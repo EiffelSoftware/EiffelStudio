@@ -45,7 +45,7 @@ feature {NONE}-- Initialization
 			create final_message_box
 			create final_message_label
 			create destination_path_label
-			create l_ev_cell_1
+			create generate_button
 			create l_ev_horizontal_separator_1
 			create wizard_output_middle_box
 			create output_buttons_box
@@ -70,7 +70,7 @@ feature {NONE}-- Initialization
 			output_outter_box.extend (final_message_box)
 			final_message_box.extend (final_message_label)
 			final_message_box.extend (destination_path_label)
-			final_message_box.extend (l_ev_cell_1)
+			final_message_box.extend (generate_button)
 			extend (l_ev_horizontal_separator_1)
 			extend (wizard_output_middle_box)
 			wizard_output_middle_box.extend (output_buttons_box)
@@ -105,11 +105,13 @@ feature {NONE}-- Initialization
 			final_message_box.hide
 			final_message_box.set_padding_width (5)
 			final_message_box.disable_item_expand (final_message_label)
-			final_message_box.disable_item_expand (destination_path_label)
+			final_message_box.disable_item_expand (generate_button)
 			final_message_label.set_text ("Files generated in:")
 			final_message_label.align_text_left
 			destination_path_label.set_foreground_color (link_label)
 			destination_path_label.align_text_left
+			generate_button.set_text ("Generate")
+			generate_button.set_minimum_width (100)
 			wizard_output_middle_box.set_padding_width (5)
 			wizard_output_middle_box.set_border_width (7)
 			wizard_output_middle_box.disable_item_expand (output_buttons_box)
@@ -134,6 +136,7 @@ feature {NONE}-- Initialization
 			destination_path_label.pointer_button_press_actions.extend (agent on_link_click (?, ?, ?, ?, ?, ?, ?, ?))
 			destination_path_label.pointer_enter_actions.extend (agent on_link_enter)
 			destination_path_label.pointer_leave_actions.extend (agent on_link_leave)
+			generate_button.select_actions.extend (agent on_generate)
 			save_button.select_actions.extend (agent on_save)
 			open_eiffelstudio_button.select_actions.extend (agent on_open_eiffelstudio)
 			exit_button.select_actions.extend (agent on_exit)
@@ -153,13 +156,13 @@ feature -- Access
 	percentage_label,
 	percent_label, progress_bar_label, final_message_label, destination_path_label: EV_LABEL
 	stop_button,
-	save_button, open_eiffelstudio_button, exit_button: EV_BUTTON
-	left_output_padding_cell, right_output_padding_cell: EV_CELL
+	generate_button, save_button, open_eiffelstudio_button, exit_button: EV_BUTTON
+	left_output_padding_cell,
+	right_output_padding_cell: EV_CELL
 
 feature {NONE} -- Implementation
 
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -193,6 +196,11 @@ feature {NONE} -- Implementation
 	
 	on_link_leave is
 			-- Called by `pointer_leave_actions' of `destination_path_label'.
+		deferred
+		end
+	
+	on_generate is
+			-- Called by `select_actions' of `generate_button'.
 		deferred
 		end
 	

@@ -84,6 +84,18 @@ feature -- Element Settings
 		do
 			open_eiffelstudio_button.disable_sensitive
 		end
+	
+	enable_generate_button is
+			-- Enable sensitivity on `generate' button.
+		do
+			generate_button.enable_sensitive
+		end
+		
+	disable_generate_button is
+			-- Disable sensitivity on `generate' button.
+		do
+			generate_button.disable_sensitive
+		end
 		
 feature -- Basic Operations
 
@@ -163,7 +175,10 @@ feature -- Basic Operations
 						output_text.show_scroll_bars
 					when feature {WIZARD_PROGRESS_EVENT_ID}.Step then
 						check
-							not_finished: not environment.abort implies (progress_bar.value < (progress_bar.value_range.upper - progress_bar.value_range.lower))
+					--		not_finished: not environment.abort implies (progress_bar.value < (progress_bar.value_range.upper - progress_bar.value_range.lower))
+						end
+						if not environment.abort and progress_bar.value >= (progress_bar.value_range.upper - progress_bar.value_range.lower) then
+							do_nothing
 						end
 						progress_bar.step_forward
 						l_percent := ((progress_bar.value / (progress_bar.value_range.upper - progress_bar.value_range.lower)) * 100).rounded
@@ -268,6 +283,18 @@ feature {NONE} -- GUI Events Handling
 				end
 				output_text.save (l_file_name)
 			end
+		end
+
+	on_generate is
+			-- Called by `select_actions' of `generate_button'.
+		local
+			l_window: WIZARD_MAIN_WINDOW
+		do
+			l_window ?= (create {EV_UTILITIES}).parent_window (Current)
+			check
+				has_main_window: l_window /= Void
+			end
+			l_window.on_generate
 		end
 
 feature {NONE} -- Implementation

@@ -94,9 +94,9 @@ feature {NONE}-- Initialization
 			right_box.disable_item_expand (content_box)
 			title_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			create internal_font
-			internal_font.set_family (3)
-			internal_font.set_weight (8)
-			internal_font.set_shape (10)
+			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
 			internal_font.set_height_in_points (12)
 			internal_font.preferred_families.extend ("Trebuchet MS")
 			title_label.set_font (internal_font)

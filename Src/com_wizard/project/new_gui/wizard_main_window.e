@@ -127,6 +127,23 @@ feature -- Basic Operations
 			environment.set_compile_eiffel (not compile_eiffel_check_button.is_selected)
 		end
 
+feature {WIZARD_OUTPUT_BOX} -- Implementation
+
+	on_generate is
+			-- Save all information and start generation.
+		do
+			check
+				is_valid: is_valid
+			end
+			output_box.set_destination_folder (destination_folder_box.value)
+			notebook.select_item (output_box)
+			if eiffel_project_box.is_show_requested then
+				eiffel_project_box.save_values
+			end
+			project_box.save_combo_text
+			start_generation
+		end
+
 feature {NONE} -- Implementation
 
 	on_help is
@@ -160,7 +177,7 @@ feature {NONE} -- Implementation
 			else
 				project_button.set_text ("New")
 			end
-			first_generate_button.disable_default_push_button
+			initialize_generate_button
 			project_button.enable_default_push_button
 			in_delete_mode := False
 			project_selected := False
@@ -179,7 +196,7 @@ feature {NONE} -- Implementation
 				project_button.enable_sensitive
 			end
 			project_box.save_combo_text
-			first_generate_button.enable_default_push_button
+			initialize_generate_button
 			project_button.disable_default_push_button
 			in_delete_mode := True
 			project_selected := True
@@ -341,21 +358,6 @@ feature {NONE} -- Implementation
 			((create {EV_ENVIRONMENT}).application).destroy
 		end
 
-	on_generate is
-			-- Save all information and start generation.
-		do
-			check
-				is_valid: is_valid
-			end
-			output_box.set_destination_folder (destination_folder_box.value)
-			notebook.select_item (output_box)
-			if eiffel_project_box.is_show_requested then
-				eiffel_project_box.save_values
-			end
-			project_box.save_combo_text
-			start_generation
-		end
-
 	on_previous is
 			-- Select first notebook page
 		local
@@ -394,6 +396,7 @@ feature {NONE} -- Implementation
 			is_running := True
 			first_generate_button.disable_sensitive
 			second_generate_button.disable_sensitive
+			output_box.disable_generate_button
 			l_worker_thread.do_work (agent run, agent output_box.process_event)
 			is_running := False
 			initialize_generate_button
@@ -455,9 +458,11 @@ feature {NONE} -- Implementation
 					(not com_project_box.is_show_requested or com_project_box.is_valid)) then
 				first_generate_button.enable_sensitive
 				second_generate_button.enable_sensitive
+				output_box.enable_generate_button
 			else
 				first_generate_button.disable_sensitive
 				second_generate_button.disable_sensitive
+				output_box.disable_generate_button
 			end
 		end
 	
@@ -608,7 +613,7 @@ feature {NONE} -- Implementation
 			end
 			Profile_manager.set_save_blocked (False)
 		end
-
+		
 feature {NONE} -- Private Access
 
 	project_selected: BOOLEAN

@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to filter the text in some way.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class FILTER_COMMAND 
 
 inherit
@@ -12,8 +19,19 @@ inherit
 creation
 
 	make
-	
-feature 
+
+feature -- Initialization
+
+	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+			-- Initialize the filter window, and add a 
+			-- button click action for button number 3.
+		do
+			!!filter_window.make (c, Current);
+			init (c, a_text_window);
+			add_button_click_action (3, Current, Void)
+		end;
+
+feature -- Properties
 
 	filter_window: FILTER_W;
 			-- Associated popup window
@@ -58,15 +76,9 @@ feature
 		end;
 
 	text_window: CLASS_TEXT;
+			-- Text of the offended class.
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
-		do
-			!!filter_window.make (c, Current);
-			init (c, a_text_window);
-			add_button_click_action (3, Current, Void)
-		end;
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- If left mouse button was pressed -> execute filter.
@@ -169,14 +181,19 @@ feature {NONE}
 			end
 		end;
 
-feature {NONE}
+feature {NONE} -- Attributes
 
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Filter 
 		end;
  
-	command_name: STRING is do Result := l_Filter end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Filter
+		end;
 
 invariant
 

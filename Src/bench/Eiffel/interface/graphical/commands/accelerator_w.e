@@ -1,4 +1,9 @@
--- Keyboard accelerators for major functionalities of Bench.
+indexing
+
+	description:	
+		"Keyboard accelerators for major functionalities of Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class ACCELERATOR_W
 
@@ -10,6 +15,7 @@ inherit
 feature {NONE} -- Execution
 
 	work (argument: ANY) is
+			-- Do some stuff for the execution of the commands.
 		local
 			default_argument: ANY
 		do
@@ -70,16 +76,22 @@ feature {NONE} -- Execution
 				Project_tool.exec_nostop.execute (format_and_run)
 			elseif argument = raise_project_acc then
 				Project_tool.raise
+
 			elseif argument = raise_class_acc then
 				Window_manager.raise_class_windows
+
 			elseif argument = raise_feat_acc then
 				Window_manager.raise_routine_windows
+
 			elseif argument = raise_obj_acc then
 				Window_manager.raise_object_windows
+
 			elseif argument = raise_expl_acc then
 				Window_manager.raise_explain_windows
+
 			elseif argument = raise_sys_acc then
 				System_tool.raise
+
 			elseif argument = raise_warner_acc then
 				if name_chooser.is_popped_up then
 					name_chooser.raise
@@ -99,8 +111,9 @@ feature {NONE} -- Execution
 feature {NONE} -- Inapplicable
 
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
-			-- Do nothing.
+			-- Useless here.
 		do
+			-- Do nothing.
 		end;
 
 end -- class ACCELERATOR_W

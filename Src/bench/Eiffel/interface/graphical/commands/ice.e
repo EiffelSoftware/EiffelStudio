@@ -1,4 +1,9 @@
--- Temporary ice command
+indexing
+
+	description:	
+		"Temporary ice command.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class ICE 
 
@@ -11,15 +16,23 @@ creation
 	make
  
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do 
 			init (c, a_text_window)
 		end; 
  
+feature  -- Properties
+
+	symbol: PIXMAP is
+			-- Empty symbol
+		do
+			Result := bm_default
+		end;
 	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- for now, purge system
@@ -39,18 +52,13 @@ feature {NONE}
 						%successfully before purge", void, void, "OK");
 			end;
 		end;
- 
-feature 
 
-	symbol: PIXMAP is
-			-- Empty symbol
+feature {NONE} -- Attrbitues
+
+	command_name: STRING is
+			-- Name of the command.
 		do
-			Result := bm_default
-		end;
-
-	
-feature {NONE}
-
-	command_name: STRING is do Result := "Purge system" end
+			Result := "Purge system"
+		end
   
-end
+end -- class ICE

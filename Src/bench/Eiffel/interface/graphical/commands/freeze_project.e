@@ -1,5 +1,9 @@
+indexing
 
--- Command to freeze the Eiffel
+	description:	
+		"Command to freeze the Eiffel code.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class FREEZE_PROJECT 
 
@@ -11,15 +15,25 @@ inherit
 			confirm_and_compile,
 			command_name, symbol,
 			compilation_allowed, perform_compilation
-		end
+		end;
+	SHARED_MELT_ONLY
  
 creation
 
 	make
+
+feature -- Properties
+
+	symbol: PIXMAP is 
+			-- Symbol for the button.
+		once 
+			Result := bm_Freeze 
+		end; 
  
-feature {NONE}
+feature {NONE} -- Implementation
 
 	confirm_and_compile (argument: ANY) is
+			-- Ask for confirmation, and compile thereafter.
 		do
 			if 
 				(argument = text_window) or (argument = Current) or
@@ -46,6 +60,7 @@ feature {NONE}
 		end;
 
 	launch_c_compilation (argument: ANY) is
+			-- Launch the C compilation in the background.
 		do
 			error_window.put_string ("System recompiled%N");
 			if start_c_compilation then
@@ -56,24 +71,23 @@ feature {NONE}
 		end;
 
 	perform_compilation (arg: ANY) is
+			-- The actual compilation process.
 		do
 			Eiffel_project.freeze
 		end;
 
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Freeze 
-		end; 
-
-feature {NONE}
+feature {NONE} -- Attributes
 
 	compilation_allowed: BOOLEAN is
+			-- Is compilation allowed?
 		do
 			Result := not melt_only
 		end
 
-	command_name: STRING is do Result := l_Freeze end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Freeze
+		end;
 
-end
+end -- FREEZE_PROJECT

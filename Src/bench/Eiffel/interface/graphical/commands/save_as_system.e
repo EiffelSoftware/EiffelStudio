@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to save the ace-file under a different name.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 
 class SAVE_AS_SYSTEM 
 
@@ -13,15 +20,18 @@ creation
 
 	make
 
-	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
 
+feature -- Updating
+
 	update_more is
+			-- Update the file name of the ace file.
 		local
 			show_text: SHOW_TEXT
 		do
@@ -31,4 +41,4 @@ feature
 			end;
 		end
 
-end
+end -- class SAVE_AS_SYSTEM

@@ -1,4 +1,10 @@
--- Retarget the feature tool with the routine the execution is stopped in.
+indexing
+
+	description:	
+		"Retarget the feature tool with the routine the execution is stopped in.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 
 class CURRENT_ROUTINE
 
@@ -17,11 +23,29 @@ creation
 feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: ROUTINE_TEXT) is
+			-- Initialize the associated window.
 		do 
 			init (c, a_text_window)
 		end;
 
-feature {NONE}
+feature -- Properties
+
+	text_window: ROUTINE_TEXT;
+			-- Text of the routine.
+
+	symbol: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Current
+		end;
+
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Current
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Retarget the feature tool with the current routine if any.
@@ -46,20 +70,6 @@ feature {NONE}
 					text_window.highlight_breakable (status.break_index)
 				end
 			end
-		end;
-
-feature
-
-	text_window: ROUTINE_TEXT;
-
-	symbol: PIXMAP is
-		once
-			Result := bm_Current
-		end;
-
-	command_name: STRING is
-		do
-			Result := l_Current
 		end;
 
 end -- class CURRENT_ROUTINE

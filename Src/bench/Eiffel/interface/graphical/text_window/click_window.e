@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Window with a clickable text";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class CLICK_WINDOW 
 
 inherit
@@ -21,12 +28,19 @@ inherit
 			put_error, put_class, put_classi, put_cluster,
 			put_class_syntax, put_ace_syntax
 		end
-feature 
+
+feature -- Properties
 
 	focus_start, focus_end: INTEGER; 
 			-- Bounds of focus in the structured text
 
-	focus: STONE is do Result := item(position).node end;
+	focus: STONE is
+			-- The stone where the focus currently is.
+		do
+			Result := item(position).node
+		end;
+
+feature -- Settings
 
 	set_bounds (a, b: INTEGER) is
 			-- Set the bounds of current focus.
@@ -37,6 +51,8 @@ feature
 			focus_start = a;
 			focus_end = b
 		end;
+
+feature -- Input
 
 	put_string (s: STRING) is
 			-- Add `s' to the text image, don't record it in internal structure.
@@ -161,7 +177,7 @@ feature
 			put_stone (stone, str)
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	update_focus (i: INTEGER) is
 			-- Select the stone corresponding to text position `i'.
@@ -189,6 +205,8 @@ feature -- Output processing for text_struct
 			-- Current position in the structured document text
 
 	process_basic_text (t: BASIC_TEXT) is
+			-- Puts normal, i.e. non clickable, text `t' in the
+			-- text.
 		do
 			put_string (t.image);
 		end;
@@ -209,6 +227,7 @@ feature -- Output processing for text_struct
 		end;
 
 	process_feature_name_text (t: FEATURE_NAME_TEXT) is
+			-- Process clickable text `t'.
 		local
 			st: FEATURE_STONE
 		do
@@ -217,16 +236,19 @@ feature -- Output processing for text_struct
 		end;
 
 	process_indentation (t: INDENT_TEXT) is
+			-- Process non clickable text `t'.
 		do
 			put_string (t.image)
 		end;
 
 	process_new_line (t: NEW_LINE_ITEM) is
+			-- Put a new line in the text.
 		do
 			new_line;
 		end;
 
 	process_after_class (t: AFTER_CLASS) is
+			-- Put "-- class" followed by `t' in the text.
 		local
 			class_stone: CLASSC_STONE
 		do

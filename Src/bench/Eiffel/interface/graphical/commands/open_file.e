@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to open a file";
+	date: "$Date$";
+	revision: "$Revision$"
+
 
 class OPEN_FILE 
 
@@ -9,14 +16,23 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialization of the command.
 		do
 			init (c, a_text_window)
 		end;
+	
+feature -- Properties
 
-feature {NONE}
+	symbol: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Open
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Open a file.
@@ -59,17 +75,13 @@ feature {NONE}
 				end
 			end
 		end;
-	
-feature 
 
-	symbol: PIXMAP is
-		once
-			Result := bm_Open
-		end;
+feature {NONE} -- Attributes
 
-	
-feature {NONE}
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Open
+		end
 
-	command_name: STRING is do Result := l_Open end
-
-end
+end -- class OPEN_FILE

@@ -1,7 +1,7 @@
 indexing
 
-	description: 
-		"";
+	description:	
+		"Command for stopped applications.";
 	date: "$Date$";
 	revision: "$Revision $"
 

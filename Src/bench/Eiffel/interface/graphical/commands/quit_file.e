@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to quit editing a file.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class QUIT_FILE 
 
 inherit
@@ -8,15 +15,23 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
 
+feature -- Properties
 
-feature {NONE}
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Quit 
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Quit cautiously a file.
@@ -33,17 +48,13 @@ feature {NONE}
 				end
 			end
 		end;
-	
-feature 
 
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Quit 
+feature {NONE} -- Attributes
+
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Exit
 		end;
- 
-	
-feature {NONE}
 
-	command_name: STRING is do Result := l_Exit end;
-
-end
+end -- class QUIT_FILE

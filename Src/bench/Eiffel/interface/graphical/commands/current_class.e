@@ -1,4 +1,9 @@
--- Retarget the class tool with the class the execution is stopped in.
+indexing
+
+	description:	
+		"Retarget the class tool with the class the execution is stopped in.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CURRENT_CLASS
 
@@ -14,11 +19,26 @@ creation
 feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize this window.
 		do 
 			init (c, a_text_window)
 		end;
 
-feature {NONE}
+feature -- Properties
+
+	symbol: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Current
+		end;
+
+	command_name: STRING is
+			-- Command name.
+		do
+			Result := l_Current
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Retarget the class tool with the current class if any.
@@ -41,18 +61,6 @@ feature {NONE}
 				!! st.make (status.e_feature, e_class);
 				text_window.receive (st)
 			end
-		end;
-
-feature
-
-	symbol: PIXMAP is
-		once
-			Result := bm_Current
-		end;
-
-	command_name: STRING is
-		do
-			Result := l_Current
 		end;
 
 end -- class CURRENT_CLASS

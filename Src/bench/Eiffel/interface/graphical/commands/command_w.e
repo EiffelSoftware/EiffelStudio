@@ -1,5 +1,9 @@
+indexing
 
--- Ancestor of all workbench commands.
+	description:	
+		"Ancestor of all workbench commands.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class COMMAND_W 
 
@@ -12,7 +16,7 @@ inherit
 	COMMAND;
 	WARNING_MESSAGES
 
-feature 
+feature -- Execution
 
 	execute (argument: ANY) is
 			-- Set cursor to watch shape, call `work' and restore cursor.
@@ -22,10 +26,10 @@ feature
 			restore_cursors
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		deferred
 		end;
 
-end
+end -- class COMMAND_W

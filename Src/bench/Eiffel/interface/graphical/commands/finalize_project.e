@@ -1,4 +1,9 @@
--- Command to finalize the Eiffel
+indexing
+
+	description:	
+		"Command to finalize the Eiffel code.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class FINALIZE_PROJECT 
 
@@ -10,27 +15,55 @@ inherit
 			confirm_and_compile, command_name, symbol, 
 			compilation_allowed, finalization_error, perform_compilation
 		end;
-	SHARED_ERROR_HANDLER
+	SHARED_ERROR_HANDLER;
+	SHARED_MELT_ONLY
  
 creation
 
 	make
  
-feature {NONE}
+feature -- Properties
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Finalize
+		end;
+
+feature {NONE} -- Attributes
 
 	compilation_allowed: BOOLEAN is
+			-- Is a compilation allowed?
 		do
 			Result := not melt_only
 		end
 
 	c_code_directory: STRING is
+			-- Directory where the C code is stored.
 		do
 			Result := Final_generation_path
 		end;
 
 	assert_confirmed: BOOLEAN;
+			-- Did the user confirm the question whether to keep the assertions
+			-- or not?
+
+	finalization_error: BOOLEAN;
+			-- Has a validity error been detected during the
+			-- finalization? This happens with DLE dealing
+			-- with statically bound feature calls
+
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Finalize
+		end;
+
+feature {NONE} -- Implementation
 
 	confirm_and_compile (argument: ANY) is
+			-- Ask for confirmation if the assertion are to be kept, and
+			-- finalize thereafter.
 		do
 			if 
 				argument = text_window or
@@ -71,6 +104,7 @@ feature {NONE}
 		end;
 
 	perform_compilation (argument: ANY) is
+			-- The real compilation work.
 		local
 			temp: STRING;
 			rescued: BOOLEAN
@@ -100,12 +134,8 @@ feature {NONE}
 			retry
 		end;
 
-	finalization_error: BOOLEAN;
-			-- Has a validity error been detected during the
-			-- finalization? This happens with DLE dealing
-			-- with statically bound feature calls
-
 	launch_c_compilation (argument: ANY) is
+			-- Launch the C compilation in the background.
 		do
 			if start_c_compilation then
 				error_window.put_string
@@ -129,17 +159,5 @@ feature {NONE}
 			end;
 			error_window.put_string ("System recompiled%N");
 		end;
-
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Finalize
-		end;
  
-
-feature {NONE}
-
-	command_name: STRING is do Result := l_Finalize end;
-
-end
+end -- class FINALIZE_PROJECT

@@ -30,16 +30,18 @@ extern "C" {
 	int egc_tup_dtype;
 	int32 egc_disp_rout_id;
 	int egc_bit_dtype;
-	int egc_sp_bool;
-	int egc_sp_char;
-	int egc_sp_wchar;
-	int egc_sp_int8;
-	int egc_sp_int16;
-	int egc_sp_int32;
-	int egc_sp_int64;
-	int egc_sp_real;
-	int egc_sp_double;
-	int egc_sp_pointer;
+
+	uint32 egc_sp_bool;
+	uint32 egc_sp_char;
+	uint32 egc_sp_wchar;
+	uint32 egc_sp_int8;
+	uint32 egc_sp_int16;
+	uint32 egc_sp_int32;
+	uint32 egc_sp_int64;
+	uint32 egc_sp_real;
+	uint32 egc_sp_double;
+	uint32 egc_sp_pointer;
+	uint32 egc_sp_ref;
 
 	int egc_int8_ref_dtype;	
 	int egc_int16_ref_dtype;	

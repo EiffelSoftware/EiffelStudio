@@ -396,24 +396,23 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 		require
 			an_object_not_void: an_object /= Void
 		local
-			window_object: GB_TITLED_WINDOW_OBJECT
 			selector_item: GB_WINDOW_SELECTOR_ITEM
+			command_move_window: GB_COMMAND_MOVE_WINDOW
 		do
-			window_object ?= an_object
-			check
-				object_was_window: window_object /= Void
-			end
 			if an_object.layout_item = Void then
-				object_handler.add_new_window (window_object)			
-				create selector_item.make_with_object (window_object)
+				object_handler.add_new_window (an_object)			
+				create selector_item.make_with_object (an_object)
 				-- Ensure that when the item is selected, the layout constructor is updated
 				-- to reflect this.
 				selector_item.select_actions.extend (agent selected_window_changed (selector_item))
+				extend (an_object.window_selector_item)
 			else
-				unparent_tree_node (an_object.window_selector_item)
+				if not (an_object.window_selector_item.parent = Window_selector) then
+						-- Do nothing if attempting to move from `Current' to `Current'.
+					create command_move_window.make (an_object, Void)
+					command_move_window.execute
+				end
 			end
-			
-			extend (an_object.window_selector_item)
 		ensure
 			count_increased: old an_object.layout_item = Void implies count = old count + 1
 				-- Only if we were not moving internally as determined by whether the layout item

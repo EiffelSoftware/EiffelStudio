@@ -378,6 +378,17 @@ feature -- Event - command association
 			-- 'add_command' or 'add_command_with_event_data'
 	
 feature -- Postconditions
+	
+	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+		-- Check if the dimensions of the widget are set to 
+		-- the values given or the minimum values possible 
+		-- for that widget.
+		-- XXXXXXXXXXXXXXXXXXXXXX fix
+		do
+                       Result := (width = new_width or else width = minimum_width or else (not shown and width = 1)) and then
+                                 (height = new_height or else height = minimum_height or else (not shown and height = 1))
+                       Result := True
+		end		
 
 	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 			-- Check if the dimensions of the widget are set to 

@@ -10,7 +10,7 @@ deferred class
 inherit
 	EV_ITEM_I
 
-	EV_TEXT_CONTAINER_IMP
+	EV_TEXTABLE_IMP
 		rename
 			-- We want to maintain the name make_with_text
 			-- although the signature is different

@@ -17,7 +17,7 @@ inherit
 	
 	EV_BAR_ITEM_IMP
 
-	EV_TEXT_CONTAINER_IMP
+	EV_TEXTABLE_IMP
                 rename
                         label_widget as widget
 		redefine

@@ -77,7 +77,7 @@ feature {NONE} -- Externals
 	set_proxy (obj: POINTER): POINTER is
 			-- Attach `obj' to proxy.
 		external
-			"C | %"eif_threads.h%""
+			"C (EIF_REFERENCE): EIF_OBJECT | %"eif_threads.h%""
 		alias
 			"eif_thr_proxy_set"
 		end
@@ -85,7 +85,7 @@ feature {NONE} -- Externals
 	access_proxy (p: POINTER): G is
 			-- Retrieve attached object.
 		external
-			"C | %"eif_threads.h%""
+			"C (EIF_OBJECT): EIF_REFERENCE | %"eif_threads.h%""
 		alias
 			"eif_thr_proxy_access"
 		end

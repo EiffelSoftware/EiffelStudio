@@ -371,16 +371,19 @@ feature {NONE} -- Text processing
 	process_cl_syntax (text: CL_SYNTAX_ITEM) is
 			-- Process class syntax text.
 		do
+			process_basic_text (text)
 		end;
 
 	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
 			-- Process Ace syntax text.
 		do
+			process_basic_text (text)
 		end;
 
 	process_address_text (text: ADDRESS_TEXT) is
 			-- Process address text.
 		do
+			process_basic_text (text)
 		end;
 
 	process_padded is
@@ -391,6 +394,13 @@ feature {NONE} -- Text processing
 	process_feature_name_text (text: FEATURE_NAME_TEXT) is
 			-- Process feature name text `t'.
 		do
+			process_basic_text (text)
+		end;
+
+	process_feature_text (text: FEATURE_TEXT) is
+			-- Process feature text `text'.
+		do
+			process_basic_text (text)
 		end;
 
 	process_breakpoint is
@@ -401,6 +411,7 @@ feature {NONE} -- Text processing
 	process_error_text (text: ERROR_TEXT) is
 			-- Process error text.
 		do
+			process_basic_text (text)
 		end;
 
 	process_before_class (text: BEFORE_CLASS) is

@@ -45,19 +45,21 @@ feature -- Status setting
 	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
 			-- Set `a_widget.x_position' to `an_x'.
 			-- Set `a_widget.y_position' to `a_y'.
+		local
+			wel_win: WEL_WINDOW
 		do
-			check
-				to_be_implemented: False
-			end
+			wel_win ?= a_widget.implementation
+			wel_win.move (an_x, a_y)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
+		local
+			wel_win: WEL_WINDOW
 		do
-			check
-				to_be_implemented: False
-			end
+			wel_win ?= a_widget.implementation
+			wel_win.resize (a_width, a_height)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -145,6 +147,9 @@ end -- class EV_FIXED_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/02 16:12:56  brendel
+--| Implemented.
+--|
 --| Revision 1.15  2000/05/02 15:12:50  brendel
 --| Added creation of ev_children.
 --|

@@ -1,5 +1,11 @@
 indexing
-	description: "Procedure objects, with some arguments possibly still open";
+	description:
+		"Objects representing delayed calls to a procedure.%N%
+		%with some operands possibly still open."
+	note:
+		"Features are the same as those of ROUTINE,%N%
+		%with `apply' made effective, and no further%N%
+		%redefinition of `is_equal' and `copy'."
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -16,16 +22,15 @@ inherit
 feature -- Calls
 
 	call (args: OPEN_ARGS) is
-			-- Call procedure with arguments `args'.
+			-- Call procedure with operands `args'.
 		do
-			arguments := args
+			operands := args
 			rout_set_cargs
 			rout_obj_call_procedure (rout_disp, rout_cargs)
 		end
 
 	apply is
-			-- Call procedure with arguments `arguments'
-			-- as last set.
+			-- Call procedure with `operands' as last set.
 		do
 			rout_set_cargs
 			rout_obj_call_procedure (rout_disp, rout_cargs)

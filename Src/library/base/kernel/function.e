@@ -1,5 +1,11 @@
 indexing
-	description: "Function objects, with some arguments still possibly open";
+	description:
+		"Objects representing delayed calls to a funtion,%N%
+		%with some arguments possibly sill open."
+	note:
+		"Features are the same as those of RUOTINE,%N%
+		%with `apply' made effective, and the addition%N%
+		%of `last_result' and `item'."
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -16,18 +22,18 @@ inherit
 feature -- Access
 	
 	last_result: RESULT_TYPE is
-			-- Result of last call
+			-- Result of last call, if any.
 		do
 			Result := result_array.item (1)
 		end
 
 	item (args: OPEN_ARGS): RESULT_TYPE is
-			-- Result of evaluating function for `args'.
+			-- Result of calling function with `args' as operands.
 		require
-			valid_arguments: valid_arguments (args)
+			valid_operands: valid_operands (args)
 			callable: callable
 		do
-			arguments := args
+			operands := args
 			rout_set_cargs
 			rout_obj_call_function ($Current, $result_array, 
 					rout_disp, rout_cargs)
@@ -37,7 +43,8 @@ feature -- Access
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is function the same as `other'?
+			-- Is associated funtion the same as the one
+			-- associated with `other'?
 		do
 			Result := Precursor (other) and then
 					  equal (last_result, other.last_result)
@@ -46,7 +53,7 @@ feature -- Comparison
 feature -- Duplication
 
 	copy (other: like Current) is
-			-- Reinitialize from content of `other'.
+			-- Use same function as `other'.
 		do
 			Precursor (other)
 			result_array.put (other.last_result, 1)
@@ -55,19 +62,16 @@ feature -- Duplication
 feature -- Basic operations
 
 	call (args: OPEN_ARGS) is
-			-- Call function with arguments `args'.
-			-- Result in `last_result'.
+			-- Call function with operands `args'.
 		do
-			arguments := args
+			operands := args
 			rout_set_cargs
 			rout_obj_call_function ($Current, $result_array, 
 									rout_disp, rout_cargs)
 		end
 
 	apply is
-			-- Call function with arguments `arguments'
-			-- as last set.
-			-- Result in `last_result'.
+			-- Call function with `operands' as last set.
 		do
 			rout_set_cargs
 			rout_obj_call_function ($Current, $result_array, 
@@ -81,7 +85,7 @@ feature -- Obsolete
 		obsolete
 			"Please use `item' instead"
 		require
-			valid_arguments: valid_arguments (args)
+			valid_operands: valid_operands (args)
 			callable: callable
 		do
 			Result := item (args)
@@ -101,7 +105,7 @@ feature {NONE} -- Implementation
 
 	rout_obj_call_function (cur, res, rout, args: POINTER) is
 			-- Perform call to `rout' on `cur' object with `args'
-			-- as arguments and return `res'.
+			-- as operands and return `res'.
 		external
 			"C | %"eif_rout_obj.h%""
 		end

@@ -57,7 +57,7 @@ feature
 		require
 			type_exists: type /= Void;
 		do
-			Result := Eiffel_system.class_of_id (type.base_id);
+			Result := System.class_of_id (type.base_id)
 		end;
 
 feature 
@@ -809,8 +809,7 @@ feature -- Skeleton generation
 			Skeleton_file.putstring ("{%N(long) ");
 			Skeleton_file.putint (skeleton.count);
 			Skeleton_file.putstring (",%N%"");
-			upper_class_name := clone (a_class.class_name)
-			upper_class_name.to_upper;
+			upper_class_name := a_class.name_in_upper;
 			Skeleton_file.putstring (upper_class_name);
 			Skeleton_file.putstring ("%",%N");
 			if not skeleton_empty then
@@ -1019,8 +1018,7 @@ feature -- Byte code generation
 			ba.append_short_integer (type_id - 1);
 
 				-- 2. generator string
-			class_name := clone (associated_class.class_name)
-			class_name.to_upper;
+			class_name := associated_class.name_in_upper;
 			ba.append_string (class_name);
 
 				-- 3. number of attributes
@@ -1142,8 +1140,7 @@ feature -- DLE
 			Skeleton_file.new_line;
 
 			Skeleton_file.putstring ("node->cn_generator = %"");
-			upper_class_name := clone (a_class.class_name)
-			upper_class_name.to_upper;
+			upper_class_name := a_class.name_in_upper;
 			Skeleton_file.putstring (upper_class_name);
 			Skeleton_file.putstring ("%";");
 			Skeleton_file.new_line;

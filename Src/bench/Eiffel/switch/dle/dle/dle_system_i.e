@@ -417,7 +417,7 @@ feature -- Final mode
 				class_id := id_list.item_for_iteration;
 				a_class := class_of_id (class_id);
 				if a_class /= Void then
-					deg_output.put_degree_minus_4 (a_class.e_class, i)
+					deg_output.put_degree_minus_4 (a_class, i)
 
 					a_class.process_polymorphism;
 					History_control.check_overload
@@ -454,7 +454,7 @@ feature -- Final mode
 					if a_class /= Void then
 						current_class := a_class;
 						if a_class.dle_generate_final_code then
-							deg_output.put_degree_minus_5 (a_class.e_class, j)
+							deg_output.put_degree_minus_5 (a_class, j)
 						end;
 						j := j - 1
 					end

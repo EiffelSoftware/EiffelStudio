@@ -45,7 +45,7 @@ debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring (": Recording feature ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" of class ");
-	io.error.putstring (a_feature.written_class.class_name);
+	io.error.putstring (a_feature.written_class.name);
 	io.error.new_line;
 end;
 					remover.record (a_feature, a_feature.written_class)
@@ -55,7 +55,7 @@ debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring ("Export	status of: ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" of class ");
-	io.error.putstring (a_feature.written_class.class_name);
+	io.error.putstring (a_feature.written_class.name);
 	io.error.putstring (" is ");
 	io.error.putstring (a_feature.export_status.generator);
 	io.error.putstring (" ");

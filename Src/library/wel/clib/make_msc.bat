@@ -14,4 +14,5 @@ echo ------------------------------------------------------------------------
 nmake /NOLOGO /C /S /f makefile_dll.msc >> make.log
 
 echo. 
-echo done.
+echo Compilation done.
+echo The result of the compilation is available in "make.log"

@@ -1,15 +1,23 @@
-CC = cl.exe
-PROJ = wel_hook
-OBJS = $(PROJ).OBJ
+# wel_hook.dll - Makefile for Microsoft C
 
-CFLAGS = -nologo -D_WIN32_WINNT=0x200 -W3 -Ox
+CC = cl.exe
+CFLAGS = -nologo -D_WIN32_WINNT=0x200 -W1 -Ox
 LFLAGS = -DLL -SECTION:.shared,RWS \
 		-EXPORT:MouseProc -EXPORT:hook_mouse -EXPORT:unhook_mouse -EXPORT:get_hook_window
 
-LIBS =  -OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
-
-$(PROJ).DLL: $(OBJS)
-    link -NOLOGO $(LFLAGS) $(OBJS) $(LIBS)
-
 .cpp.obj:
     $(CC) $(CFLAGS) $<
+
+OBJS = wel_hook.obj
+LIBS =  kernel32.lib user32.lib advapi32.lib
+
+wel_hook.dll: $(OBJS)
+	if exist $@ del $@
+    link -NOLOGO $(LFLAGS) -OUT:$@ $(OBJS) $(LIBS)
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\dll mkdir ..\spec\msc\dll
+	copy $@ ..\spec\msc\dll
+	del $@
+	del *.obj
+	del wel_hook.lib
+	del wel_hook.exp

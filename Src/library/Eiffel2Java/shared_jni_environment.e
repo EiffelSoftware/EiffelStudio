@@ -24,8 +24,8 @@ feature -- Access
 				-- variable
 			class_path := exec.get ("CLASSPATH")
 			if class_path = Void then
-				create ex
-				ex.raise ("Can't get CLASSPATH")
+					-- Default to current directory
+				class_path := "."
 			end
 			debug ("java_vm")
 				io.error.putstring ("CLASSPATH=")

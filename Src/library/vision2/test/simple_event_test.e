@@ -35,7 +35,10 @@ feature -- Access
 			w := wgt.width
 			h := wgt.height
 			
-			s.set_pointer_position (x+(w/2), y+(h/2))
+			s.set_pointer_position (
+				(x+(w/2)).truncated_to_integer,
+				(y+(h/2))).truncated_to_integer
+			)
 			sleep (1)
 			s.fake_pointer_button_press (1)
 			sleep (1)

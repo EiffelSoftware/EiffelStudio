@@ -100,6 +100,7 @@ feature -- Debug
 			io.put_boolean (num_lock_key_pressed)
 			io.put_string (" Scroll Lock: ")
 			io.put_boolean (scroll_lock_key_pressed)
+			io.put_string ("%N")
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation

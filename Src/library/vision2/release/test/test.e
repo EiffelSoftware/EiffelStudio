@@ -8,8 +8,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+
 class
 	EV_TEST
+
 
 inherit
 	EV_APPLICATION
@@ -28,30 +30,6 @@ feature
 		once
 			create Result
 		end
-
---	prepare is
---		do
---			post_launch_actions.extend (~show_splash_screen)
---			post_launch_actions.extend (~prepare_main_window)
---			post_launch_actions.extend (~remove_splash_screen)
---		end
-
---	splash_screen: EV_WINDOW
---			-- Application logo window.
-
---	show_splash_screen is
---			-- Display application logo window.
---		do
---			create splash_screen
---			splash_screen.extend (create {EV_PIXMAP}.make_for_test)
---			splash_screen.show
---		end
-
---	remove_splash_screen is
---			-- Hide application logo window.
---		do
---			splash_screen.destroy
---		end
 
 	prepare is
 			-- Pre launch preperation.
@@ -75,6 +53,7 @@ feature
 			create {EV_VERTICAL_BOX} box
 			create hb
 			hb.extend (non_widgets_frame)
+			hb.disable_item_expand (non_widgets_frame)
 			first_window.extend (box)
 			box.extend (hb)
 			create scroll
@@ -86,6 +65,8 @@ feature
 			widget_label.align_text_left
 			description_frame.extend (widget_label)
 			box.disable_item_expand (description_frame)
+			box.extend (widget_tool)
+			box.disable_item_expand (widget_tool)
 
 			menu_bar.extend (decendants (first_window))
 
@@ -111,6 +92,46 @@ feature
 			"C [macro <stdio.h>]"
 		alias
 			"exit(0)"
+		end
+
+	widget_tool: EV_WIDGET is
+			-- Tool for viewing widget properties.
+		local
+			main: EV_HORIZONTAL_BOX
+			hole: EV_PIXMAP
+			black_hole: EV_PIXMAP
+			label: EV_LABEL
+		once
+			create main
+			main.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+			Result := main
+			create hole
+			hole.set_with_named_file ("hole.png")
+			main.extend (hole)
+			main.disable_item_expand (hole)
+			create label.make_with_text ("<-- Drop stuff here to see class name.     Or try the bottomless pit. -->")
+			label.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+			main.extend (label)
+			hole.drop_actions.extend (~update_widget_tool (label, ?))
+			hole.set_target_name ("Widget tool")
+			create black_hole
+			black_hole.set_with_named_file ("black.png")
+			main.extend (black_hole)
+			main.disable_item_expand (black_hole)
+			black_hole.drop_actions.extend (~nuke)
+			black_hole.set_target_name ("Black hole")
+			black_hole.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+		end
+	
+	update_widget_tool (a_tool: EV_LABEL; a_widget: EV_WIDGET) is
+			-- Update `widget_tool'.
+		do
+			a_tool.set_text (a_widget.generating_type)
+		end
+
+	nuke (w: EV_WIDGET) is
+		do
+			do_once_on_idle (w~destroy)
 		end
 
 	widgets_frame: EV_FRAME is
@@ -154,6 +175,10 @@ feature
 					l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
 					wbox.extend (l)
 					wbox.extend (widgets.item)
+					widgets.item.set_pebble (widgets.item)
+					if widgets.index \\ 2 = 0 then
+						widgets.item.set_target_menu_mode
+					end
 					wbox.disable_item_expand (l)
 					widgets.forth
 					i := i + 1
@@ -172,7 +197,7 @@ feature
 			client_area: EV_CELL
 			combo_item: EV_LIST_ITEM
 			testable: EV_TESTABLE_NON_WIDGET
-		do
+		once
 			create Result.make_with_text ("Non-widget tests")
 			create vb
 			Result.extend (vb)
@@ -229,12 +254,14 @@ feature
 			Result.extend (create {EV_CELL}.make_for_test)
 			Result.extend (create {EV_FRAME}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
+			Result.last.set_minimum_size (200,100)
 			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA}.make_for_test)
 			Result.extend (create {EV_NOTEBOOK}.make_for_test)
 			Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
 			Result.extend (create {EV_VERTICAL_BOX}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SPLIT_AREA}.make_for_test)
 			Result.extend (create {EV_VIEWPORT}.make_for_test)
+			Result.last.set_minimum_size (100,100)
 			Result.extend (create {EV_BUTTON}.make_for_test)
 			Result.extend (create {EV_CHECK_BUTTON}.make_for_test)
 			Result.extend (create {EV_DRAWING_AREA}.make_for_test)
@@ -256,6 +283,7 @@ feature
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SEPARATOR}.make_for_test)
 			Result.extend (create {EV_PIXMAP}.make_for_test)
+			Result.last.set_minimum_size (100,100)
 			Result.extend (create {EV_TEXT}.make_for_test)
 			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
 			Result.extend (create {EV_COMBO_BOX}.make_for_test)
@@ -433,6 +461,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/26 16:58:30  oconnor
+--| added PND tests
+--|
 --| Revision 1.24  2000/04/26 16:20:54  brendel
 --| Commented out splash screen experiment.
 --| Non-widgets combo now only displays the ones that have a test.

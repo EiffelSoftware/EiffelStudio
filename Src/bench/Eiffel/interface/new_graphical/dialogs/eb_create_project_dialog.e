@@ -175,9 +175,12 @@ feature -- Execution
 		local
 			blank_project_builder: BLANK_PROJECT_BUILDER
 			rescued: BOOLEAN
+			cla, clu, f: STRING
+			sc: EIFFEL_SYNTAX_CHECKER
 		do
 			success := False
 			if not rescued then
+				create sc
 					-- Retrieve System parameters
 				if directory_field.text = Void or else directory_field.text.is_empty then
 					add_error_message (Warning_messages.w_Fill_in_location_field)
@@ -186,13 +189,31 @@ feature -- Execution
 				create directory_name.make_from_string (directory_field.text)
 				check_and_create_directory (directory_name)
 
-				if system_name_field.text = Void or else system_name_field.text.is_empty then
+				system_name := system_name_field.text
+				if not sc.is_valid_system_name (system_name) then
 					add_error_message (Warning_messages.w_Fill_in_project_name_field)
 					raise_exception (Invalid_project_name_exception)
 				end
-				system_name := system_name_field.text
+				cla := root_class_field.text
+				cla.to_upper
+				if not sc.is_valid_class_name (cla) then
+					add_error_message (Warning_messages.w_invalid_class_name (cla))
+					raise_exception (Invalid_project_name_exception)
+				end
+				clu := root_cluster_field.text
+				clu.to_lower
+				if not sc.is_valid_cluster_name (clu) then
+					add_error_message (Warning_messages.w_invalid_cluster_name (clu))
+					raise_exception (Invalid_project_name_exception)
+				end
+				f := root_feature_field.text
+				f.to_lower
+				if not sc.is_valid_identifier (f) then
+					add_error_message (Warning_messages.w_invalid_feature_name (f))
+					raise_exception (Invalid_project_name_exception)
+				end
 
-				create blank_project_builder.make (system_name, directory_name)
+				create blank_project_builder.make (system_name, cla, clu, f, directory_name)
 				ace_file_name := blank_project_builder.ace_filename
 				compile_project := compile_project_check_button.is_selected
 
@@ -299,7 +320,7 @@ feature {NONE} -- Implementation
 	build_interface is
 			-- Build the interface
 		local
-			vb: EV_VERTICAL_BOX
+			vb, main_vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			label: EV_LABEL
 			b: EV_BUTTON
@@ -307,6 +328,8 @@ feature {NONE} -- Implementation
 			buttons_box: EV_HORIZONTAL_BOX
 			project_directory_frame: EV_FRAME
 			system_name_frame: EV_FRAME
+			clal, clul, snl, fnl: EV_LABEL
+			sz: INTEGER
 		do
 				-- Let the user choose the directory
 			default_create
@@ -314,20 +337,60 @@ feature {NONE} -- Implementation
 
 				-- Ask for the system name if it's not already known.
 			if ask_for_system_name then
-					-- System Name
+				create system_name_frame.make_with_text (Interface_names.l_System_properties)
+				create main_vb
+				main_vb.set_padding (Layout_constants.Tiny_padding_size)
+				main_vb.set_border_width (Layout_constants.Small_border_size)
+				create clal.make_with_text (Interface_names.L_root_class_name)
+				create clul.make_with_text (Interface_names.L_root_cluster_name)
+				create snl.make_with_text (Interface_names.L_system_name)
+				create fnl.make_with_text (Interface_names.L_root_feature_name)
+				sz := clal.minimum_width.max (clul.minimum_width).max (snl.minimum_width).max (fnl.minimum_width)
+				clal.set_minimum_width (sz)
+				clal.align_text_left
+				clul.set_minimum_width (sz)
+				clul.align_text_left
+				snl.set_minimum_width (sz)
+				snl.align_text_left
+				fnl.set_minimum_width (sz)
+				fnl.align_text_left
+					-- System name
 				create system_name_field.make_with_text (Default_project_name)
 				system_name_field.change_actions.extend (agent on_change_project_name)
-				create vb
-				vb.set_border_width (Layout_constants.Default_border_size)
-				vb.extend (system_name_field)
-				create system_name_frame.make_with_text (Interface_names.l_Project_name)
-				system_name_frame.extend (vb)
+				create hb
+				hb.extend (snl)
+				hb.disable_item_expand (snl)
+				hb.extend (system_name_field)
+				main_vb.extend (hb)
+					-- Root cluster name
+				create root_cluster_field.make_with_text (Default_root_cluster_name)
+				create hb
+				hb.extend (clul)
+				hb.disable_item_expand (clul)
+				hb.extend (root_cluster_field)
+				main_vb.extend (hb)
+					-- Root class name
+				create root_class_field.make_with_text (Default_root_class_name)
+				create hb
+				hb.extend (clal)
+				hb.disable_item_expand (clal)
+				hb.extend (root_class_field)
+				main_vb.extend (hb)
+					-- Root feature name
+				create root_feature_field.make_with_text (Default_root_feature_name)
+				create hb
+				hb.extend (fnl)
+				hb.disable_item_expand (fnl)
+				hb.extend (root_feature_field)
+				main_vb.extend (hb)
+				
+				system_name_frame.extend (main_vb)
 			else
 					-- Ace file Name
 				create ace_filename_field.make_with_text (ace_file_name)
 				create b.make_with_text_and_action (Interface_names.b_Browse, agent browse_ace_file)
 				create hb
-				hb.set_border_width (Layout_constants.Default_border_size)
+				hb.set_border_width (Layout_constants.Small_border_size)
 				hb.extend (ace_filename_field)
 				hb.extend (b)
 				hb.disable_item_expand (b)
@@ -338,8 +401,8 @@ feature {NONE} -- Implementation
 				-- Project directory
 			create project_directory_frame.make_with_text (Interface_names.l_Location)
 			create vb
-			vb.set_border_width (Layout_constants.Default_border_size)
-			vb.set_padding (Layout_constants.Default_padding_size)
+			vb.set_border_width (Layout_constants.Small_border_size)
+			vb.set_padding (Layout_constants.Small_padding_size)
 			
 			create directory_field
 			if suggested_directory_name /= Void then
@@ -558,7 +621,7 @@ feature {NONE} -- Callbacks
 			curr_project_name := system_name_field.text
 			if not curr_project_location.is_empty then
 				sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
-				curr_project_location.head (sep_index)
+				curr_project_location.keep_head (sep_index)
 				if curr_project_name /= Void then
 					curr_project_location.append (curr_project_name)
 				end
@@ -634,6 +697,12 @@ feature {NONE} -- Vision2 architechture
 
 	system_name_field: EV_TEXT_FIELD
 	
+	root_class_field: EV_TEXT_FIELD
+	
+	root_cluster_field: EV_TEXT_FIELD
+	
+	root_feature_field: EV_TEXT_FIELD
+	
 	ace_filename_field: EV_TEXT_FIELD
 	
 	compile_project_check_button: EV_CHECK_BUTTON
@@ -641,6 +710,12 @@ feature {NONE} -- Vision2 architechture
 feature {NONE} -- Constants
 
 	Default_project_name: STRING is "sample"
+	
+	Default_root_class_name: STRING is "ROOT_CLASS"
+	
+	Default_root_feature_name: STRING is "make"
+	
+	Default_root_cluster_name: STRING is "root_cluster"
 	
 	Default_project_location_for_windows: STRING is "C:\projects"
 	

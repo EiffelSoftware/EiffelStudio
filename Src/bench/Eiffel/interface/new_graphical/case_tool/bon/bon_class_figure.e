@@ -136,8 +136,12 @@ feature -- Access
 		
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
+		local
+			pax, pay: INTEGER
 		do
-			Result := ellipse.bounding_box
+			pax := ellipse.point_a_x
+			pay := ellipse.point_a_y
+			create Result.make (pax, pay, ellipse.point_b_x - pax, ellipse.point_b_y - pay)
 		end
 		
 	height: INTEGER is
@@ -364,7 +368,7 @@ feature -- Element change
 			val2 := p1.y_precise
 			b := (val1 - val2) / 2
 			cy := (val1 + val2) / 2
-			if a = 0 and b = 0 then
+			if a * l = 0 and b = 0 then
 				ax := 0
 				ay := 0
 			else
@@ -387,6 +391,24 @@ feature -- Element change
 				end
 			end
 			p.set_precise (cx + ax, cy - ay)
+		end
+		
+	fade_out is
+			-- Fade out `Current'.
+		do
+			if is_high_quality and then background_color /= Void then
+				ellipse.set_background_color (faded_color (background_color))
+			end
+			is_faded := True
+		end
+		
+	fade_in is
+			-- Fade in `Current'.
+		do
+			if is_high_quality and then background_color /= Void then
+				ellipse.set_background_color (background_color)
+			end
+			is_faded := False
 		end
 		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update

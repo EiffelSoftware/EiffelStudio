@@ -153,8 +153,12 @@ feature -- Access
 
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
+		local
+			pax, pay: INTEGER
 		do
-			Result := rectangle.bounding_box
+			pax := rectangle.point_a_x
+			pay := rectangle.point_a_y
+			create Result.make (pax, pay, rectangle.point_b_x - pax, rectangle.point_b_y - pay)
 		end
 		
 	height: INTEGER is

@@ -121,7 +121,7 @@ feature -- Access
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		do
-			Result := rectangle.bounding_box
+			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.height)
 		end
 		
 	height: INTEGER is

@@ -438,12 +438,12 @@ feature {NONE} -- Implementation
 			if source /= Void and then target /= Void then
 				-- do not intersect with start or target figure
 				l_point_array := point_array
-				other_bbox := source.bounding_box
+				other_bbox := source.size
 				label_bbox := label_group.bounding_box
 				if other_bbox.intersects (label_bbox) then
 					set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox, nearest_start, nearest_end)
 				end
-				other_bbox := target.bounding_box
+				other_bbox := target.size
 				label_bbox := label_group.bounding_box
 				if other_bbox.intersects (label_bbox) then
 					set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox, nearest_end, nearest_start)

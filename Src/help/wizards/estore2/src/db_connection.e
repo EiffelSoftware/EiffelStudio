@@ -73,9 +73,9 @@ feature -- basic Operations
 			b: BOOLEAN
 			uname, pword, dname: STRING
 		do
-			precursor
+			Precursor
 			if not b then
-					set_database(database_type)
+				set_database (database_type)
 				if db_manager.is_connected then
 					db_manager.disconnect
 				end
@@ -107,9 +107,9 @@ feature -- basic Operations
 	update_state_information is
 			-- Check user entries
 		do
-			wizard_information.set_database_info(username.text,
-				password.text,db_name.text,is_oracle)
-			precursor			
+			wizard_information.set_database_info (username.text,
+				password.text, db_name.text, is_oracle)
+			Precursor			
 		end
 
 	display_state_text is

@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 			set_default_name;
 			if reference /= Void_pointer then
 				address := reference.out
+				dynamic_type_id := id;
 			end;
-			dynamic_type_id := id;
 		end;
 
 	make_attribute (attr_name: like name; a_class: like e_class;
@@ -159,7 +159,6 @@ feature -- Output
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
-			str: STRING
 		do
 			if address = Void then
 				Result := NONE_representation
@@ -171,11 +170,6 @@ feature -- Output
 					Result.append (Left_square_bracket)
 					Result.append (address)
 					Result.append (Right_square_bracket)
-					str := string_value
-					if str /= Void then
-						Result.append (Equal_sign_str)
-						Result.append (str)
-					end
 				else
 					create Result.make (20)
 					Result.append (Any_class.name_in_upper)
@@ -201,9 +195,6 @@ feature -- Output
 				Result := "Void"
 			else
 				Result := "[" + address + "]"
-				if string_value /= Void then
-					Result.append (" = " + string_value)
-				end
 			end
 		end
 
@@ -239,37 +230,9 @@ feature -- Output
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 			-- If referenced object is a STRING, get its value.
-		local
-			ec: CLASS_C;
-			value: STRING;
-			value_area: SPECIAL [CHARACTER];
-			i, value_count: INTEGER
 		do
 			if address /= Void then
 				address := hector_addr (address);
-				ec := dynamic_class;
-				if 
-					ec /= Void and then
-					ec.lace_class = Eiffel_system.string_class
-				then
-					send_rqst_3 (Rqst_inspect, In_string_addr, 0, hex_to_integer (address));
-					value := c_tread;
-					value_count := value.count;
-					!! string_value.make (value_count + 2);
-					string_value.extend ('%"');
-					from
-						value_area := value.area
-					until
-						i >= value_count or i >= Application.displayed_string_size
-					loop
-						string_value.append (char_text (value_area.item (i)));
-						i := i + 1
-					end;
-					string_value.extend ('%"');
-					if value_count > Application.displayed_string_size then
-						string_value.append (" ...")
-					end
-				end
 			end
 		end;
 

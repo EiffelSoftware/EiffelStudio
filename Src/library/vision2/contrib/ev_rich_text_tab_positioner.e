@@ -190,30 +190,6 @@ feature {NONE} -- Implementation
 				Result.put_integer_32 (0, 2)
 			end
 		end
---		
---		tab_control.drag_actions.extend (agent show_dragged_line)
---	tab_control.end_drag_actions.extend (agent complete_dragged_line_display)		
---	last_dashed_line_position := -1
---	show_dragged_line (position: INTEGER) is
---			-- Display a line representing a tab drag at position `position'
---			-- on `tab_control'.
---		local
---		do
---			screen.enable_dashed_line_style
---			screen.set_invert_mode
---			screen.draw_segment (tab_control.screen_x + position, rich_text.screen_y + 8, tab_control.screen_x + position, rich_text.screen_y + rich_text.height - 8)
---			if last_dashed_line_position > 0 then
---				screen.draw_segment (last_dashed_line_position, rich_text.screen_y + 8, last_dashed_line_position, rich_text.screen_y + rich_text.height - 8)
---			end
---			last_dashed_line_position := tab_control.screen_x + position
---		end
---		
---	complete_dragged_line_display (tab_index: INTEGER) is
---			--
---		do
---			
---		end
-		
 		
 	last_dashed_line_position: INTEGER
 		-- Last horizontal coordinate of dashed line drawn when slider is moved.

@@ -15,8 +15,7 @@ inherit
 			update_style
 		redefine
 			interface,
-			other_imp,
-			common_dialog_imp
+			other_imp
 		end
 
 	EV_UNTITLED_DIALOG_IMP_COMMON
@@ -24,8 +23,7 @@ inherit
 			hide, is_modal, setup_dialog
 		redefine
 			interface,
-			other_imp,
-			common_dialog_imp
+			other_imp
 		end
 
 create

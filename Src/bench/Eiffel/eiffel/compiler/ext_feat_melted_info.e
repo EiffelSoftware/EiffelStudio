@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			is_encapsulated := ext_i.is_cpp or ext_i.is_special or ext_i.encapsulated
 
 			extension := ext_i.extension
-			if not is_encapsulated and then include_list = Void and then extension /= Void then
+			if not is_encapsulated and then include_list = Void then
 				argument_types := extension.argument_types
 				if not (argument_types /= Void and then argument_types.count > 0) then
 					argument_types := Void

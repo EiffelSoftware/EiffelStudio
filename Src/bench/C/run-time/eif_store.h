@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 /* Setting of `eif_is_new_independent_format' */
-#define eif_set_new_independent_format(v)	eif_is_new_independent_format = (EIF_BOOLEAN) (v)
+RT_LNK void eif_set_new_independent_format(EIF_BOOLEAN v);
 
 /*
  * Eiffel calls
@@ -46,9 +46,6 @@ RT_LNK void set_buffer_size (EIF_INTEGER);
 
 RT_LNK EIF_POINTER *stream_malloc (EIF_INTEGER stream_size);
 RT_LNK void stream_free (EIF_POINTER *stream);
-
-RT_LNK EIF_BOOLEAN eif_is_new_independent_format;	/* Do we use the 4.5 independent
-													   storable mechanism? */
 
 /* Features needed for EiffelNet */
 RT_LNK void basic_general_free_store(EIF_REFERENCE);

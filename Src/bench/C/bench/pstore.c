@@ -25,6 +25,7 @@
 #include "rt_retrieve.h"
 #include "rt_compress.h"
 #include "rt_gen_types.h"
+#include "rt_globals.h"
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -43,7 +44,7 @@ rt_private long parsing_position = 0;
 rt_private long parsing_buffer_size = 0;
 rt_private int file_descriptor;
 
-rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
+rt_private long pst_store(char *object, long int a_object_count);	/* Recursive store */
 rt_private void parsing_store_write(void);
 rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid);
 rt_private int compiler_char_write(char *pointer, int size);
@@ -115,6 +116,7 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 
 rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 {
+	RT_GET_CONTEXT
 	int gc_stopped;
 
 	make_index = mid;
@@ -158,7 +160,7 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 
 }
 
-rt_private long pst_store(EIF_REFERENCE object, long int object_count)
+rt_private long pst_store(EIF_REFERENCE object, long int a_object_count)
 {
 	/* Second pass of the store mechanism: writing on the disk.
 	 */
@@ -171,7 +173,7 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 	int is_expanded;
 	EIF_BOOLEAN object_needs_index;
 	long saved_file_pos = 0;
-	long saved_object_count = object_count;
+	long saved_object_count = a_object_count;
 
 	object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)())need_index)(server,object);
 
@@ -188,9 +190,9 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 	flags = Mapped_flags(fflags);
 	is_expanded = (flags & EO_EXP) != (uint32) 0;
 	if (!(is_expanded || (flags & EO_STORE)))
-		return object_count;		/* Unmarked means already stored */
+		return a_object_count;		/* Unmarked means already stored */
 	else if (!is_expanded)
-		object_count++;
+		a_object_count++;
 	
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
@@ -216,7 +218,7 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 					if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
 						ref = eif_reference_tuple_item(l_item);
 						if (ref) {
-							object_count = pst_store (ref, object_count);
+							a_object_count = pst_store (ref, a_object_count);
 						}
 					}
 				}
@@ -228,13 +230,13 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 				{
 					o_ref = *(EIF_REFERENCE *) ref;
 					if (o_ref != (EIF_REFERENCE) 0)
-						object_count = pst_store(o_ref,object_count);
+						a_object_count = pst_store(o_ref,a_object_count);
 				}
 			} else {						/* Special of composites */
 				elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ptr);
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
-					object_count = pst_store(ref,object_count);
+					a_object_count = pst_store(ref,a_object_count);
 				}
 			}
 		}
@@ -249,7 +251,7 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 		) {
 			o_ref = *(EIF_REFERENCE *)o_ptr;
 			if (o_ref != (EIF_REFERENCE) 0)
-				object_count = pst_store(o_ref,object_count);
+				a_object_count = pst_store(o_ref,a_object_count);
 		}
 	}
 
@@ -258,13 +260,11 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index)
-		(make_index)(server, object, saved_file_pos, object_count - saved_object_count);
+		(make_index)(server, object, saved_file_pos, a_object_count - saved_object_count);
 
 
-	return object_count;
+	return a_object_count;
 }
-
-extern long cmp_buffer_size;
 
 /* Work-memory needed for compression. Allocate memory in units
  * of `long' (instead of `char') to make sure it is properly aligned.
@@ -278,6 +278,7 @@ static HEAP_ALLOC(wrkmem,LZO1X_1_MEM_COMPRESS);
 
 rt_private void parsing_store_write(void)
 {
+	RT_GET_CONTEXT
 	char* cmps_out_ptr = cmps_general_buffer;
 	unsigned int cmps_out_size = cmp_buffer_size;
 	int signed_cmps_out_size;
@@ -316,6 +317,7 @@ rt_private int parsing_char_write (char *pointer, int size)
 
 rt_private void parsing_compiler_write(void)
 {
+	RT_GET_CONTEXT
 	char* cmps_out_ptr = cmps_general_buffer;
 	unsigned int cmps_out_size = cmp_buffer_size;
 	int signed_cmps_out_size;

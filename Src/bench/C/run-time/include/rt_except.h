@@ -35,6 +35,10 @@ extern void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue en
 extern void excatch(jmp_buf *jmp);			/* Set exception catcher from C to interpret */
 extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
 
+#ifdef EIF_THREADS
+extern void eif_except_thread_init (void);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

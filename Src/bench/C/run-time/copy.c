@@ -30,6 +30,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "eif_garcol.h"
 #include "rt_macros.h"
 #include "rt_gen_types.h"
+#include "rt_globals.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"
@@ -40,15 +41,17 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 /*#define DEBUG 	*/
 
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="hclone" return_type="struct hash" export="private">
 doc:		<summary>The following hash table is used to keep the maping between cloned objects, so that we know for instance where we put the clone for object X. It takes a pointer and yields an EIF_OBJECT.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
-doc:		<fixme>hclone access is not protected. Therefore to deep clone/copy operation occurring at the same time in two different threads will certainly fail. Solution is to put `hclone' in the `eif_globals' structure, so that two threads can perform parallel deep copy/clone.</fixme>
 doc:	</attribute>
 */
 rt_private struct hash hclone;			/* Cloning hash table */
+#endif
 
 /* Function declarations */
 rt_private void rdeepclone(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Recursive cloning */
@@ -157,6 +160,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	/* Recursive Eiffel clone. This function recursively clones the source
 	 * object and returns a pointer to the top of the new tree.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT	
 	EIF_REFERENCE root = (EIF_REFERENCE)  0;		/* Root of the deep cloned object */
 	jmp_buf exenv;					/* Environment saving */
@@ -279,6 +283,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	 * against GC movements. Returns the address of the cloned object.
 	 */
 
+	RT_GET_CONTEXT
 	union overhead *zone;			/* Malloc info zone */
 	uint32 flags;					/* Object's flags */
 	uint32 size;					/* Object's size */
@@ -346,6 +351,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 	 * tests when the attachment to the receiving reference is done.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_REFERENCE clone, c_ref, c_field;
 	uint32 flags;
 	union overhead *zone;

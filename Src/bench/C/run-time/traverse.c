@@ -44,27 +44,13 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
  */
 /*#define DEBUG */		/**/
 
-/* The mstack structure has to be an exact copy of the stack structure, but has
- * an added field st_bot at the end. That way, we may safely use the common
- * stack handling structures without any code duplication and still have the
- * added field to make a FIFO stack--RAM.
- */
-struct mstack {
-	struct stchunk *st_hd;	/* Head of chunk list */
-	struct stchunk *st_tl;	/* Tail of chunk list */
-	struct stchunk *st_cur;	/* Current chunk in use (where top is) */
-	char **st_top;			/* Top in chunk (pointer to next free location) */
-	char **st_end;			/* Pointer to first element beyond current chunk */
-	char **st_bot;			/* ADDED FIELD for FIFO stack implementation */
-};
-
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="map_stack" return_type="struct mstack" export="private">
 doc:		<summary>Map table. It is used to record the EIF_OBJECT protections of all the objects created during the maping traversal. It is represented as a stack and not as an array to avoid fragmentation when resizing (since we do not know how many objects we will traverse)--RAM.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private struct mstack map_stack;
@@ -73,12 +59,12 @@ rt_private struct mstack map_stack;
 doc:	<attribute name="obj_nb" return_type="EIF_INTEGER_32" export="shared">
 doc:		<summary>Counter of marked objects. Only used with ISE_GC.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared EIF_INTEGER_32 obj_nb;
+#endif
 
 #ifndef lint
 rt_private char *rcsid =
@@ -102,6 +88,7 @@ rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE c
 /* Account for types of attributes of dynamic type `dtype'. */
 rt_private void account_attributes (int16 dtype)
 {
+	RT_GET_CONTEXT
 	long num_attrib = System (dtype).cn_nbattr;
 	long i, k;
 	for (i=0; i<num_attrib; i++) {
@@ -140,7 +127,8 @@ rt_private void account_attributes (int16 dtype)
 /* Account for type of object found */
 rt_private void account_type (uint32 dftype, int p_accounting)
 {
-	int16  *cidarr, dtype, i;
+	RT_GET_CONTEXT
+	int16  *l_cidarr, dtype, i;
 
 	dtype = Deif_bid(dftype);
 
@@ -165,20 +153,20 @@ rt_private void account_type (uint32 dftype, int p_accounting)
 
 	if (dftype != (uint32) dtype) {
 		/* Now insert generics if any */
-		cidarr = eif_gen_cid ((int16) dftype);
-		i = *(cidarr++); /* count */
+		l_cidarr = eif_gen_cid ((int16) dftype);
+		i = *(l_cidarr++); /* count */
 
 		while (i--)
 		{
-			dtype = *(cidarr++);
+			dtype = *(l_cidarr++);
 
 			if (dtype <= EXPANDED_LEVEL)
 				dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
 
 			if (dtype == TUPLE_TYPE) {
 				i = i - 3;
-				cidarr += 3;
-				dtype = *cidarr;
+				l_cidarr += 3;
+				dtype = *l_cidarr;
 				if (dtype <= EXPANDED_LEVEL) {
 					dtype = EXPANDED_LEVEL - dtype;
 				}
@@ -198,6 +186,7 @@ rt_shared void traversal(char *object, int p_accounting)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char *object_ref, *reference;
 	EIF_INTEGER count, elem_size;
@@ -337,6 +326,7 @@ rt_shared void map_start(void)
 	 * structure.
 	 */
 
+	RT_GET_CONTEXT
 	map_stack.st_bot = map_stack.st_hd->sk_arena;	/* First item */
 	map_stack.st_cur = map_stack.st_hd;
 	map_stack.st_end = map_stack.st_cur->sk_end;
@@ -349,6 +339,7 @@ rt_shared EIF_OBJECT map_next(void)
 	 * mangled from the bottom.
 	 */
 
+	RT_GET_CONTEXT
 	register1 EIF_OBJECT *item;		/* Item we shall return */
 	register2 struct stchunk *cur;	/* New current chunk */
 
@@ -379,6 +370,7 @@ rt_shared void map_reset(int emergency)
 	/* At the end of a cloning operation, the stack is reset (i.e. emptied)
 	 * and a consistency check is made to ensure it is really empty.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct stchunk *next;	/* Next chunk in stack list */
 	struct stchunk *cur;	/* Current chunk in stack list */
@@ -410,13 +402,13 @@ rt_shared void map_reset(int emergency)
 #endif
 }
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="referers_target" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Object for which we track all the objects that refers to it in `find_referers'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_REFERENCE referers_target = NULL;
@@ -425,17 +417,18 @@ rt_private EIF_REFERENCE referers_target = NULL;
 doc:	<attribute name="instance_type" return_type="EIF_INTEGER" export="private">
 doc:		<summary>Dynamic type used to track all objects of this particular dynamic type in `find_instance_of'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_INTEGER instance_type = 0;
+#endif
 
 rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type)
 	/* Find all objects that refers to `target' and return a SPECIAL object
 	 * of type `result_type'. */
 {
+	RT_GET_CONTEXT
 	referers_target = target;
 	return matching (internal_find_referers, result_type);
 }
@@ -444,24 +437,18 @@ rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_t
 	/* Find all object that have `type' as dynamic type and return a SPECIAL
 	 * object containing them all of type `result_type'. */
 {
+	RT_GET_CONTEXT
 	instance_type = type;
 	return matching (internal_find_instance_of, result_type);
 }
 
-struct obj_array {
-	EIF_REFERENCE *area;	/* Area where objects are stored */
-	int count;				/* Number of inserted items */
-	int capacity;			/* Capacity of `area' */
-	int index;				/* Cursor position */
-};
-
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="found_collection" return_type="struct obj_array *" export="private">
 doc:		<summary>Collects all matching objects found in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private struct obj_array *found_collection = NULL;
@@ -470,12 +457,12 @@ rt_private struct obj_array *found_collection = NULL;
 doc:	<attribute name="marked_collection" return_type="struct obj_array *" export="private">
 doc:		<summary>Keeps all objects marked during search in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private struct obj_array *marked_collection = NULL;
+#endif
 
 rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collection)
 	/* Add `obj' to `a_collection'. */
@@ -493,6 +480,7 @@ rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collect
 rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to)
 	/* Check if dynamic type of `compare_to' and `enclosing' matches `instance_type'. If so, add it to `found_collection'. */
 {
+	RT_GET_CONTEXT
 	if
 		((enclosing == compare_to) &&
 		((EIF_INTEGER) ((HEADER(enclosing)->ov_flags) & EO_TYPE) == instance_type ? 1 : 0) &&
@@ -506,6 +494,7 @@ rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE c
 	/* Check if `compare_to' refers to `referers_target' and that `enclosing' is not equal to `compare_to'. If
 	 * it matches, then we add `enclosing' to `found_collection'. */
 {
+	RT_GET_CONTEXT
 	if
 		((enclosing != compare_to) &&
 		(referers_target == compare_to ? 1 : 0))
@@ -647,6 +636,7 @@ rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERE
 rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
 		/* Find objects below by `object' that reference `target'. */
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE *o_ref;
 	EIF_INTEGER count;
 	union overhead *zone;

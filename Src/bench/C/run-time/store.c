@@ -55,16 +55,18 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #endif
 #endif
 #ifdef RECOVERABLE_DEBUG
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="object_count" return_type="long" export="private">
 doc:		<summary>Number of stored objects so far. Only used in debug mode.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private long object_count;
+#endif
+
 #ifdef PRINT_OBJECT
 extern void print_object (EIF_REFERENCE object);
 #endif
@@ -85,13 +87,13 @@ extern void print_object (EIF_REFERENCE object);
 #define EIF_BUFFER_ALLOCATED_SIZE EIF_DCMPS_OUT_SIZE
 #define EIF_CMPS_BUFFER_ALLOCATED_SIZE EIF_CMPS_OUT_SIZE
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="cmps_general_buffer" return_type="char *" export="shared">
 doc:		<summary>Buffer in which result of compression in `store_write' is stored. Apply only for basic and general store.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared char* cmps_general_buffer = NULL;
@@ -100,9 +102,8 @@ rt_shared char* cmps_general_buffer = NULL;
 doc:	<attribute name="general_buffer" return_type="char *" export="shared">
 doc:		<summary>Buffer in which stored data is temporary stored before being really stored to medium. Apply only for basic and general store.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared char *general_buffer = NULL;
@@ -111,9 +112,8 @@ rt_shared char *general_buffer = NULL;
 doc:	<attribute name="current_position" return_type="int" export="shared">
 doc:		<summary>Position of next insertion in `general_buffer'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared int current_position = 0;
@@ -122,43 +122,38 @@ rt_shared int current_position = 0;
 doc:	<attribute name="buffer_size" return_type="long" export="shared">
 doc:		<summary>Size of various buffers (general_buffer, run_idr buffer)</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared long buffer_size = 0;
 
 /*
-doc:	<attribute name="old_buffer_size" return_type="long" export="private">
+doc:	<attribute name="old_store_buffer_size" return_type="long" export="private">
 doc:		<summary>Store default version of `buffer_size'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long old_buffer_size = 0;
+rt_private long old_store_buffer_size = 0;
 
 /*
 doc:	<attribute name="cmp_buffer_size" return_type="long" export="shared">
 doc:		<summary>Size of compression buffer `cmps_general_buffer', computed from `buffer_size'</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared long cmp_buffer_size = 0;
 
-#ifndef EIF_THREADS
 /*
 doc:	<attribute name="s_fides" return_type="int" export="private">
 doc:		<summary>File descriptor used during storing process</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int s_fides;
@@ -193,13 +188,13 @@ rt_public void rt_init_store(
 	void (*make_header_function) (void),
 	int accounting_type);
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="store_write_func" return_type="void (*)()" export="private">
 doc:		<summary>Action called when `general_buffer' is full.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*store_write_func)(void);
@@ -208,9 +203,8 @@ rt_private void (*store_write_func)(void);
 doc:	<attribute name="flush_buffer_func" return_type="void (*)()" export="private">
 doc:		<summary>Action called at the end of a store to flush remaining in-memory data.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*flush_buffer_func)(void);
@@ -219,9 +213,8 @@ rt_private void (*flush_buffer_func)(void);
 doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
 doc:		<summary>Action called to store an Eiffel object.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*st_write_func)(EIF_REFERENCE);
@@ -230,9 +223,8 @@ rt_private void (*st_write_func)(EIF_REFERENCE);
 doc:	<attribute name="make_header_func" return_type="void (*)(void)" export="private">
 doc:		<summary>Action called to write storable header.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*make_header_func)(void);
@@ -241,9 +233,8 @@ rt_private void (*make_header_func)(void);
 doc:	<attribute name="char_write_func" return_type="int (*)(char *, int)" export="shared">
 doc:		<summary>Action called to write a sequence of characters of a given length to disk. It returns number of bytes written. Only used by `run_idr' which explains why it is `shared' and not `private' to current C module.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared int (*char_write_func)(char *, int);
@@ -252,9 +243,8 @@ rt_shared int (*char_write_func)(char *, int);
 doc:	<attribute name="old_store_write_func" return_type="void (*)()" export="private">
 doc:		<summary>Store default version of `store_write_func'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*old_store_write_func)(void);
@@ -263,9 +253,8 @@ rt_private void (*old_store_write_func)(void);
 doc:	<attribute name="old_char_write_func" return_type="int (*)(char *, int)" export="private">
 doc:		<summary>Store default version of `char_write_func'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int (*old_char_write_func)(char *, int);
@@ -274,9 +263,8 @@ rt_private int (*old_char_write_func)(char *, int);
 doc:	<attribute name="old_flush_buffer_func" return_type="void (*)()" export="private">
 doc:		<summary>Store default version of `buffer_write_func'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*old_flush_buffer_func)(void);
@@ -285,9 +273,8 @@ rt_private void (*old_flush_buffer_func)(void);
 doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
 doc:		<summary>Store default version of `st_write_func'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*old_st_write_func)(EIF_REFERENCE);
@@ -296,9 +283,8 @@ rt_private void (*old_st_write_func)(EIF_REFERENCE);
 doc:	<attribute name="old_make_header_func" return_type="void (*)()" export="private">
 doc:		<summary>Store default version of `make_header_func'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private void (*old_make_header_func)(void);
@@ -307,9 +293,8 @@ rt_private void (*old_make_header_func)(void);
 doc:	<attribute name="accounting" return_type="int" export="private">
 doc:		<summary>Do we account for something while traversing first set of objects to be stored? If so, its value tells us what to do (See `eif_traverse.h' for explanation of possible values)</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int accounting = 0;
@@ -318,81 +303,75 @@ rt_private int accounting = 0;
 doc:	<attribute name="old_accounting" return_type="int" export="private">
 doc:		<summary>Store default version of `accounting'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int old_accounting = 0;
 
 /*
-doc:	<attribute name="eif_is_new_independent_format" return_type="EIF_BOOLEAN" export="public">
+doc:	<attribute name="eif_is_new_independent_format" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>Do we use 4.5 independent storable mechanism?</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_public EIF_BOOLEAN eif_is_new_independent_format = EIF_TRUE;
+rt_private EIF_BOOLEAN eif_is_new_independent_format = EIF_TRUE;
 
 /*
 doc:	<attribute name="account" return_type="char *" export="shared">
 doc:		<summary>Array of traversed dynamic types during accounting.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<indexing>Dynamic type</indexing>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared char *account = NULL;
 
 /*
-doc:	<attribute name="sorted_attributes" return_type="int **" export="shared">
+doc:	<attribute name="sorted_attributes" return_type="unsigned int **" export="shared">
 doc:		<summary>Array of sorted attributes</summary>
 doc:		<access>Read/Write</access> 
 doc:		<indexing>[Dynamic type, attribute number]</indexing>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared unsigned int **sorted_attributes = NULL;
 
 /* Declarations to work with streams */
 /*
-doc:	<attribute name="stream_buffer" return_type="char *" export="private">
+doc:	<attribute name="store_stream_buffer" return_type="char *" export="private">
 doc:		<summary>Buffer used to store output of a storable made on stream.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private char *stream_buffer;
+rt_private char *store_stream_buffer;
 
 /*
-doc:	<attribute name="stream_buffer_position" return_type="int" export="private">
-doc:		<summary>Position in `stream_buffer' where next insertion of data will happen.</summary>
+doc:	<attribute name="store_stream_buffer_position" return_type="long" export="private">
+doc:		<summary>Position in `store_stream_buffer' where next insertion of data will happen.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private int stream_buffer_position;
+rt_private long store_stream_buffer_position;
 
 /*
-doc:	<attribute name="stream_buffer_size" return_type="long" export="private">
-doc:		<summary>Size of `stream_buffer'.</summary>
+doc:	<attribute name="store_stream_buffer_size" return_type="long" export="private">
+doc:		<summary>Size of `store_stream_buffer'.</summary>
 doc:		<access>Read/Write</access> 
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long stream_buffer_size;
+rt_private long store_stream_buffer_size;
+#endif
 
 /* Functions to write on the specified IO_MEDIUM */
 rt_public  int char_write (char *, int);
@@ -404,8 +383,27 @@ rt_private int stream_write (char *, int);
 /* Set the default buffer_size to a certain value */
 rt_public void set_buffer_size (EIF_INTEGER new_size) 
 {
+	RT_GET_CONTEXT
 	buffer_size = new_size;
 }
+
+rt_public void eif_set_new_independent_format (EIF_BOOLEAN v)
+{
+	RT_GET_CONTEXT
+	eif_is_new_independent_format = (EIF_BOOLEAN) v;
+}
+
+#ifdef EIF_THREADS
+rt_shared void eif_store_thread_init (void)
+	/* Initialize private data of `store.c' in multithreaded environment. */
+	/* Data is already zeroed, so only variables that needs something different
+	 * than the default value will be initialized. */
+{
+	RT_GET_CONTEXT;
+	eif_is_new_independent_format = EIF_TRUE;
+	eif_is_new_recoverable_format = EIF_TRUE;
+}
+#endif
 
 /* Initialize store function pointers and globals */
 /* reset buffer size if argument is non null */
@@ -417,13 +415,14 @@ rt_public void rt_init_store(
 	void (*make_header_function) (void),
 	int accounting_type)
 {
+	RT_GET_CONTEXT
 	old_store_write_func = store_write_func;
 	old_char_write_func = char_write_func;
 	old_flush_buffer_func = flush_buffer_func;
 	old_st_write_func = st_write_func;
 	old_make_header_func = make_header_func;
 	old_accounting = accounting;
-	old_buffer_size = buffer_size;
+	old_store_buffer_size = buffer_size;
 
 	store_write_func = store_function;
 	char_write_func = char_write_function;
@@ -437,13 +436,14 @@ rt_public void rt_init_store(
 /* Reset store function pointers and globals to their default values */
 
 rt_public void rt_reset_store(void) {
+	RT_GET_CONTEXT
 	store_write_func = old_store_write_func;
 	char_write_func = old_char_write_func;
 	flush_buffer_func = old_flush_buffer_func;
 	st_write_func = old_st_write_func;
 	make_header_func = old_make_header_func;
 	accounting = old_accounting;
-	buffer_size = old_buffer_size;
+	buffer_size = old_store_buffer_size;
 
 	if (account != (char *) 0) {
 		xfree(account);
@@ -483,6 +483,7 @@ rt_public void estore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 
 rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
+	RT_GET_CONTEXT
 	rt_init_store (
 		store_write,
 		stream_write,
@@ -491,17 +492,17 @@ rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_R
 		make_header,
 		0);
 
-	stream_buffer = *buffer;
-	stream_buffer_size = size;
-	stream_buffer_position = 0;
+	store_stream_buffer = *buffer;
+	store_stream_buffer_size = size;
+	store_stream_buffer_position = 0;
 
 	allocate_gen_buffer();
 	internal_store(object);
 
-	*buffer = stream_buffer;
+	*buffer = store_stream_buffer;
 	rt_reset_store ();
-	*real_size = stream_buffer_position;
-	return stream_buffer_size;
+	*real_size = (EIF_INTEGER) store_stream_buffer_position;
+	return store_stream_buffer_size;
 }
 
 /* General store */
@@ -528,6 +529,7 @@ rt_public void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 
 rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
+	RT_GET_CONTEXT
 	rt_init_store (
 		store_write,
 		stream_write,
@@ -536,17 +538,17 @@ rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 		make_header,
 		TR_ACCOUNT);
 
-	stream_buffer = *buffer;
-	stream_buffer_size = size;
-	stream_buffer_position = 0;
+	store_stream_buffer = *buffer;
+	store_stream_buffer_size = size;
+	store_stream_buffer_position = 0;
 	
 	allocate_gen_buffer();
 	internal_store(object);
-	*buffer = stream_buffer;
+	*buffer = store_stream_buffer;
 
 	rt_reset_store ();
-	*real_size = stream_buffer_position;
-	return stream_buffer_size;
+	*real_size = (EIF_INTEGER) store_stream_buffer_position;
+	return store_stream_buffer_size;
 }
 
 rt_public void basic_general_free_store (EIF_REFERENCE object)
@@ -556,18 +558,21 @@ rt_public void basic_general_free_store (EIF_REFERENCE object)
 }
 
 #ifdef RECOVERABLE_SCAFFOLDING
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_is_new_recoverable_format" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>Does `independent_store' use new recoverable format? Default True.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_BOOLEAN eif_is_new_recoverable_format = EIF_TRUE;
+#endif
+
 rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
 {
+	RT_GET_CONTEXT
 	eif_is_new_recoverable_format = state;
 }
 #endif
@@ -618,6 +623,7 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 
 rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
+	RT_GET_CONTEXT
 #ifdef RECOVERABLE_SCAFFOLDING
   if (eif_is_new_recoverable_format) {
 #ifdef RECOVERABLE_DEBUG
@@ -646,9 +652,9 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
   }
 #endif
 
-	stream_buffer = *buffer;
-	stream_buffer_size = size;
-	stream_buffer_position = 0;
+	store_stream_buffer = *buffer;
+	store_stream_buffer_size = size;
+	store_stream_buffer_position = 0;
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
@@ -660,14 +666,15 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	xfree (idr_temp_buf);
 	idr_temp_buf = (char *)0;
 
-	*buffer = stream_buffer;
+	*buffer = store_stream_buffer;
 	rt_reset_store ();
-	*real_size = stream_buffer_position;
-	return stream_buffer_size;
+	*real_size = (EIF_INTEGER) store_stream_buffer_position;
+	return store_stream_buffer_size;
 }
 
 rt_public void independent_free_store (EIF_REFERENCE object)
 {
+	RT_GET_CONTEXT
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
@@ -708,6 +715,7 @@ rt_public void stream_free (EIF_POINTER *real_buffer)	/*08/04/98*/
 
 rt_public void allocate_gen_buffer (void)
 {
+	RT_GET_CONTEXT
 	if (general_buffer == (char *) 0) {
 		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
@@ -732,6 +740,7 @@ rt_public void allocate_gen_buffer (void)
 
 rt_shared void internal_store(char *object)
 {
+	RT_GET_CONTEXT
 	/* Store object hierarchy of root `object' in file `file_ptr' and
 	 * produce header if `accounting'.
 	 */
@@ -845,7 +854,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 rt_private void st_store(EIF_REFERENCE object)
 {
 	/* Second pass of the store mecahnism: writing on the disk. */
-
+	RT_GET_CONTEXT
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE o_ptr;
 	long nb_references;
@@ -1092,7 +1101,7 @@ rt_public long get_offset(uint32 o_type, uint32 attrib_num)
 rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 {
 	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
-
+	RT_GET_CONTEXT
 #ifdef WORKBENCH
 	int32 rout_id;				/* Attribute routine id */
 	long offset;
@@ -1494,6 +1503,7 @@ rt_private void object_write(char *object)
 rt_public void make_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int i;
 	char *vis_name;			/* Visible name of a class */
@@ -1603,7 +1613,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 rt_public void sort_attributes(int dtype)
 {
 	/* Sort the attributes alphabeticaly by type */
-
+	RT_GET_CONTEXT
 	struct cnode *class_info;		/* Info on the current type */
 	unsigned int *s_attr;			/* Sorted attributes for the type */
 	char **attr_names;
@@ -1669,6 +1679,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 rt_public void imake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int i;
 	char *vis_name;			/* Visible name of a class */
@@ -1910,6 +1921,7 @@ rt_private void widr_type (int16 dtype)
 rt_public void rmake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int16 ohead = OVERHEAD;
 	int16 max_types = scount;
@@ -1951,6 +1963,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 rt_public void free_sorted_attributes(void)
 	/* Free the memory allocated for `sorted_attributes'. */
 {
+	RT_GET_CONTEXT
 	int i;
 	unsigned int *s_attr;
 
@@ -1972,6 +1985,7 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 
 rt_public void buffer_write(register char *data, int size)
 {
+	RT_GET_CONTEXT
 	register int i;
 
 	if (current_position + size >= buffer_size) {
@@ -1992,6 +2006,7 @@ rt_public void buffer_write(register char *data, int size)
  * do another write operation */
 rt_public void new_buffer_write(register char *data, int size)
 {
+	RT_GET_CONTEXT
 	if (current_position + size >= buffer_size) {
 			/* Copy the data buffer into the general_buffer until the last one is full
 			 * launch a writing operation on the IO_MEDIUM and do a recursive call to
@@ -2011,6 +2026,7 @@ rt_public void new_buffer_write(register char *data, int size)
 
 rt_public void flush_st_buffer (void)
 {
+	RT_GET_CONTEXT
 	if (current_position != 0)
 		store_write_func();
 }
@@ -2023,18 +2039,20 @@ rt_public int char_write(char *pointer, int size)
 
 rt_private int stream_write (char *pointer, int size)
 {
-	if (stream_buffer_size - stream_buffer_position < size) {
-		stream_buffer_size += buffer_size;
-		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
+	RT_GET_CONTEXT
+	if (store_stream_buffer_size - store_stream_buffer_position < size) {
+		store_stream_buffer_size += buffer_size;
+		store_stream_buffer = (char *) eif_realloc (store_stream_buffer, store_stream_buffer_size);
 	}
 
-	memcpy ((stream_buffer + stream_buffer_position), pointer, size);
-	stream_buffer_position += size;
+	memcpy ((store_stream_buffer + store_stream_buffer_position), pointer, size);
+	store_stream_buffer_position += size;
 	return size;
 } 
 
 void store_write(void)
 {
+	RT_GET_CONTEXT
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;
 	int cmps_in_size = 0;
@@ -2073,27 +2091,27 @@ void store_write(void)
 rt_private void st_write_cid (uint32 dftype)
 
 {
-	int16 *cidarr, count;
+	int16 *l_cidarr, count;
 
-	cidarr = eif_gen_cid ((int16) dftype);
-	count  = *cidarr;
+	l_cidarr = eif_gen_cid ((int16) dftype);
+	count  = *l_cidarr;
 
 	buffer_write ((char *) (&count), sizeof (int16));
 
 	/* If count = 1 then we don't need to write more data */
 
 	if (count > 1)
-		buffer_write ((char *) (cidarr+1), count * sizeof (int16));
+		buffer_write ((char *) (l_cidarr+1), count * sizeof (int16));
 }
 
 rt_private void ist_write_cid (uint32 dftype)
 
 {
-	int16 *cidarr;
+	int16 *l_cidarr;
 	uint32 count, i, val;
 
-	cidarr = eif_gen_cid ((int16) dftype);
-	count  = (uint32) *cidarr;
+	l_cidarr = eif_gen_cid ((int16) dftype);
+	count  = (uint32) *l_cidarr;
 
 	widr_norm_int (&count);
 
@@ -2101,11 +2119,11 @@ rt_private void ist_write_cid (uint32 dftype)
 
 	if (count > 1)
 	{
-		++cidarr;
+		++l_cidarr;
 
-		for (i = 1; i <= count; ++i, ++cidarr)
+		for (i = 1; i <= count; ++i, ++l_cidarr)
 		{
-			val = (uint32) *cidarr;
+			val = (uint32) *l_cidarr;
 			widr_norm_int (&val);
 		}
 	}

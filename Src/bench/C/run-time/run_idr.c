@@ -1,18 +1,17 @@
 /*
 
-    #    #####   #####           #####   #    #  #    #          ####
-    #    #    #  #    #          #    #  #    #  ##   #         #    #
-    #    #    #  #    #          #    #  #    #  # #  #         #
-    #    #    #  #####           #####   #    #  #  # #  ###    #
-    #    #    #  #   #           #   #   #    #  #   ##  ###    #    #
-    #    #####   #    # #######  #    #   ####   #    #  ###     ####
+ #####   #    #  #    #             #    #####   #####            ####
+ #    #  #    #  ##   #             #    #    #  #    #          #    #
+ #    #  #    #  # #  #             #    #    #  #    #          #
+ #####   #    #  #  # #             #    #    #  #####    ###    #
+ #   #   #    #  #   ##             #    #    #  #   #    ###    #    #
+ #    #   ####   #    # #######     #    #####   #    #   ###     ####
 
 	Internal data representation.
-
 */
 
 /*
-doc:<file name="idr_run.c" header="rt_run_idr.h" version="$Id$" summary="IDR = Internal Data Representation, used for serialization in independent store">
+doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = Internal Data Representation, used for serialization in independent store">
 */
 
 #include "eif_portable.h"
@@ -48,14 +47,16 @@ doc:<file name="idr_run.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #endif
 #include "eif_size.h"	/* Needed for DBLSIZ */
 #include "rt_malloc.h"
+#include "rt_assert.h"
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="idr_temp_buf" return_type="char *" export="shared">
 doc:		<summary>Buffer of 48 characters used for reading float/double in INDEPENDENT_STORE_4_4 and older. It iis shared so that it can be freed if an exception occurs.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a per thread data. Since this only used for old storable that we are unlikely to ever retrieve again, we should allocate this buffer on the fly when we need it, or even do it statically on the stack.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:		<fixme>Since this only used for old storable that we are unlikely to ever retrieve again, we should allocate this buffer on the fly when we need it, or even do it statically on the stack.</fixme>
 doc:	</attribute>
 */
 rt_shared char *idr_temp_buf;
@@ -64,9 +65,8 @@ rt_shared char *idr_temp_buf;
 doc:	<attribute name="amount_read" return_type="int" export="private">
 doc:		<summary>Amount read into IDRF buffer used in `check_capacity'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int amount_read = 0;
@@ -75,9 +75,8 @@ rt_private int amount_read = 0;
 doc:	<attribute name="idrf_buffer_size" return_type="long" export="private">
 doc:		<summary>Size of IDRF buffer set in `run_idr_init'. Default value of 256KB.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private long idrf_buffer_size = 262144L;
@@ -86,9 +85,8 @@ rt_private long idrf_buffer_size = 262144L;
 doc:	<attribute name="idrf" return_type="IDRF" export="private">
 doc:		<summary>IDRF buffer</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private IDRF idrf;
@@ -97,16 +95,40 @@ rt_private IDRF idrf;
 doc:	<attribute name="run_idr_read_func" return_type="int (*)(IDR *)" export="private">
 doc:		<summary>`run_idr_read' function. This can be different depending on which version of INDEPENDENT_STORE we are using. The old one is based on `short' the new one on `long'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data. Is this really needed now? I don't see any other possible function that could be used.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:		<fixme>Is this really needed now? I don't see any other possible function that could be used.</fixme>
 doc:	</attribute>
 */
 rt_private int (*run_idr_read_func) (IDR *bu);
+#endif
 
 rt_private int run_idr_read (IDR *bu);
 rt_private void old_ridr_multi_int (long int *obj, int num);
 rt_private void old_widr_multi_int (long int *obj, int num);
+
+#ifdef EIF_THREADS
+rt_shared void eif_run_idr_thread_init (void)
+	/* Initialize private data of `run_idr.c' in multithreaded environment. */
+	/* Data is already zeroed, so only variables that needs something different
+	 * than the default value will be initialized. */
+{
+	RT_GET_CONTEXT
+	REQUIRE ("idr_temp_buf_null", idr_temp_buf == NULL);
+	REQUIRE ("amount_read_is_zero", amount_read == 0);
+	REQUIRE ("idrf_buffer_size_is_zero", idrf_buffer_size == 0);
+//	REQUIRE ("idrf_zeroed", ??? );
+	REQUIRE ("run_idr_read_func_null", run_idr_read_func == NULL);
+
+	idrf_buffer_size = 262144L;
+
+	ENSURE ("idr_temp_buf_null", idr_temp_buf == NULL);
+	ENSURE ("amount_read_is_zero", amount_read == 0);
+	ENSURE ("idrf_buffer_size_is_zero", idrf_buffer_size == 262144L);
+//	ENSURE ("idrf_zeroed", ??? );
+	ENSURE ("run_idr_read_func_null", run_idr_read_func == NULL);
+}
+#endif
 
 rt_public bool_t run_idr_setpos(IDR *idrs, int pos)
 {
@@ -158,6 +180,7 @@ rt_public int run_idrf_create(int size)
 	 * the size may not be the same. Return 0 if ok, -1 for failure.
 	 */
 	
+	RT_GET_CONTEXT
 	char *out_addr;			/* IDR output data buffer */
 	char *in_addr;			/* IDR input data buffer */
 
@@ -179,6 +202,7 @@ rt_public int run_idrf_create(int size)
 
 rt_public void run_idr_init (long idrf_size, int type)
 {
+	RT_GET_CONTEXT
 	idrf_buffer_size = idrf_size;
 
 	run_idr_read_func = run_idr_read;
@@ -203,12 +227,14 @@ rt_public void run_idr_init (long idrf_size, int type)
 
 rt_public void run_idr_destroy (void)
 {
+	RT_GET_CONTEXT
 	run_mem_destroy(&idrf.i_encode);
 	run_mem_destroy(&idrf.i_decode);
 }
 
 rt_private int run_idr_read (IDR *bu)
 {
+	RT_GET_CONTEXT
 	register char * ptr = bu->i_buf;
 	int32 read_size;
 	long amount_left;
@@ -237,6 +263,7 @@ rt_private int run_idr_read (IDR *bu)
 
 rt_private void run_idr_write (IDR *bu)
 {
+	RT_GET_CONTEXT
 	register char * ptr = idrs_buf (bu);
 	int32 host_send, send_size = (int32) (bu->i_ptr - ptr);
 	register int number_writen;
@@ -259,6 +286,7 @@ rt_private void run_idr_write (IDR *bu)
 
 rt_public void check_capacity (IDR *bu, int size)
 {
+	RT_GET_CONTEXT
 	if (idrs_op (bu)) {
 		if ((bu->i_ptr + size) > (bu->i_buf + amount_read)) {
 			amount_read = run_idr_read_func (bu);
@@ -274,6 +302,7 @@ rt_public void check_capacity (IDR *bu, int size)
 
 rt_public void idr_flush (void)
 {
+	RT_GET_CONTEXT
 	check_capacity (&idrf.i_encode, idrf_buffer_size);
 }
 
@@ -463,6 +492,7 @@ rt_public bool_t run_int(IDR *idrs, uint32 *ip, int len)
 
 rt_public void ridr_multi_char (EIF_CHARACTER *obj, int num)
 {
+	RT_GET_CONTEXT
 	int cap = idrf_buffer_size / sizeof (EIF_CHARACTER);
 
 	if ((num - cap) <= 0) {
@@ -488,6 +518,7 @@ rt_public void ridr_multi_char (EIF_CHARACTER *obj, int num)
 
 rt_public void widr_multi_char (EIF_CHARACTER *obj, int num)
 {
+	RT_GET_CONTEXT
 	int cap = idrf_buffer_size / sizeof (EIF_CHARACTER);
 
 	if ((num - cap) <= 0) {
@@ -516,6 +547,7 @@ rt_public void widr_multi_char (EIF_CHARACTER *obj, int num)
 
 rt_public void ridr_multi_any (char *obj, int num)
 {
+	RT_GET_CONTEXT
 	int cap;
 	char s;
 
@@ -542,6 +574,7 @@ rt_public void ridr_multi_any (char *obj, int num)
 
 rt_public void widr_multi_any (char *obj, int num)
 {
+	RT_GET_CONTEXT
 	int cap = idrf_buffer_size / sizeof (char *);
 	char s = (char) sizeof (char *);
 
@@ -567,6 +600,7 @@ rt_public void widr_multi_any (char *obj, int num)
 
 rt_public void ridr_multi_int8 (EIF_INTEGER_8 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 
 	while (num > i++) {
@@ -578,6 +612,7 @@ rt_public void ridr_multi_int8 (EIF_INTEGER_8 *obj, int num)
 
 rt_public void widr_multi_int8 (EIF_INTEGER_8 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 
 	while (num > i++) {
@@ -589,6 +624,7 @@ rt_public void widr_multi_int8 (EIF_INTEGER_8 *obj, int num)
 
 rt_public void ridr_multi_int16 (EIF_INTEGER_16 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 	EIF_INTEGER_16 value;
 
@@ -602,6 +638,7 @@ rt_public void ridr_multi_int16 (EIF_INTEGER_16 *obj, int num)
 
 rt_public void widr_multi_int16 (EIF_INTEGER_16 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 	EIF_INTEGER_16 value;
 
@@ -615,6 +652,7 @@ rt_public void widr_multi_int16 (EIF_INTEGER_16 *obj, int num)
 
 rt_public void ridr_multi_int32 (EIF_INTEGER_32 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 
 	if (rt_kind_version < INDEPENDENT_STORE_5_0) {
@@ -633,6 +671,7 @@ rt_public void ridr_multi_int32 (EIF_INTEGER_32 *obj, int num)
 
 rt_public void widr_multi_int32 (EIF_INTEGER_32 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 
 	if (rt_kind_version < INDEPENDENT_STORE_5_0) {
@@ -651,6 +690,7 @@ rt_public void widr_multi_int32 (EIF_INTEGER_32 *obj, int num)
 
 rt_public void ridr_multi_int64 (EIF_INTEGER_64 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 	EIF_INTEGER_64 upper, lower;
 	uint32 value;
@@ -669,6 +709,7 @@ rt_public void ridr_multi_int64 (EIF_INTEGER_64 *obj, int num)
 
 rt_public void widr_multi_int64 (EIF_INTEGER_64 *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 	uint32 upper, lower, value;
 	EIF_INTEGER_64 temp;
@@ -689,6 +730,7 @@ rt_public void widr_multi_int64 (EIF_INTEGER_64 *obj, int num)
 
 rt_public void ridr_multi_float (EIF_REAL *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 	char temp_len;
 
@@ -715,6 +757,7 @@ rt_public void ridr_multi_float (EIF_REAL *obj, int num)
 
 rt_public void widr_multi_float (EIF_REAL *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 	char temp_len;
 
@@ -745,6 +788,7 @@ rt_public void widr_multi_float (EIF_REAL *obj, int num)
 
 rt_public void ridr_multi_double (EIF_DOUBLE *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 
 	if (rt_kind_version < INDEPENDENT_STORE_4_4) {
@@ -787,6 +831,7 @@ rt_public void ridr_multi_double (EIF_DOUBLE *obj, int num)
 
 rt_public void widr_multi_double (EIF_DOUBLE *obj, int num)
 {
+	RT_GET_CONTEXT
 	register int i = 0;
 
 	if (rt_kind_version < INDEPENDENT_STORE_4_4) {
@@ -830,6 +875,7 @@ rt_public void widr_multi_double (EIF_DOUBLE *obj, int num)
 
 rt_public void ridr_multi_bit (struct bit *obj, int num, long int elm_siz)
 {
+	RT_GET_CONTEXT
 	int i = 0;
 	int siz, number_of_bits;
 	int cap;
@@ -868,6 +914,7 @@ rt_public void ridr_multi_bit (struct bit *obj, int num, long int elm_siz)
 
 rt_public void widr_multi_bit (struct bit *obj, int num, uint32 len, int elm_siz)
 {
+	RT_GET_CONTEXT
 	int i = 0;
 	int siz = BIT_NBPACK (len);
 	int cap;
@@ -902,11 +949,13 @@ rt_public void widr_multi_bit (struct bit *obj, int num, uint32 len, int elm_siz
 
 rt_public void ridr_norm_int (uint32 *obj)
 {
+	RT_GET_CONTEXT
 	run_int (&idrf.i_decode, obj, 1);
 }
 
 rt_public void widr_norm_int (uint32 *obj)
 {
+	RT_GET_CONTEXT
 	run_int (&idrf.i_encode, obj, 1);
 }
 
@@ -926,6 +975,7 @@ rt_public int idr_read_line (char *bu, int max_size)
 
 rt_private void old_ridr_multi_int (long int *obj, int num)
 {
+	RT_GET_CONTEXT
 	int cap;
 	char s;
 
@@ -951,6 +1001,7 @@ rt_private void old_ridr_multi_int (long int *obj, int num)
 
 rt_private void old_widr_multi_int (long int *obj, int num)
 {
+	RT_GET_CONTEXT
 	int cap = idrf_buffer_size / sizeof (long);
 	char s = (char) sizeof (long);
 

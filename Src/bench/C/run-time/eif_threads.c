@@ -35,6 +35,10 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_types.h"
 #include "rt_interp.h"
 #include "rt_assert.h"
+#include "rt_retrieve.h"
+#include "rt_run_idr.h"
+#include "rt_store.h"
+#include "rt_except.h"
 
 #include <string.h>
 
@@ -270,159 +274,19 @@ rt_private rt_global_context_t *eif_new_context (void)
 		 * calls to get thread specific data. */
 	rt_globals->eif_globals = eif_globals;
 
-	
-#ifdef WORKBENCH
-		/*----------*/
-		/* debug.c  */
-		/*----------*/
-	db_stack.st_hd = (struct stdchunk *) 0;      /* st_hd */
-	db_stack.st_tl =	(struct stdchunk *) 0;      /* st_tl */
-	db_stack.st_cur =	(struct stdchunk *) 0;      /* st_cur */
-	db_stack.st_top =	(struct dcall *) 0;         /* st_top */
-	db_stack.st_end =	(struct dcall *) 0;        /* st_end */
+		/* Initialize per thread data. It is done in the module which uses them */
 
-	once_list.idl_hd = (struct idlchunk *) 0;      /* idl_hd */
-	once_list.idl_tl =	(struct idlchunk *) 0;      /* idl_tl */
-	once_list.idl_last = (uint32 *) 0;               /* idl_last */
-	once_list.idl_end =	(uint32 *) 0;               /* idl_end */
- 
-#endif	/* WORKBENCH */
-
-		/*----------*/
 		/* except.c */
-		/*----------*/
-	
-	eif_stack.st_hd =	(struct stxchunk *) 0;				/* st_hd */
-	eif_stack.st_tl =	(struct stxchunk *) 0;				/* st_tl */
-	eif_stack.st_cur =	(struct stxchunk *) 0;				/* st_cur */
-	eif_stack.st_top =	(struct ex_vect *) 0;				/* st_top */
-	eif_stack.st_end =	(struct ex_vect *) 0;				/* st_end */
+	eif_except_thread_init ();
 
-	eif_trace.st_hd = 	(struct stxchunk *) 0;				/* st_hd */
-	eif_trace.st_tl =	(struct stxchunk *) 0;				/* st_tl */
-	eif_trace.st_cur = 	(struct stxchunk *) 0;				/* st_cur */
-	eif_trace.st_top =	(struct ex_vect *) 0;				/* st_top */
-	eif_trace.st_end =	(struct ex_vect *) 0;				/* st_end */
-	eif_trace.st_bot =	(struct ex_vect *) 0;				/* st_bot */
+		/* retrieve.c */
+	eif_retrieve_thread_init ();
 
-	exdata.ex_val = 		0;				
-	exdata.ex_nomem = 		0;				
-	exdata.ex_nsig = 		0;				
-	exdata.ex_level = 		0;				
-	exdata.ex_org = 		0;				
-	exdata.ex_tag = 		(char *) 0;		
-	exdata.ex_otag = 		(char *) 0;		
-	exdata.ex_rt = 		(char *) 0;		
-	exdata.ex_ort = 		(char *) 0;		
-	exdata.ex_class = 		0;				
-	exdata.ex_oclass = 		0;				
+		/* run_idr.c */
+	eif_run_idr_thread_init ();
 
-	print_history_table = ~0;
-
-	ex_string.area =	NULL;   
-	ex_string.used =	0L;    
-	ex_string.size =		0L    ;
-
-
-		/*----------*/
-		/* garcol.c */
-		/*----------*/
-#ifdef ISE_GC
-	loc_stack.st_hd = 		(struct stchunk *) 0;	
-	loc_stack.st_tl = 		(struct stchunk *) 0;	
-	loc_stack.st_cur = 		(struct stchunk *) 0;	
-	loc_stack.st_top = 		(EIF_REFERENCE *) 0;			
-	loc_stack.st_end = 		(EIF_REFERENCE *) 0;			
-
-	loc_set.st_hd = 		(struct stchunk *) 0;	
-	loc_set.st_tl = 		(struct stchunk *) 0;	
-	loc_set.st_cur = 		(struct stchunk *) 0;	
-	loc_set.st_top = 		(EIF_REFERENCE *) 0;			
-	loc_set.st_end = 		(EIF_REFERENCE *) 0;			
-#endif
-	
-	once_set.st_hd = 		(struct stchunk *) 0;	
-	once_set.st_tl = 		(struct stchunk *) 0;	
-	once_set.st_cur = 		(struct stchunk *) 0;	
-	once_set.st_top = 		(EIF_REFERENCE *) 0;			
-	once_set.st_end = 		(EIF_REFERENCE *) 0;			
-
-#ifdef ISE_GC
-		/*----------*/
-		/* hector.c */
-		/*----------*/
-
-	hec_stack.st_hd = 		(struct stchunk *) 0;	
-	hec_stack.st_tl = 		(struct stchunk *) 0;	
-	hec_stack.st_cur = 		(struct stchunk *) 0;	
-	hec_stack.st_top = 		(EIF_REFERENCE *) 0;			
-	hec_stack.st_end = 		(EIF_REFERENCE *) 0;			
-
-	hec_saved.st_hd = 		(struct stchunk *) 0;	
-	hec_saved.st_tl = 		(struct stchunk *) 0;	
-	hec_saved.st_cur = 		(struct stchunk *) 0;	
-	hec_saved.st_top = 		(EIF_REFERENCE *) 0;			
-	hec_saved.st_end = 		(EIF_REFERENCE *) 0;			
-
-	free_stack.st_hd = 		(struct stchunk *) 0;	
-	free_stack.st_tl = 		(struct stchunk *) 0;	
-	free_stack.st_cur = 		(struct stchunk *) 0;	
-	free_stack.st_top = 		(EIF_REFERENCE *) 0;			
-	free_stack.st_end = 		(EIF_REFERENCE *) 0;			
-#endif
-
-#ifdef WORKBENCH
-		/*----------*/
-		/* interp.c */
-		/*----------*/
-
-	op_stack.st_hd = 		(struct stochunk *) 0;      
-	op_stack.st_tl = 		(struct stochunk *) 0;      
-	op_stack.st_cur = 		(struct stochunk *) 0;      
-	op_stack.st_top = 		(struct item *) 0;          
-	op_stack.st_end = 		(struct item *) 0;          
-
-	IC = (unsigned char *) 0;
-	iregs = (struct item **) 0;
-	iregsz = 0;  
-	argnum = 0;  
-	locnum = 0; 
-	tagval = 0L;
-	inv_mark_table = (char *) 0;
-
-
-#endif	/* WORKBENCH */	
-	
-		/*--------*/
-		/* main.c */
-		/*--------*/
-
-	in_assertion = 0;
-		/*--------*/
-		/* out.c */
-		/*--------*/
-	tagged_out = (char *) 0;
-	tagged_max = 0;
-	tagged_len = 0;
-
-		/*-----------*/
-		/* pattern.c */
-		/*-----------*/
-
-	darray = (uint32 **) 0;
-
-		/*--------*/
-		/* plug.c */
-		/*--------*/
-
-	nstcall = 0;
-	inv_mark_tablep = (char * ) 0;
-
-		/*-------*/
-		/* sig.c */
-		/*-------*/
-	
-	esigblk = 0;
+		/* store.c */
+	eif_store_thread_init ();
 
 	eif_init_gc_stacks(rt_globals);
 

@@ -33,6 +33,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_traverse.h"
 #include "eif_memory.h"
 #include "rt_gen_types.h"
+#include "rt_globals.h"
 #include "rt_compress.h"
 #include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
@@ -83,185 +84,13 @@ extern void print_object (EIF_REFERENCE object);
 
 #define MAX_GENERICS      4		/* Number of generic parameters that are statically
 								   allocated */
-/* A translation of a class name in the storing system into a new name in
- * the retrieving system.
- */
-typedef struct {
-		/* Name in storing system (key) */
-	char *old_name;
-		/* Name in retrieving system (value) */
-	char *new_name;
-} class_translation;
-
-typedef struct {
-		/* Name of attribute in storing system */
-	char *name;
-
-		/* Types of attribute and any generic parameters */
-	int16 *types;
-
-		/* Basic type in storing system */
-	uint32 basic_type;
-
-		/* Index of attribute in retrieving system. A value of -1 means
-		 * that attribute does not have a match in retrieving system.
-		 */
-	int16 new_index;
-} attribute_detail;
-
-/* Special values for the `type_index' elements of `type_table' and the
- * `new_type' field of `type_descriptor'.
- */
-enum type_state {
-		 /* The corresponding type is not present in the new system */
-	TYPE_NOT_PRESENT = -1,
-
-		 /* No entry for this type was found in the header */
-	TYPE_UNDEFINED = -2,
-
-		 /* The generic type has not yet been resolved */
-	TYPE_UNRESOLVED_GENERIC = -3
-};
-
-/* Describes a type in the storing system, with sufficient information to
- * convert it into a type in the retrieving system.
- */
-typedef struct {
-		/* Name of type in storing system */
-	char *name;
-
-		/* Array of length `attribute_count' indexed by attribute in
-		 * storing system and containing the type of the attribute in the
-		 * storing system.
-		 */
-	attribute_detail *attributes;
-
-		/* Array of generic type patterns if `generic_count' is non-zero.
-		 */
-	int32 *generics;
-
-		/* Type in storing system. */
-	int16 old_type;
-
-		/* Type in retrieving system corresponding to `old_type' in storing
-		 * system. See the type_state enumeration for special values for this
-		 * field.
-		 */
-	int16 new_type;
-
-		/* New full dynamic type to use in place of generics recorded for
-		 * object.
-		 */
-	int16 new_dftype;
-
-		/* Count of attributes in storing system */
-	int16 attribute_count;
-
-		/* Count of generic arguments in storing system */
-	int16 generic_count;
-
-		/* Were attributes added to type in retrieving system? */
-	int16 mismatched;
-
-} type_descriptor;
-
-/* Describes a table of information which describes types read from the
- * header of a stored object tree.
- */
-typedef struct {
-		/* A table of indexes into `descriptions', indexed by the type
-		 * value in the storing system. The length of this index will be
-		 * equal to the number of dynamic types in the storing system. See
-		 * the type_state enumeration for special values for these
-		 * elements.
-		 */
-	int16 *type_index;
-
-		/* Table of type descriptions for the types found in the header of
-		 * an independent or recoverable stored object.
-		 */
-	type_descriptor *descriptions;
-
-		/* Number of elements in `descriptions'. This will be equal to the
-		 * number of dynamic types recorded in the header of the stored
-		 * object.
-		 */
-	uint16 count;
-} type_table;
-
-typedef struct {
-		/* Indirection to special object of references containing objects
-		 * which are mismatched and require correction. There are three
-		 * cases of objects in this special, which affect the
-		 * interpretation of `objects':
-		 * (1) The object being corrected is a normal object without EO_COMP.
-		 *    The object at the same position in `values' is a special
-		 *    object containing the attribute values of the object in the
-		 *    storing system in the order of those attributes in the
-		 *    storing system.
-		 * (2) The object being corrected is a normal object with EO_COMP.
-		 *    The object at the same position in `values' is a special
-		 *    object of references, of a length equal to the number of
-		 *    attributes of the object in the retrieving system (and
-		 *    possibly one larger). Each occupied position of this special
-		 *    will correspond (by attribute index of the object in the
-		 *    retrieving system) to a mismatched expanded attribute of the
-		 *    associated object in `objects', and will point to another
-		 *    special object of references whose length is equal to the
-		 *    original number of attributes of the expanded attribute and
-		 *    containing the original values of the attributes of the
-		 *    expanded attribute in much the same way as in case (1). If
-		 *    the object in `objects' is itself mismatched, its original
-		 *    values will be found similar to case (1), but at the position
-		 *    of the special in `values' which is one more than the number
-		 *    of attributes of the object in the retrieving system.
-		 * (3) The object is a special object.
-		 *    The object in values will be a special object of expanded
-		 *    objects which are mismatched. The corresponding value in
-		 *    `values' will be a special object of references, of the same
-		 *    length, and each position will reference another special
-		 *    object of references of a length equal to the original number
-		 *    of attributes of the corresponding expanded object and
-		 *    contain the original values of the expanded.
-		 */
-	EIF_OBJECT objects;
-
-		/* Indirection to special object containing the old values of
-		 * the objects in `objects'. The interpretation of the value of
-		 * this field in dependent upon what kind of object is at the same
-		 * position in `objects'.
-		 */
-	EIF_OBJECT values;
-
-		/* Potentional number of objects in `objects' and `values'.
-		 */
-	uint32 capacity;
-
-		/* Actual number of objects in `objects' and `values'. */
-	uint32 count;
-} mismatch_table;
-
-typedef union {
-	EIF_BOOLEAN		vbool;
-	EIF_CHARACTER	vchar;
-	EIF_WIDE_CHAR	vwchar;
-	EIF_INTEGER_8	vint8;
-	EIF_INTEGER_16	vint16;
-	EIF_INTEGER_32	vint32;
-	EIF_INTEGER_64	vint64;
-	EIF_REAL		vreal;
-	EIF_DOUBLE		vdbl;
-	EIF_REFERENCE	vref;
-	EIF_POINTER		vptr;
-} multi_value;
-
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="rt_table" return_type="struct htable *" export="shared">
 doc:		<summary>Table used for solving references.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared struct htable *rt_table;
@@ -270,9 +99,8 @@ rt_shared struct htable *rt_table;
 doc:	<attribute name="nb_recorded" return_type="int32" export="shared">
 doc:		<summary>Number of items recorded in `hec_stack' during retrieval.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared int32 nb_recorded = 0;
@@ -281,9 +109,8 @@ rt_shared int32 nb_recorded = 0;
 doc:	<attribute name="rt_kind" return_type="char" export="shared">
 doc:		<summary>Kind of storable.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared char rt_kind;
@@ -292,34 +119,31 @@ rt_shared char rt_kind;
 doc:	<attribute name="rt_kind_version" return_type="char" export="shared">
 doc:		<summary>Version of storable. Only used for independent store.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared char rt_kind_version;
 
 /*
-doc:	<attribute name="eif_discard_pointer_value" return_type="EIF_BOOLEAN" export="public">
+doc:	<attribute name="eif_discard_pointer_value" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>To discard or not the pointer value upon retrieval. By default we do not keep the value as a pointer value represent allocated memory which might not be present at retrieval time.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>STORABLE</eiffel_classes>
-doc:		<fixme>Could be a in a private per thread or global and protected through a mutex.</fixme>
 doc:	</attribute>
 */
-rt_public EIF_BOOLEAN eif_discard_pointer_values = EIF_TRUE;
+rt_private EIF_BOOLEAN eif_discard_pointer_values = EIF_TRUE;
 
 /*
 doc:	<attribute name="type_conversions" return_type="type_table *" export="private">
 doc:		<summary></summary>
 doc:		<access></access>
 doc:		<indexing></indexing>
-doc:		<thread_safety></thread_safety>
-doc:		<synchronization></synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes></eiffel_classes>
-doc:		<fixme>Should be in a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_private type_table *type_conversions;
@@ -329,10 +153,9 @@ doc:	<attribute name="mismatches" return_type="mismatch_table *" export="private
 doc:		<summary></summary>
 doc:		<access></access>
 doc:		<indexing></indexing>
-doc:		<thread_safety></thread_safety>
-doc:		<synchronization></synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes></eiffel_classes>
-doc:		<fixme>Should be in a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_private mismatch_table *mismatches;
@@ -342,9 +165,8 @@ doc:	<attribute name="dattrib" return_type="int **" export="private">
 doc:		<summary>Pointer to attribyte offsets in each object for independent store.</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>[dftype][i-th attribute]</indexing>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int **dattrib;
@@ -354,9 +176,8 @@ doc:	<attribute name="dtypes" return_type="int *" export="private">
 doc:		<summary>Conversion between dtypes found in storable file and dtypes of current system. Used for general and independent store.</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>[old dftype]</indexing>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int *dtypes;
@@ -366,9 +187,8 @@ doc:	<attribute name="spec_elm_size" return_type="uint32 *" export="private">
 doc:		<summary>Array of special element sizes. Only used for special of expanded types where definition of expanded types is different in stored file and retrieval system.</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>[old dftype]</indexing>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a per thread data. </fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private uint32 *spec_elm_size;
@@ -377,9 +197,8 @@ rt_private uint32 *spec_elm_size;
 doc:	<attribute name="old_overhead" return_type="uint32" export="private">
 doc:		<summary>Overhead size from stored object which might be different from retrieval system. Used only in case of special of expanded objects.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private uint32 old_overhead = 0;
@@ -388,47 +207,35 @@ rt_private uint32 old_overhead = 0;
 doc:	<attribute name="r_buffer" return_type="char *" export="private">
 doc:		<summary>Buffer for reading of storable header.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private char * r_buffer = NULL;
 
-#ifndef EIF_THREADS
 /*
 doc:	<attribute name="r_fides" return_type="int" export="private">
 doc:		<summary>File descriptor use for retrieve.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int r_fides;
-#endif
 
 /*
 doc:	<attribute name="class_translations" return_type="unamed struct" export="private">
 doc:		<summary></summary>
 doc:		<access></access>
 doc:		<indexing></indexing>
-doc:		<thread_safety></thread_safety>
-doc:		<synchronization></synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes></eiffel_classes>
-doc:		<fixme>Should be in a private per thread data.</fixme>
 doc:	</attribute>
 */
-rt_private struct {
-		/* Pointer to array of class translation entries */
-	class_translation *table;
+rt_private class_translations_table class_translations;	/* Table of class name translations */
 
-		/* Maximum number of entries in `translations'. */
-	unsigned int max_count;
-
-		/* Number of entries in `translations'. */
-	unsigned int count;
-} class_translations;	/* Table of class name translations */
+#endif
 
 /*
  * Function declations
@@ -478,16 +285,16 @@ rt_private int (char_read) (char *, int);
 rt_private int (stream_read) (char *, int);
 
 /* read function declarations */
-int retrieve_read (void);
-int retrieve_read_with_compression (void);
+rt_public int retrieve_read (void);
+rt_public int retrieve_read_with_compression (void);
 
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="retrieve_read_func" return_type="int (*)(void)" export="private">
 doc:		<summary>High level function to read storable file. It uses `char_read_func' to actually read bytes of the file.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int (*retrieve_read_func)(void) = retrieve_read_with_compression;
@@ -496,9 +303,8 @@ rt_private int (*retrieve_read_func)(void) = retrieve_read_with_compression;
 doc:	<attribute name="char_read_func" return_type="int (*)(char *buf, int n)" export="shared">
 doc:		<summary>Read `n' bytes from content of storable and store it in allocated buffer `buf'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared int (*char_read_func)(char *, int) = char_read;
@@ -507,9 +313,8 @@ rt_shared int (*char_read_func)(char *, int) = char_read;
 doc:	<attribute name="old_retrieve_read_func" return_type="int (*)(void)" export="private">
 doc:		<summary>Nice hack for compiler so that compiler can use a different `retrieve_read_func' for its modified use of store/retrieve. So each time we use the compiler one, at the end we restore the `old' one which is the default one for traditional store/retrieve.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
@@ -518,9 +323,8 @@ rt_private int (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
 doc:	<attribute name="old_char_read_func" return_type="int (*)(char *, int)" export="private">
 doc:		<summary>Nice hack for compiler so that compiler can use a different `char_read_func' for its modified use of store/retrieve. So each time we use the compiler one, at the end we restore the `old' one which is the default one for traditional store/retrieve.</summary>
 doc:		<access>Read/Wriite</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int (*old_char_read_func)(char *, int) = char_read;
@@ -529,9 +333,8 @@ rt_private int (*old_char_read_func)(char *, int) = char_read;
 doc:	<attribute name="old_rt_kind" return_type="char" export="private">
 doc:		<summary>Old kind of storable.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private char old_rt_kind;			/* Kind of storable */
@@ -540,9 +343,8 @@ rt_private char old_rt_kind;			/* Kind of storable */
 doc:	<attribute name="old_buffer_size" return_type="long" export="private">
 doc:		<summary>Old buffer size.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
@@ -551,9 +353,8 @@ rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
 doc:	<attribute name="end_of_buffer" return_type="int" export="shared">
 doc:		<summary>Size after decompression of decompressed data.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared int end_of_buffer = 0;
@@ -566,9 +367,9 @@ rt_shared int end_of_buffer = 0;
 doc:	<attribute name="stream_buffer" return_type="char *" export="private">
 doc:		<summary>Pointer to memory buffer where storable is located.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a per thread data. Code in `stream_read' does not make sense at all since no resizing of `stream_buffer' will occur (we are reading not writing here!). </fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:		<fixme>Code in `stream_read' does not make sense at all since no resizing of `stream_buffer' will occur (we are reading not writing here!). </fixme>
 doc:	</attribute>
 */
 rt_private char *stream_buffer;
@@ -577,9 +378,8 @@ rt_private char *stream_buffer;
 doc:	<attribute name="stream_buffer_position" return_type="int" export="private">
 doc:		<summary>Position of cursor in `stream_buffer' while reading storable.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int stream_buffer_position;
@@ -588,9 +388,8 @@ rt_private int stream_buffer_position;
 doc:	<attribute name="stream_buffer_size" return_type="long" export="private">
 doc:		<summary>Size of `stream_buffer'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a per thread data.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private long stream_buffer_size;
@@ -599,18 +398,37 @@ rt_private long stream_buffer_size;
 doc:	<attribute name="cidarr" return_type="int16 [256]" export="private">
 doc:		<summary>Static CID array.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Should be in a private per thread data. Fixed size is not good. It should be a resizable array.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:		<fixme>Fixed size is not good. It should be a resizable array.</fixme>
 doc:	</attribute>
 */
 rt_private int16 cidarr [256];
+
+#endif
+
+#ifdef EIF_THREADS
+rt_shared void eif_retrieve_thread_init (void)
+	/* Initialize private data of `retrieve.c' in multithreaded environment. */
+	/* Data is already zeroed, so only variables that needs something different
+	 * than the default value will be initialized. */
+{
+	RT_GET_CONTEXT;
+	eif_discard_pointer_values = EIF_TRUE;
+	retrieve_read_func = retrieve_read_with_compression;
+	char_read_func = char_read;
+	old_retrieve_read_func = retrieve_read_with_compression;
+	old_char_read_func = char_read;
+	old_buffer_size = RETRIEVE_BUFFER_SIZE;
+}
+#endif
 
 /* Initialize retrieve function pointers and globals */
  
 rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
 {
 		/* Storing the previous state of the retrieving operation before the new one start */
+	RT_GET_CONTEXT
 	old_retrieve_read_func = retrieve_read_func;
 	old_char_read_func = char_read_func;
 	old_buffer_size = buffer_size;
@@ -627,6 +445,7 @@ rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read
 /* Reset retrieve function pointers and globals to their default values */
  
 rt_public void rt_reset_retrieve(void) {
+	RT_GET_CONTEXT
 	retrieve_read_func = old_retrieve_read_func;
 	char_read_func = old_char_read_func;
 	buffer_size = old_buffer_size;
@@ -709,6 +528,7 @@ rt_private void free_type_conversion_table (type_table *table)
 
 rt_private int type_defined (int16 old_type)
 {
+	RT_GET_CONTEXT
 	int result = 0;
 	if (old_type >= 0)
 		result = type_conversions->type_index[old_type] != TYPE_UNDEFINED;
@@ -717,6 +537,7 @@ rt_private int type_defined (int16 old_type)
 
 rt_private type_descriptor *type_description (int32 old_type)
 {
+	RT_GET_CONTEXT
 	type_descriptor *result;
 	int16 i = type_conversions->type_index[old_type];
 	if (i == TYPE_UNDEFINED)
@@ -775,6 +596,7 @@ rt_private mismatch_table *new_mismatch_table (uint32 min_count)
 
 rt_private void grow_mismatch_table (void)
 {
+	RT_GET_CONTEXT
 	mismatches->capacity *= 2;
 	mismatches->objects = eif_protect (
 			sprealloc (eif_wean (mismatches->objects), mismatches->capacity));
@@ -798,57 +620,59 @@ rt_private void free_mismatch_table (mismatch_table *table)
  */
 
 
+#ifndef EIF_THREADS
 /* TODO: How should data be placed into `mismatch_information'?
  */
 /*
-doc:	<attribute name="mismatch_information_initialiize" return_type="EIF_PROCEDURE" export="private">
+doc:	<attribute name="mismatch_information_initialize" return_type="EIF_PROCEDURE" export="private">
 doc:		<summary>Re-initialization of `mismatch_information' table used by MISMATCH_CORRECTOR.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
-doc:		<fixme>Should be in a private per thread data.</fixme>
 doc:	</attribute>
 */
-rt_private EIF_PROCEDURE mismatch_information_intialize;
+rt_private EIF_PROCEDURE mismatch_information_initialize;
 
 /*
 doc:	<attribute name="mismatch_information_add" return_type="EIF_PROCEDURE" export="private">
 doc:		<summary>Insert new items in `mismatch_information' table </summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
-doc:		<fixme>Should be in a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_private EIF_PROCEDURE mismatch_information_add;
 
 /*
-doc:	<attribute name="mismtach_information" return_type="EIF_OBJECT" export="private">
+doc:	<attribute name="mismtach_information_object" return_type="EIF_OBJECT" export="private">
 doc:		<summary>Protected reference to `mismatch_information' of MISMATCH_CORRECTOR.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
-doc:		<fixme>Should be in a private per thread data as it `mismatch_information' is a once per thread at the Eiffel level.</fixme>
 doc:	</attribute>
 */
 rt_private EIF_OBJECT mismatch_information_object;
 
+#endif
+
 rt_public void set_mismatch_information_access (
 		EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add)
 {
+	RT_GET_CONTEXT
 	if (mismatch_information_object != NULL)
 		eif_wean (mismatch_information_object);
 	mismatch_information_object = eif_adopt (object);
-	mismatch_information_intialize = init;
+	mismatch_information_initialize = init;
 	mismatch_information_add = add;
 }
 
 rt_private void set_mismatch_information (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
+	RT_GET_CONTEXT
 	EIF_OBJECT vals_i = eif_protect (values);
 	int16 new_type = Dtype (object);
 	type_descriptor *conv = type_description_for_new (conversions, new_type);
@@ -856,7 +680,7 @@ rt_private void set_mismatch_information (
 	int i;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
-	mismatch_information_intialize (eif_access (mismatch_information_object));
+	mismatch_information_initialize (eif_access (mismatch_information_object));
 
 	/* Store class name in table */
 	class_name = eif_gen_typename_of_type ((int16) Dftype (object));
@@ -959,11 +783,12 @@ rt_private void correct_one_mismatch (
  */
 rt_private int correct_mismatches (mismatch_table *mm, type_table *conversions)
 {
+	RT_GET_CONTEXT
 	int result = 0;
 	uint32 i;
 
 	if (mismatch_information_object == NULL  ||
-		mismatch_information_intialize == NULL  ||
+		mismatch_information_initialize == NULL  ||
 		mismatch_information_add == NULL)
 		return 0;
 
@@ -991,6 +816,7 @@ rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc)
 
 rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *buffer, EIF_INTEGER size, EIF_INTEGER start_pos, EIF_INTEGER *real_size)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE new_object;
 	stream_buffer = (char *) *buffer;
 	stream_buffer_size = size;
@@ -1002,27 +828,40 @@ rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *buffer, EIF_INTEGER size, 
 }
 
 #ifdef RECOVERABLE_SCAFFOLDING
+#ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_use_old_independent_retrieve" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>Do we want to use old independent format or new one that can fix some mismatch? Default new one.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>STORABLE</eiffel_classes>
-doc:		<fixme>Should be in a private per thread data. Is this obsolete now?</fixme>
+doc:		<fixme>Is this obsolete now?</fixme>
 doc:	</attribute>
 */
 rt_private EIF_BOOLEAN eif_use_old_independent_retrieve = EIF_FALSE;
+#endif
+
 rt_public void eif_set_old_independent_retrieve (EIF_BOOLEAN state)
 {
+	RT_GET_CONTEXT
 	eif_use_old_independent_retrieve = state;
 }
+
+rt_public void eif_set_discard_pointer_values (EIF_BOOLEAN state)
+	/* Do we need to store pointers or not? */
+{
+	RT_GET_CONTEXT
+	eif_discard_pointer_values = state;
+}
+
 #endif
 
 rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int))
 {
 	/* Retrieve object store in file `filename' */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	EIF_REFERENCE retrieved = NULL;
 	EIF_OBJECT retrieved_i = NULL;
@@ -1232,6 +1071,7 @@ rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
  */
 rt_private void independent_retrieve_init (long idrf_size)
 {
+	RT_GET_CONTEXT
 		/* Initialize serialization streams for reading (0 stands for read) */
 	run_idr_init (idrf_size, 0);
 
@@ -1250,6 +1090,7 @@ rt_private void independent_retrieve_init (long idrf_size)
 rt_private void independent_retrieve_reset (void)
 	/* Clean allocated data structures for independent store */
 {
+	RT_GET_CONTEXT
 	int i;
 
 	run_idr_destroy ();
@@ -1282,6 +1123,7 @@ rt_private struct htable *create_hash_table (int32 count, size_t size)
 
 rt_public void class_translation_clear (void)
 {
+	RT_GET_CONTEXT
 	REQUIRE ("Table consistency",
 			(class_translations.max_count == 0) == (class_translations.table == NULL));
 	if (class_translations.table != NULL) {
@@ -1304,6 +1146,7 @@ rt_public void class_translation_clear (void)
 
 rt_private void class_translation_grow (void)
 {
+	RT_GET_CONTEXT
 	REQUIRE ("Table consistency",
 			(class_translations.max_count == 0) == (class_translations.table == NULL));
 	if (class_translations.max_count == 0) {
@@ -1333,6 +1176,7 @@ rt_private void class_translation_grow (void)
 
 rt_private char *class_translation_lookup (char *old_name)
 {
+	RT_GET_CONTEXT
 	char *result = NULL;
 	REQUIRE ("Old name exists", old_name != NULL && old_name[0] != '\0');
 	if (class_translations.table != NULL) {
@@ -1351,6 +1195,7 @@ rt_private char *class_translation_lookup (char *old_name)
 
 rt_public void class_translation_put (char *new_name, char *old_name)
 {
+	RT_GET_CONTEXT
 	class_translation *trans = NULL;
 	char *newnm;
 	unsigned int i;
@@ -1387,6 +1232,7 @@ rt_public void class_translation_put (char *new_name, char *old_name)
 
 rt_public EIF_INTEGER class_translation_count (void)
 {
+	RT_GET_CONTEXT
 	return class_translations.count;
 }
 
@@ -1395,6 +1241,7 @@ rt_public EIF_INTEGER class_translation_count (void)
  */
 rt_public char *class_translation_old (EIF_INTEGER i)
 {
+	RT_GET_CONTEXT
 	char *result = NULL;
 	REQUIRE ("Valid index", 0 <= i && i < (EIF_INTEGER) class_translations.count);
 	if (0 <= i && i < (EIF_INTEGER) class_translations.count)
@@ -1407,6 +1254,7 @@ rt_public char *class_translation_old (EIF_INTEGER i)
  */
 rt_public char *class_translation_new (EIF_INTEGER i)
 {
+	RT_GET_CONTEXT
 	char *result = NULL;
 	REQUIRE ("Valid index", 0 <= i && i < (EIF_INTEGER) class_translations.count);
 	if (0 <= i && i < (EIF_INTEGER) class_translations.count)
@@ -1416,6 +1264,7 @@ rt_public char *class_translation_new (EIF_INTEGER i)
 
 rt_private void rt_create_table (int32 count)
 {
+	RT_GET_CONTEXT
 	rt_table = create_hash_table (count, sizeof (struct rt_struct));
 }
 
@@ -1460,6 +1309,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	long nb_byte;
 	EIF_REFERENCE oldadd;
@@ -1581,6 +1431,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char *oldadd;
 	char * volatile newadd = (char *) 0;
@@ -1747,6 +1598,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	long nb_byte;
 	char *oldadd;
@@ -1909,6 +1761,7 @@ rt_public EIF_REFERENCE rrt_make (void)
  */
 rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE spec;
 
 	REQUIRE ("No GC", g_data.status & GC_STOP);
@@ -1933,6 +1786,7 @@ rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
  */
 rt_private void rt_dropped (register EIF_REFERENCE old, int16 old_type)
 {
+	RT_GET_CONTEXT
 	unsigned long key = (unsigned long) old - 1;
 	struct rt_struct *info = (struct rt_struct *) ht_first(rt_table, key);
 	info->rt_status = DROPPED;
@@ -1984,6 +1838,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrieved object.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	EIF_REFERENCE volatile newadd = NULL;
 	volatile long int i;
@@ -2141,6 +1996,7 @@ rt_private void rt_clean(void)
 	/* Clean the data structure before raising an exception of code `code'
 	 * after having cleaned the hash table 
 	 * and allocated memory and reset function pointers. */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
@@ -2200,6 +2056,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 	 * possible references with it, before putting it in the hash table.
 	 */
 
+	RT_GET_CONTEXT
 	unsigned long key = ((unsigned long) old) - 1;	/* Key in the hash table */
 	unsigned long solved_key;
 	long offset;
@@ -2263,6 +2120,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 	 * The third argument is needed because of expanded objects:
 	 * if `new_obj' is not an expanded object,parent is equal to it. */
 
+	RT_GET_CONTEXT
 	long nb_references = 0;
 	uint32 flags, fflags;
 	EIF_REFERENCE reference, addr;
@@ -2364,6 +2222,7 @@ update:
 
 rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_REFERENCE addr, EIF_REFERENCE new_obj, EIF_REFERENCE parent)
 {
+	RT_GET_CONTEXT
 	struct rt_struct *rt_info;
 	unsigned long key = ((unsigned long) reference) - 1;
 	EIF_REFERENCE supplier;
@@ -2417,6 +2276,7 @@ rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_RE
  */
 rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE reference = *location;
 	unsigned long key = ((unsigned long) reference) - 1;
 	struct rt_struct *rt_info = (struct rt_struct *) ht_first (rt_table, key);
@@ -2462,6 +2322,7 @@ rt_private char *next_item (char *ptr)
 rt_private void read_header(char rt_type)
 {
 	/* Read header and make the dynamic type correspondance table */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
@@ -2605,6 +2466,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 rt_private void iread_header(EIF_CONTEXT_NOARG)
 {
 	/* Read header and make the dynamic type correspondance table */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
@@ -3129,6 +2991,7 @@ rt_private int attribute_type_matched (int16 **gtype, int16 **atype)
 
 rt_private int attribute_types_matched (int16 *gtypes, int16 *atypes)
 {
+	RT_GET_CONTEXT
 	int result;
 	int16 atype = atypes[0];
 	if (atype <= EXPANDED_LEVEL)
@@ -3200,6 +3063,7 @@ rt_private int find_attribute (int dtype, char *att_name, uint32 att_type, int16
 rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 {
 	/* Read header and make the dynamic type correspondance table */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char vis_name[512];
 	int old_count, nb_lines, i;
@@ -3501,6 +3365,7 @@ rt_private int16 map_generics (struct gt_info *info, int16 count, int32 *generic
  */
 rt_private int map_type (type_descriptor *conv, int *unresolved)
 {
+	RT_GET_CONTEXT
 	int result = 0;
 	char *name = class_translation_lookup (conv->name);
 	struct gt_info *ginfo = (struct gt_info *) ct_value (&egc_ce_gtype, name);
@@ -3571,6 +3436,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
  */
 rt_private void map_types (void)
 {
+	RT_GET_CONTEXT
 	int map_count, unresolved_types;
 #ifdef RECOVERABLE_DEBUG
 	printf ("-- Mapping types\n");
@@ -3646,6 +3512,7 @@ rt_private void map_type_attributes (type_descriptor *t)
 
 rt_private void map_attributes (void)
 {
+	RT_GET_CONTEXT
 	int i;
 #ifdef RECOVERABLE_DEBUG
 	printf ("-- Mapping attributes\n");
@@ -3694,6 +3561,7 @@ rt_private void rread_attribute (attribute_detail *a)
 
 rt_private void rread_type (int type_index)
 {
+	RT_GET_CONTEXT
 	char *vis_name;
 	type_descriptor *conv;
 	int16 nb_gen;
@@ -3751,6 +3619,7 @@ rt_private void rread_type (int type_index)
 rt_private void rread_header (EIF_CONTEXT_NOARG)
 {
 	/* Read header and make the dynamic type correspondance table */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int16 ohead, old_max_types, type_count, i;
 	jmp_buf exenv;
@@ -3824,6 +3693,7 @@ rt_private int readline (register char *ptr, register int *maxlen)
 			
 rt_private int buffer_read (register char *ptr, int size)
 {
+	RT_GET_CONTEXT
 	register int i;
  
 #if DEBUG & 2
@@ -3850,6 +3720,7 @@ rt_private int buffer_read (register char *ptr, int size)
 
 rt_public int retrieve_read (void)
 {
+	RT_GET_CONTEXT
 	char * ptr = general_buffer;
 	int read_size;
 	int part_read = 0;
@@ -3873,6 +3744,7 @@ rt_public int retrieve_read (void)
 
 rt_public int retrieve_read_with_compression (void)
 {
+	RT_GET_CONTEXT
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
 	char* pdcmps_in_size = (char *)0;
@@ -3918,6 +3790,7 @@ rt_public int retrieve_read_with_compression (void)
 
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 {
+	RT_GET_CONTEXT
 	long attrib_offset;
 	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
@@ -4075,6 +3948,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 {
+	RT_GET_CONTEXT
 #if DEBUG & 1
 	int z;
 #endif
@@ -4270,6 +4144,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 rt_private EIF_REFERENCE object_rread_attributes (
 		EIF_REFERENCE object, uint32 flags, long expanded_offset)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 	EIF_REFERENCE old_values = NULL;
 	EIF_REFERENCE comp_values = NULL;
@@ -4529,6 +4404,7 @@ rt_private EIF_REFERENCE object_rread_special_expanded (
 rt_private EIF_REFERENCE object_rread_special (
 		EIF_REFERENCE object, uint32 flags, uint32 count)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 	type_descriptor *conv = type_description (flags & EO_TYPE);
 	EIF_REFERENCE addr, trash = NULL;
@@ -4631,6 +4507,7 @@ rt_private int char_read(char *pointer, int size)
 
 rt_private int stream_read(char *pointer, int size)
 {
+	RT_GET_CONTEXT
 	if (stream_buffer_size - stream_buffer_position < size) {
 		stream_buffer_size += buffer_size;
 		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
@@ -4643,6 +4520,7 @@ rt_private int stream_read(char *pointer, int size)
 
 rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 {
+	RT_GET_CONTEXT
 	int16 count, dftype;
 
 	*nflags = oflags;   /* default */
@@ -4677,6 +4555,7 @@ rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 
 rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 {
+	RT_GET_CONTEXT
 	uint32 count, val;
 	int16 dftype, *ip;
 	int i;

@@ -97,6 +97,7 @@ feature -- IL code generation
 			-- Generate IL code for `expression'
 		local
 			target_type, source_type: TYPE_I
+			l_type: TYPE_I
 		do
 			expression.generate_il
 
@@ -109,6 +110,14 @@ feature -- IL code generation
 						-- Source is an expanded type and target is a reference:
 						-- metamorphose with boxing.
 					generate_il_metamorphose (source_type, target_type, True)
+				end
+			elseif target_type.is_numeric then
+				source_type := context.real_type (expression.type)
+				if not source_type.same_type (target_type) then
+					l_type := source_type.heaviest (target_type)
+					if l_type = target_type then
+						il_generator.convert_to (l_type)
+					end
 				end
 			end
 		end

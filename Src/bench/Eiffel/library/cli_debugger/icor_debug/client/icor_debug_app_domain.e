@@ -131,6 +131,16 @@ feature {EIFNET_DEBUGGER} -- Implementation
 			"Attach"
 		end
 
+	frozen cpp_is_attached (obj: POINTER; a_pb_attached: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugAppDomain signature(BOOL*): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"IsAttached"
+		end
+
 feature {NONE} -- Implementation
 
 	frozen cpp_enumerate_assemblies (obj: POINTER; a_p: POINTER): INTEGER is
@@ -162,16 +172,6 @@ feature {NONE} -- Implementation
 		alias
 			"EnumerateSteppers"
 		end
-
-	frozen cpp_is_attached (obj: POINTER; a_pb_attached: POINTER): INTEGER is
-		external
-			"[
-				C++ ICorDebugAppDomain signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
-			]"
-		alias
-			"IsAttached"
-		end		
 
 	frozen cpp_get_name (obj: POINTER; a_cchname: INTEGER; a_pcchname: POINTER; a_szname: POINTER): INTEGER is
 		external

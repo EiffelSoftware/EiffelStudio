@@ -67,12 +67,10 @@ feature -- Basic Operations
 				rich_edit.insert_text (displayed_text)
 				stream.read (p.item, Buffer_size - 1)
 			end
-			stream.close_stream
 			rich_edit.set_read_only
 		rescue
 			create mess_box.make
 			mess_box.error_message_box (Current, "Cannot read stream", "Read Error")
-			stream.close_stream
 			retried := True
 			retry
 		end

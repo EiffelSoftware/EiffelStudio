@@ -186,6 +186,14 @@ cluster
 	yacc:				"$EIFFEL_SRC/Eiffel/yacc";
 	const:			"$EIFFEL_SRC/Eiffel/const";
 
+		-- Gobo Eiffel Parse Library
+	pr_skeleton:		"$EIFFEL_SRC/library/gobo/library/parse/skeleton";
+		-- Gobo Eiffel Lexical Library
+	lx_skeleton:		"$EIFFEL_SRC/library/gobo/library/lexical/skeleton";
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$EIFFEL_SRC/library/gobo/library/kernel";
+	kl_kernel_spec:		"$EIFFEL_SRC/library/gobo/library/kernel/spec/ise";
+
 		-- Lace compilation:
 	env:				"$EIFFEL_SRC/Eiffel/lace/env";
 	lace_compile:		"$EIFFEL_SRC/Eiffel/lace/lace_compile";
@@ -262,7 +270,10 @@ cluster
 	resources(common):		"$/resources";
 
 		-- Profiling
-	converter(api):		"$/profiler/converter";
+	converter(api):		"$/profiler/converter"
+		exclude
+			"configuration_loader.e"
+		end;
 	profiling(api):		"$/profiler/profiling";
 	querying(api):		"$/profiler/querying";
 	filters(api):		"$/profiler/filters";
@@ -273,7 +284,7 @@ cluster
 
 		-- SWITCH clusters (chose one cluster per directory in switch directory)
 	switch:			"$EIFFEL_SRC/Eiffel/switch";
-	interface_switch(switch):	"$/interface/new_graphical";
+	interface_switch(switch):	"$/interface/graphical";
 	--dle_switch(switch):	"$/dle/no_dle";
 	license_switch(switch): "$/license/license";  	--unix
 	--license_switch(switch): "$/license/no_license";	--win
@@ -310,12 +321,15 @@ cluster
 	text_window(interface):		"$/graphical/text_window";
 	windows(interface):		"$/graphical/windows"
 		exclude
-			"bar_and_text.e","project_w.e"
+			"bar_and_text.e";"project_w.e";"window_mgr.e"
 		end;
-	preference_tool(interface):	"$/graphical/preference_tool";
+	preference_tool(interface):	"$/graphical/preference_tool"
+		exclude
+			"eb_preference_tool.e"
+		end;
 	profile_tool(interface):	"$/graphical/profile_tool"
 		exclude
-			"profile_tool.e"
+--			"profile_tool.e"
 		end;
 	wizard_common(interface):	"$/graphical/wizard/common";
 	wizard_bench(interface):	"$/graphical/wizard/bench";
@@ -324,7 +338,7 @@ cluster
 	new_bench_common(interface):	"$/new_graphical/common";
 	new_case_tool(interface):	"$/new_graphical/case_tool";
 	new_commands(interface):	"$/new_graphical/commands";
-	new_debugging_tool (interface):	"$/new_graphical/debugging";
+	new_debug_tool (interface):	"$/new_graphical/debug_tool";
 	new_drag_and_drop(interface):	"$/new_graphical/drag_and_drop";
 	new_formatters(interface):	"$/new_graphical/formatters";
 	new_main(interface):		"$/new_graphical/main";
@@ -333,9 +347,11 @@ cluster
 	new_text_window(interface):	"$/new_graphical/text_window";
 	new_windows(interface):		"$/new_graphical/windows";
 	new_preference_tool(interface):	"$/new_graphical/preference_tool";
+	new_parameters(interface):	"$/new_graphical/preference_tool/parameters";
 	new_profile_tool(interface):	"$/new_graphical/profile_tool";
 	new_wizard_common(interface):	"$/new_graphical/wizard/common";
 	new_wizard_bench(interface):	"$/new_graphical/wizard/bench";
+	to_be_moved(interface):		"$/new_graphical/to_be_moved";
 
 		-- Motif specific classes
 	platform_motif(interface):		"$/graphical/spec/widgets/motif";
@@ -353,6 +369,7 @@ external
 		"\$(EIFFEL_SRC)/C/parsing/shared",
 		"\$(EIFFEL_SRC)/C/parsing/eiffel",
 		"\$(EIFFEL_SRC)/C/bench",
+		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include",
  		"$EIFFEL4/library/vision2/implementation/gtk/Clib",
 	        " `/usr/gtk/bin/gtk-config --cflags`";		
 				

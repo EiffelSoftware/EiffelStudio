@@ -56,7 +56,8 @@ feature -- Initialization
 			get_point_by_index (1).set_y (100)
 			get_point_by_index (2).set_x (3)
 			get_point_by_index (2).set_y (20)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (
+				0.5, 1.0, 0.5))
 			set_line_width (2)
 			set_side_count (7)
 		end
@@ -88,11 +89,11 @@ feature -- Status setting
 
 	set_side_count (n: INTEGER) is
 				-- Set the `side_count' to `n'.
-			require
-				n_bigger_than_two: n > 2
-			do
-				side_count := n
-			end
+		require
+			n_bigger_than_two: n > 2
+		do
+			side_count := n
+		end
 
 	set_center_point (p1: EV_RELATIVE_POINT) is
 			-- Change the reference of `center_point' with `p1'.
@@ -129,7 +130,7 @@ feature -- Implementation
 				radius := distance (center_point.x_abs, center_point.y_abs,
 					corner_point.x_abs, corner_point.y_abs)
 				create Result.make (1, side_count)
-				Result.force (create {EV_COORDINATES}.set (
+				Result.put (create {EV_COORDINATES}.set (
 					corner_point.x_abs, corner_point.y_abs), 1)
 				n := 2
 				ang_step := 2 * Pi / side_count
@@ -139,7 +140,7 @@ feature -- Implementation
 				n > side_count
 			loop
 				ang := ang + ang_step
-				Result.force (create {EV_COORDINATES}.set (
+				Result.put (create {EV_COORDINATES}.set (
 					center_point.x + delta_x (ang, radius),
 					center_point.y + delta_y (ang, radius)), n)
 
@@ -215,6 +216,9 @@ end -- class EV_FIGURE_EQUILATERAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/26 16:27:06  brendel
+--| Cosmetics.
+--|
 --| Revision 1.5  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

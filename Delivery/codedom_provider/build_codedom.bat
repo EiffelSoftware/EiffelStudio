@@ -5,15 +5,7 @@ REM *********************************************
 
 ECHO Building Codedom files
 
-CD checkout\dotnet\codedom_provider\assemblies
-IF NOT EXIST ..\..\..\com_compiler\ace_file\EIFGEN\F_code\EiffelSoftware.Compiler.dll GOTO END
-COPY ..\..\..\com_compiler\ace_file\EIFGEN\F_code\EiffelSoftware.Compiler.dll .\
-CALL make.bat
-IF NOT EXIST output_processing\EiffelSoftware.Compiler.OutputDispatcher.dll GOTO END
-COPY output_processing\EiffelSoftware.Compiler.OutputDispatcher.dll .
-COPY output_processing\EiffelSoftware.Compiler.OutputHandler.dll .
-CD..
-
+CD checkout\dotnet\codedom_provider
 CALL build_studio.bat /release
 IF NOT EXIST build_studio GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.Codedom\EIFGEN\F_code\EiffelSoftware.Codedom.dll GOTO END
@@ -43,9 +35,6 @@ COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelBa
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelBase\EIFGEN\F_code\libEiffelSoftware.EiffelBase.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code\libEiffelSoftware.EiffelVision2.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\assemblies\EiffelSoftware.Compiler.Managed.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\assemblies\output_processing\EiffelSoftware.Compiler.OutputDispatcher.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\assemblies\output_processing\EiffelSoftware.Compiler.OutputHandler.dll bin\
 
 SET CODEDOM_BUILT=1
 

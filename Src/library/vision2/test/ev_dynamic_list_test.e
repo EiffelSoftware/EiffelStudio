@@ -26,7 +26,7 @@ feature -- Initialization
 	do_tests is
 		local
 			hbox_test, vbox_test: EV_LIST_TEST [EV_WIDGET]
-			exeptions: EXCEPTIONS
+			ex: EXCEPTIONS
 		do
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
 			create vbox_test.make ("EV_HORIZONTAL_BOX", ~vbox_list_generator, ~item_generator)
@@ -37,8 +37,8 @@ feature -- Initialization
 			if hbox_test.test_successful and vbox_test.test_successful then
 				destroy
 			else
-				create exceptions
-				exceptions.die (1)
+				create ex
+				ex.die (1)
 			end
 		end
 

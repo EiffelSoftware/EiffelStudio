@@ -175,7 +175,7 @@ end;
 			empty_array: ARRAY [STRING]
 		do
 			from
-				i := 1
+				i := prof_options.filenames.lower
 debug("SHOW_PROF_QUERY")
 	io.error.putstring ("Expanding filenames.%Nprof_options.filenames.count: ");
 	io.error.putint (prof_options.filenames.count);
@@ -185,7 +185,7 @@ debug("SHOW_PROF_QUERY")
 	io.error.new_line;
 end;
 			until
-				i > prof_options.filenames.count
+				i >= prof_options.filenames.upper
 			loop
 				name := prof_options.filenames.item (i);
 				if has_wildcards(name) then
@@ -219,16 +219,16 @@ end;
 							entries_name := entries.item
 							entries_name.to_lower
 							wildcard_matcher.set_text (entries_name);
-							wildcard_matcher.search_for_pattern;
 debug("SHOW_PROF_QUERY")
 	io.error.putstring ("Did it match: ");
 	io.error.putbool(wildcard_matcher.found)
 	io.error.new_line;
 end;
-							if wildcard_matcher.found then
+							if wildcard_matcher.search_for_pattern then
 								entries_name := clone (dir_name)
-								entries_name.append_character (Operating_environment.Directory_separator)
+								-- entries_name.append_character (Operating_environment.Directory_separator)
 								entries_name.append (entries.item)
+								--| Guillaume - 09/16/97
 								expanded_filenames.extend (entries_name)
 							end;
 							entries.forth
@@ -701,7 +701,8 @@ end;
 					structured_text.add_string (item.self_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("descendants") then
 					structured_text.add_string (item.descendants_sec.out);
-					structured_text.add_indent
+					-- structured_text.add_indent
+					--| Guillaume - 09/18/07
 				elseif prof_options.output_names.item (i).is_equal ("total") then
 					structured_text.add_string (item.total_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("percentage") then

@@ -22,8 +22,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			-- Entry point.
+			-- Call `initialize_components'
 		local
 			dummy: SYSTEM_OBJECT
 		do
@@ -132,7 +132,7 @@ feature -- Implementation
 									feature {WINFORMS_ANCHOR_STYLES}.left | 
 									feature {WINFORMS_ANCHOR_STYLES}.right )
 			cmb_format.items.add_range (format_choisse_array)
-			cmb_format.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $cmb_format_selected_index_changed))
+			cmb_format.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $on_cmb_format_selected_index_changed))
 			
 				-- Init `dtp_min_date'.
 			dtp_min_date.set_location (create {DRAWING_POINT}.make_from_x_and_y (128, 24))
@@ -147,7 +147,7 @@ feature -- Implementation
 										feature {WINFORMS_ANCHOR_STYLES}.Left |
 										feature {WINFORMS_ANCHOR_STYLES}.Right )
 			dtp_min_date.set_back_color (feature {DRAWING_SYSTEM_COLORS}.window)
-			dtp_min_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $dtp_min_date_value_changed))
+			dtp_min_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $on_dtp_min_date_value_changed))
 			
 				-- Init `label_2'.
 			label_2.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 56))
@@ -180,7 +180,7 @@ feature -- Implementation
 			btn_change_font.set_tab_index (5)
 			btn_change_font.set_anchor ( feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 								  		 feature {WINFORMS_ANCHOR_STYLES}.Right )
-			btn_change_font.add_click (create {EVENT_HANDLER}.make (Current, $btn_change_font_click))
+			btn_change_font.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_change_font_click))
 			
 				-- Init `date_time_picker'.
 			date_time_picker.set_location (create {DRAWING_POINT}.make_from_x_and_y (24, 24))
@@ -209,7 +209,7 @@ feature -- Implementation
 			btn_change_color.set_tab_index (2)
 			btn_change_color.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 										feature {WINFORMS_ANCHOR_STYLES}.Right )
-			btn_change_color.add_click (create {EVENT_HANDLER}.make (Current, $btn_change_color_click))
+			btn_change_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_change_color_click))
 			
 			error_max.set_data_member (("").to_cil)
 			error_max.set_data_source (Void)
@@ -228,7 +228,7 @@ feature -- Implementation
 									feature {WINFORMS_ANCHOR_STYLES}.Left |
 									feature {WINFORMS_ANCHOR_STYLES}.Right)
 			dtp_max_date.set_back_color ( feature {DRAWING_SYSTEM_COLORS}.window)
-			dtp_max_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $dtp_max_date_value_changed))
+			dtp_max_date.add_value_changed (create {EVENT_HANDLER}.make (Current, $on_dtp_max_date_value_changed))
 			
 				-- Init `chk_show_up_down'.
 			chk_show_up_down.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 104))
@@ -237,7 +237,7 @@ feature -- Implementation
 			chk_show_up_down.set_size (create {DRAWING_SIZE}.make_from_width_and_height (100, 23))
 			chk_show_up_down.set_accessible_role (feature {WINFORMS_ACCESSIBLE_ROLE}.check_button)
 			chk_show_up_down.set_tab_index (8)
-			chk_show_up_down.add_click (create {EVENT_HANDLER}.make (Current, $chk_show_up_down_click))
+			chk_show_up_down.add_click (create {EVENT_HANDLER}.make (Current, $on_chk_show_up_down_click))
 			
 			my_group_box.controls.add (chk_show_up_down)
 			my_group_box.controls.add (btn_change_font)
@@ -251,6 +251,23 @@ feature -- Implementation
 			
 			controls.add (date_time_picker)
 			controls.add (my_group_box)
+		ensure
+			non_void_components: components /= Void
+			non_void_label_3: label_3 /= Void
+			non_void_error_min: error_min /= Void
+			non_void_cmb_format: cmb_format /= Void
+			non_void_dtp_min_date: dtp_min_date /= Void
+			non_void_label_2: label_2 /= Void
+			non_void_my_group_box: my_group_box /= Void
+			non_void_label_1: label_1 /= Void
+			non_void_font_dialog: font_dialog /= Void
+			non_void_tool_tip: tool_tip /= Void
+			non_void_btn_change_font: btn_change_font /= Void
+			non_void_btn_change_color: btn_change_color /= Void
+			non_void_date_time_picker: date_time_picker /= Void
+			non_void_error_max: error_max /= Void
+			non_void_dtp_max_date: dtp_max_date /= Void
+			non_void_chk_show_up_down: chk_show_up_down /= Void
 		end
 
 
@@ -273,8 +290,11 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	btn_change_font_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_btn_change_font_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `btn_change_font' is clicked.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
 		local
 			new_font: DRAWING_FONT
 			dummy: SYSTEM_OBJECT
@@ -284,8 +304,11 @@ feature {NONE} -- Implementation
 			date_time_picker.set_font (new_font)
 		end
 
-	btn_change_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is   
+	on_btn_change_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is   
 			-- feature performed when `btn_change_color' is clicked.   
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
 		local   
 			dlg: CHANGE_COLOR_DLG   
 			dummy: SYSTEM_OBJECT   
@@ -294,8 +317,11 @@ feature {NONE} -- Implementation
 			dummy := dlg.show_dialog
 		end 
 
-	dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_min_date_value' is changed.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
 		local
 			res_comp: INTEGER
 		do
@@ -308,8 +334,11 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_dtp_max_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `dtp_max_date_value' is changed.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
 		do
 			if feature {SYSTEM_DATE_TIME}.compare (dtp_max_date.value, dtp_min_date.value) >= 0 then
 				date_time_picker.set_max_date (dtp_max_date.value)
@@ -320,8 +349,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cmb_format_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_cmb_format_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `cmd_format' is changed.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
 		local
 			l_format: WINFORMS_DATE_TIME_PICKER_FORMAT
 			item_selected: SYSTEM_STRING
@@ -343,13 +375,34 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	chk_show_up_down_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_chk_show_up_down_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
        		-- feature performed when `chk_show_up_down' is changed.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
        	local
        		show_up_down: BOOLEAN
        	do
        		show_up_down := chk_show_up_down.checked
        		date_time_picker.set_show_up_down (show_up_down)
        	end
-		
+
+invariant
+	non_void_components: components /= Void
+	non_void_label_3: label_3 /= Void
+	non_void_error_min: error_min /= Void
+	non_void_cmb_format: cmb_format /= Void
+	non_void_dtp_min_date: dtp_min_date /= Void
+	non_void_label_2: label_2 /= Void
+	non_void_my_group_box: my_group_box /= Void
+	non_void_label_1: label_1 /= Void
+	non_void_font_dialog: font_dialog /= Void
+	non_void_tool_tip: tool_tip /= Void
+	non_void_btn_change_font: btn_change_font /= Void
+	non_void_btn_change_color: btn_change_color /= Void
+	non_void_date_time_picker: date_time_picker /= Void
+	non_void_error_max: error_max /= Void
+	non_void_dtp_max_date: dtp_max_date /= Void
+	non_void_chk_show_up_down: chk_show_up_down /= Void
+
 end -- class DATE_TIME_PICKER_CTL

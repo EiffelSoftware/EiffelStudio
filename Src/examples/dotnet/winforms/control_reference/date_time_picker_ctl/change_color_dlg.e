@@ -22,6 +22,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_dtp: WINFORMS_DATE_TIME_PICKER) is
+			-- Call `initialize_components'.
 		require
 			non_void_a_dtp: a_dtp /= Void
 		local
@@ -106,7 +107,7 @@ feature -- Implementation
 			btn_trailing_fore_color.set_size (l_size)
 			btn_trailing_fore_color.set_tab_index (12)
 			btn_trailing_fore_color.set_text (("Change").to_cil)
-			btn_trailing_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $btn_trailing_fore_color_Click))
+			btn_trailing_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_trailing_fore_color_click))
 
 			l_point.make_from_x_and_y (320, 160)
 			btn_OK.set_location (l_point)
@@ -130,7 +131,7 @@ feature -- Implementation
 			btn_title_back_color.set_size (l_size)
 			btn_title_back_color.set_tab_index (14)
 			btn_title_back_color.set_text (("Change").to_cil)
-			btn_title_back_color.add_click (create {EVENT_HANDLER}.make (Current, $btn_title_back_color_Click))
+			btn_title_back_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_title_back_color_click))
 
 			pnl_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
 			l_point.make_from_x_and_y (160, 19)
@@ -154,7 +155,7 @@ feature -- Implementation
 			btn_month_background.set_size (l_size)
 			btn_month_background.set_tab_index (15)
 			btn_month_background.set_text (("Change").to_cil)
-			btn_month_background.add_click (create {EVENT_HANDLER}.make (Current, $btn_month_background_Click))
+			btn_month_background.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_month_background_click))
 
 			pnl_title_back_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
 			l_point.make_from_x_and_y (160, 67)
@@ -170,7 +171,7 @@ feature -- Implementation
 			btn_title_fore_color.set_size (l_size)
 			btn_title_fore_color.set_tab_index (13)
 			btn_title_fore_color.set_text (("Change").to_cil)
-			btn_title_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $btn_title_fore_color_Click))
+			btn_title_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_title_fore_color_click))
 
 			l_point.make_from_x_and_y (16, 115)
 			label_5.set_location (l_point)
@@ -185,7 +186,7 @@ feature -- Implementation
 			btn_fore_color.set_size (l_size)
 			btn_fore_color.set_tab_index (11)
 			btn_fore_color.set_text (("Change").to_cil)
-			btn_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $btn_fore_color_Click))
+			btn_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_fore_color_click))
 
 			pnl_trailing_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3_d)
 			l_point.make_from_x_and_y (160, 115)
@@ -239,6 +240,25 @@ feature -- Implementation
 			controls.add (label_3)
 			controls.add (label_2)
 			controls.add (label_1)
+		ensure
+			non_void_components: components /= Void
+			non_void_color_dialog: color_dialog /= Void
+			non_void_pnl_month_background: pnl_month_background /= Void
+			non_void_pnl_fore_color: pnl_fore_color /= Void
+			non_void_pnl_title_fore_color: pnl_title_fore_color /= Void
+			non_void_pnl_trailing_fore_color: pnl_trailing_fore_color /= Void
+			non_void_pnl_title_back_color: pnl_title_back_color /= Void
+			non_void_btn_OK: btn_OK /= Void
+			non_void_btn_month_background: btn_month_background /= Void
+			non_void_btn_title_back_color: btn_title_back_color /= Void
+			non_void_btn_title_fore_color: btn_title_fore_color /= Void
+			non_void_btn_fore_color: btn_fore_color /= Void
+			non_void_btn_trailing_fore_color: btn_trailing_fore_color /= Void
+			non_void_label_1: label_1 /= Void
+			non_void_label_2: label_2 /= Void
+			non_void_label_3: label_3 /= Void
+			non_void_label_4: label_4 /= Void
+			non_void_label_5: label_5 /= Void
 		end
 
 
@@ -261,83 +281,116 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-        synchronize_panel_colors is
-        		-- Synchronize panel control.
-        	do
-	            pnl_fore_color.set_back_color (dtp.calendar_fore_color)
-	            pnl_month_background.set_back_color (dtp.calendar_month_background)
-	            pnl_title_back_color.set_back_color (dtp.calendar_title_back_color)
-	            pnl_title_fore_color.set_back_color (dtp.calendar_title_fore_color)
-	            pnl_trailing_fore_color.set_back_color (dtp.calendar_trailing_fore_color)
-        	end
+	synchronize_panel_colors is
+			-- Synchronize panel control.
+        do
+			pnl_fore_color.set_back_color (dtp.calendar_fore_color)
+			pnl_month_background.set_back_color (dtp.calendar_month_background)
+			pnl_title_back_color.set_back_color (dtp.calendar_title_back_color)
+			pnl_title_fore_color.set_back_color (dtp.calendar_title_fore_color)
+			pnl_trailing_fore_color.set_back_color (dtp.calendar_trailing_fore_color)
+		end
 
-		btn_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- feature performed whent `btn_fore_color' is clicked.
-			local
-				res: WINFORMS_DIALOG_RESULT
-			do
-				color_dialog.set_color (dtp.calendar_fore_color)
-				res := color_dialog.show_dialog
-				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
-					dtp.set_calendar_fore_color (color_dialog.color)
-					synchronize_panel_colors()
-				end
+	on_btn_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- feature performed whent `btn_fore_color' is clicked.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
+		local
+			res: WINFORMS_DIALOG_RESULT
+		do
+			color_dialog.set_color (dtp.calendar_fore_color)
+			res := color_dialog.show_dialog
+			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+				dtp.set_calendar_fore_color (color_dialog.color)
+				synchronize_panel_colors()
 			end
+		end
 
-		btn_month_background_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- feature performed whent `btn_month_background' is clicked.
-			local
-				res: WINFORMS_DIALOG_RESULT
-			do
-				color_dialog.set_color (dtp.calendar_month_background)
-				res := color_dialog.show_dialog
-				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
-					dtp.set_calendar_month_background (color_dialog.color)
-					synchronize_panel_colors()
-				end
+	on_btn_month_background_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- feature performed whent `btn_month_background' is clicked.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
+		local
+			res: WINFORMS_DIALOG_RESULT
+		do
+			color_dialog.set_color (dtp.calendar_month_background)
+			res := color_dialog.show_dialog
+			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+				dtp.set_calendar_month_background (color_dialog.color)
+				synchronize_panel_colors()
 			end
+		end
 
-		btn_title_back_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- feature performed whent `btn_title_back_color' is clicked.
-			local
-				res: WINFORMS_DIALOG_RESULT
-			do
-				color_dialog.set_color (dtp.calendar_title_back_color)
-				res := color_dialog.show_dialog
-				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then 
-					dtp.set_calendar_title_back_color (color_dialog.color)
-					synchronize_panel_colors()
-				end
+	on_btn_title_back_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- feature performed whent `btn_title_back_color' is clicked.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
+		local
+			res: WINFORMS_DIALOG_RESULT
+		do
+			color_dialog.set_color (dtp.calendar_title_back_color)
+			res := color_dialog.show_dialog
+			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then 
+				dtp.set_calendar_title_back_color (color_dialog.color)
+				synchronize_panel_colors()
 			end
+		end
 
-		btn_title_fore_color_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- feature performed whent `btn_title_fore_color' is clicked.
-			local
-				res: WINFORMS_DIALOG_RESULT
-			do
-				color_dialog.set_color (dtp.calendar_title_fore_color)
-				res := color_dialog.show_dialog
-				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
-					dtp.set_calendar_title_fore_color (color_dialog.color)
-					synchronize_panel_colors
-				end
+	on_btn_title_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- feature performed whent `btn_title_fore_color' is clicked.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
+		local
+			res: WINFORMS_DIALOG_RESULT
+		do
+			color_dialog.set_color (dtp.calendar_title_fore_color)
+			res := color_dialog.show_dialog
+			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+				dtp.set_calendar_title_fore_color (color_dialog.color)
+				synchronize_panel_colors
 			end
+		end
 
-		btn_trailing_fore_color_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				-- feature performed whent `btn_trailing_fore_color' is clicked.
-			local
-				res: WINFORMS_DIALOG_RESULT
-			do
-				color_dialog.set_color (dtp.calendar_trailing_fore_color)
-				res := color_dialog.show_dialog
-				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
-					dtp.set_calendar_trailing_fore_color (color_dialog.color)
-					synchronize_panel_colors
-				end
+	on_btn_trailing_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+			-- feature performed whent `btn_trailing_fore_color' is clicked.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= Void
+		local
+			res: WINFORMS_DIALOG_RESULT
+		do
+			color_dialog.set_color (dtp.calendar_trailing_fore_color)
+			res := color_dialog.show_dialog
+			if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+				dtp.set_calendar_trailing_fore_color (color_dialog.color)
+				synchronize_panel_colors
 			end
+		end
 
 invariant
 	non_void_dtp: dtp /= Void
+	non_void_components: components /= Void
+	non_void_color_dialog: color_dialog /= Void
+	non_void_pnl_month_background: pnl_month_background /= Void
+	non_void_pnl_fore_color: pnl_fore_color /= Void
+	non_void_pnl_title_fore_color: pnl_title_fore_color /= Void
+	non_void_pnl_trailing_fore_color: pnl_trailing_fore_color /= Void
+	non_void_pnl_title_back_color: pnl_title_back_color /= Void
+	non_void_btn_OK: btn_OK /= Void
+	non_void_btn_month_background: btn_month_background /= Void
+	non_void_btn_title_back_color: btn_title_back_color /= Void
+	non_void_btn_title_fore_color: btn_title_fore_color /= Void
+	non_void_btn_fore_color: btn_fore_color /= Void
+	non_void_btn_trailing_fore_color: btn_trailing_fore_color /= Void
+	non_void_label_1: label_1 /= Void
+	non_void_label_2: label_2 /= Void
+	non_void_label_3: label_3 /= Void
+	non_void_label_4: label_4 /= Void
+	non_void_label_5: label_5 /= Void
 
 end -- Class CHANGE_COLOR_DLG
 

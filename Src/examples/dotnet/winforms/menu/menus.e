@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Main menu and context menu sample."
 
 class
 	MENU
@@ -8,7 +8,11 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
 		end
+
+	ANY
 
 create
 	make
@@ -16,8 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			-- Entry point.
 		local
 			dummy: SYSTEM_OBJECT
 			mi_file, mi_format: WINFORMS_MENU_ITEM
@@ -25,23 +28,23 @@ feature {NONE} -- Initialization
 		do
 			initialize_component
 
-			--  Initialize Fonts - use generic fonts to avoid problems across
-			--  different versions of the OS
+				--  Initialize Fonts - use generic fonts to avoid problems across
+				--  different versions of the OS
 			create mono_space_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
 			create sans_serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
 			create serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
 			current_font_family := sans_serif_font_family
 
-			-- Add File Menu
+				-- Add File Menu
 			mi_file := main_menu.menu_items.add (("&File").to_cil)
 			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("&Open...").to_cil, create {EVENT_HANDLER}.make (Current, $file_open_clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
 			dummy := mi_file.menu_items.add (("-").to_cil)     --  Gives us a seperator
 			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
 
-			-- Add Format Menu
+				-- Add Format Menu
 			mi_format := main_menu.menu_items.add (("F&ormat").to_cil)
 
-			-- Font Face sub-menu
+				-- Font Face sub-menu
 			create mmi_sans_serif.make_from_text_and_on_click (
 				(("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name),
 				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
@@ -60,7 +63,7 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (2, mmi_mono_space)
 			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
 
-			-- Font Size sub-menu
+				-- Font Size sub-menu
 			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			mmi_medium.set_checked (True) 
@@ -73,11 +76,11 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (2, mmi_large)
 			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
 
-			-- Add Format to label context menu
-			-- Note have to add a clone because menus can't belong to 2 parents
+				-- Add Format to label context menu
+				-- Note have to add a clone because menus can't belong to 2 parents
 			dummy := label_1_context_menu.menu_items.add_menu_item (mi_format.clone_menu)
 
-			--  Set up the context menu items - we use these to check and uncheck items
+				--  Set up the context menu items - we use these to check and uncheck items
 			cmi_sans_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (0)
 			cmi_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (1)
 			cmi_mono_space := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (2)
@@ -85,14 +88,24 @@ feature {NONE} -- Initialization
 			cmi_medium := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (1)
 			cmi_large := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (2)
 
-			-- We use these to track which menu items are checked
-			-- This is made more complex because we have both a menu and a context menu
+				-- We use these to track which menu items are checked
+				-- This is made more complex because we have both a menu and a context menu
 			mi_main_format_font_checked := mmi_sans_serif
 			mi_main_format_size_checked := mmi_medium
 			mi_context_format_font_checked := cmi_sans_serif
 			mi_context_format_size_checked := cmi_medium
 
 			feature {WINFORMS_APPLICATION}.run_form (Current)
+		ensure
+			non_void_mono_space_font_family: mono_space_font_family /= Void
+			non_void_sans_serif_font_family: sans_serif_font_family /= Void
+			non_void_serif_font_family: serif_font_family /= Void
+			non_void_mmi_sans_serif: mmi_sans_serif /= Void
+			non_void_mmi_serif: mmi_serif /= Void
+			non_void_mmi_mono_space: mmi_mono_space /= Void
+			non_void_mmi_small: mmi_small /= Void
+			non_void_mmi_medium: mmi_medium /= Void
+			non_void_mmi_large: mmi_large /= Void
 		end
 
 
@@ -156,6 +169,11 @@ feature {NONE} -- Implementation
 			font_size := font_sizes ("Medium")
 			
 			controls.add (label_1)
+		ensure
+			non_void_components: components /= Void
+			non_void_main_menu: main_menu /= Void
+			non_void_label_1: label_1 /= Void
+			non_void_label_1_context_menu: label_1_context_menu /= Void
 		end
 
 
@@ -255,7 +273,20 @@ feature {NONE} -- Implementation
 			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
 
-
+invariant
+	non_void_components: components /= Void
+	non_void_main_menu: main_menu /= Void
+	non_void_label_1: label_1 /= Void
+	non_void_label_1_context_menu: label_1_context_menu /= Void
+	non_void_mono_space_font_family: mono_space_font_family /= Void
+	non_void_sans_serif_font_family: sans_serif_font_family /= Void
+	non_void_serif_font_family: serif_font_family /= Void
+	non_void_mmi_sans_serif: mmi_sans_serif /= Void
+	non_void_mmi_serif: mmi_serif /= Void
+	non_void_mmi_mono_space: mmi_mono_space /= Void
+	non_void_mmi_small: mmi_small /= Void
+	non_void_mmi_medium: mmi_medium /= Void
+	non_void_mmi_large: mmi_large /= Void
 
 end -- Class MENU
 

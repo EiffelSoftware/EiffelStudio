@@ -241,9 +241,9 @@ feature -- Generate Dynamic Library
 			make_file.putstring ("%N")
 			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
+			make_file.putstring ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (egc_dynlib_file)
-			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
+			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (egc_dynlib_file)
 			make_file.putstring (" ")
 			make_file.putchar (System_object_prefix)
@@ -493,7 +493,7 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(ISE_EIFFEL)/bench/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.putstring ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			if System.in_final_mode then
 				make_file.putstring ("CPPFLAGS = $optimize ")
@@ -512,7 +512,7 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(ISE_EIFFEL)/bench/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.putstring ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			make_file.putstring ("LDFLAGS = ")
 
@@ -555,7 +555,7 @@ feature -- Generation, Header
 				%RM = $rm -f%N%
 				%RMDIR = $rmdir%N")
 
-			make_file.putstring ("X2C = \$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/bin/x2c%N")
+			make_file.putstring ("X2C = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/x2c%N")
 			make_file.putstring ("SHAREDLINK = $sharedlink%N")
 			make_file.putstring ("SHAREDLIBS = $sharedlibs%N")
 			make_file.putstring ("SHARED_SUFFIX = $shared_suffix%N")
@@ -890,9 +890,9 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("/emain.o: Makefile ")
 			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/Makefile $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
+			make_file.putstring ("/Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (emain_file)
-			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
+			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (emain_file)
 			make_file.putchar (' ')
 			make_file.putchar (System_object_prefix)
@@ -1059,5 +1059,13 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
+
+feature {NONE} -- Constants
+
+	lib_location: STRING is "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/"
+			-- Location of run-time library files.
+
+	libnet_location: STRING is "\$(ISE_EIFFEL)/library/net/spec/\$(ISE_PLATFORM)/lib/libnet.a"
+			-- Library name + location of EiffelNet.
 
 end

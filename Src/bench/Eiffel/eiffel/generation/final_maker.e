@@ -227,7 +227,8 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/lib/"
+			create Result.make (256)
+			Result.append (lib_location)
 
 			if System.has_dynamic_runtime then
 				Result.append ("$shared_prefix")
@@ -252,7 +253,7 @@ feature
 			end
 
 			if System.has_separate then
-				Result.append ("\$(ISE_EIFFEL)/library/net/spec/\$(ISE_PLATFORM)/lib/libnet.a")
+				Result.append (Libnet_location)
 			end
 		end;
 

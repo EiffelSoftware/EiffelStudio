@@ -35,6 +35,15 @@ inherit
 			default_create, is_equal, copy
 		end
 
+		-- We only inherit this to get access to the parent.
+		-- We could recursively find the tree containing `Current',
+		-- and do a reverse assignment onto a GB_TYPE_SELECTOR.
+		-- Which is better?
+	GB_ACCESSIBLE
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make_with_text
 
@@ -87,6 +96,7 @@ feature -- Access
 			
 				-- Reset the drop actions.
 			drop_actions.wipe_out
+			
 			current_type := dynamic_type_from_string (type)	
 			can_drop := True
 			container ?= constructor_item.object
@@ -133,7 +143,8 @@ feature -- Access
 						
 					end
 				end
-			
+
+						
 
 			if can_drop then
 				drop_actions.extend (agent replace_layout_item (?))	
@@ -149,6 +160,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				--| FIXME I believe this is no longer needed.
 				--| FIXME, Need to allow shift pick.
 			object_handler.for_all_objects_build_drop_actions_for_new_object
+			
+			type_selector.update_drop_actions_for_all_children (Result)
 		ensure
 			Result_not_void: Result /= Void
 		end

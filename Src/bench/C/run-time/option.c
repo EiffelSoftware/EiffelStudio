@@ -512,7 +512,6 @@ void exitprf(void)
 		SYSTEMTIME *execution_time;
 #endif  /* HAS_GERUSAGE */
 
-		char *meltpath = (char *) 0;			/* directory of .UPDT */
 		unsigned long *keys;		/* Keys from H table */
 		struct feat_table *f_values;	/* Values from class H table */
 		struct prof_info *features;	/* Features from H tables */
@@ -522,7 +521,10 @@ void exitprf(void)
 		FILE *prof_output;		/* Storage file */
 			
 		double percentage; /* the computed percentage of each routine */
-		
+
+#ifdef WORKBENCH
+		char *meltpath = (char *) 0;			/* directory of .UPDT */
+
 		meltpath = (char*) eif_getenv ("MELT_PATH");
 		
 		if (meltpath != NULL)
@@ -530,10 +532,16 @@ void exitprf(void)
 			chdir (meltpath);
 		}
 		else
+#endif
 		{
-			chdir (starting_working_directory);	
-				/* change the current directory to EIFGEN/W_code or
-			 	 * EIFGEN/F_code before to crete the profile_output_file */
+				/* change the current directory to EIFGEN/F_code
+				 * before creating the profile_output_file */
+			int error = chdir (egc_system_location);
+			if (error == -1) {
+					/* If we could not change to EIFGEN/F_code, we
+					 * set it to the starting working directory */
+				chdir (starting_working_directory);	
+			}
 		}
 
 #ifdef HAS_GETRUSAGE

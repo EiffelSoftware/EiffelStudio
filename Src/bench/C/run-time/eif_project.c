@@ -8,7 +8,7 @@
  #       #    #   ####    ####   ######   ####      #     ###     ####
 
 Dummy declarations for variables and routines called in the run-time but
-generated in a system
+generated in a system in `E1/eplug.c'.
 
 */
 
@@ -17,7 +17,6 @@ generated in a system
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 	EIF_BOOLEAN exception_stack_managed;
 	EIF_INTEGER egc_prof_enabled;	  
@@ -90,10 +89,24 @@ extern "C" {
 	int32 egc_rcarg;				/* E1/einit.c */
 
 	char *egc_system_name;
+			/* Used in `misc.c' for storing and retrieving of Windows registry keys.
+			 * Used in `update.c' to find out what the name of a melted file should
+			 * be for current system.
+			 */
+
+	char *egc_system_location;
+			/* Used in `option.c' to find out where the `profinfo' file
+			 * should be generated when profiling a system. 
+			 */
+
 	EIF_INTEGER egc_compiler_tag;
 	EIF_INTEGER egc_project_version;
 
 	int egc_platform_level;
+			/* Used in `main.c' to find out whether or not we are handling
+			 * a unlocked version of the ISE Eiffel environment or not. If
+			 * it was not the case a message is displayed.
+			 */
 
 #ifdef __cplusplus
 }

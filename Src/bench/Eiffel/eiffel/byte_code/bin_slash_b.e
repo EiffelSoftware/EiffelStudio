@@ -50,16 +50,22 @@ feature -- C code generation
 			-- Print expression value
 		local
 			l_buf: like buffer
+			l_type: TYPE_I
 		do
 			l_buf := buffer
 			type.c_type.generate_cast (l_buf)
+			
 			l_buf.put_character ('(')
-			left.type.c_type.generate_conversion_to_real_64 (l_buf)
+			l_type := context.real_type (left.type)
+			l_type.c_type.generate_conversion_to_real_64 (l_buf)
 			left.print_register
 			l_buf.put_character (')')
+			
 			generate_operator
+
 			l_buf.put_character (' ')
-			right.type.c_type.generate_conversion_to_real_64 (l_buf)
+			l_type := context.real_type (right.type)
+			l_type.c_type.generate_conversion_to_real_64 (l_buf)
 			right.print_register
 			l_buf.put_character (')')
 			l_buf.put_character (')')

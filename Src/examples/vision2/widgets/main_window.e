@@ -88,8 +88,8 @@ feature {NONE} -- Initialization
 		local
 			tree_item, tree_item1, tree_item2: EV_TREE_ITEM
 			widget: EV_WIDGET
-			primitives: ARRAY [STRING]
-			containers: ARRAY [STRING]
+			primitives: ARRAY [EV_WIDGET]
+			containers: ARRAY [EV_WIDGET]
 			counter: INTEGER
 			pixmap: EV_PIXMAP
 			passed: BOOLEAN
@@ -99,20 +99,25 @@ feature {NONE} -- Initialization
 			create tree_item1.make_with_text ("Containers")
 			tree_item.extend (tree_item1)
 			
-			create containers.make_from_array (<<"EV_CELL", "EV_FIXED", "EV_FRAME", "EV_HORIZONTAL_SPLIT_AREA",
-				"EV_HORIZONTAL_BOX", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA", "EV_TABLE", "EV_VERTICAL_BOX",
-				"EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT">>)
+			create containers.make_from_array (<<create {EV_CELL},
+												create {EV_FIXED},
+												create {EV_FRAME},
+												create {EV_HORIZONTAL_SPLIT_AREA},
+												create {EV_HORIZONTAL_BOX},
+												create {EV_NOTEBOOK},
+												create {EV_SCROLLABLE_AREA},
+												create {EV_TABLE},
+												create {EV_VERTICAL_BOX},
+												create {EV_VERTICAL_SPLIT_AREA},
+												create {EV_VIEWPORT}>>);
 			from
 				counter := 1
 			until
 				counter = containers.count + 1
 			loop
-				create tree_item2.make_with_text (containers @ counter)
+				widget := containers.item (counter)
+				create tree_item2.make_with_text (widget.generator)
 				tree_item1.extend (tree_item2)
-				passed := feature {ISE_RUNTIME}.check_assert (False)
-				widget ?= new_instance_of (dynamic_type_from_string (tree_item2.text))
-				widget.default_create
-				passed := feature {ISE_RUNTIME}.check_assert (True)
 				tree_item2.select_actions.extend (agent test_widget (widget))
 				counter := counter + 1
 			end
@@ -120,31 +125,43 @@ feature {NONE} -- Initialization
 			create tree_item1.make_with_text ("Primitives")
 			tree_item.extend (tree_item1)
 			
-			create primitives.make_from_array (<<"EV_BUTTON", "EV_CHECK_BUTTON", "EV_COMBO_BOX",
-				"EV_HORIZONTAL_PROGRESS_BAR", "EV_HORIZONTAL_RANGE",
-				"EV_HORIZONTAL_SEPARATOR", "EV_LABEL", "EV_LIST", "EV_MULTI_COLUMN_LIST",
-				"EV_PASSWORD_FIELD", "EV_PIXMAP", "EV_RADIO_BUTTON", "EV_SPIN_BUTTON",
-				"EV_TEXT", "EV_TEXT_FIELD", "EV_TOGGLE_BUTTON", "EV_TOOL_BAR", "EV_TREE", "EV_VERTICAL_PROGRESS_BAR",
-				"EV_VERTICAL_RANGE", "EV_VERTICAL_SEPARATOR", "EV_DRAWING_AREA", "EV_VERTICAL_SCROLL_BAR",
-				"EV_HORIZONTAL_SCROLL_BAR">>)
+			create primitives.make_from_array (<<create {EV_BUTTON},
+												create {EV_CHECK_BUTTON},
+												create {EV_COMBO_BOX},
+												create {EV_HORIZONTAL_PROGRESS_BAR},
+												create {EV_HORIZONTAL_RANGE},
+												create {EV_HORIZONTAL_SEPARATOR},
+												create {EV_LABEL},
+												create {EV_LIST},
+												create {EV_MULTI_COLUMN_LIST},
+												create {EV_PASSWORD_FIELD},
+												create {EV_PIXMAP},
+												create {EV_RADIO_BUTTON},
+												create {EV_SPIN_BUTTON},
+												create {EV_TEXT},
+												create {EV_TEXT_FIELD},
+												create {EV_TOGGLE_BUTTON},
+												create {EV_TOOL_BAR},
+												create {EV_TREE},
+												create {EV_VERTICAL_PROGRESS_BAR},
+												create {EV_VERTICAL_RANGE},
+												create {EV_VERTICAL_SEPARATOR},
+												create {EV_DRAWING_AREA},
+												create {EV_VERTICAL_SCROLL_BAR},
+												create {EV_HORIZONTAL_SCROLL_BAR}>>)
 			from
 				counter  := 1
 			until
 				counter = primitives.count + 1
 			loop
-				create tree_item.make_with_text (primitives @ counter)
-				tree_item1.extend (tree_item)
-				passed := feature {ISE_RUNTIME}.check_assert (False)
-				widget ?= new_instance_of (dynamic_type_from_string (tree_item.text))
-				widget.default_create
-				passed := feature {ISE_RUNTIME}.check_assert (False)
-					-- If we are a pixmap, then we must load and assign
-					-- an image.
+				widget := primitives.item (counter)
+				create tree_item2.make_with_text (widget.generator)
+				tree_item1.extend (tree_item2)
 				pixmap ?= widget
 				if pixmap /= Void then
 					pixmap.set_with_named_file ("bm_About.png")
 				end
-				tree_item.select_actions.extend (agent test_widget (widget))
+				tree_item2.select_actions.extend (agent test_widget (widget))
 				counter := counter + 1
 			end
 		end

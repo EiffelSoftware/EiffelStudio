@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			family := Family_sans
 			weight := Weight_regular
 			shape := Shape_regular
-			height := 12
+			height := 10
 
 			create preferred_families
 			preferred_families.add_actions.extend (~update_preferred_faces)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 			update_font_face
 		end
-
+		
 	initialize is 
 		do
 			is_initialized := True

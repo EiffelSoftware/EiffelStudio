@@ -153,6 +153,16 @@ feature -- Bridge to Debugger
 			Result := eifnet_debugger.last_managed_callback_is_exception
 		end
 
+	exception_handled: BOOLEAN is
+			-- Last Exception is handled ?
+			-- if True => first chance
+			-- if False => The execution will terminate after.
+		require
+			eifnet_debugger_exists: eifnet_debugger /= Void
+		do
+			Result := eifnet_debugger.last_exception_is_handled
+		end
+
 	exception_details: TUPLE [STRING, STRING] is
 			-- class details , module details
 		require
@@ -167,7 +177,7 @@ feature -- Bridge to Debugger
 			if not retried then
 				l_icd_exception := eifnet_debugger.active_exception_value
 				create l_exception_info.make (l_icd_exception)
-				l_class_details := "0x" + l_exception_info.value_class_name
+				l_class_details := l_exception_info.value_class_name
 				l_module_details := l_exception_info.value_module_file_name
 				Result := [l_class_details, l_module_details]
 			end
@@ -327,7 +337,6 @@ feature -- Execution
 		do
 			if eifnet_debugger.is_debugging then
 				eifnet_debugger.set_last_control_mode_is_kill
-				
 				eifnet_debugger.terminate_debugger
 			end
 		end

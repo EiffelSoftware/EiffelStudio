@@ -40,13 +40,13 @@ feature -- Element change
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.
 		local
-			tempstr: ANY
+			a_gs: GEL_STRING
 		do
-			tempstr := a_text.to_c
+			create a_gs.make (a_text)
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				c_object,
-				$tempstr,
+				a_gs.item,
 				NULL
 			)
 		end

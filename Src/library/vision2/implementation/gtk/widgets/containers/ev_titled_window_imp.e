@@ -173,10 +173,12 @@ feature -- Element change
 
 	set_icon_name (an_icon_name: STRING) is
 			-- Assign `an_icon_name' to `icon_name'.
+		local
+			a_gs: GEL_STRING
 		do
+			create a_gs.make (an_icon_name)
 			C.gdk_window_set_icon_name (
-				C.gtk_widget_struct_window (c_object),
-					eiffel_to_c (an_icon_name))
+				C.gtk_widget_struct_window (c_object), a_gs.item)
 			icon_name_holder := clone (an_icon_name)
 		end
 

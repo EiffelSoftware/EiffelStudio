@@ -29,13 +29,16 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a directory selection dialog with `par' as
 			-- parent.
+		local
+			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
 
 			-- Create the gtk object.
+			create a_gs.make ("Color selection dialog")
 			set_c_object (
 				C.gtk_color_selection_dialog_new (
-					eiffel_to_c ("Color selection dialog")
+					a_gs.item
 				)
 			)
 			C.gtk_widget_hide (

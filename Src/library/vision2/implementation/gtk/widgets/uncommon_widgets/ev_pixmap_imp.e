@@ -16,6 +16,8 @@ inherit
 		end
 
 	EV_DRAWABLE_IMP
+		undefine
+			dispose
 		redefine
 			interface,
 			make,
@@ -124,10 +126,10 @@ feature -- Element change
 			-- exceptions.
 			--|FIXME do this!
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := file_name.to_c
-			c_ev_load_pixmap ($Current, $temp_string, $update_fields)
+			create a_gs.make (file_name)
+			c_ev_load_pixmap ($Current, a_gs.item, $update_fields)
 		end
 
 	set_with_default is
@@ -171,28 +173,6 @@ feature -- Element change
 				C.gdk_gc_unref (maskgc)
 			end
 			set_pixmap (gdkpix, gdkmask)
-		end
-
-	destroy is
-		do
-			Precursor
-			C.gdk_gc_unref (gc)
-			gc := NULL
-		end
-		
-	dispose is
-			-- 
-		do
---			if gc /= NULL then
---				gdk_gc_unref (gc)
---			end
-			Precursor
-		end
-		
-	gdk_gc_unref (a_gc: POINTER) is 
-			-- void   gdk_gc_unref		  (GdkGC	    *gc);
-		external
-			"C (GdkGC*) | <gtk/gtk.h>"
 		end
 
 feature -- Access
@@ -439,6 +419,23 @@ feature {NONE} -- Implementation
 				gdkmask := C.gdk_bitmap_create_from_data (default_gdk_window, alpha_data, pixmap_width, pixmap_height)
 			end
 			set_pixmap (gdkpix, gdkmask)
+		end
+		
+	destroy is
+		do
+			Precursor
+			C.gdk_gc_unref (gc)
+			gc := NULL
+		end
+		
+	dispose is
+			-- 
+		do
+			if gc /= NULL then
+				gdk_gc_unref (gc)
+				gc := NULL
+			end
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 feature {NONE} -- Constants

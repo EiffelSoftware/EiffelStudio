@@ -126,8 +126,11 @@ feature -- Status setting
 
 	set_title (a_title: STRING) is
 			-- Set the title of the dialog.
+		local
+			a_gs: GEL_STRING
 		do
-			C.gtk_window_set_title (c_object, eiffel_to_c (a_title))
+			create a_gs.make (a_title)
+			C.gtk_window_set_title (c_object, a_gs.item)
 		end
 
 	set_blocking_window (a_window: EV_WINDOW) is

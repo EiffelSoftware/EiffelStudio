@@ -15,7 +15,8 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface
+			interface,
+			dispose
 		end
 
 	EV_PRIMITIVE_IMP
@@ -26,12 +27,14 @@ inherit
 			set_background_color
 		redefine
 			interface,
-			has_focus,
+		--	has_focus,
 			disconnect_all_signals,
 			default_key_processing_blocked,
 			screen_x,
 			screen_y,
-			set_focus
+			set_focus,
+			dispose,
+			destroy
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -49,27 +52,25 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		local
 			temp_sig_id: INTEGER
+			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_drawing_area_new)
+			create a_gs.make ("button-press-event")
 			temp_sig_id := c_signal_connect (
 					c_object,
-					eiffel_to_c ("button-press-event"),
-					agent give_focus
+					a_gs.item,
+					agent set_focus
 			)
+			create a_gs.make ("focus-out-event")
 			temp_sig_id := c_signal_connect (
 					c_object,
-					eiffel_to_c ("focus-in-event"),
-					agent attain_focus
-			)
-			temp_sig_id := c_signal_connect (
-					c_object,
-					eiffel_to_c ("focus-out-event"),
+					a_gs.item,
 					agent lose_focus
 			)
-			gc := C.gdk_gc_new (default_gdk_window)
+			gc := C.gdk_gc_new (C.gdk_root_parent)
 			init_default_values
-		end
+		end	
 
 feature -- Access
 
@@ -118,34 +119,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	give_focus is
-		do
-			if not has_focus then
-				set_focus
-			end
-		end
-
-	attain_focus is
-		do
-			top_level_window_imp.set_focus_widget (Current)
-			has_focus := True
-		end
-
 	lose_focus is
 		do
 			top_level_window_imp.set_focus_widget (Void)
-			has_focus := False
-			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
+			-- This is a hack to make sure focus flag is unset.
 		end
 		
 	set_focus is
 			-- Grab keyboard focus.
 		do
-			GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
-			C.gtk_widget_grab_focus (c_object)
+			if not has_focus then
+				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+				C.gtk_widget_grab_focus (c_object)
+				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
+				top_level_window_imp.set_focus_widget (Current)
+				GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+			end
 		end
-
-	has_focus: BOOLEAN
 
 	interface: EV_DRAWING_AREA
 
@@ -187,6 +178,25 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 		do
 			Result := C.gtk_widget_struct_window (c_object)
 		end
+		
+feature {NONE} -- Implementation
+
+	destroy is
+		do
+			Precursor
+			C.gdk_gc_unref (gc)
+			gc := NULL
+		end
+		
+	dispose is
+			-- 
+		do
+			if gc /= NULL then
+				gdk_gc_unref (gc)
+				gc := NULL
+			end
+			Precursor {EV_PRIMITIVE_IMP}
+		end	
 
 end -- class EV_DRAWING_AREA_IMP
 

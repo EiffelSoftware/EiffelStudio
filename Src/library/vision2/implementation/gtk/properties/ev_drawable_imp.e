@@ -19,6 +19,12 @@ inherit
 	EV_C_UTIL
 
 	PLATFORM
+	
+	MEMORY
+		undefine
+			copy,
+			default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -321,17 +327,17 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
 			if drawable /= NULL then
-				temp_string := a_text.to_c
+				create a_gs.make (a_text)
 				C.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
 					x,
 					y,
-					$temp_string
+					a_gs.item
 				)
 			end
 		end
@@ -339,17 +345,17 @@ feature -- Drawing operations
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
 			if drawable /= NULL then
-				temp_string := a_text.to_c
+				create a_gs.make (a_text)
 				C.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
 					x,
 					y + internal_font_ascent,
-					$temp_string
+					a_gs.item
 				)
 			end
 		end
@@ -653,6 +659,12 @@ feature {NONE} -- Implementation
 			-- Default system color map used for allocating colors.
 		once
 			Result := C.gdk_rgb_get_cmap
+		end
+		
+	gdk_gc_unref (a_gc: POINTER) is 
+			-- void   gdk_gc_unref		  (GdkGC	    *gc);
+		external
+			"C (GdkGC*) | <gtk/gtk.h>"
 		end
 
 invariant

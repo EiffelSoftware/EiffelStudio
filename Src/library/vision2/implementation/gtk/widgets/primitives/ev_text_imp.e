@@ -182,8 +182,11 @@ feature -- Status setting
 		end
 	
 	insert_text (txt: STRING) is
+		local
+			a_gs: GEL_STRING
 		do
-			C.gtk_text_insert (c_object, NULL, NULL, NULL, eiffel_to_c (txt), -1)
+			create a_gs.make (txt)
+			C.gtk_text_insert (c_object, NULL, NULL, NULL, a_gs.item, -1)
 		end
 	
 	set_text (txt: STRING) is

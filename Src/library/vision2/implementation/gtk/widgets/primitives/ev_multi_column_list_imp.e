@@ -578,14 +578,14 @@ feature -- Element change
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.
 		local
-			temp_txt: ANY
+			a_gs: GEL_STRING
 		do
 			if list_widget /= NULL then
-				temp_txt := a_txt.to_c
+				create a_gs.make (a_txt)
 				C.gtk_clist_set_column_title (
 					list_widget,
 					a_column - 1,
-					$temp_txt
+					a_gs.item
 				)
 			end
 		end
@@ -971,28 +971,28 @@ feature {NONE} -- Implementation
 		local
 			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pixmap_imp: EV_PIXMAP_IMP
-			temp_txt: ANY
+			a_gs: GEL_STRING
 		do
 			row_imp := ev_children.i_th (a_row)
+			create a_gs.make (a_text)
 			if row_imp.pixmap /= Void and a_column = 1 then
 				pixmap_imp ?= row_imp.pixmap.implementation
-				temp_txt := a_text.to_c
+				
 				C.gtk_clist_set_pixtext (
 					list_widget,
 					a_row - 1,
 					a_column - 1,
-					$temp_txt,
+					a_gs.item,
 					3,
 					C.gtk_pixmap_struct_pixmap (pixmap_imp.gtk_pixmap),
 					C.gtk_pixmap_struct_mask (pixmap_imp.gtk_pixmap)
 				)
 			else
-				temp_txt := a_text.to_c
 				C.gtk_clist_set_text (
 					list_widget,
 					a_row - 1,
 					a_column - 1,
-					$temp_txt
+					a_gs.item
 				)
 			end
 		end

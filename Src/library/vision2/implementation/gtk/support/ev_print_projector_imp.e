@@ -61,10 +61,12 @@ feature {EV_ANY_I} -- Access
 	project is
 		local
 			i: INTEGER
+			a_gs: GEL_STRING
 		do
 			if not interface.context.output_to_file then
 				-- Create the named pipe
-				i := mkfifo (eiffel_to_c (filename), S_IRWXU)
+				create a_gs.make (filename)
+				i := mkfifo (a_gs.item, S_IRWXU)
 				system ("lpr < " + filename + " &")
 			end
 

@@ -63,14 +63,14 @@ feature {NONE} -- Implementation
 			-- Generic menu item insertion.
 		local
 			menu_imp: EV_MENU_IMP
-			a_menu_sig: ANY
+			a_gs: GEL_STRING
 		do
-			a_menu_sig := ("activate_item").to_c
+			create a_gs.make ("activate_item")
 			if parent_imp /= Void then
 				menu_imp ?= an_item_imp
 				if menu_imp /= Void and then menu_imp.key /= 0 then
 					C.gtk_widget_add_accelerator (menu_imp.c_object,
-						$a_menu_sig,
+						a_gs.item,
 						parent_imp.accel_group,
 						menu_imp.key,
 						C.gdk_mod1_mask_enum,

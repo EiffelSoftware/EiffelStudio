@@ -19,7 +19,8 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			dispose
 		end
 
 create
@@ -44,12 +45,6 @@ feature {NONE} -- Initialization
 			--| FIXME IEK Gdk event handling needs implementing
 			--connect_signal_to_actions ("expose-event",
 			--	interface.expose_actions)
-		end
-
-	destroy is
-		do
-			C.gdk_gc_unref (gc)
-			is_destroyed := True
 		end
 
 feature -- Status report
@@ -199,6 +194,22 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Implementation
+
+	destroy is
+		do
+			C.gdk_gc_unref (gc)
+			is_destroyed := True
+		end
+		
+	dispose is
+			-- 
+		do
+			if gc /= NULL then
+				gdk_gc_unref (gc)
+				gc := NULL
+			end
+			Precursor {EV_DRAWABLE_IMP}
+		end
 
 	drawable: POINTER is
 			-- Pointer to the screen (root window)

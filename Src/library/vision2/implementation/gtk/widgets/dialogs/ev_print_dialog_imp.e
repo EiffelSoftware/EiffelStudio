@@ -29,10 +29,13 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
+		local
+			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_window_new (C.GTK_WINDOW_DIALOG_ENUM))
-			C.gtk_window_set_title (c_object, eiffel_to_c ("Print"))
+			create a_gs.make ("Print")
+			C.gtk_window_set_title (c_object, a_gs.item)
 			C.gtk_widget_realize (c_object)
 		end
 

@@ -119,13 +119,13 @@ feature -- Basic operation
 			-- Insert `txt' at the current position.
 		local
 			pos: INTEGER
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
 			pos := caret_position - 1
-			temp_string := txt.to_c
+			create a_gs.make (txt)
 			C.gtk_editable_insert_text (
 				entry_widget,
-				$temp_string,
+				a_gs.item,
 				txt.count,
 				$pos
 			)

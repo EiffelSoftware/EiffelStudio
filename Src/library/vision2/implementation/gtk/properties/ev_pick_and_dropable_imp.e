@@ -268,10 +268,10 @@ feature -- Implementation
 
 	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := signal.to_c
-			C.gtk_signal_emit_stop_by_name (a_c_object, $temp_string)
+			create a_gs.make (signal)
+			C.gtk_signal_emit_stop_by_name (a_c_object, a_gs.item)
 		end
 
 	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER;
@@ -384,7 +384,7 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			if mode_is_pick_and_drop then
-				signal_emit_stop (visual_widget, "button-press-event")
+				signal_emit_stop (c_object, "button-press-event")
 			end
 			app_implementation.on_drop (pebble)
 			x_origin := 0

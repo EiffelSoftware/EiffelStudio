@@ -23,7 +23,7 @@ inherit
 			copy
 		end
 	
-feature {EV_ANY} -- Initialization
+feature -- Initialization
 
  --|----------------------------------------------------------------
  --| Creation sequence for all Vision2 objects is like this:

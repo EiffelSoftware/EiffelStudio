@@ -53,21 +53,21 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			temp_text: ANY
+			a_gs: GEL_STRING
 		do
-			temp_text := a_text.to_c
-			C.gtk_entry_set_text (entry_widget, $temp_text)
+			create a_gs.make (a_text)
+			C.gtk_entry_set_text (entry_widget, a_gs.item)
 		end
 
 	append_text (txt: STRING) is
 			-- Append `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
-			temp_text: ANY
+			a_gs: GEL_STRING
 		do
 			temp_caret_pos := caret_position
-			temp_text := txt.to_c
-			C.gtk_entry_append_text (entry_widget, $temp_text)
+			create a_gs.make (txt)
+			C.gtk_entry_append_text (entry_widget, a_gs.item)
 			set_caret_position (temp_caret_pos)
 		end
 	
@@ -75,11 +75,11 @@ feature -- Status setting
 			-- Prepend `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
-			temp_text: ANY
+			a_gs: GEL_STRING
 		do
 			temp_caret_pos := caret_position
-			temp_text := txt.to_c
-			C.gtk_entry_prepend_text (entry_widget, $temp_text)
+			create a_gs.make (txt)
+			C.gtk_entry_prepend_text (entry_widget, a_gs.item)
 			set_caret_position (temp_caret_pos)
 		end
 		

@@ -45,10 +45,6 @@ feature -- Status setting
 		do
 			C.gtk_widget_set_sensitive (c_object, False)
 		end
-		
-feature {NONE} -- Implementation
-
-	disable_sensitive_called: BOOLEAN
 
 feature {EV_ANY_I} -- Implementation
 

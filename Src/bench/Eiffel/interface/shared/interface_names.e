@@ -184,7 +184,7 @@ feature -- Accelerator, focus label and menu name
 	m_Copy: STRING is					"&Copy%TCtrl+C"
 	f_Copy: STRING is					"Copy (Ctrl+C)"
 	f_Close: STRING is					"Close"
-	m_Close: STRING is					"&Close"
+	m_Close: STRING is					"&Close window"
 	f_Create_new_cluster: STRING is		"Create a new cluster"
 	f_Create_new_class: STRING is		"Create a new class"
 	f_Create_new_feature: STRING is		"Create a new feature"

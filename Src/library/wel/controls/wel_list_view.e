@@ -50,6 +50,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_ILC_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_LVCF_CONSTANTS
 
 creation
@@ -201,9 +206,13 @@ feature -- Status report
 			exists: exists
 			index_large_enough: index >= 0
 			index_small_enough: index < count
+		local
+			a,b: INTEGER
 		do
 			create Result.make (0,0)
 			cwin_send_message (item, Lvm_getitemposition, index, cwel_pointer_to_integer(Result.item))
+			a := Result.x
+			b := Result.y
 		end
 
 	get_cell_text (i,j: INTEGER): STRING is
@@ -431,6 +440,18 @@ feature -- Element change
 			cwin_send_message (item, Lvm_insertitem, 0, an_item.to_integer)
 		ensure
 			new_count: count = old count + 1
+		end
+
+	replace_item (an_item: WEL_LIST_VIEW_ITEM) is
+			-- Set the properties of `an_item'.
+			-- The zero-based position of the item is given by the 
+			-- `iitem' attribute of the item.
+		require
+			exists: exists
+			index_large_enough: an_item.iitem >= 0
+			index_small_enough: an_item.iitem <= count
+		do
+			cwin_send_message (item, Lvm_setitem, 0, an_item.to_integer)
 		end
 
 	delete_item (index: INTEGER) is

@@ -679,7 +679,6 @@ feature -- Access
 			non_void_statement: a_method_return_statement /= Void
 		local
 			l_node: EV_TREE_ITEM
-			l_text: SYSTEM_STRING
 		do
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
 			if a_method_return_statement.expression /= Void then

@@ -231,20 +231,21 @@ feature {NONE} -- Implementation
 		local
 			pos, last_pos: INTEGER
 			item_position: INTEGER
+			looped_already: BOOLEAN
 		do
 			create Result.make (0)
 			from
 				pos := 1
 				item_position := 1
 			until
-				--item_position > pos = 0
 				pos = a_string.count + 1
 			loop
-				if pos > 1 then
+				if looped_already then
 					last_pos := pos + 1
 				else
-					last_pos := pos
+					last_pos := 1
 				end
+			
 				pos := a_string.index_of (separator_char, last_pos)
 					-- This handles the last case.
 				if pos = 0  then
@@ -252,6 +253,7 @@ feature {NONE} -- Implementation
 				end
 				Result.extend (a_string.substring (last_pos, pos - 1))
 				item_position := item_position + 1
+				looped_already := True
 			end
 		end
 

@@ -10,6 +10,7 @@
 	Handling Eiffel-C Transfer of Objects to Routines.
 */
 
+#include "eif_globals.h"
 #include "config.h"
 #include "malloc.h"
 #include "garcol.h"

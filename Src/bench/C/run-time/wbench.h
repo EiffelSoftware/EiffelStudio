@@ -14,6 +14,8 @@
 #ifndef _wbench_h_
 #define _wbench_h_
 
+#include "eif_globals.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

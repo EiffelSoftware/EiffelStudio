@@ -20,7 +20,6 @@ deferred class DYNAMIC_TREE [G] inherit
 
 feature -- Access
 
-
 	parent: DYNAMIC_TREE [G];
 			-- Parent of current node.
 
@@ -28,6 +27,15 @@ feature -- Status report
 
 	extendible: BOOLEAN is true;
 			-- May new items be added?
+
+feature {RECURSIVE_CURSOR_TREE} -- Element change
+
+	set_child (n: like parent) is
+			-- Set the child of parent to `n'.
+		require
+			non_void_argument: n /= Void		
+		deferred
+		end;
 
 feature -- Element change
 

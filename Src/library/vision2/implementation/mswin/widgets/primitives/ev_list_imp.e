@@ -125,6 +125,8 @@ feature -- Status setting
 			-- Select item at the one-based `index'.
 		do
 			wel_select_item (index - 1)
+			cwin_send_message (parent_item, Wm_command, Lbn_selchange * 65536 + id,
+				cwel_pointer_to_integer (item))
 		end
 
 	select_all is

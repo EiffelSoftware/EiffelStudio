@@ -1,10 +1,9 @@
 indexing
-	description: ""
-	author: ""
+	description: "Abstract description of a .NET formatting context."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	DOTNET_FORMAT_CONTEXT
 
 inherit
@@ -17,8 +16,8 @@ inherit
 		export
 			{NONE} all
 		end	
-	
-feature -- Initialization
+
+feature {NONE} -- Initialization
 
 	make (a_consumed: CONSUMED_TYPE) is
 			-- Initialize Current with 'a_consumed'
@@ -36,6 +35,7 @@ feature -- Initialization
 			end
 		ensure
 			has_dotnet_type: consumed_t /= Void
+			assembly_name_not_void: assembly_name /= Void
 		end		
 
 feature -- Access
@@ -81,8 +81,10 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	strip_down (a_string: STRING ) is
+	strip_down (a_string: STRING) is
 			-- Strip string of all unwanted white space
+		require
+			a_string_not_void: a_string /= Void
 		local
 			l_new_line_count, 
 			l_old_line_count: INTEGER

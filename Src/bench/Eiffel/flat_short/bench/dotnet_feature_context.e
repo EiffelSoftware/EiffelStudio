@@ -31,7 +31,7 @@ creation
 	make,
 	make_from_entity
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_feature: E_FEATURE; c: CONSUMED_TYPE) is
 			-- Initialize Current with feature 'a_feature'
@@ -69,7 +69,7 @@ feature -- Initialization
 		end
 
 	initialize is
-			-- Initialization
+			-- Initialization.
 		require else
 			has_current_feature: current_feature /= Void
 		local
@@ -95,6 +95,8 @@ feature -- Property
 
 	current_feature: CONSUMED_ENTITY
 			-- Current feature.
+
+feature {NONE} -- Property
 
 	declared_type: CONSUMED_REFERENCED_TYPE
 			-- The type in which 'current_feature' was declared.
@@ -132,9 +134,9 @@ feature -- Execution
 				prev_cluster := Inst_context.cluster
 				execution_error := false
 				ast.format (Current)				
+				System.set_current_class (prev_class)
+				Inst_context.set_cluster (prev_cluster)
 			end
-			System.set_current_class (prev_class)
-			Inst_context.set_cluster (prev_cluster)
 		end
 
 feature -- Element change
@@ -169,11 +171,22 @@ feature -- Element change
 		do
 			begin
 			new_expression
-			set_separator (ti_comma)					
-			-- Feature name
+			set_separator (ti_comma)
+			
 			if class_c /= Void then
-				-- Feature should be clickable	
-				l_feature := class_c.feature_table.item (name_of_current_feature).api_feature (class_c.class_id)
+					-- Feature should be clickable
+				if class_c.feature_table.has (name_of_current_feature) then
+					l_feature ?= class_c.feature_table.item (name_of_current_feature).api_feature (class_c.class_id)
+				else
+					l_txt := create {LOCAL_TEXT}.make (name_of_current_feature)
+					text.add_string ("unresolved feature name")
+					text.add_new_line
+					text.add_indent
+					text.add (l_txt)
+				end		
+			end
+			
+			if l_feature /= Void then
 				text.add_new_line
 				text.add_indent
 				text.add_feature (l_feature, name_of_current_feature)
@@ -182,16 +195,58 @@ feature -- Element change
 				text.add_new_line
 				text.add_indent
 				text.add (l_txt)
-			end			
+			end	
+			
 			put_signature
 			put_comments
 		end		
+
+	put_property_or_event_feature is
+			-- Format an event ot property feature.
+		require
+			is_prop_or_event: current_feature.is_property_or_event
+		local
+			l_event: CONSUMED_EVENT
+			l_property: CONSUMED_PROPERTY
+		do
+			if current_feature.is_event then
+				l_event ?= current_feature
+				if l_event /= Void then
+					if l_event.adder /= Void then
+						name_of_current_feature := l_event.adder.eiffel_name
+						put_normal_feature
+					end
+					if l_event.remover /= Void then
+						name_of_current_feature := l_event.remover.eiffel_name
+						put_normal_feature
+					end
+					name_of_current_feature := clone (current_feature.eiffel_name)
+				end		
+			elseif current_feature.is_property then
+				l_property ?= current_feature
+				if l_property /= Void then
+					if l_property.getter /= Void then
+						name_of_current_feature := l_property.getter.eiffel_name
+						put_normal_feature
+					end
+					if l_property.setter /= Void then
+						name_of_current_feature := l_property.setter.eiffel_name
+						put_normal_feature
+					end
+					name_of_current_feature := clone (current_feature.eiffel_name)
+				end		
+			end
+		end	
+
+feature {NONE} -- Element Change
 
 	put_signature is
 			-- Feature signature
 		local
 			l_c_arg: CONSUMED_ARGUMENT
-			l_cnt: INTEGER
+			l_c_class: CLASS_I
+			l_cnt,
+			l_char_count: INTEGER
 		do
 			if not (arguments = Void or arguments.is_empty) then
 				begin
@@ -200,25 +255,35 @@ feature -- Element change
 				text.add_space
 				text.add (ti_l_parenthesis)
 				abort_on_failure
+				l_char_count := name_of_current_feature.count + 8
 				from
 					l_cnt := 1
 				until
 					l_cnt > arguments.count
 				loop
 					l_c_arg := arguments.item (l_cnt)
-					text.add (create {LOCAL_TEXT}.make (l_c_arg.eiffel_name) )
+					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
+					
+					if l_char_count > 60 then
+						text.add_new_line
+						text.add_indents (4)
+						l_char_count := 0
+					end
+					text.add (create {LOCAL_TEXT}.make (l_c_arg.eiffel_name))
 					text.add_char (':')
 					text.add_space
-					text.add_class (class_i.type_from_consumed_type (l_c_arg.type))
+					text.add_class (l_c_class)
 					if l_cnt < arguments.count then
 						text.add_char (';')
 						text.add_space
 					end
+					
+					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 + l_c_class.name.count
 					l_cnt := l_cnt + 1
 				end
 				text.add (ti_r_parenthesis)
 			end
-			-- Feature return type, if any
+				-- Feature return type, if any
 			if return_type /= Void then
 				text.add_char (':')
 				text.add_space
@@ -237,15 +302,15 @@ feature -- Element change
 			l_c_arg: CONSUMED_ARGUMENT
 			l_cnt: INTEGER
 		do
-			-- Retrieve feature comments for feature
+				-- Retrieve feature comments for feature
+			create l_parsed_arguments.make_empty
+			l_constructor ?= current_feature
+			if l_constructor /= Void then
+				l_parsed_arguments.append ("#ctor")
+			end
 			if arguments /= Void then
 				from
 					l_cnt := 1
-					create l_parsed_arguments.make_empty
-					l_constructor ?= current_feature
-					if l_constructor /= Void then
-						l_parsed_arguments.append ("#ctor")
-					end
 					if arguments.count > 0 then
 						l_parsed_arguments.extend ('(')
 					end
@@ -262,7 +327,7 @@ feature -- Element change
 					end
 					l_cnt := l_cnt + 1
 				end
-			else
+			elseif l_parsed_arguments.is_empty then
 				create l_parsed_arguments.make_empty
 			end
 			
@@ -292,38 +357,17 @@ feature -- Element change
 					l_summary.forth
 				end
 				
-				-- Arguments comments.
-				
+					-- Arguments comments.
 				l_parameter_information := l_member_info.parameters
 				if not l_parameter_information.is_empty then
-					text.add_new_line
-					text.add_new_line
-					text.add_indents (3)
-					text.add_comment ("-- Argument Information ")
-					text.add_new_line
-					text.add_indents (3)
-					text.add_comment ("-- -------------------- ")
-					from
-						l_parameter_information.start
-					until
-						l_parameter_information.after
-					loop
-						text.add_new_line
-						text.add_indents (3)
-						text.add_comment ("-- ")
-						text.add_comment (l_parameter_information.item.name + ": ")		
-						text.add_comment (l_parameter_information.item.description)	
-						l_parameter_information.forth
-					end
-					new_line
+					put_argument_comments (l_parameter_information)
 				else
 					new_line
-				end
+				end	
 	
 				l_return_info := parse_summary (l_member_info.returns)
 				if not l_return_info.is_empty then
-								-- Return Type comments.	
---					text.add_new_line
+						-- Return Type comments.	
 					text.add_new_line
 					text.add_indents (3)
 					text.add_comment ("-- Return Type Information")
@@ -352,9 +396,8 @@ feature -- Element change
 	put_origin_comment is
 			-- Put the 'from CLASS' if feature is declared in ancestor.
 		do
-			-- Check if feature is inherited, if display inherited class name
+				-- Check if feature is inherited, if display inherited class name
 			if is_inherited then
---				text.add_new_line
 				text.add_indents (3)
 				text.add_comment ("-- from (")
 				text.add_class (class_i.type_from_consumed_type (declared_type))
@@ -362,9 +405,71 @@ feature -- Element change
 				new_line
 			end
 		end		
+	
+	put_argument_comments (a_param_info: ARRAYED_LIST [PARAMETER_INFORMATION]) is
+			-- Put the parameter information comments in the feature documentation.
+		require
+			param_info_not_void: a_param_info /= Void
+		local
+			l_summary: ARRAYED_LIST [STRING]
+			l_next_line: BOOLEAN
+			l_max_count: INTEGER
+			l_string: STRING
+		do
+			text.add_new_line
+			text.add_new_line
+			text.add_indents (3)
+			text.add_comment ("-- Argument Information ")
+			text.add_new_line
+			text.add_indents (3)
+			text.add_comment ("-- -------------------- ")
+			l_max_count := max_length (a_param_info)
+				from
+					a_param_info.start
+				until
+					a_param_info.after
+				loop
+					text.add_new_line
+					text.add_indents (3)
+					text.add_comment ("-- ")
+					text.add_comment (a_param_info.item.name + ":")
+
+					l_summary := parse_summary (a_param_info.item.description)
+					from
+						l_summary.start
+					until
+						l_summary.after
+					loop
+						if l_next_line then
+							create l_string.make (l_max_count + 1)
+							l_string.fill_character (' ')
+							text.add_new_line
+							text.add_indents (3)
+							text.add_comment ("-- ")
+							text.add_string (l_string)
+						else
+							if (l_max_count - a_param_info.item.name.count > 0) then
+								create l_string.make (l_max_count - a_param_info.item.name.count)
+								l_string.fill_character (' ')
+								text.add_string (l_string)
+							end
+							l_next_line := not l_next_line
+						end
+						text.add_space
+						text.add_comment (l_summary.item)
+						l_summary.forth
+					end
+
+					l_next_line := False
+					a_param_info.forth
+				end
+			new_line
+		end		
 		
 	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
 				-- Strip 'a_summary' of all unwanted whites space
+			require
+				a_summary_not_void: a_summary /= Void
 			local
 				l_num_new_lines,
 				l_space_index,
@@ -380,17 +485,22 @@ feature -- Element change
 				until
 					l_counter > l_num_new_lines
 				loop
-					l_space_index := l_temp_string.index_of (' ', 50)
-					if l_space_index /= 0 then
-						Result.extend (l_temp_string.substring (1, l_space_index))
-						l_temp_string := l_temp_string.substring (l_space_index, l_temp_string.count)
-						l_temp_string.prune_all_leading (' ')
+					if not l_temp_string.is_empty then
+						l_space_index := l_temp_string.index_of (' ', l_temp_string.count.min (Maximum_line_count))
+						if l_space_index /= 0 then
+							Result.extend (l_temp_string.substring (1, l_space_index))
+							l_temp_string := l_temp_string.substring (l_space_index, l_temp_string.count)
+							l_temp_string.prune_all_leading (' ')
+						end
 					end
 					l_counter := l_counter + 1
 				end
 				if not l_temp_string.is_empty then
 					Result.extend (l_temp_string)
-				end			
+				end
+			ensure
+				parse_summary_not_void: Result /= Void
+				has_an_element: not a_summary.is_empty implies not Result.is_empty
 			end
 
 	feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
@@ -413,6 +523,33 @@ feature -- Element change
 				l_entities.forth
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	max_length (a_list: ARRAYED_LIST [PARAMETER_INFORMATION]): INTEGER is
+			-- Get the count of the longest argument string in 'a_list'
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_max: INTEGER
+		do
+			from 
+			 	a_list.start
+			until
+				a_list.after
+			loop
+				if a_list.item.name.count > l_max then
+					l_max := a_list.item.name.count
+				end
+				a_list.forth
+			end
+			Result := l_max
+		end
+		
+
+	Maximum_line_count: INTEGER is 70
+			-- Number of characters after which we should stop displaying
+			-- remaining characters of a string on same line.
 
 invariant
 	has_eiffel_class: class_i /= Void

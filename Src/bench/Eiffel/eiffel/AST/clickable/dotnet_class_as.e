@@ -18,19 +18,16 @@ feature {NONE} -- Initialization
 		require
 			a_consumed_not_void: a_consumed /= Void
 		do
-			class_name := a_consumed.eiffel_name
 			dotnet_name := a_consumed.dotnet_name
-			constructors := a_consumed.constructors
 			entities := a_consumed.flat_entities
 			is_deferred := a_consumed.is_deferred or a_consumed.is_interface
 			is_frozen := a_consumed.is_frozen
 			is_expanded := a_consumed.is_expanded
 			initialize (a_consumed)
 		ensure
-			class_name_set: class_name /= Void
 			dotnet_name_set: dotnet_name /= Void
-			constructors_set: constructors /= Void
 			entities_set: entities /= Void
+			deferred_set: is_deferred implies (a_consumed.is_deferred or a_consumed.is_interface)
 		end
 
 	initialize (a_consumed: CONSUMED_TYPE) is
@@ -38,69 +35,72 @@ feature {NONE} -- Initialization
 		require
 			a_consumed_not_void: a_consumed /= Void
 		do
+			set_constructors (a_consumed)
 			set_ancestors (a_consumed)
-			set_fields
-			set_events
-			set_properties
+			initialize_feature_categories
 		end
 
-feature -- Access
-
-	class_name: STRING
-			-- Class name.
-
-	dotnet_name: STRING
-			-- Full .NET name.
-
-	entities: ARRAY [CONSUMED_ENTITY]
-			-- All field, procedure and function implemented/inherited.
-
-	constructors: ARRAY [CONSUMED_CONSTRUCTOR]
-			-- Class constructors.
-
-	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
-			-- Class ancestors.
-
-	fields: ARRAYED_LIST [CONSUMED_FIELD]
-			-- Class fields.
-
-	events: ARRAYED_LIST [CONSUMED_EVENT]
-			-- Class events.
-
-	properties: ARRAYED_LIST [CONSUMED_PROPERTY]
-			-- Class properties.
-
-	is_expanded: BOOLEAN
-			-- Is Current expanded?
-
-	is_deferred: BOOLEAN
-			-- Is Current deferred?
-
-	is_frozen: BOOLEAN
-			-- Is Current frozen?
-
-	is_short: BOOLEAN
-			-- Is Current format type short?
-
-	loop_counter: INTEGER
-			-- Reusable loop counter
-
-	ctxt: DOTNET_CLASS_CONTEXT
-			-- Associated class context.
-
-feature -- Status report
-
-	is_class: BOOLEAN is True
-			-- Does the Current AST represent a class?
-
-feature -- Status Setting
-
-	set_is_short is
-			-- Set format type to short (no inheritance).
+	initialize_feature_categories is
+			-- Initialize the features by category for formatting.
 		do
-			is_short := True
+			create access_features.make (5)
+			create status_setting_features.make (5)
+			create query_features.make (5)
+			create command_features.make (5)
+			create events_features.make (5)
+			create hidden_features.make (5)
+			from
+				loop_counter := 1
+			until
+				loop_counter = entities.count
+			loop
+				if entities.item (loop_counter).is_event_type then
+					events_features.extend (entities.item (loop_counter))
+				elseif entities.item (loop_counter).is_hidden_type then
+					hidden_features.extend (entities.item (loop_counter))
+				elseif entities.item (loop_counter).is_access_type then					
+					access_features.extend (entities.item (loop_counter))
+				elseif entities.item (loop_counter).is_status_setting_type then
+					status_setting_features.extend (entities.item (loop_counter))
+				elseif entities.item (loop_counter).is_query_type then
+					query_features.extend (entities.item (loop_counter))
+				elseif entities.item (loop_counter).is_command_type then
+					command_features.extend (entities.item (loop_counter))
+				else
+					if misc_features = Void then
+						create misc_features.make (5)
+					end
+					misc_features.extend (entities.item (loop_counter))
+				end
+				loop_counter := loop_counter + 1
+			end
+			ensure
+				feature_lists_not_void: access_features /= Void and
+					status_setting_features /= Void and
+					query_features /= Void and 
+					command_features /= Void and 
+					events_features /= Void and 
+					hidden_features /= Void
+		end
+		
+	set_constructors (a_consumed: CONSUMED_TYPE) is
+			-- Set all constrcutor for the .NET class.
+		require
+			a_consumed_not_void: a_consumed /= Void
+		do
+			create constructors.make (5)
+			if not a_consumed.constructors.is_empty then
+				from
+					loop_counter := 1
+				until
+					loop_counter > a_consumed.constructors.count
+				loop
+					constructors.extend (a_consumed.constructors.item (loop_counter))
+					loop_counter := loop_counter + 1
+				end
+			end
 		ensure
-			is_short_set: is_short
+			constructors_set: constructors /= Void
 		end
 
 	set_ancestors (a_consumed: CONSUMED_TYPE) is 
@@ -118,7 +118,7 @@ feature -- Status Setting
 				from
 					loop_counter := 1
 				until
-					loop_counter = a_consumed.interfaces.count
+					loop_counter > a_consumed.interfaces.count
 				loop
 					l_c_parent ?= a_consumed.interfaces.item (loop_counter)
 					if l_c_parent /= Void then
@@ -131,67 +131,31 @@ feature -- Status Setting
 			ancestors_set: ancestors /= Void
 		end
 
-	set_fields is
-			-- Set the fields for the .NET class.
-		local
-			l_c_field: CONSUMED_FIELD
-		do
-			create fields.make (5)
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				if entities.item (loop_counter).is_field then
-					l_c_field ?= entities.item (loop_counter)
-					fields.extend (l_c_field)
-				end
-				loop_counter := loop_counter + 1
-			end
-		ensure
-			fields_set: fields /= Void
-		end
+feature {NONE} -- Access
 
-	set_events is
-			-- Set the events for the .NET class.
-		local
-			l_c_event: CONSUMED_EVENT
-		do
-			create events.make (5)
-			from 
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				if entities.item (loop_counter).is_event then
-					l_c_event ?= entities.item (loop_counter)
-					events.extend (l_c_event)
-				end
-				loop_counter := loop_counter + 1
-			end
-		ensure
-			events_set: events /= Void
-		end
+	dotnet_name: STRING
+			-- Full .NET name.
 
-	set_properties is
-			-- Set the properties for the .NET class.
-		local
-			l_c_property: CONSUMED_PROPERTY
+	is_expanded: BOOLEAN
+			-- Is Current expanded?
+
+	is_deferred: BOOLEAN
+			-- Is Current deferred?
+
+	is_frozen: BOOLEAN
+			-- Is Current frozen?
+
+	is_short: BOOLEAN
+			-- Is Current format type short?
+
+feature -- Status Setting
+
+	set_is_short is
+			-- Set format type to short (no inheritance).
 		do
-			create properties.make (5)
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				if entities.item (loop_counter).is_property then
-					l_c_property ?= entities.item (loop_counter)
-					properties.extend (l_c_property)
-				end
-				loop_counter := loop_counter + 1
-			end
+			is_short := True
 		ensure
-			properties_set: properties /= Void
+			is_short_set: is_short
 		end
 
 feature -- Formatting
@@ -322,17 +286,17 @@ feature {NONE} -- Formatting
 				a_ctxt.new_line
 				--a_ctxt.new_line
 				from
-					loop_counter := 1
+					constructors.start
 				until
-					loop_counter > constructors.count
+					constructors.after
 				loop
-					f_constructor := constructors.item (loop_counter)
+					f_constructor := constructors.item
 					a_ctxt.set_separator (ti_comma)
 					a_ctxt.indent
 					a_ctxt.format_feature (f_constructor)
 					a_ctxt.exdent
 					a_ctxt.new_line
-					loop_counter := loop_counter + 1
+					constructors.forth
 				end
 			end
 			a_ctxt.put_text_item (Ti_after_creators)
@@ -343,33 +307,13 @@ feature {NONE} -- Formatting
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		do
-			format_feature_category (a_ctxt, "Initialization")
-			format_feature_category (a_ctxt, "Access")
-			format_feature_category (a_ctxt, "Status Setting")
-			format_feature_category (a_ctxt, "Query")
-			format_feature_category (a_ctxt, "Commands")
---			format_feature_category (a_ctxt, "Events")
-		end
-
-	format_feature_category (a_ctxt: DOTNET_CLASS_CONTEXT; a_category: STRING) is
-			-- Format features in 'a_category'.
-		require
-			a_ctxt_not_void: a_ctxt /= Void
-			a_category_not_void: a_category /= Void
-		do
-			if a_category.is_equal ("Access") then
-				format_access_features (a_ctxt)
-			elseif a_category.is_equal ("Initialization") then
-				format_initialization_features (a_ctxt)
-			elseif a_category.is_equal ("Status Setting") then
-				 format_status_setting_features (a_ctxt)
-			elseif a_category.is_equal ("Query") then
-				format_queries (a_ctxt)
-			elseif a_category.is_equal ("Commands") then
-				format_commands (a_ctxt)
-			elseif a_category.is_equal ("Events") then
-				format_events (a_ctxt)
-			end
+			format_feature_category (a_ctxt, constructors, " -- Initialization")
+			format_feature_category (a_ctxt, access_features, " -- Access")
+			format_feature_category (a_ctxt, status_setting_features, " -- Status Setting")
+			format_feature_category (a_ctxt, query_features, " -- Query")
+			format_feature_category (a_ctxt, command_features, " -- Commands")
+			format_feature_category (a_ctxt, events_features, " -- Events (To do: NC)")
+			format_feature_category (a_ctxt, hidden_features, " {NONE} -- Implementation")
 		end
 
 	format_feature_header (a_ctxt: DOTNET_CLASS_CONTEXT; a_header: STRING) is
@@ -380,186 +324,61 @@ feature {NONE} -- Formatting
 		do
 			a_ctxt.new_line
 			a_ctxt.put_text_item (Ti_feature_keyword)
-			a_ctxt.put_comment_text (" -- " + a_header)
+			a_ctxt.put_comment_text (a_header)
 			a_ctxt.new_line
 		end
 
-	format_initialization_features (a_ctxt: DOTNET_CLASS_CONTEXT) is
-			-- Format 'Initialization' features.
+	format_feature_category (a_ctxt: DOTNET_CLASS_CONTEXT; a_category_list: ARRAYED_LIST [CONSUMED_ENTITY]; 
+		a_category_name: STRING) is
+			-- Format features in 'a_category_list' with heading 'a_category_name'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
-		local
-			not_empty: BOOLEAN
+			a_category_list_not_void: a_category_list /= Void
+			a_category_name_not_void: a_category_name /= Void
 		do
-			from
-				loop_counter := 1
-			until
-				loop_counter > constructors.count
-			loop
-				if not not_empty then
-					not_empty := True
-					format_feature_header (a_ctxt, "Initialization")
+			if not a_category_list.is_empty then
+				format_feature_header (a_ctxt, a_category_name)
+				from
+					a_category_list.start
+				until
+					a_category_list.after
+				loop
+					a_ctxt.format_feature (a_category_list.item)
+					a_category_list.forth
 				end
-				a_ctxt.format_feature (constructors.item (loop_counter))
-				a_ctxt.new_line
-				loop_counter := loop_counter + 1
 			end
 		end
 
-	format_access_features (a_ctxt: DOTNET_CLASS_CONTEXT) is
-			-- Format 'Access' features.
-		require
-			a_ctxt_not_void: a_ctxt /= Void
-		local
-			l_c_function: CONSUMED_FUNCTION
-			not_empty: BOOLEAN
-		do
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				l_c_function ?= entities.item (loop_counter)
-				if
-					(entities.item (loop_counter).is_field) or
-					(l_c_function /= Void and 
-					(l_c_function.eiffel_name.substring (1, 4).is_equal ("get_") and
-					l_c_function.arguments.is_empty))
-				then
-					if not not_empty then
-						not_empty := True
-						format_feature_header (a_ctxt, "Access")
-					end
-					a_ctxt.format_feature (entities.item (loop_counter))
-				end
-				loop_counter := loop_counter + 1
-			end
-		end
+feature {NONE} -- Implementation
 
-	format_status_setting_features (a_ctxt: DOTNET_CLASS_CONTEXT) is
-			-- Format 'Status Setting' features
-		require
-			a_ctxt_not_void: a_ctxt /= Void
-		local
-			l_c_procedure: CONSUMED_PROCEDURE
-			not_empty: BOOLEAN
-		do
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				l_c_procedure ?= entities.item (loop_counter)
-				if
-					l_c_procedure /= Void and 
-					(l_c_procedure.eiffel_name.substring (1, 4).is_equal ("set_") and 
-					l_c_procedure.arguments.count = 1)
-				then
-					if not not_empty then
-						not_empty := True
-						format_feature_header (a_ctxt, "Status Setting")
-					end
-					a_ctxt.format_feature (entities.item (loop_counter))
-				end
-				loop_counter := loop_counter + 1
-			end
-		end
+	entities: ARRAY [CONSUMED_ENTITY]
+			-- All field, procedure and function implemented/inherited.
 
-	format_queries (a_ctxt: DOTNET_CLASS_CONTEXT) is
-			-- Format 'Query' features
-		require
-			a_ctxt_not_void: a_ctxt /= Void
-		local
-			l_c_function: CONSUMED_FUNCTION
-			not_empty: BOOLEAN
-		do
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				l_c_function ?= entities.item (loop_counter)
-				if
-					l_c_function /= Void and 
-					( (l_c_function.eiffel_name.substring (1, 4).is_equal ("get_") or
-					(l_c_function.eiffel_name.substring (1, 3).is_equal ("is_")) ) and 
-					l_c_function.arguments.count >= 1)
-				then
-					if not not_empty then
-						not_empty := True
-						format_feature_header (a_ctxt, "Queries")
-					end
-					a_ctxt.format_feature (entities.item (loop_counter))
-				end
-				loop_counter := loop_counter + 1
-			end
-		end
+	constructors: ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
+			-- Class constructors.
 
-	format_commands (a_ctxt: DOTNET_CLASS_CONTEXT) is
-			-- Format 'Commands' features
-		require
-			a_ctxt_not_void: a_ctxt /= Void
-		local
-			l_c_procedure: CONSUMED_PROCEDURE
-			not_empty: BOOLEAN
-		do
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				l_c_procedure ?= entities.item (loop_counter)
-				if
-					l_c_procedure /= Void and 
-					(l_c_procedure.eiffel_name.substring (1, 4).is_equal ("set_") and 
-					l_c_procedure.arguments.count > 1)
-				then
-					if not not_empty then
-						not_empty := True
-						format_feature_header (a_ctxt, "Commands")
-					end
-					a_ctxt.format_feature (entities.item (loop_counter))
-				end
-				loop_counter := loop_counter + 1
-			end
-		end
+	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
+			-- Class ancestors.
 
-	format_events (a_ctxt: DOTNET_CLASS_CONTEXT) is
-			-- Format 'Events' features
-		require
-			a_ctxt_not_void: a_ctxt /= Void
-		local
-			l_c_entity: CONSUMED_ENTITY
-			not_empty: BOOLEAN
-		do
-			from
-				loop_counter := 1
-			until
-				loop_counter = entities.count
-			loop
-				l_c_entity ?= entities.item (loop_counter)
-				if
-					l_c_entity /= Void and 
-					l_c_entity.is_property_or_event
-				then
-					if not not_empty then
-						not_empty := True
-						format_feature_header (a_ctxt, "Events")
-					end
-					a_ctxt.format_feature (entities.item (loop_counter))
-				end
-				loop_counter := loop_counter + 1
-			end
-		end
+	access_features,
+	status_setting_features,
+	query_features,
+	command_features,
+	events_features,
+	hidden_features,
+	misc_features: ARRAYED_LIST [CONSUMED_ENTITY]
+			-- Class features by category.
+
+	loop_counter: INTEGER
+			-- Reusable loop counter
+
+	ctxt: DOTNET_CLASS_CONTEXT
+			-- Associated class context.
 
 invariant
-	class_name_not_void: class_name /= Void
 	dotnet_name_not_void: dotnet_name /= Void
 	constructors_not_void: constructors /= Void
 	entities_not_void: entities /= Void
 	ancestors_not_void: ancestors /= Void
-	fields_not_void: fields /= Void
-	properties_not_void: properties /= Void
-	events_not_void: events /= Void
 
 end -- class DOTNET_CLASS_AS

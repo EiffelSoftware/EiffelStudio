@@ -1,15 +1,15 @@
 indexing
-
-	description: "Description of a font"
+	description: "EiffelVision font, implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-
 	EV_FONT_I 
 
-	
+inherit
+	EV_ANY_I
+
 feature -- Access
 
 	ascent: INTEGER is
@@ -172,13 +172,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
-			-- Is the font valid?
-		require
-			font_specified: is_specified
-		deferred
-		end
-
 	is_proportional: BOOLEAN is
 			-- Is the font proportional?
 		require
@@ -212,7 +205,6 @@ feature -- Element change
 
 end -- class EV_FONT_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
@@ -228,4 +220,3 @@ end -- class EV_FONT_I
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -6,7 +6,8 @@ inherit
 		redefine
 			analyze, generate, unanalyze, enlarged, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
-			size, pre_inlined_code, inlined_byte_code
+			size, pre_inlined_code, inlined_byte_code,
+			has_separate_call
 		end;
 	ASSERT_TYPE
 		export
@@ -232,6 +233,14 @@ feature -- Inlining
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
+		end
+
+feature -- Concurrent Eiffel
+
+	has_separate_call: BOOLEAN is
+			-- Is there a separate call in this byte node?
+		do
+			Result := expr.has_separate_call
 		end
 
 end

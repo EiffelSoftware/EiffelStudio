@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
-	description: "General toggle button implementation."
+	description: "Eiffel Vision toggle button. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +8,6 @@ deferred class
 	EV_TOGGLE_BUTTON_I 
 
 inherit
-
 	EV_SELECT_BUTTON_I
 		redefine
 			interface
@@ -26,7 +23,7 @@ feature -- Status setting
 		end
 
 	toggle is
-			-- Change `is_selected'.
+			-- Invert the value of `is_selected'.
 		deferred
 		ensure
 			is_selected_changed: is_selected /= old is_selected
@@ -37,7 +34,6 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TOGGLE_BUTTON
 
 end -- class EV_TOGGLE_BUTTON_I
-
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -60,6 +56,9 @@ end -- class EV_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/25 21:28:15  brendel
+--| Formatting.
+--|
 --| Revision 1.13  2000/02/24 18:11:44  oconnor
 --| New inheritance structure for buttons with state.
 --| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.

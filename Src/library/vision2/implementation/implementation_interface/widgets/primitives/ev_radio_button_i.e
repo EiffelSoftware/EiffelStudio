@@ -5,7 +5,6 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-
 	EV_RADIO_BUTTON_I
 
 inherit
@@ -46,6 +45,9 @@ end -- class EV_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/25 21:28:15  brendel
+--| Formatting.
+--|
 --| Revision 1.8  2000/02/25 01:48:12  brendel
 --| Revised.
 --|

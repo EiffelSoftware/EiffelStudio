@@ -14,10 +14,19 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_size (par: EV_CONTAINER; col_nb: INTEGER) is         
+	make_with_size (col_nb: INTEGER) is         
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
+		deferred
+		end
+
+	make_with_text (txt: ARRAY [STRING]) is         
+			-- Create a list widget with `par' as parent,
+			-- and as many columns as the number of titles
+			-- given.
+		require
+			valid_txt: txt /= Void
 		deferred
 		end
 
@@ -139,11 +148,29 @@ feature -- Element change
 		deferred
 		end
 
+	set_columns_title (txt: ARRAY [STRING]) is         
+			-- Make `txt' the new titles of the columns.
+		require
+			exists: not destroyed
+			text_not_void: txt /= Void
+			valid_text_length: txt.count <= columns
+		deferred
+		end
+
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		require
 			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
+		deferred
+		end
+
+	set_columns_width (value: ARRAY [INTEGER]) is         
+			-- Make `value' the new values of the columns width.
+		require
+			exists: not destroyed
+			value_not_void: value /= Void
+			valid_value_length: value.count <= columns
 		deferred
 		end
 

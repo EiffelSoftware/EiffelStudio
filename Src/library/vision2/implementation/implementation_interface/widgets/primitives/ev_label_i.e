@@ -21,11 +21,9 @@ inherit
 
 feature {NONE} -- Initialization
 
- 	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create a widget with `par' as parent and `txt'
-			-- as text.
+ 	make_with_text (txt: STRING) is
+			-- Create a widget with `txt' as text.
 		require
-			valid_parent: is_valid (par)
 			valid_string: txt /= Void
 		deferred
         end	

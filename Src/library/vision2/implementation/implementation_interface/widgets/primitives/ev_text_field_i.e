@@ -13,7 +13,15 @@ inherit
 	EV_TEXT_COMPONENT_I
 
 	EV_BAR_ITEM_I
-	
+
+feature {NONE} -- Initialization
+
+	make_with_text (txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		deferred
+		end
+
 feature -- Event - command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

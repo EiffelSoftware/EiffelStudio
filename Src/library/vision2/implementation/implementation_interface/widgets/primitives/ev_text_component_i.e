@@ -12,21 +12,27 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 		redefine
-			build
+			set_default_options,
+			set_default_colors
 		end
 
 	EV_BAR_ITEM_I
 
 feature {EV_WIDGET} -- Initialization
 
-	build is
-			-- Common initializations for Gtk and Windows.
-		local
-			color: EV_COLOR
+	set_default_options is
+			-- Initialize the options of the widget.
 		do
 			set_expand (True)
 			set_vertical_resize (False)
 			set_horizontal_resize (True)
+		end
+
+	set_default_colors is
+			-- Initialize the colors of the widget
+		local
+			color: EV_COLOR
+		do
 			!! color.make_rgb (255, 255, 255)
 			set_background_color (color)
 			!! color.make_rgb (0, 0, 0)

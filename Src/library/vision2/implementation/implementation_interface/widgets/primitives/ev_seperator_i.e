@@ -10,17 +10,15 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 		redefine
-			build
+			set_default_options
 		end
 
 feature {NONE} -- Initialization
 
-	build is
+	set_default_options is
 			-- Common initializations for Gtk and Windows.
 		do
 			set_expand (False)
-			set_background_color (parent_imp.background_color)
-			set_foreground_color (parent_imp.foreground_color)
 		end
 
 end -- class EV_SEPARATOR_I

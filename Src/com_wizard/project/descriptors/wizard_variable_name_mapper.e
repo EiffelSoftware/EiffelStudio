@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 	ECOM_TYPE_KIND
 
 feature -- Access
@@ -77,6 +82,7 @@ feature -- Access
 			if Result.item (1).is_digit then
 				Result.prepend ("x_")
 			end
+
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.empty
@@ -128,6 +134,22 @@ feature -- Access
 			Result := to_eiffel_name (a_name)
 
 			Result.to_lower
+		ensure
+			non_void_feature_name: Result /= Void
+			valid_feature_name: not Result.empty
+		end
+
+	name_for_feature_with_keyword_check (a_name: STRING): STRING is
+			-- Convert to Eiffel feature name and for conflicts with Eiffel keywords.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			Result :=name_for_feature (a_name)
+
+			if eiffel_key_words.has (Result) and not shared_wizard_environment.new_eiffel_project then
+				Result.append (One)
+			end
 		ensure
 			non_void_feature_name: Result /= Void
 			valid_feature_name: not Result.empty

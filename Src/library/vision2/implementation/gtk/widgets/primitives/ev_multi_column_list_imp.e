@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			create ev_children.make
+			create ev_children.make (0)
 		end
 
 	create_list (a_columns: INTEGER) is
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			)
 			-- Insert `v' in to ev_children list.	
 
-			create temp_list.make
+			create temp_list.make (0)
 			from
 				a_counter := 1
 			until
@@ -607,6 +607,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/15 00:56:39  king
+--| Converted back to using arrayed_list
+--|
 --| Revision 1.41  2000/03/15 00:46:13  king
 --| Implemented insert_item at position
 --|

@@ -83,7 +83,10 @@ feature -- Initialization
 			number_of_lines := text_displayed.count
 
 				-- Setup the scroll bars.
-			set_vertical_range(1,vertical_range_max)
+			set_vertical_range (1,vertical_range_max)
+
+				-- Initialize the cursor
+			create cursor.make_from_absolute_pos (0,1,Current)
 
 				-- Get the focus
 			set_focus
@@ -417,20 +420,28 @@ feature -- Basic operations
 	on_left_button_down (mouse_key, x_pos, y_pos: INTEGER) is
 		local
 			l_number: INTEGER
+			new_cursor: TEXT_CURSOR
+			xline : EDITOR_LINE
 		do
 --			l_number := ((y_pos - Top_margin_width)// line_increment) + first_line_displayed
 --			create cursor.make_from_absolute_pos (x_pos - Left_margin_width, l_number, text_displayed)
 			l_number := (y_pos // line_increment) + first_line_displayed
+			if l_number > number_of_lines then
+				xline := text_displayed.last_line
+				create new_cursor.make_from_relative_pos (xline, xline.end_token, 1, Current)
+			else
+				create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
+			end
 			if not has_selection then
 				if shifted_key then
 					has_selection := True
 					selection_start := clone (cursor)
 				end
-				cursor.make_from_absolute_pos (x_pos, l_number, Current)
+				cursor := new_cursor
 			elseif shifted_key then
-				cursor.make_from_absolute_pos (x_pos, l_number, Current)
+				cursor := new_cursor
 			else
-				cursor.make_from_absolute_pos (x_pos, l_number, Current)
+				cursor := new_cursor
 				has_selection := False
 			end
 			invalidate
@@ -465,7 +476,7 @@ feature -- Selection Handling
 				begin := selection_start
 				text_displayed.delete_selection (selection_start, cursor)
 			end
-			cursor.make_from_absolute_pos (begin.x_in_pixels, begin.y_in_lines, Current)
+			cursor := begin
 			has_selection := False
 		end
 
@@ -700,12 +711,7 @@ feature {NONE} -- Implementation
 			create Result.make_indirect(log_font)
 		end
 
-	cursor: TEXT_CURSOR is
-			-- Current cursor.
-		once
-				-- Create the cursor
-			create Result.make_from_absolute_pos(0,1,Current)
-		end
+	cursor: TEXT_CURSOR
 
 	selection_start: TEXT_CURSOR
 			-- Position where the user has started to select

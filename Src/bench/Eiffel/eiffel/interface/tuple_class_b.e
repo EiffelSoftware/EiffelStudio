@@ -1,14 +1,17 @@
-class TUPLE_CLASS_B 
+indexing
+	description: "Compiled class TUPLE"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	TUPLE_CLASS_B
 
 inherit
-
 	CLASS_C
 		redefine
-			check_validity, mark_all_used, actual_type,
+			actual_type,
 			init_types, update_types, is_tuple
 		end
-
-	SPECIAL_CONST
 
 creation
 	make
@@ -17,32 +20,6 @@ feature -- Status report
 
 	is_tuple: BOOLEAN is True
 			-- Current class is TUPLE.
-
-feature 
-
-	check_validity is
-			-- Check validity of class TUPLE
-		local
-			error: BOOLEAN
-			special_error: SPECIAL_ERROR
-			creat_feat: FEATURE_I
-		do
-			-- Second, check if there is only one creation procedure 
-			-- having no arguments.
-
-			error := (creators = Void) or else creators.count /= 1
-			if not error then
-				creators.start
-				creat_feat := feature_table.item (creators.key_for_iteration)
-				error := not creat_feat.same_signature (Make_signature) 
-			end
-
-			if error then
-				!!special_error.make (Case_19, Current)
-				Error_handler.insert_error (special_error)
-			end
-				
-		end -- check_validity
 
 feature -- types
 
@@ -69,20 +46,6 @@ feature -- types
 		do
 		end
 
-feature -- Dead code removal
-
-	mark_all_used (remover: REMOVER) is
-
-		local
-			feat: FEATURE_I
-			feat_table: FEATURE_TABLE
-		do
-			creators.start
-			feat_table := feature_table
-			feat := feat_table.item (creators.key_for_iteration)
-			remover.record (feat, Current)
-		end
-
 feature -- Actual class type
 
 	actual_type: TUPLE_TYPE_A is
@@ -96,11 +59,11 @@ feature -- Actual class type
 				from
 					i := 1
 					count := generics.count
-					!! actual_generic.make (1, count)
+					create actual_generic.make (1, count)
 				until
 					i > count
 				loop
-					!! formal
+					create formal
 					formal.set_position (i)
 					actual_generic.put (formal, i)
 					i := i + 1
@@ -109,28 +72,6 @@ feature -- Actual class type
 				create actual_generic.make (1, 0)
 			end
 			create Result.make (class_id, actual_generic)
-		end
-		
-feature {NONE}
-
-	Array_parent: GEN_TYPE_A is
-			-- Parent type ARRAY [ANY]
-		local
-			any_a: CL_TYPE_A
-			gen: ARRAY [TYPE_A]
-		once
-			create any_a.make (System.any_id)
-			create gen.make (1, 1)
-			gen.put (any_a, 1)
-			create Result.make (System.array_id, gen)
-		end
-
-	Make_signature: DYN_PROC_I is
-			-- Required signature for feature `make' of class TUPLE
-		once
-			!! Result
-			Result.set_arguments (Void)
-			Result.set_feature_name_id (Names_heap.make_name_id)
 		end
 
 end -- class TUPLE_CLASS_B

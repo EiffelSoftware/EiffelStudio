@@ -1,19 +1,20 @@
---- Compiled class STRING
+indexing
+	description: "Compiled class STRING"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class STRING_CLASS_B 
 
 inherit
 	CLASS_C
 		redefine
-			check_validity, mark_all_used
+			check_validity
 		end
 
 	SPECIAL_CONST
 
-creation
-
+create
 	make
-
 	
 feature 
 
@@ -27,8 +28,8 @@ feature
 			to_special_p, parent_t: CL_TYPE_A
 		do
 			if not System.il_generation then
-				-- First check if class inherits directly from parent
-				-- TO_SPECIAL [CHARACTER]
+					-- First check if class inherits directly from parent
+					-- TO_SPECIAL [CHARACTER]
 				from
 					parents.start
 					to_special_p := To_special_parent
@@ -46,15 +47,15 @@ feature
 				end;
 			end
 			
-			-- Second check if class has only one reference attribute
-			-- only (which is necessary `area' then).
+				-- Second check if class has only one reference attribute
+				-- only (which is necessary `area' then).
 			if types.first.skeleton.nb_reference /= 1 then
 				!!special_error.make (Case_5, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
-			-- Third check if class has one creation procedure with
-			-- one integer argument
+				-- Third check if class has one creation procedure with
+				-- one integer argument
 			error := creators = Void
 			if not error then
 				from
@@ -79,7 +80,7 @@ feature
 				Error_handler.insert_error (special_error);
 			end;
 
-			-- Fourth, presence of a procedure `set_count'.
+				-- Fourthsence of a procedure `set_count'.
 			set_count_feat := feature_table.item_id (Names_heap.set_count_name_id);
 			if 	set_count_feat = Void
 				or else
@@ -90,9 +91,8 @@ feature
 				!!special_error.make (Case_17, Current);
 				Error_handler.insert_error (special_error);
 			end;
-		end; -- check_validity
+		end
 
-	
 	To_special_parent: GEN_TYPE_A is
 			-- Parent type TO_SPECIAL [CHARACTER];
 		local
@@ -125,20 +125,6 @@ feature
 			!!Result;
 			Result.set_arguments (args);
 			Result.set_feature_name_id (Names_heap.set_count_name_id);
-		end;
-
-	mark_all_used (remover: REMOVER) is
-			-- Protection of features `make' and `set_count'.
-		local
-			feat: FEATURE_I;
-			feat_table: FEATURE_TABLE;
-		do
-			creators.start;
-			feat_table := feature_table;
-			feat := feat_table.item_id (Names_heap.make_name_id)
-			remover.record (feat, Current);
-			feat := feat_table.item_id (Names_heap.set_count_name_id);
-			remover.record (feat, Current);
 		end;
 
 end

@@ -3611,33 +3611,6 @@ feature -- Dead code removal
 			visible_level.mark_visible (remover, feature_table)
 		end
 
-	mark_all_used (remover: REMOVER) is
-			-- Mark all the features written in the Current class used.
-			-- [Useful for basic class like INTEGER_REF, etc...].
-		require
-			remover_not_void: remover /= Void
-			has_feature_table: has_feature_table
-		local
-			a_feature: FEATURE_I
-			l_features: like feature_table
-			l_cursor: CURSOR
-		do
-			from
-				l_features := feature_table
-				l_features.start
-			until
-				l_features.after
-			loop
-				a_feature := l_features.item_for_iteration
-				l_cursor := l_features.cursor
-				if a_feature.written_class = Current then
-					remover.record (a_feature, Current)
-				end
-				l_features.go_to (l_cursor)
-				l_features.forth
-			end
-		end
-
 	has_visible: BOOLEAN is
 			-- Has the class some visible features
 		do

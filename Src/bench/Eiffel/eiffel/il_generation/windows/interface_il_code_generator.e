@@ -210,11 +210,13 @@ feature -- IL Generation
 				features.forth
 			end
 
-				-- FIXME: Should be removed as this should automatically
-				-- done.
-				-- Generate `Finalize' from System.Object.			
+				-- FIXME: Should be removed as this should automatically done.
+				-- Generate `Finalize' from System.Object.
 			feat := select_tbl.item (internal_finalize_rout_id)
 			generate_finalize_feature (feat)
+				-- Generate `ToString' from System.Object.
+			feat := select_tbl.item (internal_to_string_rout_id)
+			generate_to_string_feature (feat)
 		end
 
 	generate_il_implementation_inherited

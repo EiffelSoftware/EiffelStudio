@@ -12,6 +12,9 @@ inherit
 		end
 
 	WINDOWS
+		export {GENERATE_ALL_REVERSE}
+			project_tool
+		end
 
 	COMMAND	
 

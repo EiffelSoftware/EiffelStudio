@@ -814,10 +814,11 @@ feature {NONE} -- Implementation
 				if info.generate_as_client then
 					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
 						add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_window_feature, custom_feature_tag)
-					else
+					elseif info.type.substring_index ("ITEM", 1) = 0 then
 						add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_widget_feature, custom_feature_tag)
+					else
+						add_generated_string (class_text, Void, custom_feature_tag)
 					end
-					
 				else
 					add_generated_string (class_text, Void, custom_feature_tag)
 				end

@@ -3,11 +3,9 @@
 class EXTEND_QUEUE [T] 
 
 inherit
-
 	TO_SPECIAL [T]
 
 creation
-
 	make
 
 feature 
@@ -17,6 +15,10 @@ feature
 			upper := -1;
 				-- (`lower' initialized to 0 by default, so invariant holds)
 			allocate_space (0, n)
+			count := 0
+			out_index := 0
+			in_index := 0
+			array_capacity := upper - lower + 1
 		end;
 
 	allocate_space (minindex, maxindex: INTEGER) is
@@ -32,9 +34,10 @@ feature
 	wipe_out is
 			-- Remove all items.
 		do
-			clear_all;
-			out_index := 0;
-			in_index := 0;
+			clear_all
+			out_index := 0
+			in_index := 0
+			count := 0
 		end
 
 	clear_all is
@@ -61,15 +64,6 @@ feature
 			Result := count = 0
 		end
 
-	count: INTEGER is
-			--  Number of items in `Current'
-		local
-			size: INTEGER
-		do
-			size := array_seq_capacity;
-			Result := (in_index - out_index + size) \\ size
-		end;
-	
 	put_i_th (v: T; i: INTEGER) is
 			--  Replace `i'-th entry, if in index interval, by `v'.
 		do
@@ -80,21 +74,17 @@ feature
 			--  Add `v' to the end of `Current'.
 		do
 			put_i_th (v,in_index);
-			in_index := (in_index + 1) \\ array_seq_capacity
+			in_index := (in_index + 1) \\ array_capacity
+			count := count + 1
 		end;
 	
 	remove is
 			--  Remove oldest item.
 		do
-			out_index := (out_index + 1) \\ array_seq_capacity
+			out_index := (out_index + 1) \\ array_capacity
+			count := count - 1
 		end;
 	
-	array_seq_capacity: INTEGER is
-			--  Available indices
-		do
-			Result := upper - lower + 1
-		end;
-
 	item: T is
 			--  Oldest item of `Current'
 		do
@@ -107,35 +97,81 @@ feature
 			Result := area.item (i - lower)
 		end;
 	
-	full: BOOLEAN is
+	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
 			Result := capacity = count
 		end
 
-	in_index, out_index: INTEGER
-
-	lower: INTEGER;
-
-	upper: INTEGER;
-
 	capacity: INTEGER is
 			-- Number of items that may
 			-- be stored into `Current'
 		do
-			Result := array_seq_capacity - 1
+			Result := array_capacity - 1
 		end
 
 	change_last_item (t: T) is
 			-- Change the ouput of the queue
 		require
 			not empty;
-		local
-			size: INTEGER;
 		do
-			size := array_seq_capacity;
-			put_i_th (t, (in_index + size - 1) \\ size)
+			put_i_th (t, (in_index + array_capacity - 1) \\ array_capacity)
 		end;
+
+feature -- Cursor movement
+
+	start is
+			-- Put the cursor to the beginning of the cache
+		do
+			if is_full then
+				position := 0
+			else
+				position := out_index
+			end
+		end
+
+	after: BOOLEAN is
+			-- Are we at the end of the cache, ie at `out_index'
+		do
+			if is_full then
+				Result := position = count
+			else
+				Result := position = in_index
+			end
+		end
+
+	forth is
+		do
+			if is_full then
+				position := position + 1
+			else
+				position := (position + 1) \\ array_capacity
+			end
+		end
+
+	item_for_iteration: T is
+		do	
+			Result := i_th (position) 
+		end
+
+feature -- Implementation
+
+	position: INTEGER
+
+	in_index, out_index: INTEGER
+			-- Youngest and oldest item in the queue.
+
+	array_capacity: INTEGER
+			-- Capacity of the queue, equal to `upper - lower + 1'.
+
+	lower: INTEGER
+			-- Lower bound of the array.
+
+	upper: INTEGER
+			-- Upper bound of the array.
+
+	count: INTEGER
+			--  Number of items in `Current'
 
 end
 

@@ -36,67 +36,67 @@ feature -- Status setting
 	hide_ok_button is
 			-- Hide the OK button.
 		require
-			ok_button_displayed: ok_b.managed
+			ok_button_displayed: ok_b.is_managed
 		do
 			ok_b.unmanage;
 			adjust_buttons
 		ensure
-			ok_button_hidden: not ok_b.managed
+			ok_button_hidden: not ok_b.is_managed
 		end;
 
 	show_ok_button is
 			-- Show the OK button.
 		require
-			ok_button_hidden: not ok_b.managed
+			ok_button_hidden: not ok_b.is_managed
 		do
 			ok_b.manage;
 			adjust_buttons
 		ensure
-			ok_button_displayed: ok_b.managed
+			ok_button_displayed: ok_b.is_managed
 		end;
 
 	hide_apply_button is
 			-- Hide the apply button.
 		require
-			apply_button_displayed: apply_b.managed
+			apply_button_displayed: apply_b.is_managed
 		do
 			apply_b.unmanage;
 			adjust_buttons
 		ensure
-			apply_button_hidden: not apply_b.managed
+			apply_button_hidden: not apply_b.is_managed
 		end;
 
 	show_apply_button is
 			-- Show the apply button.
 		require
-			apply_button_hidden: not apply_b.managed
+			apply_button_hidden: not apply_b.is_managed
 		do
 			apply_b.manage;
 			adjust_buttons
 		ensure
-			apply_button_displayed: apply_b.managed
+			apply_button_displayed: apply_b.is_managed
 		end;
 
 	hide_cancel_button is
 			-- Hide the cancel button.
 		require
-			cancel_button_displayed: cancel_b.managed
+			cancel_button_displayed: cancel_b.is_managed
 		do
 			cancel_b.unmanage;
 			adjust_buttons
 		ensure
-			cancel_button_hidden: not cancel_b.managed
+			cancel_button_hidden: not cancel_b.is_managed
 		end;
 
 	show_cancel_button is
 			-- Show the cancel button.
 		require
-			cancel_button_hidden: not cancel_b.managed
+			cancel_button_hidden: not cancel_b.is_managed
 		do
 			cancel_b.manage;
 			adjust_buttons
 		ensure
-			cancel_button_displayed: cancel_b.managed
+			cancel_button_displayed: cancel_b.is_managed
 		end;
 
 feature {NONE} -- Implementation
@@ -183,19 +183,19 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER;
 		do
-			if (ok_b.managed) then
+			if (ok_b.is_managed) then
 				i := i + 1
 			end;
-			if (apply_b.managed) then
+			if (apply_b.is_managed) then
 				i := i + 1
 			end;
-			if (cancel_b.managed) then
+			if (cancel_b.is_managed) then
 				i := i + 1
 			end;
 			i := 2 * i - 1;
 			buttons_form.unmanage;
 			buttons_form.set_fraction_base (i);
-			if (ok_b.managed) then
+			if (ok_b.is_managed) then
 				buttons_form.set_top_offset (ok_b, 0);
 		   		buttons_form.attach_top_to_form (ok_b);
 				buttons_form.set_bottom_offset (ok_b, 0);
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 				buttons_form.attach_left_to_position (ok_b, 0);
 				buttons_form.attach_right_to_position (ok_b, 1)
 			end;
-			if (apply_b.managed) then
+			if (apply_b.is_managed) then
 				buttons_form.set_top_offset (apply_b, 0);
 				buttons_form.attach_top_to_form (apply_b);
 				buttons_form.set_bottom_offset (apply_b, 0);
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 				buttons_form.attach_left_to_position (apply_b, i - 3);
 				buttons_form.attach_right_to_position (apply_b, i - 2)
 			end;
-			if (cancel_b.managed) then
+			if (cancel_b.is_managed) then
 				buttons_form.set_top_offset (cancel_b, 0);
 				buttons_form.attach_top_to_form (cancel_b);
 				buttons_form.set_bottom_offset (cancel_b, 0);

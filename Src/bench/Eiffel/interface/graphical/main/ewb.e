@@ -28,7 +28,8 @@ feature -- Initialization
 			-- Create and map the first window: the system window.
 		local
 			screen: SCREEN;
-			temp: STRING
+			temp: STRING;
+			new_resources: RESOURCES
 		do
 			if not retried then
 					-- Check that environment variables
@@ -48,6 +49,7 @@ feature -- Initialization
 
 					-- Read the resource files
 				if resources /= Void then end;
+				!! new_resources.initialize;
 
 				if argument_count = 1 and then
 					argument (1).is_equal ("-bench")

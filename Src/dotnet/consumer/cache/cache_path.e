@@ -129,7 +129,7 @@ feature {CACHE_READER} -- Access
 			Result.append (".xml")
 		ensure
 			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
 		end
 
 	absolute_type_path (t: TYPE): STRING is
@@ -147,7 +147,7 @@ feature {CACHE_READER} -- Access
 			Result.append (relative_path)
 		ensure
 			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
 		end
 
 	Info_path: STRING is "info.xml"

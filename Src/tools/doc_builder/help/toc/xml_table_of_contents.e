@@ -244,7 +244,6 @@ feature -- Commands
 	reset is
 			-- Reset
 		do
-			filename := Shared_toc_manager.next_toc_name
 			is_persisted := False
 			create Move_nodes_list.make (2)
 			Move_nodes_list.compare_objects

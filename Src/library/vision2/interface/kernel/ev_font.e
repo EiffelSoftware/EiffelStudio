@@ -1,14 +1,18 @@
 indexing
 	description:
-		"Eiffel Vision font. Representation of a typeface.%N%
+		"Representation of a typeface.%N%
 		%Appearance is specified in terms of font family, height, shape and%N%
 		%weight. The local system font closest to the specification will be%N%
-		%displayed. A specific font name may optionally be specified.%N%
-		%(see `set_preferred_face')"
+		%displayed. A specific font name may optionally be specified. %
+		%See `set_preferred_face'"
 	status: "See notice at end of class"
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
 	revision: "$Revision$"
+
+
+--| FIXME Fonts need to be reviewed WRT addition of conveniance features
+--| for dealing with points.
 
 class
 	EV_FONT 
@@ -398,6 +402,9 @@ end -- class EV_FONT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/16 01:15:33  oconnor
+--| comments
+--|
 --| Revision 1.19  2000/03/01 20:28:52  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -10,16 +10,9 @@ indexing
 class DLL_32
 
 inherit
-	SHARED_LIBRARY
+	DISPOSABLE
 
-	MEMORY
-		rename
-			free as memory_free
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
+	SHARED_LIBRARY
 
 create
 	make

@@ -9,11 +9,9 @@ indexing
 class DIRECTORY
 
 inherit
-	MEMORY
+	DISPOSABLE
 		export
 			{NONE} all
-		redefine
-			dispose
 		end
 
 create

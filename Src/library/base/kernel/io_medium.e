@@ -9,11 +9,9 @@ indexing
 deferred class IO_MEDIUM
 
 inherit
-	MEMORY
+	DISPOSABLE
 		export
 		 {NONE} all
-		redefine
-			dispose
 		end
 
 	STRING_HANDLER

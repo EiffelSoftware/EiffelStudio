@@ -8,19 +8,11 @@ class
 	READ_WRITE_LOCK
 
 inherit
-	MEMORY
-		export
-			{NONE} all
+	DISPOSABLE
 		redefine
-			dispose,
 			default_create
 		end
 		
-	ANY
-		redefine
-			default_create
-		end
-
 create
 	default_create
 

@@ -69,11 +69,9 @@ inherit
 			{NONE} all
 		end
 
-	MEMORY
+	DISPOSABLE
 		export
 			{NONE} all
-		redefine
-			dispose
 		end
 		
 create

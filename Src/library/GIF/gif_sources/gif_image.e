@@ -8,10 +8,7 @@ class
 	GIF_IMAGE
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 	GIF_FONTS
 

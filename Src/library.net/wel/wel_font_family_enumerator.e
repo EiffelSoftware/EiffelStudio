@@ -16,10 +16,7 @@ inherit
 			{NONE} all
 		end
 
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 feature {NONE} -- Initialization
 

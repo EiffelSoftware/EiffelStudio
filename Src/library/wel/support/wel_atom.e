@@ -8,10 +8,7 @@ class
 	WEL_ATOM
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make

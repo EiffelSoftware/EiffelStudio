@@ -8,10 +8,7 @@ class
 	CONDITION_VARIABLE
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make

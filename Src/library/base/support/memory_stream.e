@@ -7,9 +7,9 @@ class
 	MEMORY_STREAM
 
 inherit
-	MEMORY
+	DISPOSABLE
 		redefine
-			dispose, copy, is_equal
+			copy, is_equal
 		end
 
 create

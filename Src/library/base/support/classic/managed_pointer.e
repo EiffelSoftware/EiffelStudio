@@ -11,19 +11,12 @@ class
 	MANAGED_POINTER
 
 inherit
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose, is_equal, copy
-		end
-
-	PLATFORM
+	DISPOSABLE
 		redefine
 			is_equal, copy
 		end
-		
-	ANY
+
+	PLATFORM
 		redefine
 			is_equal, copy
 		end

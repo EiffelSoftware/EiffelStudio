@@ -10,9 +10,8 @@ class
 	MUTEX
 
 inherit
-	MEMORY
+	DISPOSABLE
 		redefine
-			dispose,
 			default_create
 		end
 

@@ -11,11 +11,9 @@ class
 	MANAGED_POINTER
 
 inherit
-	MEMORY
-		export
-			{NONE} all
+	DISPOSABLE
 		redefine
-			dispose, is_equal, copy
+			is_equal, copy
 		end
 
 	PLATFORM
@@ -23,11 +21,6 @@ inherit
 			is_equal, copy
 		end
 		
-	ANY
-		redefine
-			is_equal, copy
-		end
-	
 create
 	make, make_from_array, make_from_pointer
 	

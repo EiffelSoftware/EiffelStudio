@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 invariant
 
 	headers_list_exists: headers /= Void
-	count_constraint: is_count_valid implies
+	count_constraint: (is_count_valid and count > 0) implies
 				(is_packet_pending = (bytes_transferred < count))
 	
 end -- class HTTP_PROTOCOL

@@ -12,8 +12,10 @@ inherit
 		undefine
 			is_deep_equal, same_as
 		end;
-
 	BASIC_TYPE_B
+		redefine
+			format
+		end
 
 feature
 
@@ -28,6 +30,12 @@ feature
 			-- Actual integer type
 		once
 			!!Result;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT_B) is
+			-- Reconstitute text
+		do
+			ctxt.put_string ("NONE");
 		end;
 
 end -- class NONE_TYPE_AS_B

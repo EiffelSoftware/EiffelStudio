@@ -23,13 +23,10 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		undefine
-			item_by_data,
-			destroy
+			item_by_data
 		redefine
 			interface,
-			add_to_container,
 			insert_i_th,
-			list_widget,
 			initialize
 		end
 
@@ -39,6 +36,21 @@ create
 feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN is False
+	
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		local
+			imp: EV_ITEM_IMP
+			item_ptr: POINTER
+		do
+			child_array.go_i_th (i)
+			imp ?= child_array.i_th (i).implementation
+			item_ptr := imp.c_object
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
+			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
+			child_array.remove
+			imp.set_item_parent_imp (Void)
+		end
 
 	make (an_interface: like interface) is
 			-- Create the tool-bar.
@@ -187,22 +199,6 @@ feature -- Implementation
 			child_array.put_left (v)
 			if parent_imp /= Void then
 				update_toolbar_style			
-			end
-		end
-
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to tool bar, set to non-expandable.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		do
-			check
-				do_not_call: False
 			end
 		end
 

@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Dialog box to change different color of the DATE_TIME_PICKER control."
 
 class
 	CHANGE_COLOR_DLG

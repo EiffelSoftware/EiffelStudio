@@ -316,6 +316,7 @@ feature -- Element change
 			i_positive: a_index > 0
 		local
 			a_column: EV_GRID_COLUMN
+			header_item: EV_HEADER_ITEM
 		do
 			create a_column
 			a_column.implementation.set_grid_i (Current)
@@ -323,6 +324,15 @@ feature -- Element change
 			a_column.implementation.set_physical_index (column_count)
 			grid_columns.put (a_column.implementation, a_index)
 			column_count := column_count + 1
+			
+				-- Now add the header for the new item.
+			create header_item
+				fixme ("[
+					Needs to use the actual index of the column taking into account those that are hidden before it.
+					Also headers before may be needed to pad it out.
+					]")
+			header.go_i_th (a_index)
+			header.put_left (header_item)
 		ensure
 			column_count_set: column_count = old column_count + 1
 		end
@@ -509,7 +519,7 @@ feature {NONE} -- Implementation
 			create grid_columns.make (5)
 			create grid_rows.make (5)
 			
-			create drawer.make_with_grid (Current)	
+			create drawer.make_with_grid (Current)
 			create drawable
 			create vertical_scroll_bar
 			create horizontal_scroll_bar
@@ -542,6 +552,7 @@ feature {NONE} -- Implementation
 			viewport.extend (vertical_box)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
+			drawable.resize_actions.force_extend (agent drawer.partial_redraw)
 		end
 		
 	viewport_resized (an_x, a_y, a_width, a_height: INTEGER) is

@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		do
 			create l_interval.make (start_time, create {TIME}.make_now)
 			last_generation_duration ?= l_interval.duration
-			if graphical_mode then
+			if graphical_mode and show_bar then
 				progress_dialog.hide	
 			end
 		end	

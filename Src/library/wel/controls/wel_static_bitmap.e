@@ -30,7 +30,7 @@ inherit
 		end
 
 creation 
-	make
+	make, make_by_bitmap_id
 
 feature {NONE} -- Initialization
 
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			dc.release
 		end
 
-	make_by_id_bitmap (a_parent: WEL_WINDOW; bitmap_id: INTEGER;
+	make_by_bitmap_id (a_parent: WEL_WINDOW; bitmap_id: INTEGER;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a static control
 		local

@@ -14,22 +14,21 @@ inherit
 
 	EB_SHARED_INTERFACE_TOOLS
 	
-	NEW_EB_CONSTANTS
+--	NEW_EB_CONSTANTS
+
+	EB_CONFIRM_SAVE_CALLBACK
 
 creation
 
 	make
 	
-feature -- Callbacks
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
-	exit_anyway is
+	process is
 			-- The user has been warned that he will lose his stuff
 		do
 			tool_supervisor.remove (tool)
 		end
-
-	user_warned: BOOLEAN
-			-- Has user been warned that he could lose the changes?
 
 feature -- Properties
 
@@ -46,11 +45,10 @@ feature {NONE} -- Implementation
 		local
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if (not user_warned) and then tool.text_window.changed then
-				create csd.make_and_launch (tool, Current, argument)
-				user_warned := True
+			if tool.text_window.changed then
+				create csd.make_and_launch (tool, Current)
 			else
-				exit_anyway
+				process
 			end
 		end
 

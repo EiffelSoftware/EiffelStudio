@@ -17,14 +17,15 @@ inherit
 			ev_children
 		end
 
-	WEL_MENU
-		rename
-			make as wel_make
+feature {EV_MENU_IMP} -- Access
+
+	menu_container: WEL_MENU is
+			-- Actual WEL container
+		deferred
 		end
 
-feature {EV_MENU_IMP} -- Status report
-
 	ev_children: LINKED_LIST [EV_MENU_ITEM_IMP]
+			-- List of all the children
 
 feature -- Event -- command association
 
@@ -45,8 +46,8 @@ feature {EV_MENU_CONTAINER} -- Implementation
 			check
 				menu_imp /= Void
 			end
-			append_popup (menu_imp, menu_imp.text)
-			menu_imp.set_position (count)
+			menu_container.append_popup (menu_imp, menu_imp.text)
+			menu_imp.set_position (menu_container.count)
 		end
 
 end -- class EV_MENU_CONTAINER_IMP

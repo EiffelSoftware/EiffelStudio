@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			
 			fill_directory_tree
 			image_list_combo_box.set_selected_index (1)
---			indent_up_down.set_value ((create {DECIMAL}).op_implicit_integer (directory_tree.indent))
 			
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
@@ -70,7 +69,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	initialize_components is
-			--
+			-- Initialize graphical components
 		local
 			l_array: NATIVE_ARRAY [SYSTEM_STRING]
 			resources: RESOURCE_MANAGER
@@ -159,7 +158,6 @@ feature {NONE} -- Implementation
 			l_size.make_from_width_and_height (120, 20)
 			indent_up_down.set_size (l_size)
 			tool_tip.set_tool_tip (indent_up_down, ("The indentation width of a child node in pixels.").to_cil)
-			indent_up_down.add_value_changed (create {EVENT_HANDLER}.make (Current, $indent_up_down_value_changed))
 
 			image_list_2.set_transparent_color (feature {DRAWING_COLOR}.transparent)
 			l_bitmap := loaded_bitmap ("diamond")
@@ -168,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 			l_bitmap := loaded_bitmap ("club")
 			if l_bitmap /= Void then
-				image_list_2.images.add (l_bitmap)--create {DRAWING_BITMAP}.make_from_filename (("club.bmp").to_cil))
+				image_list_2.images.add (l_bitmap)
 			end
 			l_size.make_from_width_and_height (5, 13)
 			set_auto_scale_base_size (l_size)
@@ -213,11 +211,11 @@ feature {NONE} -- Implementation
 			image_list_1.set_transparent_color (feature {DRAWING_COLOR}.transparent)
 			l_bitmap := loaded_bitmap ("clsdfold")
 			if l_bitmap /= Void then
-				image_list_1.images.add (l_bitmap) --create {DRAWING_BITMAP}.make_from_filename (("clsdfold.bmp").to_cil))
+				image_list_1.images.add (l_bitmap)
 			end
 			l_bitmap := loaded_bitmap ("openfold")
 			if l_bitmap /= Void then
-				image_list_1.images.add (l_bitmap) --create {DRAWING_BITMAP}.make_from_filename (("openfold.bmp").to_cil))
+				image_list_1.images.add (l_bitmap)
 			end
 
 			image_list_combo_box.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
@@ -306,7 +304,6 @@ feature {NONE} -- Implementation
 			non_void_grp_tree_view: grp_tree_view /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	dispose_boolean (a_disposing: BOOLEAN) is
@@ -341,7 +338,6 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
 
 	add_directories (node: WINFORMS_TREE_NODE) is
 			-- For a given root directory (or drive), add the directories to the
@@ -403,9 +399,6 @@ feature {NONE} -- Implementation
 			node_expanding: DIRECTORY_NODE
 		do
 			node_expanding ?= e.node
---			if node_expanding /= Void and then not node_expanding.sub_directories_sdded then
---				add_sub_directories (node_expanding)
---			end
 		end
 
 	fill_directory_tree is
@@ -447,115 +440,12 @@ feature {NONE} -- Implementation
 			if node.parent = Void then
 				Result := node.text
 			else
-				--parent_path := path_from_node (node.parent)
-				--Result := parent_path.concat_string_string_string (parent_path, ("\").to_cil, node.text)
 				Result := feature {PATH}.combine (path_from_node (node.parent), node.text)
 			end
 		end
 
-	refresh_get_expanded (node: WINFORMS_TREE_NODE; expanded_nodes: NATIVE_ARRAY [SYSTEM_STRING]; start_index: INTEGER): INTEGER is
-			-- Refresh helper functions to get all expanded nodes under the given node.
-		do
---			if (StartIndex < ExpandedNodes.Length) {
---				if (Node.IsExpanded) {
---					ExpandedNodes[StartIndex] = Node.Text
---					StartIndex++
---					for (int i = 0 i < Node.Nodes.Count i++) {
---						StartIndex = refresh_get_expanded(Node.Nodes[i],
---														 ExpandedNodes,
---														 StartIndex)
---					end
---				end
---				return StartIndex
---			end
-			Result := -1
-		end
-
-	refresh_expand (node: WINFORMS_TREE_NODE; expanded_nodes: NATIVE_ARRAY [SYSTEM_STRING]) is
-			-- Refresh helper function to expand all nodes whose paths are in parameter ExpandedNodes.
-		do
---			for (int i = ExpandedNodes.Length - 1 i >= 0 i--) {
---				if (ExpandedNodes[i] == Node.Text) {
---					/*
---					* For the expand button to show properly, one level of
---					* invisible children have to be added to the tree.
---					*/
---					add_sub_directories((DirectoryNode) Node)
---					Node.Expand()
---	
---					/* If the node is expanded, expand any children that were
---					* expanded before the refresh.
---					*/
---					for (int j = 0 j < Node.Nodes.Count j++) {
---						refresh_expand(Node.Nodes[j], ExpandedNodes)
---					end
---	
---					return
---				end
---			end
-		end
-
-	refresh (node: WINFORMS_TREE_NODE) is
-			-- Refreshes the view by deleting all the nodes and restoring them by
-			-- reading the disk(s). Any expanded nodes in the directoryView will be
-			-- expanded after the refresh.
-		do
---			// Update the directory_tree
---			if (node.Nodes.Count > 0) {
---				if (node.IsExpanded) {
---					// Save all expanded nodes rooted at node, even those that are
---					// indirectly rooted.
---					string[] tooBigExpandedNodes = new string[node.GetNodeCount(True))]
---					int iExpandedNodes = refresh_get_expanded(node,
---						tooBigExpandedNodes,
---						0)
---					string[] expandedNodes = new string[iExpandedNodes]
---					Array.Copy(tooBigExpandedNodes, 0, expandedNodes, 0,
---						iExpandedNodes)
---
---					node.Nodes.Clear()
---					add_directories(node)
---
---					// so children with subdirectories show up with expand/collapse
---					//button.
---					add_sub_directories((DirectoryNode)node)
---					node.Expand()
---
---					/*
---					 * check all children. Some might have had sub-directories added
---					 * from an external application so previous childless nodes
---					 * might now have children.
---					 */
---					for (int j = 0 j < node.Nodes.Count  j++) {
---						if (node.Nodes[j].Nodes.Count > 0) {
---							// If the child has subdirectories. If it was expanded
---							// before the refresh, then expand after the refresh.
---							refresh_expand(node.Nodes[j], expandedNodes)
---						end
---					end
---				end else {
---					/*
---					 * If the node is not expanded, then there is no need to check
---					 * if any of the children were expanded. However, we should
---					 * update the tree by reading the drive in case an external
---					 * application add/removed any directories.
---					 */
---					node.Nodes.Clear()
---					add_directories(node)
---				end
---			end else {
---				/*
---				 * Again, if there are no children, then there is no need to
---				 * worry about expanded nodes but if an external application
---				 * add/removed any directories we should reflect that.
---				 */
---				node.Nodes.Clear()
---				add_directories(node)
---			end
-		end
-
 	check_box1_add_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to be performed when 'sorted' list is clicked.
 		local
 			i: INTEGER
 		do
@@ -565,13 +455,12 @@ feature {NONE} -- Implementation
 			until
 				i = directory_tree.nodes.count
 			loop
-				refresh (directory_tree.nodes.item (i))
 				i := i + 1
 			end
 		end
 
 	image_list_combo_box_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to be performed when combo box index changes
 		local
 			index: INTEGER
 		do
@@ -585,44 +474,38 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	indent_up_down_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
-		do
-			--directory_tree.set_indent (indent_up_down.value.to_int_32 (indent_up_down.value))
-		end
-
 	check_box_2_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to enable hot tracking 
 		do
 			directory_tree.set_hot_tracking (check_box_2.checked)
 		end
 
 	check_box_3_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to enable showing of lines in tree
 		do
 			directory_tree.set_show_lines (check_box_3.checked)
 		end
 
 	check_box_4_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to enable showinf or root drive lines in tree
 		do
 			directory_tree.set_show_root_lines (check_box_4.checked)
 		end
 
 	check_box_5_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to enable showing of plus/minus in tree
 		do
 			directory_tree.set_show_plus_minus (check_box_5.checked)
 		end
 
 	check_box_6_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to enable check boxes in tree
 		do
 			directory_tree.set_check_boxes (check_box_6.checked)
 		end
 
 	check_box_7_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Event to disable showing of selection when tree loses focus
 		do
 			directory_tree.set_hide_selection (check_box_7.checked)
 		end

@@ -1,46 +1,25 @@
 indexing
-	description: "EiffelVision Check button. Widget that has a check box %
-				% and a text."
+
+	description: 
+		"EiffelVision pixmap container, implementation interface."
 	status: "See notice at end of class"
-	id: "$$"
-	date: "$$"
-	revision: "$$"
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 	
-class 
-	EV_CHECK_BUTTON
-
+deferred class
+	EV_PIXMAP_CONTAINER_I
+	
 inherit
-	EV_TOGGLE_BUTTON
-		redefine
-			make, make_with_text, 
-			implementation
-		end
-
-creation
-	make_with_text
-
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-		-- Empty check button
-		do
-			!EV_CHECK_BUTTON_IMP!implementation.make (par)
-			initialize (par)
-		end	
+	EV_CONTAINER_I
 	
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Check button with `par' as parent and `txt' as
-			-- text label
-		do
-			!EV_CHECK_BUTTON_IMP!implementation.make_with_text (par, txt)
-			widget_make (par)
+feature {NONE} -- Initialization
+	
+	make_from_primitive (primitive: EV_PRIMITIVE) is
+			-- Create pixmap container inside of 'primitive'
+		deferred
 		end
-
-feature {NONE} -- Implementation
-
-	implementation: EV_CHECK_BUTTON_I
-
-end -- class EV_CHECK_BUTTON
+end
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

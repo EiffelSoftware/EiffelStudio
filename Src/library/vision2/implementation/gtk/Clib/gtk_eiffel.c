@@ -367,13 +367,13 @@ void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label)
 
 /*
   Returns the label widget of button. 
-  There has to be only a label inside the button.
+  There has to be only a label inside the widget.
 */
-GtkWidget* c_gtk_get_label_widget (GtkWidget *button)
+GtkWidget* c_gtk_get_label_widget (GtkWidget *widget)
 {
     GList            *glist;
     
-    glist = gtk_container_children( GTK_CONTAINER(button) );
+    glist = gtk_container_children( GTK_CONTAINER(widget) );
     return GTK_WIDGET( glist->data );
 }
 

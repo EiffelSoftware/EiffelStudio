@@ -16,7 +16,7 @@ inherit
 
 	EV_BUTTON
 		redefine
-			make_with_text, implementation
+			make, make_with_text, implementation
 		end
 	
 creation
@@ -24,12 +24,19 @@ creation
 	
 feature {NONE} -- Initialization
 
+	make (par: EV_CONTAINER) is
+		-- Empty button
+		do
+			!EV_TOGGLE_BUTTON_IMP!implementation.make (par)
+			initialize (par)	
+		end	
+	
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Button with 'par' as parent and 'txt' as 
 			-- text label
 		do
 			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (par, txt)
-			widget_make (par)
+			initialize (par)
 		end			
 		
 feature -- Status report

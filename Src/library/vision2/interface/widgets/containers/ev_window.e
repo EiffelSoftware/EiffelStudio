@@ -185,6 +185,8 @@ feature -- Element change
                         implementation.set_close_command (c)
                 end
 
+feature {NONE} -- Implementation
+
         implementation: EV_WINDOW_I
                         -- Implementation of window
 

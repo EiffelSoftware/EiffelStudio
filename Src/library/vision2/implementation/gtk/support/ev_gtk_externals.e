@@ -16,11 +16,25 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_OBJECT"
 		end
 	
+	gtk_container (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_CONTAINER"
+		end
+	
 	gtk_editable (widget: POINTER): POINTER is
 		external 
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"GTK_EDITABLE"
+		end
+	
+	gtk_box (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_BOX"
 		end
 	
 	gtk_menu_item (widget: POINTER): POINTER is
@@ -303,6 +317,10 @@ feature {NONE} -- GTK C functions
 		end
 		
 	gtk_box_pack_start (box, widget: POINTER; e, f: BOOLEAN; p: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_box_pack_end (box, widget: POINTER; e, f: BOOLEAN; p: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 	

@@ -26,8 +26,9 @@ feature -- Access
 	
 feature -- Access
 
-	but: EV_BUTTON
-		
+	b1, b2, b3, b4: EV_BUTTON
+	pixmap: EV_PIXMAP
+	
 	toggle_b: EV_TOGGLE_BUTTON
 
 	check_b: EV_CHECK_BUTTON
@@ -41,7 +42,10 @@ feature -- Status setting
         
 	set_widgets is
 		do
-			!! but.make_with_text (main_widget, "Button")
+			!! b1.make_with_text (main_widget, "Button")
+			!! pixmap.make_from_file (b1.pixmap_container, "../pixmaps/power_small.xpm")
+			!! b2.make (main_widget)
+			!! pixmap.make_from_file (b2.pixmap_container, "../pixmaps/power_small.xpm")
 			!! toggle_b.make_with_text (main_widget, "Toggle Button")
 			!! check_b.make_with_text (main_widget, "Check Button")
 			!! radio1_b.make_with_text (main_widget, "Radio 1")

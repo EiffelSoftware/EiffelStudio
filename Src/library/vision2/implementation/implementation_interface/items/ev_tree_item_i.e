@@ -19,11 +19,6 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_I
-		redefine
-			interface
-		end
-
 feature -- Access
 
 	parent_tree: EV_TREE is
@@ -110,6 +105,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/09 21:37:12  king
+--| Removed inheritence from PND, now in simple item
+--|
 --| Revision 1.30  2000/03/07 01:28:50  king
 --| Now inheriting from ev_tree_item_holder_i
 --|

@@ -241,14 +241,7 @@ feature
 				file.putint (feature_id);
 				file.putstring (", Dtype(Current))");
 			end;		
-			file.putstring(");");
-			file.new_line;
-			file.putstring("EDCX%N") -- ss MT
-			file.exdent;
-			file.putchar('}');
-			file.new_line;
-			file.new_line;
-
+			file.putstring(");%N}%N%N");
 		end;
 
 	replicated: FEATURE_I is

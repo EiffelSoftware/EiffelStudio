@@ -373,6 +373,14 @@ end;
 				old_creators := Void
 			end;
 
+				-- Insert removed routines from convert clauses into propagators list.
+			if old_convert_to /= Void then
+				update_convert_clause (old_convert_to, a_class.convert_to, resulting_table)
+			end
+			if old_convert_from /= Void then
+				update_convert_clause (old_convert_from, a_class.convert_from, resulting_table)
+			end
+
 				-- Remember the removed features written in `a_class'
 			pass3_control := a_class.propagators;
 			pass3_control.set_removed_features (pass2_control.removed_features);
@@ -1165,6 +1173,43 @@ end;
 				changed_features.forth;
 			end;
 		end;
+
+	update_convert_clause (
+			a_old_convert, a_new_convert: DS_HASH_TABLE [INTEGER, CL_TYPE_A];
+			a_resulting_table: FEATURE_TABLE)
+		is
+			-- Take into account incremental changes in `convert' clauses.
+		require
+			a_class_not_void: a_class /= Void
+			a_old_convert_not_void: a_old_convert /= Void	
+			a_resulting_table_not_void: a_resulting_table /= Void
+		local
+			l_feat_name_id: INTEGER
+			l_depend_unit: DEPEND_UNIT
+		do
+			if not a_old_convert.is_equal (a_new_convert) then
+					-- Old convert clause is different from new one. For each routines previously
+					-- specified in `a_old_convert' and not specified in `a_new_convert',
+					-- we need to progagate to the classes that were using those routines
+					-- so that the code is recompiled at degree 3 (for type checking purpose only).
+				from
+					a_old_convert.start
+				until
+					a_old_convert.after
+				loop
+					l_feat_name_id := a_old_convert.item_for_iteration
+					a_resulting_table.search_id (l_feat_name_id)
+					if
+						a_resulting_table.found and
+						(a_new_convert = Void or else not a_new_convert.has_item (l_feat_name_id))
+					then
+						create l_depend_unit.make (a_class.class_id, a_resulting_table.found_item)
+						pass2_control.propagators.extend (l_depend_unit)
+					end
+					a_old_convert.forth
+				end
+			end
+		end
 
 	Routine_id_counter: ROUTINE_COUNTER is
 			-- Counter for routine ids

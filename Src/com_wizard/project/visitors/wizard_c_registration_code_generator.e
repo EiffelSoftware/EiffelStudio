@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	ccom_cleanup_com_feature: WIZARD_WRITER_C_FUNCTION is
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	ccom_unregserver_feature: WIZARD_WRITER_C_FUNCTION is
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	ccom_regserver_feature: WIZARD_WRITER_C_FUNCTION is
@@ -568,7 +568,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	dll_get_class_object_feature: WIZARD_WRITER_C_FUNCTION is
@@ -811,7 +811,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 
@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	dll_unregister_server_feature: WIZARD_WRITER_C_FUNCTION is
@@ -908,7 +908,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	dll_can_unload_now_feature: WIZARD_WRITER_C_FUNCTION is
@@ -953,7 +953,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_macro: Result /= Void
-			valid_mocro: not Result.empty
+			valid_mocro: not Result.is_empty
 		end
 
 	exe_lock_module_feature: WIZARD_WRITER_C_FUNCTION is
@@ -1268,7 +1268,7 @@ feature {NONE} -- Implementation
 			-- Dll specific registry entries
 		require
 			non_void_guid: coclass_guid /= Void
-			valid_guid: not coclass_guid.empty
+			valid_guid: not coclass_guid.is_empty
 		local
 			tmp_string: STRING
 		do
@@ -1290,9 +1290,9 @@ feature {NONE} -- Implementation
 			-- Application specific registry entries
 		require
 			non_void_guid: coclass_guid /= Void
-			valid_guid: not coclass_guid.empty
+			valid_guid: not coclass_guid.is_empty
 			non_void_name: coclass_descriptor.name /= Void
-			valid_coclass_name: not coclass_descriptor.name.empty
+			valid_coclass_name: not coclass_descriptor.name.is_empty
 		local
 			string_one, string_two: STRING
 		do

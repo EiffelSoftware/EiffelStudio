@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object
 				(C.gtk_file_selection_new (eiffel_to_c ("Select file")))
-			C.gtk_object_ref (c_object)
 			C.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
 			set_start_directory (".")

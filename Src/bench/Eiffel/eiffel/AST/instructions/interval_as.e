@@ -157,7 +157,7 @@ feature -- Type check and byte code
 			Result := context.interval_line
 		end
 
-feature {COMPILER_EXPORTER} -- Access
+feature -- Access
 
 	good_integer_interval: BOOLEAN is
 			-- Is the current interval a good integer interval ?

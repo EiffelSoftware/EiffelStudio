@@ -221,13 +221,6 @@ feature {NONE} -- Implementation
 
 invariant
 	range_not_void: is_useable implies range /= Void
-
---| FIXME VB 02/14/2000 These trigger seg-violations...
---	range_has_value: is_useable implies range.has (value)
---	range_lower_same_as_minimum: is_useable implies range.lower = minimum
---	range_upper_same_as_maximum: is_useable implies range.upper = maximum
---	range_not_empty: is_useable implies range.count > 0
-
 	maximum_greater_than_or_equal_to_minimum: is_useable implies maximum >= minimum
 	value_within_bounds: is_useable implies value >= minimum and then value <= maximum
 	step_positive: is_useable implies step > 0
@@ -257,9 +250,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.6  2000/02/15 00:42:44  brendel
---| Commented out part of invariant that has to do with INTEGER_INTERVAL.
---| They trigger segmentation violations.
+--| Revision 1.7  2000/02/15 01:56:50  brendel
+--| Removed commented out part of invariant. There is a bug in INTEGER_INTERVAL
+--| and we cannot wait for it to be fixed.
 --|
 --| Revision 1.5  2000/02/14 23:57:31  brendel
 --| Strengthened contracts using INTEGER_INTERVAL.

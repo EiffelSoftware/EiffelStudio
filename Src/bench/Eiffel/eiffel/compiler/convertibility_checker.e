@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 		
-	KL_EQUALITY_TESTER [CL_TYPE_A]
+	KL_EQUALITY_TESTER [NAMED_TYPE_A]
 		export
 			{NONE} all
 		redefine
@@ -41,8 +41,8 @@ feature -- Initialization/Checking
 		local
 			l_feat: CONVERT_FEAT_AS
 			l_type: TYPE
-			l_cl_type: CL_TYPE_A
-			l_convert_to, l_convert_from: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+			l_named_type: NAMED_TYPE_A
+			l_convert_to, l_convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			l_name_id: INTEGER
 			l_processed: SEARCH_TABLE [INTEGER]
 			l_vtug: VTUG
@@ -91,8 +91,11 @@ feature -- Initialization/Checking
 								l_feat.conversion_types.after or has_error
 							loop
 								l_type := l_feat.conversion_types.item
-								l_cl_type ?= l_type.actual_type
-								if l_type.has_like or l_cl_type = Void then
+								l_named_type ?= l_type.actual_type
+								if
+									l_named_type = Void or else
+									not l_named_type.is_full_named_type
+								then
 										-- Not a valid type.
 									create l_vncp.make ("Invalid type: use of anchors.")
 									l_vncp.set_class (a_class)
@@ -100,48 +103,48 @@ feature -- Initialization/Checking
 									has_error := True
 								else
 										-- Check type has valid generics.
-									if not l_cl_type.good_generics then
+									if not l_named_type.good_generics then
 											-- Wrong number of geneneric parameters in parent
-										l_vtug := l_cl_type.error_generics
+										l_vtug := l_named_type.error_generics
 										l_vtug.set_class (a_class)
 										Error_handler.insert_error (l_vtug)
 										has_error := True
 									else
 											-- Check constrained genericity validity rule
-										l_cl_type.reset_constraint_error_list
-										l_cl_type.check_constraints (a_class)
-										if not l_cl_type.constraint_error_list.is_empty then
-											create l_vncp.make ("Invalide generic type.")
+										l_named_type.reset_constraint_error_list
+										l_named_type.check_constraints (a_class)
+										if not l_named_type.constraint_error_list.is_empty then
+											create l_vncp.make ("Invalid generic type.")
 											l_vncp.set_class (a_class)
 											Error_handler.insert_error (l_vncp)
 											has_error := True
 										else
-											l_cl_type.check_for_obsolete_class (a_class)
+											l_named_type.check_for_obsolete_class (a_class)
 											
 												-- Check that specified routine argument or return
-												-- type matches conversion type `l_cl_type'.
+												-- type matches conversion type `l_named_type'.
 											check_conversion_type (a_class, a_feat_tbl, l_feat,
-												l_cl_type)
+												l_named_type)
 											if not has_error then
 												if l_feat.is_creation_procedure then
-													if l_convert_from.has (l_cl_type) then
+													if l_convert_from.has (l_named_type) then
 														create l_vncp.make
 															("Conversion type already specified.")
 														l_vncp.set_class (a_class)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
 													else
-														l_convert_from.put (l_name_id, l_cl_type)
+														l_convert_from.put (l_name_id, l_named_type)
 													end
 												else
-													if l_convert_to.has (l_cl_type) then
+													if l_convert_to.has (l_named_type) then
 														create l_vncp.make
 															("Conversion type already specified.")
 														l_vncp.set_class (a_class)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
 													else
-														l_convert_to.put (l_name_id, l_cl_type)
+														l_convert_to.put (l_name_id, l_named_type)
 													end
 												end
 											end
@@ -166,7 +169,7 @@ feature -- Initialization/Checking
 
 	system_validity_checking (an_array: ARRAY [CLASS_C]) is
 			-- Check convertibility validity on all system. That is to say, check
-			-- that there is only one way to convert to type.
+			-- that there is only one way to convert from a type to another type.
 			-- Note: Check is done on base class. Is this sufficient?
 		require
 			an_array_not_void: an_array /= Void
@@ -227,12 +230,132 @@ feature -- Initialization/Checking
 				i := i + 1
 			end
 		end
-		
+	
+	check_conversion (a_context_class: CLASS_C; a_source_type, a_target_type: TYPE_A) is
+			-- In context of `a_context_class' check if `a_source_type' converts to `a_target_type'.
+			-- If so set `last_conversion_check_successful' to True and set `last_conversion_info'
+			-- with proper conversion information.
+		require
+			a_context_class_not_void: a_context_class /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_success: BOOLEAN
+			l_source_class, l_target_class: CLASS_C
+			l_convert_table: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_conversion_type: TYPE_A
+			l_feat_name_id: INTEGER
+			l_feat: FEATURE_I
+			l_cl_type: CL_TYPE_A
+		do
+				-- Reset previous computation
+			last_conversion_check_successful := False
+			last_conversion_info := Void
+			
+			l_target_class := a_target_type.associated_class
+			if l_target_class /= Void then
+				l_convert_table := l_target_class.convert_from
+			end
+			if l_convert_table /= Void then
+				from
+					l_cl_type ?= a_target_type
+					l_convert_table.start
+				until
+					l_convert_table.after or l_success
+				loop
+					l_conversion_type := l_convert_table.key_for_iteration
+						-- Evaluate conversion type in context of `a_target_type'. This is needed
+						-- in the following case:
+						-- class A [G] convert make_from ({G}) ... end
+						-- a: A [X]
+						-- x: X
+						-- a := x
+						-- Instantiating `G' in context of `A [X]' will give us `X'
+						-- enabling us to convert from `X'.
+					if l_cl_type /= Void then
+						l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
+					end
+					l_success := a_source_type.same_as (l_conversion_type)
+					if l_success then
+						l_feat_name_id := l_convert_table.item_for_iteration
+					end
+					l_convert_table.forth
+				end
+				if l_success then
+					l_feat := l_target_class.feature_table.item_id (l_feat_name_id)
+					check
+						l_feat_not_void: l_feat /= Void
+						has_creation_procedures: l_target_class.creators /= Void
+						has_convert_creation_procedure:
+							l_target_class.creators.has (l_feat.feature_name)
+					end
+					l_success := l_target_class.creators.item (l_feat.feature_name).valid_for (
+						a_context_class)
+					if l_success then
+						create {FEATURE_CONVERSION_INFO} last_conversion_info.
+							make_from (a_source_type, a_target_type, l_target_class, l_feat)
+					end
+				end
+			end
+			if not l_success then
+				l_source_class := a_source_type.associated_class
+				if l_source_class /= Void then
+					l_convert_table := l_source_class.convert_to
+				end
+				if l_convert_table /= Void then
+					from
+						l_cl_type ?= a_source_type
+						l_convert_table.start
+					until
+						l_convert_table.after or l_success
+					loop
+						l_conversion_type := l_convert_table.key_for_iteration
+							-- Evaluate conversion type in context of `a_target_type'. This is needed
+							-- in the following case:
+							-- class A [G] convert to_formal: {G} ... end
+							-- a: A [X]
+							-- x: X
+							-- x := a
+							-- Instantiating `G' in context of `A [X]' will give us `X'
+							-- enabling us to convert from `X'.
+						if l_cl_type /= Void then
+							l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
+						end
+						l_success := a_target_type.same_as (l_conversion_type)
+						if l_success then
+							l_feat_name_id := l_convert_table.item_for_iteration
+						end
+						l_convert_table.forth
+					end
+					if l_success then
+						l_feat := l_source_class.feature_table.item_id (l_feat_name_id)
+						check
+							l_feat_not_void: l_feat /= Void
+						end
+						l_success := l_feat.is_exported_for (a_context_class)
+						if l_success then
+							create {FEATURE_CONVERSION_INFO} last_conversion_info.
+								make_to (a_source_type, a_target_type, l_source_class, l_feat)
+						end
+					end
+				end
+			end
+			last_conversion_check_successful := l_success
+		end
+
+feature -- Status report
+
+	last_conversion_check_successful: BOOLEAN
+			-- Was last call to `check_conversion' successful?
+	
+	last_conversion_info: CONVERSION_INFO
+			-- Information about last successful conversion checking
+
 feature {NONE} -- Implementation: initialization
 
-	new_convert_table: DS_HASH_TABLE [INTEGER, CL_TYPE_A] is
+	new_convert_table: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A] is
 			-- Create new instance used to initialize `convert_to' or `convert_from' of CLASS_C
-			-- where equality on keys is done using `same_as' from CL_TYPE_A.
+			-- where equality on keys is done using `same_as' from NAMED_TYPE_A.
 		do
 			create Result.make (10)
 				-- Compare keys using `same_as'.
@@ -280,7 +403,10 @@ feature {NONE} -- Implementation: checking
 				if l_feat.is_routine and (not l_feat.is_once or not l_feat.is_external) then
 					if a_convert_feat.is_creation_procedure then
 							-- Check it is listed as part of creation procedures of current class.
-						if not a_class.creators.has (a_convert_feat.feature_name.internal_name) then
+						if
+							a_class.creators = Void or else
+							not a_class.creators.has (a_convert_feat.feature_name.internal_name)
+						then
 								-- Not a creation procedure.
 							create l_vncp.make ("Not a creation procedure.")
 							l_vncp.set_class (a_class)
@@ -326,7 +452,7 @@ feature {NONE} -- Implementation: checking
 			a_class: CLASS_C;
 			a_feat_tbl: FEATURE_TABLE;
 			a_convert_feat: CONVERT_FEAT_AS;
-			a_type: CL_TYPE_A)
+			a_type: NAMED_TYPE_A)
 		is
 			-- Check validity of `a_type' used to convert to or from using `a_convert_feat' routine
 			-- so that it matches routine specified in `a_convert_feat', and that `a_type' does not
@@ -350,8 +476,8 @@ feature {NONE} -- Implementation: checking
 				-- FIXME: Manu 04/28/2003: we do not do yet apply convertibility to check
 				-- for conversion type validity, only conformance
 			if l_feat.is_function then
-				if not a_type.conform_to (l_feat.type.actual_type) then
-					create l_vncp.make ("SOURCE does not conform to return type.")
+				if not l_feat.type.actual_type.conform_to (a_type) then
+					create l_vncp.make ("Return type does not conform to SOURCE.")
 					l_vncp.set_class (a_class)
 					Error_handler.insert_error (l_vncp)
 					has_error := True
@@ -365,16 +491,18 @@ feature {NONE} -- Implementation: checking
 				end
 			end
 			
-				-- Check non-conformance of `a_type' to `a_class'.
-			if
-				not has_error and then
-				a_type.conform_to (a_class.constraint_actual_type)
-			then
-				create l_vncp.make ("SOURCE conforms to current class.")
-				l_vncp.set_class (a_class)
-				Error_handler.insert_error (l_vncp)
-				has_error := True
-			end
+-- FIXME: Manu: 01/22/2004: If we say that we always take conformance over convertibility
+-- then we do not need this test
+--				-- Check non-conformance of `a_type' to `a_class'.
+--			if
+--				not has_error and then
+--				a_type.conform_to (a_class.constraint_actual_type)
+--			then
+--				create l_vncp.make ("SOURCE conforms to current class.")
+--				l_vncp.set_class (a_class)
+--				Error_handler.insert_error (l_vncp)
+--				has_error := True
+--			end
 		end
 		
 feature {NONE} -- Implementation: status report
@@ -385,7 +513,7 @@ feature {NONE} -- Implementation: status report
 			a_not_void: a /= Void
 			b_not_void: b /= Void
 		local
-			l_convert: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+			l_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 		do
 				-- First check if there are no conversion to `b' from `a'.
 			l_convert := a.convert_to
@@ -436,8 +564,8 @@ feature {NONE} -- Implementation: access
 	has_error: BOOLEAN
 			-- Did we find an error in last checking.
 
-	test (u, v: CL_TYPE_A): BOOLEAN is
-			-- Compare two instances `u' and `v' of CL_TYPE_A using `same_as'.
+	test (u, v: NAMED_TYPE_A): BOOLEAN is
+			-- Compare two instances `u' and `v' of NAMED_TYPE_A using `same_as'.
 		do
 			if v = Void then
 				Result := (u = Void)

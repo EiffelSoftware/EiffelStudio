@@ -24,7 +24,8 @@ inherit
 			implementation,
 			create_implementation,
 			items_unique,
-			parent_of_items_is_current
+			parent_of_items_is_current,
+			is_in_default_state
 		end
 
 	ARRAY [EV_WIDGET]
@@ -217,6 +218,16 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.border_width
+		end
+		
+	is_homogeneous: BOOLEAN is
+			-- Are all items forced to have same dimensions.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_homogeneous
+		ensure
+			bridge_ok: Result = implementation.is_homogeneous
 		end
 
 	area_clear (a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
@@ -477,6 +488,20 @@ feature {NONE} -- Contract support
 			end
 		end
 		
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := Precursor {EV_CONTAINER} and (
+				not is_homogeneous and
+				border_width = 0 and
+				row_spacing = 0 and
+				column_spacing = 0 and
+				rows = 1 and
+				columns = 1
+			)
+		end
+
+		
 feature {EV_ANY_I} -- Implementation
 	
 	implementation: EV_TABLE_I
@@ -488,9 +513,9 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TABLE_IMP} implementation.make (Current)
-			columns := 2
-			rows := 2
-			array_make (1, columns * rows)
+			columns := 1
+			rows := 1
+			array_make (1, 1)
 		end
 
 end -- class EV_TABLE

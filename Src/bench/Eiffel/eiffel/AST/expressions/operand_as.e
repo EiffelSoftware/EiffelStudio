@@ -61,7 +61,8 @@ feature -- Comparison
 		do
 			Result := equivalent (class_type, other.class_type) and then
 					  equivalent (target, other.target) and then
-					  equivalent (expression, other.expression)
+					  equivalent (expression, other.expression) and then
+					  is_result = other.is_result
 		end
 
 feature

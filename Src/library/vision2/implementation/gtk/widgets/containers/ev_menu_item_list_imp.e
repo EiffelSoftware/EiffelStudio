@@ -25,11 +25,12 @@ feature {NONE} -- implementation
 	add_to_container (v: like item) is
 			-- Add `v' to container.
 		local
-			imp: EV_WIDGET_IMP
+			imp: EV_ITEM_IMP
 			rmi: EV_RADIO_MENU_ITEM
 			sep: EV_MENU_SEPARATOR_IMP
 		do
 			imp ?= v.implementation
+			imp.set_parent_imp (Current)
 			rmi ?= v
 			if rmi /= Void then
 				sep := last_separator_imp
@@ -65,14 +66,14 @@ feature {NONE} -- implementation
 		local
 			item_imp: EV_ITEM_IMP
 		do
-			Precursor (a_position)
-
 			item_imp ?= eif_object_from_c (
 				C.g_list_nth_data (
 					C.gtk_container_children (list_widget),
 					a_position - 1
 				)
 			)
+			Precursor (a_position)
+			item_imp.set_parent_imp (Void)
 			if needs_radio_regrouping (item_imp) then
 				reset_radio_groups
 			end
@@ -168,6 +169,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/09 22:15:20  king
+--| Implemented parenting fix, corrected remove_item_from_position
+--|
 --| Revision 1.5  2000/02/25 01:53:02  brendel
 --| While not implemented, a check false is performed when removing or moving
 --| a separator or radio item around.

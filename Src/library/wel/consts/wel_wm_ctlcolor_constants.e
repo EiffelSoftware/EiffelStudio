@@ -9,6 +9,9 @@ class
 
 feature -- Access
 
+	Wm_ctlcolor: INTEGER is 25
+			-- Declared in Windows as WM_CTLCOLOR
+
 	Wm_ctlcolormsgbox: INTEGER is 306
 			-- Declared in Windows as WM_CTLCOLORMSGBOX
 	

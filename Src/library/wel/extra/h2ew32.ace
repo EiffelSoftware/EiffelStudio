@@ -5,20 +5,20 @@ root
 	H2E (root_cluster): "make"
 
 default
-	assertion (all);
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_COMPILER\wel")
+	assertion (all)
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_C_COMPILER\wel")
 
 cluster 
-	root_cluster:		"."
+	root_cluster:	"."
+
+		-- EiffelBase
+	all base: 		"ISE_EIFFEL\library\base"
 
 		-- WEL
 	all wel:		"ISE_EIFFEL\library\wel"
 
-		-- EiffelBase
-	all base: 		"ISE_EIFFEL\library\base\"
-
 external
 	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
-	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- system h2e

@@ -9,7 +9,7 @@ root
 	EDITOR_WINDOW (gui): "make_and_launch"
 
 default
-	assertion			(no)
+	assertion			(require)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)

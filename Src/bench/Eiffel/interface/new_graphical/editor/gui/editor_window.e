@@ -36,12 +36,13 @@ feature -- Initialization
 			-- Initialize world.
 		local
 			basic_interval: INTEGER_INTERVAL
+			a_menu_bar: EV_MENU_BAR
+			a_menu: EV_MENU
+			a_menu_item: EV_MENU_ITEM
 		do
 			----------------------------
 			-- Vision2 initialisation --
 			----------------------------
-			create text_displayed.make
-
 			create my_device
 
 			first_window.key_press_actions.extend(~on_key_down)
@@ -59,7 +60,6 @@ feature -- Initialization
 			my_scrollbar.reset_with_range(basic_interval)
 			my_scrollbar.change_actions.extend (~on_vertical_scroll)
 
-
 			create my_container
 
 				-- Add widgets to our window
@@ -67,6 +67,18 @@ feature -- Initialization
 			my_container.extend (my_scrollbar)
 			my_container.disable_child_expand (my_scrollbar)
 			first_window.extend(my_container)
+
+
+				-- create Menus & menu items
+			create a_menu_bar
+			create a_menu.make_with_text ("File")
+			create a_menu_item.make_with_text ("Load")
+			a_menu_item.press_actions.extend (~on_menu_file_load)
+
+				-- Link menus & menu items to menu bar.
+			a_menu_bar.extend (a_menu)
+			a_menu.extend (a_menu_item)
+			first_window.set_menu_bar (a_menu_bar)
 
 			----------------------------
 			-- General initialisation --
@@ -88,26 +100,15 @@ feature -- Initialization
 				-- Load the font & Compute Font related constants.
 			number_of_lines_displayed := my_device.height // line_increment
 
-				-- Read and parse the file.
-			file_name := "c:\childwin.e"
-			start_reading_file
-
 				-- Setup the scroll bars.
 			my_scrollbar.set_maximum (vertical_range_max)
 
-				-- Initialize history
-			create history.make (Current)
-
-				-- Initialize the cursor
-			create cursor.make_from_absolute_pos (0, 1, Current)
-			selection_start := cursor --| this is just for selection_start not to be Void.
-
+				-- Set up the screen.
 			create buffered_screen.make_with_size(my_device.width, my_device.height)
 			buffered_screen.set_background_color(editor_preferences.normal_background_color)
 			my_device.set_background_color(editor_preferences.normal_background_color)
-
-				-- We're all setup, let's display the thing.
-			my_device.clear_and_redraw
+			my_device.disable_sensitive
+			my_scrollbar.disable_sensitive
 		end
 
 	idle_action: BOOLEAN is
@@ -129,20 +130,21 @@ feature -- Initialization
 			Result.set_size (500, 500)
 		end
 
-	key_codes: EV_KEY_CODE is
-		once
-			create Result.make
-		end
 
-
-feature -- Access
+feature {NONE} -- Graphical interface
 
 	my_device: EV_DRAWING_AREA
+			-- Part of the screen where the text is displayed.
+
 	buffered_screen: EV_PIXMAP
+			-- Buffer containing the current displayed screen.
 
 	my_scrollbar: EV_VERTICAL_SCROLL_BAR
+			-- Scroll bar associated to the drawing area
 
 	my_container: EV_HORIZONTAL_BOX
+			-- Container that groups the drawing area and
+			-- the vertical scrollbar.
 
 feature -- Access
 
@@ -185,6 +187,18 @@ feature -- Selection
 
 feature -- Process Vision2 events
 
+	on_menu_file_load is
+			-- Feature executed when the user select file/load
+			-- in the menu. Open the dialog box and let the
+			-- user choose its file to load.
+		local
+			ofd: EV_FILE_OPEN_DIALOG
+		do
+			create ofd
+			ofd.ok_actions.extend (~effective_load_file (ofd))
+			ofd.show_modal
+		end
+	
 	on_repaint (x, y, width, height: INTEGER) is
 			-- Paint the window
 		do
@@ -270,7 +284,6 @@ feature -- Process Vision2 events
 
  	on_char (character_string: STRING) is
    			-- Process Wm_char message
-   			-- See class WEL_VK_CONSTANTS for `character_code' value.
    		local
    			c: CHARACTER
    		do
@@ -326,7 +339,6 @@ feature -- Process Vision2 events
 
 	on_mouse_move (x_pos, y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
 			-- Wm_mousemove message
-			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
 			l_number	: INTEGER
 			xline		: EDITOR_LINE
@@ -500,6 +512,11 @@ feature -- Actions
 
 feature {NONE} -- Handle keystokes
 	
+	key_codes: EV_KEY_CODE is
+		once
+			create Result.make
+		end
+
 	basic_cursor_move(action: PROCEDURE[EDITOR_CURSOR,TUPLE]) is
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
@@ -870,7 +887,6 @@ feature {NONE} -- Display functions
 			-- Set the line where the cursor is situated to be redrawn
 			-- Redraw immediately if `redraw' is set.
 		local
-			-- wel_rect: WEL_RECT
 			cursor_up: INTEGER
 		do
    				-- Invalidate old cursor location.
@@ -894,7 +910,11 @@ feature {NONE} -- Status Report
 	number_of_lines: INTEGER is
 			-- Whole number of lines.
 		do
-			Result := text_displayed.count
+			if text_displayed /= Void then
+				Result := text_displayed.count
+			else
+				Result := 0
+			end
 		end
 
 	vertical_range_max: INTEGER is
@@ -921,34 +941,6 @@ feature {NONE} -- Constants & Text Attributes
 
 feature {NONE} -- Implementation
 
---	current_font: WEL_FONT
---		-- Current font used to display the text.
-
---	normal_background_brush: WEL_BRUSH is
---		do
---			Result := editor_preferences.normal_background_brush
---		end
-
---	class_background: WEL_BRUSH is
---			-- Set the class background to NULL in order
---			-- to have full control on the WM_ERASEBKG event
---			-- (on_erase_background)
---		once
---			create Result.make_by_pointer(Default_pointer)
---		end
-
---	class_icon: WEL_ICON is
---			-- Window's icon
---		once
---			create Result.make_by_id (Id_ico_child_window)
---		end
-
---	default_style: INTEGER is
---			-- Default style for this window.
---		do
---			Result := ws_overlappedwindow + ws_vscroll
---		end
-
 	font: EV_FONT is
 			-- Current text font.
 		once
@@ -958,6 +950,30 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Load/Save File handling
 
+	effective_load_file(file_d: EV_FILE_OPEN_DIALOG) is
+			-- Actions performed when the user click on the
+			-- "OK" button of the FileOpenDialog box.
+		do
+				-- Read and parse the file.
+			file_name := file_d.file_name
+			start_reading_file
+
+				-- Setup the scroll bars.
+			my_scrollbar.set_maximum (vertical_range_max)
+
+				-- Initialize history
+			create history.make (Current)
+
+				-- Initialize the cursor
+			create cursor.make_from_absolute_pos (0, 1, Current)
+			selection_start := cursor --| this is just for selection_start not to be Void.
+
+				-- We're all setup, let's display the thing & enable user input
+			my_device.clear_and_redraw
+			my_device.enable_sensitive
+			my_scrollbar.enable_sensitive
+		end
+
 	start_reading_file is
 			-- Read the file named `a_name' and perform a lexical analysis
 		local
@@ -965,6 +981,10 @@ feature {NONE} -- Load/Save File handling
 			curr_string	: STRING
 			fake_text	: EDITOR_TOKEN_TEXT
 		do
+				-- reset the displayed text & display the drawing area.
+			create text_displayed.make
+			my_device.enable_sensitive
+
 				-- read the file
 			create file.make_open_read (file_name)
 			

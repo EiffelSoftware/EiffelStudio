@@ -141,12 +141,6 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 		do
 -- by default, no background...
 --			Result := editor_preferences.normal_background_color
-
-		end
-
-	normal_background_brush: WEL_BRUSH is
-		do
-			Result := editor_preferences.normal_background_brush
 		end
 
 	selected_text_color: EV_COLOR is
@@ -157,11 +151,6 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 	selected_background_color: EV_COLOR is
 		do
 			Result := editor_preferences.selected_background_color
-		end
-
-	selected_background_brush: WEL_BRUSH is
-		do
-			Result := editor_preferences.selected_background_brush
 		end
 
 	font: EV_FONT is

@@ -89,8 +89,6 @@ feature {NONE} -- Implementation
 			old_background_color: EV_COLOR
 			the_text_color		: EV_COLOR
 			the_background_color: EV_COLOR
-			the_background_brush: WEL_BRUSH
-			wel_rect			: WEL_RECT
 			curr_position		: INTEGER
 		do
 -- 			curr_position := position

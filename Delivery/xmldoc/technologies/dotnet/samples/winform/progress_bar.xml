@@ -21,11 +21,7 @@
 					<alt_text>Hello world form</alt_text>
 				</image>
 			</paragraph>
-		</div>
-		<paragraph>
-			<line_break></line_break>
-			<line_break></line_break>
-		</paragraph>
+		</div>		
 		<heading>
 			<size>2</size>Compiling
 		</heading>
@@ -49,7 +45,7 @@
 				<class_name>(THREAD_START)</class_name>
 			</code> that simulates the progression of a process. 
 		</paragraph>
-		<paragraph>This sample contains the following class:</paragraph>
+		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>
 				<span>PROGRESS_BAR</span>

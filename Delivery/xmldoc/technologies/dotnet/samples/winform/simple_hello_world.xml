@@ -20,10 +20,6 @@
 				</image>
 			</paragraph>
 		</div>
-		<paragraph>
-			<line_break></line_break>
-			<line_break></line_break>
-		</paragraph>
 		<heading>
 			<size>2</size>Compiling
 		</heading>
@@ -37,11 +33,11 @@
 		</heading>
 		<paragraph>The application shows how to display a Windows Form under the windows environment. The application inherits the 
 			<span>FORM</span> class, and just set the title with 
-			<span>"Hello world"</span> with the inherited feature
+			<span>"Hello world"</span> with the inherited feature 
 			<span>set_title</span>. 
 		</paragraph>
 		<code>set_title (("Hello world"). to_cil)</code>
-		<paragraph>The application is launch in a PROCESS with this command line:</paragraph>
+		<paragraph>The application is launched in a PROCESS with this command line:</paragraph>
 		<code>feature {WINFORMS_APPLICATION}. run_form (Current). </code>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">

@@ -205,6 +205,13 @@ feature -- Generation constants
 		once
 			Result := "<LOCAL>"
 		end
+	
+	constants_tag: STRING is
+			-- `Result' is tag used in templated
+			-- for the constants declaration.
+		once
+			Result := "<CONSTANTS>"
+		end
 		
 	main_window_tag: STRING is
 			-- `Result' is tag used in templates
@@ -646,6 +653,9 @@ feature -- Booleans
 	
 feature -- Constants
 
+	Pixmap_constant_type: STRING is "PIXMAP"
+		-- String representation of a pixmap constant.
+
 	Integer_constant_type: STRING is "INTEGER"
 		-- String representation of an integer constant.
 	
@@ -654,6 +664,10 @@ feature -- Constants
 	
 	directory_constant_type: STRING is "DIRECTORY"
 		-- String representation of a directory constant.
+		
+	filepath_constant_type: STRING is "FILEPATH"
+	
+	filename_constant_type: STRING is "FILENAME"
 	
 	all_constant_type: STRING is "ALL"
 		-- String representation used to indicate all constant types.
@@ -672,6 +686,18 @@ feature -- Constants
 		
 	Constant_string: STRING is "Constant"
 		-- String constant representing single constant in XML.
+		
+	is_absolute_string: STRING is "is_absolute"
+	
+	filename_string: STRING is "Filename"
 
+feature -- Preferences
+
+	do_not_show_again: STRING is "Always add new constants and do not show this dialog again."
+
+	--show_pixmap_constant_directory_warning: STRING is "show_pixmap_constant_directory_warning"
+	show_repeated_absolute_constant_warning: STRING is "show_repeated_absolute_constant_warning"
+	
+	show_create_new_directory_constant_warning: STRING is "show_create_new_directory_constant_warning"
 
 end -- class GB_CONSTANTS

@@ -36,7 +36,6 @@ creation
 	make
 
 feature -- Creation
-
 	make (a_screen: SCREEN) is
 		do
 			!! base.make ("1", a_screen)
@@ -61,6 +60,7 @@ feature -- Creation
 			!! application_editor_entry.make (Menu_names.Application_editor, view_category)
 			!! interface_entry.make (Menu_names.Interface, view_category)
 			!! interface_only_entry.make (Menu_names.Interface_only, view_category) 
+			!! class_selector_entry.make (Menu_names.Class_selector, view_category)
 				--| Separators
 			!! separator1.make (widget_names.separator, form)
 			!! separator2.make (widget_names.separator, form)
@@ -431,6 +431,7 @@ feature -- Graphical interface
 	application_editor_entry: APPLICATION_EDITOR_ENTRY
 	interface_entry: INTERFACE_ENTRY
 	interface_only_entry: INTERFACE_ONLY_ENTRY
+	class_selector_entry: CLASS_SELECTOR_ENTRY
 		--| Entries in the Help category
 	-- None so far
 

@@ -63,11 +63,15 @@ feature {NONE} -- Basic operation
 		local
 			tuple: TUPLE
 			mcl_int_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE [TUPLE [INTEGER]]]
+			tree_agent: PROCEDURE [EV_ITEM_LIST_IMP [EV_TREE_ITEM], TUPLE]
 		do
-
 			mcl_int_agent ?= agent
+			tree_agent ?= agent
+
 			if mcl_int_agent /= Void then
 				agent.call ([[gtk_value_int (args)]])
+			elseif tree_agent /= Void then
+				agent.call ([gtk_value_pointer (args)])
 			
 			elseif n_args = 1 then
 				tuple := gdk_event_to_tuple (gtk_value_pointer (args))
@@ -306,6 +310,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/24 01:42:55  king
+--| Changed marshal to deal with tree/tree item events
+--|
 --| Revision 1.9  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

@@ -287,6 +287,17 @@ feature -- Status report
 			valid_f: f /= Void
 			no_error: not syntax_error
 			good_state: f.written_class /= Void and then f.written_class.has_feature_table
+		do
+			find_static_type_in_context (f)
+			Result := final_result_static_type = System.boolean_class.compiled_class
+		end
+
+	find_static_type_in_context (f: E_FEATURE) is
+			-- Find the static type of `Current' in the context of `f'.
+		require
+			valid_f: f /= Void
+			no_error: not syntax_error
+			good_state: f.written_class /= Void and then f.written_class.has_feature_table
 		local
 			fargs: LIST [STRING]
 			locals: EIFFEL_LIST [TYPE_DEC_AS]
@@ -296,6 +307,7 @@ feature -- Status report
 			i: INTEGER
 			prev_class: CLASS_C
 			prev_cluster: CLUSTER_I
+			r: BOOLEAN
 		do
 			check
 				not is_equality_test and not is_non_equality_test
@@ -308,11 +320,18 @@ feature -- Status report
 			Inst_context.set_cluster (f.written_class.cluster)
 			
 			result_static_type := Void
-			if feature_name.is_equal (Result_name) then
+			if is_identity then
+				check
+					parameters.count = 1
+					-- There would be a syntax error otherwise.
+				end
+				parameters.first.find_static_type_in_context (f)
+				result_static_type := parameters.first.final_result_static_type
+			elseif feature_name.is_equal (Result_name) then
 					-- Ah, that's an easy one: we evaluate the result.
 				type := f.type
 				if type /= Void then
-					result_static_type := type.associated_class
+					result_static_type := type.actual_type.associated_class
 				end
 			else
 					-- First look up in the feature arguments.
@@ -325,8 +344,8 @@ feature -- Status report
 					loop
 						if fargs.item.is_equal (feature_name) then
 							type := f.arguments.i_th (fargs.index)
-							if i /= Void then
-								result_static_type := type.associated_class
+							if type /= Void then
+								result_static_type := type.actual_type.associated_class
 							end
 						end
 						fargs.forth
@@ -359,8 +378,11 @@ feature -- Status report
 				if result_static_type = Void then
 						-- Last, look up in the class features.
 					fi := f.written_class.feature_named (feature_name)
-					if fi /= Void and then fi.type /= Void then
-						result_static_type := fi.type.actual_type.associated_class
+					if fi /= Void then
+						t := fi.type
+					end
+					if t /= Void then
+						result_static_type := t.actual_type.associated_class
 					end
 				end
 			end
@@ -371,10 +393,6 @@ feature -- Status report
 				else
 					final_result_static_type := result_static_type
 				end
-				Result := final_result_static_type /= Void and then
-							final_result_static_type = System.boolean_class.compiled_class
-			else
-				Result := False
 			end
 				-- Reset the context.
 			System.set_current_class (prev_class)
@@ -612,23 +630,41 @@ feature {EB_EXPRESSION} -- Status report: intermediate results.
 			-- Static type of `Current'.
 			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
 
+	is_identity: BOOLEAN
+			-- Does `Current' simply return its parameter?
+
+	is_equality_test: BOOLEAN
+			-- Does `Current' perform a comparison between its target and its parameter?
+
+	is_non_equality_test: BOOLEAN
+			-- Does `Current' perform a difference test between its target and its parameter?
+
 	target: EB_EXPRESSION
 			-- Target for the call described by `Current'.
-			--| Only for contracts.
 
 	find_static_type is
 			-- Find the static type of the final result of `Current'.
 		require
-			has_target: target /= Void
-			target_has_type: target.result_static_type /= Void
+			has_target: not is_equality_test and not is_non_equality_test and not is_identity implies target /= Void
+			target_has_type: target /= Void implies target.result_static_type /= Void
+			no_error: not syntax_error
 		local
 			t: TYPE
 			fi: FEATURE_I
 			prev_class: CLASS_C
 			prev_cluster: CLUSTER_I
 		do
+			result_static_type := Void
+			final_result_static_type := Void
 			if is_equality_test or is_non_equality_test then
 				result_static_type := System.boolean_class.compiled_class
+			elseif is_identity then
+				check
+					parameters.count = 1
+					-- There would be a syntax error otherwise.
+				end
+				parameters.first.find_static_type
+				result_static_type := parameters.first.final_result_static_type
 			else
 				result_static_type := Void
 				fi := target.result_static_type.feature_named (feature_name)
@@ -1380,17 +1416,8 @@ feature {NONE} -- Internal data
 	message: EB_EXPRESSION
 			-- Message part of `Current'.
 
-	is_identity: BOOLEAN
-			-- Does `Current' simply return its parameter?
-
 	is_constant: BOOLEAN
 			-- Does `Current' operate on a constant?
-
-	is_equality_test: BOOLEAN
-			-- Does `Current' perform a comparison between its target and its parameter?
-
-	is_non_equality_test: BOOLEAN
-			-- Does `Current' perform a difference test between its target and its parameter?
 
 	constant_result_value: DUMP_VALUE
 			-- Value associated to a constant expression.

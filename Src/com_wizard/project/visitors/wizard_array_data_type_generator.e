@@ -69,577 +69,17 @@ feature -- Basic operations
 			writable := True
 
 			create c_header_file.make (0)
-			if is_character (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_char_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("char")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(CHARACTER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(CHARACTER%)")
-				end
-
-				ce_function_signature.append ("char an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_character", 
-							dimension_count, array_size, True)
-
-			elseif is_unsigned_char (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_char_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("unsigned char")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(CHARACTER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(CHARACTER%)")
-				end
-
-				ce_function_signature.append ("unsigned char an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_character", 
-							dimension_count, array_size, True)
-
-			elseif is_integer2 (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_short_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_short")
-
-				c_type.append ("short")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-				end
-
-				ce_function_signature.append ("short an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_short", 
-							dimension_count, array_size, True)
-
-			elseif is_unsigned_short (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_short_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_short")
-
-				c_type.append ("unsigned short")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-				end
-
-				ce_function_signature.append ("unsigned short an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_short", 
-							dimension_count, array_size, True)
-
-			elseif is_integer4 (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_long_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("long")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-				end
-
-				ce_function_signature.append ("long an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_long", 
-							dimension_count, array_size, True)
-
-			elseif is_unsigned_long (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_long_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("unsigned long")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-				end
-
-				ce_function_signature.append ("unsigned long an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_long", 
-							dimension_count, array_size, True)
-
-			elseif is_int (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_int_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("int")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-				end
-
-				ce_function_signature.append ("int an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_long", 
-							dimension_count, array_size, True)
-
-			elseif is_unsigned_int (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_int_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("unsigned int")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-				end
-
-				ce_function_signature.append ("unsigned int an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_long", 
-							dimension_count, array_size, True)
-
-			elseif is_real4 (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_float_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("float")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(REAL%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(REAL%)")
-				end
-
-				ce_function_signature.append ("float an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_float", 
-							dimension_count, array_size, True)
-
-			elseif is_real8 (an_element_type) then
-				is_array_basic_type := True
-				ce_function_name.append ("ccom_ce_array_double_")
-				ce_function_name.append_integer (local_counter)
-
-				c_type.append ("double")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(DOUBLE%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(DOUBLE%)")
-				end
-
-				ce_function_signature.append ("double an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_double", 
-							dimension_count, array_size, True)
-
-			elseif is_date (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_date_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_date")
-
-				c_type.append ("DATE")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(DATE_TIME%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(DATE_TIME%)")
-				end
-
-				ce_function_signature.append ("DATE an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_date", 
-							dimension_count, array_size, False)
-
-			elseif is_error (an_element_type) or is_hresult (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_hresult_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_hresult")
-
-				c_type.append ("HRESULT")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_HRESULT%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_HRESULT%)")
-				end
-
-				ce_function_signature.append ("HRESULT an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_hresult", 
-							dimension_count, array_size, False)
-
-			elseif is_variant (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_variant_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_variant")
-
-				c_type.append ("VARIANT")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_VARIANT%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_VARIANT%)")
-				end
-
-				ce_function_signature.append ("VARIANT an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_variant", 
-							dimension_count, array_size, False)
-
-			elseif is_currency (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_currency_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_currency")
-
-				c_type.append ("CURRENCY")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_CURRENCY%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_CURRENCY%)")
-				end
-
-				ce_function_signature.append ("CURRENCY an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_currency", 
-							dimension_count, array_size, False)
-
-			elseif is_bstr (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_bstr_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_bstr")
-
-				c_type.append ("BSTR")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(STRING%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(STRING%)")
-				end
-
-				ce_function_signature.append ("BSTR an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_bstr", 
-							dimension_count, array_size, False)
-
-			elseif is_dispatch (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_dispatch_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_dispatch")
-
-				c_type.append ("IDispatch (* ")
-				c_post_type.prepend (")")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_GENERIC_DISPINTERFACE%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_GENERIC_DISPINTERFACE%)")
-				end
-
-				ce_function_signature.append ("IDispatch (* an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_dispatch", 
-							dimension_count, array_size, False)
-
-			elseif is_unknown (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_unknown_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_unknown")
-
-				c_type.append ("IUnknown (* ")
-				c_post_type.prepend (")")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_GENERIC_INTERFACE%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_GENERIC_INTERFACE%)")
-				end
-
-				ce_function_signature.append ("IUnknown (* an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_unknown", 
-							dimension_count, array_size, False)
-
-			elseif is_decimal (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_decimal_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_decimal")
-
-				c_type.append ("DECIMAL")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_DECIMAL%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_DECIMAL%)")
-				end
-
-				ce_function_signature.append ("DECIMAL an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_decimal", 
-							dimension_count, array_size, False)
-
-			elseif is_boolean (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_boolean_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_boolean")
-
-				c_type.append ("VARIANT_BOOL")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(BOOLEAN%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(BOOLAEN%)")
-				end
-
-				ce_function_signature.append ("VARIANT_BOOL an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_boolean", 
-							dimension_count, array_size, False)
-
-			elseif is_long_long (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_long_long_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_long_long")
-
-				c_type.append ("LARGE_INTEGER")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_LARGE_INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_LARGE_INTEGER%)")
-				end
-
-				ce_function_signature.append ("LARGE_INTEGER an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_long_long", 
-							dimension_count, array_size, False)
-
-			elseif is_unsigned_long_long (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_ulong_long_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_ulong_long")
-
-				c_type.append ("ULARGE_INTEGER")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(ECOM_ULARGE_INTEGER%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(ECOM_ULARGE_INTEGER%)")
-				end
-
-				ce_function_signature.append ("ULARGE_INTEGER an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_ulong_long", 
-							dimension_count, array_size, False)
-
-			elseif is_lpstr (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_lpstr_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_lpstr")
-
-				c_type.append ("LPSTR")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(STRING%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(STRING%)")
-				end
-
-				ce_function_signature.append ("LPSTR an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation ("ccom_ce_array_lpstr", 
-							dimension_count, array_size, False)
-
-			elseif is_lpwstr (an_element_type) then
-				is_array_basic_type := False
-				ce_function_name.append ("ccom_ce_array_lpwstr_")
-				ce_function_name.append_integer (local_counter)
-
-				ec_function_name.append ("ccom_ec_array_lpwstr")
-
-				c_type.append ("LPWSTR")
-				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY %(STRING%)")
-				else
-					eiffel_type.append ("ECOM_ARRAY %(STRING%)")
-				end
-
-				ce_function_signature.append ("LPWSTR an_array")
-				ce_function_signature.append (c_post_type)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-					ce_array_function_body_automation ("ccom_ce_array_lpwstr", 
-					dimension_count, array_size, False)
-
-			elseif is_void (an_element_type) then
+			element_descriptor := an_array_descriptor.array_element_descriptor
+			create element_visitor
+			element_visitor.visit (element_descriptor)
+
+			if is_void (an_element_type) then
 				add_warning (Current, void_array)
 
 			elseif is_ptr (an_element_type) or is_safearray (an_element_type) or
 					is_user_defined (an_element_type) then
 				
 				need_generate_ec := True
-				element_descriptor := an_array_descriptor.array_element_descriptor
-				create element_visitor
-				element_visitor.visit (element_descriptor)
 				
 				is_array_basic_type := False
 				ce_function_name.append ("ccom_ce_array_non_automation_")
@@ -650,9 +90,9 @@ feature -- Basic operations
 
 				c_type.append (element_visitor.c_type)
 				if dimension_count = 1 then
-					eiffel_type.append ("ARRAY ")
+					eiffel_type.append (Array_type)
 				else
-					eiffel_type.append ("ECOM_ARRAY ")
+					eiffel_type.append (Ecom_array_type)
 				end
 				
 				eiffel_type.append (Open_bracket)
@@ -660,8 +100,9 @@ feature -- Basic operations
 				eiffel_type.append (Close_bracket)
 				
 				ce_function_signature.append (c_type)
-				ce_function_signature.append (" an_array")
-				ce_function_signature.append (c_post_type)
+				ce_function_signature.append (Asterisk)
+				ce_function_signature.append (Space)
+				ce_function_signature.append (An_array)
 				ce_function_signature.append (Comma_space)
 				ce_function_signature.append (Eif_object)
 				ce_function_signature.append (Space)
@@ -688,8 +129,40 @@ feature -- Basic operations
 				ec_function_return_type.append (element_visitor.c_type)
 				ec_function_return_type.append (Asterisk)
 				
-			else
-				add_warning (Current, not_supported_data_type)
+
+			else 
+				is_array_basic_type := element_visitor.is_basic_type
+				ce_function_name.append ("ccom_ce_array_")
+				ce_function_name.append (element_visitor.c_type)
+				ce_function_name.append (Underscore)
+				ce_function_name.append_integer (local_counter)
+				ce_function_name.to_lower
+
+				c_type := clone  (element_visitor.c_type)
+				if dimension_count = 1 then
+					eiffel_type.append (Array_type)
+				else
+					eiffel_type.append (Ecom_array_type)
+				end
+				eiffel_type.append (Space)
+				eiffel_type.append (Open_bracket)
+				eiffel_type.append (element_visitor.eiffel_type)
+				eiffel_type.append (Close_bracket)
+
+				ce_function_signature.append (c_type)
+				ce_function_signature.append (Asterisk)
+				ce_function_signature.append (Space)
+				ce_function_signature.append (An_array)
+				ce_function_signature.append (Comma_space)
+				ce_function_signature.append (Eif_object)
+				ce_function_signature.append (Space)
+				ce_function_signature.append ("an_object")
+
+				ce_function_body := 
+						ce_array_function_body_automation (vartype_namer.ce_array_function_name (element_visitor.vt_type), 
+							dimension_count, array_size, element_visitor.is_structure)
+
+				ec_function_name.append (vartype_namer.ec_array_function_name (element_visitor.vt_type))
 			end
 
 			vt_type := an_array_descriptor.type

@@ -87,6 +87,7 @@ extern "C" {
  *  RTEB(x,y) are bits `x' and `y' equal?
  */
 #define RTLN(x)				emalloc(x)
+#define RTLNS(x,y,z)		emalloc_size(x,y,z)
 #define RTLNR(x,y,z,a,o,c)	rout_obj_create((x),(y),(z),(a),(o),(c))
 #define RTLB(x)				bmalloc(x)
 #define RTMB(x,y)			makebit(x,y)

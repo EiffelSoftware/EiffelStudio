@@ -68,6 +68,7 @@ extern "C" {
  * Functions return type.
  */
 RT_LNK EIF_REFERENCE emalloc(uint32 type);				/* Allocate an Eiffel object */
+RT_LNK EIF_REFERENCE emalloc_size(uint32 ftype, uint32 dtype, uint32 size);	/* Allocate an Eiffel object */
 RT_LNK EIF_REFERENCE bmalloc(long int size);			/* Bit object creation */
 RT_LNK EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
 

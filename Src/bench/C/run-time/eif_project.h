@@ -59,6 +59,7 @@ extern "C" {
 	RT_LNK void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */
 	RT_LNK struct eif_par_types **egc_partab;	/* Parent table */
 	RT_LNK int egc_partab_size;				/* Size of parent table */
+	RT_LNK int egc_type_of_gc;
 
 #ifdef WORKBENCH
 	RT_LNK fnptr *egc_frozen;			/* C routine array (frozen routines) */
@@ -90,6 +91,8 @@ extern "C" {
 
 	RT_LNK char *egc_system_name;		/* Name of the generated system */
 	RT_LNK EIF_INTEGER egc_compiler_tag;	/* Tag corresponding to the compiler version */
+
+	RT_LNK int egc_platform_level;
 	 
 #ifdef __cplusplus
 }

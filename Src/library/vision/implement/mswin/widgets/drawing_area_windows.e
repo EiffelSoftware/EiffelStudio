@@ -258,7 +258,7 @@ feature -- Basic operations
 			!! expose_data.make (owner, clip, 0)
 			expose_actions.execute (Current, expose_data)
 			unset_drawing_dc
-			a_printer_dc.new_frame
+			a_printer_dc.end_page
 			a_printer_dc.end_document
 			drawing_dc := old_dc
 			painting := false

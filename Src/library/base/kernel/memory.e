@@ -189,7 +189,7 @@ feature -- Removal
 			-- Force a partial collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		external
-			"C"
+			"C | %"eiffel.h%""
 		end;
 
 	full_collect is

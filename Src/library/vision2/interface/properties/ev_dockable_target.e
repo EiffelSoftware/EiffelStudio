@@ -5,8 +5,10 @@ indexing
 		and `veto_dock_function' to restrict which sources will be accepted. If a source
 		is rejected by the veto function, then the parent structure will be explored until
 		there are no more parents, or the source being transported is accepted.
+		
+		`docked_actions' is fired after the source of transport has been parented in `Current'.
 		]"
-	author: ""
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,8 +34,8 @@ inherit
 feature -- Access
 		
 	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN] is
-			-- Function to determine whether the current dock is allowed.
-			-- If `Result' is `True', the dock will be disallowed.
+			-- Function to determine whether current dock is allowed.
+			-- If `Result' is `True', dock will be disallowed.
 		require
 			not_destroyed: not is_destroyed
 		do

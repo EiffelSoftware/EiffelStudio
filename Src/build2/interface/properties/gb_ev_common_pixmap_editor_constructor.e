@@ -68,13 +68,13 @@ feature -- Access
 			horizontal_box.extend (constants_button)
 			horizontal_box.disable_item_expand (modify_button)
 			horizontal_box.disable_item_expand (constants_button)
-			populate_constants
 			frame_box.extend (horizontal_box)
 			create pixmap_container
 			frame_box.extend (pixmap_container)
 			create frame.make_with_text (gb_ev_pixmapable_pixmap)
 			frame.extend (frame_box)
 			Result.extend (frame)
+			populate_constants
 			parent_editor.add_pixmap_input_field (Current)
 			update_attribute_editor
 		end

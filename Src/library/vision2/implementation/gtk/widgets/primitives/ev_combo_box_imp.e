@@ -82,8 +82,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-		local
-			temp_c_object: POINTER
+			-- Connect action sequences to signals.
 		do
 			{EV_LIST_IMP} Precursor
 
@@ -92,13 +91,8 @@ feature {NONE} -- Initialization
 			--| already and the default sequences can only be connected
 			--| once.
 
-
-			--| FIXME IEK  Is this hack acceptable?
-			temp_c_object := c_object
-			c_object := entry_widget
-			connect_signal_to_actions ("activate", interface.return_actions)
-			connect_signal_to_actions ("changed", interface.change_actions)
-			c_object := temp_c_object
+			real_connect_signal_to_actions (entry_widget, "activate", interface.return_actions)
+			real_connect_signal_to_actions (entry_widget, "changed", interface.change_actions)
 		end
 
 feature -- Access
@@ -331,6 +325,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/02/25 17:50:02  king
+--| Now using real_connect_signal_to_actions
+--|
 --| Revision 1.21  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

@@ -130,6 +130,7 @@ fullrf INSTALL README make_install compile_libraries
 
 remtrace Borland files
 tar xvfz bcc55.tar.gz >>& %INSTALL_LOG
+fullrf BCC55\bin\bcc32.cfg
 fullrf bcc55.tar.gz
 
 remtrace Create documentation directory

@@ -8,7 +8,7 @@ class
 inherit
 	ECOM_CURRENCY
 
-creation
+create
 	make,
 	make_by_pointer,
 	make_from_alias

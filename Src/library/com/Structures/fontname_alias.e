@@ -8,7 +8,7 @@ class
 inherit
 	STRING
 
-creation
+create
 	make,
 	make_from_string,
 	make_from_alias

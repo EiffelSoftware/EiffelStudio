@@ -11,7 +11,7 @@ inherit
 
 	ECOM_STUB
 
-creation
+create
 	make,
 	make_from_pointer
 

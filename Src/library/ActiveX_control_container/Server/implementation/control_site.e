@@ -57,7 +57,7 @@ inherit
 
 	ECOM_STUB
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

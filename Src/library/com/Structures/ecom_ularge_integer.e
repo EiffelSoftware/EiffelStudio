@@ -13,7 +13,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make,
 	make_from_integer,
 	make_from_pointer

@@ -15,7 +15,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 
 
 feature {NONE} -- Implementation

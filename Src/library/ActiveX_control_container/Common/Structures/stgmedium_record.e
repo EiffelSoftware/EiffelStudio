@@ -13,7 +13,7 @@ inherit
 		end
 	TYMED_ENUM
 	
-creation
+create
 	make,
 	make_from_pointer
 

@@ -8,7 +8,7 @@ class
 inherit
 	X_USER_CLIPFORMAT_RECORD
 
-creation
+create
 	make_from_alias,
 	make,
 	make_by_pointer

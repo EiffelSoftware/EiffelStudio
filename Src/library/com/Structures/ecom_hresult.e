@@ -10,7 +10,7 @@ class
 inherit
 	HRESULT_FORMATTER
 
-creation
+create
 	make,
 	make_from_integer
 

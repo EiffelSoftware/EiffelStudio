@@ -26,7 +26,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make_from_other,
 	make_from_pointer
 

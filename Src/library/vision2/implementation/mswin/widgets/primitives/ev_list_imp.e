@@ -345,7 +345,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if flag_set(info.unewstate, Lvis_selected) and
-						not flag_set(info.uoldstate, Lvis_selected) then
+						not flag_set(info.uoldstate, Lvis_selected)
+				then
 						-- Item is being selected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
@@ -354,7 +355,8 @@ feature {EV_ANY_I} -- Implementation
 					interface.select_actions.call ([item_interface])
 
 				elseif flag_set(info.uoldstate, Lvis_selected) and
-					not flag_set(info.unewstate, Lvis_selected) then
+					not flag_set(info.unewstate, Lvis_selected)
+				then
 						-- Item is being unselected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
@@ -535,6 +537,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.77  2000/04/27 17:51:18  pichery
+--| Cosmetics
+--|
 --| Revision 1.76  2000/04/25 01:20:36  pichery
 --| Changed the inheritance for constants,
 --| Removed `wel_parent' hack.

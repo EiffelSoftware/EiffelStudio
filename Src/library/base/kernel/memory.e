@@ -26,7 +26,7 @@ feature -- Measurement
 		end;
 
 	gc_statistics (collector_type: INTEGER): GC_INFO is
-			-- Garbage collector information for `collector_type'.
+			-- Garbage collection information for `collector_type'.
 		require
 			type_ok:
 				collector_type = Full_collector or
@@ -55,7 +55,7 @@ feature -- Status report
 		end;	
 
 	collecting: BOOLEAN is
-			-- Is the garbage collector running?
+			-- Is garbage collection enabled?
 		external
 			"C"
 		alias
@@ -74,7 +74,7 @@ feature -- Status report
 feature -- Status setting
 
 	collection_off is
-			-- Disable the garbage collector.
+			-- Disable garbage collection.
 		external
 			"C"
 		alias
@@ -154,7 +154,7 @@ feature -- Status setting
 feature -- Removal
 
 	dispose is
-			-- Action to be executed just before the garbage collector
+			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			-- Default version does nothing; redefine in descendants
 			-- to perform specific dispose actions. Those actions
@@ -165,7 +165,7 @@ feature -- Removal
 		end;
 
 	free (object: ANY) is
-			-- Free `object', by-passing the garbage collector.
+			-- Free `object', by-passing garbage collection.
 			-- Erratic behavior will result if the object is still
 			-- referenced.
 		do
@@ -189,15 +189,15 @@ feature -- Removal
 		end;
 
 	collect is
-			-- Force a partial collection cycle if the garbage
-			-- collector is enabled; do nothing otherwise.
+			-- Force a partial collection cycle if garbage
+			-- collection is enabled; do nothing otherwise.
 		external
 			"C"
 		end;
 	
 	full_collect is
-			-- Force a full collection cycle if the garbage 
-			-- collector is enabled; do nothing otherwise.
+			-- Force a full collection cycle if garbage 
+			-- collection is enabled; do nothing otherwise.
 		external
 			"C"
 		alias

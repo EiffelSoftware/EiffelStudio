@@ -51,31 +51,32 @@ feature -- Access
 feature -- Status report
 
 	lastchar: CHARACTER is
-			-- Last character read by readchar
+			-- Last character read by `readchar'
 		do
 			Result := input.lastchar
 		end;
 
 	lastint: INTEGER is
-			-- Last integer read by readint
+			-- Last integer read by `readint'
 		do
 			Result := input.lastint
 		end;
 
 	lastreal: REAL is
-			-- Last real read by readreal
+			-- Last real read by `readreal'
 		do
 			Result := input.lastreal
 		end;
 
 	laststring: STRING is
-			-- Last string read by readline,
-			-- readstream, or readword
+			-- Last string read by `readline',
+			-- `readstream', or `readword'
 		do
 			Result := input.laststring
 		end;
 
 	lastdouble: DOUBLE is
+			-- Last double read by `readdouble'
 		do
 			Result := input.lastdouble
 		end;

@@ -27,7 +27,7 @@ creation
 feature -- Status report
 
 	is_plain_text: BOOLEAN is
-			-- Is this file plain ASCII text (Yes)
+			-- Is file reserved for text (character sequences)? (Yes)
 		do
 			Result := true
 		end

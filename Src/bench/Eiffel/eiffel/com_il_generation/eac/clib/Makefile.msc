@@ -3,7 +3,7 @@
 MV = copy
 CC = cl
 OUTPUT_CMD = -Fo
-CFLAGS = -W0 -Zi -D_WIN32_DCOM -c -I. -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -W0 -Zi -D_WIN32_DCOM -c -I. -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
 
 OBJ = ecom_gce_ise_c.obj \
 ecom_gec_ise_c.obj \

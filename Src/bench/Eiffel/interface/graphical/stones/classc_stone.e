@@ -28,7 +28,6 @@ inherit
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message
 		end;
-	INTERFACE_W;
 	WINDOWS
 
 creation

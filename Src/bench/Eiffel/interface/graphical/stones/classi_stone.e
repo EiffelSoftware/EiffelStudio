@@ -22,7 +22,6 @@ inherit
 			is_valid
 		end;
 	SHARED_EIFFEL_PROJECT;
-	INTERFACE_W;
 	WINDOWS
 
 creation

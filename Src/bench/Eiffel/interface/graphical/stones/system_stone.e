@@ -10,8 +10,7 @@ class SYSTEM_STONE
 inherit
 
 	SHARED_EIFFEL_PROJECT;
-	FILED_STONE;
-	INTERFACE_W
+	FILED_STONE
 
 feature -- Access
 

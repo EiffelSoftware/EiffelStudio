@@ -162,15 +162,17 @@ feature -- Output
 
 	put (other: RESOURCE) is
 			-- Write out resource `other'.
-		local
-			packet: ANY
 		do
 			from until not other.is_packet_pending loop
 				other.read
-				packet := other.last_packet
-				last_packet_size := c_write (main_socket.descriptor, $packet,
-					other.last_packet_size)
-				bytes_transferred := bytes_transferred + last_packet_size
+				main_socket.put_string (other.last_packet)
+				if main_socket.socket_ok then
+					last_packet := other.last_packet
+					last_packet_size := last_packet.count
+				else
+					last_packet := Void
+					last_packet_size := 0
+				end
 				if last_packet_size /= other.last_packet_size then
 					error_code := Write_error
 				end
@@ -183,10 +185,16 @@ feature -- Input
 			-- Read packet.
 		do
 			main_socket.read_stream (read_buffer_size)
-			last_packet := main_socket.last_string.to_c
-			last_packet_size := main_socket.last_string.count
+			if main_socket.socket_ok then
+				last_packet := main_socket.last_string
+				last_packet_size := last_packet.count
+			else
+				error_code := Transfer_failed
+				last_packet := Void
+				last_packet_size := 0
+			end
 			bytes_transferred := bytes_transferred + last_packet_size
-			if last_packet_size = 0 or 
+			if not error and then last_packet_size = 0 or 
 				(is_count_valid and bytes_transferred = count) then
 				is_packet_pending := False 
 			end
@@ -209,17 +217,6 @@ feature {NONE} -- Implementation
 
 	writable_cached: BOOLEAN
 			-- Has a value für `is_writable' been cached?
-
-feature {NONE} -- Externals
-
-	c_write (fd: INTEGER; buf: POINTER; size: INTEGER): INTEGER is
-			-- Write `size' bytes out of buffer `buf' to medium with
-			-- descriptor `fd'.
-		external
-			"C | <unistd.h>"
-		alias
-			"write"
-		end
 
 invariant
 

@@ -198,18 +198,18 @@ feature -- Output
 
 	put (other: RESOURCE) is
 			-- Write out resource `other'.
-		local
-			packet: ANY
 		do
 			if is_proxy_used then
 				proxy_connection.put (other)
 			else
 				from until not other.is_packet_pending loop
 					other.read
-					packet := other.last_packet
-					last_packet_size := c_write 
-						(accepted_socket.descriptor, $packet,
-						other.last_packet_size)
+					accepted_socket.put_string (other.last_packet)
+					if accepted_socket.socket_ok then
+						last_packet_size := other.last_packet.count
+					else
+						last_packet_size := 0
+					end
 					bytes_transferred := bytes_transferred + last_packet_size
 					if last_packet_size /= other.last_packet_size then
 						error_code := Write_error
@@ -227,10 +227,16 @@ feature -- Input
 				proxy_connection.read
 			else
 				accepted_socket.read_stream (read_buffer_size)
-				last_packet := accepted_socket.last_string.to_c
-				last_packet_size := accepted_socket.last_string.count
+				if accepted_socket.socket_ok then
+					last_packet := accepted_socket.last_string
+					last_packet_size := last_packet.count
+				else
+					error_code := Transfer_failed
+					last_packet := Void
+					last_packet_size := 0
+				end
 				bytes_transferred := bytes_transferred + last_packet_size
-				if last_packet_size = 0 then 
+				if not error and last_packet_size = 0 then 
 					is_packet_pending := False
 					receive (main_socket)
 					if not reply_code_ok (<<226>>) then

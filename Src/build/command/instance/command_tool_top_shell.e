@@ -250,14 +250,17 @@ feature
 
 	show_command_editor is
 		do
+			hide_other_command_editor
 			split_window.set_proportion ((100 * height // 
-										(height + Resources.cmd_ed_height)))
+									(height + Resources.cmd_ed_height)))
 			set_height (height + Resources.cmd_ed_height)
 			bottom_split_form.manage
+			command_editor.set_command (command_instance.associated_command)
 		end
 
 	hide_command_editor is
 		do
+			command_editor.clear
 			if already_open then
 				set_height (height - bottom_split_form.height)
 			end

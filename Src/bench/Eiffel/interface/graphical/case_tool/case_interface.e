@@ -119,12 +119,12 @@ feature -- Initialization specific
 			a_command2: CASE_COMMAND2
 		do
 			!! a_command1.make (scroll_list1,scroll_list2,TRUE)
-			arrow_b2.add_activate_action (a_command1, Void)
+			arrow_b1.add_activate_action (a_command1, Void)
 			scroll_list1.add_default_action (a_command1, Void)
 
 			!! a_command1.make (scroll_list2,scroll_list1, FALSE)
-			arrow_b1.add_activate_action  (a_command1, Void)
-			scroll_list2.add_default_action (a_command1, Void)
+			arrow_b2.add_activate_action  (a_command1, Void)
+			scroll_list1.add_default_action (a_command1, Void)
 
 			!BROWSE_COM!a_command2.make (Current)
 			browsw_b.add_activate_action (a_command2, Void)
@@ -172,31 +172,31 @@ feature -- Initialization specific
 				-- Scroll Form
 			scroll_form.set_fraction_base (24)
 
-			label5.set_text ("Included clusters:");
+			label5.set_text ("Excluded clusters:");
 			scroll_form.attach_left (label5, 10)
 			scroll_form.attach_top (label5, 10)
 
-			label6.set_text ("Excluded clusters:");
+			label6.set_text ("Included clusters:");
 			scroll_form.attach_right (label6, 10)
 			scroll_form.attach_top (label6, 10)
 
 				-- Attachement of the left scrollable list
-			scroll_form.attach_right (scroll_list1, 5)
-			scroll_form.attach_top_widget (label6, scroll_list1, 5)
-			scroll_form.attach_left_position (scroll_list1, 14)
-			scroll_form.attach_bottom_widget (sep1, scroll_list1, 5)
+			scroll_form.attach_right (scroll_list2, 5)
+			scroll_form.attach_top_widget (label6, scroll_list2, 5)
+			scroll_form.attach_left_position (scroll_list2, 14)
+			scroll_form.attach_bottom_widget (sep1, scroll_list2, 5)
 
 				-- Attachement of the right scrollable list
-			scroll_form.attach_left (scroll_list2, 5)
-			scroll_form.attach_top_widget (label5, scroll_list2, 5)
-			scroll_form.attach_right_position (scroll_list2, 10)
-			scroll_form.attach_bottom_widget (sep1, scroll_list2, 5)
+			scroll_form.attach_left (scroll_list1, 5)
+			scroll_form.attach_top_widget (label5, scroll_list1, 5)
+			scroll_form.attach_right_position (scroll_list1, 10)
+			scroll_form.attach_bottom_widget (sep1, scroll_list1, 5)
 
 				-- Attachements of the left and right arrows
 			arrow_b1.set_right
 			arrow_b2.set_left
-			scroll_form.attach_top_widget (arrow_b2, arrow_b1, 5)
-			scroll_form.attach_top_widget (label6, arrow_b2, 15)
+			scroll_form.attach_top_widget (arrow_b1, arrow_b2, 5)
+			scroll_form.attach_top_widget (label6, arrow_b1, 15)
 			scroll_form.attach_left_position (arrow_b1, 11)
 			scroll_form.attach_left_position (arrow_b2, 11)
 			scroll_form.attach_right_position (arrow_b1, 13)
@@ -217,7 +217,6 @@ feature -- Initialization specific
 			nested_form.attach_right (browsw_b, 5)
 			!! exec
 			text_field1.set_text(exec.current_working_directory)
-			text_field1.set_height (24)
 
 			label4.set_text ("Generation path:")
 			browsw_b.set_text ("Browse")

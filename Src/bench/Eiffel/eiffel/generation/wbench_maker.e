@@ -93,6 +93,7 @@ feature
 			cecil_rt_basket.extend ("wpath_name.o");
 			cecil_rt_basket.extend ("wobject_id.o");
 			cecil_rt_basket.extend ("wdle.o");
+			cecil_rt_basket.extend ("weif_threads.o");
 		end;
 
 	add_eiffel_objects is

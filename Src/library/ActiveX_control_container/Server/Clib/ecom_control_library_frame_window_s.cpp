@@ -21,6 +21,7 @@ extern "C" {
 
 ecom_control_library::frame_window::frame_window( EIF_TYPE_ID tid )
 {
+  ::OleInitialize (NULL);
   type_id = tid;
   ref_count = 0;
   eiffel_object = eif_create (type_id);
@@ -33,6 +34,7 @@ ecom_control_library::frame_window::frame_window( EIF_TYPE_ID tid )
 
 ecom_control_library::frame_window::frame_window( EIF_OBJECT eif_obj )
 {
+  ::OleInitialize (NULL);
   ref_count = 0;
   eiffel_object = eif_adopt (eif_obj);
   type_id = eif_type (eiffel_object);
@@ -47,6 +49,8 @@ ecom_control_library::frame_window::~frame_window()
 
   (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
   eif_wean (eiffel_object);
+
+  ::OleUninitialize ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (/* ??? */))
+rt_public bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (IDR *, void *))
           				/* The serializing stream */
           				/* Where address of arena is stored */
         				/* Where actual size of the array is stored */

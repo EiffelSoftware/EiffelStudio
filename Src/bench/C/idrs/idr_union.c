@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */))
+rt_public bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (IDR *, void *))
           					/* The serializing stream */
           					/* Union discriminent, serialized in the process */
           					/* Pointer to the start of the union */

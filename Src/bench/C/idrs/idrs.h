@@ -47,7 +47,7 @@ typedef struct idr {
 
 struct idr_discrim {	/* Discrimination array for unions encoding */
 	int id_value;		/* Value of union discriminent */
-	bool_t (*id_fn)();	/* Function to call to serialize the union */
+	bool_t (*id_fn)(IDR *, void *);	/* Function to call to serialize the union */
 };
 
 /*
@@ -81,13 +81,13 @@ extern bool_t idr_double(IDR *idrs, double *dp);		/* Encoding of a double */
 extern bool_t idr_string(IDR *idrs, char **sp, int maxlen);	/* Encoding of a string */
 
 extern bool_t idr_opaque(IDR *idrs, char *p, int len);		/* Opaque data transmission */
-extern bool_t idr_vector(IDR *idrs, char *array, int size, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Fixed size array */
-extern bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Variable size array */
-extern bool_t idr_stack(IDR *idrs, char **ap, int size, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Variable size stack (size not IDR'ed) */
-extern bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */));		/* Union encoding based on discriminent */
-extern bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (/* ??? */));		/* Polymorphic union encoding with known type */
-extern bool_t idr_read(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */));		/* Read data from file and deserialize them */
-extern bool_t idr_write(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */));		/* Write serialized data to file */
+extern bool_t idr_vector(IDR *idrs, char *array, int size, int elemsize, bool_t (*idr_elem) (IDR *, void *));		/* Fixed size array */
+extern bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (IDR *, void *));		/* Variable size array */
+extern bool_t idr_stack(IDR *idrs, char **ap, int size, int elemsize, bool_t (*idr_elem) (IDR *, void *));		/* Variable size stack (size not IDR'ed) */
+extern bool_t idr_union(IDR *idrs, int *type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (IDR *, void *));		/* Union encoding based on discriminent */
+extern bool_t idr_poly(IDR *idrs, int type, char *unp, struct idr_discrim *arms, bool_t (*dfltarm) (IDR *, void *));		/* Polymorphic union encoding with known type */
+extern bool_t idr_read(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (IDR *, void *));		/* Read data from file and deserialize them */
+extern bool_t idr_write(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (IDR *, void *));		/* Write serialized data to file */
 
 #endif
 

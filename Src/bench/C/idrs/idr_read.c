@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_read(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (/* ??? */))
+rt_public bool_t idr_read(IDR *idrs, int fd, char *bp, bool_t (*idr_bp) (IDR *, void *))
           			/* The deserializing stream */
        				/* File descriptor we want to read */
          			/* Pointer to structure which must be filled with data */

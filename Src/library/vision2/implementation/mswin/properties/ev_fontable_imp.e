@@ -19,8 +19,6 @@ feature -- Access
 			-- Font of `Current'.
 		local
 			font_imp: EV_FONT_IMP
-			private_font_imp: EV_FONT_IMP
-			a_font: WEL_FONT
 		do
 			if private_font = Void then
 				create Result

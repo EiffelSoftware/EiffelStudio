@@ -156,6 +156,8 @@ feature -- Access
 		
 	class_name_of_type (type_id: INTEGER): STRING is
 			-- Name of class associated with dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
 		do
 			Result := feature {ISE_RUNTIME}.c_generator_of_type (type_id)
 		end
@@ -172,6 +174,8 @@ feature -- Access
 	type_name_of_type (type_id: INTEGER): STRING is
 			-- Name of `type_id''s generating type (type of which `type_id'
 			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
 		do
 			Result := feature {ISE_RUNTIME}.c_generating_type_of_type (type_id)
 		end
@@ -186,23 +190,47 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
-	generic_dynamic_type_of_type (type_id: INTEGER; i: INTEGER): INTEGER is
-			-- Dynamic type of generic parameter of `type_id' at position `i'.
+	generic_count (obj: ANY): INTEGER is
+			-- Number of generic parameter in `obj'.
+		require
+			obj_not_void: obj /= Void
 		do
-			Result := eif_gen_param_id (- 1, type_id, i)
-		ensure
-			dynamic_type_nonnegative: Result >= 0
+			Result := eif_gen_count_with_dftype (feature {ISE_RUNTIME}.dynamic_type ($obj))
+		end
+
+	generic_count_of_type (type_id: INTEGER): INTEGER is
+			-- Number of generic parameter in `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := eif_gen_count_with_dftype (type_id)
 		end
 
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
 			-- Dynamic type of generic parameter of `object' at
 			-- position `i'.
+		require
+			object_not_void: object /= Void
+			object_generic: generic_count (object) > 0
+			i_valid: i > 0 and i <= generic_count (object)
 		do
 			Result := eif_gen_param_id (- 1, feature {ISE_RUNTIME}.dynamic_type ($object), i)
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end
 		
+	generic_dynamic_type_of_type (type_id: INTEGER; i: INTEGER): INTEGER is
+			-- Dynamic type of generic parameter of `type_id' at position `i'.
+		require
+			type_id_nonnegative: type_id >= 0
+			type_id_generic: generic_count_of_type (type_id) > 0
+			i_valid: i > 0 and i <= generic_count_of_type (type_id)
+		do
+			Result := eif_gen_param_id (- 1, type_id, i)
+		ensure
+			dynamic_type_nonnegative: Result >= 0
+		end
+
 	field (i: INTEGER; object: ANY): ANY is
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
@@ -231,6 +259,7 @@ feature -- Access
 	field_name_of_type (i: INTEGER; type_id: INTEGER): STRING is
 			-- Name of `i'-th field of dynamic type `type_id'.
 		require
+			type_id_nonnegative: type_id >= 0
 			index_large_enough: i >= 1
 			index_small_enought: i <= field_count_of_type (type_id)
 		do
@@ -263,6 +292,7 @@ feature -- Access
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
 			-- Abstract type of `i'-th field of dynamic type `type_id'
 		require
+			type_id_nonnegative: type_id >= 0
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
 		do
@@ -274,6 +304,7 @@ feature -- Access
 	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
 			-- Static type of declared `i'-th field of dynamic type `type_id'
 		require
+			type_id_nonnegative: type_id >= 0
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
 		do
@@ -519,6 +550,8 @@ feature -- Measurement
 
 	field_count_of_type (type_id: INTEGER): INTEGER is
 			-- Number of logical fields in dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
 		external
 			"C macro signature (EIF_INTEGER): EIF_INTEGER use %"eif_internal.h%""
 		alias
@@ -786,6 +819,12 @@ feature {NONE} -- Implementation
 			"C macro signature (long, EIF_REFERENCE, EIF_POINTER) use %"eif_internal.h%""
 		alias
 			"ei_set_pointer_field"
+		end
+
+	eif_gen_count_with_dftype (type_id: INTEGER): INTEGER is
+			-- Number of generic parameters of `obj'.
+		external
+			"C signature (int16): int use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_param_id (stype: INTEGER; dftype: INTEGER; pos: INTEGER): INTEGER is

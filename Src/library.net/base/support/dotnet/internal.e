@@ -210,6 +210,8 @@ feature -- Access
 		
 	class_name_of_type (type_id: INTEGER): STRING is
 			-- Name of class associated with dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
 		do
 			check
 				False
@@ -228,6 +230,8 @@ feature -- Access
 	type_name_of_type (type_id: INTEGER): STRING is
 			-- Name of `type_id''s generating type (type of which `type_id'
 			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
 		do
 			check
 				False
@@ -247,19 +251,31 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
-	generic_dynamic_type_of_type (type_id, i: INTEGER): INTEGER is
-			-- Dynamic type of generic parameter of `type_id' at position `i'.
+	generic_count (obj: ANY): INTEGER is
+			-- Number of generic parameter in `obj'.
+		require
+			obj_not_void: obj /= Void
+		do
+			Result := feature {ISE_RUNTIME}.generic_parameter_count (obj)
+		end
+
+	generic_count_of_type (type_id: INTEGER): INTEGER is
+			-- Number of generic parameter in `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
 		do
 			check
 				False
 			end
-		ensure
-			dynamic_type_nonnegative: Result >= 0
 		end
 
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
 			-- Dynamic type of generic parameter of `object' at
 			-- position `i'.
+		require
+			object_not_void: object /= Void
+			object_generic: generic_count (object) > 0
+			i_valid: i > 0 and i <= generic_count (object)
 		local
 			generic_type: TYPE
 		do
@@ -268,7 +284,22 @@ feature -- Access
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end
-	
+
+	generic_dynamic_type_of_type (type_id, i: INTEGER): INTEGER is
+			-- Dynamic type of generic parameter of `type_id' at position `i'.
+		require
+			type_id_nonnegative: type_id >= 0
+			type_id_generic: generic_count_of_type (type_id) > 0
+			i_valid: i > 0 and i <= generic_count_of_type (type_id)
+		do
+			check
+				False
+			end
+		ensure
+			dynamic_type_nonnegative: Result >= 0
+		end
+
+
 	field (i: INTEGER; object: ANY): ANY is
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
@@ -353,6 +384,7 @@ feature -- Access
 	field_name_of_type (i: INTEGER; type_id: INTEGER): STRING is
 			-- Name of `i'-th field of dynamic type `type_id'.
 		require
+			type_id_nonnegative: type_id >= 0
 			index_large_enough: i >= 1
 			index_small_enought: i <= field_count_of_type (type_id)
 		local
@@ -389,6 +421,10 @@ feature -- Access
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
 			-- Abstract type of `i'-th field of dynamic type `type_id'
+		require
+			type_id_nonnegative: type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count_of_type (type_id)
 		local
 			l_m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
 			l_field: FIELD_INFO
@@ -422,6 +458,7 @@ feature -- Access
 	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
 			-- Static type of declared `i'-th field of dynamic type `type_id'
 		require
+			type_id_nonnegative: type_id >= 0
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count_of_type (type_id)
 		do
@@ -670,6 +707,8 @@ feature -- Measurement
 
 	field_count_of_type (type_id: INTEGER): INTEGER is
 			-- Number of logical fields in dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
 		do
 			Result := get_members (type_id).count
 		end
@@ -737,6 +776,7 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			not_special: not is_special (object)
+			type_id_nonnegative: type_id >= 0
 			valid_type: dynamic_type (object) = type_id
 		local
 			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]

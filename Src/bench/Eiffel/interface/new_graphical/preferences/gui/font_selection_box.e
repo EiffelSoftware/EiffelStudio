@@ -34,6 +34,10 @@ feature -- Creation
 			h2.extend (example)
 			example.set_minimum_width (120)
 			create change_b.make_with_text_and_action ("Change ...",~change)
+		--| FIXME XR: Vision2 doesn't support font dialogs at the moment.
+			change_b.set_tooltip ("Not available in this version")
+			change_b.disable_sensitive
+		--| end FIXME
 			h2.extend (change_b)
 			h2.disable_item_expand (change_b)
 			h2.disable_item_expand (example)

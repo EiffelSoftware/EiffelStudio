@@ -4,6 +4,8 @@ Eiffel Vision prerelease notes. 14-Feb-2000
 This document describes the current prerelease of Eiffel Vision and changes
 since the last version of 16-Nov-1999. 
 
+See test/README for information on building the test program.
+
  Status
  ------
   A number of design changes are described below, implementation of these

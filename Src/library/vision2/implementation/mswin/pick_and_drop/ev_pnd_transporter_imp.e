@@ -109,28 +109,43 @@ feature {NONE} -- Implementation
 		local
 			wel_point: WEL_POINT
 			toolbar: EV_TOOL_BAR_IMP
-			toolbar_b: EV_TOOL_BAR_BUTTON_IMP
+			tbutton: EV_TOOL_BAR_BUTTON_IMP
+			mc_list: EV_MULTI_COLUMN_LIST_IMP
+			tree: EV_TREE_IMP
+			tg: EV_PND_TARGET_IMP
 			widget_pointed: EV_WIDGET_IMP
 		do
-			targets.start
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
-			toolbar ?= wel_point.window_at
-			if toolbar /= Void then
-				toolbar_b := toolbar.find_item_at_position (wel_point.x, wel_point.y)
-				if toolbar_b /= Void then
-					targets.search (toolbar_b)
-					if not targets.exhausted then
-						Result := targets.item
+			widget_pointed ?= wel_point.window_at
+			if widget_pointed /= Void then
+				toolbar ?= widget_pointed
+				if toolbar /= Void then
+					wel_point.screen_to_client (toolbar)
+					tbutton := toolbar.find_item_at_position (wel_point.x, wel_point.y)
+					if not tbutton.is_insensitive then
+						tg := tbutton
+					end
+				else
+					mc_list ?= widget_pointed
+					if mc_list /= Void then
+						wel_point.screen_to_client (mc_list)
+						tg := mc_list.find_item_at_position (wel_point.x, wel_point.y)
+					else
+						tree ?= widget_pointed
+						if tree /= Void then
+							wel_point.screen_to_client (tree)
+							tg := tree.find_item_at_position (wel_point.x, wel_point.y)
+						end
 					end
 				end
-			else
-				widget_pointed ?= wel_point.window_at
-				if widget_pointed /= Void then
-					targets.search (widget_pointed)
-					if not targets.exhausted then
-						Result := targets.item
-					end
+				if tg = Void then
+					tg := widget_pointed
+				end
+				targets.start
+				targets.search (tg)
+				if not targets.exhausted then
+					Result := targets.item
 				end
 			end
 		end

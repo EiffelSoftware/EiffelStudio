@@ -88,7 +88,7 @@ feature -- Update resources
 					end
 				end
 			end
-			{RESOURCE_USER} precursor (old_res, new_res)
+			{RESOURCE_USER} Precursor (old_res, new_res)
 		end
 
 	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is

@@ -9,7 +9,8 @@ inherit
 	EXPR_B
 		redefine
 			print_register, make_byte_code, generate_il,
-			is_simple_expr, is_predefined, evaluate
+			is_simple_expr, is_predefined, evaluate,
+			is_fast_as_local
 		end
 
 create
@@ -70,6 +71,9 @@ feature -- C code generation
 		end
 
 feature -- IL code generation
+
+	is_fast_as_local: BOOLEAN is true
+			-- Is expression calculation as fast as loading a local?
 
 	generate_il is
 			-- Generate IL code for boolean constant.

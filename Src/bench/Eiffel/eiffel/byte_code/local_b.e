@@ -17,7 +17,8 @@ inherit
 			make_end_assignment, make_end_reverse_assignment,
 			bit_assign_code, assigns_to, array_descriptor,
 			pre_inlined_code, generate_il_call_access,
-			generate_il_address
+			generate_il_address,
+			is_fast_as_local
 		end
 	
 feature 
@@ -88,6 +89,9 @@ feature
 		end
 
 feature -- IL code generation
+
+	is_fast_as_local: BOOLEAN is true
+			-- Is expression calculation as fast as loading a local?
 
 	generate_il_call_access (is_target_of_call: BOOLEAN) is
 			-- Generate IL code for an access to a local variable.

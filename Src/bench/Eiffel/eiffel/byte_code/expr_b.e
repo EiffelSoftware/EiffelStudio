@@ -45,6 +45,16 @@ feature -- Evaluation
 		
 feature -- Il code generation
 
+	is_fast_as_local: BOOLEAN is
+			-- Is expression calculation as fast as loading a local?
+			-- In other words: does it make sense to store a result of the expression
+			-- in a temporary local variable for multiple uses or is it equivalent 
+			-- in performance to "recalculating" the expression every time?
+			-- (In the latter case it's better to avoid creating a temporary
+			-- variable to reduce stack memory footprint and register pressure.)
+		do
+		end
+
 	generate_il_metamorphose (a_type, target_type: TYPE_I; real_metamorphose: BOOLEAN) is
 			-- Generate a metamorphose of target object.
 			-- If `real_metamorphose' is set to True, target is an

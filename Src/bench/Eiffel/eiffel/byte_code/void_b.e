@@ -9,7 +9,7 @@ class
 inherit
 	EXPR_B
 		redefine
-			is_simple_expr, is_predefined, generate_il, make_byte_code, print_register
+			is_simple_expr, is_predefined, generate_il, make_byte_code, print_register, is_fast_as_local
 		end
 
 feature -- Access
@@ -39,6 +39,9 @@ feature -- Status report
 		end
 
 feature -- IL code generation
+
+	is_fast_as_local: BOOLEAN is true
+			-- Is expression calculation as fast as loading a local?
 
 	generate_il is
 			-- Generate IL code for Void value.

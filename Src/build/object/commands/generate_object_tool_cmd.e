@@ -28,10 +28,15 @@ feature -- Execution
 
 	work (arg: ANY) is
 			-- Generate one object tool.
+		local
+			mp: MOUSE_PTR
 		do
+			!! mp
 			application_class := object_tool_generator.edited_class
+			mp.set_watch_shape
 			generate_interface
 			generate_command
+			mp.restore
 			object_tool_generator.close
 		end
 

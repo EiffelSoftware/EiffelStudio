@@ -17,11 +17,16 @@ feature
 
 	work (arg: ANY) is
 			-- Generate a command.
+		local
+			mp: MOUSE_PTR
 		do
 			if object_command_generator.routine_list.selected_count > 0 then
 				application_class := object_command_generator.edited_class
 				application_routine ?= object_command_generator.routine_list.selected_item
+				!! mp
+				mp.set_watch_shape
 				generate_command
+				mp.restore
 			end
 		ensure then
 			application_routine_not_void: application_routine /= Void

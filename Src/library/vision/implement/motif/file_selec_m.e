@@ -14,11 +14,25 @@ inherit
 	FILE_SELEC_I;
 
 	TERMINAL_M
+		rename
+			set_background_color_from_imp as old_set_background_color_from_imp, text_widget_list as old_text_widget_list
+		undefine
+			create_callback_struct, create_widget,
+			default_button, cancel_button,
+			set_foreground_color_from_imp
+		redefine
+			make
+		end;
+
+	TERMINAL_M
 		undefine
 			create_callback_struct, create_widget,
 			default_button, cancel_button
 		redefine
-			make
+			make, set_foreground_color_from_imp,
+			set_background_color_from_imp, text_widget_list
+		select
+			set_background_color_from_imp, text_widget_list
 		end;
 
 	MEL_FILE_SELECTION_BOX
@@ -37,7 +51,7 @@ inherit
 			pattern as mel_pattern,
 			set_directory as mel_set_directory,
 			directory as mel_directory,
-            is_shown as shown
+			is_shown as shown
 		select
 			file_selection_make, make_no_auto_unmanage
 		end
@@ -50,11 +64,12 @@ feature {NONE} -- Initialization
 
 	make (a_file_selection: FILE_SELEC; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif file selection.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			file_selection_make (a_file_selection.identifier,
-				mel_parent (a_file_selection, widget_index),
-				man);
+			file_selection_make (a_file_selection.identifier, mc, man);
 		end;
 
 feature -- Access
@@ -176,7 +191,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_file_list_label_string (ms);
 			ms.free
 		end;
@@ -187,7 +202,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_dir_list_label_string (ms);
 			ms.free
 		end;
@@ -197,7 +212,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_filter);
+			!! ms.make_default_l_to_r (a_filter);
 			set_dir_mask (ms);
 			ms.free
 		end;
@@ -208,7 +223,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_directory_name);
+			!! ms.make_default_l_to_r (a_directory_name);
 			mel_set_directory (ms);
 			ms.free
 		end;
@@ -218,7 +233,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_pattern);
+			!! ms.make_default_l_to_r (a_pattern);
 			mel_set_pattern (ms);
 			ms.free
 		end;
@@ -228,10 +243,10 @@ feature -- Status setting
 			-- by default this label is `Filter'.
 		local
 			ms: MEL_STRING
-        do
-            !! ms.make_localized (a_label);
-            set_filter_label_string (ms);
-            ms.free
+		do
+			!! ms.make_default_l_to_r (a_label);
+			set_filter_label_string (ms);
+			ms.free
 		end;
 
 	set_directory_selection is
@@ -286,7 +301,7 @@ feature -- Display
 
 	hide_file_selection_list is
 		do
-			list.scrolled_window.unmanage
+			list.parent.unmanage
 		end;
 
 	hide_file_selection_label is
@@ -325,7 +340,7 @@ feature -- Display
 
 	show_file_selection_list is
 		do
-			list.scrolled_window.manage
+			list.parent.manage
 		end;
 		
 feature -- Element change
@@ -390,67 +405,44 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	update_other_bg_color (pixel: POINTER) is
+	set_foreground_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
 		do
-			--xm_set_children_bg_color (pixel, screen_object);
+			mel_set_foreground_color (color_imp);
+			text.set_foreground_color (color_imp);
+			list.set_foreground_color (color_imp);
+			filter_text.set_foreground_color (color_imp);
+			mel_dir_list.set_foreground_color (color_imp);
 		end;
 
-	update_other_fg_color (pixel: POINTER) is
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
+		local
+			l: ARRAYED_LIST [POINTER];
+			color_id: POINTER
 		do
-			--xm_set_children_fg_color (pixel, screen_object);
+			old_set_background_color_from_imp (color_imp);
+			!! l.make (6);
+			l.append (list.parent.children);
+			l.append (mel_dir_list.parent.children);
+			color_id := color_imp.identifier;
+            from
+                l.start
+            until
+                l.after
+            loop
+                xm_change_color (l.item, color_id);
+                l.forth
+            end
 		end;
 
-	update_text_font (f_ptr: POINTER) is
+	text_widget_list: LINKED_LIST [POINTER] is
+			-- Text list includes the two directory list
 		do
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_TEXT),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_LIST),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_FILTER_TEXT),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_DIR_LIST),
-						--f_ptr);
+			Result := old_text_widget_list;
+			Result.extend (list.screen_object);
+			Result.extend (mel_dir_list.screen_object);
 		end;
-
-	update_label_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_DIR_LIST_LABEL),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_LIST_LABEL),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_FILTER_LABEL),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_SELECTION_LABEL),
-						--f_ptr);
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_APPLY_BUTTON),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_CANCEL_BUTTON),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_DEFAULT_BUTTON),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_HELP_BUTTON),
-						--f_ptr);
-			--set_primitive_font (xm_file_selection_box_get_child 
-						--(screen_object, MDIALOG_OK_BUTTON),
-						--f_ptr);
-		end;
-
 
 end -- class FILE_SELEC_M
 

@@ -46,6 +46,15 @@ feature -- Status report
 			bridge_ok: Result.is_equal (implementation.selected_peer)
 		end
 
+feature -- Status setting
+
+	enable_select is
+			-- Change selected peer to `Current'.
+		deferred
+		ensure
+			selected_peer_is_current: selected_peer = Current
+		end
+
 feature -- Contract support
 
 	selected_count: INTEGER is
@@ -110,6 +119,10 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/17 16:54:18  brendel
+--| Added enable_select as deferred, so that a client does not have to cast
+--| toolbar radio buttons, radio buttons or menu radio buttons.
+--|
 --| Revision 1.3  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

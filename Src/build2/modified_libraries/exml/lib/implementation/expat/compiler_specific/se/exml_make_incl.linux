@@ -1,0 +1,46 @@
+# SmallEiffel flags #######################################################
+
+
+# uncomment only one of the following
+#CHECK=-boost
+#CHECK=-no_check
+#CHECK=-require_check
+#CHECK=-ensure_check
+#CHECK=-invariant_check
+#CHECK=-loop_check
+CHECK=-all_check
+#CHECK=-debug_check
+
+
+# uncomment only one of the following
+#SPLIT=
+SPLIT=-no_split
+
+# add your custom external C dependencies here #############################
+
+LIBS=
+OBJS=$(EXPAT)/xmlparse/xmlparse.o $(EXPAT)/xmlparse/hashtable.o $(EXPAT)/xmltok/xmltok.o $(EXPAT)/xmltok/xmlrole.o
+CLIB_PATH=$(EXML)/lib/implementation/expat/compiler_specific/se/clib
+EXT_C=$(CLIB_PATH)/exml_parser.c $(CLIB_PATH)/expat_parser_error_codes_wrap.c
+INCLUDE=-I$(ROOT_DIR) -I$(EXPAT)/xmlparse
+CECIL=-cecil $(EXML)/lib/implementation/expat/compiler_specific/se/cecil.se
+OUTPUT=-o $(EIFFEL_ROOT_CLASS)
+
+# no customizations below this line ########################################
+
+COMPILE_MODE= $(CHECK) -no_style_warning $(SPLIT)
+
+all:
+	compile $(COMPILE_MODE) $(CECIL) $(OUTPUT) $(EXT_C) $(OBJS) $(LIBS) $(INCLUDE) $(EIFFEL_ROOT_CLASS) $(EIFFEL_CREATION_ROUTINE)
+clean:
+	clean $(EIFFEL_ROOT_CLASS)
+
+clean_all: clean
+	rm $(EIFFEL_ROOT_CLASS)
+	rm exml_parser_callbacks.h
+
+
+
+
+
+

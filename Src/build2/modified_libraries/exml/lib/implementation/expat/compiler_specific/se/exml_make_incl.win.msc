@@ -1,0 +1,21 @@
+LIBS=-link$(EXML)\expat\lib\xmlparse.lib
+OBJS=
+CLIB_PATH=$(EXML)\lib\implementation\expat\compiler_specific\se\clib
+EXT_C=$(CLIB_PATH)\exml_parser.c $(CLIB_PATH)\expat_parser_error_codes_wrap.c
+INCLUDE= $(INCLUDE);$(ROOT_DIR);$(EXML)\expat\xmlparse
+CECIL=-cecil $(EXML)\compiler_specific\se\cecil.se
+OUTPUT=-o $(EIFFEL_ROOT_CLASS).exe
+#COMPILE_MODE= -all_check -no_style_warning
+COMPILE_MODE= -no_check -no_split -no_style_warning
+
+make:
+	compile $(COMPILE_MODE) $(CECIL) $(OUTPUT) $(EXT_C) $(OBJS) $(LIBS) $(EIFFEL_ROOT_CLASS) $(EIFFEL_CREATION_ROUTINE)
+
+clean:
+	clean $(EIFFEL_ROOT_CLASS)
+
+clean_all: clean
+	del $(EIFFEL_ROOT_CLASS).exe
+	del exml_parser_callbacks.h
+	del exml_parser.obj
+	del expat_parser_error_codes_wrap.obj

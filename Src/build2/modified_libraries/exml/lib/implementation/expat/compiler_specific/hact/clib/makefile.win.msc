@@ -1,0 +1,16 @@
+# exml.lib - Makefile for Microsoft C
+
+CC = cl
+CFLAGS = -c -Ox -I$(EXML)\compiler_specific\hact\clib -I$(EXPAT)\xmlparse -I$(ISS_BASE)\spec\$(PLATFORM)\include
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = exml_parser.obj
+
+exml.lib: $(OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ)
+	if not exist $(EXML)\compiler_specific\hact\clib\msc mkdir $(EXML)\compiler_specific\hact\clib\msc
+	copy $@ $(EXML)\compiler_specific\hact\clib\msc
+	del $@
+	del *.obj

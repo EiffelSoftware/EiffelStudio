@@ -8,7 +8,8 @@ class
 	EV_COORDINATES
 
 creation
-	make, set
+	make,
+	set
 
 feature {NONE} -- Initialization
 

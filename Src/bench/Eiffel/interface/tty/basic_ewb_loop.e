@@ -75,7 +75,7 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 6)
+			!!Result.make (1, 8)
 
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
@@ -83,7 +83,13 @@ feature -- Initialization
 			!EWB_CLUSTERS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
+			!EWB_CLASS_LIST! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
 			!EWB_INDEXING! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_STATISTICS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_MODIFIED! ewb_cmd;

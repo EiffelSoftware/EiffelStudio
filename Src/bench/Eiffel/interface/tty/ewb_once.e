@@ -26,7 +26,7 @@ feature {NONE} -- Properties
 	        -- Associated class command to be executed
 	        -- after successfully retrieving the compiled
 	        -- class
-	    once
+	    do
 			!! Result.do_nothing
 	    end;
 

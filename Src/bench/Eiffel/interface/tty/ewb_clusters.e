@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	associated_cmd: E_SHOW_CLUSTERS is
 			-- Associated system command to be executed
-		once
+		do
 			!! Result.do_nothing
 		end;
 

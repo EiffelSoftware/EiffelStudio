@@ -91,97 +91,10 @@ feature -- Basic Operations
 			Result.put (Empty_string, 2)
 		end
 
-feature {NONE} -- Implementation
-
-	external_assemblies: STRING is
-			-- List of assemblies to include in the project.
-			-- mscorlib is allways added to a new project.
-		require
-			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
-		local
-			an_assembly: ASSEMBLY_INFORMATION
-			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
-			local_assemblies: LINKED_LIST [STRING]
-			l_assembly_name, l_path_to_assembly: STRING
-			index: INTEGER
-		do
-			create Result.make (1024)
-			Result.append (Assembly_keyword)
-			Result.append (New_line)
-
-			Result.append (Tab)
-			Result.append (Mscorlib_assembly)
-			Result.append (New_line)
-
-			selected_assemblies := wizard_information.selected_assemblies
-			from
-				selected_assemblies.start
-			until
-				selected_assemblies.after
-			loop
-				an_assembly := selected_assemblies.item
-				l_assembly_name := clone (an_assembly.name)
-				l_assembly_name.replace_substring_all (".", "_")
-				Result.append (Tab + l_assembly_name + "_" + " :" )
-				Result.append (Tab + "%"")
-				Result.append (an_assembly.name)
-				Result.append ("%",")
-				Result.append (Tab + "%"")
-				Result.append (an_assembly.version)
-				Result.append ("%",")
-				Result.append (Tab + "%"")
-				Result.append (an_assembly.culture)
-				Result.append ("%",")
-				Result.append (Tab + "%"")
-				Result.append (an_assembly.public_key)
-				Result.append ("%"")
-				Result.append (New_line)
-
-				selected_assemblies.forth
-			end
-
-			local_assemblies := wizard_information.local_assemblies
-			Result.append (New_line)
-			from
-				local_assemblies.start
-			until
-				local_assemblies.after
-			loop
-				Result.append (Tab)
-				l_path_to_assembly := local_assemblies.item
-				l_assembly_name := clone (l_path_to_assembly)
-				index := l_assembly_name.last_index_of ('\', l_assembly_name.count)
-				l_assembly_name.keep_tail (l_assembly_name.count - index)
-				l_assembly_name.replace_substring_all (".", "_")
-				Result.append (l_assembly_name + "_" + ":")
-				Result.append (Tab)
-				Result.append ("%"")
-				Result.append (l_path_to_assembly)
-				Result.append ("%"")
-				Result.append (New_line)
-
-				local_assemblies.forth
-			end	
-
-			Result.right_adjust
-			if (Result @ Result.count) = '%N' then
-				Result.remove (Result.count)
-			end
-			if (Result @ Result.count ) = ',' then
-				Result.remove (Result.count)
-			end
-		ensure
-			non_void_text: Result /= Void
-			not_empty_text: not Result.is_empty
-		end		
-
 feature {NONE} -- Constants
 
 	Application_type_template: STRING is "<FL_APPLICATION_TYPE>"
 			-- String to be replaced by the chosen application type
-
-	Root_class_external_name_template: STRING is "<FL_ROOT_CLASS_EXTERNAL_NAME>"
-			-- String to be replaced by the chosen root class external name
 
 	Root_class_name_template: STRING is "<FL_ROOT_CLASS_NAME>"
 			-- String to be replaced by the chosen root class name
@@ -189,20 +102,11 @@ feature {NONE} -- Constants
 	Creation_routine_name_template: STRING is "<FL_CREATION_ROUTINE_NAME>"
 			-- String to be replaced by the chosen creation routine name
 
-	External_assemblies_template: STRING is "<FL_EXTERNAL_ASSEMBLIES>"
-			-- String to be replaced by the paths to the selected .NET assemblies
-
 	Ace_extension: STRING is ".ace"
 			-- Ace files extension
 
 	Eiffel_extension: STRING is ".e"
 			-- Eiffel classes extension
-
-	Dll_extension: STRING is ".dll"
-			-- DLLs extension
-
-	Exe_extension: STRING is ".exe"
-			-- EXEs extension
 
 	Ace_template_filename: STRING is "template_ace.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
@@ -216,22 +120,7 @@ feature {NONE} -- Constants
 	None_class: STRING is "none"
 			-- `NONE' class
 
-	Inverted_comma: STRING is "%""
-			-- Inverted comma
-
 	Comma: STRING is ","
 			-- Comma
-
-	Assembly_keyword: STRING is "assembly"
-			-- Assembly keyword
-
-	Local_assembly: STRING is "local assemblies:"
-			-- local assemblies.
-
-	Eiffel_key: STRING is "$ISE_EIFFEL"
-			-- Key of environment variable to the Eiffel delivery
-
-	Mscorlib_assembly: STRING is "mscorlib:   %"mscorlib%",   %"1.0.3300.0%", %"neutral%", %"b77a5c561934e089%""
-			-- Mscorlib assembly allways added to the ace file.
 
 end -- class WIZARD_PROJECT_GENERATOR

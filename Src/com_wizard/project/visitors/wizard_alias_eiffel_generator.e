@@ -42,7 +42,12 @@ feature -- Basic Operations
 			-- derived class in Eiffel
 		local
 			a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
+			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 		do
+			create a_visible.make
+			a_visible.set_name (alias_descriptor.eiffel_class_name)
+			a_visible.add_feature ("make_from_other")
+			system_descriptor.add_visible_class (a_visible)
 			create eiffel_writer.make
 
 			eiffel_writer.set_class_name (alias_descriptor.eiffel_class_name)

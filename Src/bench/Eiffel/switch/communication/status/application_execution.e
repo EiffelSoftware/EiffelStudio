@@ -175,6 +175,24 @@ feature -- Properties
 			Result := debug_info.error_in_bkpts
 		end
 
+	has_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints (enabled or disabled) ?
+		do
+			Result := debug_info.has_breakpoints
+		end
+
+	has_enabled_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints enabled ?
+		do
+			Result := debug_info.has_enabled_breakpoints
+		end
+
+	has_disabled_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints disabled ?
+		do
+			Result := debug_info.has_disabled_breakpoints
+		end
+
 feature -- Access
 
 	eiffel_timeout_message: STRING is
@@ -197,24 +215,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	has_breakpoints: BOOLEAN is
-			-- Does the program have some breakpoints (enabled or disabled) ?
-		do
-			Result := debug_info.has_breakpoints
-		end
-
-	has_enabled_breakpoints: BOOLEAN is
-			-- Does the program have some breakpoints enabled ?
-		do
-			Result := debug_info.has_enabled_breakpoints
-		end
-
-	has_disabled_breakpoints: BOOLEAN is
-			-- Does the program have some breakpoints disabled ?
-		do
-			Result := debug_info.has_disabled_breakpoints
-		end
 
 	switch_breakpoint (f: E_FEATURE; i: INTEGER) is
 			-- Switch the `i'-th breakpoint of `f'
@@ -290,7 +290,35 @@ feature -- Element change
 			end
 		end
 
+	set_condition (f: E_FEATURE; i: INTEGER; expr: EB_EXPRESSION) is
+			-- Make the breakpoint located at (`f',`i') conditional with condition `expr'.
+			-- Create an enabled breakpoint if is doesn't already exist.
+		require
+			valid_f: f /= Void and then f.is_debuggable
+			valid_i: i > 0 and i <= f.number_of_breakpoint_slots
+			valid_expr: expr /= Void and then not expr.syntax_error
+			good_semantics: expr.is_condition (f)
+		do
+			debug_info.set_condition (f, i, expr)
+		end
+
+	remove_condition (f: E_FEATURE; i: INTEGER) is
+			-- Make the breakpoint located at (`f',`i') unconditional.
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)
+		do
+			debug_info.remove_condition (f, i)
+		end
+
 feature -- Access
+
+	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
+			-- Make the breakpoint located at (`f',`i') unconditional.
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)
+		do
+			Result := debug_info.condition (f, i)
+		end
 
 	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' set (enabled or disabled) ?

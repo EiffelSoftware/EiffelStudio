@@ -112,7 +112,8 @@ feature -- Definition: access
 		require
 			method_name_not_void: method_name /= Void
 			method_name_not_empty: not method_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_ref
+			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
+				in_class_token & Md_mask = Md_type_def
 			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_member_ref (item, in_class_token,

@@ -127,7 +127,7 @@ BEGIN
                     Output_Static,120,10,220,20
     LTEXT           "Do you want to see:",Output_Question_Static,120,35,220,
                     10
-    CONTROL         "Warnings?",Warnings_Check,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Warning?",Warnings_Check,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,140,50,95,10
     CONTROL         "Extra information?",Information_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,140,65,95,10
@@ -149,7 +149,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,135,20,149,10
     CONTROL         "Server code for a new component?",Server_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,135,35,130,10
-    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14,WS_DISABLED
     LTEXT           "Do you want to generate:",Code_Type_Static,120,5,95,10
     LTEXT           "(You may generate both for a new component)",
                     Code_Type_Info_Static,135,50,155,10
@@ -160,7 +160,7 @@ BEGIN
                     WS_TABSTOP,135,135,125,10
     LTEXT           "By default the wizard will compile the generated Eiffel code",
                     Eiffel_Code_Compilation_Static,120,120,190,10
-    CONTROL         "Out-of-process (.exe)",Out_Of_Process_Check,"Button",
+    CONTROL         "Out-of-process (.exe)",Out_Of_Proces_Check2,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,135,100,145,10
 END
 
@@ -189,9 +189,9 @@ BEGIN
     CONTROL         "Create a new project",Create_Project_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,60,145,10
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
-    CTEXT           "Welcome to the EiffelCOM Wizard!",Title_Static,110,5,
-                    225,10
+    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14,WS_DISABLED
+    CTEXT           "Welcome to the EiffelCOM Wizard",Title_Static,110,5,225,
+                    10
     LTEXT           "What would you like to do?",Title_Question_Static,115,
                     25,220,10
 END

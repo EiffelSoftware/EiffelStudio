@@ -53,13 +53,12 @@
 #define Code_Type_Info_Static           1053
 #define Component_Type_Static           1054
 #define Marshalling_Question_Static     1056
-#define Out_Of_Process_Check            1056
+#define Out_Of_Proces_Check2            1056
 #define Virtual_Table_Universal_Radio   1057
 #define Virtual_Table_Standard_Radio    1058
 #define Marshallin_Description_Static   1059
 #define Warnings_Check                  1060
 #define Information_Check               1061
-#define ID_BACK                         1061
 
 // Next default values for new objects
 // 
@@ -67,7 +66,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        123
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1062
+#define _APS_NEXT_CONTROL_VALUE         1061
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

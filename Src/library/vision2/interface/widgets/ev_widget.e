@@ -48,14 +48,6 @@ inherit
 			is_in_default_state
 		end
 
-	EV_CONTAINABLE
-		undefine
-			initialize
-		redefine
-			implementation,
-			is_in_default_state
-		end
-
 	EV_WIDGET_ACTION_SEQUENCES
 		redefine
 			implementation
@@ -323,7 +315,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PICK_AND_DROPABLE} and Precursor {EV_SENSITIVE} and
 				Precursor {EV_COLORIZABLE} and Precursor {EV_POSITIONED} and
-				Precursor {EV_CONTAINABLE} and Precursor {EV_HELP_CONTEXTABLE}
+				Precursor {EV_HELP_CONTEXTABLE}
 		end
 		
 feature {EV_ANY_I} -- Implementation

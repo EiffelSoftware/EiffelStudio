@@ -13,6 +13,8 @@ inherit
 
 	EV_COMMAND
 
+	EB_CHOOSE_ACE_CALLBACK
+
 	NEW_EB_CONSTANTS
 
 creation

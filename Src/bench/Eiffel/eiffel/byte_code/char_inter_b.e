@@ -21,22 +21,27 @@ feature
 
 	generate is
 			-- Generate then interval
-		require else
-			is_good_range: is_good_range
 		local
 			low, up: CHARACTER;
 		do
+				-- Do not use "lower > up" as exit test since `low'
+				-- will be out of bounds when `up' is the greatest
+				-- allowed character.
 			from
 				low := lower.generation_value;
 				up := upper.generation_value;
-			until
-				low > up
-			loop
 				generated_file.putstring ("case '");
 				generated_file.escape_char (low);
 				generated_file.putstring ("':");
 				generated_file.new_line;
+			until
+				low = up
+			loop
 				low := low + 1;
+				generated_file.putstring ("case '");
+				generated_file.escape_char (low);
+				generated_file.putstring ("':");
+				generated_file.new_line;
 			end;
 		end;
 

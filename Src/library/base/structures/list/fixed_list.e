@@ -125,8 +125,6 @@ feature -- Access
 
 feature -- Transformation
 
-	--swap(i:INTEGER) is do end;
-	
 	swap (i: INTEGER) is
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
@@ -139,8 +137,6 @@ feature -- Transformation
 		end;
 
 feature -- Duplication
-
-	--duplicate(n: INTEGER): like Current is do end;
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-list beginning at cursor position
@@ -177,7 +173,7 @@ feature -- Removal
 	wipe_out is
 		do
 			array_wipe_out;
-			index := -1;
+			index := 0;
 		end;
 
 feature -- Cursor movement

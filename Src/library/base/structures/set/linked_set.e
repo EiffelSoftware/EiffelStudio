@@ -52,6 +52,7 @@ feature -- Access
 			-- Does `Current' include `v'?
 			-- according to the 'equal' rule
 		do
+			start;
 			if not off then
 				search_equal (v)
 			end;

@@ -130,8 +130,7 @@ feature -- Modification & Insertion
 		do
 			if empty then
 				ll_add (v);
-				after := false;
-				before := false;
+				finish
 			else
 				add_right (v);
 				forth;

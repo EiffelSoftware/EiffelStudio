@@ -7,6 +7,7 @@
 #define Save_String                     3
 #define Clear_Output_String             4
 #define Launch_String                   5
+#define Generate_String                 6
 #define Wizard_Definition_File_Dialog   101
 #define Wizard_IDL_Dialog               102
 #define Wizard_Final_Dialog             104

@@ -16,7 +16,14 @@ class
 inherit
 	EV_TEXT_COMPONENT
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
+		end
+		
+	EV_FONTABLE
+		redefine
+			implementation,
+			is_in_default_state
 		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES
@@ -48,6 +55,13 @@ feature -- Element change
 		do
 			implementation.set_capacity (a_capacity)
 		end
+		
+	is_in_default_state: BOOLEAN is
+			--
+		do
+			Result := Precursor {EV_TEXT_COMPONENT} and Precursor {EV_FONTABLE}
+		end
+		
 
 feature {EV_ANY_I} -- Implementation
 

@@ -105,10 +105,13 @@ feature -- Status setting
 		local
 			ext_text: ANY
 		do
+			private_text := clone (t)
 			if exists then
 				wel_set_text (t)
+			elseif in_menu and then managed then
+				set_managed (False)
+				set_managed (True)
 			end
-			private_text := clone (t)
 			if not fixed_size_flag then
 				set_default_size
 			end

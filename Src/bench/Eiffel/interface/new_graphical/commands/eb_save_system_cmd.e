@@ -31,6 +31,7 @@ feature -- Properties
 	tool: EB_SYSTEM_TOOL
 
 feature {NONE} -- Implementation
+feature -- Execution
 
 	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Save a file with the chosen name.

@@ -718,6 +718,7 @@ feature -- Byte code generation
 				precondition.make_byte_code (ba);
 				ba.write_forward;
 			end;
+			context.record_breakable (ba);	-- Breakpoint on body entrance
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;

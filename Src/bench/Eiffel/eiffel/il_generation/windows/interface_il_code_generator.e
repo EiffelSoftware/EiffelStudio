@@ -70,8 +70,13 @@ feature -- IL Generation
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := class_type_token (current_type_id)
 
-				-- Define all features used by ISE runtime.
-			define_runtime_features (class_type)
+			if not is_single_class then
+					-- Define all features used by ISE runtime.
+				define_runtime_features (class_type)
+
+					-- Generate default constructor.
+				current_module.define_default_constructor (class_type, False)
+			end
 
 				-- First generate anchored features as they might be needed by current class
 				-- features for code generation when current class is frozen.
@@ -83,8 +88,10 @@ feature -- IL Generation
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_implementation_parents (class_interface)
 
-				-- Generate invariant routine.
-			generate_invariant_feature (class_c.invariant_feature)
+			if not is_single_class then
+					-- Generate invariant routine.
+				generate_invariant_feature (class_c.invariant_feature)
+			end
 
 				-- Reset global variable for collection.
 			current_class_type := Void
@@ -99,7 +106,7 @@ feature -- IL Generation
 		end
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
-			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER])
+			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]) 
 		is
 			-- Generate IL code for feature that represents type information of `class_c'.
 		require
@@ -109,14 +116,16 @@ feature -- IL Generation
 			l_formal: TYPE_FEATURE_I
 		do
 			if type_features /= Void then
-				from
-					type_features.start
-				until
-					type_features.after
-				loop
-					l_formal := type_features.item_for_iteration
-					generate_feature (l_formal, False, False, False)
-					type_features.forth
+				if not is_single_class then
+					from
+						type_features.start
+					until
+						type_features.after
+					loop
+						l_formal := type_features.item_for_iteration
+						generate_feature (l_formal, False, False, False)
+						type_features.forth
+					end
 				end
 
 				from
@@ -215,7 +224,8 @@ feature -- IL Generation
 		end
 
 	generate_il_implementation_inherited
-			(class_interface: CLASS_INTERFACE; class_c: CLASS_C; class_type: CLASS_TYPE)
+			(class_interface: CLASS_INTERFACE; class_c: CLASS_C;
+			class_type: CLASS_TYPE)
 		is
 			-- Generate IL code for inherited features of `current_class_type'.
 		require

@@ -1,7 +1,8 @@
 indexing
-	description:"Implementation of widget with a font"
-	note : "When a heir of this class inherits from a WEL object, it needs %
-		   %to rename `font' as `wel_font' and `set_font' as `wel_set_font'"
+	description:"EiffelVision fontable, mswindows implementation."
+	note : "When a heir of this class inherits from a WEL object,%
+			% it needs to rename `font' as `wel_font' and%
+			% `set_font' as `wel_set_font'"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,12 +10,13 @@ indexing
 deferred class
 	EV_FONTABLE_IMP
 
+inherit
+	EV_FONTABLE_I
+
 feature -- Access
 
 	font: EV_FONT is
 			-- font of current primitive
-		require
-			exists: not destroyed
 		local
 			font_windows: EV_FONT_IMP
 			default_font: WEL_FONT
@@ -32,8 +34,6 @@ feature -- Status setting
 
 	set_font (f: EV_FONT) is
 			-- Set `font' to `f'.
-		require
-			exists: not destroyed
 		local
 			local_font_windows: EV_FONT_IMP
 		do
@@ -47,10 +47,6 @@ feature -- Status setting
 
 	private_font: EV_FONT
 			-- font used for the implementation
-
-	destroyed: BOOLEAN is
-		deferred
-		end
 
 feature {NONE} -- Implementation : the wel values, are deferred here, but
 			   -- they need to be define by the heir

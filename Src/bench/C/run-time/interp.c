@@ -658,7 +658,7 @@ end:
 			case SK_POINTER:write_fnptr(rvar, last->it_ptr); break;
 			case SK_BIT:
 			case SK_EXP:
-			case SK_REF:	/* See below */;
+			case SK_REF:	/* See below */ 
 				/* If the Result is a reference, then we have an hector pointer
 				 * in place of the result.
 				 */
@@ -805,7 +805,7 @@ end:
 
 			offset = get_long();		/* Get the feature id */
 			code = get_short();			/* Get the static type */
-			meta = get_uint32();        /* Get the attribute meta-type */
+			meta = get_uint32();		/* Get the attribute meta-type */
 			type = get_short();			/* Get the reverse type */
 			last = otop();
 			if (!RTRA(type, last->it_ref))
@@ -1506,6 +1506,174 @@ end:
 		code = get_short();				/* Get the static type */
 		address(offset, code);
 		break;
+	/*
+	 * Manifest array
+	 */
+ 
+	case BC_ARRAY:
+#ifdef DEBUG
+		dprintf(2)("BC_ARRAY\n");
+#endif
+		{
+			long nbr_of_items;
+			char *new_obj;
+			short stype, dtype, feat_id;
+ 
+			stype = get_short();			/* Get the static type */
+			dtype = get_short();			/* Get the dynamic type */
+			feat_id = get_short();		  	/* Get the feature id */
+			nbr_of_items = get_long();	  	/* Number of items in array */
+ 
+			new_obj = RTLN(dtype);		  	/* Create new object */
+			epush (&loc_stack, &new_obj);   /* Protect new_obj */
+			((void (*)())RTWF(stype, feat_id, dtype))(new_obj, 1L, nbr_of_items);
+			epop (&loc_stack, 1);
+ 
+			last = iget();
+			last->type = SK_REF;
+			last->it_ref = new_obj;
+			last = iget();
+			last->type = SK_REF;
+			last->it_ref = *(char **)new_obj;
+			break;
+		}
+
+	/* 
+	 * Insert expression into manifest arrary
+	 */
+	case BC_INSERT:
+#ifdef DEBUG
+		dprintf(2)("BC_INSERT\n");
+#endif
+		{
+			struct item *it;
+ 
+			it = opop();					/* Pop the last expression */
+			last = otop();					/* Get the manifest array */
+			/* Fill the special area with the expressions
+			 * for the manifest array and type them
+			 * accordingly.
+			 */
+			switch (it->type & SK_HEAD) {
+				case SK_BOOL:
+				case SK_CHAR:
+					*((char *) last->it_ref)++ = it->it_char;
+					break;
+				case SK_BIT:
+					*(char **) last->it_ref = it->it_bit;
+					last->it_ref += sizeof(char *);
+					break;
+				case SK_EXP:
+				case SK_REF:
+					*(char **) last->it_ref = it->it_ref;
+					last->it_ref += sizeof(char *);
+					break;
+				case SK_INT:
+					*(long *) last->it_ref = it->it_long;
+					last->it_ref += sizeof(long);
+					break;
+				case SK_FLOAT:
+					*(float *) last->it_ref  = it->it_float;
+					last->it_ref += sizeof(float);
+					break;
+				case SK_DOUBLE:
+					*(double *) last->it_ref = it->it_double;
+					last->it_ref += sizeof(double);
+					break;
+				case SK_POINTER:
+					*(fnptr *) last->it_ref = it->it_ptr;
+					last->it_ref += sizeof(fnptr);
+					break;
+				default:
+					panic(botched);
+			}
+			break;
+		}
+
+	/* 
+	 * End insertion in manifest arrary
+	 */
+	case BC_END_INSERT:
+  #ifdef DEBUG
+		dprintf(2)("BC_END_INSERT\n");
+  #endif
+		/* Discard special area of array */
+		opop ();
+		break;
+
+	/*
+	 * Old expression.
+	 */
+	case BC_OLD:
+#ifdef DEBUG
+		dprintf(2)("BC_OLD\n");
+#endif
+		{	char *ref;
+				
+			if (!(WASC(icur_dtype) & CK_ENSURE)) /* No postcondition check? */
+				opop();					/* Item is poped here because 
+										 * byte code for old is generated
+										 * at the start of the routine
+										 */
+			else
+				{									
+				last = otop();
+				ref = last->it_ref;
+				switch (last->type & SK_HEAD) {	
+					case SK_EXP:
+					case SK_REF:
+						last->it_ref = RTCL(ref); 	/* Clone ref */
+						break;
+				}
+			}
+		break;
+		}
+
+	/*
+	 * Add attribute name to be stripped. 
+	 */
+	case BC_ADD_STRIP:
+#ifdef DEBUG
+		dprintf(2)("BC_ADD_STRIP\n");
+#endif
+		string = IC;
+		IC += strlen(IC) + 1;
+		last = iget();
+		last->type = SK_REF;
+		last->it_ref = string;
+		break;
+
+	/*
+	 * End strip execution 
+	 */
+	case BC_END_STRIP:
+#ifdef DEBUG
+		dprintf(2)("BC_END_STRIP\n");
+#endif
+		{	long nbr_of_items, temp;
+			char **stripped;
+			struct item *current;
+			char *array;
+			short s_type, d_type;
+
+			d_type = get_short();           /* Get the dynamic type */
+			nbr_of_items = get_long();
+			temp = nbr_of_items;
+			stripped = (char **) cmalloc(sizeof(char *)*nbr_of_items);
+			if (stripped == (char **) 0) 
+				enomem();
+			while (nbr_of_items--) {
+				last = opop();
+				stripped[nbr_of_items] = last->it_ref; 
+			}
+			current = opop(); 				/* Get current object */
+			array = RTMA(current->it_ref, d_type, stripped, temp);
+			xfree (stripped);
+			last = iget();
+			last->type = SK_REF;
+			last->it_ref = array;
+			break;
+		}
 
 	/*
 	 * Manifest string.
@@ -1618,13 +1786,13 @@ end:
 		break;
 
 	/*
-     * End of rescue clause
-     */
-    case BC_END_RESCUE:
+	 * End of rescue clause
+	 */
+	case BC_END_RESCUE:
 #ifdef DEBUG
-        dprintf(2)("BC_END_RESCUE\n");
+		dprintf(2)("BC_END_RESCUE\n");
 #endif
-        RTEF;
+		RTEF;
 		goto null;	/* RTOK skipped */
 
 	/*
@@ -3650,11 +3818,16 @@ char *start;
 	 * Assignment to an attribute.
 	 */
 	case BC_ASSIGN:
+	{ 								/* No new indent level--RAM */
+		uint32 type;
+
 		offset = get_long();		/* Get the feature id */
 		code = get_short();			/* Get the static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - 1,
-			"BC_ASSIGN", offset, code);
+		type = get_uint32();		/* Get attribute meta-type */
+		fprintf(fd, "0x%X %s fid=%d, st=%d, meta-type=0x%x\n",
+			IC - sizeof(short) - sizeof(long) -sizeof(uint32) - 1,
+			"BC_ASSIGN", offset, code, type);
+	}
 		break;
 
 	/*
@@ -3850,9 +4023,10 @@ char *start;
 				type, code);
 			break;
 		case BC_CLIKE:				/* Like feature creation type */
+			type = get_short();
 			offset = get_long();	/* Get the routine id of the anchor */
-			fprintf(fd, "0x%X BC_CREATE fid=%d\n", IC - sizeof(long) - 2,
-				offset);
+			fprintf(fd, "0x%X BC_CREATE fid=%d\n", 
+				IC - sizeof(short) - sizeof(long) - 2, offset);
 			break;
 		case BC_CCUR:				/* Like Current creation type */
 			fprintf(fd, "0x%X BC_CREATE current\n", IC - 2);
@@ -3894,6 +4068,69 @@ char *start;
 			"BC_METAMORPHOSE", code);
 		break;
 
+	/* 
+	 * Creation of a manifest array
+	 */
+	case BC_ARRAY:
+		{
+			short stype, dtype, feat_id;
+			long nbr_of_items;
+			stype = get_short();		/* Get the static type*/
+			dtype = get_short();		/* Get the dynamic type*/
+			feat_id = get_short();		/* Get the feature id*/
+			nbr_of_items = get_long();	/* Get the nbr of items in array*/
+			fprintf(fd, "0x%X %s, st=%d dt=%d fid=%d nbr=%d\n",
+				 	IC - (3*sizeof(short)) - sizeof(long) - 1, 
+					"BC_ARRAY", stype, dtype, feat_id, nbr_of_items);
+		}
+		break;
+
+	/* 
+	 * Insertion into a manifest array
+	 */
+	case BC_INSERT:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_INSERT");
+		break;
+	
+	/* 
+	 * End insertion into manifest arry
+	 */
+	case BC_END_INSERT:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_INSERT");
+		break;
+	
+	/* 
+	 * Old expression 
+	 */
+	case BC_OLD:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_OLD");
+		break;
+	
+	/* 
+	 * Add strip fid 
+	 */
+	case BC_ADD_STRIP:
+		string = IC;
+		IC += strlen(IC) + 1;
+		fprintf(fd, "0x%X %s \"%s\"\n", string - 1, "BC_ADD_STRIP", string);
+		break;
+	
+	/* 
+	 * End strip 
+	 */
+	case BC_END_STRIP:
+		{
+			short s_type, d_type;
+			long nbr;
+			s_type = get_short();
+			d_type = get_short();
+			nbr = get_long();
+			fprintf(fd, "0x%X %s, nbr of items=%d, stype=%d, dtype=%d\n", 
+				IC - sizeof(long) - (2*sizeof(short)) - 1, 
+				"BC_END_STRIP", nbr, s_type, d_type);
+			break;
+		}
+	
 	/*
 	 * Calling an external function.
 	 */
@@ -3944,12 +4181,17 @@ char *start;
 	 * Access to an attribute.
 	 */
 	case BC_ATTRIBUTE:
+	{
+		uint32 type;
+
 		offset = get_long();				/* Get feature id */
 		code = get_short();					/* Get static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - 1,
-			"BC_ATTRIBUTE", offset, code);
+		type = get_uint32();				/* Get attribute meta-type */
+		fprintf(fd, "0x%X %s fid=%d, st=%d, meta-type=0x%x\n",
+			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
+			"BC_ATTRIBUTE", offset, code, type);
 		break;
+	}
 
 	/*
 	 * Accessing an attribute in a nested expression (need invariant check).

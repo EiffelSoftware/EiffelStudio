@@ -8,7 +8,7 @@ class
 	DB_GENERATION_TYPE
 
 inherit
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,

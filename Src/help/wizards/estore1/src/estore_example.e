@@ -8,7 +8,7 @@ class
 	ESTORE_EXAMPLE
 
 inherit
-	SHARED
+	WIZARD_SHARED
 
 Creation
 	perform_example

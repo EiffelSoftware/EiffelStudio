@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROJECT_SHARED
+	PROJECT_WIZARD_SHARED
 
 feature -- Access
 
@@ -76,4 +76,4 @@ feature {NONE} -- Implementation
 			exists: Result /= Void
 		end
 
-end -- class PROJECT_SHARED
+end -- class PROJECT_WIZARD_SHARED

@@ -8,7 +8,7 @@ class
 	DB_TABLE_SELECTION
 
 inherit
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info
@@ -31,7 +31,7 @@ feature -- basic Operations
 			h1: EV_HORIZONTAL_BOX
 			v1: EV_VERTICAL_BOX
 			lab: EV_LABEL
-			txt: SMART_TEXT
+			txt: WIZARD_SMART_TEXT
 		do 
 			Create selected_items
 			Create unselected_items

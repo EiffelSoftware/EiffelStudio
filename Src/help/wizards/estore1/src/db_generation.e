@@ -8,13 +8,13 @@ class
 	DB_GENERATION
 
 inherit
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 		redefine 
 			update_state_information,
 			proceed_with_current_info
 		end
 
-	SHARED
+	WIZARD_SHARED
 		undefine
 			default_create
 		end

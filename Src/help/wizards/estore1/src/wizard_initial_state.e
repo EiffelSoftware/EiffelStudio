@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	INITIAL_STATE
+	WIZARD_INITIAL_STATE
 
 inherit
-	STATE_WINDOW
+	WIZARD_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info
@@ -123,7 +123,7 @@ feature -- basic Operations
 
 feature -- Implementation
 
-	username,password,db_name: SMART_TEXT_FIELD
+	username,password,db_name: WIZARD_SMART_TEXT_FIELD
 		-- User text entries dealing with username, password and
 		-- Database Handle name.
 
@@ -133,4 +133,4 @@ feature -- Implementation
 	pixmap_location: STRING is "essai.bmp"
 			-- Pixmap location
 
-end -- class INITIAL_STATE
+end -- class WIZARD_INITIAL_STATE

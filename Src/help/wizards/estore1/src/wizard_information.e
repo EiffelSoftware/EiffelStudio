@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			example := TRUE
 		end
 
-feature {STATE_WINDOW} -- Settings
+feature {WIZARD_STATE_WINDOW} -- Settings
 
 	set_database_info(s1,s2,s3: STRING;oracle_selected: BOOLEAN) is
 			-- Set the database information.

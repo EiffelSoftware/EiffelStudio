@@ -145,7 +145,7 @@ feature -- Status report
 			non_void_external_item: external_item /= Void
 			valid_external_item: not external_item.is_empty
 		do
-			Result := clone (external_item)
+			Result := external_item.twin
 			if not (Result.item (1) = '"') then
 				Result.prepend_character('"')
 			end
@@ -273,8 +273,6 @@ feature {NONE} -- Implementation
 			non_void_external_list: external_list /= Void
 		local
 			formatted_path: STRING
-			external_copy: STRING
-			eiffel_dir: STRING
 			can_add: BOOLEAN
 		do
 			formatted_path := format_external (external_item)
@@ -366,7 +364,7 @@ feature {NONE} -- Implementation
 					if add_quotes then
 						file_names.extend (new_id_sd (external_list.item, True))	
 					else
-						unquoted_name := clone (external_list.item)
+						unquoted_name := external_list.item.twin
 						unquoted_name.prune_all_leading ('%"')
 						unquoted_name.prune_all_trailing ('%"')
 						file_names.extend (new_id_sd (unquoted_name, True))

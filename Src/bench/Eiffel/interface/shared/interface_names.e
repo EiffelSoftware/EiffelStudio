@@ -101,8 +101,8 @@ feature -- Accelerator, focus label and menu name
 	m_About: STRING is					"&About ISE EiffelBench";
 
 	m_Apply: STRING is					"&Apply"
-	f_Case_storage: STRING is			"Reverse engineer (case)";
-	m_Case_storage: STRING is			"&Reverse engineer (case)";
+	f_Case_storage: STRING is			"Reverse engineer (EiffelCase)";
+	m_Case_storage: STRING is			"&Reverse engineer (EiffelCase)";
 	f_Clear_breakpoints: STRING is		"Clear stop points";
 	m_Clear_breakpoints: STRING is		"C&lear stop points";
 	f_Close_all_tools: STRING is		"Close all tools";
@@ -134,18 +134,18 @@ feature -- Accelerator, focus label and menu name
 	m_Exec_last: STRING is				"&Out of routine";
 	f_Exec_nostop: STRING is			"Ignore stop points";
 	m_Exec_nostop: STRING is			"&Ignore stop points";
-	f_Exec_step: STRING is				"Step by step";
-	m_Exec_step: STRING is				"S&tep by step";
+	f_Exec_step: STRING is				"Step-by-step";
+	m_Exec_step: STRING is				"S&tep-by-step";
 	f_Exec_stop: STRING is				"To next stop point";
 	m_Exec_stop: STRING is				"To ne&xt stop point";
 	f_Exit: STRING is					"Exit tool";
 	m_Exit: STRING is					"E&xit tool";
 
-	f_new_project: STRING is			"New Project..."
-	m_new_project: STRING is			"&New Project...%TCtrl+N"
+	f_new_project: STRING is			"New..."
+	m_new_project: STRING is			"&New...%TCtrl+N"
 	a_new_project: STRING is			"Ctrl<Key>n"
-	f_Open_project: STRING is			"Open Project..."
-	m_Open_project: STRING is			"&Open Project...%TCtrl+O"
+	f_Open_project: STRING is			"Open..."
+	m_Open_project: STRING is			"&Open...%TCtrl+O"
 	a_Open_project: STRING is			"Ctrl<Key>o"
 	m_Recent_project: STRING is			"&Recent Projects"
 	f_Exit_project: STRING is			"Exit"
@@ -183,15 +183,15 @@ feature -- Accelerator, focus label and menu name
 	m_Hide_object: STRING is			"Hide &object";
 	f_List_targets: STRING is			"List targets";
 	m_List_targets: STRING is			"&List targets%TCtrl+L";
-	f_New_class: STRING is				"New class tool";
-	m_New_class: STRING is				"New &class tool";
-	m_New_dynamic_lib: STRING is		"New &Dynamic library tool";
-	f_New_explain: STRING is			"New explain tool";
-	m_New_explain: STRING is			"New &explain tool";
-	f_New_object: STRING is				"New object tool";
-	m_New_object: STRING is				"New &object tool";
-	f_New_routine: STRING is			"New feature tool";
-	m_New_routine: STRING is			"New &feature tool";
+	f_New_class: STRING is				"New Class tool";
+	m_New_class: STRING is				"New &Class tool";
+	m_New_dynamic_lib: STRING is		"New &Dynamic Library tool";
+	f_New_explain: STRING is			"New Explain tool";
+	m_New_explain: STRING is			"New &Explain tool";
+	f_New_object: STRING is				"New Object tool";
+	m_New_object: STRING is				"New &Object tool";
+	f_New_routine: STRING is			"New Feature tool";
+	m_New_routine: STRING is			"New &Feature tool";
 	f_Next_target: STRING is			"Next";
 	m_Next_target: STRING is			"N&ext";
 	a_Next_target: STRING is			"Alt<key>Right";
@@ -323,11 +323,11 @@ feature -- Menu mnenomics
 	m_Feature: STRING is				"&Feature";
 	m_Feature_tools: STRING is			"&Feature tools";
 	m_File: STRING is					"&File";
-	m_Formats: STRING is				"F&ormats";
+	m_Formats: STRING is				"F&ormat";
 	m_Object: STRING is					"&Object";
 	m_Object_tools: STRING is			"&Object tools";
 	m_Special: STRING is				"&Special";
-	m_Windows: STRING is				"&Windows";
+	m_Windows: STRING is				"&Window";
 
 feature -- Label texts
 

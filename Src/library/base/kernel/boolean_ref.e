@@ -34,6 +34,22 @@ feature -- Status report
 			Result := item
 		end;
 
+feature -- Conversion
+
+	to_integer: INTEGER is
+			-- 1 if `True'
+			-- 0 if `False'
+		do
+			if
+				item
+			then
+				Result := 1
+			end
+		ensure
+			zero_or_one: Result = 0 or Result = 1
+			item_implies_one: item implies Result = 1
+		end
+
 feature -- Element change
 
 	set_item (b: BOOLEAN) is

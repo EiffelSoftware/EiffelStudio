@@ -186,11 +186,11 @@ feature -- Access
 			mp: MENU_PULL_WINDOWS
 		do
 			private_attributes.set_insensitive (flag)
-			if exists then
-				if in_menu then
-					mp ?= parent
-					mp.set_insensitive_widget (Current, flag)
-				else
+			if in_menu then
+				mp ?= parent
+				mp.set_insensitive_widget (Current, flag)
+			else
+				if exists then
 					if flag then
 						disable
 					else
@@ -264,11 +264,9 @@ feature -- Removal
 feature {NONE} -- Notification
 
 	on_bn_clicked is
-		local
-			cd: BUTCLICK_DATA
+			-- Button pressed.
 		do
-			!! cd.make (owner, 0, 0, 0, 0, id, buttons_state);
-			activate_actions.execute (Current, cd)
+			activate_actions.execute (Current, Void)
 		end
 
 end -- class PUSH_BUTTON_WINDOWS

@@ -852,8 +852,8 @@ feature {NONE} -- Implementation: Creation routine selection
 					create choice.make_default (~process_creation_routine_callback (?))
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
-					--choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
-					choice.show_modal_to_window (window)
+					choice.set_position (window.screen_x + window.width // 3, window.screen_y + window.height // 3)
+					choice.show
 				end
 			else
 				-- No creation routine is available

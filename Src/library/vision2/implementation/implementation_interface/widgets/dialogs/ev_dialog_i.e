@@ -15,6 +15,37 @@ inherit
 			interface
 		end
 
+feature -- Status Report
+
+	is_closeable: BOOLEAN is
+			-- Is the window closeable by the user?
+			-- (Through a clik on the Window Menu, or by
+			-- pressing ALT-F4)
+		deferred
+		end
+
+feature -- Status Setting
+	
+	enable_closeable is
+			-- Set the window to be closeable by the user
+			-- (Through a clik on the Window Menu, or by
+			-- pressing ALT-F4)
+		require
+			not_closeable: not is_closeable
+		deferred
+		ensure
+			closeable: is_closeable
+		end
+
+	disable_closeable is
+			-- Set the window not to be closeable by the user
+		require
+			closeable: is_closeable
+		deferred
+		ensure
+			not_closeable: not is_closeable
+		end
+
 feature -- Basic operations
 
 	block is
@@ -56,6 +87,9 @@ end -- class EV_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/29 03:01:48  pichery
+--| Added feature `is_closeable', `enable/disable_closeable'.
+--|
 --| Revision 1.11  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

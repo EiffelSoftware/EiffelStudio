@@ -41,26 +41,21 @@ feature {NONE} -- Implementation
 
 			-- Create Proxy/Stub
 			if environment.is_new_component and environment.marshaller_generated and not environment.abort then
-				message_output.add_title ("Compiling marshaller DLL GUIDs")
 				compiler.compile_iid
 				if not environment.abort then
 					progress_report.step
-					message_output.add_title ("Compiling marshaller DLL data")
 					compiler.compile_data
 				end
 				if not environment.abort then
 					progress_report.step
-					message_output.add_title ("Compiling marshaller DLL interface")
 					compiler.compile_ps
 				end
 				if not environment.abort then
 					progress_report.step
-					message_output.add_title ("Linking marshaller DLL")
 					compiler.link
 				end
 				if not environment.abort then
 					progress_report.step
-					message_output.add_title ("Registering marshaller DLL")
 					compiler.register_ps
 				end
 				if not environment.abort then

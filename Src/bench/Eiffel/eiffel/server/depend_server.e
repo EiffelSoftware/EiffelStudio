@@ -17,7 +17,6 @@ feature -- Initialisation
 		-- Creation
 		do
 			{COMPILER_SERVER}Precursor
-			!! cache.make
 			!! bid_cid_table.make (200)
 		end
 
@@ -30,8 +29,11 @@ feature -- Access
 			Result := t.id
 		end
 
-	cache: DEPEND_CACHE 
+	cache: DEPEND_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 
 	bid_cid_table: EXTEND_TABLE [CLASS_ID, BODY_ID]
 			-- you give it a body_id and it tells you in which 

@@ -6,26 +6,19 @@ class
 inherit
 	COMPILER_SERVER [FEATURE_TABLE, CLASS_ID]
 		redefine
-			has, item, make
+			has, item
 		end
 
 creation
 	make
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{COMPILER_SERVER}Precursor
-			!! cache.make
-		end
-
 	
 feature -- Access
 
-	cache: FEAT_TBL_CACHE 
+	cache: FEAT_TBL_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 		
 	has (an_id: CLASS_ID): BOOLEAN is
 			-- Has the current server or the associated temporary 

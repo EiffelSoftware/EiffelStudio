@@ -4,21 +4,9 @@ class M_ROUT_ID_SERVER
 
 inherit
 	COMPILER_SERVER [MELTED_ROUTID_ARRAY, CLASS_ID]
-		redefine
-			make
-		end
+
 creation
 	make
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{COMPILER_SERVER}Precursor
-			!! cache.make
-		end
-
 
 feature -- Access
 
@@ -28,8 +16,11 @@ feature -- Access
 			Result := t.class_id
 		end
 
-	cache: M_ROUT_ID_CACHE 
+	cache: M_ROUT_ID_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 		
 feature -- Server size configuration
 

@@ -5,26 +5,19 @@ class CLASS_INFO_SERVER
 inherit
 	COMPILER_SERVER [CLASS_INFO, CLASS_ID]
 		redefine
-			has, item, disk_item, make
+			has, item, disk_item
 		end
 
 creation
 	make
-
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{COMPILER_SERVER}Precursor
-			!! cache.make
-		end
 	
 feature 
 
-	cache: CLASS_INFO_CACHE 
+	cache: CLASS_INFO_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 	
 	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is an item of id `an_id' present in the current server ?

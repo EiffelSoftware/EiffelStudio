@@ -7,22 +7,11 @@ class TMP_BYTE_SERVER
 inherit
 	DELAY_SERVER [BYTE_CODE, BODY_ID]
 		redefine
-			ontable, updated_id, make
+			ontable, updated_id
 		end
 
 creation
 	make
-
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{DELAY_SERVER}Precursor
-			!! cache.make
-		end
-
 	
 feature 
 
@@ -46,8 +35,11 @@ feature
 			Result := t.byte_id
 		end
 
-	cache: BYTE_CACHE 
+	cache: BYTE_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 
 	Delayed: SEARCH_TABLE [BODY_ID] is
 			-- Cache for delayed items

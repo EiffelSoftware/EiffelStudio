@@ -10,28 +10,19 @@ inherit
 		export
 			{ANY} merge
 		redefine
-			has, item, make
+			has, item
 		end
 
 creation
 	make
 
-
-
-feature -- Initialisation
-
-	make is
-		-- Creation
-		do
-			{READ_SERVER}Precursor
-			!! cache.make
-		end
-
-
 feature 
 
-	cache: INV_AST_CACHE 
+	cache: INV_AST_CACHE is
 			-- Cache for routine tables
+		once
+			!! Result.make
+		end
 		
 	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is the id `an_id' present either in Current or in

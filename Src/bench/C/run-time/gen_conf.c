@@ -10,6 +10,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #include "rt_gen_types.h"
 #include "rt_lmalloc.h"
 #include "rt_threads.h"
+#include "rt_garcol.h"
 #include "rt_assert.h"
 #include <ctype.h>
 #include <string.h>

@@ -35,7 +35,7 @@ extern "C" {
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
 #define TO_MAX			7		/* Maximum number of allocable 'to' */
 #define CHUNK_MIN		5		/* Minimum Eiffel chunk # to activate plsc() */
-#define PLSC_PER		8		/* Period of plsc in acollect */
+#define PLSC_PER		20		/* Period of plsc in acollect */
 #define SPOILT_TBL		3		/* Size of spoilt chunks recording table */
 
 /*
@@ -87,6 +87,7 @@ extern struct stack memory_set;	/* Memory set stack.	*/
 extern struct stack moved_set;	/* Describes the new generation */
 extern int tenure;			/* Tenure value for next generation cycle */
 extern long plsc_per;			/* Period of plsc() in acollect() */
+extern long force_plsc;
 
 /* To start timing or not for GC-profiling */
 extern int gc_running;			/* Is the GC currently running */
@@ -123,7 +124,18 @@ extern struct stack_list opstack_list;	/* List of all `opstack' allocated in eac
 #endif
 #endif
 
+extern int acollect(void);				/* Automatic garbage collection */
+extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
+extern void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
+extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
+
+/* Status */
+extern int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem-set? */
+extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
+extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 #endif /* ISE_GC */
+
+extern int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
 
 extern EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
 extern  int st_extend(register struct stack *stk, register int size);	/* Extends a stack */

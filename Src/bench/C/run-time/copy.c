@@ -27,7 +27,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "rt_except.h"
 #include "eif_local.h"
 #include "eif_hector.h"
-#include "eif_garcol.h"
+#include "rt_garcol.h"
 #include "rt_macros.h"
 #include "rt_gen_types.h"
 #include "rt_globals.h"

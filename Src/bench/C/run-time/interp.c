@@ -38,6 +38,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_misc.h"
 #include "rt_assert.h"
 #include "rt_wbench.h"
+#include "rt_garcol.h"
 #include "rt_struct.h"
 #include "server.h" /* For debug_mode: we need to move dynamic_eval */
 

@@ -28,8 +28,11 @@ feature -- Initialization
 		
 	initialize_with_path (a_path: UNI_STRING) is
 			-- Initialize current with `a_path' as ISE_EIFFEL var.
+		local
+			l_path: BSTR_STRING
 		do
-			last_call_success := c_initialize_with_path (item, a_path)
+			create l_path.make_by_uni_string (a_path)
+			last_call_success := c_initialize_with_path (item, l_path.item)
 			is_initialized := True
 		ensure
 			success: last_call_success = 0

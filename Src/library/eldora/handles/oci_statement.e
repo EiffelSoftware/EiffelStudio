@@ -307,7 +307,9 @@ feature -- Basic operations
 			column_list := Void
 			binds := Void
 			defines := Void
-			sql_text := clone (text)
+			if text /= Void then				
+				sql_text := text.twin
+			end
 			create area.make (sql_text)
 			status := oci_stmt_prepare (handle, error_handler.handle, area.item, text.count,
 					Oci_ntv_syntax, Oci_default)

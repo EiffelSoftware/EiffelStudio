@@ -73,7 +73,7 @@ feature -- For DATABASE_FORMAT
 			-- "= NULL" which does not work.
 		do
 			if object /= Void and then not object.is_empty then
-				Result := clone (object)
+				Result := object.twin
 				Result.replace_substring_all ("'", "''")
 				if Result.count > Max_char_size then
 					Result := break (Result)
@@ -426,7 +426,7 @@ feature -- External features
 			end
 			found := not stmt.eof
 			if found then
-				results.put (clone (stmt.current_row), no_descriptor)
+				results.put (stmt.current_row.twin, no_descriptor)
 			else
 				results.put (Void, no_descriptor)
 			end

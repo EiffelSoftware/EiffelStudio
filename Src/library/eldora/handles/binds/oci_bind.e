@@ -36,7 +36,9 @@ feature -- Basic operations
 			l_handle: like handle
 			temp: WEL_STRING
 		do
-			name := clone (varname)
+			if varname /= Void then				
+				name := varname.twin	
+			end
 			create temp.make (name)
 			status := oci_bind_by_name(stmt.handle, $l_handle, errh.handle, temp.item, name.count, 
 				buffer, data_size, data_type, indicator_ptr, actual_length_ptr, return_code_ptr, 

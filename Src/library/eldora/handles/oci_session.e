@@ -105,7 +105,7 @@ feature -- Basic operations
 			session_inactive: not is_active
 		do
 			set_str_attr (Oci_attr_username, name, error_handler)
-			username := clone(name)
+			username := name.twin
 		ensure
 			definition: username /= Void and then username.is_equal (name)
 		end
@@ -117,7 +117,7 @@ feature -- Basic operations
 			session_inactive: not is_active
 		do
 			set_str_attr (Oci_attr_password, pwd, error_handler)
-			password := clone(pwd)
+			password := pwd.twin
 		ensure
 			definition: password /= Void and then password.is_equal (pwd)
 		end

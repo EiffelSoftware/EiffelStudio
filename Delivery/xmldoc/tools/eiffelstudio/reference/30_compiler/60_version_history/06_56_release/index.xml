@@ -13,7 +13,6 @@
 			<item>Supported aligned and non-aligned verbatim strings. Aligned verbatim strings use characters <code><character>[</character></code> and <code><character>]</character></code> in opening and closing sequence respectively, non-aligned verbatim strings use <code><character>{</character></code> and <code><character>}</character></code>.</item>
 			<item>Added support for manifest type expression "{<class_name>MY_TYPE</class_name>}" which gives an instance of <feature_name>TYPE</feature_name> [<feature_name>MY_TYPE</feature_name>].</item>
 			<item>New syntax for manifest constants, now they can be preceeded by a manifest type expression. For example <number>1</number> is of type <class_name>INTEGER</class_name>, whereas {<class_name>INTEGER_8</class_name>} 1 is of type <class_name>INTEGER_8</class_name>.</item>
-			<item>Added type adaptation expression "{<class_name>MY_TYPE</class_name>} <feature_name>expr</feature_name>" which is of type <class_name>MY_TYPE</class_name>. This new type of expression is valid if and only if <feature_name>expr</feature_name> is compatible with <class_name>MY_TYPE</class_name> (i.e. conforms or converts to <class_name>MY_TYPE</class_name>.</item>
 			<item>Support for <class_name>NATURAL_XX</class_name> types which are unsigned integers.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
@@ -35,6 +34,7 @@
 				</list>
 			</item>
 			<item>In .NET, all usage of <class_name>INTEGER_8</class_name> from .NET libraries have been changed to <class_name>NATURAL_8</class_name>.</item>
+			<item>In .NET, renamed <class_name>TYPE</class_name>, <class_name>ATTRIBUTE_</class_name> and <class_name>VOID_</class_name> from the mscorlib assembly into <class_name>SYSTEM_TYPE</class_name>, <class_name>SYSTEM_ATTRIBUTE</class_name> and <class_name>SYSTEM_VOID</class_name>.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes

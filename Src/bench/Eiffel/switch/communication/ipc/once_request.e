@@ -8,6 +8,10 @@ inherit
 	DEBUG_EXT
 	RECV_VALUE
 	SHARED_DEBUG
+	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -23,7 +27,7 @@ feature
 			-- Has `once_routine' already been called?
 		require
 			exists: once_routine /= Void
-			is_once: once_routine.is_once
+			is_once: feature_i (once_routine).is_once
 		local
 			real_body_id: INTEGER
 		do
@@ -53,8 +57,8 @@ end
 			-- Result of `once_function'
 		require
 			exists: once_function /= Void
-			is_once: once_function.is_once
-			is_function: once_function.is_function
+			is_once: feature_i (once_function).is_once
+			is_function: once_function.type /= Void
 			result_exists: already_called (once_function)
 		local
 			real_body_id: INTEGER
@@ -75,6 +79,17 @@ end
 			end
 		ensure
 			result_exists: Result /= Void
+		end
+
+feature -- Contract support
+
+	feature_i (f: E_FEATURE): FEATURE_I is
+			-- Return the feature_i associated to `f'.
+			--| For contract support only.
+		require
+			valid_f: f /= Void
+		do
+			Result := f.associated_feature_i
 		end
 
 end -- class ONCE_REQUEST	

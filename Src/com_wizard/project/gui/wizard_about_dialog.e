@@ -46,7 +46,7 @@ feature -- Behaviour
 feature {NONE} -- Implementation
 
 	About_eiffelcom: STRING is "EiffelCOM 4.5 Build 5%N%
-						%November 16, 2000%N%N%
+						%December 8, 2000%N%N%
 						%Copyright (C) 1999-2000%N%
 						%Interactive Software Engineering Inc. %N%N%
 						%ISE Building, 2nd floor %N%

@@ -117,12 +117,21 @@ feature {NONE}
 
 	insert_commands is
 		do
-			if command_cmd = Void then end;
+			if command_cmd = Void then end
 			if open_cmd = Void then end
 			if popdown_cmd = Void then end
 			if popup_cmd = Void then end
 			if save_cmd = Void then end
+			if new_cmd = Void then end
 			if undoable_cmd = Void then end
+			if open_window_cmd = Void then end
+			if close_window_cmd = Void then	end
+			if minimize_window_cmd = Void then end
+			if maximize_window_cmd = Void then end
+			if restore_window_cmd = Void then end
+			if reset_to_empty_cmd = Void then end
+			if reset_to_zero_cmd = Void then end
+			if clear_cmd = Void then end
 		end;
 
 end

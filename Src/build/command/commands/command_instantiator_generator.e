@@ -19,21 +19,48 @@ feature -- Creation
 			-- Create a command instantiator with at least
 			-- the predefined commands.
 		local
+			new: NEW_CMD
 			save: SAVE_CMD
 			open: OPEN_CMD
 			popup: POPUP_CMD
 			popdown: POPDOWN_CMD
+			open_window: OPEN_WINDOW_CMD
+			close_window: CLOSE_WINDOW_CMD
+			maximize_window: MAXIMIZE_WINDOW_CMD
+			minimize_window: MINIMIZE_WINDOW_CMD
+			restore_window: RESTORE_WINDOW_CMD
+			reset_to_empty: RESET_TO_EMPTY_CMD
+			reset_to_zero: RESET_TO_ZERO_CMD
+			clear: CLEAR_CMD
 		do
 			!! eiffel_text.make (0)
 			!! command_list.make	
+			!! new.make
 			!! save.make
 			!! open.make
 			!! popup.make
 			!! popdown.make
+			!! open_window.make
+			!! close_window.make
+			!! maximize_window.make
+			!! minimize_window.make
+			!! restore_window.make
+			!! reset_to_empty.make
+			!! reset_to_zero.make
+			!! clear.make
+			add_command (new)
 			add_command (open)
 			add_command (save)
 			add_command (popup)
 			add_command (popdown)
+			add_command (open_window)
+			add_command (close_window)
+			add_command (maximize_window)
+			add_command (minimize_window)
+			add_command (restore_window)
+			add_command (reset_to_empty)
+			add_command (reset_to_zero)
+			add_command (clear)
 		end
 
 feature {NONE} -- Attributes
@@ -56,7 +83,7 @@ feature -- Access
 			-- Add `a_command' in `command_list'.
 		do
 			command_list.extend (a_command)
---			overwrite_text
+			overwrite_text
 		end
 
 	remove_command (a_command: CMD) is
@@ -64,7 +91,7 @@ feature -- Access
 		do
 			command_list.start
 			command_list.prune (a_command)
---			overwrite_text
+			overwrite_text
 		end
 	
 	update_command is
@@ -218,7 +245,7 @@ feature {NONE} -- Code generation
 					Result.append_integer (i)
 					Result.append (" ?= creation_arg @ ")
 					Result.append_integer (i)
-					result.append ("%N")
+					Result.append ("%N")
 					a_cmd.arguments.forth
 					i := i + 1
 				end

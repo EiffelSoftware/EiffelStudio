@@ -35,9 +35,12 @@ feature {NONE} -- Initialization
 			-- widgets.
 		do
 			implementation.widget_make (Current)
-			if par /= Void then
+
+			if (par /= Void) then
 				managed := par.manager
 				implementation.set_parent (par)
+			else
+				managed := False
 			end
 		ensure
  			exists: not destroyed
@@ -267,6 +270,12 @@ feature -- Element change
 		require
 			exists: not destroyed
 		do
+			if (par /= Void) then
+				managed := par.manager
+			else
+				managed := False
+			end
+
 			implementation.set_parent (par)
 		ensure
 			parent_set: parent = par

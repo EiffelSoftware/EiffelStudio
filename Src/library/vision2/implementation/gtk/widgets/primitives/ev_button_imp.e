@@ -53,9 +53,10 @@ inherit
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 		export
 			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
-		redefine
-			interface,
+		undefine
 			visual_widget
+		redefine
+			interface
 		end
 
 create

@@ -18,12 +18,7 @@ feature -- Properties
 		local
 			tabs_resource: STRING
 		once
-			if tabs_disabled_for_the_platform then
-				Result := True
-			else
-				tabs_resource := resources.get_string (r_Tabs, Void);
-				Result := tabs_resource /= Void and then tabs_resource.empty
-			end
+			Result := resources.get_boolean (r_Tabs_disabled, False);
 		end;
 
 	default_tab_length: INTEGER_REF is
@@ -66,13 +61,6 @@ feature -- Settings
 		ensure
 			assigned: default_tab_length.item = new_length
 		end;
-
-feature {NONE} -- Externals
-
-	tabs_disabled_for_the_platform: BOOLEAN is
-		external
-			"C"
-		end
 
 invariant
 

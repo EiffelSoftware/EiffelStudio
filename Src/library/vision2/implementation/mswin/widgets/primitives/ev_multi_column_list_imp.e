@@ -214,10 +214,18 @@ feature -- Status report
 			Result := not flag_set (style, Lvs_nocolumnheader)
 		end
 
-	get_column_width (column: INTEGER): INTEGER is
-			-- Make `value' the new width of the one-based column.
+	column_width (column: INTEGER): INTEGER is
+			-- Width of the one-based `column'.
 		do
 			Result := wel_get_column_width (column - 1)
+		end
+	
+	column_title (column: INTEGER): STRING is
+			-- Title of the one-based `column'
+		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 feature -- Status setting
@@ -396,7 +404,7 @@ feature -- Element change
 					counter = columns
 				loop
 					current_width := current_width 
-						- get_column_width (counter)
+						- column_width (counter)
 					counter:= counter + 1
 				end
 				wel_set_column_width (current_width, column - 1)
@@ -448,14 +456,14 @@ feature -- Element change
 					if current_width > last_column_width_setting then
 						wel_set_column_width 
 							(current_width, counter - 1)
-					elseif current_width < get_column_width (counter)
+					elseif current_width < column_width (counter)
 						then 
 						wel_set_column_width
 							(last_column_width_setting, counter - 1)
 					end
 				end
 				current_width := current_width - 
-					get_column_width (counter)
+					column_width (counter)
 				counter := counter + 1
 			end
 		end
@@ -859,6 +867,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/03 19:33:19  rogers
+--| renamed get_column_width -> column_width and changed all internal calls accordingly, added column_title which is still to be implemented.
+--|
 --| Revision 1.40  2000/03/03 19:10:02  rogers
 --| Redefined extend from EV_ITEM_LIST_IMP, added a boolean, first_addition which holds whether the addition is the first addition after creation. Implemented set_columns.
 --|

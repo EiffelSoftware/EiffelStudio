@@ -34,6 +34,7 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include "rt_lmalloc.h"		/* for eif_malloc() */
 #include "rt_macros.h"
 #include "rt_dir.h"
+#include "rt_threads.h"
 #include "x2c.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
@@ -498,6 +499,16 @@ rt_public void eif_free_dlls(void)
 }
 
 #endif /* EIF_WINDOWS */
+
+#ifndef EIF_WINDOWS
+rt_public pid_t eiffel_fork(void) {
+#ifdef EIF_THREADS
+	return eif_thread_fork();
+#else
+	return fork();
+#endif
+}
+#endif
 
 /*
 doc:</file>

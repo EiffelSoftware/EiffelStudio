@@ -31,7 +31,9 @@ inherit
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
 			interface,
-			extend
+			extend,
+			put_front,
+			put_right
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
@@ -232,7 +234,9 @@ feature -- Status report
 
 feature -- Status setting
 
-	extend (v: like item)is
+	extend (v: like item) is
+			-- If `v' not already in list add to end.
+			-- Do not move cursor.
 		do
 			if not first_addition then
 				first_addition := True
@@ -241,7 +245,35 @@ feature -- Status setting
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
 
+	put_right (v: like item) is
+			-- Add `v' to the right of cursor position.
+			-- Do not move cursor.
+		do
+			if not first_addition then
+				first_addition := True
+				set_columns (v.columns)
+			end
+			{EV_ITEM_LIST_IMP} Precursor (v)
+		end
+		
+	put_front (v: like item) is
+			-- Add `v' to front.
+			-- Do not move cursor.
+		local
+			original_index: INTEGER
+		do
+			if not first_addition then
+				first_addition := True
+				set_columns (v.columns)
+			end
+			{EV_ITEM_LIST_IMP} Precursor (v)
+		end
+
+
 	first_addition: Boolean
+		-- Is this the first addition?
+		-- We need this, as if set_columns has not already been called then
+		-- we must set the number of columns before adding the row.
 
 	set_columns (c: INTEGER)is
 			-- Assign `i' to `columns'.
@@ -872,6 +904,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/06 22:30:59  rogers
+--| Redefined put_right and put_front so if this is the first addition, we can set the columns before adding the new row.
+--|
 --| Revision 1.43  2000/03/06 17:13:33  rogers
 --| Added calls to row select and deselect actions. Added call to column_click_actions.
 --|

@@ -77,10 +77,16 @@ feature -- Feature specific to ISE runtime.
 			"C | %"eif_out.h%""
 		end
 
-	frozen c_generator (some: POINTER): STRING is
+	frozen c_generator_of_type (type_id: INTEGER): STRING is
 			-- Name of the generating class of current object
 		external
 			"C | %"eif_out.h%""
+		end
+
+	frozen c_generator (some: POINTER): STRING is
+			-- Name of the generating class of current object
+		external
+			"C macro use %"eif_out.h%""
 		end
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN is
@@ -92,11 +98,18 @@ feature -- Feature specific to ISE runtime.
 
  	frozen c_generating_type (obj: POINTER): STRING is
  		external
- 			"C | %"eif_gen_conf.h%""
+ 			"C macro use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename"
  		end
 
+ 	frozen c_generating_type_of_type (type_id: INTEGER): STRING is
+ 		external
+ 			"C | %"eif_gen_conf.h%""
+ 		alias
+ 			"eif_gen_typename_of_type"
+ 		end
+ 
 feature -- Internal C routines
 
 	type_id_from_name (s: POINTER): INTEGER is

@@ -54,7 +54,7 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 		char_write,
 		flush_st_buffer,
 		st_write,
-		(void *) (0),
+		(void (*)()) 0,
 		0,
 		EIF_BUFFER_SIZE);
 

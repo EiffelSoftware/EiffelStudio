@@ -1590,6 +1590,8 @@ feature {NONE} -- Implementation
 			-- Size of `file'
 		external
 			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
+		alias
+			"eif_file_size"
 		end
 
 	file_tnil (file: POINTER) is

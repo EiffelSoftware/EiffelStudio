@@ -39,18 +39,27 @@ feature {NONE} -- Initialization
 			-- Fill with supported Widgets.
 		local
 			tree_item1, tree_item2, tree_item3: EV_TREE_ITEM
-				--	shared_pixmaps: GB_SHARED_PIXMAPS
+			pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TREE}
 			create tree_item1.make_with_text ("Widgets")
-			tree_item1.set_pixmap (pixmap_by_type (tree_item1.text.as_lower))
+			pixmap := pixmap_by_type (tree_item1.text.as_lower)
+			if pixmap /= Void then
+				tree_item1.set_pixmap (pixmap)	
+			end
 			extend (tree_item1)
 			create tree_item3.make_with_text ("Containers")
-			tree_item3.set_pixmap (pixmap_by_type (tree_item3.text.as_lower))
+			pixmap := pixmap_by_type (tree_item3.text.as_lower)
+			if pixmap /= Void then
+				tree_item3.set_pixmap (pixmap)	
+			end
 			tree_item1.extend (tree_item3)
 			add_tree_items (containers, tree_item3)
 			create tree_item2.make_with_text ("Primitives")
-			tree_item2.set_pixmap (pixmap_by_type (tree_item2.text.as_lower))
+			pixmap := pixmap_by_type (tree_item2.text.as_lower)
+			if pixmap /= Void then
+				tree_item2.set_pixmap (pixmap)	
+			end
 			tree_item1.extend (tree_item2)
 			add_tree_items (primitives, tree_item2)
 				-- Expand the types when the project is started.
@@ -106,11 +115,8 @@ feature {NONE} -- Implementation
 				create Result
 				Result.set_with_named_file (filename.out)
 			else
-				create Result
 				Missing_files.extend (a_type.as_lower + "." + extension)
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 	containers: ARRAY [STRING] is
@@ -135,7 +141,8 @@ feature {NONE} -- Implementation
 			-- Add items corresponding to contents of `list' to `tree_item'.
 		local
 			counter: INTEGER
-			new_item: EV_TREE_ITEM--GB_TYPE_SELECTOR_ITEM
+			new_item: EV_TREE_ITEM
+			pixmap: EV_PIXMAP
 		do
 			from
 				counter := 1
@@ -143,7 +150,10 @@ feature {NONE} -- Implementation
 				counter = list.count + 1
 			loop
 				create new_item.make_with_text (list @ counter)
-				new_item.set_pixmap (pixmap_by_type (new_item.text))
+				pixmap := pixmap_by_type (new_item.text)
+				if pixmap /= Void then
+					new_item.set_pixmap (pixmap)
+				end
 				tree_item.extend (new_item)
 				counter := counter + 1
 			end

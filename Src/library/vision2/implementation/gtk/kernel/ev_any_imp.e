@@ -45,11 +45,12 @@ feature {EV_ANY_I} -- Access
 			a_c_object_not_null: a_c_object /= NULL
 		do
 			c_object := a_c_object
-			debug ("EV_GTK_DEBUG")
-				print (generator + ".set_c_object new eif_object "
-					+ out.substring (1, out.index_of ('%N', 1) - 1)
-					+ " and new c_object " + c_object.out  +
-					" and new eif_oid " + object_id.out + "%N")
+			debug ("EV_GTK_CREATION")
+				print (generator + " created%N")
+			--	print (generator + ".set_c_object new eif_object "
+			--		+ out.substring (1, out.index_of ('%N', 1) - 1)
+			--		+ " and new c_object " + c_object.out  +
+			--		" and new eif_oid " + object_id.out + "%N")
 			end
 			set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
 		ensure
@@ -128,12 +129,15 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
+		local
+			a_connection_id: INTEGER
 		do
-			c_signal_connect_true (
+			a_connection_id := c_signal_connect_true (
 				c_object,
 				eiffel_to_c (a_signal_name),
 				an_agent
 			)
+			signal_ids.extend (a_connection_id)
 		end
 
 	real_signal_connect (
@@ -194,7 +198,7 @@ feature {EV_ANY_I} -- Event handling
 		end
 
 	opo_action_sequences: ARRAYED_LIST [ACTION_SEQUENCE [TUPLE]]
-			-- Once per object for implmentation for `action_sequences'.
+			-- Once per object for implementation for `action_sequences'.
 
 
 	f_of_tuple_type_id: INTEGER is once Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]}) end
@@ -572,9 +576,9 @@ feature {NONE} -- Implementation
 			--| Same for gtk_signal_disconnect_by_data.
 		do
 			-- FIXME this may not be safe!
-			--debug ("EV_GTK_DEBUG")
-			--	safe_print (generator + ".dispose")
-			--end
+			debug ("EV_GTK_DISPOSE")
+				safe_print (generator + ".dispose")
+			end
 			if c_object /= NULL then
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c
@@ -589,7 +593,7 @@ feature {NONE} -- Implementation
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			debug ("EV_GTK_DEBUG")
+			debug ("EV_GTK_DISPOSE")
 				safe_print (generator + ".c_object_dispose")
 			end
 			c_object := NULL
@@ -617,6 +621,18 @@ feature {NONE} -- Implementation
 			-- access default visual information (color depth).
 		do
 			Result := C.gtk_widget_struct_window (default_gtk_window)
+		end
+	
+	app_implementation: EV_APPLICATION_IMP is
+			-- 
+		local
+			env: EV_ENVIRONMENT
+		once
+			create env
+			Result ?= env.application.implementation
+			check
+				Result_not_void: Result /= Void
+			end
 		end
 
 feature {NONE} -- External implementation
@@ -657,10 +673,10 @@ feature {NONE} -- External implementation
 		end
 
 	c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]) is
+		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
-			"C (GtkObject*, gchar*, EIF_OBJECT)| %"ev_gtk_callback_marshal.h%""
+			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
 		alias
 			"c_ev_gtk_callback_marshal_signal_connect_true"
 		end
@@ -797,6 +813,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/29 20:03:01  king
+--| Added better debugging tags for object life
+--|
 --| Revision 1.13  2001/06/07 23:08:02  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -127,6 +127,24 @@ feature -- Element change
 			managed_data.put_integer_8 (0, nb)
 		end
 
+	set_count (a_count: INTEGER) is
+			-- Set `count' with `a_count'.
+			-- Note: Current content from index `1' to
+			-- `count.min (a_count)' is unchanged.
+		require
+			a_count_non_negative: a_count > 0
+		local
+			new_size: INTEGER
+		do
+			new_size := a_count + 1
+			if managed_data.count < new_size then
+				managed_data.resize (new_size)
+			end
+			count := a_count
+		ensure
+			count_set: count = a_count
+		end
+		
 feature {NONE} -- Implementation
 
 	managed_data: MANAGED_POINTER

@@ -97,6 +97,16 @@ feature -- Access
 			-- Is entity marked with `virtual' flag in metadata?
 		do
 		end
+
+	is_infix: BOOLEAN is
+			-- Is function an infix feature?
+		do
+		end
+			
+	is_prefix: BOOLEAN is
+			-- Is function a prefix feature?
+		do
+		end
 		
 feature -- ConsumerWrapper functions
 

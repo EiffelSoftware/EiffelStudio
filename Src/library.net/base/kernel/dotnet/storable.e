@@ -146,7 +146,7 @@ feature -- Element change
 				file.close
 			else
 				a := ("write permission failure").to_cil
-				feature {EXCEPTION_MANAGER}.raise (create {IOEXCEPTION}.make_ioexception_1 (a))
+				feature {EXCEPTION_MANAGER}.raise (create {IOEXCEPTION}.make_from_message (a))
 			end
 		end
 

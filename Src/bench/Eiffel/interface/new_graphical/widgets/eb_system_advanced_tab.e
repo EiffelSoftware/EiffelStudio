@@ -155,13 +155,13 @@ feature -- Store/Retrieve
 			if mt_runtime_check.is_sensitive then
 				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded, Void,
 					mt_runtime_check.is_selected))
-				if shared_library_check.is_selected then
-					l_name := shared_library_field.text
-					if l_name.is_empty then
-						l_name := " "
-					end
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.shared_library_definition,
-						l_name, True))
+			end
+
+			if shared_library_check.is_sensitive and then shared_library_check.is_selected then
+				l_name := shared_library_field.text
+				if not l_name.is_empty then
+					defaults.extend (new_special_option_sd (
+						feature {FREE_OPTION_SD}.shared_library_definition, l_name, True))
 				end
 			end
 		end

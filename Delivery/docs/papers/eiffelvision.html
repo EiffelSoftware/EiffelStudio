@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>EiffelVision</title>
+<title>New Page 1</title>
 <link rel="stylesheet" href="../styles/tech.css" type="text/css">
 <meta name="Microsoft Border" content="t, default">
 </head>
@@ -13,11 +13,11 @@
   <tr>
     <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
       Software Engineering</font></b></td>
-    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelVision</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
   </tr>
   <tr>
     <td colspan="2" valign="top" width="100%">
-<p align="center"><nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<p align="center">
 <hr>
 
     </td>
@@ -34,6 +34,7 @@ Projects:</p>
   <li><a href="#How to configure your Ace file">How to configure your Ace file</a></li>
   <li><a href="#Some working examples">Some working examples</a></li>
 </ul>
+<p>A pdf documentation of EiffelVision is available here.
 <p>The EiffelVision library provides a solution to one of the central needs of
 software developers: a high-level approach to graphical development. In
 particular, EiffelVision is one of the few products that support both
@@ -87,11 +88,11 @@ specificities, made more general and more powerful, EiffelVision will be even
 more simple and intuitive to use, allowing a beginner to put together a
 graphical application very quickly. The result, of course, will be fully
 portable.
-<p>Task 2 has led to the design of a new library: <a href="wel/index.html">WEL</a>
+<p>Task 2 has led to the design of a new library: <a href="http://www.eiffel.com/doc/manuals/technology/library/wel/page.html">WEL</a>
 (the Windows Eiffel Library). WEL is an encapsulation of the Windows graphical
 API, meant for those developers who are focusing on Windows and want to have
 access to the entire set of mechanisms of that platform.
-<p>Similarly, the Motif-specific part is now encapsulated in a new library: <a href="mel.html">MEL</a>
+<p>Similarly, the Motif-specific part is now encapsulated in a new library: <a href="http://www.eiffel.com/products/mel.html">MEL</a>
 (the Motif Eiffel Library).
 <p>EiffelVision, WEL, MEL and similar libraries are not separate developments:
 the platform-specific parts of New EiffelVision are entirely programmed on top
@@ -158,7 +159,7 @@ graphical applications under Windows simply, safely and effectively - whether or
 not such a person is already an Eiffel user. To such people, WEL provides a much
 nicer interface than the other techniques that we know of. This is due to the
 benefits of the Eiffel approach -- abstraction, inheritance, command classes,
-reusable components from EiffelBase
+reusable components from <a href="http://www.eiffel.com/products/base.html">EiffelBase</a>
 etc.</p>
 <p>&nbsp;</p>
 <h1><a name="Getting Started">Getting Started</a></h1>
@@ -198,8 +199,7 @@ you must follow these steps:<br>
 <h1><a name="How to configure your Ace file">How to configure your Ace file</a></h1>
 <p>In order to use EiffelVision in an Eiffel Project, you have to include in your
 project, the right clusters and the right external files. Thus, you need to
-configure your Ace file.</p>
-<p>
+configure your Ace file.<br>
 You can get all the information about Ace files <a href="lace.html">here</a>.</p>
 <p>However, we <b>strongly</b> recommend you to use the precompiled version of
 EiffelVision, as the compilation of this library is pretty long.</p>
@@ -235,13 +235,47 @@ following clusters. :</p>
 <p><b>all mel: &quot;$EIFFEL4/library/mel/&quot;;</b></p>
 <p>If you want to use WEL library, you can include in your Ace file :</p>
 <p><b>all wel: &quot;$EIFFEL4/library/wel/&quot;;</b></p>
+<p>Then, you need to include some internals to use EiffelVision:</p>
+<ul>
+  <li><b><u>For Windows</u></b></li>
+</ul>
+<p><i>external</i><br>
+</p>
+<p>&nbsp;&nbsp;&nbsp; <b>include_path:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$(EIFFEL4)\library\wel\spec\windows\include&quot;;<br>
+<br>
+&nbsp;&nbsp;&nbsp; object:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib&quot;;</b><br>
+</p>
+<ul>
+  <li><b><u>For Unix</u></b></li>
+</ul>
+<p><i>external</i><br>
+<br>
+&nbsp;&nbsp;<b>&nbsp; include_path:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$(EIFFEL4)/library/mel/Clib&quot;;<br>
+<br>
+&nbsp;&nbsp;&nbsp; object:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&quot;-lXm -lXt -lX11 -lXext -lXp"</b></p>
 <p>To see some Working Example of Ace file, you can check our <a href="#Some working examples">Examples</a>.&nbsp;</p>
-<p>A pdf documentation of EiffelVision is also available here.</p>
+<p>&nbsp;</p>
 <h1><a name="Some working examples">Some working examples</a></h1>
 <p>We developed a few examples using EiffelVision that you can try to see how to
 use this library.</p>
 <p>They are located in <b>&quot;$EIFFEL4/examples/vision&quot;</b></p>
+<p>You can especially check the example : test_all_widgets, located in <b>&quot;$EIFFEL4/examples/vision/test_all_widgets&quot;</b></p>
 <p>&nbsp;</p>
-&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+<p>&nbsp;</p>
+&nbsp;
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

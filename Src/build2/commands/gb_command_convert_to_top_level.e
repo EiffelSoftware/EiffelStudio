@@ -69,11 +69,50 @@ feature -- Basic Operation
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
+			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
 			child_object := Object_handler.deep_object_from_id (child_id)
 
 			new_object := Object_handler.deep_object_from_id (child_id).new_top_level_representation
 			new_object_id := new_object.id
+			
+				-- Now perform processing to ensure that each time `execute' is called we end up with
+				-- a structure containing objects with identical ids. See comment for `original_ids'.
+			if not executed_once then
+					-- As this is the first time, record all ids in the structure.
+				create all_children.make (50)
+				new_object.all_children_recursive (all_children)
+				create original_ids.make (50)
+				original_ids.extend (new_object.id)
+				from
+					all_children.start
+				until
+					all_children.off
+				loop
+					original_ids.extend (all_children.item.id)
+					all_children.forth
+				end
+			else
+					-- As this is not the first execution, restore the original ids into the new structure.
+				create all_children.make (50)
+				new_object.all_children_recursive (all_children)
+				check
+					counts_consistent: all_children.count + 1 = original_ids.count
+				end
+				object_handler.objects.print (new_object.id)
+				new_object.set_id (original_ids.i_th (1))
+				object_handler.objects.put (new_object, new_object.id)
+				from
+					all_children.start
+				until
+					all_children.off
+				loop
+					object_handler.objects.print (all_children.item.id)
+					all_children.item.set_id (original_ids.i_th (all_children.index + 1))
+					object_handler.objects.put (all_children.item, all_children.item.id)
+					all_children.forth
+				end
+			end
 			
 			create window_selector_item.make_with_object (new_object)
 			create display_win
@@ -129,6 +168,7 @@ feature -- Basic Operation
 				history.add_command (Current)
 			end
 			command_handler.update
+			executed_once := True
 		end			
 		
 	undo is
@@ -240,6 +280,8 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
+	executed_once: BOOLEAN
+
 	new_object, child_object: GB_OBJECT
 		-- Current representations of `new_object_id' and `child_id'. These may change
 		-- each time we execute or undo.
@@ -250,8 +292,18 @@ feature {NONE} -- Implementation
 	new_object_id: INTEGER
 		-- Id of representation of object with id `child_id' that is created.
 		
+	original_ids: ARRAYED_LIST [INTEGER]
+		-- All original ids of objects contained in new object created first time that `Current' is
+		-- executed. As each time we re-execute `Current' we create a new object structure so that any
+		-- modified properties are not lost, we need to keep all of the original ids to set them back
+		-- into the structure each time that it is subsequently created. Otherwise, if you convert a structure
+		-- to a top level structure and then build into it, undoing the history and redoing causes EiffelBuild
+		-- to crash as the add command cannot find the object with the same id as was originally built into.
+		-- As soon as there is a way to implement `Current' without re-building the structure each time,
+		-- this step should be no longer required.
+		
 	original_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-		-- Original directory item in which obejct represented by `new_object_id' was parented.
+		-- Original directory item in which object represented by `new_object_id' was parented.
 		
 	name: STRING
 		-- Name used for the new object that is created.

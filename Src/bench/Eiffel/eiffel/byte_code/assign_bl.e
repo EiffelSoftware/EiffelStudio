@@ -574,7 +574,7 @@ feature
 			int ?= other
 			if
 				binary.is_additive and then not (int = Void)
-				and then (int.lower = 1 and int.upper = 0)
+				and then int.is_one
 			then
 				binary.generate_plus_plus
 			else

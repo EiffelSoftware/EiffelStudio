@@ -424,6 +424,8 @@ feature -- Formatting
 				end
 				ctxt.put_text_item (ti_After_creators)
 				ctxt.new_line
+					-- We reset `ctxt' so that we can print again.
+				ctxt.set_last_was_printed (True)
 			end;		
 			ctxt.format_categories;	
 			ctxt.format_invariants;	

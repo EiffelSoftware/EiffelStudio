@@ -15,6 +15,10 @@ inherit
 			implementation
 		end
 
+create
+	default_create,
+	make_for_test
+
 feature -- Access
 
 	has (v: like item): BOOLEAN is
@@ -106,6 +110,9 @@ end -- class EV_CELL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.5  2000/03/01 03:22:12  oconnor
 --| reverted last commit which was in error
 --|

@@ -15,7 +15,8 @@ inherit
 		redefine
 			implementation,
 			create_action_sequences,
-			is_in_default_state
+			is_in_default_state,
+			make_for_test
 		end
 
 feature {NONE} -- Initialization
@@ -30,6 +31,21 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			reset_with_range (a_range)
+		end
+
+	make_for_test is
+		local
+			step_timer: EV_TIMEOUT
+			reset_timer: EV_TIMEOUT
+		do
+			{EV_PRIMITIVE} Precursor
+			set_minimum (0)
+			set_maximum (10)
+			set_step (1)
+			create step_timer.make_with_interval (1000)
+			step_timer.actions.extend (~step_forward)
+			create reset_timer.make_with_interval (10000)
+			reset_timer.actions.extend (~set_value (0))
 		end
 
 feature -- Events
@@ -271,6 +287,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.10  2000/02/19 20:24:42  brendel
 --| Updated copyright to 1986-2000.
 --|

@@ -19,7 +19,8 @@ inherit
 	
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_for_test
 	
 feature {NONE} -- Initialization
 
@@ -205,6 +206,9 @@ end -- class EV_TEXT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/01 03:27:40  oconnor
+--| added make_for_test
+--|
 --| Revision 1.15  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|

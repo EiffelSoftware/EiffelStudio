@@ -11,6 +11,10 @@ indexing
 class
 	EV_HORIZONTAL_SCALE
 
+create
+	default_create,
+	make_for_test
+
 inherit
 	EV_SCALE
 
@@ -37,6 +41,9 @@ end -- class EV_HORIZONTAL_SCALE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.6  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|

@@ -25,7 +25,8 @@ inherit
 
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_for_test
 
 feature {NONE} -- Implementation
 
@@ -62,6 +63,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.8  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

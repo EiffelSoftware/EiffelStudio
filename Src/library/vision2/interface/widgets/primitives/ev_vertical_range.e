@@ -17,7 +17,8 @@ inherit
 
 create
 	default_create,
-	make_with_range
+	make_with_range,
+	make_for_test
 
 feature -- Implementation
 
@@ -53,6 +54,9 @@ end -- class EV_VERTICAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/01 03:26:21  oconnor
+--| added make_for_test
+--|
 --| Revision 1.5  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

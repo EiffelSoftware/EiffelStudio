@@ -13,17 +13,26 @@ inherit
 	EV_VIEWPORT 
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			make_for_test
 		end
 
 create
-	default_create
+	default_create,
+	make_for_test
 
 feature {NONE} -- Initialization
 
 	create_implementation is
 		do
 			create {EV_SCROLLABLE_AREA_IMP} implementation.make (Current)
+		end
+
+	make_for_test is
+		do
+			default_create
+			extend (create {EV_LABEL}.make_with_text ("Label in a scrollable area."))
+			item.set_minimum_size (150,150)
 		end
 
 feature -- Access
@@ -147,6 +156,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.11  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|

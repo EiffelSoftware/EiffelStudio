@@ -15,6 +15,7 @@ indexing
 class 
 	EV_COMBO_BOX
 
+
 inherit
 	EV_TEXT_FIELD
 		redefine
@@ -34,7 +35,8 @@ inherit
 		end
 
 create	
-	default_create
+	default_create,
+	make_for_test
 
 feature -- Access
 
@@ -96,6 +98,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/01 03:30:06  oconnor
+--| added make_for_test
+--|
 --| Revision 1.27  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|

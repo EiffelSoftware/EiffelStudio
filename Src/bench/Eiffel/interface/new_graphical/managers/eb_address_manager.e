@@ -2113,14 +2113,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	Big_font: EV_FONT is
 			-- Font used to highlight labels.
-		local
-			orig_font: EV_FONT
-			csts: EV_FONT_CONSTANTS
 		do
-			create csts
-			orig_font := Default_font
-			create Result.make_with_values (
-				orig_font.family, csts.Weight_black, orig_font.shape, orig_font.height)
+			Result := Default_font
+			Result.set_weight (feature {EV_FONT_CONSTANTS}.Weight_black)
 		end
 
 	Default_font: EV_FONT is

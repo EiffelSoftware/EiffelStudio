@@ -8,14 +8,14 @@ class
 	RANGE_WINDOW
 
 inherit
-	DEMO_WINDOW
-
 	EV_HORIZONTAL_RANGE
 		redefine
 			make
 		end
 
-create
+	DEMO_WINDOW
+
+creation
 	make
 
 feature {NONE} -- Initialization
@@ -25,15 +25,18 @@ feature {NONE} -- Initialization
 			-- We create the table first without parent as it
 			-- is faster.
 		do
-			{EV_HORIZONTAL_RANGE} Precursor (par)
+			{EV_HORIZONTAL_RANGE} Precursor (Void)
+
+			set_gauge_tabs
+			create range_tab.make(Void)
+			tab_list.extend(range_tab)
+			create action_window.make(Current,tab_list)
+			make_with_range (par, 0, 100)
+			set_parent(par)
 		end
 
-feature -- Access
 
-	r1: EV_VERTICAL_RANGE
-	r2: EV_HORIZONTAL_RANGE
-	s1: EV_HORIZONTAL_SEPARATOR
-	s2: EV_VERTICAL_SEPARATOR
-	t1: EV_LABEL
+
+	range_tab: RANGE_TAB
 
 end -- class RANGE_WINDOW

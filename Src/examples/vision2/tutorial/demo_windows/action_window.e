@@ -45,6 +45,7 @@ feature -- Initialization
 				tabs.item.set_current_widget (current_widget)
 				tab_title:=tabs.item.name
 				n1.append_page(tabs.item,tab_title)
+				
 				tabs.forth
 			end
 			create cmd.make (~my_function)

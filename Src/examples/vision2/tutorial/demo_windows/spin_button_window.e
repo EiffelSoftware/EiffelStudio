@@ -8,12 +8,12 @@ class
 	SPIN_BUTTON_WINDOW
 
 inherit
-	DEMO_WINDOW
-
-	EV_VERTICAL_BOX
+	EV_SPIN_BUTTON
 		redefine
 			make
 		end
+
+	DEMO_WINDOW
 
 creation
 	make
@@ -22,18 +22,24 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
-			-- We create the box first without parent because it
+			-- We create the spin button first without parent because it
 			-- is faster.
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
-
-			create s1.make(Current)
+			{EV_SPIN_BUTTON} Precursor (par)
+			set_gauge_tabs
+			create spin_button_tab.make(Void)
+			tab_list.extend(spin_button_tab)
+			create action_window.make(Current,tab_list)
+		--	make_with_range (par, 0, 100)
+			set_parent(par)
 		
 		end
 
 feature -- Access
 
-	s1: EV_SPIN_BUTTON
+	spin_button_tab: SPIN_BUTTON_TAB
+
+	
 	
 end -- class SPIN_BUTTON_WINDOW
 

@@ -111,6 +111,8 @@ feature {NONE}
 			end
 		end;
 
+feature {STRIP_B, SYSTEM_I}
+
 	Array_type: GEN_TYPE_I is
 			-- Default array type
 		local

@@ -702,9 +702,9 @@ feature -- Text Loading
 	load_text (s: STRING) is
 			-- Display `s' in the Editor
 		do
-			editor_area.disable_sensitive
+--			editor_area.disable_sensitive
 			Precursor (s)
-			editor_area.enable_sensitive
+--			editor_area.enable_sensitive
 		end
 
 feature {NONE} -- Implementation

@@ -108,17 +108,16 @@ feature -- Status setting
 			end			
 		end
 		
-	set_first_line_displayed (fld: INTEGER) is
-			-- Assign `fld' to `first_line_displayed'.
+	synchronize_with_text_panel (old_line: INTEGER)is
+			-- Synchronize with text panel
 		require
-			fld_large_enough: fld > 0
+			old_line_large_enough: old_line > 0
 		local
 			diff, y_offset: INTEGER
 			zone: EV_RECTANGLE
 		do
-			diff := fld - first_line_displayed
-			if diff /= 0 then
-				first_line_displayed := fld
+			diff := first_line_displayed - old_line
+			if diff /= 0 then				
 				if diff.abs < text_panel.number_of_lines_displayed then
 					if diff < 0 then
 						y_offset := buffered_screen.height + diff * text_panel.line_height
@@ -197,8 +196,11 @@ feature {NONE} -- Implementation
 	in_resize: BOOLEAN
 			-- Are we in a call to on_resize that was not triggered by the function itself?
 
-	first_line_displayed: INTEGER
+	first_line_displayed: INTEGER is
 			-- First line currently displayed
+		do
+			Result := text_panel.first_line_displayed
+		end
 
 	default_width: INTEGER is 5
 			-- Default character width of margin for when number of lines is less than 100,000

@@ -74,6 +74,9 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do	
+				-- First display the first line...
+			first_line_displayed := 1
+			
 			panel_manager.add_panel (Current)
 			initialize_editor_context
 		
@@ -100,16 +103,11 @@ feature {NONE} -- Initialization
 			update_scroll_agent := agent update_scrollbars_display
 			
 			main_vbox.set_background_color (editor_preferences.normal_background_color)
-			inner_hbox.set_background_color (editor_preferences.normal_background_color)
-			main_vbox.propagate_background_color
-			
+			inner_hbox.set_background_color (editor_preferences.normal_background_color)			
 
 			----------------------------
 			-- General initialisation --
 			----------------------------
-
-				-- First display the first line...
-			first_line_displayed := 1
 
 				-- Compute Font related constants.
 			number_of_lines_displayed := editor_area.height // line_height
@@ -173,7 +171,7 @@ feature -- Status Setting
 		require
 			text_not_void: a_text /= Void
 		do
-			text_displayed := a_text
+			text_displayed := a_text			
 		end		
 		
 	display_line_with_context (l_number: INTEGER) is
@@ -200,9 +198,7 @@ feature -- Status Setting
 		end	
 		
 	setup_editor (first_line_to_display: INTEGER) is
-			-- Update `Current' as the first page of the new content has been loaded.
---		require
---			first_page_loaded: text_is_fully_loaded or else number_of_lines >= number_of_lines_displayed
+			-- Update `Current' to display at line `first_line_to_display' on current text.
 		local
 			i: INTEGER
 		do
@@ -308,7 +304,7 @@ feature -- File Properties
 				end
 			else
 				Result := True
-			end
+			end			
 		rescue
 			retried := True
 			retry
@@ -413,6 +409,7 @@ feature -- Basic Operations
 		    l_file: RAW_FILE
 		    l_doc_type: STRING
   	   	do
+  	   		editor_area.disable_sensitive
   	   			-- Check the document type of the file to load.
   	   		l_doc_type := a_filename.substring (a_filename.last_index_of ('.', a_filename.count) + 1, a_filename.count)
   	   		if l_doc_type /= Void and then known_document_type (l_doc_type) then
@@ -464,11 +461,8 @@ feature -- Graphical interface
 			Result := editor_area.pointer_style
 		end
 
-	buffered_screen: EV_PIXMAP --is
+	buffered_screen: EV_PIXMAP
 			-- Buffer containing the current displayed screen.
---		once
---			create Result
---		end
 
 	left_margin_buffered_screen: EDITOR_BUFFERED_SCREEN
 			-- Buffer containing the current displayed left margin.  This is the margin area IN THE EDITOR, not
@@ -579,9 +573,10 @@ feature -- Status Setting
 			fld_large_enough: fld > 0
 			fld_small_enough: fld <= text_displayed.number_of_lines.max (1)
 		local
-			diff, y_offset: INTEGER
+			diff, y_offset, prev_line: INTEGER
 			zone: EV_RECTANGLE
 		do			
+			prev_line := first_line_displayed
 			diff := fld - first_line_displayed
 			if diff /= 0 then
 				first_line_displayed := fld					
@@ -609,7 +604,7 @@ feature -- Status Setting
 				end					
 					-- Setup the new vertical position.
 				vertical_scrollbar.set_value (first_line_displayed)
-				margin.set_first_line_displayed (first_line_displayed)
+				margin.synchronize_with_text_panel (prev_line)
 			end			
 		end
 
@@ -673,7 +668,11 @@ feature {NONE} -- Scroll bars Management
 			if show_vertical_scrollbar then
 				nol := text_displayed.number_of_lines
 				vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
-				vertical_scrollbar.set_value (first_line_displayed)
+				if first_line_displayed > maximum_top_line_index then
+					vertical_scrollbar.set_value (maximum_top_line_index)
+				else					
+					vertical_scrollbar.set_value (first_line_displayed)
+				end
 				vertical_scrollbar.set_leap (number_of_lines_displayed.max (1))
 				if scroll_vbox.is_show_requested then
 					if not platform_is_windows then
@@ -933,7 +932,6 @@ feature {NONE} -- Display functions
 	update_display is
 			-- Update display by drawing the buffered pixmap on `editor_area'.
 		do		
-			editor_area.clear
 			if offset >= left_margin_width then
 				editor_area.draw_sub_pixmap (
 					0,
@@ -1056,13 +1054,14 @@ feature {NONE} -- Text loading
 				editor_width := editor_width.max (text_displayed.current_line.width)
 				text_displayed.forth
 			end
-			editor_width := editor_width + left_margin_width + margin.width --+ 50
+			editor_width := editor_width + left_margin_width + margin.width
 			set_editor_width (editor_width)
 			vertical_scrollbar.enable_sensitive
 			update_vertical_scrollbar
 			update_horizontal_scrollbar
 
 			refresh_now
+			editor_area.enable_sensitive
 		end
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is
@@ -1082,8 +1081,7 @@ feature {NONE} -- Text loading
 	file_loading_setup is
 			-- Setup before file loading
 		do			
-		end
-		
+		end		
 
 feature {MARGIN} -- Implementation
 
@@ -1155,7 +1153,7 @@ feature -- Memory management
 		end
 
 invariant
-	text_displayed_exists: text_displayed /= Void
-	first_line_number_is_valid: first_line_displayed > 0 and then first_line_displayed <= maximum_top_line_index
+--	text_displayed_exists: text_displayed /= Void
+--	first_line_number_is_valid: first_line_displayed > 0 and then first_line_displayed <= maximum_top_line_index
 
 end -- class TEXT_PANEL

@@ -436,8 +436,7 @@ feature {NONE} -- Implementation
 			mouse_wheel_scroll_size_preference := l_manager.new_integer_resource_value (l_manager, mouse_wheel_scroll_size_string, 3)
 			remove_trailing_white_space_preference := l_manager.new_boolean_resource_value (l_manager, remove_trailing_white_space_string, False)
 			blinking_cursor_preference := l_manager.new_boolean_resource_value (l_manager, blinking_cursor_string, False)
-			automatic_update_preference := l_manager.new_boolean_resource_value (l_manager, automatic_update_string, True)			
---			highlight_document_changes_preference := l_manager.new_boolean_resource_value (l_manager, highlight_document_changes_string, False)			
+			automatic_update_preference := l_manager.new_boolean_resource_value (l_manager, automatic_update_string, True)	
 			
 			editor_font_preference := l_manager.new_font_resource_value (l_manager, editor_font_string, create {EV_FONT})	
 			font_cell.put (editor_font_preference)			

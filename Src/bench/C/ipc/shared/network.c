@@ -26,6 +26,8 @@
 #ifdef EIF_WIN32
 #include <windows.h>
 #include "stream.h"
+#else
+#include <unistd.h>
 #endif
 
 extern unsigned TIMEOUT;		/* Time out on reads */

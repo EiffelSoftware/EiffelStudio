@@ -14,13 +14,7 @@
 #include "eif_portable.h"
 #include "rt_err_msg.h"
 #include <sys/types.h>
-
-#ifdef EIF_WIN32
 #include <signal.h>
-#else
-#include <sys/signal.h>
-#endif
-
 #include "request.h"
 #include "rqst_idrs.h"
 #include "com.h"

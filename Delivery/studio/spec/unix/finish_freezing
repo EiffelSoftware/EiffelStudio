@@ -4,7 +4,7 @@ arg=none
 case `uname` in
     Linux)
 	if [ -f /proc/cpuinfo ] ; then
-		ncpus=`grep processor /proc/cpuinfo | wc -l`
+		ncpus=`grep -c '^processor[[:space:]]*:' /proc/cpuinfo`
 	fi
 	;;
 	SunOS)

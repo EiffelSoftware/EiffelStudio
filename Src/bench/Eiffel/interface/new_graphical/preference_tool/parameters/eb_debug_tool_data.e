@@ -58,6 +58,14 @@ feature -- Access
 			Result := boolean_resource_value ("enable_optimized_jit_debugging", False)			
 		end		
 
+	default_displayed_string_size: INTEGER is
+			-- Default size of string to be retrieved from the application
+			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
+			-- (Default value is 50)
+		do
+			Result := integer_resource_value ("debugger__default_displayed_string_size", 50)
+		end
+
 	min_slice: INTEGER is
 			-- From which attribute number should special objects be displayed?
 		do

@@ -10,6 +10,10 @@
 		Option queries, profiler core, tracer core
 */
 
+/*
+doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option queries, profiler core, tracer core, assertions level">
+*/
+
 #include "eif_portable.h"
 #include "eif_project.h"
 #ifndef HAS_GETRUSAGE
@@ -36,29 +40,81 @@
 #include <stdio.h>
 #include <string.h>
 
-rt_public int trace_call_level = 0;	/* call level for E-TRACE
-					 * recursive calls (whether direct or indirect).
-					 */
+/*
+doc:	<attribute name="trace_call_level" return_type="int" export="public">
+doc:		<summary>Call level for Eiffel tracing recursive calls (wether direct or indirect).</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in public per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:	</attribute>
+*/
+rt_public int trace_call_level = 0;
 
+/*
+doc:	<attribute name="prof_stack" return_type="struct stack *" export="public">
+doc:		<summary>Profiler stack where `struct prof_info *' are stored.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>It depends whether we want to do a per thread profiling or not. For the moment I suggest we do a process profiling by adding a synchronization mutex for access to profiler.</fixme>
+doc:	</attribute>
+*/
 rt_public struct stack *prof_stack;
-
-/* Total execution time */
-
-#ifdef HAS_GETRUSAGE
-struct 	prof_rusage	*init_date;
-#elif defined(HAS_TIMES)
-double 	       init_date;
-#elif defined(EIF_WIN32)
-SYSTEMTIME 	*init_date;
-#endif  /* HAS_GERUSAGE */
 
 /* INTERNAL TRACE VARIABLES */
 
-int last_dtype;			/* These three variables are needed because we */
-int last_origin;		/* want to print "...---..." instead of "...>>>... _nextline_ ...<<<..." */
-char *last_name;		/* when we deal with a so called terminal feature (a feature without calls to other features) */
+/*
+doc:	<attribute name="last_dtype" return_type="int" export="private">
+doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in private per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:	</attribute>
+*/
+rt_private int last_dtype;
+
+/*
+doc:	<attribute name="last_origin" return_type="int" export="private">
+doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in private per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:	</attribute>
+*/
+rt_private int last_origin;
+
+/*
+doc:	<attribute name="last_name" return_type="int" export="private">
+doc:		<summary>Along with `last_origin' and `last_name', these three variables are needed because we want to print "...---..." instead of "...&gt;&gt;&gt;... _nextline_ ...&lt;&lt;&lt;..."  when we deal with a so called terminal feature (a feature without calls to other features)</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in private per thread data. And code should be updated to tell which thread is doing the tracing. Output should also be synchronized.</fixme>
+doc:	</attribute>
+*/
+rt_private char *last_name;
 
 /* INTERNAL PROFILE STRUCTURES */
+
+/*
+doc:	<attribute name="init_date" return_type="struct prof_rusage/double/SYSTEMTIME" export="private">
+doc:		<summary>Store starting date of profiling.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `initprf'.</synchronization>
+doc:	</attribute>
+*/
+#ifdef HAS_GETRUSAGE
+rt_private struct 	prof_rusage	*init_date;
+#elif defined(HAS_TIMES)
+rt_private double 	       init_date;
+#elif defined(EIF_WIN32)
+rt_private SYSTEMTIME 	*init_date;
+#endif  /* HAS_GERUSAGE */
+
 
 /* Struct to keep the information gathered */
 #ifdef HAS_GETRUSAGE
@@ -314,8 +370,6 @@ struct prof_info {
 
 #endif /* HAS_GETRUSAGE */
 
-rt_public struct stack *profile_stack;
-
 /* Structure for H table of features.
  * 'hcode' is meant to be the H key of the class
  */
@@ -324,7 +378,17 @@ struct feat_table {
 	struct htable *htab;		/* Features of class corresponding to 'dtype' */
 };
 
-struct htable *class_table;		/* The H table that contains all info */
+/*
+doc:	<attribute name="class_table" return_type="struct htable *" export="private">
+doc:		<summary>The hash-table containing all profiling information.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>Dtype</indexing>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Apply same fix as `prof_stack'.</fixme>
+doc:	</attribute>
+*/
+rt_private struct htable *class_table;		/* The H table that contains all info */
 
 /* INTERNAL PROFILE DEFINITIONS */
 
@@ -1092,3 +1156,7 @@ void prof_time(SYSTEMTIME *a_time)
 }
 
 #endif /* HAS_GETRUSAGE */
+
+/*
+doc:</file>
+*/

@@ -79,6 +79,36 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			clusters.extend (cluster)
 		end;
 
+	generate_doc (cl : S_CLUSTER_DATA_r332) is
+		local
+			fi : PLAIN_TEXT_FILE
+			file_n : FILE_NAME
+			st : STRING
+			exp : S_FREE_TEXT_DATA
+		do
+			if cluster_i /= Void then 
+				!! file_n.make
+				file_n.extend(cluster_i.path)
+				file_n.extend("doc.eif")
+					!! fi.make(file_n)
+				!! st.make (40)
+				if fi.exists then
+					from
+						fi.open_read
+						!! exp.make(20)
+					until
+						fi.end_of_file
+					loop
+						fi.read_line
+						st := deep_clone(fi.last_string)
+						exp.extend (st)
+					end
+					fi.close
+					cl.set_description(exp)
+				end
+			end 
+		end
+
 	storage_info (window: DEGREE_OUTPUT): S_CLUSTER_DATA_R332 is
 		local
 			clust_l: FIXED_LIST [S_CLUSTER_DATA];
@@ -119,6 +149,9 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 					Result.set_explanation (old_cluster_info.explanation)
 				end
 			end;
+
+			generate_doc (Result)
+
 			if view_id = 0 then
 				-- Cluster never existed so give it a
 				-- new id count

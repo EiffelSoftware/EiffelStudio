@@ -39,10 +39,16 @@ feature {NONE} -- Recording information for eiffelcase
 			p_l: ARRAYED_LIST [S_INHERIT_DATA];
 			inherit_data: S_INHERIT_DATA;
 			parent_id: CLASS_ID
+			list_tmp : ARRAY [ TYPE_A ]
+			list_gene : LINKED_LIST [ S_GENERIC_DATA ]
+			gene : S_GENERIC_DATA
+			e_class : E_CLASS
+			i : INTEGER
 		do
-			!! no_repeated_parents.make;
-			no_repeated_parents.compare_objects;
 			from
+				!! no_repeated_parents.make;
+				no_repeated_parents.compare_objects;
+				!! p_l.make (20) -- hihi
 				parents.start
 			until
 				parents.after
@@ -51,25 +57,46 @@ feature {NONE} -- Recording information for eiffelcase
 				if not parent_id.is_equal (System.any_id) then
 					no_repeated_parents.extend (parent_id)
 				end;
+
+				if
+					parents.item.parent_type /= Void 
+					and then parents.item.parent_type.generics /= Void and then
+					not parents.item.parent_type.generics.empty
+				then
+						-- the link carries genericity
+					!! list_tmp.make (0,15)
+					list_tmp := parents.item.parent_type.generics
+					!! list_gene.make
+					from 
+						i := list_tmp.lower
+					until
+						i > list_tmp.upper
+					loop
+						e_class := list_tmp.item(i).associated_eclass
+						if e_class /= Void then
+							!! gene.make ( e_class.name, Void )
+						else
+							!! gene.make ( "G", Void )
+						end
+						list_gene.extend (gene)
+						i := i + 1
+					end 
+				end
+
+				!! inherit_data
+				inherit_data.set_class_links ( classc.id.id, parent_id.id )
+				if list_gene /= Void then
+					inherit_data.set_generics ( list_gene )
+				end
+				p_l.extend ( inherit_data )
 				parents.forth
-			end;
-			!! p_l.make (no_repeated_parents.count);
-			from
-				no_repeated_parents.start;
-			until
-				no_repeated_parents.after
-			loop
-				!! inherit_data;
-				inherit_data.set_class_links (classc.id.id,
-						no_repeated_parents.item.id);
+			end
+
 debug ("CASE")
 	io.error.putstring ("%T%T%TParent: ");
 	io.error.putstring (System.class_of_id (no_repeated_parents.item).name);
 	io.error.new_line;
 end
-				p_l.extend (inherit_data);
-				no_repeated_parents.forth
-			end;
 			if not p_l.empty then
 				s_class_data.set_heir_links (p_l);
 			end
@@ -236,7 +263,7 @@ end;
 					-- Determine if classc is effective.
 					-- It is effective if any of features are
 					-- redefined or effective.
-				if redefining /= Void and then not redefining.empty then
+				if redefining /= Void and then not (redefining.count = 0) then
 					s_class_data.set_is_effective 
 				else
 					from

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
                 local
                         a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			widget := gtk_radio_button_new_with_label (default_pointer, $a)
    			gtk_object_ref (widget)
 		end

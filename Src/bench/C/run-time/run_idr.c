@@ -11,6 +11,10 @@
 
 */
 
+/*
+doc:<file name="idr_run.c" header="eif_run_idr.h" version="$Id$" summary="IDR = Internal Data Representation, used for serialization in independent store">
+*/
+
 #include "eif_portable.h"
 #ifdef VXWORKS
 #include <string.h>	/* For memcpy */
@@ -27,12 +31,11 @@
 #endif
 #include "eif_globals.h"
 #include "eif_store.h"	/* For rt_kind_version */
-#include "eif_retrieve.h"	/* For char_read_func */
 #include "eif_eiffel.h"
 #include "eif_bits.h"
 #include "eif_err_msg.h"
 #if !defined(CUSTOM) || defined(NEED_RETRIEVE_H)
-#include "eif_retrieve.h"
+#include "rt_retrieve.h"
 #endif
 #if !defined(CUSTOM) || defined(NEED_STORE_H)
 #include "eif_store.h"
@@ -46,20 +49,61 @@
 #include "eif_size.h"	/* Needed for DBLSIZ */
 #include "rt_malloc.h"
 
+/*
+doc:	<attribute name="idr_temp_buf" return_type="char *" export="shared">
+doc:		<summary>Buffer of 48 characters used for reading float/double in INDEPENDENT_STORE_4_4 and older. It iis shared so that it can be freed if an exception occurs.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a per thread data. Since this only used for old storable that we are unlikely to ever retrieve again, we should allocate this buffer on the fly when we need it, or even do it statically on the stack.</fixme>
+doc:	</attribute>
+*/
+rt_shared char *idr_temp_buf;
 
-rt_shared char *idr_temp_buf;	/* This is shared so it can be freed
-							 * if an exception occurs. */
+/*
+doc:	<attribute name="amount_read" return_type="int" export="private">
+doc:		<summary>Amount read into IDRF buffer used in `check_capacity'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int amount_read = 0;
 
-/* Private Data */
-rt_private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
-rt_private long idrf_buffer_size = 262144L; /* Size of the IDRF buffer, set by `run_idr_init' */
+/*
+doc:	<attribute name="idrf_buffer_size" return_type="long" export="private">
+doc:		<summary>Size of IDRF buffer set in `run_idr_init'. Default value of 256KB.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private long idrf_buffer_size = 262144L;
+
+/*
+doc:	<attribute name="idrf" return_type="IDRF" export="private">
+doc:		<summary>IDRF buffer</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private IDRF idrf;
 
-/* Private functions */
-rt_private int (*run_idr_read_func) (IDR *bu);	/* `run_idr_read' function. This can be different
-											 * depending on which version of INDEPENDENT_STORE
-											 * we are using. The old one is based on `short'
-											 * the new one on `long' */
+/*
+doc:	<attribute name="run_idr_read_func" return_type="int (*)(IDR *)" export="private">
+doc:		<summary>`run_idr_read' function. This can be different depending on which version of INDEPENDENT_STORE we are using. The old one is based on `short' the new one on `long'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data. Is this really needed now? I don't see any other possible function that could be used.</fixme>
+doc:	</attribute>
+*/
+rt_private int (*run_idr_read_func) (IDR *bu);
+
 rt_private int run_idr_read (IDR *bu);
 rt_private void old_ridr_multi_int (long int *obj, int num);
 rt_private void old_widr_multi_int (long int *obj, int num);
@@ -928,3 +972,7 @@ rt_private void old_widr_multi_int (long int *obj, int num)
 		run_ulong (&idrf.i_encode, (long unsigned int *) obj, left_over, sizeof (long));
 	}
 }
+
+/*
+doc:</file>
+*/

@@ -13,6 +13,10 @@
 	executable.
 */
 
+/*
+doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handling and filtering">
+*/
+
 #if defined USE_BSD_SIGNALS || defined EIF_SGI
 #	define _BSD_SIGNALS /* For sgi */
 #endif
@@ -35,34 +39,65 @@
 
 #define DESC_LEN	29		/* Maximum length for signal description */
 
-/* Array of signal handlers used by the run-time to dispatch signals as they
- * arrive. The array is modified via class EXCEPTION. If no signal handler
- * is provided, then the signal is delivered to the process after beeing
- * reset to its default behaviour (of course, we do this only when the
- * default behaviour is not SIG_IGN).
- */
+/*
+doc:	<attribute name="esig" return_type="Signal_t (*)(int) [EIF_NSIG]" export="public">
+doc:		<summary>Array of signal handlers used by the run-time to dispatch signals as they arrive. The array is modified via class EXCEPTION. If no signal handler is provided, then the signal is delivered to the process after beeing reset to its default behaviour (of course, we do this only when the default behaviour is not SIG_IGN).</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>By signal ID value</indexing>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>It does not look like it is simply initialized once and then only read. So I'm in favor of adding a mutex for its access/update. Also is this really `public'?</fixme>
+doc:	</attribute>
+*/
+
 rt_public Signal_t (*esig[EIF_NSIG])(int);	/* Array of signal handlers */
 
 #ifndef EIF_THREADS
 
-/* Records whether a signal is ignored by default or not. Some of these
- * values where set during the initialization, others were hardwired. We also
- * record the original signal status to know whether by default a signal is
- * ignored or not.
- */
-rt_public char sig_ign[EIF_NSIG];			/* Is signal ignored by default? */
-rt_public char osig_ign[EIF_NSIG];		/* Original signal default (1 = ignored) */
+/*
+doc:	<attribute name="sig_ign" return_type="char [EIF_NSIG]" export="public">
+doc:		<summary>Records whether a signal is ignored by default or not. Some of these values where set during the initialization, others were hardwired.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread</synchronization>
+doc:		<fixme>Does it really make sense to have per thread data here and to make it `public'?</fixme>
+doc:	</attribute>
+*/
 
-/* Global signal handler status. If set to 0, then signal handler is activated
- * an normal processing occurs. Otherwise, signals are queued if they are not
- * ignored, for later processing.
- */
-rt_shared int esigblk = 0;			/* By default, signals are not blocked */
+rt_public char sig_ign[EIF_NSIG];
 
-/* The FIFO stack (circular buffer) used to record arrived signals while
- * esigblk was set (for instance, while in the garbage collector).
- */
-rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
+/*
+doc:	<attribute name="osig_ign" return_type="char [EIF_NSIG]" export="public">
+doc:		<summary>Records original status of a signal to know whether by default a signal is ignored or not.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread</synchronization>
+doc:		<fixme>Does it really make sense to have per thread data here and to make it `public'?</fixme>
+doc:	</attribute>
+*/
+rt_public char osig_ign[EIF_NSIG];
+
+/*
+doc:	<attribute name="esigblk" return_type="int" export="shared">
+doc:		<summary>Global signal handler status. If set to 0, then signal handler is activated an normal processing occurs. Otherwise, signals are queued if they are not ignored, for later processing.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Does it really make sense to have per thread data here?</fixme>
+doc:	</attribute>
+*/
+rt_shared int esigblk = 0;
+
+/*
+doc:	<attribute name="sig_stk" return_type="struct s_stack" export="shared">
+doc:		<summary>The FIFO stack (circular buffer) used to record arrived signals while esigblk was set (for instance, while in the garbage collector). Initialized in `initsig'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Does it really make sense to have per thread data here?</fixme>
+doc:	</attribute>
+*/
+rt_shared struct s_stack sig_stk;
 
 #endif /* EIF_THREADS */
 
@@ -783,13 +818,14 @@ struct sig_desc {			/* Signal description structure */
 	char *s_desc;			/* English description */
 };
 
-/* The following array describes the signals. Instead of having a big switch
- * and #ifdef'ed cases, it is best to have the structure sig_desc. True, we
- * need a linear look-up to find the description, but many systems overload
- * signals, so the switch statement would be quickly un-manageable--RAM.
- * Message limit is 28 char..., sorry (to get a nice execution stack).
- */
-
+/*
+doc:	<attribute name="sig_name" return_type="struct sig_desc []" export="private">
+doc:		<summary>The following array describes the signals. Instead of having a big switch and #ifdef'ed cases, it is best to have the structure sig_desc. True, we need a linear look-up to find the description, but many systems overload signals, so the switch statement would be quickly un-manageable--RAM.  Message limit is 28 char..., sorry (to get a nice execution stack).</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since statically initialized.</synchronization>
+doc:	</attribute>
+*/
 rt_private struct sig_desc sig_name[] = {
 #ifdef SIGHUP
 	{ 1, SIGHUP, "Hangup" },
@@ -1310,3 +1346,7 @@ rt_public void exhdlr(Signal_t (*handler)(int), int sig)
 }
 
 #endif
+
+/*
+doc:</file>
+*/

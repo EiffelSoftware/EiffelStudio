@@ -12,23 +12,12 @@ inherit
 			has_loop, assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code, has_separate_call
-		end;
-	FIXED_LIST [T]
-		redefine
-			make
 		end
+
+	FIXED_LIST [T]
 
 creation
-	make
-
-feature -- initialization
-
-	make (n: INTEGER) is
-			-- Replace `make' by `make_filled' from FIXED_LIST in order
-			-- to minimize the change on the compiler due to the new FIXED_LIST
-		do
-			make_filled (n)
-		end
+	make, make_filled
 
 feature 
 
@@ -212,7 +201,7 @@ feature -- Convenience
 				if nbr_void > 0 then
 					--| Remove the void elements
 					from
-						!!Result.make (count - nbr_void);
+						!! Result.make_filled (count - nbr_void);
 						Result.start;
 						start;
 					until

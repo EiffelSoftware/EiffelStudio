@@ -189,8 +189,8 @@ feature
 			a_access_expr.set_expr (left);
 			a_access_expr.set_parent (Result);
 			Result.set_target (a_access_expr);
-			!!param.make (1);
-			param.put_i_th (right, 1);
+			!! param.make (1);
+			param.extend (right);
 
 -- FIXME PARAMETER_B takes care of the cast if needed
 --			!!p;
@@ -277,12 +277,12 @@ feature -- Byte code generation
 			Nested.set_message (access);
 			access.set_parent (Nested);
 			Access_expr.set_expr (left);
-			!!param.make (1);
-			param.put_i_th (right, 1);
-			--!!p;
-			--p.set_expression (right);
-			--p.set_attachment_type (Access_expr.context_type);
-			--param.put_i_th (p, 1);
+			!! param.make (1);
+			param.extend (right);
+--!!p;
+--p.set_expression (right);
+--p.set_attachment_type (Access_expr.context_type);
+--param.put_i_th (p, 1);
 			access.set_parameters (param);
 				-- Byte code generation on a nested call
 			Nested.make_byte_code (ba);

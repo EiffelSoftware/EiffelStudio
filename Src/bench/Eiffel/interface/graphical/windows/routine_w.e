@@ -31,8 +31,8 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Create a feature tool.
 		do
-			is_in_project_tool := False
-			{BAR_AND_TEXT} Precursor (a_screen)
+ 			is_in_project_tool := False
+ 			{BAR_AND_TEXT} Precursor (a_screen)
 		end
 
 	form_create (a_form: FORM file_m, edit_m, format_m, special_m: MENU_PULL) is
@@ -47,12 +47,12 @@ feature -- Initialization
 			format_menu := format_m
 			special_menu := special_m
 			make_form (a_form)
-			init_text_window
 			set_composite_attributes (a_form)
 			set_composite_attributes (file_m)
 			set_composite_attributes (edit_m)
 			set_composite_attributes (format_m)
 			set_composite_attributes (special_m)
+--  			init_text_window
 		end
 
 feature -- Update Resources
@@ -65,14 +65,14 @@ feature -- Update Resources
 			rout_cli_cmd: SHOW_ROUTCLIENTS
 			stop_cmd: SHOW_BREAKPOINTS
 		do
-			if old_res = resources.show_all_callers then
-				rout_cli_cmd ?= showroutclients_frmt_holder.associated_command
-				rout_cli_cmd.set_show_all_callers (new_res.actual_value)
-			elseif old_res = resources.do_flat_in_breakpoints then
-				stop_cmd ?= showstop_frmt_holder.associated_command
-				stop_cmd.set_format_mode (new_res.actual_value)
-			end
-			{BAR_AND_TEXT} Precursor (old_res, new_res)
+ 			if old_res = resources.show_all_callers then
+ 				rout_cli_cmd ?= showroutclients_frmt_holder.associated_command
+ 				rout_cli_cmd.set_show_all_callers (new_res.actual_value)
+ 			elseif old_res = resources.do_flat_in_breakpoints then
+ 				stop_cmd ?= showstop_frmt_holder.associated_command
+ 				stop_cmd.set_format_mode (new_res.actual_value)
+ 			end
+ 			{BAR_AND_TEXT} Precursor (old_res, new_res)
 		end
 
 feature -- Window Properties
@@ -185,9 +185,9 @@ feature -- Update
 		local
 			ss: SEARCH_STRING
 		do
-			{BAR_AND_TEXT} Precursor
-			routine_text_field.close_choice_window
-			class_text_field.close_choice_window
+ 			{BAR_AND_TEXT} Precursor
+ 			routine_text_field.close_choice_window
+ 			class_text_field.close_choice_window
 		end
 
 	highlight_breakable (index: INTEGER) is
@@ -275,13 +275,13 @@ feature -- Status setting
 	set_editable_text_window (ed: like editable_text_window) is
 			-- Set `editable_text_window' to `ed'.
 		do
-			editable_text_window := ed
+  			editable_text_window := ed
 		end
 
 	set_read_only_text_window (ed: like read_only_text_window) is
 			-- Set `read_only_text_window' to `ed'.
 		do
-			read_only_text_window := ed
+  			read_only_text_window := ed
 		end
 
 	set_stone (s: like stone) is
@@ -378,10 +378,10 @@ feature -- Graphical Interface
 		local
 			f_name: STRING
 		do
-			if stone /= Void then
-				class_text_field.update_class_name (stone.e_class.name)
-				routine_text_field.set_text (stone.e_feature.name)
-			end
+ 			if stone /= Void then
+ 				class_text_field.update_class_name (stone.e_class.name)
+ 				routine_text_field.set_text (stone.e_feature.name)
+ 			end
 		end 
 	
 	build_widgets is
@@ -389,16 +389,17 @@ feature -- Graphical Interface
 		do
 			create_toolbar (global_form)
 
-			build_text_windows (global_form)
-			if not is_in_project_tool then
-				build_menus
-			end
-
+  			build_text_windows (global_form)
+ 			if not is_in_project_tool then
+ 				build_menus
+ 			end
+ 
 			build_routine_toolbar
+ 
+ 			if not is_in_project_tool then
+ 				fill_menus
+ 			end
 
-			if not is_in_project_tool then
-				fill_menus
-			end
 			build_toolbar_menu
 			set_last_format (default_format)
 
@@ -406,25 +407,25 @@ feature -- Graphical Interface
 				routine_toolbar.remove
 			end
 
-			attach_all	
+ 			attach_all	
 		end
 
 	attach_all is
 			-- Attach all widgets.
 		do
-			if not is_in_project_tool then
-				global_form.attach_left (menu_bar, 0)
-				global_form.attach_right (menu_bar, 0)
-				global_form.attach_top (menu_bar, 0)
-			end
+ 			if not is_in_project_tool then
+ 				global_form.attach_left (menu_bar, 0)
+ 				global_form.attach_right (menu_bar, 0)
+ 				global_form.attach_top (menu_bar, 0)
+ 			end
 
-			global_form.attach_left (toolbar_parent, 0)
-			global_form.attach_right (toolbar_parent, 0)
-			if is_in_project_tool then
-				global_form.attach_top (toolbar_parent, 2)
-			else
-				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
-			end
+ 			global_form.attach_left (toolbar_parent, 0)
+ 			global_form.attach_right (toolbar_parent, 0)
+ 			if is_in_project_tool then
+ 				global_form.attach_top (toolbar_parent, 2)
+ 			else
+ 				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
+ 			end
 
 			global_form.attach_left (editable_text_window.widget, 0)
 			global_form.attach_top_widget (toolbar_parent, editable_text_window.widget, 0)
@@ -508,16 +509,16 @@ feature {NONE} -- Implementation Graphical Interface
 		local
 			sep: THREE_D_SEPARATOR
 		do
-			!! toolbar_parent.make (new_name, a_parent)
-			if not is_in_project_tool then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
-			end
-			toolbar_parent.set_column_layout
-			toolbar_parent.set_free_size	
-			toolbar_parent.set_margin_height (0)
-			toolbar_parent.set_spacing (1)
-			!! routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
-			routine_toolbar.set_height (22)
+ 			!! toolbar_parent.make (new_name, a_parent)
+ 			if not is_in_project_tool then
+ 				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+ 			end
+ 			toolbar_parent.set_column_layout
+ 			toolbar_parent.set_free_size	
+ 			toolbar_parent.set_margin_height (0)
+ 			toolbar_parent.set_spacing (1)
+ 			!! routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+ 			routine_toolbar.set_height (22)
 		end
 
 	build_toolbar_menu is
@@ -585,16 +586,16 @@ feature {NONE} -- Implementation Graphical Interface
 			search_button: EB_BUTTON
 			history_list_cmd: LIST_HISTORY
 		do
-				-- First we create the needed objects.
-			!! hole.make (Current)
-			!! hole_button.make (hole, routine_toolbar)
-			!! hole_holder.make_plain (hole)
-			hole_holder.set_button (hole_button)
-
-			!! class_hole.make (Current)
-			!! class_hole_button.make (class_hole, routine_toolbar)
-			!! class_hole_holder.make_plain (class_hole)
-			class_hole_holder.set_button (class_hole_button)
+ 				-- First we create the needed objects.
+ 			!! hole.make (Current)
+ 			!! hole_button.make (hole, routine_toolbar)
+ 			!! hole_holder.make_plain (hole)
+ 			hole_holder.set_button (hole_button)
+ 
+ 			!! class_hole.make (Current)
+ 			!! class_hole_button.make (class_hole, routine_toolbar)
+ 			!! class_hole_holder.make_plain (class_hole)
+ 			class_hole_holder.set_button (class_hole_button)
 
 			if not is_in_project_tool then
 				!! stop_hole.make (Current)
@@ -602,20 +603,20 @@ feature {NONE} -- Implementation Graphical Interface
 				!! stop_hole_holder.make_plain (stop_hole)
 				stop_hole_holder.set_button (stop_hole_button)
 			end
-			!! routine_text_field.make (routine_toolbar, Current)
-			!! class_text_field.make (routine_toolbar, Current)
-			!! label.make (Interface_names.t_Empty, routine_toolbar)
-			label.set_text ("from: ")
-			label.set_right_alignment
+ 			!! routine_text_field.make (routine_toolbar, Current)
+ 			!! class_text_field.make (routine_toolbar, Current)
+ 			!! label.make (Interface_names.t_Empty, routine_toolbar)
+ 			label.set_text ("from: ")
+ 			label.set_right_alignment
+ 
+   			build_edit_menu (routine_toolbar)
+ 			build_save_as_menu_entry
+ 			build_print_menu_entry
 
-			build_edit_menu (routine_toolbar)
-			build_save_as_menu_entry
-			build_print_menu_entry
-
-				--| We can now compute the search button
+ 				--| We can now compute the search button
 			search_button := search_cmd_holder.associated_button
-
-			!! quit_cmd.make (Current)
+ 
+   			!! quit_cmd.make (Current)
 
 			if not is_in_project_tool then
 				!! quit_menu_entry.make (quit_cmd, file_menu)
@@ -638,112 +639,112 @@ feature {NONE} -- Implementation Graphical Interface
 							routine_toolbar)
 			end
 
-			!! super_melt_cmd.make (Current)
+  			!! super_melt_cmd.make (Current)
 			!! super_melt_menu_entry.make (super_melt_cmd, special_menu)
-
+ 
 			build_filter_menu_entry
 
-			!! current_target_cmd.make (Current)
+ 			!! current_target_cmd.make (Current)
 			!! sep.make (new_name, special_menu)
 			!! current_target_menu_entry.make (current_target_cmd, special_menu)
 			!! current_target_cmd_holder.make_plain (current_target_cmd)
 			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
 
-			!! history_list_cmd.make (Current)
+ 			!! history_list_cmd.make (Current)
 
-			!! next_target_cmd.make (Current)
-			!! next_target_button.make (next_target_cmd, routine_toolbar)
+ 			!! next_target_cmd.make (Current)
+ 			!! next_target_button.make (next_target_cmd, routine_toolbar)
 			!! next_target_menu_entry.make (next_target_cmd, special_menu)
 			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 
-			!! previous_target_cmd.make (Current)
-			!! previous_target_button.make (previous_target_cmd, routine_toolbar)
+ 			!! previous_target_cmd.make (Current)
+ 			!! previous_target_button.make (previous_target_cmd, routine_toolbar)
 			!! previous_target_menu_entry.make (previous_target_cmd, special_menu)
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
 
-			!! text_cmd.make (Current)
-			!! text_button.make (text_cmd, routine_toolbar)
+ 			!! text_cmd.make (Current)
+ 			!! text_button.make (text_cmd, routine_toolbar)
 			!! text_menu_entry.make (text_cmd, format_menu)
 			!! showtext_frmt_holder.make (text_cmd, text_button, text_menu_entry)
 
-			!! rout_flat_cmd.make (Current)
-			!! rout_flat_button.make (rout_flat_cmd, routine_toolbar)
+ 			!! rout_flat_cmd.make (Current)
+ 			!! rout_flat_button.make (rout_flat_cmd, routine_toolbar)
 			!! rout_flat_menu_entry.make (rout_flat_cmd, format_menu)
 			!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button, rout_flat_menu_entry)
 
-			!! rout_cli_cmd.make (Current)
-			!! rout_cli_button.make (rout_cli_cmd, routine_toolbar)
+ 			!! rout_cli_cmd.make (Current)
+ 			!! rout_cli_button.make (rout_cli_cmd, routine_toolbar)
 			!! rout_cli_menu_entry.make (rout_cli_cmd, format_menu)
 			!! showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button, rout_cli_menu_entry)
 			rout_cli_button.add_third_button_action
-
-			!! sep.make (new_name, format_menu)
-
-			!! rout_hist_cmd.make (Current)
-			!! rout_hist_button.make (rout_hist_cmd, routine_toolbar)
+ 
+ 			!! sep.make (new_name, format_menu)
+ 
+ 			!! rout_hist_cmd.make (Current)
+ 			!! rout_hist_button.make (rout_hist_cmd, routine_toolbar)
 			!! rout_hist_menu_entry.make (rout_hist_cmd, format_menu)
 			!! showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button, rout_hist_menu_entry)
 
-			!! past_cmd.make (Current)
-			!! past_button.make (past_cmd, routine_toolbar)
+ 			!! past_cmd.make (Current)
+ 			!! past_button.make (past_cmd, routine_toolbar)
 			!! past_menu_entry.make (past_cmd, format_menu)
 			!! showpast_frmt_holder.make (past_cmd, past_button, past_menu_entry)
 
-			!! future_cmd.make (Current)
-			!! future_button.make (future_cmd, routine_toolbar)
+ 			!! future_cmd.make (Current)
+ 			!! future_button.make (future_cmd, routine_toolbar)
 			!! future_menu_entry.make (future_cmd, format_menu)
 			!! showfuture_frmt_holder.make (future_cmd, future_button, future_menu_entry)
 
-			!! homonym_cmd.make (Current)
-			!! homonym_button.make (homonym_cmd, routine_toolbar)
+ 			!! homonym_cmd.make (Current)
+ 			!! homonym_button.make (homonym_cmd, routine_toolbar)
 			!! homonym_menu_entry.make (homonym_cmd, format_menu)
 			!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button, homonym_menu_entry)
 
-			!! stop_cmd.make (Current)
-			!! stop_button.make (stop_cmd, routine_toolbar)
+ 			!! stop_cmd.make (Current)
+ 			!! stop_button.make (stop_cmd, routine_toolbar)
 			!! stop_menu_entry.make (stop_cmd, format_menu)
 			!! showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry)
 			stop_button.add_third_button_action
 
-			!! sep1.make (Interface_names.t_empty, routine_toolbar)
-			sep1.set_horizontal (False)
-			sep1.set_height (20)
-
-			!! sep2.make (Interface_names.t_empty, routine_toolbar)
-			sep2.set_horizontal (False)
-			sep2.set_height (20)
-
-			!! sep3.make (Interface_names.t_empty, routine_toolbar)
-			sep3.set_horizontal (False)
-			sep3.set_height (20)
-
-			!! sep4.make (Interface_names.t_empty, routine_toolbar)
-			sep4.set_horizontal (False)
-			sep4.set_height (20)
-
-				-- Now we do all attachments. This is done here because of speed
-			routine_toolbar.attach_left (hole_button, 5)
-			routine_toolbar.attach_top (hole_button, 0)
-			routine_toolbar.attach_left_widget (hole_button, class_hole_button, 0)
-			routine_toolbar.attach_top (class_hole_button, 0)
-
-			if not is_in_project_tool then
-				routine_toolbar.attach_top (stop_hole_button, 0)
-				routine_toolbar.attach_left_widget (class_hole_button, stop_hole_button, 0)
-				routine_toolbar.attach_top (shell_button, 0)
-				routine_toolbar.attach_left_widget (stop_hole_button, shell_button, 0)
-				routine_toolbar.attach_top (new_class_button, 0)
-				routine_toolbar.attach_left_widget (shell_button, new_class_button, 0)
-
-				routine_toolbar.attach_top (sep1, 0)
-				routine_toolbar.attach_left_widget (new_class_button, sep1, 5)
-
-			else
-				routine_toolbar.attach_top (sep1, 0)
-				routine_toolbar.attach_left_widget (class_hole_button, sep1, 5)
-			end
+ 			!! sep1.make (Interface_names.t_empty, routine_toolbar)
+ 			sep1.set_horizontal (False)
+ 			sep1.set_height (20)
+ 
+ 			!! sep2.make (Interface_names.t_empty, routine_toolbar)
+ 			sep2.set_horizontal (False)
+ 			sep2.set_height (20)
+ 
+ 			!! sep3.make (Interface_names.t_empty, routine_toolbar)
+ 			sep3.set_horizontal (False)
+ 			sep3.set_height (20)
+ 
+ 			!! sep4.make (Interface_names.t_empty, routine_toolbar)
+ 			sep4.set_horizontal (False)
+ 			sep4.set_height (20)
+ 
+			-- Now we do all attachments. This is done here because of speed
+ 			routine_toolbar.attach_left (hole_button, 5)
+ 			routine_toolbar.attach_top (hole_button, 0)
+ 			routine_toolbar.attach_left_widget (hole_button, class_hole_button, 0)
+ 			routine_toolbar.attach_top (class_hole_button, 0)
+ 
+ 			if not is_in_project_tool then
+ 				routine_toolbar.attach_top (stop_hole_button, 0)
+ 				routine_toolbar.attach_left_widget (class_hole_button, stop_hole_button, 0)
+ 				routine_toolbar.attach_top (shell_button, 0)
+ 				routine_toolbar.attach_left_widget (stop_hole_button, shell_button, 0)
+ 				routine_toolbar.attach_top (new_class_button, 0)
+ 				routine_toolbar.attach_left_widget (shell_button, new_class_button, 0)
+ 
+ 				routine_toolbar.attach_top (sep1, 0)
+ 				routine_toolbar.attach_left_widget (new_class_button, sep1, 5)
+ 
+ 			else
+ 				routine_toolbar.attach_top (sep1, 0)
+ 				routine_toolbar.attach_left_widget (class_hole_button, sep1, 5)
+ 			end
 
 			routine_toolbar.attach_top (text_button, 0)
 			routine_toolbar.attach_left_widget (sep1, text_button, 5)
@@ -752,8 +753,8 @@ feature {NONE} -- Implementation Graphical Interface
 			routine_toolbar.attach_top (stop_button, 0)
 			routine_toolbar.attach_left_widget (rout_flat_button, stop_button, 0)
 
-			routine_toolbar.attach_top (sep2, 0)
-			routine_toolbar.attach_left_widget (stop_button, sep2, 5)
+ 			routine_toolbar.attach_top (sep2, 0)
+ 			routine_toolbar.attach_left_widget (stop_button, sep2, 5)
 
 			routine_toolbar.attach_top (search_button, 0)
 			routine_toolbar.attach_left_widget (sep2, search_button, 5)
@@ -761,32 +762,32 @@ feature {NONE} -- Implementation Graphical Interface
 			routine_toolbar.attach_top (sep3, 0)
 			routine_toolbar.attach_left_widget (search_button, sep3, 5)
 
-			routine_toolbar.attach_top (rout_cli_button, 0)
-			routine_toolbar.attach_left_widget (sep3, rout_cli_button, 5)
-			routine_toolbar.attach_top (rout_hist_button, 0)
-			routine_toolbar.attach_left_widget (rout_cli_button, rout_hist_button, 0)
-			routine_toolbar.attach_top (past_button, 0)
-			routine_toolbar.attach_left_widget (rout_hist_button, past_button, 0)
-			routine_toolbar.attach_top (future_button, 0)
-			routine_toolbar.attach_left_widget (past_button, future_button, 0)
-			routine_toolbar.attach_top (homonym_button, 0)
-			routine_toolbar.attach_left_widget (future_button, homonym_button, 0)
-
-			routine_toolbar.attach_top (sep4, 0)
-			routine_toolbar.attach_left_widget (homonym_button, sep4, 5)
-
-			routine_toolbar.attach_top (previous_target_button, 0)
-			routine_toolbar.attach_left_widget (sep4, previous_target_button, 5)  
-			routine_toolbar.attach_top (next_target_button, 0)
-			routine_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
-
-			routine_toolbar.attach_top (routine_text_field, 0)
-			routine_toolbar.attach_left_widget (next_target_button, routine_text_field, 3)
-			routine_toolbar.attach_top (label, 0)
-			routine_toolbar.attach_bottom (label, 0)
-			routine_toolbar.attach_left_widget (routine_text_field, label, 7)
-			routine_toolbar.attach_top (class_text_field, 0)
-			routine_toolbar.attach_left_widget (label, class_text_field, 0)
+ 			routine_toolbar.attach_top (rout_cli_button, 0)
+ 			routine_toolbar.attach_left_widget (sep3, rout_cli_button, 5)
+ 			routine_toolbar.attach_top (rout_hist_button, 0)
+ 			routine_toolbar.attach_left_widget (rout_cli_button, rout_hist_button, 0)
+ 			routine_toolbar.attach_top (past_button, 0)
+ 			routine_toolbar.attach_left_widget (rout_hist_button, past_button, 0)
+ 			routine_toolbar.attach_top (future_button, 0)
+ 			routine_toolbar.attach_left_widget (past_button, future_button, 0)
+ 			routine_toolbar.attach_top (homonym_button, 0)
+ 			routine_toolbar.attach_left_widget (future_button, homonym_button, 0)
+ 
+ 			routine_toolbar.attach_top (sep4, 0)
+ 			routine_toolbar.attach_left_widget (homonym_button, sep4, 5)
+ 
+ 			routine_toolbar.attach_top (previous_target_button, 0)
+ 			routine_toolbar.attach_left_widget (sep4, previous_target_button, 5)  
+ 			routine_toolbar.attach_top (next_target_button, 0)
+ 			routine_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
+ 
+ 			routine_toolbar.attach_top (routine_text_field, 0)
+ 			routine_toolbar.attach_left_widget (next_target_button, routine_text_field, 3)
+ 			routine_toolbar.attach_top (label, 0)
+ 			routine_toolbar.attach_bottom (label, 0)
+ 			routine_toolbar.attach_left_widget (routine_text_field, label, 7)
+ 			routine_toolbar.attach_top (class_text_field, 0)
+ 			routine_toolbar.attach_left_widget (label, class_text_field, 0)
 		end
 
 feature {NONE} -- Properties

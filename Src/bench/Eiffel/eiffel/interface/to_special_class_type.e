@@ -79,7 +79,6 @@ feature
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>)
 
 			file.putstring ("%
-				%{%N%
 				%%Tchar *ref;%N%
 				%%Tunion overhead *zone;%N%
 				%%TRTLD;%N%N");

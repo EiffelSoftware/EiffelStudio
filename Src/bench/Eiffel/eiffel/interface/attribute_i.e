@@ -195,8 +195,6 @@ feature
 			file.generate_function_signature (result_type.c_type.c_string,
 				internal_name, True, Byte_context.extern_declaration_file,
 				<<"Current">>, <<"EIF_REFERENCE">>);
-			file.putchar ('{');
-			file.new_line;
 			file.indent;
 			file.putstring ("return *");
 			result_type.c_type.generate_access_cast (file);

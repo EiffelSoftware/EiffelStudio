@@ -71,8 +71,6 @@ feature
 					True, Context.extern_declaration_file,
 					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
 
-			generated_file.putchar ('{');
-			generated_file.new_line;
 			generated_file.indent;
 
 				-- Generation of temporary variables under the control

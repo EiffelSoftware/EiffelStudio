@@ -103,8 +103,6 @@ if is_special or has_signature then
 				 Context.extern_declaration_file, argument_names, std_argument_types)
  
 				-- Starting body of C routine
-			generated_file.putchar ('{');
-			generated_file.new_line;
 			generated_file.indent;
 				-- Clone expanded parameters, raise exception in caller if
 				-- needed (void assigned to expanded).

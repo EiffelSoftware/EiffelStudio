@@ -141,8 +141,6 @@ feature -- C code generation
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body
-				file.putchar ('{');
-				file.new_line;
 				file.indent;
 					-- If constant is a string, it is the semantic of a once
 				if is_once then

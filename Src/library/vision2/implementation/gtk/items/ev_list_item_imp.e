@@ -92,7 +92,9 @@ feature -- Status report
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1 = C.c_gtk_list_rows (parent_imp.list_widget)
+			Result := C.gtk_list_child_position
+				(parent_imp.list_widget, Current.c_object) + 1 
+					= C.c_gtk_list_rows (parent_imp.list_widget)
 		end
 
 feature -- Status setting
@@ -185,6 +187,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/29 18:43:40  king
+--| Tidied up code
+--|
 --| Revision 1.27  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

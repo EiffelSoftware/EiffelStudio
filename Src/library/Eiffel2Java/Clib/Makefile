@@ -10,5 +10,3 @@ CFLAGSMT= -Zi -YX -c -nologo -MTd -DEIF_THREADS  -DWORKBENCH -Ie:\EIFFEL42e\benc
 
 all:	e2j.obj 
 
-
-

@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			create {COMPILER} compiler.make
 			create {SYSTEM_BROWSER} system_browser.make
 			create {COMPLETION_INFORMATION} completion_information.make
+			create {HTML_DOC_GENERATOR} html_doc_generator.make
 			create eifgen_init.make
 				--| FIXME do not forget to call `dispose' one day !
 		end
@@ -44,6 +45,9 @@ feature -- Access
 
 	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE
 			-- Completion information
+			
+	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE
+			-- html document generator for the project
 		
 	valid_project: BOOLEAN is
 			-- Is project valid?
@@ -123,6 +127,7 @@ feature -- Basic Operations
 			rescued: BOOLEAN
 			file: RAW_FILE
 			l_pp: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
+			doc_generator: HTML_DOC_GENERATOR
 		do
 			if not Valid_project_ref.item then
 				if not rescued then
@@ -206,6 +211,7 @@ feature {NONE} -- Project Initialization
 
 				--| Retrieve existing project
 			create project_file.make (file_name)
+			
 			create project_dir.make (dir_name, project_file)
 			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir_name)

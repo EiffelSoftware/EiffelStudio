@@ -370,11 +370,6 @@ end
 		do
 		end
 
-	release_hector_protection is
-			-- Only for externals
-		do
-		end
-
 	generate_parameters_list is
 			-- Only for routines and externals
 		do
@@ -448,12 +443,10 @@ end
 					buf.putchar ('%T')
 					generate_metamorphose_end (basic_register, reg,
 									class_type, basic_type, buf)
-					release_hector_protection
 				end
 			else
 				class_type ?= type_i;	-- Cannot fail
 				generate_end (reg, class_type, class_type.is_separate)
-				release_hector_protection
 			end
 		end
 

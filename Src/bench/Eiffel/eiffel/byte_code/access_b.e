@@ -81,11 +81,6 @@ feature -- Status
 			Result := is_predefined implies is_current
 		end
 
-	has_hector_variables: BOOLEAN is
-			-- Do we have any hector variables in use ?
-		do
-		end
-
 	has_gcable_variable: BOOLEAN is
 			-- Is the access using a GCable variable ?
 		local
@@ -198,8 +193,6 @@ feature -- Element change
 						(	(parent = Void or else parent.target.is_current)
 							or parameters = Void))
 					)
-					and
-					(r = No_register implies not has_hector_variables)
 					and
 					(r = No_register implies context.propagate_no_register)
 				then
@@ -423,9 +416,7 @@ feature -- Code generation
 			i, j, nb: INTEGER
 			expr: EXPR_B
 			param: PARAMETER_B
-			protect: PROTECT_B
 			type_c: TYPE_C
-			l_has_protection: BOOLEAN
 		do
 			p := parameters
 			if p = Void then
@@ -442,28 +433,13 @@ feature -- Code generation
 				loop
 					expr := p @ i
 					param ?= expr
-					l_has_protection := False
+						-- FIXME
 					if param = Void then
-							-- Needs protection?
-						protect ?= expr
-						if protect /= Void then
-							param ?= protect.expr
-							l_has_protection := True
-						end
-					end
-					
-					if l_has_protection then
-						Result.put ("EIF_OBJECT", j)
+						type_c := real_type (expr.type).c_type
 					else
-							-- FIXME
-						if param = Void then
-							type_c := real_type (expr.type).c_type
-						else
-							type_c := real_type (param.attachment_type).c_type
-						end
-	
-						Result.put (type_c.c_string, j)
+						type_c := real_type (param.attachment_type).c_type
 					end
+					Result.put (type_c.c_string, j)
 					
 					i := i +1
 					j := j +1

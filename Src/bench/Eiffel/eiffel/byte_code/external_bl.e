@@ -10,7 +10,7 @@ inherit
 		redefine
 			free_register,
 			generate_parameters_list, generate_access_on_type,
-			release_hector_protection, basic_register, has_hector_variables,
+			basic_register,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
 			analyze_on, analyze, generate_end, allocates_memory,
@@ -344,47 +344,11 @@ feature
 			end
 		end
 
-	release_hector_protection is
-			-- Release all the hector variables
-		local
-			protect_b: PROTECT_B;
-			nb_hector: INTEGER;
-			buf: GENERATION_BUFFER
-		do
-			if parameters /= Void then
-				from
-					parameters.start;
-				until
-					parameters.after
-				loop
-					protect_b ?= parameters.item;
-					if protect_b /= Void then
-						nb_hector := nb_hector + 1;
-					end;
-					parameters.forth;
-				end;
-					-- Here is the trick: we have to release hector-protected
-					-- variables. Hence the 'has_hector_variables' predicate
-					-- is true, and no No_register propagation could occur.
-					-- That means the generate part HAS to be a C expression,
-					-- which make it possible to generate a ';' at the end
-					-- followed by the hector removal instructions--RAM.
-				if nb_hector > 0 then
-					buf := buffer
-					buf.putchar (';');
-					buf.new_line;
-					buf.putstring ("RTHF(");
-					buf.putint (nb_hector);
-					buf.putchar (')');
-				end;
-			end;
-		end;
-
 	fill_from (e: EXTERNAL_B) is
 			-- Fill current from `e'
 		local
 			expr_b: PARAMETER_B;
-			protect_b: PROTECT_B;
+			l_encapsulated: BOOLEAN
 		do
 			is_static_call := e.is_static_call
 			static_class_type := e.static_class_type
@@ -392,55 +356,38 @@ feature
 			external_name_id := e.external_name_id;
 			type := e.type;
 			parameters := e.parameters;
-			encapsulated := e.encapsulated;
+			l_encapsulated := e.encapsulated
 			extension := e.extension;
 			feature_id := e.feature_id;
 			feature_name_id := e.feature_name_id;
 			routine_id := e.routine_id
 			if parameters /= Void then
-				from parameters.start;
-				until parameters.after
+				from
+					parameters.start
+				until
+					parameters.after
 				loop
-					expr_b ?= parameters.item;	-- Cannot fail
-						-- Ensure run-time protection for references which are
-						-- not to be passed as 'raw', but protected via Hector.
-						-- Unfortunately, the class which represents the '$'
-						-- operator is named hector_b, hence the confusion.
-					if expr_b.is_hector or not
-						real_type (expr_b.type).c_type.is_pointer
+					expr_b ?= parameters.item
+					parameters.replace (expr_b.enlarged);
+					if
+						not l_encapsulated and then
+						(not expr_b.is_hector and real_type (expr_b.type).c_type.is_pointer)
 					then
-						parameters.replace (expr_b.enlarged);
-					else
-						create protect_b;
-						protect_b.set_expr (expr_b.enlarged);
-						parameters.replace (protect_b);
-					end;
+							-- We are handling an external whose parameter's type is not an
+							-- Eiffel basic type. We will need to call the encapsulated version as
+							-- this is the one that will perform the protection of Eiffel
+							-- references.
+						l_encapsulated := True
+					end
 					parameters.forth;
-				end;
-			end;
+				end
+			end
+			encapsulated := l_encapsulated
 		end;
 
 	has_call: BOOLEAN is True;
 			-- The expression has at least one call
 
 	allocates_memory: BOOLEAN is True;
-
-	has_hector_variables: BOOLEAN is
-			-- Does the current external call make use of Hector ?
-		local
-			protect_b: PROTECT_B;
-		do
-			if parameters /= Void then
-				from
-					parameters.start;
-				until
-					Result or parameters.after
-				loop
-					protect_b ?= parameters.item;
-					Result := protect_b /= Void;
-					parameters.forth;
-				end;
-			end;
-		end;
 
 end

@@ -25,7 +25,7 @@ feature -- Initialization
 			-- the slice window.
 		do
 			!!slice_window.make (c, Current);
-			init_from_tool (a_tool);
+			init (a_tool);
 		end;
 
 feature -- Properties

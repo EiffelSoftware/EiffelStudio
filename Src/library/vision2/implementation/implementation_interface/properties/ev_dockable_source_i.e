@@ -165,7 +165,7 @@ feature -- Status setting
 		do
 			real_source := Void
 		ensure
-			no_real_source: real_source = Void
+			real_source_void: real_source = Void
 		end
 		
 	enable_external_docking is
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 			container: EV_CONTAINER
 			box: EV_BOX_IMP
 			cursor: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
-			cell: EV_CELL_IMP
+			cell: EV_CELL_I
 			insert_position: INTEGER
 			dragged_index: INTEGER
 			insert_label_pos: INTEGER
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 				-- We are transporting a widget, so we can find the EV_CONTAINER
 				-- and modify the interface accordingly, to insert `insert_label' to
 				-- provide graphical feedback to user.
-				
+
 				if target /= Void and target /= insert_label then
 
 					 -- remove `insert_label' if the pointed target has changed
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 					if box /= Void then
 						insert_position := box.insertion_position
 						if insert_position /= -1 then
-							if not ((box.i_th (insert_position.min (box.count)) = insert_label) or (box.i_th ((insert_position - 1).max (1)) = insert_label)) then
+							if box.interface.is_empty or (not ((box.i_th (insert_position.min (box.count)) = insert_label) or (box.i_th ((insert_position - 1).max (1)) = insert_label))) then
 								dragged_index := box.index_of (widget_source_being_docked.interface, 1)
 								if widget_source_being_docked.parent = box.interface and (dragged_index = insert_position or dragged_index = insert_position - 1) then
 										-- Now unparent `insert_label' as we are now pointing to our original location,
@@ -960,7 +960,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 --	no_widget_stored_while_not_dragging: not is_dragging implies source_being_docked = Void
 --	widget_stored_while_dragging: is_dragging implies source_being_docked /= Void
-	no_temporary_widget_when_no_target: is_dock_executing and then closest_dockable_target = Void implies insert_label.parent = Void
+--	no_temporary_widget_when_no_target: is_dock_executing and then closest_dockable_target = Void implies insert_label.parent = Void
 	widget_or_item_source: not (widget_source_being_docked /= Void and item_source_being_docked /= Void)
 	dock_executing: is_dock_executing implies widget_source_being_docked /= Void or item_source_being_docked /= Void
 

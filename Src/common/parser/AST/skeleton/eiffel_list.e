@@ -12,7 +12,7 @@ inherit
 		rename
 			position as text_position
 		undefine
-			pass_address, copy, setup, consistent, is_equal
+			pass_address, copy, is_equal
 		redefine
 			number_of_stop_points, is_equivalent
 		end
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			{CONSTRUCT_LIST} precursor (n)
+			{CONSTRUCT_LIST} Precursor (n)
 			compare_objects
 		end
 
 	make_filled (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			{CONSTRUCT_LIST} precursor (n)
+			{CONSTRUCT_LIST} Precursor (n)
 			compare_objects
 		end
 

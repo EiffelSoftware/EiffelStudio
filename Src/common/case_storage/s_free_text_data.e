@@ -12,16 +12,12 @@ inherit
 
 	S_ELEMENT_DATA
 		undefine
-			consistent, copy, 
-			setup, is_equal
+			copy, is_equal
 		end;
 	FIXED_LIST [STRING]
 		rename
-			make	as make_fixed_list
+			make as make_fixed_list
 		end
---		redefine
---			make
---		end
 
 creation
 

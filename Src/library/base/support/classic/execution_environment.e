@@ -21,7 +21,7 @@ feature -- Access
 	current_working_directory: STRING is
 			-- Directory of current execution
 		external
-			"C | %"eif_dir.h%""
+			"C use %"eif_dir.h%""
 		alias
 			"dir_current"
 		ensure
@@ -159,7 +159,7 @@ feature {NONE} -- External
 	eif_getenv (s: POINTER): POINTER is
 			-- Value of environment variable `s'
 		external
-			"C | %"eif_misc.h%""
+			"C use %"eif_misc.h%""
 		end
 
 	eif_putenv (v: POINTER): INTEGER is
@@ -173,13 +173,13 @@ feature {NONE} -- External
 	eif_chdir (s: ANY): INTEGER is
 			-- Set the current directory to `path'
 		external
-			"C | %"eif_dir.h%""
+			"C use %"eif_dir.h%""
 		end
 
 	system_call (s: POINTER): INTEGER is
 			-- Pass to the operating system a request to execute `s'.
 		external
-			"C | %"eif_misc.h%""
+			"C blocking use %"eif_misc.h%""
 		alias
 			"eif_system"
 		end
@@ -187,7 +187,7 @@ feature {NONE} -- External
 	asynchronous_system_call (s: POINTER) is
 			-- Pass to the operating system an asynchronous request to execute `s'.
 		external
-			"C | %"eif_misc.h%""
+			"C blocking use %"eif_misc.h%""
 		alias
 			"eif_system_asynchronous"
 		end
@@ -195,13 +195,13 @@ feature {NONE} -- External
 	eif_home_directory_name: STRING is
 			-- Directory name corresponding to the home directory
 		external
-			"C | %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		end
 
 	eif_root_directory_name: STRING is
 			-- Directory name corresponding to the root directory
 		external
-			"C | %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		end
 
 indexing

@@ -925,7 +925,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 	int32 count;					/* Element count */
 	uint32 nb_attr, sk_type;
 	long sp_start = 0, sp_end;		/* Bounds for inspection */
-	int dtype;
+	int32 dtype;
 	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
 
 		/* Send address of Current object */
@@ -974,7 +974,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 					sk_type = SK_EXP;
 					twrite (&sk_type, sizeof(uint32));
 					dtype = Dtype(o_ref);
-					twrite (&dtype, sizeof(int));
+					twrite (&dtype, sizeof(int32));
 					rec_inspect(o_ref);
 				}
 			} else {
@@ -1058,7 +1058,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 					twrite (&sk_type, sizeof(uint32));
 					twrite (&is_special, sizeof(EIF_BOOLEAN));
 					twrite (&is_void, sizeof(EIF_BOOLEAN));
-					twrite (&dtype, sizeof(int));
+					twrite (&dtype, sizeof(int32));
 					twrite (&reference, sizeof(EIF_POINTER));
 				}
 			}

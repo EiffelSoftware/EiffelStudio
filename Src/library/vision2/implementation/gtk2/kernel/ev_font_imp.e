@@ -299,16 +299,18 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 		
 	pango_family_string: STRING is
 			-- Get standard string to represent family.
-		do			
-			from
-				preferred_families.start
-			until
-				Result /= Void or else preferred_families.after
-			loop
-				if app_implementation.font_names_on_system_as_lower.has (preferred_families.item.as_lower) then
-					Result := preferred_families.item.twin
-				end
-				preferred_families.forth
+		do
+			if not preferred_families.is_empty then
+				from
+					preferred_families.start
+				until
+					Result /= Void or else preferred_families.item = Void
+				loop
+					if app_implementation.font_names_on_system_as_lower.has (preferred_families.item.as_lower) then
+						Result := preferred_families.item.twin
+					end
+					preferred_families.forth
+				end				
 			end
 			if Result = Void then
 				-- We have not found a preferred family
@@ -371,6 +373,8 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 				feature {EV_FONT_CONSTANTS}.weight_black
 			then
 				Result := pango_weight_heavy
+			else
+				Result := pango_weight_normal
 			end
 		end
 

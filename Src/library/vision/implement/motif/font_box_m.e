@@ -10,8 +10,19 @@ class FONT_BOX_M
 inherit
 
 	TERMINAL_M
+		rename
+			clean_up as terminal_clean_up
 		undefine
 			make
+		end
+
+	TERMINAL_M
+		undefine
+			make
+		redefine
+			clean_up
+		select
+			clean_up
 		end;
 
 	FONT_BOX_I;
@@ -23,20 +34,22 @@ inherit
 
 creation
 
-    make
+	make
 
 feature -- Creation
 
-    make (a_font_box: FONT_BOX) is
-            -- Create a motif font box.
-        local
-            ext_name: ANY
-        do
-            ext_name := a_font_box.identifier.to_c;
-            data := font_box_create ($ext_name,
-                    a_font_box.parent.implementation.screen_object, False);
-            screen_object := font_box_form (data)
-        end;
+	make (a_font_box: FONT_BOX) is
+			-- Create a motif font box.
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := a_font_box.identifier.to_c;
+			data := font_box_create ($ext_name,
+					parent_screen_object (a_font_box, widget_index),
+					False);
+			screen_object := font_box_form (data)
+		end;
 
 feature 
 
@@ -79,6 +92,10 @@ feature
 	
 feature {NONE}
 
+	ok_actions: EVENT_HAND_M;
+			-- An event handler to manage call-backs when ok button is
+			-- activated
+
 	apply_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when apply button is
 			-- activated
@@ -89,6 +106,23 @@ feature {NONE}
 
 	data: POINTER;
 			-- Pointer to the font_box_data structure
+
+	clean_up is
+		do
+			terminal_clean_up;
+			if cancel_actions /= Void then
+				cancel_actions.free_cdfd
+			end;
+			if apply_actions /= Void then
+				apply_actions.free_cdfd
+			end;
+			if ok_actions /= Void then
+				ok_actions.free_cdfd
+			end;
+			free_data (data);
+		ensure then
+			data_freed: data = null_pointer
+		end;
 
 feature 
 
@@ -122,12 +156,6 @@ feature
 		do
 			font_box_hide_ok (data)
 		end;
-
-feature {NONE}
-
-	ok_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when ok button is
-			-- activated
 
 feature 
 
@@ -241,15 +269,23 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-    font_box_create (b_name: ANY; scr_obj: POINTER; value: BOOLEAN): POINTER is
-        external
-            "C"
-        end;
+	font_box_create (b_name: ANY; scr_obj: POINTER; value: BOOLEAN): POINTER is
+		external
+			"C"
+		end;
 
-    font_box_form (value: POINTER): POINTER is
-        external
-            "C"
-        end
+	font_box_form (value: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	free_data (p: POINTER) is
+		external
+			"C"
+		alias
+			"xfree"
+		end
+
 end
 
 

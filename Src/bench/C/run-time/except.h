@@ -210,6 +210,7 @@ extern void esfail();			/* Eiffel system failure */
 extern void ereturn();			/* Return to lastly recorded rescue entry */
 extern struct ex_vect *exget();	/* Get a new vector on stack */
 extern void excatch();			/* Set exception catcher from C to interpret */
+extern void exresc();			/* Signals entry in rescue clause */
 #ifndef WORKBENCH
 extern struct ex_vect *exft();	/* Set execution stack in final mode */
 #endif

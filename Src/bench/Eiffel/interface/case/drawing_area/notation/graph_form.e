@@ -24,31 +24,33 @@ inherit
 
 feature -- Properties
 
-	data: DATA;
+	data: DATA
 			-- Data associated with Current graphical figure
 
 	stone: STONE is
 			-- Stone associated with Current
 		deferred
-		end;
+		end
 
 	order: INTEGER is
 			-- Precedence of 'Current' as graphical entity
 		deferred
-		end; -- order
+		end -- order
 
 feature -- Graphical specifications
 
-	selected: BOOLEAN;
+	selected: BOOLEAN
 			-- Is this figure selected ?
 
-	workarea: WORKAREA;
+	workarea: WORKAREA
 			-- Workarea on which the figure is displayed
 
 	closure: EC_CLOSURE is 
 			-- graphical form's closure.
 		deferred
-		end; -- closure
+		ensure
+			not_void: closure /= Void
+		end
 
 	origin: EC_COORD_XY is
 			-- Origin the graphical form.
@@ -64,7 +66,7 @@ feature -- Setting
 		deferred
 		ensure
 			a_workarea = workarea
-		end; 
+		end
 
 	set_unselected is
 			-- Set selected to False
@@ -72,19 +74,19 @@ feature -- Setting
 			selected := False;
 		ensure
 			not_selected: not selected
-		end;
+		end
 
 	set_color is
 			-- Set color for graphical figure.
 		deferred
-		end;
+		end
 
 feature -- Access
 
 	figure_at (x_coord, y_coord: INTEGER): GRAPH_FORM is
 			-- Figure pointed by `x_coord' and `y_coord'.
 		deferred
-		end;
+		end
 
 feature -- Removal
 
@@ -92,20 +94,20 @@ feature -- Removal
 			-- Destroy the graphical information in the analysis window
 			-- but do not update the refresh area.
 		deferred
-		end; -- destroy
+		end -- destroy
 
 feature -- Update
 
 	build is
 			-- Put the differents elements according to the current position.
 		deferred
-		end; -- build
+		end -- build
 
 	update_without_erase is
 			-- Update its shape but do not erase it.
 		do
 			update_form;
-		end; 
+		end 
 
 	update is
 			-- Erase the figure, update its shape but do not redraw it.
@@ -113,10 +115,10 @@ feature -- Update
 			-- graph figure and the new graph figure to be
 			-- drawn for the drawing handler.
 		do
-			erase;
-			update_form;
+			erase
+			update_form
 			update_clip_area
-		end; 
+		end
 
 feature -- Output
 
@@ -143,23 +145,23 @@ feature -- Output
 	draw_border is
 			-- Draw the border of figure
 		deferred
-		end; -- draw_border
+		end
 
 	erase is
 			-- Erase the graphical representation from the analysis window.
 		do
-			update_clip_area;
-			erase_drawing;
-		end; -- erase
+			update_clip_area
+			erase_drawing
+		end
 
 	update_clip_area is
 			-- Merge Current closure area into the workarea `to_refresh'
 			-- clip area.
 		do
-		--	workarea.to_refresh.merge (closure)
+			workarea.to_refresh.merge (closure)
 		ensure
 			merged: workarea.to_refresh.includes (closure)
-		end;
+		end
 
 	partial_draw is
 		do
@@ -198,14 +200,14 @@ feature -- Output
 		ensure
 			not_selected: not selected
 			not_in_selected_list: not workarea.selected_figures.has (Current)	
-		end; -- unselect
+		end
 
 	invert_skeleton (painter: PATCH_PAINTER; origin_x, origin_y: INTEGER) is
 			-- Invert the class's skeleton.
 			-- Draw on `painter' as if the origin is at
 			-- (`origin_x', `origin_y').
 		deferred
-		end -- invert_skeleton
+		end
 
 feature -- Comparison
 

@@ -86,7 +86,7 @@ feature -- Setting
 
 	set_color (a_color: EV_COLOR) is
 		require
-			valid_a_color: a_color /= Void
+		--	valid_a_color: a_color /= Void
 		do
 		--	path.set_foreground_color (a_color);
 		--	interior.set_foreground_color (a_color);

@@ -111,10 +111,10 @@ feature -- Implementation
 			!! Result.make
 		end
 
-	--html_list: LINKED_LISt [ HTML_WINDOW ] is
-	--	once
-	--		!! Result.make
-	--	end
+	html_list: LINKED_LIST [ HTML_WINDOW ] is
+		once
+			!! Result.make
+		end
 
 	--generator_list: LINKED_LIST [ GENERATOR_WINDOW [ ANY ] ] is
 	--	once

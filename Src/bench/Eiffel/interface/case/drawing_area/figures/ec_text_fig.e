@@ -9,11 +9,14 @@ class EC_TEXT_FIG
 
 inherit
 
-	EC_TEXT_GEN;
+	EC_TEXT_GEN
+
 	EC_INTERIOR	
 		rename
 			make as interior_make
 		end
+
+	OBSERVER
 
 creation
 
@@ -24,23 +27,31 @@ feature -- Initialization
 	make is
 		do
 			!! words.make;
-			!! text.make (1);
-			interior_make;
-			!! base_left;
+			!! text.make (1)
+			interior_make
+			!! base_left
 			!! closure.make
 		end -- make
 
 feature -- Output
 
+
+	update is
+		do
+		--	erase
+		--	set_text("pouet")
+		--	draw
+		end
+
 	draw is
 			-- Draw the current text
 		do
 			if drawing.is_drawable then
-				set_drawing_attributes (drawing);
-				drawing.set_font (font);
-				draw_on (drawing, base_left, False);
+				set_drawing_attributes (drawing)
+				drawing.set_font (font)
+				draw_on (drawing, base_left, False)
 			end
-		end;
+		end
 							
 	erase is
 			-- Erase current figure
@@ -61,7 +72,7 @@ feature -- Output
 			h,w: INTEGER
 			a_closure: EC_CLOSURE
 		do
-			if is_motif or else not while_moving then
+			if not while_moving then
 				if vertical then
 					draw_words (drawing, base_l)
 				else
@@ -100,29 +111,26 @@ feature {NONE} -- Implementation
 		require
 			has_drawing: drawing /= Void
 		local
-			word: STRING;
-			word_base_left: like base_left;
+			word: STRING
+			word_base_left: like base_left
 			y: INTEGER
 		do
 			from
-				words.start;
+				words.start
 				word_base_left := clone (base_l)
-				y := word_base_left.y;
+				y := word_base_left.y
 			until
 				words.after
 			loop
-				word := clone (words.item);
+				word := clone (words.item)
 				words.forth
-				drawing.draw_text (word_base_left, word);
-				y := y + line_space;
-				word_base_left.set_y (y);
+				drawing.draw_text (word_base_left, word)
+				y := y + line_space
+				word_base_left.set_y (y)
 			end
 		end
 
-	is_motif: BOOLEAN is
-		once
-		--	Result := toolkit.name.is_equal ("MOTIF")
-		end
+	is_motif:BOOLEAN is FALSE
 
 feature -- Access
 

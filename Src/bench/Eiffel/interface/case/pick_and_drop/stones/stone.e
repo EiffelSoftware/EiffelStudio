@@ -64,18 +64,19 @@ feature -- Update
 feature -- Removal
 
 	destroy_data is
+			-- Destroy Current data.
 		local
 			l: LINKED_LIST [DESTROY];
 			destroy_entities_u: DESTROY_ENTITIES_U;
 			dest: like destroy_command
 		do
-			dest := destroy_command;
+			dest := destroy_command
 			if dest /= Void then
-				!! l.make;
-				l.put_front (dest);
-				!! destroy_entities_u.make (l);
-			end;
-		end;
+				!! l.make
+				l.put_front (dest)
+				!! destroy_entities_u.make (l)
+			end
+		end
 
 feature -- Duplication
 

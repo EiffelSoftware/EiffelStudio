@@ -94,7 +94,7 @@ feature -- Element change
 		local
 			old_cursor: CURSOR
 		do
-			old_cursor := cursor;
+			old_cursor := cursor
 			from
 				start
 			until
@@ -102,9 +102,9 @@ feature -- Element change
 			loop
 				if not closure.includes (item.closure) then
 					closure.merge (item.closure)
-				end;
+				end
 				forth
-			end;
+			end
 			go_to (old_cursor)
 		end; 
 
@@ -318,18 +318,18 @@ feature {GRAPH_CLUSTER} -- Implementation
 		local
 			old_cursor: CURSOR
 		do
-			old_cursor := cursor;
+			old_cursor := cursor
 			from
 				start
 			until
 				after
 			loop
-				check
-					intersects: closure.intersects (item.closure)
-				end;
+				--check
+				--	intersects: closure.intersects (item.closure)
+				--end;
 				if not closure.includes (item.closure) then
 					item.erase
-				end;
+				end
 				forth
 			end;
 			go_to (old_cursor)

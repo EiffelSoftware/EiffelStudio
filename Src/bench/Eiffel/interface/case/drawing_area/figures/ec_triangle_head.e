@@ -9,7 +9,7 @@ class EC_TRIANGLE_HEAD
 
 inherit
 
-	ONCES
+	ONCES 
 		undefine
 			is_equal,
 			setup,
@@ -60,11 +60,11 @@ feature -- Update
 	build (first_point, last_point: EC_COORD_XY) is
 			-- Build a triangle as arrow's head
 		local
-			dx, dy: INTEGER;
+			dx, dy: INTEGER
 			a,b: REAL
 		do
-			dx := origin.x - last_point.x;
-			dy := origin.y - last_point.y;
+			dx := origin.x - last_point.x
+			dy := origin.y - last_point.y
 			if dx = 0 then
 				if 0 < dy then
 					a := pi / 2
@@ -72,7 +72,7 @@ feature -- Update
 					a := -pi / 2
 				end
 			else
-				a := -arc_tangent (dy / dx);
+				a := -arc_tangent (dy / dx)
 				if 0 < dx then
 					a := a + pi
 				end;
@@ -80,16 +80,16 @@ feature -- Update
 			
 			b := sine ( a-(pi/2)).abs
 
-			i_th (1).set (origin.x, origin.y);
-			i_th (2).set (origin.x, origin.y);
+			i_th (1).set (origin.x, origin.y)
+			i_th (2).set (origin.x, origin.y)
 			i_th (2).xytranslate (Resources.link_arrow_size,
-						-(((1+b)/2)*Resources.link_arrow_size).floor);
-			i_th (3).set (origin.x, origin.y);
+						-(((1+b)/2)*Resources.link_arrow_size).floor)
+			i_th (3).set (origin.x, origin.y)
 			i_th (3).xytranslate (Resources.link_arrow_size,
-						(((1+b)/2)*Resources.link_arrow_size).floor);
+						(((1+b)/2)*Resources.link_arrow_size).floor)
 
-			dx := origin.x - last_point.x;
-			dy := origin.y - last_point.y;
+			dx := origin.x - last_point.x
+			dy := origin.y - last_point.y
 			if dx = 0 then
 				if 0 < dy then
 					a := pi / 2
@@ -97,15 +97,14 @@ feature -- Update
 					a := -pi / 2
 				end
 			else
-				a := -arc_tangent (dy / dx);
+				a := -arc_tangent (dy / dx)
 				if 0 < dx then
 					a := a + pi
 				end;
-			end;
-
-			i_th (2).xyrotate (a, origin.x, origin.y);
+			end
+			i_th (2).xyrotate (a, origin.x, origin.y)
 			i_th (3).xyrotate (a, origin.x, origin.y)
-		end; -- build
+		end
 
 feature -- Output
 

@@ -21,7 +21,7 @@ creation
 
 feature -- Initialization
 
-	make (cont: EV_CONTAINER; caller: EV_WINDOW) is
+	make (cont: EV_CONTAINER; caller: EC_EDITOR_WINDOW[STRING]) is
 			-- Initialize
 		require else
 			-- 
@@ -52,6 +52,10 @@ feature -- Updates
 
 	Update_from (new_path: STRING) is
 			-- Update from 'ent'
+		do
+		end
+
+	update is 	
 		do
 		end
 

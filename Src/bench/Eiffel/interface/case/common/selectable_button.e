@@ -24,13 +24,15 @@ feature {NONE} -- Initialization
 		-- Creation of the Button
 		require
 			pixmaps_exist: pix /= Void
-			commands_exists: com1 /= Void and com2 /= Void
+			at_least_one_first_command_exists: com1 /= Void
 			parent_exists: a_parent /= Void
 		do
 			button_make(a_parent)
 			set_pixmap(pix)
 			add_select_command(com1,Void)
-			add_unselect_command(com2,Void)
+			if com2 /= Void then
+				add_unselect_command(com2,Void)
+			end
 		end
 
 end -- class SELECTABLE_BUTTON

@@ -358,6 +358,8 @@ feature -- Implementation
 
 	graph_page: GRAPH_PAGE
 
+	to_be_removed: FLYWEIGHT_FACTORY
+
 	--toolbar: MAIN_WINDOW_TOOLBAR
 
 feature -- Callbacks
@@ -382,10 +384,10 @@ feature -- Callbacks
 				--	!EC_SYSTEM_WINDOW! ed.make (Current)
 				--elseif i=3 then
 				--	!EC_FEATURE_WINDOW! ed.make (Current)
-				--elseif i=4 then
+				elseif i=4 then
 					!REPORT_WINDOW! tool.make (Current)
-				--elseif i=5 then
-					--!HTML_WINDOW! tool.make (Current)
+				elseif i=5 then
+					!HTML_WINDOW! tool.make (Current)
 				elseif i=6 then
 					!! view_t.make_viewer ( Current)
 				elseif i=7 then

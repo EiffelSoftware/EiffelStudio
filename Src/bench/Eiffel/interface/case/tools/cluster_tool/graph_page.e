@@ -38,7 +38,7 @@ feature -- Initialization
 		
 			create_widgets
 
-			update
+		--	update
 		end
 
 	create_widgets is
@@ -89,7 +89,7 @@ feature -- Access
 		end
 
 	Update_from (ent: ANY) is
-			-- Update from 'ent'
+			-- Update from 'ent' 
 		do
 		end
 

@@ -100,8 +100,8 @@ feature {NONE} -- Implementation
 	handle_right_b: EV_TOOL_BAR_BUTTON
 	remove_handle_b: EV_TOOL_BAR_BUTTON
 	
-	class_window_name_from: CLASS_WINDOW_NAME
-	class_window_name_to: CLASS_WINDOW_NAME
+	class_window_name_from: ANY -- CLASS_WINDOW_NAME
+	class_window_name_to: ANY -- CLASS_WINDOW_NAME
 
 	parent: EC_RELATION_WINDOW
 

@@ -11,10 +11,31 @@ inherit
 	EV_PASSWORD_FIELD_I
 
 	EV_TEXT_FIELD_IMP
+		redefine
+			make,
+			make_with_text
+		end
 
 creation
 	make,
 	make_with_text
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create an empty password field
+		do
+			{EV_TEXT_FIELD_IMP} Precursor
+			gtk_entry_set_visibility (widget, False)
+		end
+
+	make_with_text (txt: STRING) is
+			-- Create a password field with `txt' as
+			-- label.
+		do
+			{EV_TEXT_FIELD_IMP} Precursor (txt)
+			gtk_entry_set_visibility (widget, False)		
+		end
 
 feature -- Access
 

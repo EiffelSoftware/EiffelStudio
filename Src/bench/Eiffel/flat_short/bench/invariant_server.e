@@ -8,13 +8,15 @@ indexing
 class INVARIANT_SERVER
 
 inherit
+
 	LINKED_LIST [INVARIANT_ADAPTER];
 	SHARED_TEXT_ITEMS
 
 creation
+
 	make
 
-feature
+feature -- Output
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 		local
@@ -22,7 +24,7 @@ feature
 			target_class: CLASS_C;
 		do
 			if not empty then
-				ctxt.save_global_adapt;
+				target_class := ctxt.class_c;
 				ctxt.set_in_assertion;
 				ctxt.begin;
 				ctxt.put_text_item (ti_Before_invariant);
@@ -35,17 +37,14 @@ feature
 					after
 				loop
 					ctxt.begin;
-					if not ctxt.troff_format then
-						target_class := ctxt.global_adapt.target_enclosing_class;
-						if target_class /= item.source_class then
-							ctxt.indent;
-							ctxt.put_text_item (ti_Dashdash);
-							ctxt.put_space;
-							ctxt.put_comment_text ("from ");
-							ctxt.put_class_name (item.source_class);
-							ctxt.exdent;
-							ctxt.new_line;
-						end;
+					if target_class /= item.source_class then
+						ctxt.indent;
+						ctxt.put_text_item (ti_Dashdash);
+						ctxt.put_space;
+						ctxt.put_comment_text ("from ");
+						ctxt.put_class_name (item.source_class);
+						ctxt.exdent;
+						ctxt.new_line;
 					end;
 					item.format (ctxt);
 					ctxt.put_text_item (ti_Semi_colon);
@@ -66,11 +65,10 @@ feature
 					ctxt.rollback
 				end
 				ctxt.set_not_in_assertion;
-				ctxt.restore_global_adapt;
 			end;
 		end;
 
-	storage_info (s: S_CLASS_DATA) is
+	store_case_info (s: S_CLASS_DATA) is
 		local
 			is_not_first: BOOLEAN;
 			ast: INVARIANT_AS_B

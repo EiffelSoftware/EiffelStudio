@@ -324,6 +324,12 @@ feature {NONE} -- Implementation
 						version := l_emitter.version
 						culture := l_emitter.culture
 						public_key_token := l_emitter.public_key_token
+						if
+							public_key_token /= Void and then
+							public_key_token.is_equal (null_key_string)
+						then
+							public_key_token := Void
+						end
 					end
 				end
 			end

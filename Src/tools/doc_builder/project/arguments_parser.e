@@ -178,6 +178,7 @@ feature -- Commands
 			l_toc: TABLE_OF_CONTENTS		
 			l_filter: DOCUMENT_FILTER
 		do
+			generation_data.set_generating (True)
 			l_constants := Shared_constants.Application_constants								
 				
 			output_file.open_append
@@ -199,8 +200,7 @@ feature -- Commands
 			report ("success%N")			
 			create l_root_dir.make (l_project.root_directory)
 			if not Shared_document_manager.has_schema then
-				print (Message_constants.missing_schema)
-				output_file.put_string (Message_constants.missing_schema)
+				report (Message_constants.missing_schema)
 			end
 			
 				-- Set content output filter
@@ -272,7 +272,7 @@ feature -- Commands
 					l_help_directory.recursive_delete
 				end
 				l_help_directory.create_dir
-				output_file.put_string ("success%N")
+				report ("success%N")
 				
 						-- Generate Help project from TOC						
 				report ("Creating help project in " + l_constants.Temporary_help_directory + "...")
@@ -285,11 +285,11 @@ feature -- Commands
 				end
 				create l_help_generator.make (l_help_project)
 				l_help_generator.generate
-				output_file.put_string ("success%N")
+				report ("success%N")
 			end
 			
+			generation_data.set_generating (False)
 			report ("%NGeneration completed.  Review information above in case of errors.")
-			output_file.close
 		end
 
 feature {NONE} -- Implementation
@@ -392,7 +392,9 @@ feature {NONE} -- Implementation
 	report (a_message: STRING) is
 			-- Report `a_message' to outputs
 		do
+			output_file.open_append
 			output_file.put_string (a_message)
+			output_file.close
 			debug ("console_output")
 				print (a_message)
 			end

@@ -152,5 +152,42 @@ feature -- Implementation
 		--	Result = (an_object.object /= Void) implies an_object.is_top_level_object
 		end
 		
-		
+	path: ARRAYED_LIST [STRING] is
+			-- `Result' is list of directories `Current' is contained in, from the
+			-- top level down.
+		local
+			node: EV_TREE_NODE
+			temp_result: ARRAYED_LIST [STRING]
+		do
+			create temp_result.make (4)
+				-- Firstly iterate upwards from `Current' to find all of the
+				-- parents in order.
+			from
+				node := Current
+			until
+				node = Void
+			loop
+				temp_result.extend (node.text)
+				node ?= node.parent
+			end
+			
+				-- Now build `result' by reversing the structure recently traversed.
+				-- This is because we wish the higher level nodes to appear first.
+			create Result.make (temp_result.count)
+			from
+				temp_result.go_i_th (temp_result.count)
+			until
+				temp_result.off
+			loop
+				Result.extend (temp_result.item)
+				temp_result.back
+			end
+			check
+				results_consistent: temp_result.count = result.count
+			end
+		ensure
+			Result_not_void: Result /= Void
+			is_empty_implies_parent_is_window_selector: Result.is_empty implies parent = window_selector
+		end
+
 end -- class GB_WINDOW_SELECTOR_DIRECTORY_ITEM

@@ -36,15 +36,18 @@ feature
 	generate_additional_rules is
 		do
 			Make_file.putstring ("%Tld -r -o preobj.o ");
-			generate_objects_macros (partial_objects, False);
+			generate_objects_macros;
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) ");
-			generate_objects_macros (partial_objects, False);
+			generate_objects_macros;
 			Make_file.putchar (' ');
-			generate_objects_macros (partial_system_objects, True);
+			generate_system_objects_macros;
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) .UPDT Makefile Makefile.SH config.sh");
 			Make_file.new_line;
+			Make_file.putstring ("%T$(RM) -r ");
+			generate_subdir_names;
+			Make_file.new_line
 		end;
 
 end

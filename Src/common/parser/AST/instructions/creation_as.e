@@ -81,7 +81,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item_without_tabs (ti_Exclamation);
 				ctxt.put_space
 			else
-				ctxt.put_text_item (ti_Creation_mark);
+				ctxt.put_text_item (ti_Create_keyword);
 				ctxt.put_space
 			end;
 			ctxt.format_ast (target)

@@ -196,7 +196,7 @@ feature -- Status report
 			-- (i.e. is there a window in the current program
 			-- with `has_heavy_capture' to True?)
 		do
-			Result := cwel_is_mouse_hooked
+			Result := cwel_get_hook_window /= Default_pointer
 		end
 
 	has_vertical_scroll_bar: BOOLEAN is
@@ -2214,9 +2214,9 @@ feature {NONE} -- Externals
 			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
 		end
 
-	cwel_is_mouse_hooked: BOOLEAN is
+	cwel_get_hook_window: POINTER is
 		external
-			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
+			"C (): HWND | %"wel_mousehook.h%""
 		end
 
 	cwin_set_class_long (hwnd: POINTER; n_index: INTEGER;

@@ -8,6 +8,14 @@
 #include <windows.h>
 
 /*---------------------------------------------------------------------------*/
+/* FUNC: cwel_get_hook_window                                                */
+/*---------------------------------------------------------------------------*/
+/* Returns the handle of the window that has started the hook, NULL if no    */
+/* hook is currently under process                                           */
+/*---------------------------------------------------------------------------*/
+HWND cwel_get_hook_window();
+
+/*---------------------------------------------------------------------------*/
 /* FUNC: cwel_hook_mouse                                                     */
 /* ARGS: hHookWindow: Handle of the window registering the hook.             */
 /*---------------------------------------------------------------------------*/

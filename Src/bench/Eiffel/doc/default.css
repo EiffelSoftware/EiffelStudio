@@ -96,8 +96,13 @@ P NESTEDELEMENT {
     COLOR:black;
 }
 
+.eerror {
+	COLOR:#FF0000;
+}
+
 .ekeyword {
     COLOR:navy;
+    FONT-WEIGHT:bold;
 }
 
 .esymbol {
@@ -229,4 +234,3 @@ P NESTEDELEMENT {
 	BORDER-COLOR: #999999;
 	PADDING: 4px 8px;
 }
-

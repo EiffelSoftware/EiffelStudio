@@ -16,9 +16,7 @@ inherit
 
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
-			make,
-			child_minwidth_changed,
-			child_minheight_changed
+			make
 		end
 		
 creation
@@ -46,34 +44,6 @@ feature -- Element change
 			-- the container.
 		do
 			ev_children.prune_all (child_imp)
-		end
-
-feature {NONE} -- Implementation
-
-	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-		do
-			check
-				Do_nothing_here: True
-			end
-		end
-
-	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-		do
-			check
-				Do_nothing_here: True
-			end
-		end
-
-	update_display is
-			-- Update the display of the children in the container.
-		do
-			check
-				Do_nothing_here: True
-			end
 		end
 
 end -- class EV_FIXED_IMP

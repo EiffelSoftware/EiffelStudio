@@ -20,10 +20,10 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			set_insensitive,
-			child_minwidth_changed,
-			child_minheight_changed,
-			on_first_display,
-			child_added
+			child_added,
+			compute_minimum_width, 
+			compute_minimum_height,
+			resize_from_minimum
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -99,10 +99,12 @@ feature -- Status settings
 				-- `flag'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			cur: CURSOR
 		do
 			if not ev_children.empty then
 				list := ev_children
 				from
+					cur := list.cursor
 					list.start
 				until
 					list.after
@@ -110,6 +112,7 @@ feature -- Status settings
 					list.item.widget.set_insensitive (flag)
 					list.forth
 				end
+				list.go_to (cur)
 			end
 			{EV_CONTAINER_IMP} Precursor (flag)
 		end
@@ -119,27 +122,21 @@ feature -- Status settings
 			-- the box has the same size.
 		do
 			is_homogeneous := flag
-			if not ev_children.empty then
-				initialize_at_minimum
-			end
+			notify_change (2 + 1)
 		end
 	
 	set_row_spacing (value: INTEGER) is
 			-- Make `value' the new `row_spacing'.
 		do
 			rows_value.first.put_i_th (value, 3)
-			if not ev_children.empty then
-				initialize_at_minimum
-			end
+			notify_change (2)
 		end
 
 	set_column_spacing (value: INTEGER) is
 			-- Make `value' the new `column_spacing'.
 		do
 			columns_value.first.put_i_th (value, 3)
-			if not ev_children.empty then
-				initialize_at_minimum
-			end
+			notify_change (1)
 		end
 
 	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is
@@ -174,7 +171,7 @@ feature -- Status settings
 
 			-- We show the child and resize the container
 			child_imp.show
-			update_display
+			notify_change (1 + 2)
 		end
 
 feature -- Element change
@@ -192,11 +189,9 @@ feature -- Element change
 		local
 			tchild: EV_TABLE_CHILD_IMP
 		do
-			child_minwidth_changed (0, child_imp)
-			child_minheight_changed (0, child_imp)
 			tchild := find_widget_child (child_imp)
 			ev_children.prune_all (tchild)
-			update_display
+			notify_change (2 + 1)
 		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
@@ -204,11 +199,13 @@ feature -- Element change
 			-- of the widget.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			cur: CURSOR
 		do
 			top_level_window_imp := a_window
 			if not ev_children.empty then
 				list := ev_children
 				from
+					cur := list.cursor
 					list.start
 				until
 					list.after
@@ -216,6 +213,7 @@ feature -- Element change
 					list.item.widget.set_top_level_window_imp (a_window)
 					list.forth
 				end
+				list.go_to (cur)
 			end
 		end
 
@@ -226,10 +224,12 @@ feature -- Basic operations
 			-- to the children.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			cur: CURSOR
 		do
 			if not ev_children.empty then
 				list := ev_children
 				from
+					cur := list.cursor
 					list.start
 				until
 					list.after
@@ -237,6 +237,7 @@ feature -- Basic operations
 					list.item.widget.set_background_color (background_color)
 					list.forth
 				end
+				list.go_to (cur)
 			end
 		end
 
@@ -245,10 +246,12 @@ feature -- Basic operations
 			-- to the children.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			cur: CURSOR
 		do
 			if not ev_children.empty then
 				list := ev_children
 				from
+					cur := list.cursor
 					list.start
 				until
 					list.after
@@ -256,6 +259,7 @@ feature -- Basic operations
 					list.item.widget.set_foreground_color (foreground_color)
 					list.forth
 				end
+				list.go_to (cur)
 			end
 		end
 
@@ -354,10 +358,12 @@ feature {NONE} -- Basic operation
 			valie_children: ev_children /= Void
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			cur: CURSOR
 		do
 			list := ev_children
 			if not list.empty then
 				from
+					cur := list.cursor
 					list.start
 				until
 					list.after or Result /= Void
@@ -367,6 +373,7 @@ feature {NONE} -- Basic operation
 					end
 					list.forth
 				end
+				list.go_to (cur)
 			else
 				Result := Void
 			end
@@ -420,6 +427,7 @@ feature {NONE} -- Basic operation
 			tchild: EV_TABLE_CHILD_IMP
 			cm: ARRAYED_LIST [FIXED_LIST [INTEGER]]
 			rw: ARRAYED_LIST [FIXED_LIST [INTEGER]]
+			cur: CURSOR
 		do
 			-- Initialize some local variables to be faster.
 			list := ev_children
@@ -428,6 +436,7 @@ feature {NONE} -- Basic operation
 				rw := rows_value
 				-- Then resize the children.
 				from
+					cur := list.cursor
 					list.start
 				until
 					list.after
@@ -440,6 +449,7 @@ feature {NONE} -- Basic operation
    						(rw @ (tchild.bottom_attachment)).last - (rw @ (tchild.top_attachment)).last - row_spacing)
 					list.forth
 				end
+				list.go_to (cur)
 			end
 		end
 
@@ -677,82 +687,6 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 			end
 		end
 
- 	child_minheight_changed (min: INTEGER; the_child: EV_WIDGET_IMP) is
- 			-- Change the current minimum_height because the child did.
- 		local
-			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
-			tchild: EV_TABLE_CHILD_IMP
-		do
-			if already_displayed then
-				list := ev_children
-				clear_line (rows_value)
-				-- A first loop for the children that take only one cell
-				from
-					list.start
-				until
-					list.after
-				loop
-					tchild := list.item
-					if (tchild.bottom_attachment - tchild.top_attachment = 1) then
-						first_body_loop (rows_value, tchild.widget.minimum_height, tchild.bottom_attachment)
-					end
-					list.forth
-				end
-				-- Then, a second loop for the children that take more than one
-				-- cell
-				from
-					list.start
-				until
-					list.after
-				loop
-					tchild := list.item
-					if (tchild.bottom_attachment - tchild.top_attachment > 1) then
-						second_body_loop (rows_value, tchild.widget.minimum_height, tchild.top_attachment,
-											tchild.bottom_attachment, row_spacing)
-					end
-					list.forth
-				end	
-			end
-		end
-	
-	child_minwidth_changed (min: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_width because the child did.
-		local
-			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
-			tchild: EV_TABLE_CHILD_IMP
-		do
-			if already_displayed then
-				list := ev_children
-				clear_line (columns_value)
-				-- A first loop for the children that take only one cell
-				from
-					list.start
-				until
-					list.after
-				loop
-					tchild := list.item
-					if (tchild.right_attachment - tchild.left_attachment = 1) then
-						first_body_loop (columns_value, tchild.widget.minimum_width, tchild.right_attachment)	
-					end
-					list.forth
-				end
-				-- Then, a second loop for the children that take more than one
-				-- cell
-				from
-					list.start
-				until
-					list.after
-				loop
-					tchild := list.item
-					if (tchild.right_attachment - tchild.left_attachment > 1) then
-						second_body_loop (columns_value, tchild.widget.minimum_width, tchild.left_attachment,
-											tchild.right_attachment, column_spacing)
-					end
-					list.forth
-				end
-			end	
-		end
-
 	initialize_at_minimum is
 			-- Initialize the width and the height of the table at the
 			-- minimum. Like for the boxes, after, all the calculus will
@@ -829,49 +763,99 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 			initialize_rest (rw, 0)
 
 			-- We resize the window and the children
-			set_minimum_width (cm.last.last - column_spacing)
-			set_minimum_height (rw.last.last - row_spacing)
-			resize (minimum_width, minimum_height)
+			resize (cm.last.last - column_spacing, rw.last.last - row_spacing)
 			adjust_children
 		end
 	
 feature {NONE} -- EiffelVision implementation
 
-   	on_first_display is
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
 		local
-			i: INTEGER
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
-  		do
-			if not ev_children.empty then
-				list := ev_children
-				from
-					i := 1
-				until
-					i = list.count + 1
-				loop
-					(list @ i).widget.on_first_display
-					i := i + 1
-				end
-			end
-			already_displayed := True
-			child_minwidth_changed (0, Void)
-			child_minheight_changed (0, Void)
-			initialize_at_minimum
-			parent_ask_resize (child_cell.width, child_cell.height)
-  		end
-
-	update_display is
-			-- Feature that update the actual container.
-			-- It check the size of the child and resize
-			-- the child or the container itself depending
-			-- on the case.
+			tchild: EV_TABLE_CHILD_IMP
+			cur: CURSOR
 		do
-			if already_displayed then
-				child_minwidth_changed (0, Void)
-				child_minheight_changed (0, Void)
-				initialize_at_minimum
-				parent_ask_resize (child_cell.width, child_cell.height)
+			list := ev_children
+			clear_line (columns_value)
+			-- A first loop for the children that take only one cell
+			from
+				cur := list.cursor
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				if (tchild.right_attachment - tchild.left_attachment = 1) then
+					first_body_loop (columns_value, tchild.widget.minimum_width, tchild.right_attachment)	
+				end
+				list.forth
 			end
+			-- Then, a second loop for the children that take more than one
+			-- cell
+			from
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				if (tchild.right_attachment - tchild.left_attachment > 1) then
+					second_body_loop (columns_value, tchild.widget.minimum_width, tchild.left_attachment,
+										tchild.right_attachment, column_spacing)
+				end
+				list.forth
+			end
+			list.go_to (cur)
+
+			internal_set_minimum_width (columns_value.last.last)
+		end
+
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+		local
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			tchild: EV_TABLE_CHILD_IMP
+			cur: CURSOR
+		do
+			list := ev_children
+			clear_line (rows_value)
+			-- A first loop for the children that take only one cell
+			from
+				cur := list.cursor
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				if (tchild.bottom_attachment - tchild.top_attachment = 1) then
+					first_body_loop (rows_value, tchild.widget.minimum_height, tchild.bottom_attachment)
+				end
+				list.forth
+			end
+			-- Then, a second loop for the children that take more than one
+			-- cell
+			from
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				if (tchild.bottom_attachment - tchild.top_attachment > 1) then
+					second_body_loop (rows_value, tchild.widget.minimum_height, tchild.top_attachment,
+										tchild.bottom_attachment, row_spacing)
+				end
+				list.forth
+			end
+			list.go_to (cur)
+
+			internal_set_minimum_height (rows_value.last.last)
+		end
+
+	resize_from_minimum (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Resize from the minimum size of the children
+		do
+			initialize_at_minimum
+			move_and_resize (a_x, a_y, a_width, a_height, True)
 		end
 
 invariant

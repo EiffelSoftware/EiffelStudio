@@ -14,13 +14,12 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			child_minheight_changed,
-			child_minwidth_changed,
-			on_first_display,
 			set_insensitive,
 			set_default_minimum_size,
 			child_added,
-			on_key_down
+			on_key_down,
+			compute_minimum_width,
+			compute_minimum_height
 		end
 
 	EV_FONTABLE_IMP
@@ -37,6 +36,7 @@ inherit
 			set_font as wel_set_font,
 			destroy as wel_destroy
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
@@ -74,7 +74,8 @@ inherit
 
 creation
 	make
-	
+
+
 feature {NONE} -- Initialization
 
 	make is
@@ -107,9 +108,15 @@ feature -- Status setting
 		do
 			set_font (font)
 			if tab_pos = Pos_top or tab_pos = Pos_bottom then
-				set_minimum_height (tab_height)
+				internal_set_minimum_height (tab_height)
+				if parent_imp /= Void then
+					notify_change (2)
+				end
 			else
-				set_minimum_width (tab_height)
+				internal_set_minimum_width (tab_height)
+				if parent_imp /= Void then
+					notify_change (1)
+				end
 			end
 		end
 	
@@ -181,11 +188,7 @@ feature -- Element change
 			wel_item.set_window (ww)
 			insert_item (count, wel_item)
 			widget_imp ?= child_imp
-			child_minwidth_changed (widget_imp.minimum_width, widget_imp)
-			child_minheight_changed (widget_imp.minimum_height, widget_imp)
-			if already_displayed then
-				adjust_items
-			end
+			notify_change (2 + 1)
 		end
 
 	set_font (f: EV_FONT) is
@@ -222,9 +225,8 @@ feature -- Element change
 			index: INTEGER
 		do
 			index := get_child_index (a_child)
-			child_minwidth_changed (0, a_child)
-			child_minheight_changed (0, a_child)
 			delete_item (index - 1)
+			notify_change (2 + 1)
 		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
@@ -340,31 +342,6 @@ feature -- Basic operation
 			end
 		end
 
-	on_first_display is
-			-- Called by the top_level window.
-			-- Almost the same action than adjust_items.
-		local
-			index: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
-			child_imp: EV_WIDGET_IMP
-		do
-			from
-				index := 0
-			until
-				index = count
-			loop
-				child_item := get_item (index)
-				child_imp ?= child_item.window
-				check
-					valid_cast: child_imp /= Void
-				end
-				child_imp.on_first_display
-				index := index + 1
-			end
-			adjust_items
-			already_displayed :=  True
-		end
-
 feature -- Assertion features
 
 	add_child_ok: BOOLEAN is
@@ -403,37 +380,75 @@ feature -- Assertion features
 			Result := not a_child.shown
 		end
 
-feature {NONE} -- Implementation for automatic size compute
+feature {NONE} -- Implementation
 
-	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his wn minimum value.
-			-- We add 6 or 2 for the border size.
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+			rect: WEL_RECT
+			value: INTEGER
 		do
+			from
+				index := 0
+				value := 0
+				rect := sheet_rect
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					valid_cast: child_imp /= Void
+				end
+				if child_imp.minimum_width > value then
+					value := child_imp.minimum_width
+				end
+				index := index + 1
+			end
+
+			-- We found the biggest child
 			if tab_pos = Pos_top or tab_pos = Pos_top then
-				if value + 6 > minimum_width then
-					set_minimum_width (value + 6)
-				end
+				internal_set_minimum_width (value + 6)
 			else
-				if value + tab_height > minimum_width then
-					set_minimum_width (value + tab_height + 2)
-				end
+				internal_set_minimum_width (value + tab_height + 2)
 			end
 		end
 
-	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum height of the container because
-			-- the child changed his own minimum width.
-			-- We add 6 or 2 for the border size.
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+			rect: WEL_RECT
+			value: INTEGER
 		do
+			from
+				index := 0
+				value := 0
+				rect := sheet_rect
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					valid_cast: child_imp /= Void
+				end
+				if child_imp.minimum_height > value then
+					value := child_imp.minimum_height
+				end
+				index := index + 1
+			end
+
+			-- We found the biggest child
 			if tab_pos = Pos_left or tab_pos = Pos_right then
-				if value + 6 > minimum_height then
-					set_minimum_height (value + 6)
-				end
+				internal_set_minimum_height (value + tab_height + 2)
 			else
-				if value + tab_height > minimum_height then
-					set_minimum_height (value + tab_height + 2)
-				end
+				internal_set_minimum_height (value + 6)
 			end
 		end
 
@@ -467,7 +482,7 @@ feature {NONE} -- WEL Implementation
  	default_style: INTEGER is
  			-- Default style used to create the control
 		do
-			Result := Ws_child + Ws_visible + Ws_group
+			Result := Ws_child + Ws_group + Ws_visible 
 				+ Ws_tabstop + Ws_clipchildren + Ws_clipsiblings
 				+ Tcs_singleline
 		end
@@ -475,8 +490,9 @@ feature {NONE} -- WEL Implementation
  	basic_style: INTEGER is
  			-- Default style used to create the control
  		do
- 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
+ 			Result := Ws_child + Ws_group + Ws_tabstop
 				+ Ws_clipchildren + Ws_clipsiblings
+				+ Ws_visible
 			if tab_pos = Pos_top then
 				Result := Result + Tcs_singleline
 			elseif tab_pos = Pos_bottom then
@@ -559,6 +575,24 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
+
+--	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+--		do
+--			Result := c_mouse_message_x (lparam)
+--		end
+
+--	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+--		do
+--			Result := c_mouse_message_y (lparam)
+--		end
 
 end -- EV_NOTEBOOK_IMP
 

@@ -100,6 +100,8 @@ feature -- Basic operations
 		execute_with_name (file_name: STRING) is
 				-- execute `Current' to load file `file_name'. This is used when
 				-- starting build by double clicking on a .bpr file.
+			require
+				file_name_not_void: file_name /= Void
 			local
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 				test_file: RAW_FILE

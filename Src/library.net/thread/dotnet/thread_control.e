@@ -7,10 +7,6 @@ indexing
 deferred class 
 	THREAD_CONTROL
 
-inherit
-
-	IDENTIFIED
-
 feature -- Basic operations
 
 	yield is
@@ -39,7 +35,7 @@ feature -- Basic operations
 				l_list.start
 				debug ("EIFFEL_THREAD")
 					print ("%N["+ current_thread_id.out +"] Threads remaining:"+ l_list.count.out+"%N")
-					print ("%NJoin " + l_list.item.internal_thread_id.out + "%N")
+					print ("%NJoin " + l_list.item.thread_id.out + "%N")
 				end
 				l_item := l_list.item
 				childrens_mutex.unlock
@@ -86,11 +82,6 @@ feature {THREAD_CONTROL} -- Threads id
 	current_thread_id: INTEGER is
 		do
 			Result := feature {SYSTEM_THREAD}.current_thread.get_domain.get_current_thread_id
-		end
-
-	internal_thread_id: INTEGER is
-		do
-			Result := object_id
 		end
 
 feature -- Sleep

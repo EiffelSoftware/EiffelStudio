@@ -1,10 +1,10 @@
 -- Old/New table
 
-class O_N_TABLE 
+class O_N_TABLE [G -> COMPILER_ID]
 
 inherit
 
-	EXTEND_TABLE [INTEGER, INTEGER]
+	EXTEND_TABLE [G, G]
 		rename
 			put as tbl_put,
 			item as tbl_item
@@ -18,10 +18,9 @@ creation
 
 feature
 
-	put (new_value, old_value: INTEGER) is
+	put (new_value, old_value: G) is
 		local
-			temp: INTEGER;
-			latest_old: INTEGER
+			latest_old: G
 		do
 debug
 	io.error.putstring ("OLD/NEW TABLE put ");
@@ -37,7 +36,7 @@ end;
 				until
 					after
 				loop
-					if item_for_iteration = latest_old then
+					if equal (item_for_iteration, latest_old) then
 						content.put (new_value, pos_for_iter);
 						control := Changed_constant;
 					end;
@@ -49,21 +48,21 @@ debug
 end;
 		end;
 
-	undo_put (old_value, new_value: INTEGER) is
-			-- Undo the cahnges
+	undo_put (old_value, new_value: G) is
+			-- Undo the changes
 			--| We cannot use `put' again because of the
 			--| protection `has'
 		require
 			item (old_value) = new_value
 		local
-			latest_new: INTEGER
+			latest_new: G
 		do
 			latest_new := item (new_value);
 debug
 	io.error.putstring ("Calling undo_put old: ");
-	io.error.putint (old_value);
+	old_value.trace;
 	io.error.putstring (" new: ");
-	io.error.putint (new_value);
+	new_value.trace;
 	io.error.new_line;
 end;
 			force (latest_new, old_value);
@@ -72,7 +71,7 @@ end;
 			until
 				after
 			loop
-				if item_for_iteration = latest_new then
+				if equal (item_for_iteration, latest_new) then
 debug
 	io.error.putstring ("FOUND ");
 	io.error.putint (pos_for_iter);
@@ -89,7 +88,7 @@ end;
 		end;
 
 
-	item (i: INTEGER): INTEGER is
+	item (i: G): G is
 		do
 			if has (i) then
 				Result := tbl_item (i)
@@ -110,9 +109,9 @@ feature -- Trace
 				after
 			loop
 				io.error.putstring ("Old: ");
-				io.error.putint (key_for_iteration);
+				key_for_iteration.trace;
 				io.error.putstring (" , New: ");
-				io.error.putint (item_for_iteration);
+				item_for_iteration.trace;
 				io.error.new_line;
 				forth
 			end

@@ -20,7 +20,7 @@ feature -- Initialization
 
 	make (n: INTEGER) is
 			-- Create instance of INTEGER_A represented by `n' bits.
-	require
+		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			size := n

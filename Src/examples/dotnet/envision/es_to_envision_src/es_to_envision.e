@@ -205,12 +205,7 @@ feature {NONE} -- Implementation
 	Precompile_cmd: STRING is
 			-- Precompile command.
 		once
-			Result := "precompile (%"$ISE_EIFFEL\ebcl\" + Third_arg + "%")"
---			if third_arg.is_equal (Debug_string) then
---				Result.append ("debug%")")
---			elseif third_arg.is_equal (Release_string) then
---				Result.append ("release%")")
---			end
+			Result := "precompiled (%"$ISE_EIFFEL\ebcl\" + Third_arg + "%")"
 		ensure
 			nonvoid_result: Result /= Void
 		end

@@ -65,7 +65,6 @@ feature -- Callstack
 				-- re-create the call stack
 			ecs := new_current_callstack_with (stack_max_depth)
 			set_call_stack (current_thread_id, ecs)
-			get_current_call_stack			
 		end
 		
 feature {NONE} -- CallStack Impl
@@ -148,6 +147,7 @@ feature -- Thread related change
 			callstack_not_void: ecs /= Void
 		do
 			call_stack_list.force (ecs, tid)
+			get_current_call_stack
 		end
 
 	refresh_current_thread_id is

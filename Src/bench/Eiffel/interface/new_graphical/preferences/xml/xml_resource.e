@@ -91,13 +91,18 @@ feature -- Implementation
 					name.append (s)
 				end
 			end
-			txt ?= node.first
+			if not node.is_empty then
+				txt ?= node.first
+			end
 			if txt /= Void then
 				s := txt.string
 				s.prune_all ('%R')
 				s.prune_all ('%T')
 			end
 			if type = string_type then
+				if s = Void then
+					s := ""
+				end
 				create {STRING_RESOURCE} value.make (name, s)
 			elseif type = color_type then
 				create {COLOR_RESOURCE} value.make (name, s)
@@ -110,8 +115,14 @@ feature -- Implementation
 				b := s.is_equal ("TRUE")
 				create {BOOLEAN_RESOURCE} value.make (name, b)
 			elseif type = array_type then
+				if s = Void then
+					s := ""
+				end
 				create {ARRAY_RESOURCE} value.make_from_string (name, s)
 			else
+				if s = Void then
+					s := ""
+				end
 				create {STRING_RESOURCE} value.make (name, s)
 			end
 			if description /= Void then

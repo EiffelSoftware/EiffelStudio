@@ -24,18 +24,14 @@ inherit
 create
 	make
 
+feature {EV_ANY_I} -- Implementation
 
-feature --
-
-	real_parent: EV_AGGREGATE_WIDGET_IMP --is
+	real_parent: EV_AGGREGATE_WIDGET_IMP
 			-- Contains `Current'.
---		do
---			Result ?= parent_imp.cell
---		end
 
 	set_real_parent (par: EV_AGGREGATE_WIDGET_IMP) is
 		do
-			real_parent := par
+			real_parent := par	
 		end
 
 	interface: EV_AGGREGATE_BOX

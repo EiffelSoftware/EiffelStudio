@@ -23,7 +23,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := c_hashcode (item)
+			Result := (c_hashcode (item)).abs
 		end;
 
 feature -- Element change

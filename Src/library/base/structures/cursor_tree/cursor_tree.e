@@ -121,7 +121,7 @@ feature -- Status report
 	extendible: BOOLEAN is
 			-- May new items be added?
 		do
-			Result := not above
+			Result := not above and then (level = 1) implies empty
 		end
 
 	is_leaf: BOOLEAN is
@@ -374,9 +374,6 @@ feature -- Element change
 			-- Add `v' after last child.
 			-- Make `v' the `first_child' if `below' and place
 			-- cursor `before'.
-		require else
-			--not_above: not above;
-			only_one_root: (level = 1) implies empty;
 		local
 			pos: CURSOR;
 		do

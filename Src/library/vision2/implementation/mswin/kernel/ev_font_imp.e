@@ -554,21 +554,20 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			loop
 				index := a_string.index_of ('%N', n)
 				if index > 0 then
-					extent := screen_dc.string_size (a_string.substring (n, index))
-					if extent.width > last_text_width then
-						last_text_width := extent.width
-					end
-					last_text_height := last_text_height + extent.height
+					extent := screen_dc.string_size (a_string.substring (n, index - 1))
 					n := index + 1
 				else
-					extent := screen_dc.string_size (a_string)
-					last_text_width := extent.width
-					last_text_height := extent.height
+					extent := screen_dc.string_size (a_string.substring (n, a_string.count))
 					n := a_string.count + 1
 				end
+				if extent.width > last_text_width then
+					last_text_width := extent.width
+				end
+				last_text_height := last_text_height + extent.height
 			end
 			screen_dc.unselect_font
 			screen_dc.quick_release
+			io.put_string (last_text_height.out + " " + last_text_width.out + "%N")
 		end
 
 feature {NONE} -- Not used
@@ -724,6 +723,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/03 01:23:52  brendel
+--| Improved implementation of calculate_text_extent.
+--|
 --| Revision 1.26  2000/03/03 01:06:53  brendel
 --| Improved implementation of calculate_text_extent.
 --|

@@ -169,7 +169,7 @@ feature -- Initialization
 			
 			create all_integer_input_fields.make (4)
 			create all_string_input_fields.make (4)
-			create all_pixmap_editors.make (2)
+			create all_pixmap_input_fields.make (2)
 		end
 		
 feature -- Access
@@ -237,13 +237,13 @@ feature -- Status setting
 			
 			all_integer_input_fields.wipe_out
 			all_string_input_fields.wipe_out
-			all_pixmap_editors.wipe_out
+			all_pixmap_input_fields.wipe_out
 		ensure
 			now_empty: attribute_editor_box.count = 0
 			object_is_void: object = Void
 			integer_input_fields_empty: all_integer_input_fields.is_empty
 			string_input_fields_empty: all_string_input_fields.is_empty
-			pixmap_editors_empty: all_pixmap_editors.is_empty
+			pixmap_input_fields_empty: all_pixmap_input_fields.is_empty
 		end
 		
 	update_current_object is
@@ -306,12 +306,12 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			pixmap_constant ?= a_constant
 			if pixmap_constant /= Void then
 				from
-					all_pixmap_editors.start
+					all_pixmap_input_fields.start
 				until
-					all_pixmap_editors.off
+					all_pixmap_input_fields.off
 				loop
-					all_pixmap_editors.item.constant_added (pixmap_constant)
-					all_pixmap_editors.forth
+					all_pixmap_input_fields.item.constant_added (pixmap_constant)
+					all_pixmap_input_fields.forth
 				end
 			end
 			integer_constant ?= a_constant
@@ -346,12 +346,12 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			pixmap_constant ?= a_constant
 			if pixmap_constant /= Void then
 				from
-					all_pixmap_editors.start
+					all_pixmap_input_fields.start
 				until
-					all_pixmap_editors.off
+					all_pixmap_input_fields.off
 				loop
-					all_pixmap_editors.item.constant_changed (pixmap_constant)
-					all_pixmap_editors.forth
+					all_pixmap_input_fields.item.constant_changed (pixmap_constant)
+					all_pixmap_input_fields.forth
 				end
 			else
 				check
@@ -374,12 +374,12 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			pixmap_constant ?= a_constant
 			if pixmap_constant /= Void then
 				from
-					all_pixmap_editors.start
+					all_pixmap_input_fields.start
 				until
-					all_pixmap_editors.off
+					all_pixmap_input_fields.off
 				loop
-					all_pixmap_editors.item.constant_removed (pixmap_constant)
-					all_pixmap_editors.forth
+					all_pixmap_input_fields.item.constant_removed (pixmap_constant)
+					all_pixmap_input_fields.forth
 				end
 			end
 			integer_constant ?= a_constant
@@ -829,8 +829,7 @@ feature {NONE} -- Implementation
 	all_string_input_fields: ARRAYED_LIST [GB_STRING_INPUT_FIELD]
 		-- All string input fields comprising `Current'.
 		
-	all_pixmap_editors: ARRAYED_LIST [GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR]
-		-- All input fields for pixmaps, comprising `Current'.
+	all_pixmap_input_fields: ARRAYED_LIST [GB_PIXMAP_INPUT_FIELD]
 		
 feature {GB_INTEGER_INPUT_FIELD} -- Implementation
 		
@@ -852,14 +851,14 @@ feature {GB_STRING_INPUT_FIELD} -- Implementation
 			all_string_input_fields.extend (input_field)
 		end
 		
-feature {GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR} -- Impleemntation
+feature {GB_PIXMAP_INPUT_FIELD} -- Impleemntation
 
-	add_pixmap_input_field (input_field: GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR) is
+	add_pixmap_input_field (input_field: GB_PIXMAP_INPUT_FIELD) is
 			-- Add `input_field' to `all_pixmap_editors'.
 		require
 			input_field_not_void: input_field /= Void
 		do
-			all_pixmap_editors.extend (input_field)
+			all_pixmap_input_fields.extend (input_field)
 		end
 		
 		
@@ -891,6 +890,6 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 invariant
 		all_integer_input_fields_not_void: all_integer_input_fields /= Void
 		all_string_input_fields_not_void: all_string_input_fields /= Void
-		all_pixmap_editors_not_void: all_pixmap_editors /= Void
+		all_pixmap_input_fields_not_void: all_pixmap_input_fields /= Void
 
 end -- class GB_OBJECT_EDITOR

@@ -69,6 +69,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_DIGIT_CHECKER
+		export
+			{NONE} all
+		end
 
 feature {GB_OBJECT_HANDLER} -- Initialization
 	
@@ -525,6 +530,9 @@ feature -- Basic operations
 			object_not_full: not is_full
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
+			counter: INTEGER
+			new_type: STRING
+			a_new_object: GB_OBJECT
 		do
 				-- `an_object' may already be contained in `Current'.
 				-- If this is the case, then the insert position is the number of
@@ -539,6 +547,26 @@ feature -- Basic operations
 			if not layout_item.is_expanded then
 				layout_item.expand
 			end
+			
+				-- Now check to see if a number modifier is pressed,
+				-- and insert the number of objects required.
+			if digit_checker.digit_pressed then
+				new_type := an_object.type
+				from
+					counter := 1
+				until
+						-- Ensure that we do not attempt to insert more items than
+						-- are accepted.
+					counter > digit_checker.digit or is_full
+				loop
+					print (digit_checker.digit)
+					a_new_object := object_handler.build_object_from_string_and_assign_id (new_type)
+					create command_add.make (Current, a_new_object, layout_item.count + 1)
+					command_add.execute
+					counter := counter + 1
+				end
+			end
+			digit_checker.end_processing
 		ensure
 			layout_item_not_void: an_object.layout_item /= Void
 		end
@@ -780,22 +808,22 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 			colorizeable ?= display_object
 			if colorizeable /= Void then
 				if color_stone.is_foreground then
-					colorizeable.set_foreground_color (color_stone.color)
+					colorizeable.set_foreground_color (clone (color_stone.color))
 					colorizeable ?= object
-					colorizeable.set_foreground_color (color_stone.color)
+					colorizeable.set_foreground_color (clone (color_stone.color))
 					a_display_object ?= display_object
 					if a_display_object /= Void then
 						colorizeable ?= a_display_object.child
-						colorizeable.set_foreground_color (color_stone.color)
+						colorizeable.set_foreground_color (clone (color_stone.color))
 					end
 				else
-					colorizeable.set_background_color (color_stone.color)
+					colorizeable.set_background_color (clone (color_stone.color))
 					colorizeable ?= object
-					colorizeable.set_background_color (color_stone.color)
+					colorizeable.set_background_color (clone (color_stone.color))
 					a_display_object ?= display_object
 					if a_display_object /= Void then
 						colorizeable ?= a_display_object.child
-						colorizeable.set_background_color (color_stone.color)
+						colorizeable.set_background_color (clone (color_stone.color))
 					end
 				end
 			end

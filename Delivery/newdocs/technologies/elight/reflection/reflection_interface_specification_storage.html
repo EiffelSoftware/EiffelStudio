@@ -1,0 +1,82 @@
+<html>
+	<head>
+		<title>Reflection interface specification</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<h2>2. How can I put a type in the database?</h2>
+		<br>
+
+				<a name = requirements>
+				<h3>2.1 Requirements</h3>
+
+						<p>
+								Before you start storage, you must have at least two XML files available:
+								<ol>
+										<li>
+												The first one, that could be called `assembly_description.xml', should describe the shared assembly defining type you want to store. Assembly name, version, culture and public key would be useful information. It should also include the path to cluster where Eiffel classes corresponding to .NET types of this assembly are stored, to enable connection between .NET and Eiffel names.
+										</li>
+										<br><br>
+										<li>
+												The second XML file is a type description file. It should be an XML representation of the corresponding Eiffel class. In fact, you must have such a file for each type you want to store in the database.
+										</li>
+								</ol>
+						Once you have generated the assembly and types description XML files, you are ready to add types to the database.
+						</p>
+				<br>
+
+				<a name = start_storage>
+				<h3>2.2 Start assembly storage...</h3>
+
+						<p>
+								First, you have to notify the database you want to start storage by calling one of the two following features: `start_assembly_storage_from_type' or `start_assembly_storage_from_info'. <br>
+								In fact, the interface assumes you will store an entire assembly, meaning all the types in the assembly. So you have to specify the assembly before adding any type.<br>
+								Depending on the context you are using ISE reflection interface, you may prefer to call `start_assembly_storage_from_type' or `start_assembly_storage_from_info'. These two features do exactly the same thing, namely notify the database that storage begins. So the choice is really up to you, it is just a matter of convenience.<br><br>
+
+								Short forms of these features can be found in the delivery. At this point, feature signatures will be enough for explanations:
+								<ul>
+										<li>
+												`start_assembly_storage_from_type (a_type: SYSTEM_TYPE; assembly_description_filename: STRING)'
+										</li>
+										<li>
+												`start_assembly_storage_from_info (a_version, a_culture, a_public_key, assembly_description_filename: STRING)'
+										</li>
+								</ul>
+
+								As mentioned earlier, the point is to specify the assembly you will work on. So you can either give an instance of `SYSTEM_TYPE' or the assembly version, culture and publik key, knowing that only this information will be internally used by the database. <br>
+								The last argument `assembly_description_filename' is the path to the assembly description XML file. <br><br>
+
+								This database may be used by several processes at the same time. Therefore it provides a synchronization mechanism between concurrent processes. Actually, each time a user asks for storage, a write lock file is generated, and each time a user asks for retrieval, a read lock file is created. When you call one the two previous features to start assembly storage, you cannot be aware other users are currently reading or writing. The reflection interface will check whether storage is possible and make result available in `last_write_successful'. <br>
+								Thus, you have to check `last_write_successful' is True before adding any type.
+						</p>
+				<br>
+
+				<a name = add_type>
+				<h3>2.3 Add a type to the database...</h3>
+
+						<p>
+								Once you have notified the database that you start storage and checked start was successful, you can add a new type by calling feature `add_type (a_type: SYSTEM_TYPE; xml_filename: STRING)'.<br>
+								In fact, only the type full name is used to add the type to the database, but the type assembly qualified name is needed to check type integrity. This is the reason why an instance of `SYSTEM_TYPE' is asked in input.<br>
+								The second argument `xml_filename' is the path to type description XML file.<br>
+								`add_type' will not only add `a_type' to the database but also check the type integrity, i.e. information in XML file and Eiffel class are matching. It makes result available in `valid_type'. If it is not a valid type, an exception will be raised.
+						</p>
+
+						<p>
+								As highlighted before, the ISE reflection interface is designed in a way you can add as many types as you want to the database by calling `add_type', with no need to call `start_assembly_storage_from...' on the condition all types belong to the same assembly.
+						</p>
+				</h3>
+				<br>
+
+				<a name = end_storage>
+				<h3>2.4 End assembly storage...</h3>
+
+						<p>
+								In the same way you have notified the database you want to store data, you have to notify you have finished to store types, at least in this assembly, by calling `end_assembly_storage'.<br>
+								This feature takes no argument. It only has a function of notification. When `end_assembly_storage' is called, the database will remove write lock on the assembly.
+						</p>
+		<br><br>
+	</body>
+</html>

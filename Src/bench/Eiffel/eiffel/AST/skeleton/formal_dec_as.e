@@ -308,7 +308,7 @@ feature -- Output
 				new_type := l_a.adapted_type (Current)
 			end
 
-			if new_type /= Void then
+			if new_type = Void then
 				s := clone (formal_name)
 				s.to_upper
 				ctxt.put_string (s)

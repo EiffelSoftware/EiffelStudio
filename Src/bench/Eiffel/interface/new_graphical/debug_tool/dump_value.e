@@ -131,81 +131,102 @@ feature -- Initialization
 			type /= Type_unknown
 		end
 
-feature -- dotnet
+feature -- Dotnet creation
+
+	make_string_for_dotnet (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
+			-- make a object ICorDebugStringValue item initialized to `value'
+		require
+			arg_not_void: a_eifnet_dsv /= Void			
+		do
+--			is_dotnet_value := True
+			eifnet_debug_value := a_eifnet_dsv
+			value_frame_dotnet := eifnet_debug_value.icd_frame
+			value_dotnet := eifnet_debug_value.icd_referenced_value
+
+			value_string_dotnet := a_eifnet_dsv.icd_value_info.interface_debug_string_value
+			string_value := a_eifnet_dsv.string_value
+			if a_eifnet_dsv.is_null then
+				value_object := Void
+			else
+				value_object := a_eifnet_dsv.address
+			end
+			type := Type_string_dotnet
+			dynamic_class := a_eifnet_dsv.dynamic_class
+			is_external_type := True
+		ensure
+			type /= Type_unknown
+		end
+
+	make_object_for_dotnet (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE) is
+			-- make a object ICorDebugObjectValue item initialized to `value'
+		require
+			arg_not_void: a_eifnet_drv /= Void
+		do
+			is_dotnet_value := True
+			eifnet_debug_value := a_eifnet_drv
+			value_frame_dotnet := eifnet_debug_value.icd_frame
+			value_dotnet := eifnet_debug_value.icd_referenced_value
+
+			value_object_dotnet := a_eifnet_drv.icd_value_info.interface_debug_object_value
+			value_class_token := a_eifnet_drv.value_class_token
+			if a_eifnet_drv.is_null then
+				value_object := Void
+			else
+				value_object := a_eifnet_drv.address
+			end
+			type := Type_object
+			
+			dynamic_class_type := a_eifnet_drv.dynamic_class_type
+			if dynamic_class_type /= Void then
+				dynamic_class := dynamic_class_type.associated_class
+				debug ("DEBUGGER_EIFNET_DATA")
+					print ("[>] dyn_class_type = " + dynamic_class_type.full_il_type_name + "%N")
+				end
+			end
+			is_external_type := a_eifnet_drv.is_external_type
+		ensure
+			type /= Type_unknown
+		end
+
+feature -- Access 
 
 	is_dotnet_value: BOOLEAN
 	
 	is_external_type: BOOLEAN
 			-- Is the value corresponding to an external type ?
 			-- (ex: like SystemObject for dotnet)
+			
+	eifnet_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 
 	value_dotnet: ICOR_DEBUG_VALUE
 
-feature -- Object ICorDebugStringValue
-
 	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
 	
-	string_value: STRING
+	value_frame_dotnet: ICOR_DEBUG_FRAME
+	
+feature -- change
 
-	make_string_for_dotnet (icd_frame: ICOR_DEBUG_FRAME; icd_value: ICOR_DEBUG_VALUE; 
-			icd_string: ICOR_DEBUG_STRING_VALUE; value: STRING; a_string_value: STRING; dclass: CLASS_C; 
-			a_b_is_null: BOOLEAN) is
-			-- make a object item initialized to `value'
+	set_value_dotnet (v: like value_dotnet) is
+			-- 
 		do
---			is_dotnet_value := True
-			value_dotnet := icd_value
-			value_frame_dotnet := icd_frame
-			value_string_dotnet := icd_string
-			string_value := a_string_value
-			if a_b_is_null then
-				value_object := Void
-			else
-				value_object := value
-			end
-			type := Type_string_dotnet
-			dynamic_class := dclass
-			is_external_type := True
-		ensure
-			type /= Type_unknown
-		end
+			value_dotnet := v	
+		end	
 
-feature -- Object ICorDebugObjectValue
+	set_value_frame_dotnet (v: like value_frame_dotnet) is
+			-- 
+		do
+			value_frame_dotnet := v	
+		end			
+	
+feature {NONE} -- Implementation dotnet
+
+	string_value: STRING
 
 	value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE
 	
 	value_class_token: INTEGER
 	
-	value_frame_dotnet: ICOR_DEBUG_FRAME
-
-	make_object_for_dotnet (icd_frame: ICOR_DEBUG_FRAME; icd_value: ICOR_DEBUG_VALUE; 
-			icd_object: ICOR_DEBUG_OBJECT_VALUE; a_value_class_token: INTEGER; value: STRING; dtype: CLASS_TYPE; 
-			a_b_is_null: BOOLEAN; a_b_is_external_type: BOOLEAN) is
-			-- make a object item initialized to `value'
-		do
-			is_dotnet_value := True
-			value_dotnet := icd_value
-			value_frame_dotnet := icd_frame
-			value_object_dotnet := icd_object
-			value_class_token := a_value_class_token
-			if a_b_is_null then
-				value_object := Void
-			else
-				value_object := value
-			end
-			type := Type_object
-			
-			if dtype /= Void then
-				dynamic_class_type := dtype
-				dynamic_class := dtype.associated_class
-				debug ("DEBUGGER_EIFNET_DATA")
-					print ("[>] dyn_class_type = " + dtype.full_il_type_name + "%N")
-				end
-			end
-			is_external_type := a_b_is_external_type
-		ensure
-			type /= Type_unknown
-		end
-		
+	
 feature -- Status report
 
 	same_as (other: DUMP_VALUE): BOOLEAN is
@@ -222,7 +243,7 @@ feature -- Status report
 		require
 			is_reference: address /= Void
 		local
-			o: DEBUGGED_OBJECT
+			o: DEBUGGED_OBJECT_CLASSIC
 			att: ABSTRACT_DEBUG_VALUE
 		do
 			debug ("debug_recv")
@@ -310,7 +331,7 @@ feature -- Status report
 		local
 			f: E_FEATURE
 			expr: EB_EXPRESSION
-			obj: DEBUGGED_OBJECT
+			obj: DEBUGGED_OBJECT_CLASSIC
 			l_attributes: LIST [ABSTRACT_DEBUG_VALUE]
 			cv_spec: SPECIAL_VALUE
 			int_value: DEBUG_VALUE [INTEGER]
@@ -377,7 +398,7 @@ feature -- Status report
 					end
 				else
 					create expr.make_with_object (
-						create {DEBUGGED_OBJECT}.make_with_class (value_object, debuggable_class),
+						create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_object, debuggable_class),
 						debuggable_name)
 					expr.evaluate
 					if expr.error_message = Void and then not expr.final_result_value.is_void then
@@ -474,7 +495,6 @@ feature -- Action
 					else
 						send_ref_value(0)
 					end
-
 				else
 					-- unexpected value, do nothing
 					debug("DEBUGGER")
@@ -589,7 +609,7 @@ feature -- Access
 			Result := type /= Type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE} -- Implementation
+feature {DUMP_VALUE, EIFNET_EXPORTER} -- Implementation
 
 	type: INTEGER 
 		-- type discrimant, possible values are Type_XXXX
@@ -604,6 +624,66 @@ feature {DUMP_VALUE} -- Implementation
 	value_pointer	: POINTER
 	value_object	: STRING -- string standing for the address of the object if type=Type_object, or 
 							 -- String if type=Type_string
+
+	is_type_unknown: BOOLEAN is
+		do
+			Result := type = Type_unknown
+		end
+
+	is_type_boolean: BOOLEAN is
+		do
+			Result := type = Type_boolean
+		end
+
+	is_type_character: BOOLEAN is
+		do
+			Result := type = Type_character
+		end
+
+	is_type_integer: BOOLEAN is
+		do
+			Result := type = Type_integer
+		end
+
+	is_type_real: BOOLEAN is
+		do
+			Result := type = Type_real
+		end
+
+	is_type_double: BOOLEAN is
+		do
+			Result := type = Type_double
+		end
+
+	is_type_bits: BOOLEAN is
+		do
+			Result := type = Type_bits
+		end
+
+	is_type_pointer: BOOLEAN is
+		do
+			Result := type = Type_pointer
+		end
+
+	is_type_object: BOOLEAN is
+		do
+			Result := type = Type_object
+		end
+
+	is_type_string: BOOLEAN is
+		do
+			Result := type = Type_string
+		end
+
+	is_type_string_dotnet: BOOLEAN is
+		do
+			Result := type = Type_string_dotnet
+		end
+
+	is_type_integer_64: BOOLEAN is
+		do
+			Result := type = Type_integer_64
+		end
 
 feature {NONE} -- Private Constants
 	

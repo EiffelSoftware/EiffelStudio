@@ -929,8 +929,8 @@ rt_public int dmake_room(int new)
 		new_mpatidtab = (int *) cmalloc(new * sizeof(int));
 	}
 	else {
-		new_melt = (char **) crealloc(melt + zeroc, (melt_count + new) * sizeof(char *));
-		new_mpatidtab = (int *) crealloc(mpatidtab + zeroc, (melt_count + new) * sizeof(int));
+		new_melt = (char **) crealloc((char *)(melt + zeroc), (melt_count + new) * sizeof(char *));
+		new_mpatidtab = (int *) crealloc((char *)(mpatidtab + zeroc), (melt_count + new) * sizeof(int));
 	}
 	if ((new_melt == (char **) 0) || (new_mpatidtab == (int *) 0))
 		return -1;				/* Not enough memory for extension */

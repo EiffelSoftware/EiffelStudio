@@ -255,6 +255,5 @@ feature {NONE} -- Implementation
 		once
 			Result := "gtk-aux-info"
 		end
-		
 
 end -- class EV_GTK_WIDGET_IMP

@@ -24,7 +24,11 @@ feature {NONE}
 		do
 			old_bg_color_name := context.bg_color_name
 			if old_bg_color_name = Void then
-				default_color := context.default_background_color
+				if context.previous_bg_color = Void then
+					default_color := context.default_background_color
+				else
+					default_color := context.previous_bg_color
+				end;
 			end
 		end
 

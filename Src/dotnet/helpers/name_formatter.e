@@ -146,12 +146,13 @@ feature -- Access
 			if operators.found then
 				Result := operators.found_item
 			else
-				l_name := formatted_variable_name (name)
+				l_name := name.twin
 				if l_name.item (1) = '_'  then
 					l_name.prepend_character ('m')
 				elseif l_name.item (1).is_digit then
 					l_name.prepend ("m_")
 				end
+				l_name := formatted_variable_name (l_name)
 				Result := l_name
 			end
 			Result := Result.twin
@@ -169,13 +170,13 @@ feature -- Access
 			if name.is_empty then
 				Result := "arg_" + pos.out
 			else
-				l_name := formatted_variable_name (name)
+				l_name := name.twin
 				if l_name.item (1) = '_'  then
 					l_name.prepend_character ('a')
 				elseif l_name.item (1).is_digit then
 					l_name.prepend ("a_")
 				end
-				Result := l_name
+				Result := formatted_variable_name (l_name)
 			end
 		ensure
 			formatted_argument_name_not_void: Result /= Void

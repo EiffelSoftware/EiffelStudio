@@ -1,8 +1,8 @@
 indexing
-	description: "Window on which is displayed the wizards"
-	author: "pascalf"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Window on which is displayed the wizards"
+	author		: "pascalf"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_WINDOW
@@ -15,10 +15,10 @@ inherit
 			default_create
 		end
 
-Creation
+create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Initialize Current window.
@@ -94,7 +94,31 @@ feature -- Initialization
 			update_navigation
 		end
 
-feature -- Implementation
+feature -- Access
+
+	wizard_page: EV_VERTICAL_BOX
+			-- Page on which is displayed the information
+			-- needed to be completed by the user in order
+			-- to be performed.
+
+feature -- Status setting
+
+	lock_update is
+			-- Lock updates for this window on certain platforms until
+			-- `unlock_update' is called.
+			--
+			-- Note: The window cannot be moved while update is locked.
+		do
+			implementation.lock_update
+		end
+
+	unlock_update is
+			-- Unlock updates for this window on certain platforms.
+		do
+			implementation.unlock_update
+		end
+
+feature {NONE} -- Implementation
 
 	previous_b, next_b, cancel_b: EV_BUTTON
 			-- Button ensuring the navigation.
@@ -102,11 +126,6 @@ feature -- Implementation
 	wizard_info_page: EV_VERTICAL_BOX
 			-- Page to be completed by the user
 			-- to give the information about the current state
-
-	wizard_page: EV_VERTICAL_BOX
-			-- Page on which is displayed the information
-			-- needed to be completed by the user in order
-			-- to be performed.
 
 	is_final: BOOLEAN
 			-- Is it the final state?
@@ -126,6 +145,18 @@ feature {WIZARD_STATE_WINDOW} -- Basic Operations
 			is_final := False
 		end
 
+	disable_next_button is
+			-- Disable the Next/Finish button
+		do
+			next_b.disable_sensitive
+		end
+
+	disable_back_button is
+			-- Enable the Next/Finish button
+		do
+			previous_b.disable_sensitive
+		end
+
 feature -- Basic Operations
 
 	previous_page is
@@ -140,7 +171,7 @@ feature -- Basic Operations
 	update_navigation is
 			-- Update navigation buttons.
 		do
-			if history.count<1 or else history.isfirst  then
+			if history.count < 1 or else history.isfirst  then
 				previous_b.disable_sensitive
 			elseif is_final then
 				previous_b.enable_sensitive

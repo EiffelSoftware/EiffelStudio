@@ -20,7 +20,7 @@ inherit
 			propagate_background_color
 		redefine
 			enable_sensitive,
-			disable_sensitive,
+			disable_sensitive
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -139,6 +139,9 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/21 18:17:46  rogers
+--| Removed extra comma.
+--|
 --| Revision 1.27  2000/03/21 18:12:21  oconnor
 --| removed redefinition of interface
 --|

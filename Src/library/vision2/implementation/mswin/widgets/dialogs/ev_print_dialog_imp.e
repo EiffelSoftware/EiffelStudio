@@ -193,12 +193,16 @@ feature -- Access
 
 	output_file_name: STRING is
 		do
-			Result:="a_file"
+			--| FIXME it appears that to implement this, you
+			--| need to handle WIN32 StartDoc and DOCINFO
+			Result:="Not yet implemented."
 		end
 
 	printer_name: STRING is
 		do
-			Result:="a printer"
+			--| FIXME Need to add WEL support for DEVNAMES
+			--| structure, to implement this feature.
+			Result:="Not yet implemented"
 		end
 
 feature -- Element change
@@ -221,6 +225,8 @@ feature -- Status_report
 
 	landscape_checked: BOOLEAN is
 		do
+			--| FIXME Appears to be no easy way to find this from
+			--| the dialog.
 		end
 		
 end -- class EV_PRINT_DIALOG_IMP

@@ -55,5 +55,17 @@ feature -- Access
 			description: "Export clause"
 			external_name: "ExportClause"
 		end
+
+	named_signature_type: NAMED_SIGNATURE_TYPE
+		indexing
+			description: "Named signature type"
+			external_name: "NamedSignatureType"
+		end
+		
+	formal_named_signature_type: FORMAL_NAMED_SIGNATURE_TYPE
+		indexing
+			description: "Formal named signature type"
+			external_name: "FormalNamedSignatureType"
+		end
 		
 end -- class EIFFEL_COMPONENTS

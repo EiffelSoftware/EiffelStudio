@@ -7,49 +7,114 @@ class
 	NAMED_SIGNATURE_TYPE
 
 inherit
-	SIGNATURE_TYPE
+	NAMED_SIGNATURE_TYPE_INTERFACE
+
 	
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make is
+		indexing
+			description: "Creation routine"
+			external_name: "Make"
+		do
+		end
+		
 feature -- Access
 
-	eiffel_name: STRING
+	eiffel_name: STRING is
 		indexing
 			description: "Eiffel name"
 			external_name: "EiffelName"
+		do
+			Result := internal_eiffel_name
 		end
 	
-	external_name: STRING
+	external_name: STRING is
 		indexing
 			description: "External name"
 			external_name: "ExternalName"
+		do
+			Result := internal_external_name
 		end
 
+	type_eiffel_name: STRING is
+		indexing
+			description: "Type Eiffel name"
+			external_name: "TypeEiffelName"
+		do
+			Result := internal_type_eiffel_name
+		end
+	
+	type_full_external_name: STRING is
+		indexing
+			description: "Type external name (full name)"
+			external_name: "TypeFullExternalName"
+		do
+			Result := internal_type_full_external_name
+		end
+		
 feature -- Status Setting
 
-	set_eiffel_name (a_name: like eiffel_name) is
+	set_eiffel_name (a_name: STRING) is
 		indexing
 			description: "Set `eiffel_name' with `a_name'."
 			external_name: "SetEiffelName"
-		require
-			non_void_name: a_name /= Void
 		do
-			eiffel_name := a_name
-		ensure
-			eiffel_name_set: eiffel_name.equals_string (a_name)
+			internal_eiffel_name := a_name
 		end
 
-	set_external_name (a_name: like external_name) is
+	set_external_name (a_name: STRING) is
 		indexing
 			description: "Set `external_name' with `a_name'."
 			external_name: "SetExternalName"
-		require
-			non_void_name: a_name /= Void
 		do
-			external_name := a_name
-		ensure
-			external_name_set: external_name.equals_string (a_name)
+			internal_external_name := a_name
+		end
+
+	set_type_eiffel_name (a_name: STRING) is
+		indexing
+			description: "Set `type_eiffel_name' with `a_name'."
+			external_name: "SetTypeEiffelName"
+		do
+			internal_type_eiffel_name := a_name
+		end
+
+	set_type_full_external_name (a_name: STRING) is
+		indexing
+			description: "Set `type_full_external_name' with `a_name'."
+			external_name: "SetTypeFullExternalName"
+		do
+			internal_type_full_external_name := a_name
+		end
+
+
+feature {NONE} -- Implementation
+
+	internal_eiffel_name: STRING
+		indexing
+			description: "Value returned by `eiffel_name'"
+			external_name: "InternalEiffelName"
+		end
+		
+	internal_external_name: STRING
+		indexing
+			description: "Value returned by `external_name'"
+			external_name: "InternalExternalName"
+		end
+
+	internal_type_eiffel_name: STRING 
+		indexing
+			description: "Value returned by `type_eiffel_name'"
+			external_name: "InternalTypeEiffelName"
+		end
+
+	internal_type_full_external_name: STRING 
+		indexing
+			description: "Value returned by `type_full_external_name'"
+			external_name: "InternalTypeFullExternalName"
 		end
 
 end -- class NAMED_SIGNATURE_TYPE

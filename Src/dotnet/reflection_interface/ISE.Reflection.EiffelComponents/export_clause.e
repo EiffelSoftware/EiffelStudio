@@ -11,7 +11,7 @@ inherit
  		rename 
  			make as make_inheritance_clause
  		redefine
- 			equals
+ 			is_equal
  		end
  
 create
@@ -103,17 +103,17 @@ feature -- Status Report
 			external_name: "AllFeaturesExported"
 		end
 
-	equals (obj: EXPORT_CLAUSE): BOOLEAN is
+	is_equal (obj: EXPORT_CLAUSE): BOOLEAN is
 		indexing
 			description: "Is Current equals to `obj'?"
-			external_name: "Equals"			
+			external_name: "IsEqual"			
 		do
 			if exportation_list /= Void and obj.exportation_list = Void then
 				Result := False
 			elseif exportation_list /= Void and obj.exportation_list /= Void then
-				Result := exportation_list.equals (obj.exportation_list) and feature_names.equals (obj.feature_names) and (all_features_exported = obj.all_features_exported)
+				Result := exportation_list.is_equal (obj.exportation_list) and feature_names.is_equal (obj.feature_names) and (all_features_exported = obj.all_features_exported)
 			elseif exportation_list = Void and obj.exportation_list = Void then
-				Result := feature_names.equals (obj.feature_names) and (all_features_exported = obj.all_features_exported)
+				Result := feature_names.is_equal (obj.feature_names) and (all_features_exported = obj.all_features_exported)
 			end
 		end
 	
@@ -170,11 +170,11 @@ feature -- Basic Operations
 		local
 			added: INTEGER
 		do
-			if not feature_names.contains (a_feature_name) then
-				added := feature_names.add (a_feature_name)
+			if not feature_names.has (a_feature_name) then
+				added := feature_names.extend (a_feature_name)
 			end
 		ensure
-			feature_name_added: feature_names.contains (a_feature_name)
+			feature_name_added: feature_names.has (a_feature_name)
 		end
 		
 	add_exportation (a_class_name: STRING) is
@@ -190,11 +190,11 @@ feature -- Basic Operations
 			if exportation_list = Void then
 				create exportation_list.make
 			end
-			if not exportation_list.contains (a_class_name) then
-				added := exportation_list.add (a_class_name)
+			if not exportation_list.has (a_class_name) then
+				added := exportation_list.extend (a_class_name)
 			end
 		ensure
-			exportation_added: exportation_list.contains (a_class_name)
+			exportation_added: exportation_list.has (a_class_name)
 		end
 		
 	string_representation: STRING is

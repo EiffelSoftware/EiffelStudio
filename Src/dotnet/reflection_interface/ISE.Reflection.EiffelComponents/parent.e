@@ -155,11 +155,11 @@ feature -- Element Change
 		local
 			added: INTEGER
 		do
-			if not rename_clauses.contains (a_clause) then
-				added := rename_clauses.add (a_clause)
+			if not rename_clauses.has (a_clause) then
+				added := rename_clauses.extend (a_clause)
 			end
 		ensure
-			rename_clause_added: rename_clauses.contains (a_clause)
+			rename_clause_added: rename_clauses.has (a_clause)
 		end
 
 	add_redefine_clause (a_clause: REDEFINE_CLAUSE) is
@@ -169,11 +169,11 @@ feature -- Element Change
 		local
 			added: INTEGER
 		do
-			if not redefine_clauses.contains (a_clause) then
-				added := redefine_clauses.add (a_clause)
+			if not redefine_clauses.has (a_clause) then
+				added := redefine_clauses.extend (a_clause)
 			end
 		ensure
-			redefine_clause_added: redefine_clauses.contains (a_clause)
+			redefine_clause_added: redefine_clauses.has (a_clause)
 		end
 
 	add_undefine_clause (a_clause: UNDEFINE_CLAUSE) is
@@ -183,11 +183,11 @@ feature -- Element Change
 		local
 			added: INTEGER
 		do
-			if not undefine_clauses.contains (a_clause) then
-				added := undefine_clauses.add (a_clause)
+			if not undefine_clauses.has (a_clause) then
+				added := undefine_clauses.extend (a_clause)
 			end
 		ensure
-			undefine_clause_added: undefine_clauses.contains (a_clause)
+			undefine_clause_added: undefine_clauses.has (a_clause)
 		end
 
 	add_select_clause (a_clause: SELECT_CLAUSE) is
@@ -197,11 +197,11 @@ feature -- Element Change
 		local
 			added: INTEGER
 		do
-			if not select_clauses.contains (a_clause) then
-				added := select_clauses.add (a_clause)
+			if not select_clauses.has (a_clause) then
+				added := select_clauses.extend (a_clause)
 			end
 		ensure
-			select_clause_added: select_clauses.contains (a_clause)
+			select_clause_added: select_clauses.has (a_clause)
 		end
 
 	add_export_clause (a_clause: EXPORT_CLAUSE) is
@@ -211,11 +211,11 @@ feature -- Element Change
 		local
 			added: INTEGER
 		do
-			if not export_clauses.contains (a_clause) then
-				added := export_clauses.add (a_clause)
+			if not export_clauses.has (a_clause) then
+				added := export_clauses.extend (a_clause)
 			end
 		ensure
-			export_clause_added: export_clauses.contains (a_clause)
+			export_clause_added: export_clauses.has (a_clause)
 		end
 
 invariant

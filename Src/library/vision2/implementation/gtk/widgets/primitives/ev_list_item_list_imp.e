@@ -189,13 +189,10 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 		local
 			item_imp: EV_LIST_ITEM_IMP
 		do
-			item_imp ?= v.implementation
-			item_imp.set_item_parent_imp (Current)
-			
 			child_array.go_i_th (i)
-			child_array.put_left (v)	
-
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, item_imp.c_object)
+			child_array.put_left (v)
+			item_imp ?= v.implementation
+			add_to_container (v, item_imp)
 			gtk_reorder_child (list_widget, item_imp.c_object, i - 1)
 		end
 

@@ -15,7 +15,6 @@ inherit
 	EV_COMBO_BOX_I
 		undefine
 			selected_item
-			--set_default_minimum_size
 		redefine
 			interface,
 			initialize
@@ -52,7 +51,6 @@ inherit
 			wel_move_and_resize,
 			set_editable,
 			on_key_down,
---			on_key_up
 			interface,
 			initialize
 		end
@@ -446,10 +444,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 				if selected and equal (text, selected_item.text) and (virtual_key /= 9) and
 					(virtual_key /= 40) and (virtual_key /= 38) then
 					t_item ?= selected_item.implementation
-					unselect
-					--|FIXME two lines below are to stop a compiler bug. Remove as soon as possible.
-					if selected then
-					end
+					unselect;
 					(ev_children @ t_item.index).interface.deselect_actions.call ([])
 						-- Call deselect events on child.
 					interface.deselect_actions.call ([(ev_children @ t_item.index).interface])
@@ -638,6 +633,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/03/23 17:55:45  rogers
+--| Removed some redundent lines.
+--|
 --| Revision 1.61  2000/03/22 20:16:19  rogers
 --| Renamed
 --| 	move_and_resize -> wel_move_and_resize,

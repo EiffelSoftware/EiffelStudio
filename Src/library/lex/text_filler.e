@@ -17,10 +17,10 @@ feature -- Access
 			-- Buffer filled by fill_buffer
 
 	file_name : STRING is
-            -- Name of input file
-        do
-            Result := file.name
-        end; 
+			-- Name of input file
+		do
+			Result := file.name
+		end; 
 
 	line_nb_array: LEX_ARRAY [INTEGER];
 			-- Array recording the line numbers of each buffered
@@ -55,78 +55,78 @@ feature -- Status setting
 		end; 
 
 	resize_and_fill_buffer (buf, b: INTEGER) is
-         -- When increasing `buffer_size': resize the buffer and then
-         --    fill the new buffer.
-         -- When decreasing `buffer_size': fill the buffer and then
-         --       resize it.
-         -- When filling the buffer: Copy the characters from the
-         -- `b'+1-st to the last one (of the buffer before resizing) in
-         -- the beginning of the buffer and then fill
-         -- the end of the buffer (after resizing) with the text.
-         -- This routine skips the columns
-         -- forbidden by exclude, but always puts '\n' at the end
-         -- of a line; the line and column numbers are those of
-         -- the characters in the real file.
-      require
-         buffer_created: buffer /= Void;
-         c_buffer_created: column_nb_array /= Void;
-         l_buffer_created: line_nb_array /= Void;
-         b_not_too_large: b <= buffer_size;
-         b_positive: b >= 0
-      local
-         previous_buffer_size: INTEGER;
-         previous_buffer: STRING;
+			-- When increasing `buffer_size': resize the buffer and then
+			-- fill the new buffer.
+			-- When decreasing `buffer_size': fill the buffer and then
+			-- resize it.
+			-- When filling the buffer: Copy the characters from the
+			-- `b'+1-st to the last one (of the buffer before resizing) in
+			-- the beginning of the buffer and then fill
+			-- the end of the buffer (after resizing) with the text.
+			-- This routine skips the columns
+			-- forbidden by exclude, but always puts '\n' at the end
+			-- of a line; the line and column numbers are those of
+			-- the characters in the real file.
+		require
+			buffer_created: buffer /= Void;
+			c_buffer_created: column_nb_array /= Void;
+			l_buffer_created: line_nb_array /= Void;
+			b_not_too_large: b <= buffer_size;
+			b_positive: b >= 0
+			local
+			previous_buffer_size: INTEGER;
+			previous_buffer: STRING;
 			c_temp1, c_temp2, c_temp3, c_temp4, c_temp5: ANY
-      do
-         if buf >= buffer_size then
-            previous_buffer_size := buffer_size;
-            buffer_size := buf;
-            previous_buffer := clone (buffer);
-            buffer.resize (buffer_size);
-            buffer.append (previous_buffer);
-            line_nb_array.resize (1, buffer_size);
-            column_nb_array.resize (1, buffer_size);
+		do
+			if buf >= buffer_size then
+				previous_buffer_size := buffer_size;
+				buffer_size := buf;
+				previous_buffer := clone (buffer);
+				buffer.resize (buffer_size);
+				buffer.append (previous_buffer);
+				line_nb_array.resize (1, buffer_size);
+				column_nb_array.resize (1, buffer_size);
 				c_temp2 := buffer.to_c;
 				c_temp3 := line_nb_array.to_c;
 				c_temp4 := column_nb_array.to_c;
 				c_temp5 := mask.to_c;
-            if source_is_file then
+				if source_is_file then
 					char_buffered_number := char_buffered_number
 					+ fill_buf (file.file_pointer, $c_temp2,
 					$c_temp3, $c_temp4,
 					$c_temp5, b, previous_buffer_size, buffer_size)
-            else
+				else
 					c_temp1 := string.to_c;
 					char_buffered_number := char_buffered_number
 					+ fill_f_s ($c_temp1, $c_temp2,
 					$c_temp3, $c_temp4,
 					$c_temp5, b, previous_buffer_size, buffer_size)
-            end
-         else
+				end
+			else
 				c_temp2 := buffer.to_c;
 				c_temp3 := line_nb_array.to_c;
 				c_temp4 := column_nb_array.to_c;
 				c_temp5 := mask.to_c;
-            if source_is_file then
+				if source_is_file then
 					char_buffered_number := char_buffered_number
 					+ fill_buf (file.file_pointer, $c_temp2,
 					$c_temp3, $c_temp4,
 					$c_temp5, b, buffer_size, buf)
-            else
+				else
 					c_temp1 := string.to_c;
 					char_buffered_number := char_buffered_number
 					+ fill_f_s ($c_temp1, $c_temp2,
 					$c_temp3, $c_temp4,
 					$c_temp5, b, buffer_size, buf)
-            end;
-            buffer_size := buf;
-            buffer.resize (buffer_size);
-            line_nb_array.resize (1, buffer_size);
-            column_nb_array.resize (1, buffer_size)
-         end
-      ensure
-         buffer_size = buf
-      end; 
+				end;
+				buffer_size := buf;
+				buffer.resize (buffer_size);
+				line_nb_array.resize (1, buffer_size);
+				column_nb_array.resize (1, buffer_size)
+			end
+		ensure
+			buffer_size = buf
+		end; 
 
 	exclude (i, j: INTEGER) is
 			-- Discard columns `i' to `j' from the input.
@@ -217,13 +217,15 @@ feature -- Status setting
 			fill_buffer (buffer_size)
 		end 
 
+feature -- Implementation
+
+	buffer_size: INTEGER;
+			-- Buffer size
+
 feature {NONE} -- Implementation
 
 	line_length: INTEGER;
 			-- Maximal number of characters in a line
-
-	buffer_size: INTEGER;
-			-- Buffer size
 
 	source_size: INTEGER;
 			-- Character number in file or string source

@@ -311,13 +311,13 @@ feature -- Widget
 			not (Result = Void)
 		end
 
+	list: ARRAY [WIDGET];
+			-- list of widgets
+
 feature {NONE}
 
 	count: INTEGER;
 			-- Index of last entry
-
-	list: ARRAY [WIDGET];
-			-- list of widgets
 
 	position: INTEGER;
 			-- Current cursor position

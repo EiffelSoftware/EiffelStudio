@@ -294,7 +294,7 @@ widget_oui)
 		end;
 
 	
-feature {NONE}
+feature
 
 	is_in_a_verification_callback: BOOLEAN is
 			-- Is the program in a `motion' or `modify' action ?

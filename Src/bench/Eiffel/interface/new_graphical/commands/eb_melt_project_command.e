@@ -107,58 +107,36 @@ feature {NONE} -- Compilation implementation
 	compile is
 			-- Compile, in the one way or the other.
 		local
-			rescued: BOOLEAN
 			st: STRUCTURED_TEXT
-			wd: EV_WARNING_DIALOG
 		do
-			if not rescued then
-				if not Eiffel_project.is_compiling then
-					reset_debugger
-					output_manager.clear
-					Window_manager.on_compile
-					perform_compilation
+			if not Eiffel_project.is_compiling then
+				reset_debugger
+				output_manager.clear
+				Window_manager.on_compile
+				perform_compilation
 
-					if Eiffel_project.successful then
-							-- If a freezing already occurred (due to a new external
-							-- or new derivation of SPECIAL), no need to freeze again.
-						if Eiffel_project.save_error then
-							create st.make
-							st.add_string ("Could not write to ")
-							st.add_string (Project_directory_name)
-							st.add_new_line
-							st.add_string ("Please check permissions / disk space")
-							st.add_new_line
-							st.add_string ("and retry")
-							st.add_new_line
-							output_manager.process_text (st)
-						else
-							if not finalization_error then
-								launch_c_compilation
-							end
+				if Eiffel_project.successful then
+						-- If a freezing already occurred (due to a new external
+						-- or new derivation of SPECIAL), no need to freeze again.
+					if Eiffel_project.save_error then
+						create st.make
+						st.add_string ("Could not write to ")
+						st.add_string (Project_directory_name)
+						st.add_new_line
+						st.add_string ("Please check permissions / disk space")
+						st.add_new_line
+						st.add_string ("and retry")
+						st.add_new_line
+						output_manager.process_text (st)
+					else
+						if not finalization_error then
+							launch_c_compilation
 						end
 					end
-
-					tool_resynchronization
-					Degree_output.finish_degree_output
 				end
-			else
-					-- The project may be corrupted => the project
-					-- becomes read-only.
-				create wd.make_with_text (Warning_messages.w_Project_may_be_corrupted)
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
 
 				tool_resynchronization
 				Degree_output.finish_degree_output
-			end
-
-		rescue
-			if not fail_on_rescue then
-				if original_exception = Io_exception then
-						-- We probably don't have the write permissions
-						-- on the server files.
-					rescued := true
-					retry
-				end
 			end
 		end
 

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- If `attribute_name' not unique, an error is raised.
 		require
 			attribute_not_void: attribute_name /= Void
-			attribute_not_empty: not attribute_name.empty
+			attribute_not_empty: not attribute_name.is_empty
 		local
 			c_attribute_name: ANY
 		do
@@ -49,9 +49,9 @@ feature {NONE} -- Initialization
 			-- Get attribute from database.
 		require
 			attribute_not_void: attribute_name /= Void
-			attribute_not_empty: not attribute_name.empty
+			attribute_not_empty: not attribute_name.is_empty
 			cl_not_void: cl_name /= Void
-			cl_not_empty: not cl_name.empty
+			cl_not_empty: not cl_name.is_empty
 		local
 			c_attribute_name: ANY
 			c_cl_name: ANY
@@ -506,7 +506,7 @@ feature -- Element Change
 			if new_time = Void then
 				c_set_value_void (an_object.oid, oid, Mt_Nil, $Void, 0)
 			else
-				microsecond := (new_time.fractionnal_second * 1000000).floor
+				microsecond := (new_time.fractional_second * 1000000).floor
 				c_set_value_timestamp (an_object.oid, oid, 
 						new_time.year, new_time.month, new_time.day,
 						new_time.hour, new_time.minute, new_time.second,

@@ -507,7 +507,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- build clusters.
 		local
 			clus: CLUSTER_SD
-			override_name: STRING
+			cluster: CLUSTER_I
 			clus_name: STRING
 		do
 			if clusters /= Void then
@@ -516,31 +516,27 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- looking at the subdirectories through `expand_recursive_clusters'
 					-- which has a small side effect that updates the `clusters' objects
 					-- by adding new item to it.
-					--
-					-- Note: because we accepted in 4.5 `all' specification on `override_cluster'
-					-- we cannot expand it like the other cluster with `all' because everything
-					-- has been created with only one override_cluster in mind. As a consequence
-					-- I (Manu) kept the previous implementation of `all' specification in
-					-- CLUSTER_I, where all classes belong to the top cluster.
 				Degree_output.put_start_degree_6 (clusters_count);
 				from
 					clusters.start
-					override_name := Universe.override_cluster_name
 				until
 					clusters.after
 				loop
 					clus := clusters.item
 					clus_name := clus.cluster_name
-					if
-						clus.is_recursive and then
-						(override_name = Void or else not clus_name.is_equal (override_name))
-					then
+					if clus.is_recursive then
 						clus.expand_recursive_clusters (clusters)
 					end
 					Degree_output.put_degree_6 (clus.cluster_name,
 						clusters_count - clusters.index + 1)
 					clus.build
 					clusters.forth
+				end
+					-- Wipe out all subclusters of override cluster and put all classes in it.
+				if Universe.has_override_cluster then
+					cluster := Universe.override_cluster
+					cluster.update_with_all_classes
+					cluster.sub_clusters.wipe_out
 				end
 			else
 				Degree_output.put_start_degree_6 (0)

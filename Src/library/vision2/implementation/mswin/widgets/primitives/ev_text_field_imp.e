@@ -134,9 +134,9 @@ feature {NONE} -- WEL Implementation
 			-- We specify the Es_autovscroll style otherwise
 			-- the system beeps when we press the return key.
 		do
-			Result := Ws_child + Ws_visible + Ws_tabstop
-					+ Ws_group + Ws_border + Es_left + Es_autohscroll
-					+ Ws_clipchildren + Ws_clipsiblings
+			Result := Ws_child | Ws_visible| Ws_tabstop
+					| Ws_group | Es_left | Es_autohscroll
+					| Ws_clipchildren | Ws_clipsiblings
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is

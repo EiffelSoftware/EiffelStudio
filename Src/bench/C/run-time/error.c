@@ -20,8 +20,6 @@
 #include <strings.h>
 #endif
 
-extern int errno;			/* System call error status */
-
 public char *error_tag(code)
 {
 	/* Returns a pointer to the English description of the system error whose

@@ -226,7 +226,6 @@ private char *vanished = "main entry point vanished";
 
 extern char *ename;					/* Name of the Eiffel program running */
 extern char *root_obj;				/* Address of the root object */
-extern int errno;					/* System call error status */
 extern char *error_tag();			/* English description out of errno code */
 extern void reclaim();				/* GC routine used to collect objects */
 

@@ -884,7 +884,7 @@ feature {NONE} -- Mouse copy cut
 			-- the editor?
 		do
 			Result := 
-						a_screen_x > editor_x + left_margin_width
+						a_screen_x > editor_x
 							and then
 						a_screen_x < editor_x + editor_area.width
 							and then

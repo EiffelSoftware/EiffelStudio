@@ -599,11 +599,29 @@ feature {COMPILER_EXPORTER} -- Implementation
 			old_cluster: CLUSTER_I;
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			a_class: CLASS_C
+			ovc    : CLUSTER_I
 		do
-			old_universe := lace.old_universe;
 			if override_cluster_name /= void then
 				cluster_of_name (override_cluster_name).set_is_override_cluster (True)
 			end;
+
+			if has_override_cluster then
+				-- Remove classes which are overridden
+				ovc := override_cluster
+
+				from
+					clusters.start
+				until
+					clusters.after
+				loop
+					if clusters.item /= ovc then
+						clusters.item.process_overrides (ovc)
+					end
+					clusters.forth
+				end
+			end
+
+			old_universe := lace.old_universe;
 			if old_universe.has_override_cluster then
 				old_tag := old_universe.override_cluster_name;
 				if not equal (old_tag, override_cluster_name) then

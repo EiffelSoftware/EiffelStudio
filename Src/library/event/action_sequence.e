@@ -47,8 +47,7 @@ inherit
 		end
 
 creation
-	make,
-	make_with_connecting_agent
+	make
 
 feature {NONE} -- Initialization
 
@@ -75,27 +74,6 @@ feature {NONE} -- Initialization
 			event_data_names_assigned: event_data_names_internal.is_equal (some_event_data_names)
 		end
 
-	make_with_connecting_agent (a_name: STRING; some_event_data_names: ARRAY [STRING]; a_connecting_agent: PROCEDURE [ANY, TUPLE []]) is
-			-- Create with `a_name',
-			-- `some_event_data_names' describing each event datum and
-			-- `a_connecting_agent' that will connect the new sequence to an actual event source.
-			-- Begin in `Normal_state'.
-		require
-			name_not_void: a_name /= Void
-			name_not_empty: not a_name.empty
-			event_data_names_not_void: some_event_data_names /= Void
-			correct_event_data_names_count:
-				 some_event_data_names.count = dummy_event_data.count
-			connecting_agent_not_void: a_connecting_agent /= Void
-		do
-			make (a_name, some_event_data_names)
-			source_connection_agent := a_connecting_agent
-		ensure
-			name_assigned: name_internal.is_equal (a_name)
-			event_data_names_assigned: event_data_names_internal.is_equal (some_event_data_names)
-			connecting_agent_assigned: source_connection_agent = a_connecting_agent
-		end
-
 	initialize is
 			-- Called when the first action is added.
 			-- Calles `source_connection_agent' to attach sequence
@@ -106,6 +84,7 @@ feature {NONE} -- Initialization
 			is_initialized := True
 			if source_connection_agent /= Void then
 				source_connection_agent.call ([])
+				source_connection_agent := Void
 			end
 		ensure
 			is_initialized
@@ -291,6 +270,28 @@ feature  -- Element Change
 			is_initialized
 		end
 
+	set_source_connection_agent (a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
+			-- Set `a_connecting_agent' that will connect sequence to an actual event source.
+			-- The agent will be called when the first action is added to the sequence.
+			-- If there are already actions in the sequence the agent is called imediatly.
+		require
+			source_connection_agent_not_set: not set_source_connection_agent_called
+			source_connection_agent_not_void: a_source_connection_agent /= Void
+		do
+			if is_initialized then
+				source_connection_agent.call ([])
+			else
+				source_connection_agent := a_source_connection_agent
+			end 
+			set_source_connection_agent_called := True
+		ensure
+			source_connection_agent_assigned: not is_initialized implies source_connection_agent = a_source_connection_agent
+			set_source_connection_agent_called_set: set_source_connection_agent_called
+		end
+
+	set_source_connection_agent_called: BOOLEAN
+		
+
 feature  {LINKED_LIST} -- Implementation
 
 	new_cell (v: like item): like first_element is
@@ -367,6 +368,8 @@ invariant
 	valid_state: state = Normal_state or state = Paused_state or state = Blocked_state
 	call_buffer_consistent: state = Normal_state implies call_buffer.empty
 
+	source_connection_agent_disgarded_after_call: is_initialized implies source_connection_agent = Void
+
 	first_addition_caught: not empty implies is_initialized
 		--| We redefine new_cell, merge_left and merge_right from LINKED_LIST
 		--| to call initialize if it has not been called before. This should
@@ -399,6 +402,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.12  1999/11/29 18:17:00  oconnor
+--| added set_source_connection_agent feature, removed make_with_connecting_agent
+--|
 --| Revision 1.11  1999/11/29 17:04:08  brendel
 --| Added comma in create-clause and fixed precondition.
 --|

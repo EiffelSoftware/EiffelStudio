@@ -43,7 +43,10 @@ feature {NONE} -- Implementation
 			-- Go to next step.
 		do
 			Precursor
-			proceed_with_new_state(Create {WIZARD_FIRST_STATE}.make(wizard_information))
+				-- The first state is not needed for the current project options,
+				-- when launched fromVisualStudio. The second state may still be
+				-- needed if other options are selected.
+			proceed_with_new_state(Create {WIZARD_SECOND_STATE}.make(wizard_information))
 		end
 
 	display_state_text is

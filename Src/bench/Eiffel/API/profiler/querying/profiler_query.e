@@ -111,7 +111,7 @@ feature -- Status report
 					Result.extend (' ');
 					so := operator_at (i);
 					Result.append (so.actual_operator);
-					Result.append ("%R%N")
+					Result.extend ('%N')
 				end
 				i := i + 1
 			end

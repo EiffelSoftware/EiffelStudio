@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 						dispatch_interface := True
 					end
 
-					generate_functions_and_properties (a_coclass_descriptor, interface_descriptors.item)
+					generate_functions_and_properties (a_coclass_descriptor, interface_descriptors.item, interface_descriptors.item.name)
 
 					interface_descriptors.forth
 				end

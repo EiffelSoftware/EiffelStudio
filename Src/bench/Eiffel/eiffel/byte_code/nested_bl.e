@@ -370,7 +370,7 @@ end;
 			message_target := message.target;
 
 				-- Put parameters, if any, in temporary registers
-			message_target.generate_parameters;
+			message_target.generate_parameters (reg);
 				-- Now if there is a result for the call and the result
 				-- has to be stored in a real register, do generate the
 				-- assignment.

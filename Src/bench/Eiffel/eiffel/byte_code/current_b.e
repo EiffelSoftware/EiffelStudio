@@ -18,8 +18,11 @@ feature
 			Result := context.current_type;
 		end;
 
-	is_current: BOOLEAN is True;
+	is_current: BOOLEAN is
 			-- This is an access to Current
+		do
+			Result := True
+		end
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?

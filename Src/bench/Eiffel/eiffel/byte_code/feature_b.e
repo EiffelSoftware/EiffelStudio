@@ -238,7 +238,8 @@ feature -- Inlining
 			base_class: CLASS_C
 			entry: POLY_TABLE [ENTRY];
 			f: FEATURE_I
-			inlined_bc: INLINED_BYTE_CODE
+			bc: STD_BYTE_CODE
+			old_c_t: CL_TYPE_I
 		do
 			type_i := context_type;
 			if not type_i.is_basic then
@@ -260,11 +261,16 @@ feature -- Inlining
 					-- Creation of a special node for the entire
 					-- feature (descendant of STD_BYTE_CODE)
 				inliner.set_current_feature_inlined;
-
 				!!inlined_feat_b;
 				inlined_feat_b.fill_from (Current)
-				inlined_bc ?= Byte_server.item (f.body_id).pre_inlined_code;
-				inlined_feat_b.set_inlined_byte_code (inlined_bc);
+				bc ?= Byte_server.disk_item (f.body_id);
+
+				old_c_t := Context.current_type;
+				Context.set_current_type (current_type);
+				bc := bc.pre_inlined_code;
+				Context.set_current_type (old_c_t);
+
+				inlined_feat_b.set_inlined_byte_code (bc);
 				Result := inlined_feat_b
 			else
 				Result := Current
@@ -273,5 +279,56 @@ feature -- Inlining
 				end
 			end;
 		end;
+
+	current_type: CL_TYPE_I is
+			-- Current type for the call (NOT the static type but the
+			-- type corresponding to the written in class)
+		local
+			written_class: CLASS_C
+			original_feature: FEATURE_I
+			gen_type_i: GEN_TYPE_I
+			m: META_GENERIC
+			real_target_type, actual_type: TYPE_A
+			constraint: TYPE_A
+			formal_a: FORMAL_A
+			nb_generics, i: INTEGER
+			t_i: TYPE_I
+		do
+			original_feature := context_type.type_a.associated_class.
+									feature_table.origin_table.item (rout_id);
+			written_class := original_feature.written_class;
+			if written_class.generics = Void then
+				Result := written_class.types.first.type
+			else
+				!!gen_type_i;
+				gen_type_i.set_base_id (written_class.id)
+
+				real_target_type := context_type.type_a;
+					-- LINKED_LIST [STRING] is recorded as LINKED_LIST [REFERENCE_I]
+					-- => LINKED_LIST [ANY] after previous call
+
+				from
+					i := 1
+					nb_generics := written_class.generics.count;
+					!!m.make (nb_generics)
+				until
+					i > nb_generics
+				loop
+					!!formal_a;
+					formal_a.set_base_type (i);
+					actual_type := formal_a.instantiation_in (real_target_type, written_class.id)
+					if actual_type.is_basic then
+						m.put (actual_type.type_i, i)
+					else
+						constraint := written_class.constraint (i);
+						m.put (constraint.type_i, i)
+					end
+					i := i + 1
+				end
+
+				gen_type_i.set_meta_generic (m)
+				Result := gen_type_i
+			end
+		end
 
 end

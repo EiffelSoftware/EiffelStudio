@@ -4,7 +4,7 @@ inherit
 
 	STD_BYTE_CODE
 		redefine
-			enlarged, has_inlined_code
+			has_inlined_code
 		end
 
 feature
@@ -25,10 +25,6 @@ feature
 			result_type := std.result_type
 			rout_id := std.rout_id
 			compound := std.compound
-		end
-
-	enlarged: INLINED_BYTE_CODE is
-		do
 		end
 
 	has_inlined_code: BOOLEAN is

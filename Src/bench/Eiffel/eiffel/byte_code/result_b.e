@@ -24,8 +24,11 @@ feature
 			Result := context.byte_code.result_type;
 		end;
 
-	is_result: BOOLEAN is true;
+	is_result: BOOLEAN is
 			-- Access is result
+		do
+			Result := True
+		end
 
 	is_creatable: BOOLEAN is true;
 			-- Can an access to Result be a target for a creation ?

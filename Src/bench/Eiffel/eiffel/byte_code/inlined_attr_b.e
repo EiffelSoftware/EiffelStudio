@@ -1,9 +1,9 @@
 class INLINED_ATTR_B
 
 inherit
-	ATTRIBUTE_B
+	ATTRIBUTE_BL
 		redefine
-			enlarged
+			enlarged, fill_from, current_register
 		end
 
 feature
@@ -19,6 +19,11 @@ feature
 	enlarged: INLINED_ATTR_B is
 		do
 			Result := Current
+		end
+
+	Current_register: INLINED_CURRENT_B is
+		once
+			!!Result
 		end
 
 end

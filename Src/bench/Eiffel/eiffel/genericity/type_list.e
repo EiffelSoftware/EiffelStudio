@@ -42,6 +42,27 @@ feature -- Search
 			go_to (old_cursor);
 		end;
 
+	search_item (t: TYPE_I): CLASS_TYPE is
+			-- Is the type `t' present in instances of CLASS_TYPE in the list?
+			-- If not, return the last item found in the list.
+		local
+			old_cursor: CURSOR
+		do
+			old_cursor := cursor
+
+			from
+				start
+			until
+				after or else item.type.same_as (t)
+			loop
+				forth
+			end
+
+			Result := item
+			
+			go_to (old_cursor)
+		end
+
 feature -- Access
 
 	found_item: CLASS_TYPE

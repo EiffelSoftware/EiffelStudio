@@ -1,0 +1,38 @@
+<document output="studio" title="Tutorial Step 7">
+	<meta_data/>
+	<paragraph>
+		<paragraph>This sample builds on tutorial 
+			<link>
+				<url>/libraries/wel/samples/tutorial/step6/index.html</url>
+				<label>step 6</label>
+			</link>, and also demonstrates the use of a WEL_MENU. The output is shown below: 
+		</paragraph>
+		<image> 
+			<url>step7.png</url> 
+			<alt_text>step7</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the sample, you will see a WEL_FRAME_WINDOW displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line" menu, will bring up a WEL_MODAL_DIALOG which allows you to change the thickness of the line that is drawn. If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. Selecting "New" from the "File" menu will clear the window. The other menu options on the "File" menu do nothing in this example. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>During the creation of MAIN_WINDOW, the menu is assigned to the window and on_menu_command is redefined to allow processing of the menu selctions. </paragraph>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>TUTORIAL_STEP7</item>
+				<item>MAIN_WINDOW</item>
+				<item>LINE_THICKNESS_DIALOG_CHART</item>
+				<item>APPLICATION_IDS</item>
+				<item>POINT</item>
+				<item>LINE</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

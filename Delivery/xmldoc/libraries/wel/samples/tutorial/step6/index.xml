@@ -1,0 +1,39 @@
+<document output="studio" title="Tutorial Step 6">
+	<meta_data/>
+	<paragraph>
+		<paragraph>This sample builds on tutorial 
+			<link>
+				<url>/libraries/wel/samples/tutorial/step5/index.html</url>
+				<label>step 5</label>
+			</link> by preventing the loss of the drawing when Windows re-draws the client area of the WEL_FRAME_WINDOW. The output is shown below: 
+		</paragraph>
+		<image> 
+			<url>step6.png</url> 
+			<alt_text>step6</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the sample, you will see a WEL_FRAME_WINDOW displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a WEL_MODAL_DIALOG will pop up which allows you to enter the thickness of the line that is drawn. If you re-size the window, then the drawing will be re-drawn.</paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This system uses a redefined on_paint to re-draw the contents of the window. A LINKED_LIST of LINES is used to store all the lines that have been drawn and during on_paint, this list is traversed in order to re-draw each line. 
+			<paragraph>This sample contains the following classes: 
+				<list ordered="false">
+					<item>TUTORIAL_STEP6</item>
+					<item>MAIN_WINDOW</item>
+					<item>LINE_THICKNESS_DIALOG_CHART</item>
+					<item>APPLICATION_IDS</item>
+					<item>POINT</item>
+					<item>LINE</item>
+				</list>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

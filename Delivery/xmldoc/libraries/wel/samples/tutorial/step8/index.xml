@@ -1,0 +1,55 @@
+<document output="studio" title="Tutorial Step 8">
+	<meta_data/>
+	<paragraph>
+		<paragraph>This sample builds on tutorial 
+			<link>
+				<url>/libraries/wel/samples/tutorial/step7/index.html</url>
+				<label>step 7</label>
+			</link>, and also demonstrates the use of a WEL_OPEN_FIALOG_DIALOG and a WEL_SAVE_FILE_DIALOG. The output is shown below: 
+		</paragraph>
+		<image> 
+			<url>step8.png</url> 
+			<alt_text>step8</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the sample, you will see a WEL_FRAME_WINDOW displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line" menu, will display a WEL_MODAL_DIALOG which allows you to change the thickness of the line that is drawn. If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. Selecting "New" from the "File" menu will clear the window. Selecting "Save" from the "File" menu will display a WEL_SAVE_FILE_DIALOG which allows you to specify the filename and location of the picture you have drawn. Selecting "Open" from the "File" menu will display a WEL_OPEN_FILE_DIALOG which allows you to specify a previously saved drawing to open. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading> The WEL_OPEN_FILE_DIALOG and the WEL_SAVE_FILE_DIALOG are both activated from the redefinition of on_menu_command. A new class, LINES is now used to store the lines drawn by the user and this inherits 
+		<link>
+			<url>/libraries/base/reference/kernel/storable_chart.html</url>
+			<label>STORABLE</label>
+		</link> which allows it to be easily stored and retrieved. 
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>TUTORIAL_STEP6</item>
+				<item>MAIN_WINDOW</item>
+				<item>LINE_THICKNESS_DIALOG_CHART</item>
+				<item>APPLICATION_IDS</item>
+				<item>POINT</item>
+				<item>LINES</item>
+				<item>LINE</item>
+			</list>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_save_file_dialog.html</url>
+					<label>Save file dialog</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_open_file_dialog.html</url>
+					<label>Open file dialog</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

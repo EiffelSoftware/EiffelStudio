@@ -50,9 +50,9 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			if flag then
-				gtk_list_item_select (widget)
+				c_gtk_list_item_select (widget)
 			else
-				gtk_list_item_deselect (widget)
+				c_gtk_list_item_unselect (widget)
 			end
 		end
 

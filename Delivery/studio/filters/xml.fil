@@ -1,0 +1,70 @@
+--!-----------------------------------------------------------------------------
+--! XML filter for EiffelStudio documentation output.
+--!-----------------------------------------------------------------------------
+
+
+file_separator			|/
+suffix				|xml
+
+-- File declaration:
+class_declaration		|<system>%N*</system>%N
+
+feature_declaration		|<anchor>f_$feature$</anchor>*
+
+					
+
+cluster_name			|<cluster><location>$file$</location><name>*</name></cluster>
+
+-- Skip origin comments. Display a tooltip instead.
+origin_comment			|
+--tooltip					|<SPAN TITLE="$tooltip$">*</SPAN>
+
+-- Use possible hyperlinks inside strings and comments:
+comment_url			|<comment><location>$file$</location>*</comment>
+string_url			|<string><location>$file$</location>*</string>
+
+features			|<feature><location>$file$#f_$feature$</location>*</feature>
+keyword_features		|<keyword><location>$file$#f_$feature</location>*</keyword>
+symbol_features			|<symbol><location>$file$#f_$feature$</location>*</symbol>
+class_name			|<class><location>$file$</location>*</class>
+
+-- Eiffel syntax items:
+non_generated_cluster		|<cluster><include>False</include>*</cluster>
+non_generated_class		|<class><include>False</include>*</class>
+non_generated_feature		|<feature><include>False</include>*</feature>
+keyword				|<keyword>*</keyword>
+reserved_word			|<reserved>*</reserved>
+symbol				|<symbol>*</symbol>
+comment				|<comment>*</comment>
+quoted				|<quoted>*</quoted>
+string				|<string>*</string>
+character			|<char>*</char>
+number				|<number>*</number>
+local_symbol			|<local>*</local>
+assertion_tag			|<tag>*</tag>
+indexing_tag			|<itag>*</itag>
+generic				|<generic>*</generic>
+.				|<dot>*</dot>
+
+-- Whitespace
+new_line			|*
+tab				|%T
+
+-- In case there are sequential spaces, use this for all subsequent spaces.
+--multiple_spaces			|&nbsp%;
+
+-- Characters that need to be escaped in XML
+escape>					|&gt;
+escape<					|&lt;
+escape&					|&amp;
+escape"					|&quot;
+
+--!-----------------------------------------------------------------------------
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------

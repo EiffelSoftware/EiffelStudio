@@ -59,9 +59,6 @@ struct ck_list {
 	struct chunk *eck_tail;		/* Tail of Eiffel list */
 };
 
-/* HP-UX has the good idea of defining sc_flags in its <sys/signal.h> */
-#undef sc_flags
-
 /* Description of a scavenging space */
 struct sc_zone {
 	int sc_size;				/* Space's size (in bytes) */
@@ -69,7 +66,7 @@ struct sc_zone {
 	char *sc_top;				/* Pointer to first free location */
 	char *sc_mark;				/* Water-mark level */
 	char *sc_end;				/* First location beyond space */
-	uint32 sc_flags;			/* ov_size in the selected malloc block */
+	uint32 sc_flgs;				/* ov_size in the selected malloc block */
 };
 
 /* Overhead for each memory segment allocated. All these objects

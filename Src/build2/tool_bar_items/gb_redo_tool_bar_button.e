@@ -42,8 +42,6 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
-		local
-			global_history: GLOBAL_HISTORY
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
 			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_redo @ 1)

@@ -33,7 +33,6 @@ feature -- Initialization
 		local
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
-			list_item: EV_LIST_ITEM
 		do
 			Precursor {EV_DIALOG}
 			set_title ("History")

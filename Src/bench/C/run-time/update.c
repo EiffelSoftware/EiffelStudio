@@ -27,6 +27,7 @@ private void conform_updt();		/* Update a conformance table */
 private void option_updt();			/* Update the option table */
 private void cecil_updt();			/* Cecil update */
 private char **names_updt();		/* String array */
+private void root_class_updt();		/* Update the root class info */
 
 public long mcount;					/* Size of melting table */
 
@@ -62,6 +63,9 @@ if ((fil = fopen(".UPDT", "r")) == (FILE *) 0) {
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0')
 		return;
+
+		/* Update the root class and the creation feature ids */
+	root_class_updt ();
 
 	count = wlong();			/* Read the count of class types */
 	new_count = count;
@@ -179,6 +183,21 @@ int nbytes;
 		dprintf(8)("\t%d: %d\n", i + 1, buffer[i]);
 }
 #endif
+}
+
+private void root_class_updt ()
+{
+	/* Update the root class info */
+
+	extern int root_class_static_type;
+	extern int root_class_dtype;
+	extern int32 root_class_feature_id;
+	extern int root_class_has_argument;
+
+	root_class_static_type = wlong();
+	root_class_dtype = wlong();
+	root_class_feature_id = wlong();
+	root_class_has_argument = wlong();
 }
 
 private void cnode_updt()
@@ -648,6 +667,7 @@ long new_count;
 		case BCDB_NO:	debug_level = DB_NO;
 						break;
 		case BCDB_YES:	debug_level = DB_ALL;
+						debug_opt->nb_keys = 0;
 						break;
 		case BCDB_TAG:	debug_level = DB_ALL;
 						debug_count = wshort();

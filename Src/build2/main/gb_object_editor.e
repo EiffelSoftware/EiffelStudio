@@ -32,6 +32,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_NAMING_UTILITIES
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature -- Initialization
 
@@ -255,7 +260,7 @@ feature {NONE} -- Implementation
 			-- Update visual representations of `obejct' to reflect new name
 			-- in `name_field'.
 		do
-			if check_valid_class_name then
+			if valid_class_name (name_field.text) then
 				if name_field.text.is_empty then
 					object.layout_item.set_text (object.type.substring (4, object.type.count))
 				else
@@ -275,34 +280,34 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	check_valid_class_name: BOOLEAN is
-   -- Check that name `class_name' is a valid class name.
-  local
-   cn: STRING
-   cchar: CHARACTER
-   i: INTEGER
-  do
-  	Result := True
-  	   cn := name_field.text
-
-  	if not cn.is_empty then
-
-   if cn = Void or else not (cn @ 1).is_alpha then
-   					-- else cn.is_empty or else not (cn @ 1).is_alpha then
-    Result := False
-   else
-    from
-     i := 2
-    until
-     i > cn.count or not Result
-    loop
-     cchar := (cn @ i)
-     Result := cchar.is_alpha or cchar.is_digit or cchar = '_'
-     i := i + 1
-    end
-   end
-  	end
-  end
+--	check_valid_class_name: BOOLEAN is
+--   -- Check that name `class_name' is a valid class name.
+--  local
+--   cn: STRING
+--   cchar: CHARACTER
+--   i: INTEGER
+--  do
+--  	Result := True
+--  	   cn := name_field.text
+--
+--  	if not cn.is_empty then
+--
+--   if cn = Void or else not (cn @ 1).is_alpha then
+--   					-- else cn.is_empty or else not (cn @ 1).is_alpha then
+--    Result := False
+--   else
+--    from
+--     i := 2
+--    until
+--     i > cn.count or not Result
+--    loop
+--     cchar := (cn @ i)
+--     Result := cchar.is_alpha or cchar.is_digit or cchar = '_'
+--     i := i + 1
+--    end
+--   end
+--  	end
+--  end
 
 
 	item_parent: EV_VERTICAL_BOX

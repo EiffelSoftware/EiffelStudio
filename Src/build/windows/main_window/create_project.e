@@ -12,14 +12,12 @@ inherit
 	CONSTANTS
 
 	WINDOWS
-		redefine
-			question_ok_action,
-			question_cancel_action
-		end
 
---	SHARED_STORAGE_INFO
+	SHARED_STORAGE_INFO
 
 	ERROR_POPUPER
+
+	QUEST_POPUPER
 
 feature {OPEN_PROJECT} -- Command
 

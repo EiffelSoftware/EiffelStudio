@@ -48,7 +48,6 @@ feature -- Basic operations
 			-- Create a new menu entry for this command.
 		do
 			start_observer
-
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 		end
 

@@ -22,22 +22,6 @@ feature -- Access
 	object: EV_PRIMITIVE
 	
 	display_object: EV_PICK_AND_DROPABLE
-
-feature -- Basic operation
-
-	build_drop_action_for_new_object is
-			-- Set up drop actions to accept `an_object'.
-		do
-			-- Does nothing as a primitive may not have another object added
-			-- as a child.
-			-- When items are supported, then the code to check for validity of
-			-- item must be here.
-			
-			-- We must actually clear the drop actions, as the last transport may have been
-			-- a shift pick, so the drop actions will not be empty.
-			display_object.drop_actions.wipe_out
-			layout_item.drop_actions.wipe_out
-		end
 		
 feature {NONE} -- Implementation
 
@@ -47,9 +31,9 @@ feature {NONE} -- Implementation
 		do
 			display_object ?= vision2_object_from_type (type)
 			display_object.set_pebble_function (agent retrieve_pebble)
-			display_object.pick_actions.force_extend (agent object_handler.set_up_drop_actions_for_all_objects)
-			display_object.pick_actions.force_extend (agent create_shift_timer)
-			display_object.pick_ended_actions.force_extend (agent destroy_shift_timer)
+			display_object.drop_actions.extend (agent add_new_component_in_parent_shift_wrapper (?))
+			display_object.drop_actions.extend (agent add_new_object_in_parent_shift_wrapper (?))
+			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 
 end -- class GB_CONTAINER_OBJECT

@@ -25,27 +25,10 @@ feature -- Access
 	
 	display_object: GB_DISPLAY_OBJECT
 		-- A representation of `Current' used
-		-- in the builder_window.
+		-- in the builder_window
 
 feature -- Basic operation
 
-	build_drop_action_for_new_object is
-			-- Set up drop actions to accept a new GB_OBJECT if permissible.
-		do
-			display_object.drop_actions.wipe_out
-			layout_item.drop_actions.wipe_out
-			display_object.drop_actions.extend (agent add_new_object (?))
-			display_object.drop_actions.extend (agent add_new_component (?))
-			layout_item.drop_actions.extend (agent add_new_object (?))
-			layout_item.drop_actions.extend (agent add_new_component (?))
-				-- We must add a veto pebble function which stops us dropping
-				-- an object on one of its children. There is no need to veto a component
-				-- being dropped, as a component generates a new object instance and therefore
-				-- cannot be a child.
-			display_object.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
-			layout_item.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
-		end
-		
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
 			-- This is redefined in descendents as insertion at position `position'
@@ -69,7 +52,6 @@ feature -- Basic operation
 		do
 			Result := object.full
 		end
-		
 
 feature {NONE} -- Implementation
 
@@ -92,10 +74,12 @@ feature {NONE} -- Implementation
 				create display_object.make_with_name_and_child (type, widget)
 				display_object.set_pebble_function (agent retrieve_pebble)
 				display_object.child.set_pebble_function (agent retrieve_pebble)
-				display_object.pick_actions.force_extend (agent create_shift_timer)
-				display_object.pick_ended_actions.force_extend (agent destroy_shift_timer)
-				display_object.child.pick_actions.force_extend (agent create_shift_timer)
-				display_object.child.pick_ended_actions.force_extend (agent destroy_shift_timer)
+				display_object.drop_actions.extend (agent add_new_object_shift_wrapper (?))
+				display_object.drop_actions.extend (agent add_new_component_shift_wrapper (?))
+				display_object.drop_actions.extend (agent add_new_component_in_parent_shift_wrapper (?))
+				display_object.drop_actions.extend (agent add_new_object_in_parent_shift_wrapper (?))
+				display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+				display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 			end
 		end
 

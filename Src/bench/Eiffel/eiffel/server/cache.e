@@ -333,10 +333,10 @@ end
 				s = 0
 			loop
 				s := s - 1
-				area.item(s).wipe_out
+				area.item(s).discard_items
 			end
 			history.wipe_out
-			array_count.wipe_out
+			array_count.discard_items
 			count := 0
 			after := True
 		end

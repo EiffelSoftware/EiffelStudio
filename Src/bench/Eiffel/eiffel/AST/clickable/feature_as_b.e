@@ -85,13 +85,15 @@ feature -- Update
 	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
 			-- Assign values to Unique features defined in the current class
 		do
-			from
-				feature_names.start
-			until
-				feature_names.after
-			loop
-				values.put (counter.next, feature_names.item.internal_name)
-				feature_names.forth
+			if body.is_unique then
+				from
+					feature_names.start
+				until
+					feature_names.after
+				loop
+					values.put (counter.next, feature_names.item.internal_name)
+					feature_names.forth
+				end
 			end
 		end;
 

@@ -298,6 +298,12 @@ feature -- Status Setting
 			code_directories.extend (a_dir_name)	
 		end		
 
+	set_is_include_list (a_mode: BOOLEAN) is
+			-- Set `is_include_list'
+		do
+			is_include_list := a_mode	
+		end	
+
 feature -- Document
 			
 	tags_uppercase: BOOLEAN
@@ -349,5 +355,7 @@ feature -- Access
 			Result.extend (l_graphical_constants.js_file_icon, "js")
 			Result.extend (l_graphical_constants.png_file_icon, "bmp")
 		end	
+
+	is_include_list: BOOLEAN
 
 end -- class APPLICATION_CONSTANTS

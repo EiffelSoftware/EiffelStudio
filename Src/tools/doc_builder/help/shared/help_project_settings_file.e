@@ -118,7 +118,8 @@ feature {NONE} -- Implementation
 		local
 			l_file_location: FILE_NAME
 		do
-			create l_file_location.make_from_string (shared_constants.application_constants.temporary_help_directory)
+--			create l_file_location.make_from_string (shared_constants.application_constants.temporary_help_directory)
+			create l_file_location.make_from_string (shared_constants.application_constants.temporary_html_directory)
 			l_file_location.extend (project.name + "_settings.xml")
 			create Result.make (l_file_location.string)
 		end

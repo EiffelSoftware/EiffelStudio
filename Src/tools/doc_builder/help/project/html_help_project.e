@@ -46,16 +46,18 @@ feature -- File
 				write_option_value ("Contents file", Shared_constants.Help_constants.Toc_file_tag, element, Result)
 				write_option_value ("Error log file", Shared_constants.Help_constants.Log_file_tag, element, Result)
 				Result.put_string ("%NBinary TOC=Yes")
-				Result.put_string ("%NCompatibility=1.1 or later")
-				Result.put_string ("%NDefault Window=EDHC")
-				Result.put_string ("%NDefault topic=index.html")
+				Result.put_string ("%NCompatibility=1.1 or later")				
 				Result.put_string ("%NDisplay compile progress=No")
-				Result.put_string ("%NFull text search stop list file=stop_words.stp")
-				Result.put_string ("%NFull-text search=Yes")
 				Result.put_string ("%NLanguage=0x409 English (United States)")
-				Result.put_string ("%NTitle=Eiffel Developer Help Center")
-				Result.put_string ("%N%N%N[WINDOWS]")
-				Result.put_string ("%NEDHC=%"Eiffel Developer Help Center 2.0%",%"docs.hhc%",,%"index.html%",%"index.html%",,,,,0x63520,,0x304e,,0x30000,,,,,,0")
+				Result.put_string ("%NDefault topic=index.html")
+				Result.put_string ("%NFull-text search=Yes")
+				if not shared_constants.application_constants.is_gui_mode then
+					Result.put_string ("%NDefault Window=EDHC")
+					Result.put_string ("%NFull text search stop list file=stop_words.stp")								
+					Result.put_string ("%NTitle=Eiffel Developer Help Center")
+					Result.put_string ("%N%N%N[WINDOWS]")
+					Result.put_string ("%NEDHC=%"Eiffel Developer Help Center 2.0%",%"docs.hhc%",,%"index.html%",%"index.html%",,,,,0x63520,,0x304e,,0x30000,,,,,,0")
+				end				
 				Result.close
 			end		
 		end

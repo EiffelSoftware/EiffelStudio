@@ -52,14 +52,19 @@ feature {NONE} -- Initialization
 feature -- Setting
 
 	set_height (a_height: INTEGER) is
-			-- Set `pixel_height' with  `a_height'.
+			-- Set `height' with `a_height'.
 		require
 			a_height_bigger_than_zero: a_height > 0
 		local
 			l: like log_font
+			screen_dc: WEL_SCREEN_DC
 		do
+			create screen_dc
+			screen_dc.get
 			l := log_font
-			l.set_height (-a_height)
+			l.set_height (-pixel_to_logical (screen_dc, a_height))
+			screen_dc.release
+
 			set_indirect (l)
 		end
 
@@ -113,12 +118,17 @@ feature -- Access
 		end
 
 	height: INTEGER is
-			-- Size of font measured in logical unit.
+			-- Size of font measured in pixels.
+		local
+			screen_dc: WEL_SCREEN_DC
 		do
 			check
 				height_negative: log_font.height < 0
 			end
-			Result := -log_font.height
+			create screen_dc
+			screen_dc.get
+			Result := logical_to_pixel (screen_dc, -log_font.height)
+			screen_dc.release
 		ensure
 			Result_bigger_than_zero: Result > 0
 		end
@@ -128,11 +138,12 @@ feature -- Access
 		local
 			screen_dc: WEL_SCREEN_DC
 		do
-			Result := -log_font.height
+			check
+				height_negative: log_font.height < 0
+			end
 			create screen_dc
 			screen_dc.get
-			Result := mul_div (Result, 72,
-								get_device_caps (screen_dc.item, logical_pixels_y))
+			Result := pixel_to_point (screen_dc, -log_font.height)
 			screen_dc.release
 		end
 
@@ -179,6 +190,92 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	point_to_pixel (hdc: WEL_DC; pt, divisor: INTEGER): INTEGER is
+			-- Convert a size `pt/divisor' expressed in point into pixel.
+		do
+			Result :=  mul_div (
+				get_device_caps (hdc.item, logical_pixels_y), pt, 72 * divisor)
+		end
+
+	pixel_to_point (hdc: WEL_DC; pi: INTEGER): INTEGER is
+			-- Convert a size `pi' expressed in pixel into point.
+		do
+			Result :=  mul_div (pi, 72,
+				get_device_caps (hdc.item, logical_pixels_y))
+		end
+
+	point_to_logical (hdc: WEL_DC; pt, divisor: INTEGER): INTEGER is
+			-- Convert a size `pt/divisor' expressed in point into logical units.
+		do
+			Result := pixel_to_logical (hdc, point_to_pixel (hdc, pt, divisor))
+		end
+
+	logical_to_point (hdc: WEL_DC; lo: INTEGER): INTEGER is
+			-- Convert a size `lo' expressed in logical unit into point.
+		do
+			Result := pixel_to_point (hdc, logical_to_pixel (hdc, lo))
+		end
+
+	pixel_to_logical (hdc: WEL_DC; pi: INTEGER): INTEGER is
+			-- Convert `pi' expressed in pixel unit into logical unit.
+		local
+			arr: ARRAY [POINTER]
+			a: ANY
+			p1, p2: WEL_POINT
+			o1, o2: WEL_POINT
+		do
+			create p1.make (0, 0)
+			create p2.make (0, pi)
+
+			create arr.make (1, 2)
+			arr.put (p1.item, 1)
+			arr.put (p2.item, 2)
+
+			a := arr.to_c
+			cwin_dp_to_lp (hdc.item, $a, 2);
+			create o1.make_by_pointer (arr.item (1))
+			create o2.make_by_pointer (arr.item (2))
+
+			Result := (o2.y - o1.y).abs
+		end
+
+	logical_to_pixel (hdc: WEL_DC; lo: INTEGER): INTEGER is
+			-- Convert `lo' expressed in logical unit into pixel unit.
+		local
+			arr: ARRAY [POINTER]
+			a: ANY
+			p1, p2: WEL_POINT
+			o1, o2: WEL_POINT
+		do
+			create p1.make (0, 0)
+			create p2.make (0, lo)
+
+			create arr.make (1, 2)
+			arr.put (p1.item, 1)
+			arr.put (p2.item, 2)
+
+			a := arr.to_c
+			cwin_lp_to_dp (hdc.item, $a, 2);
+			create o1.make_by_pointer (arr.item (1))
+			create o2.make_by_pointer (arr.item (2))
+
+			Result := (o2.y - o1.y).abs
+		end
+
+	cwin_dp_to_lp (dc, p: POINTER; i: INTEGER) is
+		external
+			"C [macro <windows.h>] (HDC, LPPOINT, int)"
+		alias
+			"DPtoLP"
+		end
+
+	cwin_lp_to_dp (dc, p: POINTER; i: INTEGER) is
+		external
+			"C [macro <windows.h>] (HDC, LPPOINT, int)"
+		alias
+			"LPtoDP"
+		end
 
 	cwin_create_font (a_height, a_width, escapement, orientation, weight,
 			italic, underline, strike_out,

@@ -70,7 +70,7 @@ feature -- Setting
 			is_reversed_engineered: is_reversed_engineered
 		end;
 
-	set_is_constant: INTEGER is
+	set_is_constant is
 		do
 			status := status_handler.set_is_constant (status)
 		end

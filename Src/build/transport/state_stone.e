@@ -19,7 +19,7 @@ inherit
 	
 feature 
 
-	data: STATE is
+	data: BUILD_STATE is
 		deferred
 		end;
 

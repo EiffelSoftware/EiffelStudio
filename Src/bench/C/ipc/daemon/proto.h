@@ -28,10 +28,10 @@ struct d_flags {				/* Daemon flags (protocol with client) */
 	int d_app;					/* Application pid */
 };
 
-#define rqstcnt		d_data.d_rqst
-#define rqstsent	d_data.d_sent
+#define rqstcnt		daemon_data.d_rqst
+#define rqstsent	daemon_data.d_sent
 
-extern struct d_flags d_data;	/* Global daemon's status */
+extern struct d_flags daemon_data;	/* Global daemon's status */
 
 /* Routine declarations */
 extern void drqsthandle(int s);	/* General request processor */

@@ -648,12 +648,21 @@ feature {NONE} -- Implementation
 		require
 			textable_not_void: textable /= Void
 			a_stone_not_void: a_stone /= Void
+		local
+			stone_signature: STRING
 		do
 			if a_stone.stone_signature /= Void then
 					-- FIXME Protected against Void, as there is no postcondition
 					-- on `stone_signature', although it appears it should never be Void,
 					-- it must be protected for now. Julian 07/22/03
-				textable.set_text (a_stone.stone_signature)
+					
+				stone_signature := a_stone.stone_signature
+				if stone_signature.has (' ') then
+						-- Generic classes, and features with arguments have their arguments
+						-- included, so we strip everything except the name.
+					stone_signature := stone_signature.substring (1, stone_signature.index_of (' ', 1) - 1)
+				end
+				textable.set_text (stone_signature)
 			end
 		ensure
 			text_set: a_stone /= Void implies textable.text.is_equal (a_stone.stone_signature)

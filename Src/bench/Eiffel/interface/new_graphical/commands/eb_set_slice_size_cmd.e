@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			if for_tool then
 				dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
-				dial.show_modal_to_window (pretty_dlg.window)
+				dial.show_modal_to_window (pretty_dlg.dialog)
 			end
 		end
 

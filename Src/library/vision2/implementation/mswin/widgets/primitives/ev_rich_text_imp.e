@@ -273,6 +273,7 @@ feature -- Status report
 			wel_character_format: WEL_CHARACTER_FORMAT
 			range_already_selected: BOOLEAN
 		do
+			lock_window_update
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
 				range_already_selected := True
 			else
@@ -284,6 +285,7 @@ feature -- Status report
 			if not range_already_selected then
 				safe_restore_caret
 			end
+			unlock_window_update
 		end
 		
 	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
@@ -367,8 +369,7 @@ feature -- Status report
 			then
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
-				new_lines_to_first_position := wel_text.substring (1, wel_line_index (a_line - 1)).occurrences ('%R')
-				Result := wel_text_length - 1 - new_lines_to_first_position
+				Result := text.count
 			end
 		end
 		
@@ -436,6 +437,7 @@ feature -- Status setting
 			wel_character_format: WEL_CHARACTER_FORMAT
 			mask: INTEGER
 		do
+			lock_window_update
 			safe_store_caret
 			set_selection (start_position - 1, end_position - 1)
 			wel_character_format ?= format.implementation
@@ -466,6 +468,7 @@ feature -- Status setting
 			wel_character_format.set_mask (mask)
 			set_character_format_selection (wel_character_format)
 			safe_restore_caret
+			unlock_window_update
 		end
 		
 	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
@@ -791,41 +794,28 @@ feature -- Status setting
 		
 	enable_word_wrapping is
 			-- Ensure `has_word_wrap' is True.
-		local
-			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
-			stream_out: WEL_RICH_EDIT_BUFFER_SAVER
-			old_text_as_rtf: STRING
 		do
-				-- Store contents of `Current' as RTF.
-			create stream_out.make
-			rtf_stream_out (stream_out)
-			stream_out.release_stream
-			old_text_as_rtf := stream_out.text
-			
-			wel_destroy
-			internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
-			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
-			show_vertical_scroll_bar
-			set_text_limit (2560000)
-			set_default_font
-			cwin_send_message (wel_item, Em_limittext, 0, 0)
-			if parent_imp /= Void then
-				parent_imp.notify_change (2 + 1, Current)
-			end
-			
-				-- Restore contents of `Current' from stored RTF.
-			create stream_in.make (old_text_as_rtf)
-			insert_rtf_stream_in (stream_in)
-			stream_in.release_stream
+			internal_change_word_wrapping (True)
 		end
 		
 	disable_word_wrapping is
 			-- Ensure `has_word_wrap' is False.
+		do
+			internal_change_word_wrapping (False)
+		end
+		
+	internal_change_word_wrapping (word_wrapping: BOOLEAN) is
+			-- Enable word wrapping if `word_wrapping', otherwise disable.
 		local
 			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
 			stream_out: WEL_RICH_EDIT_BUFFER_SAVER
 			old_text_as_rtf: STRING
 		do
+			safe_store_caret
+			if change_actions_internal /= Void then
+				change_actions_internal.block
+			end
+			
 				-- Store contents of `Current' as RTF.
 			create stream_out.make
 			rtf_stream_out (stream_out)
@@ -833,12 +823,18 @@ feature -- Status setting
 			old_text_as_rtf := stream_out.text
 			
 			wel_destroy
-			internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
+			if word_wrapping then
+				internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
+				show_vertical_scroll_bar
+			else
+				internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
+				show_scroll_bars
+			end
+			
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			set_text_limit (2560000)
 			set_default_font
 			cwin_send_message (wel_item, Em_limittext, 0, 0)
-			show_scroll_bars
 			if parent_imp /= Void then
 				parent_imp.notify_change (2 + 1, Current)
 			end
@@ -847,7 +843,22 @@ feature -- Status setting
 			create stream_in.make (old_text_as_rtf)
 			insert_rtf_stream_in (stream_in)
 			stream_in.release_stream
+			
+				-- It appears that streaming rtf adds an extra new line character which we must now remove.
+			select_region (text_length, text_length)
+			check
+				selected_text_is_newline: selected_text.is_equal ("%N")
+			end
+			delete_selection
+			
+			if change_actions_internal /= Void then
+				change_actions_internal.resume
+			end
+			safe_restore_caret
+		ensure
+			option_set: has_word_wrapping = word_wrapping
 		end
+		
 		
 	set_tab_width (a_width: INTEGER) is
 			-- Assign `a_width' to `tab_width'.

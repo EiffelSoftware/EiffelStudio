@@ -245,9 +245,11 @@ feature -- Basic Operations
 				if not l_char.is_alpha then
 					l_escaped := escaped_character (l_char)
 					Result.replace_substring (l_escaped, 1, 1)
+					i := l_escaped.count + 1
+				else
+					i := 1
 				end
 				from
-					i := l_escaped.count + 1
 				until
 					i > Result.count
 				loop

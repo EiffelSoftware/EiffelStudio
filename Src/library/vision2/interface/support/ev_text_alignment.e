@@ -47,21 +47,21 @@ feature -- Status setting
 
 	set_left_alignment is
 		do
-			alignment_code := 1
+			alignment_code := left_alignment
 		ensure
 			is_left_aligned: is_left_aligned
 		end
 
 	set_center_alignment is
 		do
-			alignment_code := 2
+			alignment_code := center_alignment
 		ensure
 			is_center_aligned: is_center_aligned
 		end
 
 	set_right_alignment is
 		do
-			alignment_code := 3
+			alignment_code := right_alignment
 		ensure
 			is_right_aligned: is_right_aligned
 		end
@@ -70,26 +70,31 @@ feature -- Status report
 
 	is_left_aligned: BOOLEAN is
 		do
-			Result := alignment_code = 1
+			Result := alignment_code = left_alignment
 		end
 
 	is_center_aligned: BOOLEAN is
 		do
-			Result := alignment_code = 2
+			Result := alignment_code = center_alignment
 		end
 
 	is_right_aligned: BOOLEAN is
 		do
-			Result := alignment_code = 3
+			Result := alignment_code = right_alignment
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	alignment_code: INTEGER
 		-- Used internally to represent one of the three alignment states.
 
+	left_alignment: INTEGER is 1
+	center_alignment: INTEGER is 2
+	right_alignment: INTEGER is 3
+
 invariant
-	alignment_code_within_range:  alignment_code >= 1 and alignment_code <= 3
+	alignment_code_within_range:  alignment_code >= left_alignment 
+					and alignment_code <= right_alignment
 
 end -- class EV_TEXT_ALIGNMENT
 

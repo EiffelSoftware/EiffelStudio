@@ -364,7 +364,8 @@ feature -- Action
 				-- Save the source class in a Backup directory
 			if Workbench.automatic_backup then
 				!! f_name.make_from_string (cluster.backup_directory)
-				f_name.extend (lace_class.base_name)
+				f_name.extend (lace_class.name)
+				f_name.add_extension ("e")
 				!! copy_file.make (f_name)
 				if copy_file.is_creatable then
 					copy_file.open_write

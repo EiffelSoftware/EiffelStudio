@@ -137,8 +137,10 @@ feature -- Access
 	selected_button: BUTTON is
 			-- Selected button
 		do
-			if selected then
+			if exists and then selected then
 				Result := button_list.i_th (number_of_buttons - wel_selected_item)
+			else
+				Result := private_selected_button
 			end
 		end
 

@@ -235,15 +235,17 @@ feature -- Access
 			clun: STRING;
 			clu: CLUSTER_I; 
 		do
-			clun := cluster_list.selected_item.value; 
-			clun.to_lower;
-			clu := Eiffel_universe.cluster_of_name (clun);
-			if clu = Void then
-				aok := False;
-				warner (tool.popup_parent).gotcha_call (Warning_messages.w_Invalid_cluster_name)
-			else
-				aok := True;
-				cluster := clu
+			if cluster_list.selected_item /= Void then
+				clun := cluster_list.selected_item.value; 
+				clun.to_lower;
+				clu := Eiffel_universe.cluster_of_name (clun);
+				if clu = Void then
+					aok := False;
+					warner (tool.popup_parent).gotcha_call (Warning_messages.w_Invalid_cluster_name)
+				else
+					aok := True;
+					cluster := clu
+				end;
 			end;
 		end;
 

@@ -154,7 +154,7 @@ feature {NONE}
 				end					
 				edited_command.remove_class
 			else
-				Precursor
+				{CMD_ADD} Precursor
 				cmd_instance_list := edited_command.instances
 				from
 					cmd_instance_list.start

@@ -49,7 +49,7 @@ feature -- Creation
 	make (a_name: STRING; a_screen: SCREEN) is
 			-- Create widgets.
 		do
-			Precursor (a_name, a_screen)
+			{EB_TOP_SHELL} Precursor (a_name, a_screen)
 			set_title (a_name)
 			set_icon_name (a_name)
 				--| Forms
@@ -559,7 +559,7 @@ feature
 			command_hole.unregister
 			arguments.unregister_holes
 			command_hole.set_empty_symbol
-			Precursor
+			{EB_TOP_SHELL} Precursor
 		end
 
 	display is
@@ -662,7 +662,7 @@ feature -- COMMAND features
 
 	realize is
 		do
-			Precursor
+			{EB_TOP_SHELL} Precursor
 			bottom_split_form.unmanage
 			already_open := true
 		end

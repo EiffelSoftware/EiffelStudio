@@ -38,6 +38,38 @@ feature {NONE} -- Initialization
 			)
 		end
 
+feature -- Status Report
+
+	is_closeable: BOOLEAN is
+			-- Is the window closeable by the user?
+			-- (Through a clik on the Window Menu, or by
+			-- pressing ALT-F4)
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+feature -- Status Setting
+	
+	enable_closeable is
+			-- Set the window to be closeable by the user
+			-- (Through a clik on the Window Menu, or by
+			-- pressing ALT-F4)
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+	disable_closeable is
+			-- Set the window not to be closeable by the user
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
 feature -- Basic operations
 
 	show_modal is
@@ -86,6 +118,10 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/29 03:01:35  pichery
+--| Added feature `is_closeable', `enable/disable_closeable'.
+--| They need to be implemented.
+--|
 --| Revision 1.11  2000/03/01 00:10:49  brendel
 --| Improved imp of show_modal, as it now remembers the value of `is_modal'.
 --|

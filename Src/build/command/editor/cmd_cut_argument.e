@@ -215,13 +215,15 @@ feature {NONE} -- Features of QUEST_POPUPER
 			-- Correspond to "New Command".
 		local
 			new_command: USER_CMD
+			copy_arguments: EB_LINKED_LIST [ARG]
 		do
 			create_new_command := True
 			previous_instance := associated_command_tool.command_instance
 				--| Create new command
 			!! new_command.make
 			new_command.set_internal_name ("")
-			new_command.set_arguments (edited_command.arguments)
+			copy_arguments := deep_clone (edited_command.arguments)
+			new_command.set_arguments (copy_arguments)
 			new_command.set_eiffel_text (edited_command.eiffel_text)
 			new_command.save_to_disk
 			edited_command := new_command

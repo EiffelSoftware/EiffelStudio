@@ -8,12 +8,13 @@ class CLASS_W
 inherit
 	BAR_AND_TEXT
 		rename
-			Class_resources as resources
+			Class_resources as resources,
+			class_type as stone_type
 		redefine
 			build_format_bar, hole,
 			tool_name, open_cmd_holder, save_cmd_holder,
 			editable, build_bar, reset, build_widgets,
-			close_windows, resize_action, stone_type,
+			close_windows, resize_action,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
 			compatible, set_mode_for_editing, editable_text_window,
@@ -29,15 +30,31 @@ inherit
 
 
 creation
-	make
+	make, form_create
+
+feature -- Initialization
+
+	form_create (a_form: FORM file_m, edit_m, format_m, special_m: MENU_PULL) is
+			-- Create a feature tool from a form.
+		require
+			valid_args: a_form /= Void and then edit_m /= Void and then	
+				format_m /= Void and then special_m /= Void
+		do
+--			is_in_project_tool := True
+--			file_menu := file_m
+--			edit_menu := edit_m
+--			format_menu := format_m
+--			special_menu := special_m
+			make_form (a_form)
+			init_text_window
+			set_composite_attributes (a_form)
+--			set_composite_attributes (file_m)
+--			set_composite_attributes (edit_m)
+--			set_composite_attributes (format_m)
+--			set_composite_attributes (special_m)
+		end
 
 feature -- Properties
-
-	stone_type: INTEGER is
-			-- Accept any type stone
-		do
-			Result := Class_type
-		end
 
 	editable_text_window: TEXT_WINDOW
 			-- Text window that can be edited
@@ -75,7 +92,7 @@ feature -- Access
 			Result :=
 				a_stone.stone_type = Routine_type or else
 				a_stone.stone_type = Breakable_type or else
-				a_stone.stone_type = Class_type
+				a_stone.stone_type = stone_type
 		end
 
 	cluster: CLUSTER_I is
@@ -349,8 +366,8 @@ feature -- Update
 			syn_stone: CL_SYNTAX_STONE
 			e_class: E_CLASS
 			txt, msg: STRING
-			error_code: INTEGER --JOCE--
-			error_message: STRING --JOCE--
+			error_message: STRING
+			error_code: INTEGER
 		do
 			classc_stone ?= stone
 			if classc_stone /= Void then
@@ -364,22 +381,21 @@ feature -- Update
 					if syn_error /= Void then	
 						txt := "Class has syntax error"
 						msg := syn_error.syntax_message
-						error_code := syn_error.error_code --JOCE--
-						error_message := syn_error.error_message --JOCE--
+						error_message := syn_error.error_message
+						error_code := syn_error.error_code
 						if not msg.empty then
 							txt.append (" (")
 							txt.append (msg)
 							txt.extend (')')
 						end
-						if error_code /= Void then --JOCE--
+						if error_code /= Void then
 							txt.append ("%N<")
 							txt.append_integer (error_code)
 							txt.append ("> ")
 							txt.append (error_message)
-							txt.append (".%N")
 						end
-						--txt.extend ('.')
-						txt.append ("%NSee highlighted area")
+						txt.append (".%NSee highlighted area.")
+
 							-- syntax error occurred
 						!! syn_stone.make (syn_error, e_class)
 						process_class_syntax (syn_stone)
@@ -451,7 +467,7 @@ feature -- Grahpical Interface
 		do
 			create_toolbar (global_form)
 
-			build_text_windows
+			build_text_windows (global_form)
 			build_menus
 			build_bar
 			build_format_bar
@@ -585,7 +601,7 @@ feature {NONE} -- Implementation Graphical Interface
 			!! quit_cmd.make (Current)
 			!! quit_button.make (quit_cmd, edit_bar)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry)
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -818,10 +834,10 @@ feature {NONE} -- Implementation Graphical Interface
 			edit_bar.attach_top (class_text_field, 0)
 			edit_bar.attach_left_position (class_text_field, 7)
 			edit_bar.attach_right_widget (open_cmd_holder.associated_button, class_text_field, 2)
-			edit_bar.attach_right (quit.associated_button, 0)
-			edit_bar.attach_top (quit.associated_button, 0)
+			edit_bar.attach_right (quit_cmd_holder.associated_button, 0)
+			edit_bar.attach_top (quit_cmd_holder.associated_button, 0)
 			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (quit.associated_button, search_cmd_holder.associated_button, 5)
+			edit_bar.attach_right_widget (quit_cmd_holder.associated_button, search_cmd_holder.associated_button, 5)
 			edit_bar.attach_top (save_cmd_holder.associated_button, 0)
 			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_cmd_holder.associated_button, 0)
 			edit_bar.attach_top (open_cmd_holder.associated_button, 0)

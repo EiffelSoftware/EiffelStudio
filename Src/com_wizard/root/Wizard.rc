@@ -26,65 +26,66 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-Wizard_Initial_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
+Wizard_Definition_File_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "EiffelCOM Wizard"
+CAPTION "Definition File"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
-    EDITTEXT        Definition_File_Edit,110,70,175,15,ES_AUTOHSCROLL
-    LTEXT           "Definition File",IDL_Static,110,60,100,10
-    PUSHBUTTON      "Browse",Browse_Button,290,70,50,14
-    EDITTEXT        Generate_Edit,110,136,175,15,ES_AUTOHSCROLL
-    LTEXT           "Destination Folder",Generate_Static,110,126,100,10
-    PUSHBUTTON      "Browse",Browse2_Button,290,135,50,14
+    EDITTEXT        Definition_File_Edit,115,55,170,15,ES_AUTOHSCROLL
+    LTEXT           "Enter the definition file",Definition_File_Input_Static,
+                    115,45,100,10
+    PUSHBUTTON      "Browse",Definition_File_Browse_Button,290,55,50,14
+    EDITTEXT        Destination_Folder_Edit,115,125,170,15,ES_AUTOHSCROLL
+    LTEXT           "Enter the destination folder:",
+                    Destination_Folder_Input_Static,115,115,100,10
+    PUSHBUTTON      "Browse",Destination_Folder_Browse_Button,290,125,50,14
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
     PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
-    LTEXT           "Paths",Introduction_Static,110,5,230,10
-    LTEXT           "A Definition Files is either an Interface Definition Language (IDL) file or a Type Library (.tlb) file. A type library can be linked to an executable or dll as a resource. Enter the component definition file.",
-                    Paths_Static,110,30,230,25
-    LTEXT           "The destination folder is the folder where the wizard will generate all the files. Enter the destination folder.",
-                    Paths_Static2,110,105,230,20
+    LTEXT           "A Definition Files is either an Interface Definition Language (IDL) file or a Type Library (.tlb) file. A type library could be linked to an executable or dll as a resource. ",
+                    Definition_File_Static,115,10,220,25
+    LTEXT           "The destination folder is the folder where the wizard will place all generated files.",
+                    Destination_Folder_Static,115,90,230,20
 END
 
 Wizard_PS_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "EiffelCOM Wizard"
+CAPTION "Marshalling"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
-    GROUPBOX        "Marshaling",Marshalling3_Static,110,75,70,45
     CONTROL         116,Wizard3_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
-    EDITTEXT        Proxy_Stub_File_Edit,110,135,175,15,ES_AUTOHSCROLL | 
+    EDITTEXT        Proxy_Stub_Input_Edit,115,135,170,15,ES_AUTOHSCROLL | 
                     WS_DISABLED
-    LTEXT           "Proxy/Stub",Proxy_Stub_Static,110,125,100,10
+    LTEXT           "Enter the path to the marshaller: ",Proxy_Stub_Static,
+                    115,125,132,10
     PUSHBUTTON      "Browse",Browse_Button,290,135,50,14,WS_DISABLED
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    CONTROL         "Universal",Universal_Radio,"Button",BS_AUTORADIOBUTTON,
-                    115,90,55,10
-    CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    115,100,55,10
+    CONTROL         "Virtual Table, Standard Marshalling (requires marshaller dll)",
+                    Virtual_Table_Standard_Radio,"Button",BS_AUTORADIOBUTTON,
+                    135,105,200,10
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
-    LTEXT           "Marshalling",Introduction_Static,110,5,230,10
-    LTEXT           "Marshalling defines how data is passed between components. Universal marshalling is built in Windows while Standard marshalling requires a proxy/stub dll.",
-                    Marshalling_Static,110,20,230,25
-    LTEXT           "Choose between Universal or Standard marshalling and enter the path to the proxy/stub dll if you have chosen Standard marshalling.",
-                    Marshalling2_Static,110,50,230,20
-    GROUPBOX        "Server Type",Type_Static,200,75,70,45,WS_GROUP
+    LTEXT           "How should the component be accessed?",
+                    Marshalling_Question_Static,115,60,140,10
     CONTROL         "Automation",Automation_Radio,"Button",
-                    BS_AUTORADIOBUTTON,205,90,54,10
-    CONTROL         "Virtual Table",Virtual_Table_Radio,"Button",
-                    BS_AUTORADIOBUTTON,205,100,54,10
+                    BS_AUTORADIOBUTTON,135,75,54,10
+    CONTROL         "Virtual Table, Universal Marshalling",
+                    Virtual_Table_Universal_Radio,"Button",
+                    BS_AUTORADIOBUTTON,135,90,130,10
+    LTEXT           "Components can be accessed either through Automation or directly through the interface's virtual table.",
+                    Marshalling_Static,115,10,220,20
+    LTEXT           "Marshalling defines how data is passed between components. Universal Marshalling uses the marshaller built into Windows while Standard Marshalling uses a component specific marshaller.",
+                    Marshallin_Description_Static,115,30,220,30
 END
 
 Wizard_IDL_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "EiffelCOM Wizard"
+CAPTION "Marshalling"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
@@ -92,84 +93,75 @@ BEGIN
     CONTROL         115,Wizard2_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    GROUPBOX        "Marshaling",Marshalling3_Static,145,105,75,45,WS_GROUP
-    CONTROL         "Universal",Universal_Radio,"Button",BS_AUTORADIOBUTTON,
-                    155,121,54,10
-    CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    155,135,54,10
-    GROUPBOX        "Server Type",Type_Static,231,105,74,45,WS_GROUP
-    CONTROL         "Automation",Automation_Radio,"Button",
-                    BS_AUTORADIOBUTTON,239,121,54,10
-    CONTROL         "Virtual Table",Virtual_Table_Radio,"Button",
-                    BS_AUTORADIOBUTTON,239,135,54,10
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
-    LTEXT           "Marshalling",Introduction_Static,110,5,230,10
-    LTEXT           "Marshalling defines how data is passed between components. Universal marshalling is built in Windows while Standard marshalling uses the proxy/stub dll compiled from the files generated when processing the IDL definition file.",
-                    Marshalling_Static,110,30,230,35
-    LTEXT           "Components can be accessed either through Automation or directly through their interfaces virtual table. Choose how the component you are wrapping or creating should be accessed.",
-                    Marshalling2_Static,110,70,230,30
+    CONTROL         "Virtual Table, Standard Marshalling",
+                    Virtual_Table_Standard_Radio,"Button",BS_AUTORADIOBUTTON,
+                    141,115,129,10
+    LTEXT           "Components can be accessed either through Automation or directly through the interface's virtual table.",
+                    Marshalling_Static,115,10,220,20
+    CONTROL         "Automation",Automation_Radio,"Button",
+                    BS_AUTORADIOBUTTON,141,85,54,10
+    CONTROL         "Virtual Table, Universal Marshalling",
+                    Virtual_Table_Universal_Radio,"Button",
+                    BS_AUTORADIOBUTTON,141,100,130,10
+    LTEXT           "How should the component be accessed?",
+                    Marshalling_Question_Static,115,70,140,10
+    LTEXT           "Marshalling defines how data is passed between components. Universal Marshalling uses the marshaller built into Windows while Standard Marshalling uses a component specific marshaller.",
+                    Marshallin_Description_Static,115,30,220,30
 END
 
 Wizard_Final_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "EiffelCOM Wizard"
+CAPTION "Output Messages"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Finish",IDOK,180,160,50,14
     PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
-    GROUPBOX        "Output Level",Output_level_Static,115,60,65,57
     CONTROL         117,Wizard4_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    CONTROL         "Maximum",Maximum_Radio,"Button",BS_AUTORADIOBUTTON,121,
-                    76,55,10
-    CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    121,90,55,10
-    CONTROL         "Minimum",Minimum_Radio,"Button",BS_AUTORADIOBUTTON,121,
-                    105,55,10
-    LTEXT           "A summary of all the generated files will be available in the file ""generated.txt""",
-                    Output2_Static,110,125,139,20
+    LTEXT           "A summary of all the generated files will be produced in ""generated.txt"".",
+                    Output_Info_Static,120,100,220,20
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
-    LTEXT           "Output",Introduction_Static,110,5,230,10
-    LTEXT           "The wizard will display information on the generation process in real time. Minimum output will only display errors messages. Standard output will display both errors and warnings messages. Maximum output will display information messages as well.",
-                    Output_Static,110,20,230,36
-    GROUPBOX        "Eiffel Compilation",Compile_Eiffel_Static,193,60,65,
-                    31
-    CONTROL         "Compile",Compile_Eiffel_Check,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,199,75,53,12
+    LTEXT           "The wizard will display status messages while it works. By default only error messages are displayed.",
+                    Output_Static,120,10,220,20
+    LTEXT           "Do you want to see:",Output_Question_Static,120,35,220,
+                    10
+    CONTROL         "Warnings?",Warnings_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,140,50,95,10
+    CONTROL         "Extra information?",Information_Check,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,140,65,95,10
 END
 
-Wizard_Introduction_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
+Wizard_Generated_Code_Type_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "EiffelCOM Wizard"
+CAPTION "Generated Code Type"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
-    GROUPBOX        "Location",Location_Static,230,90,65,64
     CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
-    CONTROL         "In Process",In_Process_Check,"Button",
-                    BS_AUTORADIOBUTTON | WS_TABSTOP,240,105,50,15
-    CONTROL         "Local",Local_Check,"Button",BS_AUTORADIOBUTTON | 
-                    WS_TABSTOP,240,120,50,15
-    CONTROL         "Remote",Remote_Check,"Button",BS_AUTORADIOBUTTON | 
-                    WS_TABSTOP,240,135,50,15
+    CONTROL         "In-process (.dll)",In_Process_Check,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,85,140,10
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    GROUPBOX        "Component",Generate_Code_Static,150,90,65,49
-    CONTROL         "Client",Client_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,160,105,51,16
-    CONTROL         "Server",Server_Check,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,160,121,51,16
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14,WS_DISABLED
-    CTEXT           "Welcome to the EiffelCOM wizard",Introduction_Static,
-                    110,5,230,10
-    LTEXT           "The wizard can generate code for using a component (client) or creating a new one (server). ",
-                    Introduction2_Static,110,25,230,20
-    LTEXT           "The component can be a dll (in-process) or a standard executable (local or remote).",
-                    Introduction3_Static,110,45,230,20
-    LTEXT           "Choose whether you want to generate code for a client or a server and the location of the component.",
-                    Introduction4_Static,110,65,230,20
+    CONTROL         "Client code to access a component?",Client_Check,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,135,20,149,10
+    CONTROL         "Server code for a new component?",Server_Check,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,135,35,130,10
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
+    LTEXT           "Do you want to generate:",Code_Type_Static,120,5,95,10
+    LTEXT           "(You may generate both for a new component)",
+                    Code_Type_Info_Static,135,50,155,10
+    LTEXT           "What is the type of the component executable?",
+                    Component_Type_Static,120,70,160,10
+    CONTROL         "Do not compile the Eiffel code",
+                    Eiffel_Code_Compilation_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,135,135,125,10
+    LTEXT           "By default the wizard will compile the generated Eiffel code",
+                    Eiffel_Code_Compilation_Static,120,120,190,10
+    CONTROL         "Out-of-process (.exe)",Out_Of_Process_Check,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,135,100,145,10
 END
 
 Progress_Dialog DIALOG DISCARDABLE  0, 0, 187, 90
@@ -183,6 +175,27 @@ BEGIN
     LTEXT           "Static",Progress_Static,5,10,175,20
 END
 
+Wizard_First_Choice_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
+    CONTROL         114,Wizard1_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,5,100,145
+    CONTROL         "Open an existing project",Open_Project_Check,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,125,45,140,10
+    CONTROL         "Create a new project",Create_Project_Check,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,125,60,145,10
+    PUSHBUTTON      "Help",Help_Button,290,160,50,14
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
+    CTEXT           "Welcome to the EiffelCOM Wizard!",Title_Static,110,5,
+                    225,10
+    LTEXT           "What would you like to do?",Title_Question_Static,115,
+                    25,220,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -192,7 +205,7 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
-    Wizard_Initial_Dialog, DIALOG
+    Wizard_Definition_File_Dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 340
@@ -224,7 +237,7 @@ BEGIN
         BOTTOMMARGIN, 174
     END
 
-    Wizard_Introduction_Dialog, DIALOG
+    Wizard_Generated_Code_Type_Dialog, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 340
@@ -238,6 +251,14 @@ BEGIN
         RIGHTMARGIN, 180
         TOPMARGIN, 7
         BOTTOMMARGIN, 83
+    END
+
+    Wizard_First_Choice_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 340
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 174
     END
 END
 #endif    // APSTUDIO_INVOKED

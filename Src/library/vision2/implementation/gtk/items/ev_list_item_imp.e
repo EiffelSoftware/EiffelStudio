@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 		local
 			item_box: POINTER
 		do
-			{EV_ITEM_IMP} Precursor
+			Precursor {EV_ITEM_IMP}
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			checkable_imp_initialize

@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 		do
 			pixmapable_imp_initialize
 			initialize_pixmap_box
-			{EV_ITEM_IMP} Precursor
+			Precursor {EV_ITEM_IMP}
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 10, -1)
 			is_initialized := True
 		end

@@ -302,7 +302,7 @@ feature -- Generation
 
 			if final_mode then
 				!! extern_decl_file.make (extern_declaration_filename);
-				extern_decl_file.open_write;
+				extern_decl_file.open_append;
 			else
 				extern_decl_file := file
 			end
@@ -507,7 +507,7 @@ feature -- Generation
 				-- initialisation bulk.
 
 			file.generate_function_signature ("void", c_name,
-				"", h_file,
+				True, h_file,
 				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>);
 
 			file.putchar ('{');
@@ -1427,7 +1427,7 @@ feature -- DLE
 
 				Extern_declarations.generate_header (dle_extern_declaration_filename)
 				extern_decl_file := dle_extern_declaration_file;
-				extern_decl_file.open_write
+				extern_decl_file.open_append
 				
 				byte_context.set_generated_file (file);
 				byte_context.set_extern_declaration_file (extern_decl_file);

@@ -44,7 +44,8 @@ feature -- Access
 feature {EB_TOOL} -- Tool management
 
 	-- the call with `t' is mandatory because these features
-	-- may be called during `tool''s creation
+	-- may be called during `tool''s creation, before we can
+	-- use the `tool' attribute.
 
 	destroy_tool (t: like tool) is
 			-- destroy associated tool
@@ -108,12 +109,12 @@ feature -- Resize
 
 feature -- Tool status report
 
-	tool_title: STRING is
+	tool_title (t: EB_TOOL): STRING is
 		do
 			Result := title
 		end
 
-	tool_icon_name: STRING is
+	tool_icon_name (t: EB_TOOL): STRING is
 		do
 			Result := icon_name
 		end
@@ -137,6 +138,11 @@ feature {NONE} -- Implementation
 
 	build_windows_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 			-- Builds the standart windows items in `a_menu'
+		require
+			a_menu_exists: is_valid (a_menu)
+				-- If `a_menu' is Void, no error occurs, but
+				-- we require to put our items somewhere, for
+				-- else they would be lost.
 		local
 			i: EV_MENU_ITEM
 			create_class_cmd: EB_CREATE_CLASS_CMD

@@ -182,7 +182,10 @@ cluster
 
 	communications (switch):		"$/communication"
 
-	status (communications):		"$/status"
+	all status (communications):		"$/status"
+		exclude
+			"dotnet"
+		end
 
 	ipc (communications):		"$/ipc"
 
@@ -194,7 +197,8 @@ cluster
 
 	all interface:		"$EIFFEL_SRC/Eiffel/interface"
 		exclude
-			"CVS"; "graphical"; "win32"; "mswin"; "new_tty"; "tty"; "Not_in_System"; "registry"; "preferences"; 
+			"CVS"; "graphical"; "win32"; "mswin"; "new_tty"; 
+			"tty"; "Not_in_System"; "registry"; "preferences"; "dotnet"
 		end
 
 	all preferences:		"$EIFFEL_SRC/library/preferences"

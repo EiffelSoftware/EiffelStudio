@@ -231,7 +231,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
 	basic_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
-			create Result.make (50)
+			create Result.make (100)
 			Result.put (equal_type, equal_name_id)
 			Result.put (is_equal_type, is_equal_name_id)
 			Result.put (is_equal_type, standard_is_equal_name_id)

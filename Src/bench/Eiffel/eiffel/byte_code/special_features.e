@@ -179,7 +179,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
 	c_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
-			create Result.make (40)
+			create Result.make (100)
 			Result.put (equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
 			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (equal_type, feature {PREDEFINED_NAMES}.deep_equal_name_id)
@@ -227,7 +227,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
 	byte_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
-			create Result.make (25)
+			create Result.make (100)
 			Result.put (equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
 			Result.put (equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (equal_type, feature {PREDEFINED_NAMES}.deep_equal_name_id)

@@ -114,7 +114,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
-			children_names: ARRAYED_LIST [STRING]
+			children: ARRAYED_LIST [GB_GENERATED_INFO]
 		do
 			create Result.make (4)
 			full_information := get_unique_full_info (element)
@@ -138,21 +138,21 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (Is_item_expanded_string)
 				-- We have to check that there is an `is_item_expanded' string.
 			if element_info /= Void then
-				children_names := info.child_names
+				children := info.children
 				check
-					consistent: children_names.count = element_info.data.count
+					consistent: children.count = element_info.data.count
 				end
 				from
-					children_names.start
+					children.start
 				until
-					children_names.off
+					children.off
 				loop
 						-- We only generate code for all the children that are disabled as they
 						-- are expanded by default.
-					if element_info.data @ children_names.index /= '1' then
-						Result.extend (info.name + ".disable_item_expand (" + children_names.item + ")")
+					if element_info.data @ children.index /= '1' then						
+						Result.extend (info.name + ".disable_item_expand (" + children.item.ev_any_access_name + ")")
 					end
-					children_names.forth
+					children.forth
 				end
 			end
 		end

@@ -1475,7 +1475,6 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	EIF_GEN_DER *sgdp, *tgdp;
 	int16 *ptypes;
 	int i, idx, result;
-	char exp_src;
 	unsigned char mask;
 	int16 stype, ttype;
 
@@ -1487,13 +1486,8 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	stype = source_type;
 	ttype = target_type;
 
-	exp_src = '\0';
-
 	if (stype <= -256)
-	{
 		stype   = -256 - stype;
-		exp_src = '1';
-	}
 
 	if (ttype < 0)
 	{

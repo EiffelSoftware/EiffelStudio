@@ -384,17 +384,13 @@ rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, int len, int size)
 			}
 		} else {						/*decode an 8 byte long */
 			while (len > i) {
-				unsigned long upper, lower;
-	
 				bcopy(idrs->i_ptr, &value, 4);
-				lower = (unsigned long) ntohl(value);
 				idrs->i_ptr += 4;
 				bcopy(idrs->i_ptr, &value, 4);
-				upper = (unsigned long) ntohl(value);
 				idrs->i_ptr += 4;
 #if LNGSIZ == 4
 						/*if the data has come from a 8 byte */
-				*(lp + (i++)) = lower;		/* long machine and we are only a 4 byte*/
+				*(lp + (i++)) = (unsigned long) ntohl(value);		/* long machine and we are only a 4 byte*/
 						/*long machine only take the lower 4 bytes*/
 						/* This will cause lost of data but l am */
 						/* assuming we do not send any longs between*/
@@ -402,7 +398,8 @@ rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, int len, int size)
 #else
 						/* rejoin the upper and lower parts */ 
 
-				*(lp + (i++)) = (lower & 0x00000000ffffffff) | (upper << 32);
+				*(lp + (i++)) = (lower & 0x00000000ffffffff) | 
+								(((unsigned long) ntohl(value)) << 32);
 #endif
 			}
 		}

@@ -805,7 +805,7 @@ rt_private void gen_object_write(char *object)
 			long count, elem_size;
 			char *ref, *o_ptr;
 			char *vis_name;
-			uint32 dgen, dgen_typ;
+			uint32 dgen;
 			struct gt_info *info;
 
 			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
@@ -847,7 +847,6 @@ rt_private void gen_object_write(char *object)
 						buffer_write(object, count*sizeof(EIF_DOUBLE));
 						break;
 					case SK_BIT:
-						dgen_typ = dgen & SK_DTYPE;
 						elem_size = *(long *) (o_ptr + sizeof(long));
 
 /*FIXME: header for each object ????*/

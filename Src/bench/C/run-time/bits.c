@@ -898,7 +898,6 @@ rt_public char *b_xor(char *a, char *b)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 uint32 len_a;		/* Length of the bit field a */
 	register2 uint32 len_b;		/* Length of the bit field b */
 	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
@@ -907,7 +906,6 @@ rt_public char *b_xor(char *a, char *b)
 	epush(&loc_stack, (char *) &b);
 	a = b_clone(a);
 	epop(&loc_stack,1);
-	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
 	addr_a = ARENA(a);

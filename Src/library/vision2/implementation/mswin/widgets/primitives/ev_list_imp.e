@@ -57,6 +57,7 @@ inherit
 			move_and_resize as wel_move_and_resize,
 			count as wel_count,
 			selected_items as wel_selected_items,
+			selected_item as wel_selected_item,
 			insert_item as wel_insert_item
 		undefine
 			window_process_message,
@@ -101,6 +102,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create ev_children.make (2)
+			create internal_selected_items.make (2)
 
 				-- Create the WEL LISTVIEW.
 			wel_make (Default_parent, 0, 0, 0, 0, 0)
@@ -139,33 +141,21 @@ feature -- Access
 			--
 			-- Void if there is no selection
 		local
-			local_selected_items: like selected_items
+			local_selected_index: INTEGER
 		do
-			local_selected_items := selected_items
-			if not local_selected_items.empty then
-				Result ?= selected_items.first
+			local_selected_index := wel_selected_item
+			if local_selected_index > 0 then
+				Result := (ev_children @ (local_selected_index + 1)).interface
 			end
 		end
 
-	selected_items: LINKED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
-		local
-			i: INTEGER
-			interf: EV_LIST_ITEM
-			c: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
-			create Result.make
-			c := ev_children
-			from
-				i := 0
-			until
-				i = selected_count
-			loop
-				interf ?= (c @ (wel_selected_items @ i + 1)).interface
-				Result.extend (interf)
-				Result.finish
-				i := i + 1
-			end			
+			Result := clone (internal_selected_items)
+		ensure then
+			internal_selected_items_uptodate implies 
+				Result.is_equal (retrieve_selected_items)
 		end
 
 feature -- Status setting
@@ -185,16 +175,14 @@ feature -- Status setting
 	clear_selection is
 			-- Make `selected_items' empty.
 		local
-			local_selected_items: LINKED_LIST [EV_LIST_ITEM]
+			local_selected_items: like selected_items
 		do
-			local_selected_items := selected_items
-			from
-				local_selected_items.start
+			local_selected_items := internal_selected_items
+			from 
 			until
-				local_selected_items.after
+				local_selected_items.empty
 			loop
-				local_selected_items.item.disable_select
-				local_selected_items.forth
+				local_selected_items.first.disable_select
 			end
 		end
 
@@ -359,23 +347,31 @@ feature {EV_ANY_I} -- Implementation
 			-- An item has changed
 		local
 			item_imp: EV_LIST_ITEM_IMP
+			item_interface: EV_LIST_ITEM
 		do
+			internal_selected_items_uptodate := False
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if flag_set(info.unewstate, Lvis_selected) and
 						not flag_set(info.uoldstate, Lvis_selected) then
 						-- Item is being selected
 					item_imp := ev_children @ (info.iitem + 1)
+					item_interface := item_imp.interface
+					internal_selected_items.extend (item_interface)
 					item_imp.interface.select_actions.call ([])
-					interface.select_actions.call ([item_imp.interface])
+					interface.select_actions.call ([item_interface])
 
 				elseif flag_set(info.uoldstate, Lvis_selected) and
 					not flag_set(info.unewstate, Lvis_selected) then
 						-- Item is being unselected
 					item_imp := ev_children @ (info.iitem + 1)
+					item_interface := item_imp.interface
+					internal_selected_items.prune_all (item_interface)
 					item_imp.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([item_imp.interface])
+					interface.deselect_actions.call ([item_interface])
 				end
+
 			end
+			internal_selected_items_uptodate := True
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -414,6 +410,35 @@ feature {EV_ANY_I} -- Implementation
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end 
+
+feature {NONE} -- Implementation
+
+	internal_selected_items_uptodate: BOOLEAN
+			-- Is `internal_selected_items' up-to-date?
+
+	internal_selected_items: like selected_items
+			-- Cached version of all selected items.
+
+	retrieve_selected_items: like selected_items is
+			-- Current selected items (non cached version)
+		local
+			i: INTEGER
+			interf: EV_LIST_ITEM
+			c: like ev_children
+		do
+			create Result.make (selected_count)
+			c := ev_children
+			from
+				i := 0
+			until
+				i = selected_count
+			loop
+				interf ?= (c @ (wel_selected_items @ i + 1)).interface
+				Result.extend (interf)
+				Result.finish
+				i := i + 1
+			end		
+		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -489,6 +514,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/04/19 01:29:41  pichery
+--| Cached `selected_items' for better perfs.
+--|
 --| Revision 1.69  2000/04/18 21:22:45  pichery
 --| MAJOR CHANGE:
 --| - Changed the implementation of EV_LIST_IMP. It now

@@ -154,7 +154,7 @@ feature -- Status report
 					arg := args.item (i)
 					arg_type_code := args.arg_item_code (i)
 					if arg_type_code = 'r' then
-						if not eif_gen_conf (
+						if arg /= Void and then not eif_gen_conf (
 								ei_dtype ($arg),
 								open_operand_type (i)
 							)

@@ -47,15 +47,9 @@ feature -- Status setting
 			-- Affect `a_cluster' to `data'.
 		local
 			actual: CLUSTER_I
-			name: STRING
 		do
 			actual := a_cluster.actual_cluster
-			if not actual.belongs_to_all then
-				set_text (actual.cluster_name)
-			else
-				name := actual.cluster_name
-				set_text (name.substring (name.last_index_of ('.', name.count) + 1, name.count))
-			end
+			set_text (actual.display_name)
 			set_tooltip (actual.cluster_name)
 			data := a_cluster
 			set_pebble (stone)

@@ -6,6 +6,7 @@ indexing
 class DYNAMIC_LIB_W 
 
 inherit
+
 	BAR_AND_TEXT
 		rename
 			edit_bar as dynamic_lib_toolbar,
@@ -170,6 +171,19 @@ feature -- Update
 		end
 	
 feature -- Stone process
+
+	process (d_class:E_CLASS; d_creation:E_FEATURE; 
+			 d_routine:E_FEATURE; d_index:INTEGER) is
+		do
+			if d_routine.is_attribute then
+				warner (eb_shell).gotcha_call ("An attribute can not be exported.")
+			elseif d_routine.is_deferred then
+				warner (eb_shell).gotcha_call ("A deferred feature can not be exported.%N")
+			else
+				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index)
+			end
+			synchronize
+		end
  
 	process_classi (s: CLASSI_STONE) is
 		local
@@ -192,8 +206,7 @@ feature -- Stone process
 	process_feature (s: FEATURE_STONE) is
 			-- Proces feature stone.
 		do
-			Eiffel_dynamic_lib.add_export_feature (s.e_class, Void, s.e_feature, 0)
-			synchronize
+			process (s.e_class, Void, s.e_feature, 0)
 		end
 
 	process_feature_error (s: FEATURE_ERROR_STONE) is

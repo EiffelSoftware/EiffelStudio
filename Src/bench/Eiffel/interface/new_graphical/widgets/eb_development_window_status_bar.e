@@ -225,10 +225,11 @@ feature -- Access
 	widget: EV_STATUS_BAR
 			-- Widget representing `Current'.
 
-feature {NONE} -- Implementation: widgets
-
 	label: EV_LABEL
 			-- Label where messages are displayed.
+			-- Directly accessible.
+
+feature {NONE} -- Implementation: widgets
 
 	project_label: EV_LABEL
 			-- Label that gives the name of the current project.

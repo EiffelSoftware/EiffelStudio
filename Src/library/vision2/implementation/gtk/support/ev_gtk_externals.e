@@ -303,7 +303,7 @@ feature {NONE} -- GTK C functions for menu
 	gtk_menu_append (menu: POINTER; menu_item: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end		
-	
+
 feature {NONE} -- GTK C functions for menu item
 
 	gtk_menu_bar_new: POINTER is
@@ -352,6 +352,14 @@ feature {NONE} -- GTK C functions for option buttons
 
 	gtk_option_menu_remove_menu (widget: POINTER) is
 		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_option_button_selected_menu_item (widget: POINTER): POINTER is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_option_button_index_of_menu_item (option_menu: POINTER; menu_item: POINTER): INTEGER is
+		external "C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for list
@@ -564,7 +572,7 @@ feature {NONE} -- GtkStyle functions
 
 feature {NONE} -- GtkWindow function
 
-	c_gtk_window_set_modal(window: POINTER; state: BOOLEAN) is
+	c_gtk_window_set_modal (window: POINTER; state: BOOLEAN) is
 		external
 			"C | %"gtk_eiffel.h%""
 		end
@@ -573,11 +581,12 @@ feature {NONE} -- Key Event function
 
 	c_gtk_event_keys_state (p: POINTER): INTEGER is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
+			"C | %"gtk_eiffel.h%""
 		end	
-	gtk_widget_set_all_events (p: POINTER) is
+
+	c_gtk_widget_set_all_events (p: POINTER) is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
+			"C | %"gtk_eiffel.h%""
 		end	
 	
 feature {NONE} -- Implementation

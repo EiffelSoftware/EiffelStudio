@@ -14,13 +14,12 @@ all:: net.lib
 .c.obj:
 	$(CC) -Fo$@ -c $(CFLAGS) $<
 
-SMODE = network.c network_r.c
+SMODE = network.c network_r.c hostname.c syncpoll.c
 
 LSRCS = $(SMODE)
 
 OBJS = \
-	network.obj \
-	network_r.obj
+	network.obj network_r.obj hostname.obj syncpoll.obj
 
 local_clean:: remove
 

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
@@ -9,49 +10,6 @@ indexing
 
 deferred class 
 	EV_SIMPLE_ITEM_I
-
-inherit
-	EV_ITEM_I
-		redefine
-			interface
-		end
-
-	EV_PICK_AND_DROPABLE_I
-		redefine
-			interface
-		end
-
-	EV_PIXMAPABLE_I
-		redefine
-			interface
-		end
-
-	EV_TEXTABLE_I
-		redefine
-			interface
-		end
-
-feature -- Access
-
-	maximum_pixmap_width: INTEGER is
-			-- Maximum width allowed for `pixmap'.
-		do	
-			Result := 16
-				-- FIXME This should be constant
-				-- ie standard_icon_width = 16
-		end
-
-	maximum_pixmap_height: INTEGER is
-			-- Maximum height allowed for `pixmap'.
-		do
-			Result := 16
-				-- FIXME This should be constant
-				-- ie standard_icon_width = 16
-		end
-
-feature {EV_SIMPLE_ITEM_I} -- Implementation
-
-	interface: EV_SIMPLE_ITEM
 
 end -- class EV_SIMPLE_ITEM_I
 
@@ -76,6 +34,9 @@ end -- class EV_SIMPLE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/07 22:10:00  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.23  2000/03/09 21:36:24  king
 --| Now inheriting from PND
 --|

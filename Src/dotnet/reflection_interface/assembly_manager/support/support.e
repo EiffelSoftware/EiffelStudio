@@ -21,9 +21,9 @@ feature -- Access
 		do
 			if not retried then
 				create conversion_support.make_conversionsupport
-				assembly_name := conversion_support.assemblynamefromdescriptor (a_descriptor)
+				assembly_name := conversion_support.assembly_name_from_descriptor (a_descriptor)
 				an_assembly := an_assembly.load (assembly_name)
-				Result := an_assembly.GetReferencedAssemblies
+				Result := an_assembly.Get_Referenced_Assemblies
 			else
 				Result := Void
 			end
@@ -53,7 +53,7 @@ feature -- Access
 				i = dependancies.count
 			loop
 				a_dependancy := dependancies.item (i)
-				added := dependancies_list.add (a_dependancy.name)
+				added := dependancies_list.add (a_dependancy.get_name)
 				i := i + 1
 			end
 			dependancies_list.sort
@@ -62,11 +62,11 @@ feature -- Access
 			from
 				i := 0
 			until
-				i = dependancies_list.Count
+				i = dependancies_list.get_Count
 			loop
-				a_name ?= dependancies_list.item (i)
+				a_name ?= dependancies_list.get_item (i)
 				Result := Result.Concat_String_String (Result, a_name)
-				if i < dependancies_list.Count - 1 then
+				if i < dependancies_list.get_Count - 1 then
 					Result := Result.Concat_String_String (Result, ", ")
 				end
 				i := i + 1
@@ -91,14 +91,14 @@ feature -- Status Report
 			non_void_class: a_class /= Void
 			non_void_feature_name: a_feature_name /= Void
 		do
-			Result := has_feature (a_class.initializationfeatures, a_feature_name)
-					or has_feature (a_class.accessfeatures, a_feature_name)
-					or has_feature (a_class.elementchangefeatures, a_feature_name)
-					or has_feature (a_class.basicoperations, a_feature_name)
-					or has_feature (a_class.unaryoperatorsfeatures, a_feature_name)
-					or has_feature (a_class.binaryoperatorsfeatures, a_feature_name)
-					or has_feature (a_class.specialfeatures, a_feature_name)
-					or has_feature (a_class.implementationfeatures, a_feature_name)
+			Result := has_feature (a_class.initialization_features, a_feature_name)
+					or has_feature (a_class.access_features, a_feature_name)
+					or has_feature (a_class.element_change_features, a_feature_name)
+					or has_feature (a_class.basic_operations, a_feature_name)
+					or has_feature (a_class.unary_operators_features, a_feature_name)
+					or has_feature (a_class.binary_operators_features, a_feature_name)
+					or has_feature (a_class.special_features, a_feature_name)
+					or has_feature (a_class.implementation_features, a_feature_name)
 		end
 
 feature {NONE} -- Implementation
@@ -116,10 +116,10 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				i = a_list.count or Result
+				i = a_list.get_count or Result
 			loop
-				a_feature ?= a_list.item (i)
-				if a_feature /= Void and then a_feature.eiffelname.tolower.equals_string (a_feature_name.tolower) then
+				a_feature ?= a_list.get_item (i)
+				if a_feature /= Void and then a_feature.eiffel_name.to_lower.equals_string (a_feature_name.to_lower) then
 					eiffel_feature := a_feature
 					Result := True
 				end

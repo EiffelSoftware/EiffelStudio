@@ -96,14 +96,14 @@ feature -- Basic Operations
 			non_void_feature: a_feature /= Void
 			non_void_feature_modification: feature_modification /= Void
 		do
-			if not features_modifications.containskey (a_feature) then
+			if not features_modifications.contains_key (a_feature) then
 				features_modifications.add (a_feature, feature_modification)
 			else
 				features_modifications.remove (a_feature)
 				features_modifications.add (a_feature, feature_modification)
 			end
 		ensure
-			feature_modification_added: features_modifications.containsvalue (feature_modification)
+			feature_modification_added: features_modifications.contains_value (feature_modification)
 		end
 		
 invariant

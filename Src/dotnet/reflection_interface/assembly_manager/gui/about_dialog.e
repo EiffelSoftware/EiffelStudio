@@ -18,11 +18,11 @@ feature {NONE} -- Initialization
 			description: "Initialize GUI."
 			external_name: "Make"
 		local
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 		do
 			make_form
 			initialize_gui
-			returned_value := showdialog
+			returned_value := show_dialog
 		end
 
 feature -- Access
@@ -48,35 +48,36 @@ feature -- Basic Operations
 			a_point: SYSTEM_DRAWING_POINT
 			an_image: SYSTEM_DRAWING_IMAGE
 			a_panel: SYSTEM_WINDOWS_FORMS_PANEL
+			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
 		do
 			set_enabled (True)
 			set_text (dictionary.Title)
 			a_size.set_width (dictionary.Window_width)
 			a_size.set_height (dictionary.Window_height)
 			set_size (a_size)
-			set_borderstyle (dictionary.Border_style)
+			set_border_style (border_style.fixed_single)
 			set_icon (dictionary.Assembly_manager_icon)
-			set_backcolor (dictionary.White_color)
-			set_maximizebox (False)
+			set_back_color (dictionary.White_color)
+			set_maximize_box (False)
 			
 				-- Image
-			an_image := image_factory.fromfile (dictionary.Image_filename)
+			an_image := image_factory.from_file (dictionary.Image_filename)
 			create a_panel.make_panel
-			a_panel.set_height (an_image.height)
-			a_panel.set_width (an_image.width)
-			a_panel.set_backgroundimage (an_image)			
-			controls.add (a_panel)	
+			a_panel.set_height (an_image.get_height)
+			a_panel.set_width (an_image.get_width)
+			a_panel.set_background_image (an_image)			
+			get_controls.add (a_panel)	
 			
 				-- Text
 			create main_panel.make_panel
-			main_panel.set_backcolor (dictionary.White_color)
-			a_size.set_width (dictionary.Window_width - a_panel.width)
+			main_panel.set_back_color (dictionary.White_color)
+			a_size.set_width (dictionary.Window_width - a_panel.get_width)
 			a_size.set_height (dictionary.Window_width)
 			main_panel.set_size (a_size)
-			a_point.set_x (a_panel.width)
+			a_point.set_x (a_panel.get_width)
 			a_point.set_y (0)
 			main_panel.set_location (a_point)
-			controls.add (main_panel)
+			get_controls.add (main_panel)
 			
 			display_text
 		end
@@ -113,32 +114,34 @@ feature {NONE} -- Implementation
 	
 	create_panel_label (a_text: STRING; y_position: INTEGER; is_bold_style: BOOLEAN) is
 		indexing
-			description: "Create a label with text `a_text' at position `y_position' and add it to `main_panel' controls."
+			description: "Create a label with text `a_text' at position `y_position' and add it to `main_panel' get_controls."
 			external_name: "CreatePanelLabel"
 		require
 			non_void_text: a_text /= Void
-			not_empty_text: a_text.length > 0
+			not_empty_text: a_text.get_length > 0
 			valid_y_position: y_position >= 0 and y_position <= dictionary.Window_height
 		local
 			a_label: SYSTEM_WINDOWS_FORMS_LABEL
 			a_point: SYSTEM_DRAWING_POINT
 			a_font: SYSTEM_DRAWING_FONT
+			alignment: SYSTEM_DRAWING_CONTENTALIGNMENT
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 			create a_label.make_label
-			a_label.set_backcolor (dictionary.White_color)
+			a_label.set_back_color (dictionary.White_color)
 			a_label.set_text (a_text)
 			a_point.set_x (dictionary.Margin)
 			a_point.set_y (y_position)
 			a_label.set_location (a_point)
-			a_label.set_autosize (True)
-			a_label.set_textalign (dictionary.Middle_center_alignment)
+			a_label.set_auto_size (True)
+			a_label.set_text_align (alignment.Middle_center)
 			if is_bold_style then
-				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
+				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)
 			else
-				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
+				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			end
 			a_label.set_font (a_font)
-			main_panel.controls.add (a_label)
+			main_panel.get_controls.add (a_label)
 		end
 		
 end -- class ABOUT_DIALOG

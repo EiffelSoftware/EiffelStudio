@@ -50,8 +50,8 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			a_label.set_location (a_point)			
-			a_label.set_autosize (True)
-			controls.add (a_label)
+			a_label.set_auto_size (True)
+			get_controls.add (a_label)
 
 			create a_label.make_label
 			a_label.set_font (a_font)
@@ -59,17 +59,17 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
 			a_label.set_location (a_point)			
-			a_label.set_autosize (True)
-			controls.add (a_label)
+			a_label.set_auto_size (True)
+			get_controls.add (a_label)
 
 			create a_label.make_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Public_key_string.concat_string_string (dictionary.Public_key_string, assembly_descriptor.publickey))
+			a_label.set_text (dictionary.Public_key_string.concat_string_string (dictionary.Public_key_string, assembly_descriptor.public_key))
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + 3 * dictionary.Label_height)
 			a_label.set_location (a_point)			
-			a_label.set_autosize (True)
-			controls.add (a_label)
+			a_label.set_auto_size (True)
+			get_controls.add (a_label)
 		end
 		
 end -- class DIALOG

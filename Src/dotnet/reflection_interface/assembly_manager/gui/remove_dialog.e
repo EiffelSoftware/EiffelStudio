@@ -24,41 +24,43 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.Length > 0
+			not_empty_assembly_name: an_assembly_descriptor.name.get_Length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 		local
-			return_value: INTEGER
+			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 		do
 			make_form
 			assembly_descriptor := an_assembly_descriptor
 			dependancies := assembly_dependancies
 			initialize_gui
-			return_value := showdialog
+			return_value := show_dialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
 		end
 
 feature -- Access
-
-	non_removable_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
-		indexing
-			description: "List of assemblies that cannot be removed from the Eiffel assembly cache"
-			external_name: "NonRemovableAssemblies"
-		local
-			special_assemblies: SPECIAL_ASSEMBLIES
-		once
-			create special_assemblies
-			Result := special_assemblies.non_removable_assemblies
-		ensure
-			non_removable_assemblies_created: Result /= Void
-		end
 		
 	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
 		indexing
 			description: "Assembly dependancies"
 			external_name: "Dependancies"
+		end
+
+	non_removable_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+		indexing
+			description: "Non removable assemblies"
+			external_name: "NonRemovableAssemblies"
+		local
+			added: INTEGER
+		once
+			create Result.make
+			added := Result.add (dictionary.Mscorlib_assembly_name)
+			added := Result.add (dictionary.System_assembly_name)
+		ensure
+			list_created: Result /= Void
+			valid_list: Result.get_count = 2
 		end
 		
 	dictionary: REMOVE_DIALOG_DICTIONARY is
@@ -95,23 +97,8 @@ feature -- Status Setting
 			external_name: "IsNonRemovableAssembly"
 		require
 			non_void_descriptor: a_descriptor /= Void
-		local
-			i: INTEGER
-			an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 		do
-			from
-			until
-				i = non_removable_assemblies.count or Result
-			loop
-				an_assembly_descriptor ?= non_removable_assemblies.item (i)
-				if an_assembly_descriptor /= Void then
-					Result := an_assembly_descriptor.name.tolower.equals_string (a_descriptor.name.tolower) and
-							an_assembly_descriptor.version.tolower.equals_string (a_descriptor.version.tolower) and
-							an_assembly_descriptor.culture.tolower.equals_string (a_descriptor.culture.tolower) and
-							an_assembly_descriptor.publickey.tolower.equals_string (a_descriptor.publickey.tolower) 
-				end
-				i := i + 1
-			end
+			Result := non_removable_assemblies.contains (a_descriptor.name.to_lower)
 		end
 		
 feature -- Basic Operations
@@ -127,15 +114,17 @@ feature -- Basic Operations
 			a_font: SYSTEM_DRAWING_FONT
 			on_yes_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_no_event_handler_delegate: SYSTEM_EVENTHANDLER
+			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			set_borderstyle (dictionary.Border_style)
+			set_border_style (border_style.fixed_single)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 			set_icon (dictionary.Remove_icon)
-			set_maximizebox (False)
+			set_maximize_box (False)
 
 				-- Assembly name
 			create assembly_label.make_label
@@ -145,7 +134,7 @@ feature -- Basic Operations
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size,  dictionary.Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
 			
 			create_assembly_labels
@@ -156,7 +145,7 @@ feature -- Basic Operations
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (2 * dictionary.Margin +  4 * dictionary.Label_height)
 			question_label.set_location (a_point)
-			question_label.set_autosize (True)	
+			question_label.set_auto_size (True)	
 			question_label.set_font (label_font)
 						
 				-- Yes button
@@ -181,11 +170,11 @@ feature -- Basic Operations
 			create on_no_event_handler_delegate.make_eventhandler (Current, $on_no_event_handler)
 			no_button.add_Click (on_no_event_handler_delegate)
 			
-				-- Addition of controls
-			controls.add (assembly_label)
-			controls.add (question_label)
-			controls.add (yes_button)
-			controls.add (no_button)
+				-- Addition of get_controls
+			get_controls.add (assembly_label)
+			get_controls.add (question_label)
+			get_controls.add (yes_button)
+			get_controls.add (no_button)
 		end
 
 feature -- Event handling
@@ -199,7 +188,9 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			warning_dialog: WARNING_DIALOG
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			if not is_non_removable_assembly (assembly_descriptor) then
@@ -207,7 +198,7 @@ feature -- Event handling
 				close
 			else
 				close
-				returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_removable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Non_removable_assembly, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end
 		end
 
@@ -233,16 +224,18 @@ feature {NONE} -- Implementation
 		local
 			reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
 			retried: BOOLEAN
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			if not retried then
 				create reflection_interface.make_reflectioninterface
-				reflection_interface.MakeReflectionInterface
-				reflection_interface.removeassembly (assembly_descriptor)
+				reflection_interface.Make_Reflection_Interface
+				reflection_interface.remove_assembly (assembly_descriptor)
 			else
-				if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				if reflection_interface.last_error /= Void and then reflection_interface.last_error.description /= Void and then reflection_interface.last_error.description.get_length > 0 then
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.last_error.description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				end
 			end
 		rescue

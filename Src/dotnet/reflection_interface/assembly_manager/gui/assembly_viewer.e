@@ -15,7 +15,9 @@ feature {NONE} -- Initialization
 			description: "Initialize attributes, register to subject and initialize GUI."
 			external_name: "Make"
 		local
-			return_value: INTEGER
+			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			retried: BOOLEAN
 		do
@@ -23,9 +25,9 @@ feature {NONE} -- Initialization
 			if not retried then
 				prepare_gui
 				initialize_gui
-				return_value := showdialog
+				return_value := show_dialog
 			else
-				return_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Error_message, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				return_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Error_message, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end
 		ensure
 			non_void_reflection_interface: reflection_interface /= Void
@@ -302,7 +304,7 @@ feature -- Basic Operations
 		do
 			register_to_subject
 			create reflection_interface.make_reflectioninterface
-			reflection_interface.MakeReflectionInterface
+			reflection_interface.Make_Reflection_Interface
 			build_assemblies	
 		ensure
 			non_void_reflection_interface: reflection_interface /= Void
@@ -315,14 +317,12 @@ feature -- Basic Operations
 		local
 			a_size: SYSTEM_DRAWING_SIZE
 			on_resize_delegate: SYSTEM_EVENTHANDLER
-			on_close_delegate: SYSTEM_EVENTHANDLER
 		do
 			set_enabled (True)
 			set_text (dictionary.Title)
 			a_size.set_width (dictionary.Window_width)
 			a_size.set_height (dictionary.Window_height)
 			set_size (a_size)
-			--set_borderstyle (dictionary.Border_style)
 			set_icon (dictionary.Assembly_manager_icon)
 
 			build_menu
@@ -330,15 +330,12 @@ feature -- Basic Operations
 			build_toolbar
 			build_assemblies_table
 			display_assemblies
-			controls.Add (data_grid)
+			get_controls.Add (data_grid)
 
-			create on_resize_delegate.make_eventhandler (Current, $on_resize)
+			create on_resize_delegate.make_eventhandler (Current, $on_resize_action)
 			add_resize (on_resize_delegate)
 			
 			fill_data_grid
-			
-			create on_close_delegate.make_eventhandler (Current, $on_close)
-			add_closed (on_close_delegate)
 		ensure
 			non_void_menu: main_menu /= Void
 			non_void_toolbar: toolbar /= Void
@@ -355,6 +352,7 @@ feature -- Basic Operations
 		local
 			added: INTEGER
 			separator: SYSTEM_WINDOWS_FORMS_MENUITEM
+			shortcut: SYSTEM_WINDOWS_FORMS_SHORTCUT
 		do
 				-- Build menu.
 			create main_menu.make_mainmenu
@@ -365,7 +363,7 @@ feature -- Basic Operations
 				
 				-- Build File menu item.
 			create exit_menu_item.make_menuitem_1 (dictionary.Exit_menu_item)
-			exit_menu_item.set_shortcut (dictionary.Ctrl_X_shortcut)
+			exit_menu_item.set_shortcut (shortcut.Ctrl_X)
 			
 				-- Build View menu item.
 			create name_menu_item.make_menuitem_1 (dictionary.Name_menu_item)
@@ -375,12 +373,12 @@ feature -- Basic Operations
 			create dependancies_menu_item.make_menuitem_1 (dictionary.Dependancies_menu_item)
 			create show_all_menu_item.make_menuitem_1 (dictionary.Show_all_menu_item)
 						
-			name_menu_item.set_shortcut (dictionary.Ctrl_N_shortcut)
-			version_menu_item.set_shortcut (dictionary.Ctrl_R_shortcut)
-			culture_menu_item.set_shortcut (dictionary.Ctrl_U_shortcut)
-			public_key_menu_item.set_shortcut (dictionary.Ctrl_K_shortcut)
-			dependancies_menu_item.set_shortcut (dictionary.Ctrl_D_shortcut)
-			show_all_menu_item.set_shortcut (dictionary.Ctrl_A_shortcut)
+			name_menu_item.set_shortcut (shortcut.Ctrl_N)
+			version_menu_item.set_shortcut (shortcut.Ctrl_R)
+			culture_menu_item.set_shortcut (shortcut.Ctrl_U)
+			public_key_menu_item.set_shortcut (shortcut.Ctrl_K)
+			dependancies_menu_item.set_shortcut (shortcut.Ctrl_D)
+			show_all_menu_item.set_shortcut (shortcut.Ctrl_A)
 			
 			name_menu_item.set_checked (True)
 			version_menu_item.set_checked (False)
@@ -388,30 +386,30 @@ feature -- Basic Operations
 			public_key_menu_item.set_checked (False)
 			dependancies_menu_item.set_checked (False)
 
-			added := view_menu_item.menuitems.add (name_menu_item)	
-			added := view_menu_item.menuitems.add (version_menu_item)	
-			added := view_menu_item.menuitems.add (culture_menu_item)	
-			added := view_menu_item.menuitems.add (public_key_menu_item)				
-			added := view_menu_item.menuitems.add (dependancies_menu_item)
+			added := view_menu_item.get_menu_items.add (name_menu_item)	
+			added := view_menu_item.get_menu_items.add (version_menu_item)	
+			added := view_menu_item.get_menu_items.add (culture_menu_item)	
+			added := view_menu_item.get_menu_items.add (public_key_menu_item)				
+			added := view_menu_item.get_menu_items.add (dependancies_menu_item)
 					
 				-- Build Tools menu
 			create dependancy_viewer_menu_item.make_menuitem_1 (dictionary.Dependancy_viewer_menu_item)
-			dependancy_viewer_menu_item.set_shortcut (dictionary.Ctrl_D_shortcut)
-			added := tools_menu_item.menuitems.add (dependancy_viewer_menu_item)
-			separator := tools_menu_item.menuitems.add_string ("-")
+			dependancy_viewer_menu_item.set_shortcut (shortcut.Ctrl_D)
+			added := tools_menu_item.get_menu_items.add (dependancy_viewer_menu_item)
+			separator := tools_menu_item.get_menu_items.add_string ("-")
 			
 				-- Build Help menu item.
 			create help_topics_menu_item.make_menuitem_1 (dictionary.Help_topics_menu_item)
 			create about_menu_item.make_menuitem_1 (dictionary.About_menu_item)
-			help_topics_menu_item.set_shortcut (dictionary.Ctrl_H_shortcut)
-			added := help_menu_item.menuitems.add (help_topics_menu_item)
-			separator := help_menu_item.menuitems.add_string ("-")
-			added := help_menu_item.menuitems.add (about_menu_item)			
+			help_topics_menu_item.set_shortcut (shortcut.Ctrl_H)
+			added := help_menu_item.get_menu_items.add (help_topics_menu_item)
+			separator := help_menu_item.get_menu_items.add_string ("-")
+			added := help_menu_item.get_menu_items.add (about_menu_item)			
 				
-			added := main_menu.menuitems.add (file_menu_item)
-			added := main_menu.menuitems.add (view_menu_item)
-			added := main_menu.menuitems.add (tools_menu_item)
-			added := main_menu.menuitems.add (help_menu_item)
+			added := main_menu.get_menu_items.add (file_menu_item)
+			added := main_menu.get_menu_items.add (view_menu_item)
+			added := main_menu.get_menu_items.add (tools_menu_item)
+			added := main_menu.get_menu_items.add (help_menu_item)
 			set_menu (main_menu)
 		end
 	
@@ -490,12 +488,12 @@ feature -- Basic Operations
 	build_image_list is
 		indexing
 			description: "Build toolbar image list."
-			external_name: "BuildImageList"
+			external_name: "Buildimage_list"
 		require
 			non_void_toolbar: toolbar /= Void
 		deferred
 		ensure
-			non_void_image_list: toolbar.imagelist /= Void
+			non_void_image_list: toolbar.get_image_list /= Void
 		end
 
 	build_toolbar_assembly_viewer is
@@ -506,10 +504,12 @@ feature -- Basic Operations
 			added: INTEGER
 			separator: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
 			toolbar_button_click_delegate: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONCLICKEVENTHANDLER
+			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARAPPEARANCE
+			style: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
 		do
 			create toolbar.make_toolbar
-			toolbar.set_appearance (dictionary.Flat_appearance)
-			toolbar.set_autosize (True)
+			toolbar.set_appearance (appearance.Flat)
+			toolbar.set_auto_size (True)
 			
 			build_image_list
 			
@@ -524,32 +524,32 @@ feature -- Basic Operations
 			create separator.make_toolbarbutton
 			
 				-- Set icons to toolbar buttons.
-			name_toolbar_button.set_imageindex (0)
-			version_toolbar_button.set_imageindex (1)
-			culture_toolbar_button.set_imageindex (2)
-			public_key_toolbar_button.set_imageindex (3)
-			dependancies_toolbar_button.set_imageindex (4)
-			dependancy_viewer_toolbar_button.set_imageindex (5)
-			help_toolbar_button.set_imageindex (6)
+			name_toolbar_button.set_image_index (0)
+			version_toolbar_button.set_image_index (1)
+			culture_toolbar_button.set_image_index (2)
+			public_key_toolbar_button.set_image_index (3)
+			dependancies_toolbar_button.set_image_index (4)
+			dependancy_viewer_toolbar_button.set_image_index (5)
+			help_toolbar_button.set_image_index (6)
 			
 				-- Set tooltips.
-			name_toolbar_button.set_tooltiptext (dictionary.Name_menu_item)
-			version_toolbar_button.set_tooltiptext (dictionary.Version_menu_item)
-			culture_toolbar_button.set_tooltiptext (dictionary.Culture_menu_item)
-			public_key_toolbar_button.set_tooltiptext (dictionary.Public_key_menu_item)
-			dependancies_toolbar_button.set_tooltiptext (dictionary.Dependancies_menu_item)
-			dependancy_viewer_toolbar_button.set_tooltiptext (dictionary.Dependancy_viewer_menu_item)
-			help_toolbar_button.set_tooltiptext (dictionary.Help_menu_item)
+			name_toolbar_button.set_tool_tip_text (dictionary.Name_menu_item)
+			version_toolbar_button.set_tool_tip_text (dictionary.Version_menu_item)
+			culture_toolbar_button.set_tool_tip_text (dictionary.Culture_menu_item)
+			public_key_toolbar_button.set_tool_tip_text (dictionary.Public_key_menu_item)
+			dependancies_toolbar_button.set_tool_tip_text (dictionary.Dependancies_menu_item)
+			dependancy_viewer_toolbar_button.set_tool_tip_text (dictionary.Dependancy_viewer_menu_item)
+			help_toolbar_button.set_tool_tip_text (dictionary.Help_menu_item)
 			
 				-- Set button style.
-			name_toolbar_button.set_style (dictionary.Toggle_button)
-			version_toolbar_button.set_style (dictionary.Toggle_button)
-			culture_toolbar_button.set_style (dictionary.Toggle_button)
-			public_key_toolbar_button.set_style (dictionary.Toggle_button)
-			dependancies_toolbar_button.set_style (dictionary.Toggle_button)
-			dependancy_viewer_toolbar_button.set_style (dictionary.Push_button)
-			help_toolbar_button.set_style (dictionary.Push_button)
-			separator.set_style (dictionary.Separator)
+			name_toolbar_button.set_style (style.Toggle_button)
+			version_toolbar_button.set_style (style.Toggle_button)
+			culture_toolbar_button.set_style (style.Toggle_button)
+			public_key_toolbar_button.set_style (style.Toggle_button)
+			dependancies_toolbar_button.set_style (style.Toggle_button)
+			dependancy_viewer_toolbar_button.set_style (style.Push_button)
+			help_toolbar_button.set_style (style.Push_button)
+			separator.set_style (style.Separator)
 			
 				-- Set visible
 			name_toolbar_button.set_pushed (True)
@@ -559,22 +559,22 @@ feature -- Basic Operations
 			dependancies_toolbar_button.set_pushed (False)
 			
 				-- Add buttons to `toolbar'.
-			added := toolbar.buttons.add_toolbarbutton (name_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (version_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (culture_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (public_key_toolbar_button)
-			added := toolbar.buttons.add_toolbarbutton (dependancies_toolbar_button)
-			controls.add (toolbar)
+			added := toolbar.get_buttons.add_tool_bar_button (name_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (version_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (culture_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (public_key_toolbar_button)
+			added := toolbar.get_buttons.add_tool_bar_button (dependancies_toolbar_button)
+			get_controls.add (toolbar)
 			
 				-- Set action.
   			create toolbar_button_click_delegate.make_toolbarbuttonclickeventhandler (Current, $on_toolbar_button_clicked)
-  			toolbar.add_buttonclick (toolbar_button_click_delegate)
+  			toolbar.add_button_click (toolbar_button_click_delegate)
 		end
 
 	build_image_list_assembly_viewer is
 		indexing
 			description: "Build toolbar image list."
-			external_name: "BuildImageListAssemblyViewer"
+			external_name: "Buildimage_listAssemblyViewer"
 		local
 			resources: SYSTEM_RESOURCES_RESOURCEMANAGER
 			name_icon: SYSTEM_DRAWING_ICON
@@ -585,27 +585,27 @@ feature -- Basic Operations
 			dependancies_image: SYSTEM_DRAWING_IMAGE
 			dependancy_viewer_image: SYSTEM_DRAWING_IMAGE
 			help_image: SYSTEM_DRAWING_IMAGE	
-			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
-			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST 
+			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST 
+			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST
 		do
-		--	create resources.make_2 (Current.GetType)
+		--	create resources.make_2 (Current.Get_Type)
 		--	name_icon ?= resources.getobject ("assembly_name_icon")
 		--	 System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ScrollBarCtl));
  		--	statusBarPanel1.Icon = (System.Drawing.Icon)resources.GetObject("statusBarPanel1.Icon");
  
 				-- Create icons
-			name_image := image_factory.fromfile (dictionary.Name_icon_filename)
-			version_image := image_factory.fromfile (dictionary.Version_icon_filename)
-			culture_image := image_factory.fromfile (dictionary.Culture_icon_filename)
-			public_key_image := image_factory.fromfile (dictionary.Public_key_icon_filename)
-			dependancies_image := image_factory.fromfile (dictionary.Dependancies_icon_filename)
-			dependancy_viewer_image := image_factory.fromfile (dictionary.Dependancy_viewer_icon_filename)
-			help_image := image_factory.fromfile (dictionary.Help_icon_filename)
+			name_image := image_factory.from_file (dictionary.Name_icon_filename)
+			version_image := image_factory.from_file (dictionary.Version_icon_filename)
+			culture_image := image_factory.from_file (dictionary.Culture_icon_filename)
+			public_key_image := image_factory.from_file (dictionary.Public_key_icon_filename)
+			dependancies_image := image_factory.from_file (dictionary.Dependancies_icon_filename)
+			dependancy_viewer_image := image_factory.from_file (dictionary.Dependancy_viewer_icon_filename)
+			help_image := image_factory.from_file (dictionary.Help_icon_filename)
 			
-				-- Add icons to `imagelist'.
+				-- Add icons to `image_list'.
 			create image_list.make_imagelist
-			toolbar.set_imagelist (image_list)
-			images := image_list.images
+			toolbar.set_image_list (image_list)
+			images := image_list.get_images
 			images.add (name_image)
 			images.add (version_image)
 			images.add (culture_image)
@@ -625,7 +625,7 @@ feature -- Basic Operations
 			create data_table.make_datatable_1 (dictionary.Data_table_title)
 			
 				-- Create table columns
-			type := type_factory.GetType_String (dictionary.System_string_type);
+			type := type_factory.Get_Type_String (dictionary.System_string_type);
 			create assembly_name_column.make_datacolumn_2 (dictionary.Assembly_name_column_title, type)
 			create assembly_version_column.make_datacolumn_2 (dictionary.Assembly_version_column_title, type)
 			create assembly_culture_column.make_datacolumn_2 (dictionary.Assembly_culture_column_title, type)
@@ -633,7 +633,7 @@ feature -- Basic Operations
 			create dependancies_column.make_datacolumn_2 (dictionary.Dependancies_column_title, type)					
 
 				-- Add columns to data table
-			data_table.Columns.Add_DataColumn (assembly_name_column)
+			data_table.get_Columns.Add_Data_Column (assembly_name_column)
 		end
 
 	build_data_grid_assembly_viewer is
@@ -648,17 +648,18 @@ feature -- Basic Operations
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
 			--on_cell_delegate: SYSTEM_EVENTHANDLER
 			a_color: SYSTEM_DRAWING_COLOR
+			style: SYSTEM_DRAWING_FONTSTYLE
 		do
 				-- Build data grid	
 			create data_grid.make_datagrid
-			data_grid.BeginInit
+			data_grid.Begin_Init
 			data_grid.set_Visible (True)
-			create data_grid_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
+			create data_grid_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			data_grid.set_font (data_grid_font)
 			
-			if width /= Void and then width > 0 then
-				a_size.set_width (width - dictionary.Margin // 2)
-				a_size.set_height (height - 4 * dictionary.Row_height)				
+			if get_width /= Void and then get_width > 0 then
+				a_size.set_width (get_width - dictionary.Margin // 2)
+				a_size.set_height (get_height - 4 * dictionary.Row_height)				
 			else
 				a_size.set_width (dictionary.Window_width - dictionary.Margin // 2)
 				a_size.set_height (dictionary.Window_height - 4 * dictionary.Row_height)
@@ -667,11 +668,11 @@ feature -- Basic Operations
 			set_height (dictionary.Window_height)
 			
 			a_point.set_x (0)
-			a_point.set_y (toolbar.height)
+			a_point.set_y (toolbar.get_height)
 			data_grid.set_location (a_point)
-			data_grid.set_DataSource (data_table)
-			data_grid.set_TabIndex (0)
-			data_grid.EndInit 
+			data_grid.set_Data_Source (data_table)
+			data_grid.set_Tab_Index (0)
+			data_grid.End_Init 
 			
 				-- Table styles
 			create assembly_name_column_style.make_datagridtextboxcolumn
@@ -681,41 +682,41 @@ feature -- Basic Operations
 			create dependancies_column_style.make_datagridtextboxcolumn
 			
 				-- Set `MappingName'.
-			assembly_name_column_style.set_mappingname (dictionary.Assembly_name_column_title)
-			assembly_version_column_style.set_mappingname (dictionary.Assembly_version_column_title)
-			assembly_culture_column_style.set_mappingname (dictionary.Assembly_culture_column_title)
-			assembly_public_key_column_style.set_mappingname (dictionary.Assembly_public_key_column_title)
-			dependancies_column_style.set_mappingname (dictionary.Dependancies_column_title)
+			assembly_name_column_style.set_mapping_name (dictionary.Assembly_name_column_title)
+			assembly_version_column_style.set_mapping_name (dictionary.Assembly_version_column_title)
+			assembly_culture_column_style.set_mapping_name (dictionary.Assembly_culture_column_title)
+			assembly_public_key_column_style.set_mapping_name (dictionary.Assembly_public_key_column_title)
+			dependancies_column_style.set_mapping_name (dictionary.Dependancies_column_title)
 
 				-- Set `HeaderText'.
-			assembly_name_column_style.set_headertext (dictionary.Assembly_name_column_title)
-			assembly_version_column_style.set_headertext (dictionary.Assembly_version_column_title)
-			assembly_culture_column_style.set_headertext (dictionary.Assembly_culture_column_title)
-			assembly_public_key_column_style.set_headertext (dictionary.Assembly_public_key_column_title)
-			dependancies_column_style.set_headertext (dictionary.Dependancies_column_title)
+			assembly_name_column_style.set_header_text (dictionary.Assembly_name_column_title)
+			assembly_version_column_style.set_header_text (dictionary.Assembly_version_column_title)
+			assembly_culture_column_style.set_header_text (dictionary.Assembly_culture_column_title)
+			assembly_public_key_column_style.set_header_text (dictionary.Assembly_public_key_column_title)
+			dependancies_column_style.set_header_text (dictionary.Dependancies_column_title)
 			
 			set_read_only_assembly_viewer
 			
 				-- Set styles.
 			create data_grid_table_style.make_datagridtablestyle_1 
-			data_grid_table_style.set_backcolor (a_color.White)
-			data_grid_table_style.set_PreferredColumnWidth (dictionary.Window_width // 6)
-			data_grid_table_style.set_preferredrowheight (dictionary.Row_height)
-			data_grid_table_style.set_readonly (True)
-			data_grid_table_style.set_selectionbackcolor (dictionary.White_color)
-			data_grid_table_style.set_rowheadersvisible (False)
-			data_grid_table_style.set_columnheadersvisible (True)
-			data_grid_table_style.set_mappingname (dictionary.Data_table_title)
-			data_grid_table_style.set_allowsorting (False)
+			data_grid_table_style.set_back_color (a_color.get_White)
+			data_grid_table_style.set_Preferred_Column_Width (dictionary.Window_width // 6)
+			data_grid_table_style.set_preferred_row_height (dictionary.Row_height)
+			data_grid_table_style.set_read_only (True)
+			data_grid_table_style.set_selection_back_color (dictionary.White_color)
+			data_grid_table_style.set_row_headers_visible (False)
+			data_grid_table_style.set_column_headers_visible (True)
+			data_grid_table_style.set_mapping_name (dictionary.Data_table_title)
+			data_grid_table_style.set_allow_sorting (False)
 			
-			added := data_grid_table_style.gridcolumnstyles.add (assembly_name_column_style)
-			added := data_grid_table_style.gridcolumnstyles.add (assembly_version_column_style)
-			added := data_grid_table_style.gridcolumnstyles.add (assembly_culture_column_style)
-			added := data_grid_table_style.gridcolumnstyles.add (assembly_public_key_column_style)
-			added := data_grid_table_style.gridcolumnstyles.add (dependancies_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_version_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_culture_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (assembly_public_key_column_style)
+			added := data_grid_table_style.get_grid_column_styles.add (dependancies_column_style)
 			
-			if not data_grid.TableStyles.contains_datagridtablestyle (data_grid_table_style) then
-				added := data_grid.TableStyles.Add (data_grid_table_style)
+			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
+				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
 			end	
 
 			--create on_cell_delegate.make_eventhandler (Current, $on_cell)			
@@ -755,29 +756,19 @@ feature -- Basic Operations
 		end
 	
 feature -- Event handling
-
-	on_close (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-		indexing
-			description: "Action performed when user closes the window"
-			external_name: "OnClose"
-		require
-			non_void_sender: sender /= Void
-			non_void_arguments: arguments /= Void
-		deferred
-		end
 		
-	on_resize (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+	on_resize_action (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Resize window and its content."
-			external_name: "OnResize"
+			external_name: "OnResizeAction"
 		local
 			a_size: SYSTEM_DRAWING_SIZE
 		do
-			a_size.set_width (width - dictionary.Margin // 2)
-			a_size.set_height (height - 4 * dictionary.Row_height)
+			a_size.set_width (get_width - dictionary.Margin // 2)
+			a_size.set_height (get_height - 4 * dictionary.Row_height)
 			data_grid.set_Size (a_size)
 			resize_columns
-			if data_table.rows /= Void and then data_table.rows.count > 0 then
+			if data_table.get_rows /= Void and then data_table.get_rows.get_count > 0 then
 				fill_data_grid
 			end			
 			refresh
@@ -862,15 +853,15 @@ feature -- Event handling
 			public_key_toolbar_button.set_pushed (True)
 			dependancies_toolbar_button.set_pushed (True)
 			
-			controls.remove (data_grid)
+			get_controls.remove (data_grid)
 			build_assemblies_table
-			columns := data_table.columns
+			columns := data_table.get_columns
 			columns.clear
-			columns.add_datacolumn (assembly_name_column)
-			columns.add_datacolumn (assembly_version_column)
-			columns.add_datacolumn (assembly_culture_column)
-			columns.add_datacolumn (assembly_public_key_column)
-			columns.add_datacolumn (dependancies_column)
+			columns.add_data_column (assembly_name_column)
+			columns.add_data_column (assembly_version_column)
+			columns.add_data_column (assembly_culture_column)
+			columns.add_data_column (assembly_public_key_column)
+			columns.add_data_column (dependancies_column)
 		end
 
 	show_name_assembly_viewer (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -895,11 +886,11 @@ feature -- Event handling
 			public_key_toolbar_button.set_pushed (False)
 			dependancies_toolbar_button.set_pushed (False)
 			
-			controls.remove (data_grid)
+			get_controls.remove (data_grid)
 			build_assemblies_table
-			columns := data_table.columns
+			columns := data_table.get_columns
 			columns.clear
-			columns.add_datacolumn (assembly_name_column)	
+			columns.add_data_column (assembly_name_column)	
 		end
 		
 	exit (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -924,13 +915,14 @@ feature -- Event handling
 			support: ISE_REFLECTION_REFLECTIONSUPPORT
 			help_filename: STRING
 			help: SYSTEM_WINDOWS_FORMS_HELP
+			navigator: SYSTEM_WINDOWS_FORMS_HELPNAVIGATOR
 		do
 			create support.make_reflectionsupport
 			support.make
-			help_filename := support.Eiffeldeliverypath
+			help_filename := support.Eiffel_delivery_path
 			help_filename := help_filename.concat_string_string (help_filename, dictionary.Relative_help_filename)
 				--TOC
-			help.showhelp_control_string_helpnavigator (Current, help_filename, 2147483650)
+			help.show_help_control_string_help_navigator (Current, help_filename, navigator.table_of_contents)
 		end
 		
 	about_assembly_manager (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -1007,7 +999,7 @@ feature -- Event handling
 			support: SUPPORT
 		do
 			create support
-			selected_row := data_grid.CurrentRowIndex
+			selected_row := data_grid.get_current_row_index
 			if selected_row /= -1 then
 				a_descriptor := current_assembly (selected_row)	
 				if a_descriptor /= Void then
@@ -1074,11 +1066,11 @@ feature {NONE} -- Implementation
 		local
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
-			columns := data_table.columns
-			Result := data_table.NewRow			
-			Result.Table.DefaultView.set_AllowEdit (False)
-			Result.Table.DefaultView.set_AllowNew (False)
-			Result.Table.DefaultView.set_AllowDelete (False)
+			columns := data_table.get_columns
+			Result := data_table.New_Row			
+			Result.get_Table.get_Default_View.set_Allow_Edit (False)
+			Result.get_Table.get_Default_View.set_Allow_New (False)
+			Result.get_Table.get_Default_View.set_Allow_Delete (False)
 			if columns.contains (dictionary.Assembly_name_column_title) then
 				Result.set_Item_String (dictionary.Assembly_name_column_title, dictionary.Empty_string)
 			end
@@ -1094,7 +1086,7 @@ feature {NONE} -- Implementation
 			if columns.contains (dictionary.Dependancies_column_title) then
 				Result.set_Item_String (dictionary.Dependancies_column_title, dictionary.Empty_string)
 			end
-			data_table.Rows.Add (Result)
+			data_table.get_Rows.Add (Result)
 		end	
 		
 	current_assembly (row_number: INTEGER): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
@@ -1102,7 +1094,7 @@ feature {NONE} -- Implementation
 			description: "Assembly descriptor corresponding to row at index `row_number'"
 			external_name: "CurrentAssembly"
 		require
-			valid_row_number: row_number > -1 and row_number < data_table.rows.count
+			valid_row_number: row_number > -1 and row_number < data_table.get_rows.get_count
 		deferred
 		end		
 
@@ -1120,15 +1112,15 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				rows := data_table.rows
-				if (rows.count + 3) * dictionary.Row_height < height - 4 * dictionary.Row_height then
-					difference := height - 4 * dictionary.Row_height - (rows.count + 3) * dictionary.Row_height
+				rows := data_table.get_rows
+				if (rows.get_count + 3) * dictionary.Row_height < get_height - 4 * dictionary.Row_height then
+					difference := get_height - 4 * dictionary.Row_height - (rows.get_count + 3) * dictionary.Row_height
 					empty_row_count := difference // dictionary.Row_height + 1
 					from
 					until
 						i = empty_row_count
 					loop
-						build_empty_row (rows.count)
+						build_empty_row (rows.get_count)
 						i := i + 1
 					end
 				end
@@ -1163,11 +1155,11 @@ feature {NONE} -- Implementation
 			description: "Set read-only property to each column of the data grid."
 			external_name: "SetReadOnlyAssemblyViewer"
 		do
-			assembly_name_column_style.set_readonly (True)
-			assembly_version_column_style.set_readonly (True)
-			assembly_culture_column_style.set_readonly (True)
-			assembly_public_key_column_style.set_readonly (True)
-			dependancies_column_style.set_readonly (True)
+			assembly_name_column_style.set_read_only (True)
+			assembly_version_column_style.set_read_only (True)
+			assembly_culture_column_style.set_read_only (True)
+			assembly_public_key_column_style.set_read_only (True)
+			dependancies_column_style.set_read_only (True)
 		end
 		
 	resize_columns is
@@ -1192,24 +1184,24 @@ feature {NONE} -- Implementation
 			columns: SYSTEM_DATA_DATACOLUMNCOLLECTION
 		do
 			build_assemblies
-			controls.remove (data_grid)
+			get_controls.remove (data_grid)
 			build_assemblies_table
-			columns := data_table.columns
+			columns := data_table.get_columns
 			columns.clear
-			if name_menu_item.checked then
-				columns.add_datacolumn (assembly_name_column)
+			if name_menu_item.get_checked then
+				columns.add_data_column (assembly_name_column)
 			end
-			if version_menu_item.checked then
-				columns.add_datacolumn (assembly_version_column)
+			if version_menu_item.get_checked then
+				columns.add_data_column (assembly_version_column)
 			end
-			if culture_menu_item.checked then
-				columns.add_datacolumn (assembly_culture_column)
+			if culture_menu_item.get_checked then
+				columns.add_data_column (assembly_culture_column)
 			end
-			if public_key_menu_item.checked then
-				columns.add_datacolumn (assembly_public_key_column)
+			if public_key_menu_item.get_checked then
+				columns.add_data_column (assembly_public_key_column)
 			end		
-			if dependancies_menu_item.checked then
-				columns.add_datacolumn (dependancies_column)
+			if dependancies_menu_item.get_checked then
+				columns.add_data_column (dependancies_column)
 			end			
 		end
 		
@@ -1240,11 +1232,11 @@ feature {NONE} -- Implementation
 			support: SUPPORT
 		do
 			create support
-			Result := data_table.NewRow
-			columns := data_table.columns			
-			Result.Table.DefaultView.set_AllowEdit (False)
-			Result.Table.DefaultView.set_AllowNew (False)
-			Result.Table.DefaultView.set_AllowDelete (False)
+			Result := data_table.New_Row
+			columns := data_table.get_columns			
+			Result.get_Table.get_Default_View.set_Allow_Edit (False)
+			Result.get_Table.get_Default_View.set_Allow_New (False)
+			Result.get_Table.get_Default_View.set_Allow_Delete (False)
 			if columns.contains (dictionary.Assembly_name_column_title) then
 				Result.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.name)
 			end
@@ -1255,7 +1247,7 @@ feature {NONE} -- Implementation
 				Result.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.culture)
 			end
 			if columns.contains (dictionary.Assembly_public_key_column_title) then
-				Result.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.publickey)
+				Result.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.public_key)
 			end			
 			if columns.contains (dictionary.Dependancies_column_title) then
 				dependancies := support.dependancies_from_info (a_descriptor)
@@ -1265,7 +1257,7 @@ feature {NONE} -- Implementation
 					Result.set_Item_String (dictionary.Dependancies_column_title, dictionary.No_dependancy)
 				end
 			end
-			data_table.rows.Add (Result)
+			data_table.get_rows.Add (Result)
 		end
 		
 end -- class ASSEMBLY_VIEWER

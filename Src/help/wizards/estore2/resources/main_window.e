@@ -1,231 +1,98 @@
 indexing
-	description: "Root Window for the application"
-	author: "pascalf"
+	description: "Main window: lets the user choose %
+			%which database table to edit."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	MAIN_WINDOW
- 
-inherit
-	EV_TITLED_WINDOW
 
-	DB_CONNECTION
-		undefine
-			default_create
-		end
-		
-		-- Inherit DB_SHARED to have an access to the Database Manager
-	DB_SHARED
-		undefine
-			default_create
-		end
-	
+inherit
+	STATUS_WINDOW
+
 create
-	make_window
+	make_from_application
 
 feature -- Initialization
 
-	make_window (appli: APPLICATION) is
-			-- Initialize
+	make_from_application (appl: APPLICATION) is
+			-- Initialize.
 		require
-			not_void: appli /= Void
+			not_void: appl /= Void
 		do
-			default_create
-			close_actions.extend (~exit)
-			application := appli		
-			create_widgets
-			retrieve_info
-			init_connect
-		ensure
-			application_set: appli = application
+			make
+			close_request_actions.extend (appl~destroy)
+			set_title (main_window_title)
+			create table_window_list.make (10)
 		end
 
-	init_connect is
-			-- Connect to the database.
-		require
-			not_void: username /= Void and password /= Void and data_source /= Void
+	set_initial_focus is
+			-- Set initial focus to the table selection combo-box.
+		do
+			table_selection_cbox.set_focus
+		end
+
+feature {NONE} -- Implementation
+
+	create_window_content is
+			-- Add window content.
 		local
-			b: BOOLEAN
+			vbox: DV_VERTICAL_BOX
+			label: DV_LABEL
+			button: DV_BUTTON
 		do
-			if not b then
-				if not initialized then
-					db_manager.set_connection_information (username, password, data_source)
-					if not db_manager.has_error then
-						db_manager.establish_connection
-					end
-				end
-				b := db_manager.session_control.is_connected 
-				if b then
-					initialized := TRUE
-				end
-			end
-			if not b then
-				io.put_string ("Connection Failed.%NPlease Check UserName and Password")
-			end
-		rescue
-			b := TRUE
- 			retry
+			create vbox.make
+			container.extend (vbox)
+			create label.make_with_text (Table_select_label_text)
+			vbox.extend (label)
+			create table_selection_cbox.make_with_integer_data
+			vbox.extend (table_selection_cbox)
+			fill_cbox
+			create button.make_with_text (Table_select_button_text)
+			button.add_action (~popup_table_window)
+			vbox.extend (button)
+			vbox.extend_separator
+			create button.make_with_text (Exit_button_text)
+			button.add_action (close_request_actions~call ([]))
+			vbox.extend (button)
 		end
 
-	create_widgets is
-			-- Design of the window, creation of buttons.
+	fill_cbox is
+			-- Fill `table_selection_cbox' with database table names.
+		require
+			not_void: table_selection_cbox /= Void
 		local
-			v0: EV_VERTICAL_BOX
-			cell: EV_CELL
-			h1: EV_HORIZONTAL_BOX
-			b1: EV_BUTTON
-			lab: EV_LABEL
+			tname_list: ARRAYED_LIST [STRING]
 		do
-
-			create v0
-			v0.set_border_width (5)
-			extend (v0)
-
-			create cell
-			cell.set_minimum_height (5)
-			--cell.set_background_color (white)
-			v0.extend (cell)
-			v0.disable_item_expand (cell)
-
-			create h1
-			h1.set_border_width (2)
-			create cell
-			cell.set_minimum_width (10)
-			h1.extend (cell)
-			h1.disable_item_expand (cell)
-			create cell
-			cell.set_minimum_size (60, 20)
-			create lab.make_with_text ("Choose an operation:")
-			--lab.set_background_color (white)
-			lab.align_text_left
-			--lab.set_minimal_size
-			--lab.set_border_width (5)
-			cell.extend (lab)
-			h1.extend (cell)
-			v0.extend (h1)
-			v0.disable_item_expand (h1)
-
-			create cell
-			cell.set_minimum_height (10)
-			--cell.set_background_color (white)
-			v0.extend (cell)
-
-			create h1
-			h1.set_border_width (2)
-			create b1.make_with_text_and_action ("Select", ~popup_select)
-			b1.set_minimum_size (50, 20)
-			h1.extend (b1)
-			h1.disable_item_expand (b1)
-			create cell
-			cell.set_minimum_width (10)
-			h1.extend (cell)
-			h1.disable_item_expand (cell)
-			create cell
-			cell.set_minimum_size (200, 15)
-			create lab.make_with_text ("Display information from the database")
-			lab.align_text_left
-			cell.extend (lab)
-			h1.extend (cell)
-			v0.extend (h1)
-			v0.disable_item_expand (h1)
-
-				-- Use this part to add an Update query.
-				
---			create h1
---			h1.set_border_width (2)
---			create b1.make_with_text_and_action ("Update", ~exit)
---			b1.set_minimum_size (50, 20)
---			h1.extend (b1)
---			h1.disable_item_expand (b1)
---			create cell
---			cell.set_minimum_width (10)
---			h1.extend (cell)
---			h1.disable_item_expand (cell)
---			create cell
---			cell.set_minimum_size (120, 15)
---			create lab.make_with_text ("Modify information in the database")
---			lab.align_text_left
---			cell.extend (lab)
---			h1.extend (cell)
---			v0.extend (h1)
---			v0.disable_item_expand (h1)
-
-			create h1
-			h1.set_border_width (2)
-			create b1.make_with_text_and_action ("Insert", ~popup_insert)
-			b1.set_minimum_size (50, 20)
-			h1.extend (b1)
-			h1.disable_item_expand (b1)
-			create cell
-			cell.set_minimum_width (10)
-			h1.extend (cell)
-			h1.disable_item_expand (cell)
-			create cell
-			cell.set_minimum_size (120, 15)
-			create lab.make_with_text ("Add a row to a table")
-			lab.align_text_left
-			cell.extend (lab)
-			h1.extend (cell)
-			v0.extend (h1)
-			v0.disable_item_expand (h1)
-
-			create h1
-			h1.set_border_width (2)
-			create b1.make_with_text_and_action ("Exit", ~exit)
-			b1.set_minimum_size (50, 20)
-			h1.extend (b1)
-			h1.disable_item_expand (b1)
-			create cell
-			cell.set_minimum_width (10)
-			h1.extend (cell)
-			h1.disable_item_expand (cell)
-			create cell
-			cell.set_minimum_size (120, 15)
-			create lab.make_with_text ("Quit the application")
-			lab.align_text_left
-			cell.extend (lab)
-			h1.extend (cell)
-			v0.extend (h1)
-			v0.disable_item_expand (h1)
+			tname_list := tables.Name_list
+			from
+				tname_list.start
+			until
+				tname_list.after
+			loop
+				table_selection_cbox.add_data_choice (tname_list.index, tname_list.item)
+				tname_list.forth
+			end
 		end
 
-feature -- Actions
-
-	popup_select is
-			-- Pop up select window.
-		require
-			appli_not_void: application /= Void
-			initialized: initialized
+	popup_table_window is
+			-- Pop up a window to edit content of database table selected in
+			-- `table_selection_cbox'.
+		local
+			table_window: TABLE_WINDOW
 		do
-			application.popup_select_window
+			create table_window.make_with_table_code (table_selection_cbox.value)
+			table_window.show
+			table_window.set_initial_focus
+			table_window_list.extend (table_window)
 		end
 
-	popup_insert is
-			-- Pop up insert window.
-		require
-			appli_not_void: application /= Void
-			initialized: initialized
-		do
-			application.popup_insert_window
-		end
+	table_selection_cbox: DV_COMBO_BOX
+			-- Combo box to select a database table.
 
-	exit is
-			-- Exit the current window.
-		require
-			appli_not_void: application /= Void
-		do
-			application.destroy_windows
-		end
-
-
-
-feature -- Implementation
-	
-	initialized: BOOLEAN
-		-- Is the connection with the DB initialized ?
-		
-	application: APPLICATION
-		-- Contains features for windows' management.
+	table_window_list: ARRAYED_LIST [TABLE_WINDOW]
+			-- Table window list. To avoid problems linked to 
+			-- the use of a lv.
 
 end -- class MAIN_WINDOW

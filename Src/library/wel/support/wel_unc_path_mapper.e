@@ -121,4 +121,4 @@ feature {NONE} -- Externals
 			"WNetCancelConnection2"
 		end
 		
-end -- class UNC_MAPPER
+end -- class WEL_UNC_PATH_MAPPER

@@ -32,10 +32,10 @@ numerical keypad "7", numpad_7, NumPad 7, GDK_KP_7, Vk_numpad7
 numerical keypad "8", numpad_8, NumPad 8, GDK_KP_8, Vk_numpad8
 numerical keypad "9", numpad_9, NumPad 9, GDK_KP_9, Vk_numpad9
 numerical keypad "+", numpad_add, NumPad +, GDK_KP_Add, Vk_add
-numerical keypad "/", numpad_divide, NumPad /, GDK_KP_Divide, Vk_divide
-numerical keypad "*", numpad_multiply, NumPad *, GDK_KP_Multiply, Vk_multiply
+numerical keypad "/", numpad_divide, NumPad /, GDK_KP_Divide | GDK_F25, Vk_divide
+numerical keypad "*", numpad_multiply, NumPad *, GDK_KP_Multiply | GDK_F26, Vk_multiply
 num lock, num_lock, NumLock, GDK_Num_Lock, Vk_numlock
-numerical keypad "-", numpad_subtract, NumPad -, GDK_KP_Subtract, Vk_subtract
+numerical keypad "-", numpad_subtract, NumPad -, GDK_KP_Subtract | GDK_F24, Vk_subtract
 numerical keypad ".", numpad_decimal, NumPad ., GDK_KP_Decimal, Vk_decimal
 F1, f1, F1, GDK_F1, Vk_f1
 F2, f2, F2, GDK_F2, Vk_f2
@@ -51,12 +51,12 @@ F11, f11, F11, GDK_F11, Vk_f11
 F12, f12, F12, GDK_F12, Vk_f12
 the spacebar, space, Space, GDK_space, Vk_space
 back space, back_space, BackSpace, GDK_BackSpace, Vk_back
-enter, enter, Enter, GDK_Return, Vk_return
+enter, enter, Enter, GDK_Return | GDK_KP_Enter, Vk_return
 escape, escape, Esc, GDK_Escape, Vk_escape
 tab, tab, Tab, GDK_Tab, Vk_tab
-pause (break), pause, Pause, GDK_Pause, Vk_pause
+pause (break), pause, Pause, GDK_Pause | GDK_F21, Vk_pause
 caps lock, caps_lock, CapsLock, GDK_Caps_Lock, Vk_capital
-scroll lock, scroll_lock, ScrollLock, GDK_Scroll_Lock, Vk_scroll
+scroll lock, scroll_lock, ScrollLock, GDK_F23, Vk_scroll
 "%," (or "<"), comma, %,, GDK_comma, 188
 "=" (or "+"), equal, =, GDK_equal, 187
 "." (or ">"), period, ., GDK_period, 190
@@ -68,10 +68,10 @@ scroll lock, scroll_lock, ScrollLock, GDK_Scroll_Lock, Vk_scroll
 "'" (or """), quote, ', GDK_quoteleft, 222
 "`" (or "~"), backquote, `, GDK_quoteright, 192
 "-" (or "_"), dash, -, GDK_minus, 189
-the up-arrow, up, Up, GDK_uparrow, Vk_up
-the down-arrow, down, Down, GDK_downarrow, Vk_down
-the left-arrow, left, Left, GDK_leftarrow, Vk_left
-the right-arrow, right, Right, GDK_rightarrow, Vk_right
+the up-arrow, up, Up, GDK_Up, Vk_up
+the down-arrow, down, Down, GDK_Down, Vk_down
+the left-arrow, left, Left, GDK_Left, Vk_left
+the right-arrow, right, Right, GDK_Right, Vk_right
 page up, page_up, PageUp, GDK_Page_Up, Vk_prior
 page down, page_down, PageDown, GDK_Page_Down, Vk_next
 home, home, Home, GDK_Home, Vk_home
@@ -105,11 +105,29 @@ delete, delete, Delete, GDK_Delete, Vk_delete
 "y", y, y, GDK_y, 89
 "z", z, z, GDK_z, 90
 
+# Extra keys that cannot be used as accelerator keys.
+
+shift, shift, Shift, GDK_Shift_L | GDK_Shift_R, 16
+control, ctrl, Ctrl, GDK_Control_L | GDK_Control_R, 17
+left application-key, left_meta, Left Meta, GDK_Meta_L, 91
+right application-key, right_meta, Right Meta, GDK_Meta_R, 92
+
+# Keys that we are not supporting:
+# - Keys that are not common between PC/Sun/etc.
+# - PrintScreen: has no effect on Windows. (generates screenshot)
+# - Alt: has no effect on Windows. (shortcut to menubar)
+
 #-------------------------------------------------------------------------------
 # CVS log
 #-------------------------------------------------------------------------------
 #
 # $Log$
+# Revision 1.11  2000/03/22 00:31:59  brendel
+# Fixed some GDK keys.
+# Added | operator to have more than one possible External.
+# Added Shift, Ctrl, and L&R Meta, although they cannot be used as
+# accelerator key.
+#
 # Revision 1.10  2000/03/21 00:52:13  brendel
 # NumPad 0 -> NumPad +.
 #

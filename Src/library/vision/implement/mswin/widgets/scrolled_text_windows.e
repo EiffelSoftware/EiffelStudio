@@ -44,6 +44,7 @@ feature -- Initialization
 			show_horizontal_scrollbar
 			show_vertical_scrollbar
 			a_scrolled_text.set_font_imp (Current)
+			--init_dlls
 		end
 
 	realize is

@@ -1,0 +1,86 @@
+system
+	zad_miner
+
+root
+	ZAD_MINER: make_and_launch
+
+default
+	assertion(no)
+	arguments("-debug")
+	arguments("tto")
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("dlg_dispatcher")
+	disabled_debug("gdi_count")
+	debug("show_mine")
+	disabled_debug("vision2_windows")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("wel")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("win_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(yes)
+	msil_generation_type("exe")
+	check_vape(no)
+	console_application(no)
+	address_expression(no)
+	array_optimization(yes)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+
+
+--	array_optimization (yes)
+--	inlining (yes)
+------------------------ EiffelBase:
+------------------------ TimeEiffelLibrary:
+------------------------ EiffelVision
+--"$ISE_EIFFEL\library\libpng\libpng.lib",
+--"$ISE_EIFFEL\library\zlib\zlib.lib",
+-- 		"$VISION_PRERELEASE\libpng\libpng.lib",
+-- 		"$VISION_PRERELEASE\zlib\zlib.lib",
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\free_add_ons\zad_miner\src"
+
+
+	"ws":		"$ISE_EIFFEL\library"
+
+	all "base":		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; 
+		end
+
+	all time:		"$ISE_EIFFEL\library\time"
+		exclude
+			"english"; "german"; 
+		end
+
+	all "wel" (ws):		"$\wel"
+
+	all "vision2" (ws):		"$\vision2"
+		exclude
+			"gtk"; "obsolete"; 
+		end
+
+external
+
+	include_path:
+		"$ISE_EIFFEL\library\wel\spec\windows\include",
+		"$ISE_EIFFEL\library\vision2\spec\include",
+		"$ISE_EIFFEL\library\time\clib"
+
+	object:
+		"$ISE_EIFFEL\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$ISE_EIFFEL\library\time\spec\msc\lib\datetime.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
+
+end

@@ -40,6 +40,13 @@ feature -- Access
 			Result.compare_objects
 		end
 
+	mouse_wheel_scroll_lines: INTEGER is
+			-- Default number of lines to scroll in response to
+			-- a mouse wheel scroll event.
+		do
+			Result := 3
+		end
+
 end -- class EV_ENVIRONMENT_IMP
 
 --|----------------------------------------------------------------

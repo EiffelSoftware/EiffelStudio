@@ -63,6 +63,8 @@ del run-time\config.h
 rem
 rem Copy the config 
 rem
+copy config.h run-time
+copy portable.h run-time
 copy config.sh extra\win32\console
 copy make.w32 extra\win32\console\make.bat
 copy config.sh extra\win32\desc

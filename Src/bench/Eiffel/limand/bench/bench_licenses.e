@@ -129,16 +129,16 @@ feature {NONE}
 				r := precomp_dirs.item_for_iteration
 
 				debug ("LIMAN")
-					io.error.putstring ("Precompilation ");
+					io.error.put_string ("Precompilation ");
 					if r.system_name /= Void then
-						io.error.putstring (r.system_name)
+						io.error.put_string (r.system_name)
 					else
-						io.error.putstring ("Void system name!!!!")
+						io.error.put_string ("Void system name!!!!")
 					end
 					if r.licensed then
-						io.error.putstring (" is licensed%N")
+						io.error.put_string (" is licensed%N")
 					else
-						io.error.putstring (" is not licensed%N")
+						io.error.put_string (" is not licensed%N")
 					end
 				end
 
@@ -147,19 +147,19 @@ feature {NONE}
 					l ?= licenses.item (precomp_name)
 					if l = Void then
 debug ("LIMAN")
-	io.error.putstring ("Creating new license%N")
+	io.error.put_string ("Creating new license%N")
 end
 						create l.make
 						l.set_library_name (precomp_name)
 						l.get_license
 						if l.licensed then
 debug ("LIMAN")
-	io.error.putstring ("License valid: inserting into hash table%N")
+	io.error.put_string ("License valid: inserting into hash table%N")
 end
 							licenses.put (l, precomp_name)
 						else
 debug ("LIMAN")
-	io.error.putstring ("Cannot get initial license%N")
+	io.error.put_string ("Cannot get initial license%N")
 end
 							create error
 							error.set_application_name (l.library_name)
@@ -167,14 +167,14 @@ end
 						end
 					elseif not l.alive then
 debug ("LIMAN")
-	io.error.putstring ("Cannot get initial license%N")
+	io.error.put_string ("Cannot get initial license%N")
 end
 						create error
 						error.set_application_name (l.library_name)
 						Error_handler.insert_error (error)
 					else
 debug ("LIMAN")
-	io.error.putstring ("License is still valid%N")
+	io.error.put_string ("License is still valid%N")
 end
 					end
 				end

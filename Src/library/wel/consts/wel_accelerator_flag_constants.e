@@ -1,63 +1,48 @@
 indexing
-	description: "Constants for defining accelerator keys %
-		%in WEL_ACCELERATOR."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Constants for defining accelerator keys %
+				  %in WEL_ACCELERATOR."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_ACCELERATOR_FLAG_CONSTANTS
 
 feature -- Access
 
-	Falt: INTEGER is
-			-- The ALT key must be held down when the accelerator
-			-- key is pressed.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FALT"
-		end
-
-	Fcontrol: INTEGER is
+	Fcontrol: INTEGER is 8
 			-- The CTRL key must be held down when the accelerator
 			-- key is pressed.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FCONTROL"
-		end
+			--
+			-- Declared in Windows as FCONTROL
 
-	Fnoinvert: INTEGER is
+	Fnoinvert: INTEGER is 2
 			-- Specifies that no top-level menu item is highlighted
 			-- when the accelerator is used. If this flag is not
 			-- specified, a top-level menu item will be
 			-- highlighted, if possible, when the accelerator is
 			-- used.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FNOINVERT"
-		end
+			--
+			-- Declared in Windows as FNOINVERT
 
-	Fshift: INTEGER is
+	Fshift: INTEGER is 4
 			-- The SHIFT key must be held down when the accelerator
 			-- key is pressed.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FSHIFT"
-		end
+			--
+			-- Declared in Windows as FSHIFT
 
-	Fvirtkey: INTEGER is
+	Fvirtkey: INTEGER is 1
 			-- The key member specifies a virtual-key code. If this
 			-- flag is not specified, key is assumed to specify an
 			-- ASCII character code.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FVIRTKEY"
-		end
+			--
+			-- Declared in Windows as FVIRTKEY
+
+	Falt: INTEGER is 16
+			-- The ALT key must be held down when the accelerator
+			-- key is pressed.
+			--
+			-- Declared in Windows as FALT
 
 end -- class WEL_ACCELERATOR_FLAG_CONSTANTS
 

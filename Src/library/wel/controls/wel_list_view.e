@@ -208,14 +208,16 @@ feature -- Status report
 			cwin_send_message (item, Lvm_getitemrect, index, cwel_pointer_to_integer(Result.item))
 		end
 
-	get_cell_text (i,j: INTEGER): STRING is
-			-- Get the label of the cell with coordinates `i', `j' with `txt'.
+	get_cell_text (isub_item, iitem: INTEGER): STRING is
+			-- Get the label of the cell with coordinates `isub_item', `iiitem'.
+		obsolete
+			"Argument positions have been swapped."
 		require
 			exists: exists
-			i_large_enough: i >= 0
-			j_large_enough: j >= 0
-			i_small_enough: i < count
-			j_small_enough: j < column_count
+			iitem_large_enough: iitem >= 0
+			isub_item_large_enough: isub_item >= 0
+			iitem_small_enough: iitem < count
+			isub_item_small_enough: isub_item < column_count
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 			buffer: STRING
@@ -223,10 +225,10 @@ feature -- Status report
 			create an_item.make
 			create buffer.make (buffer_size)
 			buffer.fill_blank
-			an_item.set_isubitem (j)
+			an_item.set_isubitem (isub_item)
 			an_item.set_text (buffer)
 			an_item.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Lvm_getitemtext, i, an_item.to_integer)
+			cwin_send_message (item, Lvm_getitemtext, iitem, an_item.to_integer)
 			Result := an_item.text			
 		end
 
@@ -263,6 +265,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	ensure_visible (an_index: INTEGER) is
+			-- Ensure that column `an_index' is completely visible in `Current'.
+		require
+			exists: exists
+			index_large_enough: an_index >= 0
+			index_small_enough: an_index < count
+		do
+			cwin_send_message (item, Lvm_ensurevisible, an_index, 1)
+		end
 
 	set_extended_view_style (a_new_style: INTEGER) is
 			-- Sets extended styles in list view controls. 
@@ -318,19 +330,20 @@ feature -- Status setting
 			cwin_send_message (item, Lvm_setitemcount, value, 0)
 		end	
 
-	set_cell_text (i,j: INTEGER; txt: STRING) is
-			-- Set the label of the cell with coordinates `i', `j' with `txt'.
+	set_cell_text (isub_item, iitem: INTEGER; txt: STRING) is
+			-- Set the label of the cell with coordinates `isub_item', `item'
+			-- with `txt'.
 		require
 			exists: exists
-			i_large_enough: i >= 0
-			j_large_enough: j >= 0
-			i_small_enough: i < column_count
-			j_small_enough: j < count
+			isub_item_large_enough: isub_item >= 0
+			iitem_large_enough: iitem >= 0
+			isub_item_small_enough: isub_item < column_count
+			iitem_small_enough: iitem < count
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do
-			create an_item.make_with_attributes (Lvif_text, j, i, 0, txt)
-			cwin_send_message (item, Lvm_setitemtext, j, an_item.to_integer)
+			create an_item.make_with_attributes (Lvif_text, iitem, isub_item, 0, txt)
+			cwin_send_message (item, Lvm_setitemtext, iitem, an_item.to_integer)
 		end
 
 	set_column_title (txt: STRING; index: INTEGER) is

@@ -1883,7 +1883,7 @@ end
 
 			deg_output := Degree_output
 				-- Generation of the descriptor tables
-			if First_compilation and Compilation_modes.is_precompiling then
+			if first_compilation and Compilation_modes.is_precompiling then
 				from
 					class_list := freeze_set
 					i := class_list.count
@@ -1908,7 +1908,7 @@ end
 					i := i - 1
 					class_list.forth
 				end
-			elseif First_compilation then
+			elseif first_compilation then
 				from
 					class_list := freeze_set
 					i := class_list.count
@@ -2086,7 +2086,7 @@ end
 				-- If we are not using any precompilation, ie classes.count = 1
 				-- which correspond to the classes.item (Normal_compilation),
 				-- we don't need to update the body ids at the first compilation
-			if not (First_compilation and then classes.ht_count = 1) then
+			if not (first_compilation and then classes.ht_count = 1) then
 				from
 					class_list := freeze_set
 					class_list.start
@@ -2216,7 +2216,9 @@ feature -- Final mode generation
 
 				-- Generation of C files associated to the classes of
 				-- the system.
+			Eiffel_table.start_degree_minus_5 (History_control.max_rout_id)
 			degree_minus_5
+			Eiffel_table.finish_degree_minus_5
 
 			generate_main_finalized_eiffel_files
 
@@ -2250,15 +2252,14 @@ feature -- Final mode generation
 			-- Process Degree -4.
 		local
 			a_class: CLASS_C
-			i, j, nb: INTEGER
+			i, j, k, nb: INTEGER
 			deg_output: DEGREE_OUTPUT
-			class_array: ARRAY [CLASS_C]
+			class_array, ordered_classes: ARRAY [CLASS_C]
 			local_classes: CLASS_C_SERVER
 		do
+			!! ordered_classes.make (1, max_class_id)
 			local_classes := classes
 			i := local_classes.count
-			deg_output := Degree_output
-			deg_output.put_start_degree (-4, i)
 			from
 				local_classes.start
 			until
@@ -2275,14 +2276,30 @@ feature -- Final mode generation
 						-- Since a class can be removed, test if `a_class'
 						-- is not Void.
 					if a_class /= Void then
-						deg_output.put_degree_minus_4 (a_class, i)
-						a_class.process_polymorphism
-						History_control.check_overload
-						i := i - 1
+						ordered_classes.put (a_class, a_class.topological_id)
 					end
 					j := j + 1
 				end
 				local_classes.forth
+			end
+
+			from
+				deg_output := Degree_output
+				deg_output.put_start_degree (-4, i)
+				k := 1
+			until
+				k > max_class_id
+			loop
+					-- Since a class can be removed, test if `a_class'
+					-- is not Void.
+				a_class := ordered_classes.item (k)
+				if a_class /= Void then
+					deg_output.put_degree_minus_4 (a_class, i)
+					i := i - 1
+					a_class.process_polymorphism
+					History_control.check_overload
+				end
+				k := k + 1
 			end
 			deg_output.put_end_degree
 			History_control.transfer
@@ -2397,21 +2414,26 @@ feature -- Dead code removal
 				end
 			end
 
-				-- Protection of the attribute `area' in class TO_SPECIAL
-			to_special_class.compiled_class.mark_all_used (remover)
+			--FIXME: The following commented lines seems to be useless, because
+			-- we will never mark either an attribute or because they don't
+			-- have any features to be marked.
+			-- The main reason of marking these classes is for the run-time.
 
+-- 				-- Protection of the attribute `area' in class TO_SPECIAL
+-- 			to_special_class.compiled_class.mark_all_used (remover)
+ 
 				-- Protection of `make' from ARRAY
 			array_class.compiled_class.mark_all_used (remover)
-
-				-- Protection of features written in basic reference classes
-			character_ref_class.compiled_class.mark_all_used (remover)
-			boolean_ref_class.compiled_class.mark_all_used (remover)
-			integer_ref_class.compiled_class.mark_all_used (remover)
-			real_ref_class.compiled_class.mark_all_used (remover)
-			double_ref_class.compiled_class.mark_all_used (remover)
-			pointer_ref_class.compiled_class.mark_all_used (remover)
-
-				-- Protection of feature `make' of class STRING
+ 
+-- 				-- Protection of features written in basic reference classes
+-- 			character_ref_class.compiled_class.mark_all_used (remover)
+-- 			boolean_ref_class.compiled_class.mark_all_used (remover)
+-- 			integer_ref_class.compiled_class.mark_all_used (remover)
+-- 			real_ref_class.compiled_class.mark_all_used (remover)
+-- 			double_ref_class.compiled_class.mark_all_used (remover)
+-- 			pointer_ref_class.compiled_class.mark_all_used (remover)
+ 
+				-- Protection of feature `make' and `set_count' of class STRING
 			string_class.compiled_class.mark_all_used (remover)
 
 				-- Protection of feature `make' of class TUPLE
@@ -2460,22 +2482,24 @@ feature -- Generation
 			deg_output.display_degree_output (degree_message, 6, 10)
 			generate_cecil
 
-				-- Generation of the conformance table
-			deg_output.display_degree_output (degree_message, 5, 10)
-			t.generate_conformance_table
+--				-- Generation of the conformance table
+--			deg_output.display_degree_output (degree_message, 5, 10)
+--			t.generate_conformance_table
 
 				-- Generation of the parent table
-			deg_output.display_degree_output (degree_message, 4, 10)
+			deg_output.display_degree_output (degree_message, 5, 10)
 			generate_parent_tables
+
+				-- Generate plug with run-time.
+				-- Has to be done before `generate_routine_table' because
+				-- this is were we mark `used' the attribute table of `lower' and
+				-- `area' used with `array_optimization'.
+			deg_output.display_degree_output (degree_message, 4, 10)
+			t.generate_plug
 
 				-- Routine table generation
 			deg_output.display_degree_output (degree_message, 3, 10)
 			generate_routine_table
-
-				-- Generate plug with run-time.
-			deg_output.display_degree_output (degree_message, 2, 10)
-			t.generate_plug
-			--generate_plug
 
 				-- Generate edynlib with run-time.
 			deg_output.display_degree_output (degree_message, 2, 10)
@@ -2582,22 +2606,20 @@ end
 		local
 			rout_id: ROUTINE_ID
 			table: POLY_TABLE [ENTRY]
+			used: SEARCH_TABLE [ROUTINE_ID]
 		do
 			Attr_generator.init (generation_buffer)
 			Rout_generator.init (header_generation_buffer)
 
 			from
-				Tmp_poly_server.start
+				used := Eiffel_table.used
+				used.start
 			until
-				Tmp_poly_server.after
+				used.after
 			loop
-				rout_id := Tmp_poly_server.key_for_iteration
-
-				if Eiffel_table.is_used (rout_id) then
-					table := Tmp_poly_server.item (rout_id)
-					table.write
-				end
-				Tmp_poly_server.forth
+				table := Tmp_poly_server.item (used.item_for_iteration)
+				table.write
+				used.forth
 			end
 
 			generate_initialization_table
@@ -2790,48 +2812,18 @@ end
 			cltype_array: ARRAY [CLASS_TYPE]
 			local_classes: CLASS_C_SERVER
 			skeleton_file, header_file: INDENT_FILE
-			buffer, header_buffer: GENERATION_BUFFER
+			buffer: GENERATION_BUFFER
 		do
 			nb := Type_id_counter.value
 			final_mode := byte_context.final_mode
 
 			buffer := generation_buffer
 			buffer.clear_all
-			header_buffer := header_generation_buffer
-			header_buffer.clear_all
-
-			if final_mode then
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					if class_types.item (i) /= Void then
-						-- FIXME
-						class_types.item (i).skeleton.make_extern_declarations
-					end
-					i := i + 1
-				end
-
-				Extern_declarations.generate_header (header_buffer)
-				Extern_declarations.generate (header_buffer)
-				Extern_declarations.wipe_out
-
-				!! header_file.make_open_write (final_file_name (Eskelet, Dot_h))
-				header_file.put_string (header_buffer)
-				header_file.close
-			end
-
 
 			buffer.putstring ("#include %"eif_project.h%"%N%
 									 %#include %"eif_struct.h%"%N")
 
-			if final_mode then
-				buffer.putstring ("#include %"")
-				buffer.putstring (Eskelet)
-				buffer.putstring (Dot_h)
-				buffer.putstring ("%"%N%N")
-			else
+			if not final_mode then
 					-- Hash table extern declaration in workbench mode
 				buffer.putstring ("#include %"eif_macros.h%"%N")
 				buffer.new_line
@@ -2993,7 +2985,7 @@ end
 			end
 
 				-- Generate skeleton
-			!! skeleton_file.make_open_write (gen_file_name (final_mode, Eskelet));
+			!! skeleton_file.make_open_write (x_gen_file_name (final_mode, Eskelet));
 			skeleton_file.put_string (buffer)
 			skeleton_file.close
 		end
@@ -3188,8 +3180,7 @@ end
 			class_type: CLASS_TYPE
 		do
 			from
-				!! rout_table
-				rout_table.set_rout_id (routine_id_counter.initialization_rout_id)
+				!! rout_table.make (routine_id_counter.initialization_rout_id)
 				i := 1
 				nb := Type_id_counter.value
 				rout_table.create_block (nb)
@@ -3271,50 +3262,22 @@ feature -- Dispose routine
 	generate_dispose_table is
 			-- Generate dispose table
 		local
-			rout_table: SPECIAL_TABLE
-			rout_entry: SPECIAL_ENTRY
-			i, nb: INTEGER
-			class_type: CLASS_TYPE
-			feature_i: FEATURE_I
-			written_type: CL_TYPE_I
-			written_class: CLASS_C
+			entry: ROUT_TABLE
 		do
-			from
-				!! rout_table
-				rout_table.set_rout_id (routine_id_counter.dispose_rout_id)
-				i := 1
-				nb := Type_id_counter.value
-				rout_table.create_block (nb)
-			until
-				i > nb 
-			loop
-				class_type := class_types.item (i)
-if class_type /= Void then
-	-- FIXME
-				feature_i := class_type.dispose_feature
-				if feature_i /= Void then
-						-- FIXME: extra check to see if it's the one from MEMORY:
-						-- no need to add an empty routine
-						-- Ooops, maybe we need to do it if the Eiffel code
-						-- includes a call obj.dispose (you never know what users
-						-- or Dave Hollenberg are going to do)
-						-- But this call may generate a new table of its own (check)
-						-- Yes it does (check done) so we can optimize the `dispose'
-						-- table
-						-- Xavier
-					!!rout_entry
-					rout_entry.set_type_id (i)
-					written_class := class_of_id (feature_i.written_in)
-					written_type := written_class.meta_type (class_type.type)
-					rout_entry.set_written_type_id (written_type.type_id)
- 					rout_entry.set_body_id (feature_i.body_id)
-					rout_table.extend (rout_entry)
-				end
-end
-				i := i + 1
-			end
-			rout_table.sort_till_position
-			rout_table.write
+				-- Get the polymorphic table corresponding to the `dispose' routine
+				-- from MEMORY.
+			entry ?= Eiffel_table.poly_table (memory_dispose_id)
+
+				-- We are using `header_generation_buffer' for the generation
+				-- because this is used for routine tables (look at
+				-- `generate_routine_table').
+				-- We are using `routine_id_counter.dispose_rout_id' and not
+				-- `memory_dispose_id' to generate the table, because we are not
+				-- generating a standard polymorphic table and so, we cannot reuse the
+				-- one which could have been generated if there was any polymorphic
+				-- call on `dispose'.
+			entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
+											header_generation_buffer)
 		end
 
 feature -- Dispatch and execution tables generation

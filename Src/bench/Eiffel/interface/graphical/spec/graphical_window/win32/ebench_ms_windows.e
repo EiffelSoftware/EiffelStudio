@@ -9,7 +9,7 @@ class
 inherit
 	TOOLKIT_IMP
 		redefine
-			message_loop, make
+			message_loop, make, run
 		end
 
 creation
@@ -26,6 +26,12 @@ feature -- Initialization
 
 			!! wel_window_manager
 			windows := wel_window_manager.windows
+		end
+
+	run is
+			-- Create `main_window' and start the message loop.
+		do
+			message_loop
 		end
 
 feature -- Process message event

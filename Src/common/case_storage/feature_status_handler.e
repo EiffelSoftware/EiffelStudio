@@ -32,6 +32,11 @@ feature -- Properties
 			Result := has_property (status, Status_is_once)
 		end
 
+	is_reversed_engineered (status: INTEGER): BOOLEAN is
+		do
+			Result := has_property (status, Status_is_reversed_engineered)
+		end
+
 feature -- Settings
 
 	set_is_constant (status: INTEGER): INTEGER is
@@ -54,6 +59,11 @@ feature -- Settings
 			Result := set_property (status, Status_is_once)
 		end
 
+	set_reversed_engineered (status: INTEGER): INTEGER is
+		do
+			Result := set_property (status, Status_is_reversed_engineered)
+		end
+
 feature {NONE} -- Property numbers (= bit numbers)
 				-- NB: Not possible to use `unique' (see ETL, p267)
 
@@ -61,6 +71,7 @@ feature {NONE} -- Property numbers (= bit numbers)
 	Status_new_since_last_re: INTEGER is 2;
 	Status_is_once: INTEGER is 3;
 	Status_is_constant: INTEGER is 4;
+	Status_is_reversed_engineered: INTEGER is 5;
 
 feature {NONE} -- Implementation
 

@@ -33,7 +33,7 @@
 
 /* The following hash table is used to keep the maping between cloned objects,
  * so that we know for instance where we put the clone for object X. It takes
- * a pointer and yields an EIF_OBJ.
+ * a pointer and yields an EIF_OBJECT.
  */
 rt_private struct hash hclone;			/* Cloning hash table */
 
@@ -227,7 +227,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	union overhead *zone;			/* Malloc info zone */
 	uint32 flags;					/* Object's flags */
 	uint32 size;					/* Object's size */
-	EIF_OBJ *hash_zone;				/* Hash table entry recording duplication */
+	EIF_OBJECT *hash_zone;				/* Hash table entry recording duplication */
 	char *clone;					/* Where clone is allocated */
 
 	zone = HEADER(source);			/* Where eif_malloc stores its information */

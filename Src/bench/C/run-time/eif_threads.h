@@ -25,11 +25,11 @@
 extern "C" {
 #endif
 
-#include "eif_cecil.h"		/* Needed for EIF_OBJ,... definitions */
+#include "eif_cecil.h"		/* Needed for EIF_OBJECT,... definitions */
 
 RT_LNK void eif_thr_panic(char *);
-RT_LNK EIF_POINTER eif_thr_freeze(EIF_OBJ object);
-RT_LNK void eif_thr_unfreeze(EIF_OBJ object);
+RT_LNK EIF_POINTER eif_thr_freeze(EIF_OBJECT object);
+RT_LNK void eif_thr_unfreeze(EIF_OBJECT object);
 RT_LNK EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
 RT_LNK EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
 RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
@@ -155,13 +155,13 @@ RT_LNK void eif_thr_init_root(void);
 RT_LNK void eif_thr_register(void);
 RT_LNK unsigned int eif_thr_is_initialized(void);
 RT_LNK EIF_BOOLEAN eif_thr_is_root(void);
-RT_LNK void eif_thr_create(EIF_OBJ, EIF_POINTER);
+RT_LNK void eif_thr_create(EIF_OBJECT, EIF_POINTER);
 RT_LNK void eif_thr_exit(void);
 RT_LNK void eif_thr_yield(void);
 RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);
 RT_LNK void eif_thr_wait(EIF_BOOLEAN *);
-RT_LNK void eif_thr_create_with_args(EIF_OBJ, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
+RT_LNK void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 RT_LNK EIF_INTEGER eif_thr_default_priority(void);
 RT_LNK EIF_INTEGER eif_thr_min_priority(void);
 RT_LNK EIF_INTEGER eif_thr_max_priority(void);
@@ -747,7 +747,7 @@ RT_LNK void eif_thr_cond_wait (EIF_POINTER cond, EIF_POINTER mutex);
 RT_LNK void eif_thr_cond_destroy (EIF_POINTER cond);
 
 typedef struct thr_list_struct {
-    EIF_OBJ thread;
+    EIF_OBJECT thread;
     struct thr_list_struct *next;
 } thr_list_t;
 
@@ -756,7 +756,7 @@ typedef struct thr_list_struct {
  */
  
 typedef struct {
-    EIF_OBJ current;
+    EIF_OBJECT current;
     EIF_POINTER routine;
     EIF_MUTEX_TYPE *children_mutex;
     thr_list_t **addr_thr_list;

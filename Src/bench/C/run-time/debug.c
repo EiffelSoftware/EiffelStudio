@@ -923,11 +923,11 @@ rt_private void call_up(int level)
  * Viewing objects.
  */
 
-rt_shared char *dview(EIF_OBJ root)
+rt_shared char *dview(EIF_OBJECT root)
 {
 	/* Compute the tagged out form for object 'root' and return a pointer to
 	 * the location of the C buffer holding the string. Note that the
-	 * build_out() run-time routine expects an EIF_OBJ pointer.
+	 * build_out() run-time routine expects an EIF_OBJECT pointer.
 	 */
 
 	char *out;					/* Where out form is stored */

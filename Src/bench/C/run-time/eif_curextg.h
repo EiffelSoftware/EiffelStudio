@@ -6,7 +6,7 @@ extern "C" {
 #endif
 	
 /*****************************************************************
-    In the C-programs, we use EIF_OBJ and char * to indicate
+    In the C-programs, we use EIF_OBJECT and char * to indicate
 direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
@@ -100,7 +100,7 @@ extern EIF_INTEGER _concur_waiting_time_of_cspf;
 extern char _concur_class_name_of_root_obj[constant_max_class_name_len+1];
 extern EIF_BOOLEAN _concur_terminatable;
 extern EIF_BOOLEAN _concur_exception_has_happened;
-extern EIF_OBJ _concur_temp_sep_obj;
+extern EIF_OBJECT _concur_temp_sep_obj;
 extern DAEMON  *_concur_scoop_dog;
 extern EIF_INTEGER _concur_scoop_dog_port;
 

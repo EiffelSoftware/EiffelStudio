@@ -1959,7 +1959,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		dprintf(2)("BC_PROTECT\n");
 #endif
 		last = otop();
-		last->type = SK_POINTER;	/* So the EIF_OBJ will be ignored by GC */
+		last->type = SK_POINTER;	/* So the EIF_OBJECT will be ignored by GC */
 		last->it_ref = (char *) RTHP(last->it_ref);
 		break;
 

@@ -300,7 +300,7 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 dprintf(4)("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _concur_class_name_of_root_obj, ptr_table, _concur_command_feature, _concur_command_class);
 #endif
 #ifndef WORKBENCH
-				fptr = *(EIF_FN_REF *) ct_value(ptr_table, _concur_command_feature);
+				fptr = *(EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, _concur_command_feature);
 #ifdef DEBUG
 dprintf(2)("%d(%s) ******** Separa feature <%s>'s dyn_type=%d, fptr=%x\n", _concur_pid, _concur_command_class, _concur_command_feature, dyn_type, fptr);
 #endif

@@ -43,7 +43,7 @@ rt_private void write_tab(register int tab);		/* Print tabulations */
 rt_private void rec_write(register char *object, int tab);		/* Write object print in `tagged_out' */
 rt_private void rec_swrite(register char *object, int tab);		/* Write special object */
 rt_private void buffer_allocate(void);	/* Allocate initial buffer */
-rt_shared char *build_out(EIF_OBJ object);		/* Build `tagged_out' string */
+rt_shared char *build_out(EIF_OBJECT object);		/* Build `tagged_out' string */
 
 #ifndef lint
 rt_private char *rcsid =
@@ -71,7 +71,7 @@ rt_public char *c_generator(register char *Current)
 	return makestr(generator, strlen(generator));
 }
 
-rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJ object)
+rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJECT object)
 {
 	/* Write a tagged out printing in an string.
 	 * Return a pointer on an Eiffel string object.
@@ -88,7 +88,7 @@ rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJ object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
+rt_public char *build_out(EIF_CONTEXT EIF_OBJECT object)
 {
 	/* Build up tagged out representation in a private global buffer */
 	EIF_GET_CONTEXT
@@ -527,7 +527,7 @@ rt_shared char *simple_out(EIF_CONTEXT struct item *val)
 	case SK_EXP:
 	case SK_REF:
 		xfree(tagged_out);							/* What a waste of CPU cycles */
-		return build_out((EIF_OBJ)(&val->it_ref));	/* Only for the beauty of it */
+		return build_out((EIF_OBJECT)(&val->it_ref));	/* Only for the beauty of it */
 	case SK_VOID:
 		sprintf(tagged_out, "Not an object!");
 		break;

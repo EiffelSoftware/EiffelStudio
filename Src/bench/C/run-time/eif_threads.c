@@ -38,8 +38,8 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create(EIF_OBJ, EIF_POINTER);
-rt_public void eif_thr_create_with_args(EIF_OBJ, EIF_POINTER, EIF_INTEGER,
+rt_public void eif_thr_create(EIF_OBJECT, EIF_POINTER);
+rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
 
@@ -191,7 +191,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 }
 
 
-rt_public void eif_thr_create (EIF_OBJ thr_root_obj, EIF_POINTER init_func)
+rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func)
 {
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
@@ -217,7 +217,7 @@ rt_public void eif_thr_create (EIF_OBJ thr_root_obj, EIF_POINTER init_func)
 }
 
 
-rt_public void eif_thr_create_with_args (EIF_OBJ thr_root_obj, 
+rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
 										 EIF_POINTER init_func,
 										 EIF_INTEGER priority,
 										 EIF_INTEGER policy,
@@ -319,7 +319,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 			/*
 			 * Call the `execute' routine of the thread
 			 */
-			EIF_PROC execute = (EIF_PROC) routine_ctxt->routine;
+			EIF_PROCEDURE execute = (EIF_PROCEDURE) routine_ctxt->routine;
 			(execute)(root_obj);
 		}
 		root_obj = (char *)0;
@@ -806,7 +806,7 @@ rt_public void eif_thr_panic(char *msg)
  * Class OBJECT_CONTROL externals
  */
 
-rt_public EIF_POINTER eif_thr_freeze (EIF_OBJ object)
+rt_public EIF_POINTER eif_thr_freeze (EIF_OBJECT object)
 {
 	/* This function is used by the class PROXY: the item of the proxy is
 	 * frozen so that it can be accessed by any thread any time. It would
@@ -836,7 +836,7 @@ rt_public EIF_POINTER eif_thr_freeze (EIF_OBJ object)
 	}
 }
 
-rt_public void eif_thr_unfreeze (EIF_OBJ object)
+rt_public void eif_thr_unfreeze (EIF_OBJECT object)
 {
 	/* This function unfreezes an object frozen with eif_thr_freeze()
 	 * It should work even if the object has been frozen by spfreeze() and
@@ -853,7 +853,7 @@ rt_public void eif_thr_unfreeze (EIF_OBJ object)
 
 rt_public EIF_POINTER eif_thr_proxy_set(EIF_POINTER object)
 		/* `object' is actually an EIF_REFERENCE and this function
-		 * returns a EIF_OBJ. However, we keep this signature so as to match the
+		 * returns a EIF_OBJECT. However, we keep this signature so as to match the
 		 * one on the Eiffel side. -ET */
 {
 	/* 
@@ -868,7 +868,7 @@ rt_public EIF_POINTER eif_thr_proxy_set(EIF_POINTER object)
 	return  hector_addr(object); /* should it be inlined? -ET */
 }
 
-rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_OBJ proxy)
+rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_OBJECT proxy)
 {
 	/*
 	 * Returns the address of the actual proxy item.
@@ -878,7 +878,7 @@ rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_OBJ proxy)
 }
 
 rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy)
-			/* Once again: it is in fact an EIF_OBJ */
+			/* Once again: it is in fact an EIF_OBJECT */
 {
 	/*
 	 * Frees the entry in the hec_saved stack of the proxy item.

@@ -44,7 +44,7 @@ rt_public long dle_melt_count = 0;		/* Size of `dle_melt' table */
 rt_public char *(**dle_make)();		/* `make' of DYNAMIC descendants */
 #endif
 rt_public int dynamic_dtype;			/* Dynamic type of DYNAMIC */
-rt_private EIF_PROC eif_set_dtype;		/* `set_dynamic_type' eiffel routine */
+rt_private EIF_PROCEDURE eif_set_dtype;		/* `set_dynamic_type' eiffel routine */
 rt_private int dle_loaded = 0;			/* Has a DC-Set already been loaded */
 rt_private int old_scount = 0;			/* Old number of dynamic types */
 #ifdef HAS_DLOPEN
@@ -583,7 +583,7 @@ rt_public EIF_INTEGER dle_search(EIF_REFERENCE obj, EIF_REFERENCE class_name)
 	return (EIF_INTEGER) DLE_NO_CLASS;
 }
 
-rt_public void c_pass_dle_routines(EIF_PROC set_dtype_addr)
+rt_public void c_pass_dle_routines(EIF_PROCEDURE set_dtype_addr)
 {
 	eif_set_dtype = set_dtype_addr;
 }

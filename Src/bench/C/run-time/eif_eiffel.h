@@ -57,7 +57,7 @@ RT_LNK double math_power (double v1, double v2);
 
 /* defined in pattern.c */
 
-extern int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int start, int fuzzy);
+extern int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen, int plen, int start, int fuzzy);
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"

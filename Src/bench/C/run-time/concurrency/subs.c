@@ -1,7 +1,7 @@
 
 
 /*****************************************************************
-	In the C-programs, we use EIF_OBJ and char * to indicate
+	In the C-programs, we use EIF_OBJECT and char * to indicate
 direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
@@ -906,7 +906,7 @@ EIF_INTEGER sock;
 /*
 void c_concur_put_stream (fd, s, l)
 EIF_INTEGER fd;
-EIF_OBJ s;
+EIF_OBJECT s;
 EIF_INTEGER l;
 {
 EIF_INTEGER tmp;
@@ -1008,7 +1008,7 @@ void cur_set_gc_period(EIF_INTEGER gcp) {
 */
 }
 
-EIF_OBJ cur_deep_import(EIF_OBJ s_obj) {
+EIF_OBJECT cur_deep_import(EIF_OBJECT s_obj) {
 	int i, fd;
 
 	if (!s_obj) 

@@ -1,6 +1,6 @@
 
 /*****************************************************************
-	In the C-programs, we use EIF_OBJ and char * to indicate 
+	In the C-programs, we use EIF_OBJECT and char * to indicate 
 direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
@@ -134,8 +134,8 @@ void make_server()
 /*-----------------------------------------------------------------------*/
 
 EIF_BOOLEAN NOUSEon_same_processor(s1, s2)
-EIF_OBJ s1;
-EIF_OBJ s2;
+EIF_OBJECT s1;
+EIF_OBJECT s2;
 {
 /* is the two separate objects on the same processor? */
 	
@@ -144,7 +144,7 @@ EIF_OBJ s2;
 }
 
 EIF_BOOLEAN on_local_processor(s1)
-EIF_OBJ s1;
+EIF_OBJECT s1;
 {
 /* is the separate object on the local processor? */
 	
@@ -194,7 +194,7 @@ EIF_INTEGER port;
 }
 
 
-EIF_OBJ  create_child() {
+EIF_OBJECT  create_child() {
 /* used to create an proxy for a separate child Eiffel Object;
  * and return direct(unprotected) address. 
 */
@@ -214,7 +214,7 @@ EIF_OBJ  create_child() {
 		
 }
 
-EIF_OBJ  create_sep_obj(hostn, port, o_id)
+EIF_OBJECT  create_sep_obj(hostn, port, o_id)
 EIF_INTEGER hostn;
 EIF_INTEGER port;
 EIF_INTEGER o_id;
@@ -355,13 +355,13 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 		
 }
 
-EIF_OBJ clone_sep_obj_proxy(obj)
-EIF_OBJ obj;
+EIF_OBJECT clone_sep_obj_proxy(obj)
+EIF_OBJECT obj;
 {
 /* return direct address */
 	EIF_POINTER host_in_c;
 	char * obj_ptr;
-	EIF_OBJ ret;
+	EIF_OBJECT ret;
 
 	EIF_REFERENCE protected_obj;
 	
@@ -380,7 +380,7 @@ EIF_OBJ obj;
 
 
 EIF_BOOLEAN reserve_sep_obj(sep_obj)
-EIF_OBJ sep_obj;
+EIF_OBJECT sep_obj;
 {
 /* to get exclusive access to a separate object. 
  * if we successly reserve the separate object, return 0; otherwise return 1.
@@ -413,7 +413,7 @@ EIF_OBJ sep_obj;
 } 
 
 void free_sep_obj(sep_obj)
-EIF_OBJ sep_obj;
+EIF_OBJECT sep_obj;
 {
 /* to release the exclusive access from a separate object. 
  * after the function, the separate object is eif_free to be accessed by other
@@ -919,10 +919,10 @@ EIF_INTEGER s;
 		blen += dlen; \
 	} else { \
 		if (blen) \
-			c_concur_put_stream(s, (EIF_OBJ)buf, blen); \
+			c_concur_put_stream(s, (EIF_OBJECT)buf, blen); \
 		blen = 0; \
 		if (dlen>=constant_command_buffer_len)  \
-			c_concur_put_stream(s, (EIF_OBJ)data, dlen); \
+			c_concur_put_stream(s, (EIF_OBJECT)data, dlen); \
 		else { \
 			memcpy(buf+blen, (char *)data, dlen); \
 			blen += dlen; \
@@ -1378,7 +1378,7 @@ printf("\n\n\n * %d(%s) We have no client to server again, so to release %d serv
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
 
-EIF_OBJ remote_server(hostn, port)
+EIF_OBJECT remote_server(hostn, port)
 char *hostn;
 EIF_INTEGER port;
 {
@@ -1604,7 +1604,7 @@ EIF_INTEGER parent_pid;
 }
 
 void wait_sep_child_obj(direct_sep)
-EIF_OBJ direct_sep;
+EIF_OBJECT direct_sep;
 {
 /* wait the information returned by a separate child object.
  * During the waiting period, process other client's REGISTER requesters

@@ -55,7 +55,7 @@ struct mstack {
 	char **st_bot;			/* ADDED FIELD for FIFO stack implementation */
 };
 
-/* The following stack is used to record the EIF_OBJ protections of all the
+/* The following stack is used to record the EIF_OBJECT protections of all the
  * objects created during the maping traversal. It is represented as a stack and
  * not as an array to avoid fragmentation when resizing (since we do not know
  * how many objects we will traverse)--RAM.
@@ -92,7 +92,7 @@ rt_shared void traversal(char *object, int p_accounting)
 	union overhead *zone;		/* Object header */
 	uint32 flags;				/* Object flags */
 	char *new;					/* Mapped object */
-	EIF_OBJ mapped;				/* Mapped object protection */
+	EIF_OBJECT mapped;				/* Mapped object protection */
 	int mapped_object = 0;		/* True if maping occured */
 	int i;						/* To iterate over the references */
 
@@ -234,14 +234,14 @@ rt_shared void map_start(void)
 	map_stack.st_end = map_stack.st_cur->sk_end;
 }
 
-rt_shared EIF_OBJ map_next(void)
+rt_shared EIF_OBJECT map_next(void)
 {
 	/* Return next object in the map table, via its indirection pointer. Note
 	 * that the stack structure is physically destroyed in the process, being
 	 * mangled from the bottom.
 	 */
 
-	register1 EIF_OBJ *item;		/* Item we shall return */
+	register1 EIF_OBJECT *item;		/* Item we shall return */
 	register2 struct stchunk *cur;	/* New current chunk */
 
 #ifdef MAY_PANIC
@@ -250,8 +250,8 @@ rt_shared EIF_OBJ map_next(void)
 		eif_panic(botched);
 #endif
 	
-	item = (EIF_OBJ *) map_stack.st_bot++;		/* Make a guess */
-	if (item >= (EIF_OBJ *) map_stack.st_end) {	/* Bad guess (beyond chunk) */
+	item = (EIF_OBJECT *) map_stack.st_bot++;		/* Make a guess */
+	if (item >= (EIF_OBJECT *) map_stack.st_end) {	/* Bad guess (beyond chunk) */
 		cur = map_stack.st_cur->sk_next;		/* Advance one chunk */
 
 #ifdef MAY_PANIC
@@ -261,14 +261,14 @@ rt_shared EIF_OBJ map_next(void)
 
 		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
 		map_stack.st_bot = cur->sk_arena;		/* This is the new bottom */
-		item = (EIF_OBJ *) map_stack.st_bot++;	/* Next item in stack */
+		item = (EIF_OBJECT *) map_stack.st_bot++;	/* Next item in stack */
 		xfree((char *) (map_stack.st_cur));				/* Free previous chunk */
 		map_stack.st_cur = cur;					/* It's the new first chunk */
 		map_stack.st_hd = cur;					/* In case of emergency */
 	}
 
 #ifdef MAY_PANIC
-	if (item == (EIF_OBJ *) map_stack.st_top)	/* Reached the end of stack */
+	if (item == (EIF_OBJECT *) map_stack.st_top)	/* Reached the end of stack */
 		eif_panic(botched);
 #endif
 	
@@ -311,7 +311,7 @@ rt_shared void map_reset(int emergency)
 	 * exception in the middle of the traversal...
 	 */
 
-	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJ pointers */
+	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJECT pointers */
 	EIF_END_GET_CONTEXT
 }
 

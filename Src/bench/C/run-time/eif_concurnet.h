@@ -49,7 +49,7 @@ extern 		EIF_INTEGER net_host_addr (EIF_POINTER);
 extern 		EIF_INTEGER c_read_int (EIF_INTEGER);
 extern 		EIF_REAL c_read_float (EIF_INTEGER);
 extern 		EIF_DOUBLE c_read_double (EIF_INTEGER);
-extern 		EIF_INTEGER c_read_stream (EIF_INTEGER, EIF_INTEGER, EIF_OBJ);
+extern 		EIF_INTEGER c_read_stream (EIF_INTEGER, EIF_INTEGER, EIF_OBJECT);
 
 /* If we use the old EiffelNet version, we should use the following macro:
 #define		c_concur_read_int(s)				ntohl(c_read_int(s))
@@ -60,7 +60,7 @@ extern 		EIF_INTEGER c_read_stream (EIF_INTEGER, EIF_INTEGER, EIF_OBJ);
 #define 	c_concur_my_read_stream(s, l, b)	c_read_stream(s, l, b)
 
 
-extern 		void c_put_stream (EIF_INTEGER, EIF_OBJ, EIF_INTEGER);
+extern 		void c_put_stream (EIF_INTEGER, EIF_OBJECT, EIF_INTEGER);
 extern 		void c_put_int (EIF_INTEGER, EIF_INTEGER);
 extern 		void c_put_float (EIF_INTEGER, EIF_DOUBLE);
 extern 		void c_put_double (EIF_INTEGER, EIF_DOUBLE);
@@ -74,7 +74,7 @@ extern 		void c_put_double (EIF_INTEGER, EIF_DOUBLE);
 #define		c_concur_put_double(s, v)			c_put_double(s, v)
 
 
-extern 		EIF_INTEGER c_select(EIF_INTEGER, EIF_OBJ, EIF_OBJ, EIF_OBJ, EIF_INTEGER, EIF_INTEGER);
+extern 		EIF_INTEGER c_select(EIF_INTEGER, EIF_OBJECT, EIF_OBJECT, EIF_OBJECT, EIF_INTEGER, EIF_INTEGER);
 
 extern 		float change_float_order(float);
 extern 		double change_double_order(double);

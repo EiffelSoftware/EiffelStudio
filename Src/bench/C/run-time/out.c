@@ -556,6 +556,7 @@ rt_shared char *simple_out(struct item *val)
 		break;
 	case SK_DOUBLE:
 		sprintf(tagged_out, "DOUBLE = %.17g", val->it_double);
+		break;
 	case SK_BIT:
 		sprintf(tagged_out, "Bit object");
 		break;

@@ -10,7 +10,7 @@ deferred class
 
 inherit
 	EV_PND_SOURCE_I
--- alex
+
 	EV_EVENT_HANDLER_IMP
 
 feature {EV_PND_SOURCE_I} -- Implementation

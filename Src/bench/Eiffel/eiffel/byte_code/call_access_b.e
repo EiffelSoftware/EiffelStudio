@@ -93,7 +93,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for feature call.
 		do
-			generate_il_call (True)
+			generate_il_call (False)
 		end
 
 	generate_il_call (invariant_checked: BOOLEAN) is

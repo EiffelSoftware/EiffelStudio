@@ -91,12 +91,14 @@ feature -- Basic Operations
 			end
 			if environment.abort then
 				message_output.display_error
+			else
+				message_output.add_title ("Processing finished successfully")
 			end
 			progress_report.finish
 		rescue
 			if not l_retried then
 				environment.set_abort (Exception_raised)
-				environment.set_error_data (tag_name + ":%N" + exception_trace)
+				environment.set_error_data (tag_name + ":%R%N" + exception_trace)
 				l_retried := True
 				retry
 			end

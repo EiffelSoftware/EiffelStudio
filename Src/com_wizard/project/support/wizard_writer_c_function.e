@@ -32,31 +32,24 @@ feature -- Access
 		do
 			create Result.make (10000)
 			Result.append (generated_signature)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%R%N%R%N")
 			Result.append (generated_comment)
-			Result.append (Open_curly_brace)
-			Result.append (New_line)
+			Result.append ("{%R%N")
 			Result.append (body)
-			Result.append (New_line)
-			Result.append (Close_curly_brace)
-			Result.append (Semicolon)
+			Result.append ("%R%N};")
 		end
 
 	generated_header_file: STRING is
 			-- Generated header file
 		do
-			
 			Result := generated_signature
 			if is_pure_virtual then
-				Result.prepend (Space)
-				Result.prepend (Virtual.twin)
-				Result.append (Pure_virtual_sufix)
+				Result.prepend (" virtual ")
+				Result.append (" = 0")
 			end
-			Result.prepend (tab)
+			Result.prepend ("%T")
 			Result.prepend (generated_comment)
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append (";%R%N")
 		end
 
 feature -- Element Change
@@ -97,13 +90,9 @@ feature {NONE} -- Implementation
 			can_generate: can_generate
 		do
 			create Result.make (100)
-			Result.append (tab)
-			Result.append (C_open_comment_line)
-			Result.append (New_line_tab)
+			Result.append ("%T/*-----------------------------------------------------------%R%N%T")
 			Result.append (comment)
-			Result.append (New_line_tab)
-			Result.append (C_close_comment_line)
-			Result.append (New_line)
+			Result.append ("%R%N%T-----------------------------------------------------------*/%R%N")
 		end
 
 	generated_signature: STRING is

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
-			valid_syntax: not (a_body.item (1) = '%N') and not (a_body.item (1) = '#') and
+			valid_syntax: not (a_body.item (1) = '%R') and not (a_body.item (1) = '#') and
 							not (a_body.item (a_body.count) = '%N') 
 		do
 			body := a_body
@@ -51,7 +51,7 @@ feature -- Element Change
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
-			valid_syntax: not (a_body.item (1) = '%N') and not (a_body.item (1) = '#') and
+			valid_syntax: not (a_body.item (1) = '%R') and not (a_body.item (1) = '#') and
 							not (a_body.item (a_body.count) = '%N') 
 		do
 			body := a_body

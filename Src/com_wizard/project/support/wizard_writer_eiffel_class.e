@@ -35,17 +35,17 @@ feature -- Access
 			l_integer: INTEGER
 			l_features: LIST [WIZARD_WRITER_FEATURE]
 		do
-			Result := "indexing%N%Tdescription: %""
+			Result := "indexing%R%N%Tdescription: %""
 			Result.append (description)
-			Result.append ("%"%N%Tnote: ")
+			Result.append ("%"%R%N%Tnote: ")
 			Result.append (Wizard_note)
-			Result.append ("%N%N")
+			Result.append ("%R%N%R%N")
 			if is_deferred then
 				Result.append ("deferred ")
 			end
-			Result.append ("class%N%T")
+			Result.append ("class%R%N%T")
 			Result.append (class_name)
-			Result.append ("%N%N")
+			Result.append ("%R%N%R%N")
 			if not inherit_clauses.is_empty then
 				Result.append ("inherit")
 			end
@@ -54,33 +54,33 @@ feature -- Access
 			until
 				inherit_clauses.after
 			loop
-				Result.append ("%N")
+				Result.append ("%R%N")
 				Result.append (inherit_clauses.item.generated_code)
-				Result.append ("%N")
+				Result.append ("%R%N")
 				inherit_clauses.forth
 			end
 			if not inherit_clauses.is_empty then
-				Result.append ("%N")
+				Result.append ("%R%N")
 			end
 			if empty_creation_routines then
-				Result.append ("create%N%N")
+				Result.append ("create%R%N%R%N")
 			else
 				from
 					creation_routines.start
 					if not creation_routines.off then
-						Result.append ("create%N%T")
+						Result.append ("create%R%N%T")
 						Result.append (creation_routines.item)
 						creation_routines.forth
 					end
 				until
 					creation_routines.off
 				loop
-					Result.append (",%N%T")
+					Result.append (",%R%N%T")
 					Result.append (creation_routines.item)
 					creation_routines.forth
 				end
 				if not creation_routines.is_empty then
-					Result.append ("%N%N")
+					Result.append ("%R%N%R%N")
 				end
 			end
 			from
@@ -101,17 +101,17 @@ feature -- Access
 					until
 						l_features.after
 					loop
-						Result.append ("%N%N")
+						Result.append ("%R%N%R%N")
 						Result.append (l_features.item.generated_code)
 						l_features.forth
 					end
-					Result.append ("%N%N")
+					Result.append ("%R%N%R%N")
 				end
 				l_integer := l_integer + 1
 			end
 			Result.append ("end -- ")
 			Result.append (class_name)
-			Result.append ("%N%N")
+			Result.append ("%R%N%R%N")
 			Result.append (Class_footer)
 		end
 

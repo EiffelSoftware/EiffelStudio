@@ -38,26 +38,19 @@ feature -- Access
 			-- Generated header file
 		do
 			create Result.make (100)
-			Result.append (tab)
-			Result.append (C_open_comment_line)
-			Result.append (New_line_tab)
+			Result.append ("%T/*-----------------------------------------------------------%R%N%T")
 			Result.append (comment)
-			Result.append (New_line_tab)
-			Result.append (C_close_comment_line)
-			Result.append (New_line_tab)
+			Result.append ("%R%N%T-----------------------------------------------------------*/%R%N%T")
 			Result.append (result_type)
-			Result.append (Space)
+			Result.append (" ")
 			Result.append (name)
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append (";%R%N")
 		end
 
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := (name /= Void and then not name.is_empty) and
-						(result_type /= Void and then not result_type.is_empty) and
-						(comment /= Void)
+			Result := name /= Void and then not name.is_empty and result_type /= Void and then not result_type.is_empty and comment /= Void
 		end
 
 feature -- Element Change

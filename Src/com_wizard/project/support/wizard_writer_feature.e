@@ -79,11 +79,11 @@ feature -- Access
 					Result.append (body)
 				end
 			end
-			Result.append ("%N%T%T%T-- ")
+			Result.append ("%R%N%T%T%T-- ")
 			Result.append (comment)
 
 			if not is_attribute and not constant then
-				Result.append ("%N%T%T")
+				Result.append ("%R%N%T%T")
 				from
 					preconditions.start
 					if not preconditions.after then
@@ -92,12 +92,12 @@ feature -- Access
 				until
 					preconditions.after
 				loop
-					Result.append ("%N%T%T%T")
+					Result.append ("%R%N%T%T%T")
 					Result.append (preconditions.item.generated_code)
 					preconditions.forth
 				end
 				if not preconditions.is_empty then
-					Result.append ("%N%T%T")
+					Result.append ("%R%N%T%T")
 				end
 				if not is_deferred then
 					from
@@ -108,12 +108,12 @@ feature -- Access
 					until
 						local_variables.after
 					loop
-						Result.append ("%N%T%T%T")
+						Result.append ("%R%N%T%T%T")
 						Result.append (local_variables.item)
 						local_variables.forth
 					end
 					if not local_variables.is_empty then
-						Result.append ("%N%T%T")
+						Result.append ("%R%N%T%T")
 					end
 				end
 				if is_deferred then
@@ -125,11 +125,11 @@ feature -- Access
 				else
 					Result.append ("do")
 				end
-				Result.append ("%N")
+				Result.append ("%R%N")
 				if not is_deferred then
 					Result.append (body)
 				end
-				Result.append ("%N%T%T")
+				Result.append ("%R%N%T%T")
 				from
 					postconditions.start
 					if not postconditions.after then
@@ -138,12 +138,12 @@ feature -- Access
 				until
 					postconditions.after
 				loop
-					Result.append ("%N%T%T%T")
+					Result.append ("%R%N%T%T%T")
 					Result.append (postconditions.item.generated_code)
 					postconditions.forth
 				end
 				if postconditions /= Void and then not postconditions.is_empty then
-					Result.append ("%N%T%T")
+					Result.append ("%R%N%T%T")
 				end
 				Result.append ("end")
 			end
@@ -274,7 +274,7 @@ feature -- Element Change
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
-			valid_syntax: (not a_body.is_empty) implies (not (a_body.item (a_body.count) = '%N') and not (a_body.item (1) = '%N'))
+			valid_syntax: (not a_body.is_empty) implies (not (a_body.item (a_body.count) = '%N') and not (a_body.item (1) = '%R'))
 			not_constant: not constant
 			not_deferred: not is_deferred
 		do

@@ -25,8 +25,6 @@ inherit
 	MARSHAL_BY_REF_OBJECT
 		rename
 			make as make_marhaller
-		undefine
-			to_string, equals, finalize, get_hash_code
 		end
 	
 create
@@ -40,7 +38,6 @@ feature {COM_ISE_CACHE_MANAGER} -- Initialization
 			non_void_domain: a_domain /= Void
 			non_finalizing_domain: not a_domain.is_finalizing_for_unload
 		do
-			make_marhaller
 			app_domain := a_domain
 			create resolver_paths.make (7)
 			resolver_paths.compare_objects

@@ -13,15 +13,6 @@ indexing
 class
 	ANY
 
-inherit
-	SYSTEM_OBJECT
-		export
-			{NONE} all
-			{SYSTEM_OBJECT} get_type
-		redefine
-			finalize, equals, get_hash_code, to_string
-		end
-
 feature -- Customization
 	
 feature -- Access
@@ -52,7 +43,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := get_type.is_instance_of_type (other)
+			Result := to_dotnet.get_type.is_instance_of_type (other)
 		end
 
 	frozen same_type (other: ANY): BOOLEAN is
@@ -60,8 +51,8 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := get_type.is_instance_of_type (other) and then
-				other.get_type.is_instance_of_type (Current)
+			Result := to_dotnet.get_type.is_instance_of_type (other) and then
+				other.to_dotnet.get_type.is_instance_of_type (Current)
 		ensure
 			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
@@ -89,7 +80,7 @@ feature -- Comparison
 		do
 			Result := Current = other
 			if not Result then
-				Result := feature {ISE_RUNTIME}.standard_equal (Current, other)
+				Result := feature {ISE_RUNTIME}.standard_is_equal (Current, other)
 			end
 		ensure
 			same_type: Result implies same_type (other)
@@ -138,7 +129,7 @@ feature -- Comparison
 			else
 				Result := other = some
 				if not Result then
-					Result := feature {ISE_RUNTIME}.deep_equal (some, other)
+					Result := feature {ISE_RUNTIME}.deep_equal (Current, some, other)
 				end
 			end
 		ensure
@@ -226,7 +217,7 @@ feature -- Duplication
 			-- Always uses default copying semantics.
 		do
 				-- Built-in
-			Result ?= memberwise_clone
+--			Result ?= memberwise_clone
 		ensure
 			standard_twin_not_void: Result /= Void
 			equal: standard_equal (Result, Current)
@@ -353,53 +344,18 @@ feature -- Basic operations
 			-- Result = Result.default
 		end
 
-feature {NONE} -- Disposal
+feature -- Conversion
 
-	frozen finalize is
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-		local
-			l_disposable: DISPOSABLE
+	to_dotnet: SYSTEM_OBJECT is
+		require
+			is_dotnet: is_running_on_dotnet
 		do
-			l_disposable ?= Current
-			if l_disposable /= Void then
-				l_disposable.dispose
-			end
+			Result := Current
 		end
 
-feature {NONE} -- Implement .NET feature
+	is_running_on_dotnet: BOOLEAN is True
+			-- Platform is .NET
 
-	frozen equals (obj: SYSTEM_OBJECT): BOOLEAN is
-			-- Compare `obj' to Current using Eiffel semantic.
-		local
-			l_other: like Current
-		do
-			l_other ?= obj
-			if l_other /= Void then
-				Result := get_type.equals_type (obj.get_type) and then is_equal (l_other)
-			end
-		end
-
-	frozen to_string: SYSTEM_STRING is
-			-- New string containing terse printable representation
-			-- of current object
-		do
-			Result := out.to_cil
-		end
-		
-	frozen get_hash_code: INTEGER is
-			-- Hash code value.
-		local
-			h: HASHABLE
-		do
-			h ?= Current
-			if h /= Void then
-				Result := h.hash_code
-			else
-				Result := Precursor {SYSTEM_OBJECT}
-			end
-		end
-		
 invariant
 	reflexive_equality: standard_is_equal (Current)
 	reflexive_conformance: conforms_to (Current)

@@ -326,7 +326,7 @@ feature -- Element change
 			native_array.put (k - 1, v)
 		end
 
-	put_reference (v: SYSTEM_OBJECT; index: INTEGER) is
+	put_reference (v: ANY; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)

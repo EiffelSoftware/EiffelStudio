@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 frozen external class
-	NATIVE_ARRAY [G -> SYSTEM_OBJECT]
+	NATIVE_ARRAY [G]
 
 inherit
 	SYSTEM_ARRAY

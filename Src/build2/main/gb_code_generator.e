@@ -482,6 +482,8 @@ feature {NONE} -- Implementation
 				string_constant: GB_STRING_CONSTANT
 				pixmap_constant: GB_PIXMAP_CONSTANT
 				directory_constant: GB_DIRECTORY_CONSTANT
+				color_constant: GB_COLOR_CONSTANT
+				font_constant: GB_FONT_CONSTANT
 				l_string: STRING
 			do	
 					--Firstly read the contents of the file.
@@ -546,6 +548,26 @@ feature {NONE} -- Implementation
 							generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is" +
 								indent + "-- `Result' is DIRECTORY constant named `" + directory_constant.name + "'." + 
 								indent_less_one + "once" + indent + "Result := %"" + directory_constant.value_as_string + "%"" + Indent_less_one + "end" + "%N"
+						end
+						color_constant ?= constant
+						if color_constant /= Void then
+							generated_constants_string := generated_constants_string + Indent_less_two + color_constant.name + ": EV_COLOR is" +
+								indent + "-- `Result' is EV_COLOR constant named `" + color_constant.name + "'." + 
+								indent_less_one + "once" + indent + "Result := create {EV_COLOR}.make_with_8_bit_rgb (" + color_constant.value.red_8_bit.out + ", " + color_constant.value.green_8_bit.out + ", " + color_constant.value.blue_8_bit.out + ")" + Indent_less_one + "end" + "%N"
+						end
+						font_constant ?= constant
+						if font_constant /= Void then
+								generated_constants_string := generated_constants_string + Indent_less_two + font_constant.name + ": EV_FONT is" +
+								indent + "-- `Result' is EV_FONT constant named `" + font_constant.name + "'." + 
+								indent_less_one + "once" + indent + "create Result" + Indent +
+								"Result.set_family (" + font_constant.value.family.out + ")" + Indent +
+								"Result.set_weight (" + font_constant.value.weight.out + ")" + Indent +
+								"Result.set_shape (" + font_constant.value.shape.out + ")" + Indent + 
+								"Result.set_height_in_points (" + font_constant.value.height_in_points.out + ")"
+								if not font_constant.value.preferred_families.is_empty then
+									generated_constants_string := generated_constants_string + Indent + "Result.preferred_families.extend (%"" + font_constant.value.preferred_families.i_th (1) + "%")"
+								end
+								generated_constants_string := generated_constants_string + Indent_less_one + "end" + "%N"							
 						end
 						all_constants.forth
 					end

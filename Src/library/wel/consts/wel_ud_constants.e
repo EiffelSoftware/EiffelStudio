@@ -9,21 +9,15 @@ class
 
 feature -- Access
 
-	Ud_maxval: INTEGER is
+	Ud_maxval: INTEGER is 32767
 			-- Maximum value allowed in an up-down control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UD_MAXVAL"
-		end
+			--
+			-- Declared in Windows as UD_MAXVAL
 
-	Ud_minval: INTEGER is
+	Ud_minval: INTEGER is -32767
 			-- Minimum value allowed in an up-down control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UD_MINVAL"
-		end
+			--
+			-- Declared in Windows as UD_MINVAL
 
 end -- class WEL_UD_CONSTANTS
 

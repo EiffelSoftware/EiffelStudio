@@ -9,77 +9,56 @@ class
 
 feature -- Access
 
-	Tvc_bykeyboard: INTEGER is
+	Tvc_bykeyboard: INTEGER is 2
 			-- Used for the `Tvn_selchanged' and `Tvn_selchanging'
 			-- notification messages.
 			-- Action done by a key stroke.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVC_BYKEYBOARD"
-		end
+			--
+			-- Declared in Windows as TVC_BYKEYBOARD
 
-	Tvc_bymouse: INTEGER is
+	Tvc_bymouse: INTEGER is 1
 			-- Used for the `Tvn_selchanged' and `Tvn_selchanging'
 			-- notification messages.
 			-- Action done by a mouse click.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVC_BYMOUSE"
-		end
+			--
+			-- Declared in Windows as TVC_BYMOUSE
 
-	Tvc_unknown: INTEGER is
+	Tvc_unknown: INTEGER is 0
 			-- Used for the `Tvn_selchanged' or `Tvn_selchanging'
 			-- notification messages.
 			-- Action done by unknown.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVC_UNKNOWN"
-		end
+			--
+			-- Declared in Windows as TVC_UNKNOWN
 
-	Tve_collapse: INTEGER is
+	Tve_collapse: INTEGER is 1
 			-- Used for the `Tvn_expand' or `Tvn_expanding'
 			-- notification messages.
 			-- Action done by collapsing the list.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVE_COLLAPSE"
-		end
+			--
+			-- Declared in Windows as TVE_COLLAPSE
 
-	Tve_collapsereset: INTEGER is
+	Tve_collapsereset: INTEGER is 32768
 			-- Used for the `Tvn_expand' and `Tvn_expanding'
 			-- notification messages.
 			-- Action done by collapsing the list and removing
 			-- the child items.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVE_COLLAPSERESET"
-		end
+			--
+			-- Declared in Windows as TVE_COLLAPSERESET
 
-	Tve_expand: INTEGER is
+	Tve_expand: INTEGER is 2
 			-- Used for the `Tvn_expand' and `Tvn_expanding'
 			-- notification messages.
 			-- Action done by expanding the list.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVE_EXPAND"
-		end
+			--
+			-- Declared in Windows as TVE_EXPAND
 
-	Tve_toggle: INTEGER is
+	Tve_toggle: INTEGER is 3
 			-- Used for the `Tvn_expand' and `Tvn_expanding'
 			-- notification messages.
 			-- Action done by changing the list of the list 
 			-- between collapse and expand.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVE_TOGGLE"
-		end
+			--
+			-- Declared in Windows as TVE_TOGGLE
 
 end -- class WEL_TVAF_CONSTANTS
 

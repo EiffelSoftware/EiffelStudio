@@ -9,299 +9,131 @@ class
 
 feature -- Access
 
-	Em_getcharformat: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETCHARFORMAT"
-		end
+	Em_getcharformat: INTEGER is 1082
+			-- Declared in Windows as EM_GETCHARFORMAT
 
-	Em_getparaformat: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETPARAFORMAT"
-		end
+	Em_getparaformat: INTEGER is 1085
+			-- Declared in Windows as EM_GETPARAFORMAT
 
-	Em_setbkgndcolor: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETBKGNDCOLOR"
-		end
+	Em_setbkgndcolor: INTEGER is 1091
+			-- Declared in Windows as EM_SETBKGNDCOLOR
 
-	Em_setcharformat: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETCHARFORMAT"
-		end
+	Em_setcharformat: INTEGER is 1092
+			-- Declared in Windows as EM_SETCHARFORMAT
 
-	Em_seteventmask: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETEVENTMASK"
-		end
+	Em_seteventmask: INTEGER is 1093
+			-- Declared in Windows as EM_SETEVENTMASK
 
-	Em_setparaformat: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETPARAFORMAT"
-		end
+	Em_setparaformat: INTEGER is 1095
+			-- Declared in Windows as EM_SETPARAFORMAT
 
-	Em_charfrompos: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_CHARFROMPOS"
-		end
+	Em_charfrompos: INTEGER is 215
+			-- Declared in Windows as EM_CHARFROMPOS
 
-	Em_exgetsel: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_EXGETSEL"
-		end
+	Em_exgetsel: INTEGER is 1076
+			-- Declared in Windows as EM_EXGETSEL
 
-	Em_exsetsel: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_EXSETSEL"
-		end
+	Em_exsetsel: INTEGER is 1079
+			-- Declared in Windows as EM_EXSETSEL
 
-	Em_hideselection: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_HIDESELECTION"
-		end
+	Em_hideselection: INTEGER is 1087
+			-- Declared in Windows as EM_HIDESELECTION
 
-	Em_posfromchar: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_POSFROMCHAR"
-		end
+	Em_posfromchar: INTEGER is 214
+			-- Declared in Windows as EM_POSFROMCHAR
 
-	Em_selectiontype: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SELECTIONTYPE"
-		end
+	Em_selectiontype: INTEGER is 1090
+			-- Declared in Windows as EM_SELECTIONTYPE
 
-	En_selchange: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EN_SELCHANGE"
-		end
+	En_selchange: INTEGER is 1794
+			-- Declared in Windows as EN_SELCHANGE
 
-	Em_exlimittext: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_EXLIMITTEXT"
-		end
+	Em_exlimittext: INTEGER is 1077
+			-- Declared in Windows as EM_EXLIMITTEXT
 
-	Em_findtext: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_FINDTEXT"
-		end
+	Em_findtext: INTEGER is 1080
+			-- Declared in Windows as EM_FINDTEXT
 
-	Em_findtextex: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_FINDTEXTEX"
-		end
+	Em_findtextex: INTEGER is 1103
+			-- Declared in Windows as EM_FINDTEXTEX
 
-	Em_getseltext: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETSELTEXT"
-		end
+	Em_getseltext: INTEGER is 1086
+			-- Declared in Windows as EM_GETSELTEXT
 
-	Em_gettextrange: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETTEXTRANGE"
-		end
+	Em_gettextrange: INTEGER is 1099
+			-- Declared in Windows as EM_GETTEXTRANGE
 
-	Em_setlimittext: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETLIMITTEXT"
-		end
+	Em_setlimittext: INTEGER is 197
+			-- Declared in Windows as EM_SETLIMITTEXT
 
-	Em_exlinefromchar: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_EXLINEFROMCHAR"
-		end
+	Em_exlinefromchar: INTEGER is 1078
+			-- Declared in Windows as EM_EXLINEFROMCHAR
 
-	Em_findwordbreak: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_FINDWORDBREAK"
-		end
+	Em_findwordbreak: INTEGER is 1100
+			-- Declared in Windows as EM_FINDWORDBREAK
 
-	Em_getwordbreakprocex: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETWORDBREAKPROCEX"
-		end
+	Em_getwordbreakprocex: INTEGER is 1104
+			-- Declared in Windows as EM_GETWORDBREAKPROCEX
 
-	Em_setwordbreakprocex: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETWORDBREAKPROCEX"
-		end
+	Em_setwordbreakprocex: INTEGER is 1105
+			-- Declared in Windows as EM_SETWORDBREAKPROCEX
 
-	Em_canpaste: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_CANPASTE"
-		end
+	Em_canpaste: INTEGER is 1074
+			-- Declared in Windows as EM_CANPASTE
 
-	Em_pastespecial: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_PASTESPECIAL"
-		end
+	Em_pastespecial: INTEGER is 1088
+			-- Declared in Windows as EM_PASTESPECIAL
 
-	Em_streamin: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_STREAMIN"
-		end
+	Em_streamin: INTEGER is 1097
+			-- Declared in Windows as EM_STREAMIN
 
-	Em_streamout: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_STREAMOUT"
-		end
+	Em_streamout: INTEGER is 1098
+			-- Declared in Windows as EM_STREAMOUT
 
-	Em_displayband: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_DISPLAYBAND"
-		end
+	Em_displayband: INTEGER is 1075
+			-- Declared in Windows as EM_DISPLAYBAND
 
-	Em_formatrange: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_FORMATRANGE"
-		end
+	Em_formatrange: INTEGER is 1081
+			-- Declared in Windows as EM_FORMATRANGE
 
-	Em_settargetdevice: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETTARGETDEVICE"
-		end
+	Em_settargetdevice: INTEGER is 1096
+			-- Declared in Windows as EM_SETTARGETDEVICE
 
-	Em_requestresize: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_REQUESTRESIZE"
-		end
+	Em_requestresize: INTEGER is 1089
+			-- Declared in Windows as EM_REQUESTRESIZE
 
-	Em_geteventmask: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETEVENTMASK"
-		end
+	Em_geteventmask: INTEGER is 1083
+			-- Declared in Windows as EM_GETEVENTMASK
 
-	Em_getimecolor: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETIMECOLOR"
-		end
+	Em_getimecolor: INTEGER is 1129
+			-- Declared in Windows as EM_GETIMECOLOR
 
-	Em_getimeoptions: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETIMEOPTIONS"
-		end
+	Em_getimeoptions: INTEGER is 1131
+			-- Declared in Windows as EM_GETIMEOPTIONS
 
-	Em_getoptions: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETOPTIONS"
-		end
+	Em_getoptions: INTEGER is 1102
+			-- Declared in Windows as EM_GETOPTIONS
 
-	Em_getpunctuation: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETPUNCTUATION"
-		end
+	Em_getpunctuation: INTEGER is 1125
+			-- Declared in Windows as EM_GETPUNCTUATION
 
-	Em_getwordwrapmode: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_GETWORDWRAPMODE"
-		end
+	Em_getwordwrapmode: INTEGER is 1127
+			-- Declared in Windows as EM_GETWORDWRAPMODE
 
-	Em_setimecolor: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETIMECOLOR"
-		end
+	Em_setimecolor: INTEGER is 1128
+			-- Declared in Windows as EM_SETIMECOLOR
 
-	Em_setimeoptions: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETIMEOPTIONS"
-		end
+	Em_setimeoptions: INTEGER is 1130
+			-- Declared in Windows as EM_SETIMEOPTIONS
 
-	Em_setoptions: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETOPTIONS"
-		end
+	Em_setoptions: INTEGER is 1101
+			-- Declared in Windows as EM_SETOPTIONS
 
-	Em_setpunctuation: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETPUNCTUATION"
-		end
+	Em_setpunctuation: INTEGER is 1124
+			-- Declared in Windows as EM_SETPUNCTUATION
 
-	Em_setwordwrapmode: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"EM_SETWORDWRAPMODE"
-		end
+	Em_setwordwrapmode: INTEGER is 1126
+			-- Declared in Windows as EM_SETWORDWRAPMODE
 
 end -- class WEL_RICH_EDIT_MESSAGE_CONSTANTS
 

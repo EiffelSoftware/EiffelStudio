@@ -17,26 +17,14 @@ feature -- Access
 
 	Clip_mask: INTEGER is 15
 
-	Clip_lh_angles: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_LH_ANGLES"
-		end
+	Clip_lh_angles: INTEGER is 16
+			-- Declared in Windows as CLIP_LH_ANGLES
 
-	Clip_tt_always: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_TT_ALWAYS"
-		end
+	Clip_tt_always: INTEGER is 32
+			-- Declared in Windows as CLIP_TT_ALWAYS
 
-	Clip_embedded: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_EMBEDDED"
-		end
+	Clip_embedded: INTEGER is 128
+			-- Declared in Windows as CLIP_EMBEDDED
 
 end -- class WEL_CLIP_PRECISION_CONSTANTS
 

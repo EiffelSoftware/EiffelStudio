@@ -38,16 +38,12 @@ feature -- Access
 			-- Draws text and objects in a vertical direction.
 			-- Available for Asian-languages only.
 
-	Es_ex_nocalloleinit: INTEGER is
-			-- Prevents the control from calling the OleInitialize
-			-- function when created. Useful only in dialog
-			-- templates because CreateWindowEx does not accept
-			-- this style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ES_EX_NOCALLOLEINIT"
-		end
+	Es_ex_nocalloleinit: INTEGER is 16777216
+			-- Prevents the control from calling the OleInitialize function
+			-- when created. This window style is useful only in dialog 
+			-- templates because CreateWindowEx does not accept this style.
+			--
+			-- Declared in Windows as ES_EX_NOCALLOLEINIT
 
 end -- class WEL_RICH_EDIT_STYLE_CONSTANTS
 

@@ -99,12 +99,7 @@ feature -- Access
 
 	Sm_dbcsenabled: INTEGER is 42
 
-	Sm_cmetrics: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SM_CMETRICS"
-		end
+	Sm_cmetrics: INTEGER is 76
 
 end -- class WEL_SM_CONSTANTS
 

@@ -9,19 +9,11 @@ class
 
 feature -- Access
 
-	Pbs_smooth: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"PBS_SMOOTH"
-		end
+	Pbs_smooth: INTEGER is 1
+			-- Declared in Windows as PBS_SMOOTH
 
-	Pbs_vertical: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"PBS_VERTICAL"
-		end
+	Pbs_vertical: INTEGER is 4
+			-- Declared in Windows as PBS_VERTICAL
 
 end -- class WEL_PBM_CONSTANTS
 

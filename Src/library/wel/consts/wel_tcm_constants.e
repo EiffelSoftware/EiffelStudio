@@ -9,159 +9,71 @@ class
 
 feature -- Access
 
-	Tcm_adjustrect: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_ADJUSTRECT"
-		end
+	Tcm_adjustrect: INTEGER is 4904
+			-- Declared in Windows as TCM_ADJUSTRECT
 
-	Tcm_deleteallitems: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_DELETEALLITEMS"
-		end
+	Tcm_deleteallitems: INTEGER is 4873
+			-- Declared in Windows as TCM_DELETEALLITEMS
 
-	Tcm_deleteitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_DELETEITEM"
-		end
+	Tcm_deleteitem: INTEGER is 4872
+			-- Declared in Windows as TCM_DELETEITEM
 
-	Tcm_getcurfocus: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETCURFOCUS"
-		end
+	Tcm_getcurfocus: INTEGER is 4911
+			-- Declared in Windows as TCM_GETCURFOCUS
 
-	Tcm_getcursel: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETCURSEL"
-		end
+	Tcm_getcursel: INTEGER is 4875
+			-- Declared in Windows as TCM_GETCURSEL
 
-	Tcm_getimagelist: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETIMAGELIST"
-		end
+	Tcm_getimagelist: INTEGER is 4866
+			-- Declared in Windows as TCM_GETIMAGELIST
 
-	Tcm_getitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETITEM"
-		end
+	Tcm_getitem: INTEGER is 4869
+			-- Declared in Windows as TCM_GETITEM
 
-	Tcm_getitemcount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETITEMCOUNT"
-		end
+	Tcm_getitemcount: INTEGER is 4868
+			-- Declared in Windows as TCM_GETITEMCOUNT
 
-	Tcm_getitemrect: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETITEMRECT"
-		end
+	Tcm_getitemrect: INTEGER is 4874
+			-- Declared in Windows as TCM_GETITEMRECT
 
-	Tcm_getrowcount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETROWCOUNT"
-		end
+	Tcm_getrowcount: INTEGER is 4908
+			-- Declared in Windows as TCM_GETROWCOUNT
 
-	Tcm_gettooltips: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_GETTOOLTIPS"
-		end
+	Tcm_gettooltips: INTEGER is 4909
+			-- Declared in Windows as TCM_GETTOOLTIPS
 
-	Tcm_hittest: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_HITTEST"
-		end
+	Tcm_hittest: INTEGER is 4877
+			-- Declared in Windows as TCM_HITTEST
 
-	Tcm_insertitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_INSERTITEM"
-		end
+	Tcm_insertitem: INTEGER is 4871
+			-- Declared in Windows as TCM_INSERTITEM
 
-	Tcm_removeimage: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_REMOVEIMAGE"
-		end
+	Tcm_removeimage: INTEGER is 4906
+			-- Declared in Windows as TCM_REMOVEIMAGE
 
-	Tcm_setcursel: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETCURSEL"
-		end
+	Tcm_setcursel: INTEGER is 4876
+			-- Declared in Windows as TCM_SETCURSEL
 
-	Tcm_setimagelist: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETIMAGELIST"
-		end
+	Tcm_setimagelist: INTEGER is 4867
+			-- Declared in Windows as TCM_SETIMAGELIST
 
-	Tcm_setitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETITEM"
-		end
+	Tcm_setitem: INTEGER is 4870
+			-- Declared in Windows as TCM_SETITEM
 
-	Tcm_setitemextra: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETITEMEXTRA"
-		end
+	Tcm_setitemextra: INTEGER is 4878
+			-- Declared in Windows as TCM_SETITEMEXTRA
 
-	Tcm_setitemsize: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETITEMSIZE"
-		end
+	Tcm_setitemsize: INTEGER is 4905
+			-- Declared in Windows as TCM_SETITEMSIZE
 
-	Tcm_setpadding: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETPADDING"
-		end
+	Tcm_setpadding: INTEGER is 4907
+			-- Declared in Windows as TCM_SETPADDING
 
-	Tcm_settooltips: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_SETTOOLTIPS"
-		end
+	Tcm_settooltips: INTEGER is 4910
+			-- Declared in Windows as TCM_SETTOOLTIPS
 
-	Tcm_highlightitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCM_HIGHLIGHTITEM"
-		end
+	Tcm_highlightitem: INTEGER is 4915
+			-- Declared in Windows as TCM_HIGHLIGHTITEM
 
 end -- class WEL_TCM_CONSTANTS
 

@@ -152,16 +152,17 @@ feature {EV_ANY_I, EV_LIST} -- Implementation
 			-- toolkit.
 
 invariant
-	selected_items_not_void: selected_items /= Void
+	selected_items_not_void:
+		is_useable implies selected_items /= Void
 
 	selected_items_first_is_selected_item:
-		not selected_items.empty implies selected_items.first = selected_item
+		is_useable implies not selected_items.empty implies selected_items.first = selected_item
 
 	selected_items_empty_xor_selected_item_not_void:
-		selected_items.empty xor selected_item /= Void
+		is_useable implies selected_items.empty xor selected_item /= Void
 
 	selection_size_within_bounds:
-		not multiple_selection_enabled implies selected_items.count <= 1
+		is_useable implies not multiple_selection_enabled implies selected_items.count <= 1
 
 end -- class EV_LIST
 
@@ -186,6 +187,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/02 17:00:20  rogers
+--| Added is_useable to assertions.
+--|
 --| Revision 1.36  2000/03/01 23:44:14  king
 --| Moved lists_equal in to item_list
 --|

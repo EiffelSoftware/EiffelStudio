@@ -968,7 +968,6 @@ feature -- Generation
 		do
 			final_mode := byte_context.final_mode
 
-			buffer.indent
 			buffer.putchar ('{')
 			buffer.new_line
 			buffer.indent
@@ -1020,7 +1019,6 @@ feature -- Generation
 			buffer.exdent
 			buffer.putchar ('}')
 			buffer.new_line
-			buffer.exdent
 		end
 
 	mark_creation_routine (r: REMOVER) is

@@ -308,6 +308,10 @@ feature {NONE} -- Implementation
 			l_assemblies: SYSTEM_DLL_STRING_COLLECTION
 			i, l_count: INTEGER
 			l_assembly: CODE_REFERENCED_ASSEMBLY
+			l_type: CODE_GENERATED_TYPE
+			l_creation_routines: HASH_TABLE [CODE_CREATION_ROUTINE, STRING]
+			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
+			l_found: BOOLEAN
 		do
 			if not l_retried then
 				-- First create temporary directory if needed
@@ -374,7 +378,21 @@ feature {NONE} -- Implementation
 								l_cluster_properties := l_properties.clusters.get_cluster_properties ("root_cluster")
 								from
 									Resolver.generated_types.start
-									l_root_class := Resolver.generated_types.item_for_iteration.eiffel_name
+									l_type := Resolver.generated_types.item_for_iteration
+									l_root_class := l_type.eiffel_name
+									from
+										l_creation_routines := l_type.creation_routines
+										l_creation_routines.start
+									until
+										l_creation_routines.after or l_found
+									loop
+										l_arguments := l_creation_routines.item_for_iteration.arguments
+										l_found := l_arguments = Void or else l_arguments.is_empty 
+										if l_found then
+											l_properties.set_creation_routine (l_creation_routines.item_for_iteration.eiffel_name)
+										end
+										l_type.creation_routines.forth
+									end
 									Resolver.generated_types.forth
 								until
 									Resolver.generated_types.after
@@ -404,14 +422,14 @@ feature {NONE} -- Implementation
 					l_properties.set_target_clr_version (Clr_version)
 
 					l_assemblies := a_options.referenced_assemblies
-					if l_assemblies /= Void then
+					if l_assemblies /= Void and then l_assemblies.count > 0 then
 						from
 							l_count := l_assemblies.count
 						until
 							i = l_count
 						loop
 							l_assembly_file_name := l_assemblies.item (i)
-							if not has (l_assembly_file_name) then
+							if not has_file (l_assembly_file_name) then
 								if feature {SYSTEM_FILE}.exists (l_assembly_file_name) then
 									l_path := l_assembly_file_name
 								else
@@ -426,6 +444,8 @@ feature {NONE} -- Implementation
 							end
 							i := i + 1		
 						end
+					else
+						add_default_assemblies
 					end
 					complete
 					from
@@ -492,8 +512,8 @@ feature {NONE} -- Implementation
 			l_res: SYSTEM_OBJECT
 		do
 			if not l_retried then
-	--			compiler.add_output_error ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_ERROR_EVENT_HANDLER}.make (Current, $on_error)))
-	--			compiler.add_output_string ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_STRING_EVENT_HANDLER}.make (Current, $on_output)))
+			--	compiler.add_output_error ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_ERROR_EVENT_HANDLER}.make (Current, $on_error)))
+			--	compiler.add_output_string ((create {IEIFFEL_COMPILER_EVENTS_OUTPUT_STRING_EVENT_HANDLER}.make (Current, $on_output)))
 				compiler.compile (feature {EIF_COMPILATION_MODE}.eif_compilation_mode_finalize)
 				create last_compilation_results.make (temp_files)
 				(create {SECURITY_PERMISSION}.make_from_flag (feature {SECURITY_PERMISSION_FLAG}.Control_evidence)).assert

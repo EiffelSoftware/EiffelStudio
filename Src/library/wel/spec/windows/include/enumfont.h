@@ -36,15 +36,6 @@ extern "C" {
 #endif
 
 
-typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
-	(EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
-	 EIF_POINTER, /* ENUMLOGFONT * */
-	 EIF_POINTER, /* NEWTEXTMETRIC * */
-	 EIF_INTEGER, /* Font type */
-	 EIF_POINTER  /* user-data */
-	 );
-
-
 /* Eiffel routine signature for `converter' */
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);
 

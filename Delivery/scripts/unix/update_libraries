@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 remtrace Update the Eiffel libraries source
 if [ -e $EIFFEL_SRC ]; then

@@ -25,6 +25,12 @@ feature -- Status report
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_void
 		end
 		
+	tuple_code: INTEGER_8 is
+			-- Code for Void.
+		do
+			-- Nothing
+		end
+		
 feature
 
 	level: INTEGER is
@@ -39,21 +45,10 @@ feature
 			Result := Current
 		end
 
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			st.add_string ("VOID")
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("void")
-		end
-
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		once
-			Result := "void"
+			Result := name
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -77,15 +72,9 @@ feature
 			False
 		end
 
-	c_string: STRING is "void"
+	name, c_string: STRING is "void"
 			-- String generated for the type.
 			
-	c_string_id: INTEGER is
-			-- String ID generated for type.
-		once
-			Result := Names_heap.void_name_id
-		end
-
 	union_tag: STRING is "rarg"
 
 	hash_code: INTEGER is

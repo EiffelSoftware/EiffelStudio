@@ -12,7 +12,8 @@ inherit
 		undefine
 			text_length
 		redefine
-			interface
+			interface,
+			next_change_of_character
 		end
 
 	EV_TEXT_IMP
@@ -48,6 +49,60 @@ feature {NONE} -- Initialization
 			create Result
 		end
 
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a file access action sequence.
+		do
+			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
+		local
+			character_change: reference INTEGER
+			range_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+		do
+			character_change := 0
+			range_info := internal_character_format_range_information (current_pos, current_pos + a_text_length, True, character_change)
+			Result := character_change
+		end
+
+	initialize_for_saving is
+			-- Initialize `Current' for save operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		do
+			-- Do nothing
+		end
+		
+	complete_saving is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_saving'.
+		do
+			-- Do nothing
+		end
+
+	initialize_for_loading is
+			-- Initialize `Current' for load operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		do
+			-- Do nothing
+		end
+		
+	complete_loading is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_loading'.
+		do
+			-- Do nothing
+		end
+		
+	font_char_set (a_font: EV_FONT): INTEGER is
+			-- `Result' is char set of font `a_font'.
+		do
+			Result := 0
+		end	
+
 feature -- Status Report
 
 	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
@@ -66,29 +121,217 @@ feature -- Status Report
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		do
-			--create Result.make_with_values (family: BOOLEAN; weight: BOOLEAN; shape: BOOLEAN; height: BOOLEAN; a_color: BOOLEAN; a_background_color: BOOLEAN; striked_out: BOOLEAN; underlined: BOOLEAN; vertical_offset: BOOLEAN)
-			--create Result.make_with_values (True, True, True, True, True, True, True, True, True)
+			Result := internal_character_format_range_information (start_index, end_index, False, Void)
 		end
 
-	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
-			-- Formatting range information from lines `start_line' to `end_line'.
-			-- All attributes in `Result' are set to `True' if they remain consitent from `start_line' to
-			--`end_line' and `False' otherwise.
+	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: reference INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- All attributes in `Result' are set to `True' if they remain consistent from `start_index' to
+			--`end_index' and `False' otherwise.
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
+		local
+			a_character_index: INTEGER
+			a_text_iter: POINTER
+			a_text_attributes: POINTER
+			previous_text_attributes: POINTER
+			previous_font_family, font_family: STRING
+			non_contiguous_range_information: INTEGER
+			font_family_contiguous: BOOLEAN
+			a_change: BOOLEAN
+			exit_loop: BOOLEAN
 		do
+			from
+				font_family_contiguous := True
+				a_character_index := start_index + 1
+				a_text_iter := a_text_iter.memory_alloc (feature {EV_GTK_TEXT_ITER_STRUCT}.structure_size)
+				feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, start_index - 1)
+				previous_text_attributes := gtk_text_view_get_default_attributes (text_view)
+				a_change := gtk_text_iter_get_attributes (a_text_iter.item, previous_text_attributes)
+				a_text_attributes := gtk_text_view_get_default_attributes (text_view)
+				create previous_font_family.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
+			until
+				exit_loop or else a_character_index = end_index
+			loop
+				feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, a_character_index - 1)
+	
+				a_text_attributes := gtk_text_attributes_copy (previous_text_attributes)
+				a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
+				
+				if font_family_contiguous then
+					create font_family.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
+					
+					if not font_family.is_equal (previous_font_family) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
+						font_family_contiguous := False
+					end
+					previous_font_family := font_family	
+				end
+				
+				if feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
+				end
+
+				if feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
+				end
+
+				if feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
+				end
+
+				if feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.color)
+				end
+				
+				if feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
+				end
+
+				if gtk_text_appearance_struct_strikethrough (gtk_text_attributes_struct_text_appearance (a_text_attributes)) /=
+					gtk_text_appearance_struct_strikethrough (gtk_text_attributes_struct_text_appearance (previous_text_attributes)) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out)
+				end
+
+				if gtk_text_appearance_struct_underline (gtk_text_attributes_struct_text_appearance (a_text_attributes)) /=
+					gtk_text_appearance_struct_underline (gtk_text_attributes_struct_text_appearance (previous_text_attributes)) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined)
+				end
+
+				if gtk_text_appearance_struct_rise (gtk_text_attributes_struct_text_appearance (a_text_attributes)) /=
+					gtk_text_appearance_struct_rise (gtk_text_attributes_struct_text_appearance (a_text_attributes)) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
+				end
+				
+				gtk_text_attributes_free (previous_text_attributes)
+				previous_text_attributes := a_text_attributes
+				
+				a_character_index := a_character_index + 1
+				
+				if abort_on_change and then non_contiguous_range_information > 0 then
+					non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
+					exit_loop := True
+				end
+			end
+			
+			gtk_text_attributes_free (previous_text_attributes)
+			
+			a_text_iter.memory_free
+
+			create Result.make_with_flags ((1023).bit_xor (non_contiguous_range_information))
+				-- 1023 is the mask value for character format constants
+	
+			if change_index /= Void then
+				change_index.set_item (a_character_index - 1)
+					-- We take off one as the change occurs before `character_index' is incremented at end of loop
+			end
 		end
 
-	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
-			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+	paragraph_format_range_information (start_index, end_index: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
+			--`end_index' and `False' otherwise.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		local
+			a_character_index: INTEGER
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_text_attributes: POINTER
+			previous_text_attributes: POINTER
+			non_contiguous_range_information: INTEGER
+			font_family_contiguous: BOOLEAN
+			a_change: BOOLEAN
 		do
-			Result := False
+			from
+				font_family_contiguous := True
+				a_character_index := start_index + 1
+				create a_text_iter.make
+				feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, start_index - 1)
+				previous_text_attributes := gtk_text_view_get_default_attributes (text_view)
+				a_change := gtk_text_iter_get_attributes (a_text_iter.item, previous_text_attributes)
+			until
+				a_character_index > end_index
+			loop
+				create a_text_iter.make
+				feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, a_character_index - 2)
+				a_text_attributes := gtk_text_view_get_default_attributes (text_view)
+				a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
+
+				if gtk_text_attributes_struct_justification (a_text_attributes) /=
+					gtk_text_attributes_struct_justification (previous_text_attributes) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
+				end
+				
+				if gtk_text_attributes_struct_left_margin (a_text_attributes) /=
+					gtk_text_attributes_struct_left_margin (previous_text_attributes) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_PARAGRAPH_CONSTANTS}.left_margin)
+				end
+
+				if gtk_text_attributes_struct_right_margin (a_text_attributes) /=
+					gtk_text_attributes_struct_right_margin (previous_text_attributes) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_PARAGRAPH_CONSTANTS}.right_margin)
+				end
+
+				if gtk_text_attributes_struct_pixels_above_lines (a_text_attributes) /=
+					gtk_text_attributes_struct_pixels_above_lines (previous_text_attributes) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_PARAGRAPH_CONSTANTS}.top_spacing)
+				end
+
+				if gtk_text_attributes_struct_pixels_below_lines (a_text_attributes) /=
+					gtk_text_attributes_struct_pixels_below_lines (previous_text_attributes) then
+						non_contiguous_range_information := non_contiguous_range_information.bit_or (feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
+				end
+				
+				gtk_text_attributes_free (previous_text_attributes)
+				previous_text_attributes := a_text_attributes
+				
+				a_character_index := a_character_index + 1
+			end
+			
+			gtk_text_attributes_free (previous_text_attributes)
+
+			create Result.make_with_flags ((31).bit_xor (non_contiguous_range_information))
+				-- 31 is the mask value for paragraph format constants
+
+		end
+
+	paragraph_format_contiguous, internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from line `start_position' to `end_position' contiguous?
+		local
+			range_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+		do
+			range_info := paragraph_format_range_information (start_position, end_position)
+			Result := range_info.alignment and then range_info.left_margin and then range_info.right_margin and then range_info.top_spacing and then range_info.bottom_spacing
 		end
 
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+			-- Internal version which permits optimizations as caret position and selection
+			-- does not need to be restored.
 		do
-			Result := character_format (start_index).is_equal (character_format (end_index))
+			Result := internal_character_format_contiguous (start_index, end_index)
+		end
+
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		local
+			a_range_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+		do
+			a_range_info := internal_character_format_range_information (start_index, end_index, True, Void)
+			Result := a_range_info.font_family
 		end
 
 	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
@@ -96,7 +339,7 @@ feature -- Status Report
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
 		do
-			create Result
+			Result := paragraph_format (selection_start)
 		end
 
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
@@ -109,42 +352,29 @@ feature -- Status Report
 			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, applicable_attributes)
 		end
 
-	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
-			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from caret positions `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
 			format_imp: EV_PARAGRAPH_FORMAT_IMP
 		do
 			format_imp ?= format.implementation
-			modify_paragraph_internal (start_line, end_line, format_imp, applicable_attributes)
+			modify_paragraph_internal (start_position, end_position, format_imp, applicable_attributes)
 		end
 
-	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
-			-- Is formatting from caret position `start_index' to `end_index' contiguous?
-		do
-			Result := False
-		end
-		
-	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
-			-- Formatting range information from caret position `start_index' to `end_index'.
-			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
-			-- are subsequently changed.
-		do
-			--create Result
-		end
-
-	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	paragraph_format, internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		local
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes: POINTER
 			a_justification: INTEGER
+			a_change: BOOLEAN
 		do
 			create Result
 			create a_text_iter.make
 			feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, caret_index - 1)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
-			gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
+			a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
 			
 			Result.set_bottom_spacing (gtk_text_attributes_struct_pixels_below_lines (a_text_attributes))
 			Result.set_top_spacing (gtk_text_attributes_struct_pixels_above_lines (a_text_attributes))
@@ -165,7 +395,7 @@ feature -- Status Report
 		end
 
 	selected_character_format: EV_CHARACTER_FORMAT is
-			--
+			-- Format of the character which starts the selection
 		do
 			Result := character_format (selection_start)
 		end
@@ -224,68 +454,72 @@ feature -- Status Report
 	
 feature -- Status report
 
-	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
+	character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+			-- `Result' is character format at position `pos'. On some platforms
+			-- this may be optimized to take the selected character format and therefore
+			-- should only be used by `next_change_of_character'.
+		do
+			Result := internal_character_format (pos).interface
+		end
+
+	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP is
 			-- `Result' is character format of character `character_index'.
 		local
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes, a_text_appearance: POINTER
 			a_font_description: POINTER
 			a_color: POINTER
-			a_font: EV_FONT
-			a_font_imp: EV_FONT_IMP
 			font_size, font_weight, font_style: INTEGER
-			a_effects: EV_CHARACTER_FORMAT_EFFECTS
-			a_red, a_blue, a_green: INTEGER
-			a_family: EV_GTK_C_STRING
+			a_family: STRING--EV_GTK_C_STRING
+			a_change: BOOLEAN
 		do
-			create Result
+			Result ?= (create {EV_CHARACTER_FORMAT}).implementation
 			create a_text_iter.make
-			feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 2)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
-			gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
+			a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
 			
 			a_text_appearance := gtk_text_attributes_struct_text_appearance (a_text_attributes)
-			
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
-			create a_family.make_from_pointer (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
+			create a_family.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
 			font_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description)
 			font_weight := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (a_font_description)
-			font_size := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (a_font_description) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
-			create a_font
 			
-			a_font.set_height (font_size)
-			if font_style > 0 then
-				a_font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+			if font_weight <= feature {EV_FONT_IMP}.pango_weight_ultra_light then
+				font_weight := feature {EV_FONT_CONSTANTS}.weight_thin
+			elseif font_weight <= feature {EV_FONT_IMP}.pango_weight_normal then
+				font_weight := feature {EV_FONT_CONSTANTS}.weight_regular
+			elseif font_weight <= feature {EV_FONT_IMP}.pango_weight_bold then
+				font_weight := feature {EV_FONT_CONSTANTS}.weight_bold
+			else
+				font_weight := feature {EV_FONT_CONSTANTS}.weight_black
 			end
-			a_font_imp ?= a_font.implementation
-			a_font_imp.set_weight_from_pango_weight (font_weight)
-	
-			a_font.preferred_families.extend (a_family.string)
-			
-			Result.set_font (a_font)
+			font_size := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (a_font_description) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+
+			if feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description) > 0 then
+				font_style := feature {EV_FONT_CONSTANTS}.shape_italic
+			else
+				font_style := feature {EV_FONT_CONSTANTS}.shape_regular
+			end
+
+			Result.set_font_attributes (a_family, feature {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 			
 			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
-			a_red := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256
-			a_blue := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
-			a_green := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256
-			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (a_red, a_green, a_blue))
+			Result.set_fcolor (
+				feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256,
+				feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256,
+				feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256			
+			)
 			
 			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
-			a_red := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256
-			a_blue := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
-			a_green := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256
-			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (a_red, a_green, a_blue))
+			Result.set_bcolor (
+				feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256,
+				feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256,
+				feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256			
+			)
 			
-			create a_effects
-			if gtk_text_appearance_struct_strikethrough (a_text_appearance) > 0 then
-				a_effects.enable_striked_out
-			end
-			if gtk_text_appearance_struct_underline (a_text_appearance) > 0 then
-				a_effects.enable_underlined
-			end
-			a_effects.set_vertical_offset (gtk_text_appearance_struct_rise (a_text_appearance))
-			Result.set_effects (a_effects)
+			Result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
 	
 			gtk_text_attributes_free (a_text_attributes)
 		end
@@ -352,6 +586,7 @@ feature -- Status setting
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, text_buffer)
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
+				set_text ("")
 				create text_buffer_iter.make
 				create append_buffer_start_iter.make
 				create append_buffer_end_iter.make
@@ -504,7 +739,7 @@ feature {NONE} -- Implementation
 				"C struct GtkTextAppearance access &fg_color use <gtk/gtk.h>"
 			end
 
-	gtk_text_iter_get_attributes (a_text_iter: POINTER; a_text_values: POINTER) is
+	gtk_text_iter_get_attributes (a_text_iter: POINTER; a_text_values: POINTER): BOOLEAN is
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
@@ -523,6 +758,20 @@ feature {NONE} -- Implementation
 				"C inline use <gtk/gtk.h>"
 			alias
 				"free ((GtkTextAttributes*) $a_text_attributes)"
+			end
+
+	gtk_text_attributes_copy_values (a_text_attributes_src, a_text_attributes_dest: POINTER) is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_attributes_copy_values ((GtkTextAttributes*) $a_text_attributes_src, (GtkTextAttributes*) $a_text_attributes_dest)"
+			end
+	
+	gtk_text_attributes_copy (a_text_attributes_src: POINTER): POINTER is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_attributes_copy ((GtkTextAttributes*) $a_text_attributes_src)"
 			end
 
 	gtk_text_view_get_iter_at_location (a_text_view,  a_text_iter: POINTER; buffer_x, buffer_y: INTEGER) is
@@ -564,16 +813,16 @@ feature {NONE} -- Implementation
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, text_tag, a_start_iter.item, a_end_iter.item)
 		end
 
-	modify_paragraph_internal (start_line, end_line: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
-			-- Apply paragraph formatting `format' to lines `start_line', `end_line' based on `applicable_attributes'
+	modify_paragraph_internal (start_position, end_position: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Apply paragraph formatting `format' from position `start_position' to `end_position' based on `applicable_attributes'
 		local
 			a_start_position, a_end_position: INTEGER
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_tag_table, text_tag: POINTER
 			a_start_line: INTEGER
 		do
-			a_start_position := first_position_from_line_number (start_line)
-			a_end_position := last_position_from_line_number (end_line)
+			a_start_position := start_position
+			a_end_position := end_position
 			
 			create a_start_iter.make
 			create a_end_iter.make
@@ -593,7 +842,6 @@ feature {NONE} -- Implementation
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (text_buffer, text_tag, a_start_iter.item, a_end_iter.item)
 
 		end
-
 
 	update_tab_positions (value: INTEGER) is
 			-- Update tab widths based on contents of `tab_positions'.

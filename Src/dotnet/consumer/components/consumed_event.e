@@ -13,7 +13,8 @@ inherit
 		redefine
 			eiffelized_consumed_entities,
 			dotnet_name,
-			is_event
+			is_event,
+			is_public
 		end
 
 create
@@ -34,6 +35,7 @@ feature {NONE} -- Initialization
 			args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			dotnet_name := dn
+			is_public := pub
 			create args.make (1, 1)
 			args.put (create {CONSUMED_ARGUMENT}.make ("Value", "value", handler_type, False), 1)
 			entity_make (en, pub, decl_type)
@@ -71,6 +73,9 @@ feature -- ConsumerWrapper functions
 		do
 			Result := True
 		end
+		
+	is_public: BOOLEAN
+			-- Is `Current' public.
 
 feature -- Access
 

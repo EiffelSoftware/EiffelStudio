@@ -54,6 +54,10 @@ feature {NONE} -- GTK C functions for widgets
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_widget_unparent (w: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_widget_destroyed (widget: POINTER): BOOLEAN is

@@ -61,6 +61,10 @@ feature {NONE} -- GTK C functions for radio buttons
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_radio_button_set_group (but, gp: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_toggle_button_active (button: POINTER): BOOLEAN is

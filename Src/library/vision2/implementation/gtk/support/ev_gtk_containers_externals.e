@@ -14,11 +14,27 @@ feature {NONE} -- GTK C functions for general containers
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_container_remove (container, widget: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	gtk_container_set_border_width (container: POINTER; border_width: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
 	c_gtk_container_border_width (container: POINTER): INTEGER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	c_gtk_container_nb_children (container: POINTER): INTEGER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	c_gtk_container_ith_child (container: POINTER; i: INTEGER): POINTER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	c_gtk_container_has_child (container, child: POINTER): BOOLEAN is
 		external "C [macro <gtk_eiffel.h>]"
 		end
 
@@ -148,7 +164,7 @@ feature {NONE} -- GTK C functions for notebooks
 		end
 
 	c_gtk_notebook_count (notebook: POINTER): INTEGER is
-		external "C | <gtk/gtk.h>"
+		external "C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for split area
@@ -167,6 +183,14 @@ feature {NONE} -- GTK C functions for split area
 	
 	gtk_paned_add2 (paned: POINTER; child: POINTER) is
 		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_paned_child1 (paned: POINTER): POINTER is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
+	c_gtk_paned_child2 (paned: POINTER): POINTER is
+		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
 feature {NONE} -- GTK C functions for scrollable area

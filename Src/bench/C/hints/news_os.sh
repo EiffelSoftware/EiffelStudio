@@ -10,8 +10,8 @@
 # $Id$
 #
 # $Log$
-# Revision 1.1  1993/03/12 13:09:00  grator
-# Initial revision
+# Revision 1.2  1997/10/04 05:36:57  grator
+# *** empty log message ***
 #
 
 # _setjmp and _longjmp do not work properly!!

@@ -7,8 +7,8 @@
 ?RCS: as explained in the README file which comes with dist.
 ?RCS:
 ?RCS: $Log$
-?RCS: Revision 1.1  1993/03/12 13:08:58  grator
-?RCS: Initial revision
+?RCS: Revision 1.2  1997/10/04 05:36:45  grator
+?RCS: *** empty log message ***
 ?RCS:
 ?X: 
 ?X: This unit serves as the goal which forces make to choose all the units that

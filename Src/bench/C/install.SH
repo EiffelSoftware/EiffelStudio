@@ -25,8 +25,8 @@ $startsh
 #  Licence as specified in the README file that comes with dist.
 #
 # $Log$
-# Revision 1.1  1993/03/12 16:20:17  grator
-# Initial revision
+# Revision 1.2  1997/10/04 05:31:58  grator
+# *** empty log message ***
 #
 # Revision 2.8  91/07/08  13:27:17  ram
 # 3.0 alpha baseline.

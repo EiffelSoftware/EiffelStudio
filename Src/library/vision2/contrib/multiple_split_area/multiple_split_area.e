@@ -661,8 +661,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				counter > count
 			loop
 				holder := holder_of_widget (linear_representation.i_th (counter))
-				if counter < index_of_tool or
-					counter > index_of_tool + 1 then
+				if linear_representation.has (a_holder.tool) and (counter < index_of_tool or
+					counter > index_of_tool + 1) or not linear_representation.has (a_holder.tool) then
 					vertical_box := holder.upper_box
 					create cell
 					cell.set_data (counter)
@@ -698,6 +698,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		local
 			cell: EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			box: EV_BOX
 		do
 			from
 				all_holders.start
@@ -708,25 +709,36 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				holder.remove_real_target
 				holder.tool.remove_real_target
 				holder.label_box.remove_real_target
-				if not holder.upper_box.is_empty then
-					
-					-- We do not wish to remove any minimized items contained in `upper_box',
-					-- only the cells added during call to `initialize_docking_areas'.
-					-- Therefore, we check that they are cells with data to qualify this.
-					cell ?= holder.upper_box.first
+				box := holder.upper_box
+				from
+					box.start
+				until
+					box.off						
+				loop
+						-- We do not wish to remove any minimized items contained in `upper_box',
+						-- only the cells added during call to `initialize_docking_areas'.
+						-- Therefore, we check that they are cells with data to qualify this.
+					cell ?= box.item
 					if cell /= Void and then cell.data /= Void then
-						holder.upper_box.start
-						holder.upper_box.remove
-					end
+						box.remove
+					else
+						box.forth
+					end					
 				end
-				if not holder.lower_box.is_empty then
-					-- We do not wish to remove any minimized items contained in `lower_box',
-					-- only the cells added during call to `initialize_docking_areas'.
-					-- Therefore, we check that they are cells with data to qualify this.
-					cell ?= holder.lower_box.first
+				box := holder.lower_box
+				from
+					box.start
+				until
+					box.off						
+				loop
+						-- We do not wish to remove any minimized items contained in `upper_box',
+						-- only the cells added during call to `initialize_docking_areas'.
+						-- Therefore, we check that they are cells with data to qualify this.
+					cell ?= box.item
 					if cell /= Void and then cell.data /= Void then
-						holder.lower_box.start
-						holder.lower_box.remove
+						box.remove
+					else
+						box.forth
 					end
 				end
 				all_holders.forth
@@ -1355,31 +1367,39 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			Result_not_void: Result /= Void
 		end
 		
-	update_for_holder_position_change (original_position, new_position: INTEGER) is
+	update_for_holder_position_change (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; new_position: INTEGER) is
 			-- Update `linear_representation' and `all_holders' to reflect a change of
 			-- position from `original_position' to `new_position'.
+			-- Passing 0 as `original_position' means the holder was not contained in `Current',
+			-- Hence in this case, no pruning is performed.
 		require
-			positions_different: original_position /= new_position
+			a_holder_not_void: a_holder /= Void
+			new_position_positive: new_position >= 1 and new_position <= count + 1
 		local
 			real_new_position: INTEGER
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			widget: EV_WIDGET
+			original_position: INTEGER
 		do
-			if original_position < new_position then
+			original_position := linear_representation.index_of (a_holder.tool, 1)
+			if original_position < new_position and original_position /= 0 then
 				real_new_position := new_position - 1
 			else
 				real_new_position := new_position
 			end
-			linear_representation.go_i_th (original_position)
-			widget := linear_representation.item
-			linear_representation.remove
+			widget := a_holder.tool
+			if original_position /= 0 then
+				linear_representation.go_i_th (original_position)
+				linear_representation.remove
+			end
 			linear_representation.go_i_th (real_new_position)
 			linear_representation.put_left (widget)
-			all_holders.go_i_th (original_position)
-			holder := all_holders.item
-			all_holders.remove
+			if original_position /= 0 then
+				all_holders.go_i_th (original_position)
+				all_holders.remove
+			end
 			all_holders.go_i_th (real_new_position)
-			all_holders.put_left (holder)
+			all_holders.put_left (a_holder)
 		end
 		
 	parent_window (widget: EV_WIDGET): EV_WINDOW is

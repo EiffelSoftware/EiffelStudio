@@ -43,6 +43,18 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Status setting
+
+	set_maximum_text_length (value: INTEGER) is
+			-- Make `value' the new maximal lenght of the text
+			-- in character number.
+		require
+			exist: not destroyed
+			valid_length: value >= 0
+		do
+			implementation.set_maximum_text_length (value)
+		end
+
 feature -- Event - command association
 	
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

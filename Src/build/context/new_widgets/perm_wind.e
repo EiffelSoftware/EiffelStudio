@@ -36,7 +36,7 @@ feature {NONE}
 
 	make (a_name: STRING; a_screen: SCREEN) is
 		do
-			!!top_shell.make (a_name, a_screen);
+			!! top_shell.make ("2", a_screen);
 			eb_bulletin_create (a_name, top_shell);
 		end;
 

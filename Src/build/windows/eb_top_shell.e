@@ -39,7 +39,7 @@ feature -- Initialization
             -- `set_default'. 
 			-- Calls top_shell_make and tooltip_initialize 
 		do
-			top_shell_make (a_name, a_screen)
+			top_shell_make ("2", a_screen)
 			tooltip_initialize (Current)
 			set_default_color
 			add_undo_redo_accelerator (Current)

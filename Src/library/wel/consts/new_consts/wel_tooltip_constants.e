@@ -101,6 +101,20 @@ feature -- Tooltip message constants
 		alias
 			"TTM_GETTIPTEXTCOLOR"
 		end
+		
+	Ttm_setmaxtipwidth: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_SETMAXTIPWIDTH"
+		end
+		
+	Ttm_getmaxtipwidth: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TTM_GETMAXTIPWIDTH"
+		end
 
 	Ttm_gettoolcount: INTEGER is
 		external

@@ -9,13 +9,14 @@ class PROJECT_W
 
 inherit
 
+	TOOLTIP_INITIALIZER;
 	TOOL_W
 		redefine
 			tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,
 			process_classi, compatible, process_feature,
 			process_class_syntax, process_ace_syntax, display,
-			process_call_stack
+			process_call_stack, force_raise, resources
 		end;
 	COMMAND;
 	BASE
@@ -26,13 +27,15 @@ inherit
 		end;
 	WINDOW_ATTRIBUTES;
 	SYSTEM_CONSTANTS;
-	INTERFACE_W;
 	EB_CONSTANTS;
 	SHARED_APPLICATION_EXECUTION;
+	SHARED_EIFFEL_PROJECT;
 	RESOURCE_USER
 		redefine
-			update_integer_resource, update_boolean_resource
+			update_integer_resource, update_boolean_resource,
+			update_string_resource
 		end;
+	WIDGET_ROUTINES
 
 feature -- Initialization
 
@@ -41,7 +44,8 @@ feature -- Initialization
 		local
 			app_stopped_cmd: APPLICATION_STOPPED_CMD
 		do
-			Project_tool_resources.add_user (Current);
+			General_resources.add_user (Current);
+			Project_resources.add_user (Current);
 			base_make (tool_name, a_screen);
 			!! history.make;
 			register;
@@ -56,16 +60,15 @@ feature -- Initialization
 			set_action ("<Configure>", Current, remapped);
 			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit_cmd_holder.associated_command);
-			set_composite_attributes (Current);
 			set_font_to_default;
 			!! app_stopped_cmd;
 			Application.set_before_stopped_command (app_stopped_cmd);
 			Application.set_after_stopped_command (app_stopped_cmd);
 			set_default_position;
+			set_composite_attributes (Current);
 			realize;
 			focus_label.initialize_focusables (Current);
 			init_text_window;
-			set_composite_attributes (Current);
 		end;
 
 feature -- Resource Update
@@ -74,15 +77,23 @@ feature -- Resource Update
 		local
 			rout_cli_cmd: SHOW_ROUTCLIENTS;
 			stop_cmd: SHOW_BREAKPOINTS;
-			pr: like Project_tool_resources
+			pr: like Project_resources;
+			d_output: DEGREE_OUTPUT
 		do
-			pr := Project_tool_resources
+			pr := Project_resources
 			if old_res = pr.command_bar then
 				if new_res.actual_value then
 					classic_bar.add
 				else
 					classic_bar.remove
 				end
+			elseif old_res = pr.graphical_output_disabled then
+				if new_res.actual_value then	
+					!! d_output;
+				else
+					!GRAPHICAL_DEGREE_OUTPUT! d_output;
+				end;
+				Eiffel_project.set_degree_output (d_output)
 			elseif old_res = pr.format_bar then
 				if new_res.actual_value then
 					format_bar.add
@@ -101,24 +112,84 @@ feature -- Resource Update
 			old_res.update_with (new_res)
 		end;
 
+	update_string_resource (old_res, new_res: STRING_RESOURCE) is
+		local
+			gr: like General_resources
+		do
+			gr := General_resources
+			if old_res = gr.filter_path then
+				Eiffel_project.set_filter_path (new_res.value);
+			elseif old_res = gr.profile_path then
+				Eiffel_project.set_profile_path (new_res.value);
+			elseif old_res = gr.tmp_path then
+				Eiffel_project.set_tmp_directory (new_res.value);
+			end;
+			old_res.update_with (new_res)
+		end;
+
 	update_integer_resource (old_res, new: INTEGER_RESOURCE) is
 		local
-			pr: like Project_tool_resources
+			pr: like Project_resources
 		do
-			pr := Project_tool_resources
+			pr := Project_resources
 			if new.actual_value >= 0 then
-				if old_res = pr.tool_width then
+				if old_res = pr.tool_x then
+					set_x (new.actual_value)
+				elseif old_res = pr.tool_y then
+					set_y (new.actual_value)
+				elseif old_res = pr.tool_width then
 					set_width (new.actual_value)
 				elseif old_res = pr.tool_height then
 					if shown_portions = 1 then
 						set_height (new.actual_value)
+						if not toolkit_is_motif then
+							split_window.set_height (real_project_height (implementation));
+						end
 					end
+				elseif old_res = General_resources.tab_step then
+					set_default_tab_length (new.actual_value);
+					Window_manager.routine_win_mgr.set_tab_length_to_default;
+					Window_manager.class_win_mgr.set_tab_length_to_default;
+					Window_manager.object_win_mgr.set_tab_length_to_default;
+					Window_manager.explain_win_mgr.set_tab_length_to_default;
+					System_tool.set_tab_length_to_default;
+					System_tool.update_save_symbol
+					if System_tool.text_window.is_graphical then	
+						System_tool.synchronize
+					end;
+					if feature_part /= Void and then feature_form.managed then
+						feature_part.set_tab_length_to_default 
+						if  feature_part.text_window.is_graphical then
+							feature_part.synchronize
+						end
+					end;
+					if object_part /= Void and then object_form.managed then 
+						object_part.set_tab_length_to_default 
+						if object_part.text_window.is_graphical then
+							object_part.synchronize
+						end
+					end;
+					Project_tool.set_tab_length_to_default;
+					if Project_tool.text_window.is_graphical then	
+						Project_tool.synchronize
+					end;
 				end;
 				old_res.update_with (new)
 			end
 		end
+	
+feature -- Access
 
-feature -- Properties
+	resources: like Project_resources is
+		do
+			Result := Project_resources
+		end;
+
+	tooltip_parent: COMPOSITE is
+			-- Tooltip parent is the project tool
+		do
+			Result := Current
+		end;
 
 	split_window: SPLIT_WINDOW;
 
@@ -152,6 +223,12 @@ feature -- Access
 
 feature -- Window Settings
 
+	force_raise is
+			-- Raise the project tool.
+		do
+			raise
+		end;
+
 	set_default_size is
 		do
 		end;
@@ -162,8 +239,8 @@ feature -- Window Settings
 		local
 			default_x, default_y: INTEGER
 		do
-			default_x := Project_tool_resources.tool_x.actual_value;
-			default_y := Project_tool_resources.tool_y.actual_value;
+			default_x := Project_resources.tool_x.actual_value;
+			default_y := Project_resources.tool_y.actual_value;
 			set_x_y (default_x, default_y)
 		end;
  
@@ -365,6 +442,15 @@ feature -- Execution Implementation
 
 feature -- Update
 
+	synchronize_routine_tool_to_default is
+			-- Synchronize the routine tool to the default format.
+		do
+			if feature_part /= Void and then feature_form.managed then	
+				feature_part.set_default_format;
+				feature_part.synchronize
+			end;
+		end
+
 	close_windows is
 			-- Close associated windows.
 		do
@@ -565,8 +651,8 @@ feature -- Graphical Interface
 		do
 			shown_portions := 1;
 
-			default_width := Project_tool_resources.tool_width.actual_value;
-			default_height := Project_tool_resources.tool_height.actual_value;
+			default_width := Project_resources.tool_width.actual_value;
+			default_height := Project_resources.tool_height.actual_value;
 			set_size (default_width, default_height);
 
 			!! split_window.make (new_name, Current);
@@ -585,10 +671,10 @@ feature -- Graphical Interface
 			build_toolbar_menu;
 			exec_stop_frmt_holder.execute (Void);
 
-			if Project_tool_resources.command_bar.actual_value = False then
+			if Project_resources.command_bar.actual_value = False then
 				classic_bar.remove
 			end;
-			if Project_tool_resources.format_bar.actual_value = False then
+			if Project_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 
@@ -601,6 +687,10 @@ feature -- Graphical Interface
 			sep: SEPARATOR;
 			case_storage_cmd: CASE_STORAGE;
 			case_storage_menu_entry: EB_MENU_ENTRY;
+			document_submenu: MENU_PULL;
+			generate_doc_cmd: DOCUMENT_GENERATION;
+			generate_menu_entry: EB_MENU_ENTRY;
+			generate_submenu: MENU_PULL
 		do
 			!! menu_bar.make (new_name, std_form);
 			!! file_menu.make (Interface_names.m_File, menu_bar);
@@ -633,10 +723,17 @@ feature -- Graphical Interface
 			special_object_menu.button.set_insensitive;
 
 			!! sep.make (Interface_names.t_Empty, special_menu);
-			!! case_storage_cmd.make (Current);
-			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
-			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
-			case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
+			!! case_storage_cmd;
+			!! case_storage_menu_entry.make_default (case_storage_cmd, special_menu);
+			!! generate_submenu.make (Interface_names.m_Document, special_menu);
+			!! generate_doc_cmd.make_flat;
+			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu);
+			!! generate_doc_cmd.make_flat_short;
+			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu);
+			!! generate_doc_cmd.make_short;
+			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu);
+			!! generate_doc_cmd.make_text;
+			!! generate_menu_entry.make (generate_doc_cmd, generate_submenu)
 		end;
 
 	build_toolbar_menu is
@@ -697,10 +794,13 @@ feature -- Graphical Interface
 			update_cmd: UPDATE_PROJECT;
 			update_button: EB_BUTTON;
 			update_menu_entry: EB_MENU_ENTRY;
+			quick_update_cmd: UPDATE_PROJECT;
+			quick_update_button: EB_BUTTON;
+			quick_update_menu_entry: EB_MENU_ENTRY;
 			version_button: PUSH_B;
 		do
 			!! open_command;
-			!! classic_bar.make (l_Command_bar_name, toolbar_parent);
+			!! classic_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			!! quit_cmd.make (Current);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit_cmd_holder.make_plain (quit_cmd);
@@ -718,6 +818,7 @@ feature -- Graphical Interface
 			!! open_classes_menu.make (Interface_names.m_Class_tools, window_menu);
 			!! open_routines_menu.make (Interface_names.m_Feature_tools, window_menu);
 			!! open_objects_menu.make (Interface_names.m_Object_tools, window_menu);
+			!! sep.make (Interface_names.t_Empty, window_menu);
 
 				-- Regular menu entries.
 			!! explain_cmd.make (Current);
@@ -738,6 +839,7 @@ feature -- Graphical Interface
 			!! routine_hole_holder.make (routine_cmd, routine_button, routine_menu_entry);
 			!! shell_cmd.make (Current);
 			!! shell_button.make (shell_cmd, classic_bar);
+			shell_button.add_third_button_action;
 			!! object_cmd.make (Current);
 			!! object_button.make (object_cmd, classic_bar);
 			!! object_menu_entry.make (object_cmd, open_objects_menu);
@@ -753,24 +855,24 @@ feature -- Graphical Interface
 			!! clear_bp_menu_entry.make (clear_bp_cmd, debug_menu);
 			!! clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry);
 
-			!! show_prof_cmd.make (Current);
-			!! show_prof_menu_entry.make (show_prof_cmd, window_menu);
-			!! show_profile_cmd_holder.make_plain (show_prof_cmd);
-			show_profile_cmd_holder.set_menu_entry (show_prof_menu_entry);
+			!! show_prof_cmd;
+			!! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
 
 			!! sep.make (Interface_names.t_Empty, window_menu);
-			!! show_pref_cmd.make (Current);
-			!! show_pref_menu_entry.make (show_pref_cmd, window_menu);
+			!! show_pref_cmd.make (Project_resources);
+			!! show_pref_menu_entry.make_default (show_pref_cmd, window_menu);
 
 			!! display_feature_cmd.make (Current);
 			!! display_feature_button.make (display_feature_cmd, classic_bar);
 			!! display_feature_menu_entry.make (display_feature_cmd, format_menu);
 			!! display_feature_cmd_holder.make (display_feature_cmd, display_feature_button, display_feature_menu_entry);
+			display_feature_cmd.set_holder (display_feature_cmd_holder);
 
 			!! display_object_cmd.make (Current);
 			!! display_object_button.make (display_object_cmd, classic_bar);
 			!! display_object_menu_entry.make (display_object_cmd, format_menu);
 			!! display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry);
+			display_object_cmd.set_holder (display_object_cmd_holder);
 
 			!! update_cmd.make (Current);
 			!! update_button.make (update_cmd, classic_bar);
@@ -778,44 +880,41 @@ feature -- Graphical Interface
 			!! update_menu_entry.make (update_cmd, compile_menu);
 			!! update_cmd_holder.make (update_cmd, update_button, update_menu_entry);
 
+			!! quick_update_cmd.make (Current);
+			quick_update_cmd.set_quick_melt;
+			!! quick_update_button.make (quick_update_cmd, classic_bar);
+			quick_update_button.set_action ("!c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only);
+			!! quick_update_menu_entry.make (quick_update_cmd, compile_menu);
+			!! quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_update_menu_entry);
+
 			classic_bar.attach_left (explain_button, 0);
 			classic_bar.attach_top (explain_button, 0);
-			classic_bar.attach_bottom (explain_button, 0);
 			classic_bar.attach_left_widget (explain_button, system_button,0);
 			classic_bar.attach_top (system_button, 0);
-			classic_bar.attach_bottom (system_button, 0);
 			classic_bar.attach_left_widget (system_button, class_button,0);
 			classic_bar.attach_top (class_button, 0);
-			classic_bar.attach_bottom (class_button, 0);
 			classic_bar.attach_left_widget (class_button, routine_button, 0);
 			classic_bar.attach_left_widget (routine_button, shell_button, 0);
 			classic_bar.attach_top (routine_button, 0);
-			classic_bar.attach_bottom (routine_button, 0);
 			classic_bar.attach_top (shell_button, 0);
-			classic_bar.attach_bottom (shell_button, 0);
 			classic_bar.attach_left_widget (shell_button, object_button, 0);
 			classic_bar.attach_top (object_button, 0);
-			classic_bar.attach_bottom (object_button, 0);
 			classic_bar.attach_left_widget (object_button, clear_bp_button, 0);
 			classic_bar.attach_left_widget (clear_bp_button, stop_points_button, 0);
 			classic_bar.attach_top (stop_points_button, 0);
-			classic_bar.attach_bottom (stop_points_button, 0);
 			classic_bar.attach_top (clear_bp_button, 0);
-			classic_bar.attach_bottom (clear_bp_button, 0);
 
-			classic_bar.attach_right (update_button, 0);
+			classic_bar.attach_right (quick_update_button, 20);
+			classic_bar.attach_top (quick_update_button, 0);
 			classic_bar.attach_top (update_button, 0);
-			classic_bar.attach_bottom (update_button, 0);
 			classic_bar.attach_top (search_cmd_holder.associated_button, 0);
-			classic_bar.attach_bottom (search_cmd_holder.associated_button, 0);
+			classic_bar.attach_right_widget (quick_update_button, update_button, 0);
 			classic_bar.attach_right_widget (update_button, search_cmd_holder.associated_button, 3);
 
 			classic_bar.attach_left_widget (stop_points_button, display_feature_button, 60);
 			classic_bar.attach_top (display_feature_button, 0);
-			classic_bar.attach_bottom (display_feature_button, 0);
 			classic_bar.attach_right_widget (display_feature_button, display_object_button, 0);
 			classic_bar.attach_top (display_object_button, 0);
-			classic_bar.attach_bottom (display_object_button, 0)
 		end;
 
 	build_format_bar is
@@ -850,7 +949,7 @@ feature -- Graphical Interface
 			down_exception_stack_button: EB_BUTTON;
 			display_exception_menu_entry: EB_MENU_ENTRY;
 		do
-			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 
 			!! debug_run_cmd.make (Current);
 			!! debug_run_button.make (debug_run_cmd, format_bar);
@@ -906,43 +1005,32 @@ feature -- Graphical Interface
 
 			!! sep.make (new_name, debug_menu)
 
-			!! run_final_cmd.make (Current);
+			!! run_final_cmd;
 			!! run_final_menu_entry.make (run_final_cmd, debug_menu);
-			!! run_final_cmd_holder.make_plain (run_final_cmd);
-			run_final_cmd_holder.set_menu_entry (run_final_menu_entry);
 
 			format_bar.attach_left (stop_button, 0);
 			format_bar.attach_top (stop_button, 0);
-			format_bar.attach_bottom (stop_button, 0);
 			format_bar.attach_top (step_button, 0);
-			format_bar.attach_bottom (step_button, 0);
 			format_bar.attach_left_widget (stop_button, step_button, 0);
 			format_bar.attach_top (last_button, 0);
-			format_bar.attach_bottom (last_button, 0);
 			format_bar.attach_left_widget (step_button, last_button, 0);
 			format_bar.attach_top (nostop_button, 0);
-			format_bar.attach_bottom (nostop_button, 0);
 			format_bar.attach_left_widget (last_button, nostop_button, 0);
 
 			format_bar.attach_right (debug_run_button, 0);
 			format_bar.attach_top (debug_run_button, 0);
-			format_bar.attach_bottom (debug_run_button, 0);
 			format_bar.attach_right_widget (debug_run_button, 
 					debug_status_button, 0);
 			format_bar.attach_top (debug_status_button, 0);
-			format_bar.attach_bottom (debug_status_button, 0);
 			format_bar.attach_top (down_exception_stack_button, 0);
 			format_bar.attach_right_widget (debug_status_button, 
 					down_exception_stack_button, 0);
-			format_bar.attach_bottom (down_exception_stack_button, 0);
 			format_bar.attach_top (up_exception_stack_button, 0);
 			format_bar.attach_right_widget (down_exception_stack_button, 
 					up_exception_stack_button, 0);
-			format_bar.attach_bottom (up_exception_stack_button, 0);
 			format_bar.attach_right_widget (up_exception_stack_button, 
 					debug_quit_button, 0);
 			format_bar.attach_top (debug_quit_button, 0);
-			format_bar.attach_bottom (debug_quit_button, 0);
 		end;
 
 	build_compile_menu is
@@ -1038,6 +1126,8 @@ feature -- Commands
 
 	update_cmd_holder: COMMAND_HOLDER;
 
+	quick_update_cmd_holder: COMMAND_HOLDER;
+
 	debug_run_cmd_holder: COMMAND_HOLDER;
 
 	debug_status_cmd_holder: COMMAND_HOLDER;
@@ -1054,19 +1144,13 @@ feature -- Commands
 
 	precompile_cmd_holder: COMMAND_HOLDER;
 
-	run_final_cmd_holder: COMMAND_HOLDER;
- 
 	display_feature_cmd_holder: COMMAND_HOLDER;
 
 	display_object_cmd_holder: COMMAND_HOLDER;
 
-	show_profile_cmd_holder: COMMAND_HOLDER;
-
 	up_exception_stack_holder: COMMAND_HOLDER;
 
 	down_exception_stack_holder: COMMAND_HOLDER;
-
-	case_storage_cmd_holder: COMMAND_HOLDER;
 
 feature -- Hole access
  
@@ -1194,7 +1278,7 @@ feature {NONE} -- Implementation
 			-- Add a menu entry reflecting `a_tool' to `a_menu'.
 		local
 			sep: SEPARATOR;
-			entry: EB_MENU_ENTRY;
+			entry: TOOL_MENU_ENTRY;
 			cmd: RAISE_TOOL_CMD;
 			a_font: FONT;
 			a_color: COLOR
@@ -1203,7 +1287,7 @@ feature {NONE} -- Implementation
 				!! sep.make (Interface_names.t_Empty, a_menu);
 			end
 			!! cmd.make (a_tool)
-			!! entry.make_tools_menu (cmd, a_menu)
+			!! entry.make (cmd, a_menu, a_tool)
 			a_font := Graphical_resources.font.actual_value;
 			if a_font /= Void then
 				entry.set_font (a_font)
@@ -1224,7 +1308,7 @@ feature {NONE} -- Implementation
 		local
 			done: BOOLEAN;
 			list: ARRAYED_LIST [WIDGET];
-			menu_entry: EB_MENU_ENTRY;
+			menu_entry: TOOL_MENU_ENTRY;
 			raise_cmd: RAISE_TOOL_CMD
 		do
 			from
@@ -1235,17 +1319,9 @@ feature {NONE} -- Implementation
 			loop
 					-- Get rid of the separators.
 				menu_entry ?= list.item;
-				if menu_entry /= Void then
-					raise_cmd ?= menu_entry.associated_command;
-					if
-						raise_cmd /= Void and then
-						raise_cmd.tool = a_tool
-					then
-						menu_entry.set_text (a_tool.title);
-						done := True
-					else
-						list.forth
-					end
+				if menu_entry /= Void and then menu_entry.tool = a_tool then
+					menu_entry.set_text (a_tool.title);
+					done := True
 				else
 					list.forth
 				end
@@ -1258,7 +1334,7 @@ feature {NONE} -- Implementation
 		local
 			done: BOOLEAN;
 			list: ARRAYED_LIST [WIDGET];
-			menu_entry: EB_MENU_ENTRY;
+			menu_entry: TOOL_MENU_ENTRY;
 			raise_cmd: RAISE_TOOL_CMD
 		do
 			from
@@ -1269,17 +1345,9 @@ feature {NONE} -- Implementation
 			loop
 					-- Get rid of the separators.
 				menu_entry ?= list.item;
-				if menu_entry /= Void then
-					raise_cmd ?= menu_entry.associated_command;
-					if
-						raise_cmd /= Void and then
-						raise_cmd.tool = a_tool
-					then
-						menu_entry.destroy;
-						done := True
-					else
-						list.forth
-					end
+				if menu_entry /= Void and then menu_entry.tool = a_tool then
+					menu_entry.destroy;
+					done := True
 				else
 					list.forth
 				end
@@ -1329,10 +1397,12 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			shown_portions := shown_portions - 1;
 			allow_resize;
 			feature_height := feature_form.height;
-			h := height;
 			feature_form.unmanage;
 			if not toolkit_is_motif then
-				set_height (h - feature_height);
+				h := real_project_height (implementation);
+
+				set_height (height - feature_height)
+				split_window.set_height (h - feature_height)
 			end;
 			forbid_resize;
 			feature_part.close_windows;
@@ -1351,10 +1421,9 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			-- Show the feature portion and the menu entries
 			-- regarding the feature tool.
 		local
-			new_height: INTEGER;
+			new_height, real_height: INTEGER;
 			mp: MOUSE_PTR;
-			off: INTEGER;
-			old_height: INTEGER
+			off: INTEGER
 		do
 			!! mp.set_watch_cursor;
 			if feature_part = Void then
@@ -1362,7 +1431,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 				!! feature_part.form_create (feature_form, edit_feature_menu, format_feature_menu,
 						special_feature_menu);
 				feature_height := 
-					Project_tool_resources.debugger_feature_height.actual_value;
+					Project_resources.debugger_feature_height.actual_value;
 			else
 				feature_height := feature_form.height
 			end;
@@ -1376,17 +1445,19 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 				edit_menu.button.set_sensitive
 			end;
 
-			old_height := std_form.height;
 			allow_resize;
 			new_height := height + feature_height;
+			real_height := real_project_height (implementation) + feature_height;
 			feature_form.set_height (feature_height);
 			feature_form.manage;
-			off := Project_tool_resources.bottom_offset.actual_value;
-			if y + new_height > screen.height - off then
-				new_height := screen.height - off - y
-			end;
+			off := Project_resources.bottom_offset.actual_value;
 			if not toolkit_is_motif then
+				if y + new_height > screen.height - off then
+					new_height := screen.height - off - y;
+					real_height := new_height
+				end;
 				set_height (new_height);
+				split_window.set_height (real_height);
 			end;
 			forbid_resize;
 
@@ -1409,10 +1480,12 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 
 			allow_resize;
 			object_height := object_form.height;
-			h := height;
+			h := real_project_height (implementation);
 			object_form.unmanage;
 			if not toolkit_is_motif then
-				set_height (h - object_height);
+				h := real_project_height (implementation);
+				set_height (height - object_height)
+				split_window.set_height (h - object_height);
 			end;
 			forbid_resize;
 			object_part.close_windows;
@@ -1434,14 +1507,15 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			new_height: INTEGER;
 			new_pos: INTEGER;
 			mp: MOUSE_PTR;
-			off: INTEGER
+			off: INTEGER;
+			real_height: INTEGER
 		do
 			!! mp.set_watch_cursor;
 			if object_part = Void then
 				!! object_part.form_create (object_form, edit_object_menu, format_object_menu,
 						special_object_menu);
 				object_height := 
-					Project_tool_resources.debugger_object_height.actual_value;
+					Project_resources.debugger_object_height.actual_value;
 			else
 				object_height := object_form.height
 			end;
@@ -1457,15 +1531,18 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			end;
 
 			new_height := height + object_height;
-			off := Project_tool_resources.bottom_offset.actual_value;
+			real_height := real_project_height (implementation) + object_height;
+			off := Project_resources.bottom_offset.actual_value;
 			allow_resize;
 			object_form.set_height (object_height);
 			object_form.manage;
-			if y + new_height > screen.height - off then
-				new_height := screen.height - off - y
-			end;
 			if not toolkit_is_motif then
+				if y + new_height > screen.height - off then
+					new_height := screen.height - off - y;
+					real_height := new_height
+				end;
 				set_height (new_height);
+				split_window.set_height (real_height);
 			end;
 			forbid_resize;
 			show_current_object;

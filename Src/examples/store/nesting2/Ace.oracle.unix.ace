@@ -1,14 +1,14 @@
 system nesting
 
 root
-	test_i (root_cluster): "make"
+	test_i: "make"
 
 default
 	assertion (all);
 	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
-	root_cluster:		"$EIFFEL4/examples/store/nesting2";
+	root_cluster:		"$EIFFEL4/examples/store/nesting2"
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
 	oracle_handle:		"$EIFFEL4/examples/store/Utilities/oracle"
 		exclude 

@@ -18,12 +18,19 @@ feature -- Initialization
 	prepare is
 		local
 			vb: EV_VERTICAL_BOX
+			sa: EV_HORIZONTAL_SPLIT_AREA
+		--	pix: EV_PIXMAP
 		do
 			first_window.set_title ("DYNAMIC_LIST test")
 			create vb
 			first_window.extend (vb)
 			create test.make ("EV_HORIZONTAL_BOX", ~list_generator, ~item_generator)
+
+		--	create pix
+		--	pix.set_with_file (create {RAW_FILE}.make_open_read ("c:\eiffel46\bench\bitmaps\bmp\open.bmp"))
 			create butt.make_with_text ("Perform test.")
+		--	butt.set_pixmap (pix)
+
 			butt.press_actions.extend (~perform)
 			vb.extend (butt)
 			vb.disable_child_expand (butt)
@@ -32,6 +39,10 @@ feature -- Initialization
 			vb.disable_child_expand (results_label)
 			create desc_label
 			vb.extend (desc_label)
+			create sa
+			vb.extend (sa)
+			sa.extend (create {EV_RADIO_BUTTON}.make_with_text ("B1"))
+			sa.extend (create {EV_RADIO_BUTTON}.make_with_text ("B2"))
 		end
 
 	butt: EV_BUTTON

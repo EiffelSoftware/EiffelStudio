@@ -13,8 +13,9 @@ feature -- Generation type
 
 feature -- Access
 
-	any_class, system_object_class: CLASS_I
-			-- Class ANY
+	any_class: CLASS_I
+	system_object_class: EXTERNAL_CLASS_I
+			-- Class ANY and System.Object
 
 	ancestor_class_to_all_classes: CLASS_I is
 		do
@@ -340,7 +341,7 @@ feature -- Settings
 			any_class_set: any_class = c
 		end
 
-	set_system_object_class (c: CLASS_I) is
+	set_system_object_class (c: EXTERNAL_CLASS_I) is
 			-- Assign `c' to `system_object_class
 		require
 			c_not_void: c /= Void

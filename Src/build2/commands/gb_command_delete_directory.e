@@ -86,7 +86,7 @@ feature -- Basic Operation
 				create directory.make (temp_file_name)
 				create_directory (directory)
 			end
-			window_selector.add_named_directory (directory_name)
+			window_selector.silent_add_named_directory (directory_name)
 			command_handler.update
 		end
 	

@@ -19,15 +19,6 @@
 #define CUSTOM
 #define NEED_HASH_H
 #define NEED_TIMER_H
-/* the following are used only during the compilation of the run-time
- * it would be better removing it in any other case -> don't leave it
- * when copying include files to bench/spec/$PLATFORM/include
- */
-#define panic eiffel_panic
-#define malloc eiffel_malloc
-#define calloc eiffel_calloc
-#define realloc eiffel_realloc
-#define free eiffel_free
 #endif
 
 #ifndef HAS_BCMP

@@ -177,7 +177,20 @@ feature -- C externals
 		alias
 			"GetHashFromBlob"
 		end
-	
+
+	get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
+			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
+		is
+		external
+			"[
+				dllwin mscorsn.dll
+				signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
+				use <StrongName.h>
+			]"
+		alias
+			"GetHashFromFileW"
+		end
+
 	get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER is
 			-- Get environment variable `name' and put result in `buffer' with size `size'.
 			-- Return size of variable or 0 if not found.

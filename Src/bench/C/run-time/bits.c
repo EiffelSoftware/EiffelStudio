@@ -119,7 +119,7 @@ rt_public char *bmalloc(long int size)
 		return result;
 	}
 
-	eraise("object allocation", EN_MEM);	/* Signals no more memory */
+	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
 	/* NOTREACHED */
 }
 
@@ -230,9 +230,9 @@ rt_public void b_copy(char *a, char *b)
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
 	if ((char *) 0 == a)
-		panic ("bit copy panic (void source)");
+		panic (MTC "bit copy panic (void source)");
 	if ((char *) 0 == b)
-		panic ("bit copy panic (void target)");
+		panic (MTC "bit copy panic (void target)");
 
 	len1 = LENGTH(a);
 	len2 = LENGTH(b);

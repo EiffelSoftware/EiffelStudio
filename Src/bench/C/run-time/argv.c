@@ -44,13 +44,13 @@ rt_public void arg_init(int eargc, char **eargv)
 	/* Allocate memory for array duplication */
 	eif_argv = (char **) cmalloc((eargc + 1) * sizeof(char *));
 	if (eif_argv == (char **)0)
-		fatal_error(error);
+		fatal_error(MTC error);
 
 	/* Duplicate arguments array */
 	for (i = 0; i < eargc; i++) {
 		eif_argv[i] = cmalloc(strlen(eargv[i]) + 1);
 		if (eif_argv[i] == (char *)0)
-			fatal_error(error);
+			fatal_error(MTC error);
 		strcpy (eif_argv[i], eargv[i]);
 	}
 

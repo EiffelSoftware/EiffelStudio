@@ -32,7 +32,7 @@ rt_public EIF_POINTER file_def(int file)
 	case 0: return (EIF_POINTER) stdin;
 	case 1: return (EIF_POINTER) stdout;
 	case 2: return (EIF_POINTER) stderr;
-	default: panic("invalid file request");
+	default: panic(MTC "invalid file request");
 	}
 
 	/* NOTREACHED */

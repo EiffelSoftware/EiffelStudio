@@ -14,7 +14,7 @@ feature -- Event association
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
 			-- `sitem' has been selected'
-		do
+		deferred
 		end
 
 feature {EV_MENU_CONTAINER} -- Implementation
@@ -30,7 +30,6 @@ feature {EV_MENU_CONTAINER} -- Implementation
 			end
 			menu_container.append_popup (menu_imp, menu_imp.text)
 			menu_imp.set_position (menu_container.count)
-			menu_imp.set_parent_container (Current)
 		end
 
 feature {EV_MENU_IMP} -- Implementation

@@ -5,7 +5,7 @@ inherit
 
 	CMD_ADD
 		redefine
-			element, update_information
+			undo, redo, element, update_information
 		end;
 	
 feature {NONE}
@@ -21,6 +21,25 @@ feature {NONE}
 		do
 			Result := edited_command.labels
 		end;
+
+	undo is
+		do
+			{CMD_ADD} Precursor
+				--| Remove displayed label if needed.
+			if edited_command.command_editor.shown then
+				edited_command.command_editor.labels.finish
+				edited_command.command_editor.labels.remove
+			end
+		end
+
+	redo is
+		do
+			{CMD_ADD} Precursor
+				--| Add displayed label if needed.
+			if edited_command.command_editor.shown then
+				edited_command.command_editor.labels.extend (element)
+			end	
+		end
 
 	update_information is
 		do

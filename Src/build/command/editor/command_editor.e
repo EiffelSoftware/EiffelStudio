@@ -161,7 +161,7 @@ feature {NONE} -- Graphical interface
 	label_scrolled_w: SCROLLED_W
 			-- Scrolled window enclosing `labels'
 
-feature {COMMAND_TOOL, CMD_UPDATE_PARENT} -- Graphical interface
+feature {COMMAND_TOOL, CMD_COMMAND} -- Graphical interface
 
 	observed_commands: OBSERVED_INSTANCE_BOX
 			-- Observers of command_instance
@@ -513,8 +513,8 @@ feature -- Labels
 				if edited_command.has_descendents then
 					popup_error_box (Messages.instance_add_label_er)
 				else
-					edited_command.add_label (new_label_text.text)
 					!! new_cmd_label.make (new_label_text.text)
+					edited_command.add_label (new_cmd_label)
 					labels.extend (new_cmd_label)
 				end
 			else
@@ -531,6 +531,11 @@ feature -- Labels
 					popup_error_box (Messages.instance_rem_label_er)
 				else
 					edited_command.remove_label (l)
+					if shown then
+						labels.start
+						labels.search (l)
+						labels.remove
+					end
 					labels.refresh_display
 				end
 			end

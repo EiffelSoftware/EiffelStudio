@@ -182,6 +182,7 @@ feature {NONE}-- Initialization
 			constants_list.select_actions.extend (agent item_selected_in_list (?))
 			constants_list.deselect_actions.extend (agent item_deselected_in_list (?))
 			constants_list.column_title_click_actions.extend (agent column_clicked (?))
+			constants_list.key_press_actions.extend (agent key_pressed_on_constants_list (?))
 			display_all_types.select_actions.extend (agent display_all_types_changed)
 			string_item.select_actions.extend (agent string_item_selected)
 			integer_item.select_actions.extend (agent integer_item_selected)
@@ -236,6 +237,11 @@ feature {NONE} -- Implementation
 	
 	column_clicked (a_column: INTEGER) is
 			-- Called by `column_title_click_actions' of `constants_list'.
+		deferred
+		end
+	
+	key_pressed_on_constants_list (a_key: EV_KEY) is
+			-- Called by `key_press_actions' of `constants_list'.
 		deferred
 		end
 	

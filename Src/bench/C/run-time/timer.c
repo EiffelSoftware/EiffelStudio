@@ -13,6 +13,13 @@
 #include "timer.h"
 #include "portable.h"
 
+#ifndef HAS_GETRUSAGE
+#ifdef HAS_TIMES
+#include <sys/param.h>		/* For value of HZ */
+#endif
+#endif
+
+
 #ifndef lint
 private char *rcsid =
 	"$Id$";
@@ -119,6 +126,12 @@ double *usertime, *systime;
 	*usertime = (double)time.tms_utime / (double)HZ;
 	*systime = (double)time.tms_stime / (double)HZ;
 }
+#else
+public void getcputime(usertime, systime)
+double *usertime, *systime;
+{
+}
 #endif
+
 #endif
 

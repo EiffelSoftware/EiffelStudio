@@ -381,9 +381,7 @@ int i;					/* Index in g_stat array where statistics are kept */
 
 	if (gc_monitor) {
 		gettime(&realtime);					/* Get current time stamp */
-#ifndef __WATCOMC__
 		getcputime(&usertime, &systime);	/* Current CPU usage */
-#endif
 	}
 
 #ifdef MEMCHK
@@ -403,9 +401,7 @@ int i;					/* Index in g_stat array where statistics are kept */
 	 */
 
 	if (gc_monitor) {
-#ifndef __WATCOMC__
 		getcputime(&usertime2, &systime2);	/* Current CPU usage */
-#endif
 		gettime(&realtime2);				/* Get current time stamp */
 	}
 	

@@ -15,9 +15,6 @@
 
 #include "config.h"
 #include <sys/types.h>
-#ifndef __WATCOMC__
-#include <sys/param.h>		/* For value of HZ */
-#endif
 
 #ifdef I_TIME
 # include <time.h>

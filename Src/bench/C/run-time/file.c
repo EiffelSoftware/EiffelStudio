@@ -21,8 +21,10 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef __WATCOMC__
+#ifdef I_PWD
 #include <pwd.h>
+#endif
+#ifdef I_GRP
 #include <grp.h>
 #endif
 
@@ -64,9 +66,6 @@ private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
 private char *file_freopen();	/* Reopen file */
 private void swallow_nl();		/* Swallow next character if new line */
 
-#ifndef __WATCOMC__
-extern int errno;				/* Kernel error report */
-#endif 
 extern int esys();				/* Raise 'Operating system error' exception */
 extern int eio();				/* Raise 'I/O error' exception */
 
@@ -615,10 +614,8 @@ FILE *f;
 public void file_chown(name, uid)
 char *name;
 int uid;
-#ifdef __WATCOMC__
-{}
-#else
 {
+#ifdef HAS_CHOWN
 	/* Change the owner of the file to `uid' */
 
 	int gid;					/* Current Group ID */
@@ -639,16 +636,16 @@ int uid;
 		}
 		break;
 	}
-}
+#else
+	fprintf (stderr, "chown is not available\n");
 #endif
+}
 
 public void file_chgrp(name, gid)
 char *name;
 int gid;
-#ifdef __WATCOMC__
-{}
-#else
 {
+#ifdef HAS_CHOWN
 	/* Change the group of the file to `gid' */
 
 	int uid;					/* Current Owner ID */
@@ -669,8 +666,10 @@ int gid;
 		}
 		break;
 	}
-}
+#else
+	fprintf (stderr, "chown is not available\n");
 #endif
+}
 
 public void file_stat (path, buf)
 char *path;				/* Path name */
@@ -775,7 +774,7 @@ int op;
 
     switch (op) {
 	case 0: /* Is file readable */
-#ifndef __WATCOMC__
+#ifdef HAS_GETEUID
 		if (uid == geteuid())
 			return (mode & S_IRUSR) ? '\01' : '\0';
 		else if (gid = getegid())
@@ -784,7 +783,7 @@ int op;
 #endif
 			return (mode & S_IROTH) ? '\01' : '\0';
 	case 1: /* Is file writable */
-#ifndef __WATCOMC__
+#ifdef HAS_GETEUID
 		if (uid == geteuid())
 			return (mode & S_IWUSR) ? '\01' : '\0';
 		else if (gid = getegid())
@@ -793,7 +792,7 @@ int op;
 #endif
 			return (mode & S_IWOTH) ? '\01' : '\0';
 	case 2: /* Is file executable */
-#ifndef __WATCOMC__
+#ifdef HAS_GETEUID
 		if (uid == geteuid())
 			return (mode & S_IXUSR) ? '\01' : '\0';
 		else if (gid = getegid())
@@ -883,10 +882,8 @@ char *to;
 public void file_link(from, to)
 char *from;
 char *to;
-#ifdef __WATCOMC__
-{}
-#else
 {
+#ifdef HAS_LINK
 	/* Link file `from' into `to' */
 
 	int status;			/* System call status */
@@ -902,8 +899,11 @@ char *to;
 		}
 		break;
 	}
-}
+#else
+	fprintf (stderr, "link is not available\n");
 #endif
+}
+
 public void file_mkdir(path)
 char *path;
 {
@@ -1217,17 +1217,17 @@ int uid;
 	struct passwd *pp;
 	extern struct passwd *getpwuid();
 
-#ifdef __WATCOMC__
-	return makestr(str, 0);
-#else
+#ifdef HAS_GETPWUID
 	pp = getpwuid(uid);
 	if (pp == (struct passwd *) 0)
 		sprintf(str, "%d", uid);		/* Not available: use UID */
 	else
 		strcpy(str, pp->pw_name);		/* Available: fetch login name */
+#else
+	sprintf(str, "%d", uid);			/* Not available: use UID */
+#endif
 	
 	return makestr(str, strlen(str));
-#endif
 }
 
 public char *file_group(gid)
@@ -1242,17 +1242,17 @@ int gid;
 	struct group *gp;
 	extern struct group *getgrgid();
 
-#ifdef __WATCOMC__
-	return makestr(str, 0);
-#else
+#ifdef HAS_GETGRGID
 	gp = getgrgid(gid);
 	if (gp == (struct group *) 0)
 		sprintf(str, "%d", gid);		/* Not available: use GID */
 	else
 		strcpy(str, gp->gr_name);		/* Available: fetch login name */
+#else
+	sprintf(str, "%d", uid);			/* Not available: use UID */
+#endif
 	
 	return makestr(str, strlen(str));
-#endif
 }
 
 public char *file_def(file)

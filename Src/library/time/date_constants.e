@@ -1,22 +1,23 @@
 indexing
-	description: "universal constants about dates"
-	status: "See notice at end of class";
+	description: "Universal constants about dates"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	access: date, time
+	access: date
 
-class
-	DATE_CONSTANTS
+class DATE_CONSTANTS inherit
 
-inherit
 	TIME_UTILITY
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
 	Days_in_week: INTEGER is 7
 				-- Number of days in a week
 
-	Max_weeks_in_year: INTEGER is 53;
+	Max_weeks_in_year: INTEGER is 53
 				-- Maximun number of weeks in a year 
  
 	Months_in_year: INTEGER is 12
@@ -27,20 +28,6 @@ feature -- Access
 
 	Days_in_non_leap_year: INTEGER is 365
 				-- Number of days in a non-leap year
-
-	i_th_leap_year (i: INTEGER): BOOLEAN is 
-		obsolete "Use `is_leap_year' instead."
-			-- Is the `i'-th year a leap year? 
-		do 
-			Result := is_leap_year (i)
-		end;
-
-	is_leap_year (y: INTEGER): BOOLEAN is 
-			-- Is year `y' a leap year? 
-		do 
-			Result := (mod (y, 4) = 0) and ((mod (y, 100) /= 0) or 
-				(mod (y, 400) = 0)) 
-		end;
 
 	days_in_i_th_month (i, y: INTEGER): INTEGER is 
 			-- Number of days in the `i' th month at year `y' 
@@ -84,13 +71,29 @@ feature -- Access
 			Result := date_time_tools.long_months_text
 		end
 
+feature -- Status report
+
+	i_th_leap_year (i: INTEGER): BOOLEAN is 
+		obsolete "Use `is_leap_year' instead."
+			-- Is the `i'-th year a leap year? 
+		do 
+			Result := is_leap_year (i)
+		end
+
+	is_leap_year (y: INTEGER): BOOLEAN is 
+			-- Is year `y' a leap year? 
+		do 
+			Result := (mod (y, 4) = 0) and ((mod (y, 100) /= 0) or 
+				(mod (y, 400) = 0)) 
+		end
+
 feature {NONE} -- Implementation
 
 	Days_in_months: ARRAY [INTEGER] is 
 			-- Array containing number of days for each month of
 			-- a non-leap year.
 		once
-			Result := <<31,28,31,30,31,30,31,31,30,31,30,31>>
+			Result := <<31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31>>
 		ensure
 			result_exists: Result /= Void
 			valid_count: Result.count = Months_in_year

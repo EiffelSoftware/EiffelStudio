@@ -1,12 +1,10 @@
 indexing
-	description: "Sets of compactly coded dates";
-	date: "$Date$";
+	description: "Sets of compactly coded dates"
+	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	DATE_SET
+class DATE_SET inherit
 
-inherit
 	ARRAY [INTEGER]
 		rename
 			make as make_array,
@@ -15,15 +13,15 @@ inherit
 		end
 
 create
+
 	make
 
-feature -- Creation
+feature -- Initialization
 	
 	make (n: INTEGER) is
-			-- Create structure for initial
-			-- estimate of `n' dates.
+			-- Create set for `n' dates.
 		require
-			n_not_void: n /= Void
+			positive: n > 0
 		do
 			make_array (1, n)
 			last := 0
@@ -32,31 +30,31 @@ feature -- Creation
 feature -- Access
 
 	item (i: INTEGER): DATE is
-			-- Element at index `i'
+			-- Item at index `i'
 		require
-			i_not_void: i /= Void
+			index_in_range: 1 <= i and i <= last
 		do
-			create Result.make_by_compact_date (item_array(i))
+			create Result.make_by_compact_date (item_array (i))
 		end
 
 	last: INTEGER
-			-- Index of the last element inserted
+			-- Index of the last item inserted
 
 feature -- Element change
 
 	put (d: DATE) is
-			-- Insert `d';
-			-- Index will be given by `last'.
+			-- insert `d' as last item.
 		require 
-			d_not_void: d /= Void
+			exists: d /= Void
 		do
 			last := last + 1
 			force (d.compact_date, last)
 		ensure
-			inserted: item (last).is_equal (d);
+			inserted: equal (item (last), d)
 		end
 		
 invariant
+	
 	last_non_negative: last >= 0
 	last_small_enough: last <= count
 

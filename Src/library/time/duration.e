@@ -1,26 +1,56 @@
 indexing 
-	description: "duration of an interval of time" 
-	status: "See notice at end of class"; 
+	description: "Temporal intervals"
+	status: "See notice at end of class" 
 	date: "$Date$" 
 	revision: "$Revision$" 
-	access: date, time 
  
-deferred class
+deferred class DURATION inherit
 
-	DURATION
-
-inherit
 	PART_COMPARABLE
 
 	GROUP_ELEMENT
 		undefine
 			is_equal
-		end;
+		end
+
+feature -- Status report
+
+	is_positive: BOOLEAN is
+			-- Is duration positive?
+		deferred
+		end
+	 
+	is_negative: BOOLEAN is
+			-- Is duration negative?
+		do
+			Result := not is_positive and not is_zero
+		end
+
+	is_zero: BOOLEAN is
+			-- Is duration zero?
+		do
+			Result := equal (Current, zero)
+		end
+		
+feature -- Element change
+
+	prefix "+": like Current is
+			-- Unary plus
+		do
+			Result := deep_clone (Current)
+		end
+
+	infix "-" (other: like Current): like Current is
+			-- Difference with `other'
+		do
+			Result := Current + -other
+		end
+		
+invariant
+
+	sign_correctness: is_positive xor is_negative xor is_zero
 
 end -- class DURATION
-
-
-
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.

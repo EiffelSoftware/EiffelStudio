@@ -1,13 +1,11 @@
 indexing
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 	access: date, time
 
-class 
-	DATE_TIME_VALUE 
+class DATE_TIME_VALUE inherit 
 
-inherit 
 	DATE_TIME_MEASUREMENT
 	
 feature -- Access

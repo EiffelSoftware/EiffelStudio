@@ -1,22 +1,25 @@
 indexing
 	description: "Date/Time Measurement"
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class DATE_TIME_MEASUREMENT inherit
 	
 	DATE_CONSTANTS
-				
+		
 	TIME_CONSTANTS
 		
 feature -- Access
 
-	date: DATE_MEASUREMENT is deferred end
+	date: DATE_MEASUREMENT is
 		-- Date corresponding to current object
+		deferred
+		end
 
-	time: TIME_MEASUREMENT is deferred end
+	time: TIME_MEASUREMENT is 
 		-- Time corresponding to current object
+		deferred
+		end
 
 	year: INTEGER is
 			-- Year of the current object
@@ -63,7 +66,7 @@ feature -- Access
 		do
 			Result := time.second
 		ensure
-			same_second: Result = time.second;
+			same_second: Result = time.second
 		end
 
 	fine_second: DOUBLE is 

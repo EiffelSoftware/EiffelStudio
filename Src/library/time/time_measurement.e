@@ -1,29 +1,35 @@
 indexing
 	description: "Time Measurable Units"
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	TIME_MEASUREMENT
+deferred class TIME_MEASUREMENT inherit
 
-inherit
 	TIME_CONSTANTS
 
 feature -- Access
 
-	hour: INTEGER is deferred end
-		-- Number of hours associated with current object.
-
-	minute: INTEGER is deferred end
-		-- Number of minutes associated with current object.
-
-	second: INTEGER is deferred end
-		-- Number of seconds associated with current object.
+	hour: INTEGER is
+		-- Number of hours associated with current object
+		deferred
+		end
 	
-	fine_second: DOUBLE is deferred end
-		-- Number of fine seconds associated with current object.
 
+	minute: INTEGER is
+		-- Number of minutes associated with current object
+		deferred
+		end
+	 
+	second: INTEGER is
+		-- Number of seconds associated with current object.
+		deferred
+		end
+	
+	fine_second: DOUBLE is
+		-- Number of fine seconds associated with current object
+		deferred
+		end
+	 
 feature -- Settings
 
 	set_second (s: INTEGER) is 
@@ -49,7 +55,7 @@ feature -- Settings
 	set_fractionals (f: DOUBLE) is
 			-- Set `fractional_second' to `f'.
 		require
-			f_large_enough: f >= 0;
+			f_large_enough: f >= 0
 			f_small_enough: f < 1 
 		deferred
 		ensure

@@ -1,12 +1,10 @@
 indexing
-	description: "Sets of compactly coded times";
-	date: "$Date$";
+	description: "Sets of compactly coded times"
+	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	TIME_SET
+class TIME_SET inherit
 
-inherit
 	ARRAY [NUMERIC]
 		rename
 			make as make_array,
@@ -15,15 +13,15 @@ inherit
 		end
 
 create
+
 	make
 
-feature -- Creation
+feature -- Initialization
 	
 	make (n: INTEGER) is
-			-- Create structure for initial
-			-- estimate of `n' times.
+			-- Create set for `n' times.
 		require
-			n_not_void: n /= Void
+			positive: n > 0
 		do
 			make_array (1, 2 * n)
 			last := 0
@@ -32,41 +30,47 @@ feature -- Creation
 feature -- Access
 
 	item (i: INTEGER): TIME is
-			-- Element at index `i'
+			-- Item at index `i'
 		require
-			i_not_void: i /= Void
+			index_in_range: 1 <= i and i <= last
 		local
 			c_t: INTEGER_REF
 			frac_sec: DOUBLE_REF
 		do
 			c_t ?= item_array ((2 * i) - 1)
 			frac_sec ?= item_array (2 * i)
+			check
+				time_exists: c_t /= Void
+				fractional_second_exists: frac_sec /= Void
+					-- Because the fractional second value always follows the
+					-- compact time value
+			end
 			create Result.make_by_compact_time (c_t.item)
 			Result.set_fractionals (frac_sec.item)
 		end
 
 	last: INTEGER
-			-- Index of the last element inserted
+			-- Index of the last item inserted
 
 feature -- Element change
 
-	put (d: TIME) is
-			-- Insert `d';
-			-- Index will be given by `last'.
+	put (t: TIME) is
+			-- insert `t' as last item.
 		require 
-			d_not_void: d /= Void
+			exists: t /= Void
 		local
 			i: INTEGER
 		do
 			last := last + 1
 			i := 2 * last
-			force (d.compact_time, i - 1)
-			force (d.fractional_second, i)
+			force (t.compact_time, i - 1)
+			force (t.fractional_second, i)
 		ensure
-			inserted: item (last).is_equal (d);
+			inserted: equal (item (last), t)
 		end
 
 invariant
+
 	last_non_negative: last >= 0
 	last_small_enough: last <= count
 

@@ -71,16 +71,12 @@ feature {NONE} -- Initialization
 			good_argument: t /= Void
 			not_formal: not t.has_formal
 		do
-			type := t
+			type := t.generic_derivation
 			is_changed := True
 			type_id := System.type_id_counter.next
 			static_type_id := Static_type_id_counter.next_id
 			if System.il_generation then
-				if
-					associated_class.is_external or 
-					associated_class.is_frozen or
-					associated_class.is_single
-				then
+				if t.is_generated_as_single_type then
 					implementation_id := static_type_id
 				else
 					implementation_id := Static_type_id_counter.next_id
@@ -130,13 +126,42 @@ feature -- Access
 		require
 			il_generation: System.il_generation
 		do
-			Result := not associated_class.is_external and not is_precompiled
+			Result := not is_precompiled and not type.is_external
 		end
 
 	is_changed: BOOLEAN
 			-- Is the attribute list changed ? [has the skeleton of
 			-- attributes to be re-generated ?]
 
+	is_expanded: BOOLEAN is
+			-- Is current class type expanded?
+		require
+			type_not_void: type /= Void
+		do
+			Result := type.is_expanded
+		end
+
+	is_external: BOOLEAN is
+			-- Is current class type external?
+		require
+			type_not_void: type /= Void
+		local
+			l_class: like associated_class
+		do
+			l_class := associated_class
+			Result := l_class.is_external and (l_class.is_basic implies type.is_basic)
+		end
+		
+	is_generated_as_single_type: BOOLEAN is
+			-- Is associated type generated as a single type or as an interface type and
+			-- an implementation type.
+		require
+			il_generation: System.il_generation
+		do
+			Result := type.is_generated_as_single_type
+		end
+		
+		
 	has_cpp_externals: BOOLEAN
 			-- Does current class_type contain C++ externals
 
@@ -1238,10 +1263,10 @@ feature -- Parent table generation
 					gen_type.meta_generic /= Void then
 				Par_table.init (type.generated_id (final_mode), 
 								gen_type.meta_generic.count,
-								a_class.name_in_upper, a_class.is_expanded);
+								a_class.name, a_class.is_expanded);
 			else
 				Par_table.init (type.generated_id (final_mode), 0,
-								a_class.name_in_upper, a_class.is_expanded);
+								a_class.name, a_class.is_expanded);
 			end
 
 			from
@@ -1276,10 +1301,10 @@ feature -- Parent table generation
 					gen_type.meta_generic /= Void then
 				Par_table.init (type.generated_id (False), 
 								gen_type.meta_generic.count,
-								a_class.name_in_upper, a_class.is_expanded);
+								a_class.name, a_class.is_expanded);
 			else
 				Par_table.init (type.generated_id (False), 0,
-								a_class.name_in_upper, a_class.is_expanded);
+								a_class.name, a_class.is_expanded);
 			end
 
 			from
@@ -1393,7 +1418,7 @@ feature -- Skeleton generation
 			buffer.putstring ("{%N(long) ")
 			buffer.putint (skeleton.count)
 			buffer.putstring (",%N%"")
-			upper_class_name := a_class.name_in_upper
+			upper_class_name := a_class.name
 			buffer.putstring (upper_class_name)
 			buffer.putstring ("%",%N")
 			if not skeleton_empty then
@@ -1417,6 +1442,11 @@ feature -- Skeleton generation
 				buffer.putstring ("(uint32 *) 0,%N")
 				buffer.putstring ("(int16 **) 0,%N")
 			end
+
+				-- Store Skeleton flag associated to Current type
+			buffer.putstring ("(uint16) ")
+			buffer.putint (skeleton_flags)
+			buffer.putstring (",%N")
 
 			if byte_context.final_mode then
 				if
@@ -1456,20 +1486,6 @@ feature -- Skeleton generation
 						(skeleton.nb_reference + skeleton.nb_expanded)
 				buffer.putstring ("L,%N")
 
-					-- Deferred class type flag
-				if a_class.is_deferred then
-					buffer.putstring ("'\01',%N")
-				else
-					buffer.putstring ("'\0',%N")
-				end
-
-					-- Composite class type flag
-				if has_creation_routine then
-					buffer.putstring ("'\01',%N")
-				else
-					buffer.putstring ("'\0',%N")
-				end
-
 				if
 					not Compilation_modes.is_precompiling and
 					not associated_class.is_precompiled
@@ -1501,13 +1517,6 @@ feature -- Skeleton generation
 				end
 				buffer.putstring (",%N")
 					
-					-- Dispose routine id
-				if System.disposable_descendants.has (associated_class) then
-					buffer.putstring ("'\01',%N")
-				else
-					buffer.putstring ("'\0',%N")
-				end
-
 				if
 					not Compilation_modes.is_precompiling and
 					not associated_class.is_precompiled
@@ -1563,9 +1572,7 @@ feature -- Byte code generation
 		local
 			parent_list: like parent_types
 			ba: BYTE_ARRAY
-			class_name: STRING
 			creation_feature: FEATURE_I
-			a_class: CLASS_C
 		do
 			ba := Byte_array
 			ba.clear
@@ -1574,8 +1581,7 @@ feature -- Byte code generation
 			ba.append_short_integer (type_id - 1)
 
 				-- 2. generator string
-			class_name := associated_class.name_in_upper
-			ba.append_string (class_name)
+			ba.append_string (associated_class.name)
 
 				-- 3. number of attributes
 			ba.append_integer (skeleton.count)
@@ -1599,32 +1605,20 @@ feature -- Byte code generation
 				parent_list.forth
 			end
 
-				-- 6. Routine ids of attributes
+				-- 6. Store skeleton flags
+			ba.append_short_integer (skeleton_flags)
+
+				-- 7. Routine ids of attributes
 			skeleton.make_rout_id_array (ba)
 
-				-- 7. Reference number
+				-- 8. Reference number
 			ba.append_integer (skeleton.nb_reference + skeleton.nb_expanded)
 			
-				-- 8. Skeleton size
+				-- 9. Skeleton size
 			skeleton.make_size_byte_code (ba)
 
-				-- Deferred class type flag
-			a_class := associated_class
-			if a_class.is_deferred then
-				ba.append ('%/001/')
-			else
-				ba.append ('%U')
-			end
-
-				-- Composite class type flag
-			if has_creation_routine then
-				ba.append ('%/001/')
-			else
-				ba.append ('%U')
-			end
-
 				-- Creation feature id if any.
-			creation_feature := a_class.creation_feature
+			creation_feature := associated_class.creation_feature
 			if creation_feature /= Void then
 				ba.append_int32_integer (creation_feature.feature_id)
 			else
@@ -1633,13 +1627,6 @@ feature -- Byte code generation
 
 				-- Static type id
 			ba.append_int32_integer (static_type_id - 1)
-
-				-- Dispose routine id of dispose
-			if System.disposable_descendants.has (associated_class) then
-				ba.append ('%/001/')
-			else
-				ba.append ('%U')
-			end
 
 			Result := ba.feature_table
 		end
@@ -1652,6 +1639,44 @@ feature -- Debug
 			type.trace
 		end
 
+feature {NONE} -- Convenience
+
+	skeleton_flags: INTEGER_16 is
+			-- Corresponding flags to insert in skeleton structure
+		local
+			l_class: like associated_class
+		do
+			l_class := associated_class
+
+				-- From bit 0 to bit 3: we store `tuple_code'.
+			Result := type.tuple_code
+			
+				-- Bit 8: Store `is_declared_as_expanded'
+			if l_class.is_expanded then
+				Result := Result | 0x0100
+			end
+			
+				-- Bit 9: Store `is_expanded'
+			if is_expanded then
+				Result := Result | 0x0200
+			end
+			
+				-- Bit 10: Store `has_dispose'
+			if System.disposable_descendants.has (l_class) then
+				Result := Result | 0x0400
+			end
+
+				-- Bit 11: Store `is_composite'
+			if has_creation_routine then
+				Result := Result | 0x0800
+			end
+			
+				-- Bit 12: Store `is_deferred'
+			if l_class.is_deferred then
+				Result := Result | 0x1000
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	internal_namespace: STRING

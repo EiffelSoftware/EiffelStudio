@@ -298,7 +298,7 @@ mtsharedlibs='-lpthread -lexc -lrt -lm -ldnet_stub -lSM -lICE'
 
 lns='/usr/bin/ln -s'
 integer_64_size='8'
-eif_integer_64_display='"Ld"'
+eif_integer_64_display='"lld"'
 integer_16_size='2'
 longsize='4'
 d_mymalloc=''

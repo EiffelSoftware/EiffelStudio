@@ -22,7 +22,16 @@ inherit
 		end;
 
 	WIDGET_X
+		rename	
+			clean_up as widget_x_clean_up
+		end
 
+	WIDGET_X 
+		redefine
+			clean_up
+		select
+			clean_up
+		end
 
 feature
 
@@ -51,9 +60,23 @@ feature
 
 feature {NONE}
 
+	clean_up is
+		do
+			widget_x_clean_up;
+			if destroy_actions /= Void then
+				destroy_actions.free_cdfd
+			end
+		end;
+
 	destroy_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when
 			-- current widget is destroyed
+
+	parent_screen_object (a_widget: WIDGET; index: INTEGER): POINTER is
+		do
+			Result := widget_manager.parent_using_index
+						(a_widget, index).implementation.screen_object
+		end;
 
 feature
 
@@ -144,7 +167,7 @@ feature
 			cursor_implementation: SCREEN_CURSOR_X
 		do
 			cursor_implementation ?= a_cursor.implementation;
-			if not (cursor = Void) then
+			if cursor /= Void then
 				cursor_implementation.remove_object (Current)
 			end;
 			cursor := a_cursor;

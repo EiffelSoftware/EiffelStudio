@@ -9,12 +9,13 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	HISTORY_LIST 
 
 inherit
-
-	HISTORY;
+	HISTORY
+		undefine
+			copy, is_equal
+		end
 
 	LINKED_LIST [UNDOABLE]
 		rename

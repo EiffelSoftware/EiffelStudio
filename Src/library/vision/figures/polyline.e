@@ -11,14 +11,21 @@ class
 
 inherit
 
-	ENDED;
+	ENDED
+		undefine
+			copy, is_equal
+		end
 
 	PATH
 		rename
 			make as path_make
+		undefine
+			copy, is_equal
 		end;
 	
 	OPEN_FIG	
+		undefine
+			copy, is_equal
 		redefine
 			translate,
 			set_origin,

@@ -138,6 +138,7 @@ feature -- Initialization
 			create attribute_editor_box
 			create scrollable_holder
 			create viewport
+			viewport.resize_actions.force_extend (agent viewport_resized)
 			viewport.set_minimum_width (Minimum_width_of_object_editor)
 			create scrollable_holder
 			vertical_box1.extend (scrollable_holder)
@@ -465,6 +466,13 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 
 feature {NONE} -- Implementation
 
+	viewport_resized is
+			-- Adjust contents of `viewport' in response to viewport
+			-- resizing
+		do
+			viewport.set_item_width (viewport.width)
+		end
+
 	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
 		do
 				-- If the object is not void, it means that
@@ -502,6 +510,7 @@ feature {NONE} -- Implementation
 			label: EV_LABEL
 			current_window_parent: EV_WINDOW
 			locked_in_here: BOOLEAN
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -582,7 +591,10 @@ feature {NONE} -- Implementation
 			not object.type.is_equal ("EV_MENU_SEPARATOR") then
 				create event_selection_button
 				update_event_selection_button_text
-				attribute_editor_box.extend (event_selection_button)
+				create horizontal_box
+				horizontal_box.extend (event_selection_button)
+				horizontal_box.disable_item_expand (event_selection_button)
+				attribute_editor_box.extend (horizontal_box)
 				attribute_editor_box.disable_item_expand (event_selection_button)
 				event_selection_button.select_actions.extend (agent show_event_dialog)
 			end

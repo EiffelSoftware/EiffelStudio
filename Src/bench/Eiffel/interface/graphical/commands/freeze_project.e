@@ -6,12 +6,17 @@ class FREEZE_PROJECT
 inherit
  
 	UPDATE_PROJECT
+		rename
+			freezing_actions as freeze_system
+		undefine
+			freeze_system
 		redefine
-			launch_c_compilation, freezing_actions,
+			launch_c_compilation, freeze_system,
 			confirm_and_compile,
 			command_name, symbol,
 			compilation_allowed
 		end
+	C_COMPILE_ACTIONS
  
 creation
 
@@ -43,11 +48,6 @@ feature {NONE}
 			then
 				compile (argument)
 			end;
-		end;
-
-	freezing_actions is
-		do
-			System.freeze_system;
 		end;
 
 	launch_c_compilation (argument: ANY) is

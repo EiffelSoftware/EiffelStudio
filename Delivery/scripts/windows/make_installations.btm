@@ -41,28 +41,28 @@ call build.btm vision2_tour
 
 rem EiffelBuild Enterprise
 candle -dISE_RELEASE=enterprise -dISE_MODULE_NAME=build_enterprise -dISE_PRODUCT_NAME="EiffelBuild Enterprise Edition" build.wxs
-light /b f:\InstalledEiffel56 build.wixobj -out MSMs\build_enterprise.msm
+light /b %INSTALL_DIR build.wixobj -out MSMs\build_enterprise.msm
 del build.wixobj
 
 rem EiffelBuild Free version
 candle -dISE_RELEASE=free_version -dISE_MODULE_NAME=build_free -dISE_PRODUCT_NAME="EiffelBuild Evaluation Edition" build.wxs
-light /b f:\InstalledEiffel56 build.wixobj -out MSMs\build_free.msm
+light /b %INSTALL_DIR build.wixobj -out MSMs\build_free.msm
 del build.wixobj
 
 rem EiffelStudio Enterprise
 candle -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
-light /b f:\InstalledEiffel56 ec.wixobj -out MSMs\ec_enterprise.msm
+light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_enterprise.msm
 del ec.wixobj
 
 rem EiffelStudio University
 candle -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
-light /b f:\InstalledEiffel56 ec.wixobj -out MSMs\ec_university.msm
+light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_university.msm
 del ec.wixobj
 
 
 rem EiffelStudio Free version
 candle -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
-light /b f:\InstalledEiffel56 ec.wixobj -out MSMs\ec_free.msm
+light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_free.msm
 del ec.wixobj
 
 cdd %INSTALL_DIR

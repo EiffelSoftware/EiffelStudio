@@ -30,12 +30,31 @@ inherit
 			is_shown as shown
 		end
 
+feature -- Access
+
+	is_label: BOOLEAN is
+			-- Is current button a label?
+			-- (False by default)
+		do
+		end;
+
 feature -- Status report
 
 	text: STRING is
 			-- Text of button
+		local
+			keysym: CHARACTER;
+			pos: INTEGER;
 		do
 			Result := label_as_string
+			keysym := mnemonic;
+			if keysym /= '%U' then
+				check
+					string_has_mnemonic: Result.has (keysym)
+				end;
+				pos := Result.index_of (keysym, 1);
+				Result.insert ("&", pos)
+			end
 		end; 
 
 feature -- Status setting
@@ -44,8 +63,11 @@ feature -- Status setting
 			-- Set button text to `a_text'.
 		require
 			not_text_void: a_text /= Void
+		local
+			menu_m: MENU_M;
+			button_text: STRING
 		do
-			set_label_as_string (a_text)
+			set_mnemonic_from_text (a_text, True)
 		ensure
 			text_set: text.is_equal (a_text)
 		end;
@@ -61,6 +83,69 @@ feature -- Status setting
 		do
 			set_end_alignment
 		end;
+
+feature {NONE} -- Implementation
+
+	is_able_have_accerlators: BOOLEAN is
+			-- Can the button able to have accelerators?
+			-- True if it is not a label and not in an
+			-- option pull
+		local
+			menu_m: MENU_M;
+			a_text: STRING
+		do
+			if not is_label then
+				menu_m ?= parent;
+				Result := menu_m /= Void and then
+					menu_m.children_has_accelerators
+			end
+		end
+
+	set_mnemonic_from_text (a_text: STRING; set_text_explicity: BOOLEAN) is
+			-- Extract the mnemonic from `a_text' and set it and then
+			-- set the button text to `a_text' if `set_text_explicity' is True.
+		local
+			count, pos: INTEGER;
+			finished: BOOLEAN;
+			button_text: STRING;
+			keysym: CHARACTER
+		do
+			if is_able_have_accerlators then
+				from
+					count := a_text.count;
+					pos := 1
+				until
+					finished
+				loop
+					pos := a_text.index_of ('&', pos);
+					if pos = 0 then
+						finished := True
+					elseif pos = count then
+						pos := 0;
+						finished := True
+					elseif a_text.item (pos + 1) /= '&' then	
+						finished := True
+					else
+						pos := pos + 1
+					end	
+				end
+				if pos = 0 then
+					if set_text_explicity then
+						set_label_as_string (a_text)
+					else
+						set_mnemonic ('%U')
+					end
+				else
+					keysym := a_text.item (pos + 1);
+					set_mnemonic (keysym);
+					button_text := clone (a_text);
+					button_text.remove (pos) -- Remove the `&'
+					set_label_as_string (button_text)
+				end
+			elseif set_text_explicity then
+				set_label_as_string (a_text)
+			end;
+		end
 
 end -- class BUTTON_M
 

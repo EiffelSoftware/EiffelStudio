@@ -1,58 +1,45 @@
-class HOLE_COMMAND
+deferred class HOLE_COMMAND
 
 inherit
 	TWO_STATE_CMD
 		rename
 			true_state_symbol as symbol,
-			false_state_symbol as full_symbol
+			false_state_symbol as full_symbol,
+			init_from_tool as make
 		redefine
 			holder, full_symbol
 		end;
-	STONE_TYPES
-
-creation
-	make
+	HOLE
+		export
+			{EB_BUTTON_HOLE} receive
+		end
 
 feature -- Initialization
 
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize a hole command with the `symbol' icon,
-			-- `a_text_window' is passed as argument to the activation action.
-		require
-			a_text_window_not_void: a_text_window /= Void
-		do
-			init (a_text_window)
-		ensure
-			text_window_set: equal (text_window, a_text_window)
-		end;
-
-feature -- Pick and Throw
-
-	receive (a_stone: STONE) is
-			-- Process dropped stone `a_stone'.
-		do
-			holder.associated_button.receive (a_stone)
-		end;
-
-feature -- Execute
-
-	work(argument: ANY) is
+	init_other_button_actions (a_button: EB_BUTTON_HOLE) is
+			-- Initialize other button actions
+			-- (Do nothing by default)
 		do
 		end;
 
 feature -- Properties
 
 	name: STRING is
-		do
-			Result := "Default"
+		deferred
 		end;
 
 	symbol: PIXMAP is
-		do
+		deferred
 		end;
 
 	holder: HOLE_HOLDER;
 			-- Holder of Current
+
+	target: WIDGET is
+			-- Initialization of the hole is
+			-- done in the associated button
+		do
+		end;
 
 	full_symbol: PIXMAP is
 		do	
@@ -63,5 +50,9 @@ feature -- Properties
 		do
 			Result := symbol
 		end;
+
+	transported_stone: STONE is
+		do
+		end
 
 end -- class HOLE_COMMAND

@@ -11,7 +11,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_external, has_instruction, index_of_instruction
+			is_external
 		end;
 
 feature {NONE} -- Initialization
@@ -53,21 +53,6 @@ feature -- Properties
 				Result := alias_name.value;
 			end;
 		end; -- external_name
-
-feature -- Access
-
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
-			-- Does current routine body has instruction `i'?
-		do
-			Result := False
-		end;
-
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
-			-- Index of `i' in this external feature.
-			-- Result is `0'.
-		do
-			Result := 0
-		end;
 
 feature {AST_EIFFEL} -- Output
 

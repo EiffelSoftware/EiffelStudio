@@ -19,6 +19,8 @@ inherit
 			plateform_build
 		end
 
+	EV_BAR_ITEM_IMP
+
 	EV_DEFAULT_COLORS
 
 feature {NONE} -- Initialization
@@ -90,7 +92,7 @@ feature -- Status setting
 			set_caret_position (pos)
 		end
 
-	set_maximum_line_lenght (lenght: INTEGER) is
+	set_maximum_line_length (length: INTEGER) is
 			-- Maximum number of charachters on line
 		do
 			check

@@ -10,10 +10,6 @@ cvs co Delivery/vision2_tour
 REM Copy template files
 XCOPY /Y /E /I Delivery\vision2_tour\templates .\templates
 
-REM Copy png files for tests
-XCOPY /Y /E /I Delivery\vision2_tour\png .\bitmaps\png
-
-
 REM Copy constants and eiffel environment to interface.
 XCOPY /Y Src\Build2\constants\gb_constants.e .\interface
 XCOPY /Y Src\Build2\utilities\eiffel_env.e .\interface
@@ -31,6 +27,9 @@ XCOPY /Y Delivery\vision2_tour\bitmaps\ico\testing.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\properties.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\size_down.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\size_up.ico .\bitmaps\ico\
+XCOPY /Y Delivery\vision2_tour\bitmaps\png\image1.png .\bitmaps\png\
+XCOPY /Y Delivery\vision2_tour\bitmaps\png\image1.png .\bitmaps\png\
+
 
 REM Copy modified vision2 interface files needed.
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface

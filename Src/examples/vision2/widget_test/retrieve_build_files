@@ -24,15 +24,15 @@ cp ./Src/build2/main/gb_supported_events.e ./interface/
 # Copy icons for different widget types across.
 cp -r Delivery/build/bitmaps ./
 
-# Copy png files for tests
-cp Delivery/vision2_tour/png/*.png ./bitmaps/png/
-
 # Copy icons for standard buttons.
 cp Delivery/vision2_tour/bitmaps/png/documentation.png ./bitmaps/png/
 cp Delivery/vision2_tour/bitmaps/png/testing.png ./bitmaps/png/
 cp Delivery/vision2_tour/bitmaps/png/properties.png ./bitmaps/png/
 cp Delivery/vision2_tour/bitmaps/png/size_down.png ./bitmaps/png/
 cp Delivery/vision2_tour/bitmaps/png/size_up.png ./bitmaps/png/
+cp Delivery/vision2_tour/bitmaps/png/image1.png ./bitmaps\png/
+cp Delivery/vision2_tour/bitmaps/png/image2.png ./bitmaps\png/
+
 
 # Copy modified vision2 interface files needed.
 cp -r ./Src/build2/modified_libraries/vision2/ev_pixmap.e ./interface/

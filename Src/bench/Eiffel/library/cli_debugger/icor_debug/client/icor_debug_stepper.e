@@ -34,8 +34,6 @@ feature {ICOR_EXPORTER} -- Access
 			-- Desactivate the stepper
 		do
 			last_call_success := cpp_deactivate (item)
-		ensure
-			success: last_call_success = 0
 		end		
 
 	step (a_b_step_in: BOOLEAN) is

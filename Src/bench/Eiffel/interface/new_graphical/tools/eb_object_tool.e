@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			create local_tree
 			local_tree.drop_actions.extend (~drop_stack_element)
 			local_tree.key_press_actions.extend (~debug_value_key_action (local_tree, ?))
+			local_tree.set_minimum_size (300, 200)
 			split.set_first (local_tree)
 			create object_tree
 			object_tree.drop_actions.extend (~add_object)

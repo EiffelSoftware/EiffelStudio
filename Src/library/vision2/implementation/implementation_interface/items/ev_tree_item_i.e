@@ -28,8 +28,15 @@ inherit
 feature -- Access
 
 	parent_tree: EV_TREE is
-			-- Root tree that item is held within
-		deferred
+			-- Root tree that parent is held within.
+		local
+			parent_item: EV_TREE_ITEM_IMP
+		do
+			Result ?= parent
+			if Result = Void and then parent /= Void then
+				parent_item ?= parent.implementation
+				Result := parent_item.parent_tree
+			end
 		end
 
 feature -- Status report
@@ -104,6 +111,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/26 01:29:16  king
+--| Correctly implemented parent_tree
+--|
 --| Revision 1.27  2000/02/24 20:52:13  king
 --| Inheriting from pick and dropable
 --|

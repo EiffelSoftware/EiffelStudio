@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			y_set: y = a_y
 		end
 
-	make_by_cursor_position (a_x, a_y: INTEGER) is
+	make_by_cursor_position is
 			-- Make a point and set `x' and `y' with 
 			-- the current cursor position.
 		do
@@ -93,11 +93,11 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_cursor_position (x, y: INTEGER) is
+	set_cursor_position (a_x, a_y: INTEGER) is
 			-- set the current cursor position to
-			-- `x' and `y'.
+			-- `a_x' and `a_y'.
 		do
-			cwin_set_cursor_position (x, y)
+			cwin_set_cursor_position (a_x, a_y)
 		end
 
 	get_cursor_position is
@@ -223,7 +223,7 @@ feature {NONE} -- Externals
 			"GetCursorPos"
 		end
 
-	cwin_set_cursor_position (x, y: INTEGER) is
+	cwin_set_cursor_position (a_x, a_y: INTEGER) is
 			-- SDK SetCursorPos
 		external
 			"C [macro <wel.h>] (int, int)"

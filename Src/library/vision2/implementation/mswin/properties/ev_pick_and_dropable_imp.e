@@ -100,15 +100,6 @@ feature -- Implementation
 					is_dnd_in_transport := True
 				end
 
-				if accept_cursor = Void then
-					create curs_code
-					create accept_cursor.make_with_code (curs_code.standard)
-				end
-				if deny_cursor = Void then
-					create curs_code
-					create deny_cursor.make_with_code (curs_code.no)
-				end
-
 				pointer_x := a_screen_x
 				pointer_y := a_screen_y
 				if pick_x = 0 and pick_y = 0 then
@@ -132,6 +123,8 @@ feature -- Implementation
 			list: EV_LIST
 			list_imp: EV_LIST_IMP
 			list_item: EV_LIST_ITEM_IMP
+			standard_cursor: EV_CURSOR
+			cursor_code: EV_CURSOR_CODE
 		do
 			print ("End transport%N")
 			release_action := Ev_pnd_disabled
@@ -159,9 +152,13 @@ feature -- Implementation
 			--| 	last_pointed_target_is_void: last_pointed_target = Void
 			--|Is this correct?
 			last_pointed_target := Void
-			if cursor_imp /= Void then
+			if pnd_stored_cursor_imp /= Void then
 				set_pointer_style (pnd_stored_cursor_imp.interface)
 				-- Set the pointer style back to state before PND.
+			else
+				create cursor_code
+				create standard_cursor.make_with_code (cursor_code.standard)
+				set_pointer_style (standard_cursor)
 			end
 		end
 
@@ -351,6 +348,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/21 01:27:45  rogers
+--| End transport now returns the cursor to the previous state before PND.
+--|
 --| Revision 1.17  2000/03/17 23:36:06  rogers
 --| Fixed pointed_target, and implemented ability for a list_item to be a target. Added the following features : curosr_imp, pnd_stored_cursor_imp, set_pointer_style and cursor_on_widget.
 --|

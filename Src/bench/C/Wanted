@@ -51,6 +51,7 @@
 >HAS_TIME
 >HAS_TIMES
 >HAS_UNAME
+>HAS_UNLINK
 >HAS_USLEEP
 >HAS_UTIME
 >INTSIZE
@@ -196,6 +197,7 @@ d_syserrlst
 d_time
 d_times
 d_uname
+d_unlink
 d_usleep
 d_utime
 d_voidtty

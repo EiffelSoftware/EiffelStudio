@@ -706,6 +706,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 
 #$d_geteuid HAS_GETEUID	/**/
 
+/* HAS_UNLINK:
+ *	This symbol, if defined, indicates that the unlink routine is
+ *	available.
+ */
+#$d_unlink HAS_UNLINK	/**/
+
 /* HAS_UTIME:
  *	This symbol, if defined, indicates that the utime routine is
  *	available.

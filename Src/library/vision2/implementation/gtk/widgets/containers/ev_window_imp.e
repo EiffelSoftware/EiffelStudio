@@ -193,6 +193,7 @@ feature -- Status setting
 				is_destroyed or else not is_show_requested
 			loop
 				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+				App_implementation.call_idle_actions
 			end
 		end
 

@@ -362,6 +362,24 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 				once_value_icd_module := Result
 			end
 		end
+		
+	value_icd_function (f_name: STRING): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for this ICorDebugObjectValue value
+			-- with external feature name `f_name'.
+		require
+			has_object_interface
+			valid_feature_name: f_name /= Void and then not f_name.is_empty
+		local
+			icdm: like value_icd_module
+			classtok, feattok: INTEGER
+		do
+			icdm := value_icd_module
+			if icdm /= Void then
+				classtok := value_class_token
+				feattok := icdm.md_member_token (classtok, f_name)
+				Result := icdm.get_function_from_token (feattok)
+			end
+		end
 
 feature -- Interface Access
 

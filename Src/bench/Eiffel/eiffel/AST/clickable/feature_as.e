@@ -46,6 +46,9 @@ feature {AST_FACTORY} -- Initialization
 			indexes := i
 			id := System.feature_as_counter.next_id
 			if body.is_unique then
+				check
+					system_initialized: System.current_class /= Void
+				end
 				System.current_class.set_has_unique
 			end
 			create location.reset

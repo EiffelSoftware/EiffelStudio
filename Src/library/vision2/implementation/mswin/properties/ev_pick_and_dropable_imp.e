@@ -205,7 +205,7 @@ feature -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	is_pnd_in_transport,
 	is_dnd_in_transport: BOOLEAN
@@ -301,6 +301,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/15 19:24:01  rogers
+--| Changed the export status of implementation features to EV_ANY_I.
+--|
 --| Revision 1.10  2000/02/14 11:40:40  oconnor
 --| merged changes from prerelease_20000214
 --|

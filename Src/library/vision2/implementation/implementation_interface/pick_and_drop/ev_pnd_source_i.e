@@ -122,7 +122,7 @@ feature -- Status report
 	mode_is_drag_and_drop: BOOLEAN
 			-- Is the transport mechanism drag and drop?
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	start_transport (
         a_x, a_y, a_button: INTEGER;
@@ -269,6 +269,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/15 19:21:40  rogers
+--| Changed the export status of implementation features to EV_ANY_I.
+--|
 --| Revision 1.15  2000/02/14 11:40:35  oconnor
 --| merged changes from prerelease_20000214
 --|

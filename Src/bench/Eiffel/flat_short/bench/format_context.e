@@ -344,8 +344,8 @@ feature -- Setting
 	set_no_new_line_between_tokens is
 			-- Neither new line nor space between tokens.
 		do
-			format.set_new_line_between_tokens (false)
-			format.set_space_between_tokens (false)
+			format.set_new_line_between_tokens (False)
+			format.set_space_between_tokens (False)
 		ensure
 			not format.new_line_between_tokens
 			not format.space_between_tokens
@@ -354,8 +354,8 @@ feature -- Setting
 	set_space_between_tokens is
 			-- Add a space character after the separator.
 		do
-			format.set_new_line_between_tokens (false)
-			format.set_space_between_tokens (true)
+			format.set_new_line_between_tokens (False)
+			format.set_space_between_tokens (True)
 		ensure
 			not format.new_line_between_tokens
 			format.space_between_tokens
@@ -496,7 +496,7 @@ feature -- Setting local format details
 	continue_on_failure is
 			-- Set abort flag for format to be False.
 		do
-			format.set_must_abort (false)
+			format.set_must_abort (False)
 		ensure
 			not_must_abort_on_failure: not must_abort_on_failure
 		end
@@ -518,7 +518,7 @@ feature -- Setting local format details
 	need_dot is
 			-- Formatting needs dot.
 		do
-			format.set_dot_needed (true)
+			format.set_dot_needed (True)
 		ensure
 			format.dot_needed
 		end
@@ -547,8 +547,8 @@ feature -- Execution
 			if not rescued then
 				prev_class := System.current_class
 				prev_cluster := Inst_context.cluster
-				execution_error := false
-				class_name := class_c.name_in_upper
+				execution_error := False
+				class_name := class_c.name
 
 				if is_short then
 					client := system.any_class.compiled_class
@@ -571,7 +571,7 @@ feature -- Execution
 					format_registration.target_ast.format (Current)
 					Inst_context.set_cluster (Void)
 				else
-					execution_error := true
+					execution_error := True
 				end
 			else
 				Rescue_status.set_is_error_exception (False)
@@ -639,7 +639,7 @@ feature -- Update
 			text.head (format.position_in_text)
 			format_stack.remove
 			format := format_stack.item
-			last_was_printed := false
+			last_was_printed := False
 		ensure
 			not_last_was_printed: not last_was_printed
 			format_removed: not format_stack.has (old format)
@@ -650,7 +650,6 @@ feature -- Element change
 	put_class_name (s: STRING) is
 			-- Append class name to 'text', treated as a stone.
 		local
-			tmp: STRING
 			classi: CLASS_I
 		do
 			if not tabs_emitted then
@@ -660,8 +659,7 @@ feature -- Element change
 			if is_for_case then
 				text.add_default_string (s)
 			else
-				tmp := s.as_lower
-				classi := Universe.class_named (tmp, class_c.cluster)
+				classi := Universe.class_named (s, class_c.cluster)
 				if classi = Void then
 					text.add_default_string (s)
 				else
@@ -672,14 +670,11 @@ feature -- Element change
 
 	put_classi (c: CLASS_I) is
 			-- Append class name to 'text', treated as a stone.
-		local
-			s: STRING
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end
-			s := c.name_in_upper
-			text.add_classi (c, s)
+			text.add_classi (c, c.name)
 		end
 
 	prepare_class_text is
@@ -719,9 +714,9 @@ feature -- Element change
 				-- normal to an infix and
 				-- for rolling back.
 			f.set_insertion_point (text.cursor)
-			f.set_dot_needed (false)
+			f.set_dot_needed (False)
 			local_adapt := unnested_local_adapt
-			last_was_printed := true
+			last_was_printed := True
 		end
 	
 	prepare_for_feature (name: STRING; args: EIFFEL_LIST [EXPR_AS]) is
@@ -1061,7 +1056,7 @@ feature -- Implementation
 				end
 --| FIXME VB 06/13/2000 Removed this:
 --|				if (in_assertion and then not is_feature_visible) then
---|					last_was_printed := false
+--|					last_was_printed := False
 --|				end
 --| ... and suddenly all contracts seem to be printed...!?!
 --| I presume the purpose is to hide assertions that have non-exported
@@ -1100,7 +1095,7 @@ feature -- Implementation
 					-- Reestablish local adaptations.
 					local_adapt := adapt
 				else
-					last_was_printed := true
+					last_was_printed := True
 				end;			
 			end
 		end
@@ -1181,7 +1176,7 @@ feature -- Implementation
 	put_infix_name (adapt: like local_adapt) is
 		do
 			text.add (operator_to_item (adapt.final_name, adapt))
-			last_was_printed := true
+			last_was_printed := True
 		end
 
 	operator_to_item (a_visual_name: STRING; adapt: like local_adapt): BASIC_TEXT is

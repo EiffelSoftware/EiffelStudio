@@ -35,8 +35,8 @@ feature {NONE}-- Initialization
 	initialize is
 			-- initialize `Current'.
 		do
---			C.gtk_container_add (App_implementation.default_window_imp.hbox, clipboard_widget)
---			C.gtk_widget_show (clipboard_widget)
+--			feature {EV_GTK_EXTERNALS}.gtk_container_add (App_implementation.default_window_imp.hbox, clipboard_widget)
+--			feature {EV_GTK_EXTERNALS}.gtk_widget_show (clipboard_widget)
 --			is_initialized := True
 		end
 
@@ -49,18 +49,18 @@ feature -- Access
 			a_gs1, a_gs2: GEL_STRING
 			edit_chars: POINTER
 		do
---			C.gtk_editable_delete_text (clipboard_widget, 0, -1)
+--			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
 --			create a_gs1.make ("CLIPBOARD")
 --			create a_gs2.make ("COMPOUND_TEXT")
---			a_success := C.gtk_selection_convert (
+--			a_success := feature {EV_GTK_EXTERNALS}.gtk_selection_convert (
 --				clipboard_widget,
---				C.gdk_atom_intern (a_gs1.item, 1),
---				C.gdk_atom_intern (a_gs2.item, 1),
---				C.GDK_CURRENT_TIME
+--				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_gs1.item, 1),
+--				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_gs2.item, 1),
+--				feature {EV_GTK_EXTERNALS}.gDK_CURRENT_TIME
 --			)
---			edit_chars := C.gtk_editable_get_chars (clipboard_widget, 0, -1)
+--			edit_chars := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (clipboard_widget, 0, -1)
 --			create Result.make_from_c (edit_chars)
---			C.g_free (edit_chars)
+--			feature {EV_GTK_EXTERNALS}.g_free (edit_chars)
 		end
 
 feature -- Status Setting
@@ -77,10 +77,10 @@ feature -- Status Setting
 				clip_text := ""
 			end
 			create a_gs.make (clip_text)
-			C.gtk_editable_delete_text (clipboard_widget, 0, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
 			--gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_gs.item, -1)
-			C.gtk_editable_select_region (clipboard_widget, 0, -1)
-			C.gtk_editable_copy_clipboard (clipboard_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (clipboard_widget, 0, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (clipboard_widget)
 		end
 		
 feature {NONE} -- Externals

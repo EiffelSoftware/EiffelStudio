@@ -22,7 +22,8 @@ inherit
 			internal_set_caret_position,
 			insert_text,
 			visual_widget,
-			set_background_color
+			set_background_color,
+			initialize
 		end
 		
 	EV_FONTABLE_IMP
@@ -40,7 +41,16 @@ feature {NONE} -- Initialization
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
+			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new)
+			entry_widget := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (c_object)
 		end
+		
+	initialize is
+			-- 
+		do
+			Precursor {EV_TEXT_COMPONENT_IMP}
+		end
+		
 
 feature -- Access
 
@@ -102,20 +112,27 @@ feature -- Status setting
 	
 	insert_text (txt: STRING) is
 		local
+			a_gs: GEL_STRING
 		do
+			create a_gs.make (text)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (entry_widget, a_gs.item, -1)
 		end
 	
-	set_text (txt: STRING) is
+	set_text (a_text: STRING) is
+		local
+			a_gs: GEL_STRING
 		do
+			create a_gs.make (a_text)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (entry_widget, a_gs.item, -1)
 		end
 	
-	append_text (txt: STRING) is
+	append_text (a_text: STRING) is
 			-- Append `txt' to `text'.
 		local
 		do
 		end
 	
-	prepend_text (txt: STRING) is
+	prepend_text (a_text: STRING) is
 			-- Prepend 'txt' to `text'.
 		local
 		do

@@ -34,13 +34,13 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create a_gs.make ("Font selection dialog")
-			set_c_object (C.gtk_font_selection_dialog_new (
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
 						a_gs.item
 					))
 			create temp_font
 			temp_font.set_height (14)
 			set_font (temp_font)
-			C.gtk_widget_realize (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 
 	reset_dialog is
@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 		do
 --			a_font_sel := gtk_font_selection_dialog_struct_fontsel (c_object)
 --			a_pixels_button := gtk_font_selection_struct_pixels_button (a_font_sel)
---			C.gtk_toggle_button_set_active (a_pixels_button, True)
---			C.gtk_widget_hide (C.gtk_widget_struct_parent (a_pixels_button))
+--			feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (a_pixels_button, True)
+--			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_pixels_button))
 		end
 
 	initialize is
@@ -89,7 +89,7 @@ feature -- Access
 			create Result
 			font_imp ?= Result.implementation
 			create a_fullname.make (0)
---			a_fullname.from_c (C.gtk_font_selection_dialog_get_font_name (c_object))
+--			a_fullname.from_c (feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object))
 --			Result.preferred_families.extend (font_imp.substring_dash (a_fullname, 2))
 --
 --			a_font_height := font_imp.substring_dash (a_fullname, 7)
@@ -98,9 +98,9 @@ feature -- Access
 --					gtk_font_selection_dialog_struct_fontsel (c_object)
 --				)
 --				a_selected_index := pointer_to_integer (
---					C.glist_struct_data (gtk_clist_struct_selection (size_clist))
+--					feature {EV_GTK_EXTERNALS}.glist_struct_data (gtk_clist_struct_selection (size_clist))
 --				)
---				a_selected_index := C.gtk_clist_get_text (
+--				a_selected_index := feature {EV_GTK_EXTERNALS}.gtk_clist_get_text (
 --							size_clist,
 --							a_selected_index,
 --							0,
@@ -125,7 +125,7 @@ feature -- Element change
 		do
 			font_imp ?= a_font.implementation
 			create a_gs.make (font_imp.system_name)
---			a_success_flag := C.gtk_font_selection_dialog_set_font_name (
+--			a_success_flag := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 --							c_object,
 --							a_gs.item
 --						)

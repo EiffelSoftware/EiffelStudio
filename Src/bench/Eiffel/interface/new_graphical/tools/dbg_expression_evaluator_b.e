@@ -180,6 +180,9 @@ feature -- EXPR_B evaluation
 
 			l_value_i: VALUE_I
 		do
+			debug ("debugger_evaluator")
+				print (generator + ".evaluate_expr_b (" + a_expr_b.generator + ")%N")
+			end
 			l_value_i := a_expr_b.evaluate
 			if l_value_i.is_no_value then
 				l_paran_b ?= a_expr_b
@@ -1012,7 +1015,7 @@ feature -- Concrete evaluation
 						f.arguments.i_th (params.index).type_i).is_basic)
 				then
 					debug ("debugger_trace_eval_data")
-						print (generating_type + ".evaluate_function :: Send Metamorphose request ... %N")
+						print (generating_type + ".prepare_parameters_for_classic :: Send Metamorphose request ... %N")
 					end
 					send_rqst_0 (Rqst_metamorphose)
 				end
@@ -1045,7 +1048,7 @@ feature -- Concrete evaluation
 				end
 				print ("%Tfeature="); print (f.name); print ("%N")
 			end
-			if not Application.is_dotnet then
+			if Application.is_classic then
 					-- Initialize the communication.
 				Init_recv_c
 			end
@@ -1076,7 +1079,7 @@ feature -- Concrete evaluation
 				end
 			else
 				l_dyntype := l_dynclass.types.first
-			end				
+			end
 
 			if not error_occurred then
 					-- Get real feature
@@ -1527,7 +1530,13 @@ feature {NONE} -- compiler helpers
 			check
 				l_basic_not_void: l_basic /= Void
 			end
-			Result := l_basic.associated_reference_class_type
+			if application.is_dotnet then
+				Result := l_basic.associated_reference_class_type
+			else
+					-- FIXME jfiat 2004-10-06 : why do we have two different behaviors
+					-- depending if we are on dotnet or classic ?
+				Result := l_basic.associated_class_type
+			end
 		ensure
 			associated_reference_class_type_not_void: Result /= Void
 		end		

@@ -111,6 +111,26 @@ feature -- Properties
 				class_windows_count /= 0
 		end
 				
+	is_class_opened (cl_name:STRING):BOOLEAN is
+			-- Return True if the class is already opened in a class_tool
+			-- return False otherwise.
+		local
+			active_class_editors: LINKED_LIST[CLASS_W]
+		do
+			Result := False
+			active_class_editors := class_win_mgr.active_editors
+			from
+				active_class_editors.start
+			until
+				active_class_editors.after and Result
+			loop
+				if active_class_editors.item.class_text_field.text.is_equal(cl_name) then
+					Result := True
+				end
+				active_class_editors.forth	
+			end
+		end
+
 feature -- Graphical Interface
 
 	close (ed: TOOL_W) is

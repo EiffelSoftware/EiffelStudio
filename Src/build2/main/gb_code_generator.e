@@ -92,6 +92,8 @@ feature -- Basic operation
 				build_application_file
 			end
 			
+			build_constants_file
+			
 			root_element ?= current_document.first
 			from
 				root_element.start
@@ -297,6 +299,32 @@ feature {NONE} -- Implementation
 				ace_output_file.close
 			end
 		end
+		
+		build_constants_file is
+				--
+			local
+				constants_file_name: FILE_NAME
+				constants_file: PLAIN_TEXT_FILE
+				constants_content: STRING
+			do
+				--| FIXME handle visual studio wizard.
+				
+					--Firstly read the contents of the file.
+				create constants_file.make_open_read (constants_template_file_name)
+				constants_file.read_stream (constants_file.count)
+				constants_file.close
+				constants_content := constants_file.last_string
+				
+					-- Now write the new constants file to disk.
+				constants_file_name := clone (generated_path)
+				constants_file_name.extend ("constants.e")
+
+				create constants_file.make_open_write (constants_file_name)
+				constants_file.start
+				constants_file.putstring (constants_content)
+				constants_file.close
+			end
+			
 
 		build_application_file is
 				-- Generate an application class for the project.
@@ -467,9 +495,9 @@ feature {NONE} -- Implementation
 				
 					-- Add code for Precursor call in `intialize'.
 				if project_settings.client_of_window then
-					add_generated_string (class_text, Void, precursor_tag)
+					add_generated_string (class_text, "initialize_constants", precursor_tag)
 				else
-					add_generated_string (class_text, "Precursor {" + document_info.type + "}", precursor_tag)
+					add_generated_string (class_text, "Precursor {" + document_info.type + "}" + Indent + "initialize_constants", precursor_tag)
 				end
 				
 					-- Add code for creation of widgets to `class_text'.

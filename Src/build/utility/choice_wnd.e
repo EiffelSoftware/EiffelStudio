@@ -53,17 +53,21 @@ feature
 
 feature {NONE}
 
-	first_line: STRING is
+	first_line: STRING_SCROLLABLE_ELEMENT is
 		once
-			Result := "Cancel"
+			!! Result.make (6)
+			Result.append ("Cancel")
 		end;
 
-	no_item_line: STRING is
+	no_item_line: STRING_SCROLLABLE_ELEMENT is
 		once
-			Result := "-- no items --"
+			!! Result.make (14)
+			Result.append ("-- no items --")
 		end;
 	
 	fill (l: LINKED_LIST [STRING]) is
+		local
+			a_string_scrollable_element: STRING_SCROLLABLE_ELEMENT
 		do
 			list.wipe_out;
 			if l.empty then
@@ -73,14 +77,16 @@ feature {NONE}
 				from
 					list.start;
 					l.start;
-					list.put_right (first_line);
+					list.force (first_line);
 					list.forth;
 				until
 					l.after
 				loop
-					list.put_right (l.item);
+					!! a_string_scrollable_element.make (0)
+					a_string_scrollable_element.append (l.item)
+					list.force (a_string_scrollable_element);
 					l.forth;
-					list.forth
+--					list.forth
 				end;
 				if list.count >= 10 then
 					list.set_visible_item_count (10);
@@ -108,7 +114,7 @@ feature -- EiffelVision
 
 feature {NONE}
 
-	list: SCROLL_LIST;
+	list: SCROLLABLE_LIST;
 
 	execute (argument: ANY) is
 		do

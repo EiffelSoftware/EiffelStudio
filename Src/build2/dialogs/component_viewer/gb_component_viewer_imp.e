@@ -64,7 +64,7 @@ feature {NONE}-- Initialization
 			
 			set_minimum_width (300)
 			set_minimum_height (400)
-			set_title ("Display window")
+			set_title ("Component viewer")
 			l_ev_vertical_box_1.set_padding_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)

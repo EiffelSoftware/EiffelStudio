@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			type := a_text
 				-- We must now add the correct pixmap.
 			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (type))
+			set_pixmap (pixmaps.pixmap_by_name (type.as_lower))
 		end
 
 	initialize is

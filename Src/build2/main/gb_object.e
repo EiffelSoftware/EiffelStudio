@@ -30,6 +30,8 @@ inherit
 	GB_SHARED_XML_HANDLER
 	
 	GB_WIDGET_UTILITIES
+	
+	EV_ANY_HANDLER
 
 feature {NONE} -- Initialization
 	

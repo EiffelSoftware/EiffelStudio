@@ -37,7 +37,7 @@ feature
 			until
 				error_list.offright
 			loop
-				io.error.putchar ('%T');
+				a_clickable.put_string ("%T");
 				error_list.item.build_explain (a_clickable);
 				error_list.forth;
 			end;

@@ -41,13 +41,13 @@ feature
             -- in `a_clickable'.
         do
             vwoe_build_explain (a_clickable);
-			io.error.putstring ("%T%T");
+			a_clickable.put_string ("%T%T");
 -- FIXME:
 --			actual_type.build_explain;
-			io.error.putstring (" doesn't conform to ");
+			a_clickable.put_string (" doesn't conform to ");
 -- FIXME:
 --			formal_type.build_explain;
-			io.error.new_line;
+			a_clickable.new_line;
 		end;
 
 end

@@ -27,19 +27,18 @@ feature
             -- Build specific explanation explain for current error
             -- in `a_clickable'.
         do
-			io.error.putstring ("VHPR: point 1%N");
-			io.error.putstring ("%T");
+			a_clickable.put_string ("VHPR: point 1%N%T");
 			from
 				involved_classes.start
 			until
 				involved_classes.offright
 			loop
-				io.error.putstring
-					(System.class_of_id (involved_classes.item).class_name);
-				io.error.putstring ("  ");
+				System.class_of_id (involved_classes.item).append_clickable_signature
+																(a_clickable);
+				a_clickable.put_string ("  ");
 				involved_classes.forth;
 			end;
-			io.error.new_line;
+			a_clickable.new_line;
 		end;
 
 end

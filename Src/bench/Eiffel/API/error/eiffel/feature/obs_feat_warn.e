@@ -33,16 +33,16 @@ feature
 		do
 			if a_feature /= Void then
 				a_clickable.put_string ("%T%Tin feature `");
-				a_clickable.put_string (a_feature.feature_name);
+				a_feature.append_clickable_signature (a_clickable);
 				a_clickable.put_string ("':%N%T%T");
 			else
 				a_clickable.put_string ("%T%Tin invariant%N%T%T");
 			end;
-			a_clickable.put_string (obsolete_feature.feature_name);
+			obsolete_feature.append_clickable_signature (a_clickable);
 			a_clickable.put_string (" is obsolete: ");
 			a_clickable.put_string (obsolete_feature.obsolete_message);
 			a_clickable.put_string (" (class ");
-			a_clickable.put_string (associated_class.signature);
+			associated_class.append_clickable_name (a_clickable);
 			a_clickable.put_string (")");
 			a_clickable.new_line;
 		end;

@@ -84,6 +84,8 @@ feature
 
 	associated_class: CLASS_C is
 			-- Class ARRAY
+		require else
+			array_class_compiled: System.array_class.compiled
 		once
 			Result := System.array_class.compiled_class;
 		end;

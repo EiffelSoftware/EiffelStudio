@@ -5,6 +5,9 @@ class VD02
 inherit
 
 	ERROR
+		redefine
+			build_explain
+		end;
 
 feature
 
@@ -30,6 +33,15 @@ feature
 			-- Error code
 		do
 			Result := "VD02";
+		end;
+
+	build_explain (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("The Use file `");
+			a_clickable.put_string (use_name);
+			a_clickable.put_string ("' specified in the cluster clause `");
+			a_clickable.put_string (cluster.cluster_name);
+			a_clickable.put_string ("' does not exist%N");
 		end;
 
 end

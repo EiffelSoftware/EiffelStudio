@@ -64,6 +64,8 @@ feature
 
 	associated_class: CLASS_C is
 			-- Class INTEGER
+		require else
+			integer_class_compiled: System.integer_class.compiled;
 		once
 			Result := System.integer_class.compiled_class;
 		end;

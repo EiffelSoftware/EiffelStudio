@@ -35,9 +35,9 @@ feature
             -- in `a_clickable'.
         do
             old_build_explain (a_clickable);
-			io.error.putstring ("%Tfeature: ");
-			io.error.putstring (feature_name);
-			io.error.new_line;
+			a_clickable.put_string ("%Tfeature: ");
+			a_clickable.put_string (feature_name);
+			a_clickable.new_line;
 		end;
 
 end

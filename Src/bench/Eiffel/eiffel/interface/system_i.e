@@ -538,6 +538,7 @@ end;
 			-- Class type of type id `type_id'.
 		require
 			index_small_enough: type_id <= class_types.count;
+			valid_index: type_id <= type_id_counter.value;
 		do
 			Result := class_types.item (type_id);
 		end;
@@ -2650,7 +2651,7 @@ feature -- Main file generation
 			static_type: INTEGER;
 			feature_id: INTEGER;
 			has_argument: BOOLEAN;
-			i: INTEGER
+			i, nb: INTEGER
 		do
 
 			final_mode := byte_context.final_mode;
@@ -2748,11 +2749,16 @@ feature -- Main file generation
 
 				Main_file.putstring ("%Nvoid tabinit()%N{%N");
 				from
-					i := class_types.lower
+					i := 1;
+					nb := type_id_counter.value
 				until
-					i > class_types.upper
+					i > nb
 				loop
 					cl_type := class_types.item (i);
+
+-- FIXME ???
+-- cl_type cannot be Void if process_dynamic_types has been done in
+-- freeze_system.
 					if cl_type /= Void then
 						Main_file.putstring ("%TInit");
 						Main_file.putint (cl_type.id);

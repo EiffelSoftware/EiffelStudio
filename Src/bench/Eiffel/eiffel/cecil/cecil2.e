@@ -23,6 +23,8 @@ feature
 
 	init (n: INTEGER) is
 			-- Initialization
+		require else
+			True
 		local
 			hash_size: INTEGER;
 		do

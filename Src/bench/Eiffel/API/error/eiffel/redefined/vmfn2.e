@@ -37,6 +37,7 @@ feature
 			-- in `a_clickable'.
 		local
 			feature_info: INHERIT_INFO;
+			feature_i: FEATURE_I;
 			parent: CLASS_C;
 		do
             old_build_explain (a_clickable);
@@ -46,15 +47,15 @@ feature
 				features.offright
 			loop
 				feature_info := features.item;
-				io.error.putstring ("%Tfeature ");
-				io.error.putstring (feature_info.a_feature.feature_name);
-				io.error.putstring (" inherited from ");
+				feature_i := feature_info.a_feature;
+				a_clickable.put_string ("%Tfeature ");
+				feature_i.append_clickable_signature (a_clickable);
+				a_clickable.put_string (" inherited from ");
 				parent := System.class_of_id (feature_info.parent.parent_id);
-				io.error.putstring (parent.class_name);
-				io.error.putstring (" written in ");
-				io.error.putstring
-							(feature_info.a_feature.written_class.class_name);
-				io.error.new_line;
+				parent.append_clickable_name (a_clickable);
+				a_clickable.put_string (" written in ");
+				feature_i.written_class.append_clickable_name (a_clickable);
+				a_clickable.new_line;
 				features.forth;
 			end;
 		end;

@@ -4,7 +4,8 @@ class ERROR_HANDLER
 
 inherit
 
-	EXCEPTIONS
+	EXCEPTIONS;
+	WINDOWS;
 
 creation
 
@@ -38,7 +39,7 @@ feature	-- Error handling primitives
 			good_argument: e /= Void
 		do
 debug
-io.error.putstring ("Inserting error object:%N");
+debug_window.put_string ("Inserting error object:%N");
 e.trace;
 end;
 			new_error := True;
@@ -52,7 +53,7 @@ end;
 			good_argument: w /= Void
 		do
 debug
-io.error.putstring ("Inserting warning object:%N");
+debug_window.put_string ("Inserting warning object:%N");
 w.trace;
 end;
 			warning_list.finish;	
@@ -185,7 +186,7 @@ feature -- Debug purpose
 				error_list.offright
 			loop
 				error_list.item.trace;
-				io.error.putstring ("------------------------------%N");
+				error_window.put_string ("------------------------------%N");
 				error_list.forth;
 			end;
 		end;
@@ -197,9 +198,9 @@ feature -- Debug purpose
 			until
 				warning_list.offright
 			loop
-				io.error.putstring ("%T");
+				error_window.put_string ("%T");
 				warning_list.item.trace;
-				io.error.putstring ("------------------------------%N");
+				error_window.put_string ("------------------------------%N");
 				warning_list.forth;
 			end;
 			warning_list.wipe_out;

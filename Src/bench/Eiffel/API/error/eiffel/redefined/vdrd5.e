@@ -39,15 +39,15 @@ feature
 			-- in `a_clickable'.
 		do
 			eiffel_error_build_explain (a_clickable);
-			io.error.putstring ("%Tprecursor: ");
-			io.error.putstring (precursor.feature_name);
-			io.error.putstring (" written in ");
-			io.error.putstring (precursor.written_class.class_name);
-			io.error.putstring ("%N%Tredeclaration: ");
-			io.error.putstring (redeclaration.feature_name);
-			io.error.putstring (" written in ");
-			io.error.putstring (redeclaration.written_class.class_name);
-			io.error.new_line;
+			a_clickable.put_string ("%Tprecursor: ");
+			precursor.append_clickable_signature (a_clickable);
+			a_clickable.put_string (" written in ");
+			precursor.written_class.append_clickable_name (a_clickable);
+			a_clickable.put_string ("%N%Tredeclaration: ");
+			redeclaration.append_clickable_signature (a_clickable);
+			a_clickable.put_string (" written in ");
+			redeclaration.written_class.append_clickable_name (a_clickable);
+			a_clickable.new_line;
 		end;
 
 end

@@ -47,13 +47,13 @@ feature
             -- in `a_clickable'.
         do
 			vdrd5_build_explain (a_clickable);
-			io.error.putstring ("%Tprecursor type: ");
+			a_clickable.put_string ("%Tprecursor type: ");
 -- FIXME:
 --			precursor_type.build_explain;
-			io.error.putstring ("%N%Tredeclared type: ");
+			a_clickable.put_string ("%N%Tredeclared type: ");
 -- FIXME:
 --			type.build_explain;
-			io.error.new_line;
+			a_clickable.new_line;
 		end;
 
 end

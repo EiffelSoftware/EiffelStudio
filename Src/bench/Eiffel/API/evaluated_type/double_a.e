@@ -60,6 +60,8 @@ feature
 
 	associated_class: CLASS_C is
 			-- Class DOUBLE
+		require else
+			double_class_compiled: System.double_class.compiled
 		once
 			Result := System.double_class.compiled_class;
 		end;

@@ -624,14 +624,12 @@ feature
 					inh_assert.generate_precondition
 				end;
 
-				if have_assert then
-					if workbench_mode then
-						generated_file.putstring ("RTCF;");
-						generated_file.new_line;
-						generated_file.putchar ('}');
-						generated_file.new_line;
-						generated_file.exdent;
-					end;
+				generated_file.putstring ("RTCF;");
+				generated_file.new_line;
+				if workbench_mode then
+					generated_file.putchar ('}');
+					generated_file.new_line;
+					generated_file.exdent;
 				end;
 			end;
 		end;
@@ -756,8 +754,8 @@ feature
 	exception_stack_managed: BOOLEAN is
 			-- Do we have to manage the exception stack
 		do
-			Result := context.workbench_mode;
---			Result := true;
+--			Result := context.workbench_mode;
+			Result := true;
 		end;
 
 	generate_execution_declarations is

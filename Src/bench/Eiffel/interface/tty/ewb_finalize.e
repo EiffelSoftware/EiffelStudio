@@ -28,8 +28,11 @@ feature
 				end;
 				if not error_occurred then
 					compile;
+						-- Save the project before the finalization in order to
+						-- be able to use the project for other melting/freezing
+						-- or finalization afterwards.
+					terminate_project;
 					System.finalized_generation;
-					terminate_project
 				end;
 				print_tail;
 			end;

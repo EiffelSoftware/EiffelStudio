@@ -44,14 +44,14 @@ feature
 			loop
 				info := selection_list.item;
 				if (info.parent = Void) then
-					io.error.putstring ("%Tin current class: ");
+					a_clickable.put_string ("%Tin current class: ");
 				else
-					io.error.putstring ("%Tin parent ");
-					io.error.putstring (info.parent.class_name);
-					io.error.putstring (": ");
+					a_clickable.put_string ("%Tin parent ");
+					a_clickable.put_string (info.parent.class_name);
+					a_clickable.put_string (": ");
 				end;
-				io.error.putstring (info.a_feature.feature_name);
-				io.error.new_line;
+				info.a_feature.append_clickable_signature (a_clickable);
+				a_clickable.new_line;
 
 				selection_list.forth;
 			end;

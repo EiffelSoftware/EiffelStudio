@@ -29,14 +29,14 @@ feature
 		local
 			compiled_class: CLASS_C;
 			dummy_reference: CLASS_C;
-			class_stone: CLASSC_STONE
 		do
 			error_window.put_string (Error_string);
 			error_window.put_clickable_string (stone (dummy_reference), code);
-			error_window.put_string (" in class ");
+			error_window.put_string (" (");
+			error_window.put_string (generator);
+			error_window.put_string (") in class ");
 			compiled_class := System.class_of_id (class_id);
-			class_stone := compiled_class.stone;
-			error_window.put_clickable_string (class_stone, class_stone.signature);
+			compiled_class.append_clickable_signature (error_window);
 			error_window.put_string (":%N");
 			build_explain (error_window)
 		end

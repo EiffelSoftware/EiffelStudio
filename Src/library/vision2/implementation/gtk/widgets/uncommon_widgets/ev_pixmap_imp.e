@@ -324,7 +324,7 @@ feature -- Access
 					(array_offset \\ (a_width)), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				feature {EV_GTK_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
 				if n_character = 8 then
 					n_character := 0
@@ -384,7 +384,7 @@ feature -- Access
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
-				feature {EV_GTK_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)

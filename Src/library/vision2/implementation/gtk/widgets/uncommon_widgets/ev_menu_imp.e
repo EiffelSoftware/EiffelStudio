@@ -83,7 +83,7 @@ feature -- Basic operations
 			pc := (create {EV_SCREEN}).pointer_position
 			bw := feature {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
 			if not interface.is_empty then
-				feature {EV_GTK_EXTERNALS}.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
 			end
 		end
 
@@ -92,7 +92,7 @@ feature -- Basic operations
 			-- of `a_widget'.
 		do
 			if not interface.is_empty then
-				feature {EV_GTK_EXTERNALS}.c_gtk_menu_popup (list_widget,
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.c_gtk_menu_popup (list_widget,
 					a_widget.screen_x + a_x,
 					a_widget.screen_y + a_y)
 			end

@@ -73,7 +73,7 @@ feature -- XML saving
 			Result.extend ("system_interface.xml")
 		end
 		
-	linux_ace_name: STRING is "ace.Linux.ace"
+	unix_ace_name: STRING is "ace.Unix.ace"
 	
 	windows_ace_name: STRING is "ace.Windows.ace"
 		

@@ -279,7 +279,7 @@ feature -- Basic operations
 			end
 		end
 		
-	ensure_item_visible (tree_item: EV_TREE_ITEM) is
+	ensure_item_visible (tree_item: EV_TREE_NODE) is
 			-- Ensure `tree_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local

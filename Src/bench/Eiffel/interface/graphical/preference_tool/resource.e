@@ -56,4 +56,12 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
+feature -- Update
+
+	update_with (other: like Current) is
+			-- Update Current with the value of `other'
+		do
+			set_value (other.value)
+		end
+		
 end -- class RESOURCE

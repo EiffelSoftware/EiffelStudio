@@ -7,7 +7,7 @@ class CALL_STACK_ELEMENT_DOTNET
 
 inherit
 	
-	CALL_STACK_ELEMENT
+	EIFFEL_CALL_STACK_ELEMENT
 
 	COMPILER_EXPORTER
 		export
@@ -84,7 +84,8 @@ feature -- Filling
 			
 			dynamic_type := a_dyn_type
 			if dynamic_type /= Void then
-				dynamic_class := dynamic_type.associated_class	
+				dynamic_class := dynamic_type.associated_class
+				class_name := dynamic_class.name_in_upper				
 			end
 			if a_org_class /= Void then
 				origin_class := a_org_class

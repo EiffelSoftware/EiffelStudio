@@ -7,7 +7,7 @@ class CALL_STACK_ELEMENT_CLASSIC
 
 inherit
 
-	CALL_STACK_ELEMENT
+	EIFFEL_CALL_STACK_ELEMENT
 
 	OBJECT_ADDR
 
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_rout_c%N"); end
 			init_rout_c
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_rout_info%N"); end
-			c_recv_rout_info(Current)
+			c_recv_rout_info (Current)
 
 			debug ("DEBUGGER_TRACE")
 				if is_exhausted then
@@ -350,7 +350,8 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 			else
 				dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
 				if dynamic_type /= Void then
-					dynamic_class := dynamic_type.associated_class					
+					dynamic_class := dynamic_type.associated_class
+					class_name := dynamic_class.name_in_upper
 				end
 				origin_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 

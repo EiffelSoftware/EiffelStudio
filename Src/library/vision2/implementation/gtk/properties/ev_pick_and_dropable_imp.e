@@ -336,6 +336,12 @@ feature -- Implementation
 			post_drop_steps
 
 			call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			
+			if pointer_style /= Void then
+				internal_set_pointer_style (pointer_style)
+			else
+				C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), NULL)
+			end
 
 			--a_mouse_window := C.gdk_window_at_pointer ($a_mouse_x, $a_mouse_y)
 			--if pointer_over_widget (a_mouse_window, a_mouse_x, a_mouse_y) then
@@ -355,6 +361,12 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 		end
+		
+	pointer_style: EV_CURSOR is
+			-- 
+		deferred
+		end
+		
 
 	call_press_actions (targ: EV_ABSTRACT_PICK_AND_DROPABLE; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 		local
@@ -435,7 +447,7 @@ feature -- Implementation
 				end
 			end
 		end
-		Max_draw_ignore: INTEGER is 80
+		Max_draw_ignore: INTEGER is 2
 
 	erase_rubber_band is
 			-- Erase previously drawn rubber band.
@@ -445,6 +457,12 @@ feature -- Implementation
 				rubber_band_is_drawn := False
 			end
 		end
+		
+	root_parent: POINTER is
+			-- GdkWindow of X root window.
+		once
+			Result := C.gdk_root_parent
+		end
 
 	real_draw_rubber_band is
 			-- Implementation of draw_rubber_band.
@@ -452,41 +470,42 @@ feature -- Implementation
 			ang, a, head: REAL
 			gc: POINTER
 		do
-			gc := invert_gc
-			C.gdk_draw_line (C.gdk_root_parent, gc,
+		--	gc := invert_gc
+			C.gdk_draw_line (root_parent, invert_gc,
 				x_origin, y_origin, old_pointer_x, old_pointer_y)
-			if target_highlight_is_drawn then
-				C.gdk_draw_arc (C.gdk_root_parent, gc,
-					1, old_pointer_x - Pebble_size, old_pointer_y - Pebble_size,
-					Pebble_size*2, Pebble_size*2, 0, Full_circle)
-			else
-				head:= Head_size
-				if x_origin = old_pointer_x then
-					ang := pi/2
-					if y_origin < old_pointer_y then
-						head := - head
-					end
-				else
-					ang := arc_tangent ((y_origin - old_pointer_y)
-						/ (x_origin - old_pointer_x))
-				end
-				a := 0.3
-				if old_pointer_x <= x_origin then
-					head := - head
-				end
-				C.gdk_draw_line (C.gdk_root_parent, gc,
-					old_pointer_x, old_pointer_y,
-					old_pointer_x + (cosine (ang - a) * head).rounded,
-					old_pointer_y + (sine (ang - a) * head).rounded)
-				C.gdk_draw_line (C.gdk_root_parent, gc,
-					old_pointer_x, old_pointer_y,
-					old_pointer_x + (cosine (ang + a) * head).rounded,
-					old_pointer_y + (sine (ang + a) * head).rounded)
+			--| FIXME IEK  Implement cursor functionality.
+--			if target_highlight_is_drawn then
+--				C.gdk_draw_arc (C.gdk_root_parent, gc,
+--					1, old_pointer_x - Pebble_size, old_pointer_y - Pebble_size,
+--					Pebble_size*2, Pebble_size*2, 0, Full_circle)
+--			else
+--				head:= Head_size
+--				if x_origin = old_pointer_x then
+--					ang := pi/2
+--					if y_origin < old_pointer_y then
+--						head := - head
+--					end
+--				else
+--					ang := arc_tangent ((y_origin - old_pointer_y)
+--						/ (x_origin - old_pointer_x))
+--				end
+--				a := 0.3
+--				if old_pointer_x <= x_origin then
+--					head := - head
+--				end
+--				C.gdk_draw_line (C.gdk_root_parent, gc,
+--					old_pointer_x, old_pointer_y,
+--					old_pointer_x + (cosine (ang - a) * head).rounded,
+--					old_pointer_y + (sine (ang - a) * head).rounded)
+--				C.gdk_draw_line (C.gdk_root_parent, gc,
+--					old_pointer_x, old_pointer_y,
+--					old_pointer_x + (cosine (ang + a) * head).rounded,
+--					old_pointer_y + (sine (ang + a) * head).rounded)
 --				C.gdk_draw_arc (C.gdk_root_parent, gc,
 --					1, x_origin - Pebble_size, y_origin - Pebble_size,
 --					Pebble_size*2, Pebble_size*2, 0, Full_circle)
 -- FIXME Signature for pebble has changed.
-			end
+--			end
 		end
 		Head_size: INTEGER is -15
 		Pebble_size: INTEGER is 4

@@ -308,7 +308,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Find a font face based on properties
 			-- `preferred_face' and `family'.
 		local
-			lower_face: STRING
+			found_face: STRING
 			found: BOOLEAN
 			dc: WEL_MEMORY_DC
 			text_metric: WEL_TEXT_METRIC
@@ -345,14 +345,13 @@ feature {EV_ANY_I} -- Implementation
 				until
 					found or preferred_families.after
 				loop
-					lower_face := preferred_families.item.twin
-					lower_face.to_lower
-					found := Font_enumerator.font_faces.has (lower_face)
+					found_face := preferred_families.item.twin
+					found := Font_enumerator.font_faces.has (found_face)
 					preferred_families.forth
 				end
 				if found then
-					Wel_log_font.set_face_name (lower_face)
-					wel_log_font.set_char_set (font_enumerator.text_metrics.item (lower_face).character_set)
+					Wel_log_font.set_face_name (found_face)
+					wel_log_font.set_char_set (font_enumerator.text_metrics.item (found_face).character_set)
 				else
 						-- Preferred face not found, leave Windows do
 						-- its best.

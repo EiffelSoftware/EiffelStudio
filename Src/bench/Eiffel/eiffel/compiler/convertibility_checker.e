@@ -351,12 +351,11 @@ feature -- Initialization/Checking
 					-- conversion
 				if
 					System.il_generation and then
-					(not a_source_type.is_external or a_source_type.is_expanded) and
-					a_target_type.is_external
+					(not a_source_type.is_external or a_source_type.is_expanded)
 				then
-						-- Special conversion between eiffel types and SYSTEM_OBJECT.
+						-- Special conversion between eiffel types/expanded types and SYSTEM_OBJECT/ANY.
 					l_cl_type ?= a_target_type
-					if l_cl_type /= Void and then l_cl_type.is_system_object then
+					if l_cl_type /= Void and then l_cl_type.is_system_object_or_any then
 						if a_source_type.is_expanded then
 								-- Case of passing an expanded to .NET
 							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_source_type)
@@ -396,10 +395,10 @@ feature -- Initialization/Checking
 						-- the formal generic is expanded it becomes a conversion.
 					create {FORMAL_CONVERSION_INFO} last_conversion_info.make (a_formal, a_target_type)
 					l_success := True
-				elseif System.il_generation and then a_target_type.is_external then
+				elseif System.il_generation then
 					l_cl_type ?= a_target_type
-					if l_cl_type /= Void and then l_cl_type.is_system_object then
-							-- Reattachement of a formal to SYSTEM_OBJECT, we allow this.
+					if l_cl_type /= Void and then l_cl_type.is_system_object_or_any then
+							-- Reattachement of a formal to SYSTEM_OBJECT/ANY, we allow this.
 						create {FORMAL_DOTNET_CONVERSION_INFO} last_conversion_info.make (a_formal, a_target_type)
 						l_success := True
 					end

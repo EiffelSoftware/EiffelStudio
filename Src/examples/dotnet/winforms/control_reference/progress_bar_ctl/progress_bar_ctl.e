@@ -15,6 +15,8 @@ inherit
 			dispose_boolean
 		end
 
+	EXCEPTIONS
+
 	ANY
 
 create
@@ -66,7 +68,7 @@ feature -- Access
 feature -- Implementation
 
 	initialize_components is
-			--
+			-- Initialize all componants of the form.
 		local
 			l_array: NATIVE_ARRAY [SYSTEM_STRING]
 			l_point: DRAWING_POINT
@@ -241,11 +243,8 @@ feature {NONE} -- Implementation
 			numerator   := prog_bar.value - min 
 			denominator := prog_bar.maximum - min 
 			completed   := (numerator / denominator) * 100.0 
-	
-			--lbl_completed.set_text ((feature {MATH}.round (completed).to_string + "%"").to_cil) 
-			lbl_completed.set_text ((completed.to_string_string2 (completed.to_string)))-- + "%"").to_cil)
-			feature {SYSTEM_CONSOLE}.write (("titi").to_cil)
-			feature {SYSTEM_CONSOLE}.write_double (completed)
+
+			lbl_completed.set_text ((completed.out + "%%").to_cil)
 		end
 
 	timed_progress_proc is
@@ -259,50 +258,21 @@ feature {NONE} -- Implementation
 			dummy: SYSTEM_OBJECT
 		do
 			if not rescued then
-				feature {SYSTEM_CONSOLE}.write (("  1  ").to_cil)
 				create l_mi.make (Current, $update_progress)
-				feature {SYSTEM_CONSOLE}.write (("  2   ").to_cil)
 				from
 				until
 					stop
 				loop
-					feature {SYSTEM_CONSOLE}.write (("  3   ").to_cil)
 					dummy := invoke (l_mi)
-					feature {SYSTEM_CONSOLE}.write (("  4   ").to_cil)
 					sleep_time := 100
-					feature {SYSTEM_CONSOLE}.write (("  5   ").to_cil)
 					feature {THREAD}.sleep_integer (i_sleep_time)
 				end
-	
-				feature {SYSTEM_CONSOLE}.write (("not rescued").to_cil)
-			else
-				feature {SYSTEM_CONSOLE}.write (("rescued !!!!!!!!!!!").to_cil)
 			end
-
-			feature {SYSTEM_CONSOLE}.write (("timed_progress_proc").to_cil)
-			
---			try {
---				MethodInvoker mi = new MethodInvoker(UpdateProgress)
---				while (true) {
---					Invoke(mi)
---					int i_sleep_time = create SleepTime
---					Thread.Sleep(i_sleep_time) 
---				}
---			}
---			//Thrown when the thread is interupted by the main thread - exiting the loop
---			catch (ThreadInterruptedException e) {
---				if (e != null) {}
---			}
---			catch (Exception we) {
---				if (we != null) {
---					MessageBox.Show(we.ToString())
---				}
---			}
 		rescue
---			THREAD_INTERRUPTED_EXCEPTION
---			
+--			catch (THREAD_INTERRUPTED_EXCEPTION last_exception) {}
+--			catch (EXCEPTION last_exception) {-- msg_box}
+
 			rescued := True
-			-- msg_box
 			retry
 		end
 
@@ -323,28 +293,37 @@ feature {NONE} -- Implementation
 		end
 
 	sldr_speed_scroll (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Feature performed when speed scroll is moved.
 		local
 			tb: WINFORMS_TRACK_BAR
 			time: INTEGER
 		do
 			tb ?= sender 
---			if tb /= Void then
---				time := 110 - tb.value 
---				set_sleep_time (time)
---			end
+			if tb /= Void then
+				time := 110 - tb.value 
+				set_sleep_time (time)
+			end
 		end
 
 	cmb_step_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			--
+			-- Feature performed when step selected change.
+		local
+			l_selected_item: SYSTEM_STRING
+			l_step_string: STRING
+			l_step: INTEGER
+			retried: BOOLEAN
 		do
---			try {
---				prog_bar.Step = Int32.Parse((string)cmd_step.SelectedItem)
---			}
---			catch (Exception ex) {
---				// thrown if Int32.Parse can't convert
---				if (ex !=null) {}
---			}
+			if not retried then
+				l_selected_item ?= cmd_step.selected_item
+				create l_step_string.make_from_cil (l_selected_item)
+				l_step := l_step_string.to_integer
+				prog_bar.set_step (l_step)
+			else
+				prog_bar.set_step (1)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 end -- Class PROGRESS_BAR_CTL

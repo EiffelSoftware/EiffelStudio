@@ -8,7 +8,7 @@ deferred class
 	EV_FILE_SELECTION_DIALOG
 
 inherit
-	EV_STANDARD_DIALOG
+	EV_SELECTION_DIALOG
 		redefine
 			implementation
 		end
@@ -147,50 +147,6 @@ feature -- Element change
 			no_void_pattern: not filter_patterns.has (Void)
 		do
 			implementation.set_filter (filter_names, filter_patterns)
-		end
-
-feature -- Event - command association
-
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "OK" button is pressed.
-			-- If there is no "OK" button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_ok_command (cmd, arg)
-		end
-
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Cancel" button is pressed.
-			-- If there is no "Cancel" button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_cancel_command (cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_ok_commands
-		end
-
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_cancel_commands
 		end
 
 feature {NONE} -- implementation

@@ -1,5 +1,5 @@
 indexing
-	description	: "IL Full-name Conflict when two classes of system have same full-name."
+	description	: "Warning generated when assembly cannot be signed."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -10,21 +10,13 @@ deferred class
 	
 feature {NONE}  -- Initialization
 	
-	make is
-		deferred
-		end
-	
-	make_and_initialize (parent: EV_EVENT_DATA; p: POINTER) is
+		
+	make (parent: EV_EVENT_DATA; p: POINTER) is
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'	
 		deferred
 		end
 
-feature {EV_EVENT_DATA} -- Metamorphosis
-	
-	metamorphosis (p: POINTER): EV_EVENT_DATA is
-		deferred
-		end
 end
 			
 	

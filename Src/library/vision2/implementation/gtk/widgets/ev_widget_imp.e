@@ -217,58 +217,45 @@ feature -- Resizing
 feature -- Event - command association
 	
 	add_button_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
 		do
-			add_command ("button_press_event", command, arguments)
+			!EV_BUTTON_EVENT_DATA!ev_data.make
+			add_command ("button_press_event", command, arguments, ev_data)
 		end
 	
 	
 	add_button_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
 		do
-			add_command ("button_release_event", command, arguments)
+			!EV_BUTTON_EVENT_DATA!ev_data.make
+			add_command ("button_release_event", command, arguments, ev_data)
 		end
 			
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA
 		do
-			add_command ("motion_notify_event", command, arguments)
+			!EV_MOTION_EVENT_DATA!ev_data.make
+			add_command ("motion_notify_event", command, arguments, ev_data)
 		end
 	
 	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
-			add_command ("delete_event", command, arguments)
+			add_command ("delete_event", command, arguments, Void)
 		end
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
-			add_command ("enter_notify_event", command, arguments)
+			add_command ("enter_notify_event", command, arguments, Void)
 		end
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
-			add_command ("leave_notify_event", command, arguments)
+			add_command ("leave_notify_event", command, arguments, Void)
 		end
-
-	add_command (event: STRING; command: EV_COMMAND; 
-		     arguments: EV_ARGUMENTS) is
-			-- Add `command' at the end of the list of
-			-- actions to be executed when the 'event'
-			-- happens `arguments' will be passed to
-			-- `command' whenever it is invoked as a
-			-- callback. 'arguments' can be Void, which
-			-- means that no arguments are passed to the
-			-- command.
-		local
-			a: ANY
-                do
-			a := event.to_c
-			-- check if to use gtk signals or x events
-			last_command_id := 
-				c_gtk_signal_connect (widget,
-						      $a,
-						      command.execute_address,
-						      $command,
-						      $arguments,
-						      arguments.set_event_data_address)
-		end
+	
 
 
 	remove_command (command_id: INTEGER) is
@@ -286,9 +273,47 @@ feature -- Event - command association
 			-- 'add_command'
 	
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {NONE} -- Implementation
 
-        widget: POINTER
+	add_command (event: STRING; command: EV_COMMAND; 
+		     arguments: EV_ARGUMENTS; ev_data: EV_EVENT_DATA) is
+			-- Add `command' at the end of the list of
+			-- actions to be executed when the 'event'
+			-- happens `arguments' will be passed to
+			-- `command' whenever it is invoked as a
+			-- callback. 'arguments' can be Void, which
+			-- means that no arguments are passed to the
+			-- command.
+		local
+			a: ANY
+			arg: EV_ARGUMENTS
+                do
+			-- To avoid sharing argument for different
+			-- commands. (We should share everything else 
+			-- though, FIX THIS!)
+			
+			if arguments.data /= Void then
+				arg := deep_clone (arguments)
+			else
+				arg := arguments
+			end
+			arg.set_data (ev_data)			
+			
+			a := event.to_c
+			-- check if to use gtk signals or x events
+			last_command_id := 
+				c_gtk_signal_connect (widget,
+						      $a,
+						      command.execute_address,
+						      $command,
+						      $arg,
+						      arg.set_event_data_address)
+		end
+        
+	
+feature {EV_WIDGET_IMP} -- Implementation
+	
+	widget: POINTER
                         -- pointer to the C structure representing this widget
 
 

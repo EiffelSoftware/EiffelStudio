@@ -13,7 +13,7 @@
 
 d_bsdsig='undef'
 sh='sh'
-cc='gcc'
+cc='cc'
 cpp='/usr/ccs/lib/cpp'
 ar='ar'
 ld='ld'
@@ -27,7 +27,7 @@ cppflags=''
 sharedsuffix='.so'
 sharedlibversion='.1.0'
 ldflags=''
-ldsharedflags='-shared'
+ldsharedflags='-G'
 
 libs='-lsocket -lnsl -lm'
 mtlibs='-lsocket -lnsl -lm -lthread'

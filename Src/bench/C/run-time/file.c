@@ -12,17 +12,10 @@
 */
 
 #include "config.h"
-#include "portable.h"
-#include "except.h"
-#include "plug.h"
-#include "error.h"
-#include "dir.h"
 
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #ifdef EIF_OS2
 #include <io.h>
@@ -84,6 +77,12 @@
 #ifdef I_SYS_FILE
 #include <sys/file.h>
 #endif
+
+#include "portable.h"
+#include "except.h"
+#include "plug.h"
+#include "error.h"
+#include "dir.h"
 
 #include "file.h"
 

@@ -16,6 +16,8 @@ inherit
 
 	EB_DEBUGGER_DATA
 	
+	SHARED_DEBUG_VALUE_KEEPER	
+	
 	EB_SHARED_GRAPHICAL_COMMANDS
 	
 	IPC_SHARED
@@ -457,9 +459,10 @@ feature -- Status setting
 				-- Hide debugging tools.
 			debugging_window.left_panel.block
 			debugging_window.right_panel.block
-			call_stack_tool.recycle
-			object_tool.recycle
-			evaluator_tool.recycle
+
+				-- Free and recycle tools
+			recycle_tools
+			
 			debugging_window.right_panel.unblock
 			debugging_window.left_panel.unblock
 			debug ("DEBUGGER_INTERFACE")
@@ -482,6 +485,23 @@ feature -- Status setting
 		ensure
 			not raised
 		end
+		
+	recycle_tools is
+			-- Recycle tools to free unused data
+		do
+			call_stack_tool.recycle
+			object_tool.recycle
+			evaluator_tool.recycle
+			application.recycle
+
+			recycle_debugger_data			
+		end
+		
+	recycle_debugger_data is
+			-- Recycle cross data used for debugging tools
+		do
+			Debug_value_keeper.recycle
+		end		
 
 	set_stone (st: STONE) is
 			-- Propagate `st' to tools.

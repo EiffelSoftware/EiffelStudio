@@ -658,17 +658,19 @@ feature -- Status setting
 		end
 
 	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
-			-- Set the format of the text between `first_pos' and `last_pos' to
-			-- `format'. May or may not change the cursor position.
+			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
+			-- Formatting is applied immediately.
 		local
 			wel_character_format: WEL_CHARACTER_FORMAT2
 		do
+			safe_store_caret
 			set_selection (first_pos - 1, last_pos - 1)
 			wel_character_format ?= format.implementation
 			check
 				wel_character_format_not_void: wel_character_format /= Void
 			end
 			set_character_format_selection (wel_character_format)
+			safe_restore_caret
 		end
 		
 	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
@@ -779,6 +781,11 @@ feature -- Status setting
 				formats_index.clear_all
 				heights.wipe_out
 				buffer_locked_in_format_mode := True
+				lowest_buffered_value := start_pos
+				highest_buffered_value := end_pos
+			else
+				lowest_buffered_value := lowest_buffered_value.min (start_pos)
+				highest_buffered_value := highest_buffered_value.max (end_pos)
 			end
 			if not formats.has (format) then
 				formats.extend (format)
@@ -825,9 +832,12 @@ feature -- Status setting
 				heights.extend (format.font.height * 2)
 				format_offsets.put (hashed_formats.count, hashed_character_format)
 			end
-			format_index := format_offsets.item (hashed_character_format) 
-			temp_string := "\cf"
-			temp_string.append (format_index.out)
+			format_index := format_offsets.item (hashed_character_format)
+			temp_string := "\highlight"
+			temp_string.append ((format_index * 2 ).out)
+			temp_string.append ("\cf")
+			temp_string.append ((format_index * 2 - 1).out)
+			
 			format_underlined := formats.i_th (format_index).effects.is_underlined
 			if not is_current_format_underlined and format_underlined then
 				temp_string.append ("\ul")
@@ -926,7 +936,7 @@ feature -- Status setting
 	flush_buffer is
 			-- Flush any buffered operations.
 		local
-			last_end_value, counter, insert_pos, format_index, original_position: INTEGER
+			last_end_value, counter, format_index, original_position: INTEGER
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 			temp_string, font_text, color_text, default_font_format: STRING
 			a_color: EV_COLOR
@@ -938,10 +948,10 @@ feature -- Status setting
 				-- Do nothing if buffer is not is format mode or append mode,
 				-- as there is nothing to flush. A user may call them however, as there
 				-- is no need to restrict against such calls.
-			if buffer_locked_in_format_mode then
+			if buffer_locked_in_format_mode then		
 				buffered_text := text.twin
 					-- Generate an insertion string to use for default font
-				default_font_format := "\cf1\f0\fs"
+				default_font_format := "\cf1\highlight2\f0\fs"
 				default_font_format.append ((font.height * 2).out)
 				default_font_format.append (" ")
 				
@@ -975,12 +985,28 @@ feature -- Status setting
 				color_text.append ("\blue")
 				color_text.append (a_color.blue_8_bit.out)
 				color_text.append (";")
+				a_color := interface.background_color
+				color_text.append ("\red")
+				color_text.append (a_color.red_8_bit.out)
+				color_text.append ("\green")
+				color_text.append (a_color.green_8_bit.out)
+				color_text.append ("\blue")
+				color_text.append (a_color.blue_8_bit.out)
+				color_text.append (";")
 				from
 					formats.start
 				until
 					formats.off
 				loop
 					a_color := formats.item.color
+					color_text.append ("\red")
+					color_text.append (a_color.red_8_bit.out)
+					color_text.append ("\green")
+					color_text.append (a_color.green_8_bit.out)
+					color_text.append ("\blue")
+					color_text.append (a_color.blue_8_bit.out)
+					color_text.append (";")
+					a_color := formats.item.background_color
 					color_text.append ("\red")
 					color_text.append (a_color.red_8_bit.out)
 					color_text.append ("\green")
@@ -1000,15 +1026,16 @@ feature -- Status setting
 				last_end_value := 1
 				internal_text.resize (default_string_size)
 				from
-					counter := 1
-					insert_pos := internal_text.count + 1
+					counter := lowest_buffered_value
 				until
-					counter > buffered_text.count
+					counter > highest_buffered_value - 1
 				loop
 					if start_formats.item (counter) /= Void then
 						format_index := formats_index.item (counter)
-						temp_string := "\cf"
-						temp_string.append ((format_index + 1).out)
+						temp_string := "\highlight"
+						temp_string.append ((format_index * 2 + 2).out)
+						temp_string.append ("\cf")
+						temp_string.append ((format_index * 2 + 1).out)
 						format_underlined := formats.i_th (format_index).effects.is_underlined
 						if not is_current_format_underlined and format_underlined then
 							temp_string.append ("\ul")
@@ -1049,22 +1076,21 @@ feature -- Status setting
 						temp_string.append (" ")
 						internal_text.append_string (temp_string)
 					end
+					if end_formats.item (counter) /= Void and start_formats.item (counter) = Void then
+						internal_text.append_string (default_font_format)
+					end
 					if buffered_text.item (counter).is_equal ('%N') then
 						internal_text.append_string ("\par%N")
 					else
 						internal_text.append_character (buffered_text.item (counter))
 					end
-					insert_pos := insert_pos + 1
-					
-					if end_formats.item (counter) /= Void and start_formats.item (counter + 1) = Void then
-						internal_text.append_string (default_font_format)
-					end
 					counter := counter + 1
 				end
 				internal_text.append ("}")
 				buffered_text := Void
+				set_selection (lowest_buffered_value - 1, highest_buffered_value - 1)
 				create stream.make (internal_text)
-				rtf_stream_in (stream)
+				insert_rtf_stream_in (stream)
 				stream.release_stream
 			elseif buffer_locked_in_append_mode then
 				
@@ -1077,8 +1103,10 @@ feature -- Status setting
 			buffer_locked_in_append_mode := False
 			buffer_locked_in_format_mode := False
 			
-				-- Ensure there is no selection, and the caret is restored.			
-			unselect
+				-- Ensure there is no selection, and the caret is restored.
+			if has_selection then
+				unselect
+			end
 			set_caret_position (original_position)
 		end
 		
@@ -1115,6 +1143,14 @@ feature -- Status setting
 				formats.off
 			loop
 				a_color := formats.item.color
+				color_text.append ("\red")
+				color_text.append (a_color.red_8_bit.out)
+				color_text.append ("\green")
+				color_text.append (a_color.green_8_bit.out)
+				color_text.append ("\blue")
+				color_text.append (a_color.blue_8_bit.out)
+				color_text.append (";")
+				a_color := formats.item.background_color
 				color_text.append ("\red")
 				color_text.append (a_color.red_8_bit.out)
 				color_text.append ("\green")
@@ -1483,6 +1519,8 @@ feature {NONE} -- Implementation
 	buffered_text: STRING
 		-- Internal representation of `text' used only when flushing the buffers. Prevents the need
 		-- to stream the contents of `current', every time that the `text' is needed.
+		
+	lowest_buffered_value, highest_buffered_value: INTEGER
 
 	start_formats: HASH_TABLE [STRING, INTEGER] is
 			-- The format type applicable at a paticular character position. The `item' is used to look up the

@@ -206,6 +206,8 @@ feature -- Status report
 		do
 			create Result.make_from_string (cluster.path)
 			Result.set_file_name (base_name)
+		ensure
+			file_name_not_void: Result /= Void
 		end
 
 	text: STRING is
@@ -401,6 +403,8 @@ feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 			-- Assign `b' to `changed'.
 		do
 			changed := b
+		ensure
+			changed_set: changed = b
 		end
 
 	set_compiled_class (c: CLASS_C) is
@@ -434,6 +438,8 @@ feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 			-- Assign `c' to `cluster'.
 		do
 			cluster := c
+		ensure
+			cluster_set: cluster = c
 		end
 
 	set_old_location_info (c: like cluster; n: like base_name) is
@@ -564,7 +570,7 @@ feature {COMPILER_EXPORTER} -- Compiled class
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_assertion_level (l: ASSERTION_I) is
+	set_assertion_level (l: like assertion_level) is
 			-- Merge `l' to `assertion_level'.
 		do
 			assertion_level.merge (l)
@@ -574,21 +580,27 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Assign `t' to `trace_level'.
 		do
 			trace_level := t
+		ensure
+			trace_level_set: trace_level = t
 		end
 
 	set_profile_level (t: like profile_level) is
 			-- Assign `t' to `trace_level'.
 		do
 			profile_level := t
+		ensure
+			profile_level_set: profile_level = t
 		end
 
-	set_optimize_level (o: OPTIMIZE_I) is
+	set_optimize_level (o: like optimize_level) is
 			-- Assign `o' to `optimize_level'.
 		do
 			optimize_level := o
+		ensure
+			optimize_level_set: optimize_level = o
 		end
 
-	set_debug_level (d: DEBUG_I) is
+	set_debug_level (d: like debug_level) is
 			-- Assign `d' to `debug_level'.
 		local
 			other_partial, partial: DEBUG_TAG_I
@@ -610,16 +622,20 @@ feature {COMPILER_EXPORTER} -- Setting
 			end
 		end
 
-	set_visible_level (v: VISIBLE_I) is
+	set_visible_level (v: like visible_level) is
 			-- Assign `v' to `visible_level'.
 		do
 			visible_level := v
+		ensure
+			visible_level_set: visible_level = v
 		end
 
-	set_visible_name (s: STRING) is
+	set_visible_name (s: like visible_name) is
 			-- Assign `s' to `visible_name'.
 		do
 			visible_name := s
+		ensure
+			visible_name_set: visible_name = s
 		end
 
 	external_name: STRING is

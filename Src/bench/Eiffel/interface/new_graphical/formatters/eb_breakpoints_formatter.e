@@ -34,7 +34,7 @@ feature -- Formatting
 	format (stone: STONE) is
 			-- Show the "debug" format of `stone' if it is debuggable.
 		local
-			edit_tool: EB_MULTIFORMAT_EDIT_TOOL
+			edit_tool: EB_MULTIFORMAT_TOOL
 			e_feature: E_FEATURE
 			message: STRING
 			f_stone: FEATURE_STONE
@@ -102,9 +102,9 @@ feature {NONE} -- Implementation
 			-- Display debug format of `stone'.
 		do
 			if do_flat then
-				tool.text_window.process_text (debug_context_text (s))
+				tool.text_area.process_text (debug_context_text (s))
 			else
-				tool.text_window.process_text (simple_debug_context_text (s))
+				tool.text_area.process_text (simple_debug_context_text (s))
 			end
 		end
 	

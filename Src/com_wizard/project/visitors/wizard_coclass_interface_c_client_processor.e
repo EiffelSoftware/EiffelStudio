@@ -13,7 +13,6 @@ inherit
 create
 	make
 
-
 feature -- Basic operations
 
 	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is

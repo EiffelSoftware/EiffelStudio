@@ -324,7 +324,7 @@ void c_gtk_signal_disconnect (GtkObject *widget,
  *
  *********************************/
 
-int c_gtk_event_keys_state (GdkEventMotion *p)
+int c_gtk_event_keys_state (GtkObject *p)
 {
 	int x,y;
 	GdkModifierType state;
@@ -343,7 +343,7 @@ int c_gtk_event_keys_state (GdkEventMotion *p)
  * 
  *********************************/
 
-void gtk_widget_set_all_events (GtkWidget * win)
+void c_gtk_widget_set_all_events (GtkObject * win)
 {
 	gint event_flags;
 
@@ -551,7 +551,7 @@ EIF_BOOLEAN c_gtk_widget_position_set (GtkWidget *w, gint x, gint y)
 			return (x == aux_info->x);
 	}
 	else
-		return (y = aux_info-> y);
+		return (y == aux_info-> y);
 }
 
 EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint height) 
@@ -599,19 +599,19 @@ void c_gtk_widget_set_size (GtkWidget *widget, int width, int height)
   gtk_widget_size_allocate (widget, &allocation);
 }
 
-EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *widget) 
+EIF_INTEGER c_gtk_widget_minimum_width (GtkObject *widget) 
 {
 	  GtkRequisition requisition;
 	    
-	  gtk_widget_size_request (widget, &requisition);
+	  gtk_widget_size_request ((GtkWidget *) widget, &requisition);
 	  return requisition.width;
 }
 
-EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *widget) 
+EIF_INTEGER c_gtk_widget_minimum_height (GtkObject *widget) 
 {
 	  GtkRequisition requisition;
 
-	  gtk_widget_size_request (widget, &requisition);
+	  gtk_widget_size_request ((GtkWidget *) widget, &requisition);
 	  return requisition.height;
 }
 
@@ -637,12 +637,12 @@ gint c_gtk_container_nb_children (GtkWidget *widget)
 	return (g_list_length (children));
 }
 
-GtkWidget* c_gtk_container_ith_child (GtkWidget *widget, guint i)
+EIF_POINTER c_gtk_container_ith_child (GtkWidget *widget, guint i)
 {
 	GList* children;
 	
 	children = gtk_container_children (GTK_CONTAINER(widget));
-	return (g_list_nth_data ((children), i));
+	return (EIF_POINTER)(g_list_nth_data ((children), i));
 }
 
 int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child)
@@ -650,7 +650,7 @@ int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child)
 	GList* children;
 	
 	children = gtk_container_children (GTK_CONTAINER(widget));
-	children = g_list_find (children, child);
+	children = g_list_find (children, (gpointer) child);
 	if (!children)
 	{
 		return 0;
@@ -661,6 +661,71 @@ int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child)
 	};
 }
 
+/*********************************
+ *
+ * Function `c_gtk_scrollable_area_add' (1)
+ * 			'c_gtk_scrollable_area_has_child' (2)
+ *
+ * Note : (1) We have to distinguish 2 cases to add the widget 
+ * 		  to the scroll area:
+ * 		  	- if the widget is not a scrollable widget,
+ * 		  			use 'gtk_scrolled_window_add_with_viewport',
+ * 		  	- otherwise, use 'gtk_container_add'.
+ * 		  (2) Has the scrollable area the given child?
+ *
+ *********************************/
+
+void c_gtk_scrollable_area_add (GtkWidget *scroll_area, GtkWidget *widget)
+{
+  GtkScrolledWindow *scrolled_window;
+  
+  scrolled_window = GTK_SCROLLED_WINDOW (scroll_area);
+  
+    if (!gtk_widget_set_scroll_adjustments (widget,
+			gtk_range_get_adjustment (GTK_RANGE (scrolled_window->hscrollbar)),
+			gtk_range_get_adjustment (GTK_RANGE (scrolled_window->vscrollbar))))
+	{
+		gtk_scrolled_window_add_with_viewport (scrolled_window, widget);
+	}
+	else
+		gtk_container_add (GTK_CONTAINER (scroll_area), widget);
+}
+
+int c_gtk_scrollable_area_has_child (GtkWidget *widget, GtkWidget *child)
+{
+	GtkBin *bin;
+	GtkWidget *viewport;
+
+	GList* children;
+
+	bin = GTK_BIN (widget);
+	if ( (bin->child !=NULL) && (GTK_IS_VIEWPORT (bin->child)) )
+	/* If we are here, this means we use the
+	 * 'gtk_scrolled_window_add_with_viewport' to add the child.
+	 * So we have to test if the child has been added to the viewport
+	 */
+	{
+		viewport = bin->child;
+		children = gtk_container_children (GTK_CONTAINER(viewport));
+		children = g_list_find (children, (gpointer) child);
+		if (!children)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	else
+	/* Otherwise, we have used 'gtk_container_add' to add the
+	 * child in the scrollable area.
+	 * So we just use 'c_gtk_container_has_child'.
+	 */
+	{
+		return c_gtk_container_has_child (widget, child);
+	}
+}
 
 /*********************************
  *
@@ -774,6 +839,38 @@ int c_gtk_get_text_max_length (GtkWidget* text)
 EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button) 
 {
     return (GTK_TOGGLE_BUTTON(button)->active);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_option_button_selected_menu_item' (1)
+ *			  `c_gtk_option_button_index_of_menu_item' (2)
+ *			  
+ * Note : (1) Current selected menu item
+ *		  (2) Give the position of the menu_item in the menu
+ *		  		inside the option button. The position is needed by 
+ *		  		`gtk_option_menu_set_history'.
+ * 
+ *********************************/
+
+EIF_POINTER c_gtk_option_button_selected_menu_item (GtkWidget *option_button) 
+{
+    return ((EIF_POINTER) GTK_OPTION_MENU (option_button)->menu_item);
+}
+
+EIF_INTEGER c_gtk_option_button_index_of_menu_item (GtkWidget *option_menu, GtkWidget *menu_item)
+{
+	GtkOptionMenu * opt_menu;
+	GtkMenu *menu;
+
+	gint pos;
+	
+	opt_menu = GTK_OPTION_MENU (option_menu);
+	menu = GTK_MENU (opt_menu->menu);
+	
+	pos = g_list_index (GTK_MENU_SHELL (menu)->children, (gpointer) menu_item);
+
+   	return pos;
 }
 
 /*********************************
@@ -1001,11 +1098,16 @@ guint c_gtk_clist_selection_length (GtkWidget* list)
 
 /*********************************
  *
- * Function : `c_gtk_table_rows'
- *            `c_gtk_table_columns'
+ * Function : `c_gtk_table_rows' (1)
+ *            `c_gtk_table_columns' (2)
+ *            `c_gtk_table_set_spacing_if_needed' (3)
  *
- * Note : Give the number of rows and columns of
+ * Note : (1) (2) Give the number of rows and columns of
  *        a table.
+ *        (3) Sets the spacings if needed. This function has been created
+ *        because of a GTK bug: when adding new child in the table,
+ *        the spacings are not set for it. As soon as the bug is fixed,
+ *        we can erase this function.
  *
  * Author : Leila
  *
@@ -1019,6 +1121,19 @@ EIF_INTEGER c_gtk_table_rows (GtkWidget *widget)
 EIF_INTEGER c_gtk_table_columns (GtkWidget *widget)
 {
   return (GTK_TABLE(widget)->ncols);
+}
+
+void c_gtk_table_set_spacing_if_needed (GtkWidget *widget)
+{
+	if (GTK_TABLE (widget)->column_spacing > 0)
+	{
+	  gtk_table_set_col_spacings (GTK_TABLE (widget), GTK_TABLE (widget)->column_spacing);
+	}
+	if (GTK_TABLE (widget)->row_spacing > 0)
+	{
+	  gtk_table_set_row_spacings (GTK_TABLE (widget), GTK_TABLE (widget)->row_spacing);
+	}
+	
 }
 
 /*********************************
@@ -1166,7 +1281,6 @@ EIF_REFERENCE ev_color_make_rgb (int r, int g, int b)
 }
 */
 
-
 void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
 {
 		GtkStyle* style;
@@ -1195,26 +1309,28 @@ void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;
 		int or, og, ob;
-int i;
+		
 		style = gtk_widget_get_style(GTK_WIDGET(widget));
 		r *= 257; g *= 257; b *= 257;
-
+		
 		or = style->bg[GTK_STATE_NORMAL].red;
 		og = style->bg[GTK_STATE_NORMAL].green;
 		ob = style->bg[GTK_STATE_NORMAL].blue;
 		
-		if(or != r || og != g || ob != b) {
+		if(or != r || og != g || ob != b)
+		{
 			style = gtk_style_copy (style);
-			for (i = 0; i < 5; i++) {
-				style->bg[i].red = r;
-				style->bg[i].green = g;
-				style->bg[i].blue = b;
-				style->base[i].red = r;
-				style->base[i].green = g;
-				style->base[i].blue = b;
-			}
+
+			style->bg[GTK_STATE_NORMAL].red = r;
+			style->bg[GTK_STATE_NORMAL].green = g;
+			style->bg[GTK_STATE_NORMAL].blue = b;
+			style->base[GTK_STATE_NORMAL].red = r;
+			style->base[GTK_STATE_NORMAL].green = g;
+			style->base[GTK_STATE_NORMAL].blue = b;
+			
 			gtk_widget_set_style(GTK_WIDGET(widget), style);
 		}
+		
 }
 
 void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b)
@@ -1233,7 +1349,6 @@ void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;
 		int or, og, ob;
-		int i;
 
 		style = gtk_widget_get_style(GTK_WIDGET(widget));
 
@@ -1244,17 +1359,16 @@ void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 		ob = style->text[GTK_STATE_NORMAL].blue;
 		
 		if(or != r || og != g || ob != b) {
-			gtk_widget_set_style(GTK_WIDGET(widget), style);
   			
 			style = gtk_style_copy (style);
-			for (i = 0; i < 5; i++) {
-				style->fg[i].red = r;
-				style->fg[i].green = g;
-				style->fg[i].blue = b;
-				style->text[i].red = r;
-				style->text[i].green = g;
-				style->text[i].blue = b;
-			}	
+
+			style->fg[GTK_STATE_NORMAL].red = r;
+			style->fg[GTK_STATE_NORMAL].green = g;
+			style->fg[GTK_STATE_NORMAL].blue = b;
+			style->text[GTK_STATE_NORMAL].red = r;
+			style->text[GTK_STATE_NORMAL].green = g;
+			style->text[GTK_STATE_NORMAL].blue = b;
+			
 			gtk_widget_set_style(GTK_WIDGET(widget), style);
 		}
 }

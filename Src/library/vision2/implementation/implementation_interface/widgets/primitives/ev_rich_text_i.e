@@ -42,7 +42,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end	
 		
-	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		require
 			valid_character_index: start_index >= 1 and end_index <= text_length + 1 and
@@ -54,7 +54,19 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+		require
+			valid_character_index: start_line >= 1 and end_line <= line_count and
+				start_line <= end_line
+		deferred
+		ensure
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end	
+		end
+		
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.

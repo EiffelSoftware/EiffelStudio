@@ -1,7 +1,5 @@
 indexing
-
-	description:	
-		"Model for workbench windows."
+	description: "Dialog for choosing where to put a new class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,89 +7,50 @@ class
 	EB_CREATE_CLASS_DIALOG
 
 inherit
-
-	EB_FORM_DIALOG
+	EV_DIALOG
+	NEW_EB_CONSTANTS
+	EB_TOOL_COMMAND
 		rename
-			make as form_d_make,
-			popdown as form_d_popdown,
-			display as form_d_display
+			make as make_command
+		redefine
+			tool
 		end
-	EB_CONSTANTS
-	EV_COMMAND
-	WARNER_CALLBACKS
-		rename
-			execute_warner_help as choose_different_name,
-			execute_warner_ok as keep_name
-		end
+--	WARNER_CALLBACKS
+--		rename
+--			execute_warner_help as choose_different_name,
+--			execute_warner_ok as keep_name
+--		end
 	SHARED_EIFFEL_PROJECT
-	WINDOWS
+	EB_SHARED_INTERFACE_TOOLS
 	EIFFEL_ENV
-	WINDOW_ATTRIBUTES
+--	WINDOW_ATTRIBUTES
 
 creation
 
-	make
+	make_default
 
 feature -- Initialization
 
-	make (a_tool: EB_CLASS_TOOL) is
-		local
-			separator: THREE_D_SEPARATOR
+	make_default (a_tool: EB_CLASS_TOOL) is
 		do
-			tool := a_tool
-			form_d_make (Interface_names.t_Empty, a_tool.popup_parent)
+			make_command (a_tool)
+			make (a_tool.parent_window)
 			set_title (Interface_names.t_New_class)
-			create class_l.make (Interface_names.t_Empty, Current)
-			create cluster_form.make (Interface_names.t_Empty, Current)
-			create cluster_name.make (Interface_names.t_Empty, cluster_form)
-			create cluster_list.make (Interface_names.t_Empty, cluster_form)
-			create file_form.make (Interface_names.t_Empty, Current)
-			create file_label.make (Interface_names.t_Empty, file_form)
-			create file_entry.make (Interface_names.t_Empty, file_form)
-			create form.make (Interface_names.t_Empty, Current)
-			create separator.make (Interface_names.t_Empty, Current)
-			form.set_fraction_base (2)
-			create create_b.make (Interface_names.b_Create, form)
-			create cancel_b.make (Interface_names.b_Cancel, form)
-			cluster_form.attach_top (cluster_list, 0)
-			cluster_form.attach_left (cluster_name, 0)
-			cluster_form.attach_right (cluster_list, 0)
-			cluster_form.attach_left_widget (cluster_name, cluster_list, 5)
-			cluster_form.attach_bottom (cluster_list, 5)
-			file_form.attach_left (file_label, 0)
-			file_form.attach_right (file_entry, 0)
-			file_form.attach_left_widget (file_label, file_entry, 5)
-			attach_top (class_l, 5)
-			attach_left (class_l, 10)
-			attach_left (file_form, 10)
-			attach_left (cluster_form, 10)
-			attach_top_widget (class_l, file_form, 5)
-			attach_top_widget (file_form, cluster_form, 5)
-			attach_bottom_widget (separator, cluster_form, 0)
-			attach_bottom_widget (form, separator, 5)
-			attach_left (separator, 5)
-			attach_right (separator, 5)
-			form.attach_left (create_b, 3)
-			form.attach_top (create_b, 0)
-			form.attach_bottom (create_b, 0)
-			form.attach_right_position (create_b, 1)
-			form.attach_left_position (cancel_b, 1)
-			form.attach_right (cancel_b, 0)
-			form.attach_top (cancel_b, 0)
-			form.attach_bottom (cancel_b, 0)
-			attach_right (cluster_form, 5)
-			attach_right (file_form, 5)
-			attach_left (form, 5)
-			attach_right (form, 5)
-			attach_bottom (form, 5)
-			cluster_name.set_text (Interface_names.l_Cluster)
-			file_label.set_text (Interface_names.l_File_name)
-			file_entry.add_activate_action (Current, create_new_class)
-			cancel_b.add_activate_action (Current, cancel)
-			create_b.add_activate_action (Current, create_new_class)
-			set_composite_attributes (Current)
-			realize
-			set_exclusive_grab
+			create name_frame.make_with_text (display_area, "Class name")
+			create class_l.make (name_frame)
+			create file_frame.make_with_text (display_area, Interface_names.l_File_name)
+			create file_entry.make (file_frame)
+			create cluster_frame.make_with_text (display_area, Interface_names.l_Cluster)
+			create cluster_list.make (cluster_frame)
+			create create_b.make_with_text (action_area, Interface_names.b_Create)
+			create cancel_b.make_with_text (action_area, Interface_names.b_Cancel)
+
+			file_entry.add_return_command (Current, create_new_class)
+			cancel_b.add_click_command (Current, cancel)
+			create_b.add_click_command (Current, create_new_class)
+--			set_composite_attributes (Current)
+			allow_resize
+			set_modal (True)
 		end
 
 feature -- Callbacks
@@ -100,7 +59,7 @@ feature -- Callbacks
 			-- The file name of the new class already exists.
 			-- The user wants to choose another file name.
 		do
-			popup
+			show
 		end
 
 	keep_name (argument: ANY) is
@@ -113,28 +72,29 @@ feature -- Callbacks
 
 feature -- Properties
 
-	cluster_list: SCROLLABLE_LIST
+	cluster_list: EV_LIST
 
-	file_entry: TEXT_FIELD
+	file_entry: EV_TEXT_FIELD
 
-	cluster_form, file_form: FORM
+	class_l: EV_LABEL
 
-	class_l: LABEL
+	name_frame, cluster_frame, file_frame: EV_FRAME
 
-	cluster_name, file_label: LABEL
+	create_b, cancel_b: EV_BUTTON
 
-	create_b, cancel_b: PUSH_B
-
-	form: FORM
-
-	create_new_class: ANY is
+	create_new_class: EV_ARGUMENT1 [ANY] is
 		once
-			createResult
+			create Result.make (Void)
 		end
 
-	cancel: ANY is
+	edit_class: EV_ARGUMENT1 [ANY] is
 		once
-			createResult
+			create Result.make (Void)
+		end
+
+	cancel: EV_ARGUMENT1 [ANY] is
+		once
+			create Result.make (Void)
 		end
 
 	cluster: CLUSTER_I
@@ -154,33 +114,30 @@ feature -- Properties
 
 feature -- Settings
 
-	display (new_width: INTEGER) is
-		do
-			set_width (new_width)
-			form_d_display
-		end
+--	display (new_width: INTEGER) is
+--		do
+--			set_width (new_width)
+--			form_d_display
+--		end
 
 feature -- Access
 
-	call (class_n: STRING; cl: CLUSTER_I) is
+	call (class_n: STRING) is
 		require
 			valid_args: class_n /= Void 
 		local
-			str, str2: STRING
+			str: STRING
 			clus_list: LINKED_LIST [CLUSTER_I]
-			str_el: SCROLLABLE_LIST_STRING_ELEMENT
 			clus: CLUSTER_I
+			i: EV_LIST_ITEM
 			new_width: INTEGER
 		do
-			cluster := cl
-			class_name := clone (class_n)
-			str2 :=  clone (class_n)
-			str2.to_upper
-			class_name.to_lower
-			create str.make (0)
-			str.append ("Class name: ")
-			str.append (str2)
+			cluster := tool.cluster
+			str :=  clone (class_n)
+			str.to_upper
 			class_l.set_text (str)	
+			class_name := clone (class_n)
+			class_name.to_lower
 			file_name := clone (class_name)
 			file_name.append (".e")
 			file_entry.set_text (file_name)
@@ -194,55 +151,50 @@ feature -- Access
 				loop
 					clus := clus_list.item
 					if not clus.is_precompiled then
-						create str_el.make (0)
-						str_el.append (clus.cluster_name)
-						cluster_list.extend (str_el)
-						new_width := new_width.max (str_el.count)
+						create i.make_with_text (cluster_list, clus.cluster_name)
+						i.set_data (clus)
+						new_width := new_width.max (i.text.count)
 					end
 					clus_list.forth
 				end
-				if cluster_list.empty then
-					create_b.set_insensitive
+				if cluster_list.count = 0 then
+					create_b.set_insensitive (True)
 				else
-					if cl = Void then
-						cluster_list.select_i_th (1)
-					else
-						cluster_list.start
-						cluster_list.compare_objects
-						create str_el.make (0)
-						str_el.append (cl.cluster_name)
-						cluster_list.search (str_el)
-						if cluster_list.after then
-							cluster_list.select_i_th (1)
-						else
-							cluster_list.select_item
-						end
-						if cluster_list.count < 10 then
-							cluster_list.set_visible_item_count (cluster_list.count)
-						else
-							cluster_list.set_visible_item_count (10)
-						end
+					i := Void
+					if cluster /= Void then
+						i := cluster_list.find_item_by_data (cluster)
 					end
+					if i = Void then
+						i := cluster_list.get_item (1)
+					end
+					i.set_selected (True)
+--					if cluster_list.count < 10 then
+--						cluster_list.set_visible_item_count (cluster_list.count)
+--					else
+--						cluster_list.set_visible_item_count (10)
+--					end
 				end
 			else
-				create_b.set_insensitive
+				create_b.set_insensitive (True)
 			end
-			display ((200).max (new_width * 12))
+			show
+--			display ((200).max (new_width * 12))
 		end
 
 	change_cluster is
 			-- Howdy Howdy
 		local
-			clun: STRING
+			clu_n: STRING
 			clu: CLUSTER_I 
+			wd: EV_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
-				clun := cluster_list.selected_item.value 
-				clun.to_lower
-				clu := Eiffel_universe.cluster_of_name (clun)
+				clu_n := cluster_list.selected_item.text
+				clu_n.to_lower
+				clu := Eiffel_universe.cluster_of_name (clu_n)
 				if clu = Void then
 					aok := False
-					warner (tool.popup_parent).gotcha_call (Warning_messages.w_Invalid_cluster_name)
+					create wd.make_default (tool.parent_window, Interface_names.t_Warning, Warning_messages.w_Invalid_cluster_name)
 				else
 					aok := True
 					cluster := clu
@@ -250,22 +202,16 @@ feature -- Access
 			end
 		end
 
-	popdown is
-			-- Popdown the cluster_list.
-		do
-			cluster_list.wipe_out
-			form_d_popdown
-		end
-
 feature -- Execution
 
-	execute (argument: ANY) is
+	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 		local
 			f_name: FILE_NAME
 			--file: PLAIN_TEXT_FILE
 			file: RAW_FILE -- Windows specific 
 			str: STRING
 			base_name: STRING
+			wd: EV_WARNING_DIALOG
 		do
 			if argument = create_new_class then
 				change_cluster
@@ -278,37 +224,42 @@ feature -- Execution
 					create class_i.make_with_cluster (cluster)
 					class_i.set_file_details (class_name, base_name)
 					if cluster.has_base_name (base_name) then
-						warner (tool.popup_parent).gotcha_call 
-							(Warning_messages.w_Class_already_in_cluster (base_name))
+						create wd.make_default (tool.parent_window, Interface_names.t_Warning,
+							Warning_messages.w_Class_already_in_cluster (base_name))
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						warner (tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_create_file (f_name))
+						create wd.make_default (tool.parent_window, Interface_names.t_Warning,
+							Warning_messages.w_Cannot_create_file (f_name))
 					else 
 						create stone.make (class_i)
 						if not file.exists then
 							load_default_class_text (file)
-							popdown
+							destroy
 						elseif
 							not (file.is_readable and then file.is_plain)
 						then
-							popdown
-							warner (tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_read_file (f_name))
+							create wd.make_default (tool.parent_window, Interface_names.t_Warning,
+								Warning_messages.w_Cannot_create_file (f_name))
+							destroy
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
-							popdown
-							warner (tool.popup_parent).custom_call
-								(Current, Warning_messages.w_File_exists_edit_it (f_name),
-								" Edit ", "Select another file", Void)
+							create wd.make_with_text (tool.parent_window, Interface_names.t_Warning,
+								Warning_messages.w_File_exists_edit_it (f_name))
+							wd.show_ok_cancel_buttons
+							wd.add_ok_command (Current, Edit_class)
+							wd.show
 						end
 					end
 				end
+			elseif argument = Edit_class then
+					-- The file name of the new class already exists.
+					-- The user wants to keep it.
+				cluster.classes.put (class_i, class_name)
+				tool.process_classi (stone)
 			elseif argument = cancel then
-				popdown
-				if last_warner /= Void then
-					last_warner.popdown
-				end
+				destroy
 			end
 		end
 

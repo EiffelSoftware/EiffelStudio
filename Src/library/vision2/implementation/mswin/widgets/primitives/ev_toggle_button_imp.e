@@ -17,6 +17,7 @@ inherit
 	EV_BUTTON_IMP
 		redefine
 			wel_window,
+			make,
 			make_with_text
 		end
 
@@ -25,6 +26,13 @@ creation
 
 
 feature -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create a wel toggle button with an empty text.
+		do
+			test_and_set_parent (par)
+			!WEL_SELECTABLE_BUTTON!wel_window.make (parent_imp.wel_window, "", 0, 0, 10, 10, 0)
+		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
         		-- Create a wel toggle button.
@@ -67,6 +75,7 @@ feature -- Event - command association
 	add_toggle_command ( command: EV_COMMAND; 
 			    arguments: EV_ARGUMENTS) is	
 		do
+			
 		end	
 
 feature -- Implementation

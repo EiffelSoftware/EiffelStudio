@@ -40,12 +40,14 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
+JMTCFLAGS = \$(CFLAGS) $optimize $mtccflags $large
 LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
+LN = $ln
 SED = $sed
 
 ########################################################################
@@ -53,7 +55,7 @@ SED = $sed
 
 RUN_TIME=../run-time
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ)
+OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -110,6 +112,328 @@ LSRC = \
 	idrf_pos.c \
 	idrm_creat.c \
 	idrm_dstry.c
+
+
+MT_LOBJ = \
+	MTidr_double.o \
+	MTidr_float.o \
+	MTidr_array.o \
+	MTidr_char.o \
+	MTidr_getpos.o \
+	MTidr_int.o \
+	MTidr_long.o \
+	MTidr_opaque.o \
+	MTidr_poly.o \
+	MTidr_read.o \
+	MTidr_setpos.o \
+	MTidr_short.o \
+	MTidr_size.o \
+	MTidr_stack.o \
+	MTidr_string.o \
+	MTidr_uchar.o \
+	MTidr_uint.o \
+	MTidr_ulong.o \
+	MTidr_union.o \
+	MTidr_ushort.o \
+	MTidr_vector.o \
+	MTidr_void.o \
+	MTidr_write.o \
+	MTidrf_creat.o \
+	MTidrf_dstry.o \
+	MTidrf_pos.o \
+	MTidrm_creat.o \
+	MTidrm_dstry.o 
+
+all:: libmtidr.a
+
+local_realclean::
+	$(RM) libmtidr.a
+
+libmtidr.a: $(MT_LOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_LOBJ)
+	$(RANLIB) $@
+
+MTidr_double.c: idr_double.c
+	$(RM) MTidr_double.c
+	$(LN) idr_double.c MTidr_double.c
+remove::
+	$(RM) MTidr_double.c
+
+MTidr_float.c: idr_float.c
+	$(RM) MTidr_float.c
+	$(LN) idr_float.c MTidr_float.c
+remove::
+	$(RM) MTidr_float.c
+
+MTidr_array.c: idr_array.c
+	$(RM) MTidr_array.c
+	$(LN) idr_array.c MTidr_array.c
+remove::
+	$(RM) MTidr_array.c
+
+MTidr_char.c: idr_char.c
+	$(RM) MTidr_char.c
+	$(LN) idr_char.c MTidr_char.c
+remove::
+	$(RM) MTidr_char.c
+
+MTidr_getpos.c: idr_getpos.c
+	$(RM) MTidr_getpos.c
+	$(LN) idr_getpos.c MTidr_getpos.c
+remove::
+	$(RM) MTidr_getpos.c
+
+MTidr_int.c: idr_int.c
+	$(RM) MTidr_int.c
+	$(LN) idr_int.c MTidr_int.c
+remove::
+	$(RM) MTidr_int.c
+
+MTidr_long.c: idr_long.c
+	$(RM) MTidr_long.c
+	$(LN) idr_long.c MTidr_long.c
+remove::
+	$(RM) MTidr_long.c
+
+MTidr_opaque.c: idr_opaque.c
+	$(RM) MTidr_opaque.c
+	$(LN) idr_opaque.c MTidr_opaque.c
+remove::
+	$(RM) MTidr_opaque.c
+
+MTidr_poly.c: idr_poly.c
+	$(RM) MTidr_poly.c
+	$(LN) idr_poly.c MTidr_poly.c
+remove::
+	$(RM) MTidr_poly.c
+
+MTidr_read.c: idr_read.c
+	$(RM) MTidr_read.c
+	$(LN) idr_read.c MTidr_read.c
+remove::
+	$(RM) MTidr_read.c
+
+MTidr_setpos.c: idr_setpos.c
+	$(RM) MTidr_setpos.c
+	$(LN) idr_setpos.c MTidr_setpos.c
+remove::
+	$(RM) MTidr_setpos.c
+
+MTidr_short.c: idr_short.c
+	$(RM) MTidr_short.c
+	$(LN) idr_short.c MTidr_short.c
+remove::
+	$(RM) MTidr_short.c
+
+MTidr_size.c: idr_size.c
+	$(RM) MTidr_size.c
+	$(LN) idr_size.c MTidr_size.c
+remove::
+	$(RM) MTidr_size.c
+
+MTidr_stack.c: idr_stack.c
+	$(RM) MTidr_stack.c
+	$(LN) idr_stack.c MTidr_stack.c
+remove::
+	$(RM) MTidr_stack.c
+
+MTidr_string.c: idr_string.c
+	$(RM) MTidr_string.c
+	$(LN) idr_string.c MTidr_string.c
+remove::
+	$(RM) MTidr_string.c
+
+MTidr_uchar.c: idr_uchar.c
+	$(RM) MTidr_uchar.c
+	$(LN) idr_uchar.c MTidr_uchar.c
+remove::
+	$(RM) MTidr_uchar.c
+
+MTidr_uint.c: idr_uint.c
+	$(RM) MTidr_uint.c
+	$(LN) idr_uint.c MTidr_uint.c
+remove::
+	$(RM) MTidr_uint.c
+
+MTidr_ulong.c: idr_ulong.c
+	$(RM) MTidr_ulong.c
+	$(LN) idr_ulong.c MTidr_ulong.c
+remove::
+	$(RM) MTidr_ulong.c
+
+MTidr_union.c: idr_union.c
+	$(RM) MTidr_union.c
+	$(LN) idr_union.c MTidr_union.c
+remove::
+	$(RM) MTidr_union.c
+
+MTidr_ushort.c: idr_ushort.c
+	$(RM) MTidr_ushort.c
+	$(LN) idr_ushort.c MTidr_ushort.c
+remove::
+	$(RM) MTidr_ushort.c
+
+MTidr_vector.c: idr_vector.c
+	$(RM) MTidr_vector.c
+	$(LN) idr_vector.c MTidr_vector.c
+remove::
+	$(RM) MTidr_vector.c
+
+MTidr_void.c: idr_void.c
+	$(RM) MTidr_void.c
+	$(LN) idr_void.c MTidr_void.c
+remove::
+	$(RM) MTidr_void.c
+
+MTidr_write.c: idr_write.c
+	$(RM) MTidr_write.c
+	$(LN) idr_write.c MTidr_write.c
+remove::
+	$(RM) MTidr_write.c
+
+MTidrf_creat.c: idrf_creat.c
+	$(RM) MTidrf_creat.c
+	$(LN) idrf_creat.c MTidrf_creat.c
+remove::
+	$(RM) MTidrf_creat.c
+
+MTidrf_dstry.c: idrf_dstry.c
+	$(RM) MTidrf_dstry.c
+	$(LN) idrf_dstry.c MTidrf_dstry.c
+remove::
+	$(RM) MTidrf_dstry.c
+
+MTidrf_pos.c: idrf_pos.c
+	$(RM) MTidrf_pos.c
+	$(LN) idrf_pos.c MTidrf_pos.c
+remove::
+	$(RM) MTidrf_pos.c
+
+MTidrm_creat.c: idrm_creat.c
+	$(RM) MTidrm_creat.c
+	$(LN) idrm_creat.c MTidrm_creat.c
+remove::
+	$(RM) MTidrm_creat.c
+
+MTidrm_dstry.c: idrm_dstry.c
+	$(RM) MTidrm_dstry.c
+	$(LN) idrm_dstry.c MTidrm_dstry.c
+remove::
+	$(RM) MTidrm_dstry.c
+##############
+
+MTidr_double.o: MTidr_double.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_float.o: MTidr_float.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_array.o: MTidr_array.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_char.o: MTidr_char.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_getpos.o: MTidr_getpos.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_int.o: MTidr_int.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidrm_dstry.o: MTidrm_dstry.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidrm_creat.o: MTidrm_creat.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidrf_pos.o: MTidrf_pos.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidrf_dstry.o: MTidrf_dstry.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidrf_creat.o: MTidrf_creat.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_write.o: MTidr_write.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_void.o: MTidr_void.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_vector.o: MTidr_vector.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_ushort.o: MTidr_ushort.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_union.o: MTidr_union.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_ulong.o: MTidr_ulong.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_uint.o: MTidr_uint.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_uchar.o: MTidr_uchar.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_string.o: MTidr_string.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_stack.o: MTidr_stack.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_size.o: MTidr_size.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_short.o: MTidr_short.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_setpos.o: MTidr_setpos.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_read.o: MTidr_read.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_poly.o: MTidr_poly.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_opaque.o: MTidr_opaque.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
+
+MTidr_long.o: MTidr_long.c
+	$(CC) -c 	$(JMTCFLAGS)  	$*.c
+	$(RM) 	$*.c
 
 LOBJ = \
 	idr_double.o \

@@ -50,12 +50,6 @@ feature {NONE} -- Initialization
 
 			-- Create the `box'.
 			initialize
-
---			-- Create a gtk label with a text set to ""
---			create_text_label ("")
---
---			-- We left-align and vertical_center-position the text.
---			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
 		end	
 		
 	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is

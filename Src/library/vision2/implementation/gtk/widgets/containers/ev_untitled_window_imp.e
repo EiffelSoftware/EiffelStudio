@@ -435,17 +435,7 @@ feature {EV_STATUS_BAR_IMP} -- Implementation
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	has_close_command: BOOLEAN
-			-- Did the user added a close command to the window.
-
-feature {NONE} -- Implementation
-
---	child_packing_changed (child_imp: EV_WIDGET_IMP) is
---			-- changed the settings of his child `the_child'.
---			-- Redefined because the child is placed in a hbox (see `add_child').
---		do
---			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
---			c_gtk_box_set_child_options (hbox, child_imp.widget, True, False)
---		end
+			-- Did the user add a close command to the window?
 
 end -- class EV_UNTITLED_WINDOW_IMP
 

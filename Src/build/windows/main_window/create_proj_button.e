@@ -32,7 +32,7 @@ feature {NONE} -- Button
 	
 feature {NONE} -- Command
 
-	work (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	work (argument: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 		do
 			if not main_window.project_initialized then
 				popup_window
@@ -48,9 +48,9 @@ feature {NONE} -- Command
 
 	popup_window, question_ok_action is
 		local
-			dialog: EV_DIRECTORY_SELECTION_DIALOG
+			dialog: EV_DIRECTORY_DIALOG
 			cmd: CREATE_PROJECT
-			arg: EV_ARGUMENT1 [EV_DIRECTORY_SELECTION_DIALOG]
+			arg: EV_ARGUMENT1 [EV_DIRECTORY_DIALOG]
 		do
 			create dialog.make_with_text (main_window,
 							Widget_names.create_project_window)

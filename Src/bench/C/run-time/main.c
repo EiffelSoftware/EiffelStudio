@@ -114,7 +114,7 @@ long EIF_bonce_count = 0;	/* Nr. of once routines in bytecode */
 char **EIF_once_values = (char **) 0;	/* Array to save the value of each computed once */
 #endif
 
-char starting_working_directory [PATH_MAX + 1];	/* Store the working directory during the session, */
+char *starting_working_directory;	/* Store the working directory during the session, */
 							/* ie where to put output files from the runtime */
 
 rt_private void display_reminder (void);	/* display reminder of license */
@@ -200,7 +200,11 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef EIF_WIN32
 	static char module_name [255] = {0};
+#endif
+	
+	starting_working_directory = (char *) eif_malloc (PATH_MAX + 1);
 
+#ifdef EIF_WIN32
 		/* Get the current working directory, ie the one where we
 		/* are going to save the ouput files */
 	if (getcwd(starting_working_directory, PATH_MAX) == NULL)

@@ -18,7 +18,6 @@ extern "C" {
 
 #include "eif_threads.h"
 #include "eif_globals.h"
-#include "eif_file.h"
 
 RT_LNK long EIF_once_count;			/* Nr. of once routines */
 RT_LNK long EIF_bonce_count;		/* Nr. of once routines in bytecode */
@@ -29,7 +28,7 @@ extern void eif_alloc_init();
 extern char *ename;				/* Name of the Eiffel program running */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
 RT_LNK int scount;				/* Maximum dtype */
-extern char starting_working_directory [PATH_MAX + 1];
+extern char *starting_working_directory;
 
 #ifdef __cplusplus
 }

@@ -58,19 +58,14 @@ feature
 			n, i: INTEGER;
 		do
 			n := argument_count;
-				-- Use of `deep_equal' is valid as no SPECIAL objects are
-				-- involved
-			Result := 	deep_equal (result_type, other.result_type)
-						and then
-						n = other.argument_count;
+			Result :=  n = other.argument_count and then
+					type_deep_equal (result_type, other.result_type)
 			from
 				i := 1;
 			until
 				i > n or else not Result
 			loop
-					-- Use of `deep_equal' is valid as no SPECIAL objects are
-					-- involved
-				Result := deep_equal (argument_types.item (i), (other.argument_types.item (i)));
+				Result := type_deep_equal (argument_types.item (i), (other.argument_types.item (i)));
 				i := i + 1;
 			end;
 		end;
@@ -532,6 +527,39 @@ feature {NONE} -- Implemantation
 
 		once
 			Result := <<"fnptr", "int">>
+		end
+
+	type_deep_equal (first_type, other_type: TYPE_C): BOOLEAN is
+			-- Deep equal comparison wich does not compare the `cr_info´ attribute
+			-- declared in CL_TYPE_I.
+		require
+			first_type_not_void: first_type /= Void
+			other_type_not_void: other_type /= Void
+		local
+			bit_i, other_bit_i: BIT_I
+			cl_type_i, other_cl_type_i: CL_TYPE_I
+		do
+			if (first_type.same_type (other_type)) then
+				cl_type_i ?= first_type
+				if cl_type_i /= Void then
+					bit_i ?= first_type
+					if bit_i /= Void then
+						other_bit_i ?= other_type
+						Result := bit_i.size = other_bit_i.size
+					else
+						Result := True
+					end
+					
+					other_cl_type_i ?= other_type
+					Result := Result and then deep_equal (cl_type_i.base_id, other_cl_type_i.base_id)
+					Result := Result and then (cl_type_i.is_expanded = other_cl_type_i.is_expanded)
+					Result := Result and then (cl_type_i.is_separate = other_cl_type_i.is_separate)
+				else
+						-- There is no attributes to compare in the case of
+						-- VOID_I, REFERENCE_I and NONE_I
+					Result := deep_equal (first_type, other_type)	
+				end
+			end
 		end
 
 invariant

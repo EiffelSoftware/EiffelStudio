@@ -47,7 +47,10 @@ extern 		EIF_REAL c_read_float ();
 extern 		EIF_DOUBLE c_read_double ();
 extern 		EIF_INTEGER c_read_stream ();
 
+/* If we use the old EiffelNet version, we should use the following macro:
 #define		c_concur_read_int(s)				ntohl(c_read_int(s))
+*/
+#define		c_concur_read_int(s)				c_read_int(s)
 #define		c_concur_read_real(s)				c_read_float(s)
 #define		c_concur_read_double(s)				c_read_double(s)
 #define 	c_concur_my_read_stream(s, l, b)	c_read_stream(s, l, b)
@@ -59,12 +62,18 @@ extern 		void c_put_float ();
 extern 		void c_put_double ();
 
 #define		c_concur_put_stream(s, p, l)		c_put_stream(s, p, l)
+/* If we use the old EiffelNet version, we should use the following macro:
 #define		c_concur_put_int(s, v)				c_put_int(s, htonl(v))
+*/
+#define		c_concur_put_int(s, v)				c_put_int(s, v)
 #define		c_concur_put_real(s, v)				c_put_float(s, v)
 #define		c_concur_put_double(s, v)			c_put_double(s, v)
 
 
 extern 		EIF_INTEGER c_select();
+
+extern 		float change_float_order();
+extern 		double change_double_order();
 
 /*
 #define 	c_concur_select(fn, rm, wm, em, to, tom)	c_select(fn, rm, wm, em, to, tom)

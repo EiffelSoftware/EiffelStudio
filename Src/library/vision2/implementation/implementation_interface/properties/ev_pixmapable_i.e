@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision pixmap container, implementation interface."
 	status: "See notice at end of class"
@@ -9,22 +8,28 @@ indexing
 	
 deferred class
 	EV_PIXMAP_CONTAINER_I
-	
+
+inherit
+	EV_ANY_I
+
 feature {EV_PIXMAP} -- status settings
 	
 	add_pixmap (pixmap: EV_PIXMAP) is
 			-- Add a pixmap in the container
 		require
-			pixmap_not_void: pixmap /= Void
+			exists: not destroyed
+			valid_pixmap: pixmap.is_valid
 			pixmap_size_ok: pixmap_size_ok (pixmap)
 		deferred
 		end
+
+feature {EV_PIXMAP} -- Implementation
 
 	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do
-			Result := True
+			Result := (pixmap.width <= 16) and (pixmap.height <= 16)
 		end
 
 end -- class EV_PIXMAP_CONTAINER_I

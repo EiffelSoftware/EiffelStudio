@@ -85,16 +85,6 @@ feature -- Status setting
 		ensure
 			tree_enabled: is_tree_enabled
 		end	
-
---	set_background_color (a_color: EV_COLOR) is
---			-- Set `a_color' to all cells of Current
---		require
---			a_color_not_void: a_color /= Void
---		do
---			to_implement ("EV_GRID_I.set_background_color")
---		ensure
---			--background_color_set: forall (item (i, j).background_color = a_color)
---		end
 		
 	show_column (a_column: INTEGER) is
 			-- Ensure column `a_column' is visible in `Current'.
@@ -383,6 +373,22 @@ feature -- Measurements
 
 	row_count: INTEGER
 			-- Number of rows in Current
+			
+feature {NONE} -- Implementation
+
+	initialize_grid is
+			-- Initialize `Current'. To be called during `initialize' of
+			-- the implementation classes.
+		do
+			create drawer.make_with_grid (Current)	
+			create drawable
+		end
+
+	drawable: EV_DRAWING_AREA
+		-- Drawing area for `Current' on which all drawing operations are performed.
+		
+	drawer: EV_GRID_DRAWER_I
+		-- Drawer which is able to redraw `Current'.
 
 feature {EV_ANY_I} -- Implementation
 
@@ -393,6 +399,8 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	row_count_non_negative: row_count >= 0
 	column_count_non_negative: column_count >= 0
+	drawer_not_void: drawer /= Void
+	drawable_not_void: drawable /= Void
 	
 end
 

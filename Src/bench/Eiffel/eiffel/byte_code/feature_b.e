@@ -246,17 +246,18 @@ feature -- IL code generation
 
 				if cl_type.base_class.is_native_array then
 					native_array_class_type ?= class_type
-					if native_array_class_type /= Void then
-						need_generation := False
-						native_array_class_type.generate_il (feature_name_id)
-						if System.il_verifiable then
-							if 
-								not return_type.is_expanded and then
-								not return_type.is_none and then
-								not return_type.is_void
-							then
-								il_generator.generate_check_cast (return_type, return_type)
-							end
+					check
+						native_array_class_type_not_void: native_array_class_type /= Void
+					end
+					need_generation := False
+					native_array_class_type.generate_il (feature_name_id, cl_type)
+					if System.il_verifiable then
+						if 
+							not return_type.is_expanded and then
+							not return_type.is_none and then
+							not return_type.is_void
+						then
+							il_generator.generate_check_cast (return_type, return_type)
 						end
 					end
 				end
@@ -302,27 +303,6 @@ feature -- IL code generation
 					end
 				end
 			end
-		end
-
-	generate_il_array_creation is
-			-- Perform creation of an array.
-		require
-			parameters_not_void: parameters /= Void
-			parameters_count: parameters.count = 1
-		local
-			cl_type: CL_TYPE_I
-			class_type: NATIVE_ARRAY_CLASS_TYPE
-		do
-			cl_type ?= context_type
-			check
-				valid_type: cl_type /= Void
-				type_is_native_array: cl_type.base_class.is_native_array
-				class_type_exists: cl_type.associated_class_type /= Void
-			end
-
-			parameters.generate_il
-			class_type ?= cl_type.associated_class_type
-			class_type.generate_il (feature_name_id)
 		end
 
 feature -- Byte code generation

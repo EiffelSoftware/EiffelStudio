@@ -1,4 +1,7 @@
--- Access to an Eiffel attribute
+indexing
+	description: "Access to an Eiffel attribute"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ATTRIBUTE_B 
 
@@ -160,6 +163,11 @@ feature -- IL code generation
 
 				if is_first and need_target then
 						-- Accessing attribute written in current analyzed class.
+					if address_required then
+							-- We need current target which will be used later on in
+							-- NESTED_B.generate_il to assign back the new value of the attribute.
+						il_generator.generate_current
+					end
 					if cl_type.is_reference then
 							-- Normal access we simply push current
 						il_generator.generate_current
@@ -169,17 +177,24 @@ feature -- IL code generation
 						if need_real_metamorphose (cl_type) then
 								-- Current attribute is written in a non-expanded class
 								-- we need to box current register to be able to
-								-- access urrent attribute.
+								-- access Current attribute.
 							il_generator.generate_metamorphose (cl_type)
 						end
 					end
-				elseif not cl_type.is_reference then
-						-- Current attribute coming from an expanded class need a special
-						-- transformation of the `parent' if we want to access it.
-						-- If `need_real_metamorphose (cl_type)' a box operation will
-						-- occur meaning that current attribute was written in a
-						-- non-expanded class.
-					generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
+				else
+					if address_required then
+							-- We need to duplicate top object which will be used later on in
+							-- NESTED_B.generate_il to assign back the new value of the attribute.
+						il_generator.duplicate_top
+					end
+					if not cl_type.is_reference then
+							-- Current attribute coming from an expanded class need a special
+							-- transformation of the `parent' if we want to access it.
+							-- If `need_real_metamorphose (cl_type)' a box operation will
+							-- occur meaning that current attribute was written in a
+							-- non-expanded class.
+						generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
+					end
 				end
 
 					-- Let's try to prepare call to `XXX.attribute.copy' in

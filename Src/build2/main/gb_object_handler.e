@@ -183,9 +183,7 @@ feature -- Basic operation
 			
 				-- Remove `an_object' from its parent.
 			an_object.unparent_during_type_change
-			
-			
-			--new_object ?= selector_item.generate_transportable
+
 			new_object ?= build_object_from_string (a_type)
 			
 			new_object.set_layout_item (old_layout_item)

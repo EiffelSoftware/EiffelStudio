@@ -6,7 +6,8 @@ inherit
 
 	ATTRIBUTE_BL
 		redefine
-			check_dt_current, is_polymorphic, generate_access_on_type
+			check_dt_current, is_polymorphic, generate_access_on_type,
+			generate_separate_attribute_call
 		end
 
 feature
@@ -43,7 +44,7 @@ feature
 			base_class: CLASS_C
 		do
 			if typ.is_separate then
-				generate_for_separate_attribute_call(reg, typ);
+				generate_separate_attribute_call(reg, typ);
 			else
 			is_nested := not is_first;
 			type_i := real_type (type);
@@ -107,8 +108,8 @@ feature
 	
 feature -- Concurrent Eiffel
 
-	generate_for_separate_attribute_call(reg:  REGISTRABLE; typ: CL_TYPE_I) is
-		-- generate code for separate attribute call.
+	generate_separate_attribute_call (reg:  REGISTRABLE; typ: CL_TYPE_I) is
+			-- generate code for separate attribute call.
 		local
             is_nested: BOOLEAN;
             type_i: TYPE_i;

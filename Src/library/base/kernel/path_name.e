@@ -187,7 +187,7 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	eif_volumne_name (s: POINTER): STRING is
+	eif_volume_name (s: POINTER): STRING is
 		external
 			"C"
 		end

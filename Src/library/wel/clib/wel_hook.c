@@ -91,12 +91,7 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 		)
 		return 0;
 
-	// The foreground window has changed since we have hooked the mouse
-	// (The user has pressed ALT+Tab). So we don't redirect the mouse
-	// messages
-	if (GetForegroundWindow() != hForegroundWnd_at_hook_time)
-		return 0;
-	
+
 	//===================================
 	// We will handle this mouse message
 	//===================================

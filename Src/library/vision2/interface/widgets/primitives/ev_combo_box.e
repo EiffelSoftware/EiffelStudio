@@ -49,28 +49,6 @@ create
 	make_with_strings,
 	make_with_text
 
-feature -- Access
-
-	pixmaps_width: INTEGER is
-			-- Width of pixmaps displayed in list.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.pixmaps_width
-		ensure
-			bridge_ok: Result = implementation.pixmaps_width
-		end
-
-	pixmaps_height: INTEGER is
-			-- Height of pixmaps dispalyed in list.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.pixmaps_height
-		ensure
-			bridge_ok: Result = implementation.pixmaps_height
-		end
-
 feature -- Element change
 
 	set_text (a_text: STRING) is
@@ -84,20 +62,6 @@ feature -- Element change
 			set_editable_text (a_text)
 		ensure
 			text_set: check_text_modification ("", a_text)
-		end
-
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of pixmaps displayed in `Current'.
-			-- Note: The Default value is 16x16
-		require
-			not_destroyed: not is_destroyed
-			valid_width: a_width > 0
-			valid_height: a_height > 0
-		do
-			implementation.set_pixmaps_size (a_width, a_height)
-		ensure
-			width_set: pixmaps_width = a_width
-			height_set: pixmaps_height = a_height
 		end
 		
 feature {NONE} -- Contract support

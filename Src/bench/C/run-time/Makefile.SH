@@ -96,7 +96,7 @@ LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	run_idr.c path_name.c dle.c object_id.c eif_threads.c eif_project.c
+	run_idr.c path_name.c dle.c object_id.c eif_threads.c eif_project.c gen_conf.c
 
 OTHER = main.c except.c
 
@@ -148,7 +148,8 @@ WSRC = \
 	weif_threads.c \
 	wmain.c \
 	wexcept.c \
-	weif_project.c
+	weif_project.c \
+	wgen_conf.c
 
 ESRC = \
 	compress.c \
@@ -193,7 +194,9 @@ ESRC = \
 	weif_threads.c \
 	bmain.c \
 	bexcept.c \
-	weif_project.c
+	weif_project.c \
+	wgen_conf.c
+
 
 LOBJ = \
 	eif_once.o \
@@ -240,7 +243,8 @@ LOBJ = \
 	eif_threads.o \
 	main.o \
 	except.o \
-	eif_project.o 
+	eif_project.o \
+	gen_conf.o
 
 WOBJ = \
 	$(NETWORK) \
@@ -292,7 +296,8 @@ WOBJ = \
 	interp.o \
 	update.o \
 	wbench.o \
-	weif_project.o
+	weif_project.o \
+	wgen_conf.o
 
 EOBJ = \
 	woption.o \
@@ -343,7 +348,8 @@ EOBJ = \
 	interp.o \
 	update.o \
 	wbench.o  \
-	weif_project.o
+	weif_project.o \
+	wgen_conf.o
 
 all:: eif_size.h
 
@@ -673,6 +679,12 @@ weif_threads.c: eif_threads.c
 remove::
 	$(RM) weif_threads.c
 
+wgen_conf.c: gen_conf.c
+	$(RM) wgen_conf.c
+	$(LN) gen_conf.c wgen_conf.c
+remove::
+	$(RM) wgen_conf.c
+
 wmain.c: main.c
 	$(RM) wmain.c
 	$(LN) main.c wmain.c
@@ -854,6 +866,10 @@ wobject_id.o: wobject_id.c
 	$(RM) $*.c
 
 weif_threads.o: weif_threads.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wgen_conf.o: wgen_conf.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 

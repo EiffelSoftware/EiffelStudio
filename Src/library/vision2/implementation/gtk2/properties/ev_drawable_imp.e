@@ -480,7 +480,7 @@ feature -- Drawing operations
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
 		local
-			tmp: SPECIAL [INTEGER_16]
+			tmp: SPECIAL [INTEGER]
 		do
 			if drawable /= default_pointer then
 				tmp := coord_array_to_gdkpoint_array (points).area
@@ -581,7 +581,7 @@ feature -- filling operations
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `background_color'.
 		local
-			tmp: SPECIAL [INTEGER_16]
+			tmp: SPECIAL [INTEGER]
 		do
 			if drawable /= default_pointer then
 				tmp := coord_array_to_gdkpoint_array (points).area
@@ -634,7 +634,7 @@ feature -- filling operations
 
 feature {NONE} -- Implemention
 
-	coord_array_to_gdkpoint_array (pts: ARRAY [EV_COORDINATE]): ARRAY [INTEGER_16] is
+	coord_array_to_gdkpoint_array (pts: ARRAY [EV_COORDINATE]): ARRAY [INTEGER] is
 			-- Low-level conversion.
 		require
 			pts_exists: pts /= Void
@@ -652,8 +652,8 @@ feature {NONE} -- Implemention
 				i > array_count + 1
 			loop
 				a_coord := a_pts.item (i // 2)
-				Result.force (a_coord.x.to_integer_16, i - 1)
-				Result.force (a_coord.y.to_integer_16, i)			
+				Result.force (a_coord.x, i - 1)
+				Result.force (a_coord.y, i)			
 				i := i + 2
 			end
 		ensure

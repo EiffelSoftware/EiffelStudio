@@ -8,7 +8,7 @@ class
 	GB_TREE_ITEM_OBJECT
 
 inherit
-	GB_OBJECT
+	GB_PARENT_OBJECT
 		redefine
 			object, display_object, accepts_child, is_full
 		end

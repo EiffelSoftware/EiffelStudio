@@ -11,22 +11,17 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, conformance_type, meta_type,
-			is_like_argument, is_deep_equal
+			is_like_argument, is_deep_equal, valid_base_type
 		end;
 	SHARED_LIKE_CONTROLER;
 	SHARED_ARG_TYPES;
 
-feature -- Attributes
+feature -- Access
 
-	actual_type: TYPE_A;
-			-- Actual type of the argument
-
-feature -- Primitives
-
-	set_actual_type (a: TYPE_A) is
-			-- Assign `a' to `actual_type'.
+	is_like: BOOLEAN is
+			-- Is the type an anchored one ?
 		do
-			actual_type := a;
+			Result := True;
 		end;
 
 	is_like_argument: BOOLEAN is
@@ -35,10 +30,51 @@ feature -- Primitives
 			Result := True;
 		end;
 
-	is_like: BOOLEAN is
-			-- Is the type an anchored one ?
+	valid_base_type: BOOLEAN is
+			-- Is the base type valid
 		do
-			Result := True;
+			Result := evaluated_type /= Void and then
+				evaluated_type.valid_base_type
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated class
+		do
+			Result := evaluated_type.associated_eclass;
+		end;
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		local
+			actual_dump: STRING;
+		do
+			actual_dump := evaluated_type.dump;
+			!!Result.make (16 + actual_dump.count);
+			Result.append ("(like arg #");
+			Result.append_integer (position);
+			Result.append (")");
+			Result.append (actual_dump);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("(like arg #");
+			a_clickable.put_int (position);
+			a_clickable.put_char (')');
+			actual_type.append_clickable_signature (a_clickable);
+		end;
+
+feature -- Primitives
+
+	actual_type: TYPE_A;
+			-- Actual type of the argument
+
+	set_actual_type (a: TYPE_A) is
+			-- Assign `a' to `actual_type'.
+		do
+			actual_type := a;
 		end;
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
@@ -101,27 +137,6 @@ feature -- Primitives
 			Result := actual_type.associated_class;
 		end;
 
-	dump: STRING is
-			-- Dumped trace
-		local
-			actual_dump: STRING;
-		do
-			actual_dump := actual_type.dump;
-			!!Result.make (16 + actual_dump.count);
-			Result.append ("(like arg #");
-			Result.append_integer (position);
-			Result.append (")");
-			Result.append (actual_dump);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("(like arg #");
-			a_clickable.put_int (position);
-			a_clickable.put_char (')');
-			actual_type.append_clickable_signature (a_clickable);
-		end;
-
 	has_like: BOOLEAN is
 			-- Does the type have anchored type in its definition ?
 		do
@@ -182,17 +197,17 @@ feature -- Storage information for EiffelCase
 			!! Result.make (Void, associated_class.id)
 		end;
 
-    storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
-            -- Storage info for Current type in class `classc'
-            -- and store the name of the class for Current
-        local
-            ass_classc: CLASS_C
-            class_name: STRING
-        do
-            ass_classc := associated_class;
-            !! class_name.make (ass_classc.class_name.count);
+	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+			-- and store the name of the class for Current
+		local
+			ass_classc: CLASS_C
+			class_name: STRING
+		do
+			ass_classc := associated_class;
+			!! class_name.make (ass_classc.class_name.count);
 			class_name.append (ass_classc.class_name);
 			!! Result.make (class_name, ass_classc.id)
-        end;
+		end;
 
 end

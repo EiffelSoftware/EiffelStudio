@@ -1,46 +1,17 @@
 indexing
 
 	description: 
-		"EiffelVision box, implementation interface."
+		"EiffelVision vertical split, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	EV_BOX_I
+	EV_VERTICAL_SPLIT_I
 	
 inherit
-	EV_INVISIBLE_CONTAINER_I
-	
-feature -- Constants
-	
-	Default_homogenous: BOOLEAN is True
-	Default_spacing: INTEGER is 0
-	Default_expand: BOOLEAN is True
-	Default_fill: BOOLEAN is True
-	Default_padding: INTEGER is 0
-
-		
-feature -- Element change (box specific)
-	
-	set_homogeneous (homogeneous: BOOLEAN) is
-			-- Homogenous controls whether each object in
-			-- the box has the same size. If homogenous =
-			-- True, expand argument for each child is
-			-- automatically True
-		require
-			exist: not destroyed
-		deferred
-		end
-	
-	set_spacing (spacing: INTEGER) is
-			-- Spacing between the objects in the box
-		require
-			exist: not destroyed
-		deferred
-		end	
-	
+	EV_SPLIT_I
 end
 
 --|----------------------------------------------------------------

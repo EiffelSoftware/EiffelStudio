@@ -1183,6 +1183,9 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 {
 	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
 	unsigned int nbytes;			/* Object's size */
+#ifdef ISE_GC
+	uint32 mod;
+#endif
 
 	(void) eif_register_bit_type (size);
 #ifdef DEBUG
@@ -1196,6 +1199,10 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	 */
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 #ifdef ISE_GC
+	mod = nbytes % ALIGNMAX;
+	if (mod != 0)
+		nbytes += ALIGNMAX - mod;
+
 	object = malloc_from_eiffel_list (nbytes);		/* Allocate Eiffel object */
 #endif
 #if defined(BOEHM_GC) || defined(NO_GC)

@@ -413,6 +413,8 @@ feature -- Generation constants
 	Create_command_string: STRING is "create "
 			-- String corresponding to creation instruction in generated_code.
 
+	Optimal_string: STRING is "Optimal"
+
 feature -- Wizard
 
 	wizard_completion_file_name: STRING is "completion_status.txt"

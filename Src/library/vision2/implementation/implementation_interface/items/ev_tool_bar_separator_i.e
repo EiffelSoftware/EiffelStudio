@@ -11,10 +11,18 @@ deferred class
 inherit
 	EV_SEPARATOR_ITEM_I
 		redefine
-			parent_imp
+			parent_imp,
+			parent
 		end
 
 feature -- Access
+
+	parent: EV_TOOL_BAR is
+			-- The parent of the Current widget
+			-- Can be void.
+		do
+			Result ?= {EV_SEPARATOR_ITEM_I} Precursor
+		end
 
 	parent_imp: EV_TOOL_BAR_IMP
 			-- Parent implementation

@@ -19,7 +19,7 @@ feature -- Access
 			environment: EXECUTION_ENVIRONMENT
 		once
 			if Platform_constants.is_windows then
-				create Result.make_from_location (System_general, "HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+				create Result.make_from_location (System_general, "HKEY_CURRENT_USER\Software\ISE\Eiffel50")
 			else
 				create environment
 				create file_name.make_from_string (environment.home_directory_name)

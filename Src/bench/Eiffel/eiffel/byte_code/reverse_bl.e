@@ -141,7 +141,10 @@ feature
 				target.print_register;
 				buf.putstring (" = ");
 			end;
-			if how /= None_assignment then
+			if context.real_type (target.type).is_none then
+					-- Assignment on something of type NONE always fails.
+				buf.putstring ("(EIF_REFERENCE) 0");
+			else
 				buf.putstring ("RTRV(");
 
 				if gen_type = Void then
@@ -163,8 +166,6 @@ feature
 					source_print_register
 					buf.putchar (')')
 				end
-			else
-				buf.putstring ("(EIF_REFERENCE) 0");
 			end;
 			buf.putchar (';');
 			buf.new_line;

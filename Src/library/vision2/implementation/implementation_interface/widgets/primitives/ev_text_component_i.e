@@ -140,7 +140,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
---			is_editable: is_editable
+			text_is_editable: is_editable
 		deferred
 		ensure
 			text_set: text.is_equal (txt)
@@ -151,7 +151,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
---			is_editable: is_editable
+			is_editable: is_editable
 		deferred
 		end
 	
@@ -160,7 +160,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
---			is_editable: is_editable
+			is_editable: is_editable
 		deferred
 		ensure
 			text_appended:
@@ -171,7 +171,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
---			is_editable: is_editable
+			is_editable: is_editable
 		deferred
 		ensure
 			text_prepended:

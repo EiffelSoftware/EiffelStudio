@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_custdataitem.h
+//  File:   E_custdataitem.h
 //
-//  Contents:	Accessors of GUID structure.
+//  Contents: Accessors of GUID structure.
 //
 //
 //--------------------------------------------------------------------------

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_IRootStorage.h
+//  File:   E_IRootStorage.h
 //
-//  Contents:	Declaration of IRootStorage interface implementation class.
+//  Contents: Declaration of IRootStorage interface implementation class.
 //
 //
 //--------------------------------------------------------------------------
@@ -25,16 +25,16 @@ extern "C" {
 class E_IRootStorage
 {
 public:
-	// Commands
-	E_IRootStorage(IUnknown * pstgName);
-	~E_IRootStorage();
-	void ccom_switch_to_file (EIF_POINTER filename);
-	
-	// Queries	
-	EIF_POINTER ccom_item();
-	
-private:	
-	IRootStorage * pIRootStorage;
+  // Commands
+  E_IRootStorage(IUnknown * pstgName);
+  ~E_IRootStorage();
+  void ccom_switch_to_file (EIF_POINTER filename);
+  
+  // Queries  
+  EIF_POINTER ccom_item();
+  
+private:  
+  IRootStorage * pIRootStorage;
 };
 
 #ifdef __cplusplus

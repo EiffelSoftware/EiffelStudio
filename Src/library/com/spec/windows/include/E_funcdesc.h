@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_funcdesc.h
+//  File:   E_funcdesc.h
 //
-//  Contents:	Accessors of FANCDESC structure.
+//  Contents: Accessors of FANCDESC structure.
 //
 //
 //--------------------------------------------------------------------------

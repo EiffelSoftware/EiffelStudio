@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		ecom_rt_globals.h
+//  File:   ecom_rt_globals.h
 //
-//  Contents: 	Global variables used by EiffelCOM wizard
+//  Contents:   Global variables used by EiffelCOM wizard
 //
 //--------------------------------------------------------------------------
 

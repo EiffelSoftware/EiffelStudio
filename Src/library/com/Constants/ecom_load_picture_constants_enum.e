@@ -5,8 +5,6 @@ indexing
 class
 	ECOM_LOAD_PICTURE_CONSTANTS_ENUM
 
-creation
-
 feature -- Access
 
 	default1: INTEGER is 0

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_wide_string.h
+//  File:   E_wide_string.h
 //
-//  Contents:	Declaration of E_wide_string class.
+//  Contents: Declaration of E_wide_string class.
 //
 //
 //--------------------------------------------------------------------------
@@ -19,14 +19,14 @@
 #include "eif_eiffel.h"
 
 #ifdef __cplusplus
-	extern "C" {
+  extern "C" {
 #endif
 
 WCHAR * ccom_create_from_string (char * string);
 EIF_REFERENCE ccom_wide_str_to_string (WCHAR * wide_string);
 
 #ifdef __cplusplus
-	}
+  }
 #endif
 
 #endif // !__ECOM_E_WIDE_STRING_H_INC__

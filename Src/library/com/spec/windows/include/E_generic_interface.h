@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_generic_interface.h
+//  File:   E_generic_interface.h
 //
-//  Contents:	Declaration of generic interface implementation class.
+//  Contents: Declaration of generic interface implementation class.
 //
 //
 //--------------------------------------------------------------------------
@@ -25,16 +25,16 @@ extern "C" {
 
 class E_generic_interface
 {
-	public:
-		// Commands
-		E_generic_interface () {};
-		E_generic_interface (IUnknown * other);
-		~E_generic_interface ();
-		
-		// Queries
-		EIF_POINTER ccom_item ();
-	private:
-		IUnknown * item;
+  public:
+    // Commands
+    E_generic_interface () {};
+    E_generic_interface (IUnknown * other);
+    ~E_generic_interface ();
+    
+    // Queries
+    EIF_POINTER ccom_item ();
+  private:
+    IUnknown * item;
 };
 
 #ifdef __cplusplus

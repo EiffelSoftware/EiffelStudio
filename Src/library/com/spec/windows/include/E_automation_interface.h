@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_automation_interface.h
+//  File:   E_automation_interface.h
 //
-//  Contents:	Declaration of automation interface implementation class.
+//  Contents: Declaration of automation interface implementation class.
 //
 //
 //--------------------------------------------------------------------------
@@ -25,16 +25,16 @@ extern "C" {
 
 class E_automation_interface
 {
-	public:
-		// Commands
-		E_automation_interface () {};
-		E_automation_interface (IDispatch * other);
-		~E_automation_interface ();
-		
-		// Queries
-		EIF_POINTER ccom_item ();
-	private:
-		IDispatch * item;
+  public:
+    // Commands
+    E_automation_interface () {};
+    E_automation_interface (IDispatch * other);
+    ~E_automation_interface ();
+    
+    // Queries
+    EIF_POINTER ccom_item ();
+  private:
+    IDispatch * item;
 };
 
 #ifdef __cplusplus

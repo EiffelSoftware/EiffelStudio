@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		ecom_flags.h
+//  File:   ecom_flags.h
 //
-//  Contents:	Externals definition for class ECOM_FLAGS
+//  Contents: Externals definition for class ECOM_FLAGS
 //
 //
 //--------------------------------------------------------------------------

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		ecom_exception.h
+//  File:   ecom_exception.h
 //
-//  Contents:	Externals definition for class ECOM_EXCEPTION
+//  Contents: Externals definition for class ECOM_EXCEPTION
 //
 //
 //--------------------------------------------------------------------------
@@ -20,17 +20,17 @@
 class Formatter
 {
 public:
-	Formatter();
-	virtual ~Formatter();
-	EIF_REFERENCE ccom_format_message( EIF_INTEGER Code );
-	char* c_format_message( long Code );
-	EIF_INTEGER ccom_hresult (char * exception_code_name); 
-	EIF_REFERENCE ccom_hresult_to_string( EIF_INTEGER Code );
-	HRESULT hresult (int code);
+  Formatter();
+  virtual ~Formatter();
+  EIF_REFERENCE ccom_format_message( EIF_INTEGER Code );
+  char* c_format_message( long Code );
+  EIF_INTEGER ccom_hresult (char * exception_code_name); 
+  EIF_REFERENCE ccom_hresult_to_string( EIF_INTEGER Code );
+  HRESULT hresult (int code);
 
 };
 
-#endif	// __cplusplus
+#endif  // __cplusplus
 
 #endif // !__ECOM_EXCEPTION_H_INC__
 

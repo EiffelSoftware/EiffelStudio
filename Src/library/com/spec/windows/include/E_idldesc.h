@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_idldesc.h
+//  File:   E_idldesc.h
 //
-//  Contents:	Accessors of IDLDESC structure.
+//  Contents: Accessors of IDLDESC structure.
 //
 //
 //--------------------------------------------------------------------------

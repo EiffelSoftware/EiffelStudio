@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1998.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		ecom_generated_rt_globals.h
+//  File:   ecom_generated_rt_globals.h
 //
-//  Contents: 	Global variables used by EiffelCOM wizard
+//  Contents:   Global variables used by EiffelCOM wizard
 //
 //--------------------------------------------------------------------------
 
@@ -26,19 +26,19 @@ extern int return_hr_value;
 extern jmp_buf exenv;
 extern struct xstack eif_stack;
 
-#define ECATCH	struct ex_vect *exvect;\
-	jmp_buf exenv;\
-	RTEA ((char *)0,0, (char *)0);\
-	exvect->ex_jbuf = &exenv;\
-	if (return_hr_value = setjmp (exenv)) \
-		return (HRESULT)(f.hresult (return_hr_value))
+#define ECATCH  struct ex_vect *exvect;\
+  jmp_buf exenv;\
+  RTEA ((char *)0,0, (char *)0);\
+  exvect->ex_jbuf = &exenv;\
+  if (return_hr_value = setjmp (exenv)) \
+    return (HRESULT)(f.hresult (return_hr_value))
 
  
 #ifdef RTEOK 
-	#define END_ECATCH exok()
+  #define END_ECATCH exok()
 #else 
-	#define END_ECATCH expop (&eif_stack);\
-						exok() 
+  #define END_ECATCH expop (&eif_stack);\
+            exok() 
 #endif
 
 #ifdef __cplusplus

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_bindptr.h
+//  File:   E_bindptr.h
 //
-//  Contents:	Accessors of BINDPTR structure.
+//  Contents: Accessors of BINDPTR structure.
 //
 //
 //--------------------------------------------------------------------------

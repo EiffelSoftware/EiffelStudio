@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------
 //
 //  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 1999.
+//  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:		E_arraydesc.h
+//  File:   E_arraydesc.h
 //
-//  Contents:	Accessors of ARRAYDESC structure.
+//  Contents: Accessors of ARRAYDESC structure.
 //
 //
 //--------------------------------------------------------------------------
@@ -20,13 +20,13 @@
 #define ccom_arraydesc_dim_count(_ptr_) ((EIF_INTEGER) (((ARRAYDESC *)_ptr_)->cDims))
 
 #ifdef __cplusplus
-	extern "C" {
+  extern "C" {
 #endif
 
 EIF_REFERENCE ccom_arraydesc_bounds (EIF_POINTER ptr);
 
 #ifdef __cplusplus
-	}
+  }
 #endif
 
 #endif // !__ECOM_E_ARRAY_DESC_H_INC__

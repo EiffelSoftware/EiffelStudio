@@ -9,6 +9,7 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "dir.h"
 #include "file.h"	/* for PATH_MAX */
@@ -81,7 +82,7 @@ void eif_gr_call_finish_freezing(request, c_code_dir, freeze_cmd_name)
 EIF_OBJ request, c_code_dir, freeze_cmd_name;
 {
 #ifdef __WATCOMC__
-	eif_call_finish_freezing(c_code_dir, freeze_cmd_name)
+	eif_call_finish_freezing(c_code_dir, freeze_cmd_name);
 #else
 	DIR *dirp;
 	char *cmd;
@@ -114,67 +115,91 @@ EIF_OBJ request, c_code_dir, freeze_cmd_name;
 
 
 
-void eif_link_driver (c_code_dir, systeme_name, prelink_command_name, driver_name)
-EIF_OBJ c_code_dir, systeme_name, prelink_command_name, driver_name;
+void eif_link_driver (c_code_dir, system_name, prelink_command_name, driver_name)
+EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
 #ifdef __WATCOMC__
-	char *ini_path, *cmd, *eiffel_dir;
-	FILE *ini_file;
+	char *ini_path, *src, *eiffel_dir, *eiffel_plt, *system_exe;
+	FILE *ini_file, *fi, *fo;
+	char buffer[4096];
+	int amount;
 
 		/* First create the .INI file */
-	ini_path = cmalloc(strlen(eif_access(c_code_dir))+strlen(eif_access(systeme_name))+10);
+	ini_path = cmalloc(strlen(eif_access(c_code_dir))+strlen(eif_access(system_name))+10);
 	if (ini_path == (char *)0)
 		enomem();
 
-	sprintf(ini_path, "%s/%s.INI", eif_access(c_code_dir), eif_access(systeme_name));
+	sprintf(ini_path, "%s\\%s.INI", eif_access(c_code_dir), eif_access(system_name));
 
-	ini_file = fopen(ini_path, "w");
+	ini_file = fopen(ini_path, "wt");
 	fprintf(ini_file, "[Environment]\nDriver=%s\n", eif_access(driver_name));
 	fclose(ini_file);
 
 	xfree(ini_path);
 
 		/* Link */
+
 	eiffel_dir = eif_getenv("EIFFEL3");
-
-	cmd = cmalloc(40 + strlen(eiffel_dir) + strlen(eif_access(driver_name)));
-	if (cmd == (char *)0)
+	src = cmalloc(38 + strlen (eiffel_dir));
+	if (src == (char *)0)
 		enomem();
+	strcpy (src, eiffel_dir);
+	strcat (src, "\\bench\\spec\\");
+	eiffel_plt = eif_getenv("PLATFORM");
+	strcat (src, eiffel_plt);
+	strcat (src, "\\bin\\precompd.exe");
+	fi = fopen (src, "rb");
+	system_exe = cmalloc (strlen (eif_access (system_name)) + 
+						  strlen (eif_access (c_code_dir)) + 5);
+	if (strlen (eif_access (system_name) > 8)
+		{
+		printf ("The system is called: %s\n", eif_access (system_name));
+		printf ("The system name should not be more than 8 characters\n");
+		}
+	sprintf (system_exe, "%s\\%s.EXE", eif_access (c_code_dir), eif_access (system_name));
+	fo = fopen (system_exe, "wb");
 
-	sprintf(cmd, "command.com /c copy %s\\bench\\spec\\winwat\\bin\\precompd.exe %s", eiffel_dir, eif_access(driver_name));
+	amount = 4096;
+	while (amount == 4096) 
+		{
+		amount = fread (buffer, sizeof(char), amount, fi);
+		if (amount != fwrite (buffer, sizeof(char), amount, fo))
+			eio();
+		}
 
-	(void) eif_system(cmd);
-	xfree(cmd);
+	fclose (fi);
+	fclose (fo);
+
 #else
 	char *cmd;
 
-	cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen(eif_access(systeme_name)) +
+	cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) +
 					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
 	if (cmd == (char *)0)
 		enomem();
 
-	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name), eif_access(driver_name), eif_access(c_code_dir), eif_access(systeme_name));
+	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name), eif_access(driver_name), eif_access(c_code_dir), eif_access(system_name));
 
 	(void) eif_system(cmd);
 	xfree(cmd);
 #endif
 }
 
-void eif_gr_link_driver (request, c_code_dir, systeme_name, prelink_command_name, driver_name)
+void eif_gr_link_driver (request, c_code_dir, system_name, prelink_command_name, driver_name)
 EIF_OBJ request;
-EIF_OBJ c_code_dir, systeme_name, prelink_command_name, driver_name;
+EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
 #ifdef __WATCOMC__
-	eif_link_driver(c_code_dir, systeme_name, prelink_command_name, driver_name);
+	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;
 
-	cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen (eif_access(systeme_name)) +
+	cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen (eif_access(system_name)) +
 					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
 	if (cmd == (char *)0)
 		enomem();
 
-	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name), eif_access(driver_name), eif_access(c_code_dir), eif_access(systeme_name));
+	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name), eif_access(driver_name), eif_access(c_code_dir), eif_access(system_name));
 
 	(*set_proc)(eif_access(request), RTMS (cmd));
 	(*send_proc)(eif_access(request));

@@ -241,7 +241,7 @@ feature -- Access
 			-- (if not, more optimal code is generated from
 			-- a new project and do not use precompilation).
 		do
-			Result := not Comp_system.poofter_finalization
+			Result := not Comp_system.poofter_finalization or else Comp_system.il_generation
 		end
 
 	lace_has_assertions: BOOLEAN is

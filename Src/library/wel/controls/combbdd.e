@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_COMBO_BOX
+		redefine
+			height
+		end
 
 	WEL_CBS_CONSTANTS
 		export
@@ -18,6 +21,14 @@ inherit
 creation
 	make,
 	make_by_id
+
+feature -- Access
+
+	height: INTEGER is
+			-- Height including the list box
+		do
+			Result := dropped_rect.height
+		end
 
 feature -- Status setting
 

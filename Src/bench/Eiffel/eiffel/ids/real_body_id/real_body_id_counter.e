@@ -175,6 +175,38 @@ feature -- Setting
 			dle_debug_subcounter.reset
 		end
 
+feature -- Generation
+
+	generate_offsets (file: INDENT_FILE) is
+			-- Generate `offset' declarations into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			real_body_id_subcounter: REAL_BODY_ID_SUBCOUNTER
+		do
+			from start until after loop
+				real_body_id_subcounter ?= item_for_iteration;
+				real_body_id_subcounter.generate_offset (file);
+				forth
+			end
+		end
+
+	generate_extern_offsets (file: INDENT_FILE) is
+			-- Generate `offset' extern declarations into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			real_body_id_subcounter: REAL_BODY_ID_SUBCOUNTER
+		do
+			from start until after loop
+				real_body_id_subcounter ?= item_for_iteration;
+				real_body_id_subcounter.generate_extern_offset (file);
+				forth
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	current_subcounter: REAL_BODY_ID_SUBCOUNTER;

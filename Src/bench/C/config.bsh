@@ -18,7 +18,7 @@ lib='lib'
 #-----------------
 ccflags='-q $debug -I$compiler_path\include -L$compiler_path\lib'
 mtccflags='-q $debug -tWM -DEIF_THREADS -I$compiler_path\include -L$compiler_path\lib'
-output_libraries='standard'
+output_libraries='standard mtstandard'
 #
 #
 link_line='&$compiler_path\bin\tlib /p512 $@ +-$**'

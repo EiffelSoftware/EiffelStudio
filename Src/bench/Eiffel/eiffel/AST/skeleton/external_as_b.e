@@ -14,8 +14,6 @@ inherit
 			byte_node, type_check
 		end;
 
-	SHARED_STATUS;
-
 	SHARED_MELT_ONLY;
 
 	EXTERNAL_CONSTANTS

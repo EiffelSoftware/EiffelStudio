@@ -313,11 +313,10 @@ feature -- Access
 				Result.append (dynamic_type.name_in_upper)
 				if type = Type_object then
 					Result.append_character (' ')
-					Result.append (full_output)
 				else
 					Result.append_character ('=')
-					Result.append (full_output)
 				end
+				Result.append (full_output)
 			elseif is_void then
 				Result.append ("NONE = Void")
 			else
@@ -333,8 +332,10 @@ feature -- Access
 			when Type_boolean then
 				Result := value_boolean.out
 			when Type_character then
-				create Result.make (6)
-				Result.append_character ('%'')
+				create Result.make (10)
+				Result.append_character ('/')
+				Result.append_integer (value_character.code)
+				Result.append ("/ : %'")
 				Result.append ((create {CHARACTER_ROUTINES}).char_text (value_character))
 				Result.append_character ('%'')
 			when Type_integer then

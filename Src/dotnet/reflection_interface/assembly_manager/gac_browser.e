@@ -67,21 +67,43 @@ feature {NONE} -- Implementation
 				until
 					j >= files.count
 				loop
-					create assembly.make
-					assembly := assembly.getassemblyname (files.item (j).fullname)
-					name := assembly.name
-					version := assembly.version.tostring
-					culture := assembly.cultureinfo.displayname
-					public_key := decode_key (assembly.getpublickeytoken)
-					create desc.make1
-					desc.make (name, version, culture, public_key)
-					n := Result.add (desc)
+					assembly := load_from_file (files.item (j).fullname)
+					if assembly /= Void then
+						name := assembly.name
+						version := assembly.version.tostring
+						culture := assembly.cultureinfo.displayname
+						public_key := decode_key (assembly.getpublickeytoken)
+						create desc.make1
+						desc.make (name, version, culture, public_key)
+						n := Result.add (desc)
+					end
 					j := j + 1
 				end
 				i := i + 1
 			end
 		ensure
 			Result_exists: Result /= Void
+		end
+
+	load_from_file (file: STRING): SYSTEM_REFLECTION_ASSEMBLYNAME is
+			-- Assembly stored in `file'.
+			-- Void if `file' format is invalid.
+		indexing
+			external_name: "LoadFromFile"
+		require
+			file_not_void: file /= Void
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				create Result.make
+				Result := Result.getassemblyname (file)
+			else 
+				Result := Void
+			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	decode_key (a_key: ARRAY [INTEGER_8]): STRING is

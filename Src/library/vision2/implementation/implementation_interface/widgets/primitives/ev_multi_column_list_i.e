@@ -181,6 +181,24 @@ feature -- Event : command association
 		deferred
 		end
 
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_column_click_commands is
+			-- Empty the list of commands to be executed
+			-- when a column is clicked.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]

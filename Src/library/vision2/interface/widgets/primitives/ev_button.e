@@ -67,7 +67,18 @@ feature -- Event - command association
 		do
 			implementation.add_click_command (cmd, arg)
 		end	
-	
+
+feature -- Event -- removing command association
+
+	remove_click_commands is	
+			-- Empty the list of commands to be executed when
+			-- the button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_click_commands
+		end
+
 feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
 
 	implementation: EV_BUTTON_I

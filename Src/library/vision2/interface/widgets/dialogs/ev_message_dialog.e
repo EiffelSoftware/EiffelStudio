@@ -239,6 +239,80 @@ feature -- Event - command association
 			Implementation.add_help_command (cmd, arg)
 		end
 
+feature -- Event -- removing command association
+
+	remove_ok_commands is
+			-- Empty the list of commands to be executed when
+			-- "OK" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_ok_commands
+		end
+
+	remove_cancel_commands is
+			-- Empty the list of commands to be executed when
+			-- "Cancel" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_cancel_commands
+		end
+
+	remove_yes_commands is
+			-- Empty the list of commands to be executed when
+			-- "Yes" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_yes_commands
+		end
+
+	remove_no_commands is
+			-- Empty the list of commands to be executed when
+			-- "No" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_no_commands
+		end
+
+	remove_abort_commands is
+			-- Empty the list of commands to be executed when
+			-- "Abort" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_abort_commands
+		end
+
+	remove_retry_commands is
+			-- Empty the list of commands to be executed when
+			-- "Retry" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_retry_commands
+		end
+
+	remove_ignore_commands is
+			-- Empty the list of commands to be executed when
+			-- "Ignore" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_ignore_commands
+		end
+
+	remove_help_commands is
+			-- Empty the list of commands to be executed when
+			-- "Help" button is pressed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_help_commands
+		end
+
 feature -- Implementation
 
 	implementation: EV_MESSAGE_DIALOG_I

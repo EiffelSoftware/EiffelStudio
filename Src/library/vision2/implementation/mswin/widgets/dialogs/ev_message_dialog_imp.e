@@ -227,6 +227,64 @@ feature -- Event - command association
 			add_command (Cmd_help, cmd, arg)
 		end
 
+feature -- Event -- removing command association
+
+	remove_ok_commands is
+			-- Empty the list of commands to be executed when
+			-- "OK" button is pressed.
+		do
+			remove_command (Cmd_ok)
+		end
+
+	remove_cancel_commands is
+			-- Empty the list of commands to be executed when
+			-- "Cancel" button is pressed.
+		do
+			remove_command (Cmd_cancel)
+		end
+
+	remove_yes_commands is
+			-- Empty the list of commands to be executed when
+			-- "Yes" button is pressed.
+		do
+			remove_command (Cmd_yes)
+		end
+
+	remove_no_commands is
+			-- Empty the list of commands to be executed when
+			-- "No" button is pressed.
+		do
+			remove_command (Cmd_no)
+		end
+
+	remove_abort_commands is
+			-- Empty the list of commands to be executed when
+			-- "Abort" button is pressed.
+		do
+			remove_command (Cmd_abort)
+		end
+
+	remove_retry_commands is
+			-- Empty the list of commands to be executed when
+			-- "Retry" button is pressed.
+		do
+			remove_command (Cmd_retry)
+		end
+
+	remove_ignore_commands is
+			-- Empty the list of commands to be executed when
+			-- "Ignore" button is pressed.
+		do
+			remove_command (Cmd_ignore)
+		end
+
+	remove_help_commands is
+			-- Empty the list of commands to be executed when
+			-- "Help" button is pressed.
+		do
+			remove_command (Cmd_help)
+		end
+
 feature {NONE} -- Basic operations
 
 	add_flag (value: INTEGER) is

@@ -72,6 +72,16 @@ feature -- Event - command association
 		deferred
 		end	
 
+feature -- Event -- removing command association
+
+	remove_switch_commands is
+			-- Empty the list of commands to be executed
+			-- when a page is switch in the notebook.
+		require
+			exists: not destroyed
+		deferred
+		end	
+
 feature -- Implementation
 
 	add_child_ok: BOOLEAN is

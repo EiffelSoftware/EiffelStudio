@@ -1,11 +1,10 @@
 indexing
-
 	description: 
-		"EiffelVision toggle button. It looks and acts like   %
+		"EiffelVision toggle button. It looks and acts like%
 		% a button, but is always in one of two states,%
-                %alternated by a click. Toggle button may be%
-                %depressed, and when clicked again, it will pop back%
-                %up. Click again, and it will pop back down."
+		%alternated by a click. Toggle button may be%
+		%depressed, and when clicked again, it will pop back%
+		%up. Click again, and it will pop back down."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -85,6 +84,17 @@ feature -- Event - command association
 			valid_command: cmd /= Void
 		do
 			implementation.add_toggle_command (cmd, arg)
+		end	
+
+feature -- Event -- removing command association
+
+	remove_toggle_commands is	
+			-- Empty the list of commands to be executed
+			-- when the button is toggled.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_toggle_commands
 		end	
 
 feature {NONE} -- Implementation

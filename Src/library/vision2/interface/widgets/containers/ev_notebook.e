@@ -113,7 +113,18 @@ feature -- Event - command association
 		do
 			implementation.add_switch_command (cmd, arg)
 		end	
-		
+
+feature -- Event -- removing command association
+
+	remove_switch_commands is
+			-- Empty the list of commands to be executed
+			-- when a page is switch in the notebook.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_switch_commands
+		end	
+
 feature {NONE} -- Implementation
 	
 	implementation: EV_NOTEBOOK_I

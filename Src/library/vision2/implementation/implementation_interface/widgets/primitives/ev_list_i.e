@@ -152,6 +152,16 @@ feature -- Event : command association
 		deferred
 		end
 
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature {EV_LIST_ITEM} -- Implementation
 
 	add_item (item: EV_LIST_ITEM) is

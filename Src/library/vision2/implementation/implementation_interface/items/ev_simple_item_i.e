@@ -58,8 +58,8 @@ feature -- Status settings
 feature -- Event : command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the item is 
-			-- activated.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -67,13 +67,31 @@ feature -- Event : command association
 		end	
 
 	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the item is
-			-- unactivated.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end	
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		require
+			exists: not destroyed
+		deferred			
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		require
+			exists: not destroyed
+		deferred	
+		end
 
 feature -- Implementation
 

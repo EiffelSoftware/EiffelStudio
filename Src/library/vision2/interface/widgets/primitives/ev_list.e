@@ -143,6 +143,17 @@ feature -- Event : command association
 			implementation.add_selection_command (cmd, arg)
 		end
 
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_selection_commands
+		end
+
 feature {EV_LIST_ITEM_IMP, EV_LIST_ITEM} -- Implementation
 	
 	implementation: EV_LIST_I	

@@ -143,10 +143,19 @@ feature -- Element change
 feature -- Event : command association
 
 	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'command' to the list of commands to be executed
+			-- Add 'cmd' to the list of commands to be executed
 			-- when the item is double clicked.
 		do
 			add_command (Cmd_item_dblclk, cmd, arg)
+		end	
+
+feature -- Event -- removing command association
+
+	remove_double_click_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is double-clicked.
+		do
+			remove_command (Cmd_item_dblclk)
 		end	
 
 feature {NONE} -- Implementation

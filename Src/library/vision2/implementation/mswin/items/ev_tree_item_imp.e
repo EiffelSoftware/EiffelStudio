@@ -116,6 +116,15 @@ feature -- Event : command association
 			add_command (Cmd_item_subtree, cmd, arg)
 		end
 
+feature -- Event -- removing command association
+
+	remove_subtree_commands is
+			-- Empty the list of commands to be executed when
+			-- the selection subtree is expanded or collapsed.
+		do
+			remove_command (Cmd_item_subtree)
+		end
+
 feature {NONE} -- Implementation
 
 	parent: EV_TREE_ITEM_CONTAINER_IMP

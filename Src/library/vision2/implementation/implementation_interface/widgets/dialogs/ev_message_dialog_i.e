@@ -211,6 +211,72 @@ feature -- Event - command association
 		deferred
 		end
 
+feature -- Event -- removing command association
+
+	remove_ok_commands is
+			-- Empty the list of commands to be executed when
+			-- "OK" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_cancel_commands is
+			-- Empty the list of commands to be executed when
+			-- "Cancel" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_yes_commands is
+			-- Empty the list of commands to be executed when
+			-- "Yes" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_no_commands is
+			-- Empty the list of commands to be executed when
+			-- "No" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_abort_commands is
+			-- Empty the list of commands to be executed when
+			-- "Abort" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_retry_commands is
+			-- Empty the list of commands to be executed when
+			-- "Retry" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_ignore_commands is
+			-- Empty the list of commands to be executed when
+			-- "Ignore" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_help_commands is
+			-- Empty the list of commands to be executed when
+			-- "Help" button is pressed.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 end -- class EV_MESSAGE_DIALOG_I
 
 --|----------------------------------------------------------------

@@ -166,7 +166,8 @@ feature -- Status setting
 							l.off
 						loop
 							if l.item /= NULL then
-								rad_but_imp ?= eif_object_from_c (l.item)
+								rad_but_imp ?= eif_object_from_c (C.gtk_widget_struct_parent (l.item))
+									-- The c_object of the radio button is its parent (event box)
 								if rad_but_imp /= Void then
 									peer.remove_radio_button (rad_but_imp.interface)
 								end
@@ -183,7 +184,8 @@ feature -- Status setting
 							l.off
 						loop
 							if l.item /= NULL then
-								rad_but_imp ?= eif_object_from_c (l.item)
+								rad_but_imp ?= eif_object_from_c (C.gtk_widget_struct_parent (l.item))
+									-- The c_object of the radio button is its parent (event box)
 								if rad_but_imp /= Void then
 									if peer.radio_group /= NULL then
 										C.gtk_radio_button_set_group (rad_but_imp.visual_widget, peer.radio_group)

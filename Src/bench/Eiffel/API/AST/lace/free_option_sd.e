@@ -13,11 +13,7 @@ inherit
 			is_valid, adapt_defaults
 		end
 
-	SHARED_RESCUE_STATUS
-
 	EIFFEL_ENV
-
-	SHARED_BENCH_LICENSES
 
 	SHARED_EIFFEL_PARSER
 

@@ -7,6 +7,22 @@ indexing
 class
 	PAIR [G,H]
 
+create
+	default_create,
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_first: G; a_second: H) is
+			-- New pair made of `a_first' and `a_second'.
+		do
+			first := a_first
+			second := a_second
+		ensure
+			first_set: first = a_first
+			second_set: second = a_second
+		end
+
 feature -- Access
 
 	first: G

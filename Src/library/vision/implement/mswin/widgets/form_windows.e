@@ -15,23 +15,29 @@ inherit
 			set_width as bulletin_set_width,
 			set_height as bulletin_set_height
 		export
-			{WIDGET_WINDOWS, ATTACHMENT_LIST_WINDOWS} children
+			{WIDGET_WINDOWS, ATTACHMENT_LIST_WINDOWS}
+				children,
+				children_list
 		redefine
 			child_has_resized,
 			make,
 			realize,
 			class_name,
-			set_enclosing_size
+			set_enclosing_size,
+			resize_for_shell
 		end;
 
 	BULLETIN_WINDOWS
 		export
-			{WIDGET_WINDOWS, ATTACHMENT_LIST_WINDOWS} children
+			{WIDGET_WINDOWS, ATTACHMENT_LIST_WINDOWS}
+				children,
+				children_list
 		redefine
 			show, make, realize_current, set_size,
 			set_width, set_height, child_has_resized,
 			realize, class_name,
-			set_enclosing_size
+			set_enclosing_size,
+			resize_for_shell
 		select
 			show, realize_current, set_size, 
 			set_width, set_height
@@ -62,10 +68,10 @@ feature -- Status setting
 			-- Child has been resized
 		do
 			if not updating then
-				update_all
 				if realized then
 					set_enclosing_size
 				end
+				update_all
 			end
 		end
 
@@ -84,10 +90,10 @@ feature -- Status setting
 			if not fixed_size_flag and not updating then
 				h := form_child_list.height (Current)
 				w := form_child_list.width (Current)
-				if h /= height and w /= width then
+				if h > height and w > width then
 					set_size (w, h)
 				else
-					if h /= height then
+					if h > height then
 						set_height (h)
 					end			
 					if w > width then
@@ -192,7 +198,7 @@ feature	-- Implementation
 		do
 			a_childw ?= a_child
 			form_child_list.attach_bottom (a_childw, Current, bottom_offset, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -207,7 +213,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_bottom (a_childw, Current, a_position, true)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -221,7 +227,9 @@ feature	-- Implementation
 			a_childw  ?= a_child
 			a_widgetw ?= a_widget
 			form_child_list.attach_bottom (a_childw, a_widgetw, bottom_offset, false);
-			if realized and then shown then 
+			a_childw  ?= a_widget
+			form_child_list.add (a_childw)
+			if realized then 
 				update_all
 			end
 		end
@@ -234,7 +242,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_left (a_childw, current, left_offset, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -249,7 +257,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_left (a_childw, Current, a_position, true)
-			if realized and then shown then
+			if realized then
 				update_all
 			end
 		end
@@ -263,7 +271,9 @@ feature	-- Implementation
 			a_childw  ?= a_child
 			a_widgetw ?= a_widget
 			form_child_list.attach_left (a_childw, a_widgetw, left_offset, false)
-			if realized and then shown then 
+			a_childw  ?= a_widget
+			form_child_list.add (a_childw)
+			if realized then 
 				update_all
 			end
 		end
@@ -276,7 +286,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_right (a_childw, Current, right_offset, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -291,7 +301,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_right (a_childw, Current, a_position, true)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -305,7 +315,9 @@ feature	-- Implementation
 			a_childw  ?= a_child
 			a_widgetw ?= a_widget
 			form_child_list.attach_right (a_childw, a_widgetw, right_offset, false)
-			if realized and then shown then 
+			a_childw  ?= a_widget
+			form_child_list.add (a_childw)
+			if realized then 
 				update_all
 			end
 		end
@@ -318,7 +330,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_top (a_childw, Current, top_offset, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -333,7 +345,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_top (a_childw, Current, a_position, true)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -347,7 +359,9 @@ feature	-- Implementation
 			a_childw  ?= a_child
 			a_widgetw ?= a_widget
 			form_child_list.attach_top (a_childw, a_widgetw, top_offset, false)
-			if realized and then shown then 
+			a_childw  ?= a_widget
+			form_child_list.add (a_childw)
+			if realized then 
 				update_all
 			end
 		end
@@ -359,7 +373,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_right (a_childw, Void, 0, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -371,7 +385,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_left (a_childw, Void, 0, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -383,7 +397,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_bottom (a_childw, Void, 0, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -395,7 +409,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_top (a_childw, Void, 0, false)
-			if realized and then shown then 
+			if realized then 
 				update_all
 			end
 		end
@@ -409,6 +423,27 @@ feature	-- Implementation
 		end
 
 feature -- Implementation
+
+	resize_for_shell is
+			-- Resize current widget if the parent is a shell.			
+		local
+			tw: TOP_WINDOWS
+		do
+			tw ?= parent
+			if tw /= Void and then tw.exists and then not fixed_size_flag then
+				if tw.client_width < width or tw.client_height < height then
+					if tw.client_width < width then
+						tw.set_form_width (width)
+					end
+					if tw.client_height < height then
+						tw.set_form_height (height)
+					end
+				else
+					set_x_y (0, 0)
+					set_size (tw.client_width, tw.client_height)
+				end
+			end
+		end
 
 	form_child_list: ATTACHMENT_LIST_WINDOWS
 			-- Children of this widget

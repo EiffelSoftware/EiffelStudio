@@ -865,11 +865,7 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 {
 	int16   typearr [4], arr_dtype;
 
-#ifdef WORKBENCH
 	arr_dtype = RTUD_INV(egc_arr_dtype);
-#else
-	arr_dtype = egc_arr_dtype;
-#endif
 
 	typearr [0] = -1;           /* No static call context */
 	typearr [1] = arr_dtype;    /* Base type of ARRAY     */
@@ -878,6 +874,7 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 
 	return eif_compound_id ((int16 *)0, (char *)0,(int16) arr_dtype, typearr);
 }
+
 /*------------------------------------------------------------------*/
 /* Full type name of `obj' as STRING object.                        */
 /*------------------------------------------------------------------*/

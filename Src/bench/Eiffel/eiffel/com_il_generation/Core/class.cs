@@ -27,7 +27,7 @@ internal class CLASS
 	}
 	
 	// Associated ModuleBuilder
-	protected ModuleBuilder module;
+	internal ModuleBuilder module;
 	
 	// Type ID
 	public int TypeID, InterfaceID;
@@ -360,7 +360,7 @@ internal class CLASS
 			LocalInterfaces = new Type [Interfaces.Count];
 		} else {
 			LocalInterfaces = new Type [Interfaces.Count + 1];
-			LocalInterfaces [Interfaces.Count] = COMPILER.Ise_eiffel_type_info_type;
+			LocalInterfaces [Interfaces.Count] = RUNTIME.Ise_eiffel_type_info_type;
 		}
 		for( i = 0; i < Interfaces.Count; i++ )
 			LocalInterfaces [i] = COMPILER.Classes [( int )Interfaces [i]].Builder;
@@ -398,7 +398,7 @@ internal class CLASS
 			MethodBuilder set_type, class_name;
 			MethodBuilder method;
 			FieldBuilder attribute;
-			Type type = COMPILER.Ise_eiffel_derivation_type;
+			Type type = RUNTIME.Ise_eiffel_derivation_type;
 			ILGenerator MethodIL;
 
 				// Define storage of type information
@@ -454,7 +454,10 @@ internal class CLASS
 			MethodIL = class_name.GetILGenerator();
 			MethodIL.Emit (OpCodes.Ldstr, eiffel_name);
 			MethodIL.Emit (OpCodes.Ret);
+
+			builder.SetCustomAttribute (CA.eiffel_class_name_attr (eiffel_name));
 		}
+
 		#if ASSERTIONS
 			TypeBuilderCreated = true;
 		#endif

@@ -26,7 +26,7 @@ inherit
 
 	OBSERVER
 		rename
-			update as preferences_changed
+			update as retrieve_preferences
 		undefine
 			default_create
 		end
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 			diagram_preferences.add_observer (Current)
 			
-			retrive_preferences
+			retrieve_preferences
 			
 			real_arrow_head_size := 10
 			request_update
@@ -213,13 +213,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	preferences_changed is
-			-- User changed preferences.
-		do
-			retrive_preferences
-		end
-		
-	retrive_preferences is
+	retrieve_preferences is
 			-- Retrive preferences from shared resources.
 		do
 			set_line_width (bon_inheritance_line_width)

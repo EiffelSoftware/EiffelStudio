@@ -87,6 +87,7 @@ feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX} -- Basic o
 			-- a GB_TYPE_SELECTOR_ITEM, so in this case we simply wipe
 			-- out the drop actions on `selector_item' as you cannot
 			-- drop a type on a type.
+			-- If `an_object' is Void, then we wipe out the drop actions.
 		local
 			selector_item: GB_TYPE_SELECTOR_ITEM
 		do
@@ -98,7 +99,7 @@ feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX} -- Basic o
 				-- The check for object.parent not Void, ensures that we do nothing
 				-- if a window has been picked.
 			if selector_item /= Void then
-				if an_object.object /= Void and an_object.parent_object /= Void then
+				if an_object /= Void and then an_object.object /= Void and then an_object.parent_object /= Void then
 					selector_item.generate_drop_actions (an_object)	
 				else
 					selector_item.drop_actions.wipe_out

@@ -45,13 +45,9 @@ feature
 			loop
 				unit := table.item;
 				body_id := body_index_table.item (unit.body_index)
-				if unit.is_attribute then
-					mark_alive (body_id.id);
-				else
-					old_position := table.position
-					mark (unit.feature_id, unit.body_index, body_id, unit.id, unit.written_in, dispose_rout_id);
-					table.go_to (old_position)	
-				end;
+				old_position := table.position
+				mark (unit.feature_id, unit.body_index, body_id, unit.id, unit.written_in, dispose_rout_id);
+				table.go_to (old_position)	
 				table.forth
 			end
 		end
@@ -90,19 +86,26 @@ end
 					unit := table.item;
 					if unit.id.associated_class.simple_conform_to (original_class_id.associated_class) then
 						old_position := table.position;
-						if not is_alive (unit.body_id.id) then
+						body_id_unit := unit.body_id
+						if not is_alive (body_id_unit.id) then
 DEBUG ("DEAD_CODE")
 	io.putstring ("marking for rout_id: ")
 	io.putint (rout_id_val.id)
 	io.putstring ("%N")
 end
-								body_id_unit := body_index_table.item (unit.body_index)
 								mark (unit.feature_id, unit.body_index, body_id_unit, unit.id, unit.written_in, rout_id_val);
 						end;
 						table.go_to (old_position);
 					end;
 					table.forth
 				end;
+debug ("DEAD_CODE")
+	print ("End of marking Poly_table `")
+	print (rout_id_val.id)
+	print ("'; for feature written in ")
+	print (original_class_id.associated_class.name)
+	print ("%N%N")
+end
 			end;
 		end;
 

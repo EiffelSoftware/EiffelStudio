@@ -72,7 +72,7 @@ FILE *fp;
 #ifdef __WINDOWS_386__
 	return eif_console_eof();
 #else
-	return file_feof (fp);
+	return file_feof(fp);
 #endif
 }            
 
@@ -85,7 +85,16 @@ FILE *f;
 EIF_INTEGER	number;
 {
 #ifdef __WINDOWS_386__
-	eif_console_putint (number);
+		/* `f' will be Void for all the instances of CONSOLE.
+		 * If `default_output' is of type PLAIN_TEXT_FILE (set
+		 * with `set_file_default'), we want to call the standard
+		 * functions. This comment is valid for all the output
+		 * functions
+		 */
+	if (f)
+		file_pi (f, number);
+	else
+		eif_console_putint (number);
 #else
 	file_pi (f, number);	
 #endif
@@ -96,7 +105,10 @@ FILE *f;
 EIF_REAL number;
 {
 #ifdef __WINDOWS_386__
-	eif_console_putreal (number);
+	if (f)
+		file_pr (f, number);
+	else
+		eif_console_putreal (number);
 #else
 	file_pr (f, number);	
 #endif
@@ -108,7 +120,10 @@ char *str;
 EIF_INTEGER len;
 {
 #ifdef __WINDOWS_386__
-	eif_console_putstring (str, len);
+	if (f)
+		file_ps (f, str, len);
+	else
+		eif_console_putstring (str, len);
 #else
 	file_ps (f, str, len);
 #endif
@@ -119,7 +134,10 @@ FILE *f;
 EIF_CHARACTER c;
 {
 #ifdef __WINDOWS_386__
-	eif_console_putchar (c);
+	if (f)
+		file_pc (f, c);
+	else
+		eif_console_putchar (c);
 #else
 	file_pc (f, c);
 #endif
@@ -130,7 +148,10 @@ FILE *f;
 EIF_DOUBLE val;
 {
 #ifdef __WINDOWS_386__
-	eif_console_putdouble (val);
+	if (f)
+		file_pd (f, val);
+	else
+		eif_console_putdouble (val);
 #else
 	file_pd (f, val);
 #endif
@@ -246,6 +267,7 @@ public void console_file_close (f)
 FILE *f;
 {
 #ifdef __WINDOWS_386__
+	if (f) file_close (f);
 #else
 	file_close (f);
 #endif

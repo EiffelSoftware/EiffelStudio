@@ -44,6 +44,7 @@ feature -- Status setting
 			-- Destroy screen widget implementation.
                 do
                         gtk_widget_destroy (widget)
+			widget := Default_pointer
 		end
 
 	hide is

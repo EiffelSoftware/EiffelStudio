@@ -10,7 +10,9 @@ deferred class TOOL_COMMAND
 
 inherit
 
-	COMMAND_W
+	ISE_COMMAND;
+	EB_CONSTANTS;
+	WINDOWS
 
 feature {NONE} -- Initialization
 
@@ -41,29 +43,6 @@ feature -- Access
 			-- Parent used for popup creation
 		do
 			Result := tool.popup_parent
-		end;
-
-	name: STRING is
-			-- Name of the command
-		deferred
-		end;
-
-    menu_name: STRING is
-            -- Name used in menu entry
-        deferred
-        end;
-
-    accelerator: STRING is
-            -- Accelerator action for menu entry
-		deferred
-        end
-
-feature {EB_BUTTON} -- Implementation
-
-	button_three_action: ANY is
-			-- Action to specify that the third button was pressed
-		once
-			!! Result
 		end;
 
 invariant

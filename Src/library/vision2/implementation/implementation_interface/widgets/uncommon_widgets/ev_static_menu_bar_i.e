@@ -37,22 +37,6 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is the current menu destroyed ?
-		deferred
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy the actual static menu-bar.
-		require
-			exists: not destroyed
-		deferred
-		end
-
 feature {NONE} -- Implementation
 
 	parent_imp: EV_WINDOW_IMP

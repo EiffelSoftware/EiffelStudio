@@ -6,9 +6,9 @@ root
 
 default
 	assertion (require)
+	console_application (yes)
 	multithreaded (yes)
 	dead_code_removal (yes)
---	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt");
 
 
 cluster
@@ -41,10 +41,7 @@ cluster
 		end
 
 external
-	include_path:
-		"../../.."
-	object:
-		"../../fext.o"
-	make:	"../../Make"
+	include_path: "../../.."
+	object: "../../fext.obj"
 
 end

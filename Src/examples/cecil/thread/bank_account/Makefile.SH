@@ -1,56 +1,70 @@
-	cp $ISE_EIFFEL/bench/spec/$ISE_PLATFORM/include/config.sh .
+case $CONFIG in
+'')
 	if test ! -f config.sh; then
 		(echo "Can't find config.sh."; exit 1)
 	fi 2>/dev/null
 	. ./config.sh
-
+	;;
+esac
+case "$0" in
+*/*) cd `expr X$0 : 'X\(.*\)/'` ;;
+esac
 echo "Extracting "."/Makefile (with variable substitutions)"
 $spitshell >Makefile <<!GROK!THIS!
-SHELL = /bin/sh
-CC = $cc
-CFLAGS = $optimize $mtccflags $large -I\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/include -I. \$(INCLUDE_PATH)
-LDFLAGS =  $windows_flags $mtldflags
-EIFLIB = EIFGEN/F_code/libbank_account.a 
-MAKE = $make
-AR = $ar
-LIBS=$mtlibs
-LD = $ld
-MKDEP = $mkdep \$(DPFLAGS) --
-MV = $mv
-RANLIB = $ranlib
+########################################################################
+# Makefile generated from Makefile.SH on $DATE
+MAKE = make
+INCLUDE_PATH = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
+DELDIR = $rm -rf
+LN = $ln
 RM = $rm -f
-RMDIR = $rmdir
-COMMAND_MAKEFILE = $command_makefile
+CP = $cp
+MV = $mv
+SHELL = /bin/sh
+FINISH_FREEZING = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/finish_freezing
+CFLAGS = $mtccflags $large
+EC = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/ec
+EIFLIB = EIFGEN/W_code/libbank_account.a 
+LIBS = $mtlibs
+OBJECT = main.o fext.o
+
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-.SUFFIXES: .x .xpp
+
+
+all: prepare $(OBJECT) compile_eiffel compile_c mklink bank_account 
+
+prepare:
+	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
+	$(RM) Ace.ace
+	$(MV) tmp Ace.ace
+
+compile_eiffel:
+	$(EC) -freeze; 
+
+compile_c:
+	cd EIFGEN/W_code; $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/finish_freezing -silent; $(MAKE) cecil
+
+mklink:
+	$(LN) EIFGEN/W_code/bank_account.melted .
+
+bank_account: $(OBJECT) $(EIFLIB)
+	$(CC) -o bank_account $(OBJECT) $(EIFLIB) $(LIBS)
 
 .c.o:
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -c $<
 
-all: tst
-
-OBJECTS= main.o fext.o  
-
-$(EIFLIB): 
-	cd EIFGEN/F_code;\
-	$(MAKE) cecil;\
-	cd ../..
-
-tst: $(OBJECTS)  $(EIFLIB) Makefile
-	$(RM) tst
-	$(CC) -o $@ $(CFLAGS) $(LDFLAGS)  $(OBJECTS) $(EIFLIB) $(LIBS) 
-
-clean: local_clean
-clobber: local_clobber
-
-local_clean::
-	$(RM) core *.o 
-
-local_clobber:: local_clean
-	$(RM) tst Makefile config.sh 
-
-!NO!SUBS!
-chmod 644 Makefile
-$eunicefix Makefile
+clean:
+	$(RM) core
+	$(RM) config.sh
+	$(RM) *.o 
+	$(RM) bank_account 
+	$(RM) bank_account.melted
+	$(RM) bank_account.epr
+	$(RM) Makefile
+	$(DELDIR) EIFGEN
+	sed -e s/"fext.o"/"fext.obj"/ Ace.ace > tmp
+	$(RM) Ace.ace
+	$(MV) tmp Ace.ace
+	
 

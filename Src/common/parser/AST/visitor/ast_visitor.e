@@ -483,7 +483,7 @@ feature {AST_EIFFEL} -- Initialization
 		deferred
 		end
 
-	process_infix_as (l_as: INFIX_AS) is
+	process_infix_as (l_as: INFIX_PREFIX_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	INFIX_AS
+	INFIX_PREFIX_AS
 
 inherit
 	FEATURE_NAME
@@ -112,7 +112,7 @@ feature -- Conveniences
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
-			infix_feature: INFIX_AS;
+			infix_feature: INFIX_PREFIX_AS;
 			normal_feature: FEAT_NAME_ID_AS;
 		do
 			normal_feature ?= other
@@ -167,4 +167,4 @@ feature
 			end
 		end
 
-end -- class INFIX_AS
+end -- class INFIX_PREFIX_AS

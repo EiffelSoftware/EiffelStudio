@@ -1203,7 +1203,7 @@ feature -- Access
 			index_list_set: Result.index_list = i
 		end
 
-	new_infix_as (op: STRING_AS; b: BOOLEAN): INFIX_AS is
+	new_infix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
 			-- New INFIX AST node
 		require
 			op_not_void: op /= Void
@@ -1483,7 +1483,7 @@ feature -- Access
 		end
 
 
-	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_AS is
+	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
 			-- New PREFIX AST node
 		require
 			op_not_void: op /= Void

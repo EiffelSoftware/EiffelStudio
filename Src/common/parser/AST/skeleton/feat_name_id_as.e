@@ -60,7 +60,7 @@ feature -- Comparison
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		local
 			normal_feature: like Current;
-			infix_feature: INFIX_AS;
+			infix_feature: INFIX_PREFIX_AS;
 		do
 			normal_feature ?= other;
 			infix_feature ?= other;

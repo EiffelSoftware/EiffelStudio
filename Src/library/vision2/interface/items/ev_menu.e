@@ -38,7 +38,6 @@ feature -- Status report
 
 	parent: EV_MENU_ITEM_LIST is
 			-- Menu item list containing `Current'.
-			--| Redefined to avoid typing error.
 		do
 			Result := implementation.parent
 		end

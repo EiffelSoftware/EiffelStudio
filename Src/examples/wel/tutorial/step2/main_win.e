@@ -24,16 +24,23 @@ feature {NONE} -- Implementation
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Display a message box when the user presses the
 			-- the left mouse button.
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			information_message_box ("You have pressed the left %
+			!!msg_box.make
+			msg_box.information_message_box (Current, "You have pressed the left %
 				%mouse button.", "Message received")
 		end
 
 	closeable: BOOLEAN is
 			-- Does the user want to quit?
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			Result := question_message_box ("Do you want to quit?",
+			!!msg_box.make
+			msg_box.question_message_box (Current, "Do you want to quit?",
 				"Quit")
+			Result := msg_box.message_box_result = Idyes
 		end
 
 end -- class MAIN_WINDOW

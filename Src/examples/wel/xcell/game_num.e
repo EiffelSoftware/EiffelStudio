@@ -54,19 +54,24 @@ feature {NONE} -- Implementation
 
 	on_ok is
 			-- Ok button is pressed
+		local
+			msg_box: WEL_MSG_BOX
 		do
 			if number_edit.text.is_integer then
 				if number_edit.text.to_integer < 1 or number_edit.text.to_integer > 65000 then
-					information_message_box ("You can only select a game number from 1 to 65000.", "Information")
+					!!msg_box.make
+					msg_box.information_message_box (Current, "You can only select %
+						%a game number from 1 to 65000.", "Information")
 					number_edit.set_text (game_number.out)
 				else
 					game_number := number_edit.text.to_integer
 					terminate (Idok)
 				end
 			else
-					information_message_box ("This field requires %
-						%a number.", "Information")
-					number_edit.set_text (game_number.out)
+				!!msg_box.make
+				msg_box.information_message_box (Current, "This field requires %
+					%a number.", "Information")
+				number_edit.set_text (game_number.out)
 			end
 		end
 

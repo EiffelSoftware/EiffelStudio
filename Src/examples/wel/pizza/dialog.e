@@ -119,6 +119,7 @@ feature
 		local
 			i: INTEGER
 			sel_string: ARRAY [STRING]
+			msg_box: WEL_MSG_BOX
 		do
 			text_info.wipe_out
 			text_info.append ("You ordered a Pizza with ")
@@ -144,7 +145,8 @@ feature
 			else
 				text_info.append ("no toppings.%N")
 			end
-			information_message_box (text_info, "Pizza Order")
+			!!msg_box.make
+			msg_box.information_message_box (Current, text_info, "Pizza Order")
 			terminate (Idok)
 		end
 

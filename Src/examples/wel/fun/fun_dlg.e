@@ -111,9 +111,12 @@ feature
 
 	on_ok is
 			-- The ok button is pressed
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			information_message_box ("Thank you for your participation...",
-				"ISE Example")
+			!!msg_box.make
+			msg_box.information_message_box (Current, 
+				"Thank you for your participation...", "ISE Example")
 			terminate (Idok)
 		end
 

@@ -242,27 +242,6 @@ rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
  * Conformance query
  */
 
-rt_public char estypeg(char *obj1, char *obj2)
-{
-	/* Are dynamic types of `obj1' and `obj2' identical? */
-
-	if ((char *) 0 == obj1 || (char *) 0 == obj2)
-		return (char) 0;
-
-	return (Dtype(obj1) == Dtype(obj2));
-}
-
-rt_public EIF_BOOLEAN econfg(char *obj1, char *obj2)
-{
-	/* Does dynamic type of `obj2' conform to dynamic type of `obj1' ? */
-
-	if ((char *) 0 == obj1 || (char *) 0 == obj2)
-		return (EIF_BOOLEAN) 0;
-
-	return (EIF_BOOLEAN) econfm(Dftype(obj1), Dftype(obj2));
-
-}
-
 rt_public int econfm(int ancestor, int heir)
 			 	/* If conformance is true, this must be the ancestor type */
 				/* And this must be the heir then */

@@ -111,17 +111,17 @@
 			</code> is called for, and vice versa. Three out of four of the executable lines in the following code sample are invalid:
 		</paragraph>
 		<code_block>
-local
-    my_string: STRING
-    my_system_string: SYSTEM_STRING
-do
-    my_system_string := "Hello World!"           -- Invalid
-    my_string := "Hello World!"                  -- Valid
-    my_string := my_system_string                -- Invalid
-    my_system_string := my_string                -- Invalid
-        .
-        .
-end
+	<keyword>local</keyword>
+		my_string<symbol>:</symbol> <class_name>STRING</class_name>
+		my_system_string<symbol>:</symbol> <class_name>SYSTEM_STRING</class_name>
+	<keyword>do</keyword>
+		my_system_string <symbol>:</symbol><symbol>=</symbol> "Hello World!"           -- Invalid
+		my_string <symbol>:</symbol><symbol>=</symbol> "Hello World!"                  -- Valid
+		my_string <symbol>:</symbol><symbol>=</symbol> my_system_string                -- Invalid
+		my_system_string <symbol>:</symbol><symbol>=</symbol> my_string                -- Invalid
+			.
+			.
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>To handle this issue, the Eiffel for .NET class 
 			<code>
@@ -162,17 +162,17 @@ end
 			</code> to make all the lines from the previous sample valid.
 		</paragraph>
 		<code_block>
-local
-    my_string: STRING
-    my_system_string: SYSTEM_STRING
-do
-    my_system_string := ("Hello World!").to_cil     -- Valid
-    my_string := "Hello World!"                     -- Valid
-    my_string.make_from_cil (my_system_string)      -- Valid
-    my_system_string := my_string.to_cil            -- Valid
-        .
-        .
-end
+	<keyword>local</keyword>
+		my_string<symbol>:</symbol> <class_name>STRING</class_name>
+		my_system_string<symbol>:</symbol> <class_name>SYSTEM_STRING</class_name>
+	<keyword>do</keyword>
+		my_system_string <symbol>:</symbol><symbol>=</symbol> <symbol>(</symbol>"Hello World!"<symbol>)</symbol><feature_name></feature_name>.<feature_name>to_cil</feature_name>     -- Valid
+		my_string <symbol>:</symbol><symbol>=</symbol> "Hello World!"                     -- Valid
+		my_string.<feature_name>make_from_cil</feature_name> <symbol>(</symbol>my_system_string<symbol>)</symbol>      -- Valid
+		my_system_string <symbol>:</symbol><symbol>=</symbol> my_string.<feature_name>to_cil</feature_name>            -- Valid
+			.
+			.
+	<keyword>end</keyword>
 </code_block>
 		<note>
 			<bold>Note:</bold> As shown in the above example, it is necessary to apply 
@@ -185,7 +185,8 @@ end
 			<code>
 				<class_name>System.String</class_name>
 			</code> is called for.
-			<paragraph>This is expected to change in a future release. It shall become unnecesary to apply 
+			<line_break></line_break>
+			This is expected to change in a future release. It shall become unnecesary to apply 
 				<code>
 					<feature_name>to_cil</feature_name>
 				</code> to manifest strings. Instead, whether a 
@@ -195,7 +196,7 @@ end
 				<code>
 					<class_name>System.String</class_name>
 				</code> is needed will be determined by the context in which the manifest string is being used, and the proper type of object will be generated.
-			</paragraph>
+			
 		</note>
 		<heading>
 			<size>3</size>Other Similar Types

@@ -31,7 +31,7 @@ feature -- Initialization
 		end
 
 	make_from_file (file_name: FILE_NAME) is
-			-- Load a GIF file, and store it into 'image'
+			-- Load a PNG file, and store it into 'image'
 		require
 			file_name_possible: file_name /= Void and then file_name.is_valid
 		local
@@ -42,6 +42,7 @@ feature -- Initialization
 			fd_file := file.file_pointer
 			image := gdImageCreateFromPng(fd_file)
 			file.close
+			background_color_allocated := TRUE
 		end
 
 feature -- Basic Operations
@@ -69,6 +70,7 @@ feature -- Access
 			red_possible: red >=0 and red <256
 			green_possible: green >=0 and green <256
 			blue_possible: blue >=0 and blue < 256
+			background_color_allocated: background_color_allocated
 		do
 			Result := c_get_color_exact(image,red,green, blue)
 			if Result <0 then
@@ -79,11 +81,13 @@ feature -- Access
 		end
 
 	width: INTEGER is
+			-- Width of Current.
 		do
 			Result := c_get_width ( image )
 		end		
 
 	height: INTEGER is
+			-- Width of Current
 		do
 			Result := c_get_height ( image )
 		end
@@ -141,6 +145,9 @@ feature -- Validity of use for Current Image.
 		do
 			Result := c_image_color_total(image)
 		end
+
+	background_color_index: INTEGER
+		-- Index of the background color
 
 feature -- Drawing
 
@@ -207,13 +214,6 @@ feature -- Drawing
 			draw_line(gp2.get_x,gp2.get_y,gp1.get_x,gp1.get_y,color_index) 
 		end
 
-	draw_ellipse (center_x,center_y,ellipse_width,ellipse_height,color_index:INTEGER) is
-		require
-			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
-		do
-			gdImageArc(image,center_x,center_y,ellipse_width,ellipse_height,0,360,color_index)
-		end
-
 	draw_rectangle (x1,y1,x2,y2,color_index: INTEGER) is
 			-- Draw a rectangle with (x1,y1) and (x2,y2) the coords of 
 			-- two of the opposite summits of the rectangle.
@@ -225,32 +225,25 @@ feature -- Drawing
 			gdImageRectangle(image,x1,y1,x2,y2,color_index)	
 		end
 
-	draw_arc (center_x,center_y,arc_width,arc_height,starting_deg,ending_deg,color_index:INTEGER) is
-			-- gdImageArc is used to draw a partial ellipse centered at the given point,
-			-- with the specified width and height in pixels. The arc begins at the position 
-			-- in degrees specified by starting_deg and ends at the position specified by 
-			-- ending_deg. The arc is drawn in the color specified by the last argument. 
-			--Values greater than 360 are interpreted modulo 360. 
-		require
-			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
-			center_inside_the_image:coordinates_within_the_image(center_x,center_y)
+	set_background_color(r,g,b: INTEGER) is
+		-- Set the background color of Current.
+		-- This has to be set before any other color operations.
 		do
-			gdImageArc(image,center_x,center_y,arc_width,arc_height,starting_deg,ending_deg,color_index)
+			background_color_index := gdImageColorAllocate(image, r,g,b )
+			if background_color_index/=-1 then
+				background_color_allocated := TRUE
+			end
 		end
 
-	fill_closed_figure ( x,y,border_color, color_index: INTEGER ) is
-		-- gdImageFillToBorder floods a portion of the image with the specified color_index,
-		--beginning at the specified point and stopping at the specified border color.
-		require
-			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
-		do
-			gdimagefilltoborder(image, x,y,border_color, color_index )
-		end
-
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	image: POINTER
 		-- Pointer on the image structure.
+
+	background_color_allocated: BOOLEAN
+		-- Background Color Index of Current image.
+
+feature {NONE} -- Memory 
 
 	dispose is
 			-- Remove C_struture associated with Current Image.
@@ -309,26 +302,11 @@ feature {NONE} -- Externals
 			"gdImageRectangle"
 		end
 
-	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,color_index: INTEGER) is
-		external
-			"c"
-		alias
-			"gdImageArc"
-		end
-
-
 	gdImagePng(p: POINTER; f: POINTER) is
 		external
 			"c"
 		alias
 			"gdImagePng"
-		end
-
-	gdimagefilltoborder(p: POINTER; x,y, stopping_color, color_index: INTEGER) is
-		external
-			"c"
-		alias
-			"gdImageFillToBorder"
 		end
 
 	c_pixel_color_index(p: POINTER; x,y: INTEGER):INTEGER is
@@ -378,5 +356,4 @@ feature {NONE} -- Externals
 
 invariant
 	image_exists: image /= DEFAULT_POINTER
-
 end -- class GD_IMAGE

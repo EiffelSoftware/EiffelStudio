@@ -1336,7 +1336,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 								 * position of the attribute in the
 								 * object.
 								 */
-		if (num_attrib == System(new_dtype).cn_nbattr) {
+		if ((long) num_attrib == System(new_dtype).cn_nbattr) {
 			int i, chk_attrib = num_attrib;
 
 			if (num_attrib != 0) {			/* Only eif_malloc memory and process if 

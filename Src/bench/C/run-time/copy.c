@@ -675,7 +675,7 @@ rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 	return ((EIF_BOOLEAN) temp);
 }
 
-rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
+rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER index)
 {
 	/* Copy elements of `source' within bounds `start'..`end'
 	 * to `target' starting at index `index'.
@@ -683,16 +683,24 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	 * memory has been properly allocated beforehand.
 	 */
 
-	EIF_INTEGER esize, count; /* %%ss removed , i; */
-	EIF_REFERENCE ref; /* %%ss removed , *src_ref; */
+	EIF_INTEGER elem_size, count;
+	EIF_REFERENCE ref;
 	uint32 flags;
 
+	REQUIRE ("source not null", source);
+	REQUIRE ("target not null", target);
 	REQUIRE ("Special object", HEADER (source)->ov_flags & EO_SPEC);
+	REQUIRE ("Special object", HEADER (target)->ov_flags & EO_SPEC);
+	REQUIRE ("start position valid", (start >= 0) && (start < RT_SPECIAL_COUNT(source)));
+	REQUIRE ("end position valid", (end >= 0) && (end < RT_SPECIAL_COUNT(source)));
+	REQUIRE ("valid bounds", (start <= end) || (start == end + 1));
+	REQUIRE ("index position valid", (index >= 0) && (index < RT_SPECIAL_COUNT(target)));
+	REQUIRE ("enough_space", (RT_SPECIAL_COUNT(target) - index >= (end - start)));
 
 	count = end - start + 1;
 	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
-	esize = *(long *) (ref + sizeof(long));
-	memmove(target+index*esize,source+start*esize, count*esize);
+	elem_size = *(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER));
+	memmove(target + (index * elem_size), source + (start * elem_size), count * elem_size);
 
 #ifdef ISE_GC
 	/* Ok, normally we would have to perform age tests, by scanning the special

@@ -1,9 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision application, mswindows implementation."
+		"Eiffel Vision application. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -50,9 +49,9 @@ feature {NONE} -- Initialization
 	launch  is
 			-- Start the event loop.
 		do
-			set_root_window (main_window)
+			set_application_main_window (main_window)
 			run
-			destroy_application
+			--destroy_application
 		end
 
 feature -- Basic operation
@@ -97,15 +96,15 @@ feature -- Root window
 
 feature -- Status setting
 
-	destroy_application is
-			-- Destroy few objects before to leave.
-		do
-		end
+--	destroy_application is
+--			-- Destroy few objects before to leave.
+--		do
+--		end
 
-	set_root_window (a_window: EV_WINDOW_IMP)is
-		do
-			set_application_main_window (a_window)
-		end
+--	set_root_window (a_window: EV_WINDOW_IMP)is
+--		do
+--			set_application_main_window (a_window)
+--		end
 
 feature -- Element change
 
@@ -113,31 +112,13 @@ feature -- Element change
 			-- Add `w' to the list of root windows.
 		do
 			root_windows.extend (w)
-			--|FIXME .implementation)
 		end
 
 	remove_root_window (w: EV_WINDOW) is
 			-- Remove `w' from the root windows list.
-		local
-			window_imp: EV_WINDOW_IMP
 		do
-			if root_windows.count /= 1 then
-				root_windows.start
-				if root_windows.item = w then
-					--.implementation then
-					--|FIXME
-					root_windows.remove
-					window_imp ?= root_windows.item.implementation
-					set_root_window (window_imp)
-				else
-					root_windows.prune (w)
-					--.implementation)
-					--|FIXME
-				end
-			else
-				root_windows.start
-				root_windows.remove
-			end
+			root_windows.prune_all (w)
+			set_application_main_window (main_window)
 		end
 
 feature -- Status report
@@ -167,6 +148,7 @@ feature -- Basic operation
 		do
 			destroy_just_called := True
 			is_destroyed := True
+			root_windows.wipe_out
 		end
 
 feature {NONE} -- WEL Implemenation
@@ -186,11 +168,11 @@ feature {NONE} -- WEL Implemenation
 			create rich_edit_dll.make
 		end
 
-feature {NONE} -- Message loop, we redefine it because the user
-			   -- Can add an accelerator at the run-time.
+feature {NONE} -- Implementation
 
 	message_loop is
-			-- Windows message loop
+			-- Windows message loop.
+			--| Redefined to add accelerator functionality.
 		local
 			msg: WEL_MSG
 			main_win: EV_TITLED_WINDOW_IMP
@@ -208,7 +190,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 			from
 				create msg.make
 			until
-				done
+				done or else root_windows.empty
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
@@ -223,6 +205,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 								msg.dispatch
 							end
 						else
+							--| FIXME Accelerators not working yet.
 							if main_win.accelerators /= Void then
 								msg.translate_accelerator (
 									main_win,
@@ -321,7 +304,6 @@ feature -- External Implementation
 			"Sleep"
 		end
 
-
 end -- class EV_APPLICATION_IMP
 
 --|----------------------------------------------------------------
@@ -345,6 +327,11 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/13 19:36:14  brendel
+--| Improved add_root_window and remove_root_window.
+--| When destroy is called, wipes out root_windows.
+--| Application exits when root_windows empty.
+--|
 --| Revision 1.30  2000/04/11 18:14:33  brendel
 --| First window is now shown after postlaunch actions.
 --|

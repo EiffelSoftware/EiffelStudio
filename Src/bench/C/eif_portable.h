@@ -40,6 +40,7 @@ extern "C" {
 /* 
  *  VMS system specific definitions 
  */
+#define VMS_PATH_MAX 512    /* allow for ODS5 names */
 #define _POSIX_EXIT
 #define __NEW_STARLET	/* define prototypes for sys$, lib$ function calls */
 /* #define _VMS_V6_SOURCE	** see DECC RTL doc (geteuid) */

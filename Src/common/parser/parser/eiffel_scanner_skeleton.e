@@ -13,7 +13,7 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton
 		redefine
-			reset
+			reset, fatal_error
 		end
 
 	EIFFEL_TOKENS
@@ -81,63 +81,98 @@ feature -- Access
 			--		BAR
 			--		end
 
-	nb_tilde: INTEGER
-			-- Number of '~' in the last TE_TILDE token
-
-	yacc_error_code: INTEGER
-
 feature -- Error handling
 
-	report_error (a_message: STRING) is
-			-- A syntax error has been detected.
-			-- Print error message.
-		require
-			a_message_not_void: a_message /= Void
+	fatal_error (a_message: STRING) is
+			-- A fatal error occurred.
+			-- Log `a_message' and raise an exception.
 		local
 			an_error: SYNTAX_ERROR
 		do
--- TO DO
-			inspect last_token
---			when EIF_ERROR2 then
-					-- String too long: call feature `make_string_too_long' of
---		 * class ERROR_HANDLER.
---		 */
---		(*syntax2)(Error_handler);
---		break;
---	case EIF_ERROR3:
---		/* Bad string extension: call feature `make_string_extension'
---		 * of class ERROR_HANDLER.
---		 */
---		(*syntax3)(Error_handler);
---		break;
---	case EIF_ERROR4:
---		/* Bad string: call feature `make_string_uncompleted'
---		 * of class ERROR_HANDLER.
---		 */
---		(*syntax4)(Error_handler);
---		break;
---	case EIF_ERROR5:
---		/* Bad character */
---		(*syntax5)(Error_handler);
---		break;
---	case EIF_ERROR6:
---		/* Empty manifest string */
---		(*syntax6)(Error_handler);
---		break;
---	case EIF_ERROR7:
---		/* Identifier too long: call feature `make_id_too_long' of
---		 * class ERROR_HANDLER.
---		 */
---		(*syntax7)(Error_handler);
-
-			else
-					-- Common syntax error.
-				!SYNTAX_ERROR! an_error.make (current_position.start_position, current_position.end_position, filename, yacc_error_code, "")
-			end
---			if not equal (a_message, "parse error") then
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
---			end
+		end
+
+	report_character_invalid_code_error (a_code: INTEGER) is
+			-- Invalid character code after %.
+		local
+			an_error: BAD_CHARACTER
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+
+				-- Dummy code (for error recovery) follows:
+			token_buffer.append_character ('a')
+			last_token := TE_CHAR
+		end
+
+	report_character_missing_quote_error (char: STRING) is
+			-- Invalid character: final quote missing.
+		require
+			char_not_void: char /= Void
+		local
+			an_error: BAD_CHARACTER
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+
+				-- Dummy code (for error recovery) follows:
+			token_buffer.append_character ('a')
+			last_token := TE_CHAR
+		end
+
+	report_string_bad_special_character_error is
+			-- Invalid special character after % in manisfest string.
+		local
+			an_error: STRING_EXTENSION
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+
+				-- Dummy code (for error recovery) follows:
+			token_buffer.append_character ('a')
+		end
+
+	report_string_invalid_code_error (a_code: INTEGER) is
+			-- Invalid character code after % in manisfest string.
+		local
+			an_error: STRING_EXTENSION
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+
+				-- Dummy code (for error recovery) follows:
+			token_buffer.append_character ('a')
+		end
+
+	report_string_missing_quote_error (a_string: STRING) is
+			-- Invalid string: final quote missing.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			an_error: STRING_UNCOMPLETED
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+
+				-- Dummy code (for error recovery) follows:
+			last_token := TE_STRING
+		end
+
+	report_unknown_token_error (a_token: CHARACTER) is
+			-- Unknown token.
+		local
+			an_error: SYNTAX_ERROR
+		do
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
 		end
 
 feature {NONE} -- Implementation
@@ -150,7 +185,7 @@ feature {NONE} -- Implementation
 		do
 			if code > Maximum_character_code then
 					-- Bad character code.
-				last_token := EIF_ERROR5
+				report_character_invalid_code_error (code)
 			else
 				token_buffer.clear_all
 				token_buffer.append_character (charconv (code))
@@ -167,7 +202,7 @@ feature {NONE} -- Implementation
 			if code > Maximum_character_code then
 					-- Bad character code.
 				set_start_condition (0)
-				last_token := EIF_ERROR3
+				report_string_invalid_code_error (code)
 			else
 				token_buffer.append_character (charconv (code))
 			end
@@ -205,6 +240,21 @@ feature {NONE} -- Implementation
 			cloned_string_not_void: Result /= Void
 			new_object: Result /= a_string
 			equal: Result.is_equal (a_string)
+			less_memory: Result.capacity <= a_string.capacity
+		end
+
+	cloned_lower_string (a_string: STRING): STRING is
+			-- Clone of `a_string'; convert characters to lower case
+			-- (Reduce memory storage if possible.)
+		require
+			a_string_not_void: a_string /= Void
+		do
+			!! Result.make (a_string.count)
+			Result.append_string (a_string)
+			Result.to_lower
+		ensure
+			cloned_string_not_void: Result /= Void
+			new_object: Result /= a_string
 			less_memory: Result.capacity <= a_string.capacity
 		end
 

@@ -263,7 +263,7 @@ feature -- Command
 			--| being destroyed when the container is destroyed.
 		do
 			interface.wipe_out
-			Precursor
+			Precursor				
 		end
 
 feature -- Event handling

@@ -88,7 +88,6 @@ feature -- Basic Exportations
 			current_initialized: is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
-			path_exists: (create {FILE_INFO}.make (a_path)).exists
 		do	
 			implementation.consume_assembly_from_path (a_path)
 		end

@@ -27,8 +27,22 @@ inherit
 
 feature -- Basic Operations
 
+	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+			-- Add Type Library description to type descriptor.
+		require
+			non_void_type_lib: a_type_lib /= Void
+		do
+			if description = Void then
+				create description.make (100)
+			end
+			if not description.empty then
+				description.append (Space)
+			end
+			description.append (a_type_lib.description)
+		end
+
 	set_common_fields (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is
-			-- Set common feilds in `a_descriptor'
+			-- Set common fields in `a_descriptor'
 		require
 			valid_descriptor: a_descriptor /= Void
 		do

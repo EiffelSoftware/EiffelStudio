@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			ok_button: EV_BUTTON
 			status_bar: EV_FRAME
 			split_area: EV_HORIZONTAL_SPLIT_AREA
-			table_content: ARRAYED_LIST [EV_WIDGET]
+			table_content: LINEAR [EV_WIDGET]
 			list_item: EV_LIST_ITEM
 			layout_rows_entry, layout_columns_entry: GB_INTEGER_INPUT_FIELD
 			object: GB_OBJECT
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 		local
 			relative_pointa, relative_pointb: EV_RELATIVE_POINT
 			figure_rectangle: EV_FIGURE_RECTANGLE
-			widgets: ARRAYED_LIST [EV_WIDGET]
+			widgets: LINEAR [EV_WIDGET]
 			widget: EV_WIDGET
 		do
 				-- Remove all previous figures from `world'.
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 				-- We must  draw the grid if necessary.
 			draw_grid	
 			
-			widgets := first.item_list
+			widgets := first.linear_representation
 			from
 				widgets.start
 			until

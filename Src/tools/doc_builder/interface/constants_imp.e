@@ -45,10 +45,14 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_width: INTEGER is 
-			-- `Result' is INTEGER constant named button_width.
-		once
-			Result := 80
+	icon_cut_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.extend ("icon_cut_color.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	icon_open_file_ico: EV_PIXMAP is
@@ -123,6 +127,16 @@ feature -- Access
 			-- `Result' is INTEGER constant named dialog_short_height.
 		once
 			Result := 175
+		end
+
+	icon_search_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.extend ("icon_search.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	empty_cell_width: INTEGER is 
@@ -257,6 +271,12 @@ feature -- Access
 			-- `Result' is INTEGER constant named dialog_width.
 		once
 			Result := 400
+		end
+
+	button_width: INTEGER is 
+			-- `Result' is INTEGER constant named button_width.
+		once
+			Result := 80
 		end
 
 	icon_widget_edit_ico: EV_PIXMAP is
@@ -445,16 +465,6 @@ feature -- Access
 			Result := "Next"
 		end
 
-	icon_cut_color_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.extend ("icon_cut_color.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	studio_filtered_text: STRING is
 			-- `Result' is STRING constant named `studio_filtered_text'.
 		once
@@ -474,16 +484,6 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
 			a_file_name.extend ("icon_new.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_search_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.extend ("icon_search.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 

@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Once per process control. This class provides %
 		%some features that manipulates once per process%
@@ -14,23 +13,23 @@ class
 
 feature	-- Externals
 
-	global_once_procedure (Currt: ANY; once_proc: POINTER) is
+	global_once_procedure (current_object: ANY; once_proc: POINTER) is
 			-- Evaluates once per process the procedure
-			-- pointed by `once_proc'. Put `Current' as 
+			-- pointed by `once_proc'. Put `Current_object' as 
 			-- the first argument.
 		external
-			"C %"eif_once.h%""
+			"C | %"eif_once.h%""
 		alias
 			"eif_global_procedure"	
 		end
 
-	global_once_function (Currt: ANY; once_func: POINTER): ANY is
+	global_once_function (current_object: ANY; once_func: POINTER): ANY is
 			-- returns the result of the once feature
 			-- pointed by 'once_func' which will be
-			-- evaluated once per process. Put `Current' as 
+			-- evaluated once per process. Put `Current_object' as 
 			-- the first argument.
 		external
-			"C %"eif_once.h%""
+			"C | %"eif_once.h%""
 		alias
 			"eif_global_function"
 		end

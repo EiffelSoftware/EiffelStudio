@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 				window_border_height + window_frame_height
 			shell_width := 2 * window_frame_width
 			managed := True
+			default_position := True
 		end
 
 feature -- Element change

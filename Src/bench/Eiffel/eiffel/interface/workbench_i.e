@@ -134,12 +134,12 @@ feature -- Initialization
 
 feature -- Commands
 
-	retried: BOOLEAN;
-
 	recompile is
 			-- Incremental recompilation
 		require
 			Error_handler_has_no_errors: Error_handler.error_list.empty
+		local
+			retried: BOOLEAN
 		do
 			if not retried then
 

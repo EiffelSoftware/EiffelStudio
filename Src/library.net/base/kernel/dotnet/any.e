@@ -252,6 +252,16 @@ feature -- Duplication
  		do
  		end
 
+feature {NONE} -- Retrieval
+
+	frozen internal_correct_mismatch is
+			-- Called from runtime to peform a proper dynamic dispatch on `correct_mismatch'.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
 feature -- Output
 
 	io: STD_FILES is

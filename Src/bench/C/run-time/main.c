@@ -20,7 +20,7 @@
 #include "eif_project.h"
 #include <string.h>
 #include "eif_urgent.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_sig.h"
 #include "eif_gen_conf.h"
 
@@ -321,7 +321,11 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #ifdef EIF_WIN32
 	static char module_name [255] = {0};
 #endif
-	
+
+#ifdef EIF_WIN32
+	set_windows_exception_filter();
+#endif
+
 	starting_working_directory = (char *) eif_malloc (PATH_MAX + 1);
 
 #ifdef EIF_WIN32

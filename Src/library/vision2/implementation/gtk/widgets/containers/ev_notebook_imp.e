@@ -39,14 +39,13 @@ feature -- Status report
 	count: INTEGER is
 			-- Number of pages in the notebook
 		do
+			Result := c_gtk_notebook_count (widget)
 		end
 
 	current_page: INTEGER is
 			-- Index of the page currently opened
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := gtk_notebook_get_current_page (widget)
 		end
 	
 feature -- Status setting
@@ -68,7 +67,12 @@ feature -- Status setting
 			end
 			gtk_notebook_set_tab_pos (widget, gtk_pos)
 		end
-	
+
+	set_current_page (index: INTEGER) is
+			-- Make the `index'-th page the currently opened page.
+		do
+			gtk_notebook_set_page (widget, index - 1)
+		end	
 	
 feature -- Element change
 

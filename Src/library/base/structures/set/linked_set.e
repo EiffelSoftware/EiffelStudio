@@ -26,10 +26,7 @@ class LINKED_SET [G] inherit
 			put as ll_put,
 			prune as ll_prune
 		export
-			{NONE}
-				 all
-			{ANY}
-				 make, forth, item, off, start
+			{NONE} ll_extend, ll_put, ll_prune
 		undefine
 			changeable_comparison_criterion
 		end;

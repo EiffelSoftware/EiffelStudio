@@ -148,7 +148,7 @@ feature {SORTED_TWO_WAY_LIST} -- Implementation
 			!! Result.make
 		end;
 
-feature {NONE} -- Obsolete
+feature -- Obsolete
 
 	add (v: like item) is
 		obsolete "Use ``extend'' instead"

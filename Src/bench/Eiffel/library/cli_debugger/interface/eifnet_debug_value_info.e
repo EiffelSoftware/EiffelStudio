@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 		
+	SHARED_EIFFEL_PROJECT		
+		export
+			{NONE} all
+		end
+		
 create
 	make, make_from_prepared_value
 	
@@ -194,16 +199,13 @@ feature -- Queries
 				if has_object_interface then
 					once_value_class_type := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)			
 				else
-					once_value_class_type := eifnet_debug_value.dynamic_class.types.first
---| FIXME JFIAT: lead to stack overflow !!!
-
---FIXME jfiat [02/01/2004]
---  in case of generic ?
+					once_value_class_type := Eiffel_system.System.system_object_class.compiled_class.types.first
+					--| FIXME jfiat 2004/03/29 : any smarter way to find the real type ?
 				end	
 			end
 			Result := once_value_class_type
 		end
-	
+
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
 	value_class_token: INTEGER is

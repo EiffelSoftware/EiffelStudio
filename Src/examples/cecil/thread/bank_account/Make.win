@@ -1,0 +1,8 @@
+MAKE=nmake
+
+all: cecil
+
+cecil:
+	cd ..\..
+	$(MAKE) -f Makefile.win
+	cd EIFGEN\F_code

@@ -1348,6 +1348,7 @@ feature {NONE} -- Messages
 			exists: exists
 		do
 		end
+		
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
@@ -1375,6 +1376,13 @@ feature {NONE} -- Messages
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousemove message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		require
+			exists: exists
+		do
+		end
+		
+	on_mouse_wheel (delta, x_pos, y_pos: INTEGER) is
+			-- Wm_mousewheel message
 		require
 			exists: exists
 		do
@@ -1737,6 +1745,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_right_button_double_click (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
+			when Wm_mousewheel then
+				on_mouse_wheel (wparam |>> 16, cwin_lo_word (lparam), cwin_hi_word (lparam))
 			when Wm_timer then
 				on_timer (wparam)
 			when Wm_setfocus then

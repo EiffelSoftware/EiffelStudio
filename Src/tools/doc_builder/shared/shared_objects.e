@@ -52,8 +52,8 @@ feature -- Once objects
 			create Result.make
 		end	
 
-	Wizard_data: WIZARD_INFORMATION is
-			-- Wizard data
+	Generation_data: GENERATION_INFORMATION is
+			-- Generation data
 		once
 			create Result
 		end

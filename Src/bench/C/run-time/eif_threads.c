@@ -1285,8 +1285,6 @@ rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy)
 	printf("eif_thr_proxy_dispose(%x)\n", proxy);
 #endif
 	eufreeze (eif_access (proxy)); /* unfreeze the object */
-	hfree (hector_addr(proxy)); /* remove the entry in hector saved stack */
-		
 }
 
 #endif /* EIF_THREADS */

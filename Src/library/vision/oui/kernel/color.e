@@ -160,11 +160,8 @@ feature -- Status setting
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		require
-			red_value_small_enough: red_value <= 65535;
 			red_value_not_negative: red_value >= 0;
-			green_value_small_enough: green_value <= 65535;
 			green_value_not_negative: green_value >= 0;
-			blue_value_small_enough: blue_value <= 65535;
 			blue_value_not_negative: blue_value >= 0
 		do
 			implementation.set_rgb (red_value, green_value, blue_value)

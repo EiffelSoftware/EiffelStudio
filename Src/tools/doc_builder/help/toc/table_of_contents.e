@@ -70,8 +70,7 @@ feature -- Initialization
 
 	initialize is
 			-- Initialize
-		do
-			unique_id := 1	
+		do			
 			set_filter (manager.shared_project.filter_manager.filter_by_description ("Unfiltered"))
 			set_title (root_string)
 			code_nodes.clear_all
@@ -189,7 +188,7 @@ feature -- Commands
 	flatten_ids is
 			-- Flatten ids
 		do			
-			unique_id := flatten_node_ids (1)
+			set_unique_id (flatten_node_ids (1))
 		end
 
 feature -- Storage

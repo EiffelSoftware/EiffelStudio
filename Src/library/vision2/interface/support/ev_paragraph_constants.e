@@ -1,5 +1,8 @@
 indexing
-	description: "Constants for use by and with EV_PARAGRAPH_FORMAT."
+	description: "[
+		Constants for use by and with EV_PARAGRAPH_FORMAT and
+		EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +24,23 @@ feature -- Constants
 	Alignment_justified: INTEGER is 4
 		-- Justified.
 		
+feature -- Paragraph flags.
+		
+	Alignment: INTEGER is 1
+		-- Alignment is applicable.
+	
+	Left_margin: INTEGER is 2
+		-- Left margin is applicable.
+	
+	Right_margin: INTEGER is 4
+		-- Right margin is applicable.
+	
+	Top_spacing: INTEGER is 8
+		-- Top spacing is applicable.
+	
+	bottom_spacing: INTEGER is 16
+		-- Bottom spacing is applicable.
+		
 feature -- Contract support
 
 	valid_alignment (an_alignment: INTEGER): BOOLEAN is
@@ -30,6 +50,13 @@ feature -- Contract support
 				an_alignment = alignment_center or else
 				an_alignment = alignment_right or else
 				an_alignment = alignment_justified
+		end
+		
+	valid_paragraph_flag (a_flag: INTEGER): BOOLEAN is
+			-- Is `a_flag' a valid paragraph flag?
+			-- Used by EV_PARAGRAPH_FORMAT_RANGE_INFORMATION.
+		do
+			Result := a_flag <= alignment + left_margin + right_margin + top_spacing + bottom_spacing
 		end
 
 end -- class EV_PARAGRAPH_CONSTANTS

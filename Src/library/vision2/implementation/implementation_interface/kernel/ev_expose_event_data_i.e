@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	EV_EVENT_DATA_I	
-		redefine
-			print_contents
-		end	
 
 feature -- Access
 
@@ -28,16 +25,6 @@ feature -- Element change
 		do
 			clip_region := clip
 		end 
-
-feature -- Debug
-	
-	print_contents is
-		do
-			io.put_string ("EV_EXPOSE_EVENT_DATA: ")
-			print (widget)
-			clip_region.print_contents
-			io.put_string ("%N")
-		end
 
 end -- class EV_EXPOSE_EVENT_DATA_I
 

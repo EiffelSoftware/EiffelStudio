@@ -9,10 +9,7 @@ deferred class
 
 inherit
 	EV_BUTTON_EVENT_DATA_I
-		redefine
-			print_contents
-		end	
-	
+
 feature -- Access	
 	
 	data: EV_PND_DATA
@@ -33,13 +30,6 @@ feature -- Element change
 			-- Make `value' the new data type.
 		do
 			data_type := value
-		end
-
-feature -- Debug
-	
-	print_contents is
-			-- print the contents of the object
-		do
 		end
 
 end -- class EV_PND_EVENT_DATA_I

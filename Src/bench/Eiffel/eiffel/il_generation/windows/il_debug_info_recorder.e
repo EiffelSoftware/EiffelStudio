@@ -176,10 +176,6 @@ feature -- Class token access from eStudio
 
 	class_token_for_class_type (a_class_type: CLASS_TYPE): INTEGER is
 			-- Class token for CLASS_TYPE.
-		local
-			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
-			l_id: INTEGER
-			l_mod_name: STRING
 		do
 			Result := class_token (Void, a_class_type)
 		end

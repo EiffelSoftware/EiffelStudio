@@ -24,18 +24,6 @@ creation
 
 feature
 
-	login_name: STRING is
-			-- Database login
-		once
-			Result := "sa"
-		end;
-		
-	password: STRING is
-			-- Database password
-		once
-			Result := ""
-		end;
-
 	select_string: STRING is
 		once
 			Result := "select name, id from sysobjects"

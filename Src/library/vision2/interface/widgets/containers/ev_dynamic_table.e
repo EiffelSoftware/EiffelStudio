@@ -53,6 +53,18 @@ feature -- Status report
 			Result := implementation.is_row_layout
 		end
 
+	finite_dimension: INTEGER is
+			-- The number of columns if row
+			-- layout, or a number of row if column
+			-- layout
+		require
+			exists: not destroyed
+		do
+			Result := implementation.finite_dimension
+		ensure
+			positive_result: Result > 0 
+		end
+
 feature -- Status setting
 
 	set_finite_dimension (a_number: INTEGER) is

@@ -26,17 +26,8 @@ feature -- Status report
 
 	selected: BOOLEAN
 			-- Has the user selected something (file, color, etc.)?
-			-- If True, the Ok button has been choosed. If False,
-			-- the Cancel button has been choosed.
-
-feature {NONE} -- Implementation
-
-        window_manager: WEL_WINDOW_MANAGER is
-		once
-			!! Result
-		ensure
-			result_exists: Result /= Void
-		end
+			-- If True, the Ok button has been chosen. If False,
+			-- the Cancel button has been chosen.
 
 end -- class WEL_STANDARD_DIALOG
 

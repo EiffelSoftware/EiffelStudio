@@ -34,7 +34,6 @@ To do:
 - Splitter cursor in EV_SPLIT_AREA.
 - Redo windows dialog implementation.
 - Right click interface to pick and drop.
-- Add set_pointer_position to EV_SCREEN.
 - The event `expose_actions' is triggered twice on a container when a window
   is resized. !! This makes resizing take twice as long!!
 - Color is inefficent on GTK+. 
@@ -128,11 +127,11 @@ X   complete but found to have bugs
     widgets/primitives/ev_text_component.e              o    *     *     .
     widgets/primitives/ev_text_field.e                  *    *     *     .
     widgets/primitives/ev_label.e                       *    *     *     .
-    widgets/primitives/ev_drawing_area.e                *    o     o     .
+    widgets/primitives/ev_drawing_area.e                *    *     o     .
     widgets/primitives/ev_separator.e                   *    *     *     .
     widgets/primitives/ev_horizontal_separator.e        *    *     *     .
     widgets/primitives/ev_vertical_separator.e          *    *     *     .
-    widgets/uncommon_widgets/ev_pixmap.e                o    o     o     .
+    widgets/uncommon_widgets/ev_pixmap.e                o    *     o     .
 
   Gauges:
     widgets/primitives/ev_gauge.e                       *    *     *     .

@@ -14,6 +14,9 @@ feature -- Access
 
 	hostname: STRING
 		-- hostname .. ex: smtp
+		
+	code_number: INTEGER
+		-- Last error code received from server.
 
 	default_port: INTEGER is
 		-- Default port
@@ -82,15 +85,14 @@ feature {NONE} -- Miscellaneous
 		do
 			create socket.make_client_by_port (port, hostname)
 			socket.connect
-			socket.read_line
-			if decode (socket.last_string) = Ack_begin_connection then
+			decode
+			if code_number = Ack_begin_connection then
 				enable_connected
 			end
 		end
 
-	decode (s: STRING): INTEGER is
-			-- Decode the answer and retrieve the code number,
-			-- Update the reply message.
+	decode is
+			-- Read answer from server and set `code_number'.
 		deferred
 		end
 

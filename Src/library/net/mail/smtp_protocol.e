@@ -8,6 +8,9 @@ class
 
 inherit
 	SENDING_PROTOCOL
+		rename
+			code_number as smtp_code_number
+		end
 
 create
 	make
@@ -23,9 +26,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	smtp_code_number: INTEGER
-		-- Code number of the reply
 
 	smtp_reply: STRING
 		-- Replied message from SMTP protocol
@@ -116,14 +116,25 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Basic operations
 
-	decode (s: STRING): INTEGER is
-			-- Retrieve the number corresponding to the message receive from the smtp server.
+	decode is
+			-- Retrieve response from server and set `smtp_code_number'.
 		local
-			s_int: STRING
+			response: STRING
 		do
-			smtp_reply:= s
-			s_int:= s.substring (1, 4)
-			Result:= s_int.to_integer
+			from
+				socket.read_line
+				response:= socket.last_string
+			until
+				response.item (4) /= '-'
+			loop
+					-- We are getting a multiline error code, we read
+					-- until the error code is not followed by the hyphen
+					-- sign.
+				socket.read_line
+				response := socket.last_string
+			end
+			response:= response.substring (1, 3)
+			smtp_code_number := response.to_integer
 		end
 
 	send_command (s: STRING; expected_code: INTEGER) is
@@ -132,9 +143,7 @@ feature {NONE} -- Basic operations
 			response: STRING
 		do
 			socket.put_string (s + "%R%N")
-			socket.read_line
-			response:= socket.last_string
-			smtp_code_number := decode (response)
+			decode
 			if (smtp_code_number /= expected_code) then
 				enable_transfer_error
 				set_transfer_error_message (smtp_reply)
@@ -201,6 +210,7 @@ feature {NONE} -- Basic operations
 				add_sub_header (memory_resource.headers.key_for_iteration)
 				memory_resource.headers.forth
 			end
+			sub_header.append ("%R%N")			
 		end
 
 	add_sub_header (sub_header_key: STRING) is
@@ -220,13 +230,13 @@ feature {NONE} -- Basic operations
 			loop
 				if bcc_mode then
 					if sub_header_key.is_equal (H_bcc) then
-						sub_header.append (H_to + ":" +a_header.entries.item + "%N")
+						sub_header.append (H_to + ":" + a_header.entries.item + "%R%N")
 					end
 					if not (sub_header_key.is_equal (H_to) or sub_header_key.is_equal (H_cc)) then
-						sub_header.append (sub_header_key + ":" + a_header.entries.item + "%N")
+						sub_header.append (sub_header_key + ":" + a_header.entries.item + "%R%N")
 					end
 				else
-					sub_header.append (sub_header_key + ":" + a_header.entries.item + "%N")
+					sub_header.append (sub_header_key + ":" + a_header.entries.item + "%R%N")
 				end
 				a_header.entries.forth
 			end
@@ -255,7 +265,7 @@ feature {NONE} -- Basic operations
 					send_command (Data, Data_code)
 					mail_message.prepend (sub_header)
 					if mail_signature /= Void then
-						mail_message.append ("%N" + mail_signature)
+						mail_message.append ("%R%N" + mail_signature)
 					end
 					mail_message.replace_substring_all ("%N.", "%N..")
 					mail_message.append ("%R%N.")

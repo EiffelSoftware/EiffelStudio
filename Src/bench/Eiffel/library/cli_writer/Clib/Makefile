@@ -1,5 +1,5 @@
 # Finalized Version
-CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include
 #CFLAGS = -nologo -Zi -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION -DASSERTIONS
 
 .cpp.obj:

@@ -78,83 +78,88 @@ feature -- Basic Operations
 		local
 			idl_file_generator: WIZARD_IDL_GENERATOR
 		do
-			if shared_wizard_environment.abort then
+			if not shared_wizard_environment.abort then
+				message_output.initialize_log_file
+			end
+			
+			if 
+				shared_wizard_environment.new_eiffel_project and
+				not shared_wizard_environment.abort
+			then
+				progress_report.set_title ("Processing Eiffel class")
+				progress_report.start
+				progress_report.set_range (2)
+
+				create idl_file_generator.make (message_output)
+				progress_report.step
+				idl_file_generator.generate
+				progress_report.step
+			end
+
+			-- Compile IDL
+			if 
+				shared_wizard_environment.idl and
+				not shared_wizard_environment.abort
+			then
+				progress_report.set_title (Idl_compilation_title)
+				progress_report.start
+
+				if shared_wizard_environment.use_universal_marshaller then
+					progress_report.set_range (1)
+				else
+					progress_report.set_range (6)
+				end
+				message_output.add_title (Current, Idl_compilation_title)
+
+				compiler.compile_idl
+				progress_report.step
+
+
+				-- Create Proxy/Stub
+				if 
+					not shared_wizard_environment.use_universal_marshaller and 
+					Shared_wizard_environment.server and 
+					not shared_wizard_environment.abort
+				then
+					-- Compile c iid file
+					message_output.add_title (Current, Iid_compilation_title)
+					compiler.compile_iid
+					if not shared_wizard_environment.abort then
+						progress_report.step
+						-- Compile c dlldata file
+						message_output.add_title (Current, Data_compilation_title)
+						compiler.compile_data
+					end
+					if not shared_wizard_environment.abort then
+						progress_report.step
+						-- Compile c proxy/stub file
+						message_output.add_title (Current, Ps_compilation_title)
+						compiler.compile_ps
+					end
+					if not shared_wizard_environment.abort then
+						progress_report.step
+						-- Final link
+						message_output.add_title (Current, Link_title)
+						compiler.link
+					end
+					if not shared_wizard_environment.abort then
+						progress_report.step
+						-- Registration
+						message_output.add_title (Current, Ps_registration_title)
+						compiler.register_ps
+					end
+					if not shared_wizard_environment.abort then
+						progress_report.step
+					end
+				
+				end
+			end
+			if Shared_wizard_environment.abort then
+				message_output.close_log_file
 				finish
 			else
-				message_output.initialize_log_file
-				if shared_wizard_environment.new_eiffel_project then
-					progress_report.set_title ("Processing Eiffel class")
-					progress_report.start
-					progress_report.set_range (2)
-
-					create idl_file_generator.make (message_output)
-					progress_report.step
-					idl_file_generator.generate
-					progress_report.step
-				end
-
-				if shared_wizard_environment.abort then
-					finish
-				else
-					-- Compile IDL
-					if shared_wizard_environment.idl then
-						progress_report.set_title (Idl_compilation_title)
-						progress_report.start
-
-						if shared_wizard_environment.use_universal_marshaller then
-							progress_report.set_range (1)
-						else
-							progress_report.set_range (6)
-						end
-						message_output.add_title (Current, Idl_compilation_title)
-						compiler.compile_idl
-						if not shared_wizard_environment.abort then
-							progress_report.step
-							-- Create Proxy/Stub
-							if not shared_wizard_environment.use_universal_marshaller and Shared_wizard_environment.server then
-								-- Compile c iid file
-								message_output.add_title (Current, Iid_compilation_title)
-								compiler.compile_iid
-								if not shared_wizard_environment.abort then
-									progress_report.step
-									-- Compile c dlldata file
-									message_output.add_title (Current, Data_compilation_title)
-									compiler.compile_data
-									if not shared_wizard_environment.abort then
-										progress_report.step
-										-- Compile c proxy/stub file
-										message_output.add_title (Current, Ps_compilation_title)
-										compiler.compile_ps
-										if not shared_wizard_environment.abort then
-											progress_report.step
-											-- Final link
-											message_output.add_title (Current, Link_title)
-											compiler.link
-											if not shared_wizard_environment.abort then
-												progress_report.step
-												-- Registration
-												message_output.add_title (Current, Ps_registration_title)
-												compiler.register_ps
-												if not shared_wizard_environment.abort then
-													progress_report.step
-													generate
-												end
-											end
-										end
-									end
-								end
-							else
-								generate
-							end
-						end
-					else
-						generate
-					end
-					message_output.close_log_file
-					if Shared_wizard_environment.abort then
-						finish
-					end
-				end
+				generate
+				message_output.close_log_file
 			end
 		rescue
 			if not failed_on_rescue then

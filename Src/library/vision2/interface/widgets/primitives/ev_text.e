@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_TEXT_AREA
+	EV_TEXT
 
 inherit
 	EV_TEXT_COMPONENT
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create an empty text area with `par' as
 			-- parent.
 		do
-			!EV_TEXT_AREA_IMP!implementation.make
+			!EV_TEXT_IMP!implementation.make
 			widget_make (par)
 		end
 
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		require
 			valid_parent: parent_needed implies par /= Void
 		do
-			!EV_TEXT_AREA_IMP!implementation.make_with_text (txt)
+			!EV_TEXT_IMP!implementation.make_with_text (txt)
 			widget_make (par)
 		end
 
@@ -56,10 +56,10 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	implementation: EV_TEXT_AREA_I
+	implementation: EV_TEXT_I
 			-- Implementation 
 			
-end -- class EV_TEXT_AREA
+end -- class EV_TEXT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_TEXT_AREA_I
+	EV_TEXT_I
 	
 inherit
 	EV_TEXT_COMPONENT_I
@@ -46,7 +46,7 @@ feature -- Basic operation
 		deferred
 		end
 
-end -- class EV_TEXT_AREA_I
+end -- class EV_TEXT_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

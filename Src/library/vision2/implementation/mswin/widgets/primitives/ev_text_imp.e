@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_TEXT_AREA_IMP
+	EV_TEXT_IMP
 
 inherit
-	EV_TEXT_AREA_I
+	EV_TEXT_I
 		
 	EV_TEXT_COMPONENT_IMP
 		undefine
@@ -133,7 +133,7 @@ feature {NONE} -- WEL Implementation
 			execute_command (Cmd_change, Void)
 		end
 
-end -- class EV_TEXT_AREA_IMP
+end -- class EV_TEXT_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable  components for ISE Eiffel.

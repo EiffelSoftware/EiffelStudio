@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 	
 end --class EV_LABEL_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

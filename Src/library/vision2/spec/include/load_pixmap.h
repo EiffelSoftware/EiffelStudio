@@ -36,7 +36,9 @@ extern "C" {
 /* not recognized.                                                           */
 /*---------------------------------------------------------------------------*/
 void c_ev_load_pixmap(
+#ifndef EIF_IL_DLL
 		void *pCurrObject, 
+#endif
 		char *pszFileName, 
 		void *fnptr
 	);

@@ -28,10 +28,13 @@ feature {NONE} -- Initialization
 		local
 			formatters: like managed_formatters
 			conv_ct: EB_CLASS_TEXT_FORMATTER
+			dotnet_short: EB_DOTNET_SHORT_FORMATTER
+			dotnet_flat: EB_DOTNET_FLAT_SHORT_FORMATTER
 		do
 			context := a_context
 			formatters := a_tool.managed_class_formatters
 			create managed_formatters.make (10)
+			create saved_formatters.make (5)
 			create shared_editor.make (a_tool)
 			shared_editor.drop_actions.extend (~drop_stone)
 			from
@@ -40,14 +43,25 @@ feature {NONE} -- Initialization
 				formatters.after
 			loop
 				conv_ct ?= formatters.item
+				dotnet_short ?= formatters.item
+				dotnet_flat ?= formatters.item
 				if conv_ct /= Void then
 					conv_ct.set_editor (shared_editor)
 				end
-				managed_formatters.extend (formatters.item)
+				if dotnet_short /= Void then
+					saved_formatters.extend (dotnet_short) 
+				elseif dotnet_flat /= Void then
+					saved_formatters.extend (dotnet_flat)
+				else
+					managed_formatters.extend (formatters.item)
+				end
 				formatters.forth
 			end
 			fill_in
 		end
+
+	saved_formatters: like managed_formatters
+			-- Formmatters needed by tool by not in Current stome context.
 
 feature -- Access
 
@@ -83,7 +97,9 @@ feature -- Status setting
 			-- Send a stone to class formatters.
 		local
 			st: CLASSC_STONE
+			ist: CLASSI_STONE
 			fst: FEATURE_STONE
+			l_current_type: BOOLEAN
 		do
 			fst ?= new_stone
 				-- If `new_stone' is a feature stone, take the associated class.
@@ -91,24 +107,38 @@ feature -- Status setting
 				create st.make (fst.e_feature.associated_class)
 			else
 				st ?= new_stone
+				ist ?= new_stone
 			end
---			if
---				internal_stone /= Void and then
---				st /= Void and then
---				internal_stone.e_class /= st.e_class or else
---				internal_stone = Void or else
---				st = Void
---			then
-				from
-					managed_formatters.start
-				until
-					managed_formatters.after
-				loop
-					managed_formatters.item.set_stone (st)
-					managed_formatters.forth
+		
+			-- Set appropriate formatters for stone type.
+			if stone /= Void then
+				ist ?= stone
+				if ist /= Void then
+					l_current_type := ist.class_i.is_external_class
 				end
---			end
-			internal_stone := st
+			end
+			if st /= Void and st.e_class.is_external or
+				st = Void and ist /= Void and ist.class_i.is_external_class then
+				if not l_current_type then
+					set_dotnet_formatting (True)
+				end
+			elseif st /= Void and not st.e_class.is_external or
+				st = Void and ist /= Void and not ist.class_i.is_external_class then
+				if l_current_type then
+					set_dotnet_formatting (False)
+				end
+			end
+
+			-- Set the stones.
+			from
+				managed_formatters.start
+			until
+				managed_formatters.after
+			loop
+				managed_formatters.item.set_stone (st)
+				managed_formatters.forth
+			end
+			internal_stone := st			
 		end
 
 	launch_stone (st: CLASSI_STONE) is
@@ -121,18 +151,18 @@ feature -- Status setting
 			-- Display information from the selected formatter.
 		do
 			visible := True
-			if Workbench.is_already_compiled then
-				from
-					managed_formatters.start
-				until
-					managed_formatters.after
-				loop
-					managed_formatters.item.on_shown
-					managed_formatters.forth
+				if Workbench.is_already_compiled then
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after
+					loop
+						managed_formatters.item.on_shown
+						managed_formatters.forth
+					end
+				else
+					output_line.set_text (Interface_names.l_Compile_first)
 				end
-			else
-				output_line.set_text (Interface_names.l_Compile_first)
-			end
 		end
 
 	on_deselect is
@@ -250,6 +280,29 @@ feature -- Status setting
 			shared_editor.set_focus
 		end
 
+	set_dotnet_formatting (a_flag: BOOLEAN) is
+			-- Set whether Current is displaying an Eiffel or a .NET class.
+		local
+			l_short_formatter,
+			l_flat_formatter: EB_CLASS_INFO_FORMATTER
+		do
+			if a_flag then
+				managed_formatters.i_th (1).disable_sensitive
+				managed_formatters.i_th (2).disable_sensitive
+			else
+				managed_formatters.i_th (1).enable_sensitive
+				managed_formatters.i_th (2).enable_sensitive
+			end
+			managed_formatters.go_i_th (3)
+			l_short_formatter := managed_formatters.item
+			managed_formatters.go_i_th (4)
+			l_flat_formatter := managed_formatters.item
+			change_formatters
+			saved_formatters.wipe_out
+			saved_formatters.extend (l_short_formatter)
+			saved_formatters.extend (l_flat_formatter)
+		end
+
 feature -- Memory management
 
 	recycle is
@@ -260,6 +313,8 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Implementation
+
+	
 
 	tool_bar: EV_TOOL_BAR
 			-- Toolbar containing all buttons.
@@ -318,11 +373,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	change_formatters is
+			-- Change the formatters in the widget and managed_formatters.
+		do
+			replace_formatter (saved_formatters.i_th (1), 3)
+			replace_formatter (saved_formatters.i_th (2), 4)
+		end
+		
+
 	add_formatter (formatter: EB_CLASS_INFO_FORMATTER) is
 			-- Add `formatter' to managed formatters, create a related menu item and a tool bar button.
 		do
 			formatter.set_widget_owner (Current)
 			tool_bar.extend (formatter.new_button)
+			formatter.set_output_line (output_line)
+		end
+
+	replace_formatter (formatter: EB_CLASS_INFO_FORMATTER; i: INTEGER) is
+			-- Replace formatter at index 'i' with `formatter', create a related menu item and a tool bar button.
+			-- (export status {NONE})
+		do
+			managed_formatters.go_i_th (i)
+			managed_formatters.replace (formatter)
+			formatter.on_shown
+			formatter.set_widget_owner (Current)
+			tool_bar.go_i_th (i)
+			tool_bar.replace (formatter.new_button)
 			formatter.set_output_line (output_line)
 		end
 

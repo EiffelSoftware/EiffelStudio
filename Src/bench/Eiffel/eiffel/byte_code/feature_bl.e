@@ -150,7 +150,6 @@ end
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			entry: POLY_TABLE [ENTRY]
 			type_i: TYPE_I
 			class_type: CL_TYPE_I
 			access: ACCESS_B
@@ -159,11 +158,9 @@ end
 		do
 			type_i := context_type
 			class_type ?= type_i
-			entry := Eiffel_table.poly_table (rout_id)
 			is_polymorphic_access := not type_i.is_basic and then
 					class_type /= Void and then
-					entry /= Void and then
-					entry.is_polymorphic (class_type.type_id)
+					Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -183,15 +180,13 @@ end
 	is_polymorphic: BOOLEAN is
 			-- Is access polymorphic ?
 		local
-			entry: POLY_TABLE [ENTRY]
 			class_type: CL_TYPE_I
 			type_i: TYPE_I
 		do
-			entry := Eiffel_table.poly_table (rout_id)
 			type_i := context_type
-			if not (type_i.is_basic or entry = Void) then
+			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				Result := entry.is_polymorphic (class_type.type_id)
+				Result := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) >= 0
 			end
 		end
 
@@ -199,19 +194,19 @@ end
 			-- Generate feature call in a `typ' context
 		local
 			internal_name, table_name: STRING
-			entry: POLY_TABLE [ENTRY]
 			rout_table: ROUT_TABLE
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
+			array_index: INTEGER
 		do
-			entry := Eiffel_table.poly_table (rout_id)
+			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, True)
 			buf := buffer
-			if entry = Void then
+			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				buf.putchar ('(')
 				real_type (type).c_type.generate_function_cast (buf, <<>>)
 				buf.putstring (" RTNR)")
-			elseif precursor_type = Void and then entry.is_polymorphic (typ.type_id) then
+			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
@@ -221,7 +216,7 @@ end
 				buf.putchar ('(')
 				buf.putstring (table_name)
 				buf.putchar ('-')
-				buf.putint (entry.min_used - 1)
+				buf.putint (array_index)
 				buf.putstring (")[")
 				if reg.is_current then
 					context.generate_current_dtype
@@ -241,7 +236,7 @@ end
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
-				rout_table ?= entry
+				rout_table ?= Eiffel_table.poly_table (rout_id)
 
 				if rout_table.is_implemented (typ.type_id) then
 					internal_name := clone (rout_table.feature_name (typ.type_id))

@@ -95,19 +95,17 @@ feature
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			entry: POLY_TABLE [ENTRY];
 			type_i: TYPE_I;
 			class_type: CL_TYPE_I;
 			access: ACCESS_B;
 			void_register: REGISTER;
 			is_polymorphic_access: BOOLEAN;
 		do
-			entry := Eiffel_table.poly_table (rout_id);
 			type_i := context_type;
 			class_type ?= type_i;
 			is_polymorphic_access := not type_i.is_basic and then
 					class_type /= Void and then
-					entry.is_polymorphic (class_type.type_id);
+					Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) >= 0;
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current;
 			end;
@@ -139,23 +137,23 @@ feature
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate external call in a `typ' context
 		local
-			entry: POLY_TABLE [ENTRY];
 			table_name: STRING;
 			i: INTEGER;
 			is_boolean: BOOLEAN;
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
+			array_index: INTEGER
 		do
 			check
 				final_mode: context.final_mode
 			end;
 			is_boolean := type.is_boolean;
-			entry := Eiffel_table.poly_table (rout_id);
 
 			type_c := real_type (type).c_type;
 			buf := buffer
 
-			if entry.is_polymorphic (typ.type_id) then
+			array_index := Eiffel_table.is_polymorphic (rout_id, typ.type_id, True)
+			if array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
@@ -170,7 +168,7 @@ feature
 				buf.putchar ('(');
 				buf.putstring (table_name);
 				buf.putchar ('-');
-				buf.putint (entry.min_used - 1);
+				buf.putint (array_index);
 				buf.putchar (')');
 				buf.putchar ('[');
 				if reg.is_current then
@@ -200,14 +198,11 @@ feature
 						-- Now generate the right name to call the external
 						-- In the case of a signature or a macro, the call will be direct
 						-- In the case of a dll, the encapsulation will be called (encoded name)
-					extension.generate_external_name (buf, external_name,
-						entry, typ, type_c);
+					extension.generate_external_name (buf, external_name, typ, type_c);
 				else
 					if is_boolean then
-						buf.putstring ("EIF_TEST((");
-					else
-						buf.putchar ('(');
-					end;
+						buf.putstring ("EIF_TEST(");
+					end
 					if
 						extension /= Void and then
 						extension.has_include_list
@@ -215,13 +210,14 @@ feature
 						extension.generate_header_files
 						buf.putstring (external_name);
 					else
+						buf.putchar ('(')
 						type_c.generate_function_cast
 							(buf, argument_types);
 						buf.putstring (external_name);
 							-- Remember external routine declaration
 						Extern_declarations.add_routine (type_c, external_name);
+						buf.putchar (')')
 					end;
-					buf.putchar (')');
 				end;
 			end;
 		end;
@@ -232,7 +228,7 @@ feature
 			is_macro_extension: BOOLEAN
 			is_cpp_extension: BOOLEAN
 			final_mode: BOOLEAN
-			polymorphic: BOOLEAN
+			not_polymorphic: BOOLEAN
 			cpp_ext: CPP_EXTENSION_I
 			buf: GENERATION_BUFFER
 		do
@@ -246,7 +242,7 @@ feature
 				-- Now generate the parameters of the call, if needed.
 			buf := buffer
 			if final_mode then
-				polymorphic := Eiffel_table.poly_table (rout_id).is_polymorphic (class_type.type_id)
+				not_polymorphic := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True) < 0
 
 				if is_macro_extension then
 					if parameters /= Void then
@@ -254,11 +250,11 @@ feature
 						extension.generate_parameter_list (parameters)
 						buf.putchar (')')
 					end
-					if not polymorphic then
+					if not_polymorphic then
 							--| See comments in `generate_access_on_type'
 						buf.putchar (')');
 					end
-				elseif is_cpp_extension and not polymorphic then
+				elseif is_cpp_extension and not_polymorphic then
 					cpp_ext ?= extension
 					cpp_ext.generate (external_name, parameters)
 				else

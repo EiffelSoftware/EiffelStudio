@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROXY [SHARED_OBJECT]
+	PROXY [G]
 
 inherit
 	MEMORY
@@ -25,7 +25,7 @@ creation
 
 feature -- Initialization
 
-	frozen make, frozen put (obj: SHARED_OBJECT) is
+	frozen make, frozen put (obj: G) is
 			-- Make proxy denote `obj'.
 		require
 			not_void: obj /= Void
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature	-- Access
 
-	item: SHARED_OBJECT is
+	item: G is
 			-- Object attached to proxy.
 		require
 			attached: is_set
@@ -82,7 +82,7 @@ feature {NONE} -- Externals
 			"eif_thr_proxy_set"
 		end
 
-	access_proxy (p: POINTER): SHARED_OBJECT is
+	access_proxy (p: POINTER): G is
 			-- Retrieve attached object.
 		external
 			"C | %"eif_threads.h%""

@@ -26,7 +26,12 @@ feature
 	set_meta_generic (m: META_GENERIC) is
 			-- Assign `m' to `meta_generic'.
 		do
-			meta_generic := m
+			if m = Void then
+				-- TUPLE without generic parameters
+				!!meta_generic.make (0)
+			else
+				meta_generic := m
+			end
 		end
 
 	true_generics : ARRAY [TYPE_I]
@@ -35,9 +40,12 @@ feature
 	set_true_generics (tgen: ARRAY [TYPE_I]) is
 			-- Assign `tgen' to `true_generics'.
 		do
-			true_generics := tgen
-		ensure
-			generics_set : true_generics = tgen
+			if tgen = Void then
+				-- TUPLE without generic parameters
+				!!true_generics.make (1,0)
+			else
+				true_generics := tgen
+			end
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -204,6 +212,7 @@ feature -- Generic conformance
 				-- It's an ancored type 
 				Result.append (cr_info.gen_type_string(final_mode))
 			end
+
 			Result.append_integer (generated_id (final_mode))
 			Result.append (", ")
 
@@ -244,4 +253,4 @@ feature -- Generic conformance
 			end
 		end
 
-end
+end -- class GEN_TYPE_I

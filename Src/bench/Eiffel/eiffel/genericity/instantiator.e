@@ -108,6 +108,9 @@ end;
 				-- Check array class
 			check_array_class;
 
+				-- Check tuple class
+			check_tuple_class;
+
 				-- Remove the obsolete types
 			clean;
 
@@ -182,6 +185,17 @@ feature {NONE}
 			--array_cl.update_types (Array_type);
 		end;
 
+	check_tuple_class is
+			-- Force a tuple type in the system
+		local
+			tuple_cl: CLASS_C;
+			tuple_t: GEN_TYPE_I;
+		do
+			tuple_cl := System.tuple_class.compiled_class;
+			dispatch (Tuple_type_a, tuple_cl);
+			tuple_t := Tuple_type;
+		end;
+
 feature
 
 	Array_type_a: GEN_TYPE_A is
@@ -202,6 +216,22 @@ feature
 			generics.put (any_type, 1);
 			Result.set_generics (generics);
 			Result.set_is_expanded (False);
+		end;
+
+	Tuple_type_a: TUPLE_TYPE_A is
+			-- Default tuple type
+		require
+			tuple_compiled: System.tuple_class.compiled
+		local
+			generics: ARRAY [TYPE_A]
+		do
+				-- Not once because tuple_id can change
+			!!Result
+			Result.set_base_class_id (System.tuple_id)
+				-- No generics
+			!!generics.make (1, 0)
+			Result.set_generics (generics)
+			Result.set_is_expanded (False)
 		end;
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
@@ -238,6 +268,22 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 			Result.set_base_id (System.array_id);
 		end;
 
+	Tuple_type: TUPLE_TYPE_I is
+			-- Default tuple type
+		local
+			meta_gen: META_GENERIC
+			true_gen: ARRAY [TYPE_I]
+		do
+				--- Not once because tuple_id can change
+			!!meta_gen.make (0)
+			!!true_gen.make (1, 0)
+
+			!!Result;
+			Result.set_meta_generic (meta_gen)
+			Result.set_true_generics (true_gen)
+			Result.set_base_id (System.tuple_id)
+		end;
+
 feature -- Debug
 
 	trace is
@@ -258,4 +304,5 @@ feature -- Debug
 			end;
 		end;
 
-end
+end -- class INSTANTIATOR
+

@@ -45,18 +45,6 @@ default
 	inlining (no)
 	multithreaded (no)
 
-
--- Root Cluster
--- Project Cluster
--- Interface Cluster
--- Shared Cluster
--- Miscellaneous Cluster
--- XML Cluster		
--- Help Cluster
--- EiffelTime
--- GOBO
--- WEL
-
 cluster
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 

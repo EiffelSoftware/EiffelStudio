@@ -5,8 +5,6 @@ root
 	DOC_BUILDER: make_and_launch
 
 default
-	il_verifiable (no)
-	msil_generation_type ("exe")
 	assertion (no)
 	disabled_debug (yes)
 	debug ("console_output")

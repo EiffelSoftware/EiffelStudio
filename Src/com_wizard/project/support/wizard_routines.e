@@ -10,17 +10,25 @@ inherit
 			{NONE} all
 		end
 
+feature -- Access
+
+	Temporary_input_file_name: STRING is "Input_File"
+			-- Input file
+
 feature -- Basic Operations
 
 	c_to_obj (a_file_name: STRING): STRING is
-			-- Change file name extension from ".c" to ".obj".
+			-- Change file name extension from ".c" or ".cpp" to ".obj".
 		require
 			non_void_file_name: a_file_name /= Void
-			valid_file_name: a_file_name.substring (a_file_name.count - 1, a_file_name.count).is_equal (".c")
+			valid_file_name: is_c_file (a_file_name)
+		local
+			dot_index: INTEGER
 		do
 			Result := clone (a_file_name)
-			Result.replace_substring (".o", a_file_name.count - 1, a_file_name.count)
-			Result.append ("bj")
+			dot_index := Result.index_of ('.', 1)
+			Result.head (dot_index)
+			Result.append ("obj")
 		ensure
 			changed: Result.substring (Result.count - 3, Result.count).is_equal (".obj")
 		end

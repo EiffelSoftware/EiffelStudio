@@ -373,7 +373,6 @@ feature -- Status report
 			object_with_debug_output: address /= Void and has_formatted_output
 		local
 			f: E_FEATURE
-			expr: EB_EXPRESSION
 			obj: DEBUGGED_OBJECT_CLASSIC
 			l_attributes: LIST [ABSTRACT_DEBUG_VALUE]
 			cv_spec: SPECIAL_VALUE
@@ -444,17 +443,7 @@ feature -- Status report
 						end
 					end
 				else
-					create expr.make_with_object (
-							create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
-							debuggable_name
-						)
-					expr.evaluate
-					if expr.error_message = Void and then not expr.final_result_value.is_void then
-						Result := expr.final_result_value.string_representation (min, max)
-						last_string_representation_length := expr.final_result_value.last_string_representation_length
-					else
-						Result := expr.error_message
-					end
+					Result := debug_output_evaluated_string (min, max)
 				end
 			end
 			if Result = Void then
@@ -462,6 +451,50 @@ feature -- Status report
 			end
 		ensure
 			string_representation_not_void: Result /= Void
+		end
+
+	debug_output_evaluated_string (min, max: INTEGER): STRING is
+		local
+			expr: EB_EXPRESSION
+		do
+			create expr.make_with_object (
+					create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
+					debuggable_name
+				)
+			expr.evaluate
+			if expr.error_message = Void and then not expr.final_result_value.is_void then
+				Result := expr.final_result_value.string_representation (min, max)
+				last_string_representation_length := expr.final_result_value.last_string_representation_length
+			else
+				Result := expr.error_message
+			end
+		end
+
+	generic_type_evaluated_string: STRING is
+		local
+			expr: EB_EXPRESSION
+		do
+			if application.is_dotnet then
+				if dynamic_class_type /= Void then
+					Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
+								value_frame_dotnet, 
+								value_dotnet, 
+								value_object_dotnet, 
+								dynamic_class_type
+							)
+				end
+			else
+				create expr.make_with_object (
+						create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, eiffel_system.system.any_class.compiled_class),
+						"generating_type"
+					)
+				expr.evaluate
+				if expr.error_message = Void and then not expr.final_result_value.is_void then
+					Result := expr.final_result_value.string_representation (0, -1)
+--				else
+--					Result := expr.error_message
+				end				
+			end			
 		end
 
 	formatted_output: STRING is
@@ -549,13 +582,23 @@ feature -- Access
 	type_and_value: STRING is
 			-- String representation of the type and value of `Current'.
 			--| CLASS_NAME = `full_output'
+		local
+			l_generating_type_string: STRING
 		do
 			create Result.make (100)
 
 			if is_void then
 				Result.append ("NONE = Void")
 			elseif dynamic_class /= Void then
-				Result.append (dynamic_class.name_in_upper)
+				if dynamic_class.is_generic then
+					l_generating_type_string := generic_type_evaluated_string
+				end
+				if l_generating_type_string	/= Void then
+					Result.append (l_generating_type_string)
+				else
+					Result.append (dynamic_class.name_in_upper)				
+				end
+				
 				if type = Type_object or type = Type_string_dotnet then
 					Result.append_character (' ')
 				else

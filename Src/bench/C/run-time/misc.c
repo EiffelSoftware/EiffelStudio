@@ -39,7 +39,19 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
 
+/*
+doc:	<routine name="eif_pointer_identity" export="public">
+doc:		<summary>Because of a crash of VC6++ when directly assigning a function pointer to an array of function pointer in a loop, we create this identity function that cannot be inlined and thus prevents the bug to occur. As soon as VC6++ is not supported we can get rid of it. Read comments on ROUT_TABLE.generate_loop_initialization for details.</summary>
+doc:		<param name="p" type="void *">Pointer to return.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
 
+rt_public void * eif_pointer_identity (void * p)
+{
+	return p;
+}
 
 rt_public EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 {

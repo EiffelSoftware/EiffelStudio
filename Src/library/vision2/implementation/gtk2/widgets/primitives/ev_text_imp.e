@@ -19,7 +19,6 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
-			internal_set_caret_position,
 			insert_text,
 			visual_widget,
 			set_background_color,
@@ -38,7 +37,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a gtk label.
+			-- Create a gtk text view.
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new)
@@ -48,9 +47,101 @@ feature {NONE} -- Initialization
 	initialize is
 			-- 
 		do
+			enable_word_wrapping
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 		
+	maximum_character_width: INTEGER is
+			-- Maximum width of a single character in `Current'.
+		do
+		end
+
+	clipboard_content: STRING is
+			-- `Result' is current clipboard content.
+		do
+		end
+
+feature -- Status report
+
+	is_editable: BOOLEAN is
+			-- Is the text editable by the user?
+		do
+		end
+
+	has_selection: BOOLEAN is
+			-- Does `Current' have a selection?
+		do
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected.
+		do
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected.
+		do
+		end
+
+feature -- Status setting
+	
+	set_editable (flag: BOOLEAN) is
+			-- if `flag' then make the component read-write.
+			-- if not `flag' then make the component read-only.
+		do
+		end
+
+	set_caret_position (pos: INTEGER) is
+			-- set current insertion position
+		do
+		end
+
+feature -- Resizing
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make a minimum of `nb' of the widest character visible
+			-- on one line.
+		do
+		end
+
+feature -- Basic operation
+
+	select_region (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) the text between 
+			-- `start_pos' and `end_pos'. Both `start_pos' and
+			-- `end_pos' are selected.
+		do
+		end	
+
+	deselect_all is
+			-- Unselect the current selection.
+		do
+		end
+
+	delete_selection is
+			-- Delete the current selection.
+		do
+		end
+
+	cut_selection is
+			-- Cut `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard to paste it later.
+			-- If `selectd_region' is empty, it does nothing.
+		do
+		end
+
+	copy_selection is
+			-- Copy `selected_region' into the Clipboard.
+			-- If the `selected_region' is empty, it does nothing.
+		do
+		end
+
+	paste (index: INTEGER) is
+			-- Insert the contents of the clipboard 
+			-- at `index' postion of `text'.
+			-- If the Clipboard is empty, it does nothing. 
+		do
+		end		
 
 feature -- Access
 
@@ -95,6 +186,9 @@ feature -- Status report
 		local
 		do
 		end
+		
+	has_word_wrapping: BOOLEAN
+			-- Does `Current' have word wrapping enabled?
 
 feature -- Status setting
 		
@@ -107,7 +201,7 @@ feature -- Status setting
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
-			Precursor {EV_TEXT_COMPONENT_IMP} (pos)
+
 		end
 	
 	insert_text (txt: STRING) is
@@ -167,15 +261,22 @@ feature -- Basic operation
 			insert_text ("%N")
 		end
 
-	search (str: STRING; start: INTEGER): INTEGER is
-			-- Position of first occurrence of `str' at or after `start';
-			-- 0 if none.
-		do
-			Result := text.substring_index (str, start)
-		end
-
 	scroll_to_line (i: INTEGER) is
 		do
+		end
+		
+	enable_word_wrapping is
+			-- 
+		do
+			-- Make sure only vertical scrollbar is showing
+			has_word_wrapping := True
+		end
+		
+	disable_word_wrapping is
+			--
+		do
+			-- Make sure both scrollbars are showing
+			has_word_wrapping := False
 		end
 
 feature -- Assertions
@@ -191,9 +292,10 @@ feature -- Assertions
 		
 feature {NONE} -- Implementation
 
-	vertical_adjustment_struct: POINTER is
-			-- Pointer to vertical adjustment struct use in the scrollbar.
+	on_change_actions is
+			-- The text within the widget has changed.
 		do
+			change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
 		end
 
 	line_height: INTEGER is

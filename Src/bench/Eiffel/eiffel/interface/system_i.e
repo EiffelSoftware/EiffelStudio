@@ -74,7 +74,8 @@ feature -- Counters
 			dispatch_table.counter.init_counter;
 			execution_table.counter.init_counter;
 			server_controler.file_counter.init_counter;
-			feature_as_counter.init_counter
+			feature_as_counter.init_counter;
+			pattern_table.pattern_id_counter.init_counter
 		end;
 
 	compilation_id: INTEGER
@@ -353,6 +354,10 @@ feature -- Properties
 
 	uses_precompiled: BOOLEAN;
 			-- Does current system use a precompiled library?
+
+	has_precompiled_preobj: BOOLEAN;
+			-- Does a `preobj' file exist for the current precompiled project?
+			-- This file might not exist as a result of merging precompilations
 
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
@@ -801,6 +806,69 @@ end;
 					-- `None' is specified as the root class
 				Workbench.change_all_new_classes
 			end
+		end
+
+feature -- Merging
+
+	merge (other: like Current) is
+			-- Merge `other' into `Current'.
+		require
+			other_not_void: other /= Void
+		local
+			was_precompiling: BOOLEAN
+		do
+			was_precompiling := Compilation_modes.is_precompiling;
+			Compilation_modes.set_is_precompiling (True);
+			byte_context.set_workbench_mode;
+			set_freeze (True);
+				-- Counters.
+			body_id_counter.append (other.body_id_counter);
+			body_index_counter.append (other.body_index_counter);
+			class_counter.append (other.class_counter);
+			feature_as_counter.append (other.feature_as_counter);
+			routine_id_counter.append (other.routine_id_counter);
+			static_type_id_counter.append (other.static_type_id_counter);
+
+			classes.append (other.classes);
+			has_expanded := has_expanded or other.has_expanded;
+			onbidt.append (other.onbidt);
+			body_index_table.append (other.body_index_table);
+			type_set.merge (other.type_set);
+			address_table.merge (other.address_table);
+			rout_info_table.append (other.rout_info_table);
+			execution_table.append (other.execution_table);
+			dispatch_table.append (other.dispatch_table);
+			frozen_level := execution_table.frozen_level;
+			externals.append (other.externals);
+			pattern_table.append (other.pattern_table);
+
+				-- Servers.
+			server_controler.append (other.server_controler);
+			ast_server.take_control (other.ast_server);
+			body_server.merge (other.body_server);
+			byte_server.take_control (other.byte_server);
+			class_comments_server.take_control (other.class_comments_server);
+			class_info_server.take_control (other.class_info_server);
+			depend_server.take_control (other.depend_server);
+			feat_tbl_server.take_control (other.feat_tbl_server);
+			inv_ast_server.merge (other.inv_ast_server);
+			inv_byte_server.take_control (other.inv_byte_server);
+			rep_depend_server.take_control (other.rep_depend_server);
+			rep_feat_server.merge (other.rep_feat_server);
+			rep_server.take_control (other.rep_server);
+			server_controler.init;
+
+				-- Topological sort
+			sorter.sort;
+			Error_handler.checksum;
+			build_conformance_table;
+			sorter.clear;
+			process_dynamic_types;
+			generate_descriptor_tables;
+			Precompilation_descobj.make_from_string (Descobj);
+			Workbench.set_precompiled_descobj (Precompilation_descobj);
+
+			Compilation_modes.set_is_precompiling (was_precompiling)
 		end
 
 feature -- Recompilation 
@@ -1894,9 +1962,6 @@ end;
 			generate_dle_file;
 				-- Empty update file
 			generate_empty_update_file;
-			if Compilation_modes.is_precompiling then
-				generate_descriptor_tables
-			end
 		end;
 
 	generate_empty_update_file is
@@ -2301,6 +2366,7 @@ feature -- Generation
 
 	generate_descriptor_tables is
 			-- Generate descriptor tables.
+			-- Used when merging precompilations.
 		do
 			Desc_generator.init;
 			from classes.start until classes.after loop
@@ -3297,6 +3363,7 @@ feature -- Main file generation
 				%#include %"struct.h%"%N%N");
 
 			if not final_mode then
+				class_counter.generate_offsets (Initialization_file);
 				Initialization_file.putstring ("int32 rcorigin = ");
 				Initialization_file.putint (rcorigin);
 				Initialization_file.putstring (";%Nint rcdt = ");
@@ -3497,6 +3564,12 @@ feature
 		do
 			is_precompiled := b
 		end;
+
+	set_has_precompiled_preobj (b: BOOLEAN) is
+			-- Set `has_precompiled_preobj' to `b'.
+		do
+			has_precompiled_preobj := b
+		end
 
 	set_code_replication_off (b: BOOLEAN) is
 			-- Assign `b' to `replication_off'

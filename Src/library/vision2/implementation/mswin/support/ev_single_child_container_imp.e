@@ -12,8 +12,7 @@ deferred class
 inherit
 	EV_CONTAINER_IMP
 		redefine
-			set_insensitive,
-			on_first_display
+			set_insensitive
 		end
 
 feature -- Access
@@ -39,19 +38,15 @@ feature -- Element change
 			-- Add child into composite
 		do
 			child := child_imp
-			child_minwidth_changed (child_imp.minimum_width, child_imp)
-			child_minheight_changed (child_imp.minimum_height, child_imp)
-			update_display
+			notify_change (2 + 1)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove the given child from the children of
 			-- the container.
 		do
-			child_minwidth_changed (0, child_imp)
-			child_minheight_changed (0, child_imp)
 			child := Void
-			update_display
+			notify_change (2 + 1)
 		end
 
 feature -- Basic operations
@@ -72,23 +67,6 @@ feature -- Basic operations
 			if child /= Void then
 				child.set_foreground_color (foreground_color)
 			end
-		end
-
-	update_display is
-			-- Feature that update the actual container.
-		do
-			if child /= Void then
-				child.set_move_and_size (0, 0, client_width, client_height)
-			end
-		end
-
-	on_first_display is
-		do
-			if child /= Void then
-				child.on_first_display
-			end
-			parent_ask_resize (child_cell.width, child_cell.height)
-			already_displayed := True
 		end
 
 feature -- Assertion

@@ -146,7 +146,9 @@ feature -- Status setting
 		end;
 
 	set_memory_threshold (value: INTEGER) is
-			-- Set a new `memory_threshold'.
+			-- Set a new `memory_threshold' in bytes. Whenever the memory 
+			-- allocated for Eiffel reaches this value, an automatic
+			-- collection is performed.
 		require
 			positive_value: value > 0;
 		external
@@ -156,7 +158,11 @@ feature -- Status setting
 		end;
 
 	set_collection_period (value: INTEGER) is
-			-- Set `collection_period'.
+			-- Set `collection_period'. Every `value' collection,
+			-- the Garbage collector will performed a collection
+			-- on the whole memory, otherwise a simple partial
+			-- collction is done.
+			
 		require
 			positive_value: value > 0;
 		external
@@ -176,7 +182,8 @@ feature -- Status setting
 		end;
 
 	set_chunk_size (value: INTEGER) is
-			-- Set the minimal size of a memory chunk.
+			-- Set the minimal size of a memory chunk. 
+			-- A chunk is an Eiffel memory unit.
 		require
 			positive_value: value > 0;
 		external

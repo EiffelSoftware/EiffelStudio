@@ -7,9 +7,12 @@ indexing
 external class
 	ISE_RUNTIME
 
+inherit
+	SYSTEM_OBJECT
+
 feature -- Equality
 
-	deep_equal (target, source: ANY): BOOLEAN is
+	frozen deep_equal (target, source: ANY): BOOLEAN is
 			-- Copy `source' onto `target'.
 		external
 			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO): System.Boolean use ISE.Runtime.RUN_TIME"
@@ -19,7 +22,7 @@ feature -- Equality
 
 feature -- Duplication
 
-	standard_copy (target, source: ANY) is
+	frozen standard_copy (target, source: ANY) is
 			-- Copy `source' onto `target'.
 		external
 			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO) use ISE.Runtime.RUN_TIME"
@@ -27,7 +30,7 @@ feature -- Duplication
 			"standard_copy"
 		end
 
-	standard_clone (o: ANY): SYSTEM_OBJECT is
+	frozen standard_clone (o: ANY): SYSTEM_OBJECT is
 			-- Create a new instance of same type as `o'.
 		external
 			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE_Runtime.EIFFEL_TYPE_INFO.Object use ISE.Runtime.GENERIC_CONFORMANCE"
@@ -35,14 +38,31 @@ feature -- Duplication
 			"create_like_object"
 		end
 
-	deep_clone (o: ANY): SYSTEM_OBJECT is
-			-- 
+	frozen deep_clone (o: ANY): SYSTEM_OBJECT is
 		external
 			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE.Runtime.EIFFEL_TYPE_INFO use ISE.Runtime.RUN_TIME"
 		alias
 			"deep_clone"
 		end
 		
+feature -- Output
+
+	frozen tagged_out (o: SYSTEM_OBJECT): SYSTEM_STRING is
+		external
+			"IL static signature (System.Object): System.String use ISE.Runtime.RUN_TIME"
+		alias
+			"tagged_out"
+		end
+
+feature -- Hash code
+
+	frozen hash_code (o: SYSTEM_OBJECT): INTEGER is
+		external
+			"IL static signature (System.Object): System.Int32 use ISE.Runtime.RUN_TIME"
+		alias
+			"hash_code"
+		end
+
 feature -- Externals
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN is

@@ -39,7 +39,7 @@ inherit
 		redefine
 			implementation
 		end
-
+		
 create
 	default_create,
 	make_with_size
@@ -62,8 +62,9 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	flush is
-			-- Execute any delayed calls to `expose_actions' without waiting
-			-- for next idle.
+			-- Ensure that the appearence of `Current' is updated on screen
+			-- immediately. Any changes that have not yet been reflected will
+			-- become visible.
 		require	
 			not_destroyed: not is_destroyed
 		do

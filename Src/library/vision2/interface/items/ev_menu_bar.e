@@ -10,7 +10,13 @@ class
 	EV_MENU_BAR
 
 inherit
+	
 	EV_MENU_ITEM_LIST
+		rename
+			parent as old_parent
+		export
+			{NONE}
+				is_parent_recursive
 		redefine
 			implementation,
 			create_implementation
@@ -20,11 +26,21 @@ create
 	default_create
 
 feature -- Status report
+		
+	parent: EV_WINDOW is
+			-- Parent of `Current'.
+		do
+			Result := implementation.parent
+		end
+		
+feature {NONE} -- Inapplicable
 
-	parent: EV_MENU_ITEM_LIST is
+	old_parent: EV_MENU_ITEM_LIST is
 			-- Container of `Current'.
 		do
 			-- Menu bars have no menu item list as parent.
+			-- Therefore this is "hidden" and may not be queried.
+			-- `Parent' returns EV_WINDOW containing `Current'
 		end
 
 feature {EV_ANY_I} -- Implementation

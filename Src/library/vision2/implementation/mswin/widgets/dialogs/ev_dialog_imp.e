@@ -23,14 +23,8 @@ inherit
 			default_style,
 			default_ex_style,
 			interface,
-			show,
 			on_get_min_max_info,
 			on_wm_close
-		end
-
-	WEL_DS_CONSTANTS
-		export
-			{NONE} all
 		end
 
 create
@@ -43,17 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	block is
-			-- Wait until window is closed by the user.
-		local
-			app: EV_APPLICATION
-		do
-			app := (create {EV_ENVIRONMENT}).application
-			from until is_destroyed or else not is_show_requested loop
-				app.sleep (100)
-				app.process_events
-			end
-		end
+feature {NONE} -- Externals
 
 	show_modal is
 			-- Show and wait until window is closed.
@@ -62,21 +46,13 @@ feature -- Basic operations
 				show
 				block
 			else
-				show
 				enable_modal
+				show
 				block
-				disable_modal
+				disable_modal			
 			end
 		end
 	
-	show is
-   			-- Show dialog.
-		do
-			{EV_TITLED_WINDOW_IMP} Precursor
-			invalidate
-			update
-		end
-
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
 			-- Called by WEL to request min/max size of window.
 			-- Is called just before move and/or resize.
@@ -105,15 +81,15 @@ feature -- Status Setting
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4)
 		do
-			set_style (default_style + ws_sysmenu)
 			is_closeable := True
+			set_style (default_style + Ws_sysmenu)
 		end
 
 	disable_closeable is
 			-- Set the window not to be closeable by the user
 		do
-			set_style (default_style)
 			is_closeable := False
+			set_style (default_style)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -139,7 +115,6 @@ feature {NONE} -- WEL Implementation
 		do
 			Result :=  Ws_ex_controlparent
 				+ Ws_ex_toolwindow
-				+ Ws_ex_topmost
 		end
 
 	interface: EV_DIALOG
@@ -167,6 +142,10 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/05/01 19:52:09  pichery
+--| Removed feature `block' (now implemented in
+--| EV_TITLED_WINDOW_IMP).
+--|
 --| Revision 1.14  2000/04/29 03:31:33  pichery
 --| New dialog implementation
 --|

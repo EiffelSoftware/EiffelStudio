@@ -99,7 +99,7 @@ feature -- Primitives
 	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to `actual_type' ?
 		do
-			Result := actual_type.internal_conform_to (other, in_generics)
+			Result := actual_type.internal_conform_to (other.actual_type, in_generics)
 		end
 
 	type_i: TYPE_I is

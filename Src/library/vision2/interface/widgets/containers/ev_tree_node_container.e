@@ -8,7 +8,9 @@ indexing
 	
 deferred class 
 	EV_TREE_NODE_CONTAINER
-		obsolete "This is no longer applicable. Use EV_TREE_ITEM_LIST instead."
+
+obsolete
+	"This is no longer applicable. Use EV_TREE_ITEM_LIST instead."
 
 inherit
 	EV_ANY

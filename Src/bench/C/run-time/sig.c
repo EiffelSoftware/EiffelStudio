@@ -1038,7 +1038,7 @@ void esigresdef(long int sig)
  * To run this, compile the file with -DTEST.
  */
 
-struct eif_except exdata;	/* Exception handling global flags */
+struct eif_exception exdata;	/* Exception handling global flags */
 rt_private int bufstate(void);	/* Print circular buffer state */
 
 Signal_t test_handler(int sig)

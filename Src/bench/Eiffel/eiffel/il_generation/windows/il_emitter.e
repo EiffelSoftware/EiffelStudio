@@ -5,9 +5,6 @@ indexing
 
 class
 	IL_EMITTER
-	
-inherit
-	SHARED_WORKBENCH
 
 create
 	make
@@ -159,6 +156,12 @@ feature -- Retrieval
 			create l_uni.make (a_path)
 			assembly_info := implementation.assembly_info_from_assembly (l_uni)
 			assembly_found := assembly_info /= Void
+		end
+		
+	unload is
+			-- unload all used resources
+		do
+			implementation.unload
 		end
 
 feature -- XML generation

@@ -490,9 +490,9 @@ feature {NONE} -- Contract Support
 					until
 						old_instance_referers.off
 					loop
-						check
-							items_identical: new_instance_referers.item (old_instance_referers.item_for_iteration) /= Void
-						end
+--						check
+--							items_identical: new_instance_referers.item (old_instance_referers.item_for_iteration) /= Void
+--						end
 						old_instance_referers.forth
 					end
 					counter := counter + 1

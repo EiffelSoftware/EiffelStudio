@@ -7,9 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>End User License Agreement
-		</heading>
 		<paragraph>End User License Agreement for the Eiffel ENViSioN! Programming System</paragraph>
 		<paragraph>Carefully read all of the terms and conditions of this agreement prior to opening or downloading the software package, or startingits installation procedure. Opening or downloading the software package, or starting its installation procedure, indicates your acceptance of these terms andconditions. This software agreement governs your use of THE Eiffel ENViSioN! PROGRAMMING SYSTEM (hereinafter referred to as Eiffel ENViSioN!) from EiffelSoftware, Inc., a California Corporation with offices in Goleta, California 93117. By using the enclosed Eiffel ENViSioN! software package, you agree to thefollowing terms and conditions;</paragraph>
 		<heading>
@@ -47,14 +44,21 @@
 			<size>2</size>8. MISCELLANEOUS PROVISIONS 
 		</heading>
 		<paragraph>a. All correspondence shall be directed to Eiffel Software at the following address: </paragraph>
-		<paragraph>        Customer Service Department
-			<line_break/>           Eiffel Software Inc.
-			<line_break/>          356 Storke Road,
-			<line_break/>        Goleta,
-			<line_break/>           CA 93117 USA
-			<line_break/>           tel. (805) 685-1006,
-			<line_break/>           fax. (805) 685-6869
-			<line_break/>           or throughthe world-wide Web at http://support.eiffel.com
+		<paragraph>
+			&amp;nbsp;&amp;nbsp;&amp;nbsp;Customer Service Department:
+			<line_break/>&amp;nbsp;&amp;nbsp;&amp;nbsp;Eiffel Software Inc.
+			<line_break/>&amp;nbsp;&amp;nbsp;&amp;nbsp;356 Storke Road,
+			<line_break/>&amp;nbsp;&amp;nbsp;&amp;nbsp;Goleta,
+			<line_break/>&amp;nbsp;&amp;nbsp;&amp;nbsp;CA 93117 USA
+			<line_break/>
+			<line_break/>&amp;nbsp;&amp;nbsp;&amp;nbsp;tel. (805) 685-1006,
+			<line_break/>&amp;nbsp;&amp;nbsp;&amp;nbsp;fax. (805) 685-6869
+			<line_break/>
+			<line_break/>or throughthe world-wide Web at 
+			<link>
+				<url>http://support.eiffel.com</url>
+				<label>http://support.eiffel.com</label>
+			</link>
 		</paragraph>
 		<paragraph>b. This agreement shall succeed any previous agreement relevant to the subject between the parties and shall be controlling.</paragraph>
 		<paragraph>c. The terms and conditions of this agreement shall be interpreted and enforced according to the laws of the State of Californiaand shall be subject to the appropriate jurisdiction in and of the county of Santa Barbara, California, U.S.A.</paragraph>

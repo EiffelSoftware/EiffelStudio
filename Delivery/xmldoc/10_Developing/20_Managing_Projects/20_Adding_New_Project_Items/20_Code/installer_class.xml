@@ -5,12 +5,16 @@
 			<row>
 				<cell>
 					<paragraph>  The Installer Class isto be invoked at set-up time. The class contains  all of the defaultimplmentation required to create a installer  class. </paragraph>
-					<paragraph>Please ensure you have the System.Configuration.Install assembly added to  project references before adding this item. </paragraph>
+					<paragraph>Please ensure you have the 
+						<code>
+							<class_name>System.Configuration.Install</class_name>
+						</code> assembly added to  project references before adding this item. 
+					</paragraph>
 					<seealso>
 						<bold>See Also</bold>
 						<line_break/>
 						<link>
-							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.htm</url>
+							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.xml</url>
 							<label>  Adding New Project Items</label>
 						</link>
 					</seealso>

@@ -7,24 +7,24 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>A break point is a point used to halt execution of a Project for
+		<paragraph>A break point is a point used to halt execution of a Project for 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel debugging</keywords>&gt;Debugging
+				<keywords>Eiffel debugging</keywords>Debugging
 			</help_link>  purposes. For example, the code that you wish to examine requires some fairly  complex steps in order for it to beexecuted. It is not possible to step  through the whole Projects execution line by line, so you set a Break Point.  When the Break Point is reached, execution will stop, and you will be able to  debug theProject.
 		</paragraph>
 		<paragraph>You have as many break points as you wish in a project.</paragraph>
-		<paragraph>You may also turn a regular Break Point into a
+		<paragraph>You may also turn a regular Break Point into a 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel Conditional Break Point</keywords>&gt;Conditional Break Point
-			</help_link>  by modifying its properties. For more information regarding this, click
+				<keywords>Eiffel Conditional Break Point</keywords>Conditional Break Point
+			</help_link>  by modifying its properties. For more information regarding this, click 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel Conditional Break Point</keywords>&gt;here
+				<keywords>Eiffel Conditional Break Point</keywords>here
 			</help_link>.
 		</paragraph>
 		<heading>
@@ -40,7 +40,7 @@
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel Editor</keywords>&gt;Editor
+					<keywords>Eiffel Editor</keywords>Editor
 				</help_link>,   corresponding to the line of source code where you wish to place the Break   Point.
 			</item>
 		</list>
@@ -54,7 +54,7 @@
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel Editor</keywords>&gt;Editor
+				<keywords>Eiffel Editor</keywords>Editor
 			</help_link>,  for which a Break Point has been set.
 		</paragraph>
 		<heading>
@@ -70,53 +70,53 @@
 				<url>EditorWindowWithBreakPointHit.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The screenshot above demonstrates the appearence of the
+		<paragraph>The screenshot above demonstrates the appearence of the 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel Editor</keywords>&gt;Editor
-			</help_link>  when a break point has been reached, and the execution has stopped. The line  that is highlighted in yellow is the next line of theProject's code that will  be executed.
+				<keywords>Eiffel Editor</keywords>Editor
+			</help_link> when a break point has been reached, and the execution has stopped. The line  that is highlighted in yellow is the next line of theProject's code that will  be executed.
 		</paragraph>
 		<heading>
 			<size>2</size>Stepping Through the Project
 		</heading>
-		<paragraph>To follow the exeuction of the system during
+		<paragraph>To follow the exeuction of the system during 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel debugging</keywords>&gt;Debugging
+				<keywords>Eiffel debugging</keywords>Debugging
 			</help_link>,  you need to step through the code, line by line. This allows you to see exactly  what is happening within thesystem.
 		</paragraph>
-		<paragraph>There are two ways of stepping during
+		<paragraph>There are two ways of stepping during 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel debugging</keywords>&gt;Debugging
+				<keywords>Eiffel debugging</keywords>Debugging
 			</help_link>:
 		</paragraph>
 		<list ordered="false">
-			<item>   Step Into - If the current line to be executed contains one or more
+			<item>   Step Into - If the current line to be executed contains one or more 
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel routine</keywords>&gt;routines
-				</help_link>   that may be executed, then the execution will step into the
+					<keywords>Eiffel routine</keywords>routines
+				</help_link>   that may be executed, then the execution will step into the 
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel routine</keywords>&gt;routine
-				</help_link>   to execute it one line at a time. If there is no such
+					<keywords>Eiffel routine</keywords>routine
+				</help_link>   to execute it one line at a time. If there is no such 
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel routine</keywords>&gt;routine
+					<keywords>Eiffel routine</keywords>routine
 				</help_link>,  then the current line for execution will be incremented.
 			</item>
-			<item>   Step Over - Even if the current line to be executed contains one or more
+			<item>   Step Over - Even if the current line to be executed contains one or more 
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel routine</keywords>&gt;routine
+					<keywords>Eiffel routine</keywords>routine
 				</help_link>,   then the execution of their bodies will not be traced, and the current line for   execution will be incremented.
 			</item>
 		</list>
@@ -126,26 +126,27 @@
 				<url>EditorWindowWithBreakPointSteppedOver.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The screenshot above demonstrates a single stepping from the breakpoint to the  next line of code to be executed. As the line of code with the Break Point did  not contain a
+		<paragraph>The screenshot above demonstrates a single stepping from the breakpoint to the  next line of code to be executed. As the line of code with the Break Point did  not contain a 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel routine</keywords>&gt;routine
+				<keywords>Eiffel routine</keywords>routine
 			</help_link>,  then Step Into and Step Over had the same effect.
 		</paragraph>
-		<paragraph>Once you are
+		<paragraph>Once you are 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel debugging</keywords>&gt;Debugging
-			</help_link>,  you may also run to a particular point in the source code, without setting a  Break Point, by right clicking on the line in the
+				<keywords>Eiffel debugging</keywords>Debugging
+			</help_link>,  you may also run to a particular point in the source code, without setting a  Break Point, by right clicking on the line in the 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
-				<keywords>Eiffel Editor</keywords>&gt;Editor
+				<keywords>Eiffel Editor</keywords>Editor
 			</help_link>  that you wish to run to, and select 
 			<bold>Run To Cursor</bold> from the context menu.
 		</paragraph>
+		<line_break/>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

@@ -7,58 +7,50 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
-					<paragraph>  The Debugging property page is used to define the debugging options for your  project to be used at runtime.
-						<line_break/>
-					</paragraph>
-					<heading>
-						<size>2</size>  Actions
-					</heading>
-					<paragraph>The actionpropertiesare user-specific properties and will not be  applied to the project as a whole, but saved in a separate user configuration  file. Theses user specific settings do not require a project recompilation to  reflect their changes.
-						<line_break/>
-					</paragraph>
-					<paragraph>
-						<bold>Start Application</bold>
-					</paragraph>
-					<paragraph>  Ifyour project isrequires a client application to function  correctly, such in the case of a Class Library project,then you will need  to specify a client application to use when debugging.</paragraph>
-					<bold>Note</bold>: Please ensure that  the output of the project is the same assembly that the client application will  be using when it is run.
-					<paragraph>
-						<bold>Start Application Path</bold>
-					</paragraph>
-					<paragraph>  The Start Applications Path is used to change the working directory of the  client application that uses the projects compiled assembly.
-						<line_break/>
-						<paragraph>
-							<bold>Arguments</bold>
-						</paragraph>
-						<paragraph>  The Arguments property allows you to specify any required command line  arguments for either the selected project or, if a Start Application is  defined, the Start Application.
-							<line_break/>
-						</paragraph>
-						<heading>
-							<size>2</size>  Generate Debug Info
-						</heading>
-						<paragraph>
-							<bold>Generate Debug Info</bold>
-						</paragraph>
-						<paragraph>This property tells the compiler whether or not to generate the debugging  information needed by the debugger to debug your project. It is recommended  that this option is set to true for all debugging related configurations, and  set to false for any release related configurations. If this property is set to  false you will be unable to debug the code for the selected project.</paragraph>
-						<paragraph>For precompile library project the debugging information is always generated.</paragraph>
-						<seealso>
-							<bold>See Also</bold>
-							<line_break/>
-							<link>
-								<url>project_configuration.htm</url>
-								<label>Property Page Overview</label>
-							</link>
-							<line_break/>
-							<link>
-								<url>advanced_ppg.htm</url>
-								<label>Advanced Property Page</label>
-							</link>
-							<line_break/>
-						</seealso>
-					</paragraph>
-				</cell>
-			</row>
-		</table>
+		<paragraph>  The Debugging property page is used to define the debugging options for your  project to be used at runtime.
+			<line_break/>
+		</paragraph>
+		<heading>
+			<size>2</size>Actions
+		</heading>
+		<paragraph>The actionpropertiesare user-specific properties and will not be  applied to the project as a whole, but saved in a separate user configuration  file. Theses user specific settings do not require a project recompilation to  reflect their changes.</paragraph>
+		<heading>
+			<size>3</size>Start Application
+		</heading>
+		<paragraph>  Ifyour project isrequires a client application to function  correctly, such in the case of a Class Library project,then you will need  to specify a client application to use when debugging.</paragraph>
+		<note>
+			<bold>Note</bold>: Please ensure that  the output of the project is the same assembly that the client application will  be using when it is run.
+		</note>
+		<heading>
+			<size>3</size>Start Application Path
+		</heading>
+		<paragraph>  The Start Applications Path is used to change the working directory of the  client application that uses the projects compiled assembly.</paragraph>
+		<heading>
+			<size>3</size>Arguments
+		</heading>
+		<paragraph>  The Arguments property allows you to specify any required command line  arguments for either the selected project or, if a Start Application is  defined, the Start Application.</paragraph>
+		<heading>
+			<size>2</size>  Generate Debug Info
+		</heading>
+		<heading>
+			<size>3</size>Generate Debug Info
+		</heading>
+		<paragraph>This property tells the compiler whether or not to generate the debugging  information needed by the debugger to debug your project. It is recommended  that this option is set to true for all debugging related configurations, and  set to false for any release related configurations. If this property is set to  false you will be unable to debug the code for the selected project.</paragraph>
+		<note>
+			<bold>Note</bold>: For precompile library project the debugging information is always generated.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>project_configuration.htm</url>
+				<label>Property Page Overview</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>advanced_ppg.htm</url>
+				<label>Advanced Property Page</label>
+			</link>
+			<line_break/>
+		</seealso>
 	</paragraph></document>

@@ -4,8 +4,8 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select
-						<bold>Build  Solution</bold> from the
+					<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select 
+						<bold>Build  Solution</bold> from the 
 						<bold>Build</bold> menu as demonstrated below:
 					</paragraph>
 					<paragraph>
@@ -14,7 +14,7 @@
 							<url>BuildMenu.png</url>
 						</image>
 					</paragraph>
-					<paragraph>There are eight entries on the
+					<paragraph>There are eight entries on the 
 						<bold>Build</bold> menu, each described below:
 					</paragraph>
 					<list ordered="false">
@@ -28,24 +28,24 @@
 							<bold>Clean Solution</bold> - Deletes all built/compiled outputs from the Solution.
 						</item>
 						<item>
-							<bold>Build Selection</bold> - Compiles only the currently selected project in the
+							<bold>Build Selection</bold> - Compiles only the currently selected project in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
-							</link>.  The compilation method of this project is equivalent to that performed by
-							<bold>Build   Solution</bold>. This menu entry is greyed out when there is no project  selected in the
+							</link>.  The compilation method of this project is equivalent to that performed by 
+							<bold>Build   Solution</bold>. This menu entry is greyed out when there is no project  selected in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
 							</link>.
 						</item>
 						<item>
-							<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the
+							<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the 
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
-							</link>.The  compilation method of this project is equivalent to that performed by
-							<bold>Rebuild   Solution</bold>. This menu entry is greyed out when there is no project  selected in the
+							</link>.The  compilation method of this project is equivalent to that performed by 
+							<bold>Rebuild  Solution</bold>. This menu entry is greyed out when there is no project  selected in the
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
@@ -61,18 +61,19 @@
 							<bold>Configuration Manager...</bold> - Displays a dialog allowing you to specify  Project configuration information for each Project in the Solution.
 						</item>
 					</list>
-					<paragraph>  The
+					<paragraph>  The 
 						<link>
 							<url>/10_Developing/20_Managing_Projects/10_Configuring_A_Project/10_Project_Property_Pages/ProjectConfiguration.htm</url>
 							<label>Project Property Pages</label>
 						</link>  allow you to adjust the properties of your project, many of which apply  directly to the compilation.
 					</paragraph>
-					<paragraph>  If your compilation fails, see
+					<paragraph>  If your compilation fails, see 
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/CompilationErrors.htm</url>
 							<label>Compilation Errors</label>
 						</link>  for more information on correcting such errors.
 					</paragraph>
+					<line_break/>
 					<seealso>
 						<bold>See also</bold>
 						<line_break/>

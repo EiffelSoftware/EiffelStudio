@@ -4,24 +4,56 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>The EiffelVision2 Window item is a new Eiffel Class, TITLED_WINDOW  that represents a Vision2 titled window, inheriting  EV_TITLED_WINDOW.</paragraph>
+					<paragraph>The EiffelVision2 Window item is a new Eiffel Class, 
+						<code>
+							<class_name>TITLED_WINDOW</class_name>
+						</code>  that represents a EiffelVision 2 titled window, inheriting 
+						<code>
+							<class_name>EV_TITLED_WINDOW</class_name>
+						</code>.
+					</paragraph>
 					<paragraph>  Default feature clauses are contained within the class text, and three  pre-defined features are contained:</paragraph>
 					<list ordered="false">
-						<item>initialize - Redefined from  EV_TITLED_WINDOW, this feature performs the initialization of the  window, and any custom initialization required for your window, can be added  here. intialize is executed as a result of calling  default_create on the window. </item>
-						<item>is_in_default_state - Is the window in the correct  default state after initialization? If you wish to check the default state of  your window, add code to perform this here. </item>
-						<item>close_requested - Destroys the window. Connected to the  close_request_actions of the window during intialize.  The close_request_actions are fired when a user  attempts to close the window, and if you wish to override the default  behaviour, add your code to this feature. </item>
+						<item>i
+							<code>
+								<feature_name>nitialize</feature_name>
+							</code> - Redefined from  
+							<code>
+								<class_name>EV_TITLED_WINDOW</class_name>
+							</code>, this feature performs the initialization of the  window, and any custom initialization required for your window, can be added  here. 
+							<code>
+								<feature_name>intialize</feature_name>
+							</code> is executed as a result of calling  
+							<code>
+								<feature_name>default_create</feature_name>
+							</code> on the window. 
+						</item>
+						<item>
+							<code>
+								<feature_name>is_in_default_state</feature_name>
+							</code> - Is the window in the correct  default state after initialization? If you wish to check the default state of  your window, add code to perform this here. 
+						</item>
+						<item>
+							<code>
+								<feature_name>close_requested</feature_name>
+							</code> - Destroys the window. Connected to the  close_request_actions of the window during intialize.  The close_request_actions are fired when a user  attempts to close the window, and if you wish to override the default  behaviour, add your code to this feature. 
+						</item>
 					</list>
-					<paragraph>For more information regarding the use of
+					<paragraph>For more information regarding the use of 
 						<link>
 							<url>/libraries/vision2/index.xml</url>
-							<label>Vision2</label>
-						</link>,  click
+							<label>EiffelVision 2</label>
+						</link>,  click 
 						<link>
 							<url>/libraries/vision2/index.xml</url>
 							<label>here</label>
 						</link>
 					</paragraph>
-					<paragraph>Appearence of an  EV_TITLED_WINDOW:</paragraph>
+					<paragraph>Appearence of an  
+						<code>
+							<class_name>EV_TITLED_WINDOW</class_name>
+						</code>:
+					</paragraph>
 					<paragraph>
 						<image>
 							<alt_text>titled window</alt_text>
@@ -32,9 +64,10 @@
 						<bold>See Also</bold>
 						<line_break/>
 						<link>
-							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.htm</url>
+							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.xml</url>
 							<label>  Adding New Project Items</label>
 						</link>
+						<line_break/>
 					</seealso>
 				</cell>
 			</row>

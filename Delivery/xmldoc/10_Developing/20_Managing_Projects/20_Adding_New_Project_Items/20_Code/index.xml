@@ -6,7 +6,8 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph>The following code items may be added:
+	<paragraph>
+		<paragraph>The following code items may be added:</paragraph>
 		<list ordered="false">
 			<item>Class</item>
 			<item>Component Class</item>
@@ -14,4 +15,23 @@
 			<item>Web Service</item>
 			<item>Windows Service Class</item>
 		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../10_UI/index.xml</url>
+				<label>UI</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../30_Data/index.xml</url>
+				<label>Data</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../40_Resources/index.xml</url>
+				<label>Resources</label>
+			</link>
+			<line_break/>
+		</seealso>
 	</paragraph></document>

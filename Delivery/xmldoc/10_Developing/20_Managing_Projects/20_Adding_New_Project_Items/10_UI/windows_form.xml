@@ -5,12 +5,22 @@
 			<row>
 				<cell>
 					<paragraph>  The Windows Form itemadds an empty Winform Classfor Windows  applications to your project.Thisitem when added will open in the  .NETWindows Form designer. </paragraph>
-					<paragraph>Please ensure thatthe Accessiblity, System.Windows.Formsand  System.Drawing assemblies have been added to your project before adding a  Windows Form item to your project.</paragraph>
+					<paragraph>Please ensure thatthe 
+						<code>
+							<class_name>Accessiblity</class_name>
+						</code>, 
+						<code>
+							<class_name>System.Windows.Forms</class_name>
+						</code> and 
+						<code>
+							<class_name>System.Drawing</class_name>
+						</code> assemblies have been added to your project before adding a  Windows Form item to your project.
+					</paragraph>
 					<seealso>
 						<bold>See Also</bold>
 						<line_break/>
 						<link>
-							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.htm</url>
+							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.xml</url>
 							<label>  Adding New Project Items</label>
 						</link>
 					</seealso>

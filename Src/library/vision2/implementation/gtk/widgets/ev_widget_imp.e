@@ -103,9 +103,9 @@ feature {NONE} -- Initialization
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				real_signal_connect_after (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (object_id, ?, ?, ?, ?), size_allocate_translate_agent)
+				real_signal_connect_after (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
 			else
-				real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (object_id, ?, ?, ?, ?), size_allocate_translate_agent)
+				real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
 	
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)

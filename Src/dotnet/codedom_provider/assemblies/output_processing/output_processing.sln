@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EiffelSoftware.Compiler.OutputHandler", "handler\handler.csproj", "{5615EDB7-E861-449C-AD8F-7D1A4551C56B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EiffelSoftware.Compiler.OutputDispatcher", "dispatcher\dispatcher.csproj", "{8B852C88-F950-4505-AFAD-2D3F6EE959FC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{5615EDB7-E861-449C-AD8F-7D1A4551C56B}.Debug.ActiveCfg = Debug|.NET
+		{5615EDB7-E861-449C-AD8F-7D1A4551C56B}.Debug.Build.0 = Debug|.NET
+		{5615EDB7-E861-449C-AD8F-7D1A4551C56B}.Release.ActiveCfg = Release|.NET
+		{5615EDB7-E861-449C-AD8F-7D1A4551C56B}.Release.Build.0 = Release|.NET
+		{8B852C88-F950-4505-AFAD-2D3F6EE959FC}.Debug.ActiveCfg = Debug|.NET
+		{8B852C88-F950-4505-AFAD-2D3F6EE959FC}.Debug.Build.0 = Debug|.NET
+		{8B852C88-F950-4505-AFAD-2D3F6EE959FC}.Release.ActiveCfg = Release|.NET
+		{8B852C88-F950-4505-AFAD-2D3F6EE959FC}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

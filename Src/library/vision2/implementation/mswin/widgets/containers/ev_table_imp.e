@@ -386,7 +386,6 @@ feature -- Status settings
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 			local
-				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
 				table_child: EV_TABLE_CHILD_IMP
 				child_imp: EV_WIDGET_IMP
 			do

@@ -260,6 +260,8 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_Until_keyword)
 			ctxt.indent
 			ctxt.new_line
+			ctxt.new_expression
+			ctxt.begin
 			ctxt.format_ast (stop)
 			ctxt.exdent
 			ctxt.new_line

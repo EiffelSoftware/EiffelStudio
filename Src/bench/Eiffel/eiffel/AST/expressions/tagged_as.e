@@ -35,7 +35,7 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Expression
 
-    start_position: INTEGER; 
+	start_position: INTEGER;
 			-- Start position of AST
 
 feature -- Comparison
@@ -87,6 +87,7 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			ctxt.new_expression
 			ctxt.begin
 			simple_format (ctxt)
 			if ctxt.last_was_printed then

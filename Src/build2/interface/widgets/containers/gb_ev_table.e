@@ -989,7 +989,7 @@ feature {NONE} -- Implementation
 				if x <= first.columns and y <= first.rows then
 					selected_item := first.item (x, y)
 					if selected_item /= Void then
-						list.item_by_data (selected_item).enable_select
+						list.retrieve_item_by_data (selected_item, True).enable_select
 					end
 					update_prompt
 				end

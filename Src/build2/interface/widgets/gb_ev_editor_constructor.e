@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-feature {GB_INTEGER_INPUT_FIELD} -- Implementation
+feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD} -- Implementation
 
 	object: GB_OBJECT is
 			-- Object referenced by `Current'.

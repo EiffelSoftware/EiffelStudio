@@ -697,7 +697,7 @@ weif_project.c: eif_project.c
 remove::
 	$(RM) weif_project.c
 
-weif_project.c: weif_project.c
+weif_project.o: weif_project.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 

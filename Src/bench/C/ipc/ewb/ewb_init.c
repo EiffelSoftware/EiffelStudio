@@ -28,13 +28,6 @@
 extern int identify();			/* Make sure we are started via the wrapper */
 extern char *ename;				/* Eiffel program name */
 
-public void welcome()
-{
-	/* Print a welcome message */
-
-	printf("Welcome to the Eiffel workbench!\n");
-}
-
 public void init_connect()
 {
 	int s;			/* The connected socket descriptor */

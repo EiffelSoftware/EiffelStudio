@@ -212,8 +212,27 @@ end;
 					has_same_type := True;
 					same_interface := old_feature_i.same_interface (new_feature_i)
 					if not same_interface then
+						-- Check whether it was in the address table
+						if System.address_table.has (old_feature_i.written_in,
+													 old_feature_i.feature_id
+													) then
+							-- Force a re-freeze in order
+							-- to get a correct 'ececil.c'
+							System.set_freeze
+						end
 						has_same_type := old_feature_i.same_class_type (new_feature_i);
 					end;
+				else
+					-- Does not exist any more.
+					-- Check whether it was in the address table
+					if System.address_table.has (old_feature_i.written_in,
+												 old_feature_i.feature_id
+												) then
+						-- Force a re-freeze in order
+						-- to get a correct 'ececil.c'
+						-- (no unresolved externals in this case)!
+						System.set_freeze
+					end
 				end;
 					-- First condition, `other' must have the feature
 					-- name. Second condition, `old_feature_i' and
@@ -324,9 +343,9 @@ end;
 				removed_feature_ids.after
 			loop
 debug ("ACTIVITY")
-    io.error.putstring ("%Tfeature of id ");
-    io.error.putint (removed_feature_ids.item);
-    io.error.putstring (" (removed by `update_table' is propagated to clients%N");
+	io.error.putstring ("%Tfeature of id ");
+	io.error.putint (removed_feature_ids.item);
+	io.error.putstring (" (removed by `update_table' is propagated to clients%N");
 end;
 				!!depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item);
 				propagators.put (depend_unit);
@@ -425,15 +444,16 @@ end;
 			feature_i: FEATURE_I;
 			vcch1: VCCH1;
 			pos: INTEGER;
+			select_table: SELECT_TABLE
 		do
 			from
 				non_deferred := not associated_class.is_deferred;
-				start
+				select_table := origin_table
+				select_table.start
 			until
-				after
+				select_table.after
 			loop
-				pos := iteration_position
-				feature_i := item_for_iteration;
+				feature_i := select_table.item_for_iteration;
 				if feature_i.is_deferred then
 					deferred_found := True;
 					if non_deferred then
@@ -444,8 +464,7 @@ end;
 					end;
 				end;
 				check_feature (feature_i);
-				go (pos);
-				forth;
+				select_table.forth;
 			end;
 		end;
 
@@ -807,12 +826,12 @@ feature -- API
 			end
 		end
 
-    written_in_features: LIST [E_FEATURE] is
-            -- List of features defined in current class
+	written_in_features: LIST [E_FEATURE] is
+			-- List of features defined in current class
 		local
 			c_id: like feat_tbl_id;
 			list: LINKED_LIST [E_FEATURE]
-        do  
+		do  
 			from
 				c_id := feat_tbl_id;
 				!! list.make;
@@ -826,7 +845,7 @@ feature -- API
 				forth
 			end;
 			Result := list
-        end;
+		end;
 
 feature {FORMAT_REGISTRATION} -- Init
 

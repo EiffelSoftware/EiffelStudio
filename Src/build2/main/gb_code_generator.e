@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		do
 			set_progress (0.1)
 			if system_status.is_wizard_system then
-				create platform_ace_file_name.make_from_string (execution_environment.command_line.argument_array @ 1)
+				create platform_ace_file_name.make_from_string (visual_studio_information.wizard_installation_path + "wizards\build")
 				platform_ace_file_name.extend ("templates")
 				platform_ace_file_name.extend ("windows")
 				platform_ace_file_name.extend ("ace_template.ace")
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			do
 				set_progress (0.2)
 				if system_status.is_wizard_system then
-					create application_template.make_from_string (execution_environment.command_line.argument_array @ 1)
+					create application_template.make_from_string (visual_studio_information.wizard_installation_path + "wizards\build")
 					application_template.extend ("templates")
 					application_template.extend ("build_application_template.e")
 				else
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
 				if system_status.is_wizard_system then
-					create window_template.make_from_string (execution_environment.command_line.argument_array @ 1)
+					create window_template.make_from_string (visual_studio_information.wizard_installation_path + "wizards\build")
 					window_template.extend ("templates")
 					window_template.extend ("build_class_template_imp.e")
 				else
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 		do
 				-- Retrieve the template for a class file to generate.
 			if system_status.is_wizard_system then
-				create window_template.make_from_string (execution_environment.command_line.argument_array @ 1)
+				create window_template.make_from_string (visual_studio_information.wizard_installation_path + "wizards\build")
 				window_template.extend ("templates")
 				window_template.extend ("build_class_template.e")
 			else

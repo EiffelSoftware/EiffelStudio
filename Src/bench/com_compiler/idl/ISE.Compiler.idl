@@ -105,6 +105,9 @@ interface IEiffelProject: IUnknown
   [helpstring ("Create new project.")]
   HRESULT create_project ([in] BSTR an_ace_file_name, [in] BSTR project_directory_path);
 
+  [helpstring ("Load only the ace file for a project.")]
+  HRESULT load_ace_file_only ([in] BSTR ace_file_name);
+
   [helpstring ("Full path to .epr file.")]
   HRESULT project_file_name ([out, retval] BSTR * return_value);
 

@@ -454,8 +454,8 @@ feature {EV_DRAWING_AREA_IMP, EV_LIST_ITEM_LIST_IMP} -- Implementation
 		end
 
 	enable_key_processing: BOOLEAN
-		-- Should default gtk key handler be enabled, used to prevent default keys
-		-- losing the widget focus, useful for when using drawing area as a text processor.
+			-- Should default gtk key handler be enabled, used to prevent default keys
+			-- losing the widget focus, useful for when using drawing area as a text processor.
 
 feature {NONE} -- Implementation
 

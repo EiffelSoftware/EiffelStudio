@@ -28,7 +28,7 @@ feature -- Access
 			create Result.make (class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (meta_generic)
-			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_expanded (is_expanded)
 		end
 
 invariant

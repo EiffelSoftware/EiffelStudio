@@ -2,8 +2,13 @@ indexing
 	description: 
 		"EiffelVision multi-column-list, implementation interface."
 	status: "See notice at end of class"
+<<<<<<< ev_multi_column_list_imp.e
 	date: "$Date$"
 	revision: "$Revision$"
+=======
+	date: "$Date$"
+	revision: "$Revision$"
+>>>>>>> 1.10.2.4
 
 class
 	EV_MULTI_COLUMN_LIST_IMP
@@ -141,7 +146,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			if selection_signal_id /= 0 then
 				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-				feature {EV_GTK_EXTERNALS}.signal_disconnect (a_selection, last_signal_connection_id)
+				feature {EV_GTK_EXTERNALS}.signal_disconnect (a_selection, selection_signal_id)
 				selection_signal_id := 0				
 			end
 		end

@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			tab: EV_CELL
 		do
 			Precursor
---			set_padding (layout_constants.small_padding_size)
 			set_border_width (layout_constants.default_border_size)
 			create feature_clause_selector
 			extend (feature_clause_selector)
@@ -66,15 +65,9 @@ feature {NONE} -- Initialization
 			add_indented (invariant_field, 1)
 
 			create procedure_check_box.make_with_text ("Generate set procedure")
---			procedure_check_box.select_actions.extend (~on_set_procedure_select)
 			extend (procedure_check_box)
 			disable_item_expand (procedure_check_box)
 
---			extend (create {EV_LABEL}.make_with_text ("Select precondition:"))
---			create precondition_selector
---			precondition_selector.focus_in_actions.extend (~on_precondition_focus_gain)
---			precondition_selector.disable_sensitive
---			extend (precondition_selector)
 		end
 
 feature -- Access
@@ -96,14 +89,8 @@ feature -- Access
 			Result := invariant_part
 			if Result /= Void then
 				f_name := feature_name_field.text
-				Result.replace_substring_all (f_name, "a_" + f_name)
+				Result.replace_substring_all (f_name, name_preposition + f_name)
 			end
-		--	Result := precondition_selector.text
-		--	if Result /= Void then
-		--		if Result.is_empty or Result.is_equal (pc_None) then
-		--			Result := Void
-		--		end
-		--	end
 		end
 
 	invariant_part: STRING is
@@ -162,18 +149,26 @@ feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 
 feature {NONE} -- Implementation
 
+	name_preposition: STRING is
+			-- `Result' is either "an_" or "a_" depending on the first character of `feature_name_field.text'.
+		require
+			feature_name_field_not_empty: feature_name_field.text.count > 0
+		local
+			first_character: CHARACTER
+		do
+			first_character := feature_name_field.text.item (1).as_lower
+			if first_character = 'a' or first_character = 'e' or first_character = 'i'
+				or first_character = 'o' or first_character = 'u' then
+				Result := "an_"
+			else
+				Result := "a_"
+			end
+		ensure
+			Result_valid: Result.is_equal ("an_") or Result.is_equal ("a_")
+		end
+
 	pc_None: STRING is "(none)"
 			-- Mark for no precondition.
-
---	on_set_procedure_select is
---			-- User selected set-procedure.
---		do
---			if procedure_check_box.is_selected then
---				precondition_selector.enable_sensitive
---			else
---				precondition_selector.disable_sensitive
---			end
---		end
 
 	on_declaration_change is
 			-- Update invariant when attribute declaration changes.
@@ -211,7 +206,7 @@ feature {NONE} -- Implementation
 			b.extend (li)
 
 			if for_precondition then
-				pc := assertions ("a_" + f_name, type_selector.code)
+				pc := assertions (name_preposition + f_name, type_selector.code)
 			else
 				pc := assertions (f_name, type_selector.code)
 			end
@@ -228,7 +223,7 @@ feature {NONE} -- Implementation
 			if for_precondition then
 				inv := invariant_field.text
 				if inv /= Void and then not inv.is_empty then
-					inv.replace_substring_all (f_name, "a_" + f_name)
+					inv.replace_substring_all (f_name, name_preposition + f_name)
 					pc.compare_objects
 					if not pc.has (inv) then
 						create li.make_with_text (inv)

@@ -30,12 +30,16 @@ feature -- Status report
 			-- Is `window' registered?
 		require
 			window_not_void: window /= Void
+		local
+			l_data, null: POINTER
 		do
+				-- Default is `Result := False'.
 			if window.exists then
-				Result := eif_id_object (
-					feature {WEL_INTERNAL_DATA}.object_id (window.internal_data)) /= Void
-			else
-				Result := False
+				l_data := window.internal_data
+				if l_data /= null then
+					Result := eif_id_object (
+						feature {WEL_INTERNAL_DATA}.object_id (l_data)) /= Void
+				end
 			end
 		end
 

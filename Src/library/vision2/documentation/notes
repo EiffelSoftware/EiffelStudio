@@ -54,6 +54,7 @@ To do:
 
 
 
+
 Feature/Bug requests:
 - EV_LABEL.vertical align_text_center. (jfiat@capgemini.fr)
 - EV_MULTI_COLUMN_LIST double click. (jfiat@capgemini.fr)
@@ -62,6 +63,9 @@ Feature/Bug requests:
 	<<["ok",~ok_action];["toto",~do_toto];["tata",Void];>>
   ) (pascalf@eiffel.com)
 - Print dialog. (pascalf@eiffel.com)
+- Is it possible to sort data in a multiple column list ? Is it possible to
+  set editable the cells of the list ? (jsireude@capgemini.fr, PR 2456) 
+
 
 Status:													
 .   not implemented

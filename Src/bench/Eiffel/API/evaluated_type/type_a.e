@@ -56,6 +56,12 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
+		
+	is_natural: BOOLEAN is
+			-- Is current actual type a natural type?
+		do
+			-- Do nothing
+		end
 
 	is_real_32: BOOLEAN is
 			-- Is the current actual type a real 32 bits type ?

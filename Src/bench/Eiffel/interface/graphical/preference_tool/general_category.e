@@ -51,6 +51,9 @@ feature {TTY_RESOURCES} -- Initialization
 			!! window_free_list_number.make ("window_free_list_number", rt, 2);
 			!! color_list.make ("color_list", rt,
 					<<"black", "white", "red", "blue", "green", "yellow", "brown", "cyan">>);
+			if not Platform_constants.is_windows then
+				!! print_shell_command.make ("print_shell_command", rt, "lpr $target");
+			end;
 		end
 
 feature -- Validation
@@ -69,13 +72,14 @@ feature -- Resources
 	filter_path: STRING_RESOURCE;
 	profile_path: STRING_RESOURCE;
 	tmp_path: STRING_RESOURCE;
-	shell_command: STRING_RESOURCE;
+	print_shell_command: STRING_RESOURCE;
 	filter_name: STRING_RESOURCE;
 	filter_command: STRING_RESOURCE;
 	active_drag_and_drop: BOOLEAN_RESOURCE;
 	history_size: INTEGER_RESOURCE;
 	default_window_position: BOOLEAN_RESOURCE;
 	window_free_list_number: INTEGER_RESOURCE;
-	color_list: ARRAY_RESOURCE
+	color_list: ARRAY_RESOURCE;
+	shell_command: STRING_RESOURCE
 
 end -- class GENERAL_CATEGORY

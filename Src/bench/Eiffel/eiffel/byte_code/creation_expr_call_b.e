@@ -33,6 +33,12 @@ feature -- Generation
 		deferred
 		end
 
+	generate_il_call (inv_checked: BOOLEAN) is
+			-- Like `generate_il' except that we can specify wether or not
+			-- invariant will be checked before calling creation procedure.
+		deferred
+		end
+		
 	generate is
 		deferred
 		end

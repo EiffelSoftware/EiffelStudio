@@ -178,7 +178,7 @@ feature -- IL code generation
 			local_number: INTEGER
 			real_metamorphose: BOOLEAN
 			need_generation: BOOLEAN
-			target_type: TYPE_I
+			target_type: CL_TYPE_I
 			l_count: INTEGER
 		do
 				-- Get type on which call will be performed.
@@ -194,7 +194,10 @@ feature -- IL code generation
 				il_special_routines.generate_il (Current, cl_type, parameters)
 			else
 					-- Find location of feature.
-				target_type := il_generator.implemented_type (written_in, cl_type)
+				target_type ?= il_generator.implemented_type (written_in, cl_type)
+				check
+					target_type_not_void: target_type /= Void
+				end
 
 				class_c := cl_type.base_class
 
@@ -243,8 +246,14 @@ feature -- IL code generation
 				end
 
 				if invariant_checked then
-						-- Need a copy of top to perform invariant checking.
+						-- Need two copies of current object in stack
+						-- to perform invariant check before and after
+						-- feature call.
 					il_generator.duplicate_top
+					if inv_checked then
+						il_generator.duplicate_top
+						il_generator.generate_invariant_checking (cl_type)
+					end
 				end
 
 				if class_c.is_special_array then
@@ -307,19 +316,23 @@ feature -- IL code generation
 				
 				if need_generation then
 						-- Perform call to feature
-						-- FIXME: performance problem here since we are retrieving the
-						-- FEATURE_TABLE. This could be avoided if at creation of FEATURE_B
-						-- node we add the feature_id in the parent class.
-					if precursor_type /= Void then
-							-- In IL, if you can call Precursor, it means that parent is
-							-- not expanded and therefore we can safely generate a static
-							-- call to Precursor feature.
-						il_generator.generate_precursor_feature_access (
-							target_type, feature_id, l_count, not return_type.is_void)
-					else
+					if target_type.base_class.is_precompiled then
+							-- Extract all data about feature to be called.
 						il_generator.generate_feature_access (
 							target_type, feature_id, l_count, not return_type.is_void,
-							cl_type.is_reference or else real_metamorphose)
+								cl_type.is_reference or else real_metamorphose)
+					else
+						if precursor_type /= Void then
+								-- In IL, if you can call Precursor, it means that parent is
+								-- not expanded and therefore we can safely generate a static
+								-- call to Precursor feature.
+							il_generator.generate_precursor_feature_access (
+								target_type, feature_id, l_count, not return_type.is_void)
+						else
+							il_generator.generate_feature_access (
+								target_type, feature_id, l_count, not return_type.is_void,
+								cl_type.is_reference or else real_metamorphose)
+						end
 					end
 					if System.il_verifiable then
 						if 

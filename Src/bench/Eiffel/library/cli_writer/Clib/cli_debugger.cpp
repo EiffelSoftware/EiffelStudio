@@ -373,8 +373,11 @@ rt_private void dbg_resume_estudio_thread () {
 #define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
 #define DBG_CLOSE_ESTUDIO_THREAD_HANDLE dbg_close_estudio_thread_handle ()
-#define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ();
-#define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread (); 
+
+#define DBG_SUSPEND_ESTUDIO_THREAD_DEBUG dbg_suspend_estudio_thread ();
+#define DBG_RESUME_ESTUDIO_THREAD_DEBUG  dbg_resume_estudio_thread (); 
+#define DBG_SUSPEND_ESTUDIO_THREAD SuspendThread(estudio_thread_handle)
+#define DBG_RESUME_ESTUDIO_THREAD ResumeThread (estudio_thread_handle) 
 /*
 #define DBG_SUSPEND_ESTUDIO_THREAD 
 #define DBG_RESUME_ESTUDIO_THREAD
@@ -568,11 +571,13 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 
 /*
 ///////////////////////////////////////////////////////////
-/// dbg_lock_and_wait_callback :: EC evaluation         ///
+///   dbg_process_evaluation   :: EC evaluation         ///
 ///////////////////////////////////////////////////////////
 */
 
-rt_public void dbg_lock_and_wait_callback (void* icdc) {
+#define WAIT_UNTIL_ESTUDIO_THREAD_SUSPENDED Sleep (2)
+
+rt_public void dbg_process_evaluation (void* icdc) {
 	Callback_ids cb_id;
 
 	/*** Local  ***/
@@ -584,6 +589,7 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 
 	/*** Require  ***/
 	REQUIRE(LOCKED_DBG_TIMER_IS_NOT_SET, "Timer disabled (context = evaluating)")
+	REQUIRE(!LOCKED_CALLBACK_PROCESSING, "No callback processing")
 
 	/*** Do  ***/
 	if (LOCKED_DBG_EXIT_PROCESS_OCCURRED) {
@@ -594,7 +600,6 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 	LOCKED_ES_EVALUATION_START;
 	DBGTRACE("[ES::Eval] START evaluation");
 
-	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 	if (LOCKED_DBG_STATE_IS_EQUAL (4)) {
 		/* We are in notification processing
 		 * we need evaluation functionalities
@@ -606,6 +611,8 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 	/* Initialize data
 	 * at begining we don't care about past */
 	eval_callback_proceed = false;
+
+	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 
 	/* Process the evaluation : */
 	hr = ((ICorDebugController*)icdc)->Continue (false);
@@ -682,7 +689,7 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 /// dbg_debugger_..._callback :: .NET Dbg Callback      ///
 ///////////////////////////////////////////////////////////
 */
-rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
+rt_public void dbg_begin_callback (Callback_ids callback_id) {
 	REQUIRE(!LOCKED_CALLBACK_PROCESSING, "No other callback processing")
 	LOCKED_DBG_CB_ID_SET_VALUE (callback_id);
 	DBGTRACE2("[CB] ENTER CALLBACK = ", Callback_name(callback_id));
@@ -741,12 +748,12 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	/* <2> ec is waiting */
 	LOCKED_DBG_STATE_INCREMENT;
 	/* <3> ec is waiting */
-	Sleep(2);
+	WAIT_UNTIL_ESTUDIO_THREAD_SUSPENDED;
 	DBGTRACE2("5 - [CB] start exec callback :", Callback_name(callback_id));
 	/* Executing callback, then come back to dbg_debugger_after_callback */
 }
 
-rt_public void dbg_debugger_after_callback (Callback_ids callback_id) {
+rt_public void dbg_finish_callback (Callback_ids callback_id) {
 	/* <3> come back from callback */
 	DBGTRACE2("6 - [CB] end exec callback : ", Callback_name(callback_id));
 

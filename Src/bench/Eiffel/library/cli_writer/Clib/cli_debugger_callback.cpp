@@ -112,23 +112,23 @@ rt_private void raise_error (HRESULT hr, char *msg)
 
 HRESULT DebuggerManagedCallback::CreateProcess(ICorDebugProcess *pProcess)
 {
-	dbg_debugger_before_callback (CB_CREATE_PROCESS);
+	dbg_begin_callback (CB_CREATE_PROCESS);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_CREATE_PROCESS);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 //	DBGTRACE("[ManagedCallback] CreateProcess");
-	dbg_debugger_after_callback (CB_CREATE_PROCESS);
+	dbg_finish_callback (CB_CREATE_PROCESS);
     return (S_OK);
 }
 
 HRESULT DebuggerManagedCallback::ExitProcess(ICorDebugProcess *pProcess)
 {
-	dbg_debugger_before_callback (CB_EXIT_PROCESS);
+	dbg_begin_callback (CB_EXIT_PROCESS);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EXIT_PROCESS);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 //	DBGTRACE("[ManagedCallback] ExitProcess");
-	dbg_debugger_after_callback (CB_EXIT_PROCESS);
+	dbg_finish_callback (CB_EXIT_PROCESS);
     return (S_OK);
 }
 
@@ -138,13 +138,13 @@ HRESULT DebuggerManagedCallback::ExitProcess(ICorDebugProcess *pProcess)
 HRESULT DebuggerManagedCallback::CreateAppDomain(ICorDebugProcess *pProcess,
                                           ICorDebugAppDomain *pAppDomain)
 {
-	dbg_debugger_before_callback (CB_CREATE_APP_DOMAIN);
+	dbg_begin_callback (CB_CREATE_APP_DOMAIN);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_CREATE_APP_DOMAIN);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 	SET_DBG_CB_INFO_POINTER(2, pAppDomain);
 //	DBGTRACE("[ManagedCallback] CreateAppDomain ");
-	dbg_debugger_after_callback (CB_CREATE_APP_DOMAIN);
+	dbg_finish_callback (CB_CREATE_APP_DOMAIN);
     return S_OK;
 }
 
@@ -154,13 +154,13 @@ HRESULT DebuggerManagedCallback::CreateAppDomain(ICorDebugProcess *pProcess,
 HRESULT DebuggerManagedCallback::ExitAppDomain(ICorDebugProcess *pProcess,
                                         ICorDebugAppDomain *pAppDomain)
 {
-	dbg_debugger_before_callback (CB_EXIT_APP_DOMAIN);
+	dbg_begin_callback (CB_EXIT_APP_DOMAIN);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EXIT_APP_DOMAIN);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 	SET_DBG_CB_INFO_POINTER(2, pAppDomain);
 // 	DBGTRACE("[ManagedCallback] ExitAppDomain");
-	dbg_debugger_after_callback (CB_EXIT_APP_DOMAIN);
+	dbg_finish_callback (CB_EXIT_APP_DOMAIN);
     return S_OK;
 }
 
@@ -172,13 +172,13 @@ HRESULT DebuggerManagedCallback::ExitAppDomain(ICorDebugProcess *pProcess,
 HRESULT DebuggerManagedCallback::LoadAssembly(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugAssembly *pAssembly)
 {
-	dbg_debugger_before_callback (CB_LOAD_ASSEMBLY);
+	dbg_begin_callback (CB_LOAD_ASSEMBLY);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_LOAD_ASSEMBLY);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pAssembly);
 // 	DBGTRACE("[ManagedCallback] LoadAssembly");
-	dbg_debugger_after_callback (CB_LOAD_ASSEMBLY);
+	dbg_finish_callback (CB_LOAD_ASSEMBLY);
     return S_OK;
 }
 
@@ -189,13 +189,13 @@ HRESULT DebuggerManagedCallback::LoadAssembly(ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::UnloadAssembly(ICorDebugAppDomain *pAppDomain,
                                          ICorDebugAssembly *pAssembly)
 {
-	dbg_debugger_before_callback (CB_UNLOAD_ASSEMBLY);
+	dbg_begin_callback (CB_UNLOAD_ASSEMBLY);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_UNLOAD_ASSEMBLY);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pAssembly);
 // 	DBGTRACE("[ManagedCallback] UnloadAssembly");
-	dbg_debugger_after_callback (CB_UNLOAD_ASSEMBLY);
+	dbg_finish_callback (CB_UNLOAD_ASSEMBLY);
     return S_OK;
 }
 
@@ -204,14 +204,14 @@ HRESULT DebuggerManagedCallback::Breakpoint(ICorDebugAppDomain *pAppDomain,
                                      ICorDebugThread *pThread, 
                                      ICorDebugBreakpoint *pBreakpoint)
 {
-	dbg_debugger_before_callback (CB_BREAKPOINT);
+	dbg_begin_callback (CB_BREAKPOINT);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_BREAKPOINT);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 	SET_DBG_CB_INFO_POINTER(3, pBreakpoint);
 // 	DBGTRACE ("Breakpoint");
-	dbg_debugger_after_callback (CB_BREAKPOINT);
+	dbg_finish_callback (CB_BREAKPOINT);
     return S_OK;
 }
 
@@ -221,7 +221,7 @@ HRESULT DebuggerManagedCallback::StepComplete(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugStepper *pStepper,
                                        CorDebugStepReason reason)
 {
-	dbg_debugger_before_callback (CB_STEP_COMPLETE);
+	dbg_begin_callback (CB_STEP_COMPLETE);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_STEP_COMPLETE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
@@ -229,20 +229,20 @@ HRESULT DebuggerManagedCallback::StepComplete(ICorDebugAppDomain *pAppDomain,
 	SET_DBG_CB_INFO_POINTER(3, pStepper);
 	SET_DBG_CB_INFO_INTEGER(4, reason);
 // 	DBGTRACE("[ManagedCallback] StepComplete");
-	dbg_debugger_after_callback (CB_STEP_COMPLETE);
+	dbg_finish_callback (CB_STEP_COMPLETE);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::Break(ICorDebugAppDomain *pAppDomain,
                                 ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback (CB_BREAK);
+	dbg_begin_callback (CB_BREAK);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_BREAK);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 // 	DBGTRACE("[ManagedCallback] Break");
-	dbg_debugger_after_callback (CB_BREAK);
+	dbg_finish_callback (CB_BREAK);
     return S_OK;
 }
 
@@ -253,7 +253,7 @@ HRESULT DebuggerManagedCallback::Exception(ICorDebugAppDomain *pAppDomain,
 	HRESULT hr;
 	ICorDebugValue *pExceptionValue;
 
-	dbg_debugger_before_callback (CB_EXCEPTION);
+	dbg_begin_callback (CB_EXCEPTION);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EXCEPTION);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
@@ -265,7 +265,7 @@ HRESULT DebuggerManagedCallback::Exception(ICorDebugAppDomain *pAppDomain,
 		SET_DBG_CB_INFO_POINTER(4, pExceptionValue);
 	}
 // 	DBGTRACE("[ManagedCallback] Exception");
-	dbg_debugger_after_callback (CB_EXCEPTION);
+	dbg_finish_callback (CB_EXCEPTION);
     return S_OK;
 }
 
@@ -274,14 +274,14 @@ HRESULT DebuggerManagedCallback::EvalComplete(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugThread *pThread,
                                        ICorDebugEval *pEval)
 {
-	dbg_debugger_before_callback (CB_EVAL_COMPLETE);
+	dbg_begin_callback (CB_EVAL_COMPLETE);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EVAL_COMPLETE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 	SET_DBG_CB_INFO_POINTER(3, pEval);
 // 	DBGTRACE("[ManagedCallback] EvalComplete");
-	dbg_debugger_after_callback (CB_EVAL_COMPLETE);
+	dbg_finish_callback (CB_EVAL_COMPLETE);
     return S_OK;
 }
 
@@ -289,14 +289,14 @@ HRESULT DebuggerManagedCallback::EvalException(ICorDebugAppDomain *pAppDomain,
                                         ICorDebugThread *pThread,
                                         ICorDebugEval *pEval)
 {
-	dbg_debugger_before_callback (CB_EVAL_EXCEPTION);
+	dbg_begin_callback (CB_EVAL_EXCEPTION);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EVAL_EXCEPTION);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 	SET_DBG_CB_INFO_POINTER(3, pEval);
 // 	DBGTRACE("[ManagedCallback] EvalException");
-	dbg_debugger_after_callback (CB_EVAL_EXCEPTION);
+	dbg_finish_callback (CB_EVAL_EXCEPTION);
     return S_OK;
 }
 
@@ -304,13 +304,13 @@ HRESULT DebuggerManagedCallback::EvalException(ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::CreateThread(ICorDebugAppDomain *pAppDomain,
                                        ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback (CB_CREATE_THREAD);
+	dbg_begin_callback (CB_CREATE_THREAD);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_CREATE_THREAD);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 // 	DBGTRACE("[ManagedCallback] CreateThread");
-	dbg_debugger_after_callback (CB_CREATE_THREAD);
+	dbg_finish_callback (CB_CREATE_THREAD);
     return S_OK;
 }
 
@@ -318,27 +318,27 @@ HRESULT DebuggerManagedCallback::CreateThread(ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::ExitThread(ICorDebugAppDomain *pAppDomain,
                                      ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback (CB_EXIT_THREAD);
+	dbg_begin_callback (CB_EXIT_THREAD);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EXIT_THREAD);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 // 	DBGTRACE("[ManagedCallback] ExitThread");
-	dbg_debugger_after_callback (CB_EXIT_THREAD);
+	dbg_finish_callback (CB_EXIT_THREAD);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::LoadModule( ICorDebugAppDomain *pAppDomain,
                                       ICorDebugModule *pModule)
 {
-	dbg_debugger_before_callback (CB_LOAD_MODULE);
+	dbg_begin_callback (CB_LOAD_MODULE);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_LOAD_MODULE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pModule);
 	pModule->EnableJITDebugging (true, false);
 // 	DBGTRACE("[ManagedCallback] LoadModule");
-	dbg_debugger_after_callback (CB_LOAD_MODULE);
+	dbg_finish_callback (CB_LOAD_MODULE);
     return S_OK;
 }
 
@@ -346,13 +346,13 @@ HRESULT DebuggerManagedCallback::LoadModule( ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::UnloadModule( ICorDebugAppDomain *pAppDomain,
                       ICorDebugModule *pModule)
 {
-	dbg_debugger_before_callback (CB_UNLOAD_MODULE);
+	dbg_begin_callback (CB_UNLOAD_MODULE);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_UNLOAD_MODULE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pModule);
 // 	DBGTRACE("[ManagedCallback] UnloadModule");
-	dbg_debugger_after_callback (CB_UNLOAD_MODULE);
+	dbg_finish_callback (CB_UNLOAD_MODULE);
     return S_OK;
 }
 
@@ -360,13 +360,13 @@ HRESULT DebuggerManagedCallback::UnloadModule( ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::LoadClass( ICorDebugAppDomain *pAppDomain,
                    ICorDebugClass *pClass)
 {
-	dbg_debugger_before_callback (CB_LOAD_CLASS);
+	dbg_begin_callback (CB_LOAD_CLASS);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_LOAD_CLASS);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pClass);
 // 	DBGTRACE("[ManagedCallback] LoadClass");
-	dbg_debugger_after_callback (CB_LOAD_CLASS);
+	dbg_finish_callback (CB_LOAD_CLASS);
     return S_OK;
 }
 
@@ -374,13 +374,13 @@ HRESULT DebuggerManagedCallback::LoadClass( ICorDebugAppDomain *pAppDomain,
 HRESULT DebuggerManagedCallback::UnloadClass( ICorDebugAppDomain *pAppDomain,
                      ICorDebugClass *pClass)
 {
-	dbg_debugger_before_callback (CB_UNLOAD_CLASS);
+	dbg_begin_callback (CB_UNLOAD_CLASS);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_UNLOAD_CLASS);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pClass);
 // 	DBGTRACE("[ManagedCallback] UnloadClass");
-	dbg_debugger_after_callback (CB_UNLOAD_CLASS);
+	dbg_finish_callback (CB_UNLOAD_CLASS);
     return S_OK;
 }
 
@@ -390,14 +390,14 @@ HRESULT DebuggerManagedCallback::DebuggerError(ICorDebugProcess *pProcess,
                                         HRESULT errorHR,
                                         DWORD errorCode)
 {
-	dbg_debugger_before_callback (CB_DEBUGGER_ERROR);
+	dbg_begin_callback (CB_DEBUGGER_ERROR);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_DEBUGGER_ERROR);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 	SET_DBG_CB_INFO_INTEGER(2, errorHR);
 	SET_DBG_CB_INFO_DWORD(3, errorCode);
 // 	DBGTRACE("[ManagedCallback] DebuggerError");
-	dbg_debugger_after_callback (CB_DEBUGGER_ERROR);
+	dbg_finish_callback (CB_DEBUGGER_ERROR);
     return (S_OK);
 }
 
@@ -408,14 +408,14 @@ HRESULT DebuggerManagedCallback::LogMessage(ICorDebugAppDomain *pAppDomain,
                   WCHAR *pLogSwitchName,
                   WCHAR *pMessage)
 {
-	dbg_debugger_before_callback (CB_LOG_MESSAGE);
+	dbg_begin_callback (CB_LOG_MESSAGE);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_LOG_MESSAGE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 	/* UnUsed Args ... */
 // 	DBGTRACE("[ManagedCallback] LogMessage");
-	dbg_debugger_after_callback (CB_LOG_MESSAGE);
+	dbg_finish_callback (CB_LOG_MESSAGE);
     return S_OK;
 }
 
@@ -427,38 +427,38 @@ HRESULT DebuggerManagedCallback::LogSwitch(ICorDebugAppDomain *pAppDomain,
                   WCHAR *pLogSwitchName,
                   WCHAR *pParentName)
 {
-	dbg_debugger_before_callback (CB_LOG_SWITCH);
+	dbg_begin_callback (CB_LOG_SWITCH);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_LOG_SWITCH);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 	/* UnUsed Args ... */
 // 	DBGTRACE("[ManagedCallback] LogSwitch");
-	dbg_debugger_after_callback (CB_LOG_SWITCH);
+	dbg_finish_callback (CB_LOG_SWITCH);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::ControlCTrap(ICorDebugProcess *pProcess)
 {
-	dbg_debugger_before_callback (CB_CONTROL_CTRAP);
+	dbg_begin_callback (CB_CONTROL_CTRAP);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_CONTROL_CTRAP);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 // 	DBGTRACE("[ManagedCallback] ControlCTrap");
-	dbg_debugger_after_callback (CB_CONTROL_CTRAP);
+	dbg_finish_callback (CB_CONTROL_CTRAP);
     return S_OK;
 }
 
 HRESULT DebuggerManagedCallback::NameChange(ICorDebugAppDomain *pAppDomain, 
                                      ICorDebugThread *pThread)
 {
-	dbg_debugger_before_callback (CB_NAME_CHANGE);
+	dbg_begin_callback (CB_NAME_CHANGE);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_NAME_CHANGE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 // 	DBGTRACE("[ManagedCallback] NameChange");
-	dbg_debugger_after_callback (CB_NAME_CHANGE);
+	dbg_finish_callback (CB_NAME_CHANGE);
     return S_OK;
 }
 
@@ -467,14 +467,14 @@ HRESULT DebuggerManagedCallback::UpdateModuleSymbols(ICorDebugAppDomain *pAppDom
                                               ICorDebugModule *pModule,
                                               IStream *pSymbolStream)
 {
-	dbg_debugger_before_callback (CB_UPDATE_MODULE_SYMBOLS);
+	dbg_begin_callback (CB_UPDATE_MODULE_SYMBOLS);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_UPDATE_MODULE_SYMBOLS);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pModule);
 	/* UnUsed args */
 // 	DBGTRACE("[ManagedCallback] UpdateModuleSymbols");
-	dbg_debugger_after_callback (CB_UPDATE_MODULE_SYMBOLS);
+	dbg_finish_callback (CB_UPDATE_MODULE_SYMBOLS);
     return S_OK;
 }
 
@@ -483,7 +483,7 @@ HRESULT DebuggerManagedCallback::EditAndContinueRemap(ICorDebugAppDomain *pAppDo
                                                ICorDebugFunction *pFunction,
                                                BOOL fAccurate)
 {
-	dbg_debugger_before_callback (CB_EDIT_AND_CONTINUE_REMAP);
+	dbg_begin_callback (CB_EDIT_AND_CONTINUE_REMAP);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_EDIT_AND_CONTINUE_REMAP);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
@@ -491,7 +491,7 @@ HRESULT DebuggerManagedCallback::EditAndContinueRemap(ICorDebugAppDomain *pAppDo
 	SET_DBG_CB_INFO_POINTER(3, pFunction);
 	/* UnUsed args */
 // 	DBGTRACE("[ManagedCallback] EditAndContinueRemap");
-	dbg_debugger_after_callback (CB_EDIT_AND_CONTINUE_REMAP);
+	dbg_finish_callback (CB_EDIT_AND_CONTINUE_REMAP);
     return S_OK;
 }
 
@@ -500,7 +500,7 @@ HRESULT DebuggerManagedCallback::BreakpointSetError(ICorDebugAppDomain *pAppDoma
                                              ICorDebugBreakpoint *pBreakpoint,
                                              DWORD dwError)
 {
-	dbg_debugger_before_callback (CB_BREAKPOINT_SET_ERROR);
+	dbg_begin_callback (CB_BREAKPOINT_SET_ERROR);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_BREAKPOINT_SET_ERROR);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
@@ -508,7 +508,7 @@ HRESULT DebuggerManagedCallback::BreakpointSetError(ICorDebugAppDomain *pAppDoma
 	SET_DBG_CB_INFO_POINTER(3, pBreakpoint);
 	SET_DBG_CB_INFO_DWORD(4, dwError);
 // 	DBGTRACE("[ManagedCallback] BreakpointSetError");
-	dbg_debugger_after_callback (CB_BREAKPOINT_SET_ERROR);
+	dbg_finish_callback (CB_BREAKPOINT_SET_ERROR);
     return S_OK;
 }
 
@@ -521,12 +521,12 @@ HRESULT DebuggerManagedCallback::BreakpointSetError(ICorDebugAppDomain *pAppDoma
 HRESULT DebuggerUnmanagedCallback::DebugEvent(LPDEBUG_EVENT event,
                                               BOOL fIsOutOfBand)
 {
-	dbg_debugger_before_callback (CB_DEBUG_EVENT);
+	dbg_begin_callback (CB_DEBUG_EVENT);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_DEBUG_EVENT);
 	/* UnUsed args */
 // 	DBGTRACE("[UnManagedCallback] DebugEvent");
-	dbg_debugger_after_callback (CB_DEBUG_EVENT);
+	dbg_finish_callback (CB_DEBUG_EVENT);
     return (S_OK);
 }
 

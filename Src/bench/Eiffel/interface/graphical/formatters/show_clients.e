@@ -38,14 +38,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Clients_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Display clients of `c' in tree form.
 		local
-			ewb_clients: EWB_CLIENTS
+			ewb_clients: E_SHOW_CLIENTS
 		do
-			!! ewb_clients.null;
-			ewb_clients.set_output_window (text_window);
-			ewb_clients.display (c.class_c);
+			!! ewb_clients.make (c.class_c, text_window);
+			ewb_clients.execute
 		end
 
 	display_temp_header (stone: STONE) is

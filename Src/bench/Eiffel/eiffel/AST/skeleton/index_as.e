@@ -113,9 +113,11 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_space
 			end
 
-			ctxt.set_space_between_tokens
-			ctxt.set_separator (ti_Comma)
-			ctxt.format_ast (index_list)
+			if index_list /= Void then
+				ctxt.set_space_between_tokens
+				ctxt.set_separator (ti_Comma)
+				ctxt.format_ast (index_list)
+			end
 		end
 	
 end -- class INDEX_AS

@@ -235,11 +235,13 @@ end;
 				rid := r_id_set.item (i);
 				if not selected_rout_id_set.has (rid) then
 					rout_id_set.force (rid);
-io.error.putstring ("%T");
-io.error.putstring (System.current_class.signature);
-io.error.putstring (", ");
-io.error.putstring (a_feature.feature_name);
-io.error.putstring (" is unselected and has a history%N");
+debug ("REPLICATION", "ACTUAL_REPLICATION")
+	io.error.putstring ("%T");
+	io.error.putstring (System.current_class.signature);
+	io.error.putstring (", ");
+	io.error.putstring (a_feature.feature_name);
+	io.error.putstring (" is unselected and has a history%N");
+end;
 				end;
 				i := i + 1;
 			end

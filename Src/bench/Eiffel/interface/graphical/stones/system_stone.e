@@ -42,7 +42,8 @@ feature
 		do
 			if 
 				(Lace /= Void) and then (Lace.root_ast /= Void) and then
-				Lace.not_first_parsing
+				Lace.not_first_parsing and then
+				System.root_class_name /= Void
 			then
 				Result := Lace.root_ast.click_list.clickable_stones (dummy_reference)
 			end

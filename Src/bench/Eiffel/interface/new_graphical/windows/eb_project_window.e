@@ -14,7 +14,7 @@ inherit
 			make, make_top_level
 		end
 
-	WINDOW_ATTRIBUTES
+--	WINDOW_ATTRIBUTES
 
 	SYSTEM_CONSTANTS
 
@@ -24,7 +24,9 @@ inherit
 
 	PROJECT_CONTEXT
 
-	WIDGET_ROUTINES
+--	WIDGET_ROUTINES
+
+	NEW_EB_CONSTANTS
 
 	INTERFACE_NAMES
 
@@ -103,9 +105,9 @@ feature -- Window Settings
 		local
 			default_x, default_y: INTEGER
 		do
-			default_x := Project_resources.tool_x.actual_value
-			default_y := Project_resources.tool_y.actual_value
-			set_x_y (default_x, default_y)
+--			default_x := Project_resources.tool_x.actual_value
+--			default_y := Project_resources.tool_y.actual_value
+--			set_x_y (default_x, default_y)
 		end
  
 	set_initialized is
@@ -147,19 +149,19 @@ feature -- Window Properties
 
 feature -- Window Holders
 
-	stop_points_hole_holder: HOLE_HOLDER
+--	stop_points_hole_holder: HOLE_HOLDER
 
-	system_hole_holder: HOLE_HOLDER
+--	system_hole_holder: HOLE_HOLDER
 
-	class_hole_holder: HOLE_HOLDER
+--	class_hole_holder: HOLE_HOLDER
 
-	routine_hole_holder: HOLE_HOLDER
+--	routine_hole_holder: HOLE_HOLDER
 
-	dynamic_lib_hole_holder: HOLE_HOLDER
+--	dynamic_lib_hole_holder: HOLE_HOLDER
 
-	object_hole_holder: HOLE_HOLDER
+--	object_hole_holder: HOLE_HOLDER
 
-	explain_hole_holder: HOLE_HOLDER
+--	explain_hole_holder: HOLE_HOLDER
 
 feature -- Pulldown Menus
 
@@ -269,13 +271,13 @@ feature -- Update
 	initialize_main_menu is
 			-- Build the menu bar
 		local
-			sep: SEPARATOR
-			case_storage_cmd: CASE_STORAGE
-			case_storage_menu_entry: EV_MENU_ITEM
-			document_submenu: EV_MENU
-			generate_doc_cmd: DOCUMENT_GENERATION
-			generate_menu_entry: EV_MENU_ITEM
-			generate_submenu: EV_MENU
+--			sep: SEPARATOR
+--			case_storage_cmd: CASE_STORAGE
+--			case_storage_menu_entry: EV_MENU_ITEM
+--			document_submenu: EV_MENU
+--			generate_doc_cmd: DOCUMENT_GENERATION
+--			generate_menu_entry: EV_MENU_ITEM
+--			generate_submenu: EV_MENU
 		do
 			create menu_bar.make (Current)
 			create file_menu.make_with_text (menu_bar, Interface_names.m_File)

@@ -72,6 +72,7 @@ EIF_INTEGER c_millisecond_now ()
 	int msec;
 	
 	c_get_date_time ();
+	msec = date_time_fine.millitm;
 #ifndef EIF_WIN32
 	msec--;
 #endif

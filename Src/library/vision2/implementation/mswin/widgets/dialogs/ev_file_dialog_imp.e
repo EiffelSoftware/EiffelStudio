@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EV_STANDARD_DIALOG_IMP
+		redefine
+			show
+		end
 
 feature -- Access
 
@@ -69,6 +72,15 @@ feature -- Status report
 
 feature -- Status setting
 
+	show is
+			-- Show the window.
+			-- As the window is modal, nothing can be done
+			-- until the user closed the window.
+		do
+			{EV_STANDARD_DIALOG_IMP} Precursor
+			dispatch_events
+		end
+
 	select_filter (filter: STRING) is
 			-- Select `filter' in the list of filter.
 		local
@@ -117,7 +129,47 @@ feature -- Element change
 			filnames := filter_names
 		end
 
-feature {NONE} -- Basic operation
+feature -- Event - command association
+
+	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "OK" button is pressed.
+			-- If there is no "OK" button, the event never occurs.
+		do
+			add_command (Cmd_ok, cmd, arg)
+		end
+
+	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "Cancel" button is pressed.
+			-- If there is no "Cancel" button, the event never occurs.
+		do
+			add_command (Cmd_cancel, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_ok_commands is
+			-- Empty the list of commands to be executed when
+			-- "OK" button is pressed.
+		do
+			remove_command (Cmd_ok)
+		end
+
+	remove_cancel_commands is
+			-- Empty the list of commands to be executed when
+			-- "Cancel" button is pressed.
+		do
+			remove_command (Cmd_cancel)
+		end
+
+feature {NONE} -- Implementation
+
+	filpatterns: ARRAY [STRING]
+		-- Patterns of the filters of the dialog
+
+	filnames: ARRAY [STRING]
+		-- Names of the filters of the dialog
 
 	find_index (list: ARRAY [STRING]; item: STRING): INTEGER is
 			-- Return the index of `item' in `list'
@@ -140,13 +192,21 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation for events handling
 
-	filpatterns: ARRAY [STRING]
-		-- Patterns of the filters of the dialog
-
-	filnames: ARRAY [STRING]
-		-- Names of the filters of the dialog
+	dispatch_events is
+			-- Execute the command associated to the action of the user.
+			-- As in `process_message' of WEL_WINDOW, we can't use
+			-- `inspect' here.
+		do
+			if selected then
+				execute_command (Cmd_ok, Void)
+--				selected_button := "OK"
+			else
+				execute_command (Cmd_cancel, Void)
+--				selected_button := "Cancel"
+			end
+		end
 
 feature {NONE} -- Deferred features
 

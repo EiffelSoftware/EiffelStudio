@@ -67,6 +67,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_EXTERNALS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 creation
 	make
 
@@ -293,8 +300,8 @@ feature
 
 				-- Process externals
 			if a_class.changed then
-				pass2_control.set_new_externals (new_externals);
-				pass2_control.process_externals;
+				pass2_control.set_new_externals (new_externals)
+				pass2_control.process_externals
 			end;
 
 				-- Insert the changed creators in the propagators list
@@ -908,8 +915,11 @@ debug ("ACTIVITY")
 	io.error.putint (integer_value.value);
 	io.error.new_line;
 end;
-			elseif Result.is_external then
+			elseif Result.is_c_external then
 					-- Track new externals introduced in the class
+				if system.il_generation then
+					Il_c_externals.add_external (Result)	
+				end
 				external_i ?= Result;
 				if not external_i.encapsulated then
 					new_externals.put_front (external_i.external_name_id);

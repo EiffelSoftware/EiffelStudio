@@ -38,11 +38,11 @@ feature {NONE}
 			!!Result
 		end;
 	
-feature 
+feature
 
 	valid_focus_string: BOOLEAN is
 		do
-			Result := focus_string /= Void;
+			Result := focus_string /= Void	
 		end;
 
 	set_focus is

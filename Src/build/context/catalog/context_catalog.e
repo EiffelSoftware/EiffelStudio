@@ -75,11 +75,9 @@ feature
 
 			!!first_separator.make (S_eparator, top_form);
 			first_separator.set_horizontal (true);
-			first_separator.set_single_line;
 
 			!!second_separator.make (S_eparator, top_form);
 			second_separator.set_horizontal (true);
-			second_separator.set_single_line;
 
 			!!edit_hole.make (P_Cbutton, top_form);
 
@@ -114,8 +112,8 @@ feature
 			top_form.attach_left (edit_hole, 10);
 
 			top_form.attach_top (first_separator, 40);
-			top_form.attach_right (first_separator, 10);
-			top_form.attach_left (first_separator, 10);
+			top_form.attach_right (first_separator, 0);
+			top_form.attach_left (first_separator, 0);
 
 			top_form.attach_left (page_label, 10);
 			top_form.attach_top_widget (first_separator, page_label, 5);
@@ -125,8 +123,8 @@ feature
 
 			top_form.attach_top_widget (focus_label, second_separator, 5);
 			top_form.attach_top_widget (page_label, second_separator, 5);
-			top_form.attach_right (second_separator, 10);
-			top_form.attach_left (second_separator, 10);
+			top_form.attach_right (second_separator, 0);
+			top_form.attach_left (second_separator, 0);
 
 			bottom_form := window_page;
 			page_label.set_text ("dummy initial value");

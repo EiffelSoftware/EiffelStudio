@@ -30,7 +30,7 @@ feature
 		end;
 
 	
-feature {NONE}
+feature
 
 	eb_cursor_type: INTEGER is
 			-- Cursor type of the EiffelBuild session

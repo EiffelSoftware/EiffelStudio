@@ -1,4 +1,3 @@
-
 class CHOICE_WND 
 
 inherit

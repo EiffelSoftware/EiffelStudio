@@ -1,4 +1,3 @@
--- Unique strings generator
 -- Persistent
 
 class NAMER 

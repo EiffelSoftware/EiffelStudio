@@ -1,5 +1,3 @@
--- Unique integer generator
-
 class INT_GENERATOR 
 	
 feature 

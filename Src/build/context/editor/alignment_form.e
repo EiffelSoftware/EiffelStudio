@@ -120,8 +120,8 @@ feature
 			attach_left_position (align_hole, 11);
 			attach_right (align_hole, 10);
 
-			attach_left (a_separator, 10);
-			attach_right (a_separator, 10);
+			attach_left (a_separator, 0);
+			attach_right (a_separator, 0);
 
 			attach_left (radio_box_direction, 10);
 			attach_left (radio_box_point, 10);

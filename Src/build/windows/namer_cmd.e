@@ -44,7 +44,7 @@ feature
 			new_name := namable.visual_name;
 			namable.set_visual_name (old_visual_name);
 			old_visual_name := new_name;
-			main_panel.namer_hole.reset (namable)
+			--main_panel.namer_hole.reset (namable)
 		end;
 
 	redo is

@@ -38,8 +38,8 @@ inherit
 		end;
 
 feature 
-
 	rescued: BOOLEAN;
+	ace_file: STRING is "$EIFFEL3/build/Ace/Ace"
 
 	execute (argument: STRING) is
 		local
@@ -106,6 +106,18 @@ feature
 
 feature {NONE}
 
+	install_ace_file is
+		local 
+			cmd: STRING
+		do
+			!!cmd.make(64)
+			cmd.copy("cp ")
+			cmd.append(ace_file)
+			cmd.append(" ")
+			cmd.append(Project_directory)
+			system(cmd)
+		end
+
 	create_initial_directories is
 			-- Create directories for a project.
 		local
@@ -119,6 +131,7 @@ feature {NONE}
 				main_panel.set_title ("Creating new project...");
 				mp.set_watch_shape;
 				create_eb_directories;
+				install_ace_file;
 				init_session;
 				app_editor.create_initial_state;
 				!!storer.make;

@@ -5,10 +5,10 @@
 			<link>
 				<url>00_introduction.xml</url>
 				<label>Organize Favorites dialog</label>
-			</link>, this command 
+			</link>, this command
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_new_class.png</url>
-			</image> provides a way of adding a class to the favorites. When clicked, anew dialog is popped up, that allows to select a class among the clusters of the system:
+			</image>provides a way of adding a class to the favorites. When clicked, a new dialog is popped up, that allows to select a class among the clusters of the system:
 		</paragraph>
 		<paragraph>
 			<image>

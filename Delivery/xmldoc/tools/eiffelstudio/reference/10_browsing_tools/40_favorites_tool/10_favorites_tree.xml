@@ -1,7 +1,7 @@
 <document title="Favorites tree" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The favorites tree gives a graphical representation of the favorite classes of the system, as opposed to the favoritesmenu.</paragraph>
+		<paragraph>The favorites tree gives a graphical representation of the favorite classes of the system, as opposed to the favorites menu.</paragraph>
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_tree.png</url>

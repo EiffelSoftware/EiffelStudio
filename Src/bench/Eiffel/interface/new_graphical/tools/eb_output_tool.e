@@ -156,7 +156,7 @@ feature -- Basic operation
 		local
 			old_st: STRUCTURED_TEXT
 		do
-			old_st := text_area.current_text
+			old_st := clone (text_area.current_text)
 			if old_st /= Void then
 				old_st.append (st)
 				text_area.process_text (old_st)

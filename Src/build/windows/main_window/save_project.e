@@ -24,6 +24,7 @@ feature
 	rescued: BOOLEAN;
 	
 	work (argument: ANY) is
+			-- Save Current project to project_directory
 		local
 			storer: STORER;	
 			mp: MOUSE_PTR;

@@ -14,6 +14,7 @@ inherit
 		redefine
 			make
 		end
+
 	DEMO_WINDOW
 creation
 	make
@@ -37,13 +38,15 @@ feature {NONE} -- Initialization
 			set_primitive_tabs
 			tab_list.extend(text_component_tab)
 			tab_list.extend(text_field_tab)
-			create action_window.make (Current, tab_list)
+			create action_window.make (textfield, tab_list)
 		end
 
 feature -- Access
 
 	TextField: EV_TEXT_FIELD
-			-- A text field in the demo
+		-- A text field in the demo
+
+	
 end -- class TEXT_FIELD_WINDOW
 
 --|----------------------------------------------------------------

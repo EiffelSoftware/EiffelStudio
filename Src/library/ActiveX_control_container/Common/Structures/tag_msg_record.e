@@ -37,6 +37,12 @@ feature -- Access
 			Result := ccom_tag_msg_h_wnd (item)
 		end
 
+	h_wnd_integer: INTEGER is
+			-- Handle as INTEGER.
+		do
+			Result := cwel_pointer_to_integer (h_wnd)
+		end
+		
 	message: INTEGER is
 			-- No description available.
 		do

@@ -125,13 +125,23 @@ feature -- Basic Operation
 					clr_version_cb.item.enable_select
 				end
 				clr_version_cb.forth
+			end		
+			
+			create clr_version_lab.make_with_text (interface_names.l_clr_version)
+			create clr_version_check.make_with_text (interface_names.l_clr_most_recent_version)
+			clr_version_check.select_actions.extend (agent on_change_clr_version_combo)
+			if wizard_information.is_most_recent_clr_version then
+				clr_version_check.enable_select
+			else			
+				clr_version_check.disable_select
 			end
 			
-			create l_lab.make_with_text (interface_names.l_clr_version)
 			create l_horiz_box
+			l_horiz_box.extend (clr_version_check)
+			l_horiz_box.disable_item_expand (clr_version_check)
 			l_horiz_box.set_padding (dialog_unit_to_pixels (10))
-			l_horiz_box.extend (l_lab)
-			l_horiz_box.disable_item_expand (l_lab)
+			l_horiz_box.extend (clr_version_lab)
+			l_horiz_box.disable_item_expand (clr_version_lab)
 			l_horiz_box.extend (clr_version_cb)
 			l_horiz_box.disable_item_expand (clr_version_cb)
 			l_horiz_box.extend (create {EV_CELL})
@@ -150,7 +160,8 @@ feature -- Basic Operation
 				root_class_name.change_actions,
 				creation_routine_name.change_actions,
 				console_app_b.select_actions,
-				clr_version_cb.select_actions
+				clr_version_check.select_actions,
+				clr_version_cb.select_actions				
 				>>)
 		end
 
@@ -215,7 +226,13 @@ feature -- Basic Operation
 			else
 				wizard_information.set_console_application (console_app_b.is_selected)
 			end
-			wizard_information.set_clr_version (clr_version_cb.text)
+			if clr_version_check.is_selected then
+				wizard_information.set_is_most_recent_clr_version (True)
+				wizard_information.set_clr_version (interface_names.l_clr_most_recent_version_summary)
+			else
+				wizard_information.set_is_most_recent_clr_version (False)
+				wizard_information.set_clr_version (clr_version_cb.text)
+			end
 			Precursor
 		end
 
@@ -272,9 +289,10 @@ feature {NONE} -- Implementation
 			lower_case_root_class_name := clone (root_class_name.text)
 			if lower_case_root_class_name /= Void then
 				lower_case_root_class_name.to_lower
-				if lower_case_root_class_name.is_equal (None_class) then
-					creation_routine_name.set_text (Unrelevant_data)
+				if lower_case_root_class_name.is_equal (interface_names.l_none_class) then
+					creation_routine_name.widget.disable_sensitive
 				else
+					creation_routine_name.widget.enable_sensitive
 					creation_routine_name.set_text ("make")
 				end
 			end
@@ -289,6 +307,18 @@ feature {NONE} -- Implementation
 				console_app_b.disable_sensitive
 			end
 		end
+		
+	on_change_clr_version_combo is
+			-- Action to perform when user changes the CLR version check button
+		do
+			if clr_version_check.is_selected then
+				clr_version_lab.disable_sensitive
+				clr_version_cb.disable_sensitive
+			else
+				clr_version_lab.enable_sensitive
+				clr_version_cb.enable_sensitive
+			end	
+		end		
 
 feature {NONE} -- Constants
 
@@ -298,9 +328,6 @@ feature {NONE} -- Constants
 	Dll_type: STRING is "Dynamic-Link Library"
 			-- Meaning of DLL
 
-	None_class: STRING is "none"
-			-- `NONE' class
-
 	Subtitle_text: STRING is "You can choose to create a .exe or a .dll file%N%
 					%and select the names of the root class and its creation routine."
 
@@ -309,6 +336,12 @@ feature {NONE} -- Constants
 
 	console_app_b: EV_CHECK_BUTTON
 			-- Console application check box.
+			
+	clr_version_check: EV_CHECK_BUTTON
+			-- Check button for using most recent CLR version
+			
+	clr_version_lab: EV_LABEL
+			-- Label to indicate CLR version selection combo
 			
 	clr_version_cb: EV_COMBO_BOX
 			-- Clr versions selection combo box

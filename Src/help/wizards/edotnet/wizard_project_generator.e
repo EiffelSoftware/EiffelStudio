@@ -85,10 +85,18 @@ feature -- Basic Operations
 
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
-				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
+				if wizard_information.is_most_recent_clr_version then
+					from_template_to_project (wizard_resources_path, ace_template_filename_recent_clr, project_location, project_name_lowercase + Ace_extension, map_list)
+				else					
+					from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
+				end
 				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			else
-				from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)
+				if wizard_information.is_most_recent_clr_version then
+					from_template_to_project (wizard_resources_path, ace_template_with_root_class_none_filename_recent_clr, project_location, project_name_lowercase + Ace_extension, map_list)
+				else
+					from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)
+				end
 			end
 		end
 
@@ -151,6 +159,12 @@ feature {NONE} -- Constants
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Ace_template_with_root_class_none_filename: STRING is "template_ace_with_root_class_none.ace"
+			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
+
+	Ace_template_filename_recent_clr: STRING is "template_ace_recent_clr.ace"
+			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
+
+	Ace_template_with_root_class_none_filename_recent_clr: STRING is "template_ace_with_root_class_none_recent_clr.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Application_template_filename: STRING is "template_application.e"

@@ -19,6 +19,9 @@ feature -- Labels names
 	l_Selected_assemblies_name: STRING is	"Selected assemblies Name"
 	l_Version: STRING is 				"Version"
 	l_clr_version: STRING is			"Targeted CLR Version:"
+	l_clr_most_recent_version: STRING is 	"Use most recent CLR Version:"
+	l_clr_most_recent_version_summary: STRING is 	"Most recent CLR Version"
+	l_none_class: STRING is "none"
 
 feature -- Buttons names
 

@@ -21,8 +21,7 @@ feature -- Initialization
 
 	prepare is
 			-- Prepare window.
-		do
-			first_window.add_help_button
+		do			
 			Precursor {BENCH_WIZARD_MANAGER}	
 		end
 

@@ -161,6 +161,14 @@ feature -- Status setting
 		ensure
 			assigned: real_target = a_target
 		end
+		
+	remove_real_target is
+			-- Ensure `real_target' is `Void'.
+		do
+			real_target := Void
+		ensure
+			real_target_void: real_target = Void
+		end
 
 feature -- Element change
 

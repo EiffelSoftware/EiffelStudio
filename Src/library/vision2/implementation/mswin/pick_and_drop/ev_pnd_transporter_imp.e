@@ -57,7 +57,7 @@ feature {EV_PND_TARGET_IMP} -- Access
 
 feature -- Transport
 
-	transport (dt_src: EV_PND_SOURCE_IMP; cmd: TUPLE [EV_COMMAND, EV_ARGUMENT]) is
+	transport (dt_src: EV_PND_SOURCE_IMP; cmd: EV_INTERNAL_COMMAND) is
 			-- Start the transport and
 			-- draw the line from the point `pt'.
 			-- If Void, start the line from the current cursor position. 
@@ -85,7 +85,7 @@ feature -- Transport
 
 feature {EV_PND_SOURCE_IMP} -- Default command
 
-	default_command: TUPLE [EV_COMMAND, EV_ARGUMENT]
+	default_command: EV_INTERNAL_COMMAND
 
 feature {NONE} -- Implementation
 
@@ -135,7 +135,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute (args: EV_ARGUMENT3 [INTEGER, EV_PND_SOURCE_IMP, INTEGER]; data: EV_BUTTON_EVENT_DATA) is
+	execute (args: EV_ARGUMENT2 [INTEGER, EV_PND_SOURCE_IMP]; data: EV_BUTTON_EVENT_DATA) is
+			-- Executed when the user right click.
 		local
 			target: EV_PND_TARGET_IMP
 			wel_point: WEL_POINT
@@ -159,7 +160,7 @@ feature {NONE} -- Implementation
 			when 2 then -- Drop the data in a target.
 				dropped.set_item (True)
 				target := pointed_target
-				args.second.terminate_transport (Current, args.third, default_command)
+				args.second.terminate_transport (Current, default_command)
 				args.second.widget_source.release_capture
 --				unset_cursor
 				draw_segment (x0, y0, x1, y1)
@@ -168,7 +169,7 @@ feature {NONE} -- Implementation
 				end
 			when 3 then -- Drag canceled.
 				dropped.set_item (True)
-				args.second.terminate_transport (Current, args.third, default_command)
+				args.second.terminate_transport (Current, default_command)
 				args.second.widget_source.release_capture
 --				unset cursor
 				draw_segment (x0, y0, x1, y1)

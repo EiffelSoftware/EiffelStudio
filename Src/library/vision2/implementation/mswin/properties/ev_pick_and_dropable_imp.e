@@ -18,82 +18,49 @@ inherit
 
 feature -- Implementation
 
-	initialize_transport (args: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
+	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		local
 			transporter: EV_PND_TRANSPORTER_IMP
-			arg1, arg2: EV_ARGUMENT3 [INTEGER, EV_PND_SOURCE_IMP, INTEGER]
-			mouse_button: INTEGER
-			com: EV_COMMAND
-			arg: EV_ARGUMENT
+			arg1, arg2: EV_ARGUMENT2 [INTEGER, EV_PND_SOURCE_IMP]
 		do
-			com ?= args.second.item (1)
-			if com /= Void then
-				arg ?= args.second.item (2)
-				com.execute (arg, data)
+			if args.first /= Void then
+				args.first.execute (data)
 			end
-			mouse_button := args.first
 			if transportable then
 				create transporter
-				transporter.transport (Current, args.second)
-				create arg1.make (2, Current, mouse_button)
-				create arg2.make (3, Current, mouse_button) 
-				inspect mouse_button
-				when 1 then
-					remove_single_command (Cmd_button_one_press, args.third)
-					widget_source.add_command (Cmd_button_one_press,
-													transporter, arg1)
-					widget_source.add_command (Cmd_button_two_release,
-													transporter, arg2)
-					widget_source.add_command (Cmd_button_three_release,
-													transporter, arg2)
-				when 2 then
-					remove_single_command (Cmd_button_two_press, args.third)
-					widget_source.add_command (Cmd_button_two_press,
-													transporter, arg1)
-					widget_source.add_command (Cmd_button_one_release,
-													transporter, arg2)
-					widget_source.add_command (Cmd_button_three_release,
-													transporter, arg2)
-				when 3 then
-					remove_single_command (Cmd_button_three_press, args.third)
-					widget_source.add_command (Cmd_button_three_press,
-													transporter, arg1)
-					widget_source.add_command (Cmd_button_one_release,
-													transporter, arg2)
-					widget_source.add_command (Cmd_button_two_release,
-													transporter, arg2)
-				end
-				create arg1.make (1, Current, mouse_button)
+				transporter.transport (Current, args.first)
+				create arg1.make (2, Current)
+				create arg2.make (3, Current)
+
+				-- We add the commands
+				remove_single_command (Cmd_button_three_press, args.second)
+				widget_source.add_command (Cmd_button_three_press, transporter, arg1)
+				widget_source.add_command (Cmd_button_one_press, transporter, arg2)
+				widget_source.add_command (Cmd_button_two_press, transporter, arg2)
+
+				-- We set a command that draw the line
+				create arg1.make (1, Current)
 				widget_source.add_command (Cmd_motion_notify, transporter, arg1)
 			end
 		end
 
-	terminate_transport (transporter: EV_PND_TRANSPORTER_IMP; mouse_button: INTEGER; cmd: TUPLE [EV_COMMAND, EV_ARGUMENT]) is
+	terminate_transport (transporter: EV_PND_TRANSPORTER_IMP; cmd: EV_INTERNAL_COMMAND) is
 			-- Terminate the pick and drop mechanim.
 		local
 			com: EV_ROUTINE_COMMAND
-			arg: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]
+			arg: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]
 		do
 			create com.make (~initialize_transport)
-			create arg.make (mouse_button, cmd, com)
-			inspect mouse_button
-			when 1 then
-				widget_source.remove_single_command (Cmd_button_one_press, transporter)
-				widget_source.remove_single_command (Cmd_button_two_release, transporter)
-				widget_source.remove_single_command (Cmd_button_three_release, transporter)
-				add_command (Cmd_button_one_press, com, arg)
-			when 2 then
-				widget_source.remove_single_command (Cmd_button_two_press, transporter)
-				widget_source.remove_single_command (Cmd_button_one_release, transporter)
-				widget_source.remove_single_command (Cmd_button_three_release, transporter)
-				add_command (Cmd_button_two_press, com, arg)
-			when 3 then
-				widget_source.remove_single_command (Cmd_button_three_press, transporter)
-				widget_source.remove_single_command (Cmd_button_one_release, transporter)
-				widget_source.remove_single_command (Cmd_button_two_release, transporter)
-				add_command (Cmd_button_three_press, com, arg)
-			end
+			create arg.make (cmd, com)
+
+			-- We remove the commands added before
+			widget_source.remove_single_command (Cmd_button_three_press, transporter)
+			widget_source.remove_single_command (Cmd_button_one_press, transporter)
+			widget_source.remove_single_command (Cmd_button_two_press, transporter)
+			add_command (Cmd_button_three_press, com, arg)
+
+			-- We remove the drawing command
 			widget_source.remove_single_command (Cmd_motion_notify, transporter)
 		end
 

@@ -10,7 +10,7 @@ inherit
 
 feature -- Status Report
 
-	next_user_precondition (celt: INTEGER; rgvar: ARRAY [ECOM_VARIANT]; pcelt_fetched: INTEGER_REF): BOOLEAN is
+	next_user_precondition (celt: INTEGER; rgvar: ECOM_VARIANT; pcelt_fetched: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `next'.
 			-- Redefine in descendants if needed.
 		do
@@ -40,7 +40,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	next (celt: INTEGER; rgvar: ARRAY [ECOM_VARIANT]; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgvar: ECOM_VARIANT; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgvar' [in].  

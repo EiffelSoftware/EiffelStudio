@@ -1,0 +1,35 @@
+system
+	test_cpp
+
+root 
+	TEST_CPP (root_cluster): "make"
+
+default
+	assertion (all);
+--	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base");
+
+cluster 
+	root_cluster:		"$EIFFEL4\examples\cpp\mystring";
+
+	-- EiffelBase
+	kernel: 		"$EIFFEL4\library\base\kernel";
+	routines: 		"$EIFFEL4\library\base\routines";
+	support:		"$EIFFEL4\library\base\support";
+	access: 		"$EIFFEL4\library\base\structures\access";
+	cursors:		"$EIFFEL4\library\base\structures\cursors";
+	cursor_tree:		"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
+	iteration:		"$EIFFEL4\library\base\structures\iteration";
+	list:			"$EIFFEL4\library\base\structures\list";
+	set:			"$EIFFEL4\library\base\structures\set";
+	sort:			"$EIFFEL4\library\base\structures\sort";
+	storage:		"$EIFFEL4\library\base\structures\storage";
+	table:			"$EIFFEL4\library\base\structures\table";
+	traversing:		"$EIFFEL4\library\base\structures\traversing";
+	tree:			"$EIFFEL4\library\base\structures\tree";
+
+external
+	include_path:		"$(EIFFEL4)\examples\cpp\mystring";
+	object: 		"$(EIFFEL4)\examples\cpp\mystring\mystring.obj";
+
+end

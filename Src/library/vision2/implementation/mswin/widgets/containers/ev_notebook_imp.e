@@ -32,7 +32,7 @@ inherit
 	WEL_TAB_CONTROL
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy
@@ -49,7 +49,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
-			on_draw_item
+			on_draw_item,
+			on_menu_command
 		redefine
 			default_style,
 			default_ex_style,
@@ -76,7 +77,8 @@ feature {NONE} -- Initialization
 			check
 				parent_not_void: wel_imp /= Void
 			end
-			wel_make (wel_imp, 0, 0, 0, 0, 0)
+			wel_make (wel_imp, 0, 0, 10, 10, 0)
+			tab_pos := Pos_top
 		end
 
 	plateform_build (par: EV_CONTAINER_IMP) is
@@ -85,7 +87,11 @@ feature {NONE} -- Initialization
 		do
 			{EV_CONTAINER_IMP} Precursor (par)
 			set_font (font)
-			set_minimum_height (tab_height)
+			if tab_pos = Pos_top or tab_pos = Pos_bottom then
+				set_minimum_height (tab_height)
+			else
+				set_minimum_width (tab_height)
+			end
 		end
 
 feature {NONE} -- Access
@@ -97,39 +103,10 @@ feature -- Status setting
 	
 	set_tab_position (pos: INTEGER) is
 			-- set position of tabs (left, right, top or bottom)
-		local
-			temp_window: wel_window
-			ev_children: LINKED_LIST [WEL_TAB_CONTROL_ITEM]
 		do
-			tab_pos := pos
-			temp_window := wel_parent 
-			if count > 0 then
-				from
-					!! ev_children.make
-				until
-					ev_children.count = count
-				loop
-					ev_children.extend (get_item (ev_children.count))
-					ev_children.last.window.set_parent (temp_window)
-					ev_children.last.window.hide
-				end
-				wel_destroy
-				wel_make (temp_window, 0, 0, 0, 0, 0)
-				from
-					ev_children.start
-				until
-					ev_children.after
-				loop
-					ev_children.item.window.set_parent (Current)
-					insert_item (count, ev_children.item)
-					ev_children.forth
-				end
-			else
-				wel_destroy
-				wel_make (temp_window, 0, 0, 0, 0, 0)
-			end
+ 			tab_pos := pos
+ 			set_style (default_style)
 			set_font (font)
-			set_minimum_height (tab_height)
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -186,6 +163,26 @@ feature -- Element change
 			insert_item (count, wel_item)
 		end
 
+	set_font (f: EV_FONT) is
+			-- Set `font' to `f'.
+			-- When the tabs are vertical, we set back the default font
+			-- by using `cwin_send_message' (feature not implemented in WEL)
+			-- because vertical fonts doesn't work with everything.
+		local
+			local_font_windows: EV_FONT_IMP
+		do
+			if (tab_pos = Pos_top) or (tab_pos = Pos_bottom) then
+				private_font := f
+				local_font_windows ?= private_font.implementation
+				check
+					valid_font: local_font_windows /= void
+				end
+				wel_set_font (local_font_windows.wel_font)
+			else
+				cwin_send_message (item, wm_setfont, 0, cwin_make_long (1, 0))
+			end
+		end
+
 feature -- Implementation
 
 	add_child (child_imp: EV_WIDGET_IMP) is
@@ -201,18 +198,32 @@ feature {EV_WIDGET_IMP} -- Implementation
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his wn minimum value.
+			-- We add 6 or 2 for the border size.
 		do
-			if value + 6 > minimum_width then
-				set_minimum_width (value + 6)
+			if tab_pos = Pos_top or tab_pos = Pos_top then
+				if value + 6 > minimum_width then
+					set_minimum_width (value + 6)
+				end
+			else
+				if value + tab_height > minimum_width then
+					set_minimum_width (value + tab_height + 2)
+				end
 			end
 		end
 
 	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum height of the container because
 			-- the child changed his own minimum width.
+			-- We add 6 or 2 for the border size.
 		do
-			if value + tab_height > minimum_height then
-				set_minimum_height (value + tab_height)
+			if tab_pos = Pos_left or tab_pos = Pos_right then
+				if value + 6 > minimum_height then
+					set_minimum_height (value + 6)
+				end
+			else
+				if value + tab_height > minimum_height then
+					set_minimum_height (value + tab_height + 2)
+				end
 			end
 		end
 
@@ -264,19 +275,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_style: INTEGER is
-			-- Default style used to create the control
-		do
-			Result := {WEL_TAB_CONTROL} Precursor + Ws_clipchildren
-				+ Ws_clipsiblings + Tcs_multiline + Tcs_hottrack
-			if tab_pos = Pos_bottom then
-				Result := Result + Tcs_bottom
-			elseif tab_pos = Pos_left then
-				Result := Result + Tcs_vertical + Tcs_fixedwidth
+ 	default_style: INTEGER is
+ 			-- Default style used to create the control
+ 		do
+ 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
+				+ Ws_clipchildren + Ws_clipsiblings
+			if tab_pos = Pos_top then
+				Result := Result + Tcs_singleline
+			elseif tab_pos = Pos_bottom then
+ 				Result := Result + Tcs_bottom + Tcs_singleline
+ 			elseif tab_pos = Pos_left then
+ 				Result := Result + Tcs_vertical + Tcs_fixedwidth 
+					+ Tcs_multiline
 			elseif tab_pos = Pos_right then
-				Result := Result + Tcs_vertical + Tcs_right + Tcs_fixedwidth
-			end
-		end
+ 				Result := Result + Tcs_right + Tcs_vertical
+					+ Tcs_fixedwidth + Tcs_multiline
+ 			end
+ 		end
 
 	default_ex_style: INTEGER is
 	  			-- Default extented style used to create the window
@@ -285,27 +300,22 @@ feature {NONE} -- Implementation
  		end
 
 	tab_height: INTEGER is
-			-- The height of the bar with the pages.
+			-- The height of the tabs in `Pos_top' ot `Pos_bottom' status,
+			-- the width of the tabs otherwise.
 		do
-			Result := 25 --client_rect.top - sheet_rect.top
-		end
-
-	set_font (f: EV_FONT) is
-   			-- Set `font' to `f'.
-   		local
-   			local_font_windows: EV_FONT_IMP
-   		do
- 			private_font := f
- 			local_font_windows ?= private_font.implementation
-			check
-   				valid_font: local_font_windows /= void
-   			end
-			if (tab_pos = Pos_top) or (tab_pos = Pos_bottom) then
-				wel_set_font (local_font_windows.wel_font)
+			inspect tab_pos 
+			when Pos_top then
+				Result := sheet_rect.top - client_rect.top
+			when Pos_left then
+				Result := sheet_rect.left - client_rect.left
+			when Pos_bottom then
+				Result := client_rect.bottom - sheet_rect.bottom
+			when Pos_right then
+				Result := client_rect.right - sheet_rect.right
 			else
-				set_vertical_font (local_font_windows.wel_font)
+				Result := 0
 			end
- 		end
+		end
 
 end -- EV_NOTEBOOK_IMP
 

@@ -23,7 +23,8 @@ inherit
 			initialize,
 			interface,
 			update_current_push_button,
-			set_background_color
+			on_mouse_enter,
+			on_mouse_leave
 		end
    
 	EV_TEXT_ALIGNABLE_IMP
@@ -120,10 +121,26 @@ inherit
 			on_bn_clicked,
 			wel_set_text,
 			process_message,
-			on_erase_background
+			on_erase_background,
+			on_wm_theme_changed
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
+	
+	WEL_THEME_PBS_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	WEL_THEME_PART_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	WEL_ODS_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -137,8 +154,10 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			extra_width := 20
 			text_alignment := default_alignment
+				-- Retrieve the theme for the button.
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
-
+		
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -254,7 +273,7 @@ feature -- Status setting
 			-- Remove the style "default_push_button"  of `Current'. 
 		do
 			is_default_push_button := False
-			if internal_bitmap /= Void then
+			if flag_set (style, bs_ownerdraw) then
 				invalidate
 			else
 				cwin_send_message (wel_item, bm_setstyle,
@@ -270,13 +289,6 @@ feature -- Status setting
 		end
 		
 feature -- Element change
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		do
-			Precursor {EV_PRIMITIVE_IMP} (a_color)
-			set_style (style | bs_ownerdraw)
-		end
 		
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the pixmap of `Current'.
@@ -285,7 +297,6 @@ feature -- Element change
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER
 		do
-			set_style (style | bs_ownerdraw)
 			private_pixmap := pix.twin
 			if not text.is_empty then
 				if private_font /= Void then
@@ -359,7 +370,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used to create `Current'.
 		do
-			Result := ws_visible | ws_child | ws_group | ws_tabstop | Ws_clipchildren | Ws_clipsiblings
+			Result := ws_visible | ws_child | ws_group | ws_tabstop | Ws_clipchildren | Ws_clipsiblings | Bs_ownerdraw
 		end
 
 	on_bn_clicked is
@@ -389,29 +400,26 @@ feature {NONE} -- WEL Implementation
 				Result := Precursor (hwnd, msg, wparam, lparam)
 			end
 		end
-
-feature {EV_ANY_I} -- Drawing implementation
-
-	button_in: INTEGER is
-			-- `Result' is code used to determine if button is in.
-			-- Ods constants do not seem to
-			-- match up well. See MSDN DRAWITEMSTRUCT for
-			-- more information regarding the allowable states.
-		once
-			Result := feature {WEL_ODS_CONSTANTS}.Ods_selected -- 1
+		
+	on_wm_theme_changed is
+			-- WM_THEMECHANGED message received so update current theme object.
+		do
+			application_imp.theme_drawer.close_theme_data (open_theme)
+			application_imp.update_theme_drawer
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
 		
-	button_out: INTEGER is
-			-- Result is code used to determine if button is out.
-		once
-			Result := feature {WEL_ODS_CONSTANTS}.Ods_grayed -- 2
-		end
+	open_theme: POINTER
+		-- Theme currently open for `Current'. May be Void while running on Windows versions that
+		-- do no support theming.
+
+feature {EV_ANY_I} -- Drawing implementation
 		
 	has_pushed_appearence (state: INTEGER): BOOLEAN is
 			-- Should `Current' have the appearence of being
 			-- pressed?
 		do
-			Result := flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_selected)			
+			Result := flag_set (state, Ods_selected)			
 		end
 		
 	pixmap_border: INTEGER is 4
@@ -435,6 +443,21 @@ feature {EV_ANY_I} -- Drawing implementation
 			create Result.make_solid (color_imp)
 		end
 		
+	parent_internal_background_brush: WEL_BRUSH is
+			-- `Result' is background brush of parent `Current'.
+		local
+			color_imp: EV_COLOR_IMP
+			color: EV_COLOR
+		do
+			color_imp := parent_imp.background_color_imp
+			if color_imp = Void then
+				create color
+				color_imp ?= color.implementation
+				color_imp.set_with_system_id (feature {WEL_COLOR_CONSTANTS}.Color_btnface)
+			end
+			create Result.make_solid (color_imp)
+		end
+
 	on_draw_item (draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Wm_drawitem message received. We must now draw `Current'
 			-- ourselves with the information in `draw_item'.
@@ -464,8 +487,6 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- the top of `Current' to where the pixmap should be drawn.
 			color_imp: EV_COLOR_IMP
 				-- Temporary color implementation.
-			color_ref: WEL_COLOR_REF
-				-- Temorary color ref.
 			image_width: INTEGER
 				-- Width of current image, or 0 when `internal_pixmap_state' is Void.
 			text_width: INTEGER
@@ -488,7 +509,16 @@ feature {EV_ANY_I} -- Drawing implementation
 			mask_bitmap: WEL_BITMAP
 				-- Mask bitmap of current image.
 			l_background_brush: WEL_BRUSH
+			
+			color_ref: WEL_COLOR_REF			
+			coordinate: EV_COORDINATE			
+			drawstate: INTEGER
+				-- Drawstate of the button.
+			theme_drawer: EV_THEME_DRAWER_IMP
+				-- Theme drawer currently in use.
 		do
+			theme_drawer := application_imp.theme_drawer
+		
 				-- Local access to information in `draw_item'.
 			dc := draw_item.dc
 			rect := draw_item.rect_item
@@ -505,46 +535,59 @@ feature {EV_ANY_I} -- Drawing implementation
 			color_imp ?= background_color.implementation
 			memory_dc.set_background_color (color_imp)
 				-- We are unable to query the font directly from `dc', so we set it ourselves.
-				if private_font /= Void then
-					font_imp ?= private_font.implementation
-					check
-						font_not_void: font_imp /= Void
-					end
-					memory_dc.select_font (font_imp.wel_font)
-				else
-					memory_dc.select_font (private_wel_font)
+			if private_font /= Void then
+				font_imp ?= private_font.implementation
+				check
+					font_not_void: font_imp /= Void
 				end
-
+				memory_dc.select_font (font_imp.wel_font)
+			else
+				memory_dc.select_font (private_wel_font)
+			end
+						
+					-- Calculate the draw state flags and then draw the background
+			if has_pushed_appearence (state) then
+				drawstate := pbs_pressed
+			else
+				drawstate := pbs_normal
+				if flag_set (state, ods_hotlight) or mouse_on_button then	
+						--| FIXME This is a big hack as `mouse_on_button' is used as we do not seem to
+						--| get the ODS_HOTLIGHT notification?
+					drawstate := pbs_hot
+				elseif flag_set (state, Ods_focus) then
+					drawstate := pbs_defaulted
+				elseif not is_sensitive then
+					drawstate := pbs_disabled
+				end
+			end
+			
+							-- Need to first clear the area to the background color of `parent_imp'
+			theme_drawer.draw_theme_parent_background (wel_item, memory_dc, rect, Void)
+			
 				-- We set the text color of `memory_dc' to white, so that if we are
 				-- a toggle button, and must draw the checked background, it uses white combined with
 				-- the current background color. We then restore the original `text_color' back into `memory_dc'.
 			color_ref := memory_dc.text_color
 			memory_dc.set_text_color (white)
-			l_background_brush := internal_background_brush
-			memory_dc.fill_rect (rect, l_background_brush)
-				-- We no longer use `l_background_brush', but it is a local so that
-				-- can delete it later.
+			theme_drawer.draw_theme_background (open_theme, memory_dc, bp_pushbutton, drawstate, rect, Void, internal_background_brush)
 			memory_dc.set_text_color (color_ref)
-			
 			
 			create focus_rect.make (rect.left, rect.top, rect.right, rect.bottom)
 			create text_rect.make (rect.left, rect.top, rect.right, rect.bottom)
 			focus_rect.inflate (-focus_rect_border, -focus_rect_border)
 
-			
-				-- Draw frame around `Current'. We must handle the three states, of it
-				-- being in, out or bolded in response to being a default push button.
-				--| Note that we shoudl probably use `draw_edge' here, but it gives us a
-				--| slightly different appearence to the old button style.
 			if has_pushed_appearence (state) then
-				draw_frame (memory_dc, text_rect, Button_in)
-			else
-				if is_default_push_button then
-					draw_frame (memory_dc, text_rect, state)
+					drawstate := ods_selected
 				else
-					draw_frame (memory_dc, text_rect, button_out)
+					if is_default_push_button then
+						drawstate := ods_default
+					else
+						drawstate := ods_grayed
+					end
 				end
-			end
+				
+				-- Draw the edge of the button.
+			theme_drawer.draw_button_edge (memory_dc, drawstate, text_rect)
 				
 				-- If there is a pixmap on `Current', then assign its implementation to
 				--`internal_pixmap_state' and store its width in `image_width'.
@@ -593,15 +636,10 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Note that if there is no image, `image_width' is 0, and we do not
 				-- add on `image_pixmap_space'.
 			text_rect.set_left (left_position + image_width + ((private_pixmap /= Void).to_integer * image_pixmap_space))
-		
-				-- If the `button_in' flag is set in `state', then we must move the text one pixel
-				-- to the right and one pixel down to simulate the depression.
-			if flag_set (state, button_in) then
-				text_rect.offset (1, 1)
-			end
 
-				-- Draw `text' of `Current' on `memory_dc'.
-			draw_button_text_left (memory_dc, text_rect)
+			theme_drawer.update_button_text_rect_for_state (open_theme, state, text_rect)
+
+			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, foreground_color)
 			
 				-- If we have a pixmap set on `Current', then we must draw it.
 			if internal_pixmap_state /= Void then
@@ -613,11 +651,17 @@ feature {EV_ANY_I} -- Drawing implementation
 				if internal_pixmap_state.has_mask then
 					mask_bitmap := internal_pixmap_state.get_mask_bitmap
 				end
-				draw_bitmap_on_button (memory_dc, wel_bitmap, mask_bitmap, left_position, pixmap_border + height_offset , state)
+					-- Modify the coordinates of the image one pixel to right
+					-- and one pixel down if the button is currently depressed.
+				
+				create coordinate.make (left_position, pixmap_border + height_offset)
+				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
+
+				theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)
 			end
 
 				-- If `Current' has the focus, then we must draw the focus rectangle.
-			if flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_focus) then
+			if flag_set (state, ods_focus) then
 					-- If `is_default_push_button' then `Current' is being
 					-- drawn as the focused button in a dialog. We must move
 					-- `focus_rect' away from the extra thick border.
@@ -634,207 +678,12 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Clean up GDI objects created.
 			memory_dc.unselect_all
 			memory_dc.delete
-			l_background_brush.delete
+			if l_background_brush /= Void then
+				l_background_brush.delete
+			end
 			if mask_bitmap /= Void then
 				mask_bitmap.decrement_reference	
 			end
-		end
-		
-	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON is
-			-- Extract the icon from `pixmap_imp'.
-		local
-			pix_imp: EV_PIXMAP_IMP
-		do
-			pix_imp ?= a_pixmap_imp_state
-			if pix_imp /= Void then
-				Result := pix_imp.icon
-			end
-			if Result /= Void then
-				Result.increment_reference
-			else
-				Result := a_pixmap_imp_state.build_icon
-				Result.enable_reference_tracking
-			end
-		end
-		
-	text_format: INTEGER is
-			-- `Result' is formatting used for `text' when
-			-- displayed in a WEL_RECT.
-		once
-			Result := set_flag (Result, Dt_left)
-			Result := set_flag (Result, Dt_vcenter)
-			Result := set_flag (Result, Dt_singleline)
-		end
-		
-		
-	draw_button_text_left (dc: WEL_DC; r: WEL_RECT) is
-			-- Draw `text' of `Current' on `dc', in `r'.
-			-- If not `is_sensitive' then perform appropriate
-			-- higlighting on text.
-		local
-			old_text_color: WEL_COLOR_REF
-			color_imp: EV_COLOR_IMP
-		do
-			old_text_color := dc.text_color
-			if not is_sensitive then
-				r.offset (1, 1)
-				dc.set_background_transparent
-				dc.set_text_color (white)
-				dc.draw_text (wel_text, r, text_format)
-				dc.set_text_color (color_gray_text)
-				r.offset (-1, -1)
-			else
-				color_imp ?= foreground_color.implementation
-				dc.set_text_color (color_imp)
-			end
-			dc.set_background_transparent
-			dc.draw_text (wel_text, r, text_format)
-			dc.set_text_color (old_text_color)
-		end
-		
-	draw_bitmap_on_button (dc: WEL_DC; a_bitmap, mask_bitmap: WEL_BITMAP; an_x, a_y, state: INTEGER) is
-			-- Draw `a_bitmap' on `dc' at `an_x'. `a_y'. If `button_in' is set in `state' then draw bitmap
-			-- one pixel right, and one pixel down to simulate the button being depressed.
-			-- Take `is_sensitive' into acount, and draw `a_bitmap' greyed out if not `is_sensitive'.
-		local
-			actual_x, actual_y: INTEGER
-			draw_state_flags: INTEGER
-			buffer_dc: WEL_MEMORY_DC
-			wel_bitmap: WEL_BITMAP
-			image_buffer_dc: WEL_MEMORY_DC
-			wel_bitmap_image: WEL_BITMAP
-		do
-				-- Modify the coordinates of the image one pixel to right
-				-- and one pixel down if the button is currently depressed.
-			if flag_set (state, button_in) then
-				actual_x := an_x + 1
-				actual_y := a_y + 1
-			else
-				actual_x := an_x
-				actual_y := a_y
-			end
-				-- Initialize `draw_state_flags' dependent on current state of `is_sensitive'.
-			if is_sensitive then
-				draw_state_flags := feature {WEL_DRAWING_CONSTANTS}.Dss_normal
-			else
-				draw_state_flags := feature {WEL_DRAWING_CONSTANTS}.Dss_disabled
-			end
-
-			if mask_bitmap = Void then
-					-- Draw directly to `dc' as there is no mask. i.e. the image is completely
-					-- rectangular.
-				dc.draw_state_bitmap (Void, a_bitmap, actual_x, actual_y, draw_state_flags)
-			else
-				create buffer_dc.make_by_dc (dc)
-				create wel_bitmap.make_compatible (dc, a_bitmap.width, a_bitmap.height)
-				buffer_dc.select_bitmap (wel_bitmap)
-				if buffer_dc.mask_blt_supported then
-						-- If Windows platform supports mask_blt then we can draw the image the
-						-- simple way.
-						
-						-- As there is a mask, we must draw the image to a buffer, and then
-						-- blit it onto `dc'. This is because `draw_state_bitmap' does not allow
-						-- you to use a mask. We then use `mask_blt' to copy the buffered image back.
-						
-						--	Draw the state bitmap on `buffer_dc' with style `draw_state_flags'.
-					buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
-						-- Copy the image from `buffer_dc' to `dc'.
-					dc.mask_blt (actual_x, actual_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
-						buffer_dc.make_rop4 (feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
-						-- Clean up GDI.
-				else
-						-- Windows platform does not support mask_blt, so we must simulate this ourselves with `bit_blt'.
-						
-						-- Create `image_buffer_dc' which is used to draw the state image onto.
-					create image_buffer_dc.make_by_dc (dc)	
-					create wel_bitmap_image.make_compatible (dc, a_bitmap.width, a_bitmap.height)
-					image_buffer_dc.select_bitmap (wel_bitmap_image)
-					
-						-- Blt the current background of the button, onto `buffer_dc'. This is necessary, as a toggle
-						-- button will have a checked background when selected.
-					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, dc, actual_x, actual_y, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
-						-- Draw the image to `image_buffer_dc' using `draw_state_flags'.
-						-- Note that we must draw the image to another dc, as it is not possible to use any masking
-						-- with `draw_state_bitmap'.
-					image_buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
-						-- We now and `mask_bitmap' onto `buffer_dc'.
-					buffer_dc.draw_bitmap_with_raster_operation (mask_bitmap, 0, 0, a_bitmap.width, a_bitmap.height, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcand)
-						-- Copy the actual image already drawn on `image_buffer_dc' to `buffer_dc'. Due to the previous operation, this
-						-- will be effectively masked.
-					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, image_buffer_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint)
-						-- Copy the final image from `buffer_dc' to `dc'.
-					dc.bit_blt (actual_x, actual_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
-					wel_bitmap_image.dispose
-					image_buffer_dc.unselect_all
-					image_buffer_dc.delete
-				end
-				wel_bitmap.dispose
-				buffer_dc.unselect_all
-				buffer_dc.delete
-			end		
-		end
-		
-	draw_frame (dc: WEL_DC; r: WEL_RECT; state: INTEGER) is
-			-- Draw frame around `Current', using `r' which represents the size of `Current',
-			-- into `dc'. Take `state' into acount, and draw it in, out or bolded
-			-- accordingly.
-		local
-			color: WEL_COLOR_REF
-		do
-				-- If `current' is a default puch button, then it must have a bold rectangle.
-				-- default push buttons are only used in dialogs.
-			if is_default_push_button then
-				create color.make_rgb (0, 0, 0)
-				draw_line (dc, r.left,  r.top, r.right, r.top, color)
-				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
-				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
-				r.inflate (-1, -1)
-			end
-				-- If the button is out then display it accordingly. The further check
-				-- is used for handling toggle buttons.
-			if flag_set (state, button_out) or not flag_set (state, button_in) then
-				color := Rhighlight
-				draw_line (dc, r.left, r.top, r.right, r.top, color)
-				draw_line (dc, r.left, r.top,r.left,  r.bottom, color)
-				color := Rdark_shadow
-				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
-				r.Inflate(-1, -1)
-				color := rlight
-				draw_line (dc, r.left, r.top, r.right, r.top, color)
-				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
-				color := rshadow
-				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
-			end
-			
-				-- If the button is in, then draw the appropriate border.
-	  		if flag_set (state, button_in) then
-	  			color := rdark_shadow
-				draw_line (dc, r.left, r.top, r.right, r.top, color)
-				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
-				color := Rhighlight
-				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
-				r.Inflate(-1, -1)
-				color := rshadow;
-				draw_line (dc, r.left,  r.top, r.right - 1, r.top, color)
-				draw_line (dc, r.left,  r.top, r.left,  r.bottom - 1, color)
-			end
-		end
-		
-	draw_line (dc: WEL_DC; sx, sy, ex, ey: INTEGER; color_ref: WEL_COLOR_REF) is
-			-- Draw a line on `dc' in color `color_ref', from `sx', `sy' to
-			-- `ex', `ey'.
-		local
-			pen: WEL_PEN
-		do
-			create pen.make_solid (1, color_ref)
-			dc.select_pen (pen)
-			dc.line (sx, sy, ex, ey)
-			dc.unselect_pen
-			pen.dispose
 		end
 		
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -846,46 +695,31 @@ feature {EV_ANY_I} -- Drawing implementation
 			disable_default_processing
 		end
 		
-	color_gray_text: WEL_COLOR_REF is
-			-- `Result' is color corresponding to Windows color - Colorgraytext.
-		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_graytext)
-		end
-		
 	white: WEL_COLOR_REF is
 			-- `Result' is color corresponding to white
 		once
 			Create Result.make_rgb (255, 255, 255)
 		end
+		
+	mouse_on_button: BOOLEAN
+		-- Is the mouse pointer currently held above `Current'? Used as
+		-- a temporary hack until it can be found why Ods_hottrack does not seem to
+		-- be sent when it should.
 
-	rtext_color: WEL_COLOR_REF is
-			-- `Result' is color corresponding to Windows color - Colorbtntext
+	on_mouse_enter is
+			-- Called when the mouse enters `Current'.
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btntext)
+			Precursor {EV_PRIMITIVE_IMP}
+			mouse_on_button := True
+			invalidate
 		end
-
-	rlight: WEL_COLOR_REF is
-			-- `Result' is color corresponding to Windows color - Color3dlight
+	
+	on_mouse_leave is
+			-- Called when the mouse enters `Current'.
 		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_3dlight)
-		end
-		
-	rhighlight: WEL_COLOR_REF is
-			-- `Result' is color corresponding to Windows color - Colorbtnhighlight
-		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnhighlight)
-		end
-		
-	rshadow: WEL_COLOR_REF is
-			-- `Result' is color corresponding to Windows color - Colorbtnshadow.
-		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnshadow)
-		end
-		
-	rdark_shadow: WEL_COLOR_REF is
-			-- `Result' is color corresponding to Windows color -Color3ddkshadow
-		do
-			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_3ddkshadow)
+			Precursor {EV_PRIMITIVE_IMP}
+			mouse_on_button := False
+			invalidate
 		end
 		
 feature {NONE} -- Feature that should be directly implemented by externals

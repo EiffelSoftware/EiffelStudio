@@ -34,6 +34,18 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+		
+	file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Actions to be performed while loading or saving.
+			-- Event data is percentage of file written (0-100).
+		do
+			if file_access_actions_internal = Void then
+				file_access_actions_internal := create_file_access_actions
+			end
+			Result := file_access_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -52,6 +64,14 @@ feature {EV_ANY_I} -- Implementation
 
 	selection_change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `selection_change_actions'.
+			
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a file access action sequence.
+		deferred
+		end
+		
+	file_access_actions_internal: EV_INTEGER_ACTION_SEQUENCE
+			-- Implementation of once per object `file_access_actions'.
 
 end
 

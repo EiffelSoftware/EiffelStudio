@@ -44,6 +44,7 @@
 #include "x2c.h"	/* For macro LNGPAD */
 #include "proto.h"
 #include "rt_assert.h"
+#include "rt_macros.h"
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -928,7 +929,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 	union overhead *zone;		/* Object header */
 	register5 uint32 flags;		/* Object flags */
 	register3 long sp_index;	/* Element index */
-	register4 long elem_size;	/* Element size */
+	register4 EIF_INTEGER elem_size;	/* Element size */
 	char *o_ref;
 	char *reference;
 	int32 count;					/* Element count */
@@ -941,9 +942,9 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 	twrite (&object, sizeof (EIF_POINTER));
 
 	zone = HEADER(object);
-	o_ref = (EIF_REFERENCE) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-	count = *(EIF_INTEGER *) o_ref;
-	elem_size = *(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER));
+	o_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+	count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
 	flags = zone->ov_flags;
 	dtype = Deif_bid(flags);
 
@@ -1126,17 +1127,17 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 
 	union overhead *zone;		/* Object header */
 	uint32 flags;				/* Object flags */
-	long elem_size;				/* Element size */
+	EIF_INTEGER elem_size;				/* Element size */
 	char *o_ref;
-	long count;					/* Element count */
+	EIF_INTEGER count;					/* Element count */
 	int dtype;
 	char *new_object_attr;		/* new value for the attribute (if new value is a reference) */
 	unsigned char error_code = 0;
 
 	zone = HEADER(object);
-	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-	count = *(long *) o_ref;
-	elem_size = *(long *) (o_ref + sizeof(long));
+	o_ref = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
+	count = RT_SPECIAL_COUNT_WITH_INFO (o_ref);
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref);
 	flags = zone->ov_flags;
 	dtype = (int) Deif_bid(flags);
 

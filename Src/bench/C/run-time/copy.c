@@ -120,10 +120,10 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 		/* Keep the reference flag and the composite one and the type */
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP | EO_TYPE);
 		/* Keep the count and the element size */
-	r_ref = result + size - LNGPAD_2;
-	s_ref = source + size - LNGPAD_2;
-	*(long *) r_ref = *(long *) s_ref;
-	*(long *) (r_ref + sizeof(long)) = *(long *) (s_ref + sizeof(long));
+	r_ref = RT_SPECIAL_INFO(result);
+	s_ref = RT_SPECIAL_INFO_WITH_ZONE(source, zone);
+	RT_SPECIAL_COUNT_WITH_INFO(r_ref) = RT_SPECIAL_COUNT_WITH_INFO(s_ref);
+	RT_SPECIAL_ELEM_SIZE_WITH_INFO(r_ref) = RT_SPECIAL_ELEM_SIZE_WITH_INFO (s_ref);
 
 	RT_GC_WEAN(source);				/* Remove GC protection */
 
@@ -339,9 +339,8 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 
 	EIF_REFERENCE clone, c_ref, c_field;
 	uint32 flags;
-	uint32 size;
 	union overhead *zone;
-	long count, elem_size;
+	EIF_INTEGER count, elem_size;
 
 	zone = HEADER(source);
 	flags = zone->ov_flags;
@@ -381,10 +380,8 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 		if (!(flags & EO_REF)){				/* No references */
 			return;
 		}
-		zone = HEADER(clone);
-		size = zone->ov_size & B_SIZE;		/* Size of special object */
-		c_ref = clone + size - LNGPAD_2;	/* Where count is stored */
-		count = *(long *) c_ref;			/* Number of items in special */
+		c_ref = RT_SPECIAL_INFO(clone);
+		count = RT_SPECIAL_COUNT_WITH_INFO (c_ref);			/* Number of items in special */
 
 		/* If object is filled up with references, loop over it and recursively
 		 * deep clone them. If the object has expanded objects, then we need
@@ -401,7 +398,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 				rdeepclone(c_field, clone, offset);
 			}
 		} else {					/* Special filled with expanded objects */
-			elem_size = *(long *) (c_ref + sizeof(long));
+			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (c_ref);
 			for (offset = OVERHEAD; count > 0; count--, offset += elem_size)
 				expanded_update(source, clone + offset, DEEP);
 		}
@@ -698,8 +695,8 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	REQUIRE ("enough_space", (RT_SPECIAL_COUNT(target) - index >= (end - start)));
 
 	count = end - start + 1;
-	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
-	elem_size = *(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER));
+	ref = RT_SPECIAL_INFO(source);
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 	memmove(target + (index * elem_size), source + (start * elem_size), count * elem_size);
 
 #ifdef ISE_GC
@@ -739,14 +736,14 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 
 	union overhead *zone;			/* Malloc information zone */
 	void  *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* Initialization routine to be called */
-	long i, count, elem_size;
+	EIF_INTEGER i, count, elem_size;
 	int dtype, dftype;
 	EIF_REFERENCE ref;
 
 	zone = HEADER(spobj);
-	ref = spobj + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	count = *(long *) ref;
-	elem_size = *(long *) (ref + sizeof(long));
+	ref = RT_SPECIAL_INFO_WITH_ZONE(spobj, zone);
+	count = RT_SPECIAL_COUNT_WITH_INFO(ref);
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 
 	if (zone->ov_flags & EO_COMP) {
 			/* case of a special object of expanded structures */

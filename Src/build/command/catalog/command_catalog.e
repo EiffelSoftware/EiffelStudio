@@ -14,7 +14,6 @@ inherit
 			{ANY} all
 		redefine
 			current_page, make
-			-- show, hide, shown, realize
 		end
 
 	WINDOWS
@@ -39,14 +38,12 @@ feature -- Initialization
 
 	create_interface is
 			-- Create command catalog interface.
-		local
-			new_label: LABEL
 		do
 			!! page_sw.make (Widget_names.scroll, Current)
 			!! button_rc.make (Widget_names.row_column, Current)
-			!! new_label.make (Widget_names.Command_catalog, button_rc)
 			!! separator.make ("", Current)
 			!! pages.make
+			!! command_catalog_label.make (Widget_names.command_catalog, Current)
 			set_values
 			attach_all
 			define_command_pages
@@ -64,9 +61,12 @@ feature -- Initialization
 	attach_all is
 			-- Perform attachments
 		do
+			attach_top (command_catalog_label, 3)
 			attach_top (button_rc, 0)
+			attach_left (command_catalog_label, 0)
+			attach_left_widget (command_catalog_label, button_rc, 10)
 			attach_right (button_rc, 0)
-			attach_left (button_rc, 0)
+			attach_top_widget (command_catalog_label, separator, 0)
 			attach_top_widget (button_rc, separator, 0)
 			attach_left (separator, 0)
 			attach_right (separator, 0)
@@ -85,12 +85,12 @@ feature {NONE}
 			window_commands: WINDOW_CMDS
 			command_templates: TEMPL_CMDS
 		do
-			!!user_defined_commands1.make (1, Current)
-			!!user_defined_commands2.make (2, Current)
-			!!generated_commands.make (3, Current)
-			!!command_templates.make (Current)
-			!!window_commands.make (Current)
-			!!file_commands.make (Current)
+			!! user_defined_commands1.make (1, Current)
+			!! user_defined_commands2.make (2, Current)
+			!! generated_commands.make (3, Current)
+			!! command_templates.make (Current)
+			!! window_commands.make (Current)
+			!! file_commands.make (Current)
 			add_page (user_defined_commands1)
 			add_page (user_defined_commands2)
 			add_page (generated_commands)
@@ -99,13 +99,6 @@ feature {NONE}
 			add_page (command_templates)
 			set_initial_page (user_defined_commands1)
 		end
-
-feature 
-
---	realize is
---		do
---			{FORM} Precursor	
---		end
 
 feature {CMD_CAT_BUTTON} -- Attributes
 
@@ -116,6 +109,9 @@ feature {NONE} -- Attributes
 
 	separator: THREE_D_SEPARATOR
 			-- Separator between the column row and the list of commands
+
+	command_catalog_label: LABEL
+			-- Label displaying "Command catalog"
 
 feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, 
 			GENERATE_OBJECT_TOOL_CMD, GENERATE_OBJECT_COMMAND_CMD}

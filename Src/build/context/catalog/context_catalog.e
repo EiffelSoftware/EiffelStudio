@@ -53,6 +53,7 @@ feature -- Creation
 			!! menu_page.make (scrolled_w, rc)
 			!! set_page.make (scrolled_w, rc)
 			!! group_page.make (scrolled_w, rc)
+			!! context_catalog_label.make ("Context catalog", Current)
 			set_values
 			attach_all
 		end
@@ -75,9 +76,12 @@ feature -- Creation
 
 	attach_all is
 		do
-			attach_top (rc, 0)			
-			attach_left (rc, 0)
+			attach_top (rc, 0)	
+			attach_top (context_catalog_label, 3)
+			attach_left (context_catalog_label, 0)
+			attach_left_widget (context_catalog_label, rc, 10)
 			attach_right (rc, 0)
+			attach_top_widget (context_catalog_label, first_separator, 0)
 			attach_top_widget (rc, first_separator, 0)
 
 			attach_left (first_separator, 0)
@@ -88,20 +92,18 @@ feature -- Creation
 			attach_right (scrolled_w, 0)
 			attach_bottom (scrolled_w, 0)
 
--- 			attach_page (window_page)
--- 			attach_page (group_page)
--- 			attach_page (primitive_page)
--- 			attach_page (set_page)
--- 			attach_page (scroll_page)
--- 			attach_page (menu_page)
-
 		end
 
 feature {NONE}
 
 	current_button: CON_CAT_BUTTON
+			-- Current selected button
 	
 	rc: ROW_COLUMN
+			-- Row-column containing the category buttons
+
+	context_catalog_label: LABEL
+			-- Label displaying "Context catalog"
 
 feature 
 

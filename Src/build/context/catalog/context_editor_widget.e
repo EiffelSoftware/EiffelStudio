@@ -67,15 +67,19 @@ feature -- Creation
 			!! focus_area_form.make (Widget_names.form1, Current)
 			!! context_hole.make (Current, focus_area_form)
 			!! first_separator.make (Widget_names.separator, Current)
-			first_separator.set_horizontal (True)
 			!! context_editor_label.make ("Context editor", focus_area_form)
 			!! formats_rc.make (Widget_names.row_column, focus_area_form)
-			formats_rc.set_row_layout
-			formats_rc.set_preferred_count (1)
 			!! scrolled_w.make ("", Current)
 
+				--| Set values
+			first_separator.set_horizontal (True)
+			formats_rc.set_row_layout
+			formats_rc.set_preferred_count (1)
+			update_title
+
+				--| Perform attachments
 			focus_area_form.attach_top (context_hole, 0)
-			focus_area_form.attach_top (context_editor_label, 0)
+			focus_area_form.attach_top (context_editor_label, 3)
 			focus_area_form.attach_top (formats_rc, 0)
 			focus_area_form.attach_left (context_hole, 0)
 			focus_area_form.attach_left_widget (context_hole, context_editor_label, 5)
@@ -127,14 +131,6 @@ feature -- Creation
 			current_form_number := 0
 		end
 
---	attach_attributes_form (a_form: EDITOR_FORM) is
---		do
---			attach_top_widget (first_separator, a_form, 1)
---			attach_left (a_form, 1)
---			attach_right (a_form, 1)
---			attach_bottom (a_form, 1)
---		end
-
 feature {NONE} -- Attributes
 
 	first_separator: THREE_D_SEPARATOR
@@ -170,7 +166,7 @@ feature
 			tmp: STRING
 		do
 			if edited_context = Void then
-				set_title ("Empty editor")
+				set_title ("Empty context editor")
 			else
 				!! tmp.make (15)
 				tmp.append (edited_context.label)

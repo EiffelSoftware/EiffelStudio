@@ -11,7 +11,7 @@ inherit
 
 	EB_BUTTON_HOLE
 		redefine
-			text_window, transported_stone, stone_type
+			transported_stone, stone_type
 		end
 
 creation
@@ -19,8 +19,6 @@ creation
 	make
 
 feature -- Properties
-
-	text_window: ROUTINE_TEXT;
 
 	transported_stone: STONE is
 		local

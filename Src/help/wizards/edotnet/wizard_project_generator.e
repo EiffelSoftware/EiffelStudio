@@ -53,15 +53,11 @@ feature -- Basic Operations
 				map_list.extend (tuple)
 
 			end
-				-- Add the external assemblies paths
-			create tuple.make
-			tuple.put (External_assemblies_template, 1)
-			if not wizard_information.selected_assemblies.is_empty then
-				tuple.put (external_assemblies, 2)
-			else
-				tuple.put (Empty_string, 2)
-			end
-			map_list.extend (tuple)
+--				-- Add the external assemblies paths
+--			create tuple.make
+--			tuple.put (External_assemblies_template, 1)
+--			tuple.put (external_assemblies, 2)
+--			map_list.extend (tuple)
 		
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
@@ -106,6 +102,7 @@ feature {NONE} -- Implementation
 	
 	external_assemblies: STRING is
 			-- List of assemblies to include in the project.
+			-- mscorlib is allways added to a new project.
 		require
 			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
 --			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
@@ -120,6 +117,7 @@ feature {NONE} -- Implementation
 			Result.append (Assembly_keyword)
 			Result.append (New_line)
 			
+			Result.append (Tab)
 			Result.append (Mscorlib_assembly)
 			Result.append (New_line)
 
@@ -150,9 +148,8 @@ feature {NONE} -- Implementation
 				selected_assemblies.forth
 			end
 			
-			Result.append (Tab + Tab + "-- Local assemblies.")
-			Result.append (New_line)
 			local_assemblies := wizard_information.local_assemblies
+			Result.append (New_line)
 			from
 				local_assemblies.start
 			until

@@ -246,34 +246,59 @@ feature -- Status Setting
 		end		
 
 	tag_selection (a_tag: STRING) is
+			-- Enclose `selected_text' in `a_tag'.  Eg, `some_text'
+			-- becomes `a_tagsome_texta_tag'.  If there is no selection
+			-- just insert `a_taga_tag'.
+		local
+			l_text,
+			l_prev_text: STRING
+		do
+			create l_text.make_from_string (a_tag)
+			
+			if has_selection then
+				if l_text.has_substring ("[tag]") then
+					l_text.replace_substring_all ("[tag]", selected_text)
+				else			
+					l_text.append (a_tag)
+					l_text.append (selected_text)
+					l_text.append (a_tag)
+				end
+				if not clipboard_content.is_empty then
+					l_prev_text := clipboard_content
+				end
+				cut_selection
+			end
+			insert_text (l_text)
+			select_region (caret_position, caret_position + l_text.count - 1)
+			if l_prev_text /= Void then
+				shared_document_editor.clipboard.set_text (l_prev_text)
+			end
+		end
+
+	tag_selection_as_xml (a_tag: STRING) is
 			-- Enclose `selected_text' in XML `a_tag'.  Eg, `some_text'
 			-- becomes '<a_tag>some_text</a_tag>'.  If there is no selection
 			-- just insert '<a_tag></a_tag>'.
 		local
 			l_text,
-			l_end_text,
 			l_prev_text: STRING
 		do
-			if a_tag.item (1) = '<' then
-				create l_text.make_from_string (a_tag)
-			else			
-				create l_text.make_from_string ("<" + a_tag + ">")
-			end
+			create l_text.make_from_string ("<" + a_tag + ">")			
+			
 			if has_selection then
-				l_text.append (selected_text)
+				if l_text.has_substring ("[tag]") then
+					l_text.replace_substring_all ("[tag]", selected_text)
+				else
+					l_text.append (selected_text)
+				end
+				
 				if not clipboard_content.is_empty then
 					l_prev_text := clipboard_content
 				end
 				cut_selection
 			end
 			
-			if a_tag.item (1) = '<' then
-				create l_end_text.make_from_string (a_tag)
-				l_end_text.replace_substring_all ("<", "</")
-				l_text.append (l_end_text)
-			else
-				l_text.append ("</" + a_tag + ">")
-			end
+			l_text.append ("</" + a_tag + ">")			
 			insert_text (l_text)
 			select_region (caret_position, caret_position + l_text.count - 1)
 			if l_prev_text /= Void then
@@ -398,7 +423,7 @@ feature {NONE} -- Implementation
 								menu_children.after
 							loop
 								create l_menu_item.make_with_text (menu_children.item)
-								l_menu_item.select_actions.extend (agent tag_selection (menu_children.item))
+								l_menu_item.select_actions.extend (agent tag_selection_as_xml (menu_children.item))
 								l_popup.extend (l_menu_item)
 								menu_children.forth
 							end				

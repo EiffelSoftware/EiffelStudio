@@ -951,46 +951,15 @@ rt_private int16 eif_gen_param (int16 stype, int16 dftype, int pos, char *is_exp
 /* TUPLE and its descendants!                                       */
 /*------------------------------------------------------------------*/
 
-rt_public int eif_gen_count (EIF_REFERENCE obj) {
-	if (obj == NULL) {
-		return 0;
-	} else {
-#ifdef EIF_THREADS
-		int16 result;
-			/* Critical section as we might compute a new `eif_anc_id_map' entry */
-		EIFMTX_LOCK;
-		result = eif_gen_count_with_dftype ((int16) Dftype(obj));
-		EIFMTX_UNLOCK;
-		return result;
-#else
-		return eif_gen_count_with_dftype ((int16) Dftype(obj));
-#endif
-	}
-}
-
-rt_shared int eif_gen_count_with_dftype (int16 dftype)
+rt_public int eif_gen_count_with_dftype (int16 dftype)
 {
 	EIF_GEN_DER *gdp;
-	EIF_ANC_ID_MAP *amap;
 
 	REQUIRE("Valid type", (dftype >= 0) && (dftype < next_gen_id));
 
-	if (tuple_static_type >= 0) {
-		amap = eif_anc_id_map [dftype];
+	gdp = eif_derivations [dftype];
 
-		if (amap == (EIF_ANC_ID_MAP *) 0) {
-			eif_compute_anc_id_map (dftype);
-			amap = eif_anc_id_map [dftype];
-		}
-
-		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
-	} else {
-		gdp = eif_derivations [dftype];
-	}
-
-	CHECK("Generic type", gdp && (!gdp->is_bit));
-
-	return gdp->size;
+	return (gdp ? gdp->size : 0);
 }
 
 /*------------------------------------------------------------------*/

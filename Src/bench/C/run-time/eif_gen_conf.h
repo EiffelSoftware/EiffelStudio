@@ -15,7 +15,7 @@ RT_LNK int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 dyn_type
 
 /* Number of generic parameters of an object */
 RT_LNK int eif_tuple_count (EIF_REFERENCE tuple);
-RT_LNK int eif_gen_count (EIF_REFERENCE tuple);
+RT_LNK int eif_gen_count_with_dftype (int16 dftype);
 
 /* New object with same type as i-th (`pos') generic of `object' */
 RT_LNK EIF_REFERENCE eif_gen_create (EIF_REFERENCE object, int pos);

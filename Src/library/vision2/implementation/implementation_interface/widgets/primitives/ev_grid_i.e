@@ -386,8 +386,6 @@ feature -- Element change
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 
-	physical_column_count: INTEGER
-
 	insert_new_column (a_index: INTEGER) is
 			-- Insert a new column at index `a_index'.
 		require
@@ -558,20 +556,23 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 		-- The row data returned from `row_list' @ i may be Void for optimization purposes
 		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
 		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
-		-- The actual ordering is queried from `logical_to_physical_mapping'
+		-- The actual ordering is queried from `visible_physical_column_indexes'
 
 	visible_physical_column_indexes: SPECIAL [INTEGER] is
-			-- Zero-based indexes of the p
+			-- Zero-based physical data indexes of the visible columns needed for `row_data' lookup whilst rendering cells
 		local
 			i: INTEGER
+			a_col: EV_GRID_COLUMN
 		do
-			create Result.make (column_count)
+			create Result.make (visible_column_count)
 			from
 				i := 1
 			until
-				i > column_count
+				i > visible_column_count
 			loop
-				Result.put (i, i)
+				a_col := column (i)
+				Result.put (i - 1, a_col.implementation.physical_index)
+				i := i + 1
 			end
 		end
 
@@ -603,6 +604,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 		
 	grid_columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
 		-- Arrayed list returning the appropriate EV_GRID_COLUMN from a given index
+
+	physical_column_count: INTEGER
+		-- Number of physical columns stored in `row_list'
 
 feature {EV_GRID_DRAWER_I} -- Implementation
 

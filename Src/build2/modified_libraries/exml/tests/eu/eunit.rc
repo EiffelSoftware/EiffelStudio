@@ -1,0 +1,2 @@
+-O $EXML/lib/implementation/expat/compiler_specific/se/clib/exml_parser.c $EXML/lib/implementation/expat/compiler_specific/se/clib/expat_parser_error_codes_wrap.c $EXPAT/xmlparse/xmlparse.o $EXPAT/xmlparse/hashtable.o $EXPAT/xmltok/xmltok.o $EXPAT/xmltok/xmlrole.o -I. -I$EXPAT/xmlparse -all_check -no_split -no_warning -cecil $EXML/lib/implementation/expat/compiler_specific/se/cecil.se  
+

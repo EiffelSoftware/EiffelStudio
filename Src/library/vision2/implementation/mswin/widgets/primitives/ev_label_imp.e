@@ -28,11 +28,12 @@ inherit
 		undefine
 			set_default_minimum_size
 		redefine
-			set_default_minimum_size,
 			align_text_center,
 			align_text_left,
 			align_text_right,
-			interface
+			interface,
+			set_text,
+			remove_text
 		end
 
 	EV_FONTABLE_IMP
@@ -120,6 +121,22 @@ feature -- Access
 			--|---------------------------------------------------------------
 		do
 			Result := wel_window_parent
+		end
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			Precursor (a_text)
+			set_default_minimum_size
+		end
+
+	remove_text is
+			-- Make `text' `Void'.
+		do
+			Precursor
+			set_default_minimum_size
 		end
 
 feature -- Status setting
@@ -268,6 +285,12 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/18 23:32:51  brendel
+--| Added redefinition of set_text and remove_text. set_default_minimum_size
+--| is called after setting/removing. This is to avoid windows from trying to
+--| be smart and wrap the text which works quite well until the line should be
+--| split over more than 2 lines.
+--|
 --| Revision 1.39  2000/03/29 20:31:45  brendel
 --| Added compiler workaround. See code.
 --|

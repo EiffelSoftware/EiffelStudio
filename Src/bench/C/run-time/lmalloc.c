@@ -9,15 +9,9 @@
 
 	Malloc library functions.
 
-  This file provides an Eiffel implementation of malloc, calloc, realloc,
-  and free which are eif_malloc, eif_calloc, eif_realloc, and
-  eif_free but only for the Unix/Linux platforms in NON-multithreaded 
-  mode. The other platforms call the features provided in the C library
-  (malloc, realloc ...). For VXWORKS, we are not supposed to link this file
-  to the run-time but we can do this to perform test for us ( but don't
-  forget to remove it in the delivery to HP (the HP's engineers have their
-  own malloc, ... we do not have, so we call our malloc in the C library).
-  Manuelt.
+  Wrappers to malloc functions from standard libs. 
+  Define LMALLOC_CHECK, for checks and debugging output.
+
 
   Additionally, this file contains some VMS platform specific functions.
   They are here (rather than in misc.c) because this module can be 
@@ -27,15 +21,17 @@
 */
 
 
+#include <assert.h>
+#include <stdio.h>
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"
 
-#ifndef EIF_VMS
+#if !defined EIF_VMS || !defined VXWORKS
 #include <malloc.h>
-#endif
+#endif	/* !defined EIF_VMS || !defined VXWORKS */
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */
@@ -48,141 +44,281 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-/* Important: I've turned the GC off when malloc routines are ran because I
- * have the feeling it would introduce confusion in the brain of the final
- * Eiffel users. It is possible to use cmalloc() and al. instead if GC is
- * wanted, but that makes a difference only when we are short in memory--RAM.
- */
+#ifdef LMALLOC_CHECK
+
+
+/*---------------*/
+/* Definitions.  */
+/*---------------*/
+struct lm_entry {
+	void *ptr;	
+	struct lm_entry *next;
+}; 
+
+rt_shared void eif_lm_display ();
+rt_shared int is_in_lm (void *ptr);
+rt_private struct lm_entry **lm = (struct lm_entry **) 0;
+
+rt_private int lm_create (); 
+rt_private int lm_put (void *ptr);
+rt_private int lm_remove (void *ptr);
+rt_private int lm_free ();
+
+/*----------------------*/
+/* MT declarations.     */
+/*----------------------*/
+
+#ifdef EIF_THREADS
+rt_private EIF_MUTEX_TYPE *lm_lock = NULL;
+#define EIF_LM_LOCK \
+	if (!lm_lock) \
+		EIF_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n"); \
+	EIF_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
+
+#define EIF_LM_UNLOCK \
+	EIF_MUTEX_UNLOCK (lm_lock, "Couldn't lock lm lock"); 
+
+#else	/* EIF_THREADS */
+#define EIF_LM_LOCK
+#define EIF_LM_UNLOCK
+#endif	/* EIF_THREADS */
+	
+
+/*-------------------------------------------*/
+/* Create and initialize lm linked list.     */
+/*-------------------------------------------*/
+rt_private int lm_create () {
+
+	assert (lm == (struct lm_entry **) 0);
+
+	EIF_LM_LOCK
+	lm = (struct lm_entry **) malloc (sizeof(struct lm_entry *));
+	if (!lm) {
+		EIF_LM_UNLOCK
+		return -1;
+	}
+	
+	*lm = (struct lm_entry *) 0;
+	EIF_LM_UNLOCK
+	return 0;
+}
+
+/*-------------------------------------*/
+/* Add an entry in lm linked list.     */
+/*-------------------------------------*/
+rt_private int lm_put (void *ptr) {
+
+	struct lm_entry *ne;
+	struct lm_entry *cur = *lm;
+	
+	EIF_LM_LOCK
+	if (!lm) {
+		if (lm_create ()) {
+			EIF_LM_UNLOCK
+			eif_panic ("Couldn't create lm linked list");
+		}
+	}
+
+	ne = (struct lm_entry *) malloc (sizeof (struct lm_entry));
+
+	if (!ne)	{
+		EIF_LM_UNLOCK
+		return -1;
+	}
+
+	ne->ptr = ptr;
+	ne->next = *lm;
+	*lm = ne;
+	EIF_LM_UNLOCK;
+	return 0;
+}
+
+/*-----------------------------------------*/
+/* Remove an entry in lm linked list.      */
+/*-----------------------------------------*/
+rt_private int lm_remove (void *ptr) {
+
+	struct lm_entry *cur;
+	struct lm_entry *tmp;
+	assert (lm != (struct lm_entry **) 0);	
+	
+	EIF_LM_LOCK
+	if (!ptr) {
+		EIF_LM_UNLOCK
+		return 0;
+	}
+	
+	if (!lm) {	
+		EIF_LM_UNLOCK
+		return -1;
+	}
+		
+	if (!(*lm)) {
+		EIF_LM_UNLOCK
+		return -1;
+	}
+		
+	cur = *lm;
+	if (cur->ptr == ptr) {
+		*lm = cur->next;
+		free (cur);
+		if (!(*lm))	{	/* Is `lm' empty? */
+			free (lm);
+			lm = NULL;
+		}
+		EIF_LM_UNLOCK
+		return 0;
+	}
+
+	tmp = cur->next;
+
+	while (tmp)	{
+		if (tmp->ptr == ptr) {
+			cur->next = tmp->next;
+			free (tmp);
+			EIF_LM_UNLOCK
+			return 0;
+		}
+		cur = tmp;
+		tmp = cur->next;
+	}
+
+	EIF_LM_UNLOCK
+	return -1;
+
+}
+
+/*-----------------------------------*/
+/* Occurrence of element in lm.      */
+/*-----------------------------------*/
+	
+rt_shared int is_in_lm (void *ptr) {
+	struct lm_entry *cur;
+
+	EIF_LM_LOCK;
+	if (!lm) {
+		EIF_LM_UNLOCK;
+		return 0;
+	}
+	for (cur = *lm; cur != NULL; cur = cur->next) {
+		if (ptr == cur->ptr) {
+			EIF_LM_UNLOCK
+			return 1;
+		}
+	}
+	EIF_LM_UNLOCK;	
+	return 0;
+}
+
+/*------------------------------*/
+/* Display lm linked list.      */
+/*------------------------------*/
+rt_shared void eif_lm_display () {
+	struct lm_entry *cur;
+
+	EIF_LM_LOCK;
+	if (!lm) {
+		fprintf (stderr, "lm is empty\n");	
+		EIF_LM_UNLOCK;
+		return;
+	}
+	for (cur = *lm; cur != NULL; cur = cur->next) 
+		fprintf (stderr, "0x%x\n", cur->ptr);
+	EIF_LM_UNLOCK;	
+}
+	
+
+/*------------------------------*/
+/* Free lm linked list.         */
+/*------------------------------*/
+rt_private int lm_free (struct lm_entry **lm) {
+	struct lm_entry *cur, *tmp;
+
+	EIF_LM_LOCK
+
+	if (!lm) {
+		EIF_LM_UNLOCK
+		return -1;
+	}
+	for (cur = *lm; cur != NULL; ) {
+		tmp = cur;
+		cur = cur->next;	
+		free (tmp);
+	}
+	EIF_LM_UNLOCK
+	return 0;
+}
+#endif	/* LMALLOC_CHECK */
 
 rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 {
+#ifdef LMALLOC_CHECK
+	Malloc_t ret;
 
-#if defined EIF_THREADS
-/* In multithreaded mode, we do not want to use the eiffel implementation * 
- * of eif_malloc () because when calling reclaim () in a thread we want   *
- * the thread to give back the memory to the system and not to the        *
- * free-list. Otherwise, the creation of thread would be quite costly     *
- * manuelt. */
-
+	ret = (Malloc_t) malloc (nbytes);
+	if (lm_put (ret))	
+		fprintf (stderr, "Warning: cannot lm malloc %d bytes\n", nbytes);
+#ifdef LMALLOC_DEBUG
+	fprintf (stderr, "EIF_MALLOC: 0x%x\t(%d bytes)\n", ret, nbytes);	
+#endif
+	return ret;
+#else	/* LMALLOC_CHECK */
 	return (Malloc_t) malloc (nbytes);
-
-#elif defined EIF_WIN32 || defined EIF_VMS
-/* For Windows and VMS platforms we use malloc() implemented in the C-library */
-	return malloc (nbytes);
-
-#elif defined VXWORKS
-/* For VXWORKS, we have a special run-time. HP provides their own malloc ()
- *we do not have, so we call malloc() from the C-library to perform test */
-#warning: file should not be linked for VXWORKS runtime. 
-	return malloc (nbytes);
-
-#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
-	return malloc (nbytes);
-
-#else
-/* all the other platforms (Unix/Linux) use an eiffel implementation *
- * for eif_malloc() */ 
-
-	EIF_REFERENCE arena;
-
-	/* The C object does not use its Eiffel flags field in the header. However,
-	 * we set the EO_C bit. This will help the GC because it won't need
-	 * extra-tests to skip the C arenas referenced by Eiffel objects.
-	 */
-
-	arena = xmalloc(nbytes, C_T, GC_OFF);
-	if (arena != (EIF_REFERENCE) 0)
-		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
-
-	return (Malloc_t) arena;
-
-
-#endif /* EIF_THREADS */	
+#endif	/* LMALLOC_CHECK */
 }
 
 rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 {
-#ifdef EIF_THREADS 
+#ifdef LMALLOC_CHECK
+	Malloc_t ret;
+
+	ret = (Malloc_t) calloc (nelem, elsize);
+	if (lm_put (ret))	
+		fprintf (stderr, "Warning: cannot lm calloc %d * %d \n", nelem * elsize);
+#ifdef LMALLOC_DEBUG
+	fprintf (stderr, "EIF_CALLOC: 0x%x\t(%d elts * %d bytes = %d bytes)\n", ret, nelem, elsize, nelem*elsize);	
+#endif
+	return ret;
+#else	/* LMALLOC_CHECK */
 	return (Malloc_t) calloc (nelem, elsize);
-
-#elif defined EIF_WIN32 || defined EIF_VMS
-	return calloc (nelem, elsize);
-
-#elif defined VXWORKS
-#warning: file should not be linked for VXWORKS runtime.
-	return calloc (nelem, elsize);
-
-#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
-	return calloc (nelem, elsize);
-
-#else /* all the other platforms (Unix/Linux) use an eiffel implementation */
-      /* for eif_calloc() */ 
-	register1 unsigned int nbytes = nelem * elsize;
-	register2 Malloc_t allocated;
-
-	allocated = eif_malloc(nbytes);
-	if (allocated != (Malloc_t) 0)
-		bzero(allocated, nbytes);
-
-	return allocated;
-
-#endif /* EIF_THREADS */	
+#endif	/* LMALLOC_CHECK */
 }
 
 rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes)
 {
-#ifdef EIF_THREADS 
+#ifdef LMALLOC_CHECK
+	Malloc_t ret;
+
+	ret = (Malloc_t) realloc (ptr, nbytes);
+	if (ptr != ret) {
+	if (lm_remove (ptr))	
+		fprintf (stderr, "Warning: cannot lm remove-realloc 0x%x\n", ptr);
+	if (lm_put (ret))	
+		fprintf (stderr, "Warning: cannot lm realloc 0x%x with %d bytes\n", ptr, nbytes);
+	}
+#ifdef LMALLOC_DEBUG
+	fprintf (stderr, "EIF_REALLOC: 0x%x\t(old 0x%x, %d bytes)\n", ret, ptr, nbytes);	
+#endif
+	return ret;
+#else	/* LMALLOC_CHECK */
 	return (Malloc_t) realloc (ptr, nbytes);
-
-#elif defined EIF_WIN32 || defined EIF_VMS
-	return realloc (ptr, nbytes);
-
-#elif defined VXWORKS
-#warning: file should not be linked for VXWORKS runtime.
-	return realloc (ptr,nbytes);
-
-#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
-	return realloc (ptr, nbytes);
-#else /* all the other platforms (Unix/Linux) use an eiffel implementation */
-      /* for eif_realloc() */ 
-
-	/* A realloc with a null pointer has to be equivalent to a single malloc */
-
-	if (ptr == (Malloc_t) 0)
-		return eif_malloc(nbytes);
-
-	return (Malloc_t) xrealloc(ptr, nbytes, GC_OFF);
-
-#endif /* EIF_THREADS */	
+#endif	/* LMALLOC_CHECK */
 }
 
 void eif_free(register void *ptr)
 {
-#if defined EIF_THREADS 
+#ifdef LMALLOC_CHECK
+	Malloc_t ret;
+
 	free (ptr);
-
-
-#elif defined VXWORKS
-#warning: file should not be linked for VXWORKS runtime
+	if (lm_remove (ptr))	
+		fprintf (stderr, "Warning: cannot lm free 0x%x\n", ptr);
+#ifdef LMALLOC_DEBUG
+	fprintf (stderr, "tEIF_FREE: 0x%x\n", ptr);	
+#endif
+#else	/* LMALLOC_CHECK */
 	free (ptr);
-
-#elif defined EIF_WIN32 || defined EIF_VMS
-	free (ptr);
-
-#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
-	free (ptr);
-#else /* all the other platforms (Unix/Linux) use an eiffel implementation */
-      /* for eif_free() */ 
-
-	/* Free is guaranteed to work enven with a null pointer, while xfree will
-	 * most probably dump a core...
-	 */
-
-	if (ptr == (Malloc_t) 0)
-		return;
-	xfree(ptr);
-
-#endif /* EIF_THREADS */	
+#endif	/* LMALLOC_CHECK */
 }
 
 

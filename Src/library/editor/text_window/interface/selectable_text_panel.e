@@ -239,7 +239,7 @@ feature {NONE} -- Handle mouse clicks
 						stop := l_cursor.twin
 						text_displayed.set_selection_cursor (l_cursor)
 						text_displayed.selection_cursor.go_start_word
-						l_cursor.go_end_word						
+						l_cursor.go_end_word
 						text_displayed.enable_selection
 						if l_cursor.is_equal (text_displayed.selection_cursor) then
 							l_cursor.go_right_char_no_down_line
@@ -552,10 +552,9 @@ feature {NONE} -- Handle mouse clicks
 				position_cursor (l_cursor, x_pos, y_pos)
 			end
 
-			if text_displayed.has_selection and then l_cursor.is_equal (selection_cursor) then
+			if text_displayed.selection_is_empty then
 					-- Forget selection if nothing is selected.
-				text_displayed.disable_selection
-				
+				text_displayed.disable_selection				
 			end
 
 			if l_number /= former_pointed_line then

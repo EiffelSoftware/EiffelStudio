@@ -40,12 +40,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
-			-- Default font to draw dialogs.
-		once
-			create Result.make
-		end
-
 	closeable: BOOLEAN is
 			-- When the user can close the window?
 		local

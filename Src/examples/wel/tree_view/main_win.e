@@ -67,12 +67,6 @@ feature {NONE} -- Implementation
 	Title: STRING is "WEL Tree View"
 			-- Window's title
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
-			-- Default font used to draw dialogs.
-		once
-			create Result.make
-		end
-
 	class_background: WEL_BRUSH is
 			-- background color
 		once

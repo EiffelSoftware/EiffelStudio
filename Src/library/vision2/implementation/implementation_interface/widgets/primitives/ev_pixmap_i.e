@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (par: EV_PIXMAP_CONTAINER) is
+	make (par: EV_PIXMAPABLE) is
 			-- Create a pixmap implementation.
 		deferred
 		end	

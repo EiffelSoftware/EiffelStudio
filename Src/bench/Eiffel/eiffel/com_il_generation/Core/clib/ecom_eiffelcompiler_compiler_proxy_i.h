@@ -72,6 +72,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_cls_compliant(  /* [in] */ VARIANT_BOOL v ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	virtual STDMETHODIMP StartAssemblyGeneration(  /* [in] */ BSTR name, /* [in] */ BSTR fname, /* [in] */ BSTR location ) = 0;
 
 

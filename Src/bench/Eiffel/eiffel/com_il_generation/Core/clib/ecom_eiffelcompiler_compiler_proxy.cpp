@@ -5,7 +5,7 @@
 #include "ecom_EiffelCompiler_COMPILER_PROXY.h"
 static const CLSID CLSID_COMPILER_PROXY_ = {0xe3895019,0xe9fd,0x345e,{0x8f,0x63,0x00,0xc6,0x68,0x3c,0x1d,0x1a}};
 
-static const IID IID_COMPILER_PROXY_I_ = {0x0137a789,0x12a5,0x3504,{0x9b,0x31,0xb3,0x23,0x3d,0x27,0xd4,0xe7}};
+static const IID IID_COMPILER_PROXY_I_ = {0x413ba215,0x207b,0x36a4,{0x89,0x6d,0xad,0x84,0xda,0xbb,0x95,0xe0}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -223,6 +223,38 @@ void ecom_EiffelCompiler::COMPILER_PROXY::ccom_set_verifiability(  /* [in] */ EI
 	tmp_v = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (v);
 	
 	hr = p_COMPILER_PROXY_I->set_verifiability(tmp_v);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::COMPILER_PROXY::ccom_set_cls_compliant(  /* [in] */ EIF_BOOLEAN v )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_COMPILER_PROXY_I == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_COMPILER_PROXY_I_, (void **)&p_COMPILER_PROXY_I);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL tmp_v = 0;
+	tmp_v = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (v);
+	
+	hr = p_COMPILER_PROXY_I->set_cls_compliant(tmp_v);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

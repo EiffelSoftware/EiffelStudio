@@ -22,12 +22,6 @@ namespace ISE.Compiler {
 internal class COMPILER : MarshalByRefObject, COMPILER_PROXY_I {
 
 /*
-feature -- Access
-*/
-	public bool is_verifiable;
-		// Is current code generation verifiable?
-
-/*
 feature -- Settings
 */
 	public void set_console_application()
@@ -68,6 +62,13 @@ feature -- Settings
 		is_verifiable = v;
 	}
 
+	public void set_cls_compliant (bool v)
+		// Set cls compliance of code generation. If `v' is True, generate
+		// cls compliant code, otherwise code is not cls compliant.
+	{
+		is_cls_compliant = v;
+	}
+
 /*
 feature -- Generation Structure
 */
@@ -105,8 +106,6 @@ feature -- Generation Structure
 			ExternalAssemblies = new System.Collections.ArrayList();
 			
 			CAFactory = new CustomAttributesFactory();
-
-			is_verifiable_enabled = false;
 
 			// Initialize access to ISE Runtime Classes
 			PrepareISERuntime();
@@ -2210,9 +2209,18 @@ feature -- Statics
 	public static string dll_name;
 	public static string dll_prefix;
 
-	// Status of code generation
+/*
+feature -- Access
+*/
 	internal static bool is_debugging_enabled = false;
-	internal static bool is_verifiable_enabled = false;
+		// Is current generation including debug information?
+
+	internal static bool is_verifiable = true;
+		// Is current code generation verifiable?
+	
+	internal static bool is_cls_compliant = true;
+		// Is current code generation cls compliant?
+
 } // end of COMPILER
 
 } // end of namespace

@@ -402,7 +402,10 @@ internal class CLASS
 
 				// Define storage of type information
 			attribute = builder.DefineField ("$$____type", type, FieldAttributes.Family);
-			attribute.SetCustomAttribute (CA.not_cls_compliant_attr);
+
+			if (COMPILER.is_cls_compliant) {
+				attribute.SetCustomAttribute (CA.not_cls_compliant_attr);
+			}
 
 				// Implement `____type' to access type info.
 			method = builder.DefineMethod (
@@ -410,7 +413,9 @@ internal class CLASS
 				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
 					MethodAttributes.Public,
 				type, Type.EmptyTypes);
-			method.SetCustomAttribute (CA.not_cls_compliant_attr);
+			if (COMPILER.is_cls_compliant) {
+				method.SetCustomAttribute (CA.not_cls_compliant_attr);
+			}
 
 			MethodIL = method.GetILGenerator();
 			MethodIL.Emit (OpCodes.Ldarg_0);
@@ -424,7 +429,9 @@ internal class CLASS
 					MethodAttributes.Public,
 				COMPILER.VoidType,
 				new Type [1] {type});
-			set_type.SetCustomAttribute (CA.not_cls_compliant_attr);
+			if (COMPILER.is_cls_compliant) {
+				set_type.SetCustomAttribute (CA.not_cls_compliant_attr);
+			}
 
 			MethodIL = set_type.GetILGenerator();
 			MethodIL.Emit (OpCodes.Ldarg_0);
@@ -439,7 +446,9 @@ internal class CLASS
 					MethodAttributes.Public,
 				typeof (String),
 				Type.EmptyTypes);
-			class_name.SetCustomAttribute (CA.not_cls_compliant_attr);
+			if (COMPILER.is_cls_compliant) {
+				class_name.SetCustomAttribute (CA.not_cls_compliant_attr);
+			}
 
 			MethodIL = class_name.GetILGenerator();
 			MethodIL.Emit (OpCodes.Ldstr, eiffel_name);

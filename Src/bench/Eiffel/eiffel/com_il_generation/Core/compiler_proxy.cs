@@ -113,6 +113,10 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.set_verifiability (v);
 	}
 
+	public void set_cls_compliant (bool v) {
+		core.set_cls_compliant (v);
+	}
+
 	public void AddAssemblyReference (string Name) {
 		core.AddAssemblyReference (Name);
 	}

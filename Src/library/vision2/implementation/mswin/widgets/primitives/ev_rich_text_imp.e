@@ -379,11 +379,14 @@ feature -- Status report
 		do
 			disable_redraw
 			current_selection := selection
-			if has_selection and selection_start + 1 = start_index and selection_end + 1 = end_index then
+			if current_selection.minimum /= current_selection.maximum and
+				start_index = current_selection.minimum + 1 and
+				end_index = current_selection.maximum + 1
+			then
 				range_already_selected := True
 			else
-				set_selection (start_index, end_index)
 				safe_store_caret
+				set_selection (start_index, end_index)
 			end
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)

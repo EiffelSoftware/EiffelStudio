@@ -690,6 +690,7 @@ end
 			desc: ATTR_DESC
 			generic_desc: GENERIC_DESC
 			attribute_type: TYPE_A
+			l_ext: IL_EXTENSION_I
 		do
 			from
 				create Result.make
@@ -699,9 +700,12 @@ end
 			loop
 				feature_i := item_for_iteration
 				if feature_i.is_attribute then
+					l_ext ?= feature_i.extension
 					attribute_type := feature_i.type.actual_type
-					if not attribute_type.is_none then
-							-- No attribute of NONE type in skeleton
+					if
+						(l_ext = Void or else l_ext.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
+					then
+							-- We do not take IL static fields, only attributes of a class.
 						attr_type := attribute_type.type_i
 						if attr_type.has_formal or attr_type.is_true_expanded then
 							create generic_desc

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	DB_INITIALIZATION
+	INITIAL_STATE
 
 inherit
 	STATE_WINDOW
@@ -133,4 +133,4 @@ feature -- Implementation
 	pixmap_location: STRING is "essai.bmp"
 			-- Pixmap location
 
-end -- class DB_INITIALIZATION
+end -- class INITIAL_STATE

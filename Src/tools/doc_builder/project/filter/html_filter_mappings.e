@@ -71,7 +71,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("border", "border")
 			Result.extend ("width", "width")
 			Result.extend ("height", "height")
-			Result.extend ("alt_text", "alt_text")
+			Result.extend ("alt", "alt_text")
 			Result.extend ("usemap", "usemap")
 			Result.extend ("shape", "shape")
 			Result.extend ("co-ordinates", "co-ordinates")
@@ -103,6 +103,7 @@ feature {HTML_FILTER} -- Access
 			Result.compare_objects
 			Result.extend ("class", "style")
 			Result.extend ("stylesheet", "stylesheet")
+			Result.extend ("title", "stylesheet_title")
 		end		
 		
 	character_mappings: HASH_TABLE [STRING, STRING] is
@@ -154,6 +155,7 @@ feature -- Element Data
 			Result.extend ("list")
 			Result.extend ("stylesheet")
 			Result.extend ("span")
+			Result.extend ("div")
 			Result.extend ("image_link")
 			Result.extend ("paragraph")
 			Result.extend ("help_link")
@@ -184,6 +186,7 @@ feature -- Element Data
 			Result.extend ("class_name")
 			Result.extend ("cluster_name")
 			Result.extend ("feature_name")
+			Result.extend ("compiler_error")
 		end	
 
 	bufferable: ARRAYED_LIST [STRING] is

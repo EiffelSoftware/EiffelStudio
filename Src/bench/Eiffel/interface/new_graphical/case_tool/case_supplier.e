@@ -289,13 +289,13 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	add_suppliers (a_type: TYPE) is
+	add_suppliers (a_type: TYPE_AS) is
 			-- Try to extract as good as possible all supplier types
 			-- from `a_type'.
 		local
 			ct: CLASS_TYPE_AS
 			bt: BASIC_TYPE
-			g: EIFFEL_LIST [TYPE]
+			g: EIFFEL_LIST [TYPE_AS]
 		do
 			ct ?= a_type
 			if ct /= Void then

@@ -1,0 +1,264 @@
+<html>
+	<head>
+		<title>Reflection interface specification</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<h2>3. How can I retrieve information from the database?</h2>
+		<br>
+
+				<a name = assembly_retrieval>
+				<h3>3.1 Retrieve an assembly...</h3>
+
+						<p>
+								The first kind of information you may want to retrieve is an assembly. In the same way you had two features to start assembly storage, ISE reflection interface provides two queries to get information about an assembly:
+								<ul>
+										<li>
+												`assembly_from_type (a_type: SYSTEM_TYPE): EIFFEL_ASSEMBLY'
+										</li>
+										<li>
+												`assembly_from_info (a_version, a_culture, a_key: STRING): EIFFEL_ASSEMBLY'
+										</li>
+								</ul>
+
+								The first feature may be more convenient sometimes, but the only information used by the database to retrieve assembly description file is version, culture and key.<br>
+								Then it will use the XML file to generate an instance of `EIFFEL_ASSEMBLY', which may be easier to use. The attributes of this class are:
+
+								<ul>
+										<li>
+												assembly_name: STRING<br>
+														-- Assembly name
+										</li>
+										<br><br>
+										<li>
+												assembly_version: STRING<br>
+														-- Assembly version
+										</li>
+										<br><br>
+										<li>
+												assembly_culture: STRING<br>
+														-- Assembly culture
+										</li>
+										<br><br>
+										<li>
+												assembly_public_key: STRING<br>
+														-- Assembly public key
+										</li>
+										<br><br>
+										<li>
+												eiffel_cluster_path: STRING<br>
+														-- Path to cluster where Eiffel classes will be generated
+										</li>
+										<br><br>
+										<li>
+												emitter_version_number: STRING<br>
+													-- Emitter version number
+										</li>
+								</ul>
+						</p>
+				<br>
+
+				<a name = type_retrieval>
+				<h3>3.2 Retrieve a type...</h3>
+
+						<p>
+								ISE reflection interface also provides a query (`type') to get information about a .NET type. Its signature is: `type (a_type: SYSTEM_TYPE): EIFFEL_CLASS'.<br>
+								First, the database looks for the assembly defining this type by using type assembly qualified name. Then, it uses type full name to find location of type description XML file. At last, it uses XML file to generate a more user-friendly representation that is an instance of `EIFFEL_CLASS'.<br>
+								This class provides useful information to match .NET names and Eiffel names. Here are the attributes of class `EIFFEL_CLASS':
+
+								<ul>
+										<li>
+												is_frozen: BOOLEAN<br>
+														-- Is class frozen?
+										</li>
+										<br><br>
+										<li>
+												is_expanded: BOOLEAN<br>
+														-- Is class expanded?
+										</li>
+										<br><br>
+										<li>
+												is_deferred: BOOLEAN<br>
+														-- Is class deferred?
+										</li>
+										<br><br>
+										<li>
+												create_none: BOOLEAN<br>
+														-- Does class have `create{NONE}' creation declaration?
+										</li>
+										<br><br>
+										<li>
+												eiffel_name: STRING<br>
+														-- Eiffel name
+										</li>
+										<br><br>
+										<li>
+												dot_net_strong_name: STRING<br>
+														-- .NET strong name (i.e. alias)
+										</li>
+										<br><br>
+										<li>
+												dot_net_simple_name: STRING <br>
+														-- .NET simple name
+										</li>
+										<br><br>
+										<li>
+												namespace: STRING<br>
+														-- Namespace defining current class
+										</li>
+										<br><br>
+										<li>
+												parents: SYSTEM_COLLECTIONS_HASHTABLE<br>
+														-- Key: Parent Eiffel name<br>
+														-- Value: Inheritance clauses
+										</li>
+										<br><br>
+										<li>
+												creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Creation routines Eiffel names
+										</li>
+										<br><br>
+										<li>
+												initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Initialization features
+										</li>
+										<br><br>
+										<li>
+												access_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Access features
+										</li>
+										<br><br>
+										<li>
+												element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Element change features
+										</li>
+										<br><br>
+										<li>
+												basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Basic operations
+										</li>
+										<br><br>
+										<li>
+												unary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Unary operators
+										</li>
+										<br><br>
+										<li>
+												binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Binary operators
+										</li>
+										<br><br>
+										<li>
+												special_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Special features
+										</li>
+										<br><br>
+										<li>
+												implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Implementation features
+										</li>
+										<br><br>
+										<li>
+												invariants: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Class invariants
+										</li>
+								</ul>
+
+								In fact, features are instance of `EIFFEL_FEATURE', which provides useful information to match .NET and Eiffel feature names, arguments names... The attributes of class `EIFFEL_FEATURE' are:
+
+								<ul>
+										<li>
+												is_frozen: BOOLEAN<br>
+														-- Is feature frozen?
+										</li>
+										<br><br>
+										<li>
+												is_static: BOOLEAN<br>
+														-- Is feature static?
+										</li>
+										<br><br>
+										<li>
+												is_abstract: BOOLEAN<br>
+														-- Is feature abstract?
+										</li>
+										<br><br>
+										<li>
+												is_method: BOOLEAN<br>
+														-- Is feature a method?
+										</li>
+										<br><br>
+										<li>
+													is_field: BOOLEAN<br>
+														-- Is feature a field?
+										</li>
+										<br><br>
+										<li>
+												is_creation_routine: BOOLEAN<br>
+														-- Is feature a creation routine?
+										</li>
+										<br><br>
+										<li>
+												eiffel_name: STRING<br>
+														-- Eiffel name
+										</li>
+										<br><br>
+										<li>
+												dot_net_name: STRING<br>
+														-- .NET name
+										</li>
+										<br><br>
+										<li>
+												arguments: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Feature Arguments
+										</li>
+										<br><br>
+										<li>
+												return_type: STRING<br>
+														-- Eiffel name of feature return type
+										</li>
+										<br><br>
+										<li>
+												return_type_assembly_qualified_name: STRING<br>
+														-- Assembly qualified name of feature return type
+										</li>
+										<br><br>
+										<li>
+												preconditions: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Feature preconditions
+										</li>
+										<br><br>
+										<li>
+												postconditions: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Feature postconditions
+										</li>
+										<br><br>
+										<li>
+												comments: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+														-- Feature comments
+										</li>
+								</ul>
+						</p>
+				<br>
+
+				<a name = assemblies_retrieval>
+				<h3>3.3 Retrieve all the assemblies...</h3>
+
+						<p>
+								ISE reflection interface also provides a query called `assemblies', which enables you to get all the assemblies stored in the database. The result is an instance of `SYSTEM_COLLECTIONS_ARRAYLIST', which is in fact a list of `EIFFEL_ASSEMBLY'.<br>
+								A point that has not been mentioned yet is that database keeps a kind of index in XML format with paths to assembly description XML files, that is used to build this list of `EIFFEL_ASSEMBLY'.
+						</p>
+				<br>
+
+				<a name = concurrence_issue>
+				<h3>3.4 Concurrence issue</h3>
+
+						<p>
+								In the same way storage may be impossible because of concurrent processes, data retrieval may also fail. Therefore, ISE reflection interface updates a boolean called `last_read_successful' to let you about this.<br>
+								In both cases, you can have some more information about the storage/retrieval error by calling `last_error'. This query return an instance of `REFLECTION_ERROR', which has two attributes: `message: STRING' and `code: INTEGER'.
+						</p>
+		<br><br>
+	</body>
+</html>

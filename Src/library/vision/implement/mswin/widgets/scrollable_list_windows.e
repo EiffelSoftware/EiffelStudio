@@ -181,11 +181,13 @@ feature  -- Access
 	selected: BOOLEAN is
 			-- Is there at least one item selected?
 		do
-			if multiple_selection then
-				Result := count_selected_items > 0
-			else
-				Result := cwin_send_message_result (wel_item,
-					Lb_getcursel, 0, 0) /= Lb_err
+			if wel_item /= default_pointer then
+				if multiple_selection then
+					Result := count_selected_items > 0
+				else
+					Result := cwin_send_message_result (wel_item,
+						Lb_getcursel, 0, 0) /= Lb_err
+				end
 			end
 		end
 

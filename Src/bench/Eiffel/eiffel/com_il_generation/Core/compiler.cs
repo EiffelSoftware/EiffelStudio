@@ -69,6 +69,12 @@ feature -- Settings
 		is_cls_compliant = v;
 	}
 
+	public void set_any_type_id (int v)
+		// Set `Any_id' with `v'.
+	{
+		Any_id = v;
+	}
+
 /*
 feature -- Generation Structure
 */
@@ -189,17 +195,17 @@ feature -- Generation Structure
 
 			switch (dotnet_name)
 			{
-				case "System.Object": AnyID = TypeID; break;
-				case "System.Int32": Int32ID = TypeID; break;
-				case "System.Int64": Int64ID = TypeID; break;
-				case "System.Int16": Int16ID = TypeID; break;
-				case "System.Byte": ByteID = TypeID; break;
-				case "System.Single": SingleID = TypeID; break;
-				case "System.Double": DoubleID = TypeID; break;
-				case "System.Char": CharID = TypeID; break;
-				case "System.Boolean": BooleanID = TypeID; break;
-				case "System.Exception": ExceptionID = TypeID; break;
-				case "System.IntPtr": PointerID = TypeID; break;
+				case "System.Object": Object_id = TypeID; break;
+				case "System.Int32": Integer_32_id = TypeID; break;
+				case "System.Int64": Integer_64_id = TypeID; break;
+				case "System.Int16": Integer_16_id = TypeID; break;
+				case "System.Byte": Integer_8_id = TypeID; break;
+				case "System.Single": Real_id = TypeID; break;
+				case "System.Double": Double_id = TypeID; break;
+				case "System.Char": Character_id = TypeID; break;
+				case "System.Boolean": Boolean_id = TypeID; break;
+				case "System.Exception": Exception_id = TypeID; break;
+				case "System.IntPtr": Pointer_id = TypeID; break;
 				default: break;
 			}
 
@@ -250,6 +256,12 @@ feature -- Generation Structure
 		// Generate mapping between `ISE.Runtime.NONE_TYPE and `type_id'.
 	{
 		internal_generate_type_class_mapping (Ise_none_type, type_id);
+	}
+
+	public void generate_eiffel_type_info_type_class_mapping (int type_id)
+		// Generate mapping between `ISE.Runtime.EIFFEL_TYPE_INFO and `type_id'.
+	{
+		internal_generate_type_class_mapping (Ise_eiffel_type_info_type, type_id);
 	}
 
 	public void generate_basic_type_class_mapping (int type_id)
@@ -378,7 +390,7 @@ feature -- Generation Structure
 			Log ("EndParentsList");
 		#endif
 		if (!Classes [CurrentTypeID].IsInterface && Classes [CurrentTypeID].BaseType == NoValue) {
-			Classes [CurrentTypeID].AddParent (AnyID);
+			Classes [CurrentTypeID].AddParent (Object_id);
 		}		
 		Classes [CurrentTypeID].CreateTypeBuilder();
 	}
@@ -1390,7 +1402,7 @@ feature -- Generation Structure
 	// assertion yield a False value.
 	public void GenerateAssertionCheck (int AssertType, string Tag) {
 		Label NewLabel = MethodIL.DefineLabel();
-		Type ExceptionType = Classes [ExceptionID].Builder;
+		Type ExceptionType = Classes [Exception_id].Builder;
 		Type [] ArrayType = new Type [1] {typeof (string)};
 
 		BranchOnTrue (NewLabel);
@@ -1411,7 +1423,7 @@ feature -- Generation Structure
 	}
 
 	public void GeneratePreconditionViolation() {
-		Type ExceptionType = Classes [ExceptionID].Builder;
+		Type ExceptionType = Classes [Exception_id].Builder;
 		Type [] ArrayType = new Type [1] {typeof (string)};
 
 		GenerateRestoreAssertionStatus();
@@ -1437,7 +1449,7 @@ feature -- Generation Structure
 
 	// Start rescue clause and store last exception
 	public void GenerateStartRescue(){
-		MethodIL.BeginCatchBlock (Classes [ExceptionID].Builder);
+		MethodIL.BeginCatchBlock (Classes [Exception_id].Builder);
 		MethodIL.Emit (OpCodes.Stsfld, last_exception);
 	}
 
@@ -1520,23 +1532,23 @@ feature -- Generation Structure
 
 	// Generate `ldint.xx' instruction
 	public void GenerateLoadFromAddress (int TypeID) {
-		if (TypeID == Int32ID)
+		if (TypeID == Integer_32_id)
 			MethodIL.Emit (OpCodes.Ldind_I4);
-		else if (TypeID == Int64ID)
+		else if (TypeID == Integer_64_id)
 			MethodIL.Emit (OpCodes.Ldind_I8);
-		else if (TypeID == Int16ID)
+		else if (TypeID == Integer_16_id)
 			MethodIL.Emit (OpCodes.Ldind_I2);
-		else if (TypeID == ByteID)
+		else if (TypeID == Integer_8_id)
 			MethodIL.Emit (OpCodes.Ldind_I1);
-		else if (TypeID == CharID)
+		else if (TypeID == Character_id)
 			MethodIL.Emit (OpCodes.Ldind_I2);
-		else if (TypeID == BooleanID)
+		else if (TypeID == Boolean_id)
 			MethodIL.Emit (OpCodes.Ldind_I1);
-		else if (TypeID == SingleID)
+		else if (TypeID == Real_id)
 			MethodIL.Emit (OpCodes.Ldind_R4);
-		else if (TypeID == DoubleID)
+		else if (TypeID == Double_id)
 			MethodIL.Emit (OpCodes.Ldind_R8);
-		else if (TypeID == PointerID)
+		else if (TypeID == Pointer_id)
 			MethodIL.Emit (OpCodes.Ldind_I);
 		else
 			MethodIL.Emit (OpCodes.Ldobj, Classes [TypeID].Builder);
@@ -1619,7 +1631,7 @@ feature -- Generation Structure
 		AttributeAttributes = FieldAttributes.Private | FieldAttributes.Static;
 
 		DoneBuilder = ((TypeBuilder)Classes [CurrentTypeID].Builder).
-			DefineField (name + "Done", Classes [BooleanID].Builder, AttributeAttributes);
+			DefineField (name + "Done", Classes [Boolean_id].Builder, AttributeAttributes);
 	}
 
 	public void GenerateOnceResultInfo (string name, int TypeID) {
@@ -1944,7 +1956,7 @@ feature -- Generation Structure
 		ISE_class = ise_runtime_assembly.GetType ("ISE.Runtime.EXCEPTION_MANAGER");
 		last_exception = ISE_class.GetField ("last_exception");
 
-		ISE_EiffelInterface = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_TYPE_INFO");
+		Ise_eiffel_type_info_type = ise_runtime_assembly.GetType ("ISE.Runtime.EIFFEL_TYPE_INFO");
 		Ise_type = ise_runtime_assembly.GetType ("ISE.Runtime.TYPE");
 		Ise_class_type = ise_runtime_assembly.GetType ("ISE.Runtime.CLASS_TYPE");
 		Ise_generic_type = ise_runtime_assembly.GetType ("ISE.Runtime.GENERIC_TYPE");
@@ -2105,8 +2117,12 @@ feature -- Statics
 	private static int arg_pos;
 
 	// Predefined class type ids
-	private static int AnyID, PointerID, Int32ID, BooleanID,
-		CharID, DoubleID, SingleID, ByteID, Int16ID, Int64ID, ExceptionID;
+	private static int Object_id, Pointer_id, Integer_32_id, Boolean_id,
+		Character_id, Double_id, Real_id, Integer_8_id, Integer_16_id,
+		Integer_64_id, Exception_id;
+
+	internal static int Any_id;
+		// Id of ANY interface.
 
 	// Key pair filename extension
 	private static string Key_filename_extension = ".snk";
@@ -2193,7 +2209,7 @@ feature -- Statics
 	private static int counter = 0;
 
 	// Interface to which all Eiffel implementation classes inherits from.
-	public static Type ISE_EiffelInterface = null;
+	public static Type Ise_eiffel_type_info_type = null;
 	public static Type Ise_type = null;
 	public static Type Ise_class_type = null;
 	public static Type Ise_generic_type = null;

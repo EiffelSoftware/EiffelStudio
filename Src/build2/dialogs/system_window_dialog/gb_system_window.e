@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Events
 
-	
 	class_build_type_selected is
 			-- Called by `select_actions' of `project_radio_button'.
 		do
@@ -143,10 +142,12 @@ feature {NONE} -- Implementation
 			else
 				debugging_check_button.disable_select
 			end
-			if project_settings.attributes_local then
+			if project_settings.attributes_local.is_equal (True_string) then
 				attributes_local_check_button.enable_select
-			else
-				attributes_local_check_button.disable_select
+			elseif project_settings.attributes_local.is_equal (False_string) then
+				attributes_non_local_check_button.enable_select
+			elseif project_settings.attributes_local.is_equal (Optimal_string) then
+				attributes_optimal_local_check_button.enable_select
 			end
 			if project_settings.client_of_window then
 				client_check_button.enable_select
@@ -193,9 +194,11 @@ feature {NONE} -- Implementation
 				project_settings.disable_debugging_output
 			end
 			if attributes_local_check_button.is_selected then
-				project_settings.enable_attributes_local
-			else
-				project_settings.disable_attributes_local
+				project_settings.set_attributes_locality (True_string)
+			elseif attributes_non_local_check_button.is_selected then
+				project_settings.set_attributes_locality (False_string)
+			elseif attributes_optimal_local_check_button.is_selected then
+				project_settings.set_attributes_locality (Optimal_string)
 			end
 			if client_check_button.is_selected then
 				project_settings.enable_client_of_window
@@ -255,8 +258,6 @@ feature {NONE} -- Implementation
 		do
 			Result := System_status.current_project_settings
 		end
-		
-	
 
 end -- class GB_SYSTEM_WINDOW
 

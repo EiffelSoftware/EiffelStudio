@@ -188,9 +188,9 @@ feature -- Input
 				fill_buffer (token_end);
 				token_end := 0
 			end;
+			read_index := token_end + 1;
 			if
 				buffer_item_code (read_index) = -1
-				or buffer_item_code (read_index) = Close_of_file
 			then
 				end_of_text := true;
 				token_type := -1;
@@ -200,7 +200,6 @@ feature -- Input
 				token_type := 0;
 				token_start := token_end + 1
 			end;
-			read_index := token_end + 1;
 			if read_index > buffer_size then
 				if token_start = 1 then
 					buffer_resized := true;
@@ -290,6 +289,7 @@ feature -- Input
 				fill_buffer (token_end);
 				token_end := 0
 			end;
+			read_index := token_end + 1;
 			if buffer_item_code (read_index) = -1 then
 				end_of_text := true;
 				token_type := -1;
@@ -299,7 +299,6 @@ feature -- Input
 				token_type := 0;
 				token_start := token_end + 1
 			end;
-			read_index := token_end + 1;
 			from
 				state := dfa.item (1);
 				state := state.item (categories_table.item
@@ -356,6 +355,7 @@ feature -- Input
 				fill_buffer (token_end);
 				token_end := 0
 			end;
+			read_index := token_end + 1;
 			if buffer_item_code (read_index) = -1 then
 				end_of_text := true;
 				token_type := -1;
@@ -365,7 +365,6 @@ feature -- Input
 				token_type := 0;
 				token_start := token_end + 1
 			end;
-			read_index := token_end + 1;
 			from
 				state := dfa.item (1);
 				state := state.item (categories_table.item
@@ -548,7 +547,7 @@ feature {NONE} -- Implementation
 		end;
 
 end -- class LEXICAL
- 
+
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,

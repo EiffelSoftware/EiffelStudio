@@ -32,7 +32,8 @@ class CONSOLE inherit
 			readint, readreal, readdouble, readchar,
 			readline, readstream, readword, next_line,
 			putint, putbool, putreal,
-			putdouble, putstring, putchar, new_line, end_of_file
+			putdouble, putstring, putchar, new_line, end_of_file,
+			file_close
 		end
 
 creation
@@ -375,6 +376,14 @@ INTEGER is
 		external
 			"C"
 		end;
+
+	file_close (file: POINTER) is
+			-- Close `file'
+		external
+			"C"
+		alias
+			"console_file_close"
+		end
 	
 end -- class CONSOLE
 

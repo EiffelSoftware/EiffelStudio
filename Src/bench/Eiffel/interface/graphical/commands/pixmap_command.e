@@ -91,6 +91,9 @@ feature -- Licence managment
 			if licence.registered then
 				licence.open_licence;
 				Result := licence.licenced and then licence_checked;
+				if not Result then
+					licence.unregister;
+				end;
 			end;
 --			if Result then
 --				io.error.putstring ("ISE license manager: recognized application%N%

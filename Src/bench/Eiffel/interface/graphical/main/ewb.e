@@ -32,6 +32,9 @@ feature -- Licence managment
 			if licence.registered then
 				licence.open_licence;
 				Result := licence.licenced
+				if not Result then
+					licence.unregister
+				end;
 			end;
 		end;
 

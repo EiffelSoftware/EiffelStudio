@@ -199,14 +199,30 @@ feature -- Status setting
 			-- Wait until window is closed by the user.
 		local
 			dummy: INTEGER
+			l_had_exception: BOOLEAN
+			l_message: STRING
 		do
 			from
+				app_implementation.gtk_marshal.enable_exception_handling
+					-- Proxy exception handling is needed for dialogs when rescue clause is located in a ancestor client of `Current'
+					-- When exception bypasses gtk default signal marshalling then sometimes strange behavior occurs leading to potential crashes
 			until
 				is_destroyed or else not is_show_requested
 			loop
 				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+				l_had_exception := app_implementation.gtk_marshal.last_callback_had_exception
 				App_implementation.call_idle_actions
+				if l_had_exception then
+					l_message := app_implementation.gtk_marshal.last_exception_message
+					app_implementation.gtk_marshal.disable_exception_handling
+					if l_message = Void then
+						(create {EXCEPTIONS}).raise ("Vision2 caught an exception")
+					else
+						(create {EXCEPTIONS}).raise ("Vision2 Exception: " + l_message)
+					end
+				end
 			end
+			app_implementation.gtk_marshal.disable_exception_handling
 		end
 
 	enable_modal is
@@ -614,8 +630,9 @@ feature {EV_ANY_I} -- Implementation
 	lock_update is
 			-- Lock drawing updates for `Current'
 		do
-			Precursor {EV_WINDOW_I}			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			Precursor {EV_WINDOW_I}
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
+			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 		
 	event_mask: INTEGER
@@ -625,7 +642,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Restore drawing updates for `Current'
 		do
 			Precursor {EV_WINDOW_I}
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_thaw_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, False)
+			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_thaw_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES}

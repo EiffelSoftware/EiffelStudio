@@ -78,7 +78,9 @@ feature -- Conveniences
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword (" is ");
+			ctxt.put_string (" ");
+			ctxt.put_keyword ("is");
+			ctxt.put_string (" ");
 			value.format(ctxt);
 			ctxt.commit;
 		end;

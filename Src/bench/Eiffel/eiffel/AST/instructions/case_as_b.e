@@ -78,15 +78,20 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("when ");
+			ctxt.put_keyword ("when");
+			ctxt.put_string (" ");
 			ctxt.set_separator (",");
+			ctxt.separator_is_special;
 			ctxt.no_new_line_between_tokens;
 			interval.format (ctxt);
-			ctxt.put_keyword (" then ");
+			ctxt.put_string (" ");
+			ctxt.put_keyword ("then");
+			ctxt.put_string (" ");
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				ctxt.set_separator(";");
+				ctxt.separator_is_special;
 				ctxt.new_line_between_tokens;
 				compound.format(ctxt)
 			end;	

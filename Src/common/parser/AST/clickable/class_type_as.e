@@ -328,9 +328,11 @@ feature -- stoning
 			ctxt.put_class_name (Universe.class_named (class_name,
 						Inst_context.cluster).compiled_class);
 			if generics /= void then
-				ctxt.put_special (" [");
-				ctxt.no_new_line_between_tokens;
-				ctxt.set_separator (", ");
+				ctxt.put_string (" ");
+				ctxt.put_special ("[");
+				ctxt.space_between_tokens;
+				ctxt.set_separator (",");
+				ctxt.separator_is_special;
 				generics.format (ctxt);
 				ctxt.put_special ("]");
 			end;

@@ -2,7 +2,10 @@ class EXPORT_ITEM_AS
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			format
+		end;
 	SHARED_EXPORT_STATUS;
 
 feature -- Attributes
@@ -35,6 +38,23 @@ feature -- Export status computing
 				export_status := clients.export_status; 
 			end;
 			features.update (export_adapt, export_status, parent);
+		end;
+
+feature -- formatter
+
+	format (ctxt : FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			if clients /= Void then
+				ctxt.set_separator (",");
+				ctxt.separator_is_special;
+				ctxt.space_between_tokens;
+				clients.format (ctxt);
+				ctxt.put_string (" ")
+			end;
+			features.format (ctxt);
+			ctxt.commit
 		end;
 
 end

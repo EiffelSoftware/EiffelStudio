@@ -593,7 +593,8 @@ feature -- Primitives
 			i, count: INTEGER;
 		do
 			ctxt.put_class_name (associated_class);
-			ctxt.put_special (" [");
+			ctxt.put_string (" ");
+			ctxt.put_special ("[");
 			from
 				i := 1;
 				count := generics.count;
@@ -602,7 +603,8 @@ feature -- Primitives
 			loop
 				generics.item (i).format (ctxt);
 				if i /= count then
-					ctxt.put_string (", ");
+					ctxt.put_special (",");
+					ctxt.put_string (" ");
 				end;
 				i := i + 1;
 			end;

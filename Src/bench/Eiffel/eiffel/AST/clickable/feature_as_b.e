@@ -223,9 +223,11 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.begin;
+			ctxt.put_before_feat_decl;
 			ctxt.next_line;
 			ctxt.set_separator(",");
-			ctxt.no_new_line_between_tokens;
+			ctxt.separator_is_special;
+			ctxt.space_between_tokens;
 			ctxt.abort_on_failure;
 				--| Should only be one feature name
 			feature_names.first.main_feature_format (ctxt)
@@ -236,6 +238,7 @@ feature -- Formatter
 				ctxt.commit;
 				body.format (ctxt);
 				ctxt.commit;
+				ctxt.put_after_feat_decl;
 			end;
 		end;
 

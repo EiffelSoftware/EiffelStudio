@@ -52,7 +52,8 @@ feature -- Formatting
 			ctxt.begin;
 			if  clients /= void then
 				ctxt.set_separator (",");
-				ctxt.no_new_line_between_tokens;
+				ctxt.separator_is_special;
+				ctxt.space_between_tokens;
 				clients.format (ctxt);
 			end;
 			--ctxt.put_trailing_comment (position);

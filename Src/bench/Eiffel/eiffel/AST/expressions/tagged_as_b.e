@@ -65,7 +65,8 @@ feature -- Type check, byte code and dead code removal
 			ctxt.begin;
 			if tag /= void then
 				ctxt.put_string(tag);
-				ctxt.put_special(": ");
+				ctxt.put_special(":");
+				ctxt.put_string (" ")
 			end;
 			ctxt.new_expression;
 			expr.format (ctxt);

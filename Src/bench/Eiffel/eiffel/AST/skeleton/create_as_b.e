@@ -34,7 +34,8 @@ feature -- formatter
 			last_was_printed: BOOLEAN;
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("creation ");
+			ctxt.put_keyword ("creation");
+			ctxt.put_string (" ");
 			if clients = void then
 				last_was_printed := true
 			else
@@ -48,6 +49,7 @@ feature -- formatter
 					ctxt.indent_one_more;
 					ctxt.next_line;
 					ctxt.set_separator(",");
+					ctxt.separator_is_special;
 					ctxt.new_line_between_tokens;
 					feature_list.format (ctxt);
 				end;

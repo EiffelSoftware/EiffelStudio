@@ -108,7 +108,7 @@ feature -- Initialization
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("BIT ");
+			ctxt.put_string ("BIT ");
 			ctxt.prepare_for_feature (bits_symbol, Void);
 			ctxt.put_current_feature;
 			ctxt.commit;

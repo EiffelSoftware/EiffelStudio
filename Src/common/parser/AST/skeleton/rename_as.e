@@ -5,6 +5,9 @@ class RENAME_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			format
+		end
 
 feature -- Attributes
 
@@ -24,6 +27,20 @@ feature -- Initialization
 		ensure then
 			old_name_exists: old_name /= Void;
 			new_name_exists: new_name /= Void;
+		end;
+
+feature -- Formatter
+
+	format (ctxt : FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			old_name.format (ctxt);
+			ctxt.put_string (" ");
+			ctxt.put_keyword ("as");
+			ctxt.put_string (" ");
+			new_name.format (ctxt);
+			ctxt.commit
 		end;
 	
 end

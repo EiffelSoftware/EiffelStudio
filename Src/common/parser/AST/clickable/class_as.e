@@ -135,7 +135,9 @@ feature -- formatting
 			flat: FLAT_AST;
 			s: STRING;
 		do
+			ctxt.put_before_class_declaration;
 			ctxt.begin;
+			ctxt.prepare_class_text;
 			ctxt.flat_struct.format_comments (ctxt);			
 			if indexes /= void and not indexes.empty then
 				ctxt.put_keyword ("indexing");
@@ -149,6 +151,7 @@ feature -- formatting
 				ctxt.next_line;
 			end;
 
+			ctxt.put_before_class_header;
 			if is_expanded then
 				ctxt.put_keyword ("expanded");
 				ctxt.put_string (" ");
@@ -163,18 +166,45 @@ feature -- formatting
 				ctxt.put_string (" ");
 			end;
 			ctxt.put_name_of_class;	
+			ctxt.put_after_class_header;
 
 			if generics /= void then
 				ctxt.put_string (" ");
+				ctxt.put_before_generics;
 				ctxt.put_special ("[");
-				ctxt.no_new_line_between_tokens;
-				ctxt.set_separator (", ");
+				ctxt.space_between_tokens;
+				ctxt.set_separator (",");
+				ctxt.separator_is_special;
 				generics.format (ctxt);
 				ctxt.put_special ("]");
+				ctxt.put_after_generics
 			end;
 			ctxt.next_line;
 			ctxt.next_line;
+			if ctxt.is_clickable_format and obsolete_message /= Void then
+				ctxt.put_before_obsolete;
+				ctxt.put_keyword ("obsolete");
+				ctxt.put_string (" ");
+				obsolete_message.format (ctxt);
+				ctxt.put_after_obsolete;
+				ctxt.next_line;
+				ctxt.next_line
+			end;
+			if ctxt.is_clickable_format and parents /= Void then
+				ctxt.put_before_inheritance;
+				ctxt.put_keyword ("inherit");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.new_line_between_tokens;
+				ctxt.set_separator (";");
+				parents.format (ctxt);
+				ctxt.put_after_inheritance;
+				ctxt.indent_one_less;
+				ctxt.next_line;
+				ctxt.next_line
+			end;
 			if creators /= void then
+				ctxt.put_before_creators;
 				ctxt.continue_on_failure;
 				ctxt.new_line_between_tokens;
 				ctxt.set_separator (void);
@@ -183,15 +213,19 @@ feature -- formatting
 					ctxt.put_keyword ("creation");
 					ctxt.next_line;
 				end;
+				ctxt.put_after_creators;
 				ctxt.next_line;
 			end;		
 			ctxt.begin;
 			ctxt.flat_struct.format (ctxt);	
 			ctxt.commit;	
+			ctxt.put_before_class_end;
 			ctxt.put_keyword ("end");
 			ctxt.end_class_text;
+			ctxt.put_after_class_end;
 			ctxt.next_line;
 			ctxt.commit;
+			ctxt.put_after_class_declaration
 		end;
 
 feature {CASE_CLASS_INFO} -- Case storage 

@@ -78,6 +78,7 @@ feature
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
+			ctxt.put_before_feat_clause;
 			ctxt.begin;
 			ctxt.next_line;
 			ctxt.put_keyword ("feature");
@@ -97,6 +98,7 @@ feature
 				features.forth;
 			end;
 			ctxt.commit;
+			ctxt.put_after_feat_clause;
 		end
 
 	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is

@@ -78,16 +78,20 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
+			ctxt.put_before_invariant;
 			ctxt.put_keyword("invariant");
 			ctxt.indent_one_more;
 			ctxt.continue_on_failure;
 			ctxt.next_line;
 			ctxt.set_separator (";");
+			ctxt.separator_is_special;
+			ctxt.new_line_between_tokens;
 			if assertion_list /= Void then
 				format_assertions (ctxt);
 			end;
 			if ctxt.last_was_printed then
 				ctxt.commit;
+				ctxt.put_after_invariant
 			else
 				ctxt.rollback
 			end

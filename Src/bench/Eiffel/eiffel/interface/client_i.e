@@ -206,7 +206,8 @@ feature -- formatter
 				end
 				clients.forth;
 				if not clients.after then
-					ctxt.put_string (", ");
+					ctxt.put_special (",");
+					ctxt.put_string (" ");
 				end
 			end
 		end;

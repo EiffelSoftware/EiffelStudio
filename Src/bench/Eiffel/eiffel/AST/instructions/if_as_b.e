@@ -118,14 +118,17 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.put_breakable;
-			ctxt.put_keyword ("if ");
+			ctxt.put_keyword ("if");
+			ctxt.put_string (" ");
 			ctxt.new_expression;
 			condition.format (ctxt);
-			ctxt.put_keyword (" then");
+			ctxt.put_string (" ");
+			ctxt.put_keyword ("then");
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				ctxt.set_separator(";");
+				ctxt.separator_is_special;
 				ctxt.new_line_between_tokens;
 				compound.format (ctxt);
 				ctxt.indent_one_less;
@@ -133,9 +136,10 @@ feature -- Formatter
 			ctxt.next_line;
 			ctxt.put_breakable;
 			if elsif_list /= void then	
-				ctxt.set_separator(void);
+				ctxt.set_separator	(Void);
 				elsif_list.format (ctxt);
-				ctxt.set_separator(";");
+				ctxt.set_separator (";");
+				ctxt.separator_is_special;
 				ctxt.next_line;
 			end;
 			if else_part /= void then

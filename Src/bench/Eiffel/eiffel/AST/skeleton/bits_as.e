@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a BIT type."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class BITS_AS
 
 inherit
@@ -43,7 +48,7 @@ feature -- Comparison
 			Result := equivalent (bits_value, other.bits_value)
 		end
 
-feature
+feature -- Type evaluation
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_A is
 			-- Calculated type in function of the feature `f' which has

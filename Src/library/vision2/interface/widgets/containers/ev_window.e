@@ -308,16 +308,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_WINDOW_IMP} implementation.make (Current)
 		end
-		
-feature -- Obsolete
-
-	set_status_bar (a_status_bar: EV_WIDGET) is
-			-- Assign `a_status_bar' to `status_bar'.
-		obsolete
-			"Use: lower_bar.extend (...)"
-		do
-			lower_bar.extend (a_status_bar)
-		end
 
 invariant
 	--title_not_void: is_usable implies title /= Void

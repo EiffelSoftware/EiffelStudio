@@ -15,14 +15,14 @@
 			<code>
 				<class_name>LIST</class_name> 
 				<symbol>[</symbol>
-				<generic>G</generic>
+				<generics>G</generics>
 				<symbol>]</symbol>
 			</code> the insertion procedure 
 			<code>
 				<feature_name>put</feature_name>
 			</code> has a formal argument of type 
 			<code>
-				<generic>G</generic>
+				<generics>G</generics>
 			</code>, representing the element to be inserted.  Then with a declaration such as
 		</paragraph>
 		<code_block><local_variable>pl</local_variable><symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>POLYGON</class_name><symbol>]</symbol></code_block>
@@ -121,7 +121,7 @@
 				<symbol>[</symbol>
 			</code>
 			<code>
-				<generic>T</generic>
+				<generics>T</generics>
 			</code>
 			<code>
 				<symbol>]]</symbol>
@@ -133,7 +133,7 @@
 			</code> 
 			<code>
 				<symbol>[</symbol>
-				<generic>G</generic>
+				<generics>G</generics>
 				<symbol>]</symbol>
 			</code>, may be viewed as an abbreviation for genericity constrained by 
 			<code>

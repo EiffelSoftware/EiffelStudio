@@ -68,7 +68,7 @@
 		<paragraph>A feature, as noted, is an operation available on instances of a class.  A feature can be either an 
 			<bold>attribute</bold> or a 
 			<bold>routine</bold>.  This classification, which you can follow by starting from the 
-			<span>right</span> on the figure above, is based on implementation considerations:
+			right on the figure above, is based on implementation considerations:
 		</paragraph>
 		<list ordered="false">
 			<item> An attribute is a feature implemented through memory: it describes a field that will be found in all instances of the class.  For example class 
@@ -100,7 +100,7 @@
 		</list>
 		<paragraph>If we instead take the viewpoint of the 
 			<bold>clients</bold> of a class (the classes relying on its feature), you can see the relevant classification by starting from the 
-			<span>left</span> on the figure:
+			left on the figure:
 		</paragraph>
 		<list ordered="false">
 			<item>
@@ -796,7 +796,7 @@
 			</link>) -- will generalize the notion of type slightly.  But they do not change the fundamental property that 
 			<bold>every type is based on a class</bold>, called the type's 
 			<bold>base class</bold>.  In the examples seen so far, each type 
-			<span>is</span> a class, serving as its own base class.
+			is a class, serving as its own base class.
 		</paragraph>
 		<paragraph>An instance of a class 
 			<code>
@@ -1398,6 +1398,7 @@
 			</code> of the form illustrated by the figure on page 
 			<link>
 				<url>tutorial-00.xml#35291</url>
+				<label>28</label>
 			</link> can cause objects to become unreachable.  This is the case for the object identified as OBJ2 on that figure (the object to which 
 			<code>
 				<local_variable>x</local_variable>
@@ -1890,7 +1891,7 @@
 		</paragraph>
 		<paragraph>These rules follow directly from the more general goals (reusability, extendibility, reliability) and principles (Uniform Access, information hiding) underlying Eiffel software design.  They reflect a view that each class must denote a well-understood abstraction, defined by a set of exported features chosen by the class designer -- the "control panel".  </paragraph>
 		<paragraph>The class documentation (the 
-			<span>contract form</span>, see page 
+			contract form, see page 
 			<link>
 				<url>tutorial-09.xml#78482</url>
 				<label>44</label>

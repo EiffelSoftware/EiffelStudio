@@ -234,7 +234,7 @@
 			<code>
 				<feature_name>item</feature_name>
 			</code>, because these features must be applicable to 
-			<span>any</span> routine, and so cannot rely on a fixed number of arguments.  Instead they take a single tuple intended to contain all the arguments.  This property is reflected in the type of the second actual generic parameter to 
+			any routine, and so cannot rely on a fixed number of arguments.  Instead they take a single tuple intended to contain all the arguments.  This property is reflected in the type of the second actual generic parameter to 
 			<code>
 				<local_variable>f</local_variable>
 			</code>, corresponding to 

@@ -55,13 +55,14 @@
 				<string>iteration</string>
 			</code> and so on.  You can nest clusters, using for example EiffelBase, with its own subclusters as listed, as a cluster of your system.
 		</paragraph>
-		<paragraph>How will you specify a universe? Any Eiffel implementation can use its own conventions.  EiffelStudio applies a simple policy:</paragraph>
+		<paragraph>How will you specify a universe? Any Eiffel implementation can use its own conventions.  EiffelStudio applies a simple policy:
+		<line_break/>
 		<list ordered="false">
 			<item>Store each class in a single file, called its class file, with a name of the form 
 				<code>
 					<string>name</string>
 				</code>
-				<span>.</span>
+				.
 				<code>
 					<keyword>e</keyword>
 				</code>.  For clarity, 
@@ -70,14 +71,13 @@
 				</code> should be the lower-case version of the class name, although this is a style rule, not a requirement.
 			</item>
 			<item>Put all the class files of a cluster into a single directory (folder on Windows), called its cluster directory.
-				<paragraph>
-					<info>It is desirable for clarity, as a style rule, to separate clusters that directly contain classes ("terminal clusters") from those that have subclusters.  Cluster directories will then contain class files or cluster subdirectories, but not both.  </info>
-				</paragraph>
+			<note>It is desirable for clarity, as a style rule, to separate clusters that directly contain classes ("terminal clusters") from those that have subclusters.  Cluster directories will then contain class files or cluster subdirectories, but not both.  </note>
 			</item>
 			<item>To specify a system, it suffices to provide a list of cluster directories, along with the name of the root class and root procedure.  The universe consists of the classes contained in all the class files in the listed cluster directories.  </item>
 		</list>
+		</paragraph>
 		<paragraph>Here is an example of such a system specification.  It's 
-			<span>not</span> written in Eiffel, although it definitely has an Eiffel-like flavor.  It is called an 
+			not written in Eiffel, although it definitely has an Eiffel-like flavor.  It is called an 
 			<bold>Ace</bold>  (Assembly of Classes in Eiffel) and written in the Eiffel-like 
 			<bold>Lace</bold> notation (Language for the Assembly of Classes in Eiffel).  The backward slash 
 			<code>

@@ -10,11 +10,11 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>The division of roles in object technology is clear: of the two principal constituents of a system, 
-			<span>object types</span> and 
-			<span>operations</span>, the first dominates.  Classes, representing object types, determines the structure of the software; every routine, representing an operations, belongs to a class.
+			object types and 
+			operations, the first dominates.  Classes, representing object types, determines the structure of the software; every routine, representing an operations, belongs to a class.
 		</paragraph>
 		<paragraph>In some circumstances it is useful to define an 
-			<span>object</span> that denotes an 
+			object that denotes an 
 			operation.  This is especially useful if you want to build an object structure that refers to operations, so that you can later traverse the structure and execute the operations encountered.  A typical application is 
 			<bold>event-driven programming</bold> for Graphical User Interfaces (GUI), including Web programming.  In GUI programming you will want to record properties of the form
 		</paragraph>
@@ -67,8 +67,8 @@
 			</code> is not: it's program code -- a routine of a certain class.
 		</paragraph>
 		<paragraph>Agents address this issue.  An agent is an 
-			<span>object</span> that represents a 
-			<span>routine</span>, which can then be kept in an object structure.  The simplest form of agent is written 
+			object that represents a 
+			routine, which can then be kept in an object structure.  The simplest form of agent is written 
 			<code>
 				<keyword>agent</keyword>
 			</code>

@@ -308,8 +308,8 @@
 			</code> clause is optional, but here it is needed because the C name, starting with an underscore, is not valid as an Eiffel identifier.
 		</paragraph>
 		<paragraph>Similar syntax exists to interface with C++ classes.  ISE Eiffel includes a tool called 
-			<span>Legacy++</span> which will automatically produce, from a C++ class, an Eiffel class that encapsulates its facilities, making them available to the rest of the Eiffel software as 
-			<span>bona fide</span>  Eiffel features.
+			Legacy++ which will automatically produce, from a C++ class, an Eiffel class that encapsulates its facilities, making them available to the rest of the Eiffel software as 
+			bona fide  Eiffel features.
 		</paragraph>
 		<paragraph>These mechanisms illustrate one of the roles of Eiffel: as an system architecturing and software composition tool, used at the highest level to produce systems with robust, flexible structures ready for extendibility, reusability and maintainability.  In these structures not everything must be written in the Eiffel language: existing software elements and library components can play their part, with the structuring capabilities of Eiffel (classes, information hiding, inheritance, clusters, contracts and other techniques seen in this presentation) serving as the overall wrapping mechanism.  </paragraph>
 	</paragraph></document>

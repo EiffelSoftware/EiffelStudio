@@ -18,7 +18,7 @@
 			<content>Design by Contract&amp;#153; basics</content>
 		</heading>
 		<paragraph>A system -- a software system in particular, but the ideas are more general -- is made of a number of cooperating components. Design by Contract&amp;#153; states that their cooperation should be based on precise specifications -- 
-			<span>contracts</span> -- describing each party's expectations and guarantees.
+			contracts -- describing each party's expectations and guarantees.
 		</paragraph>
 		<paragraph>An Eiffel contract is similar to a real-life contract between two people or two companies, which it is convenient to express in the form of tables listing the expectations and guarantees. Here for example is how we could sketch the contract between a homeowner and the telephone company:</paragraph>
 		<table>
@@ -171,8 +171,8 @@
 				<feature_name>deposit</feature_name>
 			</code> is correct if and only if the value of the argument is non-negative. The routine does not guarantee anything for a call that does not satisfy the precondition. It is in fact part of the Eiffel method that a routine body should 
 			<bold>never</bold> test for the precondition, since it is the client's responsibility to ensure it. (An apparent paradox of Design by Contract&amp;#153;, which is reflected in the bottom-right entries of the preceding and follwing contract tables, and should not be a paradox any more at the end of this discussion, is that one can get 
-			<span>more</span> reliable software by having 
-			<span>fewer</span> explicit checks in the software text.)
+			more reliable software by having 
+			fewer explicit checks in the software text.)
 		</paragraph>
 		<paragraph>The postcondition of a routine expresses what the routine guaranteed to its clients for calls satisfying the precondition. The notation 
 			<code>
@@ -495,7 +495,7 @@
 					<label>Reusable Software</label>
 				</link>
 			</span> (see bibliography). Assertions play a central role in such documentation by expressing the terms of the contract. As demonstrated 
-			<span>a contrario</span> by the widely publicized $500-million crash of the Ariane-5 rocket launcher in June of 1996, due to the incorrect reuse of a software module from the Ariane-4 project, 
+			a contrario by the widely publicized $500-million crash of the Ariane-5 rocket launcher in June of 1996, due to the incorrect reuse of a software module from the Ariane-4 project, 
 			<bold>reuse without a contract documentation</bold> is the path to disaster. Non-reuse would, in fact, be preferable.
 		</paragraph>
 		<heading>

@@ -631,7 +631,7 @@
 			<code>
 				<feature_name>cp</feature_name>
 			</code> is that it must be a 
-			<span>procedure</span> of 
+			procedure of 
 			<code>
 				<class_name>T</class_name>
 			</code>, not necessarily a creation procedure; this permits using the mechanism even if 

@@ -123,7 +123,6 @@ feature -- Status setting
 		local
 			fst, ofst: FEATURE_STONE
 			new_f: E_FEATURE
-			old_id: STRING
 			cst: CLASSC_STONE
 			cl: CLASS_C
 			found: BOOLEAN

@@ -37,18 +37,28 @@ inherit
 	
 feature -- Attributes for externals
 
-	external_name: STRING;
+	external_name: STRING is
 			-- External name to call
+		do
+			Result := Names_heap.item (external_name_id)
+		end
+		
+	external_name_id: INTEGER
+			-- Name ID of external.
 
 	encapsulated: BOOLEAN;
 			-- Has the call to `external_name' to be encapsulated?
 
 feature -- Routines for externals
 
-	set_external_name (s: STRING) is
-			-- Assign `s' to `external_name'.
+	set_external_name_id (a_name_id: INTEGER) is
+			-- Assign `s' to `a_name_id'.
+		require
+			a_name_id_positive: a_name_id > 0
 		do
-			external_name := s;
+			external_name_id := a_name_id
+		ensure
+			external_name_id_set: external_name_id = a_name_id
 		end;
 
 	set_encapsulated (e: BOOLEAN) is

@@ -126,6 +126,7 @@ feature -- Formatting
 							tool.set_stone (stone);
 							tool.set_file_name (file_name (stone));
 							display_info (stone);
+							text_window.set_cursor_position (0);
 							tool.show_read_only_text;
 							text_window.display;
 							tool.set_last_format (holder);

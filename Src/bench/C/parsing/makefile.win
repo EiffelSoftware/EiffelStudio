@@ -1,0 +1,7 @@
+all:
+	cd eiffel
+	wmake
+	cd ..\lace
+	wmake
+	cd ..\shared
+	wmake

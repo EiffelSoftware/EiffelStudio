@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 			create widget_tree
 			create notebook
 			create assemblies
-			create edit_area
 			create edit_comments_area
 			create search
 			create informations
@@ -78,10 +77,9 @@ feature {NONE} -- Initialization
 			l_vertical_split_area.extend (edit_comments_area)
 
 			notebook.extend (assemblies)
-			notebook.extend (edit_area)
+			notebook.extend (right_tree)
 			notebook.extend (search)
 			notebook.extend (informations)
-			notebook.extend (right_tree)
 			informations.extend (edit_area_box)
 			edit_area_box.extend (color_edit_area)
 			edit_area_box.extend (l_vertical_scroll_bar_1)
@@ -89,11 +87,9 @@ feature {NONE} -- Initialization
 			informations.extend (l_horizontal_box_1)
 			informations.disable_item_expand (l_horizontal_box_1)
 			l_horizontal_box_1.extend (l_horizontal_scroll_bar_1)
---			l_horizontal_box_1.disable_item_expand (l_horizontal_scroll_bar_1)
 			
 				-- Initialize properties of all widgets.
 			edit_comments_area.disable_edit
-			edit_area.set_text ("TEST TEST TEST TEST TEST%N%N%N TEST TEST TEST TEST TEST TEST TEST")
 			set_title ("Eiffel Assembly Cache Browser.")
 			file_menu.set_text ("File")
 			print_item.set_text ("Print...")
@@ -106,15 +102,10 @@ feature {NONE} -- Initialization
 			edit_type_item.set_text ("Edit type...")
 			help_menu.set_text ("Help")
 			about_item.set_text ("About...")
---			widget_tree.set_minimum_width (100)
 			notebook.set_item_text (assemblies, "Assemblies")
-			notebook.set_item_text (edit_area, "Informations")
 			notebook.set_item_text (search, "Search results")
 			notebook.set_item_text (informations, "Informations")
 			notebook.set_item_text (right_tree, "Objects")
---			color_edit_area.set_minimum_width (200)
---			color_edit_area.set_minimum_height (300)
---			l_vertical_scroll_bar_1.set_value (0)
 			
 				--Connect events.
 			resize_actions.extend (agent on_resize (?, ?, ?, ?))
@@ -126,8 +117,6 @@ feature {NONE} -- Initialization
 			remove_assembly_item.select_actions.extend (agent on_remove_assembly)
 			edit_type_item.select_actions.extend (agent on_edit_type)
 			about_item.select_actions.extend (agent on_about)
-			--l_horizontal_split_area_1.resize_actions.extend (agent on_resize_split_area (?, ?, ?, ?))
-			--l_horizontal_split_area_1.move.force_extend (agent on_resize_split_area)
 			edit_area_box.resize_actions.force_extend (agent on_resize_split_area)
 
 				-- Close the application when an interface close
@@ -161,7 +150,7 @@ feature --{EDIT_FACTORY, TREE_FACTORY} -- Implementation
 	widget_tree: EV_TREE
 	notebook: EV_NOTEBOOK
 	assemblies, search: EV_MULTI_COLUMN_LIST
-	edit_area, edit_comments_area: EV_TEXT
+	edit_comments_area: EV_TEXT
 	informations: EV_VERTICAL_BOX
 	edit_area_box, l_horizontal_box_1: EV_HORIZONTAL_BOX
 	color_edit_area: EV_PIXMAP
@@ -218,11 +207,6 @@ feature --{EDIT_FACTORY, TREE_FACTORY} -- Implementation
 			-- Called by `select_actions' of `about_item'.
 		deferred
 		end
-	
---	on_resize_split_area (a_x, a_y, a_width, a_height: INTEGER) is
---			-- Called by `resize_actions' of `l_horizontal_split_area_1'.
---		deferred
---		end
 	
 	on_resize_split_area is
 			-- Called by `resize_actions' of `l_horizontal_split_area_1'.

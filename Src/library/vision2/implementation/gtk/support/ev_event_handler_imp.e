@@ -175,7 +175,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	add_command_with_event_data (event: STRING; cmd: EV_COMMAND; 
+	add_command_with_event_data (wid: POINTER; event: STRING; cmd: EV_COMMAND; 
 		     arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA;
 		     mouse_button: INTEGER; double_click: BOOLEAN) is
 			-- Add `cmd' at the end of the list of
@@ -205,7 +205,7 @@ feature {NONE} -- Status setting
 			end
 			ev_str := event.to_c
 			con_id := c_gtk_signal_connect (
-				widget,
+				wid,
 				$ev_str,
 				cmd.execute_address,
 				$cmd,
@@ -241,7 +241,7 @@ feature {NONE} -- Status setting
 			(event_command_array @ event_id).extend (cmd, con_id)
 		end
         
-	add_command (event: STRING; cmd: EV_COMMAND; 
+	add_command (wid: POINTER; event: STRING; cmd: EV_COMMAND; 
 		     arg: EV_ARGUMENT) is
 			-- Add `cmd' at the end of the list of
 			-- actions to be executed when the 'event'
@@ -263,7 +263,7 @@ feature {NONE} -- Status setting
 		do
 			ev_str:= event.to_c
 			con_id := c_gtk_signal_connect (
-				widget,
+				wid,
 				$ev_str,
 				cmd.execute_address,
 				$cmd,
@@ -301,7 +301,7 @@ feature {NONE} -- Status setting
 
 		end
 
-	remove_commands (event_id: INTEGER) is
+	remove_commands (wid: POINTER; event_id: INTEGER) is
 			-- Remove the commands associated with
 			-- 'event_id' from the list of actions for
 			-- this context. If there is no command
@@ -322,7 +322,7 @@ feature {NONE} -- Status setting
 						list_com.exhausted
 					loop
 						con_id := list_com.connexion_id
-						gtk_signal_disconnect (widget, con_id)
+						gtk_signal_disconnect (wid, con_id)
 						-- remove the command in GTK
 						list_com.forth
 					end
@@ -335,7 +335,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
+	remove_single_command (wid: POINTER; event_id: INTEGER; cmd: EV_COMMAND) is
 			-- Remove `cmd' from the list of commmands associated
 			-- with the event `event_id'.
 		require
@@ -354,7 +354,7 @@ feature {NONE} -- Status setting
 				until
 					list_com.exhausted
 				loop
-					gtk_signal_disconnect (widget, list_com.connexion_id)
+					gtk_signal_disconnect (wid, list_com.connexion_id)
 						-- remove the command in GTK
 					list_com.remove
 						-- update of the event_command_array

@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := True
 			create child_cell
-			set_vertical_resize (True)
-			set_horizontal_resize (True)
+			internal_changes := set_bit (internal_changes, 16, True)
+			internal_changes := set_bit (internal_changes, 32, True)
 		end
 
 feature -- Access
@@ -435,6 +435,9 @@ end -- EV_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/14 16:17:36  brendel
+--| Improved initialize.
+--|
 --| Revision 1.20  2000/03/14 03:02:54  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

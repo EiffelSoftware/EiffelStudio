@@ -135,11 +135,4 @@ feature -- Access
 			end
 		end
 
-	display_agent (name: STRING; textable: EV_TEXTABLE): PROCEDURE [ANY, TUPLE[]] is
-			--
-		do
-			
-		end
-		
-
 end -- class GB_EV_ACTION_SEQUENCE

@@ -86,26 +86,16 @@ feature {PREFERENCE_CATEGORY} -- Access
 				if ar.value = Void or else ar.value.empty then
 					file.putstring ("%"%"");
 				else
-					if ar.value @ 1 /= '%"' then
-						file.putchar ('%"')
-						quotation_added := true
-					end
+					file.putchar ('%"')
 					file_putstring (file, ar.value)
-					if quotation_added then
-						file.putchar ('%"')
-					end
+					file.putchar ('%"')
 				end
 			elseif text.text.empty then
 				file.putstring ("%"%"")
 			else
-				if text.text @ 1 /= '%"' then
-					file.putchar ('%"')
-					quotation_added := true
-				end
+				file.putchar ('%"')
 				file_putstring (file, text.text)
-				if quotation_added then
-					file.putchar ('%"')
-				end
+				file.putchar ('%"')
 			end
 		end;
 

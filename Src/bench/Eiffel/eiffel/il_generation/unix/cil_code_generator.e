@@ -1016,11 +1016,12 @@ feature -- Assignments
 		do
 		end
 
-	generate_expanded_attribute_assignment (type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class
 			-- when direct access to attribute is not possible.
 		require
 			type_i_not_void: type_i /= Void
+			attr_type_not_void: attr_type /= Void
 			positive_feature_id: a_feature_id > 0
 		do
 		end

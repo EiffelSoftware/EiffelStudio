@@ -19,7 +19,8 @@ create
 feature -- Access
 
 	color: EV_COLOR is
-			-- Currently selected color.
+			-- Currently selected color or last color
+			-- passed to `set_color' if user cancelled `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do

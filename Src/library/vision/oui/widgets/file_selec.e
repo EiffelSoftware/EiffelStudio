@@ -226,6 +226,14 @@ feature
 			Result := implementation.pattern
 		end;
 
+	pattern_name: SRING
+			-- Name of the search pattern
+		require
+			exists: not destroyed
+		do
+			Result := implementation.pattern_name
+		end;
+
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.

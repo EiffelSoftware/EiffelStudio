@@ -568,11 +568,11 @@ yyval3 := new_boolean_as (True)
 	yy_do_action_38 is
 			--|#line 205
 		local
-			yyval7: INTEGER_AS
+			yyval7: INTEGER_CONSTANT
 		do
 
 				if token_buffer.is_integer then
-					yyval7 := new_integer_as (token_buffer.to_integer)
+					yyval7 := new_integer_as (False, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -581,7 +581,7 @@ yyval3 := new_boolean_as (True)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					yyval7 := new_integer_as (0)
+					yyval7 := new_integer_as (False, "0")
 				end
 			
 			yyval := yyval7
@@ -590,11 +590,11 @@ yyval3 := new_boolean_as (True)
 	yy_do_action_39 is
 			--|#line 220
 		local
-			yyval7: INTEGER_AS
+			yyval7: INTEGER_CONSTANT
 		do
 
 				if token_buffer.is_integer then
-					yyval7 := new_integer_as (token_buffer.to_integer)
+					yyval7 := new_integer_as (False, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -603,7 +603,7 @@ yyval3 := new_boolean_as (True)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					yyval7 := new_integer_as (0)
+					yyval7 := new_integer_as (False, "0")
 				end
 			
 			yyval := yyval7
@@ -612,11 +612,11 @@ yyval3 := new_boolean_as (True)
 	yy_do_action_40 is
 			--|#line 235
 		local
-			yyval7: INTEGER_AS
+			yyval7: INTEGER_CONSTANT
 		do
 
 				if token_buffer.is_integer then
-					yyval7 := new_integer_as (- token_buffer.to_integer)
+					yyval7 := new_integer_as (True, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -626,7 +626,7 @@ yyval3 := new_boolean_as (True)
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					yyval7 := new_integer_as (0)
+					yyval7 := new_integer_as (False, "0")
 				end
 			
 			yyval := yyval7
@@ -1220,7 +1220,7 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype7 (v: ANY): INTEGER_AS is
+	yytype7 (v: ANY): INTEGER_CONSTANT is
 		require
 			valid_type: yyis_type7 (v)
 		do
@@ -1231,7 +1231,7 @@ feature {NONE} -- Conversion
 
 	yyis_type7 (v: ANY): BOOLEAN is
 		local
-			u: INTEGER_AS
+			u: INTEGER_CONSTANT
 		do
 			u ?= v
 			Result := (u = v)

@@ -21,7 +21,30 @@ feature -- Editable
 			window_mgr.display (command_editor);
 		end
 
-feature -- Instance
+feature -- Instances
+
+	associated_instance_editors: LINKED_LIST [CMD_INST_EDITOR] is
+			-- Instance editor that has Current command
+		local
+			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
+			ed: CMD_INST_EDITOR
+		do
+			!! Result.make;
+			inst_editors := window_mgr.instance_editors;
+			from
+				inst_editors.start
+			until
+				inst_editors.after
+			loop
+				ed := inst_editors.item;
+				if ed.command_instance /= Void and then
+					(ed.command_instance.associated_command = Current) 
+				then
+					Result.extend (ed)
+				end;
+				inst_editors.forth
+			end
+		end;
 
 	has_instances: BOOLEAN is
 			-- Does Current have instances?
@@ -35,7 +58,7 @@ feature -- Instance
 				Shared_app_graph.off or Result
 			loop
 				s ?= Shared_app_graph.key_for_iteration;
-				if not (s = Void) then
+				if s /= Void then
 					from
 						s.start
 					until
@@ -55,6 +78,101 @@ feature -- Instance
 					end;
 				end;
 				Shared_app_graph.forth
+			end
+		end;
+
+	contexts_with_instances: LINKED_LIST [CONTEXT] is
+			-- Contexts that use Current command instances
+		local
+			s: STATE;
+			b: BEHAVIOR;
+			found: BOOLEAN
+		do
+			!! Result.make;
+			from
+				Shared_app_graph.start
+			until
+				Shared_app_graph.off 
+			loop
+				s ?= Shared_app_graph.key_for_iteration;
+				if s /= Void then
+					found := False;
+					from
+						s.start
+					until
+						s.after
+					loop
+						b := s.output.data;
+						from
+							b.start
+						until
+							b.after 
+						loop
+							found := (b.output.associated_command = Current);
+							b.forth
+						end;
+						if found then
+							Result.extend (s.input)
+						end;
+						s.forth
+					end;
+				end;
+				Shared_app_graph.forth
+			end
+		end;
+
+	instances: LINKED_LIST [CMD_INSTANCE] is
+			-- Instances for Current command
+		local
+			s: STATE;
+			b: BEHAVIOR;
+			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
+			ed: CMD_INST_EDITOR		
+		do
+			!! Result.make;
+			from
+				Shared_app_graph.start
+			until
+				Shared_app_graph.off 
+			loop
+				s ?= Shared_app_graph.key_for_iteration;
+				if s /= Void then
+					from
+						s.start
+					until
+						s.after
+					loop
+						b := s.output.data;
+						from
+							b.start
+						until
+							b.after 
+						loop
+							if (b.output.associated_command = Current) then
+								if not Result.has (b.output) then
+									Result.extend (b.output)
+								end
+							end
+							b.forth
+						end;
+						s.forth
+					end;
+				end;
+				Shared_app_graph.forth
+			end;
+				-- Get instances that hasn't been
+				-- inserted into a behaviour yet
+			inst_editors := associated_instance_editors;
+			from
+				inst_editors.start
+			until
+				inst_editors.after
+			loop
+				ed := inst_editors.item;
+				if not Result.has (ed.command_instance) then
+					Result.extend (ed.command_instance)
+				end
+				inst_editors.forth
 			end
 		end;
 
@@ -79,6 +197,22 @@ feature -- Stone
 			-- Name of the class representing
 			-- Current command
 		deferred
+		end;
+
+	eiffel_type_to_lower: STRING is
+			-- Name of the class representing
+			-- Current command in lower case
+		do
+			Result := clone (eiffel_type);
+			Result.to_lower
+		end;
+
+	eiffel_type_to_upper: STRING is
+			-- Name of the class representing
+			-- Current command in upper case
+		do
+			Result := clone (eiffel_type);
+			Result.to_upper
 		end;
 
 	arguments: EB_LINKED_LIST [ARG] is
@@ -146,15 +280,12 @@ feature -- Code Generation
 		do
 			!!n.make ("argument");
 			!!Result.make (0);
-				temp := clone (eiffel_type);
-				temp.to_upper;
-			Result.append (temp);
+			Result.append (eiffel_type_to_upper);
 			Result.append ("%N%T%Trename%N%T%T%Texecute as ");
-				temp.to_lower;
+			temp := eiffel_type_to_lower;
 			Result.append (temp);
 			Result.append ("_execute,");
 			Result.append ("%N%T%T%Tmake as ");
-				temp.to_lower;
 			Result.append (temp);
 			Result.append ("_make");
 			from
@@ -238,14 +369,10 @@ feature -- Code Generation
 	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is
 			-- Code generation for the 
 			-- creation clause of Current.
-		local
-			temp: STRING
 		do
 			!!Result.make (0);
 			Result.append ("%T%T%T");
-				temp := clone (eiffel_type);
-				temp.to_lower;
-			Result.append (temp);
+			Result.append (eiffel_type_to_lower);
 			Result.append ("_make");
 			if not l.empty then
 				Result.append (" (");

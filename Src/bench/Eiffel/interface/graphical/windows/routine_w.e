@@ -222,7 +222,7 @@ feature -- Access
 
 feature -- Update
 
-	parse_file is
+	parse_file: BOOLEAN is
 			-- Parse the file if possible.
 			-- (By default, do nothing).
 		local
@@ -249,6 +249,7 @@ feature -- Update
 				warner (popup_parent).gotcha_call (txt);
 			else
 				text_window.update_clickable_from_stone (stone)
+				Result := true
 			end
 		end;
 
@@ -328,8 +329,7 @@ feature -- Update
 				elseif last_format = showtext_frmt_holder then
 					-- Update the title bar of the feature tool.
 					-- "(stop)" if the routine has a stop point set.
-					showtext_frmt_holder.associated_command.display_header
-													(stone)
+					showtext_frmt_holder.associated_command.display_header (stone)
 				end
 			end
 		end;
@@ -376,19 +376,15 @@ feature -- Stone updating
 	process_feature (a_stone: FEATURE_STONE) is
 			-- Process the feature stone `a_stone'. 
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (a_stone);
-			else
-				last_format.execute (a_stone);
-				add_to_history (a_stone)
-				update_edit_bar
-			end
-		end;
+			last_format.execute (a_stone);
+			add_to_history (a_stone)
+			update_edit_bar
+		end
 
 	process_breakable (a_stone: BREAKABLE_STONE) is
 		do
 			Project_tool.process_breakable (a_stone)
-		end;
+		end
 
 	process_class (a_stone: CLASSC_STONE) is
 		local
@@ -401,9 +397,7 @@ feature -- Stone updating
 			text: STRUCTURED_TEXT;
 			s: STRING
 		do
-			if text_window.changed then
-				showtext_frmt_holder.execute (s);
-			elseif stone /= Void then
+			if stone /= Void then
 				ris := stone.e_feature.rout_id_set;
 				c := a_stone.e_class;
 				from

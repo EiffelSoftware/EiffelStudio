@@ -3,9 +3,7 @@
 	<paragraph>
 					<paragraph>  The Installer Class is to be invoked at set-up time. The class contains  all of the default implementation required to create a installer  class. </paragraph>
 					<paragraph>Please ensure you have the 
-						<code>
-							<class_name>System.Configuration.Install</class_name>
-						</code> assembly added to  project references before adding this item. 
+						<class_name>System.Configuration.Install</class_name> assembly added to  project references before adding this item. 
 					</paragraph>
 					<seealso>
 						<bold>See Also</bold>

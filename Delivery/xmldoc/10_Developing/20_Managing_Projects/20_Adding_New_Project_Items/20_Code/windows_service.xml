@@ -3,9 +3,7 @@
 	<paragraph>
 					<paragraph>  The Windows Service class is used for creating Windows services.The class  contains all of the default implementation required to create a windows  service. </paragraph>
 					<paragraph>Please ensure you have the 
-						<code>
-							<class_name>System.ServiceProcess</class_name>
-						</code> assembly added to project  references before adding this item. 
+						<class_name>System.ServiceProcess</class_name> assembly added to project  references before adding this item. 
 					</paragraph>
 					<seealso>
 						<bold>See Also</bold>

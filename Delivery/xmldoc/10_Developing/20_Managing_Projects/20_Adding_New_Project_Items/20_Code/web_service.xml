@@ -2,22 +2,14 @@
 	<meta_data/>
 	<paragraph>
 					<paragraph>The Web Service class is for creating Web Services to use from other  application. The class contains all of the default implementation required  to create a web service class. You may add any number of features to this class  however by default they will not be exported. To add a 'Web Method' you must  declare individual items with the 
-						<code>
-							<class_name>WEB_METHOD_ATTRIBUTE</class_name>
-						</code>. Please review the  example below.
+						<class_name>WEB_METHOD_ATTRIBUTE</class_name>. Please review the  example below.
 					</paragraph>
 					<paragraph>Please note that all those features exported as web methods must use the .NET  basic types (
-						<code>
-							<class_name>SYSTEM_STRING</class_name>
-						</code>, etc.)and not the Eiffel basic types (
-						<code>
-							<class_name>STRING</class_name>
-						</code>,  etc.)or else the features will be uncallable via SOAP.
+						<class_name>SYSTEM_STRING</class_name>, etc.)and not the Eiffel basic types (
+						<class_name>STRING</class_name>,  etc.)or else the features will be uncallable via SOAP.
 					</paragraph>
 					<paragraph>Please ensure you have the 
-						<code>
-							<class_name>System.Web.Services</class_name>
-						</code> assembly added to project  references before adding this item.
+						<class_name>System.Web.Services</class_name> assembly added to project  references before adding this item.
 					</paragraph>
 					<seealso>
 						<bold>See Also</bold>

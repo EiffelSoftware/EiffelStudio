@@ -21,9 +21,7 @@
 			</image>
 		</paragraph>
 		<paragraph>  In this example, the tree node representing the Eiffel class 
-			<code>
-				<class_name>APPLICATION</class_name>
-			</code> is the  subject of the context menu, which was opened as the result of a right click.  The entries available on the context menu perform the following actions:
+			<class_name>APPLICATION</class_name> is the  subject of the context menu, which was opened as the result of a right click.  The entries available on the context menu perform the following actions:
 		</paragraph>
 		<list ordered="false">
 			<item> 

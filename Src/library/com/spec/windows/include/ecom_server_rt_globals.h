@@ -13,7 +13,6 @@
 #define __ECOM_SERVER_RUNTIME_GLOBALS_H_INC__
 
 #include <setjmp.h>
-#include "ecom_generated_rt_globals.h"
 #include "eif_eiffel.h"
 #include "eif_except.h"
 

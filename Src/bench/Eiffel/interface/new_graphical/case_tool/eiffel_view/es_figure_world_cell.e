@@ -22,6 +22,22 @@ inherit
 			copy,
 			default_create
 		end
+		
+	RESOURCE_OBSERVATION_MANAGER
+		rename
+			initialize as initialize_resources
+		undefine
+			default_create,
+			copy
+		end
+		
+	OBSERVER
+		rename
+			update as retrieve_preferences
+		undefine
+			default_create,
+			copy
+		end
 
 create
 	make_with_world,
@@ -30,7 +46,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_world_and_tool (a_world: like world; a_tool: like tool) is
-			-- 
+			-- Make an EIFFEL_FIGURE_WORLD_CELL displaying `a_world' inside `a_tool'.
 		require
 			a_world_not_Void: a_world /= Void
 			a_tool_not_Void: a_tool /= Void
@@ -42,19 +58,21 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-			-- 
+			-- Initialize `Current'.
 		do
 			Precursor {EV_MODEL_WORLD_CELL}
 			drawing_area.set_pointer_style (cursors.open_hand_cursor)
+			add_observer ("diagram_auto_scroll_speed", Current)
+			retrieve_preferences
 		end
-		
-	
+
 feature -- Access
 
 	projector: EIFFEL_PROJECTOR
 			-- The projector used to project the `world'.
 			
 	tool: EB_CONTEXT_EDITOR
+			-- Tool the `world' is displayed in.
 
 feature {NONE} -- Implementation
 
@@ -158,5 +176,14 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	retrieve_preferences is
+			-- Retrieve `scroll_speed' from preferences.
+		local
+			val: INTEGER
+		do
+			val := integer_resource_value ("diagram_auto_scroll_speed", 50)
+			val := val.min(100).max(0)
+			scroll_speed := val / 100
+		end
 
 end -- class EIFFEL_FIGURE_WORLD_CELL

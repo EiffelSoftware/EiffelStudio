@@ -192,6 +192,18 @@ feature -- Access
 		do
 			Result := labels.item (to_go_index).text
 		end
+		
+	value: INTEGER is
+			-- Progress value.
+		do
+			Result := progress_bar.value
+		end
+		
+	range: INTEGER_INTERVAL is
+			-- Range of progress bar.
+		do
+			Result := progress_bar.range
+		end
 
 feature -- Status setting
 
@@ -222,7 +234,7 @@ feature -- Basic operation
 			wparent: EB_WINDOW
 		do
 			if not is_show_requested then
---				wparent := Window_manager.last_focused_window
+				wparent := Window_manager.last_focused_window
 				if wparent /= Void then
 					show_relative_to_window (wparent.window)
 				else
@@ -243,7 +255,9 @@ feature -- Basic operation
 		end
 
 	set_value (a_value: INTEGER) is
-			-- Set `processed_count' to `a_value'.
+			-- Set `value' to `a_value'.
+		require
+			a_value_in_range: range.has (a_value)
 		do
 			progress_bar.set_value (a_value)
 			graphical_update

@@ -174,9 +174,11 @@ feature -- Status setting
                         -- Set the height to `new_height'
                 do
 			has_height := True
-			private_attributes.set_height (new_height)
-			if exists then
-				wel_set_height (new_height)
+			if private_attributes.height /= new_height then
+				private_attributes.set_height (new_height)
+				if exists then
+					wel_set_height (new_height)
+				end
 			end
                 end
 
@@ -186,10 +188,13 @@ feature -- Status setting
                 do
 			has_width := True
 			has_height := True
-			private_attributes.set_width ( new_width)
-			private_attributes.set_height (new_height)
-			if exists then
-				resize (new_width, new_height)
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
+				private_attributes.set_width (new_width)
+				private_attributes.set_height (new_height)
+				if exists then
+					resize (new_width, new_height)
+				end
 			end
 		end
 
@@ -197,9 +202,11 @@ feature -- Status setting
 			-- Set the width to `new_width'
 		do
 			has_width := True
-			private_attributes.set_width (new_width)
-			if exists then
-				wel_set_width (new_width)
+			if private_attributes.width /= new_width then
+				private_attributes.set_width (new_width)
+				if exists then
+					wel_set_width (new_width)
+				end
 			end
 		end
 

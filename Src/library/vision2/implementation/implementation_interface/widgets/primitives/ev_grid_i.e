@@ -1409,10 +1409,20 @@ feature {NONE} -- Event handling
 			--
 		local
 			pointed_item: EV_GRID_ITEM
+			pointed_item_row: EV_GRID_ROW
 		do
 			pointed_item := drawer.item_at_position (a_x, a_y)
 			if a_button = 1 then
-				pointed_item.enable_select
+				pointed_item_row := pointed_item.row
+				if pointed_item_row.subrow_count > 0 then
+					if pointed_item_row.is_expanded then
+						pointed_item_row.collapse
+					else
+						pointed_item_row.expand
+					end
+				else
+					pointed_item.enable_select
+				end
 			end
 		end
 

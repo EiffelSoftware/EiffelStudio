@@ -18,7 +18,7 @@ inherit
 			id,
 			set_id
 		redefine
-			parent_imp
+			parent
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -41,11 +41,11 @@ feature {NONE} -- Initialization
 	make_with_text (par: EV_LIST; txt: STRING) is
 			-- Add and create an item with `txt' as label.
 		do
-			parent_imp ?= par.implementation
+			parent ?= par.implementation
 			check
-				parent_not_void: parent_imp /= Void
+				parent_not_void: parent /= Void
 			end
-			parent_imp.set_name (txt)
+			parent.set_name (txt)
 			initialize_list (item_command_count)
 		end
 
@@ -54,20 +54,20 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := parent_imp.is_selected (id)
+			Result := parent.is_selected (id)
 		end
 
 	text: STRING is
 			-- Current label of the item
 		do
-			Result := parent_imp.i_th_text (id)
+			Result := parent.i_th_text (id)
 		end
 
 	destroyed: BOOLEAN is
 			-- Is current object destroyed ?
-			-- Yes if the item doesn't exist in the parent_imp.
+			-- Yes if the item doesn't exist in the parent.
 		do
-			Result := not parent_imp.ev_children.has (Current)
+			Result := not parent.ev_children.has (Current)
 		end
 
 feature -- Status setting
@@ -75,14 +75,14 @@ feature -- Status setting
 	destroy is
 			-- Destroy the actual item.
 		do
-			parent_imp.remove_item (id)
+			parent.remove_item (id)
 			interface.remove_implementation
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
-			parent_imp.select_item (id + 1)
+			parent.select_item (id + 1)
 		end
 
 	toggle is
@@ -97,8 +97,8 @@ feature -- Element change
 	set_text (str: STRING) is
 			-- Set `text' to `str'.
 		do
-			parent_imp.delete_string (id)
-			parent_imp.insert_string_at (str, id)
+			parent.delete_string (id)
+			parent.insert_string_at (str, id)
 		end
 
 --	set_parent (par: EV_CONTAINER) is
@@ -109,17 +109,17 @@ feature -- Element change
 --		local
 --			par_imp: EV_CONTAINER_IMP
 --		do
---			parent_imp.remove_item
+--			parent.remove_item
 --			if par /= Void then
 --				par.set_name (text)
 --				par.
 --
---				parent_imp ?= par
+--				parent ?= par
 --				check
---					parent_not_void: parent_imp /= Void
+--					parent_not_void: parent /= Void
 --				end
 --			else
---				parent_imp := Void
+--				parent := Void
 --			end
 --		end
 
@@ -173,10 +173,10 @@ feature {NONE} -- Implementation
 			-- Window used to create the pixmap. It has to be
 			-- a wel_control.
 		do
-			Result ?= parent_imp
+			Result ?= parent
 		end
 
-	parent_imp: EV_LIST_ITEM_CONTAINER_IMP
+	parent: EV_LIST_ITEM_CONTAINER_IMP
 			-- list that contains the current item.
 
 	draw_focus (dc: WEL_DC; rect: WEL_RECT) is
@@ -212,18 +212,18 @@ feature {NONE} -- Implementation
 	draw_unselected_body (dc: WEL_DC; rect: WEL_RECT) is
 			-- Draw the body of the button : bitmap + text
 		do
-			dc.set_background_color (parent_imp.background_color_imp)
-			dc.fill_rect (rect, parent_imp.background_brush)
+			dc.set_background_color (parent.background_color_imp)
+			dc.fill_rect (rect, parent.background_brush)
 			if pixmap_imp /= Void and text /= "" then
 				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
 			rect.set_left (pixmap_imp.width + 5)
-				dc.set_text_color (parent_imp.foreground_color_imp)
+				dc.set_text_color (parent.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 				rect.set_left (0)
 			elseif pixmap_imp /= Void then
 				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
 			elseif text /= "" then
-				dc.set_text_color (parent_imp.foreground_color_imp)
+				dc.set_text_color (parent.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 			end
 		end	

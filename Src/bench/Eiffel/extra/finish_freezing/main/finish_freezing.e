@@ -57,8 +57,8 @@ feature -- Initialization
 				if index_of_word_option ("vs") = 0 then
 					-- We do not want to run nmake if launched from VS.Net
 					translator.run_make
+					c_error := c_compilation_error
 				end
-				c_error := c_compilation_error
 			end
 			
 				-- Destroy network path mapping if any
@@ -74,12 +74,13 @@ feature -- Initialization
 			
 			if index_of_word_option ("vs") /= 0 then
 				if retried then
-					-- Make the application return a non-zero value to OS to flag an error to calling process.
+						-- Make the application return a non-zero value to OS to flag an error
+						-- to calling process.
 					feature {EXCEPTIONS}.die (1)
 				end
 			end
 		rescue
-			retried := true
+			retried := True
 			retry
 		end
 
@@ -100,10 +101,10 @@ feature -- Access
 		do
 			create completed.make("completed.eif")
 			if not completed.exists then
-				Result := true
+				Result := True
 			else
 				completed.delete
-				Result := false
+				Result := False
 			end
 		end
 

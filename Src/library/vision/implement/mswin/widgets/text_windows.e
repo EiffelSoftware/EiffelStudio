@@ -339,6 +339,9 @@ feature -- Status report
 				!! text_metric.make (client_dc)
 				local_cx := cx + horizontal_position * text_metric.average_character_width
 				local_line_index := first_visible_line + (cy - formatting_rect.top) // text_metric.height
+				if local_line_index >= line_count then
+					local_line_index := line_count - 1
+				end
 				local_string := line (local_line_index)
 				local_char_index := line_index (local_line_index)
 				if local_cx > client_dc.tabbed_text_size (local_string).width then
@@ -478,7 +481,7 @@ feature -- Status setting
 		end
 
 	set_cursor_position (pos: INTEGER) is
-			-- Set is_cursor_position_visible to flag.
+			-- Set cursor_position to pos.
 		local
 			a_text: STRING
 			nb_cr: INTEGER
@@ -489,10 +492,14 @@ feature -- Status setting
 				if is_selection_active then 
 					start_sel := selection_start
 					end_sel := selection_end
+					enable_scroll_caret_at_selection
 					set_caret_position (nb_cr)
+					disable_scroll_caret_at_selection
 					wel_set_selection (start_sel, end_sel)
 				else
+					enable_scroll_caret_at_selection
 					set_caret_position (nb_cr)
+					disable_scroll_caret_at_selection
 				end
 			else
 				private_cursor_position := pos
@@ -557,12 +564,16 @@ feature -- Status setting
 
 	set_selection (first, last: INTEGER) is
 			-- Highlight the substring between `first' and `last' positions
+			-- leave the caret at `first'
 		local
 			nb_cr_first, nb_cr_last: INTEGER
 		do
 			nb_cr_first := eiffel_position_to_windows (first)
 			nb_cr_last := eiffel_position_to_windows (last)
 			if exists then
+				enable_scroll_caret_at_selection
+				set_caret_position (nb_cr_first)				
+				disable_scroll_caret_at_selection
 				wel_set_selection (nb_cr_first, nb_cr_last)
 			end
 			private_begin_selection := first
@@ -602,8 +613,27 @@ feature -- Status setting
 
 	set_top_character_position (char_pos : INTEGER) is
 			-- Set first character displayed to `char_pos'.
+		local
+			nb_cr, top_line: INTEGER
+			start_sel, end_sel : INTEGER
 		do
-			
+			if exists then
+				nb_cr := eiffel_position_to_windows (char_pos)
+				top_line := line_from_char (nb_cr)
+				nb_cr := line_index (top_line)
+				if is_selection_active then 
+					start_sel := selection_start
+					end_sel := selection_end
+					enable_scroll_caret_at_selection
+					set_caret_position (nb_cr)
+					disable_scroll_caret_at_selection
+					wel_set_selection (start_sel, end_sel)
+				else
+					enable_scroll_caret_at_selection
+					set_caret_position (nb_cr)
+					disable_scroll_caret_at_selection
+				end
+			end			
 		end
 
 	set_single_line_mode is

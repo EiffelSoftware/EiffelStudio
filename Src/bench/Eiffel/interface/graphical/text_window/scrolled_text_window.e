@@ -371,60 +371,17 @@ feature -- Update
 			end
 		end;
 
-	search (s: STRING) is
+	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
-		local
-			l_t, l_s: STRING;
-			local_text: like text;
-			search_sub: STRING;
-			c_pos: INTEGER;
-			start_position, end_position: INTEGER;
-			temp: STRING;
 		do
-			last_found_position := -1;
-			local_text := implementation.actual_text;
-
-			l_t := clone (local_text);
-			l_t.to_lower;
-			matcher.set_text (l_t)
-
-			if not equal (matcher.pattern, s) then
-				l_s := clone (s);
-				l_s.to_lower;
-				matcher.set_pattern (l_s)
-			end;
-
-			c_pos := implementation.actual_cursor_position;
-			if
-				c_pos >= 0 and then
-				c_pos + 1 < local_text.count
-			then
-				matcher.start_at (c_pos);
-				matcher.search_for_pattern;
-				if not matcher.found then
-					if (c_pos > 0) then
-						matcher.start_at (0);
-						matcher.search_for_pattern;
-					end
-				end
-				if matcher.found then
-					start_position := matcher.found_at - 1;
-					last_found_position := start_position;
-					end_position := start_position + s.count;
-					start_position := implementation.unexpanded_position (start_position);
-					end_position := implementation.unexpanded_position (end_position);
-					highlight_selected (start_position, end_position);
-					set_cursor_position (end_position)
-				end
-			end;
-			matcher.set_text ("")
+			search (s, is_case_sensitive, True)
 		end;
-
-	replace_text (s, r: STRING; replace_all: BOOLEAN) is
+			
+	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		local
 			s_pos, e_pos: INTEGER;
-			start_position, end_position: INTEGER
+			c_position, start_position, end_position: INTEGER
 		do
 			if not replace_all then
 				if matcher.found then
@@ -437,17 +394,22 @@ feature -- Update
 						replace (begin_of_selection, end_of_selection, r)
 					end
 				end;
-				search (s);
+				search (s, is_case_sensitive, True);
 			else
+				c_position := cursor_position;
 					--| Replace all.
+				set_cursor_position (0);
 				from
-					search (s)
+					search (s, is_case_sensitive, False)
 				until
 					not matcher.found
 				loop
-					replace (begin_of_selection, end_of_selection, r);
-					search (s)
+					e_pos := end_of_selection;
+					replace (begin_of_selection, e_pos, r);
+					set_cursor_position (e_pos);
+					search (s, is_case_sensitive, False)
 				end
+				set_cursor_position (c_position);
 			end
 		end;
 
@@ -597,6 +559,60 @@ feature {OBJECT_W} -- Settings
 				index := index + 1
 			end;
 			clickable_count := last_pos
+		end;
+
+	search (s: STRING; is_case_sensitive, start_at_top: BOOLEAN) is
+			-- Highlight and show next occurence of `s'.
+			-- `start_at_top' of text if initially couldn't find text.
+		local
+			l_t, l_s: STRING;
+			local_text: like text;
+			search_sub: STRING;
+			c_pos: INTEGER;
+			start_position, end_position: INTEGER;
+			temp: STRING;
+		do
+			last_found_position := -1;
+			local_text := implementation.actual_text;
+
+			l_t := clone (local_text);
+			if not is_case_sensitive then
+				l_t.to_lower;
+			end;
+			matcher.set_text (l_t)
+
+			if not equal (matcher.pattern, s) then
+				l_s := clone (s);
+				if not is_case_sensitive then
+					l_s.to_lower;
+				end;
+				matcher.set_pattern (l_s)
+			end;
+
+			c_pos := implementation.actual_cursor_position;
+			if
+				c_pos >= 0 and then
+				c_pos + 1 < local_text.count
+			then
+				matcher.start_at (c_pos);
+				matcher.search_for_pattern;
+				if not matcher.found then
+					if start_at_top and then (c_pos > 0) then
+						matcher.start_at (0);
+						matcher.search_for_pattern;
+					end
+				end
+				if matcher.found then
+					start_position := matcher.found_at - 1;
+					last_found_position := start_position;
+					end_position := start_position + s.count;
+					start_position := implementation.unexpanded_position (start_position);
+					end_position := implementation.unexpanded_position (end_position);
+					highlight_selected (start_position, end_position);
+					set_cursor_position (end_position)
+				end
+			end;
+			matcher.set_text ("")
 		end;
 
 end -- class SCROLLED_TEXT_WINDOW

@@ -19,6 +19,8 @@ inherit
 	
 	GB_ACCESSIBLE_COMMAND_HANDLER
 	
+	GB_WIDGET_UTILITIES
+	
 create
 	
 	make
@@ -101,13 +103,17 @@ feature {NONE} -- Implementation
 					-- is contained.
 				if object_handler.object_contained_in_object (deleted_object, editor.object) or
 					deleted_object = editor.object then
-					--editor.make_empty
 					if editor = docked_object_editor then
 						editor.make_empty
 					else
-						window_parent := editor.window_parent
+						window_parent := parent_window (editor)
+						check
+							floating_editor_is_in_window: window_parent /= Void
+						end
 						editor.destroy
 						window_parent.destroy
+						--| FIXME should this be `editors' prune?
+						--| if not, then we may not even need the argument anymore.
 						floating_object_editors.prune (editor)
 					end
 				end

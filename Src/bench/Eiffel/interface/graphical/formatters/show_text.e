@@ -147,9 +147,6 @@ feature -- Formatting
 						if cur /= Void then
 							text_window.go_to (cur)
 						end;
-						if routine_w /= Void then
-							routine_w.highlight_routine
-						end
 						tool.set_last_format (holder);
 						display_header (stone);
 						mp.restore

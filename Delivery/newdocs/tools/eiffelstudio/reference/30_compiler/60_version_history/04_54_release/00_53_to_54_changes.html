@@ -22,7 +22,30 @@
 
         <H2>What's new</H2>
         
+        <ul>
+          <li>Support for new <span class="ekeyword">convert</span> keyword.</li>
+          <li>Support for new C/C++ inline specification.</li>
+          <li>For .NET, allow calling of overloaded features for a .NET classes 
+          to be called without using disambiguated names. Disambiguated names 
+          are still needed when redefining inherited features from .NET classes.</li>
+          <li>Support for inclusion of .NET resources within Eiffel assemblies.</li>
+</ul>
+        
         <H2>Improvements</H2>
+        
+        
+        <ul>
+          <li>Improved speed of compilation by about 7-10%</li>
+          <li>Reduced waiting time at the end of the degree 6 when performing a 
+          compilation from scratch (reduced to about 50% or less of the time it 
+          used to take)</li>
+          <li>Improved speed of <span class="eclass">TUPLE</span> creation and <span class="eclass">TUPLE</span> access 
+          which generates more compact C code.</li>
+          <li>Improved speed of agent calls by a factor of 2 to 3.</li>
+          <li>Improved speed of Eiffel calls from C (CECIL and use of $ operator 
+          on routines) by removing an indirection. It also makes generated 
+          executables smaller (about 1-5% smaller)</li>
+</ul>
         
         
         <h2>Changes</h2>
@@ -39,6 +62,8 @@
           in class <span class="eclass">MY_CLASS</span>, the following agent creation
           <span class="ekeyword">agent</span> <span class="efeature">target</span>.<span class="efeature">call</span> is valid if and 
           only if <span class="efeature">call</span> is exported to <span class="eclass">MY_CLASS</span>.</li>
+          <li>Allowed type specification for open operands in agent creation, 
+          i.e. one can now write: <span class="ekeyword">agent</span> <span class="efeature">f</span> ({<span class="eclass">A</span>}).</li>
 </ul>
         
         
@@ -58,6 +83,12 @@
         <ul>
           <li>Fixed issue when shared library definition file did not exist or 
           was invalid. Now it will not produce any C compilation errors.</li>
+          <li>Fixed bug in recoverable storable when there is a mismatch. The 
+          first assignment attempt in 
+          <span class="efeature">internal_correct_mismatch</span> from <span class="eclass">ANY</span> would crash.</li>
+          <li>Fixed issues when using agents in a multithreaded application, 
+          they will sometimes disable the garbage collector and the application 
+          might quickly run out of memory.</li>
 </ul>
         
         
@@ -76,6 +107,14 @@
         
         
         <h3>Store/Retrieve issues</h3>
+        
+        
+        <ul>
+          <li>Fixed memory corruption bug with recoverable storable when a 
+          mismatch was detected</li>
+          <li>Fixed issue where mismatch was not detected if attributes were 
+          dropped</li>
+</ul>
         
         
         </BODY>

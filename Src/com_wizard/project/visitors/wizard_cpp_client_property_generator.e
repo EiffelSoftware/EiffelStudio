@@ -371,6 +371,12 @@ feature {NONE} -- Implementation
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
 
+			tmp_body.append ("args.rgvarg = &arg")
+			tmp_body.append (Semicolon)
+			tmp_body.append (New_line_tab)
+			tmp_body.append ("args.rgdispidNamedArgs = NULL")
+			tmp_body.append (Semicolon)
+			tmp_body.append (New_line_tab)
 			tmp_body.append ("args.cArgs = 1")
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)

@@ -31,6 +31,9 @@ feature -- Basic operations
 			need_generate_ce := False
 			need_generate_ec := False
 
+			need_free_memory := False
+			need_generate_free_memory := False
+
 			a_type := an_automation_descriptor.type
 			c_type := vartype_namer.c_name (a_type)
 			eiffel_type := vartype_namer.eiffel_name (a_type)
@@ -113,6 +116,8 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_bstr")
 				ec_function_name.append ("ccom_ec_bstr")
 				can_free := True
+				need_free_memory := True
+				free_memory_function_name := "rt_ce.free_memory_bstr"
 
 			elseif is_dispatch (a_type) then
 				ce_function_name.append ("ccom_ce_pointed_dispatch")

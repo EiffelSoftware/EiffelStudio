@@ -154,6 +154,24 @@ feature {NONE}
 			-- so it is very important to name the format as
 			-- SHOW_<type of format>
 		do
+-- FIXME: use of generator is not portable
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
+-- FIXME
 			!!Result.make(0);
 			Result.append (generator);
 			Result.to_lower;

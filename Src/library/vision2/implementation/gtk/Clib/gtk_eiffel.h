@@ -394,6 +394,9 @@ EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem);
 /* Routine to set the selection mode of the tree to SINGLE */
 void c_gtk_tree_set_single_selection_mode (GtkWidget *tree);
 
+/* Routine to set the selection mode of the tree to SINGLE */
+EIF_POINTER c_gtk_tree_selected_item (GtkWidget *tree);
+
 /*==============================================================================
  gtk_text functions
 ==============================================================================*/

@@ -50,6 +50,27 @@ feature -- Access
 				Result := private_font
 			end
 		end
+		
+	internal_font_height: INTEGER is
+			-- Height required to correctly display font of `Current' in pixels.
+		local
+			screen_dc: WEL_SCREEN_DC
+			extent: WEL_SIZE
+		do
+			create screen_dc
+			screen_dc.get
+			if wel_font = Void then
+				screen_dc.select_font ((create {WEL_SHARED_FONTS}).gui_font)
+			else
+				screen_dc.select_font (wel_font)
+			end
+			extent := screen_dc.string_size ("X")
+			screen_dc.unselect_font 
+			screen_dc.quick_release
+			Result := extent.height
+		ensure
+			result_non_negative: Result >= 0
+		end
 
 feature -- Status setting
 

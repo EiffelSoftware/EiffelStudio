@@ -69,59 +69,6 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-	update_attribute_editor is
-			-- Update status of `attribute_editor' to reflect information
-			-- from `objects.first'.
-		do
-			value.return_actions.block
-			step.return_actions.block
-			leap.return_actions.block
-			
-			value.set_text (first.value.out)
-			step.set_text (first.step.out)
-			leap.set_text (first.leap.out)
-
-			value.return_actions.resume
-			step.return_actions.resume
-			leap.return_actions.resume
-		end
-		
-	set_up_user_events (vision2_object, an_object: like ev_type) is
-			-- Add events necessary for `vision2_object'.
-		local
-			widget: EV_WIDGET
-		do
-			--| For now, just deal with widgets. At some point items may be supported also.
-		user_event_widget := vision2_object
-		widget ?= vision2_object
-		check
-			we_are_dealing_with_a_widget: widget /= Void
-		end
-		objects.extend (an_object)
-		objects.extend (vision2_object)
-		widget.pointer_button_release_actions.force_extend (agent start_timer)
-		end	
-		
-		start_timer is
-				--
-			local
-				timer: EV_TIMEOUT
-			do
-				create timer.make_with_interval (10)
-				timer.actions.extend (agent check_state)
-				timer.actions.extend (agent timer.destroy)
-			end
-			
-		check_state is
-				-- Update the display window representation of
-				-- the gauge, to reflect change from user.
-			do
-				objects.first.set_value (user_event_widget.value)
-				update_editors
-			end
-			
-		user_event_widget: like ev_type
-		
 feature {GB_XML_STORE} -- Output
 
 	
@@ -196,6 +143,60 @@ feature {GB_CODE_GENERATOR} -- Output
 		end
 
 feature {NONE} -- Implementation
+
+	update_attribute_editor is
+			-- Update status of `attribute_editor' to reflect information
+			-- from `objects.first'.
+		do
+			value.return_actions.block
+			step.return_actions.block
+			leap.return_actions.block
+			
+			value.set_text (first.value.out)
+			step.set_text (first.step.out)
+			leap.set_text (first.leap.out)
+
+			value.return_actions.resume
+			step.return_actions.resume
+			leap.return_actions.resume
+		end
+		
+	set_up_user_events (vision2_object, an_object: like ev_type) is
+			-- Add events necessary for `vision2_object'.
+		local
+			widget: EV_WIDGET
+		do
+			--| For now, just deal with widgets. At some point items may be supported also.
+		user_event_widget := vision2_object
+		widget ?= vision2_object
+		check
+			we_are_dealing_with_a_widget: widget /= Void
+		end
+		objects.extend (an_object)
+		objects.extend (vision2_object)
+		widget.pointer_button_release_actions.force_extend (agent start_timer)
+		end	
+		
+		start_timer is
+				-- Start a timer, which is used as a delay between an event begin
+				-- received by `user_event_widget' and `check_state'.
+			local
+				timer: EV_TIMEOUT
+			do
+				create timer.make_with_interval (10)
+				timer.actions.extend (agent check_state)
+				timer.actions.extend (agent timer.destroy)
+			end
+			
+		check_state is
+				-- Update the display window representation of
+				-- the gauge, to reflect change from user.
+			do
+				objects.first.set_value (user_event_widget.value)
+				update_editors
+			end
+			
+		user_event_widget: like ev_type
 
 	set_value is
 			-- Update property `value' on all items in `objects'.

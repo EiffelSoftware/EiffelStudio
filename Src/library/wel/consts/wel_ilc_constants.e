@@ -13,8 +13,8 @@ feature -- Access
 	Ilc_color: INTEGER is
 			-- Use the default behavior if none of the other
 			-- ILC_COLOR* flags is specified. Typically, the
-			-- Default is Tvsil_ilc_color4, but for older 
-			-- display drivers, the default is Tvsil_ilc_colorddb.
+			-- Default is Ilc_color4, but for older 
+			-- display drivers, the default is Ilc_colorddb.
 		external
 			"C [macro %"commctrl.h%"]"
 		alias

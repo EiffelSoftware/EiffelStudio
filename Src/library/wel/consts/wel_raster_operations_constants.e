@@ -114,6 +114,19 @@ feature -- Access
 			"WHITENESS"
 		end
 
+	Maskpaint: INTEGER is 2229030 -- 0x220326
+
+	--| Constants for mask_blt only
+
+	Maskcopy: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"MAKEROP4(SRCCOPY, PATCOPY)"
+		end
+
+
+
 end -- class WEL_RASTER_OPERATIONS_CONSTANTS
 
 --|----------------------------------------------------------------

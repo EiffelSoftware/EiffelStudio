@@ -26,20 +26,34 @@ feature {NONE} -- Implementation
 			-- `Result' is pixmap named "image" + a_number.out.
 		local
 			filename: FILE_NAME
+			file_location: STRING
 		do
 			if all_loaded_pixmaps = Void then
 				create all_loaded_pixmaps.make (2)
 			end
-			create filename.make_from_string (get ("ISE_VISION2_TOUR"))
-			filename.extend ("bitmaps")
-			filename.extend ("png")
-			filename.extend ("image" + a_number.out + ".png")
-			if all_loaded_pixmaps @ filename /= Void then
-				Result := all_loaded_pixmaps @ filename
+			file_location := get ("ISE_VISION2_TOUR")
+			if file_location = Void then
+				file_location := get ("ISE_EIFFEL")
+				if file_location /= Void then
+					create filename.make_from_string (file_location)
+					filename.extend ("vision2_tour")
+				end
+			else
+				create filename.make_from_string (file_location)
+			end
+			if file_location /= Void then
+				filename.extend ("bitmaps")
+				filename.extend ("png")
+				filename.extend ("image" + a_number.out + ".png")
+				if all_loaded_pixmaps @ filename /= Void then
+					Result := all_loaded_pixmaps @ filename
+				else
+					create Result
+					Result.set_with_named_file (filename)	
+					all_loaded_pixmaps.put (Result, filename)
+				end
 			else
 				create Result
-				Result.set_with_named_file (filename)	
-				all_loaded_pixmaps.put (Result, filename)
 			end
 		end
 		

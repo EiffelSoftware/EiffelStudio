@@ -434,7 +434,7 @@ feature {NONE}-- Initialization
 			l_ev_label_1.set_text ("Filter ")
 			l_ev_label_1.align_text_left
 			output_combo.set_tooltip ("Output filter transformation")
-			output_combo.set_minimum_width (150)
+			output_combo.set_minimum_width (250)
 			left_tool.set_style (1)
 			l_ev_vertical_box_2.disable_item_expand (main_tool)
 			main_tool.set_style (2)

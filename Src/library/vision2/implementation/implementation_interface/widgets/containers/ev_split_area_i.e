@@ -16,10 +16,11 @@ feature -- Status setting
 
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
-			-- `value' is given in percentage.
+			-- `value' is given in pixel.
+			-- Has an effect only if the split area has
+			-- already a child.
 		require
 			exists: not destroyed
-			valid_value: value >= 0 and value <= 100
 		deferred
 		end
 

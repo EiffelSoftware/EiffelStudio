@@ -43,6 +43,7 @@ feature
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
+			first_class: CLASS_C
 			first_class_topo_id: INTEGER
 			found, is_deferred: BOOLEAN;
 			i, nb, old_position: INTEGER
@@ -53,43 +54,80 @@ feature
 			old_position := position
 			system_i := System
 
-				-- Go to the entry of type id greater or equal than `type_id':
-				-- note than deferred feature have no entries in the tables
-			goto_used (type_id);
-			i := position
-
-				-- We never compute the value for this entry, so we need to do it
-			from
-				local_copy := Current
-				nb := max_position
-				is_deferred := True;
-				cl_type := system_i.class_type_of_id (type_id);
-				first_class_topo_id := cl_type.associated_class.topological_id;
-			until
-				Result or else i > nb
-			loop
-				entry := local_copy.array_item (i);
-				second_type_id := entry.type_id;
-				if second_type_id = type_id then
-					is_deferred := False
-				end;
-				cl_type := system_i.class_type_of_id (second_type_id);
-				if cl_type.associated_class.conformance_table.item (first_class_topo_id) then
-					if entry.used then
-						if found then
-							Result := not equal (entry.body_id, first_body_id)
-						else
-							found := True;
-							first_body_id := entry.body_id;
+ 				-- If it is not a poofter finalization
+ 				-- we have a quicker algorithm handy.
+			if not system_i.poofter_finalization then
+					-- Go to the entry of type id greater or equal than `type_id':
+					-- note than deferred feature have no entries in the tables
+				goto_used (type_id);
+				i := position
+					-- We never compute the value for this entry, so we need to do it
+				from
+					local_copy := Current
+					nb := max_position
+					is_deferred := True;
+					cl_type := system_i.class_type_of_id (type_id);
+					first_class_topo_id := cl_type.associated_class.topological_id;
+				until
+					Result or else i > nb
+				loop
+					entry := local_copy.array_item (i);
+					second_type_id := entry.type_id;
+					if second_type_id = type_id then
+						is_deferred := False
+					end;
+					cl_type := system_i.class_type_of_id (second_type_id);
+					if cl_type.associated_class.conformance_table.item (first_class_topo_id) then
+						if entry.used then
+							if found then
+								Result := not equal (entry.body_id, first_body_id)
+							else
+								found := True;
+								first_body_id := entry.body_id;
+							end;
 						end;
 					end;
+					i := i + 1
 				end;
-				i := i + 1
-			end;
 
-			if not Result then
-				Result := is_deferred and then found
-			end;
+				if not Result then
+					Result := is_deferred and then found
+				end
+			else
+					-- We never compute the value for this entry, so we need to do it
+				from
+					local_copy := Current
+					i := lower
+					nb := max_position
+					is_deferred := True;
+					cl_type := system_i.class_type_of_id (type_id);
+					first_class := cl_type.associated_class;
+				until
+					Result or else i > nb
+				loop
+					entry := local_copy.array_item (i);
+					second_type_id := entry.type_id;
+					if second_type_id = type_id then
+						is_deferred := False
+					end;
+					cl_type := system_i.class_type_of_id (second_type_id);
+					if cl_type.associated_class.simple_conform_to (first_class) then
+						if entry.used then
+							if found then
+								Result := not equal (entry.body_id, first_body_id)
+							else
+								found := True;
+								first_body_id := entry.body_id;
+							end;
+						end;
+					end;
+					i := i + 1
+				end;
+
+				if not Result then
+					Result := is_deferred and then found
+				end
+			end
 
 			position := old_position
 		end;

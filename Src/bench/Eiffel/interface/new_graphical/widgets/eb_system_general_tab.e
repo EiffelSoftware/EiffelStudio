@@ -231,13 +231,6 @@ feature {NONE} -- Filling
 				precompiled_combo.set_text ("None")
 			end
 
-			if Workbench.is_already_compiled then
-					-- As soon as we do a successful compilation we cannot
-					-- change some options.
-				precompiled_combo.disable_sensitive
-				generation_combo.disable_sensitive
-				compilation_combo.disable_sensitive
-			end
 		end
 
 	initialize_with_default_option (a_opt: D_OPTION_SD) is
@@ -513,6 +506,12 @@ feature {NONE} -- Initialization
 			compilation_combo.extend (create {EV_LIST_ITEM}.make_with_text ("Precompilation"))
 			enable_select (compilation_combo.i_th (normal_code))
 			compilation_combo.disable_edit
+
+				-- As soon as we do a successful compilation we cannot
+				-- change some options.
+			set_only_once_widgets.extend (precompiled_combo)
+			set_only_once_widgets.extend (generation_combo)
+			set_only_once_widgets.extend (compilation_combo)
 		end
 
 	generation_type_frame (st: STRING): EV_FRAME is

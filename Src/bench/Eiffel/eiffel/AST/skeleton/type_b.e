@@ -23,6 +23,15 @@ feature
 		deferred
 		end;
 
+	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
+			-- Calculated type in function of the feature `f' which has
+			-- the type Current and the feature table `feat_table'.
+			-- This is for the format context where the solved type is not
+			-- guaranteed to exist
+		do
+			Result := solved_type (feat_table, f)
+		end;
+
 	actual_type: TYPE_A is
 			-- Processed type of the type without taking care of the
 			-- anchored type.

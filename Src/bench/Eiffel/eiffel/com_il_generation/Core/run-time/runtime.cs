@@ -130,7 +130,7 @@ feature -- Status report
 			der = info.____type ();
 			if (der == null) {
 					// Not a generic class, possibly a good candidate for ARRAY.
-				Result = (info.____class_name ().IndexOf ("ARRAY") == 1);
+				Result = info.____class_name ().Equals ("ARRAY");
 			}
 		}
 		return Result;

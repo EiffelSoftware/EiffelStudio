@@ -17,6 +17,8 @@
    Database: "ORACLE"
 */
 
+#ifndef _ORACLE_H_
+#define _ORACLE_H_
 
 #include <ctype.h>
 
@@ -28,8 +30,9 @@
 #include <oratypes.h>
 #endif /* ORATYPES */
 
-#ifndef _ORACLE_H_
-#define _ORACLE_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* datatypes for Eiffel*/
 #define ORA_EIF_STRING_TYPE            10
@@ -183,5 +186,8 @@ int ora_c_string_type (void);
 int ora_c_date_type (void);
 
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _ORACLE_H_ */

@@ -1003,17 +1003,49 @@ EIF_INTEGER c_gtk_table_columns (GtkWidget *widget)
 
 /*********************************
  *
- * Function : `c_gtk_tree_item_expanded'
+ * Function : `c_gtk_tree_item_expanded' (1)
+ * 			  `c_gtk_tree_item_is_selected'	(2)
+ * 			  `c_gtk_tree_item_set_single_selection_mode' (3)
  *
- * Note : Tell if an item is expanded or not
+ * Note : (1) Tell if an item is expanded or not
+ *		  (2) is the item selected?
+ *		  (3) set the selection mode to SINGLE
  *
- * Author : Leila
+ * Author : Leila, Alex
  *
  *********************************/
 
 EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget)
 {
   return (GTK_TREE_ITEM(widget)->expanded) ? 1: 0;
+}
+
+EIF_BOOLEAN c_gtk_tree_item_is_selected (GtkWidget *tree, GtkWidget *treeItem)
+{
+	GList *list;
+	GtkWidget *item;
+	
+	list = GTK_TREE_SELECTION(tree);
+	
+	while (list)
+	{
+	  if (list->data != NULL)
+	  {
+		item = GTK_WIDGET (list->data);
+ 	    if (item == treeItem)
+	    {
+		  return 1;
+	    }
+	  }
+  	  list = list->next;
+	}
+	return 0; 
+	
+}
+
+void c_gtk_tree_set_single_selection_mode (GtkWidget *tree)
+{
+  gtk_tree_set_selection_mode (GTK_TREE (tree), GTK_SELECTION_SINGLE);
 }
 
 /*********************************

@@ -7,26 +7,12 @@ inherit
 	CALL_ACCESS_B
 		rename
 			feature_id as attribute_id,
-			feature_name as attribute_name,
-			make_code as standard_make_code
+			feature_name as attribute_name
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
 			creation_access, enlarged, is_creatable, is_attribute, read_only
 		end;
-
-	CALL_ACCESS_B
-		rename
-			feature_id as attribute_id,
-			feature_name as attribute_name
-		redefine
-			make_code,
-			reverse_code, expanded_assign_code, assign_code,
-			make_end_assignment, make_end_reverse_assignment,
-			creation_access, enlarged, is_creatable, is_attribute, read_only
-		select
-			make_code
-		end
 
 feature 
 
@@ -119,7 +105,7 @@ feature -- Byte code generation
 				-- Generate attribute id
 			ba.append_integer (attribute_id);
 				-- Generate static type of the call
-			instant_context_type ?= Context.real_type (context_type);
+			instant_context_type ?= context_type;
 			ba.append_short_integer
 				(instant_context_type.associated_class_type.id - 1);
 				-- Generate attribute meta-type
@@ -140,7 +126,7 @@ feature -- Byte code generation
 				-- Generate attribute id
 			ba.append_integer (attribute_id);
 				-- Generate static type of the call
-			instant_context_type ?= Context.real_type (context_type);
+			instant_context_type ?= context_type;
 			ba.append_short_integer
 				(instant_context_type.associated_class_type.id - 1);
 				-- Generate attribute meta-type
@@ -150,7 +136,7 @@ feature -- Byte code generation
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for an access to an attribute
 		local
-			r_type: TYPE_I;
+			inst_con_type, r_type: TYPE_I;
 		do
 			r_type := Context.real_type (type);
 			if r_type.is_none then
@@ -159,7 +145,10 @@ feature -- Byte code generation
 				end;
 				ba.append (Bc_void);
 			else
-				standard_make_code (ba, flag);
+				inst_con_type := context_type;
+				standard_make_code (ba, flag, 
+					require_metamorphosis (inst_con_type),
+					inst_con_type);
 				ba.append_uint32_integer (r_type.sk_value);
 			end;
 		end;

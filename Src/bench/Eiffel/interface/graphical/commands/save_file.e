@@ -43,7 +43,8 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		local   
-			new_file: PLAIN_TEXT_FILE;
+			--new_file: PLAIN_TEXT_FILE; 
+			new_file: RAW_FILE; -- Because of windows
 			to_write: STRING;
 			aok: BOOLEAN;
 			temp: STRING;
@@ -86,7 +87,7 @@ feature {NONE} -- Implementation
 					end;
 					new_file.close;
 					text_window.disable_clicking;
-					if Class_resources.parse_class_after_saving.actual_value then
+					if tool.stone /= Void and then Class_resources.parse_class_after_saving.actual_value then
 						tool.parse_file
 					end;
 					tool.update_save_symbol;

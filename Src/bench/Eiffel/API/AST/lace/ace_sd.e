@@ -292,11 +292,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- Second adaptation of Use files
 			adapt_use;
 
-				-- Update content of clusters.
-			update_clusters;
-	
 				-- Process override cluster first.
 			Universe.process_override_cluster
+
+				-- Update content of clusters.
+			update_clusters;
 
 				-- Remove inexistant clusters from the system
 			process_removed_clusters

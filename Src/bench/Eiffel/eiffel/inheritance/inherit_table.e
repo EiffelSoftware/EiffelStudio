@@ -1148,10 +1148,14 @@ end;
 			rep_dep: REP_CLASS_DEPEND;
 			feat_rep_dep: REP_FEATURE_DEPEND;
 			feature_name: STRING
+			class_id: CLASS_ID
 		do
 			from
-				if Rep_depend_server.has (a_class.id) then
-					rep_dep := Rep_depend_server.item (a_class.id);
+				class_id := a_class.id
+				if Rep_depend_server.server_has (class_id) then
+					rep_dep := Rep_depend_server.server_item (class_id);
+				elseif Tmp_rep_depend_server.has (class_id) then
+					rep_dep := Tmp_rep_depend_server.item (class_id);
 				end;
 				changed_features.start
 			until
@@ -1167,11 +1171,12 @@ end;
 				end;
 				changed_features.forth;
 			end;
+
 			if rep_dep /= Void and then feat_rep_dep /= Void then 
 				if feat_rep_dep.count > 0 then
 					Tmp_rep_depend_server.put (rep_dep)
 				else
-					Tmp_rep_depend_server.remove (a_class.id)
+					Tmp_rep_depend_server.remove (class_id)
 				end;
 			end;
 		end;

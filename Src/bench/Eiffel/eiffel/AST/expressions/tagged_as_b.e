@@ -1,10 +1,23 @@
--- Abstract description of a tagged expression
+indexing
 
-class TAGGED_AS
+	description:
+		"Abstract description of a tagged expression. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class TAGGED_AS_B
 
 inherit
 
-	EXPR_AS
+	TAGGED_AS
+		redefine
+			expr, tag
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,22 +25,11 @@ inherit
 
 feature -- Attributes
 
-	tag: ID_AS;
+	tag: ID_AS_B;
 			-- Expression tag
 
-	expr: EXPR_AS;
+	expr: EXPR_AS_B;
 			-- Expression
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			tag ?= yacc_arg (0);
-			expr ?= yacc_arg (1);
-		ensure then
-			expr_exists: expr /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -59,7 +61,7 @@ feature -- Type check, byte code and dead code removal
 			Result.set_expr (expr.byte_node);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -96,18 +98,9 @@ feature	-- Replication
 			Result.set_expr (expr.replicate (ctxt))
 		end;
 
-feature {TAGGED_AS}	-- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e;
-		end
-
 feature -- Case Storage
 
-	storage_info (ctxt: FORMAT_CONTEXT): S_TAG_DATA is
+	storage_info (ctxt: FORMAT_CONTEXT_B): S_TAG_DATA is
 		require
 			valid_context: ctxt /= Void;
 			empty_text: ctxt.text.empty
@@ -123,4 +116,4 @@ feature -- Case Storage
 			ctxt.text.wipe_out;
 		end;
 	
-end
+end -- class TAGGED_AS_B

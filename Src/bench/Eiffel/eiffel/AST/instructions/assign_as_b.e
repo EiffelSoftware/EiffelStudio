@@ -1,10 +1,21 @@
--- Abstract description of an assignment
+indexing
 
-class ASSIGN_AS
+	description: "Abstract description of an assignment. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ASSIGN_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	ASSIGN_AS	
+		redefine
+			source, target
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,23 +23,11 @@ inherit
 
 feature -- Attributes
 
-	target: ACCESS_AS;
+	target: ACCESS_AS_B;
 			-- Target of the assignment
 
-	source: EXPR_AS;
+	source: EXPR_AS_B;
 			-- Source of the assignment
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			target ?= yacc_arg (0);
-			source ?= yacc_arg (1);
-		ensure then
-			target_exists: target /= Void;
-			source_exists: source /= Void;
-		end;
 
 feature -- Type check, byte code production, dead_code_removal
 
@@ -106,7 +105,7 @@ feature -- Type check, byte code production, dead_code_removal
 			Result.set_source (source.byte_node);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconsitute text.
 		do
 			ctxt.begin;
@@ -119,13 +118,6 @@ feature -- Type check, byte code production, dead_code_removal
 			ctxt.new_expression;
 			source.format (ctxt);
 			ctxt.commit;
-		end;
-		
-feature {} -- Formatter
-
-	assign_symbol: TEXT_ITEM is
-		do
-			Result := ti_Assign
 		end;
 		
 feature -- Replication
@@ -149,20 +141,4 @@ feature -- Replication
 			Result.set_source (source.replicate (ctxt.new_ctxt));
 		end;
 
-feature {ASSIGN_AS}	-- Replication
-		
-	set_target (t: like target) is
-		require
-			valid_arg: t /= Void
-		do
-			target := t
-		end;
-
-	set_source (s: like source) is
-		require
-			valid_arg: s /= Void
-		do
-			source := s
-		end;
-
-end
+end -- class ASSIGN_AS_B

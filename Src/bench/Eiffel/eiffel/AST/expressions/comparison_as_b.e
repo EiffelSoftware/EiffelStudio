@@ -1,25 +1,26 @@
--- Binary comparison operation
+indexing
 
-deferred class COMPARISON_AS
+	description: "Binary comparison operation. Version for Bench";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class COMPARISON_AS_B
 
 inherit
 
-	BINARY_AS
-		redefine
+	COMPARISON_AS
+		rename
+			left as old_left,
+			right as old_right
+		end;
+
+	BINARY_AS_B
+		undefine
 			balanced, operator_is_special, operator_is_keyword
+		select
+			left, right
 		end
 
 feature
 
-	balanced: BOOLEAN is
-			-- Is the current binary operation subject to the balancing
-			-- rule proper to simple numeric types ?
-		do
-			Result := True;
-		end;
-
-	operator_is_special: BOOLEAN is true;
-	
-	operator_is_keyword: BOOLEAN is false;
-
-end
+end -- class COMPARISON_AS_B

@@ -1,38 +1,30 @@
-class UN_STRIP_AS
+class UN_STRIP_AS_B
 
 inherit
 
-	EXPR_AS
+	UN_STRIP_AS
+		redefine
+			id_list
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format
 		end
 
 feature -- Attributes
 
-	id_list: EIFFEL_LIST [ID_AS];
+	id_list: EIFFEL_LIST_B [ID_AS_B];
 			-- Attribute list
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			id_list ?= yacc_arg (0);
-			if id_list = Void then
-				-- Empty list
-				!!id_list.make (0)
-			end;
-			id_list.compare_objects;
-		ensure then
-			id_list /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
 	type_check is
 			-- Type check a strip expression
 		local
-			an_id: ID_AS;
+			an_id: ID_AS_B;
 			pos: INTEGER;
 			feature_table: FEATURE_TABLE;
 			attribute_i: ATTRIBUTE_I;
@@ -114,7 +106,7 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		local
 			print_comma: BOOLEAN;
@@ -154,4 +146,4 @@ feature -- Replication
 	-- replicate should replace a feature with all its version,
 	-- and add the attribute introduced in the descendant class		
 
-end
+end -- class UN_STRIP_AS_B

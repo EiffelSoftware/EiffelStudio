@@ -1,19 +1,18 @@
-class UN_PLUS_AS
+class UN_PLUS_AS_B
 
 inherit
 
-	UNARY_AS
+	UN_PLUS_AS
+		rename
+			expr as old_plus_expr
+		end;
+
+	UNARY_AS_B
 		redefine
 			byte_node
+		select	
+			expr
 		end
-
-feature -- Type check
-
-	prefix_feature_name: STRING is
-			-- Internal name of the prefixed feature
-		once
-			Result := "_prefix_plus";
-		end;
 
 feature -- Byte node
 
@@ -32,6 +31,4 @@ feature -- Byte node
 			access_line.forth;
 		end;
 	
-	operator_name: STRING is "+";
-end
-	
+end -- class UN_PLUS_AS_B

@@ -1,10 +1,23 @@
--- Abstract description of a parenthesized expression
+indexing
 
-class PARAN_AS
+	description:
+		"Abstract description of a parenthesized expression. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class PARAN_AS_B
 
 inherit
 
-	EXPR_AS
+	PARAN_AS
+		redefine
+			expr
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,18 +25,8 @@ inherit
 
 feature -- Attributes
 
-	expr: EXPR_AS;
+	expr: EXPR_AS_B;
 			-- Parenthesized expression
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expr ?= yacc_arg (0);
-		ensure then
-			expr_exists: expr /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -40,7 +43,7 @@ feature -- Type check, byte code and dead code removal
 			Result.set_expr (expr.byte_node);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.begin;
 			ctxt.put_text_item (ti_L_parenthesis);
@@ -68,14 +71,4 @@ feature	-- Replication
 			Result.set_expr (expr.replicate (ctxt))
 		end;
 
-feature {PARAN_AS}	-- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end;
-
-
-end
+end -- class PARAN_AS_B

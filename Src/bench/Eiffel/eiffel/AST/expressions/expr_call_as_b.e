@@ -1,10 +1,23 @@
--- Abstract description of a call as an expression
+indexing
 
-class EXPR_CALL_AS
+	description:
+		"Abstract description of a call as an expression. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class EXPR_CALL_AS_B
 
 inherit
 
-	EXPR_AS
+	EXPR_CALL_AS
+		redefine
+			call
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			 fill_calls_list, replicate
@@ -12,23 +25,13 @@ inherit
 
 feature -- Attributes
 
-	call: CALL_AS;
+	call: CALL_AS_B;
 			-- Expression call
-
-feature -- Inialization
-
-	set is
-			-- Yacc initialization
-		do
-			call ?= yacc_arg (0);
-		ensure then
-			call_exists: call /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
 	type_check is
-			-- Type check of a call as an expression
+			-- Type check of a call as an expression.
 		do
 				-- Put an actual type of the current analyzed class
 			context.begin_expression;
@@ -37,12 +40,12 @@ feature -- Type check, byte code and dead code removal
 		end;
 
 	byte_node: CALL_B is
-			-- Associated byte code
+			-- Associated byte code.
 		do
 			Result := call.byte_node;
 		end;
 
-	format(ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			call.format (ctxt);
@@ -51,25 +54,16 @@ feature -- Type check, byte code and dead code removal
 feature	-- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
+			-- Find calls to Current.
 		do
 			call.fill_calls_list (l);
 		end;
 
 	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
+			-- Adapt to replication.
 		do
 			Result := clone (Current);
 			Result.set_call (call.replicate (ctxt));
 		end;
 
-feature {EXPR_CALL_AS}
-
-	set_call (c: like call) is
-		require
-			valid_arg: c /= Void
-		do
-			call := c;
-		end
-
-end
+end -- class EXPR_CALL_AS_B

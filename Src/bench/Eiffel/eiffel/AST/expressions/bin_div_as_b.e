@@ -1,26 +1,26 @@
-class BIN_DIV_AS
+class BIN_DIV_AS_B
 
 inherit
 
-	ARITHMETIC_AS
+	BIN_DIV_AS
+		rename
+			left as old_div_left,
+			right as old_div_right
+		end;
+
+	ARITHMETIC_AS_B
 		redefine
 			numeric_balance
 		select
-			numeric_balance
+			numeric_balance, right, left
 		end;
-	ARITHMETIC_AS
+
+	ARITHMETIC_AS_B
 		rename
 			numeric_balance as old_numeric_balance
 		end;
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_div";
-		end;
 
 	numeric_balance (left_type, right_type: TYPE_A): BOOLEAN is
 		do
@@ -34,4 +34,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_DIV_AS_B

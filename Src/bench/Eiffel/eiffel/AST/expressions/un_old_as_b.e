@@ -1,19 +1,21 @@
-class UN_OLD_AS
+class UN_OLD_AS_B
 
 inherit
 
-	UNARY_AS
+	UN_OLD_AS
+		rename
+			expr as old_old_expr
+		end;
+
+	UNARY_AS_B
+		undefine
+			operator_is_keyword, simple_format
 		redefine
 			type_check, byte_node, operator_is_keyword, format,
 			replicate, fill_calls_list
+		select
+			expr
 		end;
-
-feature -- Type check
-
-	prefix_feature_name: STRING is
-			-- Internal name of the prefixed feature
-		once
-		end; -- prefix_feature_name
 
 feature -- Type check, byte code and dead code removal
 
@@ -69,8 +71,7 @@ feature -- Type check, byte code and dead code removal
 			Result.add_old_expression;
 		end;
 
-
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
 			ctxt.begin;
@@ -90,10 +91,6 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end; 
 			
-	operator_name: STRING is "old";
-	
-	operator_is_keyword: BOOLEAN is true;
-
 feature	-- Replication
 	
 	fill_calls_list (l: CALLS_LIST) is
@@ -108,4 +105,5 @@ feature	-- Replication
 			Result := clone (Current);
 			Result.set_expr (expr.replicate (ctxt));
 		end;
-end
+
+end -- class UN_OLD_AS_B

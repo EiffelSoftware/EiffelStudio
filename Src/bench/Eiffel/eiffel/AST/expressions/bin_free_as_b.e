@@ -1,44 +1,34 @@
--- Free binary expression description
+indexing
 
-class BIN_FREE_AS
+	description: "Free binary expression description. Version for Bench";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class BIN_FREE_AS_B
 
 inherit
 
-	BINARY_AS
+	BIN_FREE_AS
+		rename
+			left as old_free_left,
+			right as old_free_right
 		redefine
+			op_name, set_infix_function_name
+		end;
+
+	BINARY_AS_B
+		undefine
 			set, operator_is_keyword
+		select
+			left, right
 		end
 
 feature -- Attributes
 
-	op_name: ID_AS;
+	op_name: ID_AS_B;
 			-- Free operator name
 
 feature
-
-	set is
-			-- Yacc initialization
-		do
-			left ?= yacc_arg (0);
-			op_name ?= yacc_arg (1);
-			right ?= yacc_arg (2);
-		ensure then
-			left_exists: left /= Void;
-			right_exists: right /= Void;
-			operator_exists: op_name /= Void;
-		end;
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		do
-			!!Result.make (7 + op_name.count);
-			Result.append (Internal_infix);
-			Result.append (op_name);
-		end;
-
-	Internal_infix: STRING is "_infix_";
-			-- Internal prefix name for feature
 
 	byte_anchor: BIN_FREE_B is
 			-- Byte code type
@@ -46,15 +36,13 @@ feature
 			!!Result
 		end;
 
+feature {BINARY_AS_B}
 
-	operator_is_keyword: BOOLEAN is false;
-
-feature {BINARY_AS}
-
-	set_infix_function_name (name: ID_AS) is
+	set_infix_function_name (name: ID_AS_B) is
 		do
 			op_name := clone (name)
 			op_name.tail (op_name.count - 7);
 			-- 7 = "_infix_".count
 		end;
-end
+
+end -- class BIN_FREE_AS_B

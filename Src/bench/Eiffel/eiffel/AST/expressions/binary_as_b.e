@@ -1,67 +1,37 @@
+indexing
 
--- Abstract class for binary expression nodes
+	description: "Abstract class for binary expression nodes, Bench version";
+	date: "$Date$";
+	revision: "$Revision$"
 
-deferred class BINARY_AS
+deferred class BINARY_AS_B
 
 inherit
 
-	EXPR_AS
+	BINARY_AS
+		redefine
+			left, right
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
 		end;
+
 	SHARED_ARG_TYPES
 
 feature -- Attributes
 
-	left: EXPR_AS;
+	left: EXPR_AS_B;
 			-- Left operand
 
-	right: EXPR_AS;
+	right: EXPR_AS_B;
 			-- Right opernad
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			left ?= yacc_arg (0);
-			right ?= yacc_arg (1);
-		ensure then
-			left_exists: left /= Void;
-			right_exists: right /= Void
-		end;
-
-feature -- Balancing rule control
-
-	balanced: BOOLEAN is
-			-- Is the current binary operation subject to the balancing
-			-- rule proper to simple numeric types ?
-		do
-			-- Do nothing
-		end;
-
-	balanced_result: BOOLEAN is
-			-- is the result of the infix operation subject to the
-			-- balancing rule ?
-		do
-			-- Do nothing
-		end;
-
-	bit_balanced: BOOLEAN is
-			-- Is the current binary operation subject to the
-			-- balancing rule proper to bit types ?
-		do
-			-- Do nothing
-		end;
-
 feature -- Type check, byte code and dead code removal
-
-	infix_function_name: STRING is
-			-- Internal name of the infix feature associated to the
-			-- binary expression
-		deferred
-		end;
 
 	type_check is
 			-- Type check a binary expression
@@ -269,7 +239,7 @@ feature -- Type check, byte code and dead code removal
 		end;
 	
 	
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -288,21 +258,6 @@ feature -- Type check, byte code and dead code removal
 			end
 		end;
 
-	operator_is_keyword: BOOLEAN is
-		do
-			Result := true;
-		end;
-
-	operator_is_special: BOOLEAN is 
-		do
-			Result := false;
-		end;
-
-	operator_name: STRING is
-		do
-			Result := infix_function_name;	
-		end;
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST)  is
@@ -319,11 +274,11 @@ feature -- Replication
 		end;
 
 
-	replicate (ctxt: REP_CONTEXT): BINARY_AS is
+	replicate (ctxt: REP_CONTEXT): BINARY_AS_B is
 			-- Adapt to replication.
 		local
 			new_left: like left;
-			b: BIN_FREE_AS;
+			b: BIN_FREE_AS_B;
 		do
 			new_left := left.replicate (ctxt);
 			ctxt.adapt_name (infix_function_name);
@@ -338,19 +293,4 @@ feature -- Replication
 			Result.set_right (right.replicate (ctxt.new_ctxt));
 		end;
 
-feature {BINARY_AS}	-- Replication
-
-	set_left (l: like left) is
-		require
-			valid_arg: l /= Void
-		do
-			left := l
-		end;
-
-	set_right (l: like right) is
-		require
-			valid_arg: l /= Void
-		do
-			right := l
-		end;
-end
+end -- class BINARY_AS_B

@@ -1,10 +1,23 @@
--- Abstract description ao an alternative of a multi_branch instruction
+indexing
 
-class CASE_AS
+	description:
+			"Abstract description ao an alternative of a multi_branch %
+			%instruction. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CASE_AS_B
 
 inherit
 
-	AST_EIFFEL
+	CASE_AS
+		redefine
+			interval, compound
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
@@ -13,22 +26,11 @@ inherit
 
 feature -- Attributes
 
-	interval: EIFFEL_LIST [INTERVAL_AS];
+	interval: EIFFEL_LIST_B [INTERVAL_AS_B];
 			-- Interval of the alternative
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			interval ?= yacc_arg (0);
-			compound ?= yacc_arg (1);
-		ensure then
-			interval_exists: interval /= Void;
-		end;
 
 feature -- Type check, byte code production, dead code removal
 
@@ -61,7 +63,6 @@ feature -- Type check, byte code production, dead code removal
 			end;
 		end;
 
-
 feature -- Debugging
 
 	find_breakable is
@@ -74,7 +75,7 @@ feature -- Debugging
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -119,18 +120,4 @@ feature -- Replication
 			end
 		end;
 
-feature {CASE_AS}	-- Replication
-
-	set_interval (i: like interval) is
-		require
-			valid_arg: i /= Void
-		do
-			interval := i
-		end;
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end;
-
-end
+end -- class CASE_AS_B

@@ -1,17 +1,19 @@
-class BIN_MINUS_AS
+class BIN_MINUS_AS_B
 
 inherit
 
-	ARITHMETIC_AS
+	BIN_MINUS_AS
+		rename
+			left as old_minus_left,
+			right as old_minus_right
+		end;
+
+	ARITHMETIC_AS_B
+		select
+			left, right
+		end;
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		do
-			Result := "_infix_minus";
-		end;
 
 	byte_anchor: BIN_MINUS_B is
 			-- Byte code type
@@ -19,4 +21,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_MINUS_AS_B

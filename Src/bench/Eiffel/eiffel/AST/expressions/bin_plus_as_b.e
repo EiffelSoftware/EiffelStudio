@@ -1,21 +1,24 @@
-class BIN_PLUS_AS
+class BIN_PLUS_AS_B
 
 inherit
 
-	ARITHMETIC_AS
+	BIN_PLUS_AS
+		rename
+			left as old_plus_left,
+			right as old_plus_right
+		end;
+
+	ARITHMETIC_AS_B
+		select
+			left, right
+		end
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_plus";
-		end;
 
 	byte_anchor: BIN_PLUS_B is
 			-- Byte code type
 		do
 			!!Result
 		end;
-end
+
+end -- class BIN_PLUS_AS_B

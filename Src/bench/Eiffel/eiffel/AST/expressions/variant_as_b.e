@@ -1,12 +1,24 @@
--- Description of variant loop
+indexing
 
-class VARIANT_AS
+	description: "Description of variant loop. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class VARIANT_AS_B
 
 inherit
 
-	TAGGED_AS
+	VARIANT_AS
+		rename
+			tag as old_variant_tag,
+			expr as old_variant_expr
+		end;
+
+	TAGGED_AS_B
 		redefine
 			byte_node, type_check
+		select
+			tag, expr
 		end
 
 feature
@@ -39,4 +51,4 @@ feature
 			Result.set_expr (expr.byte_node);
 		end;
 
-end
+end -- class VARIANT_AS_B

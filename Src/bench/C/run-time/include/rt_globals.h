@@ -191,12 +191,12 @@ typedef struct tag_rt_globals
 	size_t old_store_buffer_size_cx;
 	size_t cmp_buffer_size_cx;
 	int s_fides_cx;
-	void (*store_write_func_cx)(void);
+	void (*store_write_func_cx)(size_t);
 	void (*flush_buffer_func_cx)(void);
 	void (*st_write_func_cx)(EIF_REFERENCE, uint32);
 	void (*make_header_func_cx)(void);
 	int (*char_write_func_cx)(char *, int);
-	void (*old_store_write_func_cx)(void);
+	void (*old_store_write_func_cx)(size_t);
 	int (*old_char_write_func_cx)(char *, int);
 	void (*old_flush_buffer_func_cx)(void);
 	void (*old_st_write_func_cx)(EIF_REFERENCE, uint32);

@@ -80,7 +80,7 @@ RT_LNK void stream_free (EIF_POINTER *stream);
 RT_LNK void basic_general_free_store(EIF_REFERENCE);
 RT_LNK void independent_free_store (EIF_REFERENCE);
 RT_LNK void rt_init_store(
-	void (*store_function) (void),
+	void (*store_function) (size_t),
 	int (*char_write_function)(char *, int),
 	void (*flush_buffer_function) (void),
 	void (*st_write_function) (EIF_REFERENCE, uint32),
@@ -91,7 +91,7 @@ RT_LNK void flush_st_buffer(void);
 RT_LNK void st_write(EIF_REFERENCE object, uint32);		/* Write an object in file */
 RT_LNK void ist_write(EIF_REFERENCE object, uint32);
 RT_LNK void gst_write(EIF_REFERENCE object, uint32);
-RT_LNK void store_write(void);
+RT_LNK void store_write(size_t);
 RT_LNK void make_header(void);				/* Make header */
 RT_LNK void rmake_header(void);				/* Make header */
 RT_LNK void imake_header(void);				/* Make header */

@@ -185,8 +185,8 @@ feature {NONE} -- Implementation
 	tool_bar: EV_TOOL_BAR is
 			-- Tool bar of `Current'
 		local
-			delete_button: GB_DELETE_TOOL_BAR_BUTTON
-			a_new_object_editor: GB_NEW_OBJECT_EDITOR_BUTTON
+		--	delete_button: GB_DELETE_TOOL_BAR_BUTTON
+		--	a_new_object_editor: GB_NEW_OBJECT_EDITOR_BUTTON
 			undo_button: GB_UNDO_TOOL_BAR_BUTTON
 			redo_button: GB_REDO_TOOL_BAR_BUTTON
 			separator: EV_TOOL_BAR_SEPARATOR
@@ -195,8 +195,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.extend (command_handler.delete_object_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.save_command.new_toolbar_item (True, False))
-			create a_new_object_editor
-			Result.extend (a_new_object_editor)
+			Result.extend (command_handler.object_editor_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)
 			create undo_button

@@ -47,6 +47,16 @@ feature -- Access
 			create Result
 		end
 
+	Wel_drawing_constants: WEL_DRAWING_CONSTANTS is
+			-- Drawing Constants
+			-- Include constants:
+			--   DI_xxxx
+			--   DT_xxxx
+			--   ...
+		once
+			create Result
+		end
+
 	Wel_ht_constants: WEL_HT_CONSTANTS is
 			-- Access to Ht_xxxconstnats
 		once

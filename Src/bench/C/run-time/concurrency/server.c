@@ -153,6 +153,15 @@ EIF_OBJ s1;
 		sprintf(crash_info, CURAPPERR38);
 		c_raise_concur_exception(exception_void_separate_object);
 	}
+
+	/* the following "if" statement should be removed later, because it does something
+	 * that should be done by Compiler: type checking.
+	 */
+	if (Dtype(s1) != _concur_sep_obj_dtype) {
+		add_nl;
+		sprintf(crash_info, "    The object(whose Dtype is %d) is not a separate object(whose Dtype is: %d).", Dtype(s1), _concur_sep_obj_dtype);
+		c_raise_concur_exception(exception_invalid_separate_object);
+	}
 	return hostaddr_of_sep_obj(s1) == _concur_hostaddr && pid_of_sep_obj(s1) == _concur_pid;
 }
 

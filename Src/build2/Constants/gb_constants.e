@@ -254,6 +254,12 @@ feature -- Dialogs
 	
 feature -- Warning Dialogs
 
+	Exit_warning: STRING is "Are you sure you wish to Exit?"
+		-- Displayed in a dialog when user attempts to quit.
+	
+	Exit_save_warning: STRING is "The project has not been saved.%NDo you wish to save it before exiting?"
+		-- Dispalyed in a dialog when user attempts to quit with an unsave project.
+
 	Object_editor_button_warning: STRING is "Please drop an object on this button%NUse right click for both%Npick and drop actions."
 	
 	Project_exists_warning: STRING is "A Build project already exists in the selected directory. Do you wish to overwrite this project?"

@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
-				Eiffel_project.call_finish_freezing (workbench_mode)
+				Eiffel_project.call_finish_freezing_and_wait (workbench_mode)
 			end
 		end;
 

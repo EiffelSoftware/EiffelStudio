@@ -16,7 +16,6 @@ inherit
 	EV_MENU_I
 
 	EV_MENU_ITEM_CONTAINER_IMP
-
 			
 creation
 	
@@ -29,12 +28,12 @@ feature {NONE} -- Initialization
 		local
 			par_imp: EV_MENU_ITEM_CONTAINER_IMP
 		do
-			make
+			wel_make
 			par_imp ?= par.implementation
 			check
 				valid_container: par_imp /= Void
 			end
-			children := par_imp.children
+			ev_children := par_imp.ev_children
 			set_text (label)
 		end	
 
@@ -50,13 +49,6 @@ feature -- Status report
 			text := str
 		end
 
-feature -- Implementation
-
-	wel_window: EV_WEL_CONTROL_WINDOW
-			-- The actual wel_window is a control window that contains a
-			-- Menu
-
-	
 end -- class EV_MENU_IMP
 
 --|----------------------------------------------------------------

@@ -309,6 +309,31 @@ feature -- Setting
 			condition := Void
 		end
 
+feature {DEBUG_INFO} -- Saving protocol.
+
+	prepare_for_save is
+			-- To be used before storing breakpoints: we store the condition as the string only.
+		do
+			if condition /= Void then
+				expression := condition.expression
+				condition := Void
+			else
+				expression := Void
+			end
+		end
+
+	reload is
+			-- To be used after save and load operations, to restore the condition.
+		do
+			if expression /= Void then
+				create condition.make_for_context (expression)
+				if condition.syntax_error or else not condition.is_condition (routine) then
+					condition := Void
+				end
+				expression := Void
+			end
+		end
+
 feature {EWB_REQUEST} -- application status access
 
 	is_set_for_application: BOOLEAN is
@@ -329,6 +354,11 @@ feature -- Comparison
 		do
 			Result := (other.breakable_line_number = breakable_line_number) and (other.body_index = body_index)
 		end
+
+feature {NONE} -- Implementation
+
+	expression: STRING
+			-- String representation of the condition, if any, during save and load operations.
 
 feature -- Public constants
 	Breakpoint_do_nothing: INTEGER is 0 -- default value

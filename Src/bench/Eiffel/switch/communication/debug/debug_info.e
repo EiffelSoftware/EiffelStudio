@@ -39,12 +39,32 @@ feature -- global
 					-- Reset information about the application
 					-- contained in the breakpoints.
 				restore
+				
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+						-- Compact the conditions.
+					breakpoints.item_for_iteration.prepare_for_save
+					breakpoints.forth
+				end
 
 					-- save all breakpoints
 				create raw_file.make (raw_filename)
 				raw_file.open_write
 				raw_file.independent_store (breakpoints)
 				raw_file.close
+
+				from
+					breakpoints.start
+				until
+					breakpoints.after
+				loop
+						-- Restore the conditions.
+					breakpoints.item_for_iteration.reload
+					breakpoints.forth
+				end
 			end
 		rescue
 			retried := True
@@ -72,6 +92,16 @@ feature -- global
 						-- Reset information about the application
 						-- contained in the breakpoints (if any).
 					restore
+
+					from
+						breakpoints.start
+					until
+						breakpoints.after
+					loop
+							-- Restore the conditions.
+						breakpoints.item_for_iteration.reload
+						breakpoints.forth
+					end
 				end
 			end
 			if breakpoints = Void then

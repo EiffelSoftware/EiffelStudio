@@ -497,6 +497,14 @@ feature -- Generator constants -- 8
 
 	Excepinfo_variable_name: STRING is "excepinfo"
 
+	Wcode_field: STRING is "wCode"
+
+	Bstr_source_field: STRING is "BstrSource"
+
+	Bstr_description_field: STRING is "BstrDescription"
+
+	Bstr_help_file_field: STRING is "BstrHelpFile"
+
 	Class_object_registration_token: STRING is "dwRegister"
 
 	Class_object_variable_name: STRING is "class_object"
@@ -754,6 +762,8 @@ feature -- Generator constants -- 8
 	Eif_eiffel_h: STRING is "eif_eiffel.h"
 
 	Windows_h: STRING is "windows.h"
+
+	Objbase_h: STRING is "objbase.h"
 
 	An_object: STRING is "an_object"
 

@@ -1,4 +1,4 @@
-system selector
+system esql
 
 root
 	
@@ -25,7 +25,7 @@ cluster
 
 external
 
-	object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)";
+	object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)/lib";
 		"-lsys_time";
 		"-lsupport";
 		"-lingres_store";

@@ -25,7 +25,7 @@ cluster
 
 external
 
-	Object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)";
+	Object: "-L$(EIFFEL3)/library/store/spec/$(PLATFORM)/lib";
 		"-lsupport";
 		"-lsybase";
 		"-lsys_time";

@@ -311,7 +311,7 @@ feature -- Access
 				counter := counter + 1
 			end
 		end
-	
+
 	process_xml_string (xml_string: STRING) is
 			-- Format `xml_string' so that it includes indents and new lines, so that it
 			-- will appear nicely in editors that do not automatically format XML.
@@ -324,37 +324,55 @@ feature -- Access
 			counter: INTEGER
 			closing_index: INTEGER
 			tag_contents: STRING
+			temp_string: STRING
 		do
+			temp_string := xml_string.twin
+			xml_string.wipe_out
 			from
 				counter := 1
 			until
-				counter > xml_string.count
+				counter > temp_string.count
 			loop
-				if (xml_string @ counter).is_equal ('<') then
-					closing_index := xml_string.index_of ('>', counter  + 1)
+				xml_string.append_character (temp_string @ counter)
+				if (temp_string @ counter).is_equal ('<') then
+					closing_index := temp_string.index_of ('>', counter  + 1)
 					if closing_index - counter > 1 then
-						tag_contents := xml_string.substring (counter + 1, closing_index - 1)
-						if tag_contents.has ('/') and tag_contents.substring_index ("CDATA", 1) = 0 then
+						tag_contents := temp_string.substring (counter + 1, closing_index - 1)
+						if tag_contents.has ('/')  then
 							if not ((tag_contents @ tag_contents.count) = '/') then
+								from
+									counter := counter + 1
+								until
+									counter = closing_index + 1
+								loop
+									xml_string.append_character (temp_string @ counter)
+									counter := counter + 1
+								end
+								counter := counter - 1
 								if depth > 0 then
 									depth := depth - 1
 								end
-								xml_string.insert_character ('%N', closing_index + 1)
+								xml_string.append_character ('%N')
 								add_tabs (xml_string, closing_index + 2, depth)
 							else
-								xml_string.insert_character ('%N', closing_index + 1)
+								xml_string.append_character ('%N')
 								add_tabs (xml_string, closing_index + 2, depth)
 							end
 						else
-							if not tag_contents.substring (1, 8).is_equal ("![CDATA[") then
-								-- We must ignore the CDATA tags, as they are not another entry, but contained within
-								-- a tag.
-								if (not tag_contents.is_equal (Internal_properties_string)) then
-									depth := depth + 1
-								else
-									xml_string.insert_character ('%N', closing_index + 1)
-									add_tabs (xml_string, closing_index + 2, depth)
+							if (not tag_contents.is_equal (Internal_properties_string)) then
+								depth := depth + 1
+							else
+								from
+									counter := counter + 1
+								until
+									counter = closing_index + 1
+								loop
+									xml_string.append_character (temp_string @ counter)
+									counter := counter + 1
 								end
+								counter := counter - 1
+								xml_string.append_character ('%N')
+								add_tabs (xml_string, closing_index + 2, depth)
 							end
 						end
 					end
@@ -378,7 +396,7 @@ feature -- Access
 				temp_string.append ("%T")
 				counter := counter + 1
 			end
-			a_string.insert_string (temp_string, index)
+			a_string.append (temp_string)--insert_string (temp_string, index)
 		ensure
 			new_count_correct: a_string.count = old a_string.count + count
 		end

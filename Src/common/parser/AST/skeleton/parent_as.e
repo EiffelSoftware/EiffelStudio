@@ -240,7 +240,7 @@ is
 					other_list.forth
 				end;
 				if not temp_list.empty then
-					!! Result.make (list.count + temp_list.count)
+					!! Result.make_filled (list.count + temp_list.count)
 					Result.merge_after_position (0, list);
 					Result.merge_after_position (list.count, temp_list);
 				else

@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"AST represenation of a unary `strip' operation.";
+	description: "AST represenation of a unary `strip' operation.";
 	date: "$Date$";
 	revision: "$Revision $"
 

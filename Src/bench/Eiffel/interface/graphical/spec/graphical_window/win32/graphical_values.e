@@ -108,7 +108,8 @@ feature {NONE} -- Implementation
 			valid_font: a_font /= Void
 		local
 			c_ref: WEL_COLOR_REF;
-			f_w: FONT_IMP;
+			--f_w: FONT_IMP;
+			f_w: FONT_WINDOWS; --VISIONLITE
 			l_font: WEL_LOG_FONT
 		do
 			!! Result.make;

@@ -93,7 +93,8 @@ creation
 
 feature -- Access
 
-	implementation: TABBED_TEXT_IMP
+	--implementation: TABBED_TEXT_IMP
+	implementation: TABBED_TEXT_WINDOWS --VISIONLITE
 
 	dummy_text: WEL_RICH_EDIT
 

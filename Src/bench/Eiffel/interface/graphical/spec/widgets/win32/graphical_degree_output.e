@@ -44,7 +44,12 @@ feature -- Start output
 		local
 			tmp: STRING
 		do
-			create_window;
+			--VISIONLITE
+			if not exists then
+				create_window;
+			end;
+			--VISIONLITE
+			-- create_window;
 			cancel_b.enable;
 			total_number := total_nbr;
 			processed := 0;
@@ -408,6 +413,11 @@ feature {NONE} -- Implementation
 	put_string (a_message: STRING) is
 			-- Put `a_message' in the output window.
 		do
+			--VISIONLITE
+			if not exists then
+				create_window
+			end
+			--VISIONLITE
 			put_non_degree_message (a_message)
 		end;
 

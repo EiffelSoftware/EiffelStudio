@@ -1,6 +1,6 @@
 indexing
 	description: "List the types of currently selected assembly."
-	external_name: "AssemblyManager.AssemblyView"
+	external_name: "ISE.AssemblyManager.AssemblyView"
 
 class
 	ASSEMBLY_VIEW
@@ -54,6 +54,17 @@ feature -- Access
 			external_name: "AssemblyDescriptor"
 		end
 
+	assembly_modifications: ASSEMBLY_MODIFICATIONS is
+			-- Assembly modifications descriptor
+		indexing
+			external_name: "AssemblyModifications"
+		once
+			create Result.make_from_info (assembly_descriptor)
+		ensure
+			assembly_modifications_created: Result /= Void
+			assembly_descriptor_set: Result.assembly_descriptor = assembly_descriptor
+		end
+	
 	assembly_descriptor_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Assembly descriptor label
 		indexing
@@ -187,13 +198,13 @@ feature -- Basic Operations
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
 			label_font: SYSTEM_DRAWING_FONT
-			i: INTEGER
-			added: INTEGER	
-			a_type: ISE_REFLECTION_EIFFELCLASS
-			an_item: STRING
-			list_view_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
+--			i: INTEGER
+--			added: INTEGER	
+--			a_type: ISE_REFLECTION_EIFFELCLASS
+--			an_item: STRING
+--			list_view_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
 			type: SYSTEM_TYPE
-			on_item_event_handler_delegate: SYSTEM_EVENTHANDLER
+--			on_item_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_close_event_handler_delegate: SYSTEM_EVENTHANDLER
 		do
 			set_Enabled (True)
@@ -247,53 +258,7 @@ feature -- Basic Operations
 			types_label.set_font (label_font)
 			
 				-- Type list
-			create type_list_view.make_listview
-			--type_list_view.set_borderstyle (dictionary.List_view_border_style)
-			type_list_view.set_borderstyle (List_view_border_style)
-			type_list_view.set_checkboxes (False)
-			type_list_view.set_fullrowselect (True)
-			type_list_view.set_gridlines (True)
-			type_list_view.set_multiselect (False)
-			type_list_view.set_sorting (0)
-			--type_list_view.set_view (dictionary.View)
-			type_list_view.set_view (View)
-			type_list_view.set_activation (0)
-			--type_list_view.set_alignment (dictionary.Alignment)
-			type_list_view.set_alignment (Alignment)
-			type_list_view.set_scrollable (True)
-			type_list_view.set_tabindex (0)
-			
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (5 * dictionary.Margin + 3 * dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (5 * Margin + 3 * Label_height)
-			type_list_view.set_location (a_point)
-			
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			--a_size.set_height (dictionary.Window_height - 11 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)
-			a_size.set_width (Window_width - 2 * Margin)
-			a_size.set_height (Window_height - 11 * Margin - 3 * Label_height - Button_height)
-			type_list_view.set_size (a_size)				
-			from
-			until
-				i = type_list.count
-			loop
-				a_type ?= type_list.item (i)
-				if a_type /= Void then
-					an_item := a_type.eiffelname
-					if a_type.dotnetsimplename /= Void and then a_type.dotnetsimplename.length > 0 then
-						an_item := an_item.concat_string_string_string_string (an_item, dictionary.Space, dictionary.Opening_bracket, a_type.dotnetfullname)
-						an_item := an_item.concat_string_string (an_item, dictionary.Closing_bracket)
-					end
-					create list_view_item.make_1 (an_item)
-					list_view_item := type_list_view.items.add (list_view_item)
-					types.add (list_view_item, a_type)
-				end
-				i := i + 1
-			end
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_item_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnItemEventHandler")
-			type_list_view.add_Click (on_item_event_handler_delegate)
+			build_list_view 
 			
 				-- Close button
 			create close_button.make_button
@@ -303,13 +268,13 @@ feature -- Basic Operations
 			a_point.set_Y (Window_height - 4 * Margin - Button_height)
 			close_button.set_location (a_point)
 			close_button.set_text (dictionary.Close_button_label)
+			type := type_factory.GetType_String (dictionary.System_event_handler_type)
 			on_close_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnCloseEventHandler")
 			close_button.add_Click (on_close_event_handler_delegate)
 
 			controls.add (assembly_label)
 			controls.add (assembly_descriptor_label)
 			controls.add (types_label)
-			controls.add (type_list_view)
 			controls.add (close_button)
 		end
 
@@ -333,10 +298,11 @@ feature -- Event handling
 			if eiffel_class /= Void then
 				if not children_table.contains (eiffel_class) then
 					children := children_factory.recursive_children (eiffel_class)
+					children_table.add (eiffel_class, children)
 				else
 					children ?= children_table.item (eiffel_class)
 				end
-				create type_view.make (assembly_descriptor, eiffel_class, children)
+				create type_view.make (assembly_descriptor, eiffel_class, children, Current)
 			end
 		end
 
@@ -351,6 +317,37 @@ feature -- Event handling
 			close
 		end
 
+feature {TYPE_VIEW} -- Status Setting
+
+	set_assembly_types (a_list: like type_list) is
+			-- Set `type_list' with `a_list'.
+		indexing
+			external_name: "SetAssemblyTypes"
+		require
+			non_void_type_list: a_list /= Void
+		do
+			type_list := a_list
+			controls.remove (type_list_view)
+			build_list_view
+			refresh
+		ensure
+			type_list_set: type_list = a_list
+		end
+
+	set_children (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; children_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+			-- Replace children of `an_eiffel_class' by `children_list' in `children_table'.
+		indexing
+			external_name: "SetChildren"
+		require
+			non_void_eiffel_class: an_eiffel_class /= Void
+			non_void_children_list: children_list /= Void	
+		do
+			if children_table.contains (an_eiffel_class) then
+				children_table.remove (an_eiffel_class)
+				children_table.add (an_eiffel_class, children_list)
+			end		
+		end
+		
 feature {NONE} -- Implementation
 
 	type_factory: SYSTEM_TYPE
@@ -389,6 +386,70 @@ feature {NONE} -- Implementation
 			-- Value: List of children (instance of `SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_EIFFELCLASS]')
 		indexing
 			external_name: "ChildrenTable"
+		end
+	
+	build_list_view is
+			-- Build list view from `type_list'.
+		indexing
+			external_name: "BuildListView"
+		local
+			a_size: SYSTEM_DRAWING_SIZE
+			a_point: SYSTEM_DRAWING_POINT
+			i: INTEGER
+			a_type: ISE_REFLECTION_EIFFELCLASS
+			an_item: STRING
+			list_view_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
+			type: SYSTEM_TYPE
+			on_item_event_handler_delegate: SYSTEM_EVENTHANDLER		
+		do
+			create type_list_view.make_listview
+			--type_list_view.set_borderstyle (dictionary.List_view_border_style)
+			type_list_view.set_borderstyle (List_view_border_style)
+			type_list_view.set_checkboxes (False)
+			type_list_view.set_fullrowselect (True)
+			type_list_view.set_gridlines (True)
+			type_list_view.set_multiselect (False)
+			type_list_view.set_sorting (0)
+			--type_list_view.set_view (dictionary.View)
+			type_list_view.set_view (View)
+			type_list_view.set_activation (0)
+			--type_list_view.set_alignment (dictionary.Alignment)
+			type_list_view.set_alignment (Alignment)
+			type_list_view.set_scrollable (True)
+			type_list_view.set_tabindex (0)
+			
+			--a_point.set_X (dictionary.Margin)
+			--a_point.set_Y (5 * dictionary.Margin + 3 * dictionary.Label_height)
+			a_point.set_X (Margin)
+			a_point.set_Y (5 * Margin + 3 * Label_height)
+			type_list_view.set_location (a_point)
+			
+			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			--a_size.set_height (dictionary.Window_height - 11 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)
+			a_size.set_width (Window_width - 2 * Margin)
+			a_size.set_height (Window_height - 11 * Margin - 3 * Label_height - Button_height)
+			type_list_view.set_size (a_size)				
+			from
+			until
+				i = type_list.count
+			loop
+				a_type ?= type_list.item (i)
+				if a_type /= Void then
+					an_item := a_type.eiffelname
+					if a_type.fullexternalname /= Void and then a_type.fullexternalname.length > 0 then
+						an_item := an_item.concat_string_string_string_string (an_item, dictionary.Space, dictionary.Opening_bracket, a_type.fullexternalname)
+						an_item := an_item.concat_string_string (an_item, dictionary.Closing_bracket)
+					end
+					create list_view_item.make_1 (an_item)
+					list_view_item := type_list_view.items.add_listviewitem (list_view_item)
+					types.add (list_view_item, a_type)
+				end
+				i := i + 1
+			end
+			type := type_factory.GetType_String (dictionary.System_event_handler_type)
+			on_item_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnItemEventHandler")
+			type_list_view.add_Click (on_item_event_handler_delegate)
+			controls.add (type_list_view)
 		end
 		
 end -- class ASSEMBLY_VIEW

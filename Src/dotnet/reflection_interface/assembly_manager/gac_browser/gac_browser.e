@@ -1,10 +1,13 @@
 indexing
 	description: "GAC Browser"
-	external_name: "AssemblyManager.GACBrowser"
+	external_name: "ISE.AssemblyManager.GACBrowser"
 
 class
 	GAC_BROWSER
 
+inherit
+	ISE_REFLECTION_CONVERSIONSUPPORT
+	
 feature -- Access
 
 	shared_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -44,12 +47,6 @@ feature -- Access
 			external_name: "GacPath"
 		end
 		
-	Neutral_culture: STRING is "neutral"
-			-- Neutral culture as a string
-		indexing
-			external_name: "NeutralCulture"
-		end
-		
 feature {NONE} -- Implementation
 
 	assembly_versions (dir: SYSTEM_IO_DIRECTORYINFO): SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -81,15 +78,7 @@ feature {NONE} -- Implementation
 				loop
 					assembly := load_from_file (files.item (j).fullname)
 					if assembly /= Void then
-						name := assembly.name
-						version := assembly.version.tostring
-						culture := assembly.cultureinfo.name
-						if culture /= Void and then culture.length = 0 then
-							culture := Neutral_culture
-						end
-						public_key := decode_key (assembly.getpublickeytoken)
-						create desc.make1
-						desc.make (name, version, culture, public_key)
+						desc := assemblydescriptorfromname (assembly)
 						n := Result.add (desc)
 					end
 					j := j + 1
@@ -119,33 +108,6 @@ feature {NONE} -- Implementation
 		rescue
 			rescued := True
 			retry
-		end
-
-	decode_key (a_key: ARRAY [INTEGER_8]): STRING is
-			-- Printable representation of `a_key'.
-		indexing
-			external_name: "DecodeKey"
-		require
-			a_key_not_void: a_key /= Void
-		local
-			i: INTEGER
-			hex_rep: STRING
-		do
-			Result := ""
-			from
-				i := 0
-			until
-				i >= a_key.count
-			loop
-				hex_rep := a_key.item (i).tostring_string ("X").tolower
-				if hex_rep.length < 2 then
-					hex_rep := hex_rep.concat_string_string ("0", hex_rep)
-				end
-				Result := Result.concat_string_string (Result, hex_rep)
-				i := i + 1
-			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 end -- class GAC_BROWSER

@@ -1,6 +1,6 @@
 indexing
 	description: "Dialog showing dependancies of a .NET assembly"
-	external_name: "AssemblyManager.DependancyViewer"
+	external_name: "ISE.AssemblyManager.DependancyViewer"
 
 class
 	DEPENDANCY_VIEWER

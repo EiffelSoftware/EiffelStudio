@@ -1,6 +1,6 @@
 indexing
 	description: "Enable user to import a .NET assembly."
-	external_name: "AssemblyManager.ImportDialog"
+	external_name: "ISE.AssemblyManager.ImportDialog"
 
 class
 	IMPORT_DIALOG
@@ -113,6 +113,12 @@ feature -- Access
 			external_name: "CancelButton"
 		end
 
+	message_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+			-- Message text box
+		indexing
+			external_name: "MessageTextBox"
+		end
+		
 feature -- Constants
 
 	Border_style: INTEGER is 3
@@ -127,9 +133,9 @@ feature -- Constants
 			external_name: "WindowHeight"
 		do
 			if dependancies.count > 0 then
-				Result := 280
+				Result := 330
 			else
-				Result := 230
+				Result := 280
 			end
 		end
 		
@@ -364,20 +370,22 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
+			type: SYSTEM_TYPE
+			on_confirmation_event_handler_delegate: SYSTEM_EVENTHANDLER
 			warning_dialog: WARNING_DIALOG
-			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			assembly: SYSTEM_REFLECTION_ASSEMBLY
 		do
-				-- Check for importation of assembly dependancies
 			if dependancies.count > 0 then
 				if not dependancies_check_box.Checked then
-					create warning_dialog.make (assembly_descriptor, dependancies, dictionary.Warning_text)
+					type := type_factory.GetType_String (dictionary.System_event_handler_type)
+					on_confirmation_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "ImportAssemblyWithoutDependancies")
+					create warning_dialog.make (assembly_descriptor, dependancies, dictionary.Warning_text, on_confirmation_event_handler_delegate)
+				else
+					import_assembly_and_dependancies
+					close
 				end
 			else
-				assembly_name := assembly_name_from_info
-				assembly := assembly.load (assembly_name)
-				console.writeline_string ("ok: importation of assembly and dependancies")
-				--import (assembly)
+				import_assembly_and_dependancies
+				close
 			end
 		end
 
@@ -399,11 +407,8 @@ feature -- Event handling
 		require
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
-		local
-			--select_folder_dialog: SYSTEM_WINDOWS_FORMS_DESIGN_FOLDERNAMEEDITOR
 		do
 			console.writeline_string ("browse")
-			--create select_folder_dialog.make_foldernameeditor
 		end
 		
 feature {NONE} -- Implementation
@@ -435,7 +440,7 @@ feature {NONE} -- Implementation
 			Result.set_Name (assembly_descriptor.Name)
 			create version.make_3 (assembly_descriptor.Version)
 			Result.set_Version (version)
-			if not assembly_descriptor.Culture.Equals_String (dictionary.Neutral_culture) then
+			if not assembly_descriptor.Culture.equals_string (dictionary.Neutral_culture) then
 				create culture.make (assembly_descriptor.Culture)
 			else
 				create culture.make (dictionary.Empty_string)
@@ -451,6 +456,77 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+	
+	import_assembly_and_dependancies is
+			-- Import the assembly corresponding to `assembly_descriptor' and its dependancies.
+		indexing
+			external_name: "ImportAssemblyAndDependancies"
+		require
+			non_void_assembly_descriptor: assembly_descriptor /= Void
+		local
+			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			assembly: SYSTEM_REFLECTION_ASSEMBLY
+			--emitter: ISE_REFLECTION_EIFFELCODEGENERATOR
+		do
+			assembly_name := assembly_name_from_info
+			assembly := assembly.load (assembly_name)
+			console.writeline_string (dictionary.Assembly_and_dependancies_importation_message)
+			display_message (dictionary.Assembly_and_dependancies_importation_message)
+			--create emitter.make
+			--emitter.importassemblyfromgac (assembly)
+			controls.remove (message_text_box)
+			refresh
+		end
+
+	import_assembly_without_dependancies is
+			-- Import the assembly corresponding to `assembly_descriptor' without its dependancies.
+		indexing
+			external_name: "ImportAssemblyWithoutDependancies"
+		require	
+			non_void_assembly_descriptor: assembly_descriptor /= Void
+		local
+			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			assembly: SYSTEM_REFLECTION_ASSEMBLY
+			--emitter: ISE_REFLECTION_EIFFELCODEGENERATOR		
+		do
+			assembly_name := assembly_name_from_info
+			assembly := assembly.load (assembly_name)
+			console.writeline_string (dictionary.Assembly_importation_message)
+			display_message (dictionary.Assembly_importation_message)
+			--create emitter.make
+			--emitter.importassemblywithoutdependancies (assembly)
+			controls.remove (message_text_box)
+			refresh			
+		end
+		
+	display_message (a_message: STRING) is
+			-- Display `a_message' in a text box at the bottom of the window.
+		indexing
+			external_name: "DisplayMessage"
+		require
+			non_void_message: a_message /= Void
+			not_empty_message: a_message.length > 0
+		local
+			a_size: SYSTEM_DRAWING_SIZE
+			a_point: SYSTEM_DRAWING_POINT
+		do
+			create message_text_box.make_textbox
+			message_text_box.set_forecolor (dictionary.Red_color)
+			message_text_box.set_text (a_message)
+			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_width (Window_width - 2 * Margin)
+			message_text_box.set_size (a_size)
+			a_point.set_x (Margin)
+			if dependancies.count > 0 then
+				--a_point.set_Y (9 * dictionary.Margin + 6 * dictionary.Label_height)
+				a_point.set_Y (9 * Margin + 6 * Label_height)
+			else
+				--a_point.set_Y (6 * dictionary.Margin + 5 * dictionary.Label_height)
+				a_point.set_Y (6 * Margin + 5 * Label_height)
+			end	
+			message_text_box.set_location (a_point)
+			controls.add (message_text_box)
 		end
 		
 end -- class IMPORT_DIALOG

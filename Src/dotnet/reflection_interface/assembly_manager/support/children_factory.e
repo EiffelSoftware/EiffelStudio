@@ -1,6 +1,6 @@
 indexing
 	description: "Retrieves children from an instance of `ISE_REFLECTION_EIFFELCLASS'."
-	external_name: "AssemblyManager.ChildrenFactory"
+	external_name: "ISE.AssemblyManager.ChildrenFactory"
 
 class
 	CHILDREN_FACTORY
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 						not parents_enumerator.movenext
 					loop
 						a_parent ?= parents_enumerator.current_
-						if a_parent.tolower.equals (a_class.eiffelname.tolower) and not Result.contains (a_type) then
+						if a_parent.tolower.equals_string (a_class.eiffelname.tolower) and not Result.contains (a_type) then
 							added := Result.add (a_type)
 						end
 						moved := parents_enumerator.movenext

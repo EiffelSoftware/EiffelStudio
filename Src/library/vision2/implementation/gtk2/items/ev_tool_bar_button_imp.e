@@ -26,7 +26,8 @@ inherit
 			initialize,
 			pointer_double_press_actions_internal,
 			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal
+			pointer_motion_actions_internal,
+			event_widget
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -48,18 +49,25 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is do Result := False end
+	
+	event_widget: POINTER is
+			-- 
+		do
+			Result := visual_widget
+		end
 
 	make (an_interface: like interface) is
 			-- Create the tool bar button.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL))		
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL))
 		end
 
 	initialize is
 			-- Initialization of button box and events.
 		do
 			Precursor {EV_ITEM_IMP}
+			initialize_events
 			connect_button_press_switch
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -113,6 +121,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		do
 			create Result
 			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (event_widget, "button-press-event", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation

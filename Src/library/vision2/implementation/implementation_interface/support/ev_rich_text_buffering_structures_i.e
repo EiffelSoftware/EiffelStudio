@@ -229,7 +229,8 @@ feature {EV_ANY_I} -- Status Setting
 			current_character: CHARACTER
 			found_opening_brace: BOOLEAN
 			paragraph_format: EV_PARAGRAPH_FORMAT
-			last_load_value, current_load_value: INTEGER
+			last_load_value, current_load_value,
+			key_index, keys_count: INTEGER
 		do
 			last_load_successful := True
 			if rtf_text.item (1).is_equal (rtf_open_brace_character) then
@@ -309,18 +310,24 @@ feature {EV_ANY_I} -- Status Setting
 					no_carriage_returns: not plain_text.has ('%R')
 				end
 				rich_text.flush_buffer
+				keys_count := all_paragraph_format_keys.count
 				from
 					all_paragraph_format_keys.start
 				until
 					all_paragraph_format_keys.off
 				loop
+					key_index := all_paragraph_format_keys.index
 					paragraph_format := all_paragraph_formats.item (all_paragraph_format_keys.item)
-					rich_text.format_paragraph (all_paragraph_indexes.i_th (all_paragraph_format_keys.index), all_paragraph_indexes.i_th (all_paragraph_format_keys.index) + 1, paragraph_format)
+					if key_index < keys_count then
+						rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), all_paragraph_indexes.i_th (key_index + 1), paragraph_format)
+					else
+						rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), rich_text.text_length, paragraph_format)
+					end
 					
 					if rich_text.file_access_actions_internal /= Void then
 							-- Here we update the `file_access_actions' with the range 90-100 for the
 							-- paragraph formatting.
-						current_load_value := 90 + ((all_paragraph_format_keys.index * 10) // all_paragraph_format_keys.count)
+						current_load_value := 90 + ((key_index * 10) // keys_count)
 						if current_load_value /= last_load_value then
 								-- Fire the `file_access_actions' only if changed.	
 							last_load_value := current_load_value						

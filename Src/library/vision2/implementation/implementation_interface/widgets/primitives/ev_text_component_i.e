@@ -10,6 +10,14 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
+		rename
+			interface as primitive_interface
+		end
+	
+	EV_TEXTABLE_I
+		select
+			interface
+		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_I
 
@@ -17,13 +25,11 @@ feature -- Access
 
 	text: STRING is
 			-- `Result' is text of `Current'.
-		require
 		deferred
 		end
 
 	text_length: INTEGER is
 			-- Length of the text in `Current'.
-		require
 		deferred
 		end
 

@@ -1,5 +1,4 @@
 /*
-
   ####   ######   ####      #    #               #    #
  #    #  #       #    #     #    #               #    #
  #       #####   #          #    #               ######
@@ -127,12 +126,8 @@ struct gt_info {
  */
 
 #ifndef WORKBENCH
-extern struct ctable *ce_rname;		/* Routine names -> function pointer */
 extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 #endif
-
-/*JOCE extern struct ctable egc_ce_type; */			/* Class name -> type ID */
-/*JOCE extern struct ctable egc_ce_gtype; */			/* Generic class name -> gt_info */
 
 extern EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
 extern EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
@@ -165,7 +160,7 @@ extern void  failure(void);					/* The Eiffel exectution failed */
 extern void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */
 
 #ifndef WORKBENCH
-#define Cecil(x)	ce_rname[x]			/* Final mode acces to hash table */
+#define Cecil(x)	egc_ce_rname[x]			/* Final mode acces to hash table */
 #else
 #define Cecil(x)	System(x).cn_cecil	/* Workbench mode access */
 #endif

@@ -2773,7 +2773,7 @@ rt_private char eedefined(long ex)
 #include "urgent.c"
 
 rt_private struct stack hec_stack;
-rt_private char *(**ecreate)();
+/*rt_private char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
 
 #include "eif_macros.h"
 

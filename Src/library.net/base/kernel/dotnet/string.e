@@ -719,17 +719,7 @@ feature -- Element change
 			i, j: INTEGER
 		do
 			if n < count then
-				from
-					j := count - n
-					i := 0
-				until
-					i = n
-				loop
-					internal_string_builder.set_chars (i, internal_string_builder.get_chars (j))
-					i := i + 1
-					j := j + 1
-				end
-				set_count (n)
+				internal_string_builder := internal_string_builder.remove (0, count - n)
 			end
 		ensure
 			new_count: count = n.min (old count)

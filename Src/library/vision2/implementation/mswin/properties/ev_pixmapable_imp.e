@@ -12,33 +12,6 @@ deferred class
 inherit
 	EV_PIXMAPABLE_I
 
-	WEL_RASTER_OPERATIONS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_DT_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_ODS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_ODA_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_DRAWING_ROUTINES
-		rename
-			draw_edge as routine_draw_edge
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	pixmap: EV_PIXMAP is
@@ -54,27 +27,19 @@ feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the widget.
+			-- We need to destroy the dc that comes with it,
+			-- because a bitmap can be linked to only one dc
+			-- at a time.
 		do
 			pixmap_imp ?= pix.implementation
+			pixmap_imp.internal_delete_dc
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		do
+			pixmap_imp.internal_create_dc
 			pixmap_imp ?= Void
-		end
-
-feature {EV_PIXMAP_IMP} -- Implementation
-
-	wel_window: WEL_WINDOW is
-			-- Window used to create the pixmap.
-		deferred
-		end
-
-feature {EV_CONTAINER_IMP} -- Implementation
-
-	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
-		deferred
 		end
 
 end -- class EV_PIXMAPABLE_IMP

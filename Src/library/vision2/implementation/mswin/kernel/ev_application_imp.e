@@ -325,7 +325,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Status Report
 		--| ready for the next pick/drag. However, we still want to override
 		--| the default processing for the Wm_ncativate message in the window.
 		--| This flag has been added only for this case.
-	
 
 	set_transport_just_ended is
 			-- Assign `True' to `transport_just_ended'.

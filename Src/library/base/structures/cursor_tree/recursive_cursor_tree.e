@@ -15,7 +15,7 @@ deferred class RECURSIVE_CURSOR_TREE [G] inherit
 
 	CURSOR_TREE [G]
 		redefine
-			empty, extendible
+			empty, extendible, extend
 		end
 
 feature -- Access
@@ -110,7 +110,7 @@ feature -- Status report
 			-- Is cursor on tree root?
 		do
 			if not off then
-				Result := (active_parent = above_node);
+				Result := (active_parent = above_node)
 			end
 		end;
 
@@ -185,8 +185,8 @@ feature -- Cursor movement
 				below := false
 			else
 				active := active_parent;
-				if active_parent /= Void then
-					active_parent := active_parent.parent;
+				if active /= Void then
+					active_parent := active.parent;
 				end
 				corresponding_child;
 			end;
@@ -209,7 +209,11 @@ feature -- Cursor movement
 					active := active.child;
 				end;
 				before := true;
-			elseif i = arity + 1 then
+			elseif above or else i <= arity then
+				active_parent := active;
+				active.child_go_i_th (i);
+				active := active.child
+			else
 				if arity = 0 then
 					below := true;
 				else
@@ -218,10 +222,6 @@ feature -- Cursor movement
 					active := active.child;
 				end;
 				after := true;
-			else
-				active_parent := active;
-				active.child_go_i_th (i);
-				active := active.child
 			end
 		end;
 
@@ -236,6 +236,27 @@ feature -- Cursor movement
 				end;
 			unchecked_go (temp)
 		end;
+
+feature -- Insert element
+
+	extend (v: G) is
+			-- Add `v' after last child.
+			-- Make `v' the `first_child' if `below' and place
+			-- cursor `before'.
+		local
+			pos: CURSOR;
+		do
+			pos := cursor;
+			go_last_child;
+			put_right (v);
+			go_to (pos);
+			if below then
+				below := false;
+				before := false;
+				after := false;
+				down (0);
+			end;
+		end
 
 feature -- Element change
 
@@ -254,8 +275,9 @@ feature -- Removal
 		do
 			corresponding_child;
 			active := active_parent;
-			active_parent := active_parent.parent;
+			active_parent := active.parent;
 			active.remove_child
+			active.child_back
 		ensure then
 			not_off_unless_empty: empty or else not off
 		end;
@@ -292,10 +314,11 @@ feature {NONE} -- Implementation
 
 	corresponding_child is
 			-- Make `active' the current child of `active_parent'.
+		require
+			active_exists: active /= Void
 		do
 			if active_parent /= Void then
-				active_parent.child_go_i_th (1);
-				--active_parent.search (active);
+				active_parent.set_child (active)
 			end;
 		end;
 
@@ -312,6 +335,9 @@ feature {NONE} -- Implementation
 			before := p.before;
 			below := p.below
 		end;
+
+invariant
+	coherency: not above implies active_parent.child = active
 
 end -- class RECURSIVE_CURSOR_TREE
 

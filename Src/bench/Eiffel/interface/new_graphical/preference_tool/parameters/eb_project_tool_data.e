@@ -32,7 +32,7 @@ feature -- Access
 			Result := resources.get_integer("project_tool_height", 340)
 		end
 
-	project_tool_bar: BOOLEAN is
+	project_toolbar_visible: BOOLEAN is
 		do
 			Result := resources.get_boolean("project_tool_bar", True)
 		end

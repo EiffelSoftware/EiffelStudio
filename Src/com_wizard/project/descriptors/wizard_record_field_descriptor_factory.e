@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_type_info: ECOM_TYPE_INFO; an_index: INTEGER; 
@@ -41,11 +46,6 @@ feature -- Basic operations
 			end
 
 			if is_forbidden_c_word (name) then
-				name.prepend ("a_")
-			end
-			tmp_string := clone (name)
-			tmp_string.to_lower
-			if eiffel_key_words.has (tmp_string) then
 				name.prepend ("a_")
 			end
 

@@ -34,7 +34,7 @@ feature -- Access
 	else_part: BYTE_LIST [BYTE_NODE]
 			-- Default compound {list of INSTR_B}
 
-	end_location: TOKEN_LOCATION
+	end_location: LOCATION_AS
 			-- Line number where `end' keyword is located
 
 feature -- Settings

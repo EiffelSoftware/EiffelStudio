@@ -41,7 +41,7 @@ feature -- Eiffel source line information
 			Result_positive: Result > 0
 		end
 
-	set_line_number (lnr: like line_number) is
+	set_line_number (lnr: INTEGER) is
 			-- Set `line_number' to `lnr'.
 		require
 			lnr_positive: lnr > 0

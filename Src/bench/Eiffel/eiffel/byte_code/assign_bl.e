@@ -18,6 +18,21 @@ inherit
 			register, get_register, print_register
 		end
 
+create
+	make
+	
+feature {NONE} -- Initialization
+
+	make (other: ASSIGN_B) is
+			-- Create new instance from `other'.
+		require
+			other_not_void: other /= Void
+		do
+			target := other.target.enlarged
+			source := other.source.enlarged
+			line_number := other.line_number
+		end
+
 feature
 
 	target_propagated: BOOLEAN

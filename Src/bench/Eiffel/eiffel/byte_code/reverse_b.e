@@ -31,11 +31,7 @@ feature -- Enlarging
 	enlarged: REVERSE_BL is
 			-- Enlarge current node.	
 		do
-			create Result
-			Result.set_target (target.enlarged)
-			Result.set_source (source.enlarged)
-			Result.set_line_number (line_number)
-			Result.set_info (info)
+			create Result.make (Current)
 		end
 
 feature -- IL code generation

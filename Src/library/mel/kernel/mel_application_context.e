@@ -72,6 +72,72 @@ feature -- Status report
 			Result := Mel_dispatcher.last_id
 		end;
 
+	pending: INTEGER is
+			-- Mask of pending event 
+			-- (Null, if there are none)
+		require
+			is_valid: is_valid
+		do
+			Result := xt_app_pending (handle)
+		ensure
+			valid_result: Result /= 0 implies
+					(Result = XtIMAlternateInput) or else 
+					(Result = XtIMTimer) or else 
+					(Result = XtIMXEvent) 
+		end;
+
+	next_event: MEL_EVENT is
+			-- Retrieves the next event from the queue 
+			-- (It waits until there is an event in the queue. The
+			-- retrieved event is removed from the queue)
+		require
+			is_valid: is_valid
+		local
+			ms: MEL_CALLBACK_STRUCT
+		do
+			xt_app_next_event (handle, global_xevent_ptr);
+			!! ms.make_event_only (global_xevent_ptr);
+			Result := ms.event
+		ensure
+			event_returned: Result /= Void
+		end;
+	
+	XtIMAlternateInput: INTEGER is
+			-- Constant for Alternative input
+			-- (Returned by `pending' and used for `process_event')
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+		alias
+			"XtIMAlternateInput"
+		end;
+
+	XtIMAll: INTEGER is
+			-- Constant for all events
+			-- (Used for `process_event')
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+		alias
+			"XtIMAll"
+		end;
+
+	XtIMTimer: INTEGER is
+			-- Constant for timer event
+			-- (Returned by `pending' and used for `process_event')
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+		alias
+			"XtIMTimer"
+		end;
+
+	XtIMXEvent: INTEGER is
+			-- Constant for X events
+			-- (Returned by `pending' and used for `process_event')
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_POINTER"
+		alias
+			"XtIMXEvent"
+		end;
+
 feature -- Element change
 
 	set_default_resources (a_list: ARRAY [MEL_WIDGET_RESOURCE]) is
@@ -210,12 +276,38 @@ feature -- Element change
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-feature -- Miscellaneous
+feature -- Update
 
 	iterate is
 			-- Loop the application.
+		require
+			is_valid: is_valid;
 		do
 			xt_app_main_loop (handle)
+		end;
+
+	process_event (a_mask: INTEGER) is
+			-- Process one X event, alternative input source or timer
+			-- event in Current application context based on `a_mask'.
+			-- This routine will block until an event of type `a_mask'
+			-- becomes available.
+		require
+			is_valid: is_valid;
+			valid_mask: a_mask = XtIMAlternateInput or else
+					a_mask = XtIMTimer or else
+					a_mask = XtIMXEvent or else
+					a_mask = XtIMAll
+		do
+			xt_app_process_event (handle, a_mask)
+		end;
+
+	dispatch_event (an_event: MEL_EVENT) is
+			-- Dispatch `an_event' to the appropriated event handler.
+		require
+			valid_an_event: an_event /= Void 
+		do
+			if xt_dispatch_event (an_event.handle) then
+			end
 		end;
 
 feature -- Removal
@@ -279,6 +371,39 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
+
+	xt_app_pending (app_contxt: POINTER): INTEGER is
+		external
+			"C [macro <X11/Intrinsic.h>] (XtAppContext): EIF_INTEGER"
+		alias
+			"XtAppPending"
+		end;
+
+	xt_app_process_event (app_contxt: POINTER; a_mask: INTEGER) is
+		external
+			"C [macro <X11/Intrinsic.h>] (XtAppContext, XtInputMask)"
+		alias
+			"XtAppProcessEvent"
+		end;
+
+	xt_dispatch_event (an_event: POINTER): BOOLEAN is
+		external
+			"C [macro <X11/Intrinsic.h>] (XEvent *): EIF_BOOLEAN"
+		alias
+			"XtDispatchEvent"
+		end;
+
+	xt_app_next_event (app_context: POINTER; an_event: POINTER) is
+		external
+			"C [macro <X11/Intrinsic.h>] (XtAppContext, XEvent *)"
+		alias
+			"XtAppNextEvent"
+		end;
+
+ 	global_xevent_ptr: POINTER is
+        external
+            "C [macro <mel.h>]: XEvent *"
+        end;
 
 end -- class MEL_APPLICATION_CONTEXT
 

@@ -180,31 +180,43 @@ feature -- Status Setting
 			Result := (pixels * 72 // screen.vertical_resolution) * 2
 		end
 		
-	start_line_indexes (a_text: STRING): ARRAYED_LIST [INTEGER] is
-			-- `Result' is index of first character of every line in `a_text'
-			-- as determined by '%N', not displayed lines.
+	generate_paragraph_information (a_text: STRING) is
+			-- `Result' is index of first character of every line in `a_text' upon
+			-- which the paragraph formatting changes, as determined by '%N'.
 		require
 			text_not_void: a_text /= Void
 		local
 			counter: INTEGER
 		do
-			create Result.make (50)
+			create paragraph_start_indexes.make (50)
+			create paragraph_formats.make (50)
+
 				-- Add the first line which is always 1.
-			Result.extend (1)
+			paragraph_start_indexes.extend (1)
+			
+			build_paragraph_from_format (rich_text.paragraph_format (1))
 				-- Now iterate `a_string' and determine each line as determined by `%N'.
 			from
 				counter := 1
 			until
 				counter > a_text.count
 			loop
-			if a_text.item (counter).is_equal ('%N') then
-				Result.extend (counter + 1)
-			end
-			counter := counter + 1
+				if a_text.item (counter).is_equal ('%N') then
+				if not rich_text.paragraph_format_contiguous (counter, counter + 2) then--rich_text.paragraph_format_contiguous (paragraph_start_indexes.last, counter + 2) then
+						-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
+						-- we must add one to convert to caret positions, and one to check that we are checking the first character
+						-- of the next line (past the %N) to determine if the format changed.
+					paragraph_start_indexes.extend (counter + 1)
+					build_paragraph_from_format (rich_text.paragraph_format (counter + 1))
+				end
+				end
+				counter := counter + 1
 			end
 		ensure
-			result_not_void: Result /= Void
-			count_greater_or_equal_to_one: Result.count >= 1
+			start_indexes_not_void: paragraph_start_indexes /= Void
+			formats_not_void: paragraph_formats /= Void
+			count_greater_or_equal_to_one: paragraph_start_indexes.count >= 1
+			counts_equal: paragraph_start_indexes.count = paragraph_formats.count
 		end
 
 feature -- Access
@@ -241,6 +253,46 @@ feature {EV_ANY_I} -- Implementation
 		end
 		
 feature {NONE} -- Implementation
+
+	build_paragraph_from_format (a_format: EV_PARAGRAPH_FORMAT) is
+			-- Add RTF representation of `a_format' to `paragraph_formats' is
+		require
+			formats_not_void: paragraph_formats /= Void
+		local
+			format: STRING
+		do
+			format := new_paragraph.twin
+			if a_format.is_left_aligned then
+				format.append (paragraph_left_aligned)
+			elseif a_format.is_center_aligned then
+				format.append (paragraph_center_aligned)
+			elseif a_format.is_right_aligned then
+				format.append (paragraph_right_aligned)
+			elseif a_format.is_justified then
+				format.append (paragraph_justified)
+			end
+			if a_format.left_margin /= 0 then
+				format.append (paragraph_left_indent)
+				format.append (pixels_to_half_points (a_format.left_margin * 10).out)
+			end
+			if a_format.right_margin /= 0 then
+				format.append (paragraph_right_indent)
+				format.append (pixels_to_half_points (a_format.right_margin * 10).out)
+			end
+			if a_format.top_spacing /= 0 then
+				format.append (paragraph_space_before)
+				format.append (pixels_to_half_points (a_format.top_spacing * 10).out)
+			end
+			if a_format.bottom_spacing /= 0 then
+				format.append (paragraph_space_after)
+				format.append (pixels_to_half_points (a_format.bottom_spacing * 10).out)
+			end
+			format.append_character (' ')
+			paragraph_formats.extend (format)
+		ensure
+			formats_count_increased: paragraph_formats.count = old paragraph_formats.count + 1
+		end
+		
 
 	build_font_from_format (a_format: EV_CHARACTER_FORMAT) is
 			-- Update font text `font_text' for addition of a new format to the buffering.
@@ -336,6 +388,16 @@ feature {NONE} -- Implementation
 				back_color_offset.force (hashed_colors.item (hashed_back_color))
 			end
 		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	paragraph_start_indexes: ARRAYED_LIST [INTEGER]
+		-- Indexes of every paragraph format change in a document in order.
+		-- Call `generate_paragraph_information' to fill.
+		
+	paragraph_formats: ARRAYED_LIST [STRING]
+		-- A string representation of Each paragraph change found in
+		-- `paragraph_start_indexes'. Call `generate_paragraph_information' to fill.
 			
 feature {NONE} -- Implementation
 

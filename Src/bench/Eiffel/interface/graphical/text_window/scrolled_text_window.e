@@ -299,7 +299,6 @@ feature -- Text manipulation
 	clear_window is
 			-- Erase internal structures of Current.
 		do
-			set_cursor_position (0);
 			image.wipe_out;
 			disable_clicking;
 			position := 0;
@@ -308,6 +307,7 @@ feature -- Text manipulation
 			focus_end := 0;
 			changed := True;
 			clear;
+			set_cursor_position (0);
 			set_changed (false);
 		ensure then
 			image.empty;

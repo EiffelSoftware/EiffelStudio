@@ -10,6 +10,74 @@
 
 <body>
 
+<h2>cecil-test</h2>
+<p>After you have done the appropriate steps to compile the example, you will 
+get a `cecil.exe' on windows, or `cecil' on Unix.</p>
+<p>This example performs some basic tests of CECIL from C to Eiffel and Eiffel 
+to C. You can:</p>
+<ul>
+  <li>choose to raise an exception when a routine is not visible</li>
+  <li>create an Eiffel string</li>
+  <li>choose to raise a precondition violation from C.</li>
+</ul>
+<p>&nbsp;</p>
+<p>A typical output will be:</p>
+<pre>$ cecil 
+Do you want to enable the visible exception? (y-yes, n-no):n
+Disable visible exception
+
+====== In eiffel_call ======
+        Eiffel type id = 9
+        Eiffel procedure make 0x100546b4
+        Eiffel object = 0x30068030
+Testing linked_list...
+12345
+test_linked_list OK
+Testing memory...
+Give string length (enter a high number for raising an Eiffel exception)
+234
+Memory OK
+Testing if string void ...
+Enter a string: (press enter if you want to raise an Eiffel exception)
+wefsd
+wefsdTesting precondition...By default it is true
+
+====== Done ======
+
+====== In eiffel_call ======
+        Eiffel type id = 9
+        Eiffel procedure test_linked_list 0x10054ebc
+        Eiffel object = 0x30068030
+Testing linked_list...
+12345
+test_linked_list OK
+
+====== Done ======
+
+====== In eiffel_call_1_arg ======
+        Eiffel type id = 9
+        Eiffel procedure print 0x1004e0a8
+        Eiffel object = 0x30068030
+        Eiffel object = 0x30068030
+Execute the Eiffel code `print (linked_list)' from the C side:
+MAIN [0x30068030]
+  linked_list: LINKED_LIST [0x30068C40]
+
+====== Done ======
+
+====== In cecil_test ======
+        protected indirection of 30068c40 is 300311bc
+        Eiffel type id of STRING = 198
+        Eiffel type id of LINKED_LIST [STRING] = 224
+        Linked List forth: 10222fbc
+        Linked list object = 0x30068c40
+Do you want to test the visibility of an Eiffel routine? (y-yes, n-no):
+n
+Do you want raise a precondition violation? (y-yes, n-no):
+n
+
+====== Done ======</pre>
+
 </body>
 
 </html>

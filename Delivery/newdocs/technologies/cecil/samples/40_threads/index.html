@@ -10,6 +10,67 @@
 
 <body>
 
+<h2>bank_account</h2>
+<p>After you have done the appropriate steps to compile the example, you will 
+get a `bank_account.exe' on windows, or `bank_account' on Unix.</p>
+<p>This program launches two types of threads:</p>
+<ul>
+  <li>the spenders withdraw some money from a shared bank acccount</li>
+  <li>the savers make some deposits on it.</li>
+</ul>
+<p>The Eiffel Threads are launched from C. The synchronization is done from 
+Eiffel. The shared bank account is a C structure, and is updated by the Eiffel 
+Threads using some C externals.</p>
+<p><br>
+In main.c:<br>
+LISTSZ size of bank account history.<br>
+DEPOSITORS numbers of savers.<br>
+WITHDRAWERS numbers of spenders.</p>
+<p>&nbsp;</p>
+<p>A typical output will be:</p>
+<pre>$ bank_account 
+**** Bank account report:
+Thread 0x30036350       DEPOSIT 161
+Thread 0x30036350       DEPOSIT 614
+Thread 0x30036350       DEPOSIT 626
+Thread 0x30036350       DEPOSIT 880
+Thread 0x30036350       DEPOSIT 601
+Thread 0x30036350       DEPOSIT 480
+Thread 0x30036350       DEPOSIT 177
+Thread 0x30036350       DEPOSIT 451
+Thread 0x30036350       DEPOSIT 96
+Thread 0x30036350       DEPOSIT 219
+*** BALANCE: 5305
+Do you want to continue? (y/n)
+y
+**** Bank account report:
+Thread 0x3003fcf0       DEPOSIT 161
+Thread 0x3004f088       DEPOSIT 161
+Thread 0x300567a0       WITHDRAWAL      161
+Thread 0x3005e1f0       WITHDRAWAL      161
+Thread 0x30036350       DEPOSIT 531
+Thread 0x3003fcf0       DEPOSIT 614
+Thread 0x3004f088       DEPOSIT 614
+Thread 0x300567a0       WITHDRAWAL      614
+Thread 0x30036350       DEPOSIT 409
+Thread 0x3003fcf0       DEPOSIT 626
+*** BALANCE: 7485
+Do you want to continue? (y/n)
+y
+**** Bank account report:
+Thread 0x3004f088       DEPOSIT 626
+Thread 0x30036350       DEPOSIT 799
+Thread 0x300567a0       WITHDRAWAL      626
+Thread 0x3005e1f0       WITHDRAWAL      614
+Thread 0x3003fcf0       DEPOSIT 880
+Thread 0x30036350       DEPOSIT 860
+Thread 0x3004f088       DEPOSIT 880
+Thread 0x300567a0       WITHDRAWAL      880
+Thread 0x30036350       DEPOSIT 307
+Thread 0x3004f088       DEPOSIT 601
+*** BALANCE: 10318
+</pre>
+
 </body>
 
 </html>

@@ -18,7 +18,7 @@ inherit
 			Fifth as set_state_action,
 			Sixth as set_label_action
 		end;
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as top_create,
 			realize as shell_realize
@@ -26,14 +26,25 @@ inherit
 			{NONE} all;
 			{ANY}realized, set_cursor, 
 			cursor, hide, show, shown, ungrab
+		redefine
+			set_geometry
 		end;
 	WINDOWS;
-	CONSTANTS
 	CLOSEABLE
 
 creation
 
 	make
+
+feature -- Window attributes
+
+	set_geometry is
+		do
+			set_x_y (Resources.app_ed_x,
+					Resources.app_ed_y);
+			set_size (Resources.app_ed_width,
+					Resources.app_ed_height);
+		end;
 
 feature -- Drawing area 
 
@@ -419,9 +430,9 @@ feature {NONE} -- EiffelVision Section
 	labels_wnd: CHOICE_WND;
 			-- Popup window that displays labels between states
 
-	state_label: LABEL_G;
+	state_label: LABEL;
 
-	transition_label: LABEL_G;
+	transition_label: LABEL;
 
 	transition_list: LABEL_SCR_L;
 	
@@ -494,6 +505,7 @@ feature {NONE}
 			!!transition_label.make (Widget_names.transition_name, form1);
 			!!state_list.make (Widget_names.list1, form1, Current);
 			!!transition_list.make (Widget_names.list2, form1);
+			initialize_window_attributes;
 				-- *******************
 				-- Perform attachments
 				-- *******************
@@ -535,7 +547,9 @@ feature {NONE}
 			state_list.set_single_selection;
 			figures.set_showable_area (drawing_sw);
 			drawing_sw.set_working_area (drawing_area);
-			drawing_area.set_background_color (App_const.white);
+			drawing_area.set_background_color (Resources.drawing_area_color);
+			drawing_area.set_size (Resources.app_dr_area_width,
+							Resources.app_dr_area_height);
 			--add_sub_application_command.Create (Current);
 			!!labels_wnd.make (form);
 				-- *************

@@ -59,14 +59,17 @@ feature -- Status Report
 			-- Do referenced assemblies have assembly with name `a_name'?
 		local
 			l_old_cursor: CURSOR
+			l_full_name, l_other_full_name: SYSTEM_STRING
 		do
 			l_old_cursor := Referenced_assemblies.cursor
+			l_full_name := a_name.full_name
 			from
 				Referenced_assemblies.start
 			until
 				Referenced_assemblies.after or Result
 			loop
-				Result := Referenced_assemblies.item.assembly.get_name.full_name.equals (a_name.full_name)
+				l_other_full_name := Referenced_assemblies.item.assembly.get_name.full_name
+				Result := l_other_full_name.equals (l_full_name)
 				Referenced_assemblies.forth
 			end
 			Referenced_assemblies.go_to (l_old_cursor)
@@ -183,6 +186,7 @@ feature -- Basic Operations
 						end
 						if l_location /= Void then
 							add_referenced_assembly (l_location)
+							l_location := Void
 						end
 					end
 					i := i + 1

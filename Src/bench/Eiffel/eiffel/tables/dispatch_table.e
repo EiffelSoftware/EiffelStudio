@@ -23,11 +23,11 @@ feature -- Initialization
 	make is
 			-- Create a new dispatch table.
 		do
-			init;
+			init
 			!! counter.make
 		end
 
-	counter: REAL_BODY_INDEX_COUNTER;
+	counter: REAL_BODY_INDEX_COUNTER
 			-- Counter for real body index
 			
 feature 
@@ -36,13 +36,13 @@ feature
 			-- Real body index associated to an instance of FEATURE_I of
 			-- body index `body_index' in a class type `class_type'.
 		local
-			unit: DISPATCH_UNIT;
+			unit: DISPATCH_UNIT
 		do
-			unit := unit_of_body_index (body_index, class_type);
+			unit := unit_of_body_index (body_index, class_type)
 			if not (unit = Void) then
-				Result := unit.real_body_index;
-			end;
-		end;
+				Result := unit.real_body_index
+			end
+		end
 
 feature {NONE} -- Search
 
@@ -50,22 +50,22 @@ feature {NONE} -- Search
 			-- Unit associated to an instance of FEATURE_I of
 			-- body index `body_index' in a class type `class_type'.
 		do
-			Marker.set_body_index (body_index);
-			Marker.set_class_type (class_type);
-			Result := item (Marker);
-		end;
+			Marker.set_body_index (body_index)
+			Marker.set_class_type (class_type)
+			Result := item (Marker)
+		end
 
 	Marker: DISPATCH_UNIT is
 			-- Marker for search
 		local
-			f: DYN_PROC_I;
+			f: DYN_PROC_I
 			bi: BODY_INDEX
 		once
-			!!f;
-			!! bi.make (1);
-			f.set_body_index (bi);
-			!!Result.make (System.class_type_of_id (1), f);
-		end;
+			!!f
+			!! bi.make (1)
+			f.set_body_index (bi)
+			!!Result.make (System.class_type_of_id (1), f)
+		end
 
 feature -- Refreezing
 
@@ -93,8 +93,8 @@ feature -- Merging
 			-- Append  `other' to `Current'.
 			-- Used when merging precompilations.
 		do
-			{CENTRAL_TABLE} precursor (other);
-			frozen_level := counter.total_count;
+			{CENTRAL_TABLE} precursor (other)
+			frozen_level := counter.total_count
 			dle_frozen_level := frozen_level
 		end
 
@@ -105,96 +105,96 @@ feature	-- Melting and C Generation
 		
 				-- 2.3 PATCH: dump long integer `v' in file `f'	
 		local
-			u: DISPATCH_UNIT;
+			u: DISPATCH_UNIT
 		do
 debug
-	io.error.putstring ("Updating dispatch_table%NCount: ");
-	io.error.putint (counter.total_count);
-	io.error.new_line;
-end;
+	io.error.putstring ("Updating dispatch_table%NCount: ")
+	io.error.putint (counter.total_count)
+	io.error.new_line
+end
 debug ("DLE SPY")
-	io.error.putstring ("Updating dispatch_table%NCount: ");
-	io.error.putint (counter.total_count);
-	io.error.new_line;
-end;
+	io.error.putstring ("Updating dispatch_table%NCount: ")
+	io.error.putint (counter.total_count)
+	io.error.new_line
+end
 
 			from
 				melted_list.start
 			until
 				melted_list.after
 			loop
-				u := melted_list.item;
+				u := melted_list.item
 				if u.is_valid then
 debug ("DLE SPY")
-io.error.put_string ("%Tstatic type #");
-io.error.put_integer (u.class_type.id.id);
-io.error.put_string (", dtype #");
-io.error.put_integer (u.class_type.type_id);
-io.error.new_line;
-io.error.put_string ("%Tbody_index #");
-io.error.put_integer (u.real_body_index.id - 1);
-io.error.put_string (", body_id #");
-io.error.put_integer (u.real_body_id.id - 1);
+io.error.put_string ("%Tstatic type #")
+io.error.put_integer (u.class_type.id.id)
+io.error.put_string (", dtype #")
+io.error.put_integer (u.class_type.type_id)
+io.error.new_line
+io.error.put_string ("%Tbody_index #")
+io.error.put_integer (u.real_body_index.id - 1)
+io.error.put_string (", body_id #")
+io.error.put_integer (u.real_body_id.id - 1)
 io.error.new_line
 end
-					write_int (file.file_pointer, u.real_body_index.id - 1);
-					write_int (file.file_pointer, u.real_body_id.id - 1);
+					write_int (file.file_pointer, u.real_body_index.id - 1)
+					write_int (file.file_pointer, u.real_body_id.id - 1)
 debug
-	io.error.putstring ("Item written%N");
-end;
-					melted_list.forth;
+	io.error.putstring ("Item written%N")
+end
+					melted_list.forth
 				else
-					melted_list.remove;
-				end;
-			end;
+					melted_list.remove
+				end
+			end
 				-- End of update for the dispatch table
-			write_int (file.file_pointer, -1);
-		end;
+			write_int (file.file_pointer, -1)
+		end
 
 	write_dispatch_count (file: RAW_FILE) is
 			-- Write the size of dispatch table on `file'.
 		do
 			write_int (file.file_pointer, counter.total_count)
-		end;
+		end
 
 	generate (file: INDENT_FILE) is
 			-- Generate the dispatch table in `file'.
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: file /= Void
+			is_open: file.is_open_write
 		local
-			values: ARRAY [INTEGER];
-			unit: DISPATCH_UNIT;
-			i, nb: INTEGER;
+			values: ARRAY [INTEGER]
+			unit: DISPATCH_UNIT
+			i, nb: INTEGER
 		do
 			from
-				nb := counter.total_count;
-				!!values.make (1, nb);
+				nb := counter.total_count
+				!!values.make (1, nb)
 				start
 			until
 				after
 			loop
-				unit := item_for_iteration;
+				unit := item_for_iteration
 				if unit.is_valid then
-					values.put (unit.real_body_id.id - 1, unit.real_body_index.id);
-				end;
-				forth;
-			end;
+					values.put (unit.real_body_id.id - 1, unit.real_body_index.id)
+				end
+				forth
+			end
 			from
-				i := 1;
-				file.putstring ("#include %"eif_portable.h%"%N%N");
-				file.putstring ("uint32 fdispatch[] = {%N")
+				i := 1
+				file.putstring ("#include %"eif_portable.h%"%N%N")
+				file.putstring ("uint32 egc_fdispatch[] = {%N")
 			until
 				i > nb
 			loop
-				file.putstring ("(uint32) ");
-				file.putint (values.item (i));
-				file.putchar (',');
-				file.new_line;
-				i := i + 1;
-			end;
-			file.putstring ("};%N");
-		end;
+				file.putstring ("(uint32) ")
+				file.putint (values.item (i))
+				file.putchar (',')
+				file.new_line
+				i := i + 1
+			end
+			file.putstring ("};%N")
+		end
 
 feature -- DLE
 
@@ -204,59 +204,59 @@ feature -- DLE
 			if not System.is_dynamic then
                 dle_frozen_level := counter.total_count
             end
-        end;
+        end
 
 	generate_dle (file: INDENT_FILE) is
 			-- Generate the DC-set dispatch units in `file'.
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: file /= Void
+			is_open: file.is_open_write
 			dynamic_system: System.is_dynamic
 		local
-			values: ARRAY [INTEGER];
-			unit: DISPATCH_UNIT;
+			values: ARRAY [INTEGER]
+			unit: DISPATCH_UNIT
 			i, nb: INTEGER
 		do
 			from
-				nb := counter.total_count;
-				!!values.make (1, nb);
+				nb := counter.total_count
+				!!values.make (1, nb)
 				start
 			until
 				after
 			loop
-				unit := item_for_iteration;
+				unit := item_for_iteration
 				if unit.is_valid then
-					values.put (unit.real_body_id.id - 1, unit.real_body_index.id);
-				end;
-				forth;
-			end;
+					values.put (unit.real_body_id.id - 1, unit.real_body_index.id)
+				end
+				forth
+			end
 			from
-				i := nb - counter.current_count + 1;
-				file.putstring ("#include %"eif_struct.h%"");
-				file.new_line;
-				file.putstring ("#include %"eif_portable.h%"");
-				file.new_line;
-				file.new_line;
-				file.putstring ("void dle_edisptch(void)");
-				file.new_line;
-				file.putchar ('{');
-				file.new_line;
-				file.indent;
+				i := nb - counter.current_count + 1
+				file.putstring ("#include %"eif_struct.h%"")
+				file.new_line
+				file.putstring ("#include %"eif_portable.h%"")
+				file.new_line
+				file.new_line
+				file.putstring ("void dle_edisptch(void)")
+				file.new_line
+				file.putchar ('{')
+				file.new_line
+				file.indent
 			until
 				i > nb
 			loop
-				file.putstring ("dispatch [");
-				file.putint (i - 1);
-				file.putstring ("] = (uint32) ");
-				file.putint (values.item (i));
-				file.putchar (';');
-				file.new_line;
+				file.putstring ("dispatch [")
+				file.putint (i - 1)
+				file.putstring ("] = (uint32) ")
+				file.putint (values.item (i))
+				file.putchar (';')
+				file.new_line
 				i := i + 1
-			end;
-			file.exdent;
-			file.putchar ('}');
+			end
+			file.exdent
+			file.putchar ('}')
 			file.new_line
-		end;
+		end
 
 feature {NONE} -- External features
 
@@ -264,6 +264,6 @@ feature {NONE} -- External features
 			-- Write integer `v' in file `f'.
 		external
 			"C"
-		end;
+		end
 
 end

@@ -10,15 +10,15 @@ inherit
 		rename
 			make as ht_make,
 			put as table_put
-		end;
+		end
 	SHARED_WORKBENCH
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
 	SHARED_ARRAY_BYTE
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
 	COMPILER_EXPORTER
 		undefine
 			copy, setup, consistent, is_equal
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Create an empty table.
 		do
-			ht_make (n);
+			ht_make (n)
 			!! offset_counters.make (n)
 		end
 
@@ -44,7 +44,7 @@ feature -- Insertion
 			-- of the corresponding routine and the offset of 
 			-- the routine in the origin class.
 		require
-			rout_id_not_void: rout_id /= Void;
+			rout_id_not_void: rout_id /= Void
 			org_not_void: org /= Void
 		local
 			info: ROUT_INFO
@@ -52,20 +52,20 @@ feature -- Insertion
 			if has (rout_id) then
 					-- The routine id has been recorded 
 					-- earlier.
-				info := item (rout_id);
+				info := item (rout_id)
 				if not info.origin.is_equal (org.id) then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
 						-- origin value updated.
-					info.set_offset (new_offset (org));
+					info.set_offset (new_offset (org))
 					info.set_origin (org.id)
-				end;
+				end
 			else
 					-- The routine is brand new.
-				!! info.make (org, new_offset (org));
-				force (info, rout_id);
-			end;
-		end;
+				!! info.make (org, new_offset (org))
+				force (info, rout_id)
+			end
+		end
 
 feature -- Offset processing
 
@@ -75,22 +75,22 @@ feature -- Offset processing
 			--|Beware: this function has a side effect!
 			--|Note: see if "obsolete" offsets could be reused.
 		local
-			class_id: CLASS_ID;
+			class_id: CLASS_ID
 			counter: COUNTER
 		do
-			class_id := c.id;
+			class_id := c.id
 			if not offset_counters.has (class_id) then
-				!! counter;
+				!! counter
 					-- Routine offsets start from 0.
-				counter.set_value (-1);
+				counter.set_value (-1)
 				offset_counters.put (counter, class_id)
 			else
 				counter := offset_counters.item (class_id)
-			end;
+			end
 			Result := counter.next
-		end;
+		end
 
-	offset_counters: EXTEND_TABLE [COUNTER, CLASS_ID];
+	offset_counters: EXTEND_TABLE [COUNTER, CLASS_ID]
 			-- Offset counters for feature introducted
 			-- in the corresponding class
 
@@ -99,23 +99,23 @@ feature -- Query features
 	origin (rout_id: ROUTINE_ID): CLASS_C is
 			-- Origin of routine of id `rout_id'
 		require
-			rout_id_not_void: rout_id /= Void;
+			rout_id_not_void: rout_id /= Void
 			has_rout_id: has (rout_id)
 		do
 			Result := System.class_of_id (item (rout_id).origin)
 		ensure
 			origin_not_void: Result /= Void
-		end;
+		end
 
 	offset (rout_id: ROUTINE_ID): INTEGER is
 			-- Offset of routine of id `rout_id'
 			-- in origin class
 		require
-			rout_id_not_void: rout_id /= Void;
+			rout_id_not_void: rout_id /= Void
 			has_rout_id: has (rout_id)
 		do
 			Result := item (rout_id).offset
-		end;
+		end
 
 	descriptor_size (class_id: CLASS_ID): INTEGER is
 			-- Number of routines introduced
@@ -125,7 +125,7 @@ feature -- Query features
 				-- Offsets start from 0.
 				Result := offset_counters.item (class_id).value + 1
 			end
-		end;
+		end
 
 	renumbered_table: ARRAY [ROUT_INFO] is
 			-- Routine info indexed by routine ids after
@@ -134,22 +134,22 @@ feature -- Query features
 			rout_id, max: INTEGER
 		do
 			from start until after loop
-				rout_id := key_for_iteration.id;
+				rout_id := key_for_iteration.id
 				if max < rout_id then
 					max := rout_id
-				end;
+				end
 				forth
-			end;
-			!! Result.make (1, max);
+			end
+			!! Result.make (1, max)
 			from
 				start
 			until
 				after
 			loop
-				Result.put (item_for_iteration, key_for_iteration.id);
+				Result.put (item_for_iteration, key_for_iteration.id)
 				forth
-			end;
-		end;
+			end
+		end
 
 feature -- Generation
 
@@ -159,16 +159,16 @@ feature -- Generation
 			file_not_void: f /= Void
 			file_exists: f.exists
 		local
-			rout_infos: ARRAY [ROUT_INFO];
-			nb_elements: INTEGER;
-			i: INTEGER;
+			rout_infos: ARRAY [ROUT_INFO]
+			nb_elements: INTEGER
+			i: INTEGER
 			ri: ROUT_INFO
 		do
 			rout_infos := renumbered_table
 			nb_elements := rout_infos.count
 
 			f.putstring ("#include %"eif_macros.h%"%N%N")
-			f.putstring ("struct rout_info forg_table[] = {%N")
+			f.putstring ("struct rout_info egc_forg_table[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
 			f.putstring ("%T{(int16) -1, (int16) -1},%N")
@@ -189,12 +189,12 @@ feature -- Generation
 					f.putstring ("},")
 				else
 					f.putstring ("%N%T{(int16) -1, (int16) -1},")
-				end;
+				end
 				i := i + 1
-			end;
+			end
 
 			f.putstring ("%N};%N")
-		end;
+		end
 
 feature -- Melting
 
@@ -204,9 +204,9 @@ feature -- Melting
 			--    1) Number of elements (uint32)
 			--    2) Sequence of pairs (short, short)
 		local
-			rout_infos: ARRAY [ROUT_INFO];
-			nb_elements: INTEGER;
-			i: INTEGER;
+			rout_infos: ARRAY [ROUT_INFO]
+			nb_elements: INTEGER
+			i: INTEGER
 			ri: ROUT_INFO
 		do
 			rout_infos := renumbered_table
@@ -246,32 +246,32 @@ feature -- Melting
 				-- Return correctly sized structure.
 			Result := Byte_array.character_array
 			Byte_array.clear
-		end;
+		end
 
 feature -- Trace
 
 	trace is
 		local
-			rout_infos: ARRAY [ROUT_INFO];
-			nb_elements: INTEGER;
+			rout_infos: ARRAY [ROUT_INFO]
+			nb_elements: INTEGER
 			i: INTEGER
 		do
-			rout_infos := renumbered_table;
-			nb_elements := rout_infos.count;
+			rout_infos := renumbered_table
+			nb_elements := rout_infos.count
 			from
 				i := 1
 			until
 				i > nb_elements
 			loop
 				if rout_infos.item (i) /= Void then
-					io.putstring ("Routine id: ");
-					io.putint (i);
-					rout_infos.item (i).trace;
+					io.putstring ("Routine id: ")
+					io.putint (i)
+					rout_infos.item (i).trace
 					io.new_line
-				end;
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 feature -- DLE
 
@@ -282,16 +282,16 @@ feature -- DLE
 			file_exists: f.exists
 			dynamic_syatem: System.is_dynamic
 		local
-			rout_infos: ARRAY [ROUT_INFO];
-			nb_elements: INTEGER;
-			i: INTEGER;
+			rout_infos: ARRAY [ROUT_INFO]
+			nb_elements: INTEGER
+			i: INTEGER
 			ri: ROUT_INFO
 		do
 			rout_infos := renumbered_table
 			nb_elements := rout_infos.count
 
 			f.putstring ("#include %"eif_macros.h%"%N%N")
-			f.putstring ("static struct rout_info Dforg_table[] = {%N");
+			f.putstring ("static struct rout_info Dforg_table[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
 			f.putstring ("%T{(int16) -1, (int16) -1},%N")
@@ -303,7 +303,7 @@ feature -- DLE
 			until
 				i > nb_elements
 			loop
-				ri := rout_infos.item (i);
+				ri := rout_infos.item (i)
 				if ri /= Void then
 					f.putstring ("%N%T{(int16) ")
 					f.putint (ri.origin.id)
@@ -312,13 +312,13 @@ feature -- DLE
 					f.putstring ("},")
 				else
 					f.putstring ("%N%T{(int16) -1, (int16) -1},")
-				end;
+				end
 				i := i + 1
-			end;
+			end
 			
 			f.putstring ("%N};%N%Nvoid dle_ecall(void)%N%
 					%{%N%Teorg_table = Dforg_table;%N}%N")
-		end;
+		end
 
 feature -- Merging
 
@@ -328,7 +328,7 @@ feature -- Merging
 		require
 			other_not_void: other /= Void
 		do
-			merge (other);
+			merge (other)
 			offset_counters.merge (other.offset_counters)
 		end
 

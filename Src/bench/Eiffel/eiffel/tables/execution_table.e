@@ -4,19 +4,19 @@ class EXECUTION_TABLE
 
 inherit
 
-	CENTRAL_TABLE [EXECUTION_UNIT];
+	CENTRAL_TABLE [EXECUTION_UNIT]
 	SHARED_WORKBENCH
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
 	SHARED_SERVER
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
 	SHARED_BODY_ID
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
 
 creation
 
@@ -27,11 +27,11 @@ feature -- Initialization
 	make is
 			-- Create a new execution table.
 		do
-			init;
+			init
 			!! counter.make
 		end
 
-	counter: REAL_BODY_ID_COUNTER;
+	counter: REAL_BODY_ID_COUNTER
 			-- Counter for real body id
 
 feature -- Refreezing
@@ -65,96 +65,96 @@ feature
 	make_update (file: RAW_FILE) is
 			-- Generate byte code for updating the execution table
 		local
-			e: EXECUTION_UNIT;
-			real_body_id: REAL_BODY_ID;
-			melted_feature: MELT_FEATURE;
+			e: EXECUTION_UNIT
+			real_body_id: REAL_BODY_ID
+			melted_feature: MELT_FEATURE
 		do
 				-- First write the count of the byte code table
-			write_int (file.file_pointer, counter.total_count - frozen_level);
+			write_int (file.file_pointer, counter.total_count - frozen_level)
 debug
-	io.error.putstring ("Updating execution_table%NCount: ");
-	io.error.putint (counter.total_count - frozen_level);
-	io.error.new_line;
-	io.error.putstring ("Frozen level: ");
-	io.error.putint (frozen_level);
-	io.error.new_line;
-end;
+	io.error.putstring ("Updating execution_table%NCount: ")
+	io.error.putint (counter.total_count - frozen_level)
+	io.error.new_line
+	io.error.putstring ("Frozen level: ")
+	io.error.putint (frozen_level)
+	io.error.new_line
+end
 
 			from
 				melted_list.start
 			until
 				melted_list.after
 			loop
-				e := melted_list.item;
+				e := melted_list.item
 				if e.is_valid then
-					real_body_id := e.real_body_id;
+					real_body_id := e.real_body_id
 					check
 							-- Very important check
 						is_melted: real_body_id.id > frozen_level
-					end;
-					melted_feature := M_feature_server.item (real_body_id);
+					end
+					melted_feature := M_feature_server.item (real_body_id)
 						-- Write the body id
 					write_int
-						(file.file_pointer, real_body_id.id - frozen_level - 1);
+						(file.file_pointer, real_body_id.id - frozen_level - 1)
 						-- Write the size
-					write_int (file.file_pointer, melted_feature.size);
+					write_int (file.file_pointer, melted_feature.size)
 						-- Write the pattern id
-					write_int (file.file_pointer, e.real_pattern_id);
+					write_int (file.file_pointer, e.real_pattern_id)
 						-- Write the byte code
-					melted_feature.store (file);
+					melted_feature.store (file)
 
 debug
-	io.error.putstring ("Item written%N");
-end;
+	io.error.putstring ("Item written%N")
+end
 
-					melted_list.forth;
+					melted_list.forth
 				else
-					melted_list.remove;
-				end;
+					melted_list.remove
+				end
 			end;	
 				-- End of execution table update
-			write_int (file.file_pointer, -1);
-		end;
+			write_int (file.file_pointer, -1)
+		end
 
 	generate (file: INDENT_FILE) is
 			-- Generate the frozen execution table in `file'.
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: file /= Void
+			is_open: file.is_open_write
 		local
-			values: ARRAY [EXECUTION_UNIT];
-			unit: EXECUTION_UNIT;
-			i, nb: INTEGER;
+			values: ARRAY [EXECUTION_UNIT]
+			unit: EXECUTION_UNIT
+			i, nb: INTEGER
 			temp: STRING
 		do
 			from
-				nb := counter.total_count;
-				!!values.make (1, nb);
+				nb := counter.total_count
+				!!values.make (1, nb)
 				start
 			until
 				after
 			loop
-				unit := item_for_iteration;
-				values.put (unit, unit.index.id);
-				forth;
-			end;
+				unit := item_for_iteration
+				values.put (unit, unit.index.id)
+				forth
+			end
 
 				-- Generation
 			from
-				!! include_set.make;
-				include_set.compare_objects;
-				i := 1;
+				!! include_set.make
+				include_set.compare_objects
+				i := 1
 				file.putstring ("#include %"eif_macros.h%"%N%
-								%#include %"eif_struct.h%"%N%N");
+								%#include %"eif_struct.h%"%N%N")
 			until
 				i > nb
 			loop
-				unit := values.item (i);
+				unit := values.item (i)
 				if unit /= Void and then unit.is_valid then
-					unit.generate_declaration (file);
-				end;
-				i := i + 1;
-			end;
+					unit.generate_declaration (file)
+				end
+				i := i + 1
+			end
 
 				-- Generate the include files associated with
 				-- external features not encapsulated but with a list
@@ -166,46 +166,46 @@ end;
 				include_set.after
 			loop
 				if not (include_set.item.is_equal("%"eif_eiffel.h%"")) then
-					file.putstring ("#include ");
-					file.putstring (include_set.item);
+					file.putstring ("#include ")
+					file.putstring (include_set.item)
 				else
-					file.putstring ("#include %"eif_eiffel.h%"");
+					file.putstring ("#include %"eif_eiffel.h%"")
 				end
-				file.putstring ("%N%N");
+				file.putstring ("%N%N")
 				include_set.forth
 			end
-			include_set := Void;
+			include_set := Void
 
 			from
-				file.new_line;
-				!!temp.make (0);
-				i := 1;
-				temp.append ("%Nint fpatidtab[] = {%N");
-				file.putstring ("fnptr frozen[] = {%N")
+				file.new_line
+				!!temp.make (0)
+				i := 1
+				temp.append ("%Nint egc_fpatidtab[] = {%N")
+				file.putstring ("fnptr egc_frozen[] = {%N")
 			until
 				i > nb
 			loop
-				unit := values.item (i);
+				unit := values.item (i)
 				if unit /= Void and then unit.is_valid then
-					unit.generate (file);
-					temp.append_integer (unit.real_pattern_id);
-					temp.append (",%N");
+					unit.generate (file)
+					temp.append_integer (unit.real_pattern_id)
+					temp.append (",%N")
 				else
-					file.putstring ("(fnptr) 0,%N");
-					temp.append ("-1,%N");
-				end;
-				i := i + 1;
-			end;
-			file.putstring ("};%N");
-			temp.put ('%N', temp.count - 1);
-			temp.put ('}', temp.count);
-			temp.append (";%N");
-			file.putstring (temp);
-		end;
+					file.putstring ("(fnptr) 0,%N")
+					temp.append ("-1,%N")
+				end
+				i := i + 1
+			end
+			file.putstring ("};%N")
+			temp.put ('%N', temp.count - 1)
+			temp.put ('}', temp.count)
+			temp.append (";%N")
+			file.putstring (temp)
+		end
 
 feature {EXT_INCL_EXEC_UNIT} -- Include set
 
-	include_set: LINKED_SET [STRING];
+	include_set: LINKED_SET [STRING]
 
 feature -- Debugging
 
@@ -213,13 +213,13 @@ feature -- Debugging
 			-- Reset `debug_counter' and `dle_debug_counter'.
 		do
 			counter.reset_debug_counter
-		end;
+		end
 
 	debuggable_body_id (old_id: REAL_BODY_ID): REAL_BODY_ID is
 			-- New body id for debuggable byte arrays
 		do
 			Result := counter.debuggable_body_id (old_id)
-		end;
+		end
 
 feature -- DLE
 
@@ -232,9 +232,9 @@ feature -- DLE
 	set_levels is
 			-- Keep track of the different levels after each compilation
 		do
-			counter.set_levels;
+			counter.set_levels
 			reset_debug_counter
-		end;
+		end
 
 	make_melted_dle (file: RAW_FILE) is
 			-- Generate byte code for updating the execution table
@@ -242,103 +242,103 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic
 		local
-			e: EXECUTION_UNIT;
-			real_body_id: REAL_BODY_ID;
+			e: EXECUTION_UNIT
+			real_body_id: REAL_BODY_ID
 			melted_feature: MELT_FEATURE
 		do
 				-- First write the count of the byte code table
-			write_int (file.file_pointer, counter.total_count - dle_frozen_level);
+			write_int (file.file_pointer, counter.total_count - dle_frozen_level)
 debug ("DLE ACTIVITY", "DLE SPY")
-	io.error.putstring ("Updating execution_table%NCount: ");
-	io.error.putint (counter.total_count - dle_frozen_level);
-	io.error.new_line;
-	io.error.putstring ("Frozen level: ");
-	io.error.putint (frozen_level);
-	io.error.new_line;
-	io.error.putstring ("DLE level: ");
-	io.error.putint (dle_level);
-	io.error.new_line;
-	io.error.putstring ("DLE frozen level: ");
-	io.error.putint (dle_frozen_level);
-	io.error.new_line;
-end;
+	io.error.putstring ("Updating execution_table%NCount: ")
+	io.error.putint (counter.total_count - dle_frozen_level)
+	io.error.new_line
+	io.error.putstring ("Frozen level: ")
+	io.error.putint (frozen_level)
+	io.error.new_line
+	io.error.putstring ("DLE level: ")
+	io.error.putint (dle_level)
+	io.error.new_line
+	io.error.putstring ("DLE frozen level: ")
+	io.error.putint (dle_frozen_level)
+	io.error.new_line
+end
 
 			from
 				melted_list.start
 			until
 				melted_list.after
 			loop
-				e := melted_list.item;
+				e := melted_list.item
 				if e.is_valid then
-					real_body_id := e.real_body_id;
+					real_body_id := e.real_body_id
 					check
 							-- Very important check
 						is_melted: real_body_id.id > dle_frozen_level
-					end;
-					melted_feature := M_feature_server.item (real_body_id);
+					end
+					melted_feature := M_feature_server.item (real_body_id)
 						-- Write the body id
 					write_int
-						(file.file_pointer, real_body_id.id - dle_frozen_level -1);
+						(file.file_pointer, real_body_id.id - dle_frozen_level -1)
 						-- Write the size
-					write_int (file.file_pointer, melted_feature.size);
+					write_int (file.file_pointer, melted_feature.size)
 						-- Write the pattern id
-					write_int (file.file_pointer, e.real_pattern_id);
+					write_int (file.file_pointer, e.real_pattern_id)
 						-- Write the byte code
-					melted_feature.store (file);
+					melted_feature.store (file)
 
 debug
-	io.error.putstring ("Item written%N");
-end;
+	io.error.putstring ("Item written%N")
+end
 
-					melted_list.forth;
+					melted_list.forth
 				else
-					melted_list.remove;
+					melted_list.remove
 				end
 			end;	
 				-- End of execution table update
 			write_int (file.file_pointer, -1)
-		end;
+		end
 
 	generate_dle (file: INDENT_FILE) is
 			-- Generate the frozen execution table for the Dynamic Class Set.
 		require
-			dynamic_system: System.is_dynamic;
-			good_argument: file /= Void;
+			dynamic_system: System.is_dynamic
+			good_argument: file /= Void
 			is_open: file.is_open_write
 		local
-			values: ARRAY [EXECUTION_UNIT];
-			unit: EXECUTION_UNIT;
-			i, nb: INTEGER;
+			values: ARRAY [EXECUTION_UNIT]
+			unit: EXECUTION_UNIT
+			i, nb: INTEGER
 			temp: STRING
 		do
 			from
-				nb := counter.total_count;
-				!!values.make (1, nb);
+				nb := counter.total_count
+				!!values.make (1, nb)
 				start
 			until
 				after
 			loop
-				unit := item_for_iteration;
-				values.put (unit, unit.index.id);
-				forth;
-			end;
+				unit := item_for_iteration
+				values.put (unit, unit.index.id)
+				forth
+			end
 
 				-- Generation
 			from
-				!! include_set.make;
-				include_set.compare_objects;
-				i := nb - counter.current_count + 1;
+				!! include_set.make
+				include_set.compare_objects
+				i := nb - counter.current_count + 1
 				file.putstring ("#include %"eif_struct.h%"%N%
-								%#include %"eif_macros.h%"%N%N");
+								%#include %"eif_macros.h%"%N%N")
 			until
 				i > nb
 			loop
-				unit := values.item (i);
+				unit := values.item (i)
 				if unit /= Void and then unit.is_valid then
-					unit.generate_declaration (file);
-				end;
-				i := i + 1;
-			end;
+					unit.generate_declaration (file)
+				end
+				i := i + 1
+			end
 
 				-- Generate the include files associated with
 				-- external features not encapsulated but with a list
@@ -349,61 +349,61 @@ end;
 			until
 				include_set.after
 			loop
-				file.putstring ("#include ");
-				file.putstring (include_set.item);
-				file.putstring ("%N%N");
+				file.putstring ("#include ")
+				file.putstring (include_set.item)
+				file.putstring ("%N%N")
 				include_set.forth
 			end
-			include_set := Void;
+			include_set := Void
 
 			from
-				file.new_line;
-				!!temp.make (0);
-				i := nb - counter.current_count + 1;
-				temp.append ("%Nstatic int Dfpatidtab[] = {%N");
-				file.putstring ("static fnptr Dfrozen[] = {%N");
+				file.new_line
+				!!temp.make (0)
+				i := nb - counter.current_count + 1
+				temp.append ("%Nstatic int Dfpatidtab[] = {%N")
+				file.putstring ("static fnptr Dfrozen[] = {%N")
 			until
 				i > nb
 			loop
-				unit := values.item (i);
+				unit := values.item (i)
 				if unit /= Void and then unit.is_valid then
-					unit.generate (file);
-					temp.append_integer (unit.real_pattern_id);
-					temp.append (",%N");
+					unit.generate (file)
+					temp.append_integer (unit.real_pattern_id)
+					temp.append (",%N")
 				else
-					file.putstring ("(fnptr) 0,%N");
-					temp.append ("-1,%N");
-				end;
-				i := i + 1;
-			end;
-			file.putstring ("};%N");
-			temp.put ('%N', temp.count - 1);
-			temp.put ('}', temp.count);
-			temp.append (";%N");
-			file.putstring (temp);
+					file.putstring ("(fnptr) 0,%N")
+					temp.append ("-1,%N")
+				end
+				i := i + 1
+			end
+			file.putstring ("};%N")
+			temp.put ('%N', temp.count - 1)
+			temp.put ('}', temp.count)
+			temp.append (";%N")
+			file.putstring (temp)
 
-			file.new_line;
-			file.putstring ("void dle_efrozen(void)");
-			file.new_line;
-			file.putchar ('{');
-			file.new_line;
-			file.indent;
-			file.putstring ("dle_zeroc = ");
-			file.putint (dle_frozen_level);
-			file.putchar (';');
-			file.new_line;
-			file.putstring ("dle_frozen = Dfrozen - ");
-			file.putint (dle_level);
-			file.putchar (';');
-			file.new_line;
-			file.putstring ("dle_fpatidtab = Dfpatidtab - ");
-			file.putint (dle_level);
-			file.putchar (';');
-			file.new_line;
-			file.exdent;
-			file.putchar ('}');
 			file.new_line
-		end;
+			file.putstring ("void dle_efrozen(void)")
+			file.new_line
+			file.putchar ('{')
+			file.new_line
+			file.indent
+			file.putstring ("dle_zeroc = ")
+			file.putint (dle_frozen_level)
+			file.putchar (';')
+			file.new_line
+			file.putstring ("dle_frozen = Dfrozen - ")
+			file.putint (dle_level)
+			file.putchar (';')
+			file.new_line
+			file.putstring ("dle_fpatidtab = Dfpatidtab - ")
+			file.putint (dle_level)
+			file.putchar (';')
+			file.new_line
+			file.exdent
+			file.putchar ('}')
+			file.new_line
+		end
 
 feature {NONE} -- External features
 
@@ -411,6 +411,6 @@ feature {NONE} -- External features
 			-- Write integer `v' in file `f'.
 		external
 			"C"
-		end;
+		end
 
 end

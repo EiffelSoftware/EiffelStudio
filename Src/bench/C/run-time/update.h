@@ -19,14 +19,16 @@
  */
 
 #define BCAS_NO			'n'
-#define BCAS_REQUIRE	'r'
+#define BCAS_REQUIRE		'r'
 #define BCAS_ENSURE		'e'
-#define BCAS_INVARIANT	'i'
+#define BCAS_INVARIANT		'i'
 #define BCAS_LOOP		'l'
 #define BCAS_CHECK		'c'
 #define BCDB_NO			'n'
 #define BCDB_YES		'y'
 #define BCDB_TAG		't'
+#define BC_NO			'n'
+#define BC_YES			'y'
 
 
 extern void update();					/* Update of internal structures */

@@ -70,6 +70,11 @@ remtrace studio
 exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
+cdd %INSTALL_DIR\studio\config
+move windows %ISE_PLATFORM
+cdd %INSTALL_DIR\studio\help\defaults
+move windows %ISE_PLATFORM
+cdd %INSTALL_DIR
 remtrace build
 exprt -r %DEFAULT_CVS_TAG -d build Delivery/build
 remtrace vision2 tour

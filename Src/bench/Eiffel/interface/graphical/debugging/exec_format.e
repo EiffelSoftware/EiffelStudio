@@ -54,8 +54,6 @@ feature
 
 feature {NONE}
 
-	Format_and_run: ANY is once !!Result end;
-
 	execution_mode: INTEGER is deferred end;
 
 	display_info (i: INTEGER; s: STONE) is do end;

@@ -68,13 +68,15 @@ feature {NONE} -- Implementation
 			dc_not_void: dc /= Void
 			dc_exits: dc.exists
 		local
-			a: ANY
+			p: POINTER
+			str: WEL_STRING
 		do
 			init_action
 			if family /= Void then
-				a := family.to_c
+				!! str.make (family)
+				p := str.item
 			end
-			cwin_enum_font_families (dc.item, $a,
+			cwel_enum_font_families (dc.item, p,
 				cwel_enum_font_fam_procedure, default_pointer)
 			finish_action
 		end
@@ -108,13 +110,10 @@ feature {NONE} -- Externals
 			"C [macro <enumfont.h>]"
 		end
 
-	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is
+	cwel_enum_font_families (hdc, family, enum_proc, data: POINTER) is
 			-- SDK EnumFontFamilies
 		external
-			"C [macro <enumfont.h>] (HDC, LPCSTR, FONTENUMPROC, %
-				%LPARAM)"
-		alias
-			"EnumFontFamilies"
+			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_FONT_FAMILY_ENUMERATOR

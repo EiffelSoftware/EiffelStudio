@@ -11,16 +11,21 @@ class
 
 inherit
 
-	DRAWING_X;
-
 	DRAW_B_I;
+
+	DRAWING_X
+		undefine
+			display
+		redefine
+			display_handle
+		end;
 
 	BUTTON_M
 		undefine
 			create_callback_struct, shown
+		redefine
+			display_handle
 		end;
-
-	FONTABLE_M;
 
 	MEL_DRAWN_BUTTON
 		rename
@@ -33,7 +38,15 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
+			draw_arc as mel_draw_arc,
+			draw_point as mel_draw_point,
+			draw_rectangle as mel_draw_rectangle,
+			fill_arc as mel_fill_arc,
+			fill_polygon as mel_fill_polygon,
+			fill_rectangle as mel_fill_rectangle,
 			is_shown as shown
+		redefine
+			display_handle
 		select
 			mel_drawn_make
 		end
@@ -46,16 +59,22 @@ feature {NONE} -- Initialization
 
 	make (a_draw_b: DRAW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif draw button.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_drawn_make (a_draw_b.identifier,
-					mel_parent (a_draw_b, widget_index),
-					man);
+			mel_drawn_make (a_draw_b.identifier, mc, man);
 			set_shadow_in (False);
 			set_push_button_enabled (True);
-			display_pointer := xt_display (screen_object);
-			create_gc
+			a_draw_b.set_font_imp (Current);
+			make_gc (mel_screen)
 		end;
+
+feature -- Access
+
+	display_handle: POINTER;
+			-- C handle to the display
 
 feature -- Status setting
 
@@ -133,13 +152,16 @@ feature -- Removal
 			remove_expose_callback (mel_vision_callback (a_command), argument)
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
-	window_object: POINTER is
-			-- X identifier of the drawable.
+	font: FONT is
 		do
-			--Result := xt_window (screen_object)
 		end;
+
+	set_font (a_font: FONT) is
+			-- Set font label to `font_name'.
+		do
+		end
 
 end -- class DRAW_B_M
 

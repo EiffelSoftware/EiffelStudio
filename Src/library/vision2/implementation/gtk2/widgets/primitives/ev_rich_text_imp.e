@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			range_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 		do
 			character_change := 0
-			range_info := internal_character_format_range_information (current_pos, current_pos + a_text_length, True, character_change)
+			range_info := internal_character_format_range_information (current_pos, a_text_length + 1, True, character_change)
 			Result := character_change
 		end
 
@@ -231,8 +231,8 @@ feature -- Status Report
 			
 			a_text_iter.memory_free
 
-			create Result.make_with_flags ((1023).bit_xor (non_contiguous_range_information))
-				-- 1023 is the mask value for character format constants
+			create Result.make_with_flags ((511).bit_xor (non_contiguous_range_information))
+				-- 511 is the mask value for character format constants
 	
 			if change_index /= Void then
 				change_index.set_item (a_character_index - 1)

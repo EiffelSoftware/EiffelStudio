@@ -111,7 +111,7 @@ feature {NONE}-- Initialization
 			version_title.set_text ("v")
 			version_title.align_text_left
 			version_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			version_label.set_text ("1.0.0130")
+			version_label.set_text ("2.0.1.1319")
 			version_label.align_text_left
 			content_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			content_box.set_padding_width (5)

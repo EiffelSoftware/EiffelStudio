@@ -17,18 +17,31 @@ feature -- Initialization
 	make_root is
 			-- Create `Current' as root node of generated info.
 		do
-			create children.make (50)
-			create supported_types.make (10)
-			create supported_type_elements.make (10)
+			common_make
+				-- Remove all information from previous
+				-- prepass stage.
+			names_by_id.clear_all
+			generated_info_by_id.clear_all
 		end
 		
 	make_child (a_parent: GB_GENERATED_INFO) is
 			-- Create `Current' as child of `a_parent'.
 		do
-			make_root
+			common_make
 			parent := a_parent
 			parent.add_child (Current)
 		end
+		
+feature {NONE} -- Initialization
+
+	common_make is
+			-- Initialization common to `make' and `make_child'.
+		do
+			create children.make (50)
+			create supported_types.make (10)
+			create supported_type_elements.make (10)
+		end
+		
 
 feature -- Access
 
@@ -47,6 +60,19 @@ feature -- Access
  		
  	supported_type_elements: ARRAYED_LIST [XML_ELEMENT]
  		-- All xml elements matching `supported_types'.
+ 		
+ 	names_by_id: HASH_TABLE [STRING, INTEGER] is
+			-- All names found during prepass, referenced by id.
+		once
+			create Result.make (40)
+		end
+		
+	generated_info_by_id: HASH_TABLE [GB_GENERATED_INFO, INTEGER] is
+			--  All generated infos referenced by id.
+		once
+			create Result.make (40)
+		end
+		
 		
 	
 	id: INTEGER

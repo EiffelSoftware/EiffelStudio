@@ -154,9 +154,11 @@ rt_public void eif_thr_init_root(void)
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
 	EIF_TSD_CREATE(rt_global_key,"Couldn't create private global key for root thread");
+#ifdef ISE_GC
 	EIF_LW_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, "Couldn't create GC set mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
+#endif
 	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
 	EIF_LW_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");
 	EIF_LW_MUTEX_CREATE (eif_memory_mutex, "Couldn't create memory mutex");
@@ -469,7 +471,9 @@ rt_public void eif_thr_exit(void)
 
 		/* Mark current thread so that it is not taken into account by GC
 		 * synchronization */
+#ifdef ISE_GC
 	rt_globals->gc_thread_status = EIF_THREAD_DYING;
+#endif
 
 	RT_GC_PROTECT(thread_object);
 	thread_object = eif_access(eif_thr_context->current);
@@ -696,6 +700,7 @@ rt_private void eif_stack_free (void *stack){
 	st->st_end = NULL;
 }
 
+#ifdef ISE_GC
 rt_public void eif_synchronize_for_gc ()
 	/* Synchronize current thread for a GC cycle */
 {
@@ -797,6 +802,7 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 #endif
 	EIF_GC_MUTEX_UNLOCK;
 }
+#endif
 
 rt_public void eif_thr_yield(void)
 {

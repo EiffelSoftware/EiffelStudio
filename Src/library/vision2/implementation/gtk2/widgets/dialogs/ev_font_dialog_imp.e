@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Connect `interface' and initialize `c_object'.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 			create a_cs.make ("Font Selection Dialog")
@@ -65,7 +65,7 @@ feature -- Access
 			-- Current selected font.
 		local
 			font_imp: EV_FONT_IMP
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 			a_utf8_ptr: POINTER
 			font_desc: STRING
 			font_names: ARRAYED_LIST [STRING]
@@ -78,7 +78,7 @@ feature -- Access
 			font_imp ?= Result.implementation
 			
 			a_utf8_ptr := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
-			create a_cs.make_from_utf8_pointer (a_utf8_ptr)
+			create a_cs.make_from_pointer (a_utf8_ptr)
 			font_desc := a_cs.string.as_lower
 			font_names := App_implementation.font_names_on_system
 			
@@ -124,7 +124,7 @@ feature -- Element change
 		local
 			a_success_flag: BOOLEAN
 			font_imp: EV_FONT_IMP
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			font_imp ?= a_font.implementation
 			create a_cs.make (font_imp.name + " " + font_imp.height.out)

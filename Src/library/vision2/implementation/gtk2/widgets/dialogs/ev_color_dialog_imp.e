@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 

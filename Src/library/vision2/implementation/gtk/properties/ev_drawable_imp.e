@@ -331,7 +331,7 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			if drawable /= default_pointer then
 				create a_cs.make (a_text)
@@ -350,7 +350,7 @@ feature -- Drawing operations
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			if drawable /= default_pointer then
 				create a_cs.make (a_text)

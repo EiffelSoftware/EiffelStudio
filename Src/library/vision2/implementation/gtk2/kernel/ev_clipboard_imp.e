@@ -34,7 +34,7 @@ feature {NONE}-- Initialization
 	initialize is
 			-- initialize `Current'.
 		local
-			cs: C_STRING
+			cs: EV_GTK_C_STRING
 		do
 			create cs.make ("CLIPBOARD")
 			clipboard := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
@@ -52,12 +52,12 @@ feature -- Access
 	text: STRING is
 			-- `Result' is current clipboard content.
 		local
-			utf8_string: EV_GTK_C_UTF8_STRING
+			utf8_string: EV_GTK_C_STRING
 			text_ptr: POINTER
 		do
 			if feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard) then
 				text_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
-				create utf8_string.make_from_utf8_pointer (text_ptr)
+				create utf8_string.make_from_pointer (text_ptr)
 				feature {EV_GTK_EXTERNALS}.g_free (text_ptr)
 				Result := utf8_string.string
 			else
@@ -71,7 +71,7 @@ feature -- Status Setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to clipboard.
 		local
-			a_cs: EV_GTK_C_UTF8_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, -1)

@@ -621,6 +621,25 @@ end;
 			end;
 		end;
 
+	nb_of_classes: INTEGER is
+			-- Number of classes in the system
+		require
+			id_array_not_void: id_array /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := id_array.lower
+			until
+				i > id_array.upper
+			loop
+				if id_array.item (i) /= Void then
+					Result := Result + 1
+				end;
+				i := i + 1
+			end
+		end;
+		
 	class_of_id (id: INTEGER): CLASS_C is
 			-- Class of id `id'.
 		require

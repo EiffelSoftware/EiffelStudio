@@ -3,11 +3,12 @@ indexing
 	description: 
 	"DEMO_WINDOW, base class for all demo windows. Belongs to EiffelVision example test_all_widgets."
 	status: "See notice at end of class"
+	note: "A demo window is an empty window, features must be redefine to have a full window."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class 
+class 
 	DEMO_WINDOW
 
 inherit
@@ -23,13 +24,14 @@ inherit
 		select 
 			make
 		end
-	
-	EV_COMMAND
+
+creation
+	make
 
 feature --Access
 
 	main_widget: EV_WIDGET is
-		deferred
+		do
 		end
 	
 	actions_window: ACTIONS_WINDOW
@@ -39,12 +41,14 @@ feature --Access
 			-- Button which was pressed when this demo 
 			-- window was opened
 	
-	
 feature -- Initialization
 	
 	make (par: EV_WINDOW) is
 		do
 			the_parent := par
+			parent_make (the_parent) 
+			set_widgets
+			set_values
 		end
 	
 feature -- Access
@@ -54,34 +58,37 @@ feature -- Access
 feature -- Status setting
         
 	set_widgets is
-                deferred
-                end
+                do
+		end
 	
 	set_values is
- 		deferred
+ 		do
  		end
 
 -- 	set_commands is
 -- 		deferred
 -- 		end
-	
-feature -- Command executing
-	
-	execute (argument: EV_ARGUMENT2[MAIN_WINDOW, EV_TOGGLE_BUTTON]) is
+
+	set_effective_button (but: EV_TOGGLE_BUTTON) is
+			-- Make `but' the new `effective_button'.
 		do
---			if argument.second.pressed then
-				parent_make (the_parent) 
-				set_widgets
-				set_values
-				show
-				!!actions_window.make_with_main_widget (Current, main_widget)
-				actions_window.show
-				argument.first.set_insensitive (True)
-				effective_button := argument.second
-				set_close_command (argument.first)
---			end
-			
+			effective_button := but
 		end
+
+feature -- Show the window
+	
+	activate (win: MAIN_WINDOW) is
+		local
+			a: EV_ARGUMENT1[DEMO_WINDOW]
+		do
+			show
+			!!actions_window.make_with_main_widget (Current, main_widget)
+			actions_window.show
+			win.set_insensitive (True)
+			!!a.make (Current)
+			add_destroy_command (win, a)
+		end
+
 end
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -33,9 +33,6 @@ feature {NONE} -- Initialization
 			body ?= yacc_arg (1);
 			start_position := yacc_int_arg (0);
 			end_position := yacc_int_arg (1);
-			if body.is_unique then
-				set_unique_values
-			end;
 
 			set_start_position;
 		ensure then
@@ -201,25 +198,6 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 
 feature {COMPILER_EXPORTER} -- Initialization
  
-	set_unique_values is
-			-- Store the values of the unique constants
-			-- in the AST_CONTEXT (temporary, the hash table is
-			-- stored in the CLASS_INFO at the end of pass1)
-		local
-			unique_values: HASH_TABLE [INTEGER, STRING];
-		do
-			if unique_values = Void then
-				!!unique_values.make (feature_names.count);
-			end;
-			from
-				feature_names.start
-			until
-				feature_names.after
-			loop
-				feature_names.forth
-			end
-		end;
-
 	set_names (names: like feature_names) is
 		do
 			feature_names := names;

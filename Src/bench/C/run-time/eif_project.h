@@ -39,7 +39,7 @@ extern "C" {
 	RT_LNK int egc_tup_dtype;				/* Dynamic type for TUPLE */
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
 	RT_LNK int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
-	RT_LNK int egc_any_dtype;			/* Dynamic type of ANY */
+	RT_LNK int16 egc_any_dtype;			/* Dynamic type of ANY */
 
 	RT_LNK uint32 egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
 	RT_LNK uint32 egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */

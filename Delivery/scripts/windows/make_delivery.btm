@@ -34,6 +34,11 @@ iff %@INDEX[%@LOWER[%$],no_new_ec] ge 0 then
 else
 	unset /Q NO_NEW_EC
 endiff
+iff %@INDEX[%@LOWER[%$],enterprise] ge 0 then
+	set BUILD_ENTERPRISE_ONLY="True"
+else
+	unset /Q BUILD_ENTERPRISE_ONLY
+endiff
 iff %@INDEX[%@LOWER[%$],no_wizard] ge 0 then
 	set NO_WIZARDS="True"
 else
@@ -122,9 +127,8 @@ fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
 
 remtrace Borland files
-gunzip bcc55.tar.gz
-tar -xvf bcc55.tar >>& %INSTALL_LOG
-fullrf bcc55.tar
+tar xvfz bcc55.tar.gz >>& %INSTALL_LOG
+fullrf bcc55.tar.gz
 
 md docs
 cd docs
@@ -183,7 +187,7 @@ iff not defined NO_COMPILE then
 	endiff
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
-	sed -e "s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g" zad_miner.ace >> new_ace.ace
+	sed -e s/\$ISE_EIFFEL\\free_add_ons/\$INSTALL_DIR\\free_add_ons/g zad_miner.ace >> new_ace.ace
 	clean_project
 	finalize new_ace.ace
 	fff
@@ -203,10 +207,11 @@ iff not defined NO_COMPILE then
 	cdd %INIT_DIR
 	give_time_to compile Resource Bench
 
-	remtrace Generate the Assembly Manager
-	call make_assembly_manager.btm
-	cdd %INIT_DIR
-	give_time_to compile the Assembly Manager
+rem FIXME: 2/21/2002 Manu
+rem	remtrace Generate the Assembly Manager
+rem	call make_assembly_manager.btm
+rem	cdd %INIT_DIR
+rem	give_time_to compile the Assembly Manager
 else
 	remtrace Copy executable files from the old delivery
 	quick_move /s studio\spec

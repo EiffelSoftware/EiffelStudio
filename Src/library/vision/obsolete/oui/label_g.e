@@ -107,7 +107,7 @@ feature -- Background pixmap
 	set_background_pixmap (new_pixmap: PIXMAP) is
 			-- Set background pixmap to `new_pixmap'.
 		require else
-			Valid_new_pixmap: not (new_pixmap = Void)
+			valid_new_pixmap: new_pixmap /= Void
 		do
 		end;
 

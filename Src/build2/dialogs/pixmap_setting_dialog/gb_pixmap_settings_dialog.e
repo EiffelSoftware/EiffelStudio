@@ -101,10 +101,22 @@ feature {NONE} -- Initialization
 			default_create
 				-- Modify the interface appropriately.
 			select_directory_button.hide
+
+			absolute_text.change_actions.block
+			relative_text.change_actions.block
+				
+				-- While setting the texts, the change
+				-- actions must be blocked, to ensure that
+				-- no processing is performed as a result.
 			absolute_text.set_text (a_pixmap_name)
 			relative_text.set_text (a_pixmap_name)
+			
+			absolute_text.change_actions.resume
+			relative_text.change_actions.resume
+			
 			absolute_text.disable_sensitive
 			relative_text.disable_sensitive
+			set_title (modify_pixmap_dialog_title)
 		end
 
 	user_initialization is

@@ -63,16 +63,26 @@ feature {NONE}
 			-- contexts (if grouped)
 		local
 			a_list: LINKED_LIST [CONTEXT];
+			final_list: LINKED_LIST [CONTEXT]
 		do
 			if a_context.grouped then
 				a_list := a_context.group;
+				!! final_list.make;
 				from
 					a_list.start
 				until
 					a_list.after
 				loop
-					modify_context (a_list.item);
+					final_list.append (a_list.item.children_list_plus_current);
 					a_list.forth;
+				end;
+				from
+					final_list.start
+				until
+					final_list.after
+				loop
+					modify_context (final_list.item);
+					final_list.forth;
 				end;
 			else
 				modify_context (a_context)

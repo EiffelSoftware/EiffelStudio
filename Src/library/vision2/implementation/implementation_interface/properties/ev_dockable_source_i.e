@@ -234,6 +234,9 @@ feature -- Basic operations
 			
 			
 		do
+				-- Reset `dockable_dialog_target' as it should only be created in here if required.
+			dockable_dialog_target := Void
+			
 			dockable_target := closest_dockable_target
 				-- Note that if the parent is not a dialog, then we do not destroy the dialog.
 				-- If the parent is a dialog, it means that the drop of the newly transported widget

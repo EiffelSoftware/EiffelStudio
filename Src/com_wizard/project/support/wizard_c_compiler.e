@@ -49,18 +49,22 @@ feature -- Basic Operations
 			valid_folder_name: is_valid_folder_name (a_folder_name)
 		local
 			l_directory: DIRECTORY
-			l_string: STRING
+			l_string, l_comspec: STRING
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			create l_directory.make_open_read (a_folder_name)
 			if l_directory.has_entry ("Makefile." + Ise_c_compiler_value) then
+				l_comspec := Env.get ("ComSpec")
+				check
+					has_comspec: l_comspec /= Void
+				end
+				create l_string.make (l_comspec.count + 16)
+				l_string.append (l_comspec)
+				l_string.append (" /c ")
 				if Ise_c_compiler_value.is_equal ("msc") then
-					l_string := "make_msc.bat"
+					l_string.append ("make_msc.bat")
 				else
-					check
-						Ise_c_compiler_value.is_equal ("bcb")
-					end
-					l_string := "make_bcb.bat"
+					l_string.append ("make_bcb.bat")
 				end
 				create l_process_launcher
 				l_process_launcher.run_hidden

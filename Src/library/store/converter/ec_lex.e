@@ -175,7 +175,7 @@ feature -- Status setting
 					end;
 					i := i + 1
 				end;
-				if not tmpsl.empty then 
+				if not tmpsl.is_empty then 
 					put_nameless_expression(clone (tmpsl), Left_del_ttype);
 					put_nameless_expression(clone (tmpsr), Right_del_ttype)
 				end;

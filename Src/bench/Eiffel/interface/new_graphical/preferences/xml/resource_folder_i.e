@@ -175,9 +175,6 @@ feature -- Status Report
 
 feature -- Access
 
---	path: STRING
-		-- Id of Current, it is unique.
-
 	name: STRING
 		-- Id of Current, it is unique.
 

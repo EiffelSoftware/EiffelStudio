@@ -19,9 +19,6 @@ feature -- Initialization
 
 feature -- Access
 
---	path: STRING
-		-- Id of Current, it is unique.
-
 	name: STRING is
 			-- Id of Current, it is unique.
 		do

@@ -1,3 +1,9 @@
+indexing
+	description: "Shared lists of created windows and groups."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class SHARED_CONTEXT 
 	
 feature {NONE}
@@ -8,9 +14,11 @@ feature {NONE}
 			!!Result.make
 		end;
 
-    Shared_group_list: LINKED_LIST [GROUP] is
+	Shared_group_list: LINKED_LIST [GROUP] is
+			-- list of groups
         once
             !!Result.make
         end;
 
-end
+end -- class SHARED_CONTEXT
+

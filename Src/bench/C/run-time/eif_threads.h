@@ -362,7 +362,17 @@ extern EIF_POINTER eif_thr_last_thread(void);
 	EIF_MUTEX_INIT(m,msg)
 #define EIF_MUTEX_INIT(m,msg)			InitializeCriticalSection(m)
 #define EIF_MUTEX_LOCK(m,msg)			EnterCriticalSection(m)
-#define EIF_MUTEX_TRYLOCK(m,r,msg)
+
+#if(_WIN32_WINNT >= 0x0400)			/* The function EIF_MUTEX_TRYLOCK can be defined only
+									 * on Windows NT 4.0 */
+#define EIF_MUTEX_TRYLOCK(m,r,msg) \
+	r = TryEnterCriticalSection(m); \
+	if(r == 0) \
+		eif_thr_panic(msg)
+#else
+#define EIF_MUTEX_TRYLOCK(m,r,msg) /* Need to find a counter part on Windows 95 */
+#endif
+
 #define EIF_MUTEX_UNLOCK(m,msg)			LeaveCriticalSection(m)
 #define EIF_MUTEX_DESTROY0(m,msg)		DeleteCriticalSection(m)
 #define EIF_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY0(m,msg); eif_free(m)

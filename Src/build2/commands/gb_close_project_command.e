@@ -25,6 +25,8 @@ inherit
 	
 	GB_SHARED_COMPONENT_VIEWER
 	
+	GB_ACCESSIBLE_HISTORY
+	
 	GB_ACCESSIBLE
 	
 	GB_CONSTANTS
@@ -89,10 +91,26 @@ feature -- Basic operations
 				system_status.close_current_project
 				system_status.main_window.hide_tools
 				destroy_floating_editors
-				component_viewer.hide
+
+					-- Hide the component viewer.
+				if component_viewer.is_show_requested then
+					command_handler.show_hide_component_viewer_command.execute
+				end
+				if display_window.is_show_requested then
+					command_handler.show_hide_display_window_command.execute
+				end
 					-- Hide the display and builder windows.
-				display_window.hide
-				builder_window.hide
+				if builder_window.is_show_requested then
+					command_handler.show_hide_builder_window_command.execute
+				end
+				
+					-- Hide the history window.
+				if not command_handler.show_history_command.executable then
+					history.dialog.hide
+				end
+					-- Remove the history.
+				history.wipe_out
+	
 				command_handler.update	
 			end
 

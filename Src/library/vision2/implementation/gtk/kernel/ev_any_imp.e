@@ -166,6 +166,7 @@ feature {NONE} -- Implementation
 			--	safe_print (generator + ".dispose")
 			--end
 			if c_object /= Default_pointer then
+				gtk_signal_disconnect_by_data (c_object, object_id)
 				gtk_object_unref (c_object)
 			end
 			Precursor
@@ -230,6 +231,13 @@ feature {NONE} -- External implementation
 			-- (Dispose cannot call C.gtk_object_unref)
         	external
             		"C (GtkObject*) | <gtk/gtk.h>"
+        	end
+
+	gtk_signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
+			-- Only for use in dispose.
+			-- (Dispose cannot call C.gtk_signal_disconnect_by_data)
+        	external
+            		"C (GtkObject*, gpointer) | <gtk/gtk.h>"
         	end
 
 	C: EV_C_EXTERNALS is
@@ -350,6 +358,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/14 19:18:55  oconnor
+--| disconnect GTK destroy callback on dispose
+--|
 --| Revision 1.5  2000/03/11 00:43:59  oconnor
 --| Commented out possibly unsafe dispose action.
 --|

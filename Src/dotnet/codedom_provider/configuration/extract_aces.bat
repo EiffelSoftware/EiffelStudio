@@ -24,8 +24,33 @@ ECHO Could not find ..\build_studio\EiffelSoftware.CodeDom\ace.ace !!
 
 :MANAGER
 IF EXIST ..\build_studio\ecd_manager\ace.ace COPY /Y ..\build_studio\ecd_manager\ace.ace manager.ace
-IF EXIST ..\build_studio\ecd_manager\ace.ace GOTO END
+IF EXIST ..\build_studio\ecd_manager\ace.ace GOTO BASEDEBUG
 ECHO Could not find ..\build_studio\ecd_manager\ace.ace !!
+
+:BASEDEBUG
+IF EXIST ..\build_studio_debug\EiffelSoftware.EiffelBase\ace.ace COPY /Y ..\build_studio_debug\EiffelSoftware.EiffelBase\ace.ace base.debug.ace
+IF EXIST ..\build_studio_debug\EiffelSoftware.EiffelBase\ace.ace GOTO VISION2DEBUG
+ECHO Could not find ..\build_studio_debug\EiffelSoftware.EiffelBase\ace.ace !!
+
+:VISION2DEBUG
+IF EXIST ..\build_studio_debug\EiffelSoftware.EiffelVision2\ace.ace COPY /Y ..\build_studio_debug\EiffelSoftware.EiffelVision2\ace.ace vision2.debug.ace
+IF EXIST ..\build_studio_debug\EiffelSoftware.EiffelVision2\ace.ace GOTO CACHEDEBUG
+ECHO Could not find ..\build_studio_debug\EiffelSoftware.EiffelVision2\ace.ace !!
+
+:CACHEDEBUG
+IF EXIST ..\build_studio_debug\EiffelSoftware.CacheBrowser\ace.ace COPY /Y ..\build_studio_debug\EiffelSoftware.CacheBrowser\ace.ace cache_browser.debug.ace
+IF EXIST ..\build_studio_debug\EiffelSoftware.CacheBrowser\ace.ace GOTO PROVIDERDEBUG
+ECHO Could not find ..\build_studio_debug\EiffelSoftware.CacheBrowser\ace.ace !!
+
+:PROVIDERDEBUG
+IF EXIST ..\build_studio_debug\EiffelSoftware.CodeDom\ace.ace COPY /Y ..\build_studio_debug\EiffelSoftware.CodeDom\ace.ace codedom_provider.debug.ace
+IF EXIST ..\build_studio_debug\EiffelSoftware.CodeDom\ace.ace GOTO MANAGERDEBUG
+ECHO Could not find ..\build_studio_debug\EiffelSoftware.CodeDom\ace.ace !!
+
+:MANAGERDEBUG
+IF EXIST ..\build_studio_debug\ecd_manager\ace.ace COPY /Y ..\build_studio_debug\ecd_manager\ace.ace manager.debug.ace
+IF EXIST ..\build_studio_debug\ecd_manager\ace.ace GOTO END
+ECHO Could not find ..\build_studio_debug\ecd_manager\ace.ace !!
 
 :END
 ECHO Done copying Eiffel CodeDom Provider ace files.

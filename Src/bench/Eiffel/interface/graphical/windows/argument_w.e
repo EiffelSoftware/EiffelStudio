@@ -33,7 +33,7 @@ feature -- Initialization
 			!!apply_it;
 			!!cancel_it;
 			set_ok_label ("Run");
-			set_apply_label ("OK");
+			set_apply_label (l_Ok);
 			add_ok_action (Current, Void);
 			add_apply_action (Current, apply_it);
 			add_cancel_action (Current, cancel_it);
@@ -60,7 +60,7 @@ feature -- Initialization
 			!! apply_it;
 			!! cancel_it;
 			set_ok_label ("Run");
-			set_apply_label ("OK");
+			set_apply_label (l_Ok);
 			add_ok_action (Current, Void);
 			add_apply_action (Current, apply_it);
 			add_cancel_action (Current, cancel_it);

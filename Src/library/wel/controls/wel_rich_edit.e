@@ -119,7 +119,7 @@ feature -- Status report
 			exists: exists
 		do
 			create Result.make_empty
-			cwin_send_message (item, Em_exgetsel, 0, Result.to_integer)
+			cwin_send_message (item, Em_exgetsel, to_wparam (0), Result.item)
 		end
 
 	caret_position: INTEGER is
@@ -127,7 +127,7 @@ feature -- Status report
 			range: WEL_CHARACTER_RANGE
 		do
 			create range.make_empty
-			cwin_send_message (item, Em_exgetsel, 0, range.to_integer)
+			cwin_send_message (item, Em_exgetsel, to_wparam (0), range.item)
 			Result := range.maximum
 		end
 		
@@ -147,8 +147,7 @@ feature -- Status report
 		do
 			create Result.make
 			Result.set_all_masks
-			cwin_send_message (item, Em_getcharformat, 0,
-				Result.to_integer)
+			cwin_send_message (item, Em_getcharformat, to_wparam (0), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -160,8 +159,7 @@ feature -- Status report
 		do
 			create Result.make
 			Result.set_all_masks
-			cwin_send_message (item, Em_getcharformat, 1,
-				Result.to_integer)
+			cwin_send_message (item, Em_getcharformat, to_wparam (1), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -187,7 +185,7 @@ feature -- Status report
 			Result := selected_text
 
 			set_options (Ecoop_set, old_options)
-			cwin_send_message (item, Em_exsetsel, 0, previous_selection.to_integer)
+			cwin_send_message (item, Em_exsetsel, to_wparam (0), previous_selection.item)
 			show_selection
 		end
 
@@ -202,8 +200,7 @@ feature -- Status report
 			create Result.make (selection_end - selection_start)
 			Result.fill_blank
 			create a_wel_string.make (Result)
-			cwin_send_message (item, Em_getseltext, 0,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Em_getseltext, to_wparam (0), a_wel_string.item)
 			Result := a_wel_string.string
 		ensure
 --			valid_length: Result.count =
@@ -230,8 +227,7 @@ feature -- Status report
 			--| Microsoft Developer Network CD (April 1996).
 			--| See article PSS ID Number: Q137805
 			create Result.make (0, 0)
-			cwin_send_message (item, Em_posfromchar,
-				Result.to_integer, character_index)
+			cwin_send_message (item, Em_posfromchar, Result.item, to_lparam (character_index))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -259,8 +255,7 @@ feature -- Status report
 			--| Microsoft Developer Network CD (April 1996).
 			--| See article PSS ID Number: Q137805
 			create p.make (a_x, a_y)
-			Result := cwin_send_message_result (item,
-				Em_charfrompos, 0, p.to_integer)
+			Result := cwin_send_message_result_integer (item, Em_charfrompos, to_wparam (0), p.item)
 		end
 
 	line_number_from_position (a_pos: INTEGER): INTEGER is
@@ -270,8 +265,7 @@ feature -- Status report
 			exists: exists
 			a_pos_large_enough: a_pos >= 0
 		do
-			Result := cwin_send_message_result (item,
-				Em_exlinefromchar, 0, a_pos)
+			Result := cwin_send_message_result_integer (item, Em_exlinefromchar, to_wparam (0), to_lparam (a_pos))
 		end
 
 	event_mask: INTEGER is
@@ -281,8 +275,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Em_geteventmask, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+				Em_geteventmask, to_wparam (0), to_lparam (0))
 		end
 
 	text: STRING is
@@ -299,13 +293,13 @@ feature -- Status report
 	count: INTEGER is
 			-- Length of text.
 		do
-			Result := cwin_send_message_result (item, Wm_gettextlength, 0, 0)
+			Result := cwin_send_message_result_integer (item, Wm_gettextlength, to_wparam (0), to_lparam (0))
 		end
 
 	options: INTEGER is
 			-- Give the current set of options.
 		do
-			Result := cwin_send_message_result (item, Em_getoptions, 0, 0)
+			Result := cwin_send_message_result_integer (item, Em_getoptions, to_wparam (0), to_lparam (0))
 		end
 
 feature -- Status setting
@@ -319,7 +313,7 @@ feature -- Status setting
 			range: WEL_CHARACTER_RANGE
 		do
 			create range.make (start_position, end_position)
-			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
+			cwin_send_message (item, Em_exsetsel, to_wparam (0), range.item)
 		end
 
 	set_caret_position (position: INTEGER) is
@@ -330,20 +324,20 @@ feature -- Status setting
 			range: WEL_CHARACTER_RANGE
  		do
 			create range.make (position, position)
-			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
+			cwin_send_message (item, Em_exsetsel, to_wparam (0), range.item)
   		end
 	
 	move_to_selection is
 			-- Move the selected text to be visible
 		do
-			cwin_send_message (item, Em_scrollcaret, 0, 0)
+			cwin_send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
 		end
 
 	set_text_limit (limit: INTEGER) is
 			-- Set the length of the text the user can enter into
 			-- the edit control.
 		do
-			cwin_send_message (item, Em_exlimittext, 0, limit)
+			cwin_send_message (item, Em_exlimittext, to_wparam (0), to_lparam (limit))
 		end
 
 	set_tab_stops_array (tab: ARRAY [INTEGER]) is
@@ -382,8 +376,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_seteventmask, 0,
-				an_event_mask)
+			cwin_send_message (item, Em_seteventmask, to_wparam (0), to_lparam (an_event_mask))
 		ensure
 			event_mask_set: event_mask = an_event_mask
 		end
@@ -394,8 +387,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_setoptions, operation,
-				an_options)
+			cwin_send_message (item, Em_setoptions, to_wparam (operation), to_lparam (an_options))
 		end
 
 	set_text (a_text: STRING) is
@@ -425,8 +417,7 @@ feature -- Status setting
 			exists: exists
 			color_not_void: color /= Void
 		do
-			cwin_send_message (item, Em_setbkgndcolor, 0,
-				color.item)
+			cwin_send_message (item, Em_setbkgndcolor, to_wparam (0), to_lparam (color.item))
 		end
 
 	set_background_system_color is
@@ -435,7 +426,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_setbkgndcolor, 1, 0)
+			cwin_send_message (item, Em_setbkgndcolor, to_wparam (1), to_lparam (0))
 		end
 
 	enable_standard_notifications is
@@ -605,7 +596,7 @@ feature -- Basic operations
 			stream_not_void: stream /= Void
 		do
 			stream.init_action
-			cwin_send_message (item, Em_streamin, format, stream.to_integer)
+			cwin_send_message (item, Em_streamin, to_wparam (format), stream.item)
 			stream.finish_action
 		end
 
@@ -619,7 +610,7 @@ feature -- Basic operations
 			stream_not_void: stream /= Void
 		do
 			stream.init_action
-			cwin_send_message (item, Em_streamout, format, stream.to_integer)
+			cwin_send_message (item, Em_streamout, to_wparam (format), stream.item)
 			stream.finish_action
 		end
 
@@ -628,7 +619,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_hideselection, 1, 0)
+			cwin_send_message (item, Em_hideselection, to_wparam (1), to_lparam (0))
 		end
 
 	show_selection is
@@ -636,7 +627,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_hideselection, 0, 0)
+			cwin_send_message (item, Em_hideselection, to_wparam (0), to_lparam (0))
 		end
 
 	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
@@ -653,7 +644,8 @@ feature -- Basic operations
 				flags := Fr_matchcase
 			end
 
-			Result := cwin_send_message_result (item, Em_findtextex, flags , find_text.to_integer)
+			Result := cwin_send_message_result_integer (item, Em_findtextex,
+				to_wparam (flags), find_text.item)
 		end
 
 feature -- Element change
@@ -665,7 +657,7 @@ feature -- Element change
 			a_char_format_not_void: a_char_format /= Void
 		do
 			cwin_send_message (item, Em_setcharformat,
-				Scf_all, a_char_format.to_integer)
+				to_wparam (Scf_all), a_char_format.item)
 		end
 
 	set_character_format_selection (a_char_format: WEL_CHARACTER_FORMAT) is
@@ -675,7 +667,7 @@ feature -- Element change
 			a_char_format_not_void: a_char_format /= Void
 		do
 			cwin_send_message (item, Em_setcharformat,
-				Scf_selection, a_char_format.to_integer)
+				to_wparam (Scf_selection), a_char_format.item)
 		end
 
 	set_character_format_word (a_char_format: WEL_CHARACTER_FORMAT) is
@@ -685,8 +677,7 @@ feature -- Element change
 			a_char_format_not_void: a_char_format /= Void
 		do
 			cwin_send_message (item, Em_setcharformat,
-				Scf_word + Scf_selection,
-				a_char_format.to_integer)
+				to_wparam (Scf_word + Scf_selection), a_char_format.item)
 		end
 
 	set_paragraph_format (a_para_format: WEL_PARAGRAPH_FORMAT) is
@@ -695,8 +686,7 @@ feature -- Element change
 			exists: exists
 			a_para_format_not_void: a_para_format /= Void
 		do
-			cwin_send_message (item, Em_setparaformat, 0,
-				a_para_format.to_integer)
+			cwin_send_message (item, Em_setparaformat, to_wparam (0), a_para_format.item)
 		end
 
 	print_all (dc: WEL_PRINTER_DC; title: STRING) is
@@ -739,8 +729,8 @@ feature -- Element change
 				-- character on the next page.
 				fr.set_rect (r)
 				fr.set_rect_page (r)
-				i := cwin_send_message_result (item,
-					Em_formatrange, 1, fr.to_integer)
+				i := cwin_send_message_result_integer (item,
+					Em_formatrange, to_wparam (1), fr.item)
 				-- If there is more text to print, spit this
 				-- page from the printer and start another one.
 				if i < tl then
@@ -750,7 +740,7 @@ feature -- Element change
 				end
 			end
 			-- Reset the formatting of the rich edit control.
-			cwin_send_message (item, Em_formatrange, 1, 0)
+			cwin_send_message (item, Em_formatrange, to_wparam (1), to_lparam (0))
 
 			-- Finish the document.
 			dc.end_page
@@ -762,7 +752,7 @@ feature -- Element change
 				-- to prevent the filtered message to be handled
 				-- by the Rich Edit Control.
 			do
-				parent.set_message_return_value (1)
+				parent.set_message_return_value (to_lresult (1))
 				parent.disable_default_processing
 			end
 feature -- Notifications

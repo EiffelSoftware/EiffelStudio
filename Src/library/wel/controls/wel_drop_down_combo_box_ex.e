@@ -73,7 +73,7 @@ feature -- Status settings
 			exists: exists
 			positive_limit: limit >= 0
 		do
-			cwin_send_message (edit_item, Em_limittext, limit, 0)
+			cwin_send_message (edit_item, Em_limittext, to_wparam (limit), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := cwel_integer_to_pointer (cwin_send_message_result (item, Cbem_geteditcontrol, 0, 0))
+			Result := cwin_send_message_result (item, Cbem_geteditcontrol, to_wparam (0), to_lparam (0))
 		end
 
 	default_style: INTEGER is

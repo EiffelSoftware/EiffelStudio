@@ -7,30 +7,33 @@ indexing
 class
 	WEL_WORD_OPERATIONS
 
+inherit
+	WEL_DATA_TYPE
+
 feature -- Basic operations
 
-	cwin_lo_word (value: INTEGER): INTEGER is
+	cwin_lo_word (value: POINTER): INTEGER is
 			-- SDK LOWORD
 		external
-			"C [macro <wel.h>] (EIF_INTEGER): EIF_INTEGER"
+			"C inline use <windows.h>"
 		alias
-			"LOWORD"
+			"(EIF_INTEGER) LOWORD($value)"
 		end
 
-	cwin_hi_word (value: INTEGER): INTEGER is
+	cwin_hi_word (value: POINTER): INTEGER is
 			-- SDK HIWORD
 		external
-			"C [macro <wel.h>] (EIF_INTEGER): EIF_INTEGER"
+			"C inline use <windows.h>"
 		alias
-			"HIWORD"
+			"(EIF_INTEGER) HIWORD($value)"
 		end
 
-	cwin_make_long (low, high: INTEGER): INTEGER is
+	cwin_make_long (low, high: INTEGER): POINTER is
 			-- SDK MAKELONG
 		external
-			"C [macro <wel.h>] (UINT, UINT): EIF_INTEGER"
+			"C inline use <windows.h>"
 		alias
-			"MAKELONG"
+			"(EIF_POINTER) MAKELONG($low, $high)"
 		end
 
 end -- class WEL_WORD_OPERATIONS

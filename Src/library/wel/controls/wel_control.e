@@ -49,9 +49,9 @@ feature -- Access
 			if has_system_font then
 				Result := (create {WEL_SHARED_FONTS}).system_font
 			else
-				create Result.make_by_pointer (cwel_integer_to_pointer (
+				create Result.make_by_pointer (
 					cwin_send_message_result (item, Wm_getfont,
-					0, 0)))
+					default_pointer, default_pointer))
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -67,8 +67,7 @@ feature -- Element change
 			a_font_exists: a_font.exists
 		do
 			cwin_send_message (item, Wm_setfont,
-				cwel_pointer_to_integer (a_font.item),
-				cwin_make_long (1, 0))
+				a_font.item, cwin_make_long (1, 0))
 		ensure
 			font_set: not has_system_font implies font.item = a_font.item
 		end
@@ -81,7 +80,7 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_send_message_result (item, Wm_getfont,
-				0, 0) = 0
+				default_pointer, default_pointer) = default_pointer
 		end
 
 feature -- Basic operations
@@ -151,16 +150,16 @@ feature {WEL_DIALOG} -- Implementation
 			p: POINTER
 		do
 				-- Keep the previous one
-			default_window_procedure := cwin_get_window_long (item, Gwl_wndproc)
+			default_window_procedure := cwin_get_window_long (item, Gwlp_wndproc)
 
 				-- Set the new one
-			cwin_set_window_long (item, Gwl_wndproc, cwel_window_procedure_address)
+			cwin_set_window_long (item, Gwlp_wndproc, cwel_window_procedure_address)
 				
 			p := internal_data
 			feature {WEL_INTERNAL_DATA}.set_default_window_procedure (p, default_window_procedure)
 		end
 
-	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		do
 			Result := cwin_call_window_proc (default_window_procedure,
 				hwnd, msg, wparam, lparam)
@@ -174,11 +173,10 @@ feature {WEL_DIALOG} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_call_window_proc (proc, hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
+	cwin_call_window_proc (proc, hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK CallWindowProc
 		external
-			"C [macro <wel.h>] (WNDPROC, HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
+			"C [macro <wel.h>] (WNDPROC, HWND, UINT, WPARAM, LPARAM): LRESULT"
 		alias
 			"CallWindowProc"
 		end

@@ -105,7 +105,7 @@ feature {NONE} -- Cookie access and settings
 	cookie: POINTER is
 			-- Current protected object passed to callback function.
 		do
-			Result := cwel_integer_to_pointer (cwel_editstream_get_dwcookie (item))
+			Result := cwel_editstream_get_dwcookie (item)
 		end
 
 	set_cookie (a_cookie: POINTER) is
@@ -113,7 +113,7 @@ feature {NONE} -- Cookie access and settings
 			--| Contains Current, so the C callback function knows
 			--| which object to call.
 		do
-			cwel_editstream_set_dwcookie (item, cwel_pointer_to_integer (a_cookie))
+			cwel_editstream_set_dwcookie (item, a_cookie)
 		ensure
 			cookie_set: cookie = a_cookie
 		end
@@ -143,7 +143,7 @@ feature {NONE} -- Externals
 			"sizeof (EDITSTREAM)"
 		end
 
-	cwel_editstream_set_dwcookie (ptr: POINTER; value: INTEGER) is
+	cwel_editstream_set_dwcookie (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro %"estream.h%"]"
 		end
@@ -153,7 +153,7 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_editstream_get_dwcookie (ptr: POINTER): INTEGER is
+	cwel_editstream_get_dwcookie (ptr: POINTER): POINTER is
 		external
 			"C [macro %"estream.h%"]"
 		end

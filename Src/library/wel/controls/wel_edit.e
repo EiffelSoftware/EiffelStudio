@@ -62,7 +62,7 @@ feature -- Basic operations
 			exists: exists
 			has_selection: has_selection
 		do
-			cwin_send_message (item, Wm_cut, 0, 0)
+			cwin_send_message (item, Wm_cut, to_wparam (0), to_lparam (0))
 		ensure
 			has_no_selection: not has_selection
 		end
@@ -73,7 +73,7 @@ feature -- Basic operations
 			exists: exists
 			has_selection: has_selection
 		do
-			cwin_send_message (item, Wm_copy, 0, 0)
+			cwin_send_message (item, Wm_copy, to_wparam (0), to_lparam (0))
 		end
 
 	clip_paste is
@@ -82,7 +82,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_paste, 0, 0)
+			cwin_send_message (item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
 	undo is
@@ -93,7 +93,7 @@ feature -- Basic operations
 			exists: exists
 			can_undo: can_undo
 		do
-			cwin_send_message (item, Em_undo, 0, 0)
+			cwin_send_message (item, Em_undo, to_wparam (0), to_lparam (0))
 		end
 
 	delete_selection is
@@ -102,7 +102,7 @@ feature -- Basic operations
 			exists: exists
 			has_selection: has_selection
 		do
-			cwin_send_message (item, Wm_clear, 0, 0)
+			cwin_send_message (item, Wm_clear, to_wparam (0), to_lparam (0))
 		ensure
 			has_no_selection: not has_selection
 		end
@@ -113,7 +113,7 @@ feature -- Basic operations
 			exists: exists
 			positive_length: text_length > 0
 		do
-			cwin_send_message (item, Em_setsel, 0, -1)
+			cwin_send_message (item, Em_setsel, to_wparam (0), to_lparam (-1))
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = 0
@@ -126,7 +126,7 @@ feature -- Basic operations
 			exists: exists
 			has_selection: has_selection
 		do
-			cwin_send_message (item, Em_setsel, -1, 0)
+			cwin_send_message (item, Em_setsel, to_wparam (-1), to_lparam (0))
 		ensure
 			has_no_selection: not has_selection
 		end
@@ -142,8 +142,7 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (new_text)
-			cwin_send_message (item, Em_replacesel, 0,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Em_replacesel, to_wparam (0), a_wel_string.item)
 		end
 
 feature -- Status setting
@@ -154,9 +153,9 @@ feature -- Status setting
 			exists: exists
 		do
 			if modify then
-				cwin_send_message (item, Em_setmodify, 1, 0)
+				cwin_send_message (item, Em_setmodify, to_wparam (1), to_lparam (0))
 			else
-				cwin_send_message (item, Em_setmodify, 0, 0)
+				cwin_send_message (item, Em_setmodify, to_wparam (0), to_lparam (0))
 			end
 		ensure
 			modified_set: modified = modify
@@ -167,7 +166,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_setreadonly, 1, 0)
+			cwin_send_message (item, Em_setreadonly, to_wparam (1), to_lparam (0))
 		end
 
 	set_read_write is
@@ -175,7 +174,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_setreadonly, 0, 0)
+			cwin_send_message (item, Em_setreadonly, to_wparam (0), to_lparam (0))
 		end
 
 	set_text_limit (limit: INTEGER) is
@@ -185,7 +184,7 @@ feature -- Status setting
 			exists: exists
 			positive_limit: limit >= 0
 		do
-			cwin_send_message (item, Em_limittext, limit, 0)
+			cwin_send_message (item, Em_limittext, to_wparam (limit), to_lparam (0))
 		end
 	
 	get_text_limit: INTEGER is
@@ -194,7 +193,7 @@ feature -- Status setting
 		require
 			exisits: exists
 		do
-			Result := cwin_send_message_result (item, Em_getlimittext, 0, 0)
+			Result := cwin_send_message_result_integer (item, Em_getlimittext, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -207,7 +206,7 @@ feature -- Status setting
 			selection_in_lower_bound: start_position >= 0 and end_position >= 0
 			selection_in_upper_bound: start_position <= text_length and end_position <= text_length
 		do
-			cwin_send_message (item, Em_setsel, start_position, end_position)
+			cwin_send_message (item, Em_setsel, to_wparam (start_position), to_lparam (end_position))
 		ensure
 			has_selection: (start_position /= end_position) implies has_selection
 --			logical_order: (end_position >= start_position) implies (selection_start = start_position and selection_end = end_position)
@@ -221,7 +220,7 @@ feature -- Status setting
 			position_large_enough: position >= 0
 			position_small_enough: position <= text_length
 		do
-			cwin_send_message (item, Em_setsel, position, position)
+			cwin_send_message (item, Em_setsel, to_wparam (position), to_lparam (position))
 		ensure
 			has_no_selection: not has_selection
 			caret_position_set: caret_position = position
@@ -234,13 +233,15 @@ feature -- Status report
 		require
 			exists: exists
 		local
-			sel_end: INTEGER	
+			sel_end: INTEGER
 		do
+			fixme ("[
+				Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.
+			]")
 				-- We pass `Void' as the previous implementation only returned
 				-- the high value part of the result, corresponding to the
 				-- end position.
-			 cwin_send_message (item,
-				Em_getsel, 0, cwel_pointer_to_integer ($sel_end))
+			cwin_send_message (item, Em_getsel, to_wparam (0), $sel_end)
 			Result := sel_end
 		end
 
@@ -251,8 +252,11 @@ feature -- Status report
 		local
 			sel_start, sel_end: INTEGER
 		do
-			cwin_send_message (item, Em_getsel, cwel_pointer_to_integer ($sel_start),
-				cwel_pointer_to_integer ($sel_end))
+			fixme ("[
+				Replace sel_start, and set_end 's type by INTEGER_32, as it has
+				to be a pointer to a DWORD.
+			]")
+			cwin_send_message (item, Em_getsel, $sel_start, $sel_end)
 			Result := sel_end /= sel_start	
 		end
 
@@ -264,7 +268,10 @@ feature -- Status report
 		local
 			sel_start: INTEGER
 		do
-			cwin_send_message (item, Em_getsel, cwel_pointer_to_integer ($sel_start), 0)
+			fixme ("[
+				Replace sel_start's type by INTEGER_32, as $sel_start has to be a pointer to a DWORD.
+			]")
+			cwin_send_message (item, Em_getsel, $sel_start, to_lparam (0))
 			Result := sel_start
 		ensure
 			result_large_enough: Result >= 0
@@ -279,7 +286,10 @@ feature -- Status report
 		local
 			sel_end: INTEGER
 		do
-			cwin_send_message (item, Em_getsel, 0, cwel_pointer_to_integer ($sel_end))
+			fixme ("[
+				Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.
+			]")
+			cwin_send_message (item, Em_getsel, to_wparam (0), $sel_end)
 			Result := sel_end
 		ensure
 			result_large_enough: Result >= 0
@@ -291,8 +301,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Em_canundo,
-				0, 0) /= 0
+			Result := cwin_send_message_result (item, Em_canundo, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
 	modified: BOOLEAN is
@@ -301,7 +310,7 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_send_message_result (item,
-				Em_getmodify, 0, 0) /= 0
+				Em_getmodify, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
 	formatting_rect: WEL_RECT is
@@ -311,8 +320,7 @@ feature -- Status report
 			exists: exists
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Em_getrect, 0,
-				Result.to_integer)
+			cwin_send_message (item, Em_getrect, to_wparam (0), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end

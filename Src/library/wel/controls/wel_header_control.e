@@ -98,7 +98,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result(item, Hdm_get_item_count, 0, 0); 
+			Result := cwin_send_message_result_integer (item, Hdm_get_item_count,
+				to_wparam (0), to_lparam (0)) 
 			check
 				successfull: Result /= -1
 			end
@@ -117,13 +118,11 @@ feature -- Status report
 			exists: exists
 			a_point_exists: a_point /= Void and then a_point.exists
 		local
-			i_result: INTEGER
 			hit_test_info: WEL_HD_HIT_TEST_INFO
 		do
 			create hit_test_info.make
 			hit_test_info.set_point (a_point)
-			i_result := cwin_send_message_result (item, Hdm_hit_test, 0, 
-															cwel_pointer_to_integer (hit_test_info.item)); 
+			cwin_send_message (item, Hdm_hit_test, to_wparam (0), hit_test_info.item)
 		end
 
 feature -- Status setting
@@ -167,7 +166,7 @@ feature -- Element change
 		local
 			i_result: INTEGER
 		do
-			i_result := cwin_send_message_result(item, Hdm_insert_item, insert_after_item_no, cwel_pointer_to_integer (hd_item.item)); 
+			i_result := cwin_send_message_result_integer (item, Hdm_insert_item, to_wparam (insert_after_item_no), hd_item.item)
 			check
 				successfull: i_result /= -1
 			end
@@ -183,7 +182,7 @@ feature -- Element change
 		local
 			i_result: INTEGER
 		do
-			i_result := cwin_send_message_result(item, Hdm_delete_item, index, 0); 
+			i_result := cwin_send_message_result_integer (item, Hdm_delete_item, to_wparam (index), to_lparam (0)) 
 			check
 				successfull: i_result /= -1
 			end
@@ -200,7 +199,7 @@ feature -- Element change
 		local
 			i_result: INTEGER
 		do
-			i_result := cwin_send_message_result(item, Hdm_set_item, index, cwel_pointer_to_integer (hd_item.item))
+			i_result := cwin_send_message_result_integer (item, Hdm_set_item, to_wparam (index), hd_item.item)
 			check
 				successfull: i_result /= 0
 			end
@@ -367,7 +366,7 @@ feature {NONE} -- Implementation
 		do
 			create hd_layout.make
 			hd_layout.set_rectangle (a_rect)
-			i_result := cwin_send_message_result(item, Hdm_layout, 0, cwel_pointer_to_integer (hd_layout.item))
+			i_result := cwin_send_message_result_integer (item, Hdm_layout, to_wparam (0), hd_layout.item)
 			check
 				successfull: i_result /= 0
 			end

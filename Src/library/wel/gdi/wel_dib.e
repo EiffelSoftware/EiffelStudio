@@ -128,10 +128,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwel_integer_to_pointer (
-				cwel_pointer_to_integer(item) +
-				info_header.structure_size + color_count *
-				rgb_quad_size)
+			Result := item + (info_header.structure_size + color_count * rgb_quad_size)
 		end
 
 	palette: WEL_PALETTE
@@ -157,9 +154,7 @@ feature -- Basic operations
 			until
 				i = num_color
 			loop
-				cwel_integer_to_pointer (cwel_pointer_to_integer (item) +
-					info_header.structure_size + i * rgb_quad_size // 2).
-						memory_copy ($i, 1)
+				(item + (info_header.structure_size + i * rgb_quad_size // 2)).	memory_copy ($i, 1)
 				i := i + 1
 			end
 		end
@@ -196,10 +191,7 @@ feature {NONE} -- Implementation
 			i_small_enough: i < color_count
 		do
 			create Result.make
-			Result.memory_copy (cwel_integer_to_pointer (
-				cwel_pointer_to_integer(item) + 
-				info_header.structure_size + i * rgb_quad_size),
-				rgb_quad_size)
+			Result.memory_copy (item + (info_header.structure_size + i * rgb_quad_size), rgb_quad_size)
 		ensure
 			result_not_void: Result /= Void
 		end

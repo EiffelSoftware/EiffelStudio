@@ -54,8 +54,7 @@ feature -- Access
 			index_small_enough: index < count
 		do
 			create Result.make
-			cwin_send_message (item, Ttm_enumtools, index,
-				Result.to_integer)
+			cwin_send_message (item, Ttm_enumtools, to_wparam (index), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -67,8 +66,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Ttm_gettoolcount, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+				Ttm_gettoolcount, default_pointer, default_pointer)
 		ensure
 			positive_result: Result >= 0
 		end
@@ -81,8 +80,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Ttm_getdelaytime,
-				Ttdt_autopop, 0)
+			Result := cwin_send_message_result_integer (item, Ttm_getdelaytime,
+				to_wparam (Ttdt_autopop), to_lparam (0))
 		ensure
 			positive_result: result >= 0
 		end
@@ -95,8 +94,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Ttm_getdelaytime,
-				Ttdt_initial, 0)
+			Result := cwin_send_message_result_integer (item, Ttm_getdelaytime,
+				to_wparam (Ttdt_initial), to_lparam(0))
 		ensure
 			positive_result: result >= 0
 		end
@@ -108,8 +107,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Ttm_getdelaytime,
-				Ttdt_reshow, 0)
+			Result := cwin_send_message_result_integer (item, Ttm_getdelaytime,
+				to_wparam (Ttdt_reshow), to_lparam (0))
 		ensure
 			positive_result: result >= 0
 		end
@@ -119,7 +118,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			create Result.make_by_color (cwin_send_message_result (item, Ttm_gettipbkcolor, 0, 0))
+			create Result.make_by_color (cwin_send_message_result_integer (item, Ttm_gettipbkcolor, default_pointer, default_pointer))
 		ensure
 			result_not_void: result /= Void
 		end
@@ -129,7 +128,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			create Result.make_by_color (cwin_send_message_result (item, Ttm_gettiptextcolor, 0, 0))
+			create Result.make_by_color (cwin_send_message_result_integer (item, Ttm_gettiptextcolor, default_pointer, default_pointer))
 		ensure
 			result_not_void: result /= Void
 		end
@@ -140,7 +139,7 @@ feature -- Status report
 		require
 			exists
 		do
-			Result := cwin_send_message_result (item, ttm_getmaxtipwidth, 0, 0)
+			Result := cwin_send_message_result_integer (item, ttm_getmaxtipwidth, default_pointer, default_pointer)
 		ensure
 			result_valid: Result >= -1
 		end
@@ -153,7 +152,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Ttm_activate, 1, 0)
+			cwin_send_message (item, Ttm_activate, to_wparam (1), default_pointer)
 		end
 
 	deactivate is
@@ -161,7 +160,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Ttm_activate, 0, 0)
+			cwin_send_message (item, Ttm_activate, default_pointer, default_pointer)
 		end
 
 	set_automatic_delay_time (delay: INTEGER) is
@@ -173,7 +172,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_automatic, cwin_make_long (delay, 0))
+				to_wparam (Ttdt_automatic), cwin_make_long (delay, 0))
 		end
 
 	set_autopop_delay_time (delay: INTEGER) is
@@ -186,7 +185,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_autopop, cwin_make_long (delay, 0))
+				to_wparam (Ttdt_autopop), cwin_make_long (delay, 0))
 		end
 		
 	set_max_tip_width (a_width: INTEGER) is
@@ -197,7 +196,7 @@ feature -- Status setting
 			exists: exists
 			poisitive_width: a_width >=0
 		do
-			cwin_send_message (item, ttm_setmaxtipwidth, 0, a_width)
+			cwin_send_message (item, ttm_setmaxtipwidth, to_wparam (0), to_lparam (a_width))
 		end
 		
 
@@ -211,7 +210,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_initial, cwin_make_long (delay, 0))
+				to_wparam (Ttdt_initial), cwin_make_long (delay, 0))
 		end
 
 	set_reshow_delay_time (delay: INTEGER) is
@@ -223,7 +222,7 @@ feature -- Status setting
 			positive_delay: delay >= 0
 		do
 			cwin_send_message (item, Ttm_setdelaytime,
-				Ttdt_reshow, cwin_make_long (delay, 0))
+				to_wparam (Ttdt_reshow), cwin_make_long (delay, 0))
 		end
 
 	set_background_color (a_color: WEL_COLOR_REF) is
@@ -232,7 +231,7 @@ feature -- Status setting
 			exists: exists
 			color_not_void: a_color /= Void
 		do
-			cwin_send_message (item, Ttm_settipbkcolor, a_color.item, 0)
+			cwin_send_message (item, Ttm_settipbkcolor, to_wparam (a_color.item), to_lparam(0))
 		ensure
 			color_set: background_color.red = a_color.red and then
 					background_color.green = a_color.green and then
@@ -245,7 +244,8 @@ feature -- Status setting
 			exists: exists
 			color_not_void: a_color /= Void
 		do
-			cwin_send_message (item, Ttm_settiptextcolor, a_color.item, 0)
+			cwin_send_message (item, Ttm_settiptextcolor,
+				cwel_integer_to_pointer (a_color.item), default_pointer)
 		ensure
 			color_set: text_color.red = a_color.red and then
 					text_color.green = a_color.green and then
@@ -260,8 +260,7 @@ feature -- Basic operations
 			exists: exists
 			tool_info_not_void: tool_info /= Void
 		do
-			cwin_send_message (item, Ttm_addtool, 0,
-				tool_info.to_integer)
+			cwin_send_message (item, Ttm_addtool, to_wparam (0), tool_info.item)
 		ensure
 			count_increased: count = old count + 1
 		end
@@ -273,8 +272,7 @@ feature -- Basic operations
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Ttm_deltool, 0,
-				i_th_tool_info (index).to_integer)
+			cwin_send_message (item, Ttm_deltool, to_wparam (0), i_th_tool_info (index).item)
 		ensure
 			count_decreased: count = old count - 1
 		end

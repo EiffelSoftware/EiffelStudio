@@ -21,13 +21,13 @@ feature -- Access
 			-- Character code of the key
 			-- See class WEL_VK_CONSTANTS for different values.
 		do
-			Result := w_param
+			Result := w_param.to_integer_32
 		end
 
 	data: INTEGER is
 			-- Key data
 		do
-			Result := l_param
+			Result := l_param.to_integer_32
 		end
 
 end -- class WEL_KEY_MESSAGE

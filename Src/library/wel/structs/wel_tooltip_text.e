@@ -60,8 +60,7 @@ feature -- Access
 		require
 			text_id_set: text_id_set
 		do
-			Result := cwin_lo_word (cwel_pointer_to_integer (
-				cwel_tooltiptext_get_lpsztext (item)))
+			Result := cwin_lo_word (cwel_tooltiptext_get_lpsztext (item))
 		end
 
 	instance: WEL_INSTANCE is
@@ -127,8 +126,7 @@ feature -- Status report
 	text_id_set: BOOLEAN is
 			-- Is `text' equal to a resource string identifer?
 		do
-			Result := cwin_hi_word (cwel_pointer_to_integer (
-				cwel_tooltiptext_get_lpsztext (item))) = 0
+			Result := cwin_hi_word (cwel_tooltiptext_get_lpsztext (item)) = 0
 		end
 
 feature -- Measurement

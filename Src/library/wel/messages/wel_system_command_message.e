@@ -27,7 +27,7 @@ feature -- Access
 			-- Type of system command requested.
 			-- See class WEL_SC_CONSTANTS for different values.
 		do
-			Result := w_param
+			Result := w_param.to_integer_32
 		end
 
 	x: INTEGER is

@@ -59,9 +59,9 @@ feature -- Access
 			if has_system_font then
 				Result := (create {WEL_SHARED_FONTS}).system_font
 			else
-				create Result.make_by_pointer (cwel_integer_to_pointer (
+				create Result.make_by_pointer (
 					cwin_send_message_result (item, Wm_getfont,
-					0, 0)))
+					default_pointer, default_pointer))
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -77,7 +77,7 @@ feature -- Element change
 			a_font_exists: a_font.exists
 		do
 			cwin_send_message (item, Wm_setfont,
-				cwel_pointer_to_integer (a_font.item),
+				a_font.item,
 				cwin_make_long (1, 0))
 		ensure
 			font_set: not has_system_font implies font.item = a_font.item
@@ -91,7 +91,7 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_send_message_result (item, Wm_getfont,
-				0, 0) = 0
+				default_pointer, default_pointer) = default_pointer
 		end
 
 	minimal_width: INTEGER is

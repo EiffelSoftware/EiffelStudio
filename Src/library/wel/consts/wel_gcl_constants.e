@@ -27,33 +27,33 @@ feature -- GCL Constants
 			--
 			-- Declared in Windows as GCL_CBWNDEXTRA
 
-	Gcl_hbrbackground: INTEGER is -10
+	Gcl_hbrbackground, gclp_hbrbackground: INTEGER is -10
 			-- Replaces a handle to the background brush associated with the 
 			-- class. 
 			--
 			-- Declared in Windows as GCL_HBRBACKGROUND
 
-	Gcl_hcursor: INTEGER is -12
+	Gcl_hcursor, gclp_hcursor: INTEGER is -12
 			-- Replaces a handle to the cursor associated with the class. 
 			--
 			-- Declared in Windows as GCL_HCURSOR
 
-	Gcl_hicon: INTEGER is -14
+	Gcl_hicon, gclp_hicon: INTEGER is -14
 			-- Replaces a handle to the icon associated with the class. 
 			--
 			-- Declared in Windows as GCL_HICON
 
-	Gcl_hiconsm: INTEGER is -34
+	Gcl_hiconsm, gclp_hiconsm: INTEGER is -34
 			-- Replace a handle to the small icon associated with the class. 
 			--
 			-- Declared in Windows as GCL_HICONSM
 
-	Gcl_hmodule: INTEGER is -16
+	Gcl_hmodule, gclp_hmodule: INTEGER is -16
 			-- Replaces a handle to the module that registered the class. 
 			--
 			-- Declared in Windows as GCL_HMODULE
 
-	Gcl_menuname: INTEGER is -8
+	Gcl_menuname, gclp_menuname: INTEGER is -8
 			-- Replaces the address of the menu name string. The string 
 			-- identifies the menu resource associated with the class. 
 			--
@@ -64,7 +64,7 @@ feature -- GCL Constants
 			--
 			-- Declared in Windows as GCL_STYLE
 
-	Gcl_wndproc: INTEGER is -24
+	Gcl_wndproc, gclp_wndproc: INTEGER is -24
 			-- Replaces the address of the window procedure associated with 
 			-- the class. 
 			--

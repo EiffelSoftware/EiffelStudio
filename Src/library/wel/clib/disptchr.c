@@ -54,12 +54,12 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 #endif
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
-			(EIF_INTEGER) wparam,
-			(EIF_INTEGER) lparam));
+			(EIF_POINTER) wparam,
+			(EIF_POINTER) lparam));
 	} else {
 		WNDPROC proc = NULL;
 		struct EIF_WEL_USERDATA *data =
-			(struct EIF_WEL_USERDATA *) GetWindowLong (hwnd, GWL_USERDATA);
+			(struct EIF_WEL_USERDATA *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 
 		if (data) {
 			proc = data->default_window_procedure;
@@ -80,7 +80,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 					data->object_id = 0;
 					data->default_window_procedure = NULL;
 					free (data);
-					SetWindowLong (hwnd, GWL_USERDATA, (LONG) 0);
+					SetWindowLongPtr (hwnd, GWLP_USERDATA, (LONG_PTR) 0);
 				}
 			}
 		}
@@ -111,8 +111,8 @@ INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 #endif
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
-			(EIF_INTEGER) wparam,
-			(EIF_INTEGER) lparam));
+			(EIF_POINTER) wparam,
+			(EIF_POINTER) lparam));
 
 		switch (msg) {
 			case WM_CHARTOITEM:
@@ -130,7 +130,7 @@ INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			default:
 				if (dialog_result != 0) {
 						/* Set the result given by WEL to the dialog */
-					dialog_result = SetWindowLong (hwnd, DWL_MSGRESULT, (LONG) dialog_result);
+					dialog_result = SetWindowLongPtr (hwnd, DWLP_MSGRESULT, (LONG_PTR) dialog_result);
 					return (dialog_result != 0);
 				} else
 					return FALSE;

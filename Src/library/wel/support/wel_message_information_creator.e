@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (window: WEL_WINDOW; message, wparam, lparam: INTEGER) is
+	make (window: WEL_WINDOW; message: INTEGER; wparam, lparam: POINTER) is
 			-- Make `message_information' corresponding to
 			-- `message' by using `wparam' and `lparam'.
 		require

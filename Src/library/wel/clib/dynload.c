@@ -106,7 +106,7 @@ DWORD cwin_get_dll_version(char *pszDllName)
 			ZeroMemory(&dvi, sizeof(dvi));
 			dvi.cbSize = sizeof(dvi);
 
-			hr = (*pDllGetVersion)(&dvi);
+			hr = ((HRESULT (*) (DLLVERSIONINFO *)) pDllGetVersion)(&dvi);
 
 			if(SUCCEEDED(hr))
 				{

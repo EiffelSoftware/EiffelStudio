@@ -24,7 +24,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Bm_setcheck, 3, 0)
+			cwin_send_message (item, Bm_setcheck, to_wparam (3), to_lparam (0))
 		ensure
 			indeterminate: indeterminate
 		end
@@ -36,8 +36,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Bm_getcheck, 0, 0) = 2
+			Result := cwin_send_message_result_integer (item,
+				Bm_getcheck, to_wparam (0), to_lparam (0)) = 2
 		end
 
 feature {NONE} -- Implementation

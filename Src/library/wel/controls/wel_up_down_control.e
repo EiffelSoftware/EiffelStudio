@@ -53,11 +53,8 @@ feature -- Access
 
 	position: INTEGER is
 			-- Current position
-		local
-			temp: INTEGER
 		do
-			temp := cwin_send_message_result (item, Udm_getpos, 0, 0)	
-			Result := cwin_lo_word (temp)
+			Result := cwin_lo_word (cwin_send_message_result (item, Udm_getpos, to_wparam (0), to_lparam (0)))
 				-- Because we are use `Udm_getpos' and not `Udm_getpos32',
 				-- we need to apply this conversion to the result in order to
 				-- correctly deal with negative values. At some point, all settings and
@@ -70,19 +67,21 @@ feature -- Access
 	minimum: INTEGER is
 			-- Minimum position
 		local
-			lower, higher: INTEGER
+			lower: INTEGER
 		do
-			cwin_send_message (item, Udm_getrange32, cwel_pointer_to_integer ($lower), cwel_pointer_to_integer ($higher))
+			fixme ("lower should be an INTEGER_32")
+			cwin_send_message (item, Udm_getrange32, $lower, to_lparam (0))
 			Result := lower
 		end
 
 	maximum: INTEGER is
 			-- Maximum position
 		local
-			lower, higher: INTEGER
+			upper: INTEGER
 		do
-			cwin_send_message  (item, Udm_getrange32, cwel_pointer_to_integer ($lower), cwel_pointer_to_integer ($higher))
-			Result := higher
+			fixme ("upper should be an INTEGER_32")
+			cwin_send_message (item, Udm_getrange32, to_wparam (0), $upper)
+			Result := upper
 		end
 
 	buddy_window: WEL_WINDOW is
@@ -90,8 +89,8 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := window_of_item (cwel_integer_to_pointer (
-				cwin_send_message_result (item, Udm_getbuddy, 0, 0)))
+			Result := window_of_item (
+				cwin_send_message_result (item, Udm_getbuddy, to_wparam (0), to_lparam (0)))
 		end
 
 feature -- Element change
@@ -99,7 +98,7 @@ feature -- Element change
 	set_position (a_position: INTEGER) is
 			-- Set `position' with `new_position'.
 		do
-			cwin_send_message (item, Udm_setpos, 0,
+			cwin_send_message (item, Udm_setpos, to_wparam (0),
 				cwin_make_long (a_position, 0))
 		end
 
@@ -107,7 +106,7 @@ feature -- Element change
 			-- Set `minimum' and `maximum' with `a_minimum' and
 			-- `a_maximum'.
 		do
-			cwin_send_message (item, Udm_setrange, 0,
+			cwin_send_message (item, Udm_setrange, to_wparam (0),
 				cwin_make_long (a_maximum, a_minimum))
 		end
 
@@ -119,7 +118,7 @@ feature -- Element change
 			a_window_exists: a_window.exists
 		do
 			cwin_send_message (item, Udm_setbuddy,
-				a_window.to_integer, 0)
+				a_window.item, to_lparam (0))
 		ensure
 			window_set: buddy_window = a_window
 		end
@@ -131,7 +130,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Udm_setbase, 10, 0)
+			cwin_send_message (item, Udm_setbase, to_wparam (10), to_lparam (0))
 		ensure
 			decimal_base: decimal_base
 		end
@@ -141,7 +140,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Udm_setbase, 16, 0)
+			cwin_send_message (item, Udm_setbase, to_wparam (16), to_lparam (0))
 		ensure
 			hexadecimal_base: hexadecimal_base
 		end
@@ -153,8 +152,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Udm_getbase, 0, 0) = 10
+			Result := cwin_send_message_result_integer (item,
+				Udm_getbase, to_wparam (0), to_lparam (0)) = 10
 		end
 
 	hexadecimal_base: BOOLEAN is
@@ -162,8 +161,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Udm_getbase, 0, 0) = 16
+			Result := cwin_send_message_result_integer (item,
+				Udm_getbase, to_wparam (0), to_lparam (0)) = 16
 		end
 
 feature {NONE} -- Implementation

@@ -19,15 +19,7 @@ feature -- Access
 
 	position: WEL_WINDOW_POS is
 		do
-			create Result.make_by_pointer (cwel_integer_to_pointer (l_param))
-		end
-
-feature {NONE} -- Externals
-
-	cwel_integer_to_pointer (i: INTEGER): POINTER is
-			-- Converts an integer `i' to a pointer
-		external
-			"C [macro <wel.h>] (int): EIF_POINTER"
+			create Result.make_by_pointer (l_param)
 		end
 
 end -- class WEL_WINDOW_POSITION_MESSAGE

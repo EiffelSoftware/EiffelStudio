@@ -90,7 +90,7 @@ feature -- Status report
 			-- if it is indeed a dialog, the result will always
 			-- be non zero, otherwise it is zero.
 		do
-			Result := c_get_window_long (hwnd, Dwl_dlgproc) /= 0
+			Result := cwin_get_window_long (hwnd, Dwlp_dlgproc) /= default_pointer
 		end
 
 feature -- Status setting
@@ -261,14 +261,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND): EIF_POINTER"
 		alias
 			"GetLastActivePopup"
-		end
-
-	c_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
-			-- SDK GetWindowLong
-		external
-			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
-		alias
-			"GetWindowLong"
 		end
 
 end -- class WEL_APPLICATION

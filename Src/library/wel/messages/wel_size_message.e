@@ -25,7 +25,7 @@ feature -- Access
 			-- Type of resizing requested.
 			-- See class WEL_SIZE_CONSTANTS for different values.
 		do
-			Result := w_param
+			Result := w_param.to_integer_32
 		end
 
 	width: INTEGER is

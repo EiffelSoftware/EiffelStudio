@@ -30,12 +30,11 @@ feature -- Access
 			end
 		end
 
-	message_return_value: INTEGER is
+	message_return_value: POINTER is
 			-- Return value of the window procedure.
 		require
 			has_return_value: has_return_value
 		do
-	
 			check
 				not_void: message_return_value_area /= Void
 				good_area: message_return_value_area.count >= level_count
@@ -69,15 +68,15 @@ feature -- Access
 		
 feature -- Element Change
 
-	set_message_return_value (value: INTEGER) is
+	set_message_return_value (value: POINTER) is
 			-- Set the window-procedure-return-value.
 		do
 			if
 				has_return_value_area = Void
 			then
 					-- Areas need to be created first.
-				create_has_return_value_area (Initial_area_size)
-				create_message_return_value_area (Initial_area_size)
+				create has_return_value_area.make (Initial_area_size)
+				create message_return_value_area.make (Initial_area_size)
 			end
 
 			check
@@ -89,8 +88,10 @@ feature -- Element Change
 				has_return_value_area.count < level_count
 			then
 					-- Areas need to be resized.
-				resize_has_return_value_area (level_count + Area_resize_increment)
-				resize_message_return_value_area (level_count + Area_resize_increment)
+				has_return_value_area := has_return_value_area.resized_area (
+					level_count + Area_resize_increment)
+				message_return_value_area := message_return_value_area.resized_area (
+					level_count + Area_resize_increment)
 			end
 			
 			check
@@ -110,7 +111,7 @@ feature -- Element Change
 			if
 				default_processing_area = Void
 			then
-				create_default_processing_area (Initial_area_size)
+				create default_processing_area.make (Initial_area_size)
 			end
 
 			check
@@ -120,7 +121,8 @@ feature -- Element Change
 			if
 				default_processing_area.count < level_count
 			then
-				resize_default_processing_area (level_count + Area_resize_increment)
+				default_processing_area := default_processing_area.resized_area (
+					level_count + Area_resize_increment)
 			end
 
 			check
@@ -142,7 +144,7 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 			if
 				has_return_value
 			then
-				set_has_return_value (False)
+				has_return_value_area.put (False, level_count - 1)
 			end
 			
 			if
@@ -174,121 +176,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 feature {NONE} -- Implementation
 
 	has_return_value_area: SPECIAL [BOOLEAN]
-	message_return_value_area: SPECIAL [INTEGER]
+	message_return_value_area: SPECIAL [POINTER]
 	default_processing_area: SPECIAL [BOOLEAN]
-
-
-	create_has_return_value_area (n: INTEGER) is
-			-- Create `has_return_value_area'
-		local
-			fake_array: ARRAY [BOOLEAN]	
-		do
-			create fake_array.make (0, n - 1)
-			has_return_value_area := fake_array.area
-		ensure
-			has_return_value_area_not_void: has_return_value_area /= Void
-			correct_size:	has_return_value_area.count = n
-		end
-
-	create_message_return_value_area (n: INTEGER) is
-			-- Create `return_value_area'.
-		local
-			fake_array: ARRAY [INTEGER]	
-		do
-			create fake_array.make (0, n - 1)
-			message_return_value_area := fake_array.area
-		ensure
-			message_return_value_area_not_void: message_return_value_area /= Void
-			correct_size:	message_return_value_area.count = n
-		end
-
-	create_default_processing_area (n: INTEGER) is
-			-- Create `default_processing_area'.
-		local
-			fake_array: ARRAY [BOOLEAN]	
-		do
-			create fake_array.make (0, n - 1)
-			default_processing_area := fake_array.area
-		ensure
-			default_processing_area_not_void: default_processing_area /= Void
-			correct_size:	default_processing_area.count = n
-		end
-
-	resize_has_return_value_area (new_count: INTEGER) is
-			-- Resize `has_return_value_area'.
-		require
-			new_cound_greater: new_count > has_return_value_area.count
-		local
-			fake_array: ARRAY [BOOLEAN]
-			i: INTEGER
-		do
-			create fake_array.make (0, new_count - 1)
-			
-			from
-				i := 0
-			until
-				i >= has_return_value_area.count
-			loop
-				fake_array.area.put (has_return_value_area.item (i), i)
-				i := i + 1
-			end
-			
-			has_return_value_area := fake_array.area
-		end
-
-	resize_message_return_value_area (new_count: INTEGER) is
-			-- Resize `return_value_area'.
-		require
-			new_count_greater: new_count > message_return_value_area.count
-		local
-			fake_array: ARRAY [INTEGER]
-			i: INTEGER
-		do
-			create fake_array.make (0, new_count - 1)
-			
-			from
-				i := 0
-			until
-				i >= message_return_value_area.count
-			loop
-				fake_array.area.put (message_return_value_area.item (i), i)
-				i := i + 1
-			end
-			
-			message_return_value_area := fake_array.area
-		end
-
-	resize_default_processing_area (new_count: INTEGER) is
-			-- Resize `default_processing_area'.
-		require
-			new_count_greater: new_count > default_processing_area.count
-		local
-			fake_array: ARRAY [BOOLEAN]
-			i: INTEGER
-		do
-			create fake_array.make (0, new_count - 1)
-			
-			from
-				i := 0
-			until
-				i >= default_processing_area.count
-			loop
-				fake_array.area.put (default_processing_area.item (i), i)
-				i := i + 1
-			end
-			
-			default_processing_area := fake_array.area
-		end
-
-
-	set_has_return_value (value: BOOLEAN) is
-			-- Sets whether the current `has_return_value' is
-			-- True or False.
-		do
-			has_return_value_area.put (value, level_count - 1)
-		ensure
-			value_set: has_return_value = value
-		end
 
 	Initial_area_size: INTEGER is 2
 	Area_resize_increment: INTEGER is 2

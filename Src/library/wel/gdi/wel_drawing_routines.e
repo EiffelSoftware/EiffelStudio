@@ -18,6 +18,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	WEL_DATA_TYPE
+		export
+			{NONE} all
+		end
 
 	WEL_DT_CONSTANTS
 
@@ -56,7 +61,7 @@ feature -- Basic operations
 		do
 			create wel_string.make (txt)
 			cwin_draw_state (dc.item, default_pointer, default_pointer,
-					wel_string.to_integer, txt.count, x, y, dc.tabbed_text_width (txt),
+					wel_string.item, to_lparam (txt.count), x, y, dc.tabbed_text_width (txt),
 					dc.tabbed_text_height (txt), Dst_text + Dss_disabled)
 		end
 
@@ -69,7 +74,7 @@ feature -- Basic operations
 			dc_exists: dc.exists
 		do
 			cwin_draw_state (dc.item, default_pointer, default_pointer,
-					bitmap.to_integer, 0, x, y, 0, 0,
+					bitmap.item, default_pointer, x, y, 0, 0,
 					Dst_bitmap + Dss_disabled)
 		end
 
@@ -89,7 +94,7 @@ feature {NONE} -- Externals
 			"DrawFocusRect"
 		end
 
-	cwin_draw_state (hdc, hbrush, callback: POINTER; lparam, wparam, x, y, cx, cy, flag: INTEGER) is
+	cwin_draw_state (hdc, hbrush, callback: POINTER; lparam, wparam: POINTER; x, y, cx, cy, flag: INTEGER) is
 			-- The flag is a combination of a type and a state.
 		external
 			"C [macro <windows.h>] (HDC, HBRUSH, DRAWSTATEPROC, LPARAM, WPARAM, int, int, int, int, UINT)"

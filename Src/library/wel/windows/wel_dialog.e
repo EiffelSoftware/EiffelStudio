@@ -195,8 +195,8 @@ feature {NONE} -- Implementation
 			-- Zero if the dialog is identified by
 			-- a name (`resource_name').
 
-	frozen dialog_process_message, process_message (hwnd: POINTER; msg,
-			wparam, lparam: INTEGER): INTEGER is
+	frozen dialog_process_message, process_message (hwnd: POINTER;
+			msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		do
 			Result := composite_process_message (hwnd, msg,
 				wparam, lparam)

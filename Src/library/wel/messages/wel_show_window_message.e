@@ -24,7 +24,7 @@ feature -- Status report
 	shown: BOOLEAN is
 			-- Is the window being shown?
 		do
-			Result := w_param = 1
+			Result := w_param.to_integer_32 = 1
 		end
 
 	parent_opening: BOOLEAN is
@@ -45,7 +45,7 @@ feature -- Access
 			-- Status of the window being shown.
 			-- See class WEL_SW_CONSTANTS for differents values.
 		do
-			Result := l_param
+			Result := l_param.to_integer_32
 		end
 
 end -- class WEL_SHOW_WINDOW_MESSAGE

@@ -118,21 +118,21 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	cwin_get_wm_menuselect_cmd (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_menuselect_cmd (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_MENUSELECT_CMD"
 		end
 
-	cwin_get_wm_menuselect_flags (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_menuselect_flags (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_MENUSELECT_FLAGS"
 		end
 
-	cwin_get_wm_menuselect_hmenu (wparam, lparam: INTEGER): POINTER is
+	cwin_get_wm_menuselect_hmenu (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias

@@ -24,7 +24,7 @@ feature -- Status setting
 	select_item (index: INTEGER) is
 			-- Select item at the zero-based `index'.
 		do
-			cwin_send_message (item, Lb_setcursel, index, 0)
+			cwin_send_message (item, Lb_setcursel, to_wparam (index), to_lparam (0))
 		ensure then
 			selected: selected
 			selected_item: selected_item = index
@@ -36,7 +36,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Lb_setcursel, -1, 0)
+			cwin_send_message (item, Lb_setcursel, to_wparam (-1), to_lparam (0))
 		ensure
 			unselected: not selected
 		end
@@ -46,8 +46,8 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is an item selected?
 		do
-			Result := cwin_send_message_result (item,
-				Lb_getcursel, 0, 0) /= Lb_err
+			Result := cwin_send_message_result_integer (item,
+				Lb_getcursel, to_wparam (0), to_lparam (0)) /= Lb_err
 		end
 
 	selected_item: INTEGER is
@@ -56,8 +56,7 @@ feature -- Status report
 			exists: exists
 			selected: selected
 		do
-			Result := cwin_send_message_result (item,
-				Lb_getcursel, 0, 0)
+			Result := cwin_send_message_result_integer (item, Lb_getcursel, to_wparam (0), to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result < count

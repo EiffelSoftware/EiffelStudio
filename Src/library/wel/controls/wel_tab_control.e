@@ -97,7 +97,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,Tcm_getitemcount, 0, 0)
+			Result := cwin_send_message_result_integer (item,Tcm_getitemcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -107,7 +107,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Tcm_getrowcount, 0 ,0)
+			Result := cwin_send_message_result_integer (item, Tcm_getrowcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -124,7 +124,7 @@ feature -- Access
 			exists: exists
 		do
 			Result := client_rect
-			cwin_send_message (item, Tcm_adjustrect, 0, Result.to_integer)
+			cwin_send_message (item, Tcm_adjustrect, to_wparam (0), Result.item)
 		end
 
 	label_index_rect: WEL_RECT is
@@ -132,7 +132,7 @@ feature -- Access
 			-- (excluding the tab sheet)
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Tcm_getitemrect, current_selection, Result.to_integer)
+			cwin_send_message (item, Tcm_getitemrect, to_wparam (current_selection), Result.item)
 		end
 
 feature -- Status report
@@ -142,7 +142,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Tcm_getcursel, 0, 0)
+			Result := cwin_send_message_result_integer (item, Tcm_getcursel, to_wparam (0), to_lparam (0))
 		ensure
 			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
@@ -168,7 +168,7 @@ feature -- Status report
 			buffer.fill_blank
 			Result.set_text (buffer)
 			Result.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Tcm_getitem, index, Result.to_integer)
+			cwin_send_message (item, Tcm_getitem, to_wparam (index), Result.item)
 		end
 			
 
@@ -182,7 +182,7 @@ feature -- Status setting
 			index_small_enough: index < count
 		do
 			on_tcn_selchanging
-			cwin_send_message (item, Tcm_setcursel, index, 0)
+			cwin_send_message (item, Tcm_setcursel, to_wparam (index), to_lparam (0))
 			on_tcn_selchange
 		ensure
 			current_selection_set: current_selection = index
@@ -194,7 +194,7 @@ feature -- Status setting
 			-- To use for a notebook with the tabs on the left or 
 			-- the right.
 		do
-			cwin_send_message (item, wm_setfont, cwel_pointer_to_integer (fnt.item), cwin_make_long (1, 0))
+			cwin_send_message (item, wm_setfont, fnt.item, cwin_make_long (1, 0))
 		end			
 
 feature -- Element change
@@ -208,7 +208,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index <= count
 		do
-			cwin_send_message (item, Tcm_setitem, index, an_item.to_integer)
+			cwin_send_message (item, Tcm_setitem, to_wparam (index), an_item.item)
 		end
 
 	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
@@ -221,8 +221,7 @@ feature -- Element change
 		local
 			window: WEL_WINDOW
 		do
-			cwin_send_message (item, Tcm_insertitem, index,
-				an_item.to_integer)
+			cwin_send_message (item, Tcm_insertitem, to_wparam (index), an_item.item)
 			window := an_item.window
 			if window /= Void and then window.exists then
 				if index = 0 then
@@ -242,7 +241,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Tcm_deleteitem, index, 0)
+			cwin_send_message (item, Tcm_deleteitem, to_wparam (index), to_lparam (0))
 		ensure
 			count_decreased: count = old count - 1
 		end
@@ -252,7 +251,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tcm_deleteallitems, 0, 0)
+			cwin_send_message (item, Tcm_deleteallitems, to_wparam (0), to_lparam (0))
 		ensure
 			empty: count = 0
 		end
@@ -261,7 +260,7 @@ feature -- Element change
 			-- Set size of labeled index area of each tab
 			-- Width is only reset if tabs are fixed-width; height is always reset
 		do
-			cwin_send_message (item, Tcm_Setitemsize, 0, cwin_make_long (new_width, new_height))
+			cwin_send_message (item, Tcm_setitemsize, to_wparam (0), cwin_make_long (new_width, new_height))
 		end
 
 feature -- Notifications
@@ -382,7 +381,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			i, a_count, sel, cur_style: INTEGER
 			r: WEL_RECT
 			is_vertical, is_bottom, is_right: BOOLEAN
-			r_addr: INTEGER
+			r_addr: POINTER
 			l_item: POINTER
 		do
 			bk_brush := background_brush
@@ -391,7 +390,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 					--| Disable the default windows processing and return correct
 					--| value to Windows, i.e. nonzero value.
 				disable_default_processing
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 	
 					-- Find out where tabs are located.
 				cur_style := style
@@ -403,7 +402,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 					-- needs to be redrawn.
 				create main_region.make_rect_indirect (invalid_rect)
 				create r.make (0, 0, 0, 0)
-				r_addr := r.to_integer
+				r_addr := r.item
 	
 					-- Remove from region the area corresponding to tabs.
 					-- For a non selected tab, the area returned is too big, we need
@@ -419,7 +418,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 				until
 					i = a_count
 				loop
-					cwin_send_message (l_item, Tcm_getitemrect, i, r_addr)
+					cwin_send_message (l_item, Tcm_getitemrect, to_wparam (i), r_addr)
 					if i /= sel then
 						if is_bottom then
 							r.set_top (r.top + 2)
@@ -481,7 +480,7 @@ feature {NONE} -- Implementation
 	buffer_size: INTEGER is 256
 			-- Windows text retrieval buffer size
 
-  	on_wm_paint (wparam: INTEGER) is
+  	on_wm_paint (wparam: POINTER) is
    			-- Wm_paint message.
    			-- Need to do nothing
    		do

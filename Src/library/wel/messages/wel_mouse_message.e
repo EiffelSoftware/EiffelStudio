@@ -32,7 +32,7 @@ feature -- Access
 			-- Keys flags.
 			-- See class WEL_MK_CONSTANTS for different values.
 		do
-			Result := w_param
+			Result := w_param.to_integer_32
 		end
 
 	x: INTEGER is
@@ -81,12 +81,12 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	c_mouse_message_x (lparam: INTEGER): INTEGER is
+	c_mouse_message_x (lparam: POINTER): INTEGER is
 		external
 			"C [macro <wel.h>]"
 		end
 
-	c_mouse_message_y (lparam: INTEGER): INTEGER is
+	c_mouse_message_y (lparam: POINTER): INTEGER is
 		external
 			"C [macro <wel.h>]"
 		end

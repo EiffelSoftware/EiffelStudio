@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_window: WEL_WINDOW; a_message, a_w_param, a_l_param: INTEGER) is
+	make (a_window: WEL_WINDOW; a_message: INTEGER; a_w_param, a_l_param: POINTER) is
 			-- Set `window', `message', `w_param', `l_param' with
 			-- `a_window', `a_message', `a_w_param', `a_l_param'
 		do
@@ -44,11 +44,11 @@ feature -- Access
 			-- Message number. See class WEL_WM_CONSTANTS for
 			-- different values.
 
-	w_param: INTEGER
+	w_param: POINTER
 			-- Additional information about `message'. The exact
 			-- meaning depends on the value of `message'.
 
-	l_param: INTEGER
+	l_param: POINTER
 			-- Additional information about `message'. The exact
 			-- meaning depends on the value of `message'.
 

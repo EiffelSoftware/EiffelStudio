@@ -318,7 +318,7 @@ feature -- Element change
 			bitmap_not_void: bmp /= Void
 		do
 			set_mask (set_flag (mask, Rbbim_background))
-			cwel_rebarbandinfo_set_hbmback (item, bmp.to_integer)
+			cwel_rebarbandinfo_set_hbmback (item, bmp.item)
 		end
 
 feature -- Basic operation
@@ -438,7 +438,7 @@ feature {NONE} -- Externals
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_hbmback (ptr: POINTER; integer: INTEGER) is
+	cwel_rebarbandinfo_set_hbmback (ptr: POINTER; bitmap: POINTER) is
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end

@@ -235,15 +235,15 @@ feature -- Status setting
 			--       `a_big_icon' to Void to remove the big icon.
 		do
 			if a_small_icon /= Void then
-				cwin_send_message (item, Wm_seticon, Icon_small, cwel_pointer_to_integer(a_small_icon.item))
+				cwin_send_message (item, Wm_seticon, to_wparam (Icon_small), a_small_icon.item)
 			else
-				cwin_send_message (item, Wm_seticon, Icon_small, 0)
+				cwin_send_message (item, Wm_seticon, to_wparam (Icon_small), to_lparam (0))
 			end
 
 			if a_big_icon /= Void then
-				cwin_send_message (item, Wm_seticon, Icon_big, cwel_pointer_to_integer(a_big_icon.item))
+				cwin_send_message (item, Wm_seticon, to_wparam (Icon_big), a_big_icon.item)
 			else
-				cwin_send_message (item, Wm_seticon, Icon_big, 0)
+				cwin_send_message (item, Wm_seticon, to_wparam (Icon_big), to_lparam (0))
 			end
 		end
 
@@ -535,7 +535,7 @@ feature {NONE}-- Messages
 			end
 		end
 
-	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Wm_drawitem message.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
@@ -566,7 +566,7 @@ feature {NONE}-- Messages
 				-- paint_dc.set_text_color (control.foreground_color)
 				-- paint_dc.set_background_color (control.background_color)
 				-- create brush.make_solid (control.background_color)
-				-- set_message_return_value (brush.to_integer)
+				-- set_message_return_value (brush.item)
 				-- disable_default_processing
 		end
 
@@ -644,26 +644,26 @@ feature {NONE}-- Messages
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
-			set_message_return_value (feature {WEL_DLGC_CONSTANTS}.dlgc_want_all_keys)
+			set_message_return_value (to_lresult (feature {WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
 feature {NONE} -- Implementation
 
-	on_wm_notify (wparam, lparam: INTEGER) is
+	on_wm_notify (wparam, lparam: POINTER) is
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
 			control: WEL_CONTROL
 		do
-			create info.make_by_pointer (cwel_integer_to_pointer (lparam))
-			on_notify (wparam, info)
+			create info.make_by_pointer (lparam)
+			on_notify (wparam.to_integer_32, info)
 			control ?= info.window_from
 			if control /= Void and then control.exists then
 				control.process_notification_info (info)
 			end
 		end
 
-	on_wm_command (wparam, lparam: INTEGER) is
+	on_wm_command (wparam, lparam: POINTER) is
 			-- Wm_command message.
 			-- Dispatch a Wm_command message to
 			-- `on_wm_control_id_command', `on_control_command'
@@ -721,7 +721,7 @@ feature {NONE} -- Implementation
 			on_menu_command (menu_id)
 		end
 
-	on_wm_menu_select (wparam, lparam: INTEGER) is
+	on_wm_menu_select (wparam, lparam: POINTER) is
 			-- Wm_menuselect message.
 		require
 			exists: exists
@@ -733,16 +733,14 @@ feature {NONE} -- Implementation
 			if p /= default_pointer then
 				create a_menu.make_by_pointer (p)
 				on_menu_select (cwin_get_wm_menuselect_cmd (wparam, lparam),
-					cwin_get_wm_menuselect_flags (wparam, lparam),
-					a_menu)
+					cwin_get_wm_menuselect_flags (wparam, lparam), a_menu)
 			else
 				on_menu_select (cwin_get_wm_menuselect_cmd (wparam, lparam),
-					cwin_get_wm_menuselect_flags (wparam, lparam),
-					Void)
+					cwin_get_wm_menuselect_flags (wparam, lparam), Void)
 			end
 		end
 
-	on_wm_paint (wparam: INTEGER) is
+	on_wm_paint (wparam: POINTER) is
 			-- Wm_paint message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -755,7 +753,7 @@ feature {NONE} -- Implementation
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			create paint_dc.make_by_pointer (Current, wparam)
 			paint_dc.get
 			if scroller /= Void then
 				paint_dc.set_viewport_origin (-scroller.horizontal_position,
@@ -765,7 +763,7 @@ feature {NONE} -- Implementation
 			paint_dc.release
 		end
 
-	on_wm_vscroll (wparam, lparam: INTEGER) is
+	on_wm_vscroll (wparam, lparam: POINTER) is
 			-- Wm_vscroll message.
 		require
 			exists: exists
@@ -782,8 +780,7 @@ feature {NONE} -- Implementation
 						a_bar_exists: a_bar.exists
 					end
 					on_vertical_scroll_control (cwin_get_wm_vscroll_code (wparam, lparam),
-						cwin_get_wm_vscroll_pos (wparam, lparam),
-						a_bar)
+						cwin_get_wm_vscroll_pos (wparam, lparam), a_bar)
 				end
 			else
 				-- The message comes from a window scroll bar
@@ -792,7 +789,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_hscroll (wparam, lparam: INTEGER) is
+	on_wm_hscroll (wparam, lparam: POINTER) is
 			-- Wm_hscroll message.
 		require
 			exists: exists
@@ -809,8 +806,7 @@ feature {NONE} -- Implementation
 						a_bar_exists: a_bar.exists
 					end
 					on_horizontal_scroll_control (cwin_get_wm_hscroll_code (wparam, lparam),
-						cwin_get_wm_hscroll_pos (wparam, lparam),
-						a_bar)
+						cwin_get_wm_hscroll_pos (wparam, lparam), a_bar)
 				end
 			else
 				-- The message comes from a window scroll bar
@@ -819,51 +815,51 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_draw_item (wparam, lparam: INTEGER) is
+	on_wm_draw_item (wparam, lparam: POINTER) is
 			-- Wm_drawitem message
 		require
 			exists: exists
 		local
 			di: WEL_DRAW_ITEM_STRUCT
 		do
-			create di.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create di.make_by_pointer (lparam)
 			on_draw_item (wparam, di)
 		end
 
-	on_wm_get_min_max_info (lparam: INTEGER) is
+	on_wm_get_min_max_info (lparam: POINTER) is
 			-- Wm_getminmaxinfo message
 		require
 			exists: exists
 		local
 			mmi: WEL_MIN_MAX_INFO
 		do
-			create mmi.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create mmi.make_by_pointer (lparam)
 			on_get_min_max_info (mmi)
 		end
 
-	on_wm_window_pos_changed (lparam: INTEGER) is
+	on_wm_window_pos_changed (lparam: POINTER) is
 			-- Wm_windowposchanged message
 		require
 			exists: exists
 		local
 			wp: WEL_WINDOW_POS
 		do
-			create wp.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create wp.make_by_pointer (lparam)
 			on_window_pos_changed (wp)
 		end
 
-	on_wm_window_pos_changing (lparam: INTEGER) is
+	on_wm_window_pos_changing (lparam: POINTER) is
 			-- Wm_windowposchanging message
 		require
 			exists: exists
 		local
 			wp: WEL_WINDOW_POS
 		do
-			create wp.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create wp.make_by_pointer (lparam)
 			on_window_pos_changing (wp)
 		end
 
-	on_wm_ctlcolor (wparam, lparam: INTEGER) is
+	on_wm_ctlcolor (wparam, lparam: POINTER) is
 			-- Common routine for Wm_ctlcolor messages.
 		require
 			exists: exists
@@ -876,7 +872,7 @@ feature {NONE} -- Implementation
 			if hwnd_control /= default_pointer then
 				control ?= window_of_item (hwnd_control)
 				if control /= Void and then control.exists then
-					create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+					create paint_dc.make_by_pointer (Current, wparam)
 					on_color_control (control, paint_dc)
 				end
 			end
@@ -951,7 +947,7 @@ feature {NONE} -- Implementation
 			until
 				child_wnd.after
 			loop
-				cwin_send_message (child_wnd.item.item, Wm_syscolorchange, 0, 0)
+				cwin_send_message (child_wnd.item.item, Wm_syscolorchange, to_wparam (0), to_lparam (0))
 				child_wnd.forth
 			end
 		end
@@ -968,7 +964,7 @@ feature {NONE} -- Implementation
 feature {WEL_DISPATCHER}
 
 	frozen composite_process_message, process_message (hwnd: POINTER;
-			msg, wparam, lparam: INTEGER): INTEGER is
+			msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		local
 			called: BOOLEAN
 		do
@@ -988,7 +984,7 @@ feature {WEL_DISPATCHER}
 			when Wm_command then
 				on_wm_command (wparam, lparam)
 			when Wm_syscommand then
-				on_sys_command (wparam, cwin_lo_word (lparam), cwin_hi_word (lparam))
+				on_sys_command (wparam.to_integer_32, cwin_lo_word (lparam), cwin_hi_word (lparam))
 			when Wm_menuselect then
 				on_wm_menu_select (wparam, lparam)
 			when Wm_vscroll then
@@ -1004,9 +1000,9 @@ feature {WEL_DISPATCHER}
 			when Wm_windowposchanging then
 				on_wm_window_pos_changing (lparam)
 			when Wm_paletteischanging then
-				on_palette_is_changing (window_of_item (cwel_integer_to_pointer (wparam)))
+				on_palette_is_changing (window_of_item (wparam))
 			when Wm_palettechanged then
-				on_palette_changed (window_of_item (cwel_integer_to_pointer (wparam)))
+				on_palette_changed (window_of_item (wparam))
 			when Wm_querynewpalette then
 				on_query_new_palette
 			when Wm_settingchange then
@@ -1073,80 +1069,80 @@ feature {NONE} -- Externals
 			"PostQuitMessage"
 		end
 
-	cwin_get_wm_command_id (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_command_id (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_COMMAND_ID"
 		end
 
-	cwin_get_wm_command_hwnd (wparam, lparam: INTEGER): POINTER is
+	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_COMMAND_HWND"
 		end
 
-	cwin_get_wm_command_cmd (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_command_cmd (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_COMMAND_CMD"
 		end
 
-	cwin_get_wm_menuselect_cmd (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_menuselect_cmd (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_MENUSELECT_CMD"
 		end
 
-	cwin_get_wm_menuselect_flags (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_menuselect_flags (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_MENUSELECT_FLAGS"
 		end
 
-	cwin_get_wm_menuselect_hmenu (wparam, lparam: INTEGER): POINTER is
+	cwin_get_wm_menuselect_hmenu (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_MENUSELECT_HMENU"
 		end
 
-	cwin_get_wm_vscroll_code (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_VSCROLL_CODE"
 		end
 
-	cwin_get_wm_vscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		end
 
-	cwin_get_wm_vscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	cwin_get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_VSCROLL_HWND"
 		end
 
-	cwin_get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_HSCROLL_CODE"
 		end
 
-	cwin_get_wm_hscroll_pos (wparam, lparam: INTEGER): INTEGER is
+	cwin_get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		end
 
-	cwin_get_wm_hscroll_hwnd (wparam, lparam: INTEGER): POINTER is
+	cwin_get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias

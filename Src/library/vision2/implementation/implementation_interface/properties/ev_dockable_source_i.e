@@ -407,12 +407,16 @@ feature -- Basic operations
 				if not (tool_bar /= Void and widget_source_being_docked /= Void) then
 					locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
 					if locked_in_here and widget_source_being_docked.top_level_window /= Void then
-						--widget_source_being_docked.top_level_window.lock_update
 						container_imp ?= container.implementation
 						check
-							container_not_void: container /= Void
+							container_not_void: container_imp /= Void
 						end
-						container_imp.top_level_window_imp.lock_update
+							-- FIXME This protection appears to be required as from time to
+							-- time `top_level_window_imp' returns `Void'. Need to understand
+							-- why and how this occurs. Julian
+						if container_imp.top_level_window_imp /= Void then
+							container_imp.top_level_window_imp.lock_update
+						end
 					end		
 					if insert_label.parent /= Void then
 						unparent_source_being_docked

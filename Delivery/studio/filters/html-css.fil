@@ -28,7 +28,7 @@ feature_declaration		|<A NAME="f_$feature$">*</A>
 menu_bar				|<FORM ONSUBMIT="go_to('$root$'%,this.c.value);return false;">%N%
 						%<TABLE CELLSPACING="5" CELLPADDING="4"><TR>%N%
 						%*%
-						%<TD CLASS="link2"><INPUT NAME="c" VALUE="$class$"></TD>%N%
+						%<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="$class$"></TD>%N%
 						%</TR></TABLE></FORM>
 
 menu_item				|<TD CLASS="link1"><A CLASS="link1" HREF="$file$">*</A></TD>%N
@@ -38,6 +38,7 @@ class_menu_item_disabled|<TD CLASS="nolink2">*</TD>%N
 
 cluster_name			|<A CLASS="ecluster" HREF="$file$">*</A>
 
+-- Skip origin comments. Display a tooltip instead.
 origin_comment			|
 tooltip					|<SPAN TITLE="$tooltip$">*</SPAN>
 

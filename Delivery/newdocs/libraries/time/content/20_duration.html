@@ -1,0 +1,303 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Duration</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+
+<h1>Duration</h1>
+
+<p><a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a>, <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> AND <a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a></p>
+<p>The classes dealing with duration inherit DURATION, which inherits
+GROUP_ELEMENT and PART_COMPARABLE. An instance of <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a>, <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> or
+<a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a> is an element of a group, i.e. there is a zero and addition operations (infix +,
+infix -, prefix + and prefix -). Duration is used as an amount of time, without link to an origin. It may be added to the
+respective absolute notion (time + time_duration is possible, not time + date_time_duration nor date_time +
+time_duration...see classes <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>, <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> and <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>).</p>
+<p>Attributes are allowed to take negative values or values which do not stand
+in the usual range (hour = -1, minute = 75, day = 40...). However, features are available in each class to
+convert instances into the usual format: functions canonical and to_canonical are present in each class. An instance
+is canonical (canonical = True) if its attributes stand into the usual range. For example, an instance of
+<a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> such as 12:-10:60 is not canonical. to_canonical will return 11:51:0. In <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> and
+<a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a>, these features are also present.</p>
+<p>The order is partially implemented. <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> has a complete order
+whereas <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> and
+ 
+<a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a> are more specific.</p>
+<b>
+<h2>TIME_DURATION</h2>
+</b>
+<h4>Creation</h4>
+
+<p>Two ways are possible: by choosing the value of each attributes hour, minute
+and second (feature make), or by giving an amount of seconds (make_by_seconds). Any integer value is
+accepted. It is possible to create a duration with 1 hour and -60 minutes.</p>
+
+<h4>Access</h4>
+
+<p>Zero is a once feature with 0 hour, 0 minute and 0 second. The total amount
+of second of the current duration is the result of feature seconds_count.</p>
+
+<h4>Comparison</h4>
+
+<p>Instances of <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> may be compared easily. The order is the order of
+the respective total amount of second. 1:-40:0 is less than 0:0:1800, etc... Functions &lt;, &gt;,
+&lt;= and &gt;= are available. Is_equal tests equality, = will compare references.</p>
+
+<h4>Element change</h4>
+
+<p>Set directly hour, minute and second with set_hour, set_minute and set_second.
+Arguments do not need to satisfy any range rule.</p>
+
+<h4>Operations</h4>
+
+<ul>
+  <li>Adding hours, minutes and seconds with features hour_add, minute_add and
+    second_add.</li>
+  <li> <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> inherits from GROUP_ELEMENT. infix and prefix +, infix and
+prefix - are available to compose instances of each other.</li>
+</ul>
+
+<h4>Conversion</h4>
+
+<p>Two features ensure a link with the notion of day: to_days returns the number
+of days equivalent to the current duration. For example, a duration such as 23:60:0 is equivalent to
+one day. For negative duration, the result is never 0. -1 hour is equivalent to -1 day (i.e. the result of the function is
+- 1). To_days is associated with time_modulo_day. This second function returns an instance of <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a>.
+The result represents the difference between the current duration and the number of days yielded by to_days. It
+implies that the result is always positive and less than one day.</p>
+<p>For example, the current duration is 25:70:600. to_days will returns 1 (one
+day) and time_modulo_day will return 2:20:0:. If the current duration is negative: -23:-80:300,
+to_days will return -2 (minus two days) and time_modulo_day will return 23:45:0.</p>
+<p>Durations may be canonical or not canonical (BOOLEAN canonical). That means
+the features hour, minute and second are included in a particular range, or not. An instance of
+<a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> is canonical if:</p>
+<ul>
+  <li>in the case of a positive duration (&gt; zero), all of the three features
+have to be positive or 0, minute and second less than 60.</li>
+  <li>in the case of a negative duration (&lt; zero), all of the three features
+have to be negative or 0, minute and second strictly greater than -60. The function canonical tests if the duration is
+canonical or not, the function to_canonical yields a new duration equivalent to the current one and canonical.</li>
+</ul>
+
+<h2>DATE_DURATION</h2>
+
+<p>Dealing with the gregorian calendar is not so easy because of irregularities.
+A duration of one month may be equal to 28 up to 31 days, depending on the current date! On the other
+hand, it could be useful to deal with precise duration. This point leads to an original design of the class: A
+separation is made between two kinds of instances.</p>
+<p>The definite ones and the relative ones. The function definite which returns
+a BOOLEAN, is true for definite duration and false otherwise. An instance is definite if and only if its attributes
+month and year are 0. Then only the number of days is used. Relative (non definite) durations have their
+attributes year, month and day meaningful but it is then impossible to compare them to each other (is one month greater
+than 30 days?, is one year greater than 365 days?). The main difference appears when a duration is added to a date.
+In the case of a definite duration, there is no ambiguity. A given number of days are added to the date, taking care of the
+calendar. In the other case, the result is relative to the origin date. For example, a one month duration may be
+equal to 28 days if the date is in February or 31days if the date is in August. A duration becomes definite when its
+attributes year and month become 0. However it is possible to deal with instances of <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> without taking care of
+this distinction.</p>
+
+        <h3> Relative date_duration</h3>
+
+<p>Relative duration can not be compared with any other durations (including
+zero). The reason is simple.
+ 
+It is not possible to say if 30 days are less than 1 month: it depends on the
+date: it is true in August (in a 31 days month) and it is false in February.</p>
+<p>If feature &gt; (or &lt;, + + is called with at least one non definite member
+(the current instance or the argument), the result will be always False. We may only know if two durations are equal,
+with the feature is_equal. It compares field by field the two durations. When adding a relative date_duration to a
+date, the years and the months are added first, then the date may be cut (June 31 -&gt; June 30) and finally the days are
+added. For example, if one month is added to the date August 31st, the result is September 30th.</p>
+<p>Nevertheless there is a way to compare relative durations: a relative
+date_duration may be canonical. It means that the duration has its attributes month and day in a fixed range.
+month must be between 1 and 12, and day larger than 1 and less than a value between 27 and 30. This value is fixed
+simply: (in the case of a positive duration) when setting day to 0 and adding one more month, the addition of the start
+date and this new duration must yield a date strictly after the final date (yielded by adding date and tested
+duration). For example is 0/0/30 (i.e. 0 year, 0 month and 30 days) canonical?</p>
+<ul>
+  <li>If the origin date is 01/15 (15th of January), the final date is 02/14. We
+can not convert 30 days into 1 month in this case. The duration is canonical.</li>
+  <li>If the origin date is 04/15 (15th of april), the final date is 05/15. The
+duration is not canonical since it is possible to convert days into 1 month. The origin date is used to determine whether the duration is positive or not.
+If the final date is after
+ 
+the origin date the duration is positive, otherwise it is negative. That does
+not mean we can compare it to zero, that is
+ 
+only used to determine the sign of the canonical standard. If the duration is
+negative, it is canonical only if all the
+ 
+attributes are negative.</li>
+</ul>
+<p>A way to compare two relative durations is to make them canonical from the
+same date, and then to compare the fields. It is the same as adding the durations to the same date,
+and to compare the final dates to each
+ 
+other.</p>
+
+        <h3>Definite date_duration</h3>
+
+<p>Definite durations are characterized by the attribute day. Whenever a
+duration has its attributes year and 
+month equal to 0, this duration is then definite. On the other hand, if one
+of these two attributes is not 0, the duration is not definite anymore.</p>
+<p>The number of days between an origin date and the result of (date + duration)
+does not depend on the origin date. It is possible to compare definite date_duration to each other.
+The order is the one of day.</p>
+<p>A definite duration may be canonical or not. It is canonical if the number of
+day is small enough.</p>
+
+<h3>General description</h3>
+<h4>Creation</h4>
+
+<p>Two creation features are available: make takes three arguments (year, month
+and day). If year and
+ 
+month are null, the duration will be definite; make_by_days takes only the
+number of day. The duration is
+ 
+automatically definite.</p>
+
+<h4>Comparison</h4>
+
+<p>Features &lt;, &gt;, &lt;= and &gt;= are available. If both instances are
+definite, numbers of days are compared. If one of them is non definite, the result is False.</p>
+
+<h4>Element change</h4>
+
+<p>Features set_day, set_month and set_year are available to set one of these
+three attributes day, month, year.</p>
+
+<h4>Operation</h4>
+
+<ul>
+  <li>Add years, months and days with features year_add, month_add and day_add.</li>
+  <li> <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> inherits from GROUP_ELEMENT. infix and prefix +, infix and
+prefix - are available to compose
+ 
+instances of each other.</li>
+</ul>
+
+<h4>Conversion</h4>
+
+<ul>
+  <li>to_canonical is used to get a new duration equivalent to the current one
+and canonical. It needs an argument from
+ 
+class <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, which is the origin of calculations.</li>
+  <li>to_definite is used to get a new duration equivalent to the current one and
+definite. As with the previous feature,
+ 
+one argument is needed. - to_date_time is used to get an instance of
+<a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a>. It will have the
+ 
+same date of the current duration and time set to zero.</li>
+</ul>
+<b>
+<h2>DATE_TIME_DURATION</h2>
+</b>
+<p><a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a> is client of <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> and <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a>. Most of the
+common features described in <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> are present in the class. The class deals
+with its attributes date and time in
+ 
+the same way as <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>.</p>
+<p>There are, as in <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a>, definite and non definite durations. It is
+the date part which gives the definite non definite status. Features canonical and to_canonical are present in
+DATE_TIME_DURATION. They have to deal with the attributes time.</p>
+
+<h4>Creation</h4>
+
+<p>There are still several ways to create an instance:</p>
+<ul>
+  <li>by choosing values for all the attributes of date and time (make). - by
+choosing a value for day and values for all the attributes of time. The instance is then definite
+    (make_definite).</li>
+  <li>by gathering an instance of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> with an instance of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> (make_by_date_time).
+This feature copies the
+ 
+references of its arguments, so that if the time (or the date) is changed,
+the instance previously initialized will be also
+ 
+changed. If this effect has to be avoided, the use of clones is required.</li>
+  <li>by encapsulating an instance of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> (make_by_date). The attribute time is
+set to zero, i.e. 0:0:0. The
+ 
+attribute date is set with the same reference than the argument.</li>
+</ul>
+
+<h4>Access</h4>
+
+<p>Seconds_count is the amount of seconds of the time part only. To get the
+total amount of seconds of the cur-rent
+ 
+duration, first shift it to a definite duration, then multiply day by the
+number of seconds in day and add
+ 
+to it seconds_count. Take care that the duration is not more than 68 years.
+If it is, the number of seconds will
+ 
+be larger than 2 billion, which is the upper limit for INTEGER (4 bytes).</p>
+
+<h4>Comparison</h4>
+
+<p>The rules are the same than those for <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a>. Features &lt;, &gt;,
+&lt;= and &gt;= are available. If both instances are definite, numbers of days are compared. If one of them is
+non definite, the result is False.</p>
+
+<h4>Element change</h4>
+
+<p>It is possible to change reference of time and date with the features
+set_time and set_date. To change only
+ 
+one element (for example hour), features from <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> or <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a>
+have to be used.</p>
+
+<h4>Operation</h4>
+
+<ul>
+  <li><a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a> inherits from GROUP_ELEMENT. infix and prefix +, infix
+and prefix - are available
+ 
+to compose instances to each other.</li>
+  <li>Only day_add is present. To add only one element, features from
+<a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a> or <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a>
+ 
+have to be used.</li>
+</ul>
+
+<h4>Conversion</h4>
+
+<ul>
+  <li>canonical and to_canonical are available in the class. To be canonical an
+instance of the class must have its
+ 
+attributes time and date canonical. Then time must have the same sign than
+the one of the current duration. The sign of
+ 
+the current instance is determined by adding it to the argument (from
+<a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>). That will yield a final
+ 
+date. If this final date is after the origin (= the argument), the current
+duration is considered positive. Otherwise,
+ 
+it is considered negative. Finally time must be less than one day (if
+positive) or more than minus one day (if negative). 
+To_canonical returns a duration equivalent to the current one (for the
+argument) and canonical.</li>
+  <li>time_to_canonical looks like to_canonical but focuses mainly on time. It
+requires a definite duration so that it 
+is possible to compare it to zero. It yields a definite duration equivalent
+to the current one with a canonical time. hour 
+is then cut so that it stands in the range of one day (0 to 23 if positive
+and -23 to 0 if negative). The attributes day is 
+also modified to keep the result equivalent to the current duration.
+time_to_canonical does not need any argument 
+because only time and day are modified.</li>
+</ul>
+
+	</BODY>
+</HTML>

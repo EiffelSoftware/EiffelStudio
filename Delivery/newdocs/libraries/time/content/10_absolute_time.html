@@ -1,0 +1,210 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Absolute time</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+<h1>Absolute time</h1>
+<p>The classes dealing with date and those dealing with time have almost the
+same construction. At the top of the hierarchy are the constants and the notion of value
+(TIME_VALUE, DATE_VALUE, DATE_TIME_VALUE). From this notion come two kinds of heirs which are the absolute notion of
+time (classes <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> and <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>) and the notion of duration (classes
+DATE_DURATION, TIME_DURATION, <a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a>).</p>
+<p><a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> and <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> inherit from the deferred class ABSOLUTE. It implies
+that instances of these classes are used as absolutes. We can imagine an oriented axis on which
+are reported values. ABSOLUTE inherits COMPARABLE, there is a complete order inside the class and its heir.
+ABSOLUTE is a client of DURATION, so that each instance of ABSOLUTE is linked with the duration
+between the origin and itself.</p>
+<p>The default way to compare absolute objects is to compare their respective
+duration to each other.</p>
+<h2>TIME</h2>
+<p><a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> deals with hour, minute and second. Is is possible to use more precision
+for time (there is no limit inside the class). See <A HREF="50_more_precision.html">More precision in <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a></a> for
+documentation. This section deals only with second.</p>
+<h4>Creation</h4>
+<p>There are three ways to create an instance of the class <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>: by choosing the
+time (make), by getting the time from the system (make_now), or by choosing the number of seconds
+elapsed from the origin (make_by_seconds). The arguments of make and make_by_seconds have to respect
+the range of a day (see preconditions).</p>
+
+<h4>Origin and cyclic representation</h4>
+
+<p>The origin is 0 hour 0 minute and 0 second. Notion of time is relative to a
+day in a cyclic representation: days begin at 0:0:0 and end at 23:59:59. If a second is added to 23:59:59
+then the result will be 0:0:0. Subtracting a minute to 0:0:0 will yield 23:59:0.</p>
+
+<h4>Comparison</h4>
+
+<p>Instances of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> may be compared. Functions &lt;, + &gt; and &gt;= are
+available. Function is_equal must be use to test equality. = will compare references.</p>
+
+<h4>Measurement</h4>
+
+<p>The duration linked to an instance of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> (attribute duration) is an
+instance of TIME_DURATION. It is the duration from the origin until the current time. The function seconds returns
+the number of seconds since the origin. This function may be useful to get the number of seconds between two events.
+The feature - creates an interval between two instances of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>. The duration of this interval is given by the
+function duration. However, this duration is not canonical (See <a href="20_duration.html">Duration</a> for precisions). In <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>,
+the feature relative_duration returns the same duration, but more efficiently and also it is canonical.</p>
+
+<h4>Operations</h4>
+
+<ul>
+  <li>Set directly hour, minute and second with set_hour, set_minute and
+set_second. Arguments must satisfy the rules of creation.</li>
+  <li>Adding hours, minutes and seconds with features hour_add, minute_add and
+second_add. Features add and + take an instance of TIME_DURATION as anPage 3 argument and add it to the
+current time.</li>
+  <li>Moving to the next or the previous hour, minute or second with features
+hour_forth, hour_back, minute_forth, minute_back, second_forth and second_back. It is faster to use these features
+rather than those above (hour_back &lt;-&gt; hour_add (-1)).</li>
+</ul>
+
+<h2>DATE</h2>
+
+<p><a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> deals with year, month and day. It is more complicated since there is no
+regular period in dates: each month contains its own total of days and there are leap years. That is
+why some peculiarities appear while manipulating objects of this class. There is no limit for a date (inside the
+class). The only limit comes from INTEGER representation. If INTEGER size is 32 bits (most common case), and as
+long as the basic unit is a day, the range for a date is from (- 2^31) to 2^31 (days), i.e. 5.8 million years
+from the origin.</p>
+
+<h4>Creation</h4>
+
+<p>There are also three ways to create an instance of the class <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>: by
+choosing the date (make, make_month_day_year, make_day_month_year), by getting the date from the
+system (make_now), or by choosing the number of days elapsed from the origin (make_by_days). The arguments of each
+creation procedure have to respect the common range (See preconditions).</p>
+
+<h4>Origin</h4>
+
+<p>The origin is 01/01/1600.</p>
+
+<h4>Comparison</h4>
+
+<p>Instances of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> may be compared. Functions &lt;, + &gt; and &gt;= are
+available. Function is_equal must be use to test equality, = will compare references.</p>
+
+<h4>Measurement</h4>
+
+<p>Each instance of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> has a function (duration) which returns the duration
+since the origin until the current date (it is an instance of DATE_DURATION). This duration is definite,
+i.e. it contains only days (See below). However, it may be useful to deal directly with days (no need of
+DATE_DURATION). In this case, the function days of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> yields the number of days since origin.</p>
+
+<h4>Status Report</h4>
+
+<p>Much information may be gotten from functions written in this part. Most of
+them are used within the class, but they are exported at the same time.</p>
+
+<h4>Operations</h4>
+
+<p><a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> operations looks like <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> operations:</p>
+<ul>
+  <li>Setting directly year, month and day with set_year, set_month and set_day.
+Arguments must satisfy the rules of creation. These rules are more complicated than those of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>. For example
+it is not allowed to set day to 31 if the current month is April, whereas it is allowed if the month is
+January. It is the same rules as for make. The same thing for years: It is not allowed to set year to a non-leap year if the
+current date is February 29th of a leap year. However, two features are available to set month and year even if day
+is too large: set_month_cut_days and set_year_cut_days will cut day down to the largest value allowed.</li>
+  <li>Adding years, months and days with features year_add, month_add and
+day_add. There is no requirement to add a year or a month. However, these features have to return a correct
+result, i.e. day is checked before each addi-tion. Adding one month to August 31st will yield September 30th. 31 is cut to 30
+since there are only 30 days in september. Features add and + take an instance of DATE_DURATION in
+argument and add it to the current date. It is written so that years and months are added first, the days last.
+(see DATE_DURATION below)&nbsp;</li>
+  <li>Moving to the next or the previous year, month or day with features
+year_forth, year_back, month_forth, month_back, day_forth and day_back. It is the same but faster to use these
+features rather than those upper (year_back &lt;-&gt; year_add (-1)).</li>
+  <li>Features relative_duration and definite_duration return the duration
+between the current date and the argument. The first one returns a result which is canonical (See definitions
+below), while the second one returns a definite result but may be not canonical.</li>
+</ul>
+<p>For example, date1 is April 20th and date2 is May 28th. Both features will
+yield instances of DURATION; however, relative_duration will yield 1 month and 8 days whereas
+definite_duration will yield 38 days.</p>
+<b>
+<h2>DATE_TIME</h2>
+</b>
+<p>The aim is to gather the time with the date. <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> is client of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> and
+<a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> (see inheritance relation). Some features from <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> and <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> are re-written since they are useful within
+the class. Many other features may be called indirectly with the correct attribute (time or date).</p>
+
+<h4>Creation</h4>
+
+<p>There are still several ways to create an instance:</p>
+<ul>
+  <li>by choosing value for all the attributes of the date and the time (make).</li>
+  <li>by getting the time from the system (make_now).</li>
+  <li>by gathering an instance of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> with an instance of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> (make_by_date_time).
+This feature copies only the references of its arguments, so that if the time (or the date) is
+changed, the instance previously initialized will be also changed. If this effect has to be avoided, cloning the arguments
+is required.</li>
+  <li>by encapsulating an instance of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> (make_by_date). The attribute time
+is set to the origin, i.e. 0:0:0.</li>
+</ul>
+<p>The attribute date is set with the same reference as the argument (See
+comment of the previous section).</p>
+
+<h4>Access</h4>
+
+<p>To make it easier calls to features of <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> and <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, the most useful access
+features are written as features in <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> (days, seconds and their associated duration date_duration and
+time_duration).</p>
+
+<h4>Comparison</h4>
+
+<p>Instances of <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> are totally ordered (the class inherit from ABSOLUTE).
+Functions &lt;, + &gt; and &gt;= are available. Function is_equal must be used to test equality, = will
+compare references.</p>
+
+<h4>Measurement</h4>
+
+<p>Function duration gathers functions duration from the attributes time and
+date. The result is an instance of <a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a>.</p>
+
+<h4>Element change</h4>
+
+<p>It is possible to change reference of time and date with the features
+set_time and set_date. To change only one element (for example hour), features from <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> or <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> have to be used.</p>
+
+<h4>Operations</h4>
+
+<p>Addition of hours, minutes and seconds are available directly in the class.
+The reason is that adding one second may have a consequence on the date. Using second_add from <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a> is also
+possible but the date will not be modified in the case time makes a cycle. It is of course the same for minute and
+hour. day_add is also available directly since it is frequently used within the class.</p>
+<p>Features + and add take an instance of <a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a> in arguments. The
+date duration is added first then the time duration. Adding the time duration first would have
+yield some different result as in this example: the current date is August 30th 23:59:59. The duration to add
+is one month and one second. Feature add returns October 1st 0:0:0, whereas adding the second first would return
+September 30th 0:0:0! The same difference
+ 
+occurs with leap years.</p>
+<p>Feature relative_duration and definite_duration returns the duration between
+the current date (with time)
+ 
+and the argument. The first one returns a result which is canonical (see
+definitions below), while the second
+ 
+one returns a result definite but may be not canonical. It is the same notion
+than in <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>.</p>
+
+<h2>DATE and DATE_TIME</h2>
+
+<p>Another way to process would have been to make <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> inherit from <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>,
+as long as <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> is a <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, with more precision. The choice was to have a client relation
+between them. Otherwise <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> should have known the existence of <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>, and many assignment attempts
+would have been useful in features such as infix +. So <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> is client of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>.</p>
+<p>However, it could be useful to mix instances of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> of <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>. As
+<a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> is client of <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> with its attribute date, it is easy to get only the date from instances
+of <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>. On the other way features are available to convert objects from <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a> to <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>. In class
+<a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, feature to_date_time builds an instance of <a href="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> with the origin of time (0,0,0). In the class
+DATE_TIME, the creation procedure make_by_date has the same effect. (The same feature exists for duration,
+replacing origin by zero).</p>
+
+	</BODY>
+</HTML>

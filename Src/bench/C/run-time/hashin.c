@@ -26,6 +26,16 @@ private char *rcsid =
 	"$Id$";
 #endif
 
+/* These routines use malloc and free and not xcalloc, xfree because we
+ * want to release the memory taken by the hash table after retrieving
+ * the precompiled project (~400k) so that it will be reused by Eiffel
+ * objects.
+ * The note above is only valid for Windows (and any other implementation
+ * that does not redefine malloc and free. If they are redefined, the
+ * blocks of memory will be managed the same way.
+ * Xavier
+ */
+
 public int ht_create(ht, n, sval)
 struct htable *ht;
 int32 n;
@@ -43,14 +53,14 @@ int sval;
 	
 	hsize = nprime((5 * n) / 4);	/* Table's size */
 
-	array = xcalloc(hsize, sizeof(long));	/* Mallocs array of keys */
+	array = calloc(hsize, sizeof(long));	/* Mallocs array of keys */
 	if (array == (char *) 0)
 		return -1;					/* Malloc failed */
 	ht->h_keys = (unsigned long *) array;		/* Where array of keys is stored */
 
-	array = cmalloc(hsize * sval);			/* Mallocs array of values */
+	array = malloc(hsize * sval);			/* Mallocs array of values */
 	if (array == (char *) 0) {
-		xfree(ht->h_keys);			/* Free keys array */
+		free(ht->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */
 	}
 	ht->h_values = array;			/* Where array of keys is stored */
@@ -213,8 +223,8 @@ struct htable *ht;
 	for (; size > 0; size--, key++, val += sval)
 #ifdef MAY_PANIC
 		if ((char *) 0 == ht_put(&new_ht, *key, val)) {	/* Failed */
-			xfree(new_ht.h_values);	/* Free new H table */
-			xfree(new_ht.h_keys);
+			free(new_ht.h_values);	/* Free new H table */
+			free(new_ht.h_keys);
 			panic("cannot extend H table");
 		}
 #else
@@ -222,8 +232,8 @@ struct htable *ht;
 #endif
 
 	/* Free old H table and set H table descriptor */
-	xfree(ht->h_values);			/* Free in allocation order */
-	xfree(ht->h_keys);				/* To make free happy (coalescing) */
+	free(ht->h_values);			/* Free in allocation order */
+	free(ht->h_keys);				/* To make free happy (coalescing) */
 	bcopy(&new_ht, ht, sizeof(struct htable));
 
 	return 0;		/* Extension was ok */
@@ -234,8 +244,8 @@ struct htable *ht;
 {
 	/* Free hash table arrays and descriptor */
 
-	xfree(ht->h_values);
-	xfree(ht->h_keys);
+	free(ht->h_values);
+	free(ht->h_keys);
 	xfree(ht);
 }
 

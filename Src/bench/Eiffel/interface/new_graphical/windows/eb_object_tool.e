@@ -18,7 +18,8 @@ inherit
 			empty_tool_name, build_interface,
  set_default_format,
 			stone, synchronize, -- process_object,
-			destroy, reset,-- default_format, create_toolbar,
+			destroy, reset, format_list,
+-- create_toolbar,
 --			set_title,
  history_window_title,
 -- help_index,
@@ -62,6 +63,32 @@ feature {NONE} -- Initialization
 --			set_composite_attributes (special_m)
 --			init_text_window
 --		end
+
+	build_interface is
+		do
+			precursor
+
+--			if not is_in_project_tool then
+--				build_menus
+--			end
+--			build_object_toolbar
+--			if not is_in_project_tool then
+--				fill_menus
+--			end
+--			build_toolbar_menu
+--			set_last_format (default_format)
+
+--			if resources.command_bar.actual_value = False then
+--				object_toolbar.remove
+--			end
+
+		end
+
+	init_formatters is
+		do
+			create format_list.make (Current)
+			set_last_format (format_list.default_format)
+		end
 
 feature -- Window Properties
 
@@ -156,63 +183,56 @@ feature -- Update
 	reset is
 			-- Reset the contents of the object window.
 		do
---			Precursor
---			set_default_sp_bounds
---			init_text_window
+			Precursor
+			set_default_sp_bounds
+			init_text_window
 		end
  
 	process_object (a_stone: like stone) is
 			-- Set `s' to stone.
 		local
---			status: APPLICATION_STATUS
---			shell: EV_CONTAINER
+			status: APPLICATION_STATUS
+			wd: EV_WARNING_DIALOG
 		do
---			status := Application.status
---			if is_a_shell then
---				shell := eb_shell
---			else
---				shell := Project_tool
---			end
---
---			if status = Void then
---				warner (shell).gotcha_call (Warning_messages.w_System_not_running)
---			elseif not status.is_stopped then
---				warner (shell).gotcha_call (Warning_messages.w_System_not_stopped)
---			elseif not a_stone.is_valid then
---				warner (shell).gotcha_call (Warning_messages.w_Object_not_inspectable)
---			else
+			status := Application.status
+			if status = Void then
+				create wd.make_default (parent, Interface_names.t_Warning,
+					Warning_messages.w_System_not_running)
+			elseif not status.is_stopped then
+				create wd.make_default (parent, Interface_names.t_Warning,
+					Warning_messages.w_System_not_stopped)
+			elseif not a_stone.is_valid then
+				create wd.make_default (parent, Interface_names.t_Warning,
+					Warning_messages.w_Object_not_inspectable)
+			else
 --				last_format.execute (a_stone)
 --				add_to_history (a_stone)
---			end
+			end
 		end
  
 	synchronize is
 			-- Synchronize clickable elements with text, if possible.
 		local
---			status: APPLICATION_STATUS
+			status: APPLICATION_STATUS
 --			cur: CURSOR
---			shell: COMPOSITE
+			cur: INTEGER
+			wd: EV_WARNING_DIALOG
 		do
---			status := Application.status
---			if is_a_shell then
---				shell := eb_shell
---			else
---				shell := Project_tool
---			end
---
---			if status = Void then
---				-- Do nothing.
---				--| There is no need to warn the user because, this simply means
---				--| that we need to refresh the content of the window and his
---				--| application is not running under EiffelBench. This case happens
---				--| mostly when doing `Apply' in the Preference dialg.
---			elseif not status.is_stopped then
---				warner (shell).gotcha_call (Warning_messages.w_System_not_stopped)
---			else
---				cur := text_window.cursor
---				synchronise_stone
---				text_window.go_to (cur)
---			end
+			status := Application.status
+			if status = Void then
+				-- Do nothing.
+				--| There is no need to warn the user because, this simply means
+				--| that we need to refresh the content of the window and his
+				--| application is not running under EiffelBench. This case happens
+				--| mostly when doing `Apply' in the Preference dialg.
+			elseif not status.is_stopped then
+				create wd.make_default (parent, Interface_names.t_Warning,
+					Warning_messages.w_System_not_stopped)
+			else
+				cur := text_window.position
+				synchronise_stone
+				text_window.go_to (cur)
+			end
 		end
 
 	close_windows is
@@ -243,7 +263,7 @@ feature -- Settings
 	set_default_format is
 			-- Set the format to its default.
 		do
---			set_last_format (default_format)
+			set_last_format (format_list.default_format)
 		end
 
 feature -- Commands
@@ -378,37 +398,9 @@ feature {NONE} -- Implementation; Graphical Interface
 --
 		end
 
-	build_interface is
-		do
-			precursor
-
---			if not is_in_project_tool then
---				build_menus
---			end
---			build_object_toolbar
---			if not is_in_project_tool then
---				fill_menus
---			end
---			build_toolbar_menu
---			set_last_format (default_format)
-
---			if resources.command_bar.actual_value = False then
---				object_toolbar.remove
---			end
-
-		end
-
 feature {NONE} -- Properties
 
---	default_format: EB_FORMATTER is
---			-- Default format shows attributes' values
---		do
---			Result := showattr_frmt_holder
---		end
-
-	is_in_project_tool: BOOLEAN
-			-- Is the current object tool in the project tool window?
+	format_list: EB_OBJECT_FORMATTER_LIST
 
 build_edit_bar is do end
-init_formatters is do end
 end -- class EB_OBJECT_TOOL

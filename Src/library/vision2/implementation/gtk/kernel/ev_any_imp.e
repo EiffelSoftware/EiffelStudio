@@ -132,7 +132,7 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		do
-			real_signal_connect (visual_widget, a_signal_name, an_agent, translate)
+			real_signal_connect (c_object, a_signal_name, an_agent, translate)
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
 		end
@@ -231,7 +231,7 @@ feature {EV_ANY_I} -- Event handling
 		require
 			a_connection_id_positive: a_connection_id > 0
 		do
-			C.gtk_signal_disconnect (visual_widget, a_connection_id)
+			C.gtk_signal_disconnect (c_object, a_connection_id)
 			signal_ids.prune_all (a_connection_id)
 		end
 
@@ -248,7 +248,7 @@ feature {EV_ANY_I} -- Event handling
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
 			real_connect_signal_to_actions (
-				visual_widget,
+				c_object,
 				a_signal_name,
 				an_action_sequence,
 				translate
@@ -306,7 +306,7 @@ feature {EV_ANY_I} -- Event handling
 				agent an_action_sequence.call (?),
 				translate
 			)
-			disconnect_agent := agent gtk_marshal.signal_disconnect_agent_routine (visual_widget, last_signal_connection_id, signal_ids)
+			disconnect_agent := agent gtk_marshal.signal_disconnect_agent_routine (c_object, last_signal_connection_id, signal_ids)
 			an_action_sequence.empty_actions.extend (disconnect_agent)
 			an_action_sequence.empty_actions.extend (
 				gtk_marshal.kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			debug ("EV_GTK_DISPOSE")
 				safe_print (generator + ".dispose")
 			end
-			if c_object /= NULL and then not is_in_final_collect then
+			if c_object /= NULL and then not is_in_final_collect and then not gtk_marshal.is_destroyed then
 				-- Destroy has been explicitly called.
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c

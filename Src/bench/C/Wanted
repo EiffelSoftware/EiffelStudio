@@ -222,6 +222,8 @@ i_xm_protocols
 intsize
 large
 ldflags
+lex
+lexflags
 libs
 ln
 longsize

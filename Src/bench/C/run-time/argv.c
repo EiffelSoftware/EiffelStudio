@@ -18,6 +18,20 @@
 #include <string.h>				/* For strcpy(), strlen() */
 
 
+/*
+doc:<file name="argv.c" header="eif_argv.h">
+doc:	<attribute name="eif_argc" return_type="int">
+doc:		<summary>Initial `argc' value (argument count). Used from Eiffel code to get access to command line arguments.</summary>
+doc:		<thread_safety>Initialized by `arg_init' in `eif_rtinit' so no need for synchronization.</thread_safety>
+doc:		<eiffel_classes>ARGUMENTS, MEL_DISPLAY, EV_APPLICATION_IMP (gtk implementation)</eiffel_classes>
+doc:	</attribute>
+doc:	<attribute name="eif_argv" return_type="char **">
+doc:		<summary>Copy of initial `argv'. Used from Eiffel code to get access to command line arguments.</summary>
+doc:		<thread_safety>Initialized by `arg_init' in `eif_rtinit' so no need for synchronization.</thread_safety>
+doc:		<eiffel_classes>ARGUMENTS, MEL_DISPLAY, EV_APPLICATION_IMP (gtk implementation)</eiffel_classes>
+doc:	</attribute>
+doc:</file>
+*/
 rt_public int eif_argc;			/* Initial argc value (argument count) */
 rt_public char **eif_argv;			/* Copy of initial argv (argument vector) */
 

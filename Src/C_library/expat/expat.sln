@@ -1,0 +1,51 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gennmtab", "gennmtab\gennmtab.vcproj", "{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmlparse", "xmlparse\xmlparse.vcproj", "{1459A198-1A10-4EDE-B548-31FA60215661}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmltok", "xmltok\xmltok.vcproj", "{F72D901B-8BB5-43E6-91EB-AA474074172F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmlwf", "xmlwf\xmlwf.vcproj", "{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = MinSize
+		ConfigName.2 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+		{1459A198-1A10-4EDE-B548-31FA60215661}.0 = {F72D901B-8BB5-43E6-91EB-AA474074172F}
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.0 = {46294925-FA5F-45EC-A1B4-E8B633DAD8B9}
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.0 = {1459A198-1A10-4EDE-B548-31FA60215661}
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}.Debug.ActiveCfg = Debug|Win32
+		{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}.Debug.Build.0 = Debug|Win32
+		{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}.MinSize.ActiveCfg = Release|Win32
+		{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}.MinSize.Build.0 = Release|Win32
+		{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}.Release.ActiveCfg = Release|Win32
+		{46294925-FA5F-45EC-A1B4-E8B633DAD8B9}.Release.Build.0 = Release|Win32
+		{1459A198-1A10-4EDE-B548-31FA60215661}.Debug.ActiveCfg = Debug|Win32
+		{1459A198-1A10-4EDE-B548-31FA60215661}.Debug.Build.0 = Debug|Win32
+		{1459A198-1A10-4EDE-B548-31FA60215661}.MinSize.ActiveCfg = MinSize|Win32
+		{1459A198-1A10-4EDE-B548-31FA60215661}.MinSize.Build.0 = MinSize|Win32
+		{1459A198-1A10-4EDE-B548-31FA60215661}.Release.ActiveCfg = Release|Win32
+		{1459A198-1A10-4EDE-B548-31FA60215661}.Release.Build.0 = Release|Win32
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.Debug.ActiveCfg = Debug|Win32
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.Debug.Build.0 = Debug|Win32
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.MinSize.ActiveCfg = Release|Win32
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.MinSize.Build.0 = Release|Win32
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.Release.ActiveCfg = Release|Win32
+		{F72D901B-8BB5-43E6-91EB-AA474074172F}.Release.Build.0 = Release|Win32
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.Debug.ActiveCfg = Debug|Win32
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.Debug.Build.0 = Debug|Win32
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.MinSize.ActiveCfg = Release|Win32
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.MinSize.Build.0 = Release|Win32
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.Release.ActiveCfg = Release|Win32
+		{DCF081CA-7E03-4528-A0F3-7EBCBDABDA1D}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

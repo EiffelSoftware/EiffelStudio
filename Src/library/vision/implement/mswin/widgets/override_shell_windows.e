@@ -121,28 +121,32 @@ feature -- Status setting
 		local
 			c: ARRAYED_LIST [WIDGET_WINDOWS]
 			i, maxxw, maxyh, tmp: INTEGER
-			current_item: WIDGET_WINDOWS			
+			current_item: WIDGET_WINDOWS
 		do
-			from 
-				c := children_list
+			if not fixed_size_flag then
+				fixed_size_flag := True
+				from 
+					c := children_list
 				c.start
-			until
-				c.after
-			loop
-				current_item := c.item
-				if current_item /= Void then
-					tmp := current_item.x + current_item.width
-					if tmp > maxxw then
-						maxxw := tmp
+				until
+					c.after
+				loop
+					current_item := c.item
+					if current_item /= Void then
+						tmp := current_item.x + current_item.width
+						if tmp > maxxw then
+							maxxw := tmp
+						end
+						tmp := current_item.y + current_item.height
+						if tmp > maxyh  then
+							maxyh := tmp
+						end
 					end
-					tmp := current_item.y + current_item.height
-					if tmp > maxyh  then
-						maxyh := tmp
-					end
+					c.forth
 				end
-				c.forth
+				set_size (maxxw, maxyh)
+				fixed_size_flag := False
 			end
-			set_size (maxxw, maxyh)
 		end
 
 	unrealize is 

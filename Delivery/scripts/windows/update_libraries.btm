@@ -33,6 +33,10 @@ remtrace vision2
 exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 remtrace wizard
 exprt -r %DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+remtrace helpers
+exprt -r %DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
+remtrace preferences
+exprt -r %DEFAULT_CVS_TAG -d preferences "Src/library/preferences"
 cd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code
 remtrace com

@@ -19,7 +19,10 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface
+			interface,
+			compute_minimum_width,
+			compute_minimum_height,
+			compute_minimum_size
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -27,7 +30,8 @@ inherit
 			make as ev_wel_control_container_make,
 			move as move_to
 		redefine
-			top_level_window_imp
+			top_level_window_imp,
+			move_and_resize
 		end
 
 create
@@ -59,6 +63,45 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Make `x' and `y' the new position of the current object and
+			-- `w' and `h' the new width and height of it.
+			-- If there is any child, it also adapt them to fit to the given
+			-- value.
+		do
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
+			if child /= Void then
+				child.set_move_and_size (0, 0, 
+					client_width, client_height)
+			end
+		end
+
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
+		do
+			if child /= Void then
+				internal_set_minimum_width (child.minimum_width)
+			end
+		end
+
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+		do
+			if child /= Void then
+				internal_set_minimum_height (child.minimum_height)
+			end
+		end
+
+	compute_minimum_size is
+			-- Recompute both the minimum_width and then
+			-- minimum_height of the object.
+		do
+			if child /= Void then
+				internal_set_minimum_size (child.minimum_width, 
+					child.minimum_height)
+			end
+		end
+
 	interface: EV_CONTAINER
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
@@ -86,6 +129,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/22 17:34:49  rogers
+--| Redefined move_and_resize from EV_WEL_CONTROL_CONTAINER_IMP, compute_minimum_width, compute_minimum_height and  compute_minimum_size from EV_SINGLE_CHILD_CONTAINER_IMP.
+--|
 --| Revision 1.3  2000/02/19 05:45:00  oconnor
 --| released
 --|

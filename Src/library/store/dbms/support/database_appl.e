@@ -99,6 +99,7 @@ feature -- Status setting
 		require
 			is_logged_to_base: is_logged_to_base
 		do
+			update_handle
 			database_make (Selection_string_size)
 			if session_database = Void then
 				create session_database

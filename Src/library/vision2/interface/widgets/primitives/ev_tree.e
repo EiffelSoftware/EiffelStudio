@@ -19,7 +19,7 @@ inherit
 			make_for_test
 		end
 
-	EV_TREE_ITEM_HOLDER
+	EV_TREE_ITEM_LIST
 		redefine
 			implementation,
 			create_action_sequences
@@ -70,11 +70,14 @@ feature {EV_ANY} -- Contract support
 				t_item.expand 
 				a_counter1 := a_counter1 + 1
 			end
-				create t_item2.make_with_text ("First item of 'Tree item 5' after tests")
-				create t_item3.make_with_text ("Third item of 'Tree item 5' after tests")
+				create t_item2.make_with_text 
+					("First item of 'Tree item 5' after tests")
+				create t_item3.make_with_text 
+					("Third item of 'Tree item 5' after tests")
 				t_item2.extend (t_item3)
 				t_item2.start
-				create t_item4.make_with_text ("Fifth item of 'Tree item 5' after tests")
+				create t_item4.make_with_text 
+					("Fifth item of 'Tree item 5' after tests")
 				t_item2.item.extend (t_item4)
 				t_item.extend (t_item2)
 				t_item.prune (t_item2)
@@ -170,6 +173,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/17 00:01:26  king
+--| Accounted for name change of tree_item_holder
+--|
 --| Revision 1.31  2000/03/10 19:22:55  king
 --| Corrected indentation in make_for_test
 --|

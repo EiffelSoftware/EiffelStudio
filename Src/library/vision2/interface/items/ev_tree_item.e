@@ -21,7 +21,7 @@ inherit
 
 		end
 
-	EV_TREE_ITEM_HOLDER
+	EV_TREE_ITEM_LIST
 		redefine
 			implementation,
 			create_action_sequences
@@ -169,6 +169,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/17 00:01:26  king
+--| Accounted for name change of tree_item_holder
+--|
 --| Revision 1.37  2000/03/09 21:40:12  king
 --| Removed inheritence from PND
 --|

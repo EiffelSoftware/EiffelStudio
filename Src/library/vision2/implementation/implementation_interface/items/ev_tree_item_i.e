@@ -14,7 +14,7 @@ inherit
 			interface
 		end
 
-	EV_TREE_ITEM_HOLDER_I
+	EV_TREE_ITEM_LIST_I
 		redefine
 			interface
 		end
@@ -105,6 +105,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/17 00:01:26  king
+--| Accounted for name change of tree_item_holder
+--|
 --| Revision 1.31  2000/03/09 21:37:12  king
 --| Removed inheritence from PND, now in simple item
 --|
@@ -136,7 +139,8 @@ end -- class EV_TREE_ITEM_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.22.6.2  1999/12/17 19:06:03  rogers
---| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I replaces EV_PND_SOURCE and EV_PND_TARGET. Added top_parent.
+--| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I
+--| replaces EV_PND_SOURCE and EV_PND_TARGET. Added top_parent.
 --|
 --| Revision 1.22.6.1  1999/11/24 17:30:04  oconnor
 --| merged with DEVEL branch

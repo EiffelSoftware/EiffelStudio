@@ -451,6 +451,10 @@ feature {NONE} -- Implementation
 			create Result.make_from_absolute_pos(0,1,Current)
 		end
 
+	selection_start: TEXT_CURSOR
+
+	has_selection: BOOLEAN
+
 end -- class CHILD_WINDOW
 
 --|-------------------------------------------------------------------------

@@ -154,17 +154,9 @@ feature {NONE} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
-			menu_bar_object: GB_MENU_BAR_OBJECT
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
-			menu_bar_object ?= new_object			
-			if menu_bar_object /= Void then
-				titled_window_object ?= object
-				titled_window_object.add_menu_bar (menu_bar_object)
-			else
-				object_handler.add_object (object, new_object, object.layout_item.count + 1)
-			end
+			object_handler.add_object (object, new_object, object.layout_item.count + 1)
 			from
 				element.start
 			until

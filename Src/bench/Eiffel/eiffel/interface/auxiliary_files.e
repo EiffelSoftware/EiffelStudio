@@ -273,8 +273,7 @@ feature -- Dynamic Library file
 										buffer.putstring("void")
 									end
 
-									buffer.putstring (")")
-									buffer.putstring ("%N{")
+									buffer.putstring (")%N{%TGTCX")
 
 										--INFORMATION ABOUT THE FEATURE
 									if internal_creation_name /= Void then

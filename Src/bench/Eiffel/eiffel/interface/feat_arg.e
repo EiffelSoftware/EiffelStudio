@@ -8,11 +8,6 @@ inherit
 			copy, setup, consistent, is_equal
 		end
 
-	SHARED_CONSTRAINT_ERROR
-		undefine
-			copy, setup, consistent, is_equal
-		end
-
 	SHARED_EVALUATOR
 		undefine
 			copy, setup, consistent, is_equal
@@ -45,7 +40,7 @@ feature
 	copy (other: like Current) is
 			-- Clone
 		do
-			{EIFFEL_LIST_B} precursor (other)
+			{EIFFEL_LIST_B} Precursor (other)
 			set_argument_names (clone (argument_names))
 		end
 
@@ -73,6 +68,7 @@ feature
 			argument_name: ID_AS_B
 			vtug: VTUG
 			vtcg2: VTCG2
+			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
 			from
 				start
@@ -103,14 +99,13 @@ feature
 						Error_handler.raise_error
 					end
 						-- Check constrained genericity
-					solved_type.check_constraints (associated_class)
-					if not Constraint_error_list.empty then
+					constraint_error_list := solved_type.check_constraints (associated_class)
+					if Constraint_error_list /= Void then
 						!!vtcg2
 						vtcg2.set_class (associated_class)
 						vtcg2.set_feature (f)
 						vtcg2.set_entity_name (argument_name)
-						vtcg2.set_error_list
-							(deep_clone (Constraint_error_list))
+						vtcg2.set_error_list (constraint_error_list)
 						Error_handler.insert_error (vtcg2)
 					end
 				end

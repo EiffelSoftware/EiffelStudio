@@ -37,6 +37,8 @@
  *   http://www.oberhumer.com/opensource/lzo/
  */
 
+#include "eif_portable.h"
+
 #define __LZO_IN_MINILZO
 #define LZO_BUILD
 
@@ -393,8 +395,18 @@ extern "C" {
 #  if defined(LZO_HAVE_CONFIG_H) || defined(SIZEOF_CHAR_P)
 #    error "no suitable type for lzo_ptr_t"
 #  else
+#ifdef EIF_WIN32
+#ifdef _WIN64
+     typedef uintptr_t      lzo_ptr_t;
+     typedef intptr_t       lzo_sptr_t;
+#else
      typedef unsigned long      lzo_ptr_t;
      typedef long               lzo_sptr_t;
+#endif
+#else
+     typedef unsigned long      lzo_ptr_t;
+     typedef long               lzo_sptr_t;
+#endif
 #    define __LZO_HAVE_PTR_T
 #  endif
 #endif

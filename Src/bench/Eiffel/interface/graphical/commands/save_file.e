@@ -10,6 +10,7 @@ class SAVE_FILE
 inherit
 
 	EB_CONSTANTS;
+	SYSTEM_CONSTANTS;
 	TWO_STATE_CMD
 		rename
 			init as make,
@@ -28,13 +29,13 @@ feature -- Properties
 	unmodified_pixmap: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Save 
+			Result := Pixmaps.bm_Save 
 		end;
 
 	modified_pixmap: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Dark_save
+			Result := Pixmaps.bm_Dark_save
 		end;
 
 feature {NONE} -- Implementation
@@ -55,17 +56,17 @@ feature {NONE} -- Implementation
 					(new_file.exists) and then (not new_file.is_plain)
 				then
 					aok := False;
-					warner (popup_parent).gotcha_call (w_Not_a_plain_file (new_file.name))
+					warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_plain_file (new_file.name))
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then
 					aok := False;
-					warner (popup_parent).gotcha_call (w_Not_writable (new_file.name))
+					warner (popup_parent).gotcha_call (Warning_messages.w_Not_writable (new_file.name))
 				elseif
 					 (not new_file.exists) and then (not new_file.is_creatable)
 				then
 					aok := False;
-					warner (popup_parent).gotcha_call (w_Not_creatable (new_file.name))
+					warner (popup_parent).gotcha_call (Warning_messages.w_Not_creatable (new_file.name))
 				end;
 
 				if aok then
@@ -99,13 +100,25 @@ feature {NONE} -- Attributes
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'.
 		once
-			Result := bm_Dark_save
+			Result := Pixmaps.bm_Dark_save
 		end;
 
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Save
+			Result := Interface_names.f_Save
 		end
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Save
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Save
+		end;
 
 end -- class SAVE_FILE

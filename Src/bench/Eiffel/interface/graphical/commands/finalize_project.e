@@ -15,7 +15,7 @@ inherit
 			warner_ok as update_project_warner_ok
 		redefine
 			c_code_directory, launch_c_compilation,
-			confirm_and_compile, name, symbol, grey_symbol,
+			confirm_and_compile, name, menu_name, accelerator,
 			compilation_allowed, finalization_error, perform_compilation
 		end;
 	UPDATE_PROJECT
@@ -24,7 +24,7 @@ inherit
 			warner_ok as keep_assertions
 		redefine
 			c_code_directory, launch_c_compilation,
-			confirm_and_compile, name, symbol, grey_symbol,
+			confirm_and_compile, name, menu_name, accelerator,
 			compilation_allowed, finalization_error, perform_compilation,
 			discard_assertions, keep_assertions
 		select
@@ -59,8 +59,8 @@ feature -- Callbacks
 			elseif not assert_confirmed then
 				assert_confirmed := True;
 				warner (popup_parent).custom_call (Current, 
-					w_Assertion_warning, l_Keep_assertions, 
-					l_Discard_assertions, l_Cancel); 
+					Warning_messages.w_Assertion_warning, Interface_names.b_Keep_assertions, 
+					Interface_names.b_Discard_assertions, Interface_names.b_Cancel); 
 			elseif 
 				not Application.is_running or else
 				(argument /= Void and 
@@ -75,24 +75,10 @@ feature -- Callbacks
 				end_run_confirmed := true;
 				confirmer (popup_parent).call (Current,
 						"Recompiling project will end current run.%N%
-						%Start compilation anyway?", l_Compile)
+						%Start compilation anyway?", Interface_names.b_Compile)
 			end
 		end;
  
-feature -- Properties
-
-	symbol: PIXMAP is 
-			-- Pixmap for the button.
-		once 
-			Result := bm_Finalize
-		end;
-
-	grey_symbol: PIXMAP is
-			-- Pixmap to indicate insensitivity
-		once
-			Result := bm_Grey_Finalize
-		end;
-
 feature {NONE} -- Attributes
 
 	compilation_allowed: BOOLEAN is
@@ -119,7 +105,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Finalize
+			Result := Interface_names.f_Finalize
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Finalize
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Finalize
 		end;
 
 feature {NONE} -- Implementation
@@ -134,8 +132,8 @@ feature {NONE} -- Implementation
 				argument = last_confirmer and not end_run_confirmed)
 			then
 				assert_confirmed := False;
-				warner (popup_parent).custom_call (Current, w_Finalize_warning,
-					l_Finalize_now, Void, l_Cancel);
+				warner (popup_parent).custom_call (Current, Warning_messages.w_Finalize_warning,
+					Interface_names.b_Finalize_now, Void, Interface_names.b_Cancel);
 			elseif 
 				(argument = Current) or else
 				(argument = last_confirmer)

@@ -37,6 +37,7 @@ feature -- Callbacks
 			chooser: NAME_CHOOSER_W
 		do
 			chooser := name_chooser (popup_parent);
+			chooser.set_open_file;
 			chooser.call (Current) 
 		end;
 	
@@ -45,7 +46,7 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Open
+			Result := Pixmaps.bm_Open
 		end;
 
 feature {NONE} -- Implementation
@@ -68,21 +69,22 @@ feature {NONE} -- Implementation
 						tool.show_file (f);
 					elseif f.exists and then not f.is_plain then
 						warner (popup_parent).custom_call (Current, 
-							w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel);
+							Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel);
 					else
 						warner (popup_parent).custom_call (Current, 
-						w_Cannot_read_file_retry (fn), l_Ok, Void, l_Cancel);
+						Warning_messages.w_Cannot_read_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel);
 					end
 				else
 					warner (popup_parent).custom_call (Current, 
-						w_Not_a_file_retry (fn), l_Ok, Void, l_Cancel);
+						Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel);
 				end
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, w_File_changed)
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 				else
 					chooser := name_chooser (popup_parent);
+					chooser.set_open_file;
 					chooser.call (Current) 
 				end
 			end
@@ -93,7 +95,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Open
+			Result := Interface_names.f_Open
+		end
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Open
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Open
 		end
 
 end -- class OPEN_FILE

@@ -45,13 +45,41 @@ feature {NONE} -- Initialization
 			inspect
 				edit_type
 			when copy_type then
-				Result := "copy"
+				Result := Interface_names.f_copy
 			when cut_type then
-				Result := "cut"
+				Result := Interface_names.f_cut
 			when paste_type then
-				Result := "paste"
+				Result := Interface_names.f_paste
 			end
 		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			inspect
+				edit_type
+			when copy_type then
+				Result := Interface_names.m_copy
+			when cut_type then
+				Result := Interface_names.m_cut
+			when paste_type then
+				Result := Interface_names.m_paste
+			end
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			inspect
+				edit_type
+			when copy_type then
+				Result := Interface_names.a_copy
+			when cut_type then
+				Result := Interface_names.a_cut
+			when paste_type then
+				Result := Interface_names.a_paste
+			end
+		end
 
 feature -- Execution
 

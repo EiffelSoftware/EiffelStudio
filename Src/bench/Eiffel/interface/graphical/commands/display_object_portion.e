@@ -21,19 +21,34 @@ feature -- Properties
 			-- Short name for Current
 		do
 			if is_shown then
-				Result := "Hide object"
+				Result := Interface_names.f_Hide_object
 			else
-				Result := "Show object"
+				Result := Interface_names.f_Show_object
 			end
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			if is_shown then
+				Result := Interface_names.m_Hide_object
+			else
+				Result := Interface_names.m_Show_object
+			end
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	symbol: PIXMAP is
 			-- Pixmap to represent Current on a button
 		do
 			if is_shown then
-				Result := bm_Hide_object
+				Result := Pixmaps.bm_Hide_object
 			else
-				Result := bm_Show_object
+				Result := Pixmaps.bm_Show_object
 			end
 		end;
 

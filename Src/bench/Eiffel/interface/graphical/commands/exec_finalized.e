@@ -42,18 +42,18 @@ feature {NONE} -- Execution
 		do
 			system_name := clone (Eiffel_system.name);
 			if system_name = Void then
-				warner (popup_parent).gotcha_call ("You must finalize ypur project first.")
+				warner (popup_parent).gotcha_call (Warning_messages.w_Must_finalize_first)
 			else
 				appl_name := Eiffel_system.application_name (False);
 				!! f.make (appl_name);
 				if not f.exists then
-					warner (popup_parent).gotcha_call ("The system doesn't exist.")
+					warner (popup_parent).gotcha_call (Warning_messages.w_Unexisting_system)
 				else
 					!! f_name.make_from_string (Final_generation_path);
 					f_name.set_file_name (Makefile_SH);
 					!! make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then
-						warner (popup_parent). gotcha_call ("The Makefile.SH is more recent than the system.")
+						warner (popup_parent). gotcha_call (Warning_messages.w_MakefileSH_more_recent)
 					else
 						!! mp.set_watch_cursor;
 						appl_name.extend (' ');
@@ -70,9 +70,19 @@ feature {NONE} -- Properties
 
 	name: STRING is
 			-- Short description of Current.
-			--| TEST
 		do
-			Result := l_Run_finalized
+			Result := Interface_names.f_Run_finalized
 		end;
 		
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Run_finalized
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end;
+
 end -- class EXEC_FINALIZED

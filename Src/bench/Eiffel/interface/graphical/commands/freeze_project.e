@@ -15,7 +15,7 @@ inherit
 		redefine
 			launch_c_compilation, 
 			confirm_and_compile,
-			name, symbol,
+			name, menu_name, accelerator,
 			compilation_allowed, perform_compilation
 		end;
 	UPDATE_PROJECT
@@ -24,7 +24,7 @@ inherit
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
-			name, symbol,
+			name, menu_name, accelerator,
 			compilation_allowed, perform_compilation,
 			freeze_now
 		select
@@ -52,14 +52,6 @@ feature -- Callbacks
 			end
 		end;
 
-feature -- Properties
-
-	symbol: PIXMAP is 
-			-- Symbol for the button.
-		once 
-			Result := bm_Freeze 
-		end; 
- 
 feature {NONE} -- Implementation
 
 	confirm_and_compile (argument: ANY) is
@@ -70,8 +62,8 @@ feature {NONE} -- Implementation
 				(argument /= Void and then 
 				argument = last_confirmer and not end_run_confirmed) 
 			then
-				warner (popup_parent).custom_call (Current, w_Freeze_warning,
-							l_Freeze_now, Void, l_Cancel);
+				warner (popup_parent).custom_call (Current, Warning_messages.w_Freeze_warning,
+							Interface_names.b_Freeze_now, Void, Interface_names.b_Cancel);
 			elseif (argument /= Void and then argument = last_warner) then
 					freeze_now (argument)
 			elseif 
@@ -110,7 +102,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Freeze
+			Result := Interface_names.f_Freeze
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Freeze
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Freeze
 		end;
 
 end -- FREEZE_PROJECT

@@ -46,10 +46,15 @@ feature -- Properties
 			fast: FEATURE_AS
 		do
 			if internal_start_position < 0 then
-				fast := e_feature.ast
-				if fast /= Void then
-					internal_start_position := fast.start_position
-					internal_end_position := fast.end_position
+				if e_feature /= Void then
+					fast := e_feature.ast
+					if fast /= Void then
+						internal_start_position := fast.start_position
+						internal_end_position := fast.end_position
+					else
+						internal_start_position := 0
+						internal_end_position := 0
+					end
 				else
 					internal_start_position := 0
 					internal_end_position := 0
@@ -64,14 +69,19 @@ feature -- Properties
 		local
 			fast: FEATURE_AS
 		do
-			if internal_start_position < 0 then
-				fast := e_feature.ast
-				if fast /= Void then
-					internal_start_position := fast.start_position
-					internal_end_position := fast.end_position
+			if internal_end_position < 0 then
+				if e_feature /= Void then
+					fast := e_feature.ast
+					if fast /= Void then
+						internal_start_position := fast.start_position
+						internal_end_position := fast.end_position
+					else
+						internal_start_position := 0
+						internal_end_position := 0
+					end
 				else
-					internal_start_position := -1
-					internal_end_position := -1
+					internal_start_position := 0
+					internal_end_position := 0
 				end
 			end
 			Result := internal_end_position
@@ -82,6 +92,9 @@ feature -- Access
 	feature_name: STRING is
 			-- Feature name of feature
 		do
+			check
+				e_feature_not_void: e_feature /= Void
+			end
 			Result := e_feature.name
 		end
 
@@ -90,7 +103,7 @@ feature -- Access
 		local
 			f: E_FEATURE
 		do
-			if e_feature.written_class.has_feature_table then
+			if e_feature /= Void and then e_feature.written_class.has_feature_table then
 				f := e_feature.written_class.feature_with_body_index (e_feature.body_index)
 				if f /= Void then
 					Result := f.name
@@ -98,7 +111,7 @@ feature -- Access
 					Result := e_feature.name
 				end
 			else
-				Result := e_feature.name
+				Result := feature_name
 			end
 		end
 
@@ -106,8 +119,8 @@ feature -- Access
 			-- Name used in the history list
 		do
 			create Result.make (0)
-			Result.append (Interface_names.s_Feature_stone)
-			Result.append (e_feature.name)
+			Result.append (Interface_names.s_feature_stone)
+			Result.append (feature_name)
 			Result.append (" from ")
 			Result.append (e_class.class_signature)
 		end
@@ -119,9 +132,10 @@ feature -- Access
 			fns: FEATURE_STONE
 		do
 			fns ?= other
-			Result := fns /= Void and then
-					e_feature.feature_id = fns.e_feature.feature_id and then
-					e_feature.associated_class = fns.e_feature.associated_class
+			Result := fns /= Void and then e_feature = fns.e_feature and then
+					(e_feature = Void or else (
+						e_feature.feature_id = fns.e_feature.feature_id and then
+						e_feature.associated_class = fns.e_feature.associated_class))
 		end
 
 feature -- dragging
@@ -131,11 +145,16 @@ feature -- dragging
 		local
 			temp: STRING
 		do
-			Result := "-- Version from class: "
-			Result.append (e_feature.written_class.name_in_upper)
+			if e_feature /= Void then
+				Result := "-- Version from class: "
+				Result.append (e_feature.written_class.name_in_upper)
+			else
+				Result := feature_name.twin
+			end
 			Result.append ("%N%N%T")
 
 			temp := Precursor {CLASSC_STONE}
+
 			if temp /= Void then
 				if 
 					temp.count >= end_position and 
@@ -151,8 +170,8 @@ feature -- dragging
 	file_name: FILE_NAME is
 			-- The one from class origin of `e_feature'
 		do
-			if e_feature /= Void and then 
-				e_feature.written_class /= Void and then
+			if
+				e_feature /= Void and then e_feature.written_class /= Void and then
 				e_class /= Void
 			then
 				create Result.make_from_string (e_feature.written_class.file_name)
@@ -162,6 +181,9 @@ feature -- dragging
 	stone_signature: STRING is
 			-- Signature of Current feature
 		do
+			check
+				e_feature_not_void: e_feature /= Void
+			end
 			Result := e_feature.feature_signature
 		end
 
@@ -174,7 +196,7 @@ feature -- dragging
 			Result.append ("{")
 			Result.append (e_class.name_in_upper)
 			Result.append ("}.")
-			Result.append (e_feature.name)
+			Result.append (feature_name)
 			if class_i /= Void then
 				a_base_name := class_i.file_name
 				if a_base_name /= Void then
@@ -188,7 +210,7 @@ feature -- dragging
 	stone_cursor: EV_CURSOR is
 			-- Cursor representing `Current' when dropping is allowed.
 		once
-			Result := Cursors.cur_Feature
+			Result := Cursors.cur_feature
 		end
  
 	x_stone_cursor: EV_CURSOR is
@@ -224,8 +246,7 @@ feature -- dragging
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-				-- Don't like side effects but it is
-				-- useful here.
+				-- Don't like side effects but it is useful here.
 			check_validity
 			if start_position = 0 then
 					-- Body as cannot be found

@@ -20,10 +20,10 @@ feature {NONE} -- Initialization
 			process_obj_sets
 			create_obj_cmp_sets
 			fill_obj_cmp_sets (False)
-			process_obj_cmp_sets
+			process_obj_sets
 			create_obj_cmp_sets
 			fill_obj_cmp_sets (True)
-			process_obj_cmp_sets
+			process_obj_sets
 			from
 				i := 1
 			until
@@ -192,29 +192,6 @@ feature {NONE} -- Implementation
 		
 	process_obj_sets is
 			-- Process object sets.
-		require
-			sets_exist: obj_set1 /= Void and obj_set2 /= Void
-			sets_filled: not obj_set1.is_empty and not obj_set2.is_empty
-		do
-			obj_set1.symdif (obj_set2)
-			Io.put_string ("Set 1: ")
-			from obj_set1.start until obj_set1.after loop
-				Io.put_integer (obj_set1.item.item)
-				Io.put_string (", ")
-				obj_set1.forth
-			end
-			Io.put_new_line
-			Io.put_string ("Set 2: ")
-			from obj_set2.start until obj_set2.after loop
-				Io.put_integer (obj_set2.item.item)
-				Io.put_string (", ")
-				obj_set2.forth
-			end
-			Io.put_new_line
-		end
-		
-	process_obj_cmp_sets is
-			-- Process comparable object sets.
 		require
 			sets_exist: obj_set1 /= Void and obj_set2 /= Void
 			sets_filled: not obj_set1.is_empty and not obj_set2.is_empty

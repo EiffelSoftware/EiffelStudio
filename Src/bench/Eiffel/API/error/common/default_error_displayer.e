@@ -99,7 +99,6 @@ feature -- Output
 				display_error_error (st)
 			end;
 			output_window.process_text (st);
-			output_window.display
 		rescue
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				retried := True;

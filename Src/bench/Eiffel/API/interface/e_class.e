@@ -382,12 +382,8 @@ feature -- Output
 			-- Append the name ot the current class in `st'
 		require
 			non_void_st: st /= Void
-		local
-			c_name: STRING;
 		do
-			c_name := clone (name)
-			c_name.to_upper;
-			st.add_classi (lace_class, c_name)
+			st.add_classi (lace_class, name_in_upper)
 		end;
 
 feature {COMPILER_EXPORTER} -- Implementation

@@ -4,11 +4,8 @@ inherit
 
 	RQST_HANDLER;
 	SHARED_DEBUG;
-	SHARED_WORKBENCH;
 	OBJECT_ADDR;
-	WINDOWS;
-	GRAPHICS;
-	CURSOR_W
+	SHARED_RESOURCES
 
 creation
 	
@@ -41,15 +38,20 @@ feature
 			dyn_type: INTEGER;
 			offset: INTEGER;
 			address: STRING;
-			reason: INTEGER
+			reason: INTEGER;
+			status: APPLICATION_STATUS;	
+			e_cmd: E_CMD
 		do
-			set_global_cursor (watch_cursor);
-			run_info.set_is_stopped (true);
-
+			e_cmd := Application.before_stopped_command;
+			if e_cmd /= Void then
+				e_cmd.execute
+			end;
+if enabled_debug_trace then
+	io.error.putstring ("Application stopped - reading (STOPPED_HDLR):%N");
+end;
 				-- Physical address of objects held in object tools
 				-- may have been change...
 			update_addresses;
-			window_manager.object_win_mgr.synchronize;
 
 			position := 1;
 
@@ -86,20 +88,30 @@ feature
 				-- Read asertion tag.
 			read_string;
 
-			run_info.set_exception (last_int, last_string);
-			run_info.set (name, address, org_type, dyn_type, offset, reason);
+if enabled_debug_trace then
+	io.error.putstring ("Application stopped - finished reading%N");
+	io.error.putstring ("Setting app status for routine: ");
+	io.error.putstring (name);
+	io.error.new_line
+end;
+			status := Application.status;
+			check
+				application_launched: status /= Void
+			end;
+			status.set (name, address, org_type, dyn_type, offset, reason);
+			status.set_exception (last_int, last_string);
+			status.set_is_stopped (true);
 
-			--if (reason /= Pg_viol) then
-			
-				run_info.dump_stack;
-		--	end;
-
-			if Run_info.e_feature /= Void then
-				Window_manager.routine_win_mgr.show_stoppoint 
-							(Run_info.e_feature, Run_info.break_index)
-			end;		
-			Run_info.display_status (Debug_window);
-			restore_cursors
+if enabled_debug_trace then
+	io.error.putstring ("Finished setting status (Now calling after cmd)%N")
+end;
+			e_cmd := Application.after_stopped_command;
+			if e_cmd /= Void then
+				e_cmd.execute
+			end;
+if enabled_debug_trace then
+	io.error.putstring ("Finished calling after_cmd (STOPPED_HDLR)%N")
+end;
 		end;
 
 feature {} -- parsing features

@@ -490,18 +490,42 @@ feature -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
-			gdkwin: POINTER
+			gdkwin, gtkwid: POINTER
 			x, y: INTEGER
+			widget_target_imp: EV_PICK_AND_DROPABLE_IMP
 		do
-			--| Previous target optimization will not work with mclist.
 			gdkwin := C.gdk_window_at_pointer ($x, $y)
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
 			if gdkwin /= NULL then
-				Result := app_imp.pnd_target_from_gdk_window (gdkwin, x, y)
+				widget_target_imp ?= last_pointed_target
+				if widget_target_imp /= Void and then widget_target_imp.pointer_over_widget (gdkwin, x, y) then
+						Result ?= last_pointed_target
+				else
+				--	C.gdk_window_get_user_data (gdkwin, $gtkwid)
+				--	check
+				--		gtkwid_not_null: gtkwid /= NULL
+				--	end
+				--	from
+				--		Result ?= eif_object_from_c (gtkwid)
+				--	until
+				--		Result /= Void
+				--	loop
+				--		gtkwid := C.gtk_widget_struct_parent (gtkwid)
+				--		Result ?= eif_object_from_c (gtkwid)
+				--	end
+					Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
+				end			
+			end
+		end
+		
+	app_implementation: EV_APPLICATION_IMP is
+			-- 
+		local
+			env: EV_ENVIRONMENT
+		once
+			create env
+			Result ?= env.application.implementation
+			check
+				Result_not_void: Result /= Void
 			end
 		end
 
@@ -511,7 +535,7 @@ feature -- Implementation
 			interface.init_drop_actions (Result)
 		end
 
-feature {EV_APPLICATION_IMP} -- Implementation
+feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 
 	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
 			-- Comparison of gdk window and widget position to determine
@@ -604,6 +628,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/16 01:07:33  king
+--| Slightly optimized
+--|
 --| Revision 1.2  2001/06/07 23:08:03  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

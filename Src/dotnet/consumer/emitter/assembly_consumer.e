@@ -12,16 +12,25 @@ class
 
 inherit
 	ASSEMBLY_CONSUMPTION_ERRORS
-	
+		
 	REFLECTION
 
 	CALLBACK_INTERFACE
-
+		
 	COMMON_PATH
+		export
+			{NONE} all
+		end
 
 	SHARED_ASSEMBLY_MAPPING
-	
+		export
+			{NONE} all
+		end
+		
 	NAME_FORMATTER
+		export
+			{NONE} all
+		end
 
 create
 	make

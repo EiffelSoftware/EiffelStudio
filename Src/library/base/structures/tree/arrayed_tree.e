@@ -21,7 +21,7 @@ class ARRAYED_TREE [G] inherit
 	DYNAMIC_TREE [G]
 		undefine
 			child_after, readable_child,
-			writable_child,	child_off, child_before
+			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
 			duplicate_all, fill_subtree
@@ -370,6 +370,12 @@ feature {NONE} -- Implementation
 				other.child_forth;
 				c.attach_to_parent (Current)
 			end;
+		end;
+
+feature {NONE} -- Not Applicable
+
+	set_child (n: like parent) is
+		do
 		end;
 
 end -- class ARRAYED_TREE

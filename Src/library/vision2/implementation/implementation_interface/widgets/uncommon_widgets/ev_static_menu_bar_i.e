@@ -31,12 +31,7 @@ feature -- Access
 			-- this attribute will be `Void'
 		require
 			exists: not destroyed
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
-			else
-				Result := Void
-			end
+		deferred
 		end
 
 feature -- Status report

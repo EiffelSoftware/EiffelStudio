@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' and store necessary information
 			-- required to `execute' and `undo'.
 		do
+			history.cut_off_at_current_position
 			original_type := an_original_type
 			new_type := a_new_type
 			original_id := an_object.id

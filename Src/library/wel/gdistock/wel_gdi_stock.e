@@ -21,10 +21,8 @@ feature {NONE} -- Initialization
 			-- Make a gdi stock object identified by `stock_id'.
 		do
 			item := cwin_get_stock_object (stock_id)
-			shared := True
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			shared := True	
+			gdi_make
 		ensure
 			exists: exists
 			shared: shared

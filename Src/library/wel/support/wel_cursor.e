@@ -54,9 +54,7 @@ feature {NONE} -- Initialization
 				main_args.current_instance.item,
 				x_hot_spot, y_hot_spot, cursor_width,
 				cursor_height, a1.item, a2.item)
-
-			references_number := 1
-			increase_gdi_objects_count
+			gdi_make
 		end
 
 feature -- Access

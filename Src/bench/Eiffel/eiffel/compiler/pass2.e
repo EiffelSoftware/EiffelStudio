@@ -2,21 +2,15 @@
 class PASS2
 
 inherit
+	SHARED_TMP_SERVER
 
-	SHARED_TMP_SERVER;
-	SHARED_ERROR_HANDLER;
-	SORTED_PASS
-		rename
-			remove_class as basic_remove_class
-		redefine
-			changed_classes, execute, make
-		end;
+	SHARED_ERROR_HANDLER
+
 	SORTED_PASS
 		redefine
 			changed_classes, execute, make, remove_class
-		select
-			remove_class
-		end;
+		end
+
 	COMPILER_EXPORTER
 
 creation
@@ -137,7 +131,7 @@ feature
 		local
 			found: BOOLEAN
 		do	
-			basic_remove_class (a_class);
+			{SORTED_PASS} Precursor (a_class);
 			from
 				extra_check_list.start
 			until

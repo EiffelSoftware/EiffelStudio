@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			-- `a_name'.
 		require
 			name_not_void: a_name /= Void
-			name_not_empty: not a_name.empty
+			name_not_empty: not a_name.is_empty
 		do
 			parent := Void
 			resource_name := clone (a_name)

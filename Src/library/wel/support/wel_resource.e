@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Load the resource by a `name'
 		require
 			name_not_void: name /= Void
-			name_not_empty: not name.empty
+			name_not_empty: not name.is_empty
 		local
 			a_wel_string: WEL_STRING
 		do

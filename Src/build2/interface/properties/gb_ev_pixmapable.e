@@ -26,6 +26,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EIFFEL_ENV
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -127,6 +132,7 @@ feature {GB_XML_STORE} -- Output
 				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
 			end
 		end
+		
 
 feature {GB_CODE_GENERATOR} -- Output
 
@@ -156,19 +162,36 @@ feature {NONE} -- Implementation
 		local
 			dialog: EV_FILE_OPEN_DIALOG
 			new_pixmap: EV_PIXMAP
+			shown_once, opened_file: BOOLEAN
+			error_dialog: EV_WARNING_DIALOG
 		do
 			if first.pixmap = Void then
-				create dialog
-				dialog.show_modal_to_window (parent_window (parent_editor))
-				if not dialog.file_name.is_empty then
-					create new_pixmap
-					new_pixmap.set_with_named_file (dialog.file_name)
-						-- Must set the pixmap before the stretch takes place.
-					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
-					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
-					add_pixmap_to_pixmap_container (new_pixmap)
-					modify_button.set_text (Remove_string)
-					modify_button.set_tooltip (Remove_tooltip)
+				from
+					create dialog
+				until
+					(dialog.file_name.is_empty and shown_once) or opened_file
+				loop
+					shown_once := True
+					dialog.show_modal_to_window (parent_window (parent_editor))
+					if not dialog.file_name.is_empty and then valid_file_extension (dialog.file_name.substring (dialog.file_name.count -2, dialog.file_name.count)) then
+						create new_pixmap
+						new_pixmap.set_with_named_file (dialog.file_name)
+							-- Must set the pixmap before the stretch takes place.
+						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
+						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
+						add_pixmap_to_pixmap_container (new_pixmap)
+						modify_button.set_text (Remove_string)
+						modify_button.set_tooltip (Remove_tooltip)
+						opened_file := True
+					elseif not dialog.file_name.is_empty then
+						create error_dialog
+						if Eiffel_platform.is_equal ("windows") then
+							error_dialog.set_text (Windows_unsupported_pixmap_type)
+						else
+							error_dialog.set_text (Unix_unsupported_pixmap_type)
+						end
+						error_dialog.show_modal_to_window (parent_editor.parent_window (parent_editor))
+					end
 				end
 			else
 				for_all_objects (agent {EV_PIXMAPABLE}.remove_pixmap)
@@ -182,6 +205,23 @@ feature {NONE} -- Implementation
 				filler_label.remove_tooltip
 			end	
 		end
+		
+	valid_file_extension (extension: STRING): BOOLEAN is
+			-- Is `extension' a valid file format for
+			-- a pixmap on the current platform?
+		require
+			extension_length_3: extension.count = 3
+		do
+			extension.to_upper
+			if Eiffel_platform.is_equal ("windows") and
+				(extension.is_equal ("BMP") or extension.is_equal ("ICO") or
+				extension.is_equal ("PNG")) then
+				Result := True
+			elseif (extension.is_equal ("PNG") or extension.is_equal ("XPM")) then
+				Result := True
+			end
+		end
+		
 		
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
 			-- Add `pixmap' to `pixmap_container'.

@@ -20,11 +20,8 @@ inherit
 			interface,
 			visual_widget,
 			initialize,
-			clear_selection,
-			deselect_item,
-			select_item,
-			remove_i_th,
-			on_item_clicked
+			switch_to_single_mode_if_necessary,
+			switch_to_browse_mode_if_necessary
 		end	
 create
 	make
@@ -35,14 +32,12 @@ feature -- Status report
 			-- True if the user can choose several items,
 			-- False otherwise.
 
-
 feature -- Initialize
 
 	initialize is
 			-- Initialize the list.
 		do
 			Precursor
-			selection_mode_is_single := True
 			disable_multiple_selection
 		end
 
@@ -86,41 +81,6 @@ feature -- Status setting
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
 		end
-
-	select_item (an_index: INTEGER) is
-			-- Select the item of the list at the one-based
-			-- `index'.
-		do
-			switch_to_browse_mode_if_necessary		
-			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
-		end
-
-	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `index'.
-		do
-			switch_to_single_mode_if_necessary
-			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
-		end
-
-	clear_selection is
-			-- Clear the selection of the list.
-		do
-			if not selection_mode_is_single then
-				if multiple_selection_enabled then
-					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
-				else
-					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
-				end
-				selection_mode_is_single := True
-			end
-			Precursor {EV_LIST_ITEM_LIST_IMP}
-		end
-		
-	remove_i_th (an_index: INTEGER) is
-		do
-			switch_to_single_mode_if_necessary
-			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
-		end
 		
 feature {EV_ANY_I} -- Implementation
 
@@ -133,18 +93,15 @@ feature {EV_ANY_I} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	on_item_clicked is
-		do
-			switch_to_browse_mode_if_necessary
-			Precursor {EV_LIST_ITEM_LIST_IMP}
-		end
-	
 	switch_to_single_mode_if_necessary is
 			-- Change selection mode if the last selected item is deselected.
+		local
+			sel_items: like selected_items
 		do
 			if not selection_mode_is_single then
 				if multiple_selection_enabled then
-					if selected_items.count = 1 then
+					sel_items := selected_items
+					if sel_items = Void or else selected_items.count <= 1 then
 						C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
 						selection_mode_is_single := True
 					end
@@ -167,8 +124,7 @@ feature {NONE} -- Implementation
 				selection_mode_is_single := False
 			end
 		end
-	selection_mode_is_single:BOOLEAN
-
+		
 end -- class EV_LIST_IMP
 
 --!-----------------------------------------------------------------------------
@@ -192,6 +148,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2001/06/13 16:35:58  etienne
+--| Improved item selection in combo boxes and lists.
+--|
 --| Revision 1.45  2001/06/08 22:09:17  etienne
 --| Modified to have the wanted behavior regarding selection.
 --|

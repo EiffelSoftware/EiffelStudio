@@ -45,10 +45,10 @@ feature {NONE} -- Initialization
 			valid_dimension_count: a_dimension_count >= 0
 			valid_lower_indices: some_lower_indices /= Void and then 
 					some_lower_indices.count = a_dimension_count and
-					some_lower_indices.lower = 1
+					(a_dimension_count > 0 implies some_lower_indices.lower = 1)
 			valid_element_count: some_element_counts /= Void and then
 					some_element_counts.count = a_dimension_count and
-					some_element_counts.lower = 1 and then
+					(a_dimension_count > 0 implies some_element_counts.lower = 1) and then
 					are_element_counts_valid (some_element_counts)
 		local
 			a_count: INTEGER
@@ -57,10 +57,16 @@ feature {NONE} -- Initialization
 			dimension_count := a_dimension_count
 			element_counts := clone (some_element_counts)
 			lower_indices := clone (some_lower_indices)
+			
+			if dimension_count > 0 then
+				a_count := 1
+			else
+				a_count := 0
+			end
+			
 			from
 				i := 1
-				create upper_indices.make (1, dimension_count)
-				a_count := 1
+				create upper_indices.make (1, dimension_count)	
 			variant
 				dimension_count - i + 1
 			until
@@ -73,7 +79,7 @@ feature {NONE} -- Initialization
 
 			array_make (0, a_count - 1)
 		ensure
-			valid_dimension_count: dimension_count >0
+			valid_dimension_count: dimension_count >= 0
 			valid_element_counts: element_counts /= Void and then element_counts.count = dimension_count
 			valid_lower_indices: lower_indices /= Void and then lower_indices.count = dimension_count
 			valid_upper_indices: upper_indices /= Void and then upper_indices.count = dimension_count
@@ -84,20 +90,20 @@ feature {NONE} -- Initialization
 			-- with lower indices in each dimension as described by `some_lower_indices'
 			-- and element count in each dimension as described by `some_element_counts'.
 		require
-			valid_dimension_count: a_dimension_count > 0
+			valid_dimension_count: a_dimension_count >= 0
 			valid_lower_indices: some_lower_indices /= Void and then 
 					some_lower_indices.count = a_dimension_count and
-					some_lower_indices.lower = 1
+					(a_dimension_count > 0 implies some_lower_indices.lower = 1)
 			valid_element_count: some_element_counts /= Void and then
 					some_element_counts.count = a_dimension_count and
-					some_element_counts.lower = 1 and then
+					(a_dimension_count > 0 implies some_element_counts.lower = 1) and then
 					are_element_counts_valid (some_element_counts)
 			valid_array_size: a.count = total_count (some_element_counts)
 		do
 			make (a_dimension_count, some_lower_indices, some_element_counts)
 			area := a.area
 		ensure
-			valid_dimension_count: dimension_count > 0
+			valid_dimension_count: dimension_count >= 0
 			valid_element_counts: element_counts /= Void and then element_counts.count = dimension_count
 			valid_lower_indices: lower_indices /= Void and then lower_indices.count = dimension_count
 			valid_upper_indices: upper_indices /= Void and then upper_indices.count = dimension_count
@@ -162,9 +168,9 @@ feature -- Status report
 	are_element_counts_valid (some_element_counts: ARRAY [INTEGER]): BOOLEAN is
 			-- Are `some_element_counts' valid element counts?
 		require
-			valid_element_counts: some_element_counts /= Void and then 
-					(some_element_counts.lower = 1 and
-					some_element_counts.count > 0)
+			non_void_element_counts: some_element_counts /= Void
+			valid_element_counts:  (some_element_counts.count > 0 implies 
+						some_element_counts.lower = 1)
 		local
 			i: INTEGER
 		do

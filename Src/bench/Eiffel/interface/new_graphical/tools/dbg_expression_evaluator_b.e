@@ -477,6 +477,7 @@ feature -- EXPR_B evaluation
 			l_p_b: PARAMETER_B
 			l_e_b: EXPR_B
 			l_v_i: VALUE_I
+			l_has_error: BOOLEAN
 		do
 			if not retried then
 				-- FIXME JFIAT: 2004/03/18 for now just process basic type ...
@@ -488,7 +489,7 @@ feature -- EXPR_B evaluation
 --				l_basic_type_to_create ?= l_type_to_create
 
 				l_f_b ?= a_creation_expr_b.call
-				if l_f_b /= Void then
+				if l_f_b /= Void and then l_f_b.parameters /= Void then
 					l_p_b ?= l_f_b.parameters.first
 					if l_p_b /= Void then
 						l_e_b ?= l_p_b.expression
@@ -498,10 +499,15 @@ feature -- EXPR_B evaluation
 								evaluate_value_i (l_v_i)
 							end
 						end							
-					end						
+					end
+				else
+					l_has_error := True
 				end
 --				tmp_target := l_tmp_target_backup
 			else
+				l_has_error := True
+			end
+			if l_has_error then
 				error_message := a_creation_expr_b.generator + " = CREATION_EXPR_B : sorry not yet ready"
 				
 				l_type_to_create := a_creation_expr_b.info.type_to_create
@@ -510,6 +516,7 @@ feature -- EXPR_B evaluation
 				end
 			end
 		rescue
+			retried := True
 			retry
 		end
 
@@ -1310,7 +1317,9 @@ feature {NONE} -- Implementation
 					l_error := error_handler.error_list.first
 					error_message := "Error " + l_error.code + " :" + error_to_string (l_error)
 				else
-					error_message := "Error!"
+					if error_message = Void then
+						error_message := "Error!"
+					end
 				end
 				Result := Void
 			end

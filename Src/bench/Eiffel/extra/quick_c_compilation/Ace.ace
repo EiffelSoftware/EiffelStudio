@@ -2,7 +2,7 @@ system
 	quick_finalize
 
 root
-	FAST_COMPILE (fast_compile): "make"
+	FAST_COMPILE: "make"
 
 default
 	assertion (no)
@@ -10,9 +10,8 @@ default
 	inlining (yes)
 
 cluster
-	fast_compile : "."
+	fast_compile: "."
 
-	-- EiffelBase:
 	all base:				"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"

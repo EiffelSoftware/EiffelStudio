@@ -206,27 +206,29 @@ feature -- Basic Operations
 		do
 			cluster := clusters_table.item (cluster_name)
 			cluster_table_by_id.remove (cluster.cluster_id)
-			clusters_table.remove (cluster_name)
 			from
-				cluster_list := clusters_table.linear_representation
-				cluster_list.start
+				clusters_impl.start
 			until
-				removed or cluster_list.after
+				removed or clusters_impl.after
 			loop
-				if cluster_list.item.name.is_equal (cluster_name) then
-					cluster_list.remove
+				if clusters_impl.item.name.is_equal (cluster_name) then
+					clusters_impl.remove
 					removed := True
 				elseif 
-					cluster_list.item.has_children and then
-					cluster_list.item.has_child (cluster_name) 
+					clusters_impl.item.has_children and then
+					clusters_impl.item.has_child (cluster_name) 
 				then
-					cluster_list.item.remove_child (cluster_name)
+					clusters_impl.item.remove_child (cluster_name)
 					removed := True
 				end
 				if not removed then
-					cluster_list.forth					
+					clusters_impl.forth					
 				end
-			end				
+			end	
+			if clusters_table.item (cluster_name).override then
+				ace_accesser.set_override_cluster (Void)
+			end
+			clusters_table.remove (cluster_name)
 		end
 		
 	store is
@@ -456,7 +458,7 @@ feature -- Validation
 			end
 		end	
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation		
 
 	clusters_impl: ARRAYED_LIST [CLUSTER_PROPERTIES]
 			-- List of clusters at top level (does not include sub-clusters).

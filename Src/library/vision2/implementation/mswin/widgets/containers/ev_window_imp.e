@@ -941,7 +941,6 @@ feature {EV_ANY_I} -- Implementation
 			-- message `msg'.
 		local
 			a_menu: WEL_MENU
-			titled_window: EV_TITLED_WINDOW_IMP
 		do
 				-- The `Wm_ncactive' message is sent by windows when the
 				-- non client area of Current needs to be changed to indicate an

@@ -36,7 +36,6 @@
 			<TEXT>raise_on_error<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>graphical_output_disabled<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT>starting_layout<LIST_STRING>horizontal;select;vertical;horizontal;debug;object;feature</LIST_STRING></TEXT>
-			<TEXT>bench_recent_files<LIST_STRING>;</LIST_STRING></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Debugger_preferences" ICON="icon_preferences_folder">
 			<HEAD>Debugger preferences</HEAD>
@@ -69,7 +68,7 @@
 				<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>False</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="Enable syntax autocomplete">syntax_autocomplete<BOOLEAN>True</BOOLEAN></TEXT>
-				<TEXT DESCRIPTION="Any features appears in the feature call complete window">call_complete_with_any_features<BOOLEAN>False</BOOLEAN></TEXT>
+				<TEXT DESCRIPTION="Any features appear in the feature call complete window">call_complete_with_any_features<BOOLEAN>False</BOOLEAN></TEXT>
 				<TOPIC TOPIC_ID="class_structure_completion" ICON="icon_preferences_folder">
 					<HEAD>Class structure keywords</HEAD>
 					<TOPIC TOPIC_ID="indexing" ICON="icon_preferences_folder">

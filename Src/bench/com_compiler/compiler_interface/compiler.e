@@ -16,6 +16,7 @@ inherit
 			precompile,
 			freezing_occurred,
 			compiler_version,
+			generate_msil_keyfile,
 			Freeze_command_name,
 			freeze_command_arguments,
 			remove_file_locks,
@@ -145,6 +146,28 @@ feature -- Basic Operations
 			retry
 		end
 		
+	generate_msil_keyfile (filename: STRING) is
+			-- Generate an MSIL cryptographic key file
+		require else
+			filename_exists: filename /= Void
+			valid_filename: not filename.is_empty
+		local
+			l_result, key_size: INTEGER
+			public_key: POINTER
+			file: RAW_FILE
+		do
+			l_result := feature {MD_STRONG_NAME}.strong_name_key_gen (default_pointer, 0, $public_key, $key_size)
+			if l_result = 1 then
+				create file.make (filename)
+				if not file.exists then
+					file.open_write ()
+					file.put_data (public_key, key_size)
+					file.close
+				end
+				feature {MD_STRONG_NAME}.strong_name_free_buffer (public_key)	
+			end
+
+		end
 		
 	freezing_occurred: BOOLEAN is
 			-- Did last compile warrant a call to finish_freezing?

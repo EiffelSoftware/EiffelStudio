@@ -70,7 +70,7 @@ X   complete but found to have bugs
 -   NA
 (Note the TEST column will be used later)
 
-                                                        IF    WEL    GEL TEST
+                                                        IF   WEL  GEL  TEST
   Base:                                        
     kernel/ev_any.e                                     *    .    *    .
     properties/ev_drawable.e                            .    .    *    .

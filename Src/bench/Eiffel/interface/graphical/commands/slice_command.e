@@ -10,6 +10,8 @@ class SLICE_COMMAND
 inherit
 
 	PIXMAP_COMMAND
+		export
+			{ANY} button_three_action
 		redefine
 			tool
 		end;
@@ -20,11 +22,10 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_tool: OBJECT_W) is
+	make (a_tool: OBJECT_W) is
 			-- Initialize the command, add a button click action and create
 			-- the slice window.
 		do
-			!!slice_window.make (c, Current);
 			init (a_tool);
 		end;
 
@@ -76,8 +77,11 @@ feature {NONE} -- Implementation
 			!! mp.set_watch_cursor;
 			if argument = button_three_action then
 					-- 3rd button pressed
+				if slice_window = Void then
+					!! slice_window.make (popup_parent, Current);
+				end;
 				slice_window.call 
-			elseif argument = slice_window then
+			elseif slice_window /= Void and then argument = slice_window then
 				current_format := tool.last_format.associated_command;
 				if current_format = tool.showattr_frmt_holder.associated_command then
 					old_do_format := current_format.do_format;

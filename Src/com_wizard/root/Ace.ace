@@ -1,5 +1,5 @@
 -- This Ace file requires the following environment variables:
--- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL5\library)
+-- * "LIBRARY" should be set to the Eiffel library directory (e.g. $ISE_EIFFEL\library)
 
 system
 	com_wizard
@@ -8,8 +8,8 @@ root
 	APPLICATION(root_cluster): "make"
 
 default
---	assertion (no)
-	assertion (all)
+	assertion (no)
+--	assertion (all)
 
 cluster
 	
@@ -56,54 +56,55 @@ cluster
 		end;
 
 	-- EiffelBase
-	base_kernel:						"$EIFFEL5\library\base\kernel"
+	base_kernel:						"$ISE_EIFFEL\library\base\kernel"
 		visible
 			ARRAY;
 			STRING;
 		end;
 
-	all base_desc:					"$EIFFEL5\library\base\desc"
+	all base_desc:					"$ISE_EIFFEL\library\base\desc"
 
-	all base_structures:				"$EIFFEL5\library\base\structures"
+	all base_structures:				"$ISE_EIFFEL\library\base\structures"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end
 
-	all base_support:					"$EIFFEL5\library\base\support"
+	all base_support:					"$ISE_EIFFEL\library\base\support"
 
 	-- WEL
-	all wel:						"$EIFFEL5\library\wel"
+	all wel:						"$ISE_EIFFEL\library\wel"
 		default
 			assertion (no)
 		end;
 
 	-- EiffelCOM
-	ecom_constants:					"$EIFFEL5\library\com\Constants"
+	ecom_constants:					"$ISE_EIFFEL\library\com\Constants"
 
-	ecom_Interfaces:					"$EIFFEL5\library\com\Interfaces"
+	ecom_Interfaces:					"$ISE_EIFFEL\library\com\Interfaces"
 
-	ecom_Support:					"$EIFFEL5\library\com\Support"
+	ecom_Support:					"$ISE_EIFFEL\library\com\Support"
 
-	ecom_Structures:					"$EIFFEL5\library\com\Structures"
+	ecom_Structures:					"$ISE_EIFFEL\library\com\Structures"
 		visible
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
 		end;
 
 	-- EiffelTime
-	all time:						"$EIFFEL5\library\time"
+	all time:						"$ISE_EIFFEL\library\time"
 		exclude
 			"french";
 			"german"
 		end;
 
 external
-	include_path:	"$EIFFEL5\library\wel\spec\windows\include",
-					"$EIFFEL5\library\com\spec\windows\include"
+	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include",
+					"$ISE_EIFFEL\library\time\clib",
+					"$ISE_EIFFEL\library\com\spec\windows\include"
 
-	object: 		"$EIFFEL5\library\wel\spec\$(COMPILER)\lib\wel.lib",
-					"$EIFFEL5\library\time\spec\msc\lib\datetime.lib",
-					"$EIFFEL5\library\com\spec\msc\lib\com.lib",
-					"$EIFFEL5\library\com\spec\msc\lib\com_runtime.lib";
+	object: 		"$ISE_EIFFEL\library\wel\spec\$(COMPILER)\lib\wel.lib",
+					"$ISE_EIFFEL\library\time\spec\msc\lib\datetime.lib",
+					"$ISE_EIFFEL\library\com\spec\msc\lib\com.lib",
+					"$ISE_EIFFEL\library\com\spec\msc\lib\com_runtime.lib";
 end

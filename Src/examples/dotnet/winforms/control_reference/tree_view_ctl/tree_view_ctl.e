@@ -115,7 +115,6 @@ feature {NONE} -- Implementation
 			directory_tree.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			l_point.make_from_x_and_y (24, 16)
 			directory_tree.set_location (l_point)
-			directory_tree.set_allow_drop (True)
 			directory_tree.set_tab_index (0)
 			directory_tree.set_indent (19)
 			directory_tree.set_text (("treeView1").to_cil)

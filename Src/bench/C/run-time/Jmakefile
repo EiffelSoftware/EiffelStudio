@@ -14,7 +14,8 @@ LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
-	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c
+	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
+	path_name.c
 
 /*
  * The following files need a special treatment.

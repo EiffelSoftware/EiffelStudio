@@ -105,6 +105,7 @@ feature {NONE} -- Initialization
 			create force_directed_layout.make_with_world (empty_world)
 			force_directed_layout.stop
 			force_directed_layout.stop_actions.extend (agent on_force_stop)
+			force_directed_layout.set_theta (50)
 			
 			init_commands
 			build_tool_bar
@@ -184,6 +185,8 @@ feature {NONE} -- Initialization
 			fit_to_screen_cmd.enable_sensitive
 			create reset_view_cmd.make (Current)
 			reset_view_cmd.enable_sensitive
+			create force_settings_cmd.make (Current)
+			force_settings_cmd.enable_sensitive
 		end
 
 	build_tool_bar is
@@ -233,6 +236,7 @@ feature {NONE} -- Initialization
 			tb_commands.extend (remove_anchor_cmd)
 			tb_commands.extend (toggle_cluster_legend_cmd)
 			tb_commands.extend (toggle_uml_cmd)
+			tb_commands.extend (force_settings_cmd)
 			custom_toolbar := retrieve_diagram_toolbar (tb_commands)
 
 			custom_toolbar.update_toolbar
@@ -431,6 +435,9 @@ feature -- Access
 			Result ?= world
 		end
 
+	force_directed_layout: EIFFEL_FORCE_LAYOUT
+			-- Layout used to force direct the graph.
+
 feature -- Status settings.
 
 	update_excluded_class_figures is
@@ -510,6 +517,7 @@ feature -- Status settings.
 			reset_view_cmd.disable_sensitive
 			view_selector.disable_sensitive
 			view_menu_button.disable_sensitive
+			force_settings_cmd.disable_sensitive
 		end
 		
 	enable_toolbar is
@@ -1272,6 +1280,9 @@ feature {NONE} -- Commands
 			
 	fit_to_screen_cmd: EB_FIT_TO_SCREEN_COMMAND
 			-- Resize diagram such that it fits to screen.
+			
+	force_settings_cmd: EB_SHOW_PHYSICS_SETTINGS_COMMAND
+			-- Show settings dialog for force directed.
 
 feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 
@@ -1302,9 +1313,6 @@ feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 				force_directed_layout.layout
 			end
 		end
-		
-	force_directed_layout: EG_FORCE_DIRECTED_LAYOUT
-			-- Layout used to force direct the graph.
 
 feature {NONE} -- Events
 
@@ -1728,6 +1736,7 @@ feature {NONE} -- Implementation
 			reset_toolbar
 	
 			toggle_force_cmd.enable_sensitive
+			force_settings_cmd.enable_sensitive
 			remove_anchor_cmd.enable_sensitive
 			toggle_cluster_legend_cmd.enable_sensitive
 			change_color_cmd.enable_sensitive

@@ -983,6 +983,12 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("toggle_force")
 		end
+		
+	Icon_force_settings: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("force_settings")
+		end
+		
 
 	Icon_toggle_clusters: ARRAY [EV_PIXMAP] is
 		once
@@ -1490,7 +1496,8 @@ feature {NONE} -- Implementation
 			Result.put ([11, 9], "icon_pin_closed_color")
 			Result.put ([11, 10], "icon_pin_open_color")
 			Result.put ([11, 11], "icon_arrow_empty")
-
+			Result.put ([11, 12], "icon_force_settings_color")	
+		
 			Result.compare_objects
 		end
 

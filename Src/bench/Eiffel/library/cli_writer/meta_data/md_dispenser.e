@@ -34,13 +34,13 @@ feature {NONE} -- Implementation
 	new_md_dispenser: POINTER is
 			-- New instance of IMetaDataDispenser
 		external
-			"C use %"pe_writer.h%""
+			"C use %"cli_writer.h%""
 		end
 
 	c_define_scope_for_md_emit (an_item: POINTER): POINTER is
 			-- Call `DefineScope (CLSID_CorMetaDataRuntime, 0, IID_IMetaDataEmit, (IUnknown **) &imde)'.
 		external
-			"C use %"pe_writer.h%""
+			"C use %"cli_writer.h%""
 		end
 		
 end -- class MD_DISPENSER

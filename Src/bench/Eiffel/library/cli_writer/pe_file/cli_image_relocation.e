@@ -59,7 +59,7 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of CLI_IMAGE_RELOCATION structure.
 		external
-			"C macro use %"pe_writer.h%""
+			"C macro use %"cli_writer.h%""
 		alias
 			"sizeof(CLI_IMAGE_RELOCATION)"
 		end
@@ -69,19 +69,19 @@ feature {NONE} -- Implementation
 	c_set_block_rva (an_item: POINTER; i: INTEGER) is
 			-- Set `BlockRVA' to `i'.
 		external
-			"C struct CLI_IMAGE_RELOCATION access BlockRVA type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMAGE_RELOCATION access BlockRVA type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_block_size (an_item: POINTER; i: INTEGER) is
 			-- Set `BlockSize' to `i'.
 		external
-			"C struct CLI_IMAGE_RELOCATION access BlockSize type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMAGE_RELOCATION access BlockSize type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_fixup (an_item: POINTER; i: INTEGER_16) is
 			-- Set `Fixup' to `i'.
 		external
-			"C struct CLI_IMAGE_RELOCATION access Fixup type WORD use %"pe_writer.h%""
+			"C struct CLI_IMAGE_RELOCATION access Fixup type WORD use %"cli_writer.h%""
 		end
 
 end -- class CLI_IMAGE_RELOCATION

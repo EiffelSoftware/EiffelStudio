@@ -67,7 +67,7 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size of CLI_IMPORT_TABLE.
 		external
-			"C macro use %"pe_writer.h%""
+			"C macro use %"cli_writer.h%""
 		alias
 			"sizeof(CLI_IMPORT_TABLE)"
 		end
@@ -89,49 +89,49 @@ feature {NONE} -- Settings
 	c_set_import_lookup_table (an_item: POINTER; i: INTEGER) is
 			-- Set `ImportLookupTable' to `i'.
 		external
-			"C struct CLI_IMPORT_TABLE access ImportLookupTable type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access ImportLookupTable type DWORD use %"cli_writer.h%""
 		end
 	
 	c_set_time_date_stamp (an_item: POINTER; i: INTEGER) is
 			-- Set `TimeDateStamp' to `i'.
 		external
-			"C struct CLI_IMPORT_TABLE access TimeDateStamp type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access TimeDateStamp type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_forwarder_chain (an_item: POINTER; i: INTEGER) is
 			-- Set `ForwarderChain' to `i'.
 		external
-			"C struct CLI_IMPORT_TABLE access ForwarderChain type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access ForwarderChain type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_name_rva (an_item: POINTER; i: INTEGER) is
 			-- Set `NameRVA' to `i'.
 		external
-			"C struct CLI_IMPORT_TABLE access NameRVA type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access NameRVA type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_iat_rva (an_item: POINTER; i: INTEGER) is
 			-- Set `IatRVA' to `i'.
 		external
-			"C struct CLI_IMPORT_TABLE access IatRVA type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access IatRVA type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER) is
 			-- Set `ImportByNameRVA' to `i'.
 		external
-			"C struct CLI_IMPORT_TABLE access ImportByNameRVA type DWORD use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access ImportByNameRVA type DWORD use %"cli_writer.h%""
 		end
 
 	c_entry_point_name (an_item: POINTER): POINTER is
 			-- Access `EntryPointName'.
 		external
-			"C struct CLI_IMPORT_TABLE access EntryPointName use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access EntryPointName use %"cli_writer.h%""
 		end
 
 	c_library_name (an_item: POINTER): POINTER is
 			-- Access `LibraryName'.
 		external
-			"C struct CLI_IMPORT_TABLE access LibraryName use %"pe_writer.h%""
+			"C struct CLI_IMPORT_TABLE access LibraryName use %"cli_writer.h%""
 		end
 
 end -- class CLI_IMPORT_TABLE

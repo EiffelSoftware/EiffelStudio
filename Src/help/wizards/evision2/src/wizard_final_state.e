@@ -59,7 +59,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+	pixmap_icon_location: STRING is
 			-- Icon for the Eiffel Wel Wizard
+		once
+			Result := "eiffel_wizard_icon" + pixmap_extension
+		end
 
 end -- class WIZARD_FINAL_STATE

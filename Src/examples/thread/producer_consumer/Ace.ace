@@ -1,0 +1,34 @@
+system
+	pc
+
+root
+
+	PC (root_cluster): "make"
+
+default
+
+	assertion (all); -- On Eiffel4.2 , assertion are not MT-safe.
+	multithreaded(yes);
+	-- Uncomment the next line if you have the base-mt precompilation
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base-mt");
+
+cluster
+	
+	root_cluster: ".";
+	kernel:			"$EIFFEL4/library/base/kernel";
+	support:		"$EIFFEL4/library/base/support";
+	access:			"$EIFFEL4/library/base/structures/access";
+	cursors:		"$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:	"$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:		"$EIFFEL4/library/base/structures/dispenser";
+	iteration:		"$EIFFEL4/library/base/structures/iteration";
+	list:			"$EIFFEL4/library/base/structures/list";
+	set:			"$EIFFEL4/library/base/structures/set";
+	sort:			"$EIFFEL4/library/base/structures/sort";
+	storage:		"$EIFFEL4/library/base/structures/storage";
+	table:			"$EIFFEL4/library/base/structures/table";
+	traversing:		"$EIFFEL4/library/base/structures/traversing";
+	tree:			"$EIFFEL4/library/base/structures/tree";
+
+	thread:			"$EIFFEL4/library/thread";
+end

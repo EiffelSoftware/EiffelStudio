@@ -3738,7 +3738,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	to->sc_top += length;					/* Update free-location pointer */
 	memcpy (root, zone, length);/* The scavenge process itself */
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
-#ifdef EIF_NO_SCAVENGE
+#ifdef EIF_NO_SCAVENGING
 	eif_panic ("Scavenging is not disabled");
 #endif	/* EIF_NO_SCAVENGING */
 	zone->ov_size |= B_FWD;					/* Mark object as forwarded */

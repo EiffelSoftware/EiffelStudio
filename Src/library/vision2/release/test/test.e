@@ -339,7 +339,7 @@ feature
 			-- List of other Vision objects.
 		once
 			create Result.make
-			Result.extend (create {EV_FIGURE_ARC})
+			Result.extend (create {EV_FIGURE_ARC}.make_for_test)
 			Result.extend (create {EV_FIGURE_DOT}.make_for_test)
 --|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
 			Result.extend (create {EV_FIGURE_ELLIPSE}.make_for_test)
@@ -350,7 +350,7 @@ feature
 			Result.extend (create {EV_FIGURE_PICTURE}.make_for_test)
 			Result.extend (create {EV_FIGURE_PIE_SLICE}.make_for_test)
 			Result.extend (create {EV_FIGURE_POLYGON}.make_for_test)
-			Result.extend (create {EV_FIGURE_POLYLINE})
+			Result.extend (create {EV_FIGURE_POLYLINE}.make_for_test)
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
 			Result.extend (create {EV_FIGURE_WORLD})
@@ -483,6 +483,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/26 18:44:57  brendel
+--| Created arc and polyline with make_for_test.
+--|
 --| Revision 1.29  2000/04/26 18:32:35  brendel
 --| Reinserted changes.
 --|

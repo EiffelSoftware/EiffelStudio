@@ -29,19 +29,22 @@ cluster
  
 	-- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/matisse/support";
-	estore_interface:	"$EIFFEL4/library/matisse/interface";
-	estore_date:		"$EIFFEL4/library/matisse/date_and_time";
-	estore_db_support:	"$EIFFEL4/library/matisse/dbms/support";
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_interface:	"$EIFFEL4/library/store/interface";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+
+	-- EiffelTime
+	
+	time:				"$EIFFEL4/library/time";
 
 	-- Matisse for EiffelStore
 
-	matisse_interface : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_interface";
-	matisse_entities : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_entities";
-	matisse_entities_externals : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_entities/externals";
-	matisse_entities_streams : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_entities/streams";
-	matisse_sr : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_sr";
+	matisse_interface : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_interface";
+	matisse_entities : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities";
+	matisse_entities_externals : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities/externals";
+	matisse_entities_streams : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities/streams";
+	matisse_sr : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_sr";
 
-	oracle : "$EIFFEL4/library/matisse/dbms/rdbms/oracle";
+	oracle : "$EIFFEL4/library/store/dbms/rdbms/oracle";
 
 end

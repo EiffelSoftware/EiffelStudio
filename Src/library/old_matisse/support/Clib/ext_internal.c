@@ -8,7 +8,7 @@
 --| Telephone 805-685-1006
 --| Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <eiffel@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
 
 	Routines to implement class EXT_INTERNAL
@@ -17,14 +17,14 @@
 	Date: "$Date$"
 	Revision: "$Revision$"
 */
-#include "eiffel.h"
-#include "config.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "struct.h"
-#include "out.h"
-#include "macros.h"         /* For macro LNGOFF */
-#include "plug.h"
+#include "eif_eiffel.h"
+#include "eif_config.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_struct.h"
+#include "eif_out.h"
+#include "eif_macros.h"         /* For macro LNGOFF */
+#include "eif_plug.h"
 
 #ifndef TRUE
 #define TRUE 1
@@ -36,8 +36,7 @@
 /*
  * Routine definitions
  */
-void c_mark (obj)
-     EIF_OBJ obj;
+void c_mark (EIF_OBJ obj)
 {
 	union overhead *zone = HEADER(obj);
 	uint32 flags;
@@ -47,8 +46,7 @@ void c_mark (obj)
 	zone->ov_flags = flags;
 }
 
-void c_nullmark (obj)
-     EIF_OBJ obj;
+void c_nullmark (EIF_OBJ obj)
 {
 	union overhead *zone = HEADER(obj);
 	uint32 flags;
@@ -58,8 +56,7 @@ void c_nullmark (obj)
 	zone->ov_flags = flags;
 }
 
-EIF_BOOLEAN c_is_marked (obj)
-     EIF_OBJ obj;
+EIF_BOOLEAN c_is_marked (EIF_OBJ obj)
 {
 	union overhead *zone = HEADER(obj);
 	uint32 flags;
@@ -75,8 +72,7 @@ EIF_INTEGER c_nb_classes ()
 	return (scount);
 }
 
-EIF_BOOLEAN c_is_ref_array (obj)
-EIF_OBJ obj;
+EIF_BOOLEAN c_is_ref_array (EIF_OBJ obj)
 {
 	union overhead *zone = HEADER(obj);
 	uint32 flags;

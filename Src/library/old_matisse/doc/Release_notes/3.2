@@ -1,0 +1,109 @@
+
+EiffelStore 3.2
+December 1993
+---------------
+
+	The changes between EiffelStore 3.1 and 3.2 are
+	the following:
+
+	- New RDBMS handle: Sybase. Almost all the existing
+	documenntation remains unchanged. Changes are in
+	the hierarchy structure and the layout of private primitives
+	accross classes.
+
+	- With Sybase, class DB_CONTROL introduces the notation
+	of transaction:
+		+	Transaction cannot be started to modify RDBMS schema
+			(allocate REPOSITORY)
+		+ Transaction must be started with a DB_CONTROL.begin to
+		store/delete entries in RDBMS tables.
+		+ Transactions are not necessary to query (DB_SELECTION)
+		tables.
+
+	To address concurrently multiple bases/tables with cursor, one may
+	proceed as in the following example:
+
+
+class TWO_CURSOR
+
+inherit	
+
+	ACTION
+		redefine
+			execute
+		end
+
+creation
+
+	make
+
+feature
+
+	control: DB_CONTROL;
+
+	selection: DB_SELECTION;
+
+	cursor: DB_RESULT;
+
+	book: BOOK2;
+
+	app1: SYBASE_APPL;
+
+	app2: SYBASE_APPL;
+
+	make is
+		do
+			init_example;
+			control.begin;
+			!!selection.make;
+			!!cursor.make;
+			!!book.make;
+			selection.reset_cursor(cursor);
+			selection.set_action(Current);
+			selection.query("select * from db_book");
+			app1.set_base;
+			selection.query("select * from db_book");
+			from
+				cursor.fill_in
+			until
+				not selection.over
+			loop
+				selection.object_convert(book);
+				selection.cursor_to_object;
+				io.putstring(book.out);
+				selection.next;
+				cursor.fill_in
+			end;
+			selection.terminate;
+			app2.set_base;
+			selection.load_result;
+			control.commit;
+			control.disconnect;
+		end;
+
+	init_example is
+		do
+			!!app1;
+			!!app2;
+			app1.set_access_rights("sa","");
+			app1.set_base;
+			!!control.make;
+			control.set_trace;
+			control.connect;
+			app2.set_access_rights("sa","");
+			app2.set_base
+			control.connect;
+			!!selection.make;
+			!!cursor.make;
+			!!book.make
+		end;
+
+	execute is
+		do
+			selection.object_convert(book);
+			selection.cursor_to_object;
+			io.putstring(book.out)
+		end;
+
+
+end -- class TWO_CURSOR

@@ -53,10 +53,12 @@ local_realclean::
 	$(RM) libsupport.a
 
 libsupport.a: $(OBJS)
+	mkdir -p ../../spec/$(PLATFORM)/lib
 	$(RM) $@
 	$(AR) $@ $(OBJS)
-	$(MV) $@ $(EIFFEL4)/library/matisse/spec/$(PLATFORM)
-	$(RANLIB) $(EIFFEL4)/library/matisse/spec/$(PLATFORM)/$@
+	$(MV) $@ ../../spec/$(PLATFORM)/lib
+	$(RANLIB) ../../spec/$(PLATFORM)/lib/$@
+	$(MAKE) clobber
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit

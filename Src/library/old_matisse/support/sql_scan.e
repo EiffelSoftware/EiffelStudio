@@ -20,8 +20,6 @@ inherit
 		end
 
 	EXT_INTERNAL
-		--rename
-			--min as basic_min, max as basic_max
 		undefine
 			is_equal, copy, out, consistent, setup
 		end
@@ -82,7 +80,7 @@ feature -- Basic operations
 			r_real: REAL_REF
 			r_character: CHARACTER_REF
 			r_string: STRING
-			r_date: ABSOLUTE_DATE
+			r_date: DATE_TIME
 			r_bool: BOOLEAN_REF
 			r_double: DOUBLE_REF
 		do
@@ -260,8 +258,10 @@ feature {NONE} -- Status report
 			-- (May be redefined in descendant class).
 		do
 			Result := k
+-- FIXME: Jacques, comments removed according matisse library			
 		ensure
 			Result = k
+--			
 		end
 
 feature {NONE} -- Status setting
@@ -271,8 +271,10 @@ feature {NONE} -- Status setting
 			-- (May be redefined in descendant class).
 		do
 			max_index := field_count (obj)
+-- FIXME: Jacques, comments removed according to matisse library			
 		ensure
 			max_index = field_count (obj)
+--			
 		end
 
 	search_special is

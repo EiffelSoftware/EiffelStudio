@@ -41,11 +41,12 @@ feature -- Status report
 			Result := implementation.warning_message
 		end
 
-	is_ok : BOOLEAN is
+-- FIXME: Jacques, added according matisse library
+	is_ok_mat : BOOLEAN is
 		do
-			Result := implementation.is_ok
+			Result := implementation.is_ok_mat
 		end
-
+--
 feature -- Status setting
 
 	set_connect (new_value: BOOLEAN) is

@@ -82,6 +82,14 @@ feature -- Status report
 			Result := implementation.descriptor_available	
 		end
 
+	after: BOOLEAN is
+			-- Is the `container' after?
+		require
+			container_exists: container /= Void
+		do
+			Result := container.after
+		end
+
 feature -- Status setting
 
 	set_container (one_container: like container) is
@@ -146,7 +154,9 @@ feature -- Status setting
 
 	start is
 			-- Set `cursor' on first element of `container'.
+-- FIXME: Jacques, according to matisse library
 		require else
+-- end FIXME
 			container_exists: container /= Void
 		do
 			container.start
@@ -158,7 +168,9 @@ feature -- Status setting
 
 	forth is
 			-- Move `cursor' to next element of `container'.
+-- FIXME: Jacques, according to matisse library
 		require else
+-- end FIXME
 			container_exists: container /= Void
 		do
 			container.forth
@@ -190,48 +202,59 @@ feature -- Status setting
 			stop_condition_set: stop_condition = action
 		end
 
+	unset_action is
+			-- Reset `stop_condition' to Void.
+		do
+			stop_condition := Void
+		ensure
+			stop_condition_void: stop_condition = Void
+		end
+
 feature -- Basic operations
 
-    load_result is
-            -- Iterate through selection results,
-            -- load `container' if requested and call action routine
-            -- for each iteration step until `exit_condition' is met.
-        require
-            connected: is_connected
-            is_ok: is_ok 
-		local
-			i : INTEGER
-        do
-            from
-                if cursor = Void then
-                    !! cursor.make 
-                    cursor.set_descriptor (active_selection_number) 
-                end
-                if not handle.status.found then
-                cursor.fill_in 
-                end
-                if stop_condition /= Void then
-                    stop_condition.start
-                end 
-            until
-                is_exiting
-            loop
-                if container /= Void then
-                    container.extend(cursor)
-                    !! cursor.make
-                    cursor.set_descriptor (active_selection_number)
-                end
-                if stop_condition /= Void then
-                    stop_condition.execute
-                end
-                next
-                cursor.fill_in
-            end
-            implementation.terminate
-        ensure
-            cursor_not_void: cursor /= Void
-            exit_condition_met: is_exiting
-        end
+	load_result is
+			-- Iterate through selection results,
+			-- load `container' if requested and call action routine
+			-- for each iteration step until `exit_condition' is met.
+		require
+			connected: is_connected
+			is_ok: is_ok
+		do
+			from
+				if cursor = Void then
+					!! cursor.make
+					cursor.set_descriptor (active_selection_number)
+				end
+				if not handle.status.found then
+					cursor.fill_in
+				end
+				if stop_condition /= Void then
+					stop_condition.start
+				end
+			until
+				is_exiting
+			loop
+				if container /= Void then
+					container.extend (cursor)
+					!! cursor.make
+					cursor.set_descriptor (active_selection_number)
+				end
+				if stop_condition /= Void then
+					stop_condition.execute
+				end
+				next
+-- FIXME: JAcques, according to EiffelMatisse.
+			--	if not is_exiting then
+					cursor.fill_in
+			--	end
+-- End  FIXME
+			end
+			implementation.terminate
+		ensure
+			cursor_not_void: cursor /= Void
+			exit_condition_met: is_exiting
+		end
+
 	query (s: STRING) is
 			-- Select stored objects using `s' and make
 			-- them retrievable using `load_result'.
@@ -313,8 +336,8 @@ feature {NONE} -- Status report
 invariant
 
 	--last_cursor_in_container: 
-	--	container /= Void and then not container.empty 
-	--							implies container.has (cursor)
+		--container /= Void and then not container.empty 
+								--implies container.has (cursor)
 
 end -- class DB_SELECTION
 

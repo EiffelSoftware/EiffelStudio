@@ -339,7 +339,7 @@ feature {NONE} -- Status report
 	is_date (obj: ANY): BOOLEAN is
 			-- Is `obj' a date object?
 		local
-			r_date: ABSOLUTE_DATE
+			r_date: DATE_TIME
 		do
 			r_date ?= obj
 			Result := r_date /= Void

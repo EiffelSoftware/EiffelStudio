@@ -59,6 +59,43 @@ feature -- Status setting and report
 		deferred
 		end
 
+	begin_version_access(version:STRING):INTEGER is
+			-- Start of version access status from database handle
+			-- value of "latest" may be used for 'version' 
+		require
+			Version_exists: version /= Void and not version.empty
+			connection_exists: is_connected
+		deferred
+		end
+
+	end_version_access:INTEGER is
+			-- End version access status from database handle
+		require
+			connection_exists: is_connected
+		deferred
+		end
+
+feature -- Initialization
+	trans_tbl_make(fn:STRING) is
+		deferred	
+		end
+
+	trans_tbl_create is
+		deferred	
+		end
+
+	trans_tbl_restore is
+		deferred	
+		end
+
+	trans_tbl_exists:BOOLEAN is
+		deferred	
+		end
+
+	trans_tbl_filename:STRING is
+		deferred	
+		end
+
 end -- class DB_CONTROL_I
 
 
@@ -70,11 +107,9 @@ end -- class DB_CONTROL_I
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
+--| 270 Storke Road, ISE Building, second floor, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com> 
 --|----------------------------------------------------------------
-

@@ -54,6 +54,14 @@ feature -- Basic operations
 			all_transaction_ended: transaction_count = 0
 		end
 
+	begin is
+			-- Start a new transaction.
+		require
+			connection_exists: is_connected
+		do
+			handle.status.set (implementation.begin)
+		end
+
 	commit is
 			-- Commit work.
 		require
@@ -87,12 +95,28 @@ feature -- Basic operations
 			end
 		end
 
-	begin is
-			-- Start a new transaction.
+	begin_version_access(version:STRING) is
+			-- Start access of a version specified by 'version'
+			-- value is a version string as understood by the database
+		require
+			Version_exists: version /= Void and not version.empty
+			connection_exists: is_connected
+		do
+			handle.status.set (implementation.begin_version_access(version))
+		end
+
+	begin_version_access_latest is
+			-- Start access of most recent version
+		do
+			begin_version_access("latest")
+		end
+
+	end_version_access is
+			-- Finish a version access
 		require
 			connection_exists: is_connected
 		do
-			handle.status.set (implementation.begin)
+			handle.status.set (implementation.end_version_access)
 		end
 
 feature -- Status report
@@ -118,22 +142,43 @@ feature {NONE} -- Initialization
 			implementation := handle.database.db_control_i
 		end
 
+feature -- Initialization
+	trans_tbl_make(fn:STRING) is
+		do
+			implementation.trans_tbl_make(fn)
+		end
+
+	trans_tbl_create is
+		do
+			implementation.trans_tbl_create
+		end
+
+	trans_tbl_restore is
+		do
+			implementation.trans_tbl_restore
+		end
+
+	trans_tbl_exists:BOOLEAN is
+		do
+			Result := implementation.trans_tbl_exists
+		end
+
+	trans_tbl_filename:STRING is
+		do
+			Result := implementation.trans_tbl_filename
+		end
+
 end -- class DB_CONTROL
 
 
 --|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| EiffelStore: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
 --|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
+--| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
-

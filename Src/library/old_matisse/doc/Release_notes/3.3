@@ -1,0 +1,37 @@
+RELEASE NOTE
+			     EiffelStore 3.3
+			       October 1994
+		    Societe des Outils du Logiciel
+
+		       	---------------------
+
+The changes between EiffelStore 3.2 and 3.3 are the following:
+
+	o New Eiffel type support: class DOUBLE.
+
+	o Nested queries support (see example `nested').
+
+	o 1) Under Sybase database server,
+   	class DB_CONTROL introduces the notation
+   	of transaction:
+      	+  Transaction cannot be started to modify RDBMS schema
+         	(allocate REPOSITORY)
+      	+ Transaction must be started with a DB_CONTROL.begin to
+      	store/delete entries in RDBMS tables.
+      	+ Transactions are not necessary to query (DB_SELECTION)
+      	tables.
+
+   	o Each time a query is applied on a DB_SELECTION object,
+   	a dedicated cursor is given to the `query' operation,  until routine
+   	`terminate' is called which releases the cursor.
+   	Under ORACLE, the number of concurrently opened cursors
+   	is limited to 5. For any change in this limitation, see
+   	file $EIFFEL4/library/store/dbms/rdbms/oracle/Clib/oracle.pc
+   	since it requires a change in the PRO*C source file and
+   	a recompilation of the oracle.a external library.
+
+   	o The value retrieved from a column of type CHAR(n) is
+   	the exact same value as the one stored in the database.
+
+	o Sybase stored procedures (class DB_PROC).
+	See example `stored_proc'.

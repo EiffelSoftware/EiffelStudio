@@ -95,7 +95,6 @@ feature {NONE}-- Initialization
 				extend (vbox)
 				to_be_inserted.key_press_actions.extend (agent on_key_pressed)
 				to_be_inserted.change_actions.extend (agent on_text_edited)
-				disable_user_resize
 				focus_in_actions.extend (agent on_focus)
 				choice_list.pointer_button_release_actions.extend (agent mouse_selection)
 				key_press_actions.extend (agent on_key_pressed)

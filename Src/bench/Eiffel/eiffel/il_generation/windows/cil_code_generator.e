@@ -215,6 +215,9 @@ feature -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
+	public_key: MD_PUBLIC_KEY
+			-- Public key if used of current assembly.
+
 feature -- Settings
 
 	set_current_class_type (cl_type: like current_class_type) is
@@ -357,7 +360,9 @@ feature -- Settings
 
 feature -- Generation Structure
 
-	start_assembly_generation (assembly_name, a_file_name, location: STRING) is
+	start_assembly_generation (assembly_name, a_file_name,
+			a_key_pair_file_name, location: STRING)
+		is
 			-- Create Assembly with `name'.
 		require
 			assembly_name_not_void: assembly_name /= Void
@@ -368,6 +373,7 @@ feature -- Generation Structure
 			location_not_empty: not location.is_empty
 		local
 			ass: MD_ASSEMBLY_INFO
+			l_assembly_flags: INTEGER
 		do
 			create output_file_name.make_from_string (location)
 			output_file_name.set_file_name (a_file_name)
@@ -404,9 +410,18 @@ feature -- Generation Structure
 			create override_counter
 
 			remap_external_token
+
+			if a_key_pair_file_name /= Void then
+				create public_key.make_from_file (a_key_pair_file_name)
+				l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
+			else
+				public_key := Void
+			end
+
 			create ass.make
 			uni_string.set_string (assembly_name)
-			main_module_token := md_emit.define_assembly (uni_string, 0, ass)
+			main_module_token := md_emit.define_assembly (uni_string, l_assembly_flags, ass,
+				public_key)
 
 			define_custom_attribute (main_module_token, com_visible_ctor_token,
 				not_com_visible_ca)
@@ -500,6 +515,9 @@ feature -- Generation Structure
 				l_debug_info := dbg_writer.debug_info (l_dbg_directory)
 				l_pe_file.set_debug_information (l_dbg_directory, l_debug_info)
 				dbg_writer.close
+			end
+			if public_key /= Void then
+				l_pe_file.set_public_key (public_key)
 			end
 			l_pe_file.set_emitter (md_emit)
 			l_pe_file.set_method_writer (method_writer)
@@ -716,31 +734,58 @@ feature -- Class info
 					external_class_mapping.put (l_type, name)
 					external_token_mapping.put (l_type_token, name)
 				else
-						-- Let's define interface class.
-					uni_string.set_string (name)
-					l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-						feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-						feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-						feature {MD_TYPE_ATTRIBUTES}.Is_interface |
-						feature {MD_TYPE_ATTRIBUTES}.Abstract
-					if class_type.static_type_id = any_type_id then
-							-- By default interface of ANY does not implement any other interfaces
-							-- than EIFFEL_TYPE_INFO.
-						l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
-							<< ise_eiffel_type_info_type_token >>)
+					if not class_c.is_frozen then
+							-- Let's define interface class.
+						uni_string.set_string (name)
+						l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
+							feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
+							feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
+							feature {MD_TYPE_ATTRIBUTES}.Is_interface |
+							feature {MD_TYPE_ATTRIBUTES}.Abstract
+						if class_type.static_type_id = any_type_id then
+								-- By default interface of ANY does not implement any other interfaces
+								-- than EIFFEL_TYPE_INFO.
+							l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
+								<< ise_eiffel_type_info_type_token >>)
+						else
+							l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
+								last_parents)
+						end
+						class_mapping.put (l_type_token, class_type.static_type_id)
+						external_class_mapping.put (class_type.type, name)
+						external_token_mapping.put (l_type_token, name)
+						uni_string.set_string (impl_name)
 					else
-						l_type_token := md_emit.define_type (uni_string, l_attributes, 0,
-							last_parents)
+						uni_string.set_string (name)
 					end
-					class_mapping.put (l_type_token, class_type.static_type_id)
-					external_class_mapping.put (class_type.type, name)
-					external_token_mapping.put (l_type_token, name)
-					
+
 						-- Let's define implementation class.
 					l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
 						feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
 						feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
 						feature {MD_TYPE_ATTRIBUTES}.Is_class
+
+					if class_c.is_deferred then
+						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
+					end
+
+					if class_c.is_frozen then
+						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
+						l_type_token := md_emit.define_type (uni_string, l_attributes,
+							object_type_token, last_parents)
+					else
+						one_element_array.put (class_mapping.item (class_type.static_type_id), 0)
+
+						if is_single_inheritance_implementation then
+							single_parent_mapping.put (single_inheritance_parent_id,
+								class_type.implementation_id)
+							l_type_token := md_emit.define_type (uni_string, l_attributes,
+								class_mapping.item (single_inheritance_parent_id), one_element_array)
+						else
+							l_type_token := md_emit.define_type (uni_string, l_attributes,
+								object_type_token, one_element_array)
+						end
+					end
 
 					if is_debug_info_enabled and dbg_documents.item (class_c.class_id) = Void then
 						uni_string.set_string (class_c.file_name)
@@ -748,24 +793,6 @@ feature -- Class info
 							vendor_guid, document_type_guid), class_c.class_id)
 					end
 
-					uni_string.set_string (impl_name)
-					if class_c.is_deferred then
-						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
-					end
-					if class_c.is_frozen then
-						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
-					end
-					one_element_array.put (class_mapping.item (class_type.static_type_id), 0)
-
-					if is_single_inheritance_implementation then
-						single_parent_mapping.put (single_inheritance_parent_id,
-							class_type.implementation_id)
-						l_type_token := md_emit.define_type (uni_string, l_attributes,
-							class_mapping.item (single_inheritance_parent_id), one_element_array)
-					else
-						l_type_token := md_emit.define_type (uni_string, l_attributes,
-							object_type_token, one_element_array)
-					end
 					class_mapping.put (l_type_token, class_type.implementation_id)
 					external_class_mapping.put (class_type.type, impl_name)
 					external_token_mapping.put (l_type_token, impl_name)

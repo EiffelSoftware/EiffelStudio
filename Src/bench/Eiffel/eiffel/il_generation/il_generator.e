@@ -52,9 +52,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	classes_count: INTEGER
-			-- Number of classes in Universe.
-
 	compiled_classes_count: INTEGER
 			-- Number of classes generated in IL.
 
@@ -63,6 +60,9 @@ feature -- Access
 
 	is_finalizing: BOOLEAN
 			-- Are we finalizing?
+
+	has_root_class: BOOLEAN
+			-- Does current module has a root class specification?
 
 feature -- Generation
 
@@ -73,10 +73,10 @@ feature -- Generation
 			output_file_name: FILE_NAME
 			retried, is_assembly_loaded, is_error_available: BOOLEAN
 			deletion_successful: BOOLEAN
-			classes: ARRAY [CLASS_C]
 			output_file: RAW_FILE
 			l_last_error_msg: STRING
 			l_key_file_name: STRING
+			l_public_key: MD_PUBLIC_KEY
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -113,8 +113,26 @@ feature -- Generation
 							l_key_file_name)
 					end
 				end
-				il_generator.start_assembly_generation (System.name, file_name,
-					l_key_file_name, location, assembly_info)
+
+				if l_key_file_name /= Void then
+					if (create {MD_STRONG_NAME}).present then
+						create l_public_key.make_from_file (l_key_file_name)
+						if not l_public_key.is_valid then
+							l_public_key := Void
+								-- Introduce error saying that public key cannot be read.
+							Error_handler.insert_warning (create {VIIK})
+						end
+					else
+						l_public_key := Void
+						Error_handler.insert_warning (create {VISM})
+					end
+				else
+					l_public_key := Void
+				end
+
+				if l_public_key /= Void then
+					assembly_info.set_public_key_token (l_public_key.public_key_token_string)
+				end
 
 				create output_file_name.make_from_string (location)
 				output_file_name.set_file_name (file_name)
@@ -136,22 +154,33 @@ feature -- Generation
 				il_generator.set_verifiability (System.il_verifiable)
 				il_generator.set_cls_compliant (System.cls_compliant)
 
-					-- We currently have one module per assembly, in the future we might
-					-- generate our code using as many modules as C directories if we
-					-- were in our C code generation.
-				il_generator.start_module_generation (file_name, System.line_generation)
+					-- We add `8' because they are 8 types from ISE.Runtime
+					-- we want to reuse.
+				il_generator.initialize_class_mappings (static_type_id_counter.count + 8)
 
-				classes_count := System.classes.count
-				classes := sorted_classes (System.classes)
+					-- Identify all runtime types.
+				il_generator.set_runtime_type_id (static_type_id_counter.count + 1)
+				il_generator.set_class_type_id (static_type_id_counter.count + 2)
+				il_generator.set_generic_type_id (static_type_id_counter.count + 3)
+				il_generator.set_formal_type_id (static_type_id_counter.count + 4)
+				il_generator.set_none_type_id (static_type_id_counter.count + 5)
+				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
+				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
+				il_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
+
+				il_generator.start_assembly_generation (System.name, file_name,
+					l_public_key, location, assembly_info, System.line_generation)
+
+					-- Split classes into modules
+				prepare_classes (System.classes, is_finalizing)
 
 					-- Generate types metadata description and IL code
-				generate_types (classes)
+				generate_all_types (sorted_classes (System.classes))
 
-					-- Generate entry point, if any.
+					-- Generate entry point if necessary
 				generate_entry_point
 
 					-- Finish code generation.
-				il_generator.end_module_generation
 				il_generator.end_assembly_generation
 			else
 					-- An error occurred, let's raise an Eiffel compilation
@@ -267,11 +296,38 @@ feature -- Generation
 		
 feature {NONE} -- Type description
 
+	generate_all_types (classes: ARRAY [CLASS_C]) is
+			-- Generate all classes in compiled system.
+		require
+			valid_system: System.classes /= Void
+		do
+			generate_class_interfaces (classes)
+
+			if not is_finalizing then
+				degree_output.put_start_degree (1, compiled_classes_count)
+			end
+
+			from
+				ordered_classes.start
+			until
+				ordered_classes.after
+			loop
+				Il_generator.start_module_generation (ordered_classes.key_for_iteration)
+				generate_types (ordered_classes.item_for_iteration)
+				Il_generator.end_module_generation (has_root_class)
+				ordered_classes.forth
+			end
+			if not is_finalizing then
+				degree_output.put_end_degree
+			end
+		end
+		
 	generate_types (classes: ARRAY [CLASS_C]) is
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
 		do
+			has_root_class := False
 				-- Generate set of types as they are known from Eiffel
 				-- We simply define a basic correspondance between Eiffel
 				-- and IDs used by the IL code generator in a topological
@@ -285,7 +341,7 @@ feature {NONE} -- Type description
 			generate_features_implementation (classes)
 		end
 
-	generate_class_mappings (classes: ARRAY [CLASS_C]) is
+	generate_class_interfaces (classes: ARRAY [CLASS_C]) is
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
@@ -301,25 +357,6 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				compiled_classes_count := 0
-
-					-- We add `8' because they are 8 types from ISE.Runtime
-					-- we want to reuse.
-				il_generator.start_class_mappings (static_type_id_counter.count + 8)
-
-					-- Identify all runtime types.
-				il_generator.set_runtime_type_id (static_type_id_counter.count + 1)
-				il_generator.set_class_type_id (static_type_id_counter.count + 2)
-				il_generator.set_generic_type_id (static_type_id_counter.count + 3)
-				il_generator.set_formal_type_id (static_type_id_counter.count + 4)
-				il_generator.set_none_type_id (static_type_id_counter.count + 5)
-				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
-				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
-				il_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
-				il_generator.generate_type_class_mappings
-				il_generator.set_any_type_id (
-					System.any_class.compiled_class.types.first.static_type_id)
-				il_generator.set_object_type_id (
-					System.system_object_class.compiled_class.types.first.implementation_id)
 			variant
 				nb - i + 1
 			until
@@ -338,9 +375,12 @@ feature {NONE} -- Type description
 							cl_type := types.item
 								-- Generate correspondance between Eiffel IDs and
 								-- CIL information.
-							Il_generator.generate_class_mappings (cl_type)
-							if cl_type.is_generated and not l_class_counted then
-								compiled_classes_count := compiled_classes_count + 1
+							il_generator.generate_class_interfaces (cl_type, class_c)
+							cl_type.set_il_type_name
+							if cl_type.is_generated and then not l_class_counted then
+								if is_class_generated (class_c) then
+									compiled_classes_count := compiled_classes_count + 1
+								end
 								l_class_counted := True
 							end
 
@@ -352,6 +392,51 @@ feature {NONE} -- Type description
 							-- when a class does not have a generic derivation, `types' is empty
 							-- and `generate_class_mappings' is not called.
 						class_c.lace_class.set_actual_namespace
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	generate_class_mappings (classes: ARRAY [CLASS_C]) is
+			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
+			-- topological order.
+		require
+			classes_not_void: classes /= Void
+		local
+			class_c: CLASS_C
+			i, nb: INTEGER
+			types: TYPE_LIST
+			cl_type: CLASS_TYPE
+		do
+			from
+				i := classes.lower
+				nb := classes.upper
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if is_class_generated (class_c) then
+					has_root_class := has_root_class or else class_c.lace_class = System.root_class
+					types := class_c.types
+					if not types.is_empty then
+						from
+							types.start
+						until
+							types.after
+						loop
+							cl_type := types.item
+								-- Generate correspondance between Eiffel IDs and
+								-- CIL information.
+							if cl_type.is_generated then
+								Il_generator.set_current_module_with (cl_type)
+								Il_generator.generate_class_mappings (cl_type)
+							end
+
+							types.forth
+						end
 					end
 				end
 				i := i + 1
@@ -379,7 +464,7 @@ feature {NONE} -- Type description
 				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if class_c /= Void and not class_c.is_external then
+				if is_class_generated (class_c) then
 					System.set_current_class (class_c)
 					from
 						types := class_c.types
@@ -391,6 +476,7 @@ feature {NONE} -- Type description
 							-- Generate correspondance between Eiffel IDs and
 							-- CIL information.
 						if types.item.is_generated then
+							Il_generator.set_current_module_with (types.item)
 							Il_generator.generate_class_attributes (types.item)
 							if not l_class_processed then
 								j := j - 1
@@ -423,8 +509,6 @@ feature {NONE} -- Type description
 				j := compiled_classes_count
 				if is_finalizing then
 					degree_output.put_start_degree (-2, j)
-				else
-					degree_output.put_start_degree (1, j)
 				end
 			variant
 				nb - i + 1
@@ -432,7 +516,7 @@ feature {NONE} -- Type description
 				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if class_c /= Void and not class_c.is_external then
+				if is_class_generated (class_c) then
 					if (j \\ 500) = 0 then
 						feature {MEMORY}.full_collect
 						feature {MEMORY}.full_coalesce
@@ -449,12 +533,11 @@ feature {NONE} -- Type description
 
 						if cl_type.is_generated then
 							context.init (cl_type)
+							Il_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
 								if is_finalizing then
 									degree_output.put_degree_minus_2 (class_c, j)
-								else
-									degree_output.put_degree_1 (class_c, j)
 								end
 								System.set_current_class (class_c)
 								l_class_processed := True
@@ -470,7 +553,9 @@ feature {NONE} -- Type description
 				end
 				i := i + 1
 			end
-			degree_output.put_end_degree
+			if is_finalizing then
+				degree_output.put_end_degree
+			end
 		end
 
 	generate_features_implementation (classes: ARRAY [CLASS_C]) is
@@ -491,8 +576,6 @@ feature {NONE} -- Type description
 				j := compiled_classes_count
 				if is_finalizing then
 					degree_output.put_start_degree (-3, j)
-				else
-					degree_output.put_start_degree (-1, j)
 				end
 			variant
 				nb - i + 1
@@ -500,7 +583,7 @@ feature {NONE} -- Type description
 				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if class_c /= Void and not class_c.is_external then
+				if is_class_generated (class_c) then
 					if (j \\ 500) = 0 then
 						feature {MEMORY}.full_collect
 						feature {MEMORY}.full_coalesce
@@ -516,16 +599,18 @@ feature {NONE} -- Type description
 						cl_type := types.item
 						if cl_type.is_generated then
 							context.init (cl_type)
+							Il_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
 								if is_finalizing then
 									degree_output.put_degree_minus_3 (class_c, j)
 								else
-									degree_output.put_degree_minus_1 (class_c, j)
+									degree_output.put_degree_1 (class_c, j)
 								end
 								System.set_current_class (class_c)
 								l_class_processed := True
 								j := j - 1
+								compiled_classes_count := compiled_classes_count - 1
 							end
 
 							cl_type.set_assembly_info (assembly_info)
@@ -540,7 +625,9 @@ feature {NONE} -- Type description
 				end
 				i := i + 1
 			end
-			degree_output.put_end_degree
+			if is_finalizing then
+				degree_output.put_end_degree
+			end
 		end
 
 	generate_entry_point is
@@ -559,12 +646,99 @@ feature {NONE} -- Type description
 				root_feat := a_class.feature_table.item (System.creation_name)
 				l_decl_type := il_generator.implemented_type (root_feat.origin_class_id,
 					a_class.types.first.type)
-				il_generator.define_entry_point (a_class.types.first.implementation_id, l_decl_type.associated_class_type.implementation_id,
+				il_generator.define_entry_point (
+					a_class.types.first.implementation_id,
+					l_decl_type.associated_class_type,
 					root_feat.origin_feature_id)
 			end
 		end
 		
 feature {NONE} -- Sort
+
+	ordered_classes: HASH_TABLE [ARRAY [CLASS_C], INTEGER]
+			-- Classes sorted by their module appartenance.
+
+	prepare_classes (system_classes: CLASS_C_SERVER; is_one_module: BOOLEAN) is
+			-- Initialize `ordered_classes' so that it is organized by modules
+			-- and for each modules classes are sorted following their topological order.
+		require
+			system_classes_not_void: system_classes /= Void
+		local
+			l_classes: HASH_TABLE [ARRAYED_LIST [CLASS_C], INTEGER]
+			l_list: ARRAYED_LIST [CLASS_C]
+			i, nb, l_packet, l_max_packet: INTEGER
+			l_class: CLASS_C
+		do
+			create l_classes.make (10)
+			from
+				i := 1
+				nb := system_classes.capacity
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				l_class := system_classes.item (i)
+				if l_class /= Void then
+					if is_one_module then
+						l_packet := 1
+					else
+						l_packet := l_class.class_id
+					end
+					l_classes.search (l_packet)
+					if l_classes.found then
+						l_list := l_classes.found_item
+					else
+						create l_list.make (10)
+						l_classes.put (l_list, l_packet)
+					end
+					l_list.extend (l_class)
+					if l_packet > l_max_packet then
+						l_max_packet := l_packet
+					end
+				end
+				i := i + 1
+			end
+			
+			create ordered_classes.make (l_max_packet)
+			from
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_list := l_classes.item_for_iteration
+				l_packet := l_classes.key_for_iteration
+				
+				ordered_classes.put (sorted_array_from_list (l_list), l_packet)
+				l_classes.forth
+			end
+		ensure
+			ordered_classes_not_void: ordered_classes /= Void
+		end
+
+	sorted_array_from_list (a_list: ARRAYED_LIST [CLASS_C]): SORTABLE_ARRAY [CLASS_C] is
+			-- Initialize a sorted array of CLASS_C from `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1
+				nb := a_list.count
+				create Result.make (i, nb)
+				a_list.start
+			until
+				i > nb
+			loop
+				Result.put (a_list.item, i)
+				a_list.forth
+				i := i + 1
+			end
+			Result.sort
+		ensure
+			sorted_array_from_list_not_void: Result /= Void
+		end
 
 	sorted_classes (system_classes: CLASS_C_SERVER): ARRAY [CLASS_C] is
 			-- `system_classes' sorted following their topological
@@ -656,6 +830,13 @@ feature {NONE} -- Progression
 	dll_type: STRING is "dll"
 			-- Type of generation
 
+	is_class_generated (a_class: CLASS_C): BOOLEAN is
+			-- Is `a_class' to be generated?
+		do
+			Result := (a_class /= Void and then not a_class.is_external) and then
+				is_finalizing or else (a_class.is_generated and then a_class.degree_minus_1_needed)
+		end
+		
 invariant
 	system_exists: System /= Void
 

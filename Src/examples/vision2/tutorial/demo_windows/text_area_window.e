@@ -8,7 +8,7 @@ class
 	TEXT_AREA_WINDOW
 
 inherit
-	EV_TEXT_AREA
+	EV_TEXT
 		redefine
 			make
 		end
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
 		do
-			{EV_TEXT_AREA} Precursor (par)
+			{EV_TEXT} Precursor (par)
 			append_text ("This is a text area.")
 		end
 

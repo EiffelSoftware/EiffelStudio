@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			dc_not_void: dc /= Void
 			dc_exits: dc.exists
 		do
-			cwel_set_enum_font_fam_procedure_address ($convert)
+			cwel_set_enum_font_fam_procedure_address ($update_current)
 			cwel_set_font_family_enumerator_object (Current)
 			enumerate (dc, family)
 			cwel_set_enum_font_fam_procedure_address (default_pointer)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			finish_action
 		end
 
-	convert (lpelf, lpntm: POINTER; font_type: INTEGER; extra: POINTER) is
+	update_current (lpelf, lpntm: POINTER; font_type: INTEGER; extra: POINTER) is
 			-- Convert Windows pointers into Eiffel objects and
 			-- call `action'.
 		local

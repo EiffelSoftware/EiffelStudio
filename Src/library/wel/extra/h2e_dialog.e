@@ -116,7 +116,7 @@ feature {NONE} -- Behaviors
 				create conv.make (class_name_edit.text,
 					eiffel_file_edit.text,
 					h_file_edit.text)
-				conv.convert (h_file_edit.text)
+				conv.extract_definition (h_file_edit.text)
 				conv.close_file
 				translate_button.set_text (previous_text)
 				c.restore_previous

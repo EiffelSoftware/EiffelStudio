@@ -77,8 +77,7 @@ inherit
 			setup_dialog,
 			process_message,
 			wel_move_and_resize,
-			on_wm_destroy,
-			register_current_window
+			on_wm_destroy
 		end
 			
 	WEL_ID_CONSTANTS

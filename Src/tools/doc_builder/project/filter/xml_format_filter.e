@@ -49,6 +49,9 @@ feature {NONE} -- Processing
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Process `e'
 		do
+			if in_attribute then
+				rich_text.buffered_append (stag_end, tag_format)
+			end
 			rich_text.buffered_append (stag_start, tag_format)
 			rich_text.buffered_append (a_local_part, element_format)
 			in_attribute := True

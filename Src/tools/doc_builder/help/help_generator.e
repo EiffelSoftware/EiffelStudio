@@ -41,14 +41,7 @@ feature -- Generation
 			l_src_file, l_dest_file: RAW_FILE
 			l_src_name, l_dest_name: FILE_NAME
 		do		
-					-- First copy the HTML files in to a sub-directory of the Help project.  This
-					-- must be done because HTML Help 1.x won't compile in HTML files which are not
-					-- outside the directory hierarchy of the project.  It also ensures we know exactly
-					-- where all the files which should be included in the new help project are located.
---			create l_html_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
---			create l_help_dir.make (Shared_constants.Application_constants.Temporary_help_directory)
---			copy_directory (l_html_dir, l_help_dir)
-		
+				-- Generate the project
 			l_html_help_project ?= project
 			if l_html_help_project /= Void then				
 				generate_html_help (l_html_help_project)
@@ -60,11 +53,13 @@ feature -- Generation
 					l_web_help_project ?= project
 					if l_web_help_project /= Void then
 						generate_web_help (l_web_help_project)
+						create l_html_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
+						create l_help_dir.make (Shared_constants.Application_constants.Temporary_help_directory)
+						copy_directory (l_html_dir, l_help_dir)
 					end
 				end
 			end
-			
-					-- Copy new Help files to required path
+					-- Copy generated help project file to required path
 			create l_constants
 			if not l_constants.Temporary_help_directory.out.is_equal (project.location.name) then										
 				create l_src_name.make_from_string (l_constants.Temporary_help_directory.out)

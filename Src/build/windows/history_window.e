@@ -280,29 +280,33 @@ feature -- Interface
 			close_b: CLOSE_WINDOW_BUTTON;
 			del_com: DELETE_WINDOW;
 			focus_label: FOCUS_LABEL;
-			form: FORM
+			top_form, form: FORM
 		do
 				-----------------
 				-- Create widgets
 				-----------------
 			shell_make (Widget_names.history_window, a_screen);
 			!! form.make (Widget_names.form, Current);
-			!! focus_label.make (form);
+			!! top_form.make (Widget_names.form1, form);
+			!! focus_label.make (top_form);
 			!! list.make (Widget_names.list, form);
 			!! row_column.make (Widget_names.row_column, form);
 			!! undo_button.make (Widget_names.undo_label, row_column);
 			!! redo_button.make (Widget_names.redo_label, row_column);
-			!! close_b.make (Current, form, focus_label);
+			!! close_b.make (Current, top_form, focus_label);
 
 				----------------------
 				-- Perform attachments
 				----------------------
-			form.attach_top (focus_label, 5);
-			form.attach_left (focus_label, 0);
-			form.attach_right_widget (close_b, focus_label, 0);
-			form.attach_right (close_b, 0);
-			form.attach_top_widget (focus_label, list, 2);
-			form.attach_top_widget (close_b, list, 2);
+			top_form.attach_top (focus_label, 0);
+			top_form.attach_left (focus_label, 0);
+			top_form.attach_right_widget (close_b, focus_label, 0);
+			top_form.attach_right (close_b, 0);
+			top_form.attach_bottom (focus_label, 0);
+			top_form.attach_bottom (close_b, 0);
+			form.attach_left (top_form, 0);
+			form.attach_right (top_form, 0);
+			form.attach_top_widget (top_form, list, 2);
 			form.attach_left (list, 0);
 			form.attach_right (list, 0);
 			form.attach_bottom (row_column, 0);

@@ -1,8 +1,6 @@
-
--- Sequences of continuous segments
-
 indexing
 
+	description: "Sequences of continuous segments";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

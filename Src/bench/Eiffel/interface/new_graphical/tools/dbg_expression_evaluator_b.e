@@ -903,6 +903,7 @@ feature -- Concrete evaluation
 	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
+			f_is_not_attribute: not f.is_attribute
 		local
 			l_dynclass: CLASS_C
 			l_dyntype: CLASS_TYPE

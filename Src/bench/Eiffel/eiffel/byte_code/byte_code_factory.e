@@ -100,10 +100,6 @@ feature -- Convertibility
 					Result := l_nested
 				end
 			end
-
-			check
-				l_feat_not_void: l_feat /= Void
-			end
 		ensure
 			convert_byte_node_not_void: Result /= Void
 		end
@@ -116,8 +112,13 @@ feature {NONE} -- Implementation: status report
 			a_expr_not_void: a_expr /= Void
 			a_source_type_not_void: a_source_type /= Void
 			a_target_type_not_void: a_target_type /= Void
+		local
+			l_string_b: STRING_B
 		do
-
+			if a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type) then
+				l_string_b ?= a_expr
+				Result := l_string_b /= Void
+			end
 		end
 		
 feature {NONE} -- Implementation: Byte node
@@ -129,8 +130,17 @@ feature {NONE} -- Implementation: Byte node
 			a_source_type_not_void: a_source_type /= Void
 			a_target_type_not_void: a_target_type /= Void
 			is_basic_conversion: is_basic_conversion (a_expr, a_source_type, a_target_type)
+		local
+			l_string_b: STRING_B
 		do
-			
+			if a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type) then
+				l_string_b ?= a_expr
+				check
+					l_string_b_not_void: l_string_b /= Void
+				end
+				l_string_b.set_is_dotnet_string (True)
+				Result := l_string_b
+			end			
 		end
 
 feature {NONE} -- Implementation: Access

@@ -16,30 +16,35 @@
    Product: "EiffelStore";
    Database: "ORACLE"
 */
+
+#include "oci.h"
+
 #ifndef ORATYPES
 #include <oratypes.h>
 #endif /* ORATYPES */
 
-#ifndef ORACLE
-#define ORACLE
+#ifndef _ORACLE_H_
+#define _ORACLE_H_
+
+/* datatypes for Eiffel*/
+#define ORA_EIF_STRING_TYPE            10
+#define ORA_EIF_CHARACTER_TYPE          4
+#define ORA_EIF_INTEGER_TYPE            4
+#define ORA_EIF_FLOAT_TYPE              5
+#define ORA_EIF_REAL_TYPE 				6
+#define ORA_EIF_BOOLEAN_TYPE            3
+#define ORA_EIF_DATE_TYPE              11
+#define ORA_EIF_UNKNOWN_TYPE            0
 
  /*  internal/external datatype codes */
 #define VARCHAR2_TYPE				1
 #define NUMBER_TYPE					2
 #define INT_TYPE					3
-#define FLT_TYPE					4
-#define STRG_TYPE					5
+#define FLOAT_TYPE					4
+#define STRING_TYPE					5
 #define ROWID_TYPE					11
-#define D_TYPE						12
-/* datatypes for Eiffel*/
-#define STRING_TYPE            10
-#define CHARACTER_TYPE          4
-#define INTEGER_TYPE            4
-#define FLOAT_TYPE              5
-#define REAL_TYPE 				6
-#define BOOLEAN_TYPE            3
-#define DATE_TYPE              11
-#define UNKNOWN_TYPE            0
+#define DATE_TYPE					12
+
 /*  ORACLE error codes used in demonstration programs */
 #define VAR_NOT_IN_LIST       1007
 #define NO_DATA_FOUND         1403
@@ -133,19 +138,19 @@ int ora_put_select_name (int no_des, int i, char *result);
 int ora_start_order (int no_desc);
 int ora_terminate_order (int no_des);
 int ora_next_row (int no_des);
-int ora_set_parameter(int no_desc, text *stmt_buf, char *value);
+int ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value);
 int ora_connect (text *name, text *passwd);
 int ora_disconnect (void);
 int ora_rollback (void);
 int ora_commit (void);
 int ora_trancount (void);
 int ora_get_date_data (int no_des, int i);
-char ora_get_year(void);
-char ora_get_month(void);
-char ora_get_day(void);
-char ora_get_hour(void);
-char ora_get_min(void);
-char ora_get_sec(void);
+char *ora_get_year(void);
+char *ora_get_month(void);
+char *ora_get_day(void);
+char *ora_get_hour(void);
+char *ora_get_min(void);
+char *ora_get_sec(void);
 char * ora_get_warn_message (void);
 int ora_get_data_len (int no_des, int i);
 int ora_conv_type (int i);
@@ -154,9 +159,9 @@ int ora_get_count (int no_des);
 int ora_get_col_len (int no_des, int i);
 void ora_clear_error (void);
 char * ora_get_error_message (void);
-ora_c_free(char *ptr);
+void ora_c_free(char *ptr);
 void ora_error_handler(Cda_Def *cursor);
 
 
 
-#endif /* ORACLE */
+#endif /* _ORACLE_H_ */

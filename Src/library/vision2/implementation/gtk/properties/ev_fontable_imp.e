@@ -38,11 +38,14 @@ feature -- Status setting
 		local
 			a_style: POINTER
 			font_imp: EV_FONT_IMP
+			font_ptr: POINTER
 		do
 			private_font := clone (a_font)
 			font_imp ?= private_font.implementation
 			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (fontable_widget))
-			C.set_gtk_style_struct_font (a_style, font_imp.c_object)
+			font_ptr := C.gdk_font_ref (font_imp.c_object)
+			font_imp.set_font_object (font_ptr)
+			C.set_gtk_style_struct_font (a_style, font_ptr)
 			C.gtk_widget_set_style (fontable_widget, a_style)
 			C.gtk_style_unref (a_style)
 		end

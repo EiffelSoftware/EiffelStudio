@@ -12,7 +12,7 @@ inherit
 	DEFAULT_HOLE_COMMAND
 		redefine
 			symbol, full_symbol, icon_symbol,
-			name, stone_type
+			name, stone_type, menu_name, accelerator
 		end
 
 creation
@@ -24,24 +24,35 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Icon for the routine tool
 		once
-			Result := bm_Routine
+			Result := Pixmaps.bm_Routine
 		end;
 
 	full_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Routine_dot
+			Result := Pixmaps.bm_Routine_dot
 		end;
 
 	icon_symbol: PIXMAP is
 			-- Icon for the routine tool
 		once
-			Result := bm_Routine_icon
+			Result := Pixmaps.bm_Routine_icon
 		end;
 
 	name: STRING is
 		do
-			Result := l_New_routine
+			Result := Interface_names.f_New_routine
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_New_routine
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
     stone_type: INTEGER is

@@ -181,6 +181,9 @@ feature -- Basic operations
 					-- Now reset all constants.
 				constants.reset
 				
+					-- Ensure there is no longer a root window.
+				Object_handler.remove_root_window
+				
 				command_handler.update
 			end
 

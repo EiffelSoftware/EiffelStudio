@@ -13,15 +13,14 @@ inherit
 		rename
 			dump as basic_dump,
 			set as basic_set,
-			is_deep_equal as basic_is_deep_equal,
 			simple_format as basic_simple_format
 		end;
 
 	CLASS_TYPE_AS
 		redefine
-			dump, is_deep_equal, simple_format, set
+			dump, simple_format, set
 		select
-			dump, is_deep_equal, simple_format, set
+			dump, simple_format, set
 		end;
 
 feature {NONE} -- Initialization
@@ -39,16 +38,6 @@ feature {NONE} -- Initialization
 			-- Do nothing
 		end;
  
-feature -- Access
-
-	is_deep_equal (other: TYPE): BOOLEAN is
-		local
-			o: like Current
-		do
-			o ?= other;
-			Result := o /= Void and then basic_is_deep_equal (other)
-		end;
-
 feature -- Output
 
 	dump: STRING is

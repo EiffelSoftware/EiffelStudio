@@ -43,22 +43,26 @@ feature -- Creation
 		local
 			desc: DESCRIPTOR
 			local_class_types: TYPE_LIST
+			l_area: SPECIAL [DESCRIPTOR]
+			i, nb: INTEGER
 		do
 			base_class := c
 			class_types := c.types
 			local_class_types := class_types
 
-			make_filled (local_class_types.count)
+			nb := local_class_types.count
+			make_filled (nb)
 			from
-				start
+				l_area := area
+				nb := count
 				local_class_types.start
 			until
-				after
+				i = nb
 			loop
 				!! desc.make (local_class_types.item, s)
-				replace (desc)
-				forth
+				l_area.put (desc, i)
 				local_class_types.forth
+				i := i + 1
 			end
 		end
 
@@ -77,6 +81,8 @@ feature -- Insertion
 		local
 			u: ENTRY
 			local_class_types: TYPE_LIST
+			i, nb: INTEGER
+			l_area: SPECIAL [DESCRIPTOR]
 		do
 			if f.has_entry then
 				u := f.new_entry (System.routine_id_counter.invariant_rout_id)
@@ -84,13 +90,14 @@ feature -- Insertion
 					from
 						local_class_types := class_types
 						local_class_types.start
-						start
+						l_area := area
+						nb := count
 					until
-						after
+						i = nb
 					loop
-						item.set_invariant_entry (u.entry (local_class_types.item))
+						l_area.item (i).set_invariant_entry (u.entry (local_class_types.item))
 						local_class_types.forth
-						forth
+						i := i + 1
 					end
 				end
 			end
@@ -108,7 +115,8 @@ feature -- Insertion
 			u: ENTRY
 			ri: ROUT_INFO
 			origin: CLASS_ID
-			offset, nb_routines: INTEGER
+			offset, nb_routines, i, nb: INTEGER
+			l_area: SPECIAL [DESCRIPTOR]
 			desc: DESCRIPTOR
 			du: DESC_UNIT
 			void_entry: ENTRY
@@ -138,12 +146,13 @@ feature -- Insertion
 					from
 						local_class_types := class_types
 						local_class_types.start
-						start
+						l_area := area
+						nb := count
 					until
-						after
+						i = nb
 					loop
 							-- Get the descriptor of the class type.
-						desc := item
+						desc := l_area.item (i)
 							-- Create a desc_unit if an origin is encountered
 							-- for the first time and insert it in the
 							-- descriptor,  (otherwise recuperate existing one).
@@ -162,7 +171,7 @@ feature -- Insertion
 						end
 						du.put (u.entry (local_class_types.item), offset)
 						local_class_types.forth
-						forth
+						i := i + 1
 					end
 				end
 			end
@@ -178,21 +187,23 @@ feature -- Melting
 		local
 			ba: BYTE_ARRAY
 			md: MELTED_DESC
-			actual_count: INTEGER
+			actual_count, i, nb: INTEGER
+			l_area: SPECIAL [DESCRIPTOR]
 		do
 				-- Initialization.
 			ba := Byte_array
 			ba.clear
 
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				if item.class_type.is_modifiable then
+				if l_area.item (i).class_type.is_modifiable then
 					actual_count := actual_count + 1
 				end
-				forth
+				i := i + 1
 			end
 				-- Write the number descriptors.
 			ba.append_integer (actual_count)
@@ -210,16 +221,22 @@ feature -- Melting
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Append the byte code of each individual 
 			-- descriptor to `ba'
+		local
+			des: DESCRIPTOR
+			l_area: SPECIAL [DESCRIPTOR]
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count
 			until
-				after
+				i = nb
 			loop
-				if item.class_type.is_modifiable then
-					item.make_byte_code (ba)
+				des := l_area.item (i)
+				if des.class_type.is_modifiable then
+					des.make_byte_code (ba)
 				end
-				forth
+				 i := i + 1
 			end
 		end
 

@@ -225,6 +225,33 @@ feature -- Access
 			Result := wel_height
 		end
 
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen
+		local
+			wind: EV_WINDOW_IMP
+		do
+			wind ?= Current
+			if wind /= Void then
+				Result := x_position + wind.frame_width + wind.border_width - 1
+			elseif parent /= Void
+				then Result := x_position + parent.screen_x
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen. 
+		local 
+			wind: EV_WINDOW_IMP
+		do 
+			wind ?= Current
+			if wind /= Void then
+				Result := y_position + wind.title_height + wind.frame_height + 1
+			elseif parent /= Void then
+				Result := y_position + parent.screen_y
+			end
+		end
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -292,48 +319,6 @@ feature -- Status setting
 		do
 			enable
 		end
-
--- 	set_horizontal_resize (flag: BOOLEAN) is
--- 			-- Adapt `resize_type' to `flag'.
--- 		do
--- 			if flag then
--- 				if vertical_resizable then
--- 					resize_type := 3
--- 				else
--- 					resize_type := 1
--- 				end
--- 			else
--- 				if vertical_resizable then
--- 					resize_type := 2
--- 				else
--- 					resize_type := 0
--- 				end				
--- 			end
--- 			if parent_imp /= Void then
--- 				parent_ask_resize (child_cell.width, child_cell.height)
--- 			end
--- 		end
--- 
--- 	set_vertical_resize (flag: BOOLEAN) is
--- 			-- Adapt `resize_type' to `flag'.
--- 		do
--- 			if flag then
--- 				if horizontal_resizable then
--- 					resize_type := 3
--- 			else
--- 					resize_type := 2
--- 				end
--- 			else
--- 				if horizontal_resizable then
--- 					resize_type := 1
--- 				else
--- 					resize_type := 0
--- 				end				
--- 			end
--- 			if parent_imp /= Void then
--- 				parent_ask_resize (child_cell.width, child_cell.height)
--- 			end
--- 		end
 
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
@@ -932,6 +917,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/03/17 18:20:31  rogers
+--| Implemented screen_x and screen_y as they are now deferred from EV_WIDGET_I. Removed set_vertical_resize, set_horizontal_resize.
+--|
 --| Revision 1.56  2000/03/14 20:02:36  brendel
 --| Rearranged initialization.
 --|

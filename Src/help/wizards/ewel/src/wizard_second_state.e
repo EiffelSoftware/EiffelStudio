@@ -1,8 +1,8 @@
 indexing
-	description: "Page in which the user choose where he wants to generate the sources."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Page in which the user choose where he wants to generate the sources."
+	author		: "David Solal"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_SECOND_STATE

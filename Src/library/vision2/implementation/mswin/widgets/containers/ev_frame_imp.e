@@ -1,10 +1,9 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision frame, Mswindows implementation."
+		"Eiffel Vision frame. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
-	id: "$Id$"
 	revision: "$Revision$"
 
 class
@@ -35,10 +34,10 @@ inherit
 			interface
 		end
 
-	EV_FONTABLE_IMP
-		rename
-			interface as ev_fontable_interface
-		end
+--	EV_FONTABLE_IMP
+--		rename
+--			interface as ev_fontable_interface
+--		end
 
 	EV_TEXTABLE_IMP
 		rename
@@ -51,7 +50,9 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make
+			make as ev_wel_control_container_make,
+			style as window_style,
+			set_style as set_window_style
 		redefine
 			on_paint,
 			top_level_window_imp,
@@ -59,7 +60,7 @@ inherit
 			wel_set_text
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -69,15 +70,20 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
+			style := Ev_frame_etched_in
 		end
 
 	initialize is
 			-- Set default font.
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor
-			!WEL_ANSI_VARIABLE_FONT! wel_font.make
-			wel_set_font (wel_font)
+			wel_set_font (create {WEL_ANSI_VARIABLE_FONT}.make)
 		end
+
+feature -- Access
+
+	style: INTEGER
+			-- Visual appearance. See: EV_FRAME_CONSTANTS.
 
 feature -- Access
 
@@ -106,8 +112,14 @@ feature -- Access
 				2 * box_width).max (0)
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP
-			-- Top level window that contains the current widget.
+feature -- Element change
+
+	set_style (a_style: INTEGER) is
+			-- Assign `a_style' to `style'.
+		do
+			style := a_style
+			invalidate
+		end
 
 feature -- Status setting
 
@@ -121,6 +133,30 @@ feature -- Status setting
 			internal_set_minimum_size (dc.string_width (wel_text) +
 				2 * box_width + 10, box_text_height + 2 * box_width)
 			dc.release
+		end
+
+	align_text_center is
+			-- Display `text' centered.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	align_text_left is
+			-- Display `text' left aligned.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	align_text_right is
+			-- Display `text' right aligned.
+		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 feature -- Element change
@@ -173,6 +209,9 @@ feature {NONE} -- Implementation for automatic size compute.
 		end
 
 feature {NONE} -- WEL Implementation
+
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
 		repaint: BOOLEAN) is
@@ -267,11 +306,6 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	--| FIXME
-	align_text_center is do end
-	align_text_right is do end
-	align_text_left is do end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FRAME
@@ -299,6 +333,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/27 17:15:19  brendel
+--| Started revising.
+--|
 --| Revision 1.26  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.
 --|

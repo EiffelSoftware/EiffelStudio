@@ -11,6 +11,9 @@ class
 
 inherit
 	COM_OBJECT
+		rename
+			is_successful as is_com_successful
+		end
 
 create
 	make_by_pointer

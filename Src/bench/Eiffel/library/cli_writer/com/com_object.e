@@ -43,6 +43,14 @@ feature -- Ref management
 			end			
 			cpp_addref (item)
 		end
+
+feature -- Status report
+
+	is_successful: BOOLEAN is
+			-- Was last call to a COM routine of `Current' successful?
+		do
+			Result := last_call_success = 0
+		end
 		
 feature {NONE} -- Access 
 

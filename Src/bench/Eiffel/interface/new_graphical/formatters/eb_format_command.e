@@ -14,6 +14,8 @@ inherit
 			set_menu_item, set_button
 		end
 
+	EB_CONFIRM_SAVE_CALLBACK
+
 create
 	make
 
@@ -28,10 +30,9 @@ feature -- Access
 
 	f: EB_FORMATTER
 
-	user_warned : BOOLEAN
-		-- has a confirmation dialog been displayed yet?
+	s: STONE
 
-feature
+feature -- Feedback
 
 	set_menu_item (m: like menu_item) is
 		do
@@ -45,13 +46,20 @@ feature
 			b.add_click_command (Current, Void)
 		end
 
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
+
+	process is
+		do
+--			execute_licensed (s)
+			f.format (s)
+		end
+
 feature -- Execution
 
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Execute current command but don't change the cursor into watch shape.
 		local
 --			mp: MOUSE_PTR
-			s: STONE
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 			if argument = Void then
@@ -59,12 +67,10 @@ feature -- Execution
 			else
 				s ?= argument.first
 			end
-			if not (f.tool.text_window.changed) or else user_warned then
---				execute_licensed (s)
-				f.format (s)
+			if f.tool.text_window.changed then
+				create csd.make_and_launch (f.tool, Current)
 			else
-				create csd.make_and_launch (f.tool, Current, argument)
-				user_warned := True
+				process
 			end
 		end
 		

@@ -13,9 +13,28 @@ deferred class
 	EV_STANDARD_DIALOG_IMP
 
 inherit
+
+	EV_STANDARD_DIALOG_I
+
 	EV_DIALOG_IMP
 		rename
 			make as old_make
+		end
+
+feature {EV_MESSAGE_DIALOG_IMP} -- Execute procedure
+
+	execute (argument: EV_ARGUMENT1[EV_STANDARD_DIALOG_I]; data: EV_EVENT_DATA) is
+			-- Command to close the dialog
+		local
+			dialog: EV_STANDARD_DIALOG
+		do
+--			argument.first.interface.destroy
+--				-- destroy the gtk object
+			dialog ?= argument.first.interface
+			dialog.hide
+--				-- Hide the gtk object
+				-- The user must no forget to destroy
+				-- the dialog when no more needed.
 		end
 
 end -- class EV_STANDARD_DIALOG_IMP

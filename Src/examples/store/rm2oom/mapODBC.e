@@ -51,6 +51,10 @@ feature
 				io.putstring("Can't connect to the database.%N")
 			else
 				--  The Eiffel program is now connected to the database
+
+				io.putstring ("%NEnter path of directory where files will be generated: ")
+				io.readline
+				path_name := clone (io.laststring)
 				from 
 					io.putstring("%NEnter repository name (`exit' to terminate): ");
 					io.readline;
@@ -71,7 +75,7 @@ feature
 						-- Generate an Eiffel class according to
 						-- the object type loaded in the DB_REPOSITORY
 						io.new_line;
-						repository.generate_class
+						generate_class (repository)
 					end;
 					io.putstring("%NEnter repository name (`exit' to terminate): ");
 					io.readline
@@ -81,6 +85,34 @@ feature
 				session_control.disconnect
 			end
 		end -- make
+
+	generate_class (repository: DB_REPOSITORY) is
+			-- Generate class from `repository'.
+		local
+			fi: PLAIN_TEXT_FILE
+			rescued: BOOLEAN
+			fn: FILE_NAME
+		do
+			if not rescued then
+				create fn.make_from_string (path_name)
+				fn.extend (repository.repository_name)
+				fn.add_extension (Eiffelclass_extension)
+				create fi.make_create_read_write (fn)
+				repository.generate_class (fi)
+				fi.close
+			else
+				io.putstring ("Cannot create file " + repository.repository_name)
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	Eiffelclass_extension: STRING is "e"
+			-- Extension for an Eiffel class.
+
+	path_name: STRING
+			-- Class generation path name.
 
 end -- class MAPPER
 

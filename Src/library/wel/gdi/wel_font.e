@@ -184,7 +184,6 @@ feature -- Access
 				
 				size := screen_dc.string_size (a_string)
 				cur_width := size.width
-				cur_width := cur_width + screen_dc.character_size (a_string.item (a_string.count)).width
 				cur_height := size.height
 				
 				screen_dc.unselect_font

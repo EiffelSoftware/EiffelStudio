@@ -484,10 +484,10 @@ feature {NONE} -- Implementation
 				-- Compute usefull constants
 			bitmap_height := height
 			bitmap_width := width
-			window_width := display_width
-			window_height := display_height
-			bitmap_left := (display_width - bitmap_width) // 2
-			bitmap_top := (display_height - bitmap_height) // 2
+			window_width := wel_width
+			window_height := wel_height
+			bitmap_left := (window_width - bitmap_width) // 2
+			bitmap_top := (window_height - bitmap_height) // 2
 			bitmap_right := bitmap_left + bitmap_width
 			bitmap_bottom := bitmap_top + bitmap_height
 						
@@ -784,6 +784,9 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/06/09 01:55:59  manus
+--| Merged version 1.6.2.5 from DEVEL branch to trunc
+--|
 --| Revision 1.10  2000/06/08 18:59:37  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -1,0 +1,308 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>ISE Assembly Manager Guided Tour</TITLE>
+		<LINK REL=StyleSheet HREF="../default.css">
+<HTML>
+	<HEAD>
+		<SCRIPT LANGUAGE="JScript">
+
+			// Default values
+			var left = 10;
+			var top = 10;
+			var height = 500;
+			var width = 500;
+			var oNewWindow = 0;
+
+			function ImageClick( oImage )
+			{
+				if( oNewWindow == 0 || oNewWindow.closed )
+				{
+					oNewWindow = window.open ("","", "left=" + left + ", top=" + top + ", height=" + height + ", width=" + width + ", status=no, toolbar=no, menubar=no, location=no, resizable=yes", true );
+					oNewWindow.document.write ("<HTML><BODY BGCOLOR=\"#EEEEEE\"><TABLE WIDTH=\"100%\" HEIGHT=\"100%\"><TR><TD WIDTH=\"100%\" VALIGN=\"MIDDLE\" ALIGN=\"CENTER\"><IMG SRC=" + oImage.src + "></TD></TR></TABLE></HTML></BODY>");
+				}
+				else
+				{
+					left = oNewWindow.screenLeft;
+					top = oNewWindow.screenTop;
+					height = oNewWindow.document.body.clientHeight;
+					width = oNewWindow.document.body.clientWidth;
+					oNewWindow.close();
+					ImageClick( oImage );
+				}
+			}
+		</SCRIPT>
+
+	</HEAD>
+
+	<BODY>
+		<br>
+		<br>
+		<h1>ISE Assembly Manager Guided Tour</h1><br>
+
+		<p>
+			To use the APIs of the Microsoft .NET framework in your Eiffel# systems, you need to <b>emit the <a href = "../reference/00_definitions/external_class.html">external Eiffel classes</a></b> corresponding to these assemblies.	ISE Assembly Manager provides you with a simple way to do this. The assembly you want to import must be signed.<br>
+			Once you have imported the assemblies to the <a href = "../reference/00_definitions/eiffel_assembly_cache.html"><b>Eiffel assembly cache</b></a>, ISE Assembly Manager gives you another powerful ability: <b>edit types</b> of the imported assemblies. Thus, you will be able to modify the automatically generated names of features and arguments to names that are more suitable. ISE Assembly Manager will <b>check the consistency of your modifications</b> before saving the changes and updating the corresponding Eiffel classes.
+		</p>
+		<p>
+			Since the importation time is quite long (a few minutes to up to twenty minutes for assemblies such as `System.Windows.Forms.dll', which have many dependencies), the most commonly used assemblies of the .NET framework are <b>already imported</b> to the Eiffel Assembly Cache in the delivery. <br>
+			You can change the names of the features and arguments of pre-imported assemblies the same way you can edit assemblies you have imported yourself.
+		</p>
+		<p>
+			This section guides you through the powerful functionalities provided by ISE Assembly Manager.
+		</p>
+		<br>
+
+		<a name = interface></a>
+		<h2>First glimpse of the user interface</h2><br>
+
+		<table><tr><td>
+		<p>
+			<b>EiffelStudio</b> gives you access to ISE Assembly Manager either through the following toolbar button: <img src = "../images/eiffel_studio_toolbar_button.png" no border> or through the `Tools' menu:
+		</p>
+		</td><td>
+			<IMG border=1 SRC = "../images/eiffel_studio_tools_menu.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+		</td></tr></table>
+		<br>
+		<table><tr><td>
+		<p>
+			ISE Assembly Manager comes out with the following screen, we called &quot;Imported assembly viewer&quot;:
+		</p>
+		</td><td align = right>
+		<p>
+			<IMG border=1 SRC = "../images/imported_assembly_viewer.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+		</p>
+		</td></tr></table>
+		<br>
+
+		<ul>
+		<li><h3>The `File' menu</h3></li>
+			<table><tr><td>
+			<p>
+					<img src = "../images/file_menu.png" no border >
+			</p>
+			</td><td>
+			<p>
+				The `File' menu provides you with another way to close ISE Assembly Manager by clicking on the `Exit' menu item.
+			</p>
+			</td>
+			</tr></table>
+			<br>
+
+		<li><h3>The `View' menu</h3></li>
+			<table cellspacing = 15><tr><td>
+			<p>
+				<IMG border=1 SRC = "../images/view_menu.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+			</p>
+			</td><td>
+			<p>
+				The first six menu items enable you to show new columns in the array. By default, only the assembly name and the path to Eiffel  sources are visible. But you may want to see also the assembly version, culture and public key or assembly dependencies. That is the aim of these six items. The first six toolbar buttons give you the same opportunity: <img src = "../images/imported_assembly_viewer_view_toolbar.png" no border><br>
+				The last two items of the `View' menu are only a faster way to show all columns or come back to the initial layout.
+			</p>
+			</td><tr></table>
+
+			<table>
+			<tr><td>
+			<p>
+				Here are some screenshots of the imported assembly viewer with different possible layouts:
+			</p>
+			</td><td>
+				<IMG border=1 SRC = "../images/imported_assembly_viewer_with_version_culture_public_key.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+			</td><td>
+				<IMG border=1 SRC = "../images/imported_assembly_viewer_with_dependencies.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+			</td></tr></table>
+
+			<p class = "note">
+				<b>Note</b> that when you click on `Show dependencies', a new column will be added to the initial array. But it will only show the names of dependencies. If you want some more precise information about them, just select `Dependency Viewer' in the `Tools' menu to open the <a href = "../reference/10_dependency_viewer/index.html">dependency viewer</a> and have a more complete view of each dependency.
+			</p>
+			<br>
+
+		<li><h3>The `Tools' menu</h3></li>
+			<p>
+				<center>
+					<IMG border=1 SRC = "../images/tools_menu.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+				</center>
+			</p>
+			<ul>
+				<li><b>Dependency Viewer</b></li>
+					<p>
+						This item (as well as the following toolbar button:<img src = "../images/dependency_viewer_toolbar_button.png" no border>) gives you the ability to launch the <a href = "../reference/10_dependency_viewer/index.html">dependency viewer</a>, which lists all dependencies of the selected assembly.
+					</p>
+					<br>
+
+				<li><b>Edit</b></li>
+					<p>
+						This item (as well as the following toolbar button:<img src = "../images/edit_toolbar_button.png" no border>) gives you access to the <a href = "../reference/20_assembly_view/index.html">assembly view</a> and then edit some types of your choice.
+					</p>
+					<br>
+
+				<li><b>Remove</b></li>
+					<p>
+						This item (as well as the following toolbar button:<img src = "../images/remove_toolbar_button.png" no border>) opens the <a href = "../reference/40_remove_dialog/index.html">remove dialog</a>, which enables you to remove assemblies from the <a href = "../reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>.
+					</p>
+					<br>
+
+				<li><b>Eiffel generation</b></li>
+					<p>
+						This item (as well as the following toolbar button:<img src = "../images/eiffel_generation_toolbar_button.png" no border>) gives you access to the <a href = "../reference/50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a>, which enables you to update the Eiffel sources corresponding to the selected assembly.
+					</p>
+					<br>
+
+				<li><b>Import Tool</b></li>
+					<p>
+						This last item of the `Tool' menu (as well as the following toolbar button:<img src = "../images/import_tool_toolbar_button.png" no border>) gives you access to the <a href = "../reference/60_import_tool/index.html">import tool</a>, which pretty looks like the imported assembly viewer but lists the shared assemblies from the Global Assembly Cache instead of the imported assemblies from the <a href = "../reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>.
+					</p>
+			</ul>
+
+		<li><h3>The `Help' menu</h3></li>
+			<p>
+				<center>
+					<img src = "../images/help_menu.png" no border>
+				</center>
+			</p>
+			<ul>
+				<li><b>Help Topics</b></li>
+					<table>
+					<tr><td>
+					<p>
+						This item (as well as the toolbar button <img src = "../images/help_toolbar_button.png" no border>) opens the help topics about ISE Assembly Manager:
+					</p>
+					</td><td align = right>
+					<p>
+						<IMG border=1 SRC = "../images/help_window.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+					</p>
+					</td></tr></table>
+					<br>
+
+				<li><b>About ISE Assembly Manager</b></li>
+					<table><tr><td>
+					<p>
+						This menu item gives you some general information about ISE Assembly Manager and the company Interactive Software Engineering, Inc.
+					</p>
+					</td><td>
+					<p>
+						<IMG border=1 SRC = "../images/about_ise_assembly_manager.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+					</p>
+					</td></tr></table>
+			</ul>
+		</ul>
+		<br>
+
+		<a name = import></a>
+		<h2>Importing signed assemblies to the Eiffel Assembly Cache</h2><br>
+
+		<p>
+				To import an assembly to the <a href = "../reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>, you have to make sure the assembly is signed.
+		</p>
+		<p>
+				If your current screen is the <a href = "./assembly_manager.html#interface">imported assembly viewer</a> (the first window when you launch ISE Assembly Manager), you first have to open the <a href = "../reference/60_import_tool/index.html">import tool</a> by clicking on the following toolbar button <img src = "../images/import_tool_toolbar_button.png" no border> or selecting the menu item `Import Tool' in the `Tools' menu.
+		</p>
+		<p>
+			 	Depending on the "kind" of assembly you want to import, you will follow two different schemes:
+		</p>
+		<ul>
+			<li><b>To import a signed assembly, which is in the Global Assembly Cache:</b></li><br>
+			<ol>
+				<li>Click on the name of the shared assembly you want to import (in the array listing all shared assemblies)</li>
+				<li>Click on the following toolbar button <img src = "../images/import_dialog_toolbar_button.png" no border> or select the menu item `Import' in the `Tools' menu. </li>
+			</ol>
+
+			<table><tr><td>
+			<p>
+				In both cases, the <a href = "../reference/70_import_dialog/index.html">import dialog</a> will appear and help you import the selected assembly to the <a href = "../reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>.
+			</p>
+			</td><td>
+			<p>
+				<IMG border=1 SRC = "../images/import_dialog.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+			</p>
+			</td></tr></table>
+
+			<li><b>To import a signed assembly, which is in not in the Global Assembly Cache:</b></li><br>
+			<table>
+			<tr><td>
+			<p>
+				Click on the open toolbar button <img src = "../images/open_assembly_toolbar_button.png" no border> or select the menu item `Open Assembly' in the `File' menu. In both cases, the <a href = "../reference/80_open_assembly_dialog/index.html">open assembly dialog</a> will appear.
+			</p>
+			</td><td>
+			<p>
+				<IMG border=1 SRC = "../images/open_assembly_dialog.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+			</p>
+			</td></tr></table>
+			<p>
+				You just have to select the signed assembly you want to import and click on `Open' to open the <a href = "../reference/70_import_dialog/index.html">import dialog</a>, which will help you import the selected assembly to the <a href = "../reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>.
+			</p>
+		</ul>
+		<p class = "tip">
+			<b>Tip</b>: The import dialog gives you the opportunity to import the dependencies together with the assembly. Not importing the dependencies may result in compilation errors, it is strongly recommended that you import all of the dependencies together with the assembly (only the dependencies that have not been imported yet are displayed).
+		</p>
+		<br><br>
+
+		<a name = edit></a>
+		<h2>Editing imported assemblies</h2><br>
+
+		<table><tr><td>
+		<p>
+			To edit an imported assembly, your current screen has to be the <a href = "./assembly_manager.html#interface">imported assembly viewer</a>, that is the window that appears when you launch ISE Assembly Manager.<br>
+			Click on the name of the assembly you want to edit (in the table).<br>
+
+			At this point, you have the choice between clicking on the toolbar button <img src = "../images/edit_toolbar_button.png" no border> or selecting the menu item `Edit' in the `Tools' menu. In both cases the <a href = "../reference/20_assembly_view/index.html">assembly view</a> will appear, displaying the list of types in the assembly. If you want to edit a particular type, just simple click on the type name (the Eiffel name) and the <a href = "../reference/30_type_view/index.html">type view</a> will be opened.
+		</p>
+		</td><td>
+		<p>
+			<IMG border=1 SRC = "../images/type_view.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+		</p>
+		</td></tr></table>
+		<p>
+			This class short form is editable: it gives you the opportunity to rename the name of each local feature and its arguments names.
+		</p>
+		<p class = "note">
+			<b>Note</b>: Only <b>local features</b> (i.e. first defined in the currently edited class) and its arguments names are editable. If you want to rename a feature, which is inherited (or an argument whose related feature is inherited) you have to switch to the parent class to change the feature name (or argument name).
+		</p>
+
+		<ul>
+			<li><b>Rename a class feature</b></li>
+				<p>
+					When you open the type view (by clicking on the type Eiffel name in the <a href = "../reference/20_assembly_view/index.html">assembly view</a>), the text field with name of the first feature of the class is automatically selected.	You just have to type the new feature name.
+				</p>
+				<br>
+
+			<li><b>Rename a feature argument</b></li>
+				<p>
+					To rename a feature argument, just give the focus to the text field you want to edit (by clicking with the mouse) and type the new argument name.
+				</p>
+				<br>
+		</ul>
+		<p>
+			ISE Assembly Manager first checks that your <b>changes are consistent</b> before saving them. In case problems are detected, the list of errors appears at the bottom of the type view.	When you click on an error message, the focus is given to the corresponding text field, inviting you to modify it.<br>
+			When all changes are correct, ISE Assembly Manager saves changes and <b>updates the Eiffel class</b> (and its children if any).
+		</p>
+		<p class = "note">
+			<b>Note</b>: Even if you do not want to rename class features or arguments, you always have the opportunity to update the Eiffel classes corresponding to any imported assemblies through the <a href = "../reference/50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a> accessible from the <a href = "./assembly_manager.html#interface">imported assembly viewer</a>. This may be useful in case you mistakenly deleted the folder containing the Eiffel classes.
+		</p>
+		<br><br>
+
+		<a name = remove></a>
+		<h2>Removing assemblies from the Eiffel Assembly Cache</h2><br>
+
+		<table><tr><td>
+		<p>
+			To remove an assembly from the <a href = "../reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>, your current screen has to be the <a href = "./assembly_manager.html">imported assembly viewer</a>, that is the window that appears when you launch ISE Assembly Manager.<br>
+			Click on the name of the assembly you want to remove (in the table).<br>
+
+			At this point, you have the choice between clicking on the toolbar button <img src = "../images/remove_toolbar_button.png" no border> or selecting the menu item `Remove' in the `Tools' menu. In both cases the <a href = "../reference/40_remove_dialog/index.html">remove dialog</a> will appear and help you remove the assembly.
+		</p>
+		</td><td>
+		<p>
+			<IMG border=1 SRC = "../images/remove_dialog.png" Width = "150" Height = "100" OnClick="ImageClick(this)" OnMouseEnter="ImageClick(this)" OnMouseOver="this.border=3" OnMouseOut="this.border=0">
+		</p>
+		</td></tr></table>
+		<p class = "note">
+			<b>Note</b>: When you decide to remove an assembly (and possibly its dependencies), you must keep in mind that assembly removal is a one-way process: the only way to &quot;undo&quot; it is to import the assembly again through the <a href = "../reference/60_import_tool/index.html">import tool</a>. But this may take quite a long time. Therefore it is strongly advised not to remove the assembly dependencies that you may need in another Eiffel# system.
+		</p>
+
+		<br>
+		<br>
+
+	</body>
+</html>

@@ -46,7 +46,7 @@ feature -- Generation constants
 			-- `Result' is location of windows ace file template.
 		do
 			Result := template_file_location
-			Result.extend ("windows")
+			Result.extend ("Windows")
 			Result.extend ("ace_template.ace")
 		end
 		

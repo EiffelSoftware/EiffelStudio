@@ -21,7 +21,11 @@ inherit
 	EV_TITLED_WINDOW_IMP
 		redefine
 			default_style,
-			interface
+			default_ex_style,
+			interface,
+			show,
+			on_get_min_max_info,
+			on_wm_close
 		end
 
 	WEL_DS_CONSTANTS
@@ -64,12 +68,78 @@ feature -- Basic operations
 				disable_modal
 			end
 		end
+	
+	show is
+   			-- Show dialog.
+		do
+			{EV_TITLED_WINDOW_IMP} Precursor
+			invalidate
+			update
+		end
 
-feature {NONE} -- Implementation
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+			-- Called by WEL to request min/max size of window.
+			-- Is called just before move and/or resize.
+		local
+			max_size, max_position: WEL_POINT
+		do
+				-- Prevent the maximize state.
+			Precursor (min_max_info)
+			create max_size.make (width, height)
+			create max_position.make (x_position, y_position)
+ 			min_max_info.set_max_size (max_size)
+			min_max_info.set_max_position (max_position)
+		end
+
+feature -- Status Report
+
+	is_closeable: BOOLEAN
+			-- Is the window closeable by the user?
+			-- (Through a clik on the Window Menu, or by
+			-- pressing ALT-F4)
+
+feature -- Status Setting
+	
+	enable_closeable is
+			-- Set the window to be closeable by the user
+			-- (Through a clik on the Window Menu, or by
+			-- pressing ALT-F4)
+		do
+			set_style (default_style + ws_sysmenu)
+			is_closeable := True
+		end
+
+	disable_closeable is
+			-- Set the window not to be closeable by the user
+		do
+			set_style (default_style)
+			is_closeable := False
+		end
+
+feature {NONE} -- WEL Implementation
+	
+	on_wm_close is
+			-- User clicked on "close" ('X').
+		do
+			if is_closeable then
+				interface.close_actions.call ([])
+			end
+			on_wm_close_executed := True
+				-- Do not actually close the window.
+			set_default_processing (False)
+		end
 
 	default_style: INTEGER is
+			-- By default we don't show the "Window Menu"
 		do
-			Result := Ws_popup + Ws_sysmenu + Ws_caption
+			Result := Precursor - ws_sysmenu
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result :=  Ws_ex_controlparent
+				+ Ws_ex_toolwindow
+				+ Ws_ex_topmost
 		end
 
 	interface: EV_DIALOG
@@ -97,6 +167,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/29 03:31:33  pichery
+--| New dialog implementation
+--|
 --| Revision 1.13  2000/04/20 18:27:50  brendel
 --| Block now also ends when window is destroyed.
 --|

@@ -143,7 +143,8 @@ feature -- Element change
 							other.after or else other_item >= item
 						loop
 							put_left (other_item);
-							other.forth
+							other.forth;
+							other_item := other.item
 						end
 					end
 				end

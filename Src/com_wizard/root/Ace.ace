@@ -94,11 +94,9 @@ cluster
 
 external
 	include_path:	"$EIFFEL_SRC\library\wel\spec\windows\include",
-					"$EIFFEL_SRC\library\time\clib",
 					"$EIFFEL_SRC\library\com\spec\windows\include"
 
 	object: 		"$EIFFEL_SRC\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-					"$EIFFEL_SRC\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
 					"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
 					"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib";
 end

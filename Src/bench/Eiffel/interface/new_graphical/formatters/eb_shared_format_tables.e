@@ -177,7 +177,7 @@ feature -- Properties
 			end
 		end
 
-feature -- Properties .NET
+feature -- Properties .NET	
 		
 	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
 			-- Format .NET consumed type, flat short.
@@ -348,6 +348,14 @@ feature {NONE} -- Attributes
 		end		
 
 feature {NONE} -- Attributes .NET
+
+	consumed_types: HASH_TABLE [CONSUMED_TYPE, STRING] is
+			-- Table of .NET types which have been formatted already.
+			-- Used to prevent deserializing consumed type every time we
+			-- wish to format.
+		once
+			create Result.make (History_size)
+		end
 
 	flatshort_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, STRING] is
 			-- Table of last .NET flat short formats.

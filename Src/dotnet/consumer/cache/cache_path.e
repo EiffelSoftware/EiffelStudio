@@ -165,6 +165,26 @@ feature {CACHE_READER} -- Access
 
 	Eac_path: STRING is "dotnet\assemblies\"
 			-- EAC path relative to $ISE_EIFFEL
+			
+feature {EMITTER} -- Access
+		
+	internal_eiffel_path: CELL [STRING] is
+			-- internal eiffel path
+		once
+			create Result.put (Void)
+		end
+
+feature {EMITTER} -- Element Change
+	
+	set_internal_eiffel_path (a_path: STRING) is
+			-- set `internal_eiffel_path' to 'a_path'
+		require
+			not_already_set: internal_eiffel_path.item = Void
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+		do
+			internal_eiffel_path.put (a_path)
+		end
 
 feature {NONE} -- Implementation
 
@@ -177,25 +197,31 @@ feature {NONE} -- Implementation
 			l_obj: SYSTEM_OBJECT
 		once
 			if not retried then
-				Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
-				if Result = Void then
-					l_registry_key := feature {REGISTRY}.local_machine
-					l_registry_key := l_registry_key.open_sub_key (("SOFTWARE").to_cil)
-					l_registry_key := l_registry_key.open_sub_key (("ISE").to_cil)
-					l_registry_key := l_registry_key.open_sub_key (("Eiffel52").to_cil)
-					l_registry_key := l_registry_key.open_sub_key (("emitter").to_cil)
-					l_obj := l_registry_key.get_value (Ise_key.to_cil)
-					l_str ?= l_obj
-					
-					if l_str /= Void then
-						create Result.make_from_cil (l_str)
+				if internal_eiffel_path.item = Void then
+					Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
+					if Result = Void then
+						l_registry_key := feature {REGISTRY}.local_machine
+						l_registry_key := l_registry_key.open_sub_key (("SOFTWARE").to_cil)
+						l_registry_key := l_registry_key.open_sub_key (("ISE").to_cil)
+						l_registry_key := l_registry_key.open_sub_key (("Eiffel52").to_cil)
+						l_registry_key := l_registry_key.open_sub_key (("emitter").to_cil)
+						l_obj := l_registry_key.get_value (Ise_key.to_cil)
+						l_str ?= l_obj
+						
+						if l_str /= Void then
+							create Result.make_from_cil (l_str)
+						end
 					end
-				end
-				check
-					Ise_eiffel_defined: Result /= Void
-				end
-				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
-					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+					check
+						Ise_eiffel_defined: Result /= Void
+					end
+					if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
+						Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+					end	
+					-- set internal eiffel path to registry key
+					internal_eiffel_path.put (Result)
+				else
+					Result := clone (internal_eiffel_path.item)
 				end
 			else
 					-- FIXME: Manu 05/14/2002: we should raise an error here.
@@ -208,6 +234,5 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-	
 end
 

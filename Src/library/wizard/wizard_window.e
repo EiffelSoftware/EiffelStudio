@@ -25,20 +25,20 @@ feature -- Initialization
 		local
 			v1: EV_VERTICAL_BOX
 		do
-				default_create
-				disable_user_resize
-				set_size (500,386)
-				Create wizard_page
-				Create v1
-				extend (v1)
-				v1.extend (wizard_page)	
-				build_navigation_bar (v1)
+			default_create
+			disable_user_resize
+			set_size (503, 385)
+			create wizard_page
+			create v1
+			v1.extend (wizard_page)	
+			build_navigation_bar (v1)
+			extend (v1)
 
-				load_first_state
-				Create wizard_information.make
+			load_first_state
+			Create wizard_information.make
 		end
 
-	build_navigation_bar(a_box: EV_BOX) is
+	build_navigation_bar (a_box: EV_BOX) is
 			-- Build the navigation bar.
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -89,37 +89,41 @@ feature -- Initialization
 		local
 			wizard_initial_state: WIZARD_INITIAL_STATE
 		do
-			Create wizard_initial_state.make(Create {WIZARD_INFORMATION}.make)
-			proceed_with_new_state(wizard_initial_state)
+			Create wizard_initial_state.make (create {WIZARD_INFORMATION}.make)
+			proceed_with_new_state (wizard_initial_state)
 			update_navigation
 		end
 
 feature -- Implementation
 
-	previous_b,next_b,cancel_b: EV_BUTTON
-		-- Button ensuring the navigation.
+	previous_b, next_b, cancel_b: EV_BUTTON
+			-- Button ensuring the navigation.
 
 	wizard_info_page: EV_VERTICAL_BOX
-		-- Page to be completed by the user
-		-- to give the information about the current state
+			-- Page to be completed by the user
+			-- to give the information about the current state
 
 	wizard_page: EV_VERTICAL_BOX
-		-- Page on which is displayed the information
-		-- needed to be completed by the user in order
-		-- to be performed.
+			-- Page on which is displayed the information
+			-- needed to be completed by the user in order
+			-- to be performed.
 
 	is_final: BOOLEAN
+			-- Is it the final state?
 
-feature {WIZARD_FINAL_STATE_WINDOW} -- Basic Operations	
+feature {WIZARD_STATE_WINDOW} -- Basic Operations	
 
 	set_final_state (text: STRING) is
-			-- Current state is final, hence a special
-			-- process.
+			-- Current state is final, hence a special process.
 		do
---			previous_b.disable_sensitive
 			next_b.set_text(text)
-			is_final := TRUE
---			next_b.press_actions.wipe_out
+			is_final := True
+		end
+
+	set_intermediary_state is
+			-- Current state is intermediate.
+		do
+			is_final := False
 		end
 
 feature -- Basic Operations
@@ -140,7 +144,6 @@ feature -- Basic Operations
 				previous_b.disable_sensitive
 			elseif is_final then
 				previous_b.enable_sensitive
-				is_final := FALSE
 			else
 				previous_b.enable_sensitive
 				next_b.set_text("Next >")				

@@ -17,10 +17,12 @@ feature -- Access
 			-- Text displayed in label.
 		do
 			Result := wel_text
-			if Result /= Void and then Result.empty then
-				Result := Void
-			else
-				unescape_ampersands (Result)
+			if Result /= Void then
+				if Result.empty then
+					Result := Void
+				else
+					unescape_ampersands (Result)
+				end
 			end
 		end 
 
@@ -56,11 +58,11 @@ feature {EV_ANY_I} -- Implementation
 
 	escaped_text (s: STRING): STRING is
 			-- `text' with doubled ampersands.
-		require
-			s_not_void: s /= Void
 		do
-			Result := clone (s)
-			escape_ampersands (Result)
+			if s /= Void then
+				Result := clone (s)
+				escape_ampersands (Result)
+			end
 		end
 
 	escape_ampersands (s: STRING) is
@@ -178,6 +180,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/28 22:11:41  brendel
+--| Added check for Void string.
+--|
 --| Revision 1.17  2000/03/28 00:04:23  brendel
 --| Revised.
 --| Changed feature order and comments with _I.

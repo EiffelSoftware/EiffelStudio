@@ -153,11 +153,13 @@ long objectCount;
 				HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-			if (rt_kind)
-				newadd = emalloc(dtypes[flags & EO_TYPE]);
-			else
+			if (rt_kind) {
+				nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
+				newadd = emalloc(dtypes[flags & EO_TYPE]); 
+			} else {
+				nb_char = Size((uint16)(flags & EO_TYPE));
 				newadd = emalloc(flags & EO_TYPE);
+			}
 		}
 		
 		/* Creation of the Eiffel object */	

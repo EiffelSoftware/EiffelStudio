@@ -21,7 +21,7 @@ feature -- Initialization
 
 	launch is
 		do
-			create thread_imp.make (create {SYSTEM_THREAD_START}.make (Current, $call_execute))
+			create thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
 			thread_imp.start
 			add_children (Current)
 		end
@@ -29,10 +29,10 @@ feature -- Initialization
 	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
 			-- Initialize a new thread running `execute', using attributes.
 		local
-			l_priority: SYSTEM_THREAD_PRIORITY
+			l_priority: THREAD_PRIORITY
 		do
 
-			create thread_imp.make (create {SYSTEM_THREAD_START}.make (Current, $call_execute))
+			create thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
 
 			--| Set attributes
 			thread_imp.set_priority (l_priority.from_integer (attr.priority))

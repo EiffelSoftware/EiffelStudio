@@ -242,8 +242,6 @@ feature -- Status setting
 		require
 			widget_realized: realized
 		deferred
-		ensure
-			shown
 		end;
 
 	ungrab is

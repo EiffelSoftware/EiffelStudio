@@ -78,6 +78,7 @@ feature -- Basic Operation
 				-- Assign `True' to `executed' so next time `execute' is called,
 				-- we can use the correct objects to perform the settings.
 			executed := True
+			command_handler.update
 		end
 		
 	undo is

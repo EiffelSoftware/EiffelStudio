@@ -16,11 +16,14 @@ inherit
 	EV_WINDOW_IMP
 		rename
 			set_parent as old_set_parent
+export {NONE}
+	vbox
 		undefine
 			set_default_options
 		redefine
 			make,
-			make_with_owner
+			make_with_owner,
+			initialize
 		select
 			old_set_parent
 		end
@@ -71,6 +74,21 @@ feature -- Element change
 		do
 			win ?= par
 			old_set_parent (win)
+		end
+
+feature {NONE} -- Implementation
+
+	initialize is
+			-- Create the horizontal box `hbox'
+			-- to put in the window.
+			-- We do not need the `vbox' anymore. We have to keep `hbox'
+			-- because of the EV_DIALOG_I implementation.
+			--! FIXME: Alex 09191999. See with the windows platform, if
+			--! we can change EV_DIALOG_I to avoid using `hbox'.
+		do
+			hbox := gtk_hbox_new (False, 0)
+			gtk_container_add (GTK_CONTAINER (widget), hbox)
+			gtk_widget_show (hbox)
 		end
 
 end -- class EV_DIALOG_IMP

@@ -175,7 +175,7 @@ call nmake
 remtrace Copying .NET components
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
 call nmake
-copy ise_runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy ISE.Runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Creating Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace

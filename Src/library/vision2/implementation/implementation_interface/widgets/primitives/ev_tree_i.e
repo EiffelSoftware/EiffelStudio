@@ -22,11 +22,6 @@ feature -- Event : command association
 		deferred
 		end
 
-feature {NONE} -- Implementation
-
-	ev_children: ARRAYED_LIST [EV_TREE_ITEM]
-			-- We need to store the children.
-	
 end -- class EV_TREE_I
 
 --|----------------------------------------------------------------

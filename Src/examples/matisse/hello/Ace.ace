@@ -1,0 +1,75 @@
+--
+-- This Ace file is for the example application of the MATISSE-Eiffel Binding
+--
+-- File         : Ace.ace
+-- Created   :
+--
+
+system
+	sample
+
+root
+	EXAMPLE_APP(root_cluster): "make"
+	
+default
+	assertion (require);
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base");
+	
+cluster
+
+	root_cluster: ".";
+
+	-- EiffelBase
+	kernel:			"$EIFFEL4\library\base\kernel";
+	support:			"$EIFFEL4\library\base\support";
+	access:			"$EIFFEL4\library\base\structures\access";
+	cursors:			"$EIFFEL4\library\base\structures\cursors";
+	cursor_tree:		"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
+	iteration:			"$EIFFEL4\library\base\structures\iteration";
+	list:				"$EIFFEL4\library\base\structures\list";
+	set:				"$EIFFEL4\library\base\structures\set";
+	sort:				"$EIFFEL4\library\base\structures\sort";
+	storage:			"$EIFFEL4\library\base\structures\storage";
+	table:			"$EIFFEL4\library\base\structures\table";
+	traversing:		"$EIFFEL4\library\base\structures\traversing";
+	tree:				"$EIFFEL4\library\base\structures\tree";
+	thread:			"$EIFFEL4\library\thread";
+
+	-- EiffelTime
+	time:	"$EIFFEL4\library\time";
+	time_format (time):	"$\format";
+	time_local_settings (time):	"$\format\english";
+
+
+	-- MATISSE-Eiffel Binding
+	eif_matisse(root_cluster):	"$\..\..";
+	matisse_retrieval(eif_matisse):	"$\matisse_retrieval"
+		visible
+			MT_LINKED_STACK   creation "make" export "make" end;
+			MT_ARRAY      creation "make" export "make" end;
+			MT_LINKED_LIST creation "make"  export "make" end;
+			MT_ARRAYED_LIST  creation "make" export "make" end;
+			MT_HASH_TABLE     creation "make" export "make" end;
+			MT_AA_HASH_TABLE  creation "make" export "make" end;
+			MT_RA_HASH_TABLE  creation "make" export "make" end;
+			MT_AR_HASH_TABLE  creation "make" export "make" end;
+			MT_RR_HASH_TABLE  creation "make" export "make" end;
+		end;
+	matisse_interface(eif_matisse):	"$\matisse_interface"
+		visible
+			MT_EXCEPTIONS;
+		end;
+	matisse_streams (eif_matisse):	"$\matisse_streams";
+	matisse_externals (eif_matisse):	"$\matisse_externals";
+	matisse_entities (eif_matisse):		"$\matisse_entities";
+	matisse_sql (eif_matisse):			"$\matisse_sql";
+	matisse_support (eif_matisse):		"$\matisse_support";
+	
+external
+	object:	
+		"$(EIFFEL4)\library\time\Clib\datetime.lib",
+		"C:\MATISSE\lib\matisse.lib",
+		"..\..\..\..\matisse_externals\Clib\mt_support.lib";
+
+end

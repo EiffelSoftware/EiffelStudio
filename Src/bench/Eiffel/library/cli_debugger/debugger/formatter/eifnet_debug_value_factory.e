@@ -52,6 +52,11 @@ feature -- Access
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_char then
 					create {EIFNET_DEBUG_CHARACTER_VALUE} Result.make (a_icd, icd_frame, Edv_formatter.prepared_icor_debug_value_as_character (l_icd_prepared))
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
+				when
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_i,
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u
+				then
+					create {EIFNET_DEBUG_BASIC_VALUE [POINTER]} Result.make (a_icd, icd_frame, Edv_formatter.prepared_icor_debug_value_as_pointer (l_icd_prepared))
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_i1,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 
@@ -64,9 +69,7 @@ feature -- Access
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, icd_frame, Edv_formatter.prepared_icor_debug_value_as_integer_16 (l_icd_prepared))
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_i4,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_i,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u4,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u 					
+					feature {MD_SIGNATURE_CONSTANTS}.element_type_u4
 				then
 					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, icd_frame, Edv_formatter.prepared_icor_debug_value_as_integer (l_icd_prepared))
 				when 
@@ -93,9 +96,8 @@ feature -- Access
 					create {EIFNET_DEBUG_STRING_VALUE} Result.make (a_icd, l_icd_prepared, icd_frame)
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray then
 					create {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} Result.make (a_icd, l_icd_prepared, icd_frame)
-
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
-----					do_nothing
+--					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_end then
 ----					do_nothing
 ----				when feature {MD_SIGNATURE_CONSTANTS}.element_type_sentinel then

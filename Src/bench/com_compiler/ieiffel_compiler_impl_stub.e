@@ -56,6 +56,12 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	remove_file_locks is
+			-- Remove file locks
+		do
+			-- Put Implementation here.
+		end
+
 	create_item is
 			-- Initialize `item'
 		do

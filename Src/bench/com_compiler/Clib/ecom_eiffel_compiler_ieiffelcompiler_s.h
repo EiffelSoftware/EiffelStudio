@@ -81,6 +81,12 @@ public:
 	virtual STDMETHODIMP freeze_command_arguments(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Remove file locks
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP remove_file_locks( void ) = 0;
+
+
 
 protected:
 

@@ -46,15 +46,16 @@ feature -- Access
 		do
 			Result := Valid_project_ref.item
 		end
-			
+
 	last_error_message: STRING
 			-- Last error message.
-			
+
 	is_compiled: BOOLEAN is
 			-- Has system been compiled?
 		do
 			Result := compiler.is_successful
 		end
+
 
 	project_file_name: STRING is
 			-- Full path to .epr file.

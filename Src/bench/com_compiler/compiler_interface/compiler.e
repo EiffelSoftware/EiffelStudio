@@ -16,7 +16,8 @@ inherit
 			freezing_occurred,
 			compiler_version,
 			Freeze_command_name,
-			freeze_command_arguments
+			freeze_command_arguments,
+			remove_file_locks
 		end
 		
 	SHARED_EIFFEL_PROJECT
@@ -129,5 +130,10 @@ feature -- Basic Operations
 			Result := clone (freeze_command_name + " -silent -vs")
 		end
 		
+	remove_file_locks is
+			-- Close the open EIFGEN files so that they may be removed by another compiler instance.
+		do
+			Eiffel_system.System.server_controler.wipe_out
+		end
 		
 end -- class COMPILER

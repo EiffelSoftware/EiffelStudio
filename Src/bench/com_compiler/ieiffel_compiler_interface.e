@@ -59,6 +59,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	remove_file_locks_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `remove_file_locks'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -113,6 +120,14 @@ feature -- Basic Operations
 			-- Eiffel Freeze command arguments
 		require
 			freeze_command_arguments_user_precondition: freeze_command_arguments_user_precondition
+		deferred
+
+		end
+
+	remove_file_locks is
+			-- Remove file locks
+		require
+			remove_file_locks_user_precondition: remove_file_locks_user_precondition
 		deferred
 
 		end

@@ -103,6 +103,9 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Eiffel Freeze command arguments")]
   HRESULT freeze_command_arguments ([out, retval] BSTR * return_value);
+
+  [helpstring ("Remove file locks")]
+  HRESULT remove_file_locks ();
 };
 //---------------------------------------------------------------------
 

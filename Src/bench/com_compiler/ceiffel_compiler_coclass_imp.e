@@ -79,6 +79,12 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	remove_file_locks is
+			-- Remove file locks
+		do
+			-- Put Implementation here.
+		end
+
 feature {NONE}  -- Externals
 
 	ccom_create_item (eif_object: like Current): POINTER is

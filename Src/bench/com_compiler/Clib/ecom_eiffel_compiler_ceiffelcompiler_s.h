@@ -90,6 +90,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Remove file locks
+	-----------------------------------------------------------*/
+	STDMETHODIMP remove_file_locks( void );
+
+
+	/*-----------------------------------------------------------
 	EnumConnectionPoints of IConnectionPointContainer.
 	-----------------------------------------------------------*/
 	STDMETHODIMP EnumConnectionPoints( /* [out] */ IEnumConnectionPoints ** ppEnum );

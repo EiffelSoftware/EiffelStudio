@@ -18,6 +18,7 @@ inherit
 
 	TEXT_I
 
+	--WEL_RICH_EDIT
 	WEL_MULTIPLE_LINE_EDIT
 		rename
 			make as wel_make,
@@ -86,8 +87,21 @@ feature -- Initialization
 			managed := man
 			a_text.set_font_imp (Current)
 			is_multi_line_mode := true
-			!! private_attributes
+			!! private_attributes;
+			--init_dlls
 		end
+
+	--init_dlls is
+			-- Initialize the Dlls
+		--local
+			--common_controls_dll: WEL_COMMON_CONTROLS_DLL;
+			--rich_edit_dll: WEL_RICH_EDIT_DLL
+		--once
+			--!! common_controls_dll.make;
+			--common_controls_dll.set_shared
+			--!! rich_edit_dll.make
+			--rich_edit_dll.set_shared
+		--end;
 
 	realize is
 			-- Realize current widget
@@ -143,6 +157,13 @@ feature -- Access
 				fw ?= font.implementation
 				Result := height // fw.string_height (Current, "I")
 			end
+		end
+
+	tab_length: INTEGER is
+			-- Tab length of text
+			-- (Default is 8)
+		do	
+			Result := 8
 		end
  
 feature -- Status report
@@ -293,6 +314,8 @@ feature -- Status report
 					hp := tm.average_character_width * hp
 				end
 				Result := client_dc.tabbed_text_size (local_string).width + formatting_rect.left - hp
+				--Result := client_dc.tabbed_text_size_with_tabulation 
+					--(local_string, <<tab_length>>).width + formatting_rect.left - hp
 				client_dc.release
 			end
 		end
@@ -340,7 +363,10 @@ feature -- Status report
 				end
 				local_string := line (local_line_index)
 				local_char_index := line_index (local_line_index)
-				if local_cx > client_dc.tabbed_text_size (local_string).width then
+				--if local_cx > client_dc.tabbed_text_size_with_tabulation
+							--(local_string, <<tab_length>>).width then
+				if local_cx > client_dc.tabbed_text_size
+							(local_string).width then
 					Result := local_char_index + line_length (local_line_index)
 				else
 					Result := local_char_index + 1
@@ -350,7 +376,10 @@ feature -- Status report
 						i
 					until
 						i < 1 or else
-							(client_dc.tabbed_text_size (local_string).width < local_cx)
+							(client_dc.tabbed_text_size
+								(local_string).width < local_cx)
+							--(client_dc.tabbed_text_size_with_tabulation
+								--(local_string, <<tab_length>>).width < local_cx)
 					loop
 						local_string.head (i)
 						Result := local_char_index + i + 1

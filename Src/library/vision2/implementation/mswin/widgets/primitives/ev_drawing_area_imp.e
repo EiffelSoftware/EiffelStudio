@@ -26,7 +26,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent
+			set_parent as wel_set_parent
 		undefine
 			set_width,
 			set_height,
@@ -42,8 +42,7 @@ inherit
 			on_key_up
 		redefine
 			on_paint,
-			on_wm_erase_background,
-			destroy
+			on_wm_erase_background
 		end
 
 creation
@@ -98,16 +97,6 @@ feature {NONE} -- Implementation
 			check
 				do_not_call: False
 			end
-		end
-
-	destroy is
-			-- Destroy the widget, but set the parent sensitive
-			-- in case it was set insensitive by the child.
-		do
-			if parent_imp /= Void then
-				parent_imp.set_insensitive (False)
-			end
-			{WEL_CONTROL_WINDOW} Precursor
 		end
 
 	on_wm_erase_background (wparam: INTEGER) is

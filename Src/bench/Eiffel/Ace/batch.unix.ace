@@ -21,11 +21,10 @@ cluster
 			"table"; "CVS"; 
 		end
 
-	liman:		"$EIFFEL_SRC/Eiffel/limand"
-
-	liman_bench (liman):		"$/bench"
-
-	liman_abstract (liman):		"$/abstract"
+	all time:		"$EIFFEL_SRC/library/time"
+		exclude
+			"CVS"; "french"; "german"; 
+		end
 
 	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
 
@@ -111,10 +110,23 @@ cluster
 	profile_tool (interface):		"$/graphical/profile_tool"
 
 	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
+		exclude
+			"md_strong_name.e"; "md_public_key.e"
+		end
 
-	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+	all xml_deserializer:		"$EIFFEL_SRC/Eiffel/library/xml_deserializer"
 
-	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+	all eac_components:		"$EIFFEL_SRC/dotnet/consumer/components"
+
+	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
+		exclude
+			"enterprise"; "free"; "CVS"; 
+		end
+
+	all keygen:		"$EIFFEL_SRC/library/keygen"
+		exclude
+			"eiffel_envision_10"; "windows"; "CVS"; "EIFGEN"; 
+		end
 
 external
 
@@ -125,10 +137,11 @@ external
 		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include"
 
 	object:
-		"\$(EIFFEL_SRC)/C/platform/libplatform.a",
-		"\$(EIFFEL_SRC)/C/bench/libcompiler.a",
-		"\$(EIFFEL_SRC)/C/minilzo/minilzo.o"
-		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o"
+		"$(EIFFEL_SRC)/C/bench/libcompiler.a",
+        "$(EIFFEL_SRC)/C/platform/libplatform.a",
+        "$(EIFFEL_SRC)/C/minilzo/minilzo.o",
+        "$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
+        "$(EIFFEL_SRC)/library/exml/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o"
 
 
 end

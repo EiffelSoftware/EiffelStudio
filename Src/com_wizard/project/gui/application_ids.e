@@ -39,6 +39,7 @@ feature -- Access
 	Introduction4_static_constant: INTEGER is 1044
 	Title_static_constant: INTEGER is 1048
 	Warnings_check_constant: INTEGER is 1060
+	Stop_check_constant: INTEGER is 1062
 	Id_back_constant: INTEGER is 1040
 	Virtual_table_universal_radio_constant: INTEGER is 1057
 	Marshallin_description_static_constant: INTEGER is 1059

@@ -121,7 +121,7 @@ BEGIN
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
     LTEXT           "A summary of all the generated files will be produced in ""generated.txt"".",
-                    Output_Info_Static,120,100,220,20
+                    Output_Info_Static,120,125,220,20
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     LTEXT           "The wizard will display status messages while it works. By default it will only display error messages.",
                     Output_Static,120,10,220,20
@@ -131,6 +131,10 @@ BEGIN
                     WS_TABSTOP,140,50,95,10
     CONTROL         "Extra information?",Information_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,140,65,95,10
+    LTEXT           "By default, the wizard will stop on compilation error.",
+                    Output2_Static,120,85,220,10
+    CONTROL         "Do not stop on compilation error",Stop_check,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,140,100,120,10
 END
 
 Wizard_Generated_Code_Type_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
@@ -200,7 +204,7 @@ END
 
 Splash_screen_dialog DIALOGEX 0, 0, 215, 133
 STYLE DS_CENTER | WS_POPUP
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         127,Splash_bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE,0,
                     0,215,133,WS_EX_DLGMODALFRAME

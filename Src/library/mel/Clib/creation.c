@@ -13,7 +13,7 @@
  *
  */
 
-private Arg auto_unmanage_arg[1];
+rt_private Arg auto_unmanage_arg[1];
 
 EIF_POINTER c_auto_unmanage_arg()
 {

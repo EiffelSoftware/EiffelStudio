@@ -40,6 +40,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font
 		undefine
+			on_size,
+			on_move,
 			on_right_button_up, on_left_button_down,
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,

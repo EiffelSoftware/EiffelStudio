@@ -71,6 +71,8 @@ inherit
 			on_right_button_down,
 			on_mouse_move,
 			on_set_cursor,
+			on_size,
+			on_move,
 			on_menu_command,
 			on_key_up,
 			on_key_down,

@@ -53,6 +53,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			on_size,
+			on_move,
 			on_right_button_up,
 			on_left_button_down,
 			on_left_button_up,

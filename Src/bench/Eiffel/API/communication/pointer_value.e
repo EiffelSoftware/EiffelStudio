@@ -1,34 +1,56 @@
 class POINTER_VALUE
 
 inherit
+
 	DEBUG_VALUE
 
-creation
-	make
+creation {RECV_VALUE, ATTR_REQUEST}
 
-feature
+	make, make_attribute
 
-     append_value (cw: CLICK_WINDOW) is 
-		local
-			pointer_class: CLASS_I
-        do 
-			pointer_class := System.pointer_class;
-			if pointer_class.compiled then
-				pointer_class.compiled_class.append_clickable_name (cw)
-			else
-				pointer_class.append_clickable_name (cw)
-			end;
-			cw.put_string (" = C pointer ");
-			cw.put_string (value)
-        end;
-
-
-	value: STRING;
+feature {NONE} -- Initialization
 
 	make (v: POINTER) is
+			-- Set `value' to `v'.
 		do
+			set_default_name;
 			value := v.out
+		end;
+
+	make_attribute (attr_name: like name; a_class: like e_class; addr: like value) is
+		require
+			not_attr_name_void: attr_name /= Void;
+			not_addr_void: addr/= Void
+		do
+			name := attr_name;
+			if a_class /= Void then
+				is_attribute := True;
+				e_class := a_class;
+			end;
+			value := addr
+		end;
+
+feature -- Property
+
+	value: STRING;
+			-- Address of the pointer
+
+feature -- Access
+
+	dynamic_class: E_CLASS is
+		do
+			Result := Eiffel_system.pointer_class.compiled_eclass
+		ensure then
+			non_void_result: Result /= Void
 		end
 
-end
+feature -- Output
 
+	 append_type_and_value (cw: CLICK_WINDOW) is 
+		do 
+			dynamic_class.append_clickable_name (cw)
+			cw.put_string (" = C pointer ");
+			cw.put_string (value)
+		end;
+
+end -- class POINTER_VALUE

@@ -1,34 +1,54 @@
 class REAL_VALUE
 
 inherit
+
 	DEBUG_VALUE
 
-creation
-	make
+creation {RECV_VALUE, ATTR_REQUEST}
 
-feature
+	make, make_attribute
 
-     append_value (cw: CLICK_WINDOW) is 
-		local
-			real_class: CLASS_I
-        do 
-			real_class := System.real_class;
-			if real_class.compiled then
-				real_class.compiled_class.append_clickable_name (cw)
-			else
-				real_class.append_clickable_name (cw)
+feature {NONE} -- Implementation
+
+	make (v: like value) is
+			-- Set `value' to `v'.
+		do
+			set_default_name;
+			value := v
+		end;
+
+	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
+		require
+			not_attr_name_void: attr_name /= Void;
+		do
+			name := attr_name;
+			if a_class /= Void then
+				e_class := a_class;
+				is_attribute := True;
 			end;
-			cw.put_string (" = ");
-            cw.put_string (value.out)
-        end;
+			value := v
+		end;
 
+feature -- Property
 
 	value: REAL;
 
-	make (v: like value) is
+feature -- Access
+
+	dynamic_class: E_CLASS is
 		do
-			value := v
+			Result := Eiffel_system.real_class.compiled_eclass
+		ensure then
+			non_void_result: Result /= Void
 		end
 
-end
+feature -- Output
 
+	 append_type_and_value (cw: CLICK_WINDOW) is 
+		do 
+			dynamic_class.append_clickable_name (cw)
+			cw.put_string (" = ");
+			cw.put_string (value.out)
+		end;
+
+end -- class REAL_VALUE

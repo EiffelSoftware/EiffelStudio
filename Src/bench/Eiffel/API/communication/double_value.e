@@ -1,33 +1,54 @@
 class DOUBLE_VALUE
 
 inherit
+
 	DEBUG_VALUE
 
-creation
-	make
+creation {RECV_VALUE, ATTR_REQUEST}
 
-feature
+	make, make_attribute
 
-	 append_value (cw: CLICK_WINDOW) is 
-		local
-			double_class: CLASS_I
-		do 
-			double_class := System.double_class;
-			if double_class.compiled then
-				double_class.compiled_class.append_clickable_name (cw)
-			else
-				double_class.append_clickable_name (cw)
+feature {NONE} -- Initialization
+
+	make (v: like value) is
+			-- Set `value' to `v'.
+		do
+			set_default_name;
+			value := v
+		end
+
+	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
+		require
+			not_attr_name_void: attr_name /= Void;
+		do
+			name := attr_name;
+			if a_class /= Void then
+				is_attribute := True;
+				e_class := a_class;
 			end;
+			value := v
+		end;
+
+feature -- Property
+
+	value: DOUBLE;
+
+feature -- Access
+
+	dynamic_class: E_CLASS is
+		do
+			Result := Eiffel_system.double_class.compiled_eclass
+		ensure then
+			non_void_result: Result /= Void
+		end
+
+feature -- Output
+
+	 append_type_and_value (cw: CLICK_WINDOW) is 
+		do 
+			dynamic_class.append_clickable_name (cw);
 			cw.put_string (" = ");
 			cw.put_string (value.out)
 		end;
 
-	value: DOUBLE;
-
-	make (v: like value) is
-		do
-			value := v
-		end
-
-end
-
+end -- class DOUBLE_VALUE

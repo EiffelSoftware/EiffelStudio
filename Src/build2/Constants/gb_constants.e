@@ -558,7 +558,7 @@ feature -- Warning Dialogs
 	
 	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of EiffelBuild.%NClick 'Continue' if you wish to load the project, with default EiffelBuild settings."
 	
-	Not_all_windows_named_string: STRING is "Some of the windows you are attempting to generate are not named.%NThe name is required for the generation and is used for both the class and file names.%NDo you wish EiffelBuild to assign default names to those windows that are unnamed?"
+	Not_all_windows_named_string: STRING is "Some of the windows you are attempting to generate are not named.%NThe name is required for the generation and is used for both the class and file names.%NDo you wish to assign default names to those windows that are unnamed?"
 	
 	constant_rejected_warning: STRING is "The value of the selected constant does not lie within the range permitted for this%Nproperty, and thefore the constant has been rejected.%NThe range of permitted values is restricted by the properties and settings of each object."
 

@@ -166,7 +166,7 @@ feature -- Actions
 						loop
 							deg.put_case_class_message (classes.item.compiled_class)
 							set_base_cluster (classes.item.cluster)
-							cl_name := classes.item.name_in_upper
+							cl_name := classes.item.name
 							set_class_name (cl_name)
 							if filter.is_html then
 								filter.set_keyword ("html_meta", html_meta_for_class (classes.item))
@@ -181,7 +181,7 @@ feature -- Actions
 		--							end
 									prepare_for_file (
 										classes.item.cluster.relative_path ('%U'),
-										classes.item.name + cf.file_extension
+										classes.item.name.as_lower + cf.file_extension
 									)
 									set_document_title (cl_name + " " + cf.description)
 									generate_class (classes.item, cf)

@@ -679,7 +679,8 @@ feature {NONE} -- Implementation
 		%	debug  (no)%N%
 		%	array_optimization (no)%N%
 		%	inlining (no)%N%
-		%	inlining_size (%"4%")%N%N%
+		%	inlining_size (%"4%")%N%
+		%	precompiled (%"%DEIFFEL4\precomp\spec\%DPLATFORM\WEL%");%N%N%
 		%cluster%N%
 		%	all component: %""
 	

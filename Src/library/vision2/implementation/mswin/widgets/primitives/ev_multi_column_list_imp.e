@@ -392,12 +392,14 @@ feature -- Status setting
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	column_count: INTEGER is
 		do	
 			Result := wel_column_count
 		end
+
+feature {NONE} -- Implementation
 
 	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
 			-- Set the label of the cell with coordinates `a_x', `a_y'
@@ -576,7 +578,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at `an_index' row.
 		local
-			list: LINKED_LIST [STRING]
+			list: ARRAYED_LIST [STRING]
 			litem: WEL_LIST_VIEW_ITEM
 			first_string: STRING
 		do
@@ -614,6 +616,10 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					litem.to_integer)
 				list.forth
 			end
+				-- Now update image.
+			if item_imp.pixmap /= Void then
+				set_row_pixmap (an_index, item_imp.pixmap)
+			end
 			invalidate
 		end
 
@@ -640,6 +646,62 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			delete_item (an_index)
 				-- Update the column widths in case this removal caused the
 				-- scroll bar to be hidden.
+		end
+		
+	set_item_text (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING; item_index: INTEGER) is
+			-- Assign `an_item' text to row `row' at position `item_index'.
+		require
+			row_not_void: row /= Void
+		local
+			litem: WEL_LIST_VIEW_ITEM
+		do
+			create litem.make_with_attributes (
+				Lvif_text, internal_get_index (row) - 1, item_index - 1, 0, an_item)
+					-- Add image to the item if one is set.
+				if item_index = 1 and then row.internal_pixmap /= Void then
+					image_list.add_pixmap (row.internal_pixmap)
+					litem.set_image (image_list.last_position)
+				end
+			cwin_send_message (wel_item, Lvm_setitem, 0,
+				litem.to_integer)
+		end
+	
+	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been added to index `item_index' in row `row.
+		local
+			litem: WEL_LIST_VIEW_ITEM
+			current_index: INTEGER
+		do
+			if item_index > column_count then
+				expand_column_count_to (item_index)
+			end
+
+			set_item_text (row, an_item, item_index)
+			
+			from
+				current_index := item_index + 1
+			until
+				current_index > row.interface.count
+			loop
+				set_item_text (row, row.interface.i_th (current_index), current_index)
+				current_index := current_index + 1
+			end
+		end
+
+	on_item_removed_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been removed from index `item_index' in row `row'.
+		local
+			current_index: INTEGER
+		do
+			from
+				current_index := item_index
+			until
+				current_index > row.interface.count
+			loop
+				set_item_text (row, row.interface.i_th (current_index), current_index)
+				current_index := current_index + 1
+			end
+			set_item_text (row, "", row.interface.count + 1)
 		end
 
 	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
@@ -774,6 +836,8 @@ feature {NONE} -- Implementation, Pixmap handling
 				ev_children.go_to (cur)
 			end
 		end
+		
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Set row `a_row' pixmap to `a_pixmap'.

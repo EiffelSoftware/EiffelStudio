@@ -1,0 +1,21 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_type	\- return the type identifier of an Eiffel reference. 
+.SH SYNOPSYS
+.nf
+\fB#include "eif_cecil.h"\fP
+.sp
+.BI "EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE " reference ");"
+.fi
+.SH DESCRIPTION
+The \fBeif_type_by_reference()\fP function returns the type 
+identifier corresponding to \fIreference\fP. 
+.SH RETURN VALUE
+Type identifier of \fIreference\fP. The behavior is unknown if \fIreference\fP is not a
+valid Eiffel reference.
+.SH CONFORMANCE
+ISE Eiffel 4.5 and later.
+.SH SEE ALSO
+.BR eif_type "(1) , "eif_name "(1), "eif_type_id "(1). " 
+
+

@@ -1,0 +1,20 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_wean	\- release an Eiffel reference's protection.
+.SH SYNOPSYS
+.nf
+\fB#include "eif_hector.h"\fP
+.sp
+.BI "EIF_REFERENCE eif_wean (EIF_OBJECT " obj ");"
+.fi
+.SH DESCRIPTION
+The \fBeif_wean()\fP function releases the protection of the Eiffel reference, which is protected by the Eiffel object \fIobj\fP. 
+.SH RETURN VALUE
+It returns
+the Eiffel reference previously protected by \fPobj\fP.
+.SH CONFORMANCE
+ISE Eiffel 4.1 and later.
+.SH SEE ALSO
+.BR eif_access "(1) , "eif_adopt "(1), "eif_protect "(1)." 
+
+

@@ -1746,29 +1746,43 @@ feature {NONE} -- Implementation
 		local
 			file: KL_BINARY_INPUT_FILE
 			fn: FILE_NAME
+			retried: BOOLEAN
 		do
-			create fn.make_from_string (path)
-			fn.extend ("indexing")
-			fn.add_extension ("txt")
-			create file.make (fn)
-			file.open_read
-			if file.is_open_read then
-				Cluster_indexing_parser.parse (file)
-				Result := Cluster_indexing_parser.root_node.top_indexes
-				file.close
-			end
-		rescue
-			if Rescue_status.is_error_exception then
-				if not (file = Void or else file.is_closed) then
+			if not retried then
+				create fn.make_from_string (path)
+				fn.extend ("indexing")
+				fn.add_extension ("txt")
+				create file.make (fn)
+				if file.exists then
+					file.open_read
+					if file.is_open_read then
+						Cluster_indexing_parser.parse (file)
+						if cluster_indexing_parser.indexing_node /= Void then
+							Result := Cluster_indexing_parser.indexing_node
+						end
+						file.close
+					end
+				else
+					if parent_cluster /= Void then
+						Result := parent_cluster.indexes
+					end
+				end
+			else
+					-- We got an error: most likely a syntax error
+				if file /= Void and then not file.is_closed then
 					file.close
 				end
+				Result := Void
 			end
+		rescue
+			retried := True
+			retry
 		end
 
-	Cluster_indexing_parser: CLUSTER_INDEXING_PARSER is
+	Cluster_indexing_parser: EIFFEL_PARSER is
 			-- Parser adapted from the Eiffel parser.
 		once
-			create Result.make
+			create Result.make_indexing_parser
 		end
 
 feature -- Formatting

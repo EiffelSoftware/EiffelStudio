@@ -142,16 +142,24 @@ feature --Status Setting
 			-- Move the composition window to x,y position
 		local
 			moved: BOOLEAN
+			pt: WEL_POINT
+			rect: WEL_RECT
+			cf: WEL_COMPOSITION_FORM
 		do
-			moved := cwel_ime_move_composition_window (input_context, Cfs_point, x, y)			
+			create pt.make (x, y)
+			create rect.make (10, 10, 200, 200)
+			create cf.make_by_point (pt, rect)
+			moved := cwel_ime_move_composition_window (input_context, cf.item)			
 		end
 		
 	move_status_window (x, y: INTEGER) is
 			-- Move the status window to x,y position
 		local
 			moved: BOOLEAN
+			pt: WEL_POINT
 		do
-			moved := cwel_ime_move_status_window (input_context, x, y)			
+			create pt.make (x, y)
+			moved := cwel_ime_move_status_window (input_context, pt.item)			
 		end
 		
 
@@ -178,7 +186,7 @@ feature --Status Report
 		end
 
 
-feature --Externals
+feature {NONE} -- Externals
 
 	cwel_get_imm_description (key_layout: POINTER; dest: POINTER; buff_len: INTEGER): INTEGER
 		is
@@ -238,16 +246,20 @@ feature --Externals
 			"ImmSetConversionStatus"
 		end	
 		
-	cwel_ime_move_composition_window (input_cont: POINTER; style, xpos, ypos: INTEGER): BOOLEAN is
+	cwel_ime_move_composition_window (input_cont, comp_form: POINTER): BOOLEAN is
 			-- 
 		external
-			"C macro signature (EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER): EIF_BOOLEAN use <wel_imm.h>"
+			"C macro signature (HIMC, LPCOMPOSITIONFORM): EIF_BOOLEAN use <imm.h>"
+		alias
+			"ImmSetCompositionWindow"
 		end
 		
-	cwel_ime_move_status_window (input_cont: POINTER; xpos, ypos: INTEGER): BOOLEAN is
+	cwel_ime_move_status_window (input_cont, point: POINTER): BOOLEAN is
 			-- 
 		external
-			"C macro signature (EIF_POINTER, EIF_INTEGER, EIF_INTEGER): EIF_BOOLEAN use <wel_imm.h>"
+			"C macro signature (HIMC, LPPOINT): EIF_BOOLEAN use <imm.h>"
+		alias
+			"ImmSetStatusWindowPos"
 		end
 		
 		

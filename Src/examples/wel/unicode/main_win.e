@@ -146,7 +146,7 @@ feature -- Access
 	main_menu: WEL_MENU is
 				-- Windows main menu created from resource
 			once
-				create Result.make_by_id (Idmainmenu_constant)
+				create Result.make_by_id (Idr_menu1_constant)
 			end
 		
 feature {NONE} -- Implementation
@@ -187,26 +187,6 @@ feature {NONE} -- Implementation
 				if (conv_mode.bit_and (wel_const) = wel_const) then
 					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
 				end
-			when Id_imeoptions_conversionmode_eudc_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_eudc
-				if (conv_mode.bit_and (wel_const) = wel_const) then
-					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
-				end
-			when Id_imeoptions_conversionmode_symbol_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_symbol
-				if (conv_mode.bit_and (wel_const) = wel_const) then
-					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
-				end
-			when Id_imeoptions_conversionmode_hanja_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert
-				if (conv_mode.bit_and (wel_const) = wel_const) then
-					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
-				end
-			when Id_imeoptions_conversionmode_noconversion_constant then
-				wel_const := feature {WEL_IME_CONSTANTS}.Ime_cmode_noconversion
-				if (conv_mode.bit_and (wel_const) = wel_const) then
-					imm.input_method_editor.set_conversion_status (conv_mode.bit_and (wel_const.bit_not))
-				end	
 			end
 			imm.release_input_context (lang_edit.item)
 			refresh
@@ -279,23 +259,15 @@ feature {NONE} -- Implementation
 			-- Initialize the main menu
 		do
 			if imm.has_ime (imm.input_locale) then	
-				main_menu.enable_item (Id_imeoptions_conversionmode_eudc_constant)
 				main_menu.enable_item (Idalphanumeric_constant)
-				main_menu.enable_item (Id_imeoptions_conversionmode_hanja_constant)
 				main_menu.enable_item (Idsoftkeyboard_constant)
 				main_menu.enable_item (Idshapehalf_constant)
-				main_menu.enable_item (Id_imeoptions_conversionmode_symbol_constant)
-				main_menu.enable_item (Id_imeoptions_conversionmode_noconversion_constant)
 				main_menu.enable_item (Idnative_constant)
 				main_menu.enable_item (Idshapefull_constant)
 			else
-				main_menu.disable_item (Id_imeoptions_conversionmode_eudc_constant)
 				main_menu.disable_item (Idalphanumeric_constant)
-				main_menu.disable_item (Id_imeoptions_conversionmode_hanja_constant)
 				main_menu.disable_item (Idsoftkeyboard_constant)
 				main_menu.disable_item (Idshapehalf_constant)
-				main_menu.disable_item (Id_imeoptions_conversionmode_symbol_constant)
-				main_menu.disable_item (Id_imeoptions_conversionmode_noconversion_constant)
 				main_menu.disable_item (Idnative_constant)
 				main_menu.disable_item (Idshapefull_constant)
 			end
@@ -551,7 +523,6 @@ feature {NONE} -- Implementation
 
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_eudc) = feature {WEL_IME_CONSTANTS}.Ime_cmode_eudc ) then
 				tmp_string.append ("- EUDC Conversion%N")
-				main_menu.check_item (Id_imeoptions_conversionmode_eudc_constant)
 			end
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_fixed) = feature {WEL_IME_CONSTANTS}.Ime_cmode_fixed ) then
 				tmp_string.append ("- Fixed Conversion%N")
@@ -567,7 +538,6 @@ feature {NONE} -- Implementation
 			end
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert) = feature {WEL_IME_CONSTANTS}.Ime_cmode_hanjaconvert ) then
 				tmp_string.append ("- Hanja convert%N")
-				main_menu.check_item (Id_imeoptions_conversionmode_hanja_constant)
 			end
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_katakana) = feature {WEL_IME_CONSTANTS}.Ime_cmode_katakana ) then
 				tmp_string.append ("- Katakana%N")
@@ -585,7 +555,6 @@ feature {NONE} -- Implementation
 			end
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_noconversion) = feature {WEL_IME_CONSTANTS}.Ime_cmode_noconversion ) then
 				tmp_string.append ("- No conversion%N")
-				main_menu.check_item (Id_imeoptions_conversionmode_noconversion_constant)
 			end
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_roman) = feature {WEL_IME_CONSTANTS}.Ime_cmode_roman ) then
 				tmp_string.append ("- Roman%N")
@@ -598,7 +567,6 @@ feature {NONE} -- Implementation
 			end	
 			if (conv_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_cmode_symbol) = feature {WEL_IME_CONSTANTS}.Ime_cmode_symbol ) then
 				tmp_string.append ("- Symbol conversion%N")
-				main_menu.check_item (Id_imeoptions_conversionmode_symbol_constant)
 			end
 			if (sent_mode.bit_and (feature {WEL_IME_CONSTANTS}.Ime_smode_automatic) = feature {WEL_IME_CONSTANTS}.Ime_smode_automatic ) then
 				tmp_string.append ("- Automatic conversion%N")

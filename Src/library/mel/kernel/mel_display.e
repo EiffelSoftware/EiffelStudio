@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 
 	argv: POINTER is
 		external
-			"C : EIF_POINTER | %"argv.h%""
+			"C [macro %"argv.h%"] : EIF_POINTER"
 		alias
 			"eif_argv"
 		end;

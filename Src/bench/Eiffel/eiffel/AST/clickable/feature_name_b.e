@@ -58,8 +58,10 @@ feature -- Formatting
 
 	main_feature_format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text for main features of a class.
+		require
+			valid_target_feature: ctxt.global_adapt.target_enclosing_feature /= Void
 		do
-			if is_frozen then
+			if ctxt.global_adapt.target_enclosing_feature.is_frozen then
 				ctxt.put_text_item (ti_Frozen_keyword);
 				ctxt.put_space
 			end;

@@ -1,13 +1,14 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.1"
+	generator: "geyacc version 3.3"
 
 class EIFFEL_TOKENS
 
 inherit
 
 	YY_PARSER_TOKENS
+
 
 feature -- Access
 
@@ -399,4 +400,4 @@ feature -- Token codes
 	TE_STR_NOT: INTEGER is 380
 	TE_STR_FREE: INTEGER is 381
 
-end -- class EIFFEL_TOKENS
+end

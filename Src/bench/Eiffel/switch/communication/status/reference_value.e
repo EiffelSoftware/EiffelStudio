@@ -40,15 +40,15 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (reference: POINTER; id: like dynamic_type_id) is
-			-- Set `address' to `reference' address
+	make (a_reference: POINTER; id: like dynamic_type_id) is
+			-- Set `address' to `a_reference' address
 			-- and `dynamic_type_id' to `id'.
 		local
 			void_pointer: POINTER
 		do
 			set_default_name;
-			if reference /= Void_pointer then
-				address := reference.out
+			if a_reference /= Void_pointer then
+				address := a_reference.out
 				is_null := (address = Void)
 				dynamic_type_id := id;
 			end;

@@ -12,12 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
-
-#ifdef EIF_WIN32
-#define print_err_msg fprintf
-#else
 #include "err_msg.h"
-#endif
 
 #include <sys/types.h>
 #include "logfile.h"
@@ -26,6 +21,8 @@
 #include "ewbio.h"
 
 #ifdef EIF_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include "uu.h"
 #endif
 
@@ -41,11 +38,6 @@
 
 #ifdef I_FCNTL
 #include <fcntl.h>
-#endif
-
-#ifdef EIF_WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #endif
 
 /* #define USE_ADD_LOG */
@@ -102,6 +94,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 
 	char *startpath, *dotplace, *cmdline, *cmd2;	/* Paths for directory to start in */
 	BOOL in_quote;									/* Needed for " processing */
+	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
 	int pdn[2];					/* The opened downwards file descriptors */
 	int pup[2];					/* The opened upwards file descriptors */
@@ -254,6 +247,11 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		add_log(20, "ERROR cannot create process %d", GetLastError());
 		add_log(20, "Error code %d", GetLastError());
 #endif
+		strcat (error_msg, "Cannot Launch the program \"");
+		strcat (error_msg, cmd2);
+		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
+		MessageBox (NULL, error_msg, "Execution terminated",
+					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 	}
 
 #ifdef USE_ADD_LOG

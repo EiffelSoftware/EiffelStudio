@@ -18,9 +18,25 @@ inherit
 			proc_args
 		end
 
+feature -- Access
+
+	database_handle_name: STRING is "SYBASE"
+
 feature -- For DATABASE_STATUS
 
-	is_ok_mat: BOOLEAN
+	is_error_updated: BOOLEAN
+			-- Has an Oracle function been called since last update which may have
+			-- updated error code, error message or warning message?
+
+	found: BOOLEAN
+			-- Is there any record matching the last
+			-- selection condition used ?
+
+	clear_error is
+			-- Reset database error status.
+		do
+		end
+
 
 feature -- For DATABASE_CHANGE 
 
@@ -63,10 +79,21 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN is True
 
-	result_order (descriptor: INTEGER): INTEGER is
+	result_order (descriptor: INTEGER) is
 		do
-			Result := syb_result_order (descriptor)
+			last_error_code := syb_result_order (descriptor)
 		end
+
+feature -- Access
+
+	last_error_code: INTEGER
+			-- Last error returned by Handle.
+
+	get_error_code: INTEGER is
+		do
+			Result := last_error_code
+		end
+
 
 feature -- For DATABASE_STORE
 
@@ -235,35 +262,40 @@ feature -- External	features
 			Result := syb_new_descriptor
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING): INTEGER is
+	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := syb_init_order (no_descriptor, $c_temp)
+			last_error_code := syb_init_order (no_descriptor, $c_temp)
 		end
 
-	start_order (no_descriptor: INTEGER): INTEGER is
+	start_order (no_descriptor: INTEGER) is
 		do
-			Result := syb_start_order(no_descriptor)
+			last_error_code := syb_start_order(no_descriptor)
 		end
 
-	next_row (no_descriptor: INTEGER): INTEGER is
+	next_row (no_descriptor: INTEGER) is
 		do
-			Result := syb_next_row(no_descriptor)
+			last_error_code := syb_next_row(no_descriptor)
 		end
 
-	terminate_order (no_descriptor: INTEGER): INTEGER is
+	terminate_order (no_descriptor: INTEGER) is
 		do
-			Result := syb_terminate_order(no_descriptor)
+			last_error_code := syb_terminate_order(no_descriptor)
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING): INTEGER is
+	close_cursor (no_descriptor: INTEGER) is
+			-- Do nothing, for ODBC prepared statement
+		do
+		end
+
+	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := syb_exec_immediate($c_temp)
+			last_error_code := syb_exec_immediate($c_temp)
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
@@ -319,6 +351,11 @@ feature -- External	features
 	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
 		do
 			Result := syb_get_boolean_data (no_descriptor, ind)
+		end
+
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+			-- is last retrieved data null? 
+		do
 		end
 
 	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
@@ -396,7 +433,7 @@ feature -- External	features
 			syb_database_make (i)
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING): INTEGER is
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
 		local
 			c_temp1, c_temp2, c_temp3, c_temp4: ANY
 		do
@@ -405,22 +442,22 @@ feature -- External	features
 			c_temp3 := application.to_c
 			c_temp4 := hostname.to_c
 
-			Result := syb_connect ($c_temp1, $c_temp2, $c_temp3, $c_temp4)
+			last_error_code := syb_connect ($c_temp1, $c_temp2, $c_temp3, $c_temp4)
 		end
 
-	disconnect: INTEGER is
+	disconnect is
 		do
-			Result := syb_disconnect
+			last_error_code := syb_disconnect
 		end
 
-	commit: INTEGER is
+	commit is
 		do
-			Result := syb_commit
+			last_error_code := syb_commit
 		end
 
-	rollback: INTEGER is
+	rollback is
 		do
-			Result := syb_rollback
+			last_error_code := syb_rollback
 		end
 
 	trancount: INTEGER is
@@ -428,14 +465,9 @@ feature -- External	features
 			Result := syb_trancount
 		end
 
-	begin: INTEGER is
+	begin is
 		do
-			Result := syb_begin
-		end
-
-	database_handle: DATABASE_HANDLE [SYBASE] is
-		once
-			!! Result
+			last_error_code := syb_begin
 		end
 
 feature {NONE} -- External features

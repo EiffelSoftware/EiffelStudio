@@ -1,12 +1,7 @@
 indexing
 	description: "Ingres specification";
-<<<<<<< ingres.e
 	date: "$Date$";
 	revision: "$Revision$"
-=======
-	date: "$Date$";
-	revision: "$Revision$"
->>>>>>> 1.3
 
 class 
 	INGRES
@@ -21,9 +16,25 @@ inherit
 			proc_args
 		end
 
+feature -- Access
+
+	database_handle_name: STRING is "SYBASE"
+
 feature -- For DATABASE_STATUS
 
-	is_ok_mat: BOOLEAN
+	is_error_updated: BOOLEAN
+			-- Has an Oracle function been called since last update which may have
+			-- updated error code, error message or warning message?
+
+	found: BOOLEAN
+			-- Is there any record matching the last
+			-- selection condition used ?
+
+	clear_error is
+			-- Reset database error status.
+		do
+		end
+
 
 feature -- For DATABASE_CHANGE 
 
@@ -66,6 +77,16 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE, DATABASE_PROC
 	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
 		do
 			Result := true
+		end
+
+feature -- Access
+
+	last_error_code: INTEGER
+			-- Last error returned by Handle.
+
+	get_error_code: INTEGER is
+		do
+			Result := last_error_code
 		end
 
 feature -- DATABASE_STRING
@@ -226,35 +247,40 @@ feature -- External
 			Result := ing_new_descriptor
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING): INTEGER is
+	init_order (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := ing_init_order (no_descriptor, $c_temp)
+			last_error_code := ing_init_order (no_descriptor, $c_temp)
 		end
 
-	start_order (no_descriptor: INTEGER): INTEGER is
+	start_order (no_descriptor: INTEGER) is
 		do
-			Result := ing_start_order(no_descriptor)
+			last_error_code := ing_start_order(no_descriptor)
 		end
 
-	next_row (no_descriptor: INTEGER): INTEGER is
+	next_row (no_descriptor: INTEGER) is
 		do
-			Result := ing_next_row(no_descriptor)
+			last_error_code := ing_next_row(no_descriptor)
 		end
 
-	terminate_order (no_descriptor: INTEGER): INTEGER is
+	terminate_order (no_descriptor: INTEGER) is
 		do
-			Result := ing_terminate_order(no_descriptor)
+			last_error_code := ing_terminate_order(no_descriptor)
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING): INTEGER is
+	close_cursor (no_descriptor: INTEGER) is
+			-- Do nothing, for ODBC prepared statement
+		do
+		end
+
+	exec_immediate (no_descriptor: INTEGER; command: STRING) is
 		local
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := ing_exec_immediate($c_temp)
+			last_error_code := ing_exec_immediate($c_temp)
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL [CHARACTER]; max_len:INTEGER): INTEGER is
@@ -310,6 +336,11 @@ feature -- External
 	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
 		do
 			Result := ing_get_boolean_data (no_descriptor, ind)
+		end
+
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+			-- is last retrieved data null? 
+		do
 		end
 
 	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
@@ -387,7 +418,7 @@ feature -- External
 			c_ing_make (i)
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING): INTEGER is
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
         	local
             		c_temp1, c_temp2, c_temp3, c_temp4, c_temp5, c_temp6: ANY
         	do
@@ -397,22 +428,22 @@ feature -- External
             		c_temp4 := rolePassWd.to_c
             		c_temp5 := groupId.to_c
             		c_temp6 := data_source.to_c
-            		Result := ing_connect ($c_temp1, $c_temp2, $c_temp3, $c_temp4, $c_temp5, $c_temp6)
+            		last_error_code := ing_connect ($c_temp1, $c_temp2, $c_temp3, $c_temp4, $c_temp5, $c_temp6)
 		end
 
-	disconnect: INTEGER is
+	disconnect is
 		do
-			Result := ing_disconnect
+			last_error_code := ing_disconnect
 		end
 
-	commit: INTEGER is
+	commit is
 		do
-			Result := ing_commit
+			last_error_code := ing_commit
 		end
 
-	rollback: INTEGER is
+	rollback is
 		do
-			Result := ing_rollback
+			last_error_code := ing_rollback
 		end
 
 	trancount: INTEGER is
@@ -420,14 +451,9 @@ feature -- External
 			Result := ing_trancount
 		end
 
-	begin: INTEGER is
+	begin is
 		do
-			Result := ing_begin
-		end
-
-	database_handle: DATABASE_HANDLE [INGRES] is
-		once
-			!! Result
+			last_error_code := ing_begin
 		end
 
 feature {NONE} -- External features

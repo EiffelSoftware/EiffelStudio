@@ -21,7 +21,8 @@ feature -- Access
 			if database_type.is_equal(odbc) then
 				Result := db_manager_odbc 
 			elseif database_type.is_equal(oracle) then
-				Result := db_manager_oracle
+--				Result := db_manager_oracle
+				Result := db_manager_odbc
 			end	
 		ensure
 			exists: Result /= Void
@@ -56,15 +57,15 @@ feature {NONE} -- Implementation
 			Result.append(odbc)
 		end
 		
-	db_manager_oracle: DATABASE_MANAGER[ORACLE] is
+--	db_manager_oracle: DATABASE_MANAGER[ORACLE] is
 			-- Database manager. Allows to perform
 			-- connection, deconnection, request and 
 			-- query execution.
-		once
-			Create Result
-		ensure
-			exists: Result /= Void
-		end
+--		once
+--			Create Result
+--		ensure
+--			exists: Result /= Void
+--		end
 
 	db_manager_odbc: DATABASE_MANAGER[ODBC] is
 			-- Database manager. Allows to perform

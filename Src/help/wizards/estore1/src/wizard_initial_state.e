@@ -80,7 +80,8 @@ feature -- basic Operations
 				if odbc_b.is_selected then
 					set_database(odbc)
 				else
-					set_database(oracle)
+--					set_database(oracle)
+					set_database(odbc)
 				end
 				if db_manager.connected then
 					db_manager.disconnect

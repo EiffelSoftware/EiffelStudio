@@ -44,12 +44,14 @@ feature {NONE} -- Creation
 
 	make (a_toggle_b: TOGGLE_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif toggle button.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_toggle_make (a_toggle_b.identifier,
-					mel_parent (a_toggle_b, widget_index),
-					man);
-			a_toggle_b.set_font_imp (Current)
+			mel_toggle_make (a_toggle_b.identifier, mc, man);
+			a_toggle_b.set_font_imp (Current);	
+			set_mnemonic_from_text (a_toggle_b.identifier, False)
 		end;
 
 feature -- Status setting

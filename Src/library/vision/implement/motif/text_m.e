@@ -67,11 +67,13 @@ feature {NONE} -- Initialization
 
 	make (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif text.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_text_make (a_text.identifier,
-					mel_parent (a_text, widget_index),
-					man);
+			mel_text_make (a_text.identifier, mc, man);
+			set_multi_line_mode;
 			a_text.set_font_imp (Current)
 		end;
 

@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOGGLE_BG_M 
+class 
+	TOGGLE_BG_M 
 
 inherit
 
@@ -31,7 +32,6 @@ inherit
 			mel_toggle_make
 		end
 
-
 creation
 
 	make
@@ -40,12 +40,14 @@ feature {NONE} -- Initialization
 
 	make (a_toggle_bg: TOGGLE_BG; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif toggle button gadget.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_toggle_make (a_toggle_bg.identifier,
-					mel_parent (a_toggle_bg, widget_index),
-					man);
-			a_toggle_bg.set_font_imp (Current)
+			mel_toggle_make (a_toggle_bg.identifier, mc, man);
+			a_toggle_bg.set_font_imp (Current);
+			set_mnemonic_from_text (a_toggle_bg.identifier, False)
 		end;
 
 feature -- Status setting

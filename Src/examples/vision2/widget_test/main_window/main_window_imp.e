@@ -243,6 +243,7 @@ feature {NONE}-- Initialization
 			clear_all.set_text ("Clear All")
 			clear_all.set_tooltip ("Clear all events")
 			l_vertical_box_5.disable_item_expand (object_editor)
+			object_editor.set_border_width (3)
 			padding_cell.set_minimum_width (180)
 			test_class_display.disable_edit
 			flat_short_display_parent.disable_item_expand (l_horizontal_box_6)
@@ -302,7 +303,7 @@ feature {NONE} -- Implementation
 	file_generate, file_exit, help_about: EV_MENU_ITEM
 	l_menu_separator_1: EV_MENU_SEPARATOR
 	l_vertical_box_1, l_vertical_box_2, main_box, l_vertical_box_3, vertical_spacing_box, 
-	l_vertical_box_4, l_vertical_box_5, flat_short_display_parent: EV_VERTICAL_BOX
+	l_vertical_box_4, l_vertical_box_5, object_editor, flat_short_display_parent: EV_VERTICAL_BOX
 	l_horizontal_separator_1, l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_horizontal_box_1, main_notebook_properties_item, horizontal_spacing_box, l_horizontal_box_2, 
 	l_horizontal_box_3, main_notebook_tests, l_horizontal_box_4, l_horizontal_box_5, 
@@ -310,8 +311,7 @@ feature {NONE} -- Implementation
 	l_tool_bar_1, l_tool_bar_2, l_tool_bar_3, l_tool_bar_4: EV_TOOL_BAR
 	generate_button: EV_TOOL_BAR_BUTTON
 	l_cell_1, l_cell_2, widget_selector_parent, left_spacing_cell, top_spacing_cell, 
-	widget_holder, bottom_spacing_cell, right_spacing_cell, object_editor, padding_cell, 
-	controller_parent: EV_CELL
+	widget_holder, bottom_spacing_cell, right_spacing_cell, padding_cell, controller_parent: EV_CELL
 	l_vertical_separator_1: EV_VERTICAL_SEPARATOR
 	properties_button, tests_button, documentation_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	main_split_area: EV_HORIZONTAL_SPLIT_AREA

@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
-			-- Text at the zero-based `index'
+			-- Text at the one-based `index'
 		require
 			exists: not destroyed
-			index_large_enough: index >= 0
+			index_large_enough: index > 0
 			index_small_enough: index < count
 		do
 			Result := implementation.get_item (index)
@@ -71,6 +71,18 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.count
+		end
+
+feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' the list.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= count
+		do
+			implementation.select_item (index)
 		end
 
 feature -- Element change

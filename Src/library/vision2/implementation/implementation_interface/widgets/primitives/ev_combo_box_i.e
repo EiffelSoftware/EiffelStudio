@@ -14,10 +14,10 @@ inherit
 feature -- Access
 
 	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
-			-- Text at the zero-based `index'
+			-- Text at the one-based `index'
 		require
 			exists: not destroyed
-			index_large_enough: index >= 0
+			index_large_enough: index > 0
 			index_small_enough: index < count
 		deferred
 		ensure
@@ -47,6 +47,17 @@ feature -- Status report
 			-- number of items in the list of the combo-box
 		require
 			exists: not destroyed
+		deferred
+		end
+
+feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' of the list.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= count
 		deferred
 		end
 

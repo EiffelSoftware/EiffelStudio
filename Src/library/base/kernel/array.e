@@ -22,14 +22,6 @@ class ARRAY [G] inherit
 			consistent, setup
 		end;
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		redefine
-			copy, is_equal,
-			consistent, setup
-		end;
-
 	TO_SPECIAL [G]
 		export
 			{ARRAY} set_area
@@ -316,7 +308,7 @@ feature -- Resizing
 			end;
 			if empty_area then
 				make_area (new_size);
-			elseif new_size /= old_size then
+			elseif new_size > old_size or new_lower < lower then
 				area := arycpy ($area, new_size, 
 					lower - new_lower, old_count)
 			end;
@@ -333,7 +325,6 @@ feature -- Conversion
 		do
 			Result := area
 		end;
-		
 		
 	linear_representation: LINEAR [G] is
 			-- Representation as a linear structure
@@ -355,7 +346,6 @@ feature -- Conversion
 
 feature -- Duplication
 
-
 	copy (other: like Current) is
 			-- Reinitialize by copying all the items of `other'.
 			-- (This is also used by `clone'.)
@@ -365,7 +355,6 @@ feature -- Duplication
 		ensure then
 			equal_areas: area.is_equal (other.area)
 		end;
-
 
 feature -- Obsolete
 

@@ -14,7 +14,7 @@ inherit
 			interface
 		end
 
-	EV_ITEM_LIST_I [EV_TREE_ITEM]
+	EV_TREE_ITEM_HOLDER_I
 		redefine
 			interface
 		end
@@ -110,6 +110,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/07 01:28:50  king
+--| Now inheriting from ev_tree_item_holder_i
+--|
 --| Revision 1.29  2000/03/01 18:09:22  oconnor
 --| released
 --|

@@ -243,6 +243,9 @@ union overhead {
 			uint32 ovu_flags;			/* Eiffel flags */
 			char *ovu_fwd;				/* Forwarding pointer */
 		} ovu;
+#ifdef EIF_TID
+        EIF_THR_TYPE *ovs_tid;          /* thread id of creator thread */
+#endif  /* EIF_TID */
 		uint32 ovs_size;				/* Size of block, plus flags */
 	} ov_head;
 #if MEM_ALIGNBYTES > 8

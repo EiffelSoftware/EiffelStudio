@@ -5,7 +5,6 @@ root
 	DOC_BUILDER: make_and_launch
 
 default
-	precompiled ("$ISE_EIFFEL\precomp\spec\dotnet\vision2")
 	assertion (no)
 	msil_generation (yes)
 	disabled_debug (yes)
@@ -63,7 +62,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp.e"; "gtk2"; 
+			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "gtk2"; 
 		end
 
 	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"

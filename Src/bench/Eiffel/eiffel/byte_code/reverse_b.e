@@ -25,12 +25,13 @@ feature
 			cl_type_i: CL_TYPE_I;
 			source_type: TYPE_I;
 		do
+			make_breakable (ba);
+
 				-- Generate expression byte code
 			source.make_byte_code (ba);
 
 			source_type ?= context.real_type (source.type);
 			target.make_reverse_code (ba, source_type);
-			make_breakable (ba)
 		end;
 		
 end

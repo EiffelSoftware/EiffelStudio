@@ -129,6 +129,7 @@ feature -- Byte code generation
 		local
 			nb_keys: INTEGER;
 		do
+			make_breakable (ba);
 			if compound /= Void then
 				ba.append (Bc_debug);
 				if keys = Void then
@@ -146,9 +147,9 @@ feature -- Byte code generation
 				end;
 				ba.mark_forward;
 				compound.make_byte_code (ba);
+				make_breakable (ba);
 				ba.write_forward;
-			end;
-			make_breakable (ba);
+			end
 		end;
 
 end

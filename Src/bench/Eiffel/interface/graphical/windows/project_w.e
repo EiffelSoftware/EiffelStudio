@@ -181,6 +181,9 @@ feature -- rest
 	type_teller: LABEL_G;
 			-- To tell what type of element we are dealing with
 
+	stop_points_hole: DEBUG_STOPIN;
+			-- To set breakpoints
+
 	build_widgets is
 			-- Build widget.
 		do
@@ -201,7 +204,6 @@ feature -- rest
 			object_hole: OBJECT_HOLE;
 			explain_hole: EXPLAIN_HOLE;
 			shell_hole: SHELL_HOLE;
-			debug_stop_hole: DEBUG_STOPIN;
 			dummy_rc: ROW_COLUMN;
 		do
 			!!open_command.make (text_window);
@@ -215,7 +217,7 @@ feature -- rest
 				!!class_hole.make (classic_bar, Current);
 				!!routine_hole.make (classic_bar, Current);
 				!!object_hole.make (classic_bar, Current);
-				!!debug_stop_hole.make (classic_bar, Current);
+				!!stop_points_hole.make (classic_bar, Current);
 				--!!shell_hole.make (classic_bar, Current);
 					classic_bar.attach_top (quit_command, 0);
 					classic_bar.attach_top (change_font_command, 0);
@@ -225,14 +227,14 @@ feature -- rest
 					classic_bar.attach_top (class_hole, 0);
 					classic_bar.attach_top (routine_hole, 0);
 					classic_bar.attach_top (object_hole, 0);
-					classic_bar.attach_top (debug_stop_hole, 0);
+					classic_bar.attach_top (stop_points_hole, 0);
 					classic_bar.attach_left (explain_hole, 0);
 					classic_bar.attach_left_widget (explain_hole, system_hole,0);
 					classic_bar.attach_left_widget (system_hole, class_hole,0);
 					classic_bar.attach_left_widget (class_hole, routine_hole, 0);
 					classic_bar.attach_left_widget (routine_hole, object_hole, 0);
-					classic_bar.attach_left_widget (object_hole, debug_stop_hole, 0);
-					classic_bar.attach_left_widget (debug_stop_hole, type_teller,
+					classic_bar.attach_left_widget (object_hole, stop_points_hole, 0);
+					classic_bar.attach_left_widget (stop_points_hole, type_teller,
 0);
 					classic_bar.attach_right_widget (change_font_command, type_teller, 0);
 					classic_bar.attach_right_widget (quit_command, change_font_command, 0);

@@ -97,16 +97,18 @@ feature -- Debugger
 	find_breakable is
 			-- Look for breakable instructions
 		do
+			record_break_node;
 			if compound /= Void then
 				compound.find_breakable;
 			end;
+			record_break_node;
 			if elsif_list /= Void then
 				elsif_list.find_breakable;
 			end;
 			if else_part /= Void then
 				else_part.find_breakable;
+				record_break_node;
 			end;
-			record_break_node;
 		end;
 
 feature -- Formatter
@@ -115,6 +117,7 @@ feature -- Formatter
 			-- Reconstitute	text
 		do
 			ctxt.begin;
+			ctxt.put_breakable;
 			ctxt.put_keyword ("if ");
 			ctxt.new_expression;
 			condition.format (ctxt);
@@ -127,23 +130,24 @@ feature -- Formatter
 				compound.format (ctxt);
 				ctxt.indent_one_less;
 			end;
+			ctxt.next_line;
+			ctxt.put_breakable;
 			if elsif_list /= void then	
-				ctxt.next_line;
 				ctxt.set_separator(void);
 				elsif_list.format (ctxt);
 				ctxt.set_separator(";");
+				ctxt.next_line;
 			end;
 			if else_part /= void then
-				ctxt.next_line;
 				ctxt.put_keyword ("else");
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				else_part.format (ctxt);
 				ctxt.indent_one_less;
+				ctxt.next_line;
+				ctxt.put_breakable;
 			end;
-			ctxt.next_line;
 			ctxt.put_keyword ("end");
-			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 

@@ -7,7 +7,7 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable, format
+			format
 		end
 
 feature -- Initialization
@@ -41,15 +41,11 @@ feature -- Type check and byte code
 
 feature -- Debugger
  
-	find_breakable is
-			-- Cannot break after a `retry' since it is an inconditional jump.
-		do
-			-- Do nothing
-		end;
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			ctxt.put_breakable;
 			ctxt.put_keyword("retry");
 			ctxt.always_succeed;
 		end;

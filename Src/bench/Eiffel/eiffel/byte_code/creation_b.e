@@ -65,6 +65,7 @@ feature -- Byte code generation
 debug
 	info.trace;
 end;
+			make_breakable (ba);
 			ba.append (Bc_create);
 			info.make_byte_code (ba);
 			target_type := Context.real_type (target.type);
@@ -76,7 +77,6 @@ end;
 				target.make_byte_code (ba);
 				ba.append (Bc_create_inv);
 			end;
-			make_breakable (ba);
 		end;
 
 end

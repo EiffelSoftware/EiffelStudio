@@ -322,6 +322,7 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			ctxt.put_breakable;
 			if type /= void then
 				ctxt.put_special("!");
 				type.format (ctxt);
@@ -335,7 +336,6 @@ feature -- Type check, byte code and dead code removal
 				ctxt.keep_types;
 				call.format (ctxt);
 			end;
-			ctxt.put_breakable;
 			ctxt.always_succeed;
 		end;
 

@@ -5,7 +5,7 @@ creation
 
 	make
 	
-feature {NONE}
+feature 
 
 	routine_win_mgr: ROUTINE_WIN_MGR;
 		-- Manager for routine windows 

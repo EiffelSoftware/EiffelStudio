@@ -90,4 +90,13 @@ feature
 			-- Do nothing
 		end;
 
+	make_breakable (ba: BYTE_ARRAY) is
+			-- Put a breakable point token
+			-- hook when generating debuggable byte code.
+		do
+			if context.debug_mode then
+				context.record_breakable (ba);
+			end
+		end; -- make_breakable
+
 end

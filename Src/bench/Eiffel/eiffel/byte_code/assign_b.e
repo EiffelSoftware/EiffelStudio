@@ -49,6 +49,8 @@ feature -- Byte code generation
 		local
 			source_type: TYPE_I;
 		do
+			make_breakable (ba);
+
 				-- Generate expression byte code
 			source.make_byte_code (ba);
 
@@ -56,7 +58,6 @@ feature -- Byte code generation
 				-- of the target (local, attribute or result).
 			source_type ?= context.real_type (source.type);
 			target.make_assignment_code (ba, source_type);
-			make_breakable (ba)
 		end;
 
 end

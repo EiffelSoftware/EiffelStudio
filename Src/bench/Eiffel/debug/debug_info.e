@@ -43,6 +43,9 @@ feature
 
 feature -- Debuggables (Byte code,...)
 
+	debugged_routines: LINKED_LIST [FEATURE_I];
+			-- Routines that are currently debugged
+
 	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
 			-- Debuggable structures not 
 			-- sent to the application yet
@@ -63,7 +66,7 @@ feature -- Debuggables (Byte code,...)
 		do
 			sent_debuggables.merge (new_debuggables);
 			new_debuggables.clear_all;
-		end;
+		end; -- tenure_debuggables
 
 	restore_debuggables is
 			-- Restore debuggables. See comment
@@ -72,14 +75,14 @@ feature -- Debuggables (Byte code,...)
 			sent_debuggables.merge (new_debuggables);
 			new_debuggables := sent_debuggables;
 			!! sent_debuggables.make (10)
-		end;
+		end; -- restore_debuggables
 
 	clear_debuggables is
 			-- Clear debuggable structures.
 		do
 			sent_debuggables.clear_all;
 			new_debuggables.clear_all
-		end;
+		end; -- clear_debuggables
 
 	add_feature (f: FEATURE_I) is
 			-- Generate debuggable byte code corresponding to
@@ -87,27 +90,24 @@ feature -- Debuggables (Byte code,...)
 			-- Do nothing if `f' has previously been added.
 		do
 			if not has_feature (f) then
-			    new_debuggables.put (f.debuggables, f.body_id);
+				new_debuggables.put (f.debuggables, f.body_id);
 				debugged_routines.add (f)
 			end
-		end;
+		end; -- add_feature
 
 	debuggable_count: INTEGER is
 			-- Number of new byte arrays since last transfer
-			-- between workbench and application. 
-		local
-			ll: LINKED_LIST [DEBUGGABLE]
+			-- between workbench and application 
 		do
 			from
 				new_debuggables.start
 			until
-				new_debuggables.offright
+				new_debuggables.after
 			loop
-				ll := new_debuggables.item_for_iteration;	
-				Result := Result + ll.count;
+				Result := Result + new_debuggables.item_for_iteration.count;
 				new_debuggables.forth
-			end;
-		end;
+			end
+		end; -- debuggable_count
 
 	new_extension: INTEGER is
 			-- Number of new byte arrays since last transfer
@@ -139,21 +139,19 @@ feature -- Debuggables (Byte code,...)
 				end;
 				new_debuggables.forth
 			end;
-		end;
+		end; -- new_extension
 
 	has_feature (feature_i: FEATURE_I): BOOLEAN is
 			-- Has debuggable byte code already been 
 			-- generated for `feature_i'?
-			--|
 		do
 			Result := 
 				new_debuggables.has (feature_i.body_id) or else 
 				sent_debuggables.has (feature_i.body_id)
-		end;
+		end; -- has_feature
 
 	debuggables (f: FEATURE_I): LINKED_LIST [DEBUGGABLE] is
-			-- List of debuggables corresponding to
-			-- `feature_i'
+			-- List of debuggables corresponding to `feature_i'
 		require
 			has_feature (f)
 		do
@@ -164,7 +162,7 @@ feature -- Debuggables (Byte code,...)
 			end;
 		ensure
 			Result /= Void
-		end;
+		end; -- debuggables
 
 	breakable_index (f: INTEGER; offset: INTEGER): INTEGER is
 		local
@@ -186,8 +184,8 @@ feature -- Debuggables (Byte code,...)
 						breakables.forth;
 					end
 				end
-			end
-		end;
+			end;
+		end; -- breakable_index
 
 feature -- Breakpoints
 
@@ -229,7 +227,7 @@ feature -- Breakpoints
 			debug_bodies: LINKED_LIST [DEBUGGABLE];
 			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
 			body_id: INTEGER;
-			bp: BREAKPOINT;
+			bp: BREAKPOINT
 		do
 			!!new_breakpoints.make;
 			from
@@ -263,19 +261,16 @@ feature -- Breakpoints
 				end;
 				new_debuggables.forth;
 			end
-		end;
+		end; -- restore_breakpoints
 						
-	
-				
 	clear_breakpoints is
 			-- Clear the breakpoint structures.
 		do
 			!! new_breakpoints.make;
-		end;
-
+		end; -- clear_breakpoints
 
 	switch_breakpoint (f: FEATURE_I; i: INTEGER) is
-			-- switch the i-th breakpoint of f
+			-- Switch the `i'-th breakpoint of `f' ?
 		require
 			prepared_for_debug: has_feature (f)
 		local
@@ -284,7 +279,7 @@ feature -- Breakpoints
 			bp: BREAKPOINT;
 			ap: AST_POSITION;
 			pos: INTEGER;
-			debug_item: DEBUGGABLE;
+			debug_item: DEBUGGABLE
 		do
 			debug_bodies := debuggables (f);
 			from
@@ -308,30 +303,25 @@ feature -- Breakpoints
 				new_breakpoints.add (bp);
 				debug_bodies.forth;
 			end;	
-			is_last_breakpoint_set := is_stop;
-		end;
+			is_last_breakpoint_set := is_stop
+		end; -- switch_breakpoint
 			
 		
 	is_last_breakpoint_set: BOOLEAN;	
-		-- did last switch_breakpoint set a breakpoint to stop
+		-- Did last `switch_breakpoint' set a breakpoint to stop ?
 
 	is_breakpoint_set (f: FEATURE_I; i: INTEGER): BOOLEAN is
-			-- is the i-th breakpoint of f set is
-		local
-			debuggable: DEBUGGABLE;
+			-- Is the `i'-th breakpoint of `f' set ?
 		do
-			if has_feature (f) then
-				debuggable := debuggables (f).first;
-				if i <= debuggable.breakable_points.count then
-					Result := debuggable.breakable_points.i_th (i).is_set
-				end
-			end
-		end;
+			Result := has_feature (f) and then debuggables (f).first.is_breakpoint_set (i)
+		end; -- is_breakpoint_set
 
-feature -- Status
-
-	debugged_routines: LINKED_LIST [FEATURE_I];
-			-- Routines that are currently debugged.
+	has_breakpoint_set (f: FEATURE_I): BOOLEAN is
+			-- Has `f' a breakpoint set to stop ?
+		do
+			Result := has_feature (f) and then debuggables (f).first.has_breakpoint_set
+		end; -- has_breakpoint_set
+			
 
 feature -- Trace
 
@@ -373,4 +363,4 @@ feature -- Trace
 			end;
 		end
 
-end
+end -- class DEBUG_INFO

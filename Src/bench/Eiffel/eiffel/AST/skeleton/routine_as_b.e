@@ -448,6 +448,7 @@ feature -- Debugger
 			end;
 			if rescue_clause /= Void then
 				rescue_clause.find_breakable;
+				record_break_node
 			end;
 		end;
 

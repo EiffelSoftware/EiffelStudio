@@ -76,7 +76,8 @@ feature -- Debugging
 		do
 			if compound /= Void then
 				compound.find_breakable
-			end
+			end;
+			record_break_node
 		end
 
 
@@ -94,7 +95,10 @@ feature -- Formatter
 			ctxt.set_separator(";");
 			ctxt.new_line_between_tokens;
 			ctxt.next_line;
-			compound.format (ctxt);
+			if compound /= Void then
+				compound.format (ctxt);
+			end;
+			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 

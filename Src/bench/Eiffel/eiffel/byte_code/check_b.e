@@ -83,6 +83,7 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a check instruction.
 		do
+			make_breakable (ba);
 			if check_list /= Void then
 					-- Set assertion type
 				context.set_assertion_type (In_check);
@@ -96,7 +97,6 @@ feature -- Byte code generation
 					-- Jump offset evaluation
 				ba.write_forward;
 			end;
-			make_breakable (ba)
 		end;
 
 end

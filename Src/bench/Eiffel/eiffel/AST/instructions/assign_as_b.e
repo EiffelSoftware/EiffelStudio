@@ -110,12 +110,12 @@ feature -- Type check, byte code production, dead_code_removal
 			-- Reconsitute text.
 		do
 			ctxt.begin;
+			ctxt.put_breakable;
 			ctxt.new_expression;
 			target.format (ctxt);
 			ctxt.put_special (assign_symbol);
 			ctxt.new_expression;
 			source.format (ctxt);
-			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 		

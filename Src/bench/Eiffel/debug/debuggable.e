@@ -21,6 +21,29 @@ feature -- Data
 
 	breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
 
+feature -- Status
+
+	is_breakpoint_set (i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakable point set ?
+		do
+			if i >= 1 and i <= breakable_points.count then
+				Result := breakable_points.i_th (i).is_set
+			end
+		end; -- is_breakpoint_set
+
+	has_breakpoint_set: BOOLEAN is
+			-- Is at least one breakable point set ?
+		do
+			from
+				breakable_points.start
+			until
+				Result or breakable_points.after
+			loop
+				Result := breakable_points.item.is_set;
+				breakable_points.forth
+			end
+		end; -- has_breakpoint_set
+
 feature -- Setting
 
 	set_breakable_points (bp: SORTED_TWO_WAY_LIST [AST_POSITION]) is

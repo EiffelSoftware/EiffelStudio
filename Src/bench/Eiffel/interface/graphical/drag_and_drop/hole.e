@@ -73,8 +73,6 @@ feature {NONE}
 			-- Can current accept `dropped'?
 		do
 			Result := dropped /= Void and then (stone_type = dropped.stone_type)
-		ensure
-			Result implies ((dropped /= Void) and then (stone_type = dropped.stone_type))
 		end;
 
 feature  -- to redefine

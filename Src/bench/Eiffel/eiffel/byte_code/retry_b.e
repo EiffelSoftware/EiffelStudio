@@ -21,6 +21,7 @@ feature
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a retry instruction
 		do
+			make_breakable (ba);
 			ba.append (Bc_retry);
 			ba.write_retry;
 		end;

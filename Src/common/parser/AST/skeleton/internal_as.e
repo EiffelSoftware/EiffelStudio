@@ -49,6 +49,7 @@ feature -- Debugger
 			if compound /= Void then
 				compound.find_breakable;
 			end;
+			record_break_node;
 		end;
 
 feature -- Formatter
@@ -66,6 +67,7 @@ feature -- Formatter
 				ctxt.separator_is_special;
 				compound.format(ctxt);
 			end;
+			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 

@@ -147,8 +147,8 @@ feature {NONE}
 	   	 end;
 
 
-	command_bar: FORM;
-			-- Bar with the command buttons (set stoppoint, run...)
+--	command_bar: FORM;
+			-- Bar with the command buttons (set stoppoint)
 
 	build_command_bar is
 		do
@@ -179,7 +179,6 @@ feature {NONE}
 		end;
 
 	build_format_bar is
-			-- Build debugging buttons in `format_bar'.
 		do
 			!!showtext_command.make (format_bar, text_window);
 				format_bar.attach_top (showtext_command, 0);
@@ -208,6 +207,10 @@ feature {NONE}
 			!!shell_command.make (format_bar, text_window);
 				format_bar.attach_top (shell_command, 0);
 				format_bar.attach_right (shell_command, 0);
+
+			!!showstop_command.make (format_bar, text_window);
+				format_bar.attach_top (showstop_command, 0);
+				format_bar.attach_right_widget (shell_command, showstop_command, 10);
 		end;
 
 	build_bar is
@@ -263,21 +266,22 @@ feature {NONE}
 				edit_bar.attach_right (quit_cmd, 0);
 		end;
 
-	debug_run_command: DEBUG_RUN;
+--	debug_run_command: DEBUG_RUN;
 --	step_command: STEP;
 --	next_command: NEXT;
 --	line_command: TIL_LINE;
 --	continue_command: CONTINUE;
 --	break_command: SET_BREAKPOINT;
-	break_command: DEBUG_STOPIN;	
-	unbreak_command: DEBUG_NOSTOPIN;	
-	debug_quit_command: DEBUG_QUIT;
+--	break_command: DEBUG_STOPIN;	
+--	unbreak_command: DEBUG_NOSTOPIN;	
+--	debug_quit_command: DEBUG_QUIT;
 	showroutclients_command: SHOW_ROUTCLIENTS;
-	debug_showbreak: DEBUG_SHOWBREAK;
+--	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
 	showhistory_command: SHOW_ROUT_HIST;
 	showfuture_command: SHOW_FUTURE;
 	showflat_command: SHOW_ROUT_FLAT;
+	showstop_command: SHOW_BREAKPOINTS;
 	shell_command: SHELL_COMMAND;
 
 end

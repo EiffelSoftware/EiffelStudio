@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 						create new_pixmap
 						new_pixmap.set_with_named_file (dialog.file_name)
 							-- Must set the pixmap before the stretch takes place.
-						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (clone (new_pixmap)))
+						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
 						add_pixmap_to_pixmap_container (clone (new_pixmap))
 						modify_button.set_text (Remove_string)

@@ -174,7 +174,7 @@ feature -- Cecil
 			generate_macro ("RCECIL", cecil_rt_basket)
 
 				-- Cecil library prodcution rule
-			make_file.putstring ("STATIC_CECIL= lib")
+			make_file.putstring ("STATIC_CECIL = lib")
 			make_file.putstring (system_name)
 			make_file.putstring (".a%N")
 
@@ -201,16 +201,21 @@ feature -- Cecil
 			make_file.new_line
 			make_file.new_line
 
--- SHARED_CECIL
-			make_file.putstring ("SHARED_CECIL= lib")
+				-- SHARED_CECIL
+			make_file.putstring ("SHARED_CECIL = lib")
 			make_file.putstring (system_name)
-			make_file.putstring ("$shared_suffix %N")
+			make_file.putstring ("$(SHARED_SUFFIX)%N")
 			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
-			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EIFLIB) E1/emain.o $precompilelibs %N")
-			make_file.putstring ("SHAREDFLAGS= $(LDSHAREDFLAGS) %N");
-			make_file.putstring ("$(SHARED_CECIL) : $(SHARED_CECIL_OBJECT) %N")
+			make_file.putstring ("SHARED_CECIL_OBJECT = $(OBJECTS) $(EXTERNALS) $(EIFLIB)")
+			make_file.putchar (continuation)
+			make_file.new_line
+			generate_other_objects
+			make_file.putstring ("%T%TE1/emain.o")
+			make_file.new_line
+			make_file.putstring ("SHAREDFLAGS = $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
 			make_file.putstring ("%T$(RM) $(SHARED_CECIL) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
 			make_file.new_line
@@ -243,11 +248,11 @@ feature -- Generate Dynamic Library
 			make_file.putint (1)
 			make_file.putstring ("/egc_dynlib.c") 
 
-			make_file.putstring ("%N%T cd ")
+			make_file.putstring ("%N%Tcd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("%N%T$(MAKE) egc_dynlib.o")
-			make_file.putstring ("%N%T cd ..")
+			make_file.putstring (" ; $(MAKE) egc_dynlib.o")
+			make_file.putstring (" ; cd ..")
 
 			-- Generate "E1/edynlib.o"
 			make_file.putstring ("%N")
@@ -257,16 +262,20 @@ feature -- Generate Dynamic Library
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/edynlib.c ")
-			make_file.putstring ("%N%T cd ")
+			make_file.putstring ("%N%Tcd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("%N%T$(MAKE) edynlib.o")
-			make_file.putstring ("%N%T cd ..")
+			make_file.putstring (" ; $(MAKE) edynlib.o")
+			make_file.putstring (" ; cd ..%N")
 
 			-- Continue the declaration for the SYSTEM_IN_DYNAMIC_LIB
-			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ= $(OBJECTS) $(EXTERNALS) $(EIFLIB) E1/edynlib.o E1/egc_dynlib.o $precompilelibs %N")
-			make_file.putstring ("DYNLIBSHAREDFLAGS= $(LDSHAREDFLAGS) %N");
-			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB) : $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
+			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ = $(EIFLIB) ")
+			make_file.putchar (continuation)
+			make_file.new_line
+			generate_other_objects
+			make_file.putstring ("%T%T$(OBJECTS) $(EXTERNALS) E1/edynlib.o E1/egc_dynlib.o ")
+			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.putstring ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
 			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
 			
@@ -539,6 +548,7 @@ feature -- Generation, Header
 				%RMDIR = $rmdir%N")
 			make_file.putstring ("SHAREDLINK = $sharedlink%N")
 			make_file.putstring ("SHAREDLIBS = $sharedlibs%N")
+			make_file.putstring ("SHARED_SUFFIX = $shared_suffix%N")
 
 			if System.makefile_names /= Void then
 				generate_makefile_names -- EXTERNAL_MAKEFILES = ...
@@ -956,7 +966,7 @@ feature -- Cleaning rules
 			make_file.putstring ("clean: sub_clean local_clean%N")
 			make_file.putstring ("clobber: sub_clobber local_clobber%N%N")
 			make_file.putstring ("local_clean::%N")
-			make_file.putstring ("%T$(RM) core finished *.o%N%N")
+			make_file.putstring ("%T$(RM) core finished *.o *.so *.a%N%N")
 			make_file.putstring ("local_clobber:: local_clean%N%T")
 			make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N")
 			make_file.putstring ("%Nsub_clean::%N")

@@ -135,7 +135,7 @@ feature -- Element change
 			internal_background_color := a_color.twin
 		end
 		
-feature {NONE} -- Implementation
+feature {EV_GRID_I} -- Implementation
 
 	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
 			-- Set `parent_grid_i' to `a_parent_grid_i'
@@ -149,6 +149,8 @@ feature {NONE} -- Implementation
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.
+		
+feature {NONE} -- Implementation
 
 	destroy is
 			-- Destroy `Current'.

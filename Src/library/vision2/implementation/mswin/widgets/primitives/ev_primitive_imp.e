@@ -77,11 +77,18 @@ feature -- Basic operations
 			-- previous one.
 		local
 			hwnd: POINTER
-			window: WEL_WINDOW
+			window: EV_WIDGET_IMP
 		do
 			hwnd := next_dlggroupitem (top_level_window_imp.item, item, direction)
-			window := windows.item (hwnd)
-			window.set_focus
+			window ?= windows.item (hwnd)
+			check
+				valid_cast: window /= Void
+			end
+			if parent_imp = window.parent_imp then
+				-- The next widget must have the same parent as the
+				-- widget which currently has the focus.
+				window.set_focus
+			end
 		end
 
 	process_tab_key (virtual_key: INTEGER) is

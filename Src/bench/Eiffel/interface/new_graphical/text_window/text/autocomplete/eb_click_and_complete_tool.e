@@ -720,7 +720,7 @@ feature -- Class names completion
 						cname.left_adjust
 						cname.right_adjust
 					end
-					cname.to_lower
+					cname.to_upper
 				end
 				from
 					create class_list.make (100)
@@ -736,7 +736,7 @@ feature -- Class names completion
 						until
 							classes.after
 						loop
-							create class_name.make_with_name (classes.key_for_iteration.as_upper)
+							create class_name.make_with_name (classes.key_for_iteration)
 						 	class_list.extend (class_name)
 							classes.forth
 						end
@@ -748,7 +748,7 @@ feature -- Class names completion
 							classes.after
 						loop
 							if matches (classes.key_for_iteration, cname) then
-								create class_name.make_with_name (classes.key_for_iteration.as_upper)
+								create class_name.make_with_name (classes.key_for_iteration)
 							 	class_list.extend (class_name)
 							end
 							classes.forth

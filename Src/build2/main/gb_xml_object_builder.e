@@ -39,6 +39,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -174,6 +179,180 @@ feature -- Access
 			end
 		end
 		
+	replace_all_instances_with_up_to_date_xml (element: XM_ELEMENT) is
+			-- For all elements contained within then structure of `element' which represent top
+			-- level objects, replace with a new representation of the associated top level object.
+		require
+			element_not_void: element /= Void
+		local
+			all_elements: ARRAYED_LIST [XM_ELEMENT]
+			all_ids: ARRAYED_LIST [INTEGER]
+			xml_store: GB_XML_STORE
+			new_element: XM_ELEMENT
+			current_element: XM_ELEMENT
+			original_parent: XM_ELEMENT
+			top_level_object: GB_OBJECT
+		do
+			create all_elements.make (10)
+			create all_ids.make (10)
+			update_xml (element, all_elements, all_ids)
+			create xml_store
+			from
+				all_ids.start
+				all_elements.start
+			until
+				all_ids.off
+			loop
+				top_level_object := object_handler.objects @ all_ids.item
+				if top_level_object /= Void then
+					xml_store.store_individual_object (top_level_object)
+					new_element ?= xml_store.last_stored_individual_object.first
+					convert_element_to_instance (new_element, all_ids.item, 1)
+				else
+						-- In this case the top level object referenced within the
+						-- element is no longer in the project so we must simply flatten
+						-- the element. A quick way to do this is to pass `2' to `convert_element_to_instance'
+					new_element ?= all_elements.item.twin
+					convert_element_to_instance (new_element, 0, 2)
+				end
+				
+				current_element := all_elements.item
+				original_parent := current_element.parent_element
+				from
+					original_parent.start
+				until
+					original_parent.off
+				loop
+					if original_parent.item_for_iteration = current_element then
+						original_parent.replace (new_element, original_parent.index)
+					end
+					original_parent.forth
+				end
+				
+				all_ids.forth
+				all_elements.forth
+			end
+		end
+		
+	convert_element_to_instance (element: XM_ELEMENT; id, depth: INTEGER) is
+			-- Convert a `element' representing a copy of a top level object `id'
+			-- to a representation of the top level object. `id' must match the
+			-- associated object listed in `element'.
+		require
+			element_not_void: element /= Void
+		local
+			referenced_id: INTEGER
+			current_element: XM_ELEMENT
+			internal_current_element: XM_ELEMENT
+			current_name: STRING
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+			index: INTEGER
+			reference_found: BOOLEAN
+			current_index: INTEGER
+		do
+			from
+				element.start
+			until
+				element.off or reference_found
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name
+					if current_name.is_equal (Item_string) then
+						-- The element represents an item, so we must add new objects.
+						convert_element_to_instance (current_element, id, depth + 1)
+					else
+						-- We must check for internal properties, else set the properties of the component
+						if current_name.is_equal (Internal_properties_string) then
+							index := element.index
+							current_index := current_element.index
+							full_information := get_unique_full_info (current_element)
+							if depth = 1 then
+								add_element_containing_integer (current_element, reference_id_string, id)
+							else							
+								element_info := full_information @ reference_id_string
+								if element_info /= Void then
+									referenced_id := element_info.data.to_integer
+									from
+										current_element.start
+									until
+										current_element.off
+									loop
+										internal_current_element ?= current_element.item_for_iteration
+										if internal_current_element /= Void then
+											if internal_current_element.name.is_equal (reference_id_string) then
+												current_element.remove_at
+											end
+										end
+										if not current_element.off then
+											current_element.forth
+										end
+									end
+								end
+							end
+							element.go_i_th (index)
+							current_element.go_i_th (current_index.min (current_element.count))
+						elseif current_name.is_equal (Events_string) then
+							-- No events handled.
+						else
+						end
+					end
+				end
+				element.forth
+			end
+		end		
+		
+	update_xml (element: XM_ELEMENT; all_elements: ARRAYED_LIST [XM_ELEMENT]; all_ids: ARRAYED_LIST [INTEGER]) is
+			-- For the representation of a widget structure in `element', return all elements that represent a top level
+			-- instance within `all_elements' and the corresponding id of the top level object within `all_ids'.
+		require
+			element_not_void: element /= Void
+			all_elements_not_void: all_elements /= Void
+			all_ids_not_void: all_ids /= Void
+		local
+			referenced_id: INTEGER
+			current_element: XM_ELEMENT
+			current_name: STRING
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+			index: INTEGER
+			reference_found: BOOLEAN
+		do
+			from
+				element.start
+			until
+				element.off or reference_found
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name
+					if current_name.is_equal (Item_string) then
+						-- The element represents an item, so we must add new objects.
+						update_xml (current_element, all_elements, all_ids)
+					else
+						-- We must check for internal properties, else set the properties of the component
+						if current_name.is_equal (Internal_properties_string) then
+							index := element.index
+							full_information := get_unique_full_info (current_element)
+							element_info := full_information @ reference_id_string
+							if element_info /= Void then
+								referenced_id := element_info.data.to_integer
+								all_elements.extend (element)
+								all_ids.extend (referenced_id)
+								reference_found := True
+							end
+							element.go_i_th (index)
+						elseif current_name.is_equal (Events_string) then
+							-- No events handled.
+						else
+						end
+					end
+				end
+				element.forth
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is

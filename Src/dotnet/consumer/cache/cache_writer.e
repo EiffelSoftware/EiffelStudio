@@ -291,6 +291,32 @@ feature -- Basic Operations
 			retry
 		end		
 		
+	compact_cache_info is
+			-- comapcts cache info by removing all CONSUMED_ASSEMBLYs that are marked as being unconsumed
+		local
+			l_info: CACHE_INFO
+			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_removed: BOOLEAN
+			i: INTEGER
+		do
+			l_info := cache_reader.info
+			l_assemblies := l_info.assemblies
+			from
+				i := 1
+			until
+				i > l_assemblies.count
+			loop
+				if not l_assemblies.item (i).is_consumed then
+					l_info.remove_assembly (l_assemblies.item (i))
+					l_removed := True
+				end
+				i := i + 1
+			end
+			if l_removed then
+				update_info (l_info)
+			end
+		end		
+		
 	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
 			-- retrieve a consumed assembly for `a_path' and store in cache info for retrieval
 		require

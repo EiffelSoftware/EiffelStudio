@@ -19,6 +19,18 @@ feature -- Properties
 
 feature -- Status setting
 
+	enable_breakpoints is
+			-- `Current' must display breakpoints from now on, if possible.
+		do
+			has_breakpoints := True
+		end
+
+	disable_breakpoints is
+			-- `Current' must not display breakpoints from now on.
+		do
+			has_breakpoints := False
+		end
+
 	set_stone (new_stone: FEATURE_STONE) is
 			-- Associate current formatter with feature contained in `new_stone'.
 		do
@@ -162,6 +174,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Properties
+
+	has_breakpoints: BOOLEAN
+			-- Should `Current' display breakpoints?
 
 	feature_cmd: E_FEATURE_CMD
 			-- Feature command that is used to generate text output (especially in files).

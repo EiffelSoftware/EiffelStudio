@@ -151,9 +151,7 @@ feature {NONE} -- Implementation
 			-- API feature.
 			-- Cannot be called in Current context.
 		do
-			check
-				not_called: False
-			end
+			create {E_FUNCTION} Result.make (feature_name, feature_id)
 		end
 		
 feature {NONE} -- Replication

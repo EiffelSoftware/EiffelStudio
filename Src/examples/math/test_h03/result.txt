@@ -1,0 +1,10 @@
+Transportation problem solved in 3 iterations.
+
+From	To	Number	Unit Cost
+3	2	4	3
+3	3	2	10
+2	3	1	14
+1	3	1	11
+2	1	4	5
+
+Total cost is 77

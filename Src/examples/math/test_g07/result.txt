@@ -1,0 +1,11 @@
+Expecting 9.0, 4.0, 5.930
+Number of observations: 11
+Median: 9
+Median deviation: 4
+Standard deviation: 5.9304088740207037
+MEDIAN_STATISTICS [0xF61140]
+  data: ARRAY [0xF61168]
+  n: INTEGER = 11
+  median: DOUBLE = 9
+  median_deviation: DOUBLE = 4
+  standard_deviation: DOUBLE = 5.9304088740207037

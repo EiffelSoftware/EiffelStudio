@@ -1,0 +1,64 @@
+testgl done.
+testgm done.
+test_gg done.
+test_gr done.
+test_gh done.
+test_ajc optional output...
+Integral: 0.33333333333333337
+Function calls: 21
+Number of intervals used: 1
+Estimate of error: 1.8503717077085948e-015
+End of first interval: 1
+Result on first interval: 0.33333333333333337
+test_ajc done.
+test_akc done.
+test_akc done.
+test_amc optional output...
+Integral: 3.1215933157446307
+Function calls: 645
+Number of intervals used: 22
+Estimate of error: 4.7768436483686116e-005
+End of first interval: 0.000244140625
+Result on first interval: 0.030537546186628337
+test_amc done.
+test_amc2 optional output...
+Integral: 1.4281674685323422
+Function calls: 150
+Number of intervals used: 3
+Estimate of error: 9.6837626404611132e-006
+End of first interval: 0.25
+Result on first interval: 7.8118904513787526e-009
+test_amc2 done.
+test_asc optional output...
+Integral: 0.99999695311074077
+Function calls: 380
+Number of intervals used: 6
+Estimate of error: 0.00059234187181533837
+Result on first interval: 1.013283128125289
+Error on first interval: 2.2478090611066648e-007
+Error flag on first interval: 0
+End of first interval: 6
+test_asc done.
+test_anc done.
+test_apc done.
+test_aqc done.
+test_fcc optional output...
+Estimate of error: 9.8931961429740744e-005
+test_fcc done.
+test_gbc optional output...
+Number of evaluations: 1344
+Estimate of error: 0.0085302851845364975
+Estimate: 0.57224481757256274
+Number of evaluations: 2528
+Estimate of error: 0.0052960146960788525
+Total number of evaluations: 2528
+test_poly done.
+test_gen optional output...
+Integral: 0.33333333333333337
+Function calls: 21
+Number of intervals used: 1
+Estimate of error: 1.8503717077085948e-015
+Result on first interval: 0.33333333333333337
+Error on first interval: 1.8503717077085948e-015
+test_gen done.
+0 errors. Tests completed.

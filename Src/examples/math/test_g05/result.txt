@@ -1,0 +1,313 @@
+Number of observations: 7
+Number of valid observations: 7
+Mean: 3.0499999999999998
+Minimum: 1
+Maximum: 5
+Standard deviation: 1.2945398152754257
+Coefficient of skewness: -0.11466129767918848
+Kurtosis: -0.97325722944491444
+Number of observations: 7
+Number of valid observations: 5
+Mean: 3.0350000000000001
+Minimum: 2
+Maximum: 4
+Standard deviation: 0.81330842134782666
+Coefficient of skewness: -0.12516692996587936
+Kurtosis: -1.4945904772129013
+Sum of weights: 1
+0.5: 0.5
+1.6449: 1.6448536269521328
+0.79730000000000001: 0.79730697935971062
+0.20269999999999999: 0.20269302064028938
+0.40539999999999998: 0.40538604128057876
+0.59460000000000002: 0.59461395871942124
+-2.9430000000000001: -2.9430920604552808
+-2.9430000000000001: -2.9430920604552808
+2.6899999999999999: 2.6895850189423141
+2.8450000000000002: 2.8453396640559712
+0.4279: 0.42792638326526522
+0.57210000000000005: 0.57207361673473478
+6.2000000000000002: 6.2006438738261522
+0.98370000000000002: 0.98368007728735551
+0.016299999999999981: 0.016319922712644458
+2.5: 2.4979501385281933
+0.94989999999999997: 0.94987794546733484
+0.050100000000000033: 0.050122054532665168
+0.67000000000000004: 0.66963115446845256
+Testing Student's T Distribution nu=20.
+Expect .7973 .4054 .5946 .2027
+0.79730697935971062 0.40538604128057876 0.59461395871942124 0.20269302064028938
+Expect 2.845: 2.8453396640559712
+Expect 0.85: 0.84997428685305898 0.84997428685305898 0.84997428685305898 0.84997428685305898
+Testing normal distribution (3., 2.)
+Standard deviate at x=.95:1.6448536269521328
+Deviate at x=.95:6.2897072539042655
+Testing chi-squared distribution (7.5)
+Expect .4279: 0.42792638326526522
+Expect 6.2: 6.1997692498252075
+Testing F distribution (10.0, 25.5)
+Expect .984: 0.9837116311095202
+Expect 2.837: 2.8469288838722826
+Testing Beta distribution (1., 2.)
+Expect .4375: 0.4375
+Expect 0.25: 0.24999992466615745
+Testing Gamma distribution (7.5, .1)
+Expect .428: 0.42856813123761672
+Expect 0.670: 0.66971428057849147
+Testing Bivariate Normal distribution (.540)
+Expect .9995: 0.99951657585761622
+From a CUD
+0.56784423022967212
+0.79080457630676815
+0.85770531026408581
+0.43524346036348444
+0.39684256392007244
+0.91869613947448248
+From a CUD_AB (2, 5)
+2.2189073723319352
+4.9085897212579583
+2.4213637259531851
+3.7223196811030959
+3.4654897596544667
+4.7636978100675087
+From an EXPONENTIAL (2.0)
+5.2354377693877501
+0.061887913653612368
+3.9257422996611089
+1.1098805093052451
+1.4328455902716275
+0.16408543879093529
+From a Beta (2.0, 2.0)
+0.67274149649998727
+0.87121026090446374
+0.85487218650640995
+0.38686449428886027
+0.42616407554807656
+0.32583871616239823
+From a normal distribution mean 3., sigma 2.
+5.5947686053386168
+4.6041307196090102
+2.1354129163859148
+4.4506040884679674
+3.0277970728645793
+6.230492101313617
+The next sample only is from normal(0.,1.)
+-0.18318312429828298
+0.99730522141852163
+From a GAMMA (5.0, 1.0)
+12.369909913765559
+9.2657266878770024
+5.7148371798851114
+6.5162571072555835
+3.4313716280186162
+12.301689628614872
+From a Chi-square (4.0)
+12.077868977213724
+0.90999952564062458
+7.9265461068320064
+0.21339964852854321
+9.2705664973187094
+2.2203785961489428
+From a Student's t (4.0)
+-0.35359546782697815
+-0.48978430176301535
+0.4061838782183631
+0.69034640593801533
+-0.86444956744152845
+0.0065996745602570133
+From a Discrete (2, 6)
+2
+6
+2
+4
+4
+6
+From a Poisson (2.7)
+1
+6
+1
+3
+2
+5
+From a Binomial (100, 0.5)
+43
+59
+45
+51
+50
+57
+Normal tail/generator comparison. Please wait.
+Expect .20 +/- error: 0.18099999999999999
+Student's t tail/generator comparison. Please wait.
+Expect .20 +/- error: 0.20499999999999999
+Chi-squared tail/generator comparison. Please wait.
+Expect .20 +/- error: 0.21099999999999999
+Gamma tail/generator comparison. Please wait.
+Expect .20 +/- error: 0.214
+Testing vector normal generator.
+ARRAY [0xF63418]
+  area: SPECIAL [0xF63430]
+    -- begin special object --
+        0: DOUBLE = 1.7697396189662173
+        1: DOUBLE = 4.4480729914346098
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+
+ARRAY [0xF63450]
+  area: SPECIAL [0xF63468]
+    -- begin special object --
+        0: DOUBLE = 3.2677810265619884
+        1: DOUBLE = 3.0582561857638484
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+
+ARRAY [0xF63488]
+  area: SPECIAL [0xF634A0]
+    -- begin special object --
+        0: DOUBLE = 3.1768772119524566
+        1: DOUBLE = 2.3651055843720163
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+
+ARRAY [0xF634C0]
+  area: SPECIAL [0xF634D8]
+    -- begin special object --
+        0: DOUBLE = -0.10551901180174772
+        1: DOUBLE = 1.839547638788374
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+
+ARRAY [0xF634F8]
+  area: SPECIAL [0xF63510]
+    -- begin special object --
+        0: DOUBLE = 1.2932972408468646
+        1: DOUBLE = -0.18504173750774422
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+
+Testing deal of subsets from 2, 4, 6, 8, 9
+DEALER [0xF687C0]
+  dealt: ARRAY [0xF68828]
+  deck: ARRAY [0xF687E8]
+  saved_state: NAG_RANDOM_NUMBER_GENERATOR_STATE [0xF687D8]
+ARRAY [0xF68828]
+  area: SPECIAL [0xF68840]
+    -- begin special object --
+        0: INTEGER = 2
+        1: INTEGER = 6
+        2: INTEGER = 8
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 3
+ARRAY [0xF696A0]
+  area: SPECIAL [0xF696B8]
+    -- begin special object --
+        0: INTEGER = 6
+        1: INTEGER = 8
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+Should repeat the same experience now...
+DEALER [0xF6A2D8]
+  dealt: ARRAY [0xF6A340]
+  deck: ARRAY [0xF6A300]
+  saved_state: NAG_RANDOM_NUMBER_GENERATOR_STATE [0xF6A2F0]
+ARRAY [0xF6A340]
+  area: SPECIAL [0xF6A358]
+    -- begin special object --
+        0: INTEGER = 2
+        1: INTEGER = 6
+        2: INTEGER = 8
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 3
+ARRAY [0xF6B1B8]
+  area: SPECIAL [0xF6B1D0]
+    -- begin special object --
+        0: INTEGER = 6
+        1: INTEGER = 8
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 2
+Testing permuting 1, ..., 5
+ARRAY [0xF6BE10]
+  area: SPECIAL [0xF6BE28]
+    -- begin special object --
+        0: INTEGER = 2
+        1: INTEGER = 5
+        2: INTEGER = 3
+        3: INTEGER = 1
+        4: INTEGER = 4
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 5
+ARRAY [0xF6BE10]
+  area: SPECIAL [0xF6BE28]
+    -- begin special object --
+        0: INTEGER = 5
+        1: INTEGER = 1
+        2: INTEGER = 2
+        3: INTEGER = 3
+        4: INTEGER = 4
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 5
+Testing ARMA time series #1
+ARRAY [0xF6D520]
+  area: SPECIAL [0xF6D538]
+    -- begin special object --
+        0: DOUBLE = 3.406036420771426
+        1: DOUBLE = 1.6951503980160467
+        2: DOUBLE = 3.5042082952661167
+        3: DOUBLE = 1.131123681880313
+        4: DOUBLE = 0.063990881909829933
+        5: DOUBLE = 0.58340275336047509
+        6: DOUBLE = 0.53515363633737589
+        7: DOUBLE = -1.7205987556150748
+        8: DOUBLE = -0.4963679997076812
+        9: DOUBLE = 1.6448087808762046
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 10
+Testing ARMA time series #2
+ARRAY [0xF6EBA8]
+  area: SPECIAL [0xF6EBC0]
+    -- begin special object --
+        0: DOUBLE = 1.570170696688179
+        1: DOUBLE = -0.86514396659599158
+        2: DOUBLE = -0.87172361215666117
+        3: DOUBLE = -1.464453632983254
+        4: DOUBLE = 1.2211751975839902
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 5
+ARRAY [0xF6EBA8]
+  area: SPECIAL [0xF6EBC0]
+    -- begin special object --
+        0: DOUBLE = 1.232221304962196
+        1: DOUBLE = 2.1920975222082624
+        2: DOUBLE = -0.20899383218626655
+        3: DOUBLE = -0.47889560426445116
+        4: DOUBLE = -2.4701144160707211
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 5

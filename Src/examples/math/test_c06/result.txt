@@ -1,0 +1,377 @@
+TESTING FOURIER_TRANSFORMER
+Compare with tests in NAG section C06
+TEST 1
+========
+Testing c06eac - fft of real bra vector to packed complex 
+Vector to be transformed 
+
+BASIC_VECTOR <7|, real:
+Index # Values
+      1   3.4907e-001   5.4890e-001   7.4776e-001   9.4459e-001   1.1385e+000
+      6   1.3285e+000   1.5137e+000
+
+After transformation - packed complex vector 
+
+BASIC_VECTOR <7|, packed complex:
+Index # Values
+      1   2.4836e+000,   0.0000e+000  -2.6599e-001,   0.0000e+000
+      3  -2.5768e-001,   0.0000e+000  -2.5636e-001,   0.0000e+000
+      5   5.8062e-002,   0.0000e+000   2.0298e-001,   0.0000e+000
+      7   5.3090e-001,   0.0000e+000
+
+TEST 2
+========
+Testing 'as_dual_complex' - see data in test c06eac 
+
+BASIC_VECTOR <7|, dual complex:
+Index # Values
+      1   2.4836e+000,   0.0000e+000  -2.6599e-001,   5.3090e-001
+      3  -2.5768e-001,   2.0298e-001  -2.5636e-001,   5.8062e-002
+      5  -2.5636e-001,  -5.8062e-002  -2.5768e-001,  -2.0298e-001
+      7  -2.6599e-001,  -5.3090e-001
+
+TEST 3
+========
+Testing c06ebc - from packed complex vector back to original real 
+
+BASIC_VECTOR <7|, real:
+Index # Values
+      1   3.4907e-001   5.4890e-001   7.4776e-001   9.4459e-001   1.1385e+000
+      6   1.3285e+000   1.5137e+000
+
+TEST 4
+========
+Testing c06ecc - fft of complex dual vector to dual complex 
+Vector to be transformed 
+
+BASIC_VECTOR <7|, dual complex:
+Index # Values
+      1   3.4907e-001,  -3.7168e-001   5.4890e-001,  -3.5669e-001
+      3   7.4776e-001,  -3.1175e-001   9.4459e-001,  -2.3702e-001
+      5   1.1385e+000,  -1.3274e-001   1.3285e+000,   7.4000e-004
+      7   1.5137e+000,   1.6298e-001
+
+Vector after transformation - dual complex 
+
+BASIC_VECTOR <7|, dual complex:
+Index # Values
+      1   2.4836e+000,  -4.7100e-001  -5.5180e-001,   4.9684e-001
+      3  -3.6711e-001,   9.7562e-002  -2.8767e-001,  -5.8648e-002
+      5  -2.2506e-001,  -1.7477e-001  -1.4825e-001,  -3.0840e-001
+      7   1.9830e-002,  -5.6496e-001
+
+Inverse transformation - should be the original vector 
+
+BASIC_VECTOR <7|, dual complex:
+Index # Values
+      1   3.4907e-001,  -3.7168e-001   5.4890e-001,  -3.5669e-001
+      3   7.4776e-001,  -3.1175e-001   9.4459e-001,  -2.3702e-001
+      5   1.1385e+000,  -1.3274e-001   1.3285e+000,   7.4000e-004
+      7   1.5137e+000,   1.6298e-001
+
+TEST 5
+========
+Testing c06fpc - fft of real matrix to packed complex 
+Each row of matrix is treated as independent row vector 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 6], real:
+Row/Col             1             2             3             4             5
+      1   3.8540e-001   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001
+      2   5.4170e-001   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001
+      3   9.1720e-001   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002
+Row/Col             6
+      1   1.4240e-001
+      2   8.7230e-001
+      3   4.8150e-001
+
+Matrix after transformation - packed complex 
+
+BASIC_MATRIX [3 x 6], packed complex:
+Row/Col                           1                           2
+      1   1.0737e+000,   0.0000e+000  -1.0406e-001,   0.0000e+000
+      2   1.3961e+000,   0.0000e+000  -3.6518e-002,   0.0000e+000
+      3   1.1237e+000,   0.0000e+000   9.1407e-002,   0.0000e+000
+Row/Col                           3                           4
+      1   1.1255e-001,   0.0000e+000  -1.4668e-001,   0.0000e+000
+      2   7.7955e-002,   0.0000e+000  -1.5207e-001,   0.0000e+000
+      3   3.9355e-001,   0.0000e+000   1.5301e-001,   0.0000e+000
+Row/Col                           5                           6
+      1  -3.7378e-001,   0.0000e+000  -4.3841e-003,   0.0000e+000
+      2  -6.0705e-002,   0.0000e+000   4.6658e-001,   0.0000e+000
+      3   3.4578e-001,   0.0000e+000  -5.0841e-002,   0.0000e+000
+
+Converting the results to dual complex form 
+
+BASIC_MATRIX [3 x 6], dual complex:
+Row/Col                           1                           2
+      1   1.0737e+000,   0.0000e+000  -1.0406e-001,  -4.3841e-003
+      2   1.3961e+000,   0.0000e+000  -3.6518e-002,   4.6658e-001
+      3   1.1237e+000,   0.0000e+000   9.1407e-002,  -5.0841e-002
+Row/Col                           3                           4
+      1   1.1255e-001,  -3.7378e-001  -1.4668e-001,   0.0000e+000
+      2   7.7955e-002,  -6.0705e-002  -1.5207e-001,   0.0000e+000
+      3   3.9355e-001,   3.4578e-001   1.5301e-001,   0.0000e+000
+Row/Col                           5                           6
+      1   1.1255e-001,   3.7378e-001  -1.0406e-001,   4.3841e-003
+      2   7.7955e-002,   6.0705e-002  -3.6518e-002,  -4.6658e-001
+      3   3.9355e-001,  -3.4578e-001   9.1407e-002,   5.0841e-002
+
+TEST 6
+========
+Testing c06fqc - fft of packed comlex matrix to real matrix 
+Should restore the original matrix 
+
+BASIC_MATRIX [3 x 6], real:
+Row/Col             1             2             3             4             5
+      1   3.8540e-001   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001
+      2   5.4170e-001   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001
+      3   9.1720e-001   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002
+Row/Col             6
+      1   1.4240e-001
+      2   8.7230e-001
+      3   4.8150e-001
+
+TEST 7
+========
+Testing c06frc - fft of complex dual matrix to dual complex 
+Each row of matrix is treated as independent row vector 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 6], dual complex:
+Row/Col                           1                           2
+      1   3.8540e-001,   5.4170e-001   6.7720e-001,   2.9830e-001
+      2   9.1720e-001,   9.0890e-001   6.4400e-002,   3.1180e-001
+      3   1.1560e-001,   6.2140e-001   6.8500e-002,   8.6810e-001
+Row/Col                           3                           4
+      1   1.1380e-001,   1.1810e-001   6.7510e-001,   7.2550e-001
+      2   6.0370e-001,   3.4650e-001   6.4300e-001,   6.1980e-001
+      3   2.0600e-001,   7.0600e-001   8.6300e-001,   8.6520e-001
+Row/Col                           5                           6
+      1   6.3620e-001,   8.6380e-001   1.4240e-001,   8.7230e-001
+      2   4.2800e-002,   2.6680e-001   4.8150e-001,   1.6140e-001
+      3   6.9670e-001,   9.1900e-001   2.7920e-001,   3.3550e-001
+
+Matrix after transformation - dual complex 
+
+BASIC_MATRIX [3 x 6], dual complex:
+Row/Col                           1                           2
+      1   1.0737e+000,   1.3961e+000  -5.7065e-001,  -4.0902e-002
+      2   1.1237e+000,   1.0677e+000   1.7276e-001,   3.8586e-002
+      3   9.0999e-001,   1.7617e+000  -3.0542e-001,   6.2434e-002
+Row/Col                           3                           4
+      1   1.7326e-001,  -2.9582e-001  -1.4668e-001,  -1.5207e-001
+      2   4.1855e-001,   7.4808e-001   1.5301e-001,   1.7522e-001
+      3   4.0788e-001,  -6.9479e-002  -7.8547e-002,   7.2505e-002
+Row/Col                           5                           6
+      1   5.1849e-002,   4.5173e-001   3.6252e-001,  -3.2134e-002
+      2   3.6856e-001,   5.6533e-002   1.0054e-002,   1.4027e-001
+      3  -1.1933e-001,   1.2851e-001  -5.3141e-001,  -4.3353e-001
+
+Inverse transformation - restoring original data 
+
+BASIC_MATRIX [3 x 6], dual complex:
+Row/Col                           1                           2
+      1   3.8540e-001,   5.4170e-001   6.7720e-001,   2.9830e-001
+      2   9.1720e-001,   9.0890e-001   6.4400e-002,   3.1180e-001
+      3   1.1560e-001,   6.2140e-001   6.8500e-002,   8.6810e-001
+Row/Col                           3                           4
+      1   1.1380e-001,   1.1810e-001   6.7510e-001,   7.2550e-001
+      2   6.0370e-001,   3.4650e-001   6.4300e-001,   6.1980e-001
+      3   2.0600e-001,   7.0600e-001   8.6300e-001,   8.6520e-001
+Row/Col                           5                           6
+      1   6.3620e-001,   8.6380e-001   1.4240e-001,   8.7230e-001
+      2   4.2800e-002,   2.6680e-001   4.8150e-001,   1.6140e-001
+      3   6.9670e-001,   9.1900e-001   2.7920e-001,   3.3550e-001
+
+TEST 8
+========
+Testing c06fuc - 2-d fft of complex dual matrix to dual complex 
+Matrix represents a rectangular grid of data points 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 5], dual complex:
+Row/Col                           1                           2
+      1   1.0000e+000,   0.0000e+000   9.9900e-001,  -4.0000e-002
+      2   9.9400e-001,  -1.1100e-001   9.8900e-001,  -1.5100e-001
+      3   9.0300e-001,  -4.3000e-001   8.8500e-001,  -4.6600e-001
+Row/Col                           3                           4
+      1   9.8700e-001,  -1.5900e-001   9.3600e-001,  -3.5200e-001
+      2   9.6300e-001,  -2.6800e-001   8.9100e-001,  -4.5400e-001
+      3   8.2300e-001,  -5.6800e-001   6.9400e-001,  -7.2000e-001
+Row/Col                           5
+      1   8.0200e-001,  -5.9700e-001
+      2   7.3100e-001,  -6.8200e-001
+      3   4.6700e-001,  -8.8400e-001
+
+Matrix after 2-dim transformation - dual complex 
+
+BASIC_MATRIX [3 x 5], dual complex:
+Row/Col                           1                           2
+      1   3.3731e+000,  -1.5187e+000   4.8136e-001,  -9.0703e-002
+      2   4.5654e-001,   1.3675e-001   5.4913e-002,   3.1741e-002
+      3  -1.7045e-001,   4.9274e-001  -3.7450e-002,   5.8365e-002
+Row/Col                           3                           4
+      1   2.5066e-001,   1.7762e-001   5.4326e-002,   3.1884e-001
+      2   9.3404e-003,   3.8878e-002  -2.1729e-002,   3.5634e-002
+      3  -4.2303e-002,   8.2462e-003  -3.7742e-002,  -2.5484e-002
+Row/Col                           5
+      1  -4.1944e-001,   4.1454e-001
+      2  -7.5925e-002,   4.4665e-003
+      3  -2.2173e-003,  -8.2908e-002
+
+Inverse 2-dim transformation - restoring original data 
+
+BASIC_MATRIX [3 x 5], dual complex:
+Row/Col                           1                           2
+      1   1.0000e+000,  -6.4099e-017   9.9900e-001,  -4.0000e-002
+      2   9.9400e-001,  -1.1100e-001   9.8900e-001,  -1.5100e-001
+      3   9.0300e-001,  -4.3000e-001   8.8500e-001,  -4.6600e-001
+Row/Col                           3                           4
+      1   9.8700e-001,  -1.5900e-001   9.3600e-001,  -3.5200e-001
+      2   9.6300e-001,  -2.6800e-001   8.9100e-001,  -4.5400e-001
+      3   8.2300e-001,  -5.6800e-001   6.9400e-001,  -7.2000e-001
+Row/Col                           5
+      1   8.0200e-001,  -5.9700e-001
+      2   7.3100e-001,  -6.8200e-001
+      3   4.6700e-001,  -8.8400e-001
+
+TEST 9
+========
+Testing c06hac - sine fft of real matrix to real 
+Matrix represents three rows of independent real data 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 5], real:
+Row/Col             1             2             3             4             5
+      1   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001   1.4240e-001
+      2   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001   8.7230e-001
+      3   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002   4.8150e-001
+
+Matrix after sine transformation 
+
+BASIC_MATRIX [3 x 5], real:
+Row/Col             1             2             3             4             5
+      1   1.0014e+000   6.2000e-003   8.3427e-002   5.2860e-001   2.5137e-001
+      2   1.2477e+000  -6.5985e-001   2.5698e-001   8.5850e-002   2.6584e-001
+      3   8.5207e-001   7.1900e-002  -5.6061e-002  -4.8900e-001   2.0557e-001
+
+Inverse transformation - restoring original data 
+
+BASIC_MATRIX [3 x 5], real:
+Row/Col             1             2             3             4             5
+      1   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001   1.4240e-001
+      2   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001   8.7230e-001
+      3   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002   4.8150e-001
+
+TEST 10
+========
+Testing c06hbc - cosine fft of real matrix to real 
+Matrix represents three rows of independent real data 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 7], real:
+Row/Col             1             2             3             4             5
+      1   3.8540e-001   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001
+      2   5.4170e-001   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001
+      3   9.1720e-001   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002
+Row/Col             6             7
+      1   1.4240e-001   9.5620e-001
+      2   8.7230e-001   4.9360e-001
+      3   4.8150e-001   2.0570e-001
+
+Matrix after cosine transformation 
+
+BASIC_MATRIX [3 x 7], real:
+Row/Col             1             2             3             4             5
+      1   1.6833e+000  -4.8180e-002   1.7609e-002   1.3683e-001   3.2395e-001
+      2   1.9605e+000  -4.8838e-001  -6.5529e-002   4.4442e-001   9.6360e-002
+      3   1.3838e+000   1.5876e-001  -7.6124e-002  -1.1844e-001   3.5117e-001
+Row/Col             6             7
+      1  -5.8298e-001  -4.2666e-002
+      2   8.5620e-002  -2.2895e-001
+      3   5.7586e-001   1.0999e-002
+
+Inverse transformation - restoring original data 
+
+BASIC_MATRIX [3 x 7], real:
+Row/Col             1             2             3             4             5
+      1   3.8540e-001   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001
+      2   5.4170e-001   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001
+      3   9.1720e-001   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002
+Row/Col             6             7
+      1   1.4240e-001   9.5620e-001
+      2   8.7230e-001   4.9360e-001
+      3   4.8150e-001   2.0570e-001
+
+TEST 11
+========
+Testing c06hcc - quarter-sine fft of real matrix to real 
+MY COPY OF NAG MANUAL MISSES SOME PAGES HERE - USING MADE UP DATA 
+Matrix represents three rows of independent real data 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 5], real:
+Row/Col             1             2             3             4             5
+      1   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001   1.4240e-001
+      2   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001   8.7230e-001
+      3   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002   4.8150e-001
+
+Matrix after quarter-sine transformation 
+
+BASIC_MATRIX [3 x 5], real:
+Row/Col             1             2             3             4             5
+      1   6.7019e-001   1.8764e-001   3.2781e-002   4.2530e-001   6.9176e-002
+      2   8.9721e-001  -1.6370e-001   4.0026e-003   1.8997e-001   1.0032e-001
+      3   5.2610e-001   2.5001e-001  -1.5109e-001  -2.4102e-001   1.7231e-001
+
+Inverse transformation - restoring original data 
+
+BASIC_MATRIX [3 x 5], real:
+Row/Col             1             2             3             4             5
+      1   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001   1.4240e-001
+      2   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001   8.7230e-001
+      3   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002   4.8150e-001
+
+TEST 12
+========
+Testing c06hdc - quarted-cosine fft of real matrix to real 
+Matrix represents three rows of independent real data 
+Matrix to be transformed 
+
+BASIC_MATRIX [3 x 6], real:
+Row/Col             1             2             3             4             5
+      1   3.8540e-001   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001
+      2   5.4170e-001   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001
+      3   9.1720e-001   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002
+Row/Col             6
+      1   1.4240e-001
+      2   8.7230e-001
+      3   4.8150e-001
+
+Matrix after quarter-cosine transformation 
+
+BASIC_MATRIX [3 x 6], real:
+Row/Col             1             2             3             4             5
+      1   7.2574e-001  -2.2156e-001   1.0112e-001   2.3548e-001  -1.4056e-001
+      2   7.4789e-001  -6.1720e-001   4.1121e-001   7.9076e-002   1.3306e-001
+      3   6.7129e-001  -1.3627e-001  -6.4209e-003  -2.8541e-002   4.7577e-001
+Row/Col             6
+      1  -2.2821e-001
+      2  -9.0583e-002
+      3   1.4751e-001
+
+Inverse transformation - restoring original data 
+
+BASIC_MATRIX [3 x 6], real:
+Row/Col             1             2             3             4             5
+      1   3.8540e-001   6.7720e-001   1.1380e-001   6.7510e-001   6.3620e-001
+      2   5.4170e-001   2.9830e-001   1.1810e-001   7.2550e-001   8.6380e-001
+      3   9.1720e-001   6.4400e-002   6.0370e-001   6.4300e-001   4.2800e-002
+Row/Col             6
+      1   1.4240e-001
+      2   8.7230e-001
+      3   4.8150e-001
+
+
+End of FOURIER_TRANSFORMER tests 

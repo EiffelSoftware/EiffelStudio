@@ -1,0 +1,422 @@
+
+ ***************************************** 
+INVERTER tests - select one of the listed cases: 
+1 - REAL GENERAL system matrix 
+2 - REAL SYMMETRIC system matrix 
+3 - COMPLEX GENERAL system matrix 
+4 - COMPLEX SYMMETRIC system (hermitian) matrix 
+
+ ***************************************** 
+
+ ***************************************
+Testing REAL GENERAL system matrix 
+
+ *************************************** 
+
+
+ ---------------- 
+
+ NAG tests f03afc 
+
+ System matrix before LU factorization 
+BASIC_MATRIX [3 x 3], real:
+Row/Col             1             2             3
+      1   3.3000e+001   1.6000e+001   7.2000e+001
+      2  -2.4000e+001  -1.0000e+001  -5.7000e+001
+      3  -8.0000e+000  -4.0000e+000  -1.7000e+001
+
+
+ System matrix after LU factorization 
+(Unit diagonal elements of U are not stored) 
+BASIC_MATRIX [3 x 3], real:
+Row/Col             1             2             3
+      1  -8.0000e+000   5.0000e-001   2.1250e+000
+      2  -2.4000e+001   2.0000e+000  -3.0000e+000
+      3   3.3000e+001  -5.0000e-001   3.7500e-001
+
+
+ Array of pivots 
+ARRAY [0xF643C8]
+  area: SPECIAL [0xF643E0]
+    -- begin special object --
+        0: INTEGER = 3
+        1: INTEGER = 2
+        2: INTEGER = 3
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 3
+
+ Determinant = (0.375 + i 0) * 2 ^ 4
+
+ ---------------- 
+NAG test f04ajc 
+
+ Solve for: 
+BASIC_MATRIX [3 x 1], real:
+Row/Col             1
+      1  -3.5900e+002
+      2   2.8100e+002
+      3   8.5000e+001
+
+
+ Solution: 
+BASIC_MATRIX [3 x 1], real:
+Row/Col             1
+      1   1.0000e+000
+      2  -2.0000e+000
+      3  -5.0000e+000
+
+
+ Inverse of system matrix 
+BASIC_MATRIX [3 x 3], real:
+Row/Col             1             2             3
+      1  -9.6667e+000  -2.6667e+000  -3.2000e+001
+      2   8.0000e+000   2.5000e+000   2.5500e+001
+      3   2.6667e+000   6.6667e-001   9.0000e+000
+
+
+Product of system matrix with its inverse. 
+Should be unit matrix 
+BASIC_MATRIX [3 x 3], real:
+Row/Col             1             2             3
+      1   1.0000e+000   0.0000e+000   0.0000e+000
+      2   0.0000e+000   1.0000e+000   0.0000e+000
+      3   0.0000e+000   0.0000e+000   1.0000e+000
+
+
+ *************************************** 
+Testing REAL SYMMETRIC system matrix 
+
+ *************************************** 
+
+
+ ---------------- 
+
+ NAG tests f03aec 
+
+ System matrix before Cholesky's factorization 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   6.0000e+000   7.0000e+000   6.0000e+000   5.0000e+000
+      2   7.0000e+000   1.1000e+001   8.0000e+000   7.0000e+000
+      3   6.0000e+000   8.0000e+000   1.1000e+001   9.0000e+000
+      4   5.0000e+000   7.0000e+000   9.0000e+000   1.1000e+001
+
+
+ System matrix after Cholesky's factorization 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   6.0000e+000   1.1667e+000   1.0000e+000   8.3333e-001
+      2   7.0000e+000   2.8333e+000   3.5294e-001   4.1176e-001
+      3   6.0000e+000   1.0000e+000   4.6471e+000   7.7215e-001
+      4   5.0000e+000   1.1667e+000   3.5882e+000   3.5823e+000
+
+
+ Reciprocals of diagonal elements 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1   0.0000e+000   0.0000e+000   0.0000e+000   0.0000e+000
+
+
+ Determinant = (0.069091796874999958 + i 0) * 2 ^ 12
+
+ ---------------- 
+Another NAG test f03aec 
+Data as in NAG test f04agc 
+
+ System matrix before Cholesky's factorization 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   5.0000e+000   7.0000e+000   6.0000e+000   5.0000e+000
+      2   7.0000e+000   1.0000e+001   8.0000e+000   7.0000e+000
+      3   6.0000e+000   8.0000e+000   1.0000e+001   9.0000e+000
+      4   5.0000e+000   7.0000e+000   9.0000e+000   1.0000e+001
+
+
+ System matrix after Cholesky's factorization 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   7.0000e+000   1.4286e+000   1.1429e+000   1.0000e+000
+      2   6.0000e+000  -5.7143e-001  -5.5000e+000  -5.2500e+000
+      3   5.0000e+000  -1.4286e-001   2.5000e+000   1.7000e+000
+      4   5.0000e+000  -1.4286e-001  -5.0000e-001   1.0000e-001
+
+
+ Reciprocals of diagonal elements 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1   0.0000e+000   0.0000e+000   0.0000e+000   0.0000e+000
+
+
+ Determinant = (0.062500000000000264 + i 0) * 2 ^ 4
+ ---------------- 
+NAG test f04agc 
+
+ Solve for: 
+BASIC_MATRIX [4 x 1], real:
+Row/Col             1
+      1   2.3000e+001
+      2   3.2000e+001
+      3   3.3000e+001
+      4   3.1000e+001
+
+
+ Solution: 
+BASIC_MATRIX [4 x 1], real:
+Row/Col             1
+      1   1.0000e+000
+      2   1.0000e+000
+      3   1.0000e+000
+      4   1.0000e+000
+
+
+ Inverse of system matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   6.8000e+001  -4.1000e+001  -1.7000e+001   1.0000e+001
+      2  -4.1000e+001   2.5000e+001   1.0000e+001  -6.0000e+000
+      3  -1.7000e+001   1.0000e+001   5.0000e+000  -3.0000e+000
+      4   1.0000e+001  -6.0000e+000  -3.0000e+000   2.0000e+000
+
+
+Product of system matrix with its inverse. 
+Should be unit matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   1.0000e+000   1.7764e-014   0.0000e+000   3.5527e-015
+      2   5.6843e-014   1.0000e+000   1.0658e-014   1.4211e-014
+      3   5.6843e-014   1.4211e-014   1.0000e+000   3.5527e-015
+      4   2.8422e-014   2.1316e-014   0.0000e+000   1.0000e+000
+
+
+ *************************************** 
+Testing COMPLEX GENERAL system matrix 
+
+ *************************************** 
+
+
+ ---------------- 
+
+ NAG tests f03ahc 
+
+ System matrix before LU factorization 
+BASIC_MATRIX [3 x 3], blended complex:
+Row/Col                           1                           2
+      1   2.0000e+000,   0.0000e+000   1.0000e+000,   2.0000e+000
+      2   1.0000e+000,   1.0000e+000   1.0000e+000,   3.0000e+000
+      3   1.0000e+000,   1.0000e+000   0.0000e+000,   5.0000e+000
+Row/Col                           3
+      1   2.0000e+000,   1.0000e+001
+      2  -5.0000e+000,   1.4000e+001
+      3  -7.0000e+000,   2.0000e+001
+
+
+ System matrix after LU factorization 
+(Unit diagonal elements of U are not stored) - 
+BASIC_MATRIX [3 x 3], blended complex:
+Row/Col                           1                           2
+      1   2.0000e+000,   0.0000e+000   5.0000e-001,   1.0000e+000
+      2   1.0000e+000,   1.0000e+000   5.0000e-001,   3.5000e+000
+      3   1.0000e+000,   1.0000e+000   1.5000e+000,   1.5000e+000
+Row/Col                           3
+      1   1.0000e+000,   5.0000e+000
+      2   3.8000e+000,   1.4000e+000
+      3  -4.6000e+000,   2.0000e-001
+
+
+ Array of pivots 
+ARRAY [0xF67330]
+  area: SPECIAL [0xF6F838]
+    -- begin special object --
+        0: INTEGER = 1
+        1: INTEGER = 3
+        2: INTEGER = 3
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 3
+
+ Determinant = (0.023437500000000028 + i 0.12499999999999997) * 2 ^ 8
+ ---------------- 
+NAG test f04akc (with f03ahc extra) 
+
+ System matrix before LU factorization 
+BASIC_MATRIX [3 x 3], blended complex:
+Row/Col                           1                           2
+      1   1.0000e+000,   0.0000e+000   1.0000e+000,   2.0000e+000
+      2   1.0000e+000,   1.0000e+000   0.0000e+000,   3.0000e+000
+      3   1.0000e+000,   1.0000e+000   0.0000e+000,   5.0000e+000
+Row/Col                           3
+      1   2.0000e+000,   1.0000e+001
+      2  -5.0000e+000,   1.4000e+001
+      3  -8.0000e+000,   2.0000e+001
+
+
+ System matrix after LU factorization 
+(Unit diagonal elements of U are not stored) 
+BASIC_MATRIX [3 x 3], blended complex:
+Row/Col                           1                           2
+      1   1.0000e+000,   0.0000e+000   1.0000e+000,   2.0000e+000
+      2   1.0000e+000,   1.0000e+000   1.0000e+000,   2.0000e+000
+      3   1.0000e+000,   1.0000e+000   1.0000e+000,   0.0000e+000
+Row/Col                           3
+      1   2.0000e+000,   1.0000e+001
+      2   3.2000e+000,   1.6000e+000
+      3  -2.0000e-001,   4.0000e-001
+
+
+ Array of pivots 
+ARRAY [0xF75870]
+  area: SPECIAL [0xF76080]
+    -- begin special object --
+        0: INTEGER = 1
+        1: INTEGER = 3
+        2: INTEGER = 3
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 3
+
+ Determinant = (0.062500000000000056 + i 0) * 2 ^ 4
+ Solve for: 
+BASIC_MATRIX [3 x 1], blended complex:
+Row/Col                           1
+      1   1.0000e+000,   0.0000e+000
+      2   0.0000e+000,   0.0000e+000
+      3   0.0000e+000,   0.0000e+000
+
+
+ Solution: 
+BASIC_MATRIX [3 x 1], blended complex:
+Row/Col                           1
+      1   1.0000e+001,   1.0000e+000
+      2   9.0000e+000,  -3.0000e+000
+      3  -2.0000e+000,   2.0000e+000
+
+
+ Inverse of system matrix 
+BASIC_MATRIX [3 x 3], blended complex:
+Row/Col                           1                           2
+      1   1.0000e+001,   1.0000e+000  -2.0000e+000,   6.0000e+000
+      2   9.0000e+000,  -3.0000e+000   0.0000e+000,   8.0000e+000
+      3  -2.0000e+000,   2.0000e+000  -1.0000e+000,  -2.0000e+000
+Row/Col                           3
+      1  -3.0000e+000,  -2.0000e+000
+      2  -3.0000e+000,  -2.0000e+000
+      3   1.0000e+000,   0.0000e+000
+
+
+Product of system matrix with its inverse. 
+Should be unit matrix 
+BASIC_MATRIX [3 x 3], blended complex:
+Row/Col                           1                           2
+      1   1.0000e+000,   0.0000e+000   0.0000e+000,   0.0000e+000
+      2   3.5527e-015,   0.0000e+000   1.0000e+000,  -8.8818e-016
+      3   3.5527e-015,   0.0000e+000  -7.1054e-015,  -8.8818e-016
+Row/Col                           3
+      1   0.0000e+000,   0.0000e+000
+      2   8.8818e-016,  -1.7764e-015
+      3   1.0000e+000,   0.0000e+000
+
+
+ *************************************** 
+Testing COMPLEX SYMMETRIC system matrix 
+
+ ******************************** ****** 
+
+
+ ---------------- 
+
+ NAG test f01bnc 
+
+ System matrix before U (H) * U factorization 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   1.5000e+001,   0.0000e+000   1.0000e+000,  -2.0000e+000
+      2   1.0000e+000,   2.0000e+000   2.0000e+001,   0.0000e+000
+      3   2.0000e+000,   0.0000e+000  -2.0000e+000,  -1.0000e+000
+      4  -4.0000e+000,  -3.0000e+000   3.0000e+000,   3.0000e+000
+Row/Col                           3                           4
+      1   2.0000e+000,   0.0000e+000  -4.0000e+000,   3.0000e+000
+      2  -2.0000e+000,   1.0000e+000   3.0000e+000,  -3.0000e+000
+      3   1.8000e+001,   0.0000e+000  -1.0000e+000,   2.0000e+000
+      4  -1.0000e+000,  -2.0000e+000   2.6000e+001,   0.0000e+000
+
+
+ System matrix after U(H)*U factorization 
+(Reciprocals of diag elements of U are in 'reciprocals') 
+Above diagonal elements are valid components of U 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   1.5000e+001,   0.0000e+000   6.6667e-002,  -1.3333e-001
+      2   1.0000e+000,   2.0000e+000   1.9667e+001,   0.0000e+000
+      3   2.0000e+000,   0.0000e+000  -2.1333e+000,  -7.3333e-001
+      4  -4.0000e+000,  -3.0000e+000   3.6667e+000,   2.6667e+000
+Row/Col                           3                           4
+      1   1.3333e-001,   0.0000e+000  -2.6667e-001,   2.0000e-001
+      2  -1.0847e-001,   3.7288e-002   1.8644e-001,  -1.3559e-001
+      3   1.7475e+001,   0.0000e+000   1.7459e-003,   8.2832e-002
+      4   3.0508e-002,  -1.4475e+000   2.3168e+001,  -5.0741e-017
+
+
+ Array of reciprocals of 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1   0.0000e+000   0.0000e+000   0.0000e+000   0.0000e+000
+
+
+ ---------------- 
+NAG test f04awc 
+
+ System matrix before LU factorization 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   1.5000e+001,   0.0000e+000   1.0000e+000,  -2.0000e+000
+      2   1.0000e+000,   2.0000e+000   2.0000e+001,   0.0000e+000
+      3   2.0000e+000,   0.0000e+000  -2.0000e+000,  -1.0000e+000
+      4  -4.0000e+000,  -3.0000e+000   3.0000e+000,   3.0000e+000
+Row/Col                           3                           4
+      1   2.0000e+000,   0.0000e+000  -4.0000e+000,   3.0000e+000
+      2  -2.0000e+000,   1.0000e+000   3.0000e+000,  -3.0000e+000
+      3   1.8000e+001,   0.0000e+000  -1.0000e+000,   2.0000e+000
+      4  -1.0000e+000,  -2.0000e+000   2.6000e+001,   0.0000e+000
+
+
+ Solution: 
+BASIC_MATRIX [4 x 1], blended complex:
+Row/Col                           1
+      1   1.4917e+000,   2.1788e+000
+      2   1.1629e+000,   7.6979e-001
+      3   5.5059e-001,  -1.3977e+000
+      4   8.6912e-001,  -7.6555e-001
+
+
+ Inverse of system matrix 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   7.3984e-002,  -2.1684e-019  -7.6361e-003,   6.9831e-003
+      2  -7.6361e-003,  -6.9831e-003   5.3847e-002,   5.4210e-020
+      3  -6.9831e-003,  -1.9258e-003   5.7690e-003,   2.8217e-003
+      4   1.1337e-002,   9.6122e-003  -8.1888e-003,  -5.4675e-003
+Row/Col                           3                           4
+      1  -6.9831e-003,   1.9258e-003   1.1337e-002,  -9.6122e-003
+      2   5.7690e-003,  -2.8217e-003  -8.1888e-003,   5.4675e-003
+      3   5.7522e-002,  -1.1011e-020  -7.5357e-005,  -3.5753e-003
+      4  -7.5357e-005,   3.5753e-003   4.3163e-002,   9.4531e-020
+
+
+Product of system matrix with its inverse. 
+Should be unit matrix 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   1.0000e+000,  -3.4694e-018   0.0000e+000,  -2.6021e-018
+      2   0.0000e+000,  -8.6736e-018   1.0000e+000,   5.2042e-018
+      3  -1.3878e-017,  -3.4694e-018   2.0817e-017,   1.9082e-017
+      4  -5.5511e-017,  -2.7756e-017  -2.7756e-017,   2.7756e-017
+Row/Col                           3                           4
+      1  -6.9389e-018,   1.7347e-018  -2.7756e-017,  -2.7756e-017
+      2  -1.3878e-017,   0.0000e+000   0.0000e+000,  -2.7756e-017
+      3   1.0000e+000,   8.6736e-019  -6.9389e-018,   0.0000e+000
+      4  -2.1684e-018,   0.0000e+000   1.0000e+000,  -1.4453e-018
+

@@ -1,0 +1,121 @@
+Solving for zero of f1. Answer should be 1.5
+Root: 1.4999886972443881
+Solving for zero of system. Answer should be 
+Checking function and Jacobian from Eiffel
+ARRAY [0xF33224]
+  area: SPECIAL [0xF3323C]
+    -- begin special object --
+        0: DOUBLE = -0.57069999999999999
+        1: DOUBLE = -0.68159999999999998
+        2: DOUBLE = -0.70169999999999999
+        3: DOUBLE = -0.70420000000000005
+        4: DOUBLE = -0.70140000000000002
+        5: DOUBLE = -0.69189999999999996
+        6: DOUBLE = -0.66579999999999995
+        7: DOUBLE = -0.59599999999999997
+        8: DOUBLE = -0.41639999999999999
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 9
+ARRAY [0xF3443C]
+  area: SPECIAL [0xF34454]
+    -- begin special object --
+        0: DOUBLE = -0.00029697999999989122
+        1: DOUBLE = 0.00014287999999984535
+        2: DOUBLE = 0.00013422000000029577
+        3: DOUBLE = 0.00010471999999950299
+        4: DOUBLE = -0.0001239200000000551
+        5: DOUBLE = -0.00015121999999978541
+        6: DOUBLE = -7.927999999979285e-005
+        7: DOUBLE = 0.00016799999999972393
+        8: DOUBLE = 2.2080000000035405e-005
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 9
+BASIC_MATRIX [0xF3525C]
+  blended_storage: Void
+  imaginary_storage: Void
+  real_storage: ARRAY [0xF352A4]
+  conversion_default_dual_complex: BOOLEAN = False
+  positive_definite: BOOLEAN = False
+  symmetric: BOOLEAN = False
+  printout_decimals: INTEGER = 4
+  printout_start_column: INTEGER = 1
+  printout_start_row: INTEGER = 1
+  printout_stop_column: INTEGER = 9
+  printout_stop_row: INTEGER = 9
+  printout_width: INTEGER = 13
+  number_of_columns: INTEGER = 9
+  number_of_rows: INTEGER = 9
+  storage_count: INTEGER = 81
+  type: INTEGER = 1
+  scale: DOUBLE = 1
+Solution without Jacobian, last_root: ARRAY [0xF3634C]
+  area: SPECIAL [0xF36364]
+    -- begin special object --
+        0: DOUBLE = -0.57065451160065928
+        1: DOUBLE = -0.68162834229123037
+        2: DOUBLE = -0.70173245256347083
+        3: DOUBLE = -0.70421294008375235
+        4: DOUBLE = -0.70136904762728913
+        5: DOUBLE = -0.69186564337991452
+        6: DOUBLE = -0.66579201215468931
+        7: DOUBLE = -0.59603420128081641
+        8: DOUBLE = -0.41641206299847189
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 9
+last_value: ARRAY [0xF363BC]
+  area: SPECIAL [0xF363D4]
+    -- begin special object --
+        0: DOUBLE = 6.5601089005440372e-009
+        1: DOUBLE = -4.1754713020480949e-009
+        2: DOUBLE = -5.193165231176522e-009
+        3: DOUBLE = -2.3960127215616467e-009
+        4: DOUBLE = 2.0224926178258329e-009
+        5: DOUBLE = 4.8179182865482062e-009
+        6: DOUBLE = 2.5794992808414463e-009
+        7: DOUBLE = -3.8837375537781327e-009
+        8: DOUBLE = -1.3588596914360096e-010
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 9
+
+Jacobian checked against system, ok.
+Solution with Jacobian, last_root: ARRAY [0xF3A39C]
+  area: SPECIAL [0xF3A3B4]
+    -- begin special object --
+        0: DOUBLE = -0.57065451160065905
+        1: DOUBLE = -0.68162834229123059
+        2: DOUBLE = -0.70173245256347117
+        3: DOUBLE = -0.70421294008375235
+        4: DOUBLE = -0.7013690476272888
+        5: DOUBLE = -0.69186564337991419
+        6: DOUBLE = -0.66579201215468919
+        7: DOUBLE = -0.59603420128081663
+        8: DOUBLE = -0.416412062998472
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 9
+last_value: ARRAY [0xF3A40C]
+  area: SPECIAL [0xF3A424]
+    -- begin special object --
+        0: DOUBLE = 6.5601106769008766e-009
+        1: DOUBLE = -4.1754728563603294e-009
+        2: DOUBLE = -5.1931665634441515e-009
+        3: DOUBLE = -2.3960133876954615e-009
+        4: DOUBLE = 2.0224937280488575e-009
+        5: DOUBLE = 4.8179193967712308e-009
+        6: DOUBLE = 2.579500169019866e-009
+        7: DOUBLE = -3.8837384419565524e-009
+        8: DOUBLE = -1.3588619118820588e-010
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 9
+

@@ -403,6 +403,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External implementation
 
+	c_memory_free (a_pointer: POINTER) is
+			-- Free memory allocated by malloc, calloc and realloc.
+		external
+			"C | <stdlib.h>"
+		alias
+			"free"
+		end
+
 	set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
 		c_object_dispose_address: POINTER) is
 				-- Store Eiffel object_id in `gtk_object'.

@@ -55,7 +55,7 @@ feature -- Initialization
 				if init_licence then
 					if not licence.is_unlimited then
 					expiration := licence.time_left
-						if expiration <= 100 then
+						if expiration <= 30 then
 							io.error.putstring ("Your license will expire in ")
 							io.error.putint (expiration)
 							io.error.putstring (" days.%N")

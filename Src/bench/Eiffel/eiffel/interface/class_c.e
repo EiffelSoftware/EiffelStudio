@@ -26,9 +26,9 @@ inherit
 
 	SHARED_BODY_ID
 
-	HASHABLE
+	SHARED_EIFFEL_PARSER
 
-	MEMORY
+	HASHABLE
 
 	SK_CONST
 
@@ -208,6 +208,7 @@ feature -- Action
 	build_ast: CLASS_AS is
 			-- Parse the file and generate the AST
 		local
+			parser: like eiffel_parser
 			file, copy_file: RAW_FILE
 			f_name: FILE_NAME
 			class_file_name: STRING
@@ -258,17 +259,16 @@ feature -- Action
 
 			has_unique := False
 
-				-- Call Yacc
-			collection_off
-			Result := c_parse (file.file_pointer, $class_file_name)
-			collection_on
+				-- Call Eiffel parser
+			parser := Eiffel_parser
+			parser.parse (file)
+			Result := parser.root_node
 
 			file.close
 			Error_handler.checksum
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
-				collection_on
 				if not (file = Void or else file.is_closed) then
 					file.close
 				end
@@ -1751,7 +1751,7 @@ feature -- Class initialization
 					p := parents_as
 					check p.lower = 1 end
 					lower := 1
-					upper := p.upper
+					upper := parents_as.count
 				until
 					lower > upper
 				loop
@@ -1774,7 +1774,7 @@ feature -- Class initialization
 					p := parents_as
 					check p.lower = 1 end
 					lower := 1
-					upper := p.upper
+					upper := parents_as.count
 					!! pars.make_filled (upper)
 				until
 					lower > upper
@@ -3483,13 +3483,6 @@ feature -- Merging
 				--| `syntactical_clients' is used when removing classes.
 				--| Since a precompiled class cannot be removed, it
 				--| doesn't matter if `syntactical_clients' is out-of-date.
-		end
-
-feature {NONE} -- External features
-
-	c_parse (f: POINTER; s: POINTER): CLASS_AS is
-		external
-			"C"
 		end
 
 end -- class CLASS_C

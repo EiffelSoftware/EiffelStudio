@@ -60,8 +60,13 @@ feature -- Processing
 			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
 			Precursor (interface_descriptor)
-			create implemented_interface_generator
-			implemented_interface_generator.generate (interface_descriptor)
+			if 
+				not interface_descriptor.interface_descriptor.name.is_equal (Iunknown_type) and
+				not interface_descriptor.interface_descriptor.name.is_equal (Idispatch_type)
+			then
+				create implemented_interface_generator
+				implemented_interface_generator.generate (interface_descriptor)
+			end
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -74,8 +79,13 @@ feature -- Processing
 		do
 			if not shared_wizard_environment.new_eiffel_project then
 				Precursor (interface_descriptor)
-				create interface_server_generator
-				interface_server_generator.generate (interface_descriptor)
+				if 
+					not interface_descriptor.name.is_equal (Iunknown_type) and
+					not interface_descriptor.name.is_equal (Idispatch_type)
+				then
+					create interface_server_generator
+					interface_server_generator.generate (interface_descriptor)
+				end
 			end
 		end
 

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Generating libraries</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Generating libraries">
+		<META NAME="MS-HKWD" CONTENT="Compiling libraries">
+		<META NAME="MS-HKWD" CONTENT="Precompiling libraries">
+		<META NAME="MS-HKWD" CONTENT="Library, generating">
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Generating libraries</H1>
+		<P>There are two main types of libraries in Eiffel: precompiled Eiffel
+        libraries and C libraries. Both kinds of libraries can be created via
+        EiffelStudio. The former can only be used in Eiffel projects, C
+        libraries can be used either in Eiffel programs, or in standard C
+        programs.
+        <p>To generate an Eiffel precompiled library:</p>
+        <ul>
+        <li>Select the <b>Precompilation Wizard</b> in the <b>Tools</b> menu
+          and follow the instructions,</li>
+        
+        </ul>
+        <p>or</p>
+        <ul>
+        
+        <li>Launch a new EiffelStudio session,</li>
+        
+        <li>Select <b>Open existing Ace</b>,
+         <IMG SRC="/images/eiffelstudio/SCREENSHOT(open existing Ace)">.
+</li>
+        
+        <li>Click <b>Next</b>,</li>
+        
+        <li>Select the Ace file of the library you want to precompile,</li>
+        
+        <li>Give a location where to put the precompiled library,</li>
+        
+        <li><u>Uncheck</u> the <b>Compile the generated project</b> check box, <IMG SRC="/images/eiffelstudio/SCREENSHOT(Compile generated project)">.
+</li>
+        
+        <li>Click OK</li>
+        
+        <li>Choose <b>Precompile</b> in the <b>Project</b> menu.</li>
+        
+        </ul>
+        <p>To generate a dynamically linked C library using Eiffel code:</p>
+        <ul>
+        
+        <li>Generate a definition file for this library, via the Dynamic library
+          Builder HYPERLINK(DLL window),</li>
+        
+        <li>Open the <A HREF=HYPERLINK(reference_project_settings)><b>Project Settings</b></a> dialog,</li>
+        
+        <li>In the <b>Advanced</b> tab, check <b>Shared library definition</b>,</li>
+        
+        <li>Enter the name of the definition you created in the first step
+          (including the path if necessary),</li>
+        
+        <li>Compile the current project.</li>
+        
+        </ul>
+        <p>The generated C library should be located in the EIFGEN|W_code
+        directory in the directory of your project.</p>
+        <p>To generate a C library from a C compiler, please refer to the
+        documentation of your C compiler.</p>
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="40_using_libraries.html">Using libraries</A><BR>
+					<A HREF=HYPERLINK(reference_Cecil)>CECIL library: calling Eiffel routines from C programs</A><BR>
+					<A HREF=HYPERLINK(reference_command_line)>Command line options</A><BR>
+		</P>
+	</BODY>
+</HTML>

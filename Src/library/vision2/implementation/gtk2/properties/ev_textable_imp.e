@@ -154,10 +154,7 @@ feature {EV_ANY_IMP} -- Implementation
 			Result := s.twin
 			Result.replace_substring_all ("_", "__")
 			if s.has ('&') then
-				Result := s.twin
 				filter_ampersand (Result, '_')
-			else
-				Result := s
 			end
 		ensure
 			copied_only_if_s_had_ampersand:

@@ -55,11 +55,11 @@ feature {GB_XML_STORE} -- Output
 			default_background := colorizable.background_color
 			default_foreground := colorizable.foreground_color
 			
-			if not default_background.is_equal (objects.first.background_color) then
-				add_element_containing_string (element, background_color_string, build_string_from_color (objects.first.background_color))
+			if not default_background.is_equal (objects.first.background_color) or uses_constant (background_color_string) then
+				add_color_element (element, background_color_string, objects.first.background_color)
 			end
-			if not default_foreground.is_equal (objects.first.foreground_color) then
-				add_element_containing_string (element, foreground_color_string, build_string_from_color (objects.first.foreground_color))
+			if not default_foreground.is_equal (objects.first.foreground_color) or uses_constant (foreground_color_string) then
+				add_color_element (element, foreground_color_string, objects.first.foreground_color)
 			end
 		end
 
@@ -71,11 +71,11 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (background_color_string)
 			if element_info /= Void then
-				for_all_objects (agent {EV_COLORIZABLE}.set_background_color (build_color_from_string (element_info.data)))
+				for_all_objects (agent {EV_COLORIZABLE}.set_background_color (retrieve_and_set_color_value (background_color_string)))
 			end
 			element_info := full_information @ (foreground_color_string)
 			if element_info /= Void then
-				for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (build_color_from_string (element_info.data)))
+				for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (retrieve_and_set_color_value (foreground_color_string)))
 			end
 		end
 		
@@ -93,13 +93,21 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (background_color_string)
 			if element_info /= Void then
-				temp_color := build_color_from_string (element_info.data)
-				Result.extend (info.name + ".set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+				if element_info.is_constant then
+					Result.extend (info.name + ".set_background_color (" + element_info.data + ")")	
+				else
+					temp_color := build_color_from_string (element_info.data)
+					Result.extend (info.name + ".set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+				end
 			end
 			element_info := full_information @ (foreground_color_string)
 			if element_info /= Void then
-				temp_color := build_color_from_string (element_info.data)
-				Result.extend (info.name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+				if element_info.is_constant then
+					Result.extend (info.name + ".set_foreground_color (" + element_info.data + ")")	
+				else
+					temp_color := build_color_from_string (element_info.data)
+					Result.extend (info.name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+				end
 			end
 		end
 

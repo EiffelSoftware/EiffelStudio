@@ -295,7 +295,7 @@ feature -- Access
 	pointer_style: EV_CURSOR
 			-- Cursor displayed when the pointer is over this widget.
 
-feature {EV_WIDGET_IMP} -- Position retrieval
+feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 
 	screen_x: INTEGER is
 			-- Horizontal position of the client area on screen, 

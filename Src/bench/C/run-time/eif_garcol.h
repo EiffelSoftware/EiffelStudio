@@ -88,6 +88,8 @@ extern void reclaim(void);				/* Reclaim all the objects */
 extern int collect(void);				/* Generation-based collector */
 extern int epush(register struct stack *stk, register char *value);					/* Push an addess on a run-time stack */
 extern char **st_alloc(register struct stack *stk, register int size);			/* Creates an empty stack */
+extern  int st_extend(register struct stack *stk, register int size);         
+/* Extends a stack */
 extern int acollect(void);				/* Automatic garbage collection */
 extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
 extern void st_truncate(register struct stack *stk);			/* Truncate stack if necessary */

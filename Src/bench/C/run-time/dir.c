@@ -11,6 +11,7 @@
 
 */
 
+#include <stdio.h>
 #include "config.h"
 #include "portable.h"
 
@@ -224,9 +225,9 @@ char *name;
     struct stat buf;            /* Buffer to get file statistics */
 
 	if (stat(name, &buf) == -1)	/* Attempt to stat file */
-		return (EIF_BOOLEAN) 0;
+		return (EIF_BOOLEAN) '\0';
 	else
-		return (buf.st_mode & S_IFDIR) ? (EIF_BOOLEAN) '\1' : (EIF_BOOLEAN) '\0';
+		return (EIF_BOOLEAN) ((buf.st_mode & S_IFDIR) ? '\1' : '\0');
 }
 
 public EIF_BOOLEAN eif_dir_is_readable(name)
@@ -251,7 +252,7 @@ char *name;
 
 	if (uid == geteuid())
 		return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
-	else if (gid = getegid())
+	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
 	else
 #endif
@@ -278,7 +279,7 @@ char *name;
 
 	if (uid == geteuid())
 		return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
-	else if (gid = getegid())
+	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
 	else
 #endif
@@ -305,7 +306,7 @@ char *name;
 
 	if (uid == geteuid())
 		return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
-	else if (gid = getegid())
+	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
 	else
 #endif

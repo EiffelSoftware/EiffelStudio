@@ -86,7 +86,6 @@ feature -- Basic Operations
 					end
 					create l_item.make_with_text (a_entry)
 					a_combo.put_front (l_item)
-					l_item.enable_select
 				else
 					if not a_combo.first.text.as_lower.is_equal (l_entry) then
 						create {ARRAYED_LIST [STRING]} l_new_list.make (l_list.count)
@@ -107,7 +106,6 @@ feature -- Basic Operations
 						a_combo.set_strings (l_new_list)
 						a_combo.change_actions.resume
 					end
-					a_combo.first.enable_select
 				end
 				l_save_routine ?= a_combo.data
 				if l_save_routine /= Void then

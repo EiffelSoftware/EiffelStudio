@@ -13,6 +13,13 @@ deferred class NETWORK_RESOURCE_URL inherit
 			make, is_equal
 		end
 
+	HOST_VALIDITY_CHECKER
+		rename
+			host_ok as proxy_host_ok
+		undefine
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make (a: STRING) is
@@ -20,9 +27,7 @@ feature {NONE} -- Initialization
 		do
 			create username.make (0)
 			create password.make (0)
-			create host_charset
-			host_charset.define ("A-Za-z0-9.\-")
-			path_charset := clone (host_charset)
+			path_charset := clone (Host_charset)
 			path_charset.add ("%%/_")
 			Precursor (a)
 		end
@@ -102,14 +107,6 @@ feature -- Status report
 			Result := is_host_correct (host) and then is_path_correct (path)
 		end
 
-	proxy_host_ok (h: STRING): BOOLEAN is
-	 		-- Is host name of proxy correct?
-		do
-			if h /= Void and then not h.is_empty then
-				Result := host_charset.contains_string (h)
-			end
-		end
-	
 	is_password_accepted: BOOLEAN is
 			-- Can a password be set?
 		do
@@ -183,16 +180,11 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	host_charset: CHARACTER_SET
-			-- Character set for host names
-
 	path_charset: CHARACTER_SET
 			-- Character set for path names
 	
 invariant
 
-	host_charset_defined: host_charset /= Void and then 
-				not host_charset.is_empty
 	path_charset_defined: path_charset /= Void and then 
 				not path_charset.is_empty
 	username_exists: username /= Void

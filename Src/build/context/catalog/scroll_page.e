@@ -15,7 +15,7 @@ feature
 	text_type: CONTEXT_TYPE;
 	drawing_area_type: CONTEXT_TYPE;
 	scroll_list_type: CONTEXT_TYPE;
-	drawing_area: EB_DRAWING_BOX;
+	drawing_area: DRAWING_BOX;
 
 feature {NONE}
 
@@ -118,7 +118,7 @@ feature {NONE}
 
 			attach_top (text, 1);
 			attach_top (scroll_list, 1);
-			attach_top_widget (scroll_list, drawing_area.scrolled_window, 10);
+			attach_top_widget (text, drawing_area.scrolled_window, 10);
 		end;
 
 	execute (argument: ANY) is

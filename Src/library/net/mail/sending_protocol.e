@@ -17,7 +17,8 @@ feature -- Basic operations
 		require
 			connection_exists: is_connected
 			connection_initiated: is_initiated
-			valid_headers: memory_resource.headers.has (H_from) and then memory_resource.headers.has (H_To)
+			valid_headers: memory_resource.headers.has (H_from)
+				and then memory_resource.headers.has (H_to)
 		deferred
 		end
 

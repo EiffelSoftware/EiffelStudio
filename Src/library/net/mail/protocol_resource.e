@@ -21,6 +21,8 @@ feature -- Basic operations
 
 	close_protocol is
 			-- Close the protocol.
+		require
+			is_initiated: is_initiated
 		deferred
 		ensure
 			protocol_not_initiated: not is_initiated

@@ -1751,16 +1751,18 @@ feature -- C code generation
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
+			tmp_body_id: BODY_ID
 		do
 			if used then
 					-- `generate' from BYTE_CODE will log the feature name
 					-- and encoded name in `used_features_log_file' from SYSTEM_I
 				generate_header (file);
 
-				if Tmp_opt_byte_server.has (body_id) then
-					byte_code := Tmp_opt_byte_server.disk_item (body_id);
+				tmp_body_id := body_id
+				if Tmp_opt_byte_server.has (tmp_body_id) then
+					byte_code := Tmp_opt_byte_server.disk_item (tmp_body_id);
 				else
-					byte_code := Byte_server.disk_item (body_id);
+					byte_code := Byte_server.disk_item (tmp_body_id);
 				end
 
 					-- Generation of C code for an Eiffel feature written in

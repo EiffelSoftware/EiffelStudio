@@ -9,9 +9,7 @@ inherit
 
 	AST_EIFFEL_B
 		undefine
-			position, simple_format
-		redefine
-			format
+			position
 		end;
 
 	SHARED_EXPORT_STATUS;
@@ -36,27 +34,31 @@ feature -- Export status computing
 			end;
 		end;
 
-feature -- Formatting
+feature {CLASS_AS_B} -- Implementation
 
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
+	register_features (format_reg: FORMAT_REGISTRATION) is
+			-- Register features in `format_reg'.
+		require
+			valid_arg: format_reg /= Void
+		local
+			f: like features;
+			feat: FEATURE_AS_B;
+			feat_adapter: FEATURE_ADAPTER
 		do
-			ctxt.begin;
-			if  clients /= Void then
-				ctxt.set_separator (ti_Comma);
-				ctxt.space_between_tokens;
-				clients.format (ctxt);
+			f := features;
+			from
+				f.start
+			until
+				f.after
+			loop
+				feat := f.item;
+				!! feat_adapter;
+				feat_adapter.register (feat, format_reg);
+				f.forth
 			end;
-			--ctxt.put_trailing_comment (position);
-			ctxt.next_line;
-			ctxt.indent_one_more;
-			ctxt.next_line;
-			ctxt.new_line_between_tokens;
-			ctxt.set_separator (Void);
-			features.format (ctxt);
-			ctxt.next_line;
-			ctxt.commit;
 		end;
+
+feature -- Formatting
 
 	storage_info: LINKED_LIST [S_FEATURE_DATA] is
 			-- Storage information of Current

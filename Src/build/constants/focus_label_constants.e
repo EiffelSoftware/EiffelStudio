@@ -51,6 +51,7 @@ feature
 	scroll_label: STRING is "scroll";
 	self_label: STRING is "self";
 	sets_label: STRING is "sets";
+	show_window_label: STRING is "show/hide window";
 	state_label: STRING is "state";
 	submenu_label: STRING is "submenu";
 	templates_label: STRING is "templates";

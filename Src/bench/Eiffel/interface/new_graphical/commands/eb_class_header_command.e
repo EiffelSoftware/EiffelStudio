@@ -27,28 +27,63 @@ feature -- Basic operations
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_class_header)
 			explain_dialog.show_modal_to_window (tool.development_window.window)
 		end
+		
+feature -- Access
+
+	pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmaps representing the command (one for the
+			-- gray version, one for the color version).
+		do
+			Result := Pixmaps.Icon_class_header
+		end
+
+	tooltip: STRING is
+			-- Tooltip for the toolbar button.
+		do
+			Result := Interface_names.f_diagram_change_header
+		end
+
+	stone_as: CLASS_AS
+			-- AST of class dropped.
+			-- Used to check syntax before and after renaming.
+
+	name: STRING is "Class_header_hole"
+			-- Name of the command. Used to store the command in the
+			-- preferences.
+
+	change_name_dialog: EB_CLASS_HEADER_DIALOG
+			-- Dialog where new class name is typed.
+
+	invalid_name_dialog: EB_WARNING_DIALOG
+			-- Dialog displaying error messages.
+
+	explain_dialog: EB_INFORMATION_DIALOG
+			-- Dialog explaining how to use `Current'.
+
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text, use_gray_icons)
+			Result.drop_actions.extend (agent execute_with_stone)
+		end
+			
+feature {NONE} -- Implementation
 
 	execute_with_stone (a_stone: CLASSI_STONE) is
 			-- Create a development window and process `a_stone'.
 		local
-			src: CLASS_FIGURE
+			src: ES_CLASS
 			s, g, old_name, old_generics, stone_text: STRING
 			cnr: CLASS_NAME_REPLACER
 			cfs: CLASSI_FIGURE_STONE
-			cd: CONTEXT_DIAGRAM
 			invalid_name: BOOLEAN
 			class_file: PLAIN_TEXT_FILE
 		do
-			cd ?= tool.class_view
-			if cd = Void then
-				cd ?= tool.cluster_view
-			end
-			check cd /= Void end
 			cfs ?= a_stone
-			if cfs /= Void and then cfs.source.world = cd then
-				src := cfs.source
+			if cfs /= Void then
+				src := cfs.source.model
 			else
-				src := cd.class_figure_by_class (a_stone.class_i)
+				src := tool.graph.class_from_interface (a_stone.class_i)
 			end
 			if src /= Void then
 				create class_file.make (src.class_i.file_name)
@@ -154,23 +189,13 @@ feature -- Basic operations
 			tool.projector.project
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text, use_gray_icons)
-			Result.drop_actions.extend (agent execute_with_stone)
-		end
-
-feature {NONE} -- Implementation
-
-	change_name_locally (a_class: CLASS_FIGURE; new_name, new_generics: STRING) is
+	change_name_locally (a_class: ES_CLASS; new_name, new_generics: STRING) is
 			-- Change name of `a_class' to `new_name'.
 		require
 			a_class_not_void: a_class /= Void
 			new_name_not_void: new_name /= Void
 		local
 			cg: CLASS_TEXT_MODIFIER
-			cur_cluster: CLUSTER_I
 		do
 			cg := a_class.code_generator
 			cg.prepare_for_modification
@@ -182,17 +207,15 @@ feature {NONE} -- Implementation
 				cg.set_end_mark (new_name)
 				cg.commit_modification
 				a_class.set_name (new_name)
-				a_class.set_generics (new_generics)
-				a_class.synchronize
-				a_class.update
-				cur_cluster := a_class.class_i.cluster
-				cur_cluster.classes.remove (a_class.class_i.name)
-				a_class.class_i.set_name (new_name.as_upper)
-				cur_cluster.add_new_classs (a_class.class_i)
+				if not new_generics.is_empty then
+					a_class.set_generics (new_generics)
+				else
+					a_class.set_generics (Void)
+				end
 			end
 		end
 			
-	change_name_compiled_classes (a_class: CLASS_FIGURE; cnr: CLASS_NAME_REPLACER; old_name, new_name, new_generics: STRING) is
+	change_name_compiled_classes (a_class: ES_CLASS; cnr: CLASS_NAME_REPLACER; old_name, new_name, new_generics: STRING) is
 			-- Change name of `a_class' to `new_name' in compiled classes.
 		require
 			cnr_not_void: cnr /= Void
@@ -205,7 +228,7 @@ feature {NONE} -- Implementation
 			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 		end
 
-	change_name_universe_classes (a_class: CLASS_FIGURE; cnr: CLASS_NAME_REPLACER; old_name, new_name, new_generics: STRING) is
+	change_name_universe_classes (a_class: ES_CLASS; cnr: CLASS_NAME_REPLACER; old_name, new_name, new_generics: STRING) is
 			-- Change name of `a_class' to `new_name' in the whole universe.
 		require
 			cnr_not_void: cnr /= Void
@@ -260,67 +283,16 @@ feature {NONE} -- Implementation
 
 	tool_disable_sensitive is
 			-- Make diagram unsensitive to user input.
-		local
-			cd: CONTEXT_DIAGRAM
 		do
-			cd := tool.class_view
-			if cd = Void then
-				cd := tool.cluster_view
-			end
-			check cd /= Void end
 			tool.disable_toolbar
 			tool.area_as_widget.disable_sensitive
 		end			
 
 	tool_enable_sensitive is
 			-- Make diagram sensitive to user input.
-		local
-			class_d: CONTEXT_DIAGRAM
-			cluster_d: CLUSTER_DIAGRAM
 		do
-			class_d := tool.class_view
-			if class_d = Void then
-				cluster_d := tool.cluster_view
-				check cluster_d /= Void end
-				tool.reset_tool_bar_for_cluster_view
-				tool.update_toggles (cluster_d)
-				tool.area_as_widget.enable_sensitive
-			else
-				check class_d /= Void end
-				tool.reset_tool_bar_for_cluster_view
-				tool.update_toggles (class_d)
-				tool.area_as_widget.enable_sensitive
-			end
+			tool.enable_toolbar
+			tool.area_as_widget.enable_sensitive
 		end
-
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_class_header
-		end
-
-	tooltip: STRING is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_diagram_change_header
-		end
-
-	stone_as: CLASS_AS
-			-- AST of class dropped.
-			-- Used to check syntax before and after renaming.
-
-	name: STRING is "Class_header_hole"
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-
-	change_name_dialog: EB_CLASS_HEADER_DIALOG
-			-- Dialog where new class name is typed.
-
-	invalid_name_dialog: EB_WARNING_DIALOG
-			-- Dialog displaying error messages.
-
-	explain_dialog: EB_INFORMATION_DIALOG
-			-- Dialog explaining how to use `Current'.
 
 end -- class EB_CLASS_HEADER_COMMAND

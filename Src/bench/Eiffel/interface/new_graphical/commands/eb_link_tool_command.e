@@ -21,56 +21,52 @@ feature -- Basic operations
 	execute is
 			-- Perform on the whole diagram.
 		local
-			d: CONTEXT_DIAGRAM
+			l_all_saved_edges: like all_saved_edges
+			l_world: EIFFEL_WORLD
 		do
-			d ?= tool.class_view
-			if d = Void then
-				d ?= tool.cluster_view
+			l_all_saved_edges := all_saved_edges
+			l_world := tool.world
+			if current_button.is_selected then
+				l_world.enable_right_angles
+				l_world.apply_right_angles
+				history.register_named_undoable (
+					interface_names.t_diagram_put_right_angles_cmd,
+					[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent toggle_button>>],
+					[<<agent l_world.disable_right_angles, agent undo_apply_right_angles (l_all_saved_edges), agent toggle_button>>])
+			else
+				l_world.disable_right_angles
+				l_world.remove_right_angles
+				history.register_named_undoable (
+					interface_names.t_diagram_remove_right_angles_cmd,
+					[<<agent l_world.disable_right_angles, agent l_world.remove_right_angles, agent toggle_button>>],
+					[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent toggle_button>>])
 			end
-			check d /= Void end
-
-			d.hide_links
-			project
-			d.use_right_angles
-			d.show_links
-			project
-			history.register_named_undoable (
-				Interface_names.t_Diagram_put_right_angles_cmd,
-				[<<agent d.hide_links, agent project, agent d.redo_right_angles, agent d.show_links, agent project>>],
-				[<<agent d.hide_links, agent project, agent d.undo_right_angles, agent d.show_links, agent project>>])
+			current_button.set_tooltip (tooltip)
 		end
 
 	execute_with_link_stone (a_stone: LINK_STONE) is
 			-- Change `a_stone' layout as the user wants.
 		local
-			lf: LINK_FIGURE
+			lf: EIFFEL_LINK_FIGURE
 			x_pos, y_pos: INTEGER
-			d: CONTEXT_DIAGRAM
 			client_stone: CLIENT_STONE
 			screen: EV_SCREEN
 		do
-			current_stone := a_stone
-			d ?= tool.class_view
-			if d = Void then
-				d ?= tool.cluster_view
-			end
-			check d /= Void end
-
-			if a_stone.source.world = d then
+			if a_stone.source.world = tool.world then
 				create link_tool_dialog
 				link_tool_dialog.set_link_tool_command (Current)
 	
 					-- Save current link midpoints.
 				lf := a_stone.source
 				link_tool_dialog.set_link_figure (lf)
-				saved_midpoints := lf.midpoints.twin
+				saved_edges := lf.edges
 	
 				create screen
 				x_pos := screen.pointer_position.x - link_tool_dialog.width // 2
 				y_pos := screen.pointer_position.y - link_tool_dialog.height // 2
 				link_tool_dialog.set_position (x_pos, y_pos)
 	
-				link_tool_dialog.preset (d.labels_shown)
+				link_tool_dialog.preset (tool.world.is_labels_shown)
 	
 				client_stone ?= a_stone
 				if client_stone /= Void then
@@ -86,10 +82,16 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+--			Result := Precursor (display_text, use_gray_icons)
+--			Result.drop_actions.extend (agent execute_with_link_stone)
+
+			create Result.make (Current)
+			current_button := Result
+			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_link_stone)
 		end
 
@@ -98,11 +100,11 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 	on_dialog_closed is
 			-- The user made his mind.
 		local
-			lf: LINK_FIGURE
-			new_midpoints: ARRAYED_LIST [LINK_MIDPOINT]
+			lf: EIFFEL_LINK_FIGURE
+			new_edges: LIST [EG_EDGE]
 		do
 			check
-				saved_midpoints_not_void: saved_midpoints /= Void
+				saved_edges_not_void: saved_edges /= Void
 			end
 			lf := link_tool_dialog.link_figure
 			
@@ -126,47 +128,38 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 							project
 						end
 						
-							-- Save current link midpoints.
-						new_midpoints := lf.midpoints.twin
+						new_edges := lf.edges
 						if link_tool_dialog.handle_left_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_one_handle_left_cmd,
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints), 
-									agent lf.show, agent project>>],
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
-									agent lf.show, agent project>>])
-						elseif link_tool_dialog.handle_right_selected then			
+								[<<agent lf.reset, agent lf.retrieve_edges (new_edges)>>],
+								[<<agent lf.reset, agent lf.retrieve_edges (saved_edges)>>])
+						elseif link_tool_dialog.handle_right_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_one_handle_right_cmd,
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints),
-									agent lf.show, agent project>>],
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
-									agent lf.show, agent project>>])
-						elseif link_tool_dialog.two_handles_left_selected then			
+								[<<agent lf.reset, agent lf.retrieve_edges (new_edges)>>],
+								[<<agent lf.reset, agent lf.retrieve_edges (saved_edges)>>])
+						elseif link_tool_dialog.two_handles_left_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_two_handles_left_cmd,
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints),
-									agent lf.show, agent project>>],
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
-									agent lf.show, agent project>>])
-						elseif link_tool_dialog.two_handles_right_selected then			
+								[<<agent lf.reset, agent lf.retrieve_edges (new_edges)>>],
+								[<<agent lf.reset, agent lf.retrieve_edges (saved_edges)>>])
+						elseif link_tool_dialog.two_handles_right_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_two_handles_right_cmd,
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (new_midpoints),
-									agent lf.show, agent project>>],
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.retrieve_midpoints (saved_midpoints),
-									agent lf.show, agent project>>])
+								[<<agent lf.reset, agent lf.retrieve_edges (new_edges)>>],
+								[<<agent lf.reset, agent lf.retrieve_edges (saved_edges)>>])
 						elseif link_tool_dialog.reset_selected then
 							history.do_named_undoable (
 								Interface_names.t_Diagram_remove_handles_cmd,
-								[<<agent lf.hide, agent project, agent lf.reset, agent lf.show, agent project>>],
-								[<<agent lf.retrieve_midpoints (saved_midpoints), agent project>>])
+								agent lf.reset,
+								agent lf.retrieve_edges (saved_edges))
 						end
 					end
 				else
 					if link_tool_dialog.applied then
 						lf.reset
-						lf.retrieve_midpoints (saved_midpoints)
+						lf.retrieve_edges (saved_edges)
 						project
 					end
 				end
@@ -180,6 +173,18 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 			tool.projector.project
 		end
 
+feature -- Access
+
+	tooltip: STRING is
+			-- Tooltip for the toolbar button.
+		do
+			if current_button.is_selected then
+				Result := Interface_names.f_diagram_remove_right_angles
+			else
+				Result := Interface_names.f_diagram_put_right_angles
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	current_stone: LINK_STONE
@@ -190,12 +195,6 @@ feature {NONE} -- Implementation
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_link_tool
-		end
-
-	tooltip: STRING is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_diagram_link_tool
 		end
 
 	menu_name: STRING is
@@ -211,7 +210,65 @@ feature {NONE} -- Implementation
 	link_tool_dialog: EB_LINK_TOOL_DIALOG
 			-- Associated widget.
 			
-	saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT]
+	saved_edges: LIST [EG_EDGE]
 			-- Backup of previous link midpoints.
+			
+	all_saved_edges: LIST [TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]] is
+			-- 
+		local
+			l_edges: LIST [EG_LINK_FIGURE]
+			l_item: EIFFEL_LINK_FIGURE
+		do
+			l_edges := tool.world.flat_links
+			create {ARRAYED_LIST [TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]]} Result.make (l_edges.count)
+			from
+				l_edges.start
+			until
+				l_edges.after
+			loop
+				l_item ?= l_edges.item
+				if l_item /= Void then
+					Result.extend ([l_item, l_item.edges])
+				end
+				l_edges.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	undo_apply_right_angles (edge_lists: like all_saved_edges) is
+			-- 
+		local
+			l_item: TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]
+			l_figure: EIFFEL_LINK_FIGURE
+			l_saved_edges: LIST [EG_EDGE]
+		do
+			from
+				edge_lists.start
+			until
+				edge_lists.after
+			loop
+				l_item := edge_lists.item
+				l_figure ?= l_item.item (1)
+				l_saved_edges ?= l_item.item (2)
+				l_figure.reset
+				l_figure.retrieve_edges (l_saved_edges)
+				edge_lists.forth
+			end
+		end
+		
+	toggle_button is
+			-- Toggle button without execution.
+		do
+			current_button.select_actions.block
+			current_button.toggle
+			current_button.set_tooltip (tooltip)
+			current_button.select_actions.resume
+		end
+		
+feature {EB_CONTEXT_EDITOR} -- Implementation
+
+	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON
+			-- Current toggle button.
 	
 end -- class EB_LINK_TOOL_COMMAND

@@ -20,31 +20,14 @@ feature -- Basic operations
 
 	execute is
 			-- Perform operation.
-		local
-			world: CONTEXT_DIAGRAM
 		do
-			if tool.class_view /= Void then
-				world := tool.class_view
-			elseif tool.cluster_view /= Void then
-				world := tool.cluster_view
+			if tool.world.is_inheritance_links_shown then
+				tool.world.hide_inheritance_links
+			else
+				tool.world.show_inheritance_links
 			end
-			if world /= Void then
-				if world.inheritance_layer.is_show_requested then
-					world.inheritance_layer.hide
-					world.inheritance_layer.disable_sensitive
-					world.inheritance_mover_layer.hide
-					world.inheritance_mover_layer.disable_sensitive
-					world.disable_inheritance_links_displayed
-				else
-					world.inheritance_layer.show
-					world.inheritance_layer.enable_sensitive
-					world.inheritance_mover_layer.show
-					world.inheritance_mover_layer.enable_sensitive
-					world.enable_inheritance_links_displayed
-				end
-				current_button.set_tooltip (tooltip)
-				tool.projector.project
-			end
+			current_button.set_tooltip (tooltip)
+			tool.projector.project
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
@@ -55,19 +38,14 @@ feature -- Basic operations
 		do
 			create Result.make (Current)
 			current_button := Result
+			if tool.world.is_inheritance_links_shown then
+				Result.toggle
+			end
 			initialize_toolbar_item (Result, display_text, use_gray_icons)
-			Result.toggle
 			Result.select_actions.extend (agent execute)
 		end
-
-feature {NONE} -- Implementation
-
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_inherit
-		end
+		
+feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
@@ -77,6 +55,15 @@ feature {NONE} -- Implementation
 			else
 				Result := Interface_names.f_diagram_show_inheritance
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmaps representing the command (one for the
+			-- gray version, one for the color version).
+		do
+			Result := Pixmaps.Icon_inherit
 		end
 
 	description: STRING is

@@ -26,6 +26,7 @@ feature
 					text_window.set_text (new_text);
 					text_window.set_changed (false);
 					display_filter_header (root_stone, filtername);
+					text_window.set_file_name (filtered_file_name (root_stone, filtername))
 					text_window.set_editable;
 					filter_name := clone (filtername);
 					filtered := true
@@ -41,24 +42,26 @@ feature
 			stone_not_void: stone /= Void;
 			filtername_not_void: filtername /= Void
 		local
-			full_pathname: STRING;
+			full_pathname: FILE_NAME;
+			fname: STRING;
 			filter_file: PLAIN_TEXT_FILE;
 			context: FORMAT_CONTEXT;
 			text_filter: TEXT_FILTER
 		do
-			full_pathname := clone (filter_path);
-			full_pathname.append (filtername);
-			full_pathname.append (".fil");
-			!!filter_file.make (full_pathname);
+			!!full_pathname.make_from_string (filter_path);
+			fname := clone (filtername);
+			fname.append (".fil");
+			full_pathname.set_file_name (fname);
+			!!filter_file.make (full_pathname.path);
 			if filter_file.exists and then filter_file.is_readable then
-				!!text_filter.make_from_filename (full_pathname);
+				!!text_filter.make_from_filename (full_pathname.path);
 				file_suffix := text_filter.file_suffix;
 				context := filter_context (stone);
 				text_filter.process_text (context.text);
 				Result := text_filter.image
 			else
 				warner (text_window).gotcha_call 
-					(w_Cannot_read_filter (full_pathname))
+					(w_Cannot_read_filter (full_pathname.path))
 			end
 		end;
 
@@ -83,6 +86,31 @@ feature
 			else
 				Result.append (filtername)
 			end
+		end;
+
+	temp_filtered_file_name (stone: STONE; filtername: STRING): STRING is
+			-- Name of the file where the filtered output text will be temporary			-- stored (classname.file_suffix or classname.filtername)
+		require
+			stone_not_void: stone /= Void;
+			filtername_not_void: filtername /= Void
+		local
+			fname: FILE_NAME;
+			class_stone: CLASSC_STONE
+		do
+			!!fname.make_from_string (tmp_directory);
+			class_stone ?= stone;
+			!! Result.make (0);
+			if class_stone /= Void then
+				Result.append (class_stone.class_c.class_name);
+			end;
+			Result.extend ('.');
+			if file_suffix /= Void then
+				Result.append (file_suffix)
+			else
+				Result.append (filtername)
+			end;
+			fname.set_file_name (Result);
+			Result := fname.path
 		end;
 
 	filter_name: STRING;
@@ -114,8 +142,7 @@ feature {NONE}
 			new_title.append (" (");
 			new_title.append (filtername);
 			new_title.append (" format)");
-			text_window.display_header (new_title);
-			text_window.set_file_name (filtered_file_name (stone, filtername))
+			text_window.display_header (new_title)
 		end;
 
 end -- class FILTERABLE

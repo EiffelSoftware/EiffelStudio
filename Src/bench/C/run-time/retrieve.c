@@ -960,8 +960,8 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 		client = eif_access(rt_solved->rt_obj);
 		supplier = eif_access(new);
 
-#ifdef EIF_REM_SET_OPTIMIZATION
 		*(char **)(client + offset) = supplier;	/* Attachment */
+#ifdef EIF_REM_SET_OPTIMIZATION
 		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF))
 		{
 			RTAS_OPT (supplier, offset >> EIF_REFERENCE_BITS, client);	
@@ -972,7 +972,6 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 		}
 	
 #else	/* EIF_REM_SET_OPTIMIZATION */
-		*(char **)(client + offset) = supplier;	/* Attachment */
 		RTAS(supplier, client);					/* Age check */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
@@ -1039,14 +1038,14 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 update:
 	/* Update references */
 	for (addr = new; 	nb_references > 0;
-			nb_references--, addr = (char *)(((char **) addr) + 1)) {
+			nb_references--, addr = (EIF_REFERENCE)(((EIF_REFERENCE *) addr) + 1)) {
 		int total_ref = nb_references;
 
 		/* *(char **)new is a pointer an a stored object: check if
 		 * the corresponding reference is already in the hash table
 		 */
-		reference = *(char **)addr;
-		if (reference == 0)
+		reference = *(EIF_REFERENCE *)addr;
+		if (reference == (EIF_REFERENCE) 0)
 			continue;
 		if (System(flags & EO_TYPE).cn_nbattr) {
 			if (((System(flags & EO_TYPE).cn_types[total_ref - nb_references]) & SK_HEAD) == SK_EXP) {
@@ -1059,7 +1058,7 @@ update:
 				} else
 					new_offset = offset;
 	
-				*(char **) addr = new + new_offset;				/* Expanded reference */
+				*(EIF_REFERENCE *) addr = new + new_offset;				/* Expanded reference */
 				if (rt_kind) {
 					/* CHECK THIS - M.S. */
 					uint32 old_flags = HEADER(new + new_offset)->ov_flags;
@@ -1073,18 +1072,23 @@ update:
 		{
 			struct rt_struct *rt_info;
 			unsigned long key = ((unsigned long) reference) - 1;
-			char *supplier;
+			EIF_REFERENCE supplier;
 
 			rt_info = (struct rt_struct *) ht_first(rt_table, key);
 			if (rt_info->rt_status == SOLVED) {
 				/* Reference is already solved */
 				supplier = eif_access(rt_info->rt_obj);
-				*(char **) addr = supplier;					/* Attachment */
+				*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
 #ifdef EIF_REM_SET_OPTIMIZATION
 				if ((HEADER (new)->ov_flags & (EO_SPEC | EO_REF)) 
 						== (EO_SPEC | EO_REF))
 				{
-					RTAS_OPT (supplier, (addr - new) >> EIF_REFERENCE_BITS, new);
+					assert (!(HEADER (new)->ov_flags & EO_COMP));
+							/* No expanded objects in it. */
+					RTAS_OPT (supplier, 
+						(EIF_REFERENCE *) addr - (EIF_REFERENCE *) new , new);
+						/* Casting with (EIF_REFERENCE *) gives directly the
+						 * index instead of the offset. */
 				}
 				else	
 				{

@@ -23,6 +23,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "eif_misc.h"
 #include "eif_malloc.h"
 #include "eif_lmalloc.h"		/* for eif_malloc() */
@@ -245,16 +246,43 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	ref += sizeof(long);
 	elem_size = *(long *) ref;			/* Extract the element size */
 
+	/* Possible optimization: remembering process for special objects full of
+	 * references can be discarded in this call to `sprealloc', since
+	 * we will change the order of the indices. */
+
 	new_area = sprealloc(area, i);		/* Reallocation of special object */
+							
 
 	/* Move old contents to the right position and fill in empty parts with
 	 * zeros.
 	 */
 
 	safe_bcopy(new_area, new_area + j * elem_size, k * elem_size);
+									/* `safe_bcopy' takes care of overlap. */
 	bzero(new_area, j * elem_size);		/* Fill empty parts of area with 0 */
 	bzero(new_area + (j + k) * elem_size, (i - j - k) * elem_size);
 
+	/* If the new area is full of references and remembered,
+	 * the information in the special table
+	 * may be completely obsolete.  Thus, we remove its entry 
+	 * and relaunch the remembering process. */
+
+	assert (HEADER (new_area)->ov_flags & EO_SPEC);	/* Must be special. */
+
+	if ((HEADER (new_area)->ov_flags & (EO_REF | EO_REM)) 
+			== (EO_REF | EO_SPEC | EO_REM)) {
+				/* Is object in Special table? */
+		/* Removal. */
+		if (0 == special_rem_remove (new_area)) {
+			/* Is there no occurrence of `new_area' in special table? */
+			eif_panic ("Special table removal failed");
+		}
+
+		/* Remembering process. */
+		eif_promote_special (new_area);
+	}
+	
+	
 	if (!(HEADER(new_area)->ov_flags & EO_COMP))
 		return new_area;				/* No expanded objects */
 

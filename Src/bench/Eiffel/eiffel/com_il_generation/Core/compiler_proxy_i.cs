@@ -405,9 +405,6 @@ feature -- Generation structure
 
 	void GenerateReturn();
 	
-	// Generate return statement.
-	void GenerateReturnValue();
-
 /* Onces */
 
 
@@ -416,6 +413,7 @@ feature -- Generation structure
 	void GenerateOnceResultInfo( string name, int TypeID );
 
 	void generate_once_computed ();
+	void generate_once_result_address ();
 
 	void GenerateOnceTest();
 

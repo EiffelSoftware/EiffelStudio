@@ -794,13 +794,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_return_value_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `generate_return_value'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	generate_once_done_info_user_precondition (name: STRING): BOOLEAN is
 			-- User-defined preconditions for `generate_once_done_info'.
 			-- Redefine in descendants if needed.
@@ -817,6 +810,13 @@ feature -- Status Report
 
 	generate_once_computed_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `generate_once_computed'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_once_result_address_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `generate_once_result_address'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -2210,14 +2210,6 @@ feature -- Basic Operations
 
 		end
 
-	generate_return_value is
-			-- No description available.
-		require
-			generate_return_value_user_precondition: generate_return_value_user_precondition
-		deferred
-
-		end
-
 	generate_once_done_info (name: STRING) is
 			-- No description available.
 			-- `name' [in].  
@@ -2241,6 +2233,14 @@ feature -- Basic Operations
 			-- No description available.
 		require
 			generate_once_computed_user_precondition: generate_once_computed_user_precondition
+		deferred
+
+		end
+
+	generate_once_result_address is
+			-- No description available.
+		require
+			generate_once_result_address_user_precondition: generate_once_result_address_user_precondition
 		deferred
 
 		end

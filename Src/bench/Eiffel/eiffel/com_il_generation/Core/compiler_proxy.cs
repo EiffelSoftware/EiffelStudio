@@ -578,16 +578,16 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateReturn ();
 	}
 	
-	public void GenerateReturnValue() {
-		core.GenerateReturnValue ();
-	}
-
 	public void GenerateOnceDoneInfo (string name) {
 		core.GenerateOnceDoneInfo (name);
 	}
 
 	public void GenerateOnceResultInfo (string name, int TypeID) {
 		core.GenerateOnceResultInfo (name, TypeID);
+	}
+
+	public void generate_once_result_address () {
+		core.generate_once_result_address();
 	}
 
 	public void generate_once_computed () {

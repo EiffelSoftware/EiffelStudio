@@ -26,17 +26,17 @@ feature {NONE} -- Initialization
 feature -- Status settings
 
 	add_ok_button is
-			-- Add an `OK' button in the dialog
+			-- Add an OK button in the dialog.
 		deferred
 		end
 
 	add_help_button is
-			-- Add a help button in the dialog
+			-- Add an Help button in the dialog.
 		deferred
 		end
 
 	add_okcancel_buttons is
-			-- Add two buttons : one `OK' and one `Cancel'.
+			-- Add two buttons : OK and Cancel.
 		deferred
 		end
 
@@ -50,27 +50,33 @@ feature -- Miscellaneous
 
 feature -- Event - command association
 
-	add_ok_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the `ok' button
-			-- is pressed. If there is no `ok' button, the event
-			-- never occurs and then the command isn't execute,
-			-- yet, the user can add a command if he wish it.
+	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the OK button is pressed.
+			-- If there is no OK button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 
-	add_cancel_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the `cancel' button
-			-- is pressed. If there is no `cancel' button, the event
-			-- never occurs and then the command isn't execute,
-			-- yet, the user can add a command if he wish it.
+	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Cancel button is pressed.
+			-- If there is no Cancel button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 
-	add_help_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the `help' button
-			-- is pressed. If there is no `help' button, the event
-			-- never occurs and then the command isn't execute,
-			-- yet, the user can add a command if he wish it.
+	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Help button is pressed.
+			-- If there is no Help button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 

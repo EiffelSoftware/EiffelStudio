@@ -1,5 +1,4 @@
-Syntax error: precursor appears in a routine which is declared
-              with synonyms.
-What to do  : remove precursor construct or provide separate
-              declarations for the synonyms.
+Error: Invalid use of parent specification in Precursor construct
+What to do: make sure that the identifier in braces denotes one
+  of the parents of the current class.
 

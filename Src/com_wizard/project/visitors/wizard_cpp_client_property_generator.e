@@ -37,7 +37,6 @@ feature {NONE} -- Basic operations
 			non_void_interface_name: interface_name /= Void
 			valid_interface_name: not interface_name.empty
 		local
-			tmp_string, access_feature_name, set_feature_name: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			visitor := a_property.data_type.visitor
@@ -64,8 +63,6 @@ feature {NONE} -- Implementation
 			non_void_interface_name: interface_name /= Void
 			non_void_property: a_property/= Void
 			valid_interface_name: not interface_name.empty
-		local
-			tmp_string: STRING
 		do
 			-- Access feature (get_  function)
 			create c_access_feature.make
@@ -77,7 +74,11 @@ feature {NONE} -- Implementation
 			end
 
 			-- Set result type
-			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration then
+			if 
+				visitor.is_basic_type or 
+				(visitor.vt_type = Vt_bool) or 
+				visitor.is_enumeration 
+			then
 				c_access_feature.set_result_type (visitor.cecil_type)
 			else
 				c_access_feature.set_result_type (Eif_reference)
@@ -117,20 +118,32 @@ feature {NONE} -- Implementation
 
 			-- Set signature
 			create a_signature.make (200)
-			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration then
+			if 
+				visitor.is_basic_type or 
+				(visitor.vt_type = Vt_bool) or 
+				visitor.is_enumeration 
+			then
 				a_signature.append (visitor.cecil_type)
 
-			elseif visitor.is_structure or visitor.is_array_basic_type or
-					visitor.is_interface then
+			elseif 
+				visitor.is_structure or 
+				visitor.is_array_basic_type 
+			then
 				a_signature.append (visitor.c_type)
 				a_signature.append (Space)
 				a_signature.append (Asterisk)
 			elseif 
-				visitor.is_structure_pointer or 
-				visitor.is_interface_pointer or
-				visitor.is_coclass_pointer 
+				visitor.is_structure_pointer
 			then
 				a_signature.append (visitor.c_type)
+			
+			elseif
+				visitor.is_interface_pointer or
+				visitor.is_coclass_pointer or
+				visitor.is_interface or
+				visitor.is_coclass
+			then
+				a_signature.append (Iunknown)
 
 			else
 				a_signature.append (Eif_object)
@@ -221,7 +234,6 @@ feature {NONE} -- Implementation
 		local
 			tmp_body: STRING
 			pointer_var: LINKED_LIST[STRING]
-			tmp_c_writer: WIZARD_WRITER_C_FUNCTION
 			type: INTEGER
 		do
 			create pointer_var.make
@@ -253,52 +265,76 @@ feature {NONE} -- Implementation
 			tmp_body.append (New_line_tab)
 
 			if not visitor.is_structure then
-				tmp_body.append (visitor.c_type)
+				if 
+					visitor.is_interface_pointer or
+					visitor.is_coclass_pointer
+				then
+					if visitor.vt_type = Vt_unknown then
+						tmp_body.append (Iunknown)
+					else
+						tmp_body.append (Idispatch)
+					end
+				else
+					tmp_body.append (visitor.c_type)
+				end
 				tmp_body.append (Space)
 				tmp_body.append (Tmp_variable_name)
+				
+				if 
+					visitor.is_interface_pointer or
+					visitor.is_coclass_pointer or
+					visitor.is_structure_pointer
+				then
+					tmp_body.append (" = 0")
+				end
 				tmp_body.append (Semicolon)
 				tmp_body.append (New_line_tab)
 
-				tmp_body.append (Tmp_variable_name)
-				tmp_body.append (Space_equal_space)
-
-				if is_byref (type) then
-					pointer_var.extend (Tmp_variable_name)
-				end
-
 				if 
-					visitor.is_basic_type or 
-					visitor.is_enumeration  or
-					visitor.is_interface_pointer or 
-					visitor.is_coclass_pointer or
-					visitor.is_array_basic_type or
-					visitor.is_structure_pointer
+					visitor.vt_type = Vt_dispatch
 				then
-					tmp_body.append (Open_parenthesis)
-					tmp_body.append (visitor.c_type)
-					tmp_body.append (Close_parenthesis)
-					tmp_body.append (Argument_name)
-
-				elseif visitor.is_structure then
-					tmp_body.append (Asterisk)
-					tmp_body.append (Open_parenthesis)
-					tmp_body.append (visitor.c_type)
-					tmp_body.append (Asterisk)
-					tmp_body.append (Close_parenthesis)
-					tmp_body.append (Argument_name)
-
+					tmp_body.append ("hr = " + Argument_name + 
+								"->QueryInterface (IID_IDispatch, (void**)&" +
+								Tmp_variable_name + 
+								")")
+				elseif
+					visitor.vt_type = Vt_unknown
+				then
+					tmp_body.append (Tmp_variable_name + " = " + Argument_name)
+				
 				else
-					if visitor.need_generate_ec then
-						tmp_body.append (Generated_ec_mapper)
-					else
-						tmp_body.append (Ec_mapper)
+					tmp_body.append (Tmp_variable_name)
+					tmp_body.append (Space_equal_space)
+
+					if is_byref (type) then
+						pointer_var.extend (Tmp_variable_name)
 					end
 
-					tmp_body.append (Dot)
-					tmp_body.append (visitor.ec_function_name)
-					tmp_body.append (Space_open_parenthesis)
-					tmp_body.append (Argument_name)
-					tmp_body.append (Close_parenthesis)
+
+					if 
+						visitor.is_basic_type or 
+						visitor.is_enumeration  or
+						visitor.is_array_basic_type or
+						visitor.is_structure_pointer
+					then
+						tmp_body.append (Open_parenthesis)
+						tmp_body.append (visitor.c_type)
+						tmp_body.append (Close_parenthesis)
+						tmp_body.append (Argument_name)
+
+					else
+						if visitor.need_generate_ec then
+							tmp_body.append (Generated_ec_mapper)
+						else
+							tmp_body.append (Ec_mapper)
+						end
+
+						tmp_body.append (Dot)
+						tmp_body.append (visitor.ec_function_name)
+						tmp_body.append (Space_open_parenthesis)
+						tmp_body.append (Argument_name)
+						tmp_body.append (Close_parenthesis)
+					end
 				end
 				tmp_body.append (Semicolon)
 				tmp_body.append (New_line_tab)

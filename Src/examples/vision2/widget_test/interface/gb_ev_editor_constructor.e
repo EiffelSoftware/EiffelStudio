@@ -138,5 +138,13 @@ feature {NONE} -- Implementation
 			-- For all editors referencing `vision2_object', rebuild any associated object editors.
 		do
 		end
+		
+	validate_true (a_string: STRING): BOOLEAN is
+			-- A procedure that matches type for validation,
+			-- and always returns True. Used when no validation
+			-- is to be performed on STRING data
+		do
+			Result := True
+		end
 
 end -- class GB_EV_EDITOR_CONSTRUCTOR

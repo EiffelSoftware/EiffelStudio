@@ -5,7 +5,7 @@ class DEPEND_SERVER
 inherit
 	COMPILER_SERVER [CLASS_DEPENDANCE, CLASS_ID]
 		redefine
-			make, item
+			make, item, has
 		end
 
 creation
@@ -75,6 +75,12 @@ feature -- Access
 			end; 
 		end;		
 		
+	has (an_id: CLASS_ID): BOOLEAN is
+			-- Is an item of id `an_id' present in the current server?
+		do
+			Result := server_has (an_id) or else Tmp_depend_server.has (an_id);
+		end
+
 feature -- Server size configuration
 
 	Size_limit: INTEGER is 100

@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_return_value, return_type, is_attribute, is_init_only
+			has_return_value, return_type, is_attribute, is_init_only, is_field
 		end
 
 create
@@ -66,6 +66,12 @@ feature -- Status report
 		do
 			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_init_only =
 				feature {FEATURE_ATTRIBUTE}.Is_init_only
+		end
+		
+	is_field: BOOLEAN is
+			-- Is field?
+		do
+			Result := True
 		end
 
 end -- class CONSUMED_FIELD

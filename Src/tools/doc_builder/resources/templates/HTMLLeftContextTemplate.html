@@ -80,13 +80,17 @@ function documentLoaded ()
 	{
 		spanId = pageSpans[i].getAttribute('id');
 
-		match = false;
-		//Look for match in strings against span id
-		for (j in filterStrings)
+		match = spanId == "";
+
+		if (!match)
 		{
-			if (spanId == filterStrings [j])
+			//Look for match in strings against span id
+			for (j in filterStrings)
 			{
-				match = true;
+				if (spanId == filterStrings [j])
+				{
+					match = true;
+				}
 			}
 		}
 
@@ -179,6 +183,10 @@ function ToggleAll()
 				font-size: 70%;
 				font-family: Verdana, Arial, Helvetica, sans-serif;
 				text-decoration:none;
+			}
+			TD
+			{
+				white-space: nowrap;
 			}
 		</style>
 

@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				for_all_objects (agent {EV_PIXMAPABLE}.remove_pixmap)
-				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (""))
+				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (Void))
 				pixmap_container.wipe_out
 				modify_button.set_text (Select_string)
 				modify_button.set_tooltip (Select_tooltip)
@@ -201,6 +201,7 @@ feature {NONE} -- Implementation
 					-- no need to remove it from the pixmap
 					-- as the pixmap will no be no longer visible.
 				filler_label.remove_tooltip
+				rebuild_associated_editors (first)
 			end	
 		end
 		

@@ -44,7 +44,7 @@ feature -- Initialization
 			c_gtk_widget_set_all_events (widget)
 
 			-- Make it appear where the mouse is.
-			gtk_window_set_position (GTK_WINDOW (widget), 1)
+			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_CENTER)
 
 			initialize
 		end

@@ -112,14 +112,14 @@ feature -- Properties
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: ROUTINE_TEXT_FORMATTER
+			ctxt: FEATURE_TEXT_FORMATTER
 		do
 			if rout_flat_table.has (stone) then
 				Result := rout_flat_table.item (stone)
 			else
 				!! ctxt;
 				ctxt.set_clickable;
-				ctxt.format (stone.e_feature, stone.e_class);
+				ctxt.format (stone.e_feature);
 				if not ctxt.error then
 					Result := ctxt.text;
 					rout_flat_table.put (Result, stone);
@@ -134,17 +134,39 @@ feature -- Properties
 			stone_not_void: stone /= Void;
 			valid_stone: stone.is_valid
 		local
-			ctxt: ROUTINE_TEXT_FORMATTER
+			ctxt: FEATURE_TEXT_FORMATTER
 		do
 			if debug_table.has (stone) then
 				Result := debug_table.item (stone)
 			else
 				!! ctxt;
 				ctxt.set_clickable;
-				ctxt.format_debuggable (stone.e_feature, stone.e_class);
+				ctxt.format_debuggable (stone.e_feature);
 				if not ctxt.error then
 					Result := ctxt.text;
 					debug_table.put (Result, stone);
+					record_in_history (stone, debug_table)
+				end
+			end
+		end;
+
+	simple_debug_context_text (stone: FEATURE_STONE): STRUCTURED_TEXT is
+			-- Simple formatting (nothing clickalbe)
+			-- of the debug form of `stone'
+		require
+			stone_not_void: stone /= Void;
+			valid_stone: stone.is_valid
+		local
+			ctxt: FEATURE_TEXT_FORMATTER
+		do
+			if debug_table.has (stone) then
+				Result := debug_table.item (stone)
+			else
+				!! ctxt;
+				ctxt.simple_format_debuggable (stone.e_feature);
+				if not ctxt.error then
+					Result := ctxt.text;
+					simple_debug_table.put (Result, stone);
 					record_in_history (stone, debug_table)
 				end
 			end
@@ -161,6 +183,7 @@ feature -- Clearing tables
 			clickable_table.clear_all;
 			rout_flat_table.clear_all;
 			debug_table.clear_all;
+			simple_debug_table.clear_all;
 			history_list.wipe_out
 		end;
 
@@ -207,6 +230,12 @@ feature {NONE} -- Attributes
 		end;
 
 	debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
+			-- Table of the last debug formats
+		once
+			!!Result.make (History_size)
+		end;
+
+	simple_debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
 			-- Table of the last debug formats
 		once
 			!!Result.make (History_size)

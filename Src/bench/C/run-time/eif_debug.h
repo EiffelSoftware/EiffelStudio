@@ -90,6 +90,9 @@ extern struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg
 extern int dmake_room(int new_entries_number);		/* Pre-extend melting table */
 extern void drecord_bc(int body_idx, int body_id, char *addr);		/* Record new byte code in run-time tables */
 
+/* Computing position within program */
+extern void ewhere(struct where *where);
+
 /* Macro used to get a calling context on top of the stack */
 #define dget()	dpush((struct dcall *) 0)
 

@@ -14,8 +14,10 @@ extern "C" {
 #endif
 
 
-typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
-	(EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
+typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE) (
+#ifndef EIF_IL_DLL
+	EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
+#endif
 	 EIF_POINTER, /* ENUMLOGFONT * */
 	 EIF_POINTER, /* NEWTEXTMETRIC * */
 	 EIF_INTEGER, /* Font type */

@@ -41,13 +41,19 @@ feature -- Status setting
 		do
 			private_font := clone (a_font)
 			font_imp ?= private_font.implementation
-			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
+			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (fontable_widget))
 			C.set_gtk_style_struct_font (a_style, font_imp.c_object)
-			C.gtk_widget_set_style (visual_widget, a_style)
+			C.gtk_widget_set_style (fontable_widget, a_style)
 			C.gtk_style_unref (a_style)
 		end
 
 feature {NONE} -- Implementation
+
+	fontable_widget: POINTER is
+			-- Pointer to the widget that is fontable.
+		do
+			Result := visual_widget
+		end
 
 	private_font: EV_FONT
 

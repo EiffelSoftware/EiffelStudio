@@ -153,6 +153,8 @@ feature {NONE} -- Callbacks
 				)
 				exit_confirmation_dialog.set_ok_action (~exit_application)
 				exit_confirmation_dialog.show_modal_to_window (window_manager.last_focused_window.window)
+			else
+				exit_application
 			end
 		end
 

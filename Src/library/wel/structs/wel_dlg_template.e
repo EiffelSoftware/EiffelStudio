@@ -198,7 +198,7 @@ feature -- Basic operations
 				check
 					source_pointer_exists: source_pointer /= default_pointer
 				end
-				c_memcpy (cwin_global_lock (item), source_pointer, length)
+				cwin_global_lock (item).memory_copy (source_pointer, length)
 				cwin_global_unlock (item)
 			else
 				Precursor (source_pointer, length)
@@ -209,7 +209,7 @@ feature -- Basic operations
 			-- Fill current with `a_character'.
 		do
 			if memory_allocated_with_global_alloc then
-				c_memset (cwin_global_lock (item), a_character, structure_size)
+				cwin_global_lock (item).memory_set (a_character.code, structure_size)
 				cwin_global_unlock (item)
 			else
 				Precursor (a_character)

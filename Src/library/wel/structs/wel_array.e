@@ -44,9 +44,8 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			c_memcpy (cwel_integer_to_pointer (
-				to_integer + (index * item_size)),
-				an_item.item, item_size)
+			cwel_integer_to_pointer (to_integer + (index * item_size)).
+				memory_copy (an_item.item, item_size)
 		end
 
 	i_th_item (index: INTEGER): POINTER is

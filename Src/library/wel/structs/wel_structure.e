@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 		local
 			a_default_pointer: POINTER
 		do
-			item := c_calloc (1, structure_size)
+			item := item.memory_calloc (1, structure_size)
 			if item = a_default_pointer then
 					-- Memory allocation problem
 				(create {EXCEPTIONS}).raise ("No more memory")
@@ -39,7 +39,7 @@ feature -- Basic operations
 			check
 				source_pointer_exists: source_pointer /= default_pointer
 			end
-			c_memcpy (item, source_pointer, length)
+			item.memory_copy (source_pointer, length)
 		end
 
 	initialize is
@@ -55,7 +55,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			c_memset (item, a_character, structure_size)
+			item.memory_set (a_character.code, structure_size)
 		end
 
 feature -- Measurement
@@ -75,7 +75,7 @@ feature {NONE} -- Removal
 			a_default_pointer: POINTER
 		do
 			if item /= a_default_pointer then
-				c_free (item)
+				item.memory_free
 				item := a_default_pointer
 			end
 		end
@@ -84,40 +84,42 @@ feature {NONE} -- Externals
 
 	c_calloc (a_num, a_size: INTEGER): POINTER is
 			-- C calloc
-		external
-			"C (size_t, size_t): EIF_POINTER | <malloc.h>"
-		alias
-			"calloc"
+		obsolete
+			"Use `memory_calloc' from POINTER class instead."
+		do
+			Result := Result.memory_calloc (a_num, a_size)
 		end
 
 	c_free (ptr: POINTER) is
 			-- C free
-		external
-			"C (void *) | <malloc.h>"
-		alias
-			"free"
+		obsolete
+			"Use `memory_free' from POINTER class instead."
+		do
+			ptr.memory_free
 		end
 
 	c_memcpy (destination, source: POINTER; count: INTEGER) is
 			-- C memcpy
-		external
-			"C (void *, void *, size_t) | <memory.h>"
-		alias
-			"memcpy"
+		obsolete
+			"Use `memory_free' from POINTER class instead."
+		do
+			destination.memory_copy (source, count)
 		end
 
 	c_enomem is
 			-- Raise a "No more memory" exception.
+		obsolete
+			"Use facility of EXCEPTIONS class instead to raise %"No more memory%" exception"
 		do
 			(create {EXCEPTIONS}).raise ("No more memory")
 		end
 
 	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER) is
 			-- C function 
-		external
-			"C (void *, int, size_t) | <memory.h>"
-		alias
-			"memset"
+		obsolete
+			"Use `memory_set' from POINTER class instead."
+		do
+			destination.memory_set (filling_char.code, count)
 		end
 
 end -- class WEL_STRUCTURE

@@ -46,7 +46,7 @@ feature -- Output
 
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add (ti_None_class)
+			st.add (ti_none_class)
 		end
 
 feature {COMPILER_EXPORTER}
@@ -54,8 +54,7 @@ feature {COMPILER_EXPORTER}
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			!! Result
-			Result.set_type (type_i)
+			create Result.make (type_i)
 		end
 
 	type_i: NONE_I is

@@ -85,10 +85,10 @@ feature -- Output
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
 			if is_true_expanded then
-				st.add (ti_Expanded_keyword)
+				st.add (ti_expanded_keyword)
 				st.add_space
 			elseif is_separate then
-				st.add (ti_Separate_keyword)
+				st.add (ti_separate_keyword)
 				st.add_space
 			end
 			associated_class.append_name (st)
@@ -102,13 +102,13 @@ feature -- Output
 			class_name := clone (associated_class.name)
 			class_name.to_upper
 			if is_true_expanded then
-				!!Result.make (class_name.count + 9)
+				create Result.make (class_name.count + 9)
 				Result.append ("expanded ")
 			elseif is_separate then
-				!!Result.make (class_name.count + 9)
+				create Result.make (class_name.count + 9)
 				Result.append ("separate ")
 			else
-				!!Result.make (class_name.count)
+				create Result.make (class_name.count)
 			end
 			Result.append (class_name)
 		end
@@ -130,7 +130,7 @@ feature {COMPILER_EXPORTER}
 	type_i: CL_TYPE_I is
 			-- C type
 		do
-			!!Result
+			create Result
 			Result.set_is_true_expanded (is_true_expanded)
 			Result.set_is_separate (is_separate)
 			Result.set_base_id (base_class_id)
@@ -343,8 +343,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			!! Result
-			Result.set_type (type_i)
+			create Result.make (type_i)
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is

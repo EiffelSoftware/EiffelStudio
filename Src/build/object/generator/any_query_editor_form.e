@@ -421,7 +421,7 @@ feature -- Command generation
 			-- Generate the setting of the query using `argument'.
 		do
 			!! Result.make (0)
-			Result.append ("target_object.")
+			Result.append ("target.")
 			Result.append (procedure_name)
 			Result.append (" (")
 			Result.append (perm_wind)

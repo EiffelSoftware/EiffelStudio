@@ -5,7 +5,8 @@ inherit
 	
 	CAT_PAGE [EVENT]
 		redefine
-			create_new_icon, associated_catalog, new_icon
+			create_new_icon, associated_catalog, new_icon,
+			make_visible, make_unmanaged
 		end;
 	SHARED_EVENTS
 
@@ -19,6 +20,20 @@ feature {NONE}
 		do
 			!!new_icon.make (Current);
 		end;
+
+feature {CATALOG}
+
+	make_visible (a_parent: COMPOSITE) is
+		do
+			Precursor (a_parent)
+			set_preferred_count (4)
+		end
+
+	make_unmanaged (a_parent: COMPOSITE) is
+		do
+			Precursor (a_parent)
+			set_preferred_count (4)
+		end
 
 feature 
 

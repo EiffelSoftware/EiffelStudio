@@ -56,7 +56,7 @@ feature {CASE_CLUSTER_INFO}
 			Inst_context.set_cluster (Void);
 			s_class_data.set_booleans (classc.is_deferred,
 					False, 
-					False,
+					classc.feature_table.has_introduced_new_externals,
 					False,
 					False,
 					classc.class_name.is_equal (System.root_class_name));
@@ -68,8 +68,10 @@ feature {CASE_CLUSTER_INFO}
 			record_relation_com.execute;
 			!! record_inherit_info_com.make (classc, s_class_data);
 			record_inherit_info_com.execute;
-			!! record_chart_info_com.make (classc, s_class_data);
-			record_chart_info_com.execute;
+
+				-- removed: processing is done by EiffelCase
+			--!! record_chart_info_com.make (classc, s_class_data);
+			--record_chart_info_com.execute;
 
 			process_old_info;
 		end

@@ -78,7 +78,8 @@ end
 		local
 			renaming: EXTEND_TABLE [STRING, STRING];
 			features: ARRAYED_LIST [S_FEATURE_DATA];
-			feature_data: S_FEATURE_DATA
+			feature_data: S_FEATURE_DATA;
+			feature_data_r1: S_FEATURE_DATA_R331;
 			parent: PARENT_C;
 			found: BOOLEAN;
 			origin_class: CLASS_C;
@@ -152,7 +153,9 @@ end;
 								-- This means that the feature is not redefined.
 							!! temp.make (0);
 							temp.append (renaming.item_for_iteration);
-							!! feature_data.make (temp);
+							!! feature_data_r1.make (temp);
+							feature_data_r1.set_reversed_engineered;
+							feature_data := feature_data_r1;
 							feature_i := classc.feature_table.item 
 														(renaming.key_for_iteration);
 							if feature_i /= Void then

@@ -1,146 +1,70 @@
 indexing
-	description: "ScrollBar (SB) messages."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ScrollBar (SB) messages."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_SB_CONSTANTS
 
 feature -- Access
 
-	Sb_lineup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_LINEUP"
-		end
+	Sb_lineup: INTEGER is 0
+			-- Declared in Windows as SB_LINEUP
 
-	Sb_lineleft: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_LINELEFT"
-		end
+	Sb_lineleft: INTEGER is 0
+			-- Declared in Windows as SB_LINELEFT
 
-	Sb_linedown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_LINEDOWN"
-		end
+	Sb_linedown: INTEGER is 1
+			-- Declared in Windows as SB_LINEDOWN
 
-	Sb_lineright: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_LINERIGHT"
-		end
+	Sb_lineright: INTEGER is 1
+			-- Declared in Windows as SB_LINERIGHT
 
-	Sb_pageup: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_PAGEUP"
-		end
+	Sb_pageup: INTEGER is 2
+			-- Declared in Windows as SB_PAGEUP
 
-	Sb_pageleft: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_PAGELEFT"
-		end
+	Sb_pageleft: INTEGER is 2
+			-- Declared in Windows as SB_PAGELEFT
 
-	Sb_pagedown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_PAGEDOWN"
-		end
+	Sb_pagedown: INTEGER is 3
+			-- Declared in Windows as SB_PAGEDOWN
 
-	Sb_pageright: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_PAGERIGHT"
-		end
+	Sb_pageright: INTEGER is 3
+			-- Declared in Windows as SB_PAGERIGHT
 
-	Sb_thumbposition: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_THUMBPOSITION"
-		end
+	Sb_thumbposition: INTEGER is 4
+			-- Declared in Windows as SB_THUMBPOSITION
 
-	Sb_thumbtrack: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_THUMBTRACK"
-		end
+	Sb_thumbtrack: INTEGER is 5
+			-- Declared in Windows as SB_THUMBTRACK
 
-	Sb_top: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_TOP"
-		end
+	Sb_top: INTEGER is 6
+			-- Declared in Windows as SB_TOP
 
-	Sb_left: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_LEFT"
-		end
+	Sb_left: INTEGER is 6
+			-- Declared in Windows as SB_LEFT
 
-	Sb_bottom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_BOTTOM"
-		end
+	Sb_bottom: INTEGER is 7
+			-- Declared in Windows as SB_BOTTOM
 
-	Sb_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_RIGHT"
-		end
+	Sb_right: INTEGER is 7
+			-- Declared in Windows as SB_RIGHT
 
-	Sb_endscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_ENDSCROLL"
-		end
+	Sb_endscroll: INTEGER is 8
+			-- Declared in Windows as SB_ENDSCROLL
 
-	Sb_horz: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_HORZ"
-		end
+	Sb_horz: INTEGER is 0
+			-- Declared in Windows as SB_HORZ
 
-	Sb_vert: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_VERT"
-		end
+	Sb_vert: INTEGER is 1
+			-- Declared in Windows as SB_VERT
 
-	Sb_ctl: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_CTL"
-		end
+	Sb_ctl: INTEGER is 2
+			-- Declared in Windows as SB_CTL
 
-	Sb_both: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SB_BOTH"
-		end
+	Sb_both: INTEGER is 3
+			-- Declared in Windows as SB_BOTH
 
 end -- class WEL_SB_CONSTANTS
 

@@ -1,209 +1,97 @@
 indexing
-	description: "ComboBox message (CB) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ComboBox message (CB) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CB_CONSTANTS
 
 feature -- Access
 
-	Cb_geteditsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETEDITSEL"
-		end
+	Cb_geteditsel: INTEGER is 320
+			-- Declared in Windows as CB_GETEDITSEL
 
-	Cb_limittext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_LIMITTEXT"
-		end
+	Cb_limittext: INTEGER is 321
+			-- Declared in Windows as CB_LIMITTEXT
 
-	Cb_seteditsel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SETEDITSEL"
-		end
+	Cb_seteditsel: INTEGER is 322
+			-- Declared in Windows as CB_SETEDITSEL
 
-	Cb_addstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_ADDSTRING"
-		end
+	Cb_addstring: INTEGER is 323
+			-- Declared in Windows as CB_ADDSTRING
 
-	Cb_deletestring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_DELETESTRING"
-		end
+	Cb_deletestring: INTEGER is 324
+			-- Declared in Windows as CB_DELETESTRING
 
-	Cb_dir: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_DIR"
-		end
+	Cb_dir: INTEGER is 325
+			-- Declared in Windows as CB_DIR
 
-	Cb_getcount: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETCOUNT"
-		end
+	Cb_getcount: INTEGER is 326
+			-- Declared in Windows as CB_GETCOUNT
 
-	Cb_getcursel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETCURSEL"
-		end
+	Cb_getcursel: INTEGER is 327
+			-- Declared in Windows as CB_GETCURSEL
 
-	Cb_getlbtext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETLBTEXT"
-		end
+	Cb_getlbtext: INTEGER is 328
+			-- Declared in Windows as CB_GETLBTEXT
 
-	Cb_getlbtextlen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETLBTEXTLEN"
-		end
+	Cb_getlbtextlen: INTEGER is 329
+			-- Declared in Windows as CB_GETLBTEXTLEN
 
-	Cb_insertstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_INSERTSTRING"
-		end
+	Cb_insertstring: INTEGER is 330
+			-- Declared in Windows as CB_INSERTSTRING
 
-	Cb_resetcontent: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_RESETCONTENT"
-		end
+	Cb_resetcontent: INTEGER is 331
+			-- Declared in Windows as CB_RESETCONTENT
 
-	Cb_findstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_FINDSTRING"
-		end
+	Cb_findstring: INTEGER is 332
+			-- Declared in Windows as CB_FINDSTRING
 
-	Cb_selectstring: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SELECTSTRING"
-		end
+	Cb_selectstring: INTEGER is 333
+			-- Declared in Windows as CB_SELECTSTRING
 
-	Cb_setcursel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SETCURSEL"
-		end
+	Cb_setcursel: INTEGER is 334
+			-- Declared in Windows as CB_SETCURSEL
 
-	Cb_showdropdown: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SHOWDROPDOWN"
-		end
+	Cb_showdropdown: INTEGER is 335
+			-- Declared in Windows as CB_SHOWDROPDOWN
 
-	Cb_getitemdata: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETITEMDATA"
-		end
+	Cb_getitemdata: INTEGER is 336
+			-- Declared in Windows as CB_GETITEMDATA
 
-	Cb_setitemdata: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SETITEMDATA"
-		end
+	Cb_setitemdata: INTEGER is 337
+			-- Declared in Windows as CB_SETITEMDATA
 
-	Cb_getdroppedcontrolrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETDROPPEDCONTROLRECT"
-		end
+	Cb_getdroppedcontrolrect: INTEGER is 338
+			-- Declared in Windows as CB_GETDROPPEDCONTROLRECT
 
-	Cb_setitemheight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SETITEMHEIGHT"
-		end
+	Cb_setitemheight: INTEGER is 339
+			-- Declared in Windows as CB_SETITEMHEIGHT
 
-	Cb_getitemheight: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETITEMHEIGHT"
-		end
+	Cb_getitemheight: INTEGER is 340
+			-- Declared in Windows as CB_GETITEMHEIGHT
 
-	Cb_setextendedui: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_SETEXTENDEDUI"
-		end
+	Cb_setextendedui: INTEGER is 341
+			-- Declared in Windows as CB_SETEXTENDEDUI
 
-	Cb_getextendedui: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETEXTENDEDUI"
-		end
+	Cb_getextendedui: INTEGER is 342
+			-- Declared in Windows as CB_GETEXTENDEDUI
 
-	Cb_getdroppedstate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_GETDROPPEDSTATE"
-		end
+	Cb_getdroppedstate: INTEGER is 343
+			-- Declared in Windows as CB_GETDROPPEDSTATE
 
-	Cb_findstringexact: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_FINDSTRINGEXACT"
-		end
+	Cb_findstringexact: INTEGER is 344
+			-- Declared in Windows as CB_FINDSTRINGEXACT
 
-	Cb_okay: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_OKAY"
-		end
+	Cb_okay: INTEGER is 0
+			-- Declared in Windows as CB_OKAY
 
-	Cb_err: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_ERR"
-		end
+	Cb_err: INTEGER is -1
+			-- Declared in Windows as CB_ERR
 
-	Cb_errspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CB_ERRSPACE"
-		end
+	Cb_errspace: INTEGER is -2
+			-- Declared in Windows as CB_ERRSPACE
 
 	Cb_gettopindex: INTEGER is 347
 			-- An application sends the CB_GETTOPINDEX message to 

@@ -1,104 +1,71 @@
 indexing
-	description: "ComboBoxEx Message (CBEM) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "ComboBoxEx Message (CBEM) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CBEM_CONSTANTS
 
 feature -- Access
 
-	Cbem_insertitem: INTEGER is
+	Cbem_insertitem: INTEGER is 1025
 			-- Inserts a new item in a ComboBoxEx.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_INSERTITEM"
-		end
+			--
+			-- Declared in Windows as CBEM_INSERTITEM
 
-	Cbem_setimagelist: INTEGER is
+	Cbem_setimagelist: INTEGER is 1026
 			-- Sets an image list for a ComboBoxEx control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_SETIMAGELIST"
-		end
+			--
+			-- Declared in Windows as CBEM_SETIMAGELIST
 
-	Cbem_getimagelist: INTEGER is
+	Cbem_getimagelist: INTEGER is 1027
 			-- Retrieves the handle to an image list assigned
 			-- to a ComboBoxEx control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_GETIMAGELIST"
-		end
+			--
+			-- Declared in Windows as CBEM_GETIMAGELIST
 
-	Cbem_getitem: INTEGER is
+	Cbem_getitem: INTEGER is 1028
 			-- Retrieves item information for a given ComboBoxEx item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_GETITEM"
-		end
+			--
+			-- Declared in Windows as CBEM_GETITEM
 
-	Cbem_setitem: INTEGER is
+	Cbem_setitem: INTEGER is 1029
 			-- Sets the attributes for an item in a ComboBoxEx control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_SETITEM"
-		end
+			--
+			-- Declared in Windows as CBEM_SETITEM
 
-	Cbem_deleteitem: INTEGER is
+	Cbem_deleteitem: INTEGER is 324
 			-- Removes an item from a ComboBoxEx control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_DELETEITEM"
-		end
+			--
+			-- Declared in Windows as CBEM_DELETEITEM
 
-	Cbem_getcombocontrol: INTEGER is
+	Cbem_getcombocontrol: INTEGER is 1030
 			-- Retrieves the handle to the child combo box control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_GETCOMBOCONTROL"
-		end
+			--
+			-- Declared in Windows as CBEM_GETCOMBOCONTROL
 
-	Cbem_geteditcontrol: INTEGER is
+	Cbem_geteditcontrol: INTEGER is 1031
 			-- Retrieves the handke to the edit control portion of
 			-- a ComboBoxEc control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_GETEDITCONTROL"
-		end
+			--
+			-- Declared in Windows as CBEM_GETEDITCONTROL
 
-	Cbem_setexstyle: INTEGER is
+	Cbem_setexstyle: INTEGER is 1032
 			-- Sets extended styles within a ComboBoxEx control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_SETEXSTYLE"
-		end
+			--
+			-- Declared in Windows as CBEM_SETEXSTYLE
 
-	Cbem_getexstyle: INTEGER is
+	Cbem_getexstyle: INTEGER is 1033
 			-- Retrieves the extended styles of a ComboBoxEx control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_GETEXSTYLE"
-		end
+			--
+			-- Declared in Windows as CBEM_GETEXSTYLE
 
-	Cbem_haseditchanged: INTEGER is
+	Cbem_haseditchanged: INTEGER is 1034
 			-- Determines if the user has changed the contents of the
 			-- ComboBoxEx edit control by typing.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEM_HASEDITCHANGED"
-		end
+			--
+			-- Declared in Windows as CBEM_HASEDITCHANGED
 
 end -- class WEL_CBEM_CONSTANTS
 

@@ -1,41 +1,25 @@
 indexing
-	description: "Mouse Activate (MA) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Mouse Activate (MA) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_MA_CONSTANTS
 
 feature -- Access
 
-	Ma_activate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MA_ACTIVATE"
-		end
+	Ma_activate: INTEGER is 1
+			-- Declared in Windows as MA_ACTIVATE
 
-	Ma_activateandeat: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MA_ACTIVATEANDEAT"
-		end
+	Ma_activateandeat: INTEGER is 2
+			-- Declared in Windows as MA_ACTIVATEANDEAT
 
-	Ma_noactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MA_NOACTIVATE"
-		end
+	Ma_noactivate: INTEGER is 3
+			-- Declared in Windows as MA_NOACTIVATE
 
-	Ma_noactivateandeat: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"MA_NOACTIVATEANDEAT"
-		end
+	Ma_noactivateandeat: INTEGER is 4
+			-- Declared in Windows as MA_NOACTIVATEANDEAT
 
 end -- class WEL_MA_CONSTANTS
 

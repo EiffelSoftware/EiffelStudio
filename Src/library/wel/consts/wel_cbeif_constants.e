@@ -1,72 +1,51 @@
 indexing
-	description: "Combo-Box-Ex Item Flag (CBEIF) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Combo-Box-Ex Item Flag (CBEIF) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_CBEIF_CONSTANTS
 
 feature -- Access
 
-	Cbeif_text: INTEGER is
+	Cbeif_text: INTEGER is 1
 			-- The `text' member is valid or must be filled in.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_TEXT"
-		end
+			--
+			-- Declared in Windows as CBEIF_TEXT
 
-	Cbeif_image: INTEGER is
+	Cbeif_image: INTEGER is 2
 			-- The `image' member is valid or must be filled in.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_IMAGE"
-		end
+			--
+			-- Declared in Windows as CBEIF_IMAGE
 
-	Cbeif_selectedimage: INTEGER is
+	Cbeif_selectedimage: INTEGER is 4
 			-- The `selected_image' member is valid or must be
 			-- filled in.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_SELECTEDIMAGE"
-		end
+			--
+			-- Declared in Windows as CBEIF_SELECTEDIMAGE
 
-	Cbeif_overlay: INTEGER is
+	Cbeif_overlay: INTEGER is 8
 			-- The `overlay' member is valid or must be filled in.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_OVERLAY"
-		end
+			--
+			-- Declared in Windows as CBEIF_OVERLAY
 
-	Cbeif_indent: INTEGER is
+	Cbeif_indent: INTEGER is 16
 			-- The `indent' member is valid or must be filled in.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_INDENT"
-		end
+			--
+			-- Declared in Windows as CBEIF_INDENT
 
-	Cbeif_lparam: INTEGER is
-			-- The `lparam' member is valid or must be filled in.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_LPARAM"
-		end
-
-	Cbeif_di_setitem: INTEGER is
+	Cbeif_di_setitem: INTEGER is 268435456
 			-- The control should store the item data and not ask
 			-- for it again. This flag is used only with the
 			-- CBEN_GETDISPINFO notification message.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"CBEIF_DI_SETITEM"
-		end
+			--
+			-- Declared in Windows as CBEIF_DI_SETITEM
+
+	Cbeif_lparam: INTEGER is 32
+			-- The `lparam' member is valid or must be filled in.
+			--
+			-- Declared in Windows as CBEIF_LPARAM
 
 end -- class WEL_CBEIF_CONSTANTS
 

@@ -296,8 +296,8 @@ feature -- Action
 				-- are avaible in the universe.
 				-- Empty syntactical supplier list from compilation
 				-- to another one after duplicating it.
-			old_syntactical_suppliers := clone (syntactical_suppliers)
-			syntactical_suppliers.wipe_out
+			old_syntactical_suppliers := syntactical_suppliers
+			!! syntactical_suppliers.make
 			supplier_list := ast_b.suppliers.supplier_ids
 			if not supplier_list.empty then
 				check_suppliers (supplier_list)
@@ -1907,8 +1907,7 @@ feature -- Class initialization
 				until
 					old_parents.after or else Result
 				loop
-					Result := 	parent_class =
-								old_parents.item.associated_class
+					Result := parent_class = old_parents.item.associated_class
 					old_parents.forth
 				end
 				parents.forth
@@ -1941,8 +1940,7 @@ feature -- Class initialization
 				until
 					parents.after or else Result
 				loop
-					Result := parent_class =
-								parents.item.associated_class
+					Result := parent_class = parents.item.associated_class
 					parents.forth
 				end
 				old_parents.forth
@@ -2113,7 +2111,7 @@ feature
 					error := True
 				end
 
-					-- Second, check if the formal generic name doen't
+					-- Second, check if the formal generic name doesn't
 					-- appear twice in `generics'.
 				pos := gens.index
 				from

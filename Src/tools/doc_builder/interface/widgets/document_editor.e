@@ -486,6 +486,16 @@ feature -- Shortcuts
 			Result.extend ("", l_key_constants.key_l)
 			Result.extend ("", l_key_constants.key_n)
 			Result.extend ("", l_key_constants.key_m)
+			Result.extend ("", l_key_constants.key_0)
+			Result.extend ("", l_key_constants.key_1)
+			Result.extend ("", l_key_constants.key_2)
+			Result.extend ("", l_key_constants.key_3)
+			Result.extend ("", l_key_constants.key_4)
+			Result.extend ("", l_key_constants.key_5)
+			Result.extend ("", l_key_constants.key_6)
+			Result.extend ("", l_key_constants.key_7)
+			Result.extend ("", l_key_constants.key_8)
+			Result.extend ("", l_key_constants.key_9)
 		end
 		
 

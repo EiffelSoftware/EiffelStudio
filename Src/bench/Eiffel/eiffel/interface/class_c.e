@@ -127,7 +127,7 @@ feature -- Access
 			-- if the class is marked `changed3'.
 		do
 			Result := propagators.make_pass3
-		end -- changed3
+		end
 
 	changed3a : BOOLEAN
 			-- Type check?
@@ -431,6 +431,8 @@ feature -- Action
 
 			file.close
 			Error_handler.checksum
+		ensure
+			build_ast_not_void: Result /= Void
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
@@ -639,7 +641,7 @@ feature -- Conformance dependencies
 			removed : not has_dep_class (a_class)
 		end
 
-	has_dep_class (a_class : CLASS_C) : BOOLEAN is
+	has_dep_class (a_class: CLASS_C): BOOLEAN is
 			-- Is `a_class' in `conf_dep_classes'?
 		require
 			not_void : a_class /= Void
@@ -872,7 +874,7 @@ end
 					end
 
 debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.putstring ("%TTo melt_in true: ")
+	io.error.putstring ("%TTo melt_in True: ")
 	io.error.putstring (feature_name)
 	io.error.new_line
 end
@@ -1586,6 +1588,9 @@ feature
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	
 			end
+		ensure
+			feature_table_file_name_not_void: Result /= Void
+			feature_table_file_name_not_empty: not Result.is_empty
 		end
 
 	base_file_name: STRING is
@@ -1599,6 +1604,9 @@ feature
 				Result := name.substring (1, name.count.min (2))
 				private_base_file_name := Result
 			end
+		ensure
+			base_file_name_not_void: Result /= Void
+			base_file_name_not_empty: not Result.is_empty
 		end
 
 	packet_number: INTEGER is
@@ -1623,6 +1631,8 @@ feature
 			else
 				Result := internal_feature_table_file_id
 			end
+		ensure
+			feature_table_file_id_positive: Result > 0
 		end
 
 feature -- Skeleton processing
@@ -2146,6 +2156,8 @@ feature {NONE} -- Private access
 			-- Default parent type
 		once
 			create Result.make (System.any_id)
+		ensure
+			any_type_not_void: Result /= Void
 		end
 
 	Any_parent: PARENT_C is
@@ -2153,25 +2165,34 @@ feature {NONE} -- Private access
 		once
 			create Result
 			Result.set_parent_type (Any_type)
+		ensure
+			any_parent_not_void: Result /= Void
 		end
 
 	System_object_type: CL_TYPE_A is
 			-- Default parent type
+		require
+			il_generation: System.il_generation
 		once
 			create Result.make (System.system_object_id)
+		ensure
+			system_object_type_not_void: Result /= Void
 		end
 
 	System_object_parent: PARENT_C is
 			-- Default compiled parent
+		require
+			il_generation: System.il_generation
 		once
 			create Result
 			Result.set_parent_type (System_object_type)
+		ensure
+			system_object_parent_not_void: Result /= Void
 		end
 
 feature
 
-	update_syntactical_relations
-		(old_syntactical_suppliers: like syntactical_suppliers) is
+	update_syntactical_relations (old_syntactical_suppliers: like syntactical_suppliers) is
 			-- Remove syntactical client/supplier relations and take
 			-- care of possible removed classes
 		local
@@ -2769,6 +2790,8 @@ feature -- Supplier checking
 			create array_generics.make (1, 1)
 			array_generics.put (string_type, 1)
 			create Result.make (System.array_id, array_generics)
+		ensure
+			array_of_string_not_void: Result /= Void
 		end
 
 feature -- Order relation for inheritance and topological sort
@@ -2855,7 +2878,7 @@ feature -- Propagation
 					io.error.new_line
 				end
 				workbench.add_class_to_recompile (class_i)
-				class_i.set_changed (true)
+				class_i.set_changed (True)
 				syntactical_clients.forth
 			end
 		end
@@ -2866,36 +2889,48 @@ feature -- Convenience features
 			-- Mark the associated lace class changed.
 		do
 			lace_class.set_changed (b)
+		ensure
+			changed_set: changed = b
 		end
 
 	set_changed2 (b: BOOLEAN) is
 			-- Assign `b' to `changed2'.
 		do
 			changed2 := b
+		ensure
+			changed2_set: changed2 = b
 		end
 
 	set_changed3a (b: BOOLEAN) is
 			-- Assign `b' to `changed3a'.
 		do
 			changed3a := b
+		ensure
+			changed3a_set: changed3a = b
 		end
 
 	set_changed4 (b: BOOLEAN) is
 			-- Assign `b' to `changed4'.
 		do
 			changed4 := b
+		ensure
+			changed4_set: changed4 = b
 		end
 
 	set_has_unique is
 			-- Set `has_unique' to True
 		do
 			has_unique := True
+		ensure
+			has_unique_set: has_unique
 		end
 
 	set_has_expanded is
 			-- Set `has_expanded' to True
 		do
 			has_expanded := True
+		ensure
+			has_expanded_set: has_expanded
 		end
 
 	set_is_in_system (v: BOOLEAN) is
@@ -2905,34 +2940,45 @@ feature -- Convenience features
 		do
 			is_in_system := v
 		ensure
-			is_in_system_set: TRUE
+			is_in_system_set: is_in_system = v
 		end
 
 	set_is_used_as_expanded is
 		do
 			is_used_as_expanded := True
+		ensure
+			is_used_as_expanded_set: is_used_as_expanded
 		end
 
 	set_is_used_as_separate is
 		do
 			is_used_as_separate := True
+		ensure
+			is_used_as_separate_set: is_used_as_separate
 		end
 
 	set_invariant_feature (f: INVARIANT_FEAT_I) is
+			-- Set `invariant_feature' with `f'.
 		do
 			invariant_feature := f
+		ensure
+			invariant_feature_set: invariant_feature = f
 		end
 
 	set_skeleton (s: GENERIC_SKELETON) is
 			-- Assign `s' to `skeleton'.
 		do
 			skeleton := s
+		ensure
+			skeleton_set: skeleton = s
 		end
 
 	set_creators (c: like creators) is
 			-- Assign `c' to `creators'.
 		do
 			creators := c
+		ensure
+			creators_set: creators = c
 		end
 
 	set_visible_table_size (i: INTEGER) is
@@ -2964,6 +3010,8 @@ feature -- Convenience features
 			if not desc.has (c) then
 				desc.extend (c)
 			end
+		ensure
+			inserted: descendants.has (c)
 		end
 
 	visible_name: STRING is
@@ -2992,6 +3040,8 @@ feature -- Convenience features
 			else
 				Result := lace_class.assertion_level
 			end
+		ensure
+			assertion_level_not_void: Result /= Void
 		end
 
 	trace_level: OPTION_I is
@@ -3022,7 +3072,7 @@ feature -- Convenience features
 			-- Visible level
 		do
 			if is_used_as_separate then
-				!VISIBLE_SEPARATE_I! Result
+				create {VISIBLE_SEPARATE_I} Result
 			else
 				Result := lace_class.visible_level
 			end
@@ -3055,6 +3105,8 @@ feature -- Actual class type
 				end
 			end
 			Result.set_is_true_expanded (is_expanded)
+		ensure
+			actual_type_not_void: Result /= Void
 		end
 		
 	insert_changed_feature (feature_name_id: INTEGER) is
@@ -3079,6 +3131,8 @@ end
 			valid_index: generics.valid_index (i)
 		do
 			Result := generics.i_th (i).constraint_type
+		ensure
+			constraint_not_void: Result /= Void
 		end
 
 	update_instantiator1 is
@@ -3202,12 +3256,16 @@ end
 	derivations: DERIVATIONS is
 		once
 			Result := instantiator.derivations
+		ensure
+			derivations_not_void: Result /= Void
 		end
 
 	new_type (data: CL_TYPE_I): CLASS_TYPE is
 			-- New class type for current class
 		do
-			!!Result.make (data)
+			create Result.make (data)
+		ensure
+			new_type_not_void: Result /= Void
 		end
 
 	is_special: BOOLEAN is
@@ -3255,6 +3313,8 @@ feature -- Meta-type
 					Result ?= Result.instantiation_in (gen_type)
 				end
 			end
+		ensure
+			meta_type_not_void: Result /= Void
 		end
 
 feature -- Validity class
@@ -3680,6 +3740,8 @@ feature -- Access
 		do
 			Result := clone (name)
 			Result.to_upper
+		ensure
+			name_in_upper_not_void: Result /= Void
 		end
 
 	ast: CLASS_AS is
@@ -3958,12 +4020,16 @@ feature -- Server Access
 			-- Cluster to which the class belongs to
 		do
 			Result := lace_class.cluster
+		ensure
+			cluster_not_void: Result /= Void
 		end
 
 	file_name: STRING is
 			-- File name of the class
 		do
 			Result := lace_class.file_name
+		ensure
+			file_name_not_void: Result /= Void
 		end
 
 	file_is_readable: BOOLEAN is
@@ -4087,6 +4153,8 @@ feature -- Output
 				Inst_context.set_cluster (old_cluster)
 				Result.append ("]")
 			end
+		ensure
+			class_signature_not_void: Result /= Void
 		end
 
 	append_header (st: STRUCTURED_TEXT) is
@@ -4154,18 +4222,24 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Assign `i' to `topological_id'.
 		do
 			topological_id := i
+		ensure
+			topological_id_set: topological_id = i
 		end
 
 	set_is_deferred (b: BOOLEAN) is
 			-- Assign `b' to `is_deferred'.
 		do
 			is_deferred := b
+		ensure
+			is_deferred_set: is_deferred = b
 		end
 
 	set_is_expanded (b: BOOLEAN) is
 			-- Assign `b' to `is_expanded'.
 		do
 			is_expanded := b
+		ensure
+			is_expanded_set: is_expanded = b
 		end
 
 	set_is_enum (b: BOOLEAN) is
@@ -4182,24 +4256,32 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Assign `b' to `is_separate'.
 		do
 			is_separate := b
+		ensure
+			is_separate_set: is_separate = b
 		end
 
 	set_parents (p: like parents) is
 			-- Assign `p' to `parents'.
 		do
 			parents := p
+		ensure
+			parents_set: parents = p
 		end
 
 	set_suppliers (s: like suppliers) is
 			-- Assign `s' to `suppliers'.
 		do
 			suppliers := s
+		ensure
+			suppliers_set: suppliers = s
 		end
 
 	set_generics (g: like generics) is
 			-- Assign `g' to `generics'.
 		do
 			generics := g
+		ensure
+			generics_set: generics = g
 		end
 
 	set_reverse_engineered (b: BOOLEAN) is
@@ -4214,6 +4296,8 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Set `obsolete_message' to `m'.
 		do
 			obsolete_message := m
+		ensure
+			obsolete_message_set: obsolete_message = m
 		end
 
 	set_generic_features (f: like generic_features) is
@@ -4641,7 +4725,9 @@ feature {NONE} -- Implementation
 			-- Stored value of last generated syntax error generated calling
 			-- routine `parse_ast'
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
+		ensure
+			last_syntax_cell_not_void: Result /= Void
 		end
 
 feature {DEGREE_5} -- Degree 5
@@ -4790,6 +4876,7 @@ feature {DEGREE_3} -- Degree 3
 			finalization_needed := True
 		ensure
 			added: degree_3_needed
+			finalization_needed_set: finalization_needed
 		end
 
 	remove_from_degree_3 is

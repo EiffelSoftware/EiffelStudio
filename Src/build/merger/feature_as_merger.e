@@ -12,7 +12,8 @@ feature
 			o_ras_ebuild, u_ras_ebuild, n_ras_ebuild: ROUTINE_AS_EBUILD
 			feature_names_merger: FEATURE_NAMES_MERGER;
 			body_merger: BODY_MERGER;
-			comment_merger: COMMENT_MERGER
+			comment_merger: COMMENT_MERGER;
+			o_comment: EIFFEL_COMMENTS;
 		do
 			o_fas_ebuild ?= o
 			u_fas_ebuild ?= u
@@ -33,7 +34,7 @@ feature
 					o_body := o.body
 				end
 
-				if u.body.is_body_equiv (n.body) then
+				if u.body = Void or else u.body.is_body_equiv (n.body) then
 					merge_result.set_body (n.body)
 				else
 					!! body_merger
@@ -50,13 +51,17 @@ feature
 			if u_fas_ebuild /= Void and n_fas_ebuild /= Void then
 				u_ras_ebuild ?= u_fas_ebuild.body.content
 				n_ras_ebuild ?= n_fas_ebuild.body.content
-				o_ras_ebuild ?= o_fas_ebuild.body.content
-				if u_ras_ebuild = Void and n_ras_ebuild = Void and then
-					o_ras_ebuild = Void
+				if o_fas_ebuild /= Void then
+					o_ras_ebuild ?= o_fas_ebuild.body.content
+				end
+				if u_ras_ebuild = Void and n_ras_ebuild = Void and then o_ras_ebuild = Void
 				then
 						-- For attribute comment
 					!! comment_merger
-					comment_merger.merge3 (o_fas_ebuild.comment,
+					if o_fas_ebuild /= void then
+						o_comment := o_fas_ebuild.comment
+					end
+					comment_merger.merge3 (o_comment,
 										u_fas_ebuild.comment, 
 										n_fas_ebuild.comment)
 					merge_result.set_comment (comment_merger.merge_result)

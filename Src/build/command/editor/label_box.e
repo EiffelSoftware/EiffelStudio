@@ -40,7 +40,7 @@ feature -- Creation
 			if scrolled_w /= Void then
 				scrolled_w.set_working_area (Current)
 			end
-			set_row_layout
+			set_column_layout
 			set_preferred_count (6)
 		end;
 

@@ -123,9 +123,6 @@ feature -- Basic operations
 			-- bottom right corner of `existing_window'.
 		require
 			windows_not_void: new_window /= Void and existing_window /= Void
-				-- FIXME see 
-			--new_window_hidden: not new_window.is_show_requested
-			existing_window_shown: existing_window.is_show_requested
 		do
 			new_window.set_position (existing_window.x_position + existing_window.width - new_window.width,
 				existing_window.y_position + existing_window.height - new_window.height)

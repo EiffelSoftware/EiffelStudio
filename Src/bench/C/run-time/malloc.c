@@ -2741,7 +2741,7 @@ char *from;
 	} else if (from == (char *) 0)
 		obj_use[flags & EO_TYPE]++;
 
-	if (dtype <= max_dtype && !(flags & EO_SPEC)) {
+	if (dtype <= max_dtype && !(flags & EO_SPEC) && !(flags & EO_EXP)) {
 		int mod;
 		int nbytes = Size(dtype);
 		int size = HEADER(object)->ov_size & B_SIZE;

@@ -28,6 +28,7 @@ cp ./Src/build2/utilities/gb_general_utilities.e ./interface/
 cp ./Src/build2/utilities/gb_widget_utilities.e ./interface/
 cp ./Src/build2/utilities/ordered_string_handler.e ./interface/
 cp ./Src/build2/main/gb_supported_events.e ./interface/
+cp ./Src/Build2/utilities/object_default_state_checker.e ./interface/
 
 # Copy icons for different widget types across.
 cp -r Delivery/build/bitmaps ./

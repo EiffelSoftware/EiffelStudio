@@ -25,7 +25,7 @@ cluster
 
 
 external
-	include_path:		"$(ISE_EIFFEL)/examples/cpp/mystring";
-	object: 		"$(ISE_EIFFEL)/examples/cpp/mystring/mystring.obj";
+	include_path:		"\$(ISE_EIFFEL)/examples/cpp/mystring";
+	object: 		"$(ISE_EIFFEL)/examples/cpp/mystring/mystring.o";
 
 end

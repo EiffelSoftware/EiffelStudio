@@ -18,27 +18,6 @@ inherit
 
 	EV_BAR_ITEM_I
 
-feature {NONE} -- Initialization
-
-	set_default_options is
-			-- Initialize the options of the widget.
-		do
-			set_expand (True)
-			set_vertical_resize (False)
-			set_horizontal_resize (True)
-		end
-
-	set_default_colors is
-			-- Initialize the colors of the widget
-		local
-			color: EV_COLOR
-		do
-			!! color.make_rgb (255, 255, 255)
-			set_background_color (color)
-			!! color.make_rgb (0, 0, 0)
-			set_foreground_color (color)
-		end
-
 feature -- Access
 
 	text: STRING is
@@ -95,6 +74,25 @@ feature -- Status report
 
 feature -- Status setting
 	
+	set_default_options is
+			-- Initialize the options of the widget.
+		do
+			set_expand (True)
+			set_vertical_resize (False)
+			set_horizontal_resize (True)
+		end
+
+	set_default_colors is
+			-- Initialize the colors of the widget
+		local
+			color: EV_COLOR
+		do
+			!! color.make_rgb (255, 255, 255)
+			set_background_color (color)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
+		end
+
 	set_editable (flag: BOOLEAN) is
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.

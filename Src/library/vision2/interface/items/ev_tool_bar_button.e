@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Press button for use with EV_TOOL_BAR"
+		"[
+			Press button for use with EV_TOOL_BAR
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

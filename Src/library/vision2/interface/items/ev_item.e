@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Base class for all items that may be held in EV_ITEM_LISTs."
+		"[
+			Base class for all items that may be held in EV_ITEM_LISTs.
+		]"
 	status: "See notice at end of class."
 	keywords: "item"
 	date: "$Date$"

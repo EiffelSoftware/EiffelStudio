@@ -1,7 +1,9 @@
 indexing
 	description:
-		"Button for use with EV_TOOL_BAR that toggles between states each time%
-		%it is pressed"
+		"[
+			Button for use with EV_TOOL_BAR that toggles between states each time
+			it is pressed.
+		]"
 	status: "See notice at end of class."
 	keywords: "tool, bar, toggle, button"
 	date: "$Date$"

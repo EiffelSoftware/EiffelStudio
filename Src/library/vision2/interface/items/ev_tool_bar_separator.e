@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Scored line separator for use in EV_TOOL_BAR."
+		"[
+			Scored line separator for use in EV_TOOL_BAR.
+		]"
 	status: "See notice at end of class."
 	keywords: "separator, tool, bar, line, devide"
 	date: "$Date$"

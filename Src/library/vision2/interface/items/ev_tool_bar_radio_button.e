@@ -1,8 +1,10 @@
 indexing
 	description:
-		"Toggle button for use with EV_TOOL_BAR.%N%
-		%`is_selected' is mutualy exclusive with respect to other tool bar%
-		%radio buttons between separators in a tool bar."
+		"[
+			Toggle button for use with EV_TOOL_BAR.
+			`is_selected' is mutualy exclusive with respect to other tool bar
+			radio buttons between separators in a tool bar.
+		]"
 	status: "See notice at end of class."
 	keywords: "toggle, button, tool, bar"
 	date: "$Date$"

@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Drop down menu containing EV_MENU_ITEMs"
+		"[
+			Drop down menu containing EV_MENU_ITEMs
+		]"
 	status: "See notice at end of class"
 	keywords: "menu, bar, drop down, popup"
 	date: "$Date$"

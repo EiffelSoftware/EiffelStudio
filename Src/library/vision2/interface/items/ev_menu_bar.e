@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Menu bar containing drop down menus. See EV_MENU."
+		"[
+			Menu bar containing drop down menus. See EV_MENU.
+		]"
 	status: "See notice at end of class"
 	keywords: "menu, bar, item, file, edit, help"
 	date: "$Date$"

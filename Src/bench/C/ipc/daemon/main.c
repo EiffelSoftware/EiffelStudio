@@ -291,7 +291,7 @@ rt_private void set_signal(void)
 #ifdef SIGTERM
 	signal(SIGTERM, handler);
 #endif
-#ifdef BSD
+#ifdef SIGCHLD
 	signal (SIGCHLD, SIG_IGN);
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_IGN);
@@ -370,25 +370,6 @@ rt_private void process_name (char *ewb_path)
 #endif
 		}
 }
-
-#ifndef HAS_STRDUP
-#if defined(EIF_VMS) || defined(__STDC__)
-rt_public char *strdup (const char* s)
-#else
-rt_public char *strdup (char *s)
-#endif
-{
-	char *new;
-	int l = strlen (s) + 1;
-
-	if (new = (char *) malloc (l))
-		strncpy (new, s, l);
-	else
-		return (char *) 0;
-
-	return new;
-}
-#endif	/* HAS_STRDUP */
 
 #ifdef EIF_ASSERTIONS
 rt_shared int ise_printf (char *StrFmt, ...)

@@ -5,7 +5,8 @@ root
 	ROOT_CLASS (ROOT_CLUSTER): "make"
 
 default
-	assertion (require);
+	assertion (require)
+	console_application (yes)
 
 cluster
 

@@ -7,7 +7,7 @@ RM = /bin/rm -f
 CP = /bin/cp
 SHELL = /bin/sh
 FINISH_FREEZING = $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/finish_freezing
-ES4 = $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/ec
+EC = $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/ec
 EIFLIB = EIFGEN/W_code/libtst.a 
 LIBS = -lm
 OBJECT = main.o
@@ -17,7 +17,7 @@ VERSION_NUMBER=45
 all: compile_eiffel compile_c mklink tst 
 
 compile_eiffel:
-	$(ES4) -freeze; 
+	$(EC) -freeze; 
 
 compile_c:
 	cd EIFGEN/W_code; $(CP) $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include/config.sh .; $(SHELL) Makefile.SH; $(MAKE) cecil

@@ -11,7 +11,7 @@ default
 	-- If you have the MT precompiled EiffelBase library, you may 
 	-- the following default assertion: (check the name
 	-- of your MT precompiled library in the specified path first.
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/mt-base");
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base-mt");
 	exception_trace (no)
 
 cluster

@@ -164,8 +164,13 @@ extern "C" void eole2_var_set_currency( EIF_POINTER ptr,
 {
     VARIANT* v = (VARIANT*)ptr;
     v->vt = (VARTYPE)VT_CY;
+#ifdef EIF_BORLAND
+    v->cyVal.s.Lo = lo;
+    v->cyVal.s.Hi = hi;
+#else
     v->cyVal.Lo = lo;
     v->cyVal.Hi = hi;
+#endif /* EIF_BORLAND */
 }
 
 //---------------------------------------------------------------------------
@@ -237,7 +242,11 @@ extern "C" void eole2_var_set_by_reference(
             v->pdblVal = (double*)value_ptr;
         break;
         case VT_BOOL:
+#ifdef EIF_BORLAND
+            v->pbool = (VARIANT_BOOL*)value_ptr;
+#else
             v->pboolVal = (VARIANT_BOOL*)value_ptr;
+#endif /* EIF_BORLAND */
         break;
         case VT_CY:
             v->pcyVal = (CY*)value_ptr;
@@ -313,7 +322,11 @@ extern "C" EIF_BOOLEAN eole2_var_get_boolean( EIF_POINTER ptr )
 {
     VARIANT* v = (VARIANT*)ptr;
     if( v->vt & VT_BYREF )
+#ifdef EIF_BORLAND
+        return (EIF_BOOLEAN) *(v->pbool);
+#else
         return (EIF_BOOLEAN) *(v->pboolVal);
+#endif /* EIF_BORLAND */
 #pragma warning (disable: 4237)
     return (EIF_BOOLEAN)(v->boolVal);
 #pragma warning (default: 4237)
@@ -336,8 +349,16 @@ extern "C" EIF_INTEGER eole2_var_get_currency_lo( EIF_POINTER ptr )
 {
     VARIANT* v = (VARIANT*)ptr;
     if( v->vt & VT_BYREF )
+#ifdef EIF_BORLAND
+        return (EIF_INTEGER)v->pcyVal->s.Lo;
+#else
         return (EIF_INTEGER)v->pcyVal->Lo;
+#endif /* EIF_BORLAND */
+#ifdef EIF_BORLAND
+    return (EIF_INTEGER)v->cyVal.s.Lo;
+#else
     return (EIF_INTEGER)v->cyVal.Lo;
+#endif /* EIF_BORLAND */
 }
 
 //---------------------------------------------------------------------------
@@ -346,8 +367,16 @@ extern "C" EIF_INTEGER eole2_var_get_currency_hi( EIF_POINTER ptr )
 {
     VARIANT* v = (VARIANT*)ptr;
     if( v->vt & VT_BYREF )
+#ifdef EIF_BORLAND
+        return (EIF_INTEGER)v->pcyVal->s.Hi;
+#else
         return (EIF_INTEGER)v->pcyVal->Hi;
+#endif /* EIF_BORLAND */
+#ifdef EIF_BORLAND
+    return (EIF_INTEGER)v->cyVal.s.Hi;
+#else
     return (EIF_INTEGER)v->cyVal.Hi;
+#endif /* EIF_BORLAND */
 }
 
 //---------------------------------------------------------------------------
@@ -431,7 +460,11 @@ extern "C" EIF_POINTER eole2_var_get_by_ref_ptr (EIF_POINTER ptr)
             result = (EIF_POINTER)v->pdblVal;
         break;
         case VT_BOOL:
+#ifdef EIF_BORLAND
+            result = (EIF_POINTER)v->pbool;
+#else
             result = (EIF_POINTER)v->pboolVal;
+#endif /* EIF_BORLAND */
         break;
         case VT_CY:
             result = (EIF_POINTER)v->pcyVal;
@@ -1385,7 +1418,11 @@ extern "C" EIF_POINTER eole2_currency_allocate (void) {
 //
 
 extern "C" void eole2_currency_set_Lo (EIF_POINTER _this, EIF_INTEGER Lo) {
-   ((CURRENCY FAR *)_this)->Lo = (ULONG)Lo;
+#ifdef EIF_BORLAND
+   ((CURRENCY FAR *)_this)->s.Lo = (LONG)Lo;
+#else
+   ((CURRENCY FAR *)_this)->Lo = (LONG)Lo;
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1404,7 +1441,11 @@ extern "C" void eole2_currency_set_Lo (EIF_POINTER _this, EIF_INTEGER Lo) {
 //
 
 extern "C" void eole2_currency_set_Hi (EIF_POINTER _this, EIF_INTEGER Hi) {
+#ifdef EIF_BORLAND
+   ((CURRENCY FAR *)_this)->s.Hi = (LONG)Hi;
+#else
    ((CURRENCY FAR *)_this)->Hi = (LONG)Hi;
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1422,7 +1463,11 @@ extern "C" void eole2_currency_set_Hi (EIF_POINTER _this, EIF_INTEGER Hi) {
 //
 
 extern "C" EIF_INTEGER eole2_currency_get_Lo (EIF_POINTER _this) {
+#ifdef EIF_BORLAND
+   return (EIF_INTEGER)(((CURRENCY FAR *)_this)->s.Lo);
+#else
    return (EIF_INTEGER)(((CURRENCY FAR *)_this)->Lo);
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1440,7 +1485,11 @@ extern "C" EIF_INTEGER eole2_currency_get_Lo (EIF_POINTER _this) {
 //
 
 extern "C" EIF_INTEGER eole2_currency_get_Hi (EIF_POINTER _this) {
+#ifdef EIF_BORLAND
+   return (EIF_INTEGER)(((CURRENCY FAR *)_this)->s.Hi);
+#else
    return (EIF_INTEGER)(((CURRENCY FAR *)_this)->Hi);
+#endif /* EIF_BORLAND */
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////

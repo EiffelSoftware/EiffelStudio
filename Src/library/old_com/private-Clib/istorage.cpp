@@ -1361,7 +1361,11 @@ extern "C" EIF_INTEGER eole2_statstg_get_element_type (EIF_POINTER _this) {
 //
 
 extern "C" EIF_INTEGER eole2_statstg_get_element_size (EIF_POINTER _this) {
+#ifdef EIF_BORLAND
+   return (EIF_INTEGER)(((STATSTG FAR *)_this)->cbSize.u.LowPart);
+#else
    return (EIF_INTEGER)(((STATSTG FAR *)_this)->cbSize.LowPart);
+#endif /* EIF_BORLAND */
 }
 
 /////////////////////////////////////////////////////////////////////////////

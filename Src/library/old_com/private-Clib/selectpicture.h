@@ -12,8 +12,6 @@
 //       None.
 //
 
-#include <OCIDL.h>
-
 struct SelectPicture {
 	HDC hdcOut;
 	OLE_HANDLE hbmpOut;

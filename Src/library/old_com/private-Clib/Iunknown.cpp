@@ -201,43 +201,36 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
 
    if( IsEqualGUID( tmpIID, IID_IUnknown ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IUnknown ) );
-      ((E_IUnknown*)result)->E_IUnknown::E_IUnknown();
+      result = (EIF_POINTER) new E_IUnknown;
    }
 
 /*   else if (IsEqualGUID (tmpIID, IID_IAdviseSink))
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IAdviseSink));
-      ((E_IAdviseSink*)result)->E_IAdviseSink::E_IAdviseSink();
+      result = (EIF_POINTER) new E_IAdviseSink;
    }
    else if( IsEqualGUID( tmpIID, IID_IAdviseSink2 ) )
    {
-      result = calloc( 1, sizeof( E_IAdviseSink2 ) );
-      ((E_IAdviseSink2*)result)->E_IAdviseSink2::E_IAdviseSink2();
+      result = (EIF_POINTER) new E_IAdviseSink2;
    }
 */
    else if( IsEqualGUID( tmpIID, IID_IClassFactory ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IClassFactory ) );
-      ((E_IClassFactory*)result)->E_IClassFactory::E_IClassFactory();
+      result = (EIF_POINTER) new E_IClassFactory;
    }
 /*
    else if( IsEqualGUID( tmpIID, IID_IClassFactory2 ) )
    {
-      result = calloc( 1, sizeof( E_IClassFactory2 ) );
-      ((E_IClassFactory2*)result)->E_IClassFactory2::E_IClassFactory2();
+      result = (EIF_POINTER) new E_IClassFactory2;
    }
 */   
 	else if( IsEqualGUID( tmpIID, IID_IConnectionPointContainer ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IConnectionPointContainer ) );
-      ((E_IConnectionPointContainer*)result)->E_IConnectionPointContainer::E_IConnectionPointContainer();
+      result = (EIF_POINTER) new E_IConnectionPointContainer;
    }
 
    else if( IsEqualGUID( tmpIID, IID_IConnectionPoint ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IConnectionPoint ) );
-      ((E_IConnectionPoint*)result)->E_IConnectionPoint::E_IConnectionPoint();
+      result = (EIF_POINTER) new E_IConnectionPoint;
    }
 
 /*
@@ -259,8 +252,7 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }*/
 
    else if (IsEqualGUID (tmpIID, IID_IDispatch)) {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IDispatch));
-      ((E_IDispatch*)result)->E_IDispatch::E_IDispatch();
+      result = (EIF_POINTER) new E_IDispatch;
    }
 
 /* else if( IsEqualGUID( tmpIID, IID_IDropSource ) )
@@ -304,24 +296,22 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }*/
 /*   else if( IsEqualGUID( tmpIID, IID_IOleClientSite ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IOleClientSite));
-      ((E_IOleClientSite*)result)->E_IOleClientSite::E_IOleClientSite ();
+      result = (EIF_POINTER) new E_IOleClientSite;
    }
+
    else if( IsEqualGUID( tmpIID, IID_IOleContainer ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IOleContainer));
-      ((E_IOleContainer*)result)->E_IOleContainer::E_IOleContainer ();
+      result = (EIF_POINTER) new E_IOleContainer;
    }
+ 
    else if( IsEqualGUID( tmpIID, IID_IOleControl ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IOleControl ) );
-      ((E_IOleControl*)result)->E_IOleControl::E_IOleControl();
+      result = (EIF_POINTER) new E_IOleControl;
    }
 
    else if( IsEqualGUID( tmpIID, IID_IOleControlSite ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IOleControlSite));
-      ((E_IOleControlSite*)result)->E_IOleControlSite::E_IOleControlSite ();
+      result = (EIF_POINTER) new E_IOleControlSite;
    }
 
    else if( IsEqualGUID( tmpIID, IID_IOleInPlaceActiveObject ) )
@@ -330,26 +320,22 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
 
    else if( IsEqualGUID( tmpIID, IID_IOleInPlaceFrame ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IOleInPlaceFrame));
-      ((E_IOleInPlaceFrame*)result)->E_IOleInPlaceFrame::E_IOleInPlaceFrame ();
+      result = (EIF_POINTER) new E_IOleInPlaceFrame;
    }
 
    else if( IsEqualGUID( tmpIID, IID_IOleInPlaceObject ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IOleInPlaceObject ) );
-      ((E_IOleInPlaceObject*)result)->E_IOleInPlaceObject::E_IOleInPlaceObject();
+      result = (EIF_POINTER) new E_IOleInPlaceObject;
    }
 
    else if( IsEqualGUID( tmpIID, IID_IOleInPlaceSite ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IOleInPlaceSite));
-      ((E_IOleInPlaceSite*)result)->E_IOleInPlaceSite::E_IOleInPlaceSite ();
+      result = (EIF_POINTER) new E_IOleInPlaceSite;
    }
+
    else if( IsEqualGUID( tmpIID, IID_IOleInPlaceUIWindow ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IOleInPlaceUIWindow));
-      ((E_IOleInPlaceUIWindow*)result)->E_IOleInPlaceUIWindow::E_IOleInPlaceUIWindow();
-
+      result = (EIF_POINTER)new E_IOleInPlaceUIWindow;
    }
 */
 /* else if( IsEqualGUID( tmpIID, IID_IOleItemContainer ) )
@@ -360,34 +346,29 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }
    else if( IsEqualGUID( tmpIID, IID_IOleObject ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IOleObject ) );
-      ((E_IOleObject*)result)->E_IOleObject::E_IOleObject();
+      result = (EIF_POINTER) new E_IOleObject;
    }
    else if( IsEqualGUID( tmpIID, IID_IOleWindow ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IOleWindow ) );
-      ((E_IOleWindow*)result)->E_IOleWindow::E_IOleWindow();
+      result = (EIF_POINTER) new E_IOleWindow;
    }
    else if( IsEqualGUID( tmpIID, IID_IParseDisplayName ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IParseDisplayName));
-      ((E_IParseDisplayName*)result)->E_IParseDisplayName::E_IParseDisplayName();
+      result = (EIF_POINTER) new E_IParseDisplayName;
    }
    else if( IsEqualGUID( tmpIID, IID_IPerPropertyBrowsing ) )
    {
    }
    else if( IsEqualGUID( tmpIID, IID_IPersist ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IPersist ) );
-      ((E_IPersist*)result)->E_IPersist::E_IPersist();
+      result = (EIF_POINTER) new E_IPersist;
    }
    else if( IsEqualGUID( tmpIID, IID_IPersistFile ) )
    {
    }
    else if( IsEqualGUID( tmpIID, IID_IPersistStorage ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IPersistStorage ) );
-      ((E_IPersistStorage*)result)->E_IPersistStorage::E_IPersistStorage();
+      result = (EIF_POINTER) new E_IPersistStorage;
    }
 */
    else if( IsEqualGUID( tmpIID, IID_IPersistStream ) )
@@ -399,8 +380,7 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
 
 /*   else if( IsEqualGUID( tmpIID, IID_IPropertyNotifySink ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IPropertyNotifySink));
-      ((E_IPropertyNotifySink*)result)->E_IPropertyNotifySink::E_IPropertyNotifySink ();
+      result = (EIF_POINTER) new E_IPropertyNotifySink;
    }
    else if( IsEqualGUID( tmpIID, IID_IPropertyPage ) )
    {
@@ -414,8 +394,7 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
 */
    else if( IsEqualGUID( tmpIID, IID_IProvideClassInfo ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_IProvideClassInfo));
-      ((E_IProvideClassInfo*)result)->E_IProvideClassInfo::E_IProvideClassInfo ();
+      result = (EIF_POINTER) new E_IProvideClassInfo;
    }
 /*   else if( IsEqualGUID( tmpIID, IID_IPSFactory ) )
    {
@@ -437,8 +416,7 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }
    else if( IsEqualGUID( tmpIID, IID_IRunnableObject ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IRunnableObject ) );
-      ((E_IRunnableObject*)result)->E_IRunnableObject::E_IRunnableObject();
+      result = (EIF_POINTER) new E_IRunnableObject;
    }
    else if( IsEqualGUID( tmpIID, IID_IRunningObjectTable ) )
    {
@@ -469,21 +447,18 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }*/
    else if( IsEqualGUID( tmpIID, IID_ITypeLib ) )
    {
-      result = (EIF_POINTER)calloc (1, sizeof (E_ITypeLib));
-      ((E_ITypeLib*)result)->E_ITypeLib::E_ITypeLib ();
+      result = (EIF_POINTER) new E_ITypeLib;
    }
 /* else if( IsEqualGUID( tmpIID, IID_IUnknown ) )
    {
    }
    else if( IsEqualGUID( tmpIID, IID_IViewObject ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IViewObject ) );
-      ((E_IViewObject*)result)->E_IViewObject::E_IViewObject();
+      result = (EIF_POINTER) new E_IViewObject;
    }
    else if( IsEqualGUID( tmpIID, IID_IViewObject2 ) )
    {
-      result = (EIF_POINTER)calloc( 1, sizeof( E_IViewObject2 ) );
-      ((E_IViewObject2*)result)->E_IViewObject2::E_IViewObject2();
+      result = (EIF_POINTER) new E_IViewObject2;
    }
 */
    else if( IsEqualGUID( tmpIID, IID_IEnumFORMATETC ) )
@@ -508,34 +483,28 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }
    else if( IsEqualGUID( tmpIID, IID_IEnumUnknown ) )
    {
-  	  result = (EIF_POINTER)calloc(1, sizeof ( E_IEnumUnknown ) );
-      ((E_IEnumUnknown*)result)->E_IEnumUnknown::E_IEnumUnknown();
+  	  result = (EIF_POINTER) new E_IEnumUnknown;
    }
    else if( IsEqualGUID( tmpIID, IID_IEnumConnectionPoints ) )
    {
-  	  result = (EIF_POINTER)calloc(1, sizeof ( E_IEnumConnectionPoints ) );
-      ((E_IEnumConnectionPoints*)result)->E_IEnumConnectionPoints::E_IEnumConnectionPoints();
+  	  result = (EIF_POINTER) new E_IEnumConnectionPoints;
    }
    else if( IsEqualGUID( tmpIID, IID_IEnumConnections ) )
    {
-  	  result = (EIF_POINTER)calloc(1, sizeof ( E_IEnumConnections ) );
-      ((E_IEnumConnections*)result)->E_IEnumConnections::E_IEnumConnections();
+  	  result = (EIF_POINTER) new E_IEnumConnections;
    }
    else if( IsEqualGUID( tmpIID, IID_IFont ) )
    {
-  	  result = (EIF_POINTER)calloc(1, sizeof ( E_IFont ) );
-      ((E_IFont*)result)->E_IFont::E_IFont();
+  	  result = (EIF_POINTER) new E_IFont;
    }
 /*   else if( IsEqualGUID( tmpIID, IID_IFontDisp ) )
    {
- 	  result = (EIF_POINTER)calloc(1, sizeof ( E_IFontDisp ) );
-      ((E_IFontDisp*)result)->E_IFontDisp::E_IFontDisp();
+ 	  result = (EIF_POINTER) new E_IFontDisp;
    }
 */
    else if( IsEqualGUID( tmpIID, IID_IPicture ) )
    {
- 	  result = (EIF_POINTER)calloc(1, sizeof ( E_IPicture ) );
-      ((E_IPicture*)result)->E_IPicture::E_IPicture();
+ 	  result = (EIF_POINTER) new E_IPicture;
    }
    else
    {
@@ -549,7 +518,6 @@ extern "C" EIF_POINTER eole2_create_interface_pointer( EIF_OBJ eiffelObject,
    }
    return (EIF_POINTER)result;
 }
-
 
 //---------------------------------------------------------------------------
 

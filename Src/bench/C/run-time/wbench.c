@@ -459,7 +459,7 @@ rt_public int wtype_gen(int static_type, int32 feature_id, char *object)
 {
 	/* Type of a generic feature of routine id `rout_id' in the class of
 	 * dynamic type of `object'. Replaces formal generics by actual gen.
-	 * of `objectï. Returns an integer.
+	 * of `object'. Returns an integer.
 	 */ 
 
 	int32   rout_id;
@@ -480,7 +480,7 @@ rt_public int wptype_gen(int static_type, int32 origin, int32 offset, char *obje
 {
 	/* Type of a generic feature of routine identified by `offset' in 
 	 * its origin class `origin' and to be applied on `object'. Replaces
-	 * formal generics by actual gen. of `objectï. Returns an integer.
+	 * formal generics by actual gen. of `object'. Returns an integer.
 	 */ 
 
 	struct desc_info    *desc;

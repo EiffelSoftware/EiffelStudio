@@ -53,6 +53,8 @@ feature -- Comparison
 	disjoint (other: like Current): BOOLEAN is
 			-- Do current set and `other' have no
 			-- items in common?
+		local
+			other_item: like item
 		do
 			from
 				start;
@@ -61,17 +63,16 @@ feature -- Comparison
 			until
 				after or other.after or not Result
 			loop
-				if item < other.item then
-					search_after (other.item);
+				other_item := other.item;
+				if item < other_item then
+					search_after (other_item);
 				end;
-				if
-					not after
-					and then other.item.is_equal (item)
-				then
-					Result := false
-				else
-					forth;
-					other.forth
+				if not after then
+					if other_item.is_equal (item) then
+						Result := false
+					else
+						other.forth
+					end
 				end
 			end;	
 		end;
@@ -114,7 +115,8 @@ feature -- Element change
 	merge (other: like Current) is
 			-- Add all items of `other'.
 		local
-			mode: BOOLEAN
+			mode: BOOLEAN;
+			other_item: like item;
 		do
 			from
 				mode := object_comparison
@@ -123,23 +125,24 @@ feature -- Element change
 			until
 				after or other.after
 			loop
-				if item < other.item then
-					search_after (other.item)
+				other_item := other.item;
+				if item < other_item then
+					search_after (other_item)
 				end;
 				if not after then
 					if
-						(not mode and then item = other.item) 
+						(not mode and then item = other_item) 
 					or else
-						(mode and then item.is_equal (other.item))
+						(mode and then item.is_equal (other_item))
 					then
 						forth;
-					other.forth
+						other.forth
 					else
 						from
 						until
-							other.after or else other.item >= item
+							other.after or else other_item >= item
 						loop
-							put_left (other.item);
+							put_left (other_item);
 							other.forth
 						end
 					end
@@ -232,6 +235,8 @@ feature -- Basic operations
 
 	subtract (other: like Current) is
 			-- Remove all items also in `other'.
+		local
+			other_item: like item
 		do
 			from
 				start;
@@ -239,12 +244,13 @@ feature -- Basic operations
 			until
 				after or other.after	
 			loop
-				if item < other.item then
-					search_after (other.item)
+				other_item := other.item;
+				if item < other_item then
+					search_after (other_item)
 				end;
 				if
 					not after
-					and then other.item.is_equal (item)
+					and then other_item.is_equal (item)
 				then
 					remove
 				else
@@ -257,6 +263,8 @@ feature -- Basic operations
 	symdif (other: like Current) is
 			-- Remove all items also in `other', and add all items
 			-- of `other' not already present.
+		local
+			other_item: like item
 		do
 			from
 				start;
@@ -264,10 +272,11 @@ feature -- Basic operations
 			until
 				after or other.after
 			loop
-				if item < other.item then
+				other_item := other.item;
+				if item < other_item then
 					forth
-				elseif item > other.item then
-					put_left (other.item);
+				elseif item > other_item then
+					put_left (other_item);
 					other.forth
 				else
 					remove;

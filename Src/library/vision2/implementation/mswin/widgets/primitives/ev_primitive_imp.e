@@ -103,7 +103,9 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control needs to process this kind of keys.
 		do
-			if virtual_key = Vk_tab and then flag_set (style, Ws_tabstop) then
+			if virtual_key = Wel_vk_constants.Vk_tab and then 
+				flag_set (style, Wel_ws_constants.Ws_tabstop)
+			then
 				if key_down (Vk_shift) then
 					tab_action (False)
 				else
@@ -179,6 +181,9 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/29 03:35:36  pichery
+--| Remove Constants from Inheritance
+--|
 --| Revision 1.26  2000/04/26 22:11:49  rogers
 --| Removed par_imp.add_child (Current) from set_parent as redundent now.
 --|

@@ -1,65 +1,227 @@
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+
 case $CONFIG in
 '')
-    if test -f config.sh; then TOP=.;
-    elif test -f ../config.sh; then TOP=..;
-    elif test -f ../../config.sh; then TOP=../..;
-    elif test -f ../../../config.sh; then TOP=../../..;
-    elif test -f ../../../../config.sh; then TOP=../../../..;
-    else
-        echo "Can't find config.sh."; exit 1
-    fi
-    . $TOP/config.sh
-    ;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-CURRENT=.
+CURRENT=bench
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
-$spitshell >Makefile <<!GROK!THIS!
 
-AR = $ar rc
+DATE=`date`
+
+$spitshell >Makefile <<!GROK!THIS!
+########################################################################
+# Makefile generated from Makefile.SH on $DATE
+
+SHELL = /bin/sh
+JMAKE = jmake
+TOP = ..
+CURRENT = $CURRENT
+DIR = $DIR
+
+########################################################################
+# Parameters set by Configure -- edit config.sh if changes are needed
+
+AR = ar rc
 CC = $cc
-INCLUDE_PATH = -I. -I../run-time -I../run-time/include -I../minilzo -I../idrs
-CFLAGS = \$(INCLUDE_PATH)
+CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
-RM = $rm -f
+JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
+LIBS = $libs
+LINT = lint
+MAKE = make
+MKDEP = $mkdep \$(DPFLAGS) --
+MV = $mv
 RANLIB = $ranlib
+RM = $rm -f
+SED = $sed
+
+########################################################################
+# Automatically generated parameters -- do not edit
+
+USRINC = $usrinc
+SOURCES =  \$(LSRC) \$(PSTORE) \$(LSRC) \$(PSTORE) bytedump.c meltdump.c
+OBJECTS =  \$(FOBJ) \$(WOBJ) bytedump.o meltdump.o
+
+########################################################################
+# New suffixes and associated building rules -- edit with care
+
+.c.o:
+	\$(RM) \$@
+	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
+########################################################################
+# Jmake rules for building libraries, programs, scripts, and data files
+# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+########################################################################
+# Force 'make depend' to be performed first -- do not edit
 
-OBJECTS = pstore.o pretrieve.o date.o encode.o offset.o byte.o
-WOBJECTS = wpstore.o pretrieve.o date.o encode.o offset.o byte.o
+.FORCE_DEPEND::
 
-.c.o:
-	$(RM) $@
-	$(CC) -c $(JCFLAGS) $<
+all:: .FORCE_DEPEND
 
-all:: libcompiler.a libwcompiler.a bytedump meltdump
+########################################################################
+# Start of Jmakefile
 
-libcompiler.a: $(OBJECTS)
-	$(RM) $@
-	$(AR) $@ $(OBJECTS)
-	$(RANLIB) $@
+# Files used to build the daemon
+LSRC = byte.c date.c encode.c offset.c pretrieve.c minilzo.c
+PSTORE = pstore.c
+WPSTORE_OBJ = wpstore.o
 
-libwcompiler.a: $(WOBJECTS)
-	$(RM) $@
-	$(AR) $@ $(WOBJECTS)
-	$(RANLIB) $@
+# Derived object file names
+OBJ = \
+	   byte.o \
+	   date.o \
+	   encode.o \
+	   offset.o \
+	   pretrieve.o \
+	   minilzo.o 
+
+FOBJ = \
+	       $(OBJ) \
+	   pstore.o 
+
+WOBJ = \
+	       $(OBJ) \
+	       wpstore.o 
 
 wpstore.o: pstore.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+
+# Where shared archive is located (path and name)
+LIBRUN = ../run-time
+
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBRUN)/include -I$(TOP)/idrs
+CFLAGS = $(DPFLAGS)
+
+all:: libcompiler.a
+
+local_realclean::
+	$(RM) libcompiler.a
+
+libcompiler.a: $(FOBJ)
 	$(RM) $@
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o wpstore.o
+	$(AR) $@ $(FOBJ)
+	$(RANLIB) $@
 
-clean::
-	\$(RM) *.o 
-	\$(RM) bytedump meltdump
+all:: libwcompiler.a
 
-clobber:: clean
-	\$(RM) Makefile *.o
-	
+local_realclean::
+	$(RM) libwcompiler.a
+
+libwcompiler.a: $(WOBJ)
+	$(RM) $@
+	$(AR) $@ $(WOBJ)
+	$(RANLIB) $@
+
+all:: bytedump
+
+local_realclean::
+	$(RM) bytedump
+
+bytedump: bytedump.o
+	$(RM) $@
+	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
+	$(CC) -o $@ bytedump.o $(JLDFLAGS) $(LIBS)
+
+all:: meltdump
+
+local_realclean::
+	$(RM) meltdump
+
+meltdump: meltdump.o
+	$(RM) $@
+	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
+	$(CC) -o $@ meltdump.o $(JLDFLAGS) $(LIBS)
+
+depend:: ../mkdep
+
+../mkdep:
+	@echo "You have to run Configure in $(TOP) first."; exit 1
+
+depend::
+	($(SED) '/^# DO NOT DELETE/q' Makefile && \
+	$(MKDEP) $(SOURCES) | \
+	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
+	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
+	) > Makefile.new
+	cp Makefile Makefile.bak
+	cp Makefile.new Makefile
+	$(RM) Makefile.new
+
+lint:
+	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
+
+########################################################################
+# Common rules for all Makefiles -- do not edit
+
+emptyrule::
+
+clean: local_clean
+realclean: local_realclean
+clobber: local_clobber
+
+local_clean::
+	$(RM) core *~ *.o
+
+local_realclean:: local_clean
+
+local_clobber:: local_realclean
+	$(RM) Makefile config.sh
+
+Makefile.SH: Jmakefile
+	-@if test -f $(TOP)/.package; then \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	else touch $@; exit 0; fi
+
+Makefile: Makefile.SH
+	/bin/sh Makefile.SH
+
+tags::
+	$(CTAGS) -w *.[ch]
+	$(CTAGS) -xw *.[ch] > tags
+
+local_clobber::
+	$(RM) tags
+
+########################################################################
+# Empty rules for directories with no sub-directories -- do not edit
+
+install::
+	       @echo "install in $(CURRENT) done."
+
+deinstall::
+	       @echo "deinstall in $(CURRENT) done."
+
+install.man::
+	       @echo "install.man in $(CURRENT) done."
+
+deinstall.man::
+	       @echo "deinstall.man in $(CURRENT) done."
+
 Makefiles::
 
 Makefiles.SH::

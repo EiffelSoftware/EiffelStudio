@@ -11,9 +11,6 @@
 /* output to the file 'logfile'. Simple facility.                   */
 /*------------------------------------------------------------------*/
 
-/*
-#define GEN_CONF_DEBUG
-*/
 #ifdef GEN_CONF_DEBUG
 rt_public void log_puts (char *);
 rt_public void log_puti (int);
@@ -627,6 +624,141 @@ rt_public char eif_gen_is_uniform (char *obj, char code)
 	}
 
 	return EIF_TRUE;
+}
+/*------------------------------------------------------------------*/
+/* Typecode string for target/argument types of a ROUTINE object.   */
+/* ONLY for ROUTINE!                                                */
+/*------------------------------------------------------------------*/
+
+rt_public char *eif_gen_typecode_str (char *obj)
+{
+	int16 dftype, gtype;
+	int pos;
+	EIF_GEN_DER *gdp;
+	EIF_ANC_ID_MAP *amap;
+	char tstr [256];
+	char *strp;
+
+	if (obj == (char *)0)
+		eif_panic ("Invalid object");
+
+	dftype = Dftype(obj);
+
+	/* Check for expanded */
+
+	if (dftype <= -256)
+		dftype = -256-dftype;
+
+	if ((dftype < 0) || (dftype >= next_gen_id))
+		eif_panic ("Invalid type");
+
+	gdp = eif_derivations [dftype];
+
+	if (gdp == (EIF_GEN_DER *)0)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->is_bit)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->size < 2)
+		eif_panic ("Not a routine object.");
+
+	gtype = gdp->typearr [0];
+
+	if (gtype <= -256)
+		gtype = -256-gtype;
+
+	strp = tstr;
+
+	switch (gtype)
+	{
+		case -2: *strp = 'c';
+				 break;
+		case -3: *strp = 'b';
+				 break;
+		case -4: *strp = 'i';
+				 break;
+		case -5: *strp = 'f';
+				 break;
+		case -6: *strp = 'd';
+				 break;
+		case -8: *strp = 'p';
+				 break;
+		default: *strp = 'r';
+				 break;
+	}
+
+	/* Now treat the arguments */
+
+	dftype = gdp->typearr [1];
+
+	/* Check for expanded */
+
+	if (dftype <= -256)
+		dftype = -256-dftype;
+
+	if ((dftype < 0) || (dftype >= next_gen_id))
+		eif_panic ("Invalid type");
+
+	if (tuple_static_type >= 0)
+	{
+		amap = eif_anc_id_map [dftype];
+
+		if (amap == (EIF_ANC_ID_MAP *) 0)
+		{
+			eif_compute_anc_id_map (dftype, 1, 0);
+			amap = eif_anc_id_map [dftype];
+		}
+
+		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+	}
+	else
+	{
+		gdp = eif_derivations [dftype];
+	}
+
+	if (gdp == (EIF_GEN_DER *)0)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->is_bit)
+		eif_panic ("Not a generic type.");
+
+	++strp;
+
+	for (pos = 0; pos < gdp->size; ++pos, ++strp)
+	{
+		gtype = gdp->typearr [pos];
+
+		if (gtype <= -256)
+			gtype = -256-gtype;
+
+		switch (gtype)
+		{
+			case -2: *strp = 'c';
+					 break;
+			case -3: *strp = 'b';
+					 break;
+			case -4: *strp = 'i';
+					 break;
+			case -5: *strp = 'f';
+					 break;
+			case -6: *strp = 'd';
+					 break;
+			case -8: *strp = 'p';
+					 break;
+			default: *strp = 'r';
+					 break;
+		}
+	}
+
+	*strp = '\0';
+
+	strp = cmalloc (strlen (tstr) + 1);
+
+	if (strp == (char *) 0)
+		enomem();
+
+	return makestr(strp, strlen(strp));
 }
 /*------------------------------------------------------------------*/
 /* Type of generic parameter in `obj' at position `pos'.            */
@@ -1957,6 +2089,9 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 
 	i = (int16) gdp->size;
 
+	if (gdp->is_expanded)
+		strcat (result, "expanded ");
+
 	strcat (result, parent_of(gdp->base_id)->class_name);
 
 	if (i > 0)
@@ -2038,6 +2173,9 @@ rt_private int eif_typename_len (int16 dftype)
 	i = (int16) gdp->size;
 
 	len = strlen (parent_of(gdp->base_id)->class_name);
+
+	if (gdp->is_expanded)
+		len += 9;
 
 	if (i == 0)         /* TUPLE without generics */
 		return len;

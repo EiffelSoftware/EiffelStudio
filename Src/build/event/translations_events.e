@@ -41,7 +41,7 @@ feature
 				list_extend (Shared_translation_list.item);
 				Shared_translation_list.forth;
 			end;
-			parent.unmanage;
+			--parent.parent.unmanage;
 			check_number_of_icons;
 			if not empty then
 				go_i_th (1);
@@ -74,7 +74,7 @@ feature
 					icons.forth
 				end;
 			end;
-			parent.manage;
+			--parent.parent.manage;
 		end;
 
 	

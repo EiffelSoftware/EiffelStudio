@@ -1,0 +1,69 @@
+system
+	test
+
+root
+	OBJECT_TOOL_TESTER: start
+
+default
+	assertion(require)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("dlg_dispatcher")
+	disabled_debug("gdi_count")
+	disabled_debug("vision2_windows")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("wel")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("win_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(yes)
+	trace(no)
+	il_verifiable(yes)
+	msil_generation_type("exe")
+	check_vape(no)
+	console_application(no)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(no)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+
+cluster
+	all test:		"D:\work\object_editor"
+		exclude
+			"eifgen"; "notes"; 
+		end
+
+	dev:		"D:\work\library"
+
+	all wel (dev):		"$\wel"
+
+	all vision2 (dev):		"$\vision2"
+		exclude
+			new_figures; gtk; components; obsolete; release; 
+		end
+
+	all base:		"d:\work\library\base"
+		exclude
+			"table_eiffel3"; 
+		default
+			assertion(no)
+		end
+
+external
+
+	include_path:
+		"d:\work\library\wel\spec\windows\include",
+		"d:\work\library\vision2\spec\include"
+
+	object:
+		"d:\work\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"d:\work\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

@@ -52,54 +52,65 @@ feature -- Execution
 			prev_cluster: CLUSTER_I
 		do
 			if not rescued then
-				prev_class := System.current_class;
-				prev_cluster := Inst_context.cluster;
-				output_window.clear_window;
-				if workbench.successfull then
-					Create_case_storage_directory;
-					!! d.make (Case_storage_path);
-					if not d.exists or else not d.is_readable then
-						output_window.put_string ("Directory ");
-						output_window.put_string (case_storage_path);
-						output_window.new_line;
-						output_window.put_string ("is not readable. Please check permission.")
-						output_window.new_line;
-					else
-						!! fn.make_from_string (Case_storage_path);
-						fn.set_file_name (System_name);	
-						!! f.make (fn);
-						if not f.exists or else need_to_reverse_engineer then;
-							reset_format_booleans;
-							set_order_same_as_text;
-							initialize_view_ids;
-							process_clusters;
-							Reverse_engineering_window.put_start_reverse_engineering
-								(System.nb_of_classes);
-							convert_to_case_format;
-							remove_old_classes;
-							clear_shared_case_information;
-							output_window.put_string ("Finished storing EiffelCase project.");
-						else
-							output_window.put_string ("EiffelCase project is up to date.");
-						end;
-						output_window.new_line;
-					end;
+				if not Workbench.system_defined then
+					output_window.put_string ("Project not been compiled.");
+					output_window.new_line;
+					output_window.put_string ("The project must be compiled ");
+					output_window.put_string ("before it can be reversed engineered ");
+					output_window.new_line;
 					output_window.display
 				else
-					output_window.put_string ("Project is in an unstable state.");
-					output_window.new_line;
-					output_window.put_string ("Make sure that the system has been");
-					output_window.new_line;
-					output_window.put_string ("successfully compiled.");
-					output_window.new_line;
-					output_window.display
-				end;
+					prev_class := System.current_class;
+					prev_cluster := Inst_context.cluster;
+					output_window.clear_window;
+					if workbench.successfull then
+						Create_case_storage_directory;
+						!! d.make (Case_storage_path);
+						if not d.exists or else not d.is_readable then
+							output_window.put_string ("Directory ");
+							output_window.put_string (case_storage_path);
+							output_window.new_line;
+							output_window.put_string ("is not readable. Please check permission.")
+							output_window.new_line;
+						else
+							!! fn.make_from_string (Case_storage_path);
+							fn.set_file_name (System_name);	
+							!! f.make (fn);
+							if not f.exists or else need_to_reverse_engineer then;
+								reset_format_booleans;
+								set_order_same_as_text;
+								initialize_view_ids;
+								process_clusters;
+								Reverse_engineering_window.put_start_reverse_engineering
+									(System.nb_of_classes);
+								convert_to_case_format;
+								remove_old_classes;
+								clear_shared_case_information;
+								output_window.put_string ("Finished storing EiffelCase project.");
+							else
+								output_window.put_string ("EiffelCase project is up to date.");
+							end;
+							output_window.new_line;
+						end;
+						output_window.display
+					else
+						output_window.put_string ("Project is in an unstable state.");
+						output_window.new_line;
+						output_window.put_string ("Make sure that the system has been");
+						output_window.new_line;
+						output_window.put_string ("successfully compiled.");
+						output_window.new_line;
+						output_window.display
+					end;
+				end
 			else
 				rescued := False;
 				output_window.display
 			end;
-			System.set_current_class (prev_class);
-			Inst_context.set_cluster (prev_cluster);
+			if Workbench.system_defined then	
+				System.set_current_class (prev_class);
+				Inst_context.set_cluster (prev_cluster);
+			end
 		rescue
 			Case_file_server.remove_tmp_files;
 			clear_shared_case_information;

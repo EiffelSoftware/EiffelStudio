@@ -81,7 +81,6 @@ feature -- Access
 			Result := c_field_offset (i - 1, $object)
 		end;
 
-
 	field_type (i: INTEGER; object: ANY): INTEGER is
 			-- Type of `i'-th field of `object'
 		require
@@ -276,7 +275,6 @@ feature -- Measurement
 			positive_result: Result > 0
 		end;
 
-
 	physical_size (object: ANY): INTEGER is
 			-- Space occupied by `object' in bytes
 		require
@@ -399,7 +397,6 @@ feature {NONE} -- Implementation
 			"ei_count_field"
 		end;
 
-
 	c_bit_size (i: INTEGER; object: POINTER): INTEGER is
 			-- Size (in bit) of the `i'-th bit field of `object'
 		external
@@ -407,7 +404,6 @@ feature {NONE} -- Implementation
 		alias
 			"ei_bit_size"
 		end;
-
 
 	c_size (object: POINTER): INTEGER is
 			-- Physical size of `object'
@@ -465,7 +461,6 @@ feature {NONE} -- Implementation
 		alias
 			"ei_set_pointer_field"
 		end;
-
 
 end -- class INTERNAL
 

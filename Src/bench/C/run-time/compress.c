@@ -90,7 +90,9 @@ clearness. In this example there are six padding bits.
 /*#define DEBUG_CMPS*/
 
 #include <stdio.h>
+#ifndef VXWORKS
 #include <memory.h>
+#endif
 #ifdef DEBUG_CMPS
 #include "eif_confmagic.h"
 #include <assert.h>

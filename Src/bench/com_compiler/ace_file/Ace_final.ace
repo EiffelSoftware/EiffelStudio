@@ -114,13 +114,9 @@ cluster
         end
       cluster_prop_enumerator
         end
-      cluster_excludes_enumerator
+      eiffel_string_enumerator
         end
       assembly_enumerator
-        end
-      include_paths_enumerator
-        end
-      object_files_enumerator
         end
       system_externals
         end

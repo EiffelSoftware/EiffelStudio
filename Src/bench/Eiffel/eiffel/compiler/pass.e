@@ -33,22 +33,24 @@ feature
 		local
 			pass_c: PASS_C;
 			deg_output: DEGREE_OUTPUT
+			local_changed_classes: LINKED_LIST [PASS_C]
 		do
 			from
+				local_changed_classes := changed_classes
 				deg_output := Degree_output;
-				deg_output.put_start_degree (Degree_number, changed_classes.count);
+				deg_output.put_start_degree (Degree_number, local_changed_classes.count);
 			until
-				changed_classes.empty
+				local_changed_classes.empty
 			loop
-				pass_c := changed_classes.first;
+				pass_c := local_changed_classes.first;
 				System.set_current_class (pass_c.associated_class);
 
-				pass_c.execute (deg_output, changed_classes.count);
+				pass_c.execute (deg_output, local_changed_classes.count);
 
-				changed_classes.start;
-				changed_classes.search (pass_c);
-				if not changed_classes.after then
-					changed_classes.remove;
+				local_changed_classes.start;
+				local_changed_classes.search (pass_c);
+				if not local_changed_classes.after then
+					local_changed_classes.remove;
 				end;
 
 			end;
@@ -67,28 +69,31 @@ feature
 			pass_c: PASS_C;
 			position: INTEGER;
 			old_cursor: CURSOR
+			local_changed_classes: LINKED_LIST [PASS_C]
 		do
 			from
-				old_cursor := changed_classes.cursor;
-				changed_classes.start
+				local_changed_classes := changed_classes
+				old_cursor := local_changed_classes.cursor;
+				local_changed_classes.start
 			until
-				changed_classes.after or else found
+				local_changed_classes.after or else found
 			loop
-				pass_c := changed_classes.item;
+				pass_c := local_changed_classes.item;
 				if pass_c.associated_class = a_class then
 					found := True;
 					Result := pass_c;
 				end;
-				changed_classes.forth
+				local_changed_classes.forth
 			end;
+
 			if not found then
 				Result := new_controler (a_class);
 				check
-					changed_classes.after
+					local_changed_classes.after
 				end;
-				changed_classes.put_left (Result);
+				local_changed_classes.put_left (Result);
 			end;
-			changed_classes.go_to (old_cursor);
+			local_changed_classes.go_to (old_cursor);
 		end;
 
 	new_controler (a_class: CLASS_C): PASS_C is
@@ -116,18 +121,20 @@ feature
 		local
 			found: BOOLEAN;
 			pass_c: PASS_C;
+			local_changed_classes: LINKED_LIST [PASS_C]
 		do
 			from
-				changed_classes.start
+				local_changed_classes := changed_classes
+				local_changed_classes.start
 			until
-				changed_classes.after or else found
+				local_changed_classes.after or else found
 			loop
-				pass_c := changed_classes.item;
+				pass_c := local_changed_classes.item;
 				if pass_c.associated_class = a_class then
 					found := True;
-					changed_classes.remove;
+					local_changed_classes.remove;
 				else
-					changed_classes.forth
+					local_changed_classes.forth
 				end;
 			end;
 		end;

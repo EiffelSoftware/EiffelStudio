@@ -23,16 +23,18 @@ feature
 			found: BOOLEAN;
 			after: BOOLEAN;
 			pass_c: COMP_PASS_C;
-			position: INTEGER;
 			current_class: CLASS_C;
+			old_cursor: CURSOR
+			local_changed_classes: PART_SORTED_TWO_WAY_LIST [COMP_PASS_C]
 		do
 			from
-				position := changed_classes.index;
-				changed_classes.start
+				local_changed_classes := changed_classes
+				old_cursor := local_changed_classes.cursor;
+				local_changed_classes.start
 			until
-				after or else changed_classes.after or else found
+				found or else after or else local_changed_classes.after
 			loop
-				pass_c := changed_classes.item;
+				pass_c := local_changed_classes.item;
 				current_class := pass_c.associated_class;
 				if current_class = a_class then
 					found := True;
@@ -40,13 +42,13 @@ feature
 				elseif a_class < current_class then
 					after := True;
 				end;
-				changed_classes.forth
+				local_changed_classes.forth
 			end;
 			if not found then
 				Result := new_controler (a_class);
-				changed_classes.extend (Result);
+				local_changed_classes.extend (Result);
 			end;
-			changed_classes.go_i_th (position);
+			local_changed_classes.go_to (old_cursor);
 		ensure then
 			changed_classes.sorted
 		end;

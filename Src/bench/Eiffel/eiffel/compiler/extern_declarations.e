@@ -127,6 +127,10 @@ feature
 			file_name_exists: file_name /= Void;
 		local
 			f: INDENT_FILE;
+			local_routines: EXTEND_TABLE [TYPE_C, STRING]
+			local_routine_tables: SEARCH_TABLE [STRING]
+			local_attribute_tables: SEARCH_TABLE [STRING]
+			local_type_tables: SEARCH_TABLE [STRING]
 		do
 			!!f.make (file_name);
 			f.open_append;
@@ -134,49 +138,54 @@ feature
 				-- generate the include files required by externals
 			generate_header_files (f);
 
+
 			from
-				routines.start
+				local_routines := routines
+				local_routines.start
 			until
-				routines.after
+				local_routines.after
 			loop
 				f.putstring ("extern ");
-				routines.item_for_iteration.generate (f);
-				f.putstring (routines.key_for_iteration);
+				local_routines.item_for_iteration.generate (f);
+				f.putstring (local_routines.key_for_iteration);
 				f.putstring ("();%N");
-				routines.forth;
+				local_routines.forth;
 			end;
 
 			from
-				routine_tables.start
+				local_routine_tables := routine_tables
+				local_routine_tables.start
 			until
-				routine_tables.after
+				local_routine_tables.after
 			loop
 				f.putstring ("extern fnptr ");
-				f.putstring (routine_tables.item_for_iteration);
+				f.putstring (local_routine_tables.item_for_iteration);
 				f.putstring ("[];%N");
-				routine_tables.forth;
+				local_routine_tables.forth;
 			end;
 
 			from
-				attribute_tables.start
+				local_attribute_tables := attribute_tables
+				local_attribute_tables.start
 			until
-				attribute_tables.after
+				local_attribute_tables.after
 			loop
 				f.putstring ("extern long ");
-				f.putstring (attribute_tables.item_for_iteration);
+				f.putstring (local_attribute_tables.item_for_iteration);
 				f.putstring ("[];%N");
-				attribute_tables.forth;
+				local_attribute_tables.forth;
 			end;
 
 			from
-				type_tables.start
+				local_type_tables := type_tables
+				local_type_tables.start
 			until
-				type_tables.after
+				local_type_tables.after
 			loop
 				f.putstring ("extern int16 ");
-				f.putstring (type_tables.item_for_iteration);
+				f.putstring (local_type_tables.item_for_iteration);
 				f.putstring ("[];%N");
-				type_tables.forth;
+				local_type_tables.forth;
 			end;
 
 			f.close;

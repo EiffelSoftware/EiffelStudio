@@ -34,10 +34,9 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_pen (a_style, a_width, a_color.item)
 		ensure
-			exists: exists
-			style_set: style = a_style
-			width_set: width = a_width
-			color_set: color.item = a_color.item
+			style_set: exists implies style = a_style
+			width_set: exists implies width = a_width
+			color_set: exists implies color.is_equal (a_color)
 		end
 
 	make_solid (a_width: INTEGER; a_color: WEL_COLOR_REF) is
@@ -47,6 +46,10 @@ feature {NONE} -- Initialization
 			a_color_not_void: a_color /= Void
 		do
 			item := cwin_create_pen (Ps_solid, a_width, a_color.item)
+		ensure
+			style_set: exists implies style = Ps_solid
+			width_set: exists implies width = a_width
+			color_set: exists implies color.is_equal (a_color)
 		end
 
 	make_indirect (a_log_pen: WEL_LOG_PEN) is
@@ -90,7 +93,7 @@ feature -- Access
 		end
 
 	log_pen: WEL_LOG_PEN is
-			-- Create a log pen structure for `Current'
+			-- Log pen structure associated to `Current'
 		require
 			exists: exists
 		do

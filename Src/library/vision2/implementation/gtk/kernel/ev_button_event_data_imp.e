@@ -39,12 +39,23 @@ feature -- Initialization
 		initialize (p: POINTER) is
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'
+		local
+			gtk_state: INTEGER
+				-- value of `state' given by GTK function
+			shift, control, first, second, third: BOOLEAN
 		do
 			Precursor (p)			
-			set_x (c_gdk_event_x (p))
-			set_y (c_gdk_event_y (p))
---			set_state (c_gdk_event_state (p))
-			set_button (c_gdk_event_button (p))
+
+			gtk_state:= c_gtk_event_keys_state(p)
+			shift:= bit_set (gtk_state, 1)
+			control:= bit_set (gtk_state, 4)
+			first:= bit_set (gtk_state, 256)
+			second:= bit_set (gtk_state, 512)
+			third:= bit_set (gtk_state, 1024)
+
+			set_all (widget, c_gdk_event_x (p), c_gdk_event_y (p),
+					c_gdk_event_button (p), shift,
+					control, first, second, third)
 		end
 
 end -- class EV_BUTTON_EVENT_DATA_IMP

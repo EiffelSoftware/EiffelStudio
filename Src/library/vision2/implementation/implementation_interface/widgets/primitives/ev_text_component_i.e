@@ -102,8 +102,7 @@ feature -- Status setting
 	set_caret_position (pos: INTEGER) is
 			-- set current insertion position
 		require
-			position_large_enough: pos >= 1
-			position_small_enough: pos <= text_length + 1
+			valid_caret_position: valid_caret_position (pos)
 			is_editable: is_editable
 		deferred
 		end

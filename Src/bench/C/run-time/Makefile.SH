@@ -99,7 +99,7 @@ DPFLAGS = -I$(TOP) -I. -I../ipc/app
 NETWORK_OBJ = ../ipc/app/network.o
 MTNETWORK_OBJ = ../ipc/app/MTnetwork.o
 
-LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
+LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
@@ -120,7 +120,6 @@ WSRC = \
 	compress.c \
 	console.c \
 	option.c \
-	math.c \
 	malloc.c \
 	garcol.c \
 	local.c \
@@ -168,7 +167,6 @@ WSRC = \
 ESRC = \
 	compress.c \
 	console.c \
-	math.c \
 	malloc.c \
 	garcol.c \
 	local.c \
@@ -220,7 +218,6 @@ MT_LOBJ = \
 	MTcompress.o \
 	MTconsole.o \
 	MToption.o \
-	MTmath.o \
 	MTmalloc.o \
 	MTgarcol.o \
 	MTlocal.o \
@@ -271,7 +268,6 @@ LOBJ = \
 	compress.o \
 	console.o \
 	option.o \
-	math.o \
 	malloc.o \
 	garcol.o \
 	local.o \
@@ -323,7 +319,6 @@ WOBJ = \
 	compress.o \
 	console.o \
 	woption.o \
-	wmath.o \
 	wmalloc.o \
 	wgarcol.o \
 	wlocal.o \
@@ -379,7 +374,6 @@ MT_WOBJ = \
 	MTcompress.o \
 	MTconsole.o \
 	MTwoption.o \
-	MTwmath.o \
 	MTwmalloc.o \
 	MTwgarcol.o \
 	MTwlocal.o \
@@ -434,7 +428,6 @@ EOBJ = \
 	eif_once.o \
 	compress.o \
 	console.o \
-	wmath.o \
 	wmalloc.o \
 	wgarcol.o \
 	wlocal.o \
@@ -648,9 +641,6 @@ weif_project.o: eif_project.c
 woption.o: option.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
-wmath.o: math.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
-
 wmalloc.o: malloc.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -792,9 +782,6 @@ MTeif_project.o: eif_project.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MToption.o: option.c
-	$(CC) -c $(JMTCFLAGS)  $? -o $@
-
-MTmath.o: math.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTmalloc.o: malloc.c
@@ -939,9 +926,6 @@ MTwoption.o: option.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTcompress.o: compress.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
-MTwmath.o: math.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmalloc.o: malloc.c

@@ -23,7 +23,6 @@ DLLDIR=$(OUTDIR)
 
 OBJECTS = \
 	$(INDIR)\lmalloc.$obj \
-	$(INDIR)\math.$obj \
 	$(INDIR)\malloc.$obj \
 	$(INDIR)\garcol.$obj \
 	$(INDIR)\local.$obj \
@@ -79,7 +78,6 @@ OBJECTS = \
 WOBJECTS = \
 	$(NETWORK) \
 	$(INDIR)\wlmalloc.$obj \
-	$(INDIR)\wmath.$obj \
 	$(INDIR)\wmalloc.$obj \
 	$(INDIR)\wgarcol.$obj \
 	$(INDIR)\wlocal.$obj \
@@ -137,7 +135,6 @@ WOBJECTS = \
 
 EOBJECTS = \
 	$(INDIR)\wlmalloc.$obj \
-	$(INDIR)\wmath.$obj \
 	$(INDIR)\wmalloc.$obj \
 	$(INDIR)\wgarcol.$obj \
 	$(INDIR)\wlocal.$obj \
@@ -392,9 +389,6 @@ $(INDIR)\main.$obj: $(RTSRC)\main.c
 $(INDIR)\malloc.$obj: $(RTSRC)\malloc.c
 	$(CC) $(JCFLAGS) $(RTSRC)\malloc.c
 
-$(INDIR)\math.$obj: $(RTSRC)\math.c
-	$(CC) $(JCFLAGS) $(RTSRC)\math.c
-
 $(INDIR)\memory.$obj: $(RTSRC)\memory.c
 	$(CC) $(JCFLAGS) $(RTSRC)\memory.c
 
@@ -547,9 +541,6 @@ $(INDIR)\wmain.$obj: $(RTSRC)\main.c
 
 $(INDIR)\wmalloc.$obj: $(RTSRC)\malloc.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\malloc.c
-
-$(INDIR)\wmath.$obj: $(RTSRC)\math.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\math.c
 
 $(INDIR)\wmemory.$obj: $(RTSRC)\memory.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\memory.c

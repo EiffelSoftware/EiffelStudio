@@ -28,18 +28,20 @@ feature {NONE} -- Implementation
 			create edit.make (Current)
 			l_vertical_scroll_bar_1.change_actions.force_extend (agent edit.color_refresh_type)
 			l_horizontal_scroll_bar_1.change_actions.force_extend (agent edit.color_refresh_type)
-			
+
 			notebook.selection_actions.extend (agent on_change_notebook)
-			
+
 				-- pick and drop actions.
 			color_edit_area.set_pick_and_drop_mode
-			
+
 				-- Menu
 			find_net_feature_item.disable_sensitive
 			import_item.disable_sensitive
 			remove_assembly_item.disable_sensitive
 			edit_type_item.disable_sensitive
 			
+				-- noteBook
+			--notebook.last.disable_sensitive
 		end
 
 feature {NONE} -- Menu actions
@@ -47,15 +49,15 @@ feature {NONE} -- Menu actions
 	on_print is
 			-- Called by `resize_actions' of `Current'.
 		local
-			dlg: EV_PRINT_DIALOG
+			print_dlg: EV_PRINT_DIALOG
 		do
-			create dlg
-			dlg.print_actions.extend (agent ok_print (dlg))
-			dlg.show_modal_to_window (Current)
+			create print_dlg
+			print_dlg.print_actions.extend (agent ok_print (print_dlg))
+			print_dlg.show_modal_to_window (Current)
 		end
-	
+
 	ok_print (a_print_dialog: EV_PRINT_DIALOG) is
-			-- 
+			-- Action performed when ok is clicked in `print_dlg'.
 		local
 			l_context: EV_PRINT_CONTEXT
 			l_figure_list: EV_FIGURE_WORLD
@@ -63,26 +65,35 @@ feature {NONE} -- Menu actions
 			l_figure: EV_FIGURE_PICTURE
 			l_print_area: EV_PIXMAP
 			
-			current_assembly: CONSUMED_ASSEMBLY
-			current_type: CONSUMED_TYPE
+			l_current_assembly: CONSUMED_ASSEMBLY
+			l_current_type: CONSUMED_TYPE
 		do
-			l_context := a_print_dialog.print_context
-			create l_figure_list.default_create
-			create l_print_area.default_create;
-			(create {PRINT_DISPLAY}.make (l_print_area)).print_type (current_assembly, current_type.dotnet_name)
-			create l_figure.make_with_pixmap (color_edit_area)
-			l_figure_list.extend (l_figure)
-			create l_print_projector.make_with_context (l_figure_list, l_context)
-			l_print_projector.project
+			l_current_assembly := (create {SESSION}).current_assembly
+			l_current_type := (create {SESSION}).current_type
+			
+			if l_current_type /= Void then
+				l_context := a_print_dialog.print_context
+				create l_figure_list.default_create
+				create l_print_area.default_create;
+				l_print_area.set_size (300, 300)
+				(create {PRINT_DISPLAY}.make (l_print_area)).print_type (l_current_assembly, l_current_type.dotnet_name)
+				--(create {PRINT_DISPLAY}.make (l_print_area)).print_type (current_assembly, "System.Array")
+				--l_print_area := clone (color_edit_area)
+				color_edit_area := l_print_area
+				create l_figure.make_with_pixmap (l_print_area)
+				l_figure.set_pixmap (l_print_area)
+				l_figure_list.extend (l_figure)
+				create l_print_projector.make_with_context (l_figure_list, l_context)
+				l_print_projector.project
+			end
 		end
-		
-	
+
 	on_exit is
 			-- Called by `select_actions' of `exit_item'.
 		do
 			((create {EV_ENVIRONMENT}).application).destroy
 		end
-	
+
 	on_find_net_feature is
 			-- Called by `select_actions' of `find_net_feature_item'.
 		local
@@ -92,7 +103,7 @@ feature {NONE} -- Menu actions
 			titi.set_parent_window (Current)
 			titi.show_relative_to_window (Current)
 		end
-	
+
 	on_find_eiffel_feature is
 			-- Called by `select_actions' of `find_eiffel_feature_item'.
 		local
@@ -102,31 +113,18 @@ feature {NONE} -- Menu actions
 			find_eiffel_feature_dlg.set_parent_window (Current)
 			find_eiffel_feature_dlg.show_relative_to_window (Current)
 		end
-	
+
 	on_import_assembly is
 			-- Called by `select_actions' of `import_item'.
 		local
 			file_dialog: EV_FILE_OPEN_DIALOG
---			cache_writer: CACHE_WRITER
---			cache_reader: CACHE_READER
---			assembly_name: ASSEMBLY_NAME
 		do
 			create file_dialog
 			file_dialog.set_filter ("*.dll")
 			file_dialog.set_title ("Import assembly")
 			file_dialog.show_modal_to_window (Current)
-			
---			create {CACHE_WRITER_IMPL}cache_writer.make_cache_writer
---			create {CACHE_READER_IMPL}cache_reader.make_cache_reader
---			if not cache_reader.is_initialized then
---			end
---			if not cache_reader.is_assembly_in_cache (assembly_name) then
---				cache_writer.add_assembly (assembly_name)
---			else
---				-- message : remove first the assembly
---			end
 		end
-	
+
 	on_remove_assembly is
 			-- Called by `select_actions' of `remove_assembly_item'.
 		local
@@ -135,7 +133,7 @@ feature {NONE} -- Menu actions
 			create remove_assembly_dialog
 			remove_assembly_dialog.show_modal_to_window (Current)
 		end
-		
+
 	on_edit_type is
 			-- Called by `select_actions' of `edit_type_item'.
 		local
@@ -167,21 +165,19 @@ feature {NONE} -- Menu actions
 				end
 			end
 		end
-	
---	on_resize_split_area (a_x, a_y, a_width, a_height: INTEGER) is
+
 	on_resize_split_area is
 			-- Called by `resize_actions'.
 		do
 			on_resize (0,0,0,0)
 		end
-	
+
 	on_change_notebook is
 		do
 			if notebook.selected_item = informations then
 				on_resize (0,0,0,0)
 			end
 		end
-		
-			
+
 end -- class MAIN_WINDOW
 

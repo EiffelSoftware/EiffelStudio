@@ -288,21 +288,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_without_underscores (from_string, to_string: STRING) is
-			-- Append all characters of `from_string' but underscores
-			-- to `to_string'.
+	append_without_underscores (source_string, dest_string: STRING) is
+			-- Append all characters of `source_string' but underscores
+			-- to `dest_string'.
 		require
-			from_string_not_void: from_string /= Void
-			to_string_not_void: to_string /= Void
+			source_string_not_void: source_string /= Void
+			dest_string_not_void: dest_string /= Void
 		local
 			i, nb: INTEGER
 			char: CHARACTER
 		do
-			nb := from_string.count
+			nb := source_string.count
 			from i := 1 until i > nb loop
-				char := from_string.item (i)
+				char := source_string.item (i)
 				if char /= '_' then
-					to_string.append_character (char)
+					dest_string.append_character (char)
 				end
 				i := i + 1
 			end

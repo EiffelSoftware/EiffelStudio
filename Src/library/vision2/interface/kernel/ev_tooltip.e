@@ -13,15 +13,17 @@ class
 inherit
 	EV_ANY
 		redefine
+			default_create,
 			implementation
 		end
 
 create
+	default_create,
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	default_create, make is
 			-- Create the tooltip.
 		do
 			create {EV_TOOLTIP_IMP} implementation.make
@@ -119,7 +121,7 @@ feature -- Element change
 	add_tip (wid: EV_WIDGET; txt: STRING) is
 			-- Make `txt' the tip that is displayed when the
 			-- user stays on `wid'.
-			-- If the widget already had a tip in this
+			-- If the widget already has a tip in this
 			-- tooltip, it replaces it.
 		require
 			exists: not destroyed

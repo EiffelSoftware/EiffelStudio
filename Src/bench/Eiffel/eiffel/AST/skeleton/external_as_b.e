@@ -34,7 +34,7 @@ feature -- Initialization
 		local
 			melt_only_error: MELT_ONLY
 		do
-			if melt_only and then not System.precompilation then
+			if melt_only and then not Compilation_modes.is_precompiling then
 					-- The `melt_only' compiler can only generate C code
 					-- during the precompilation
 				!!melt_only_error;

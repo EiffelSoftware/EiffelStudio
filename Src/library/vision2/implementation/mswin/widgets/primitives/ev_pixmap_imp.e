@@ -140,7 +140,6 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Misc.
 					-- so we can erase everything.
 				reset_bitmap_content
 				reset_resource_content
-
 				update_needed := True
 			end
 		end
@@ -1157,7 +1156,7 @@ feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 
-feature {EV_PIXMAP_IMP} -- Pixmap State
+feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP_DRAWABLE} -- Pixmap State
 
 	private_width: INTEGER
 			-- Current width
@@ -1199,6 +1198,7 @@ feature {NONE} -- Implementation
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
+			source_dc: WEL_MEMORY_DC
 			s_dc: WEL_SCREEN_DC
 		do
 			if error_code = Loadpixmap_error_noerror then
@@ -1268,6 +1268,19 @@ feature {NONE} -- Implementation
 							Dib_colors_constants.Dib_rgb_colors
 							)
 						private_mask_bitmap.enable_reference_tracking
+						
+						memory_dc.select_bitmap (private_bitmap)
+						
+							--| FIXME To get the icon masking to work properly we have to always make sure
+							--| that the color masked out is always black, this is achieved by blitting
+							--| the black part of the mask on to the source pixmap
+							--| Studio uses black as the color underneath for all icons
+						create source_dc.make
+						source_dc.select_bitmap (private_mask_bitmap)
+						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Maskpaint)
+						source_dc.unselect_bitmap
+						source_dc.delete
+						
 						memory_dc.unselect_all
 						memory_dc.delete
 
@@ -1625,6 +1638,37 @@ feature {
 		} -- Implementation
 
 	interface: EV_PIXMAP
+
+feature {EV_PIXMAP_IMP_DRAWABLE} -- Implementation
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Pixmap region of `Current' represented by rectangle `area'
+		local
+			a_drawable_pixmap: EV_PIXMAP_IMP_DRAWABLE
+		do
+			promote_to_drawable
+			a_drawable_pixmap ?= interface.implementation
+			Result := a_drawable_pixmap.sub_pixmap (area)
+		end
+
+	set_bitmap_and_mask (a_bitmap, a_mask: WEL_BITMAP; a_bitmap_width, a_bitmap_height: INTEGER) is
+			-- Set `private_bitmap' and `private_mask_bitmap' of `Current' to `a_bitmap' and `a_mask'
+			-- `a_bitmap_width' and `a_bitmap_height' avoid calculating `width' and `height' from logical bitmap
+		require
+			not_already_initialized: private_bitmap = Void and private_mask_bitmap = Void
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_width_valid: a_bitmap_width > 0
+			a_bitmap_height_valid: a_bitmap_height > 0
+		do
+			private_bitmap := a_bitmap
+			private_bitmap.enable_reference_tracking
+			if a_mask /= Void then
+				private_mask_bitmap := a_mask
+				private_mask_bitmap.enable_reference_tracking
+			end
+			private_width := a_bitmap_width
+			private_height := a_bitmap_height
+		end
 
 invariant
 	not_both_icon_and_cursor:

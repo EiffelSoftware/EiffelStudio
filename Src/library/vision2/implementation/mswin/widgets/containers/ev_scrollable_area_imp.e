@@ -135,7 +135,6 @@ feature {NONE} -- Implementation
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
-			--| FIXME Scrollbars should ALWAYS be visible.
 		local
 			ch, cw: INTEGER
 		do
@@ -187,6 +186,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/21 22:02:49  brendel
+--| Removed FIXME.
+--|
 --| Revision 1.21  2000/04/21 18:14:06  brendel
 --| Mixed up width and height.
 --|

@@ -25,8 +25,8 @@
 #include "listen.h"
 
 #include <string.h>
-#ifdef EIF_SGI
-#include <strings.h>
+#if defined(EIF_SGI) || defined(EIF_SOLARIS)
+#include <strings.h> /* for index and rindex. */
 #endif
 
 #include <signal.h>

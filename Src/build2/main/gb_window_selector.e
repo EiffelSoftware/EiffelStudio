@@ -68,6 +68,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_COMMAND_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -295,6 +302,87 @@ feature -- Status setting
 		ensure
 			count_increased: count = old count + 1
 		end
+		
+feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
+
+	remove_directory (a_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+			-- Remove `a_directory' from `Current'.
+		require
+			directory_not_void: a_directory /= Void
+			has_directory: has (a_directory)
+		local
+			warning_dialog: EV_WARNING_DIALOG
+			confirmation_dialog: EV_CONFIRMATION_DIALOG
+			perform_delete: BOOLEAN
+			window_item: GB_WINDOW_SELECTOR_ITEM
+			all_objects: ARRAYED_LIST [GB_OBJECT]
+			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			original_root_index, new_root_index: INTEGER
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			perform_delete := True
+			all_objects := objects
+			if all_objects.count = a_directory.count then
+					-- If all of the objects in `Current' are contained in `a_directory' then prompt the user
+					-- that the root window will be moved out of the directory, as you may not delete the
+					-- root window.
+				create confirmation_dialog.make_with_text ("The directory contains the root window which will be moved from the directory. Other windows will be delted. Are you sure that you wish to remove this directory?")
+				confirmation_dialog.show_modal_to_window (parent_window (Current))
+				if confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).Ev_cancel) then
+					perform_delete := False
+				end
+			elseif not a_directory.is_empty then	
+					-- If the directory is not empty, then it does not matter if the root window is contained,
+					-- as if we are here, we know that there are other window objects not contained in the directory,
+					-- so just before the deletion, we can set one of these to be the root window.
+				create confirmation_dialog.make_with_text ("The directory%"" + a_directory.text + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted?")
+				confirmation_dialog.show_modal_to_window (parent_window (Current))
+				if confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).Ev_cancel) then
+					perform_delete := False
+				end
+			end
+			if perform_delete then
+				if all_objects.count = a_directory.count then
+						-- Move the root window out of the directory, as it may not be deleted.
+					add_new_object (object_handler.root_window_object)
+				else
+					directory_of_root_window ?= object_handler.root_window_object.window_selector_item.parent
+					if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
+						-- We must now select the next root window in the tree, as the root window is contained in
+						-- `a_directory'.
+						original_root_index := all_objects.index_of (object_handler.root_window_object, 1)
+						if original_root_index < objects.count then
+							new_root_index := original_root_index + a_directory.count
+						else
+							new_root_index := 1
+						end
+						titled_window_object ?= all_objects.i_th (new_root_index)
+						check
+							object_was_window: titled_window_object /= Void
+						end
+						titled_window_object.set_as_root_window
+					end
+				end
+				from
+					a_directory.start
+				until
+					a_directory.off
+				loop
+					window_item ?= a_directory.item
+					check
+						item_was_window: window_item /= Void
+					end
+						-- Now remove the window from the directory. As directories are
+						-- not part of the history, we must remove it before creating the command,
+						-- as otherwise the command will fail when attempting to retore the window
+						-- to the directory. It will simply be replaced at the root.
+					unparent_tree_node (window_item)
+					Command_handler.Delete_object_command.delete_object (window_item.object)
+				end
+				unparent_tree_node (a_directory)
+			end
+		end
+		
 
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 

@@ -30,6 +30,11 @@ inherit
 
 	EV_PICK_AND_DROPABLE_IMP
 		redefine	
+			interface	
+		end
+		
+	EV_DOCKABLE_SOURCE_IMP
+		redefine
 			interface
 		end
 
@@ -467,12 +472,21 @@ feature {NONE} -- Implementation, mouse_button_events
 				)
 				actions_called := True
 			end
-			pnd_press (
+			if interface.is_dragable then
+				dragable_press (
 				t.integer_item (1),
 				t.integer_item (2),
 				button,
 				t.integer_item (3),
 				t.integer_item (4))
+			else
+				pnd_press (
+					t.integer_item (1),
+					t.integer_item (2),
+					button,
+					t.integer_item (3),
+					t.integer_item (4))
+			end
 			if not actions_called then
 				call_pointer_actions (
 					pointer_button_press_actions_internal,
@@ -566,6 +580,7 @@ feature {NONE} -- Implementation, mouse_button_events
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is released.
 		do
+			check_dragable_release (x_pos, y_pos)
 			check_drag_and_drop_release (x_pos, y_pos)
 			on_button_up (x_pos, y_pos, 1)
 		end
@@ -685,9 +700,16 @@ feature {NONE} -- Implementation
 				Cursor_on_widget.replace (Current)	
 				track_mouse.dispose
 			end
-			if (is_transport_enabled and mode_is_drag_and_drop) or
+			t := translate_coordinates (x_pos, y_pos)
+			if awaiting_movement or is_dragging then
+				dragable_motion (
+					t.integer_item (1),
+					t.integer_item (2),
+					t.integer_item (3),
+					t.integer_item (4)
+				)
+			elseif (is_transport_enabled and mode_is_drag_and_drop) or
 				(mode_is_pick_and_drop and is_pnd_in_transport) then
-				t := translate_coordinates (x_pos, y_pos)
 				pnd_motion (
 					t.integer_item (1),
 					t.integer_item (2),

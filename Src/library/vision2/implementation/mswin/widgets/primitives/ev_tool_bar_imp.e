@@ -360,7 +360,7 @@ feature -- Basic operation
 				it.interface.pointer_button_press_actions.call
 				([x_pos - child_x (it.interface), y_pos, button, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
-				it.interface.press_actions.call ([])
+				it.interface.select_actions.call ([])
 			end
 		end
 
@@ -708,6 +708,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/04/20 01:16:05  pichery
+--| Fixed call to an obsolete feature
+--|
 --| Revision 1.53  2000/04/12 17:06:45  brendel
 --| Removed connect_radio_grouping.
 --|

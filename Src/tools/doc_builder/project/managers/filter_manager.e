@@ -34,8 +34,6 @@ feature -- Access
 
 	filtered_document (a_doc: DOCUMENT): FILTERED_DOCUMENT is
 			-- Filtered document generated from `filter' and `a_doc'
-		require
-			valid_document: a_doc.is_valid_xml
 		do
 			create Result.make (a_doc, filter)
 			add_filtered_document (Result)			

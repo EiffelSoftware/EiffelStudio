@@ -89,7 +89,9 @@ feature -- TOC Management
 					xml_toc_converter := Void					
 				end
 			end
-			display_toc
+			if loaded_toc /= Void then
+				display_toc
+			end
 		end		
 	
 	add_toc (a_toc: TABLE_OF_CONTENTS) is

@@ -13,7 +13,6 @@ feature {HTML_FILTER} -- Access
 		once
 			create Result.make (15)
 			Result.compare_objects
-			Result.extend ("html", "document")
 			Result.extend ("head", "meta_data")
 			Result.extend ("table", "table")
 			Result.extend ("tr", "row")
@@ -23,8 +22,8 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("span", "span")
 			Result.extend ("pre", "code_block")
 			Result.extend ("b", "bold")
-			Result.extend ("i", "italic")
-			Result.extend ("br", "line_break")					
+			Result.extend ("u", "underline")
+			Result.extend ("i", "italic")			
 			Result.extend ("a", "link")
 			Result.extend ("img", "image")
 			Result.extend ("title", "title")
@@ -40,10 +39,12 @@ feature {HTML_FILTER} -- Access
 			-- Complex element to element mappings
 		once
 			create Result.make (5)
-			Result.compare_objects
+			Result.compare_objects			
+			Result.extend ("html", "document")
 			Result.extend ("body", "document_paragraph")
 			Result.extend ("p", "paragraph")
 			Result.extend ("p", "paragraph_end")
+			Result.extend ("span", "start_end")
 			Result.extend ("", "url")
 			Result.extend ("map", "image_map")
 			Result.extend ("area", "area")
@@ -54,7 +55,8 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("p class=%"seealso%"", "seealso")
 			Result.extend ("p class=%"sample%"", "sample")
 			Result.extend ("p class=%"note%"", "note")
-			Result.extend ("p class=%"info%"", "info")			
+			Result.extend ("p class=%"info%"", "info")									
+			Result.extend ("span class=%"tagged_text%"", "start")
 			Result.extend ("ol", "list_ordered")
 			Result.extend ("ul", "list_unordered")
 			Result.extend ("", "list")
@@ -82,6 +84,7 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("cellpadding", "padding")
 			Result.extend ("cellspacing", "spacing")
 			Result.extend ("align", "alignment")			
+			Result.extend ("valign", "vertical_alignment")
 			Result.extend ("content", "meta_content")
 			Result.extend ("name", "name")
 			Result.extend ("index_moniker", "index_moniker")
@@ -104,6 +107,16 @@ feature {HTML_FILTER} -- Access
 			Result.extend ("class", "style")
 			Result.extend ("stylesheet", "stylesheet")
 			Result.extend ("title", "stylesheet_title")
+			Result.extend ("rowspan", "rowspan")
+			Result.extend ("colspan", "columnspan")
+		end		
+		
+	single_element_element_mappings: HASH_TABLE [STRING, STRING] is
+			-- List of elements which don't require a closing tag (e.g, '<line_break/>')
+		once
+			create Result.make (1)
+			Result.compare_objects
+			Result.extend ("br", "line_break")
 		end		
 		
 	character_mappings: HASH_TABLE [STRING, STRING] is
@@ -162,6 +175,7 @@ feature -- Element Data
 			Result.extend ("output")
 			Result.extend ("script")
 			Result.extend ("document_paragraph")
+			Result.extend ("start")
 		end
 	
 	style_elements: ARRAYED_LIST [STRING] is

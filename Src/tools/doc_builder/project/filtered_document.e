@@ -23,7 +23,6 @@ feature {FILTER_MANAGER} -- Creation
 			-- Make from filter
 		require
 			filter_not_void: a_filter /= Void
-			document_valid_xml: a_doc.is_valid_xml
 		local
 			retried: BOOLEAN
 		do

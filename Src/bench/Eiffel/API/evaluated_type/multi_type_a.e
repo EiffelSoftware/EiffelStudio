@@ -50,6 +50,28 @@ feature -- Property
 			Result := System.array_class.compiled_eclass;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		local
+			i, nb: INTEGER
+		do
+			nb := other.count
+			if count = nb then
+				from
+					i := 1
+					Result := True
+				until
+					not Result or else i > nb
+				loop
+					Result := equivalent (item (i),
+						other.item (i))
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -167,10 +189,10 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			Result := last_type.storage_info (classc);
 		end;
 
-    storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
-            -- Storage info for Current type in class `classc'
-        do
-            Result := last_type.storage_info_with_name (classc);
-        end;
+	storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		do
+			Result := last_type.storage_info_with_name (classc);
+		end;
 
 end -- class MULTI_TYPE_A

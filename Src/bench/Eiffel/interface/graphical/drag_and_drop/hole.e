@@ -5,7 +5,8 @@ inherit
 
 	ICONED_COMMAND
 		rename
-			init as ic_init
+			init as ic_init,
+			is_valid as pict_color_b_is_valid
 		end;
 	STONE
 

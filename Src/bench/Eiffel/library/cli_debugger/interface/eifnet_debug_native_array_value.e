@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			if array_value /= Void then
 				capacity := array_value.get_count
 			end
---			create items.make
+			register_dotnet_data
 		ensure
 			value_set: icd_value = a_prepared_value
 		end

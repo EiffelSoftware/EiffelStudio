@@ -107,7 +107,7 @@ feature
 	integer_to_pointer (i: INTEGER): POINTER is 
 			-- Convert integer value `i' in a valid `POINTER' value. 
 		external 
-			"C inline use <windows.h>" 
+			"C inline use %"eif_eiffel.h%"" 
 		alias 
 			"(EIF_POINTER) $i"
 		end

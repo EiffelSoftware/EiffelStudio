@@ -329,8 +329,7 @@ end;
 				until
 					i < 1
 				loop
-					params.i_th (i).set_attachment_type
-											(Attachments.item.type_i);
+					params.i_th (i).set_attachment_type (Attachments.item.type_i);
 					Attachments.forth;
 					i := i - 1;
 				end;

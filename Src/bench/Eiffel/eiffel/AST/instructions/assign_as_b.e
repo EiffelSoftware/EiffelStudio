@@ -42,7 +42,7 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			target.type_check;
 
 				-- Check if the target is not read-only mode. Remember that
-			   -- a failure an on access will raise an error. So here, we
+				-- a failure an on access will raise an error. So here, we
 				-- know that the routine `type_check' appiled on `target'
 				-- didn't fail.
 			access := context.access_line.access;

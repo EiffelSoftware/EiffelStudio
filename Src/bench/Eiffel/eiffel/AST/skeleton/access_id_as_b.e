@@ -73,8 +73,7 @@ feature
 			if argument_position /= 0 then
 					-- Found argument
 				Result ?= a_feature.arguments.i_th (argument_position);
-				Result := Result.actual_type.instantiation_in
-													(last_type, last_id);
+				Result := Result.actual_type.instantiation_in (last_type, last_id);
 				error_found := parameters /= Void;
 				!!argument_b;
 				argument_b.set_position (argument_position);
@@ -86,8 +85,7 @@ feature
 						-- Local found
 					error_found := parameters /= Void;
 					Result := local_info.actual_type;
-					Result := Result.actual_type.instantiation_in
-													(last_type, last_id);
+					Result := Result.actual_type.instantiation_in (last_type, last_id);
 					!!local_b;
 					local_b.set_position (local_info.position);
 					context.access_line.insert (local_b);

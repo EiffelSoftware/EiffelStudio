@@ -205,8 +205,7 @@ feature -- Type check, byte code and dead code removal
 						-- Check if creation routine is non-once procedure
 					feature_name := call.feature_name;
 					if
-						 not creation_class.valid_creation_procedure
-																(feature_name)
+						 not creation_class.valid_creation_procedure (feature_name)
 					then
 						!!vgcc5;
 						context.init_error (vgcc5);
@@ -224,9 +223,7 @@ feature -- Type check, byte code and dead code removal
 							context.init_error (vgcc5);
 							vgcc5.set_target_name (target.access_name);
 							vgcc5.set_type (creation_type);
-							a_feature := 
-								creation_class.feature_table.item
-															(feature_name);
+							a_feature := creation_class.feature_table.item (feature_name);
 							vgcc5.set_creation_feature (a_feature);
 							Error_handler.insert_error (vgcc5);
 						end;
@@ -353,8 +350,8 @@ feature -- Replication
 		do
 			Result := clone (Current);
 			Result.set_target (target.replicate (ctxt));
-			if type = void then
-				if call /= void then
+			if type = Void then
+				if call /= Void then
 					Result.set_call (call.replicate (ctxt));
 					-- if call is not creation routine
 					-- raise exception

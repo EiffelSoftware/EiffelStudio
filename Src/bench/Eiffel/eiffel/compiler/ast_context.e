@@ -53,7 +53,6 @@ feature
 	creation_types: LINE [CREATE_INFO];
 			-- Creation information types
 
-	
 	parameters: LINE [TYPE_A];
 			-- Features with arguments encountered during type check
 
@@ -78,8 +77,7 @@ feature
 			-- Level for analysis of precondition
 
 	check_for_special_error: BOOLEAN;
-			-- Flag for checking the vape error and
-			-- vaol error
+			-- Flag for checking the vape error and vaol error
 			
 	supplier_ids: FEATURE_DEPENDANCE;
 			-- Supplier units
@@ -87,13 +85,13 @@ feature
 	make is
 		do
 			extend_stack_make;
-			!!locals.make (10);
-			!!access_line.make;
-			!!multi_line.make;
-			!!interval_line.make;
-			!!creation_types.make;
-			!!parameters.make;
-			!!supplier_ids.make;
+			!! locals.make (10);
+			!! access_line.make;
+			!! multi_line.make;
+			!! interval_line.make;
+			!! creation_types.make;
+			!! parameters.make;
+			!! supplier_ids.make;
 			!! instruction_line.make
 			!! separate_calls.make (1, 0)
 		end;

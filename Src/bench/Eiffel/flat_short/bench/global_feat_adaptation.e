@@ -167,25 +167,23 @@ feature -- Transformation
 		local
 			i, nb: INTEGER;
 			s_type, t_type: TYPE_A;
-			arg_list: EIFFEL_LIST [ID_AS];
 			arg_name: STRING
 			source_arguments: FEAT_ARG;
 			target_arguments: FEAT_ARG;
 			formal_type: FORMAL_A
 		do
 			if source_enclosing_feature /= Void then
+				source_arguments := source_enclosing_feature.arguments
 				if source_enclosing_feature.arguments /= Void then
-					arg_list := source_enclosing_feature.argument_names;
-					nb := arg_list.count;
 					from 
+						target_arguments := target_enclosing_feature.arguments;
 						i := 1
+						nb := source_arguments.count;
 					until
 						i > nb or else Result /= Void
 					loop
-						arg_name := arg_list.i_th (i);
+						arg_name := source_arguments.item_name (i);
 						if feature_name.is_equal (arg_name) then
-							source_arguments := source_enclosing_feature.arguments;
-							target_arguments := target_enclosing_feature.arguments;
 							s_type := source_arguments.i_th (i).actual_type;
 							if s_type.is_formal then
 								formal_type ?= s_type;

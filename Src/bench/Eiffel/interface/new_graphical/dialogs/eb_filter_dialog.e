@@ -9,7 +9,9 @@ class
 inherit
 	EV_COMMAND
 	EV_DIALOG
-	WINDOW_ATTRIBUTES
+	EB_GENERAL_DATA
+	NEW_EB_CONSTANTS
+--	WINDOW_ATTRIBUTES
 	EIFFEL_ENV	
 
 creation
@@ -237,7 +239,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	list_exists: list /= Void
-	text_field_exists: text_field /= Void
+--	list_exists: list /= Void
+--	text_field_exists: text_field /= Void
 
 end -- class EB_FILTER_DIALOG

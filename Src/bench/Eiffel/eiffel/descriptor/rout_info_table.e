@@ -94,7 +94,7 @@ feature -- Offset processing
 	offset_counters: ARRAY [INTEGER];
 			-- Array indexed by CLASS_C id's
 			-- The entry for a given class id corresponds
-			-- to the number of origins recorded so far for
+			-- to the number of offsets recorded so far for
 			-- that class.
 
 	new_offset (c: CLASS_C): INTEGER is

@@ -17,6 +17,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} valid_pen_style_constant
+		undefine
+			copy, is_equal
 		end
 
 create

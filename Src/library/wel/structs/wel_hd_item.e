@@ -10,7 +10,11 @@ class
 
 inherit
 	WEL_STRUCTURE
+	
 	WEL_BIT_OPERATIONS
+		undefine
+			copy, is_equal
+		end
 
 create
 	make,

@@ -16,6 +16,8 @@ inherit
 	WEL_WINDOW_MANAGER
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

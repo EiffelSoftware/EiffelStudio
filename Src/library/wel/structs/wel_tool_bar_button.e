@@ -13,11 +13,15 @@ inherit
 	WEL_TB_STYLE_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_TB_STATE_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

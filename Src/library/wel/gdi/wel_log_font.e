@@ -16,41 +16,57 @@ inherit
 	WEL_FONT_QUALITY_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_OUT_PRECISION_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_CLIP_PRECISION_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_FONT_PITCH_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_CHARACTER_SET_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_FONT_FAMILY_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_CAPABILITIES_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create 

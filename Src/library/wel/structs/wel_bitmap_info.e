@@ -18,6 +18,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} valid_dib_colors_constant
+		undefine
+			copy, is_equal
 		end
 
 create

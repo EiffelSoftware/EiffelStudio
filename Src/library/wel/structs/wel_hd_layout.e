@@ -15,9 +15,15 @@ inherit
 			make
 		end
 	WEL_BIT_OPERATIONS
+		undefine
+			copy, is_equal
+		end
+	
 	WEL_HDI_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

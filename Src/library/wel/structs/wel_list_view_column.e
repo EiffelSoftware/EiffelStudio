@@ -19,7 +19,9 @@ inherit
 			{NONE} all
 			{ANY} valid_lvcfmt_constant,
 					lvscw_autosize,
-					Lvscw_autosize_useheader					 
+					Lvscw_autosize_useheader
+		undefine
+			copy, is_equal
 		end
 
 create

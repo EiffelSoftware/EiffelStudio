@@ -16,17 +16,23 @@ inherit
 	WEL_CF_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_FONT_TYPE_CONSTANTS
 		export
 			{NONE} all
 			{ANY} valid_font_type_constant
+		undefine
+			copy, is_equal
 		end
 
 create

@@ -15,6 +15,8 @@ inherit
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create

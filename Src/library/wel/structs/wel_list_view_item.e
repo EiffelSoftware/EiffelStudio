@@ -17,11 +17,15 @@ inherit
 	WEL_LVIF_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_LVIS_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 create
@@ -175,8 +179,6 @@ feature -- Element change
 			cwel_lv_item_set_iimage (item, image_normal)
 			add_mask(Lvif_image)
 		end
-
-
 
 feature -- Measurement
 

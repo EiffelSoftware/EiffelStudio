@@ -12,6 +12,8 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
+		undefine
+			copy, is_equal
 		redefine
 			destroy_item
 		end

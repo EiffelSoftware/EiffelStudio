@@ -21,7 +21,8 @@ inherit
 		export
 			{NONE} all
 		undefine
-			is_equal
+			is_equal,
+			copy
 		end
 
 create

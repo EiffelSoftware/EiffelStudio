@@ -19,6 +19,9 @@ inherit
 	WEL_STRUCTURE
 
 	WEL_WINDOWS_ROUTINES
+		undefine
+			copy, is_equal
+		end
 	
 create
 	make_by_pointer

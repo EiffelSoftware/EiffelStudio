@@ -13,6 +13,8 @@ inherit
 			make
 		end
 
+	WINDOWS
+
 creation
 	make
 
@@ -50,12 +52,26 @@ feature {NONE}-- Initialization
 		end
 
 	set_callbacks is
--- 		local
+		local
+			cmd: EV_ROUTINE_COMMAND
 -- 			change_mode_cmd: CHANGE_MODE_CMD
 		do
+			create cmd.make (~process_help)
+			help_b.add_default_pnd_command (cmd, Void)
 -- 			!! change_mode_cmd
 -- 			execute_b.add_value_changed_action (change_mode_cmd, execute_b)
 -- 			edit_b.add_value_changed_action (change_mode_cmd, edit_b)
+		end
+
+feature {MAIN_TOOLBAR} -- Help display
+
+	process_help (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+		local
+			hw: HELP_WINDOW
+		do
+			create hw.make (main_window)
+			hw.update_text (arg, ev_data)
+			hw.show
 		end
 
 feature -- Enabel/Disable buttons

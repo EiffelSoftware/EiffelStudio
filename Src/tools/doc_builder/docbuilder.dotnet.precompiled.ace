@@ -64,7 +64,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "gtk2"; 
+			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "gtk2"; "ev_checkable_tree.e";
 		end
 
 	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"

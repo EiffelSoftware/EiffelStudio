@@ -60,15 +60,15 @@ feature -- Displayed messages in text form.
 			metric_not_void: current_metric /= Void
 		local
 			defined_metric: EB_METRIC
-			archived_metrics: LINKED_LIST [EB_METRIC]
-			archived_xml: LINKED_LIST [XM_ELEMENT]
+			archived_metrics: ARRAYED_LIST [EB_METRIC]
+			archived_xml: ARRAYED_LIST [XM_ELEMENT]
 			index_current_metric: INTEGER
 			current_formula: STRING
 			current_xml: XM_ELEMENT
 			defined_formula: STRING
 		do
-			create archived_metrics.make
-			create archived_xml.make
+			create archived_metrics.make (0)
+			create archived_xml.make (0)
 			tool.file_handler.retrieve_metric (f, archived_metrics, archived_xml)
 
 			index_current_metric := tool.metrics.index_of (current_metric, 1)

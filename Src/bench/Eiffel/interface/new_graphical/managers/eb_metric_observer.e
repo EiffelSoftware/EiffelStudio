@@ -28,7 +28,7 @@ feature -- Manager
 		deferred
 		end
 
-	notify_management_metric (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
+	notify_management_metric (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT]) is
 			-- The state of the manager has changed. Metrics have been changed. Update `Current'.
 		deferred
 		end

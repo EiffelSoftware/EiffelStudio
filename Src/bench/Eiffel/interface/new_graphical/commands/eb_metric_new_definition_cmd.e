@@ -371,7 +371,7 @@ feature -- Action
 		require
 			valid_metric: a_metric /= Void
 		local
-			comp_metrics: LINKED_LIST [EB_METRIC]
+			comp_metrics: ARRAYED_LIST [EB_METRIC]
 			sorted_list: SORTED_TWO_WAY_LIST [EB_METRIC]
 			cursor: CURSOR
 		do

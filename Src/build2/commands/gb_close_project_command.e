@@ -85,7 +85,7 @@ feature -- Basic operations
 				docked_object_editor.make_empty
 				system_status.close_current_project
 				system_status.main_window.hide_tools
-				floating_object_editors.wipe_out
+				destroy_floating_editors
 				command_handler.update	
 			end
 

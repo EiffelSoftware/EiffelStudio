@@ -108,6 +108,11 @@ feature {NONE} -- Implementation
 				a_raw_data.forth
 			end
 
+			-- Append last cluster
+			if not str_buffer.is_empty and not is_common_path (str_buffer) then
+				clusters.extend (str_buffer)
+			end
+
 			if not a_raw_data.after then
 				is_object := False
 				is_include_path := False
@@ -133,17 +138,20 @@ feature {NONE} -- Implementation
 					a_raw_data.item.left_adjust
 					a_raw_data.item.right_adjust
 
-					if a_raw_data.item.item (a_raw_data.item.count) = ';' then
-						a_raw_data.item.put (',', a_raw_data.item.count)
-					end
-					if a_raw_data.item.item (a_raw_data.item.count) /= ',' then
-						a_raw_data.item.append_character (',')
-					end
-
-					if is_object and not is_common_path (a_raw_data.item) and a_raw_data.item.index_of ('%"', 1) > 0 then
-						objects.extend (a_raw_data.item)
-					elseif is_include_path and not is_common_path (a_raw_data.item) and a_raw_data.item.index_of ('%"', 1) > 0 then
-						include_path.extend (a_raw_data.item)
+					-- Could be empty if line was "include_path:"
+					if not a_raw_data.item.is_empty then
+						if a_raw_data.item.item (a_raw_data.item.count) = ';' then
+							a_raw_data.item.put (',', a_raw_data.item.count)
+						end
+						if a_raw_data.item.item (a_raw_data.item.count) /= ',' then
+							a_raw_data.item.append_character (',')
+						end
+	
+						if is_object and not is_common_path (a_raw_data.item) and a_raw_data.item.index_of ('%"', 1) > 0 then
+							objects.extend (a_raw_data.item)
+						elseif is_include_path and not is_common_path (a_raw_data.item) and a_raw_data.item.index_of ('%"', 1) > 0 then
+							include_path.extend (a_raw_data.item)
+						end
 					end
 					a_raw_data.forth
 				end
@@ -156,14 +164,10 @@ feature {NONE} -- Implementation
 			non_void_string: a_path /= Void
 			valid_path: not a_path.is_empty
 		do
-			if a_path.substring_index ("library\base", 1) > 0 or
-					a_path.substring_index ("library\com", 1) > 0 or
-					a_path.substring_index ("library\wel", 1) > 0 or
-					a_path.substring_index ("library\time", 1) > 0 then
-				Result := True
-			else
-				Result := False
-			end
+			Result := a_path.substring_index ("library\base", 1) > 0 or
+				a_path.substring_index ("library\com", 1) > 0 or
+				a_path.substring_index ("library\wel", 1) > 0 or
+				a_path.substring_index ("library\time", 1) > 0
 		end
 
 end -- class EI_CLUSTER_DATA_INPUT

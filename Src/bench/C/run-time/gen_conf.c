@@ -3286,10 +3286,12 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 	int i = 0;
 	struct gt_info ltype;
 	int32 cecil_id;
-	int32 *gtype;		/* Generic information for current type */
-	int32 *itype;		/* Generic information for inspected type */
-	int32 *t;			/* To walk through the gt_gen array */
-	int matched;		/* Did the inspected type matched our entry? */
+	int32 *gtype;			/* Generic information for current type */
+	int32 *itype;			/* Generic information for inspected type */
+	int32 *t;				/* To walk through the gt_gen array */
+	int16 real_type_id;		/* Computed type id */
+	int matched;			/* Did the inspected type matched our entry? */
+	int index = (int) 0;	/* Index at which we need to write or read the type */
 	
 	if ((*error == 1) || ((pos + gen_number) > (length - 1))) {
 			/* The number of parameters given to resolve the generic type is
@@ -3309,13 +3311,15 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 		enomem();
 
 	for (i = 1; i <= gen_number; i++) {
-		if (is_generic (&ltype, type_string_array [pos + i]) > 0) {
+		if (is_generic (&ltype, type_string_array [index + pos + i]) > 0) {
 			eif_type_id_ex (error, &ltype, ltype.gt_param,
-					type_string_array, typearr, pos + i, length);
+					type_string_array, typearr, index + pos + i, length);
 				/* A generic type is always a reference type */
+			index = index + ltype.gt_param;
 			gtype [i - 1] = SK_DTYPE;
 		} else {
-			cecil_id = eifcid (type_string_array [pos + i]);
+			cecil_id = eifcid (type_string_array [index + pos + i]);
+			real_type_id  = gen_type_id (cecil_id);
 			switch (cecil_id & SK_HEAD)	{
 				case SK_BOOL:
 				case SK_CHAR:
@@ -3324,11 +3328,11 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 				case SK_DOUBLE:
 				case SK_POINTER:
 					gtype [i - 1] = cecil_id & SK_HEAD;
-					typearr [pos + i + 1] = gen_type_id(cecil_id);
+					typearr [index + pos + i + 1] = real_type_id;
 					break;
 				default: 
 					gtype [i - 1] = SK_DTYPE;
-					typearr [pos + i + 1] = RTUD_INV (gen_type_id(cecil_id));
+					typearr [index + pos + i + 1] = RTUD_INV(real_type_id);
 					break;
 			}
 		}

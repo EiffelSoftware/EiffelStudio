@@ -165,10 +165,9 @@ del %EIFFEL_SRC%\examples\dotnet\envision\envision.ace
 mkdir tree_view
 cd tree_view
 copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\tree_view_ctl\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\tree_view_ctl\*.bmp
 mkdir debug
 mkdir release
-copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\tree_view_ctl\*.bmp .\debug
-copy %EIFFEL_SRC%\examples\dotnet\winforms\control_reference\tree_view_ctl\*.bmp .\release
 cd ..
 call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\control_reference\tree_view_ctl\ace.ace" "$ISE_EIFFEL\examples\winforms\tree_view" "debug"
 copy %EIFFEL_SRC%\examples\dotnet\envision\envision.ace .\\tree_view\\debug\\ace.ace
@@ -206,10 +205,9 @@ del %EIFFEL_SRC%\examples\dotnet\envision\envision.ace
 mkdir window_calculator
 cd window_calculator
 copy %EIFFEL_SRC%\examples\dotnet\winforms\applications\world_calc\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\applications\world_calc\*.dll
 mkdir debug
 mkdir release
-copy %EIFFEL_SRC%\examples\dotnet\winforms\applications\world_calc\*.dll .\debug
-copy %EIFFEL_SRC%\examples\dotnet\winforms\applications\world_calc\*.dll .\release
 copy ..\\..\\..\\template_aces\\world_calc_debug.ace .\\debug\\ace.ace
 copy ..\\..\\..\\template_aces\\world_calc_release.ace .\\release\\ace.ace
 cd ..
@@ -291,10 +289,9 @@ mkdir viewport
 cd viewport
 copy %EIFFEL_SRC%\examples\vision2\viewport\*.e 
 copy ..\\..\\eiffel_project.eifp .\\viewport.eifp
+copy %EIFFEL_SRC%\examples\vision2\viewport\*.png
 mkdir debug
 mkdir release
-copy %EIFFEL_SRC%\examples\vision2\viewport\*.png .\debug
-copy %EIFFEL_SRC%\examples\vision2\viewport\*.png .\release
 copy ..\\..\\..\\template_aces\\viewport_debug.ace .\\debug\\ace.ace
 copy ..\\..\\..\\template_aces\\viewport_release.ace .\\release\\ace.ace
 cd ..
@@ -303,10 +300,9 @@ mkdir widgets
 cd widgets
 copy %EIFFEL_SRC%\examples\vision2\widgets\*.e 
 copy ..\\..\\eiffel_project.eifp .\\widgets.eifp
+copy %EIFFEL_SRC%\examples\vision2\widgets\*.png
 mkdir debug
 mkdir release
-copy %EIFFEL_SRC%\examples\vision2\widgets\*.png .\debug
-copy %EIFFEL_SRC%\examples\vision2\widgets\*.png .\release
 copy ..\\..\\..\\template_aces\\widgets_debug.ace .\\debug\\ace.ace
 copy ..\\..\\..\\template_aces\\widgets_release.ace .\\release\\ace.ace
 cd ..

@@ -18,14 +18,6 @@ inherit
 			is_in_default_state
 		end
 
-	EV_PICK_AND_DROPABLE
-		undefine
-			copy, is_equal
-		redefine
-			implementation,
-			is_in_default_state
-		end
-
 	INTERACTIVE_LIST [STRING]
 		rename
 			default_create as interactive_list_make
@@ -67,8 +59,8 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_ITEM} and Precursor {EV_PICK_AND_DROPABLE} and
-				Precursor {EV_PIXMAPABLE} and Precursor {EV_DESELECTABLE}
+			Result := Precursor {EV_ITEM} and Precursor {EV_PIXMAPABLE} and
+				Precursor {EV_DESELECTABLE}
 		end
 
 feature {EV_ANY_I} -- Implementation

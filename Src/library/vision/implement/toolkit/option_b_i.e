@@ -62,27 +62,27 @@ feature
 feature
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 	add_arm_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 	add_release_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 end --class OPTION_B_I

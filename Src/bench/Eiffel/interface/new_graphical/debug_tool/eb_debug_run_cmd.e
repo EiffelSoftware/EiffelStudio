@@ -271,6 +271,7 @@ feature -- Execution
 				create wd.make_with_text (Warning_messages.w_No_system)
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			elseif 
+				Eiffel_system.system /= Void and then
 				Eiffel_system.system.il_generation and then 
 				Eiffel_system.system.msil_generation_type.is_equal ("dll")
 			then

@@ -101,10 +101,10 @@ feature -- Access
 			valid_result: Result implies current_class.is_precompiled
 		end;
 
-	chained_assertion_of_fid (fid: INTEGER): CHAINED_ASSERTIONS is
+	chained_assertion: CHAINED_ASSERTIONS is
 			-- Chained assertion for feature id `fid'
 		do
-			Result := assert_server.chained_assertion_of_fid (fid)
+			Result := assert_server.current_assertion
 		end;
 
 	feature_clause_comments (ast: FEATURE_CLAUSE_AS_B): EIFFEL_COMMENTS is

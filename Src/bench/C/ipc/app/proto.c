@@ -748,6 +748,9 @@ register1 char *object;
 			if (0 == reference) {
 				sprintf(buffer, "Void");
 				twrite (buffer, strlen(buffer));
+					/* Send "Void" twice: one for the type and */
+					/* the other for the value of the item. */
+				twrite (buffer, strlen(buffer));
 			} else if (HEADER(reference)->ov_flags & EO_C) {
 				sprintf(buffer, "POINTER");
 				twrite (buffer, strlen(buffer));

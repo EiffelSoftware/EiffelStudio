@@ -11,7 +11,7 @@ inherit
 	HASHABLE
 	
 create
-	make
+	default_create, make
 
 feature -- Creation
 

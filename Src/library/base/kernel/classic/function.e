@@ -13,7 +13,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	FUNCTION [BASE_TYPE, OPEN_ARGS -> TUPLE create make end, RESULT_TYPE]
+	FUNCTION [BASE_TYPE, OPEN_ARGS -> TUPLE create default_create end, RESULT_TYPE]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]

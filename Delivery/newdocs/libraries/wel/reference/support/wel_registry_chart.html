@@ -1,0 +1,104 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
+		
+<TITLE>WEL_REGISTRY Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/support/wel_registry_chart.html">WEL_REGISTRY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../wel/support/index.html">wel.support</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Registry manager"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/consts/wel_hkey_chart.html">WEL_HKEY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/consts/wel_registry_access_mode_chart.html">WEL_REGISTRY_ACCESS_MODE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`basic_valid_name_for_hkey' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_basic_valid_name_for_hkey">basic_valid_name_for_hkey</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`basic_valid_value_for_hkey' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_basic_valid_value_for_hkey">basic_valid_value_for_hkey</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`close_key' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_close_key">close_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`create_key' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_create_key">create_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">parent_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">sam</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_key_value' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_default_key_value">default_key_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">path</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_registry_key_value_chart.html">WEL_REGISTRY_KEY_VALUE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`delete_key' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_delete_key">delete_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">parent_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`delete_value' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_delete_value">delete_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">parent_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enumerate_key' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_enumerate_key">enumerate_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_registry_key_chart.html">WEL_REGISTRY_KEY</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enumerate_value' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_enumerate_value">enumerate_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enumerate_values' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_enumerate_values">enumerate_values</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_classes_root' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_classes_root">hkey_classes_root</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_current_config' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_current_config">hkey_current_config</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_current_user' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_current_user">hkey_current_user</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_dyn_data' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_dyn_data">hkey_dyn_data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_local_machine' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_local_machine">hkey_local_machine</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_performance_data' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_performance_data">hkey_performance_data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hkey_users' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_hkey_users">hkey_users</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_value_for_root_keys' was declared in WEL_HKEY"><A CLASS="efeature" HREF="../../wel/consts/wel_hkey.html#f_index_value_for_root_keys">index_value_for_root_keys</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`key_from_remote_host' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_key_from_remote_host">key_from_remote_host</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">root_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`key_value' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_key_value">key_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">value_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_registry_key_value_chart.html">WEL_REGISTRY_KEY_VALUE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_subkeys' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_number_of_subkeys">number_of_subkeys</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_values' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_number_of_values">number_of_values</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`open_key' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_open_key">open_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">parent_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">access_mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`open_key_value' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_open_key_value">open_key_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key_path</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">value_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_registry_key_value_chart.html">WEL_REGISTRY_KEY_VALUE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`open_key_with_access' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_open_key_with_access">open_key_with_access</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key_path</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">sam</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_value_for_hkey' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_valid_value_for_hkey">valid_value_for_hkey</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`create_new_key' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_create_new_key">create_new_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key_path</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_key_value' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_registry.html#f_set_key_value">set_key_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">value_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_registry_key_value_chart.html">WEL_REGISTRY_KEY_VALUE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>

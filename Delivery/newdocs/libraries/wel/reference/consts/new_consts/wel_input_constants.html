@@ -1,0 +1,806 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
+		
+<TITLE>WEL_INPUT_CONSTANTS Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Constants relative to Mouse &#38; Keyboard"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Arnaud PICHERY [ </SPAN><A CLASS="estring" HREF="mailto:aranud@mail.dotcom.fr">aranud@mail.dotcom.fr</A><SPAN CLASS="estring"> ]"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../wel/consts/new_consts/wel_input_constants.html">WEL_INPUT_CONSTANTS</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Keyboard event input constants</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_keyeventf_extendedkey"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_keyeventf_extendedkey">Keyeventf_extendedkey</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as KEYEVENTF_EXTENDEDKEY</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_keyeventf_keyup"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_keyeventf_keyup">Keyeventf_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as KEYEVENTF_KEYUP</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Mouse Activate constants.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_ma_activate"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_ma_activate">Ma_activate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MA_ACTIVATE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_ma_activateandeat"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_ma_activateandeat">Ma_activateandeat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MA_ACTIVATEANDEAT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_ma_noactivate"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_ma_noactivate">Ma_noactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MA_NOACTIVATE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_ma_noactivateandeat"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_ma_noactivateandeat">Ma_noactivateandeat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MA_NOACTIVATEANDEAT</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Mouse and Key (MK) constants</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mk_control"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mk_control">Mk_control</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MK_CONTROL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mk_lbutton"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mk_lbutton">Mk_lbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MK_LBUTTON</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mk_mbutton"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mk_mbutton">Mk_mbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MK_MBUTTON</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mk_rbutton"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mk_rbutton">Mk_rbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MK_RBUTTON</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mk_shift"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mk_shift">Mk_shift</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MK_SHIFT</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Mouse event input constants</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_absolute"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_absolute">Mouseeventf_absolute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_ABSOLUTE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_leftdown"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_leftdown">Mouseeventf_leftdown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_LEFTDOWN</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_leftup"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_leftup">Mouseeventf_leftup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_LEFTUP</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_middledown"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_middledown">Mouseeventf_middledown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_MIDDLEDOWN</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_middleup"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_middleup">Mouseeventf_middleup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">64</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_MIDDLEUP</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_move"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_move">Mouseeventf_move</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_MOVE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_rightdown"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_rightdown">Mouseeventf_rightdown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_RIGHTDOWN</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_rightup"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_rightup">Mouseeventf_rightup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_RIGHTUP</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mouseeventf_wheel"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_mouseeventf_wheel">Mouseeventf_wheel</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2048</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MOUSEEVENTF_WHEEL</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Virtual Key (VK) constants</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_0"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_0">Vk_0</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">48</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_1"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_1">Vk_1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">49</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_2"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_2">Vk_2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">50</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_3"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_3">Vk_3</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">51</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_4"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_4">Vk_4</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">52</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_5"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_5">Vk_5</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">53</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_6"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_6">Vk_6</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">54</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_7"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_7">Vk_7</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">55</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_8"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_8">Vk_8</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">56</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_9"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_9">Vk_9</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">57</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Vk_a thru Vk_z are the same as their </SPAN><A CLASS="eclass" HREF="../../../reference/support/ascii.html">ASCII</A><SPAN CLASS="ecomment"> equivalents: 'A' thru 'Z'.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_a"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_a">Vk_a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_add"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_add">Vk_add</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">107</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_ADD</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_b"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_b">Vk_b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">66</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_back"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_back">Vk_back</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_BACK</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_c"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_c">Vk_c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">67</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_cancel"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_cancel">Vk_cancel</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_CANCEL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_capital"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_capital">Vk_capital</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">20</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_CAPITAL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_clear"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_clear">Vk_clear</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_CLEAR</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_control"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_control">Vk_control</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">17</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_CONTROL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_d"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_d">Vk_d</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">68</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_decimal"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_decimal">Vk_decimal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">110</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_DECIMAL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_delete"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_delete">Vk_delete</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">46</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_DELETE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_divide"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_divide">Vk_divide</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">111</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_DIVIDE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_down"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_down">Vk_down</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">40</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_DOWN</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_e"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_e">Vk_e</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">69</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_end"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_end">Vk_end</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">35</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_END</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_escape"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_escape">Vk_escape</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">27</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_ESCAPE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_execute"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_execute">Vk_execute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">43</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_EXECUTE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f">Vk_f</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">70</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f1"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f1">Vk_f1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">112</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F1</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f10"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f10">Vk_f10</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">121</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F10</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f11"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f11">Vk_f11</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">122</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F11</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f12"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f12">Vk_f12</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">123</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F12</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f13"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f13">Vk_f13</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">124</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F13</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f14"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f14">Vk_f14</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">125</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F14</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f15"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f15">Vk_f15</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">126</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F15</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f16"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f16">Vk_f16</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">127</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F16</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f17"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f17">Vk_f17</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F17</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f18"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f18">Vk_f18</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">129</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F18</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f19"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f19">Vk_f19</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">130</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F19</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f2"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f2">Vk_f2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">113</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F2</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f20"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f20">Vk_f20</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F20</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f21"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f21">Vk_f21</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">132</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F21</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f22"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f22">Vk_f22</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">133</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F22</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f23"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f23">Vk_f23</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">134</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F23</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f24"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f24">Vk_f24</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">135</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F24</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f3"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f3">Vk_f3</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">114</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F3</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f4"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f4">Vk_f4</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">115</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F4</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f5"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f5">Vk_f5</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">116</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F5</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f6"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f6">Vk_f6</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">117</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F6</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f7"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f7">Vk_f7</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">118</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F7</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f8"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f8">Vk_f8</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">119</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F8</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_f9"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_f9">Vk_f9</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">120</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_F9</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_g"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_g">Vk_g</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">71</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_h"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_h">Vk_h</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">72</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_help"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_help">Vk_help</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">47</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_HELP</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_home"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_home">Vk_home</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">36</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_HOME</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_i"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_i">Vk_i</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">73</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_insert"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_insert">Vk_insert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">45</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_INSERT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_j"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_j">Vk_j</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">74</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_k"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_k">Vk_k</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">75</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_l"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_l">Vk_l</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">76</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_lbutton"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_lbutton">Vk_lbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_LBUTTON</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_lcontrol"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_lcontrol">Vk_lcontrol</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">162</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_LCONTROL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_left"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_left">Vk_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">37</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_LEFT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_lmenu"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_lmenu">Vk_lmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">164</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_LMENU</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_lshift"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_lshift">Vk_lshift</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">160</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_LSHIFT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_m"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_m">Vk_m</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">77</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_mbutton"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_mbutton">Vk_mbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_MBUTTON</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_menu"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_menu">Vk_menu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">18</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_MENU</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_multiply"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_multiply">Vk_multiply</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">106</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_MULTIPLY</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_n"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_n">Vk_n</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">78</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_next"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_next">Vk_next</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">34</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NEXT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numlock"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numlock">Vk_numlock</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">144</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMLOCK</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad0"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad0">Vk_numpad0</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">96</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD0</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad1"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad1">Vk_numpad1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">97</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD1</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad2"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad2">Vk_numpad2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">98</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD2</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad3"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad3">Vk_numpad3</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">99</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD3</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad4"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad4">Vk_numpad4</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">100</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD4</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad5"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad5">Vk_numpad5</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">101</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD5</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad6"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad6">Vk_numpad6</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">102</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD6</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad7"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad7">Vk_numpad7</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">103</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD7</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad8"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad8">Vk_numpad8</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">104</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD8</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_numpad9"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_numpad9">Vk_numpad9</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">105</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_NUMPAD9</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_o"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_o">Vk_o</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">79</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_p"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_p">Vk_p</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">80</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_pause"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_pause">Vk_pause</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_PAUSE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_print"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_print">Vk_print</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">42</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_PRINT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_prior"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_prior">Vk_prior</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">33</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_PRIOR</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_q"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_q">Vk_q</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">81</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_r"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_r">Vk_r</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">82</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_rbutton"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_rbutton">Vk_rbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_RBUTTON</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_rcontrol"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_rcontrol">Vk_rcontrol</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">163</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_RCONTROL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_return"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_return">Vk_return</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_RETURN</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_right"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_right">Vk_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">39</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_RIGHT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_rmenu"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_rmenu">Vk_rmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">165</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_RMENU</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Vk_0 thru Vk_9 are the same as their </SPAN><A CLASS="eclass" HREF="../../../reference/support/ascii.html">ASCII</A><SPAN CLASS="ecomment"> equivalents: '0' thru '9'.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_rshift"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_rshift">Vk_rshift</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">161</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_RSHIFT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_s"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_s">Vk_s</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">83</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_scroll"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_scroll">Vk_scroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">145</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SCROLL</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_select"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_select">Vk_select</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">41</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SELECT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_separator"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_separator">Vk_separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">108</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SEPARATOR</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_shift"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_shift">Vk_shift</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SHIFT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_snapshot"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_snapshot">Vk_snapshot</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">44</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SNAPSHOT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_space"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_space">Vk_space</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SPACE</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_subtract"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_subtract">Vk_subtract</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">109</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_SUBTRACT</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_t"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_t">Vk_t</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">84</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_tab"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_tab">Vk_tab</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_TAB</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_u"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_u">Vk_u</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">85</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_up"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_up">Vk_up</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">38</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as VK_UP</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_v"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_v">Vk_v</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">86</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_w"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_w">Vk_w</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">87</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_x"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_x">Vk_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">88</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_y"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_y">Vk_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">89</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_vk_z"><A CLASS="efeature" HREF="../../../wel/consts/new_consts/wel_input_constants.html#f_vk_z">Vk_z</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">90</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_INPUT_CONSTANTS<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>
+<BR>
+

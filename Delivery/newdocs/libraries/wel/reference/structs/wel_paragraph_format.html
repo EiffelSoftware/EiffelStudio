@@ -1,0 +1,494 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
+		
+<TITLE>WEL_PARAGRAPH_FORMAT Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Contains information about paragraph formating attributes in a rich edit control."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/structs/wel_paragraph_format.html">WEL_PARAGRAPH_FORMAT</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a paragraph format structure.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_pointer"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_make_by_pointer">make_by_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Since </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> is shared, it does not need</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to be freed.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Caution: </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment"> must be a pointer</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> coming from Windows.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_alignment"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_alignment">alignment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Alignment type.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfa_constants.html">WEL_PFA_CONSTANTS</A><SPAN CLASS="ecomment"> for values.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer.html">POINTER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic Windows handle or structure pointer.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can be a HWND, HICON, RECT *, WNDCLASS *, etc...</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mask"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_mask">mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Valid information or attributes to set.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfm_constants.html">WEL_PFM_CONSTANTS</A><SPAN CLASS="ecomment"> for values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This attribut is automatically set by the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> features set_*.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_numbering"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_numbering">numbering</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Numbering type</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_offset"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_offset">offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Indentation of the second line and subsequent</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> lines, relative to the starting indentation. The</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> first line is indented if this member is negative,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> or outdented is this member is positive.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_right_indent"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_right_indent">right_indent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size of the right indentation, relative to the right</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> margin</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_start_indent"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_start_indent">start_indent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Indentation of the first line in the paragraph</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_tabulations"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_tabulations">tabulations</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contains tab stops</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_max_tab_stops"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_max_tab_stops">max_tab_stops</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_structure_size"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size to allocate (in bytes)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">positive_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_exists"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> exist?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has_mask"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_has_mask">has_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> set in </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_mask">mask</A><SPAN CLASS="ecomment">?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfm_constants.html">WEL_PFM_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> values.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_shared"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_structure.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_shared"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_set_shared">set_shared</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to True.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_unshared"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_set_unshared">set_unshared</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to False.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">unshared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_add_mask"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_add_mask">add_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_mask">mask</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfm_constants.html">WEL_PFM_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_has_mask">has_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_bullet_numbering"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_bullet_numbering">bullet_numbering</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add bullets.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">bullet_numbering</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_numbering">numbering</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_pfn_bullet">pfn_bullet</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_no_numbering"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_no_numbering">no_numbering</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove any numbering.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">no_numbering</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_numbering">numbering</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_remove_mask"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_remove_mask">remove_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> from </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_mask">mask</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfm_constants.html">WEL_PFM_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_not_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_has_mask">has_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_alignment"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_alignment">set_alignment</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_alignment</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_alignment">alignment</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_alignment</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfa_constants.html">WEL_PFA_CONSTANTS</A><SPAN CLASS="ecomment"> for values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">alignment_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_alignment">alignment</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_alignment</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_center_alignment"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_center_alignment">set_center_alignment</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Paragraphs are centered.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">alignment_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_alignment">alignment</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../wel/consts/wel_pfa_constants.html#f_pfa_center">pfa_center</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_default_tabulation"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_default_tabulation">set_default_tabulation</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the default tabulation.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_item"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_left_alignment"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_left_alignment">set_left_alignment</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Paragraphs are aligned with the left margin.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">alignment_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_alignment">alignment</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../wel/consts/wel_pfa_constants.html#f_pfa_left">pfa_left</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_mask"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_mask">set_mask</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_mask">mask</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../wel/consts/wel_pfm_constants.html">WEL_PFM_CONSTANTS</A><SPAN CLASS="ecomment"> for </SPAN><SPAN CLASS="equoted">a_mask</SPAN><SPAN CLASS="ecomment"> values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">mask_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_mask">mask</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_mask</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_offset"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_offset">set_offset</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_offset</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_offset">offset</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_offset</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">offset_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_offset">offset</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_offset</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_right_alignment"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_right_alignment">set_right_alignment</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Paragraphs are aligned with the right margin.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">alignment_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_alignment">alignment</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../wel/consts/wel_pfa_constants.html#f_pfa_right">pfa_right</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_right_indent"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_right_indent">set_right_indent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_right_indent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_right_indent">right_indent</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_right_indent</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">right_indent_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_right_indent">right_indent</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_right_indent</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_start_indent"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_start_indent">set_start_indent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_start_indent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_start_indent">start_indent</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_start_indent</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">start_indent_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_start_indent">start_indent</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_start_indent</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_tabulation"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_tabulation">set_tabulation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">tab</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set a tab stop at every </SPAN><SPAN CLASS="equoted">tab</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_tabulations"><A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_set_tabulations">set_tabulations</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">tabs</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set tabulation stops using the values of </SPAN><SPAN CLASS="equoted">tabs</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">tabs_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">tabs</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">tabs_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">tabs</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_count">count</A> <A CLASS="esymbol" HREF="../../reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_max_tab_stops">max_tab_stops</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">tabulations_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_tabulations">tabulations</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">tabs</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_dispose"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_dispose">dispose</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Destroy the inner structure of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This function should be called by the GC when the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object is collected or by the user if </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> no more usefull.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_to_integer"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Converts </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> to an integer.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/support/wel_any.html">WEL_ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_cwel_pointer_to_integer">cwel_pointer_to_integer</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_initialize"><A CLASS="efeature" HREF="../../wel/structs/wel_structure.html#f_initialize">initialize</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill Current with zeros.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_exists">exists</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_initialize_with_character"><A CLASS="efeature" HREF="../../wel/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill current with </SPAN><SPAN CLASS="equoted">a_character</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_exists">exists</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_memory_copy"><A CLASS="efeature" HREF="../../wel/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">length</SPAN><SPAN CLASS="ecomment"> bytes from </SPAN><SPAN CLASS="equoted">source_pointer</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../wel/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">length_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../wel/structs/wel_paragraph_format.html#f_structure_size">structure_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">length_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_exists">exists</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_PARAGRAPH_FORMAT<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>
+<BR>
+

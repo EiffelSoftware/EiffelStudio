@@ -1,0 +1,320 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
+		
+<TITLE>WEL_PRINTER_DC Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/gdi/wel_printer_dc_chart.html">WEL_PRINTER_DC</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../wel/gdi/index.html">wel.gdi</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Device context associated to a printer."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_make_by_pointer">make_by_pointer</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/gdi/wel_dc_chart.html">WEL_DC</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`background_color' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_background_color">background_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bitmap' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_bitmap">bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_bitmap_chart.html">WEL_BITMAP</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bitmap_selected' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_bitmap_selected">bitmap_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`brush' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_brush">brush</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_brush_chart.html">WEL_BRUSH</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`brush_selected' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_brush_selected">brush_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`device_caps' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_device_caps">device_caps</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">capability</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`di_bits' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_di_bits">di_bits</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">start_scan</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">scan_lines</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bitmap_info</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_bitmap_info_chart.html">WEL_BITMAP_INFO</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">usage</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`font' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_font">font</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_font_chart.html">WEL_FONT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`font_selected' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_font_selected">font_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`height' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`internal_number_id' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_internal_number_id">internal_number_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`internal_number_id_cell' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_internal_number_id_cell">Internal_number_id_cell</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/list/cell_chart.html">CELL</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_opaque' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_is_opaque">is_opaque</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_transparent' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_is_transparent">is_transparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`map_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_map_mode">map_mode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mask_blt_supported' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_mask_blt_supported">Mask_blt_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`object_id' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_object_id">object_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`palette' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_palette">palette</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_palette_chart.html">WEL_PALETTE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`palette_selected' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_palette_selected">palette_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pen' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_pen">pen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_pen_chart.html">WEL_PEN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pen_selected' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_pen_selected">pen_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pixel_color' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_pixel_color">pixel_color</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`polygon_fill_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_polygon_fill_mode">polygon_fill_mode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`position' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_position">position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_point_chart.html">WEL_POINT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`reference_tracked' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_reference_tracked">reference_tracked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`references_count' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_references_count">references_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_region">region</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_region_chart.html">WEL_REGION</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`region_selected' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_region_selected">region_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`rop2' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_rop2">rop2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`stretch_blt_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_stretch_blt_mode">stretch_blt_mode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`string_height' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_string_height">string_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`string_size' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_string_size">string_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_size_chart.html">WEL_SIZE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`string_width' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_string_width">string_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tabbed_text_height' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_tabbed_text_height">tabbed_text_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tabbed_text_size' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_tabbed_text_size">tabbed_text_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_size_chart.html">WEL_SIZE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tabbed_text_size_with_tabulation' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_tabbed_text_size_with_tabulation">tabbed_text_size_with_tabulation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">tabulations</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_size_chart.html">WEL_SIZE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tabbed_text_width' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_tabbed_text_width">tabbed_text_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text_alignment' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_text_alignment">text_alignment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text_color' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_text_color">text_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text_face' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_text_face">text_face</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_dib_colors_constant' was declared in WEL_DIB_COLORS_CONSTANTS"><A CLASS="efeature" HREF="../../wel/consts/wel_dib_colors_constants.html#f_valid_dib_colors_constant">valid_dib_colors_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_extent_map_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_valid_extent_map_mode">valid_extent_map_mode</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_map_mode_constant' was declared in WEL_MM_CONSTANTS"><A CLASS="efeature" HREF="../../wel/consts/wel_mm_constants.html#f_valid_map_mode_constant">valid_map_mode_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_polygon_fill_mode_constant' was declared in WEL_POLYGON_FILL_MODE_CONSTANTS"><A CLASS="efeature" HREF="../../wel/consts/wel_polygon_fill_mode_constants.html#f_valid_polygon_fill_mode_constant">valid_polygon_fill_mode_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_rop2_constant' was declared in WEL_ROP2_CONSTANTS"><A CLASS="efeature" HREF="../../wel/consts/wel_rop2_constants.html#f_valid_rop2_constant">valid_rop2_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_stretch_mode_constant' was declared in WEL_STRETCH_MODE_CONSTANTS"><A CLASS="efeature" HREF="../../wel/consts/wel_stretch_mode_constants.html#f_valid_stretch_mode_constant">valid_stretch_mode_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_text_alignement_constant' was declared in WEL_TA_CONSTANTS"><A CLASS="efeature" HREF="../../wel/consts/wel_ta_constants.html#f_valid_text_alignement_constant">valid_text_alignement_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`viewport_extent' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_viewport_extent">viewport_extent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_size_chart.html">WEL_SIZE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`viewport_origin' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_viewport_origin">viewport_origin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_point_chart.html">WEL_POINT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`width' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`window_extent' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_window_extent">window_extent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_size_chart.html">WEL_SIZE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`window_origin' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_window_origin">window_origin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_point_chart.html">WEL_POINT</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`abort_document' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_abort_document">abort_document</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`arc' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_arc">arc</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">left</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">right</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bottom</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_start_arc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_start_arc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_end_arc</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_end_arc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bit_blt' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_bit_blt">bit_blt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">dc_source</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">raster_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`chord' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_chord">chord</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">left</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">right</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bottom</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_start_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_start_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_end_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_end_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`copy_dc' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_copy_dc">copy_dc</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dc_source</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`decrement_reference' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_decrement_reference">decrement_reference</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`delete' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_delete">delete</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_dispose">dispose</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`draw_bitmap' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_draw_bitmap">draw_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`draw_centered_text' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_draw_centered_text">draw_centered_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`draw_cursor' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_draw_cursor">draw_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cursor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_cursor_chart.html">WEL_CURSOR</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`draw_icon' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_draw_icon">draw_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`draw_icon_ex' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_draw_icon_ex">draw_icon_ex</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">icon_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">icon_height</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">frame_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">flicker_free_background</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_brush_chart.html">WEL_BRUSH</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">di_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`draw_text' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_draw_text">draw_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">format</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ellipse' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_ellipse">ellipse</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">left</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">right</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bottom</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_reference_tracking' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_enable_reference_tracking">enable_reference_tracking</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`end_document' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_end_document">end_document</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`end_page' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_end_page">end_page</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill_rect' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_fill_rect">fill_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_brush</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_brush_chart.html">WEL_BRUSH</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill_region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_fill_region">fill_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_brush</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_brush_chart.html">WEL_BRUSH</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`flood_fill_border' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_flood_fill_border">flood_fill_border</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`flood_fill_surface' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_flood_fill_surface">flood_fill_surface</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`get' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_get">get</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`increment_reference' was declared in WEL_REFERENCE_TRACKABLE"><A CLASS="efeature" HREF="../../wel/support/wel_reference_trackable.html#f_increment_reference">increment_reference</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invert_rect' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_invert_rect">invert_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invert_region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_invert_region">invert_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`line' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_line">line</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x2</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`line_to' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_line_to">line_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mask_blt' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_mask_blt">mask_blt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">dc_source</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_source</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">mask_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x_mask</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_mask</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">raster_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`move_to' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_move_to">move_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pat_blt' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_pat_blt">pat_blt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">raster_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pie' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_pie">pie</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">left</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">right</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bottom</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_start_point</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_start_point</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_end_point</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_end_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`poly_bezier' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_poly_bezier">poly_bezier</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">points</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`poly_bezier_to' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_poly_bezier_to">poly_bezier_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">points</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`polygon' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_polygon">polygon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">points</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`polyline' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_polyline">polyline</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">points</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`realize_palette' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_realize_palette">realize_palette</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`rectangle' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_rectangle">rectangle</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">left</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">right</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bottom</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`release' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_release">release</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_clip_region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_remove_clip_region">remove_clip_region</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`round_rect' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_round_rect">round_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">left</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">top</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">right</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bottom</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">ellipse_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">ellipse_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`save_bitmap' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_save_bitmap">save_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/file_name_chart.html">FILE_NAME</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_bitmap' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_bitmap">select_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_brush' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_brush">select_brush</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_brush</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_brush_chart.html">WEL_BRUSH</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_clip_region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_clip_region">select_clip_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_font' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_font">select_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_font_chart.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_palette' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_palette">select_palette</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_palette</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_palette_chart.html">WEL_PALETTE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_pen' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_pen">select_pen</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pen</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_pen_chart.html">WEL_PEN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`select_region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_select_region">select_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_background_color' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_background_color">set_background_color</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_background_opaque' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_background_opaque">set_background_opaque</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_background_transparent' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_background_transparent">set_background_transparent</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_map_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_map_mode">set_map_mode</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_pixel' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_pixel">set_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_polygon_fill_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_polygon_fill_mode">set_polygon_fill_mode</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_rop2' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_rop2">set_rop2</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_rop2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_set_shared">set_shared</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_stretch_blt_mode' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_stretch_blt_mode">set_stretch_blt_mode</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_text_alignment' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_text_alignment">set_text_alignment</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_alignment</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_text_color' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_text_color">set_text_color</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../wel/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_viewport_extent' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_viewport_extent">set_viewport_extent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_extent</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_extent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_viewport_origin' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_viewport_origin">set_viewport_origin</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_origin</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_window_extent' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_window_extent">set_window_extent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_extent</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_extent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_window_origin' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_set_window_origin">set_window_origin</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_origin</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start_document' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_start_document">start_document</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start_document_info' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_start_document_info">start_document_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">doc_info</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_doc_info_chart.html">WEL_DOC_INFO</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start_page' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/gdi/wel_printer_dc.html#f_start_page">start_page</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`stretch_blt' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_stretch_blt">stretch_blt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">width_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">height_destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">dc_source</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">x_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">width_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">height_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">raster_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`stretch_di_bits' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_stretch_di_bits">stretch_di_bits</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_destination</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_source</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">dib_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">dib_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">dib</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/gdi/wel_dib_chart.html">WEL_DIB</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">bitmap_info</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/structs/wel_bitmap_info_chart.html">WEL_BITMAP_INFO</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rgb_mode</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">raster_operation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tabbed_text_out' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_tabbed_text_out">tabbed_text_out</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">tabulations</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">tabulations_origin</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text_out' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_text_out">text_out</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_all' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_all">unselect_all</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_bitmap' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_bitmap">unselect_bitmap</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_brush' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_brush">unselect_brush</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_font' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_font">unselect_font</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_palette' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_palette">unselect_palette</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_pen' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_pen">unselect_pen</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unselect_region' was declared in WEL_DC"><A CLASS="efeature" HREF="../../wel/gdi/wel_dc.html#f_unselect_region">unselect_region</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>

@@ -1,0 +1,150 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
+		
+<TITLE>WEL_COMMAND_MANAGER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../wel/support/wel_command_manager_chart.html">WEL_COMMAND_MANAGER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../wel/support/index.html">wel.support</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Command manager which is able to retrieve the command associated to a Windows message."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../wel/support/wel_command_manager.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">H</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/hashable_chart.html">HASHABLE</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`_infix_@' was declared in HASH_TABLE"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../reference/structures/table/hash_table.html#f__infix_@">@</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`after' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_after">after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`capacity' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_capacity">capacity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><A CLASS="efeature" HREF="../../reference/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`conflict' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_conflict">conflict</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`current_keys' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_current_keys">current_keys</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cursor' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_cursor">cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/cursors/cursor_chart.html">CURSOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_command_manager.html#f_exists">exists</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`found' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`found_item' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_found_item">found_item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_item' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_has_item">has_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`inserted' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_inserted">inserted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' was declared in FINITE"><A CLASS="efeature" HREF="../../reference/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_equal' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_manager_chart.html">WEL_COMMAND_MANAGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item_for_iteration' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_item_for_iteration">item_for_iteration</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`key_for_iteration' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_key_for_iteration">key_for_iteration</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`linear_representation' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`not_found' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_not_found">not_found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../reference/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`occurrences' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_occurrences">occurrences</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`off' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prunable' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`removed' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_removed">removed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replaced' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_replaced">replaced</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_cursor' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_valid_cursor">valid_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/cursors/cursor_chart.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_key' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`accommodate' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_accommodate">accommodate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`clear_all' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_clear_all">clear_all</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../reference/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../reference/structures/access/container.html#f_compare_references">compare_references</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`copy' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_manager_chart.html">WEL_COMMAND_MANAGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extend' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fill' was declared in COLLECTION"><A CLASS="efeature" HREF="../../reference/structures/access/collection.html#f_fill">fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/access/container_chart.html">CONTAINER</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`force' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_command_manager.html#f_force">force</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`forth' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_forth">forth</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`go_to' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_go_to">go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/structures/cursors/cursor_chart.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hash_table_force' was declared in HASH_TABLE as `force'"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_force">hash_table_force</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hash_table_make' was declared in HASH_TABLE as `make'"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_make">hash_table_make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hash_table_remove' was declared in HASH_TABLE as `remove'"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_remove">hash_table_remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_command_manager.html#f_make">make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove' is declared in `Current'"><A CLASS="efeature" HREF="../../wel/support/wel_command_manager.html#f_remove">remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../wel/support/wel_command_exec_chart.html">WEL_COMMAND_EXEC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace_key' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_replace_key">replace_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_key</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`search' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start' was declared in HASH_TABLE"><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_start">start</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+</BODY>
+
+</HTML>

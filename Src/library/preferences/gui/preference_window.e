@@ -56,11 +56,6 @@ feature {NONE} -- Initialization
 			right_list.column_resized_actions.extend (agent on_right_list_column_resize)
 			right_list.resize_actions.extend (agent on_window_move_and_resize)
 
---			create boolean_selec.make (Current)
---			create text_selec.make (Current)
---			create color_selec.make (Current)
---			create font_selec.make (Current)
-
 				-- Split area
  			create split
 			split.enable_flat_separator
@@ -132,11 +127,8 @@ feature -- Command
 	destroy is
 			-- Destroy the window
 		do
-				-- Destroy the selection windows as well
---			boolean_selec.destroy
---			text_selec.destroy
---			color_selec.destroy
---			font_selec.destroy
+				-- Removes selection windows as well if still displayed.
+			clear
 
 			Precursor {EV_TITLED_WINDOW}
 		end
@@ -525,7 +517,11 @@ feature {NONE} -- Implementation
 	clear is
 			-- Hide the edition window if displayed
 		do
-			if current_edition_window /= Void and then current_edition_window.is_displayed then
+			if
+				current_edition_window /= Void and then
+				not current_edition_window.is_destroyed and then
+				current_edition_window.is_displayed
+			then
 				current_edition_window.hide
 				current_edition_window := Void
 			end
@@ -539,18 +535,6 @@ feature {NONE} -- Private widgets
 	right_list: EV_MULTI_COLUMN_LIST
 			-- List of values attached to field selected in the left list 'left_list'.
 
---	boolean_selec: BOOLEAN_SELECTION_BOX
---			-- Box in which the user may choose whether the value is True or False.
---
---	text_selec: TEXT_SELECTION_BOX
---			-- Box in which the user may change the value representable with a string.
---
---	color_selec: COLOR_SELECTION_BOX
---			-- Box in which the user may change the value associated to a color.
---
---	font_selec: FONT_SELECTION_BOX
---			-- Box in which the user may change the value associated to a font.
---
 	current_edition_window: EV_DIALOG
 			-- Currently displayed edition window. Void if no window is
 			-- displayed.

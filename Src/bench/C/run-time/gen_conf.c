@@ -722,7 +722,9 @@ rt_shared void eif_gen_conf_cleanup ()
 		eif_free (tmp);
 	}
 	eif_free (eif_derivations);	
+#ifdef EIF_THREADS
 	EIFMTX_DESTROY
+#endif
 
 	eif_free (eif_cid_map);		/* (int16 *) */
 } /* eif_gen_conf_cleanup () */

@@ -343,8 +343,8 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 		gc_run();						/* Enabled GC it was previously enabled */
 #endif
 
-	xfree((EIF_REFERENCE) (eif_equality_table->s_keys));	/* Free search table keys */
-	xfree((EIF_REFERENCE) eif_equality_table);				/* Free search table descriptor */
+	eif_rt_xfree((EIF_REFERENCE) (eif_equality_table->s_keys));	/* Free search table keys */
+	eif_rt_xfree((EIF_REFERENCE) eif_equality_table);			/* Free search table descriptor */
 	eif_equality_table = NULL;
 	return result;
 }

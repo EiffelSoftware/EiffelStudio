@@ -2855,7 +2855,7 @@ rt_private void interpret(int flag, int where)
 			array = striparr(icurrent->it_ref, d_type, stripped, temp);
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop); /* If G.C calls melted dispose */
-			xfree ((EIF_REFERENCE) stripped);
+			eif_rt_xfree ((EIF_REFERENCE) stripped);
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = array;
@@ -6048,7 +6048,7 @@ rt_private void wipe_out(register struct stochunk *chunk)
 			chunk != (struct stochunk *) 0; 
 			chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
-		xfree((EIF_REFERENCE) chunk);
+		eif_rt_xfree((EIF_REFERENCE) chunk);
 	}
 
 /*

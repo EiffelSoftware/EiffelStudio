@@ -355,7 +355,7 @@ rt_shared EIF_OBJECT map_next(void)
 		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
 		map_stack.st_bot = cur->sk_arena;		/* This is the new bottom */
 		item = (EIF_OBJECT *) map_stack.st_bot++;	/* Next item in stack */
-		xfree((char *) (map_stack.st_cur));				/* Free previous chunk */
+		eif_rt_xfree((char *) (map_stack.st_cur));				/* Free previous chunk */
 		map_stack.st_cur = cur;					/* It's the new first chunk */
 		map_stack.st_hd = cur;					/* In case of emergency */
 	}
@@ -387,10 +387,10 @@ rt_shared void map_reset(int emergency)
 		for (next = map_stack.st_hd; next != 0; /*empty */) {
 			cur = next;						/* Current chunk to be freed */
 			next = next->sk_next;			/* Compute next chunk... */
-			xfree((char *) cur);			/* ...before freeing it */
+			eif_rt_xfree((char *) cur);			/* ...before freeing it */
 		}
 	} else
-		xfree((char *) (map_stack.st_cur));	/* Free last chunk in stack */
+		eif_rt_xfree((char *) (map_stack.st_cur));	/* Free last chunk in stack */
 
 	memset (&map_stack, 0, sizeof(map_stack));	/* Reset an empty stack */
 	/* Release all the hector pointers asked for during the map table

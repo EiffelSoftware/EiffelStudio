@@ -52,14 +52,14 @@ EIF_REFERENCE sep_obj_create() {
 	/* Create the sep_obj, and return the direct reference */
 	EIF_REFERENCE sep_obj;
 	EIF_INTEGER sep_obj_size = constant_sep_obj_size*constant_sizeofint;
-	sep_obj = xmalloc(sep_obj_size, EIFFEL_T, GC_ON);	
+	sep_obj = eif_rt_xmalloc(sep_obj_size, EIFFEL_T, GC_ON);	
 	if (sep_obj != (char *)0) {
 		sep_obj = eif_set_for_sep_obj(sep_obj, sep_obj_size, _concur_sep_obj_dtype | EO_NEW); 
 			/* Set for Eiffel use */
 	} else {
 		if (gen_scavenge & GS_ON)       /* If generation scaveging was on */
 			sc_stop();                  /* Free 'to' and explode 'from' space
-		sep_obj = xmalloc(sep_obj_size, EIFFEL_T, GC_OFF);	/* Try again */	
+		sep_obj = eif_rt_xmalloc(sep_obj_size, EIFFEL_T, GC_OFF);	/* Try again */	
 		if (sep_obj != (char *)0) {
 			sep_obj = eif_set_for_sep_obj(sep_obj, sep_obj_size, _concur_sep_obj_dtype | EO_NEW); 
 				/* Set for Eiffel use */

@@ -296,7 +296,7 @@ rt_private int extend(register struct stack *stk)
 	register3 char **arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
-	chunk = (struct stchunk *) xmalloc(size * sizeof(char *), C_T, GC_OFF);
+	chunk = (struct stchunk *) eif_rt_xmalloc(size * sizeof(char *), C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0) {
 		chunk = (struct stchunk *) uchunk();	/* Attempt with urgent mem */
 		if (chunk != (struct stchunk *) 0)

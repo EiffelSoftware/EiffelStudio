@@ -459,12 +459,12 @@ rt_private type_table *new_type_conversion_table (int max_types, int num_types)
 	size_t table_size, index_size;
 	int i;
 
-	result = (type_table*) xmalloc (sizeof (type_table), C_T, GC_OFF);
+	result = (type_table*) eif_rt_xmalloc (sizeof (type_table), C_T, GC_OFF);
 	if (result == NULL)
 		xraise (EN_MEM);
 
 	table_size = num_types * sizeof (type_descriptor);
-	result->descriptions = (type_descriptor*) xmalloc (table_size, C_T, GC_OFF);
+	result->descriptions = (type_descriptor*) eif_rt_xmalloc (table_size, C_T, GC_OFF);
 	if (result->descriptions == NULL)
 		xraise (EN_MEM);
 	result->count = num_types;
@@ -476,7 +476,7 @@ rt_private type_table *new_type_conversion_table (int max_types, int num_types)
 	}
 
 	index_size = max_types * sizeof (int16);
-	result->type_index = (int16 *) xmalloc (index_size, C_T, GC_OFF);
+	result->type_index = (int16 *) eif_rt_xmalloc (index_size, C_T, GC_OFF);
 	if (result->type_index == NULL)
 		xraise (EN_MEM);
 	for (i=0; i<max_types; i++)
@@ -490,7 +490,7 @@ rt_private void free_type_conversion_table (type_table *table)
 	if (table != NULL) {
 		int i;
 		if (table->type_index != NULL) {
-			xfree ((char *) table->type_index);
+			eif_rt_xfree ((char *) table->type_index);
 			table->type_index = NULL;
 		}
 		if (table->descriptions != NULL) {
@@ -501,29 +501,29 @@ rt_private void free_type_conversion_table (type_table *table)
 					for (j=0; j<t->attribute_count; j++)
 					{
 						attribute_detail *a = t->attributes + j;
-						xfree (a->name);
+						eif_rt_xfree (a->name);
 						a->name = NULL;
 						if (a->types != NULL) {
-							xfree ((char *) a->types);
+							eif_rt_xfree ((char *) a->types);
 							a->types = NULL;
 						}
 					}
-					xfree ((char *) t->attributes);
+					eif_rt_xfree ((char *) t->attributes);
 					t->attributes = NULL;
 				}
 				if (t->generics != NULL) {
-					xfree ((char *) t->generics);
+					eif_rt_xfree ((char *) t->generics);
 					t->generics = NULL;
 				}
 				if (t->name != NULL) {
-					xfree (t->name);
+					eif_rt_xfree (t->name);
 					t->name = NULL;
 				}
 			}
-			xfree ((char *) table->descriptions);
+			eif_rt_xfree ((char *) table->descriptions);
 			table->descriptions = NULL;
 		}
-		xfree ((char *) table);
+		eif_rt_xfree ((char *) table);
 	}
 }
 
@@ -582,7 +582,7 @@ rt_private EIF_REFERENCE new_spref (int count)
 rt_private mismatch_table *new_mismatch_table (uint32 min_count)
 {
 	uint32 capacity = min_count;
-	mismatch_table *result = (mismatch_table *) xmalloc (
+	mismatch_table *result = (mismatch_table *) eif_rt_xmalloc (
 			sizeof (mismatch_table), C_T, GC_OFF);
 	if (result == NULL)
 		xraise (EN_MEM);
@@ -613,7 +613,7 @@ rt_private void free_mismatch_table (mismatch_table *table)
 	table->values = NULL;
 	table->capacity = 0;
 	table->count = 0;
-	xfree ((char *) table);
+	eif_rt_xfree ((char *) table);
 }
 
 /*
@@ -962,10 +962,10 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	}
 
 	if (rt_kind) {
-		xfree((char *) dtypes);					/* Free the correspondance table */
+		eif_rt_xfree((char *) dtypes);					/* Free the correspondance table */
 	}
 	if ((rt_kind == INDEPENDENT_STORE) || (rt_kind == RECOVERABLE_STORE)) {
-		xfree((char *) spec_elm_size);					/* Free the element size table */
+		eif_rt_xfree((char *) spec_elm_size);					/* Free the element size table */
 	}
 
 	ht_free(rt_table);					/* Free hash table descriptor */
@@ -1076,13 +1076,13 @@ rt_private void independent_retrieve_init (long idrf_size)
 		/* Initialize serialization streams for reading (0 stands for read) */
 	run_idr_init (idrf_size, 0);
 
-	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
 	if (idr_temp_buf == (char *)0)
 		xraise (EN_MEM);
 
-	dattrib = (int **) xmalloc (scount * sizeof (int *), C_T, GC_OFF);
+	dattrib = (int **) eif_rt_xmalloc (scount * sizeof (int *), C_T, GC_OFF);
 	if (dattrib == (int **)0){
-		xfree(idr_temp_buf);
+		eif_rt_xfree(idr_temp_buf);
 		xraise (EN_MEM);
 	}
 	memset  ((char *)dattrib, 0, scount * sizeof (int *));
@@ -1096,15 +1096,15 @@ rt_private void independent_retrieve_reset (void)
 
 	run_idr_destroy ();
 	if (idr_temp_buf != NULL) {
-		xfree (idr_temp_buf);
+		eif_rt_xfree (idr_temp_buf);
 		idr_temp_buf = NULL;
 	}
 	if (dattrib != NULL) {
 		for (i = 0; i < scount; i++) {
 			if (*(dattrib + i))
-				xfree ((char *)(*(dattrib +i)));
+				eif_rt_xfree ((char *)(*(dattrib +i)));
 		}
-		xfree ((char *) dattrib);
+		eif_rt_xfree ((char *) dattrib);
 		dattrib = NULL;
 	}
 }
@@ -1113,7 +1113,7 @@ rt_private void independent_retrieve_reset (void)
 rt_private struct htable *create_hash_table (int32 count, size_t size)
 {
 	struct htable *result = (struct htable*)
-			xmalloc (sizeof (struct htable), C_T, GC_OFF);
+			eif_rt_xmalloc (sizeof (struct htable), C_T, GC_OFF);
 	if (result == NULL)
 		xraise (EN_MEM);
 	if (ht_create (result, count, size) == -1)
@@ -1130,13 +1130,13 @@ rt_public void class_translation_clear (void)
 	if (class_translations.table != NULL) {
 		unsigned int i;
 		for (i=0; i<class_translations.count; i++) {
-			xfree ((char *) class_translations.table[i].old_name);
+			eif_rt_xfree ((char *) class_translations.table[i].old_name);
 			class_translations.table[i].old_name = NULL;
 
-			xfree ((char *) class_translations.table[i].new_name);
+			eif_rt_xfree ((char *) class_translations.table[i].new_name);
 			class_translations.table[i].new_name = NULL;
 		}
-		xfree ((char *) class_translations.table);
+		eif_rt_xfree ((char *) class_translations.table);
 		class_translations.table = NULL;
 		class_translations.max_count = 0;
 		class_translations.count = 0;
@@ -1153,7 +1153,7 @@ rt_private void class_translation_grow (void)
 	if (class_translations.max_count == 0) {
 		int max_count = 5;
 		class_translations.table =
-				(class_translation *) xcalloc (max_count, sizeof (class_translation));
+				(class_translation *) eif_rt_xcalloc (max_count, sizeof (class_translation));
 		if (class_translations.table == NULL)
 			xraise (EN_MEM);
 		class_translations.max_count = max_count;
@@ -1162,12 +1162,12 @@ rt_private void class_translation_grow (void)
 	else {
 		int new_max_count = class_translations.max_count * 2;
 		class_translation *new_table =
-				(class_translation *) xcalloc (new_max_count, sizeof (class_translation));
+				(class_translation *) eif_rt_xcalloc (new_max_count, sizeof (class_translation));
 		if (new_table == NULL)
 			xraise (EN_MEM);
 		memcpy (new_table, class_translations.table,
 				class_translations.count * sizeof (class_translation));
-		xfree ((char *) class_translations.table);
+		eif_rt_xfree ((char *) class_translations.table);
 		class_translations.table = new_table;
 		class_translations.max_count = new_max_count;
 	}
@@ -1202,7 +1202,7 @@ rt_public void class_translation_put (char *new_name, char *old_name)
 	unsigned int i;
 	REQUIRE ("Old name exists", old_name != NULL && old_name[0] != '\0');
 	REQUIRE ("New name exists", new_name != NULL && new_name[0] != '\0');
-	newnm = (char *) xmalloc (strlen (new_name) + 1, C_T, GC_OFF);
+	newnm = (char *) eif_rt_xmalloc (strlen (new_name) + 1, C_T, GC_OFF);
 	if (newnm == NULL)
 		xraise (EN_MEM);
 	strcpy (newnm, new_name);
@@ -1212,7 +1212,7 @@ rt_public void class_translation_put (char *new_name, char *old_name)
 	}
 	if (trans != NULL) {
 		/* Key already in table */
-		xfree (trans->new_name);
+		eif_rt_xfree (trans->new_name);
 		trans->new_name = newnm;
 	}
 	else {
@@ -1222,7 +1222,7 @@ rt_public void class_translation_put (char *new_name, char *old_name)
 		trans = class_translations.table + class_translations.count;
 		++class_translations.count;
 		trans->new_name = newnm;
-		trans->old_name = (char *) xmalloc (strlen (old_name) + 1, C_T, GC_OFF);
+		trans->old_name = (char *) eif_rt_xmalloc (strlen (old_name) + 1, C_T, GC_OFF);
 		if (trans->old_name == NULL)
 			xraise (EN_MEM);
 		strcpy (trans->old_name, old_name);
@@ -2012,7 +2012,7 @@ rt_private void rt_clean(void)
 				cell = rt_info->rt_list;
 				while (cell != (struct rt_cell *) 0) {
 					next_cell = cell->next;
-					xfree((char *) cell);
+					eif_rt_xfree((char *) cell);
 					cell = next_cell;
 				}
 			}
@@ -2020,16 +2020,16 @@ rt_private void rt_clean(void)
 		ht_free(rt_table);						/* Free hash table descriptor */
 	}
 	if (dtypes != (int *) 0) {
-		xfree((char *) dtypes);
+		eif_rt_xfree((char *) dtypes);
 		dtypes = (int *) 0;
 	}
 	if (spec_elm_size != (uint32 *)0) {
-		xfree((char *) spec_elm_size);
+		eif_rt_xfree((char *) spec_elm_size);
 		spec_elm_size = (uint32 *)0;
 	}
 
 	if (r_buffer != (char *)0) {
-		xfree (r_buffer);
+		eif_rt_xfree (r_buffer);
 		r_buffer = (char *) 0;
 	}
 #ifdef ISE_GC
@@ -2103,7 +2103,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 		*(EIF_REFERENCE *) (client + offset) = supplier;
 		RTAS(supplier, client);					/* Age check */
 
-		xfree((char *) rt_unsolved);		/* Free reference solving cell */
+		eif_rt_xfree((char *) rt_unsolved);		/* Free reference solving cell */
 		rt_info->rt_list = next;			/* Unlink from list */
 		rt_unsolved = next;	
 	}
@@ -2248,7 +2248,7 @@ rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_RE
 		/* Reference is stil unsolved */
 		struct rt_cell *new_cell, *old_cell;
 
-		new_cell = (struct rt_cell *) xmalloc(sizeof(struct rt_cell), C_T, GC_OFF);
+		new_cell = (struct rt_cell *) eif_rt_xmalloc(sizeof(struct rt_cell), C_T, GC_OFF);
 		if (new_cell == (struct rt_cell *)0)
 			xraise (EN_MEM);
 		new_cell->status = RTU_KEYED;
@@ -2292,7 +2292,7 @@ rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 		EIF_OBJECT new_hector = hrecord (object);
 		nb_recorded++;
 
-		new_cell = (struct rt_cell *) xmalloc (sizeof (struct rt_cell), C_T, GC_OFF);
+		new_cell = (struct rt_cell *) eif_rt_xmalloc (sizeof (struct rt_cell), C_T, GC_OFF);
 		if (new_cell == NULL)
 			xraise (EN_MEM);
 		new_cell->status = RTU_INDIRECTION;
@@ -2342,7 +2342,7 @@ rt_private void read_header(char rt_type)
 		RTXSC;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
-	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
+	r_buffer = (char*) eif_rt_xmalloc (bsize * sizeof (char), C_T, GC_OFF);
 	if (r_buffer == (char *)0)
 		xraise (EN_MEM);
 
@@ -2352,17 +2352,17 @@ rt_private void read_header(char rt_type)
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eise_io("General retrieve: unable to read number of different Eiffel types.");
 	/* create a correspondance table */
-	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
+	dtypes = (int *) eif_rt_xmalloc(old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == (int *) 0)
 		xraise(EN_MEM);
 
 	if (rt_type == GENERAL_STORE_4_0) {
-		sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
+		sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
 #endif
 		if (sorted_attributes == (unsigned int **)0) {
-			xfree ((char *) dtypes);
+			eif_rt_xfree ((char *) dtypes);
 			xraise(EN_MEM);
 			}
 		}
@@ -2457,7 +2457,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		if (rt_type == GENERAL_STORE_4_0)
 			sort_attributes(new_dtype);
 	}
-	xfree (r_buffer);
+	eif_rt_xfree (r_buffer);
 	r_buffer = (char *) 0;
 	expop(&eif_stack);
 }
@@ -2490,7 +2490,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
-	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
+	r_buffer = (char*) eif_rt_xmalloc (bsize * sizeof (char), C_T, GC_OFF);
 	if (r_buffer == (char *) 0)
 		xraise (EN_MEM);
 
@@ -2500,10 +2500,10 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
 	/* create a correspondance table */
-	dtypes = (int *) xmalloc(old_count * sizeof(int), C_T, GC_OFF);
+	dtypes = (int *) eif_rt_xmalloc(old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == (int *)0)
 		xraise (EN_MEM);
-	spec_elm_size = (uint32 *) xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
+	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == (uint32 *)0)
 		xraise (EN_MEM);
 	if (idr_read_line(r_buffer, bsize) <= 0)
@@ -2614,16 +2614,16 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			if (num_attrib != 0) {			/* Only eif_malloc memory and process if 
 								 * the object has attributes.
 								 */
-				attrib_order = (int *) xmalloc (num_attrib * sizeof (int), C_T, GC_OFF);
+				attrib_order = (int *) eif_rt_xmalloc (num_attrib * sizeof (int), C_T, GC_OFF);
 				if (attrib_order == (int *)0)
 					xraise (EN_MEM);
 				for (; num_attrib > 0;) {
 					if (idr_read_line(r_buffer, bsize) <= 0) {
-						xfree ((char *) attrib_order);
+						eif_rt_xfree ((char *) attrib_order);
 						eise_io("Independent retrieve: unable to read attribute description.");
 					}
 					if (sscanf(r_buffer," %lu %s", &read_attrib, att_name) != 2) {
-						xfree ((char *) attrib_order);
+						eif_rt_xfree ((char *) attrib_order);
 						eise_io("Independent retrieve: unable to read attribute description.");
 					}
 
@@ -2639,7 +2639,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	
 							while (strcmp(att_name, *(System (new_dtype).cn_names + i++))) {
 								if (i >= chk_attrib){
-									xfree ((char *) attrib_order);
+									eif_rt_xfree ((char *) attrib_order);
 									(void) strcat (vis_name + strlen (vis_name), ".");
 									(void) strcat (vis_name + strlen (vis_name), att_name);
 									eraise(vis_name, EN_RETR); 
@@ -2655,7 +2655,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 									== (uint32) read_attrib) {
 								*(attrib_order + num_attrib) = i;
 							} else {
-								xfree ((char *) attrib_order);
+								eif_rt_xfree ((char *) attrib_order);
 								(void) strcat (vis_name + strlen (vis_name), ".");
 								(void) strcat (vis_name + strlen (vis_name), att_name);
 								eraise(vis_name, EN_RETR);
@@ -2665,7 +2665,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 							*(attrib_order + num_attrib) = num_attrib;
 						}
 					} else {
-						xfree ((char *) attrib_order);
+						eif_rt_xfree ((char *) attrib_order);
 						(void) strcat (vis_name + strlen (vis_name), ".");
 						(void) strcat (vis_name + strlen (vis_name), att_name);
 						eraise(vis_name, EN_RETR);	/* non matching attributes */
@@ -2679,7 +2679,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		dattrib [new_dtype] = attrib_order;		/* store position of attribute in obj*/
 		attrib_order = (int *) 0;			/* make sure its null for next loop */
 	}
-	xfree (r_buffer);
+	eif_rt_xfree (r_buffer);
 	r_buffer = (char*) 0;
 	expop(&eif_stack);
 }
@@ -3081,7 +3081,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
 
-	r_buffer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
+	r_buffer = (char*) eif_rt_xmalloc (bsize * sizeof (char), C_T, GC_OFF);
 	if (r_buffer == NULL)
 		xraise (EN_MEM);
 
@@ -3091,10 +3091,10 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	if (sscanf (r_buffer,"%d\n", &old_count) != 1)
 		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
 	/* create a correspondance table */
-	dtypes = (int *) xmalloc (old_count * sizeof(int), C_T, GC_OFF);
+	dtypes = (int *) eif_rt_xmalloc (old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == NULL)
 		xraise (EN_MEM);
-	spec_elm_size = (uint32 *) xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
+	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == NULL)
 		xraise (EN_MEM);
 	if (idr_read_line (r_buffer, bsize) <= 0)
@@ -3157,7 +3157,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 			int j;
 
 			/* Read meta-types */
-			conv->generics = (int32 *) xmalloc (nb_gen * sizeof (int32), C_T, GC_OFF);
+			conv->generics = (int32 *) eif_rt_xmalloc (nb_gen * sizeof (int32), C_T, GC_OFF);
 			if (conv->generics == NULL)
 				xraise (EN_MEM);
 			conv->generic_count = nb_gen;
@@ -3237,7 +3237,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		dtypes[dtype] = new_dtype;			/* store new type on old type */
 		conv->new_type = new_dtype;
 
-		conv->name = (char *) xmalloc (strlen(vis_name)+1, C_T, GC_OFF);
+		conv->name = (char *) eif_rt_xmalloc (strlen(vis_name)+1, C_T, GC_OFF);
 		if (conv->name == NULL)
 			xraise (EN_MEM);
 		else
@@ -3262,23 +3262,23 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 			long att_type;
 
 			attributes = (attribute_detail *)
-					xmalloc (num_attrib * sizeof (attribute_detail), C_T, GC_OFF);
+					eif_rt_xmalloc (num_attrib * sizeof (attribute_detail), C_T, GC_OFF);
 			if (attributes == NULL)
 				xraise (EN_MEM);
 			conv->attributes = attributes;
 
 			for (j=num_attrib-1; j>=0; j--) {
 				if (idr_read_line (r_buffer, bsize) <= 0) {
-					xfree ((char *) attributes);
+					eif_rt_xfree ((char *) attributes);
 					eise_io ("Independent retrieve: unable to read attribute description.");
 				}
 				if (sscanf (r_buffer," %lu %s", &att_type, vis_name) != 2) {
-					xfree ((char *) attributes);
+					eif_rt_xfree ((char *) attributes);
 					eise_io ("Independent retrieve: unable to read attribute description.");
 				}
 				if (att_type == SK_BIT)
 					eraise ("BIT type unsupported", EN_RETR);
-				attributes[j].name = (char *) xmalloc (strlen (vis_name) +1, C_T, GC_OFF);
+				attributes[j].name = (char *) eif_rt_xmalloc (strlen (vis_name) +1, C_T, GC_OFF);
 				if (attributes[j].name == NULL)
 					xraise (EN_MEM);
 				else
@@ -3315,7 +3315,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		}
 #endif
 	}
-	xfree (r_buffer);
+	eif_rt_xfree (r_buffer);
 	r_buffer = (char*) 0;
 	expop (&eif_stack);
 }
@@ -3531,7 +3531,7 @@ rt_private void rread_attribute (attribute_detail *a)
 
 	/* Read attribute name */
 	ridr_multi_int16 (&name_length, 1);
-	a->name = (char *) xmalloc (name_length + 1, C_T, GC_OFF);
+	a->name = (char *) eif_rt_xmalloc (name_length + 1, C_T, GC_OFF);
 	if (a->name == NULL)
 		xraise (EN_MEM);
 	ridr_multi_char ((EIF_CHARACTER *) a->name, name_length);
@@ -3569,7 +3569,7 @@ rt_private void rread_type (int type_index)
 	int16 dtype;
 
 	ridr_multi_int16 (&name_length, 1);
-	vis_name = (char *) xmalloc (name_length + 1, C_T, GC_OFF);
+	vis_name = (char *) eif_rt_xmalloc (name_length + 1, C_T, GC_OFF);
 	if (vis_name == NULL)
 		xraise (EN_MEM);
 	ridr_multi_char ((EIF_CHARACTER *) vis_name, name_length);
@@ -3586,7 +3586,7 @@ rt_private void rread_type (int type_index)
 	/* Determine dynamic type in current system corresponding to type
 	 * in storing system */
 	if (nb_gen > 0) {
-		conv->generics = (int32 *) xmalloc (nb_gen * sizeof (int32), C_T, GC_OFF);
+		conv->generics = (int32 *) eif_rt_xmalloc (nb_gen * sizeof (int32), C_T, GC_OFF);
 		if (conv->generics == NULL)
 			xraise (EN_MEM);
 		conv->generic_count = nb_gen;
@@ -3605,7 +3605,7 @@ rt_private void rread_type (int type_index)
 	if (num_attrib > 0) {
 		int i;
 		attribute_detail *attributes = (attribute_detail *)
-				xmalloc (num_attrib * sizeof (attribute_detail), C_T, GC_OFF);
+				eif_rt_xmalloc (num_attrib * sizeof (attribute_detail), C_T, GC_OFF);
 		if (attributes == NULL)
 			xraise (EN_MEM);
 		conv->attributes = attributes;
@@ -3641,12 +3641,12 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	printf ("-- Reading header: %d types\n", type_count);
 #endif
 
-	spec_elm_size = (uint32 *) xmalloc (old_max_types * sizeof (uint32), C_T, GC_OFF);
+	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_max_types * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == NULL)
 		xraise (EN_MEM);
 
 	/* create a correspondance table, still needed by rt_id_read_cid() */
-	dtypes = (int *) xmalloc (old_max_types * sizeof(int), C_T, GC_OFF);
+	dtypes = (int *) eif_rt_xmalloc (old_max_types * sizeof(int), C_T, GC_OFF);
 	if (dtypes == NULL)
 		xraise (EN_MEM);
 
@@ -4412,7 +4412,7 @@ rt_private EIF_REFERENCE object_rread_special (
 	if (object != NULL)
 		addr = object;
 	else {
-		trash = (EIF_REFERENCE) xmalloc (count * sizeof (multi_value), C_T, GC_OFF);
+		trash = (EIF_REFERENCE) eif_rt_xmalloc (count * sizeof (multi_value), C_T, GC_OFF);
 		addr = trash;
 	}
 	if (!(flags & EO_REF)) {			/* Special of simple types */
@@ -4448,7 +4448,7 @@ rt_private EIF_REFERENCE object_rread_special (
 		ridr_multi_any ((char *) addr, count);
 
 	if (trash != NULL)
-		xfree (trash);
+		eif_rt_xfree (trash);
 
 	return result;
 }
@@ -4465,7 +4465,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 	if (object != NULL)
 		addr = object;
 	else {
-		trash = (EIF_REFERENCE) xmalloc (count * sizeof (EIF_TYPED_ELEMENT), C_T, GC_OFF);
+		trash = (EIF_REFERENCE) eif_rt_xmalloc (count * sizeof (EIF_TYPED_ELEMENT), C_T, GC_OFF);
 		addr = trash;
 	}
 
@@ -4495,7 +4495,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 	}
 
 	if (trash != NULL)
-		xfree (trash);
+		eif_rt_xfree (trash);
 }
 
 rt_private int char_read(char *pointer, int size)

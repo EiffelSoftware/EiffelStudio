@@ -42,16 +42,16 @@ rt_shared void hash_malloc(struct hash *hp, register long int size)
 	 /* Initialization of the hash table */
 
 	hp->h_size = nprime(4 * size /3);
-	hp->h_key = (char **) xcalloc(hp->h_size, sizeof(char *));
-	hp->h_entry = (char **) xcalloc(hp->h_size, sizeof(char *));
+	hp->h_key = (char **) eif_rt_xcalloc(hp->h_size, sizeof(char *));
+	hp->h_entry = (char **) eif_rt_xcalloc(hp->h_size, sizeof(char *));
 }
 
 rt_shared void hash_free(struct hash *hp)
 {
 	/* Free memory allocated to the tables. */
 
-	xfree((char *) (hp->h_key));			/* Free keys array */
-	xfree((char *) (hp->h_entry));			/* Free entries array */
+	eif_rt_xfree((char *) (hp->h_key));			/* Free keys array */
+	eif_rt_xfree((char *) (hp->h_entry));			/* Free entries array */
 	hp->h_key = NULL;
 	hp->h_entry = NULL;
 	hp->h_size = 0;

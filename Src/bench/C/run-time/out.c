@@ -122,7 +122,7 @@ rt_public EIF_REFERENCE c_tagged_out(EIF_OBJECT object)
 
 	tagged_out = build_out(object);	/* Build tagged out string for object */
 	result = makestr(tagged_out, strlen(tagged_out));
-	xfree(tagged_out);	/* Buffer not needed anymore */
+	eif_rt_xfree(tagged_out);	/* Buffer not needed anymore */
 
 	return result;		/* An Eiffel string */
 }
@@ -194,7 +194,7 @@ rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 	RT_GET_CONTEXT
 	/* Allocates initial tagged out buffer */
 
-	tagged_out = (char *) xcalloc(TAG_SIZE, sizeof(char));
+	tagged_out = (char *) eif_rt_xcalloc(TAG_SIZE, sizeof(char));
 	if (tagged_out == (char *) 0)
 		enomem(MTC_NOARG);
 	tagged_max = TAG_SIZE;
@@ -315,7 +315,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				write_string(str);
 				sprintf(buffero, "\n");
 				write_out();
-				xfree(str);	/* Allocated by `b_out' */
+				eif_rt_xfree(str);	/* Allocated by `b_out' */
 			}
 			break;
 		case SK_EXP:
@@ -469,7 +469,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					write_string(str);
 					sprintf(buffero, "\n");
 					write_out();
-					xfree(str);	/* Allocated by `b_out' */
+					eif_rt_xfree(str);	/* Allocated by `b_out' */
 				}
 			}
 	else 
@@ -690,7 +690,7 @@ rt_shared char *simple_out(struct item *val)
 	switch (val->type & SK_HEAD) {
 	case SK_EXP:
 	case SK_REF:
-		xfree(tagged_out);							/* What a waste of CPU cycles */
+		eif_rt_xfree(tagged_out);							/* What a waste of CPU cycles */
 		return build_out((EIF_OBJECT)(&val->it_ref));	/* Only for the beauty of it */
 	case SK_VOID:
 		sprintf(tagged_out, "Not an object!");

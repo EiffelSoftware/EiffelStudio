@@ -9,7 +9,7 @@
 
 rt_public int epush(register struct stack *stk, register EIF_REFERENCE value) {}
 rt_public void epop(register struct stack *stk, register int nb_items) {}
-rt_public EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag) {}
+rt_public EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag) {}
 rt_public void eraise(char *tag, int val) {}
 rt_public EIF_REFERENCE eif_set(EIF_REFERENCE object, unsigned int nbytes, uint32 type) {}
 rt_public struct stack loc_stack;

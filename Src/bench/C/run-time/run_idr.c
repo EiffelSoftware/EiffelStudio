@@ -149,7 +149,7 @@ rt_public void run_mem_destroy(IDR *idrs)
 
 	idrs->i_size = 0;
 	if (idrs->i_buf != (char *) 0) {
-		xfree(idrs->i_buf);
+		eif_rt_xfree(idrs->i_buf);
 		idrs->i_buf = idrs->i_ptr = (char *) 0;
 	}
 }
@@ -185,12 +185,12 @@ rt_public int run_idrf_create(int size)
 	char *in_addr;			/* IDR input data buffer */
 
 	/* Create input IDR memory stream (decode mode) */
-	if ((char *) 0 == (in_addr = (char *) xmalloc(size, C_T, GC_OFF)))
+	if ((char *) 0 == (in_addr = (char *) eif_rt_xmalloc(size, C_T, GC_OFF)))
 		return -1;
 
 	/* Create output IDR memory stream (encode mode) */
-	if ((char *) 0 == (out_addr = (char *) xmalloc(size, C_T, GC_OFF))) {
-		xfree(in_addr);
+	if ((char *) 0 == (out_addr = (char *) eif_rt_xmalloc(size, C_T, GC_OFF))) {
+		eif_rt_xfree(in_addr);
 		return -1;
 	}
 

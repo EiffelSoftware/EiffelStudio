@@ -76,17 +76,11 @@ feature -- Access
 			value.return_actions.block
 			step.return_actions.block
 			leap.return_actions.block
---			user_can_resize.select_actions.block
---			maximum_width.return_actions.block
---			maximum_height.return_actions.block
+			
 			value.set_text (first.value.out)
 			step.set_text (first.step.out)
 			leap.set_text (first.leap.out)
 
---			user_can_resize.select_actions.resume
---			maximum_width.return_actions.resume
---			maximum_height.return_actions.resume
---			title.change_actions.resume
 			value.return_actions.resume
 			step.return_actions.resume
 			leap.return_actions.resume
@@ -133,11 +127,20 @@ feature {GB_XML_STORE} -- Output
 	
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
+		local
+			gauge: EV_GAUGE
 		do
---			add_element_containing_boolean (element, User_can_resize_string, objects.first.user_can_resize)
---			add_element_containing_integer (element, Maximum_width_string, objects.first.maximum_width)
---			add_element_containing_integer (element, Maximum_height_string, objects.first.maximum_height)
---			add_element_containing_string (element, Title_string, objects.first.title)
+			gauge ?= new_instance_of (dynamic_type_from_string (class_name (first)))
+			gauge.default_create
+			if gauge.value /= first.value then
+				add_element_containing_integer (element, Value_string, objects.first.value)
+			end
+			if gauge.step /= first.step then
+				add_element_containing_integer (element, Step_string, objects.first.step)
+			end
+			if gauge.leap /= first.leap then
+				add_element_containing_integer (element, Leap_string, objects.first.leap)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -147,24 +150,22 @@ feature {GB_XML_STORE} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
---			full_information := get_unique_full_info (element)
---			
---			element_info := full_information @ (User_can_resize_string)
---			if element_info.data.is_equal (True_string) then
---				for_all_objects (agent {EV_WINDOW}.enable_user_resize)
---			else
---				for_all_objects (agent {EV_WINDOW}.disable_user_resize)
---			end
---			
---			element_info := full_information @ (Maximum_width_string)
---			for_all_objects (agent {EV_WINDOW}.set_maximum_width(element_info.data.to_integer))
---			
---			element_info := full_information @ (Maximum_height_string)
---			for_all_objects (agent {EV_WINDOW}.set_maximum_height(element_info.data.to_integer))
---			
---			element_info := full_information @ (title_string)
---			for_all_objects (agent {EV_WINDOW}.set_title (element_info.data))
---			
+			full_information := get_unique_full_info (element)
+			
+			element_info := full_information @ (Value_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_GAUGE}.set_value (element_info.data.to_integer))
+			end
+			
+			element_info := full_information @ (Step_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_GAUGE}.set_step (element_info.data.to_integer))
+			end
+			
+			element_info := full_information @ (Leap_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_GAUGE}.set_leap (element_info.data.to_integer))
+			end
 		end
 		
 feature {GB_CODE_GENERATOR} -- Output
@@ -177,21 +178,21 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
---			Result := ""
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (text_string)
---			if element_info /= Void and then element_info.data.count /= 0 then
---				Result := a_name + ".set_text (%"" + element_info.data + "%")"
---			end
---			element_info := full_information @ (text_alignment_string)
---			if element_info.data.is_equal (Ev_textable_left_string) then
---				Result := Result + indent + a_name + ".align_text_left"
---			elseif element_info.data.is_equal (Ev_textable_center_string) then
---				Result := Result + indent + a_name + ".align_text_center"
---			elseif element_info.data.is_equal (Ev_textable_right_string) then
---				Result := Result + indent + a_name + ".align_text_right"
---			end
---			Result := strip_leading_indent (Result)
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Value_string)
+			if element_info /= Void then
+				Result := a_name + ".set_value (" + element_info.data + ")"
+			end
+			element_info := full_information @ (Step_string)
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_step (" + element_info.data + ")"
+			end
+			element_info := full_information @ (Leap_string)
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_leap (" + element_info.data + ")"
+			end
+			Result := strip_leading_indent (Result)
 		end
 
 feature {NONE} -- Implementation
@@ -246,8 +247,5 @@ feature {NONE} -- Implementation
 	Value_string: STRING is "Value"
 	Step_string: STRING is "Step"
 	Leap_string: STRING is "Leap"
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class GB_EV_WINDOW

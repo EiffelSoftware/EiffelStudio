@@ -275,14 +275,13 @@ feature -- Labels manipulation
 			
 			if l_label.is_position_set then
 				l_jmp := l_label.position - (current_position + 4)
-				add_integer (l_jmp)
 			else
 					-- Store current location so that we can 
 					-- update with correct offset as soon as we
 					-- know about `l_label' position.
 				l_label.mark_branch_position (current_position)
-				current_position := current_position + 4
 			end
+			add_integer (l_jmp)
 		end
 
 	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER) is
@@ -420,7 +419,7 @@ feature {NONE} -- Opcode insertion helpers
 			l_capacity: INTEGER
 		do
 			l_capacity := item.count
-			if pos > l_capacity then
+			if pos >= l_capacity then
 				item.resize (pos.max (l_capacity + Chunk_size))
 			end
 			item.put_integer_8 (val, pos)
@@ -456,7 +455,7 @@ feature {NONE} -- Implementation
 			
 invariant
 	item_not_void: item /= Void
-	current_position_valid: current_position >= 0 and current_position < item.count
+	current_position_valid: current_position >= 0 and current_position <= item.count
 	valid_max_stack: max_stack >= 0 and then max_stack < 65535
 	
 end -- class MD_METHOD_BODY

@@ -15,6 +15,8 @@ inherit
 
 feature -- Access
 
+	is_synchronized: BOOLEAN
+
 	current_stack_address: STRING
 	current_stack_pseudo_depth: INTEGER
 	current_module_name: STRING
@@ -44,6 +46,14 @@ feature -- Is Equal
 				and then (current_class_token 			= other.current_class_token			)
 				and then (current_feature_token 		= other.current_feature_token		)
 				and then (current_il_offset		 		= other.current_il_offset			)
+		end
+
+feature -- Properties
+
+	set_synchronized (val: BOOLEAN) is
+			-- Change is_synchronized.
+		do
+			is_synchronized := val
 		end
 
 feature -- Change

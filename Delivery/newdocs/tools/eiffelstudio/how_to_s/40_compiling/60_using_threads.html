@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Using threads</TITLE>
+		<META NAME="MS-HKWD" CONTENT="threads, using">
+		<META NAME="MS-HKWD" CONTENT="using threads">
+		<META NAME="MS-HKWD" CONTENT="multithreaded programs">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Using threads</H1>
+        <p>Eiffel supports multithreaded programs. The HYPERLINK(thread library)
+        thread library provides ways to handle threads safely inside an Eiffel
+        program. Make sure you HYPERLINK(editing/adding_a_component) add it to
+        your project if you want to use threads.</p>
+
+        <p>To create a multithreaded program or library:</p>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>Advanced</b> tab, check the <b>multithreaded runtime</b>
+              option.
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <p>SCREENSHOT(multithreaded runtime in project settings dialog).</p>
+
+        <P CLASS="warning"><B>Caution</B>: Make sure the external and precompiled
+        libraries you use have also been compiled with support for threads.</P>
+
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="15_generating_libraries.html">Creating libraries</A><BR>
+					<A HREF="HYPERLINK(editing_a_project/adding_components).html">Adding classes and clusters from
+                    Eiffel libraries without precompiling the library</A>
+		</P>
+	</BODY>
+</HTML>

@@ -24,10 +24,10 @@ feature -- Status
 		local
 			res: INTEGER
 			success: BOOLEAN
-			is_windows95: BOOLEAN
+			is_windows_95: BOOLEAN
 		do
-			is_windows95 := (create {WEL_WINDOWS_VERSION}).is_windows95
-			if not is_windows95 or else has_windows_plus then
+			is_windows_95 := (create {WEL_WINDOWS_VERSION}).is_windows_95
+			if not is_windows_95 or else has_windows_plus then
 				success := c_system_parameters_info (Spi_getdragfullwindows, 1, $res, 0)
 				if success then
 					Result := res /= 0
@@ -41,7 +41,7 @@ feature -- Status
 			-- The pvParam parameter is not used. The function returns TRUE
 			-- if the extension is installed, or FALSE if it is not.
 		require
-			is_windows_95: (create {WEL_WINDOWS_VERSION}).is_windows95
+			is_windows_95: (create {WEL_WINDOWS_VERSION}).is_windows_95
 		local
 			success: BOOLEAN
 			res: INTEGER

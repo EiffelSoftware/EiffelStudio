@@ -153,7 +153,7 @@ feature -- Basic operation
 			an_object_display_item_not_void: an_object.display_object /= Void
 			an_object_layout_item_not_void: an_object.layout_item /= Void
 		do
-			replace_object (an_object, build_object_from_string (a_type))
+			replace_object (an_object, build_object_from_string_and_assign_id (a_type))
 		end
 		
 	replace_object (an_object, new_object: GB_OBJECT) is
@@ -277,8 +277,17 @@ feature -- Basic operation
 			not_in_objects: not objects.has (an_object)
 		end
 
+	build_object_from_string_and_assign_id (a_text: STRING): GB_OBJECT is
+			-- Generate `Result' from `text' with a new id assigned.
+		do
+			Result := build_object_from_string (a_text)
+			Result.assign_id
+		end
+		
+
 	build_object_from_string (a_text: STRING): GB_OBJECT is
 			-- Generate `Result' from `text'.
+			-- `Result' will not have and id.
 		require
 			text_valid: a_text.count > 0 -- This is not a  complete check, but is better than nothing.
 		local
@@ -412,6 +421,14 @@ feature -- Basic operation
 				-- we close and then re-load a project, the
 				-- events recorded for `window_object' are extended.
 			window_object.events.wipe_out
+			
+				-- Wipe `deleted_objects'.
+			deleted_objects.wipe_out
+				-- Wipe out `objects' but restore the
+				-- first item, as it is the Window object,
+				-- and will not be re-built.
+			objects.wipe_out
+			objects.extend (window_object)
 		end
 		
 	string_is_object_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
@@ -444,7 +461,7 @@ feature -- Basic operation
 	string_is_feature_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
-			current_name_lower, name_lower: STRING
+			name_lower: STRING
 			current_object: GB_OBJECT
 		do
 				-- Do nothing if `object_name' is empty.
@@ -486,10 +503,6 @@ feature -- Basic operation
 			-- if not `Void', but still check the events for `an_object'.
 			-- Returns `False' if `object_name' is empty. This is because you are
 			-- allowed to have as many "unnamed" objects as you wish.
-		local
-			current_name_lower, name_lower: STRING
-			current_object: GB_OBJECT
-			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		do
 			Result := string_is_object_name (object_name, an_object) or
 				string_is_feature_name (object_name, an_object)
@@ -502,7 +515,7 @@ feature -- Basic operation
 		require
 			feature_name_already_used: string_is_feature_name (feature_name, Void)
 		local
-			current_name_lower, name_lower: STRING
+			name_lower: STRING
 			current_object: GB_OBJECT
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 			action_sequence1, action_sequence2: GB_EV_ACTION_SEQUENCE
@@ -635,6 +648,49 @@ feature -- Basic operation
 				layout_item.forth
 			end
 		end
+		
+	object_from_display_widget (ev_any: EV_ANY): GB_OBJECT is
+			-- `Result' is GB_OBJECT with `ev_any' as `object'.
+			-- Only checks in `obejcts'.
+		local
+			local_objects: ARRAYED_LIST [GB_OBJECT]
+			counter: INTEGER
+		do
+			local_objects ?= objects
+			from
+				counter := 1
+			until
+				counter > local_objects.count or
+				Result /= Void
+			loop
+				if (local_objects @ counter).object = ev_any then
+					Result := local_objects @ counter
+				end
+				counter := counter + 1
+			end
+		end
+		
+	object_from_id (an_id: INTEGER): GB_OBJECT is
+			-- `Result' is GB_OBJECT with id `an_id'.
+			-- Only checks in `objects'.
+		local
+			local_objects: ARRAYED_LIST [GB_OBJECT]
+			counter: INTEGER
+		do
+			local_objects ?= objects
+			from
+				counter := 1
+			until
+				counter > local_objects.count or
+				Result /= Void
+			loop
+				if (local_objects @ counter).id = an_id then
+					Result := local_objects @ counter
+				end
+				counter := counter + 1
+			end
+		end
+		
 
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
@@ -662,10 +718,10 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 			new_object_object_not_void: new_object.object /= Void
 		end
 		
-feature {GB_TITLED_WINDOW_OBJECT} -- Implementation
+feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER} -- Implementation
 		
 	add_object_to_objects (an_object: GB_OBJECT) is
-			--
+			-- Add `an_object' to `objects'.
 		require
 			not_already_included: not objects.has (an_object)
 		do

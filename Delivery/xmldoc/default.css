@@ -30,14 +30,6 @@ table.header
 	margin: 0px 0px 0px 0px;
 }
 
-table.content
-{
-	width: 90%;	
-	border: 0;
-	margin-left: 20px;
-	margin-right: 20px;
-}
-
 table.navigation 
 {
 	border-bottom-style: solid;
@@ -80,19 +72,6 @@ td.product_type
 	font: italic;	
 }
 
-table.page_title
-{
-	width: 100%;	
-	margin: 3px 5px 5px 14px;
-}
-
-td.page_title
-{	
-	font: 160%;
-	font-weight: bold;
-	margin: 3px 5px 3px 14px;
-}
-
 a 
 {
 	color: #3333cc;
@@ -109,22 +88,25 @@ h1, h2, h3, h4, h5, h6
 }
 h1 
 {
+	margin: 15px 20px 15px 15px;
 	font-size: 160%;
 }
 
 h2 
 {	
-	font-size: 140%;
+	font-size: 120%;
 }
 
 h3 
 {
-	font-size: 120%;
+	font-size: 110%;
+	font-style: italic;
 }
 
 h4, h5, h6 
 {
 	font-size: 100%;
+	font-style: italic;
 }
 
 ol, ul 

@@ -102,7 +102,7 @@ feature -- Event handling
 			create Result
 		end
 
-	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_in action sequence.
 			-- Attach to GTK "focus-in-event" signal.
 		do
@@ -116,7 +116,7 @@ feature -- Event handling
 --			Result := C.gtk_signal_name ("focus-in-event")
 --		end
 
-	create_focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_out action sequence.
 			-- Attach to GTK "focus-out-event" signal.
 		do

@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 		do
 			Result := 50
 			if not search_text.is_empty then
-				Result := Result + 50
+				Result := Result + 60
 			end
 			if not full_filter_text.is_empty then
 				Result := Result + 50

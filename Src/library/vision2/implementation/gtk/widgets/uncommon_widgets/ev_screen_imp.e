@@ -195,6 +195,12 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
+	flush is
+			-- Force all queued draw to be called.
+		do
+			-- By default do nothing
+		end
+
 	destroy is
 		do
 			C.gdk_gc_unref (gc)

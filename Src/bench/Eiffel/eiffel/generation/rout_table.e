@@ -147,8 +147,8 @@ feature
 			position := old_position
 		end;
 
-	generate (file: INDENT_FILE) is
-			-- Generation of the routine table in file "erout*.c".
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generation of the routine table in buffer "erout*.c".
 		local
 			entry: ROUT_ENTRY;
 			i, nb, index: INTEGER;
@@ -160,9 +160,9 @@ feature
 			from
 				empty_function_ptr_string := "(char *(*)()) 0,%N"
 				function_ptr_cast_string := "(char *(*)()) "
-				file.putstring ("char *(*");
-				file.putstring (rout_id.table_name);
-				file.putstring ("[])() = {%N");
+				buffer.putstring ("char *(*");
+				buffer.putstring (rout_id.table_name);
+				buffer.putstring ("[])() = {%N");
 				local_copy := Current
 				i := min_used;
 				nb := max_used;
@@ -175,22 +175,22 @@ feature
 				if i = entry.type_id then
 					if entry.used then
 						routine_name := entry.routine_name;
-						file.putstring (function_ptr_cast_string);
-						file.putstring (routine_name);
-						file.putstring (",%N");
+						buffer.putstring (function_ptr_cast_string);
+						buffer.putstring (routine_name);
+						buffer.putstring (",%N");
 			
 							-- Remember external routine declaration
 						Extern_declarations.add_routine (entry.type.c_type, clone (routine_name));
 					else
-						file.putstring (empty_function_ptr_string);
+						buffer.putstring (empty_function_ptr_string);
 					end;
 					index := index + 1
 				else
-					file.putstring (empty_function_ptr_string);
+					buffer.putstring (empty_function_ptr_string);
 				end;
 				i := i + 1;
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end; -- generate
 
 	feature_name (type_id: INTEGER): STRING is

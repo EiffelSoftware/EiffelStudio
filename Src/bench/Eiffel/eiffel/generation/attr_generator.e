@@ -12,16 +12,14 @@ inherit
 
 feature
 
-	Size_limit: INTEGER is 20000;
-			-- Limit of size for each generated file
-
 	init_file is
 			-- Initialization of new file
 		require else
-			current_file_exists: current_file /= Void;
-			is_open: current_file.is_open_write;
+			current_buffer_exists: current_buffer /= Void;
 		do
-			current_file.putstring ("#include %"eif_macros.h%"%N%N");
+				-- Clear buffer for Current generation
+			current_buffer.clear_all
+			current_buffer.putstring ("#include %"eif_macros.h%"%N%N");
 		end;
 
 end

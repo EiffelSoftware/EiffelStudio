@@ -119,7 +119,7 @@ feature
 			Result := used
 		end
 
-	generate (file: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- Generation of the table for final Eiffel executable.
 		deferred
 		end
@@ -300,7 +300,7 @@ feature
 			end
 		end
 
-	generate_type_table (file: INDENT_FILE) is
+	generate_type_table (buffer: GENERATION_BUFFER) is
 			-- Generate the associated type table in final mode.
 		local
 			i, j, nb, index: INTEGER
@@ -324,14 +324,14 @@ feature
 				entry := local_copy.array_item (index);
 				if i = entry.type_id then
 					if entry.is_generic then
-						file.putstring ("static int16 ");
-						file.putstring (c_name);
-						file.putstring ("_pgtype");
-						file.putint (j);
-						file.putstring (" [] = {0,");
-						entry.generate_cid (file, True);
-						file.putstring ("-1};");
-						file.new_line;
+						buffer.putstring ("static int16 ");
+						buffer.putstring (c_name);
+						buffer.putstring ("_pgtype");
+						buffer.putint (j);
+						buffer.putstring (" [] = {0,");
+						entry.generate_cid (buffer, True);
+						buffer.putstring ("-1};");
+						buffer.new_line;
 						j := j + 1
 					end;
 					index := index + 1
@@ -340,9 +340,9 @@ feature
 			end;
 
 				-- Now generate pointer table
-			file.putstring ("int16 *");
-			file.putstring (c_name);
-			file.putstring ("_gen_type [] = {%N");
+			buffer.putstring ("int16 *");
+			buffer.putstring (c_name);
+			buffer.putstring ("_gen_type [] = {%N");
 
 			from
 				i := min_type_id;
@@ -355,29 +355,29 @@ feature
 				entry := local_copy.array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
-						file.putstring (c_name);
-						file.putstring ("_pgtype");
-						file.putint (j);
-						file.putchar (',');
+						buffer.putstring (c_name);
+						buffer.putstring ("_pgtype");
+						buffer.putint (j);
+						buffer.putchar (',');
 						j := j + 1;
 					else
-						file.putstring ("0,");
+						buffer.putstring ("0,");
 					end
 					index := index + 1
 				else
-					file.putstring ("0,");
+					buffer.putstring ("0,");
 				end;
-				file.new_line;
+				buffer.new_line;
 
 				i := i + 1;
 			end;
-			file.putstring ("0};%N%N");
+			buffer.putstring ("0};%N%N");
 
 				-- Generate the old stuff
 			from
-				file.putstring ("int16 ")
-				file.putstring (c_name)
-				file.putstring ("[] = {%N")
+				buffer.putstring ("int16 ")
+				buffer.putstring (c_name)
+				buffer.putstring ("[] = {%N")
 				i := min_type_id
 				nb := max_type_id
 				index := lower
@@ -386,15 +386,15 @@ feature
 			loop
 				entry := local_copy.array_item (index)
 				if i = entry.type_id then
-					file.putint (entry.feature_type_id - 1)
-					file.putstring (",%N")
+					buffer.putint (entry.feature_type_id - 1)
+					buffer.putstring (",%N")
 					index := index + 1
 				else
-					file.putstring ("0,%N")
+					buffer.putstring ("0,%N")
 				end
 				i := i + 1
 			end
-			file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
 		end
 
 	workbench_c_type: STRING is

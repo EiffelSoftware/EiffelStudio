@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
 		local
-			character_change: reference INTEGER
+			character_change: INTEGER_REF
 			range_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 		do
 			character_change := 0
@@ -128,7 +128,7 @@ feature -- Status Report
 			Result := internal_character_format_range_information (start_index, end_index, False, Void)
 		end
 
-	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: reference INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consistent from `start_index' to
 			--`end_index' and `False' otherwise.

@@ -1,29 +1,45 @@
-system nest2
-root
+system
+	nest2
 
-	test_i   	(root_cluster): "make"
+root
+	test_i (root_cluster): "make"
 
 default
-
 	assertion (all);
 	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
 
 cluster
 
-	root_cluster:		"$EIFFEL4\library\store\examples\nest2";
-	estore_examples:	"$EIFFEL4\library\store\examples\Utilities";
--- EiffelStore
+	root_cluster:		"$EIFFEL4\examples\store\nest2";
+	estore_examples:	"$EIFFEL4\examples\store\Utilities";
 
+		-- EiffelStore
 	estore_support:		"$EIFFEL4\library\store\support";
 	estore_interface:	"$EIFFEL4\library\store\interface";
 	estore_date:		"$EIFFEL4\library\store\date_and_time";
 	estore_db_support:	"$EIFFEL4\library\store\dbms\support";
 	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc";
 
-external
+		-- EiffelBase
+	kernel: 		"$EIFFEL4\library\base\kernel";
+	support:		"$EIFFEL4\library\base\support";
+	access: 		"$EIFFEL4\library\base\structures\access";
+	cursors:		"$EIFFEL4\library\base\structures\cursors";
+	cursor_tree:	"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
+	iteration:		"$EIFFEL4\library\base\structures\iteration";
+	list:			"$EIFFEL4\library\base\structures\list";
+	set:			"$EIFFEL4\library\base\structures\set";
+	sort:			"$EIFFEL4\library\base\structures\sort";
+	storage:		"$EIFFEL4\library\base\structures\storage";
+	table:			"$EIFFEL4\library\base\structures\table";
+	traversing:		"$EIFFEL4\library\base\structures\traversing";
+	tree:			"$EIFFEL4\library\base\structures\tree";
 
-	object: "$(EIFFEL4)\library\store\support\Clib\support.lib",
-		"$(EIFFEL4)\library\store\date_and_time\Clib\sys_time.lib",
-		"$(EIFFEL4)\library\store\dbms\rdbms\odbc\Clib\odbc_store.lib",
-		"\odbcsdk\lib32\odbc32.lib"
+external
+	object:
+		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib",
+		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\sys_time.lib",
+		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
+		"C:\odbcsdk\lib32\odbc32.lib";
 end

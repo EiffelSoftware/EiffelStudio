@@ -255,6 +255,7 @@ feature -- Access: tokens
 	ise_eiffel_derivation_type_token,
 	ise_eiffel_class_name_attr_ctor_token,
 	ise_assertion_level_attr_ctor_token,
+	ise_interface_type_attr_ctor_token,
 	type_handle_class_token,
 	ise_assertion_level_enum_token: INTEGER
 			-- Token for run-time types used in code generation.
@@ -1917,6 +1918,7 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig: like method_sig
 			l_ise_eiffel_class_name_attr_token: INTEGER
 			l_ise_assertion_level_attr_token: INTEGER
+			l_ise_interface_type_attr_token: INTEGER
 			l_system_type_token: INTEGER
 		do
 				-- Define `ise_runtime_token'.
@@ -2006,6 +2008,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (eiffel_class_name_attribute), ise_runtime_token)
 			l_ise_assertion_level_attr_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (assertion_level_class_name_attribute), ise_runtime_token)
+			l_ise_interface_type_attr_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (interface_type_class_name_attribute), ise_runtime_token)
 			ise_generic_conformance_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
 
@@ -2054,6 +2058,7 @@ feature {NONE} -- Once per modules being generated.
 			ise_eiffel_class_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_eiffel_class_name_attr_token, l_meth_sig)
 
+				-- Definition of `.ctor' for ASSERTION_LEVEL_ATTRIBUTE
 			l_system_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Type"), mscorlib_token)
 			ise_assertion_level_enum_token := md_emit.define_type_ref (
@@ -2071,6 +2076,18 @@ feature {NONE} -- Once per modules being generated.
 			uni_string.set_string (".ctor")
 			ise_assertion_level_attr_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_assertion_level_attr_token, l_meth_sig)
+
+				-- Definition of `.ctor' for CREATION_TYPE_ATTRIBUTE
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				l_system_type_token)
+
+			uni_string.set_string (".ctor")
+			ise_interface_type_attr_ctor_token := md_emit.define_member_ref (uni_string,
+				l_ise_interface_type_attr_token, l_meth_sig)
 		end
 
 feature {NONE} -- Implementation

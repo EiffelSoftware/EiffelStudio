@@ -17,6 +17,14 @@ inherit
 			copy
 		end
 
+	WIZARD_SHARED_VERSION_NUMBER
+		export
+			{NONE}
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 	
@@ -40,14 +48,14 @@ feature {NONE} -- Initialization
 				print (l_cls.program_usage (exe_name) + "%R%N")
 				print ("Use -h/--help for more help." + "%R%N")
 			else
-				if l_valid_options.is_empty then
+				if l_valid_options.has ("-g") then
 					make_and_launch
 				else
 					if l_valid_options.has ("-v") then
 						print_version_info
 					elseif l_valid_options.has ("-h") then
 						print (l_cls.program_help (exe_name, Void, Void))
-					else
+					elseif not l_valid_options.is_empty then
 						if l_valid_options.has ("-e") and not (l_valid_options.has ("-a") and l_valid_options.has ("-f") and l_valid_options.has ("-u")) then
 							print ("Options '-a', '-f' and '-u' required by option '-e'.")
 							print (l_cls.program_usage (exe_name) + "%R%N")
@@ -62,7 +70,7 @@ feature {NONE} -- Initialization
 							if l_valid_options.found then
 								environment.set_class_cluster_name (l_valid_options.found_item.first.twin)
 							end
-							environment.set_compile_c (l_valid_options.has ("-g") or l_valid_options.has ("-l"))
+							environment.set_compile_c (l_valid_options.has ("-i") or l_valid_options.has ("-l"))
 							environment.set_compile_eiffel (l_valid_options.has ("-l"))
 							l_valid_options.search ("-d")
 							if l_valid_options.found then
@@ -142,7 +150,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			s := "EiffelCOM Wizard 2.0.0220" + "%R%N"
+			s := "EiffelCOM Wizard " + version_number + "%R%N"
 			s.append ("Copyright (c) 2005, Eiffel Software. All rights reserved." + "%R%N")
 			print (s)
 		end
@@ -210,11 +218,12 @@ feature {NONE} -- Private Access
 				    "-m,--marshaller#Build marshaller DLL, can only be used with '--client' and if definition file is an IDL file.",
 				    "-d,--destination=DESTINATION!#Generate files in DESTINATION folder. By default files are generated in current folder.",
 				    "-o,--outofprocess#Access or build out of process component. By default access or build in-process component (DLL).",
-				    "-g,--compilec#Compile generated C code.",
-				    "-l,--compileeiffel#Compile eiffel code, also compile C code (implies -g).",
+				    "-i,--compilec#Compile generated C code.",
+				    "-l,--compileeiffel#Compile eiffel code, also compile C code (implies -i).",
 				    "-b,--backup#Backup overriden files by adding extension '.bac'.",
 				    "-p,--cleanup#Cleanup destination folder prior to generation.",
 				    "-n,--nologo#Do not display copyright information.",
+				    "-g,--graphical#Launch GUI.",
 				    "(-c|-s|-e)",
 				    "(-p|-b)">>
 		end

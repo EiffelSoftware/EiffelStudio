@@ -15,7 +15,7 @@ feature -- Initialization
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			create l_process_launcher
-			l_process_launcher.spawn ("com_wizard.exe", Void)
+			l_process_launcher.spawn ("com_wizard.exe -g", Void)
 		end
 
 end -- class ROOT_CLASS

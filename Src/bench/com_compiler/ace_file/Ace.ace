@@ -5,7 +5,6 @@ root
 	ecom_ise_registration: make
 
 default
-	msil_assembly_compatibility ("None")
 	assertion (no)
 	arguments (" ")
 	arguments ("/regserver")
@@ -30,12 +29,18 @@ default
 	disabled_debug ("dead_code")
 	disabled_debug ("dead_code_removal")
 	disabled_debug ("debbugger_hook")
+	disabled_debug ("debug_recv")
+	disabled_debug ("debugger")
 	disabled_debug ("debugger_hook")
+	disabled_debug ("debugger_interface")
+	disabled_debug ("debugger_trace")
+	disabled_debug ("display_exception_trace")
 	disabled_debug ("dle topo")
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("document")
 	disabled_debug ("documentation")
 	disabled_debug ("dollar")
+	disabled_debug ("editor")
 	disabled_debug ("filters")
 	disabled_debug ("flat_short")
 	disabled_debug ("flush_file")
@@ -44,21 +49,26 @@ default
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
+	disabled_debug ("hector")
 	disabled_debug ("liman")
 	disabled_debug ("local_feat_adaptation")
+	disabled_debug ("once")
 	disabled_debug ("optimization")
 	disabled_debug ("options")
 	disabled_debug ("parse")
+	disabled_debug ("profile_convert")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
-	disabled_debug ("resource_validate")
 	disabled_debug ("sep_debug")
 	disabled_debug ("server")
+	disabled_debug ("show_prof_query")
 	disabled_debug ("skeleton")
 	disabled_debug ("trace_table")
 	disabled_debug ("transfer")
 	disabled_debug ("type_check")
 	disabled_debug ("verbose")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
 	disabled_debug ("wel")
 	disabled_debug ("wel_gdi_count")
 	disabled_debug ("wel_gdi_references")
@@ -67,7 +77,6 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
-	override_cluster ("new_tty")
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
@@ -105,6 +114,8 @@ cluster
 				end
 			ieiffel_cluster_properties_impl_proxy
 				end
+			ieiffel_htmldoc_generator_impl_proxy
+				end
 			ecom_ise_registration
 				end
 			ceiffel_project_coclass_imp
@@ -126,6 +137,16 @@ cluster
 			ieiffel_project_properties_impl_stub
 				end
 			ieiffel_cluster_properties_impl_stub
+				end
+			ieiffel_htmldoc_generator_impl_stub
+				end
+			ieiffel_system_externals_impl_stub
+				end
+			ieiffel_system_assemblies_impl_stub
+				end
+			ieiffel_assembly_properties_impl_stub
+				end
+			ieiffel_htmldoc_generator_impl_stub
 				end
 			class_descriptor
 				end
@@ -167,12 +188,6 @@ cluster
 				end
 			system_externals
 				end
-			ieiffel_system_externals_impl_stub
-				end
-			ieiffel_system_assemblies_impl_stub
-				end
-			ieiffel_assembly_properties_impl_stub
-				end
 			system_assemblies
 				end
 			assembly_properties
@@ -183,9 +198,11 @@ cluster
 				end
 			html_doc_generator
 				end
-			ieiffel_htmldoc_generator_impl_stub
+			ieiffel_htmldoc_events_impl_stub
 				end
-			ieiffel_htmldoc_generator_impl_proxy
+			ieiffel_htmldoc_events_impl_proxy
+				end
+			ieiffel_htmldoc_events_interface
 				end
 			variable_descriptor
 				end
@@ -267,6 +284,58 @@ cluster
 				end
 		end
 
+	liman:		"$EIFFEL_SRC\Eiffel\limand"
+
+	liman_bench (liman):		"$\bench"
+
+	liman_abstract (liman):		"$\abstract"
+
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+
+	common:		"$EIFFEL_SRC\Eiffel\common"
+
+	common_parser (common):		"$\parser"
+
+	common_eiffel_parser (common_parser):		"$\parser"
+
+	old_resources (common):		"$\resources"
+
+	flat_short (common_parser):		"$\flat_short"
+		exclude
+			"format_context.e"; "local_format.e"; 
+		end
+
+	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+
+	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
+
+	const:		"$EIFFEL_SRC\Eiffel\const"
+
+	xml:		"$EIFFEL_SRC\library\exml"
+
+	xml_main (xml):		"$\main"
+
+	xml_tree_parser (xml_main):		"$\tree_parser"
+
+	xml_spec (xml):		"$\compiler_specific\ise"
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; 
+		end
+
+	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
+		exclude
+			"CVS"; 
+		end
+		
+	all lace:		"$EIFFEL_SRC\Eiffel\lace"
+		exclude
+			"CVS"; 
+		end
+
 	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
 			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
@@ -277,87 +346,22 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:		"$EIFFEL_SRC\library\helpers"
+	all helpers:		"$EIFFEL_SRC/library/helpers"
+		exclude
+			"CVS"; 
+		end
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
 	interface_switch (switch):		"$\interface\batch_only"
 
-	communications (switch):		"$\no_communication"
+	license_switch (switch):		"$\license\no_license"
 
-	time_lock (switch):		"$\license\time_lock"
+	communications (switch):		"$\no_communication"
 
 	status (communications):		"$\status"
 
-	ipc (communications):		"$\ipc"
-
 	debuging_class (communications):		"$\debug"
-
-	debuging_formatters (communications):		"$\formatters"
-
-	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
-
-	"common":		"$EIFFEL_SRC\Eiffel\common"
-
-	common_parser (common):		"$\parser"
-
-	old_resources (common):		"$\resources"
-
-	common_eiffel_parser (common_parser):		"$\parser"
-
-	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
-
-	all lace:		"$EIFFEL_SRC\Eiffel\lace"
-		exclude
-			"CVS"; 
-		default
-			assertion (all)
-		end
-
-	liman:		"$EIFFEL_SRC\Eiffel\limand"
-
-	liman_bench (liman):		"$\bench"
-
-	liman_abstract (liman):		"$\abstract"
-
-	documentation_main:		"$EIFFEL_SRC\Eiffel\case\documentation\main"
-		exclude
-			"case_tool"; 
-		end
-
-	all "compiler_support":		"$EIFFEL_SRC\Eiffel\support"
-
-	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
-
-	flat_short (common_parser):		"$\flat_short"
-		exclude
-			"format_context.e"; "local_format.e"; 
-		end
-
-	encryption:		"$EIFFEL_SRC\library\encryption"
-
-	const:		"$EIFFEL_SRC\Eiffel\const"
-
-	all gobo:		"$EIFFEL_SRC\library\gobo\library"
-		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; 
-		end
-
-	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
-
-	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
-
-	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
-
-	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
-
-	xml:		"$EIFFEL_SRC\library\exml"
-
-	xml_main (xml):		"$\main"
-
-	xml_tree_parser (xml_main):		"$\tree_parser"
-
-	xml_spec (xml):		"$\compiler_specific\ise"
 
 	interface:		"$EIFFEL_SRC\Eiffel\interface"
 
@@ -366,45 +370,51 @@ cluster
 	tty (interface):		"$\tty"
 
 	preference_tool (interface):		"$\graphical\preference_tool"
+		exclude
+			"eb_flat_short_data.e"
+		end
 
 	profile_tool (interface):		"$\graphical\profile_tool"
 
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+	
+	
 external
 
 	include_path:
-		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\library\time\Clib",
-		"$(EIFFEL_SRC)\library\com\spec\windows\include",
-		"$(EIFFEL_SRC)\com_compiler\Clib",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
-		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\C\bench",
+		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\C\platform",
+		"$(EIFFEL_SRC)\com_compiler\Clib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
-		"$(EIFFEL_SRC)\C_library\expat\xmlparse"
+		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include"
 
 	object:
-		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"$(EIFFEL_SRC)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\C\bench\wcompiler.lib",
-		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
-		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
-		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
-		"$(EIFFEL_SRC)\C\idrs\idr.lib",
-		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
+		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
+		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib",
+		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib",		
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
-		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib",
+		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
-		"corguids.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
-		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"corguids.lib",
 		"mscorsn.lib"
+		
+		
 
 end

@@ -31,6 +31,20 @@ feature -- Access
 feature -- Access
 
 	color_resource_value (s: STRING): EV_COLOR is
+			-- Color resource. Can be Void if no color resource called `s' exists.
+		local
+			s1: STRING
+			r: COLOR_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void then
+				Result := r.actual_value
+			end
+		end
+
+	secure_color_resource_value (s: STRING; rd, gd, bd: INTEGER): EV_COLOR is
+			-- Color value of resource named `s', or rgb color defined by
+			-- `rd', `gd', `bd' if resource does not exist.
 		local
 			s1: STRING
 			r: COLOR_RESOURCE
@@ -39,9 +53,7 @@ feature -- Access
 			if r /= Void then
 				Result := r.actual_value
 			else
-				s1 := clone (s)
-				s1.append (" : resource name has no associated value, default applied.")
-					-- Warning, we apply the default.
+				Create Result.make_with_rgb_with_8_bits (rd, gd, bd)
 			end
 		end
 

@@ -50,7 +50,7 @@ feature -- Initialization
 			a_screen: SCREEN;
 			app_stopped_cmd: APPLICATION_STOPPED_CMD
 		do
-			Project_resources.add_user (Current);
+			Project_tool_resources.add_user (Current);
 			a_screen := ebench_display;
 			base_make (tool_name, a_screen);
 			!! history.make;
@@ -60,7 +60,7 @@ feature -- Initialization
 			set_title (l_project);
 			set_icon_name (tool_name);
 			if bm_Project_icon.is_valid then
-				set_icon_pixmap (bm_Project_icon)
+				set_icon_pixmap (bm_Project_icon);
 			end;
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
@@ -73,18 +73,19 @@ feature -- Initialization
 			Application.set_after_stopped_command (app_stopped_cmd);
 			set_default_position;
 			realize;
-			focus_label.initialize_focusables;
 			init_text_window;
-			set_composite_attributes (Current)
-		end
+			set_composite_attributes (Current);
+		end;
 
 feature -- Resource Update
 
 	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
 		local
-			pr: like Project_resources
+            rout_cli_cmd: SHOW_ROUTCLIENTS;
+            stop_cmd: SHOW_BREAKPOINTS;
+			pr: like Project_tool_resources
 		do
-			pr := Project_resources
+			pr := Project_tool_resources
 			if old_res = pr.command_bar then
 				if new_res.actual_value then
 					classic_bar.add
@@ -97,15 +98,23 @@ feature -- Resource Update
 				else
 					format_bar.remove
 				end
+            elseif old_res = pr.debugger_show_all_callers then
+                rout_cli_cmd ?=
+                    feature_part.showroutclients_frmt_holder.associated_command;
+                rout_cli_cmd.set_show_all_callers (new_res.actual_value)
+            elseif old_res = pr.debugger_do_flat_in_breakpoints then
+                stop_cmd ?=
+                    feature_part.showstop_frmt_holder.associated_command;
+                stop_cmd.set_format_mode (new_res.actual_value)
 			end;
 			old_res.update_with (new_res)
 		end;
 
 	update_integer_resource (old_res, new: INTEGER_RESOURCE) is
 		local
-			pr: like Project_resources
+			pr: like Project_tool_resources
 		do
-			pr := Project_resources
+			pr := Project_tool_resources
 			if new.actual_value >= 0 then
 				if old_res = pr.tool_width then
 					set_width (new.actual_value)
@@ -180,8 +189,8 @@ feature -- Window Settings
 		local
 			default_x, default_y: INTEGER
 		do
-			default_x := Project_resources.tool_x.actual_value;
-			default_y := Project_resources.tool_y.actual_value;
+			default_x := Project_tool_resources.tool_x.actual_value;
+			default_y := Project_tool_resources.tool_y.actual_value;
 			set_x_y (default_x, default_y)
 		end;
  
@@ -511,11 +520,12 @@ feature -- Graphical Interface
 			-- Build widget.
 		local
 			default_width, default_height: INTEGER;
+			sep: SEPARATOR
 		do
 			shown_portions := 1;
 
-			default_width := Project_resources.tool_width.actual_value;
-			default_height := Project_resources.tool_height.actual_value;
+			default_width := Project_tool_resources.tool_width.actual_value;
+			default_height := Project_tool_resources.tool_height.actual_value;
 			set_size (default_width, default_height);
 
 			!! split_window.make (new_name, Current);
@@ -529,14 +539,15 @@ feature -- Graphical Interface
 			build_text_windows;
 			build_top;
 			build_compile_menu;
+			!! sep.make ("", toolbar_parent);
 			build_format_bar;
 			build_toolbar_menu;
 			exec_stop_frmt_holder.execute (Void);
 
-			if Project_resources.command_bar.actual_value = False then
+			if Project_tool_resources.command_bar.actual_value = False then
 				classic_bar.remove
 			end;
-			if Project_resources.format_bar.actual_value = False then
+			if Project_tool_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 
@@ -547,8 +558,8 @@ feature -- Graphical Interface
 			-- Build the menu bar
 		local
 			sep: SEPARATOR;
-			case_storage_cmd: CASE_STORAGE;
-			case_storage_menu_entry: EB_MENU_ENTRY;
+            case_storage_cmd: CASE_STORAGE;
+            case_storage_menu_entry: EB_MENU_ENTRY;
 		do
 			!! menu_bar.make (new_name, std_form);
 			!! file_menu.make ("File", menu_bar);
@@ -570,20 +581,19 @@ feature -- Graphical Interface
 			!! format_feature_menu.make ("Feature", format_menu);
 			format_feature_menu.button.set_insensitive;
 			!! special_feature_menu.make ("Feature", special_menu);
-			special_feature_menu.button.set_insensitive;
 
 			!! edit_object_menu.make ("Object", edit_menu);
 			edit_object_menu.button.set_insensitive;
 			!! special_object_menu.make ("Object", special_menu);
 			special_object_menu.button.set_insensitive;
 			!! format_object_menu.make ("Object", format_menu);
-			format_object_menu.button.set_insensitive;
+			format_object_menu.button.set_insensitive
 
 			!! sep.make ("", special_menu);
 			!! case_storage_cmd.make (Current);
-			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
-			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
-			case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry)
+            !! case_storage_menu_entry.make (case_storage_cmd, special_menu);
+            !! case_storage_cmd_holder.make_plain (case_storage_cmd);
+            case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
 		end;
 
 	build_toolbar_menu is
@@ -640,6 +650,7 @@ feature -- Graphical Interface
 			update_cmd: UPDATE_PROJECT;
 			update_button: EB_BUTTON;
 			update_menu_entry: EB_MENU_ENTRY;
+			version_button: PUSH_B;
 		do
 			!! open_command.make (text_window);
 			!! classic_bar.make (l_Command_bar_name, toolbar_parent);
@@ -647,6 +658,7 @@ feature -- Graphical Interface
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit_cmd_holder.make_plain (quit_cmd);
 			quit_cmd_holder.set_menu_entry (quit_menu_entry);
+			!! version_button.make (Version_number, help_menu);
 			!! explain_cmd.make (Current);
 			!! explain_button.make (explain_cmd, classic_bar);
 			!! explain_menu_entry.make (explain_cmd, help_menu);
@@ -1246,7 +1258,6 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 
 			if shown_portions /= 2 then
 				edit_menu.button.set_insensitive;
-				special_menu.button.set_insensitive
 			end;
 
 			edit_feature_menu.button.set_insensitive;
@@ -1270,7 +1281,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 				!! feature_part.form_create (feature_form);
 				build_feature_menus
 				feature_height := 
-					Project_resources.debugger_feature_height.actual_value;
+					Project_tool_resources.debugger_feature_height.actual_value;
 			else
 				feature_height := feature_form.height
 			end;
@@ -1281,7 +1292,6 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			special_feature_menu.button.set_sensitive;
 			format_feature_menu.button.set_sensitive;
 			if shown_portions = 2 then
-				special_menu.button.set_sensitive;
 				edit_menu.button.set_sensitive
 			end;
 
@@ -1296,7 +1306,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			end;
 			forbid_resize
 
-			off := Project_resources.bottom_offset.actual_value;
+			off := Project_tool_resources.bottom_offset.actual_value;
 			show_current_stoppoint;
 			mp.restore
 		end;
@@ -1322,7 +1332,6 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 
 			if shown_portions /= 2 then
 				edit_menu.button.set_insensitive;
-				special_menu.button.set_insensitive;
 			end;
 
 			edit_object_menu.button.set_insensitive;
@@ -1345,7 +1354,7 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 				!! object_part.form_create (object_form);
 				build_object_menus;
 				object_height := 
-					Project_resources.debugger_object_height.actual_value;
+					Project_tool_resources.debugger_object_height.actual_value;
 			else
 				object_height := object_form.height
 			end;
@@ -1357,12 +1366,11 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			special_object_menu.button.set_sensitive;
 			format_object_menu.button.set_sensitive;
 			if shown_portions = 2 then
-				special_menu.button.set_sensitive;
 				edit_menu.button.set_sensitive
 			end;
 
 			new_height := height + object_height;
-			off := Project_resources.bottom_offset.actual_value;
+			off := Project_tool_resources.bottom_offset.actual_value;
 			allow_resize;
 			object_form.set_height (object_height);
 			object_form.manage;

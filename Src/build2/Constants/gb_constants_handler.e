@@ -253,10 +253,10 @@ feature -- Element change
 				-- Now remove all referers.
 			referers := a_constant.referers
 			from
-				referers.start
 			until
 				referers.is_empty
 			loop
+				referers.start
 				referers.item.destroy
 			end
 			

@@ -94,13 +94,9 @@ feature {NONE} -- Implementation
 			-- Extension type of image formats on current platform.
 			-- either "png" or "ico"
 		once
-			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
-				Result := "ico"
-			else
-				Result := "png"
-			end
+			Result := "png"
 		ensure
-			Result_valid: Result.is_equal ("png") or Result.is_equal ("ico")
+			Result_valid: Result.is_equal ("png")
 		end
 
 invariant

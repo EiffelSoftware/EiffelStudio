@@ -18,11 +18,11 @@ inherit
 			is_empty, count
 		end
 
-	ANY
+	HASHABLE
 		undefine
 			is_equal, copy
 		end
-
+	
 create
 	make
 
@@ -34,6 +34,30 @@ feature -- Creation
 			array_make (1, eif_gen_count ($Current))
 		end
 
+feature -- Status report
+
+	hash_code: INTEGER is
+			-- Hash code value
+		local 
+			i, nb: INTEGER 
+			l_key: HASHABLE 
+		do 
+			from
+				i := 1
+				nb := count
+			until
+				i > nb 
+			loop
+				l_key ?= item (i) 
+				if l_key /= Void then 
+					Result := Result + l_key.hash_code * internal_primes.i_th (i) 
+				end 
+				i := i + 1 
+			end 
+				-- Ensure it is a positive value.
+			Result := Result.hash_code
+		end 
+		
 feature -- Type queries
 
 	is_boolean_item (index: INTEGER): BOOLEAN is
@@ -653,6 +677,12 @@ feature {NONE} -- Implementation
 			-- Number of generic parameters of `obj'.
 		external
 			"C use %"eif_gen_conf.h%""
+		end
+
+	internal_primes: PRIMES is
+			-- For quick access to prime numbers.
+		once 
+			create Result
 		end
 
 indexing

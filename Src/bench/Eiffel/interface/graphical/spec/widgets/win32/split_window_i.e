@@ -204,17 +204,22 @@ feature -- Sizing policy
 			-- Respond to resizing from children.
 		do
 			if
-				top_child /= Void and then top_child.managed
+				top_child /= Void and then
+				top_child.managed
 			then
 				resize_top_child
 			end;
 			if
-				middle_child /= Void and then middle_child.managed
+				middle_child /= Void and then
+				middle_child.managed and then
+				top_split_visible
 			then
 				resize_middle_child
 			end;
 			if
-				bottom_child /= Void and then bottom_child.managed
+				bottom_child /= Void and then
+				bottom_child.managed and then
+				bottom_split_visible
 			then
 				resize_bottom_child
 			end

@@ -124,6 +124,15 @@ feature -- Formatting
 								end;
 							end			
 						end;
+						class_tool ?= tool;
+						if 
+							class_tool /= Void and then (
+							(same_stone and tool.last_format = 
+										class_tool.showclick_frmt_holder) or
+							(do_format and tool.last_format.associated_command = Current))
+						then
+							cur := text_window.cursor;
+						end;
 						text_window.clear_window;
 						tool.set_editable_text;
 						filed_stone ?= stone;
@@ -147,15 +156,6 @@ feature -- Formatting
 							else
 								text_window.update_clickable_from_stone
 							end
-						end;
-						class_tool ?= tool;
-						if 
-							class_tool /= Void and then (
-							(same_stone and tool.last_format = 
-										class_tool.showclick_frmt_holder) or
-							(do_format and tool.last_format.associated_command = Current))
-						then
-							cur := text_window.cursor;
 						end;
 						if cur /= Void then
 							text_window.go_to (cur)

@@ -162,6 +162,9 @@ rt_public Signal_t exfpe(int sig)
 	 * it will make the difference on BSD systems, allowing us to use the
 	 * _longjmp and _setjmp routines which do not do any system call.
 	 */
+
+	EIF_GET_CONTEXT
+
 #ifdef HAS_SIGSETMASK
 	int oldmask;	/* Signal mask value */ /* %%ss moved from above */
 
@@ -169,6 +172,9 @@ rt_public Signal_t exfpe(int sig)
 		oldmask &= ~sigmask(sig);			/* Unblock signal */
 		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
 #endif
+
+	if (sig_ign[sig])				/* If signal is to be ignored */
+		return;						/* Nothing to be done */
 
 	xraise(EN_FLOAT);		/* Raise a floating point exception */
 }
@@ -470,6 +476,8 @@ rt_shared void initsig(void)
      * signal () on some specific signals.
 	 */
 
+	old = SIG_IGN;
+
 	switch (sig) {
 	
 #ifdef EIF_DFLT_SIGUSR
@@ -532,14 +540,17 @@ rt_shared void initsig(void)
 #endif /* PROFILED_RUN_TIME */
 
 		default:
-			old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+			if (esigdefined (sig) == (char) 1) 
+				old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 	}			
 #else
+		if (esigdefined (sig) == (char) 1) 
 #if defined PROFILED_RUNTIME && defined SIGPROF
-		if (sig != SIGPROF)
+			if (sig != SIGPROF)
 #endif
-			old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+				old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 #endif	/* EIF_THREADS */
+
 		if (old == SIG_IGN)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
 		else

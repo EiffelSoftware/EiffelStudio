@@ -192,9 +192,13 @@ feature -- Properties
 	freeze: BOOLEAN is
 			-- Has the system to be frozen again ?
 		do
-			Result := not Lace.compile_all_classes and 
-				(private_freeze or else 
-				Compilation_modes.is_freezing)
+			if not java_generation then
+				Result := (not Lace.compile_all_classes) and
+					(private_freeze or else
+					Compilation_modes.is_freezing)
+			else
+				-- Avoid freezing or re-freezing at all costs!
+			end
 		end;
 
 	freezing_occurred: BOOLEAN;
@@ -225,7 +229,7 @@ feature -- Properties
 	c_file_names: FIXED_LIST [STRING];
 			-- C file names to include
 
-	include_paths:  FIXED_LIST [STRING];
+	include_paths: FIXED_LIST [STRING];
 			-- Include paths to add in the Makefile C flags
 
 	object_file_names: FIXED_LIST [STRING];
@@ -1441,6 +1445,15 @@ end;
 				-- There is something to update
 			Update_file.putchar ('%/001/');
 
+			-- Flag indicating whether it's Java or Eiffel byte-code
+			if java_generation then
+				-- This is a Java byte-code file
+				Update_file.putchar ('%/001/');
+			else
+				-- This is an Eiffel byte-code file
+				Update_file.putchar ('%/000/');
+			end
+
 				-- Update the root class info
 			a_class := root_class.compiled_class;
 			dtype := a_class.types.first.type_id - 1;
@@ -1993,6 +2006,15 @@ end;
 			Update_file.open_write;
 				-- Nothing to update
 			Update_file.putchar ('%U');
+			-- Flag indicating whether it's Java or Eiffel byte-code
+			if java_generation then
+				-- This is a Java byte-code file
+				Update_file.putchar ('%/001/');
+			else
+				-- This is an Eiffel byte-code file
+				Update_file.putchar ('%/000/');
+			end
+
 			Update_file.close;
 		end;
 
@@ -2385,6 +2407,17 @@ feature
 		do
 			address_expression_allowed := b
 		end
+
+feature -- Java byte-code generation
+
+	java_generation : BOOLEAN;
+
+	set_java_generation (b: BOOLEAN) is
+		do
+			java_generation := b;
+		ensure
+			jave_generation_set : java_generation = b
+		end;
 
 feature -- Generation
 
@@ -3392,8 +3425,8 @@ feature -- Pattern table generation
 
 	generate_only_separate_pattern_table is
 			-- Generate pattern table.
-        require
-            finalized_mode: byte_context.final_mode
+		require
+			finalized_mode: byte_context.final_mode
 		do
 			pattern_table.generate_in_finalized_mode;
 		end
@@ -3520,7 +3553,7 @@ feature -- Main file generation
 				Initialization_file.putstring ("#include %"curextern.h%"%N%N")
 			end
 
-			if  creation_name /= Void then
+			if creation_name /= Void then
 				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id);
 					c_name := rout_table.feature_name (cl_type.id.id);
@@ -4414,4 +4447,4 @@ invariant
 
 	dle_constraint: not (is_dynamic and extendible)
 
-end
+end -- class SYSTEM_I

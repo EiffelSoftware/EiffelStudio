@@ -5,7 +5,7 @@ root
 
 default
 	assertion (no);
---	exception_trace (yes);
+	exception_trace (yes);
 	dead_code_removal (no);
 --	inlining_size ("16");
 	inlining (no);

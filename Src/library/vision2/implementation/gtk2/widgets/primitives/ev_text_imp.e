@@ -132,7 +132,12 @@ feature -- Status setting
 
 	set_caret_position (pos: INTEGER) is
 			-- set current insertion position
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
 		end
 
 feature -- Resizing
@@ -170,8 +175,21 @@ feature -- Basic operation
 
 	deselect_all is
 			-- Unselect the current selection.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-		end
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+											text_buffer,
+											a_iter.item,
+											feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+			)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+										text_buffer,
+										feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bound (text_buffer),
+										a_iter.item
+			)
+		end	
 
 	delete_selection is
 			-- Delete the current selection.
@@ -279,10 +297,10 @@ feature -- Status setting
 	
 	insert_text (a_text: STRING) is
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_gs.make (a_text)
+			create a_cs.make (a_text)
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
@@ -290,47 +308,54 @@ feature -- Status setting
 								a_iter.item,
 								feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
 			)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_gs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
 	
 	set_text (a_text: STRING) is
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_text)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_gs.item, -1)
+			create a_cs.make (a_text)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
 		end
 	
 	append_text (a_text: STRING) is
 			-- Append `txt' to `text'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_gs.make (a_text)
+			create a_cs.make (a_text)
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (text_buffer, a_iter.item)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_gs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
 	
 	prepend_text (a_text: STRING) is
 			-- Prepend 'txt' to `text'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_gs.make (a_text)
+			create a_cs.make (a_text)
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_gs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
 	
 	delete_text (start, finish: INTEGER) is
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
+			create a_start_iter.make
+			create a_end_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, finish - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete (text_buffer, a_start_iter.item, a_end_iter.item)
 		end
 
 feature -- Basic operation
@@ -354,7 +379,7 @@ feature -- Basic operation
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
 			)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_char_enum)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_word_enum)
 			has_word_wrapping := True
 		end
 		

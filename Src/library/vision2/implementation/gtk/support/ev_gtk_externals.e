@@ -1852,7 +1852,7 @@ feature -- External C functions
 			"C (GDateYear): gboolean | <gtk/gtk.h>"
 		end
 
-	frozen g_date_julian (a_date: POINTER): INTEGER is
+	frozen g_date_julian (a_date: POINTER): NATURAL_32 is
 			-- guint32      g_date_julian                (GDate       *date);
 			-- (from C_GLIB)
 		external
@@ -4758,7 +4758,7 @@ feature -- External C functions
 			"C (GdkDragContext*, GdkWindow*, gint, gint, GdkWindow**, GdkDragProtocol*) | <gtk/gtk.h>"
 		end
 
-	frozen gdk_drag_get_protocol (a_xid: INTEGER; a_protocol: POINTER): INTEGER is
+	frozen gdk_drag_get_protocol (a_xid: INTEGER; a_protocol: POINTER): NATURAL_32 is
 			-- guint32         gdk_drag_get_protocol (guint32          xid,
 			-- 				       GdkDragProtocol *protocol);
 			-- (from C_GDK)
@@ -5108,7 +5108,7 @@ feature -- External C functions
 			"C (GdkWindow*): GdkEvent* | <gtk/gtk.h>"
 		end
 
-	frozen gdk_event_get_time (a_event: POINTER): INTEGER is
+	frozen gdk_event_get_time (a_event: POINTER): NATURAL_32 is
 			-- guint32   gdk_event_get_time 		(GdkEvent 	*event);
 			-- (from C_GDK)
 		external
@@ -6425,7 +6425,7 @@ feature -- External C functions
 			"C () | <gtk/gtk.h>"
 		end
 
---	gdk_time_get: INTEGER is
+--	frozen gdk_time_get: NATURAL_32 is
 --			-- guint32 gdk_time_get	  (void);
 --			-- (from C_GDK)
 --		external

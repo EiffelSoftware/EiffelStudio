@@ -1,18 +1,22 @@
 indexing
-	description: ""
+	description: "Explain Tool. This class is not maintained%
+		%anymore. the Help tool will replace it."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	EB_EXPLAIN_TOOL
 
+obsolete 
+	"To be replaced by the help tool"
+
 inherit
-	EB_EDITOR
+	EB_TEXT_TOOL
 		rename
-			edit_bar as explain_toolbar
+			toolbar as explain_toolbar
 --			Any_type as stone_type
 		redefine
-			empty_tool_name
+			default_name
 -- hole, 
 --			process_any, build_menus,
 --			build_toolbar_menu,
@@ -31,20 +35,19 @@ feature -- Status setting
 			l: LINKED_LIST [STRING]
 		do
 			if s.is_valid then
-				text_window.clear_window
+				text_area.clear_window
 				l := s.help_text
 				from
 					l.start
 				until
 					l.after
 				loop
-					text_window.put_string (l.item)
-					text_window.new_line
+					text_area.put_string (l.item)
+					text_area.new_line
 					l.forth
 				end
-				text_window.display
+				text_area.display
 				set_title (s.header)
-				update_save_symbol
 			end
 		end
 
@@ -55,15 +58,15 @@ feature -- Graphical Interface
 --		local
 --			sep: THREE_D_SEPARATOR
 --		do
---			!! toolbar_parent.make (new_name, a_parent)
---			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+--			create toolbar_parent.make (new_name, a_parent)
+--			create sep.make (Interface_names.t_Empty, toolbar_parent)
 --			toolbar_parent.set_column_layout
 --			toolbar_parent.set_free_size	
 --			toolbar_parent.set_margin_height (0)
 --			toolbar_parent.set_spacing (1)
---			!! explain_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
+--			create explain_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
 --			if not Platform_constants.is_windows then
---				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+--				create sep.make (Interface_names.t_Empty, toolbar_parent)
 --			else
 --				explain_toolbar.set_height (22)
 --			end
@@ -72,22 +75,22 @@ feature -- Graphical Interface
 	build_menus is
 			-- Create the menus.
 		do
---			!! menu_bar.make (new_name, global_form)
---			!! file_menu.make (Interface_names.m_File, menu_bar)
---			!! edit_menu.make (Interface_names.m_Edit, menu_bar)
---			!! special_menu.make (Interface_names.m_Special, menu_bar)
---			!! window_menu.make (Interface_names.m_Windows, menu_bar)
+--			create menu_bar.make (new_name, global_form)
+--			create file_menu.make (Interface_names.m_File, menu_bar)
+--			create edit_menu.make (Interface_names.m_Edit, menu_bar)
+--			create special_menu.make (Interface_names.m_Special, menu_bar)
+--			create window_menu.make (Interface_names.m_Windows, menu_bar)
 --			build_help_menu
 --			fill_menus
 		end
 
-	build_edit_bar (a_toolbar: EV_BOX) is
+	build_toolbar (a_toolbar: EV_BOX) is
 			-- Build formatting buttons in `format_bar'.
 		local
 --			showtext_cmd: SHOW_HTML_TEXT;
 		do
---			!! showtext_cmd.make (Current)
---			!! showtext_frmt_holder.make_plain (showtext_cmd)
+--			create showtext_cmd.make (Current)
+--			create showtext_frmt_holder.make_plain (showtext_cmd)
 --
 --			if resources.command_bar.actual_value = False then
 --				explain_toolbar.remove
@@ -99,13 +102,13 @@ feature -- Graphical Interface
 		local
 --			toolbar_t: TOGGLE_B
 		do
---			!! toolbar_t.make (explain_toolbar.identifier, special_menu)
+--			create toolbar_t.make (explain_toolbar.identifier, special_menu)
 --			explain_toolbar.init_toggle (toolbar_t)
 		end
 
 feature -- Window Properties
 
-	empty_tool_name: STRING is
+	default_name: STRING is
 			-- Name of the tool represented by Current.
 		do
 			Result := Interface_names.t_Empty_explain

@@ -8,7 +8,6 @@ indexing
 class
 	GB_BUILDER_WINDOW
 
-
 inherit
 	
 	EV_DIALOG

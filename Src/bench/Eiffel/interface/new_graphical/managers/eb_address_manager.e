@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 				create vb
 				vb.extend (hbox)
 				create output_line
-				output_line.align_text_left
+				output_line.align_text_right
 				vb.extend (output_line)
 				create address_dialog
 				address_dialog.set_title (Interface_names.t_Select_location)
@@ -631,6 +631,7 @@ feature {NONE} -- Execution
 			if current_class = Void then
 				if class_i = Void then
 					if output_line /= Void then
+						output_line.show
 						output_line.set_text (Warning_messages.w_Specify_a_class)
 					else
 						--| FIXME XR: How do we warn the user?
@@ -1999,7 +2000,6 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					end
 				end
 			end
---			header_info.set_size (header_info.minimum_size)
 		end
 
 	update_combos is
@@ -2062,15 +2062,21 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		local
 			start_x: INTEGER
 			window: EV_WINDOW
+			a_screen: EV_SCREEN
 		do
 			start_x := header_info.screen_x
 			window := parent_window (header_info)
 			if address_dialog.is_show_requested then
 				address_dialog.hide
 			end
-			address_dialog.set_position (start_x, header_info.screen_y)
-			address_dialog.set_size (window.width + window.screen_x - start_x, header_info.height)
+			create a_screen
+			address_dialog.set_position (start_x.max (0).min (a_screen.width - address_dialog.minimum_width), header_info.screen_y.max (0).min (a_screen.height - address_dialog.height))
+			address_dialog.set_width ((start_x + header_info.width).min (a_screen.width) - start_x.max(0))
 			address_dialog.show
+			if output_line /= Void then
+				output_line.set_foreground_color (editor_preferences.error_text_color)
+				output_line.remove_text
+			end
 		end
 
 	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER) is

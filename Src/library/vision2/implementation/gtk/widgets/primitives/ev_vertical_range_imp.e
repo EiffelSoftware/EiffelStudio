@@ -15,7 +15,8 @@ inherit
 
 	EV_RANGE_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 create
@@ -26,8 +27,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create the vertical range.
 		do
-			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100 + 10, 1, 10, 10)
+			Precursor (an_interface)
 			set_c_object (C.gtk_vscale_new (adjustment))		
 			C.gtk_scale_set_digits (c_object, 0)	
 		end
@@ -59,6 +59,9 @@ end -- class EV_VERTICAL_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/16 04:12:20  brendel
+--| Added redefinition of `make'. Adjustment is now initialized in Precursor.
+--|
 --| Revision 1.6  2000/02/15 16:34:31  brendel
 --| Fixed bug in initialization found after adding `is_in_default_state' in
 --| interface classes.

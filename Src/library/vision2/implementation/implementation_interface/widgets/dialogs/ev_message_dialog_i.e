@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature {EV_MESSAGE_DIALOG} -- Initialization
 
 	build is
-			-- Common initializations for Gtk and Windows.
+			-- Fill the dialog with the basic elements.
 		deferred
 		end
 

@@ -64,7 +64,6 @@ feature -- Basic operation
 			test_list.extend (["remove_right", ~test_remove_right])
 			test_list.extend (["append", ~test_append])
 			test_list.extend (["fill", ~test_fill])
-			test_list.extend (["append", ~test_append])
 			test_list.extend (["merge_left", ~test_merge_left])
 			test_list.extend (["merge_right", ~test_merge_right])
 
@@ -712,6 +711,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/16 20:30:44  brendel
+--| Removed 2nd test of append.
+--|
 --| Revision 1.25  2000/03/16 18:06:05  oconnor
 --| tweak output format
 --|

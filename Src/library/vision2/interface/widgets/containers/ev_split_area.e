@@ -13,7 +13,8 @@ deferred class
 inherit
 	EV_CONTAINER
 		rename
-			implementation as ev_container_implementation
+			implementation as ev_container_implementation,
+			item as ev_container_item
 		export
 			{NONE} fill
 		undefine
@@ -21,7 +22,6 @@ inherit
 			put
 		redefine
 			replace,
-			item,
 			client_height,
 			client_width
 		end
@@ -33,12 +33,24 @@ inherit
 		select
 			implementation
 		end
-	
+
+	FIXED [EV_WIDGET]
+		undefine
+			default_create,
+			changeable_comparison_criterion
+		end
 
 feature -- Access
 
-	item: EV_WIDGET
-			-- Current item
+	item: EV_WIDGET is
+			-- Item at current position.
+		do
+			if index = 1 then
+				Result := first_cell.item
+			elseif index = 2 then
+				Result := second_cell.item
+			end
+		end
 
 	first: EV_WIDGET is
 			-- First item.
@@ -58,16 +70,20 @@ feature -- Access
 
 	go_to_first is
 			-- Make `first' current `item'.
+		require
+			first_exists: count >= 1
 		do
-			item := first
+			index := 1
 		ensure
 			item_is_first: item = first
 		end
 
 	go_to_second is
 			-- Make `first' current `item'.
+		require
+			second_exists: count >= 2
 		do
-			item := second
+			index := 2
 		ensure
 			item_is_second: item = second
 		end
@@ -75,17 +91,27 @@ feature -- Access
 	has (v: like item): BOOLEAN is
 			-- Does structure include `v'?
 		do
-			Result := first_cell.has(v) or second_cell.has (v)
+			Result := first_cell.has (v) or second_cell.has (v)
 		end
 
 feature -- Status report
 
+	count: INTEGER is
+			-- Number of items.
+		do
+			if first_cell.readable then
+				Result := 1
+				if second_cell.readable then
+					Result := 2
+				end
+			end
+		end
+
 	readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
-			Result := item /= Void
+			Result := index > 0 and then index <= count
 		end
-
 
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?
@@ -93,22 +119,10 @@ feature -- Status report
 			Result := item /= Void
 		end
 
-	empty: BOOLEAN is
-			-- Is there no element?
-		do
-			Result := first = Void and second = Void
-		end
-
 	extendible: BOOLEAN is
 			-- Items may be added.
 		do
 			Result := first = Void or second = Void
-		end
-
-	full: BOOLEAN is
-			-- Is structure filled to capacity?
-		do
-			Result := first /= Void and second /= Void
 		end
 
 	prunable: BOOLEAN is True
@@ -153,6 +167,9 @@ feature -- Measurement
 			Result := implementation.box.client_height
 		end
 
+	capacity: INTEGER is 2
+			-- Number of items that may be stored.
+
 feature -- Element change
 
 	put, extend (an_item: like item) is
@@ -173,7 +190,6 @@ feature -- Element change
 			second_item_used_second:
 				old first /= Void implies second = an_item
 			has_an_item: has (an_item)
-
 		end
 
 	replace (an_item: like item) is
@@ -263,6 +279,9 @@ feature -- Conversion
 
 feature {NONE}-- Implementation
 
+	index: INTEGER
+			-- Current cursor position.
+
 	first_cell, second_cell: EV_CELL
 		-- Two client areas.
 
@@ -331,6 +350,12 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/03 02:43:12  brendel
+--| Now inherits from FIXED. This implied implementing: `count' and
+--| `capacity'. The features `empty' and `full' are provided.
+--| Added feature `index'.
+--| Renamed `item' from container, since it has a unsatisfiable precondition.
+--|
 --| Revision 1.16  2000/03/03 00:33:16  oconnor
 --| fixed first and second
 --|

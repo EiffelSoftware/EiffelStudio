@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Entry point.
 		local
-			dummy: SYSTEM_OBJECT
+			res: SYSTEM_OBJECT
 			mi_file, mi_add_doc, mi_exit, mi_window: WINFORMS_MENU_ITEM
 		do
 			initialize_component
@@ -34,26 +34,26 @@ feature {NONE} -- Initialization
 			add_mdi_child_activate (create {EVENT_HANDLER}.make (Current, $on_MDI_child_activated))
 
 				-- Add File Menu
-			mi_file := main_menu.menu_items.add (("&File").to_cil)
+			mi_file := main_menu.menu_items.add ("&File")
 			mi_file.set_merge_order (0)
 			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
 
-			create mi_add_doc.make_from_text_and_on_click_and_shortcut (("&Add Document").to_cil, create {EVENT_HANDLER}.make (Current, $on_file_add_clicked), feature {WINFORMS_SHORTCUT}.ctrl_a)
+			create mi_add_doc.make ("&Add Document", create {EVENT_HANDLER}.make (Current, $on_file_add_clicked), feature {WINFORMS_SHORTCUT}.ctrl_a)
 			mi_add_doc.set_merge_order (100)
 
-			create mi_exit.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $on_file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X)
+			create mi_exit.make ("E&xit", create {EVENT_HANDLER}.make (Current, $on_file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X)
 			mi_exit.set_merge_order (110)
 
-			dummy := mi_file.menu_items.add_menu_item (mi_add_doc)
-			dummy := mi_file.menu_items.add (("-").to_cil)     --  Gives us a seperator
-			dummy := mi_file.menu_items.add_menu_item (mi_exit)
+			res := mi_file.menu_items.add_menu_item (mi_add_doc)
+			res := mi_file.menu_items.add ("-")     --  Gives us a seperator
+			res := mi_file.menu_items.add_menu_item (mi_exit)
 
 				-- Add Window Menu
-			mi_window := main_menu.menu_items.add (("&Window").to_cil)
+			mi_window := main_menu.menu_items.add ("&Window")
 			mi_window.set_merge_order (10)
-			dummy := mi_window.menu_items.add_string_event_handler (("&Cascade").to_cil, create {EVENT_HANDLER}.make (Current, $on_window_cascade_clicked))
-			dummy := mi_window.menu_items.add_string_event_handler (("Tile &Horizontal").to_cil, create {EVENT_HANDLER}.make (Current, $on_window_tileH_clicked))
-			dummy := mi_window.menu_items.add_string_event_handler (("Tile &Vertical").to_cil, create {EVENT_HANDLER}.make (Current, $on_window_tileV_clicked))
+			res := mi_window.menu_items.add_string_event_handler ("&Cascade", create {EVENT_HANDLER}.make (Current, $on_window_cascade_clicked))
+			res := mi_window.menu_items.add_string_event_handler ("Tile &Horizontal", create {EVENT_HANDLER}.make (Current, $on_window_tileH_clicked))
+			res := mi_window.menu_items.add_string_event_handler ("Tile &Vertical", create {EVENT_HANDLER}.make (Current, $on_window_tileV_clicked))
 			mi_window.set_mdi_list (True)  -- Adds the MDI Window List to the bottom of the menu
 
 			feature {WINFORMS_APPLICATION}.run_form (Current)
@@ -87,20 +87,20 @@ feature {NONE} -- Implementation
 			create main_menu.make
 			create status_bar.make
 
-			set_text (("MDI Example").to_cil)
+			set_text ("MDI Example")
 			set_menu (main_menu)
-			l_size.make_from_width_and_height (5, 13)
+			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
-			l_size.make_from_width_and_height (450, 200)
+			l_size.make (450, 200)
 			set_client_size (l_size)
 
 			create main_menu.make
 			set_menu (main_menu)
 
 			status_bar.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
-			l_point.make_from_x_and_y (0, 180)
+			l_point.make (0, 180)
 			status_bar.set_location (l_point)
-			l_size.make_from_width_and_height (450, 20)
+			l_size.make (450, 20)
 			status_bar.set_size (l_size)
 			status_bar.set_tab_index (1)
 			controls.add (status_bar)
@@ -115,7 +115,6 @@ feature {NONE} -- Implementation
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- Method called when form is disposed.
 		local
-			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -135,7 +134,7 @@ feature {NONE} -- Implementation
 			doc: DOCUMENT
 		do
 			window_count := window_count + 1 
-			create doc.make_with_name (("Document " + window_count.out).to_cil)
+			create doc.make_with_name ("Document " + window_count.out)
 			doc.set_mdi_parent (Current)
 			doc.show
 		end
@@ -165,7 +164,7 @@ feature {NONE} -- Implementation
 			non_void_args: args /= Void
 		do
 			if active_mdi_child = Void then
-				status_bar.set_text (("").to_cil)
+				status_bar.set_text ("")
 			else
 				status_bar.set_text (active_mdi_child.text)
 			end

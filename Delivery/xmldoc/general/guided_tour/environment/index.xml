@@ -1,5 +1,5 @@
 <document title="EiffelStudio: A Guided Tour" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>
@@ -12,18 +12,13 @@
 			</link>
 		</paragraph>
 		<paragraph>
-			<info>This document is available both locally, as part of the  Eiffel Software  Eiffel delivery, and on the 
-				<link>
-					<url>http://docs.eiffel.com/general/guided_tour/environment/index.xml</url>
-					<label>http://docs.eiffel.com</label>
-				</link> Web site.  See the 
-				<link>
-					<url>../../../general/guided_tour/index.xml</url>
-					<label>list of introductory documents.  </label>
-				</link>
-				<line_break/>This is 
-				<bold>not</bold> an introduction to the Eiffel method and language.  Follow the preceding link for 
-				<italic>Invitation to Eiffel </italic>and a longer tutorial.
+			<info>
+			This is <bold>not</bold> an introduction to the Eiffel method and language. See the 
+			<link>
+				<url>../../../general/guided_tour/index.xml</url>
+				<label>list of introductory documents </label>
+			</link>
+				link for <italic>Invitation to Eiffel </italic>and a longer tutorial.
 			</info>
 		</paragraph>
 		<heading>

@@ -36,14 +36,14 @@ feature -- Basic operation
 		do
 			implementation.set_pointer_position (x, y)
 		ensure
-			pointer_position_set:
-				pointer_position.x = x and pointer_position.y = y
+			--pointer_position_set:
+			--	pointer_position.x = x and pointer_position.y = y
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
 			-- Simulate the user pressing a `a_button' on the pointing device.
 		do
-			--| FIXME implementation.
+			implementation.fake_pointer_button_press (a_button)
 			--|	for X do somthing like
 			--| XTestFakeButtonEvent (display, a_button, True, 0)
 			--| For windows use SendInput
@@ -53,6 +53,7 @@ feature -- Basic operation
 	fake_pointer_button_release (a_button: INTEGER) is
 			-- Simulate the user releasing a `a_button' on the pointing device.
 		do
+			implementation.fake_pointer_button_release (a_button)
 			--| FIXME implementation.
 			--|	for X do somthing like
 			--| XTestFakeButtonEvent (display, a_button, False, 0)
@@ -63,6 +64,7 @@ feature -- Basic operation
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
 		do
+			implementation.fake_key_press (a_key)
 			--| FIXME implementation.
 			--|	for X do somthing like
 			--| XTestFakeKeyvent (display, gtk_code (key), True, 0)
@@ -73,6 +75,7 @@ feature -- Basic operation
 	fake_key_release (a_key: EV_KEY) is
 			-- Simulate the user releasing a `key'.
 		do
+			implementation.fake_key_release (a_key)
 			--| FIXME implementation.
 			--|	for X do somthing like
 			--| XTestFakeKeyvent (display, gtk_code (key), False, 0)
@@ -141,6 +144,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/11 19:01:55  king
+--| Added pointer manipulation functions
+--|
 --| Revision 1.10  2000/04/06 23:26:59  oconnor
 --| added implementation comments and new fake event features
 --|

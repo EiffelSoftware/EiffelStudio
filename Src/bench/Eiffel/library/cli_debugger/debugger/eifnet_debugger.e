@@ -231,16 +231,10 @@ feature -- Status
 
 	last_dbg_call_success: INTEGER
 
-	last_dbg_call_succeed: BOOLEAN is
-			-- 
-		do
-			Result := last_dbg_call_success = 0
-		end
-
 feature -- Callback notification about synchro
 
 	estudio_callback_event is
-			-- 
+			-- Callback trigger for processing at end of dotnet callback
 		do
 			Application.imp_dotnet.estudio_callback_notify
 		end
@@ -591,16 +585,19 @@ feature -- Function Evaluation
 					l_feat_name := a_feat.external_name
 				end
 			else
+					--| This should be an true Eiffel type
 				l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
+				l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (ct)				
+				l_icd_module := icor_debug_module (l_class_module_name)
 				if l_feat_tok = 0 then
-					l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (ct)				
-					l_icd_module := icor_debug_module (l_class_module_name)
 					l_feat_name := a_feat.feature_name
 				end
 			end
 			if l_icd_module /= Void then
-					--| Now we have the ICOR_DEBUG_MODULE ...
-				l_feat_tok := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, l_feat_name)
+					--| Now we have the ICOR_DEBUG_MODULE ...				
+				if l_feat_tok = 0 then
+					l_feat_tok := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, l_feat_name)					
+				end
 				if l_feat_tok > 0 then
 					Result := l_icd_module.get_function_from_token (l_feat_tok)
 				end
@@ -990,9 +987,10 @@ feature -- Specific function evaluation
 			end
 		end
 
-feature -- GC related
-
---| FIXME jfiat [2004/03/19] : not yet ready, to be continued
+--| NOTA jfiat [2004/03/19] : not yet ready, to be continued
+--
+--feature -- GC related
+--
 --
 --	keep_alive (addr: STRING) is
 --		local

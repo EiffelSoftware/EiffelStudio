@@ -24,6 +24,7 @@ extern "C" {
 #include "eif_size.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
+#include "eif_lmalloc.h"    /* for eif_free */
 #if ! defined CUSTOM || defined NEED_TIMER_H
 #include "eif_timer.h"
 #endif
@@ -201,13 +202,16 @@ rt_public int gc_running = 0;			/* Is the GC running */ /* %%zmt */
 rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */ /* %%zmt */
 rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
 
-#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+
+/* For historical reasons, these definitions were moved here for VMS. 
+ * The reasons were specious, and the definitions have been restored to 
+ * retrieve.c, at least for VMS. I don't know about other platforms.
+ * --- dss
+ */
+#if defined EIF_VMS || defined EIF_OS2 || defined SYMANTEC_CPP
 #else	/* %%ss added */
 rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
 rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
-	/* Was getting a link warning that it couldn't find this symbol.
-	 * Under vms the linker won't include the symbol if at least one
-	 * routine from the module isn't used.
 	 */
 #endif
 

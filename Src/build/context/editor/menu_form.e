@@ -9,7 +9,8 @@ inherit
 	EDITOR_FORM
 		redefine
 			context
-		end
+		end;
+	ERROR_POPUPER
 
 creation
 
@@ -38,6 +39,11 @@ feature {NONE}
 	Menu_cmd: MENU_CMD is
 		once
 			!!Result
+		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := editor
 		end;
 
 feature {NONE}
@@ -91,15 +97,20 @@ feature {NONE}
 			type: CONTEXT_TYPE;
 			new_context: CONTEXT
 		do
-			if argument = First then
-				-- Create a button
-				type := context_catalog.menu_entry_type;
+			if context.is_in_a_group then
+				error_box.popup (Current,
+					Messages.cannot_create_context_in_group_er, Void)
 			else
-				-- Create a submenu
-				type := context_catalog.submenu_type;
-			end;
-			new_context := type.create_context (context);
-			tree.display (new_context)
+				if argument = First then
+					-- Create a button
+					type := context_catalog.menu_entry_type;
+				else
+					-- Create a submenu
+					type := context_catalog.submenu_type;
+				end;
+				new_context := type.create_context (context);
+				tree.display (new_context)
+			end
 		end;
 
 	reset is

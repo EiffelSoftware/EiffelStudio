@@ -18,7 +18,7 @@ inherit
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
 			make,
-			make_with_text,
+			--make_with_text,
 			parent_imp
 		end
 
@@ -46,25 +46,25 @@ feature {NONE} -- Initialization
 			gtk_misc_set_padding (label_widget, 21, 0)
 		end
 	
-	make_with_text (txt: STRING) is
-			-- Create a radio menu item with`txt' as label.
-		do
---			dummy_item := gtk_radio_menu_item_new (Default_pointer)
---			widget := gtk_radio_menu_item_new (Default_pointer)
---			gtk_object_ref (widget)
+--	make_with_text (txt: STRING) is
+--			-- Create a radio menu item with`txt' as label.
+--		do
+----			dummy_item := gtk_radio_menu_item_new (Default_pointer)
+----			widget := gtk_radio_menu_item_new (Default_pointer)
+----			gtk_object_ref (widget)
+----
+----			gtk_radio_menu_item_set_group (widget,
+----			gtk_radio_menu_item_group (dummy_item));
+----			set_state (False)
+----			gtk_check_menu_item_set_show_toggle (widget, True)
+----			initialize
+----			create_text_label (txt)
+----			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
+----			gtk_misc_set_padding (label_widget, 21, 0)
 --
---			gtk_radio_menu_item_set_group (widget,
---			gtk_radio_menu_item_group (dummy_item));
---			set_state (False)
---			gtk_check_menu_item_set_show_toggle (widget, True)
---			initialize
---			create_text_label (txt)
---			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
---			gtk_misc_set_padding (label_widget, 21, 0)
-
-			make
-			set_text (txt)
-		end		
+--			make
+--			set_text (txt)
+--		end		
 
 feature -- Access
 

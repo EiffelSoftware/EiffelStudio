@@ -80,6 +80,7 @@ extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c 
 #ifdef ITERATIVE_MARKING
 #undef RECURSIVE_MARKING
 #undef HYBRID_MARKING
+#warning "Iterative marking"
 #define MARK_SWITCH iterative_mark
 #define GEN_SWITCH it_gen_mark
 #if LNGSIZ == 4
@@ -259,7 +260,7 @@ rt_shared void urgent_plsc(char **object);			/* Partial scavenge with given loca
 rt_private void init_plsc(void);			/* Initialize the scavenging process */
 rt_private void clean_zones(void);			/* Clean up scavenge zones */
 rt_private char *scavenge(register char *root, struct sc_zone *to);			/* Scavenge an object */
-rt_private void clean_space();			/* Sweep forwarded objects */ /* %%ss undefine */
+/*rt_private void clean_space();*/			/* Sweep forwarded objects */ /* %%ss undefine */
 rt_private void full_update(void);			/* Update scavenge-related structures */
 rt_private void split_to_block(void);		/* Keep only needed space in 'to' block */
 rt_private int sweep_from_space(void);		/* Clean space after the scavenging */
@@ -843,6 +844,10 @@ rt_public void reclaim(void)
 
 #ifdef EIF_THREADS
 	free (eif_globals);
+#ifdef VXWORKS
+	if (taskVarDelete(0,(int *)&(eif_global_key))) 
+	  eif_thr_panic("Problem with taskVarDelete\n");
+#endif
 #endif
 
 	EIF_END_GET_CONTEXT
@@ -2265,9 +2270,9 @@ not_explorable:
 char *nget(register1 struct stack *stk)
 {
 	/* Pop the top item of *stk */
-
+	EIF_GET_CONTEXT
 	register1 char **top = stk->st_top;		/* The top of the stack */
-	register2 char **saved_top = top;		/* Save current top of stack */
+	/*	register2 char **saved_top = top;	/* Save current top of stack */
 	register3 char **arena;					/* Base address of current chunk */
 	register4 struct stchunk *s;
 
@@ -2316,6 +2321,7 @@ char *nget(register1 struct stack *stk)
 #endif
 		return (char *) 0;
 	}
+	EIF_END_GET_CONTEXT
 }
 
 char *ntop( register1 struct stack *stk)

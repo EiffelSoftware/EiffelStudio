@@ -1,0 +1,128 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>EiffelStore Implementation Layer</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Implementation Layer">
+		<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>The Implementation Layer</H1>
+		<P>Each interface class has an implementation counterpart that implements
+		specific DBMS handling. The class prefix indicates clearly its layer,
+		for instance:</P>
+
+		<UL>
+			<LI><A CLASS="eclass" HREF="../../reference/interface/db_selection.html">DB_SELECTION</A> is the interface to perform a database selection query.
+			<LI><A CLASS="eclass" HREF="../../reference/dbms/support/database_selection.html">DATABASE_SELECTION</A> [<A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A>] is its implementation.
+		</UL>
+
+		<P>The abstract <A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A> class represents a DBMS, i.e. it is the Eiffel-side database
+		call interface. It is inherited for instance by the instantiable <A CLASS="eclass" HREF="../../reference/dbms/rdbms/oracle/oracle.html">ORACLE</A> and <A CLASS="eclass" HREF="../../reference/dbms/rdbms/odbc/odbc.html">ODBC</A> classes.</P>
+
+		<P>EiffelStore enables to link common interface objects with database-specific implementation objects using a <B>handle</B>. This
+		handle also enables to switch between different databases.</P>
+
+		<P>Let us see in 4 steps how EiffelStore implements this handle system:
+
+		<UL>
+			<LI>The <A HREF="#handle">active database handle</A>.
+			<LI>The <A HREF="#association">association between interface and implementation</A> objects.
+			<LI>The <A HREF="#access">access to the DBMS call interface</A> from the implementation layer.
+			<LI>The <A HREF="#selection">active database selection</A> from the database application.
+		</UL>
+
+		<H2><A NAME="handle"></A>The active database handle</H2>
+
+		<P>The <A CLASS="eclass" HREF="../../reference/support/handle_use.html">HANDLE_USE</A> class provides access to the unique <A CLASS="eclass" HREF="../../reference/support/handle.html">HANDLE</A> instance. This object
+		stores all the information about the active database, mainly:</P>
+
+		<UL>
+			<LI>Database login information:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<A NAME="f_login"><A CLASS="efeature" HREF="../../reference/support/handle.html#f_login">login</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/dbms/support/login.html">LOGIN</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Session login</SPAN><BR>
+</CODE><BR>
+
+			<LI>Database status information:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<A NAME="f_status"><A CLASS="efeature" HREF="../../reference/support/handle.html#f_status">status</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/support/db_status.html">DB_STATUS</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status of active database</SPAN><BR>
+</CODE><BR>
+
+		</UL>
+
+		<H2><A NAME="association"></A>Association between interface and implementation</H2>
+
+		<P>The association between an interface object and its implementation counterpart is
+		done at the interface object creation.</P>
+
+		<P>Every interface class inherits from the <A CLASS="eclass" HREF="../../reference/support/handle_use.html">HANDLE_USE</A> class and can access the active
+		database handle. This handle contains a <A CLASS="eclass" HREF="../../reference/dbms/support/db.html">DB</A> [<A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A>] object that provides implementation
+		objects corresponding to every interface objects.</P>
+
+		<P>The creation procedure for a <A CLASS="eclass" HREF="../../reference/interface/db_change.html">DB_CHANGE</A> object is for instance:</P>
+
+<BR><CODE>
+<A CLASS="efeature" HREF="../../reference/interface/db_change.html#f_make">make</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Create an interface object to change active base.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">implementation</SPAN> := <SPAN CLASS="efeature">handle</SPAN>.<A CLASS="efeature" HREF="../../reference/support/handle.html#f_database">database</A>.<A CLASS="efeature" HREF="../../reference/dbms/support/db.html#f_db_change">db_change</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">ht</SPAN>.<A CLASS="efeature" HREF="../../../base/reference/structures/table/hash_table.html#f_make">make</A> (<SPAN CLASS="efeature">name_table_size</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">implementation</SPAN>.<A CLASS="efeature" HREF="../../reference/dbms/support/database_change.html#f_set_ht">set_ht</A> (<SPAN CLASS="efeature">ht</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<H2><A NAME="access"></A>Access to the DBMS call interface</H2>
+
+		<P>Every implementation class can access the active database call interface by
+		inheriting from the <A CLASS="eclass" HREF="../../reference/dbms/support/handle_spec.html">HANDLE_SPEC</A> [<A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A>] class. This class provides access to the <A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A>
+		object, i.e. an instance of class <A CLASS="eclass" HREF="../../reference/dbms/rdbms/oracle/oracle.html">ORACLE</A> or <A CLASS="eclass" HREF="../../reference/dbms/rdbms/odbc/odbc.html">ODBC</A>.</P>
+
+		<P><A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A> descendants are actually wrappers for the DBMS call interfaces written in C.
+		More precisely, call interfaces as delivered by the DBMS companies are called in an EiffelStore
+		C library. The C libraries are then wrapped into Eiffel classes, <A CLASS="eclass" HREF="../../reference/dbms/support/database.html">DATABASE</A> descendants.</P>
+
+		<H2><A NAME="selection"></A>Active database selection</H2>
+
+		<P>As seen in the <A HREF="../10_interface_layer/10_database_connection/index.html">interface connection</A> part,
+		active database selection is performed by the {<A CLASS="eclass" HREF="../../reference/dbms/support/database_appl.html">DATABASE_APPL</A>}.<A CLASS="efeature" HREF="../../reference/dbms/support/database_appl.html#f_set_base">set_base</A> feature: when a <A CLASS="eclass" HREF="../../reference/dbms/support/database_appl.html">DATABASE_APPL</A>
+		object calls <A CLASS="efeature" HREF="../../reference/dbms/support/database_appl.html#f_set_base">set_base</A>, database represented by this object is activated.</P>
+
+		<P>Let us give some details about the <A CLASS="efeature" HREF="../../reference/dbms/support/database_appl.html#f_set_base">set_base</A> feature:</P>
+
+		<UL>
+			<LI>Database call interface global reference is updated through {<A CLASS="eclass" HREF="../../reference/dbms/support/handle_spec.html">HANDLE_SPEC</A>}.<A CLASS="efeature" HREF="../../reference/dbms/support/handle_spec.html#f_update_handle">update_handle</A>.
+			<LI>All information about the database is set to the handle, mainly:
+			<UL>
+				<LI>Login information.
+				<LI>Status information.
+			</UL>
+
+			<P CLASS="note"><B>Note</B>: When database is inactive, its information is stored in the <A CLASS="eclass" HREF="../../reference/dbms/support/database_appl.html">DATABASE_APPL</A> object.</P>
+		</UL>
+
+		<P>The corresponding code looks like:</P>
+
+<BR><CODE>
+<SPAN CLASS="efeature">session_status</SPAN>: <A CLASS="eclass" HREF="../../reference/support/db_status.html">DB_STATUS</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- A session management object reference.</SPAN><BR>
+...<BR>
+<A CLASS="efeature" HREF="../../reference/dbms/support/database_appl.html#f_set_base">set_base</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">update_handle</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">session_status</SPAN> = <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">Void</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;create <SPAN CLASS="efeature">session_status</SPAN>.<A CLASS="efeature" HREF="../../reference/support/db_status.html#f_make">make</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">handle</SPAN>.<SPAN CLASS="efeature">set_status</SPAN> (<SPAN CLASS="efeature">session_status</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+</CODE><BR>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../10_interface_layer/index.html">The interface layer</A><BR>
+		</P>
+	</BODY>
+</HTML>

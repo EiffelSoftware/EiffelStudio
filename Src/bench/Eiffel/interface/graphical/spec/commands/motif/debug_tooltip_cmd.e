@@ -10,6 +10,21 @@ class
 inherit
 	MEL_COMMAND
 
+creation
+	make
+
+feature -- Initialization
+
+	make (text_field_imp: TEXT_FIELD_I) is
+			-- Create the tootip command
+		local
+			imp: TEXT_FIELD_IMP
+		do
+			imp ?= text_field_imp
+			imp.set_motion_verify_callback (Current, Void)
+			imp.disable_verify_bell
+		end
+
 feature -- execution
 
 	execute (arg: ANY) is

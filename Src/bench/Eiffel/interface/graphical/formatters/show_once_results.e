@@ -12,7 +12,7 @@ class
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			dark_symbol, display_temp_header
 		end;
@@ -63,9 +63,7 @@ feature {NONE} -- Properties
 			Result := f.is_once and f.is_function
 		end;
 
-feature {NONE} -- Implementation
-
-	display_info (object: OBJECT_STONE) is
+	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
 		local
 			once_func_list: SORTED_TWO_WAY_LIST [E_FEATURE];
 			once_request: ONCE_REQUEST;
@@ -74,7 +72,7 @@ feature {NONE} -- Implementation
 			dynamic_class: E_CLASS;
 			type_name: STRING;
 			status: APPLICATION_STATUS;	
-			cs: CLASSC_STONE
+			cs: CLASSC_STONE;
 		do
 			status := Application.status;
 			if status = void then
@@ -82,56 +80,59 @@ feature {NONE} -- Implementation
 			elseif not status.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
+				!! Result.make;
 				dynamic_class := object.dynamic_class;
 				once_func_list := dynamic_class.once_functions;
 				!! once_request.make;
 				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
 				!! cs.make (dynamic_class);
-				text_window.put_stone (cs, type_name);
-				text_window.put_string (" [");
-				text_window.put_stone (object, object.object_address);
-				text_window.put_char (']');
-				text_window.new_line;
-				text_window.new_line;
+				Result.add_classi (dynamic_class.lace_class, type_name);
+				Result.add_string (" [");
+				Result.add_address (object.object_address, dynamic_class);
+				Result.add_char (']');
+				Result.add_new_line;
+				Result.add_new_line;
 				from
 					once_func_list.start
 				until
 					once_func_list.after
 				loop
-					text_window.put_string ("%T");
+					Result.add_string ("%T");
 					e_feature := once_func_list.item;
-					e_feature.append_name (text_window, dynamic_class);
+					e_feature.append_name (Result, dynamic_class);
 					arguments := e_feature.arguments;
 					if arguments /= Void then
-						text_window.put_string (" (");
+						Result.add_string (" (");
 						from
 							arguments.start
 						until
 							arguments.after
 						loop
-							text_window.put_string (arguments.argument_names.i_th (arguments.index));
-							text_window.put_string (": ");
-							arguments.item.actual_type.append_to (text_window);
+							Result.add_string (arguments.argument_names.i_th (arguments.index));
+							Result.add_string (": ");
+							arguments.item.actual_type.append_to (Result);
 							arguments.forth;
 							if not arguments.after then
-								text_window.put_string ("; ")
+								Result.add_string ("; ")
 							end
 						end;
-						text_window.put_char (')')
+						Result.add_char (')')
 					end;
-					text_window.put_string (": ");
+					Result.add_string (": ");
 					if once_request.already_called (e_feature) then
-						once_request.once_result (e_feature).append_type_and_value (text_window)
+						once_request.once_result (e_feature).append_type_and_value (Result)
 					else
-						e_feature.type.append_to (text_window);
-						text_window.put_string ("%TNot yet called")
+						e_feature.type.append_to (Result);
+						Result.add_string ("%TNot yet called")
 					end;
-					text_window.new_line;
+					Result.add_new_line;
 					once_func_list.forth
 				end
 			end
 		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

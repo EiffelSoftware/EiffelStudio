@@ -9,7 +9,7 @@ class SHOW_SUPPLIERS
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end
@@ -52,16 +52,17 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "sup";
 
-feature {NONE} -- Implementation
-
-	display_info (c: CLASSC_STONE) is
-			-- Display suppliers of `c' in tree form.
+	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
+			-- Display suppliers fo `c'.
 		local
-			cmd: E_SHOW_SUPPLIERS
+			cmd: E_SHOW_SUPPLIERS;
 		do
-			!! cmd.make (c.e_class, text_window);
-			cmd.execute
-		end
+			!! Result.make;
+			!! cmd.make (c.e_class, Result);
+			cmd.execute;
+		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

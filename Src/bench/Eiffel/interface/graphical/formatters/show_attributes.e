@@ -9,7 +9,7 @@ class SHOW_ATTRIBUTES
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end
@@ -56,15 +56,16 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "att";
 
-feature {NONE} -- Implementation
-
-	display_info (c: CLASSC_STONE) is
+	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
 		local
 			cmd: E_SHOW_ATTRIBUTES
 		do
-			!! cmd.make (c.e_class, text_window);
+			!! Result.make;
+			!! cmd.make (c.e_class, Result);
 			cmd.execute
-		end
+		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

@@ -50,16 +50,17 @@ feature {NONE} -- Properties
 			Result := l_Homonyms_of
 		end;
 
-feature {NONE} -- Implementation
-
-	display_info (f: FEATURE_STONE)  is
-			-- Display homonyms of the routine.
+	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
+			-- Display homononyms of the routine.
 		local
 			cmd: E_SHOW_ROUTINE_HOMONYMNS;
 		do
-			!! cmd.make (f.e_feature, f.e_class, text_window);
-			cmd.execute
+			!! Result.make;
+			!! cmd.make (f.e_feature, f.e_class, Result);
+			cmd.execute;
 		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

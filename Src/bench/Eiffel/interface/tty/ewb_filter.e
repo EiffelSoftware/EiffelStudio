@@ -6,31 +6,39 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_FILTER 
+deferred class EWB_FILTER 
 
 inherit
 
-	EWB_COMPILED_CLASS
+	EWB_CLASS
 		rename
 			make as class_make
 		redefine
 			process_compiled_class, loop_action
 		end
 
-creation
+feature -- Initialization
 
-	make
+	make (fn, cn: STRING) is
+			-- Initialize Current with class_name `cn'
+			-- and filtername `fn'.
+		require
+			fn_not_void: fn /= Void;
+			cn_not_void: cn /= Void
+		do
+			class_make (cn);
+			init(fn);
+		ensure
+			filter_name_set: equal (filter_name, fn);
+			class_name_set: class_name = cn
+		end;
 
-feature -- Creation
-
-	make (cn, fn: STRING) is
+	init (fn: STRING) is
 			-- Initialize Current with class_name as `cn'
 			-- and filter_name as `fn'.
 		require
-			cn_not_void: cn /= Void;
 			fn_not_void: fn /= Void
 		do
-			class_make (class_name);
 			filter_name := fn
 		ensure
 			filter_set: filter_name = fn
@@ -56,36 +64,33 @@ feature -- Properties
 			Result := filter_abb
 		end;
 
-feature {NONE} -- Execution
+feature {NONE} -- Properties
 
-	associated_cmd: E_SHOW_CLASS_FILTERED_TEXT is
+	associated_cmd: E_CLASS_CMD is
 			-- Associated class command to be executed
 			-- after successfully retrieving the compiled
 			-- class
-		once
-			!! Result.do_nothing
+		deferred
+		ensure
+			non_void_result: Result /= Void
 		end;
+
+feature {NONE} -- Execution
 
 	process_compiled_class (e_class: E_CLASS) is
 			-- Execute associated command
 		local
 			cmd: like associated_cmd;
-			ctxt: CLASS_TEXT_FORMATTER
+			ctxt: CLASS_TEXT_FORMATTER;
+			st: STRUCTURED_TEXT
 		do
+			!! st.make;
 			cmd := clone (associated_cmd);
 			!! ctxt;
-			set_format_attributes (ctxt);
-			cmd.set (e_class, output_window);
-			cmd.set_filter_name (filter_name);	
-			cmd.set_text_formatter (ctxt);	
-			cmd.execute
-		end;
-
-	set_format_attributes (ctxt: CLASS_TEXT_FORMATTER) is
-			-- Set context attributes `ctxt'.
-		do
-			ctxt.set_one_class_only;
-			ctxt.set_order_same_as_text;
+			cmd.set (e_class, st);
+			cmd.execute;
+			output_window.put_string (cmd.structured_text.image);
+			output_window.new_line
 		end;
 
 	loop_action is

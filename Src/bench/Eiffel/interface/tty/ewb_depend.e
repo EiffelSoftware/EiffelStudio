@@ -25,11 +25,13 @@ feature
 			supplier: CLASS_C;
 			supp_f: FEATURE_I;
 			class_id, fid: INTEGER;
+			st: STRUCTURED_TEXT
 		do
 			dep := Depend_server.item (class_c.id);
 			fdep := dep.item (f.feature_name);
 
-			output_window.put_string ("Dependents:%N");
+			!! st.make
+			st.add_string ("Dependents:%N");
 			from
 				fdep.start
 			until
@@ -41,13 +43,15 @@ feature
 				supplier := System.class_of_id (class_id);
 				supp_f := supplier.feature_table.feature_of_feature_id (fid);
 
-				supplier.append_name (output_window);
-				output_window.put_char ('.');
-				supp_f.append_name (output_window, supplier);
-				output_window.new_line;
+				supplier.append_name (st);
+				st.add_char ('.');
+				supp_f.append_name (st, supplier);
+				st.add_new_line;
 
 				fdep.forth
 			end;
+			output_window.put_string (st.image);
+			output_window.new_line
 		end;
 
 end -- class EWB_DEPEND

@@ -22,7 +22,8 @@ feature -- Execution
 			-- occurred
 		local
 			status: APPLICATION_STATUS;
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			st: STRUCTURED_TEXT
 		do
 			!! mp.do_nothing;
 			if Application.is_stopped then
@@ -34,7 +35,11 @@ feature -- Execution
 					Window_manager.routine_win_mgr.show_stoppoint
 								(status.e_feature, status.break_index)
 				end;
-				status.display_status (Debug_window);
+				!! st.make;
+				status.display_status (st);
+				Debug_window.clear_window;
+				Debug_window.process_text (st);
+				Debug_window.display;
 				mp.restore
 			else
 					-- Before receiving and updating stack info

@@ -123,11 +123,15 @@ feature {NONE} -- Implementation
 			valid_e_feature: e_feature /= Void;
 			valid_e_class: e_class /= Void
 		local
-			cmd: like associated_cmd
+			cmd: like associated_cmd;
+			st: STRUCTURED_TEXT
 		do
+			!! st.make;
 			cmd := clone (associated_cmd);
-			cmd.set (e_feature, e_class, output_window);
-			cmd.execute
+			cmd.set (e_feature, e_class, st);
+			cmd.execute;
+			output_window.put_string (st.image);
+			output_window.new_line
 		end
 
 end -- class EWB_FEATURE

@@ -9,7 +9,7 @@ class SHOW_CLUSTERS
 
 inherit
 
-	FORMATTER
+	FILTERABLE
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end
@@ -51,16 +51,19 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "clu";
 
-feature {NONE} -- Implementation
+feature {NONE} -- Attributes
 
-	display_info (c: CLASSC_STONE) is
-			-- Show universe: clusters in class lists, in `text_window'.
+	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
+			-- Show universe: clusters in class lists.
 		local
-			cmd: E_SHOW_CLUSTERS;
+			cmd: E_SHOW_CLUSTERS
 		do
-			!! cmd.make (text_window);
+			!! Result.make;
+			!! cmd.make (Result);
 			cmd.execute
 		end;
+
+feature {NONE} -- Implementation
 
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.

@@ -9,15 +9,31 @@ class EWB_FS
 
 inherit
 
-	EWB_FILTER
+	EWB_COMPILED_CLASS
+		rename
+			make as class_make
 		redefine
-			name, help_message, abbreviation,
-			set_format_attributes			
+			name, help_message, abbreviation
 		end
 
 creation
 
 	make, do_nothing
+
+feature -- Initialization
+
+	make (cn, fn: STRING) is
+			-- Initialization
+		require
+			cn_not_void: cn /= Void;
+			fn_not_void: fn /= Void
+		do
+			class_make (cn);
+			init (fn);
+		ensure
+			filter_name_set: filter_name = fn;
+			class_name_set: class_name = cn
+		end;
 
 feature -- Properties
 
@@ -36,12 +52,11 @@ feature -- Properties
 			Result := flatshort_abb
 		end;
 
-feature {NONE} -- Implementation
+feature {NONE} -- Execution
 
-	set_format_attributes (ctxt: CLASS_TEXT_FORMATTER) is
-			-- Set format attributes `ctxt'.
+	associated_cmd: E_SHOW_FS is
 		do
-			ctxt.set_is_short;
+			!! Result.do_nothing
 		end;
 
 end -- class EWB_FS

@@ -53,10 +53,6 @@ void c_ev_save_png(
 		int
 		);
 
-//FIXME put this somewhere else!!
-
-unsigned long time_msec (void);
-
 #ifdef __cplusplus
 }
 #endif

@@ -149,7 +149,7 @@ feature -- Access
 		local
 			now: INTEGER
 		do
-			now := time_msec
+			time_msec ($now)
 			check
 				linear_time: now >= last_subtree_function_call_time
 			end
@@ -373,9 +373,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	time_msec: INTEGER is
+	time_msec (now: TYPED_POINTER [INTEGER]) is
 		external
-			"C (): unsigned long | %"load_pixmap.h%""
+			"C inline use <sys/types.h>, <sys/timeb.h>"
+		alias
+			"[
+				{
+					struct timeb tb;
+					static time_t beginning = 0;
+					if (!beginning) {
+						beginning = time (NULL);
+					}
+					ftime (&tb);
+					*$now = (EIF_INTEGER) (((tb.time - beginning) * 1000) + tb.millitm);
+				}
+			]"
 		end
 
 end -- class EV_DYNAMIC_TREE_ITEM

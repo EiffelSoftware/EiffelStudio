@@ -1502,16 +1502,3 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		/* that's it */
 	return;
 }
-
-/*<HACK>*/
-/*FIXME this puts milliseconds into 32 bit, it doesn't last long.*/
-unsigned long time_msec (void)
-{
-	struct timeb tb;
-	static time_t begining = 0;
-	if (!begining) begining = time (NULL);
-	ftime (&tb);
-	return (((tb.time - begining) * 1000) + tb.millitm);
-}
-
-/*</HACK>*/

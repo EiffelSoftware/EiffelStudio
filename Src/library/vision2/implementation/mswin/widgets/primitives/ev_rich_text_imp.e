@@ -264,22 +264,6 @@ feature -- Status report
 				
 			safe_restore_caret
 		end
-		
-	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
-			-- Is formatting from caret position `start_index' to `end_index' contiguous?
-		local
-			mask: INTEGER
-			wel_character_format: WEL_CHARACTER_FORMAT
-		do
-	--		safe_store_caret
-	--		if start_index /= selection_start or end_index /= selection_end then
-	--			set_selection (start_index - 1, end_index)
-	--		end
-			wel_character_format := current_selection_character_format
-			mask := wel_character_format.mask
-			print ("Mask : " + mask.out + "%N")
-	--		safe_restore_caret
-		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
 			-- Index of character closest to position `x_position', `y_position'. 

@@ -5,8 +5,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
-
 	EV_COLOR_I
+
+inherit
+	EV_ANY_I
 
 feature {NONE} -- Initialization
 

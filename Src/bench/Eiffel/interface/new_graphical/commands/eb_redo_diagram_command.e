@@ -26,7 +26,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Accelerator action
 			-- Redo last cancelled action if possible and if the diagram
 			-- has the focus.
 		do
-			if tool.projector.widget.has_focus and then not history.redo_exhausted then
+			if is_sensitive and then tool.projector.widget.has_focus and then not history.redo_exhausted then
 				execute
 			end
 		end

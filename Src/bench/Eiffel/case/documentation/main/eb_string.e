@@ -70,16 +70,8 @@ feature -- Status report
 	is_class_name: BOOLEAN is
 			-- Could `Current' be the name of a class?
 			-- i.e. Does `Current' consist of only underscores, uppercases and digits.
-		local
-			i: INTEGER
-			c: CHARACTER
 		do
-			Result := True
-			from i := 1 until not Result or else i > count loop
-				c := item (i)
-				i := i + 1
-				Result := c = '_' or else c.is_upper or else c.is_digit
-			end
+			Result := (create {IDENTIFIER_CHECKER}).is_valid_upper (Current)
 		end
 
 	is_plural_class: BOOLEAN is
@@ -92,16 +84,8 @@ feature -- Status report
 
 	is_feature_name: BOOLEAN is
 			-- Could `Current' be the name of a feature?
-		local
-			i: INTEGER
-			c: CHARACTER
 		do
-			Result := True
-			from i := 1 until not Result or else i > count loop
-				c := item (i)
-				i := i + 1
-				Result := c = '_' or else c.is_alpha or else c.is_digit
-			end
+			Result := (create {IDENTIFIER_CHECKER}).is_valid (Current)
 		end
 
 	is_dot_feature_name: BOOLEAN is

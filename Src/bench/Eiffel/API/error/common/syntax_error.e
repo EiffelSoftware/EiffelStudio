@@ -6,8 +6,9 @@ inherit
 
 	ERROR
 		redefine
-			trace, stone
-		end
+			trace
+		end;
+	SHARED_WORKBENCH
 
 creation
 
@@ -55,18 +56,35 @@ feature -- Conveniences
 			end_position := i;
 		end;
 
-feature -- Error code
+feature -- Property
 
 	code: STRING is "Syntax error";
 			-- Error code
 
+	syntax_message: STRING is 
+			-- Specific syntax message. 
+			-- (By default, it is empty)
+		do
+			Result := ""
+		ensure
+			non_void_result: Result /= Void
+		end;	
+
 feature
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
+		local
+			msg: STRING
 		do
+			msg := syntax_message;
+			if not msg.empty then
+				ow.put_char ('(');
+				ow.put_string (msg)
+				ow.put_string (")%N");
+			end
 		end;
 
-	trace is
+	trace (ow: OUTPUT_WINDOW) is
 			-- Debug purpose
 		local
 			file: PLAIN_TEXT_FILE;
@@ -93,33 +111,34 @@ feature
 			end;
 			file.close;
 
-			put_string ("Syntax error at line ");
-			put_int (line_number);
+			ow.put_string ("Syntax error at line ");
+			ow.put_int (line_number);
 			if Lace.parsed then
 				if Lace.successfull then
 						-- Error happened in a class
-					put_string (" in class ");
-					put_clickable_string (
-							stone (System.current_class.e_class),
+					ow.put_string (" in class ");
+					ow.put_class_syntax (Current, System.current_class.e_class, 
 							System.current_class.signature)
 				else
 						-- Error happened while parsing a "use" file
-					put_string (" in Cluster_properties %"Use%" file")
+					ow.put_string (" in Cluster_properties %"Use%" file")
 					if file_name /= Void then
-						put_string ("%N     File: "); put_string (file_name);
+						ow.put_string ("%N     File: "); 
+						ow.put_string (file_name);
 					end;
 				end
 			else
-				put_clickable_string (ace_stone, " in Ace file")
+				ow.put_ace_syntax (Current, " in Ace file")
 			end;
-			new_line;
-			build_explain;
-			display_line (previous_line);
-			display_error_line (current_line, start_position - start_line_pos);
-			display_line (next_line);
+			ow.new_line;
+			build_explain (ow);
+			display_line (ow, previous_line);
+			display_error_line (ow, current_line, 
+						start_position - start_line_pos);
+			display_line (ow, next_line);
 		end;
 
-	display_line (a_line: STRING) is
+	display_line (ow: OUTPUT_WINDOW; a_line: STRING) is
 		local
 			i: INTEGER;
 			nb: INTEGER;
@@ -134,16 +153,16 @@ feature
 					i := i + 1;
 					c := a_line.item (i);
 					if c = '%T' then
-						put_string ("    ")
+						ow.put_string ("    ")
 					else
-						put_char (c)
+						ow.put_char (c)
 					end;
 				end;
-				new_line;
+				ow.new_line;
 			end;
 		end;
 
-	display_error_line (a_line: STRING; pos: INTEGER) is
+	display_error_line (ow: OUTPUT_WINDOW; a_line: STRING; pos: INTEGER) is
 		local
 			i, nb: INTEGER;
 			c: CHARACTER;
@@ -157,28 +176,28 @@ feature
 				i := i + 1;
 				c := a_line.item (i);
 				if c = '%T' then
-					put_string ("    ");
+					ow.put_string ("    ");
 					if i <= pos then
 						nb_tab := nb_tab + 1;
 					end;
 				else
-					put_char (c)
+					ow.put_char (c)
 				end;
 			end;
-			new_line;
+			ow.new_line;
 			position := pos + 3*nb_tab;
 			if position = 0 then
-				put_string ("^---------------------------%N");
+				ow.put_string ("^---------------------------%N");
 			else
 				from
 					i := 1;
 				until
 					i > position
 				loop
-					put_char ('-');
+					ow.put_char ('-');
 					i := i + 1;
 				end;
-				put_string ("^%N");
+				ow.put_string ("^%N");
 			end;
 		end;
 
@@ -201,18 +220,5 @@ feature {NONE} -- Externals
 		external
 			"C"
 		end;
-
-feature -- stoning
-
-	stone (reference_class: E_CLASS): CL_SYNTAX_STONE is
-		do
-			!!Result.make (Current, reference_class)
-		end;
-
-	ace_stone: ACE_SYNTAX_STONE is
-			-- Reference class is useless here
-		do
-			!!Result.make (Current)
-		end
 
 end

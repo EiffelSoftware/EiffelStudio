@@ -29,6 +29,7 @@ extern "C" {
 
 RT_LNK EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type);
 RT_LNK EIF_REFERENCE find_instance_of (EIF_INTEGER instance_type, EIF_INTEGER result_type);
+RT_LNK EIF_REFERENCE find_all_instances (EIF_INTEGER result_type);
 
 #ifdef __cplusplus
 }

@@ -88,7 +88,7 @@
 				<keyword>invariant</keyword>
 			</code>), as well as other assertion constructs studied later (see 
 			<link>
-				<url>tutorial-11.xml#38021</url>
+				<url>tutorial-11.xml</url><anchor_name>38021</anchor_name>
 				<label>"Instructions", page 84</label>
 			</link>): loop invariants and variants, check instructions.
 		</paragraph>
@@ -270,7 +270,7 @@
 				<keyword>check</keyword>
 			</code> instruction as introduced later (
 			<link>
-				<url>tutorial-11.xml#38021</url>
+				<url>tutorial-11.xml</url><anchor_name>38021</anchor_name>
 				<label>"Instructions", page 84</label>
 			</link>) is recommended if the reason for omitting the test is non-trivial.
 		</note>
@@ -345,7 +345,7 @@
 					<keyword>check</keyword>
 				</code> instructions, loop invariants and loop variants (
 				<link>
-					<url>tutorial-11.xml#38021</url>
+					<url>tutorial-11.xml</url><anchor_name>38021</anchor_name>
 					<label>"Exception handling", page 46</label>
 				</link>).
 			</item>
@@ -353,7 +353,7 @@
 		</paragraph>
 		<paragraph>An assertion violation, if detected at run time under one of these options other than the first, will cause an exception (
 			<link>
-				<url>tutorial-09.xml#10722</url>
+				<url>tutorial-09.xml</url><anchor_name>10722</anchor_name>
 				<label>"Instructions", page 84</label>
 			</link>). Unless the software has an explicit "retry" plan as explained in the discussion of exceptions, the violation will cause produce an exception trace and cause termination (or, in EiffelStudio, a return to the environment's browsing and debugging facilities at the point of failure). If present, the label of the violated subclause will be displayed, to help identify the problem.
 		</paragraph>
@@ -364,7 +364,7 @@
 		</paragraph>
 		<paragraph>During development and testing, assertion monitoring should be turned on at the highest possible level. Combined with static typing and the immediate feedback of compilation techniques such as the Melting Ice Technology, this permits the development process mentioned in the section 
 			<link>
-				<url>tutorial-04.xml#94733</url>
+				<url>tutorial-04.xml</url><anchor_name>94733</anchor_name>
 				<label>"Quality and functionality", page 10</label>
 			</link>, where errors are exterminated at birth. No one who has not practiced the method in a real project can imagine how many mistakes are found in this way; surprisingly often, a violation will turn out to affect an assertion that was just included for goodness' sake, the developer being convinced that it could never "possibly" fail to be satisfied.
 		</paragraph>
@@ -430,7 +430,7 @@
 			<item> Names and signatures (argument and result type information) for exported features. </item>
 			<item> Header comments of these features, which carry informal descriptions of their purpose. (Hence the importance, mentioned in section 
 				<link>
-					<url>tutorial-05.xml#35212</url>
+					<url>tutorial-05.xml</url><anchor_name>35212</anchor_name>
 					<label>4</label>
 				</link>, of always including such comments and writing them carefully.)
 			</item>
@@ -449,11 +449,11 @@
 				<keyword>once</keyword>
 			</code> variants seen in 
 			<link>
-				<url>tutorial-06.xml#91180</url>
+				<url>tutorial-06.xml</url><anchor_name>91180</anchor_name>
 				<label>"External software", page 16</label>
 			</link> above and 
 			<link>
-				<url>tutorial-11.xml#71816</url>
+				<url>tutorial-11.xml</url><anchor_name>71816</anchor_name>
 				<label>"Once routines and shared objects", page 82</label>
 			</link> below); assertion subclauses involving non-exported features; and some keywords not useful in the documentation, such as 
 			<code>
@@ -462,7 +462,7 @@
 		</paragraph>
 		<paragraph>In accordance with the Uniform Access principle (page 
 			<link>
-				<url>tutorial-07.xml#UNIFORM ACCESS</url>
+				<url>tutorial-07.xml</url><anchor_name>UNIFORM ACCESS</anchor_name>
 				<label>19</label>
 			</link>), the Contract Form does not distinguish between attributes and argument-less queries. In the above example, 
 			<code>
@@ -477,7 +477,7 @@
 			<item> Rather than being developed separately -- an unrealistic requirement, hard to impose on developers initially and becoming impossible in practice if we expect the documentation to remain up to date as thesoftware evolves -- the documentation is extracted from the software itself. It is not a separate product but a different view of the same product. This prolongs the 
 				<bold>Single Product</bold> principle that lies at the basis of Eiffel's seamless development model (section 
 				<link>
-					<url>tutorial-04.xml#41726</url>
+					<url>tutorial-04.xml</url><anchor_name>41726</anchor_name>
 					<label>3</label>
 				</link>).
 			</item>
@@ -486,12 +486,12 @@
 		<paragraph>The Contract Form is only one of the relevant views. EiffelStudio, for example, generates graphical representations of system structures, to show classes and their relations -- client, inheritance -- according to the conventions of BON (the Business Object Notation). In accordance with the principles of seamlessness and reversibility, EiffelStudio lets you both work on the text, producing the graphics on the fly, or work on the graphics, updating the text on the fly; you can alternate as you wish between these two modes. The resulting process is quite different from more traditional approaches based on separate tools: an analysis and CASE workbench, often based on UML, to deal with an initial "bubble-and-arrow" description; and a separate programming environment, to deal with implementation aspects only. In Eiffel the environment provides consistent, seamless support from beginning to end. </paragraph>
 		<paragraph>The Contract Form -- or its variant the Flat-Contract Form, which takes account of inheritance (
 			<link>
-				<url>tutorial-10.xml#11134</url>
+				<url>tutorial-10.xml</url><anchor_name>11134</anchor_name>
 				<label>"Flat and Flat-Contract Forms", page 72</label>
 			</link>) are the standard form of library documentation, used extensively, for example, in the book 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/doc/page.xml#rs</url>
+					<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>rs</anchor_name>
 					<label>Reusable Software</label>
 				</link>
 			</span> (see bibliography). Assertions play a central role in such documentation by expressing the terms of the contract. As demonstrated 
@@ -700,7 +700,7 @@
 			<feature_name>exception</feature_name>
 		</code>, giving the code for the last exception, and symbolic names (
 		<link>
-			<url>tutorial-11.xml#94304</url>
+			<url>tutorial-11.xml</url><anchor_name>94304</anchor_name>
 			<label>"Constant and unique attributes", page 83</label>
 		</link>) for all such codes, such as 
 		<code>
@@ -729,13 +729,13 @@
 		<list ordered="false">
 			<item> They make it possible to use Eiffel for analysis and design. At a high level of abstraction, it is necessary to be precise too. With the exception of BON, object-oriented analysis and design methods tend to favor abstraction over precision. Thanks to assertions, it is possible to express precise properties of a system ("At what speed should the alarm start sounding?") without making any commitment to implementation. The discussion of deferred classes (
 				<link>
-					<url>tutorial-10.xml#48949</url>
+					<url>tutorial-10.xml</url><anchor_name>48949</anchor_name>
 					<label>"Applications of deferred classes", page 60</label>
 				</link>) will show how to write a purely descriptive, non-software model in Eiffel, using contracts to describe the essential properties of a system without any computer or software aspect.
 			</item>
 			<item> Assertions also serve to control the power of inheritance-related mechanisms -- redeclaration, polymorphism, dynamic binding -- and channel them to correct uses by assigning the proper semantic limits. See 
 				<link>
-					<url>tutorial-10.xml#83610</url>
+					<url>tutorial-10.xml</url><anchor_name>83610</anchor_name>
 					<label>"Inheritance and contracts", page 66</label>
 				</link>.
 			</item>

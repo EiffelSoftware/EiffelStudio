@@ -225,7 +225,7 @@
 				<symbol>[</symbol><local_variable>x</local_variable><symbol>]</symbol>
 			</code>, using the syntax for manifest tuples introduced in 
 			<link>
-				<url>tutorial-11.xml#36752</url>
+				<url>tutorial-11.xml</url><anchor_name>36752</anchor_name>
 				<label>"Tuple types", page 90</label>
 			</link>.  You will always use tuples for the argument to 
 			<code>

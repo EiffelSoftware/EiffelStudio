@@ -18,7 +18,7 @@
 		</paragraph>
 		<paragraph>The terms of the new EiffelBase license are given below. Changes since the original version are recorded in the 
 			<link>
-				<url>#changes</url>
+				<anchor_name>changes</anchor_name>
 				<label>changes section</label>
 			</link>.
 		</paragraph>
@@ -29,7 +29,7 @@
 		</paragraph>
 		<paragraph>EiffelBase is one of the principal contributions of Eiffel: a library of fundamental structures and algorithms covering the basics of computing, and resulting from a "Linnaean" effort at a general-purpose taxonomy of computing structures. We believe that EiffelBase is one of the most carefully designed and extensively used libraries in the object-oriented industry. The library and its design principles are described in detail in the book 
 			<link>
-				<url>http://www.eiffel.com/doc/#ru</url>
+				<url>http://www.eiffel.com/doc/</url><anchor_name>ru</anchor_name>
 				<label>
 					<italic>Reusable Software: The Base Object-Oriented Component Libraries</italic>
 				</label>
@@ -115,7 +115,7 @@
 				<item>If you need to make any modification to the classes, mark those modifications clearly in the class texts.</item>
 				<item>Ensure that the text remains valid Eiffel. Note that this license does not authorize you to distribute versions of the Library restated in other programming, analysis or design languages, except if mechanically translated from the source form by an Eiffel compiler, in which case they fall under "object form". For any non-mechanical adaptation to other languages you must obtain authorization from Eiffel Software. "Valid Eiffel" includes the language described in the latest edition or printing of the book 
 					<link>
-						<url>http://www.eiffel.com/doc/page.xml#etl</url>
+						<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>etl</anchor_name>
 						<label>
 							<italic>Eiffel: The Language</italic>
 						</label>
@@ -150,36 +150,36 @@
 		<paragraph>
 			<bold>7 May 1999</bold>: in response to comments by David Broadfoot on the Eiffel Software Eiffel user list, rewording of the 
 			<link>
-				<url>#contamination</url>
+				<anchor_name>contamination</anchor_name>
 				<label>explanation</label>
 			</link> of why we are applying more liberal terms than GPL-style licenses. regarding fears of 
 			<link>
-				<url>#contamination</url>
+				<anchor_name>contamination</anchor_name>
 				<label>contamination</label>
 			</link> with the Gnu Public License.
 		</paragraph>
 		<paragraph>
 			<bold>6 May 1999</bold>: following comments by Ed Avis and Alexander Kjeldaas, we now permit distribution maintainers to continue distributing an old version as long as they 
 			<link>
-				<url>#obsolete_version</url>
+				<anchor_name>obsolete_version</anchor_name>
 				<label>mention clearly that it's obsolete </label>
 			</link>.
 		</paragraph>
 		<paragraph>
 			<bold>7 April 1999</bold>: following comments by Loryn Jenkins and Ed Avis, removal of the requirement that bug fixes and improvements be provided back to the maintainers of the library. This requirement has been changed to a mere 
 			<link>
-				<url>#encourage_bug_reports</url>
+				<anchor_name>encourage_bug_reports</anchor_name>
 				<label>encouragement </label>
 			</link>, facilitating use of the library. Of course it is in everyone's interest to report bugs and improvements.
 		</paragraph>
 		<paragraph>
 			<bold>7 April 1999</bold>: following comments by Loryn Jenkins, loosening of the 
 			<link>
-				<url>#valid_eiffel</url>
+				<anchor_name>valid_eiffel</anchor_name>
 				<label>definition of "valid Eiffel"</label>
 			</link>. This change also caused addition of the notion of 
 			<link>
-				<url>#reference_implementation</url>
+				<anchor_name>reference_implementation</anchor_name>
 				<label>reference implementation</label>
 			</link>. The purpose is to avoid crippling EiffelBase by preventing it from utilizing innovative language constructs and corrections in the language contributions. Such language extensions are OK as long as they have been accepted for discussion by NICE and are supported by the reference implementation.
 		</paragraph>
@@ -187,7 +187,7 @@
 			<bold>1 April 1999</bold>: following some comments by Richard Stallman,addition of a qualification ("
 			<italic>justified or not</italic>") to the notes regarding fears of 
 			<link>
-				<url>#contamination</url>
+				<anchor_name>contamination</anchor_name>
 				<label>contamination </label>
 			</link>with the Gnu Public License. Our intention is not to criticize the GPL but simply to note that the GPL does cause some fears, "justified or not", among commercial developers.
 		</paragraph>

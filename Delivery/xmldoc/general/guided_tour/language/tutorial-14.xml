@@ -25,7 +25,7 @@
 			<item>
 				<span>
 					<link>
-						<url>http://eiffel.com/doc/#etl</url>
+						<url>http://eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 						<label>Eiffel: The Language</label>
 					</link>
 				</span>, Bertrand Meyer, Prentice Hall, 1992.  Language manual and reference.

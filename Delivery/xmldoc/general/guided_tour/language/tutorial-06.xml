@@ -246,14 +246,14 @@
 				<class_name>ANY</class_name>
 			</code> introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (page 
 			<link>
-				<url>tutorial-07.xml#12485</url>
+				<url>tutorial-07.xml</url><anchor_name>12485</anchor_name>
 				<label>28</label>
 			</link>) and default input-output.  The procedure 
 			<code>
 				<string>print</string>
 			</code> used in the first version of our "Hello World" (page 
 			<link>
-				<url>tutorial-05.xml#80381</url>
+				<url>tutorial-05.xml</url><anchor_name>80381</anchor_name>
 				<label>11</label>
 			</link>) comes from 
 			<code>
@@ -281,7 +281,7 @@
 		<paragraph>Classes are the only form of module in Eiffel.  As will be explained in more detail, they also provide the basis for the only form of type.  This module-type identification is at the heart of object technology and of the fundamental simplicity of the Eiffel method.  </paragraph>
 		<paragraph>Above classes, you will find the concept of cluster.  A cluster is a group of related classes.  Clusters are a property of the method, enabling managers to organize the development into teams.  As we have already seen (section 
 			<link>
-				<url>tutorial-04.xml#41726</url>
+				<url>tutorial-04.xml</url><anchor_name>41726</anchor_name>
 				<label>3</label>
 			</link>) they also play a central role in the lifecycle model.  Clusters are an organizational concept, not a form of module, and do not require an Eiffel language construct.
 		</paragraph>

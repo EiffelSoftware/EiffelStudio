@@ -212,7 +212,7 @@
 				<label>
 					<italic>Isolating the context, pg 68</italic>
 				</label>
-				<url>index-11.xml#89659</url>
+				<url>index-11.xml</url><anchor_name>89659</anchor_name>
 			</link>
 		</note>
 		<paragraph>The diagram is cropped to the available area; to get the whole picture, resize the window from the bottom-right corner.  You can now see the inheritance structure:</paragraph>
@@ -333,7 +333,7 @@
 		<paragraph>The EiffelBase Data Structure library and its subclusters are described in the book 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/doc/#rs</url>
+					<url>http://www.eiffel.com/doc/</url><anchor_name>rs</anchor_name>
 					<label>Reusable Software</label>
 				</link>
 			</span>.  Let's go to one of the most frequently used subclusters, 

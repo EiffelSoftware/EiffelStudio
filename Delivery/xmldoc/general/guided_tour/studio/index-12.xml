@@ -121,12 +121,12 @@
 			</heading>
 			<paragraph>Next compile again, using the Compilation button (shown on the figure page 
 				<link>
-					<url>index.xml#COMPILATION BUTTON</url>
+					<url>index.xml</url><anchor_name>COMPILATION BUTTON</anchor_name>
 				</link> ).  Some "degree" messages appear quickly; EiffelStudio has found out what class has changed and deduced what exactly to recompile -- only a subset of the whole system.  So this again will proceed very quickly.
 			</paragraph>
 			<paragraph>Execute the system again now, using one of the execution buttons (shown on the figure on page 
 				<link>
-					<url>index.xml#ORIGINAL FIGURE WITH RUN BUTTONS</url>
+					<url>index.xml</url><anchor_name>ORIGINAL FIGURE WITH RUN BUTTONS</anchor_name>
 				</link> ), with or without breakpoints, on the right in the bottom Project toolbar.  You will see that the message output by the execution has changed to include the added string.
 			</paragraph>
 		</div>
@@ -137,7 +137,7 @@
 			</heading>
 			<paragraph>In studying the Context Tool we discovered a number of views of a class text ( 
 				<link>
-					<url>index-08.xml#76845</url>
+					<url>index-08.xml</url><anchor_name>76845</anchor_name>
 				</link> ).  For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable.  A row of buttons next to the Class and Feature fields lets you choose between them:
 			</paragraph>
 			<div>

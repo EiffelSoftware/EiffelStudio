@@ -884,8 +884,18 @@ rt_public void file_stat (char *path, struct stat *buf)
 	for (;;) {
 		errno = 0;						/* Reset error condition */
 #ifdef HAS_LSTAT
-	/* We do not use lstat anymore -- Fred */
-		status = stat(path, buf);		/* Watch for symbolic links */
+		status = lstat(name, buf);
+		if (status == 0) {
+			/* We found a file, not let's check if it is not a symbolic link,
+			 * if it is the case, we need to call `stat' to make sure the link
+			 * is valid. It is going to slow down current call by stating twice
+			 * the info, but this case is quite rare and there is a benefit
+			 * in using `lstat' over `stat' the first time as more than 90%
+			 * of the files we stat are not symlink. */
+			if ((buf->st_mode & S_IFLNK) == S_IFLNK) {
+				status = stat (name, buf);
+			}
+		}
 #else
 		status = stat(path, buf);		/* Get file statistics */
 #endif
@@ -957,7 +967,7 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	case 17: /* Is file a FIFO */
 		return (EIF_INTEGER) (buf->st_mode & S_IFIFO);
 	case 18: /* Is file a symbolic link */
-		return (EIF_INTEGER) (buf->st_mode & S_IFLNK);
+		return (EIF_INTEGER) ((buf->st_mode & S_IFLNK) == S_IFLNK);
 	case 19: /* Is file a socket */
 		return (EIF_INTEGER) (buf->st_mode & S_IFSOCK);
 	default:
@@ -1110,20 +1120,47 @@ rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)
 
 rt_public EIF_BOOLEAN file_exists(char *name)
 {
-	/* Test whether file exists or not by checking the return from the stat()
-	 * system call, hence letting the kernel run all the tests. Return true
-	 * if the file exists.
-	 * Stat is called directly, because failure is allowed here obviously.
+	/* Test whether file exists or not. If `name' represents a symbolic link,
+	 * it will check that pointed file does exist.
 	 */
 
 	int status;					/* System call status */
 	struct stat buf;			/* Buffer to get file statistics */
 	
-
-	status = stat(name, &buf);	/* Attempt to stat file */
-
-	return (EIF_BOOLEAN) (status == -1 ? '\0' : '\01');
+#ifdef HAS_LSTAT
+	status = lstat(name, &buf);	/* Attempt to stat file */
+	if (status == 0) {
+		/* We found a file, not let's check if it is not a symbolic link,
+		 * if it is the case, we need to call `stat' to make sure the link
+		 * is valid. */
+		if ((buf->st_mode & S_IFLNK) == S_IFLNK) {
+			status = stat (name, &buf);
+		}
+	}
+#else
+	status = stat (name, &buf);
+#endif
+	return (status == -1 ? EIF_FALSE : EIF_TRUE);
 }
+
+rt_public EIF_BOOLEAN file_path_exists(char *name)
+{
+	/* Test whether file exists or not without following the symbolic link
+	 * if `name' represents one.
+	 */
+
+	int status;
+	struct stat buf;			/* Buffer to get file statistics */
+	
+#ifdef HAS_LSTAT
+	status = lstat(name, &buf);
+#else
+	status = stat(name, &buf);
+#endif
+
+	return (status == -1 ? EIF_FALSE : EIF_TRUE);
+}
+
 
 /*
  * Interfacing with file system.

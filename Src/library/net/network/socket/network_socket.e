@@ -15,8 +15,19 @@ deferred class NETWORK_SOCKET inherit
 			put_integer, putint, put_boolean, putbool,
 			put_real, putreal, put_double, putdouble
 		redefine
-			address, is_valid_peer_address
-	end
+			address, is_valid_peer_address, create_from_descriptor
+		end
+
+feature -- Initialization
+
+	create_from_descriptor (fd: INTEGER) is
+			-- Create socket from descriptor `fd'.
+		do
+			Precursor (fd)
+			timeout := default_timeout
+		ensure then
+			timeout_set_to_default: timeout = default_timeout
+		end
 
 feature -- Status report
 

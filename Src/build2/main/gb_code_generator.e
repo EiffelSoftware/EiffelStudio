@@ -290,6 +290,7 @@ feature {NONE} -- Implementation
 			current_type: STRING
 			new_object : GB_OBJECT
 			found_name: STRING
+			menu_bar_object: GB_MENU_BAR_OBJECT
 		do
 			
 				-- Retrieve the current type represented by `element'.
@@ -321,7 +322,14 @@ feature {NONE} -- Implementation
 									-- we are generating code for a window or not. i.e for the window code
 									-- generated should be "extend (widget)" instead of "something.extend (widget)".
 								if depth = 3 then
-									add_build (new_object.extend_xml_representation (element_info.data))						
+										--| FIXME this should be implemented in a less specific way,
+										--| not in this class.
+									menu_bar_object ?= new_object
+									if menu_bar_object /= Void then
+										add_build ("set_menu_bar (" + element_info.data + ")")
+									else
+										add_build (new_object.extend_xml_representation (element_info.data))						
+									end
 								else
 									add_build (parent_name + "." + new_object.extend_xml_representation (element_info.data))
 										-- Store the parent and child attribute names in `parent_child'.

@@ -36,6 +36,9 @@ inherit
 	ECOM_FUNC_KIND
 
 	ECOM_VAR_TYPE
+		rename
+			is_iunknown as is_unknown_interface,
+			is_idispatch as is_dispatch_interface
 		export
 			{NONE} all
 		end
@@ -574,8 +577,10 @@ feature -- Basic operations
 			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			l_argument: WIZARD_PARAM_DESCRIPTOR
 		do
-			if inherited_interface /= Void and not inherited_interface.is_iunknown and not inherited_interface.is_idispatch and not inherited_interface.is_interface_disambiguated then
-				inherited_interface.disambiguate_interface_names
+			if inherited_interface /= Void and not inherited_interface.is_iunknown and not inherited_interface.is_idispatch then
+				if not inherited_interface.is_interface_disambiguated then
+					inherited_interface.disambiguate_interface_names
+				end
 				feature_eiffel_names.append (inherited_interface.feature_eiffel_names)
 			end
 			from
@@ -611,8 +616,10 @@ feature -- Basic operations
 						l_arguments.after
 					loop
 						l_argument := l_arguments.item
+						if l_argument.name.is_equal ("left") then
+							do_nothing
+						end
 						l_argument.set_name (unique_identifier (l_argument.name, agent feature_eiffel_names.has))
-						l_argument.set_name (unique_identifier (l_argument.name, agent Eiffel_keywords.has))
 						l_arguments.forth
 					end
 				end

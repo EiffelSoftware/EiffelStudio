@@ -1,55 +1,58 @@
+indexing
+	description: "General namer hole."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class NAMER_HOLE 
 
 inherit
 
 	EDIT_BUTTON
-		rename
-			make as button_make
 		redefine
-			process_any
+			make
 		end
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	create_focus_label is 
+	make (par: EV_CONTAINER) is
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			set_focus_string (Focus_labels.namer_label)
-		end;
+			{EDIT_BUTTON} Precursor (par)
+			create cmd.make (~process_rename)
+			add_default_pnd_command (cmd, Void)
+		end
 
-	make (a_parent: COMPOSITE) is
-		require
-			valid_a_parent: a_parent /= Void;
-			do
-			button_make (a_parent);
-		end;
+--	create_focus_label is 
+--		do
+--			set_focus_string (Focus_labels.namer_label)
+--		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.namer_pixmap
-		end;
-	
-feature {NONE}
+		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.any_type
-		end;
+feature {NAMER_HOLE} -- Command
 
-	process_any (dropped: STONE) is
+	process_rename (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 		local
-			namer_cmd: RENAME_COMMAND
+			namable: NAMABLE
 		do
-			!! namer_cmd;
-			namer_cmd.execute (dropped);
-		end;
+			namable ?= ev_data.data
+			if namable /= Void and then namable.is_able_to_be_named then
+				namer_window.popup_with (namable)
+			end
+		end
 
 	create_empty_editor is
 		do
-		end;
+		end
 
-end
+end -- class NAMER_HOLE
+

@@ -233,7 +233,7 @@ feature -- Generation
 			final_mode: BOOLEAN;
 			generate_c_code: BOOLEAN;
 			type_list: TYPE_LIST
-			once_count, oidx:INTEGER
+			once_count:INTEGER
 		do
 			final_mode := byte_context.final_mode;
 
@@ -251,16 +251,16 @@ feature -- Generation
 						-- Check to see if there is really something to generate
 	
 					generate_c_code := has_creation_routine or else
-						(	current_class.has_invariant and then
-							current_class.assertion_level.check_invariant);
+							(current_class.has_invariant and then
+							 current_class.assertion_level.check_invariant);
 					from
 						feature_table.start
 					until
-						feature_table.after or else generate_c_code
+						generate_c_code or else feature_table.after
 					loop
 						feature_i := feature_table.item_for_iteration;
-						if feature_i.to_generate_in (current_class) and then feature_i.used then
-							generate_c_code := True;
+						if feature_i.to_generate_in (current_class) then
+							generate_c_code := feature_i.used
 						end;
 						feature_table.forth;
 					end;
@@ -308,42 +308,8 @@ feature -- Generation
 						generate_creation_routine (file, extern_decl_file);
 					end;
 
-					-- Count once routines which must be generated
-					-- in the current class
-	
-					from
-						feature_table.start;
-					until
-						feature_table.after
-					loop
-						feature_i := feature_table.item_for_iteration;
-						if feature_i.to_generate_in (current_class) and then
-										feature_i.is_once then
-							once_count := once_count + 1
-						end;
-						feature_table.forth;
-					end;
-
-					-- Create index offset variable, if necessary.
-	
-					if once_count > 0 then
-						file.putstring ("static int EIF_oidx_off = 0;%N")
-					end
-
-					-- Create module initialization procedure
-
-					file.generate_function_signature (
-							   "void", id.module_init_name, True, file, <<"">>, <<"void">>
-													 )
-	
-					if once_count > 0 then
-						file.putstring ("%TEIF_oidx_off = EIF_once_count;%N%
-									%%TEIF_once_count += ")
-						file.putint (once_count)
-						file.putstring (";%N}%N%N")
-					else
-						file.putstring ("%N}%N%N")
-					end
+						-- Declaration of index offset variable for the `onces' array.
+					extern_decl_file.putstring ("extern int EIF_oidx_off;%N")
 
 					from
 						feature_table.start;
@@ -355,20 +321,31 @@ feature -- Generation
 						if feature_i.to_generate_in (current_class) then
 							if feature_i.is_once then
 									-- If it's a once, give it a key.
-								byte_context.set_once_index (oidx)
-								oidx := oidx + 1
+								byte_context.set_once_index (once_count)
+								once_count := once_count + 1
 							end
 							generate_feature (feature_i, file);
 						end
 						feature_table.forth;
 					end;
 
-					if 	current_class.has_invariant
-						and then
-							((not final_mode)
-							or else
-							current_class.assertion_level.check_invariant)
-					then
+						-- Create module initialization procedure
+					if once_count > 0 then
+						file.putstring ("static int EIF_oidx_off = 0;%N")
+					end
+
+					file.generate_function_signature ("void", id.module_init_name, True, extern_decl_file, <<"">>, <<"void">>)
+	
+					if once_count > 0 then
+						file.putstring ("%TEIF_oidx_off = EIF_once_count;%N%
+									%%TEIF_once_count += ")
+						file.putint (once_count)
+						file.putstring (";%N}%N%N")
+					else
+						file.putstring ("%N}%N%N")
+					end
+
+					if current_class.has_invariant and then ((not final_mode) or else current_class.assertion_level.check_invariant) then
 						inv_byte_code := Inv_byte_server.disk_item (current_class.id);
 						inv_byte_code.generate_invariant_routine;
 						byte_context.clear_all;

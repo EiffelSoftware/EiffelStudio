@@ -1,6 +1,6 @@
 indexing
-	description: "Encapsulation of a C++ external.";
-	date: "$Date$";
+	description: "Encapsulation of a C++ external."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class CPP_EXT_BYTE_CODE
@@ -54,7 +54,7 @@ feature -- Code generation
 				shared_include_queue.extend (class_header_file)
 				if not context.final_mode then
 					generated_file.putstring ("#include ")
-					generated_file.putstring (class_header_file);
+					generated_file.putstring (class_header_file)
 					generated_file.new_line
 				end
 			end
@@ -63,7 +63,7 @@ feature -- Code generation
 
 	generate_body is
 		local
-			i, count: INTEGER;
+			i, count: INTEGER
 		do
 				-- Check for null pointer to C++ object in workbench mode
 			if not Context.final_mode then
@@ -83,18 +83,18 @@ feature -- Code generation
 				end
 			end
 			if not result_type.is_void then
-				generated_file.putstring ("return ");
-			end;
+				generated_file.putstring ("return ")
+			end
 			--if has_return_type then
-				--generated_file.putchar ('(');
-				--generated_file.putstring (return_type);
-				--generated_file.putchar (')');
-				--generated_file.putchar (' ');
+				--generated_file.putchar ('(')
+				--generated_file.putstring (return_type)
+				--generated_file.putchar (')')
+				--generated_file.putchar (' ')
 			if result_type /= Void then
-				result_type.c_type.generate_cast (generated_file);
+				result_type.c_type.generate_cast (generated_file)
 			else
-				generated_file.putstring ("(void)");
-			end;
+				generated_file.putstring ("(void)")
+			end
 
 			generated_file.putchar ('(')
 			inspect
@@ -103,11 +103,11 @@ feature -- Code generation
 				generated_file.putstring ("((")
 				generated_file.putstring (class_name)
 				generated_file.putstring ("*) arg1)->")
-				generated_file.putstring (external_name);
+				generated_file.putstring (external_name)
 			when static, static_data_member then
 				generated_file.putstring (class_name)
 				generated_file.putstring ("::")
-				generated_file.putstring (external_name);
+				generated_file.putstring (external_name)
 			when new then
 				generated_file.putstring ("new ")
 				generated_file.putstring (class_name)
@@ -125,15 +125,15 @@ feature -- Code generation
 				generate_arguments_with_cast
 			end
 
-			generated_file.putchar (')');
-			generated_file.putchar (';');
-			generated_file.new_line;
+			generated_file.putchar (')')
+			generated_file.putchar (';')
+			generated_file.new_line
 		end
 
 	generate_basic_arguments_with_cast is
 			-- Generate C arguments, if any, with casts if there's a signature
 		local
-			i, j, count: INTEGER;
+			i, j, count: INTEGER
 		do
 			from
 				j := 1
@@ -149,18 +149,18 @@ feature -- Code generation
 				i > count
 			loop
 				if j > 1 then
-					generated_file.putstring (gc_comma);
+					generated_file.putstring (gc_comma)
 				end
 				if has_arg_list then
-					generated_file.putchar ('(');
-					generated_file.putstring (argument_types.item (j));
-					generated_file.putstring (") ");
-				end;
-				generated_file.putstring ("arg");
-				generated_file.putint (i);
-				i := i + 1;
+					generated_file.putchar ('(')
+					generated_file.putstring (argument_types.item (j))
+					generated_file.putstring (") ")
+				end
+				generated_file.putstring ("arg")
+				generated_file.putint (i)
+				i := i + 1
 				j := j + 1
-			end;
-		end;
+			end
+		end
 
 end -- class CPP_EXT_BYTE_CODE

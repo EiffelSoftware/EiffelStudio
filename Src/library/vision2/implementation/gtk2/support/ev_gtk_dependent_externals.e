@@ -573,7 +573,13 @@ feature -- Externals
 		alias
 			"gtk_file_chooser_set_filename ((GtkFileChooser*) $a_dialog, (gchar*) $a_filename)"
 		end
-		
+
+	frozen gtk_file_chooser_set_local_only (a_dialog: POINTER; a_local_only: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_file_chooser_set_local_only ((GtkFileChooser*) $a_dialog, (gboolean) $a_local_only)"
+		end
 
 	frozen gtk_combo_box_get_entry (a_combo: POINTER): POINTER is
 		external

@@ -206,6 +206,12 @@ feature -- Access
 			if exists then
 				wel_destroy
 			end
+			if has_accelerator then
+				accelerators.remove (accelerator)
+			end
+			if in_menu and then managed then
+				set_managed (False)
+			end
 			realized := False
 		end
 

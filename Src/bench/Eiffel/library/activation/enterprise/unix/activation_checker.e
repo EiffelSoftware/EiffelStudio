@@ -21,7 +21,7 @@ inherit
 			check_license as is_check_license
 		end
 
-feature
+feature -- License checking
 
 	check_activation is
 			-- Check whether product can be started.
@@ -42,8 +42,6 @@ feature
 		do
 			check_license
 		end
-	
-feature {NONE} -- Implementation
 
 	check_license is
 			-- Check license information and set `can_run', `is_licensed' and `is_evaluating'
@@ -61,6 +59,8 @@ feature {NONE} -- Implementation
 			end
 		end
 	
+feature {NONE} -- Implementation
+
 	report_engine_not_initialized is
 			-- Action to be performed when engine is not initialized.
 		do

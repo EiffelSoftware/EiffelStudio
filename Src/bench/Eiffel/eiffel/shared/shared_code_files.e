@@ -71,7 +71,7 @@ feature {NONE}
 			Result := file_name
 
 			!! finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name (finished_file_for_make)
+			finished_file_name.set_file_name (Finished_file_for_make)
 			!! finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	
@@ -104,7 +104,7 @@ feature {NONE}
 			Result := file_name
 
 			!! finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name (finished_file_for_make)
+			finished_file_name.set_file_name (Finished_file_for_make)
 			!! finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	

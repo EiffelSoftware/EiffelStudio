@@ -81,7 +81,7 @@ feature -- Initialization
 				if a_selected then
 						-- We are toggling so `a_selected' is status before toggle
 					if uncheck_actions_internal /= Void then
-						uncheck_actions_internal	.call ([a_list_item])
+						uncheck_actions_internal.call ([a_list_item])
 					end
 				else
 					if check_actions_internal /= Void then
@@ -93,21 +93,17 @@ feature -- Initialization
 			end
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
-		
 
 	initialize_model is
 			-- Create our data model for `Current'
 		local
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
+			a_type_array: MANAGED_POINTER 
 		do
-			create a_type_array.make (0, 2)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_boolean, 2)
-			a_type_array_c := a_type_array.to_c
-			list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (3, $a_type_array_c)			
-		end
+			create a_type_array.make (3 * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, 1 * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_boolean (a_type_array.item, 2 * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (3, a_type_array.item)			end
 
 feature -- Access
 

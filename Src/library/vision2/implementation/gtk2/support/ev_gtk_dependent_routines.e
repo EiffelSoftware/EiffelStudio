@@ -9,6 +9,48 @@ class
 
 feature -- Implementation
 
+	frozen add_g_type_string (an_array: POINTER; a_pos: INTEGER) is
+			-- Add G_TYPE_STRING constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		require
+			an_array_not_null: an_array /= default_pointer
+			a_pos_nonnegative: a_pos >= 0
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					GType type = G_TYPE_STRING;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
+	frozen add_gdk_type_pixbuf (an_array: POINTER; a_pos: INTEGER) is
+			-- Add GDK_TYPE_PIXBUF constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		require
+			an_array_not_null: an_array /= default_pointer
+			a_pos_nonnegative: a_pos >= 0
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					GType type = GDK_TYPE_PIXBUF;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
+	frozen sizeof_gtype: INTEGER is
+			-- Size of the `GType' C type
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"sizeof(GType)"
+		end	
+
 	create_gtk_dialog: POINTER is
 			-- Create and initialize a gtk dialog
 		do

@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			-- C compiler options to compile generated code.
 			"-D_WIN32_DCOM %
 			%-c -I..\..\client\include -I..\..\server\include -I..\..\common\include %
-			%-I$(ISE_EIFFEL)\bench\spec\windows\include %
+			%-I$(ISE_EIFFEL)\studio\spec\windows\include %
 			%-I%D(ISE_EIFFEL)\library\com\spec\windows\include "
 			
 	bcb_compiler_flags: STRING is 

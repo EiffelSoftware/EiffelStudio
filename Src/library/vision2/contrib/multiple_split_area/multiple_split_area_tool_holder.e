@@ -346,6 +346,8 @@ feature {NONE} -- Implementation
 			minimized_count: INTEGER
 			tool_holder: like Current
 			parent_rep: LINEAR [EV_WIDGET]
+			horizontal_box: EV_HORIZONTAL_BOX
+			widget: EV_WIDGET
 		do
 			parent_area.store_positions
 			original_position := parent_area.linear_representation.index_of (tool, 1)
@@ -446,6 +448,18 @@ feature {NONE} -- Implementation
 						-- the size was stored when a dock began (`dock_started_actions'), then it could be
 						-- restored here. Julian 09/15/03
 					parent_area.insert_widget (tool, display_name, new_position, tool.minimum_height.max (100))
+					
+						-- Now copy all contents of customizeable area into new holder area.
+					horizontal_box := parent_area.customizeable_area_of_widget (tool)
+					from
+						customizeable_area.start
+					until
+						customizeable_area.is_empty
+					loop
+						widget := customizeable_area.item
+						customizeable_area.remove
+						horizontal_box.extend (widget)
+					end
 				else
 					parent_area.update_for_holder_position_change (Current, new_position)
 					parent_area.rebuild

@@ -53,13 +53,22 @@ feature -- Attributes
 			Result := feature_name
 		end
 
+feature -- Delayed calls
+
+	is_delayed : BOOLEAN is
+			-- Is this access delayed?
+		do
+			-- Default: No
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (feature_name, other.feature_name) and
-				equivalent (parameters, other.parameters)
+				equivalent (parameters, other.parameters) and
+				is_delayed = other.is_delayed
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -101,7 +110,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			arg_type: TYPE_A
 			a_feature: FEATURE_I
-			i, count, argument_position: INTEGER
+			i, count, arg_count, argument_position: INTEGER
 				-- Id of the class type on the stack
 			current_item: TYPE_A
 			last_type, last_constrained: TYPE_A
@@ -123,6 +132,7 @@ feature -- Type check, byte code and dead code removal
 			like_argument_detected, vape_check: BOOLEAN
 			vape: VAPE
 			formal_type: FORMAL_A
+			operand: OPERAND_AS
 		do
 			last_type := context.item
 			if last_type.is_multi_type then
@@ -160,6 +170,24 @@ feature -- Type check, byte code and dead code removal
 				
 					-- Attachments type check
 				count := parameter_count
+				arg_count := a_feature.argument_count
+
+				if (count = 0) and then (arg_count /= 0) and then is_delayed then
+					-- Delayed call with all arguments open.
+					-- Create parameters.
+					from
+						!!parameters.make_filled (arg_count)
+						parameters.start
+					until
+						parameters.after
+					loop
+						!!operand
+						parameters.put (operand)
+						parameters.forth
+					end
+					count := arg_count
+					parameters.start
+				end
 				if count /= a_feature.argument_count then
 					!!vuar1
 					context.init_error (vuar1)
@@ -219,7 +247,6 @@ feature -- Type check, byte code and dead code removal
 							vuar2.set_actual_type (current_item)
 							Error_handler.insert_error (vuar2)
 						end
-	
 							-- Insert the attachment type in the
 							-- parameters line for byte code
 						Attachments.insert (arg_type)
@@ -258,16 +285,18 @@ feature -- Type check, byte code and dead code removal
 					-- Note: the following conditional instruction will not be executed
 					-- if the class type of the constraint id not generic since in that
 					-- case `Result' would not be formal.
+
 				if last_type.is_formal then
 					if Result.is_formal then
 						formal_type ?= Result
 					else
 						formal_type ?= Result.actual_type
 					end
+
 					if formal_type /= Void then
 						Result := last_constrained.generics.item (formal_type.position)
 					end
- 				elseif last_type.is_like then
+				elseif last_type.is_like then
  					if Result.is_formal then
  						formal_type ?= Result
  					else
@@ -276,7 +305,7 @@ feature -- Type check, byte code and dead code removal
  					if formal_type /= Void then
  						Result := last_type.actual_type.generics.item (formal_type.position)
  					end
- 				end
+				end
 				Result := Result.conformance_type
 				context.pop (count)
 				Result := Result.instantiation_in (last_type, last_id).actual_type

@@ -1,0 +1,57 @@
+/*
+ *	
+ * ODL definition for Composite Object Example
+ *	
+ *	
+ */
+
+#include "../../odl_include/mt_eif.odl"
+
+interface DOCUMENT : persistent {
+	relationship List<DOC_AUTHOR> authors
+	   inverse DOC_AUTHOR::documents;
+	relationship List<CHAPTER> chapters[0, -1]
+	   inverse CHAPTER::of_document
+	   mt_instance_of CompositeRelationship;
+	attribute String title
+	   mt_make_entry "Make-Entry";
+};
+
+interface DOC_CONTENT : persistent {
+	relationship List <DOC_CONTENT> linked_by
+	   inverse PARAGRAPH::hyperlinks;
+};
+
+interface CHAPTER : DOC_CONTENT : persistent {
+	relationship List <SECTION> sections [0, -1]
+	   inverse SECTION::of_chapter
+	   mt_instance_of CompositeRelationship;
+	relationship DOCUMENT of_document
+	   inverse DOCUMENT::chapters;
+	attribute String title
+	   mt_make_entry "Make-Entry";
+};
+
+interface SECTION : DOC_CONTENT : persistent {
+	relationship List <PARAGRAPH> paragraphs [0, -1]
+	   inverse PARAGRAPH::of_section
+	   mt_instance_of CompositeRelationship;
+	relationship CHAPTER of_chapter
+	   inverse CHAPTER::sections;
+	attribute String title
+	   mt_make_entry "Make-Entry";
+};
+
+interface PARAGRAPH : DOC_CONTENT : persistent {
+	attribute String text;
+	relationship SECTION of_section
+	   inverse SECTION::paragraphs;
+	relationship List <DOC_CONTENT> hyperlinks
+	   inverse DOC_CONTENT::linked_by;
+};
+
+interface DOC_AUTHOR : persistent {
+	relationship List <DOCUMENT> documents
+	  inverse DOCUMENT::authors;
+	attribute String name;
+};

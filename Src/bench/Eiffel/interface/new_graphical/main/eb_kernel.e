@@ -93,6 +93,7 @@ feature {NONE} -- Initialization
 			create preference_access.make_with_default_values_and_location (system_general, eiffel_preferences)
 			initialize_preferences (preference_access)
 			
+				-- Initialize command-line only preferences
 			preferences.initialize_ec_preferences (preference_access)
 
 			create new_resources.initialize

@@ -55,6 +55,17 @@ void lp_init()
 
 }
 
+void lp_ebuild_init()
+{
+	/* Initialization of the list managment */
+	object_stack = (char **) cmalloc(STACK_CHUNK * sizeof(char *));
+	object_size = STACK_CHUNK;
+	object_top = 0;
+	count_stack = (int *) cmalloc(STACK_CHUNK * sizeof(int));
+	count_size = STACK_CHUNK;
+	count_top = -1;
+}
+
 char *lp_file(file_pointer, filename)
 FILE *file_pointer;
 char *filename;

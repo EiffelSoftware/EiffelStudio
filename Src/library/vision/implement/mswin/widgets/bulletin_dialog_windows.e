@@ -36,6 +36,7 @@ inherit
 			wel_make as make_child,
 			unrealize as bulletin_unrealize
 		undefine
+			resize_for_shell,
 			default_style,
 			destroy,
 			class_background,

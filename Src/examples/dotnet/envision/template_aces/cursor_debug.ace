@@ -23,7 +23,7 @@ default
 	precompiled ("$ISE_EIFFEL\ebcl\debug")
 
 cluster 
-	root_cluster:		"$EIFFEL_SRC\..\samples\vision2\cursor"
+	root_cluster:		"$ISE_EIFFEL\..\samples\vision2\cursor"
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude

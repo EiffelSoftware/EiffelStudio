@@ -29,7 +29,7 @@ default
 
 
 cluster
-	standard_dialogs:		"$EIFFEL_SRC\..\samples\vision2\standard_dialogs"
+	standard_dialogs:		"$ISE_EIFFEL\..\samples\vision2\standard_dialogs"
 
 
 	all base:		"$ISE_EIFFEL\library\base"

@@ -3,10 +3,10 @@ class NONE_I
 inherit
 	TYPE_I
 		redefine
-			dump, is_none, is_void, is_bit, is_basic, 
+			is_none, is_void, is_bit, is_basic, 
 			is_reference, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			cecil_value, append_signature, generated_id,
+			cecil_value, generated_id,
 			generate_gen_type_il
 		end
 
@@ -23,6 +23,12 @@ feature -- Status report
 			-- NONE element type
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Formal tuple code. Should not be called.
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 
 feature
@@ -51,21 +57,13 @@ feature
 	is_pointer: BOOLEAN is True
 			-- A NONE type is a pointer
 
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			st.add_string ("NONE")
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("NONE")
-		end
+	name: STRING is "NONE"
+			-- Name of current type
 
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		once
-			Result := "none"
+			Result := name
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -74,10 +72,11 @@ feature
 			Result := other.is_none
 		end
 
-	description: ATTR_DESC is
+	description: REFERENCE_DESC is
 			-- Type description for skeleton
 		do
 			Result := Reference_c_type.description
+			Result.set_type_i (Current)
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
@@ -88,12 +87,6 @@ feature
 
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
-	
-	c_string_id: INTEGER is
-			-- String ID generated for type.
-		once
-			Result := Names_heap.eif_reference_name_id
-		end
 
 	union_tag: STRING is "rarg"
 
@@ -159,6 +152,6 @@ feature -- Generic conformace for IL
 		do
 			il_generator.generate_none_type_instance
 		end
-		
+
 end -- class NONE_I
 

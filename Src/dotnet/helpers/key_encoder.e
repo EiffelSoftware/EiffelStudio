@@ -12,23 +12,17 @@ feature -- Access
 			a_key_not_void: a_key /= Void
 		local
 			i: INTEGER
-			hex_rep: STRING
-			x_string: STRING
 		do
-			x_string := "X";
-			Result := ""
+			create Result.make (a_key.count * 2)
 			from
 				i := 0	
 			until
 				i >= a_key.count
 			loop
-				create hex_rep.make_from_cil (a_key.item (i).to_string_with_format (x_string.to_cil).to_lower)
-				if hex_rep.count < 2 then
-					hex_rep.prepend ("0")
-				end
-				Result.append (hex_rep)
+				Result.append (a_key.item (i).to_hex_string)
 				i := i + 1
 			end
+			Result.to_lower
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -148,7 +148,10 @@ feature -- Access
 						referenced_assemblies.forth
 					end
 				end
-				
+					
+				-- Do not search for type if `element_type' calls `dotnet_type'
+				search_for_type := False
+
 				-- Maybe it's an array?
 				if Result = Void then
 					if element_type /= Void then
@@ -161,7 +164,6 @@ feature -- Access
 				end
 
 				internal_type := Result
-				search_for_type := False
 			else
 				Result := internal_type
 			end

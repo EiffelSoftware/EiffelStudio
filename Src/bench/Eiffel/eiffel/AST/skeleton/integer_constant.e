@@ -21,7 +21,7 @@ inherit
 			string_value
 		redefine
 			generate, is_integer, is_propagation_equivalent,
-			set_real_value
+			set_real_type
 		end
 
 	EXPR_B
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			size_set: size = 32
 		end
 
-feature {AST_FACTORY} -- Initialization
+feature -- Initialization
 
 	initialize (is_negative: BOOLEAN; s: STRING) is
 			-- Create a new INTEGER AST node.
@@ -214,7 +214,7 @@ feature -- Settings
 			lower_set: lower = i
 		end
 
-	set_real_value (t: INTEGER_A) is
+	set_real_type (t: INTEGER_A) is
 			-- Extract size information of `t' and assign it to Current.
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.

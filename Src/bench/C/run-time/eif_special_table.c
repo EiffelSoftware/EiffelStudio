@@ -1,4 +1,38 @@
 /*
+ ######     #    ######
+ #          #    #
+ #####      #    #####
+ #          #    #
+ #          #    #
+ ######     #    #      #######
+
+  ####   #####   ######   ####      #      ##    #
+ #       #    #  #       #    #     #     #  #   #
+  ####   #    #  #####   #          #    #    #  #
+      #  #####   #       #          #    ######  #
+ #    #  #       #       #    #     #    #    #  #
+  ####   #       ######   ####      #    #    #  ###### #######
+
+  #####    ##    #####   #       ######           ####
+    #     #  #   #    #  #       #               #    #
+    #    #    #  #####   #       #####           #
+    #    ######  #    #  #       #        ###    #
+    #    #    #  #    #  #       #        ###    #    #
+    #    #    #  #####   ######  ######   ###     ####
+
+	Interface for special_table.
+	The special table is a 2 x N array. It records the
+	special objects, full of references, which are old , with
+	the index to the items that are young object (not old).
+	Therefore, a special object can have several entries 
+	(as many as it references a young object.)
+
+	This table is used when the flag EIF_REM_SET_OPTIMIZATION is defined,
+	and is particularly efficient when manupilating big arrays of objects.
+	The time spent to scan an special object full of references is no longer 
+	proportionnal to its size but to the number of new references that it has.
+	
+		
 */
 
 #include <assert.h>
@@ -376,7 +410,7 @@ rt_public int spt_xtend(struct special_table *spt)
 	count = spt->count;
 
 	/************************
-	 * Preconditions.	*
+	 * Preconditions.		*
 	 ************************/
 #ifndef NDEBUG
 

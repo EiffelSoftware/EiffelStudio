@@ -65,7 +65,7 @@ extern "C" {
 
 #else
 	void (**egc_edispose)(void);
-	void (**egc_ecreate)(void);
+	char *(**egc_ecreate)(void);
 	struct ctable *egc_ce_rname;
 	long *egc_fnbref ;
 	long *egc_fsize;

@@ -74,7 +74,7 @@ extern "C" {
 								* dynamic types (for re-freezing) */
 #else
 	RT_LNK void (**egc_edispose)(void);
-	RT_LNK void (**egc_ecreate)(void);
+	RT_LNK char *(**egc_ecreate)(void);
 	RT_LNK struct ctable *egc_ce_rname;
 	RT_LNK long *egc_fnbref ;
 	RT_LNK long *egc_fsize;

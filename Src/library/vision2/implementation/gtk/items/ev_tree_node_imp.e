@@ -388,7 +388,7 @@ feature {EV_TREE_IMP} -- Implementation
 			else
 				Result := clone (internal_text)
 			end
-		ensure
+		ensure then
 			text_not_void: Result /= Void
 		end
 
@@ -400,7 +400,7 @@ feature {EV_TREE_IMP} -- Implementation
 			else
 				Result := clone (internal_tooltip)
 			end
-		ensure
+		ensure then
 			tooltip_not_void: Result /= Void
 		end
 

@@ -142,7 +142,6 @@ feature -- IL code generation
 			r_type: TYPE_I
 			cl_type: CL_TYPE_I
 			target_type: TYPE_I
-			class_c: CLASS_C
 			l_feature_call: FEATURE_B
 			l_cancel_attribute_generation: BOOLEAN
 		do
@@ -220,12 +219,11 @@ feature -- IL code generation
 
 				if not l_cancel_attribute_generation then
 						-- We push code to access Current attribute.
-					class_c := System.class_of_id (written_in)
 					if address_required then
 						il_generator.generate_attribute_address (target_type,
 							r_type, attribute_id)
 					else
-						if class_c.is_frozen or class_c.is_single or class_c.is_external then
+						if target_type.is_generated_as_single_type then
 							il_generator.generate_attribute (need_target, target_type, attribute_id)
 						else
 							il_generator.generate_feature_access (target_type,
@@ -348,15 +346,8 @@ feature -- Byte code generation
 			r_type: TYPE_I
 		do
 			r_type := Context.real_type (type)
-			if r_type.is_none then
-				if is_first then
-					ba.append (Bc_current)
-				end
-				ba.append (Bc_void)
-			else
-				standard_make_code (ba, flag)
-				ba.append_uint32_integer (r_type.sk_value)
-			end
+			standard_make_code (ba, flag)
+			ba.append_uint32_integer (r_type.sk_value)
 		end
 
 	code_first: CHARACTER is

@@ -276,13 +276,38 @@ feature {COMPILER_EXPORTER} -- Incrementality
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_feature_names (f: like feature_names) is
+			-- Set `feature_names' to `f'
 		do
 			feature_names := f
 		end;
 
 	set_body (b: like body) is
+			-- Set `body' to `b'
 		do
 			body := b
 		end;				
+
+	update_positions (sp: like start_position; ep: like end_position) is
+			-- Set `start_position' to `sp' and `end_position' to `ep'
+		do
+			start_position := sp
+			end_position := ep
+		ensure
+			start_position_set: start_position = sp
+			end_position_set: end_position = ep
+		end
+
+	update_positions_with_offset (offset: INTEGER) is
+			-- Add `offset' to `start_position' and `end_position'
+			-- reflect the fact that current feature is not at the 
+			-- same position in the source file.
+			--| `offset' may be positive as well as negative.
+		do
+			start_position := start_position + offset
+			end_position := end_position + offset
+		ensure
+			start_position_set: start_position = old start_position + offset
+			end_position_set: end_position = old end_position + offset
+		end
 
 end -- class FEATURE_AS

@@ -203,10 +203,18 @@ feature -- Basic operation
 		local
 			new_lines_to_start: INTEGER
 			new_lines_to_end: INTEGER
+			actual_start, actual_end: INTEGER
 		do
-			new_lines_to_start := text.substring (1, start_pos).occurrences ('%N')
-			new_lines_to_end := text.substring (start_pos + 1, end_pos).occurrences ('%N')
-			set_selection (start_pos - 1 + new_lines_to_start, end_pos + new_lines_to_start + new_lines_to_end)
+			if start_pos < end_pos then
+				actual_start := start_pos
+				actual_end := end_pos
+			else
+				actual_start := end_pos
+				actual_end := start_pos
+			end
+			new_lines_to_start := text.substring (1, actual_start).occurrences ('%N')
+			new_lines_to_end := text.substring (actual_start + 1, actual_end).occurrences ('%N')
+			set_selection (actual_start - 1 + new_lines_to_start, actual_end + new_lines_to_start + new_lines_to_end)
 		end
 
 	paste (index: INTEGER) is

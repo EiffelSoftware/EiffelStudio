@@ -1,10 +1,9 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" EiffelVision timeout, mswindows implementation."
+		"Eiffel Vision timeout. Mswindows implementation."
 	status: "See notice at end of class"
-	date: "$$"
-	revision: "$$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_TIMEOUT_IMP
@@ -12,55 +11,43 @@ class
 inherit
 	EV_TIMEOUT_I
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a timeout that call that launch `cmd' with `arg' every `delay'
-			-- millisecondes.
+			-- Create timer.
 		do
 			base_make (an_interface)
-			check
-				to_be_implemented: False
-			end
-		--	command := cmd
-		--	argument := arg
-		--	period := delay
-		--	internal_timeout.add_timeout (Current)
 		end
 
-	initialize is 
-		do 
+	initialize is
+		do
+			internal_timeout.add_timeout (Current)
 			is_initialized := True
 		end
 
 feature -- Access
 
-	period: INTEGER
-			-- Period of the timeout in milli-seconde.
-
---|	command: EV_COMMAND
---|			-- Command associated with the timeout.
-
---|FIXME	argument: EV_ARGUMENT
-			-- Argument associated with the timeout.
-			
 	interval: INTEGER
+			-- Time between calls to `interface.actions' in milliseconds.
 
-	set_interval (an_interval: INTEGER) is do end
+feature -- Status setting
+
+	set_interval (an_interval: INTEGER) is
 			-- Assign `an_interval' in milliseconds to `interval'.
-			-- Zero disables.
+		do
+			if interval /= an_interval then
+				interval := an_interval
+				internal_timeout.change_interval (id, interval)
+			end
+		end
 
---	count: INTEGER
-			-- Number of times the command has been executed including
-			-- the current execution.
+feature {EV_INTERNAL_TIMEOUT_IMP} -- Implementation
 
 	id: INTEGER
 			-- Id needed to destroy the current timeout.
-
-feature -- Status report
 
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?
@@ -68,32 +55,16 @@ feature -- Status report
 			Result := not internal_timeout.timeouts.has (id)
 		end
 
-feature -- Status setting
-
 	destroy is
 			-- Destroy actual object.
 		do
 			internal_timeout.remove_timeout (id)
-		--|FIXME	command := Void
-		--|FIXME	argument := Void
 		end
-
-feature -- Element change
 
 	set_id (value: INTEGER) is
 			-- Make `value' the new id of the timeout.
 		do
 			id := value
-		end
-
-feature -- Basic operation
-
-	execute is
-			-- Execute the command associated with the timer.
-			-- Ajouter un event data with delay et count.
-		do
-			count := count + 1
-	--		command.execute (argument, Void)
 		end
 
 feature {NONE} -- Implementation
@@ -106,27 +77,30 @@ feature {NONE} -- Implementation
 
 end -- class EV_TIMEOUT_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/06 23:11:11  brendel
+--| Implemented new interface.
+--|
 --| Revision 1.7  2000/02/19 07:34:49  oconnor
 --| removed old commandstuff
 --|

@@ -251,21 +251,6 @@ feature {EV_ANY_I} -- Status setting
 		end
 
 feature {EV_ANY_I} -- Element change
-	
-	append_page (child_imp: EV_WIDGET_IMP; label: STRING) is
-		-- Add a new page for notebook containing 'child_imp' with tab 
-		-- label `label'.
-		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-			ww: WEL_WINDOW
-		do
-			ww ?= child_imp
-			create a_wel_item.make
-			a_wel_item.set_text (label)
-			a_wel_item.set_window (ww)
-			insert_item (count, a_wel_item)
-			notify_change (Nc_minsize, child_imp)
-		end
 
 	set_font (f: EV_FONT) is
 			-- Set `font' to `f'.
@@ -788,6 +773,7 @@ feature {NONE} -- Implementation
 				wel_win_not_void: wel_win /= Void
 			end
 			create wel_tci.make
+			wel_tci.set_text ("")
 			wel_tci.set_window (wel_win)
 			insert_item (i - 1, wel_tci)
 			v_imp.wel_set_parent (Current)

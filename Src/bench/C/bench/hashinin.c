@@ -16,17 +16,7 @@
 #include "rt_malloc.h"
 #include "rt_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
 #include "eif_except.h"	/* for eif_panic() */
-
-#ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */
-#else
-#include <strings.h>
-#endif
-
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
 
 /* These routines use malloc and free and not eif_rt_xcalloc, eif_rt_xfree because we
  * want to release the memory taken by the hash table after retrieving

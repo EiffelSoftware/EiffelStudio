@@ -44,17 +44,17 @@ feature -- Location error state
 	t_Location_state: STRING is "Location Error"
 	
 	m_Location_state: STRING is 
-		"The directory you have choosen doesn't exist and%N%
+		"The directory you have chosen doesn't exist and%N%
 		%the Wizard cannot create it.%N%
 		%%N%
 		%Click Back and choose another directory."
 
 feature -- Project warning
 
-	t_Project_allready_exist: STRING is "Project allready exist"
+	t_Project_already_exist: STRING is "Project already exist"
 	
-	m_Project_allready_exist: STRING is
-		"The directory you have choosen allready contain%N%
+	m_Project_already_exist: STRING is
+		"The directory you have chosen already contain%N%
 		%a project.%N%
 		%%N%
 		%Click Back to choose another directory.%N%

@@ -18,13 +18,15 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			
 		end
 
 feature -- Access
 
-	xml_name: STRING is "LIST_STRING"
+	xml_name: STRING is
 			-- String that represents this type in XML representations.
+		do
+			Result := "LIST_STRING"
+		end
 
 	registry_name: STRING is "EIFARR"
 			-- String that represents this type in registry keys.

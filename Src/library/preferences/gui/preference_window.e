@@ -188,7 +188,8 @@ feature {NONE} -- Execution
 	on_right_list_focus_out is
 			-- Clear the edition window when the right list lose the focus.
 		do
-			if current_edition_window /= Void then
+			if (create {PLATFORM}).is_windows and then current_edition_window /= Void then
+					-- FIXME Remove Windows only query when a solution for gtk focus handling is found
 				if not current_edition_window.has_focus and then
 					not right_list.has_focus
 				then

@@ -5,6 +5,9 @@ indexing
 		%  window. Therefore, each feature that call the parent %
 		%  here need to be redefine by EV_WINDOW to check if    %
 		%  parent is `Void'"
+	note: "We undefine all the features of WEL_WINDOW because all%
+		% the Eiffel Vision objects will inherit from a final    %
+		% wel_object, this will implement all the deferred features."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,49 +19,98 @@ deferred class
 inherit
 	EV_WIDGET_I
 
+	EV_EVENT_HANDLER_IMP
+
+	EV_WIDGET_EVENTS_CONSTANTS_IMP
+
 	WEL_WM_CONSTANTS        
+
+	WEL_WINDOW
+		rename
+				-- We rename the features that have different signature in
+				-- Vision and in WEL.
+			parent as wel_parent
+		undefine
+				-- We undefine all the features the are redefine later by
+				-- Wel or Vision objects.
+			destroy,
+			destroy_item,
+			width,
+			height,
+			minimal_width,
+			minimal_height,
+			maximal_width,
+			maximal_height,
+			move_and_resize,
+			move,
+			set_text,
+			text_length,
+			default_ex_style,
+			set_default_window_procedure,
+			call_default_window_procedure,
+			process_message,
+			remove_command,
+			main_args,
+			on_show,
+			on_size,
+			on_destroy,
+			on_wm_destroy,
+			on_set_cursor,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+			set_width,
+			set_height
+		end
 
 feature -- Status report
 	
 	destroyed: BOOLEAN is
 			-- Is Current widget destroyed?
 		do
-			Result := not wel_window.exists
+			Result := not exists
 		end
-		
+
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
        	do
-            		Result := not wel_window.enabled
+      		Result := not enabled
 		end
 
-	shown: BOOLEAN is
-		do
-			Result := wel_window.shown
-		end
+--	shown: BOOLEAN is
+--		do
+--			Result := shown
+--		end
 
 feature -- Status setting
 
-	destroy is
+--	destroy is
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
-		do
-			if parent_imp /= Void then
-				parent_imp.set_insensitive (False)
-			end
-			wel_window.destroy
-		end
+--		deferred
+--			if parent_imp /= Void then
+--				parent_imp.set_insensitive (False)
+--			end
+--			{WEL_WINDOW} Precursor
+--		end
 	
-	hide is
-			-- Make widget invisible on the screen.
-		do
-			wel_window.hide
-		end
+--	hide is
+--			-- Make widget invisible on the screen.
+--		do
+--			hide
+--		end
 	
-	show is
-		do
-			wel_window.show
-		end
+--	show is
+--		do
+--			wel_window.show
+--		end
 	
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
@@ -71,37 +123,37 @@ feature -- Status setting
 			-- sensitive mode otherwise.
 		do
 			if flag then
-				wel_window.disable
+				disable
 			else
-				wel_window.enable
+				enable
 			end
 		end
 
 feature -- Measurement
 	
-	x: INTEGER is
+--	x: INTEGER is
 			-- Horizontal position relative to parent
-		do
-			Result := wel_window.x
-		end
+--		do
+--			Result := wel_window.x
+--		end
 	
-	y: INTEGER is
+--	y: INTEGER is
 			-- Vertical position relative to parent
-		do
-			Result := wel_window.y
-		end
+--		do
+--			Result := wel_window.y
+--		end
 	
-	width: INTEGER is
+--	width: INTEGER is
 			-- Width of the widget
-		do
-			Result := wel_window.width
-		end
+--		do
+--			Result := wel_window.width
+--		end
 	
-	height: INTEGER is 
+--	height: INTEGER is 
 			-- Height of the widget
-		do
-			Result := wel_window.height
-		end
+--		do
+--			Result := wel_window.height
+--		end
 
 	minimum_width: INTEGER 
 			-- Minimum width of widget, `0' by default
@@ -126,15 +178,15 @@ feature -- Resizing
 			-- Make `new_width' the new width and notify the parent
 			-- of the change.
 		do
-				wel_window.set_width (new_width.max (minimum_width))
-				parent_imp.child_width_changed (width, Current)
+			{WEL_WINDOW} Precursor (new_width.max (minimum_width))
+			parent_imp.child_width_changed (width, Current)
 		end
 		
 	set_height (new_height: INTEGER) is
 			-- Make `new_height' the new `height' and notify the
 			-- parent of the change.
 		do
-			wel_window.set_height (new_height.max (minimum_height))
+			{WEL_WINDOW} Precursor (new_height.max (minimum_height))
 			parent_imp.child_height_changed (new_height, Current)
 		end
 	
@@ -162,114 +214,99 @@ feature -- Resizing
 			end
 		end
 
-	set_x (new_x: INTEGER) is
+--	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
-		do
-			wel_window.set_x (new_x)
-		end
+--		do
+--			wel_window.set_x (new_x)
+--		end
 		
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
 		do
-			wel_window.move (new_x, new_y)
+			move (new_x, new_y)
 		end
 	
-	set_y (new_y: INTEGER) is
+--	set_y (new_y: INTEGER) is
 			-- Put at vertical position `new_y' relative
 			-- to parent.
-		do
-			wel_window.set_y (new_y)
-		end
+--		do
+--			wel_window.set_y (new_y)
+--		end
 	
 
 feature -- Event - command association
 
-	add_button_press_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a command that responds when `button' is pressed.
 			-- Use the `Wm_lbuttondown', `Wm_mbuttondown' and `Wm_rbuttondown'
 			-- windows events.
-		local
-			data_type: EV_BUTTON_EVENT_DATA
 		do
-			!! data_type.make
 			inspect mouse_button 
 				when 1 then
-					add_command (Wm_lbuttondown, command, arguments, data_type)
+					add_command (Cmd_button_one_press, a_command, arguments)
 				when 2 then
-					add_command (Wm_mbuttondown, command, arguments, data_type)
+					add_command (Cmd_button_two_press, a_command, arguments)
 				when 3 then
-					add_command (Wm_rbuttondown, command, arguments, data_type)
+					add_command (Cmd_button_three_press, a_command, arguments)
 				else
 					io.putstring ("This button do not exists")
 			end
 		end
 	
-	add_button_release_command (mouse_button: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a command that responds when `button' is release.
 			-- Use the `Wm_lbuttonup', `Wm_mbuttonup' and `Wm_rbuttonup' 
 			-- windows events.
-		local
-			data_type: EV_BUTTON_EVENT_DATA
 		do
-			!! data_type.make
 			inspect mouse_button
 				when 1 then
-					add_command (Wm_lbuttonup, command, arguments, data_type)
+					add_command (Cmd_button_one_release, a_command, arguments)
 				when 2 then
-					add_command (Wm_mbuttonup, command, arguments, data_type)
+					add_command (Cmd_button_two_release, a_command, arguments)
 				when 3 then
-					add_command (Wm_rbuttonup, command, arguments, data_type)
+					add_command (Cmd_button_three_release, a_command, arguments)
 				else
 					io.putstring ("This button do not exists")
 			end
 		end
 
 	add_double_click_command (mouse_button: INTEGER;
-				  command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+				  a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add 'command' to the list of commands to be executed
 			-- when button no 'mouse_button' is double clicked.
-		local
-			data_type: EV_BUTTON_EVENT_DATA
 		do
-			!! data_type.make
 			inspect mouse_button
 				when 1 then
-					add_command (Wm_lbuttondblclk, command, arguments, data_type)
+					add_command (Cmd_button_one_dblclk, a_command, arguments)
 				when 2 then
-					add_command (Wm_mbuttondblclk, command, arguments, data_type)
+					add_command (Cmd_button_two_dblclk, a_command, arguments)
 				when 3 then
-					add_command (Wm_rbuttondblclk, command, arguments, data_type)
+					add_command (Cmd_button_three_dblclk, a_command, arguments)
 				else
 					io.putstring ("This button do not exists")
 			end
 		end
 
-	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_motion_notify_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a motion notify command to the widget.
 			-- Be careful, in this motion-notify, windows considers that
 			-- pushing and releasing a button is a move ???
 			-- Need to be fix, it shouldn't be like this.
 			-- Use the `WM_mousemove' windows event
-		local
-			data_type: EV_MOTION_EVENT_DATA
 		do
-			!! data_type.make
-			add_command (Wm_mousemove, command, arguments, data_type)
+			add_command (Cmd_motion_notify, a_command, arguments)
 		end
 	
-	add_destroy_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_destroy_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add `command' to the list of commands to be executed when 
 			-- the widget is destroyed.
-		local
-			data_type: EV_MOTION_EVENT_DATA
 		do
-			!! data_type.make
-			add_command (Wm_destroy, command, arguments, data_type)
+			add_command (Cmd_destroy, a_command, arguments)
 		end
 
-	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_key_press_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a key press command to the widget.
 			-- Use the `Wm_keydown' and the `Wm_char' windows event.
 			-- The result will be this givent by `Wm_char', because the 
@@ -277,90 +314,60 @@ feature -- Event - command association
 			-- the character corresponding to the key.
 			-- We do not use add_command, because we have to put two command
 			-- on the same `ev_wel_command'.
-		local
-			data_type: EV_KEY_EVENT_DATA
 		do
-			!! data_type.make
-			add_command (Wm_char, command, arguments, data_type)
+			add_command (Cmd_key_press, a_command, arguments)
 		end
 	
-	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_key_release_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a key release to the widget.
 			-- Use the `Wm_keyup' windows event.
-		local
-			data_type: EV_KEY_EVENT_DATA
 		do
-			!! data_type.make
-			add_command (Wm_keyup, command, arguments, data_type)
+			add_command (Cmd_key_release, a_command, arguments)
 		end
 
-	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_enter_notify_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a command that responds when the mouse enter the widget.
 			-- Use the `' windows event
-		local
-			data_type: EV_EVENT_DATA
 		do
-			!! data_type.make
-				-- We must not use add_command here.
-			add_command (Wm_setcursor, command, arguments, data_type)
+			add_command (Cmd_enter_notify, a_command, arguments)
 		end
 	
-	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_leave_notify_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 			-- Add a command that responds when the mouse leave the widget
 			-- Use the `' windows event
-		local
-			data_type: EV_EVENT_DATA
 		do
-			!! data_type.make
-				-- We must not use add_command here
-			add_command (Wm_mousemove, command, arguments, data_type)
+			add_command (Cmd_leave_notify, a_command, arguments)
 		end
 
-	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_expose_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add a command that responds when the widget is 
+			-- exposed after having been hidden by the user or 
+			-- behind a window.
 		do
+			add_command (Cmd_expose, a_command, arguments)
 		end
 
-	remove_command (command_id: INTEGER) is
-			-- Remove the command associated with
-			-- 'command_id' from the list of actions for
-			-- this context. If there is no command
-			-- associated with 'command_id', nothing
-			-- happens.
-		do	
-			-- Penser a faire un truc dans le genre
-			-- si necessaire.	
-			-- wel_window.disable_commands
-		end
-
-	add_command (messages: INTEGER; command: EV_COMMAND; arguments: EV_ARGUMENTS 
-		     	ev_data: EV_EVENT_DATA) is
-			-- Add a command to a widget that means create an ev_wel_command
-			-- and put it to the wel_window of the widget.
-			-- For the meaning of the message, see wel_wm_message.
-			-- The argument can be `Void', in this case, there is 
-			-- no argument passed to the command.
-		require
-			command_not_void: command /= Void
-		local
-			com: EV_COMMAND
-			adapted_command: EV_WEL_COMMAND
-		do
-			if command.event_data /= Void then
-				com := deep_clone (command)
-			else	
-				com := command
-			end
-			com.set_event_data (ev_data)
-			!! adapted_command.make (com, arguments)
-			wel_window.put_command (adapted_command, messages, arguments)
-			wel_window.enable_commands
-		end
-	
 	last_command_id: INTEGER
 			-- Id of the last command added by feature
 			-- 'add_command'
 
 feature -- Implementation
+
+	parent_imp: EV_CONTAINER_IMP is
+			-- Parent container of this widget. The same than
+			-- parent but with a different type.
+		do 
+			Result ?= wel_parent
+		ensure then
+			parent_set: parent /= Void implies Result /= Void
+		end
+
+	test_and_set_parent (par: EV_CONTAINER) is
+			-- Set the parent of the Current widget.
+			-- Nothing to do on windows. The wel_parent
+			-- is enough.
+		do
+		end
 
 	set_minimum_size (min_width, min_height: INTEGER) is
 			-- set `minimum_width' to `min_width'
@@ -374,23 +381,172 @@ feature -- Implementation
 			-- Move and resize the widget. Only the parent can call this feature
 			-- because it doesn't notify the parent of the change.
 		do
-			wel_window.move_and_resize (a_x, a_y, minimum_width.max(a_width), minimum_height.max (a_height), True)
+			move_and_resize (a_x, a_y, minimum_width.max(a_width), minimum_height.max (a_height), True)
 		end
 
 	parent_ask_resize (new_width, new_height: INTEGER) is
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
 		do
-			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			resize (minimum_width.max(new_width), minimum_height.max (new_height))
+		end
+
+feature {NONE} -- Implementation for events handling
+
+	initialize_list is
+			-- Create the `command_list' and the `arguments_list'.
+		do
+				!! command_list.make (1, 18)
+				!! argument_list.make (1, 18)
+		end
+
+feature {NONE} -- Implementation, mouse button events
+
+	get_button_data (keys, x_pos, y_pos: INTEGER): EV_BUTTON_EVENT_DATA is
+			-- Give the event data with the values `x_pos',
+			-- `y_pos' and `keys'
+		do
+			!! Result.make
+			Result.set_x (x_pos)
+			Result.set_y (y_pos)
+		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_one_press, data)
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_two_press, data)
 		end
 	
-feature {EV_WIDGET_IMP} -- Implementation
-	
-	wel_window: WEL_WINDOW is
-			-- Actual WEL component
-		deferred
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_three_press, data)
 		end
-	
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_one_release, data)
+		end
+
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_two_release, data)
+		end
+
+	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_three_release, data)
+		end
+
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_one_dblclk, data)
+		end
+
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_two_dblclk, data)
+		end
+
+	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_BUTTON_EVENT_DATA
+		do
+			data := get_button_data (keys, x_pos, y_pos)
+			execute_command (Cmd_button_three_dblclk, data)
+		end
+
+feature {NONE} -- Implementation, mouse move, enter and leave events
+
+	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+			-- This cell contains the widget_imp that currently
+			-- has the pointer of the mouse. As it is a once 
+			-- feature, it is a shared data.
+			-- it is used for the `mouse_enter' and `mouse_leave'
+			-- events.
+		once
+			!! Result.put (Void)
+		ensure
+			result_exists: Result /= Void
+		end
+
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+		local
+			data: EV_MOTION_EVENT_DATA
+		do
+			if cursor_on_widget.item /= Current then
+				if cursor_on_widget.item /= Void then
+					cursor_on_widget.item.on_mouse_leave
+				end
+				cursor_on_widget.replace (Current)
+				on_mouse_enter
+			end
+			!! data.make
+			data.set_x (x_pos)
+			data.set_y (y_pos)
+			execute_command (Cmd_motion_notify, data)
+		end
+
+	on_mouse_enter is
+		do
+			execute_command (Cmd_enter_notify, Void)
+		end
+
+feature {EV_WIDGET_IMP} -- on_mouse_leave must be visible 
+
+	on_mouse_leave is
+		do
+			execute_command (Cmd_leave_notify, Void)
+		end
+
+feature {NONE} -- Implementation, key events
+
+	on_char (character_code, key_data: INTEGER) is
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			!! data.make
+			data.set_string (character_code.ascii_char.out)
+			data.set_state (key_data)
+			execute_command (Cmd_key_press, data)
+		end
+
+	on_key_up (virtual_key, key_data: INTEGER) is
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			!! data.make
+			data.set_keyval (key_data)
+			execute_command (Cmd_key_release, data)
+		end
+
 end -- class EV_WIDGET_IMP
 
 --|----------------------------------------------------------------

@@ -40,12 +40,27 @@ feature -- Access
 
 feature -- Status report
 	
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
+		do
+			Result := parent_imp = Void
+		end
+
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
 		end
 
 feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
+		local
+		do
+			text := Void
+			pixmaps := Void
+			parent_imp := Void	
+		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.

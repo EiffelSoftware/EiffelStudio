@@ -1,9 +1,6 @@
-<document output="studio" title="Major changes between ISE Eiffel 5.2 and ISE Eiffel 5.3">
+<document output="studio" title="Major changes between ISE Eiffel 5.3 and ISE Eiffel 5.4">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Changes between ISE Eiffel 5.3 and ISE Eiffel 5.4:
-		</heading>
 		<heading>
 			<size>2</size>What's new
 		</heading>

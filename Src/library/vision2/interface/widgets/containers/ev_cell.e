@@ -64,6 +64,17 @@ feature -- Status report
 		do
 			Result := full and not is_destroyed
 		end
+		
+	count: INTEGER is
+			-- Number of items in `Current'.
+		do
+			if full then
+				Result := 1
+			end
+		ensure then
+			valid_result: Result = 0 or Result = 1
+		end
+		
 
 feature -- Removal
 

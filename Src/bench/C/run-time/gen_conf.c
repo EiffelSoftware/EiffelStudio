@@ -287,7 +287,7 @@ rt_shared void eif_gen_conf_cleanup ();
 
 #ifdef  EIF_THREADS
 
-rt_private EIF_MUTEX_TYPE   *eif_gen_mutex = (EIF_MUTEX_TYPE *) 0;
+rt_private EIF_LW_MUTEX_TYPE   *eif_gen_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
 rt_public int16 eifthd_final_id (int16, int16 *, int16 **, EIF_REFERENCE, int );
@@ -305,10 +305,10 @@ rt_public int16 *eifthd_gen_cid (int16);
 rt_public int16 eifthd_gen_id_from_cid (int16 *, int *);
 rt_public int eifthd_gen_conf (int16, int16);
 
-#define EIFMTX_CREATE EIF_MUTEX_CREATE(eif_gen_mutex, "Cannot create mutex for eif_gen_conf\n")
-#define EIFMTX_DESTROY	EIF_MUTEX_DESTROY (eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
-#define EIFMTX_LOCK   EIF_MUTEX_LOCK(eif_gen_mutex, "Cannot lock mutex for eif_gen_conf\n")
-#define EIFMTX_UNLOCK EIF_MUTEX_UNLOCK(eif_gen_mutex, "Cannot unlock mutex for eif_gen_conf\n")
+#define EIFMTX_CREATE EIF_LW_MUTEX_CREATE(eif_gen_mutex, "Cannot create mutex for eif_gen_conf\n")
+#define EIFMTX_DESTROY	EIF_LW_MUTEX_DESTROY (eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
+#define EIFMTX_LOCK   EIF_LW_MUTEX_LOCK(eif_gen_mutex, "Cannot lock mutex for eif_gen_conf\n")
+#define EIFMTX_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gen_mutex, "Cannot unlock mutex for eif_gen_conf\n")
 
 #endif
 /*------------------------------------------------------------------*/

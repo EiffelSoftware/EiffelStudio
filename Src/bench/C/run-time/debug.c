@@ -151,18 +151,18 @@ rt_shared struct dbglobalinfo d_globaldata = {
 };
 
 #ifdef EIF_THREADS
-rt_shared EIF_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
+rt_shared EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
 #endif /* EIF_THREADS */
 
 #ifdef EIF_THREADS
 #define DBGMTX_CREATE \
-	EIF_MUTEX_CREATE(db_mutex, "Cannot create mutex for the debugger [dbreak]\n")
+	EIF_LW_MUTEX_CREATE(db_mutex, "Cannot create mutex for the debugger [dbreak]\n")
 #define DBGMTX_DESTROY \
-	EIF_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
+	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
 #define DBGMTX_LOCK	\
-	EIF_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n")
+	EIF_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n")
 #define DBGMTX_UNLOCK \
-	EIF_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
+	EIF_LW_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
 #else
 #define DBGMTX_CREATE 
 #define DBGMTX_DESTROY 

@@ -72,7 +72,10 @@ rt_public char *ename;						/* Eiffel program's name */
 rt_public int scount;						/* Number of dynamic types */
 #endif
 
+#ifndef EIF_THREADS
 rt_public int in_assertion = 0;			/* Is an assertion being evaluated ? */
+#endif
+
 #ifdef WORKBENCH
 rt_public int ccount;						/* Number of classes */
 rt_public int fcount;						/* Number of frozen dynamic types */

@@ -12,58 +12,58 @@ class
 inherit
 	COM_OBJECT
 
-create
+create {COM_ISE_CACHE_MANAGER}
 	make_by_pointer
 	
 feature -- Access
 
-	name: UNI_STRING is
+	name: STRING is
 			-- assembly name
 		local
 			res: POINTER
 		do
 			last_call_success := c_name (item, $res)
 			if res /= Void then
-				create Result.make_by_pointer (res)
+				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
 			success: last_call_success = 0
 		end
 		
-	version: UNI_STRING is
+	version: STRING is
 			-- assembly version
 		local
 			res: POINTER
 		do
 			last_call_success := c_version (item, $res)
 			if res /= Void then
-				create Result.make_by_pointer (res)
+				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
 			success: last_call_success = 0
 		end
 		
-	culture: UNI_STRING is
+	culture: STRING is
 			-- assembly culture
 		local
 			res: POINTER
 		do
 			last_call_success := c_culture (item, $res)
 			if res /= Void then
-				create Result.make_by_pointer (res)
+				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
 			success: last_call_success = 0
 		end
 		
-	public_key_token: UNI_STRING is
+	public_key_token: STRING is
 			-- assembly public key token
 		local
 			res: POINTER
 		do
 			last_call_success := c_public_key_token (item, $res)
 			if res /= Void then
-				create Result.make_by_pointer (res)
+				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
 			success: last_call_success = 0

@@ -384,10 +384,10 @@ feature -- Status setting
 			-- Display current execution status.
 			--| Deferred implementation for optimization purposes.
 		do
-			(create {EV_ENVIRONMENT}).application.idle_actions.prune_all (update_agent)
+			ev_application.idle_actions.prune_all (update_agent)
 			local_tree.wipe_out
 			object_tree.wipe_out;
-			(create {EV_ENVIRONMENT}).application.idle_actions.extend (update_agent)
+			ev_application.idle_actions.extend (update_agent)
 		end
 
 	set_debugger_manager (a_manager: like debugger_manager) is
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 	real_update is
 			-- Display current execution status.
 		do
-			(create {EV_ENVIRONMENT}).application.idle_actions.prune_all (update_agent)
+			ev_application.idle_actions.prune_all (update_agent)
 			if Application.status /= Void then
 				pretty_print_cmd.refresh
 				if Application.status.is_stopped then

@@ -133,6 +133,8 @@
 					<li><B>EV_CHECKABLE_LIST</B> - Corrected postcondition of `checked_items' which was checking `selected_items' in error, and therefore almost always failing.</li>
 					<li><B>EV_APPLICATION</B> - Querying `focused_widget' if the window with the focus was empty caused a crash. This has now been fixed, and in this situation, the window itself is returned.</li>
 					<li><B>EV_FIGURE_TEXT</B> - Fixed handling of `preferred_fonts' from the `font', which was not taken into account. Previously, the default font was always used.</li>
+					<li><B>EV_DYNAMIC_LIST</B> - Fixed `retrieve_item_by_data' and `retrieve_items_by_data' which were always performing object comparison, even when reference comparison was selected by passing `False' as the second argument.</li>
+					<li><B>EV_TREE_NODE_LIST</B>- Fixed `retrieve_item_recursively_by_data' and `retrieve_items_recursively_by_data' which were always performing object comparison, even when reference comparison was selected by passing `False' as the second argument.</li>
 				</ul>
 			<li>
 				<b>Windows</b>

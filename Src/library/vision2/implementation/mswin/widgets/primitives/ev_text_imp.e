@@ -98,6 +98,14 @@ inherit
 		end
 
 	WEL_EM_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_COLOR_CONSTANTS
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -362,9 +370,13 @@ feature {NONE} -- WEL Implementation
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 		local
-			back: EV_COLOR_IMP
+			back: WEL_COLOR_REF
 		do
-			back ?= background_color.implementation
+			if is_editable then
+				back ?= background_color.implementation
+			else
+				create back.make_system (Color_btnface)
+			end
 			check
 				background_color_not_void: back /= Void
 			end

@@ -8,7 +8,17 @@ deferred class
 	WIZARD_COMPONENT_C_GENERATOR
 
 inherit
+	ANY
+
 	WIZARD_WRITER_DICTIONARY
+		export
+			{NONE} all
+		end
+
+	ECOM_INVOKE_KIND
+		export
+			{NONE} all
+		end
 
 feature -- Basic operations
 
@@ -48,6 +58,63 @@ feature -- Basic operations
 		ensure
 			non_void_definition: Result /= Void
 			valid_definition: not Result.empty
+		end
+
+	libid_name (name: STRING): STRING is
+			-- Name of library id
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		do
+			Result := "LIBID_"
+			Result.append (name)
+		end
+
+	libid_definition (name: STRING; guid: ECOM_GUID): STRING is
+			-- Definition of CLSID in source file.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+			non_void_guid: guid /= Void
+			valid_guid: guid.item /= default_pointer
+		do
+			create Result.make (1000)
+			Result.append ("static ")
+			Result.append (Const)
+			Result.append (Space)
+			Result.append (Iid_type)
+			Result.append (Space)
+			Result.append (libid_name (name))
+			Result.append (Space)
+			Result.append (Equal_sign)
+			Result.append (Space)
+			Result.append (guid.to_definition_string)
+			Result.append (Semicolon)
+		ensure
+			non_void_definition: Result /= Void
+			valid_definition: not Result.empty
+		end
+
+	libid_declaration (name: STRING): STRING is
+			-- Declaration of LIBID in header file
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		do
+			-- extern "C" IID LIBID_'name'
+
+			Result := clone (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Const)
+			Result.append (Space)
+			Result.append (Iid_type)
+			Result.append (Space)
+			Result.append (libid_name (name))
+			Result.append (Semicolon)
 		end
 
 end -- class WIZARD_COMPONENT_C_GENERATOR

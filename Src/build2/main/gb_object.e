@@ -25,8 +25,6 @@ inherit
 	
 	GB_ACCESSIBLE_COMMAND_HANDLER
 	
-	GB_PICK_AND_DROP_SHIFT_MODIFIER
-	
 	GB_XML_OBJECT_BUILDER
 	
 	GB_ACCESSIBLE_XML_HANDLER
@@ -148,6 +146,9 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER} -- Status setting
 		do
 			layout_item ?= a_layout_item
 			layout_item.set_object (Current)
+			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
+			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
+			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		ensure
 			layout_item_set: layout_item = a_layout_item
 			layout_item_object_set: layout_item.object = Current
@@ -244,68 +245,50 @@ feature {GB_OBJECT_HANDLER} -- Element change
 			object_initialized: object /= Void
 		end
 		
+	can_add_child (an_object: GB_OBJECT): BOOLEAN is
+			-- Can `an_object' be added to `Current'
+			-- if shift not pressed.
+			-- Can `an_object' be added to `Current'
+			-- if shift pressed.
+		local
+			env: EV_ENVIRONMENT
+			local_parent_object: GB_OBJECT
+		do
+			create env
+			if env.application.shift_pressed then
+				local_parent_object := parent_object
+					-- If we are at the top level. i.e. a window,
+					-- there will be no parent.
+				if local_parent_object /= Void then
+					Result := not local_parent_object.is_full
+					if local_parent_object /= Void then
+						Result := Result and override_drop_on_child (an_object)
+					end	
+				end
+			else
+				Result := not is_full
+				if an_object /= Void then
+					Result := Result and override_drop_on_child (an_object)
+				end
+			end
+			
+		end
+		
 	create_layout_item is
 			-- Create a layout_item associated with `Current'.
 		require
 			no_layout_item_associated: layout_item = Void
 		do
 			create layout_item.make (Current)
+			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
+			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
+			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		ensure
 			lyout_item_initialized: layout_item /= Void
 			layout_item_not_parented: layout_item.parent = Void
 		end		
 
 feature -- Basic operations
-
-	build_drop_action_for_new_object is
-			-- Set up drop actions on `Current'.
-		require
-			object_not_void: object /= Void
-			layout_item_not_void: layout_item /= Void
-		deferred
-		end
-		
-	build_shift_drop_action_for_new_object is
-			-- Set up drop actions on `Current'.
-		require
-			object_not_void: object /= Void
-			layout_item_not_void: layout_item /= Void
-		local
-			local_parent_object: GB_OBJECT
-			display: EV_PICK_AND_DROPABLE
-			layout: EV_PICK_AND_DROPABLE
-		do
-			display ?= display_object
-			check
-				display_not_void: display /= Void
-			end
-			layout ?= layout_item
-			check
-				layout_not_void: layout /= Void
-			end
-					-- Clear these, from the last transport.
-			display.drop_actions.wipe_out
-			layout.drop_actions.wipe_out
-
-			local_parent_object := parent_object
-				-- If the object is a window then the parent will be Void.
-				-- There is nothing do do in this case.
-			if local_parent_object /= Void then
-				if not local_parent_object.is_full then
-					display.drop_actions.extend (agent add_new_object_in_parent (?))
-					layout.drop_actions.extend (agent add_new_object_in_parent (?))
-					display.drop_actions.extend (agent add_new_component_in_parent (?))
-					layout.drop_actions.extend (agent add_new_component_in_parent (?))
-					
-
-					
-					-- Need a veto pebble function that checks correctly.
-					display.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
-					layout.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
-				end
-			end
-		end	
-		
 		
 	is_full: BOOLEAN is
 			-- Is `Current' full?
@@ -345,8 +328,7 @@ feature -- Basic operations
 		do
 			add_new_object (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
 		end
-		
-		
+
 	add_new_object (an_object: GB_OBJECT) is
 			-- Add `an_object' to `Current'.
 		local
@@ -464,12 +446,16 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- `Current' is `an_object' then do not allow drop.
 		do
 			Result := True
-				-- Check that the object is fully instantiated, and is not still
-				-- representing a type.
-			if an_object.object /= Void then
-				if object_handler.object_contained_in_object (an_object, Current) or
-				Current = an_object then
-					Result := False
+				
+				-- If an object is Void then we are transporting a type.
+			if an_object /= Void then
+					-- Check that the object is fully instantiated, and is not still
+					-- representing a type.
+				if an_object.object /= Void then
+					if object_handler.object_contained_in_object (an_object, Current) or
+					Current = an_object then
+						Result := False
+					end
 				end
 			end
 		end
@@ -534,6 +520,42 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			-- the current_object_type.
 		do
 			Result := "extend (" + child_name + ")"
+		end
+		
+feature {NONE} -- Implementation
+
+	add_new_object_wrapper (an_object: GB_OBJECT) is
+			-- If shift pressed then add `an_object' to
+			-- parent of `Current', else add to `Current'.
+		local
+			env: EV_ENVIRONMENT
+		do
+			create env
+			if not env.application.shift_pressed then
+				check
+					object_not_full: not is_full
+				end
+				add_new_object (an_object)
+			else
+				add_new_object_in_parent (an_object)
+			end
+		end
+		
+	add_new_component_wrapper (a_component: GB_COMPONENT) is
+			-- If shift pressed then add `a_component' to
+			-- parent of `Current', else add to `Current'.
+		local
+			env: EV_ENVIRONMENT
+		do
+			create env
+			if not env.application.shift_pressed then
+				check
+					object_not_full: not is_full
+				end
+				add_new_component (a_component)
+			else
+				add_new_component_in_parent (a_component)
+			end
 		end
 
 end -- class GB_OBJECT

@@ -82,20 +82,23 @@ feature -- Properties
 	arguments,
 	array_optimization,
 	check_vape,
+	company,
 	console_application,
+	copyright,
 	dead_code,
+	description,
 	document,
 	dynamic_runtime,
 	exception_stack_managed,
 	force_recompile,
 	generate_eac_metadata,
 	manifest_integers_as_integer_32,
-	msil_generation,
-	msil_generation_type,
 	msil_culture,
-	msil_version,
 	msil_assembly_compatibility,
 	msil_full_name,
+	msil_generation,
+	msil_generation_type,
+	msil_key_file_name,
 	namespace,
 	il_verifiable,
 	cls_compliant,
@@ -108,10 +111,14 @@ feature -- Properties
 	multithreaded,
 	override_cluster,
 	profile,
+	product,
 	server_file_size,
 	shared_library_definition,
+	title,
+	trademark,
 	use_cluster_name_as_namespace,
 	use_all_cluster_name_as_namespace,
+	version,
 	working_directory,
 	free_option_count: INTEGER is unique
 
@@ -172,9 +179,12 @@ feature {NONE} -- Codes and names.
 			Result.force (arguments, "arguments")
 			Result.force (array_optimization, "array_optimization")
 			Result.force (check_vape, "check_vape")
+			Result.force (company, "company")
 			Result.force (console_application, "console_application")
+			Result.force (copyright, "copyright")
 			Result.force (cls_compliant, "cls_compliant")
 			Result.force (dead_code, "dead_code_removal")
+			Result.force (description, "description")
 			Result.force (document, "document")
 			Result.force (dotnet_naming_convention, "dotnet_naming_convention")
 			Result.force (dynamic_runtime, "dynamic_runtime")
@@ -193,16 +203,19 @@ feature {NONE} -- Codes and names.
 			Result.force (msil_full_name, "msil_full_name")
 			Result.force (msil_generation, "msil_generation")
 			Result.force (msil_generation_type, "msil_generation_type")
-			Result.force (msil_version, "msil_version")
+			Result.force (msil_key_file_name, "msil_key_file_name")
 			Result.force (multithreaded, "multithreaded")
 			Result.force (namespace, "namespace")
 			Result.force (override_cluster, "override_cluster")
 			Result.force (profile, "profile")
 			Result.force (server_file_size, "server_file_size")
 			Result.force (shared_library_definition, "shared_library_definition")
+			Result.force (title, "title")
+			Result.force (trademark, "trademark")
 			Result.force (working_directory, "working_directory")
 			Result.force (use_cluster_name_as_namespace, "use_cluster_name_as_namespace")
 			Result.force (use_all_cluster_name_as_namespace, "use_all_cluster_name_as_namespace") 
+			Result.force (version, "version")
 		end
 
 feature {COMPILER_EXPORTER}
@@ -416,13 +429,6 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
-				when msil_version then
-					if value.is_name then
-						System.set_msil_version (value.value)	
-					else
-						error_found := True
-					end
-
 				when msil_full_name then
 					if value.is_name then
 						System.set_msil_full_name (value.value)	
@@ -433,6 +439,13 @@ feature {COMPILER_EXPORTER}
 				when msil_assembly_compatibility then
 					if value.is_name then
 						System.set_msil_assembly_compatibility (value.value)	
+					else
+						error_found := True
+					end
+					
+				when msil_key_file_name then
+					if value.is_name then
+						System.set_msil_key_file_name (value.value)	
 					else
 						error_found := True
 					end
@@ -605,6 +618,55 @@ feature {COMPILER_EXPORTER}
 					if value.is_name then
 							-- Set top namespace of all classes.
 						System.set_system_namespace (value.value)
+					else
+						error_found := True
+					end
+					
+				when version then
+					if value.is_name then
+						System.set_version (value.value)	
+					else
+						error_found := True
+					end
+					
+				when title then
+					if value.is_name then
+						System.set_title (value.value)	
+					else
+						error_found := True
+					end
+					
+				when description then
+					if value.is_name then
+						System.set_description (value.value)	
+					else
+						error_found := True
+					end
+					
+				when company then
+					if value.is_name then
+						System.set_company (value.value)	
+					else
+						error_found := True
+					end
+					
+				when product then
+					if value.is_name then
+						System.set_product (value.value)	
+					else
+						error_found := True
+					end
+					
+				when copyright then
+					if value.is_name then
+						System.set_copyright (value.value)	
+					else
+						error_found := True
+					end
+					
+				when trademark then
+					if value.is_name then
+						System.set_trademark (value.value)	
 					else
 						error_found := True
 					end

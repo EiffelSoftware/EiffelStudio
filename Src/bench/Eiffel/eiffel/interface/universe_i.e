@@ -372,7 +372,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			consistency: not has_cluster_of_path (c.path)
 		do
 			clusters.extend (c)
-			clusters.forth
+			clusters.finish
 		end
 
 	copy (other: like Current) is

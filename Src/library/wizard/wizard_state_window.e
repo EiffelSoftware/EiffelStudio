@@ -152,6 +152,7 @@ feature -- Settings
 				i > a_table.count
 			loop
 				a_table.item(i).extend (agent change_entries)
+				a_table.item(i).extend (agent check_wizard_status)
 				i := i + 1
 			end
 		end

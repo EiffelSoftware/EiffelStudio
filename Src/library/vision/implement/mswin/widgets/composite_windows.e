@@ -95,7 +95,10 @@ feature -- Element change
 				local_children.off
 			loop
 				ww := local_children.item
-				if ww.shown and not ww.wel_shown then
+				if
+					ww.shown and then
+					not ww.wel_shown
+				then
 					ww.wel_show
 				end
 				local_children.forth

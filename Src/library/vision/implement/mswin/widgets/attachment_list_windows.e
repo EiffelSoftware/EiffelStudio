@@ -50,7 +50,7 @@ feature -- Status setting
 				!!a.make (w)
 				extend (a)
 			end
-		end				
+		end
 
 	attach_left (w,l : WIDGET_WINDOWS; pos: INTEGER;
 			relative: BOOLEAN) is

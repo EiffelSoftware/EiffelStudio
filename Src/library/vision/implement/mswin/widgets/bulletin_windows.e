@@ -113,7 +113,11 @@ feature -- Status setting
 	show is
 			-- Show composite.
 		do
-			if exists and then ((parent /= Void and then parent.wel_shown) or (parent = Void)) then 
+			if 
+				exists and then
+				((parent /= Void and then parent.wel_shown)
+				or (parent = Void))
+			then
 				wel_show
 				show_children
 			end

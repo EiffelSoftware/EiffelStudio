@@ -39,7 +39,7 @@ feature -- Properies
 				not is_not_actual_class_type and then not has_generics
 		end;
 
-	real_class_ids: LINKED_LIST [INTEGER] is
+	real_class_ids: LINKED_LIST [CLASS_ID] is
 			-- List of class id representing actual classes
 			-- in system
 		do

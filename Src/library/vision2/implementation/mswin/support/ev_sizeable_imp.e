@@ -7,6 +7,9 @@ indexing
 deferred class
 	EV_SIZEABLE_IMP
 
+inherit
+	EV_ANY_I
+
 feature -- Measurement
 
 	minimum_width: INTEGER 

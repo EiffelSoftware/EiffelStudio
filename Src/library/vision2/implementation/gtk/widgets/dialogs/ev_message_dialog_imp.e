@@ -18,42 +18,7 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the dialog box.
-		do
-			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
-			c_gtk_window_set_modal (widget, True)
-			gtk_window_set_position (GTK_WINDOW (widget), 1)
-
-			initialize
-			parent_imp ?= par.implementation
-		end
-
-	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
-			-- Create a message box with `par' as parent, `a_title' as
-			-- title and `a_msg' as message.
-		do
-			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
-			c_gtk_window_set_modal (widget, True)
-			gtk_window_set_position (GTK_WINDOW (widget), 1)
-
-			initialize
-			parent_imp ?= par.implementation
-			set_message (a_msg)
-			set_title (a_title)
-		end
-
-	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
-		do
-			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
-			c_gtk_window_set_modal (widget, True)
-			gtk_window_set_position (GTK_WINDOW (widget), 1)
-
-			parent_imp ?= par.implementation
-			initialize
-			show
-		end
-
-	build is
-			-- Normal build and load icon
+			-- build and load icon
 		local
 			dbox: EV_VERTICAL_BOX
 			container_interface: EV_DIALOG
@@ -61,6 +26,13 @@ feature {NONE} -- Initialization
 
 			color: EV_COLOR
 		do
+			widget := gtk_window_new (GTK_WINDOW_DIALOG)
+			c_gtk_window_set_modal (widget, True)
+			gtk_window_set_position (GTK_WINDOW (widget), 1)
+
+			initialize
+			parent_imp ?= par.implementation
+
 			-- First the build of the window
 			set_background_color (Color_dialog)
 			!! color.make_rgb (0, 0, 0)
@@ -88,18 +60,33 @@ feature {NONE} -- Initialization
 
 			!! display_area.make (dbox)
 			display_area.set_spacing (3)
-			display_area.set_minimum_height (100)
-			display_area.set_minimum_width (250)
+			display_area.set_height (100)
+			display_area.set_width (250)
 
 			!! action_area.make (dbox)
 			action_area.set_border_width (3)
 			action_area.set_spacing (4)
 			action_area.set_expand (False)
 			action_area.set_minimum_height (30)
-			action_area.set_minimum_width (250)
+			action_area.set_width (250)
 
 			-- Current build
 			icon_build (display_area)		
+		end
+
+	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
+			-- Create a message box with `par' as parent, `a_title' as
+			-- title and `a_msg' as message.
+		do
+			make (par)
+			set_message (a_msg)
+			set_title (a_title)
+		end
+
+	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
+		do
+			make (par)
+			show
 		end
 
 feature -- Status report

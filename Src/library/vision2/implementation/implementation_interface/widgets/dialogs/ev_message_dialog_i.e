@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature {EV_MESSAGE_DIALOG} -- Initialization
 
-	build is
-			-- Fill the dialog with the basic elements.
-		deferred
-		end
+--	build is
+--			-- Fill the dialog with the basic elements.
+--		deferred
+--		end
 
 feature -- Status report
 

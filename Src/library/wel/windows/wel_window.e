@@ -1707,8 +1707,10 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
 			when Wm_move then
-				on_move (cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
+					-- This is the same as using the "MAKEPOINTS" macro to
+					-- extract the position.
+				on_move (cwin_lo_word (lparam).to_integer_16,
+					cwin_hi_word (lparam).to_integer_16)
 			when Wm_lbuttondown then
 				on_left_button_down (wparam,
 					c_mouse_message_x (lparam),

@@ -186,7 +186,7 @@ feature -- Element Settings
 		end
 		
 	add_redefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE) is
-			-- Add redefine clause for parent `a_dotnet_parent_name' and feature `a_feature_name'.
+			-- Add redefine clause for parent `a_parent' and feature `a_routine'.
 		require
 			non_void_parent: a_parent /= Void
 			non_void_routine: a_routine /= Void
@@ -196,6 +196,23 @@ feature -- Element Settings
 			l_parent := parent (a_parent.eiffel_name)
 			if l_parent /= Void then
 				l_parent.add_redefine_clause (create {CODE_REDEFINE_CLAUSE}.make (a_routine, a_parent))
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
+			end			
+		end
+	
+	add_rename_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE; a_new_name: STRING) is
+			-- Add rename clause for parent `a_parent' and feature `a_routine' renamed as `a_new_name'.
+		require
+			non_void_parent: a_parent /= Void
+			non_void_routine: a_routine /= Void
+			non_void_new_name: a_new_name /= Void
+		local
+			l_parent: CODE_PARENT
+		do
+			l_parent := parent (a_parent.eiffel_name)
+			if l_parent /= Void then
+				l_parent.add_rename_clause (create {CODE_RENAME_CLAUSE}.make (a_routine, a_parent, a_new_name))
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
 			end			

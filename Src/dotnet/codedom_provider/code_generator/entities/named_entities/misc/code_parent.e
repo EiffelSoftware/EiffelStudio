@@ -31,9 +31,12 @@ feature	-- Access
 			-- Associated type
 
 	undefine_clauses: LIST [CODE_UNDEFINE_CLAUSE]
-			-- Rename inheritance clauses
+			-- Undefine inheritance clauses
 
 	redefine_clauses: LIST [CODE_REDEFINE_CLAUSE]
+			-- Redefine inheritance clauses
+
+	rename_clauses: LIST [CODE_RENAME_CLAUSE]
 			-- Rename inheritance clauses
 
 	code: STRING is
@@ -45,10 +48,11 @@ feature	-- Access
 			Result.append (type.eiffel_name)
 			Result.append_character ('%N')
 
+			Result.append (clauses_code (rename_clauses))
 			Result.append (clauses_code (undefine_clauses))
 			Result.append (clauses_code (redefine_clauses))
 
-			if undefine_clauses.count > 0 or redefine_clauses.count > 0 then
+			if undefine_clauses.count > 0 or redefine_clauses.count > 0 or rename_clauses.count > 0 then
 				Result.append ("%T%Tend%N")
 				Result.append ("%N")
 			end
@@ -74,6 +78,16 @@ feature -- Status Setting Inheritance Clauses
 			redefine_clauses.extend (a_clause)
 		ensure
 			redefine_clause_added: redefine_clauses.has (a_clause)
+		end
+
+	add_rename_clause (a_clause: CODE_RENAME_CLAUSE) is
+			-- Add `a_clause' to `inheritance_clauses' for parent `a_parent'.
+		require
+			non_void_inheritance_clause: a_clause /= Void
+		do
+			rename_clauses.extend (a_clause)
+		ensure
+			rename_clause_added: rename_clauses.has (a_clause)
 		end
 
 feature {NONE} -- Implementation

@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Dialog to prompt user for formatting or not a long format"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -33,6 +33,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_TOOLS
+		undefine
+			default_create
+		end
 
 creation
 	make_and_launch,
@@ -64,14 +69,21 @@ feature {NONE} -- Initialization
 			pnd_motion_actions.extend (agent clear_status_during_transport)
 			cancel_actions.extend (agent clear_status_after_transport)
 			first_window.set_title (Wizard_title)
-				-- Why not add `show' to `post_launch_actions' also?
-			first_window.show
+			if not is_modify_wizard then
+				first_window.show
+			end
 			
 				-- We only do this if we are a modify wizard, as
 				-- we jump directly to the fourth state (building), and for
 				-- this to work, launch must be called.
+				-- The type selector is normally set up by the main window, but
+				-- when we are the modify_wizard, this is not possible, as we do not
+				-- want to show the window until the very last minute (connected below)
+				-- so that we reduce flicker.
 			if is_modify_wizard then
 				post_launch_actions.extend (agent first_window.load_first_state)
+				post_launch_actions.extend (agent first_window.show)
+				post_launch_actions.extend (agent type_selector.ensure_top_item_visible)
 			end
 			launch
 		end

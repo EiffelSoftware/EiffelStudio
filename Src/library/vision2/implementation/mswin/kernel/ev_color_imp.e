@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision color. Mswindows implementation";
@@ -224,6 +223,9 @@ end -- class EV_COLOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/19 05:52:35  oconnor
+--| released
+--|
 --| Revision 1.4  2000/02/14 11:40:40  oconnor
 --| merged changes from prerelease_20000214
 --|

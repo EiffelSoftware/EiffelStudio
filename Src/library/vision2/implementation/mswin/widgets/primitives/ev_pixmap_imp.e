@@ -881,8 +881,14 @@ feature {EV_ANY_I} -- Delegated features
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-				-- Simple pixmap => not in a container.
-			Result := False
+			if is_destroyed then
+				Result := interface.implementation.is_show_requested
+			else
+					-- Simple pixmap => not in a container.
+					-- This should never be called, as `show' upgrades
+					-- the implementation.
+				Result := False
+			end	
 		end
 
 	minimum_height: INTEGER is

@@ -158,7 +158,7 @@ feature {EV_ANY_I} -- Event handling
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
 					eiffel_to_c (a_signal_name),
-					~translate_and_call (an_agent, translate, ?, ?)
+					agent translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
 				last_signal_connection_id := c_signal_connect (
@@ -290,7 +290,7 @@ feature {EV_ANY_I} -- Event handling
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
 			an_action_sequence.not_empty_actions.extend (
-				~connect_signal_to_actions_now (
+				agent connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
 					an_action_sequence,
@@ -322,10 +322,10 @@ feature {EV_ANY_I} -- Event handling
 			real_signal_connect (
 				a_c_object,
 				a_signal_name,
-				an_action_sequence~call (?),
+				agent an_action_sequence.call (?),
 				translate
 			)
-			disconnect_agent := ~signal_disconnect (last_signal_connection_id)
+			disconnect_agent := agent signal_disconnect (last_signal_connection_id)
 			an_action_sequence.empty_actions.extend (disconnect_agent)
 			an_action_sequence.empty_actions.extend (
 				kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
@@ -340,7 +340,7 @@ feature {EV_ANY_I} -- Event handling
 			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
 		do
 			create kamikaze_cell.put (Void)
-			Result := ~do_kamikaze (
+			Result := agent do_kamikaze (
 				an_action_sequence,
 				target,
 				kamikaze_cell
@@ -376,7 +376,7 @@ feature {EV_ANY_I} -- Event handling
 	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is
 		
 		once
-			Result := ~gdk_event_to_tuple
+			Result := agent gdk_event_to_tuple
 		end
 
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is

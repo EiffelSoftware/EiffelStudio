@@ -41,10 +41,10 @@ feature -- Access
 			Result.from_c (cwin_reg_key_class (item))
 		end
 		
-	last_change: WEL_FILETIME is
+	last_change: WEL_FILE_TIME is
 			-- Last modification time
 		do
-			!! Result.make_from_pointer (cwin_reg_key_time (item))
+			!! Result.make_by_pointer (cwin_reg_key_time (item))
 		end
 		
 	item: POINTER

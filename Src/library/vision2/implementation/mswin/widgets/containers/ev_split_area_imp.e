@@ -184,6 +184,8 @@ feature {NONE} -- Implementation
 				end
 					-- If `v_imp' not Void (meaning `v' is being removed).
 				if v_imp /= Void then
+						-- Call `remove_item_actions' for `Current'.
+					remove_item_actions.call ([v_imp.interface])
 						-- Unparent `v_imp' from `Current'.
 					v_imp.set_parent (Void)
 						-- Reflect the changes by updating the position of the
@@ -519,6 +521,15 @@ end -- class EV_SPLIT_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2001/07/02 18:26:58  rogers
+--| We now call the `remove_item_actions' from `prune'. This fixes the
+--| following bug:
+--|
+--| Add a widget which is sensitive'
+--| call `disable_sensitive' on `Current''
+--| remove the widget and place in another sensitive container.'
+--| The widget is still disabled.
+--|
 --| Revision 1.28  2001/06/29 01:00:22  rogers
 --| Fixed bug in prune with expandable items after calling wipe_out.
 --|

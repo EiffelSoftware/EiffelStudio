@@ -461,7 +461,7 @@ void initprf(void)
 	if(prof_enabled) {
 			/* Get the current working directory, ie the one where we
 			/* are going to save the profile_ouput_file */
-		if ( _getcwd(cwd, MAX_PATH) == NULL)
+		if ( getcwd(cwd, MAX_PATH) == NULL)
 			print_err_msg(stderr, "Unable to get the current working directory.\n");
 
 			/* Allocate table */

@@ -70,9 +70,10 @@ feature {NONE} -- Implementation
 			-- If right mouse button was pressed -> bring up slice window. 
 		local
 			current_format: FORMATTER_2;
-			old_do_format: BOOLEAN
+			old_do_format: BOOLEAN;
+			mp: MOUSE_PTR
 		do
-			set_global_cursor (watch_cursor);
+			!! mp.set_watch_cursor;
 			if argument = Void then
 					-- 3rd button pressed
 				slice_window.call 
@@ -85,7 +86,7 @@ feature {NONE} -- Implementation
 					current_format.set_do_format (old_do_format)
 				end
 			end;
-			restore_cursors
+			mp.restore
 		end;
 	
 feature {NONE} -- Attributes

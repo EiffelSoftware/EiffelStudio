@@ -106,7 +106,8 @@ feature -- Project Initialization
 			temp: STRING;
 			fn: FILE_NAME;
 			title: STRING;
-			e_displayer: DEFAULT_ERROR_DISPLAYER
+			e_displayer: DEFAULT_ERROR_DISPLAYER;
+			mp: MOUSE_PTR
 		do
 			ok := True;
 			if not project_dir.exists then
@@ -141,9 +142,10 @@ feature -- Project Initialization
 					temp := w_Not_a_file (project_eif_file.name);
 					ok := False
 				else
-					restore_cursors;
+					!! mp.do_nothing;
+					mp.restore
 					project_tool.set_title ("Retrieving project...");
-					set_global_cursor (watch_cursor);
+					mp.set_watch_cursor;
 					retrieve_project (project_dir);
 					if not Eiffel_project.error_occurred then
 						!! e_displayer.make (Error_window);

@@ -58,16 +58,17 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Execute the command.
 		local
-			format_storage: E_STORE_CASE_INFO
+			format_storage: E_STORE_CASE_INFO;
+			mp: MOUSE_PTR
 		do
 			if 
 				argument = control_click or
 				(last_confirmer /= Void and argument = last_confirmer)
 			then
-				set_global_cursor (watch_cursor);
+				!! mp.set_watch_cursor;
 				!! format_storage.make (Error_window);
 				format_storage.execute;
-				restore_cursors
+				mp.restore
 			else
 				confirmer (text_window).call (Current,
 					"This command requires exploring the entire%N%

@@ -11,7 +11,6 @@ inherit
 
 	E_CMD;
 	SHARED_APPLICATION_EXECUTION;
-	CURSOR_W;
 	WINDOWS;
 	GRAPHICS
 
@@ -22,8 +21,10 @@ feature -- Execution
 			-- stopped in a breakpoint or an exception
 			-- occurred
 		local
-			status: APPLICATION_STATUS
+			status: APPLICATION_STATUS;
+			mp: MOUSE_PTR
 		do
+			!! mp.do_nothing;
 			if Application.is_stopped then
 					-- Application has stopped 
 					-- after receiving and updating stack info
@@ -34,10 +35,10 @@ feature -- Execution
 								(status.e_feature, status.break_index)
 				end;
 				status.display_status (Debug_window);
-				restore_cursors
+				mp.restore
 			else
 					-- Before receiving and updating stack info
-				set_global_cursor (watch_cursor);	
+				mp.set_watch_cursor
 			end
 		end
 

@@ -23,7 +23,7 @@ feature -- Access
 			res: POINTER
 		do
 			last_call_success := c_name (item, $res)
-			if res /= Void then
+			if res /= default_pointer then
 				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
@@ -36,7 +36,7 @@ feature -- Access
 			res: POINTER
 		do
 			last_call_success := c_version (item, $res)
-			if res /= Void then
+			if res /= default_pointer then
 				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
@@ -49,7 +49,7 @@ feature -- Access
 			res: POINTER
 		do
 			last_call_success := c_culture (item, $res)
-			if res /= Void then
+			if res /= default_pointer then
 				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure
@@ -62,7 +62,7 @@ feature -- Access
 			res: POINTER
 		do
 			last_call_success := c_public_key_token (item, $res)
-			if res /= Void then
+			if res /= default_pointer then
 				Result := (create {UNI_STRING}.make_by_pointer (res)).string
 			end
 		ensure

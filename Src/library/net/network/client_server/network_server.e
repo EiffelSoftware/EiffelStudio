@@ -7,48 +7,59 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class INET_SERVER
+deferred class NETWORK_SERVER
 
 inherit
 	SERVER
 		redefine
-			in, make
+			in, resend
 		end
 
 feature -- Access
 
-	in: NETWORK_SOCKET_STREAM
-		-- Receive socket.
+	in: NETWORK_STREAM_SOCKET
+			-- Receive socket.
 
-	make (a : SOCKET_ADDRESS_NETWORK; queueing : INTEGER) is
+	make (a_port : INTEGER) is
+		require 
+			valid_port: a_port >= 0
 		do
-			!!in.make
-			in.set_address (a);
-			in.bind
-			in.listen (queueing)
+			!!in.make_server_by_port (a_port)
+			if queued = 0 then
+				in.listen (5)
+			else
+				in.listen (queued)
+			end
 		end
 
-	close is
+	cleanup is
 		do
 			in.close
 		end
 
 	receive is
 		do
-			outflow ?= in.accept;
-			received ?= socket_retrieved (outflow);
-		end;
-	
-	clean_up is
+			in.accept
+			outflow ?= in.accepted
+			received ?= retrieved (outflow)
+		end
+
+	resend (msg: STORABLE) is
 		do
-		end;
+			msg.independent_store (outflow)
+		end
+	
+	close is
+		do
+			if outflow /= Void and then not outflow.is_closed then
+				outflow.close
+			end
+		end
 
-
-
-end -- class INET_SERVER
+end -- class NETWORK_SERVER
 
 --|----------------------------------------------------------------
---| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -59,3 +70,4 @@ end -- class INET_SERVER
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -1,71 +1,75 @@
 indexing
 
 	description:
-		"A unix socket datagram.";
+		"A unix datagram socket.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class UNIX_SOCKET_DGRAM
+class UNIX_DATAGRAM_SOCKET
 
 inherit
 
 	UNIX_SOCKET
+		rename
+			send as socket_send
 		export
-			{NONE} accept, listen
+			{NONE} accept, listen, socket_send
 		redefine
 			bind
 		select
 			bind
-		end;
+		end
 
 	UNIX_SOCKET
 		rename
-			bind as socket_bind
-		end;
+			bind as socket_bind,
+			send as socket_send
+		export
+			{NONE} accept, listen, socket_send
+		end
 
-	SOCKET_DGRAM
+	DATAGRAM_SOCKET
 
 creation
 
-	make
+	make 
 
-feature 	-- Initialization
+feature -- Initialization
 
 	make is
 			-- create a unix socket datagram
 		do
-			family := af_unix;
-			type := sock_dgrm;			
-			make_socket;
-		end;
+			family := af_unix
+			type := sock_dgrm
+			make_socket
+		end
 
 	bind is
 			-- bind to the local address
 		do
-			socket_bind;
-			is_open_read := False;
-			bound := True;
+			socket_bind
+			is_open_read := False
+			bound := True
 		ensure then
-			is_bound_ : bound;
-			not_open_read: not is_open_read;
-		end;
+			is_bound: bound
+			not_open_read: not is_open_read
+		end
 
-	bound: BOOLEAN;
-		-- Socket is bound
+	bound: BOOLEAN
+			-- Socket is bound
 
 	make_peer_address is
-			-- create the peer address 
+			-- create the peer address
 		do
-			!!peer_address.make;
-		end;
+			!!peer_address.make
+		end
 
-
-end 	-- class UNIX_SOCKET_DGRAM
+end -- class UNIX_DATAGRAM_SOCKET
 
 --|----------------------------------------------------------------
---| Eiffelnet: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.

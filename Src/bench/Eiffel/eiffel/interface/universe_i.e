@@ -402,6 +402,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 				not Result or clusters.after or other.clusters.after
 			loop
 				Result := Result and clusters.item.is_equal (other.clusters.item)
+				clusters.forth
+				other.clusters.forth
 			end		
 		end
 

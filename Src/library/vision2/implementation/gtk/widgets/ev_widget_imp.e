@@ -101,7 +101,6 @@ feature {NONE} -- Initialization
 				--| "button-press-event" is a special case, see below.
 				
 			connect_button_press_switch_agent := agent connect_button_press_switch
-			button_press_switch_agent := agent button_press_switch
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
@@ -115,7 +114,18 @@ feature {NONE} -- Initialization
 	Signal_map_actions: INTEGER is 2
 
 
-	button_press_switch_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
+	button_press_switch_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]] is
+			-- 
+		do
+			if button_press_switch_agent_internal /= Void then
+				Result := button_press_switch_agent_internal
+			else
+				button_press_switch_agent_internal := agent button_press_switch
+				Result := button_press_switch_agent_internal
+			end
+		end
+		
+	button_press_switch_agent_internal: PROCEDURE [EV_WIDGET_IMP, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 	
 	button_press_switch (
 			a_type: INTEGER;
@@ -576,20 +586,6 @@ feature {NONE} -- Implementation
 				eiffel_to_c ("gtk-aux-info")
 			)
 		end
-		
-	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
-			-- Convert GtkAllocation to tuple.
-		local
-			gtk_alloc: POINTER
-		do
-			gtk_alloc := gtk_value_pointer (p)
-			Result := [
-				C.gtk_allocation_struct_x (gtk_alloc),
-				C.gtk_allocation_struct_y (gtk_alloc),
-				C.gtk_allocation_struct_width (gtk_alloc),
-				C.gtk_allocation_struct_height (gtk_alloc)
-			]
-		end
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
@@ -609,42 +605,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	key_event_translate (n: INTEGER; p: POINTER): TUPLE is
-			-- Convert GdkEventKey to tuple.
-		local
-			keyval: INTEGER
-			gdkeventkey: POINTER
-			a_key_string: STRING
-			key: EV_KEY
-			a_key_press: BOOLEAN
-		do
-			gdkeventkey := gtk_value_pointer (p)
-			if C.gdk_event_key_struct_type (gdkeventkey) = C.gdk_key_press_enum then
-				a_key_press := True
-				create a_key_string.make (0)
-				a_key_string.from_c (C.gdk_event_key_struct_string (gdkeventkey))
-			end
-			keyval := C.gdk_event_key_struct_keyval (gdkeventkey)
-			if valid_gtk_code (keyval) then
-				create key.make_with_code (key_code_from_gtk (keyval))
-			end
-			
-			Result := [key, a_key_string, a_key_press]
-		end
-		
-
 feature {NONE} -- Agent functions.
 
-	key_event_translate_agent: FUNCTION [EV_WIDGET_IMP, TUPLE [INTEGER, POINTER], TUPLE] is
+	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- 
 		once
-			Result := agent key_event_translate
+			Result := agent gtk_marshal.key_event_translate
 		end
 		
-	size_allocate_translate_agent: FUNCTION [EV_WIDGET_IMP, TUPLE [INTEGER, POINTER], TUPLE] is
+	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- 
 		once
-			Result := agent size_allocate_translate
+			Result := agent gtk_marshal.size_allocate_translate
 		end
 		
 feature {EV_WINDOW_IMP} -- Implementation

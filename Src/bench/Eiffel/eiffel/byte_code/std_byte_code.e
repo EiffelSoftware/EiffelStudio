@@ -738,6 +738,7 @@ feature
 
 	has_separate_call_in_condition(l: BYTE_LIST [BYTE_NODE]): BOOLEAN is
 		do
+			if System.has_separate then
 			Result := False;
 			if l /= Void then
 				from
@@ -749,6 +750,7 @@ feature
 					l.forth;
 				end;
 			end;
+			end
 		end
 
 	generate_postcondition is
@@ -1298,6 +1300,7 @@ feature -- Concurrent Eiffel
 			var_name: STRING;
 			reg: REGISTRABLE
 		do
+			if system.has_separate then
 			-- Reserve separate parameters
 			!!var_name.make(10);
 			if arguments /= Void then
@@ -1323,6 +1326,7 @@ feature -- Concurrent Eiffel
 					i := i + 1;
 				end;
 			end;
+			end
 		end
 
 	free_separate_parameters is 
@@ -1332,6 +1336,7 @@ feature -- Concurrent Eiffel
 			var_name: STRING;
 			reg: REGISTRABLE
 		do
+			if system.has_separate then
             -- Free separate parameters
 			!!var_name.make(10);
             if arguments /= Void then
@@ -1356,6 +1361,7 @@ feature -- Concurrent Eiffel
                     i := i + 1;
                 end;
             end;
+			end
 		end
 
 end

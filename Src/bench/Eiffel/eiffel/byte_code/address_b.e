@@ -67,7 +67,9 @@ feature
 				if context.dt_current > 1 then
 					generated_file.putstring (gc_dtype);
 				else
-					generated_file.putstring (gc_dtype_current);
+					generated_file.putstring (gc_upper_dtype_lparan);
+					context.Current_register.print_register_by_name;
+					generated_file.putchar (')');
 				end;
 				generated_file.putchar (')');
 			else
@@ -88,7 +90,9 @@ feature
 					if context.dt_current > 1 then
 						generated_file.putstring (gc_dtype)
 					else
-						generated_file.putstring (gc_dtype_current);
+						generated_file.putstring (gc_upper_dtype_lparan);
+						context.Current_register.print_register_by_name;
+						generated_file.putchar (')');
 					end;
                     generated_file.putchar (']');
 						-- Mark table used

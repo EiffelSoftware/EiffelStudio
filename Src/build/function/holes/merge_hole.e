@@ -16,10 +16,10 @@ feature {NONE}
 			Result := Current
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.merge_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.merge_label)
+		end;
 
 -- samik	focus_label: FOCUS_LABEL is
 -- samik		do

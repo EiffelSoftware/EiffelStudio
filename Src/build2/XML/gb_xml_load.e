@@ -113,12 +113,17 @@ feature -- Basic operation
 				-- Now mark one window as the main window of the system if it is
 				-- `Void' which will occur when you load an old project that did not
 				-- have a root window.
-			if Object_handler.root_window_object = Void then
+			if Object_handler.root_window_object = Void and not window_selector.objects.is_empty then
 				window_selector.mark_first_window_as_root
 				System_status.disable_project_modified
 			end
-			
-			Window_selector.select_main_window
+
+				-- Only select a main window if there is at least one window
+				-- in the system. It is possible to save a project after having
+				-- deleted all windows.
+			if not window_selector.objects.is_empty then
+				Window_selector.select_main_window
+			end
 			
 				-- Flag to the system that a load is no longer underway.
 			System_status.disable_loading_project

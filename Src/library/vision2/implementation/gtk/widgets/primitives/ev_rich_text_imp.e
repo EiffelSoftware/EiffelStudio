@@ -29,6 +29,53 @@ feature -- Status Report
 		do
 		end
 
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		do
+		end
+
+	selected_character_format: EV_CHARACTER_FORMAT is
+			--
+		do
+		end
+
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph_format at caret position `caret_index'.
+		do
+		end
+
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		do
+		end
+
+	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+		do
+		end
+
+	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		do
+		end
+
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+		do
+		end
+
+	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from lines `start_line' to `end_line'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_line' to
+			--`end_line' and `False' otherwise.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		do
+		end
+
 	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		do
@@ -36,6 +83,15 @@ feature -- Status Report
 		
 	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		do
+		end
+
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
+			--`end_index' and `False' otherwise.
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		do

@@ -38,6 +38,11 @@ feature -- Access
 			-- Color of the current format
 		do
 		end
+
+	background_color: EV_COLOR is
+			-- Color of the current format
+		do
+		end
 		
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'
@@ -52,6 +57,11 @@ feature -- Status setting
 		end
 
 	set_color (a_color: EV_COLOR) is
+			-- Make `value' the new color
+		do
+		end
+
+	set_background_color (a_color: EV_COLOR) is
 			-- Make `value' the new color
 		do
 		end

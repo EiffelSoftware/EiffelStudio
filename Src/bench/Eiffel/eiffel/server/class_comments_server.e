@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"Comment server for a class.";
+	description: "Comment server for a class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class CLASS_COMMENTS_SERVER 
+class
+	CLASS_COMMENTS_SERVER 
 
 inherit
-
 	COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]
 		export
 			{NONE} all;
@@ -18,7 +16,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Update

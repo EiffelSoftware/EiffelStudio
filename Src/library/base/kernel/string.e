@@ -1186,7 +1186,10 @@ feature -- Conversion
 					l_list.extend (part)
 					i := j + 1
 				end
-				if j = c and item (j) = a_separator then
+				if j = c then
+					check
+						last_character_is_a_separator: item (j) = a_separator
+					end
 						-- A separator was found at the end of the string
 					l_list.extend ("")
 				end

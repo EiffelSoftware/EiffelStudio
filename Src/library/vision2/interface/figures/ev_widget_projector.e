@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 			widget := a_widget
 			area_x := 0
 			area_y := 0
-			widget.pointer_motion_actions.extend (~mouse_move)
-			widget.pointer_button_press_actions.extend (~button_press)
-			widget.pointer_double_press_actions.extend (~double_press)
-			widget.pointer_button_release_actions.extend (~button_release)
-			widget.pointer_leave_actions.extend (~pointer_leave)
-			widget.set_pebble_function (~on_pebble_request)
-			widget.set_actual_drop_target_agent (~on_drop_target_request)
+			widget.pointer_motion_actions.extend (agent mouse_move)
+			widget.pointer_button_press_actions.extend (agent button_press)
+			widget.pointer_double_press_actions.extend (agent double_press)
+			widget.pointer_button_release_actions.extend (agent button_release)
+			widget.pointer_leave_actions.extend (agent pointer_leave)
+			widget.set_pebble_function (agent on_pebble_request)
+			widget.set_actual_drop_target_agent (agent on_drop_target_request)
 		end
 
 	make_with_drawable_widget_and_buffer (

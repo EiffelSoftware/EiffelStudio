@@ -46,12 +46,12 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_boolean (element, Is_homogeneous_string, objects.first.is_homogeneous)
 			end
 				-- Padding is 0 by default.
-			if objects.first.padding_width > 0 then
-				add_element_containing_integer (element, Padding_string, objects.first.padding_width)	
+			if objects.first.padding_width > 0 or uses_constant (Padding_string) then
+				add_integer_element (element, Padding_string, objects.first.padding_width)	
 			end
 				-- Border is 0 by default.
-			if objects.first.border_width > 0 then
-				add_element_containing_integer (element, Border_string, objects.first.border_width)
+			if objects.first.border_width > 0 or uses_constant (Border_string) then
+				add_integer_element (element, Border_string, objects.first.border_width)
 			end
 			
 				-- If there are one or more children in the box, then we always
@@ -93,14 +93,12 @@ feature {GB_XML_STORE} -- Output
 				end
 			end
 
-			element_info := full_information @ (Padding_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_BOX}.set_padding_width (element_info.data.to_integer))
+			if full_information @ (Padding_string) /= Void then
+				for_all_objects (agent {EV_BOX}.set_padding_width (retrieve_and_set_integer_value (Padding_string)))
 			end
 			
-			element_info := full_information @ (Border_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_BOX}.set_border_width (element_info.data.to_integer))
+			if full_information @ (Border_string) /= Void then
+				for_all_objects (agent {EV_BOX}.set_border_width (retrieve_and_set_integer_value (Border_string)))
 			end
 		
 		

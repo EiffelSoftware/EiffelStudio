@@ -17,18 +17,8 @@ feature {DOCUMENT_EDITOR} -- Creation
 			editor_not_void: a_editor /= Void			
 		do
 			editor := a_editor
-			initialize
 		ensure
 			editor_set: editor = a_editor
-		end		
-
-	initialize is
-			-- Initialize values
-		local
-			l_font_consts: EV_FONT_CONSTANTS
-		do
-			create l_font_consts
-			create font.make_with_values (l_font_consts.family_typewriter, l_font_consts.weight_regular, l_font_consts.shape_regular, 11)
 		end		
 
 feature -- Access

@@ -17,6 +17,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	frozen get_xml_generation: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use Formatter"
+		alias
+			"get_XmlGeneration"
+		end
+
 	frozen get_eiffel_formatting: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use Formatter"
@@ -25,6 +32,13 @@ feature -- Access
 		end
 
 feature -- Element Change
+
+	frozen set_xml_generation (value: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use Formatter"
+		alias
+			"set_XmlGeneration"
+		end
 
 	frozen set_eiffel_formatting (value: BOOLEAN) is
 		external

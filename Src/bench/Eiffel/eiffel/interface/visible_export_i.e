@@ -21,6 +21,9 @@ feature
 		do
 			Result := feat.export_status.is_all
 			if not Result then
+					-- If it is a creation routine, we can export
+					-- it, so that we match the Eiffel way to create
+					-- an object.
 				creators := feat.access_class.creators
 				if creators /= Void then
 					Result := creators.has (feat.feature_name)

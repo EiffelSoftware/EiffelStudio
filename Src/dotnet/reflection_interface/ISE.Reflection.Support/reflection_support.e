@@ -33,21 +33,46 @@ feature -- Access
 			description: "Environment variable giving path to Eiffel delivery"
 			external_name: "EiffelKey"
 		end
+	
+	ISE_Eiffel_key_path: STRING is "Software\ISE\Eiffel50\ec"
+		indexing
+			description: "Path (in the registry key) to the `ISE_EIFFEL' key"
+			external_name: "IseEiffelKeyPath"
+		end
 		
 	Eiffel_delivery_path: STRING is 
 		indexing
 			description: "Path to Eiffel delivery"
 			external_name: "EiffelDeliveryPath"
 		local
-			env: SYSTEM_ENVIRONMENT
+			--env: SYSTEM_ENVIRONMENT
+			registry_key: MICROSOFT_WIN32_REGISTRYKEY
+			registry: MICROSOFT_WIN32_REGISTRY
+			keys: ARRAY [STRING]
+			a_key: STRING
+			i: INTEGER
+			retried: BOOLEAN
 		do
-			Result := env.Get_Environment_Variable (Key)
-			if Result.Ends_With ("\") then
-				Result := Result.Substring_int32_int32 (0, Result.get_Length - 1)
+			if not retried then
+				--Result := env.Get_Environment_Variable (Key)
+				registry_key := registry.current_user.open_sub_key (ISE_Eiffel_key_path)
+				Result ?= registry_key.get_value (Key)
+				if Result /= Void then
+					if Result.get_length > 0 then
+						if Result.Ends_With ("\") then
+							Result := Result.Substring_int32_int32 (0, Result.get_Length - 1)
+						end
+					else
+						create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
+					end
+				else
+					create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
+				end			
 			end
-		ensure
-			non_void_eiffel_delivery_path: Result /= Void
-			not_emtpy_eiffel_delivery_path: Result.get_Length > 0
+		rescue
+			retried := True
+			create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
+			retry
 		end
 		
 	Assemblies_folder_path: STRING is "\dotnet\assemblies\"

@@ -18,7 +18,9 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			minimum_width,
+			minimum_height
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_ITEM]
@@ -197,6 +199,12 @@ feature {NONE} -- Implementation
 			check dont_call: False end
 		end
 
+feature {NONE} -- Implementation
+
+	minimum_width, minimum_height: INTEGER
+		-- Redefined to avoid seg faults from invariant calling
+		-- invalid features for items.
+
 
 feature {EV_TREE_IMP} -- Implementation
 
@@ -238,6 +246,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/02/24 18:47:55  king
+--| Redefined min_wid/hgt to avoid invariant violation that doesnt apply to feature needed by the tree item
+--|
 --| Revision 1.33  2000/02/24 01:42:14  king
 --| Implemented event handling
 --|

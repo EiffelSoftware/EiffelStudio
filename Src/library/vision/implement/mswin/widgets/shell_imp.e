@@ -80,7 +80,8 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name
+			class_name,
+			class_background
 		end
 
 feature -- Initialization
@@ -377,6 +378,19 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 		once
 			Result := Ws_overlappedwindow + Ws_visible
+		end
+
+	class_background: WEL_BRUSH is
+			-- Default background
+		local
+			windows_color: COLOR_IMP
+		do
+			if private_background_color = Void then
+				!! Result.make_by_sys_color (Color_window + 1)
+			else
+				windows_color ?= private_background_color.implementation
+				Result := windows_color.brush
+			end
 		end
 
 	class_name: STRING is

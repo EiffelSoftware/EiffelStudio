@@ -151,6 +151,15 @@ feature -- Status report
 			result_valid: selected_count > 0 implies Result >= 0
 		end
 
+	get_background_color: WEL_COLOR_REF is
+			-- `Result' is background color used for control.
+		local
+			color_int: INTEGER
+		do
+			color_int := cwin_send_message_result (item, Lvm_getbkcolor, 0, 0)
+			create Result.make_by_color (color_int)
+		end
+
 	get_column_width (column: INTEGER): INTEGER is
 			-- Width of the zero-based `index'-th item.
 		require
@@ -379,6 +388,11 @@ feature -- Status setting
 			else
 				cwin_send_message (item, Lvm_setimagelist, Lvsil_small, 0) -- 0 correspond to NULL.
 			end
+		end
+
+	set_background_color (a_color: WEL_COLOR_REF) is
+		do
+			cwin_send_message (item, Lvm_setbkcolor, 0, a_color.item)
 		end
 
 feature -- Element change

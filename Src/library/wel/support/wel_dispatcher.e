@@ -25,7 +25,6 @@ inherit
 			{NONE} all
 		end
 
-
 	WEL_EN_CONSTANTS	
 		-- debug
 
@@ -52,7 +51,7 @@ feature {NONE} -- Implementation
 			returned_value: INTEGER
 			has_return_value: BOOLEAN
 		do
-			window := windows.item (hwnd)
+			window := window_of_item (hwnd)
 			debug ("win_dispatcher")
 				if window /= Void then
 					io.print (" after look at windows table ")
@@ -60,10 +59,7 @@ feature {NONE} -- Implementation
 					io.new_line
 				end
 			end
-			if window /= Void then
-				check
-					window_exists: window.exists
-				end
+			if window /= Void and then window.exists then
 				window.increment_level
 
 				Result := window.process_message (hwnd, msg, wparam, lparam)
@@ -107,8 +103,9 @@ feature {NONE} -- Implementation
 				io.new_line
 			end
 			if msg = Wm_initdialog then
-				window := windows.item (cwel_temp_dialog_value)
+				window := new_dialog
 				if window /= Void then
+					new_dialog_cell.put (Void)
 					window.increment_level
 	
 					-- Special case for the message
@@ -120,7 +117,6 @@ feature {NONE} -- Implementation
 					--| called, Result is set to `1'.
 					--| As a result, any call to `set_focus' in
 					--| `setup_dialog' from WEL_DIALOG is useless.
-					windows.remove (cwel_temp_dialog_value)
 					window.set_item (hwnd)
 					register_window (window)
 					Result := window.process_message (hwnd, msg, wparam, lparam)
@@ -128,8 +124,8 @@ feature {NONE} -- Implementation
 				end
 				Result := 1
 			else
-				window := windows.item (hwnd)
-				if window /= Void then
+				window := window_of_item (hwnd)
+				if window /= Void and window.exists then
 					window.increment_level
 					last_result := window.process_message (hwnd, msg, wparam, lparam)
 					if window.has_return_value then

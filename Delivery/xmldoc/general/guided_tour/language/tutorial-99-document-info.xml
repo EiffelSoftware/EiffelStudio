@@ -17,7 +17,7 @@
 		<paragraph>See acknowledgments in book 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/doc/page.xml#etl</url>
+					<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>etl</anchor_name>
 					<label>Eiffel: The Language</label>
 				</link>
 			</span>.  

@@ -169,7 +169,7 @@ Tab</bold></code_block>
 			<paragraph>Most of these denote Eiffel constructs as they appear in the official language reference, the book 
 				<span>
 					<link>
-						<url>http://www.eiffel.com/doc/#etl</url>
+						<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 						<label>Eiffel: The Language</label>
 					</link>
 				</span> .  Since the Eiffel construct names 
@@ -202,7 +202,7 @@ Tab</bold></code_block>
 					</code>, denoting any Eiffel keyword among those listed in boldface in the corresponding appendix in 
 					<span>
 						<link>
-							<url>http://www.eiffel.com/doc/#etl</url>
+							<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 							<label>Eiffel: The Language</label>
 						</link>
 					</span>
@@ -223,7 +223,7 @@ Tab</bold></code_block>
 					</code>, denoting any of the Eiffel symbols listed in the corresponding appendix of 
 					<span>
 						<link>
-							<url>http://www.eiffel.com/doc/#etl</url>
+							<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 							<label>Eiffel: The Language</label>
 						</link>
 					</span> .

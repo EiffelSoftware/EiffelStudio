@@ -423,7 +423,7 @@
 		</paragraph>
 		<info>Some variants of the basic creation instruction will be reviewed later: instruction with an explicit type; creation expressions.  See 
 			<link>
-				<url>tutorial-11.xml#28280</url>
+				<url>tutorial-11.xml</url><anchor_name>28280</anchor_name>
 				<label>"Creation variants", page 89</label>
 			</link>.
 		</info>
@@ -551,7 +551,7 @@
 		</paragraph>
 		<paragraph>The default initialization rules seen earlier for attributes (see the table on page 
 			<link>
-				<url>tutorial-07.xml#25630</url>
+				<url>tutorial-07.xml</url><anchor_name>25630</anchor_name>
 				<label>21</label>
 			</link>) also serve to initialize local entities and 
 			<code>
@@ -604,7 +604,7 @@
 </code_block>
 		<paragraph>Following the principle of Uniform Access (page 
 			<link>
-				<url>tutorial-07.xml#UNIFORM ACCESS</url>
+				<url>tutorial-07.xml</url><anchor_name>UNIFORM ACCESS</anchor_name>
 				<label>19</label>
 			</link>), this form is the same for calls to attributes and to functions without arguments.  In thisexample, feature 
 			<code>
@@ -783,15 +783,15 @@
 		</paragraph>
 		<paragraph>Three mechanisms introduced below -- expanded types (page 
 			<link>
-				<url>tutorial-07.xml#40534</url>
+				<url>tutorial-07.xml</url><anchor_name>40534</anchor_name>
 				<label>26</label>
 			</link>), genericity (page 
 			<link>
-				<url>tutorial-08.xml#15572</url>
+				<url>tutorial-08.xml</url><anchor_name>15572</anchor_name>
 				<label>36</label>
 			</link>) and anchored declarations (page 
 			<link>
-				<url>tutorial-10.xml#46019</url>
+				<url>tutorial-10.xml</url><anchor_name>46019</anchor_name>
 				<label>79</label>
 			</link>) -- will generalize the notion of type slightly.  But they do not change the fundamental property that 
 			<bold>every type is based on a class</bold>, called the type's 
@@ -940,7 +940,7 @@
 				<class_name>ANY</class_name>
 			</code> seen earlier (page 
 			<link>
-				<url>tutorial-06.xml#82680</url>
+				<url>tutorial-06.xml</url><anchor_name>82680</anchor_name>
 				<label>15</label>
 			</link>).
 		</paragraph>
@@ -1199,7 +1199,7 @@
 				<local_variable>x</local_variable>
 			</code> and would, if evaluated, yield an exception as explained in 
 			<link>
-				<url>tutorial-09. .xml#10722</url>
+				<url>tutorial-09. .xml</url><anchor_name>10722</anchor_name>
 				<label>"Exception handling", page 46</label>
 			</link> below.)
 		</paragraph>
@@ -1397,7 +1397,7 @@
 				<local_variable>y</local_variable>
 			</code> of the form illustrated by the figure on page 
 			<link>
-				<url>tutorial-00.xml#35291</url>
+				<url>tutorial-00.xml</url><anchor_name>35291</anchor_name>
 				<label>28</label>
 			</link> can cause objects to become unreachable.  This is the case for the object identified as OBJ2 on that figure (the object to which 
 			<code>
@@ -1524,7 +1524,7 @@
 				<class_name>NONE</class_name>
 			</code>. Because of the global inheritance structure (page 
 			<link>
-				<url>tutorial-06.xml#82680</url>
+				<url>tutorial-06.xml</url><anchor_name>82680</anchor_name>
 				<label>15</label>
 			</link>) this means it is in fact available to no useful client at all, and is equivalent in practice to 
 			<code>
@@ -1589,7 +1589,7 @@
 				<class_name>B</class_name>
 			</code>, ... This enables a group of related classes to provide each other with privileged access, without requiring the introduction of a special module category above the class level (see 
 			<link>
-				<url>tutorial-06.xml#29888</url>
+				<url>tutorial-06.xml</url><anchor_name>29888</anchor_name>
 				<label>"Clusters", page 15</label>
 			</link>).
 		</paragraph>
@@ -1885,7 +1885,7 @@
 		</list>
 		<paragraph>The last case is particularly interesting is that it allows the class designer to set the precise way in which clients will manipulate the class instances, respecting the properties of the class and its integrity.  The exported routines may, through the Design by Contract mechanism reviewed later (
 			<link>
-				<url>tutorial-09.xml#30455</url>
+				<url>tutorial-09.xml</url><anchor_name>30455</anchor_name>
 				<label>8</label>
 			</link>), place some further restrictions on the permitted modifications, for example by requiring the withdrawn amount to be positive.
 		</paragraph>
@@ -1893,12 +1893,12 @@
 		<paragraph>The class documentation (the 
 			contract form, see page 
 			<link>
-				<url>tutorial-09.xml#78482</url>
+				<url>tutorial-09.xml</url><anchor_name>78482</anchor_name>
 				<label>44</label>
 			</link>) makes this view clear to client authors; no violation of that interface is permitted.  This approach also paves the way for future 
 			<bold>generalization</bold> -- the final step of the cluster lifecycle, seen earlier on page 
 			<link>
-				<url>tutorial-04.xml#10958</url>
+				<url>tutorial-04.xml</url><anchor_name>10958</anchor_name>
 				<label>9</label>
 			</link> -- of the most promising components, and their inclusion into reusable libraries.
 		</paragraph>

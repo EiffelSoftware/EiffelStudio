@@ -45,7 +45,7 @@
 				<label>Object-Oriented Software Construction, 2nd edition</label>
 			</link>; for a full description of the language, get the book 
 			<link>
-				<url>http://www.eiffel.com/doc/#etl</url>
+				<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 				<label>Eiffel: The Language</label>
 			</link>.  (These two links require Web access)
 		</paragraph>

@@ -136,7 +136,7 @@
 		<paragraph>To define a new filter, simply add a file to this directory.  Filters are expressed in a simple notation called EFF ( 
 			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc.  The best way to define a new filter is usually to start from an existing one and adapt it.  You will find the specification of EFF at the end of this manual, in 
 			<link>
-				<url>index-20.xml#35873</url>
+				<url>index-20.xml</url><anchor_name>35873</anchor_name>
 			</link> .
 		</paragraph>
 		<heading>
@@ -430,7 +430,7 @@
 			</code> next to the cluster name near the top.  Remember that when generating the documentation we elected ( 
 			<span>
 				<link>
-					<url>index-09.xml#81896</url>
+					<url>index-09.xml</url><anchor_name>81896</anchor_name>
 					<label>"Choosing a level of detail", page 45</label>
 				</link>)
 			</span> to generate everything, diagrams included.  Hadn't we checked the corresponding check box, the 
@@ -533,7 +533,7 @@
 					<keyword>html-stylesheet.fil</keyword>
 				</code> in the same directory.  EFF is described in an appendix ( 
 				<link>
-					<url>index-20.xml#35873</url>
+					<url>index-20.xml</url><anchor_name>35873</anchor_name>
 					<label> 19, page 144</label>
 				</link>).
 				<code_block>

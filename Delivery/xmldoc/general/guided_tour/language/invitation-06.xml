@@ -44,7 +44,7 @@
 				<local_variable>acc</local_variable>
 			</code> and the accompanying picture as given on page 
 			<link>
-				<url>invitation-00.xml#FIRST PICTURE OF BANK ACCOUNT OBJECT</url>
+				<url>invitation-00.xml</url><anchor_name>FIRST PICTURE OF BANK ACCOUNT OBJECT</anchor_name>
 				<label>6</label>
 			</link>), denotes possible run-time references to objects of type 
 			<code>

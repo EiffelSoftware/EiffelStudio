@@ -102,7 +102,7 @@
 					<keyword>Create a new project</keyword>
 				</code>" option of EiffelStudio (remember the first screen on page 
 				<link>
-					<url>index.xml#PROJECT START SCREEN</url>
+					<url>index.xml</url><anchor_name>PROJECT START SCREEN</anchor_name>
 				</link> ), EiffelStudio will build the Ace for you; if you change the Preferences during a session, EiffelStudio will update the Ace.  When you become an experienced Eiffel developer you can also edit the Ace file directly; Aces are written in a simple Eiffel-like notation called 
 				<bold>Lace</bold> (Language for Assembling Classes in Eiffel).  If you like you can take a peek at Lace by opening the relevant 
 				<code>
@@ -123,7 +123,7 @@
 					<keyword>Open compiled project</keyword>
 				</code> " in the initial screen on page 
 				<link>
-					<url>index.xml#PROJECT START SCREEN</url>
+					<url>index.xml</url><anchor_name>PROJECT START SCREEN</anchor_name>
 				</link> ), you will just select the corresponding 
 				<code>
 					<keyword>.epr</keyword>

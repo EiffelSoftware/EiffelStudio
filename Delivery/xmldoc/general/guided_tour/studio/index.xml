@@ -8,7 +8,7 @@
 			<size>3</size>
 			<content>
 				<link>
-					<url>index-99-document-info.xml#pgfId-467816</url>
+					<url>index-99-document-info.xml</url><anchor_name>pgfId-467816</anchor_name>
 					<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
 				</link>
 			</content>
@@ -23,7 +23,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-02.xml#pgfId-471615</url>
+						<url>index-02.xml</url><anchor_name>pgfId-471615</anchor_name>
 						<label>1 OVERVIEW AND PREREQUISITES</label>
 					</link>
 				</content>
@@ -32,7 +32,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-03.xml#pgfId-333608</url>
+						<url>index-03.xml</url><anchor_name>pgfId-333608</anchor_name>
 						<label>2 COPYING THE EXAMPLE FILES</label>
 					</link>
 				</content>
@@ -41,7 +41,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-04.xml#pgfId-264352</url>
+						<url>index-04.xml</url><anchor_name>pgfId-264352</anchor_name>
 						<label>3 STARTING EIFFELSTUDIO AND OPENING A PROJECT</label>
 					</link>
 				</content>
@@ -50,7 +50,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-05.xml#pgfId-258371</url>
+						<url>index-05.xml</url><anchor_name>pgfId-258371</anchor_name>
 						<label>4 COMPILING AND EXECUTING A SYSTEM</label>
 					</link>
 				</content>
@@ -59,7 +59,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-06.xml#pgfId-3038</url>
+						<url>index-06.xml</url><anchor_name>pgfId-3038</anchor_name>
 						<label>5 A LOOK AT THE PROJECT DIRECTORY</label>
 					</link>
 				</content>
@@ -68,7 +68,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-07.xml#pgfId-475544</url>
+						<url>index-07.xml</url><anchor_name>pgfId-475544</anchor_name>
 						<label>6 STARTING TO BROWSE</label>
 					</link>
 				</content>
@@ -77,7 +77,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-08.xml#pgfId-479692</url>
+						<url>index-08.xml</url><anchor_name>pgfId-479692</anchor_name>
 						<label>7 CLASS VIEWS</label>
 					</link>
 				</content>
@@ -86,7 +86,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-09.xml#pgfId-495679</url>
+						<url>index-09.xml</url><anchor_name>pgfId-495679</anchor_name>
 						<label>8 PRODUCING AND EXPORTING DOCUMENTATION</label>
 					</link>
 				</content>
@@ -95,7 +95,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-10.xml#pgfId-510970</url>
+						<url>index-10.xml</url><anchor_name>pgfId-510970</anchor_name>
 						<label>9 BROWSING FEATURES</label>
 					</link>
 				</content>
@@ -104,7 +104,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-11.xml#pgfId-511185</url>
+						<url>index-11.xml</url><anchor_name>pgfId-511185</anchor_name>
 						<label>10 RETARGETING THROUGH PICK-AND-DROP</label>
 					</link>
 				</content>
@@ -113,7 +113,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-12.xml#pgfId-515538</url>
+						<url>index-12.xml</url><anchor_name>pgfId-515538</anchor_name>
 						<label>11 RECOMPILING AND EDITING</label>
 					</link>
 				</content>
@@ -122,7 +122,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-13.xml#pgfId-519836</url>
+						<url>index-13.xml</url><anchor_name>pgfId-519836</anchor_name>
 						<label>12 HANDLING SYNTAX AND VALIDITY ERRORS</label>
 					</link>
 				</content>
@@ -131,7 +131,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-14.xml#pgfId-515824</url>
+						<url>index-14.xml</url><anchor_name>pgfId-515824</anchor_name>
 						<label>13 DEBUGGING AND RUN-TIME MONITORING</label>
 					</link>
 				</content>
@@ -140,7 +140,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-15.xml#pgfId-522626</url>
+						<url>index-15.xml</url><anchor_name>pgfId-522626</anchor_name>
 						<label>14 COMPUTING PROJECT METRICS</label>
 					</link>
 				</content>
@@ -149,7 +149,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-16.xml#pgfId-527344</url>
+						<url>index-16.xml</url><anchor_name>pgfId-527344</anchor_name>
 						<label>15 GRAPHICS-BASED DESIGN</label>
 					</link>
 				</content>
@@ -158,7 +158,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-17.xml#pgfId-527441</url>
+						<url>index-17.xml</url><anchor_name>pgfId-527441</anchor_name>
 						<label>16 HOW EIFFELSTUDIO COMPILES</label>
 					</link>
 				</content>
@@ -167,7 +167,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-18.xml#pgfId-522597</url>
+						<url>index-18.xml</url><anchor_name>pgfId-522597</anchor_name>
 						<label>17 THE COMMAND-LINE COMPILER</label>
 					</link>
 				</content>
@@ -176,7 +176,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-19.xml#pgfId-527948</url>
+						<url>index-19.xml</url><anchor_name>pgfId-527948</anchor_name>
 						<label>18 EXECUTING A SYSTEM WITHIN AND WITHOUT EIFFELSTUDIO</label>
 					</link>
 				</content>
@@ -185,7 +185,7 @@ This is not an introduction to the Eiffel method and language. Follow the preced
 				<size>2</size>
 				<content>
 					<link>
-						<url>index-20.xml#pgfId-521093</url>
+						<url>index-20.xml</url><anchor_name>pgfId-521093</anchor_name>
 						<label>19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</label>
 					</link>
 				</content>

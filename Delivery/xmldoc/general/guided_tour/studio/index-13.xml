@@ -16,7 +16,7 @@
 			<paragraph>Let's remind ourselves first of how the language is specified.  The book 
 				<span>
 					<link>
-						<url>http://www.eiffel.com/doc/#etl</url>
+						<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 						<label>Eiffel: The Language</label>
 					</link>
 				</span>, the language reference, carefully distinguishes between three levels of description: 
@@ -140,7 +140,7 @@
 				</code> .  The reason is merely that Eiffel's syntax, being simple and regular, does not require sophisticated error messages; syntax errors usually result from trivial oversights.  If you make a syntax error and the reason is not immediately clear, check the syntax summary in the appendix of 
 				<span>
 					<link>
-						<url>http://www.eiffel.com/doc/#etl</url>
+						<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 						<label>Eiffel: The Language</label>
 					</link>
 				</span>.
@@ -185,7 +185,7 @@
 			<paragraph>A validity error is a violation of one of the validity constraints given in 
 				<span>
 					<link>
-						<url>http://www.eiffel.com/doc/#etl</url>
+						<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 						<label>Eiffel: The Language</label>
 					</link>
 				</span> .  Every such constraint is identified by a four-letter code of the form 
@@ -326,7 +326,7 @@
 			<paragraph>The result is to display the complete text of the violated rule, straight from the pages of 
 				<span>
 					<link>
-						<url>http://www.eiffel.com/doc/#etl</url>
+						<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 						<label>Eiffel: The Language</label>
 					</link>
 				</span> .

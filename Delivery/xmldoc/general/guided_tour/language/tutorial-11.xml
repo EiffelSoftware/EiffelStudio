@@ -69,7 +69,7 @@
 		</paragraph>
 		<paragraph>The "Hello World" system at the beginning of this discussion (section 
 			<link>
-				<url>tutorial-05.xml#35212</url>
+				<url>tutorial-05.xml</url><anchor_name>35212</anchor_name>
 				<label>4</label>
 			</link>) used an output instruction of the form 
 			<code>
@@ -273,7 +273,7 @@
 				<keyword>unique</keyword>
 			</code> values (
 			<link>
-				<url>tutorial-11.xml#94304</url>
+				<url>tutorial-11.xml</url><anchor_name>94304</anchor_name>
 				<label>"Constant and unique attributes", page 83</label>
 			</link>) for the <italic>vi</italic>
 		</paragraph>
@@ -482,7 +482,7 @@
 		</heading>
 		<paragraph>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (
 			<link>
-				<url>tutorial-07.xml#59651</url>
+				<url>tutorial-07.xml</url><anchor_name>59651</anchor_name>
 				<label>"Creating and initializing objects", page 20</label>
 			</link>):
 		</paragraph>

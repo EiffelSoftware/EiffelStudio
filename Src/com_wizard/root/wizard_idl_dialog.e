@@ -5,11 +5,11 @@ class
 	WIZARD_IDL_DIALOG
 
 inherit
-	WEL_MODAL_DIALOG
+	WIZARD_DIALOG
 		redefine
-			notify,
+			setup_dialog,
 			on_ok,
-			setup_dialog
+			notify
 		end
 
 	WIZARD_SHARED_DATA
@@ -17,18 +17,13 @@ inherit
 			{NONE} all
 		end
 
-	APPLICATION_IDS
-		export
-			{NONE} all
-		end
-
-create
+creation
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_COMPOSITE_WINDOW) is
-			-- Create dialog.
+			-- Create the dialog.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
@@ -41,29 +36,17 @@ feature {NONE} -- Initialization
 			create id_ok.make_by_id (Current, Idok)
 			create marshaling2_static.make_by_id (Current, Marshaling2_static_constant)
 			create type2_static.make_by_id (Current, Type2_static_constant)
-			create id_cancel.make_by_id (Current, Idcancel)
+			create id_back.make_by_id (Current, Idback_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
+			create id_cancel.make_by_id (Current, Idcancel)
 		end
 
 feature -- Behavior
 
-	on_ok is
-			-- Process Next button activation.
-		local
-			folder_name, file_name: STRING
-			a_file: RAW_FILE
-		do
-			shared_wizard_environment.set_use_universal_marshaller (universal2_radio.checked)
-			shared_wizard_environment.set_automation (automation2_radio.checked)
-			Precursor
-		end
-
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
-			-- Process `control_id' control notification.
+			-- Process `control' control notification.
 		do
-			if control = help_button then
-		--		Help_dialog.activate
-			elseif control = automation2_radio then
+			if control = automation2_radio then
 				universal2_radio.disable
 				standard2_radio.disable
 				universal2_radio.set_checked
@@ -78,7 +61,7 @@ feature -- Behavior
 			-- Initialize dialog's controls.
 		do
 			uncheck_all
-			if shared_wizard_environment.automation then
+			if Shared_wizard_environment.automation then
 				automation2_radio.set_checked
 				universal2_radio.set_checked
 				universal2_radio.disable
@@ -87,14 +70,22 @@ feature -- Behavior
 				universal2_radio.enable
 				standard2_radio.enable
 				virtual_table2_radio.set_checked
-				if shared_wizard_environment.use_universal_marshaller then
+				if Shared_wizard_environment.use_universal_marshaller then
 					universal2_radio.set_checked
 				else
 					standard2_radio.set_checked
 				end
 			end
 		end
-		
+
+	on_ok is
+			-- Next button was clicked.
+		do
+			Shared_wizard_environment.set_use_universal_marshaller (universal2_radio.checked)
+			Shared_wizard_environment.set_automation (automation2_radio.checked)
+			Precursor
+		end
+
 feature -- Access
 
 	automation2_radio: WEL_RADIO_BUTTON
@@ -109,20 +100,11 @@ feature -- Access
 	standard2_radio: WEL_RADIO_BUTTON
 			-- Standard marshaling radio button
 
-	id_ok: WEL_PUSH_BUTTON
-			-- Next button
-
 	type2_static: WEL_GROUP_BOX
 			-- Server type group title
 
 	marshaling2_static: WEL_GROUP_BOX
 			-- Marshaling type group title
-
-	id_cancel: WEL_PUSH_BUTTON
-			-- Back button
-
-	help_button: WEL_PUSH_BUTTON
-			-- Help button
 
 feature {NONE} -- Implementation
 

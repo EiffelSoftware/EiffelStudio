@@ -14,8 +14,6 @@ inherit
 
 feature {NONE} -- Status report
 
-
-	--session_database: DATABASE is
 	session_database: DB [DATABASE] is
 			-- Data base handle
 		deferred

@@ -241,20 +241,23 @@ feature {NONE} -- Semantic actions
 					--|#line 355 "external.y"
 				yy_do_action_66
 			when 67 then
-					--|#line 359 "external.y"
+					--|#line 360 "external.y"
 				yy_do_action_67
 			when 68 then
-					--|#line 363 "external.y"
+					--|#line 364 "external.y"
 				yy_do_action_68
 			when 69 then
-					--|#line 369 "external.y"
+					--|#line 368 "external.y"
 				yy_do_action_69
 			when 70 then
 					--|#line 374 "external.y"
 				yy_do_action_70
 			when 71 then
-					--|#line 380 "external.y"
+					--|#line 379 "external.y"
 				yy_do_action_71
+			when 72 then
+					--|#line 385 "external.y"
+				yy_do_action_72
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown rule id: ")
@@ -1709,7 +1712,7 @@ debug ("GEYACC")
 end
 
 
-			yyval5 := new_system_id_as (token_buffer)
+			yyval5 := new_double_quote_id_as (token_buffer)
 		
 			yyval := yyval5
 if yy_parsing_status = yyContinue then
@@ -1720,13 +1723,13 @@ end
 		end
 
 	yy_do_action_67 is
-			--|#line 359 "external.y"
+			--|#line 360 "external.y"
 		local
 			yyval5: ID_AS
 		do
---|#line 359 "external.y"
+--|#line 360 "external.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'external.y' at line 359")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 360")
 end
 
 
@@ -1741,13 +1744,34 @@ end
 		end
 
 	yy_do_action_68 is
-			--|#line 363 "external.y"
+			--|#line 364 "external.y"
 		local
 			yyval5: ID_AS
 		do
---|#line 363 "external.y"
+--|#line 364 "external.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'external.y' at line 363")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 364")
+end
+
+
+			yyval5 := new_system_id_as (token_buffer)
+		
+			yyval := yyval5
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp := yyvsp - 2
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_69 is
+			--|#line 368 "external.y"
+		local
+			yyval5: ID_AS
+		do
+--|#line 368 "external.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 368")
 end
 
 
@@ -1756,27 +1780,6 @@ end
 			yyval := yyval5
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_69 is
-			--|#line 369 "external.y"
-		local
-			yyval5: ID_AS
-		do
---|#line 369 "external.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'external.y' at line 369")
-end
-
-
-			yyval5 := new_double_quote_id_as (token_buffer)
-		
-			yyval := yyval5
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
 	yyvs.put (yyval, yyvsp)
 end
 		end
@@ -1796,19 +1799,40 @@ end
 		
 			yyval := yyval5
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
+	yyssp := yyssp - 3
+	yyvsp := yyvsp - 2
 	yyvs.put (yyval, yyvsp)
 end
 		end
 
 	yy_do_action_71 is
-			--|#line 380 "external.y"
+			--|#line 379 "external.y"
 		local
 			yyval5: ID_AS
 		do
---|#line 380 "external.y"
+--|#line 379 "external.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'external.y' at line 380")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 379")
+end
+
+
+			yyval5 := new_double_quote_id_as (token_buffer)
+		
+			yyval := yyval5
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_72 is
+			--|#line 385 "external.y"
+		local
+			yyval5: ID_AS
+		do
+--|#line 385 "external.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line 385")
 end
 
 
@@ -1824,7 +1848,7 @@ end
 			-- Execute error action.
 		do
 			inspect yy_act
-			when 166 then
+			when 168 then
 					-- End-of-file expected action.
 				report_eof_expected_error
 			else
@@ -1885,8 +1909,8 @@ feature {NONE} -- Table templates
 			   48,   48,   48,   48,   48,   48,   64,   64,   50,   50,
 			   51,   66,   66,   67,   68,   68,   69,   69,   52,   52,
 			   53,   53,   53,   53,   54,   54,   59,   59,   58,   58,
-			   61,   61,   62,   63,   63,   56,   56,   56,   56,   57,
-			   57,   55>>)
+			   61,   61,   62,   63,   63,   56,   56,   56,   56,   56,
+			   57,   57,   55>>)
 		end
 
 	yytypes1_template: ANY is
@@ -1909,9 +1933,10 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    5,    8,    8,    1,    8,    5,    5,
 			    5,    5,    1,    1,    4,    5,    5,    5,    5,    5,
 			    5,    5,    1,    3,    3,    7,    7,    7,    5,    1,
-			    1,    6,    8,    8,    8,    1,    1,    1,    1,    5,
-			    4,    8,    8,    6,    6,    6,    1,    4,    1,    1,
-			    1,    5,    4,    4,    8,    8,    2,    1,    1>>)
+			    1,    6,    8,    8,    8,    1,    1,    1,    1,    1,
+			    5,    4,    8,    8,    6,    6,    6,    1,    4,    1,
+			    1,    1,    1,    5,    4,    4,    8,    8,    2,    1,
+			    1>>)
 		end
 
 	yytypes2_template: ANY is
@@ -1933,22 +1958,23 @@ feature {NONE} -- Table templates
 			Result := yyfixed_array (<<
 			    6,   37,   36,    6,    6,    7,    5,   38,    0,    0,
 			   38,   38,   38,   38,   38,   41,   38,   38,   38,   38,
-			   38,   38,   38,    0,   39,    0,    0,    3,    4,   71,
+			   38,   38,   38,    0,   39,    0,    0,    3,    4,   72,
 			    0,    0,    0,   38,    0,   60,    2,   12,   38,    0,
 			   38,   60,    1,   60,    0,    0,    0,    0,   44,   48,
-			   42,    0,    0,    0,    0,    0,    0,    0,    0,   70,
+			   42,    0,    0,    0,    0,    0,    0,    0,    0,   71,
 			    0,   22,   22,    0,    0,    0,    0,   56,   38,   38,
 			    0,   38,    0,   15,   61,    0,    0,    0,   11,    8,
 			    0,    0,    0,    0,   46,    0,   45,    0,   40,    0,
 			    0,    0,    0,    0,    0,    0,   24,    0,   23,   38,
 
 			   38,   56,   56,   56,    0,   58,    0,    0,   14,    0,
-			   68,    0,    0,   63,   62,   16,    0,   10,   30,   28,
+			   69,    0,    0,   63,   62,   16,    0,   10,   30,   28,
 			   26,   32,   43,    0,   49,   34,   31,   35,   25,   27,
-			   33,   29,   69,   60,   60,   58,   58,   58,   54,   57,
-			   59,   50,   17,   19,   18,    0,    0,    0,    0,   54,
-			   47,   21,   20,   53,   52,   51,    0,    0,   65,   67,
-			   66,   64,    0,   55,   13,    9,    0,    0,    0>>)
+			   33,   29,   70,   60,   60,   58,   58,   58,   54,   57,
+			   59,   50,   17,   19,   18,    0,    0,    0,    0,    0,
+			   54,   47,   21,   20,   53,   52,   51,    0,    0,   66,
+			   65,   68,   67,   64,    0,   55,   13,    9,    0,    0,
+			    0>>)
 		end
 
 	yydefgoto_template: ANY is
@@ -1956,8 +1982,8 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			  166,   42,   36,   27,   28,    6,   37,   23,   24,   88,
-			   66,  157,   67,  113,   61,  141,  105,   99,   73,   74,
+			  168,   42,   36,   27,   28,    6,   37,   23,   24,   88,
+			   66,  158,   67,  113,   61,  141,  105,   99,   73,   74,
 			  114,    7,    8,   49,   50,   85,   86>>)
 		end
 
@@ -1966,24 +1992,25 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   43, -32768, -32768,   91,   91, -32768, -32768,  123,   18,    9,
-			   -2,   25,   25,   25,   25,   79,   25,   25,   25,   25,
-			   25,   25,   25,   69, -32768,   -6,   -6, -32768, -32768, -32768,
-			   28,   12,   12,   25,   12,   -9, -32768, -32768,   25,   28,
-			   25,   -9, -32768,   -9,   68,   67,   65,   63,   28,   77,
-			 -32768,   61,   58,   56,   55,   52,   42,   41,   12, -32768,
-			   34,   46,   46,   12,   12,   12,   60, -32768,   25,   25,
-			   -9,   25,   -8, -32768, -32768,   -9,   59,   -9, -32768, -32768,
-			   12,   12,   12,   12, -32768,   66,   64,   28, -32768,   12,
-			   12,   12,   12,   12,   12,   12, -32768,   51, -32768,   25,
+			   41, -32768, -32768,   74,   74, -32768, -32768,  118,   18,    6,
+			   -5,   39,   39,   39,   39,   92,   39,   39,   39,   39,
+			   39,   39,   39,   88, -32768,   -6,   -6, -32768, -32768, -32768,
+			   26,   17,   17,   39,   17,    5, -32768, -32768,   39,   26,
+			   39,    5, -32768,    5,   87,   86,   71,   70,   26,   78,
+			 -32768,   69,   67,   65,   64,   58,   57,   43,   17, -32768,
+			   51,   52,   52,   17,   17,   17,   62, -32768,   39,   39,
+			    5,   39,   -8, -32768, -32768,    5,   61,    5, -32768, -32768,
+			   17,   17,   17,   17, -32768,   68,   66,   26, -32768,   17,
+			   17,   17,   17,   17,   17,   17, -32768,   59, -32768,   39,
 
-			   25, -32768, -32768, -32768,   12,   15,   -9,   -9, -32768,   -9,
-			 -32768,   21,  -34, -32768,   49, -32768,   12, -32768, -32768, -32768,
-			 -32768, -32768, -32768,   28, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768, -32768,   -9,   -9,   15,   15,   15,    3, -32768,
-			 -32768, -32768, -32768, -32768, -32768,   40,   33,   32,   -8,    3,
-			 -32768, -32768, -32768, -32768, -32768, -32768,   28,   -9, -32768, -32768,
-			 -32768, -32768,   -9, -32768, -32768, -32768,   23,   16, -32768>>)
+			   39, -32768, -32768, -32768,   17,    1,    5,    5, -32768,    5,
+			 -32768,   -1,  -17, -32768,   63, -32768,   17, -32768, -32768, -32768,
+			 -32768, -32768, -32768,   26, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768, -32768, -32768,    5,    5,    1,    1,    1,   -3, -32768,
+			 -32768, -32768, -32768, -32768, -32768,   56,   40,   46,   42,   -8,
+			   -3, -32768, -32768, -32768, -32768, -32768, -32768,   26,    5, -32768,
+			 -32768, -32768, -32768, -32768,    5, -32768, -32768, -32768,   32,   13,
+			 -32768>>)
 		end
 
 	yypgoto_template: ANY is
@@ -1991,9 +2018,9 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768,  108, -32768, -32768,
-			  -39,  -36,   -4,  -38,   78, -117,  -90,   44,  -40,  -60,
-			 -32768, -32768,   35, -32768, -32768, -32768, -32768>>)
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768,  103, -32768, -32768,
+			  -39,  -44,   -4,  -46,   76, -116,  -86,   37,  -40,  -63,
+			 -32768, -32768,   47, -32768, -32768, -32768, -32768>>)
 		end
 
 	yytable_template: ANY is
@@ -2001,29 +2028,29 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   76,   78,  112,   79,  111,   38,   60,  147,  146,   84,
-			  108,  135,  136,  137,   41,  115,  168,  117,  153,  154,
-			  155,   40,  140,  167,  139,   35,   34,   68,   69,   15,
-			   71,   72,   33,  110,   39,   59,   26,   25,    9,   10,
-			  156,   32,   31,  160,  159,   30,  142,  143,  124,  144,
-			   29,    5,  158,   29,   96,  148,   15,    4,    3,  101,
-			  102,  103,  145,  132,   65,    2,   64,   63,    1,   29,
-			  123,  122,  116,  104,   98,   97,  118,  119,  120,  121,
-			   87,   95,   94,   48,  150,  125,  126,  127,  128,  129,
-			  130,  131,   93,  151,  152,   92,   91,  164,   90,    5,
+			   76,   78,  112,   79,  111,   38,   60,  108,  140,   84,
+			  139,   41,  115,  170,  117,  135,  136,  137,   40,  154,
+			  155,  156,   35,   34,  148,  147,   15,   68,   69,   33,
+			   71,   39,  169,  110,  157,   59,   26,   25,   32,   31,
+			  146,  145,   30,  142,  143,   72,  144,   29,  124,    5,
+			    9,   10,  160,  162,   96,    4,    3,  161,   29,  101,
+			  102,  103,   65,    2,   64,   63,    1,   29,  159,  149,
+			   15,  132,  123,  122,  116,  104,  118,  119,  120,  121,
+			   98,   87,    5,   95,  151,  125,  126,  127,  128,  129,
+			  130,  131,   97,  152,  153,  166,   48,   94,   93,  100,
 
-			  138,   89,  165,   83,   62,   82,  100,   81,   80,   58,
-			  161,    0,  149,  162,    0,    0,    0,  163,   43,   44,
-			   45,   46,   47,    0,   51,   52,   53,   54,   55,   56,
-			   57,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,   70,    0,   22,   21,    0,   75,   20,   77,   19,
-			   18,    0,   17,   16,   15,   14,   13,   12,   11,    0,
+			  138,  167,   62,  163,   92,   91,  164,   90,    0,   89,
+			   83,   82,  150,   43,   44,   45,   46,   47,  165,   51,
+			   52,   53,   54,   55,   56,   57,   81,   80,   58,    0,
+			    0,    0,    0,    0,    0,    0,   70,    0,   22,   21,
+			    0,   75,   20,   77,   19,   18,    0,   17,   16,   15,
+			   14,   13,   12,   11,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,  106,  107,    0,  109,
+			    0,  106,  107,    0,  109,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 
-			    0,    0,    0,    0,    0,    0,    0,  133,  134>>)
+			    0,    0,  133,  134>>)
 		end
 
 	yycheck_template: ANY is
@@ -2031,29 +2058,29 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   39,   41,   10,   43,   12,    9,   12,   41,   42,   48,
-			   70,  101,  102,  103,   16,   75,    0,   77,  135,  136,
-			  137,   23,    7,    0,    9,   16,   17,   31,   32,   31,
-			   34,   40,   23,   41,   36,   41,   18,   19,    3,    4,
-			   37,   32,   33,   11,   11,   36,  106,  107,   87,  109,
-			   41,    8,   12,   41,   58,    6,   31,   14,   15,   63,
-			   64,   65,   41,   12,   36,   22,   38,   39,   25,   41,
-			    6,    5,   13,   13,   28,   41,   80,   81,   82,   83,
-			    3,   40,   40,    4,  123,   89,   90,   91,   92,   93,
-			   94,   95,   40,  133,  134,   40,   40,  157,   40,    8,
+			   39,   41,   10,   43,   12,    9,   12,   70,    7,   48,
+			    9,   16,   75,    0,   77,  101,  102,  103,   23,  135,
+			  136,  137,   16,   17,   41,   42,   31,   31,   32,   23,
+			   34,   36,    0,   41,   37,   41,   18,   19,   32,   33,
+			   41,   42,   36,  106,  107,   40,  109,   41,   87,    8,
+			    3,    4,   12,   11,   58,   14,   15,   11,   41,   63,
+			   64,   65,   36,   22,   38,   39,   25,   41,   12,    6,
+			   31,   12,    6,    5,   13,   13,   80,   81,   82,   83,
+			   28,    3,    8,   40,  123,   89,   90,   91,   92,   93,
+			   94,   95,   41,  133,  134,  158,    4,   40,   40,   62,
 
-			  104,   40,  162,   40,   26,   40,   62,   40,   40,   40,
-			  148,   -1,  116,  149,   -1,   -1,   -1,  156,   10,   11,
-			   12,   13,   14,   -1,   16,   17,   18,   19,   20,   21,
-			   22,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   33,   -1,   20,   21,   -1,   38,   24,   40,   26,
-			   27,   -1,   29,   30,   31,   32,   33,   34,   35,   -1,
+			  104,  164,   26,  149,   40,   40,  150,   40,   -1,   40,
+			   40,   40,  116,   10,   11,   12,   13,   14,  157,   16,
+			   17,   18,   19,   20,   21,   22,   40,   40,   40,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   33,   -1,   20,   21,
+			   -1,   38,   24,   40,   26,   27,   -1,   29,   30,   31,
+			   32,   33,   34,   35,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   68,   69,   -1,   71,
+			   -1,   68,   69,   -1,   71,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   99,  100>>)
+			   -1,   -1,   99,  100>>)
 		end
 
 feature {NONE} -- Conversion
@@ -2199,7 +2226,7 @@ feature {NONE} -- Conversion
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 168
+	yyFinal: INTEGER is 170
 			-- Termination state id
 
 	yyFlag: INTEGER is -32768
@@ -2208,7 +2235,7 @@ feature {NONE} -- Constants
 	yyNtbase: INTEGER is 43
 			-- Number of tokens
 
-	yyLast: INTEGER is 208
+	yyLast: INTEGER is 203
 			-- Upper bound of `yytable' and `yycheck'
 
 	yyMax_token: INTEGER is 297

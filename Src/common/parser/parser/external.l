@@ -222,9 +222,9 @@ N		[0-9]
 				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
 			}
-({A}{X}*)("/"({A}{X}*))*	{
+(("-")|("/")|{X})+ {
 					-- Special identifier for include files that specifies
-					-- a path, e.g. <sys/timeb.h>
+					-- a path, e.g. <sys/timeb.h>, or path that includes an hyphenation.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
 				current_position.go_to (token_buffer.count)

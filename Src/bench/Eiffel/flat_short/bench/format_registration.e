@@ -470,6 +470,7 @@ end;
 				end;
 				file.open_read
 				parser := Eiffel_parser
+				parser.set_has_syntax_warning (False)
 				parser.parse (file)
 				Result := parser.root_node
 				file.close

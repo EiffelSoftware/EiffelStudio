@@ -13,7 +13,10 @@ inherit
 		rename
 			make as form_d_make
 		end;
-	COMMAND_W;
+	TOOL_COMMAND
+		redefine
+			tool
+		end;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as choose_different_name,
@@ -28,11 +31,11 @@ creation
 
 feature -- Initialization
 
-	make (composite: COMPOSITE; text: CLASS_TEXT) is
+	make (a_tool: CLASS_W) is
 		do
-			class_text := text;
-			form_d_make ("New Class", composite);
-			set_title ("New Class");
+			init_from_tool (a_tool);
+			form_d_make (name, a_tool.popup_parent);
+			set_title (name);
 			!! class_l.make ("", Current);
 			!! cluster_form.make ("", Current);
 			!! cluster_name.make ("", cluster_form);
@@ -76,6 +79,10 @@ feature -- Initialization
 			set_exclusive_grab
 		end;
 
+feature -- Access
+	
+	name: STRING is "New class"
+
 feature -- Callbacks
 
 	choose_different_name is
@@ -90,7 +97,7 @@ feature -- Callbacks
 			-- The user wants to keep it.
 		do
 			cluster.classes.put (class_i, class_name);
-			class_text.tool.process_classi (stone)
+			tool.process_classi (stone)
 		end;
 
 feature -- Properties
@@ -129,7 +136,8 @@ feature -- Properties
 
 	stone: CLASSI_STONE;
 
-	class_text: CLASS_TEXT;
+	tool: CLASS_W;
+			-- Class tool
 
 	aok: BOOLEAN;
 
@@ -186,7 +194,7 @@ feature -- Access
 			clu := Eiffel_universe.cluster_of_name (clun);
 			if clu = Void then
 				aok := False;
-				warner (class_text).gotcha_call (w_Invalid_cluster_name)
+				warner (popup_parent).gotcha_call (w_Invalid_cluster_name)
 			else
 				aok := True;
 				cluster := clu
@@ -213,12 +221,12 @@ feature -- Execution
 					!! class_i.make_with_cluster (cluster);
 					class_i.set_file_details (class_name, base_name);
 					if cluster.has_base_name (base_name) then
-						warner (class_text).gotcha_call 
+						warner (tool.popup_parent).gotcha_call 
 							(w_Class_already_in_cluster (base_name));
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						warner (class_text).gotcha_call (w_Cannot_create_file (f_name))
+						warner (popup_parent).gotcha_call (w_Cannot_create_file (f_name))
 					else 
 						!! stone.make (class_i);
 						if not file.exists then
@@ -228,12 +236,12 @@ feature -- Execution
 							not (file.is_readable and then file.is_plain)
 						then
 							popdown;
-							warner (class_text).gotcha_call (w_Cannot_read_file (f_name))
+							warner (popup_parent).gotcha_call (w_Cannot_read_file (f_name))
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
 							popdown;
-							warner (class_text).custom_call
+							warner (popup_parent).custom_call
 								(Current, w_File_exists_edit_it (f_name),
 								" Edit ", "Select another file", Void)
 						end;
@@ -265,7 +273,7 @@ feature -- Execution
 			end;
 			cluster.add_new_classs (class_i);
 			!! stone.make (class_i);
-			class_text.tool.process_classi (stone)
+			tool.process_classi (stone)
 		end;
 
 end -- class NEW_CLASS_W

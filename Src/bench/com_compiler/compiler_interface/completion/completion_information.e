@@ -357,7 +357,9 @@ feature -- Access
 								-- with inherited features we have to trick compiler into believing that it is a feature call
 								local_name := "local"
 								add_local (local_name, class_i.name_in_upper)
-								feature_call := clone (local_name) + "."
+								create feature_call.make (256)
+								feature_call.append (local_name)
+								feature_call.append_character ('.')
 								feature_call.append (def_parsed_result.parsed_result_string)
 
 								classes := eiffel_universe.classes_with_name ("ANY")
@@ -563,7 +565,7 @@ feature {NONE} -- Implementation
                     l_index > l_count
                 loop
                     l_entry := entries.i_th (l_index)
-                    l_names.put (clone (l_entry.name), <<l_index>>)
+                    l_names.put (l_entry.name.twin, <<l_index>>)
                     l_image_indexes.put (image_index (l_entry), <<l_index>>)
                     l_index := l_index + 1
                 end

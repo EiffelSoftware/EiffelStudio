@@ -21,11 +21,8 @@ creation
 
 feature -- Access
 
-	has_valid_feature: BOOLEAN is
+	has_valid_feature: BOOLEAN is True
 			-- Always a valid feature
-		do
-			Result := True
-		end
 
 feature -- Execution
 

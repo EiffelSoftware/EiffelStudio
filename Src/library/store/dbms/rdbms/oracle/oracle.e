@@ -3,9 +3,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
---FIXME: status management must be done in class`DATABASE'.
-
 class 
 	ORACLE
 
@@ -556,11 +553,6 @@ feature -- External features
 
  	begin: INTEGER is
 		do
-		end
-
-	database_handle: DATABASE_HANDLE [ORACLE] is
-		once
-			create Result
 		end
 
 feature {NONE} -- External features

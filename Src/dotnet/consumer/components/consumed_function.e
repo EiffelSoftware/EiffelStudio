@@ -11,7 +11,7 @@ inherit
 		rename
 			make as method_make
 		redefine
-			has_return_value, return_type
+			has_return_value, return_type, is_infix, is_prefix
 		end
 
 create

@@ -60,8 +60,8 @@ feature -- Status setting
 	
 feature -- Element change
 
-	set_page_title (index: INTEGER; str: STRING) is
-			-- Set the label of the `index' page of the notebook.
+	set_page_title (index: INTEGER; title: STRING) is
+			-- Set the title of the `index' page of the notebook to `title'.
 			-- The first page is the page number 1.
 		require
 			exists: not destroyed
@@ -69,9 +69,9 @@ feature -- Element change
 		deferred
 		end
 	
-	append_page (c: EV_WIDGET_I; label: STRING) is
+	append_page (c: EV_WIDGET_I; title: STRING) is
 			-- New page for notebook containing child 'c' with tab 
-			-- label 'label
+			-- title as `title'
 		require
 			exists: not destroyed		
 		deferred

@@ -185,21 +185,21 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_page_title (index: INTEGER; str: STRING) is
-			-- Set the label of the `index' page of the notebook.
+	set_page_title (index: INTEGER; title: STRING) is
+			-- Set the title of the `index' page of the notebook to `title'.
 			-- The first page is the page number 1.
 		local
 			wel_item: WEL_TAB_CONTROL_ITEM
 		do
 			wel_item := get_item (index - 1)
-			wel_item.set_text (str)
+			wel_item.set_text (title)
 			delete_item (index - 1)
 			insert_item (index - 1, wel_item)
 		end
 	
-	append_page (child_imp: EV_WIDGET_I; label: STRING) is
-		-- Add a new page for notebook containing 'child_imp' with tab 
-		-- label `label'.
+	append_page (child_imp: EV_WIDGET_I; title: STRING) is
+		-- Add a new page for notebook containing 'child_imp' with tab
+		-- title as`title'
 		local
 			wel_item: WEL_TAB_CONTROL_ITEM
 			ww: WEL_WINDOW
@@ -207,7 +207,7 @@ feature -- Element change
 		do
 			ww ?= child_imp
 			!! wel_item.make
-			wel_item.set_text (label)
+			wel_item.set_text (title)
 			wel_item.set_window (ww)
 			insert_item (count, wel_item)
 			widget_imp ?= child_imp

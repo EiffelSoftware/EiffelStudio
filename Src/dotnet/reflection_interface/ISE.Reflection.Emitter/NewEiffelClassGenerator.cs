@@ -51,13 +51,15 @@ public class EiffelClassGenerator: Globals
  */
  
 	// Import `assembly' without any dependancies.
-	virtual public void ImportAssemblyWithDependancies( Assembly assembly, String PathName )
+	virtual public void ImportAssemblyWithDependancies( Assembly assembly, String PathName, bool EiffelFormatting )
 	{
 		Emitter emitter;
 		String Path;
 		
 		emitter = new Emitter();
 		emitter.PrepareEmitFromAssembly( assembly );
+		Emitter.NameFormatter.EiffelFormatting = EiffelFormatting;
+			
 		if( PathName == null )
 		{
 			Path = Environment.CurrentDirectory;
@@ -76,13 +78,15 @@ public class EiffelClassGenerator: Globals
 	}
 	
 	// Import `assembly' without any dependancies.
-	virtual public void ImportAssemblyWithoutDependancies( Assembly assembly, String PathName )
+	virtual public void ImportAssemblyWithoutDependancies( Assembly assembly, String PathName, bool EiffelFormatting )
 	{
 		Emitter emitter;
 		String Path;
 		
 		emitter = new Emitter();
 		emitter.PrepareEmitFromAssembly( assembly );
+		Emitter.NameFormatter.EiffelFormatting = EiffelFormatting;
+		
 		if( PathName == null )
 		{
 			Path = Environment.CurrentDirectory;
@@ -107,7 +111,8 @@ public class EiffelClassGenerator: Globals
 		Emitter emitter;
 		
 		emitter = new Emitter();
-		emitter.PrepareEmitFromAssembly( assembly );		
+		emitter.PrepareEmitFromAssembly( assembly );
+		
 		ImportedDependancies = new ArrayList();
 		ImportedDependancies.Add( assembly );
 		EmitEiffelClassesFromXml( null );
@@ -120,7 +125,8 @@ public class EiffelClassGenerator: Globals
 		Emitter emitter;
 		
 		emitter = new Emitter();
-		emitter.PrepareEmitFromAssembly( assembly );		
+		emitter.PrepareEmitFromAssembly( assembly );	
+		
 		ImportedDependancies = new ArrayList();
 		ImportedDependancies.Add( assembly );
 		EmitEiffelClassesFromXml( PathName );

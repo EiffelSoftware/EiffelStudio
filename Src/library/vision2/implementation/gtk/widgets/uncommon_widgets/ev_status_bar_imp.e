@@ -31,7 +31,7 @@ inherit
 create
 	make
 
-feature {NONE}-- Initialization
+feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a horizontal box in which we will put
@@ -52,7 +52,7 @@ feature {NONE}-- Initialization
 			is_initialized := True
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
@@ -73,6 +73,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/13 22:11:07  king
+--| Corrected indenting on feature clauses
+--|
 --| Revision 1.14  2000/03/13 19:08:09  king
 --| Implemented reorder_child
 --|

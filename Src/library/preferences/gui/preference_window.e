@@ -270,7 +270,7 @@ feature {NONE} -- Execution
 	apply_changes is
 			-- Apply changes.
 		local
-			wd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			wd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			delayed_resources_msg: STRING
 		do
 			if not delayed_resources.is_empty then

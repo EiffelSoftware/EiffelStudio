@@ -1,92 +1,20 @@
 <!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
 <HTML>
 	<HEAD>
-		<TITLE>Example overview topic</TITLE>
-		<META NAME="MS-HKWD" CONTENT="keyword here">
+		<TITLE>Editor preferences</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Preference, Editor">
+		<META NAME="MS-HKWD" CONTENT="Editor, preferences">
 		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 	</HEAD>
 
 	<BODY>
-		<H1>Header 1</H1>
-		<H2>Header 2</H2>
-		<H3>Header 3</H3>
-		<P>Text. </P>
-
+		<H1>Editor preferences</H1>
 		<UL>
-			<LI>First item of bulleted list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in bulleted list.
+			<LI><a href="00_introduction.html">Introduction</a>
+			<LI><a href="10_general_automatic_completion_preferences.html">General preferences</a>
+			<LI><a href="20_keyboard_shortcuts_preferences.html">User-definable
+              keyboard shortcuts</a>
+			<LI><a href="30_automatic_completion_preferences/">Automatic completion preferences</a>
 		</UL>
-
-		<OL>
-			<LI>First item of ordered list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in ordered list.
-		</OL>
-
-		<CODE>
-			<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
-			 &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../vision2/ev_action_sequence.html">EV_ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/tuple.html">TUPLE</A> <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-			<BR>
-			<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/base/reference/event/action_sequence.html">ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-			<BR>
-			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
-			<BR>
-			 &nbsp; &nbsp; &nbsp;<A NAME="f_force_extend"><A CLASS="efeature" HREF="../../../vision2/ev_action_sequence.html#f_force_extend">force_extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/tuple.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extend without checking type of </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
-			<BR>
-			 &nbsp; &nbsp; &nbsp;<A NAME="f_extend_kamikaze"><A CLASS="efeature" HREF="../../../vision2/ev_action_sequence.html#f_extend_kamikaze">extend_kamikaze</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extend </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> and remove it again after it is called.</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base/linked_list.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../event/action_sequence.html#f_prune_when_called">prune_when_called</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
-			 &nbsp; &nbsp; &nbsp;<BR>
-			<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_ACTION_SEQUENCE<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
-		</CODE>
-		<BR>
-
-		<TABLE>
-			<TR>
-				<TD>
-					Row 1 Column 1
-				</TD>
-				<TD>
-					Row 1 Column 2
-				</TD>
-			</TR>
-			<TR>
-				<TD>
-					Row 2 Column 1
-				</TD>
-				<TD>
-					Row 2 Column 2
-				</TD>
-			</TR>
-		</TABLE>
-
-		<P>
-		[FIGURE]
-		<P CLASS="figuretitle">Fig. 1: Figure Title</P>
-
-		<P CLASS="Note">
-		<B>Note</B>: Did you know?<BR>
-		</P>
-		<P CLASS="tip">
-		<B>Tip</B>: Cool trick<BR>
-		</P>
-		<P CLASS="warning">
-		<B>Caution</B>: Be careful<BR>
-		</P>
-
-		<P CLASS="seealso">
-		<B>See Also</B><BR>
-					<A HREF="Decision.html">Related Topic</A><BR>
-		</P>
-		<P CLASS="sample">
-		<B>Samples</B><BR>
-					<A HREF="sourcecode.html">1+1=2</A><BR>
-		</P>
 	</BODY>
 </HTML>

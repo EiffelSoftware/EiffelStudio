@@ -1,5 +1,5 @@
 indexing
-	description: "Figure that represents a rectangle by two positions."
+	description: "Figure that represents a rectangle by two points."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,23 +23,21 @@ feature -- Initialization
 	default_create is
 			-- Create in (0, 0) with dimensions 0.
 		do
-			create position_a
-			create position_b
 			Precursor
 		end
 
-	make (p1, p2: EV_FIGURE_POSITION) is
+	make (p1, p2: EV_RELATIVE_POINT) is
 			-- Create with position `p1' and `p2'.
 		require
 			p1_exists: p1 /= Void
 			p2_exists: p2 /= Void
 		do
 			default_create
-			set_position_a (p1)
-			set_position_b (p2)
+			set_point_a (p1)
+			set_point_b (p2)
 		end
 
-	make_dim (p: EV_FIGURE_POSITION; w, h: INTEGER) is
+	make_dim (p: EV_RELATIVE_POINT; w, h: INTEGER) is
 			-- Create on `p' with dimensions `w', `h'.
 		require
 			p_exists: p /= Void
@@ -47,8 +45,8 @@ feature -- Initialization
 			height_positive: h >= 0
 		do
 			default_create
-			set_position_a (p)
-			set_position_b (create {EV_FIGURE_POSITION}.make (p, w, h))
+			set_point_a (p)
+			set_point_b (create {EV_RELATIVE_POINT}.make (p, w, h))
 		end
 
 	make_pos_dim (x, y, w, h: INTEGER) is
@@ -57,53 +55,54 @@ feature -- Initialization
 			width_positive: w >= 0
 			height_positive: h >= 0
 		local
-			base: EV_FIGURE_POSITION
+			base: EV_RELATIVE_POINT
 		do
 			default_create
 			create base
-			set_position_a (create {EV_FIGURE_POSITION}.make (base, x, y))
-			set_position_b (create {EV_FIGURE_POSITION}.make (position_a, w, h))
+			set_point_a (create {EV_RELATIVE_POINT}.make (base, x, y))
+			set_point_b (create {EV_RELATIVE_POINT}.make (point_a, w, h))
 		end
 
 feature -- Access
 
-	position_a, position_b: EV_FIGURE_POSITION
-			-- The position in the world.
+	point_count: INTEGER is
+			-- A line consists of 2 points.
+		once
+			Result := 2
+		end
+
+	point_a: EV_RELATIVE_POINT is
+			-- The first coordinates of the line.
+		do
+			Result := get_point (1)
+		end
+
+	point_b: EV_RELATIVE_POINT is
+			-- The first coordinates of the line.
+		do
+			Result := get_point (2)
+		end
 
 feature -- Status setting
 
-	set_position_a (p1: EV_FIGURE_POSITION) is
-			-- Change the reference of `position' with `p'.
+	set_point_a (p1: EV_RELATIVE_POINT) is
+			-- Change the reference of `position_a' with `p1'.
 		require
 			p1_exists: p1 /= Void
 		do
-			position_a := p1
+			set_point (1, p1)
+		ensure
+			point_a_assigned: p1 = point_a
 		end
 
-	set_position_b (p2: EV_FIGURE_POSITION) is
-			-- Change the reference of `position' with `p'.
+	set_point_b (p2: EV_RELATIVE_POINT) is
+			-- Change the reference of `position_b' with `p2'.
 		require
 			p2_exists: p2 /= Void
 		do
-			position_b := p2
-		end
-
-feature -- Recomputation
-
-	calculate_absolute_position is
-			-- Recalculate abs. coords. of any position this figure may have.
-			-- Not if absolute_position_valid is already True.
-		do
-			position_a.calculate_absolute_position
-			position_b.calculate_absolute_position
-		end
-
-	invalidate_absolute_position is
-			-- Invalidates the absolute positions of figures.
-			-- Not if no positioner installed or position not changed.
-		do
-			position_a.invalidate_absolute_position
-			position_b.invalidate_absolute_position
+			set_point (2, p2)
+		ensure
+			point_a_assigned: p2 = point_b
 		end
 
 feature {EV_PROJECTION} -- Implementation
@@ -111,7 +110,7 @@ feature {EV_PROJECTION} -- Implementation
 	width: INTEGER is
 			-- The width of the rectangle.
 		do
-			Result := (position_a.x_abs - position_b.x_abs)
+			Result := (point_a.x_abs - point_b.x_abs)
 			if Result < 0 then
 				Result := - Result
 			end
@@ -120,7 +119,7 @@ feature {EV_PROJECTION} -- Implementation
 	height: INTEGER is
 			-- The height of the rectangle.
 		do
-			Result := (position_a.y_abs - position_b.y_abs) 
+			Result := (point_a.y_abs - point_b.y_abs) 
 			if Result < 0 then
 				Result := - Result
 			end
@@ -131,21 +130,17 @@ feature {EV_PROJECTION} -- Implementation
 		local
 			top, left: INTEGER
 		do
-			if position_a.x_abs > position_b.x_abs then
-				left := position_b.x_abs
+			if point_a.x_abs > point_b.x_abs then
+				left := point_b.x_abs
 			else
-				left := position_a.x_abs
+				left := point_a.x_abs
 			end
-			if position_a.y_abs > position_b.y_abs then
-				top := position_b.y_abs
+			if point_a.y_abs > point_b.y_abs then
+				top := point_b.y_abs
 			else
-				top := position_a.y_abs
+				top := point_a.y_abs
 			end
 			create Result.set (left, top)
 		end
-
-invariant
-	position_a_exists: position_a /= Void
-	position_b_exists: position_b /= Void
 
 end -- class EV_FIGURE_RECTANGLE

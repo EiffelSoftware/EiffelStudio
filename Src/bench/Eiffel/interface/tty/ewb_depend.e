@@ -8,12 +8,11 @@ indexing
 class EWB_DEPEND 
 
 inherit
+	EWB_FEATURE
 
-	EWB_FEATURE;
 	SHARED_SERVER
 
 creation
-
 	make, do_nothing
 
 feature

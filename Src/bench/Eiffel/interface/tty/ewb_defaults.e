@@ -23,7 +23,7 @@ creation
 
 feature -- Creation
 
-	make_loop (parent: BASIC_EWB_LOOP) is
+	make_loop (parent: EWB_LOOP) is
 			-- Create menu-option with link
 			-- to `parent'
 		do
@@ -66,7 +66,7 @@ feature {NONE} -- Execute
 
 feature {NONE} -- Attributes
 
-	main_menu: BASIC_EWB_LOOP
+	main_menu: EWB_LOOP
 		-- The manin menu with all sub menus.
 		-- Needed for reinitialization of the options in this menu.
 

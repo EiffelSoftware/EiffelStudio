@@ -84,6 +84,7 @@ feature -- IL Generation
 			main_parent := class_c.main_parent
 			generate_il_type_features (class_c, class_type, class_c.generic_features)
 			generate_il_type_features (class_c, class_type, class_c.anchored_features)
+			
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_main_parent (class_type)
 			generate_il_implementation_parents (class_interface)
@@ -217,7 +218,7 @@ feature {NONE} -- Implementation
 						else
 								-- Case of local renaming or implicit
 								-- covariant redefinition.
-							generate_inherited_feature (feat, feat, class_type)
+							generate_inherited_feature (feat, Void, class_type)
 							mark_as_treated (feat)
 						end
 					end
@@ -442,14 +443,14 @@ feature {NONE} -- Implementation
 					if not feat.is_deferred then
 						if not is_replicated then
 							-- We call above generated static feature
-							generate_feature_il (feat, dup_feat,
+							generate_feature_il (feat,
 								current_class_type.implementation_id,
 								feat.feature_id)
 						else
 								-- We call static feature corresponding to current replicated
 								-- feature. This static feature is defined in parent which
 								-- explains the search made below to find in which parent's type.
-							generate_feature_il (feat, dup_feat,
+							generate_feature_il (feat,
 								implemented_type (feat.written_in,
 								current_class_type.type).associated_class_type.implementation_id,
 								feat.written_feature_id)
@@ -504,41 +505,54 @@ feature {NONE} -- Implementation
 			-- otherwise parent implementation.
 		require
 			feat_not_void: feat /= Void
-			inh_feat_not_void: inh_feat /= Void
 			class_type_not_void: class_type /= Void
 		local
 			l_is_method_impl_generated: BOOLEAN
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
 		do
-			l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
-			if not l_is_method_impl_generated then
-				Byte_context.set_class_type (class_type)
-				dup_feat := feat.duplicate
-				if dup_feat.is_procedure then
-					proc ?= dup_feat
-					proc.set_arguments (inh_feat.arguments)
+			if not is_single_class or inh_feat /= Void then
+				if inh_feat /= Void then
+					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
+					if not l_is_method_impl_generated then
+						Byte_context.set_class_type (class_type)
+						dup_feat := feat.duplicate
+						if dup_feat.is_procedure then
+							proc ?= dup_feat
+							proc.set_arguments (inh_feat.arguments)
+						end
+						dup_feat.set_type (inh_feat.type)
+						generate_feature (dup_feat, False, False, False)
+						Byte_context.set_class_type (current_class_type)
+					else
+						generate_feature (feat, False, False, False)
+					end
+				else
+					generate_feature (feat, False, False, False)
 				end
-				dup_feat.set_type (inh_feat.type)
-				generate_feature (dup_feat, False, False, False)
-				Byte_context.set_class_type (current_class_type)
-			else
-				generate_feature (feat, False, False, False)
-			end
 
-			if feat.rout_id_set.has (standard_twin_rout_id) then
-				generate_feature_standard_twin (feat)
+				if feat.rout_id_set.has (standard_twin_rout_id) then
+					generate_feature_standard_twin (feat)
+				else
+					generate_feature_il (feat,
+						implemented_type (feat.written_in,
+							current_class_type.type).associated_class_type.implementation_id,
+						feat.written_feature_id)
+				end
+
+					-- We need a MethodImpl here for mapping
+					-- inherited method to current defined one.
+				if l_is_method_impl_generated then
+					generate_method_impl (feat, class_type, inh_feat)
+				end
 			else
-				generate_feature_il (feat, dup_feat,
+				check
+					valid: is_single_class and then inh_feat = Void
+				end
+				generate_feature_il (feat,
 					implemented_type (feat.written_in,
 						current_class_type.type).associated_class_type.implementation_id,
-					feat.written_feature_id)
-			end
-
-				-- We need a MethodImpl here for mapping
-				-- inherited method to current defined one.
-			if l_is_method_impl_generated then
-				generate_method_impl (feat, class_type, inh_feat)
+						feat.written_feature_id)
 			end
 		end
 

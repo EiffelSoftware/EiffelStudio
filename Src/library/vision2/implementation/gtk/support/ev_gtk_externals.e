@@ -13726,7 +13726,7 @@ feature -- External C functions
 			"C (GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, gchar*, gint, gint, gint, gint) | <gtk/gtk.h>"
 		end
 
-	gtk_paint_focus (a_style: POINTER; a_window: POINTER; a_area: POINTER; a_widget: POINTER; a_detail: POINTER; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+--	gtk_paint_focus (a_style: POINTER; a_window: POINTER; a_area: POINTER; a_widget: POINTER; a_detail: POINTER; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- void gtk_paint_focus   (GtkStyle      *style,
 			-- 			GdkWindow     *window,
 			-- 			GdkRectangle  *area,
@@ -13737,9 +13737,9 @@ feature -- External C functions
 			-- 			gint	       width,
 			-- 			gint	       height);
 			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkStyle*, GdkWindow*, GdkRectangle*, GtkWidget*, gchar*, gint, gint, gint, gint) | <gtk/gtk.h>"
-		end
+--		external
+--			"C (GtkStyle*, GdkWindow*, GdkRectangle*, GtkWidget*, gchar*, gint, gint, gint, gint) | <gtk/gtk.h>"
+--		end
 
 	gtk_paint_handle (a_style: POINTER; a_window: POINTER; a_state_type: INTEGER; a_shadow_type: INTEGER; a_area: POINTER; a_widget: POINTER; a_detail: POINTER; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_orientation: INTEGER) is
 			-- void gtk_paint_handle  (GtkStyle      *style,

@@ -579,3 +579,20 @@ rt_private int is_free(char *s)
 		return 0;
 	}
 }
+
+/* Rescue instruction list */
+
+char *rescue_instr()
+{
+	/* Return the list of rescue instructions if any. */
+	/* Otherwise return an empty list.                */
+ 
+	char *result = list_new(CONSTRUCT_LIST_AS);
+ 
+	if (result == (char *) 0) 
+	{
+		result = create_node(CONSTRUCT_LIST_AS);
+		(*init_array[CONSTRUCT_LIST_AS])(result,0L);
+	}
+	return result;
+}

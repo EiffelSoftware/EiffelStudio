@@ -424,6 +424,16 @@ feature -- Dialogs
 	
 	project_name_prompt: STRING is "Project name :"
 	
+feature -- Miscellaneous
+
+	Event_selection_text: STRING is "Select events"
+		-- Displayed on button in object editor which pops
+		-- up event dialog.
+	
+	Event_modification_text: STRING is "Modify events"
+		-- Displayed on button in object editor which pops
+		-- up event dialog.
+	
 feature -- Warning Dialogs
 
 	Exit_warning: STRING is "Are you sure you wish to Exit?"

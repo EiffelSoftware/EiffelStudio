@@ -11,6 +11,10 @@
 
 */
 
+/*
+doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaous eiffel externals">
+*/
+
 #include "eif_portable.h"
 #ifdef VXWORKS
 #include <envLib.h>
@@ -464,10 +468,38 @@ struct eif_dll_info {
 	HANDLE dll_module_ptr;
 };
 
-struct eif_dll_info *eif_dll_table = (struct eif_dll_info *) 0;
+/*
+doc:	<attribute name="eif_dll_table" return_type="struct eif_dll_info *" export="private">
+doc:		<summary>Hold all shared libraries that have been already loaded. Used for `DLL' C externals.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>We simply need a mutex to protect update access.</fixme>
+doc:	</attribute>
+*/
+rt_private struct eif_dll_info *eif_dll_table = (struct eif_dll_info *) 0;
 
-int eif_dll_capacity = EIF_DLL_CHUNK;
-int eif_dll_count = 0;
+/*
+doc:	<attribute name="eif_dll_capacity" return_type="int" export="private">
+doc:		<summary>Capacity of `eif_dll_table'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>We simply need a mutex to protect update access.</fixme>
+doc:	</attribute>
+*/
+rt_private int eif_dll_capacity = EIF_DLL_CHUNK;
+
+/*
+doc:	<attribute name="eif_dll_count" return_type="int" export="private">
+doc:		<summary>Count of `eif_dll_table'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>We simply need a mutex to protect update access.</fixme>
+doc:	</attribute>
+*/
+rt_private int eif_dll_count = 0;
 
 rt_public HMODULE eif_load_dll(char *module_name)
 {
@@ -527,3 +559,7 @@ rt_public void eif_free_dlls(void)
 }
 
 #endif /* EIF_WINDOWS */
+
+/*
+doc:</file>
+*/

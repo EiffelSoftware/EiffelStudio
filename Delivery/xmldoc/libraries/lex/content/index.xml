@@ -190,7 +190,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<paragraph>To create a new analyzer, use</paragraph>
 			<code_block>	<keyword>create</keyword> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>make_new</feature_name></code_block>
 			<paragraph>You may also retrieve an analyzer from a previous session. <link><url>/libraries/lex/reference/LEXICAL_chart.html</url><label>LEXICAL</label></link> is a descendant from <link><url>/libraries/reference/base/kernel/STORABLE_chart.html</url><label>STORABLE</label></link>, so you can use feature retrieved for that purpose. In a descendant of <link><url>/libraries/reference/base/kernel/STORABLE_chart.html</url><label>STORABLE</label></link>, simply write</paragraph>
-			<code_block>	<feature_name>analyzer</feature_name> <symbol>?=</symbol> <code><feature_name>retrieved</feature_name></code></code_block>
+			<code_block>	<feature_name>analyzer</feature_name> <symbol>?=</symbol> <feature_name>retrieved</feature_name></code_block>
 			<paragraph>If you do not want to make the class a descendant of <link><url>/libraries/reference/base/kernel/STORABLE_chart.html</url><label>STORABLE</label></link>, use the creation procedure make of <link><url>../../reference/LEXICAL_chart.html</url><label>LEXICAL</label></link>, not to be confused with make_new above:</paragraph>
 <code_block>
 	<keyword>create</keyword> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>make</feature_name>
@@ -637,7 +637,7 @@ BOOLEAN
 					<item>"Freeze" the analyzer by a call to <code><feature_name>make_analyzer</feature_name></code>.</item>
 				</list>
 				<paragraph>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <link><url>/libraries/lex/reference/SCANNING_chart.html</url><label>SCANNING</label></link>, you may use the procedure</paragraph>
-				<code_block>	<feature_name>read_grammar</feature_name> <symbol>(</symbol><local_variable>grammar_file_name</local_variable><symbol>: </symbol><code><class_name>STRING</class_name></code><symbol>)</symbol></code_block>
+				<code_block>	<feature_name>read_grammar</feature_name> <symbol>(</symbol><local_variable>grammar_file_name</local_variable><symbol>: </symbol><class_name>STRING</class_name><symbol>)</symbol></code_block>
 				<paragraph>In this case all the expressions and keywords are taken from the file of name 
 					<code>
 						<local_variable>grammar_file_name</local_variable>

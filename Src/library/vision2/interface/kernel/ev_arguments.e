@@ -8,30 +8,15 @@ indexing
 class 
 	EV_ARGUMENTS 
 
-inherit
-	EV_GTK_EXTERNALS
-	
+
 feature -- Initialization
 	
 feature -- Status setting
 	
 	set_event_data (p: POINTER) is
 		do
-			io.put_string ("Type: ")
-			io.put_integer (c_gdk_event_type (p))	
-			io.put_string ("%N")
-			
-			-- Temporary
-			if c_gdk_event_type (p) = 3 then
-				!EV_MOTION_EVENT_DATA! data.make (p)
-			elseif c_gdk_event_type (p) = 4 then
-				!EV_BUTTON_EVENT_DATA! data.make (p)
-			else
-				io.put_string ("%NWarning: no event, %
-					       %creating the default!%N")
-			
-				!!data.make (p)
-			end
+			!!data.make (p)
+			data := data.metamorphosis (p)
 		end
 
 	
@@ -45,5 +30,10 @@ feature -- Access
 			Result := routine_address ($set_event_data)
 		end
 	
+feature {NONE} -- Implementation
 	
+	routine_address (routine: POINTER): POINTER is
+		do
+			Result := routine
+		end
 end -- class EV_ARGUMENTS

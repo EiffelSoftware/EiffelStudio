@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision motion event data.% 
-	%Base class for representing event data";
+	%Class for representing motion event data";
 	status: "See notice at end of class";
 	id: "$Id$";
 	date: "$Date$";
@@ -11,10 +11,65 @@ class
 	
 inherit
 	
-	EV_EVENT_DATA
+	EV_EVENT_DATA	
+		redefine
+			implementation,
+			print_contents
+		end
+	
 	
 creation
-	make
-end
-			
+	make_and_initialize
 	
+feature {NONE} -- Initialization
+	
+--	make_and_initialize (p: POINTER) is--
+--		do
+--			!EV_MOTION_EVENT_DATA_IMP!implementation.make_and_initialize (Current, p)
+--		end
+
+feature {EV_MOTION_EVENT_DATA_I} -- Access	
+	
+	x: DOUBLE
+			-- x coordinate of mouse pointer 
+	y: DOUBLE 
+			-- y coordinate of mouse pointer 
+	state: INTEGER
+	
+
+feature {EV_BUTTON_EVENT_DATA_I} -- Element change
+	
+	set_x (new_x: DOUBLE) is
+		do
+			x := new_x
+		end
+	
+	set_y (new_y: DOUBLE) is
+		do
+			y := new_y
+		end
+	
+	set_state (new_state: INTEGER) is
+		do
+			state := new_state
+		end
+	
+feature -- Debug
+	
+	print_contents is
+			-- print the contents of the object
+		do
+			io.put_string ("(X: ")
+			io.put_double (x)
+			io.put_string (", Y: ")			
+			io.put_double (y)
+			io.put_string (")%N")		
+		end
+	
+	
+	
+feature {NONE} -- Implementation
+	
+	implementation: EV_MOTION_EVENT_DATA_I
+	
+end

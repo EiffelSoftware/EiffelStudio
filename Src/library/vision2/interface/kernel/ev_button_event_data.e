@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision button event data.% 
-	%Base class for representing event data";
+	%Class for representing button event data";
 	status: "See notice at end of class";
 	id: "$Id$";
 	date: "$Date$";
@@ -13,26 +13,22 @@ inherit
 	
 	EV_EVENT_DATA	
 		redefine
-			make,
+			make_and_initialize,
+			implementation,
 			print_contents
 		end
 	
 	
 creation
-	make
+	make_and_initialize
 	
 feature {NONE} -- Initialization
 	
-	make (p: POINTER) is
+	make_and_initialize (p: POINTER) is
 		do
-			x := c_gdk_event_x (p)
-			y := c_gdk_event_y (p)
-			state := c_gdk_event_state (p)
-			button := c_gdk_event_button (p)
-			keyval := c_gdk_event_keyval (p)
+			!EV_BUTTON_EVENT_DATA_IMP!implementation.make_and_initialize (Current, p)
 		end
-	
-	
+
 feature -- Access	
 	
 	x: DOUBLE
@@ -42,6 +38,34 @@ feature -- Access
 	state: INTEGER
 	button: INTEGER
 	keyval: INTEGER
+
+feature {EV_BUTTON_EVENT_DATA_I} -- Element change
+	
+	set_x (new_x: DOUBLE) is
+		do
+			x := new_x
+		end
+	
+	set_y (new_y: DOUBLE) is
+		do
+			y := new_y
+		end
+	
+	set_state (new_state: INTEGER) is
+		do
+			state := new_state
+		end
+	
+	set_button (new_button: INTEGER) is
+		do
+			button := new_button
+		end
+	
+	set_keyval (new_keyval: INTEGER) is
+		do
+			keyval := new_keyval
+		end
+	
 	
 feature -- Debug
 	
@@ -61,32 +85,8 @@ feature -- Debug
 	
 feature {NONE} -- Implementation
 	
+	implementation: EV_BUTTON_EVENT_DATA_I
 	
-	c_gdk_event_x  (p: POINTER): DOUBLE is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end
-	
-	c_gdk_event_y (p: POINTER): DOUBLE is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_state (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_button (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_keyval (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-			
 end
 			
 	

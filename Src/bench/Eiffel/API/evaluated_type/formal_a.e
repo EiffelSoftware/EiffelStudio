@@ -72,13 +72,25 @@ feature -- Output
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		local
 			s: STRING
+			l_class: CLASS_AS
 		do
 			if f /= Void then
-				s := clone (f.associated_class.ast.generics.i_th (position).formal_name)
-				s.to_upper
-				st.add (create {GENERIC_TEXT}.make (s))
+				l_class := f.associated_class.ast
+				if l_class.generics.valid_index (position) then
+					s := clone (l_class.generics.i_th (position).formal_name)
+					s.to_upper
+					st.add (create {GENERIC_TEXT}.make (s))
+				else
+						-- We are in case where actual generic position does not match
+						-- any generics in written class of `f'. E.g: A [H, G] inherits
+						-- from B [G], therefore in B, `G' at position 2 does not make sense.
+						--| FIXME: Manu 05/29/2002: we cannot let this happen, the reason is
+						-- due to bad initialization of `f' in wrong class.
+					st.add (Ti_generic_index)
+					st.add_int (position)
+				end
 			else
-				st.add (ti_Generic_index)
+				st.add (Ti_generic_index)
 				st.add_int (position)
 			end
 		end

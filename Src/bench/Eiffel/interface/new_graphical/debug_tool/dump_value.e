@@ -552,6 +552,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					end				
 				end			
 			end
+			if Result /= Void then
+				Result.prune_all ('%U')
+			end
 		end
 
 feature -- Action

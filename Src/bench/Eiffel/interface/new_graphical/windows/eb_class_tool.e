@@ -12,6 +12,7 @@ inherit
 		redefine
 
 --			build_format_bar, hole,
+			init_commands,
 			empty_tool_name,
 			save_text,
 --			editable,
@@ -84,9 +85,24 @@ feature -- Initialization
 			set_last_format (format_list.default_format)
 		end
 
-feature -- Properties
+	init_commands is
+		do
+			Precursor
+			create open_cmd.make (Current)
+			create save_cmd.make (Current)
+			create shell_cmd.make (Current)
+			create filter_cmd.make (Current)
+			create super_melt_cmd.make (Current)
 
-	version_cmd: CLASS_VERSIONS
+			create current_target_cmd.make (Current)
+			create next_target_cmd.make (Current)
+			create previous_target_cmd.make (Current)
+			
+		end
+
+feature -- Access
+
+--	version_cmd: CLASS_VERSIONS
 
 --	help_index: INTEGER is 6
 
@@ -96,7 +112,7 @@ feature -- Properties
 			Result := Interface_names.i_Class_id
 		end
 
-feature -- Access
+	format_bar_is_used: BOOLEAN is True
 
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
@@ -221,7 +237,7 @@ feature -- Status setting
 --			end
 			create arg.make (s)
 			last_format.launch_cmd.execute (arg, Void)
---			add_to_history (s)
+			add_to_history (s)
 		end
  
 feature -- Stone process
@@ -484,10 +500,10 @@ feature {NONE} -- Tool Properties
 			Result := Interface_names.t_Empty_class
 		end
 
-	hole: CLASS_HOLE
+--	hole: CLASS_HOLE
 			-- Hole caraterizing current
  
-feature {SHOW_HTML_TEXT} -- Parsing checking
+feature {EB_HTML_TEXT_FORMATTER} -- Parsing checking
 
 	has_class_name_changed (e_class: CLASS_C): BOOLEAN is
 			-- Has the name of the class been changed during its editing?
@@ -520,11 +536,11 @@ feature {NONE} -- Commands
 
 	super_melt_cmd: EB_SUPER_MELT_CMD
 
-	current_target_cmd_holder: COMMAND_HOLDER
+	current_target_cmd: EB_CURRENT_CLASS_CMD
 
-	previous_target_cmd_holder: COMMAND_HOLDER
+	previous_target_cmd: EB_PREVIOUS_TARGET_CMD
 
-	next_target_cmd_holder: COMMAND_HOLDER
+	next_target_cmd: EB_NEXT_TARGET_CMD
 
 feature -- Implementation
 
@@ -536,239 +552,69 @@ feature -- Implementation
 
 feature {NONE} -- Implementation Graphical Interface
 
-	create_edit_buttons is
---		local
+	create_edit_buttons (a_toolbar: EV_BOX) is
+		local
 --			quit_cmd: QUIT_FILE
---			quit_button: EB_BUTTON
---			open_cmd: OPEN_FILE
---			open_button: EB_BUTTON
---			save_cmd: SAVE_FILE
---			save_button: EB_BUTTON
---			sep: SEPARATOR
+			b: EV_BUTTON
 		do
-			create class_text_field.make_with_tool (edit_bar, Current)
---			class_text_field.set_width (200)
---			!! open_cmd.make (Current)
---			!! open_button.make (open_cmd, edit_bar)
---			!! open_menu_entry.make (open_cmd, file_menu)
---			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
---			!! save_cmd.make (Current)
---			!! save_button.make (save_cmd, edit_bar)
---			!! save_menu_entry.make (save_cmd, file_menu)
---			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
---			build_save_as_menu_entry
---			build_print_menu_entry
---			!! quit_cmd.make (Current)
---			!! quit_menu_entry.make (quit_cmd, file_menu)
---			if General_resources.close_button.actual_value then
---				!! quit_button.make (quit_cmd, edit_bar)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Open)
+			b.add_click_command (open_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Save)
+			b.add_click_command (save_cmd, Void)
+
+--			if Tool_resources.close_button.actual_value then
+--				!! b.make (close_cmd)
 --			end
---			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
---			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
---			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
---			exit_cmd_holder.set_menu_entry (exit_menu_entry)
---			build_edit_menu (edit_bar)
+
 		end
 
-	build_edit_bar is
---		local
---			version_menu_entry: EB_MENU_ENTRY
---			shell_cmd: SHELL_COMMAND
---			shell_button: EB_BUTTON_HOLE
---			shell_menu_entry: EB_MENU_ENTRY
---			previous_target_cmd: PREVIOUS_TARGET
---			previous_target_button: EB_BUTTON
---			previous_target_menu_entry: EB_MENU_ENTRY
---			next_target_cmd: NEXT_TARGET
---			next_target_button: EB_BUTTON
---			next_target_menu_entry: EB_MENU_ENTRY
---			current_target_cmd: CURRENT_CLASS
---			current_target_button: EB_BUTTON
---			current_target_menu_entry: EB_MENU_ENTRY
---			super_melt_cmd: SUPER_MELT
---			sep: SEPARATOR
---			sep1, sep2, sep3: THREE_D_SEPARATOR
+	build_edit_bar (a_toolbar: EV_BOX) is
+		local
+			sep: EV_VERTICAL_SEPARATOR
 --			history_list_cmd: LIST_HISTORY
---			super_melt_menu_entry: EB_MENU_ENTRY
---			new_class_button: EB_BUTTON_HOLE
+			new_class_cmd: EB_CREATE_CLASS_CMD
 --			do_nothing_cmd: DO_NOTHING_CMD
+			b: EV_BUTTON
 		do
+			create_edit_buttons (edit_bar)
+
+			create sep.make (a_toolbar)
+
 --			!! hole.make (Current)
---			!! hole_button.make (hole, edit_bar)
---			!! hole_holder.make_plain (hole)
---			hole_holder.set_button (hole_button)
-			create_edit_buttons
---
---			!! version_cmd.make (Current)
---			!! version_menu_entry.make (version_cmd, special_menu)
---			!! shell_cmd.make (Current)
---			!! shell_button.make (shell_cmd, edit_bar)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Class_dot)
+--			b.add_click_command (hole_holder)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Shell)
 --			shell_button.add_third_button_action
---			!! shell_menu_entry.make (shell_cmd, special_menu)
---			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
---			build_filter_menu_entry
---			!! super_melt_cmd.make (Current)
---			!! super_melt_menu_entry.make (super_melt_cmd, special_menu)
---
---			!! current_target_cmd.make (Current)
---			!! sep.make (new_name, special_menu)
---			!! current_target_menu_entry.make (current_target_cmd, special_menu)
---			!! current_target_cmd_holder.make_plain (current_target_cmd)
---			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
---			!! next_target_cmd.make (Current)
---			!! next_target_button.make (next_target_cmd, edit_bar)
---			!! next_target_menu_entry.make (next_target_cmd, special_menu)
---			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
---			!! previous_target_cmd.make (Current)
---			!! previous_target_button.make (previous_target_cmd, edit_bar)
---			!! previous_target_menu_entry.make (previous_target_cmd, special_menu)
---			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
---
+			b.add_click_command (shell_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Class)
+--			b.add_click_command (new_class_cmd, Void)
+
+			create sep.make (a_toolbar)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Previous_target)
+			b.add_click_command (previous_target_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Next_target)
+			b.add_click_command (next_target_cmd, Void)
+
 --			!! history_list_cmd.make (Current)
 --			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 --			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
---
---			!! new_class_button.make (Project_tool.class_hole_holder.associated_command, edit_bar)
---
---			!! sep1.make (Interface_names.t_empty, edit_bar)
---			sep1.set_horizontal (False)
---			sep1.set_height (20)
---
---			!! sep2.make (Interface_names.t_empty, edit_bar)
---			sep2.set_horizontal (False)
---			sep2.set_height (20)
---
---			!! sep3.make (Interface_names.t_empty, edit_bar)
---			sep3.set_horizontal (False)
---			sep3.set_height (20)
+
+			create class_text_field.make_with_tool (edit_bar, Current)
+--			class_text_field.set_width (200)
 
 		end
-
---	build_format_bar is
---			-- Build formatting buttons in `format_bar'.
---		local
---			tex_cmd: SHOW_HTML_TEXT
---			tex_button: FORMAT_BUTTON
---			tex_menu_entry: EB_TICKABLE_MENU_ENTRY
---			click_cmd: SHOW_CLICK_CL
---			click_button: FORMAT_BUTTON
---			click_menu_entry: EB_TICKABLE_MENU_ENTRY
---			fla_cmd: SHOW_FLAT
---			fla_button: FORMAT_BUTTON
---			fla_menu_entry: EB_TICKABLE_MENU_ENTRY
---			sho_cmd: SHOW_SHORT
---			sho_button: FORMAT_BUTTON
---			sho_menu_entry: EB_TICKABLE_MENU_ENTRY
---			fs_cmd: SHOW_FS
---			fs_button: FORMAT_BUTTON
---			fs_menu_entry: EB_TICKABLE_MENU_ENTRY
---			anc_cmd: SHOW_ANCESTORS
---			anc_button: FORMAT_BUTTON
---			anc_menu_entry: EB_TICKABLE_MENU_ENTRY
---			des_cmd: SHOW_DESCENDANTS
---			des_button: FORMAT_BUTTON
---			des_menu_entry: EB_TICKABLE_MENU_ENTRY
---			cli_cmd: SHOW_CLIENTS
---			cli_button: FORMAT_BUTTON
---			cli_menu_entry: EB_TICKABLE_MENU_ENTRY
---			sup_cmd: SHOW_SUPPLIERS
---			sup_button: FORMAT_BUTTON
---			sup_menu_entry: EB_TICKABLE_MENU_ENTRY
---			att_cmd: SHOW_ATTRIBUTES
---			att_button: FORMAT_BUTTON
---			att_menu_entry: EB_TICKABLE_MENU_ENTRY
---			rou_cmd: SHOW_ROUTINES
---			rou_button: FORMAT_BUTTON
---			rou_menu_entry: EB_TICKABLE_MENU_ENTRY
---			def_cmd: SHOW_DEFERREDS
---			def_button: FORMAT_BUTTON
---			def_menu_entry: EB_TICKABLE_MENU_ENTRY
---			onc_cmd: SHOW_ONCES
---			onc_button: FORMAT_BUTTON
---			onc_menu_entry: EB_TICKABLE_MENU_ENTRY
---			exp_cmd: SHOW_EXPORTED
---			exp_button: FORMAT_BUTTON
---			exp_menu_entry: EB_TICKABLE_MENU_ENTRY
---			ext_cmd: SHOW_EXTERNALS
---			ext_button: FORMAT_BUTTON
---			ext_menu_entry: EB_TICKABLE_MENU_ENTRY
---			sep: SEPARATOR
---			sep1, sep2: THREE_D_SEPARATOR
---			do_nothing_cmd: DO_NOTHING_CMD
---		do
---				-- First we create all objects.
---			!! tex_cmd.make (Current)
---			!! tex_button.make (tex_cmd, format_bar)
---			!! tex_menu_entry.make (tex_cmd, format_menu)
---			!! showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry)
---			!! click_cmd.make (Current)
---			!! click_button.make (click_cmd, format_bar)
---			!! click_menu_entry.make (click_cmd, format_menu)
---			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry)
---			!! fla_cmd.make (Current)
---			!! fla_button.make (fla_cmd, format_bar)
---			!! fla_menu_entry.make (fla_cmd, format_menu)
---			!! showflat_frmt_holder.make (fla_cmd, fla_button, fla_menu_entry)
---			!! sho_cmd.make (Current)
---			!! sho_button.make (sho_cmd, format_bar)
---			!! sho_menu_entry.make (sho_cmd, format_menu)
---			!! showshort_frmt_holder.make (sho_cmd, sho_button, sho_menu_entry)
---			!! fs_cmd.make (Current)
---			!! fs_button.make (fs_cmd, format_bar)
---			!! fs_menu_entry.make (fs_cmd, format_menu)
---			!! showflatshort_frmt_holder.make (fs_cmd, fs_button, fs_menu_entry)
---			!! sep.make (new_name, format_menu)
---			!! anc_cmd.make (Current)
---			!! anc_button.make (anc_cmd, format_bar)
---			!! anc_menu_entry.make (anc_cmd, format_menu)
---			!! showancestors_frmt_holder.make (anc_cmd, anc_button, anc_menu_entry)
---			!! des_cmd.make (Current)
---			!! des_button.make (des_cmd, format_bar)
---			!! des_menu_entry.make (des_cmd, format_menu)
---			!! showdescendants_frmt_holder.make (des_cmd, des_button, des_menu_entry)
---			!! cli_cmd.make (Current)
---			!! cli_button.make (cli_cmd, format_bar)
---			!! cli_menu_entry.make (cli_cmd, format_menu)
---			!! showclients_frmt_holder.make (cli_cmd, cli_button, cli_menu_entry)
---			!! sup_cmd.make (Current)
---			!! sup_button.make (sup_cmd, format_bar)
---			!! sup_menu_entry.make (sup_cmd, format_menu)
---			!! sep.make (new_name, format_menu)
---			!! showsuppliers_frmt_holder.make (sup_cmd, sup_button, sup_menu_entry)
---			!! att_cmd.make (Current)
---			!! att_button.make (att_cmd, format_bar)
---			!! att_menu_entry.make (att_cmd, format_menu)
---			!! showattributes_frmt_holder.make (att_cmd, att_button, att_menu_entry)
---			!! rou_cmd.make (Current)
---			!! rou_button.make (rou_cmd, format_bar)
---			!! rou_menu_entry.make (rou_cmd, format_menu)
---			!! showroutines_frmt_holder.make (rou_cmd, rou_button, rou_menu_entry)
---			!! def_cmd.make (Current)
---			!! def_button.make (def_cmd, format_bar)
---			!! def_menu_entry.make (def_cmd, format_menu)
---			!! showdeferreds_frmt_holder.make (def_cmd, def_button, def_menu_entry)
---			!! ext_cmd.make (Current)
---			!! ext_button.make (ext_cmd, format_bar)
---			!! ext_menu_entry.make (ext_cmd, format_menu)
---			!! showexternals_frmt_holder.make (ext_cmd, ext_button, ext_menu_entry)
---			!! exp_cmd.make (Current)
---			!! exp_button.make (exp_cmd, format_bar)
---			!! exp_menu_entry.make (exp_cmd, format_menu)
---			!! showexported_frmt_holder.make (exp_cmd, exp_button, exp_menu_entry)
---			!! onc_cmd.make (Current)
---			!! onc_button.make (onc_cmd, format_bar)
---			!! onc_menu_entry.make (onc_cmd, format_menu)
---			!! showonces_frmt_holder.make (onc_cmd, onc_button, onc_menu_entry)
---
---			!! sep1.make (Interface_names.t_empty, format_bar)
---			sep1.set_horizontal (False)
---			sep1.set_height (20)
---
---			!! sep2.make (Interface_names.t_empty, format_bar)
---			sep2.set_horizontal (False)
---			sep2.set_height (20)
---
--- 		end
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 
@@ -776,11 +622,9 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 		local
 			i: EV_MENU_ITEM
 		do
-			create open_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Open)
 			i.add_select_command (open_cmd, Void)
 
-			create save_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Save)
 			i.add_select_command (save_cmd, Void)
 
@@ -791,17 +635,23 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 		local
 			i: EV_MENU_ITEM
 		do
-			create shell_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Shell)
 			i.add_select_command (shell_cmd, Void)
 
-			create filter_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Filter)
 			i.add_select_command (filter_cmd, Void)
 
-			create super_melt_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Stoppable)
 			i.add_select_command (super_melt_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Current)
+			i.add_select_command (current_target_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Next_target)
+			i.add_select_command (next_target_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Previous_target)
+			i.add_select_command (previous_target_cmd, Void)
 		end
 
 end -- class EB_CLASS_TOOL

@@ -7,7 +7,7 @@ feature
 		local
 			compiler: BASIC_ES
 		do
-			!!compiler.make
+			!!compiler.make_unlicensed
 		end
 
 end

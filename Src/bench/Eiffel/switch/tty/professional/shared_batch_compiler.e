@@ -7,7 +7,7 @@ feature
 		local
 			compiler: ES
 		do
-			!!compiler.make
+			!!compiler.make_unlicensed
 		end
 
 end

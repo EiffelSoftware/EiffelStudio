@@ -20,7 +20,7 @@ inherit
 
 creation
 
-	make
+	make, make_unlicensed
 
 feature -- Access
 

@@ -44,7 +44,7 @@ feature -- Status report
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := c_gtk_editable_selection_start (widget)
+			Result := c_gtk_editable_selection_start (widget) + 1
 		end
 
 	selection_end: INTEGER is
@@ -82,7 +82,7 @@ feature -- Basic operation
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
 		do
-			gtk_editable_select_region (widget, start_pos, end_pos)
+			gtk_editable_select_region (widget, start_pos - 1, end_pos)
 		end	
 
 	select_all is

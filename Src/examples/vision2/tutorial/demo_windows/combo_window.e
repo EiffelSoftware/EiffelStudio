@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			-- Set the tabs for the action window
 		do
 			set_primitive_tabs
-		--	tab_list.extend(text_field_tab)
-		--	tab_list.extend(list_tab)
+			tab_list.extend(text_field_tab)
+			tab_list.extend(list_tab)
 			tab_list.extend(combo_tab)
 			create action_window.make(Current, tab_list)
 		end

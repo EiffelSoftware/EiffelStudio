@@ -40,6 +40,11 @@ feature {NONE} -- Initialization
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			set_primitive_tabs
+			tab_list.extend(text_component_tab)
+			tab_list.extend(text_tab)
+			tab_list.extend(rich_tab)
+			create action_window.make(Current, tab_list)
 		end
 
 feature -- Access
@@ -65,9 +70,7 @@ feature -- Basic operation
 			Result.add_character_format_with_regions (format, <<1, 8, 86, 89, 93, 108>>)		
 
 			!! format.make
-		--	!! font.make_by_system_name ("tahoma,8,400,,default,dontcare,ansi,0,0,0,draft,stroke,default")
-			!! font.make_by_name ("times new roman")
-			font.set_height (8)
+			!! font.make_by_system_name ("tahoma,24,400,,default,dontcare,ansi,0,0,0,draft,stroke,default")
 			format.set_font (font)
 			!! color.make_rgb (255, 0, 0)
 			format.set_color (color)

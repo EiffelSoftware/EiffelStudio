@@ -229,6 +229,12 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+	rich_tab: RICH_TAB is
+			-- Creation of the rich text tab
+		once
+			create Result.make (Void)
+		end
+
 	option_tab: OPTION_TAB is
 			-- Creation of the option _tab.
 		once
@@ -252,14 +258,6 @@ feature -- Basic operation
 		once
 			create Result.make (Void)
 		end
-
---	list_tab: LIST_TAB is
-			-- Creation of thwe list tab
---		once
---			create Result.make (Void)
---		end
-
-
 
 
 	text_tab: TEXT_TAB is

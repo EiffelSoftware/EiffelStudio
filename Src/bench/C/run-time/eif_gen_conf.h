@@ -13,7 +13,7 @@ extern int16 eif_final_id (int16, int16 *ttable, int16 **gttable, char *object);
 extern int16 eif_compound_id (int16 *cache, char *object, int16 dyn_type, int16 *typearr);
 
 /* Type of an actual generic parameter */
-extern int16 eif_gen_param (char *object, int pos, char *is_exp, long *nr_bits);
+extern int16 eif_gen_param (int16 stype, char *object, int pos, char *is_exp, long *nr_bits);
 
 /* Number of generic parameters of an object */
 extern int eif_gen_count (char *object);
@@ -40,7 +40,7 @@ extern int16 eif_gen_id_from_cid (int16 *, int *);
 extern int eif_gen_conf (int16, int16);
 
 /* Type of the i-th generic parameter */
-extern int16 eif_gen_param_id (char *obj, int pos);
+extern int16 eif_gen_param_id (int16 stype, char *obj, int pos);
 
 /* Parent tables */
 

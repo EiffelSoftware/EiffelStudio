@@ -2,10 +2,24 @@
 	Generic conformance
 */
 
-
 #include "eif_struct.h"
 #include "eif_macros.h"
 #include "eif_gen_conf.h"
+
+/*------------------------------------------------------------------*/
+/* Debugging flag. If set, the names of the generated types will be */
+/* output to the file 'logfile'. Simple facility.                   */
+/*------------------------------------------------------------------*/
+
+/*
+#define GEN_CONF_DEBUG
+*/
+
+#ifdef GEN_CONF_DEBUG
+rt_public void log_puts (char *);
+rt_public void log_puti (int);
+#define logfile "c:gentypes.log"
+#endif
 
 /*------------------------------------------------------------------*/
 
@@ -249,8 +263,26 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 
 		if ((cache != (int16 *)0) && (*cache != -1))
 		{
+#ifdef GEN_CONF_DEBUG
+			log_puts ("Cached -> ");
+			log_puts (eif_typename(*cache));
+			log_puts ("\r\n");
+#endif
 			return *cache;
 		}
+
+#ifdef GEN_CONF_DEBUG
+		intable = types;
+		log_puts ("{");
+		while (*intable != -1)
+		{
+			log_puti ((int) *intable);
+			log_puts (",");
+			++intable;
+		}
+
+		log_puts ("-1} -> ");
+#endif
 
 		intable  = types+1;
 		outtable = outtab;
@@ -263,10 +295,22 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 		else
 			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable, &found);
 
+
+#ifdef GEN_CONF_DEBUG
+		log_puts (eif_typename(gresult));
+#endif
+
 		if (cachable && (cache != (int16 *) 0))
 		{
+#ifdef GEN_CONF_DEBUG
+			log_puts (" CACHED");
+#endif
 			*cache = gresult;
 		}
+
+#ifdef GEN_CONF_DEBUG
+		log_puts ("\r\n");
+#endif
 
 		return gresult;
 	}
@@ -314,20 +358,45 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char 
 /* the value can then be used to call RTLB(nr_bits).                */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_gen_param (char *obj, int pos, char *is_exp, long *nr_bits)
+rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, long *nr_bits)
 {
 	int16       dftype, result;
 	EIF_GEN_DER *gdp;
+	EIF_ANC_ID_MAP *amap;
 
 	if (obj == (char *)0)
 		eif_panic ("Generic parameter of void.");
 
 	dftype = Dftype(obj);
 
+	/* Check for expanded */
+
+	if (dftype <= -256)
+		dftype = -256-dftype;
+
 	if ((dftype < 0) || (dftype >= next_gen_id))
 		eif_panic ("Invalid type");
 
-	gdp = eif_derivations [dftype];    
+	/* get actual generic from `stype' for descendant
+	   `dftype' if stype >= 0 else use dftype.
+	*/
+
+	if (stype >= 0)
+	{
+		amap = eif_anc_id_map [dftype];
+
+		if (amap == (EIF_ANC_ID_MAP *) 0)
+		{
+			eif_compute_anc_id_map (dftype, 1, 0);
+			amap = eif_anc_id_map [dftype];
+		}
+
+		gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
+	}
+	else
+	{
+		gdp = eif_derivations [dftype];
+	}
 
 	if ((gdp == (EIF_GEN_DER *)0) || (gdp->is_bit))
 		eif_panic ("Not a generic type.");
@@ -354,7 +423,7 @@ rt_public int16 eif_gen_param (char *obj, int pos, char *is_exp, long *nr_bits)
 
 	/* Is it a BITn type? If yes set the number of bits */
 
-	if (gdp->is_bit)
+	if ((gdp != (EIF_GEN_DER *) 0) && (gdp->is_bit))
 		*nr_bits = gdp->size;
 
 	return result;
@@ -387,13 +456,13 @@ rt_public int eif_gen_count (char *obj)
 /* Type of generic parameter in `obj' at position `pos'.            */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_gen_param_id (char *obj, int pos)
+rt_public int16 eif_gen_param_id (int16 stype, char *obj, int pos)
 
 {
 	char    is_expanded;
 	long    nr_bits;
 
-	return eif_gen_param (obj, pos, &is_expanded, &nr_bits);
+	return eif_gen_param (stype, obj, pos, &is_expanded, &nr_bits);
 }
 /*------------------------------------------------------------------*/
 /* Create an object with the same type as the type of the generic   */
@@ -406,7 +475,7 @@ rt_public char *eif_gen_create (char *obj, int pos)
 	char    is_expanded;
 	long    nr_bits;
 
-	result_type = eif_gen_param (obj, pos, &is_expanded, &nr_bits);
+	result_type = eif_gen_param (-1, obj, pos, &is_expanded, &nr_bits);
 
 #ifndef WORKBENCH
 
@@ -666,10 +735,10 @@ rt_public char *eif_gen_create_from_cid (int16 *cidarr)
 	return emalloc(dftype);
 }
 /*------------------------------------------------------------------*/
-/* Conformance test. Does `stype' conform to `ttype'?               */
+/* Conformance test. Does `source_type' conform to `target_type'?   */
 /*------------------------------------------------------------------*/
 
-rt_public int eif_gen_conf (int16 stype, int16 ttype)
+rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 {
 	EIF_CONF_TAB *stab;
 	EIF_GEN_DER *sgdp, *tgdp;
@@ -677,11 +746,15 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 	int i, idx, result;
 	char exp_src;
 	unsigned char mask;
+	int16 stype, ttype;
 
-	if (stype == ttype)
+	if (source_type == target_type)
 	{
 		return 1;
 	}
+
+	stype = source_type;
+	ttype = target_type;
 
 	exp_src = '\0';
 
@@ -793,7 +866,38 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 
 				for (i = 0; i < tgdp->size; ++i)
 				{
-					if (!eif_gen_conf ((sgdp->typearr)[i], (tgdp->typearr)[i]))
+					stype = (sgdp->typearr) [i];
+					ttype = (tgdp->typearr) [i];
+
+					if (stype == ttype)
+						continue; /* Same types - avoid recursion */
+
+					if (ttype < 0)
+					{
+						/* Expanded target */
+						result = 0;
+						goto done;
+					}
+
+					if (ttype < first_gen_id)
+						ttype = RTUD(ttype);
+
+					if (stype <= -256)
+					{
+						stype = -256-stype;
+
+						if (stype < first_gen_id)
+							stype = RTUD(stype);
+
+						stype = -256-stype;
+					}
+					else
+					{
+						if (stype < first_gen_id)
+							stype = RTUD(stype);
+					}
+				
+					if (!eif_gen_conf (stype, ttype))
 					{
 						result = 0;
 						goto done;
@@ -2010,6 +2114,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 			{
 				/* We conform to everything our parent
 				   conforms to */
+
 				*dest |= *src;
 
 				/* Consider only those bits as already
@@ -2172,5 +2277,32 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
+/*------------------------------------------------------------------*/
+#ifdef GEN_CONF_DEBUG
+
+#include    <stdio.h>
+
+static FILE *lfp = (FILE *) 0;
+
+rt_public void log_puts (char *s)
+
+{
+	if (lfp == (FILE *) 0)
+		lfp = fopen (logfile, "w");
+
+	fprintf (lfp,"%s",s);
+	fflush (lfp);
+}
+
+rt_public void log_puti (int i)
+
+{
+	if (lfp == (FILE *) 0)
+		lfp = fopen (logfile, "w");
+
+	fprintf (lfp,"%d",i);
+	fflush (lfp);
+}
+#endif
 /*------------------------------------------------------------------*/
 

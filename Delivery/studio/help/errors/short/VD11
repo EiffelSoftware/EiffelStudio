@@ -1,2 +1,0 @@
-Lace error: two *.e files in same cluster contain classes with same name.
-What to do: if both classes are needed, change name of one of them.

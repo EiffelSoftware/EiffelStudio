@@ -247,26 +247,22 @@ feature -- Deserialization
 			l_xm_concatenator: XM_CONTENT_CONCATENATOR
 		do
 			create l_file.make (a_file_path)
-			if l_file.exists then
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_parser.make
-					create l_tree_pipe.make
-					create l_xm_concatenator.make_null
-					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-					l_parser.parse_from_stream (l_file)
-					l_file.close
-					if l_parser.is_correct then
-						Result := l_tree_pipe.document
-					else
-						display_error_message ("File " + a_file_path + " is corrupted")
-						Result := Void
-					end
+			l_file.open_read
+			if l_file.is_open_read then
+				create l_parser.make
+				create l_tree_pipe.make
+				create l_xm_concatenator.make_null
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+				l_parser.parse_from_stream (l_file)
+				l_file.close
+				if l_parser.is_correct then
+					Result := l_tree_pipe.document
 				else
-					display_error_message ("File " + a_file_path + " cannot not be open")
+					display_error_message ("File " + a_file_path + " is corrupted")
+					Result := Void
 				end
 			else
-				display_error_message ("Try to deserialize unexisting file :%N" + a_file_path)
+				display_error_message ("File " + a_file_path + " cannot not be open")
 			end
 		end
 

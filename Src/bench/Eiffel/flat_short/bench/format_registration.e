@@ -460,19 +460,20 @@ debug ("FLAT_SHORT")
 end;
 				class_file_name := current_class.file_name;
 				create file.make (class_file_name);
-				if not (file.exists and then file.is_readable) then
+				file.open_read
+				if not file.is_open_read then
 					create vd21;
 					vd21.set_cluster (current_class.cluster);
 					vd21.set_file_name (current_class.file_name);
 					Error_handler.insert_error (vd21);
 					Error_handler.raise_error;
-				end;
-				file.open_read
-				parser := Eiffel_parser
-				parser.set_has_syntax_warning (False)
-				parser.parse (file)
-				Result := parser.root_node
-				file.close
+				else
+					parser := Eiffel_parser
+					parser.set_has_syntax_warning (False)
+					parser.parse (file)
+					Result := parser.root_node
+					file.close
+				end
 			end
 		rescue
 			if Rescue_status.is_error_exception then

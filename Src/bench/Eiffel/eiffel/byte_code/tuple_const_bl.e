@@ -181,8 +181,12 @@ feature {NONE} -- C code generation
 			generate_gen_type_conversion (real_ty)
 			print_register
 			buf.putstring (" = ")
-			buf.putstring ("RTLN(typres);")
-			buf.new_line
+			buf.putstring ("RTLNS(typres, ");
+			buf.putint (real_ty.type_id - 1)
+			buf.putstring (", ")
+			real_ty.associated_class_type.skeleton.generate_size (buf)
+			buf.putstring (");");
+			buf.new_line;
 			generate_block_close
 		end
 

@@ -146,7 +146,11 @@ feature {NONE} -- C code generation
 			print_register;
 			buf := buffer
 			buf.putstring (" = ");
-			buf.putstring ("RTLN(typres);");
+			buf.putstring ("RTLNS(typres, ");
+			buf.putint (real_ty.type_id - 1)
+			buf.putstring (", ")
+			real_ty.associated_class_type.skeleton.generate_size (buf)
+			buf.putstring (");");
 			buf.new_line;
 			generate_block_close;
 		end;

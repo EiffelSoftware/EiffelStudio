@@ -249,7 +249,7 @@ feature {NONE} -- Externals
 	cwin_global_alloc (a_num, a_size: INTEGER): POINTER is
 			-- Global Alloc
 		external
-			"C (UINT, SIZE_T): EIF_POINTER | <windows.h>"
+			"C [macro <windows.h>] (UINT, SIZE_T): EIF_POINTER"
 		alias
 			"GlobalAlloc"
 		end
@@ -257,7 +257,7 @@ feature {NONE} -- Externals
 	cwin_global_free (a_pointer: POINTER) is
 			-- GlobalFree
 		external
-			"C (HGLOBAL) | <windows.h>"
+			"C [macro <windows.h>] (HGLOBAL)"
 		alias
 			"GlobalFree"
 		end
@@ -265,7 +265,7 @@ feature {NONE} -- Externals
 	cwin_global_lock (a_pointer: POINTER): POINTER is
 			-- GlobalLock
 		external
-			"C (HGLOBAL): EIF_POINTER | <windows.h>"
+			"C [macro <windows.h>] (HGLOBAL): EIF_POINTER"
 		alias
 			"GlobalLock"
 		end
@@ -273,7 +273,7 @@ feature {NONE} -- Externals
 	cwin_global_unlock (a_pointer: POINTER) is
 			-- GlobalLock
 		external
-			"C (HGLOBAL) | <windows.h>"
+			"C [macro <windows.h>] (HGLOBAL)"
 		alias
 			"GlobalUnlock"
 		end

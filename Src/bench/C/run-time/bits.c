@@ -252,7 +252,11 @@ rt_public void b_copy(EIF_REFERENCE a, EIF_REFERENCE b)
 #endif
 
 	if (len1 == len2) {
+#ifdef VXWORKS
+		memcpy(b, a, BIT_NBPACK(len1) * BIT_PACKSIZE + sizeof(uint32));
+#else
 		bcopy(a, b, BIT_NBPACK(len1) * BIT_PACKSIZE + sizeof(uint32));
+#endif	/* VXWORKS */
 		return;
 	}
 
@@ -263,8 +267,13 @@ rt_public void b_copy(EIF_REFERENCE a, EIF_REFERENCE b)
 	nb_pack1 = BIT_NBPACK(len1);
 	idx = nb_pack1 - 1;				/* Index of last pack of `arena1' */
 	/* First, copy first fulled packs of `arena1' into `arena2' (if any) */
-	if (nb_pack1 > 1)
+	if (nb_pack1 > 1) {
+#ifdef VXWORKS
+		memcpy (arena2, arena1, idx * BIT_PACKSIZE);
+#else
 		bcopy(arena1,arena2,idx * BIT_PACKSIZE);
+#endif	/* VXWORKS */
+	}
 	/* Copy last pack of `arena1' with garbage bits set to zero */
 	mask = len1 % BIT_UNIT;
 	val = arena1[idx];
@@ -272,8 +281,13 @@ rt_public void b_copy(EIF_REFERENCE a, EIF_REFERENCE b)
 	/* Set last fields of `arena2' to zero */
 	nb_pack2 = BIT_NBPACK(len2);
 	gap = nb_pack2 - nb_pack1;
-	if (gap > 0)
+	if (gap > 0) {
+#ifdef VXWORKS
+		memset ((arena2 + nb_pack1), 0, gap * BIT_PACKSIZE);
+#else
 		bzero((EIF_REFERENCE ) (arena2 + nb_pack1), gap * BIT_PACKSIZE);
+#endif	/* VXWORKS */
+	}
 }
 
 rt_public EIF_REFERENCE b_clone(EIF_REFERENCE bit)
@@ -394,7 +408,11 @@ rt_private EIF_REFERENCE b_right_shift(EIF_REFERENCE bit, long int s)
 	if (s > len)			/* Shifting more than bit field size */
 		return new;			/* Reset bit field with zeros */
 
-	bcopy(ARENA(bit), arena, units * BIT_PACKSIZE);
+#ifdef VXWORKS
+	memcpy (arena, ARENA (bit), units * BIT_PACKSIZE);
+#else
+	bcopy (ARENA(bit), arena, units * BIT_PACKSIZE);
+#endif	/* VXWORKS */
 
 	/* First phase: full byte shifting. For instance, if BIT_UNIT is 32 and
 	 * we want to shift 67 bits, then this is 2 * BIT_UNIT + 3, which means
@@ -453,7 +471,11 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	if (s > len)			/* Shifting more than bit field size */
 		return new;			/* Reset bit field with zeros */
 
+#ifdef VXWORKS
+	memcpy (arena, ARENA(bit), units * BIT_PACKSIZE);
+#else
 	bcopy(ARENA(bit), arena, units * BIT_PACKSIZE);
+#endif	/* VXWORKS */
 
 	/* When shifting to the left, we must clear the garbage bits at the right
 	 * end of the bitfield before any shifting action.
@@ -542,7 +564,11 @@ rt_private EIF_REFERENCE b_right_rotate(EIF_REFERENCE bit, long int s)
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
+#ifdef VXWORKS
+	memcpy (arena, ARENA(bit), units * BIT_PACKSIZE);
+#else
 	bcopy(ARENA(bit), arena, units * BIT_PACKSIZE);
+#endif
 
 	/* First phase: full byte rotating. For instance, if BIT_UNIT is 32 and
 	 * we want to rotate 67 bits, then this is 2 * BIT_UNIT + 3, which means
@@ -649,7 +675,11 @@ rt_private EIF_REFERENCE b_left_rotate(EIF_REFERENCE bit, long int s)
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
+#ifdef VXWORKS
+	memcpy (arena, ARENA(bit), units * BIT_PACKSIZE);
+#else
 	bcopy(ARENA(bit), arena, units * BIT_PACKSIZE);
+#endif	/* VXWORKS */
 
 	/* First phase: full byte rotating. For instance, if BIT_UNIT is 32 and
 	 * we want to rotate 67 bits, then this is 2 * BIT_UNIT + 3, which means
@@ -1013,7 +1043,11 @@ rt_public EIF_REFERENCE bmalloc(int size)
 
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 	new = (struct bit *) eif_malloc(nbytes);
+#ifdef VXWORKS
+	memset (new, 0, nbytes);
+#else	/* VXWORKS */
 	bzero(new, nbytes);
+#endif	/* VXWORKS */
 	LENGTH(new) = size;
 
 	return (EIF_REFERENCE ) new;

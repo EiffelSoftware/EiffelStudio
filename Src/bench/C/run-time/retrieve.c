@@ -32,6 +32,10 @@
 #include <strings.h>
 #endif
 
+#ifdef EIF_WINDOWS
+#include "winsock.h"
+#endif
+
 #ifdef __VMS
  #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
  #include <errno.h>	/* redefine cma$tis... to caps before this include! */
@@ -68,8 +72,10 @@ private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 
 /* Public data declarations */
 
-#ifndef __VMS		/* r_fides declared in garcol.c for vms */
+#ifdef __VMS		/* r_fides declared in garcol.c for vms */
+#else
 public int r_fides;			/* File descriptor use for retrieve */
+public char r_fstoretype;	/* File storage type used for retrieve */
 #endif
 
 /*
@@ -113,8 +119,9 @@ int (*retrieve_read_func)() = retrieve_read;
 
 
 
-public char *eretrieve(file_desc)
+public char *eretrieve(file_desc, file_storage_type)
 EIF_INTEGER file_desc;
+EIF_CHARACTER file_storage_type;
 {
 	/* Retrieve object store in file `filename' */
 
@@ -126,11 +133,22 @@ EIF_INTEGER file_desc;
 
 	/* Open file */
 	r_fides = file_desc;
-
+	r_fstoretype = file_storage_type;
 
 	/* Read the kind of stored hierachy */
+#ifdef EIF_WINDOWS
+	if (r_fstoretype == 'F')
+		{
+		if ((read (r_fides, &rt_type, (sizeof(char)))) < sizeof (char))
+			eio();
+		}
+	else
+		if ((recv (r_fides, &rt_type, sizeof(char), 0)) < sizeof (char))
+			eio();
+#else
 	if ((read (r_fides, &rt_type, (sizeof(char)))) < sizeof (char))
 		eio();
+#endif
 
 	/* set rt_kind depending on the type to be retrieved */
 
@@ -1392,7 +1410,14 @@ int size;
 	char *buf = object;
 
 	while (amount < size) {
+#ifdef EIF_WINDOWS
+		if (r_fstoretype == 'F')
+			i = read (r_fides, buf, size - amount);
+		else
+			i = recv (r_fides, buf, size - amount, 0);
+#else
 		i = read (r_fides, buf, size - amount);
+#endif
 		if (i < 0)
 			eio();
 		amount += i;
@@ -1437,7 +1462,14 @@ public int old_retrieve_read ()
 {
 	char * ptr = general_buffer;
 
+#ifdef EIF_WINDOWS
+	if (r_fstoretype == 'F')
+		end_of_buffer = read (r_fides, ptr, buffer_size);
+	else
+		end_of_buffer = recv (r_fides, ptr, buffer_size, 0);
+#else
 	end_of_buffer = read (r_fides, ptr, buffer_size);
+#endif
 	if (end_of_buffer < 0)
 		eio();
 
@@ -1452,10 +1484,29 @@ public int retrieve_read ()
 	int part_read = 0, total_read = 0;
 
 	end_of_buffer = 0;
+#ifdef EIF_WINDOWS
+	if (r_fstoretype == 'F')
+		{
+		if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
+			eio();
+		}
+	else
+		if ((recv (r_fides, &read_size, sizeof (short), 0)) < sizeof (short))
+			eio();
+#else
 	if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
                 eio();
+#end
+
 	while (end_of_buffer < read_size) {
+#ifdef EIF_WINDOWS
+	if (r_fstoretype == 'F')
 		part_read = read (r_fides, ptr, read_size);
+	else
+		part_read = recv (r_fides, ptr, read_size, 0);
+#else
+		part_read = read (r_fides, ptr, read_size);
+#endif
 		if (part_read < 0)
 			eio();
 		end_of_buffer += part_read;

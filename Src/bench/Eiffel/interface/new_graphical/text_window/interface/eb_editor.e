@@ -633,6 +633,22 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 			update_vertical_scrollbar
 		end
 
+feature {EB_TOOL, EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW} -- Text selection access
+
+	string_selection: STRING is
+			-- Current selection string
+		require
+			has_selection: has_selection
+		local
+			copied_text: STRING
+		do
+			if has_selection then
+				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
+					Result := text_displayed.selected_string
+				end
+			end
+		end
+
 feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW} -- Edition Operations on text
 
 	cut_selection is

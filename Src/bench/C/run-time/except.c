@@ -16,6 +16,11 @@
 #include <signal.h>
 #include "config.h"
 #include <stdio.h>
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 #include "except.h"
 #include "local.h"
 #include "urgent.h"
@@ -42,12 +47,6 @@
 #endif /* WORKBENCH */
 
 #include <stdlib.h>				/* For exit(), abort() */
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #undef STACK_CHUNK
 #undef MIN_FREE
@@ -1609,6 +1608,7 @@ rt_public void panic(EIF_CONTEXT char *msg)
 	if (done++) {
 		print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n",
 			ename, msg);
+		reclaim();
 		exit(2);
 	} else
 		print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
@@ -1698,6 +1698,7 @@ rt_private void dump_core(void)
 	/* Stdout has already been flushed */
 	print_err_msg(stderr, "%s: dumping core to generate debugging information...\n",
 		ename);
+	reclaim();
 	abort();
 
 	exit(1);					/* Bede Bede Bede, That's all Folks ! */
@@ -1844,6 +1845,9 @@ rt_private void extend_trace_string(EIF_CONTEXT char *line)
 		ex_string.used += strlen(line);
 	} else {
 		ex_string.size += strlen(line) + BUFSIZ;
+#ifdef DEBUG
+		printf ("extend_trace_string: Going to do a realloc...\n");
+#endif
 		ex_string.area = (char *) realloc(ex_string.area, ex_string.size);
 		if(ex_string.area) {
 			strcpy (ex_string.area + ex_string.used, line);

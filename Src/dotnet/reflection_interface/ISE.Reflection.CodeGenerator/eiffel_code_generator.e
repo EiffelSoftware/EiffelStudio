@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			binary_operator: STRING
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
 			argument_name: STRING
 			argument_type: STRING
 			comments: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -642,8 +642,8 @@ feature {NONE} -- Implementation
 				loop
 					an_argument ?= arguments.get_Item (i)
 					if an_argument /= Void then
-						argument_name := an_argument.get_eiffel_name
-						argument_type := an_argument.get_type_eiffel_name
+						argument_name := an_argument.eiffel_name
+						argument_type := an_argument.type_eiffel_name
 					end
 					generated_code := generated_code.Concat_String_String_String_String (generated_code, argument_name, Colon, Space)
 					generated_code := generated_code.Concat_String_String (generated_code, argument_type)
@@ -656,12 +656,12 @@ feature {NONE} -- Implementation
 			end
 
 				-- feature return type
-			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_Return_Type.get_Type_eiffel_name /= Void then
-				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.get_Return_Type.get_Type_eiffel_name)
+			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_Return_Type.Type_eiffel_name /= Void then
+				generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.get_Return_Type.Type_eiffel_name)
 			end
 			if a_feature.get_Is_Field then
 				if a_feature.get_external_name /= Void and then not a_feature.get_external_name.Starts_With (Property_set_prefix) then
-					generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.get_Return_Type.get_Type_eiffel_name)
+					generated_code := generated_code.Concat_String_String_String_String (generated_code, Colon, Space, a_feature.get_Return_Type.Type_eiffel_name)
 				end
 			end
 
@@ -828,14 +828,14 @@ feature {NONE} -- Implementation
 								generated_code := generated_code.Concat_String_String_String (generated_code, Static_field, Space)
 							end						
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Signature_keyword, Space, Colon)
-							generated_code := generated_code.Concat_String_String_String_String (generated_code, a_feature.get_Return_Type.get_Type_Full_External_Name, Space, Use)
+							generated_code := generated_code.Concat_String_String_String_String (generated_code, a_feature.get_Return_Type.Type_Full_External_Name, Space, Use)
 							generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, formatter.Format_Strong_Name (eiffel_class.get_Full_External_Name), Inverted_comma)
 						end
 					else
 							-- "IL field signature : `type_full_name' use `alias'.
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Inverted_comma, IL, Space)
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Field, Space, Signature_keyword)
-						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.get_Return_Type.get_Type_Full_External_Name)				
+						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Colon, a_feature.get_Return_Type.Type_Full_External_Name)				
 						generated_code := generated_code.Concat_String_String_String_String (generated_code, Space, Use, Space)
 						generated_code := generated_code.Concat_String_String_String (generated_code, formatter.Format_Strong_Name (eiffel_class.get_Full_External_Name), Inverted_comma)
 					end
@@ -881,7 +881,7 @@ feature {NONE} -- Implementation
 					loop
 						an_argument ?= arguments.get_Item (i)
 						if an_argument /= Void then
-							Result := Result.Concat_String_String (Result, an_argument.get_Type_Full_External_Name)
+							Result := Result.Concat_String_String (Result, an_argument.Type_Full_External_Name)
 							if i < arguments.get_count - 1 then
 								Result := Result.Concat_String_String_String (Result, Comma, Space)
 							end
@@ -895,8 +895,8 @@ feature {NONE} -- Implementation
 					temp := temp.Concat_String_String_String_String (temp, Space, Colon, Space)
 				end
 
-				if a_feature.get_Return_Type /= Void and then a_feature.get_Return_Type.get_Type_Full_External_Name /= Void and then a_feature.get_Return_Type.get_Type_Full_External_Name.get_length > 0 then
-					Result := Result.Concat_String_String_String (Result, temp, a_feature.get_Return_Type.get_Type_Full_External_Name)
+				if a_feature.get_Return_Type /= Void and then a_feature.get_Return_Type.Type_Full_External_Name /= Void and then a_feature.get_Return_Type.Type_Full_External_Name.get_length > 0 then
+					Result := Result.Concat_String_String_String (Result, temp, a_feature.get_Return_Type.Type_Full_External_Name)
 				end
 				Result := Result.Concat_String_String (Result, Space)
 			end
@@ -913,7 +913,7 @@ feature {NONE} -- Implementation
 					loop
 						an_argument ?= arguments.get_Item (i)
 						if an_argument /= Void then
-							Result := Result.Concat_String_String (Result, an_argument.get_Type_Full_External_Name)
+							Result := Result.Concat_String_String (Result, an_argument.Type_Full_External_Name)
 						end
 						if i < arguments.get_count - 1 then
 							Result := Result.Concat_String_String_String (Result, Comma, Space)

@@ -45,6 +45,21 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
+	make_button_with_string (a_bitmap_index, a_string_index, a_command_id: INTEGER) is
+			-- Make a button using `a_bitmap_index' and
+			-- `a_command_id'.
+		do
+			make
+			set_style (Tbstyle_button)
+			set_string_index (a_string_index)
+			set_state (Tbstate_enabled)
+			set_bitmap_index (a_bitmap_index)
+			set_command_id (a_command_id)
+		ensure
+			bitmap_index_set: bitmap_index = a_bitmap_index
+			command_id_set: command_id = a_command_id
+		end
+
 	make_check (a_bitmap_index, a_command_id: INTEGER) is
 			-- Make a check button using `a_bitmap_index' and
 			-- `a_command_id'.

@@ -38,16 +38,16 @@ feature -- Status Report
 			Result := yHotspot_ext (item)
 		end
 	
-	hbmMask: POINTER is
-			-- Pointer to the icon bitmask bitmap.
+	mask_bitmap: WEL_BITMAP is
+			-- bitmap representing the mask.
 		do
-			Result := hbmMask_ext (item)
+			create Result.make_by_pointer(hbmMask_ext (item))
 		end
 
-	hbmColor: POINTER is
-			-- Pointer to the icon color bitmap.
+	color_bitmap: WEL_BITMAP is
+			-- bitmap representing the image (as opposed to the mask)
 		do
-			Result := hbmColor_ext (item)
+			create Result.make_by_pointer(hbmColor_ext (item))
 		end
 
 	set_fIcon (is_icon: BOOLEAN) is
@@ -70,16 +70,16 @@ feature -- Status Setting
 			set_yHotspot_ext (item, yvalue)
 		end
 
-	set_hbmMask (mask_pointer: POINTER) is
-			-- Assign `mask_pointer' to hbmMask
+	set_mask_bitmap (a_mask_bitmap: WEL_BITMAP) is
+			-- Assign `a_mask_bitmap' to hbmMask
 		do
-			set_hbmMask_ext (item, mask_pointer)
+			set_hbmMask_ext (item, a_mask_bitmap.item)
 		end
 
-	set_hbmColor (color_pointer: POINTER) is
-			-- Assign `color_pointer' to hbmColor
+	set_color_bitmap (a_color_bitmap: WEL_BITMAP) is
+			-- Assign `a_color_bitmap' to hbmColor
 		do
-			set_hbmColor_ext (item, color_pointer)
+			set_hbmColor_ext (item, a_color_bitmap.item)
 		end
 
 feature --  Measurement
@@ -88,6 +88,36 @@ feature --  Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_iconinfo
+		end
+
+feature  -- Obsolete
+
+	hbmMask: POINTER is
+		obsolete "To retrieve the mask, use `mask_bitmap' instead."
+			-- Pointer to the icon bitmask bitmap.
+		do
+			Result := hbmMask_ext (item)
+		end
+
+	hbmColor: POINTER is
+		obsolete "To retrieve the image, use `color_bitmap' instead."
+			-- Pointer to the icon color bitmap.
+		do
+			Result := hbmColor_ext (item)
+		end
+
+	set_hbmMask (mask_pointer: POINTER) is
+		obsolete "To set the mask, use `set_mask_bitmap' instead."
+			-- Assign `mask_pointer' to hbmMask
+		do
+			set_hbmMask_ext (item, mask_pointer)
+		end
+
+	set_hbmColor (color_pointer: POINTER) is
+		obsolete "To set the image, use `set_color_bitmap' instead."
+			-- Assign `color_pointer' to hbmColor
+		do
+			set_hbmColor_ext (item, color_pointer)
 		end
 
 feature {NONE} -- Externals

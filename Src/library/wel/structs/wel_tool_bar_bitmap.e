@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		require
 			positive_bitmap_id: a_bitmap_id > 0
 		do
+			internal_bitmap_id := a_bitmap_id
 			structure_make
 			set_bitmap_id (a_bitmap_id)
 		ensure
@@ -47,6 +48,8 @@ feature {NONE} -- Initialization
 			valid_tool_bar_bitmap_constant:
 				valid_tool_bar_bitmap_constant (a_bitmap_id)
 		do
+			internal_bitmap_id := a_bitmap_id
+			predefined_id := True
 			structure_make
 			set_predefined_bitmap_id (a_bitmap_id)
 		ensure
@@ -59,6 +62,7 @@ feature {NONE} -- Initialization
 			bitmap_not_void: a_bitmap /= Void
 			bitmap_exists: a_bitmap.exists
 		do
+			internal_bitmap := a_bitmap
 			structure_make
 			cwel_tbaddbitmap_set_nid (item, a_bitmap.to_integer)
 		ensure
@@ -78,10 +82,26 @@ feature -- Access
 			-- Instance that contains the bitmap resource
 			-- `bitmap_id'
 		do
-			!! Result.make (cwel_tbaddbitmap_get_hinst (item))
+			create Result.make (cwel_tbaddbitmap_get_hinst (item))
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {WEL_TOOL_BAR} -- Internal State
+
+	internal_bitmap: WEL_BITMAP
+			-- Associated bitmap. Void if a predefined bitmap or
+			-- a ressource bitmap is associated.
+
+	internal_bitmap_id: INTEGER
+			-- Associated bitmap. Void if a predefined bitmap or
+			-- a ressource bitmap is associated.
+
+feature -- Status Report
+
+	predefined_id: BOOLEAN
+			-- Are we using predefined bitmap (Cut, Copy, ...) ?
+			-- (This is not compatible with the ImageList)
 
 feature -- Element change
 
@@ -123,7 +143,7 @@ feature {NONE} -- Implementation
 
 	main_args: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

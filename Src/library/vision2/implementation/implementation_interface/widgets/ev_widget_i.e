@@ -448,7 +448,7 @@ feature -- Post-conditions
 
 feature -- Event - command association
 	
-	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button no 'mouse_button' is pressed.
 		require
@@ -458,7 +458,7 @@ feature -- Event - command association
 		end
 	
 	
-	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button no 'mouse_button' is released.
 		require
@@ -467,7 +467,7 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button no `mouse_button' is double clicked.
 		require
@@ -476,7 +476,7 @@ feature -- Event - command association
 		deferred
 		end
 			
-	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- mouse move.
 		require
@@ -485,7 +485,7 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the widget is destroyed.
 		require
@@ -494,7 +494,7 @@ feature -- Event - command association
 		deferred
 		end
 
-	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the widget has to be redrawn because it was exposed from
 			-- behind another widget.
@@ -504,7 +504,7 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- a key is pressed on the keyboard while the widget has the
 			-- focus.
@@ -514,7 +514,7 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- a key is released on the keyboard while the widget has the
 			-- focus.
@@ -524,7 +524,7 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the cursor of the mouse enter the widget.
 		require
@@ -533,7 +533,7 @@ feature -- Event - command association
 		deferred
 		end
 	
-	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- the cursor of the mouse leave the widget.
 		require

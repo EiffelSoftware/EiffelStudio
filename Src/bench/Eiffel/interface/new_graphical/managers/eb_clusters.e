@@ -109,11 +109,15 @@ feature -- Initialization
 feature -- Observer Pattern
 
 	add_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER) is
+		require
+			an_observer_not_void: an_observer /= Void
 		do
 			observer_list.extend (an_observer)
 		end
 
 	remove_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER) is
+		require
+			an_observer_not_void: an_observer /= Void
 		do
 			observer_list.start
 			observer_list.prune_all (an_observer)
@@ -138,6 +142,8 @@ feature -- Observer Pattern
 
 	on_class_added (a_class: CLASS_I) is
 			-- `a_class' has been added.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			from
 				observer_list.start
@@ -151,6 +157,8 @@ feature -- Observer Pattern
 
 	on_class_removed (a_class: CLASS_I) is
 			-- `a_class' has been removed. 
+		require
+			a_class_not_void: a_class /= Void
 		do
 			from
 				observer_list.start
@@ -164,6 +172,9 @@ feature -- Observer Pattern
 
 	on_class_moved (a_class: CLASS_I; old_cluster: CLUSTER_I) is
 			-- `a_class' has been moved away from `old_cluster'. 
+		require
+			a_class_not_void: a_class /= Void
+			old_cluster_not_void: old_cluster /= Void
 		do
 			from
 				observer_list.start
@@ -177,6 +188,8 @@ feature -- Observer Pattern
 
 	on_cluster_added (a_cluster: CLUSTER_I) is
 			-- `a_cluster' has been added
+		require
+			a_cluster_not_void: a_cluster /= Void
 		local
 			sorted: EB_SORTED_CLUSTER
 		do
@@ -193,6 +206,8 @@ feature -- Observer Pattern
 
 	on_cluster_changed (a_cluster: CLUSTER_I) is
 			-- `a_cluster' has been modified
+		require
+			a_cluster_not_void: a_cluster /= Void
 		do
 			from
 				observer_list.start
@@ -205,7 +220,9 @@ feature -- Observer Pattern
 		end
 
 	on_cluster_moved (a_cluster: EB_SORTED_CLUSTER; old_cluster: CLUSTER_I) is
-			-- `a_cluster' has been moved away from `old_cluster'. 
+			-- `a_cluster' has been moved away from `old_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		do
 			from
 				observer_list.start
@@ -218,7 +235,9 @@ feature -- Observer Pattern
 		end
 
 	on_cluster_removed (a_cluster: CLUSTER_I) is
-			-- `a_cluster' has been removed. 
+			-- `a_cluster' has been removed.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		local
 			sorted: EB_SORTED_CLUSTER
 		do
@@ -287,6 +306,8 @@ feature -- Element change
 
 	prune (obs: EB_CLUSTER_MANAGER_OBSERVER) is
 			-- Prune an observer from the observer list.
+		require
+			obs_not_void: obs /= Void
 		do
 			observer_list.start
 			observer_list.prune (obs)
@@ -294,12 +315,16 @@ feature -- Element change
 
 	extend (obs: EB_CLUSTER_MANAGER_OBSERVER) is
 			-- Add an observer to the observer list.
+		require
+			obs_not_void: obs /= Void
 		do
 			observer_list.extend (obs)
 		end
 
 	remove_class (a_class: CLASS_I) is
 			-- Remove `a_class' from its parent and notify observers.
+		require
+			a_class_not_void: a_class /= Void
 		local
 			class_list: SORTED_TWO_WAY_LIST [CLASS_I]
 			actual_parent: CLUSTER_I
@@ -319,6 +344,9 @@ feature -- Element change
 
 	add_class (a_class: STRING; a_cluster: EB_SORTED_CLUSTER) is
 			-- Add class with file name `a_class' to `a_cluster' and notify observers.
+		require
+			a_class_not_void: a_class /= Void
+			a_cluster_not_void: a_cluster /= Void
 		local
 			new_class: CLASS_I
 		do
@@ -437,6 +465,9 @@ feature -- Element change
 
 	add_class_to_cluster_i (a_class: STRING; a_cluster: CLUSTER_I) is
 			-- Add class with file name `a_class' to `a_cluster' and notify observers.
+		require
+			a_class_not_void: a_class /= Void
+			a_cluster_not_void: a_cluster /= Void
 		local
 			a_folder: EB_SORTED_CLUSTER
 		do
@@ -446,6 +477,8 @@ feature -- Element change
 
 	remove_cluster (a_cluster: EB_SORTED_CLUSTER) is
 			-- Remove `a_cluster' from its parent and notify observers.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		local
 			cluster_list: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
 			actual_parent: CLUSTER_I
@@ -471,6 +504,8 @@ feature -- Element change
 
 	remove_cluster_i (a_cluster: CLUSTER_I) is
 			-- Remove `a_cluster' from its parent and notify observers.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		local
 			a_folder: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
@@ -487,6 +522,8 @@ feature -- Element change
 
 	move_cluster (moved_cluster: CLUSTER_I; new_cluster: CLUSTER_I) is
 			-- Move `a_cluster' from `old_cluster' to `new_cluster'.
+		require
+			moved_cluster_not_void: moved_cluster /= Void
 		local
 			cluster_list: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
 			actual_parent: CLUSTER_I
@@ -580,6 +617,8 @@ feature -- Element change
 	add_cluster (a_cluster: EB_SORTED_CLUSTER; receiver: EB_SORTED_CLUSTER) is
 			-- Add `a_cluster' to `receiver' and notify observers.
 			-- Set `receiver' to `Void' if `a_cluster' should be at root-level.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		do
 			if receiver = Void then
 				a_cluster.actual_cluster.set_parent_cluster (Void)
@@ -598,7 +637,11 @@ feature -- Element change
 
 	add_cluster_i (a_cluster: CLUSTER_I; receiver: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
 			-- Add `a_cluster' to `receiver' and notify observers.
-			-- `ace_path' is the 
+			-- `ace_path' is the
+		require
+			a_cluster_not_void: a_cluster /= Void
+			receiver_not_void: receiver /= Void
+			ace_path_not_void: ace_path /= Void
 		local
 			new_subcluster, new_supercluster: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
@@ -623,6 +666,9 @@ feature -- Element change
 
 	add_top_cluster_i (a_cluster: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
 			-- Add `a_cluster' to the root of the universe and notify observers.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			ace_path_not_void: ace_path /= Void
 		local
 			new_subcluster: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
@@ -670,6 +716,11 @@ feature {NONE} -- Implementation
 	move_directory (old_path: STRING; new_path: STRING) is
 			-- Recursively move a directory from `old_path' to `new_path'.
 			-- If renaming fails, copy recursively and delete.
+		require
+			old_path_not_void: old_path /= Void
+			old_path_not_empty: not old_path.is_empty
+			new_path_not_void: new_path /= Void
+			new_path_not_empty: not new_path.is_empty
 		local
 			dir: DIRECTORY
 			retried: BOOLEAN
@@ -687,6 +738,11 @@ feature {NONE} -- Implementation
 
 	dir_rec_copy (old_path: STRING; new_path: STRING) is
 			-- Recursively move a directory from `old_path' to `new_path'.
+		require
+			old_path_not_void: old_path /= Void
+			old_path_not_empty: not old_path.is_empty
+			new_path_not_void: new_path /= Void
+			new_path_not_empty: not new_path.is_empty
 		local
 			dir1, dir2: DIRECTORY
 			tmpdir: DIRECTORY
@@ -744,6 +800,8 @@ feature {NONE} -- Implementation
 
 	folder_from_cluster (a_cluster: CLUSTER_I): EB_SORTED_CLUSTER is
 			-- Find a sorted cluster representing `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
 		local
 			path: LINKED_LIST [CLUSTER_I]
 		do
@@ -760,8 +818,8 @@ feature {NONE} -- Implementation
 
 	cluster_parents (cluster: CLUSTER_I): LINKED_LIST [CLUSTER_I] is
 			-- list of parent clusters of `cluster', from the root to the cluster, `cluster' included.
---		require
---			valid_cluster: cluster /= Void
+		require
+			valid_cluster: cluster /= Void
 		local
 			a_cluster: CLUSTER_I
 		do
@@ -778,12 +836,16 @@ feature {NONE} -- Implementation
 
 	class_parents (a_class: CLASS_I): LINKED_LIST [CLUSTER_I] is
 			-- list of parent clusters of `a_class', from the root to the class.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			Result := cluster_parents (a_class.cluster)
 		end
 
 	find_cluster_in (clusteri: CLUSTER_I; parent_cluster: EB_SORTED_CLUSTER): EB_SORTED_CLUSTER is
 			-- Find the sorted cluster associated to `clusteri' in `parent_cluster'.
+		require
+			clusteri_not_void: clusteri /= Void
 		local
 			parent_cluster_sons: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
 		do
@@ -812,6 +874,7 @@ feature {NONE} -- Implementation
 		require
 			valid_new_cluster: a_cluster /= Void
 			valid_receiver: receiver /= Void and then Eiffel_universe.clusters.has (receiver)
+			ace_path_not_void: ace_path /= Void
 		local
 			ace_clusters: LACE_LIST [CLUSTER_SD]
 			cl_name: ID_SD
@@ -897,6 +960,7 @@ feature {NONE} -- Implementation
 			-- Add an entry for `a_cluster' in the Ace file at the top level.
 		require
 			valid_new_cluster: a_cluster /= Void
+			ace_path_not_void: ace_path /= Void
 		local
 			ace_clusters: LACE_LIST [CLUSTER_SD]
 			retried: BOOLEAN

@@ -168,6 +168,7 @@ feature -- Element change
 		local
 			l_txt: BASIC_TEXT
 			l_feature: E_FEATURE
+			l_is_str: BOOLEAN
 		do
 			begin
 			new_expression
@@ -179,10 +180,6 @@ feature -- Element change
 					l_feature ?= class_c.feature_table.item (name_of_current_feature).api_feature (class_c.class_id)
 				else
 					l_txt := create {LOCAL_TEXT}.make (name_of_current_feature)
-					text.add_string ("unresolved feature name")
-					text.add_new_line
-					text.add_indent
-					text.add (l_txt)
 				end		
 			end
 			
@@ -193,63 +190,61 @@ feature -- Element change
 						-- Check if feature is frozen.
 					text.add (Ti_frozen_keyword)
 					text.add_space
-				elseif current_feature.is_deferred or l_feature.is_deferred then
+				end
+				if current_feature.is_deferred or l_feature.is_deferred then
 						-- Check if feature is deferred.
 					text.add (Ti_deferred_keyword)
 					text.add_space
 				end
+				if current_feature.is_infix or l_feature.is_infix then
+						-- Check if feature is infix.
+					text.add (Ti_infix_keyword)
+					text.add_space
+					text.add_string ("%"")
+					l_is_str := True
+				elseif current_feature.is_prefix or l_feature.is_prefix then
+						-- Check if feature is prefix.
+					text.add (Ti_prefix_keyword)
+					text.add_space
+					text.add_string ("%"")
+					l_is_str := True
+				end	
 				text.add_feature (l_feature, name_of_current_feature)
+				if l_is_str then
+					text.add_string ("%"")
+				end
 			else
 				l_txt := create {LOCAL_TEXT}.make (name_of_current_feature)
 				text.add_new_line
 				text.add_indent
+				if current_feature.is_deferred then
+					text.add_string (Ti_deferred_keyword.image)
+					text.add_space
+				end
 				if current_feature.is_frozen then
 					text.add_string (Ti_frozen_keyword.image)
 					text.add_space
 				end
+				if current_feature.is_infix then
+					text.add_string (Ti_infix_keyword.image)
+					text.add_space
+					text.add_string ("%"")
+					l_is_str := True
+				elseif current_feature.is_prefix then
+					text.add_string (Ti_prefix_keyword.image)
+					text.add_space
+					text.add_string ("%"")
+					l_is_str := True
+				end
 				text.add (l_txt)
+				if l_is_str then
+					text.add_string ("%"")
+				end
 			end	
 			
 			put_signature
 			put_comments
-		end		
-
---	put_property_or_event_feature is
---			-- Format an event ot property feature.
---		require
---			is_prop_or_event: current_feature.is_property_or_event
---		local
---			l_event: CONSUMED_EVENT
---			l_property: CONSUMED_PROPERTY
---		do
---			if current_feature.is_event then
---				l_event ?= current_feature
---				if l_event /= Void then
---					if l_event.adder /= Void then
---						name_of_current_feature := l_event.adder.eiffel_name
---						put_normal_feature
---					end
---					if l_event.remover /= Void then
---						name_of_current_feature := l_event.remover.eiffel_name
---						put_normal_feature
---					end
---					name_of_current_feature := clone (current_feature.eiffel_name)
---				end		
---			elseif current_feature.is_property then
---				l_property ?= current_feature
---				if l_property /= Void then
---					if l_property.getter /= Void then
---						name_of_current_feature := l_property.getter.eiffel_name
---						put_normal_feature
---					end
---					if l_property.setter /= Void then
---						name_of_current_feature := l_property.setter.eiffel_name
---						put_normal_feature
---					end
---					name_of_current_feature := clone (current_feature.eiffel_name)
---				end		
---			end
---		end	
+		end
 
 feature {NONE} -- Element Change
 

@@ -75,6 +75,40 @@ feature -- Access
 			Result ?= {EV_ITEM} Precursor
 		end
 
+feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			implementation.set_selected (flag)
+		ensure
+			is_selected: flag implies is_selected
+		end
+
+	toggle is
+			-- Change the state of selection of the item.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			implementation.toggle
+		end
+
+	set_expand (flag: BOOLEAN) is
+			-- Expand the item if `flag', collapse it otherwise.
+			-- Do nothing if the item is not a sub-tree.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			implementation.set_expand (flag)
+		ensure
+			is_expanded: flag implies is_expanded
+		end
+
 feature -- Status report
 
 	is_selected: BOOLEAN is
@@ -94,13 +128,23 @@ feature -- Status report
 			Result := implementation.is_expanded
 		end
 
+	is_parent: BOOLEAN is
+			-- is the item the parent of other items?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_parent
+		end
+
 feature -- Element change
 
 	set_parent (par: EV_TREE_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+			-- Can be used only if the item has no children
 		require
 			exists: not destroyed
+			not_parent: not is_parent
 		do
 			implementation.set_parent (par)
 		ensure

@@ -99,7 +99,9 @@ feature -- Access
 			-- `Result' is layout constructor item of
 			-- root node or Void if none.
 		do
-			Result ?= first
+			if not is_empty then
+				Result ?= first
+			end
 		ensure
 			not_empty_implies_has_root_object: not is_empty implies Result /= Void
 		end
@@ -132,7 +134,9 @@ feature {GB_XML_LOAD} -- Implementation
 			-- Update expanded state of root item and all children
 			-- recursively, from information held in each associated object.
 		do
-			Object_handler.recursive_do_all (root_item.object, agent expand_layout_item)
+			if root_item /= Void then
+				Object_handler.recursive_do_all (root_item.object, agent expand_layout_item)
+			end
 		end
 	
 feature {GB_OBJECT_HANDLER} -- Implementation

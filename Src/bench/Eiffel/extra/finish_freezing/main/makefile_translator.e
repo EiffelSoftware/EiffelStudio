@@ -1,7 +1,11 @@
-class MAKEFILE_TRANSLATOR
+class
+	MAKEFILE_TRANSLATOR
 
 inherit
 	PATH_CONVERTER
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -19,8 +23,7 @@ feature -- Initialization
 			create object_dependent_directories.make (50)
 			create dependent_directories.make (55)
 
-			eiffel_dir := env.get ("ISE_EIFFEL")
-			eiffel_dir := short_path
+			eiffel_dir := short_path (env.get ("ISE_EIFFEL"))
 			platform := env.get ("ISE_PLATFORM")
 			compiler := env.get ("ISE_C_COMPILER")
 

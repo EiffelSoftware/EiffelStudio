@@ -57,7 +57,7 @@ feature -- Access
 	parent: EV_COMBO_BOX_IMP is
 			-- Parent of `Current'.
 		do
-			Result ?= parent
+			Result ?= wel_parent
 		ensure
 			parent_not_void: parent /= Void
 		end

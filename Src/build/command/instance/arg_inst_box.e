@@ -9,9 +9,11 @@ inherit
 		export
 			{ANY} all
 		redefine
-			new_icon
+			new_icon,
+			create_new_icon
 		end	
 	
+
 
 creation
 
@@ -20,14 +22,32 @@ creation
 	
 feature 
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE; tool: COMMAND_TOOL) is
+		local
+			parent_scrolled_w: SCROLLED_W
 		do
+			command_tool := tool
 			box_create (a_name, a_parent)
+			set_column_layout
+			set_preferred_count (5)
+			parent_scrolled_w ?= a_parent
+			if parent_scrolled_w /= Void then
+				parent_scrolled_w.set_working_area (Current)
+			end
 		end;
 
 	
 feature {NONE}
 
-	new_icon: ARG_INST_ICON;
+	new_icon: ARG_INST_ICON
+		-- Type of icon contained in the current box
+
+	command_tool: COMMAND_TOOL
+		-- Parent comand tool
+
+	create_new_icon is
+		do
+			!! new_icon.make (command_tool)
+		end
 		
 end

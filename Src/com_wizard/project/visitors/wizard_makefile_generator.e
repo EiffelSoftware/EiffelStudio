@@ -85,7 +85,7 @@ feature -- Miscellaneous
 			valid_obj_list: not obj_list.is_empty
 		do
 			create Result.make (1000)
-			Result.append ("# ecom.lib - Makefile for Microsoft C%N%NMV = copy%N")
+			Result.append ("# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File%N%NMV = copy%N")
 			if c_compiler.is_equal ("msc") then
 				Result.append (makefile_macros_msc)
 			else
@@ -178,7 +178,7 @@ feature -- Basic operations
 			Result.append ("w" + c_to_obj (c_file_name) +
 							": " + c_file_name + "%N%
 							%	$(CC) $(CFLAGS) -DWORKBENCH	")
-			if Ise_c_compiler_value.is_equal ("msc") then
+			if not use_bcb then
 				Result.append (" -nologo ")
 			end
 			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")
@@ -186,7 +186,6 @@ feature -- Basic operations
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
-
 		
 	save_file (content, a_file_name: STRING) is
 			-- Save file with content `content' and file name `a_file_name'.

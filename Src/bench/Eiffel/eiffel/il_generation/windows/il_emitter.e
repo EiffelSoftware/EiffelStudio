@@ -158,7 +158,7 @@ feature -- Retrieval
 		do
 			create l_uni.make (a_path)
 			assembly_info := implementation.assembly_info_from_assembly (l_uni)
-			assembly_found := implementation.is_successful
+			assembly_found := assembly_info /= Void
 		end
 
 feature -- XML generation

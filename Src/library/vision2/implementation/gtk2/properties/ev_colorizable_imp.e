@@ -68,6 +68,9 @@ feature -- Status setting
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `foreground_color'
 		do
+			if needs_event_box then
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+			end
 			background_color_imp ?= a_color.implementation
 			real_set_background_color (visual_widget, a_color)
 			if visual_widget /= c_object then

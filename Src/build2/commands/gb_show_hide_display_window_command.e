@@ -17,13 +17,6 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	WIZARD_SHARED
-		rename
-			pixmap as wizard_pixmap
-		export
-			{NONE} all
-		end
 
 feature {GB_COMMAND_HANDLER} -- Initialization
 

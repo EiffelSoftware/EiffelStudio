@@ -47,9 +47,7 @@ feature -- Status setting
 					-- become very annoying.
 					
 				iconable_tool ?= window
-				if system_status.is_wizard_system then
-					window.show_relative_to_window (first_window)
-				elseif system_status.tools_always_on_top then
+				if system_status.tools_always_on_top then
 					window.show_relative_to_window (main_window)
 				else
 					window.show
@@ -64,14 +62,6 @@ feature -- Status setting
 				window.hide
 			end
 			update_controls (is_selected)
-		end
-
-feature {NONE} -- Implementation
-		
-	first_window: WIZARD_WINDOW is
-			-- `Result' is window reference
-			-- by `Current'.
-		deferred
 		end
 
 end -- class GB_RESTORABLE_WINDOW_COMMAND

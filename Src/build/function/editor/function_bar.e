@@ -27,5 +27,15 @@ feature
 	unregister_holes is
 		do
 		end;
+
+	clear is
+		do
+			edit_hole.set_empty_symbol
+		end;
+
+	update_edit_hole_symbol is
+		do
+			edit_hole.set_full_symbol
+		end;
 		
 end -- class FUNCTION_BAR

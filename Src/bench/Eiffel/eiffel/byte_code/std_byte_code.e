@@ -52,6 +52,10 @@ feature
 				-- Enlarge the tree to get some attribute where we
 				-- can store information gathered by analyze.
 			enlarge_tree;
+
+				-- Analyze arguments
+			analyze_arguments;
+
 				-- Analyze preconditions
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else
@@ -143,6 +147,32 @@ feature
 			end
 		end;
 
+	analyze_arguments is
+			-- Analyze arguments (check for expanded)
+		local
+			args: like arguments
+			i, nb: INTEGER
+			arg: TYPE_I
+		do
+			args := arguments
+			if args /= Void then
+				from
+					i := args.lower
+					nb := args.count
+				until
+					i > nb
+				loop
+					arg := real_type (args @ 1)
+					if arg.is_expanded then
+						context.force_gc_hooks
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+			
 	add_in_log (encoded_name: STRING) is
 		do
 			System.used_features_log_file.add (Context.class_type, feature_name, encoded_name);

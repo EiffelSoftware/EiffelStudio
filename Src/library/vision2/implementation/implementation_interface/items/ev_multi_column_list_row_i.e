@@ -18,10 +18,10 @@ inherit
 			interface
 		end
 
-	--EV_PICK_AND_DROPABLE_I
-	--	redefine
-	--		interface
-	--	end
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
 	
 feature -- Access
 
@@ -100,6 +100,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/09 01:18:30  king
+--| Now inheriting from PND
+--|
 --| Revision 1.30  2000/03/03 00:03:26  rogers
 --| Split set_selected into enable_select and disable_select.
 --|

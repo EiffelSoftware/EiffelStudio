@@ -433,8 +433,8 @@ feature {EV_ANY_I} -- WEL Implementation
 					/= Void then
 					offsets := pre_drop_it.relative_position
 					pre_drop_it.pointer_button_press_actions.call
-					([x_pos - offsets.integer_arrayed @ 1 + 1,
-					y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0,
+					([x_pos - offsets.integer_item (1) + 1,
+					y_pos - offsets.integer_item (2), button, 0.0, 0.0, 0.0,
 					pt.x, pt.y])
 				end
 					-- We record that the press actions have been called.
@@ -471,8 +471,8 @@ feature {EV_ANY_I} -- WEL Implementation
 				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
 					offsets := post_drop_it.relative_position
 					post_drop_it.pointer_button_press_actions.call
-						([x_pos - offsets.integer_arrayed @ 1 + 1,
-						y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0,
+						([x_pos - offsets.integer_item (1) + 1,
+						y_pos - offsets.integer_item (2), button, 0.0, 0.0,
 						0.0, pt.x, pt.y])
 				end
 			end
@@ -494,8 +494,8 @@ feature {EV_ANY_I} -- WEL Implementation
 			if it /= Void then
 				offsets := it.relative_position
 				it.pointer_double_press_actions.call
-					([x_pos - offsets.integer_arrayed @ 1 + 1,
-					y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0,
+					([x_pos - offsets.integer_item (1) + 1,
+					y_pos - offsets.integer_item (2), button, 0.0, 0.0, 0.0,
 					pt.x, pt.y])
 			end
 		end
@@ -648,8 +648,8 @@ feature {EV_ANY_I} -- WEL Implementation
 			if it /= Void then
 				offsets := it.relative_position
 				it.pointer_motion_actions.call (
-					[x_pos - offsets.integer_arrayed @ 1 + 1,
-				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x,
+					[x_pos - offsets.integer_item (1) + 1,
+				y_pos - offsets.integer_item (2), 0.0, 0.0, 0.0, pt.x,
 					pt.y])
 			end
 			if pnd_item_source /= Void then

@@ -56,6 +56,12 @@ feature {NONE}
 			Result.append ("/bitmaps/dark_save.bm")
 		end;
 
+	bm_Debug_quit: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/debug_quit.bm")
+		end;
+
 	bm_Debug_run: STRING is
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
@@ -198,6 +204,12 @@ feature {NONE}
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
 			Result.append ("/bitmaps/showdescendants.bm")
+		end;
+
+	bm_Showexternals: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/showexternals.bm")
 		end;
 
 	bm_Showflat: STRING is

@@ -42,7 +42,8 @@ feature
 			set_icon_name (tool_name)
 		end;
 
-	tool_name: STRING is do Result := l_Showcustom end;
+	--tool_name: STRING is do Result := l_Showcustom end;
+	tool_name: STRING is do Result := "Custom" end;
 	text_window: CUSTOM_TEXT;
 	hole: CUSTOM_HOLE;
 	
@@ -74,6 +75,8 @@ feature
 	format_choice: OPT_PULL;
 	export_choice: OPT_PULL;
 	origin_choice: OPT_PULL;
+
+dummy_choice: TOGGLE_B;
 
 	current_choice: PUSH_BG;
 	all_choice: PUSH_BG;
@@ -187,6 +190,7 @@ feature
 				!!origin_spec.make (new_name, global_form);
 					!!origin_label.make (new_name, origin_spec);
 					!!origin_choice.make (new_name, origin_spec);
+!!dummy_choice.make ("FFOOFF", origin_choice);
 						!!current_choice.make (new_name, origin_choice);
 						!!all_choice.make (new_name, origin_choice);
 						!!all_but_choice.make (new_name, origin_choice);
@@ -204,8 +208,7 @@ feature
 						!!complete_choice.make (new_name, format_choice);
 					!!indent_label.make (new_name, format_spec);
 					!!indent_scale.make (new_name, format_spec);
-io.putstring ("FIXME: horizontal scale wanted%N");
---					indent_scale.set_horizontal (true);
+					indent_scale.set_horizontal (true);
 				!!catalog.make (new_name, global_form);
 					!!catalog_label.make (new_name, catalog);
 					!!catalog_list.make (new_name, catalog);
@@ -225,9 +228,10 @@ io.putstring ("FIXME: horizontal scale wanted%N");
 			global_form.attach_top_widget (separator1, name_spec, 0);
 				name_spec.attach_top (name_label, 4);
 				name_spec.attach_left (name_label, 3);
-				name_spec.attach_right_widget (name_label, text_window, 3);
+				name_spec.attach_right_widget (text_window, name_label, 3);
 				name_spec.attach_left (text_window, 140);
 				name_spec.attach_right (text_window, 0);
+				name_spec.attach_bottom (text_window, 0);
 			global_form.attach_top (separator2, 70);
 			global_form.attach_top_widget (separator1, separator7, 0);
 			global_form.attach_bottom_widget (separator2, separator7, 0);
@@ -334,6 +338,7 @@ io.putstring ("FIXME: horizontal scale wanted%N");
 			set_size (420, 450);
 			origin_label.set_text (l_origin);
 			current_choice.set_text (l_current);
+dummy_choice.set_text ("GAGAGAG");
 			all_choice.set_text (l_all);
 			all_but_choice.set_text (l_all_but);
 			drop_origin_choice.set_text (l_drop);

@@ -18,6 +18,13 @@ feature -- making
         end;
  
 	class_i: CLASS_I;
+
+	file_name: STRING is
+		do
+			Result := class_i.file_name
+		end;
+
+	set_file_name (s: STRING) is do end;
  
 feature -- dragging
 

@@ -24,13 +24,18 @@ feature {NONE}
 
 	work (argument: ANY) is
 			-- Quit project after saving.
+		local
+			file: UNIX_FILE
 		do
 			if project_tool.initialized then
 				-- Project_file is not void
 				set_global_cursor (watch_cursor);
 				project_tool.set_changed (false);
-	--System.server_controler.wipe_out;
---	Workbench.basic_store (Project_file_name);
+				System.server_controler.wipe_out;
+				!!file.make (Project_file_name);
+				file.open_write;
+				Workbench.basic_store (file);
+				file.close;
 				restore_cursors
 			end;
 			exit

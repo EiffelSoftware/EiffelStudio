@@ -45,7 +45,7 @@ feature
 					text_window.clean;
 					display_header (stone);
 					text_window.put_string (stone_text);
-					if stone.clickable then
+					if stone.clickable and (stone.click_list /= Void) then
 						text_window.share (stone.click_list)
 					end;
 					text_window.set_editable;

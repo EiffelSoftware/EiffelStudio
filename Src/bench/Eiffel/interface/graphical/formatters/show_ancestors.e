@@ -16,9 +16,9 @@ feature
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window);
-			indent := 5
+			indent := 4
 		ensure
-			default_indent: indent = 5
+			default_indent: indent = 4
 		end;
 
 	symbol: PIXMAP is 
@@ -37,24 +37,31 @@ feature {NONE}
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display parents of `c' in tree form.
 		local
---			parents: FIXED_LIST [CL_TYPE_A];
---			d: CLASSC_STONE
+			parents: FIXED_LIST [CL_TYPE_A];
+			p: CLASSC_STONE;
+			class_c: CLASS_C
 		do
---			if c.id /= System.any_id then
---				from
---					parents := c.parents;
---					parents.start
---				until
---					parents.offright
---				loop
---					d := parents.item.associated_class;
---					text_window.put_string (tabs (i));
---					text_window.put_clickable_string (d, d.signature);
---					text_window.put_string ("%N");
---					display_info (i+1, d);
---					parents.forth
---				end
---			end
+			class_c := c.class_c;
+			if 
+				(class_c.id /= System.any_id) or else
+				(c = formatted)
+			then
+				parents := class_c.parents;
+				if not parents.empty then
+					from
+						parents.start
+					until
+						parents.after
+					loop
+						!!p.make (parents.item.associated_class);
+						text_window.put_string (tabs (i));
+						text_window.put_clickable_string (p, p.signature);
+						text_window.put_string ("%N");
+						display_info (i+1, p);
+						parents.forth
+					end
+				end
+			end
 		end
 
 end

@@ -41,7 +41,7 @@ feature -- Element change
 	set_x (a_x: INTEGER) is
 			-- Assign `a_x' to `x'.
 		do
-			x := new_x
+			x := a_x
 		ensure
 			x_assigned: x = a_x
 		end
@@ -94,6 +94,9 @@ end -- class EV_COORDINATES
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/16 01:33:47  oconnor
+--| typo fix
+--|
 --| Revision 1.6  2000/03/16 01:12:44  oconnor
 --| improved operand names and comments
 --|

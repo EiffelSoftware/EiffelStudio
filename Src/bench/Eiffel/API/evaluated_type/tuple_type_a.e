@@ -1,7 +1,3 @@
--- Experimental TUPLE TYPE. The resolution
--- of 'FIXMEs' and 'WHAT TO DOs' depends on
--- final design of the TUPLE class!
-
 indexing
 	description: "Description of a TUPLE type."
 	date: "$Date$"
@@ -15,10 +11,7 @@ inherit
 			valid_generic, set_generics, solved_type, type_i, good_generics,
 			error_generics, check_constraints,
 			same_as, same_class_type, is_tuple, associated_class,
-			storage_info, storage_info_with_name, substitute,
-			generate_constraint_creation_routine_error,
-			generate_constraint_error, internal_conform_to,
-			set_base_class_id
+			substitute, internal_conform_to, set_base_class_id
 		end
 
 feature -- Properties
@@ -109,19 +102,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 			else
 				-- Conformance TUPLE -> other classtypes
-				other_type ?= other
-
-				if other_type /= Void then
-					-- Check whether ARRAY [ANY] conforms to other.
-					Result := array_type_a.conform_to (other)
-				end
+				Result := Precursor (other, in_generics)
 			end
 		end
 
-	array_type_a : TYPE_A is
+	any_type_a : CL_TYPE_A is
 
 		once
-			Result := System.instantiator.Array_type_a
+			!!Result
+			Result.set_base_class_id (System.any_id)
 		end
 
 	type_i: TUPLE_TYPE_I is
@@ -136,11 +125,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				count := generics.count
 				!!meta_generic.make (count)
 				!!true_generics.make (1, count)
-				!!Result
-				Result.set_base_id (base_class_id)
-				Result.set_meta_generic (meta_generic)
-				Result.set_true_generics (true_generics)
-				Result.set_is_expanded (is_expanded)
 			until
 				i > count
 			loop
@@ -148,6 +132,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 				true_generics.put (generics.item (i).type_i, i)
 				i := i + 1
 			end
+
+			!!Result
+			Result.set_base_id (base_class_id)
+			Result.set_meta_generic (meta_generic)
+			Result.set_true_generics (true_generics)
+			Result.set_is_expanded (is_expanded)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TUPLE_TYPE_A is
@@ -164,9 +154,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := 1
 					count := generics.count
 					!!new_generics.make (1, count)
-					!!Result
-					Result.set_base_class_id (base_class_id)
-					Result.set_generics (new_generics)
 				until
 					i > count
 				loop
@@ -174,6 +161,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 						(generics.item (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
+				!!Result
+				Result.set_base_class_id (base_class_id)
+				Result.set_generics (new_generics)
 			end
 		end
 
@@ -184,8 +174,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			tuple_type: TUPLE_TYPE_A
 			tuple_type_generics: like generics
 		do
-			-- FIXME? MS
-
 			if base_class_id.is_equal (type.base_class_id) then
 				tuple_type ?= type
 				if tuple_type /= Void then
@@ -205,48 +193,46 @@ feature {COMPILER_EXPORTER} -- Primitives
 			else
 					-- `type' is a descendant type of Current: so we
 					-- have to check the current generic parameters
---                Result := type.generic_conform_to (Current)
+				Result := type.generic_conform_to (Current)
 			end
-			Result := True
 		end
 				
 	good_generics: BOOLEAN is
-			-- A TUPLE may have any number of generic
-			-- parameters. Hence always true.
+
+		local
+			i, count: INTEGER
 		do
-			Result := True
+			-- Any number of generic parameters is allowed.
+			-- Therefore we only check the gen. parameters. 
+			from
+				Result := True
+				count := generics.count
+				i := 1
+			until
+				i > count or else not Result
+			loop
+				Result := generics.item (i).good_generics
+				i := i + 1
+			end
 		end
 
 	error_generics: VTUG is
+
 		local
-			base_generics: EIFFEL_LIST [FORMAL_DEC_AS]
-			i, base_count: INTEGER
+			i, count: INTEGER
 		do
-			-- FIXME! MS
-			base_generics := associated_class.generics
-			if base_generics /= Void then
-				base_count := base_generics.count
-				if (base_count <= generics.count) then
-					from
-						i := 1
-					until
-						i > base_count or else (Result /= Void)
-					loop
-						if not generics.item (i).good_generics then
-							Result := generics.item (i).error_generics
-						end
-						i := i + 1
-					end
+			-- Any number of generic parameters is allowed.
+			-- Therefore we only check the gen. parameters. 
+			from
+				count := generics.count
+				i := 1
+			until
+				i > count or else (Result /= Void)
+			loop
+				if not generics.item (i).good_generics then
+					Result := generics.item (i).error_generics
 				end
-			end
-			if Result = Void then
-				if base_generics = Void then
-					!VTUG1! Result
-				else
-					!VTUG2! Result
-				end
-				Result.set_type (Current)
-				Result.set_base_class (associated_class)
+				i := i + 1
 			end
 		end
 
@@ -257,7 +243,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_param: TYPE_A
 			error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
-			-- FIXME! MS
+			-- There are no constraints in a TUPLE type.
+			-- Therefore we only check the gen. parameters. 
+
 			from
 				i := 1
 				count := generics.count
@@ -269,6 +257,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- We append the list coming from the recursive call
 
 				error_list := gen_param.check_constraints (context_class)
+
 				if error_list /= Void then
 					if Result = void then
 						!! Result.make
@@ -287,7 +276,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count, pos: INTEGER
 			constraint_type: TYPE_A
 			formal_type: FORMAL_A
-			tuple_type: TUPLE_TYPE_A
+			gen_type: GEN_TYPE_A
 		do
 			from
 				i := 1
@@ -302,8 +291,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 					pos := formal_type.position
 					generics.force (new_generics.item (pos), i)
 				elseif constraint_type.generics /= Void then
-					tuple_type ?= constraint_type
-					tuple_type.substitute (new_generics)
+					gen_type ?= constraint_type
+					gen_type.substitute (new_generics)
 				end
 			
 				i := i + 1
@@ -335,83 +324,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				   i := i + 1
 				end
 			end
-		end
-
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		local
-			gens: FIXED_LIST [S_TYPE_INFO]
-			count, i: INTEGER
-		do
-			-- WHAT TO DO HERE?
-			!! Result.make (Void, associated_class.id.id)
-			count := generics.count
-			!! gens.make_filled (count)
-			from
-				gens.start
-				i := 1
-			until
-				i > count
-			loop
-				gens.replace (generics.item (i).storage_info (classc))
-				gens.forth
-				i := i + 1
-			end
-			Result.set_generics (gens)
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		local
-			gens: FIXED_LIST [S_TYPE_INFO]
-			count, i: INTEGER
-			ass_classc: CLASS_C
-			class_name: STRING
-		do
-			-- WHAT TO DO HERE?
-			ass_classc := associated_class
-			class_name := clone (ass_classc.name)
-			!! Result.make (class_name, ass_classc.id.id)
-			count := generics.count
-			!! gens.make_filled (count)
-			from
-				gens.start
-				i := 1
-			until
-				i > count
-			loop
-				gens.replace (generics.item (i).storage_info_with_name (classc))
-				gens.forth
-				i := i + 1
-			end
-			Result.set_generics (gens)
-		end
-
-feature {NONE} -- Error generation
-
-	generate_constraint_error (error_list: LINKED_LIST [CONSTRAINT_INFO];
-		current_type, constraint_type: TYPE_A; position: INTEGER) is
-			-- Build the error corresponding to the VTCG error
-		local
-			constraint_info: CONSTRAINT_INFO
-		do
-			--WHAT TO DO?
---            !! constraint_info
---            constraint_info.set_type (Current)
---            constraint_info.set_actual_type (current_type)
---            constraint_info.set_formal_number (position)
---            constraint_info.set_constraint_type (constraint_type)
---            error_list.extend (constraint_info)
-		end
-
-	generate_constraint_creation_routine_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
-			-- Build the error corresponding to the VTCG error
-		local
-			constraint_info: CONSTRAINT_INFO
-		do
 		end
 
 end -- class TUPLE_TYPE_A

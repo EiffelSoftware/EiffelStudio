@@ -46,7 +46,6 @@ feature -- Access
 			-- Color value of resource named `s', or rgb color defined by
 			-- `rd', `gd', `bd' if resource does not exist.
 		local
-			s1: STRING
 			r: COLOR_RESOURCE
 		do
 			r ?= resources.item (s)

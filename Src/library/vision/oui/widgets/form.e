@@ -19,7 +19,7 @@ inherit
 
 creation
 
-	make
+	make, make_unmanaged
 
 feature {NONE} -- Creation
 

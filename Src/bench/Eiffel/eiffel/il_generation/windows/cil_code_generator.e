@@ -181,6 +181,14 @@ feature {NONE} -- Access
 			-- Precomputed signature of `done_token' so that we do not have
 			-- to compute it too often
 
+	exception_sig: MD_FIELD_SIGNATURE is
+			-- Precomputed signature of `exception_token' so that we do not have
+			-- to compute it too often
+		do
+				-- It is the same as `sync_sig'
+			Result := sync_sig
+		end
+
 	sync_sig: MD_FIELD_SIGNATURE
 			-- Precomputed signature of `sync_token' so that we do not have
 			-- to compute it too often
@@ -4074,6 +4082,16 @@ feature {NONE} -- Once management
 			result_not_void: Result /= Void
 		end
 
+	once_exception_name (feature_name: STRING): STRING is
+			-- Name of the field that holds exception raised during execution of once routine
+		require
+			feature_name_not_void: feature_name /= Void
+		do
+			Result := feature_name + "_exception"
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	once_result_name (feature_name: STRING): STRING is
 			-- Name of the field that stores result of a once function
 		require
@@ -4170,7 +4188,7 @@ feature -- Once management
 			end
 		end
 
-	done_token, result_token: INTEGER
+	done_token, result_token, exception_token: INTEGER
 			-- Token for static fields holding value if once has been computed,
 			-- its value if computed.
 			-- Ok to use token in a non-module specific code here, because they
@@ -4207,6 +4225,16 @@ feature -- Once management
 				done_sig)
 			if not feat.is_process_relative then
 				current_module.define_thread_static_attribute (done_token)
+			end
+
+				-- Generate field that holds exception raised during evaluation
+			uni_string.set_string (once_exception_name (name))
+			exception_token := md_emit.define_field (uni_string,
+				current_class_token,
+				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
+				exception_sig)
+			if not feat.is_process_relative then
+				current_module.define_thread_static_attribute (exception_token)
 			end
 
 			if not feat.type.is_void then
@@ -4258,6 +4286,8 @@ feature -- Once management
 			class_data_token := current_module.class_data_token (system.class_of_id (feature_i.access_in))
 			uni_string.set_string (once_done_name (name))
 			done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
+			uni_string.set_string (once_exception_name (name))
+			exception_token := md_emit.define_member_ref (uni_string, class_data_token, exception_sig)
 			if feature_i.has_return_value then
 				l_sig := field_sig
 				l_sig.reset
@@ -4299,14 +4329,16 @@ feature -- Once management
 				--       try {
 				--          ... -- code of once feature body
 				--       }
-				--       fault {
-				--          done := false
-				--          result := default_value -- if required
+				--       catch (Object e) {
+				--          exception := e
 				--       }
 
 				-- Thread-relative code looks like
 				--    if not done then
 				--       guarded_body -- see above
+				--    end
+				--    if exception /= Void then
+				--       raise (exception)
 				--    end
 				--    return result -- if required
 				
@@ -4322,6 +4354,9 @@ feature -- Once management
 				--       finally {
 				--          unlock (sync)
 				--       }
+				--    end
+				--    if exception /= Void then
+				--       raise (exception)
 				--    end
 				--    return result -- if required
 
@@ -4353,7 +4388,7 @@ feature -- Once management
 			branch_on_true (once_done_label)
 			put_boolean_constant (True)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, done_token)
-			method_body.once_fault_block.set_try_offset (method_body.count)
+			method_body.once_catch_block.set_try_offset (method_body.count)
 		ensure
 			once_generation: once_generation
 			done_token_set: done_token /= 0
@@ -4371,29 +4406,24 @@ feature -- Once management
 			-- current_feature_is_once: byte_context.current_feature.is_once
 		local
 			fault_label: IL_LABEL
+			return_label: IL_LABEL
 			is_process_relative: BOOLEAN
 			has_result: BOOLEAN
 		do
 				-- Close try block and start fault block
 				--       }
-				--       fault {
-				--          done := false
-				--          result := default_value -- if required
+				--       catch (Object e) {
+				--          exception := e
 				--       }
 			fault_label := create_label
 			generate_leave_to (fault_label)
-			method_body.once_fault_block.set_try_end (method_body.count)
-			method_body.once_fault_block.set_handler_offset (method_body.count)
-			put_boolean_constant (False)
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, done_token)
-			if result_token /= 0 then
-					-- Assign default value to result
-				has_result := True
-				put_default_value (result_type (byte_context.current_feature))
-				generate_once_store_result
-			end
-			method_body.put_opcode (feature {MD_OPCODES}.endfault)
-			method_body.once_fault_block.set_handler_end (method_body.count)
+			method_body.once_catch_block.set_try_end (method_body.count)
+			method_body.once_catch_block.set_class_token (current_module.object_type_token)
+			method_body.update_stack_depth (1)
+			method_body.once_catch_block.set_handler_offset (method_body.count)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, exception_token)
+			generate_leave_to (fault_label)
+			method_body.once_catch_block.set_handler_end (method_body.count)
 			mark_label (fault_label)
 
 			if ready_token /= 0 then
@@ -4428,7 +4458,19 @@ feature -- Once management
 				mark_label (once_ready_label)
 			end
 			
-			if has_result then
+				-- Check if there was an exception:
+				--    if exception /= Void then
+				--       raise (exception)
+				--    end
+			return_label := create_label
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, exception_token)
+			branch_on_false (return_label)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, exception_token)
+			method_body.put_throw
+			mark_label (return_label)
+			
+			if result_token /= 0 then
+				has_result := True
 					-- Load result of a feature:
 					-- return result -- if required
 				generate_once_result
@@ -4436,6 +4478,7 @@ feature -- Once management
 			generate_return (has_result)
 
 			done_token := 0
+			exception_token := 0
 			result_token := 0
 			ready_token := 0
 			sync_token := 0
@@ -4712,7 +4755,12 @@ feature -- Exception handling
 	generate_end_exception_block is
 			-- Mark end of rescue clause.
 		do
-			method_body.put_rethrow
+			put_integer_32_constant (feature {EXCEP_CONST}.routine_failure)
+			put_void
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld,
+				current_module.ise_last_exception_token)
+			method_body.put_newobj (current_module.ise_eiffel_exception_chained_ctor_token, 3)
+			method_body.put_throw
 			method_body.exception_block.set_end_position (method_body.count)
 			method_body.mark_label (rescue_label)
 		end
@@ -4817,7 +4865,7 @@ feature -- Assertions
 			put_integer_32_constant (feature {EXCEP_CONST}.precondition)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld,
 				current_module.ise_assertion_tag_token)
-			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 1)
+			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 2)
 			method_body.put_throw
 		end
 
@@ -4833,7 +4881,7 @@ feature -- Assertions
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr,
 					md_emit.define_string (uni_string))
 			end
-			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 1)
+			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 2)
 			method_body.put_throw
 		end
 

@@ -137,7 +137,6 @@ feature -- Creation
 	set_callbacks is
 			-- Sets the callbacks on the GUI elements.
 		local
-			import_cmd: IMPORT_APPLICATION_CLASS_CMD
 			del_com: DELETE_WINDOW
 		do
 			available_list.add_default_action (Current, First)
@@ -207,6 +206,7 @@ feature -- Command execution
 			elseif arg = Second then
 				unselect_classes
 			elseif arg = Third then
+				close_object_windows
 				generate_lists
 			elseif arg = Fourth then
 				if selected_list.selected_count > 0 then
@@ -335,16 +335,25 @@ feature
 		end
 
 	close is
-			-- Close class selector.
+			-- Close class selector, object tool generator
+			-- and object command generator.
 		do
 			hide
+			close_object_windows
+			main_panel.class_importer_entry.set_toggle_off
+		end
+
+feature {NONE}
+
+	close_object_windows is
+			-- Close object tool generator and object command generator.
+		do
 			if object_command_generator.realized then
 				object_command_generator.close
 			end
 			if object_tool_generator.realized then
 				object_tool_generator.close
 			end
-			main_panel.class_importer_entry.set_toggle_off
 		end
 
 feature -- Lists generation
@@ -353,22 +362,27 @@ feature -- Lists generation
 			-- Generate `available_list' and `selected_list'
 		local
 			import_cmd: IMPORT_APPLICATION_CLASS_CMD	
-			inserted: BOOLEAN
+			selected_classes: ARRAYED_LIST [APPLICATION_CLASS]
 		do
 			!! import_cmd
 			class_list.wipe_out
 			import_cmd.execute (Void)
+			!! selected_classes.make (0)
 			available_list.wipe_out
 			from 
 				class_list.start
 			until
 				class_list.after
 			loop
-				if not selected_list.has (class_list.item) then
+				if selected_list.has (class_list.item) then
+					selected_classes.extend (class_list.item)
+				else
 					available_list.extend (class_list.item)
 				end
 				class_list.forth
 			end
+			selected_list.wipe_out
+			selected_list.append (selected_classes)
 		end
 
 end -- class CLASS_IMPORTER

@@ -1130,13 +1130,13 @@ feature {EV_PIXMAP_IMP} -- Pixmap State
 			-- Monochrome bitmap used as mask. Void if none.
 
 	private_icon: WEL_ICON
-			-- Monochrome bitmap used as mask. Void if none.
+			-- Icon representing `Current'. Void if none.
 
 	private_cursor: WEL_CURSOR
-			-- Monochrome bitmap used as mask. Void if none.
+			-- Cursor representing `Current'. Void if none.
 
 	private_palette: WEL_PALETTE
-			-- Monochrome bitmap used as mask. Void if none.
+			-- Palette for bitmap. Void if none.
 
 feature {NONE} -- Implementation
 

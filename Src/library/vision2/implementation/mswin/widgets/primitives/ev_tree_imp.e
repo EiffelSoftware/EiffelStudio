@@ -28,7 +28,8 @@ inherit
 			on_right_button_down,
 			on_mouse_move,
 			on_key_down,
-			interface
+			interface,
+			pnd_press
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -109,6 +110,41 @@ feature {NONE} -- Initialization
 			!! all_ev_children.make (1)
 			create ev_children.make (1)
 		end
+
+feature {EV_TREE_ITEM_IMP} -- implementation
+
+		tree_is_pnd_source : BOOLEAN
+
+		pnd_child_source: EV_TREE_ITEM_IMP
+				-- If the pnd started in an item, then this is the item.
+
+		set_pnd_child_source (c: EV_TREE_ITEM_IMP) is
+			do
+				pnd_child_source := c
+			end
+
+		set_source_true is
+			do
+				tree_is_pnd_source := True
+			end
+		
+
+		set_source_false is
+			do
+				tree_is_pnd_source := False
+			end
+
+		transport_started_in_item: BOOLEAN
+
+		set_t_item_true is
+			do
+				transport_started_in_item := True
+			end
+
+		set_t_item_false is
+			do
+				transport_started_in_item := False
+			end
 
 feature -- Access
 
@@ -260,23 +296,7 @@ feature {EV_TREE_ITEM_I} -- Implementation
 			cwin_send_message (wel_item, Tvm_setitem, 0, item_imp.to_integer) 
 		end
 
-feature {NONE} -- WEL Implementation
-
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
-		local
-			it: EV_TREE_ITEM_IMP
-			pt: WEL_POINT
-			offsets: TUPLE [INTEGER, INTEGER]
-		do
-			it := find_item_at_position (x_pos, y_pos)
-			if it /= Void then
-				pt := client_to_screen (x_pos, y_pos)
-				offsets := it.relative_position
-				it.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
-				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
-			end
-		end
+feature {EV_ANY_I} -- Implementation
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_ITEM_IMP is
 			-- Find the item at the given position.
@@ -295,6 +315,50 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		do
+			inspect
+				press_action
+			when
+				Ev_pnd_start_transport
+			then
+					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+					set_source_true
+			when
+				Ev_pnd_end_transport
+			then
+				end_transport (a_x, a_y, a_button)
+				set_source_false
+			else
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
+			end
+		end
+
+feature {EV_ANY_I} -- WEL Implementation
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		local
+			it: EV_TREE_ITEM_IMP
+			pt: WEL_POINT
+			offsets: TUPLE [INTEGER, INTEGER]
+		do
+			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			if it /= Void and it.is_transport_enabled and not tree_is_pnd_source then
+					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			elseif pnd_child_source /= Void then 
+				pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			end
+
+			if it /= Void then
+				offsets := it.relative_position
+				it.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+		end
 
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -368,9 +432,21 @@ feature {NONE} -- WEL Implementation
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			pt: WEL_POINT
+			it: EV_TREE_ITEM_IMP
+			a: BOOLEAN
 		do
+			a:= transport_started_in_item
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			it := find_item_at_position (x_pos, y_pos)
+
+			if transport_started_in_item = a then
+				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			end
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -398,11 +474,14 @@ feature {NONE} -- WEL Implementation
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				pt := client_to_screen (x_pos, y_pos)
 				offsets := it.relative_position
 				it.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+			if pnd_child_source /= Void then
+				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
@@ -481,6 +560,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/03/22 20:18:53  rogers
+--| Added pnd_press, added functions relating to PND status of object and children.Not complete implementation of PND so more work needs to be undertaken.
+--|
 --| Revision 1.50  2000/03/14 18:39:12  rogers
 --| Renamed
 --| 	move -> wel_move

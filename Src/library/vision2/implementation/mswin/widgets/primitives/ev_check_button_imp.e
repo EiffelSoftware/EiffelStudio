@@ -48,7 +48,8 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_set_cursor,
-			on_bn_clicked
+			on_bn_clicked,
+			set_text
 		redefine
 			default_style
 		end	
@@ -70,7 +71,6 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 			extra_width := 20
-			set_default_minimum_size	
 		end
 
 feature -- Status report

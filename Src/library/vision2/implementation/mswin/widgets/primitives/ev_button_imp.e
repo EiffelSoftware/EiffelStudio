@@ -69,7 +69,8 @@ inherit
 			on_key_up,
 			on_set_cursor
 		redefine
-			on_bn_clicked
+			on_bn_clicked,
+			set_text
 		end
 
 creation
@@ -89,7 +90,6 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 			extra_width := 10
-			set_default_minimum_size
 		end
 
 	widget_make (an_interface: EV_WIDGET) is
@@ -150,6 +150,13 @@ feature -- Element change
 		do
 			{EV_PIXMAPABLE_IMP} Precursor
 			unset_bitmap
+			set_default_minimum_size
+		end
+
+	set_text (txt: STRING) is
+			-- Set the window text
+		do
+			{WEL_BITMAP_BUTTON} Precursor (txt)
 			set_default_minimum_size
 		end
 

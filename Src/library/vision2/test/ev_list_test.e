@@ -24,8 +24,8 @@ feature {NONE} -- Initalization
 			-- test `a_list'.
 		require
 			a_name_not_void: a_name /= Void
-			item_agent_not_void: item_agent /= Void
-			list_agent_not_void: list_agent /= Void
+			item_creator_not_void: item_creator /= Void
+			list_creator_not_void: list_creator /= Void
 		do
 			subject_name := a_name
 			description := "Test of dynamic list: " + a_name + "."
@@ -701,6 +701,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/02 18:05:12  brendel
+--| Fixed precondition on `make'.
+--|
 --| Revision 1.13  2000/03/02 17:46:57  brendel
 --| Added tests for `merge_left', `merge_right' and `swap'.
 --|

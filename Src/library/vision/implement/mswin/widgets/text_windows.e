@@ -521,6 +521,9 @@ feature -- Status setting
 			-- Forbid the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		do
+			if can_undo then	
+				undo
+			end
 		end
 
 	set_cursor_position (pos: INTEGER) is

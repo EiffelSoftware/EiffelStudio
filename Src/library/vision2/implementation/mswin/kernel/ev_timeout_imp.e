@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	Internal_timeout: EV_INTERNAL_TIMEOUT_IMP is
 			-- Window that launch the timeout commands.
 		once
-			create result.make_top ("EiffelVision timeout window")
+			create Result.make_top ("EiffelVision timeout window")
 		end
 
 end -- class EV_TIMEOUT_IMP

@@ -14,8 +14,6 @@ inherit
 			make, make_top_level, tool
 		end
 
-	INTERFACE_NAMES
-
 creation
 
 	make, make_top_level
@@ -29,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par)
 --			forbid_resize
-			Create tool.make (Current)
+			create tool.make (Current)
 
 			initialize_main_menu
 
@@ -42,7 +40,7 @@ feature {NONE} -- Initialization
 			-- used only for debugging
 		do
 			Precursor
-			Create tool.make (Current)
+			create tool.make (Current)
 
 			initialize_main_menu
 --			forbid_resize
@@ -59,26 +57,26 @@ feature {NONE} -- Initialization
 			ri, peer: EV_RADIO_MENU_ITEM
 			pl: EB_PANEL_LIST
 		do
-			Create menu_bar.make (Current)
+			create menu_bar.make (Current)
 
-			Create file_menu.make_with_text (menu_bar, "Commands")
+			create file_menu.make_with_text (menu_bar, "Commands")
 
-			Create i.make_with_text (file_menu, m_Validate)
+			create i.make_with_text (file_menu, m_Validate)
 			i.add_select_command (tool.validate_cmd, Void)
 
-			Create i.make_with_text (file_menu, m_Save)
+			create i.make_with_text (file_menu, m_Save)
 			i.add_select_command (tool.save_cmd, Void)
 
-			Create i.make_with_text (file_menu, m_Ok)
+			create i.make_with_text (file_menu, m_Ok)
 			i.add_select_command (tool.ok_cmd, Void)
 
-			Create i.make_with_text (file_menu, m_Apply)
+			create i.make_with_text (file_menu, m_Apply)
 			i.add_select_command (tool.apply_cmd, Void)
 
-			Create i.make_with_text (file_menu, m_Exit)
+			create i.make_with_text (file_menu, m_Exit)
 			i.add_select_command (tool.close_cmd, Void)
 
-			Create panel_menu.make_with_text (menu_bar, "Categories")
+			create panel_menu.make_with_text (menu_bar, "Categories")
 
 			pl := tool.panel_list
 			from
@@ -87,10 +85,10 @@ feature {NONE} -- Initialization
 				pl.after
 			loop
 				if pl.isfirst then
-					Create ri.make_with_text (panel_menu, pl.item.name)
+					create ri.make_with_text (panel_menu, pl.item.name)
 					peer := ri
 				else
-					Create ri.make_peer_with_text (panel_menu, pl.item.name, peer)
+					create ri.make_peer_with_text (panel_menu, pl.item.name, peer)
 				end
 				pl.item.raise_cmd.set_menu_item (ri)
 				pl.forth

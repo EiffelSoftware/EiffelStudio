@@ -104,6 +104,7 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 		do
 			create window
+			window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_object_window @ 1)
 			window.close_request_actions.extend (agent remove_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
 			create editor

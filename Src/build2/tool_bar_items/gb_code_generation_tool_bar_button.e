@@ -39,7 +39,7 @@ feature -- Initialization
 			-- Set pixmap and connect agents.
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_new_class @ 1)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_code_generation @ 1)
 			set_tooltip ("Code generation")
 			select_actions.extend (agent show_generation_dialog)
 		end

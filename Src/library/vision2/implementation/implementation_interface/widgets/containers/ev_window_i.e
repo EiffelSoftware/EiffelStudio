@@ -71,7 +71,8 @@ feature -- Status setting
 			-- Display iconified/minimised.
 		deferred
 		ensure
-			is_minimized: is_minimized
+			--| FIXME VB probably impossible for GTK.
+			--| is_minimized: is_minimized
 		end
 
 	maximize is
@@ -85,7 +86,8 @@ feature -- Status setting
 			-- Restore to original position when minimized or maximized.
 		deferred
 		ensure
-			minimize_restored: old is_minimized implies not is_minimized
+			--| FIXME VB probably impossible for GTK.
+			--| minimize_restored: old is_minimized implies not is_minimized
 			maximize_restored: old is_maximized implies not is_maximized
 		end
 
@@ -145,6 +147,9 @@ end -- class EV_TITLED_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/08 02:57:56  brendel
+--| Commented out is_minimized postconditions.
+--|
 --| Revision 1.37  2000/03/07 01:36:49  brendel
 --| Changed in compliance with interface.
 --|

@@ -589,7 +589,7 @@ rt_public void st_write(char *object)
 		nb_char = (zone->ov_size & B_SIZE) * sizeof(char);
 	} else
 		/* Evaluation of the size of a normal object */
-		nb_char = Size((uint16)(flags & EO_TYPE));
+		nb_char = EIF_Size((uint16)(flags & EO_TYPE));
 	/* Write the body of the object */
 	buffer_write(object, (sizeof(char) * nb_char));
 
@@ -1191,7 +1191,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			int nb_gen = info->gt_param;
 			int j;
 
-			if (0 > sprintf(s_buffer, "%d %s %ld %d", i, vis_name, Size(i), nb_gen)) {
+			if (0 > sprintf(s_buffer, "%d %s %ld %d", i, vis_name, EIF_Size(i), nb_gen)) {
 				eise_io("General store: unable to write the generic type name.");
 			}
 
@@ -1220,7 +1220,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			/* Non-generic type, write in file:
 			 *	"dtype visible_name size 0"
 			 */
-			if (0 > sprintf(s_buffer, "%d %s %ld 0", i, vis_name, Size(i))) {
+			if (0 > sprintf(s_buffer, "%d %s %ld 0", i, vis_name, EIF_Size(i))) {
 				eise_io("General store: unable to write type description.");
 			}
 			buffer_write(s_buffer, (strlen (s_buffer)));

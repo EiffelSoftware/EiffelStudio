@@ -244,7 +244,7 @@ rt_private void free_unused(void);
 #undef Disp_rout
 #undef XCreate
 #define References(type)	2		/* Number of references in object */
-#define Size(type)			40		/* Size of the object */
+#define EIF_Size(type)			40		/* Size of the object */
 #define Disp_rout(type)		0		/* No dispose procedure */
 #define XCreate(type)		0		/* No creation procedure */
 /* char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
@@ -290,7 +290,7 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 	/* Fetch object's size in bytes. Note that the size of all the Eiffel
 	 * objects is correctly padded, but do not account for the header's size.
 	 */
-	nbytes = Size(type);
+	nbytes = EIF_Size(type);
 
 #ifdef DEBUG
 	dprintf(8)("emalloc: type %d is %d bytes\n", type, nbytes);
@@ -3352,7 +3352,7 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 
 	if (dtype <= max_dtype && !(flags & EO_SPEC) && !(flags & EO_EXP)) {
 		int mod;
-		int nbytes = Size(dtype);
+		int nbytes = EIF_Size(dtype);
 		int size = HEADER(object)->ov_size & B_SIZE;
 
 		mod = nbytes % ALIGNMAX;
@@ -3643,7 +3643,7 @@ rt_private void output_table(FILE *f)
 		use = obj_use[i];
 		if (use == 0)
 			continue;
-		usage = use * (Size(i) + OVERHEAD);
+		usage = use * (EIF_Size(i) + OVERHEAD);
 		fprintf(f, "\t%s: %d (%d bytes)\n", System(i).cn_generator, use, usage);
 		nb_obj += use;
 		mem_used += usage;
@@ -3842,7 +3842,7 @@ rt_public void eif_trace_types(FILE *f)
 		use = type_use[i];
 		if (use == 0)
 			continue;
-		usage = use * (Size(i) + OVERHEAD);
+		usage = use * (EIF_Size(i) + OVERHEAD);
 		fprintf(f, "\t%s: %d (%d bytes)\n", System(i).cn_generator, use, usage);
 	}
 	fprintf(f, "C memory usage (bytes): %ld\n", (long) c_mem);

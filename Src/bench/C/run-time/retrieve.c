@@ -392,10 +392,10 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 		} else {
 			/* Normal object */
 			if (rt_kind) {
-				nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
+				nb_char = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 				newadd = emalloc(crflags & EO_TYPE); 
 			} else {
-				nb_char = Size((uint16)(flags & EO_TYPE));
+				nb_char = EIF_Size((uint16)(flags & EO_TYPE));
 				newadd = emalloc(crflags & EO_TYPE);
 			}
 		}
@@ -579,7 +579,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 							eise_io("General retrieve: not an Eiffel object.");
 				}
 			} else {
-				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+				spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
 			buffer_read((char *)(&count), sizeof(uint32));
 			nb_char = CHRPAD(count * spec_size ) + LNGPAD_2;
@@ -601,7 +601,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
+			nb_char = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
 		}
 		
@@ -772,7 +772,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 							eise_io("Independent retrieve: not an Eiffel object.");
 				}
 			} else {
-				spec_size = Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+				spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
 			ridr_norm_int (&count);
 			nb_char = CHRPAD(count * spec_size ) + LNGPAD_2;
@@ -794,7 +794,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
+			nb_char = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
 		}
 		
@@ -1032,7 +1032,7 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 		}
 	} else {							/* Normal object */
 		nb_references = References(flags & EO_TYPE);
-		size = Size(flags & EO_TYPE);
+		size = EIF_Size(flags & EO_TYPE);
 	}
 
 update:
@@ -1249,7 +1249,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 			new_dtype = *addr & SK_DTYPE;
 		}
-		if (Size(new_dtype) != size) {
+		if (EIF_Size(new_dtype) != size) {
 			eraise(vis_name, EN_RETR);		/* No good size */
 		}
 		dtypes[dtype] = new_dtype;
@@ -2133,7 +2133,7 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 		switch (types_cn & SK_HEAD) {
 			case SK_EXP:
 				if ((counter + (++num_ref - num_attrib)) < num_attrib) {
-					exp_size += (OVERHEAD + Size(types_cn & SK_DTYPE));
+					exp_size += (OVERHEAD + EIF_Size(types_cn & SK_DTYPE));
 				}
 				break;
 			case SK_REF:

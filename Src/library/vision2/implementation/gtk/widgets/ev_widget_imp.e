@@ -181,7 +181,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--| event type and pass the event data to the appropriate action
 			--| sequence.
 		require
-			button_or_2button_event:
+			valid_button_press:
 				a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM or
 				a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM or
 				a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM
@@ -597,7 +597,6 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			parent_imp := a_container_imp
-			update_request_size
 		end
 		
 feature {EV_ANY_IMP} -- Implementation
@@ -665,6 +664,7 @@ feature {NONE} -- Implementation
 				internal_minimum_height := a_minimum_height
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			update_request_size
 		end
 
 	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is

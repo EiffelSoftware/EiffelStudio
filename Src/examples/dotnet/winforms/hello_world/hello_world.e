@@ -4,8 +4,11 @@ indexing
 class
 	HELLO_WORLD
 
---inherit
---	WINFORMS_FORM
+inherit
+	WINFORMS_FORM
+		rename
+			make as make_form
+		end
 	
 create
 	make
@@ -18,15 +21,8 @@ feature {NONE} -- Initialization
 		local
 			dummy: SYSTEM_OBJECT
 		do
-			create my_window.make
-			my_window.set_text (("Hello world").to_cil)			
-			dummy := my_window.show_dialog
-		end
-		
-feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
-
+			set_text (("Hello world").to_cil)
+			feature {WINFORMS_APPLICATION}.run_form (Current)
+		end	
 
 end -- class HELLO_WORLD

@@ -46,6 +46,7 @@ feature {NONE} -- Implementation
 			-- Window messages dispatcher routine
 		local
 			window: WEL_WINDOW
+			previous_state: BOOLEAN
 		do
 			window := windows.item (hwnd)
 			debug ("win_dispatcher")
@@ -61,14 +62,14 @@ feature {NONE} -- Implementation
 				check
 					window_exists: window.exists
 				end
-				if window.process_message (hwnd, msg,
-					wparam, lparam) /= -1 then
-					-- if `process_message' returns -1 the
-					-- default window procedure must not
-					-- be called.
+				previous_state := window.default_processing_enabled
+				Result := window.process_message (hwnd, msg,
+					wparam, lparam)
+				if window.default_processing_enabled then
 					Result := window.call_default_window_procedure (msg,
 						wparam, lparam)
 				end
+				window.set_default_processing (previous_state)
 			else
 				Result := cwin_def_window_proc (hwnd, msg,
 					wparam, lparam)

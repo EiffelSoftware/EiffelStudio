@@ -49,7 +49,6 @@ cluster
  ------------------------ EiffelVision
 
   	vision:						                 	"$EIFFEL4\library\vision2\interface";
-	vision_userdata (vision):						"$\user_data";
 	vision_support (vision):						"$\support";
 	vision_kernel (vision): 	       				"$\kernel";
 	vision_properties (vision):						"$\properties";
@@ -76,7 +75,6 @@ cluster
 
 	-- Implementation clusters for MS Windows
 	vision_imp:										"$EIFFEL4\library\vision2\implementation\mswin";
-	vision_imp_userdata (vision_imp):				"$\user_data";
 	vision_imp_kernel (vision_imp): 	       		"$\kernel";
 	vision_imp_support (vision_imp):				"$\support";
 	vision_imp_properties (vision_imp):				"$\properties";

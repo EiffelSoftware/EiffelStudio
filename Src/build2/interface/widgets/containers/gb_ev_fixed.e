@@ -592,8 +592,14 @@ feature {NONE} -- Implementation
 			widget: EV_WIDGET
 			old_width: INTEGER
 			temp: INTEGER
+			temp_x, temp_y: INTEGER
 			new_x, new_y: INTEGER
-		do	
+		do
+				-- Store `x' and `y' for use elsewhere.
+			last_x := x
+			last_y := y
+				-- We only need to perform this operation if a widget representation
+				-- is selected for manipulation.
 			if selected_item_index > 0  then
 				widget := first.i_th (selected_item_index)
 				if close_to (x, y, widget.x_position + widget.width, widget.y_position + widget.height) or
@@ -627,11 +633,14 @@ feature {NONE} -- Implementation
 				end
 			end
 			if resizing_widget then
+					-- Modify automatic scrolling as appropriate.
+				update_scrolling (x, y)
+				temp_x := x				
 				if snap_button.is_selected then
-					new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
+					new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
 					new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
 				else
-					new_x := x
+					new_x := temp_x
 					new_y := y
 				end
 				widget := first.i_th (selected_item_index)
@@ -680,6 +689,7 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 			if moving_widget then
+				update_scrolling (x, y)
 				if snap_button.is_selected then
 					new_x := x - ((x - x_offset) \\ grid_size)
 					new_y := y - ((y - y_offset) \\ grid_size)	
@@ -700,6 +710,116 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 		end
+		
+	x_scrolling_velocity: INTEGER is
+			-- `Result' is desired x scrolling velocity based on the last known position
+			-- of the mouse pointer.
+		do
+			if last_x > drawing_area.width and scrolled_x_once and scrolling_x_start = x_right then
+				Result := (last_x - drawing_area.width) // 20 + 1
+			elseif last_x > scrollable_area.width + scrollable_area.x_offset and scrolling_x_start = x_center then
+				Result := (last_x - scrollable_area.width - scrollable_area.x_offset) // 20 + 1		
+			elseif last_x < scrollable_area.x_offset then
+				Result := - ((scrollable_area.x_offset - last_x) //20 + 1)
+			end
+		end
+		
+		
+	update_scrolling (x, y: INTEGER) is
+			-- Update current scrolling to reflect mouse coordinates `x', `y'.
+		do
+			if (x > drawing_area.width - scrolling_distance * 2) and not scrolled_x_once then
+					scrolled_x_once := True
+					scrolling_x_start := x_right
+					start_x_scrolling
+				elseif (x > drawing_area.width - scrolling_distance * 2) and scrolled_x_once and scrolling_x_start = x_right then
+					if not scrolling_x then
+						start_x_scrolling
+					end
+				elseif scrolling_x_start = x_right then
+					if scrolling_x then
+						end_x_scrolling
+					end
+				end
+				if (x > scrollable_area.width + scrollable_area.x_offset - scrolling_distance * 2) and not scrolled_x_once then
+					scrolled_x_once := True
+					scrolling_x_start := x_center
+					start_x_scrolling
+				elseif (x > scrollable_area.width + scrollable_area.x_offset - scrolling_distance * 2) and scrolled_x_once and scrolling_x_start = x_center then
+					if not scrolling_x then
+						start_x_scrolling
+					end
+				elseif scrolling_x_start = x_center then
+					if scrolling_x then
+						end_x_scrolling
+					end
+				end	
+				if x < scrollable_area.x_offset + scrolling_distance then
+					if not scrolling_x then
+						start_x_scrolling
+					end
+				end
+		end
+		
+
+	last_x, last_y: INTEGER
+		-- Last known cooridnates of mouse pointer.
+		
+	x_right, x_center: INTEGER is unique
+		-- Constants used with `scrolling_x_start'.
+		
+	scrolling_x_start: INTEGER
+		-- Where did the scrolling operation start?
+			-- `x_right' if started when reached edge of `drawing_area'.
+			-- `x_center' if started when reached visible edge of `drawing_area'.
+	
+		
+	timeout: EV_TIMEOUT
+		-- Used to execute the timing of scrolling.
+	
+	scrolling_x: BOOLEAN
+
+	scrolled_x_once: BOOLEAN
+		-- Have we scrolled in the x direction since the last
+		-- button 1 release?
+		
+	start_x_scrolling is
+			-- Begin the automatic scrolling.
+		do
+			if not scrolling_x then
+					-- Create a timeout which will repeatedly cause the scrolling to
+					-- take place.
+				create timeout.make_with_interval (25)
+				timeout.actions.extend (agent scroll_x)
+				scrolling_x := True
+			end
+		end
+		
+	end_x_scrolling is
+			-- 
+		do
+			if scrolling_x then
+				timeout.destroy
+				scrolling_x := False
+			end
+		end
+		
+		
+	scroll_x is
+			--
+		local
+			current_velocity: INTEGER
+		do
+			current_velocity := x_scrolling_velocity
+			if current_velocity > 0 then
+				drawing_area.set_minimum_width (drawing_area.width + current_velocity)	
+			end
+				-- Max 0 ensures that if we are scrolling to the left, we do not
+				-- move to less than position 0.
+			scrollable_area.set_x_offset ((scrollable_area.x_offset + current_velocity).max (0))
+		end
+		
+		
 		
 	close_to (current_x, current_y, desired_x, desired_y: INTEGER): BOOLEAN is
 			-- Is position `current_x', `current_y' within `accuracy_value' of `desired_x', `desired_y'.
@@ -782,7 +902,7 @@ feature {NONE} -- Implementation
 						resizing_widget := False
 					end
 					if resizing_widget or moving_widget then
-						drawing_area.enable_capture
+						drawing_area.enable_capture	
 					end
 				end
 			end
@@ -792,7 +912,11 @@ feature {NONE} -- Implementation
 			-- A button has been released on `drawing_area'
 			-- If `a_button' = 1, check for end of resize/movement.
 		do
+			scrolled_x_once := False
 			if a_button = 1 then
+				if scrolling_x then
+					end_x_scrolling
+				end
 				if resizing_widget then
 					resizing_widget := False
 					set_all_pointer_styles (standard_cursor)
@@ -876,7 +1000,7 @@ feature {NONE} -- Attributes.
 			-- Value which determines how close pointer must be
 			-- to lines/points for resizing.
 			
-	scrolling_distance: INTEGER is 20
+	scrolling_distance: INTEGER is 0
 		-- Distance from edge of area when scrolling begins.
 
 	list: EV_LIST

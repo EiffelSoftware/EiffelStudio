@@ -48,10 +48,14 @@ feature -- Access
 
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when pointer is over this widget.
+		local
+			cursor_code: EV_CURSOR_CODE
 		do
 			Result := implementation.pointer_style
-		ensure
-			bridge_ok: Result = implementation.pointer_style
+			if Result = Void then
+				create cursor_code
+				create Result.make_with_code (cursor_code.standard)
+			end
 		end
 
 	foreground_color: EV_COLOR is
@@ -771,6 +775,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2000/03/20 19:38:13  king
+--| Altered pointer_style to always return a valid cursor
+--|
 --| Revision 1.72  2000/03/09 16:37:06  brendel
 --| Improved comments on minimum size setting routines.
 --|

@@ -11,6 +11,11 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 		do
+			Io.put_string ("Comparing empty lists%N")
+			create {LINKED_LIST [STRING]} l1.make
+			create {LINKED_LIST [STRING]} l2.make
+			test_equality ("l1", "l2", l1, l2)	
+			Io.put_new_line
 			from i := 1 until i > 4 loop
 				inspect
 					i
@@ -34,11 +39,6 @@ feature {NONE} -- Initialization
 					create {SORTED_TWO_WAY_LIST [STRING]} l4.make
 					create {SORTED_TWO_WAY_LIST [STRING]} l5.make
 					Io.put_string ("SORTED_TWO_WAY_LIST%N")
-				when 5 then
-					create {TWO_WAY_SORTED_SET [STRING]} l1.make
-					create {TWO_WAY_SORTED_SET [STRING]} l4.make
-					create {TWO_WAY_SORTED_SET [STRING]} l5.make
-					Io.put_string ("TWO_WAY_SORTED_SET%N")
 				end
 
 				fill_up

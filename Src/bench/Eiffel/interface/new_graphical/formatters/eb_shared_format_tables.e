@@ -201,7 +201,6 @@ feature -- Properties
 			dntxt: DOTNET_TEXT_FORMATTER
 		do
 			create dntxt
-			dntxt.set_is_short
 			dntxt.format (a_consumed, a_classi)
 			if not dntxt.error then
 				Result := dntxt.text

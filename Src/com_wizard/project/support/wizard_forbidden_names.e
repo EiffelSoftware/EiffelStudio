@@ -870,7 +870,6 @@ feature -- Access
 			Result.force ("tagged_max", "tagged_max")
 			Result.force ("tagged_len", "tagged_len")
 			Result.force ("darray", "darray")
-			Result.force ("nstcall", "nstcall")
 			Result.force ("inv_mark_tablep", "inv_mark_tablep")
 			Result.force ("sig_ign", "sig_ign")
 			Result.force ("osig_ign", "osig_ign")

@@ -24,6 +24,7 @@ feature
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode: BOOLEAN;
+			type_i: TYPE_I
 		do
 			workbench_mode := context.workbench_mode;
 			context.set_assertion_type (0);
@@ -52,11 +53,13 @@ feature
 				postcondition.analyze;
 			end;
 				-- If result is expanded, we need to create it anyway
-			if
-				not result_type.is_void and
-				context.real_type (result_type).is_expanded
-			then
-				context.mark_result_used;
+			if not result_type.is_void then
+				type_i := context.real_type (result_type);
+				if
+					type_i.is_expanded or else type_i.is_bit then	
+				then
+					context.mark_result_used;
+				end;
 			end;
 				-- Look at the compound after postconditions have been
 				-- analyzed, so that the registers used for "old" expressions
@@ -244,8 +247,8 @@ feature
 					generated_file.putchar (';');
 				else
 					type_i := real_type (result_type);
-					type_i.c_type.generate_initial_value (generated_file);
-					generated_file.putchar (';');
+					type_i.c_type.generate_cast (generated_file);
+					generated_file.putchar ('0;');
 				end;
 				generated_file.new_line;
 			end;

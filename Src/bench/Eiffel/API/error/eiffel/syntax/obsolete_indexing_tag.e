@@ -58,7 +58,7 @@ feature -- Output
 			st.add (create {ERROR_TEXT}.make (Current, "Obsolete"))
 			st.add_string (" indexing tag used in class ")
 				-- Error happened in a class
-			associated_class.append_signature (st)
+			associated_class.append_signature (st, False)
 			st.add_string (" at line ")
 			st.add_string (location.line_number.out)
 			st.add_string (".")

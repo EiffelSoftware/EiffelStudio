@@ -56,7 +56,7 @@ feature -- Output
 				classes.after
 			loop
 				st.add_string ("Class: ")
-				classes.item_for_iteration.append_signature (st)
+				classes.item_for_iteration.append_signature (st, False)
 				st.add_new_line
 				classes.forth
 			end

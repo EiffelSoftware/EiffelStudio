@@ -40,7 +40,7 @@ feature -- Output
 			-- Display error message
 		do
 			st.add_string ("Could not analyze class ")
-			external_class.append_signature (st)
+			external_class.append_signature (st, False)
 			st.add_string (".")
 			st.add_new_line
 		end

@@ -163,7 +163,7 @@ feature -- Miscellaneous
 			loop
 				ci := class_list.item
 				text.add_indent
-				ci.compiled_class.append_signature (text)
+				ci.compiled_class.append_signature (text, True)
 				text.add_new_line
 				class_list.forth
 			end

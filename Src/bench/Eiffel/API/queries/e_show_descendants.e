@@ -21,7 +21,7 @@ feature -- Output
 			-- Execute Current command.	
 		do
 			create displayed.make;
-			current_class.append_signature (structured_text);
+			current_class.append_signature (structured_text, True);
 			structured_text.add_new_line;
 			rec_display (1, current_class, structured_text);
 			displayed := Void
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 				loop
 					descendant_class := descendants.item;
 					add_tabs (st, i);
-					descendant_class.append_signature (st);
+					descendant_class.append_signature (st, True);
 					if displayed.has (descendant_class) then
 						if not descendant_class.descendants.is_empty then
 							st.add_string ("...")

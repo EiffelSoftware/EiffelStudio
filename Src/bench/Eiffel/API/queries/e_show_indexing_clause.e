@@ -73,7 +73,7 @@ feature -- Execution
 				a_classi := classes.item (sorted_class_names.item);
 				a_class := a_classi.compiled_class;
 				if a_class /= Void then
-					a_class.append_signature (structured_text);
+					a_class.append_signature (structured_text, True);
 					display_indexing (a_class, structured_text)
 				else
 					a_classi.append_name (structured_text);

@@ -62,7 +62,7 @@ feature -- Output
 			type.append_to (st);
 			st.add_new_line;
 			st.add_string ("Base class: ");
-			base_class.append_signature (st);
+			base_class.append_signature (st, False);
 			st.add_new_line;
 		end;
 

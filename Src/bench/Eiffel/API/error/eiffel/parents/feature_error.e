@@ -84,7 +84,7 @@ feature -- Output
 		do
 			print_error_message (st)
 			st.add_string ("Class: ")
-			class_c.append_signature (st)
+			class_c.append_signature (st, False)
 			st.add_new_line
 			st.add_string ("Feature: ")
 			if error_position /= 0 then

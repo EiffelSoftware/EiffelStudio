@@ -91,11 +91,13 @@ feature {NONE}
 			!!cmd.make;
 			cmd.set_internal_name ("");
 			cmd.set_eiffel_text (cmd.template);
-			!!doc;
-			doc.set_directory_name (Environment.commands_directory);
-			doc.set_document_name (cmd.eiffel_type);
+			cmd.overwrite_text
+			--cmd.retrieve_text_from_disk
+			--!!doc;
+			--doc.set_directory_name (Environment.commands_directory);
+			--doc.set_document_name (cmd.eiffel_type);
 			--doc.save_text (cmd.template);
-			doc.update (cmd.template);
+			--doc.update (cmd.template);
 			command_catalog.add (cmd)
 		end;
 

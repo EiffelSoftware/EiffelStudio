@@ -101,7 +101,7 @@ feature -- Basic operations
 			when T_short_integer then
 				imp_integer_result := desc_call_dll32_short_integer (function_handle, arguments_size, $actual_args)
 			when T_string then
-				imp_string_result := desc_rtms (desc_call_dll32_string (function_handle, arguments_size, $actual_args))
+				create imp_string_result.make_from_c (desc_call_dll32_string (function_handle, arguments_size, $actual_args))
 			when T_no_type then
 				desc_call_dll32_procedure (function_handle, arguments_size, $actual_args)
 			end
@@ -423,15 +423,6 @@ feature {NONE} -- Externals
 			-- Get size of type `type'
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD): short int"
-		end
-
-	desc_rtms (str: POINTER): STRING is
-			-- Creates an Eiffel string from a
-			-- C manifest string `str'
-		external
-			"C [macro %"eif_macros.h%"] (char *): EIF_REFERENCE"
-		alias
-			"RTMS"
 		end
 
 	win_get_proc_address (m_p, fn: POINTER): POINTER is

@@ -1243,18 +1243,17 @@ feature -- Features info
 
 						-- Let's generate argument names now.	
 					if is_static and not l_is_c_external then
-						uni_string.set_string ("Current")
-						l_param_token := md_emit.define_parameter (l_meth_token, uni_string, 1,
-							feature {MD_PARAM_ATTRIBUTES}.In)
+							-- Offset for static features as we generate one more argument.
+						j := 1
 					end
+					uni_string.set_string ("Current")
+					l_param_token := md_emit.define_parameter (l_meth_token, uni_string, j,
+						feature {MD_PARAM_ATTRIBUTES}.In)
+
 					if l_has_arguments then
 						from
 							l_feat_arg := feat.arguments
 							i := 1
-							if is_static and not l_is_c_external then
-									-- Offset for static features as we generate one more argument.
-								j := 1
-							end
 						until
 							i > l_parameter_count
 						loop
@@ -2631,7 +2630,8 @@ feature -- Once management
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
 		do
-			done_token := md_emit.define_field (create {UNI_STRING}.make (name + "_done"),
+			uni_string.set_string (name + "_done")
+			done_token := md_emit.define_field (uni_string,
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
@@ -2651,7 +2651,8 @@ feature -- Once management
 			l_sig.reset
 			set_signature_type (l_sig, type_i)	
 				
-			result_token := md_emit.define_field (create {UNI_STRING}.make (name + "_result"),
+			uni_string.set_string (name + "_result")
+			result_token := md_emit.define_field (uni_string,
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
 		end
@@ -3169,8 +3170,8 @@ feature -- Basic feature
 			set_signature_type (l_sig, type)
 			set_signature_type (l_sig, type)
 
-			l_min_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("Min"), math_type_token, l_sig)
+			uni_string.set_string ("Min")
+			l_min_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
 				
 			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 2, True)
 		end
@@ -3193,8 +3194,8 @@ feature -- Basic feature
 			set_signature_type (l_sig, type)
 			set_signature_type (l_sig, type)
 
-			l_max_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("Max"), math_type_token, l_sig)
+			uni_string.set_string ("Max")
+			l_max_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
 				
 			method_body.put_call (feature {MD_OPCODES}.Call, l_max_token, 2, True)
 		end
@@ -3217,8 +3218,8 @@ feature -- Basic feature
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, type)
 			set_signature_type (l_sig, type)
-			l_abs_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("Abs"), math_type_token, l_sig)
+			uni_string.set_string ("Abs")
+			l_abs_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
 				
 			method_body.put_call (feature {MD_OPCODES}.Call, l_abs_token, 1, True)
 		end
@@ -3845,8 +3846,8 @@ feature {NONE} -- Once per modules being generated.
 			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
 			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
 			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
-			power_method_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("Pow"), math_type_token, l_sig)
+			uni_string.set_string ("Pow")
+			power_method_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
 		ensure
 			power_method_token_set: power_method_token /= 0
 		end
@@ -4278,73 +4279,91 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_indexes: INDEXING_CLAUSE_AS
 			l_info: ARRAY [STRING]
-			l_name, l_key_string, l_version: STRING
+			l_name, l_key_string, l_culture, l_version: STRING
 			l_token: INTEGER
 			l_key_token: MD_PUBLIC_KEY_TOKEN
 			l_major, l_minor, l_build, l_revision: INTEGER
 			l_pos, l_new_pos: INTEGER
 			l_uni_string: UNI_STRING
+			l_external_class: EXTERNAL_CLASS_C
+			l_assembly: ASSEMBLY_I
 		do
 			if not a_class.is_external then
 				internal_assemblies.put (main_module_token, a_class.class_id)
 			else
-				l_indexes := a_class.ast.top_indexes
-				if l_indexes /= Void then
+				l_external_class ?= a_class
+				if l_external_class /= Void then
+						-- When it is an XML represented external class.
+					l_assembly := l_external_class.lace_class.cluster
+					l_name := l_assembly.assembly_name
+					l_version := l_assembly.version
+					l_culture := l_assembly.culture
+					l_key_string := l_assembly.public_key_token
+				else
+						-- When it is an actual Eiffel class encapsulating
+						-- an external class.
+					l_indexes := a_class.ast.top_indexes
+					check
+						l_indexes_not_void: l_indexes /= Void
+					end
 					l_info := l_indexes.assembly_name
 					l_name := l_info.item (1)
-					if defined_assemblies.has (l_name) then
-						internal_assemblies.put (defined_assemblies.found_item, a_class.class_id)
+					if l_info.valid_index (2) then
+						l_version := l_info.item (2)
+					end
+					if l_info.valid_index (4) then
+						l_key_string := l_info.item (4)						
+					end
+				end
+				if defined_assemblies.has (l_name) then
+					internal_assemblies.put (defined_assemblies.found_item, a_class.class_id)
+				else
+					if l_name.is_equal ("mscorlib") then
+						internal_assemblies.put (mscorlib_token, a_class.class_id)
+						defined_assemblies.put (mscorlib_token, l_name)
+					elseif l_name.is_equal ("ise_runtime") then
+						internal_assemblies.put (ise_runtime_token, a_class.class_id)
+						defined_assemblies.put (ise_runtime_token, l_name)
 					else
-						if l_name.is_equal ("mscorlib") then
-							internal_assemblies.put (mscorlib_token, a_class.class_id)
-							defined_assemblies.put (mscorlib_token, l_name)
-						elseif l_name.is_equal ("ise_runtime") then
-							internal_assemblies.put (ise_runtime_token, a_class.class_id)
-							defined_assemblies.put (ise_runtime_token, l_name)
-						else
-							create l_ass_info.make
+						create l_ass_info.make
 
-							if l_info.valid_index (2) then
-								l_version := l_info.item (2)
+						if l_version /= Void then
+							l_pos := 1
+							l_new_pos := l_version.index_of ('.', l_pos)
+							l_major := l_version.substring (l_pos, l_new_pos - 1).to_integer
 
-								l_pos := 1
-								l_new_pos := l_version.index_of ('.', l_pos)
-								l_major := l_version.substring (l_pos, l_new_pos - 1).to_integer
+							l_pos := l_new_pos + 1
+							l_new_pos := l_version.index_of ('.', l_pos)
+							l_minor := l_version.substring (l_pos, l_new_pos - 1).to_integer
 
-								l_pos := l_new_pos + 1
-								l_new_pos := l_version.index_of ('.', l_pos)
-								l_minor := l_version.substring (l_pos, l_new_pos - 1).to_integer
+							l_pos := l_new_pos + 1
+							l_new_pos := l_version.index_of ('.', l_pos)
+							l_build := l_version.substring (l_pos, l_new_pos - 1).to_integer
 
-								l_pos := l_new_pos + 1
-								l_new_pos := l_version.index_of ('.', l_pos)
-								l_build := l_version.substring (l_pos, l_new_pos - 1).to_integer
+							l_pos := l_new_pos + 1
+							l_revision := l_version.substring (l_pos, l_version.count).to_integer
 
-								l_pos := l_new_pos + 1
-								l_revision := l_version.substring (l_pos, l_version.count).to_integer
-
-								l_ass_info.set_major_version (l_major.to_integer_16)
-								l_ass_info.set_minor_version (l_minor.to_integer_16)
-								l_ass_info.set_build_number (l_build.to_integer_16)
-								l_ass_info.set_revision_number (l_revision.to_integer_16)
-							end
-
-							if l_info.valid_index (4) then
-								l_key_string := l_info.item (4)
-								if l_key_string /= Void then
-									create l_key_token.make_from_string (l_key_string)
-								end
-							end
-							
-								-- NOTE: cannot use `uni_string' buffer as current feature can
-								-- be used with other features that already uses it to define
-								-- some metadata.
-							create l_uni_string.make (l_name)
-							
-							l_token := md_emit.define_assembly_ref (l_uni_string, l_ass_info,
-								l_key_token)
-							internal_assemblies.put (l_token, a_class.class_id)						
-							defined_assemblies.put (l_token, l_name)
+							l_ass_info.set_major_version (l_major.to_integer_16)
+							l_ass_info.set_minor_version (l_minor.to_integer_16)
+							l_ass_info.set_build_number (l_build.to_integer_16)
+							l_ass_info.set_revision_number (l_revision.to_integer_16)
 						end
+
+						if l_key_string /= Void then
+							if l_key_string /= Void then
+								create l_key_token.make_from_string (l_key_string)
+							end
+						end
+						
+							-- NOTE: cannot use `uni_string' buffer as current feature can
+							-- be used with other features that already uses it to define
+							-- some metadata.
+						create l_uni_string.make (l_name)
+						
+						l_token := md_emit.define_assembly_ref (l_uni_string, l_ass_info,
+							l_key_token)
+						internal_assemblies.put (l_token, a_class.class_id)						
+						defined_assemblies.put (l_token, l_name)
 					end
 				end
 			end

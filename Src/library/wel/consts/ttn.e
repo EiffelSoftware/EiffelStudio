@@ -1,5 +1,5 @@
 indexing
-	description: "Tooltip Notification (TTF) constants."
+	description: "Tooltip Notification (TTN) constants."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

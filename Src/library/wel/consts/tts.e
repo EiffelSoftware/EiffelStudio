@@ -1,5 +1,5 @@
 indexing
-	description: "Tool Tip Style (TTF) constants."
+	description: "Tool Tip Style (TTS) constants."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -54,9 +54,8 @@ feature {NONE} -- Initialization
 			build_widget_structure
 			set_up_first_window
 			set_minimum_size (640, 480)
-				-- When `Current' is closed, end the application.
-		--	close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
-			close_request_actions.extend (agent close_application)
+				-- When an attempt to close `Current' is made, call `close_requested'.
+			close_request_actions.extend (agent close_requested)
 		end
 
 feature {NONE} -- Implementation
@@ -187,10 +186,13 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	close_application is
+	close_requested is
 			-- End the current application.
 		do
+			--| FIXME Need a confirmation_dialog.
+				-- Save all the user generated components.
 			xml_handler.save_components;
+				-- Destroy the application.
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 		

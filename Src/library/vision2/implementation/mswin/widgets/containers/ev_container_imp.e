@@ -21,7 +21,9 @@ inherit
 		export
 			{EV_WEL_FRAME_WINDOW} parent_imp
 		redefine
-			parent_ask_resize
+			parent_ask_resize,
+			set_move_and_size,
+			set_insensitive
 		end
 
 	WEL_WM_CONSTANTS
@@ -54,13 +56,25 @@ feature -- Access
 			Result := wel_window.client_rect.height
 		end
 
-feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
+feature -- Status report
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if
+   			-- `flag'.
+		do
+			if the_child /= Void then
+				the_child.set_insensitive (flag)
+			end
+			Precursor (flag)
+		end
+
+feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
 
 	parent_ask_resize (new_width, new_height: INTEGER) is
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
 		do
-			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			Precursor (new_width, new_height)
 			if the_child /= Void then
 				the_child.parent_ask_resize (client_width, client_height)
 			end
@@ -70,9 +84,6 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
 			-- Resize the container according to the 
 			-- resize of the child
 		do
-			-- XX Have to take into account the borders 
-			-- (new_width and new_height are the 
-			-- dimensions of the client area)
 			set_size (new_width, new_height)
 		end
 
@@ -95,7 +106,27 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Resizing
 		do
 			set_minimum_height (new_child_minimum)
 		end
-	
+
+	set_move_and_size (a_x, a_y, new_width, new_height: INTEGER) is
+			-- When the parent asks to move and resize, it does it
+			-- and the notice the child.
+		do
+			Precursor (a_x, a_y, new_width, new_height)
+			if the_child /= void then
+				the_child.parent_ask_resize (client_width, client_height)
+			end
+		end
+
+feature {EV_WEL_CONTROL_WINDOW, EV_WEL_FRAME_WINDOW} -- Implementation
+
+	on_show is
+			-- Is called by the `wel_window' when the window
+			-- is displayed on the screen. Is usefull to resize
+			-- the container and the child.
+			-- Is redefine by some heir.
+		do
+		end
+
 feature -- Implementation
 
 	the_child: EV_WIDGET_IMP

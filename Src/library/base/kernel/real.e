@@ -10,6 +10,8 @@ indexing
 expanded class REAL inherit
 	REAL_REF
 
+create {NONE}
+
 indexing
 
 	library: "[

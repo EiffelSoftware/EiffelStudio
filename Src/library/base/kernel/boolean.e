@@ -12,6 +12,8 @@ expanded class BOOLEAN
 inherit
 	BOOLEAN_REF
 
+create {NONE}
+
 indexing
 
 	library: "[

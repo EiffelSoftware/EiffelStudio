@@ -11,6 +11,8 @@ expanded class POINTER inherit
 
 	POINTER_REF
 
+create {NONE}
+
 indexing
 
 	library: "[

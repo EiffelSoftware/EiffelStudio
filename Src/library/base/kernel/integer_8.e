@@ -9,6 +9,8 @@ expanded class INTEGER_8 inherit
 
 	INTEGER_8_REF
 
+create {NONE}
+
 indexing
 
 	library: "[

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	line (i: INTEGER): STRING is
+	line (i: INTEGER): STRING is		
 			-- Returns the content of the `i'th line.
 		require
 			valid_line_index: valid_line_index (i)
@@ -53,7 +53,18 @@ feature -- Access
 		end
 
 feature -- Status Report
-
+	
+	current_line_number: INTEGER is
+			-- Returns the number of the line the cursor currently
+			-- is on.
+		require
+			exist: not destroyed
+		do
+			Result := implementation.current_line_number
+		ensure
+			valid_line_index: valid_line_index (Result)
+		end
+	
 	line_count: INTEGER is
 			-- Number of lines in widget
 		require
@@ -64,26 +75,26 @@ feature -- Status Report
 			result_greater_zero: Result > 0
 		end 
 
-	first_character_from_line_number (i: INTEGER): INTEGER is
+	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
 		require
 			exist: not destroyed
 			valid_line: valid_line_index (i)
 		do
-			Result := implementation.first_character_from_line_number (i)
+			Result := implementation.first_position_from_line_number (i)
 		ensure
-			valid_character_position: valid_character_position (i)
+			valid_position: valid_position (i)
 		end
 
-	last_character_from_line_number (i: INTEGER): INTEGER is
+	last_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
 		require
 			exist: not destroyed
 			valid_line: valid_line_index (i)
 		do
-			Result := implementation.last_character_from_line_number (i)
+			Result := implementation.last_position_from_line_number (i)
 		ensure
-			valid_character_position: valid_character_position (i)
+			valid_position: valid_position (i)
 		end
 
 
@@ -95,6 +106,47 @@ feature -- Status Report
 			Result := i > 0 and i < line_count
 		end
 
+	has_system_frozen_widget: BOOLEAN is
+			-- Is there any widget frozen?
+			-- If a widget is frozen any updates made to it
+			-- will not be shown until the widget is
+			-- thawn again.
+		require
+			exist: not destroyed
+		do
+			Result := implementation.has_system_frozen_widget
+		end
+
+feature -- Status Settings
+
+	freeze is
+			-- Freeze the widget.
+			-- If the widget is frozen any updates made to the
+			-- window will not be shown until the widget is
+			-- thawn again.
+			-- Note: Only one window can be frozen at a time.
+			-- This is because of a limitation on Windows.
+		require
+			exist: not destroyed
+			no_frozen_widget: not has_system_frozen_widget
+		do
+			implementation.freeze
+		ensure
+			is_frozen: has_system_frozen_widget
+		end
+
+	thaw is
+			-- Thaw a frozen widget.
+		require
+			exist: not destroyed
+			is_frozen: has_system_frozen_widget
+		do
+			implementation.thaw
+		ensure
+			no_frozen_widget: not has_system_frozen_widget
+		end
+
+	
 
 feature -- Basic operation
 
@@ -124,8 +176,8 @@ feature -- Basic operation
 			exist: not destroyed
 			valid_line_index: valid_line_index (first_line) and valid_line_index (last_line)
 		do
-			select_region (first_character_from_line_number (first_line), 
-								last_character_from_line_number (last_line))
+			select_region (first_position_from_line_number (first_line), 
+								last_position_from_line_number (last_line))
 		ensure
 			has_selection: has_selection
 		end

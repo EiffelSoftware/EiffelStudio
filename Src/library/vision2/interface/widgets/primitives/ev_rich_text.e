@@ -39,17 +39,13 @@ feature -- Access
 			Result := implementation.character_format
 		end
 
-	valid_position (pos: INTEGER): BOOLEAN is
-		do
-			Result := (pos >= 1) and (pos <= text_length + 1)
-		end
-
 feature -- Status report
 
 	line_number_from_position (a_pos: INTEGER): INTEGER is
 			-- Retrieves the line number from a character position.
 			-- Line numbers start at 1.
 		require
+			exists: not destroyed
 			index_large_enough: a_pos >= 0
 			index_small_enough: a_pos <= text_length + 2
 		do
@@ -83,11 +79,24 @@ feature -- Element change
 --		ensure
 --			format_set: character_format = format
 		end
+
+	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
+			-- Set the format of the text between `first_pos' and `last_pos' to
+			-- `format'. May or may not change the cursor position.
+		require
+			exists: not destroyed
+			valid_positions: valid_position (first_pos) and valid_position (last_pos)
+			format_not_void: format /= Void
+		do
+			implementation.format_region (first_pos, last_pos, format)
+		end
+
 		
 	remove_character (pos: INTEGER) is
 			-- Remove the character at the position `pos'
 			-- Moves the cursor backwards
 		require
+			exists: not destroyed
 			valid_pos: valid_position (pos)
 		do
 			remove_text (pos, pos)
@@ -96,6 +105,7 @@ feature -- Element change
 	remove_text (start_pos, end_pos: INTEGER) is
 			-- remove the text between `start_pos' and `end_pos'.
 		require
+			exists: not destroyed
 			valid_start_pos: valid_position (start_pos)
 			valid_end_pos: valid_position (end_pos)
 		do

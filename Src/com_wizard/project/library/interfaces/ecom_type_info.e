@@ -161,7 +161,7 @@ feature -- Access
 			-- `type_info'
 			-- Valid range is 0 to `count_implemented_types' of `type_attr'
 		require
-			valid_index: an_index >= 0 and then an_index <= type_attr.count_implemented_types
+			valid_index: an_index >= -1 and then an_index <= type_attr.count_implemented_types
 		do
 			Result := ccom_get_ref_type_of_impl_type (initializer, an_index)
 		end

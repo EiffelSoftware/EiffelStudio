@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_tool)
 			
-			Create {EB_DYNAMIC_TEXT_FORMATTER} f.make (tool)
+			create {EB_DYNAMIC_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_DYNAMIC_CLICKABLE_FORMATTER} f.make (tool)
+			create {EB_DYNAMIC_CLICKABLE_FORMATTER} f.make (tool)
 			add_formatter (f)
 		end
 

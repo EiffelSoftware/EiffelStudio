@@ -51,7 +51,7 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_DEFERRED_ROUTINES
 		do
-			!! cmd.make (c.e_class)
+			create cmd.make (c.e_class)
 			cmd.execute
 			Result := cmd.structured_text
 		end

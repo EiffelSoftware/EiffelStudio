@@ -51,7 +51,7 @@ feature -- format
 						if stone /= Void and then stone.is_valid then
 							same_stone := stone.same_as (class_tool.stone)
 							display_temp_header (stone)
---							!! mp.set_watch_cursor
+--							create mp.set_watch_cursor
 							stone_text := stone.origin_text
 							if stone_text = Void then
 								stone_text := ""

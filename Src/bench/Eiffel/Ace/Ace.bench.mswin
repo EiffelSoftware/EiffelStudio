@@ -73,10 +73,10 @@ cluster
 		end	
 
 		-- ES4 SPECIFIC CLUSTERS
-	liman:				"$EIFFEL_SRC\limand"
+	liman:				"$EIFFEL_SRC\Eiffel\limand"
 
-	liman_bench(liman):		"$\..\Eiffel\limand\bench"
-	liman_bench_graphical(liman):	"$\..\Eiffel\limand\bench_graphical"
+	liman_bench(liman):		"$\bench"
+	liman_bench_graphical(liman):	"$\bench_graphical"
 	liman_abstract(liman):		"$\abstract"
 	liman_graphical(liman):		"$\graphical"
 
@@ -85,7 +85,7 @@ cluster
 	replication:		"$EIFFEL_SRC\Eiffel\eiffel\replication"
 
 		-- General compilation:
-	common:				"$EIFFEL_SRC\common"
+	common:				"$EIFFEL_SRC\Eiffel\common"
 	common_parser (common):				"$\parser"
 	common_eiffel_parser (common_parser):		"$\parser";
 

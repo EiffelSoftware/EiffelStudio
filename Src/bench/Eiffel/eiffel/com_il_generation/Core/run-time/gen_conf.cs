@@ -124,6 +124,28 @@ public class GENERIC_CONFORMANCE {
 		return Result;
 	}
 
+	public static TYPE load_type_of_object (EIFFEL_TYPE_INFO an_obj)
+		// Given an Eiffel object `an_obj' extract its type information.
+	{
+		EIFFEL_DERIVATION der;
+		CLASS_TYPE Result;
+
+		der = an_obj.____type ();
+
+		if (der == null) {
+				// It is not a generic type, so we can simply find its type through
+				// Reflection and then creates a CLASS_TYPE object.
+			Result = new CLASS_TYPE ();
+			Result.set_type (an_obj.GetType ().TypeHandle);
+		} else {
+				// It is a generic type, so we can simply find its type through
+				// its EIFFEL_DERIVATION.
+			Result = der.type;
+		}
+		return Result;
+
+	}
+
 	public static Boolean conforms_to (Object obj1, Object obj2)
 		// Does dynamic type of object attached to `obj1' conform to
 		// dynamic type of object attached to `obj2'?

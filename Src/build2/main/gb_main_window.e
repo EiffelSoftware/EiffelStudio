@@ -44,6 +44,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_ACCESSIBLE_SYSTEM_STATUS
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	default_create
@@ -60,6 +65,9 @@ feature {NONE} -- Initialization
 			build_widget_structure
 			set_up_first_window
 			set_minimum_size (640, 480)
+				-- Tell `system_settings' that `Current' is the
+				-- main window of the system.
+			system_status.set_main_window (Current)
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
 		end
@@ -84,12 +92,12 @@ feature {NONE} -- Implementation
 			create file_menu.make_with_text (Gb_file_menu_text)
 			a_menu_bar.extend (file_menu)
 			create menu_separator
-			create file_new.make_with_text ("New")
-			file_menu.extend (file_new)
-			file_menu.extend (command_handler.file_load_command.new_menu_item)
-			file_menu.extend (command_handler.file_save_command.new_menu_item)
+			file_menu.extend (command_handler.open_project_command.new_menu_item)
+			file_menu.extend (command_handler.new_project_command.new_menu_item)
+			file_menu.extend (command_handler.save_command.new_menu_item)
+			file_menu.extend (command_handler.close_project_command.new_menu_item)
 			file_menu.extend (menu_separator)
-			create file_exit.make_with_text ("Exit")
+			create file_exit.make_with_text (Gb_file_exit_menu_text)
 			file_menu.extend (file_exit)
 			file_exit.select_actions.extend (agent close_requested)
 			
@@ -103,16 +111,12 @@ feature {NONE} -- Implementation
 			view_menu.extend (view_menu_builder_window)
 			create menu_separator
 			view_menu.extend (menu_separator)
-			create view_menu_history.make_with_text ("Show history dialog")
-			view_menu.extend (view_menu_history)
-			
-			
+			view_menu.extend (command_handler.show_history_command.new_menu_item)
+
 				-- Initialize the project menu.
 			create project_menu.make_with_text (Gb_project_menu_text)
 			a_menu_bar.extend (project_menu)
-				-- FIXME make into a command.
-			create project_menu_settings.make_with_text (Gb_project_menu_settings_text)	
-			project_menu.extend (project_menu_settings)
+			project_menu.extend (command_handler.project_settings_command.new_menu_item)
 			create project_menu_build.make_with_text (Gb_project_menu_build_text)
 			project_menu.extend (project_menu_build)
 			
@@ -192,8 +196,7 @@ feature {NONE} -- Implementation
 			create Result
 			create delete_button
 			Result.extend (delete_button)
-			--Result.extend (command_handler.file_load_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.file_save_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.save_command.new_toolbar_item (True, False))
 			create a_new_object_editor
 			Result.extend (a_new_object_editor)
 			create separator
@@ -201,8 +204,7 @@ feature {NONE} -- Implementation
 			create undo_button
 			undo_button.disable_sensitive
 			Result.extend (undo_button)
-			create history_button
-			Result.extend (history_button)
+			Result.extend (command_handler.show_history_command.new_toolbar_item (True, False))
 			create redo_button
 			Result.extend (redo_button)
 			redo_button.disable_sensitive
@@ -212,6 +214,7 @@ feature {NONE} -- Implementation
 			Result.extend (generation_button)
 			create separator
 			Result.extend (separator)
+			Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))
 		end
 		
 	set_up_first_window is

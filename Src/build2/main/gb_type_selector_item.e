@@ -193,7 +193,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				-- as they must now be empty, as we are picking a new type,
 				-- not an object.
 			type_selector.update_drop_actions_for_all_children (Void)
-			Result := object_handler.build_object_from_string (type)
+			
+				-- Note that this generates a new id, so if the pnd is cancelled, we
+				-- will have used an other id, although this should not be a problem.
+				-- As the ids will be compacted when the project is next loaded.
+			Result := object_handler.build_object_from_string_and_assign_id (type)
 		ensure
 			Result_not_void: Result /= Void
 		end

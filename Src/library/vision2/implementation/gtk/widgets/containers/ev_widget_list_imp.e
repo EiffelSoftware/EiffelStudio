@@ -63,7 +63,6 @@ feature {NONE} -- Implementation
 				gtk_reorder_child (list_widget, a_c_object, i - 1)
 			end			
 			on_new_item (v_imp)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -83,7 +82,6 @@ feature {NONE} -- Implementation
 			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
 			feature {EV_GTK_EXTERNALS}.set_gtk_widget_struct_parent (a_child, NULL)
 			child_array.remove
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 feature {NONE} -- Implementation

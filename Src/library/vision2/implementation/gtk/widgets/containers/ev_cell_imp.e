@@ -67,7 +67,6 @@ feature -- Element change
 				imp.update_request_size
 				on_new_item (imp)
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -130,7 +130,7 @@ feature -- Analysis preparation
 			line: EDITOR_LINE
 		do
 			split_string := False
-			pos_in_file := 0
+			pos_in_file := 1
 			from
 				content.start
 				line := content.current_line

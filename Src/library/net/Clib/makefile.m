@@ -1,6 +1,6 @@
 AR = lib 
 CC = cl
-CFLAGS= -W1 -nologo -Ox -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+CFLAGS= -W1 -nologo -Ox -I$(ISE_EIFFEL)\studio\spec\windows\include
 LN = copy
 MAKE = make
 RANLIB = echo

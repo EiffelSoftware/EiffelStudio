@@ -312,10 +312,10 @@ feature {EV_ANY_I} -- Event handling
 			key: EV_KEY
 		do
 			if n_args /= 1 then
-				print ("********** /= 1 nargs *********%N");
+			--	print ("********** /= 1 nargs *********%N");
 			else
 			gdk_event := gtk_value_pointer (args)
-			print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
+			--print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
 			if C.gdk_event_any_struct_type (gdk_event) < 100000 then
 			inspect
 				C.gdk_event_any_struct_type (gdk_event)
@@ -689,6 +689,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/05 17:04:14  king
+--| Commented out debugging statements
+--|
 --| Revision 1.8  2000/04/04 21:01:36  oconnor
 --| assumed funtionality previously in callback marshal
 --|

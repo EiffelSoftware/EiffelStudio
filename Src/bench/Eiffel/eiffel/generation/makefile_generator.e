@@ -683,6 +683,9 @@ feature -- Generation (Linking rules)
 				Make_file.putstring ("$(EXTERNALS) ");
 			end;
 			Make_file.putstring (run_time);
+			if System.Concurrent_Eiffel then
+				Make_file.putstring (" $(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a");
+			end
 			Make_file.putstring (" $(LIBS)%N");
 
 			generate_additional_rules;

@@ -4197,7 +4197,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 						attr_address = (char *) object +
 								expanded_offset + attrib_offset;
 						old_vals = object_rread_attributes (
-								object, old_flags, attrib_offset);
+								object, old_flags, expanded_offset + attrib_offset);
 						if (mismatched)
 							ecopy (attr_address, old_value);
 					}

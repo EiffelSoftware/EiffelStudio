@@ -28,24 +28,23 @@ feature {EV_WIDGET} -- Initialization
 			set_automatic_position (False)
 		end
 
+	initialize_colors is
+			-- Called after the creation of the widget and after
+			-- having stored the parent. It define the default
+			-- colors of a widget which are the same than the
+			-- parent. This feature is redefined by several
+			-- children.
+		do
+			set_background_color (parent_imp.background_color.interface)
+			set_foreground_color (parent_imp.foreground_color.interface)
+		end
+
 feature -- Access
 
 	interface: EV_WIDGET
 			-- The interface of the current implementation
 			-- Used to give the parent of a widget to the user
 			-- and in the implementation of some widgets
-	
-	parent: EV_WIDGET is
-			-- The parent of the Current widget
-			-- If the widget is an EV_WINDOW without parent,
-			-- this attribute will be `Void'
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
-			else
-				Result := Void
-			end
-		end
 
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this widget. The same than
@@ -64,6 +63,17 @@ feature -- Access
 			-- the parent resize ?  
 			-- (If it does, its size doesn't changed).  
 			-- False by default.
+
+	background_color: EV_COLOR_IMP is
+			-- Color used for the background of the widget
+		deferred
+		end
+
+	foreground_color: EV_COLOR_IMP is
+			-- Color used for the foreground of the widget,
+			-- usually the text.
+		deferred
+		end
 
 feature -- Status Report
 
@@ -129,26 +139,45 @@ feature -- Status setting
 			flag = insensitive
 		end
 
-	set_automatic_resize (state: BOOLEAN) is
-			-- Make `state' the new `automatic_resize'.
+	set_automatic_resize (flag: BOOLEAN) is
+			-- Make `flag' the new `automatic_resize'.
 		require
 			exists: not destroyed
 		do
-			automatic_resize := state
+			automatic_resize := flag
 		ensure
-			automatic_resize_set: automatic_resize = state
+			automatic_resize_set: automatic_resize = flag
 		end
 
-	set_automatic_position (state: BOOLEAN) is
-			-- Make `state' the new `automatic_position'.
+	set_automatic_position (flag: BOOLEAN) is
+			-- Make `flag' the new `automatic_position'.
 		require
 			exists: not destroyed
 		do
-			automatic_position := state
+			automatic_position := flag
 		ensure
-			automatic_position_set: automatic_position = state
+			automatic_position_set: automatic_position = flag
 		end
 
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		require
+			exists: not destroyed
+			color_not_void: color /= Void
+		deferred
+		ensure
+			background_color_set: background_color = color.implementation
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		require
+			exists: not destroyed
+			color_not_void: color /= Void
+		deferred
+		ensure
+			foreground_color_set: foreground_color = color.implementation
+		end
 
 feature -- Measurement
 	
@@ -184,7 +213,7 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end
 	
-		minimum_width: INTEGER is
+	minimum_width: INTEGER is
 			-- Minimum width of widget
 		require
 			exists: not destroyed
@@ -216,24 +245,24 @@ feature -- Resizing
 			dimensions_set: dimensions_set (new_width, new_height)		
 		end
 
-	set_width (new_width :INTEGER) is
-			-- Make `new_width' the new width.
+	set_width (value :INTEGER) is
+			-- Make `value' the new width.
 		require
 			exists: not destroyed
-			Positive_width: new_width >= 0
+			Positive_width: value >= 0
 		deferred
 		ensure
-			dimensions_set: dimensions_set (new_width, height)
+			dimensions_set: dimensions_set (value, height)
 		end
 	
-	set_height (new_height: INTEGER) is
-			-- Make `new_height' the new.
+	set_height (value: INTEGER) is
+			-- Make `value' the new.
 		require
 			exists: not destroyed
-			Positive_height: new_height >= 0
+			Positive_height: value >= 0
 		deferred
 		ensure					
-			dimensions_set: dimensions_set (width, new_height)
+			dimensions_set: dimensions_set (width, value)
 		end
 
 	set_minimum_size (min_width, min_height: INTEGER) is
@@ -249,34 +278,34 @@ feature -- Resizing
 			min_height = min_height
 		end  
         
-	set_minimum_width (min_width: INTEGER) is
-			-- Make `min_width' the new `minimum_width'.
+	set_minimum_width (value: INTEGER) is
+			-- Make `value' the new `minimum_width'.
 		require
 			exists: not destroyed
-			a_min_large_enough: min_width >= 0
+			a_min_large_enough: value >= 0
 		deferred
 		ensure
-			min_width = min_width    
+			minimum_width_set: minimum_width = value
 		end  
 	
-	set_minimum_height (min_height: INTEGER) is
-			-- Make `min_height' the new `minimum__height' .
+	set_minimum_height (value: INTEGER) is
+			-- Make `value' the new `minimum__height' .
 		require
 			exists: not destroyed
-			height_large_enough: min_height >= 0
+			height_large_enough: value >= 0
 		deferred
 		ensure
-			min_height = min_height
+			minimum_height_set: minimum_height = value
 		end
 
-	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x' relative
+	set_x (value: INTEGER) is
+			-- Put at horizontal position `value' relative
 			-- to parent.
 		require
 			exists: not destroyed
 		deferred
 		ensure
-			x_set: x = new_x
+			x_set: x = value
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
@@ -286,18 +315,18 @@ feature -- Resizing
 			exists: not destroyed
 		deferred
 		ensure
-		--XX	x_set: x = new_x	
-		--XX	y_set: y = new_y	
+			x_set: x = new_x	
+			y_set: y = new_y	
 		end
 
-	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y' relative
+	set_y (value: INTEGER) is
+			-- Put at vertical position `value' relative
 			-- to parent.
 		require
 			exists: not destroyed
 		deferred
 		ensure
-			y_set: y = new_y		
+			y_set: y = value		
 		end
 	
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
@@ -422,11 +451,13 @@ feature -- Implementation
 			-- It is not possible to change the parent,
 			-- therefore, if there is already a parent,
 			-- we don't do anything
+		require
+			parent_not_void: par /= Void
 		deferred
 		end
 
 	set_interface (the_interface: EV_WIDGET) is
-			-- Set `interface' to `the_interface'
+			-- Make `interface' the interface of the current object.
 		require
 			valid_interface: the_interface /= Void
 		do
@@ -434,6 +465,11 @@ feature -- Implementation
 		ensure
 			interface_set: interface = the_interface
 		end
+
+--invariant
+
+--	backgound_color_not_void: background_color /= Void
+--	foreground_color_not_void: foreground_color /= Void
 	
 end -- class EV_WIDGET_I
 

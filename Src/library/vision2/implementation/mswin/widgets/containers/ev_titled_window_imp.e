@@ -212,9 +212,7 @@ feature {NONE} -- WEL Implementation
 				w := width
 				internal_changes := set_bit (internal_changes, 64, False)
 			else
-				if child /= Void then
-					w := child.minimum_width + 2 * window_frame_width
-				end
+				w := 0
 			end
 
 			-- The height to give to the window
@@ -222,17 +220,7 @@ feature {NONE} -- WEL Implementation
 				h := height
 				internal_changes := set_bit (internal_changes, 128, False)
 			else
-				if child /= Void then
-					h := child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height
-				end
-				-- Then, the menu
-				if has_menu then
-					h := h + menu_bar_height
-				end
-				-- And the status bar
-				if status_bar /= Void then
-					h := h + status_bar.height
-				end
+				h := 0
 			end
 
 			-- We check if there is a menu

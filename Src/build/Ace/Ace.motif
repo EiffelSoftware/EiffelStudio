@@ -32,8 +32,7 @@ cluster
 	traversing (base):         "$/structures/traversing";
 	tree (base):               "$/structures/tree";
 
-	--mel: 			"$EIFFEL4/library/mel";
-	mel:             "/boston/samik/src/mel";
+	mel: 			"$EIFFEL4/library/mel";
 	mel_callback_structs (mel):   "$/callback_structs";
 	mel_constants (mel):          "$/constants";
 	mel_events (mel):             "$/events";
@@ -47,8 +46,7 @@ cluster
 			assertion(no);
 		end ;  
 
---	vision:			 "$EIFFEL4/library/vision/";
-	vision:             "/boston/samik/src/vision";
+	vision:			 "$EIFFEL4/library/vision/";
 	vision_figures (vision):             "$/figures";
 	vision_imp_motif (vision):           "$/implement/motif"
          	default
@@ -67,17 +65,7 @@ cluster
     	vision_obsolete_oui (vision):        "$/obsolete/oui";
     	vision_obsolete_toolkit (vision):    "$/obsolete/toolkit";
 
---	abs_kernel:		"$EV3/oui/kernel";
---	abs_commands:	"$EV3/oui/commands";
---	abs_widgets:	"$EV3/oui/widgets";
---	tools:			"$EV3/tools";
---	x:				"$EV3/implement/X";
---	toolkit:		"$EV3/implement/toolkit";
---	motif_res:		"$EV3/implement/motif/Resources";
---	motif_widgets:	"$EV3/implement/motif/widgets";
---	figures: 		"$EV3/figures";
-
-	build:				"/boston/samik/src/build";
+	build:				"..";
     
 	build_merger (build):		"$/merger";
 	build_shared (build):		"$/Shared";
@@ -165,7 +153,7 @@ cluster
         --api_interface(api):     "$/interface";
       --  api_common(api):        "$/common";
     --    communication(api):     "$/no_communication";
-  --      output(api):            "$/output";
+  	  output(api):            "$/output";  -- OUTPUT_WINDOW
 --        evaluated_type(api):    "$/evaluated_type";
 
 
@@ -199,12 +187,13 @@ end;
 
 
 -- Patches from case: syntax_error, compiler_exporter
-	case_patches:	"/boston/samik/src/case/eiffel/patches";
+	case_patches:	"../../case/eiffel/patches";
   --              exclude
     --                    "syntax_error.e" 
 	--        end;
--- Patches from build: syntax_error
---	patches (build):	"$/patches";
+
+-- Patches from build: build_error_displayer
+	patches (build):	"$/patches";
 
 
 	
@@ -231,8 +220,6 @@ end;
 --	liman_client(liman):		"$/client";--unix
 
 external
---	include_path: 	"/boston/samik/src/RT.$(PLATFORM)/parsing/shared",
-
 	include_path: 	"\$(BENCH)/C/parsing/shared",
 			"\$(EIFFEL4)/library/mel/Clib";
 
@@ -243,10 +230,6 @@ external
 	    	"$(BENCH)/C/parsing/shared/libparsing.a",
 	    	"$(BENCH)/C/parsing/lace/liblace.a",
 	    	"$(BENCH)/C/platform/libplatform.a",
---	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/eiffel/libeiffel.a",
---	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/shared/libparsing.a",
---	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/lace/liblace.a",
---	    	"/ankara2/samik/src/RT.$(PLATFORM)/platform/libplatform.a",
 		"-lXm -lXt -lX11 -lXpm";	
 
 

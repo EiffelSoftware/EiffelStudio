@@ -67,7 +67,7 @@ library emitter
         [id(0x6002000c)]
         HRESULT _set_impl([in] IUnknown* p1);
         [id(0x6002000d)]
-        HRESULT _emitter_type_1891([out, retval] void** pRetVal);
+        HRESULT _emitter_type_1892([out, retval] void** pRetVal);
     };
 
     [
@@ -87,19 +87,19 @@ library emitter
     ]
     interface ISE_Cache_COM_ASSEMBLY_INFORMATION : IDispatch {
         [id(0x60020000)]
-        HRESULT public_key_token([out, retval] BSTR* pRetVal);
-        [id(0x60020001)]
-        HRESULT impl([out, retval] IUnknown** pRetVal);
-        [id(0x60020002)]
-        HRESULT _set_impl([in] IUnknown* p1);
-        [id(0x60020003)]
-        HRESULT make([in] IUnknown* ass);
-        [id(0x60020004)]
-        HRESULT name([out, retval] BSTR* pRetVal);
-        [id(0x60020005)]
-        HRESULT version([out, retval] BSTR* pRetVal);
-        [id(0x60020006)]
         HRESULT culture([out, retval] BSTR* pRetVal);
+        [id(0x60020001)]
+        HRESULT public_key_token([out, retval] BSTR* pRetVal);
+        [id(0x60020002)]
+        HRESULT impl([out, retval] IUnknown** pRetVal);
+        [id(0x60020003)]
+        HRESULT _set_impl([in] IUnknown* p1);
+        [id(0x60020004)]
+        HRESULT make([in] IUnknown* ass);
+        [id(0x60020005)]
+        HRESULT name([out, retval] BSTR* pRetVal);
+        [id(0x60020006)]
+        HRESULT version([out, retval] BSTR* pRetVal);
     };
 };
 

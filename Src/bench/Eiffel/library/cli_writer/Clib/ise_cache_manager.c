@@ -5,7 +5,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Wed Aug 28 18:50:53 2002
+/* at Mon Sep 02 11:45:29 2002
  */
 /* Compiler settings for ise_cache_manager.idl:
     Os (OptLev=s), W1, Zp8, env=Win32, ms_ext, c_ext

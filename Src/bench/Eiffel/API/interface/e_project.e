@@ -560,8 +560,7 @@ feature -- Update
 			melt
 			if
 				successful and then
-				not comp_system.lace.compile_all_classes and then
-				not comp_system.il_generation
+				not comp_system.lace.compile_all_classes 
 			then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)

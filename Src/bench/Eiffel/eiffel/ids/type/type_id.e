@@ -58,7 +58,7 @@ feature -- Access
 			-- Name of the descriptors Init function associated
 			-- with current type
 		do
-			!! Result.make (15);
+			!! Result.make (20);
 			Result.append (prefix_name);
 			Result.append ("Init");
 			Result.append_integer (internal_id)
@@ -68,8 +68,9 @@ feature -- Access
 			-- Name of the init procedure of the C module 
 			-- associated with current type
 		do
-			!! Result.make (15);
+			!! Result.make (20);
 			Result.append ("EIF_Minit");
+			Result.append (prefix_name);
 			Result.append_integer (internal_id)
 		end
 

@@ -130,11 +130,12 @@ feature -- Formatting
 --							create mp.set_watch_cursor
 							tool.text_window.clear_window
 							tool.text_window.hide
-							tool.text_window.set_editable (False)
+							tool.text_window.set_editable (True)
 							tool.set_stone (stone)
 							tool.set_file_name (file_name (stone))
 							display_info (stone)
-							tool.text_window.set_position (0)
+							tool.text_window.set_position (1)
+							tool.text_window.set_editable (False)
 							tool.text_window.show
 							tool.set_last_format (Current)
 							filtered := false
@@ -195,13 +196,18 @@ feature {FORMAT_BUTTON} -- Properties
 			-- from the dynamic value of object (minus the show_)
 			-- so it is very important to name the format as
 			-- SHOW_<type of format>
-		do
-			create Result.make(0)
-			Result.append (generator)
-			Result.to_lower
-				--| remove the SHOW_
-				--| Maximum length is 3. (Portability)
-			Result := Result.substring (6, Result.count.min (9))
+		
+			-- Christophe 08/24/99: it is easier, safer and more elegant to
+			-- oblige developpers to redeclare this feature than to
+			-- force all descendants to begin by "SHOW_"
+		deferred
+--		do
+--			create Result.make(0)
+--			Result.append (generator)
+--			Result.to_lower
+--				--| remove the SHOW_
+--				--| Maximum length is 3. (Portability)
+--			Result := Result.substring (6, Result.count.min (9))
 		ensure
 			Result_not_void: Result /= Void
 			valid_extension: Result.count <= 3
@@ -271,6 +277,10 @@ feature {EB_FEATURE_TOOL} -- Implementation
 		end
 
 feature -- Dumb Features: Only here for compilation
+
+	symbol: EV_PIXMAP is
+		deferred
+		end
 
 	menu_name: STRING is
 		deferred

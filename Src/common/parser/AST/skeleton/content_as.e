@@ -71,8 +71,6 @@ feature -- Type check and byte code
 	byte_node: BYTE_CODE is
             -- Associated byte code
 		do
-		ensure then
-			False
 		end;
 
 	check_local_names is

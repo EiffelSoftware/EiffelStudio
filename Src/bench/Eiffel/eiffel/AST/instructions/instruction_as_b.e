@@ -5,8 +5,9 @@ deferred class INSTRUCTION_AS
 inherit
 
 	AST_EIFFEL
+		undefine
+			byte_node
 		redefine
-			byte_node,
 			find_breakable
 		end
 
@@ -14,9 +15,7 @@ feature
 
 	byte_node: INSTR_B is
 			-- Associated byte code
-		do
-		ensure then
-			False
+		deferred
 		end
 
 feature -- Debugger

@@ -38,10 +38,10 @@ feature
 				not context.has_postcondition and
 				not context.has_invariant;
 		ensure then
-			last_in_result = target.is_result and
+			last_in_result = (target.is_result and
 				not context.byte_code.is_once and
 				not context.has_postcondition and
-				not context.has_invariant;
+				not context.has_invariant);
 		end;
 
 	mark_last_instruction is

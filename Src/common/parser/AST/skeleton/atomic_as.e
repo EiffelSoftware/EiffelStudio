@@ -39,8 +39,6 @@ feature -- Type check and dead code removal
 
 	byte_node: EXPR_B is
 		do
-		ensure then
-			False
 		end;
 
 	value_i: VALUE_I is

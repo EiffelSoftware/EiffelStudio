@@ -17,9 +17,7 @@ feature
 
 	byte_node: ACCESS_B is
 			-- Associated byte code
-		do
-		ensure then
-			False
+		deferred
 		end
 
 end

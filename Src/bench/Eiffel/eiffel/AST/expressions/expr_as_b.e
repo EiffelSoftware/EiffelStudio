@@ -5,7 +5,7 @@ deferred class EXPR_AS
 inherit
 
 	AST_EIFFEL
-		redefine
+		undefine
 			byte_node
 		end
 
@@ -13,9 +13,7 @@ feature
 
 	byte_node: EXPR_B is
 			-- Byte code type
-		do
-		ensure then
-			False
+		deferred
 		end;
 
 	text_string: STRING is

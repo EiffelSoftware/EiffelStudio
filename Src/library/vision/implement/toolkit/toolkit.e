@@ -355,7 +355,7 @@ feature
 		deferred
 		end;
 
-	widget_resource: WIDGET_RESOURCE_X is
+	widget_resource: WIDGET_RESOURCE_I is
 		deferred
 		end;
 

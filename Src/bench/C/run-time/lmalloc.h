@@ -9,7 +9,7 @@
 
 */
 
-#ifndef #EIF_THREADS
+#ifndef EIF_THREADS
 
 #ifdef __cplusplus
 extern "C" {

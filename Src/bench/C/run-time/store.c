@@ -1600,7 +1600,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 				long dgen;
 
 				dgen = (long) *(patterns++);
-				if (0 > sprintf(s_buffer, " %lu", dgen)) {
+				if (0 > sprintf(s_buffer, " %ld", dgen)) {
 					eise_io("General store: unable to write the generic type description.");
 				}
 				buffer_write(s_buffer, (strlen (s_buffer)));
@@ -1778,7 +1778,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 				long dgen;
 
 				dgen = (long) *(patterns++);
-				if (0 > sprintf(s_buffer, " %lu", dgen)) {
+				if (0 > sprintf(s_buffer, " %ld", dgen)) {
 					eise_io("Independent store: unable to write the generic type description.");
 				}
 				widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));

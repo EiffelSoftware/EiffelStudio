@@ -137,7 +137,7 @@ shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
 public long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
 extern long th_alloc;					/* Allocation threshold (in bytes) */
 
-#ifdef HAS_MMAP
+#if defined (HAS_MMAP) && PTRSIZ > 4
 extern char *root_obj;
 #endif
 
@@ -881,8 +881,12 @@ int type;
 		 * condition.
 		 */
 #ifdef HAS_MMAP
+#if PTRSIZ > 4
 		oldbrk = (union overhead *) mmap (root_obj, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
+#else
+		oldbrk = (union overhead *) mmap (NULL, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
 
+#endif
 		if ((union overhead *) -1 != oldbrk)
 			break;							/* OK, we got it */
 #else

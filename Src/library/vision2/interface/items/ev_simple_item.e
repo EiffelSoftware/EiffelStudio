@@ -32,6 +32,14 @@ feature -- Access
 			Result := implementation.text
 		end
 
+	data: ANY is
+			-- A data kept by the item
+		require
+			exists: not destroyed
+		do
+			Result := implementation.data
+		end
+
 	parent: EV_ANY is
 			-- The parent of the Current widget
 			-- Can be void.
@@ -45,7 +53,6 @@ feature -- Access
 			end
 		end
 		
-
 	parent_widget: EV_WIDGET is
 			-- Parent widget of the current item
 		require
@@ -65,6 +72,17 @@ feature -- Element change
 			implementation.set_text (txt)
 		ensure
 			text_set: text.is_equal (txt)
+		end
+
+	set_data (a: ANY) is
+			-- Make `a' the new data of the item.
+		require
+			exists: not destroyed
+		do
+			implementation.set_data (a)
+		ensure
+			data_set: (data /= Void) implies (data.is_equal (a))
+				and (data = Void) implies (a = Void)
 		end
 
 feature -- Event : command association

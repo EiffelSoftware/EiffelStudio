@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision simple item, gtk implementation."
@@ -58,6 +59,9 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/07 22:35:53  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.8  2000/02/22 21:36:02  king
 --| Removed corrected fixme
 --|

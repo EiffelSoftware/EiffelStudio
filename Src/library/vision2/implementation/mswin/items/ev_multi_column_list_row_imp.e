@@ -14,23 +14,24 @@ inherit
 		redefine
 			parent_imp,
 			interface
+		select
+			pixmap
 		end
 
 	EV_ITEM_IMP
+		rename
+			--| FIXME Get back to this.
+			pixmap as ev_item_imp_pixmap
 		undefine
-			parent
+			parent,
+			set_pixmap,
+			remove_pixmap,
+			set_pointer_style
 		redefine
 			destroy,
 			parent_imp,
 			interface,
-			on_parented
-		end
-
-	EV_PICK_AND_DROPABLE_IMP
-		undefine
-			set_pointer_style
-		redefine
-			interface,
+			on_parented,
 			pnd_press
 		end
 
@@ -224,6 +225,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/04/07 22:31:51  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.34  2000/03/30 19:52:24  rogers
 --| Changed all instances of:
 --| 	set_source_true -> set_parent_source_true

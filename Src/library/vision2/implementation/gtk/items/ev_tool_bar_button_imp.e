@@ -16,15 +16,13 @@ inherit
 			interface
 		end
 
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		rename
 			interface as simple_item_interface
 		undefine
 			set_pixmap,
 			remove_pixmap,
-			parent,
-			set_text,
-			remove_text
+			parent
 		redefine
 			initialize
 		end
@@ -72,9 +70,8 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialization of button box and events.
-
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor
+			{EV_ITEM_IMP} Precursor
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -156,6 +153,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/07 22:35:53  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.20  2000/04/04 20:50:18  oconnor
 --| updated signal connection for new marshaling scheme
 --|

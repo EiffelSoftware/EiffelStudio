@@ -15,7 +15,7 @@ inherit
 			interface
 		end
 
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		undefine
 			parent,
 			set_pointer_style
@@ -23,6 +23,11 @@ inherit
 			parent_imp,
 			interface,
 			pnd_press
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -259,6 +264,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/04/07 22:31:51  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.45  2000/03/30 19:51:35  rogers
 --| Changed all instances of:
 --| 	set_source_true -> set_parent_source_true

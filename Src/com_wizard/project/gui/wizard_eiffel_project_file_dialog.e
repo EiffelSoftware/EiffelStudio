@@ -77,6 +77,8 @@ feature -- Behavior
 		do
 			project_file_name := project_file_edit.text
 			eiffel_class_name := class_name_edit.text
+			eiffel_class_name.left_adjust
+			eiffel_class_name.right_adjust
 			ace_file_name := ace_file_name_edit.text
 			cluster_name := cluster_edit.text
 

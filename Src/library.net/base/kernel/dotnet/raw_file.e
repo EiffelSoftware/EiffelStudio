@@ -108,6 +108,25 @@ feature -- Input
 		do
 			last_double := reader.read_double
 		end
+	
+	read_data (p: POINTER; nb_bytes: INTEGER) is
+			-- Read a string of at most `nb_bytes' bound bytes
+			-- or until end of file.
+			-- Make result available in `p'.
+		local
+			i: INTEGER
+			byte: INTEGER_8
+		do
+			from
+				i := 0
+			until
+				i > (nb_bytes - 1)
+			loop
+				byte := reader.read_byte
+				feature {MARSHAL}.write_byte (p + i, byte)
+				i := i + 1
+			end
+		end
 
 feature {NONE} -- Implementation
 

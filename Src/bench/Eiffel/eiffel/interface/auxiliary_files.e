@@ -432,7 +432,7 @@ feature -- Plug and Makefile file
 			creation_feature, correct_mismatch_feat: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
+			dispose_name, str_make_name, init_name, exp_init_name, set_count_name, to_c_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			correct_mismatch_name: STRING
 			special_cl: SPECIAL_B
@@ -552,10 +552,16 @@ feature -- Plug and Makefile file
 			has_dispose := System.memory_class /= Void
 
 			if final_mode then
-				init_name := clone (Encoder.table_name (system.routine_id_counter.initialization_rout_id))
+				init_name :=
+					clone (Encoder.table_name (system.routine_id_counter.initialization_rout_id))
+				exp_init_name :=
+					clone (Encoder.table_name (system.routine_id_counter.creation_rout_id))
 
 				buffer.putstring ("extern char *(*")
 				buffer.putstring (init_name)
+				buffer.putstring ("[])();%N")
+				buffer.putstring ("extern char *(*")
+				buffer.putstring (exp_init_name)
 				buffer.putstring ("[])();%N")
 
 				if has_dispose then
@@ -676,6 +682,12 @@ feature -- Plug and Makefile file
 				buffer.putstring ("%Tegc_ecreate = ")
 				buffer.putstring ("(char *(**)(void)) ")
 				buffer.putstring (init_name)
+				buffer.putstring (";%N")
+
+					-- Initialization routines
+				buffer.putstring ("%Tegc_exp_create = ")
+				buffer.putstring ("(char *(**)(void)) ")
+				buffer.putstring (exp_init_name)
 				buffer.putstring (";%N")
 
 				if has_dispose then

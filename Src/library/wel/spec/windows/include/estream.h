@@ -28,10 +28,10 @@ typedef EIF_INTEGER (* EIF_EDITSTREAM_IN_PROCEDURE)
 	 );
 
 typedef EIF_INTEGER (* EIF_EDITSTREAM_OUT_PROCEDURE)
-	(EIF_REFERENCE,     /* WEL_EDIT_STREAM_OUT Eiffel object */
-	 EIF_REFERENCE		  /* Eiffel STRING object containing the text */
+	(EIF_REFERENCE,	/* WEL_EDIT_STREAM_OUT Eiffel object */
+	 EIF_POINTER,	/* buffer */
+	 EIF_INTEGER	/* length of buffer */
 	 );
-
 
 
 #ifdef __cplusplus

@@ -203,6 +203,7 @@ feature -- Status report
 			!! Result.make (line_length (i))
 			Result.fill_blank
 			!! a_wel_string.make (Result)
+			a_wel_string.set_size_in_string (a_wel_string.capacity)
 			nb := cwin_send_message_result (item,
 				Em_getline, i, cwel_pointer_to_integer (a_wel_string.item))
 			Result := a_wel_string.string

@@ -38,7 +38,6 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_L_array);
 			ctxt.set_separator (ti_Comma);
 			ctxt.set_space_between_tokens;
-			expressions.simple_format (ctxt);
 			ctxt.format_ast (expressions);
 			ctxt.put_text_item_without_tabs (ti_R_array);
 		end;

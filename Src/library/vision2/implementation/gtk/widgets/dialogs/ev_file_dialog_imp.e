@@ -72,8 +72,9 @@ feature -- Access
 			if
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
-				create Result.make (0)
-				Result.from_c (C.gtk_file_selection_get_filename (c_object))
+				create Result.make_from_c (C.gtk_file_selection_get_filename (c_object))
+			else
+				Result := ""
 			end
 		end
 
@@ -88,20 +89,23 @@ feature -- Status report
 	file_title: STRING is
 			-- `file_name' without its path.
 		do
-			if file_name /= Void then
+			if not file_name.is_empty then
 				Result := file_name.mirrored
 				Result.head (Result.index_of ('/', 1) - 1)
 				Result.mirror
+			else
+				Result := ""
 			end
 		end
 
 	file_path: STRING is
 			-- Path of `file_name'.
 		do
-			if file_name /= Void then
+			if not file_name.is_empty then
 				Result := clone (file_name)
-				Result.head
-					(Result.count - Result.mirrored.index_of ('/', 1) + 1)
+				Result.head	(Result.count - Result.mirrored.index_of ('/', 1) + 1)
+			else
+				Result := ""
 			end
 		end
 

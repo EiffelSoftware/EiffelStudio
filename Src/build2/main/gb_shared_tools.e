@@ -85,8 +85,7 @@ feature -- Access
 		ensure
 			exists: Result /= Void
 		end
-		
-		
+
 	project_settings_window: GB_SYSTEM_WINDOW is
 			-- Window which displays current project properties.
 		once

@@ -134,7 +134,7 @@ feature  -- Access
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 	
-	status_bar: EV_STATUS_BAR
+	status_bar: EV_WIDGET
 			-- Horizontal bar at bottom of client area used for showing messages
 			-- to the user.
 
@@ -355,10 +355,10 @@ feature -- Element change
 			menu_bar := Void
 		end
 
-	set_status_bar (a_bar: EV_STATUS_BAR) is
+	set_status_bar (a_bar: EV_WIDGET) is
 			-- Make `a_bar' the new `status_bar'.
 		local
-			sbar_imp: EV_STATUS_BAR_IMP
+			sbar_imp: EV_WIDGET_IMP
 		do
 			status_bar := a_bar
 			sbar_imp ?= a_bar.implementation
@@ -368,7 +368,7 @@ feature -- Element change
 	remove_status_bar is
 			-- Set `status_bar' to `Void'.
 		local
-			sbar_imp: EV_STATUS_BAR_IMP
+			sbar_imp: EV_WIDGET_IMP
 		do
 			if status_bar /= Void then
 				sbar_imp ?= status_bar.implementation
@@ -459,6 +459,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/28 22:02:37  brendel
+--| A status bar can now be any widget.
+--|
 --| Revision 1.19  2000/04/04 20:52:28  oconnor
 --| formatting
 --|

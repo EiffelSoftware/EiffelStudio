@@ -3681,32 +3681,6 @@ feature -- Cecil
 			visible_level.generate_cecil_table (Current)
 		end
 
-	generate_cecil_value is
-			-- Generate Cecil type value for a non generic class
-		require
-			no_generics: not is_generic
-		local
-			buffer: GENERATION_BUFFER
-		do
-			buffer := generation_buffer
-			if is_expanded then
-				buffer.putstring ("SK_EXP + ")
-			end
-			buffer.putstring ("(uint32) ")
-			buffer.putint (actual_type.type_i.type_id - 1)
-		end
-
-	cecil_value: INTEGER is
-			-- Cecil type value for a non generic class
-		require
-			no_generics: not is_generic
-		do
-			if is_expanded then
-				Result := Sk_exp
-			end
-			Result := Result | (actual_type.type_i.type_id - 1)
-		end
-
 feature -- Conformance table generation
 
 	process_polymorphism is

@@ -239,6 +239,7 @@ feature -- Basic Operations
 			end
 			create l_process_launcher
 			l_process_launcher.run_hidden
+			environment.abort_request_actions.extend (agent l_process_launcher.terminate_process)
 			l_process_launcher.launch (l_cmd, a_folder, agent message_output.add_text)
 			if eiffel_compilation_successful (a_folder) then
 				l_local_folder := a_folder.twin
@@ -247,7 +248,9 @@ feature -- Basic Operations
 				check_finish_freezing_status (a_folder)
 			else
 				environment.set_abort (Eiffel_compilation_error)
-			end		
+			end
+			environment.abort_request_actions.finish
+			environment.abort_request_actions.remove
 		end
 
 	check_finish_freezing_status (a_folder: STRING) is

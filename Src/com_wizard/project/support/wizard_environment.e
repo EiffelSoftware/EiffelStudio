@@ -117,7 +117,16 @@ feature -- Access
 		ensure
 			non_void_message: Result /= Void
 		end
-		
+	
+	abort_request_actions: LIST [ROUTINE [ANY, TUPLE[]]] is
+			-- Abort requestion actions
+		do
+			if internal_abort_requestion_actions = Void then
+				create internal_abort_requestion_actions.make (10)
+			end
+			Result := internal_abort_requestion_actions
+		end
+
 feature -- Element Change
 
 	set_is_eiffel_interface is
@@ -318,6 +327,14 @@ feature -- Element Change
 		do
 			abort := True
 			error_code := a_error_code
+			from
+				abort_request_actions.start
+			until
+				abort_request_actions.after
+			loop
+				abort_request_actions.item.call (Void)
+				abort_request_actions.forth
+			end
 		ensure
 			abort: abort
 			error_code_set: error_code = a_error_code
@@ -433,6 +450,9 @@ feature {NONE} -- Implementation
 				set_idl_file_name (l_idl_file_name)
 			end
 		end
+
+	internal_abort_requestion_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE[]]]
+			-- Abort request actions cell
 
 invariant
 	valid_type: is_new_component xor is_eiffel_interface xor is_client

@@ -85,9 +85,11 @@ feature -- Generation
 			Result.append ("static struct desc_info desc[] = {%N");
 
 			if (invariant_entry = Void) then
-				Result.append ("%T{(int16) -1, (int16) -1},%N")
+				Result.append ("%T{(uint16) ");
+				Result.append_integer (Invalid_index);
+				Result.append (", (int16) -1},%N")
 			else
-				Result.append ("%T{(int16) ");
+				Result.append ("%T{(uint16) ");
 				Result.append_integer (invariant_entry.real_body_index.id - 1);
 				Result.append (", (int16) -1},%N");
 			end;
@@ -118,10 +120,12 @@ feature -- Generation
 			Result.append ("];%N%Nstatic void build_desc () {%N")
 
 			if (invariant_entry = Void) then
-				Result.append ("%Tdesc[0].info = (int16) -1;%N")
+				Result.append ("%Tdesc[0].info = (uint16) ");
+				Result.append_integer (Invalid_index);
+				Result.append (";%N")
 				Result.append ("%Tdesc[0].type = (int16) -1;%N")
 			else
-				Result.append ("%Tdesc[0].info = (int16) (");
+				Result.append ("%Tdesc[0].info = (uint16) (");
 				Result.append (invariant_entry.real_body_index.generated_id);
 				Result.append (");%N%Tdesc[0].type = (int16) -1;%N");
 			end;

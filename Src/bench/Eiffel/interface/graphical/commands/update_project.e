@@ -12,7 +12,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			text_window
 		end;
@@ -219,7 +219,6 @@ feature {NONE} -- Implementation
 		require
 			project_tool.initialized
 		local
-			wiz_dlg: WIZARD_DIALOG;
 			create_ace: CREATE_ACE;
 			wizard: WIZARD
 		do
@@ -235,9 +234,15 @@ feature {NONE} -- Implementation
 		do
 			!!file_name.make (0);
 			file_name.append ("Ace.ace")
+			Eiffel_ace.set_file_name (file_name);
+			wiz_dlg.popdown;
+			confirm_and_compile (Void);
 		end;
 
 feature {NONE} -- Attributes
+
+	wiz_dlg: WIZARD_DIALOG;
+			-- Dialog used to display the wizard.
 
 	not_saved: BOOLEAN is
 			-- Has the text of some tool been edited and not saved?

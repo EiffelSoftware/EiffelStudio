@@ -19,16 +19,11 @@ inherit
 		select
 			putdouble, putreal, putstring, putint, new_line, putchar
 		end;
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end;
 
 creation
 
 	make
 
-	
 feature
 
 	tabs: INTEGER;
@@ -42,6 +37,7 @@ feature
 
 	nl: INTEGER;
 			-- Number of consecutive new line generated
+
 feature 
 
 	indent is
@@ -147,7 +143,7 @@ feature
 			val, remain: INTEGER;
 			s, t: STRING;
 		do
-			!!s.make (2);
+			!!s.make (3);
 			from
 				val := i;
 			variant
@@ -165,17 +161,14 @@ feature
 
 	escape_char (c: CHARACTER) is
 			-- Write char `c' with C escape sequences
-		local
-			i: INTEGER;
 		do
-			i := charcode (c);
 				-- Assume ASCII set, sorry--RAM.
-			if i < 32 or i > 127 then
-				file_putstring ("\0");
-				putoctal (i);
-			elseif i = charcode ('\') then
+			if c < ' ' or c > '%/127/' then
+				file_putstring ("\");
+				putoctal (c.code);
+			elseif c = '\' then
 				file_putstring ("\\");
-			elseif i = charcode ('%'') then
+			elseif c = '%'' then
 				file_putstring ("\'");
 			else
 				file_putchar (c);
@@ -187,7 +180,7 @@ feature
 		require
 			good_argument: s /= Void
 		local
-			i, code, nb: INTEGER;
+			i, nb: INTEGER;
 			c: CHARACTER;
 		do
 			from
@@ -197,15 +190,14 @@ feature
 				i > nb
 			loop
 				c := s.item (i);
-				code := charcode (c);
 				if c = '"' then
 					file_putstring ("\%"");
 				elseif c = '\' then
 					file_putstring ("\\");
-				elseif code < 32 or code > 127 then
+				elseif c < ' ' or c > '%/127/' then
 						-- Assume ASCII set, sorry--RAM.
-					file_putstring ("\0");
-					putoctal (code);
+					file_putstring ("\");
+					putoctal (c.code);
 				else
 					file_putchar (c);
 				end;

@@ -85,7 +85,7 @@ feature {NONE} -- Externals
 	win_free_library (p: POINTER) is
 			-- Free library
 		external
-			"C [macro %"windows.h%"] (HINSTANCE)"
+			"C [macro <windows.h>] (HINSTANCE)"
 		alias
 			"FreeLibrary"
 		end
@@ -93,7 +93,7 @@ feature {NONE} -- Externals
 	win_load_library (p: POINTER): POINTER is
 			-- Load library
 		external
-			"C [macro %"windows.h%"] (LPCTSTR): EIF_POINTER"
+			"C [macro <windows.h>] (LPCTSTR): EIF_POINTER"
 		alias
 			"LoadLibrary"
 		end

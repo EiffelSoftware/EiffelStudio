@@ -228,7 +228,9 @@ feature -- Status
 			else
 				if class_id = System.system_string_class.compiled_class.class_id then
 					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_string
-				elseif class_id = System.system_object_id then
+				elseif class_id = System.system_object_id or class_id = system.any_id then
+						-- For ANY or SYSTEM_OBJECT, we always generate a System.Object
+						-- signature since we can now assign SYSTEM_OBJECTs into ANYs.
 					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
 				else
 					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_class
@@ -272,23 +274,15 @@ feature -- Status
 	is_generated_as_single_type: BOOLEAN is
 			-- Is associated type generated as a single type or as an interface type and 
 			-- an implementation type.
-		local
-			l_class: CLASS_C
 		do
-				-- FIXME: Manu 06/28/2004: Expanded cannot yet be generated as single type.
-				-- Expanded types do not have an interface since no polymorphic calls
-				-- are done on them.
---			Result := is_expanded
+				-- External classes have only one type.
+			Result := is_external
 			if not Result then
-				l_class := base_class
-					-- When `base_class' is a basic class and that we are here, it means
-					-- that we are handling the reference version of the basic type, which
-					-- needs to be generated with the interface type and the implementation type
-				if not l_class.is_basic then
-						-- External classes, or classes marked `frozen', or that
-						-- inherites from external classes have only one generated type.
-					Result := l_class.is_single or l_class.is_external
-				end
+					-- Expanded classes, or classes that inherits from external classes
+					-- have only one generated type.
+					-- FIXME: Manu 06/28/2004: Expanded cannot yet be generated as single type.
+--				Result := is_expanded or base_class.is_single
+				Result := base_class.is_single
 			end
 		end
 

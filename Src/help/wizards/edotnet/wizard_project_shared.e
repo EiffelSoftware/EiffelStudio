@@ -21,19 +21,31 @@ feature {NONE} -- Constants
 			Result := execution_environment.get ("ISE_PLATFORM")
 		end
 
-	Interface_names: INTERFACE_NAMES is
-			-- Interface names for buttons, label, ...
-		once
-			create Result
-		end
-		
+	Empty_string: STRING is ""
+			-- Empty string
+
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Shared execution environment object
 		once
 			create Result
 		end		
 
-	Empty_string: STRING is ""
-			-- Empty string
+	Wizard_icon_name: STRING is "eiffel_wizard_icon"
+			-- .NET Wizard icon name
+
+	Interface_names: INTERFACE_NAMES is
+			-- Interface names for buttons, label, ...
+		once
+			create Result
+		end
+		
+	New_line: STRING is "%N"
+			-- New line
+	
+	Tab: STRING is "%T"
+			-- Tabulation
+			
+	Windows_new_line: STRING is "%R%N"
+			-- New line on Windows platform
 			
 end -- class WIZARD_PROJECT_SHARED

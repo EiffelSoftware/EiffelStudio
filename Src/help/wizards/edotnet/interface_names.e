@@ -6,37 +6,88 @@ class
 
 feature -- Labels names
 
+	l_Available_assemblies_name: STRING is 	"Available assemblies Name" 
+	l_Creation_routine_name: STRING is 	"Creation routine name"
+	l_Culture: STRING is				"Culture"
 	l_Dotnet_assembly: STRING is 		".NET Assembly"
 	l_Eiffel_formatting: STRING is 		"Generate Eiffel-friendly names"
-	l_Emit_directory: STRING is 			"Import Directory"	
+	l_Emit_directory: STRING is 			"Import Directory"
+	l_Public_key: STRING is 			"Public Key"
+	l_Root_class_name: STRING is 		"Root class name"
+	l_Selected_assemblies_name: STRING is	"Selected assemblies Name"
+	l_Version: STRING is 				"Version"
 	
 feature -- Buttons names
 
---	b_Add_all: STRING is					"Add all ->"
-	b_Add: STRING is 					"Add ->"
---	b_Remove_all: STRING is				"<- Remove all"
-	b_Remove: STRING is					"<- Remove"
---	b_Add_your_own_library: STRING is			"Add your own library..."
+	b_Abort: STRING is 				"Abort"
+	b_Add: STRING is					"Add"
+	b_Assembly_manager: STRING is 		"ISE Assembly Manager"
+	b_Ignore: STRING is				"Ignore"
+	b_Import_local_assemblies: STRING is	"Import Local Assemblies"
+	b_Remove: STRING is				"<- Remove"
+	b_Retry: STRING is 				"Retry"
 
 feature -- Messages
 
-	m_Welcome_title: STRING is "Welcome to the%Nnew .NET Application Wizard"
-
-	m_Welcome_message: STRING is 
-		"Using this wizard you can create a project (executable%N%
-		%or dynamic library) targeting the Microsoft .NET platform.%N%
-		%%N%
-		%The generated application will run on any system%N%
-		%where the .NET runtime is installed.%N%
-		%%N%
-		%%N%
-		%%N%
-		%To continue, click Next."
+	m_Creation_routine_name_error: STRING is
+								"The creation routine name that you have specified does not conform%N%
+								%the lace specification.%N%
+								%%N%
+								%A valid creation routine name is not empty and only contains letters,%N%
+								%digits, and underscores. The first character must%N%
+								%be a letter.%N%
+								%%N%
+								%Click Back and choose a valid creation routine name."
+	m_Filename_error: STRING is 
+						"The .NET Assembly filename that you have chosen is not valid.%N%
+						%%N%
+						%Please click Back and choose another filename."
 
 	m_Final_title: STRING is "Completing the New .NET%NApplication Wizard"
 
+	m_Invalid_data_error: STRING is
+							"Either the root class name or the creation routine name (or both of them) that you have specified%N%
+							%does not conform the lace specification.%N%
+							%%N%
+							%A valid Eiffel name is not empty and only contains letters,%N%
+							%digits, and underscores. The first character must%N%
+							%be a letter.%N%
+							%%N%
+							%Click Back and choose valid Eiffel names."
+	
+	m_Root_class_name_error: STRING is
+							"The root class name that you have specified does not conform%N%
+							%the lace specification.%N%
+							%%N%
+							%A valid root class name is not empty and only contains letters,%N%
+							%digits, and underscores. The first character must%N%
+							%be a letter.%N%
+							%%N%
+							%Click Back and choose a valid root class name."
+	
+	m_Second_state: STRING is "You can create an executable file (.exe) or  dynamic-link library (.dll)"
+	
+	m_Welcome_message: STRING is 
+							"Using this wizard you can create a project (executable%N%
+							%or dynamic library) targeting the Microsoft .NET platform.%N%
+							%%N%
+							%The generated application will run on any system%N%
+							%where the .NET runtime is installed.%N%
+							%%N%
+							%%N%
+							%%N%
+							%To continue, click Next."
+
+	m_Welcome_title: STRING is "Welcome to the%Nnew .NET Application Wizard"
+
 feature -- Titles
 
+	t_Creation_routine_name_error: STRING is "Creation Routine Name Error"
+	t_Filename_error: STRING is ".NET Assembly Filename Error"
+	t_Invalid_data_error: STRING is "Invalid Names Error"
+	t_Root_class_name_error: STRING is "Root Class Name Error"
+	t_Second_state: STRING is ".NET Application type and Project settings"
+	t_Third_state: STRING is "Assembly selection"
 	t_Wizard_title: STRING is "New .NET Application Wizard"
 
 end -- class INTERFACE_NAMES

@@ -55,17 +55,17 @@ feature -- Basic Operations
 				
 				ec_command_line := ec_location
 				if is_incremental_compilation_possible then
-					ec_command_line.append (" -project " + project_location + "\" + project_name_lowercase + ".epr")
+					ec_command_line.append (Space + Project_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Epr_extension)
 				else
-					create eifgen_directory.make (project_location + "\EIFGEN")
+					create eifgen_directory.make (project_location + Back_slash + Eifgen)
 					if eifgen_directory.exists then
 						eifgen_directory.recursive_delete
 					end
-					create epr_file.make (project_location + "\" + project_name_lowercase + ".epr")
+					create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
 					if epr_file.exists then
 						epr_file.delete
 					end
-					ec_command_line.append (" -ace " + project_location + "\" + project_name_lowercase + ".ace -project_path " + project_location)
+					ec_command_line.append (Space + Ace_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Ace_extension + Space + Project_path_compilation_option + Space + project_location)
 				end
 				(create {EXECUTION_ENVIRONMENT}).launch (ec_command_line)		
 			end
@@ -81,29 +81,40 @@ feature -- Access
 		do
 			title.set_text (Interface_names.m_Final_title)
 			if wizard_information.compile_project then
-				word :=" and compile "
+				word := Space + Text_if_compile + Space
 			else
-				word := " "
+				word := Space
 			end
 			if not wizard_information.selected_assemblies.is_empty then
 				if not wizard_information.dependencies.is_empty then
 					message_text_field.set_text (Common_message +
-						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies) + "%N" + local_assemblies_string + "%N%	
-						%Dependencies: %N" + assemblies_string (wizard_information.dependencies))
+						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
+						l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies))
 				else
 					message_text_field.set_text (Common_message +
-						"External assemblies: %N" + assemblies_string (wizard_information.selected_assemblies) + "%N" + local_assemblies_string)				
+						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string)				
 				end
 			else
 				message_text_field.set_text (Common_message)			
 			end
-			message.set_text ("Click Finish to generate" + word + "this project.")
+			message.set_text (final_state_message (word))
 		end
 
 	final_message: STRING is
 		do
 		end
 
+	final_state_message (a_word: STRING): STRING is
+			-- Final state message according to `a_word'
+		require
+			non_void_word: a_word /= Void
+		do
+			Result := "Click Finish to generate" + a_word + "this project."
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: not Result.is_empty
+		end
+		
 feature {NONE} -- Widgets
 
 	message_text_field: EV_TEXT
@@ -125,7 +136,7 @@ feature {NONE} -- Implementation
 	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Dotnet Wizard.
 		once
-			 create Result.make_from_string ("eiffel_wizard_icon")
+			 create Result.make_from_string (Wizard_icon_name)
 			 Result.add_extension (pixmap_extension)
 		end
 	
@@ -144,7 +155,7 @@ feature {NONE} -- Implementation
 				a_list.after
 			loop
 				an_assembly := a_list.item
-				Result.append ("%T" + an_assembly.name + ", " + an_assembly.version + "%N")
+				Result.append (Tab + an_assembly.name + ", " + an_assembly.version + New_line)
 				a_list.forth
 			end
 			Result.right_adjust
@@ -175,7 +186,7 @@ feature {NONE} -- Implementation
 					if last_backslash_index > 1 then
 						a_local_assembly := a_local_assembly.substring (last_backslash_index + 1, a_local_assembly.count)
 					end
-					Result.append ("%T" + a_local_assembly + "%N")
+					Result.append (Tab + a_local_assembly + New_line)
 				end
 				local_assemblies.forth
 			end
@@ -192,15 +203,15 @@ feature {NONE} -- Implementation
 			project_location: STRING
 		do
 			project_location := wizard_information.project_location
-			if directory_exists (project_location + "\EIFGEN") 
-				and then directory_exists (project_location + "\EIFGEN\W_code") 
-				and directory_exists (project_location + "\EIFGEN\F_code") 
-				and directory_exists (project_location + "\EIFGEN\COMP") 
-				and then directory_exists (project_location + "\EIFGEN\COMP\S1") then
+			if directory_exists (project_location + Back_slash + Eifgen) 
+				and then directory_exists (project_location + Back_slash + Eifgen + Back_slash + W_code) 
+				and directory_exists (project_location + Back_slash + Eifgen + Back_slash + F_code) 
+				and directory_exists (project_location + Back_slash + Eifgen + Back_slash + Comp) 
+				and then directory_exists (project_location + Back_slash + Eifgen + Back_slash + Comp + Back_slash + S1) then
 				
 				project_name_lowercase := clone (wizard_information.project_name)
 				project_name_lowercase.to_lower
-				create epr_file.make (project_location + "\" + project_name_lowercase + ".epr")
+				create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
 				Result := epr_file.exists 
 			else
 				Result := False
@@ -234,14 +245,59 @@ feature {NONE} -- Constants
 	Common_message: STRING is 
 			-- Message to the user (no matter if there are selected assemblies)
 		once
-			Result := "You have specified the following settings:%N%N%
-					%Project name: %T" + wizard_information.project_name + "%N%
-					%Location:     %T" + wizard_information.project_location + "%N%N%
-					%Root class name: %T" + wizard_information.root_class_name + "%N%
-					%Creation routine name: %T" + wizard_information.creation_routine_name + "%N%N"	
+			Result := "You have specified the following settings:" + New_line + New_line +
+					"Project name: " + Tab + wizard_information.project_name + New_line +
+					"Location: " + Tab + wizard_information.project_location + New_line + New_line +
+					"Root class name: " + Tab + wizard_information.root_class_name + New_line +
+					"Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line + New_line
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty
 		end			
 
+	Space: STRING is " "
+			-- Space
+			
+	Epr_extension: STRING is ".epr"
+			-- Eiffel projects extension
+	
+	Eifgen: STRING is "EIFGEN"
+			-- EIFGEN directory
+	
+	Comp: STRING is "COMP"
+			-- COMP directory
+	
+	W_code: STRING is "W_code"
+			-- W_code directory
+	
+	F_code: STRING is "F_code"
+			-- F_code directory
+	
+	S1: STRING is "S1"
+			-- S1 directory
+	
+	Back_slash: STRING is "\"
+			-- Back slash
+	
+	Project_compilation_option: STRING is "-project"
+			-- ec option to specify an existing project
+	
+	Ace_compilation_option: STRING is "-ace"
+			-- ec option to specify the project Ace file
+	
+	Project_path_compilation_option: STRING is "-project_path"
+			-- ec option to specify the path to generate project into
+	
+	Ace_extension: STRING is ".ace"
+			-- Ace files extension
+	
+	l_External_assemblies: STRING is ".NET assemblies:"
+			-- Label before displaying the selected .NET assemblies
+	
+	l_Dependencies: STRING is "Dependencies:"
+			-- Label before displaying the dependencies of the selected .NET assemblies
+	
+	Text_if_compile: STRING is "and compile"
+			-- Text appended to the current state text in case the user asked for project compilation
+			
 end -- class WIZARD_FINAL_STATE

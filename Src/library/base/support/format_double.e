@@ -162,16 +162,21 @@ feature -- Conversion
 			sign : INTEGER
 			integral, fraction: DOUBLE
 			ints, fracs: STRING
+			value: DOUBLE
 		do
+			value := d
+			sign := 1
+
 			if d < 0 then
 				sign := -1
-				integral := floor (-d)
-				fraction := floor ((-d - integral ) * 10^(decimals+1))
-			elseif d > 0 then
-				sign := 1
-				integral := floor (d)
-				fraction := floor ((d - floor (d)) * 10^(decimals+1))
+				value := -value
 			end
+
+			value := value + 5*10^(-decimals -1)
+
+			integral := floor (value)
+			fraction := floor ((value - integral) * 10^(decimals+1))
+
 			if not no_separator then
 				ints := split_integral (integral.out)
 				if after_decimal_separate then
@@ -207,7 +212,7 @@ feature {NONE} -- Implementation
 	pad_fraction (f: DOUBLE): STRING is
 			-- Stretch or shrink `f' to length `decimals' .
 		do
-			Result := (f+5).out
+			Result := f.out
 			Result.head (Result.count - 1)
 			if Result.count > decimals then
 				Result := Result.substring (1, decimals)

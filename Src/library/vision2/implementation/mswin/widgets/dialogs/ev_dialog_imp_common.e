@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 			if apply_center_dialog then
 				center_dialog
-				apply_center_dialog := false
+				apply_center_dialog := False
 			else
 				set_position (other_imp.x_position, other_imp.y_position)
 			end

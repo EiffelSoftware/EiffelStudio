@@ -13,7 +13,10 @@ inherit
 
 	MENU_B_I;
 
-	BUTTON_M;
+	BUTTON_M
+		redefine
+			parent
+		end;
 
 	FONTABLE_M;
 
@@ -29,8 +32,8 @@ inherit
 			destroy as mel_destroy,
 			screen as mel_screen,
 			is_shown as shown
-		select
-			mel_cascade_make
+		redefine
+			parent
 		end
 
 
@@ -40,15 +43,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU) is
 			-- Create a motif menu button.
+		local
+			mc: MEL_ROW_COLUMN
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-				mel_cascade_make (a_menu_b.identifier,
-						  mel_parent (a_menu_b, widget_index),
-						  man);
-			a_menu_b.set_font_imp (Current)
+			mel_cascade_make (a_menu_b.identifier, mc, man);
+			a_menu_b.set_font_imp (Current);
+			set_mnemonic_from_text (a_menu_b.identifier, False)
 		end
+
+feature -- Access
+
+	parent: MEL_ROW_COLUMN
+			-- Parent of menu button
 
 feature -- Status setting
 

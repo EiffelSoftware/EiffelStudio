@@ -12,9 +12,8 @@ inherit
 	EV_LABEL_I
 
 	EV_PRIMITIVE_IMP
-		undefine
-			on_key_down
 		redefine
+			on_key_down,
 			set_default_minimum_size
 		end
 
@@ -56,6 +55,7 @@ inherit
 			on_kill_focus,
 			on_key_up
 		redefine
+			on_key_down,
 			default_style,
 			wel_background_color,
 			wel_foreground_color
@@ -113,7 +113,20 @@ feature -- Status setting
 			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- WEL Implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			if has_command (Cmd_key_press) then
+				data := get_key_data (virtual_key, key_data)
+				execute_command (Cmd_key_press, data)
+			end
+		end
 
 	basic_style: INTEGER is
 			-- Basic style without any option

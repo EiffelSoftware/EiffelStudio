@@ -24,6 +24,8 @@ inherit
 	
 	GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER
 	
+	GB_WIDGET_UTILITIES
+	
 create
 	initialize
 
@@ -796,7 +798,12 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 			new_window: EV_TITLED_WINDOW
 			old_builder_window, new_builder_window: EV_TITLED_WINDOW
 			old_builder_contents: EV_WIDGET
+			locked_in_here: BOOLEAN
 		do
+			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+				locked_in_here := True
+				parent_window (Layout_constructor).lock_update
+			end
 			store_layout_constructor
 			titled_window_object ?= an_object
 				-- We must handle windows as a special case,
@@ -927,6 +934,9 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				old_builder_window.destroy
 			end
 			restore_layout_constructor
+			if locked_in_here then
+				parent_window (Layout_constructor).unlock_update
+			end
 		end
 		
 		

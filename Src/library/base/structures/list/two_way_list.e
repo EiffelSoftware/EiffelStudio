@@ -396,6 +396,7 @@ feature {TWO_WAY_LIST} -- Implementation
 			make;
 			first_element := first_item;
 			last_element := last_item;
+			active := first_element
 			count := n
 		end;
 

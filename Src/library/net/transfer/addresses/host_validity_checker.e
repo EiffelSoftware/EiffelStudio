@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 			-- Character set for host names
 		once
 			create Result
-			Result.define ("A-Za-z0-9.\-")
+			Result.define ("A-Za-z0-9\-.")
 		end
 
 end -- class HOST_VALIDITY_CHECKER

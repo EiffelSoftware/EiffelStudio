@@ -1724,6 +1724,8 @@ feature -- Undefinition
 		require
 			not is_deferred
 			redefinable
+		local
+			ext: EXTERNAL_I
 		do
 			if is_function then
 				create {DEF_FUNC_I} Result
@@ -1750,6 +1752,13 @@ feature -- Undefinition
 			Result.set_body_index (body_index)
 			Result.set_has_postcondition (has_postcondition)
 			Result.set_has_precondition (has_precondition)
+
+			if is_external then
+				ext ?= Current
+				if ext.extension.is_il then
+					Result.set_extension (ext.extension)
+				end
+			end
 		ensure
 			Result_exists: Result /= Void
 			Result_is_deferred: Result.is_deferred

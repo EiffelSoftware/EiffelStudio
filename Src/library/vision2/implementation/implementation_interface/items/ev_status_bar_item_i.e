@@ -10,15 +10,21 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
+			parent,
 			parent_imp
 		end
 
 feature -- Access
 
-	parent_imp: EV_STATUS_BAR_IMP is
-			-- Parent of the current item.
-		deferred
+	parent: EV_STATUS_BAR is
+			-- The parent of the Current widget
+			-- Can be void.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
+
+	parent_imp: EV_STATUS_BAR_IMP
+			-- Parent of the current item.
 
 feature -- Measurement
 

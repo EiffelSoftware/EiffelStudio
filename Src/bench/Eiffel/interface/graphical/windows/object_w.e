@@ -349,6 +349,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
 			build_edit_menu (edit_bar);
+			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			if create_menus then

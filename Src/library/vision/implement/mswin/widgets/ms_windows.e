@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 	make (application_class: STRING) is
 			-- Create the toolkit.
-                        -- `application_class' is used for the resource specifications.
+			-- `application_class' is used for the resource specifications.
 		do
 			set_application (Current)
 			if application_class /= Void then
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			if application = Void then
 			end
 			create_dispatcher
-                        init_instance
+			init_instance
 			init_application
 		end;
 
@@ -192,8 +192,8 @@ feature {NONE} -- Implementation
 			msg: WEL_MSG
 			accel: WEL_ACCELERATORS
 			main_w: WEL_WINDOW
-			done: BOOLEAN
 			dlg: POINTER
+			done: BOOLEAN
 		do
 			from
 				accel := accelerators

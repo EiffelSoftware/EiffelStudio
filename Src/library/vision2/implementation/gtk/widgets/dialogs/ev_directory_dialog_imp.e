@@ -15,7 +15,8 @@ inherit
 
 	EV_STANDARD_DIALOG_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 create
@@ -53,7 +54,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Setup action sequences.
 		do
-			signal_connect_true ("delete_event", ~on_cancel)
+			Precursor {EV_STANDARD_DIALOG_IMP}
+			is_initialized := False
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"pressed",
@@ -129,6 +131,9 @@ end -- class EV_DIRECTORY_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/22 00:50:03  king
+--| Now using initialize precursor
+--|
 --| Revision 1.10  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

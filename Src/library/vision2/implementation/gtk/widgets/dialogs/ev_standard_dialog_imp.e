@@ -30,13 +30,23 @@ inherit
 			title,
 			set_title,
 			set_blocking_window,
-			block,
-			initialize
+			block
 		redefine
-			blocking_window
+			blocking_window,
+			on_key_event,
+			initialize_client_area,
+			call_close_request_actions
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
+	
+feature -- Initialization
+
+	initialize_client_area is
+			-- Implementation not needed as this is already done by toolkit
+		do
+			-- Do nothing
+		end
 
 feature -- Access
 
@@ -101,6 +111,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+		do
+			Precursor {EV_WINDOW_IMP} (a_key, a_key_string, a_key_press)
+			if a_key /= Void and then a_key.code = a_key.key_escape and then not a_key_press then
+				on_ok
+			end				
+		end
+
 	block is
 			-- Wait until window is closed by the user.
 		local
@@ -121,6 +139,12 @@ feature {NONE} -- Implementation
 				C.gtk_widget_struct_window (c_object),
 				C.GDK_FUNC_CLOSE_ENUM + C.GDK_FUNC_MOVE_ENUM
 			)
+		end
+		
+	call_close_request_actions is
+			-- Call `on_cancel' if user wants to quit dialog.
+		do
+			on_cancel
 		end
 
 	on_cancel is
@@ -162,6 +186,9 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/22 00:50:04  king
+--| Now using initialize precursor
+--|
 --| Revision 1.13  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -16,7 +16,8 @@ inherit
 
 	EV_STANDARD_DIALOG_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 create
@@ -52,6 +53,8 @@ feature {NONE} -- Initialization
 			copies_hbox2, orientation_hbox, button_hbox: EV_HORIZONTAL_BOX
 			print_btn_imp, cancel_btn_imp: EV_BUTTON_IMP
 		do
+			Precursor {EV_STANDARD_DIALOG_IMP}
+			is_initialized := False
 			hbox := C.gtk_hbox_new (False, 0)
 			C.gtk_widget_show (hbox)
 			C.gtk_container_add (c_object, hbox)
@@ -408,39 +411,39 @@ feature -- Status setting
 			file_txt.hide
 		end
 
-        check_print_to_file is
-                        -- Check the "File" check box.
+	check_print_to_file is
+			-- Check the "File" check box.
 			-- By default, the "Printer" button is selected.
-                do
+		do
 			file_rdo.enable_select
-                end
+		end
 
         uncheck_print_to_file is
-                        -- Uncheck the "File" check box.
+			-- Uncheck the "File" check box.
 			-- By default, the "Printer" button is selected.
-                do
+		do
 			printer_rdo.enable_select
-                end
+		end
 
 feature -- Element change
 
         set_from_page (value: INTEGER) is
-                        -- Make `value' the new `from_page' number.
+			 -- Make `value' the new `from_page' number.
 		do
 			from_spn.set_value (value)
                 end
 
-        set_to_page (value: INTEGER) is
-                        -- Make `value' the new `to_page' number.
+	set_to_page (value: INTEGER) is
+			-- Make `value' the new `to_page' number.
 		do
 			to_spn.set_value (value)
-                end
+		end
 
-        set_copies (value: INTEGER) is
-                        -- Make `value' the new `copies' number.
-                do
+	set_copies (value: INTEGER) is
+			-- Make `value' the new `copies' number.
+		do
 			copies_spn.set_value (value)
-                end
+		end
 
 	set_maximum_to_page (value: INTEGER) is
 			-- Make `value' the new maximum `to_page' value.
@@ -485,6 +488,9 @@ end -- class EV_PRINT_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/22 00:50:04  king
+--| Now using initialize precursor
+--|
 --| Revision 1.6  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

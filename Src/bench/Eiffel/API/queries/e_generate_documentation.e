@@ -102,7 +102,7 @@ feature -- Execution
 			dir: DIRECTORY
 			retried: BOOLEAN
 		do
-			if not retried then
+			if has_documentation_generation and not retried then
 				create doc.make
 				doc.set_filter (filter_name)
 	

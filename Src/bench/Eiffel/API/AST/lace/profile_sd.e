@@ -13,6 +13,8 @@ inherit
 
 	SHARED_OPTION_LEVEL
 
+	EIFFEL_ENV
+
 feature -- Properties
 
 	option_name: STRING is "profile"
@@ -33,22 +35,27 @@ feature {COMPILER_EXPORTER} -- Update
 			if Lace.ace_options.has_external_profile then
 				v := No_option
 			else
-				if value /= Void then
-					if value.is_no then
-						v := No_option
-					elseif value.is_yes or value.is_all then
-						v := All_option
-						Lace.ace_options.set_has_profile (True)
-					elseif value.is_name then
-						v := No_option
-						Lace.ace_options.set_has_external_profile (True)
-						Lace.ace_options.set_has_profile (False)
+					-- If the current release doesn't have a profiler, we convert the option to No.
+				if has_profiler then
+					if value /= Void then
+						if value.is_no then
+							v := No_option
+						elseif value.is_yes or value.is_all then
+							v := All_option
+							Lace.ace_options.set_has_profile (True)
+						elseif value.is_name then
+							v := No_option
+							Lace.ace_options.set_has_external_profile (True)
+							Lace.ace_options.set_has_profile (False)
+						else
+							error (value)
+						end
 					else
-						error (value)
-					end
+						v := No_option
+					end;
 				else
 					v := No_option
-				end;
+				end
 			end
 
 			if not error_raised then

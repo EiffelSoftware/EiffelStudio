@@ -2,7 +2,7 @@
 -- INTERIOR: Description of the interior of a figure.
 
 indexing
-	copyright: "See notice at end of class"
+	status: "See notice at end of class"
 
 class INTERIOR 
 
@@ -69,7 +69,7 @@ end -- class INTERIOR
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1989, 1991, 1993, Interactive Software
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

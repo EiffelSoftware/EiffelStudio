@@ -19,4 +19,3 @@ extern EIF_INTEGER eif_console_readint();
 extern EIF_INTEGER eif_console_readword(EIF_POINTER, EIF_INTEGER, EIF_INTEGER);
 extern EIF_INTEGER eif_console_readstream(EIF_POINTER, EIF_INTEGER);
 extern EIF_BOOLEAN eif_console_eof();
-#

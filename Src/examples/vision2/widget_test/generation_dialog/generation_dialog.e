@@ -15,6 +15,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GENERATION_CONSTANTS
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -48,7 +53,10 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `select_directory_button'.
 		do
 			directory_dialog.show_modal_to_window (Current)
-			directory_display.set_text (Directory_dialog.directory)			
+			directory_display.set_text (Directory_dialog.directory)
+			if not directory_display.text.is_empty then
+				ok_button.enable_sensitive	
+			end
 		end
 
 
@@ -56,10 +64,39 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `ok_button'.
 		local
 			directory: DIRECTORY
+			contents: ARRAYED_LIST [STRING]
+			clashing_files: STRING
+			warning_dialog: WARNING_DIALOG
+			supress_generation: BOOLEAN
 		do
 			create directory.make (directory_display.text)
-			test_controller.generate_current_test (directory)
-			hide
+			contents := directory.linear_representation
+			contents.compare_objects
+			clashing_files := ""
+			if contents.has (Ace_file_name) then
+				clashing_files := Ace_file_name + "%N"
+			end
+			if contents.has (Application_file_name) then
+				clashing_files := clashing_files + Application_file_name + "%N"
+			end
+			if contents.has (Test_controller.selected_test_name + ".e") then
+				clashing_files := clashing_files + Test_controller.selected_test_name + ".e" + "%N"
+			end
+			
+			if not clashing_files.is_empty then
+				clashing_files := "Conflict found in directory " + directory.name +
+				"%NThe following files already exist:%N%N" + clashing_files +
+				"%N%NDo you wish to overwrite these files?"
+				create warning_dialog.make_with_text (clashing_files)
+				warning_dialog.show_modal_to_window (Current)
+				if not warning_dialog.selected_button.is_equal ("OK") then
+					supress_generation := True
+				end
+			end
+			if not supress_generation then
+				test_controller.generate_current_test (directory)
+				hide
+			end
 		end
 
 

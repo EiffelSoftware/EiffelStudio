@@ -113,10 +113,11 @@ end -- class EOLE_FILETIME
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
+--| Based on WINE library, copyright (C) Object Tools, 1996-1998.
+--| Modifications and extensions: copyright (C) ISE, 1998.
 --|
 --| Interactive Software Engineering Inc.
 --| ISE Building, 2nd floor
@@ -126,5 +127,4 @@ end -- class EOLE_FILETIME
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
 

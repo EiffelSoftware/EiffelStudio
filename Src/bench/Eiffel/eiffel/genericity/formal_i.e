@@ -124,7 +124,7 @@ feature -- Generic conformance for IL
 		local
 			l_gen_type: GEN_TYPE_I
 			l_decl_type: CL_TYPE_I
-			l_formal: FORMAL_ATTRIBUTE_I
+			l_formal: TYPE_FEATURE_I
 		do
 			l_gen_type ?= context.current_type
 			
@@ -140,7 +140,8 @@ feature -- Generic conformance for IL
 				-- in descendant class.
 			l_formal := l_gen_type.base_class.formal_at_position (position)
 			il_generator.generate_current
-			l_decl_type := il_generator.implemented_type (l_formal.origin_class_id, context.current_type)
+			l_decl_type := il_generator.implemented_type (l_formal.origin_class_id,
+				context.current_type)
 			il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, True)
 		end
 

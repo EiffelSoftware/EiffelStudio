@@ -69,7 +69,7 @@ feature {NONE}
 			loop
 				l := ht.item_for_iteration
 				Result := not l.is_unlimited and then
-					l.time_left < 30
+					l.time_left < 60
 				ht.forth
 			end
 		end

@@ -33,7 +33,7 @@ feature -- Conformance
 			type1_nonnegative: type1 >= 0
 			type2_nonnegative: type2 >= 0
 		local
-			child: TYPE
+			l_child, l_parent: TYPE
 			l_types: like known_types
 		do
 			if type1 = type2 then
@@ -42,10 +42,11 @@ feature -- Conformance
 				l_types := known_types
 				l_types.search (type1)
 				if l_types.found then
-					child := l_types.found_item.item
+					l_child := l_types.found_item.item
 					l_types.search (type2)
 					if l_types.found then
-						Result := child.is_subclass_of (l_types.found_item.item)
+						l_parent := l_types.found_item.item
+						Result := l_parent.is_assignable_from (l_child)
 					end
 				end
 			end

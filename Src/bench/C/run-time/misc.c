@@ -326,7 +326,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 	union overhead *zone;
 	char *new_area, *ref;
 	long elem_size;			/* Size of each item within area */
-	char *(*init)();		/* Initialization routine for expanded objects */
+	char *(*init)(char *);		/* Initialization routine for expanded objects */
 	int dtype;				/* Dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
@@ -364,7 +364,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 
 	ref = (new_area + j * elem_size) + OVERHEAD;	/* Needed for stupid gcc */
 	dtype = Dtype(ref);					/* Gcc won't let me expand that!! */
-	init = XCreate(dtype);
+	init = (char *(*)(char *)) XCreate(dtype);
 
 #ifdef MAY_PANIC
 	if ((char *(*)()) 0 == init)		/* There MUST be a routine */

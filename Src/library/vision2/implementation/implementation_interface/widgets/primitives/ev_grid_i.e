@@ -209,6 +209,9 @@ feature -- Status setting
 			-- Disable tree functionality for `Current'.
 		do
 			is_tree_enabled := False
+			adjust_hidden_node_count (- hidden_node_count)
+			recompute_row_offsets (1)
+			recompute_vertical_scroll_bar
 			redraw_client_area
 		ensure
 			tree_disabled: not is_tree_enabled
@@ -546,6 +549,7 @@ feature -- Status setting
 			a_row_count_positive: a_row_count >= 1
 		do
 			resize_row_lists (a_row_count)
+			recompute_row_offsets (1)
 			recompute_vertical_scroll_bar
 			redraw_client_area
 		ensure
@@ -1819,7 +1823,7 @@ invariant
 	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
 	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
 	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
-	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
+	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
 	single_item_selection_enabled_implies_only_single_item_selected: single_item_selection_enabled implies selected_items.count <= 1

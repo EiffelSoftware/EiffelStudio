@@ -10,15 +10,26 @@ class
 inherit
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_DEFERRED_BUILDER
+		export
+			{NONE} all
+		end
 	
-	GB_CONSTANTS	
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	INTERNAL
+		export
+			{NONE} all
+		end
 
-feature {NONE} -- Implementation
-
+feature -- Access
 	new_object (element: XML_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
 			-- `Result' is an object generated from `xml_element'.
 			-- This object has no parent, is not included in the

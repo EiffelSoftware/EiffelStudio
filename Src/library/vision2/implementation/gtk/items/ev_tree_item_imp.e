@@ -31,7 +31,10 @@ inherit
 			reorder_child
 		end
 
-	--EV_PICK_AND_DROPABLE_IMP
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
 
 create
 	make
@@ -265,6 +268,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/02/24 20:52:13  king
+--| Inheriting from pick and dropable
+--|
 --| Revision 1.35  2000/02/24 20:09:40  king
 --| Added subtree handling on addition and removal of items
 --|

@@ -69,7 +69,7 @@ feature -- Callbacks
 			-- The user wants to keep it.
 		do
 			cluster.classes.put (class_i, class_name)
-			tool.process_classi (stone)
+			tool.process_class (stone)
 		end
 
 feature -- Properties
@@ -259,7 +259,7 @@ feature -- Execution
 					-- The file name of the new class already exists.
 					-- The user wants to keep it.
 				cluster.classes.put (class_i, class_name)
-				tool.process_classi (stone)
+				tool.process_class (stone)
 			elseif argument = cancel then
 				destroy
 			end
@@ -284,7 +284,7 @@ feature -- Execution
 			end
 			cluster.add_new_classs (class_i)
 			create stone.make (class_i)
-			tool.process_classi (stone)
+			tool.process_class (stone)
 		end
 
 end -- class EB_CREATE_CLASS_DIALOG

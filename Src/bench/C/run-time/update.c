@@ -32,7 +32,7 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "eif_file.h"
 #include "rt_err_msg.h"
 #include "rt_main.h"
-#include "eif_gen_conf.h"
+#include "rt_gen_conf.h"
 #include "rt_error.h"					/* for error_tag() */
 #include "rt_malloc.h"
 #include "eif_path_name.h"				/* for eifrt_vms_has_path_terminator */

@@ -34,6 +34,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"		/* For assertions checkings. */
+#include "rt_gen_conf.h"
 #include "rt_globals.h"
 
 #ifdef WORKBENCH

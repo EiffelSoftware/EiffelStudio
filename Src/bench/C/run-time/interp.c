@@ -32,7 +32,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_equal.h"	/* for xequal() */
 #include <math.h>
 #include "eif_main.h"
-#include "eif_gen_conf.h"
+#include "rt_gen_conf.h"
 #include "rt_gen_types.h"
 #include "x2c.h"		/* For LNGPAD */
 #include "eif_misc.h"

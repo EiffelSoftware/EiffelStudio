@@ -33,6 +33,7 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #include "rt_compress.h"
 #include "rt_lmalloc.h"
 #include "rt_gen_types.h"
+#include "rt_gen_conf.h"
 #include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <unistd.h>	/* For write () */

@@ -41,6 +41,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_garcol.h"			/* For Eiffel flags and function declarations */
 #include "rt_threads.h"
 #include "rt_gen_types.h"
+#include "rt_gen_conf.h"
 #include "eif_except.h"			/* For exception raising */
 #include "eif_plug.h"
 #include "x2c.h"			/* For macro LNGPAD */

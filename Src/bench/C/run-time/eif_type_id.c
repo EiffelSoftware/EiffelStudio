@@ -10,6 +10,7 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include "rt_lmalloc.h"
 #include "eif_threads.h"
 #include "rt_gen_types.h"
+#include "rt_gen_conf.h"
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>

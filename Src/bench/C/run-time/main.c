@@ -26,7 +26,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_urgent.h"
 #include "rt_except.h"
 #include "rt_sig.h"
-#include "eif_gen_conf.h"
+#include "rt_gen_conf.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"		/* %%ss added for create_desc */

@@ -49,6 +49,10 @@ feature -- Status setting
 			cut_figure := Void
 		end
 
+	minimum_cut_position: INTEGER is 20
+		-- Minimum position `cut_figure_point' is permitted to
+		-- take, to nearest arrow point
+
 feature {LINK_MIDPOINT} -- Status setting
 
 	set_midpoint (mp: LINK_MIDPOINT) is
@@ -56,7 +60,7 @@ feature {LINK_MIDPOINT} -- Status setting
 		require
 			mp_not_void: mp /= Void
 		do
-			midpoint := mp
+			midpoint := mp			
 		ensure
 			mp_assigned: midpoint = mp
 		end
@@ -77,11 +81,23 @@ feature {EV_FIGURE_DRAWER, EV_FIGURE} -- Implementation
 			Precursor {EV_FIGURE_LINE}
 			s := Arrow_size + line_width
 			if cut_figure /= Void then
-					--| FIXME remove magic numbers.
-				cut_figure_point_a.set_position (20, -s // 2)
-				cut_figure_point_b.set_position (20, s // 2)
+				cut_figure_point_a.set_position (Minimum_cut_position, -s // 2)
+				cut_figure_point_b.set_position (Minimum_cut_position, s // 2)
 			end
 		end
+		
+	set_cut_position (a_distance: INTEGER) is
+			-- Position cur figure `a_distance' from origin.
+		require
+			cut_position_valid: a_distance >= Minimum_cut_position
+		do
+			cut_figure_point_a.set_position (a_distance, cut_figure_point_a.y)
+			cut_figure_point_b.set_position (a_distance, cut_figure_point_b.y)
+		ensure
+			position_set: cut_figure_point_a.x = a_distance and cut_figure_point_a.y = old cut_figure_point_a.y and
+				cut_figure_point_b.x = a_distance and cut_figure_point_b.y = old cut_figure_point_b.y
+		end
+		
 
 	build_cut_figure is
 			-- Create `cut_figure'.

@@ -338,8 +338,7 @@ feature -- Server Access
 		do
 			Result := last_syntax_error /= Void
 		ensure
-			ok_implies_last_syn_void: Result implies last_syntax_error = Void
-			not_ok_implies_last_syn_not_void: Result implies last_syntax_error /= Void
+			ok_result: Result = (last_syntax_error /= Void)
 		end
 
 	last_syntax_error: SYNTAX_ERROR is

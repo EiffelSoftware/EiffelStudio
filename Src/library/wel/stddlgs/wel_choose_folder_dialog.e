@@ -35,9 +35,12 @@ feature -- Initialization
 			create str_folder_name.make_empty (max_path)
 			create str_title.make_empty (max_title_length)
 			create str_display_name.make_empty (max_path)
+			create str_starting_folder.make_empty (max_path)
 			create imalloc.make
 			cwel_browse_info_set_pszdisplayname (item, str_folder_name.item)
 			cwel_browse_info_set_lpsztitle (item, str_title.item)
+			cwel_browse_info_set_lparam (item, str_starting_folder.item)
+			cwel_browse_info_set_lpfn (item, cwel_browse_callback_proc)
 			set_default_title
 		end
 
@@ -63,6 +66,12 @@ feature -- Access
 			Result := str_title.string
 		end
 
+	starting_folder: STRING is
+			-- Initial folder name
+		do
+			Result := str_starting_folder.string
+		end
+
 	flags: INTEGER is
 			-- Dialog box creation flags
 			-- Can be a combination of values defined in 
@@ -86,16 +95,24 @@ feature -- Element Change
 			a_title_not_void: a_title /= Void
 		do
 			str_title.set_string (a_title)
-			cwel_browse_info_set_lpsztitle (item,
-				str_title.item)
 		ensure
 			title_set: title.is_equal (a_title)
 		end
 
 	set_default_title is
-			-- Set `title' with default title ("Browse for folder")
+			-- Set `title' with default title ("Please choose a folder")
 		do
-			cwel_browse_info_set_lpsztitle (item, default_pointer)
+			set_title ("Please choose a folder.")
+		end
+
+	set_starting_folder (a_folder_name: STRING) is
+			-- Set the initial folder name
+		require
+			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty
+		do
+			str_starting_folder.set_string (a_folder_name)
+		ensure
+			starting_folder_set: starting_folder.is_equal(a_folder_name)
 		end
 
 	set_flags (a_flags: INTEGER) is
@@ -152,6 +169,9 @@ feature {NONE} -- Implementation
 	str_folder_name: WEL_STRING
 			-- Chosen folder name
 
+	str_starting_folder: WEL_STRING
+			-- Starting folder name
+
 	str_display_name: WEL_STRING
 			-- Chosen display name
 
@@ -197,6 +217,11 @@ feature {NONE} -- External
 				"MAX_PATH"
 			end
 
+	cwel_browse_callback_proc: POINTER is
+		external
+			"C [macro %"choose_folder.h%"]: EIF_POINTER"
+		end
+
 	cwel_browse_info_get_ulflags (ptr: POINTER): INTEGER is
 			external
 				"C [macro %"choose_folder.h%"]"
@@ -218,6 +243,16 @@ feature {NONE} -- External
 			end
 
 	cwel_browse_info_set_lpsztitle (ptr, a_title: POINTER) is
+			external
+				"C [macro %"choose_folder.h%"]"
+			end
+
+	cwel_browse_info_set_lpfn (ptr, value: POINTER) is
+			external
+				"C [macro %"choose_folder.h%"]"
+			end
+	
+	cwel_browse_info_set_lparam (ptr, value: POINTER) is
 			external
 				"C [macro %"choose_folder.h%"]"
 			end

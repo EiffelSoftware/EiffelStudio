@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				paint_dc.set_background_color (wel_color_ref)
 			end
 			paint_dc.draw_text (text, client_rect, alignment_type +
-				Dt_vcenter + Dt_singleline)
+				Dt_vcenter)
 		end
 
 	default_style: INTEGER is

@@ -45,12 +45,20 @@ feature -- Access
 	root_ast: ACE_SD
 			-- Parsed/Newly created Ace file
 
+--	root_cluster: STRING is
+--			-- Root cluster name
+--		do
+--			if root_ast /= Void  then
+--				Result := root_ast.root.cluster_mark.string				
+--			end
+--		end
+
 	system_name: STRING is
 			-- System name.
 		do
 			Result := root_ast.system_name
 		end
-
+		
 	root_class_name: STRING is
 			-- Root class name.
 		do
@@ -294,7 +302,39 @@ feature -- Access
 				or	Result = il_generation_exe
 				or Result = il_generation_dll
 		end
-
+		
+	default_namespace: STRING is
+			-- Default namespace for system.
+		require
+			valid_ast: is_valid
+		local
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_opt: FREE_OPTION_SD
+		do
+			defaults := root_ast.defaults
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					if defaults.item.option.is_free_option then
+						free_opt ?= defaults.item.option
+						if free_opt.code = free_opt.Namespace then
+							Result := defaults.item.value.value
+						end
+					end
+					defaults.forth
+				end
+			end
+			if Result = Void or Result.is_empty then
+				Result := system_name
+			end
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.is_empty
+		end
+		
 	is_console_application: BOOLEAN is
 			-- Does application use console mode?
 		local
@@ -701,6 +741,41 @@ feature -- Access
 			end
 		end
 		
+	ise_eiffel: STRING is 
+			-- Return the ISE_EIFFEL environment var
+		local
+			env: EIFFEL_ENV
+		do
+			create env
+			Result := env.Eiffel_installation_dir_name
+		end
+		
+	ise_eiffel_envvar: STRING is "$ISE_EIFFEL"
+		
+	library_path: STRING is 
+		once
+			Result := ise_eiffel.clone (ise_eiffel)
+			Result.append ("\library")
+		ensure
+			non_void_result: Result /= Void
+			empty_result: not Result.is_empty
+		end
+	
+	library_dotnet_path: STRING is
+		once
+			Result := ise_eiffel.clone (ise_eiffel)
+			Result.append ("\library.net")
+		ensure
+			non_void_result: Result /= Void
+			empty_result: not Result.is_empty
+		end
+		
+	reserved_keywords: LINKED_LIST [STRING] is
+			-- List of all of the word reserved by the ace file
+		do
+			Result := ace_dictionary.reserved_keywords;			
+		end
+		
 feature -- Element change
 
 	set_system_name (new_name: STRING) is
@@ -711,7 +786,7 @@ feature -- Element change
 		do
 			root_ast.set_system_name (new_id_sd (new_name, False))
 		end
-
+		
 	set_root_class_name (new_name: STRING) is
 			-- Set class named `new_name' as new root class.
 		require
@@ -767,35 +842,35 @@ feature -- Element change
 			had_assertion := False
 			if evaluate_invariant then
 				had_assertion := True
-				v := new_invariant_sd (new_id_sd ("invariant", False))
+				v := new_invariant_sd (new_id_sd (ace_dictionary.Invariant_keyword, False))
 				ass := new_assertion_sd
 				d_option := new_d_option_sd (ass, v)
 				new_defaults.put_front (d_option)
 			end			
 			if evaluate_loop then
 				had_assertion := True
-				v := new_loop_sd (new_id_sd ("loop", False))
+				v := new_loop_sd (new_id_sd (ace_dictionary.Loop_keyword, False))
 				ass := new_assertion_sd
 				d_option := new_d_option_sd (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_check then
 				had_assertion := True
-				v := new_check_sd (new_id_sd ("check", False))
+				v := new_check_sd (new_id_sd (ace_dictionary.Check_keyword, False))
 				ass := new_assertion_sd
 				d_option := new_d_option_sd (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_ensure then
 				had_assertion := True
-				v := new_ensure_sd (new_id_sd ("ensure", False))
+				v := new_ensure_sd (new_id_sd (ace_dictionary.Ensure_keyword, False))
 				ass := new_assertion_sd
 				d_option := new_d_option_sd (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_require then
 				had_assertion := True
-				v := new_require_sd (new_id_sd ("require", False))
+				v := new_require_sd (new_id_sd (ace_dictionary.Require_keyword, False))
 				ass := new_assertion_sd
 				d_option := new_d_option_sd (ass, v)
 				new_defaults.put_front (d_option)	
@@ -836,7 +911,7 @@ feature -- Element change
 					end
 				end
 			end			
-			defaults.extend (new_special_option_sd ("msil_generation", Void, b))
+			defaults.extend (new_special_option_sd (ace_dictionary.Msil_generation_keyword, Void, b))
 		end
 
 	set_il_generation_type (type: INTEGER) is
@@ -874,12 +949,46 @@ feature -- Element change
 				end
 			end
 			if type = Il_generation_exe then
-				defaults.extend (new_special_option_sd ("msil_generation_type", "exe", True))
+				defaults.extend (new_special_option_sd (ace_dictionary.Msil_generation_type_keyword, "exe", True))
 			elseif type = Il_generation_dll then
-				defaults.extend (new_special_option_sd ("msil_generation_type", "dll", True))
+				defaults.extend (new_special_option_sd (ace_dictionary.Msil_generation_type_keyword, "dll", True))
 			end
 		end
-
+		
+	set_default_namespace (namespace: STRING) is
+			-- Set the default namespace
+		require
+			namespace_exists: namespace /= Void
+			valid_namespace: not namespace.is_empty
+		local
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_opt: FREE_OPTION_SD
+			is_item_removable: BOOLEAN
+		do
+			defaults := root_ast.defaults
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					is_item_removable := False
+					if defaults.item.option.is_free_option then
+						free_opt ?= defaults.item.option
+						if free_opt.code = free_opt.Namespace then
+							is_item_removable := True
+						end
+					end
+					if is_item_removable then
+						defaults.remove
+					else
+						defaults.forth
+					end
+				end
+			end
+			defaults.extend (new_special_option_sd (ace_dictionary.Namespace_keyword, namespace, True))
+		end
+		
 	set_console_application (b: BOOLEAN) is
 			-- Set `is_console_application' to `b'.
 		local
@@ -1656,6 +1765,12 @@ feature {NONE} -- Interface names
 		once
 			create Result
 		end
+		
+	ace_dictionary: ACE_FILE_DICTIONARY is
+		-- Ace file keyword dictionary
+		once
+			create Result
+		end
 
 feature {NONE} -- Generation of AST
 
@@ -1693,7 +1808,6 @@ feature {NONE} -- Implementation
 				Result.set_comment_list (Parser.comment_list)
 			end
 		end
-
 
 invariant
 	non_void_root_ast: root_ast /= Void

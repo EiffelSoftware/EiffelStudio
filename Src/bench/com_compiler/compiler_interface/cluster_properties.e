@@ -15,6 +15,7 @@ inherit
 	IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB
 		redefine
 			name,
+			cluster_namespace,
 			cluster_path,
 			parent_name,
 			override,
@@ -28,8 +29,10 @@ inherit
 			evaluate_invariant_by_default,
 			excluded,
 			has_parent,
+			is_eiffel_library,
 			subclusters,
 			has_children,
+			--set_cluster_namespace,
 			set_cluster_path,
 			set_override,
 			set_is_library,
@@ -83,6 +86,13 @@ feature -- Access
 			Result := cluster_sd.cluster_name
 		end
 
+	cluster_namespace: STRING is 
+			-- namespace of the cluster
+		do
+			--Result := cluster_sd.namespace
+			Result := name.clone(name)
+		end
+
 	cluster_path: STRING is
 			-- Full path to cluster.
 		do
@@ -114,7 +124,7 @@ feature -- Access
 	all1: BOOLEAN is
 			-- Should all subclusters be included?
 		do
-			Result := cluster_sd.is_recursive
+			Result := cluster_sd.is_recursive and (not cluster_sd.is_library)
 		end
 
 	use_system_default: BOOLEAN is
@@ -322,7 +332,35 @@ feature -- Access
 			Result := id
 		ensure
 			valid_id: Result > 0
+		end	
+		
+	is_eiffel_library: BOOLEAN is
+			-- Is the cluster part of the Eiffel library
+		local
+			library: STRING
+			path: STRING
+		do
+			if ace.is_valid then
+				library := ace.library_path
+				if library /= Void then
+					path := cluster_path.clone(cluster_path)
+					path.replace_substring_all (ace.ise_eiffel_envvar, ace.ise_eiffel)
+					path.replace_substring_all ("/", "\")
+					Result := (path.substring_index (library, 1) = 1)
+				else
+					library := ace.library_dotnet_path
+					if library /= Void then
+						path := cluster_path.clone(cluster_path)
+						path.replace_substring_all (ace.ise_eiffel_envvar, ace.ise_eiffel)
+						path.replace_substring_all ("/", "\")
+						Result := (path.substring_index (library, 1) = 1)
+					end
+				end
+			else
+				Result := false
+			end
 		end
+		
 
 feature -- Status
 
@@ -360,8 +398,30 @@ feature -- Status
 			end
 		end
 	
+
 	is_id_defined: BOOLEAN
 			-- Is ID defined?
+			
+--	is_root_cluster: BOOLEAN is
+--			-- is the cluster the system root cluster (defined by the cluster mark in root declaration)
+--		local
+--			cluster_mark: ID_SD
+--			cluster_mark_string: STRING
+--			cluster_name: STRING
+--		do
+--			Result := false
+--			
+--			cluster_mark := ace.root_ast.root.cluster_mark
+--			cluster_mark_string := cluster_mark.string.clone(cluster_mark.string)
+--			cluster_name := name.clone(name)
+--			
+--			cluster_mark_string.to_lower
+--			cluster_name.to_lower
+--			
+--			if cluster_name.is_equal (cluster_mark_string) then
+--				Result := true	
+--			end
+--		end
 			
 feature -- Element change
 
@@ -386,11 +446,26 @@ feature -- Element change
 			end
 		end
 
+	set_cluster_namspace (a_namespace: STRING) is
+			-- Set the namespace for the cluster
+		local
+			id_sd: ID_SD
+			free_option_sd: FREE_OPTION_SD
+		do
+--			free_option_sd := new_free_option_sd(new_id_sd(, false))
+--			free_option_sd.
+			--free_option_sd := new_free_option_sd ()
+		end
+		
+
 	set_cluster_path (path: STRING) is
 			-- Full path to cluster.
 		local
 			id_sd: ID_SD
 		do
+			path.replace_substring_all ("/", "\")
+			path.replace_substring_all (ace.ise_eiffel, ace.ise_eiffel_envvar)
+			path.prune_all_trailing ('\')
 			id_sd := new_id_sd (path, True)
 			cluster_sd.set_directory_name (id_sd)
 		end
@@ -409,12 +484,18 @@ feature -- Element change
 			-- Should this cluster be treated as library?
 		do
 			cluster_sd.set_is_library (flag)
+			if flag then
+				cluster_sd.set_is_recursive (false)
+			end
 		end
 
 	set_all (flag: BOOLEAN) is
 			-- Should all subclusters be included?
 		do
 			cluster_sd.set_is_recursive (flag)
+			if flag then
+				cluster_sd.set_is_library (false)
+			end
 		end
 
 	set_use_system_default (flag: BOOLEAN) is
@@ -626,6 +707,18 @@ feature -- Element change
 		ensure
 			id_set: is_id_defined
 			valid_id: id = new_id
+		end
+		
+	
+
+feature -- Externals
+
+	ccom_release (cpp_obj: POINTER) is
+			-- Last error code
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_stub_s.h%"]"
+		alias
+			"Release"
 		end
 		
 feature {NONE} -- Implementation

@@ -98,9 +98,11 @@ feature -- Status setting
 					check
 						fw_not_void: fw /= Void
 					end
-					set_size (fw.string_width (Current, text) + extra_width, (7 * fw.string_height (Current, text)) // 4)			
+					set_form_width (fw.string_width (Current, text) + extra_width)
+					set_form_height ((7 * fw.string_height (Current, text)) // 4)
 				else
-					set_size ((text.count * 10) + extra_width, 25)
+					set_form_width ((text.count * 10) + extra_width)
+					set_form_height (25)
 				end
 			end
 		end
@@ -114,7 +116,7 @@ feature -- Status setting
 				wel_set_text (t)
 			end
 			private_text := clone (t)
-			if not fixed_size then
+			if not fixed_size_flag then
 				set_default_size
 			end
 		end

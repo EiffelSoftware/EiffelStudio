@@ -1,5 +1,9 @@
+indexing
 
--- File window with kind of a clickable interface...
+	description: 
+		"Terminal window that redirects output to a file.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class FILE_WINDOW
 
@@ -13,9 +17,10 @@ creation
 
 	make
 
-feature
+feature -- Output
 
 	open_file is
+			-- Open file.
 		local
 			retried: BOOLEAN
 		do
@@ -23,15 +28,14 @@ feature
 				open_write
 			end;
 		rescue
-			io.error.putstring ("Cannot create file: ");
-			io.error.putstring (name);
-			io.error.new_line;
 			retried := True;
 			retry
 		end;
 
-feature
+	put_char (c: CHARACTER) is 
+			-- Put character `c' to current position in file.
+		do 
+			putchar (c) 
+		end;
 
-	put_char (c: CHARACTER) is do putchar (c) end;
-
-end
+end -- class FILE_WINDOW

@@ -73,7 +73,7 @@ feature
 				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putint (rout_info.origin.id);
+				generated_file.putstring (rout_info.origin.generated_id);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (rout_info.offset)
 			else

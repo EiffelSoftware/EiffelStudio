@@ -98,7 +98,7 @@ feature
 				then
 					gen_file.putstring ("RTWPT(");
 					rout_info := System.rout_info_table.item (rout_id);
-					gen_file.putint (rout_info.origin.id);
+					gen_file.putstring (rout_info.origin.generated_id);
 					gen_file.putstring (gc_comma);
 					gen_file.putint (rout_info.offset)
 				else

@@ -40,6 +40,7 @@ feature {NONE} -- Execution
 			st: STRUCTURED_TEXT;
 			executer: E_SHOW_PROFILE_QUERY
 			error_dialog: MESSAGE_WINDOW
+			mp: MOUSE_PTR
 		do
 			if arg = Void then
 					--| Run the query
@@ -55,9 +56,11 @@ feature {NONE} -- Execution
 					profiler_options.set_language_names (clone (language_names));
 	
 					!! st.make;
+					!! mp.set_watch_cursor
 					!! executer.make (st, profiler_query, profiler_options);
 					executer.execute;
 					tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
+					mp.restore
 				else
 					!! error_dialog.make ("Query_syntax", tool)
 					error_dialog.set_message (message)

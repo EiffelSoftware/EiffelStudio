@@ -1,0 +1,87 @@
+YOUR ROADMAP TO ISE EIFFEL DOCUMENTATION
+
+=====================================================
+WHAT YOU MUST ABSOLUTELY HAVE READ TO USE ISE EIFFEL:
+=====================================================
+
+- If you are a total Eiffel beginner:
+
+	Read appendix D of [Environment], a general introduction to the concepts of
+	Eiffel. Also available in this directory as an ASCII file: language.txt
+	(but we do recommend the fully formatted version).
+
+- Before using the environment:
+
+	Read the Preface and chapters 1, Getting started, and 2, A Guided Tour,
+	of [Environment].
+
+	Read chapter 1 of [Library], Introduction to the Base libraries,
+	to know what libraries are available.
+
+=================================
+TO PROCEED TO MORE ADVANCED USES:
+=================================
+
+Read the rest of [Environment].
+
+Read the chapters of [Library] corresponding to the libraries that you may
+want to use. To understand library principles, read chapters 2 and 3 of [Library].
+
+Refer to [Reference] or to [Language] for specific language questions.
+
+Read [Method] and [Language] to understand the approach in depth.
+
+=========================================================
+IF YOU ARE GOING TO DEVELOP GRAPHICAL (GUI) APPLICATIONS:
+=========================================================
+
+Read [EiffelBuild]. If you need to use EiffelVision directly, not just
+through EiffelBuild, read [EiffelVision].
+
+===============================================
+IF YOU ARE IN CHARGE OF INSTALLING ISE EIFFEL:
+===============================================
+
+Read appendices B and C of [Environment].
+
+===============
+THE REFERENCES:
+===============
+
+- The Official Documentation:
+
+	[Reference] Eiffel: The Reference: A short language description, extracted
+	from [Language]. Report number TR-EI-41/ER.
+
+	[Library] Reusable Software: The Base Object-Oriented Component Libraries.
+	A detailed description of the EiffelBase, EiffelLex and EiffelParse libraries,
+	preceded by an in-depth examination of library design principles.
+	TR-EI-44/LI. Also available as a book published by Prentice Hall.
+
+	[Environment] ISE Eiffel: The Environment. A detailed description
+	of the EiffelBench development environment. TR-EI-39/IE. Also available
+	as a book published by Prentice Hall. Describes ISE Eiffel 3, but the
+	concepts are applicable to ISE Eiffel 4.
+
+	[EiffelBuild] Building Graphical Applications with EiffelBuild.
+	A presentation of EiffelBuild. TR-EI-43/UI.
+
+	[EiffelCase] Engineering Object-Oriented Software, Forward and Backward. 
+	A description of EiffelCase. TR-EI-53/EA.
+
+	[EiffelVision-intro] Introduction to EiffelVision. A general presentation of
+	the EiffelVision graphical and user interface library. TR-EI-40/EV.
+
+- Important Additional Literature:
+
+	[Method] Object-Oriented Software Construction. The complete presentation
+	of the underlying method. Available from Prentice Hall.
+
+	[Language] Eiffel: The Language. Available from Prentice Hall. The complete
+	language description. [Reference] is an extract with all the formal rules but
+	not the examples and explanations.
+
+	[BON] Seamless Object-Oriented Software Architecture by Kim Waldén and
+	Jean-Marc Nerson. Available from Prentice Hall. A presentation of O-O
+	analysis and design based on systematic concepts close to those of Eiffel.
+	Introduces the Business Object Notation (BON), the basis for EiffelCase.

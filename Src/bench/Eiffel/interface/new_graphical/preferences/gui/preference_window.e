@@ -191,12 +191,13 @@ feature {NONE} -- Execution
 				column1_width := right_list.column_width (1)
 				column2_width := right_list.column_width (2)
 				list_width := right_list.width
+				resize_actions.block
 				if column1_width > list_width then
 					right_list.set_column_widths (<<list_width - 3, 1>>)
 				else
-					right_list.set_column_width (list_width - column1_width - 2, 2)
+					right_list.set_column_width ((list_width - column1_width - 2).max (1), 2)
 				end
-
+				resize_actions.resume
 				clear
 				right_list.remove_selection
 				inside_on_resize_right_list_column := False
@@ -261,10 +262,12 @@ feature {NONE} -- Execution
 		local
 			column2_width: INTEGER
 		do
-			clear
-			column2_width := right_list.width - right_list.column_width (1) - 2
-			column2_width := column2_width.max (1)
-			right_list.set_column_width (column2_width, 2)
+			if not inside_on_resize_right_list_column then
+				clear
+				column2_width := right_list.width - right_list.column_width (1) - 2
+				column2_width := column2_width.max (1)
+				right_list.set_column_width (column2_width, 2)
+			end
 		end
 		
 	apply_changes is

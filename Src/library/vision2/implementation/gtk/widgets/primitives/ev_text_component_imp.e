@@ -51,19 +51,26 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := selection_start < selection_end
+			Result := C.gtk_editable_struct_selection_start_pos (entry_widget) /= 
+				C.gtk_editable_struct_selection_end_pos (entry_widget)
 		end
 
 	selection_start: INTEGER is
 			-- Index of the first character selected.
+		local
+			a_start: INTEGER
 		do
-			Result := C.gtk_editable_struct_selection_start_pos (entry_widget) + 1
+			a_start := C.gtk_editable_struct_selection_start_pos (entry_widget)
+			Result := a_start.min (C.gtk_editable_struct_selection_end_pos (entry_widget)) + 1
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected.
+		local
+			a_start: INTEGER
 		do
-			Result := C.gtk_editable_struct_selection_end_pos (entry_widget)
+			a_start := C.gtk_editable_struct_selection_start_pos (entry_widget)
+			Result := a_start.max (C.gtk_editable_struct_selection_end_pos (entry_widget))
 		end
 
 	maximum_character_width: INTEGER is

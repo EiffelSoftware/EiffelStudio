@@ -4,6 +4,19 @@ indexing
 class
 	PROGRESS_BAR_CTL
 
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
+		redefine
+			on_load,
+			dispose_boolean
+		end
+
+	ANY
+
 create
 	make
 
@@ -21,16 +34,10 @@ feature {NONE} -- Initialization
 			cmd_step.set_selected_index (0)
 			prog_bar.set_step (1)
 			
-				-- Should be called automaticaly
-			on_load
-
-			dummy := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container
@@ -65,8 +72,6 @@ feature -- Implementation
 			l_point: DRAWING_POINT
 			l_size: DRAWING_SIZE
 		do
-			create my_window.make
-			
 			create components.make
 			create label_3.make
 			create lbl_completed.make
@@ -81,14 +86,14 @@ feature -- Implementation
 
 			sldr_speed.begin_init
 
-			my_window.set_text (("ProgressBar").to_cil)
+			set_text (("ProgressBar").to_cil)
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
+			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (506, 175)
-			my_window.set_client_size_size_2 (l_size)
-			my_window.set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
-			my_window.set_maximize_box (False)
-			my_window.set_minimize_box (False)
+			set_client_size (l_size)
+			set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
+			set_maximize_box (False)
+			set_minimize_box (False)
 
 			l_point.make_from_x_and_y (16, 80)
 			label_3.set_location (l_point)
@@ -170,7 +175,7 @@ feature -- Implementation
 			l_point.make_from_x_and_y (248, 16)
 			grp_behavior.set_location (l_point)
 			grp_behavior.set_tab_index (5)
-			grp_behavior.set_tab_stop_boolean_2 (False)
+			grp_behavior.set_tab_stop (False)
 			grp_behavior.set_text (("ProgressBar").to_cil)
 			l_size.make_from_width_and_height (248, 152)
 			grp_behavior.set_size (l_size)
@@ -178,12 +183,12 @@ feature -- Implementation
 			grp_behavior.controls.add (label_1)
 			grp_behavior.controls.add (sldr_speed)
 			grp_behavior.controls.add (label_3)
-			my_window.controls.add (grp_behavior)
-			my_window.controls.add (lbl_value)
-			my_window.controls.add (label_4)
-			my_window.controls.add (lbl_completed)
-			my_window.controls.add (label_2)
-			my_window.controls.add (prog_bar)
+			controls.add (grp_behavior)
+			controls.add (lbl_value)
+			controls.add (label_4)
+			controls.add (lbl_completed)
+			controls.add (label_2)
+			controls.add (prog_bar)
 
 			sldr_speed.end_init
 		end
@@ -191,25 +196,25 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose is
-			-- method call when form is disposed.
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
 		local
 			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
 		do
---			if timed_progress /= Void then
---				timed_progress.interrupt
---				timed_progress := Void
---			end
-
---			Precursor {WINFORMS_FORM}
-			components.dispose
+			if not retried then
+				if components /= Void then
+					components.dispose	
+				end
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
 		end
 
---	on_load (e: EVENT_ARGS) is
-	on_load is
+	on_load (e: EVENT_ARGS) is
 			--
-		local
-			dummy: SYSTEM_OBJECT		
 		do
 			-- Spin off a new thread to update the ProgressBar control
 			create timed_progress.make (create {THREAD_START}.make (Current, $timed_progress_proc))
@@ -262,7 +267,7 @@ feature {NONE} -- Implementation
 					stop
 				loop
 					feature {SYSTEM_CONSOLE}.write (("  3   ").to_cil)
-					dummy := my_window.invoke (l_mi)
+					dummy := invoke (l_mi)
 					feature {SYSTEM_CONSOLE}.write (("  4   ").to_cil)
 					sleep_time := 100
 					feature {SYSTEM_CONSOLE}.write (("  5   ").to_cil)

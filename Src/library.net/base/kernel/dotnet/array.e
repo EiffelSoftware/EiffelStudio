@@ -107,31 +107,29 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
+			l_item: G
 			upper_bound: INTEGER
 		do
+			i := lower
 			upper_bound := upper
-			if object_comparison then
-				if v = Void then
-					i := upper_bound + 1
-				else
-					from
-						i := lower
-					until
-						i > upper_bound or else (item (i) /= Void and then item (i).is_equal (v))
-					loop
-						i := i + 1
-					end
+			if object_comparison and v /= Void then
+				from
+				until
+					i > upper_bound or Result
+				loop
+					l_item := item (i)
+					Result := l_item /= Void and then l_item.is_equal (v)
+					i := i + 1
 				end
 			else
 				from
-					i := lower
 				until
-					i > upper_bound or else (item (i) = v)
+					i > upper_bound or Result
 				loop
+					Result := item (i) = v
 					i := i + 1
 				end
 			end
-			Result := not (i > upper_bound)
 		end
 
 feature -- Measurement
@@ -616,7 +614,11 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-				set_area (other.area.standard_twin)
+					-- Neeed to use `twin' here and not `standard_twin' like
+					-- in classic Eiffel since in .NET a SPECIAL is just a normal
+					-- class with an attribute and thus `standard_twin' will perform
+					-- aliasing on this attribute which we don't want here.
+				set_area (other.area.twin)
 			end
 		ensure then
 			equal_areas: area.is_equal (other.area)

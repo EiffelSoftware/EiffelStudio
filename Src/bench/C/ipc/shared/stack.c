@@ -19,7 +19,7 @@
 #include "eif_portable.h"
 #include "eif_debug.h"
 #include "rt_interp.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_garcol.h"
 #include "eif_malloc.h"
 #include "stack.h"

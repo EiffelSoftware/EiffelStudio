@@ -255,11 +255,10 @@ feature {NONE} -- Menus initializations
 			-- Create and build a sub menu `toolbar_menu'.
 		local
 			menu_sep: EV_MENU_SEPARATOR
-			menu: EV_MENU
 			menu_item: EV_MENU_ITEM
 			command_menu_item: EB_COMMAND_CHECK_MENU_ITEM
 		do
-			create menu.make_with_text (Interface_names.m_Toolbars)
+			create Result.make_with_text (Interface_names.m_Toolbars)
 
 				-- Available toolbars
 			from
@@ -270,27 +269,25 @@ feature {NONE} -- Menus initializations
 				command_menu_item := show_toolbar_commands.item.new_menu_item
 				command_menu_item.select_actions.extend (~save_toolbar_state)
 				add_recyclable (command_menu_item)
-				menu.extend (command_menu_item)
+				Result.extend (command_menu_item)
 
 				show_toolbar_commands.forth
 			end
 
 				-- Separator ---------------------------
 			create menu_sep
-			menu.extend (menu_sep)
+			Result.extend (menu_sep)
 
 				-- Customize.
 			create menu_item.make_with_text (Interface_names.m_Customize_general)
 			menu_item.select_actions.extend (general_customizable_toolbar~customize)
 			menu_item.select_actions.extend (~save_general_toolbar)
-			menu.extend (menu_item)
+			Result.extend (menu_item)
 
 			create menu_item.make_with_text (Interface_names.m_Customize_project)
 			menu_item.select_actions.extend (project_customizable_toolbar~customize)
 			menu_item.select_actions.extend (~save_project_toolbar)
-			menu.extend (menu_item)
-
-			Result := menu
+			Result.extend (menu_item)
 		end
 
 	build_explorer_bar_menu: EV_MENU is

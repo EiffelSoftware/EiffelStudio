@@ -20,8 +20,10 @@ create
 feature -- Access
 
 	object: EV_PRIMITIVE
+		-- The vision2 object that `Current' represents.
 	
 	display_object: EV_PICK_AND_DROPABLE
+		-- The representation of `object' used in `build_window'.
 		
 feature {NONE} -- Implementation
 
@@ -32,9 +34,7 @@ feature {NONE} -- Implementation
 			display_object ?= vision2_object_from_type (type)
 			display_object.set_pebble_function (agent retrieve_pebble)
 			display_object.drop_actions.extend (agent add_new_component_wrapper (?))
-			--display_object.drop_actions.extend (agent add_new_component_in_parent_shift_wrapper (?))
 			display_object.drop_actions.extend (agent add_new_object_wrapper (?))
-			--display_object.drop_actions.extend (agent add_new_object_in_parent_shift_wrapper (?))
 			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 

@@ -40,8 +40,6 @@ feature -- Status setting
  		do
 			remove_main_window (Current)
 			if exists then
-				exists := False
-				unregister_window (Current)
 				if application_main_window = Current then
 					cwin_post_quit_message (0)
 				else

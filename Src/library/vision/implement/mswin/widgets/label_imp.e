@@ -166,7 +166,6 @@ feature {NONE} -- Implementation
 						windows_font.string_height (Current, text) * 7 // 4)
 				end
 				make_with_coordinates (wc, "", x, y, width, height)
-				exists := True
 				resize_for_shell
 				if private_font /= Void then
 					set_font (private_font)

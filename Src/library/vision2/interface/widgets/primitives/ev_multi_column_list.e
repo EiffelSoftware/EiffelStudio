@@ -349,7 +349,7 @@ feature -- Element change
 			column_alignments_assigned: column_alignments_assigned (alignments)
 		end
 
-feature {NONE} -- Obsolete
+feature -- Obsolete
 		
 	clear_selection is
 			-- Make `selected_items' empty.

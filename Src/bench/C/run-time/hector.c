@@ -189,15 +189,17 @@ char *object;
 	 */
 
 	EIF_OBJ address;					/* Address in hector's stack */
+	char *unprotected_ref;
 
 	address = hector_addr(object);		/* Fetch associated address */
-	eif_access(address) = (char *) 0;	/* Reset hector's entry */
-	HEADER(object)->ov_size &= ~B_C;	/* Back to the Eiffel world */
 	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
 		plsc();										/* Run GC cycle */
 		if (-1 == epush(&free_stack, address))		/* Again, we can't */
 			eraise("hector unfreezing", EN_MEM);	/* No more memory */
 	}
+	unprotected_ref = eif_access(address);
+	HEADER(unprotected_ref)->ov_size &= ~B_C;		/* Back to the Eiffel world */
+	eif_access(address) = (char *) 0;				/* Reset hector's entry */
 }
 
 /*

@@ -243,9 +243,9 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_CODE_GENERATOR} -- Status setting
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of settings held in `Current' which is
-			-- in a compilable format.
+			-- in a compilable format. Each element is a different setting line.
 			-- `element' is the XML element that contains information about `Current'.
 			-- So if `Current' is GB_EV_CONTAINER, `element' is <CONTAINER> in XML.
 			-- `info' is info retrieved from the XML during the prepass stage, and contains
@@ -375,7 +375,6 @@ feature {NONE} -- Implementation
 		local
 			constant: GB_CONSTANT
 			element_info: ELEMENT_INFORMATION
-			constant_context: GB_CONSTANT_CONTEXT
 		do
 			element_info := full_information @ a_type_name
 			if element_info /= Void then
@@ -397,7 +396,6 @@ feature {NONE} -- Implementation
 		local
 			constant: GB_CONSTANT
 			element_info: ELEMENT_INFORMATION
-			constant_context: GB_CONSTANT_CONTEXT
 		do
 			element_info := full_information @ a_type_name
 			if element_info /= Void then

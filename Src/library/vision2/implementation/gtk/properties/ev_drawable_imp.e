@@ -412,7 +412,7 @@ feature -- Drawing operations
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		do
-			draw_full_pixmap (x, y, a_pixmap, 0, 0, -1, -1)
+			draw_full_pixmap (x, y, a_pixmap, 0, 0, a_pixmap.width, a_pixmap.height)
 		end
 
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is

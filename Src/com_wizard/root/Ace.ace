@@ -103,8 +103,8 @@ external
 					"$ISE_EIFFEL\library\time\clib",
 					"$ISE_EIFFEL\library\com\spec\windows\include"
 
-	object: 		"$ISE_EIFFEL\library\wel\spec\$(COMPILER)\lib\wel.lib",
-					"$ISE_EIFFEL\library\time\spec\msc\lib\datetime.lib",
-					"$ISE_EIFFEL\library\com\spec\msc\lib\com.lib",
-					"$ISE_EIFFEL\library\com\spec\msc\lib\com_runtime.lib";
+	object: 		"$ISE_EIFFEL\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+					"$ISE_EIFFEL\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
+					"$ISE_EIFFEL\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+					"$ISE_EIFFEL\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib";
 end

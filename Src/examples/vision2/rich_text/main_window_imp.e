@@ -42,6 +42,8 @@ feature {NONE}-- Initialization
 			create l_ev_menu_bar_1
 			create l_ev_menu_2
 			create exit_menu_item
+			create options_menu
+			create word_wrapping_menu_item
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
 			create font_selection
@@ -66,6 +68,8 @@ feature {NONE}-- Initialization
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (l_ev_menu_2)
 			l_ev_menu_2.extend (exit_menu_item)
+			l_ev_menu_bar_1.extend (options_menu)
+			options_menu.extend (word_wrapping_menu_item)
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (font_selection)
@@ -89,6 +93,9 @@ feature {NONE}-- Initialization
 			set_title ("Rich Text Example")
 			l_ev_menu_2.set_text ("File")
 			exit_menu_item.set_text ("Exit")
+			options_menu.set_text ("Options")
+			word_wrapping_menu_item.enable_select
+			word_wrapping_menu_item.set_text ("Word Wrapping")
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
@@ -103,7 +110,7 @@ feature {NONE}-- Initialization
 			italic_button.set_text ("I")
 			underlined_button.set_text ("U")
 			striked_through_button.set_text ("S")
-			rich_text.set_text ("LKJLKJLKJLKJLKJ")
+			rich_text.set_text ("Some sample text.%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text.%N%NAnd a little more.%N%NThe end.")
 			l_ev_cell_1.set_minimum_height (tiny_padding)
 			l_ev_horizontal_box_2.set_padding_width (tiny_padding)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_frame_2)
@@ -113,12 +120,15 @@ feature {NONE}-- Initialization
 			
 				--Connect events.
 			exit_menu_item.select_actions.extend (agent exit)
+			word_wrapping_menu_item.select_actions.extend (agent word_wrapping_toggled)
 			font_selection.select_actions.extend (agent font_selected)
 			size_selection.select_actions.extend (agent font_size_selected)
 			size_selection.return_actions.extend (agent font_size_selected)
 			color_button.select_actions.extend (agent color_selected)
 			bold_button.select_actions.extend (agent bold_selected)
 			italic_button.select_actions.extend (agent italic_selected)
+			underlined_button.select_actions.extend (agent underline_selected)
+			striked_through_button.select_actions.extend (agent strike_through_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -129,6 +139,8 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	exit_menu_item: EV_MENU_ITEM
+	options_menu: EV_MENU
+	word_wrapping_menu_item: EV_CHECK_MENU_ITEM
 	font_selection, size_selection: EV_COMBO_BOX
 	color_toolbar, format_toolbar: EV_TOOL_BAR
 	color_button: EV_TOOL_BAR_BUTTON
@@ -156,6 +168,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	word_wrapping_toggled is
+			-- Called by `select_actions' of `word_wrapping_menu_item'.
+		deferred
+		end
+	
 	font_selected is
 			-- Called by `select_actions' of `font_selection'.
 		deferred
@@ -178,6 +195,16 @@ feature {NONE} -- Implementation
 	
 	italic_selected is
 			-- Called by `select_actions' of `italic_button'.
+		deferred
+		end
+	
+	underline_selected is
+			-- Called by `select_actions' of `underlined_button'.
+		deferred
+		end
+	
+	strike_through_selected is
+			-- Called by `select_actions' of `striked_through_button'.
 		deferred
 		end
 	

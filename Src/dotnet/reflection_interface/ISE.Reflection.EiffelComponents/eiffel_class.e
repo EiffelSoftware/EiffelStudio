@@ -1,0 +1,744 @@
+indexing
+	description: "Include all the information needed to produce class Eiffel code and XML file."
+	external_name: "ISE.Reflection.EiffelClass"
+class
+	EIFFEL_CLASS
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize attributes.
+		indexing
+			external_name: "Make"
+		do
+			create parents.make
+			create creation_routines.make 
+			create initialization_features.make
+			create access_features.make
+			create element_change_features.make
+			create basic_operations.make
+			create unary_operators_features.make
+			create binary_operators_features.make
+			create special_features.make
+			create implementation_features.make
+			create invariants.make
+		ensure
+			non_void_parents: parents /= Void
+			non_void_creation_routines: creation_routines /= Void
+			non_void_initialization_features: initialization_features /= Void
+			non_void_access_features: access_features /= Void
+			non_void_element_change_features: element_change_features /= Void
+			non_void_basic_operations: basic_operations /= Void
+			non_void_unary_operators_features: unary_operators_features /= Void
+			non_void_binary_operators_features: binary_operators_features /= Void
+			non_void_special_features: special_features /= Void
+			non_void_implementation_features: implementation_features /= Void
+			non_void_invariants: invariants /= Void
+		end
+			
+feature -- Access
+			
+	eiffel_name: STRING
+			-- Eiffel name
+		indexing
+			external_name: "EiffelName"
+		end
+	
+	dot_net_full_name: STRING
+			-- .NET full name (i.e. with namespace)
+		indexing
+			external_name: "DotNetFullName"
+		end
+		
+	dot_net_simple_name: STRING 
+			-- .NET simple name
+		indexing
+			external_name: "DotNetSimpleName"
+		end
+	
+	assembly_descriptor: ASSEMBLY_DESCRIPTOR
+			-- Descriptor of assembly defining current type
+		indexing
+			external_name: "AssemblyDescriptor"
+		end
+		
+	namespace: STRING	
+			-- Namespace defining current class
+		indexing
+			external_name: "Namespace"
+		end
+		
+	parents: SYSTEM_COLLECTIONS_HASHTABLE
+			-- Key: Parent Eiffel name
+			-- Value: Inheritance clauses (ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST [STRING]]) 
+			-- (array with rename, undefine, redefine, select and export clauses)
+		indexing
+			external_name: "Parents"
+		end
+		
+	creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
+			-- Creation routines Eiffel names 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+		indexing
+			external_name: "CreationRoutines"
+		end
+		
+	initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Initialization features 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+		indexing
+			external_name: "InitializationFeatures"
+		end
+		
+	access_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Access features 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+		indexing
+			external_name: "AccessFeatures"
+		end
+		
+	element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Element change features 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+		indexing
+			external_name: "ElementChangeFeatures"
+		end
+		
+	basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Basic operations
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+		indexing
+			external_name: "BasicOperations"
+		end
+		
+	unary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Unary operators
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+		indexing
+			external_name: "UnaryOperatorsFeatures"
+		end
+		
+	binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Binary operators
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+		indexing
+			external_name: "BinaryOperatorsFeatures"
+		end
+		
+	special_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Special features 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]	
+		indexing
+			external_name: "SpecialFeatures"
+		end
+		
+	implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST 
+			-- Implementation features 
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]		
+		indexing
+			external_name: "ImplementationFeatures"
+		end
+		
+	invariants: SYSTEM_COLLECTIONS_ARRAYLIST
+			-- Class invariants
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]] (Array with invariant tag and invariant text)
+		indexing
+			external_name: "Invariants"
+		end
+
+feature -- Eiffel names from .NET reflection info
+
+	creation_routine_from_info (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): EIFFEL_FEATURE is
+			-- Creation routine corresponding to .NET `info'.
+		indexing
+			external_name: "CreationRoutineFromInfo"
+		require
+			non_void_info: info /= Void
+		do
+			if creation_routines.Count = 0 then
+				create Result.make
+			else
+				if has_creation_routine (info) then
+					Result := routine
+				else
+					create Result.make
+				end
+			end
+		ensure
+			non_void_creation_routine: Result /= Void		
+		end
+		
+	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): EIFFEL_FEATURE is
+			-- Eiffel attribute corresponding to .NET `info'.
+		indexing
+			external_name: "AttributeFromInfo"
+		require
+			non_void_info: info /= Void
+		do
+			if has_attribute (info, initialization_features) then
+				Result := attribute
+			elseif has_attribute (info, access_features) then
+				Result := attribute
+			elseif has_attribute (info, element_change_features) then
+				Result := attribute
+			elseif has_attribute (info, basic_operations) then
+				Result := attribute
+			elseif has_attribute (info, unary_operators_features) then
+				Result := attribute
+			elseif has_attribute (info, binary_operators_features) then
+				Result := attribute
+			elseif has_attribute (info, special_features) then
+				Result := attribute
+			elseif has_attribute (info, implementation_features) then
+				Result := attribute
+			else
+				create Result.make
+			end
+		ensure
+			non_void_attribute: Result /= Void
+		end
+		
+	routine_from_info (info: SYSTEM_REFLECTION_METHODINFO): EIFFEL_FEATURE is
+			-- Eiffel routine corresponding to .NET `info'.
+		indexing
+			external_name: "RoutineFromInfo"
+		require
+			non_void_info: info /= Void
+		do
+			if has_routine (info, initialization_features) then
+				Result := routine
+			elseif has_routine (info, access_features) then
+				Result := routine
+			elseif has_routine (info, element_change_features) then
+				Result := routine
+			elseif has_routine (info, basic_operations) then
+				Result := routine
+			elseif has_routine (info, unary_operators_features) then
+				Result := routine
+			elseif has_routine (info, binary_operators_features) then
+				Result := routine
+			elseif has_routine (info, special_features) then
+				Result := routine
+			elseif has_routine (info, implementation_features) then
+				Result := routine
+			else
+				create Result.make
+			end			
+		ensure
+			non_void_routine: Result /= Void
+		end
+		
+feature -- Status Report
+
+	is_frozen: BOOLEAN
+			-- Is class frozen?
+		indexing
+			external_name: "IsFrozen"
+		end
+		
+	is_expanded: BOOLEAN
+			-- Is class expanded?
+		indexing
+			external_name: "IsExpanded"
+		end
+		
+	is_deferred: BOOLEAN
+			-- Is class deferred?
+		indexing
+			external_name: "IsDeferred"
+		end
+		
+	create_none: BOOLEAN
+			-- Does class have `create{NONE}' creation declaration?
+		indexing
+			external_name: "CreateNone"
+		end
+		
+feature -- Status Setting
+
+	set_frozen (a_value: like is_frozen) is
+			-- Set `is_frozen' with `a_value'.
+		indexing
+			external_name: "SetFrozen"
+		do
+			is_frozen := a_value
+		ensure
+			frozen_set: is_frozen = a_value
+		end
+		
+	set_expanded (a_value: like is_expanded) is
+			-- Set `is_expanded' with `expanded'.
+		indexing
+			external_name: "SetExpanded"
+		do
+			is_expanded := a_value
+		ensure
+			expanded_set: is_expanded = a_value
+		end
+	
+	set_deferred (a_value: like is_deferred) is
+			-- Set `is_deferred' with `deferred'.
+		indexing
+			external_name: "SetDeferred"
+		do
+			is_deferred := a_value
+		ensure
+			deferred_set: is_deferred = a_value
+		end
+
+	set_create_none (a_value: like create_none) is
+			-- Set `create_none' with `a_value'.
+		indexing
+			external_name: "SetCreateNone"
+		do
+			create_none := a_value
+		ensure
+			create_none_set: create_none = a_value
+		end
+	
+	set_eiffel_name (a_name: like eiffel_name) is
+			-- Set `eiffel_name' with `a_name'.
+		indexing
+			external_name: "SetEiffelName"
+		require
+			non_void_name: a_name /= Void
+			not_empty_name: a_name.Length > 0
+		do
+			eiffel_name := a_name
+		ensure
+			eiffel_name_set: eiffel_name.Equals_String (a_name)
+		end
+	
+	set_dot_net_simple_name (a_name: like dot_net_simple_name) is
+			-- Set `eiffel_name' with `a_name'.
+		indexing
+			external_name: "SetDotNetSimpleName"
+		require
+			non_void_name: a_name /= Void
+			not_empty_name: a_name.Length > 0
+		do
+			dot_net_simple_name := a_name
+		ensure
+			dot_net_simple_name_set: dot_net_simple_name.Equals_String (a_name)
+		end	
+	
+	set_namespace (a_name: like namespace) is
+			-- Set `namespace' with `a_name'.
+		indexing
+			external_name: "SetNamespace"
+		require
+			non_void_name: a_name /= Void
+			not_empty_name: a_name.Length > 0
+		do
+			namespace := a_name
+		ensure
+			namespace_set: namespace.Equals_String (a_name)
+		end	
+
+	set_dot_net_full_name (a_full_name: like dot_net_full_name) is
+			-- Set `dot_net_full_name' from `a_full_name'.
+			-- Set `dot_net_simple_name' and `namespace' from `a_full_name'.
+		indexing
+			external_name: "SetDotNetFullName"
+		require
+			non_void_full_name: a_full_name /= Void
+			not_empty_full_name: a_full_name.Length > 0
+		local
+			dot_index: INTEGER
+			full_name: STRING
+		do
+			dot_net_full_name := a_full_name
+			full_name ?= a_full_name.Clone
+			if full_name /= Void then
+				full_name := full_name.Trim				
+				dot_index := full_name.LastIndexOf_Char ('.')
+				if dot_index > -1 then
+					set_namespace (full_name.Substring_Int32_Int32 (0, dot_index))
+					set_dot_net_simple_name (full_name.Substring (dot_index + 1))
+				else
+					set_dot_net_simple_name (full_name)
+				end
+			end
+		ensure
+			dot_net_full_name_set: dot_net_full_name.Equals_String (a_full_name)
+		end
+
+	set_assembly_descriptor (a_descriptor: like assembly_descriptor) is
+			-- Set `descriptor' with `a_descriptor'.
+		indexing
+			external_name: "SetAssemblyDescriptor"
+		require
+			non_void_descriptor: a_descriptor /= Void
+		do
+			assembly_descriptor := a_descriptor
+		ensure
+			assembly_descriptor_set: assembly_descriptor = a_descriptor
+		end
+		
+	set_full_name (a_full_name: like dot_net_full_name) is
+			-- Set `dot_net_full_name' from `a_full_name'.
+		indexing
+			external_name: "SetFullName"
+		require
+			non_void_full_name: a_full_name /= Void
+			not_empty_full_name: a_full_name.Length > 0
+		do
+			dot_net_full_name := a_full_name
+		ensure
+			dot_net_full_name_set: dot_net_full_name.Equals_String (a_full_name)
+		end
+		
+feature -- Basic Operations
+
+	add_parent (a_name: STRING; rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
+			-- Add new parent to `parents' with `a_name' as key and inheritance clauses as value.
+			-- Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.
+		indexing
+			external_name: "AddParent"
+		require
+			non_void_name: a_name /= Void
+			not_empty_name: a_name.Length > 0
+			non_void_rename_clauses: rename_clauses /= Void
+			non_void_undefine_clauses: undefine_clauses /= Void
+			non_void_redefine_clauses: redefine_clauses /= Void
+			non_void_select_clauses: select_clauses /= Void
+			non_void_export_clauses: export_clauses /= Void
+		local
+			inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
+		do
+			create inheritance_clauses.make (5)
+			inheritance_clauses.put (0, rename_clauses)
+			inheritance_clauses.put (1, undefine_clauses)
+			inheritance_clauses.put (2, redefine_clauses)
+			inheritance_clauses.put (3, select_clauses)
+			inheritance_clauses.put (4, export_clauses)
+			
+			parents.Add (a_name, inheritance_clauses)
+		ensure
+			parent_added: parents.ContainsKey (a_name)
+		end
+	
+	add_creation_routine (a_name: STRING) is
+			-- Add `a_name' to `creation_routines'.
+		indexing
+			external_name: "AddCreationRoutine"
+		require
+			non_void_routine_name: a_name /= Void
+			not_empty_routine_name: a_name.Length > 0
+		local
+			routine_added: INTEGER
+		do
+			routine_added := creation_routines.Add (a_name)
+		ensure
+			routine_added: creation_routines.Contains (a_name)
+		end
+
+	add_initialization_feature (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `initialization_features'.
+		indexing
+			external_name: "AddInitializationFeature"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := initialization_features.Add (a_feature)
+		ensure
+			feature_added: initialization_features.Contains (a_feature)
+		end
+		
+	add_access_feature (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `access_features'.
+		indexing
+			external_name: "AddAccessFeature"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := access_features.Add (a_feature)
+		ensure
+			feature_added: access_features.Contains (a_feature)
+		end
+		
+	add_element_change_feature (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `element_change_features'.
+		indexing
+			external_name: "AddElementChangeFeature"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := element_change_features.Add (a_feature)
+		ensure
+			feature_added: element_change_features.Contains (a_feature)
+		end
+		
+	add_basic_operation (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `basic_operations'.
+		indexing
+			external_name: "AddBasicOperation"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := basic_operations.Add (a_feature)
+		ensure
+			feature_added: basic_operations.Contains (a_feature)
+		end
+		
+	add_unary_operator (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `unary_operator_features'.
+		indexing
+			external_name: "AddUnaryOperator"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := unary_operators_features.Add (a_feature)
+		ensure
+			feature_added: unary_operators_features.Contains (a_feature)
+		end
+		
+	add_binary_operator (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `binary_operator_features'.
+		indexing
+			external_name: "AddBinaryOperator"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := binary_operators_features.Add (a_feature)
+		ensure
+			feature_added: binary_operators_features.Contains (a_feature)
+		end
+		
+	add_special_feature (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `special_features'.
+		indexing
+			external_name: "AddSpecialFeature"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := special_features.Add (a_feature)
+		ensure
+			feature_added: special_features.Contains (a_feature)
+		end
+		
+	add_implementation_feature (a_feature: EIFFEL_FEATURE) is
+			-- Add `a_feature' to `implementation_features'.
+		indexing
+			external_name: "AddImplementationFeature"
+		require
+			non_void_feature: a_feature /= Void
+		local
+			feature_added: INTEGER
+		do
+			feature_added := implementation_features.Add (a_feature)
+		ensure
+			feature_added: implementation_features.Contains (a_feature)
+		end
+	
+	add_invariant (a_tag, a_text: STRING) is
+			-- Add new invariant (built from `a_tag' and `a_text'  to `invariants'.
+		indexing
+			external_name: "AddInvariant"
+		require
+			non_void_tag: a_tag /= Void
+			non_void_text: a_text /= Void
+			not_empty_text: a_text.Length > 0
+		local
+			invariant_added: INTEGER
+			an_invariant: ARRAY [STRING]
+		do
+			create an_invariant.make (2)
+			an_invariant.put (0, a_tag)
+			an_invariant.put (1, a_text)
+			invariant_added := invariants.Add (an_invariant)	
+		end
+
+feature {NONE} -- Implementation
+		
+	has_creation_routine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
+			-- Does current class has creation routine corresponding to `info'?
+			-- If found, make Eiffel feature available in `routine'.
+		indexing
+			external_name: "HasCreationRoutine"
+		require
+			non_void_info: info /= Void
+		local
+			i: INTEGER
+			a_routine_name: STRING
+		do
+			from
+				routine := Void
+			until
+				i = creation_routines.Count or Result 
+			loop
+				a_routine_name ?= creation_routines.Item (i)
+				if a_routine_name /= Void then
+					Result := has_routine (info, initialization_features)
+				end
+				i := i + 1
+			end
+		end
+
+	attribute: EIFFEL_FEATURE
+			-- Attribute (Result of `has_attribute' if attribute was found)
+		indexing
+			external_name: "Attribute"
+		end
+		
+	has_attribute (info: SYSTEM_REFLECTION_MEMBERINFO; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+			-- Has `a_table' feature corresponding to `info'?
+			-- If found, make Eiffel feature available in `attribute'.
+		indexing
+			external_name: "HasAttribute"
+		require
+			non_void_info: info /= Void
+			non_void_list: a_list /= Void
+		local
+			i: INTEGER
+			eiffel_feature: EIFFEL_FEATURE
+		do
+			from
+				attribute := Void
+			until
+				i = a_list.Count or Result
+			loop
+				eiffel_feature ?= a_list.Item (i)
+				if eiffel_feature /= Void then
+					if info.Name.Equals_String (eiffel_feature.dot_net_name) then
+						attribute := eiffel_feature
+						Result := True
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	routine: EIFFEL_FEATURE
+			-- Routine (Result of `has_routine' if routine was found)
+		indexing
+			external_name: "Routine"
+		end
+	
+	has_routine (info: SYSTEM_REFLECTION_METHODBASE; a_list: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+			-- Has `a_table' feature corresponding to `info'?
+			-- If found, make Eiffel feature available in `routine'.
+		indexing
+			external_name: "HasRoutine"
+		require
+			non_void_info: info /= Void
+			non_void_list: a_list /= Void
+		local
+			i: INTEGER
+			eiffel_feature: EIFFEL_FEATURE
+			constructor_info: SYSTEM_REFLECTION_CONSTRUCTORINFO
+			
+		do
+			constructor_info ?= info
+			from
+				routine := Void
+			until
+				i = a_list.Count or Result
+			loop
+				eiffel_feature ?= a_list.Item (i)
+				if eiffel_feature /= Void then
+					if info.Name.Equals_String (eiffel_feature.dot_net_name) then
+						Result := intern_has_routine (eiffel_feature, info)
+					elseif constructor_info /= Void then	
+						Result := intern_has_routine (eiffel_feature, constructor_info)
+					end
+				end
+				i := i + 1
+			end
+		end
+		
+	intern_has_routine (eiffel_feature: EIFFEL_FEATURE; info: SYSTEM_REFLECTION_METHODBASE): BOOLEAN is
+			-- Does `eiffel_feature' match with `info'.
+			-- If matching, set `routine' with `eiffel_feature'.
+		indexing
+			external_name: "InternHasRoutine"
+		require
+			non_void_eiffel_feature: eiffel_feature /= Void
+			non_void_info: info /= Void
+		local
+			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
+			matching: BOOLEAN		
+		do
+			arguments := eiffel_feature.arguments
+			if arguments.Count > 0 then
+				matching := matching_arguments (info, arguments)
+				if matching then
+					routine := eiffel_feature
+					Result := True
+				end
+			else
+				routine := eiffel_feature
+				Result := True
+			end
+		end
+	
+	matching_arguments (info: SYSTEM_REFLECTION_METHODBASE; arguments: SYSTEM_COLLECTIONS_ARRAYLIST): BOOLEAN is
+			-- Do Eiffel `arguments' match with .NET arguments of `info'?
+		indexing
+			external_name: "MatchingArguments"
+		require
+			non_void_info: info /= Void
+			non_void_arguments: arguments /= Void		
+		local
+			j: INTEGER	
+			an_argument: ARRAY [STRING]
+		do
+			if info.GetParameters /= Void then
+				if info.GetParameters.count /= arguments.count then
+					Result := False
+				else
+					from
+						Result := True
+						j := 0
+					until
+						j = arguments.Count or not Result
+					loop
+						an_argument ?= arguments.Item (j)
+						if an_argument /= Void then
+							if an_argument.count = 4 then
+								Result := info.GetParameters.item (j).ParameterType.FullName.Equals_String (an_argument.item (3))
+							else	
+								Result := False
+							end
+						else
+							Result := False
+						end
+						j := j + 1
+					end
+				end
+			else
+				Result := False
+			end
+		end
+		
+invariant
+	non_void_parents: parents /= Void
+	non_void_creation_routines: creation_routines /= Void
+	non_void_initialization_features: initialization_features /= Void
+	non_void_access_features: access_features /= Void
+	non_void_element_change_features: element_change_features /= Void
+	non_void_basic_operations: basic_operations /= Void
+	non_void_unary_operators_features: unary_operators_features /= Void
+	non_void_binary_operators_features: binary_operators_features /= Void
+	non_void_special_features: special_features /= Void
+	non_void_implementation_features: implementation_features /= Void
+	non_void_invariants: invariants /= Void
+
+end -- class EIFFEL_CLASS

@@ -150,6 +150,11 @@ feature -- Drawing operations
 		deferred
 		end
 
+	draw_straight_line (pt1, pt2: EV_COORDINATES) is
+			-- Draw an infinite line traversing `point1' and `point2'.
+		deferred
+		end
+
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require

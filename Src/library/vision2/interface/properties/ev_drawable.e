@@ -170,6 +170,12 @@ feature -- Drawing operations
 			implementation.draw_segment (pt1, pt2)
 		end
 
+	draw_straight_line (pt1, pt2: EV_COORDINATES) is
+			-- Draw an infinite line traversing `point1' and `point2'.
+		do
+			implementation.draw_straight_line (pt1, pt2)
+		end
+
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require
@@ -225,7 +231,7 @@ feature -- Drawing operations
 			orientation_large_enough: orientation >= 0;
 			orientation_small_enough: orientation < 360;
 		do
-			draw_arc (pt, r1, r2, 0, 360, orientation, -1)
+			draw_arc (pt, r1, r2, 0, 360, orientation, 0)
 		end
 
 	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
@@ -394,13 +400,6 @@ feature {NONE} -- To verify or implement: TEMP
  --		do
  --			drawing_dc.set_text_alignment (ta_baseline)
  --		end
-
-	-- Verified: Post-condition violation: Double_ref
---	draw_inf_line (pt1, pt2: EV_COORDINATES) is
---			-- Draw an infinite line traversing `point1' and `point2'.
---		do
---			implementation.draw_inf_line (pt1, pt2)
---		end
 
 feature -- Implementation
 

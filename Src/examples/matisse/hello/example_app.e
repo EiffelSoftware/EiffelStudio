@@ -53,7 +53,7 @@ feature -- Initialization
 				-- Another example of class of extent
 				-- This uses stream mechanism.
 
-			--print_properites_of_book("Design Patterns") 
+		--	print_properites_of_book("Design Patterns") 
 				-- This uses 'mt_load_all_properties'.
 				-- In order to test this routine, you need to edit the
 				-- classes AUTHOR, PERSON, PUBLISHE and BOOK.
@@ -71,7 +71,7 @@ feature -- Initialization
 			print_all_authors_of_book_transparent("Design Patterns")
 				-- Get successors using transparent loading mechanism.
 
-			--print_all_authors_of_book_explicit("Design Patterns")
+		--	print_all_authors_of_book_explicit("Design Patterns")
 				-- Get successors using explicit loading mechanism.
 				-- In order to test this routine, you need to edit the
 				-- classes AUTHOR, PERSON, PUBLISHE and BOOK.
@@ -83,7 +83,7 @@ feature -- Initialization
 				--	name: STRING
 				--	birth_year: INTEGER
 
-			--print_all_authors_of_book_using_stream("Design Patterns")
+		--	print_all_authors_of_book_using_stream("Design Patterns")
 				-- Get successors using stream.
 				-- In order to test this routine, you need to edit the
 				-- classes AUTHOR, PERSON, PUBLISHE and BOOK.
@@ -95,13 +95,13 @@ feature -- Initialization
 				--	name: STRING
 				--	birth_year: INTEGER
 
---			remove_price_of_book("Wireless Information Networks")
+			remove_price_of_book("Wireless Information Networks")
 				-- Remove an attribute value
 			
---			delete_book("Distributed Algorithms")
+			delete_book("Distributed Algorithms")
 				-- Delete an object
 			
-			--print_publisher_and_authors_of_book_explicit("Design Patterns")
+		--	print_publisher_and_authors_of_book_explicit("Design Patterns")
 				-- In order to test this routine, you need to edit the
 				-- classes AUTHOR, PERSON, PUBLISHE and BOOK.
 				-- By default, attributes of these classes is not exported to 
@@ -333,32 +333,32 @@ feature -- Programs in the document
 			a_stream.close
 		end
 		
---	print_properites_of_book(book_title: STRING) is
---		-- Example of mt_load_all_values
---		local
---			a_book: BOOK
---			an_ep: MT_ENTRYPOINT
---			books: ARRAY[BOOK]
---			i: INTEGER
---		do
---			print("%N%Nprint_properites_of_book%N")
---			!!an_ep.make_from_name("title", "BOOK")
---			books ?= an_ep.retrieve_objects(book_title)
---			from i := books.lower
---			until	i > books.upper
---			loop
---				a_book := books.item(i)
---				a_book.mt_load_all_properties
---				print("Title: ")
---				print(a_book.title) io.new_line
---				print("Price: ")
---				print(a_book.price) io.new_line
---				print(a_book.publisher)
---				print("Authors: %N")
---				print(a_book.written_by)
---				i := i + 1
---			end
---		end
+-- 	print_properites_of_book(book_title: STRING) is
+-- 		-- Example of mt_load_all_values
+-- 		local
+-- 			a_book: BOOK
+-- 			an_ep: MT_ENTRYPOINT
+-- 			books: ARRAY[MT_STORABLE]
+-- 			i: INTEGER
+-- 		do
+-- 			print("%N%Nprint_properites_of_book%N")
+-- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			books := an_ep.retrieve_objects(book_title)
+-- 			from i := books.lower
+-- 			until	i > books.upper
+-- 			loop
+-- 				a_book ?= books.item(i)
+-- 				a_book.mt_load_all_properties
+-- 				print("Title: ")
+-- 				print(a_book.title) io.new_line
+-- 				print("Price: ")
+-- 				print(a_book.price) io.new_line
+-- 				print(a_book.publisher)
+-- 				print("Authors: %N")
+-- 				print(a_book.written_by)
+-- 				i := i + 1
+-- 			end
+-- 		end
 	
 	print_properites_of_book_using_mt_get_functions(book_title: STRING) is
 		-- Example of mt_get_* functions
@@ -406,54 +406,55 @@ feature -- Programs in the document
 			end
 		end
 		
---	print_all_authors_of_book_explicit(book_title: STRING) is
---		-- This verson uses load_successors instead of stream
---		-- Section 3.6
---		local
---			authors: MT_ARRAY[AUTHOR]
---			a_book: BOOK
---			an_ep: MT_ENTRYPOINT
---			i: INTEGER
---		do
---			print("%N%Nprint_all_authors_of_book_3%N")
---			!!an_ep.make_from_name("title", "BOOK")
---			a_book ?= an_ep.retrieve_first(book_title)
---			authors ?= a_book.written_by
---			authors.load_successors
---			from
---				i := authors.lower
---			until
---				i > authors.upper
---			loop
---				print(authors.item(i))
---				i := i + 1
---			end
---		end
+-- 	print_all_authors_of_book_explicit(book_title: STRING) is
+-- 		-- This verson uses load_successors instead of stream
+-- 		-- Section 3.6
+-- 		local
+-- 			authors: MT_ARRAY [MT_STORABLE]
+-- 			author: AUTHOR
+-- 			a_book: BOOK
+-- 			an_ep: MT_ENTRYPOINT
+-- 			i: INTEGER
+-- 		do
+-- 			print("%N%Nprint_all_authors_of_book_3%N")
+-- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			a_book ?= an_ep.retrieve_first(book_title)
+-- 			authors := a_book.written_by
+-- 			authors.load_successors
+-- 			from
+-- 				i := authors.lower
+-- 			until
+-- 				i > authors.upper
+-- 			loop
+-- 				print(authors.item(i))
+-- 				i := i + 1
+-- 			end
+-- 		end
 	
---	print_all_authors_of_book_using_stream(book_title: STRING) is
---		-- Section 3.6
---		local
---			a_stream: MT_STREAM
---			an_author: AUTHOR
---			a_book: BOOK
---			an_ep: MT_ENTRYPOINT
---		do
---			print("%N%Nprint_all_authors_of_book: Using stream%N")
---			!!an_ep.make_from_name("title", "BOOK")
---			a_book ?= an_ep.retrieve_first(book_title)
---			if a_book /= Void then
---				a_stream := a_book.written_by.open_stream
---				from
---					a_stream.start
---				until
---					a_stream.exhausted
---				loop
---					print(a_stream.item)
---					a_stream.forth
---				end
---				a_stream.close
---			end
---		end
+-- 	print_all_authors_of_book_using_stream(book_title: STRING) is
+-- 		-- Section 3.6
+-- 		local
+-- 			a_stream: MT_STREAM
+-- 			an_author: AUTHOR
+-- 			a_book: BOOK
+-- 			an_ep: MT_ENTRYPOINT
+-- 		do
+-- 			print("%N%Nprint_all_authors_of_book: Using stream%N")
+-- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			a_book ?= an_ep.retrieve_first(book_title)
+-- 			if a_book /= Void then
+-- 				a_stream := a_book.written_by.open_stream
+-- 				from
+-- 					a_stream.start
+-- 				until
+-- 					a_stream.exhausted
+-- 				loop
+-- 					print(a_stream.item)
+-- 					a_stream.forth
+-- 				end
+-- 				a_stream.close
+-- 			end
+-- 		end
 
 	remove_price_of_book(book_title: STRING) is
 		-- Remove the value of attribute 'price'
@@ -489,38 +490,38 @@ feature -- Programs in the document
 
 feature
 
---	print_publisher_and_authors_of_book_explicit(book_title: STRING) is
---		-- Use 'mt_load_all_successors' and 'mt_load_all_values'
---		-- This is using explicit loading.
---		local
---			a_book: BOOK
---			a_publisher: PUBLISHER
---			authors: MT_ARRAY[AUTHOR]
---			an_ep: MT_ENTRYPOINT
---			i: INTEGER
---		do
---			print("%N%Nprint_publisher_and_authors_of_book using explicit loading%N")
---			!!an_ep.make_from_name("title", "BOOK")
---			a_book ?= an_ep.retrieve_first(book_title)
---			if a_book /= Void then
---				a_book.mt_load_all_successors
---				a_publisher := a_book.publisher
---				a_publisher.mt_load_all_values
---				print(a_publisher.name)
---				authors := a_book.written_by
---					-- authors is still empty
---				from
---					authors.load_successors
---					i := authors.lower
---				until
---					i > authors.upper
---				loop
---					authors.item(i).mt_load_all_values
---					print(authors.item(i).name)
---					i := i + 1
---				end
---			end
---		end
+-- 	print_publisher_and_authors_of_book_explicit(book_title: STRING) is
+-- 		-- Use 'mt_load_all_successors' and 'mt_load_all_values'
+-- 		-- This is using explicit loading.
+-- 		local
+-- 			a_book: BOOK
+-- 			a_publisher: PUBLISHER
+-- 			authors: MT_ARRAY[AUTHOR]
+-- 			an_ep: MT_ENTRYPOINT
+-- 			i: INTEGER
+-- 		do
+-- 			print("%N%Nprint_publisher_and_authors_of_book using explicit loading%N")
+-- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			a_book ?= an_ep.retrieve_first(book_title)
+-- 			if a_book /= Void then
+-- 				a_book.mt_load_all_successors
+-- 				a_publisher := a_book.publisher
+-- 				a_publisher.mt_load_all_values
+-- 				print(a_publisher.name)
+-- 				authors := a_book.written_by
+-- 					-- authors is still empty
+-- 				from
+-- 					authors.load_successors
+-- 					i := authors.lower
+-- 				until
+-- 					i > authors.upper
+-- 				loop
+-- 					authors.item(i).mt_load_all_values
+-- 					print(authors.item(i).name)
+-- 					i := i + 1
+-- 				end
+-- 			end
+-- 		end
 	
 	print_publisher_and_authors_of_book_transparent(book_title: STRING) is
 		-- Use get_* functions, that is transparent loading

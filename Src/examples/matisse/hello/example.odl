@@ -13,7 +13,7 @@
 interface BOOK : persistent {
 	attribute String title
 		mt_make_entry "make-entry";
-	attribute Float price;
+	attribute Float price = MtFloat(0.000000);
 	relationship MT_ARRAY<AUTHOR> written_by 
 		inverse AUTHOR::books;
 	relationship PUBLISHER publisher

@@ -485,7 +485,7 @@ feature -- Formatting
 				ctxt.continue_on_failure
 				creators.format (ctxt)
 				if not ctxt.last_was_printed then
-					ctxt.put_text_item (ti_Creation_keyword)
+					ctxt.put_text_item (ti_Create_keyword)
 					ctxt.new_line
 				end
 				ctxt.put_text_item (ti_After_creators)

@@ -122,7 +122,7 @@ feature -- Basic operations
 			id: INTEGER
 		do
 			id := ev_children.index_of (item_imp, 1)
-			Result := is_selected (id)
+			Result := is_selected (id - 1)
 		end
 
 	internal_get_text (item_imp: EV_LIST_ITEM_IMP): STRING is

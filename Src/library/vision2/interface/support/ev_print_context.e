@@ -6,7 +6,28 @@ indexing
 
 class
 	EV_PRINT_CONTEXT
-													
+	
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+		
+	default_create is
+			-- Create `Current' in default state.
+		do
+			selection_type := all_pages
+			copies := 1
+			output_to_file := False
+			printer_name := "Default"
+			portrait := True
+			horizontal_resolution := 575
+			vertical_resolution := 759
+			portrait := True
+		end
+								
 feature {NONE} -- Initialization
 
 	all_pages: INTEGER is 0

@@ -84,6 +84,12 @@ feature
 			is_call_back_set and is_regular_call_back
 		end
 
+	destroy is
+			-- Destroy Current.
+		do
+			implementation.destroy
+		end
+
 end
 
 

@@ -62,6 +62,12 @@ feature
 			Result := implementation.empty
 		end
 
+	destroy is 
+			-- Destroy Current.
+		do
+			implementation.destroy
+		end
+
 end
 
 

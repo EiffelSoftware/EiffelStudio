@@ -42,7 +42,11 @@ feature
 
 	empty: BOOLEAN is
 		deferred
-		end
+		end;
+
+	destroy is
+		deferred
+		end;
 
 end -- class TASK_I
 

@@ -1,5 +1,5 @@
 CC = cl   
-CFLAGS = -Ox -W3 -I$(ORACLE_HOME)\OCI80\INCLUDE -I. -c 
+CFLAGS = -Ox -W3 -I$(ORACLE_HOME)\OCI\INCLUDE -I. -c 
 OBJ = oracle.obj
 all:: clean oracle_store.lib
 

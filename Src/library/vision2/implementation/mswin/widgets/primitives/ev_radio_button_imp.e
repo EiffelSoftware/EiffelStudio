@@ -1,7 +1,7 @@
 indexing
 	description: "EiffelVision radio button.%
 			% Mswindows implementation"
-	author: ""
+	status: "See notice at end of class"
 	date: "$$"
 	revision: "$$"
 
@@ -33,8 +33,6 @@ inherit
 			remove_command,
 			set_width,
 			set_height,
---			destroy,
---			set_text,
 			on_bn_clicked,
 			on_left_button_down,
 			on_right_button_down,
@@ -48,7 +46,8 @@ inherit
 		end
 		
 creation
-	make, make_with_text
+	make,
+	make_with_text
 
 end -- class EV_RADIO_BUTTON_IMP
 

@@ -11,7 +11,7 @@ class
 	WIDGET_TEST_PROJECT_GENERATOR
 	
 inherit
-	EXECUTION_ENVIRONMENT
+	INSTALLATION_LOCATOR
 	
 	GENERATION_CONSTANTS
 
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			ace_text: STRING
 		do
-			create filename.make_from_string (current_working_directory)
+			create filename.make_from_string (installation_location)
 			filename.extend ("templates")
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				filename.extend ("Windows")
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			application_text: STRING
 		do
-			create filename.make_from_string (current_working_directory)
+			create filename.make_from_string (installation_location)
 			filename.extend ("templates")
 			filename.extend ("application_template.e")
 			create application_template_file.make_open_read (filename)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			common_text: STRING
 		do
-			create filename.make_from_string (current_working_directory)
+			create filename.make_from_string (installation_location)
 			filename.extend ("templates")
 			filename.extend ("generation_only")
 			filename.extend (Common_test_file_name)
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			test_text: STRING
 		do
-			create filename.make_from_string (current_working_directory)
+			create filename.make_from_string (installation_location)
 			filename.extend ("tests")
 			filename.extend (widget_type.as_lower)
 			filename.extend (test_name + ".e")
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 						current_image_number := (string_to_process.substring (1, index_of_comma - 1)).to_integer
 						string_to_process := string_to_process.substring (index_of_comma + 1, string_to_process.count)
 					end
-					create file_name.make_from_string (get ("ISE_VISION2_TOUR"))
+					create file_name.make_from_string (installation_location)
 					file_name.extend ("bitmaps")
 					file_name.extend ("png")
 					file_name.extend ("image" + current_image_number.out + ".png")

@@ -286,6 +286,8 @@ feature {NONE} -- Implementation
 						Missing_compiler)
 			Result.extend (["Missing Source File", "compiler", "Source file `{1}' is missing", Error],
 						Missing_source_file)
+			Result.extend (["Missing Compiler Path", "compiler", "Path to compiler setting is missing, installation is corrupted.", Error],
+						Missing_compiler_path)
 
 			-- Compilation directory is missing
 

@@ -260,6 +260,9 @@ feature -- Compiler Errors
 	Missing_source_file: INTEGER is 9002
 			-- Source file is missing
 
+	Missing_compiler_path: INTEGER is 9003
+			-- Compiler path setting is missing
+
 feature -- Compiler Warnings
 
 	File_exists: INTEGER is 10001

@@ -124,14 +124,26 @@ char *conf_file;
 					stop = valuable_line(cur_line); 
 					go_to_next_valuable_line(stop);
 				}
-				if (!end_of_file) 
-					get_remote_servers(fd, buf, &buf_idx, constant_size_of_data_buf, &buf_data_len, cur_raw_line, cur_line, &end_of_file);
-				else
-					get_remote_servers(-1, buf, &buf_idx, constant_size_of_data_buf, &buf_data_len, cur_raw_line, cur_line, &end_of_file);
-
+				if (!end_of_file && (int)strlen(cur_line) < 7) {
+					add_nl;
+					sprintf(crash_info, CURAPPERR37, cur_raw_line);
+					c_raise_concur_exception(exception_configure_syntax_error);
+				}
 				if (!end_of_file) {
-					stop = valuable_line(cur_line); 
-					go_to_next_valuable_line(stop);
+					memcpy(tmp_buf, cur_line, 7);
+					for(tmp_int=0; tmp_int < 7; tmp_buf[tmp_int]=tolower(tmp_buf[tmp_int]), tmp_int++); 
+					tmp_buf[7] = '\0';
+					if (strcmp(tmp_buf, "default")) {
+						if (!end_of_file) 
+							get_remote_servers(fd, buf, &buf_idx, constant_size_of_data_buf, &buf_data_len, cur_raw_line, cur_line, &end_of_file);
+						else
+							get_remote_servers(-1, buf, &buf_idx, constant_size_of_data_buf, &buf_data_len, cur_raw_line, cur_line, &end_of_file);
+	
+						if (!end_of_file) {
+							stop = valuable_line(cur_line); 
+							go_to_next_valuable_line(stop);
+						}
+					}
 				}
 				if (!end_of_file) 
 					get_default_values(fd, buf, &buf_idx, constant_size_of_data_buf, &buf_data_len, cur_raw_line, cur_line, &end_of_file);
@@ -641,10 +653,15 @@ char *end_of_file;
 	if (!_concur_host_count) {
 		_concur_host_level_count = 0;
 		_concur_host_count = 1;
-		/*c_get_host_name(); */
 		strcpy(_concur_hosts[0].host, _concur_hostname);
 		_concur_hosts[0].capability = 1;
 		strcpy(_concur_hosts[0].directory, c_get_current_directory());
+#if defined EIF_WIN32 || defined EIF_OS2
+		strcat(_concur_hosts[0].directory, "\\");
+#else
+		strcat(_concur_hosts[0].directory, "/");
+#endif
+		strcat(_concur_hosts[0].directory, _concur_executable);
 	}
 
 	return;

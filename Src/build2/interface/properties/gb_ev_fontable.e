@@ -74,7 +74,10 @@ feature {GB_XML_STORE} -- Output
 			if element_info /= Void then
 				font.preferred_families.extend (element_info.data)
 			end
-			for_all_objects (agent {EV_FONTABLE}.set_font (font))
+				-- Must only set the font if a font was really contained.
+			if full_information @ family_string /= Void then
+				for_all_objects (agent {EV_FONTABLE}.set_font (font))
+			end
 		end
 
 feature {GB_CODE_GENERATOR} -- Output

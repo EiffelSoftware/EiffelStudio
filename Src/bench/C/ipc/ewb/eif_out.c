@@ -367,7 +367,6 @@ EIF_REFERENCE c_tread (void)
 
 	str = tread (&size);
 	e_str = (EIF_REFERENCE) makestr (str, size);
-	free (str);
 	return e_str;
 }
 

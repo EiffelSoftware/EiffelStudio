@@ -168,8 +168,10 @@ char *object;
 		c = '\02';
 
 	/* Write the kind of store */
-	if (write(fides, &c, sizeof(char)) < 0)
+	if (write(fides, &c, sizeof(char)) < 0){
+		xfree(account);
 		eio();
+		}
 
 #if DEBUG & 3
 		printf ("\n %d", c);

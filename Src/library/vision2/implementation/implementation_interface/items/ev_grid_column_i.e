@@ -74,8 +74,6 @@ feature -- Access
 			i_positive: i > 0
 			i_less_than_count: i <= count
 			is_parented: parent /= Void
-		local
-			grid_row: SPECIAL [EV_GRID_ITEM]
 		do
 			Result := parent_grid_i.item (i, index)
 		ensure
@@ -117,7 +115,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			Result := internal_index
+			Result := parent_grid_i.grid_columns.index_of (Current, 1)
 		ensure
 			index_positive: Result > 0
 			index_less_than_column_count: Result <= parent.column_count
@@ -196,14 +194,6 @@ feature -- Element change
 
 feature {EV_GRID_I} -- Implementation
 
-	set_index (a_index: INTEGER) is
-			-- Set the `index' for `Current'
-		require
-			a_index_valid: a_index > 0
-		do
-			internal_index := a_index
-		end
-
 	remove_parent_grid_i is
 			-- Set `parent_grid_i' to Void
 		require
@@ -241,9 +231,6 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
 
 	physical_index: INTEGER
 		-- Physical index of column row data stored in `parent_grid_i'
-
-	internal_index: INTEGER
-		-- Index of `Current' in `parent_grid_i'
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in.

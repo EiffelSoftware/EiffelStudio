@@ -298,7 +298,8 @@ feature -- Type check, byte code and dead code removal
 				until
 					idx > cnt
 				loop
-					create int.make (open_map.item (idx))
+					create int.make_default
+					int.set_lower (open_map.item (idx))
 					new_list.put (int)
 					idx := idx + 1
 					new_list.forth
@@ -320,7 +321,8 @@ feature -- Type check, byte code and dead code removal
 				until
 					idx > cnt
 				loop
-					create int.make (closed_map.item (idx))
+					create int.make_default
+					int.set_lower (closed_map.item (idx))
 					new_list.put (int)
 					idx := idx + 1
 					new_list.forth

@@ -114,9 +114,10 @@ feature {NONE} -- Implementation
 
 			generate_header_files
 
-			l_code := Names_heap.item (alias_name_id).twin
+			l_code := Names_heap.item (alias_name_id)
 				-- If there was no alias clause then do nothing.
 			if l_code /= Void then
+				l_code := l_code.twin
 				l_code.right_adjust
 				l_code.left_adjust
 	

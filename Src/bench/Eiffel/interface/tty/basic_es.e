@@ -245,7 +245,7 @@ feature -- Output
 				%%T-aversions [-filter filtername] class feature |%N%
 				%%T-dversions [-filter filtername] class feature |%N%
 				%%T-implementers [-filter filtername] class feature |%N%
-				%%T-callers [-filter filtername] class feature |%N%
+				%%T-callers [-filter filtername] [-show_all] class feature |%N%
 				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
 		end;
 
@@ -329,7 +329,9 @@ feature -- Update
 			-- Analyze current option.
 		local
 			cn, fn: STRING;
-			filter_name: STRING
+			filter_name: STRING;
+			show_all: BOOLEAN;
+			ewb_senders: EWB_SENDERS
 		do
 			filter_name := "";
 			option := argument (current_option);	
@@ -432,11 +434,23 @@ feature -- Update
 								option_error := True
 							end
 						end;
+						if argument (current_option).is_equal ("-show_all") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								show_all := True
+							else
+								option_error := True
+							end
+						end;
 						if not option_error then
 							cn := argument (current_option);
 							current_option := current_option + 1;
 							fn := argument (current_option);
-							!EWB_SENDERS!command.make (cn, fn, filter_name)
+							!! ewb_senders.make (cn, fn, filter_name);
+							if show_all then
+								ewb_senders.set_all_callers
+							end;	
+							command := ewb_senders
 						end
 					end
 				else

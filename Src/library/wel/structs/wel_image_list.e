@@ -203,6 +203,16 @@ feature -- Basic operations
 			cwel_imagelist_replace_icon(item, index, icon_to_add.item)
 		end
 
+	get_icon (index, flags: INTEGER): WEL_ICON is
+		require
+			index_not_too_small: index >= 0
+			index_not_too_big: index < count
+			exists: exists
+		do
+			create Result.make_by_pointer (cwel_imagelist_get_icon (item, index, flags))
+		end
+		
+
 	remove_image (index: INTEGER) is
 			-- Remove the image at index `index' from the image list.
 			--
@@ -266,6 +276,13 @@ feature -- Status report
 
 
 feature {NONE} -- Externals
+
+	cwel_imagelist_get_icon (ptr: POINTER; index, flag: INTEGER): POINTER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, int): HICON"
+		alias
+			"ImageList_GetIcon"
+		end
 
 	cwel_imagelist_create (cx: INTEGER; cy: INTEGER; flag: INTEGER; c_initial: INTEGER; c_grow: INTEGER): POINTER is
 		external

@@ -361,7 +361,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 				object_address.append ("0x")
 				object_address.append (object)
 				is_melted := melted
-				routine_name := clone (r_name)
+				routine_name := r_name
 
 --				break_index := line_number
 --				display_object_address := "Unavailable"

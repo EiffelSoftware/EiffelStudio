@@ -64,7 +64,7 @@ feature -- Status report
 	selection_text: STRING is
 			-- Text in the selection edit
 		do
-			if exists then
+			if exists and then selection_edit /= Void and then selection_edit.exists then
 				Result := selection_edit.text
 			else
 				Result := the_selection_text
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			when apply_id then
 				apply_actions.execute (Current, Void)
 			when selection_edit_id then
-				the_selection_text := selection_edit.text
+				the_selection_text := selection_text
 			else
 			end
 		end

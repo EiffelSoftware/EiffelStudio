@@ -18,9 +18,7 @@ inherit
 	EV_ITEM_IMP
 		export {EV_MENU_ITEM_CONTAINER_IMP}
 			id,
-			set_id,
-			command,
-			arguments
+			set_id
 		end
 
 creation

@@ -43,6 +43,7 @@ XCOPY /Y %TEMP%\Vision2_precompile\ev_pixmap_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_radio_button_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_spin_button_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_text_flatshort.rtf .\flatshort
+XCOPY /Y %TEMP%\Vision2_precompile\ev_rich_text_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_text_field_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_toggle_button_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_tool_bar_flatshort.rtf .\flatshort

@@ -5512,6 +5512,7 @@ rt_private int get_creation_type (void)
 		}
 		break;
 	default:
+		type = 0;	/* To avoid C compiler warning */
 		eif_panic(MTC "creation type lost");
 		/* NOTREACHED */
 	}

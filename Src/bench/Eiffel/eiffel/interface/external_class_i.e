@@ -94,30 +94,39 @@ feature -- Status Report
 					if Result = Void then
 							-- Case where this is a class from `mscorlib' that is in fact
 							-- written as an Eiffel class, e.g. INTEGER, ....
-						if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
-							Result := System.integer_8_class
-						elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
-							Result := System.integer_16_class
-						elseif l_name.is_equal ("System.Int32") or l_name.is_equal ("System.UInt32") then
-							Result := System.integer_32_class
-						elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
-							Result := System.integer_64_class
-						elseif l_name.is_equal ("System.IntPtr") or l_name.is_equal ("System.UIntPtr") then
-							Result := System.pointer_class
-						elseif l_name.is_equal ("System.Double") then
-							Result := System.real_64_class
-						elseif l_name.is_equal ("System.Single") then
-							Result := System.real_32_class
-						elseif l_name.is_equal ("System.Char") then
-							Result := System.character_class
-						elseif l_name.is_equal ("System.Boolean") then
-							Result := System.boolean_class
+						check
+							has_basic_type: basic_type_mapping.has (l_name)
 						end
+						Result := basic_type_mapping.item (l_name)
 					end
 				end
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature {EXTERNAL_CLASS_C} -- Mapping
+
+	basic_type_mapping: HASH_TABLE [CLASS_I, STRING] is
+			-- Mapping between name of basic class in mscorlib and Eiffel CLASS_I.
+		once
+			create Result.make (20)
+			Result.put (System.boolean_class, "System.Boolean")
+			Result.put (System.character_class, "System.Char")
+			Result.put (System.integer_8_class, "System.SByte")
+			Result.put (System.integer_16_class, "System.Int16")
+			Result.put (System.integer_32_class, "System.Int32")
+			Result.put (System.integer_64_class, "System.Int64")
+			Result.put (System.natural_8_class, "System.Byte")
+			Result.put (System.natural_16_class, "System.UInt64")
+			Result.put (System.natural_32_class, "System.UInt32")
+			Result.put (System.natural_64_class, "System.UInt64")
+			Result.put (System.pointer_class, "System.IntPtr")
+			Result.put (System.pointer_class, "System.UIntPtr")
+			Result.put (System.real_32_class, "System.Single")
+			Result.put (System.real_64_class, "System.Double")
+		ensure
+			basic_type_mapping_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

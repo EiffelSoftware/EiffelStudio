@@ -297,12 +297,12 @@ feature {NONE} -- Implementation
 				name_figure_mover.point.set_origin (enclosing_figure.point)
 				name_figure_mover.extend (name_figure_moving_area)
 				name_figure_mover.start_actions.extend (
-					name_figure_moving_area~set_pointer_style (Default_pixmaps.Sizeall_cursor))
+					agent name_figure_moving_area.set_pointer_style (Default_pixmaps.Sizeall_cursor))
 				name_figure_mover.end_actions.extend (
-					name_figure_moving_area~set_pointer_style (Default_pixmaps.Standard_cursor))
-				name_figure_mover.end_actions.extend (~update_scrollable_area_size)
-				name_figure_mover.end_actions.extend (~update)
-				name_figure_mover.set_real_position_agent (~adjust_mover_coordinates)
+					agent name_figure_moving_area.set_pointer_style (Default_pixmaps.Standard_cursor))
+				name_figure_mover.end_actions.extend (agent update_scrollable_area_size)
+				name_figure_mover.end_actions.extend (agent update)
+				name_figure_mover.set_real_position_agent (agent adjust_mover_coordinates)
 				name_figure_mover.start_actions.extend (agent start_capture)
 				name_figure_mover.end_actions.extend (agent stop_capture)
 				extend (name_figure)

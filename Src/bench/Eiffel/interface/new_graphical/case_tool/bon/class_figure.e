@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 				create {CLASSI_FIGURE_STONE} pebble.make (Current)
 			end
 			set_target_name (clone (name))
-			drop_actions.extend (~on_class_drop)
+			drop_actions.extend (agent on_class_drop)
 			set_accept_cursor (Cursors.cur_Class)
 			set_deny_cursor (Cursors.cur_X_class)
 			build_figure
@@ -740,7 +740,7 @@ feature {NONE} -- Implementation
 						create dial.make_with_text_and_actions (
 							"An inheritance cycle was created.%N%
 								%Do you still want to add this link?",
-							<<world~add_inheritance_relation (a_stone.source, Current)>>)
+							<<agent world.add_inheritance_relation (a_stone.source, Current)>>)
 						dial.show_modal_to_window (world.context_editor.development_window.window)
 					end
 				elseif world.is_link_client then

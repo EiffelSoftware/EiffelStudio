@@ -54,6 +54,7 @@ feature -- Commands
 			l_dialog.show_modal_to_window (editor.parent_window)
 			if l_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				font := l_dialog.font
+				editor.refresh
 			end
 		end		
 		

@@ -204,6 +204,12 @@ feature -- Access
 			end;
 		end;
 
+	is_precompiled: BOOLEAN is
+			-- Is the System precompiled?
+		do	
+			Result := System.is_precompiled
+		end;
+
 feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, EXPANDED_VALUE, ATTR_REQUEST, APPLICATION_STATUS}
 
 	valid_dynamic_id (i: INTEGER): BOOLEAN is

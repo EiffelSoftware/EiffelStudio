@@ -14,8 +14,6 @@ inherit
 	COMMAND
 
 	ELMT_HOLE
--- 		rename
--- 			make as elmt_hole_make
 		redefine
 			make, associated_function,
 			associated_symbol, associated_label,
@@ -31,9 +29,8 @@ feature
 
 	make (a_parent: COMPOSITE; func: BEHAVIOR_EDITOR) is
 		do
---			elmt_hole_make (a_parent, func)
 			Precursor (a_parent, func)
-			!! instances_list_wnd.make (a_parent)
+			!! instances_list_wnd.make_with_hole (a_parent, Current)
 			add_button_press_action (3, Current, Void) 
 		end
 
@@ -69,6 +66,6 @@ feature {NONE}
 			a_context: CONTEXT
 		do
 			a_context := associated_function.edited_context
-			instances_list_wnd.popup_with_list (Current, a_context.default_commands_list)
+			instances_list_wnd.popup_with_list (a_context.default_commands_list)
 		end
 end

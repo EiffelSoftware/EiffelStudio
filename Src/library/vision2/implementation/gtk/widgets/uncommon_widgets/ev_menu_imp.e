@@ -82,9 +82,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Precursor (i)
 			if count = 0 then
-				C.gtk_menu_item_set_submenu (
-					c_object, Default_pointer
-				)
+				C.gtk_menu_item_remove_submenu (c_object)
 			end
 		end
 
@@ -115,6 +113,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/14 15:50:18  brendel
+--| Corrected removal of submenu.
+--|
 --| Revision 1.30  2000/04/13 18:56:15  brendel
 --| Changed so that submenu arrow is only shown when it has submenu items.
 --|

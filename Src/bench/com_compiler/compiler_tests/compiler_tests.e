@@ -36,8 +36,6 @@ feature -- Basic operations
 			-- load a project
 		local
 			l_extension: STRING
-			l_loaded: BOOLEAN
-			l_filename: STRING
 		do
 			if a_filename /= Void and not a_filename.is_empty then
 				l_extension := a_filename.substring (a_filename.count - 3, a_filename.count)
@@ -81,7 +79,13 @@ feature {NONE} -- Agents Routines
 			if args.count > 0 then
 				l_result := load_project (args.i_th (1))
 			else
-				--create l_menu.make
+				put_string ("%NPlease enter a filename (*.ace or *.epr): ")
+				io.read_line
+				if not io.last_string.is_empty then
+					l_result := load_project (io.last_string)
+				else
+					put_string ("%NNo project Loaded!")
+				end
 			end
 		end
 		
@@ -99,8 +103,8 @@ feature {NONE} -- Implementation
 	add_menu_items is
 			-- add menu items to menu
 		do
-			if not project_loaded then
-				main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("l", "Load Project", agent on_load_project_selected))	
+			if not Eiffel_project.initialized then
+				main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("load", "Load Project [*.ace|*.epr filename]", agent on_load_project_selected))	
 			end
 			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "Completion Info Test", agent on_completion_info_selected))
 			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Project Properties Test", agent on_project_properties_selected))

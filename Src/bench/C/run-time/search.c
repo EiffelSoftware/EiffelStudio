@@ -11,16 +11,15 @@
 */
 
 #include "config.h"
-#include "portable.h"
-#include "search.h"
-#include "tools.h"
-#include "except.h"	/* for xcalloc(),cmalloc(),xfree(),enomem() */
-
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
+#include "portable.h"
+#include "search.h"
+#include "tools.h"
+#include "except.h"	/* for xcalloc(),cmalloc(),xfree(),enomem() */
 
 rt_public struct s_table *s_create(uint32 size)
 {

@@ -12,6 +12,11 @@
 
 
 #include "config.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 #include "portable.h"
 #include "malloc.h"
 #include "garcol.h"
@@ -19,12 +24,6 @@
 #include "macros.h"
 #include "main.h"
 #include "memory.h"
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 
 rt_public void mem_free(char *object)

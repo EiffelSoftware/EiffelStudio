@@ -11,11 +11,11 @@
 */
 
 #include "config.h"
+#include "eiffel.h"			/* For standard macros */
 #include "equal.h"			/* For Eiffel boolean */
 #include "struct.h"			/* For skeleton structure */
 #include "traverse.h"		/* For traversing objects */
 #include "macros.h"			/* For macro LNGPAD */
-#include "eiffel.h"			/* For standard macros */
 #include "tools.h"			/* For `nprime' */
 #include "search.h"
 

@@ -11,21 +11,29 @@
 	recursively coying them.
 */
 
-#include "garcol.h"
-#include "malloc.h"
-#include "macros.h"
-#include "except.h"
-#include "store.h"
-#include "hashin.h"
-#include "hector.h"
-#include "traverse.h"
-#include "memory.h"
 
+#include "config.h"
 #ifdef I_STRING
 #include <string.h>				/* For bzero() */
 #else
 #include <strings.h>
 #endif
+
+#include "garcol.h"
+#include "malloc.h"
+#include "macros.h"
+#include "except.h"
+
+#if !defined CUSTOM || defined NEED_STORE_H
+#include "store.h"
+#endif
+#if !defined CUSTOM || defined NEED_HASH_H
+#include "hashin.h"
+#endif
+
+#include "hector.h"
+#include "traverse.h"
+#include "memory.h"
 
 /*
  * Declarations
@@ -128,10 +136,10 @@ rt_shared void traversal(char *object, int p_accounting)
 		flags |= EO_STORE;			/* Object marked as traversed */
 		obj_nb++; 					/* Count the number of objects traversed */
 	}
-
+#if !defined CUSTOM || defined NEED_STORE_H
 	if (p_accounting & TR_ACCOUNT)	/* Possible accounting */
 		account[flags & EO_TYPE] = (char) 1;	/* This type is present */
-
+#endif
 	zone->ov_flags = flags;			/* Mark the object */
 
 	/* Evaluation of the number of references of the object. It is really

@@ -10,9 +10,17 @@
 	Therein lie paths I would not have dared tredding alone.
 */
 
-#include "config.h"
-#include "portable.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
+
+#include "config.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+#include "portable.h"
 #include "urgent.h"
 #include "garcol.h"
 #include "except.h"
@@ -25,29 +33,30 @@
 #include "server.h"						/* ../ipc/app */
 #endif /* WORKBENCH */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "err_msg.h"
+
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #endif
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
+
+#if ! defined CUSTOM || defined NEED_UMAIN_H
 #include "umain.h"
+#endif
+
+#if !defined CUSTOM || defined NEED_ARGV_H
 #include "argv.h"
+#endif
+
 #include "malloc.h"
 #include "main.h"
 #include "project.h"					/* for einit() */
 
 #define null (char *) 0					/* Null pointer */
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
 rt_public int cc_for_speed = 0;			/* Fast memory allocation */
@@ -147,6 +156,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	ename = strrchr (module_name, '\\');
 	if (ename++ == (char *) 0)
 		ename = module_name;
+#elif defined(VXWORKS)
+	ename = "eiffelvx";
 #else
 	ename = rindex(argv[0], '/');		/* Only last name if '/' found */
 
@@ -156,7 +167,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 	ufill();							/* Get urgent memory chunks */
 
-#ifdef DEBUG
+#if defined (DEBUG) && ! defined (VXWORKS)
 	/* The following install signal handlers for signals USR1 and USR2. Both
 	 * raise an immediate scanning of memory and dumping of the free list usage
 	 * and other statistics. The difference is that USR1 also performrs a full
@@ -242,9 +253,12 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #endif
 
+#if !defined CUSTOM || defined NEED_UMAIN_H
 	umain(argc, argv, envp);			/* User's initializations */
+#endif
+#if !defined CUSTOM || defined NEED_ARGV_H
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
-
+#endif
 	once_init();
 }
 

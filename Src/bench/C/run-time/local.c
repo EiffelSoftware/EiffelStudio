@@ -13,8 +13,14 @@
 	executable.
 */
 
-#include "config.h"
 #include <stdio.h>
+
+#include "config.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 #include "malloc.h"
 #include "garcol.h"
 #include "except.h"
@@ -24,12 +30,6 @@
 #include "sig.h"
 #ifdef WORKBENCH
 #include "debug.h"
-#endif
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
 #endif
 
 #ifdef I_STDARG

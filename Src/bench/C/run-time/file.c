@@ -56,11 +56,6 @@
 #include <grp.h>
 #endif
 
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 #ifdef I_TIME
 #include <time.h>
 #endif
@@ -338,7 +333,7 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 	 * to a distant machine. Xavier
 	 */
 	current_pos = file_tell(fp);
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined VXWORKS
 	if (0 != fflush (fp))   	/* Without a flush the information */
 #else
 	if (0 != fsync (fd))   	/* Without a flush the information */
@@ -1025,7 +1020,7 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 		return (EIF_BOOLEAN) ((mode & S_ISGID) ? '\01' : '\0');
 #endif
 	case 5: /* Is file sticky */
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
 		return (EIF_BOOLEAN) ('\0');
 #else
 		return (EIF_BOOLEAN) ((mode & S_ISVTX) ? '\01' : '\0');
@@ -1054,6 +1049,10 @@ rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)
 	 * programs.
 	 */
 
+#ifdef VXWORKS
+	return ('\01');
+#else
+
 	switch (op) {
 	case 0: /* Does file exist? */
 		return (EIF_BOOLEAN) ((-1 != access(name, F_OK)) ? '\01' : '\0');
@@ -1066,6 +1065,7 @@ rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)
 	default:
 		panic(MTC "illegal access request");
 	}
+#endif
 }
 
 rt_public EIF_BOOLEAN file_exists(char *name)
@@ -1147,7 +1147,7 @@ rt_public void file_mkdir(char *path)
 		errno = 0;			/* Reset error condition */
 #ifdef EIF_OS2 
 		status = mkdir(path);		/* Create directory `path' */
-#elif defined EIF_WIN32
+#elif defined EIF_WIN32 || defined VXWORKS
 		status = mkdir(path);		/* Create directory `path' */ /* %%ss above line added */
 #else
 		status = mkdir(path, 0777);	/* Create directory `path' */
@@ -1332,7 +1332,7 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 		while (*what)
 			switch (*what++) {
 			case 't':
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined VXWORKS
 #else
 				if (flag) fmode |= S_ISVTX; else fmode &= ~S_ISVTX;
 #endif
@@ -1353,10 +1353,12 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 	default:
 		eraise("invalid permission target", EN_EXT);
 	}
-
+#ifndef VXWORKS
     file_chmod(name, fmode);
+#endif
 }
 
+#ifndef VXWORKS
 rt_public void file_chmod(char *path, int mode)
 {
 	/* Change permission mode on file `path' */
@@ -1375,6 +1377,7 @@ rt_public void file_chmod(char *path, int mode)
 		break;
 	}
 }
+#endif
 
 /*
  * File cursor management.

@@ -10,10 +10,11 @@
 		Routines for printing an Eiffel object.
 */
 
+#include <stdio.h>
 #include "config.h"
+#include "eiffel.h"
 #include "out.h"
 #include "plug.h"
-#include "eiffel.h"
 #include "struct.h"
 #include "macros.h"		/* For macro LNGPAD */
 #include "hashin.h"
@@ -21,7 +22,6 @@
 #include "sig.h"
 #include "hector.h"
 #include "bits.h"
-#include <stdio.h>
 #include "eif_globals.h"
 
 /*

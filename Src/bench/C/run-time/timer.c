@@ -10,8 +10,9 @@
 	Time-related routines
 */
 
-#include "timer.h"
 #include "config.h"
+#include "confmagic.h"
+#include "timer.h"
 #include "portable.h"
 
 #ifndef HAS_GETRUSAGE

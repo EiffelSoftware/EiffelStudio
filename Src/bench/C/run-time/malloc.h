@@ -46,8 +46,11 @@ extern "C" {
 #define C_T			0				/* Chunk mainly holds C blocks */
 #define EIFFEL_T	1				/* Chunk mainly holds Eiffel blocks */
 #define ALL_T		2				/* Any chunk, used by full_coalesc() */
+#ifdef VXWORKS
+#define CHUNK		4096			/* Number of bytes in standard chunk (in VxWorks case) */
+#else
 #define CHUNK		65536			/* Number of bytes in standard chunk */
-
+#endif
 /* Memory block types (for allocate_from_core)
  */
 #define MB_EO		0				/* Memory block for regular Eiffel object */
@@ -73,7 +76,11 @@ extern "C" {
  * Generation scavenging parameters
  */
 #define GS_LIMIT		100		/* Max size for allocation in scavenge zone */
-#define GS_ZONE_SZ		153600	/* Size of a scavenge zone (150K) */
+#ifdef VXWORKS
+#define GS_ZONE_SZ		150*1024	/* Size of a scavenge zone (150K) */
+#else
+#define GS_ZONE_SZ		2*PAGESIZE_VALUE	/* Size of a scavenge zone */
+#endif
 #define GS_FLOATMARK	(GS_ZONE_SZ * .40)	/* Leave that much free */
 #define GS_WATERMARK	(GS_ZONE_SZ - 1024)	/* Collect to be run after this */
 

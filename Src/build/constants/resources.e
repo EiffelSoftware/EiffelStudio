@@ -102,7 +102,7 @@ feature {NONE} -- Initialize font values
 			-- is in valid return VOID
 		do
 			if font /= Void then
-				if font.is_valid (widget) then
+				if font.is_font_valid then
 					Result := Font;	
 				else
 					io.error.putstring ("Warning: can not load font ");
@@ -111,7 +111,7 @@ feature {NONE} -- Initialize font values
 				end;
 			end;
 		ensure
-			valid_result: Result /= Void implies Result.is_valid (widget)
+			valid_result: Result /= Void implies Result.is_font_valid
 		end;
 
 	get_font (resource: RESOURCE_TABLE; 

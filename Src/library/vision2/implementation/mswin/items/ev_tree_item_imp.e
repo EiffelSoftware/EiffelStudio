@@ -27,7 +27,8 @@ inherit
 			set_text,
 			destroy,
 			interface,
-			pnd_press
+			pnd_press,
+			set_pixmap
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -126,7 +127,49 @@ feature -- {EV_TREE_IMP}
 			end
 		end
 
+	set_pixmap (p: EV_PIXMAP) is
+			-- Assign `p' to the displayed pixmap.
+		local
+			p_imp: EV_PIXMAP_IMP
+			w: WEL_TREE_VIEW_ITEM
+			loc_image_list: WEL_IMAGE_LIST
+			loc_image_index: INTEGER
+			loc_top_parent_imp: EV_TREE_IMP
+		do
+			create pixmap
+			pixmap.copy (p)
+				-- We copy `p' into pixmap.
+			p_imp := pixmap_imp
+			w ?= Current
+			loc_top_parent_imp := top_parent_imp
+			loc_image_list := loc_top_parent_imp.image_list
+				-- Assign values to local variables for speed.
 
+			if p_imp.icon /= Void then
+				-- If the pixmap is an icon.
+				loc_image_list.add_icon (p_imp.icon)
+				loc_image_index := loc_image_list.last_position
+					-- Add the icon to `top_parent_imp' image_list.	
+			elseif p_imp.mask_bitmap /= Void and p_imp.bitmap /= Void then
+				-- If the pixmap has a bitmap mask and a bitmap.
+				loc_image_list.add_masked_bitmap (p_imp.bitmap, p_imp.mask_bitmap)
+				loc_image_index := loc_image_list.last_position
+					-- Add a bitmap and a bitmap mask to `top_parent_imp' image_list.
+			else
+				check
+					-- If we reach here something is wrong with the pixmap.
+					False
+				end
+			end
+			set_image (loc_image_index, loc_image_index)
+			loc_top_parent_imp.set_tree_item (w)
+		end
+
+	image_index: INTEGER
+		-- The index into `image_list' of `top_parent_imp' for the standard displayed image.
+	
+	selected_image_index: INTEGER 
+		-- The index into `image_list' of `top_parent_imp' for the selected displayed image.
 
 feature -- Access
 
@@ -367,6 +410,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/24 00:18:01  rogers
+--| Implemented set_pixmap.
+--|
 --| Revision 1.38  2000/03/22 20:23:05  rogers
 --| Removed repeated inheritance from EV_PICK_AND_DROPABLE_IMP. Added pnd_press and set_pointer_style.
 --|

@@ -76,15 +76,6 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 #define eif_bit_set			eifsibit		/* Set ith bit to 1 */
 #define eif_bit_clear		eifribit		/* Reset ith bit to 0 */
 
-/* Maps an Eiffel type on a C type (for use in eif_field) */
-typedef long			EIF_INTEGER;
-typedef unsigned char	EIF_CHARACTER;
-typedef float			EIF_REAL;
-typedef double			EIF_DOUBLE;
-typedef char *			EIF_REFERENCE;
-typedef char *			EIF_POINTER;
-typedef unsigned char	EIF_BOOLEAN;
-
 /* Error report codes */
 #define EIF_NO_TYPE			(-1)			/* No type associated to a name */
 #define EIF_NO_BFIELD		((EIF_BIT) 0)	/* No bit field associated */

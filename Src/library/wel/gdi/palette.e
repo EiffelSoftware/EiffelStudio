@@ -31,7 +31,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_pointer (cwin_palette_index (i))
+			!! Result.make_by_color (cwin_palette_index (i))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -41,15 +41,15 @@ feature {NONE} -- Externals
 	cwin_create_palette (a_palette: POINTER): POINTER is
 			-- SDK CreatePalette
 		external
-			"C [macro <wel.h>] (LOGPALETTE *): EIF_POINTER"
+			"C [macro <windows.h>] (LOGPALETTE *): EIF_POINTER"
 		alias
 			"CreatePalette"
 		end
 
-	cwin_palette_index (i: INTEGER): POINTER is
+	cwin_palette_index (i: INTEGER): INTEGER is
 			-- SDK PALETTEINDEX
 		external
-			"C [macro <wel.h>] (WORD): EIF_POINTER"
+			"C [macro <windows.h>] (WORD): COLORREF"
 		alias
 			"PALETTEINDEX"
 		end

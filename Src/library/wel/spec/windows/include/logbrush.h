@@ -14,7 +14,7 @@
 #define cwel_logbrush_set_hatch(_ptr_, _value_) (((LOGBRUSH *) _ptr_)->lbHatch = (int) (_value_))
 
 #define cwel_logbrush_get_style(_ptr_) ((EIF_INTEGER) (((LOGBRUSH *) _ptr_)->lbStyle))
-#define cwel_logbrush_get_color(_ptr_) ((EIF_POINTER) (((LOGBRUSH *) _ptr_)->lbColor))
+#define cwel_logbrush_get_color(_ptr_) ((EIF_INTEGER) (((LOGBRUSH *) _ptr_)->lbColor))
 #define cwel_logbrush_get_hatch(_ptr_) ((EIF_INTEGER) (((LOGBRUSH *) _ptr_)->lbHatch))
 
 #endif /* __WEL_LOGBRUSH__ */

@@ -338,7 +338,7 @@ feature -- Status setting
 			color_not_void: color /= Void
 		do
 			cwin_send_message (item, Em_setbkgndcolor, 0,
-				color.to_integer)
+				color.item)
 		end
 
 	set_background_system_color is

@@ -21,7 +21,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			!! Result.make_by_pointer (
+			!! Result.make_by_color (
 				cwel_color_palette_get_i_th_color (item, i - 1))
 		ensure
 			result_not_void: Result /= Void
@@ -63,13 +63,13 @@ feature {NONE} -- Implementation
 		end
 
 	cwel_color_palette_get_i_th_color (ptr: POINTER;
-			i: INTEGER): POINTER is
+			i: INTEGER): INTEGER is
 		external
 			"C [macro <chooseco.h>]"
 		end
 
 	cwel_color_palette_set_i_th_color (ptr: POINTER; i: INTEGER;
-			value: POINTER) is
+			value: INTEGER) is
 		external
 			"C [macro <chooseco.h>]"
 		end

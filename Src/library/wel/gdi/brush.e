@@ -111,19 +111,18 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_create_solid_brush (a_color: POINTER): POINTER is
+	cwin_create_solid_brush (a_color: INTEGER): POINTER is
 			-- SDK CreateSolidBrush
 		external
-			"C [macro <wel.h>] (COLORREF): EIF_POINTER"
+			"C [macro <windows.h>] (COLORREF): EIF_POINTER"
 		alias
 			"CreateSolidBrush"
 		end
 
-	cwin_create_hatch_brush (hatch_style: INTEGER;
-			a_color: POINTER): POINTER is
+	cwin_create_hatch_brush (hatch_style: INTEGER; a_color: INTEGER): POINTER is
 			-- SDK CreateHatchBrush
 		external
-			"C [macro <wel.h>] (int, COLORREF): EIF_POINTER"
+			"C [macro <windows.h>] (int, COLORREF): EIF_POINTER"
 		alias
 			"CreateHatchBrush"
 		end
@@ -131,7 +130,7 @@ feature {NONE} -- Externals
 	cwin_create_brush_indirect (a_log_brush: POINTER): POINTER is
 			-- SDK CreateBrushIndirect
 		external
-			"C [macro <wel.h>] (LOGBRUSH *): EIF_POINTER"
+			"C [macro <windows.h>] (LOGBRUSH *): EIF_POINTER"
 		alias
 			"CreateBrushIndirect"
 		end
@@ -139,7 +138,7 @@ feature {NONE} -- Externals
 	cwin_create_pattern_brush (a_bitmap: POINTER): POINTER is
 			-- SDK CreatePatternBrush
 		external
-			"C [macro <wel.h>] (HBITMAP): EIF_POINTER"
+			"C [macro <windows.h>] (HBITMAP): EIF_POINTER"
 		alias
 			"CreatePatternBrush"
 		end

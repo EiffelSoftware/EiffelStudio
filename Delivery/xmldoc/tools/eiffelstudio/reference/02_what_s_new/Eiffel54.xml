@@ -41,7 +41,7 @@
 		<list ordered="false">
 			<item>Click 
 				<link>
-					<url>../../../eiffelbuild/reference/70_history/index.xml</url>
+					<url>../../../eiffelbuild/version_history/index.xml</url>
 					<label>here</label>
 				</link> for the EiffelBuild release notes.
 			</item>

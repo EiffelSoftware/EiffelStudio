@@ -728,6 +728,14 @@ feature -- Conveniences
 			-- Do nothing
 		end
 
+	has_return_value: BOOLEAN is
+			-- Does current return a value?
+		do
+			Result := is_constant or is_attribute or is_function
+		ensure
+			validity: Result implies (is_constant or is_attribute or is_function)
+		end
+
 	frozen is_c_external: BOOLEAN is
 			-- Is current feature a C external one?
 		local

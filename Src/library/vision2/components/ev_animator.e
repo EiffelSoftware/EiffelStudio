@@ -19,6 +19,8 @@ inherit
 	INTERACTIVE_LIST [EV_PIXMAP]
 		undefine
 			default_create
+		redefine
+			on_item_added
 		end
 
 create
@@ -70,11 +72,6 @@ feature {NONE} -- Implementation
 			if an_item.height > da.minimum_height then
 				da.set_minimum_height (an_item.height)
 			end
-		end
-
-	on_item_removed (an_item: EV_PIXMAP) is
-			-- Do nothing.
-		do
 		end
 
 	da: EV_DRAWING_AREA
@@ -138,6 +135,9 @@ end -- class EV_ANIMATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/06/15 22:35:52  oconnor
+--| updated for new INTERACTIVE_LIST
+--|
 --| Revision 1.2  2000/06/07 17:27:26  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

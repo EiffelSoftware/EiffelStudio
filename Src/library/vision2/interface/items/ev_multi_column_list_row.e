@@ -25,6 +25,9 @@ inherit
 	INTERACTIVE_LIST [STRING]
 		rename
 			default_create as interactive_list_make
+		redefine
+			on_item_added,
+			on_item_removed
 		end
 
 	EV_PIXMAPABLE
@@ -128,6 +131,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/06/15 22:37:01  oconnor
+--| updated for new INTERACTIVE_LIST
+--|
 --| Revision 1.36  2000/06/07 17:28:05  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

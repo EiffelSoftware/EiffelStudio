@@ -10,7 +10,8 @@ class
 inherit
 	ARRAYED_LIST [G]
 		rename
-			make as arrayed_list_make
+			make as arrayed_list_make,
+			resize as arrayed_list_resize
 		export
 			{NONE}
 				arrayed_list_make
@@ -29,6 +30,28 @@ feature {NONE} -- Initialization
 			-- Create EV_GRID arrayed list and initialize to hold zero values
 		do
 			arrayed_list_make (0)		
+		end
+
+feature {EV_GRID_I} -- Implementation
+
+	resize (new_capacity: INTEGER) is
+			-- Resize list so that it can contain
+			-- at least `n' items. Lose items if `new_capacity' is less than `capacity'
+		require -- from ARRAYED_LIST
+			new_capacity_not_negative: new_capacity >= 0
+		local
+			temp_array: ARRAY [G]
+		do
+			if new_capacity > count then
+				conservative_resize (lower, upper + new_capacity - capacity)
+				set_count (capacity)				
+			else
+					-- Shrink existing array only losing items with index greater than `new_capacity'
+				temp_array := subarray (lower, upper + new_capacity - capacity)
+				make_from_array (temp_array)
+			end
+		ensure
+			capacity_set: capacity = new_capacity
 		end
 
 feature {NONE} -- Implementation

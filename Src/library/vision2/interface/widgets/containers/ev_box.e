@@ -59,14 +59,16 @@ feature -- Status report
 
 feature -- Status report
 
-	is_child_expanded (child: EV_WIDGET): BOOLEAN is
-			-- Is `child' expanded to occupy avalible spare space.
+	is_item_expanded (an_item: EV_WIDGET): BOOLEAN is
+			-- Is `an_item' expanded to occupy avalible spare space.
+			--| FIXME rename implmenetation.is_child_expanded to
+			--| implmenetation.is_item_expanded
 		require
-			has_child: has (child)
+			has_an_item: has (an_item)
 		do
-			Result := implementation.is_child_expanded (child)
+			Result := implementation.is_child_expanded (an_item)
 		ensure
-			bridge_ok: Result = implementation.is_child_expanded (child)
+			bridge_ok: Result = implementation.is_child_expanded (an_item)
 		end
 
 feature -- Status setting
@@ -107,24 +109,28 @@ feature -- Status setting
 			padding_assigned: padding = value
 		end
 
-	enable_child_expand (child: EV_WIDGET) is
-			-- Expand `child' to occupy avalible spare space.
+	enable_item_expand (an_item: EV_WIDGET) is
+			-- Expand `an_item' to occupy avalible spare space.
+			--| FIXME reimplement _I to use this interface not
+			--| set_child_expandable
 		require
-			has_child: has (child)
+			has_an_item: has (an_item)
 		do
-			implementation.set_child_expandable (child, True)
+			implementation.set_child_expandable (an_item, True)
 		ensure
-			child_expanded: is_child_expanded (child)
+			an_item_expanded: is_item_expanded (an_item)
 		end
 
-	disable_child_expand (child: EV_WIDGET) is
-			-- Do not expand `child' to occupy avalible spare space.
+	disable_item_expand (an_item: EV_WIDGET) is
+			-- Do not expand `an_item' to occupy avalible spare space.
+			--| FIXME reimplement _I to use this interface not
+			--| set_child_expandable
 		require
-			has_child: has (child)
+			has_an_item: has (an_item)
 		do
-			implementation.set_child_expandable (child, False)
+			implementation.set_child_expandable (an_item, False)
 		ensure
-			not_child_expanded: not is_child_expanded (child)
+			not_an_item_expanded: not is_item_expanded (an_item)
 		end
 
 feature -- Implementation
@@ -155,6 +161,29 @@ feature {EV_ANY} -- Contract support
 				extend (w)
 			end
 		end
+
+feature -- Obsolete
+
+	is_child_expanded (child: EV_WIDGET): BOOLEAN is
+		obsolete
+			"use is_item_expanded"
+		do
+			Result := is_item_expanded (child)
+		end
+
+	enable_child_expand (child: EV_WIDGET) is
+		obsolete
+			"use enable_item_expand"
+		do
+			enable_item_expand (child)
+		end
+
+	disable_child_expand (child: EV_WIDGET) is
+		obsolete
+			"use disable_item_expand"
+		do
+			disable_item_expand (child)
+		end
 			
 end -- class EV_BOX
 
@@ -179,6 +208,9 @@ end -- class EV_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/09 01:28:31  oconnor
+--| Renamed *_child_expand* to *_item_expand*
+--|
 --| Revision 1.21  2000/03/01 03:25:32  oconnor
 --| added make_for_test
 --|

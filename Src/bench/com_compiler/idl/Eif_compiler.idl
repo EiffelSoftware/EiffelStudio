@@ -206,10 +206,10 @@ interface IEiffelFeatureDescriptor: IUnknown
   [helpstring ("Feature name.")]
   HRESULT name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Name of the class where the feature is written in.")]
+  [helpstring ("Name of class where feature is written in.")]
   HRESULT written_class ([out, retval] BSTR * return_value);
   
-  [helpstring ("Name of the class where the feature was evaluated in.")]
+  [helpstring ("Name of class where feature was evaluated in.")]
   HRESULT evaluated_class ([out, retval] BSTR * return_value);
 
   [helpstring ("Feature description.")]

@@ -183,7 +183,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	
 	main_box: EV_VERTICAL_BOX
 
-feature -- Access
+feature {MULTIPLE_SPLIT_AREA}-- Access
 
 	command_tool_bar: EV_TOOL_BAR
 		-- A toolbar with specific commands related to `tool',
@@ -204,21 +204,23 @@ feature -- Access
 			minimized := False
 		end
 		
+	enable_minimized is
+			-- Assign `True' to `m-nimized'.
+		do
+			minimized := True
+		end
+		
 	disable_maximized is
 			-- Assign `False' to `maximized'.
 		do
 			maximized := False
 		end
-		
---	reset_minimize_button is
---			-- Restore original pixmap to `minimize_button'.
---		do
---		end
---		
---	reset_maximize_button is
---			-- Restore original pixmap to `maximize_button'.
---		do
---		end
+	
+	enable_maximized is
+			-- Assign `True' to `maximized'.
+		do
+			maximized := True
+		end
 		
 	disable_minimize_button is
 			--
@@ -338,21 +340,11 @@ feature {NONE} -- Implementation
 	minimize is
 			-- Minimize `Current' if not minimized, restore otherwise.
 		do
-			parent_window (parent_area).lock_update
-			minimized := not minimized
-			if minimized then
-				set_restore_height (height)
-				parent_area.minimize_tool (Current)
-				minimize_button.set_pixmap (parent_area.restore_pixmap)
-				minimize_button.set_tooltip ("Restore")
-				label.disable_dockable
+			if not minimized then
+				parent_area.minimize_item (tool)
 			else
-				parent_area.restore_tool (Current)
-				minimize_button.set_pixmap (parent_area.minimize_pixmap)
-				minimize_button.set_tooltip ("Minimize")
-				label.enable_dockable
+				parent_area.restore_item (tool)
 			end
-			parent_window (parent_area).unlock_update
 		end
 		
 	close is
@@ -366,19 +358,11 @@ feature {NONE} -- Implementation
 	maximize is
 			-- Maximize `Current' if not maxamized, restore otherwise.
 		do
-			parent_window (parent_area).lock_update
-			maximized := not maximized
 			if maximized then
-				parent_area.maximize_tool (Current)
-				maximize_button.set_pixmap (parent_area.restore_pixmap)
-				maximize_button.set_tooltip ("Restore")
-				label.disable_dockable
+				parent_area.restore_item (tool)
 			else
-				parent_area.restore_maximized_tool (Current)
-				maximize_button.set_pixmap (parent_area.maximize_pixmap)
-				label.enable_dockable
+				parent_area.maximize_item (tool)
 			end
-			parent_window (parent_area).unlock_update
 		end
 		
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
@@ -402,7 +386,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		end
 		
 
-feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
+feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
 
 	maximize_button, minimize_button, close_button: EV_TOOL_BAR_BUTTON
 		-- Buttons representing minimize and maximize commands.

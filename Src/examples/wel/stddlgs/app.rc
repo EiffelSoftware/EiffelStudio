@@ -1,0 +1,17 @@
+#include "app_ids.h"
+
+ID_ICO_APPLICATION ICON "app.ico"
+
+ID_MAIN_MENU MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "Choose &file...", CMD_CHOOSE_FILE
+		MENUITEM "Choose f&ont...", CMD_CHOOSE_FONT
+		MENUITEM "Choose &color...", CMD_CHOOSE_COLOR
+		MENUITEM SEPARATOR
+		MENUITEM "&Print...", CMD_PRINT_DIALOG
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_EXIT
+	}
+}

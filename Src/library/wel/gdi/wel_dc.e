@@ -1105,6 +1105,22 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, cursor.item)
 		end
 
+	draw_edge (a_rect: WEL_RECT; edge_type: INTEGER; edge_border: INTEGER) is
+			-- Draw one or more edges depending on `edge_type' using the borders
+			-- type `edge_border' in the bounding rectangle `a_rect'.
+			--
+			-- `edge_type' is a combination of the flags BDR_xxxx and EDGE_xxxx
+			-- as found in WEL_DRAWING_CONSTANTS.
+			--
+			-- `edge_type' is a combination of the flags BF_xxxx and EDGE_xxxx
+			-- as found in WEL_DRAWING_CONSTANTS.
+		require
+			exists: exists
+			valid_rect: a_rect /= Void and then a_rect.exists
+		do
+			cwin_draw_edge (item, a_rect.item, edge_type, edge_border)
+		end
+
 	set_pixel (x, y: INTEGER; color: WEL_COLOR_REF) is
 			-- Set the pixel at `x', `y' position.
 			-- with the `color' color.
@@ -1674,6 +1690,14 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (HDC, int, int, HICON, int, int, UINT, HBRUSH, UINT)"
 		alias
 			"DrawIconEx"
+		end
+
+	cwin_draw_edge (hdc: POINTER; lprect: POINTER; edge_type: INTEGER; edge_border: INTEGER) is
+			-- SDK DrawEdge
+		external
+			"C [macro <windows.h>] (HDC, LPRECT, UINT, UINT)"
+		alias
+			"DrawEdge"
 		end
 
 	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: INTEGER) is

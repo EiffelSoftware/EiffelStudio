@@ -97,6 +97,34 @@ feature
 			buffer.putstring (")) ")
 		end
 
+	generate_function_cast_type (buffer: GENERATION_BUFFER; call_type: STRING; arg_types: ARRAY [STRING]) is
+			-- Generate C function cast in `buffer'.
+		require
+			good_arguments: buffer /= Void and arg_types /= Void
+			good_array: arg_types.lower = 1
+		local
+			i, nb: INTEGER
+		do
+			buffer.putstring ("FUNCTION_CAST_TYPE(")
+			buffer.putstring (c_string)
+			buffer.putchar (',')
+			buffer.putstring (call_type)
+			buffer.putstring (", (")
+			from
+				i := 1
+				nb := arg_types.count
+			until
+				i > nb
+			loop
+				if i /= 1 then
+					buffer.putstring (", ")
+				end
+				buffer.putstring (arg_types @ i)
+				i := i + 1
+			end
+			buffer.putstring (")) ")
+		end
+
 	generate_external_function_cast (buffer: GENERATION_BUFFER; extension: EXTERNAL_EXT_I) is
 			-- Generate C function cast in `buffer'.
 		require

@@ -7,7 +7,10 @@ indexing
 class
 	SIGNATURE_AS
 
-feature {EXTERNAL_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (args: EIFFEL_LIST [EXTERNAL_TYPE_AS]; ret: EXTERNAL_TYPE_AS) is
 			-- Create SIGNATURE_AS node

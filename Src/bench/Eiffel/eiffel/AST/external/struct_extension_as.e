@@ -13,11 +13,12 @@ inherit
 		end
 
 create
-	make
+	make,
+	initialize
 
 feature  -- Initialization
 
-	make (is_cpp_struct: BOOLEAN) is
+	make (is_cpp_struct: like is_cpp) is
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_struct'.
 		do
@@ -26,7 +27,7 @@ feature  -- Initialization
 			is_cpp_set: is_cpp = is_cpp_struct
 		end
 
-	initialize (a_name, a_field_name: ID_AS; type: EXTERNAL_TYPE_AS; use_list: USE_LIST_AS) is
+	initialize (is_cpp_struct: like is_cpp; a_name, a_field_name: ID_AS; type: EXTERNAL_TYPE_AS; use_list: USE_LIST_AS) is
 			-- Create STRUCT_EXTENSION_AS node.
 		require
 			use_list_not_void: use_list /= Void
@@ -38,6 +39,7 @@ feature  -- Initialization
 		local
 			id: INTEGER
 		do
+			is_cpp := is_cpp_struct
 			Names_heap.put (a_name)
 			id := Names_heap.found_item
 			if type /= Void then
@@ -53,6 +55,7 @@ feature  -- Initialization
 			field_name_id := Names_heap.found_item
 			header_files := use_list.array_representation
 		ensure
+			is_cpp_set: is_cpp = is_cpp_struct
 			field_name_id_set: field_name_id > 0
 			arguments_set: argument_types /= Void
 			good_arguments_count: argument_types.count = 1 or argument_types.count = 2

@@ -10,6 +10,9 @@ inherit
 
 	SHARED_IL_CONSTANTS
 
+create
+	initialize
+
 feature -- Initialization
 
 	initialize (a_language_type, a_type: INTEGER; a_sig: SIGNATURE_AS; a_class: ID_AS) is

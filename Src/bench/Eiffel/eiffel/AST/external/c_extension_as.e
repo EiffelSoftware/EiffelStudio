@@ -11,6 +11,10 @@ inherit
 			parse_special_part
 		end
 
+create
+	default_create,
+	initialize
+
 feature {EXTERNAL_FACTORY} -- Initialization
 
 	initialize (sig: SIGNATURE_AS; use_list: USE_LIST_AS) is

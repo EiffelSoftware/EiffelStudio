@@ -12,8 +12,10 @@ deferred class
 inherit
 	EV_SIZEABLE_IMP
 		redefine
+			internal_set_minimum_width,
+			internal_set_minimum_height,
+			internal_set_minimum_size,
 			internal_resize,
-			notify_change,
 			minimum_width,
 			minimum_height
 		end
@@ -54,20 +56,141 @@ feature -- Access
 
 feature -- Basic operations
 
-	internal_resize (a_x, a_y, a_width, a_height: INTEGER) is
-			-- A function sometimes used (notebook) that update
-			-- and resize the current widget.
+	internal_set_minimum_width (value: INTEGER) is
+			-- Make `value' the new `minimum_width'.
+			-- Should check if the user didn't set the minimum width
+			-- before to set the new value.
+		local
+			changed: BOOLEAN
 		do
-			inspect internal_changes
-			when 1 then
-				compute_minimum_width
-			when 2 then
-				compute_minimum_height
-			when 3 then
-				compute_minimum_size
-			else
+			if not bit_set (internal_changes, 4) then
+				changed := internal_minimum_width /= value
+				internal_minimum_width := value
+				if not bit_set (internal_changes, 1) then
+					-- If this bit is set, it means the widget
+					-- doesn't know its minimum size, then nothing need to
+					-- be done because the parent must be already awared of it.f managed then 
+					if changed and parent_imp /= Void then
+						parent_imp.notify_change (1)
+					elseif displayed then 
+						move_and_resize (x, y, width, height, True)
+					end
+				else
+					move_and_resize (x, y, width.max (value), height, True)
+				end
+			elseif displayed then
+				move_and_resize (x, y, width, height, True)
 			end
-			move_and_resize (a_x, a_y, a_width, a_height, True)
+		end
+
+	internal_set_minimum_height (value: INTEGER) is
+			-- Make `value' the new `minimum_height'.
+			-- Should check if the user didn't set the minimum width
+			-- before to set the new value.
+		local
+			changed: BOOLEAN
+		do
+			if not bit_set (internal_changes, 8) then
+				changed := internal_minimum_height /= value
+				internal_minimum_height := value
+				if not bit_set (internal_changes, 2) then
+					-- If this bit is set, it means the widget
+					-- doesn't know its minimum size, then nothing need to
+					-- be done because the parent must be already awared of it.
+					if managed then 
+						if changed and parent_imp /= Void then
+							parent_imp.notify_change (2)
+						elseif displayed then
+							move_and_resize (x, y, width, height, True)
+						end
+					else
+						move_and_resize (x, y, value, height.max (value), True)
+					end
+				end
+			elseif displayed then
+				move_and_resize (x, y, width, height, True)
+			end
+		end
+
+	internal_set_minimum_size (mw, mh: INTEGER) is
+			-- Make `mw' the new minimum_width and `mh' the new
+			-- minimum_height.
+			-- Should check if the user didn't set the minimum width
+			-- before to set the new value.
+		local
+			w_cd, h_cd: BOOLEAN
+			w_ok, h_ok: BOOLEAN
+			w_ns, h_ns: BOOLEAN
+		do
+			w_ok := not bit_set (internal_changes, 4)
+			h_ok := not bit_set (internal_changes, 8)
+
+			if w_ok and h_ok then
+				w_cd := internal_minimum_width /= mw
+				h_cd := internal_minimum_height /= mh
+				internal_minimum_width := mw
+				internal_minimum_height := mh
+				w_ns := not bit_set (internal_changes, 1)
+				h_ns := not bit_set (internal_changes, 2)
+				if w_ns and h_ns then
+					if managed then
+						if parent_imp /= Void then
+							if w_cd and h_cd then
+								parent_imp.notify_change (3)
+							elseif w_cd then
+								parent_imp.notify_change (1)
+							elseif h_cd then
+								parent_imp.notify_change (2)
+							else
+								move_and_resize (x, y, width, height, True)
+							end
+						elseif displayed then
+							move_and_resize (x, y, width, height, True)
+						end
+					else
+						move_and_resize (x, y, width.max (mw), height.max (mh), True)
+					end
+				end
+
+			elseif w_ok then
+				w_cd := internal_minimum_width /= mw
+				internal_minimum_width := mw
+				if not bit_set (internal_changes, 1) then 
+					-- If this bit is set, it means the widget
+					-- doesn't know its minimum size, then nothing need to
+					-- be done because the parent must be already awared of it.
+					if managed then
+						if w_cd and parent_imp /= Void then
+							parent_imp.notify_change (1)
+						elseif displayed then 
+							move_and_resize (x, y, width, height, True)
+						end
+					else
+						move_and_resize (x, y, width.max (mw), height, True)
+					end
+				end
+
+			elseif h_ok then
+				h_cd := internal_minimum_height /= mh
+				internal_minimum_height := mh
+				if not bit_set (internal_changes, 2) then 
+					-- If this bit is set, it means the widget
+					-- doesn't know its minimum size, then nothing need to
+					-- be done because the parent must be already awared of it.
+					if managed then
+						if h_cd and parent_imp /= Void then
+							parent_imp.notify_change (2)
+						elseif displayed then
+							move_and_resize (x, y, width, height, True)
+						end
+					else
+						move_and_resize (x, y, width, height.max (mh), True)
+					end
+				end
+
+			elseif displayed then
+				move_and_resize (x, y, width, height, True)
+			end
 		end
 
 	notify_change (type: INTEGER) is
@@ -109,6 +232,22 @@ feature -- Basic operations
 					end
 				end
 			end
+		end
+
+	internal_resize (a_x, a_y, a_width, a_height: INTEGER) is
+			-- A function sometimes used (notebook) that update
+			-- and resize the current widget.
+		do
+			inspect internal_changes
+			when 1 then
+				compute_minimum_width
+			when 2 then
+				compute_minimum_height
+			when 3 then
+				compute_minimum_size
+			else
+			end
+			move_and_resize (a_x, a_y, a_width, a_height, True)
 		end
 
 	compute_minimum_width, compute_minimum_height, compute_minimum_size is

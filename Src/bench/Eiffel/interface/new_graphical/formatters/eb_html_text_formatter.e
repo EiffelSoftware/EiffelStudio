@@ -32,6 +32,7 @@ feature -- format
 --			mp: MOUSE_PTR
 			cur: CURSOR
 			st: STRUCTURED_TEXT
+			wd: EV_WARNING_DIALOG
 		do
 			class_tool ?= tool
 			if class_tool /= Void then
@@ -58,11 +59,11 @@ feature -- format
 								if filed_stone /= Void then
 									error := true
 									if filed_stone.file_name /= Void then
---										warner (popup_parent).gotcha_call 	
---											(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+										create wd.make_default (tool.parent, Interface_names.t_Warning,	
+											Warning_messages.w_Cannot_read_file (filed_stone.file_name))
 									else
---										warner (popup_parent).gotcha_call 
---											(Warning_messages.w_No_associated_file)
+										create wd.make_default (tool.parent, Interface_names.t_Warning,
+											Warning_messages.w_No_associated_file)
 									end
 								end			
 							end
@@ -99,8 +100,8 @@ feature -- format
 											-- internally (resynchronization, ...)
 										class_name := classc_stone.e_class.name
 										error := true
---										warner (popup_parent).gotcha_call 
---											(Warning_messages.w_Class_modified (class_name))
+										create wd.make_default (tool_parent, Interface_names.t_Warning, 
+											Warning_messages.w_Class_modified (class_name))
 									end
 								elseif st = Void then
 									class_tool.update_clickable_format (classc_stone.e_class)
@@ -119,7 +120,7 @@ feature -- format
 						filtered := false
 					end
 				else
---					warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info)
+					create wd.make_default (tool_parent, Interface_names.t_Warning, Warning_messages.w_Cannot_retrieve_info)
 				end
 			end
 		rescue

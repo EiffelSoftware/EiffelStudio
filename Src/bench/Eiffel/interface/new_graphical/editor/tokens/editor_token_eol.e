@@ -25,20 +25,23 @@ feature -- Initialisation
 		do
 			image := ""
 			length := 1
-			width := 0
 		end
 
 feature -- Miscellaneous
 
-	display(d_x: INTEGER; d_y: INTEGER; a_dc: WEL_DC): INTEGER is
+	width: INTEGER is
+		do
+			Result := 0
+		end
+
+	display(d_y: INTEGER; a_dc: WEL_DC) is
 		do
 			if font /= Void then
 				a_dc.select_font(font)
 			end
 
 				-- Display the text.
-			a_dc.text_out (d_x, d_y, "¶")
-			Result := d_x + a_dc.string_width(image)
+			a_dc.text_out (position, d_y, "¶")
 
 			if font /= Void then
 				a_dc.unselect_font

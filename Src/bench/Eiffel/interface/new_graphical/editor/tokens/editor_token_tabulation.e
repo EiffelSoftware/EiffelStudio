@@ -35,43 +35,43 @@ feature -- Initialisation
 
 feature -- Miscellaneous
 
-	Initialised: BOOLEAN
-		-- debug purpose
-
-	display(d_x: INTEGER; d_y: INTEGER; dc: WEL_DC): INTEGER is
+	display(d_y: INTEGER; dc: WEL_DC) is
 		do
-			Initialised := True				-- debug purpose
+			-- Display nothing
+		end
 
-				-- Handle first tabulation.
-			Result := ((d_x // tabulation_width) + 1 ) * tabulation_width
-			width_first_tab := Result - d_x
+	width: INTEGER is
+		do
+				-- Width of first tabulation.
+			Result := ((position // tabulation_width) + 1 ) * tabulation_width - position
 
 				-- Handle next tabulations.
 			Result := Result + tabulation_width * (number_of_tabs - 1)
-
-				-- update width
-			width := Result - d_x
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
-		require else
-			Initialisation_done: Initialised = True
 		do
 			if n = 0 then
 				Result := 0
 			else
-				Result := width_first_tab + tabulation_width * (n - 1)
+					-- Width of first tabulation.
+				Result := (((position // tabulation_width) + 1 ) * tabulation_width ) - position
+
+					-- Handle next tabulations.
+				Result := Result + tabulation_width * (n - 1)
 			end
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
-		require else
-			Initialisation_done: Initialised = True
+		local
+			width_first_tab: INTEGER
 		do
+			width_first_tab := (((position // tabulation_width) + 1 ) * tabulation_width ) - position
+
 			if a_width < width_first_tab then
 				Result := 1
 			else
@@ -82,8 +82,6 @@ feature -- Miscellaneous
 feature {NONE} -- Implementation
 
 	number_of_tabs: INTEGER
-
-	width_first_tab: INTEGER
 
 	tabulation_width: INTEGER is
 		local

@@ -15,9 +15,9 @@ feature -- Access
 	length: INTEGER
 			-- Number of characters represented by the token.
 
-	width: INTEGER
-			-- Width in pixel of the entire token
-			-- Updated at each display.
+	position: INTEGER
+			-- position in pixels of the first character of
+			-- this token
 
 feature -- Linkable functions
 
@@ -39,13 +39,36 @@ feature -- Linkable functions
 			-- be Void if there are no next token.
 		do
 			previous := previous_token
+			update_position
+		end
+
+	update_position is
+			-- Update the value of `position' to
+			-- its correct value
+		do
+				-- Update current position
+			if previous /= Void then
+				position := previous.position + previous.width
+			else
+				position := 0
+			end
+
+				-- Update position of linked tokens
+			if next /= Void then
+				next.update_position
+			end
 		end
 
 feature -- Miscellaneous
 
-	display(d_x: INTEGER; d_y: INTEGER; dc: WEL_DC): INTEGER is
-			-- returns the value of d_x incremented by the size of the
-			-- displayed text.
+	width: INTEGER is
+			-- Width in pixel of the entire.
+		deferred
+		end
+	
+	display(d_y: INTEGER; dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y')
 		deferred
 		end
 
@@ -72,5 +95,6 @@ invariant
 	image_not_void: image /= Void
 	length_positive: length > 0
 	width_positive_or_null: width >= 0
+	previous = Void implies position = 0
 
 end -- class EDITOR_TOKEN

@@ -59,21 +59,21 @@ feature -- Access
 
 feature -- test features
 
-	current_line, item: like first_displayed_line
+	item: like first_displayed_line
 
 	after: BOOLEAN is
 		do
-			Result := (current_line = Void)
+			Result := (item = Void)
 		end
 
 	forth is
 		do
-			current_line := current_line.next
+			item := item.next
 		end
 
 	go_i_th (i: INTEGER) is
 		do
-			current_line := chapter.item (i)
+			item := chapter.item (i)
 		end
 
 feature -- Element Change

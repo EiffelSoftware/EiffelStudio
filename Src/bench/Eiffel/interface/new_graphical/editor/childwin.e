@@ -294,26 +294,23 @@ feature {NONE} -- Display functions
 					curr_line > last_line_to_draw + 2 or else
 					text_displayed.after
 				loop
-					display_line (0,curr_line,text_displayed.current_line, dc)
+					display_line (curr_line, text_displayed.item, dc)
 					curr_line := curr_line + 1
 					text_displayed.forth
 				end
 			end
 		end
 
-	display_line (d_x: INTEGER; a_line: INTEGER; line: EDITOR_LINE; dc: WEL_DC) is
+	display_line (a_line: INTEGER; line: EDITOR_LINE; dc: WEL_DC) is
 			-- Display `line' at the coordinates (`d_x',`d_y') on the
 			-- device context `dc'.
 		local
-			curr_x		: INTEGER
 			curr_y		: INTEGER
-			new_curr_x	: INTEGER
 			cursor_line : BOOLEAN -- Is the cursor present in the current line?
 			curr_token	: EDITOR_TOKEN
 			width_cursor: INTEGER
 			start_cursor: INTEGER
 		do
-			curr_x := d_x
 			curr_y := (a_line - first_line_displayed)*line_increment
 			cursor_line := (a_line = cursor.y_in_lines)
 
@@ -325,12 +322,12 @@ feature {NONE} -- Display functions
 				curr_token := line.item
 
 					-- Display the token.
-				new_curr_x := curr_token.display(curr_x, curr_y, dc)
+				curr_token.display(curr_y, dc)
 
 					-- Display the cursor (if needed).
 				if cursor_line and then cursor.token = curr_token then
 						-- Compute the start pixel of the cursor.
-					start_cursor := curr_x + curr_token.get_substring_width(cursor.pos_in_token - 1)
+					start_cursor := curr_token.position + curr_token.get_substring_width(cursor.pos_in_token - 1)
 						-- Compute the width of the pixel depending whether we are
 						-- in Insertion mode or not (small or plain cursor)
 					if insert_mode then
@@ -346,7 +343,6 @@ feature {NONE} -- Display functions
 				end
 
 					-- prepare next iteration
-				curr_x := new_curr_x
 				line.forth
 			end
 		end

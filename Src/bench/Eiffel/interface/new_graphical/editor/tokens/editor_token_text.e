@@ -14,7 +14,6 @@ inherit
 		export
 			{NONE} all
 		end
-
 create
 	make
 
@@ -32,6 +31,13 @@ feature -- Initialisation
 		end
 
 feature -- Miscellaneous
+
+	width: INTEGER is
+		do
+			dc.select_font(font)
+			Result := dc.string_width(image)
+			dc.unselect_font
+		end
 
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
@@ -84,7 +90,7 @@ feature -- Miscellaneous
 			Result := current_position + 1 -- We return a 1-based resul (first character = 1)
 		end
 
-	display(d_x: INTEGER; d_y: INTEGER; a_dc: WEL_DC): INTEGER is
+	display(d_y: INTEGER; a_dc: WEL_DC) is
 		local
 			old_text_color: WEL_COLOR_REF
 			old_background_color: WEL_COLOR_REF
@@ -103,8 +109,7 @@ feature -- Miscellaneous
 			end
 
 				-- Display the text.
-			a_dc.text_out (d_x, d_y, image)
-			Result := d_x + a_dc.string_width(image)
+			a_dc.text_out (position, d_y, image)
 
 				-- Restore drawing style here.
 			if text_color /= Void then
@@ -116,8 +121,6 @@ feature -- Miscellaneous
 			if font /= Void then
 				a_dc.unselect_font
 			end
-				-- update width
-			width := Result - d_x
 		end
 
 feature {NONE} -- Properties used to display the token

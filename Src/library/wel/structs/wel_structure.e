@@ -15,6 +15,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Allocate `item'
 		do
+		
 			item := c_calloc (1, structure_size)
 			if item = default_pointer then
 				-- Memory allocation problem
@@ -24,6 +25,9 @@ feature {NONE} -- Initialization
 		ensure
 			not_shared: not shared
 		end
+
+
+	
 
 feature -- Basic operations
 
@@ -49,6 +53,7 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Removal
+
 
 	destroy_item is
 			-- Free `item'

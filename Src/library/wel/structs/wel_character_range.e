@@ -75,6 +75,7 @@ feature -- Element change
 			maximum_set: maximum = a_maximum
 		end
 
+
 feature -- Measurement
 
 	structure_size: INTEGER is

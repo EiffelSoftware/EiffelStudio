@@ -200,7 +200,10 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (line_length (i))
+			!! Result.make (line_length (i) + 2)
+					-- We add 2 characters to the line_length because
+					-- our line length does not include newline characters,
+					-- Windows line lenghts do include %R%N.
 			Result.fill_blank
 			!! a_wel_string.make (Result)
 			a_wel_string.set_size_in_string (a_wel_string.capacity)

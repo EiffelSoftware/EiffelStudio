@@ -153,25 +153,29 @@ feature {NONE} -- Implementation
 			t: STRING
 			ln, ln2: STRING
 		do
-		
-			t:= rich_window.text
-			ln := rich_window.line (rich_window.current_line_number)
-			ln2 := rich_window.text.substring (rich_window.first_character_position_from_line_number (rich_window.current_line_number),
-				rich_window.last_character_position_from_line_number (rich_window.current_line_number))
-			print (t)
-			print ("tot txt size%N")
-			print (rich_window.text_length)
-			print ("%Ntot line:")
-			print (rich_window.line_count)
-			print ("%Ncur pos:")
-			print (rich_window.position.out)
-			print ("%Ncur line:")
-			print (rich_window.current_line_number)
-			print ("%Nfirst pos:")
-			print (rich_window.first_cursor_position_from_line_number (rich_window.current_line_number))
-			print ("%Nlast pos:")
-			print (rich_window.last_cursor_position_from_line_number (rich_window.current_line_number))
-			print ("%N")
+			debug		
+				t:= rich_window.text
+				ln := rich_window.line (rich_window.current_line_number)
+				ln2 := rich_window.text.substring (rich_window.first_character_position_from_line_number (rich_window.current_line_number),
+					rich_window.last_character_position_from_line_number (rich_window.current_line_number))
+				print (t)
+				print ("tot txt size%N")
+				print (rich_window.text_length)
+				print ("%Ntot line:")
+				print (rich_window.line_count)
+				print ("%Ncur pos:")
+				print (rich_window.position.out)
+				print ("%Ncur line:")
+				print (rich_window.current_line_number)
+				print ("%Nfirst pos:")
+				print (rich_window.first_cursor_position_from_line_number (rich_window.current_line_number))
+				print ("%Nlast pos:")
+				print (rich_window.last_cursor_position_from_line_number (rich_window.current_line_number))
+				print ("%N")
+			end
+
+			rich_window.select_region (3, 5)
+
 		end
 		
 	on_draw_box (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is

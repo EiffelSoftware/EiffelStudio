@@ -11,7 +11,7 @@ default
 
 --	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision2");
 --	precompiled ("E:/Eiffel45/library/vision2/extra");
-	assertions (all)
+	assertion (check)
 
 	console_application (yes)
 

@@ -36,7 +36,7 @@ class TWO_WAY_SORTED_SET [G -> COMPARABLE] inherit
 				min, max, index,
 				merge, after, before,
 				forth, finish, start,
-				item, empty, back, add,
+				item, empty, back,
 				remove, search, off, go_i_th
 		undefine
 			changeable_comparison_criterion
@@ -104,10 +104,30 @@ feature -- Element change
 
 	extend, put (v: G) is
 			-- Ensure that structure includes `v'.
+		local
+			found: BOOLEAN
 		do
 			search_after (v);
-			if after or else not item.is_equal (v) then
-				put_left (v);
+            if after or else not item.is_equal (v) then
+                put_left (v);
+                back
+            end;
+			if object_comparison then
+				if after or else not equal (item, v) then
+					put_left (v);
+					back
+				end
+			else
+				from
+				until
+					found or after or else not equal (item, v)
+				loop
+					found := item = v;
+					forth
+				end;
+				if not found then
+					put_left (v)
+				end;
 				back
 			end;
 		end;

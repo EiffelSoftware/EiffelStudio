@@ -43,7 +43,7 @@ inherit
 			height as display_height, width as display_width,
 			initialize as widget_initialize
 		undefine
-			set_background_color, set_foreground_color, background_color, 
+			set_background_color, set_foreground_color, background_color,
 			foreground_color
 		redefine
 			interface, on_parented, set_size
@@ -137,7 +137,12 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent, "EV_PIXMAP")
 			{EV_PIXMAP_IMP_DRAWABLE} Precursor
+
+				-- Precursor has set `is_initialized' to True
+				-- but we are still in the middle of our
+				-- initialization. So we set it to False.
 			is_initialized := False
+
 			widget_initialize
 		end
 
@@ -758,6 +763,10 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/13 00:26:48  pichery
+--| - Added comments for `is_initialized := False' in
+--|   `initialize'.
+--|
 --| Revision 1.2  2000/04/12 17:30:10  brendel
 --| Setting is_initialized to False to avoid contracts being checked
 --| while interface is still Void.

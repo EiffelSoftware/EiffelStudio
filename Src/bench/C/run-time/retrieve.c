@@ -84,7 +84,6 @@ rt_private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP		/* r_fides declared in garcol.c for vms */
 #else
 rt_public int r_fides;			/* File descriptor use for retrieve */ /* %%zmt */
-rt_public char r_fstoretype;	/* File storage type used for retrieve */ /* %%zmt */
 #endif
 
 #endif /* EIF_THREADS */
@@ -118,6 +117,7 @@ int retrieve_read_with_compression (void);
 int old_retrieve_read_with_compression (void);
 
 int (*retrieve_read_func)(void) = retrieve_read_with_compression;
+int (*char_read_func)() = char_read;
 
 /*
  * Convenience functions
@@ -125,9 +125,10 @@ int (*retrieve_read_func)(void) = retrieve_read_with_compression;
  
 /* Initialize retrieve function pointers and globals */
  
-rt_public void rt_init_retrieve(int (*retrieve_function) (void), int buf_size)
+rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(void), int buf_size)
 {
     retrieve_read_func = retrieve_function;
+	char_read_func = char_read_function;
 	if (buf_size)
 		buffer_size = buf_size;
 }
@@ -136,6 +137,7 @@ rt_public void rt_init_retrieve(int (*retrieve_function) (void), int buf_size)
  
 rt_public void rt_reset_retrieve(void) {
     retrieve_read_func = retrieve_read_with_compression;
+	char_read_func = char_read;
 }
  
 
@@ -143,7 +145,7 @@ rt_public void rt_reset_retrieve(void) {
  * Function definitions
  */
 
-rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type)
+rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_function)(void))
 {
 	/* Retrieve object store in file `filename' */
 
@@ -156,33 +158,21 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 
 	/* Open file */
 	r_fides = file_desc;
-	r_fstoretype = file_storage_type;
 
 	/* Read the kind of stored hierachy */
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		{
-		if ((read (r_fides, (char *)(&rt_type), (sizeof(char)))) < sizeof (char))
-			eio();
-		}
-	else
-		if ((recv (r_fides, (char *)(&rt_type), sizeof(char), 0)) < sizeof (char))
-			eio();
-#else
-	if ((read (r_fides, (char *)(&rt_type), (sizeof(char)))) < sizeof (char))
+	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char))
 		eio();
-#endif
 
 	/* set rt_kind depending on the type to be retrieved */
 
 	switch (rt_type) {
 		case BASIC_STORE_3_1:			/*old basic store */
-			rt_init_retrieve(old_retrieve_read, 1024);
+			rt_init_retrieve(old_retrieve_read, char_read_function, 1024);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case BASIC_STORE_3_2:			/* New basic store */
-			rt_init_retrieve(retrieve_read, 1024);
+			rt_init_retrieve(retrieve_read, char_read_function, 1024);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
@@ -191,13 +181,13 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 			rt_kind = BASIC_STORE;
 			break;
 		case GENERAL_STORE_3_1:			/* Old general store */
-			rt_init_retrieve(old_retrieve_read, 1024);
+			rt_init_retrieve(old_retrieve_read, char_read_function, 1024);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
 		case GENERAL_STORE_3_2:			/* New General store */
 		case GENERAL_STORE_3_3:			/* New General store 3.3 */
-			rt_init_retrieve(retrieve_read, 1024);
+			rt_init_retrieve(retrieve_read, char_read_function, 1024);
 		case GENERAL_STORE_4_0:			/* New General store */
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
@@ -273,6 +263,10 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 	EIF_END_GET_CONTEXT
 }
 
+rt_public char *eretrieve(EIF_INTEGER file_desc)
+{
+	return portable_retrieve(file_desc, char_read);
+}
 
 rt_public char *rt_make(void)
 {
@@ -1450,14 +1444,7 @@ rt_private int direct_read (register char *object, int size)
 	char *buf = object;
 
 	while (amount < size) {
-#ifdef EIF_WIN32
-		if (r_fstoretype == 'F')
-			i = read (r_fides, buf, size - amount);
-		else
-			i = recv (r_fides, buf, size - amount, 0);
-#else
-		i = read (r_fides, buf, size - amount);
-#endif
+		i = char_read_func (buf, size - amount);
 		if (i < 0)
 			eio();
 		amount += i;
@@ -1500,14 +1487,7 @@ rt_public int old_retrieve_read (void)
 	EIF_GET_CONTEXT
 	char * ptr = general_buffer;
 
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		end_of_buffer = read (r_fides, ptr, buffer_size);
-	else
-		end_of_buffer = recv (r_fides, ptr, buffer_size, 0);
-#else
-	end_of_buffer = read (r_fides, ptr, buffer_size);
-#endif
+	end_of_buffer = char_read_func (ptr, buffer_size);
 	if (end_of_buffer < 0)
 		eio();
 
@@ -1530,19 +1510,8 @@ rt_public int old_retrieve_read_with_compression (void)
 	  int part_read = 0;
 	  int total_read = 0;
 
-#ifdef EIF_WIN32
-	  if (r_fstoretype == 'F')
-			  {
-			  if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-					  eio();
-			  }
-	  else
-			  if ((recv (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE, 0)) < EIF_CMPS_HEAD_SIZE)
-					  eio();
-#else
-	  if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-				eio();
-#endif
+	  if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+			eio();
 	  pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
 	  eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
 
@@ -1552,14 +1521,7 @@ rt_public int old_retrieve_read_with_compression (void)
 	  read_size = dcmps_in_size;
 
 	  while (total_read < read_size) {
-#ifdef EIF_WIN32
-	  if (r_fstoretype == 'F')
-			  part_read = read (r_fides, ptr, read_size);
-	  else
-			  part_read = recv (r_fides, ptr, read_size, 0);
-#else
-			  part_read = read (r_fides, ptr, read_size);
-#endif
+			  part_read = char_read_func (ptr, read_size);
 			  if (part_read < 0)
 					  eio();
 			  total_read += part_read;
@@ -1588,29 +1550,11 @@ rt_public int retrieve_read (void)
 	int part_read = 0, total_read = 0;
 
 	end_of_buffer = 0;
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		{
-		if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
-			eio();
-		}
-	else
-		if ((recv (r_fides, (char *)(&read_size), sizeof (short), 0)) < sizeof (short))
-			eio();
-#else
-	if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
-				eio();
-#endif
+	if ((char_read_func (&read_size, sizeof (short))) < sizeof (short))
+		eio();
 
 	while (end_of_buffer < read_size) {
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		part_read = read (r_fides, ptr, read_size);
-	else
-		part_read = recv (r_fides, ptr, read_size, 0);
-#else
-		part_read = read (r_fides, ptr, read_size);
-#endif
+		part_read = char_read_func (ptr, read_size);
 		if (part_read < 0)
 			eio();
 		end_of_buffer += part_read;
@@ -1637,19 +1581,8 @@ rt_public int retrieve_read_with_compression (void)
 	
 	end_of_buffer = 0;
 	
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		{
-		if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-			eio();
-		}
-	else
-		if ((recv (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE, 0)) < EIF_CMPS_HEAD_SIZE)
-			eio();
-#else
-	if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-                eio();
-#endif
+	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+		eio();
 	pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
 	eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
 
@@ -1659,14 +1592,7 @@ rt_public int retrieve_read_with_compression (void)
 	read_size = dcmps_in_size;
 	
 	while (end_of_buffer < read_size) {
-#ifdef EIF_WIN32
-	if (r_fstoretype == 'F')
-		part_read = read (r_fides, ptr, read_size);
-	else
-		part_read = recv (r_fides, ptr, read_size, 0);
-#else
-		part_read = read (r_fides, ptr, read_size);
-#endif
+		part_read = char_read_func (ptr, read_size);
 		if (part_read < 0)
 			eio();
 		end_of_buffer += part_read;
@@ -2192,3 +2118,9 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 #endif
 }
 
+int char_read(pointer, size)
+char *pointer;
+int size;
+{
+	return read(r_fides, pointer, size);
+}

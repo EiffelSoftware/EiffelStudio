@@ -1351,6 +1351,8 @@ feature {WEL_WINDOW} -- Implementation
 				register_window (Current)
 				set_default_window_procedure
 			end
+		ensure
+			exists: exists
 		end
 
 	class_name: STRING is

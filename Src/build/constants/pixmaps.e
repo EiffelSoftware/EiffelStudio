@@ -327,6 +327,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("parent.symb")
 		end;
 
+	Parent_dot_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("par_dot.symb")
+		end;
+
 	Popup_filename_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("pop_fn.symb")

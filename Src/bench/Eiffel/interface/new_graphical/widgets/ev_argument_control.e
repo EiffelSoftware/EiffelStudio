@@ -368,21 +368,24 @@ feature {NONE} -- Storage
 		require
 			a_root_ast_not_void: a_root_ast /= Void
 		local
-			ast: ACE_SD
+			l_ast, l_saved_ace: ACE_SD
 			ace_file: PLAIN_TEXT_FILE
 			st: GENERATION_BUFFER
 		do
-			ast := a_root_ast.duplicate
-			create st.make (2048)
-			ast.save (st)
-			if Eiffel_ace.file_name = Void then
-				Eiffel_ace.set_file_name ("Ace.ace")
-			end
-			create ace_file.make (Eiffel_ace.file_name)
-			if not ace_file.exists or else ace_file.is_writable then
-				ace_file.open_write
-				st.put_in_file (ace_file)
-				ace_file.close
+			l_ast := a_root_ast.duplicate
+			l_saved_ace := retrieve_ace
+			if l_saved_ace = Void or else not l_saved_ace.same_as (l_ast) then
+				create st.make (2048)
+				l_ast.save (st)
+				if Eiffel_ace.file_name = Void then
+					Eiffel_ace.set_file_name ("Ace.ace")
+				end
+				create ace_file.make (Eiffel_ace.file_name)
+				if not ace_file.exists or else ace_file.is_writable then
+					ace_file.open_write
+					st.put_in_file (ace_file)
+					ace_file.close
+				end
 			end
 		end	
 

@@ -1,0 +1,139 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+
+<TITLE>DV_TABLEROW_FIELD Chart</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../processing/dv_tablerow_field_chart.html">DV_TABLEROW_FIELD</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../processing/index.html">dataview.processing</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Graphic objects representing a database table attribute."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_make_with_code">make_with_code</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../processing/dv_component_chart.html">DV_COMPONENT</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../processing/dv_messages_chart.html">DV_MESSAGES</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`attribute_code' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_attribute_code">attribute_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`can_be_activated' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_can_be_activated">can_be_activated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`can_update' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_can_update">can_update</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`creation_confirmation' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_creation_confirmation">creation_confirmation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">table_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`creation_done' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_creation_done">creation_done</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">table_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`deletion_confirmation' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_deletion_confirmation">deletion_confirmation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">table_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`deletion_done' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_deletion_done">deletion_done</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">table_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`empty_combo_item_label' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_empty_combo_item_label">empty_combo_item_label</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enter_field_value' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_enter_field_value">enter_field_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`graphical_title' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_graphical_title">graphical_title</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../user_interactions/dv_sensitive_string_chart.html">DV_SENSITIVE_STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`graphical_title_set' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_graphical_title_set">graphical_title_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`graphical_type' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_graphical_type">graphical_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../user_interactions/dv_sensitive_string_chart.html">DV_SENSITIVE_STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`graphical_type_set' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_graphical_type_set">graphical_type_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`graphical_value' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_graphical_value">graphical_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../user_interactions/dv_sensitive_string_chart.html">DV_SENSITIVE_STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`graphical_value_set' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_graphical_value_set">graphical_value_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_changed' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_has_changed">has_changed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_activated' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_activated">is_activated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_boolean' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_boolean">is_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_character' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_character">is_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_cleared' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_cleared">is_cleared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_date' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_date">is_date</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_datetime' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_datetime">is_datetime</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_double' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_double">is_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_integer' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_integer">is_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_real' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_real">is_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_string' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_is_string">is_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`retrieve_field_value' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_retrieve_field_value">retrieve_field_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">type</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`selection_window_title' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_selection_window_title">selection_window_title</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">table_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`table_description' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_table_description">table_description</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tablerows_selected' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_tablerows_selected">tablerows_selected</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_text">text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`type_not_recognized' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_type_not_recognized">type_not_recognized</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`undetermined_table_name' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_undetermined_table_name">undetermined_table_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`update_done' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_update_done">update_done</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">table_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`use_redirection' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_use_redirection">use_redirection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wrong_date_format' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_wrong_date_format">wrong_date_format</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wrong_datetime_format' was declared in DV_MESSAGES"><A CLASS="efeature" HREF="../processing/dv_messages.html#f_wrong_datetime_format">wrong_datetime_format</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_with_code' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_make_with_code">make_with_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_graphical_title' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_graphical_title">set_graphical_title</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">g_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../user_interactions/dv_sensitive_string_chart.html">DV_SENSITIVE_STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_graphical_type' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_graphical_type">set_graphical_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">g_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../user_interactions/dv_sensitive_string_chart.html">DV_SENSITIVE_STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_graphical_value' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_graphical_value">set_graphical_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">g_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../user_interactions/dv_sensitive_string_chart.html">DV_SENSITIVE_STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_is_date' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_is_date">set_is_date</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_redirector' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_redirector">set_redirector</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_redirector</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../processing/dv_value_redirector_chart.html">DV_VALUE_REDIRECTOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_title' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_title">set_title</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_type' is declared in `Current'"><A CLASS="efeature" HREF="../processing/dv_tablerow_field.html#f_set_type">set_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

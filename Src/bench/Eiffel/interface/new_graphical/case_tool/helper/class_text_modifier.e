@@ -1334,7 +1334,7 @@ feature {NONE} -- Implementation
 		do
 			if not context_editor.history.is_empty then
 				create l_text.make
-				l_text.add_multiline_string (warning_messages.w_class_modified_outside_diagram)
+				l_text.add_multiline_string (warning_messages.w_class_modified_outside_diagram, 0)
 				l_text.add_new_line
 				output_manager.process_text (l_text)
 				context_editor.reset_history

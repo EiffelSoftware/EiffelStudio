@@ -49,19 +49,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
---	count: INTEGER is
---			-- Number of direct children of the holder.
---		do
---			Result := ev_children.count
---		end
-
---	get_item (index: INTEGER): EV_ITEM is
---			-- Give the item of the list at the zero-base
---			-- `index'.
---		do
---			Result ?= (ev_children.i_th (index)).interface
---		end
-
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
 			-- selection, it gives the item which has the focus.

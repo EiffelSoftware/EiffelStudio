@@ -18,21 +18,6 @@ inherit
 --		-- EiffelVision. This is just for implementation
 --		-- reasons.
 
-feature -- Access
-
---	count: INTEGER is
---			-- Number of items
---		do
---			Result := ev_children.count
---		end
-
---	get_item (index: INTEGER): EV_TREE_ITEM is
---			-- Give the item of the tree (or tree item) at
---			-- `index'.
---		do
---			Result ?= (ev_children.i_th (index)).interface
---		end
-
 feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
 
 	tree_parent_imp: EV_TREE_IMP

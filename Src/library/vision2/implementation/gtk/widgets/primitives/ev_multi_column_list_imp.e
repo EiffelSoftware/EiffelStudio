@@ -212,19 +212,6 @@ feature -- Status setting
 			gtk_clist_unselect_all (widget)
 		end
 
---	count: INTEGER is
---			-- Number of direct children of the holder.
---		do
---			Result := ev_children.count
---		end
-
---	get_item (index: INTEGER): EV_ITEM is
---			-- Give the item of the list at the zero-base
---			-- `index'.
---		do
---			Result ?= (ev_children.i_th (index)).interface
---		end
-
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
@@ -258,17 +245,7 @@ feature -- Element change
 				-- increases speed if there are many elements
 				-- in `ev_children'
 		do
-			from
-				c := ev_children
-				c.start
-			until
-				c.after
-			loop
-				c.item.interface.remove_implementation
-				c.forth
-			end
-			c.wipe_out
-			
+			clear_ev_children	
 			gtk_clist_clear (widget)
 		end
 
@@ -326,7 +303,7 @@ feature -- Event : command association
 		do
 			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
 			i := 0
-			add_command (widget, "select_row", cmd, arg, c_integer_to_pointer (i))
+			add_command (widget, "select_row", cmd, arg, c_gtk_integer_to_pointer (i))
 		end
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -337,7 +314,7 @@ feature -- Event : command association
 		do
 			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
 			i := 0
-			add_command (widget, "unselect_row", cmd, arg, c_integer_to_pointer (i))
+			add_command (widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (i))
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

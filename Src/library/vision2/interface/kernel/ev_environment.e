@@ -54,28 +54,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_ENVIRONMENT_IMP} implementation.make (Current)
 		end
-		
-feature -- Obsolete
-
-	platform: INTEGER is
-			-- Current underlying platform.
-			-- Either `Ev_platform_gtk' or `Ev_platform_win32'.
-		obsolete
-			"This feature was not intended to be used, EiffelVision should be%
-			%platform independent. Please let us know why you need this.%N%
-			%mailto:vision2@eiffel.com"
-		do
-			Result := implementation.platform
-		ensure
-			bridge_ok: Result = implementation.platform
-			within_range: Result = Ev_platform_gtk or Result = Ev_platform_win32
-		end
-
-	Ev_platform_gtk: INTEGER is 0
-			-- Code for GTK platform.
-
-	Ev_platform_win32: INTEGER is 1
-			-- Code for win32 platform.
 
 end -- class EV_ENVIRONMENT
 

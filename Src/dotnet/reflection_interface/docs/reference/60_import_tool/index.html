@@ -1,0 +1,101 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Import Tool</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Import tool, shared assemblies, assemblies from the GAC, GAC, import">
+	</head>
+
+	<body>
+		<br>
+		<center>
+			<h1>The Import Tool</h1>
+		</center>
+		<br>
+
+		<p>
+			The import tool almost looks like the <a href = "../01_imported_assembly_viewer/index.html">imported assembly viewer</a> (the main screen of ISE Assembly Manager). But instead of listing the imported assemblies (in the Eiffel assembly cache), it lists the shared assemblies (the assemblies in the Global Assembly Cache). Therefore the import tool mainly aims at enabling you to import signed assemblies to the Eiffel assembly cache. This reference aims at showing you all possibilities provided by the import tool.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/import_tool.png" no border>
+			</center>
+		</p>
+		<br>
+
+		<h2>The menu</h2>
+
+			<h3>The `File' menu</h3>
+				<p>
+					<center>
+						<img src = "../../images/file_menu_in_import_tool.png" no border>
+					</center>
+				</p>
+				<ul>
+					<li><b>Open Assembly</b></li><br>
+						This menu item (as well as the open assembly toolbar menu: <img src = "../../images/open_assembly_toolbar_button.png" no border>) gives you the possibility to import signed assemblies, which are not in the Global Assembly Cache by opening the <a href = "../80_open_assembly_dialog/index.html">open assembly dialog</a>.
+						<p class = "seealso">
+							<b>See also</b>: <a href = "../../how_to_s/01_import_a_signed_assembly_to_the_EAC/index.html">How to import a signed assembly to the Eiffel assembly cache?</a>
+						</p>
+
+					<li><b>Exit</b></li><br>
+						The `File' menu provides you with another way to close ISE Assembly Manager by clicking on the `Exit' menu item.
+					<br>
+				</ul>
+
+			<h3>The `View' menu</h3>
+				<p>
+					<center>
+						<img src = "../../images/view_menu_in_import_tool.png" no border>
+					</center>
+				</p>
+				<p>
+					The first five menu items enable you to show new columns in the array. By default, only the assembly name is visible. But you may want to see also the assembly version, culture and public key or assembly dependencies. That is the aim of these five items. The first five toolbar buttons give you the same opportunity: <img src = "../../images/import_tool_view_toolbar.png" no border><br>
+					The last two items of the `View' menu are only a faster way to show all columns or come back to the initial layout.
+				</p>
+				<p class = "note">
+					<b>Note</b> that when you click on `Show dependencies', a new column will be added to the initial array. But it will only show the names of dependencies. If you want some more precise information about them, just select `Dependency Viewer' in the `Tools' menu to open the <a href = "../10_dependency_viewer/index.html">dependency viewer</a> and have a more complete view of each dependency.
+				</p>
+
+			<h3>The `Tools' menu</h3>
+			<p>
+				<center>
+					<img src = "../../images/tools_menu_in_import_tool.png" no border>
+				</center>
+			</p>
+			<ul>
+				<li><b>Dependency Viewer</b></li><br>
+					This item (as well as the following toolbar button:<img src = "../../images/dependency_viewer_toolbar_button.png" no border>) gives you the ability to launch the <a href = "../10_dependency_viewer/index.html">dependency viewer</a>, which lists all dependencies of the selected assembly.<br>
+					<p class = seealso>
+						<b>See also</b>: <a href = "../../how_to_s/40_view_assembly_dependencies/index.html">How to view assembly dependencies?</a>
+					</p>
+
+				<li><b>Import</b></li><br>
+					This last item of the `Tool' menu (as well as the following toolbar button:<img src = "../../images/import_dialog_toolbar_button.png" no border>) gives you access to the <a href = "../70_import_dialog/index.html">import dialog</a>, which enables you to import signed assemblies to the Eiffel assembly cache.
+					<p class = "seealso">
+						<b>See also</b>: <a href = "../../how_to_s/01_import_a_signed_assembly_to_the_EAC/index.html">How to import a signed assembly to the Eiffel assembly cache?</a>
+					<p>
+			</ul>
+
+			<h3>The `Help' menu</h3>
+			<p>
+				<center>
+					<img src = "../../images/help_menu_in_import_tool.png" no border>
+				</center>
+			</p>
+			<ul>
+				<li><b>Help Topics</b></li><br>
+					This item (as well as the toolbar button <img src = "../../images/help_toolbar_button.png" no border>) opens the help topics about ISE Eiffel Studio where you can find the current help about ISE Assembly Manager.
+				<br><br>
+
+				<li><b>About ISE Assembly Manager</b></li><br>
+					This menu item gives you some general information about ISE Assembly Manager and the company Interactive Software Engineering, Inc.
+					<p>
+						<center>
+							<img src = "../../images/about_ise_assembly_manager.png" no border>
+						</center>
+					</p>
+			</ul>
+	</body>
+</html>

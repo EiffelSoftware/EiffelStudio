@@ -1,0 +1,78 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Import dialog</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="import dialog, import a signed assembly, import assembly, import">
+	</head>
+
+	<body>
+		<br>
+		<center>
+			<h1>The import dialog</h1>
+		</center>
+		<br>
+
+		<p>
+			The import dialog enables you to import shared assemblies to the Eiffel assembly cache. It is very similar to the <a href = "../50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a>, but it provides some more options.<br>
+			At the top of the dialog, the name, version, culture and public key of the assembly to import are repeated to avoid any misunderstanding.
+		</p>
+
+		<p>
+			Then you have to choose the folder where Eiffel classes corresponding to the selected assembly will be generated. Two possibilities:
+		</p>
+		<ul>
+			<li>Check the box `default path' (which is checked by default) and the automatically-generated sources will be saved in the folder, whose filename is written in the disabled text field, that is "$ISE_EIFFEL\library.net\"</li><br><br>
+			<p>
+				<center>
+					<img src = "../../images/import_dialog.png" no border>
+				</center>
+			</p>
+			<li>Uncheck the option `default path' and browse for another folder by clicking on the `Browse' button or type it directly in the text field provided. <br>
+			You must be aware that ISE Assembly Manager will automatically create a subfolder (with the same name as the selected assembly) in the folder you have specified. <br>
+			Therefore you do not need to specify a path like "C:\my_assemblies\system" if you are currently importing the assembly `System.dll'.  "C:\my_assemblies" is sufficient since a subfolder "System" will automatically be created. Otherwise the generated classes will be in the folder "C:\my_assemblies\system\system", which is certainly not the result you expected!</li>
+			<p>
+				<center>
+					<table>
+						<tr>
+							<td><img src = "../../images/import_editable_dialog.png" no border></td>
+							<td width = 25></td>
+							<td><img src = "../../images/browse_dialog_from_dotnet_library.png" no border></td>
+						</tr>
+					</table>
+				</center>
+			</p>
+		</ul>
+
+		<p>
+			Two more options (comparing to the <a href = "../50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a>) are provided by the import dialog:
+		</p>
+		<ul>
+			<li>In the same way the remove dialog enables you to remove the dependencies of the selected assembly, the import dialog gives you the opportunity to import the dependencies of the assembly you want to import. To do so, just check the option `import dependencies'. This option is selected by default. <br>
+			In fact, if you want to use the imported assembly in an Eiffel # system, you may have some trouble if you miss the classes corresponding to the assembly dependencies. Therefore a warning appears in case you do not check the option and all dependencies are not imported yet:
+			<center>
+				<img src = "../../images/warning_import.png" no border>
+			</center>
+			<br>
+			Moreover, it does not take much longer to import the assembly with its dependencies.
+			</li>
+			<br><br>
+
+			<li>
+				The import dialog also asks you if you want to generate Eiffel classes with "Eiffel-friendly names", that is in lower case and underscores. This option is checked by default too. Nevertheless you can uncheck it if you want to keep the original external names.
+			</li>
+		</ul>
+		<br>
+
+		<p>
+			At this point, you still have the possibility not to import the assembly by clicking on `Cancel'.<br>
+			If you click on `OK', ISE Assembly Manager will launch the assembly importation. Since that may take a few minutes (up to twenty minutes for the assemblies, which have a lot of dependencies), a message box is displayed while importing the assembly and disappears when the importation is complete.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/import_message_box.png" no border>
+			</center>
+		</p>
+	</body>
+</html>

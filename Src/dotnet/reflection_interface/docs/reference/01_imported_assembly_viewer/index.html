@@ -1,0 +1,118 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Imported Assembly Viewer</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Imported assembly viewer, imported assemblies, first screen">
+	</head>
+
+	<body>
+		<br>
+		<center>
+			<h1>The imported assembly viewer</h1>
+		</center>
+		<br>
+
+		<p>
+			The imported assembly viewer is the main screen of ISE Assembly Manager. It is the one that appears when you launch the application. It gives you access to all facilities provided by ISE Assembly Manager. This reference aims at showing you how to use it.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/imported_assembly_viewer.png" no border>
+			</center>
+		</p>
+		<br>
+
+		<h2>The menu</h2>
+
+			<h3>The `File' menu</h3>
+				<p>
+					<center>
+						<img src = "../../images/file_menu.png" no border>
+					</center>
+				</p>
+				<p>
+					The `File' menu provides you with another way to close ISE Assembly Manager by clicking on the `Exit' menu item.
+				</p>
+
+			<h3>The `View' menu</h3>
+				<p>
+					<center>
+						<img src = "../../images/view_menu.png" no border>
+					</center>
+				</p>
+				<p>
+					The first six menu items enable you to show new columns in the array. By default, only the assembly name and the path to Eiffel  sources are visible. But you may want to see also the assembly version, culture and public key or assembly dependencies That is the aim of these six items. The first six toolbar buttons give you the same opportunity: <img src = "../../images/imported_assembly_viewer_view_toolbar.png" no border><br>
+					The last two items of the `View' menu are only a faster way to show all columns or come back to the initial layout.
+				</p>
+				<p>
+					Here are some screenshots of the imported assembly viewer with different possible layouts:
+					<center>
+						<img src = "../../images/imported_assembly_viewer_with_version_culture_public_key.png" no border><br><br>
+						<img src = "../../images/imported_assembly_viewer_with_dependencies.png" no border><br>
+					</center>
+				</p>
+				<p class = "note">
+					<b>Note</b> that when you click on `Show dependencies', a new column will be added to the initial array. But it will only show the names of dependencies. If you want some more precise information about them, just select `Dependency Viewer' in the `Tools' menu to open the <a href = "../10_dependency_viewer/index.html">dependency viewer</a> and have a more complete view of each dependency.
+				</p>
+
+			<h3>The `Tools' menu</h3>
+			<p>
+				<center>
+					<img src = "../../images/tools_menu.png" no border>
+				</center>
+			</p>
+			<ul>
+				<li><b>Dependency Viewer</b></li><br>
+					This item (as well as the following toolbar button:<img src = "../../images/dependency_viewer_toolbar_button.png" no border>) gives you the ability to launch the <a href = "../10_dependency_viewer/index.html">dependency viewer</a>, which lists all dependencies of the selected assembly.<br>
+					<p class = seealso>
+						<b>See also</b>: <a href = "../../how_to_s/40_view_assembly_dependencies/index.html">How to view assembly dependencies?</a>
+					</p>
+
+				<li><b>Edit</b></li><br>
+					This item (as well as the following toolbar button:<img src = "../../images/edit_toolbar_button.png" no border>) gives you access to the <a href = "../20_assembly_view/index.html">assembly view</a> and then edit some types of your choice.
+					<p class = "seealso">
+						<b>See also</b>: <a href = "../../how_to_s/20_edit_an_imported_assembly/index.html">How to edit an imported assembly?</a>
+					<p>
+
+				<li><b>Remove</b></li><br>
+					This item (as well as the following toolbar button:<img src = "../../images/remove_toolbar_button.png" no border>) opens the <a href = "../40_remove_dialog/index.html">remove dialog</a>, which enables you to remove assemblies from the Eiffel assembly cache.
+					<p class = "seealso">
+						<b>See also</b>: <a href = "../../how_to_s/10_remove_an_assembly_from_the_EAC/index.html">How to remove an assembly from the Eiffel assembly cache?</a>
+					<p>
+
+				<li><b>Eiffel generation</b></li><br>
+					This item (as well as the following toolbar button:<img src = "../../images/eiffel_generation_toolbar_button.png" no border>) gives you access to the <a href = "../50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a>, which enables you to update the Eiffel sources corresponding to the selected assembly.
+					<p class = "seealso">
+						<b>See also</b>: <a href = "../../how_to_s/30_update_eiffel_classes/index.html">How to update Eiffel classes?</a>
+					<p>
+
+				<li><b>Import Tool</b></li><br>
+					This last item of the `Tool' menu (as well as the following toolbar button:<img src = "../../images/import_tool_toolbar_button.png" no border>) gives you access to the <a href = "../60_import_tool/index.html">import tool</a>, which pretty looks like the imported assembly viewer but lists the shared assemblies from the Global Assembly Cache instead of the imported assemblies from the Eiffel assembly cache.
+					<p class = "seealso">
+						<b>See also</b>: <a href = "../../how_to_s/01_import_a_signed_assembly_to_the_EAC/index.html">How to import a signed assembly to the Eiffel assembly cache?</a>
+					<p>
+			</ul>
+
+			<h3>The `Help' menu</h3>
+			<p>
+				<center>
+					<img src = "../../images/help_menu.png" no border>
+				</center>
+			</p>
+			<ul>
+				<li><b>Help Topics</b></li><br>
+					This item (as well as the toolbar button <img src = "../../images/help_toolbar_button.png" no border>) opens the help topics about ISE Eiffel Studio where you can find the current help about ISE Assembly Manager.
+				<br><br>
+
+				<li><b>About ISE Assembly Manager</b></li><br>
+					This menu item gives you some general information about ISE Assembly Manager and the company Interactive Software Engineering, Inc.
+					<p>
+						<center>
+							<img src = "../../images/about_ise_assembly_manager.png" no border>
+						</center>
+					</p>
+			</ul>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Eiffel generation dialog</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Eiffel generation dialog, generate Eiffel classes, Eiffel code, Eiffel">
+	</head>
+
+	<body>
+		<br>
+		<center>
+			<h1>The Eiffel generation dialog</h1>
+		</center>
+		<br>
+
+		<p>
+			The Eiffel generation dialog enables you to update the Eiffel classes corresponding to an imported assembly. This may be useful in case you mistakenly deleted the folder containing the Eiffel classes.<br>
+			At the top of the dialog, the name, version, culture and public key of the assembly to update are repeated to avoid any misunderstanding.<br>
+			Then you have to choose the folder where Eiffel classes will be generated. Two possibilities:
+		</p>
+		<ul>
+			<li>Check the box `default path' (which is checked by default) and the automatically-generated sources will be saved in the folder, whose filename is written in the disabled text field, that is "$ISE_EIFFEL\library.net\assembly_name"</li><br><br>
+			<p>
+				<center>
+					<img src = "../../images/eiffel_generation_dialog.png" no border>
+				</center>
+			</p>
+			<li>Uncheck the option `default path' and browse for another folder by clicking on the `Browse' button or type it directly in the text field provided. <br>
+			You must be aware that ISE Assembly Manager will automatically create a subfolder (with the same name as the selected assembly) in the folder you have specified. <br>
+			Therefore you do not need to specify a path like "C:\my_assemblies\system" if you are currently updating the assembly `System.dll'.  "C:\my_assemblies" is sufficient since a subfolder "System" will automatically be created. Otherwise the generated classes will be in the folder "C:\my_assemblies\system\system", which is certainly not the result you expected!</li>
+			<p>
+				<center>
+					<table>
+						<tr>
+							<td><img src = "../../images/eiffel_generation_editable_dialog.png" no border></td>
+							<td width = 25></td>
+							<td><img src = "../../images/browse_dialog.png" no border></td>
+						</tr>
+					</table>
+				</center>
+			</p>
+		</ul>
+
+		<p>
+			At this point, you still have the possibility not to update the Eiffel classes by clicking on `Cancel'.<br>
+			If you click on `OK', ISE Assembly Manager will launch the generation of Eiffel classes corresponding to the selected assembly. Since that may take a few minutes, a message box is displayed while the code is being generated and disappears when code generation is complete.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/eiffel_generation_message_box.png" no border>
+			</center>
+		</p>
+	</body>
+</html>

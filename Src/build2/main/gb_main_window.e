@@ -199,7 +199,9 @@ feature {NONE} -- Implementation
 			end
 			if system_status.project_open then
 				a_menu_bar.extend (view_menu)
-				a_menu_bar.extend (project_menu)
+				if not system_status.is_wizard_system then
+					a_menu_bar.extend (project_menu)	
+				end
 			end
 			a_menu_bar.extend (help_menu)
 		end

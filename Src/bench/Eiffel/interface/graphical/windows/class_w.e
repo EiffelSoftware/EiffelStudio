@@ -13,7 +13,7 @@ inherit
 		redefine
 			build_format_bar, hole,
 			tool_name, open_cmd_holder, save_cmd_holder,
-			editable, build_bar, reset, build_widgets,
+			editable, reset, build_widgets,
 			close_windows, resize_action,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
@@ -122,6 +122,7 @@ feature -- Status setting
 			-- Show Current
 		do
 			{BAR_AND_TEXT} Precursor
+			save_cmd_holder.change_state (True)
 			class_text_field.set_focus
 		end
 
@@ -487,12 +488,12 @@ feature -- Grahpical Interface
 	build_widgets is
 		do
 			create_toolbar (global_form)
+			format_bar.set_height (22)
 
 			build_text_windows (global_form)
 			build_menus
-			build_bar
-			build_format_bar
 			build_command_bar
+			build_format_bar
 			fill_menus
 			build_toolbar_menu
 			set_last_format (default_format)
@@ -610,6 +611,7 @@ feature {NONE} -- Implementation Graphical Interface
 			sep: SEPARATOR
 		do
 			!! class_text_field.make (edit_bar, Current)
+			class_text_field.set_width (200)
 			!! open_cmd.make (Current)
 			!! open_button.make (open_cmd, edit_bar)
 			!! open_menu_entry.make (open_cmd, file_menu)
@@ -647,10 +649,17 @@ feature {NONE} -- Implementation Graphical Interface
 			current_target_menu_entry: EB_MENU_ENTRY
 			super_melt_cmd: SUPER_MELT
 			sep: SEPARATOR
+			sep1, sep2, sep3: THREE_D_SEPARATOR
 			history_list_cmd: LIST_HISTORY
 			super_melt_menu_entry: EB_MENU_ENTRY
 			new_class_button: EB_BUTTON_HOLE
 		do
+			!! hole.make (Current)
+			!! hole_button.make (hole, edit_bar)
+			!! hole_holder.make_plain (hole)
+			hole_holder.set_button (hole_button)
+			create_edit_buttons
+
 			!! version_cmd.make (Current)
 			!! version_menu_entry.make (version_cmd, special_menu)
 			!! shell_cmd.make (Current)
@@ -680,16 +689,56 @@ feature {NONE} -- Implementation Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
 
-			!! new_class_button.make (Project_tool.class_hole_holder.associated_command,	edit_bar)
-			edit_bar.attach_left_widget (hole_button, shell_button, 0)
-			edit_bar.attach_left_widget (shell_button, new_class_button, 0)
-			edit_bar.attach_top (shell_button, 0)
-			edit_bar.attach_top (new_class_button, 0)
+			!! new_class_button.make (Project_tool.class_hole_holder.associated_command, edit_bar)
 
-			edit_bar.attach_top (next_target_button, 0)
+			!! sep1.make (Interface_names.t_empty, edit_bar)
+			sep1.set_horizontal (False)
+
+			!! sep2.make (Interface_names.t_empty, edit_bar)
+			sep2.set_horizontal (False)
+
+			!! sep3.make (Interface_names.t_empty, edit_bar)
+			sep3.set_horizontal (False)
+
+				-- Attachements
+			edit_bar.attach_top (open_cmd_holder.associated_button, 0)
+			edit_bar.attach_left (open_cmd_holder.associated_button, 5)
+			edit_bar.attach_top (save_cmd_holder.associated_button, 0)
+			edit_bar.attach_left_widget (open_cmd_holder.associated_button, save_cmd_holder.associated_button, 0)
+
+			edit_bar.attach_top (sep1, 0)
+			edit_bar.attach_bottom (sep1, 0)
+			edit_bar.attach_left_widget (save_cmd_holder.associated_button, sep1, 5)
+
+			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
+			edit_bar.attach_left_widget (sep1, search_cmd_holder.associated_button, 5)
+
+			edit_bar.attach_top (sep2, 0)
+			edit_bar.attach_bottom (sep2, 0)
+			edit_bar.attach_left_widget (search_cmd_holder.associated_button, sep2, 5)
+
+			edit_bar.attach_top (hole_button, 0)
+			edit_bar.attach_left_widget (sep2, hole_button, 5)
+			edit_bar.attach_top (shell_button, 0)
+			edit_bar.attach_left_widget (hole_button, shell_button, 0)
+			edit_bar.attach_top (new_class_button, 0)
+			edit_bar.attach_left_widget (shell_button, new_class_button, 0)
+
+			edit_bar.attach_top (sep3, 0)
+			edit_bar.attach_bottom (sep3, 0)
+			edit_bar.attach_left_widget (new_class_button, sep3, 5)
+
 			edit_bar.attach_top (previous_target_button, 0)
-			edit_bar.attach_right_widget (class_text_field, next_target_button, 2)
-			edit_bar.attach_right_widget (next_target_button, previous_target_button, 0)
+			edit_bar.attach_left_widget (sep3, previous_target_button, 5)
+			edit_bar.attach_top (next_target_button, 0)
+			edit_bar.attach_left_widget (previous_target_button, next_target_button, 2)
+
+			edit_bar.attach_top (class_text_field, 0)
+			edit_bar.attach_left_widget (next_target_button, class_text_field, 3)
+
+			edit_bar.attach_top (quit_cmd_holder.associated_button, 0)
+			edit_bar.attach_right (quit_cmd_holder.associated_button, 0)
+
 		end
 
 	build_format_bar is
@@ -741,6 +790,7 @@ feature {NONE} -- Implementation Graphical Interface
 			click_button: FORMAT_BUTTON
 			click_menu_entry: EB_TICKABLE_MENU_ENTRY
 			sep: SEPARATOR
+			sep1, sep2: THREE_D_SEPARATOR
 		do
 				-- First we create all objects.
 			!! tex_cmd.make (Current)
@@ -806,10 +856,18 @@ feature {NONE} -- Implementation Graphical Interface
 			!! onc_menu_entry.make (onc_cmd, format_menu)
 			!! showonces_frmt_holder.make (onc_cmd, onc_button, onc_menu_entry)
 
+			!! sep1.make (Interface_names.t_empty, format_bar)
+			sep1.set_horizontal (False)
+			sep1.set_height (20)
+
+			!! sep2.make (Interface_names.t_empty, format_bar)
+			sep2.set_horizontal (False)
+			sep2.set_height (20)
+
 				-- And now we attach everything (this is done this way
 				-- because of speed)
 			format_bar.attach_top (tex_button, 0)
-			format_bar.attach_left (tex_button, 0)
+			format_bar.attach_left (tex_button, 5)
 			format_bar.attach_top (fla_button, 0)
 			format_bar.attach_left_widget (tex_button, click_button, 0)
 			format_bar.attach_top (fs_button, 0)
@@ -818,52 +876,47 @@ feature {NONE} -- Implementation Graphical Interface
 			format_bar.attach_left_widget (fla_button, sho_button, 0)
 			format_bar.attach_top (click_button, 0)
 			format_bar.attach_left_widget (sho_button, fs_button, 0)
+
+			format_bar.attach_top (sep1, 0)
+			format_bar.attach_left_widget (fs_button, sep1, 5)
+
 			format_bar.attach_top (anc_button, 0)
-			format_bar.attach_left_widget (fs_button, anc_button, 15)
+			format_bar.attach_left_widget (sep1, anc_button, 5)
 			format_bar.attach_top (des_button, 0)
 			format_bar.attach_left_widget (anc_button, des_button, 0)
 			format_bar.attach_top (cli_button, 0)
 			format_bar.attach_left_widget (des_button, cli_button, 0)
 			format_bar.attach_top (sup_button, 0)
 			format_bar.attach_left_widget (cli_button, sup_button, 0)
+
+			format_bar.attach_top (sep2, 0)
+			format_bar.attach_left_widget (sup_button, sep2, 5)
+
 			format_bar.attach_top (att_button, 0)
-			format_bar.attach_right_widget (rou_button, att_button, 0)
+			format_bar.attach_left_widget (sep2, att_button, 5)
 			format_bar.attach_top (rou_button, 0)
-			format_bar.attach_right_widget (def_button, rou_button, 0)
+			format_bar.attach_left_widget (att_button, rou_button, 0)
 			format_bar.attach_top (def_button, 0)
-			format_bar.attach_right_widget (onc_button, def_button, 0)
+			format_bar.attach_left_widget (rou_button, def_button, 0)
 			format_bar.attach_top (onc_button, 0)
-			format_bar.attach_right_widget (ext_button, onc_button, 0)
+			format_bar.attach_left_widget (def_button, onc_button, 0)
 			format_bar.attach_top (ext_button, 0)
-			format_bar.attach_right_widget (exp_button, ext_button, 0)
+			format_bar.attach_left_widget (onc_button, ext_button, 0)
 			format_bar.attach_top (exp_button, 0)
-			format_bar.attach_right (exp_button, 0)
-		end
-
-	build_bar is
-			-- Build top bar: editing commands
-		do
-			edit_bar.set_fraction_base (21)
-			!! hole.make (Current)
-			!! hole_button.make (hole, edit_bar)
-			!! hole_holder.make_plain (hole)
-			hole_holder.set_button (hole_button)
-			create_edit_buttons
-
-			edit_bar.attach_left (hole_button, 0)
-			edit_bar.attach_top (hole_button, 0)
-
-			edit_bar.attach_top (class_text_field, 0)
-			edit_bar.attach_left_position (class_text_field, 7)
-			edit_bar.attach_right_widget (open_cmd_holder.associated_button, class_text_field, 2)
-			edit_bar.attach_right (quit_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (quit_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (quit_cmd_holder.associated_button, search_cmd_holder.associated_button, 5)
-			edit_bar.attach_top (save_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (open_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0)
-		end
+			format_bar.attach_left_widget (ext_button, exp_button, 0)
+ 
+-- 			format_bar.attach_top (att_button, 0)
+-- 			format_bar.attach_right_widget (rou_button, att_button, 0)
+-- 			format_bar.attach_top (rou_button, 0)
+-- 			format_bar.attach_right_widget (def_button, rou_button, 0)
+-- 			format_bar.attach_top (def_button, 0)
+-- 			format_bar.attach_right_widget (onc_button, def_button, 0)
+-- 			format_bar.attach_top (onc_button, 0)
+-- 			format_bar.attach_right_widget (ext_button, onc_button, 0)
+-- 			format_bar.attach_top (ext_button, 0)
+-- 			format_bar.attach_right_widget (exp_button, ext_button, 0)
+-- 			format_bar.attach_top (exp_button, 0)
+-- 			format_bar.attach_right (exp_button, 0)
+ 		end
 
 end -- class CLASS_W

@@ -394,8 +394,8 @@ feature -- Graphical Interface
 				build_menus
 			end
 
-
 			build_routine_toolbar
+
 			if not is_in_project_tool then
 				fill_menus
 			end
@@ -517,6 +517,7 @@ feature {NONE} -- Implementation Graphical Interface
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
 			!! routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+			routine_toolbar.set_height (22)
 		end
 
 	build_toolbar_menu is
@@ -546,7 +547,8 @@ feature {NONE} -- Implementation Graphical Interface
 			current_target_cmd: CURRENT_ROUTINE
 			current_target_button: EB_BUTTON
 			current_target_menu_entry: EB_MENU_ENTRY
-			sep: THREE_D_SEPARATOR
+			sep: SEPARATOR
+			sep1, sep2, sep3, sep4: THREE_D_SEPARATOR
 			new_class_button: EB_BUTTON_HOLE
 			rout_cli_cmd: SHOW_ROUTCLIENTS
 			rout_cli_button: FORMAT_BUTTON
@@ -706,8 +708,24 @@ feature {NONE} -- Implementation Graphical Interface
 			!! showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry)
 			stop_button.add_third_button_action
 
+			!! sep1.make (Interface_names.t_empty, routine_toolbar)
+			sep1.set_horizontal (False)
+			sep1.set_height (20)
+
+			!! sep2.make (Interface_names.t_empty, routine_toolbar)
+			sep2.set_horizontal (False)
+			sep2.set_height (20)
+
+			!! sep3.make (Interface_names.t_empty, routine_toolbar)
+			sep3.set_horizontal (False)
+			sep3.set_height (20)
+
+			!! sep4.make (Interface_names.t_empty, routine_toolbar)
+			sep4.set_horizontal (False)
+			sep4.set_height (20)
+
 				-- Now we do all attachments. This is done here because of speed
-			routine_toolbar.attach_left (hole_button, 0)
+			routine_toolbar.attach_left (hole_button, 5)
 			routine_toolbar.attach_top (hole_button, 0)
 			routine_toolbar.attach_left_widget (hole_button, class_hole_button, 0)
 			routine_toolbar.attach_top (class_hole_button, 0)
@@ -720,23 +738,46 @@ feature {NONE} -- Implementation Graphical Interface
 				routine_toolbar.attach_top (new_class_button, 0)
 				routine_toolbar.attach_left_widget (shell_button, new_class_button, 0)
 
-				routine_toolbar.attach_top (text_button, 0)
-				routine_toolbar.attach_left_widget (new_class_button, text_button, 10)
+				routine_toolbar.attach_top (sep1, 0)
+				routine_toolbar.attach_left_widget (new_class_button, sep1, 5)
+
 			else
-				routine_toolbar.attach_top (text_button, 0)
-				routine_toolbar.attach_left_widget (class_hole_button, text_button, 10)
+				routine_toolbar.attach_top (sep1, 0)
+				routine_toolbar.attach_left_widget (class_hole_button, sep1, 5)
 			end
 
+			routine_toolbar.attach_top (text_button, 0)
+			routine_toolbar.attach_left_widget (sep1, text_button, 5)
 			routine_toolbar.attach_top (rout_flat_button, 0)
 			routine_toolbar.attach_left_widget (text_button, rout_flat_button, 0)
 			routine_toolbar.attach_top (stop_button, 0)
 			routine_toolbar.attach_left_widget (rout_flat_button, stop_button, 0)
 
+			routine_toolbar.attach_top (sep2, 0)
+			routine_toolbar.attach_left_widget (stop_button, sep2, 5)
+
 			routine_toolbar.attach_top (search_button, 0)
-			routine_toolbar.attach_left_widget (stop_button, search_button, 10)
+			routine_toolbar.attach_left_widget (sep2, search_button, 5)
+
+			routine_toolbar.attach_top (sep3, 0)
+			routine_toolbar.attach_left_widget (search_button, sep3, 5)
+
+			routine_toolbar.attach_top (rout_cli_button, 0)
+			routine_toolbar.attach_left_widget (sep3, rout_cli_button, 5)
+			routine_toolbar.attach_top (rout_hist_button, 0)
+			routine_toolbar.attach_left_widget (rout_cli_button, rout_hist_button, 0)
+			routine_toolbar.attach_top (past_button, 0)
+			routine_toolbar.attach_left_widget (rout_hist_button, past_button, 0)
+			routine_toolbar.attach_top (future_button, 0)
+			routine_toolbar.attach_left_widget (past_button, future_button, 0)
+			routine_toolbar.attach_top (homonym_button, 0)
+			routine_toolbar.attach_left_widget (future_button, homonym_button, 0)
+
+			routine_toolbar.attach_top (sep4, 0)
+			routine_toolbar.attach_left_widget (homonym_button, sep4, 5)
 
 			routine_toolbar.attach_top (previous_target_button, 0)
-			routine_toolbar.attach_left_widget (search_button, previous_target_button, 10)  
+			routine_toolbar.attach_left_widget (sep4, previous_target_button, 5)  
 			routine_toolbar.attach_top (next_target_button, 0)
 			routine_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
 
@@ -747,17 +788,6 @@ feature {NONE} -- Implementation Graphical Interface
 			routine_toolbar.attach_left_widget (routine_text_field, label, 7)
 			routine_toolbar.attach_top (class_text_field, 0)
 			routine_toolbar.attach_left_widget (label, class_text_field, 0)
-
-			routine_toolbar.attach_top (rout_cli_button, 0)
-			routine_toolbar.attach_left_widget (class_text_field, rout_cli_button, 10)
-			routine_toolbar.attach_top (rout_hist_button, 0)
-			routine_toolbar.attach_left_widget (rout_cli_button, rout_hist_button, 0)
-			routine_toolbar.attach_top (past_button, 0)
-			routine_toolbar.attach_left_widget (rout_hist_button, past_button, 0)
-			routine_toolbar.attach_top (future_button, 0)
-			routine_toolbar.attach_left_widget (past_button, future_button, 0)
-			routine_toolbar.attach_top (homonym_button, 0)
-			routine_toolbar.attach_left_widget (future_button, homonym_button, 0)
 
 			routine_toolbar.attach_top (quit_button, 0)
 			routine_toolbar.attach_right (quit_button, 0)

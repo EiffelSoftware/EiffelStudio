@@ -370,6 +370,7 @@ BEGIN
     Save_String             "Save Project"
     Clear_Output_String     "Clear Output"
     Launch_String           "Launch Wizard"
+    Generate_String         "Generate Code (no wizard)"
 END
 
 #endif    // English (U.S.) resources

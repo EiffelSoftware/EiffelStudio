@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 creation
 	make_flat, 
 	make_flat_short, 

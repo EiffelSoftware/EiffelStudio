@@ -18,6 +18,8 @@ inherit
 		end
 
 	EB_CONTEXT_TOOL_DATA
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

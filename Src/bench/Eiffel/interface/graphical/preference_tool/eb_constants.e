@@ -37,22 +37,28 @@ feature {NONE} -- Resources
 			-- Resources for the class tool
 		once
 			!! Result.make
-		end
+		end;
 
 	Feature_tool_resources: ROUTINE_W_CATEGORY is
 			-- Resources for the feature tool
 		once
 			!! Result.make
-		end
+		end;
 
 	Object_tool_resources: OBJECT_W_CATEGORY is
 			-- Resources for the feature tool
 		once
 			!! Result.make
-		end
+		end;
 
 	Explain_tool_resources: EXPLAIN_W_CATEGORY is
 			-- Resources for the feature tool
+		once
+			!! Result.make
+		end;
+
+	Interface_names: INTERFACE_NAMES is
+			-- All names used in the interface
 		once
 			!! Result.make
 		end

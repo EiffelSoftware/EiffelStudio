@@ -143,11 +143,11 @@ cd %EIFFEL_SRC\C_library\expat
 safe_md %EIFFEL_SRC\C_library\expat\lib
 msdev expat.dsw /make ALL - RELEASE >>& %INSTALL_LOG
 iff not exist %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll then
-	echo Couldn't recompile xmlparse.dll
+	remtrace Couldn't recompile xmlparse.dll
 	CANCEL
 endiff
 iff not exist %EIFFEL_SRC\C_library\expat\bin\xmltok.dll then
-	echo Couldn't recompile xmltok.dll
+	remtrace Couldn't recompile xmltok.dll
 	CANCEL
 endiff
 copy %EIFFEL_SRC\C_library\expat\bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
@@ -182,7 +182,7 @@ cdd %EIFFEL_SRC\dotnet\consumer\ace
 compile_dotnet emitter.ace
 wff
 iff not exist EIFGEN\W_code\emitter.exe then
-	echo Could not compile emitter.exe
+	remtrace Could not compile emitter.exe
 	CANCEL
 endiff
 move EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
@@ -204,7 +204,7 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
 	copy %EIFFEL_SRC\Eiffel\Ace\*.* .
 	iff not exist finalizedbench.ace then
-		echo Cannot find the finalization Ace for EiffelStudio
+		remtrace Cannot find the finalization Ace for EiffelStudio
 		CANCEL
 	endiff
 
@@ -214,7 +214,7 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	fff
 	cleanup_eiffel ec.exe
 	iff not exist ec.exe then
-		echo Could not finalize a new "enterprise" EiffelStudio
+		remtrace Could not finalize a new "enterprise" EiffelStudio
 		CANCEL
 	endiff
 	move ec.exe %INSTALL_DIR\releases\enterprise
@@ -225,7 +225,7 @@ else
 		copy %EIFFEL_SRC\Eiffel\Ace\newbench.mswin.ace finalizedbench.ace
 		copy %EIFFEL_SRC\Eiffel\Ace\*.* .
 		iff not exist finalizedbench.ace then
-			echo Cannot find the finalization Ace for EiffelStudio
+			remtrace Cannot find the finalization Ace for EiffelStudio
 			CANCEL
 		endiff
 
@@ -235,7 +235,7 @@ else
 		fff
 		cleanup_eiffel ec.exe
 		iff not exist ec.exe then
-			echo Could not finalize a new "enterprise" EiffelStudio
+			remtrace Could not finalize a new "enterprise" EiffelStudio
 			CANCEL
 		endiff
 		move ec.exe %INSTALL_DIR\releases\enterprise
@@ -267,7 +267,7 @@ else
 		fff
 		cleanup_eiffel ec.exe
 		iff not exist ec.exe then
-			echo Could not finalize a new "Free Edition" EiffelStudio
+			remtrace Could not finalize a new "Free Edition" EiffelStudio
 			CANCEL
 		endiff
 		move ec.exe %INSTALL_DIR\releases\free_version
@@ -284,7 +284,7 @@ finalize mswin-finish_freezing.ace
 fff
 cleanup_eiffel finish_freezing.exe
 iff not exist finish_freezing.exe then
-	echo Could not finalize a new finish_freezing
+	remtrace Could not finalize a new finish_freezing
 	CANCEL
 endiff
 move finish_freezing.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
@@ -296,7 +296,7 @@ finalize Ace.ace
 fff
 cleanup_eiffel quick_finalize.exe
 iff not exist quick_finalize.exe then
-	echo Could not finalize a new quick_finalize
+	remtrace Could not finalize a new quick_finalize
 	CANCEL
 endiff
 move quick_finalize.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
@@ -305,7 +305,7 @@ remtrace Put estudio.exe in the new delivery
 REM It should already have been compiled by the configure of the run-time.
 cdd %EIFFEL_SRC\C\ipc\daemon
 iff not exist estudio.exe then
-	echo Could not finalize a new estudio
+	remtrace Could not finalize a new estudio
 	CANCEL
 endiff
 move estudio.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
@@ -314,7 +314,7 @@ remtrace Put x2c.exe in the new delivery
 REM It should already have been compiled by the configure of the run-time.
 cdd %EIFFEL_SRC\C\run-time
 iff not exist x2c.exe then
-	echo Could not finalize a new x2c
+	remtrace Could not finalize a new x2c
 	CANCEL
 endiff
 move x2c.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
@@ -326,10 +326,27 @@ finalize h2ew32.ace
 fff
 cleanup_eiffel h2e.exe
 iff not exist h2e.exe then
-	echo Could not finalize a new h2e
+	remtrace Could not finalize a new h2e
 	CANCEL
 endiff
 move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile configure_all
+cdd %EIFFEL_SRC
+exprt -r %DEFAULT_CVS_TAG -d configure_all "Src/tools/configure_all"
+cd %EIFFEL_SRC\configure_all
+clean_project
+finalize configure_all.ace
+fff
+cleanup_eiffel configure_all.exe
+iff not exist configure_all.exe then
+	remtrace Couldnt generate configure_all.exe
+	CANCEL
+endiff
+move configure_all.exe %INSTALL_DIR
+
+remtrace Recompiling EiffelBuild
+call make_build.btm
 
 remtrace Recompile Legacy++
 cdd %EIFFEL_SRC

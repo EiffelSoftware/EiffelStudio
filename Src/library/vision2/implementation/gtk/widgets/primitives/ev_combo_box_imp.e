@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to container.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (v_imp.text)
 			feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_cs.item)

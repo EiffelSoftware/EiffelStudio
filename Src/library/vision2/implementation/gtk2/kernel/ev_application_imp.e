@@ -211,7 +211,7 @@ feature -- Basic operation
 	stop_processing is
 			-- Exit `process_events_until_stopped'.
 		local
-			temp_str: C_STRING
+			temp_str: EV_GTK_C_STRING
 		do
 				-- Set flag for 'process_events_until_stopped' to exit.
 			stop_processing_requested := True
@@ -575,19 +575,20 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			a_settings: STRING
 		do
 			a_settings := default_font_description
-			Result := not a_settings.is_equal (previous_font_description)		
+			Result := not a_settings.is_equal (previous_font_description)
+			previous_font_description := a_settings
 		end
 
 	default_font_description: STRING is
 			-- Description string of the current font used
 		local
 			gtk_settings, font_name_ptr: POINTER
-			a_utf8_c_string: EV_GTK_C_UTF8_STRING
+			a_utf8_c_string: EV_GTK_C_STRING
 		do
 			gtk_settings := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
 			create a_utf8_c_string.make ("gtk-font-name")
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (gtk_settings, a_utf8_c_string.item, $font_name_ptr)
-			create a_utf8_c_string.make_from_utf8_pointer (font_name_ptr)
+			create a_utf8_c_string.make_from_pointer (font_name_ptr)
 			Result := a_utf8_c_string.string
 		end
 		
@@ -596,7 +597,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 		local
 			a_name_array: POINTER
 			i, n_array_elements: INTEGER
-			utf8_string: EV_GTK_C_UTF8_STRING
+			utf8_string: EV_GTK_C_STRING
 		once
 			retrieve_available_fonts (default_gtk_window, $a_name_array, $n_array_elements)
 			create Result.make_filled (n_array_elements)
@@ -605,7 +606,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			until
 				i > n_array_elements
 			loop
-				create utf8_string.make_from_utf8_pointer (gchar_array_i_th (a_name_array, i))
+				create utf8_string.make_from_pointer (gchar_array_i_th (a_name_array, i))
 				Result.put_i_th (utf8_string.string, i)
 				i := i + 1
 			end
@@ -618,7 +619,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			a_name_array: POINTER
 			i, n_array_elements: INTEGER
 			i_th_item: STRING
-			utf8_string: EV_GTK_C_UTF8_STRING
+			utf8_string: EV_GTK_C_STRING
 		once
 			retrieve_available_fonts (default_gtk_window, $a_name_array, $n_array_elements)
 			create Result.make_filled (n_array_elements)
@@ -627,7 +628,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			until
 				i > n_array_elements
 			loop
-				create utf8_string.make_from_utf8_pointer (gchar_array_i_th (a_name_array, i))
+				create utf8_string.make_from_pointer (gchar_array_i_th (a_name_array, i))
 				i_th_item := utf8_string.string
 				i_th_item.to_lower
 				Result.put_i_th (i_th_item, i)

@@ -202,7 +202,7 @@ feature -- Element change
 			-- Set current button text to `txt'.
 		local
 			combo_par: EV_COMBO_BOX_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			Precursor (txt)
 			create a_cs.make (txt)

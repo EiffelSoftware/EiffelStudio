@@ -567,7 +567,6 @@ feature -- Basic Operations
 	--				--| Get Module Name
 	--	 			create mp.make (256 * 2)
 	--	 			l_hr := feature {ICOR_DEBUG_MODULE}.cpp_get_name (p_module, 256, $p_cchname, mp.item)
-	--	 			debugger_messages.extend ("Module :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)
 	--	 		end
 
 				end_of_managed_callback (Cst_managed_cb_load_module)
@@ -763,9 +762,9 @@ feature -- Basic Operations
 			-- `p_assembly' [in].  
 		require
 		local
-			l_hr: INTEGER
-			mp: MANAGED_POINTER
-			p_cchname: INTEGER
+--			l_hr: INTEGER
+--			mp: MANAGED_POINTER
+--			p_cchname: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then

@@ -10,6 +10,7 @@ class
 inherit
 	MEL_SCROLLED_LIST
 		rename
+			make as mel_make_list,
 			foreground_color as mel_foreground_color,
 			set_foreground_color as mel_set_foreground_color,
 			background_color as mel_background_color,
@@ -27,8 +28,9 @@ inherit
 			is_shown as shown
 		undefine
 			height, real_x, real_y, realized, width,
-			x, y, hide, lower, propagate_event, raise,
-			realize, set_x, set_x_y, set_y, show, unrealize
+			x, y, hide, propagate_event, raise,
+			realize, set_x, set_x_y, set_y, show, unrealize,
+			copy, setup, lower
 		redefine
 			set_size, set_height, set_width, parent
 		select
@@ -41,10 +43,11 @@ inherit
 			cursor as screen_cursor
 		undefine
 			height, real_x, real_y, realized, shown, width,
-			x, y, hide, lower, propagate_event, raise,
+			x, y, hide, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize,
 			make_from_existing, create_callback_struct,
-			set_no_event_propagation, clean_up, object_clean_up
+			set_no_event_propagation, clean_up, object_clean_up,
+			copy, setup, lower
 		redefine
 			set_size, set_height, set_width,
 			set_background_color_from_imp, set_managed, parent,
@@ -55,12 +58,15 @@ inherit
 
 	PRIMITIVE_COMPOSITE_M
 		undefine
-			set_no_event_propagation
+			set_no_event_propagation, copy, setup
 		redefine
 			set_size, set_height, set_width
 		end;
 
 	FONTABLE_M
+		undefine
+			copy, setup
+		end
 
 creation
 	make
@@ -75,7 +81,7 @@ feature -- Initialization
 			sb: MEL_SCROLL_BAR;
 			mc: MEL_COMPOSITE
 		do
-			ll_make;
+			ll_make (10);
 			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_list.identifier.to_c;
@@ -119,8 +125,11 @@ feature {NONE} -- Private routines
 		local
 			loc_string: MEL_STRING
 		do
-			!! loc_string.make_localized (s);
-			add_item_unselected (loc_string, pos)
+			if not is_destroyed then
+				!! loc_string.make_localized (s);
+				add_item_unselected (loc_string, pos);
+				loc_string.destroy
+			end
 		end
 
 feature  -- Element change
@@ -128,18 +137,14 @@ feature  -- Element change
 	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT]) is
 			-- Append a copy of s.
 		local
-			l: like s;
+			list: MEL_STRING_TABLE
 		do
-			ll_append (s);
-			l := deep_clone (s)
-			from
-				l.start
-			until
-				l.exhausted
-			loop
-				private_add (l.item.value, 0);
-				l.forth
+			if not is_destroyed then
+				list := make_merge_list (s);
+				add_items (list, 0);
+				list.destroy;
 			end
+			ll_append (s);
 		end;
 
 	extend (v: SCROLLABLE_LIST_ELEMENT) is
@@ -161,7 +166,7 @@ feature  -- Element change
 			from
 				lin_rep.start
 			until
-				not extendible or else lin_rep.off
+				lin_rep.after
 			loop
 				private_add (lin_rep.item.value, 0)
 				lin_rep.forth
@@ -175,32 +180,30 @@ feature  -- Element change
 			private_add (v.value, 0)
 		end;
 
-	merge_left (other: like Current) is
+	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
+		local
+			list: MEL_STRING_TABLE
 		do
-			from
-				other.finish
-			until
-				other.before
-			loop
-				private_add (other.item.value, index);
-				other.back
+			if not other.empty and then not is_destroyed then
+				list := make_merge_list (other);
+				add_items (list, index);
+				list.destroy
 			end;
 			ll_merge_left (other)
 		end;
 
-	merge_right (other: like Current) is
+	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
+		local
+			list: MEL_STRING_TABLE
 		do
-			from
-				other.finish
-			until
-				other.before
-			loop
-				private_add (other.item.value, index + 1);
-				other.back
+			if not other.empty and then not is_destroyed then
+				list := make_merge_list (other);
+				add_items (list, index + 1);
+				list.destroy
 			end;
 			ll_merge_right (other)
 		end;
@@ -242,8 +245,11 @@ feature  -- Element change
 		local
 			loc_string: MEL_STRING
 		do
-			!! loc_string.make_localized (v.value);
-			replace_item_pos (loc_string, index);
+			if not is_destroyed then
+				!! loc_string.make_localized (v.value);
+				replace_item_pos (loc_string, index);
+				loc_string.destroy
+			end
 			ll_replace (v)
 		end;
 
@@ -256,7 +262,9 @@ feature  -- Removal
 			-- if not, make structure exhausted.
 		do
 			search (v);
-			delete_pos (index);
+			if not is_destroyed then
+				delete_pos (index);
+			end;
 			ll_prune (v)
 		end;
 
@@ -272,8 +280,10 @@ feature  -- Removal
 				after
 			loop
 				search (v);
-				if not off then
-					delete_pos (index);
+				if not after then
+					if not is_destroyed then
+						delete_pos (index);
+					end
 					ll_prune (v)
 				end
 			end
@@ -284,7 +294,9 @@ feature  -- Removal
 			-- Move cursor to right neighbor
 			-- (or after if no right neighbor).
 		do
-			delete_pos (index);
+			if not is_destroyed then
+				delete_pos (index);
+			end;
 			ll_remove
 		end;
 
@@ -292,7 +304,9 @@ feature  -- Removal
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
-			delete_pos (index - 1);
+			if not is_destroyed then
+				delete_pos (index - 1);
+			end;
 			ll_remove_left
 		end;
 
@@ -300,14 +314,18 @@ feature  -- Removal
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
-			delete_pos (index + 1);
+			if not is_destroyed then
+				delete_pos (index + 1);
+			end;
 			ll_remove_right
 		end;
 
 	wipe_out is
 			-- Remove all items.
 		do
-			delete_all_items;
+			if not is_destroyed then
+				delete_all_items;
+			end;
 			ll_wipe_out
 		end;
 
@@ -479,6 +497,53 @@ feature -- Status setting
 			end
 		end
 
+feature -- Update
+
+    update is
+            -- Update the content of the scrollable list from
+            -- `list'.
+		local
+			list: MEL_STRING_TABLE;
+			pos: INTEGER
+        do
+			pos := index;
+			list := make_merge_list (Current);
+			delete_all_items;
+            add_items (list, 0);
+			if pos > count then
+				finish
+			else
+				go_i_th (pos);
+			end;
+            list.destroy;
+        end;
+
+feature {NONE} -- Implementation
+	
+	make_merge_list (other: SEQUENCE [SCROLLABLE_LIST_ELEMENT]): MEL_STRING_TABLE is
+			-- Make a merge list to `merge_left' and `merge_right'.
+		require
+			other_exists: other /= Void
+		local
+			i: INTEGER;
+			value: STRING
+		do
+			if not other.empty then
+				!! Result.make (other.count);
+				from
+					other.start;
+					i := 1
+				until
+					other.after
+				loop
+					value := other.item.value;
+					Result.put_string (other.item.value, i);
+					i := i + 1;
+					other.forth
+				end;
+				other.start
+			end
+		end;
 
 end -- class SCROLLABLE_LIST_M
 

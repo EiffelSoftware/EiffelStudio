@@ -16,7 +16,8 @@ inherit
 		end
 	ILIST
 		rename
-			copy_to as copy_to_array_int32
+			copy_to as copy_to_array_int32,
+			add as add_object
 		end
 	ICOLLECTION
 		rename
@@ -326,7 +327,7 @@ feature -- Basic Operations
 			"LastIndexOf"
 		end
 
-	add (value: SYSTEM_OBJECT): INTEGER is
+	add_object (value: SYSTEM_OBJECT): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Collections.ArrayList"
 		alias

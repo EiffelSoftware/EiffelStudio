@@ -78,7 +78,7 @@ feature -- Creation
 			if l_types.found then
 				c := l_types.found_item.item.get_constructor (feature {TYPE}.empty_types)
 				if c /= Void then
-					Result ?= c.invoke_array_object (Void)
+					Result ?= c.invoke (Void)
 				end
 			end
 		end
@@ -680,7 +680,7 @@ feature {NONE} -- Implementation
 			--| Reverse of `known_types'.
 		once
 				-- FIXME: We do not support BIT
-			create Result.make_1 (50)
+			create Result.make_from_capacity (50)
 			Result.add (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), Pointer_type)
 			Result.add (feature {TYPE}.get_type_string (("System.Char").to_cil), Character_type)
 			Result.add (feature {TYPE}.get_type_string (("System.Boolean").to_cil), Boolean_type)
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 			-- Key: type
 			-- Value: ID
 		once
-			create Result.make_1 (10)
+			create Result.make_from_capacity (10)
 			Result.add (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), Pointer_type)
 			Result.add (feature {TYPE}.get_type_string (("System.Char").to_cil), Character_type)
 			Result.add (feature {TYPE}.get_type_string (("System.Boolean").to_cil), Boolean_type)

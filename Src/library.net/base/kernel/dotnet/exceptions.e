@@ -247,7 +247,7 @@ feature -- Status setting
 			fle: EIFFEL_EXCEPTION
 		do
 --			create fle.make (Developer_exception, name)
-			feature {EXCEPTION_MANAGER}.raise (create {APPLICATION_EXCEPTION}.make_application_exception)
+			feature {EXCEPTION_MANAGER}.raise (create {APPLICATION_EXCEPTION}.make)
 		end
 
 	die (code: INTEGER) is

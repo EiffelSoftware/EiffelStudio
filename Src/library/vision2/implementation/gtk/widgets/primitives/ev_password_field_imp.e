@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Create password field with `*'.
 		do
 			Precursor
-			C.gtk_entry_set_visibility (c_object, False)		
+			C.gtk_entry_set_visibility (entry_widget, False)		
 		end
 
 feature {NONE} -- Implementation

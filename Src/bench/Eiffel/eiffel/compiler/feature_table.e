@@ -790,7 +790,8 @@ feature -- API
 			-- API table of features
 		local
 			cont: like content;
-			i, c, c_id: INTEGER;
+			i, c: INTEGER;
+			c_id: CLASS_ID;
 			feat: FEATURE_I;
 			other_content: ARRAY [E_FEATURE];
 		do

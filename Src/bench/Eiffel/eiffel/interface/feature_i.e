@@ -2056,10 +2056,10 @@ feature -- DLE
 
 feature -- Api creation
 
-	api_feature (associated_class_id: INTEGER): E_FEATURE is
+	api_feature (associated_class_id: CLASS_ID): E_FEATURE is
 			-- API representation of Current
 		require
-			positive_associated_class_id: associated_class_id > 0
+			positive_associated_class_id: associated_class_id /= Void
 		local
 			bi: INTEGER
 		do

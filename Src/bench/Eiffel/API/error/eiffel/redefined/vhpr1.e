@@ -37,7 +37,7 @@ feature -- Output
 			until
 				involved_classes.after
 			loop
-				if involved_classes.item /= involved_classes.first then
+				if not equal (involved_classes.item, involved_classes.first) then
 					st.add_string (", ");
 				end;
 				Eiffel_system.class_of_id (involved_classes.item)

@@ -24,10 +24,11 @@ feature
 			fdep: FEATURE_DEPENDANCE;
 			supplier: CLASS_C;
 			supp_f: FEATURE_I;
-			class_id, fid: INTEGER;
+			class_id: CLASS_ID;
+			fid: INTEGER;
 			st: STRUCTURED_TEXT
 		do
-			dep := Depend_server.item (class_c.id);
+			dep := Depend_server.item (class_c.id.id);
 			fdep := dep.item (f.feature_name);
 
 			!! st.make

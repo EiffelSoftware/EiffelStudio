@@ -249,13 +249,12 @@ feature -- Access
 		end;
 
 	text: STRUCTURED_TEXT is
-			-- Text of the Current lace file.
+			-- Text of the feature.
 			-- Void if unreadable file
 		local
 			class_text: STRING;
 			start_position, end_position: INTEGER;
 			body_as: FEATURE_AS;
-			cn: STRING;
 			c: like written_class;	
 		do
 			c := written_class;
@@ -266,9 +265,7 @@ feature -- Access
 				end_position := body_as.end_position;
 				!! Result.make;
 				Result.add_string ("-- Version from class: ");
-				cn := clone (c.name)
-				cn.to_upper;
-				Result.add_classi (c.lace_class, cn);
+				Result.add_classi (c.lace_class, c.name_in_upper);
 				Result.add_new_line;
 				Result.add_new_line;
 				Result.add_indent;
@@ -278,7 +275,7 @@ feature -- Access
 				then
 					class_text := class_text.substring 
 								(start_position + 1, end_position);
-					Result.add_feature (Current, c, class_text)
+					Result.add_feature (Current, class_text)
 				end;
 				Result.add_new_line;
 			end
@@ -384,7 +381,18 @@ feature -- Access
 		ensure
 			valid_result: Result /= Void implies not Result.empty
 					and then Result.sorted
-		end 
+		end;
+
+	updated_version: E_FEATURE is
+			-- Updated version of feature after a compilation
+			-- (First it checks if the `associated_class' is valid and
+			-- retrieves the feature using `name' from the
+			-- `associated_class' feature table)
+		do
+			if associated_class.is_valid then
+				Result := associated_class.feature_with_name (name)
+			end
+		end;
 
 feature -- Comparison
 
@@ -395,7 +403,7 @@ feature -- Comparison
 
 feature -- Output
 
-	append_signature (st: STRUCTURED_TEXT; c: E_CLASS) is
+	append_signature (st: STRUCTURED_TEXT) is
 			-- Append the signature of current feature in `st'
 		require
 			non_void_st: st /= Void
@@ -403,7 +411,7 @@ feature -- Output
 			args: like arguments
 		do
 			args := arguments;
-			append_name (st, c);
+			append_name (st);
 			if args /= Void then
 				st.add_string (" (");
 				from
@@ -428,12 +436,12 @@ feature -- Output
 			end;
 		end;
 
-	append_name (st: STRUCTURED_TEXT; c: E_CLASS) is
+	append_name (st: STRUCTURED_TEXT) is
 			-- Append the name of the feature in `st'
 		require
 			valid_st: st /= Void
 		do
-			st.add_feature (Current, c, name) 
+			st.add_feature (Current, name) 
 		end;
 
 	signature: STRING is
@@ -540,17 +548,14 @@ feature {NONE} -- Implementation
 			if Compilation_modes.is_extending then
 				Result := associated_feature_i.is_dynamic
 			end
-		end
+		end;
 
 feature {COMPILER_EXPORTER} -- Implementation
 
 	associated_feature_i: FEATURE_I is
 			-- Assocated feature_i
-		local
-			s_table: SELECT_TABLE
 		do
-			s_table := associated_class.compiled_info.feature_table.origin_table;
-			Result := s_table.item (rout_id_set.first)
+			Result := associated_class.compiled_info.feature_named (name)
 		end;
 
 feature {FEATURE_I} -- Setting

@@ -410,18 +410,26 @@ extern int fcount;
 
 /* Macros used for feature call and various accesses to objects.
  *  RTWF(x,y,z) is a feature call
+ *  RTWPF(x,y,z) is a precompiled feature call
  *  RTVF(x,y,z,t) is a nested feature call (dot expression)
+ *  RTVPF(x,y,z,t) is a nested precompiled feature call (dot expression)
  *  RTWA(x,y,z) is the access to an attribute
+ *  RTWPA(x,y,z) is the access to a precompiled attribute
  *  RTVA(x,y,z,t) is a nested access to an attribute (dot expression)
+ *  RTVPA(x,y,z,t) is a nested access to a precompiled attribute (dot expr)
  *  RTWT(x,y,z) fetches the creation type
  *  RTWPP(x,y) returns the feature address ($ operator)
  *  RTWP(x,y,z) returns the feature address ($ operator) for a specific type
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
 #define RTWF(x,y,z) wfeat(x,y,z)
+#define RTWPF(x,y,z) wpfeat(x,y,z)
 #define RTVF(x,y,z,t) wfeat_inv(x,y,z,t)
+#define RTVPF(x,y,z,t) wpfeat_inv(x,y,z,t)
 #define RTWA(x,y,z) wattr(x,y,z)
+#define RTWPA(x,y,z) wpattr(x,y,z)
 #define RTVA(x,y,z,t) wattr_inv(x,y,z,t)
+#define RTVPA(x,y,z,t) wpattr_inv(x,y,z,t)
 #define RTWT(x,y,z) wtype(x,y,z)
 #define RTWPP(x,y) ((eif_address_table[x])[y])
 #define RTWP(x,y,z) wpointer(x,y,z)

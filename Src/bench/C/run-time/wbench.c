@@ -23,10 +23,14 @@
 /* The following functions implement the access to object features and 
  * attributes in workbench mode, they are:
  * `wfeat (static_type, feature_id, dyn_type)'
+ * `wpfeat (origin, offset, dyn_type)'
  * `wfeat_inv (static_type, feature_id, name, object)'
+ * `wpfeat_inv (origin, offset, name, object)'
  * `wpointer (static_type, feature_id, dyn_type)'
  * `wattr (static_type, feature_id, dyn_type)'
+ * `wpattr (origin, offset, dyn_type)'
  * `wattr_inv (static_type, feature_id, name, object)'
+ * `wpattr_inv (origin, offset, name, object)'
  * `wtype (static_type, feature_id, dyn_type)'
  * `wdisp (dyn_type)'
  */
@@ -50,6 +54,45 @@ int32 feature_id;
 	nstcall = 0;								/* No invariant check */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
 	CBodyIdx(body_index,rout_id,dyn_type);		/* Get the body index */
+	body_id = dispatch[body_index];
+
+	if (body_id < zeroc) {
+		return frozen[body_id];			 /* Frozen feature */
+	}
+	else 
+#ifndef DLE
+	{
+		IC = melt[body_id];				 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	}
+#else
+	if (body_id < dle_level) {
+		IC = melt[body_id];				 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	} else if (body_id < dle_zeroc) {
+		return dle_frozen[body_id];		 /* Frozen feature in the DC-set */
+	} else {
+		IC = dle_melt[body_id];			 /* Position byte code to interpret */
+		return pattern[DLEMPatId(body_id)].toi;
+	}
+#endif
+}
+
+public char *(*wpfeat(origin, offset, dyn_type))()
+int dyn_type;
+int32 origin, offset;
+{
+	/* Function pointer associated to Eiffel feature of origin class
+	 * `origin', identified by `offset' in that class, and to
+	 * apply on an object of dynamic type `dyn_type'.
+	 * Return a function pointer.
+	 */
+
+	int16 body_index;
+	uint32 body_id;
+
+	nstcall = 0;								/* No invariant check */
+	body_index = desc_tab[origin][dyn_type][offset].info;
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc) {
@@ -102,6 +145,57 @@ char *name;
 
 	rout_id = Routids(static_type)[feature_id];
 	CBodyIdx(body_index,rout_id,dyn_type);
+	body_id = dispatch[body_index];
+
+	if (body_id < zeroc)
+		return frozen[body_id];
+	else 
+#ifndef DLE
+	{
+		IC = melt[body_id];	
+		return pattern[MPatId(body_id)].toi;
+	}
+#else
+	if (body_id < dle_level) {
+			/* Static melted routine */
+		IC = melt[body_id];	
+		return pattern[MPatId(body_id)].toi;
+	} else if (body_id < dle_zeroc) {
+			/* Dynamic frozen routine */
+		return dle_frozen[body_id];
+	} else {
+			/* Dynamic melted routine */
+		IC = dle_melt[body_id];	
+		return pattern[DLEMPatId(body_id)].toi;
+	}
+#endif
+}
+
+public char *(*wpfeat_inv(origin, offset, name, object))()
+int32 origin, offset;
+char *object;
+char *name;
+{
+	/* Function pointer associated to Eiffel feature of origin class
+	 * `origin', identified by `offset' in that class, and to
+	 * apply on an object `object'
+	 * Return a function pointer.
+	 */
+
+	int dyn_type;
+	int16 body_index;
+	uint32 body_id;
+
+	if (object == (char *) 0)			/* Void reference check */
+			/* Raise an exception for a feature named `name' applied
+			 * to a void reference. */
+		eraise(name, EN_VOID);
+
+	nstcall = 1;						/* Invariant check on */
+
+	dyn_type = Dtype(object);
+
+	body_index = desc_tab[origin][dyn_type][offset].info;
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc)
@@ -239,6 +333,19 @@ int32 feature_id;
 	return (offset);
 }
 
+public long wpattr(origin, offset, dyn_type)
+int32 origin;
+int dyn_type;
+int32 offset;
+{
+	/* Offset of precompiled attribute of origin class `origin', identified by
+	 * `offset' in that class, in an object of dynamic type `dyn_type'.
+	 * Return a long integer.
+	 */
+
+	return (desc_tab[origin][dyn_type][offset].info);
+}
+
 public long wattr_inv (static_type, feature_id, name, object)
 int static_type;
 int32 feature_id;
@@ -276,6 +383,40 @@ char *name;		/* Feature name to apply */
 	rout_id = Routids(static_type)[feature_id];
 	CAttrOffs(offset,rout_id,dyn_type);
 	return (offset);
+}
+
+public long wpattr_inv (origin, offset, name, object)
+int32 origin, offset;
+char *object;	/* Target object */
+char *name;		/* Feature name to apply */
+{
+	/* Offset of precompiled attribute of origin class `origin', identified by
+	 * `offset' in that class, in an object `object'.
+	 * Return a long integer.
+	 * Invariants are currently not being checked on attribute access
+	 * The code is commented out -- FRED
+	 */
+
+	int dyn_type;
+
+	if (object == (char *) 0)			/* Void reference check */
+			/* Raise an exception for a feature named `fname' applied
+			 * to a void reference. */
+		eraise(name, EN_VOID);
+
+	dyn_type = Dtype(object);
+
+/*
+ * Commented out by FRED
+ *
+ *	if (~in_assertion & WASC(dyn_type) & CK_INVARIANT) {
+ *		in_assertion = ~0;
+ *		chkinv(object);
+ *		in_assertion = 0;
+ *	}
+ */
+
+	return (desc_tab[origin][dyn_type][offset].info);
 }
 
 public int wtype(static_type, feature_id, dyn_type)

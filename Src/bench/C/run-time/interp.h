@@ -206,5 +206,12 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_END_EVAL_OLD		115
 #define BC_START_EVAL_OLD	116
 #define BC_OBJECT_ADDR		117
+#define BC_PFEATURE			118
+#define BC_PFEATURE_INV		119
+#define BC_PEXTERN			120
+#define BC_PEXTERN_INV		121
+#define BC_PARRAY			122
+#define BC_PATTRIBUTE		123
+#define BC_PATTRIBUTE_INV	124
 
 #endif

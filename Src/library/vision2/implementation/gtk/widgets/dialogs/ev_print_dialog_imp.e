@@ -157,7 +157,6 @@ feature {NONE} -- Initialization
 			create page_type_frame.make_with_text ("Page Type")
 			create page_type_hbox
 			page_type_hbox.set_border_width (4)
-			--page_type_hbox.set_padding_width (5)
 			create page_type_combo.make_with_strings (<<Letter, Legal, Executive, Ledger, A4, A5, B5, C5>>)
 			page_type_combo.set_minimum_width (100)
 			page_type_hbox.extend (page_type_combo)
@@ -182,9 +181,7 @@ feature {NONE} -- Initialization
 			button_hbox.disable_item_expand (cancel_btn)
 			main_dialog_container.extend (button_hbox)
 			extend (main_dialog_container)
-			disable_user_resize
 
-			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
 			print_btn_imp ?= print_btn.implementation
@@ -286,8 +283,8 @@ feature -- Access
 				page_constant := pspc.C5envelope
 			end
 
-			Result.set_horizontal_resolution (pspc.page_width (page_constant, landscape_checked))
-			Result.set_vertical_resolution (pspc.page_height (page_constant, landscape_checked))
+			Result.set_horizontal_resolution (pspc.page_width (page_constant, landscape_checked) - (2 * pspc.Default_left_margin))
+			Result.set_vertical_resolution (pspc.page_height (page_constant, landscape_checked) - (2 * pspc.Default_bottom_margin))
 		end
 
 	from_page: INTEGER is

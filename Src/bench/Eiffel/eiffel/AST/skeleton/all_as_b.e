@@ -5,11 +5,6 @@ inherit
 	ALL_AS;
 
 	FEATURE_SET_AS_B
-		undefine
-			simple_format
-		redefine
-			format
-		end
 
 feature -- Initialization
 
@@ -27,13 +22,6 @@ feature -- Initialization
 				vlel1.set_parent (parent.parent);
 				Error_handler.insert_error (vlel1);
 			end;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_All_keyword);
-			ctxt.always_succeed;
 		end;
 
 end -- class ALL_AS_B

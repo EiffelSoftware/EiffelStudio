@@ -251,7 +251,7 @@ feature -- Array optimization
 			!!opt_loop;
 				-- Check to see if the new safe array types can
 				-- be generated at this level (they must be generated at
-				-- the highest pssible level but onl if they are used!!)
+				-- the highest possible level but only if they are used!!)
 			from
 				generated_array_desc := opt_context.generated_array_desc;
 				generated_offsets := opt_context.generated_offsets;

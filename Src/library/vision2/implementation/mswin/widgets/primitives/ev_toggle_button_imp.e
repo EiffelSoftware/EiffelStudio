@@ -11,113 +11,79 @@ class
 
 inherit
 	EV_TOGGLE_BUTTON_I
-
-	EV_BUTTON_IMP
-		rename
-			interface as ev_button_imp_interface
 		redefine
-			default_style,
-			on_bn_clicked
-		select
-			ev_button_imp_interface
+			interface
 		end
 
-creation
-	make
+	EV_SELECT_BUTTON_IMP
+		undefine
+			default_style
+		redefine
+			interface
+		end
 
-feature -- Status report
-	
-	state: BOOLEAN is
-			-- Is toggle pressed
-		do
-			Result := cwin_send_message_result (wel_item,
-				Bm_getcheck, 0, 0) = 1
-		end 
+	WEL_SELECTABLE_BUTTON
+		rename
+			make as wel_make,
+			parent as wel_window_parent,
+			set_parent as wel_set_parent,
+			font as wel_font,
+			set_font as wel_set_font,
+			shown as is_displayed,
+			destroy as wel_destroy,
+			width as wel_width,
+			height as wel_height,
+			text as wel_text,
+			item as wel_item,
+			move as move_to,
+			enabled as is_sensitive
+		undefine
+			window_process_message,
+			remove_command,
+			set_width,
+			set_height,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_key_down,
+			on_key_up,
+			on_set_focus,
+			on_kill_focus,
+			on_set_cursor,
+			on_bn_clicked,
+			set_text,
+			show,
+			hide
+		end	
+
+create
+	make
 
 feature -- Status setting
 
-	set_state (flag: BOOLEAN) is
-			-- Set Current toggle on and set
-			-- pressed to True.
+	disable_select is
+			-- Set `is_selected' `False'.
 		do
-			if flag then
-				cwin_send_message (wel_item, Bm_setcheck, 1, 0)
-			else
-				cwin_send_message (wel_item, Bm_setcheck, 0, 0)
-			end
+			set_unchecked
 		end
 
 	toggle is
-			-- Change the state of the toggle button to
-			-- opposite
+			-- Change `is_selected'.
 		do
-			set_state (not state)
+			if checked then
+				set_unchecked
+			else
+				set_checked
+			end
 		end
 
-feature -- Event - command association
+feature {EV_ANY_I} -- Implementation
 
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands executed
---|FIXME			-- when `Current' is selected.
---|FIXME		do
---|FIXME			add_command (Cmd_select, cmd, arg)
---|FIXME		end
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands executed
---|FIXME			-- when `Current' is unselected'
---|FIXME		do
---|FIXME			add_command (Cmd_unselect, cmd, arg)
---|FIXME		end
-	
---|FIXME	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add 'cmd' to the list of commands to be executed
---|FIXME			-- when the button is toggled.
---|FIXME		do
---|FIXME			add_command (Cmd_toggle, cmd, arg)
---|FIXME		end	
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is
---|FIXME			-- Empty the list of commands executed
---|FIXME			-- when `Current' is selected.
---|FIXME		do
---|FIXME			remove_command (Cmd_unselect)
---|FIXME		end
-
---|FIXME	remove_unselect_commands is
---|FIXME			-- Empty the list of commands executed
---|FIXME			-- when `Current' is unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_unselect)
---|FIXME		end
-
---|FIXME	remove_toggle_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the button is toggled.
---|FIXME		do
---|FIXME			remove_command (Cmd_toggle)
---|FIXME		end	
-
-feature {NONE} -- Notification messages
-
-	on_bn_clicked is
-			-- When the button is pressed
-		do
-			--execute_command (Cmd_click, Void)
-			--execute_command (Cmd_toggle, Void)
-		end
-
-feature {NONE} -- WEL Implementation
-
-	default_style: INTEGER is
-			-- Not visible or child at creation
-		do
-			Result := Ws_child + Ws_visible + Ws_group
-						+ Ws_tabstop + Bs_autocheckbox 
-						+ Bs_pushlike
-		end
+	interface: EV_TOGGLE_BUTTON
 
 end -- class EV_TOGGLE_BUTTON_IMP
 
@@ -142,6 +108,13 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/24 20:41:45  brendel
+--| Revised.
+--| Now uses WEL_SELECTABLE_BUTTON instead of calling win32 directly.
+--|
+--| Revision 1.18  2000/02/23 20:22:57  rogers
+--| Improved comments. Removed old command association. Removed on_bn_clicked, as ancestor version is now used. Added interface.
+--|
 --| Revision 1.17  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|

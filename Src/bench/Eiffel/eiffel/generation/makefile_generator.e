@@ -17,23 +17,23 @@ inherit
 
 feature -- Attributes
 
-	object_baskets: ARRAY [EXTEND_STACK [STRING]];
+	object_baskets: ARRAY [LINKED_LIST [STRING]];
 			-- The entire set of class object files we have 
 			-- to make
 
-	descriptor_baskets: ARRAY [EXTEND_STACK [STRING]];
+	descriptor_baskets: ARRAY [LINKED_LIST [STRING]];
 			-- The entire set of descriptor files we have
 			-- to make
 
-	feat_table_baskets: ARRAY [EXTEND_STACK [STRING]];
+	feat_table_baskets: ARRAY [LINKED_LIST [STRING]];
 			-- The entire set of feature table files we have
 			-- to make
 
-	system_basket: EXTEND_STACK [STRING];
+	system_basket: LINKED_LIST [STRING];
 			-- The entire set of system object files we have 
 			-- to make
 
-	cecil_rt_basket: EXTEND_STACK [STRING];
+	cecil_rt_basket: LINKED_LIST [STRING];
 			-- Run-time object files to be put in the Cecil
 			-- archive
 
@@ -46,11 +46,8 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is
+	Packet_number: INTEGER is 100;
 			-- Maximum number of files in a single linking phase
-		once
-			Result := eif_packet_size
-		end;
 
 feature -- Initialization
 
@@ -66,7 +63,7 @@ feature -- Initialization
 			-- Create objects baskets.
 		local
 			basket_nb, i: INTEGER;
-			basket: EXTEND_STACK [STRING]
+			basket: LINKED_LIST [STRING]
 		do
 			basket_nb := 1 + (System.static_type_id_counter.value - 
 							System.max_precompiled_type_id) // Packet_number;
@@ -134,8 +131,8 @@ feature -- Object basket managment
 		do
 			!!object_name.make (0);
 			object_name.append (base_name);
-			object_name.append (Dot_o);
-			system_basket.put (object_name)
+			object_name.append (".o");
+			system_basket.extend (object_name)
 		end;
 
 	add_common_objects is
@@ -270,13 +267,14 @@ feature -- Actual generation
 feature -- Sub makefile generation
 
 	generate_sub_makefiles (sub_dir: STRING; 
-							baskets: ARRAY [EXTEND_STACK [STRING]]) is
+							baskets: ARRAY [LINKED_LIST [STRING]]) is
 				-- Generate makefile in subdirectories.
 		local
 			new_makefile, old_makefile: INDENT_FILE;
 			baskets_count, i: INTEGER;
 			f_name: FILE_NAME;
-			subdir_name: STRING
+			subdir_name: STRING;
+			basket: LINKED_LIST [STRING]
 		do
 			old_makefile := System.make_file;
 			from
@@ -285,41 +283,46 @@ feature -- Sub makefile generation
 			until
 				i > baskets_count
 			loop
-				
-				if system.in_final_mode then
-					!!f_name.make_from_string (Final_generation_path)
-				else
-					!!f_name.make_from_string (Workbench_generation_path)
+				basket := baskets.item (i);
+				if not basket.empty then
+					if system.in_final_mode then
+						!!f_name.make_from_string (Final_generation_path)
+					else
+						!!f_name.make_from_string (Workbench_generation_path)
+					end;
+					subdir_name := clone (sub_dir);
+					subdir_name.append_integer (i);
+					f_name.extend (subdir_name);
+					f_name.set_file_name (Makefile_SH);
+
+-- INTEGRATION: remove ".path"
+
+					!!new_makefile.make (f_name.path);
+					System.set_make_file (new_makefile);
+					Make_file.open_write;
+						-- Generate main /bin/sh preamble
+					generate_sub_preamble;
+						-- Customize main Makefile macros
+					generate_customization;
+						-- How to produce a .o from a .c file
+					generate_compilation_rule;
+						-- Generate object list.
+					generate_macro ("OBJECTS", basket);
+						-- Generate partial object.
+					Make_file.putstring ("all: ")
+					Make_file.putstring (sub_dir);
+					Make_file.putstring ("obj")
+					Make_file.putint (i);
+					Make_file.putstring (".o");
+					Make_file.new_line;
+					Make_file.new_line;
+					generate_partial_objects_linking (sub_dir, i);
+						-- Generate cleaning rules
+					generate_sub_cleaning;
+						-- End production.
+					generate_ending;
+					Make_file.close;
 				end;
-				subdir_name := clone (sub_dir);
-				subdir_name.append_integer (i);
-				f_name.extend (subdir_name);
-				f_name.set_file_name (Makefile_SH);
-				!!new_makefile.make (f_name.path);
-				System.set_make_file (new_makefile);
-				Make_file.open_write;
-					-- Generate main /bin/sh preamble
-				generate_sub_preamble;
-					-- Customize main Makefile macros
-				generate_customization;
-					-- How to produce a .o from a .c file
-				generate_compilation_rule;
-					-- Generate object list.
-				generate_macro ("OBJECTS", baskets.item (i));
-					-- Generate partial object.
-				Make_file.putstring ("all: ")
-				Make_file.putstring (sub_dir);
-				Make_file.putstring ("obj")
-				Make_file.putint (i);
-				Make_file.putstring (".o");
-				Make_file.new_line;
-				Make_file.new_line;
-				generate_partial_objects_linking (sub_dir, i);
-					-- Generate cleaning rules
-				generate_sub_cleaning;
-					-- End production.
-				generate_ending;
-				Make_file.close;
 				i := i + 1
 			end;
 			System.set_make_file (old_makefile)
@@ -343,6 +346,9 @@ feature -- Sub makefile generation
 			subdir_name.append_integer (1);
 			f_name.extend (subdir_name);
 			f_name.set_file_name (Makefile_SH);
+
+-- INTEGRATION remove ".path"
+
 			!!new_makefile.make (f_name.path);
 			System.set_make_file (new_makefile);
 			Make_file.open_write;
@@ -473,22 +479,21 @@ feature -- Generation, Object list(s)
 			end;
 		end;
 	
-	generate_macro (mname: STRING; basket: EXTEND_STACK [STRING]) is
+	generate_macro (mname: STRING; basket: LINKED_LIST [STRING]) is
 			-- Generate a bunch of objects to be put in macro `mname'
 		local
-			size, amount: INTEGER;
+			size: INTEGER;
 			file_name: STRING;
 		do
 			Make_file.putstring (mname);
 			Make_file.putstring (" = ");
 			from
-				amount := 0;
+				basket.start;
 				size := mname.count + 3;
 			until
-				amount >= Packet_number or basket.empty
+				basket.after
 			loop
 				file_name := basket.item;
-				basket.remove;
 				size := size + file_name.count + 1;
 				if size > 78 then
 					Make_file.putchar (Continuation);
@@ -500,7 +505,7 @@ feature -- Generation, Object list(s)
 					Make_file.putstring (file_name);
 				end;
 				Make_file.putchar (' ');
-				amount := amount + 1;
+				basket.forth
 			end;
 			Make_file.new_line;
 			Make_file.new_line;
@@ -582,11 +587,7 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
-			Make_file.putchar ('/');
-			Make_file.putstring (Emain);
-			Make_file.putstring (Dot_o);
-			Make_file.putstring (" Makefile%N");
-			Make_file.putstring ("%T$(RM) ");
+			Make_file.putstring ("/emain.o Makefile%N%T$(RM) ");
 			Make_file.putstring (system_name);
 			Make_file.new_line;
 			if System.makefile_names /= Void then
@@ -602,10 +603,7 @@ feature -- Generation (Linking rules)
 			Make_file.putchar (' ');
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
-			Make_file.putchar ('/');
-			Make_file.putstring (Emain);
-			Make_file.putstring (Dot_o);
-			Make_file.putchar (' ');
+			Make_file.putstring ("/emain.o ");
 			Make_file.putchar (Continuation);
 			Make_file.new_line;
 			generate_other_objects;
@@ -657,6 +655,7 @@ feature -- Generation (Linking rules)
 			-- Generate the object macros (dependencies for final executable)
 		local
 			i, baskets_count: INTEGER;
+			not_first: BOOLEAN
 		do
 				-- Feature table object files.
 			from
@@ -665,21 +664,26 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if i > 1 then
-					Make_file.putchar (' ');
+				if not feat_table_baskets.item (i).empty then
+					if not_first then
+						Make_file.putchar (' ')
+					else
+						not_first := true
+					end;
+					Make_file.putstring (Feature_table_suffix);
+					Make_file.putint (i);
+					Make_file.putchar ('/');
+					Make_file.putstring (Feature_table_suffix);
+					Make_file.putstring ("obj");
+					Make_file.putint (i);
+					Make_file.putstring (".o");
 				end;
-				Make_file.putstring (Feature_table_suffix);
-				Make_file.putint (i);
-				Make_file.putchar ('/');
-				Make_file.putstring (Feature_table_suffix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o");
 				i := i + 1
 			end;
 
-			if i > 1 then
+			if not_first then
 				Make_file.putchar (' ');
+				not_first := false
 			end;
 
 				-- Descriptor object files.
@@ -689,21 +693,26 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if i > 1 then
-					Make_file.putchar (' ');
+				if not descriptor_baskets.item (i).empty then
+					if not_first then
+						Make_file.putchar (' ')
+					else
+						not_first := true
+					end;
+					Make_file.putstring (Descriptor_suffix);
+					Make_file.putint (i);
+					Make_file.putchar ('/');
+					Make_file.putstring (Descriptor_suffix);
+					Make_file.putstring ("obj");
+					Make_file.putint (i);
+					Make_file.putstring (".o");
 				end;
-				Make_file.putstring (Descriptor_suffix);
-				Make_file.putint (i);
-				Make_file.putchar ('/');
-				Make_file.putstring (Descriptor_suffix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o");
 				i := i + 1
 			end;
 
-			if i > 1 then
+			if not_first then
 				Make_file.putchar (' ');
+				not_first := false
 			end;
 
 				-- Class object files.
@@ -713,16 +722,20 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if i > 1 then
-					Make_file.putchar (' ');
+				if not object_baskets.item (i).empty then
+					if not_first then
+						Make_file.putchar (' ')
+					else
+						not_first := true
+					end;
+					Make_file.putstring (Class_suffix);
+					Make_file.putint (i);
+					Make_file.putchar ('/');
+					Make_file.putstring (Class_suffix);
+					Make_file.putstring ("obj");
+					Make_file.putint (i);
+					Make_file.putstring (".o");
 				end;
-				Make_file.putstring (Class_suffix);
-				Make_file.putint (i);
-				Make_file.putchar ('/');
-				Make_file.putstring (Class_suffix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o");
 				i := i + 1
 			end
 		end;
@@ -731,6 +744,7 @@ feature -- Generation (Linking rules)
 			-- Generate the subdirectories' names.
 		local
 			i, baskets_count: INTEGER;
+			not_first: BOOLEAN
 		do
 			Make_file.putstring ("SUBDIRS = ");
 
@@ -741,16 +755,21 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if i > 1 then
-					Make_file.putchar (' ');
+				if not feat_table_baskets.item (i).empty then
+					if not_first then
+						Make_file.putchar (' ')
+					else
+						not_first := true
+					end;
+					Make_file.putstring (Feature_table_suffix);
+					Make_file.putint (i);
 				end;
-				Make_file.putstring (Feature_table_suffix);
-				Make_file.putint (i);
 				i := i + 1
 			end;
 
-			if i > 1 then
+			if not_first then
 				Make_file.putchar (' ');
+				not_first := false
 			end;
 
 				-- Descriptor object files.
@@ -760,16 +779,21 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if i > 1 then
-					Make_file.putchar (' ');
+				if not descriptor_baskets.item (i).empty then
+					if not_first then
+						Make_file.putchar (' ')
+					else
+						not_first := true
+					end;
+					Make_file.putstring (Descriptor_suffix);
+					Make_file.putint (i);
 				end;
-				Make_file.putstring (Descriptor_suffix);
-				Make_file.putint (i);
 				i := i + 1
 			end;
 
-			if i > 1 then
+			if not_first then
 				Make_file.putchar (' ');
+				not_first := false
 			end;
 
 				-- Class object files.
@@ -779,11 +803,15 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if i > 1 then
-					Make_file.putchar (' ');
+				if not object_baskets.item (i).empty then
+					if not_first then
+						Make_file.putchar (' ')
+					else
+						not_first := true
+					end;
+					Make_file.putstring (Class_suffix);
+					Make_file.putint (i);
 				end;
-				Make_file.putstring (Class_suffix);
-				Make_file.putint (i);
 				i := i + 1
 			end;
 
@@ -906,18 +934,20 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				Make_file.putstring (Feature_table_suffix);
-				Make_file.putint (i);
-				Make_file.putchar ('/');
-				Make_file.putstring (Feature_table_suffix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
-				Make_file.putstring (Feature_table_suffix);
-				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
-				Make_file.new_line;
-				Make_file.new_line;
+				if not feat_table_baskets.item (i).empty then
+					Make_file.putstring (Feature_table_suffix);
+					Make_file.putint (i);
+					Make_file.putchar ('/');
+					Make_file.putstring (Feature_table_suffix);
+					Make_file.putstring ("obj");
+					Make_file.putint (i);
+					Make_file.putstring (".o: Makefile%N%Tcd ");
+					Make_file.putstring (Feature_table_suffix);
+					Make_file.putint (i);
+					Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
+					Make_file.new_line;
+					Make_file.new_line;
+				end;
 				i := i + 1
 			end;
 				-- Descriptor object files.
@@ -927,18 +957,20 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				Make_file.putstring (Descriptor_suffix);
-				Make_file.putint (i);
-				Make_file.putchar ('/');
-				Make_file.putstring (Descriptor_suffix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
-				Make_file.putstring (Descriptor_suffix);
-				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
-				Make_file.new_line;
-				Make_file.new_line;
+				if not descriptor_baskets.item (i).empty then
+					Make_file.putstring (Descriptor_suffix);
+					Make_file.putint (i);
+					Make_file.putchar ('/');
+					Make_file.putstring (Descriptor_suffix);
+					Make_file.putstring ("obj");
+					Make_file.putint (i);
+					Make_file.putstring (".o: Makefile%N%Tcd ");
+					Make_file.putstring (Descriptor_suffix);
+					Make_file.putint (i);
+					Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
+					Make_file.new_line;
+					Make_file.new_line;
+				end;
 				i := i + 1
 			end;
 				-- Class object files.
@@ -948,18 +980,20 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				Make_file.putstring (Class_suffix);
-				Make_file.putint (i);
-				Make_file.putchar ('/');
-				Make_file.putstring (Class_suffix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
-				Make_file.putstring (Class_suffix);
-				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
-				Make_file.new_line;
-				Make_file.new_line;
+				if not object_baskets.item (i).empty then
+					Make_file.putstring (Class_suffix);
+					Make_file.putint (i);
+					Make_file.putchar ('/');
+					Make_file.putstring (Class_suffix);
+					Make_file.putstring ("obj");
+					Make_file.putint (i);
+					Make_file.putstring (".o: Makefile%N%Tcd ");
+					Make_file.putstring (Class_suffix);
+					Make_file.putint (i);
+					Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
+					Make_file.new_line;
+					Make_file.new_line;
+				end;
 				i := i + 1
 			end
 		end;
@@ -1026,14 +1060,6 @@ feature -- Removal of empty classes
 			-- are not generated
 		do
 			empty_class_types.extend (a_class_type);
-		end;
-
-feature {NONE} -- Externals
-
-	eif_packet_size: INTEGER is
-			-- Maximum number of files in a single linking phase
-		external
-			"C"
 		end;
 
 end

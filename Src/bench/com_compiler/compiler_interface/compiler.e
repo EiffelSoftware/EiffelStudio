@@ -28,6 +28,12 @@ inherit
 			is_output_piped,
 			output_pipe_name,
 			set_output_pipe_name,
+			compile_to_pipe_user_precondition,
+			finalize_to_pipe_user_precondition,
+			precompile_to_pipe_user_precondition,
+			generate_msil_keyfile_user_precondition,
+			expand_path_user_precondition,
+			set_output_pipe_name_user_precondition,
 			can_run
 		end
 
@@ -58,16 +64,7 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Initialize structure.
-		local
-			output: COM_DEGREE_OUTPUT
-			e_displayer: VS_ERROR_DISPLAYER
-			err_win: COM_ERROR_WINDOW
 		do
-			create output.make (Current)
-			create err_win.make (Current)
-			create e_displayer.make_with_coclass (err_win, Current)
-			Eiffel_project.set_degree_output (output)
-			Eiffel_project.set_error_displayer (e_displayer)
 			is_successful := False
 			create last_error_message.make_from_string ("System has not been compiled")
 			
@@ -96,6 +93,8 @@ feature -- Access
 
 	expand_path (a_path: STRING): STRING is
 			-- Epxand all env vars in 'a_path'
+		require else
+			non_void_path: a_path /= Void
 		local
 			var: STRING
 			formatted_var: STRING
@@ -108,61 +107,64 @@ feature -- Access
 		do
 			create env
 			Result := a_path.clone(a_path)
-			Result.replace_substring_all ("/", "\")
 			
-			dollar_pos := Result.index_of ('$', 1)
-			if dollar_pos > 0 then
-				from 
-				until
-					dollar_pos = 0
-				loop
-					-- look for '\'
-					slash_pos := Result.index_of ('\', dollar_pos + 1)
-					
-					-- now look for ) and return the first
-					-- allows for $(ENV)Ext\...
-					parth_pos := Result.index_of (')', dollar_pos + 1)
-					
-					-- look or $ as path could be $var1$var2
-					next_dollar_pos := Result.index_of ('$', dollar_pos + 1)
-
-					if slash_pos > 0 then
-						if parth_pos > 0 then
-							slash_pos := slash_pos.min (parth_pos + 1)
-						end
-						if next_dollar_pos > 0 then
-							slash_pos := slash_pos.min (next_dollar_pos)
-						end
-					elseif parth_pos > 0 then
-						if next_dollar_pos > 0 then
-							slash_pos := slash_pos.min (next_dollar_pos)
+			if not Result.is_empty then
+				Result.replace_substring_all ("/", "\")
+				
+				dollar_pos := Result.index_of ('$', 1)
+				if dollar_pos > 0 then
+					from 
+					until
+						dollar_pos = 0
+					loop
+						-- look for '\'
+						slash_pos := Result.index_of ('\', dollar_pos + 1)
+						
+						-- now look for ) and return the first
+						-- allows for $(ENV)Ext\...
+						parth_pos := Result.index_of (')', dollar_pos + 1)
+						
+						-- look or $ as path could be $var1$var2
+						next_dollar_pos := Result.index_of ('$', dollar_pos + 1)
+	
+						if slash_pos > 0 then
+							if parth_pos > 0 then
+								slash_pos := slash_pos.min (parth_pos + 1)
+							end
+							if next_dollar_pos > 0 then
+								slash_pos := slash_pos.min (next_dollar_pos)
+							end
+						elseif parth_pos > 0 then
+							if next_dollar_pos > 0 then
+								slash_pos := parth_pos.min (next_dollar_pos)
+							else
+								slash_pos := parth_pos + 1
+							end
 						else
-							slash_pos := parth_pos + 1
+							if next_dollar_pos > 0 then
+								slash_pos := next_dollar_pos
+							else
+								slash_pos := Result.count + 1
+							end
 						end
-					else
-						if next_dollar_pos > 0 then
-							slash_pos := next_dollar_pos
+						
+						var := Result.substring (dollar_pos, slash_pos - 1)
+						
+						-- remove the () and $
+						formatted_var := var.clone(var);
+						formatted_var.prune_all('(')
+						formatted_var.prune_all(')')
+						formatted_var.prune_all_leading('$')
+						
+						env_var := env.get (formatted_var)
+						if env_var /= Void and then env_var.count > 0 then
+							Result.replace_substring_all (var, env_var)
+						end
+						if dollar_pos + 1 <= Result.count then
+							dollar_pos := Result.index_of ('$', dollar_pos + 1)
 						else
-							slash_pos := Result.count + 1
+							dollar_pos := 0
 						end
-					end
-					
-					var := Result.substring (dollar_pos, slash_pos - 1)
-					
-					-- remove the () and $
-					formatted_var := var.clone(var);
-					formatted_var.prune_all('(')
-					formatted_var.prune_all(')')
-					formatted_var.prune_all_leading('$')
-					
-					env_var := env.get (formatted_var)
-					if env_var /= Void and then env_var.count > 0 then
-						Result.replace_substring_all (var, env_var)
-					end
-					if dollar_pos + 1 <= Result.count then
-						dollar_pos := Result.index_of ('$', dollar_pos + 1)
-					else
-						dollar_pos := 0
 					end
 				end
 			end
@@ -202,11 +204,11 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
 						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
-						Eiffel_project.set_degree_output (create {COM_PIPED_DEGREE_OUTPUT}.make (l_pipe))
+						set_piped_output (l_pipe)
 						Eiffel_project.melt
 						l_pipe.close
 					else
-						Eiffel_project.set_degree_output (create {COM_DEGREE_OUTPUT}.make (current))
+						set_default_output
 						Eiffel_project.melt
 					end
 				if Eiffel_project.Workbench.successful then
@@ -247,11 +249,11 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
 						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
-						Eiffel_project.set_degree_output (create {COM_PIPED_DEGREE_OUTPUT}.make (l_pipe))
+						set_piped_output (l_pipe)
 						Eiffel_project.finalize (False)
 						l_pipe.close
 					else
-						Eiffel_project.set_degree_output (create {COM_DEGREE_OUTPUT}.make (current))
+						set_default_output
 						Eiffel_project.finalize (False)
 					end
 				end
@@ -275,7 +277,7 @@ feature -- Basic Operations
 		ensure
 			output_is_piped: is_output_piped
 		end
-		
+	
 	precompile is
 			-- Precompile
 		local
@@ -287,11 +289,11 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
 						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
-						Eiffel_project.set_degree_output (create {COM_PIPED_DEGREE_OUTPUT}.make (l_pipe))
+						set_piped_output (l_pipe)
 						Eiffel_project.precompile (True)
 						l_pipe.close
 					else
-						Eiffel_project.set_degree_output (create {COM_DEGREE_OUTPUT}.make (current))
+						set_default_output
 						Eiffel_project.precompile (True)
 					end
 				end
@@ -306,7 +308,7 @@ feature -- Basic Operations
 		
 	precompile_to_pipe is
 			-- precompile to pipe - returns pipe name
-		require
+		require else
 			non_void_output_pipe_name: output_pipe_name /= Void
 			valid_output_pipe_name: not output_pipe_name.is_empty
 		do
@@ -374,7 +376,7 @@ feature -- Element Change
 
 	set_output_pipe_name (a_name: STRING) is
 			-- set 'output_pipe_name' to 'a_name'
-		require
+		require else
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
@@ -383,8 +385,89 @@ feature -- Element Change
 			output_pipe_name_set: output_pipe_name.is_equal (a_name)
 		end
 		
+feature {PROJECT_MANAGER, COMPILER_TESTER} -- Element Change
+
+	set_output_to_console is
+			-- set compiler output to output to console
+		do
+			--create compiler_degree_output
+		end
+		
+feature -- User Preconditions
+
+	expand_path_user_precondition (a_path: STRING): BOOLEAN is
+			-- expand_path precondition
+		do
+			Result := False
+		end
+		
+	generate_msil_keyfile_user_precondition (filename: STRING): BOOLEAN is
+			-- generate_msil_keyfile precondition
+		do
+			Result := False
+		end
+		
+	set_output_pipe_name_user_precondition (return_value: STRING): BOOLEAN is
+			-- set_output_pipe_name precondition
+		do
+			Result := False
+		end
+		
+	compile_to_pipe_user_precondition: BOOLEAN is
+			-- compile_to_pipe precondition
+		do
+			Result := False
+		end
+		
+	finalize_to_pipe_user_precondition: BOOLEAN is
+			-- finalize_to_pipe precondition
+		do
+			Result := False
+		end
+	
+	precompile_to_pipe_user_precondition: BOOLEAN is
+			-- precompile_to_pipe precondition
+		do
+			Result := False
+		end
+		
 feature {NONE} -- Implementation
 
+	set_piped_output (a_pipe: WEL_PIPE) is
+			-- set correct output object for output type (piped or not piped)
+		require
+			non_void_pipe: a_pipe /= Void
+			input_pipe_open: not a_pipe.input_closed
+		local
+			l_degree_output: COM_PIPED_DEGREE_OUTPUT
+			l_err_displayer: DEFAULT_ERROR_DISPLAYER
+			l_output_win: COM_PIPED_OUTPUT_WINDOW
+		do
+			if not Eiffel_project.is_compiling then
+				create l_degree_output.make (a_pipe)
+				create l_output_win.make (a_pipe)
+				create l_err_displayer.make (l_output_win)
+				Eiffel_project.set_degree_output (l_degree_output)
+				Eiffel_project.set_error_displayer (l_err_displayer)
+			end
+		end
+		
+	set_default_output is
+			-- set output to default
+		local
+			l_degree_output: COM_DEGREE_OUTPUT
+			l_err_displayer: VS_ERROR_DISPLAYER
+			l_output_win: COM_ERROR_WINDOW
+		do
+			if not Eiffel_project.is_compiling then
+				create l_degree_output.make (Current)
+				create l_output_win.make (Current)
+				create l_err_displayer.make_with_coclass (l_output_win, Current)
+				Eiffel_project.set_degree_output (l_degree_output)
+				Eiffel_project.set_error_displayer (l_err_displayer)
+			end
+		end
+		
 	output_error is
 			-- Report error back to VS.
 		require

@@ -48,11 +48,35 @@ feature -- Access
 
 	byte_node: REVERSE_B is
 			-- Associated byte code
+		local
+			l_access: ACCESS_B
+			l_local: LOCAL_B
+			l_attribute: ATTRIBUTE_B
+			l_create_info: CREATE_INFO
+			l_feature_type, l_local_type: TYPE_A
 		do
-			!! Result
-			Result.set_target (target.byte_node)
+			create Result
+			l_access := target.byte_node
+			Result.set_target (l_access)
 			Result.set_source (source.byte_node)
 			Result.set_line_number (line_number)
+			
+			if l_access.is_result then
+				l_feature_type ?= context.current_feature.type
+				l_create_info := l_feature_type.create_info
+			elseif l_access.is_local then
+				l_local ?= l_access
+				l_local_type := context.local_ith (l_local.position).type
+				l_create_info := l_local_type.create_info
+			elseif l_access.is_attribute then
+				l_attribute ?= l_access
+				create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
+					l_attribute.routine_id, context.current_class)
+			else
+				create {CREATE_TYPE} l_create_info.make (l_access.type)
+			end
+			
+			Result.set_info (l_create_info)
 		end
 
 feature {NONE} -- Formatter

@@ -328,8 +328,8 @@ feature {NONE} -- Implementation
 		do
 			m := exception_text
 			exception.set_text (m)
---| FIXME jfiat [2004/03/19] : new feature
---| We'll enable this once, we have an exception window to display the full message
+--| FIXME jfiat [2004/03/19] : NewFeature keep only first line of exception text for callstack_tool
+--| We'll enable this, once we have an exception window to display the full message
 --			exception.set_text (first_line_of (m))
 			exception.set_tooltip (m)
 		end
@@ -373,10 +373,14 @@ feature {NONE} -- Implementation
 				Result.append (")")				
 			end
 			Result.append (" Tag: ")
-			Result.append (Application.status.exception_tag)
+			s := Application.status.exception_tag
+			if s /= Void then
+				Result.append_string (s)				
+			end
 
--- FIXME JFIAT: 2003/03/12 : what for this limitation ?
+-- FIXME JFIAT: 2003/03/12 : what for this postcondition limitation ?
 -- need to check if there is any reason for that ...
+-- except we are using a TEXT_FIELD instead of multiple line widget
 --		ensure
 --			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end

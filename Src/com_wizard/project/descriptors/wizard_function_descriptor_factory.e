@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 	ECOM_FUNC_KIND
 		export
 			{NONE} all
@@ -39,6 +44,9 @@ inherit
 		end
 
 	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
 
 feature -- Basic operations
 
@@ -85,10 +93,13 @@ feature -- Basic operations
 			end
 			tmp_string := clone (name)
 			tmp_string.to_lower
-			if eiffel_key_words.has (tmp_string) then
+			if eiffel_key_words.has (tmp_string) and not shared_wizard_environment.new_eiffel_project then
 				name.append (One)
 			end
 			eiffel_name := name_for_feature (name)
+			if c_keywords.has (name) then
+				name.prepend ("a_")
+			end
 			arguments := create_arguments (tmp_names, a_count, a_func_desc.parameters, 
 					a_type_info)
 			argument_count := a_count

@@ -143,9 +143,9 @@ rt_private void write_address(char *where, char *value);			/* Write an address c
 
 /* Interpreter interface */
 rt_public void exp_call();				/* Sets IC before calling interpret */ /* %%ss undefine */
-rt_public void xinterp(char *icval);		/* Sets IC before calling interpret */
+rt_public void xinterp(EIF_CONTEXT char *icval);		/* Sets IC before calling interpret */
 rt_public void xinitint(void);			/* Initialization of the interpreter */
-rt_private void interpret(int flag, int where);	/* Run the interpreter */
+rt_private void interpret(EIF_CONTEXT int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
 rt_private int icall(int fid, int stype, int is_extern);					/* Interpreter dispatcher (in water) */
@@ -212,7 +212,7 @@ rt_private char *rcsid =
 #endif
 
 
-rt_public void xinterp(char *icval)
+rt_public void xinterp(EIF_CONTEXT char *icval)
 {
 	/* Starts interpretation at IC = icval. It is the interpreter entry
 	 * point for C code. When an exception occurs in the interpreted
@@ -241,7 +241,7 @@ rt_public void xinterp(char *icval)
 	 * for clean-up. But other than that, the pseudo vector is ignored.
 	 */
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 
 	/* If we return from a longjmp, an exception has occurred. We restore the
 	 * saved debugging context, then extract the top record to also restore the
@@ -254,7 +254,7 @@ rt_public void xinterp(char *icval)
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
 		dpop();							/* Pop off our own record */
-		ereturn();						/* Propagate exception */			
+		ereturn(MTC_NOARG);						/* Propagate exception */			
 	}
 
 #ifdef DEBUG
@@ -270,12 +270,12 @@ rt_public void xinterp(char *icval)
 	 * stack.
 	 */
 
-	(void) interpret(INTERP_CMPD, 0);	/* Start interpretation */
+	(void) interpret(MTC INTERP_CMPD, 0);	/* Start interpretation */
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
 }
 
-rt_public void xiinv(char *icval, int where)
+rt_public void xiinv(EIF_CONTEXT char *icval, int where)
             
           		/* Invariant checked after or before ? */
 {
@@ -290,17 +290,17 @@ rt_public void xiinv(char *icval, int where)
 	dstart();					/* Get calling record */
 	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
 	SAVE(op_stack, scur, stop);	/* Save operation stack */
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 
 	if (setjmp(exenv)) {
 		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
 		dpop();							/* Remove calling context */
-		ereturn();						/* Propagate exception */
+		ereturn(MTC_NOARG);						/* Propagate exception */
 	}
 
-	(void) interpret(INTERP_INVA, where);
+	(void) interpret(MTC INTERP_INVA, where);
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
 }
@@ -312,10 +312,10 @@ rt_public void xinitint(void)
 	iregsz = REGISTER_SIZE * sizeof(struct item *);
 	iregs = (struct item **) cmalloc(iregsz);
 	if (iregs == (struct item **) 0)	/* Not enough room */
-		enomem();
+		enomem(MTC_NOARG);
 }
 
-rt_private void interpret(int flag, int where)
+rt_private void interpret(EIF_CONTEXT int flag, int where)
          			/* Flag set to INTERP_INVA or INTERP_CMPD */
           			/* Are we checking invariant before or after compound? */
 {
@@ -429,7 +429,7 @@ rt_private void interpret(int flag, int where)
 						 */
 						last->it_ref = eif_access(get_address());
 						break;
-					default:		panic("invalid result type");
+					default:		panic(MTC "invalid result type");
 					}
 				}
 				return;
@@ -468,7 +468,7 @@ rt_private void interpret(int flag, int where)
 			case SK_EXP:
 			case SK_REF:		IC += sizeof(char *); break;
 			case SK_VOID:		break;
-			default:			panic(botched);
+			default:			panic(MTC botched);
 			}
 		}
 	
@@ -519,7 +519,7 @@ rt_private void interpret(int flag, int where)
 			 * stack).
 			 */
 			RTEA(string, code, icurrent->it_ref);
-			check_options(eoption + icur_dtype, icur_dtype);
+			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 			scur = op_stack.st_cur;		/* Save stack context */
 			stop = op_stack.st_top;		/* needed for setjmp() and calls */
@@ -545,7 +545,7 @@ rt_private void interpret(int flag, int where)
 			break;
 
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 
 		rescue = (char *) 0;		/* No rescue */
@@ -645,7 +645,7 @@ rt_private void interpret(int flag, int where)
 		case INTERP_INVA:
 			break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 /* end:*/ /* %%ss removed */
 		break;
@@ -694,7 +694,7 @@ rt_private void interpret(int flag, int where)
 		in_assertion = 0;
 		offset = get_long();					/* Get the retry offset */
 		IC += offset;
-		exvect = exret(exvect);					/* Retries a routine */
+		exvect = exret(MTC exvect);					/* Retries a routine */
 		break;
 
 	/*
@@ -747,7 +747,7 @@ rt_private void interpret(int flag, int where)
 			case (SK_INT):
 				break;
 			default:
-				panic ("Illegal cast operation");
+				panic (MTC "Illegal cast operation");
 			}
 		last->type = SK_INT;
 		break;
@@ -775,7 +775,7 @@ rt_private void interpret(int flag, int where)
 			case (SK_FLOAT):
 				break;
 			default:
-				panic ("Illegal cast operation");
+				panic (MTC "Illegal cast operation");
 			}
 		last->type = SK_FLOAT;
 		break;
@@ -803,7 +803,7 @@ rt_private void interpret(int flag, int where)
 			case (SK_DOUBLE):
 				break;
 			default:
-				panic ("Illegal cast operation");
+				panic (MTC "Illegal cast operation");
 			}
 		last->type = SK_DOUBLE;
 		break;
@@ -1181,7 +1181,7 @@ rt_private void interpret(int flag, int where)
 		case BC_LVAR:	assert_type = EX_VAR; break;
 		case BC_INV:	assert_type = (where ? EX_CINV : EX_INVC); break;
 		default:
-			panic("invalid assertion code");
+			panic(MTC "invalid assertion code");
 			/* NOTREADCHED */
 		}
 		switch (*IC++) {				
@@ -1201,7 +1201,7 @@ rt_private void interpret(int flag, int where)
 			break;
 		case BC_NOT_REC: break;		/* Do not record assertion */
 		default:
-			panic("invalid tag opcode");
+			panic(MTC "invalid tag opcode");
 			/* NOTREADCHED */
 		}
 		break;
@@ -1399,7 +1399,7 @@ rt_private void interpret(int flag, int where)
 			type = icur_dtype;
 			break;
 		default:
-			panic("creation type lost");
+			panic(MTC "creation type lost");
 			/* NOTREACHED */
 		}	
 		/* Creation of a new object. We know there will be no call to a
@@ -1454,7 +1454,7 @@ rt_private void interpret(int flag, int where)
 					IC += offset;
 				break;
 			default:
-				panic("invalid inspect type");
+				panic(MTC "invalid inspect type");
 				/* NOTREACHED */
 			}
 		}
@@ -1524,7 +1524,7 @@ rt_private void interpret(int flag, int where)
 					new_obj = last->it_ref;
 					break;
 				default: 
-					panic("illegal metamorphose type");
+					panic(MTC "illegal metamorphose type");
 				}
 				last = iget();
 				last->type = SK_REF;
@@ -2096,7 +2096,7 @@ rt_private void interpret(int flag, int where)
 					break;
 					}
 				default:
-					panic("illegal access to Current");
+					panic(MTC "illegal access to Current");
 				}
 
 				last = oitem(value_offset);
@@ -2104,7 +2104,7 @@ rt_private void interpret(int flag, int where)
 				last->it_ref = (char *) (icurrent->it_ref+offset);
 				break;
 			default:
-				panic("illegal address access");
+				panic(MTC "illegal address access");
 			}
 			if (is_attribute == EIF_FALSE){
 				last = oitem(value_offset);
@@ -2119,7 +2119,7 @@ rt_private void interpret(int flag, int where)
 					case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
 					case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
 					default:
-						panic("illegal type for address access");
+						panic(MTC "illegal type for address access");
 				}
 			}
 		break;
@@ -2152,7 +2152,7 @@ rt_private void interpret(int flag, int where)
 			case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
 			case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
 			default:
-				panic("illegal type for address access");
+				panic(MTC "illegal type for address access");
 			}
 		}
 		break;
@@ -2248,7 +2248,7 @@ rt_private void interpret(int flag, int where)
 						sp_area += sizeof(fnptr);
 						break;
 					default:
-						panic(botched);
+						panic(MTC botched);
 				}
 			}
 			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
@@ -2336,7 +2336,7 @@ rt_private void interpret(int flag, int where)
 						sp_area += sizeof(fnptr);
 						break;
 					default:
-						panic(botched);
+						panic(MTC botched);
 				}
 			}
 			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
@@ -2431,7 +2431,7 @@ rt_private void interpret(int flag, int where)
 			temp = nbr_of_items;
 			stripped = (char **) cmalloc(sizeof(char *)*nbr_of_items);
 			if (stripped == (char **) 0) 
-				enomem();
+				enomem(MTC_NOARG);
 			while (nbr_of_items--) {
 				last = opop();
 				stripped[nbr_of_items] = last->it_ref; 
@@ -2560,7 +2560,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_BREAK\n");
 #endif
-		dbreak(PG_BREAK);		/* Debugger hook */
+		dbreak(MTC PG_BREAK);		/* Debugger hook */
 		break;
 
 	/*
@@ -3256,7 +3256,7 @@ null:
 		return;
 
 	default:
-		panic("illegal opcode");
+		panic(MTC "illegal opcode");
 		/* NOTREACHED */
 	}
 	}							/* Remember: indentation was wrong--RAM */
@@ -3287,7 +3287,7 @@ rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, 
 
 	if (inv_mark_table == (char *) 0)
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 
 	bzero (inv_mark_table, scount);
 
@@ -3365,7 +3365,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 		 		* `tagval' will therefore be set, but we have to 
 		 		* resynchronize the registers anyway. --ericb
 		 		*/
-				xiinv(melt[body_id], where);
+				xiinv(MTC melt[body_id], where);
 
 				sync_registers(scur, stop);		/* Resynchronize registers */
 			}
@@ -3437,7 +3437,7 @@ rt_private void monadic_op(int code)
 		case SK_FLOAT:	first->it_float = -first->it_float; break;
 		case SK_DOUBLE:	first->it_double = -first->it_double; break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		break;
 
@@ -3451,12 +3451,12 @@ rt_private void monadic_op(int code)
 		switch(first->type & SK_HEAD) {
 		case SK_BOOL: first->it_char = !first->it_char; break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		break;
 
 	default:
-		panic("invalid monadic opcode");
+		panic(MTC "invalid monadic opcode");
 		/* NOTREACHED */
 	}
 }
@@ -3546,7 +3546,7 @@ rt_private void diadic_op(int code)
 			default: panic(botched);
 			}
 			break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3565,7 +3565,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long < s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long < s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long < s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3573,7 +3573,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float < (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float < s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float < s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3581,10 +3581,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double < (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double < (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double < s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3604,7 +3604,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long == s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long == s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long == s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3612,7 +3612,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float == (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float == s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float == s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3620,7 +3620,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double == (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double == (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double == s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_REF:
@@ -3629,7 +3629,7 @@ rt_private void diadic_op(int code)
 		case SK_POINTER:
 			first->it_char = first->it_ptr == second->it_ptr;
 			break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3648,7 +3648,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long >= s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long >= s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long >= s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3656,7 +3656,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float >= (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float >= s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float >= s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3664,11 +3664,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double >= (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double >= (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double >= s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3687,7 +3687,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long > s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long > s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long > s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3695,7 +3695,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float > (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float > s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float > s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3703,10 +3703,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double > (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double > (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double > s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3727,7 +3727,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long != s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long != s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long != s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3735,7 +3735,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float != (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float != s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float != s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3743,7 +3743,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double != (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double != (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double != s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_REF:
@@ -3752,7 +3752,7 @@ rt_private void diadic_op(int code)
 		case SK_POINTER:
 			first->it_char = first->it_ptr != second->it_ptr;
 			break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3771,7 +3771,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_long = f->it_long - s->it_long; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long - s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long - s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3780,7 +3780,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_float = f->it_float - (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float - s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float - s->it_double;b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3789,10 +3789,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double - (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double - (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double - s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		break;
 
@@ -3805,7 +3805,7 @@ rt_private void diadic_op(int code)
 #endif
 		switch(first->type & SK_HEAD) {
 		case SK_INT: first->it_long = first->it_long % second->it_long; break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		break;
 
@@ -3824,7 +3824,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_long = f->it_long + s->it_long; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long + s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long + s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3833,7 +3833,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_float = f->it_float + (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float + s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float + s->it_double;b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3842,11 +3842,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double + (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double + (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double + s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		break;
 
@@ -3863,7 +3863,7 @@ rt_private void diadic_op(int code)
 				case SK_INT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_long); b;
 				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_long, (double)s->it_double); b;
-				default: panic(botched);
+				default: panic(MTC botched);
 				}
 				first->type = SK_DOUBLE;
 				break;
@@ -3872,7 +3872,7 @@ rt_private void diadic_op(int code)
 				case SK_INT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_long); b;
 				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_float, (double)s->it_double); b;
-				default: panic(botched);
+				default: panic(MTC botched);
 				}
 				first->type = SK_DOUBLE;
 				break;
@@ -3881,12 +3881,12 @@ rt_private void diadic_op(int code)
 				case SK_INT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_long); b;
 				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_double, (double)s->it_double); b;
-				default: panic(botched);
+				default: panic(MTC botched);
 				}
 				first->type = SK_DOUBLE;
 				break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		break;
 
@@ -3901,7 +3901,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_long = f->it_long * s->it_long; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long * s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long * s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3910,7 +3910,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_float = f->it_float * (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float * s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float * s->it_double;b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3919,11 +3919,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double * (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double * (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double * s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		break;
 
@@ -3943,7 +3943,7 @@ rt_private void diadic_op(int code)
 						f->type = SK_DOUBLE; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long / s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long / s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3952,7 +3952,7 @@ rt_private void diadic_op(int code)
 			case SK_FLOAT: f->it_float = f->it_float / s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float / s->it_double;
 							f->type = SK_DOUBLE; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3960,11 +3960,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double / (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double / (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double / s->it_double; b;
-			default: panic(botched);
+			default: panic(MTC botched);
 			}
 			break;
 		default:
-			panic(botched);
+			panic(MTC botched);
 		}
 		break;
 
@@ -3977,11 +3977,11 @@ rt_private void diadic_op(int code)
 #endif
 		switch(first->type & SK_HEAD) {
 		case SK_INT: first->it_long = first->it_long / second->it_long; break;
-		default: panic(botched);
+		default: panic(MTC botched);
 		}
 		break;
 	default:
-		panic("invalid diadic opcode");
+		panic(MTC "invalid diadic opcode");
 		/* NOTREACHED */
 	}
 
@@ -4038,7 +4038,7 @@ rt_private int icall(int fid, int stype, int is_extern)
 		 * `tagval' will therefore be set, but we have to 
 		 * resynchronize the registers anyway. --ericb
 		 */
-		xinterp(melt[body]);
+		xinterp(MTC melt[body]);
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
@@ -4104,7 +4104,7 @@ rt_private int ipcall(int32 origin, int32 offset, int is_extern)
 		 * `tagval' will therefore be set, but we have to 
 		 * resynchronize the registers anyway. --ericb
 		 */
-		xinterp(melt[body]);
+		xinterp(MTC melt[body]);
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
@@ -4160,7 +4160,7 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
-		panic("unknown attribute type");
+		panic(MTC "unknown attribute type");
 		/* NOTREACHED */
 	}
 }
@@ -4196,7 +4196,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
-		panic("unknown attribute type");
+		panic(MTC "unknown attribute type");
 		/* NOTREACHED */
 	}
 }
@@ -4233,14 +4233,14 @@ rt_private void assign(long int fid, int stype, uint32 type)
 		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
 		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
 		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
-		default: panic(unknown_type);
+		default: panic(MTC unknown_type);
 		}
 		break;
 	case SK_FLOAT:
 		switch (last->type) {
 		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
 		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
-		default: panic(unknown_type);
+		default: panic(MTC unknown_type);
 		}
 		break;
 	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
@@ -4256,7 +4256,7 @@ rt_private void assign(long int fid, int stype, uint32 type)
 		RTAR(last->it_ref, ref);
 		*(char **) (ref + offset) = last->it_ref;
 		break;
-	default: panic(unknown_type);
+	default: panic(MTC unknown_type);
 	}
 
 
@@ -4297,14 +4297,14 @@ rt_private void passign(int32 origin, int32 f_offset, uint32 type)
 		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
 		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
 		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
-		default: panic(unknown_type);
+		default: panic(MTC unknown_type);
 		}
 		break;
 	case SK_FLOAT:
 		switch (last->type) {
 		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
 		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
-		default: panic(unknown_type);
+		default: panic(MTC unknown_type);
 		}
 		break;
 	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
@@ -4320,7 +4320,7 @@ rt_private void passign(int32 origin, int32 f_offset, uint32 type)
 		RTAR(last->it_ref, ref);
 		*(char **) (ref + offset) = last->it_ref;
 		break;
-	default: panic(unknown_type);
+	default: panic(MTC unknown_type);
 	}
 
 
@@ -4611,7 +4611,7 @@ rt_private void init_var(struct item *ptr, long int type)
 	case SK_REF:		ptr->it_ref = (char *) 0; break;
 	case SK_POINTER:	ptr->it_ptr = (char *) 0; break;
 	case SK_VOID:		break;
-	default:			panic(unknown_type);
+	default:			panic(MTC unknown_type);
 	}
 }
 
@@ -4710,7 +4710,7 @@ rt_private void allocate_registers(void)
 	if (size > iregsz) {					/* The array is not big enough */
 		new = (struct item **) crealloc((char *)iregs, size);
 		if (new == (struct item **) 0)		/* No room for extension */
-			enomem();						/* This is a critical exception */
+			enomem(MTC_NOARG);						/* This is a critical exception */
 		bigger = 0;
 		iregsz = size;
 		iregs = new;
@@ -4722,7 +4722,7 @@ rt_private void allocate_registers(void)
 			size = (REGISTER_SIZE * ITEM_SZ);
 			new = (struct item **) crealloc((char *)iregs, size);
 			if (new == (struct item **) 0)	/* Paranoid (can't happen?) */
-				enomem();				/* This is a critical exception */
+				enomem(MTC_NOARG);				/* This is a critical exception */
 			iregsz = size;				/* Array has shrinked */
 			bigger = 0;					/* Reset overhead counter */
 			iregs = new;
@@ -4877,7 +4877,7 @@ rt_public struct item *opush(register struct item *val)
 	if (top == (struct item *) 0)	{			/* No stack yet? */
 		top = stack_allocate(STACK_CHUNK);		/* Create one */
 		if (top == (struct item *) 0)	 		/* Could not create stack */
-			enomem();							/* No more memory */
+			enomem(MTC_NOARG);							/* No more memory */
 	}
 
 	if (op_stack.st_end == top) {
@@ -4888,7 +4888,7 @@ rt_public struct item *opush(register struct item *val)
 		SIGBLOCK;									/* Critical section */
 		if (op_stack.st_cur == op_stack.st_tl) {	/* Reached last chunk */
 			if (-1 == stack_extend(STACK_CHUNK))
-				enomem();
+				enomem(MTC_NOARG);
 			top = op_stack.st_top;					/* New top */
 		} else {
 			register2 struct stochunk *current;		/* New current chunk */
@@ -5185,7 +5185,7 @@ rt_public struct item *ivalue(int code, int num)
 	case IV_RESULT:						/* Result */
 		return iresult;
 	default:
-		panic("illegal value request");
+		panic(MTC "illegal value request");
 	}
 
 	/* NOTREACHED */

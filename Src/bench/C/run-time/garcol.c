@@ -13,6 +13,7 @@
 	executable.
 */
 
+#include "eif_globals.h"
 #include "misc.h"	/* %%ss added for eif_free_dlls */
 #include "config.h"
 #include "size.h"
@@ -227,7 +228,7 @@ rt_public void gc_run(void);				/* Restart the garbage collector */
 rt_public void mksp(void);					/* The mark and sweep entry point */
 rt_private int mark_and_sweep(void);		/* Mark and sweep algorithm */
 rt_public void reclaim(void);				/* Reclaim all the objects */
-rt_private void full_mark(void);			/* Marks all reachable objects */
+rt_private void full_mark(EIF_CONTEXT_NOARG);			/* Marks all reachable objects */
 rt_private void full_sweep(void);			/* Removes all un-marked objects */
 rt_private void run_collector(void);		/* Wrapper for full collections */
 rt_private void clean_up(void);			/* After collection, time to clean up */
@@ -258,7 +259,7 @@ rt_public int collect(void);				/* Generation based collector main entry */
 rt_private int generational_collect(void);	/* The generational collection algorithm */
 rt_public void eremb(char *obj);				/* Remember an old object */
 rt_public void erembq(char *obj);				/* Quick version (no GC call) of eremb */
-rt_private void mark_new_generation(void);	/* The name says it all, I think--RAM */
+rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all, I think--RAM */
 rt_private char *mark_expanded(char *root, char *(*marker) (char *));		/* Marks expanded reference in stack */
 rt_private void update_moved_set(void);	/* Update the moved set (young objects) */
 rt_private void update_rem_set(void);		/* Update remembered set */
@@ -823,7 +824,7 @@ rt_private void run_collector(void)
 	 */
 
 	if (root_obj != (char *) 0) {
-		full_mark();		/* Mark phase */
+		full_mark(MTC_NOARG);		/* Mark phase */
 		full_update();		/* Update moved and remembered set (BEFORE sweep) */
 	}
 	full_sweep();			/* Sweep phase */
@@ -846,7 +847,7 @@ rt_private void run_collector(void)
 #endif
 }
 
-rt_private void full_mark(void)
+rt_private void full_mark(EIF_CONTEXT_NOARG)
 {
 	/* Mark phase -- Starting from the root object and the subsidiary
 	 * roots in the local stack, we recursively mark all the reachable
@@ -3362,7 +3363,7 @@ rt_private int generational_collect(void)
 	flush;
 #endif
 
-	mark_new_generation();		/* Mark all new reachable objects */
+	mark_new_generation(MTC_NOARG);		/* Mark all new reachable objects */
 	full_update();				/* Sweep the yougest generation */
 	if (gen_scavenge & GS_ON)
 		swap_gen_zones();		/* Swap generation scavenging spaces */
@@ -3447,7 +3448,7 @@ rt_private int generational_collect(void)
 	return (gen_scavenge & GS_STOP) ? -1 : 0;	/* Signals error if stopped */
 }
 
-rt_private void mark_new_generation(void)
+rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 {
 	/* Genration mark phase -- All the young objects which are reachable
 	 * from the remembered set are alive. Old objects have reached immortality,
@@ -4717,7 +4718,7 @@ rt_public void eremb(char *obj)
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
 		urgent_plsc(&obj);					/* Compacting garbage collection */
 		if (-1 == epush(&rem_set, obj))		/* Still low on memory */
-			enomem();						/* Critical exception */
+			enomem(MTC_NOARG);						/* Critical exception */
 	}
 
 #ifdef DEBUG
@@ -4742,7 +4743,7 @@ rt_public void erembq(char *obj)
 	 */
 
 	if (-1 == epush(&rem_set, obj))		/* Cannot record object */
-		enomem();						/* Critical exception */
+		enomem(MTC_NOARG);						/* Critical exception */
 
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 }

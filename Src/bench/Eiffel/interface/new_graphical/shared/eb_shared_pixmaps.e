@@ -300,6 +300,14 @@ feature -- Icons
 			Result := build_classic_pixmap ("save_call_stack")
 		end
 
+	Icon_set_stack_depth: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_classic_pixmap ("set_stack_depth")
+		end
+
 	Icon_cluster_tool: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
@@ -761,6 +769,24 @@ feature -- Icons
 				-- Read the pixmaps 
 			create Result.make (1,3)
 			Result.put (pixmap_file_content ("icon_bpdisabled"), 1)
+			Result.put (pixmap_file_content ("icon_bpdisabled_stopped"), 2)
+			Result.put (pixmap_file_content ("icon_bpdisabled_top"), 3)
+		end
+
+	Icon_bpenabled_condition: ARRAY [EV_PIXMAP] is
+		once
+				-- Read the pixmaps 
+			create Result.make (1,3)
+			Result.put (pixmap_file_content ("icon_bpenabled_condition"), 1)
+			Result.put (pixmap_file_content ("icon_bpenabled_stopped"), 2)
+			Result.put (pixmap_file_content ("icon_bpenabled_top"), 3)
+		end
+
+	Icon_bpdisabled_condition: ARRAY [EV_PIXMAP] is
+		once
+				-- Read the pixmaps 
+			create Result.make (1,3)
+			Result.put (pixmap_file_content ("icon_bpdisabled_condition"), 1)
 			Result.put (pixmap_file_content ("icon_bpdisabled_stopped"), 2)
 			Result.put (pixmap_file_content ("icon_bpdisabled_top"), 3)
 		end

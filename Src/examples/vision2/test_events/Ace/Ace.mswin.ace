@@ -7,31 +7,31 @@ root
 
 default
 
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision2");
+--	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2");
 	assertion (all);
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/vision2/test_events";
+	ROOT_CLUSTER: 		"$EIFFEL4\examples\vision2\test_events";
 
 ------------------------ EiffelBase:
 
-	base:						"$EIFFEL4/library/base";
-	structures(base):			"$/structures";
-	kernel(base):				"$/kernel";
-	support(base):				"$/support";
-	access(structures):			"$/access";
-	cursors(structures):		"$/cursors";
-	cursor_tree(structures):	"$/cursor_tree";
-	dispenser(structures):		"$/dispenser";
-	iteration(structures):		"$/iteration";
-	list(structures):			"$/list";
-	set(structures):			"$/set";
-	sort(structures):			"$/sort";
-	storage(structures):		"$/storage";
-	table(structures):			"$/table";
-	traversing(structures):		"$/traversing";
-	tree(structures):			"$/tree";
+	base:						"$EIFFEL4\library\base";
+	structures(base):			"$\structures";
+	kernel(base):				"$\kernel";
+	support(base):				"$\support";
+	access(structures):			"$\access";
+	cursors(structures):		"$\cursors";
+	cursor_tree(structures):	"$\cursor_tree";
+	dispenser(structures):		"$\dispenser";
+	iteration(structures):		"$\iteration";
+	list(structures):			"$\list";
+	set(structures):			"$\set";
+	sort(structures):			"$\sort";
+	storage(structures):		"$\storage";
+	table(structures):			"$\table";
+	traversing(structures):		"$\traversing";
+	tree(structures):			"$\tree";
 
 ------------------------ Wel:
 
@@ -45,6 +45,7 @@ cluster
 	wel_support(wel):			"$\support";
 	wel_windows(wel):			"$\windows";
 	wel_messages(wel):			"$\messages";
+	wel_lak(wel):			"$\lak";
 
  ------------------------ EiffelVision
 
@@ -84,11 +85,12 @@ cluster
 	vision_imp_primitives (vision_imp_widgets):     "$\primitives";
 	vision_imp_containers (vision_imp_widgets):     "$\containers";
 	vision_imp_common_dialog (vision_imp_widgets):	"$\common_dialogs";
-	vision_imp_uncommon_widgets (vision_imp_widgets):	"$\uncommon_widgets";                       
+	vision_imp_uncommon_widgets (vision_imp_widgets):	"$\uncommon_widgets";
 external
         include_path:
-               	"$(EIFFEL4)/library/wel/spec/windows/include";
+              	"$(EIFFEL4)\library\wel\spec\windows\include",
+			"$(EIFFEL4)\library\wel\lak";
         object:
-                "$(EIFFEL4)/library/wel/spec/$(COMPILER)/lib/wel.lib";
+                "$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
 
 end

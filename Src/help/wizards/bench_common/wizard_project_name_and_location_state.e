@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 
 			message.set_text (
 				"Please fill in:%N%
-				%%T The name of the project (without space).%N%
+				%%T The name of the project.%N%
 				%%T The directory where you want the eiffel classes to be generated into.")
 		end
 

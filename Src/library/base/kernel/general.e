@@ -111,7 +111,8 @@ feature -- Comparison
 						c_deep_equal ($some, $other))
 		ensure
 			shallow_implies_deep: standard_equal (some, other) implies Result;
-			same_type : Result implies some.same_type (other);
+			both_or_none_void: (some = Void) implies (Result = (other = Void));
+			same_type: (Result and (some /= Void)) implies some.same_type (other);
 			symmetric: Result implies deep_equal (other, some)
 		end;
 

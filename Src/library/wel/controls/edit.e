@@ -53,7 +53,7 @@ feature -- Basic operations
 			-- content of the clipboard.
 		require
 			exists: exists
-                        has_selection: has_selection
+			has_selection: has_selection
 		do
 			cwin_send_message (item, Wm_paste, 0, 0)
 		end
@@ -92,6 +92,32 @@ feature -- Status setting
 			end
 		ensure
 			modified_set: modified = modify
+		end
+
+	set_read_only is
+			-- Set the read-only state.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Em_setreadonly, 1, 0)
+		end
+
+	set_read_write is
+			-- Set the read-write state.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Em_setreadonly, 0, 0)
+		end
+
+	set_text_limit (limit: INTEGER) is
+			-- Set to `limit' the length of the text the user
+			-- can enter into the edit control.
+		require
+			exists: exists
+			positive_limit: limit >= 0
+		do
+			cwin_send_message (item, Em_limittext, limit, 0)
 		end
 
 	set_selection (start_position, end_position: INTEGER) is
@@ -176,6 +202,20 @@ feature -- Status report
 		do
 			Result := cwin_send_message_result (item,
 				Em_getmodify, 0, 0) = 1
+		end
+
+	formatting_rect: WEL_RECT is
+			-- Limiting rectangle the text. It is independent of
+			-- the size of the edit-control window.
+		require
+			exists: exists
+		do
+			!! Result.make (0, 0, 0, 0)
+			cwin_send_message (item, Em_getrect, 0,
+				Result.to_integer)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
 		end
 
 feature {NONE} -- Notifications

@@ -46,7 +46,7 @@ feature -- Access
 			-- `Result' is current clipboard content.
 		local
 			a_success: INTEGER
-			a_cs1, a_cs2: C_STRING
+			a_cs1, a_cs2: EV_GTK_C_STRING
 			edit_chars: POINTER
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
@@ -69,7 +69,7 @@ feature -- Status Setting
 			-- Assign `a_text' to clipboard.
 		local
 			clip_text: STRING
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			if a_text /= Void then
 				clip_text := a_text

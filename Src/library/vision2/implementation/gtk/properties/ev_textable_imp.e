@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make ("")
 			text_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
@@ -91,7 +91,7 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
 			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)

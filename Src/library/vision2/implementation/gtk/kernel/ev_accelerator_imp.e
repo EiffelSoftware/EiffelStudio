@@ -66,7 +66,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_accel_grp_not_null: a_accel_grp /= NULL
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make ("activate")
 			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (

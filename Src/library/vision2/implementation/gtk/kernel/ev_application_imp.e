@@ -205,7 +205,7 @@ feature -- Basic operation
 	stop_processing is
 			-- Exit `process_events_until_stopped'.
 		local
-			temp_str: C_STRING
+			temp_str: EV_GTK_C_STRING
 		do
 				-- Set flag for 'process_events_until_stopped' to exit.
 			stop_processing_requested := True

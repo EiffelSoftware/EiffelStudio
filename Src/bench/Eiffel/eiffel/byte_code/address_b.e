@@ -8,7 +8,6 @@ inherit
 		end;
 	SHARED_C_LEVEL;
 	SHARED_TABLE;
-	SHARED_ENCODER;
 	SHARED_DECLARATIONS;
 	
 feature -- Attributes

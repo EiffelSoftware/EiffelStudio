@@ -7,6 +7,13 @@ class
 	EB_MELT_PROJECT_CMD
 
 inherit
+	EB_TOOL_COMMAND
+		redefine
+			tool
+		end
+
+	EB_CHOOSE_ACE_CALLBACK
+
 	SHARED_APPLICATION_EXECUTION
 
 	SHARED_EIFFEL_PROJECT
@@ -15,20 +22,9 @@ inherit
 
 	PROJECT_CONTEXT
 
-	EB_TOOL_COMMAND
-		redefine
-			tool
-		end
-
 	SHARED_RESCUE_STATUS
 
 	EB_SHARED_FORMAT_TABLES
-
---	WARNER_CALLBACKS
---		rename
---			execute_warner_help as choose_template,
---			execute_warner_ok as warner_ok
---		end
 
 	SHARED_CONFIGURE_RESOURCES
 
@@ -36,27 +32,8 @@ inherit
 
 	EB_PROJECT_TOOL_DATA
 
---	CREATE_ACE_CALLER
-
 creation
-
 	make
-
-feature -- Callbacks
-
-	choose_template is
-		do
-			load_default_ace
-		end
-
---	warner_ok (argument: ANY) is
---		local
---			chooser: NAME_CHOOSER_W
---		do
---			chooser := name_chooser (popup_parent)
---			chooser.set_open_file
---			chooser.call (Current)
---		end
 
 feature -- Properties
 
@@ -69,20 +46,11 @@ feature -- Properties
 --	symbol: EV_PIXMAP is
 --			-- Pixmap for the button.
 --		do
---			if is_quick_melt then
---				Result := Pixmaps.bm_Quick_update
---			else
---				Result := Pixmaps.bm_Update
---			end
+--			Result := Pixmaps.bm_Update
 --		end
 
 	tool: EB_PROJECT_TOOL
 			-- Project tool
-
-	generate_code_only: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
 
 feature -- Status Setting
 
@@ -104,7 +72,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compile (argument: ANY) is
+	compile is
 			-- Compile, in the one way or the other.
 		local
 			rescued: BOOLEAN
@@ -116,7 +84,7 @@ feature {NONE} -- Implementation
 			if not rescued then
 				if not Eiffel_project.is_compiling then
 					reset_debugger
---					error_window.clear_window
+					error_window.clear_window
 --					!! mp.set_watch_cursor
 					tool.update_compile_access (is_precompiling or Compilation_modes.is_precompiling)
 					perform_compilation
@@ -142,14 +110,14 @@ feature {NONE} -- Implementation
 							error_window.process_text (st)
 						else
 							if not finalization_error then
-								launch_c_compilation (argument)
+								launch_c_compilation
 							end
 						end
 					end
 
 --					mp.restore
 --					error_window.display
---					tool_resynchronization (argument)
+					tool_resynchronization
 					Degree_output.finish_degree_output
 				end
 			else
@@ -158,7 +126,7 @@ feature {NONE} -- Implementation
 				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Project_may_be_corrupted)
 
 --				error_window.display
---				tool_resynchronization (argument)
+				tool_resynchronization
 				Degree_output.finish_degree_output
 			end
 
@@ -173,7 +141,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tool_resynchronization (argument: ANY) is
+	tool_resynchronization is
 			-- Resynchronize class, feature and system tools.
 			-- Clear the format_context buffers.
 		local
@@ -189,7 +157,7 @@ feature {NONE} -- Implementation
 			create saved_msg.make (messages.count)
 			saved_msg.append (messages)
 			if tool_supervisor.has_active_editor_tools then
---				Degree_output.put_string (Interface_names.d_Resynchronizing_tools)
+				Degree_output.put_string (Interface_names.d_Resynchronizing_tools)
 				tool_supervisor.class_tool_mgr.synchronize_to_default
 				tool_supervisor.feature_tool_mgr.synchronize_to_default
 			end
@@ -202,14 +170,13 @@ feature {NONE} -- Implementation
 				system_tool.synchronize
 			end
 
---			if
---				is_dynamic_lib_tool_created and then
---				dynamic_lib_tool.realized and then
---				dynamic_lib_tool.shown
---			then
---				dynamic_lib_tool.set_default_format
---				dynamic_lib_tool.synchronize
---			end
+			if
+				dynamic_lib_tool_is_valid and then
+				dynamic_lib_tool.shown
+			then
+				dynamic_lib_tool.set_default_format
+				dynamic_lib_tool.synchronize
+			end
 
 			messages.wipe_out
 			messages.append (saved_msg)
@@ -218,7 +185,7 @@ feature {NONE} -- Implementation
 			clear_format_tables
 		end
 
-	launch_c_compilation (argument: ANY) is
+	launch_c_compilation is
 			-- Launch the C compilation.
 		local
 			window: EB_CLICKABLE_RICH_TEXT
@@ -243,16 +210,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	confirm_and_compile (argument: ANY) is
+	confirm_and_compile (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Ask for a confirmation, and thereafter compile.
+		local
+			wd: EV_WARNING_DIALOG
+			cmd: EV_ROUTINE_COMMAND
 		do
 			if
-				not Application.is_running
--- or else
---				(argument /= Void and
---				argument = last_confirmer and end_run_confirmed)
+				not Application.is_running or else
+					(arg = stop_execution)
 			then
-				compile (argument)
+				compile
 				if 
 					run_after_melt and then
 					Eiffel_ace.file_name /= Void and then
@@ -261,13 +229,15 @@ feature {NONE} -- Implementation
 				then
 						-- The system has been successfully melted.
 						-- The system can be executed as required.
---					tool.debug_run_cmd_holder.associated_command.execute (text_window)
+--					tool.debug_run_cmd.execute (text_window, Void)
 				end
 			else
-				end_run_confirmed := true
---				confirmer (popup_parent).call (Current,
---						"Recompiling project will end current run.%N%
---						%Start compilation anyway?", "Compile")
+				create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+					"Recompiling project will end current run.%NStart compilation anyway?")
+				wd.show_ok_cancel_buttons
+				create cmd.make (~confirm_and_compile)
+				wd.add_ok_command (cmd, stop_execution)
+				wd.show
 			end
 		end
 
@@ -276,17 +246,6 @@ feature {NONE} -- Implementation
 		do
 			license_display
 			Eiffel_project.melt
-		end
-
-	load_default_ace is
-			-- Load the default ace file.
-		require
-			tool.initialized
-		local
---			wizard: WIZARD
-		do
---			!! wizard.make (Project_tool, wiz_dlg, ace_b)
---			wizard.execute_action
 		end
 
 	perform_post_creation is
@@ -300,6 +259,38 @@ feature {NONE} -- Implementation
 --			confirm_and_compile (Void)
 		end
 
+feature {EB_CHOOSE_ACE_DIALOG} -- Implementation
+
+	load_chosen is
+		local
+			fod: EV_FILE_OPEN_DIALOG
+			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
+			cmd: EV_ROUTINE_COMMAND
+		do
+			create fod.make (project_tool.parent)
+--			fod.set_filter (<<"System File (*.ace)">>,<<"*.ace">>)
+			create cmd.make(~load_ace)
+			create arg.make (fod)
+			fod.add_ok_command (cmd, arg)
+			fod.show
+		end
+
+	load_default_ace is
+			-- Load the default ace file.
+		require else
+			tool.initialized
+		local
+--			wizard: WIZARD
+		do
+--			!! wizard.make (Project_tool, wiz_dlg, ace_b)
+--			wizard.execute_action
+		end
+
+	associated_window: EV_WINDOW is
+		do
+			Result := tool.parent_window
+		end
+
 feature {NONE} -- Attributes
 
 --	wiz_dlg: WIZARD_DIALOG is
@@ -311,8 +302,7 @@ feature {NONE} -- Attributes
 	not_saved: BOOLEAN is
 			-- Has the text of some tool been edited and not saved?
 		do
---			Result := tool_supervisor.class_tool_mgr.changed or else
---						(is_system_tool_created and then system_tool.changed)
+			Result := tool_supervisor.has_modified_editor_tools
 		end
 
 	finalization_error: BOOLEAN is
@@ -321,9 +311,6 @@ feature {NONE} -- Attributes
 			-- with statically bound feature calls
 		do
 		end
-
-	end_run_confirmed: BOOLEAN
-			-- Was the last confirmer popped up to confirm the end of run?
 
 	start_c_compilation: BOOLEAN
 			-- Do we have to start the C compilation after C Code generation?
@@ -384,78 +371,95 @@ feature {NONE} -- Attributes
 --			!! Result.make (Current)
 --		end
 
-feature {NONE} -- Implementation Execution
+feature {NONE} -- Execution
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Recompile the project.
+		local
+			temp: STRING
+			wd: EV_WARNING_DIALOG
+			dialog: EB_CHOOSE_ACE_DIALOG
+		do
+			if arg = Void then
+				start_c_compilation := True
+					-- Should we execute the system after sucessful melt?
+					-- (See header comment of `run_after_melt2'.)
+				run_after_melt := run_after_melt2
+				execute (Normal_request, data)
+			elseif arg = Generate_code_only then
+				start_c_compilation := False
+				run_after_melt := false
+				execute (Normal_request, data)
+			elseif arg = Save_and_compile then
+				tool_supervisor.save_all_editors
+				execute (Compile_no_save, data)
+			else
+				if Eiffel_project.is_read_only then
+					create wd.make_default (tool.parent, Interface_names.t_Warning,
+						Warning_messages.w_Cannot_compile)
+				elseif tool.initialized then
+					if not_saved and (arg = Normal_request) then
+						create wd.make_with_text (project_tool.parent, Interface_names.t_Confirm,
+							"Some files have not been saved.%N%
+							%Do you want to save them before compiling?%N")
+						wd.show_yes_no_cancel_buttons
+						wd.add_yes_command(Current, Save_and_compile)
+						wd.add_no_command(Current, Compile_no_save)
+						wd.show
+					elseif Eiffel_ace.file_name /= Void then
+						confirm_and_compile (Void, Void)
+						if Project_resources.raise_on_error.actual_value then
+							tool.raise
+						end
+					else
+						create dialog.make_default (Current, Interface_names.t_Warning,
+							Warning_messages.w_specify_ace)
+					end
+				end
+			end
+		end
+
+	load_ace (arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]; data: EV_EVENT_DATA) is
+			-- Load ace from from `arg.first'.
+		require
+			arg /= Void
 		local
 			fn: STRING
 			f: PLAIN_TEXT_FILE
 			temp: STRING
-			arg: ANY
 			wd: EV_WARNING_DIALOG
+			dialog: EB_CHOOSE_ACE_DIALOG
 		do
-			if argument /= Void then
-				if argument.first = generate_code_only then
-					arg := tool
-					start_c_compilation := False
-					run_after_melt := false
+			fn := clone (arg.first.file)
+			if not fn.empty then
+				create f.make (fn)
+				if
+					f.exists and then 
+					f.is_readable and then 
+					f.is_plain
+				then
+					Eiffel_ace.set_file_name (fn)
+					execute (Compile_no_save, Void)
+				elseif f.exists and then not f.is_plain then
+					create wd.make_with_text (tool.parent_window, Interface_names.t_Warning,
+						Warning_messages.w_Not_a_file_retry (fn))
+					wd.show_ok_cancel_buttons
+					wd.add_ok_command (Current, Compile_no_save)
+					wd.show
 				else
-					if argument.first = tool then
-						start_c_compilation := True
-							-- Should we execute the system after sucessful melt?
-							-- (See header comment of `run_after_melt2'.)
-						run_after_melt := run_after_melt2
-					end
-					arg := argument.first
+					create wd.make_with_text (tool.parent_window, Interface_names.t_Warning,
+						Warning_messages.w_Cannot_read_file_retry (fn))
+					wd.show_ok_cancel_buttons
+					wd.add_ok_command (Current, Compile_no_save)
+					wd.show
 				end
-			end
-			if Eiffel_project.is_read_only then
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_Cannot_compile)
-			elseif tool.initialized then
-				if not_saved and arg = tool then
-					end_run_confirmed := false
---					confirmer (popup_parent).call (Current, "Some files have not been saved.%NStart compilation anyway?", "Compile")
-				else
-					if Eiffel_ace.file_name /= Void then
-						confirm_and_compile (arg)
-						if Project_resources.raise_on_error.actual_value then
-							tool.raise
-						end
-					elseif arg = Void then
-						choose_template
---					elseif arg = last_warner then
---						warner_ok (arg)
---					elseif arg = last_name_chooser then
---						fn := clone (last_name_chooser.selected_file)
---						if not fn.empty then
---							!! f.make (fn)
---							if
---								f.exists and then 
---								f.is_readable and then 
---								f.is_plain
---							then
---								Eiffel_ace.set_file_name (fn)
---								work (Current)
---							elseif f.exists and then not f.is_plain then
---								warner (popup_parent).custom_call (Current,
---								Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
---							else
---								warner (popup_parent).custom_call
---									(Current, Warning_messages.w_Cannot_read_file_retry (fn),
---									Interface_names.b_Ok, Void, Interface_names.b_Cancel)
---							end
---						else
---							warner (popup_parent).custom_call (Current,
---								Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
---						end
-					else
---						warner (popup_parent).custom_call (Current,
---							Warning_messages.w_specify_ace, Interface_names.b_Browse, Interface_names.b_Build, Interface_names.b_Cancel)
-					end
-				end
-			end
+			else
+				create wd.make_with_text (tool.parent_window, Interface_names.t_Warning,
+					Warning_messages.w_Not_a_file_retry (fn))
+				wd.show_ok_cancel_buttons
+				wd.add_ok_command (Current, Compile_no_save)
+				wd.show
+			end			
 		end
 
 	license_display is
@@ -470,6 +474,36 @@ feature {NONE} -- Implementation Execution
 		end
 
 feature {NONE} -- Implementation
+
+	generate_code_only: EV_ARGUMENT1 [ANY] is
+			-- Argument used when no C compilation is asked.
+		once
+			create Result.make (Void)
+		end
+
+	normal_request: EV_ARGUMENT1 [ANY] is
+			-- Argument used for a normal request.
+		once
+			create Result.make (Void)
+		end
+
+	save_and_compile: EV_ARGUMENT1 [ANY] is
+			-- Argument used for a normal request.
+		once
+			create Result.make (Void)
+		end
+
+	compile_no_save: EV_ARGUMENT1 [ANY] is
+			-- Argument used when files needs to be saved before compiling.
+		once
+			create Result.make (Void)
+		end
+
+	stop_execution: EV_ARGUMENT1 [ANY] is
+			-- Argument used when files needs to be saved before compiling.
+		once
+			create Result.make (Void)
+		end
 
 	license_frequency: INTEGER is
 			-- Frequency of license appearance in demo mode.

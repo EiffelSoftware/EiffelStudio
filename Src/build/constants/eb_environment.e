@@ -251,7 +251,7 @@ feature -- Directory names for projects
 feature -- File names for Project
 
 	Project_ace_file: FILE_NAME is
-		once
+		do
 			!! Result.make_from_string (Project_directory);
 			Result.set_file_name (Ace_name);
 			Result.add_extension (Ace_name_in_lower_case)

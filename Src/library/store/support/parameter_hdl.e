@@ -178,7 +178,7 @@ feature {PARAMETER_HDL}
 			-- Replace object associated with `key' by a '?' in `destination'.
 			-- and, fill chronologically, the parameters_value array.
 		local
-			object: ANY
+--			object: ANY
 		do
 				destination.append ("?")
 --				check

@@ -18,7 +18,7 @@ inherit
 
 create
 	default_create,
-	make_with_text,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -229,6 +229,9 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/06 19:32:02  oconnor
+--| removed stray comma
+--|
 --| Revision 1.16  2000/03/06 19:25:55  oconnor
 --| removed make_with_text_and_actions from
 --| create clause, it only makes sense for decendants.

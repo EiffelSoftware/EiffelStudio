@@ -488,6 +488,8 @@ feature -- Warning Dialogs
 	Component_tool_button_warning: STRING is "Please drop a component on this button%NUse right click for both pick and drop actions."
 	
 	Project_exists_warning: STRING is "A Build project already exists in the selected directory. Do you wish to overwrite this project?"
+	
+	Directory_exists_warning: STRING is "The selected directory does not exist. Would you like to create it?"
 
 	Invalid_project_warning: STRING is "Invalid build project file. Please select a different file."
 		-- Warning displayed when a user attempts to open an invalid build project.

@@ -46,11 +46,7 @@ feature -- Basic operations
 --			a_height_positive: a_height >= 0
 		local
 			x, y: INTEGER
-			width, height: INTEGER
-			grid_content: SPECIAL [SPECIAL [EV_GRID_ITEM_I]]
-			grid_x, grid_y: INTEGER
-			translated_y, translated_x: INTEGER
-			back_offset: INTEGER
+			height: INTEGER
 			
 			virtual_x_position: INTEGER
 			vertical_buffer_offset: INTEGER
@@ -64,15 +60,16 @@ feature -- Basic operations
 			first_column_index: INTEGER
 			last_column_index: INTEGER
 			first_column_index_set, last_column_index_set: BOOLEAN
-			grid_item: EV_GRID_ITEM_I
 			grid_label_item: EV_GRID_LABEL_ITEM_I
 			current_index_in_row: INTEGER
 			column_counter: INTEGER
-			temp2: INTEGER
 			bool: BOOLEAN
 			row_counter: INTEGER
 			printing_values: BOOLEAN
+			column_offsets: ARRAYED_LIST [INTEGER]
+			invalid_x_start, invalid_x_end: INTEGER
 		do
+			printing_values := False
 			if printing_values then
 				print ("%N%NPartial redraw an_x : " + an_x.out + "a_y : " + a_y.out + "a_width : " + a_width.out + "a_height : " + a_height.out + "%N%N")
 			end
@@ -81,8 +78,7 @@ feature -- Basic operations
 			column_widths.extend (0)
 			
 			visible_physical_column_indexes := grid.visible_physical_column_indexes
-			
-			width := 200
+
 			height := 16
 			
 			virtual_x_position := grid.virtual_x_position
@@ -97,23 +93,30 @@ feature -- Basic operations
 				if printing_values then
 					print ("%NCalculating columns to draw%N")
 				end
+				column_offsets := grid.column_offsets
+					-- Retrieve the column offsets from `grid'.
+				check
+					column_offsets_count_equal_to_columns: column_offsets.count = grid.column_count
+				end
+				
 				from
-					grid.header.start
-					temp2 := virtual_x_position + an_x - horizontal_buffer_offset + a_width
+					column_offsets.start
+						-- Compute the virtual positions of the invalidated area.
+					invalid_x_start := virtual_x_position + an_x - horizontal_buffer_offset
+					invalid_x_end := virtual_x_position + an_x - horizontal_buffer_offset + a_width
 				until
-					last_column_index_set or grid.header.off
+					last_column_index_set or column_offsets.off
 				loop
-					temp := temp + grid.header.item.width
-					column_widths.extend (temp)
-					if not first_column_index_set and then temp > virtual_x_position + an_x - horizontal_buffer_offset then
-						first_column_index := column_widths.count - 1
+					temp := column_offsets.item
+					if not first_column_index_set and then temp > invalid_x_start then
+						first_column_index := column_offsets.index - 1
 						first_column_index_set := True
 					end
-					if not last_column_index_set and then temp2 < column_widths.last then
-						last_column_index := column_widths.count - 1
+					if not last_column_index_set and then invalid_x_end < column_offsets.item then
+						last_column_index := column_offsets.index - 1
 						last_column_index_set := True
 					end
-					grid.header.forth
+					column_offsets.forth
 				end
 				if last_column_index = 0 then
 					last_column_index := grid.column_count
@@ -139,23 +142,23 @@ feature -- Basic operations
 						temp := 0
 					until
 						column_counter > last_column_index or
-						column_counter > column_widths.count
+						column_counter > column_offsets.count
 					loop
 						if not bool and printing_values then
 							print ("%N%NColumn Counter : " + column_counter.out + "%N")
-							print ("Column widths @ column_counter : " + (column_widths @ (column_counter)).out + "%N")
+							print ("Column widths @ column_counter : " + (column_offsets @ (column_counter)).out + "%N")
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						if current_index_in_row <= column_widths.count - 1 then
+						if current_index_in_row <= column_offsets.count - 1 then
 							
 							grid_label_item ?= current_row @ (current_index_in_row - 1)
 							
 							
-							temp := (column_widths @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
+							temp := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
 							
 							grid.drawable.set_foreground_color (red)
-							grid.drawable.fill_rectangle (temp, y, column_widths @ (column_counter + 1), height)
+							grid.drawable.fill_rectangle (temp, y, column_offsets @ (column_counter + 1), height)
 							grid.drawable.set_foreground_color (black)
 							grid.drawable.draw_text_top_left (temp, y, grid_label_item.text)
 						else

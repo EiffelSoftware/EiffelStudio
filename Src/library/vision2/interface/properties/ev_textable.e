@@ -21,6 +21,8 @@ feature {NONE} -- Initialization
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Button with 'par' as parent and 'txt' as 
 			-- text label
+		require
+			valid_parent: parent_needed implies par /= Void
 		deferred
 		end
 
@@ -72,6 +74,13 @@ feature -- Element change
 			implementation.set_text (txt)
 		ensure
 			text_set: text.is_equal (txt)
+		end
+
+feature -- Deferred class
+
+	parent_needed: BOOLEAN is
+			-- Is a parent needed by the widget?
+		deferred
 		end
 
 feature {NONE} -- Implementation

@@ -227,12 +227,12 @@ feature -- Basic operations
 			original_parent: EV_DOCKABLE_TARGET
 			widget: EV_WIDGET
 			original_tool_bar: EV_TOOL_BAR
-			
 			insert_index, original_index: INTEGER
 			tool_bar_item: EV_TOOL_BAR_ITEM
 			moved_within_same_parent: BOOLEAN
-			
-			
+			locked_in_here: BOOLEAN
+			locked_in_here_window: EV_WINDOW
+			container_imp: EV_CONTAINER_IMP
 		do
 				-- Reset `dockable_dialog_target' as it should only be created in here if required.
 			dockable_dialog_target := Void
@@ -359,10 +359,18 @@ feature -- Basic operations
 			if (dockable_dialog_source = Void or dockable_target /= Void) and dockable_dialog_target = Void then
 					-- This section is executed if we are docking a widget not into a dockable dialog, hence
 					-- we check `dockable_dialog_target' is Void, to avoid the `dock_ended_actions' being fired twice,
-					-- and the rest of this section of code being executed.
+					-- and the rest of this section of code being executed.	
 				tool_bar ?= dockable_target
 				if not (tool_bar /= Void and widget_source_being_docked /= Void) then
-
+					locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+					if locked_in_here and widget_source_being_docked.top_level_window /= Void then
+						--widget_source_being_docked.top_level_window.lock_update
+						container_imp ?= container.implementation
+						check
+							container_not_void: container /= Void
+						end
+						container_imp.top_level_window_imp.lock_update
+					end		
 					if insert_label.parent /= Void then
 						unparent_source_being_docked
 						replace_insert_label
@@ -373,9 +381,12 @@ feature -- Basic operations
 					if dock_ended_actions_internal /= Void then
 						dock_ended_actions_internal.call (Void) -- dfgdfgdfg
 					end
+--					if locked_in_here and widget_source_being_docked.top_level_window /= Void then
+--						widget_source_being_docked.top_level_window.unlock_update
+--					end
 				else
 					move_dialog_to_pointer (dockable_dialog_source)
-				end
+				end		
 			end
 			
 			if widget_source_being_docked = Void then
@@ -489,6 +500,14 @@ feature -- Basic operations
 				-- As the transport has completed, we need to ensure `source_being_docked'
 				-- is now `Void'.
 			source_being_docked := Void
+			
+				-- Ensure that the locked window is unlocked, if set in this feature.
+			if locked_in_here then
+				locked_in_here_window := ((create {EV_ENVIRONMENT}).application).locked_window
+				if locked_in_here_window /= Void then
+					locked_in_here_window.unlock_update
+				end
+			end
 		ensure
 			not_dock_executing: not is_dock_executing
 			insert_separator_not_parented: insert_sep.parent = Void
@@ -962,7 +981,7 @@ feature {NONE} -- Implementation
 			end_index_valid: end_index <= a_parent.count
 		deferred
 		end
-
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_SOURCE

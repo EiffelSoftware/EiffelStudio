@@ -357,9 +357,12 @@ feature -- Basic Operations
 	Freeze_command_name: STRING is
 			-- Retrieve environment variable `a_env'.
 		once
-			Result := "%"" + (create {EIFFEL_ENV}).Eiffel_installation_dir_name + Freeze_command_relative_path + (create {PLATFORM_CONSTANTS}).Finish_freezing_script + "%""
+			Result := "%"" + (create {EIFFEL_ENV}).Eiffel_installation_dir_name + Freeze_command_relative_path + Com_freeze_command_prefix + (create {PLATFORM_CONSTANTS}).Finish_freezing_script + "%""
 		end
-		
+	
+	Com_freeze_command_prefix: STRING is "c"
+			-- Prefix of com compiler's finish_freezing utility
+
 	Freeze_command_arguments: STRING is
 			-- Retrieve command-line arguments needed by Freeze command.
 		once

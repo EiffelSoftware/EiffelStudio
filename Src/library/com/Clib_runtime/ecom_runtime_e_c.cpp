@@ -2715,3 +2715,23 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 	return c_safe_array;
 };
 //-----------------------------------------------------------------------------------
+
+void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref)
+
+// Create pointed pointer from CELL [POINTER].
+{
+	EIF_TYPE_ID type_id;
+	EIF_OBJECT eif_object;
+	EIF_POINTER_FUNCTION item;
+	void ** result;
+	
+	eif_object = eif_protect (eif_ref);
+	type_id = eif_type_id ("CELL [POINTER]");
+	item = eif_pointer_function ("item", type_id);
+
+	result = (void **) CoTaskMemAlloc (sizeof (void *));
+	* result = (void *)item (eif_access (eif_object));
+	eif_wean (eif_object);
+	return result;
+};
+//-----------------------------------------------------------------------------------

@@ -2851,3 +2851,19 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 };
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer)
+
+// Create CELL [POINTER] from void **.
+{
+	EIF_TYPE_ID type_id;
+	EIF_PROCEDURE set_item;
+	EIF_OBJECT result;
+
+	type_id = eif_type_id ("CELL [POINTER]");
+	set_item = eif_procedure ("set_item", type_id);
+	result = eif_create (type_id);
+	set_item (eif_access (result), *a_pointer);
+	CoTaskMemFree (a_pointer);
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------

@@ -984,11 +984,11 @@ feature -- Pngs
 --			Result := build_classic_pixmap ("system")
 --		end
 --
---	Icon_system_window: EV_PIXMAP is
---		once
---			Result := pixmap_file_content ("icon_system_color")
---		end
---
+	Icon_system_window: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_system_color")
+		end
+
 --	Icon_green_arrow: EV_PIXMAP is
 --		once
 --			Result := pixmap_file_content ("icon_green_arrow")

@@ -7,15 +7,16 @@ class DEBUG_SD
 
 inherit
 	OPTION_SD
-		rename
-			initialize as o_initialize
 		redefine
 			is_debug
 		end
 
 	SHARED_DEBUG_LEVEL
 
-feature {LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (v: BOOLEAN) is
 			-- Create a new DEBUG AST node.

@@ -17,7 +17,13 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-feature {ACE_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+create {LACE_I}
+	default_create
+
+feature {NONE} -- Initialization
 
 	initialize (sn: like system_name; r: like root;
 		d: like defaults; c: like clusters; e: like externals;
@@ -121,8 +127,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			create Result
-			Result.initialize (system_name.duplicate, root.duplicate,
+			create Result.initialize (system_name.duplicate, root.duplicate,
 				duplicate_ast (defaults), duplicate_ast (clusters), duplicate_ast (externals), click_list)
 			Result.set_comment_list (comment_list)
 		end

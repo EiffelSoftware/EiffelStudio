@@ -3,13 +3,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
+class
 	FILE_NAME_SD
 
 inherit
 	AST_LACE
 
-feature {FILE_NAME_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (fn: like file__name) is
 			-- Create a new FILE_NAME AST node.
@@ -31,8 +34,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			Result := clone (Current)
-			Result.initialize (file__name.duplicate)
+			create Result.initialize (file__name.duplicate)
 		end
 
 feature -- Comparison

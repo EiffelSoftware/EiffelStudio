@@ -9,7 +9,10 @@ class
 inherit
 	AST_LACE
 
-feature {TWO_NAME_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (o: like old_name; n: like new_name) is
 			-- Create a new TWO_NAME AST node.
@@ -37,8 +40,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result
-			Result.initialize (clone (old_name), clone (new_name))
+			create Result.initialize (clone (old_name), clone (new_name))
 		end
 
 feature -- Comparison

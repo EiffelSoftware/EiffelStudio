@@ -8,8 +8,11 @@ class
 
 inherit
 	AST_LACE
+	
+create
+	initialize
 
-feature {DEPEND_SD, LACE_AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (d: like depend_on; s: like script) is
 			-- Create a new TWO_NAME AST node.
@@ -37,8 +40,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object.
 		do
-			create Result
-			Result.initialize (depend_on.duplicate, script.duplicate)
+			create Result.initialize (depend_on.duplicate, script.duplicate)
 		end
 
 feature -- Comparison

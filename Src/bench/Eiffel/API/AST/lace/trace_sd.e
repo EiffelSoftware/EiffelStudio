@@ -6,7 +6,6 @@ indexing
 class TRACE_SD
 
 inherit
-
 	OPTION_SD
 		redefine
 			is_trace

@@ -9,7 +9,10 @@ inherit
 
 	AST_LACE
 
-feature {LANGUAGE_NAME_SD, LACE_AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (ln: like language_name) is
 			-- Create a new LANGUAGE_NAME AST node.
@@ -62,8 +65,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Do a full copy of Current and its sub-ojects.
 		do
-			create Result
-			Result.initialize (language_name.duplicate)
+			create Result.initialize (language_name.duplicate)
 		end
 
 feature -- Comparison

@@ -12,14 +12,6 @@ inherit
 			adapt_defaults as ast_adatp_defaults
 		end;
 
-feature {LACE_AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new OPTION AST node.
-		do
-			-- Do nothing.
-		end
-
 feature -- Properties
 
 	option_name: STRING is

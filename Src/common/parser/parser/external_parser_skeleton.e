@@ -61,12 +61,12 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_external (a_pos: INTEGER; a_file: STRING; a_string: STRING) is
+	parse_external (a_line: INTEGER; a_file: STRING; a_string: STRING) is
 			-- Parse external clause text from `a_string' located in `a_file'.
 			-- Make result available in `root_node'.
 			-- An exception is raised if a syntax error is found.
 		do
-			file_position := a_pos
+			file_line := a_line
 			root_node := Void
 			external_syntax_error := Void
 			input_buffer := create {YY_BUFFER}.make (a_string)
@@ -86,8 +86,8 @@ feature -- Access
 	root_node: EXTERNAL_EXTENSION_AS
 			-- Result of parsing
 
-	file_position: INTEGER
-			-- Current position of parsing in class text `filename'.
+	file_line: INTEGER
+			-- Current line of parsing in class text `filename'.
 
 	external_syntax_error: SYNTAX_ERROR
 			-- Current syntax error if any.
@@ -125,8 +125,8 @@ feature {NONE} -- Error handling
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 		do
-			create external_syntax_error.make (file_position + current_position.start_position,
-				 file_position + current_position.end_position, filename, 0, "", False)
+			create external_syntax_error.make (file_line,
+				 position, filename, "", False)
 		ensure then
 			has_error: has_error
 		end

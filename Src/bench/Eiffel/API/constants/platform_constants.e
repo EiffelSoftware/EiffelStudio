@@ -13,8 +13,6 @@ inherit
 
 feature -- Access
 
-	Descobj: STRING is external "C" alias "eif_descobj" end;
-
 	Dot_e: STRING is external "C" alias "eif_dot_e" end;
 
 	Dot_o: STRING is external "C" alias "eif_dot_o" end;

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	WEL_ANY
+		undefine
+			dispose
+		end
 
 	WEL_REFERENCE_TRACKABLE
 

@@ -127,11 +127,11 @@ feature -- Status Setting
 			initialized: is_initialized
 		do
 			internal_mask_bitmap.enable_reference_tracking
-			internal_mask_bitmap_object_id := eif_object_id (internal_mask_bitmap)
+			internal_mask_bitmap_object_id := internal_mask_bitmap.object_id
 
 			if has_color_bitmap then
 				internal_color_bitmap.enable_reference_tracking
-				internal_color_bitmap_object_id := eif_object_id (internal_color_bitmap)
+				internal_color_bitmap_object_id := internal_color_bitmap.object_id
 			end
 		end
 
@@ -161,7 +161,7 @@ feature -- Status Setting
 			set_hbmMask_ext (item, a_mask_bitmap.item)
 
 			internal_mask_bitmap := a_mask_bitmap
-			internal_mask_bitmap_object_id := eif_object_id (a_mask_bitmap)
+			internal_mask_bitmap_object_id := a_mask_bitmap.object_id
 			if a_mask_bitmap.reference_tracked then
 				a_mask_bitmap.increment_reference
 			end
@@ -183,7 +183,7 @@ feature -- Status Setting
 			set_hbmColor_ext (item, a_color_bitmap.item)
 
 			internal_color_bitmap := a_color_bitmap
-			internal_color_bitmap_object_id := eif_object_id (a_color_bitmap)
+			internal_color_bitmap_object_id := a_color_bitmap.object_id
 			if a_color_bitmap.reference_tracked then
 				a_color_bitmap.increment_reference	
 			end

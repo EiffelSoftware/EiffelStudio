@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 					dead_end: False
 				end
 			end
-			object_id_palette := eif_object_id (palette)
+			object_id_palette := palette.object_id
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists

@@ -8,6 +8,9 @@ indexing
 deferred class
 	WEL_REFERENCE_TRACKABLE
 
+inherit
+	WEL_OBJECT_ID_MANAGER
+
 feature -- Status Report
 
 	reference_tracked: BOOLEAN
@@ -27,6 +30,14 @@ feature -- Status Report
 		end
 	
 feature -- Status Setting
+
+	object_id: INTEGER is
+		do
+			if internal_object_id = 0 then
+				internal_object_id := eif_object_id (Current)
+			end
+			Result := internal_object_id
+		end
 
 	enable_reference_tracking is
 			-- Set `references_tracked' to True.
@@ -70,10 +81,28 @@ feature -- Status Setting
 
 feature {NONE} -- Removal
 
+	dispose is
+			-- Destroy the inner structure of `Current'.
+			--
+			-- This function should be called by the GC when the
+			-- object is collected or by the user if `Current' is
+			-- no more usefull. 
+		do
+			if exists and then not shared then
+				destroy_item
+			end
+			if internal_object_id /= 0 then
+				eif_object_id_free (internal_object_id)
+			end
+		end
+
 	destroy_item is
 			-- Ensure the current object is destroyed.
 		deferred
 		end
+
+	internal_object_id: INTEGER
+			-- Object ID of Current if recorded.
 
 feature {ANY} -- Implementation
 

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			bitmap_exists: a_bitmap.exists
 		do
 			internal_bitmap := a_bitmap
-			internal_bitmap_object_id := eif_object_id (internal_bitmap)
+			internal_bitmap_object_id := a_bitmap.object_id
 			if a_bitmap.reference_tracked then
 				a_bitmap.increment_reference
 			end

@@ -95,6 +95,18 @@ feature -- Access
 	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Parent implementation
 
+	text: STRING
+
+
+	top_parent_imp: EV_TREE_IMP is
+			-- Implementation of `parent_tree'.
+		do
+			Result ?= parent_tree.implementation
+			check
+				parent_tree_not_void: Result /= Void
+			end
+		end
+
 
 	--|FIXME I think this can be inherited now
 	--index: INTEGER is
@@ -127,6 +139,7 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
+		
 		do
 			Result := top_parent_imp.is_selected (Current)
 		end
@@ -200,9 +213,8 @@ feature -- Element change
 		do
 			-- First we set localy the text
 			set_mask (Tvif_text)
-			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
+			text := txt
 			wel_set_text (txt)
-
 			-- Then, we update the graphical tree.
 			tree := top_parent_imp
 			if tree /= Void then
@@ -422,6 +434,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/06 19:07:22  rogers
+--| Added text and also top_parent_imp which returns the implementation of parent_tree. Set text no longer calls the EV_SIMPLE_ITEM_IMP Precursor.
+--|
 --| Revision 1.27  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

@@ -27,18 +27,18 @@ creation
 feature -- Callbacks
 
 	loose_changes is
+			-- The user has been warned that he will lose his stuff
 		do
 			window_manager.close (tool);
 		end;
 
 	save_changes (argument: ANY) is
-			-- The user has been warned that he will lose his stuff
 		do
 			if tool.save_cmd_holder /= Void then
 				tool.save_cmd_holder.associated_command.execute (Void)
 			end
 
-			window_manager.close (tool);
+			loose_changes
 		end;
 
 feature -- Properties
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
-					window_manager.close (tool)
+					loose_changes
 				end
 			end
 		end;

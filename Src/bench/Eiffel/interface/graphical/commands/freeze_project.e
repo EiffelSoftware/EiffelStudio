@@ -96,14 +96,25 @@ feature {NONE} -- Implementation
 
 	launch_c_compilation (argument: ANY) is
 			-- Launch the C compilation in the background.
+		local
+			window: GRAPHICAL_TEXT_WINDOW
 		do
-			process_end_compilation;
-			if start_c_compilation then
-				error_window.put_string ("Launching C compilation in background...");
-				error_window.new_line;
-				Eiffel_project.call_finish_freezing (True);
+			window ?= Error_window
+			if window /= Void then
+				window.set_changed (True)
 			end
-		end;
+
+			Error_window.put_string ("System recompiled")
+	
+			if start_c_compilation then
+				error_window.put_string ("%NLaunching C compilation in background...%N")
+				Eiffel_project.call_finish_freezing (True)
+			end
+
+			if window /= Void then
+				window.set_changed (False)
+			end
+		end
 
 	perform_compilation (arg: ANY) is
 			-- The actual compilation process.

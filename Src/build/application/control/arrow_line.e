@@ -7,10 +7,12 @@ indexing
 class ARROW_LINE 
 
 inherit
-
 	EV_SEGMENT
 		redefine
-			make, set_line_width, attach_drawing, draw
+			make, set_line_width,
+			attach_drawing, draw,
+			set_background_color,
+			set_foreground_color
 		end
 
 	CONSTANTS
@@ -114,6 +116,34 @@ feature -- Access
 				arrow_head.after
 			loop
 				arrow_head.item.draw
+				arrow_head.forth
+			end
+		end
+
+feature -- Status setting
+
+	set_foreground_color (color: EV_COLOR) is
+		do
+			Precursor (color)
+			from
+				arrow_head.start
+			until
+				arrow_head.after
+			loop
+				arrow_head.item.set_foreground_color (color)
+				arrow_head.forth
+			end
+		end
+
+	set_background_color (color: EV_COLOR) is
+		do
+			Precursor (color)
+			from
+				arrow_head.start
+			until
+				arrow_head.after
+			loop
+				arrow_head.item.set_background_color (color)
 				arrow_head.forth
 			end
 		end

@@ -15,11 +15,13 @@ feature -- Editable
 		local
 			cmd_tool: COMMAND_TOOL
 		do
-			if command_editor = Void then
+			if command_editor /= Void and then
+				not command_editor.command_tool.destroyed
+			then
+				cmd_tool := command_editor.command_tool	
+			else
 				cmd_tool := window_mgr.command_tool
 				cmd_tool.set_command (Current)
-			else
-				cmd_tool := command_editor.command_tool	
 			end
 			cmd_tool.display
 		end	

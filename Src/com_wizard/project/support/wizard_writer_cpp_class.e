@@ -72,9 +72,6 @@ feature -- Access
 				Result.append ("%N%N")
 			end
 
-			Result.append (cpp_protector_start)
-			Result.append ("%N%N")
-
 			from
 				extern_functions.start
 			until
@@ -141,9 +138,6 @@ feature -- Access
 				end
 				functions.forth
 			end
-
-			Result.append ("%N")
-			Result.append (cpp_protector_end)
 		end
 
 	declaration_header_file_name: STRING
@@ -168,11 +162,8 @@ feature -- Access
 				Result.append ("%N#define ")
 				Result.append (l_name)
 				Result.append ("%N%N")
-				Result.append (cpp_protector_start1)
-				Result.append ("%N%N")
 				create l_declaration.make (name, namespace, abstract)
 				Result.append (l_declaration.generated_code)
-				Result.append (cpp_protector_end1)
 				Result.append ("%N#endif")
 			end
 		end
@@ -213,9 +204,6 @@ feature -- Access
 				import_files.forth
 			end
 
-			Result.append (cpp_protector_start)
-			Result.append ("%N%N")
-
 			from
 				global_variables.start
 			until
@@ -246,8 +234,6 @@ feature -- Access
 				Result.append ("%N%N")
 				extern_functions.forth
 			end
-
-			Result.append (cpp_protector_start1)
 
 			if abstract then
 				create l_protector.make (50)
@@ -348,11 +334,6 @@ feature -- Access
 			if abstract then
 				Result.append ("#endif%N")
 			end
-			Result.append (cpp_protector_end1)
-			Result.append ("%N%N")
-			Result.append (cpp_protector_end)
-			Result.append ("%N")
-
 			from
 				import_files_after.start
 			until

@@ -84,6 +84,8 @@ feature {NONE} -- Initialization
 				if t.is_generated_as_single_type then
 					implementation_id := static_type_id
 				else
+						-- Only Eiffel types that are generated with an interface
+						-- and an implementation get a different `implementation_id'.
 					implementation_id := Static_type_id_counter.next_id
 				end
 			end
@@ -174,7 +176,6 @@ feature -- Access
 		do
 			Result := type.is_generated_as_single_type
 		end
-		
 		
 	has_cpp_externals: BOOLEAN
 			-- Does current class_type contain C++ externals

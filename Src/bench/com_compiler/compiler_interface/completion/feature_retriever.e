@@ -30,6 +30,7 @@ feature -- Basic Operations
 			l_targets: LIST [STRING]
 			l_target_type: TYPE
 			l_lookup_name: STRING
+			l_new_target: like target
 		do
 			found := False
 			qualified_call := False
@@ -43,9 +44,10 @@ feature -- Basic Operations
 			if feature_i /= void then
 				qualified_call := l_targets.count > 1
 				if not qualified_call then
-					found_item := completion_feature_from_name (target)
+					l_new_target := feature_name_from_target (target)
+					found_item := completion_feature_from_name (l_new_target)
 					if found_item = Void then
-						found_item := uncompiled_completion_feature (target)
+						found_item := uncompiled_completion_feature (l_new_target)
 						found := found_item /= Void
 					end
 				else
@@ -113,6 +115,25 @@ feature {NONE} -- Implementation
 				end
 			end
 			found := Result /= Void
+		end
+		
+	feature_name_from_target (a_target: STRING): STRING is
+			-- extracts and returns a feature name from `a_target'
+		require
+			non_void_target: a_target /= Void
+			valid_target: not a_target.is_empty
+		local
+			l_last_spc: INTEGER
+		do
+			l_last_spc := a_target.last_index_of (' ', a_target.count)
+			if l_last_spc > 0 then
+				Result := a_target.substring (l_last_spc + 1, a_target.count)
+			else
+				Result := clone (a_target)
+			end
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.is_empty
 		end
 		
 	feature_location (a_feature_i: FEATURE_I): INTEGER is

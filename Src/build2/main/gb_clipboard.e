@@ -103,6 +103,9 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND} --
 			xm_element: XM_ELEMENT
 			element: XM_ELEMENT
 		do
+			if an_object.object = Void then
+				an_object.build_objects
+			end
 			object_type := an_object.type
 			create xml_store
 			xml_store.store_individual_object (an_object)

@@ -35,6 +35,7 @@ inherit
 			pixmap_size_ok
 		redefine
 			set_text,
+			make,
 			create_pixmap_place
 		select
 			remove_double_click_commands,
@@ -47,35 +48,23 @@ create
 
 feature {NONE} -- Initialization
 
+	make is
+			-- create the tool bar buton.
+			-- Redefined because the interface does not
+			-- call `widget_make' where we connect `destroy_signal_callback'
+			-- to `destroy' event.
+		do
+			{EV_BUTTON_IMP} Precursor
+
+			initialize_object_handling
+		end
+
 	initialize is
 			-- Creation of vbox for pixmap and caption.
 		do
 			box := gtk_vbox_new (False, 5)
 			gtk_widget_show (box)
 			gtk_container_add (GTK_CONTAINER (widget), box)
-		end
-
-	set_text (txt: STRING) is
-			-- Set the caption of the tool bar button to txt.
-			-- Aligns pixmap to the middle of the button.
-		do
-			{EV_BUTTON_IMP} Precursor (txt)
-			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
-			end
-		end
-
-	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
-		do
-			-- Redfinition needed to align pixmap in centre of button.
-			{EV_BUTTON_IMP} Precursor (pix_imp)
-			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
-			end
-			if label_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
-			end
 		end
 
 feature -- Access
@@ -119,6 +108,29 @@ feature -- Element Change
 			-- list.
 		do
 			parent_imp.insert_item (Current, pos)
+		end
+
+	set_text (txt: STRING) is
+			-- Set the caption of the tool bar button to txt.
+			-- Aligns pixmap to the middle of the button.
+		do
+			{EV_BUTTON_IMP} Precursor (txt)
+			if pixmap_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
+			end
+		end
+
+	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
+		do
+			-- Redfinition needed to align pixmap in centre of button.
+			{EV_BUTTON_IMP} Precursor (pix_imp)
+			if pixmap_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
+			end
+			if label_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
+			end
 		end
 
 feature -- Status report

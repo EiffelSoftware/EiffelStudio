@@ -92,6 +92,12 @@ feature -- Access
 			create Result.make
 		end
 		
+	set_root_window_command: GB_SET_ROOT_WINDOW_COMMAND is
+			-- Command representing setting of root window.
+		once
+			create Result.make
+		end
+
 	redo_command: GB_REDO_COMMAND is
 			-- Command representing a redo.
 		once
@@ -186,6 +192,7 @@ feature {GB_MAIN_WINDOW} -- Implementation
 			Result.extend (undo_command)
 			Result.extend (redo_command)
 			Result.extend (generation_command)
+			Result.extend (set_root_window_command)
 		end
 		
 	all_two_state_commands: ARRAYED_LIST [GB_TWO_STATE_COMMAND] IS

@@ -14,6 +14,31 @@ inherit
 		redefine
 			interface
 		end
+		
+feature -- Access
+
+	item_by_data (data: ANY): like item is
+			-- First item with `data'.
+		require
+			data_not_void: data /= Void
+		local
+			c: CURSOR
+			curr_data: like data
+		do
+			c := cursor
+			from
+				interface.start
+			until
+				interface.after or Result /= Void
+			loop
+				curr_data := interface.item.data
+				if equal (curr_data, data) then
+					Result := interface.item
+				end
+				interface.forth
+			end
+			go_to (c)
+		end
 
 feature {EV_ANY_I} -- Implementation
 

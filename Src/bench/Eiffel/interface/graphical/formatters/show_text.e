@@ -74,7 +74,11 @@ feature {NONE}
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Switching to text format...")
+			if text_window.root_stone = Void then
+				text_window.display_header ("Producing text format...")
+			else
+				text_window.display_header ("Switching to text format...")
+			end
 		end;
 
 feature 
@@ -138,9 +142,14 @@ feature
 						text_window.put_string (stone_text);
 						if stone.clickable then
 							if modified_class then
-								class_name := classc_stone.class_c.class_name;
-								warner (text_window).gotcha_call 
-									(w_Class_modified (class_name))
+								if not do_format then
+										-- Do not display the warning message
+										-- if the format has been changed
+										-- internally (resynchronization, ...)
+									class_name := classc_stone.class_c.class_name;
+									warner (text_window).gotcha_call 
+										(w_Class_modified (class_name))
+								end
 							else
 								click_list := stone.click_list;
 								if (click_list /= Void) then

@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window manager for routine tools.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class ROUTINE_WIN_MGR 
 
@@ -11,10 +17,6 @@ inherit
 creation
 
 	make
-
-feature {NONE}
-
-	editor_type: ROUTINE_W;
 
 feature -- Debugging (stop points)
 
@@ -55,4 +57,8 @@ feature -- Debugging (stop points)
 			end
 		end;
 
-end 
+feature {NONE} -- Properties
+
+	editor_type: ROUTINE_W;
+
+end -- class ROUTINE_WIN_MGR

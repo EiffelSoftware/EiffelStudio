@@ -1,3 +1,10 @@
+indexing
+
+	desciption:
+			"Window where the user can make choice.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class
 
 	CHOICE_W

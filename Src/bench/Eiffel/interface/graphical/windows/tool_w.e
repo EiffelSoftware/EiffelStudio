@@ -1,5 +1,10 @@
+indexing
 
--- Ancestor of all tools in the workbench, providing dragging capabilities (transport)
+	description:	
+		"Ancestor of all tools in the workbench, providing %
+					%dragging capabilities (transport)";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class TOOL_W 
 
@@ -13,7 +18,7 @@ inherit
 		end;
 	SHARED_TABS
 
-feature 
+feature -- Window Properties
 
 	text_window: TEXT_WINDOW;
 			-- Text window attached to Current
@@ -21,27 +26,101 @@ feature
 	tool_name: STRING is do end;
 			-- Name of the tool
 
-feature -- Window features
+	realized: BOOLEAN is
+			-- Is Current realized?
+		deferred
+		end;
 
-	realized: BOOLEAN is deferred end;
-	realize is deferred end;
-	shown: BOOLEAN is deferred end;
-	show is deferred end;
-	raise is deferred end;
-	title: STRING is deferred end;
-	set_title (s: STRING) is deferred end;
-	destroy is deferred end;
-	hide is deferred end
-	set_default_position is deferred end;
-	set_default_size is deferred end;
-	set_icon_name (s: STRING) is deferred end;
+	shown: BOOLEAN is
+			-- Is Current shown on the screen?
+		deferred
+		end;
 
-feature
+	title: STRING is
+			-- The title of the window.
+		deferred
+		end;
+
+	hole: HOLE is
+			-- Hole associated with Current.
+		do
+		end;
+
+	save_command: ICONED_COMMAND is
+			-- The command to save the contents of Current.
+		do
+		end;
+
+feature -- Window Implementation
+
+	realize is
+			-- Realize Current.
+		deferred
+		end;
+
+	show is
+			-- Show Current on the screen.
+		deferred
+		end;
+
+	raise is
+			-- Raise Current to the top.
+		deferred
+		end;
+
+	destroy is
+			-- Destroy the window.
+		deferred
+		end;
+
+	hide is
+			-- Hide Current from the screen.
+		deferred
+		end
+
+	close_windows is
+			-- Close the related windows.
+			-- Used for popping down.
+		deferred
+		end;
+
+feature -- Window settings
+
+	set_default_position is
+			-- Set the position to its default.
+		deferred
+		end;
+
+	set_default_size is
+			-- Set the size to its default.
+		deferred
+		end;
+
+	set_icon_name (s: STRING) is
+			-- Set `s' to the name shown just below the icon.
+		deferred
+		end;
+
+	set_default_format is
+			-- Default format of windows.
+		do
+			-- Do nothing
+		end;
+
+	set_title (s: STRING) is
+			-- Set `title' to `s'.
+		deferred
+		end;
+
+feature -- Update
 
 	synchronize is
+			-- Synchronize the contents of `text_window'.
 		do
 			text_window.synchronize
 		end;
+
+feature -- Pick and Throw Implementation
 
 	receive (dropped: STONE) is
 			-- Deal with element `dropped'.
@@ -50,7 +129,7 @@ feature
 		end;
 
 	reset is
-			-- Reset the window contents
+			-- Reset the window contents.
 		do
 			set_title (tool_name);
 			set_default_format;
@@ -62,101 +141,10 @@ feature
 			end;
 		end;
 
-	set_default_format is
-			-- Default format of windows
-		do
-			-- Do nothing
-		end;
-
-	close_windows is
-		deferred
-		end;
-	
-feature {NONE}
-
-	transporting: BOOLEAN;
-		-- Is a stone currently being transported?
-
-	abort: ANY;
-
-	transporter_init is
-			-- Initialize tranport stuff.
-		local
-			void_reference: ANY
-		do
-			!! abort;
-			set_drawing (screen);
-			set_logical_mode (10);
-			set_subwindow_mode (1);
-			add_pointer_motion_action (Current, Current);
---			add_button_click_action (3, Current, text_window);
-			add_button_press_action (3, Current, text_window);
-			add_button_release_action (1, Current, abort);
-			add_button_release_action (2, Current, abort);
-		end;
-
-	execute (argument: ANY) is
-			-- Leave a track when the pointer moves on the screen, ungrab when button is released
-		local
-			pointed_widget: WIDGET;
-			pointed_text: TEXT_WINDOW;
-			pointed_hole: HOLE;
-			transported_hole: HOLE;
-			transported_node: like last_transported;
-		do
-			if (argument = Current) then
-				-- Motion action (when grabbed)
-				if transporting then
-					draw_segment (x0, y0, x1, y1);
-					x1 := screen.x; y1 := screen.y;
-					draw_segment (x0, y0, x1, y1)
-				end;
-			elseif (argument = abort) then
-				draw_segment (x0, y0, x1, y1);
-				if origin_text /= Void then
-					origin_text.deselect_all
-				end;
-				ungrab;
-				clean_type;
-				transporting := False;
-			elseif argument /= Void then
-				draw_segment (x0, y0, x1, y1);
-				if origin_text /= Void then
-					origin_text.deselect_all
-				end;
-				clean_type;
-				transporting := False;
-				ungrab;
-				pointed_widget := screen.widget_pointed;
-				pointed_hole ?= pointed_widget;
-				pointed_text ?= pointed_widget;
-				transported_node ?= last_transported;
-				transported_hole ?= last_transported;
-				if pointed_text /= Void then
-					if transported_hole /= Void and then pointed_text.clickable then
-						pointed_text.change_focus;
-						transported_hole.receive (pointed_text.focus);
-						pointed_text.deselect_all;
-					elseif transported_node /= Void then
-						pointed_text.receive (transported_node);
-					end
-				elseif pointed_hole /= Void then
-					if transported_node /= Void then
-						pointed_hole.receive (transported_node);
-					end
-				end;
-			else
-				work (argument)
-			end
-		end;
-
-	work (arg: ANY) is do end;
-			-- Useless here
-
-feature 
-
-	transport (element: like last_transported; a_text: TEXT_WINDOW; start_x, start_y: INTEGER) is
-			-- Grab cursor and leave a track when the pointer moves on the screen.
+	transport (element: like last_transported; a_text: TEXT_WINDOW;
+				start_x, start_y: INTEGER) is
+			-- Grab cursor and leave a track when the pointer
+			-- moves on the screen.
 		require
 			tranported_not_void: element /= Void
 		do
@@ -174,52 +162,25 @@ feature
 			origin_text = a_text;
 			last_transported = element
 		end;
-
 	
-feature {NONE}
+feature {NONE} -- Implementation
 
-	origin_text: TEXT_WINDOW;
-			-- Text window where the last transported element came from, Void
-			-- if last transported was a hole
- 
-	last_transported: STONE;
-			-- Last transported element, Void between grabs
- 
-	x0, y0, x1, y1: INTEGER;
-			-- Initial and current pointer coordinates
-
-feature
-
-	tell_type (a_type_name: STRING) is
-			-- Display `a_type_name' in type teller.
-		deferred
+	transporter_init is
+			-- Initialize tranport stuff.
+		local
+			void_reference: ANY
+		do
+			!! abort;
+			set_drawing (screen);
+			set_logical_mode (10);
+			set_subwindow_mode (1);
+			add_pointer_motion_action (Current, Current);
+--			add_button_click_action (3, Current, text_window);
+			add_button_press_action (3, Current, text_window);
+			add_button_release_action (1, Current, abort);
+			add_button_release_action (2, Current, abort);
 		end;
- 
-	clean_type is
-			-- Clean what's said in the type teller window.
-		deferred
-		end;
-
 	
-feature 
-
-	hole: HOLE is do end;
-
-	save_command: ICONED_COMMAND is do end;
-	
-feature {NONE}
-
-	screen: SCREEN is deferred end;
-	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is deferred end;
-	--add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
-	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
-	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is deferred end;
-	grab (cursor: SCREEN_CURSOR) is deferred end;
-	ungrab is deferred end;
-	
-
-feature {NONE} 
-
 	raise_grabbed_popup is
 			-- Raise popup windows with exclusive grab set.
 		do
@@ -234,11 +195,166 @@ feature {NONE}
 				last_confirmer.is_popped_up 
 			then
 				last_confirmer.raise
-			elseif name_chooser.is_popped_up then
+			elseif
+				name_chooser.is_popped_up
+			then
 				name_chooser.raise
 			else
 				window_manager.class_win_mgr.raise_shell_popup
 			end
 		end;
 
-end
+feature {NONE} -- Execution Implementation
+
+	execute (argument: ANY) is
+			-- Leave a track when the pointer moves on the screen,
+			-- ungrab when button is released
+		local
+			pointed_widget: WIDGET;
+			pointed_text: TEXT_WINDOW;
+			pointed_hole: HOLE;
+			transported_hole: HOLE;
+			transported_node: like last_transported;
+		do
+			if (argument = Current) then
+				-- Motion action (when grabbed)
+				if transporting then
+					draw_segment (x0, y0, x1, y1);
+					x1 := screen.x; y1 := screen.y;
+					draw_segment (x0, y0, x1, y1)
+				end;
+			elseif (argument = abort) then
+				-- The Pick and Throw is aborted.
+				draw_segment (x0, y0, x1, y1);
+				if origin_text /= Void then
+					origin_text.deselect_all
+				end;
+				ungrab;
+				clean_type;
+				transporting := False;
+			elseif argument /= Void then
+				-- Finally, the user really threw the pebble
+				-- in a hole.
+				draw_segment (x0, y0, x1, y1);
+				if origin_text /= Void then
+					origin_text.deselect_all
+				end;
+				clean_type;
+				transporting := False;
+				ungrab;
+				pointed_widget := screen.widget_pointed;
+				pointed_hole ?= pointed_widget;
+				pointed_text ?= pointed_widget;
+				transported_node ?= last_transported;
+				transported_hole ?= last_transported;
+				if pointed_text /= Void then
+					if
+						transported_hole /= Void
+							and then
+						pointed_text.clickable
+					then
+						pointed_text.change_focus;
+						transported_hole.receive
+							(pointed_text.focus);
+						pointed_text.deselect_all;
+					elseif
+						transported_node /= Void
+					then
+						pointed_text.receive
+							(transported_node);
+					end
+				elseif pointed_hole /= Void then
+					if transported_node /= Void then
+						pointed_hole.receive
+							(transported_node);
+					end
+				end;
+			else
+				-- Must be something, we cannot deal with.
+				work (argument)
+			end
+		end;
+
+	work (arg: ANY) is
+			-- Not used.
+		do
+			-- Do Nothing
+		end;
+
+feature {NONE} -- Cursor grabbing
+
+	grab (cursor: SCREEN_CURSOR) is
+			-- Grab all events in the system.
+		deferred
+		end;
+
+	ungrab is
+			-- Stop grabbing all events in the system.
+		deferred
+		end;
+
+feature {NONE} -- Properties
+
+	abort: ANY;
+			-- Argument passed when Pick and Throw is aborted.
+
+	transporting: BOOLEAN;
+			-- Is a stone currently being transported?
+
+	origin_text: TEXT_WINDOW;
+			-- Text window where the last transported element came
+			-- from, Void if last transported was a hole
+ 
+	last_transported: STONE;
+			-- Last transported element, Void between grabs
+
+	screen: SCREEN is
+			-- The screen where Current is shown.
+		deferred
+		end;
+ 
+	x0, y0, x1, y1: INTEGER;
+			-- Initial and current pointer coordinates
+
+feature -- Focus Label
+
+	tell_type (a_type_name: STRING) is
+			-- Display `a_type_name' in type teller.
+		deferred
+		end;
+ 
+	clean_type is
+			-- Clean what's said in the type teller window.
+		deferred
+		end;
+
+feature {NONE} -- Action Adding
+
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Add action for motion of the mouse pointer.
+			-- Pass `argument' down to `a_command' when action
+			-- occurs.
+		deferred
+		end;
+
+	--add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+		--deferred
+		--end;
+
+	add_button_press_action (number: INTEGER; a_command: COMMAND;
+				argument: ANY) is
+			-- Add action for pressing a mouse button.
+			-- Pass `argument' down to `a_command' when button
+			-- `number' is pressed.
+		deferred
+		end;
+
+	add_button_release_action (number: INTEGER; a_command: COMMAND;
+				argument: ANY) is
+			-- Add action for releasing a mouse button.
+			-- Pass `argument' down to `a_command' when button
+			-- `number' is released.
+		deferred
+		end;
+
+end -- class TOOL_W

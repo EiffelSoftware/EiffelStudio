@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window to show a warning.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class WARNER_W 
 
@@ -28,7 +34,7 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_parent: COMPOSITE) is
 			-- Create a warning window.
@@ -44,6 +50,8 @@ feature
 			set_composite_attributes (Current);
 			realize
 		end;
+
+feature -- Graphical Interface
 
 	popup is
 			-- Popup warning window.
@@ -95,6 +103,8 @@ feature
 			last_caller_recorded: last_caller = a_command
 		end;
 
+feature -- Window Settings
+
 	set_last_caller (cmd: COMMAND_W) is
 		do
 			last_caller := cmd
@@ -104,6 +114,8 @@ feature
 		do
 			window ?= wind.tool
 		end;
+
+feature -- Access
 
 	gotcha_call (a_message: STRING) is
 		do
@@ -151,10 +163,25 @@ feature
 			popup;
 		end;
 
-feature {NONE}
+feature {NONE} -- Properties
 
-	popdown_action: ANY is once !!Result end;
-	help_it: ANY is once !!Result end;
+	popdown_action: ANY is
+		once
+			!!Result
+		end;
+
+	help_it: ANY is
+		once
+			!!Result
+		end;
+
+	last_caller: COMMAND_W
+			-- Last command which popped up current
+
+	window: WIDGET;
+			-- Window to which the warning will apply
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		do
@@ -177,12 +204,6 @@ feature {NONE}
 				end
 			end
 		end;
-
-	last_caller: COMMAND_W
-			-- Last command which popped up current
-
-	window: WIDGET;
-			-- Window to which the warning will apply
 
 feature {NONE} -- Clickable features
 
@@ -220,4 +241,4 @@ feature {NONE} -- Clickable features
 			error_message.extend (c);
 		end;
 
-end
+end -- class WARNER_W

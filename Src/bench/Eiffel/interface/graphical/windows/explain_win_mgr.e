@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window manager for explanation windows.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class EXPLAIN_WIN_MGR 
 
@@ -12,8 +18,8 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Properties
 
 	editor_type: EXPLAIN_W;
 	
-end 
+end -- class EXPLAIN_WIN_MGR

@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window describing an explanation";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class EXPLAIN_W 
 
@@ -22,7 +28,7 @@ creation
 
 	make
 
-feature {NONE}
+feature -- Creation
 
 	make (a_screen: SCREEN) is
 			-- Create a explain window tool
@@ -30,6 +36,8 @@ feature {NONE}
 			normal_create (a_screen);
 			text_window.set_read_only
 		end;
+
+feature -- Graphical Interface
 
 	build_text_window is
 			-- Create `text_window' different ways whether
@@ -45,23 +53,25 @@ feature {NONE}
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!!showtext_command.make (format_bar, text_window);
-				format_bar.attach_top (showtext_command, 0);
-				format_bar.attach_left (showtext_command, 0);
+			!! showtext_command.make (format_bar, text_window);
+			format_bar.attach_top (showtext_command, 0);
+			format_bar.attach_left (showtext_command, 0);
 		end;
 
-	tool_name: STRING is do Result := l_Explain end;
+feature -- Window Properties
 
-	
-feature 
+	tool_name: STRING is
+			-- Name of the tool represented by Current.
+		do
+			Result := l_Explain
+		end;
 
 	text_window: EXPLAIN_TEXT;
-			-- A text window that display the help file of an element
-
+			-- A text window that displays the help file of an element
 	
-feature {NONE}
+feature {NONE} -- Attributes; Forms And Holes
 
 	hole: EXPLAIN_HOLE;
-			-- Hole caraterizing current
+			-- Hole charaterizing current
 
-end
+end -- class EXPLAIN_W

@@ -1,7 +1,9 @@
+indexing
 
--- Hole for an existing class tool.
--- Yes, I know, it's very funny.
--- No it's not you sick frog
+	description:	
+		"Class Hole for a routine tool.";
+	date: "$Date$";
+	revision: "$Revision: "
 
 class ROUT_CLASS_HOLE 
 
@@ -17,7 +19,7 @@ creation
 
 	make
 
-feature 
+feature -- Properties
 
 	transport_stone: STONE is
 		local
@@ -45,9 +47,12 @@ feature
 			Result := bm_Class_dot
 		end;
 
-	stone_type: INTEGER is do Result := Class_type end;
+	stone_type: INTEGER is
+		do
+			Result := Class_type
+		end;
 	
-feature {NONE}
+feature {NONE} -- Properties
 
 	compatible (dropped: STONE): BOOLEAN is
 			-- Can current accept `dropped'?
@@ -56,6 +61,9 @@ feature {NONE}
 				(dropped.stone_type = Class_type)
 		end;
 
-	command_name: STRING is do Result := l_Class end;
+	command_name: STRING is
+		do
+			Result := l_Class
+		end;
 
-end
+end -- class ROUT_CLASS_HOLE

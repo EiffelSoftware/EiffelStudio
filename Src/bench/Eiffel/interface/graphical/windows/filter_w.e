@@ -1,4 +1,9 @@
--- Window to enter filter names
+indexing
+
+	description:	
+		"Window to enter filter names.";
+	date: "$Date$";
+	revision: "$Revision: "
 
 class FILTER_W 
 
@@ -16,7 +21,7 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_composite: COMPOSITE; cmd: FILTER_COMMAND) is
 			-- Create a filter window.
@@ -85,15 +90,7 @@ feature
 			set_composite_attributes (Current)
 		end;
 
-	
-feature {NONE}
-
-	display_it: ANY is once !!Result end;
-	execute_it: ANY is once !!Result end;
-	cancel_it: ANY is once !!Result end;
-			-- Arguments for the command
-
-feature 
+feature -- Execution; Implementation
 	
 	call is
 		local
@@ -113,10 +110,36 @@ feature
 				warner (associated_command.text_window). gotcha_call (warning_message)
 			end
 		end;
+	
+feature {NONE} -- Properties
 
-feature {NONE}
+	display_it: ANY is
+			-- Argument for the command.
+		once
+			!!Result
+		end;
+
+	execute_it: ANY is
+			-- Argument for the command.
+		once
+			!!Result
+		end;
+
+	cancel_it: ANY is
+			-- Argument for the command.
+		once
+			!!Result
+		end;
 
 	associated_command: FILTER_COMMAND;
+
+	list: SCROLL_LIST;
+
+	text_field: TEXT_FIELD;
+
+	warning_message: STRING;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		local
@@ -211,10 +234,6 @@ feature {NONE}
 				end
 			end
 		end;
-
-	list: SCROLL_LIST;
-	text_field: TEXT_FIELD;
-	warning_message: STRING;
 
 invariant
 

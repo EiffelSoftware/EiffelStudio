@@ -1,4 +1,9 @@
--- Window to enter special object bounds for inspection.
+indexing
+
+	description:	
+		"Window to enter special object bounds for inspection.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SLICE_W 
 
@@ -22,7 +27,7 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_composite: COMPOSITE; cmd: SLICE_COMMAND) is
 			-- Create a special object slice window.
@@ -97,15 +102,7 @@ feature
 			set_composite_attributes (Current)
 		end;
 
-	
-feature {NONE}
-
-	ok_it: ANY is once !!Result end;
-	apply_it: ANY is once !!Result end;
-	cancel_it: ANY is once !!Result end;
-			-- Arguments for the command
-
-feature 
+feature -- Access
 	
 	call is
 			-- Popup the slice window, with the capacity of the last
@@ -128,10 +125,34 @@ feature
 			popup;
 			raise
 		end;
+	
+feature {NONE} -- Properties
 
-feature {NONE}
+	ok_it: ANY is
+			-- Argument for the command
+		once
+			!!Result
+		end;
+
+	apply_it: ANY is
+			-- Argument for the command
+		once
+			!!Result
+		end;
+
+	cancel_it: ANY is
+			-- Argument for the command
+		once
+			!!Result
+		end;
 
 	associated_command: SLICE_COMMAND;
+
+	from_field, to_field: TEXT_FIELD;
+
+	last_lower, last_upper: INTEGER;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		local
@@ -173,10 +194,6 @@ feature {NONE}
 				popdown
 			end
 		end;
-
-	from_field, to_field: TEXT_FIELD;
-
-	last_lower, last_upper: INTEGER;
 
 invariant
 

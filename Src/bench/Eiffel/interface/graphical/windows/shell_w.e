@@ -1,5 +1,9 @@
+indexing
 
--- Window to enter shell commands 
+	description:	
+		"Window to enter shell commands.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHELL_W 
 
@@ -17,7 +21,7 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_composite: COMPOSITE; cmd: SHELL_COMMAND) is
 			-- Create a file selection dialog
@@ -36,14 +40,8 @@ feature
 			set_composite_attributes (Current)
 		end;
 
-	
-feature {NONE}
+feature -- Access
 
-	ok_it, cancel_it: ANY;
-			-- Arguments for the command
-
-feature 
-	
 	call is
 		do
 			set_exclusive_grab;
@@ -52,9 +50,7 @@ feature
 			raise
 		end;
 
-feature {NONE}
-
-	associcated_command: SHELL_COMMAND;
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		local
@@ -73,4 +69,11 @@ feature {NONE}
 			end
 		end;
 
-end
+feature {NONE} -- Properties
+
+	associcated_command: SHELL_COMMAND;
+
+	ok_it, cancel_it: ANY;
+			-- Arguments for the command
+
+end -- class SHELL_W

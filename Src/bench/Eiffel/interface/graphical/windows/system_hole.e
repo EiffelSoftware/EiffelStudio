@@ -1,4 +1,9 @@
--- Hole for system tool
+indexing
+
+	description:	
+		"Hole for system tool.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SYSTEM_HOLE 
 
@@ -16,7 +21,7 @@ creation
 
 	make
 
-feature 
+feature -- Properties
 
 	symbol: PIXMAP is
 			-- Icon for the system tool
@@ -30,7 +35,17 @@ feature
 			Result := bm_System_dot
 		end;
 
-feature {NONE}
+	stone_type: INTEGER is
+		do
+			Result := System_type
+		end;
+
+	command_name: STRING is
+		do
+			Result := l_System
+		end;
+
+feature {NONE} -- Execution
 
 	work (argument: ANY) is
 			-- With button select: popup the ACE.
@@ -89,16 +104,8 @@ feature {NONE}
 				end;
 			end
 		end;
-
 	
-feature 
-
-	stone_type: INTEGER is do Result := System_type end;
-
-	
-feature {NONE}
-
-	command_name: STRING is do Result := l_System end;
+feature {NONE} -- Implementation
 
 	load_default_ace is
 		local
@@ -110,4 +117,4 @@ feature {NONE}
 				system_tool.text_window.set_changed (True)
 		end;
 
-end
+end -- class SYSTEM_HOLE

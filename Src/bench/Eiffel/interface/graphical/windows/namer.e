@@ -1,9 +1,13 @@
+indexing
 
--- To name automatically each new widget
+	description:	
+		"To name automatically each new widget.";
+	date: "$Date$";
+	revision: "$Revision: "
 
 class NAMER
 
-feature {NONE}
+feature {NONE} -- Properties
 
 	new_name: STRING is
 			-- Original name for tool identification
@@ -12,7 +16,10 @@ feature {NONE}
 			Result := counter.item.out
 		end;
 
-	counter: CELL [INTEGER] is once !!Result.put (0) end
+	counter: CELL [INTEGER] is
 			-- Shared container of tool identification numbers
+		once
+			!!Result.put (0)
+		end
 
-end
+end -- class NAMER

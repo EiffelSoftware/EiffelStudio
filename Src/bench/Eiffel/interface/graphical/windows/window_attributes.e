@@ -1,10 +1,19 @@
+indexing
+
+	description:	
+		"Class to set window attributes. %
+					%CLASS NAME SHOULD CHANGE!";
+	date: 	"$Date$";
+	revision: 	"$Revision$"
+
 class SET_WINDOW_ATTRIBUTES
+	-- FIXME: *****************************************************************
 
 inherit
 	
 	SHARED_BENCH_RESOURCES
 
-feature -- Access
+feature -- Properties
 
 	bg_color: COLOR is
 		local
@@ -95,4 +104,4 @@ feature -- Setting
 			end
 		end;
 
-end
+end -- class SET_WINDOW_ATTRIBUTES

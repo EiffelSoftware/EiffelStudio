@@ -759,12 +759,26 @@ feature -- Class info
 		do
 		end
 
-	generate_class_mappings (class_type: CLASS_TYPE) is
+	generate_class_mappings (class_type: CLASS_TYPE; for_interface: BOOLEAN) is
 			-- Define all types, both external and eiffel one.
 		require
 			class_type_not_void: class_type /= Void
+			class_type_generated: class_type.is_generated
+		local
+			class_c: CLASS_C
 		do
-			current_module.generate_class_mappings (class_type)
+			class_c := class_type.associated_class
+			if class_c.is_single or class_c.is_frozen then
+				if for_interface then
+					current_module.generate_interface_class_mapping (class_type)
+				end
+			else
+				if for_interface then
+					current_module.generate_interface_class_mapping (class_type)
+				else
+					current_module.generate_implementation_class_mapping (class_type)
+				end
+			end
 		end
 
 	generate_class_interfaces (class_type: CLASS_TYPE; class_c: CLASS_C) is
@@ -1029,18 +1043,34 @@ feature -- Features info
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
+			i, nb: INTEGER
+			sorted_array: SORTABLE_ARRAY [FEATURE_I]
 		do
 			is_single_class := False
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
+				i := 1
+				nb := features.count
+				create sorted_array.make (1, features.count)
 				features.start
 			until
 				features.after
 			loop
-				feat := select_tbl.item (features.item_for_iteration)
-				generate_feature (feat, True, False, False)
+				sorted_array.put (select_tbl.item (features.item_for_iteration), i)
+				i := i + 1
 				features.forth
+			end
+			
+			sorted_array.sort
+			
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				generate_feature (sorted_array.item (i), True, False, False)
+				i := i + 1				
 			end
 
 				-- Generate type features for formal generic parameters.
@@ -1064,19 +1094,50 @@ feature -- Features info
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
+			i, nb: INTEGER
+			sorted_array: SORTABLE_ARRAY [FEATURE_I]
 		do
 			is_single_class := True
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
+				i := 1
+				nb := features.count
+				create sorted_array.make (1, features.count)
 				features.start
 			until
 				features.after
 			loop
-				feat := select_tbl.item (features.item_for_iteration)
-				generate_feature (feat, False, False, False)
+				sorted_array.put (select_tbl.item (features.item_for_iteration), i)
+				i := i + 1
 				features.forth
 			end
+			
+			sorted_array.sort
+			
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				generate_feature (sorted_array.item (i), False, False, False)
+				i := i + 1				
+			end
+
+			define_runtime_features (class_type)
+			current_module.define_default_constructor (class_type, False)
+			generate_invariant_feature (class_c.invariant_feature)
+
+				-- Generate type features for formal generic parameters.
+			if class_c.generic_features /= Void then
+				generate_implementation_type_features (class_c.generic_features, class_c.class_id)
+			end
+
+				-- Generate type features for feature used as anchor.
+			if class_c.anchored_features /= Void then
+				generate_implementation_type_features (class_c.anchored_features, class_c.class_id)
+			end
+			
 			is_single_class := False
 		end
 
@@ -1489,6 +1550,10 @@ feature -- Features info
 						define_custom_attribute (l_meth_token,
 							current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
 					end
+					if feat.is_type_feature then
+						define_custom_attribute (l_meth_token,
+							current_module.com_visible_ctor_token, not_com_visible_ca)
+					end
 
 					if not is_static and l_is_attribute and not is_override_or_c_external then
 							-- Let's define attribute setter.
@@ -1627,6 +1692,27 @@ feature -- Features info
 				l_type_feature := feats.item_for_iteration
 				if l_type_feature.origin_class_id = class_id then
 					generate_feature (l_type_feature, True, False, False)
+				end
+				feats.forth
+			end
+		end
+
+	generate_implementation_type_features (feats: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; class_id: INTEGER) is
+			-- Generate all TYPE_FEATURE_I that must be generated in
+			-- interface corresponding to class ID `class_id'.
+		require
+			feats_not_void: feats /= Void
+		local
+			l_type_feature: TYPE_FEATURE_I
+		do
+			from
+				feats.start
+			until
+				feats.after
+			loop
+				l_type_feature := feats.item_for_iteration
+				if l_type_feature.origin_class_id = class_id then
+					generate_feature (l_type_feature, False, False, False)
 				end
 				feats.forth
 			end
@@ -4504,9 +4590,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 
 	external_class_mapping: HASH_TABLE [CL_TYPE_I, STRING]
 			-- Quickly find a type given its external name.
-
-	class_mapping: ARRAY [INTEGER]
-			-- Array of type token indexed by their `type_id'.
 
 	constructor_token (a_type_id: INTEGER): INTEGER is
 			-- Token identifier for default constructor of `a_type_id'.

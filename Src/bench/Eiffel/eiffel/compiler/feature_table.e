@@ -110,8 +110,11 @@ feature -- Access: compatibility
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
+		local
+			l_id: INTEGER
 		do
-			Result := has_id (Names_heap.id_of (s))
+			l_id := Names_heap.id_of (s)
+			Result := l_id > 0 and then has_id (l_id)
 		end
 
 	search (key: STRING) is
@@ -120,9 +123,17 @@ feature -- Access: compatibility
 			-- `found_item' to item associated with `key'.
 			-- (from HASH_TABLE)
 		require
-			valid_key (Names_heap.id_of (key))
+			key_not_void: key /= Void
+			key_not_empty: not key.is_empty
+		local
+			l_id: INTEGER
 		do
-			search_id (Names_heap.id_of (key))
+			l_id := Names_heap.id_of (key)
+			if l_id > 0 then
+				search_id (l_id)
+			else
+				found_item := Void
+			end
 		end
 	
 feature -- Settings

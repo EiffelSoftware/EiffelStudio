@@ -12,8 +12,9 @@ class
 
 inherit
 	EV_PRIMITIVE
-		export {NONE}
-			add_double_click_command, remove_double_click_commands
+		export
+			{NONE} add_double_click_command
+			{NONE} remove_double_click_commands
 		redefine
 			implementation
 		end
@@ -149,6 +150,17 @@ feature -- Element change
 			exists: not destroyed
 		do
 			implementation.clear_items
+		end
+
+feature -- Basic operations
+
+	find_item_by_data (data: ANY): EV_LIST_ITEM is
+			-- Find a child with data equal to `data'.
+		require
+			exists: not destroyed
+			valid_data: data /= Void
+		do
+			Result := implementation.find_item_by_data (data)
 		end
 
 feature -- Event : command association

@@ -46,7 +46,7 @@ feature -- Initialization
   			initialized_if_no_error: not error_occurred implies initialized
 		end
 
-	make_new (project_dir: PROJECT_DIRECTORY) is
+	make_new (project_dir: PROJECT_DIRECTORY; deletion_requested: BOOLEAN) is
 			-- Create an Eiffel Project. 
 			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
 			-- (If a read-write error occured you must exit from
@@ -60,14 +60,24 @@ feature -- Initialization
 			prev_read_write_error: not read_write_error
 		local
 			d: DIRECTORY
+			new_name: STRING
 		do
-			project_directory := project_dir
 			!! d.make (Eiffel_gen_path);
 			if d.exists then
-				delete_f_code
-				delete_w_code
-				delete_comp
+				new_name := clone (Eiffel_gen_path)
+				new_name.append ("_old")
+					-- Rename the old project
+				d.change_name (new_name)
+				if deletion_requested then
+						-- Rename the old project to EIFGEN so that we can
+						-- delete it.
+					d.change_name (Eiffel_gen_path)
+					delete_f_code_content
+					delete_w_code_content
+					delete_comp_content
+				end
 			end
+			project_directory := project_dir
 			Create_compilation_directory
 			Create_generation_directory
 			Workbench.make
@@ -550,17 +560,17 @@ feature -- Update
 			successful_implies_freezing_occurred: successful implies freezing_occurred 
 		end
 
-	delete_f_code is
+	delete_f_code_content is
 		do
 			delete_generation_directory (Final_generation_path)
 		end
 
-	delete_w_code is
+	delete_w_code_content is
 		do
 			delete_generation_directory (Workbench_generation_path)
 		end
 
-	delete_comp is
+	delete_comp_content is
 		do
 			delete_generation_directory (compilation_path)
 		end
@@ -820,28 +830,15 @@ feature {NONE} -- Implementation
 	delete_generation_directory (base_name: STRING) is
 		local
 			generation_directory: DIRECTORY
-			retried, in_creation: BOOLEAN
+			retried: BOOLEAN
 		do
 			if not retried then
 				create generation_directory.make (base_name)
-				generation_directory.recursive_delete
-				generation_directory.create_dir
-			else
-					-- Make sure that `base_name' exists, if not we create it.
-				if not generation_directory.exists then
-					in_creation := True
-					generation_directory.create_dir
-				end
+				generation_directory.delete_content
 			end
 		rescue
-				-- It can fail if we do not have write permission
-				-- but it should not be the case.
-				-- In that case, we do not delete and leave the directory
-				-- as it is.
-			if not in_creation then
-				retried := True
-				retry
-			end
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation

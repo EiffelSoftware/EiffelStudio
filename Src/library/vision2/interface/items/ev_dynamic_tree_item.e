@@ -23,8 +23,7 @@ creation
 feature -- Initialization
 
 	set_dynamic (a_expand: like expand_agent; a_data: G) is
-		require
-			in_tree: parent_tree /= Void
+			-- Initialize the item to call `a_expand' on expand.
 		local
 			t_item: EV_TREE_ITEM
 		do

@@ -16,7 +16,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			visual_widget
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
@@ -26,7 +27,8 @@ inherit
 			interface,
 			add_to_container,
 			list_widget,
-			initialize
+			initialize,
+			visual_widget
 		end
 
 create
@@ -50,6 +52,13 @@ feature {NONE} -- Implementation
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 		end
+		
+	visual_widget: POINTER is
+			-- 
+		do
+			Result := list_widget
+		end
+		
 
 feature -- Implementation
 

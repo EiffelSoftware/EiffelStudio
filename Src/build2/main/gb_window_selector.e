@@ -1136,6 +1136,7 @@ feature {NONE} -- Implementation
 			-- Veto drop of `object_stone'.
 		require
 			object_stone_not_void: object_stone /= Void
+			
 		do
 			Result := not object_stone.is_instance_of_top_level_object
 		end

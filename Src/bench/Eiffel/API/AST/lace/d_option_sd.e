@@ -39,7 +39,7 @@ feature -- Initialization
 			then
 				!!vd32;
 				vd32.set_option_name (free_option.option_name);
-				Error_handler.insert_warning (vd32);
+				Error_handler.insert_error (vd32);
 				-- see also ETL p526 (VDOC error message)	
 			end;
 		end;
@@ -54,7 +54,7 @@ feature -- Initialization
 				if not free_option.is_valid then
 					!!vd32;
 					vd32.set_option_name (free_option.option_name);
-					Error_handler.insert_warning (vd32);
+					Error_handler.insert_error (vd32);
 				end;
 			end;
 		end;

@@ -28,7 +28,7 @@ inherit
 		redefine
 			is_feature_pointer, type_a, description, sk_value,
 			element_type, tuple_code,
-			name, reference_type
+			name
 		end
 
 create
@@ -56,8 +56,8 @@ feature -- Access
 			-- Type to which we metamorphose. Because generation of
 			-- metamorphose on generic basic types is not done properly
 			-- we do this as a temporary solution.
-		once
-			create Result.make (Pointer_c_type.class_id)
+		do
+			create Result.make (system.pointer_ref_class.compiled_class.class_id)
 		end
 
 	element_type: INTEGER_8 is

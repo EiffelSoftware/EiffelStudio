@@ -11,7 +11,7 @@ inherit
 			type_a
 		redefine
 			is_basic, is_reference, c_type, is_valid,
-			reference_type, generate_cecil_value
+			generate_cecil_value
 		end
 
 	TYPE_C
@@ -33,8 +33,17 @@ feature -- Access
 		
 	reference_type: CL_TYPE_I is
 			-- Assocated reference type of Current.
+		deferred
+		ensure
+			reference_type_not_void: Result /= Void
+		end
+
+	associated_reference_class_type: CLASS_TYPE is
+			-- Reference class type of Current
 		do
-			create Result.make (class_id)
+			Result := reference_type.associated_class_type
+		ensure
+			associated_reference_class_type_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -64,14 +73,11 @@ feature -- Byte code generation
 			valid_reg: reg /= Void
 			valid_value: value /= Void
 			valid_file: buffer /= Void
-		local
-			l_metamorphose_type: CL_TYPE_I	
 		do
 			reg.print_register
 			buffer.put_string (" = ")
-				-- Type used for metamorphose.
-			l_metamorphose_type := reference_type;
-			(create {CREATE_TYPE}.make (l_metamorphose_type)).generate
+				-- Create associated reference type of Current.
+			(create {CREATE_TYPE}.make (reference_type)).generate
 			buffer.put_string (", *")
 			generate_access_cast (buffer)
 			reg.print_register

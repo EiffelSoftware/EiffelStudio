@@ -50,6 +50,12 @@ feature -- Status report
 			Result := feature {SHARED_GEN_CONF_LEVEL}.double_tuple_code
 		end
 
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			create Result.make (system.double_ref_class.compiled_class.class_id)
+		end
+
 feature
 
 	level: INTEGER is

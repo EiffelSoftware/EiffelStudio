@@ -89,6 +89,7 @@ rt_public void drun();				/* Starting execution of debugged feature */
 
 /* Step by step execution control */
 rt_public void dnext();			/* Breakable point reached */
+rt_public void set_breakpoint_number();	/* Sets the n breakpoint to stop at*/
 
 /* Debugging stack handling routines */
 rt_public struct dcall *dpush();			/* Push value on stack */
@@ -114,6 +115,10 @@ rt_private struct ex_vect *last_call();	/* Last call recorded on Eiffel stack */
 rt_public void dmove();					/* Move inside calling context stack */
 rt_private void call_down();				/* Move cursor downwards */
 rt_private void call_up();					/* Move cursor upwards */
+
+/* Values used for application interrupt */
+int breakpoint_number = 0;
+int recorded_breakpoint_number = 0;
 
 #ifndef lint
 rt_private char *rcsid =
@@ -247,10 +252,24 @@ int dx;
  * Debugging hooks.
  */
 
+rt_public void set_breakpoint_number (num)
+int num;
+{
+		/*
+		 * Sets `n' breakpoint in which the application
+		 * will ask the daemon if an interrupt was requested
+		 */
+	breakpoint_number = num;
+}
+
 rt_public void dnext()
 {
-	dinterrupt();				/* Ask daemon whether application */
-								/* should be interrupted here. */
+	if (breakpoint_number >= recorded_breakpoint_number) {
+		recorded_breakpoint_number = 1;
+		dinterrupt();				/* Ask daemon whether application */
+	}								/* should be interrupted here. */
+	else
+		recorded_breakpoint_number++;
 }
 
 /*

@@ -473,24 +473,21 @@ rt_public void eif_thr_exit(void)
 
 	exitprf();
 
-		/* Mark current thread so that it is not taken into account by GC
-		 * synchronization */
-#ifdef ISE_GC
-	gc_thread_status = EIF_THREAD_DYING;
-#endif
-
 	RT_GC_PROTECT(thread_object);
 	thread_object = eif_access(eif_thr_context->current);
+	eif_wean(eif_thr_context->current);
 	offset = eifaddr_offset (thread_object, "terminated", &ret);
 	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
+#ifdef ISE_GC
+	gc_thread_status = EIF_THREAD_BLOCKED;
+#endif
 	EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
 
 		/* Set the `terminated' field of the twin thread object to True so that
 		 * it knows the thread is terminated */
 	*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
 	RT_GC_WEAN(thread_object);
-	eif_wean(eif_thr_context->current);
 
 
 	/* 

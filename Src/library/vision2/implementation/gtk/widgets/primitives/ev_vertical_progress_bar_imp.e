@@ -9,6 +9,7 @@ class
 
 inherit
 	EV_VERTICAL_PROGRESS_BAR_I
+
 	EV_PROGRESS_BAR_IMP
 
 creation
@@ -17,16 +18,11 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a progress bar.
+			-- Create a horizontal progress bar.
 		do
-		end
-
-feature -- Status setting
-
-	set_segmented (flag: BOOLEAN) is
-			-- Set the bar in segmented mode if True and in
-			-- continuous mode otherwise.
-		do
+			widget := gtk_progress_bar_new
+			gtk_progress_bar_set_orientation (widget, GTK_PROGRESS_BOTTOM_TO_TOP)
+			gtk_object_ref (widget)
 		end
 
 end -- class EV_VERTICAL_PROGRESS_BAR_IMP

@@ -15,12 +15,21 @@ inherit
 
 feature -- Access
 
-	read_element (index: INTEGER): STRING is
+	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
 			-- Text at the zero-based `index'
 		require
 			exists: not destroyed
 			index_large_enough: index >= 0
 			index_small_enough: index < count
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	selected_item: EV_COMBO_BOX_ITEM is
+			-- Give the item which is currently selected
+		require
+			exists: not destroyed
 		deferred
 		end
 
@@ -44,29 +53,6 @@ feature -- Status report
 		end
 
 feature -- Element change
-
---	add_element (a_string: STRING) is
-			-- Add an element with the text `a_string' 
-			-- to the combo-box.
-			-- If string is `Void', it add an element with 
-			-- an empty string "".
---		require
---			exists: not destroyed
---		deferred
---		end
-
-	insert_element (a_string: STRING; index: INTEGER) is
-			-- Insert an element with the text `a_string'
-			-- at the zero-based `index' position of the 
-			-- combo box.
-			-- If string is `Void', it add an element with 
-			-- an empty string "".
-		require
-			exists: not destroyed
-			index_large_enough: index >= 0
-			index_small_enough: index < count
-		deferred
-		end				
 
 --	remove_element (index: INTEGER) is
 			-- Remove the element at the zero-based

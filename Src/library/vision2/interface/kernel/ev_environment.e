@@ -34,7 +34,7 @@ feature -- Access
 	supported_image_formats: LINEAR [STRING] is
 			-- `Result' contains all supported image formats
 			-- on current platform, as a three letter uppercase 
-			-- extension. e.g. PNG, BMP, XPM, ICO.
+			-- extension. e.g. PNG, BMP, ICO.
 		require
 			not_destroyed: not is_destroyed
 		do

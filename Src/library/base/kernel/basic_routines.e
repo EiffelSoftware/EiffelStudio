@@ -14,7 +14,7 @@ feature -- Conversion
 	charconv (i: INTEGER): CHARACTER is
 			-- Character corresponding to ascii code `i'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"chconv"
 		end;
@@ -70,7 +70,7 @@ feature -- Basic operations
 	bottom_int_div (n1, n2: INTEGER): INTEGER is
 			-- Greatest lower bound of the integer division of `n1' by `n2'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"bointdiv"
 		end;
@@ -79,7 +79,7 @@ feature -- Basic operations
 			-- Least upper bound of the integer division
 			-- of `n1' by `n2'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"upintdiv"
 		end;

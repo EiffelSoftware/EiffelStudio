@@ -1,0 +1,51 @@
+%{
+/* Lex will see the function "in_word_set2" which will return a pointer
+ * to a token structure. Due to gperf constraints, the structure has to
+ * be declared here and in lex and cannot be held in an include file--RAM.
+ */
+#include "_eiffel.h"
+#include "lace_y.h"
+%}
+struct token {
+	char *name;		/* The name is imposed by gperf */
+	int yaccval;	/* Value returned to yacc */
+};
+%%
+
+# Run this file through
+#   gperf -p -t -l -k 1,'$' -N in_word_set2 lace.gperf > keyword.c
+# to produce a fast keyword recognition function.
+
+adapt,			LAC_ADAPT
+all,			LAC_ALL
+as,				LAC_AS
+assertion,		LAC_ASSERTION
+c,				LAC_C
+check,			LAC_CHECK
+cluster,		LAC_CLUSTER
+creation,		LAC_CREATION
+debug,			LAC_DEBUG
+default,		LAC_DEFAULT
+end,			LAC_END
+ensure,			LAC_ENSURE
+exclude,		LAC_EXCLUDE
+export,			LAC_EXPORT
+external,		LAC_EXTERNAL
+generate,		LAC_GENERATE
+ignore,			LAC_IGNORE
+include,		LAC_INCLUDE
+invariant,		LAC_INVARIANT
+loop,			LAC_LOOP
+make,			LAC_MAKE
+no,				LAC_NO
+object,			LAC_OBJECT
+optimize,		LAC_OPTIMIZE
+option,			LAC_OPTION
+rename,			LAC_RENAME
+require,		LAC_REQUIRE
+root,			LAC_ROOT
+system,			LAC_SYSTEM
+trace,			LAC_TRACE
+use,			LAC_USE
+visible,		LAC_VISIBLE
+yes,			LAC_YES

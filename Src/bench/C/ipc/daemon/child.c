@@ -1,0 +1,300 @@
+/*
+
+  ####   #    #     #    #       #####            ####
+ #    #  #    #     #    #       #    #          #    #
+ #       ######     #    #       #    #          #
+ #       #    #     #    #       #    #   ###    #
+ #    #  #    #     #    #       #    #   ###    #    #
+  ####   #    #     #    ######  #####    ###     ####
+
+	Child spawning and comforting.
+*/
+
+#include "config.h"
+#include "portable.h"
+#include <sys/types.h>
+#include "logfile.h"
+#include "stream.h"
+#include "timehdr.h"
+#include "ewbio.h"
+#include <signal.h>
+#include <setjmp.h>
+
+#ifdef I_FCNTL
+#include <fcntl.h>
+#endif
+
+#define PIPE_READ	0		/* File descriptor used for reading */
+#define PIPE_WRITE	1		/* File descriptor used for writing */
+
+#define TIMEOUT		30		/* Time to let the child initialize */
+
+/* To fight SIGPIPE signals */
+private jmp_buf env;		/* Environment saving for longjmp() */
+private Signal_t broken();	/* Signal handler for SIGPIPE */
+
+/* Function declaration */
+private int comfort_child();	/* Reassure child, make him confident */
+private void close_on_exec();	/* Ensure this file will be closed by exec */
+
+extern char **shword();			/* Shell word parsing of command string */
+
+public STREAM *spawn_child(cmd, child_pid)
+char *cmd;			/* The child command process */
+Pid_t *child_pid;	/* Where pid of the child is writtten */
+{
+	/* Launch the child process 'cmd' and return the stream structure which can
+	 * be used to communicate with the child. Note that this function only
+	 * returns in the parent process.
+	 */
+
+	int pdn[2];					/* The opened downwards file descriptors */
+	int pup[2];					/* The opened upwards file descriptors */
+	int new;					/* Duped file descriptor */
+	Pid_t pid;					/* Pid of the child */
+	STREAM *sp;					/* Stream used for communications with ewb */
+	char **argv;				/* Argument vector for exec() */
+
+	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
+	 * opened, one for downwards communications (ised -> ewb) and one for
+	 * upwards (ewb -> ised).
+	 */
+
+	if (-1 == pipe(pup)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR: pipe: %m (%e)");
+		add_log(2, "ERROR cannot set up upwards pipe");
+#endif
+		perror("pipe");
+		dexit(1);
+	}
+
+	if (-1 == pipe(pdn)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR: pipe: %m (%e)");
+		add_log(2, "ERROR cannot set up downwards pipe");
+#endif
+		perror("pipe");
+		dexit(1);
+	}
+
+#ifdef USE_ADD_LOG
+	add_log(12, "opened pipes as pup(%d, %d), pdn(%d, %d)",
+		pup[0], pup[1], pdn[0], pdn[1]);
+#endif
+
+	/* The fork and exec stuff: a classic */
+
+	pid = (Pid_t) fork();		/* That's where we fork */
+
+	switch (pid) {
+	case -1:		/* Error */
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR: fork: %m (%e)");
+		add_log(2, "ERROR cannot fork, sorry");
+#endif
+		perror("fork");
+		dexit(1);
+	case 0:			/* Child process */
+#ifdef USE_ADD_LOG
+		close_log();					/* Logfile should not cross exec() */
+#endif
+		close(pdn[PIPE_WRITE]);
+		close(pup[PIPE_READ]);
+		/* Start duping first allocated pipe, otherwise good luck!--RAM.
+		 * (Hint #1: dup2 closes its target fd before duping file)
+		 * (Hint #2: pipe() takes the lowest two file descriptors available)
+		 */
+		dup2(pup[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
+		if (pup[PIPE_WRITE] != EWBOUT)	/* File descriptor was really dup'ed */
+			close(pup[PIPE_WRITE]);		/* Close dup'ed files before exec */
+		dup2(pdn[PIPE_READ], EWBIN);	/* and reads from ewbin */
+		if (pdn[PIPE_READ] != EWBIN)	/* File descriptor was really dup'ed */
+			close(pdn[PIPE_READ]);		/* (avoid child running out of fd!) */
+		/* Now exec command. A successful launch should not return */
+		argv = shword(cmd);				/* Split command into words */
+		if (argv != (char **) 0) {
+			execvp(argv[0], argv);
+#ifdef USE_ADD_LOG
+			reopen_log();
+			add_log(1, "SYSERR: exec: %m (%e)");
+			add_log(2, "ERROR could not launch '%s'", argv[0]);
+#endif
+		}
+#ifdef USE_ADD_LOG
+		else
+			add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+#endif
+		dexit(1);
+	default:		/* Parent process */
+		sleep(1);	/* Let child initialize or print error */
+		close(pdn[PIPE_READ]);
+		close(pup[PIPE_WRITE]);
+		/* Reset those file descriptors to the lowest possible number, just to
+		 * remain clean (the pipe() system call allocating two files, multiple
+		 * calls to pipe() lead to a messy file allocation table)--RAM.
+		 */
+		new = dup(pup[PIPE_READ]);
+		if (new != -1 && new < pup[PIPE_READ]) {
+			close(pup[PIPE_READ]);
+			pup[PIPE_READ] = new;
+		} else if (new != -1)
+			close(new);
+		/* Same thing with writing file descriptor. Note that we only keep the
+		 * new duped descriptor when it is lower than the current original.
+		 */
+		new = dup(pdn[PIPE_WRITE]);
+		if (new != -1 && new < pdn[PIPE_WRITE]) {
+			close(pdn[PIPE_WRITE]);
+			pdn[PIPE_WRITE] = new;
+		} else if (new != -1)
+			close(new);
+		/* No need to dup2() file descriptors, we do not exec() anybody yet.
+		 * However, do make sure those remaining descriptors will be closed
+		 * by any further exec.
+		 */
+		close_on_exec(pup[PIPE_READ]);
+		close_on_exec(pdn[PIPE_WRITE]);
+	}
+
+	/* Create a STREAM structure, which provides the illusion of bidrectional
+	 * communication through the pair of pipes. When networking is added, the
+	 * interface will remain unchanged.
+	 */
+
+	sp = new_stream(pup[PIPE_READ], pdn[PIPE_WRITE]);
+
+	/* Makes sure the child started correctly, and let him know we started him
+	 * from here, and that it is not a normal user invocation.
+	 */
+
+	if (-1 == comfort_child(sp))
+		return (STREAM *) 0;		/* Wrong child */
+
+	/* Record child's pid, which may be necessary to ensure it remains alive,
+	 * or to send some signals, or whatever...
+	 */
+	
+	if (child_pid != (Pid_t *) 0)
+		*child_pid = pid;
+
+	return sp;			/* Stream used to speak to child process */
+}
+
+private int comfort_child(sp)
+STREAM *sp;		/* Stream used to talk to the child */
+{
+	/* Tell the child his parent is here, and make sure he responds. The
+	 * comforting protocol is the following: parent writes a null byte and
+	 * child echoes ^A.
+	 */
+
+	struct timeval tm;
+	int mask = (1 << writefd(sp));		/* We want to write to child */
+	char c = '\0';
+	Signal_t (*oldpipe)();
+
+	oldpipe = signal(SIGPIPE, broken);	/* Trap SIGPIPE within this function */
+
+	/* If we get a SIGPIPE signal, come back here */
+	if (0 != setjmp(env)) {
+		signal(SIGPIPE, oldpipe);
+#ifdef USE_ADD_LOG
+		add_log(1, "child did not start at all");
+#endif
+		return -1;
+	}
+
+	tm.tv_sec = TIMEOUT;				/* Do not hang on the select */
+	tm.tv_usec = 0;
+	if (-1 == select(32, (int *) 0, &mask, (int *) 0, &tm)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR select: %m (%e)");
+#endif
+		return -1;
+	}
+
+	/* If cannot write to child, there is a problem... */
+	if (!(mask & (1 << writefd(sp)))) {
+#ifdef USE_ADD_LOG
+		add_log(12, "cannot comfort child");
+#endif
+		signal(SIGPIPE, oldpipe);
+		return -1;
+	}
+
+	if (-1 == write(writefd(sp), &c, 1)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR write: %m (%e)");
+		add_log(12, "cannot send identification");
+#endif
+		signal(SIGPIPE, oldpipe);
+		return -1;
+	}
+
+	signal(SIGPIPE, oldpipe);			/* Restore previous handler */
+
+	/* Now wait for the acknowledgment -- no SIGPIPE to be feared */
+
+	mask = (1 << readfd(sp));			/* We want to read from child */
+	tm.tv_sec = 2;						/* Child should answer quickly */
+	tm.tv_usec = 0;
+	if (-1 == select(32, &mask, (int *) 0, (int *) 0, &tm)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR select: %m (%e)");
+#endif
+		return -1;
+	}
+
+	if (!(mask & (1 << readfd(sp)))) {
+#ifdef USE_ADD_LOG
+		add_log(12, "child does not answer");
+#endif
+		return -1;
+	}
+	if (-1 == read(readfd(sp), &c, 1)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR read: %m (%e)");
+		add_log(12, "cannot get child answer");
+#endif
+		return -1;
+	}
+	if (c != '\01') {
+#ifdef USE_ADD_LOG
+		add_log(12, "wrong child, it would seem");
+#endif
+		return -1;
+	}
+
+#ifdef USE_ADD_LOG
+	add_log(12, "child started ok");
+#endif
+
+	return 0;
+}
+
+private void close_on_exec(fd)
+int fd;
+{
+	/* Set the close on exec flag for file descriptor 'fd' */
+
+#ifdef F_SETFD
+	if (-1 == (fcntl(fd, F_SETFD, 1))) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR fcntl: %m (%e)");
+		add_log(2, "ERROR cannot set close-on-exec flag on fd #%d", fd);
+#endif
+	}
+#ifdef USE_ADD_LOG
+	else
+		add_log(12, "file #%d will be closed upon next exec()", fd);
+#endif
+#endif
+}
+
+private Signal_t broken()
+{
+	longjmp(env, 1);			/* SIGPIPE was received */
+	/* NOTREACHED */
+}
+

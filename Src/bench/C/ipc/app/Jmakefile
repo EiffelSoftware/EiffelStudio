@@ -1,0 +1,51 @@
+/*
+ * Jmakefile for app (application)
+ */
+
+/* We need to have the shared archive, which is in the shared/ dir. We have a
+ * dependency which ensures it is up-to-date anyway.
+ */
+
+;# Files used to build the application
+;#LIB = connect.c listen.c proto.c server.c
+LIB = listen.c proto.c
+SRC = main.c
+
+;# Derived object file names
+OBJ = \
+|expand f!$(SRC)!
+	!f:\.c=.o \
+-expand \\
+
+;# Derived library object file names
+LOBJ = \
+|expand f!$(LIB)!
+	!f:\.c=.o \
+-expand \\
+
+;# Where shared archive is located (path and name)
+LIBDIR = ../shared
+LIBRUN = ../../run-time
+LIBNAME = libshared.a
+LIBWKBENCH = libwkbench.a
+LIBARCH = $(LIBDIR)/$(LIBNAME)
+
+/* The following are understood by jmake to alter built-in commands */
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN)
+CFLAGS = $(DPFLAGS) -DWORKBENCH
+;#LDFLAGS = $(LIBARCH)
+LDFLAGS = $(LIBDIR)/$(LIBNAME)
+
+DependTarget()
+
+/*
+RemoteTargetDependency(app,$(LIBDIR),$(LIBNAME))
+RemoteTargetDependency(network.o,$(LIBDIR),$(LIBNAME))
+RemoteTargetDependency(app,$(LIBRUN),$(LIBWKBENCH))
+NormalRelocatableTarget(network,$(LOBJ))
+*/
+
+/*
+RemoteTargetDependency(app,$(LIBDIR),$(LIBNAME))
+NormalProgramTarget(app,$(SRC),$(OBJ) $(LOBJ))
+*/

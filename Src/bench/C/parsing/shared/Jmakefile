@@ -1,0 +1,20 @@
+/*
+ * Jmakefile for main C library
+ */
+
+LSRC = yacc.c strsave.c env.c yacc_err.c click.c
+
+LOBJ = \
+|expand f!$(LSRC)!
+	!f:\.c=.o \
+-expand \\
+
+RUN_TIME = ../../run-time
+DPFLAGS = -I$(TOP) -I$(RUN_TIME)
+CFLAGS = $(DPFLAGS)
+
+all:: $(LOBJ)
+
+NormalLibraryTarget(parsing,$(LSRC),$(LOBJ))
+DependTarget()
+LintTarget()

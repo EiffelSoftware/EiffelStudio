@@ -1,0 +1,159 @@
+/*
+ *	 Jmakefile for Eiffel 3.0 run-time
+ */
+
+CFLAGS = -I$(TOP)
+DPFLAGS = -I$(TOP)
+
+NETWORK_OBJ = ../ipc/app/network.o
+NETWORK_LIB = ../ipc/shared/libshared.a
+
+/*
+ * Main source files for run-time archive
+ */
+LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
+	hash.c traverse.c hashin.c tools.c internal.c plug.c \
+	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
+	hector.c cecil.c bits.c file.c dir.c string.c misc.c main.c \
+	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c
+
+/*
+ * Files addedd only for workbench archive
+ */
+WADD = debug.c interp.c option.c update.c wbench.c
+
+;# NETWORK = network.o
+
+/*
+ * Files for workbench have a 'w' pre-pended if they already exist for
+ * the normal run-time archive.
+ */
+WSRC = \
+|expand f!$(LSRC)!
+	w!f \
+-expand \\
+
+/*
+ * Object files for run-time archive
+ */
+LOBJ = \
+|expand f!$(LSRC)!
+	!f:\.c=.o \
+-expand \\
+
+/*
+ * Object files for workbench archive
+ */
+WOBJ = \
+	$(NETWORK) \
+|expand f!$(WSRC) $(WADD)!
+	!f:\.c=.o \
+-expand \\
+
+#include "U/workbench.H"
+
+ShellScriptLongTarget(size_h,size.h)
+NormalLibraryTarget(runtime,$(LSRC),$(LOBJ))
+SpecialLibraryTarget(wkbench,$(WOBJ),/**/)
+
+SimpleProgramTarget(x2c)
+
+AllTarget(config.h portable.h)
+
+>RM
+>LN
+config.h: $(TOP)/config.h
+	$(RM) $@
+	$(LN) $(TOP)/config.h .
+
+portable.h: $(TOP)/portable.h
+	$(RM) $@
+	$(LN) $(TOP)/portable.h .
+
+/*
+ * Workbench files added to SOURCES
+ */
+
+AddSourceFileC(debug)
+AddSourceFileC(interp)
+AddSourceFileC(option)
+AddSourceFileC(update)
+AddSourceFileC(wbench)
+
+DependTarget()
+LintTarget()
+
+/* How to build a 'w' file from a normal file. The library for the workbench
+ * is built from w*.c files, which are linked from normal files. Dependencies
+ * for w*.c files will be strong enough to force recompilation of a w*.o if the
+ * original .o was to be rebuilt.
+ */
+
+>LN
+>RM
+|expand f!$(LSRC)!
+w!f: !f
+	$(RM) w!f
+	$(LN) !f w!f
+remove::
+	$(RM) w!f
+
+-expand
+
+|expand f!$(WSRC)!
+!f:\.c=.o: !f
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+-expand
+
+|expand f!$(WADD)!
+!f:\.c=.o: !f
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+
+-expand
+
+local_clean:: remove
+
+final: libruntime.a
+work: libwkbench.a
+
+#ifdef NEVER
+/*
+ * The network object is pre-linked with all the needed libraries.
+ */
+
+RemoteTargetDependency(network.o,../ipc/shared,libshared.a)
+RemoteTargetDependency(network.o,../ipc/app,network.o)
+
+>LIBS
+
+network.o:
+	$(LD) $(JLKFLAGS) -r -o $@ $(NETWORK_OBJ) $(NETWORK_LIB) $(LIBS)
+
+#endif
+
+/*
+ * Run-time tests
+ */
+
+TESTS = mram gram lram eram sram
+
+test: $(TESTS)
+	mram >test 2>&1
+	gram >>test 2>&1
+	lram >>test 2>&1
+	eram >>test 2>&1
+	sram >>test 2>&1
+
+TestProgramTarget(mram,malloc.c,/**/)
+TestProgramTarget(gram,garcol.c,/**/)
+TestProgramTarget(lram,local.c,/**/)
+TestProgramTarget(eram,except.c,/**/)
+TestProgramTarget(sram,sig.c,/**/)
+
+local_realclean::
+	$(RM) $(TESTS)
+
+local_clobber::
+	$(RM) test

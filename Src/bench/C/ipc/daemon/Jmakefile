@@ -1,0 +1,31 @@
+/*
+ * Jmakefile for daemon (server)
+ */
+
+/* We need to have the shared archive, which is in TOP/shared. We have a
+ * dependency which ensures it is up-to-date anyway.
+ */
+
+;# Files used to build the daemon
+SRC = child.c listen.c main.c proto.c
+
+;# Derived object file names
+OBJ = \
+|expand f!$(SRC)!
+	!f:\.c=.o \
+-expand \\
+
+;# Where shared archive is located (path and name)
+LIBDIR = ../shared
+LIBNAME = libipc.a
+LIBARCH = $(LIBDIR)/$(LIBNAME)
+
+/* The following are understood by jmake to alter built-in commands */
+DPFLAGS = -I$(TOP) -I$(LIBDIR)
+CFLAGS = $(DPFLAGS)
+LDFLAGS = $(LIBARCH)
+
+RemoteTargetDependency(ebench,$(LIBDIR),$(LIBNAME))
+
+DependTarget()
+NormalProgramTarget(ebench,$(SRC),$(OBJ))

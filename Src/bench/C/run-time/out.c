@@ -1,0 +1,502 @@
+/*
+
+  ####   #    #   #####           ####
+ #    #  #    #     #            #    #
+ #    #  #    #     #            #
+ #    #  #    #     #     ###    #
+ #    #  #    #     #     ###    #    #
+  ####    ####      #     ###     ####
+
+		Routines for printing an Eiffel object.
+*/
+
+#include "config.h"
+#include "out.h"
+#include "plug.h"
+#include "eiffel.h"
+#include "struct.h"
+#include "macros.h"		/* For macro LNGPAD */
+#include "hashin.h"
+#include "except.h"		/* For `eraise' */
+#include "sig.h"
+#include "hector.h"
+#include "string.h"
+#include <stdio.h>
+
+/*
+ * Private declarations
+ */
+
+#define TAG_SIZE 512		/* Maximum size for a single tagged expression */
+
+private char buffer[TAG_SIZE];/* Buffer for printing an object in a string */
+private char *tagged_out;		/* String where the tagged out is written */
+private int tagged_max;			/* Actual maximum size of `tagged_out' */
+private int tagged_len;			/* Actual length of `tagged_out' */
+
+private void write_char();		/* Write a character */
+private void write_out();		/* Write in `tagged_out' */
+private void write_tab();		/* Print tabulations */
+private void rec_write();		/* Write object print in `tagged_out' */
+private void rec_swrite();		/* Write special object */
+private void buffer_allocate();	/* Allocate initial buffer */
+shared char *build_out();		/* Build `tagged_out' string */
+
+#ifndef lint
+private char *rcsid =
+	"$Id$";
+#endif
+
+/*
+ * Routine for printing representation
+ */
+
+public char *c_generator(Current)
+register1 char *Current;
+{
+	/* Class name from which the Eiffel object is an instance.
+	 * Return a reference on an Eiffel instance of STRING.
+	 */
+
+	register2 uint32 flags = HEADER(Current)->ov_flags; /* Object flags */
+	char *generator;
+
+	if (flags & EO_SPEC)
+		return makestr("SPECIAL", 7);
+	
+	generator = System(flags & EO_TYPE).cn_generator;
+
+	return makestr(generator, strlen(generator));
+}
+
+public char * c_tagged_out(object)
+EIF_OBJ object;
+{
+	/* Write a tagged out printing in an string.
+	 * Return a pointer on an Eiffel string object.
+	 */
+
+	char *result;		/* The Eiffel string returned */
+
+	build_out(object);	/* Build tagged out string for object */
+	result = makestr(tagged_out, strlen(tagged_out));
+	xfree(tagged_out);	/* Buffer not needed anymore */
+
+	return result;		/* An Eiffel string */
+}
+
+public char *build_out(object)
+EIF_OBJ object;
+{
+	/* Build up tagged out representation in a private global buffer */
+
+	uint32 flags;		/* Object flags */
+
+	buffer_allocate();	/* Allocation of `tagged_out' */
+
+	flags = HEADER(eif_access(object))->ov_flags;
+
+	if (flags & EO_SPEC) {
+		/* Special object */
+		sprintf(buffer, "SPECIAL [0x%X]\n", eif_access(object));
+		write_out();
+		/* Print recursively in `tagged_out' */
+		rec_swrite(eif_access(object), 0);
+	} else {
+		/* Print instance class name and object id */
+		sprintf(buffer, "%s [0x%X]\n", System(flags & EO_TYPE).cn_generator,
+			eif_access(object));
+		write_out();
+		/* Print recursively in `tagged_out' */
+		rec_write(eif_access(object), 0);
+	}
+
+	*buffer = '\0';
+	write_out();
+
+	return tagged_out;		/* This arena must be freed manually */
+}
+
+private void buffer_allocate()
+{
+	/* Allocates initial tagged out buffer */
+
+	tagged_out = (char *) xcalloc(TAG_SIZE, sizeof(char));
+	if (tagged_out == (char *) 0)
+		enomem();
+	tagged_max = TAG_SIZE;
+	tagged_len = 0;
+}
+
+private void rec_write(object, tab)
+register1 char *object;
+int tab;
+{
+	/* Print recursively `object' in `tagged_out' */
+
+	register2 struct cnode *obj_desc;	   /* Object type description */
+	register3 long nb_attr;				 /* Attribute number */
+	register4 uint32 *types;                /* Attribute types */
+#ifndef WORKBENCH
+	register6 long **offsets;			   /* Attribute offsets table */
+#else
+	register4 int32 *cn_attr;			   /* Attribute keys */
+#endif
+	register5 int16 dyn_type;			   /* Object dynamic type */
+	char *o_ref;
+	register7 char **names;				 /* Attribute names */
+	char *reference;						/* Reference attribute */
+	char *refptr;
+	union overhead *zone;
+	long i,nb_old, nb_reference;
+	uint32 type, ref_flags;
+
+	dyn_type = Dtype(object);
+	obj_desc = &System(dyn_type);
+	nb_attr = obj_desc->cn_nbattr;
+	names = obj_desc->cn_names;
+	types = obj_desc->cn_types;
+
+#ifndef WORKBENCH
+	offsets = obj_desc->cn_offsets;
+#else
+	cn_attr = obj_desc->cn_attr;
+#endif
+
+	/* Print attributes */
+	for (i = 0; i < nb_attr; i++) {
+
+		/* Print attribute name */
+		write_tab(tab+1);
+		sprintf(buffer, "%s: ", names[i]);
+		write_out();
+
+		/* Print attribute value */
+		type = types[i];
+#ifndef WORKBENCH
+		o_ref = object + (offsets[i])[dyn_type];
+#else
+		o_ref = object + ((long *) Table(cn_attr[i]))[dyn_type];
+#endif
+		switch(type & SK_HEAD) {
+		case SK_POINTER:
+			/* Pointer attribute */
+			sprintf(buffer, "POINTER =  C pointer 0x%x\n", *(fnptr *)o_ref);
+			write_out();
+			break;
+		case SK_BOOL:
+			/* Boolean attribute */
+			sprintf(buffer, "BOOLEAN = ");
+			write_out();
+			if (*o_ref)
+				sprintf(buffer, "True\n");
+			else
+				sprintf(buffer, "False\n");
+			write_out();
+			break;
+		case SK_CHAR:
+			/* Character attribute */
+			write_char(*o_ref, buffer);
+			write_out();
+			break;
+		case SK_INT:
+			/* Integer attribute */
+			sprintf(buffer, "INTEGER = %ld\n", *(long *)o_ref);
+			write_out();
+			break;
+		case SK_FLOAT:
+			/* Real attribute */
+			sprintf(buffer, "REAL = %f\n", *(float *)o_ref);
+			write_out();
+			break;
+		case SK_DOUBLE:
+			/* Double attribute */
+			sprintf(buffer, "DOUBLE = %.17lf\n", *(double *)o_ref);
+			write_out();
+			break;	
+		case SK_BIT:
+			/* BITS attribute  FIXME */
+			break;
+		case SK_EXP:
+			/* Expanded attribute */
+			sprintf(buffer, "expanded %s\n", System(Dtype(o_ref)).cn_generator);
+			write_out();
+			write_tab (tab + 2);
+			sprintf(buffer, "-- begin sub-object --\n");
+			write_out();
+
+			rec_write((char *)o_ref, tab + 3);
+
+			write_tab(tab + 2);
+			sprintf(buffer, "--  end  sub-object --\n");
+			write_out();
+			break;
+		default: 
+			/* Object reference */
+			reference = *(char **)o_ref;
+			if (0 != reference) {
+				ref_flags = HEADER(reference)->ov_flags;
+				if (ref_flags & EO_C) {
+					/* C reference */
+					sprintf(buffer, "POINTER = C pointer 0x%x\n", reference);
+					write_out();
+				} else if (ref_flags & EO_SPEC) {
+					/* Special object */
+					sprintf(buffer, "SPECIAL [0x%X]\n", reference);
+					write_out();
+					write_tab(tab + 2);
+					sprintf(buffer, "-- begin special object --\n");
+					write_out();
+
+					rec_swrite(reference, tab + 3);
+
+					write_tab(tab + 2);
+					sprintf(buffer, "--  end  special object --\n");
+					write_out();
+				} else {
+					sprintf(buffer, "%s [0x%X]\n",
+						System(Dtype(reference)).cn_generator, reference);
+					write_out();
+				}
+			} else {
+				sprintf(buffer, "Void\n");
+				write_out();
+			}
+		}
+	}
+}
+
+private void rec_swrite(object, tab)
+register1 char *object;
+int tab;
+{
+	/* Print special object */
+
+	union overhead *zone;		/* Object header */
+	register5 uint32 flags;		/* Object flags */
+	register3 long count;		/* Element count */
+	register4 long elem_size;	/* Element size */
+	char *o_ref;
+	char *reference;
+	long old_count;
+	int dt_type;
+
+	zone = HEADER(object);
+	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+	count = *(long *) o_ref;
+	old_count = count;
+	elem_size = *(long *) (o_ref + sizeof(long));
+	flags = zone->ov_flags;
+	dt_type = (int) (flags & EO_TYPE);
+
+	if (!(flags & EO_REF)) {
+		for (o_ref = object; count > 0; count--,
+					o_ref += elem_size) {
+			write_tab(tab + 1);
+			sprintf(buffer, "%ld: ", old_count - count);
+			write_out();
+			if (dt_type == sp_char)
+				write_char(*o_ref, buffer);
+			else if (dt_type == sp_int)
+				sprintf(buffer, "INTEGER = %ld\n", *(long *)o_ref);
+			else if (dt_type == sp_bool)
+				sprintf(buffer, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
+			else if (dt_type == sp_real)
+				sprintf(buffer, "REAL = %f\n", *(float *)o_ref);
+			else if (dt_type == sp_double)
+				sprintf(buffer, "DOUBLE = %.17lf\n", *(double *)o_ref);
+			else
+				sprintf(buffer, "POINTER = C pointer 0x%x\n", *(fnptr *)o_ref);
+			write_out();
+		}
+	} else if (!(flags & EO_COMP))
+		for (o_ref = object; count > 0; count--,
+					o_ref = (char *) ((char **)o_ref + 1)) {
+			write_tab(tab + 1);
+			sprintf(buffer, "%ld: ", old_count - count);
+			write_out();
+			reference = *(char **)o_ref;
+			if (0 == reference)
+				sprintf(buffer, "Void\n");
+			else if (HEADER(reference)->ov_flags & EO_C)
+				sprintf(buffer, "POINTER = C pointer 0x%x\n", reference);
+			else
+				sprintf(buffer, "%s [0x%X]\n",
+					System(Dtype(reference)).cn_generator, reference);
+			write_out();
+		}
+	else {
+		for (o_ref = object + OVERHEAD; count > 0; count--,
+			o_ref += elem_size) {
+			write_tab(tab + 1);
+			sprintf(buffer, "%ld: expanded ", old_count - count);
+			write_out();
+			sprintf(buffer, "%s\n", System(Dtype(o_ref)).cn_generator);
+			write_out();
+			write_tab(tab + 2);
+			sprintf(buffer, "-- begin sub-object --\n");
+			write_out();
+		
+			rec_write((char *)o_ref, tab + 3);
+
+			write_tab(tab + 2);
+			sprintf(buffer, "--  end  sub-object --\n");
+			write_out();
+		}
+	}
+}
+
+private void write_tab(tab)
+register2 int tab;
+{
+	register1 int i = 0;
+
+	for (; i < tab; i++) {
+		sprintf(buffer,"  ");
+		write_out();
+	}
+}
+
+private void write_char (c, buf)
+char c;			/* The character */
+char *buf;		/* Where it should be written */
+{
+	/* Write a character in `buffer' */
+		
+	if (c < ' ')
+		sprintf(buf, "CHARACTER = Ctrl-%c\n", c + '@');
+	else if (c > 127) {
+		c -= 128;
+		if (c < ' ')
+			sprintf(buf, "CHARACTER = Ext-Ctrl-%c\n", c + '@');
+		else
+			sprintf(buf, "CHARACTER = Ext-%c\n", c);
+	} else
+		sprintf(buf, "CHARACTER = '%c'\n", c);
+}
+
+private void write_out()
+{
+	/* Print private string `buffer' in `tagged_out'. */
+
+	int buffer_len = strlen(buffer);	/* Length of `buffer' */
+
+	tagged_len += buffer_len;
+	if (tagged_len >= tagged_max) {
+		/* Reallocation of C string `tagged_out' */
+		tagged_max *= 2;
+		tagged_out = xrealloc(tagged_out, tagged_max, GC_OFF);
+		if (tagged_out == (char *) 0)
+			enomem();
+	}
+	/* Append `buffer' to `tagged_out' */
+	strcat(tagged_out, buffer);
+}
+
+
+/*
+ * Building `out' representation for various data types.
+ */
+
+public char *c_outb(b)
+long b;
+{
+	if (b == 1)
+		return makestr("true", 4);
+	else
+		return makestr("false", 5);
+}
+
+public char *c_outi(i)
+int i;
+{
+	sprintf(buffer, "%i", i);
+	return makestr(buffer, strlen(buffer));
+}
+
+public char *c_outr(f)
+float f;
+{
+	sprintf(buffer, "%f", f);
+	return makestr(buffer, strlen(buffer));
+}
+
+public char *c_outd(d)
+double d;
+{
+	sprintf(buffer, "%g", d);
+	return makestr(buffer, strlen(buffer));
+}
+
+public char *c_outc(c)
+char c;
+{
+	sprintf(buffer, "%c", c);
+	return makestr(buffer, strlen(buffer));
+}
+
+public char *c_outp(p)
+char *p;
+{
+	sprintf(buffer, "0x%X", p);
+	return makestr(buffer, strlen(buffer));
+}
+
+#ifdef WORKBENCH
+
+#include "interp.h"
+
+/* The following routine builds a tagged out string out of simple types.
+ * The reason for this is that the debugger can request the value of, say,
+ * local #2, and this might be an integer for instance... We cannot call
+ * build_out, as it expects a true object, not a simple type...
+ */
+
+shared char *simple_out(val) 
+struct item *val;			/* Interpreter value cell */
+{
+	/* Hand build a tagged out representation for simple types. The
+	 * representation should be kept in sync with those defined above.
+	 * NB: this whole file needs a clean rewriting--RAM.
+	 */
+
+	buffer_allocate();		/* Allocate initial `tagged_out' buffer */
+
+	switch (val->type & SK_HEAD) {
+	case SK_EXP:
+	case SK_REF:
+		xfree(tagged_out);					/* What a waste of CPU cycles */
+		return build_out(&val->it_ref);		/* Only for the beauty of it */
+	case SK_VOID:
+		sprintf(tagged_out, "Not an object!");
+		break;
+	case SK_BOOL:
+		sprintf(tagged_out, "BOOLEAN = %s", val->it_char ? "True" : "False");
+		break;
+	case SK_CHAR:
+		write_char(val->it_char, tagged_out);
+		break;
+	case SK_INT:
+		sprintf(tagged_out, "INTEGER = %ld", val->it_long);
+		break;
+	case SK_FLOAT:
+		sprintf(tagged_out, "REAL = %f", val->it_float);
+		break;
+	case SK_DOUBLE:
+		sprintf(tagged_out, "DOUBLE = %.17lf", val->it_double);
+	case SK_BIT:
+		sprintf(tagged_out, "Bit object");
+		break;
+	case SK_POINTER:
+		sprintf(tagged_out, "POINTER = C pointer 0x%x", val->it_ref);
+		break;
+	default:
+		sprintf(tagged_out, "Not an object?");
+		break;
+	}
+
+	return tagged_out;
+}
+
+#endif
+

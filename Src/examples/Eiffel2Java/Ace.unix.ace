@@ -18,11 +18,13 @@ cluster
 			"desc";"table_eiffel3"
 		end
 
-	java:		"$ISE_EIFFEL/library/Eiffel2Java"
+	all java:		"$ISE_EIFFEL/library/Eiffel2Java"
 
 external
+	include_path:
+		"$(JDK_HOME)/include"
+
 	object:
-		"$(ISE_EIFFEL)/library/Eiffel2Java/spec/$(ISE_PLATFORM)/lib/e2j.obj",
 		"-L$(JDK_HOME)/lib -ljava"
 		
 

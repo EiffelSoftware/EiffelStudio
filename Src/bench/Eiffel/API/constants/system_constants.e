@@ -164,6 +164,8 @@ feature {NONE}
 
 	Updt: STRING is "melted.eif"
 
+	finished_file_for_make: STRING is "finished"
+
 	W_code: STRING is "W_code"
 
 	project_extension: STRING is ".epr"
@@ -175,10 +177,10 @@ feature {NONE}
 feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.5.002"
-	Version_tag: STRING is "0x00000014"
+	Version_number: STRING is "4.5.003"
+	Version_tag: STRING is "0x00000015"
 	Version_number_tag: STRING is "version_number"
-	Storable_version_number: STRING is "4.5.002"
+	Storable_version_number: STRING is "4.5.003"
 	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}

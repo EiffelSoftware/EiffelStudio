@@ -35,6 +35,12 @@ feature {NONE} -- Initialization
 			set_maximum_range (1)
 		end
 
+feature {NONE} -- Implementation
+
+	dispatch_events is
+		do
+		end
+
 end -- class EV_PRINT_DIALOG_IMP
 
 --|----------------------------------------------------------------

@@ -21,6 +21,14 @@ inherit
 creation
 	make
 
+<<<<<<< ev_font_selection_dialog_imp.e
+feature {NONE} -- Implementation
+
+	dispatch_events is
+		do
+		end
+
+=======
 feature {NONE} -- Implementation
 
 	dispatch_events is
@@ -30,6 +38,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
+>>>>>>> 1.2
 end -- class EV_FONT_SELECTION_DIALOG_IMP
 
 --|----------------------------------------------------------------

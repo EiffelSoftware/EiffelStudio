@@ -1828,6 +1828,7 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 	UCHAR tmpMsg[2 * MAX_ERROR_MSG];
 	SWORD cbMsg;
 	UCHAR tmpSQLSTATE[6];
+	SWORD msg_number;
 
 	if (h_err_stmt == NULL) {
 		error_number = DB_ERROR;
@@ -1855,8 +1856,8 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 		error_number = DB_SQL_ERROR;
 		sprintf(msg, "ODBC ERROR: <%d>, Inter code: <%d>", error_number, code);
 		strcat(error_message, msg);
-		//while (SQLError(SQL_NULL_HENV, SQL_NULL_HDBC, h_err_stmt, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) == SQL_SUCCESS) {
-		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, 1, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) == SQL_SUCCESS) {
+		msg_number = 1;
+		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number++, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) != SQL_NO_DATA) {
 		    sprintf(tmpMsg, "\n Native Err#=%d , SQLSTATE=%s, Error_Info='%s'",nErr, tmpSQLSTATE, msg);
 		    if (strlen(error_message) + strlen(tmpMsg) + 8 > ERROR_MESSAGE_SIZE) {
 			if (strlen(error_message) + 8 <= ERROR_MESSAGE_SIZE) {
@@ -1872,8 +1873,8 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 	case SQL_SUCCESS_WITH_INFO:
 		sprintf(msg, "\nODBC WARNING Inter code: <%d>", code);
 		strcat(warn_message, msg);
-		//while (SQLError(0, 0, h_err_stmt, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) == SQL_SUCCESS) {
-		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, 1, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) == SQL_SUCCESS) {
+		msg_number = 1;
+		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number++, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) != SQL_NO_DATA) {
 		    sprintf(tmpMsg, "\n Native Err#=%d , SQLSTATE=%s, Error_Info='%s'",nErr, tmpSQLSTATE, msg);
 		    if (strlen(warn_message) + strlen(tmpMsg) + 8 > WARN_MESSAGE_SIZE) {
 			if (strlen(warn_message) + 8 <= WARN_MESSAGE_SIZE) {

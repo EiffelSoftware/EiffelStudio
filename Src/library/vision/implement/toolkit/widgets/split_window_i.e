@@ -29,8 +29,7 @@ feature -- Element change
 			-- Set the split proportion from 0 to 100.
 		require
 			valid_proportion: p>=0 and then p<=100
-		do
-			proportion := p
+		deferred
 		end
 
 	add_child (a_child: SPLIT_WINDOW_CHILD) is

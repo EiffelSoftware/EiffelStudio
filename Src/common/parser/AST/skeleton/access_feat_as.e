@@ -91,6 +91,7 @@ feature -- Type check, byte code and dead code removal
 			vuex: VUEX;
 			vhne: VHNE;
 			vkcn: VKCN;
+			obs_warn: OBS_FEAT_WARN
 		do
 			last_type := context.item;
 			last_constrained := context.last_constrained_type;
@@ -185,11 +186,10 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.insert_error (vuex);
 				end;
 				if a_feature.is_obsolete then
-					io.error.putstring ("%TWarning: ");
-					io.error.putstring (a_feature.feature_name);
-					io.error.putstring (" is obsolete: ");
-					io.error.putstring (a_feature.obsolete_message);
-					io.error.new_line;
+					!!obs_warn;
+					obs_warn.set_feature (a_feature);
+					obs_warn.set_class (context.last_class);
+					Error_handler.insert_warning (obs_warn);
 				end;
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);

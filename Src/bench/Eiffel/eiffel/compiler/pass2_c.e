@@ -96,7 +96,7 @@ feature
 					-- Propagation of the assertions
 			if assert_prop_list = Void then
 				assert_prop_list := l;
-			else
+			elseif l /= Void then
 				assert_prop_list.finish;
 				assert_prop_list.merge_right (l)
 			end;

@@ -122,7 +122,7 @@ feature -- Type check, byte code and dead code removal
 			if precondition /= Void then
 					-- Set access id level analysis to `level1': locals
 					-- are not taken into account
-				context.set_level1 (True);
+				context.set_level1 (False);
 					-- Set Result access analysis level to `level4': Result
 					-- cannot be found in preconditions
 				context.set_level4 (True);

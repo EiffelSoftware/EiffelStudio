@@ -2509,6 +2509,9 @@ feature -- Dino stuff
 		local
 			melted_info: FEAT_MELTED_INFO;
 		do
+			--! Give a new body id so it is greater
+			--! than the frozen level
+			a_feature.change_body_id;
 			if melted_set = Void then
 				!!melted_set.make;
 			end;

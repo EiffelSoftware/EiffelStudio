@@ -132,6 +132,7 @@ feature {NONE} -- Implementation
 			test_scrollable_area: EV_SCROLLABLE_AREA
 			temp_h_box: EV_HORIZONTAL_BOX
 			temp_frame: EV_FRAME
+			l_dynamic_type: INTEGER
 		do
 			from
 				class_names.start
@@ -139,7 +140,13 @@ feature {NONE} -- Implementation
 				class_names.off
 			loop
 				temp := feature {ISE_RUNTIME}.check_assert (False)
-				common_test ?= new_instance_of (dynamic_type_from_string (class_names.item.as_upper))
+				
+				l_dynamic_type := dynamic_type_from_string (class_names.item.as_upper)
+				if l_dynamic_type /= -1 then
+					common_test ?= new_instance_of (l_dynamic_type)
+				else
+					common_test := Void
+				end
 					-- Although the files we put in there should never cause `common_test' to be Void,
 					-- we must protect it, as if anybody else was to put a file in one of these directories,
 					-- then it would crash the system.

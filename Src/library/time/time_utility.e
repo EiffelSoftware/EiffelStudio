@@ -1,5 +1,5 @@
 indexing
-	description: "functions usefull in time calculations"
+	description: "Functions useful in time calculations"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

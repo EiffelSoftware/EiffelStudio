@@ -37,9 +37,9 @@ feature -- Creation
 				substrg := s.substring(pos1, pos2 - 1)
 				substrg2 := s.substring (pos2, pos2)
 				substrg.to_lower
-			--	if substrg = "pm" or tmp_strg = "am" then
-			--		pos1 := s.count + 1
-			--	else
+				if substrg = "pm" or tmp_strg = "am" then
+					pos1 := s.count + 1
+				else
 					if substrg.count > 0 then
 						create code.make (substrg)
 						value.put (code, i)
@@ -51,7 +51,7 @@ feature -- Creation
 					end
 					pos1 := pos2 + 1
 					i := i + 1
-			--	end
+				end
 			end
 		ensure
 			value_set: value /= Void	
@@ -148,7 +148,7 @@ feature -- Interface
 				tmp_strg := substrg
 				tmp_strg.to_upper
 				if tmp_strg.is_equal ("PM") or tmp_strg.is_equal ("AM") then
-				--	pos1 := s.count + 1
+					pos1 := s.count + 1
 					am_pm_index := pos1
 					pos1 := pos2 + 1
 				else
@@ -466,7 +466,7 @@ feature -- Interface
 
 	precise_time: BOOLEAN is
 			-- Is the code string enough precise to create
-			-- nn instance of type TIME?
+			-- an instance of type TIME?
 		require
 			not_void: value /= Void
 		local

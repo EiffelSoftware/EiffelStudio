@@ -24,11 +24,11 @@ feature
 			feature_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Invalid creation procedure name: ");
-			put_string (feature_name);
-			new_line;
+			ow.put_string ("Invalid creation procedure name: ");
+			ow.put_string (feature_name);
+			ow.new_line;
 		end;
 
 end

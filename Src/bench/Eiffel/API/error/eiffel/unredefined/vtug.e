@@ -45,25 +45,25 @@ feature
 			entity_name := i;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			if feature_i /= Void then
-				put_string ("In feature: ");
-				feature_i.append_clickable_name (error_window, feature_i.written_class);
-				new_line;
+				ow.put_string ("In feature: ");
+				feature_i.append_name (ow, feature_i.written_class);
+				ow.new_line;
 			else
-				put_string ("In inheritance clause%N");
+				ow.put_string ("In inheritance clause%N");
 			end;
 			if entity_name /= Void then
-				put_string ("Entity name: ");
-				put_string (entity_name);
-				new_line;
+				ow.put_string ("Entity name: ");
+				ow.put_string (entity_name);
+				ow.new_line;
 			end;
-			put_string ("Invalid type: ");
-			type.append_clickable_signature (error_window);
-			put_string ("%NBase class: ");
-			base_class.e_class.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("Invalid type: ");
+			type.append_to (ow);
+			ow.put_string ("%NBase class: ");
+			base_class.e_class.append_signature (ow);
+			ow.new_line;
 		end;
 
 end

@@ -13,23 +13,23 @@ feature
 
 	subcode: INTEGER is 1;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			if called_feature /= Void then
-				print_called_feature;
-				put_string ("%NNumber of actuals: ");
-				put_int (argument_count);
-				put_string (" Number of formals: ");
-				put_int (called_feature.argument_count);
-				new_line;
+				print_called_feature (ow);
+				ow.put_string ("%NNumber of actuals: ");
+				ow.put_int (argument_count);
+				ow.put_string (" Number of formals: ");
+				ow.put_int (called_feature.argument_count);
+				ow.new_line;
 			elseif called_local /= Void then
-				put_string ("Local variable name: ");
-				put_string (called_local);
-				new_line
+				ow.put_string ("Local variable name: ");
+				ow.put_string (called_local);
+				ow.new_line
 			elseif called_arg /= Void then
-				put_string ("Argument name: ");
-				put_string (called_arg);
-				new_line
+				ow.put_string ("Argument name: ");
+				ow.put_string (called_arg);
+				ow.new_line
 			end;
 		end;
 

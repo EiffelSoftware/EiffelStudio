@@ -25,18 +25,18 @@ feature
 
 	subcode: INTEGER is 1;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		local
 			wclass: CLASS_C;
 		do
 			wclass := a_feature.written_class;
-			put_string ("Deferred feature: ");
-			a_feature.append_clickable_name (error_window, wclass);
-			put_string (" From: ");
-			wclass.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Deferred feature: ");
+			a_feature.append_name (ow, wclass);
+			ow.put_string (" From: ");
+			wclass.append_name (ow);
+			ow.new_line;
 		end;
 
 end

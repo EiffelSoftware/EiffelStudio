@@ -29,15 +29,15 @@ feature
 			actual_type := t;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
             -- Build specific explanation explain for current error
-            -- in `error_window'.
+            -- in `ow'.
         do
-			put_string ("Formal type: ");
-			formal_type.append_clickable_signature (error_window);
-			put_string ("%NActual type: ");
-			actual_type.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("Formal type: ");
+			formal_type.append_to (ow);
+			ow.put_string ("%NActual type: ");
+			actual_type.append_to (ow);
+			ow.new_line;
 		end;
 
 end

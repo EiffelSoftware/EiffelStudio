@@ -22,13 +22,13 @@ feature
 			other_feature := f
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Formal argument name: ");
-			put_string (other_feature.feature_name);
-			put_string (" is defined as a feature: ");
-			other_feature.append_clickable_signature (error_window, other_feature.written_class);
-			new_line;
+			ow.put_string ("Formal argument name: ");
+			ow.put_string (other_feature.feature_name);
+			ow.put_string (" is defined as a feature: ");
+			other_feature.append_signature (ow, other_feature.written_class);
+			ow.new_line;
 		end;
 
 end

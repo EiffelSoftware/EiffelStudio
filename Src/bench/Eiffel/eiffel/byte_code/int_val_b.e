@@ -27,7 +27,7 @@ feature
 			Result := value < other.value;
 		end;
 
-	display (a_clickable: CLICK_WINDOW) is
+	display (a_clickable: OUTPUT_WINDOW) is
 		do
 			a_clickable.put_int (value);
 		end;

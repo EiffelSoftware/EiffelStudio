@@ -20,16 +20,16 @@ feature
 			exported_feature := f;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		local
 			e_class: CLASS_C
 		do
 			e_class := exported_feature.written_class;
-			put_string ("Insufficiently exported feature: ");
-			exported_feature.append_clickable_name (error_window, e_class);
-			put_string (" from ");
-			e_class.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Insufficiently exported feature: ");
+			exported_feature.append_name (ow, e_class);
+			ow.put_string (" from ");
+			e_class.append_name (ow);
+			ow.new_line;
 		end;
 
 end 

@@ -23,11 +23,11 @@ feature
 			entity_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Duplicate name: ");
-			put_string (entity_name);
-			new_line;
+			ow.put_string ("Duplicate name: ");
+			ow.put_string (entity_name);
+			ow.new_line;
 		end;
 
 end

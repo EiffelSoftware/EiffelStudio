@@ -47,20 +47,20 @@ feature
 			actual_type := a;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			print_called_feature;
-			put_string ("Argument name: ");
-			put_string (argument_name);
-			put_string ("%NArgument position: ");
-			put_int (argument_position);
-			put_string ("%NActual argument type: ");
-			actual_type.append_clickable_signature (error_window);
-			put_string ("%NFormal argument type: ");
-			formal_type.append_clickable_signature (error_window);
-			new_line;
+			print_called_feature (ow);
+			ow.put_string ("Argument name: ");
+			ow.put_string (argument_name);
+			ow.put_string ("%NArgument position: ");
+			ow.put_int (argument_position);
+			ow.put_string ("%NActual argument type: ");
+			actual_type.append_to (ow);
+			ow.put_string ("%NFormal argument type: ");
+			formal_type.append_to (ow);
+			ow.new_line;
 		end;
 
 end

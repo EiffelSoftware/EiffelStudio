@@ -7,7 +7,7 @@ inherit
 			dump, is_bit, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
 			is_pointer, 
-			metamorphose, append_clickable_signature
+			metamorphose, append_signature
 		end;
 
 feature
@@ -33,7 +33,7 @@ feature
 	is_pointer: BOOLEAN is true;
 			-- Is the type a pointer type ?
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_signature (a_clickable: OUTPUT_WINDOW) is
 		do
 			a_clickable.put_string ("BIT ");
 			a_clickable.put_int (size);

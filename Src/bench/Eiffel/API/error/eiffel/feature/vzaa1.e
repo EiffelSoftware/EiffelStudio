@@ -24,13 +24,13 @@ feature
 	code: STRING is "VZAA";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Address name: ");
-			put_string (address_name);
-			new_line;
+			ow.put_string ("Address name: ");
+			ow.put_string (address_name);
+			ow.new_line;
 		end
 		
 end

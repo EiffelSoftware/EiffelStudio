@@ -30,18 +30,18 @@ feature
 			target_name := s
 		end;
 
-	print_name is
+	print_name (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Creation of: ");
-			put_string (target_name);
-			put_string ("%NTarget type: ");
-			type.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("Creation of: ");
+			ow.put_string (target_name);
+			ow.put_string ("%NTarget type: ");
+			type.append_to (ow);
+			ow.new_line;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			print_name
+			print_name (ow)
 		end;
 
 end

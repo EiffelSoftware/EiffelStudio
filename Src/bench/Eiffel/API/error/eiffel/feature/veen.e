@@ -23,13 +23,13 @@ feature
 	code: STRING is "VEEN";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Identifier: ");
-			put_string (identifier);
-			new_line;
+			ow.put_string ("Identifier: ");
+			ow.put_string (identifier);
+			ow.new_line;
 		end
 
 end

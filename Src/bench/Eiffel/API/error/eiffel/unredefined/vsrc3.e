@@ -26,12 +26,12 @@ feature
 			creation_feature := f;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Creation feature: ");
-			creation_feature.append_clickable_signature (error_window,
+			ow.put_string ("Creation feature: ");
+			creation_feature.append_signature (ow,
 				creation_feature.written_class);
-			new_line;
+			ow.new_line;
 		end;
 
 end

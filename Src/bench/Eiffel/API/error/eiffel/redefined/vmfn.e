@@ -33,19 +33,19 @@ feature
 	code: STRING is "VMFN";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Feature: ");
-			a_feature.append_clickable_signature (error_window, a_feature.written_class);
-			put_string (" Version from: ");
-			a_feature.written_class.append_clickable_name (error_window);
-			put_string ("%NFeature: ");
-			other_feature.append_clickable_signature (error_window, other_feature.written_class);
-			put_string (" Version from: ");
-			other_feature.written_class.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Feature: ");
+			a_feature.append_signature (ow, a_feature.written_class);
+			ow.put_string (" Version from: ");
+			a_feature.written_class.append_name (ow);
+			ow.put_string ("%NFeature: ");
+			other_feature.append_signature (ow, other_feature.written_class);
+			ow.put_string (" Version from: ");
+			other_feature.written_class.append_name (ow);
+			ow.new_line;
 		end;
 
 end

@@ -31,13 +31,13 @@ feature
 
 	code: STRING is "VDRS";
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
             -- Build specific explanation explain for current error
-            -- in `error_window'.
+            -- in `ow'.
         do
-			put_string ("%TFeature: ");
-			put_string (feature_name);
-			new_line;
+			ow.put_string ("%TFeature: ");
+			ow.put_string (feature_name);
+			ow.new_line;
 		end;
 
 end

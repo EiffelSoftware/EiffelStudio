@@ -22,13 +22,13 @@ feature
 			is_deferred := b;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Kind of routine: ");
+			ow.put_string ("Kind of routine: ");
 			if is_deferred then
-				put_string ("deferred%N")
+				ow.put_string ("deferred%N")
 			else
-				put_string ("external%N")
+				ow.put_string ("external%N")
 			end;
 		end;
 

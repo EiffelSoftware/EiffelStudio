@@ -25,14 +25,14 @@ feature
 			creation_feature := f;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			print_name;
-			put_string ("Feature name: ");
+			print_name (ow);
+			ow.put_string ("Feature name: ");
 			if creation_feature /= Void then
-				creation_feature.append_clickable_signature (error_window, creation_feature.written_class);
+				creation_feature.append_signature (ow, creation_feature.written_class);
 			end;
-			new_line;
+			ow.new_line;
 		end;
 
 end

@@ -21,19 +21,19 @@ feature
 			feature_name := s;
 		end;
 
-	trace is
+	trace (ow: OUTPUT_WINDOW) is
 		do
-			print_error_message;
-			put_string ("Class: ");
-			class_c.e_class.append_clickable_signature (error_window);
+			print_error_message (ow);
+			ow.put_string ("Class: ");
+			class_c.e_class.append_signature (ow);
 			if feature_name /= Void then
-				put_string ("%NFeature name: ");
-				put_string (feature_name);
-				new_line;
+				ow.put_string ("%NFeature name: ");
+				ow.put_string (feature_name);
+				ow.new_line;
 			else
-				put_string ("%NFeature: invariant%N");
+				ow.put_string ("%NFeature: invariant%N");
 			end;
-			build_explain;
+			build_explain (ow);
 		end;
 
 end

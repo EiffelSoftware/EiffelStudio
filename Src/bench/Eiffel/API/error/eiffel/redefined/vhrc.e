@@ -22,11 +22,11 @@ feature
 			parent := p;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Parent: ");
-			parent.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Parent: ");
+			parent.append_name (ow);
+			ow.new_line;
 		end;
 
 end

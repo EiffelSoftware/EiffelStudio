@@ -17,11 +17,11 @@ feature
 			parent := p;
 		end;
 
-	print_parent is
+	print_parent (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Parent for which export list appears: ");
-			parent.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Parent for which export list appears: ");
+			parent.append_name (ow);
+			ow.new_line;
 		end;
 
 	code: STRING is "VLEL";

@@ -22,17 +22,17 @@ feature
 	code: STRING is "VTCT";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		local
 			c_name: STRING;
 		do
 			c_name := clone (class_name)
 			c_name.to_upper;
-			put_string ("Unknown class name: ");
-			put_string (c_name);
-			new_line;
+			ow.put_string ("Unknown class name: ");
+			ow.put_string (c_name);
+			ow.new_line;
 		end;
 
 end

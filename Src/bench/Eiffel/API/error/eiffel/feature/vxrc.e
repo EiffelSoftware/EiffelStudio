@@ -21,12 +21,12 @@ feature
 			is_deferred := b
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			if is_deferred then
-				put_string ("Kind of routine: deferred%N");
+				ow.put_string ("Kind of routine: deferred%N");
 			else
-				put_string ("Kind of routine: external%N");
+				ow.put_string ("Kind of routine: external%N");
 			end;
 		end;
 

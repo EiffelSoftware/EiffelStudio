@@ -25,12 +25,12 @@ feature
 			entity_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Entity name: ");
-			put_string (entity_name);
-			new_line;
-			old_build_explain;
+			ow.put_string ("Entity name: ");
+			ow.put_string (entity_name);
+			ow.new_line;
+			old_build_explain (ow);
 		end;
 
 end

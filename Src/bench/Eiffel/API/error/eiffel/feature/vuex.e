@@ -46,23 +46,23 @@ feature
 
 	subcode: INTEGEr is 2;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		local
 			w_class: CLASS_C
 		do
 			w_class := exported_feature.written_class;
-			put_string ("Feature: ");
-			exported_feature.append_clickable_name (error_window, w_class);
-			put_string (" Class: ");
-			static_class.append_clickable_name (error_window);
-			put_string (" Version from: ");
-			w_class.append_clickable_name (error_window);
-			new_line;
-			put_string ("Not exported to class ");
-			class_c.append_clickable_name (error_window);
-			new_line
+			ow.put_string ("Feature: ");
+			exported_feature.append_name (ow, w_class);
+			ow.put_string (" Class: ");
+			static_class.append_name (ow);
+			ow.put_string (" Version from: ");
+			w_class.append_name (ow);
+			ow.new_line;
+			ow.put_string ("Not exported to class ");
+			class_c.append_name (ow);
+			ow.new_line
 		end
 
 end

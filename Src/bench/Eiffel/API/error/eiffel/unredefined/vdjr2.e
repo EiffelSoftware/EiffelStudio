@@ -20,13 +20,13 @@ feature
 			argument_number := i;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Argument number: ");
-			put_int (argument_number);
-			new_line;
-			print_types;
-			print_signatures;
+			ow.put_string ("Argument number: ");
+			ow.put_int (argument_number);
+			ow.new_line;
+			print_types (ow);
+			print_signatures (ow);
 		end;
 
 end

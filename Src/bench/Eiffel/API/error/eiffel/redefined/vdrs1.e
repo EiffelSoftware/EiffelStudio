@@ -1,5 +1,3 @@
--- Error when the compiler cannot find a final name for a redefinition
-
 class VDRS1 
 	
 inherit
@@ -36,15 +34,15 @@ feature
 
 	subcode: INTEGER is 1;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Invalid feature name: ");
-			put_string (feature_name);
-			put_string ("%NIn Redefine clause for parent: ");
-			parent.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Invalid feature name: ");
+			ow.put_string (feature_name);
+			ow.put_string ("%NIn Redefine clause for parent: ");
+			parent.append_name (ow);
+			ow.new_line;
 		end;
 
 end

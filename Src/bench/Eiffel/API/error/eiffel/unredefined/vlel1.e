@@ -13,9 +13,9 @@ feature
 
 	subcode: INTEGER is 1;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			print_parent;
+			print_parent (ow);
 		end;
 
 end

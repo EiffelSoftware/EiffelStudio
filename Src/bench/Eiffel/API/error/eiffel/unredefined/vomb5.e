@@ -21,11 +21,11 @@ feature
 			positive_value := i;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Non-Unique value: ");
-			put_int (positive_value);
-			new_line;
+			ow.put_string ("Non-Unique value: ");
+			ow.put_int (positive_value);
+			ow.new_line;
 		end;
 
 end

@@ -31,16 +31,16 @@ feature
 			class_c := System.class_of_id (id)
 		end;
 
-	trace is
+	trace (ow: OUTPUT_WINDOW) is
 		do
-			print_error_message;
-			put_string ("Class: ");
-			class_c.e_class.append_clickable_signature (error_window);
-			new_line;
-			build_explain
+			print_error_message (ow);
+			ow.put_string ("Class: ");
+			class_c.e_class.append_signature (ow);
+			ow.new_line;
+			build_explain (ow)
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 		end;
 

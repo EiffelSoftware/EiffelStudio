@@ -19,8 +19,9 @@ feature
 
 	init (old_feature, new_feature: FEATURE_I) is
 			-- Initialization
-		require
-			good_arguments: not (old_feature = Void or else new_feature = Void);
+        require
+            good_arguments: not (old_feature = Void or else 
+					new_feature = Void);
 		do
 			redeclaration := new_feature;
 			precursor := old_feature;
@@ -32,30 +33,24 @@ feature
 			Result := "VDRD"
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		local
 			r_class: CLASS_C;
 			p_class: CLASS_C;
 		do
 			r_class := redeclaration.written_class;
 			p_class := precursor.written_class;
-			put_string ("Redefined feature: ");
-			if r_class = class_c then
-					-- The redeclaration is written in the current class
-					-- The clickable information is NOT in the servers!!!
-				put_string (redeclaration.api_feature.signature);
-			else
-				redeclaration.append_clickable_signature (error_window, r_class);
-			end;
-			put_string (" From: ");
-			r_class.append_clickable_name (error_window);
-			put_string ("%NPrecursor: ");
-			precursor.append_clickable_signature (error_window, p_class);
-			put_string (" From: ");
-			p_class.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Redefined feature: ");
+			redeclaration.append_signature (ow, r_class);
+			ow.put_string (" From: ");
+			r_class.append_name (ow);
+			ow.put_string ("%NPrecursor: ");
+			precursor.append_signature (ow, p_class);
+			ow.put_string (" From: ");
+			p_class.append_name (ow);
+			ow.new_line;
 		end;
 
 end

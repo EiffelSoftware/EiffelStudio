@@ -10,7 +10,7 @@ inherit
 
 feature
 
-	display (a_clickable: CLICK_WINDOW) is
+	display (a_clickable: OUTPUT_WINDOW) is
 		deferred
 		end;
 

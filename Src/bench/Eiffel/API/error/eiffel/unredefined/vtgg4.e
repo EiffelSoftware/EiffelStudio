@@ -29,19 +29,19 @@ feature
 			error_list := e;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("In parent clause: ");
-			parent_type.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("In parent clause: ");
+			parent_type.append_to (ow);
+			ow.new_line;
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (error_window);
+				error_list.item.build_explain (ow);
 				error_list.forth;
 			end;
 		end;

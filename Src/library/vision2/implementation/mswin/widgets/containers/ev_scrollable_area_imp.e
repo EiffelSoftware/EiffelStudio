@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				cl_height := client_height
 				cw := imp_w - cl_width
 				ch := imp_h - cl_height
-
+				
 				if cw > 0 then
 						-- Item is too big to fit in width.
 					show_horizontal_scroll_bar

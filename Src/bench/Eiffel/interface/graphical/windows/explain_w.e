@@ -54,11 +54,9 @@ feature {NONE}
 			-- Hole caraterizing current
 
 	set_default_position is
-		local
-			i: INTEGER;
+			-- Display the window a the cursor position.
 		do
-			i := 10 * window_manager.explain_windows_count;
-			set_x_y (600 + i, i)
+			set_x_y (screen.x, screen.y)
 		end;
 
 end

@@ -140,6 +140,7 @@ feature -- Access
 			widget_name_not_empty: widget_name.count >= 1
 		do
 			Result := new_child_element (element, Item_string, "")
+			
 			add_attribute_to_element (Result, "type", "xsi", widget_name)
 		ensure
 			Result_not_void: Result /= Void

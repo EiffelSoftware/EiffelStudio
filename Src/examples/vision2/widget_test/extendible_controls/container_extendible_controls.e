@@ -61,9 +61,19 @@ feature -- Status setting
 		
 	wipe_out_item is
 			-- call `wipe_out' on `Current_type'.
+		local
+			notebook: EV_NOTEBOOK
 		do
 			current_type.wipe_out
 			object_editor.set_type (object_editor.test_widget)
+			
+			notebook ?= current_type
+			if notebook /= Void then
+					-- Need to perform special processing here as the notebook keeps
+					-- a list of its pixmap paths associated with the tabs which must
+					-- also be reset.
+				notebook.pixmap_paths.clear_all
+			end
 		end
 
 feature {NONE} -- Implementation

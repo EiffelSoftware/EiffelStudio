@@ -85,6 +85,14 @@ feature -- Basic Operations
 			ccom_remove_include_path (initializer, include_path)
 		end
 
+	replace_include_path (new_include_path: STRING; old_include_path: STRING) is
+			-- Replace an include path in the project.
+			-- `new_include_path' [in].  
+			-- `old_include_path' [in].  
+		do
+			ccom_replace_include_path (initializer, new_include_path, old_include_path)
+		end
+
 	add_object_file (object_file: STRING) is
 			-- Add a object file to the project.
 			-- `object_file' [in].  
@@ -97,6 +105,14 @@ feature -- Basic Operations
 			-- `object_file' [in].  
 		do
 			ccom_remove_object_file (initializer, object_file)
+		end
+
+	replace_object_file (new_include_path: STRING; old_object_file: STRING) is
+			-- Replace an object file in the project.
+			-- `new_include_path' [in].  
+			-- `old_object_file' [in].  
+		do
+			ccom_replace_object_file (initializer, new_include_path, old_object_file)
 		end
 
 feature {NONE}  -- Implementation
@@ -127,6 +143,12 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
+	ccom_replace_include_path (cpp_obj: POINTER; new_include_path: STRING; old_include_path: STRING) is
+			-- Replace an include path in the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
 	ccom_include_paths (cpp_obj: POINTER): IENUM_INCLUDE_PATHS_INTERFACE is
 			-- Include paths.
 		external
@@ -143,6 +165,12 @@ feature {NONE}  -- Externals
 			-- Remove a object file from the project.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_replace_object_file (cpp_obj: POINTER; new_include_path: STRING; old_object_file: STRING) is
+			-- Replace an object file in the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_object_files (cpp_obj: POINTER): IENUM_OBJECT_FILES_INTERFACE is

@@ -31,6 +31,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	replace_include_path_user_precondition (new_include_path: STRING; old_include_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `replace_include_path'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	include_paths_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `include_paths'.
 			-- Redefine in descendants if needed.
@@ -47,6 +54,13 @@ feature -- Status Report
 
 	remove_object_file_user_precondition (object_file: STRING): BOOLEAN is
 			-- User-defined preconditions for `remove_object_file'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	replace_object_file_user_precondition (new_include_path: STRING; old_object_file: STRING): BOOLEAN is
+			-- User-defined preconditions for `replace_object_file'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -87,6 +101,16 @@ feature -- Basic Operations
 
 		end
 
+	replace_include_path (new_include_path: STRING; old_include_path: STRING) is
+			-- Replace an include path in the project.
+			-- `new_include_path' [in].  
+			-- `old_include_path' [in].  
+		require
+			replace_include_path_user_precondition: replace_include_path_user_precondition (new_include_path, old_include_path)
+		deferred
+
+		end
+
 	include_paths: IENUM_INCLUDE_PATHS_INTERFACE is
 			-- Include paths.
 		require
@@ -109,6 +133,16 @@ feature -- Basic Operations
 			-- `object_file' [in].  
 		require
 			remove_object_file_user_precondition: remove_object_file_user_precondition (object_file)
+		deferred
+
+		end
+
+	replace_object_file (new_include_path: STRING; old_object_file: STRING) is
+			-- Replace an object file in the project.
+			-- `new_include_path' [in].  
+			-- `old_object_file' [in].  
+		require
+			replace_object_file_user_precondition: replace_object_file_user_precondition (new_include_path, old_object_file)
 		deferred
 
 		end

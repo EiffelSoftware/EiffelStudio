@@ -48,11 +48,11 @@ feature {NONE}
 
 	help_path: STRING is
 		local
-			file_name: DIRECTORY_NAME
+			dir_name: DIRECTORY_NAME
 		once
-			!!file_name.make_from_string (Eiffel3_dir_name);
-			file_name.extend_from_array (<<"bench", "help", "errors">>);
-			Result := file_name
+			!!dir_name.make_from_string (Eiffel3_dir_name);
+			dir_name.extend_from_array (<<"bench", "help", "errors">>);
+			Result := dir_name
 		end;
 
 	Default_precompiled_location: STRING is
@@ -68,13 +68,13 @@ feature {NONE}
 
 	filter_path: STRING is
 		local
-			file_name: DIRECTORY_NAME
+			dir_name: DIRECTORY_NAME
 		once
-			!!file_name.make_from_string (Eiffel3_dir_name);
-			file_name.extend_from_array (<<"bench", "filters">>);
-			Result := resources.get_string (r_Filter_path, file_name);
+			!!dir_name.make_from_string (Eiffel3_dir_name);
+			dir_name.extend_from_array (<<"bench", "filters">>);
+			Result := resources.get_string (r_Filter_path, dir_name);
 			if Result.empty then
-				Result := file_name
+				Result := dir_name
 			else
 					-- Interpretation of the environment variables
 				Result := interpret (Result)
@@ -83,18 +83,17 @@ feature {NONE}
 
 	tmp_directory: STRING is
 		local
-			file_name: DIRECTORY_NAME
+			dir_name: DIRECTORY_NAME
 		once
-			!!file_name.make;
-			file_name.set_directory ("tmp");
-			Result := resources.get_string (r_Tmp_directory, file_name);
+			!!dir_name.make;
+			dir_name.set_directory ("tmp");
+			Result := resources.get_string (r_Tmp_directory, dir_name);
 			if Result.empty then
-				Result := file_name
+				Result := dir_name
 			else
 					-- Interpretation of the environment variables
 				Result := interpret (Result)
 			end
 		end;
-
 
 end

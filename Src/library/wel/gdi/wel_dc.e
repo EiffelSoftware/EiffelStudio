@@ -966,15 +966,15 @@ feature -- Basic operations
 			string_not_void: string /= Void
 			rect_not_void: rect /= Void
 		local
-			a_wel_string: WEL_STRING
+			drawn_height: INTEGER
 		do
-			create a_wel_string.make (string)
-			cwin_draw_text (item, a_wel_string.item, string.count, rect.item,
-				format)
+			drawn_height := draw_text_with_result (string, rect, format)
 		end
 
-	draw_centered_text (string: STRING; rect: WEL_RECT) is
-			-- Draw the text `string' centered in `rect'.
+	draw_text_with_result (string: STRING; rect: WEL_RECT; format: INTEGER): INTEGER is
+			-- Draw the text `string' inside the `rect' using `format'.
+			-- Return the height of the text drawn.
+			-- See class WEL_DT_CONSTANTS for `format' value
 		require
 			exists: exists
 			string_not_void: string /= Void
@@ -983,8 +983,33 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (string)
-			cwin_draw_text (item, a_wel_string.item, string.count, rect.item,
-				Dt_singleline + Dt_center + Dt_vcenter)
+			Result := cwin_draw_text (item, a_wel_string.item,
+				string.count, rect.item, format)
+		end
+
+	draw_disabled_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
+			-- Draw the text `string' in disabled mode inside 
+			-- the `rect' using `format'
+			-- See class WEL_DT_CONSTANTS for `format' value
+		require
+			exists: exists
+			string_not_void: string /= Void
+			rect_not_void: rect /= Void
+		local
+			a_wel_string: WEL_STRING
+		do
+			create a_wel_string.make (string)
+			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
+		end
+
+	draw_centered_text (string: STRING; rect: WEL_RECT) is
+			-- Draw the text `string' centered in `rect'.
+		require
+			exists: exists
+			string_not_void: string /= Void
+			rect_not_void: rect /= Void
+		do
+			draw_text (string, rect, Dt_singleline + Dt_center + Dt_vcenter)
 		end
 
 	draw_bitmap (a_bitmap: WEL_BITMAP; x, y, a_width, a_height: INTEGER) is
@@ -1594,10 +1619,10 @@ feature {NONE} -- Externals
 		end
 
 	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER; 
-			rect: POINTER; format: INTEGER) is
+			rect: POINTER; format: INTEGER): INTEGER is
 			-- SDK DrawText
 		external
-			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT)"
+			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT): int"
 		alias
 			"DrawText"
 		end
@@ -2145,8 +2170,6 @@ feature {NONE} -- Externals
 			"file_ps"
 		end
 
-	
-
 	Opaque: INTEGER is
 		external
 			"C [macro <windows.h>]"
@@ -2164,6 +2187,12 @@ feature {NONE} -- Externals
 	cwin_get_function_address (module_name: POINTER; function_name: POINTER): POINTER is
 		external
 			"C(char *, char *): FARPROC | %"wel_dynload.h%""
+		end
+
+	cwin_draw_disabled_text (hdc: POINTER; string: POINTER; length: INTEGER; rect: POINTER; format: INTEGER) is
+			-- Draw disabled text
+		external
+			"C (HDC, LPCTSTR, int, LPRECT, UINT) | %"wel_drawstate.h%""
 		end
 
 	cwin_mask_blt (function_addr: POINTER; hdc_dest: POINTER; x_dest, y_dest, a_width,

@@ -67,6 +67,22 @@ feature -- Basic Operations
 			end
 			map_list.extend (tuple)
 
+				-- Add target clr version
+			create tuple.make
+			tuple.put (clr_version_template, 1)
+			tuple.put (wizard_information.clr_version, 2)
+			map_list.extend (tuple)
+
+				-- Add framework version
+			create tuple.make
+			tuple.put (assembly_version_template, 1)
+			if wizard_information.clr_version.is_equal (wizard_information.clr_version_10) then
+				tuple.put ("3300", 2)
+			else
+				tuple.put ("5000", 2)
+			end
+			map_list.extend (tuple)
+
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
 				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
@@ -118,6 +134,12 @@ feature {NONE} -- Constants
 
 	Console_application: STRING is "<FL_CONSOLE_APPLICATION>"
 			-- String to be replaced by yes or no.
+
+	clr_version_template: STRING is "<FL_CLR_VERSION>"
+			-- String to be replaced by the chosen version of CLR
+	
+	assembly_version_template: STRING is "<FL_ASSEMBLY_VERSION>"
+			-- String to be replaced by the infered .net framework assembly version
 
 	Ace_extension: STRING is ".ace"
 			-- Ace files extension

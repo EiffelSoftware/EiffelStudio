@@ -12,26 +12,33 @@ class
 
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
-		select
+		redefine
 			interface
 		end
 
 	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
-		rename
-			interface as ev_tool_bar_toggle_button_imp_interface
 		redefine
 			type,
-			set_selected,
-			on_activate
+			set_checked,
+			interface,
+			initialize
 		end
 
-	EV_RADIO_IMP [EV_TOOL_BAR_RADIO_BUTTON]
-		rename 
-			interface as ev_radio_imp_interface
+	EV_RADIO_PEER_IMP
+		redefine
+			interface
 		end
 
 creation
 	make
+
+feature {NONE} -- Initialization
+
+	initialize is
+		do
+			Precursor
+			enable_select
+		end
 
 feature -- Status report
 
@@ -43,33 +50,29 @@ feature -- Status report
 			Result := 3
 		end
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the current button if `flag', deselect it
-			-- otherwise.
+	set_checked is
+			-- Select the current button.
+		local
+			cur: CURSOR
 		do
-			{EV_TOOL_BAR_TOGGLE_BUTTON_IMP} Precursor (flag)
-			if group /= Void then
-				group.set_selection_at_no_event (Current)
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					radio_group.item.disable_select
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
 			end
+			Precursor
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
-	on_activate is
-			-- The button has been activated.
-		do
-			--{EV_TOOL_BAR_TOGGLE_BUTTON_IMP} Precursor
-			--if group /= Void then
-			--	group.set_selection_at (Current)
-			--end
-		end
-
-	on_unselect is
-			-- The button has been unselected.
-		do
-			--|FIXME Need to use the new events.
-			--execute_command (Cmd_item_deactivate, Void)
-		end
+	interface: EV_TOOL_BAR_RADIO_BUTTON
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 
@@ -94,6 +97,10 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/04 17:20:59  rogers
+--| Now inherits EV_RADIO_PEER_IMP. Implemented initialize,
+--| set_checked. Removed on_activate and on_unselect. Added interface.
+--|
 --| Revision 1.6  2000/04/03 18:48:18  rogers
 --| Removed parent_imp as it can be inherited directly from
 --| EV_TOGGLE_BUTTON_IMP.

@@ -603,8 +603,6 @@ feature {NONE} -- Execution
 
 	process_feature_class is
 			-- Analyze the class the user chose, but we are choosing a feature.
-		local
-			f: E_FEATURE
 		do
 			if current_class = Void then
 				if class_i = Void then
@@ -1479,11 +1477,10 @@ feature {NONE} -- open new class
 		local
 			str: STRING
 			nb, minc: INTEGER
-			index, j: INTEGER
+			j: INTEGER
 			list: LINKED_LIST [CLUSTER_I]
 			current_found: STRING
 			cname: STRING
-			array_count: INTEGER
 			do_not_complete: BOOLEAN
 			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN
@@ -1580,11 +1577,10 @@ feature {NONE} -- open new class
 		local
 			str: STRING
 			nb, minc: INTEGER
-			index, j: INTEGER
+			j: INTEGER
 			list: FEATURE_TABLE
 			current_found: STRING
 			cname: STRING
-			array_count: INTEGER
 			do_not_complete: BOOLEAN
 			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN

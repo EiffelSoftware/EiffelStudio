@@ -11,7 +11,7 @@ inherit
 
 	PIXMAP_COMMAND
 		rename
-			init as make
+			init_from_tool as make
 		end;
 
 creation
@@ -48,20 +48,10 @@ feature {NONE} -- Implementation
 			format_storage: E_STORE_CASE_INFO;
 			mp: MOUSE_PTR
 		do
-			if 
-				argument = control_click or
-				(last_confirmer /= Void and argument = last_confirmer)
-			then
-				!! mp.set_watch_cursor;
-				!! format_storage.make_with_window (Error_window);
-				format_storage.execute;
-				mp.restore
-			else
-				confirmer (popup_parent).call (Current,
-					"This command requires exploring the entire%N%
-					%system and may take a long time...",
-					"Continue")
-			end
+			!! mp.set_watch_cursor;
+			!! format_storage.make_with_window (Error_window);
+			format_storage.execute;
+			mp.restore
 		end;
 	
 end -- class CASE_STORAGE

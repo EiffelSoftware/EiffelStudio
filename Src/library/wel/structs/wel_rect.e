@@ -259,42 +259,58 @@ feature {NONE} -- Externals
 
 	cwel_rect_set_left (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT, long)"
+		alias
+			"left"
 		end
 
 	cwel_rect_set_top (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT, long)"
+		alias
+			"top"
 		end
 
 	cwel_rect_set_right (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT, long)"
+		alias
+			"right"
 		end
 
 	cwel_rect_set_bottom (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT, long)"
+		alias
+			"bottom"
 		end
 
 	cwel_rect_get_left (ptr: POINTER): INTEGER is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT): EIF_INTEGER"
+		alias
+			"left"
 		end
 
 	cwel_rect_get_top (ptr: POINTER): INTEGER is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT): EIF_INTEGER"
+		alias
+			"top"
 		end
 
 	cwel_rect_get_right (ptr: POINTER): INTEGER is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT): EIF_INTEGER"
+		alias
+			"right"
 		end
 
 	cwel_rect_get_bottom (ptr: POINTER): INTEGER is
 		external
-			"C [macro <rect.h>]"
+			"C [struct <rect.h>] (RECT): EIF_INTEGER"
+		alias
+			"bottom"
 		end
 
 	cwin_set_rect (ptr: POINTER; a_left, a_top, a_right,

@@ -685,20 +685,21 @@ EIF_DOUBLE d;
 #endif
 }
 
-void c_put_string (fd, s)
+void c_put_string (fd, s, size)
 EIF_INTEGER fd;
 EIF_OBJ s;
+EIF_INTEGER size;
 {
 #ifdef EIF_WIN32
-	if (send (fd, s, strlen(s), 0) == SOCKET_ERROR)
+	if (send (fd, s, size, 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
             eio();
 #elif defined EIF_OS2
-	if (send (fd, s, strlen(s), 0) == -1)
+	if (send (fd, s, size, 0) == -1)
 		if (sock_errno() != SOCEWOULDBLOCK)
             eio();
 #else
-	if (write ((int)fd, s, strlen (s)) < 0)
+	if (write ((int)fd, s, size) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
 #endif
@@ -727,7 +728,7 @@ EIF_INTEGER l;
 EIF_REAL c_read_float (fd)
 EIF_INTEGER fd;
 {
-	float f;
+	float f=0.0;
 #ifdef EIF_WIN32
 	if (recv ((int) fd, (char *) &f, sizeof (float), 0) == SOCKET_ERROR)
         if (WSAGetLastError() != EWOULDBLOCK)
@@ -747,7 +748,7 @@ EIF_INTEGER fd;
 EIF_DOUBLE c_read_double (fd)
 EIF_INTEGER fd;
 {
-	double d;
+	double d=0.0;
 #ifdef EIF_WIN32
 	if (recv (fd, (char *) &d, sizeof (double), 0) == SOCKET_ERROR)
         if (WSAGetLastError() != EWOULDBLOCK)
@@ -767,7 +768,7 @@ EIF_INTEGER fd;
 EIF_CHARACTER c_read_char (fd)
 EIF_INTEGER fd;
 {
-	char c;
+	char c=0;
 #ifdef EIF_WIN32
 	if (recv (fd, &c, sizeof (char), 0) == SOCKET_ERROR)
         if (WSAGetLastError() != EWOULDBLOCK)
@@ -787,7 +788,7 @@ EIF_INTEGER fd;
 EIF_INTEGER c_read_int (fd)
 EIF_INTEGER fd;
 {
-	EIF_INTEGER i;
+	EIF_INTEGER i=0L;
 
 #ifdef EIF_WIN32
 	if (recv (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == SOCKET_ERROR)

@@ -9,7 +9,7 @@ class
 inherit
 	GEN_TYPE_I
 		redefine
-			same_as, il_type_name, duplicate, instantiation_in
+			same_as, il_type_name, duplicate, instantiation_in, copy
 		end
 	
 create
@@ -62,13 +62,20 @@ feature -- Duplication
 
 	duplicate: NATIVE_ARRAY_TYPE_I is
 			-- Duplicate current.
+		do
+			Result := clone (Current)
+		end
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
 		local
 			l_meta: like meta_generic
 		do
-			Result := clone (Current)
+			standard_copy (other)
 			l_meta := clone (meta_generic)
-			Result.set_meta_generic (l_meta)
-			Result.set_true_generics (l_meta)
+			meta_generic := l_meta
+			true_generics := l_meta
 		end
 
 feature -- Status report

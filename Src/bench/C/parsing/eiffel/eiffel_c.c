@@ -225,9 +225,10 @@ char *constrained;
  */
 
 char *create_class(cl_name, deferred, expanded, indexes, generics, obsolete,
-parents, creators, features, invariant, cl_list)
+parents, creators, features, invariant, cl_list, end_pos)
 char *cl_name, *obsolete, *indexes, *generics, *parents, *creators, *features, *invariant, *cl_list;
 char deferred, expanded;
+int end_pos;
 {
 	/* Create an instance of CLASS_AS */
 	
@@ -248,6 +249,8 @@ char deferred, expanded;
 	object_arg[9] = obsolete;
 	bool_arg[0] = deferred;
 	bool_arg[1] = expanded;
+	int_arg[0] = end_pos;
+
 	(*init_array[CLASS_AS])(result);
 
 	return result;
@@ -353,13 +356,30 @@ printf("Generic #%d recognized\n", i);
 	/* NOTREACHED */
 }
 
-char *create_feature_as(names, declaration, start_position, end_position)
-char *names, *declaration;
-int start_position, end_position;
+char *create_fclause_as(clients, feature_list, start_pos)
+char *clients, *feature_list;
+int start_pos;
 {
-	int_arg[0] = start_position;
-	int_arg[1] = end_position;
+	int_arg[0] = start_pos;
+	return create_node2(FEATURE_CLAUSE_AS,clients,feature_list);
+}
+
+char *create_feature_as(names, declaration, start_pos, end_pos)
+char *names, *declaration;
+int start_pos, end_pos;
+{
+	int_arg[0] = start_pos;
+	int_arg[1] = end_pos;
 	return create_node2(FEATURE_AS,names,declaration);
+}
+
+char *create_routine_as(obsolete, start_pos, precs, locals, body, posts, rescue)
+char *obsolete;
+int start_pos;
+char *precs, *locals, *body, *posts, *rescue;
+{
+	int_arg[0] = start_pos;
+	return create_node6(ROUTINE_AS,obsolete,precs,locals,body,posts,rescue);
 }
 
 char *create_exp_class_type(id, generics)

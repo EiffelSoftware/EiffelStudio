@@ -8,7 +8,7 @@
 -- Major syntactical constructs
 
 Cluster_declaration, Class_declaration		|%
-		%<MML - MML filter from Eiffel 4>%N%
+		%<MML - MML filter from $generator$>%N%
 		%<TabStops%N%
 		% <TabStop .5">%N%
 		% <TabStop 1">%N%

@@ -57,9 +57,10 @@ feature
 	has_gcable_variable: BOOLEAN is
 			-- Is the access using a GCable variable ?
 		local
-			expr_b: EXPR_B
 			is_in_register: BOOLEAN
-			pos: INTEGER
+			i, nb: INTEGER
+			l_parameters: BYTE_LIST [EXPR_B]
+			l_area: SPECIAL [EXPR_B]
 		do
 			is_in_register := register /= Void and register /= No_register
 			if is_in_register and register.c_type.is_pointer then
@@ -68,27 +69,25 @@ feature
 			else
 				if parent = Void or else parent.target.is_current then
 						-- True access: we may need Current.
-					Result :=
-						(current_needed_for_access and not is_in_register)
-						or
-						(is_result and c_type.is_pointer)
+					Result := (current_needed_for_access and not is_in_register)
+						or (is_result and c_type.is_pointer)
 				end
 					-- Check the parameters if needed, i.e. if there are
 					-- any and if the access is not already stored in a
 					-- register (which can't be a pointer, otherwise it would
 					-- have been handled by the first "if").
-				if not is_in_register and parameters /= Void then
-					pos := parameters.index
+				l_parameters := parameters
+				if not is_in_register and l_parameters /= Void then
 					from
-						parameters.start
+						l_area := l_parameters.area
+						i := 0
+						nb := l_parameters.count
 					until
-						parameters.after or Result
+						i = nb or Result
 					loop
-						expr_b := parameters.item
-						Result := expr_b.has_gcable_variable
-						parameters.forth
+						Result := l_area.item (i).has_gcable_variable
+						i := i + 1
 					end
-					parameters.go_i_th (pos)
 				end
 			end
 		end
@@ -96,29 +95,32 @@ feature
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is register `r' used in local access ?
 		local
-			expr: EXPR_B
-			pos: INTEGER
+			i, nb: INTEGER
+			l_area: SPECIAL [EXPR_B]
+			l_parameters: BYTE_LIST [EXPR_B]
 		do
-			if parameters /= Void then
-				pos := parameters.index
+			l_parameters := parameters
+			if l_parameters /= Void then
 				from
-					parameters.start
+					l_area := l_parameters.area
+					i := 0
+					nb := l_parameters.count
 				until
-					parameters.after or Result
+					i = nb or Result
 				loop
-					expr := parameters.item;	-- Cannot fail
-					Result := expr.used(r)
-					parameters.forth
+					Result := l_area.item (i).used(r)
+					i := i + 1
 				end
-				parameters.go_i_th (pos)
 			end
 		end
 	
 	is_single: BOOLEAN is
 			-- Is access a single one ?
 		local
+			i, nb: INTEGER
+			l_area: SPECIAL [EXPR_B]
+			l_parameters: BYTE_LIST [EXPR_B]
 			expr_b: EXPR_B
-			pos: INTEGER
 		do
 				-- If it is predefined, then it is single.
 			Result := is_predefined
@@ -127,18 +129,19 @@ feature
 					-- It is not predefined. If it has parameters, then none
 					-- of them may have a call or allocate memory (manifest arrays,
 					-- strings, ...).
-				if parameters /= Void then
-					pos := parameters.index
+				l_parameters := parameters
+				if l_parameters /= Void then
 					from
-						parameters.start
+						l_area := l_parameters.area
+						i := 0
+						nb := l_parameters.count
 					until
-						parameters.after or not Result
+						i = nb or not Result
 					loop
-						expr_b := parameters.item
+						expr_b := l_area.item (i)
 						Result := not (expr_b.has_call or else expr_b.allocates_memory)
-						parameters.forth
+						i := i + 1
 					end
-					parameters.go_i_th (pos)
 				end
 			end
 		end
@@ -243,17 +246,21 @@ feature
 	unanalyze_parameters is
 			-- Undo the analysis on parameters
 		local
-			expr_b: EXPR_B
+			l_parameters: BYTE_LIST [EXPR_B]
+			l_area: SPECIAL [EXPR_B]
+			i, nb: INTEGER
 		do
-			if parameters /= Void then
+			l_parameters := parameters
+			if l_parameters /= Void then
 				from
-					parameters.start
+					l_area := l_parameters.area
+					i := 0
+					nb := l_parameters.count
 				until
-					parameters.after
+					i = nb
 				loop
-					expr_b := parameters.item;	-- Cannot fail
-					expr_b.unanalyze
-					parameters.forth
+					l_area.item (i).unanalyze
+					i := i + 1
 				end
 			end
 		end
@@ -261,17 +268,21 @@ feature
 	free_param_registers is
 			-- Free registers used by parameters
 		local
-			expr_b: EXPR_B
+			l_parameters: BYTE_LIST [EXPR_B]
+			l_area: SPECIAL [EXPR_B]
+			i, nb: INTEGER
 		do
-			if parameters /= Void then
+			l_parameters := parameters
+			if l_parameters /= Void then
 				from
-					parameters.start
+					l_area := l_parameters.area
+					i := 0
+					nb := l_parameters.count
 				until
-					parameters.after
+					i = nb
 				loop
-					expr_b := parameters.item;	-- Cannot fail
-					expr_b.free_register
-					parameters.forth
+					l_area.item (i).free_register
+					i := i + 1
 				end
 			end
 		end

@@ -56,7 +56,7 @@ feature -- Initialization
 			val_field.change_actions.extend (~on_val_change)
 			hr.change_actions.extend (~on_hr_change)
 
-			val_field.set_range (min_field.value, max_field.value)
+			val_field.set_range (min_field.value |..| max_field.value)
 			sb.set_range (min_field.value |..| max_field.value)
 			pb.set_range (min_field.value |..| max_field.value)
 			hr.set_range (min_field.value |..| max_field.value)

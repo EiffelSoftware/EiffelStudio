@@ -13,7 +13,8 @@ inherit
 		redefine
 			actual_type, has_like, is_like, is_external,
 			is_basic, instantiated_in, meta_type,
-			has_associated_class, reference_actual_type
+			has_associated_class, reference_actual_type,
+			is_reference, is_expanded
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -49,6 +50,18 @@ feature -- Properties
 			-- Is current type based on an external class?
 		do
 			Result := actual_type.is_external
+		end
+		
+	is_reference: BOOLEAN is
+			-- Is current actual type a reference one?
+		do
+			Result := actual_type.is_reference
+		end
+
+	is_expanded: BOOLEAN is
+			-- Is current actual type an expanded one?
+		do
+			Result := actual_type.is_expanded
 		end
 
 feature -- Access

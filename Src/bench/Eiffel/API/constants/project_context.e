@@ -75,11 +75,25 @@ feature -- Eiffel Project Directories
 			Result := temp_workbench_generation_path
 		end
 	
+	Workbench_bin_generation_path: DIRECTORY_NAME is
+			-- Path to `assemblies' directory in EIFGEN/W_code.
+		once
+			create Result.make_from_string (Workbench_generation_path)
+			Result.extend (Local_assemblies)
+		end
+
 	Final_generation_path: DIRECTORY_NAME is
 		once
 			Result := temp_final_generation_path
 		end
 
+	Final_bin_generation_path: DIRECTORY_NAME is
+			-- Path to `assemblies' directory in EIFGEN/F_code.
+		once
+			create Result.make_from_string (Final_generation_path)
+			Result.extend (Local_assemblies)
+		end
+		
 	Compilation_path: DIRECTORY_NAME is
 			-- Path to the compilation directory
 		once
@@ -189,6 +203,22 @@ feature {NONE} -- Directory creation
 			d: DIRECTORY
 		once
 			create d.make (Profiler_path);
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
+	Create_local_assemblies_directory is
+			-- Directory where local assemblies will be generated.
+		local
+			d: DIRECTORY
+		do
+			create_generation_directory
+			create d.make (Final_bin_generation_path)
+			if not d.exists then
+				d.create_dir
+			end;
+			create d.make (Workbench_bin_generation_path)
 			if not d.exists then
 				d.create_dir
 			end

@@ -655,7 +655,7 @@ feature -- Basic operations
 feature -- Element change
 
 	set_character_format_all (a_char_format: WEL_CHARACTER_FORMAT) is
-			-- Set the current selection with `a_char_format'.
+			-- Apply `a_char_format' to all text.
 		require
 			exists: exists
 			a_char_format_not_void: a_char_format /= Void
@@ -665,7 +665,7 @@ feature -- Element change
 		end
 
 	set_character_format_selection (a_char_format: WEL_CHARACTER_FORMAT) is
-			-- Set the current selection with `a_char_format'.
+			-- Apply `a_char_format' to current selection.
 		require
 			exists: exists
 			a_char_format_not_void: a_char_format /= Void

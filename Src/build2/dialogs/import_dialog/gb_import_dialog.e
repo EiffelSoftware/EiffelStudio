@@ -9,6 +9,13 @@ class
 
 inherit
 	GB_IMPORT_DIALOG_IMP
+	
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 
 feature {NONE} -- Initialization
@@ -22,6 +29,7 @@ feature {NONE} -- Initialization
 		do
 			change_list.set_background_color ((create {EV_STOCK_COLORS}).white)
 			set_default_push_button (ok_button)
+			set_icon_pixmap (Icon_build_window @ 1)
 		end
 		
 feature -- Basic operation

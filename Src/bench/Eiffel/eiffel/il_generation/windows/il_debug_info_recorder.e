@@ -49,24 +49,38 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize `Current'.
+			-- Create `Current'.
+		do
+			reset
+		end
+		
+	reset is
+			-- Reset value of Current
 		do
 			create modules_debugger_info.make (50)
-			create class_types_debugger_info.make (100)
+			create class_types_debugger_info.make (100)	
+			entry_point_token := 0
+			
+			last_class_type_recorded := Void
+			last_info_from_class_type := Void
+			last_info_from_module := Void
 		end
 
 feature -- Access
 
 	is_debug_info_enabled: BOOLEAN
-			-- Are we generating debug information?
+			-- Are we generating debug information ?
 
-	init_recording_session is
-			-- 
+	init_recording_session (debug_mode: BOOLEAN) is
+			-- Initialize recording session.
 		do
+				--| Reset internal value to recompute the CLASS_TYPES array
 			Il_debug_info.reset
-			is_debug_info_enabled := True
-			last_class_type_recorded := Void
+				--| Enable/Disable debug info
+			is_debug_info_enabled := debug_mode
 
+				--| Reset Internal attributes used for optimisation 
+			last_class_type_recorded := Void
 			last_info_from_class_type := Void
 			last_info_from_module := Void
 		end
@@ -74,6 +88,7 @@ feature -- Access
 feature -- Access from debugger
 
 	has_class_info_about_module_class_token (a_module_name: STRING; a_class_token: INTEGER): BOOLEAN is
+			-- Do we have information for Class identified by `a_module_name' and `a_class_token' ?
 		require
 			module_name_valid: a_module_name /= Void
 								and then not a_module_name.is_empty
@@ -301,8 +316,12 @@ feature {NONE} -- entry point token
 
 	is_entry_point (a_feat: FEATURE_I): BOOLEAN is
 			-- Is `a_feat' the entry point ?
+		local
+			l_creation_name: STRING
 		do
-			Result := a_feat.feature_name.is_equal (System.creation_name) 
+			l_creation_name := System.creation_name
+			Result := l_creation_name /= Void --| In case we are precompiling |--
+					and then a_feat.feature_name.is_equal (l_creation_name)
 					and then a_feat.written_class.is_equal (System.root_class.compiled_class)
 		end
 
@@ -629,6 +648,9 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			l_il_info_file: RAW_FILE
 			l_data_to_save: TUPLE[ANY,ANY,INTEGER]
 			retried: BOOLEAN
+			l_modules_debugger_info: like modules_debugger_info
+			l_class_types_debugger_info: like class_types_debugger_info
+			l_entry_point_token: like entry_point_token
 		do
 
 			debug ("debugger_il_info_trace")
@@ -643,13 +665,22 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				else
 					l_il_info_file.open_read
 					l_data_to_save ?= l_il_info_file.retrieved
-					l_il_info_file.close					
+					l_il_info_file.close
 					
-					modules_debugger_info ?= l_data_to_save.item (1)
-					class_types_debugger_info ?= l_data_to_save.item (2)
-					entry_point_token := l_data_to_save.integer_item (3)			
-				end
-				
+						--| Reset attribute values
+					reset
+					
+						--| Get values
+					l_modules_debugger_info ?= l_data_to_save.item (1)
+					l_class_types_debugger_info ?= l_data_to_save.item (2)
+					l_entry_point_token := l_data_to_save.integer_item (3)
+					
+						--| Assign values
+					modules_debugger_info := l_modules_debugger_info
+					class_types_debugger_info := l_class_types_debugger_info
+					entry_point_token := l_entry_point_token
+						
+				end			
 			else
 				io.put_string ("ERROR: Unable to load IL INFO data from file [" + Il_info_file_name + "]%N")
 			end
@@ -778,28 +809,28 @@ feature {IL_CODE_GENERATOR} -- Cleaning
 			l_feat_table.go_to (l_feat_cursor)
 		end
 
-	clean_info_for (a_class_c: CLASS_C) is
-			-- Clean stored info about `a_class_c'
-		require
-			class_c_not_void: a_class_c /= Void
-		local
-			l_class_types: TYPE_LIST
-			l_class_type: CLASS_TYPE
-			l_class_cursor: CURSOR
-		do
-			l_class_types := a_class_c.types
-			l_class_cursor := l_class_types.cursor
-			from
-				l_class_types.start
-			until
-				l_class_types.after
-			loop
-				l_class_type := l_class_types.item
-				clean_class_type_info_for (l_class_type)
-				l_class_types.forth
-			end
-			l_class_types.go_to (l_class_cursor)
-		end
+--	clean_info_for (a_class_c: CLASS_C) is
+--			-- Clean stored info about `a_class_c'
+--		require
+--			class_c_not_void: a_class_c /= Void
+--		local
+--			l_class_types: TYPE_LIST
+--			l_class_type: CLASS_TYPE
+--			l_class_cursor: CURSOR
+--		do
+--			l_class_types := a_class_c.types
+--			l_class_cursor := l_class_types.cursor
+--			from
+--				l_class_types.start
+--			until
+--				l_class_types.after
+--			loop
+--				l_class_type := l_class_types.item
+--				clean_class_type_info_for (l_class_type)
+--				l_class_types.forth
+--			end
+--			l_class_types.go_to (l_class_cursor)
+--		end
 
 feature {NONE} -- Debugger Info List Access
 
@@ -864,4 +895,3 @@ feature {NONE} -- Debugger Info List
 			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
 end -- class IL_DEBUG_INFO_RECORDER
-

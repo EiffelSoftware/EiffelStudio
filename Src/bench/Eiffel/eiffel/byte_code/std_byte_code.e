@@ -307,7 +307,7 @@ feature
 
 				-- End of C function
 			if is_once and then context.result_used then
-				generated_file.putstring ("#undef Result%N")
+				generated_file.putstring ("%N#undef Result%N")
 			end
 
 			generated_file.exdent

@@ -4,13 +4,11 @@ indexing
 class
 	MENU
 
---inherit 
---	WINFORMS_FORM
---		redefine
---			make,
---			on_paint,
---			dispose_boolean
---		end
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form
+		end
 
 create
 	make
@@ -25,8 +23,6 @@ feature {NONE} -- Initialization
 			mi_file, mi_format: WINFORMS_MENU_ITEM
 			l_array_menu_item: NATIVE_ARRAY [WINFORMS_MENU_ITEM]
 		do
-			create my_window.make
-			
 			initialize_component
 
 			--  Initialize Fonts - use generic fonts to avoid problems across
@@ -38,9 +34,9 @@ feature {NONE} -- Initialization
 
 			-- Add File Menu
 			mi_file := main_menu.menu_items.add (("&File").to_cil)
-			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("&Open...").to_cil, create {EVENT_HANDLER}.make (Current, $FileOpen_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
+			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("&Open...").to_cil, create {EVENT_HANDLER}.make (Current, $file_open_clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
 			dummy := mi_file.menu_items.add (("-").to_cil)     --  Gives us a seperator
-			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $FileExit_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
+			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $file_exit_clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
 
 			-- Add Format Menu
 			mi_format := main_menu.menu_items.add (("F&ormat").to_cil)
@@ -48,15 +44,15 @@ feature {NONE} -- Initialization
 			-- Font Face sub-menu
 			create mmi_sans_serif.make_from_text_and_on_click (
 				(("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name),
-				create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			mmi_sans_serif.set_checked (True) 
 			mmi_sans_serif.set_default_item (True) 
 			create mmi_serif.make_from_text_and_on_click (
 				(("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name),
-				create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 			create mmi_mono_space.make_from_text_and_on_click (
 				(("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name),
-				create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+				create {EVENT_HANDLER}.make (Current, $format_font_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_sans_serif)
@@ -65,11 +61,11 @@ feature {NONE} -- Initialization
 			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
 
 			-- Font Size sub-menu
-			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
-			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
+			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 			mmi_medium.set_checked (True) 
 			mmi_medium.set_default_item (True) 
-			create mmi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			create mmi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $format_size_clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_small)
@@ -96,14 +92,11 @@ feature {NONE} -- Initialization
 			mi_context_format_font_checked := cmi_sans_serif
 			mi_context_format_size_checked := cmi_medium
 
-			dummy := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container.
@@ -143,13 +136,13 @@ feature {NONE} -- Implementation
 			create label_1.make
 			create label_1_context_menu.make
 
-			my_window.set_text (("Menus 'R Us").to_cil)
+			set_text (("Menus 'R Us").to_cil)
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
+			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (392, 117)
-			my_window.set_client_size (l_size)
+			set_client_size (l_size)
 			create main_menu.make
-			my_window.set_menu (main_menu)
+			set_menu (main_menu)
 
 			label_1.set_back_color (feature {DRAWING_COLOR}.light_steel_blue)
 			l_point.make_from_x_and_y (16, 24)
@@ -161,7 +154,7 @@ feature {NONE} -- Implementation
 			label_1.set_text (("Right Click on me - I have a context menu!").to_cil)
 			label_1.set_context_menu (label_1_context_menu)
 			
-			my_window.controls.add (label_1)
+			controls.add (label_1)
 		end
 
 
@@ -182,13 +175,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	FileExit_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	file_exit_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- File->Exit Menu item handler
 		do
-			my_window.close
+			close
 		end
 
-	FileOpen_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	file_open_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- File->Open Menu item handler
 		local
 			dummy: WINFORMS_DIALOG_RESULT
@@ -197,7 +190,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	FormatFont_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Format->Font Menu item handler
 		local
 			mi_clicked: WINFORMS_MENU_ITEM
@@ -228,7 +221,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	FormatSize_Clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
 			-- Format->Size Menu item handler
 		local
 			mi_clicked: WINFORMS_MENU_ITEM

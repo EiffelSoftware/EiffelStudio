@@ -30,6 +30,9 @@ inherit
 		end
 		
 	GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER
+		export
+			{NONE} all
+		end
 
 create
 	make

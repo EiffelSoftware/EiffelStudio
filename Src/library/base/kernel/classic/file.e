@@ -1294,7 +1294,7 @@ feature -- Input
 		do
 			from
 				if last_string = Void then
-					create last_string.make (default_last_string_size)
+					create_last_string
 				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
@@ -1335,7 +1335,7 @@ feature -- Input
 			str_area: ANY
 		do
 			if last_string = Void then
-				create last_string.make (default_last_string_size)
+				create_last_string
 			end
 			last_string.grow (nb_char)
 			str_area := last_string.area
@@ -1358,7 +1358,7 @@ feature -- Input
 		do
 			from
 				if last_string = Void then
-					create last_string.make (default_last_string_size)
+					create_last_string
 				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
@@ -1415,6 +1415,16 @@ feature -- Convenience
 		end
 
 feature {NONE} -- Implementation
+
+	create_last_string is
+			-- Create new instance of `last_string'.
+		require
+			last_string_void: last_string = Void
+		do
+			create last_string.make (default_last_string_size)
+		ensure
+			last_string_not_void: last_string /= Void
+		end
 
 	default_last_string_size: INTEGER is 256
 			-- Default size for creating `last_string'

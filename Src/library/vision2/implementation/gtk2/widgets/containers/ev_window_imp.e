@@ -446,8 +446,8 @@ feature {EV_ANY_IMP} -- Implementation
 	destroy is
 			-- Destroy `Current'
 		do
-			hide
 			Precursor {EV_CONTAINER_IMP}
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 	set_focus_widget (a_focus_wid: EV_WIDGET_IMP) is

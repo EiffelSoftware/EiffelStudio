@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
         make (par: EV_CONTAINER) is
                         -- Create a fixed widget. 
 		do
-			widget := gtk_hbox_new (Default_homogenous, 
+			widget := gtk_hbox_new (Default_homogeneous, 
 						Default_spacing)
 		end	
 	

@@ -104,6 +104,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			!! all_ev_children.make (1)
+			create ev_children.make (1)
 		end
 
 feature -- FIXME To be implemented.
@@ -159,11 +160,11 @@ feature -- Access
 	all_ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
 			-- Children of the tree Classified by their h_item
 
-	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP] --is
 			-- List of the direct children of the tree.
-		do
-			Result := get_children (Void)
-		end
+		--do
+		--	Result := get_children (Void)
+		--end
 
 	selected_item: EV_TREE_ITEM is
 			-- Item which is currently selected.
@@ -247,7 +248,7 @@ feature -- Event -- removing command association
 
 feature -- Basic operations
 
-	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER) is
+	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER; an_index: INTEGER) is
 			-- Add `item_imp' to the tree with `par' as parent.
 			-- if `par' is the default_pointer, the parent is the tree.
 		local
@@ -267,6 +268,15 @@ feature -- Basic operations
 			struct.set_tree_view_item (item_imp)
 			wel_insert_item (struct)
 			all_ev_children.force (item_imp, last_item)
+	
+
+				-- We now add the child directly into ev_children.
+			ev_children.go_i_th (an_index - 1)
+			ev_children.put_right (item_imp)
+
+
+	
+			--ev_children.force (item_imp)
 
 			-- Then, we add the subitems if there are some.
 			if item_imp.internal_children /= Void then
@@ -276,7 +286,7 @@ feature -- Basic operations
 				until
 					c.after
 				loop
-					general_insert_item (c.item, item_imp.h_item, Tvi_last)
+					general_insert_item (c.item, item_imp.h_item, Tvi_last, an_index)
 					c.forth
 				end
 				item_imp.set_internal_children (Void)
@@ -387,16 +397,16 @@ feature {EV_TREE_ITEM_I} -- Implementation
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item_imp' to the list
 		do
-			general_insert_item (item_imp, default_pointer, Tvi_last)
+			general_insert_item (item_imp, default_pointer, Tvi_last, index)
 		end
 
 	insert_item (item_imp: EV_TREE_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at the `an_index' position.
 		do
 			if an_index = 1 then
-				general_insert_item (item_imp, default_pointer, Tvi_first)
+				general_insert_item (item_imp, default_pointer, Tvi_first, an_index)
 			else
-				general_insert_item (item_imp, default_pointer, (ev_children @ (an_index - 1)).h_item)
+				general_insert_item (item_imp, default_pointer, (ev_children @ (an_index - 1)).h_item, an_index)
 			end
 		end
 
@@ -644,6 +654,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/08 17:36:55  rogers
+--| Ev_children is now an attribute, so can be modified directly. General_insert_item takes an index now and all calls to this have been changed correspondigly. Ev_children is directly extended during general_insert_item.
+--|
 --| Revision 1.40  2000/03/07 17:34:47  rogers
 --| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP. Reference to item_type replaced with EV_TREE_ITEM_IMP.
 --|

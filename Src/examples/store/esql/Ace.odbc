@@ -6,7 +6,7 @@ root
 default
 
 	assertion (all);
-	precompiled ("$(EIFFEL3)\precomp\spec\$PLATFORM\base")
+	precompiled ("$EIFFEL3\precomp\spec\$PLATFORM\base")
 
 cluster
 
@@ -23,8 +23,9 @@ cluster
 
 external
 
-	object: "$(EIFFEL3)\library\store\support\Clib\support.lib",
-		"$(EIFFEL3)\library\store\date_and_time\Clib\sys_time.lib",
-		"$(EIFFEL3)\library\store\dbms\rdbms\odbc\Clib\odbc_store.lib",
-		"\odbcsdk\lib32\odbc32.lib"
+	object:
+		"$(EIFFEL3)\library\store\spec\$(PLATFORM)\lib\support.lib",
+		"$(EIFFEL3)\library\store\spec\$(PLATFORM)\lib\sys_time.lib",
+		"$(EIFFEL3)\library\store\spec\$(PLATFORM)\lib\odbc_store.lib",
+		"c:\odbcsdk\lib32\odbc32.lib"
 end

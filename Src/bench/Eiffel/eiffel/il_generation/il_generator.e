@@ -112,6 +112,7 @@ feature -- Generation
 				end
 				
 				il_generator.set_verifiability (System.il_verifiable)
+				il_generator.set_cls_compliant (System.cls_compliant)
 
 					-- Generate reference to assemblies on which Current system depends on.
 				generate_reference_to_assemblies

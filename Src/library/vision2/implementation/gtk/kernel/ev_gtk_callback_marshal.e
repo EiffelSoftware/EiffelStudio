@@ -271,6 +271,21 @@ feature {EV_ANY_IMP}
 			Result := dimension_tuple
 		end
 
+	configure_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Convert GtkAllocation to tuple.
+		local
+			gdk_configure: POINTER
+		do
+			gdk_configure := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
+			set_dimension_tuple (
+				feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_configure),
+				feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_configure),
+				feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_configure),
+				feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_configure)
+			)
+			Result := dimension_tuple
+		end
+
 feature {EV_ANY_IMP} -- Agent implementation routines
 		
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is

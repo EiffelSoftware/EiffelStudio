@@ -483,9 +483,9 @@ feature -- Update
 
 			if successful then
 				Comp_system.prepare_before_saving (True)
-				if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
+--				if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
 					save_project
-				end
+--				end
 
 				if not freezing_occurred then
 					link_driver

@@ -14,7 +14,6 @@ class
 	EV_COMBO_BOX
 
 inherit
-
 	EV_TEXT_FIELD
 		redefine
 			implementation,
@@ -22,7 +21,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -75,6 +73,16 @@ feature -- Status report
 			Result := implementation.count
 		end
 
+feature -- Element change
+
+	clear_items is
+			-- Remove all the elements of the combo-box.
+		require
+			exists: not destroyed
+		do
+			implementation.clear_items
+		end
+
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
@@ -85,29 +93,6 @@ feature -- Event : command association
 		do
 			implementation.add_selection_command (a_command, arguments)
 		end
-
-feature -- Element change
-
---	remove_element (index: INTEGER) is
-			-- Remove the element at the zero-based
-			-- `index' position of the combo-box.
---		require
---			exists: not destroyed
---			index_large_enough: index >= 0
---			index_small_enough: index < count
---		do
---			implementation.remove_element (index)
---		end
-
-	remove_all_elements is
-			-- Remove all the elements of the combo-box.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_all_elements
-		end
-
-	
 
 feature -- Implementation
 

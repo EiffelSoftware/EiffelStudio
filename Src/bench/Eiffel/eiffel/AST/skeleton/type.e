@@ -54,7 +54,12 @@ feature
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
 			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feature table `feat_table'
+		require
+			feat_table_not_void: feat_table /= Void
+			f_not_void: f /= Void
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end;
 
 	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
@@ -62,8 +67,13 @@ feature
 			-- the type Current and the feature table `feat_table'.
 			-- This is for the format context where the solved type is not
 			-- guaranteed to exist
+		require
+			feat_table_not_void: feat_table /= Void
+			f_not_void: f /= Void
 		do
 			Result := solved_type (feat_table, f)
+		ensure
+			result_not_void: Result /= Void
 		end;
 
 	actual_type: TYPE_A is

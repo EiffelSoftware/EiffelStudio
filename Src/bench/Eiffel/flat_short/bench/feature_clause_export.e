@@ -144,6 +144,8 @@ feature -- EiffelCase output
 	features_storage_info: ARRAYED_LIST [S_FEATURE_DATA] is
 			-- List of features in case format within
 			-- a feature clause
+		local
+			f_adapter: FEATURE_ADAPTER
 		do
 			!! Result.make (features.count);
 			from
@@ -151,7 +153,10 @@ feature -- EiffelCase output
 			until
 				features.after
 			loop
-				Result.extend (features.item.storage_info);
+				f_adapter := features.item;
+				if f_adapter.target_feature /= Void then
+					Result.extend (f_adapter.storage_info)
+				end;
 				features.forth;
 			end;
 		end;	

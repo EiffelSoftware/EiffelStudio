@@ -256,8 +256,10 @@ feature {NONE} -- Implementation
 		end
 		
 	update_visual_representations_on_name_change is
-			-- Update visual representations of `obejct' to reflect new name
+			-- Update visual representations of `object' to reflect new name
 			-- in `name_field'.
+		local
+			current_caret_position: INTEGER
 		do
 			if valid_class_name (name_field.text) then
 				if name_field.text.is_empty then
@@ -269,11 +271,20 @@ feature {NONE} -- Implementation
 					-- Must be performed after we have actually changed the name of the object.
 				update_editors_for_name_change (object.object, Current)
 			else
+				current_caret_position := name_field.caret_position
 				name_field.change_actions.block
-				name_field.set_text (name_field.text.substring (1, name_field.text.count - 1))
-					-- Setting the text restores the caret position, so we must put it at
-					-- the end again.
-				name_field.set_caret_position (name_field.text.count + 1)
+					-- We must handle three different cases in order to restore the text if an
+					-- invalid character was received.
+				if current_caret_position = name_field.text.count + 1 then
+					name_field.set_text (name_field.text.substring (1, name_field.text.count - 1))
+					name_field.set_caret_position (current_caret_position)
+				elseif current_caret_position = 2 then
+					name_field.set_text (name_field.text.substring (2, name_field.text.count))	
+					name_field.set_caret_position (1)
+				else
+					name_field.set_text (name_field.text.substring (1, current_caret_position - 2) + name_field.text.substring (current_caret_position, name_field.text.count))
+					name_field.set_caret_position (current_caret_position - 1)
+				end
 				name_field.change_actions.resume
 			end
 		end

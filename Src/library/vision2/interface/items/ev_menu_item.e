@@ -88,19 +88,6 @@ feature -- Status setting
    			is_now_selected: is_selected
    		end
 
-feature -- Element change
-
---	set_parent (par: EV_MENU_ITEM_HOLDER) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		require
---			exists: not destroyed
---		do
---			implementation.set_parent (par)
---		ensure
---			parent_set: parent = par
---		end
-
 feature -- Assertion
 
 	grand_parent_is_option_button: BOOLEAN is

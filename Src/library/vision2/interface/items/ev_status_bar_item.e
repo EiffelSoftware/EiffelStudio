@@ -70,19 +70,6 @@ feature -- Status setting
 			width_set: (width = value) or (value = -1)
 		end
 
-feature -- Element change
-
---	set_parent (par: EV_STATUS_BAR) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		require
---			exists: not destroyed
---		do
---			implementation.set_parent (par)
---		ensure
---			parent_set: parent = par
---		end
-
 feature {NONE} -- Implementation
 
 	implementation: EV_STATUS_BAR_ITEM_I

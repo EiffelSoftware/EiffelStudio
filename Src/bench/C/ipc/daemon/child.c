@@ -154,7 +154,8 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 
 		/* Set MELT_PATH */
 	if (handle_meltpath) {
-		char *meltpath, *appname, *envstring;	/* set MELT_PATH */
+		char *meltpath, *appname;
+		static char *envstring = NULL;	/* set MELT_PATH */
 #ifdef EIF_VMS
 		size_t dirname_size;
 #endif
@@ -194,7 +195,11 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 			strcpy (meltpath, ".");
 #endif /* platform */
 
-		envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+		if (!envstring) {
+			envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+		} else {
+			envstring = (char *) realloc (envstring, strlen(meltpath) + strlen("MELT_PATH=") + 1);
+		}
 		if (!envstring){
 			dexit (1);
 		}

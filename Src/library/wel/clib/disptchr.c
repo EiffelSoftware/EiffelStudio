@@ -47,7 +47,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	 */
 	WGTCX
 
-	if (dispatcher)
+	if (dispatcher) {
 		return (LRESULT) ((wel_wndproc) (
 #ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (dispatcher),
@@ -56,25 +56,40 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			(EIF_INTEGER) msg,
 			(EIF_INTEGER) wparam,
 			(EIF_INTEGER) lparam));
-	else
+	} else {
+		WNDPROC proc = NULL;
+		struct EIF_WEL_USERDATA *data =
+			(struct EIF_WEL_USERDATA *) GetWindowLongPtr (hwnd, GWL_USERDATA);
+
+		if (data) {
+			proc = data->default_window_procedure;
+		}
+
 		switch (msg) {
 			case WM_DESTROY:
+			{
+					/* Object is destroyed during call to `dispose' we need
+					 * to call `eif_object_id_free' to reset entry in GC, otherwise
+					 * it will crash at the next collection trying to find dead object
+					 */
+				if (data) {
 #ifndef EIF_IL_DLL
 	/* FIXME: It should be done in IL generation too */
-				{
-				  		/* Object is destroyed during call to `dispose' we need
-						 * to call `eif_object_id_free' to reset entry in GC, otherwise
-						 * it will crash at the next collection trying to find dead object
-						 */
-					EIF_INTEGER object_id = GetWindowLong (hwnd, GWL_USERDATA);	
-					if (object_id > 0) {
-						eif_object_id_free (object_id);
-					}
-				}
+					eif_object_id_free (data->object_id);
 #endif
-			default:
-				return DefWindowProc (hwnd, msg, wparam, lparam);
+					data->object_id = 0;
+					data->default_window_procedure = NULL;
+					free (data);
+					SetWindowLongPtr (hwnd, GWL_USERDATA, (LONG_PTR) 0);
+				}
+			}
 		}
+		if (proc) {
+			return CallWindowProc (proc, hwnd, msg, wparam, lparam);
+		} else {
+			return DefWindowProc (hwnd, msg, wparam, lparam);
+		}
+	}
 }
 
 INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -115,7 +130,7 @@ INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			default:
 				if (dialog_result != 0) {
 						/* Set the result given by WEL to the dialog */
-					dialog_result = SetWindowLong (hwnd, DWL_MSGRESULT, dialog_result);
+					dialog_result = SetWindowLongPtr (hwnd, DWL_MSGRESULT, (LONG_PTR) dialog_result);
 					return (dialog_result != 0);
 				} else
 					return FALSE;

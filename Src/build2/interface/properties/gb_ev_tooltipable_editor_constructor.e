@@ -24,8 +24,6 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
-		local
-			label: EV_LABEL
 		do
 			create Result
 			initialize_attribute_editor (Result)

@@ -299,6 +299,17 @@ feature -- Status report
 			cwin_send_message (item, Tvm_getitemrect, 0, Result.to_integer)
 		end
 
+	get_tooltip: WEL_TOOLTIP is
+			-- `Result' is tooltip associated with `Current'.
+		local
+			pointer: POINTER
+		do
+			pointer := treeview_gettooltips (item)
+			if pointer /= default_pointer then
+				create Result.make_by_pointer (pointer)
+			end
+		end
+
 feature -- Status setting
 
 	select_item (an_item: WEL_TREE_VIEW_ITEM) is
@@ -401,6 +412,10 @@ feature -- Status setting
 			end
 		end
 
+	set_tooltip (tooltip: WEL_TOOLTIP) is
+		do
+			treeview_settooltips (item, tooltip.item)
+		end
 
 feature -- Element change
 
@@ -646,6 +661,20 @@ feature {NONE} -- Externals
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"WC_TREEVIEW"
+		end
+
+	TreeView_Gettooltips (ptr: POINTER): POINTER is
+		external 
+			"C [macro %"cctrl.h%"] (HWND): EIF_POINTER"
+		alias
+			"TreeView_GetToolTips"
+		end
+
+	TreeView_settooltips (hwndTV, hwndTooltip: POINTER) is
+		external
+			"C [macro %"cctrl.h%"] (HWND, HWND)"
+		alias
+			"TreeView_SetToolTips"
 		end
 
 end -- class WEL_TREE_VIEW

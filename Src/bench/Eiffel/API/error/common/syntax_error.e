@@ -61,7 +61,9 @@ feature {NONE} -- Initialization
 		do
 			p := Eiffel_parser
 			create a_filename.make_from_string (p.filename)
-			make (p.start_position, p.end_position, a_filename,
+			make (
+				p.current_position.start_position,
+				p.current_position.end_position, a_filename,
 				p.error_code, p.error_message, False)
 		end
 

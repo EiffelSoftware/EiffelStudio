@@ -333,6 +333,7 @@ end;
 			feature_id := f.feature_id;
 			type := f.type;
 			parameters := f.parameters;
+			precursor_type := f.precursor_type
 			enlarge_parameters
 		end;
 
@@ -359,96 +360,96 @@ feature -- Concurrent Eiffel
 
 		-- We put the feature here because we don't want FEATURE_BWS to inherit
 		-- FEATURE_BLS, which will require us to undefine a lot of features.
-    put_parameters_into_array is
-        local
-            expr: PARAMETER_B;
-            para_type: TYPE_I;
-            i: INTEGER;
-            loc_idx: INTEGER
-        do
-            if parameters /= Void then
-                from
-                    parameters.start;
-                    i := 0;
-                until
-                    parameters.after
-                loop
-                    expr ?= parameters.item;    -- Cannot fail
-                    para_type := real_type(expr.attachment_type);
-                    if para_type.is_boolean then
-                        generated_file.putstring ("CURPB(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_long then
-                        generated_file.putstring ("CURPI(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_feature_pointer then
-                        generated_file.putstring ("CURPP(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_char then
-                        generated_file.putstring ("CURPC(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_double then
-                        generated_file.putstring ("CURPD(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_float then
-                        generated_file.putstring ("CURPR(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_reference and not para_type.is_separate then
-                        generated_file.putstring ("CURPO(");
-                        expr.print_register;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    elseif para_type.is_separate then
-                        generated_file.putstring ("CURPSO(");
+	put_parameters_into_array is
+		local
+			expr: PARAMETER_B;
+			para_type: TYPE_I;
+			i: INTEGER;
+			loc_idx: INTEGER
+		do
+			if parameters /= Void then
+				from
+					parameters.start;
+					i := 0;
+				until
+					parameters.after
+				loop
+					expr ?= parameters.item;    -- Cannot fail
+					para_type := real_type(expr.attachment_type);
+					if para_type.is_boolean then
+						generated_file.putstring ("CURPB(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_long then
+						generated_file.putstring ("CURPI(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_feature_pointer then
+						generated_file.putstring ("CURPP(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_char then
+						generated_file.putstring ("CURPC(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_double then
+						generated_file.putstring ("CURPD(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_float then
+						generated_file.putstring ("CURPR(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_reference and not para_type.is_separate then
+						generated_file.putstring ("CURPO(");
+						expr.print_register;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif para_type.is_separate then
+						generated_file.putstring ("CURPSO(");
 --                    expr.print_register;
-                        if expr.stored_register.register_name /= Void then
-                            loc_idx := context.local_index (expr.stored_register.register_name);
-                        else
-                            loc_idx := -1;
-                        end;
-                        if loc_idx /= -1 then
-                            generated_file.putstring ("l[");
-                            generated_file.putint (context.ref_var_used + loc_idx);
-                            generated_file.putstring ("]");
-                        else
-                            -- It'll be the case when the value is "Void"
-                            expr.print_register;
-                        end;
-                        generated_file.putstring (", ");
-                        generated_file.putint (i);
-                        generated_file.putstring (");");
-                        generated_file.new_line;
-                    end
-                    i := i + 1;
-                    parameters.forth;
-                end;
-            end;
-        end
+						if expr.stored_register.register_name /= Void then
+							loc_idx := context.local_index (expr.stored_register.register_name);
+						else
+							loc_idx := -1;
+						end;
+						if loc_idx /= -1 then
+							generated_file.putstring ("l[");
+							generated_file.putint (context.ref_var_used + loc_idx);
+							generated_file.putstring ("]");
+						else
+							-- It'll be the case when the value is "Void"
+							expr.print_register;
+						end;
+						generated_file.putstring (", ");
+						generated_file.putint (i);
+						generated_file.putstring (");");
+						generated_file.new_line;
+					end
+					i := i + 1;
+					parameters.forth;
+				end;
+			end;
+		end
 
 end

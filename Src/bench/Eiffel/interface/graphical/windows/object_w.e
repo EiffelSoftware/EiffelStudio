@@ -17,17 +17,21 @@ inherit
 			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole, build_widgets,
-			tool_name, set_default_format
-		end
+			tool_name, set_default_format, stone, stone_type, synchronize,
+			process_object
+		end;
 	BAR_AND_TEXT
 		rename
 			default_format as old_default_format
 		redefine
 			text_window, build_format_bar, hole, close_windows,
-			tool_name, make, build_widgets, attach_all, set_default_format
+			tool_name, make, build_widgets, attach_all, set_default_format,
+			stone, stone_type, synchronize, process_object
 		select
 			make, attach_all, close_windows
-		end
+		end;
+	SHARED_APPLICATION_EXECUTION;
+	WARNING_MESSAGES
 
 creation
 
@@ -51,6 +55,80 @@ feature -- Window Properties
 		do
 			Result := l_Object
 		end;
+
+	stone: OBJECT_STONE
+			-- Stone in tool
+ 
+	stone_type: INTEGER is
+			-- Accept any type stone
+		do
+			Result := Object_type
+		end
+ 
+  feature -- Access
+ 
+	kept_objects: LINKED_SET [STRING] is
+			-- Hector addresses of displayed clickable objects and
+			-- objects kept in history
+		local
+			obj_stone: OBJECT_STONE;
+			history_list: LINEAR [STONE];
+			pos: INTEGER
+		do
+			Result := text_window.kept_objects;
+			from
+				pos := history.index;
+				history.start
+			until
+				history.after
+			loop
+				obj_stone ?= history.item;
+				Result.extend (obj_stone.object_address);
+				history.forth
+			end;
+			history.go_i_th (pos)
+		end;
+ 
+  feature -- Update
+ 
+	hang_on is
+			-- Make object addresses unclickable.
+		do
+			text_window.hang_on
+		end;
+ 
+	process_object (a_stone: like stone) is
+			-- Set `s' to stone.
+		local
+			status: APPLICATION_STATUS
+		do
+			status := Application.status;
+			if status = Void then
+				warner (Current).gotcha_call (w_System_not_running)
+			elseif not status.is_stopped then
+				warner (Current).gotcha_call (w_System_not_stopped)
+			elseif not a_stone.is_valid then
+				warner (Current).gotcha_call (w_Object_not_inspectable)
+			else
+				last_format.execute (a_stone);
+				history.extend (a_stone)
+			end
+		end;
+ 
+	synchronize is
+			-- Synchronize clickable elements with text, if possible.
+		local
+			status: APPLICATION_STATUS
+		do
+			status := Application.status;
+			if status = Void then
+				warner (Current).gotcha_call (w_System_not_running)
+			elseif not status.is_stopped then
+				warner (Current).gotcha_call (w_System_not_stopped)
+			else
+				synchronise_stone
+			end
+		end
 
 feature -- Settings
 

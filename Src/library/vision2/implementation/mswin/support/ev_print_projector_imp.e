@@ -66,11 +66,7 @@ feature -- Access
 		local
 			clip_rect: EV_RECTANGLE
 			mm_constants: WEL_MM_CONSTANTS
-			hor_res: INTEGER
-			ver_res: INTEGER
-			horsize, versize: INTEGER
 			logical_x, logical_y: INTEGER
-			logical_sx, logical_sy: INTEGER
 		do
 			create mm_constants
 			if not is_projecting then

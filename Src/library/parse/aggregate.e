@@ -26,16 +26,16 @@ feature -- Status report
 			end_loop: BOOLEAN;
 		do
 			if structure_list.has (production) then
-				global_left_recursion.put (true);
-				child_recursion.put (true);
+				global_left_recursion.put (True);
+				child_recursion.put (True);
 				recursion_message.append (construct_name);
 				recursion_message.append ("%N");
-				Result := true
+				Result := True
 			else
 				from
 					structure_list.put_right (production);
 					child_start;
-					Result := false
+					Result := False
 				until
 					end_loop or no_components or child_after or Result
 				loop
@@ -57,7 +57,7 @@ feature -- Transformation
 		require else
 			only_commit_once: not has_commit 
 		do
-			has_commit := true;
+			has_commit := True;
 			commit_value := production.index - 1
 		end
 
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 		do
 			expand_next;
 			if has_commit and commit_value < child_index then
-				committed := true
+				committed := True
 			end
 		end;
 
@@ -89,7 +89,6 @@ feature {NONE} -- Implementation
 			no_child: no_components
 		local
 			wrong: BOOLEAN;
-			err: STRING
 		do
 			from
 				expand
@@ -150,7 +149,7 @@ feature {CONSTRUCT} -- Implementation
 						child.expand_all;
 						b := not child.left_recursion;
 						if child_recursion.item then
-							child_recursion.put (false)
+							child_recursion.put (False)
 						else
 							child.check_recursion
 						end;
@@ -198,11 +197,10 @@ feature {NONE} -- Implementation
 		end
 
 end -- class AGGREGATE
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

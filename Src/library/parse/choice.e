@@ -28,16 +28,16 @@ feature -- Status report
 			-- Is the construct's definition left-recursive?
 		do
 			if structure_list.has (production) then
-				global_left_recursion.put (true);
-				child_recursion.put (true);
+				global_left_recursion.put (True);
+				child_recursion.put (True);
 				recursion_message.append (construct_name);
 				recursion_message.append ("%N");
-				Result := true
+				Result := True
 			else
 				from
 					structure_list.put_right (production);
 					child_start;
-					Result := false
+					Result := False
 				until
 					no_components or child_after or Result
 				loop
@@ -55,8 +55,6 @@ feature {CONSTRUCT} -- Implementation
 
 	check_recursion is
 			-- Check choice construct for left recursion.
-		local
-			b: BOOLEAN
 		do
 			if not check_recursion_list.has (production) then
 				check_recursion_list.extend (production);
@@ -135,11 +133,10 @@ feature {NONE} -- Implementation
 		end;
 
 end -- class CHOICE
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

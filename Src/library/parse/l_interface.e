@@ -41,17 +41,16 @@ feature {NONE} -- Implementation
 			-- Make tokens of type `type' to be separators.
 		do
 			if analyzer = Void then
-				!!analyzer.make
+				create analyzer.make
 			end;
 			analyzer.set_separator_type (type)
 		end;
 
 end -- class L_INTERFACE
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

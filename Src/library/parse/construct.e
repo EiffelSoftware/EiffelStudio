@@ -34,7 +34,7 @@ feature -- Access
 	document: INPUT is
 			-- The document to be parsed
 		once
-			!! Result.make
+			create Result.make
 		end;
 
 	production: LINKED_LIST [CONSTRUCT] is 
@@ -71,7 +71,7 @@ feature -- Status report
 			-- Must the left-recursion test also print the production?
 			-- (Default: no.)
 		once 
-			!! Result.put (false)
+			create Result.put (False)
 		end;
 
 feature -- Status setting
@@ -79,7 +79,7 @@ feature -- Status setting
 	set_optional is
 			-- Define this construct as optional.
 		do
-			is_optional := true
+			is_optional := True
 		ensure
 			optional_construct: is_optional
 		end;
@@ -105,9 +105,9 @@ feature -- Transformation
 			initial_document_position: INTEGER
 		do
 			initial_document_position := document.index;
-			parsed := false;
-			complete := false;
-			committed := false;
+			parsed := False;
+			complete := False;
+			committed := False;
 			parse_body;
 			if not complete and is_optional then
 				document.go_i_th (initial_document_position);
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 		local
 			key: KEYWORD
 		do     
-			!! key.make (s);
+			create key.make (s);
 			put (key)
 		end;
 
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 		local
 			n: CONSTRUCT
 		do
-			if not production.empty then
+			if not production.is_empty then
 				production.go_i_th (child_index + 1);
 				if not production.after then
 					n := clone (production.item);
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 		local
 			err: STRING
 		do
-			!! err.make (20);
+			create err.make (20);
 			err.append (child.construct_name);
 			err.append (" expected, ");
 			if document.token.type = -1 then
@@ -296,33 +296,33 @@ feature {NONE} -- Implementation
 			-- List of the structures already examined when
 			-- searching for left recursion
 		once
-			!! Result.make
+			create Result.make
 		end;
 
 	check_recursion_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]] is
 			-- List of the structures already examined when
 			-- checking for left recursion
 		once
-			!! Result.make
+			create Result.make
 		end;
 
 	global_left_recursion: CELL [BOOLEAN] is 
 			-- Is there any left recursion in the whole program?
 		once 
-			!! Result.put (false)
+			create Result.put (False)
 		end;
 
 	child_recursion: CELL [BOOLEAN] is 
 			-- Is there any recursion in the whole program?
 		once 
-			!! Result.put (false)
+			create Result.put (False)
 		end;
 
 	recursion_message: STRING is
 			-- Error message when left recursion has been detected,
 			-- with all productions involved in the recursion chain
 		once
-			!! Result.make (100)
+			create Result.make (100)
 		end;
 
 	message_construction: BOOLEAN is
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 					io.put_string (recursion_message);
 					io.new_line;
 					recursion_message.wipe_out;
-					Result := true
+					Result := True
 				else
 					recursion_message.append (construct_name);
 					recursion_message.append ("%N")
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 		do
 			child.parse;
 			if child.committed then
-				committed := true;
+				committed := True;
 			end;
 			if committed and not (child.parsed or child.committed) then
 				expected_found_error
@@ -381,11 +381,10 @@ feature {NONE} -- Implementation
 		end;
 
 end -- class CONSTRUCT
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

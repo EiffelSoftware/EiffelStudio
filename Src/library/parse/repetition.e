@@ -24,11 +24,11 @@ feature -- Status report
 			-- Is the construct's definition left-recursive?
 		do
 			if structure_list.has (production) then
-				global_left_recursion.put (true);
-				child_recursion.put (true);
+				global_left_recursion.put (True);
+				child_recursion.put (True);
 				recursion_message.append (construct_name);
 				recursion_message.append ("%N");
-				Result := true;
+				Result := True;
 			else
 				structure_list.put_right (production);
 				child_start;
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			if separator /= Void then 
 				Result := document.keyword_code (separator);
 				if Result = -1 then
-					!!separator_not_keyword;
+					create separator_not_keyword;
 					separator_not_keyword.raise( "separator_not_keyword" );
 				end
 			else
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			-- production may have different parents with a
 			-- choice construct as a common ancestor of the parents)
 		do
-			Result := true
+			Result := True
 		end; 
 
 	has_separator: BOOLEAN is
@@ -128,13 +128,13 @@ feature {NONE} -- Implementation
 			until
 				not child_found 
 			loop
-				separator_found := false;
-				child_found := false;
+				separator_found := False;
+				child_found := False;
 				if has_separator then
 					separator_found := document.token.is_keyword (separator_code);
 					if separator_found then 
 						if commit_on_separator then
-							committed := true
+							committed := True
 						end;
 						document.get_token 
 					end
@@ -223,11 +223,10 @@ feature {NONE} -- Implementation
 		end 
 
 end -- class REPETITION
- 
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

@@ -63,6 +63,7 @@ feature {NONE}
 			top_form.attach_bottom (namer_hole, 0)
 			top_form.attach_bottom (ok_b, 0)
 			top_form.attach_bottom (close_b, 0)
+			form.attach_top_widget (top_form, text, 0);
 			form.attach_top (top_form, 0);
 			form.attach_right (top_form, 0);
 			form.attach_left (top_form, 0);
@@ -75,7 +76,6 @@ feature {NONE}
 			text.set_single_line_mode;
 			!! del_com.make (Current);
 			set_delete_command (del_com);
-			set_action ("<Map>,<Prop>", Current, Void);
 			initialize_window_attributes
 		end 
 
@@ -124,9 +124,12 @@ feature
 		local
 			namer_cmd: NAMER_CMD
 		do
-			!! namer_cmd;
-			namer_cmd.execute (Current);
-			namable.set_visual_name(text.text)
+			namable.check_new_name (text.text);
+			if namable.is_valid_new_name then
+				!! namer_cmd;
+				namer_cmd.execute (Current);
+				namable.set_visual_name(text.text)
+			end
 		end;
 
 	update_name is
@@ -149,15 +152,11 @@ feature {NONE} -- Command Actions
 
 	execute (arg: ANY) is
 		do
-			if arg = Void then
-				if text.text.count > 0 then
-					text.set_selection (0, text.text.count)
-				end
-			elseif not text.text.empty and then
+			if not text.text.empty and then
 				not equal (text.text, namable.visual_name)
 			then
 				set_name;
-				popdown
+				popdown;
 			end
 		end
 

@@ -83,6 +83,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Replace an include path in the project.
+	-----------------------------------------------------------*/
+	void ccom_replace_include_path(  /* [in] */ EIF_OBJECT new_include_path,  /* [in] */ EIF_OBJECT old_include_path );
+
+
+	/*-----------------------------------------------------------
 	Include paths.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_include_paths(  );
@@ -98,6 +104,12 @@ public:
 	Remove a object file from the project.
 	-----------------------------------------------------------*/
 	void ccom_remove_object_file(  /* [in] */ EIF_OBJECT object_file );
+
+
+	/*-----------------------------------------------------------
+	Replace an object file in the project.
+	-----------------------------------------------------------*/
+	void ccom_replace_object_file(  /* [in] */ EIF_OBJECT new_include_path,  /* [in] */ EIF_OBJECT old_object_file );
 
 
 	/*-----------------------------------------------------------
@@ -145,7 +157,7 @@ private:
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_grt_globals_Eif_compiler.h"
+#include "ecom_grt_globals_ISE.h"
 
 
 #endif

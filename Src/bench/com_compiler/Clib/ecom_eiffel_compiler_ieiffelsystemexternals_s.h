@@ -78,6 +78,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Replace an include path in the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP replace_include_path(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_include_path ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Include paths.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP include_paths(  /* [out, retval] */ ecom_eiffel_compiler::IEnumIncludePaths * * return_value ) = 0;
@@ -93,6 +99,12 @@ public:
 	Remove a object file from the project.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP remove_object_file(  /* [in] */ BSTR object_file ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Replace an object file in the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP replace_object_file(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_object_file ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -59,6 +59,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Replace an include path in the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP replace_include_path(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_include_path );
+
+
+	/*-----------------------------------------------------------
 	Include paths.
 	-----------------------------------------------------------*/
 	STDMETHODIMP include_paths(  /* [out, retval] */ ecom_eiffel_compiler::IEnumIncludePaths * * return_value );
@@ -74,6 +80,12 @@ public:
 	Remove a object file from the project.
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_object_file(  /* [in] */ BSTR object_file );
+
+
+	/*-----------------------------------------------------------
+	Replace an object file in the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP replace_object_file(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_object_file );
 
 
 	/*-----------------------------------------------------------
@@ -163,7 +175,7 @@ private:
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_grt_globals_Eif_compiler.h"
+#include "ecom_grt_globals_ISE.h"
 
 
 #endif

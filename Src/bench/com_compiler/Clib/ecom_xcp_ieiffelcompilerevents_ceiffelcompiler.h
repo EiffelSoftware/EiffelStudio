@@ -121,7 +121,7 @@ private:
 #endif
 #include "ecom_eiffel_compiler_CEiffelCompiler_s.h"
 
-#include "ecom_grt_globals_Eif_compiler.h"
+#include "ecom_grt_globals_ISE.h"
 
 
 #endif

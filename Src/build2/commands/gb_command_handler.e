@@ -49,7 +49,8 @@ feature -- Access
 	show_hide_history_command: GB_SHOW_HIDE_HISTORY_COMMAND is
 			-- Command representing display history.
 		once
-			create Result.make
+			create Result
+			Result.make
 		end
 		
 	delete_object_command: GB_DELETE_OBJECT_COMMAND is

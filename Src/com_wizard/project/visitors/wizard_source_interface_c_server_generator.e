@@ -373,7 +373,7 @@ feature -- Access
 							%EIF_PROCEDURE eiffel_procedure = 0;%N%T%
 							%eiffel_procedure = eif_procedure (%"" +
 								remove_feature_name (source_interface) + "%", type_id);%N%T%
-							%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_function)" + 
+							%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure)" + 
 								"(eif_access (eiffel_object), (EIF_INTEGER)dwCookie);%N%T%
 							%return S_OK;")
 			Result.set_body (body)

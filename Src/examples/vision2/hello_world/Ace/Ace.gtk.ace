@@ -16,8 +16,8 @@ default
 
 cluster
 
-	ROOT_CLUSTER: 		"../main";
-	commands:		"../commands";	
+	ROOT_CLUSTER: 		"main";
+	commands:		"commands";	
 
 -- EiffelBase:
 
@@ -45,49 +45,59 @@ cluster
 
 	-- Interface
         -- Vision:                 	"$EIFFEL4/library/vision";
-        vision:                 	"/boston/samik/src/vision2";
-	vision_kernel (vision):         "$/interface/kernel";
-	vision_support (vision):        "$/interface/support";
-	vision_widgets (vision):        "$/interface/widgets";
-	vision_primitives (vision_widgets):        "$/primitives";
-	vision_containers (vision_widgets):        "$/containers";
-
---	vision_context_data (vision):	"$/oui/context_data";
---	vision_figures (vision):	"$/figures";
---	vision_tools (vision):		"$/tools";
-
+        vision:                 			"/boston/samik/Leila/vision2";
+	vision_kernel (vision):        			"$/interface/kernel";
+	vision_support (vision):       			"$/interface/support";
+	vision_properties (vision):			"$/interface/properties";
+	vision_user_data (vision):			"$/interface/user_data";
+	vision_items (vision):				"$/interface/items";
+	vision_widgets (vision):        		"$/interface/widgets";
+	vision_primitives (vision_widgets):     	"$/primitives";
+	vision_containers (vision_widgets):     	"$/containers";
+	vision_common_dialog (vision_widgets):		"$/common_dialogs";
+	vision_uncommon_widgets (vision_widgets):	"$/uncommon_widgets";
 
 	-- Implementation
 	vision_imp (vision):		"$/implementation";
 
 	-- Implementation Interface
-	vision_ii (vision_imp):		"$/implementation_interface";
-	vision_ii_kernel (vision_ii):	"$/kernel";
-	vision_ii_support (vision_ii):	"$/support";
-	vision_ii_widgets (vision_ii):	"$/widgets";
+	vision_ii (vision_imp):				"$/implementation_interface";
+	vision_ii_kernel (vision_ii):			"$/kernel";
+	vision_ii_support (vision_ii):			"$/support";
+    	vision_ii_properties (vision_ii):   		"$/properties";
+	vision_ii_items (vision_ii):			"$/items";
+	vision_ii_widgets (vision_ii):			"$/widgets";
 	vision_ii_primitives (vision_ii_widgets):	"$/primitives";
 	vision_ii_containers (vision_ii_widgets):	"$/containers";
+    	vision_ii_common_dialog (vision_ii_widgets):    "$/common_dialogs";   
+    	vision_ii_uncommon_widgets (vision_ii_widgets): "$/uncommon_widgets";
 
 
 	-- Implementation clusters for x/GTK
-	vision_gtk (vision_imp):          	"$/gtk";
-	vision_gtk_kernel (vision_gtk):         "$/kernel";
-	vision_gtk_support (vision_gtk):        "$/support";
-	vision_gtk_widgets (vision_gtk):        "$/widgets";
-	vision_gtk_primitives (vision_gtk_widgets):	"$/primitives";
-	vision_gtk_containers (vision_gtk_widgets):	"$/containers";
+	vision_gtk (vision_imp):          			"$/gtk";
+	vision_gtk_kernel (vision_gtk):         		"$/kernel";
+	vision_gtk_support (vision_gtk):        		"$/support";
+	vision_gtk_properties (vision_gtk):     		"$/properties";
+	vision_gtk_items (vision_gtk):				"$/items";
+	vision_gtk_user_data (vision_gtk):      		"$/user_data";
+	vision_gtk_widgets (vision_gtk):       			"$/widgets";
+	vision_gtk_primitives (vision_gtk_widgets):		"$/primitives";
+	vision_gtk_containers (vision_gtk_widgets):		"$/containers";
+    	vision_gtk_common_dialog (vision_gtk_widgets):    	"$/common_dialogs";   
+    	vision_gtk_uncommon_widgets (vision_gtk_widgets): 	"$/uncommon_widgets";
 
 
 external
 
-        include_path:
-                " `gtk-config --cflags`",		
- 		"/boston/samik/src/vision2/implementation/gtk/Clib";
+include_path:
+	        " `gtk-config --cflags`",		
+ 		"/boston/samik/Leila/vision2/implementation/gtk/Clib";
 -- 		"$(EIFFEL4)/library/vision/implementation/gtk/Clib";
 
         object:
- 		"/boston/samik/src/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+ 		"/boston/samik/Leila/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 --		"$(EIFFEL4)/library/vision/implementation/gtk/Clib/gtk_eiffel.o",
-               "`gtk-config --libs`"
+		"`gtk-config --libs`"
+
 
 end

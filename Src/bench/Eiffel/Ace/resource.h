@@ -36,6 +36,15 @@
 #define ID_REPLACESTATIC                3018
 #define Txt_percentage                  3019
 
+#define IDD_PROMPT                      201
+#define IDB_LOGO                        202
+#define IDD_REGISTER                    203
+#define IDC_REGISTER                    2000
+#define IDC_USER                        2001
+#define IDC_KEY                         2002
+
+#define IDC_STATIC						-1
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

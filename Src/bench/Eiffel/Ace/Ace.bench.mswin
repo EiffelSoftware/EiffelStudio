@@ -8,12 +8,12 @@ default
 	assertion (no)
 	dead_code_removal (yes)
 -- RTEA version
-	exception_trace (yes)
+	exception_trace (no)
 -- Full optimized version
 --	exception_trace (no)
 --	array_optimization (yes)
 --	inlining_size ("8")
---	inlining (yes)
+	inlining (yes)
 
 	--trace(yes)
 	--trace ("SERVER")
@@ -219,6 +219,8 @@ cluster
 	--dle_switch(switch):	"$\dle\no_dle"
 	--license_switch(switch): "$\license\license";  	--unix
 	--license_switch(switch): "$\license\no_license";	--win
+	time_lock(switch):        	"$\license\time_lock";--win
+	encryption:				"$EIFFEL_SRC\library\encryption"
 
 		-- Communications
 	communications (switch):		"$\communication"
@@ -227,7 +229,6 @@ cluster
 	debuging_class (communications):	"$\debug"
 	debuging_commands (communications):	"$\commands"
 	debuging_formatters (communications):	"$\formatters"
-	time_lock(switch):        	"$\license\no_time_lock";--win
 
 		-- INTERFACE CLUSTERS
 	interface:			"$EIFFEL_SRC\Eiffel\interface"
@@ -260,8 +261,9 @@ cluster
 		-- Windows specific classes
 	platform_mswin(interface):		"$\graphical\spec\widgets\win32"
 	win_graphical_window(interface):		"$\graphical\spec\graphical_window\win32"
-	win_formatters(interface):		"$\graphical\spec\formatters\win32";	
-	win_commands(interface):			"$\graphical\spec\commands\win32";
+	win_formatters(interface):		"$\graphical\spec\formatters\win32";
+	win_commands(interface):			"$\graphical\spec\commands\win32"	
+
 		-- Case
 	case_common(common):		"$\case_storage"
 	case_bench:			"$EIFFEL_SRC\Eiffel\case_storage\bench"
@@ -272,7 +274,8 @@ external
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\C\parsing\shared",
 		"$(EIFFEL_SRC)\C\parsing\eiffel",
-		"$(EIFFEL_SRC)\C\bench"
+		"$(EIFFEL_SRC)\C\bench",
+		"$(EIFFEL_SRC)\library\encryption\Clib"
 
 	object:
 --		"$(EIFFEL_SRC)\tl31api\lib\tl313api.lib",
@@ -284,5 +287,7 @@ external
 		"$(EIFFEL_SRC)\C\parsing\lace\lace.lib",
 		"$(EIFFEL_SRC)\C\parsing\shared\parsing.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
-		"$(EIFFEL_SRC)\C\bench\special_tables.obj"
+		"$(EIFFEL_SRC)\C\bench\special_tables.obj",
+		"$(EIFFEL_SRC)\library\encryption\spec\$(COMPILER)\lib\des.lib"
+
 end

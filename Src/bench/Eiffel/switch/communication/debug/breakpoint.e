@@ -139,34 +139,34 @@ feature -- Access
 			-- Display the status of this breakpoint.
 			-- Note: Should only be called in Debug mode.
 		do
-			io.put_string("BREAKPOINT: trace%N")
+			io.put_string ("BREAKPOINT: trace%N")
 
-			io.put_string("%T")
+			io.put_string ("%T")
 			if routine /= Void then
-				io.put_string(routine.name)
+				io.put_string (routine.name)
 			else
-				io.put_string("unknown_routine(routine=Void)")
+				io.put_string ("unknown_routine(routine=Void)")
 			end
-			io.put_string(" @")
-			io.putint(breakable_line_number)
-			io.new_line
+			io.put_string (" @")
+			io.put_integer (breakable_line_number)
+			io.put_new_line
 			
-			io.put_string("%Tbench status: ")
+			io.put_string ("%Tbench status: ")
 			inspect bench_status
 			when Bench_breakpoint_set then
-				io.put_string("set & enabled%N")
+				io.put_string ("set & enabled%N")
 			when Bench_breakpoint_disabled then
-				io.put_string("set & disabled%N")
+				io.put_string ("set & disabled%N")
 			when Bench_breakpoint_not_set then
-				io.put_string("not set%N")
+				io.put_string ("not set%N")
 			end
 		
-			io.put_string("%Tapplication status: ")
+			io.put_string ("%Tapplication status: ")
 			inspect application_status
 			when Application_breakpoint_set then
-				io.put_string("set%N")
+				io.put_string ("set%N")
 			when Application_breakpoint_not_set then
-				io.put_string("not set%N")
+				io.put_string ("not set%N")
 			end
 		end
 

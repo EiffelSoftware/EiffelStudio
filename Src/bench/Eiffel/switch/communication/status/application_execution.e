@@ -268,7 +268,7 @@ feature {DEAD_HDLR, STOPPED_HDLR, EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_APP
 			status := Void --| then is_running = False  (status /= Void)
 			current_execution_stack_number := 1
 debug ("DEBUGGER_TRACE")
-	io.error.putstring ("terminating project%N")
+	io.error.put_string ("terminating project%N")
 end
 		ensure
 			not_running: not is_running

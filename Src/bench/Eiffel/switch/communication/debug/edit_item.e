@@ -60,11 +60,11 @@ feature -- Commands
 					until
 						item_list.after
 					loop
-						io.putstring(item_list.item.name+": ")
+						io.put_string(item_list.item.name+": ")
 						if item_list.item.dynamic_class /= Void then
-							io.putstring(item_list.item.dynamic_class.name_in_upper+"%N")
+							io.put_string(item_list.item.dynamic_class.name_in_upper+"%N")
 						else
-							io.putstring("NONE%N")
+							io.put_string("NONE%N")
 						end
 						item_list.forth
 					end
@@ -86,9 +86,9 @@ feature -- Commands
 
 						-- get item location
 					if item_list.after then
-						io.putstring("item not found !!%N")
+						io.put_string("item not found !!%N")
 					else
-						io.putstring("item found...%N")
+						io.put_string("item found...%N")
 							-- item found...
 						item := item_list.item
 					end
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			modified := True	-- by default, we will succeed
 
 			if type_integer /= Void then
-				io.putstring("Enter an INTEGER value: ")
+				io.put_string("Enter an INTEGER value: ")
 				io.readline
 				value_integer := io.last_string.to_integer
 				generic_modify_item
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 				receive_ack
 
 			elseif type_bool /= Void then
-				io.putstring("Enter a BOOLEAN value (i.e. 'True' or 'False'): ")
+				io.put_string("Enter a BOOLEAN value (i.e. 'True' or 'False'): ")
 				io.readline
 				value_bool := io.last_string.to_boolean
 				generic_modify_item
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 				receive_ack
 
 			elseif type_real /= Void then
-				io.putstring("Enter a REAL value: ")
+				io.put_string("Enter a REAL value: ")
 				io.readline
 				value_real := io.last_string.to_real
 				generic_modify_item
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 				receive_ack
 
 			elseif type_double /= Void then
-				io.putstring("Enter a DOUBLE value: ")
+				io.put_string("Enter a DOUBLE value: ")
 				io.readline
 				value_double := io.last_string.to_double
 				generic_modify_item
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 				receive_ack
 
 			elseif type_char /= Void then
-				io.putstring("Enter a CHARACTER value: ")
+				io.put_string("Enter a CHARACTER value: ")
 				io.readline
 				value_char := io.last_string @ 1
 				generic_modify_item
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 				receive_ack
 
 			elseif type_ptr /= Void then -- Pointer
-				io.putstring("Enter an hexadecimal POINTER value: ")
+				io.put_string("Enter an hexadecimal POINTER value: ")
 				io.readline
 				value_ptr := default_pointer + hex_to_integer(io.last_string)
 				generic_modify_item
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 
 			elseif item.dynamic_class /= Void and then item.dynamic_class.name_in_upper.is_equal("STRING") then
 				-- this is a String
-				io.putstring("Enter a STRING: ")
+				io.put_string("Enter a STRING: ")
 				io.readline
 				value_string := clone(io.last_string)
 				generic_modify_item
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 
 			else	-- classic reference
 				modified := False
-				io.putstring("Drop the object you want to assign in the 'edit_object' hole%N")
+				io.put_string("Drop the object you want to assign in the 'edit_object' hole%N")
 				waiting_for_object := True
 			end
 		end
@@ -229,8 +229,8 @@ feature {NONE} -- Implementation
 
 	display_error_message(error_code: INTEGER) is
 		do
-			io.putstring("The item was not modified due to an error or a wrong permission%N")
-			io.putstring("(modifying expanded attributes is not authorized)%N%N")
+			io.put_string("The item was not modified due to an error or a wrong permission%N")
+			io.put_string("(modifying expanded attributes is not authorized)%N%N")
 		end
 
 feature {EDIT_ITEM} -- Deferred features

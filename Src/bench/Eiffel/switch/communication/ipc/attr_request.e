@@ -83,13 +83,13 @@ feature -- Update
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
 			debug ("DEBUG_RECV")
-				io.error.putstring ("Grepping object at address ")
-				io.error.putstring (object_address)
-				io.error.putstring (".%N")
-				io.error.putstring ("Object is a special? ")
+				io.error.put_string ("Grepping object at address ")
+				io.error.put_string (object_address)
+				io.error.put_string (".%N")
+				io.error.put_string ("Object is a special? ")
 				io.error.put_boolean (is_special)
 				io.error.put_new_line
-				io.error.putstring ("Object is a tuple? ")
+				io.error.put_string ("Object is a tuple? ")
 				io.error.put_boolean (is_tuple)
 				io.error.put_new_line
 			end
@@ -97,18 +97,18 @@ feature -- Update
 			if is_special then
 				debug ("DEBUG_RECV")
 					if is_tuple then
-						io.error.putstring ("Oh oooh. This is a TUPLE object...%N")
+						io.error.put_string ("Oh oooh. This is a TUPLE object...%N")
 					else
-						io.error.putstring ("Oh oooh. This is a special object...%N")
+						io.error.put_string ("Oh oooh. This is a special object...%N")
 					end
 				end;
 				create attributes.make
 				debug("DEBUG_RECV")
-					io.error.putstring ("Getting the attributes from object...%N")
-					io.error.putstring ("Capacity is ")
-					io.error.putint (capacity)
-					io.error.putstring (".%N")
-					io.error.putstring ("Calling `recv_attributes'.%N")
+					io.error.put_string ("Getting the attributes from object...%N")
+					io.error.put_string ("Capacity is ")
+					io.error.put_integer (capacity)
+					io.error.put_string (".%N")
+					io.error.put_string ("Calling `recv_attributes'.%N")
 				end
 					-- Even though they are not required in this particular case
 					-- where we want to see the special object, we have to retrieve
@@ -118,7 +118,7 @@ feature -- Update
 				count := to_integer (c_tread)
 				recv_attributes (attributes, Void)
 				debug ("DEBUG_RECV")
-					io.error.putstring ("And being back again in `send'.%N")
+					io.error.put_string ("And being back again in `send'.%N")
 				end
 			else
 				create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} attributes.make
@@ -157,9 +157,9 @@ feature {NONE} -- Implementation
 		do
 			attr_nb := to_integer (c_tread)
 			debug("DEBUG_RECV")
-				io.error.putstring ("Getting ")
-				io.error.putint (attr_nb)
-				io.error.putstring (" attributes...%N")
+				io.error.put_string ("Getting ")
+				io.error.put_integer (attr_nb)
+				io.error.put_string (" attributes...%N")
 			end
 			from
 				i := 1
@@ -169,11 +169,11 @@ feature {NONE} -- Implementation
 				attr_name := c_tread
 				sk_type := to_integer (c_tread)
 				debug("DEBUG_RECV")
-					io.error.putstring ("Grepping attribute `");
-					io.error.putstring (attr_name);
-					io.error.putstring ("' of type ");
-					io.error.putint (sk_type);
-					io.error.putstring (".%N")
+					io.error.put_string ("Grepping attribute `");
+					io.error.put_string (attr_name);
+					io.error.put_string ("' of type ");
+					io.error.put_integer (sk_type);
+					io.error.put_string (".%N")
 				end
 				inspect
 					sk_type
@@ -219,16 +219,16 @@ feature {NONE} -- Implementation
 								type_id, to_pointer (c_tread).out)
 						else
 							debug("DEBUG_RECV")
-								io.error.putstring ("Creating special object.%N")
+								io.error.put_string ("Creating special object.%N")
 							end
 							create spec_attr.make_attribute (attr_name, e_class, to_pointer (c_tread).out, to_integer (c_tread))
 							debug("DEBUG_RECV")
-								io.error.putstring ("Attribute name: ");
-								io.error.putstring (attr_name);
-								io.error.new_line;
-								io.error.putstring ("The eiffel class: ");
-								io.error.putstring (e_class.name_in_upper);
-								io.error.new_line
+								io.error.put_string ("Attribute name: ");
+								io.error.put_string (attr_name);
+								io.error.put_new_line;
+								io.error.put_string ("The eiffel class: ");
+								io.error.put_string (e_class.name_in_upper);
+								io.error.put_new_line
 							end;
 							if sp_upper = -1 then
 								spec_attr.set_sp_bounds (sp_lower, spec_attr.capacity);
@@ -238,11 +238,11 @@ feature {NONE} -- Implementation
 							max_capacity := max_capacity.max (spec_attr.capacity);
 							attr := spec_attr;
 							debug("DEBUG_RECV")
-								io.error.putstring ("Receiving attributes in the special object.%N")
+								io.error.put_string ("Receiving attributes in the special object.%N")
 							end;
 							recv_attributes (spec_attr.items, Void);
 							debug("DEBUG_RECV")
-								io.error.putstring ("Done receiving attributes in the special object.%N")
+								io.error.put_string ("Done receiving attributes in the special object.%N")
 							end
 						end
 					else
@@ -260,11 +260,11 @@ feature {NONE} -- Implementation
 						-- We should never go through this path.
 					check False end
 					debug ("DEBUG_RECV")
-						io.error.putstring ("Should never go there!!")
+						io.error.put_string ("Should never go there!!")
 					end
 				end
 				debug("DEBUG_RECV")
-					io.error.putstring ("Putting `attr' in `attr_list'.%N")
+					io.error.put_string ("Putting `attr' in `attr_list'.%N")
 				end;
 				attr.set_item_number(i-1)
 				attr_list.extend (attr);

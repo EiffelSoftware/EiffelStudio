@@ -72,7 +72,7 @@ feature -- Event - command association
 			-- Add 'command' to the list of commands to be
 			-- executed when the button is toggled
 		do
-			add_command (widget, "toggled", command,  arguments )
+			add_command (widget, "toggled", command,  arguments, default_pointer)
 		end
 
 feature -- Event -- removing command association

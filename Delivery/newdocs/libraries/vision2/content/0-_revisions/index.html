@@ -12,7 +12,11 @@
         	<H2>Eiffel Studio 5.1</H2>
 		<P><B>Interface modifications</B></P>
 		<UL>
-			<LI><B>`text' of EV_TEXTABLE and EV_TEXT_COMPONENT</B> - No longer returns Void when `text' is empty.</LI>
+			<LI><B>EV_TEXTABLE and EV_TEXT_COMPONENT</B> - `text' no longer returns Void when empty.</LI>
+			<LI><B>EV_WINDOW</B> - `title' is no longer `Void' when empty.</LI>
+			<LI><B>EV_TOOLTIPABLE</B> - `tooltip' no longer returns `Void' when empty. If empty, no tooltip is displayed.</LI>
+			<LI><B>EV_TITLED_WINDOW</B> - `icon_name' no longer returns `Void' when empty.</LI>
+			<LI><B>EV_CLIPBOARD</B> - `text' no longer returns `Void' when empty.</LI>
 			<LI><B>EV_CONTAINER</B> - has three new features `set_background_pixmap', `background_pixmap' and `remove_background_pixmap'. `background_pixmap' will be tessellated to cover complete background area.</LI>
 			<LI><B>EV_TREE and EV_TREE_NODE</B> - Added `recursively_do_all'.</LI>
 			<LI><B>EV_STANDARD_DIALOGS</B> - `ok_actions' have been renamed in descendents where appropriate. e.g. in EV_PRINT_DIALOG, they are renamed to `print_actions' to match the texts of the associated buttons. Where renamed, `ok_actions' are still available but obsolete. Selected button now also returns the correct text of the button (Previously it was always "Ok").</LI>

@@ -1,5 +1,4 @@
 indexing
-
 	description: "Menus which can be attached to a window";
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -16,8 +15,8 @@ feature -- Initialization
 	make_root is
 			-- Create the root menu details
 		do
-			!! menu_id.make (1, 16384)
-			!! menu_buttons.make (17)
+			!! menu_id.make (1, 2147483645)
+			!! menu_buttons.make (30)
 		end
 
 feature -- Access
@@ -48,6 +47,14 @@ feature -- Status setting
 			if not menu_buttons.has_item (widget) then
 				menu_id.next
 				menu_buttons.put (widget, menu_id.value)
+			end
+		end
+
+	add_with_id (widget: WIDGET_WINDOWS; a_id: INTEGER) is
+			-- Add a widget to the menu.
+		do
+			if not menu_buttons.has_item (widget) then
+				menu_buttons.put (widget, a_id)
 			end
 		end
 

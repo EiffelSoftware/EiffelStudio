@@ -296,6 +296,9 @@ feature -- Element change
 		do
 			if value /= Void then
 				cursor_imp ?= value.implementation
+				if cursor_on_widget.item = Current then
+					cursor_imp.set
+				end
 			else
 				cursor_imp := Void
 			end

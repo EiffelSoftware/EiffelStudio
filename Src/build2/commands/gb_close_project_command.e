@@ -163,6 +163,10 @@ feature -- Basic operations
 					-- Restore Id counter to default
 				reset_id_counter
 				
+					-- Ensure that the project is not flagged as modified, as no
+					-- project will now be open
+				System_status.disable_project_modified
+				
 				command_handler.update
 			end
 

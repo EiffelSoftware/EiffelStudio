@@ -8,17 +8,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_LIST
+class 
+	EV_LIST
 
 inherit
-
 	EV_PRIMITIVE
 		redefine
 			implementation
 		end
 
 creation
-	
+
 	make
 	
 feature {NONE} -- Initialization
@@ -95,6 +95,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' the list.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= count
+		do
+			implementation.select_item (index)
+		end
 
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply

@@ -1508,6 +1508,9 @@ feature {WEL_WINDOW} -- Implementation
 		do
 			on_destroy
 			destroy_item
+				-- Stop default processing because no more C objects attached
+				-- to WEL object.
+			disable_default_processing
 		ensure
 			destroyed: not exists
 			unregistered: not registered (Current)

@@ -235,63 +235,63 @@ feature -- Element Change
 
 feature -- Event : command association
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		do
-			-- We need the index so we pass it as the extra_data.
-			--add_command (parent_imp.list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (index))
-		end	
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		do
-			-- We need the index so we pass it as the extra_data.
-			--add_command (parent_imp.list_widget, "unselect_row", cmd, arg, C.c_gtk_integer_to_pointer (index))
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed
-			-- when the item is selected.
-		local
-			list: LINKED_LIST [EV_COMMAND]
-		do
-			-- list of the commands to be executed for "select_row" signal.
-			--list := (event_command_array @ select_row_id).command_list
-
-			from
-				list.start
-			until
-				list.after
-			loop
-			--	remove_single_command (parent_imp.list_widget, select_row_id, list.item)
-				-- we do not need to do "list.forth" as an item has been removed
-				-- that list.
-			end
-		end	
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed
-			-- when the item is unselected.
-		local
-			list: LINKED_LIST [EV_COMMAND]
-		do
-			-- list of the commands to be executed for "unselect_row" signal.
-			--list := (event_command_array @ unselect_row_id).command_list
-
-			from
-				list.start
-			until
-				list.after
-			loop
-			--	remove_single_command (parent_imp.list_widget, unselect_row_id, list.item)
-				-- we do not need to do "list.forth" as an item has been removed
-				-- that list.
-			end
-		end	
+--|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is selected.
+--|FIXME		do
+--|FIXME			-- We need the index so we pass it as the extra_data.
+--|FIXME			--add_command (parent_imp.list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (index))
+--|FIXME		end	
+--|FIXME
+--|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `cmd' to the list of commands to be executed
+--|FIXME			-- when the item is unselected.
+--|FIXME		do
+--|FIXME			-- We need the index so we pass it as the extra_data.
+--|FIXME			--add_command (parent_imp.list_widget, "unselect_row", cmd, arg, C.c_gtk_integer_to_pointer (index))
+--|FIXME		end
+--|FIXME
+--|FIXMEfeature -- Event -- removing command association
+--|FIXME
+--|FIXME	remove_select_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when the item is selected.
+--|FIXME		local
+--|FIXME			list: LINKED_LIST [EV_COMMAND]
+--|FIXME		do
+--|FIXME			-- list of the commands to be executed for "select_row" signal.
+--|FIXME			--list := (event_command_array @ select_row_id).command_list
+--|FIXME
+--|FIXME			from
+--|FIXME				list.start
+--|FIXME			until
+--|FIXME				list.after
+--|FIXME			loop
+--|FIXME			--	remove_single_command (parent_imp.list_widget, select_row_id, list.item)
+--|FIXME				-- we do not need to do "list.forth" as an item has been removed
+--|FIXME				-- that list.
+--|FIXME			end
+--|FIXME		end	
+--|FIXME
+--|FIXME	remove_unselect_commands is
+--|FIXME			-- Empty the list of commands to be executed
+--|FIXME			-- when the item is unselected.
+--|FIXME		local
+--|FIXME			list: LINKED_LIST [EV_COMMAND]
+--|FIXME		do
+--|FIXME			-- list of the commands to be executed for "unselect_row" signal.
+--|FIXME			--list := (event_command_array @ unselect_row_id).command_list
+--|FIXME
+--|FIXME			from
+--|FIXME				list.start
+--|FIXME			until
+--|FIXME				list.after
+--|FIXME			loop
+--|FIXME			--	remove_single_command (parent_imp.list_widget, unselect_row_id, list.item)
+--|FIXME				-- we do not need to do "list.forth" as an item has been removed
+--|FIXME				-- that list.
+--|FIXME			end
+--|FIXME		end	
 
 
 feature {EV_ANY_I} -- Implementation
@@ -340,6 +340,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/02/19 00:35:29  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.28  2000/02/18 23:54:11  oconnor
 --| released
 --|

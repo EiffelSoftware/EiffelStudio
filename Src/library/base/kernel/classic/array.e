@@ -93,16 +93,14 @@ feature -- Access
 		do
 			l_area := area
 			nb := upper - lower
-			if object_comparison then
-				if v /= Void then
-					from
-					until
-						i > nb or Result
-					loop
-						l_item := l_area.item (i)
-						Result := l_item /= Void and then l_item.is_equal (v)
-						i := i + 1
-					end
+			if object_comparison and v /= Void then
+				from
+				until
+					i > nb or Result
+				loop
+					l_item := l_area.item (i)
+					Result := l_item /= Void and then l_item.is_equal (v)
+					i := i + 1
 				end
 			else
 				from

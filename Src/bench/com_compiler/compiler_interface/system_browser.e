@@ -12,6 +12,7 @@ inherit
 			system_classes,
 			class_count,
 			system_clusters,
+			external_clusters,
 			cluster_count,
 			class_descriptor,
 			feature_descriptor,
@@ -101,7 +102,38 @@ feature -- Access
 				loop
 					if list.item.parent_cluster = Void then
 						create cluster_desc.make_with_cluster_i (list.item)
-						res.extend (cluster_desc)
+						if not cluster_desc.is_external_cluster then
+							res.extend (cluster_desc)
+						end
+						
+					end
+					list.forth
+				end
+				create Result.make (res)
+			end
+		end
+		
+	external_clusters: CLUSTER_ENUMERATOR is
+			-- List of system's top-level external clusters.
+		local
+			list: LIST [CLUSTER_I]
+			cluster_desc: CLUSTER_DESCRIPTOR
+			res: ARRAYED_LIST [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]
+		do
+			if Eiffel_project.initialized then
+				list := Eiffel_universe.clusters
+				create res.make (list.count)
+				from
+					list.start
+				until
+					list.after
+				loop
+					if list.item.parent_cluster = Void then
+						create cluster_desc.make_with_cluster_i (list.item)
+						if cluster_desc.is_external_cluster then
+							res.extend (cluster_desc)
+						end
+						
 					end
 					list.forth
 				end
@@ -113,6 +145,7 @@ feature -- Access
 			-- Number of top-level clusters in system.
 		local
 			list: LIST [CLUSTER_I]
+			cluster_desc: CLUSTER_DESCRIPTOR
 		do
 			if Eiffel_project.initialized then
 				list := Eiffel_universe.clusters
@@ -122,7 +155,11 @@ feature -- Access
 					list.after
 				loop
 					if list.item.parent_cluster = Void then
-						Result := Result + 1
+						create cluster_desc.make_with_cluster_i (list.item)
+						if not cluster_desc.is_external_cluster then
+							Result := Result + 1
+						end
+						
 					end
 					list.forth
 				end

@@ -95,7 +95,7 @@ feature -- Initialization
 	duplicate: like Current is
 			-- Duplicate feature
 		do
-			Result := clone (Current)
+			Result := Precursor {FEATURE_I}
 			if arguments /= Void then
 				Result.set_arguments (clone (arguments))
 			end

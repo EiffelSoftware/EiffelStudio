@@ -14,6 +14,12 @@ inherit
 	EV_PIXMAP_I
 
 	EV_DRAWABLE_IMP
+		undefine
+			background_color,
+			foreground_color,
+			set_background_color,
+			set_foreground_color
+		end
 
 	EV_PRIMITIVE_IMP
 		rename
@@ -21,25 +27,31 @@ inherit
 		end
 	
 creation
-
-	make
+	make,
+	make_with_size
 
 feature {NONE} -- Initialization
 
-	make (parent: EV_PIXMAPABLE) is
+	make is --(parent: EV_PIXMAPABLE) is
                         -- Create a gtk pixmap.
-                local
-			par_imp: EV_WIDGET_IMP
+--                local
+--			par_imp: EV_WIDGET_IMP
                 do
-			par_imp ?= parent.implementation
-			check 
-				parent_ok: par_imp /= Void
-			end
-			
-			parent_widget := par_imp.widget
-			
-			widget := c_gtk_pixmap_create_empty (parent_widget)
+--			par_imp ?= parent.implementation
+--			check 
+--				parent_ok: par_imp /= Void
+--			end
+--			parent_widget := par_imp.widget
+--			widget := c_gtk_pixmap_create_empty (parent_widget)
+
+			widget := c_gtk_pixmap_create_empty (default_pointer)
                 end
+
+	make_with_size (w, h: INTEGER) is
+			-- Create a pixmap with 'par' as parent, 
+			-- 'w' and `h' as size.
+		do
+		end	
 
 feature -- Element change
 

@@ -37,12 +37,12 @@ inherit
 	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
-		end		
+		end	
 
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all
-		end		
+		end
 		
 	ICOR_EXPORTER -- debug trace purpose
 		export
@@ -102,15 +102,6 @@ feature -- Properties
 	routine: E_FEATURE
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
-
-	current_object: ABSTRACT_DEBUG_VALUE is
-			-- Current object value
-		do
-			if not initialized then
-				initialize_stack
-			end
-			Result := private_current_object
-		end
 		
 	current_exception: ABSTRACT_DEBUG_VALUE is
 			-- Current object value
@@ -132,7 +123,26 @@ feature -- Properties
 			--| the "line" between the two processes is free.
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
-			
+
+feature -- Current object
+
+	current_object: ABSTRACT_DEBUG_VALUE is
+			-- Current object value
+		do
+			Result := private_current_object
+			if Result = Void and then not initialized then
+				initialize_stack
+				Result := private_current_object				
+			end
+		end
+	
+	set_private_current_object (c: like private_current_object) is
+			-- Set current object value
+			-- without initializing the full stack...
+		do
+			private_current_object := c
+		end
+		
 feature -- Dotnet Properties
 
 	dotnet_class_token: INTEGER is
@@ -247,13 +257,13 @@ feature {NONE} -- Implementation
 
 				--| Get Current Object
 				l_list.start
-				private_current_object := l_list.first
+				
+				set_private_current_object (l_list.first)				
 				private_current_object.set_name ("Current")
 
 				object_address := private_current_object.address
 				display_object_address := object_address
 
-				Application.imp_dotnet.keep_object (private_current_object)
 				l_list.remove
 
 				l_count := rout.argument_count

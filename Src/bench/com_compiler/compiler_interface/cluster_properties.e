@@ -30,7 +30,6 @@ inherit
 			has_parent,
 			subclusters,
 			has_children,
-			set_name,
 			set_cluster_path,
 			set_override,
 			set_is_library,
@@ -279,35 +278,31 @@ feature -- Access
 			end
 		end
 
-	excluded: ECOM_ARRAY [STRING] is
+	excluded: CLUSTER_EXCLUDES_ENUMERATOR is
 			-- List of excluded directories.
 			-- Void if none.
 		local
-			res: ARRAY [STRING]
-			i: INTEGER
+			res: ARRAYED_LIST [STRING]
 			cl_prop: CLUST_PROP_SD
 			l_ex: LACE_LIST [EXCLUDE_SD]
+			i: INTEGER
 		do
 			cl_prop := cluster_sd.cluster_properties
+			create res.make (0)
 			if cl_prop /= Void then
 				l_ex := cl_prop.exclude_option
 				if l_ex /= Void then
 					from
 						l_ex.start
-						create res.make (1, l_ex.count)
-						i := 1
 					until
 						l_ex.after
 					loop
-						res.put (l_ex.item.file__name, i)
-						i := i + 1
+						res.extend (l_ex.item.file__name)
 						l_ex.forth
 					end
 				end
 			end
-			if res /= Void then
-				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
-			end
+			create Result.make (res)				
 		end
 
 	subclusters: CLUSTER_PROP_ENUMERATOR is

@@ -1,13 +1,11 @@
 indexing
-
-	description:
-		"Constants for warning messages.";
-	conventions:
-		"w_: Warning message";
+	description: "Constants for warning messages.";
+	conventions: "w_: Warning message";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class WARNING_MESSAGES
+class
+	WARNING_MESSAGES
 
 feature -- Warning messages
 
@@ -31,6 +29,18 @@ feature -- Warning messages
 			Result.append (file_name)
 		end
 
+	w_cannot_backup_project (base_name: STRING): STRING is
+			-- To backup the project
+		require
+			base_name_not_void: base_name /= Void
+		do
+			!! Result.make (128)
+			Result.append ("Cannot make a backup of your old project in %N")
+			Result.append (base_name)
+			Result.append ("%NMake sure that no backup directory is already there%N")
+			Result.append ("or that you have write permissions to this directory.")
+		end	
+		
 	w_Cannot_debug: STRING is "Current version of system has not been successfully compiled. %N%
 						%Cannot use debugging facilities."
 
@@ -476,7 +486,7 @@ feature -- Warning messages
 
 	w_Unknown_object: STRING is "Unknown object"
 
-	w_File_changed: STRING is "File has changed since last save!%NLose changes?"
+	w_File_changed: STRING is "File has changed.%N Do you want to save changes?"
 
 	w_Specify_ace: STRING is "Unspecified ace file%NChoose one?"
 

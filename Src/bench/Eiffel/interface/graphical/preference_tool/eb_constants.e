@@ -1,8 +1,6 @@
 indexing
-
-	description:
-		"Constants for `bench'.";
-	date: "$Date$";
+	description: "Constants for `bench'."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class EB_CONSTANTS
@@ -16,55 +14,55 @@ feature {NONE} -- Resources
 			-- General resources
 		once
 			!! Result.make
-		end;
+		end
 
 	Project_resources: PROJECT_CATEGORY is
 			-- Resources for the project tool
 		once
 			!! Result.make
-		end;
+		end
 
 	System_resources: SYSTEM_CATEGORY is
 			-- Resources for the system tool
 		once
 			!! Result.make
-		end;
+		end
 
 	Object_resources: OBJECT_CATEGORY is
 			-- Resources for the feature tool
 		once
 			!! Result.make
-		end;
+		end
 
 	Explain_resources: EXPLAIN_CATEGORY is
 			-- Resources for the feature tool
 		once
 			!! Result.make
-		end;
+		end
 
 	Profiler_resources: PROFILE_CATEGORY is
 			-- Resources for the profiler tool
 		once
 			!! Result.make
-		end;
+		end
 
 	Warning_messages: WARNING_MESSAGES is
 			-- All warning used in the interface
 		once
 			!! Result
-		end;
+		end
 
 	Interface_names: INTERFACE_NAMES is
 			-- All names used in the interface
 		once
 			!! Result
-		end;
+		end
 
 	Pixmaps: SHARED_PIXMAPS is
 			-- All pixmaps used in the interface
 		once
 			!! Result
-		end;
+		end
 
 	Cursors: SHARED_CURSORS is
 			-- All pixmaps used in the interface

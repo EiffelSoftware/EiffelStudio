@@ -8,7 +8,7 @@ indexing
 class SYSTEM_CATEGORY
 
 inherit
-	RESOURCE_CATEGORY
+	EDITOR_RESOURCE_CATEGORY
 
 creation
 	make
@@ -45,10 +45,6 @@ feature -- Validation
 
 feature -- Resources
 
-	tool_width: INTEGER_RESOURCE
-	tool_height: INTEGER_RESOURCE
-	command_bar: BOOLEAN_RESOURCE
-	format_bar: BOOLEAN_RESOURCE
 	parse_ace_after_saving: BOOLEAN_RESOURCE
 	--hidden_clusters: ARRAY_RESOURCE
 

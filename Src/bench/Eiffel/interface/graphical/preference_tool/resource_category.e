@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Abstract notion of a category of resources."
+	description: "Abstract notion of a category of resources."
 	date: "$Date$";
 	revision: "$Revision$"
 

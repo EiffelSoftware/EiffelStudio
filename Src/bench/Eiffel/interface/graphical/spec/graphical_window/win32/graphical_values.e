@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"Graphical values for the graphical window.";
+	description: "Graphical values for the graphical window.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class GRAPHICAL_VALUES
+class
+	GRAPHICAL_VALUES
 
 inherit
-
 	EB_CONSTANTS
 
 feature {NONE} -- Initialization

@@ -1,24 +1,29 @@
 indexing
-
-	description: 
-		"Abstract root class for gui eiffelbench class.";
-	date: "$Date$";
+	description: "Abstract root class for gui eiffelbench class."
+	date: "$Date$"
 	revision: "$Revision $"
 
-deferred class EWB
+deferred class
+	EWB
 
 inherit
+	WINDOWS
 
-	WINDOWS;
-	EIFFEL_ENV;
-	ISED_X_SLAVE;
-	GRAPHICS;
+	EIFFEL_ENV
+
+	ISED_X_SLAVE
+
+	GRAPHICS
+
 	ARGUMENTS
 		rename
 			command_line as arguments_line
 		end
-	SHARED_BENCH_LICENSES;
-	SHARED_CONFIGURE_RESOURCES;
+
+	SHARED_BENCH_LICENSES
+
+	SHARED_CONFIGURE_RESOURCES
+
 	SHARED_EIFFEL_PROJECT
 
 feature -- Initialization
@@ -26,71 +31,71 @@ feature -- Initialization
 	make is
 			-- Create and map the first window: the system window.
 		local
-			screen: SCREEN;
-			temp: STRING;
+			screen: SCREEN
+			temp: STRING
 			new_resources: EB_RESOURCES
 			compiler: ES
 		do
 			if not retried then
 					-- Check that environment variables
 					-- are properly set.
-				temp := Execution_environment.get ("EIFFEL4");
+				temp := Execution_environment.get ("EIFFEL4")
 				if (temp = Void) or else temp.empty then
-					io.error.putstring ("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N");
+					io.error.putstring ("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N")
 					die (-1)
-				end;
-				temp := Execution_environment.get ("PLATFORM");
+				end
+				temp := Execution_environment.get ("PLATFORM")
 				if (temp = Void) or else temp.empty then
-					io.error.putstring ("ISE Eiffel4: the environment variable $PLATFORM is not set%N");
+					io.error.putstring ("ISE Eiffel4: the environment variable $PLATFORM is not set%N")
 					die (-1)
-				end;
+				end
 
 					-- Read the resource files
 				if argument_count > 0 and then
 					(argument (1).is_equal ("-bench") or
 					else argument (1).is_equal ("-from_bench"))
 				then
-					Eiffel_project.set_batch_mode (False);
-					init_connection (argument (1).is_equal ("-bench"));
+					Eiffel_project.set_batch_mode (False)
+					init_connection (argument (1).is_equal ("-bench"))
 					if init_license then
-						if toolkit = Void then end;
-						init_windowing;
+						if toolkit = Void then end
+						init_windowing
 						iterate
-					end;
+					end
 				else
-					Eiffel_project.set_batch_mode (True);
+					Eiffel_project.set_batch_mode (True)
 					if init_license then
-						!! new_resources.initialize;
+						!! new_resources.initialize
 							-- Start the compilation in batch mode from the bench executable.
 						!!compiler.make_unlicensed
-						discard_licenses;
-					end;
-				end;
+						discard_licenses
+					end
+				end
 			else
 					-- Ensure clean exit in case of exception
 				die (-1)
-			end;
+			end
 		rescue
-			discard_licenses;
+			discard_licenses
 			if not Eiffel_project.batch_mode then
 					-- The rescue in ES will display the tag
-				io.error.putstring ("ISE Eiffel4: Session aborted%N");
-				io.error.putstring ("Exception tag: ");
-				temp := original_tag_name;
+				io.error.putstring ("ISE Eiffel4: Session aborted%N")
+				io.error.putstring ("Exception tag: ")
+				temp := original_tag_name
 				if temp /= Void then
-					io.error.putstring (temp);
-				end;
-				io.error.new_line;
-			end;
+					io.error.putstring (temp)
+				end
+				io.error.new_line
+			end
 			if not fail_on_rescue then
-				retried := True;
+				retried := True
 				retry
-			end;
-		end;
+			end
+		end
 
 feature -- Properties
 
-	retried: BOOLEAN;
+	retried: BOOLEAN
 			-- For rescues
 
 end -- class EWB

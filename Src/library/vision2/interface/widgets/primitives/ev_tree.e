@@ -18,8 +18,6 @@ inherit
 		end
 
 	EV_TREE_NODE_LIST
-		rename
-			is_parent_recursive as item_is_parent_recursive
 		redefine
 			is_in_default_state,
 			implementation
@@ -115,6 +113,8 @@ feature -- Status report
 			-- Is `an_item' contained in `Current' at any level?
 		do
 			Result := implementation.has_recursively (an_item)
+		ensure
+			not_found_in_empty: Result implies not is_empty
 		end
 		
 feature -- Status setting
@@ -145,7 +145,7 @@ feature -- Basic operations
 
 feature {NONE} -- Contract support
 
-	item_is_parent_recursive (a_tree_node: EV_TREE_NODE): BOOLEAN is
+	is_parent_recursive (a_tree_node: EV_TREE_NODE): BOOLEAN is
 			-- Is `a_tree_node' a parent of `Current'?
 		do
 				-- As we cannot insert a EV_TREE into a EV_TREE_NODE,

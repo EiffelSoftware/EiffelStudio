@@ -11,13 +11,29 @@ class
 	EV_PIXMAP
 
 inherit
-	EV_DRAWING_AREA
+	EV_DRAWABLE
+		undefine
+			create_action_sequences
 		redefine
-			make_for_test,
-			create_implementation,
 			implementation,
+			create_implementation,
 			is_equal,
 			copy
+		end
+
+	EV_PRIMITIVE
+		undefine
+			set_background_color,
+			background_color,
+			set_foreground_color,
+			foreground_color,
+			is_equal,
+			is_in_default_state,
+			copy
+		redefine
+			implementation,
+			create_action_sequences,
+			make_for_test
 		end
 
 create
@@ -138,6 +154,12 @@ feature {NONE} -- Implementation
 			create {EV_PIXMAP_IMP} implementation.make (Current)
 		end
 
+	create_action_sequences is
+		do
+			{EV_DRAWABLE} Precursor
+			{EV_PRIMITIVE} Precursor
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_PIXMAP_I
@@ -175,6 +197,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/12 00:22:03  king
+--| Now inheriting directly from drawable
+--|
 --| Revision 1.26  2000/03/20 23:05:46  pichery
 --| moved the implementation of `copy' and `set_with_named_file' into the
 --| implementation rather than in the interface. These 2 feature are now

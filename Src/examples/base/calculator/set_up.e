@@ -21,14 +21,14 @@ feature
 			-- Hash-table of operations with name and help messages.
 		once
 				-- Hash-tables are resizable anyway.
-			create  Result.make (10)
+			create Result.make (10)
 		end
 	
 	enter_operator (k, m: STRING; c: STATE) is
 			-- Enter a command `c' associated with a key `k' 
 			-- and an help message `m'.
 		do
-			create  interface
+			create interface
 			interface.set_interface (k, m, c)
 			associated_operator.put (interface, interface.operator_key)
 		end

@@ -29,10 +29,10 @@ feature -- Creation
 	make is
 			-- Initialize and execute demonstration
 		do
-			create  driver.make
+			create driver.make
 			driver.new_menu ("%N%N* PRIORITY QUEUE DEMO *%N%N[XX] shows current element%N")
 			fill_menu
-			create  a.make
+			create a.make
 			cycle
 		end
 

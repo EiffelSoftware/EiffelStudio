@@ -41,10 +41,10 @@ feature -- Creation
 			-- Create arrays to store menus. 
 		do
 			set_error_default
-			create  menu_entry.make (1, Max_Number_of_Entries)
-			create  menu_help.make (1, Max_Number_of_Entries)
-			create  menu_tag.make (1, Max_Number_of_Entries)
-			create  menu_flag.make (1, Max_Number_of_Entries)
+			create menu_entry.make (1, Max_Number_of_Entries)
+			create menu_help.make (1, Max_Number_of_Entries)
+			create menu_tag.make (1, Max_Number_of_Entries)
+			create menu_flag.make (1, Max_Number_of_Entries)
 			build_line
 		end
 
@@ -118,7 +118,7 @@ feature -- Routines
 		do
 			from
 				length := entry.count
-				create  Result.make (Max_Length_of_a_Tag)
+				create Result.make (Max_Length_of_a_Tag)
 				i := 1
 			until
 				i > length or Result.count = Max_Length_of_a_Tag
@@ -218,7 +218,7 @@ feature -- Routines
 			i: INTEGER
 		do
 			from
-				create  line.make (60)
+				create line.make (60)
 			until
 				i = 60
 			loop

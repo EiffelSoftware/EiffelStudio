@@ -397,8 +397,18 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Height and width of pixmap in Tree.
 
 	remove_pixmap is
+			-- Remove the pixmap for `Current'
+		local
+			par_tree: EV_TREE_IMP
 		do
-			--| FIXME Remove pixmap from tree and reset pix attributes.
+			if gdk_pixbuf /= default_pointer then
+				feature {EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+				gdk_pixbuf := default_pointer				
+			end
+			par_tree := parent_tree_imp
+			if par_tree /= Void then
+				par_tree.update_row_pixmap (Current)
+			end
 		end
 		
 	pixmap: EV_PIXMAP is

@@ -11,22 +11,25 @@ inherit
  
 	UPDATE_PROJECT
 		rename
+			choose_template as execute_warner_help,
 			warner_ok as update_project_warner_ok
 		redefine
 			launch_c_compilation, 
 			confirm_and_compile,
 			name, menu_name, accelerator,
-			compilation_allowed, perform_compilation
+			compilation_allowed, perform_compilation,
+			execute_warner_help
 		end;
 	UPDATE_PROJECT
 		rename
+			choose_template as execute_warner_help,
 			warner_ok as freeze_now
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
 			name, menu_name, accelerator,
 			compilation_allowed, perform_compilation,
-			freeze_now
+			freeze_now, execute_warner_help
 		select
 			freeze_now
 		end;
@@ -37,6 +40,18 @@ creation
 	make
 
 feature -- Callbacks
+
+	execute_warner_help is
+			-- Process the callback of the help button.
+		do
+			if warner_was_popped_up then
+				warner_was_popped_up := False;
+				start_c_compilation := False;
+				freeze_now (last_warner)
+			else
+				load_default_ace
+			end
+		end;
 
 	freeze_now (argument: ANY) is
 		do
@@ -58,12 +73,17 @@ feature {NONE} -- Implementation
 			-- Ask for confirmation, and compile thereafter.
 		do
 			if 
-				(argument = tool) or (argument = Current) or
+				(argument = tool) or else
+				(argument = Current) or else
 				(argument /= Void and then 
 				argument = last_confirmer and not end_run_confirmed) 
 			then
-				warner (popup_parent).custom_call (Current, Warning_messages.w_Freeze_warning,
-							Interface_names.b_Freeze_now, Void, Interface_names.b_Cancel);
+				warner_was_popped_up := True;		
+				warner (popup_parent).custom_call (Current, 
+					Warning_messages.w_Freeze_warning,
+					Interface_names.b_Freeze_now,
+					Interface_names.b_Freeze_now_but_no_c, 
+					Interface_names.b_Cancel);
 			elseif (argument /= Void and then argument = last_warner) then
 					freeze_now (argument)
 			elseif 
@@ -92,6 +112,9 @@ feature {NONE} -- Implementation
 		end;
 
 feature {NONE} -- Attributes
+
+	warner_was_popped_up: BOOLEAN;
+			-- Was the warner popped up?
 
 	compilation_allowed: BOOLEAN is
 			-- Is compilation allowed?

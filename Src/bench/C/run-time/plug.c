@@ -242,40 +242,6 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 }
 
 /*
- * Conformance query
- */
-
-rt_public int econfm(int ancestor, int heir)
-			 	/* If conformance is true, this must be the ancestor type */
-				/* And this must be the heir then */
-{
-	/* Does dynamic type `heir' conform to dynamic type `ancestor' ? */
-	return eif_gen_conf ((int16) heir, (int16) ancestor);
-/*
-	struct conform *ct = co_table[ancestor];
-	unsigned int i;
-	int j, k;
-	int16 min;
-
-	min = ct->co_min;
-	if (heir >= min && heir <= ct->co_max) {
-*/
-		/* Since the compiler assumed there is 8 bits on a character,
-		 * we do the same thing here and hardwire the `8' constant
-		 * value. -- FREDD
-		 */
-/*
-		k = heir - min;
-		i = (unsigned int) ct->co_tab [k / 8];
-		j = 7 - (k % 8);
-		return (i & (1 << j)) >> j;
-	}
-
-	return 0;
-*/
-}
-
-/*
  * Special object count
  */
 

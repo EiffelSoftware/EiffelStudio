@@ -9,7 +9,7 @@ root
 	PAINTBRUSH (root_cluster): "make_and_launch"
 
 default
-	assertion			(all)
+	assertion			(require)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)
@@ -45,10 +45,11 @@ cluster
 			"temp"
 			"release"
 			"obsolete"
+			"bench_used"
 		end
 
 external
-	include_path:		"$(EIFFEL4)\library\vision2\spec\windows\include",
+	include_path:		"$(EIFFEL4)\library\vision2\spec\include",
 						"$(EIFFEL4)\library\wel\spec\windows\include"
 
 	object: 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",

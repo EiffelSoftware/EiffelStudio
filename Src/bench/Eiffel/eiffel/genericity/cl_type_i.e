@@ -63,8 +63,15 @@ feature -- Access
 
 	il_type_name: STRING is
 			-- Class name of current type.
+		local
+			l_class_c: like base_class
 		do
-			Result := clone (base_class.external_class_name)
+			l_class_c := base_class
+			if l_class_c.is_external then
+				Result := clone (base_class.external_class_name)
+			else
+				Result := clone (base_class.name)
+			end
 		end
 
 	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is

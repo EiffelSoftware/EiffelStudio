@@ -105,12 +105,14 @@ http://support.eiffel.com.
 			mem.full_coalesce
 		end
 
-	set_can_run (l_can_run: BOOLEAN) is
+	set_can_run is
 			-- Set `can_run' with `l_can_run'.
 		do
-			can_run := l_can_run
+			can_run := True
+			is_licensed := engine.is_activated
+			is_evaluating := not is_licensed
 		ensure
-			can_run_set: can_run = l_can_run
+			can_run_set: can_run
 		end
 
 	engine: KG_ENGINE is

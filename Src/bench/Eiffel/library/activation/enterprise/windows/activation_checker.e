@@ -28,7 +28,7 @@ feature
 			check_license
 			if is_evaluating then
 				create l_app
-				create validator_window.make (agent set_can_run (True), agent l_app.destroy)
+				create validator_window.make (agent set_can_run, agent l_app.destroy)
 				validator_window.show
 				l_app.launch
 			end
@@ -50,7 +50,7 @@ feature
 			end
 			check_license
 			if is_evaluating then
-				create validator_window.make (agent set_can_run (True), a_next_action)
+				create validator_window.make (agent set_can_run, a_next_action)
 				validator_window.show
 			end
 			launch_gc_cycle

@@ -12,12 +12,12 @@ inherit
 feature -- Access
 
 	feature_name (t: TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [TYPE]): STRING is
-			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'
+			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'.
 		require
 			non_void_type: t /= Void
 			non_void_name: dotnet_name /= Void
 			valid_name: not dotnet_name.is_empty
-			valid_args: args /= Void implies args.count > 0
+			valid_args: args /= Void implies args.count >= 0
 		local
 			ct: CONSUMED_TYPE
 			crt: CONSUMED_REFERENCED_TYPE

@@ -279,36 +279,42 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		local
 			do_pass2: BOOLEAN
+			external_class: EXTERNAL_CLASS_C
 		do
-			a_class.set_reverse_engineered (False)
-			if a_class.changed then
-				do_pass2 := True
-					-- Incrementality: Degree 3 can be done successfully
-					-- on a class marked changed and then the class is
-					-- reinserted in Degree 4.
-				Degree_3.insert_new_class (a_class)
-				Degree_2.insert_new_class (a_class)
+			external_class ?= a_class
+			if external_class /= Void then
+				external_class.process_degree_4
 			else
-				do_pass2 := a_class.changed2
-			end
-			if do_pass2 then
-					-- Analysis of inheritance for a class.
-				analyzer.pass2 (a_class, a_class.supplier_status_modified)
-
-					-- No error happened: set the compilation
-					-- status of `class_c'.
-				check
-					No_error: not Error_handler.has_error
+				a_class.set_reverse_engineered (False)
+				if a_class.changed then
+					do_pass2 := True
+						-- Incrementality: Degree 3 can be done successfully
+						-- on a class marked changed and then the class is
+						-- reinserted in Degree 4.
+					Degree_3.insert_new_class (a_class)
+					Degree_2.insert_new_class (a_class)
+				else
+					do_pass2 := a_class.changed2
 				end
+				if do_pass2 then
+						-- Analysis of inheritance for a class.
+					analyzer.pass2 (a_class, a_class.supplier_status_modified)
 
-					-- Update the freeze list for changed hash tables.
-				Degree_1.insert_class (a_class)
-			elseif a_class.assert_prop_list /= Void then
-					-- Propagation of assertion modifications only.
-								debug ("ACTIVITY")
-									io.error.put_string ("Propagation of assertions only%N")
-								end
-				propagate_pass2 (a_class, False)
+						-- No error happened: set the compilation
+						-- status of `class_c'.
+					check
+						No_error: not Error_handler.has_error
+					end
+
+						-- Update the freeze list for changed hash tables.
+					Degree_1.insert_class (a_class)
+				elseif a_class.assert_prop_list /= Void then
+						-- Propagation of assertion modifications only.
+									debug ("ACTIVITY")
+										io.error.put_string ("Propagation of assertions only%N")
+									end
+					propagate_pass2 (a_class, False)
+				end
 			end
 		end
 

@@ -62,10 +62,10 @@ feature -- Element change
 		do
 				-- update the attributes.
 			token := a_token
-			pos_in_token := p
+			pos_in_token := a_position
 			
 				-- Compute the size of the current token.
-			current_width := a_token.get_substring_width (p)
+			current_width := a_token.get_substring_width(a_position)
 
 				-- Rewind the tokens of the line to get
 				-- the width of each one.
@@ -92,14 +92,13 @@ feature -- Element change
 			-- Make `x' be the new value of `x_in_pixels'.
 		require
 			x_positive_or_null: x >= 0
-		local
-			current_x: INTEGER
 		do
 				-- Update the attribute.
 			x_in_pixels := x
 
-				-- Update the current token.
-			token
+				-- Update the current token and the
+				-- the position in it
+			update_current_char
 		end
 
 	set_y_in_lines (y: INTEGER) is
@@ -188,5 +187,44 @@ feature {NONE} -- Implementation
 			line := line.previous
 			y_in_lines := y_in_lines - 1
 		end
+
+	update_current_char is
+			-- Update the current token and the the position in it.
+		local
+			current_x: INTEGER
+			current_token: EDITOR_TOKEN
+		do
+				-- Update the current token.
+			from
+				current_token := line.first_token
+				current_x := 0
+			until
+				current_x >= x_in_pixels
+			loop
+					-- Compute where we are in pixels.
+				current_x := current_x + current_token.width
+
+					-- Prepare next iteration.
+				current_token := current_token.next
+			end
+
+			if current_x = x_in_pixels then
+				-- We are lucky. The cursor is situated at the
+				-- beggining of a token
+				pos_in_token := 1
+				token := current_token
+			else
+					-- we are too far, so the good token is the
+					-- previous one.
+				token := current_tokem.previous
+					-- rewind our pixel position
+				current_x := current_x - token.
+			end
+		end
+
+		create
+
+invariant
+	x_in_pixels_positive_or_null: x_in_pixels >= 0
 
 end -- class TEXT_CURSOR

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			physical_index := -1
+			create header_item
 			is_initialized := True
 		end
 
@@ -236,11 +237,17 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in.
 		
+	header_item: EV_HEADER_ITEM
+		-- Header item associated with `Current'.
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID_COLUMN
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
+			
+invariant
+	header_item_not_void: is_initialized implies header_item /= Void
 
 end
 

@@ -422,7 +422,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			command_handler.update
 		end
 	
-feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
 		
 	mark_next_window_as_root (index_to_move: INTEGER) is
 			-- Ensure that next window in `Current' is marked as root window.
@@ -456,22 +456,12 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 		local
 			selector_item: GB_WINDOW_SELECTOR_ITEM
 			command_move_window: GB_COMMAND_MOVE_WINDOW
+			command_add_window: GB_COMMAND_ADD_WINDOW
 		do
 			if an_object.layout_item = Void then
-				object_handler.add_new_window (an_object)			
-				create selector_item.make_with_object (an_object)
-					-- Ensure that when the item is selected, the layout constructor is updated
-					-- to reflect this.
-				selector_item.select_actions.extend (agent selected_window_changed (selector_item))
-					-- Now select new object as root if there are no other windows.
-				if objects.is_empty then
-					change_root_window_to (an_object)
-				end
-				extend (an_object.window_selector_item)
-					-- If this is the only window contained, select it.
-				if objects.count = 1 then
-					an_object.window_selector_item.enable_select
-				end
+				object_handler.add_new_window (an_object)
+				create command_add_window.make (an_object, Void)
+				command_add_window.execute
 			else
 				if not (an_object.window_selector_item.parent = Window_selector) then
 						-- Do nothing if attempting to move from `Current' to `Current'.
@@ -525,7 +515,7 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 
 	update_for_removal (a_window_item: GB_WINDOW_SELECTOR_ITEM) is
-			--
+			-- Update `Current' to reflect a removal of `a_window_item'.
 		local
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 			current_index: INTEGER
@@ -561,6 +551,28 @@ feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 			end			
 		end
 		
+	selected_window_changed (selector_item: GB_WINDOW_SELECTOR_ITEM) is
+			-- `selector_item' has become selected so we must update
+			-- `layout_constructor'. Do nothing if a project is loading.
+		require
+			selector_item_not_void: selector_item /= Void
+		local
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			if not System_status.loading_project then
+					-- Only change the selected item, if a project is not loading.
+				titled_window_object := selector_item.object
+				layout_constructor.set_root_window (titled_window_object)
+				
+				update_display_and_builder_windows (titled_window_object)
+			
+				if parent_window (Layout_constructor) /= Void then
+						-- Protect against a selection being fired before
+						-- `layout_constructor' is parented.
+					layout_constructor.first.enable_select
+				end
+			end
+		end
 
 feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 
@@ -720,7 +732,21 @@ feature {GB_XML_LOAD} -- Implementation
 				found: found
 			end
 		end
-		
+
+feature {GB_COMMAND_ADD_WINDOW} -- Implementation
+
+	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+			-- Change the root window of the project to `titled_window_object'.
+		require
+			titled_window_object_not_void: titled_window_object /= Void
+		do
+			titled_window_object.set_as_root_window
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
+		ensure
+			root_window_set: object_handler.root_window_object = titled_window_object
+		end
 		
 feature {NONE} -- Implementation
 
@@ -813,6 +839,9 @@ feature {GB_SET_ROOT_WINDOW_COMMAND}
 
 feature {NONE} -- Implementation
 
+	all_deleted_directories: HASH_TABLE [STRING, STRING]
+		-- All directory names that have been deleted. A user may not enter 
+
 	add_named_directory (directory_name: STRING) is
 			-- Add a new directory named `directory_name' to `Current'.
 		require
@@ -827,19 +856,6 @@ feature {NONE} -- Implementation
 			command_handler.update
 		ensure
 			count_increaed: count = old count + 1
-		end
-		
-	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
-			-- Change the root window of the project to `titled_window_object'.
-		require
-			titled_window_object_not_void: titled_window_object /= Void
-		do
-			titled_window_object.set_as_root_window
-				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
-		ensure
-			root_window_set: object_handler.root_window_object = titled_window_object
 		end
 
 	add_new_directory is
@@ -860,30 +876,6 @@ feature {NONE} -- Implementation
 			-- Is `a_name' a valid name for a new directory?
 		do
 			Result := not directory_names.has (a_name)
-		end
-		
-
-	selected_window_changed (selector_item: GB_WINDOW_SELECTOR_ITEM) is
-			-- `selector_item' has become selected so we must update
-			-- `layout_constructor'. Do nothing if a project is loading.
-		require
-			selector_item_not_void: selector_item /= Void
-		local
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
-		do
-			if not System_status.loading_project then
-					-- Only change the selected item, if a project is not loading.
-				titled_window_object := selector_item.object
-				layout_constructor.set_root_window (titled_window_object)
-				
-				update_display_and_builder_windows (titled_window_object)
-			
-				if parent_window (Layout_constructor) /= Void then
-						-- Protect against a selection being fired before
-						-- `layout_constructor' is parented.
-					layout_constructor.first.enable_select
-				end
-			end
 		end
 		
 	update_display_and_builder_windows (titled_window_object: GB_TITLED_WINDOW_OBJECT) is

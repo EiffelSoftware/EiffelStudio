@@ -154,9 +154,7 @@ feature -- Resizing
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		do
-                        check
-                                not_yet_implemented: False
-                        end		
+                        gtk_widget_set_usize (widget, width, new_height)
 		end
 
 	set_maximum_height (max_height: INTEGER) is

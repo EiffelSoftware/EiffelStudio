@@ -1,0 +1,17 @@
+system
+	test_events
+
+root
+
+	test_events (ROOT_CLUSTER): "make"
+
+default
+
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	assertion (all)
+
+cluster
+
+	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\test_events"
+
+end

@@ -17,7 +17,8 @@ inherit
 		
 	EV_WIDGET_IMP
 		redefine
-			set_insensitive
+			set_insensitive,
+			on_first_display
 		end
 			
 feature -- Access
@@ -98,6 +99,14 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- set_minimum_width
 		do
 			set_minimum_height (value)
+		end
+
+	on_first_display is
+		do
+			if child /= Void then
+				child.on_first_display
+			end
+			{EV_WIDGET_IMP} Precursor
 		end
 
 feature -- Implementation : deferred features of 

@@ -11,7 +11,8 @@ inherit
 
 	EB_FORM_DIALOG
 		rename
-			make as form_d_make
+			make as form_d_make,
+			popdown as form_d_popdown
 		end;
 	EB_CONSTANTS;
 	COMMAND;
@@ -223,6 +224,13 @@ feature -- Access
 				cluster := clu
 			end;
 		end;
+
+	popdown is
+			-- Popdown the cluster_list.
+		do
+			cluster_list.wipe_out;
+			form_d_popdown
+		end
 
 feature -- Execution
 

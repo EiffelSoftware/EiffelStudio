@@ -51,17 +51,22 @@ feature -- Access
 			-- of pick/drag and drop.
 		do
 			if press_action = Ev_pnd_start_transport then
-					-- Now check the correct pointer_button was pressed to start 
-					-- The transport, otherwise, do nothing.
-				if (a_button = 1 and not mode_is_pick_and_drop) or
-					(a_button = 3 and mode_is_pick_and_drop) then
-					set_pnd_original_parent
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
-						a_screen_y)
-					if pebble /= Void then
-						pnd_original_parent.set_parent_source_true
-						pnd_original_parent.set_item_source (Current)
-						pnd_original_parent.set_item_source_true
+				-- We must now check that we are not currently in a pick and drop.
+					-- If we are, then we should do nothing, as the event was generated
+					-- as a result of clicking on a widget while dropping.
+				if application_imp.pick_and_drop_source = Void then				
+						-- Now check the correct pointer_button was pressed to start 
+						-- The transport, otherwise, do nothing.
+					if (a_button = 1 and not mode_is_pick_and_drop) or
+						(a_button = 3 and mode_is_pick_and_drop) then
+						set_pnd_original_parent
+						start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
+							a_screen_y)
+						if pebble /= Void then
+							pnd_original_parent.set_parent_source_true
+							pnd_original_parent.set_item_source (Current)
+							pnd_original_parent.set_item_source_true
+						end
 					end
 				end
 			elseif press_action = Ev_pnd_end_transport then

@@ -12,8 +12,7 @@ inherit
 	OPTION_SD
 		redefine
 			set, process_system_level_options, is_system_level,
-			is_valid, is_free_option, is_precompiled, is_extending,
-			is_extendible
+			is_valid, is_free_option, is_extending, is_extendible
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_DYNAMIC_CALLS;
@@ -68,12 +67,6 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 
-	is_precompiled: BOOLEAN is
-		do
-			Result := is_valid and then
-				valid_options.item (option_name) = precompilation
-		end;
-
 	is_extending: BOOLEAN is
 		do
 			Result := is_valid and then
@@ -88,7 +81,7 @@ feature {COMPILER_EXPORTER}
 
 feature {NONE}
 
-	dead_code, exception_stack_managed, collect, precompilation,
+	dead_code, exception_stack_managed, collect,
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, profile, override_cluster,
@@ -97,7 +90,7 @@ feature {NONE}
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (16);
+			!!Result.make (15);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -105,7 +98,6 @@ feature {NONE}
 			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_trace");
-			Result.force (precompilation, "precompiled");
 			Result.force (code_replication, "code_replication");
 			Result.force (server_file_size, "server_file_size");
 			Result.force (extendible, "extendible");
@@ -253,11 +245,6 @@ feature {COMPILER_EXPORTER}
 				elseif value.is_yes then
 					System.set_code_replication_off (False);
 				else
-					error_found := True;
-				end;
-			when precompilation then
-					-- Do nothing: the normal case has already been solved
-				if value = Void or else not value.is_name then
 					error_found := True;
 				end;
 			when extendible then

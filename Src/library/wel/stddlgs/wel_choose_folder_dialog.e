@@ -151,22 +151,26 @@ feature -- Basic operations
 	activate (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Activate the dialog box (modal mode) with
 			-- `a_parent' as owner.
+		local
+			browse_folder_result: INTEGER
 		do
 			set_parent (a_parent)
-			selected := False
-			cwel_sh_browse_for_folder (item, str_folder_name.item)
-			if not str_folder_name.string.is_empty then
+			browse_folder_result := cwel_sh_browse_for_folder (item, str_folder_name.item)
+			
+			if browse_folder_result = 0 and not str_folder_name.string.is_empty then
 				selected := True
 			else
+				selected := False
 				str_folder_name.set_count (0)
 			end
 		end
 		
-	cwel_sh_browse_for_folder (p: POINTER; str: POINTER) is
+	cwel_sh_browse_for_folder (p: POINTER; str: POINTER): INTEGER is
 			-- Open dialog in a different thread with COM properly initialized
-			-- to single threaded appartment.
+			-- to single threaded appartment. `Result' is 1 if user cancelled dialog,
+			-- 0 otherwise.
 		external
-			"C signature (LPBROWSEINFO, LPTSTR) use %"choose_folder.h%""
+			"C signature (LPBROWSEINFO, LPTSTR): LPITEMIDLIST use %"choose_folder.h%""
 		end
 
 feature {NONE} -- Implementation

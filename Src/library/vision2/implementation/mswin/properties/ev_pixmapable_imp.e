@@ -36,15 +36,13 @@ feature -- Element change
 			-- at a time.
 		do
 			pixmap_imp ?= pix.implementation
-			pixmap_imp.internal_delete_dc
-			pixmap_imp.set_free_status (False)
+			pixmap_imp.reference
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		do
-			pixmap_imp.internal_create_dc
-			pixmap_imp.set_free_status (True)
+			pixmap_imp.unreference
 			pixmap_imp ?= Void
 		end
 

@@ -30,6 +30,7 @@ feature -- Basic operations
 
 			cpp_writer.add_import ("ecom_rt_globals.h")
 			cpp_writer.add_import (Generated_ec_class_name + ".h")
+
 			cpp_writer.add_import (Generated_ce_class_name + ".h")
 			cpp_writer.add_other ("extern " + 
 						Generated_ec_class_name + " " +

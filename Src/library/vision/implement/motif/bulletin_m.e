@@ -27,9 +27,9 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
-	make (a_bulletin: BULLETIN) is
+	make (a_bulletin: BULLETIN; man: BOOLEAN) is
 			-- Create a motif bulletin.
 		local
 			ext_name_bull: ANY
@@ -38,7 +38,8 @@ feature
 			ext_name_bull := a_bulletin.identifier.to_c;
 			screen_object := create_bulletin 
 					($ext_name_bull, 
-					parent_screen_object (a_bulletin, widget_index));
+					parent_screen_object (a_bulletin, widget_index),
+					man);
 		end;
 
 
@@ -86,7 +87,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_bulletin (b_name: ANY; scr_obj: POINTER): POINTER is
+	create_bulletin (b_name: ANY; scr_obj: POINTER; 
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -43,9 +43,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_drawing_area: DRAWING_AREA) is
+	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN) is
 			-- Create a motif drawing area.
 		local
 			ext_name_area: ANY
@@ -53,7 +53,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name_area := a_drawing_area.identifier.to_c;
 			screen_object := create_drawing_area ($ext_name_area,
-						parent_screen_object (a_drawing_area, widget_index));
+					parent_screen_object (a_drawing_area, widget_index),
+					man);
 			display_pointer := xt_display (screen_object);
 			create_gc
 		end;
@@ -164,7 +165,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_drawing_area (a_name: ANY; scr_obj: POINTER): POINTER is
+	create_drawing_area (a_name: ANY; scr_obj: POINTER; 
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

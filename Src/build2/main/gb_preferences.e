@@ -81,15 +81,9 @@ feature -- Basic operations
 			file_name.extend ("default.xml")
 			initialize (file_name, Eiffel_preferences)
 			directory := clone (Bitmaps_path)
-			if eiffel_platform.as_lower.is_equal ("windows") then
-				directory.extend ("ico")
-				Pixmaps_path_cell.put (directory)
-				Pixmaps_extension_cell.put ("ico")
-			else
-				directory.extend ("png")
-				Pixmaps_path_cell.put (directory)
-				Pixmaps_extension_cell.put ("png")
-			end
+			directory.extend ("png")
+			Pixmaps_path_cell.put (directory)
+			Pixmaps_extension_cell.put ("png")
 			create referenced_close_agents.make (1)
 		end
 

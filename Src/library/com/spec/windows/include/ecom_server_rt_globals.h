@@ -35,7 +35,7 @@ extern struct xstack eif_stack;
 
  
 #ifdef RTEOK 
-	#define END_ECATCH d_data.db_callstack_depth--; exok()
+	#define END_ECATCH exok()
 #else 
 	#define END_ECATCH expop (&eif_stack);\
 						exok() 

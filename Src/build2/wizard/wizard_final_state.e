@@ -68,10 +68,10 @@ feature {NONE} -- Implementation
 			if (create {EV_ENVIRONMENT}).application.locked_window = first_window then
 				first_window.unlock_update
 			end
-			system_status.current_project_settings.save
 			create code_generator
 			code_generator.set_progress_bar (progress)
 			code_generator.generate
+			system_status.current_project_settings.save
 			xml_handler.save
 			--| Add here the action of your wizard.
 			--|

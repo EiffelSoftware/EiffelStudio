@@ -524,6 +524,7 @@ rt_public void spt_free(struct special_table *spt)
 	/* Free hash table arrays and descriptor. */
 
 	eif_free(spt->h_values);
+	eif_free(spt->old_values);
 	eif_free(spt->h_keys);
 	eif_free(spt);
 }	/* spt_free () */

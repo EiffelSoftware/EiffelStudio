@@ -7,6 +7,12 @@ indexing
 deferred class
 	EIFNET_DEBUGGER_SYNCHRO
 	
+inherit
+	ICOR_EXPORTER
+		export
+			{NONE} all
+		end
+	
 feature -- Synchro Initialization
 
 	init_dbg_synchronisation is
@@ -21,6 +27,7 @@ feature -- Synchro Initialization
 feature -- eStudio callback
 
 	estudio_callback_event is
+			-- Callback trigger for processing at end of dotnet callback
 		deferred
 		end
 		
@@ -36,7 +43,7 @@ feature -- Synchro Timer
 			-- Is dbg timer active ?
 	
 	start_dbg_timer is
-			-- 
+			-- Start the dbg_timer used for dotnet debugger synchronisation.
 		local
 			l_id: INTEGER
 		do
@@ -54,7 +61,7 @@ feature -- Synchro Timer
 		end
 		
 	stop_dbg_timer is
-			-- 
+			-- Stop the dbg_timer used for dotnet debugger synchronisation.
 		local
 			l_id: INTEGER
 		do
@@ -73,10 +80,11 @@ feature -- Synchro Timer
 
 feature -- Evaluation 
 
-	lock_and_wait_for_callback is
-			-- 
+	lock_and_wait_for_callback (icdc: ICOR_DEBUG_CONTROLLER) is
+			-- Lock and wait for callback
+			-- used in evaluation processing.
 		do
-			c_lock_and_wait_callback
+			c_lock_and_wait_callback (icdc.item)
 		end			
 
 feature {NONE} -- External DBG Timer
@@ -116,9 +124,9 @@ feature {NONE} -- External DBG Timer
 			"dbg_stop_timer"
 		end
 
-	c_lock_and_wait_callback is
+	c_lock_and_wait_callback (icdc_p: POINTER) is
 		external
-			"C use %"cli_debugger.h%" "
+			"C signature (void*) use %"cli_debugger.h%" "
 		alias
 			"dbg_lock_and_wait_callback"
 		end

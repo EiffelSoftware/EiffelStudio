@@ -562,6 +562,7 @@
 			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>debugger__show_text_in_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>debug_main_splitter_position<INTEGER>250</INTEGER></TEXT>
+			<TEXT>debugger__default_maximum_stack_depth<INTEGER>100</INTEGER></TEXT>
 			<TEXT>last_saved_stack_path<STRING>C:\</STRING></TEXT>
 			<TEXT>last_browsed_cluster_directory<STRING>C:\</STRING></TEXT>
 			<TEXT>max_slice<INTEGER>50</INTEGER></TEXT>
@@ -579,7 +580,7 @@
 			<TEXT>search_tool__show_options<BOOLEAN>True</BOOLEAN></TEXT>
 
 			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST_STRING></TEXT>
-			<TEXT>debugger__project_toolbar_layout<LIST_STRING>Dotnet_import__visible;System_tool__visible;Melt_project__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST_STRING></TEXT>
+			<TEXT>debugger__project_toolbar_layout<LIST_STRING>Dotnet_import__visible;System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST_STRING></TEXT>
 			<TEXT>diagram__toolbar_layout<LIST_STRING>Center_diagram__visible;Separator;Create_class__visible;New_links__visible;Delete_item__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Color__visible;Class_header_hole__visible;Link_tool__hidden;Separator;Context_depth__hidden;Cluster_filling__visible;Separator;Zoom_in__visible;Zoom_out__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Crop_diagram__hidden;Restore_view__hidden;Delete_view__hidden;Diagram_to_png__hidden;</LIST_STRING></TEXT>
 	</TOPIC>
 </TOPIC>

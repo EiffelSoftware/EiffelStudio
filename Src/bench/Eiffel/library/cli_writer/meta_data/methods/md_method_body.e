@@ -23,17 +23,43 @@ feature {NONE} -- Initialization
 			a: ARRAY [INTEGER_8]
 		do
 			create a.make (0, Chunk_size)
+			create labels.make (1, 5)
 			internal_body := a.area
-			current_position := 0
-			method_token := token
-			local_token := 0
-			is_written := False
+			create exception_block.make
+			remake (token)
 		ensure
 			current_position_set: current_position = 0
 			max_stack_set: max_stack = 0
 			current_stack_depth_set: current_stack_depth = 0
 			method_token_set: method_token = token
 			local_token_set: local_token = 0
+			labels_not_void: labels /= Void
+			nb_labels_null: nb_labels = 0
+			exception_clause_reset: not exception_block.is_defined
+			not_is_written: not is_written
+		end
+
+feature -- Reset
+
+	remake (token: like method_token) is
+			-- Reuse current object for body of method `token'.
+		do
+			current_position := 0
+			max_stack := 0
+			current_stack_depth := 0
+			method_token := token
+			local_token := 0
+			nb_labels := 0
+			exception_block.reset
+			is_written := False
+		ensure
+			current_position_set: current_position = 0
+			max_stack_set: max_stack = 0
+			current_stack_depth_set: current_stack_depth = 0
+			local_token_set: local_token = 0
+			method_token_set: method_token = token
+			nb_labels_null: nb_labels = 0
+			exception_clause_reset: not exception_block.is_defined
 			not_is_written: not is_written
 		end
 
@@ -54,7 +80,10 @@ feature -- Access
 	local_token: INTEGER
 			-- Token for signature discribing layout of local vriables
 			-- for current method. `0' means they are no local variable present.
-			
+
+	exception_block: MD_EXCEPTION_CLAUSE
+			-- Exception clause for current feature.
+
 feature -- Status report
 
 	has_locals: BOOLEAN is
@@ -64,14 +93,17 @@ feature -- Status report
 		end
 		
 	has_exceptions_handling: BOOLEAN is
-			-- 
+			-- Has an exception block completely defined?
 		do
-			
+			Result := exception_block.is_defined
 		end
 		
 	is_written: BOOLEAN
 			-- Has current body been already written into memory?
 			-- If yes, no further update operations are allowed.
+
+	nb_labels: INTEGER
+			-- Current number of defined labels for current body.
 
 feature -- Savings
 
@@ -94,22 +126,6 @@ feature -- Savings
 		end
 		
 feature -- Settings
-
-	remake (token: like method_token) is
-			-- Reuse current object for body of method `token'.
-		do
-			current_position := 0
-			max_stack := 0
-			method_token := token
-			current_stack_depth := 0
-			is_written := False
-		ensure
-			current_position_set: current_position = 0
-			max_stack_set: max_stack = 0
-			current_stack_depth_set: current_stack_depth = 0
-			method_token_set: method_token = token
-			not_is_written: not is_written
-		end
 
 	set_local_token (token: like local_token) is
 			-- Set a local signature token to current body.
@@ -170,6 +186,25 @@ feature -- Opcode insertion
 			add_integer (token)
 		end
 
+	put_opcode_integer_8 (opcode: INTEGER_16; i: INTEGER_8) is
+			-- Insert `opcode' manipulating an integer.
+		require
+			not_yet_written: not is_written
+		do
+			put_opcode (opcode)
+			internal_body.put (i, current_position)
+			current_position := current_position + 1
+		end
+
+	put_opcode_integer_16 (opcode: INTEGER_16; i: INTEGER_16) is
+			-- Insert `opcode' manipulating an integer.
+		require
+			not_yet_written: not is_written
+		do
+			put_opcode (opcode)
+			add_integer_16 (i)
+		end
+
 	put_opcode_integer (opcode: INTEGER_16; i: INTEGER) is
 			-- Insert `opcode' manipulating an integer.
 		require
@@ -206,18 +241,68 @@ feature -- Opcode insertion
 			add_integer_64 (i)
 		end
 
-	put_opcode_label (opcode: INTEGER_16; label: MD_LABEL) is
+feature -- Labels manipulation
+
+	define_label: INTEGER is
+			-- Create a new label.
+		local
+			l_label: MD_LABEL
+		do
+			create l_label.make
+			nb_labels := nb_labels + 1
+			labels.force (l_label, nb_labels)
+			Result := nb_labels
+		end
+		
+	mark_label (label_id: INTEGER) is
+			-- Set position of `label_id' to `current_position' in
+			-- stream.
+		require
+			valid_label_id: label_id > 0 and label_id <= nb_labels
+		local
+			l_label: MD_LABEL
+		do
+			l_label := labels.item (label_id)
+			l_label.mark_position (current_position, Current)
+		end
+		
+	put_opcode_label (opcode: INTEGER_16; label_id: INTEGER) is
 			-- Insert `opcode' branching to `label'
 		require
 			not_yet_written: not is_written
+		local
+			l_label: MD_LABEL
+			l_jmp: INTEGER
 		do
+			l_label := labels.item (label_id)
+			
 			put_opcode (opcode)
-			add_integer (0)
-			check
-				not_yet_implemented: False
+			
+			if l_label.is_position_set then
+				l_jmp := l_label.position - (current_position + 4)
+				add_integer (l_jmp)
+			else
+					-- Store current location so that we can 
+					-- update with correct offset as soon as we
+					-- know about `l_label' position.
+				l_label.mark_branch_position (current_position)
+				current_position := current_position + 4
 			end
 		end
 
+	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER) is
+			-- Update code at `branch_inst_pos' with new jump value `jump_offset'.
+		require
+			valid_pos: branch_inst_pos > 0 and branch_inst_pos < size
+		local
+			l_old_pos: like current_position
+		do
+			l_old_pos := current_position
+			current_position := branch_inst_pos
+			add_integer (jump_offset)
+			current_position := l_old_pos
+		end
+		
 feature -- Opcode insertion with manual update of `current_stack_depth'.
 
 	put_call (opcode: INTEGER_16; feature_token: INTEGER; nb_arguments: INTEGER; is_function: BOOLEAN) is
@@ -246,6 +331,23 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 		end
 
 feature {NONE} -- Opcode insertion helpers
+
+	add_integer_16 (val: INTEGER_16) is
+			-- Add `val' to current.
+		require
+			not_yet_written: not is_written
+		local
+			l_val: INTEGER_16
+			l_pos: INTEGER
+			i: INTEGER
+		do
+			l_val := val
+			l_pos := current_position
+			internal_put ((l_val & 0x00FF).to_integer_8, l_pos)
+			l_val := l_val |>> 8
+			internal_put ((l_val & 0x00FF).to_integer_8, l_pos + 1)
+			current_position := l_pos + 2
+		end
 
 	add_integer (val: INTEGER) is
 			-- Add `val' to current.
@@ -357,7 +459,10 @@ feature {NONE} -- Implementation
 
 	current_stack_depth: INTEGER
 			-- Current stack depth.
-
+			
+	labels: ARRAY [MD_LABEL]
+			-- List all labels used in current body.
+			
 invariant
 	internal_body_not_void: internal_body /= Void
 	current_position_valid: current_position >= 0 and current_position < internal_body.count

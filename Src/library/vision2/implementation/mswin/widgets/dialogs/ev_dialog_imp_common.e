@@ -31,10 +31,6 @@ inherit
 			forbid_resize, allow_resize,
 			window_on_wm_activate
 		select
-			x_position,
-			y_position,
-			set_x_position,
-			set_y_position,
 			wel_destroy
 		end
 

@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"Stone representing an eiffel class."
+		"Stone representing a compiled Eiffel class."
 	date: "$Date$"
 	revision: "$Revision $"
 
@@ -9,23 +9,18 @@ class
 
 inherit
 
-	FILED_STONE
+	CLASS_STONE
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message
 		end
-	SHARED_EIFFEL_PROJECT
 	HASHABLE_STONE
 		undefine
 			header
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message
 		end
---	WINDOWS
-	
-	PLATFORM_CONSTANTS
 
 creation
-
 	make
 	
 feature {NONE} -- Initialization
@@ -40,6 +35,21 @@ feature {NONE} -- Initialization
 feature -- Properties
 
 	e_class: CLASS_C
+
+	cluster: CLUSTER_I is
+		do
+			Result := e_class.cluster
+		end
+
+	class_name: STRING is
+		do
+			Result := e_class.name
+		end
+
+	class_i: CLASS_I is
+		do
+			Result := e_class.lace_class
+		end
 
 feature -- Access
 
@@ -129,7 +139,7 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result :=  Precursor {FILED_STONE} and then e_class /= Void
+			Result :=  Precursor {CLASS_STONE} and then e_class /= Void
 		end
 
 	invalid_stone_message: STRING is
@@ -140,7 +150,7 @@ feature -- Status report
 
 feature -- Synchronization
 
-	synchronized_stone: STONE is
+	synchronized_stone: CLASS_STONE is
 			-- Clone of `Current' stone after a recompilation
 			-- (May be Void if not valid anymore. It may also be a 
 			-- classi_stone if the class is not compiled anymore)

@@ -10,26 +10,59 @@ deferred class
 inherit
 	
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_XML_OBJECT_BUILDER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	EV_ANY_HANDLER
 
@@ -311,6 +344,8 @@ feature -- Basic operations
 		
 	add_new_component_in_parent (a_component: GB_COMPONENT) is
 			-- Add `a_component' to parent of `Current', before `Current'.
+		require
+			object_parent_not_full: not parent_object.is_full
 		do
 			add_new_object_in_parent (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
 		end
@@ -318,6 +353,8 @@ feature -- Basic operations
 		
 	add_new_object_in_parent (an_object: GB_OBJECT) is
 			-- Add `an_object' to parent of `Current', before `Current'.
+		require
+			object_parent_not_full: not parent_object.is_full		
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
 			insert_position: INTEGER
@@ -338,12 +375,16 @@ feature -- Basic operations
 		
 	add_new_component (a_component: GB_COMPONENT) is
 			-- Add object representation of `a_component' to `Current'.
+		require
+			object_not_full: not is_full
 		do
 			add_new_object (new_object (xml_handler.xml_element_representing_named_component (a_component.name), True))
 		end
 
 	add_new_object (an_object: GB_OBJECT) is
 			-- Add `an_object' to `Current'.
+		require
+			object_not_full: not is_full
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
 		do
@@ -363,21 +404,6 @@ feature -- Basic operations
 			end
 		ensure
 			layout_item_not_void: an_object.layout_item /= Void
-		end
-		
-	vision2_object_from_type (a_type: STRING): EV_ANY is
-			-- `Result' is a vision2 object of type `a_type'
-		local
-			passed: BOOLEAN
-			an_object: EV_ANY
-		do
-			passed := feature {ISE_RUNTIME}.check_assert (False)
-			an_object ?= new_instance_of (dynamic_type_from_string (type))
-			an_object.default_create
-			passed := feature {ISE_RUNTIME}.check_assert (True)
-			Result := an_object
-		ensure
-			result_not_void: Result /= Void
 		end
 		
 	set_name (new_name: STRING) is
@@ -547,6 +573,21 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		end
 		
 feature {NONE} -- Implementation
+
+	vision2_object_from_type (a_type: STRING): EV_ANY is
+			-- `Result' is a vision2 object of type `a_type'
+		local
+			passed: BOOLEAN
+			an_object: EV_ANY
+		do
+			passed := feature {ISE_RUNTIME}.check_assert (False)
+			an_object ?= new_instance_of (dynamic_type_from_string (type))
+			an_object.default_create
+			passed := feature {ISE_RUNTIME}.check_assert (True)
+			Result := an_object
+		ensure
+			result_not_void: Result /= Void
+		end
 
 	build_drop_actions_for_layout_item is
 			-- Build the drop actions for the layout item.

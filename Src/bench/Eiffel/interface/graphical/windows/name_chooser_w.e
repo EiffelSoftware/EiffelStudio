@@ -36,22 +36,24 @@ feature
 			add_cancel_action (Current, Void);
 			set_title (l_Select_a_file);
 			set_exclusive_grab;
-			parent.hide
+			set_default_position (false);
+			realize
 		end;
 
 	popup is
 			-- Popup file selection window.
+		local
+			new_x, new_y: INTEGER
 		do
-			if window /= Void then
-				parent.set_x_y (window.real_x, window.real_y);
-				parent.set_size (window.width, window.height);
-				window := Void
-			else
-				parent.set_x_y (0, 0);
-				parent.set_size (screen.width, screen.height);
-			end;
-			parent.hide;
 			if is_popped_up then popdown end;
+			if window /= Void then
+				new_x := window.real_x + (window.width - width) // 2;
+				new_y := window.real_y + (window.height - height) // 2;
+			else
+				new_x := (screen.width - width) // 2;
+				new_y := (screen.height - height) // 2
+			end;
+			set_x_y (new_x, new_y);
 			file_sel_d_popup;
 			raise
 		end;

@@ -247,6 +247,9 @@ feature -- Dialogs
 	
 feature -- Warning Dialogs
 
+	Invalid_project_warning: STRING is "Invalid build project file. Please select a different file."
+		-- Warning displayed when a user attempts to open an invalid build project.
+
 	Duplicate_name_warning_part1: STRING is "An object exists with the name '"
 		-- First part of warning used when a name that already exists is entered.
 		

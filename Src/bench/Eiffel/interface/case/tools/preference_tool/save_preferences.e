@@ -21,6 +21,7 @@ feature -- Initialization
 			caller := win
 			!! file_name.make_from_string(win.file_name)
 			table := resources.resource_structure.table
+			progress_bar:= caller.info_bar
 		end
 
 feature -- Execution
@@ -41,10 +42,12 @@ feature -- Execution
 				error := update_values(s)
 				file.close
 				if not error then
+					progress_bar.set_text("Writing to file")
 					file.wipe_out
 					file.open_write
 					file.putstring(s)
 					file.close
+					progress_bar.set_text("File updated.")
 				end		
 			end
 		end
@@ -54,12 +57,16 @@ feature -- Execution
 		require
 			not_void: s /= Void
 			table_exists: table /= Void
+			progress_bar_exists: progress_bar /= Void
 		local
-			s1: STRING
+			s1,s2: STRING
+			j,k,l: INTEGER
 			i: INTEGER
 		do
 			from
 				table.start
+				l := table.count
+				j := 1
 			until
 				table.after or Result 
 			loop
@@ -71,6 +78,11 @@ feature -- Execution
 				else
 					Result := TRUE
 				end
+				k := (j*100)//l
+				s2 := k.out
+				s2.append(" %%")
+				progress_bar.set_text(s2)
+				k := k+1
 				table.forth
 			end
 		end
@@ -136,7 +148,8 @@ feature -- Implementation
 	table: RESOURCES_TABLE
 		-- Resources Table.
 
+	progress_bar: EV_STATUS_BAR_ITEM
+
 invariant
-	file_name_exists: file_name /= Void
-	caller_exists: caller /= Void
+	SAVE_PRFERENCES_contistent: file_name /= Void implies caller /= Void
 end -- class SAVE_PREFERENCES

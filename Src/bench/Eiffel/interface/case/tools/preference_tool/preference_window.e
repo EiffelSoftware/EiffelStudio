@@ -64,7 +64,10 @@ feature -- Initialization
 			!! text_selec.make(edit_box,Current)
 			!! color_selec.make(edit_box, Current)
 			!! font_selec.make(edit_box, Current)
-
+			
+			!! status_bar.make(Current)
+			!! info_bar.make(status_bar)
+			
 			fill_list
 			fill_menu
 			show
@@ -92,6 +95,7 @@ feature -- Update
 			text_selec.hide
 			color_selec.hide
 			font_selec.hide
+			info_bar.set_text("")
 		end
 
 feature -- Implementation
@@ -123,11 +127,19 @@ feature -- Widgets.
 	menu: EV_STATIC_MENU_BAR 
 		-- menu of Current.
 
-	left_list: EV_LIST
+	left_list: EV_TREE
 		-- List of fields.
 
 	right_list: EV_MULTI_COLUMN_LIST
 		-- List of values attached to field selected in the left list 'left_list'.
+
+	status_bar: EV_STATUS_BAR
+		-- Status Bar
+
+	info_bar: EV_STATUS_BAR_ITEM
+		-- Message that we display.
+
+	progression: EV_STATUS_BAR_ITEM
 
 feature -- Execution
 
@@ -237,7 +249,7 @@ feature -- Fill Lists
 	fill_list is
 			-- Fill Left list.
 		local
-			it: PREFERENCE_LIST_ITEM
+ 			it: PREFERENCE_LIST_ITEM
 			l: LINKED_LIST [RESOURCE_CATEGORY]
 		do
 			from
@@ -247,8 +259,28 @@ feature -- Fill Lists
 				l.after
 			loop
 				!! it.make_with_element(left_list,l.item)
+				fill_left_branch(l.item.categories,it)
 				l.forth
 			end
+		end
+
+	fill_left_branch (categories: LINKED_LIST [RESOURCE_CATEGORY];holder: EV_TREE_ITEM_HOLDER) is
+			-- Fill Left branch.
+		require
+			list_exists: categories /= Void
+		local
+ 			it: PREFERENCE_LIST_ITEM
+		do
+			from
+				categories.start
+			until
+				categories.after
+			loop
+				!! it.make_with_element(holder,categories.item)
+				fill_left_branch (categories.item.categories,it)
+				categories.forth
+			end
+
 		end
 
 	fill_right_list is

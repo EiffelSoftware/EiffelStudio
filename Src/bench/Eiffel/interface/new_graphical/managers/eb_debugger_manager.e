@@ -534,6 +534,7 @@ feature -- Debugging events
 			quit_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
+			debug_cmd.set_launched (True)
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
@@ -690,6 +691,8 @@ feature -- Debugging events
 				quit_cmd.disable_sensitive
 				no_stop_cmd.enable_sensitive
 				debug_cmd.enable_sensitive
+				debug_cmd.set_launched (False)
+				
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive

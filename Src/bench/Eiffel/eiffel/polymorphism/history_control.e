@@ -18,7 +18,7 @@ feature -- Initialization
 
 	make is
 		do
-			!!new_units.make (500)
+			!! new_units.make (3000)
 		end
 
 feature
@@ -145,6 +145,6 @@ feature
 			end;
 		end;
 
-	Overload: INTEGER is 10000;
+	Overload: INTEGER is 50000;
 
 end

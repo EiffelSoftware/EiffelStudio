@@ -39,9 +39,12 @@ feature -- Button texts
 	b_Feature_name: STRING is			"Feature name";
 	b_Final: STRING is					"Final mode";
 	b_Finalize_now: STRING is			"Finalize now";
+	b_Finalize_now_but_no_c: STRING is	"Finalize (no C comp)";
 	b_Freeze_now: STRING is				"Freeze now";
+	b_Freeze_now_but_no_c: STRING is	"Freeze (no C comp)";
 	b_Function_time: STRING is			"Function time";
 	b_Keep_assertions: STRING is		"Keep assertions";
+	b_No: STRING is						" No ";
 	b_Non_clickable_Stoppoints_of: STRING is "Non clickable stop points of ";
 	b_Number_of_calls: STRING is		"Number of calls";
 	b_Ok: STRING is						" OK ";
@@ -56,6 +59,7 @@ feature -- Button texts
 	b_Save_as: STRING is				"Save as";
 	b_Total_time: STRING is				"Total time";
 	b_Workbench: STRING is				"Workbench mode";
+	b_Yes: STRING is					" Yes ";
 
 feature -- Graphical degree output
 
@@ -66,7 +70,7 @@ feature -- Graphical degree output
 	d_Compilation_progress: STRING is	"Compilation Progress";
 	d_Degree: STRING is					"Degree:";
 	d_Documentation: STRING is			"Documentation";
-	d_Features_processed: STRING is		"Features processed: ";
+	d_Features_processed: STRING is		"Features done: ";
 	d_Features_to_go: STRING is			"Features to go: ";
 	d_Generating: STRING is				"Generating: ";
 	d_Resynchronizing_breakpoints: STRING is "Resynchronzing breakpoints";
@@ -130,6 +134,8 @@ feature -- Accelerator, focus label and menu name
 	a_Finalize: STRING is				"Ctrl Alt<Key>z";
 	f_Finalize: STRING is				"Finalize...";
 	m_Finalize: STRING is				"Finali&ze...%TCtrl+Alt+Z";
+	f_Final_mode: STRING is				"Final mode";
+	m_Final_mode: STRING is				"&Final mode";
 	a_Find: STRING is					"Ctrl<Key>f";
 	f_Find: STRING is					"Find";
 	m_Find: STRING is					"&Find%TCtrl+F";
@@ -283,6 +289,7 @@ feature -- Menu mnenomics
 	m_Class_tools: STRING is			"&Class tools";
 	m_Commands: STRING is				"&Commands";
 	m_Compile: STRING is				"&Compile";
+	m_C_Compilation: STRING is			"C Com&pilation";
 	m_Document: STRING is				"&Documentation";
 	m_Debug: STRING is					"&Debug";
 	m_Edit: STRING is					"&Edit";
@@ -378,6 +385,11 @@ feature -- Title part
 	t_Profile_query_window: STRING is	"Profile query window";
 	t_Preference_tool: STRING is		"Preference tool";
 	t_Routines_of: STRING is			"Routines of class ";
+	t_Select_class: STRING is			"Select class";
+	t_Select_class_version: STRING is	"Select class version";
+	t_Select_color: STRING is			"Select color";
+	t_Select_feature: STRING is			"Select feature";
+	t_Select_object: STRING is			"Select object";
 	t_Suppliers_of: STRING is			"Suppliers of class ";
 	t_Routine_custom_tool: STRING is	"Routine custom tool";
 	t_Search: STRING is					"Search";
@@ -391,5 +403,7 @@ feature -- Title part
 	t_Statistics_of: STRING is			"Statistics of system ";
 	t_System: STRING is					"System";
 	t_Warning: STRING is				"Warning";
+	f_Workbench_mode: STRING is			"Workbench mode";
+	m_Workbench_mode: STRING is			"&Workbench mode";
 
 end -- class INTERFACE_NAMES

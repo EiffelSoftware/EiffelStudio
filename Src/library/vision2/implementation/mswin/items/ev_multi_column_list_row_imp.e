@@ -32,13 +32,41 @@ inherit
 		undefine
 			set_pointer_style
 		redefine
-			interface
+			interface,
+			pnd_press
 		end
 
 create
 	make
 
 feature -- Access
+
+--|FIXME
+
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		local
+			multi_column_list_imp: EV_MULTI_COLUMN_LIST_IMP
+		do
+			multi_column_list_imp := parent_imp
+			if press_action = Ev_pnd_start_transport then
+				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				multi_column_list_imp.set_source_true
+				multi_column_list_imp.set_pnd_child_source (Current)
+				multi_column_list_imp.set_t_item_true
+			elseif press_action = Ev_pnd_end_transport then
+				end_transport (a_x, a_y, a_button)
+				multi_column_list_imp.set_source_false
+				multi_column_list_imp.set_pnd_child_source (Void)
+				multi_column_list_imp.set_t_item_false
+			else
+				multi_column_list_imp.set_source_false
+				multi_column_list_imp.set_pnd_child_source (Void)
+				multi_column_list_imp.set_t_item_false
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
+			end
+		end
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -158,6 +186,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/22 20:23:40  rogers
+--| Added pnd_press.
+--|
 --| Revision 1.26  2000/03/21 01:22:27  rogers
 --| Added set_pointer_style.
 --|

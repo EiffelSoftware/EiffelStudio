@@ -36,14 +36,20 @@ feature -- Initialization
 
 	on_click is
 		do
+			fdlg.set_filter ("*.e")
 			fdlg.show_modal
-			io.put_string ("Path: " + fdlg.file_path + "%N")
-			io.put_string ("Name: " + fdlg.file_title + "%N")
-			io.put_string ("Full: " + fdlg.file_name + "%N")
+			if fdlg.file_name /= Void then
+				io.put_string ("Path: " + fdlg.file_path + "%N")
+				io.put_string ("Name: " + fdlg.file_title + "%N")
+				io.put_string ("Full: " + fdlg.file_name + "%N")
+			end
+			fdlg.set_filter ("*.*")
 			odlg.show_modal
-			io.put_string ("Path: " + fdlg.file_path + "%N")
-			io.put_string ("Name: " + fdlg.file_title + "%N")
-			io.put_string ("Full: " + fdlg.file_name + "%N")
+			if fdlg.file_name /= Void then
+				io.put_string ("Path: " + odlg.file_path + "%N")
+				io.put_string ("Name: " + odlg.file_title + "%N")
+				io.put_string ("Full: " + odlg.file_name + "%N")
+			end
 		end
 
 	first_window: EV_TITLED_WINDOW is

@@ -271,6 +271,7 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_ITEM_IMP
 			temp_sig_id: INTEGER
+			temp_string: ANY
 		do
 			v_imp ?= v.implementation
 			check
@@ -278,9 +279,10 @@ feature {NONE} -- Implementation
 			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
 --			gtk_widget_unset_flags (v_imp.c_object, C.GTK_CAN_FOCUS_ENUM)
+			temp_string := ("button-press-event").to_c
 			temp_sig_id := c_signal_connect (
 				v_imp.c_object,
-				eiffel_to_c ("button-press-event"),
+				$temp_string,
 				agent on_item_clicked
 				)
 			real_signal_connect (

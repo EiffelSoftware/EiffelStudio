@@ -66,6 +66,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EB_SHARED_MANAGERS
+		undefine
+			default_create
+		end
 	
 create
 	make_with_tool,
@@ -293,47 +298,43 @@ feature -- Modification (Add/Remove feature)
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
-			if date = class_file.date then
-				prepare_for_modification
-				if valid_syntax then
-					p := class_as.parent_with_name (a_name)
-					if p /= Void then
-						pl := class_as.parents
-						pl.start
-						pl.search (p)
-						if pl.islast then
-							ip := class_as.inherit_clause_insert_position
-						else
-							pl.forth
-							ip := pl.item.start_position - 1
-						end
-						if (position_before_inherit + 7) = p.start_position then
-							remove_code (p.start_position + 1, ip)
-						else
-							remove_code (p.start_position, ip)
-						end			
-						reparse
-					end
-					if valid_syntax then
-						if class_as.parents /= Void and then class_as.parents.is_empty then
-							remove_code (
-								position_before_inherit,
-								class_as.inherit_clause_insert_position)
-							reparse
-						end
-					end
-					commit_modification
-					create class_file.make (class_i.file_name)
-					check class_file.exists end
-					date := class_file.date
-				end
-			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-				warning_dialog.show_modal_to_window (context_editor.development_window.window)	
-				warning_dialog := Void
-				context_editor.reset_history
+			if class_file.date /= date then
+				put_class_modified_outside_diagram_warning
 				date := class_file.date
 				class_modified_outside_diagram := True
+			end
+			prepare_for_modification
+			if valid_syntax then
+				p := class_as.parent_with_name (a_name)
+				if p /= Void then
+					pl := class_as.parents
+					pl.start
+					pl.search (p)
+					if pl.islast then
+						ip := class_as.inherit_clause_insert_position
+					else
+						pl.forth
+						ip := pl.item.start_position - 1
+					end
+					if (position_before_inherit + 7) = p.start_position then
+						remove_code (p.start_position + 1, ip)
+					else
+						remove_code (p.start_position, ip)
+					end			
+					reparse
+				end
+				if valid_syntax then
+					if class_as.parents /= Void and then class_as.parents.is_empty then
+						remove_code (
+							position_before_inherit,
+							class_as.inherit_clause_insert_position)
+						reparse
+					end
+				end
+				commit_modification
+				create class_file.make (class_i.file_name)
+				check class_file.exists end
+				date := class_file.date
 			end
 		end
 
@@ -346,27 +347,23 @@ feature -- Modification (Add/Remove feature)
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
-			if date = class_file.date then
-				prepare_for_modification
-				if valid_syntax then
-					insertion_position := class_as.inherit_clause_insert_position + 1
-					if class_as.parents = Void then
-						insert_code ("inherit%N")
-					end
-					insert_code ("%T" + a_name + "%N%N")
-				end
-				commit_modification
-				create class_file.make (class_i.file_name)
-				check class_file.exists end
-				date := class_file.date
-			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-				warning_dialog.show_modal_to_window (context_editor.development_window.window)	
-				warning_dialog := Void
-				context_editor.reset_history
+			if class_file.date /= date then
+				put_class_modified_outside_diagram_warning
 				date := class_file.date
 				class_modified_outside_diagram := True
-			end	
+			end
+			prepare_for_modification
+			if valid_syntax then
+				insertion_position := class_as.inherit_clause_insert_position + 1
+				if class_as.parents = Void then
+					insert_code ("inherit%N")
+				end
+				insert_code ("%T" + a_name + "%N%N")
+			end
+			commit_modification
+			create class_file.make (class_i.file_name)
+			check class_file.exists end
+			date := class_file.date
 		end
 		
 	remove_features (data: LIST [FEATURE_AS]) is
@@ -384,78 +381,74 @@ feature -- Modification (Add/Remove feature)
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
-			if date = class_file.date then
-				prepare_for_modification
-				if valid_syntax then
-					from
-						data.start
-					until
-						data.after
-					loop
-						l_item := data.item
-						actual_feature_as := class_as.feature_with_name (l_item.feature_name)
-						if actual_feature_as /= Void then
-							if actual_feature_as.feature_names.count = 1 then
-								feat_code := code (actual_feature_as.start_position, actual_feature_as.end_position)
-	
-									--| FIXME We assume here that features are indented in a standard way.
-								if feat_code.item (feat_code.count) = '%T' then
-									feat_code.remove (feat_code.count)
-								end
-								remove_feature_with_ast (actual_feature_as)
-							else
-								feat_code := code (actual_feature_as.start_position, actual_feature_as.end_position)
-								f_name := Void
-								names := actual_feature_as.feature_names
-								name_index := 1
-								from
-									names.start
-								until
-									f_name /= Void or else names.after
-								loop
-									if names.item.associated_feature_name.is_equal (l_item.feature_name) then
-										f_name := names.item
-									else
-										name_index := name_index + 1
-										names.forth
-									end
-								end
-
-								check f_name /= Void end
-								if name_index = names.count then
-										-- `f_name' is last.
-									name_start_position := actual_feature_as.start_position + 
-										feat_code.last_index_of (',', feat_code.count) - 1
-									name_end_position := actual_feature_as.start_position + 
-										feat_code.index_of (':', 1) - 1
-									feat_code := code (name_start_position, name_end_position - 1)
-									remove_code (name_start_position, name_end_position - 1)
-									reparse
-								else
-									tmp := feat_code.substring_index (l_item.feature_name, 1)
-									name_start_position := actual_feature_as.start_position + tmp 
-									name_end_position := actual_feature_as.start_position + 
-										feat_code.index_of (',', tmp) + 1
-									feat_code := code (name_start_position, name_end_position)
-									remove_code (name_start_position, name_end_position)
-									reparse
-								end
-							end
-						end
-						data.forth
-					end
-					commit_modification
-					create class_file.make (class_i.file_name)
-					check class_file.exists end
-					date := class_file.date
-				end
-			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-				warning_dialog.show_modal_to_window (context_editor.development_window.window)	
-				warning_dialog := Void
-				context_editor.reset_history
+			if class_file.date /= date then
+				put_class_modified_outside_diagram_warning
 				date := class_file.date
 				class_modified_outside_diagram := True
+			end
+			prepare_for_modification
+			if valid_syntax then
+				from
+					data.start
+				until
+					data.after
+				loop
+					l_item := data.item
+					actual_feature_as := class_as.feature_with_name (l_item.feature_name)
+					if actual_feature_as /= Void then
+						if actual_feature_as.feature_names.count = 1 then
+							feat_code := code (actual_feature_as.start_position, actual_feature_as.end_position)
+
+								--| FIXME We assume here that features are indented in a standard way.
+							if feat_code.item (feat_code.count) = '%T' then
+								feat_code.remove (feat_code.count)
+							end
+							remove_feature_with_ast (actual_feature_as)
+						else
+							feat_code := code (actual_feature_as.start_position, actual_feature_as.end_position)
+							f_name := Void
+							names := actual_feature_as.feature_names
+							name_index := 1
+							from
+								names.start
+							until
+								f_name /= Void or else names.after
+							loop
+								if names.item.associated_feature_name.is_equal (l_item.feature_name) then
+									f_name := names.item
+								else
+									name_index := name_index + 1
+									names.forth
+								end
+							end
+
+							check f_name /= Void end
+							if name_index = names.count then
+									-- `f_name' is last.
+								name_start_position := actual_feature_as.start_position + 
+									feat_code.last_index_of (',', feat_code.count) - 1
+								name_end_position := actual_feature_as.start_position + 
+									feat_code.index_of (':', 1) - 1
+								feat_code := code (name_start_position, name_end_position - 1)
+								remove_code (name_start_position, name_end_position - 1)
+								reparse
+							else
+								tmp := feat_code.substring_index (l_item.feature_name, 1)
+								name_start_position := actual_feature_as.start_position + tmp 
+								name_end_position := actual_feature_as.start_position + 
+									feat_code.index_of (',', tmp) + 1
+								feat_code := code (name_start_position, name_end_position)
+								remove_code (name_start_position, name_end_position)
+								reparse
+							end
+						end
+					end
+					data.forth
+				end
+				commit_modification
+				create class_file.make (class_i.file_name)
+				check class_file.exists end
+				date := class_file.date
 			end
 		end
 			
@@ -470,36 +463,32 @@ feature -- Modification (Add/Remove feature)
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
-			if date = class_file.date then
-				prepare_for_modification
-				if valid_syntax then
-					from
-						data.start
-					until
-						data.after
-					loop
-						l_item := data.item
-						str ?= l_item.item (1)
-						insertion_position := l_item.integer_item (2)
-						check
-							insertion_position <= text.count
-						end
-						insert_code (str)
-						data.forth
-					end
-				end
-				commit_modification
-				create class_file.make (class_i.file_name)
-				check class_file.exists end
-				date := class_file.date
-			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-				warning_dialog.show_modal_to_window (context_editor.development_window.window)
-				warning_dialog := Void
-				context_editor.reset_history
+			if class_file.date /= date then
+				put_class_modified_outside_diagram_warning
 				date := class_file.date
 				class_modified_outside_diagram := True
 			end
+			prepare_for_modification
+			if valid_syntax then
+				from
+					data.start
+				until
+					data.after
+				loop
+					l_item := data.item
+					str ?= l_item.item (1)
+					insertion_position := l_item.integer_item (2)
+					check
+						insertion_position <= text.count
+					end
+					insert_code (str)
+					data.forth
+				end
+			end
+			commit_modification
+			create class_file.make (class_i.file_name)
+			check class_file.exists end
+			date := class_file.date
 		end
 		
 	delete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
@@ -512,42 +501,38 @@ feature -- Modification (Add/Remove feature)
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
-			if date = class_file.date then
-				prepare_for_modification
-				if valid_syntax then
-					from
-						data.finish
-					until
-						data.before
-					loop
-						l_item := data.item
-						str ?= l_item.item (1)
-						pos := l_item.integer_item (2)
-						check
-							text.has_substring (str)
-						end
-						check
-							text.substring_index (str, 1) = pos
-						end
-						check
-							text.substring (pos, pos + str.count - 1).is_equal (str)
-						end
-						remove_code (pos, pos + str.count - 1)
-						data.back
-					end
-				end
-				commit_modification
-				create class_file.make (class_i.file_name)
-				check class_file.exists end
-				date := class_file.date
-			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
-				warning_dialog.show_modal_to_window (context_editor.development_window.window)	
-				warning_dialog := Void
-				context_editor.reset_history
+			if class_file.date /= date then
+				put_class_modified_outside_diagram_warning
 				date := class_file.date
 				class_modified_outside_diagram := True
 			end
+			prepare_for_modification
+			if valid_syntax then
+				from
+					data.finish
+				until
+					data.before
+				loop
+					l_item := data.item
+					str ?= l_item.item (1)
+					pos := l_item.integer_item (2)
+					check
+						text.has_substring (str)
+					end
+					check
+						text.substring_index (str, 1) = pos
+					end
+					check
+						text.substring (pos, pos + str.count - 1).is_equal (str)
+					end
+					remove_code (pos, pos + str.count - 1)
+					data.back
+				end
+			end
+			commit_modification
+			create class_file.make (class_i.file_name)
+			check class_file.exists end
+			date := class_file.date
 		end
 	
 	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER) is
@@ -1265,52 +1250,50 @@ feature {NONE} -- Implementation
 
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
-			if class_file.date = date then
-				prepare_for_modification
+			if class_file.date /= date then
+				put_class_modified_outside_diagram_warning
+				date := class_file.date
+				class_modified_outside_diagram := True
+			end
+			
+			prepare_for_modification
+			if valid_syntax then
+				if fcw.generate_setter_procedure then
+					set_position_by_feature_clause ("", fc_Element_change)
+					new_code := setter_procedure (
+						fcw.feature_name,
+						fcw.feature_type,
+						fcw.precondition
+						)
+					--last_added_code.put_front ([new_code, insertion_position])
+					insert_code (new_code)
+					reparse
+				end
 				if valid_syntax then
-					if fcw.generate_setter_procedure then
-						set_position_by_feature_clause ("", fc_Element_change)
-						new_code := setter_procedure (
-							fcw.feature_name,
-							fcw.feature_type,
-							fcw.precondition
-							)
-						--last_added_code.put_front ([new_code, insertion_position])
-						insert_code (new_code)
-						reparse
-					end
+					set_position_by_feature_clause (fcw.clause_export, fcw.clause_comment)
+					new_code := fcw.code
+					--last_added_code.put_front ([new_code, insertion_position])
+					insert_code (new_code)
+					set_last_feature_as (fcw.feature_name)
 					if valid_syntax then
-						set_position_by_feature_clause (fcw.clause_export, fcw.clause_comment)
-						new_code := fcw.code
-						--last_added_code.put_front ([new_code, insertion_position])
-						insert_code (new_code)
-						set_last_feature_as (fcw.feature_name)
-						if valid_syntax then
-							inv := fcw.invariant_part
-							if inv /= Void then
-								
-								insertion_position := class_as.invariant_insertion_position
-								if class_as.invariant_part = Void and not class_as.has_empty_invariant then
-									--last_added_code.put_front (["%Ninvariant%N", insertion_position])
-									insert_code ("%Ninvariant%N")
-								end
-								--last_added_code.put_front (["%T" + inv + "%N", insertion_position])
-								insert_code ("%T" + inv + "%N")
-								
-								reparse
-							end	
-							if valid_syntax then
-								commit_modification
-								create class_file.make (class_i.file_name)
-								check class_file.exists end
-								date := class_file.date
-							else
-								create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
-								warning_dialog.show_modal_to_window (context_editor.development_window.window)
-								warning_dialog := Void
-								extend_from_diagram_successful := False
-								invalidate_text
+						inv := fcw.invariant_part
+						if inv /= Void then
+							
+							insertion_position := class_as.invariant_insertion_position
+							if class_as.invariant_part = Void and not class_as.has_empty_invariant then
+								--last_added_code.put_front (["%Ninvariant%N", insertion_position])
+								insert_code ("%Ninvariant%N")
 							end
+							--last_added_code.put_front (["%T" + inv + "%N", insertion_position])
+							insert_code ("%T" + inv + "%N")
+							
+							reparse
+						end	
+						if valid_syntax then
+							commit_modification
+							create class_file.make (class_i.file_name)
+							check class_file.exists end
+							date := class_file.date
 						else
 							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 							warning_dialog.show_modal_to_window (context_editor.development_window.window)
@@ -1326,20 +1309,19 @@ feature {NONE} -- Implementation
 						invalidate_text
 					end
 				else
-					create warning_dialog.make_with_text (
-						Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
+					create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 					warning_dialog.show_modal_to_window (context_editor.development_window.window)
 					warning_dialog := Void
 					extend_from_diagram_successful := False
 					invalidate_text
 				end
 			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
+				create warning_dialog.make_with_text (
+					Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
 				warning_dialog.show_modal_to_window (context_editor.development_window.window)
 				warning_dialog := Void
-				context_editor.reset_history
-				date := class_file.date
-				class_modified_outside_diagram := True
+				extend_from_diagram_successful := False
+				invalidate_text
 			end
 		end
 		
@@ -1358,4 +1340,18 @@ feature {NONE} -- Implementation
 			insert_code (a_inv)
 		end
 		
+	put_class_modified_outside_diagram_warning is
+			-- Inform user, that class was modified outside diagram.
+		local
+			l_text: STRUCTURED_TEXT
+		do
+			if not context_editor.history.is_empty then
+				create l_text.make
+				l_text.add_string (warning_messages.w_class_modified_outside_diagram)
+				l_text.add_new_line
+				output_manager.process_text (l_text)
+				context_editor.reset_history
+			end
+		end
+
 end -- class CLASS_TEXT_MODIFIER

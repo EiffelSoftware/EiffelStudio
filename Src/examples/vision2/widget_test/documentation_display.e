@@ -9,6 +9,8 @@ class
 	
 inherit
 	INTERNAL
+	
+	WIDGET_TEST_SHARED
 
 create
 	make_with_text
@@ -23,28 +25,29 @@ feature {NONE} -- Initialization
 			default_create
 			text := a_text
 		end
-		
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
 
 feature -- Status setting
 
 	update_for_type_change (widget: EV_WIDGET) is
-			--
+			-- Update documentation for type matching `widget'.
+		do
+			application.idle_actions.extend (agent real_update_for_type_change (widget))
+				-- We defer this so that it is executed on the idle actions of EV_APPLICATION.
+				-- This speeds up the appearence of the type change to a user, as they are not
+				-- waiting for the file to load before being able to interact with the interface.
+		end
+		
+	real_update_for_type_change (widget: EV_WIDGET) is
+			-- Actually perform the update of the text.
 		local
 			file_name: STRING
-			directory: DIRECTORY
 			directory_name: DIRECTORY_NAME
 			full_filename: FILE_NAME
 			file: PLAIN_TEXT_FILE
 		do
+			application.idle_actions.prune (application.idle_actions.first)
 			file_name := class_name (widget)
 			file_name.to_lower
-			--file_name := file_name.substring (4, file_name.count)
 			file_name.append ("_flatshort.txt")
 			create directory_name.make_from_string (".")
 			directory_name.extend ("flatshort")
@@ -53,32 +56,8 @@ feature -- Status setting
 			create file.make_open_read (full_filename)
 			file.readstream (file.count)
 			text.set_text (file.last_string)
-			--class_names.extend (filename.substring (1, filename.count - 2))
 			file.close
 		end
-		
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 

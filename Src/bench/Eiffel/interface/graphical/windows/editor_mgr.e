@@ -145,7 +145,6 @@ feature {WINDOW_MGR} -- Properties
 		do
 			!! mp.set_watch_cursor;
 			!! fd.make ("", Project_tool);
-			fd.set_default_position (False);
 			ed := shell_editor (fd);
 			fd.set_title (ed.tool_name);
 			Result ?= ed;

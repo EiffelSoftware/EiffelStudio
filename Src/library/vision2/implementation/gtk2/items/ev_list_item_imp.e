@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'
 		do
-			text := ""
+			internal_text := ""
 			is_initialized := True
 		end
 
@@ -150,6 +150,9 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.selected_items.has (interface)
+			end
 		end
 
 feature -- Status setting
@@ -167,7 +170,12 @@ feature -- Status setting
 		end
 
 
-	text: STRING
+	text: STRING is
+			-- 
+		do
+			Result := internal_text.twin
+		end
+		
 
 feature -- Element change
 
@@ -182,7 +190,7 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
 		do
-			text := txt.twin
+			internal_text := txt.twin
 			if parent_imp /= Void then
 				
 			end
@@ -208,11 +216,17 @@ feature -- Element change
 	
 	pixmap: EV_PIXMAP
 
+feature {NONE} -- Implementation
+
+	internal_text: STRING
+
 	destroy is
 			-- 
 		do
 			pixmap := Void
 		end
+
+feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
 	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
 			-- Set `list_iter' to `a_iter'

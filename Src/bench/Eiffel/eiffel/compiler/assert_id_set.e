@@ -93,7 +93,7 @@ feature
 			until
 				i > count or else Result
 			loop
-				Result := (item (i).body_index = assert.body_index);
+				Result := equal (item (i).body_index, assert.body_index);
 				i := i + 1;
 			end;
 		end;

@@ -195,7 +195,7 @@ feature
 			-- for an unchanged feature
 		do
 			if not is_replicated then	
-				Body_server.item (body_Id).check_local_names;
+				Body_server.item (body_Id.id).check_local_names;
 			end;
 		end;
 
@@ -215,7 +215,7 @@ feature
 --			ve05: VE05;
 --		do
 --			if is_origin then
---				fas := Body_server.item (body_Id);
+--				fas := Body_server.item (body_Id.id);
 --				body := fas.body;
 --				ras ?= body.content;
 --				if ras /= Void then

@@ -27,8 +27,7 @@ feature -- Initialization
 			assert_id_set: ASSERT_ID_SET;
 			chained_assert: CHAINED_ASSERTIONS;
 			precursor: LINKED_LIST [CHAINED_ASSERTIONS];
-			body_id, f_body_id: INTEGER;
-			body_index: INTEGER;
+			body_index: BODY_INDEX;
 			i: INTEGER;
 			inh_ass: INH_ASSERT_INFO
 		do
@@ -40,7 +39,6 @@ feature -- Initialization
 				f.after
 			loop
 				feature_i := f.item_for_iteration;
-				f_body_id := feature_i.body_id;
 				assert_id_set := feature_i.assert_id_set;
 				if 
 					(client = void
@@ -96,7 +94,7 @@ feature -- Initialization
 			assert_id_set: ASSERT_ID_SET;
 			i: INTEGER;
 			inh_f: INH_ASSERT_INFO;
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			chained_assert: CHAINED_ASSERTIONS;
 			other_feat_as: FEATURE_AS_B;
 			f_table: FEATURE_TABLE;
@@ -121,12 +119,12 @@ feature -- Initialization
 						else
 							body_id := System.body_index_table.item 
 								(inh_f.body_index);
-							if Tmp_body_server.has (body_id) then
-								other_feat_as := Tmp_body_server.item (body_id)
-							elseif Body_server.has (body_id) then
-								other_feat_as := Body_server.item (body_id)
-							elseif Rep_feat_server.has (body_id) then
-								other_feat_as := Rep_feat_server.item (body_id)
+							if Tmp_body_server.has (body_id.id) then
+								other_feat_as := Tmp_body_server.item (body_id.id)
+							elseif Body_server.has (body_id.id) then
+								other_feat_as := Body_server.item (body_id.id)
+							elseif Rep_feat_server.has (body_id.id) then
+								other_feat_as := Rep_feat_server.item (body_id.id)
 							end;
 							if other_feat_as /= Void then
 								f_table := Feat_tbl_server.item (inh_f.written_in.id);
@@ -154,11 +152,11 @@ feature -- Properties
 			-- Chained assertion for a feature hashed 
 			-- on feature_id
 
-	precursors: EXTEND_TABLE [LINKED_LIST [CHAINED_ASSERTIONS], INTEGER];
+	precursors: EXTEND_TABLE [LINKED_LIST [CHAINED_ASSERTIONS], BODY_INDEX];
 			-- List of precursor assertion hashed on feature body_index.
 			-- An assertion of a body can be chained
 			-- with a number of other routines, hence the need
-			-- for the list for a given body_id. An object of 
+			-- for the list for a given body_index. An object of 
 			-- chained_assert will be referenced in the
 			-- assertions table. 
 
@@ -180,7 +178,7 @@ feature -- Element change
 			precursor: LINKED_LIST [CHAINED_ASSERTIONS];
 			assertion: ROUTINE_ASSERTIONS;
 		do
-			if feat_adapter.body_index > 0 then
+			if feat_adapter.body_index /= Void then
 				precursor := precursors.item (feat_adapter.body_index);
 				if precursor /= Void then
 						-- Add a routine assertion for all precursor
@@ -232,8 +230,8 @@ feature -- Debug
 			until
 				precursors.after
 			loop
-				io.error.putstring ("body id: ");
-				io.error.putint (precursors.key_for_iteration);
+				io.error.putstring ("body index: ");
+				io.error.putint (precursors.key_for_iteration.id);
 				io.error.new_line;
 				from
 					precursors.item_for_iteration.start

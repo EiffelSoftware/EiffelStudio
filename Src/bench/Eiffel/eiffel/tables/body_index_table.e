@@ -4,13 +4,13 @@ class BODY_INDEX_TABLE
 
 inherit
 
-	EXTEND_TABLE [INTEGER, INTEGER]
+	EXTEND_TABLE [BODY_ID, BODY_INDEX]
 		rename
 			force as tbl_force,
 			put as tbl_put
 		end;
 
-	EXTEND_TABLE [INTEGER, INTEGER]
+	EXTEND_TABLE [BODY_ID, BODY_INDEX]
 		redefine
 			force, put
 		select
@@ -28,7 +28,7 @@ creation
 	
 feature -- Element change
 
-	put (body_id, body_index: INTEGER) is
+	put (body_id: BODY_ID; body_index: BODY_INDEX) is
 			-- Associated `body_id' with `body_index'. If `body_index'
 			-- was already used (i.e. we are changing the body id of
 			-- an already existing feature), keep track of the old
@@ -37,7 +37,7 @@ feature -- Element change
 			-- body id for generation of encoded feature name among other
 			-- things).
 		local
-			old_body_id: INTEGER
+			old_body_id: BODY_ID
 		do
 			if has (body_index) then
 				old_body_id := item (body_index);
@@ -49,7 +49,7 @@ feature -- Element change
 			tbl_put (body_id, body_index)
 		end;
 
-	force (body_id, body_index: INTEGER) is
+	force (body_id: BODY_ID; body_index: BODY_INDEX) is
 			-- Associated `body_id' with `body_index'. If `body_index'
 			-- was already used (i.e. we are changing the body id of
 			-- an already existing feature), keep track of the old
@@ -58,7 +58,7 @@ feature -- Element change
 			-- body id for generation of encoded feature name among other
 			-- things).
 		local
-			old_body_id: INTEGER
+			old_body_id: BODY_ID
 		do
 			if has (body_index) then
 				old_body_id := item (body_index);

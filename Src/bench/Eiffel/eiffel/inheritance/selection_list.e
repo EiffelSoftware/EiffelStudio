@@ -190,7 +190,7 @@ end;
 			info_parent: PARENT_C;
 			rout_id_set: ROUT_ID_SET;
 			cond, in_generic_class: BOOLEAN;
-			first_body_id: INTEGER;
+			first_body_id: BODY_ID;
 			written_id, id: CLASS_ID;
 			instantiator, to_compair, written_type, written_actual_type: TYPE_A;
 			written_class: CLASS_C;
@@ -298,7 +298,7 @@ end;
 					--info := item;
 					--a_feature := info.a_feature;
 						---- First condition for unselection: same body id
-					--cond := a_feature.body_id = first_body_id;
+					--cond := equal (a_feature.body_id, first_body_id);
 					--if cond and then in_generic_class then
 							---- Second condition if written in a generic class: same
 							---- instantiated written actual type.
@@ -480,7 +480,7 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 				--io.error.putchar (' ');
 				item.a_feature.rout_id_set.trace;
 				io.error.putstring (" {body_id = ");
-				io.error.putint (item.a_feature.body_id);
+				io.error.putint (item.a_feature.body_id.id);
 				io.error.putstring ("} written class: ");
 				io.error.putstring (item.a_feature.written_class.class_name);
 				io.error.new_line;

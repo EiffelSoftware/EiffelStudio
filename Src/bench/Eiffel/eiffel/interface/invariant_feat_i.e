@@ -40,7 +40,7 @@ feature
 			byte_code.make_byte_code (Byte_array);
 
 			melted_feature := Byte_array.melted_feature;
-			melted_feature.set_body_id (dispatch.real_body_id);
+			melted_feature.set_real_body_id (dispatch.real_body_id);
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature);
 			end;

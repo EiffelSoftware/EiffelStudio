@@ -56,10 +56,6 @@ inherit
 			same_type as general_same_type,
 			context as byte_context
 		end;
-	SHARED_ENCODER
-		rename
-			same_type as general_same_type
-		end;
 	SHARED_CODE_FILES
 		rename
 			same_type as general_same_type
@@ -120,7 +116,7 @@ feature
 	written_in: CLASS_ID;
 			-- Class id where the feature is written
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 			-- Index of body id
 
 	pattern_id: INTEGER;
@@ -167,7 +163,7 @@ feature
 			feature_id := i;
 		end;
 
-	set_body_index (i: INTEGER) is
+	set_body_index (i: BODY_INDEX) is
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i;
@@ -255,7 +251,7 @@ feature
 			Result := written_in
 		end;
 
-	body_id: INTEGER is
+	body_id: BODY_ID is
 			-- Body id of the current version of the feature
 		require
 			consistency: Body_index_table.has (body_index);
@@ -263,7 +259,7 @@ feature
 			Result := Body_index_table.item (body_index);
 		end;
 
-	original_body_id: INTEGER is
+	original_body_id: BODY_ID is
 			-- Body id of the feature before before the beginning of
 			-- a recompilation
 		require
@@ -356,7 +352,7 @@ end;
 						and then
 						is_origin = other.is_origin
 						and then
-						body_index = other.body_index
+						equal (body_index, other.body_index)
 						and then
 						type.is_deep_equal (other.type);
 		end;
@@ -381,7 +377,7 @@ end;
 			good_argument: other /= Void;
 			same_names: other.feature_name.is_equal (feature_name);
 		do
-			Result := 	type.same_as (other.type);
+			Result := type.same_as (other.type);
 		end;
 
 	same_interface (other: FEATURE_I): BOOLEAN is
@@ -733,16 +729,16 @@ feature -- Check
 			-- Body of the feature
 		local
 			class_ast: CLASS_AS_B;
-			bid: INTEGER
+			bid: BODY_ID
 		do
-			if body_index /= 0 then
+			if body_index /= Void then
 				bid := Body_index_table.item (body_index);
 				if is_code_replicated then
-					Result := Rep_feat_server.item (bid);
+					Result := Rep_feat_server.item (bid.id);
 				elseif
-					Tmp_body_server.has (bid) or Body_server.has (bid)
+					Tmp_body_server.has (bid.id) or Body_server.has (bid.id)
 				then
-					Result := Body_server.item (bid);
+					Result := Body_server.item (bid.id);
 				end
 			end;
 			if Result = Void then
@@ -770,7 +766,7 @@ debug ("SERVER", "TYPE_CHECK");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 	io.error.putstring ("body id: ");
-	io.error.putint (body_id);
+	io.error.putint (body_id.id);
 	io.error.new_line;
 end;
 				-- make the type check
@@ -819,7 +815,7 @@ feature -- Byte code computation
 			byte_code: BYTE_CODE;
 			melted_feature: MELT_FEATURE;
 		do
-			byte_code := Byte_server.item (body_id);
+			byte_code := Byte_server.item (body_id.id);
 
 			byte_context.set_byte_code (byte_code);
 
@@ -829,7 +825,7 @@ feature -- Byte code computation
 			byte_context.clear_all;
 
 			melted_feature := Byte_array.melted_feature;
-			melted_feature.set_body_id (dispatch.real_body_id);
+			melted_feature.set_real_body_id (dispatch.real_body_id);
 	
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature);
@@ -841,9 +837,17 @@ feature -- Byte code computation
 
 	melted: BOOLEAN is
 			-- Is the feature melted ?
+		local
+			bid: BODY_ID
 		do
-			Result := body_id > System.dle_frozen_level or
-				(body_id > System.frozen_level and body_id <= System.dle_level)
+			bid := body_id;
+			if bid /= Void then
+				if bid.is_dynamic then
+					Result := bid.id > System.dle_frozen_level
+				else
+					Result := bid.id > System.frozen_level
+				end
+			end
 		end;
 
 	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
@@ -862,11 +866,11 @@ feature -- Byte code computation
 			--| `pass3' in CLASS_C, the body id of the feature must be
 			--| cnaged even if not syntactically changed.
 		local
-			new_body_id, old_body_id: INTEGER;
+			new_body_id, old_body_id: BODY_ID;
 			changed_body_id_info: CHANGED_BODY_ID_INFO
 		do
 			old_body_id := body_id;
-			new_body_id := System.body_id_counter.next;
+			new_body_id := System.body_id_counter.next_id;
 				-- Update the server using `old_body_id'
 debug ("SERVER")
 	io.putstring ("Change body id of feature: ");
@@ -874,20 +878,20 @@ debug ("SERVER")
 	io.putstring (" of class ");
 	io.putstring (written_class.class_name);
 	io.putstring (" old: ");
-	io.putint (old_body_id);
+	io.putint (old_body_id.id);
 	io.putstring (" new: ");
-	io.putint (new_body_id);
+	io.putint (new_body_id.id);
 	io.new_line;
 end;
 			if not is_code_replicated then
-				Body_server.change_id (new_body_id, old_body_id);
+				Body_server.change_id (new_body_id.id, old_body_id.id);
 			else
-				Rep_feat_server.change_id (new_body_id, old_body_id);
+				Rep_feat_server.change_id (new_body_id.id, old_body_id.id);
 			end;
-			Byte_server.change_id (new_body_id, old_body_id);
+			Byte_server.change_id (new_body_id.id, old_body_id.id);
 				-- Update the body index table
 			Body_index_table.force (new_body_id, body_index);
-			System.onbidt.put (new_body_id, old_body_id);
+			System.onbidt.put (new_body_id.id, old_body_id.id);
 			!!changed_body_id_info.make (is_code_replicated, body_index, new_body_id);
 			System.changed_body_ids.force (changed_body_id_info, old_body_id)
 		end;
@@ -952,7 +956,7 @@ feature -- Polymorphism
 				else
 	 				Result :=	equal (written_in, other.written_in)
  								and then
- 								body_index = other.body_index
+ 								equal (body_index, other.body_index)
  								and then
  								pattern_id = other.pattern_id
  				end;
@@ -1091,8 +1095,7 @@ end;
 					!!vtgg1;
 					vtgg1.set_class (written_class);
 					vtgg1.set_feature (Current);
-					vtgg1.set_error_list
-										(deep_clone (Constraint_error_list));
+					vtgg1.set_error_list (deep_clone (Constraint_error_list));
 					Error_handler.insert_error (vtgg1);
 				end;
 			end;
@@ -1514,13 +1517,13 @@ feature -- Undefinition
 
 feature -- Replication
 
-	code_id: INTEGER is
+	code_id: BODY_ID is
 			-- Code id for inheritance analysis
 		do
 			Result := body_id;
 		end;
 
-	set_code_id (i: INTEGER) is
+	set_code_id (i: BODY_ID) is
 			-- Assign `i' to code_id.
 		do
 			-- Do nothing
@@ -1547,10 +1550,10 @@ feature -- Replication
 			Result /= Void
 		end;
 
-	new_code_id: INTEGER is
+	new_code_id: BODY_ID is
 			-- New code id
 		do
-			Result := System.body_id_counter.next
+			Result := System.body_id_counter.next_id
 		end;
 
 	unselected (in: CLASS_ID): FEATURE_I is
@@ -1687,10 +1690,10 @@ feature -- C code generation
 					-- and encoded name in `used_features_log_file' from SYSTEM_I
 				generate_header (file);
 
-				if Tmp_opt_byte_server.has (body_id) then
-					byte_code := Tmp_opt_byte_server.disk_item (body_id);
+				if Tmp_opt_byte_server.has (body_id.id) then
+					byte_code := Tmp_opt_byte_server.disk_item (body_id.id);
 				else
-					byte_code := Byte_server.disk_item (body_id);
+					byte_code := Byte_server.disk_item (body_id.id);
 				end
 
 					-- Generation of C code for an Eiffel feature written in
@@ -1740,7 +1743,7 @@ feature -- Debug purpose
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("body_index = ");
-			io.error.putint (body_index);
+			io.error.putint (body_index.id);
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("written in = ");
@@ -1748,8 +1751,8 @@ feature -- Debug purpose
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("body_id = ");
-			if body_index /= 0 and then Body_index_table.has (body_index) then
-				io.error.putint (body_id);
+			if body_index /= Void and then Body_index_table.has (body_index) then
+				io.error.putint (body_id.id);
 			else
 				io.error.putint (0)
 			end;
@@ -1816,7 +1819,7 @@ feature -- Debugging
 		local
 			du: DISPATCH_UNIT;
 			eu: EXECUTION_UNIT;
-			new_body_id: INTEGER;
+			new_body_id: REAL_BODY_ID;
 			bc: BYTE_CODE;
 			fa: FEATURE_AS_B
 		do
@@ -1834,7 +1837,7 @@ feature -- Debugging
 
 			-- Compute the real body id.
 			eu :=  du.execution_unit;
-			if eu.real_body_id <= System.frozen_level then
+			if eu.real_body_id.id <= System.frozen_level then
 				Result.set_was_frozen
 			end;
 			new_body_id := Execution_table.debuggable_body_id (eu.real_body_id);
@@ -1843,7 +1846,7 @@ feature -- Debugging
 			-- Compute the list of breakable AST nodes
 			-- (will be used when generating the byte
 			-- code array). Specific to debug mode.
-			fa := Body_server.disk_item (body_id);
+			fa := Body_server.disk_item (body_id.id)
 				-- `disk_item' does not keep the object in the cache
 				-- => if `find_breakable' has some side effect, it won't
 				-- have any effect on the next compilation
@@ -1859,7 +1862,7 @@ feature -- Debugging
 			-- Specific to debug mode.
 			Byte_context.set_instruction_line (context.instruction_line);
 
-			bc := Byte_server.disk_item (body_id);
+			bc := Byte_server.disk_item (body_id.id);
 				-- See above for the reason why we use `disk_item' and not `item'
 
 			Byte_context.set_debug_mode (True);
@@ -1874,7 +1877,7 @@ feature -- Debugging
 			Context.clear2
 		end;
 
-	real_body_id: INTEGER is
+	real_body_id: REAL_BODY_ID is
 			-- Real body id at compilation time. This id might be
 			-- obsolete after supermelting this feature.
 			--| In the latter case, the new real body id is kept
@@ -1997,7 +2000,7 @@ feature -- Inlining
 			args: FEAT_ARG
 			wc: CLASS_C
 		do
-			byte_code := Byte_server.item (body_id);
+			byte_code := Byte_server.item (body_id.id);
 
 			type_a ?= type;
 			Result := (type_a = Void or else not (type_a.is_expanded or else type_a.is_bits))
@@ -2042,7 +2045,7 @@ feature -- DLE
 	is_dynamic: BOOLEAN is
 			-- Is the feature part of the DC-set?
 		do
-			Result := valid_body_id and then real_body_id > System.dle_level
+			Result := valid_body_id and then real_body_id.is_dynamic
 		end;
 
 	was_used: BOOLEAN is
@@ -2059,15 +2062,15 @@ feature -- Api creation
 	api_feature (associated_class_id: CLASS_ID): E_FEATURE is
 			-- API representation of Current
 		require
-			positive_associated_class_id: associated_class_id /= Void
+			associated_class_id_not_void: associated_class_id /= Void
 		local
-			bi: INTEGER
+			bi: BODY_INDEX
 		do
 			Result := new_api_feature;
 			Result.set_written_in (written_in);
 			Result.set_associated_class_id (associated_class_id);
 			bi := body_index;
-			if bi /= 0 then
+			if bi /= Void then
 				Result.set_body_id (Body_index_table.item (bi));
 			end;
 			Result.set_is_origin (is_origin);

@@ -51,7 +51,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			current_context: TYPE_A;
 			vwbe4: VWBE4;
-			body_index: INTEGER;
+			body_index: BODY_INDEX;
 			opt_unit: OPTIMIZE_UNIT
 		do
 			if from_part /= Void then
@@ -95,7 +95,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring ("), feature ");
 	io.error.putstring (context.a_feature.feature_name);
 	io.error.putstring (" (");
-	io.error.putint (body_index);
+	io.error.putint (body_index.id);
 	io.error.putstring (")%N");
 end;
 			!!opt_unit.make (context.a_class.id, body_index);

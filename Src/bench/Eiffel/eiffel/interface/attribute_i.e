@@ -190,7 +190,7 @@ feature
 				result_type := result_type.instantiation_in (gen_type);
 			end;
 			result_type.c_type.generate (file);
-			internal_name := Encoder.feature_name (class_type.id.id, body_id);
+			internal_name := body_id.feature_name (class_type.id);
 			add_in_log (class_type, internal_name);
 			file.putstring (internal_name);
 			file.putstring ("(Current)");
@@ -358,7 +358,7 @@ feature
 			ba.append (Bc_null);
 				
 			melted_feature := ba.melted_feature;
-			melted_feature.set_body_id (dispatch.real_body_id);
+			melted_feature.set_real_body_id (dispatch.real_body_id);
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature);
 			end;

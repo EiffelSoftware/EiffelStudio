@@ -40,7 +40,7 @@ feature -- Debugging (stop points)
 				if 
 					rout_text.root_stone /= Void and then
 					rout_text.root_stone.e_feature /= Void and then
-					rout_text.root_stone.e_feature.body_id = routine.body_id
+					equal (rout_text.root_stone.e_feature.body_id, routine.body_id)
 				then
 					if rout_text.in_debug_format then
 						rout_text.redisplay_breakable_mark (index)

@@ -7,7 +7,7 @@ feature
 	occurence: INTEGER;
 			-- Occurence of the external in the system
 
-	real_body_id: INTEGER;
+	real_body_id: REAL_BODY_ID;
 			-- Body id of the external after freezing
 
 	execution_unit: EXT_EXECUTION_UNIT;
@@ -27,7 +27,7 @@ feature
 			occurence := occurence - 1;
 		end;
 
-	set_real_body_id (i: INTEGER) is
+	set_real_body_id (i: REAL_BODY_ID) is
 			-- Assign `i' to `real_body_id'.
 		do
 			real_body_id := i;

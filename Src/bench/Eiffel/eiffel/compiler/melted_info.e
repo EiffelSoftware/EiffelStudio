@@ -90,8 +90,8 @@ end;
 		local
 			melted_feat: FEATURE_I;
 			disp_unit: DISPATCH_UNIT;
-			s: TWO_WAY_SORTED_SET [INTEGER];
-			body_id: INTEGER;
+			s: TWO_WAY_SORTED_SET [BODY_ID];
+			body_id: BODY_ID;
 		do
 			melted_feat := associated_feature (feat_tbl);
 			body_id := melted_feat.body_id;

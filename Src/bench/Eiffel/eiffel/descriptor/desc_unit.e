@@ -53,7 +53,7 @@ feature -- Generation
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
 						Result.append ("%T{(int16) ");
-						Result.append_integer (re.real_body_index);
+						Result.append_integer (re.real_body_index.id - 1);
 						Result.append (", (int16) ");
 						Result.append_integer (re.static_feature_type_id -1);
 						Result.append ("},%N");
@@ -113,7 +113,7 @@ feature -- Melting
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						ba.append_short_integer (re.real_body_index);
+						ba.append_short_integer (re.real_body_index.id - 1);
 						ba.append_short_integer (re.static_feature_type_id -1);
 					else
 						ae ?= item (i);

@@ -1,25 +1,24 @@
 -- Description of a table used by the run-time in workbench mode
 
-class CENTRAL_TABLE [T->CALL_UNIT] 
+deferred class CENTRAL_TABLE [T->CALL_UNIT] 
 
 inherit
 
 	SEARCH_TABLE [T]
 		rename
+			make as search_table_make,
 			put as search_table_put
 		end;
 
 	SEARCH_TABLE [T]
+		rename
+			make as search_table_make
 		redefine
 			put
 		select
 			put
 		end
 
-creation
-
-	init
-	
 feature
 
 	melted_list: LINKED_LIST [T];
@@ -33,7 +32,8 @@ feature
 		do
 			!!melted_list.make;
 			!!useless_ids.make;
-			make (Chunk);
+			useless_ids.compare_objects;
+			search_table_make (Chunk);
 		end;
 
 	Chunk: INTEGER is 500;
@@ -45,15 +45,14 @@ feature
 		do
 			last_unit := item (t);
 			if (last_unit = Void) then
-				counter := counter + 1;
+				search_table_put (t);
+				t.set_index (counter.next_id);
+				last_unit := t;
 debug ("REFREEZING")
 	io.error.putstring ("New item at position ");
-	io.error.putint (counter);
+	io.error.putint (counter.total_count);
 	io.error.new_line;
 end;
-				search_table_put (t);
-				t.set_index (counter);
-				last_unit := t;
 			else
 debug ("REFREEZING")
 	io.error.putstring ("Item already in table%NNew type: ");
@@ -79,17 +78,23 @@ end;
 
 feature {CENTRAL_TABLE,  SYSTEM_I} -- Shake the table
 
-	counter: INTEGER;
-			-- Number of valid items in the table
+	counter: COMPILER_COUNTER is
+			-- Counter of valid items in the table
+		deferred
+		ensure
+			counter_not_void: Result /= Void
+		end
 
 	shake is
 			-- Reorganize the table during a refreezing
 		local
 			u: T;
-			unit_index: INTEGER;
-			new_index: INTEGER;
+			unit_index: COMPILER_ID;
+			new_index: COMPILER_ID;
 			max_index: INTEGER;
+			frozen_index: INTEGER
 		do
+			frozen_index := frozen_level;
 				-- First find the invalid ids
 				-- for the frozen or melted units
 				-- The precompiled units are kept anyway
@@ -102,9 +107,6 @@ debug ("REFREEZING")
 	io.error.putstring ("Frozen level: ");
 	io.error.putint (frozen_level);
 	io.error.new_line;
-	io.error.putstring ("Precomp level: ");
-	io.error.putint (precomp_level);
-	io.error.new_line;
 	display_useless_ids;
 end;
 			from
@@ -114,7 +116,7 @@ end;
 			loop
 				u := item_for_iteration;
 				unit_index := u.index;
-				if unit_index > precomp_level and then not u.is_valid then
+				if not unit_index.is_precompiled and then not u.is_valid then
 					remove (u);
 					useless_ids.extend (unit_index)
 				end;
@@ -133,7 +135,7 @@ end;
 				unit_index := u.index;
 					-- Only the melted units are moved
 				if 
-					unit_index > frozen_level and then
+					unit_index.id > frozen_index and then
 					not useless_ids.empty and then
 					unit_index > useless_ids.first
 				then
@@ -141,26 +143,26 @@ end;
 					new_index := useless_ids.first;
 debug ("REFREEZING")
 	io.error.putstring ("Moving ");
-	io.error.putint (unit_index);
+	io.error.putint (unit_index.id);
 	io.error.putstring (" to ");
-	io.error.putint (new_index);
+	io.error.putint (new_index.id);
 	io.error.new_line;
 end;
 					useless_ids.prune_all (new_index);
 					useless_ids.extend (unit_index);
 					u.set_index (new_index);
-					if new_index > max_index then
-						max_index := new_index
+					if new_index.id > max_index then
+						max_index := new_index.id
 					end;
-				elseif unit_index > max_index then
+				elseif unit_index.id > max_index then
 						-- the unit is not moved
-					max_index := unit_index
+					max_index := unit_index.id
 				end;
 				forth
 			end;
 
-			if max_index > frozen_level then
-				frozen_level := max_index
+			if max_index > frozen_index then
+				frozen_index := max_index
 			end;
 
 				-- clean then useless_ids:
@@ -170,26 +172,27 @@ end;
 			until
 				useless_ids.after
 			loop
-				if useless_ids.item > frozen_level then
+				if useless_ids.item.id > frozen_index then
 					useless_ids.remove
 				else
 					useless_ids.forth
 				end;
 			end;
 
+			set_frozen_level (frozen_index)
 				-- Reset the value of counter
-			counter := frozen_level
+			counter.set_value (frozen_index)
 debug ("REFREEZING")
 	display_useless_ids;
 	io.error.putstring ("Frozen level: ");
-	io.error.putint (counter);
+	io.error.putint (frozen_level);
 	io.error.new_line;
 end;
 		end;
 
 feature {NONE} -- Keep track of the holes in the table
 
-	useless_ids: TWO_WAY_SORTED_SET [INTEGER];
+	useless_ids: TWO_WAY_SORTED_SET [COMPILER_ID];
 			-- Id corresponding to unvalid units
 
 	display_useless_ids is
@@ -200,7 +203,7 @@ feature {NONE} -- Keep track of the holes in the table
 			until
 				useless_ids.after
 			loop
-				io.error.putint (useless_ids.item);
+				io.error.putint (useless_ids.item.id);
 				io.error.new_line;
 				useless_ids.forth
 			end;
@@ -208,25 +211,31 @@ feature {NONE} -- Keep track of the holes in the table
 				
 feature -- Re_freezing
 
-	frozen_level: INTEGER;
+	frozen_level: INTEGER is
+			-- Melted/Frozen limit
+		deferred
+		end
 
-	precomp_level: INTEGER;
+	set_frozen_level (level: INTEGER) is
+			-- Set `frozen_level' to `level'.
+		deferred
+		ensure
+			frozen_level: frozen_level = level
+		end
 
-	set_precomp_level is
-			-- Set the value of `precomp_level' to `frozen_level'
-		do
-			precomp_level := frozen_level;
-		end;
+	dle_frozen_level: INTEGER is
+			-- Melted/Frozen limit in the DC-set
+		deferred
+		end
+
+	set_dle_frozen_level (level: INTEGER) is
+			-- Set `dle_frozen_level' to `level'.
+		deferred
+		ensure
+			dle_frozen_level: dle_frozen_level = level
+		end
 
 feature -- DLE
-
-	dle_level, dle_frozen_level: INTEGER;
-			-- If `index' is lower than `precomp_level' then `item' is
-			-- part of the precompilation; if `index' is lower than
-			-- `frozen_level' then `item' is frozen in the static system;
-			-- `dle_level' is the limit between the static and the dynamic
-			-- system. Melted `item's ofthe dynamic system have `index'es
-			-- greater than `dle_frozen_level'
 
 	init_dle is
 			-- Initialization before starting building a Dynamic 
@@ -240,9 +249,7 @@ feature -- DLE
 			useless_ids.wipe_out;
 				-- Get rid of the static melted units. They have already
 				-- been take care of in the static system.
-			melted_list.wipe_out;
-				-- Init the counter to the dle level.
-			counter := dle_level
+			melted_list.wipe_out
 		end;
 
 	shake_dle is
@@ -252,10 +259,12 @@ feature -- DLE
 			-- dynamic_system: System.is_dynamic
 		local
 			u: T;
-			unit_index: INTEGER;
-			new_index: INTEGER;
-			max_index: INTEGER
+			unit_index: COMPILER_ID;
+			new_index: COMPILER_ID;
+			max_index: INTEGER;
+			frozen_index: INTEGER
 		do
+			frozen_index := dle_frozen_level;
 				-- First find the invalid ids
 				-- for the frozen or melted units
 				-- The precompiled units are kept anyway
@@ -269,12 +278,6 @@ debug ("REFREEZING")
 	io.error.putstring (")%N");
 	io.error.putstring ("Frozen level: ");
 	io.error.putint (frozen_level);
-	io.error.new_line;
-	io.error.putstring ("Precomp level: ");
-	io.error.putint (precomp_level);
-	io.error.new_line;
-	io.error.putstring ("DLE level: ");
-	io.error.putint (dle_level);
 	io.error.new_line;
 	io.error.putstring ("DLE frozen level: ");
 	io.error.putint (dle_frozen_level);
@@ -290,7 +293,7 @@ end;
 				unit_index := u.index;
 					-- Take only care of the units from then
 					-- Dynamic Class Set.
-				if unit_index > dle_level and then not u.is_valid then
+				if unit_index.is_dynamic and then not u.is_valid then
 					remove (u);
 					useless_ids.extend (unit_index)
 				end;
@@ -309,7 +312,7 @@ end;
 				unit_index := u.index;
 					-- Only the melted units are moved
 				if 
-					unit_index > dle_frozen_level and then
+					unit_index.id > frozen_index and then
 						-- Take only care of the units from then
 						-- Dynamic Class Set.
 					not useless_ids.empty and then
@@ -319,26 +322,26 @@ end;
 					new_index := useless_ids.first;
 debug ("REFREEZING")
 	io.error.putstring ("Moving ");
-	io.error.putint (unit_index);
+	io.error.putint (unit_index.id);
 	io.error.putstring (" to ");
-	io.error.putint (new_index);
+	io.error.putint (new_index.id);
 	io.error.new_line;
 end;
 					useless_ids.prune_all (new_index);
 					useless_ids.extend (unit_index);
 					u.set_index (new_index);
-					if new_index > max_index then
-						max_index := new_index
+					if new_index.id > max_index then
+						max_index := new_index.id
 					end;
-				elseif unit_index > max_index then
+				elseif unit_index.id > max_index then
 						-- the unit is not moved
-					max_index := unit_index
+					max_index := unit_index.id
 				end;
 				forth
 			end;
 
-			if max_index > dle_frozen_level then
-				dle_frozen_level := max_index
+			if max_index > frozen_index then
+				frozen_index := max_index
 			end;
 
 				-- clean then useless_ids:
@@ -348,19 +351,20 @@ end;
 			until
 				useless_ids.after
 			loop
-				if useless_ids.item > dle_frozen_level then
+				if useless_ids.item.id > frozen_index then
 					useless_ids.remove
 				else
 					useless_ids.forth
 				end
 			end;
 
+			set_dle_frozen_level (frozen_index);
 				-- Reset the value of counter
-			counter := dle_frozen_level
+			counter.set_value (frozen_index)
 debug ("REFREEZING")
 	display_useless_ids;
 	io.error.putstring ("DLE Frozen level: ");
-	io.error.putint (counter);
+	io.error.putint (dle_frozen_level);
 	io.error.new_line;
 end;
 		end;

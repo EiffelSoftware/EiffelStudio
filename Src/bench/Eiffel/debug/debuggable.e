@@ -7,11 +7,11 @@ feature -- Data
 			-- Array of debuggable byte
 			-- code
 
-	real_body_index: INTEGER;
+	real_body_index: REAL_BODY_INDEX;
 			-- Body index of feature associated
 			-- with Current.
 
-	real_body_id: INTEGER;
+	real_body_id: REAL_BODY_ID;
 			-- Body id of feature associated
 			-- with Current.
 
@@ -56,12 +56,12 @@ feature -- Setting
 			byte_code := ca
 		end;
 
-	set_real_body_index (i: INTEGER) is
+	set_real_body_index (i: REAL_BODY_INDEX) is
 		do
 			real_body_index := i
 		end;
 
-	set_real_body_id (i: INTEGER) is
+	set_real_body_id (i: REAL_BODY_ID) is
 		do
 			real_body_id := i
 		end;

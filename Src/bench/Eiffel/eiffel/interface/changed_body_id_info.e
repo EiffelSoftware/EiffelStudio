@@ -5,13 +5,13 @@ creation
 
 feature
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 
-	new_body_id: INTEGER;
+	new_body_id: BODY_ID;
 
 	is_code_replicated: BOOLEAN;
 
-	make (b: BOOLEAN; b_ind, new: INTEGER) is
+	make (b: BOOLEAN; b_ind: BODY_INDEX; new: BODY_ID) is
 		do
 			is_code_replicated := b;
 			body_index := b_ind;

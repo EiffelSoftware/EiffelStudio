@@ -64,10 +64,10 @@ feature -- Access
 			-- Has debuggable byte code already been 
 			-- generated for feature `f'?
 		local
-			body_id: INTEGER
+			body_id: BODY_ID
 		do
 			body_id := f.body_id;
-			if body_id /= 0 then
+			if body_id /= Void then
 				Result := 
 					new_debuggables.has (body_id) or else 
 					once_debuggables.has (body_id) or else 
@@ -86,7 +86,7 @@ feature -- Element change
 			f_is_debuggable: f.is_debuggable
 		local
 			f_debuggables: LINKED_LIST [DEBUGGABLE];
-			body_id: INTEGER
+			body_id: BODY_ID
 		do
 			if not has_feature (f) then
 				body_id := f.body_id;
@@ -108,7 +108,7 @@ feature -- Element change
 		require
 			has_feature: has_feature (f)
 		local
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			old_feat: E_FEATURE
 		do
 			body_id := f.body_id;
@@ -208,7 +208,7 @@ feature -- Debug
 	trace is
 		local
 			i: INTEGER;
-			dl: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			dl: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
 			second_time: BOOLEAN
 		do
 			io.putstring ("============ DEBUG INFO ===========%N%N");
@@ -221,7 +221,7 @@ feature -- Debug
 			trace_debuggables (sent_debuggables);
 		end;
 
-	trace_debuggables (dl: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER]) is
+	trace_debuggables (dl: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID]) is
 		local
 			l: LINKED_LIST [DEBUGGABLE]
 		do
@@ -255,13 +255,13 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 
 feature {APPLICATION_STATUS}
 
-	breakable_index (f: INTEGER; offset: INTEGER): INTEGER is
+	breakable_index (body_id: BODY_ID; offset: INTEGER): INTEGER is
 		local
 			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
 			i: INTEGER;
 		do
-			if sent_debuggables.has (f) then
-				breakables := sent_debuggables.item (f).first.breakable_points;
+			if sent_debuggables.has (body_id) then
+				breakables := sent_debuggables.item (body_id).first.breakable_points;
 				from
 					breakables.start;
 					i := 1	
@@ -280,14 +280,14 @@ feature {APPLICATION_STATUS}
 
 feature {ONCE_REQUEST}
 
-	real_body_id (f: E_FEATURE): INTEGER is
+	real_body_id (f: E_FEATURE): REAL_BODY_ID is
 			-- Real body id of `f' at execution time.
 			-- This id may have been modified during supermelting.
 		require
 			f_exists: f /= Void;
 			is_debuggable: f.is_debuggable
 		local
-			body_id: INTEGER
+			body_id: BODY_ID
 		do
 			body_id := f.body_id;
 			if sent_debuggables.has (body_id) then
@@ -308,7 +308,7 @@ feature {EWB_REQUEST}
 			-- Breakpoint settings or removals already
 			-- been sent to the application
 
-	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
 			-- Debuggable structures not 
 			-- sent to the application yet
 
@@ -414,7 +414,7 @@ feature {EWB_REQUEST}
 		local
 			d_list: LINKED_LIST [DEBUGGABLE];
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: INTEGER;
+			r_body_id: REAL_BODY_ID;
 			bp: BREAKPOINT
 		do
 			set_all_breakables;
@@ -459,7 +459,7 @@ feature {EWB_REQUEST}
 		local
 			d_list: LINKED_LIST [DEBUGGABLE];
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: INTEGER;
+			r_body_id: REAL_BODY_ID;
 			bp: BREAKPOINT
 		do
 			if not once_debuggables.has (f.body_id) then
@@ -503,7 +503,7 @@ feature {EWB_REQUEST}
 		local
 			d_list: LINKED_LIST [DEBUGGABLE];
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: INTEGER;
+			r_body_id: REAL_BODY_ID;
 			bp: BREAKPOINT
 		do
 			if not once_debuggables.has (f.body_id) then
@@ -545,7 +545,8 @@ feature {EWB_REQUEST}
 		local
 			d_list: LINKED_LIST [DEBUGGABLE];
 			ast_pos: AST_POSITION;
-			r_body_id, i: INTEGER;
+			r_body_id: REAL_BODY_ID;
+			i: INTEGER;
 			bp: BREAKPOINT
 		do
 			if not once_debuggables.has (f.body_id) then
@@ -608,7 +609,7 @@ feature {APPLICATION_EXECUTION, NONE}
 		require
 			has_feature: has_feature (f)
 		local
-			body_id: INTEGER
+			body_id: BODY_ID
 		do
 			body_id := f.body_id;
 			if new_debuggables.has (body_id) then
@@ -631,14 +632,14 @@ feature {NONE} -- Implementation
 			!! Result.make
 		end;
 
-	once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+	once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
 			-- Debuggable structures of once routines which have already
 			-- been called. In That case, the supermelted byte code
 			-- won't be sent to the application until next execution
 			-- to prevent any overriding of once's memory (i.e. already
 			-- called and result value if any)
 
-	new_once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+	new_once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
 			-- Debuggable structures of once routines which have already
 			-- been called, but were not recorded in `once_debuggables' last
 			-- time we sent information to the application
@@ -649,7 +650,7 @@ feature {NONE} -- Implementation
 			--| `once_debuggables', and this table must be cleared each
 			--| information are sent to the application.
 
-	sent_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+	sent_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], BODY_ID];
 			-- Debuggable structures already 
 			-- sent to the application
 
@@ -708,7 +709,7 @@ feature {NONE} -- Implementation
 			new_once_debuggables.clear_all
 		end; -- clear_debuggables
 
-	feature_of_body_id (list: LIST [E_FEATURE]; body_id: INTEGER): E_FEATURE is
+	feature_of_body_id (list: LIST [E_FEATURE]; body_id: BODY_ID): E_FEATURE is
 			-- Feature of boyd id `body_id' stored in `list';
 			-- Void if no such feature exists
 		require
@@ -719,7 +720,7 @@ feature {NONE} -- Implementation
 			until
 				Result /= Void or list.after
 			loop
-				if list.item.body_id = body_id then
+				if equal (list.item.body_id, body_id) then
 					Result := list.item
 				end;
 				list.forth

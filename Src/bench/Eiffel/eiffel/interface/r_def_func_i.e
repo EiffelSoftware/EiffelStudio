@@ -25,10 +25,10 @@ inherit
 
 feature
 
-	code_id: INTEGER;
+	code_id: BODY_ID;
 			-- Code id
 
-	set_code_id (i: INTEGER) is
+	set_code_id (i: BODY_ID) is
 			-- Assign `i' to `code_id'.
 		do
 			code_id := i

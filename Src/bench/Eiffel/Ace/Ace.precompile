@@ -56,6 +56,14 @@ cluster
 		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
+		compiler_ids:		"$BENCH/Eiffel/eiffel/ids/compiler";
+		routine_ids:		"$BENCH/Eiffel/eiffel/ids/routine";
+		class_ids:			"$BENCH/Eiffel/eiffel/ids/class";
+		type_ids:			"$BENCH/Eiffel/eiffel/ids/type";
+		body_ids:			"$BENCH/Eiffel/eiffel/ids/body_id";
+		body_indexes:		"$BENCH/Eiffel/eiffel/ids/body_index";
+		real_body_ids:		"$BENCH/Eiffel/eiffel/ids/real_body_id";
+		real_body_indexes:	"$BENCH/Eiffel/eiffel/ids/real_body_index";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
 		interface:			"$BENCH/Eiffel/eiffel/interface";
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
@@ -71,6 +79,7 @@ cluster
 
 		api_constants:	  	"$BENCH/Eiffel/API/constants";
 		api_shared:		 	"$BENCH/Eiffel/API/shared";
+		api_ids:			"$BENCH/Eiffel/API/ids";
 		api_queries:		"$BENCH/Eiffel/API/queries";
 		api_interface:	  	"$BENCH/Eiffel/API/interface";
 		api_common:			"$BENCH/Eiffel/API/common";

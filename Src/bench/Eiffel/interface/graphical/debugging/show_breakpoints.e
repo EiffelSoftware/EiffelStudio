@@ -55,7 +55,7 @@ feature -- Formatting
 					if tool /= Void then
 						tool.showtext_frmt_holder.execute (stone)
 					end;
-					if e_feature.body_id = 0 then
+					if e_feature.body_id = Void then
 							--FIXME need specify error message
 						message := w_Cannot_debug_feature
 					elseif e_feature.is_external then

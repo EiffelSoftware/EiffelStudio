@@ -47,7 +47,7 @@ feature
 			new_pairs: S_REP_NAME_LIST;
 			feat_table: FEATURE_TABLE;
 			found: BOOLEAN;
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			feature_i: FEATURE_I;
 			feature_as: FEATURE_AS_B;
 			new_name: FEATURE_NAME_B
@@ -73,7 +73,7 @@ feature
 						feat_table.after or else found
 					loop
 						feature_i := feat_table.item_for_iteration;
-						if feature_i.body_id = body_id then
+						if equal (feature_i.body_id, body_id) then
 							found := true;
 							new_pairs.item.set_old_feature (feature_i);
 						else
@@ -85,7 +85,7 @@ feature
 			end;
 			new_name := compute_new_name (f_name);
 			!! ctxt.make (new_name, new_pairs, adapter);
-			feature_as := Body_server.item (old_feat.body_id);
+			feature_as := Body_server.item (old_feat.body_id.id);
 			ast := feature_as.replicate (ctxt);
 		end;		
 			

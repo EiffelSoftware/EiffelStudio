@@ -86,7 +86,7 @@ feature -- Properties
 			-- Invariant server
 
 	target_replicated_feature_table: EXTEND_TABLE [
-			ARRAYED_LIST [FEATURE_I], INTEGER];
+			ARRAYED_LIST [FEATURE_I], BODY_INDEX];
 	   		-- Table containing replicated (conceptual) features of
 	   		-- class being flattend indexed by body_index
 

@@ -48,16 +48,16 @@ feature
 			Result := external_name
 		end;
 
-	real_body_id: INTEGER is
+	real_body_id: REAL_BODY_ID is
 			-- Real body id
 		local
-			frozen_body_id: INTEGER;
+			frozen_body_id: REAL_BODY_ID;
 		do
 			check
 				consistency: Externals.has (external_name);
 			end;
 			frozen_body_id := Externals.item (external_name).real_body_id;
-			if frozen_body_id > 0 then
+			if frozen_body_id /= Void then
 				Result := frozen_body_id
 			else
 				Result := basic_real_body_id;
@@ -71,7 +71,7 @@ feature
 		end;
 
 	IRS_valid: BOOLEAN is
-			-- Is the executino unit still valid ?
+			-- Is the execution unit still valid ?
 		local
 			written_type: CL_TYPE_I;
 			written_class: CLASS_C
@@ -92,7 +92,7 @@ feature
 						-- having undergone a "body id change". In that case the
 						-- body id is not valid if the system has an equivalent
 						-- one which is different.
-					elseif (System.onbidt.item (body_id) = body_id) then
+					elseif equal (System.onbidt.item (body_id.id), body_id.id) then
 						Result := server_has
 					end;
 				end;
@@ -101,7 +101,7 @@ feature
 
 	server_has: BOOLEAN is
 		do
-			Result := Body_server.has (body_id)
+			Result := Body_server.has (body_id.id)
 		end;
  
 end

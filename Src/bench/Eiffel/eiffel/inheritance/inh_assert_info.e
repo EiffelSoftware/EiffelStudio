@@ -13,9 +13,8 @@ feature
 	written_in: CLASS_ID;
 			-- Written_in id of the routine that has assertion
 
-	body_index_value: INTEGER;
+	body_index: BODY_INDEX;
 			-- Body index value of the routine that has the assertion
-			-- (Negative if feature is origin)
 
 	has_postcondition: BOOLEAN;
 			-- Is has_postcondition set to True? 
@@ -28,11 +27,8 @@ feature
 			-- `has_postcondition' fields.
 		do
 			written_in := feat.written_in;
-			if not feat.is_origin then
-				body_index_value := feat.body_index;
-			else
-				body_index_value := - feat.body_index;
-			end;
+			body_index := feat.body_index;
+			is_origin := feat.is_origin;
 			has_postcondition := feat.has_postcondition;
 			has_precondition := feat.has_precondition;
 		end;
@@ -42,27 +38,17 @@ feature
 			Result := (has_precondition or else has_postcondition)
 		end;
 
-	body_index: INTEGER is
-		do
-			Result := body_index_value;
-			if Result < 0 then
-				Result := - Result
-			end
-		end;
-
 	same_as (other: like Current): BOOLEAN is
 			-- Check to see if assertions has changed
 		do
 			Result := (has_precondition = other.has_precondition) and then
 					(has_postcondition = other.has_postcondition) and then
-					(body_index_value = other.body_index_value);
+					(equal (body_index, other.body_index) and
+					is_origin = other.is_origin)
 		end;
 
-	is_origin: BOOLEAN is
+	is_origin: BOOLEAN;
 			-- Is Current come from an origin feature?
-		do
-			Result := (body_index_value < 0);
-		end;
 
 	trace is
 		do
@@ -70,7 +56,7 @@ feature
 			io.putstring (System.class_of_id (written_in).class_name);
 			io.new_line;
 			io.putstring ("body_index: ");
-			io.putint (body_index);
+			io.putint (body_index.id);
 			io.new_line;
 			io.putstring ("has_postcondition: ");
 			io.putbool (has_postcondition);

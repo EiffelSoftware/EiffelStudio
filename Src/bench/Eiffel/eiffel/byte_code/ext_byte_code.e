@@ -175,9 +175,8 @@ feature -- Byte code generation
 				type_i.c_type.generate (generated_file);
 
 					-- Function's name
-				internal_name := Encoder.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id.id,
-				body_id);
+				internal_name := body_id.feature_name
+					(System.class_type_of_id (context.current_type.type_id).id)
 
 				add_in_log (internal_name);
 

@@ -214,7 +214,7 @@ feature
 			e_class := ec;
 				-- Creation of a conformance table
 			!!conformance_table.make (1,1);
-				-- Creation of the sytactical supplier list
+				-- Creation of the syntactical supplier list
 			!!syntactical_suppliers.make;
 				-- Creation of the syntactical client list
 			!!syntactical_clients.make;
@@ -499,7 +499,7 @@ feature -- Third pass: byte code production and type check
 			melt_set: like melted_set;
 			type_check_error: BOOLEAN;
 			byte_code_generated: BOOLEAN;
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			feat_dep: FEATURE_DEPENDANCE;
 			rep_removed: BOOLEAN;
 			temp: STRING
@@ -510,9 +510,9 @@ feature -- Third pass: byte code production and type check
 			invariant_changed: BOOLEAN;
 			inv_melted_info: INV_MELTED_INFO;
 
-			new_body_id: INTEGER;
-			old_body_id: INTEGER;
-			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, INTEGER];
+			new_body_id: BODY_ID;
+			old_body_id: BODY_ID;
+			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID];
 			changed_body_id_info: CHANGED_BODY_ID_INFO
 		do
 				-- Verbose
@@ -782,9 +782,9 @@ end;
 					if invariant_feature = Void then
 						!!invariant_feature.make (Current);
 						invariant_feature.set_body_index
-											(System.body_index_counter.next);
+											(System.body_index_counter.next_id);
 					end;
-					new_body_id := System.body_id_counter.next;
+					new_body_id := System.body_id_counter.next_id;
 					System.body_index_table.force
 								(new_body_id, invariant_feature.body_index);
 				end;
@@ -885,9 +885,9 @@ end;
 						-- features only. Deactive body ids of removed
 						-- features.
 					if not feature_i.is_code_replicated then
-						Tmp_body_server.desactive (body_id)
+						Tmp_body_server.desactive (body_id.id)
 					else
-						Tmp_rep_feat_server.desactive (body_id)
+						Tmp_rep_feat_server.desactive (body_id.id)
 					end;
 
 					removed_features.forth;
@@ -948,13 +948,13 @@ end;
 					new_body_id := changed_body_id_info.new_body_id;
 						-- Undo
 					if not changed_body_id_info.is_code_replicated then
-						Body_server.change_id (old_body_id, new_body_id);
+						Body_server.change_id (old_body_id.id, new_body_id.id);
 					else
-						Rep_feat_server.change_id (old_body_id, new_body_id);
+						Rep_feat_server.change_id (old_body_id.id, new_body_id.id);
 					end;
-					Byte_server.change_id (old_body_id, new_body_id);
+					Byte_server.change_id (old_body_id.id, new_body_id.id);
 					System.Body_index_table.force (old_body_id, changed_body_id_info.body_index);
-					System.onbidt.undo_put (old_body_id, new_body_id);
+					System.onbidt.undo_put (old_body_id.id, new_body_id.id);
 
 					
 					changed_body_ids.forth;
@@ -1035,7 +1035,7 @@ end;
 --			f_suppliers: FEATURE_DEPENDANCE;
 --			invariant_changed: BOOLEAN;
 --			melted_info: INV_MELTED_INFO;
---			new_body_id: INTEGER;
+--			new_body_id: BODY_ID;
 		do
 --			f_suppliers := dependances.item ("_inv_");
 --
@@ -1053,7 +1053,7 @@ end;
 --					if invariant_feature = Void then
 --						!!invariant_feature.make (Current);
 --						invariant_feature.set_body_index
---											(System.body_index_counter.next);
+--											(System.body_index_counter.next_id);
 --					end;
 --					new_body_id := System.body_id_counter.next;
 --					System.body_index_table.force
@@ -1260,7 +1260,7 @@ feature -- Melting
 			tbl: FEATURE_TABLE;
 			melted_info: FEAT_MELTED_INFO;
 			inv_melted_info: INV_MELTED_INFO;
-			new_body_id: INTEGER;
+			new_body_id: BODY_ID;
 			feature_i: FEATURE_I;
 		do
 			Inst_context.set_cluster (cluster);
@@ -1291,7 +1291,7 @@ feature -- Melting
 				!!inv_melted_info;
 				if not melted_set.has (inv_melted_info) then
 					melted_set.put (inv_melted_info);
-					new_body_id := System.body_id_counter.next;
+					new_body_id := System.body_id_counter.next_id;
 					System.body_index_table.force
 									(new_body_id, invariant_feature.body_index);
 				end;
@@ -3165,7 +3165,7 @@ end;
 			replicator: REPLICATOR;
 			rep_name: S_REP_NAME;
 			old_feat, new_feat: FEATURE_I;
-			old_body_id, new_body_id: INTEGER;
+			old_body_id, new_body_id: BODY_ID;
 			rep_table: REP_FEATURES;
 			new_feat_as, old_feat_as: FEATURE_AS_B;
 			rep_features: LINKED_LIST [S_REP_NAME];
@@ -3201,22 +3201,22 @@ end;
 									new_feat.feature_name);
 					new_feat_as := replicator.ast;
 					new_body_id := new_feat.body_id;
-					if new_body_id = 0 then
+					if new_body_id = Void then
 						-- Must check old and new ast for incrementality
 						old_body_id := new_feat.original_body_id;
-						old_feat_as := Rep_feat_server.server_item (old_body_id);
+						old_feat_as := Rep_feat_server.server_item (old_body_id.id);
 						if
 							not old_feat_as.is_assertion_equiv (new_feat_as)
 							or else not old_feat_as.is_body_equiv (new_feat_as)
 						then
-							new_body_id := System.body_id_counter.next;
+							new_body_id := System.body_id_counter.next_id;
 							insert_changed_feature (new_feat.feature_name);
 
 								-- We do not have enough information to know
 								-- in which server we should deactivate, so
 								-- we do it in both -- FRED
-							Tmp_body_server.desactive (old_body_id);
-							Tmp_rep_feat_server.desactive (old_body_id);
+							Tmp_body_server.desactive (old_body_id.id);
+							Tmp_rep_feat_server.desactive (old_body_id.id);
 
 debug ("REPLICATION")
 	io.error.putstring ("following feature AST was NOT equiv to previous%N")
@@ -3265,7 +3265,7 @@ end;
 				feature_as := rep_table.item_for_iteration;
 				read_info := index.item (feature_as.id);
 				-- Place the read_info for the feature's body id
-				rep_body_table.force (read_info, rep_table.key_for_iteration);
+				rep_body_table.force (read_info, rep_table.key_for_iteration.id);
 				rep_table.forth;
 			end;
 			-- Update read info in rep_feat servers
@@ -3311,8 +3311,7 @@ feature -- Precompilation
 
 	is_precompiled: BOOLEAN is
 		do	
-			Result := id.is_precompiled and
-				not Compilation_modes.is_precompiling
+			Result := id.is_precompiled
 		end;
 
 	nb_precompiled_class_types: INTEGER is

@@ -53,7 +53,7 @@ feature -- Status report
 			Result := id < other.id
 		end
 
-feature {NONE} -- Implementation
+feature {COMPILER_SUBCOUNTER} -- Implementation
 
 	internal_id: INTEGER;
 			-- Internal compilation-level id

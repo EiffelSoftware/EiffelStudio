@@ -65,7 +65,7 @@ feature
 				% * put%N%
 				% */%N%
 				%void ");
-			encoded_name := Encoder.feature_name (id.id, feat.body_id);
+			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "put", encoded_name);
 
@@ -181,7 +181,7 @@ feature
 				% */%N");
 			type_c.generate (file);
 
-			encoded_name := Encoder.feature_name (id.id, feat.body_id);
+			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "item", encoded_name);
 

@@ -5,10 +5,10 @@ class MELT_FEATURE
 inherit
 
 	CHARACTER_ARRAY;
-	IDABLE
+	COMPILER_IDABLE
 		rename
-			id as body_id,
-			set_id as set_body_id
+			id as real_body_id,
+			set_id as set_real_body_id
 		end;
 
 creation
@@ -17,13 +17,13 @@ creation
 	
 feature 
 
-	body_id: INTEGER;
+	real_body_id: REAL_BODY_ID;
 			-- Id of the associated class type
 
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
+	set_real_body_id (i: REAL_BODY_ID) is
+			-- Assign `i' to `real_body_id'.
 		do
-			body_id := i;
+			real_body_id := i;
 		end;
 
 end

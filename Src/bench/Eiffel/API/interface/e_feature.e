@@ -53,7 +53,7 @@ feature -- Properties
 	written_in: CLASS_ID
 			-- Class id where feature is written in
 
-	body_id: INTEGER;
+	body_id: BODY_ID;
 			-- Identification of the body
 			-- (Two features can have the same body_id if
 			-- they are shared through replication)
@@ -228,8 +228,7 @@ feature -- Access
 	is_debuggable: BOOLEAN is
 			-- Is the feature debuggable?
 		do
-			Result := (body_id /= 0) and then
-				(not is_dynamic) and then 
+			Result := (body_id /= Void) and then
 				(not is_external) and then
 				(not is_attribute) and then
 				(not is_dynamic) and then
@@ -239,11 +238,10 @@ feature -- Access
 				written_class.is_debuggable
 		ensure
 			debuggable_if: Result implies
-				(body_id /= 0) and then 
+				(body_id /= Void) and then 
 				(not is_dynamic) and then 
 				(not is_external) and then
 				(not is_attribute) and then
-				(not is_dynamic) and then
 				(not is_constant) and then
 				(not is_deferred) and then
 				(not is_unique) and then
@@ -305,7 +303,7 @@ feature -- Access
 			-- Has the feature been compiled?
 			-- (Has been compiled if passed degree 4)
 		do
-			Result := body_id /= 0
+			Result := body_id /= Void
 		end;
 
 	is_exported_to (client: E_CLASS): BOOLEAN is
@@ -321,14 +319,14 @@ feature -- Access
 			-- Associated AST structure for feature
 		local
 			class_ast: CLASS_AS;
-			bid: INTEGER
+			bid: BODY_ID
 		do
 			bid := body_id;
-			if bid /= 0 then
+			if bid /= Void then
 				if
-					Tmp_body_server.has (bid) or Body_server.has (bid)
+					Tmp_body_server.has (bid.id) or Body_server.has (bid.id)
 				then
-					Result := Body_server.item (bid);
+					Result := Body_server.item (bid.id);
 				end
 			end;
 			if Result = Void then
@@ -496,7 +494,7 @@ feature -- Output
 
 feature {DEBUG_INFO} -- Implementation
 
-	real_body_id: INTEGER is
+	real_body_id: REAL_BODY_ID is
 			-- Real body id at compilation time. This id might be
 			-- obsolete after supermelting this feature.
 			--| In the latter case, the new real body id is kept
@@ -545,16 +543,21 @@ feature {NONE} -- Implementation
 			Result := s_table.item (rout_id_set.first)
 		end;
 
-	is_dynamic: BOOLEAN;
+	is_dynamic: BOOLEAN is
 			-- Is the feature dynamic?
+		do
+-- TO DO GOBO
+-- Ask Dino about that.
+			Result := associated_feature_i.is_dynamic
+		end
 
 feature {FEATURE_I} -- Setting
 
-	set_is_dynamic (b: BOOLEAN) is
-			-- Set `is_dynamic' to `b'
-		do
-			is_dynamic := b
-		end;
+--	set_is_dynamic (b: BOOLEAN) is
+--			-- Set `is_dynamic' to `b'
+--		do
+--			is_dynamic := b
+--		end;
 
 	set_written_in (i: CLASS_ID) is
 			-- Set `written_in' to `i'.
@@ -568,7 +571,7 @@ feature {FEATURE_I} -- Setting
 			associated_class_id := i
 		end;
 
-	set_body_id (i: INTEGER) is
+	set_body_id (i: BODY_ID) is
 			-- Assign `i' to `body_id'.
 		do
 			body_id := i;

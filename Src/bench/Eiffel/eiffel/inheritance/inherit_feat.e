@@ -146,7 +146,8 @@ feature
 			next_info, next: INHERIT_INFO;
 			feature_name, new_name, other_renaming: STRING;
 			parent: PARENT_C;
-			pos, body_id: INTEGER;
+			pos: INTEGER;
+			body_id: BODY_ID;
 			duplication: BOOLEAN;
 			other_renamings: EXTEND_TABLE [STRING, STRING];
 			replication: FEATURE_I;
@@ -186,7 +187,7 @@ feature
 							--next_info := feat.item;
 							--if 	next_info /= next
 								--and then
-								--next_info.a_feature.code_id = body_id
+								--equal (next_info.a_feature.code_id, body_id)
 							--then
 								--other_renamings := next_info.parent.renaming;
 								--if other_renamings /= Void then
@@ -374,7 +375,7 @@ feature
 		require
 			good_context: nb_features > 0;
 		local
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			written_id: CLASS_ID;
 			first_feature: FEATURE_I;
 			written_class: CLASS_C;
@@ -391,7 +392,7 @@ feature
 			until
 				features.after or else not Result
 			loop
-				Result := body_id = features.item.a_feature.code_id;
+				Result := equal (body_id, features.item.a_feature.code_id);
 				features.forth;
 			end;
 				-- Second condition: if the feature is written in a

@@ -35,7 +35,8 @@ feature -- Status report
 			-- Check first if there is a `dynamic' declaration in the Ace
 			-- file for that feature.
 		local
-			pos, first_body_id: INTEGER;
+			pos: INTEGER;
+			first_body_id: BODY_ID;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
@@ -75,7 +76,7 @@ feature -- Status report
 					if cl_type.associated_class.conform_to (first_class) then
 						if entry.used then
 							if found then
-								Result := entry.body_id /= first_body_id
+								Result := not equal (entry.body_id, first_body_id)
 							else
 								found := true;
 								first_body_id := entry.body_id

@@ -161,7 +161,7 @@ end;
 							end
 						end
 						Result := False;
-						!!depend_unit.make (feat_tbl_id, f2.feature_id);;
+						!!depend_unit.make (feat_tbl_id, f2.feature_id);
 						pass2_ctrl.propagators.extend (depend_unit)
 					else
 						f1.set_code_id (f2.code_id)			
@@ -395,9 +395,9 @@ debug ("ACTIVITY")
 	io.error.putstring (" removed%N");
 end;
 					if not f.is_code_replicated then
-						Tmp_body_server.desactive (f.body_id);
+						Tmp_body_server.desactive (f.body_id.id);
 					else
-						Tmp_rep_feat_server.desactive (f.body_id);
+						Tmp_rep_feat_server.desactive (f.body_id.id);
 					end;
 						
 					-- There is no need for a corresponding "reactivate" here
@@ -518,7 +518,7 @@ end;
 			go (pos);
 		end;
 
-	feature_of_body_id (i: INTEGER): FEATURE_I is
+	feature_of_body_id (i: BODY_ID): FEATURE_I is
 			-- Feature of body id equal to `i'.
 		local
 			feat: FEATURE_I;
@@ -531,7 +531,7 @@ end;
 				after or else Result /= Void
 			loop
 				feat := item_for_iteration;
-				if feat.body_id = i then
+				if equal (feat.body_id, i) then
 					Result := feat;
 				end;
 				forth;
@@ -735,7 +735,7 @@ end;
 			end;
 		end;
 
-	replicated_features: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is
+	replicated_features: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX] is
 			-- Replicated features for Current feature table
 			-- hashed on body_index
 		local
@@ -854,7 +854,7 @@ feature -- Debugging
 if it.written_class > System.any_class.compiled_class then
 				it.trace;
 				io.error.putstring ("code id: ");
-				io.error.putint (it.code_id);
+				io.error.putint (it.code_id.id);
 				io.error.putstring (" DT: ");
 				io.error.putstring (it.generator);
 				io.error.new_line;

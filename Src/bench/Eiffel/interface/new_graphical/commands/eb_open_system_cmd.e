@@ -7,15 +7,11 @@ class
 	EB_OPEN_SYSTEM_CMD
 
 inherit
-	SHARED_EIFFEL_PROJECT
-	EB_EDITOR_COMMAND
+	EB_OPEN_FILE_CMD
 		redefine
-			tool
+			tool, process,
+			execute
 		end
-	EB_SHARED_INTERFACE_TOOLS
-	NEW_EB_CONSTANTS
-
-	EB_CONFIRM_SAVE_CALLBACK
 
 creation
 	make
@@ -47,7 +43,7 @@ feature {NONE} -- Implementation
 		do
 			if argument = Void then
 					-- First click on open
-				if tool.text_window.changed then
+				if tool.text_area.changed then
 					create csd.make_and_launch (tool, Current)
 				else
 					process

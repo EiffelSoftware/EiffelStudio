@@ -254,11 +254,11 @@ feature -- Status report
 			exists: exists
 			s_exists: s /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := s.to_c
+			!! a_wel_string.make (s)
 			!! Result.make (0, 0)
-			cwin_get_text_extend_point (item, $a, s.count,
+			cwin_get_text_extend_point (item, a_wel_string.item, s.count,
 				Result.item)
 		ensure
 			result_exists: Result /= Void
@@ -294,11 +294,11 @@ feature -- Status report
 			exists: exists
 			text_not_void: text /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 			size: INTEGER
 		do
-			a := text.to_c
-			size := cwin_get_tabbed_text_extent (item, $a,
+			!! a_wel_string.make (text)
+			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, 0, default_pointer)
 			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
@@ -338,13 +338,14 @@ feature -- Status report
 			text_not_void: text /= Void
 			tabulations_not_void: tabulations /= Void
 		local
-			a1, a2: ANY
+			a: WEL_INTEGER_ARRAY
+			a_wel_string: WEL_STRING
 			size: INTEGER
 		do
-			a1 := text.to_c
-			a2 := tabulations.to_c
-			size := cwin_get_tabbed_text_extent (item, $a1,
-				text.count, tabulations.count, $a2)
+			!! a_wel_string.make (text)
+			!! a.make (tabulations)
+			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
+				text.count, tabulations.count, a.item)
 			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
 			result_not_void: Result /= Void
@@ -413,13 +414,16 @@ feature -- Status report
 		require
 			exists: exists
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (Max_text_face)
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_text_face (item,
-				Max_text_face, $a))
+			!! a_wel_string.make (Result)
+			nb := cwin_get_text_face (item,
+				Max_text_face, a_wel_string.item)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -899,10 +903,10 @@ feature -- Basic operations
 			exists: exists
 			string_not_void: string /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := string.to_c
-			cwin_text_out (item, x, y, $a, string.count)
+			!! a_wel_string.make (string)
+			cwin_text_out (item, x, y, a_wel_string.item, string.count)
 		end
 
 	tabbed_text_out (x, y: INTEGER; string: STRING;
@@ -917,12 +921,13 @@ feature -- Basic operations
 			string_not_void: string /= Void
 			tabulations_not_void: tabulations /= Void
 		local
-			a1, a2: ANY
+			a: WEL_INTEGER_ARRAY
+			a_wel_string: WEL_STRING
 		do
-			a1 := string.to_c
-			a2 := tabulations.to_c
-			cwin_tabbed_text_out (item, x, y, $a1, string.count,
-				tabulations.count, $a2, tabulations_origin)
+			!! a_wel_string.make (string)
+			!! a.make (tabulations)
+			cwin_tabbed_text_out (item, x, y, a_wel_string.item, string.count,
+				tabulations.count, a.item, tabulations_origin)
 		end
 
 	draw_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
@@ -934,10 +939,10 @@ feature -- Basic operations
 			string_not_void: string /= Void
 			rect_not_void: rect /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := string.to_c
-			cwin_draw_text (item, $a, string.count, rect.item,
+			!! a_wel_string.make (string)
+			cwin_draw_text (item, a_wel_string.item, string.count, rect.item,
 				format)
 		end
 
@@ -948,10 +953,10 @@ feature -- Basic operations
 			string_not_void: string /= Void
 			rect_not_void: rect /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := string.to_c
-			cwin_draw_text (item, $a, string.count, rect.item,
+			!! a_wel_string.make (string)
+			cwin_draw_text (item, a_wel_string.item, string.count, rect.item,
 				Dt_singleline + Dt_center + Dt_vcenter)
 		end
 
@@ -1026,10 +1031,10 @@ feature -- Basic operations
 			points_not_void: points /= Void
 			points_count: points.count \\ 2 = 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := points.to_c
-			cwin_polyline (item, $a, points.count // 2)
+			!! a.make (points)
+			cwin_polyline (item, a.item, points.count // 2)
 		end
 
 	line_to (x, y: INTEGER) is
@@ -1120,10 +1125,10 @@ feature -- Basic operations
 			points_not_void: points /= Void
 			points_count: points.count \\ 2 = 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := points.to_c
-			cwin_polygon (item, $a, points.count // 2)
+			!! a.make (points)
+			cwin_polygon (item, a.item, points.count // 2)
 		end
 
 	ellipse (left, top, right, bottom: INTEGER) is
@@ -1304,7 +1309,7 @@ feature -- Basic operations
 		local
 			bmi, bmi2: WEL_BITMAP_INFO
 			bfh: WEL_BITMAP_FILE_HEADER
-			bits: ARRAY [CHARACTER]
+			bits: WEL_CHARACTER_ARRAY
 			size: INTEGER
 			rgb_quad: WEL_RGB_QUAD
 			rf: RAW_FILE
@@ -1340,15 +1345,14 @@ feature -- Basic operations
 			-- Write the file header
 			c_file_ps (rf.file_pointer, bfh.item, bfh.structure_size)
 
-			bits := di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
-				Dib_rgb_colors)
+			!! bits.make (di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
+				Dib_rgb_colors))
 
 			-- Write the bitmap info header
 			c_file_ps (rf.file_pointer, bmi2.item, size)
 
 			-- Write the DIB and close the file
-			a := bits.to_c
-			c_file_ps (rf.file_pointer, $a, bmi2.header.size_image)
+			c_file_ps (rf.file_pointer, bits.item, bmi2.header.size_image)
 			rf.close
 		end
 
@@ -1369,13 +1373,14 @@ feature -- Basic operations
 			bitmap_info_not_void: bitmap_info /= Void
 			valid_usage: valid_dib_colors_constant (usage)
 		local
-			a: ANY
+			a: WEL_CHARACTER_ARRAY
 		do
 			!! Result.make (1,
 				bitmap_info.header.size_image)
-			a := Result.to_c
+			!! a.make (Result)
 			cwin_get_di_bits (item, a_bitmap.item, start_scan,
-				scan_lines, $a, bitmap_info.item, usage)
+				scan_lines, a.item, bitmap_info.item, usage)
+			Result := a.to_array (1)
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count = bitmap_info.header.size_image
@@ -1397,10 +1402,10 @@ feature -- Basic operations
 			points_not_void: points /= Void
 			points_count_ok: points.count \\ 2 = 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := points.to_c
-			cwin_poly_bezier (item, $a, points.count // 2)
+			!! a.make (points)
+			cwin_poly_bezier (item, a.item, points.count // 2)
 		end
 
 	poly_bezier_to (points: ARRAY [INTEGER]) is
@@ -1418,10 +1423,10 @@ feature -- Basic operations
 			points_not_void: points /= Void
 			points_count_ok: points.count \\ 2 = 0
 		local
-			a: ANY
+			a: WEL_INTEGER_ARRAY
 		do
-			a := points.to_c
-			cwin_poly_bezier_to (item, $a, points.count // 2)
+			!! a.make (points)
+			cwin_poly_bezier_to (item, a.item, points.count // 2)
 		end
 
 feature -- Removal

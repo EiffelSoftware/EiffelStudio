@@ -196,13 +196,11 @@ feature -- Element change
 		do
 			if main_split_area /= Void and then not main_split_area.is_empty then
 				main_split_area.set_split_position (main_split_position.
-					max (main_split_area.minimum_split_position).min
-					(main_split_area.maximum_split_position))
+					max (main_split_area.minimum_split_position))
 			end
 			if top_split_area /= Void and then not top_split_area.is_empty then
 				top_split_area.set_split_position (top_split_position.
-					max (top_split_area.minimum_split_position).min
-					(top_split_area.maximum_split_position))
+					max (top_split_area.minimum_split_position))
 			end
 		end
 
@@ -573,12 +571,10 @@ feature {NONE} -- Implementation (attributes)
 							io.putstring ("Top position: " + top_split_position.out + "%N")
 						end
 						if save_splitter then
-							main_split_area.set_split_position (main_split_position.max
-										(main_split_area.minimum_split_position).
-										min (main_split_area.maximum_split_position))
-							top_split_area.set_split_position (
-								top_split_position.max (top_split_area.minimum_split_position).
-								min (top_split_area.maximum_split_position))
+							main_split_area.set_split_position (main_split_position.
+								max (main_split_area.minimum_split_position))
+							top_split_area.set_split_position (top_split_position.
+								max (top_split_area.minimum_split_position))
 							main_split_position := main_split_area.split_position
 							top_split_position := top_split_area.split_position
 						end
@@ -602,9 +598,8 @@ feature {NONE} -- Implementation (attributes)
 							io.putstring ("%NMain position (no top): " + main_split_position.out + "%N")
 						end
 						if save_splitter then
-							main_split_area.set_split_position (main_split_position.max
-										(main_split_area.minimum_split_position).
-										min (main_split_area.maximum_split_position))
+							main_split_area.set_split_position (main_split_position.
+								max (main_split_area.minimum_split_position))
 							main_split_position := main_split_area.split_position
 						end
 					when 1 then

@@ -21,8 +21,7 @@ inherit
 			culture,
 			cluster_name,
 			public_key_token,
-			set_prefix,
-			set_prefix_user_precondition
+			set_prefix
 		end
             
     
@@ -104,12 +103,6 @@ feature -- Status setting
 			else
 				assembly_sd.set_prefix_name (Void)
 			end
-		end
-        
-	set_prefix_user_precondition (a_prefix: STRING): BOOLEAN is
-			-- `set_assembly_prefix' precondition
-		do
-			Result := False
 		end
 
 feature -- Access

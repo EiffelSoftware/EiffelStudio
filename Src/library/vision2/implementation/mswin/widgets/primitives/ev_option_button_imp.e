@@ -16,7 +16,8 @@ inherit
 	EV_MENU_HOLDER_IMP
 		undefine
 			add_menu,
-			remove_menu
+			remove_menu,
+			add_menu_ok
 		end
 
 	EV_BUTTON_IMP
@@ -72,6 +73,14 @@ feature {NONE} -- Initialization
 			{EV_BUTTON_IMP} Precursor
 			!! menu_container.make_track
 			extra_width := 40
+		end
+
+feature -- Access
+
+	menu: EV_MENU_IMP is
+			-- The menu contained in the option button.
+		do
+			Result ?= menu_container
 		end
 
 feature -- Status report

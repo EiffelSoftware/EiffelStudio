@@ -26,8 +26,7 @@ inherit
 			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- and EV_PRIMITIVE_IMP
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,

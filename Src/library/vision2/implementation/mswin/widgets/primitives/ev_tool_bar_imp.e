@@ -12,10 +12,12 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			set_default_options
+			set_default_options,
+			minimum_width,
+			minimum_height,
+			internal_resize
 		redefine
 			parent_imp,
-			on_first_display,
 			move_and_resize,
 			on_left_button_up,
 			on_left_button_down,
@@ -23,6 +25,12 @@ inherit
 			on_right_button_up,
 			on_middle_button_up,
 			on_middle_button_down
+		end
+
+	EV_SIZEABLE_CONTAINER_IMP
+		redefine
+			compute_minimum_width,
+			compute_minimum_height
 		end
 
 	EV_ITEM_HOLDER_IMP
@@ -51,7 +59,8 @@ inherit
 			on_key_down,
 			on_kill_focus,
 			on_set_focus,
-			on_set_cursor
+			on_set_cursor,
+			window_process_message
 		redefine
 			wel_set_parent,
 			move,
@@ -228,10 +237,8 @@ feature -- Element change
 			wel_insert_button (index - 1, but)
 			ev_children.put (button, button.id)
 
-			-- We reset the minimum size it case it changed.
-			if already_displayed then
-				internal_update_minsize
-			end
+			-- We notify the change to integrate them if necessary
+			notify_change (2 + 1)
 		end
 
 	move_button (button: EV_TOOL_BAR_BUTTON_IMP; index: INTEGER) is
@@ -246,9 +253,7 @@ feature -- Element change
 		do
 			delete_button (internal_index (button.id))
 			ev_children.remove (button.id)
-			if already_displayed then
-				internal_update_minsize
-			end
+			notify_change (2 + 1)
 		end
 
 feature -- Basic operation
@@ -260,15 +265,20 @@ feature -- Basic operation
 			Result := cwin_send_message_result (item, Tb_commandtoindex, command_id, 0)
 		end
 
-	internal_update_minsize is
+	compute_minimum_width is
 			-- Update the minimum-size of the tool-bar.
 		local
 			num: INTEGER
 		do
-			set_minimum_height (button_height + 6)
 			num := separator_count
 			num := (count - num) * button_width + num * separator_width
-			set_minimum_width (num)
+			internal_set_minimum_width (num)
+		end
+
+	compute_minimum_height is
+			-- Update the minimum-size of the tool-bar.
+		do
+			internal_set_minimum_height (button_height + 6)
 		end
 
 	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
@@ -347,20 +357,10 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	already_displayed: BOOLEAN
-			-- Has the toolbar been already displayed
-
-	on_first_display is
-			-- Called by the top_level window when it is displayed
-			-- for the first time.
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- We must not resize the height of the tool-bar.
 		do
-			internal_update_minsize
-		end
-
-	move (a_x, a_y: INTEGER) is
-			-- We must move the bar before repositioning the tool-bar.
-		do
-			bar.move (a_x, a_y)
+			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
 			reposition
 		end
 
@@ -371,10 +371,10 @@ feature {NONE} -- Implementation
 			reposition
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- We must not resize the height of the tool-bar.
+	move (a_x, a_y: INTEGER) is
+			-- We must move the bar before repositioning the tool-bar.
 		do
-			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
+			bar.move (a_x, a_y)
 			reposition
 		end
 

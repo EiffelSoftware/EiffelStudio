@@ -33,6 +33,7 @@ inherit
 			selection_start as wel_selection_start,
 			selection_end as wel_selection_end
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,

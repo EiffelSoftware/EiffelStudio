@@ -26,8 +26,11 @@ feature {NONE} -- Initialization
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			set_minimum_height (wel_font.log_font.height + 7)
-			set_minimum_width (30)
+			internal_set_minimum_height (wel_font.log_font.height + 7)
+			internal_set_minimum_width (30)
+			if parent_imp /= Void then
+				parent_imp.notify_change (1 + 2)
+			end
 		end
 
 feature -- Status report
@@ -125,7 +128,11 @@ feature -- Resizing
 			-- Make `nb' characters visible on one line.
 			-- We add nine for the borders.
 		do
-			set_minimum_width (nb * wel_font.log_font.width + 9)
+			internal_set_minimum_width (nb * wel_font.log_font.width + 9)
+			if parent_imp /= Void then
+				parent_imp.notify_change (1)
+			end
+			-- set_minimum_width (nb * wel_font.log_font.width + 9)
 		end
 
 feature -- Basic operation

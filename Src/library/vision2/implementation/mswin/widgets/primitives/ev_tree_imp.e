@@ -26,6 +26,7 @@ inherit
 			set_font as wel_set_font,
 			selected_item as wel_selected_item
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
@@ -134,7 +135,6 @@ feature {NONE} -- WEL Implementation
 			clist: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
 		do
 			clist := ev_children
---			selected_item ?= (clist @ info.new_item.h_item).interface
 			if clist @ info.old_item.h_item /= Void then
 				(clist @ info.old_item.h_item).execute_command (Cmd_item_deactivate, Void)
 			end
@@ -158,7 +158,6 @@ feature {NONE} -- WEL Implementation
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		do
---			(ev_children @ info.new_item.h_item).execute_command (Cmd_item_right_selection, Void)
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

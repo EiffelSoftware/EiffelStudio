@@ -27,6 +27,7 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
+			window_process_message,
 			set_width,
 			set_height,
 			remove_command,

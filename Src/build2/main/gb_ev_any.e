@@ -33,6 +33,16 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_ACCESSIBLE_SYSTEM_STATUS
+		undefine
+			default_create
+		end
+		
+	GB_ACCESSIBLE_COMMAND_HANDLER
+		undefine
+			default_create
+		end
 
 feature -- Initialization
 		
@@ -201,7 +211,24 @@ feature {NONE} -- Implementation
 				p.call ([objects.item])
 				objects.forth
 			end
+				-- We update the system settings to reflect
+				-- the fact that a user modification has taken place.
+				-- This enables us to do things such as enable the save
+				-- options.
+			system_status.enable_project_modified
+			command_handler.update
 		end
+		
+	for_first_object (p: Procedure [EV_ANY, TUPLE]) is
+			-- Call `p' on the first_item in `objects'
+		do
+			objects.start
+			p.call ([objects.item])
+				-- See comment in `for_all_obejcts'.
+			system_status.enable_project_modified
+			command_handler.update
+		end
+		
 		
 	update_editors is
 			-- Short version for calling everywhere.

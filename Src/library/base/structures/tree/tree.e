@@ -15,7 +15,7 @@ deferred class TREE [G] inherit
 
 	CONTAINER [G]
 		redefine
-			is_equal
+			copy, is_equal
 		end
 
 feature -- Access
@@ -124,6 +124,18 @@ feature -- Comparison
 				if Result and not is_empty then
 					Result := tree_is_equal (Current, other)
 				end
+			end
+		end
+
+	node_is_equal (other: like Current): BOOLEAN is
+			-- Is `other' equal to Current?
+		require
+			other_not_void: other /= Void
+		do
+			if object_comparison then
+				Result := equal (Current.item, other.item)
+			else
+				Result := Current.item = other.item
 			end
 		end
 
@@ -311,11 +323,19 @@ feature -- Element change
 			item_inserted: child_item = v
 		end
 
+	put_child (n: like parent) is
+			-- Add `n' to the list of children.
+			-- Do not move child cursor.
+		require
+			non_void_argument: n /= Void
+		deferred
+		end
+
 	replace_child (n: like parent) is
 			-- Put `n' at current child position.
 		require
 			writable_child: writable_child
-			was_root: n.is_root
+--			was_root: n.is_root
 		deferred
 		ensure
 			child_replaced: child = n
@@ -339,6 +359,25 @@ feature -- Element change
 			fill_subtree (other)
 		end
 
+feature -- Removal
+
+	wipe_out is
+			-- Remove all children.
+		deferred
+		ensure
+			is_leaf: is_leaf
+		end
+
+	forget_left is
+			-- Forget all left siblings.
+		deferred 
+		end
+		
+	forget_right is
+			-- Forget all right siblings.
+		deferred 
+		end
+		
 feature -- Conversion
 
 	linear_representation: LINEAR [G] is
@@ -381,6 +420,31 @@ feature -- Conversion
 		end
 
 feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy contents from `other'.
+		local
+			i: INTEGER
+			old_idx: INTEGER
+			tmp_tree: like Current
+		do
+			tmp_tree := clone_node (other)
+			if not other.is_leaf then 
+				tree_copy (other, tmp_tree) 
+			end
+			standard_copy (tmp_tree)
+			old_idx := child_index
+			from
+				i := 1
+			until
+				i > arity
+			loop
+				child_go_i_th (i)
+				child.attach_to_parent (Current)
+				i := i + 1
+			end
+			child_go_i_th (old_idx)
+		end
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-tree beginning at cursor position and
@@ -466,7 +530,6 @@ feature {TREE} -- Implementation
 			end
 		end
 
-
 	attach_to_parent (n: like parent) is
 			-- Make `n' parent of current node.
 		do
@@ -475,12 +538,22 @@ feature {TREE} -- Implementation
 			new_parent: parent = n
 		end
 
+	cut_off_node is
+			-- Cut off all links from current node.
+		deferred
+		ensure
+			is_root: is_root
+			is_leaf: is_leaf
+			no_left_sibling: left_sibling = Void
+			no_right_sibling: right_sibling = Void
+		end
+		
+feature {NONE} -- Implementation
+
 	fill_subtree (s: TREE [G]) is
 			-- Fill children with children of `other'.
 		deferred
 		end
-
-feature {NONE} -- Implementation
 
 	remove is
 			-- Remove current item
@@ -503,13 +576,13 @@ feature {NONE} -- Implementation
 			p1, p2: like Current
 			t1_stack, t2_stack: LINKED_STACK [like Current]
 			idx_stack, orgidx1_stack, orgidx2_stack: LINKED_STACK [INTEGER]
+			l_current_cursor, l_other_cursor: CURSOR
 		do
+			l_current_cursor := t1.child_cursor
+			l_other_cursor := t2.child_cursor
+
 			if t1.is_leaf and t2.is_leaf then
-				if t1.object_comparison then
-					Result := equal (t1.item, t2.item)
-				else
-					Result := (t1.item = t2.item)
-				end
+				Result := equal (t1.item, t2.item)
 			elseif t1.is_leaf xor t2.is_leaf then
 				Result := False
 			else
@@ -532,37 +605,36 @@ feature {NONE} -- Implementation
 					not Result or else
 						(i > p1.child_capacity and t1_stack.is_empty)
 				loop
-					check
-						p1_not_void: p1 /= Void
-						p2_not_void: p2 /= Void
-							-- Because the loop is always terminated before a
-							-- node pointer becomes Void.
-					end
+						check
+							p1_not_void: p1 /= Void
+							p2_not_void: p2 /= Void
+								-- Because the loop is always terminated before a
+								-- node pointer becomes Void.
+						end
 					p1.child_go_i_th (i)
 					p2.child_go_i_th (i)
 					if p1.child_readable and p2.child_readable and
 						p1.child_capacity = p2.child_capacity then
-						check
-							p1_consistent: p1.child.parent = p1
-							p2_consistent: p2.child.parent = p2
-								-- Because the tree has to be consistent.
-						end
-						if t1.object_comparison then
-							Result := equal (p1.item, p2.item)
-						else
-							Result := (p1.item = p2.item)
-						end
+							check
+								p1_consistent: p1.child.parent = p1
+								p2_consistent: p2.child.parent = p2
+									-- Because the tree has to be consistent.
+							end
+						Result := p1.node_is_equal (p2)
 						if not (p1.child.is_leaf or p2.child.is_leaf) then
 							t1_stack.put (p1)
 							t2_stack.put (p2)
 							idx_stack.put (i + 1)
 							p1 := p1.child
 							p2 := p2.child
+							Result := p1.node_is_equal (p2)
 							orgidx1_stack.put (p1.child_index)
 							orgidx2_stack.put (p2.child_index)
 							i := 0
 						elseif p1.child.is_leaf xor p2.child.is_leaf then
 							Result := False
+						else
+							Result := p1.child.node_is_equal (p2.child)
 						end
 					elseif p1.child_capacity /= p2.child_capacity or else
 							(p1.child_readable xor p2.child_readable) then
@@ -603,40 +675,42 @@ feature {NONE} -- Implementation
 						p2.child_go_i_th (orgidx2_stack.item)
 						p1 := t1_stack.item
 						p2 := t2_stack.item
-						check
-							p1_not_void: p1 /= Void
-							p2_not_void: p2 /= Void
-								-- Because we never put Void references on the
-								-- stack.
-						end
+							check
+								p1_not_void: p1 /= Void
+								p2_not_void: p2 /= Void
+									-- Because we never put Void references on the
+									-- stack.
+							end
 						t1_stack.remove
 						t2_stack.remove
 						orgidx1_stack.remove
 						orgidx2_stack.remove
 					end
-					check
-						tree_stacks_empty: t1_stack.is_empty and
-								t2_stack.is_empty
-							-- Because we removed all items.
-						at_root: p1 = t1 and p2 = t2
-							-- Because the root nodes where the last item we
-							-- removed.
-						p1_not_void: p1 /= Void
-						p2_not_void: p2 /= Void
-							-- Because the root nodes cannot be Void.
-					end
+						check
+							tree_stacks_empty: t1_stack.is_empty and
+									t2_stack.is_empty
+								-- Because we removed all items.
+							at_root: p1 = t1 and p2 = t2
+								-- Because the root nodes where the last item we
+								-- removed.
+							p1_not_void: p1 /= Void
+							p2_not_void: p2 /= Void
+								-- Because the root nodes cannot be Void.
+						end
 					p1.child_go_i_th (orgidx1_stack.item)
 					p2.child_go_i_th (orgidx2_stack.item)
 					orgidx1_stack.remove
 					orgidx2_stack.remove
-					check
-						index_stacks_empty: orgidx1_stack.is_empty and
-									orgidx2_stack.is_empty
-							-- Because we also removed the roots from the index
-							-- stacks now.
-					end
+						check
+							index_stacks_empty: orgidx1_stack.is_empty and
+										orgidx2_stack.is_empty
+								-- Because we also removed the roots from the index
+								-- stacks now.
+						end
 				end
 			end
+			t1.child_go_to (l_current_cursor)
+			t2.child_go_to (l_other_cursor)
 		end
 
  	tree_copy (other, tmp_tree: like Current) is
@@ -651,7 +725,7 @@ feature {NONE} -- Implementation
 			same_rule: object_comparison = other.object_comparison
 		local
 			i: INTEGER
-			p1, p2: like Current
+			p1, p2, node: like Current
 			other_stack, tmp_stack: LINKED_STACK [like Current]
 			idx_stack, orgidx_stack: LINKED_STACK [INTEGER]
 		do
@@ -687,19 +761,23 @@ feature {NONE} -- Implementation
 							-- Because the target child has not been copied
 							-- yet.
 					end
-					p2.replace_child (clone (p1.child))
-					if other_stack.is_empty then
-						p2.child.attach_to_parent (Current)
-					end
-					check
-						comparison_mode_ok: p2.child.object_comparison =
-									p1.child.object_comparison
-							-- Because the comparson mode flag must be copied
-							-- correctly, too.
-						p1_consistent: p1.child.parent = p1
-						p2_consistent: p2.child.parent = p2
-							-- Because the tree has to be consistent.
-					end
+					node := clone_node (p1.child)
+						check
+							equal_but_not_the_same: standard_equal (node, p1.child) and node /= p1.child
+								-- Because `node' has been cloned.
+						end
+					p2.put_child (node)
+						check
+							node_is_child: node = p2.child
+								-- Because we inserted `node' as child.
+							comparison_mode_ok: p2.child.object_comparison =
+										p1.child.object_comparison
+								-- Because the comparson mode flag must be copied
+								-- correctly, too.
+							p1_consistent: p1.child.parent = p1
+							p2_consistent: p2.child.parent = p2
+								-- Because the tree has to be consistent.
+						end
 					if not p1.child.is_leaf then
 						other_stack.put (p1)
 						tmp_stack.put (p2)
@@ -722,19 +800,19 @@ feature {NONE} -- Implementation
 					loop
 						p1.child_go_i_th (orgidx_stack.item)
 						p2.child_go_i_th (orgidx_stack.item)
-						check
-							child_indices_equal: 
-								p1.child_index = p2.child_index
-									-- Because we have set them equal before.
-						end
+							check
+								child_indices_equal: 
+									p1.child_index = p2.child_index
+										-- Because we have set them equal before.
+							end
 						p1 := other_stack.item
 						p2 := tmp_stack.item
-						check
-							p1_not_void: p1 /= Void
-							p2_not_void: p2 /= Void
-								-- Because we never put Void references on the
-								-- stack.
-						end
+							check
+								p1_not_void: p1 /= Void
+								p2_not_void: p2 /= Void
+									-- Because we never put Void references on the
+									-- stack.
+							end
 						i := idx_stack.item
 						other_stack.remove
 						tmp_stack.remove
@@ -743,21 +821,36 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			check
-				tree_stacks_empty: other_stack.is_empty and tmp_stack.is_empty
-					-- Because we removed all items.
-				at_root: p1 = other and p2 = tmp_tree
-					-- Because the root nodes where the last item we removed.
-				copy_correct: equal (other, tmp_tree)
-					-- Because `other' has been copied to `tmp_tree'.
-			end
+			other.child_go_i_th (orgidx_stack.item)
 			tmp_tree.child_go_i_th (orgidx_stack.item)
 			orgidx_stack.remove
-			check
-				index_stack_empty: orgidx_stack.is_empty
-					-- Because we also removed the root from the index
-					-- stack now.
-			end
+				check
+					tree_stacks_empty: other_stack.is_empty and tmp_stack.is_empty
+						-- Because we removed all items.
+					at_root: p1 = other and p2 = tmp_tree
+						-- Because the root nodes where the last item we removed.
+					copy_correct: equal (other, tmp_tree)
+						-- Because `other' has been copied to `tmp_tree'.
+
+					index_stack_empty: orgidx_stack.is_empty
+						-- Because we also removed the root from the index
+						-- stack now.
+				end
+		end
+
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
+		require
+			not_void: n /= Void
+		do
+			Result := standard_clone (n)
+			Result.cut_off_node
+			Result.attach_to_parent (Void)
+		ensure
+			result_is_root: Result.is_root
+			result_is_leaf: Result.is_leaf
+			result_has_no_left_sibling: Result.left_sibling = Void
+			result_has_no_right_sibling: Result.right_sibling = Void
 		end
 
 invariant

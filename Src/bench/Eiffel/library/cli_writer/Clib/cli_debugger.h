@@ -34,7 +34,6 @@ extern void clear_dbg_cb_info();
 
 
 extern EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** );
-extern EIF_INTEGER dbg_continue (void*, BOOL);
 
 extern EIF_INTEGER dbg_timer_id ();
 extern EIF_BOOLEAN dbg_is_synchronizing();
@@ -48,9 +47,10 @@ extern void dbg_start_timer();
 extern void dbg_stop_timer();
 extern void dbg_restore_cb_notification_state ();
 extern void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
-extern void dbg_lock_and_wait_callback (void*);
-extern void dbg_debugger_before_callback(Callback_ids);
-extern void dbg_debugger_after_callback(Callback_ids);
+extern EIF_INTEGER dbg_continue (void*, BOOL);
+extern void dbg_process_evaluation (void*);
+extern void dbg_begin_callback(Callback_ids);
+extern void dbg_finish_callback(Callback_ids);
 
 #ifdef __cplusplus
 }

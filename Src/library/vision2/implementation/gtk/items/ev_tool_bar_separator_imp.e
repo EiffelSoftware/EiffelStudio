@@ -25,21 +25,22 @@ feature -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_ANY_I is
-			-- The parent of the Current widget
-			-- Can be void.
-			-- XXX
-		local
-			tmp: EV_ANY_I
+	index: INTEGER is
+			-- Index of the current item.
 		do
-			Result := tmp
 		end
 
 feature -- Element change
 
-	set_parent (par: EV_ANY) is
+	set_parent (par: EV_TOOL_BAR) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		do
+		end
+
+	set_index (pos: INTEGER) is
+			-- Make `pos' the new index of the item in the
+			-- list.
 		do
 		end
 

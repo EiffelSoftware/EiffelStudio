@@ -9,6 +9,7 @@ inherit
 			{NONE} all
 		end;
 	ASSERT_TYPE;
+	SHARED_ARRAY_BYTE
 
 
 creation
@@ -512,6 +513,10 @@ feature
 			non_gc_reg_vars := 0;
 			non_gc_tmp_vars := 0;
 			local_list.wipe_out;
+			if breakable_points /= Void then
+				breakable_points.wipe_out;
+			end;
+			debug_mode := false;
 				-- This should not be necessary but may limit the
 				-- effect of bugs in register allocation (if any).
 			register_server.clear_all;
@@ -868,6 +873,67 @@ feature
 		do
 			local_list.finish;
 			local_list.put_right (t);
+		end;
+
+feature -- Debugger
+
+	debug_mode: BOOLEAN;
+			-- True when generating byte code with debugging hooks.
+
+	instruction_line: LINE [AST_EIFFEL];
+			-- List of breakable instructions on which a breakpoint may be set.
+
+	breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
+			-- Mapping of AST nodes with breakable position in byte array
+
+	set_debug_mode (d: like debug_mode) is
+			-- Assign `d' to `debug_mode'.
+		do
+			debug_mode := d;
+		end;
+
+	set_instruction_line (l: like instruction_line) is
+			-- Assign `l' to `instruction_line' and position FIFO stack at the
+			-- beginning as a side effect, ready for usage by byte code classes.
+		do
+			instruction_line := l;
+			l.start;
+			!!breakable_points.make
+		end;
+
+	record_breakable (ba: BYTE_ARRAY) is
+			-- Record breakable point (in debug mode only)
+		local
+			ast_node: AST_EIFFEL;
+			ast_pos: AST_POSITION;
+		do
+			if debug_mode then
+				ba.mark_breakable;
+				ast_node := instruction_line.item;
+				instruction_line.forth;
+				!! ast_pos.make (ba.position, ast_node);
+				breakable_points.add (ast_pos);
+			end;
+		end;
+
+	byte_prepend (ba, array: BYTE_ARRAY) is
+			-- Prepend `array' to byte array `ba' and update positions in the
+			-- breakable point list (provided we are in debug mode).
+		local
+			amount: INTEGER;
+		do
+			ba.prepend (array);
+			if debug_mode then
+				amount := array.position;
+				from
+					breakable_points.start;
+				until
+					breakable_points.after
+				loop
+					breakable_points.item.shift (amount);
+					breakable_points.forth;
+				end;
+			end;
 		end;
 
 end

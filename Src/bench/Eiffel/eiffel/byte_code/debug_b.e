@@ -1,3 +1,4 @@
+
 class DEBUG_B 
 
 inherit
@@ -146,6 +147,7 @@ feature -- Byte code generation
 				ba.mark_forward;
 				compound.make_byte_code (ba);
 				ba.write_forward;
+				make_breakable (ba);
 			end;
 		end;
 

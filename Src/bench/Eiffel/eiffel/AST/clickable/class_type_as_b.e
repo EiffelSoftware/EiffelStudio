@@ -138,36 +138,41 @@ feature -- Conveniences
 			-- Actual class type without processing like types
 		local
 			a_class: CLASS_C;
+			a_class_i: CLASS_I;
 			gen_type: GEN_TYPE_A;
 			actual_generic: ARRAY [TYPE_A];
 			i, count: INTEGER;
 			a_cluster: CLUSTER_I;
 		do
 			a_cluster := Inst_context.cluster;
-			if generics = Void then
-				!!Result;
-			else
-				from
-					!!gen_type;
-					i := 1;
-					count := generics.count;
-					!!actual_generic.make (1, count);
-					gen_type.set_generics (actual_generic);
-				until
-					i > count
-				loop
-					actual_generic.put (generics.i_th (i).actual_type, i);
-					i := i + 1;
+			a_class_i := Universe.class_named (class_name, a_cluster);
+				-- Bug fix: `append_clickable_signature' can be called on invalid
+				-- types by the error mechanism
+			if a_class_i /= Void then
+				if generics = Void then
+					!!Result;
+				else
+					from
+						!!gen_type;
+						i := 1;
+						count := generics.count;
+						!!actual_generic.make (1, count);
+						gen_type.set_generics (actual_generic);
+					until
+						i > count
+					loop
+						actual_generic.put (generics.i_th (i).actual_type, i);
+						i := i + 1;
+					end;
+					Result := gen_type;
 				end;
-				Result := gen_type;
-			end;
-			a_class := Universe.class_named
-							(class_name, a_cluster).compiled_class;
-			Result.set_base_type (a_class.id);
-					-- Base type class is expanded
-			Result.set_is_expanded (a_class.is_expanded);
-			if a_class.is_expanded then
-				record_exp_dependance (a_class);
+				a_class := a_class_i.compiled_class;
+				Result.set_base_type (a_class.id);
+						-- Base type class is expanded
+				Result.set_is_expanded (a_class.is_expanded);
+				if a_class.is_expanded then
+					record_exp_dependance (a_class);
+				end;
 			end;
 		end;
 

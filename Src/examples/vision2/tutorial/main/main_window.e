@@ -46,6 +46,7 @@ feature -- Initialization
 			bc: EV_BASIC_COLORS
 			sitem: EV_STATUS_BAR_ITEM
 			action_button: EV_BUTTON
+			event_button: EV_BUTTON
 			tooltip: EV_TOOLTIP
 			cmd: EV_ROUTINE_COMMAND
 			item: DEMO_ITEM [WINDOW_WINDOW]
@@ -84,6 +85,12 @@ feature -- Initialization
 			item.action_button.set_parent (vbox)
 			vbox.set_child_expandable (item.action_button, False)
 			item.action_button.set_insensitive (True)
+			
+			-- We set the event button
+			create item.make_with_title (Void, "", "")
+			item.event_button.set_parent (vbox)
+			vbox.set_child_expandable (item.event_button, False)
+			item.event_button.set_insensitive (True)
 
 			-- We set the notebook
 			create color.make_rgb (255, 255, 255)
@@ -121,8 +128,17 @@ feature -- Menu Features
 			create ri1.make_with_text (menu, "Demo")
 			create ri2.make_peer_with_text (menu, "Documentation", ri1)
 			create ri3.make_peer_with_text (menu, "Text", ri1)
-			create check_item.make_with_text (menu, "Control Window")
+			--create cmd1.make (~show_Action_window)
+			create check_item.make_with_text (menu, "Action Window")
+			--check_item.add_select_command (cmd1, Void)
 			create msep.make_with_index (menu, 4)
+		end
+
+feature --
+
+	show_action_window (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Show the action window if enabled.
+		do
 		end
 
 feature -- Tree features
@@ -306,12 +322,6 @@ feature -- Tree features
 			create color.make_with_title (selection, "ev_color_dialog", "color_window")
 			create font.make_with_title (selection, "ev_font_dialog", "font_window")
 			create printd.make_with_title (dialog, "ev_print_dialog", "print_window")
-
-				-- Item demos
-			--create items.make_with_title (composed,"MULTI_COLUMN_LIST_ROW_ITEM",test_wind)
-			--create items.make_with_title (composed)
-			--create items.make_with_title (composed)
-			--create items.make_with_title (composed)
 		end
 
 end -- class MAIN_WINDOW

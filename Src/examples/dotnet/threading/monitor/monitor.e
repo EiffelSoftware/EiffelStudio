@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class
+frozen class
 	MONITOR_SYNCHRONIZATION
 
 create
@@ -65,11 +65,7 @@ feature -- Basic Operation
 		do
 			l_state ?= a_state
 			res.access_resource (l_state)
---			num_operations := num_operations - 1
---			if num_operations <= 0 then
---				dummy := l_async_operations.set
---			end
-			if feature {INTERLOCKED}.decrement_integer ($num_operations) = 0 then
+			if feature {INTERLOCKED}.decrement_integer ($num_operations) <= 0 then
 				dummy := l_async_operations.set
 			end
 		end

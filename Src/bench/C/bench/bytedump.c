@@ -716,7 +716,6 @@ static  void    print_instructions ()
 						/* Hardcoded creation expression type */
 						fprintf (ofp, " (BC_CREATE_EXP) ");
 						(void) bshort ();
-						(void) bshort ();
 						/* creation type */
 						print_ctype (bshort ());
 /*GENERIC CONFORMANCE*/

@@ -61,6 +61,7 @@ EXPORTS
 	stop_trace
 	start_trace
 	prof_stack
+	prof_stack_rewind
 	expop
 	eraise
 	xraise
@@ -408,6 +409,7 @@ EXPORTS
 	str_take
 	str_upper
 	upintdiv
+	xequal
 
 ;Generic conformance
 	eif_gen_conf_init

@@ -10,7 +10,9 @@ inherit
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
 	WINDOWS;
-	LIC_EXITER
+	LIC_EXITER;
+	SHARED_RESCUE_STATUS;
+	EXCEPTIONS
 
 creation
 
@@ -18,25 +20,39 @@ creation
 
 feature -- Creation
 
+	retried: BOOLEAN;
+
 	make is
 			-- Analyze the command line options and 
 			-- execute the appropriate command.
 		do
-			analyze_options;
-			if option_error then
-				print_option_error
-			elseif help_only then
-				print_help
-			elseif not file_error then
-				if output_window = Void then
-					command.set_output_window (error_window)
-					command.work (Project_name, Ace_name);
-				else
-					command.set_output_window (output_window)
-					command.work (Project_name, Ace_name);
-					output_window.close;
+			if not retried then
+				analyze_options;
+				if option_error then
+					print_option_error
+				elseif help_only then
+					print_help
+				elseif not file_error then
+					if output_window = Void then
+						command.set_output_window (error_window)
+						command.work (Project_name, Ace_name);
+					else
+						command.set_output_window (output_window)
+						command.work (Project_name, Ace_name);
+						output_window.close;
+					end;
+					discard_license
 				end;
-				discard_license
+			end;
+		rescue
+			discard_license;
+			io.error.putstring ("ISE Eiffel3: Session aborted%N");
+			io.error.putstring ("Exception tag: ");
+			io.error.putstring (developer_exception_name);
+			io.error.new_line;
+			if not Rescue_status.fail_on_rescue then
+				retried := True;
+				retry
 			end;
 		end;
 

@@ -26,6 +26,8 @@ feature
 					if text /= Void then
 						output_window.put_string (text);
 						output_window.new_line;
+					elseif Lace.file_name = Void then
+						output_window.put_string ("You must compile a project first%N");
 					else
 						output_window.put_string ("Cannot open ");
 						output_window.put_string (Lace.file_name);

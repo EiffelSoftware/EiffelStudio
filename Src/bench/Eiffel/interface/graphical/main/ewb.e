@@ -8,7 +8,7 @@ inherit
 	EIFFEL_ENV;
 	ISED_X_SLAVE;
 	ARGUMENTS;
-	BUILD_LIC
+	LIC_EXITER
 		rename
 			build_dir as Eiffel3_dir_name
 		undefine
@@ -38,13 +38,6 @@ feature -- Licence managment
 			end;
 		end;
 
-	discard_licence is
-		do
-			if licence.registered then
-				licence.unregister
-			end;
-		end;
-	
 feature 
 
 	retried: BOOLEAN;
@@ -83,24 +76,27 @@ feature
 					set_batch_mode (True);
 					if init_licence then
 						!!batch_compiler.make;
-						discard_licence;
+						discard_license;
 					end;
 				end;
 			else
 				-- Ensure clean exit in case of exception
 			end;
 		rescue
-			discard_licence;
-			if not Rescue_status.fail_on_rescue then
-				retried := True;
+			discard_license;
+			if not batch_mode then
+					-- The rescue in BASIC_ES will display the tag
 				io.error.putstring ("ISE Eiffel3: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
 				io.error.putstring (developer_exception_name);
 				io.error.new_line;
+			end;
+			if not Rescue_status.fail_on_rescue then
+				retried := True;
 				retry
 			end;
 		end;
-	
+
 feature {NONE}
 
 	batch_compiler: ES;

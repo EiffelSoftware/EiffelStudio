@@ -17,7 +17,9 @@ feature
 			init_project;
 			if not error_occurred then
 				if project_is_new then
-					make_new_project
+					make_new_project;
+						-- The user will have to specify the Ace file
+					Lace.set_file_name (Void);
 				else
 					retrieve_project
 				end
@@ -44,7 +46,7 @@ feature -- Initialization
 			!EWB_STRING! ewb_cmd.make (compile_cmd_name, compile_help, compile_abb, compile_menu);
 			Result.add_entry (ewb_cmd)
 	
-			!EWB_STRING! ewb_cmd.make (routines_cmd_name, routine_help, routines_abb, feature_menu);
+			!EWB_STRING! ewb_cmd.make (feature_cmd_name, feature_help, feature_abb, feature_menu);
 			Result.add_entry (ewb_cmd)
 	
 			!EWB_STRING! ewb_cmd.make (system_cmd_name, system_help, system_abb, system_menu);
@@ -55,12 +57,15 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 2)
+			!!Result.make (1, 3)
 
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			
 			!EWB_CLUSTERS! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_EDIT_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 		end;
 
@@ -68,7 +73,7 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 13)
+			!!Result.make (1, 14)
 			
 			!EWB_ANCESTORS! ewb_cmd.null;
 			Result.add_entry (ewb_cmd)
@@ -83,6 +88,9 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd)
 
 			!EWB_DESCENDANTS! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_EDIT_CLASS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_EXTERNALS! ewb_cmd.null;
@@ -237,6 +245,7 @@ feature -- Initialization
 				if last_input.empty then
 					-- do nothing
 				else
+					last_input.to_lower;
 					process_request (last_input)
 					if last_request_abb = quit_abb then
 						done := True;

@@ -63,8 +63,6 @@ feature {NONE}
 				project_tool.set_changed (true);
 				Workbench.recompile;
 				if Workbench.successfull then
-						-- Save information for DLE.
-					System.save_static_info;
 					freezing_actions;
 					project_tool.set_changed (false);
 					project_tool.set_icon_name (System.system_name);

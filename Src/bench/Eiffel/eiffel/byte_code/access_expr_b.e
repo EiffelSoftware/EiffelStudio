@@ -14,7 +14,9 @@ inherit
 			make_byte_code, is_unsafe,
 			calls_special_features,
 			optimized_byte_node, size,
-			pre_inlined_code
+			pre_inlined_code,
+			is_temporary, is_predefined,
+			register_name
 		end;
 	
 feature 
@@ -162,4 +164,21 @@ feature -- Inlining
 			expr := expr.pre_inlined_code
 		end
 
+	is_temporary: BOOLEAN is
+			-- Is register a temporary one ?
+		do
+			Result := expr.is_temporary
+		end;
+
+	is_predefined: BOOLEAN is
+			-- Is register a temporary one ?
+		do
+			Result := expr.is_predefined
+		end;
+
+	register_name: STRING is
+			-- The ASCII representation of the register
+		do
+			Result := expr.register_name
+		end
 end

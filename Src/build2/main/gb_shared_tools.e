@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 
 feature -- Access
 

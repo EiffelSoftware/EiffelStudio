@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	GB_ACCESSIBLE_HISTORY
+	GB_SHARED_HISTORY
 
 
 feature -- Access

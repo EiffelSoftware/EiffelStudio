@@ -10,13 +10,10 @@ deferred class
 
 inherit
 	EV_ITEM_I
-		rename
-			parent as old_parent
-		export {NONE}
-			old_parent
 		redefine
 			interface,
-			pixmap_equal_to
+			pixmap_equal_to,
+			parent
 		select
 			interface
 		end

@@ -63,7 +63,7 @@ feature -- Basic routines
 			a_dc.line (a_x1, a_y + 1, a_x2, a_y + 1)
 			a_dc.select_pen (face_pen)
 			a_dc.line (a_x1, a_y + 2, a_x2, a_y + 2)
-			a_dc.line (a_x1, a_y + 3, a_x2, a_y + 3) 
+			a_dc.line (a_x1, a_y + 3, a_x2, a_y + 3)
 			a_dc.select_pen (shadow_pen)
 			a_dc.line (a_x1, a_y + 4, a_x2, a_y + 4)
 			a_dc.select_pen (window_frame_pen)

@@ -7,7 +7,7 @@ inherit
 			text_window
 		end;
 	SHARED_FORMAT_TABLES;
-	SHARED_RESOURCES
+	SHARED_BENCH_RESOURCES
 
 creation
 

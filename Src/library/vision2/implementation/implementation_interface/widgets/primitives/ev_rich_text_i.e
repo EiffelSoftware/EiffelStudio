@@ -25,6 +25,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -37,6 +38,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -49,6 +51,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -63,6 +66,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -75,6 +79,7 @@ feature -- Status report
 				start_index <= end_index
 		deferred
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -87,6 +92,7 @@ feature -- Status report
 				start_position <= end_position
 		deferred
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
@@ -104,6 +110,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
@@ -121,6 +128,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_not_void: Result /= Void
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
@@ -140,6 +148,7 @@ feature -- Status report
 		deferred
 		ensure
 			index_valid: Result >= 1 and Result <= text_length
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -154,6 +163,7 @@ feature -- Status report
 		ensure
 			position_valid: Result.x >= 0 and Result.x <= width and
 				Result.y >= 0 and Result.y <= height
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -165,6 +175,7 @@ feature -- Status report
 			index_valid: an_index >= 1 and an_index <= text_length
 		deferred
 		ensure
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
@@ -179,6 +190,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_positive: Result > 0
+			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end

@@ -84,6 +84,21 @@ feature -- Element Change
 			gtk_clist_set_text (parent_imp.widget, index, column - 1, $ctxt)
 		end
 
+feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is 
+			-- activated.
+		do check false end
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		do check false end
+		end
+
+
 feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	set_index (value: INTEGER) is

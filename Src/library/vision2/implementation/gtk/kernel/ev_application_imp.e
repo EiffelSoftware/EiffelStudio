@@ -338,7 +338,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			pnd_targets.go_to (cur)
 		end
 
-feature {EV_TOOLTIPABLE_IMP} -- Implementation
+feature {EV_ANY_IMP} -- Implementation
 
 	tooltips: POINTER
 			-- Reference to GtkTooltips object.

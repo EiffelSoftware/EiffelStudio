@@ -19,6 +19,7 @@ extern "C" {
  
 #include "config.h"
 #include "portable.h"
+#include "eif_globals.h"
 
 /* Structure used to represent bits in the object. The first long integer
  * is the length of the bit field. It is then followed by enough long integers
@@ -137,9 +138,9 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 extern EIF_BOOLEAN econfg(char *obj1, char *obj2);	/* Conformance query in class GENERAL */
 extern int econfm(int ancestor, int heir);			/* Conformance query for assignment attempt */
 extern long sp_count(char *spobject);			/* Count of a special object */
-extern void chkinv(char *obj, int where);			/* Invariant control call */
+extern void chkinv(EIF_CONTEXT char *obj, int where);			/* Invariant control call */
 #ifdef WORKBENCH
-extern void chkcinv(char *obj);			/* Creation invariant call */	
+extern void chkcinv(EIF_CONTEXT char *obj);			/* Creation invariant call */	
 #endif
 
 #ifndef WORKBENCH

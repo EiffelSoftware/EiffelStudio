@@ -12,7 +12,7 @@ inherit
 
 feature -- Status report
 
-	mode_is_segmented: BOOLEAN is
+	is_segmented: BOOLEAN is
 			-- Is the mode in segmented mode?
 		require
 			exists: not destroyed

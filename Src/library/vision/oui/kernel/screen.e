@@ -98,6 +98,26 @@ feature -- Measurement
 			width_large_enough: Result >= 0
 		end;
 
+	visible_height: INTEGER is
+			-- Height of screen (in pixel)
+		require
+			exists: not destroyed
+		do
+			Result := implementation.visible_height
+		ensure
+			visible_height_large_enough: Result >= 0
+		end;
+
+	visible_width: INTEGER is
+			-- Width of screen (in pixel)
+		require
+			exists: not destroyed
+		do
+			Result := implementation.visible_width
+		ensure
+			visible_width_large_enough: Result >= 0
+		end;
+
 	x: INTEGER is
 			-- Current absolute horizontal coordinate of the mouse
 		require

@@ -51,8 +51,13 @@ feature -- Callbacks
 		do
 			if choose_again then
 				choose_again := False
-				last_name_chooser.set_window (Project_tool)
-				last_name_chooser.call (Current)
+					-- `last_name_choose' can be Void when creating a project
+					-- from another EiffelBench session because no chooser has
+					-- been created yet.
+				if last_name_chooser /= Void then
+					last_name_chooser.set_window (Project_tool)
+					last_name_chooser.call (Current)
+				end
 			else
 				init_project
 			end

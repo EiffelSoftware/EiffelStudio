@@ -310,6 +310,22 @@ end;
 	
 				forth;
 			end;
+
+				-- Iteration on the features removed by `update_table'
+			from
+				removed_feature_ids.start
+			until
+				removed_feature_ids.after
+			loop
+debug ("ACTIVITY")
+    io.error.putstring ("%Tfeature of id ");
+    io.error.putint (removed_feature_ids.item);
+    io.error.putstring (" (removed by `update_table' is propagated to clients%N");
+end;
+				!!depend_unit.make (feat_tbl_id, removed_feature_ids.item);
+				propagators.put (depend_unit);
+				removed_feature_ids.forth
+			end
 		end;
 
 	propagate_assertions (assert_list: LINKED_LIST [INTEGER]) is
@@ -350,7 +366,7 @@ end;
 			end;
 		end;
 
-		-- Check
+feature -- Check
 
 	update_table is
 			-- Check if the references to the supplier classes
@@ -359,6 +375,7 @@ end;
 			f: FEATURE_I;
 		do
 			from
+				removed_feature_ids.wipe_out;
 				start
 			until
 				after
@@ -366,7 +383,7 @@ end;
 				f := item_for_iteration;
 				if not f.is_valid then
 						-- The result type or one of the arguments type is not valid
-debug
+debug ("ACTIVITY")
 	io.error.putstring ("Update table: ");
 	io.error.putstring (key_for_iteration);
 	io.error.putstring (" removed%N");
@@ -380,11 +397,19 @@ end;
 					-- There is no need for a corresponding "reactivate" here
 					-- since it will be done in by pass2 in `feature_unit' if need be
 
+					removed_feature_ids.extend (f.feature_id);
 					remove (key_for_iteration);
 				end;
 				forth
 			end
 		end;
+
+	removed_feature_ids: LINKED_SET [INTEGER] is
+			-- Set of feature_ids removed by `update_table'
+			--| It will be used for incrementality (propagation of pass3)
+		once
+			!!Result.make
+		end
 
 	check_table is
 			-- Check all the features in the table

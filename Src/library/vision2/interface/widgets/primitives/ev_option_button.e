@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_BUTTON}
 			create menu
-			select_actions.extend (menu~show)
-			menu.item_select_actions.extend (~on_item_select)
+			select_actions.extend (agent menu.show)
+			menu.item_select_actions.extend (agent on_item_select)
 		end
 
 feature -- Access

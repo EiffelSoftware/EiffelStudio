@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			a_drawing_area_not_void: a_drawing_area /= Void
 		do
 			make_with_drawable_widget (a_world, a_drawing_area, a_drawing_area)
-			a_drawing_area.expose_actions.extend (~on_paint)
+			a_drawing_area.expose_actions.extend (agent on_paint)
 		end
 
 	make_with_buffer (
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				a_drawing_area,
 				a_buffer,
 				a_drawing_area)
-			a_drawing_area.expose_actions.extend (~on_paint)
+			a_drawing_area.expose_actions.extend (agent on_paint)
 		end
 		
 feature {NONE} -- Implementation

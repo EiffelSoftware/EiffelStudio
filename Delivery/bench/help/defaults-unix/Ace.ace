@@ -15,7 +15,7 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
@@ -24,20 +24,5 @@ cluster
 		-- root class cluster and corresponding path for your system.
 		-- Add any other clusters that your system will need.
 
-        kernel:             "$EIFFEL5/library/base/kernel";
-        support:            "$EIFFEL5/library/base/support";
-        access:             "$EIFFEL5/library/base/structures/access";
-        cursors:            "$EIFFEL5/library/base/structures/cursors";
-        cursor_tree:        "$EIFFEL5/library/base/structures/cursor_tree";
-        dispenser:          "$EIFFEL5/library/base/structures/dispenser";
-        iteration:          "$EIFFEL5/library/base/structures/iteration";
-        list:               "$EIFFEL5/library/base/structures/list";
-        obsolete:           "$EIFFEL5/library/base/structures/obsolete";
-        set:                "$EIFFEL5/library/base/structures/set";
-        sort:               "$EIFFEL5/library/base/structures/sort";
-        storage:            "$EIFFEL5/library/base/structures/storage";
-        table:              "$EIFFEL5/library/base/structures/table";
-        traversing:         "$EIFFEL5/library/base/structures/traversing";
-        tree:               "$EIFFEL5/library/base/structures/tree";
 
 end

@@ -23,19 +23,9 @@ cluster
 		-- Add any other clusters that your system will need.
 		
 
-	access:			"$EIFFEL5/library/base/structures/access";
-	cursors:		"$EIFFEL5/library/base/structures/cursors";
-	cursor_tree:	"$EIFFEL5/library/base/structures/cursor_tree";
-	dispenser:		"$EIFFEL5/library/base/structures/dispenser";
-	iteration:		"$EIFFEL5/library/base/structures/iteration";
-	kernel:			"$EIFFEL5/library/base/kernel";
-	list:			"$EIFFEL5/library/base/structures/list";
-	obsolete:		"$EIFFEL5/library/base/structures/obsolete";
-	set:			"$EIFFEL5/library/base/structures/set";
-	sort:			"$EIFFEL5/library/base/structures/sort";
-	storage:		"$EIFFEL5/library/base/structures/storage";
-	support:		"$EIFFEL5/library/base/support";
-	traversing:		"$EIFFEL5/library/base/structures/traversing";
-	tree:	       	"$EIFFEL5/library/base/structures/tree";
+	library base:	"$ISE_EIFFEL/library/base"
+		exclude
+			"table_eiffel3"
+		end
 
 end

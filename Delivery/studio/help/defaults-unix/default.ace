@@ -13,7 +13,7 @@ cluster
 	$root_cluster_line
 
 		-- EiffelBase
-	base:				"$EIFFEL5/library/base"
+	base:				"$ISE_EIFFEL/library/base"
 	structures(base):		"$/structures"
 	
 	kernel(base):			"$/kernel"
@@ -31,6 +31,6 @@ cluster
 	traversing(structures):		"$/traversing"
 	tree(structures):		"$/tree"
 
-	thread:				"$EIFFEL5/library/thread"
+	thread:				"$ISE_EIFFEL/library/thread"
 
 end

@@ -795,6 +795,14 @@ feature {NONE} -- Implementation
 				command_handler.save_command.execute
 			end
 			if must_exit then
+				if System_status.project_open then
+						-- Now store to preferences, but only if the project is open.
+						-- If it is closed, these preferences will have already been saved
+						-- at the point the project was closed, as they are subsequently hidden.
+					Preferences.set_integer_resource (Preferences.main_split__position, horizontal_split_area.split_position)
+					store_tool_positions
+				end
+				
 					-- Save all the user generated components.
 				xml_handler.save_components
 				

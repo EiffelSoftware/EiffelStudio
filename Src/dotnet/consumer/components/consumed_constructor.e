@@ -13,6 +13,7 @@ inherit
 		redefine
 			dotnet_name,
 			has_arguments, arguments, is_public,
+			is_frozen,
 			set_is_public
 		end
 
@@ -45,6 +46,9 @@ feature -- Access
 
 	is_public: BOOLEAN
 			-- Is constructor public?
+
+	is_frozen: BOOLEAN is True
+			-- A constructor cannot be redefined.
 
 	dotnet_name: STRING is ".ctor"
 			-- Name of a .NET constructor.

@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_return_value, return_type, is_attribute, is_init_only, is_field
+			has_return_value, return_type, is_attribute, is_init_only, is_field, is_virtual
 		end
 
 create
@@ -74,4 +74,13 @@ feature -- Status report
 			Result := True
 		end
 
+	is_virtual: BOOLEAN is
+			-- Is field virtual?
+			-- Yes, if it is not a static field.
+		do
+			Result := not is_static
+		ensure
+			definition: Result = not is_static
+		end
+		
 end -- class CONSUMED_FIELD

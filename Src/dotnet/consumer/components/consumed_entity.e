@@ -52,6 +52,11 @@ feature -- Access
 		do
 		end
 
+	is_frozen: BOOLEAN is
+			-- Is .NET definition frozen?
+		do
+		end
+
 	is_public: BOOLEAN is
 			-- Is .NET entity public?
 		do
@@ -74,6 +79,16 @@ feature -- Access
 
 	is_property_or_event: BOOLEAN is
 			-- Is entity an event or property related feature?
+		do
+		end
+		
+	is_new_slot: BOOLEAN is
+			-- Is entity marked with `newslot' flag in metadata?
+		do
+		end
+		
+	is_virtual: BOOLEAN is
+			-- Is entity marked with `virtual' flag in metadata?
 		do
 		end
 		

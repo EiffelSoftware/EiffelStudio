@@ -22,9 +22,10 @@ inherit
 		end
 
 creation 
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif toggle button gadget.
@@ -34,7 +35,7 @@ feature {NONE} -- Initialization
 			parent := a_parent;	
 			widget_name := a_name.to_c;
 			screen_object := xm_create_toggle_button_gadget (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
@@ -90,9 +91,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNselectColor)
+			Result := get_xt_pixel (Current, XmNselectColor)
 		ensure
-			select_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	select_insensitive_pixmap: MEL_PIXMAP is
@@ -100,9 +102,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNselectInsensitivePixmap)
+			Result := get_xt_pixmap (Current, XmNselectInsensitivePixmap)
 		ensure
-			select_insensitive_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	select_pixmap: MEL_PIXMAP is
@@ -110,9 +113,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNselectPixmap)
+			Result := get_xt_pixmap (Current, XmNselectPixmap)
 		ensure
-			select_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	spacing: INTEGER is
@@ -250,7 +254,8 @@ feature -- Status setting
 			-- Set `select_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNselectColor, a_color)
 		ensure
@@ -261,7 +266,9 @@ feature -- Status setting
 			-- Set `select_insensitive_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNselectInsensitivePixmap, a_pixmap)
 		ensure
@@ -272,7 +279,9 @@ feature -- Status setting
 			-- Set `select_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNselectPixmap, a_pixmap)
 		ensure

@@ -212,6 +212,7 @@ feature -- Basic operation
 			command_handler.show_hide_component_viewer_command.safe_disable_selected
 			command_handler.show_hide_display_window_command.safe_disable_selected
 			command_handler.show_hide_history_command.safe_disable_selected
+			hide_external_tools
 			destroy_floating_editors
 		end	
 		
@@ -600,6 +601,46 @@ feature {GB_XML_HANDLER} -- Implementation
 		do
 			main_menu_bar.do_all (agent update_menu_sensitivity (?, True))
 		end
+		
+feature {WIZARD_STATE_WINDOW}
+
+	hide_external_tools is
+			-- Hide all tools external to `multiple_split_area'.
+		local
+			external_tools: ARRAYED_LIST [EV_WIDGET]
+			dialog: EV_DIALOG
+		do
+			external_tools := Multiple_split_area.external_representation
+			from
+				external_tools.start
+			until
+				external_tools.off
+			loop
+				dialog := parent_dialog (external_tools.item)
+					-- There appears to be a bug where showing a window again
+					-- will not restore it to its last actual position unless
+					-- `set_position' has been called explicitly.
+				dialog.set_position (dialog.x_position, dialog.y_position)
+				dialog.hide
+				external_tools.forth
+			end
+		end
+		
+	show_external_tools (a_window: EV_TITLED_WINDOW) is
+			-- Show all tools external to `multiple_split_area', relative to `a_window'.
+		local
+			external_tools: ARRAYED_LIST [EV_WIDGET]
+		do
+			external_tools := Multiple_split_area.external_representation
+			from
+				external_tools.start
+			until
+				external_tools.off
+			loop
+				parent_dialog (external_tools.item).show_relative_to_window (a_window)
+				external_tools.forth
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -864,7 +905,6 @@ feature {NONE} -- Implementation
 				local_commands.forth
 			end
 		end
-		
 
 	close_requested is 
 			-- End the current application.

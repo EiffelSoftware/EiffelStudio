@@ -71,15 +71,6 @@ feature -- Access
 			bridge_ok: Result = implementation.parent
 		end
 
-	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN is
-			-- Is `a_widget' `parent', or recursivly, `parent' of `parent'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := a_widget = parent or else
-				(parent /= Void and then parent.is_parent_recursive (a_widget))
-		end
-
 	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer relative to `Current'.
 		require

@@ -64,7 +64,7 @@ extern long *nbref;		/* Gives # of references given DT */
 #define Cecil(type)			egc_ce_rname[type]			/* Final mode acces to hash table */
 #define References(type)	nbref[type] 	/* # of references */
 #define Dispose(type)		egc_edispose[type]	/* Dispose routine */
-#define Disp_rout(type)		(egc_edispose && egc_edispose[type])	/* Does type have disp routine */
+#define Disp_rout(type)		egc_edispose[type]	/* Does type have disp routine */
 #define XCreate(type)		egc_ecreate[type]	/* Initialization routine */
 #else
 #define Cecil(type)			esystem[type].cn_cecil	/* Workbench mode access */

@@ -95,7 +95,7 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (last_make_command)
 			launch (a_string, current_working_directory)
-			check_return_code (1)
+			check_return_code
 		end
 	
 	link_all (a_folder_name, a_library_name: STRING) is
@@ -133,7 +133,7 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (an_object_file_list)
 			launch (a_string, a_folder_name)
-			check_return_code (1)
+			check_return_code
 		end
 
 feature {NONE} -- Implementation
@@ -144,11 +144,10 @@ feature {NONE} -- Implementation
 	Lib_out_option: STRING is "/OUT:"
 			-- Lib out option
 
-	check_return_code (a_status: INTEGER) is
-			-- Display error message and stops execution if last system call returned
-			-- other value than `a_status'.
+	check_return_code is
+			-- Display error message and stops execution if last system call failed
 		do
-			if last_process_result /= a_status or not last_launch_successful then
+			if last_process_result /= 0 or not last_launch_successful then
 				shared_wizard_environment.set_abort (last_process_result)
 			end
 		end

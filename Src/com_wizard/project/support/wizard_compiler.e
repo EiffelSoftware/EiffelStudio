@@ -30,6 +30,7 @@ feature -- Basic Operations
 			-- resulting type library file name.
 		local
 			a_string: STRING
+			intt: INTEGER
 		do
 			a_string := clone (Idl_compiler)
 			a_string.append (Space)
@@ -45,7 +46,7 @@ feature -- Basic Operations
 			a_string.append (clone (Space))
 			a_string.append (last_make_command)
 			launch (a_string, Shared_wizard_environment.destination_folder)
-			check_return_code (1)
+			check_return_code
 		end
 
 	compile_iid is
@@ -81,7 +82,7 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (last_make_command)
 			launch (a_string, shared_wizard_environment.destination_folder)
-			check_return_code (1)
+			check_return_code
 			a_string := clone (shared_wizard_environment.destination_folder)
 			a_string.append (clone (shared_wizard_environment.project_name))
 			a_string.append (Dll_file_extension)

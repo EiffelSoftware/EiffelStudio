@@ -7,7 +7,6 @@ inherit
 	SHARED_WORKBENCH
 
 creation
-
 	make
 
 feature
@@ -105,39 +104,27 @@ feature
 			end;
 		end;
 
-	generate_header (file_name: STRING) is
+	generate_header (f: INDENT_FILE) is
 			-- Generate the run-time header file includes
 		require
-			file_name_exists: file_name /= Void;
-		local
-			f: INDENT_FILE;
+			file_exists: f /= Void and then f.exists
 		do
-			!!f.make (file_name);
-			f.open_write;
-
 			f.putstring ("#include %"eif_portable.h%"%N%
 					%#include %"eif_macros.h%"%N%N");
-
-			f.close
 		end
 
-	generate (file_name: STRING) is
+	generate (f: INDENT_FILE) is
 			-- Generate declarations in a file of name `file_name'.
 		require
-			file_name_exists: file_name /= Void;
+			file_exists: f /= Void and then f.exists
 		local
-			f: INDENT_FILE;
 			local_routines: EXTEND_TABLE [TYPE_C, STRING]
 			local_routine_tables: SEARCH_TABLE [STRING]
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]
 		do
-			!!f.make (file_name);
-			f.open_append;
-
 				-- generate the include files required by externals
 			generate_header_files (f);
-
 
 			from
 				local_routines := routines
@@ -190,8 +177,6 @@ feature
 				f.putstring ("_gen_type [];%N");
 				local_type_tables.forth;
 			end;
-
-			f.close;
 		end;
 
 end

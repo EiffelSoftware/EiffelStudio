@@ -61,11 +61,9 @@ feature {TTY_RESOURCES} -- Initialization
 			!! symbol_color.make ("symbol_color", rt, "black");
 			if not Platform_constants.is_windows then
 				!! progress_bar_color.make ("progress_bar_color", rt, "blue");
-				!! focus_label_color.make ("progress_bar_color", rt, "LightYellow");
-				!! highlight_line_background_color.make 
-					("highlight_background_line_color", rt, "red");
-				!! highlight_line_foreground_color.make 
-					("highlight_foreground_line_color", rt, "white");
+				!! focus_label_color.make ("explanation_label", rt, "LightYellow");
+				!! highlight_line_background_color.make ("highlight_background_line_color", rt, "red");
+				!! highlight_line_foreground_color.make ("highlight_foreground_line_color", rt, "white");
 			end;
 		end
 

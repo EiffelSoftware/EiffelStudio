@@ -310,13 +310,15 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		do
 			Result := (y_in_lines < other.y_in_lines) or else
-				((y_in_lines = other.y_in_lines) and then (x_in_pixels < other.x_in_pixels))
+				((y_in_lines = other.y_in_lines) and then (x_in_pixels < other.x_in_pixels and then
+												not (token = other.token) and then (pos_in_token = other.pos_in_token)))
+				--| We have to verify that Current and `other' are not equal.
 		end
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is Current equal to `other'?
 		do
-			Result := (y_in_lines = other.y_in_lines) and then (x_in_pixels = other.x_in_pixels)
+			Result := (y_in_lines = other.y_in_lines) and then (token = other.token) and then (pos_in_token = other.pos_in_token)
 		end
 
 feature -- Transformation
@@ -516,7 +518,7 @@ feature -- Transformation
 				--| (except first and last line, of course).
 			cline := line
 			t := token
-			if token.length > pos_in_token + n then
+			if token.length >= pos_in_token + n then
 					--| All the characters to erase are in the same token.
 				pos := pos_in_token + n
 			else

@@ -1296,10 +1296,8 @@ feature -- Workbench feature and descriptor table generation
 			-- the current class
 		local
 			table_file_name: STRING;
-			feat_tbl: FEATURE_TABLE;
 			file: INDENT_FILE;
 		do
-			feat_tbl := feature_table;
 			table_file_name := full_file_name;
 			table_file_name.append_integer (id);
 			table_file_name.append_character (feature_table_file_suffix);

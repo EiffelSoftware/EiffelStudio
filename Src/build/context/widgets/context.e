@@ -40,14 +40,7 @@ inherit
 		end;
 	DRAG_SOURCE;
 	TYPE_DATA
-	-- added by samik
---	WIDGET 
---		undefine
---			init_toolkit, parent,realize,is_fontable,shown,show,hide,real_x,real_y,set_size,set_x_y,height,width,x,y,raise,same
---		redefine
---			identifier
---		end
-	--endof samik
+
 	
 feature -- Guillaume
 

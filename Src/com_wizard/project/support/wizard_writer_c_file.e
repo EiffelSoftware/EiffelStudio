@@ -55,6 +55,21 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append (New_line)
 
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Open_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+
 			from
 				others_forward.start
 			until
@@ -114,6 +129,16 @@ feature -- Access
 			end
 
 			Result.append (New_line)
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Close_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+
+			Result.append (New_line)
 			Result.append (Sharp)
 			Result.append (Endif)
 		end
@@ -143,6 +168,22 @@ feature -- Access
 			Result.append (New_line)
 			Result.append (New_line)
 
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Open_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+			Result.append (New_line)
+
 			from
 				others_source.start
 			until
@@ -165,6 +206,15 @@ feature -- Access
 				Result.append (functions.item.generated_code)
 				functions.forth
 			end
+
+			Result.append (New_line)
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Close_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
 		end
 
 	can_generate: BOOLEAN is

@@ -1645,7 +1645,7 @@ yyval86 := yytype86 (yyvs.item (yyvsp))
 			yyval86: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval86 := new_clickable_id (new_id_as (token_buffer)) 
+yyval86 := new_clickable_id (create {ID_AS}.initialize (token_buffer)) 
 			yyval := yyval86
 		end
 
@@ -3631,7 +3631,7 @@ yyval71 := yytype71 (yyvs.item (yyvsp))
 
 		do
 			yyval := yyval_default;
-formal_parameters.extend (new_id_as (token_buffer)) 
+formal_parameters.extend (create {ID_AS}.initialize (token_buffer)) 
 
 		end
 
@@ -5165,7 +5165,7 @@ yyval23 := new_address_result_as
 			yyval30: ID_AS
 		do
 
-yyval30 := new_id_as (token_buffer) 
+create yyval30.initialize (token_buffer) 
 			yyval := yyval30
 		end
 
@@ -5663,7 +5663,7 @@ yyval66 := yytype66 (yyvs.item (yyvsp))
 			yyval30: ID_AS
 		do
 
-yyval30 := new_id_as (token_buffer) 
+create yyval30.initialize (token_buffer) 
 			yyval := yyval30
 		end
 
@@ -6046,7 +6046,7 @@ yyval47 := new_real_as (cloned_string (token_buffer))
 			yyval7: BIT_CONST_AS
 		do
 
-yyval7 := new_bit_const_as (new_id_as (token_buffer)) 
+yyval7 := new_bit_const_as (create {ID_AS}.initialize (token_buffer)) 
 			yyval := yyval7
 		end
 

@@ -359,7 +359,7 @@ yyval1 := yytype1 (yyvs.item (yyvsp))
 			yyval5: ID_AS
 		do
 
-yyval5 := new_id_as (token_buffer) 
+create yyval5.initialize (token_buffer) 
 			yyval := yyval5
 		end
 
@@ -670,7 +670,7 @@ yyval8 := new_real_as (cloned_string (token_buffer))
 			yyval2: BIT_CONST_AS
 		do
 
-yyval2 := new_bit_const_as (new_id_as (token_buffer)) 
+yyval2 := new_bit_const_as (create {ID_AS}.initialize (token_buffer)) 
 			yyval := yyval2
 		end
 

@@ -327,9 +327,18 @@ feature {NONE} -- Implementation
 
 	server_generated_ace_file: STRING is
 			-- Beginning of server generated Ace file
+		local
+			tmp_string: STRING
 		do
 			Result := client_generated_ace_file
-			Result.replace_substring_all (Any_type, Registration_class_name)
+			tmp_string := clone (Registration_class_name)
+			tmp_string.append (Colon)
+			tmp_string.append (Space)
+			tmp_string.append (double_quote)
+			tmp_string.append (Registration_class_creation_routine)
+			tmp_string.append (Double_quote)
+
+			Result.replace_substring_all (Any_type, tmp_string)
 			if Shared_wizard_environment.in_process_server then
 				Result.replace_substring_all (Default_keyword, Shared_library_option)
 			end

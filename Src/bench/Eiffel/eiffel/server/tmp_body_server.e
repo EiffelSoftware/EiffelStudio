@@ -4,7 +4,7 @@
 class TMP_BODY_SERVER 
 
 inherit
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+	READ_SERVER [FEATURE_AS, BODY_ID]
 		export
 			{BODY_SERVER} tbl_item
 		redefine

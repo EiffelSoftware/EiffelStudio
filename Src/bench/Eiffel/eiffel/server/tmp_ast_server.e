@@ -5,7 +5,7 @@
 class TMP_AST_SERVER 
 
 inherit
-	COMPILER_SERVER [CLASS_AS_B, CLASS_ID]
+	COMPILER_SERVER [CLASS_AS, CLASS_ID]
 		redefine
 			put, make_index, need_index, make
 		end
@@ -43,13 +43,13 @@ feature
 			!!Result.make
 		end
 
-	id (t: CLASS_AS_B): CLASS_ID is
+	id (t: CLASS_AS): CLASS_ID is
 			-- Id associated with `t'
 		do
 			Result := t.id
 		end
 
-	put (t: CLASS_AS_B) is
+	put (t: CLASS_AS) is
 			-- Append object `t' in file ".TMP_AST".
 		do
 			index.clear_all
@@ -63,7 +63,7 @@ feature
 			-- of FEATURE_AS and INVARIANT_AS
 		local
 			read_info: READ_INFO
-			feat: FEATURE_AS_B
+			feat: FEATURE_AS
 		do
 				-- Put `obj' in the index.
 			!!read_info

@@ -66,7 +66,7 @@ feature {COMPILER_EXPORTER}
 
 feature {COMPILER_EXPORTER}
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.put_text_item (ti_L_curly);
 			ctxt.put_string ("NONE");

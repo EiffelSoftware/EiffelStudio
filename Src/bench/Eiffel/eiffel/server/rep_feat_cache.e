@@ -4,7 +4,7 @@ class REP_FEAT_CACHE
 
 inherit
 
-	CACHE [FEATURE_AS_B, BODY_ID]
+	CACHE [FEATURE_AS, BODY_ID]
 
 creation
 

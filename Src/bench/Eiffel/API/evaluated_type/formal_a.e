@@ -140,7 +140,7 @@ feature {COMPILER_EXPORTER}
 			False
 		end
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 			-- reconstitute text
 		do
 			ctxt.put_string (ctxt.formal_name (position))
@@ -151,7 +151,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
 			-- Storage info for Current type in class `classc'
 		local
-			gens: EIFFEL_LIST_B [FORMAL_DEC_AS_B]
+			gens: EIFFEL_LIST [FORMAL_DEC_AS]
 			gen_name: STRING
 		do
 			gens := classc.generics

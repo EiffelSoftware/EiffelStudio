@@ -63,9 +63,6 @@ feature -- Access
 	e_feature: E_FEATURE;
 			-- Class where feature is defined
 
-	execution_error: BOOLEAN
-			-- Was there an error in the formatting
-
 feature -- Element change
 
 	formal_name (pos: INTEGER): ID_AS is

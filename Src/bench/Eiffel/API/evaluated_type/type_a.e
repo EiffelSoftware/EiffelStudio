@@ -6,7 +6,7 @@ indexing
 deferred class TYPE_A
 
 inherit
-	TYPE_B
+	TYPE
 		rename
 			position as comment_position
 		undefine
@@ -418,7 +418,7 @@ feature {COMPILER_EXPORTER} -- Access
 
 feature {COMPILER_EXPORTER}
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
 			ctxt.put_string (dump)

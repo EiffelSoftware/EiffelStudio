@@ -132,7 +132,7 @@ feature {COMPILER_EXPORTER}
 			Result.set_size (bit_count)
 		end
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.put_string ("BIT ")
 			ctxt.put_string (bit_count.out)

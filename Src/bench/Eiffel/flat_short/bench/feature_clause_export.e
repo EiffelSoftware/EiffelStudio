@@ -98,7 +98,7 @@ feature -- Element change
 
 feature -- Context output
 
-	format (ctxt: FORMAT_CONTEXT_B; comments: EIFFEL_COMMENTS) is
+	format (ctxt: FORMAT_CONTEXT; comments: EIFFEL_COMMENTS) is
 			-- Reconstitute text.
 		local
 			not_first: BOOLEAN

@@ -47,9 +47,9 @@ feature -- Access
 			-- Associated feature name representing AST
 		require
 			is_feature: is_feature
-        do
+		do
 		ensure
 			non_void_result: Result /= Void
-        end;
+		end;
 
 end -- class CLICKABLE_AST

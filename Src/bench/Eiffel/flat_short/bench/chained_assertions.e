@@ -16,7 +16,7 @@ creation
 
 feature -- Output
 
-	format_precondition (ctxt: FORMAT_CONTEXT_B) is
+	format_precondition (ctxt: FORMAT_CONTEXT) is
 			-- Format precondition to `ctxt'. Detect
 			-- if the assertion in the origin precursor
 			-- feature is defined. If not, generate
@@ -83,7 +83,7 @@ feature -- Output
 			ctxt.restore_adaptations;
 		end;
 
-	format_postcondition (ctxt: FORMAT_CONTEXT_B) is
+	format_postcondition (ctxt: FORMAT_CONTEXT) is
 			-- Format format_postcondition to `ctxt'. 
 		local
 			is_not_first: BOOLEAN;

@@ -4,7 +4,7 @@ class
 	BODY_SERVER 
 
 inherit
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+	READ_SERVER [FEATURE_AS, BODY_ID]
 		rename
 			ast_server as offsets
 		export
@@ -47,7 +47,7 @@ end;
 			!!Result.make;
 		end;
 
-	item (an_id: BODY_ID): FEATURE_AS_B is
+	item (an_id: BODY_ID): FEATURE_AS is
 			-- Body of id `an_id'. Look first in the temporary
 			-- body server. It not present, look in itself.
 		require else

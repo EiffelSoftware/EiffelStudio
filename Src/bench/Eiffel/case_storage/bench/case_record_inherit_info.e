@@ -112,7 +112,7 @@ feature {NONE} -- Recording information for eiffelcase
 			origin_feature: FEATURE_I;
 			rename_data: S_RENAME_DATA;
 			feature_i: FEATURE_I;
-			feature_ast: FEATURE_AS_B;
+			feature_ast: FEATURE_AS;
 			parent_c: PARENT_C;
 			temp: STRING
 		do

@@ -4,7 +4,7 @@
 class TMP_INV_AST_SERVER 
 
 inherit
-	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
+	READ_SERVER [INVARIANT_AS, CLASS_ID]
 		rename
 			tmp_ast_server as offsets
 		redefine

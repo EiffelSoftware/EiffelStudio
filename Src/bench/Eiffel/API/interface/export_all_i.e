@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER}
 			io.error.putstring ("ALL");
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		do
 		end;
 

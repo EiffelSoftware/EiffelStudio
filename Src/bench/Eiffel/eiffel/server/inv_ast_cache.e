@@ -4,7 +4,7 @@ class INV_AST_CACHE
 
 inherit
 
-	CACHE [INVARIANT_AS_B, CLASS_ID]
+	CACHE [INVARIANT_AS, CLASS_ID]
 
 creation
 

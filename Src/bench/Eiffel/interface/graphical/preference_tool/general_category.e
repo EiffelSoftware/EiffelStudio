@@ -34,7 +34,7 @@ feature {TTY_RESOURCES} -- Initialization
 	initialize (rt: RESOURCE_TABLE) is
 			-- Initialize all resources valid for Current.
 		do
-			!! regular_button.make ("regular_button in toolbar", rt, False)
+			!! regular_button.make ("regular_button_in_toolbar", rt, False)
 			!! acrobat_reader.make ("acrobat_reader", rt, "acrobat");
 			!! tab_step.make ("tab_step", rt, 4);
 			!! editor.make ("editor", rt, "vi");

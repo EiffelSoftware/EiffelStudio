@@ -78,7 +78,7 @@ feature -- Output
 		require
 			valid_e_class: e_class /= Void
 		local
-			f: FORMAT_CONTEXT_B
+			f: FORMAT_CONTEXT
 		do
 			!! f.make (e_class);
 			if is_short or else e_class.lace_class.hide_implementation then
@@ -105,7 +105,7 @@ feature -- Output
 		require
 			valid_e_class: e_class /= Void
 		local
-			f: FORMAT_CONTEXT_B;
+			f: FORMAT_CONTEXT;
 			old_cluster: CLUSTER_I;
 			old_class, class_c: CLASS_C;
 		do

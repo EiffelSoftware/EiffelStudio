@@ -7,7 +7,7 @@ inherit
 		rename
 			make as extend_stack_make
 		export
-			{ACCESS_FEAT_AS_B, PRECURSOR_AS_B} i_th
+			{ACCESS_FEAT_AS, PRECURSOR_AS} i_th
 		end
 
 	SHARED_SERVER
@@ -385,7 +385,7 @@ feature -- Concurrent Eiffel
 			end
 		end
 
-	set_separate_call_on_argument (arg_name: ID_AS_B) is
+	set_separate_call_on_argument (arg_name: ID_AS) is
 			-- Record argument `i' as been used in separate call.
 		require
 			feature_has_argument: a_feature.argument_position (arg_name) /= 0
@@ -419,7 +419,7 @@ feature -- Debugging
 
 feature -- Debugger
 
-	instruction_line: LINE [AST_EIFFEL_B];
+	instruction_line: LINE [AST_EIFFEL];
 			 -- List of instructions encountered sequentially in the compound.
 
 end

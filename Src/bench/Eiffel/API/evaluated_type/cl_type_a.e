@@ -270,7 +270,7 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE_B; class_id: CLASS_ID): TYPE_A is
+	instantiation_of (type: TYPE; class_id: CLASS_ID): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'
 			-- in the context of Current
 		local
@@ -346,7 +346,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			Result.set_type (type_i)
 		end
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 			--
 		do
 			ctxt.put_classi (associated_class.lace_class)

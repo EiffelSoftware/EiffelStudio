@@ -19,7 +19,7 @@ feature -- Properties
 	node: CLICKABLE_AST;
 			-- Node AST that has a position
 
-feature {CLASS_AS_B} 
+feature {CLASS_AS} 
 
 	set_node (n: like node) is
 			-- Set `node' to `n'.

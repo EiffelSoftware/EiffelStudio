@@ -213,7 +213,7 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		do
 			from
 				start;
@@ -241,7 +241,7 @@ feature {COMPILER_EXPORTER} -- Case storage
 			until
 				after
 			loop
-					--| clients dynamic types is actually ID_AS_B not STRING.
+					--| clients dynamic types is actually ID_AS not STRING.
 					--| We need to convert this to a string so that EiffelCase
 					--| can read it in.
 				from

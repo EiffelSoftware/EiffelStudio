@@ -9,10 +9,10 @@ inherit
 
 feature 
 
-	type: TYPE_B;
+	type: TYPE;
 			-- Type of the function
 
-	set_type (t: TYPE_B) is
+	set_type (t: TYPE) is
 			-- Assign `t' to `type'.
 		do
 			type := t
@@ -26,7 +26,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			{ONCE_PROC_I} precursor (other);
+			{ONCE_PROC_I} Precursor (other);
 			other.set_type (type);
 		end;
 

@@ -3,7 +3,7 @@
 class REP_FEAT_SERVER 
 
 inherit
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+	READ_SERVER [FEATURE_AS, BODY_ID]
 		rename
 			rep_server as offsets
 		export
@@ -44,7 +44,7 @@ feature -- Access
 			Result := Tmp_rep_feat_server.has (an_id) or else server_has (an_id);
 		end;
 
-	item (an_id: BODY_ID): FEATURE_AS_B is
+	item (an_id: BODY_ID): FEATURE_AS is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do

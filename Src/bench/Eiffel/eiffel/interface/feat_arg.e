@@ -13,7 +13,7 @@ inherit
 			copy, setup, consistent, is_equal
 		end
 
-	EIFFEL_LIST_B [TYPE_B]
+	EIFFEL_LIST [TYPE]
 		rename
 			make as old_make
 		redefine
@@ -27,7 +27,7 @@ feature
 
 -- FIXME: redefine is_equivalent
 
-	argument_names: EIFFEL_LIST_B [ID_AS_B]
+	argument_names: EIFFEL_LIST [ID_AS]
 			-- Argument names
 
 	make (n: INTEGER) is
@@ -40,7 +40,7 @@ feature
 	copy (other: like Current) is
 			-- Clone
 		do
-			{EIFFEL_LIST_B} Precursor (other)
+			{EIFFEL_LIST} Precursor (other)
 			set_argument_names (clone (argument_names))
 		end
 
@@ -50,7 +50,7 @@ feature
 			argument_names := n
 		end
 
-	put_name (s: ID_AS_B i: INTEGER) is
+	put_name (s: ID_AS i: INTEGER) is
 			-- Record argument name `s'.
 		require
 			index_small_enough: i <= count
@@ -65,7 +65,7 @@ feature
 		local
 			solved_type: TYPE_A
 			associated_class: CLASS_C
-			argument_name: ID_AS_B
+			argument_name: ID_AS
 			vtug: VTUG
 			vtcg2: VTCG2
 			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
@@ -129,7 +129,7 @@ feature
 			good_argument: not (associated_class = Void or f = Void)
 		local
 			solved_type: TYPE_A
-			argument_name: ID_AS_B
+			argument_name: ID_AS
 			vtec1: VTEC1
 			vtec2: VTEC2
 		do
@@ -294,7 +294,7 @@ feature {FEATURE_I}
 			i, c: INTEGER
 			args: like Current
 			t_a: TYPE_A
-			t: TYPE_B
+			t: TYPE
 		do
 			args := Current
 			if args /= Void then

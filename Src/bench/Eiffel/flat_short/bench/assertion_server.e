@@ -29,7 +29,7 @@ feature -- Initialization
 			!! feature_adapter_table.make (0);
 		end;
 
-	make_for_feature (f: FEATURE_I; ast: FEATURE_AS_B) is
+	make_for_feature (f: FEATURE_I; ast: FEATURE_AS) is
 			-- Initialize structures for processing feature `f'
 			-- with ast structure `ast'.
 		require
@@ -41,7 +41,7 @@ feature -- Initialization
 			inh_f: INH_ASSERT_INFO;
 			body_id: BODY_ID;
 			chained_assert: CHAINED_ASSERTIONS;
-			other_feat_as: FEATURE_AS_B;
+			other_feat_as: FEATURE_AS;
 			f_table: FEATURE_TABLE;
 			feat: FEATURE_I;
 			assertion: ROUTINE_ASSERTIONS;
@@ -127,7 +127,7 @@ feature -- Element change
 			inh_f: INH_ASSERT_INFO;
 			body_id: BODY_ID;
 			chained_assert: CHAINED_ASSERTIONS;
-			other_feat_as: FEATURE_AS_B;
+			other_feat_as: FEATURE_AS;
 			f_table: FEATURE_TABLE;
 			feat: FEATURE_I;
 			source_feature: FEATURE_I;

@@ -28,13 +28,13 @@ inherit
 	
 feature 
 
-	type: TYPE_B
+	type: TYPE
 			-- Type of the constant
 
 	value: VALUE_I
 			-- Constant value
 
-	set_type (t: TYPE_B) is
+	set_type (t: TYPE) is
 			-- Assign `t' to `type'.
 		do
 			type := t

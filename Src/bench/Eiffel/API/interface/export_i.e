@@ -89,7 +89,7 @@ feature -- Incrementality
 
 feature {FEATURE_CLAUSE_EXPORT, FORMAT_FEAT_CONTEXT} -- formatter
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT) is
 		deferred
 		end;
 

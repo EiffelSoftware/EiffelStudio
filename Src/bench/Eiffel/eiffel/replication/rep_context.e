@@ -20,7 +20,7 @@ feature
 
 	is_new_expression: BOOLEAN;
 	
-	replicated_name: FEATURE_NAME_B;
+	replicated_name: FEATURE_NAME;
 
 	
 	adapt_result is
@@ -59,7 +59,7 @@ feature
 			is_new_expression := False;
 		end;
 
-	adapted_name: ID_AS_B;
+	adapted_name: ID_AS;
 		
 
 	new_ctxt: like Current is

@@ -87,7 +87,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Check if the anchor type is still a non like type and
 			-- update `actual_type'.
 		local
-			argument_type: TYPE_B
+			argument_type: TYPE
 		do
 			if Like_control.is_on then
 				Like_control.raise_error

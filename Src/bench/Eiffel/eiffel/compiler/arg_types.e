@@ -15,7 +15,7 @@ feature
 	offset: INTEGER;
 			-- Offset for accessing to `container'
 
-	container: ARRAY [TYPE_B];
+	container: ARRAY [TYPE];
 			-- Argument types 
 
 	i_th (i: INTEGER): TYPE_A is

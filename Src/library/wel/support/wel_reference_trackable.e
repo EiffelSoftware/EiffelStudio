@@ -128,7 +128,7 @@ feature {NONE} -- Removal
 			-- use `delete'. 
 		do
 			if exists and then not shared then
-				debug ("WEL")
+				debug ("WEL_GDI_REFERENCES")
 					if reference_tracked and references_count > 0 then
 						print ("----------------------------------------------------------------%N")
 						print ("Warning, reference tracking was enabled for the following object%N")

@@ -61,7 +61,7 @@ feature -- Save
 			st.putstring (": rename")
 			st.new_line
 			st.indent
-			renamings.save_with_new_line (st)
+			renamings.save_with_interval_separator (st, ",%N%T%T%T%T")
 			st.exdent
 			st.new_line
 		end

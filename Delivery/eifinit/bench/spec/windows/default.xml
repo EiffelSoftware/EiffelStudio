@@ -509,6 +509,7 @@
 
 			<TEXT DESCRIPTION="Background color used to display breakable marks and breakpoints">breakpoint_background_color<COLOR>212;208;200</COLOR></TEXT>
 			<TEXT DESCRIPTION="All-purpose editor font">editor_font<FONT>Courier New-r-regular-11-screen</FONT></TEXT>
+			<TEXT DESCRIPTION="Tabulation size">tab_step<INTEGER>4</INTEGER></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
 			<HEAD>Colors</HEAD>

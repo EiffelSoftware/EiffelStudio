@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			!! a_wel_string1.make (s)
 			bitmap_file_header.memory_copy (a_wel_string1.item,
 				bitmap_file_header.structure_size)
-			structure_size := bitmap_file_header.size
+			structure_size := bitmap_file_header.size - bitmap_file_header.structure_size
 			structure_make
 			file.read_stream (structure_size)
 			s := file.last_string

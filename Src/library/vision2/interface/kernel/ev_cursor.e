@@ -68,7 +68,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy (other: EV_PIXMAP) is 
+	copy (other: like current) is 
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local

@@ -247,6 +247,12 @@ feature {NONE} -- Keywords
 			!!Result.make ("creation")
 		end
 
+	ti_Create_keyword: KEYWORD_TEXT is
+			-- "create" keyword
+		once
+			!! Result.make ("create")
+		end
+
 	ti_Debug_keyword: KEYWORD_TEXT is
 			-- "debug" keyword
 		once

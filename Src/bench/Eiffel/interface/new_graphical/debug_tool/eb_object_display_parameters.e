@@ -73,6 +73,8 @@ feature {NONE} -- Initialization
 	make_from_stack_element (ot: EB_OBJECT_TOOL; elem: EIFFEL_CALL_STACK_ELEMENT) is
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
+		require
+			elem_not_void: elem /= Void
 		do
 			make (ot, elem.dynamic_class, elem.object_address)
 		end

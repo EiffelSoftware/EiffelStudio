@@ -137,6 +137,8 @@ feature -- Type checking
 		do
 				-- Put onto the type stack an integer actual type
 			inspect size
+			when 8 then ast_context.put (Integer_8_type)
+			when 16 then ast_context.put (Integer_16_type)
 			when 32 then ast_context.put (Integer_type)
 			when 64 then ast_context.put (Integer_64_type)
 			end
@@ -264,7 +266,7 @@ feature -- Generation
 			when 8 then il_generator.put_integer_8_constant (lower)
 			when 16 then il_generator.put_integer_16_constant (lower)
 			when 32 then il_generator.put_integer_32_constant (lower)
-			when 64 then il_generator.put_integer_64_constant (lower)
+			when 64 then il_generator.put_integer_64_constant (to_integer_64)
 			end
 		end
 
@@ -283,7 +285,7 @@ feature -- Generation
 				ba.append_integer (lower)
 			when 64 then
 				ba.append (Bc_int64)
-				ba.append_integer (lower)
+				ba.append_integer_64 (to_integer_64)
 			end
 		end
 

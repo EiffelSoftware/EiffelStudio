@@ -39,12 +39,6 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icons_dir: STRING is
-			-- `Result' is DIRECTORY constant named `icons_dir'.
-		once
-			Result := "E:\dotnet\codedom_provider\compiler\tool\gui\bin"
-		end
-
 	manager_icons_dir: STRING is
 			-- `Result' is DIRECTORY constant named `manager_icons_dir'.
 		once
@@ -58,16 +52,6 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (manager_icons_dir)
 			a_file_name.set_file_name ("help.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	side_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_dir)
-			a_file_name.set_file_name ("side.png")
 			set_with_named_file (Result, a_file_name)
 		end
 

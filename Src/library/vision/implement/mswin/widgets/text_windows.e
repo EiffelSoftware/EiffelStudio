@@ -450,7 +450,7 @@ feature -- Status setting
 	clear is
 			-- Clear current text field.
 		do
-                        set_text ("")
+			set_text ("")
 		end
 
 	clear_selection is
@@ -595,10 +595,16 @@ feature -- Status setting
 			private_begin_selection := first
 			private_end_selection := last
 			if exists then
-				enable_scroll_caret_at_selection
 				wel_set_selection (eiffel_position_to_windows
 					(first), eiffel_position_to_windows (last))
-				disable_scroll_caret_at_selection
+				if
+					y_coordinate (first) >= height or else
+					line_from_char (eiffel_position_to_windows
+						(first)) < first_visible_line
+				then
+					scroll (0, line_from_char (eiffel_position_to_windows
+						(first)) - first_visible_line)
+				end
 			end
 		end
 

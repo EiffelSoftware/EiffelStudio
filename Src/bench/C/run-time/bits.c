@@ -127,7 +127,7 @@ char *makebit(char *bit, long int bit_count)
 {
 	/* Returns a new bit object with value `s' */
 	uint32 val;
-	int i, j, nb_packs, temp;
+	int i, j, nb_packs; /* %%ss removed , temp;*/
 	char *result;
 	uint32 *arena;
 	long blength = bit_count;
@@ -225,8 +225,8 @@ rt_public void b_copy(char *a, char *b)
 	register2 int len2;
 	register3 uint32 *arena1;
 	register4 uint32 *arena2;
-	register5 union overhead *zone;
-	register6 union overhead *zone2;
+	/* register5 union overhead *zone;*/ /* %%ss removed */
+	/* register6 union overhead *zone2;*/ /* %%ss removed */
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
 	if ((char *) 0 == a)
@@ -944,8 +944,8 @@ rt_public char *b_mirror(char *a)
 	for (right = LENGTH(a), left = 1; right > left; right--, left++) {
 		br = b_item(a, right);
 		bl = b_item(a, left);
-		b_put(a, right, bl);
-		b_put(a, left, br);
+		b_put(a, (char) right, (int) bl);
+		b_put(a, (char) left, (int) br);
 	}
 
 	return a;

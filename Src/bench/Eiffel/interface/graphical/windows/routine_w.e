@@ -403,7 +403,7 @@ feature -- Stone updating
 		do
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
-			else
+			elseif stone /= Void then
 				ris := stone.e_feature.rout_id_set;
 				c := a_stone.e_class;
 				from

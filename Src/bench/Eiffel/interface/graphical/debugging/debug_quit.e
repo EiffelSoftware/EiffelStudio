@@ -57,6 +57,7 @@ feature -- Output
 			-- Print the termination message to the debug_window
 			-- and reset the object windows.
 		do
+			Project_tool.clear_cursor_position;
 			debug_window.clear_window;
 			debug_window.put_string ("System terminated");
 			debug_window.new_line;

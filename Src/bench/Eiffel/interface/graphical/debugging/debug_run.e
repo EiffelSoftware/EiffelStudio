@@ -139,6 +139,7 @@ end;
 					else
 						mp.restore;
 						debug_window.clear_window;
+					Project_tool.save_current_cursor_position;
 						debug_window.put_string ("Launching system...");
 						debug_window.new_line;
 						debug_window.display;
@@ -188,6 +189,7 @@ end;
 						tool.show_stoppoint
 							(status.e_feature, status.break_index)
 					end;
+					Project_tool.save_current_cursor_position;
 					debug_window.clear_window;
 					debug_window.put_string ("System is running");
 					debug_window.new_line;

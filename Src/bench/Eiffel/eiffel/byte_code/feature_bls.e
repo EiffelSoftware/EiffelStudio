@@ -9,6 +9,13 @@ inherit
 			generate_access_on_type as old_generate_access_on_type
 		end;
 
+	FEATURE_BL
+		redefine 
+			generate_access_on_type 
+		select 
+			generate_access_on_type
+		end;
+
 feature 
 
 	NOput_parameters_into_array is

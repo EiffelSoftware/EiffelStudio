@@ -190,7 +190,7 @@ feature -- Generation
 	generate is
 			-- Generate patterns
 		local
-			id, i, nb: INTEGER;
+			i, nb: INTEGER;
 		do
 			Pattern_file.open_write;
 
@@ -276,6 +276,58 @@ feature -- Concurrent Eiffel
                 c_patterns.forth;
             end;
         end;
+
+    generate_only_separate_pattern (file: INDENT_FILE) is
+            -- Generate pattern for separate calls in FIANALIZE mode.
+		require
+			has_separate_calls: System.has_separate
+        do
+            from
+                c_patterns.start
+            until
+                c_patterns.after
+            loop
+                c_patterns.item_for_iteration.generate_only_separate_pattern (file);
+                c_patterns.forth;
+            end;
+        end;
+
+	generate_in_finalized_mode is
+			-- Generate separate pattern in Finalize mode in FIANALIZE mode.
+		local
+			i, nb: INTEGER;
+			final_pattern_file: INDENT_FILE;
+		do
+			!!final_pattern_file.make (gen_file_name (True, Epattern));
+			final_pattern_file.open_write;
+
+			final_pattern_file.putstring ("%
+				%#include %"macros.h%"%N%
+				%#include %"struct.h%"%N%
+				%#include %"interp.h%"%N%N");
+	
+			final_pattern_file.putstring ("%
+				%#include %"curextern.h%"%N%N");
+
+			generate_only_separate_pattern (final_pattern_file);
+
+				-- Generate separate pattern table
+			final_pattern_file.putstring ("fnptr separate_pattern[] = {%N")
+			from
+				i := 1;
+				nb := c_pattern_id_counter.value;
+			until
+				i > nb
+			loop
+				final_pattern_file.putstring ("(fnptr) sepcall");
+				final_pattern_file.putint (i);
+				final_pattern_file.putstring (",%N");
+				i := i + 1;
+			end;
+			final_pattern_file.putstring ("};%N%N");
+
+			final_pattern_file.close;
+		end;
 
 feature -- DLE
 

@@ -5,8 +5,8 @@ class ATTRIBUTE_BLS
 inherit
 
 	ATTRIBUTE_BL
-		rename
-			generate_access_on_type as old_generate_access_on_type
+		redefine	
+			generate_access_on_type 
 		end
 
 feature 
@@ -78,5 +78,74 @@ feature
             generated_file.putstring ("}");
             generated_file.new_line
         end
+
+		-- The following is almost the same as the "generate_access_on_type" of ATTRIBUTE_BL,
+		-- but only with the difference that we put "CURPROXY_OBJ()" around the "reg".
+		-- So, be sure that this feature is modified if "generate_access_on_type" of ATTRIBUTE_BL
+		-- is modified.
+	old_generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+			-- Generate attribute in a `typ' context
+		local
+			entry: POLY_TABLE [ENTRY];
+			table_name: STRING;
+			offset_class_type: CLASS_TYPE;
+			type_c: TYPE_C;
+			type_i: TYPE_I
+		do
+			type_i := real_type (type);
+			type_c := type_i.c_type;
+			entry := Eiffel_table.poly_table (rout_id);
+				-- No need to use dereferencing if object is an expanded
+				-- or if it is a bit.
+			if not type_i.is_expanded and then not type_c.is_bit then
+					-- For dereferencing, we need a star...
+				generated_file.putchar ('*');
+					-- ...followed by the appropriate access cast
+				type_c.generate_access_cast (generated_file);
+			end;
+			generated_file.putstring ("(CURPROXY_OBJ(");
+			reg.print_register;
+			generated_file.putstring (")");
+--			if reg.is_predefined or reg.register /= No_register then
+				generated_file.putstring (gc_plus);
+--			else
+--				generated_file.putstring (" +");
+--				generated_file.new_line;
+--				generated_file.indent;
+--			end;
+			if entry.is_polymorphic (typ.type_id) then
+					-- The access is polymorphic, which means the offset
+					-- is not a constant and has to be computed.
+				table_name := rout_id.table_name;
+				generated_file.putchar ('(');
+				generated_file.putstring (table_name);
+				generated_file.putchar ('-');
+				generated_file.putint (entry.min_type_id - 1);
+				generated_file.putchar (')');
+				generated_file.putchar ('[');
+				if reg.is_current then
+					context.generate_current_dtype;
+				else
+					generated_file.putstring (gc_upper_dtype_lparan);
+					generated_file.putstring ("CURPROXY_OBJ(");
+					reg.print_register;
+					generated_file.putstring ("))");
+				end;
+				generated_file.putchar (']');
+					-- Mark attribute offset table used.
+				Eiffel_table.mark_used (rout_id);
+					-- Remember external attribute offset declaration
+				Extern_declarations.add_attribute_table (table_name);
+			else
+					-- Hardwire the offset
+				offset_class_type := system.class_type_of_id (typ.type_id);
+				offset_class_type.skeleton.generate_offset
+					(generated_file, attribute_id);
+			end;
+			generated_file.putchar (')');
+--			if not (reg.is_predefined or reg.register /= No_register) then
+--				generated_file.exdent;
+--			end;
+		end;
 
 end

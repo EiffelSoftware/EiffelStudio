@@ -12,8 +12,7 @@ inherit
 		redefine
 			update_state_information,
 			proceed_with_current_info,
-			build,
-			make
+			build
 		end
 		
 	ISE_DIRECTORY_UTILITIES
@@ -23,20 +22,6 @@ inherit
 		
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (an_info: like wizard_information) is
-			-- Set `help_filename' with `h_filename'.
-		do
-			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info)
-		end
-		
-feature -- Access
-
-	h_filename: STRING is "reference\10_project_name_and_location\index.html"
-			-- Path to HTML help file
 			
 feature -- Basic Operation
 

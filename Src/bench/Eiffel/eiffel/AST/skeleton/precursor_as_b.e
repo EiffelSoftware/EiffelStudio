@@ -418,7 +418,7 @@ feature -- Replication
 			-- Adapt to replication
 		do
 			Result := clone (Current)
-			if parameters /= void then
+			if parameters /= Void then
 				Result.set_parameters (
 					parameters.replicate (ctxt.new_ctxt))
 			end

@@ -20,7 +20,8 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			set_editable
+			set_editable,
+			move_and_resize
 		end
 		
 	EV_BAR_ITEM_IMP
@@ -54,6 +55,7 @@ inherit
 			default_process_message,
 			on_cbn_selchange,
 			on_cbn_editupdate,
+			move_and_resize,
 			default_style
 		end
 
@@ -271,6 +273,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Wel implementation
+
+   	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+   			-- We must not resize the height of the combo-box.
+   		do
+  			cwin_move_window (item, a_x, a_y, a_width, height, repaint)
+  		end
 
 	on_cbn_selchange is
 			-- The selection is about to be changed.

@@ -146,7 +146,7 @@ feature -- Output
 			debug ("debug_recv")
 				print ("REFERENCE_VALUE.children%N")
 			end
-			create obj.make (address, min_slice, max_slice)
+			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, min_slice, max_slice)
 			Result := obj.attributes
 		end
 

@@ -6,15 +6,6 @@ inherit
 creation
 	make
 
-feature -- Iterartion
-
-	offright: BOOLEAN is
-		obsolete
-			"Use `after'"
-		do
-			Result := after
-		end;
-
 feature -- Merging
 
 	merge (other: EXTEND_TABLE [T, U]) is
@@ -33,12 +24,6 @@ feature -- Merging
 		end;
 
 feature -- Cursor for iteration
-
-	position_for_iteration : INTEGER is
-		obsolete "Use pos_for_iter"
-		do
-			Result := pos_for_iter
-		end
 
 	go (p: INTEGER) is
 			-- set position_for_iteration to p

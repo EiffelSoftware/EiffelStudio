@@ -22,6 +22,10 @@ extern "C" {
 
 #ifdef EIF_THREADS
 
+/* GC synchronization feature */
+extern void eif_synchronize_gc(eif_global_context_t *);
+extern void eif_unsynchronize_gc(eif_global_context_t *);
+
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/
@@ -331,7 +335,7 @@ extern "C" {
 
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD
+#define EIF_THR_YIELD	(yield_address ? (FUNCTION_CAST_TYPE(BOOL,WINAPI,()) yield_address)() : Sleep(0))
 
 #define EIF_THR_SET_PRIORITY(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio)
@@ -574,14 +578,14 @@ extern "C" {
 #define EIF_LW_MUTEX_TYPE	CRITICAL_SECTION
 #define EIF_LW_MUTEX_CREATE(m,msg) \
     	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE)); \
-		InitializeCriticalSection(m);
+		InitializeCriticalSection(m)
 #define EIF_LW_MUTEX_LOCK(m,msg) \
-		EnterCriticalSection(m);
+		EnterCriticalSection(m)
 #define EIF_LW_MUTEX_UNLOCK(m,msg) \
-		LeaveCriticalSection(m);
+		LeaveCriticalSection(m)
 #define EIF_LW_MUTEX_DESTROY(m,msg) \
 		DeleteCriticalSection(m); \
-		eif_free(m);
+		eif_free(m)
 
 #elif defined(SOLARIS_THREADS)
 	/* We use Solaris lwp_mutex hrere */

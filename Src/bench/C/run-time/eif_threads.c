@@ -26,6 +26,7 @@
 #include "eif_err_msg.h"
 #include "eif_sig.h"
 #include "rt_garcol.h"
+#include "rt_malloc.h"
 #include "rt_macros.h"
 #include "rt_types.h"
 #include "rt_assert.h"
@@ -57,25 +58,65 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 rt_private void eif_init_context(eif_global_context_t *);
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
-rt_public EIF_TSD_TYPE eif_global_key;
-
 	/* To update GC with thread specific data */
-rt_private void eif_destroy_gc_stacks(void);
+rt_private void eif_destroy_gc_stacks(eif_global_context_t *);
 rt_private void eif_init_gc_stacks(eif_global_context_t *);
 rt_private void load_stack_in_gc (struct stack_list *, void *);
 rt_private void remove_stack_from_gc (struct stack_list *, void *);
 rt_private void eif_stack_free (void *stack);
 
-rt_private EIF_MUTEX_TYPE *eif_thread_launch_mutex = NULL;	/* Mutex used to protect launching of a thread */
+/*
+doc:<file name="eif_thread.c" header="eif_thread.h">
+doc:	<attribute name="eif_global_key" return_type="EIF_TSD_TYPE">
+doc:		<summary>Key used to access per thread data.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_LW_MUTEX_TYPE *">
+doc:		<summary>Mutex used to protect launching of a thread.</summary>
+doc:		<thread_safety>Safe, initialized once in `eif_thr_root_init'.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Mutex is not freed.</fixme>
+doc:	</attribute>
+doc:	<attribute name="eif_is_gc_collecting" return_type="int">
+doc:		<summary>Is GC currently performing a collection?</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+doc:	<attribute name="yield_address" return_type="FARPROC">
+doc:		<summary>Address of `yield' routine for Windows. Only implemented on Windows NT and above.</summary>
+doc:		<thread_safety>Save, initialized once in `eif_thr_root_init'.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+doc:	<attribute name="eif_globals_list" return_type="struct stack_list">
+doc:		<summary>Used to store all per thread data of all running threads.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+doc:</file>
+*/
 
-#define LAUNCH_MUTEX_CREATE \
-	EIF_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n")
-#define LAUNCH_MUTEX_DESTROY \
-	EIF_MUTEX_DESTROY(eif_thread_launch_mutex, "Cannot destroy mutex for thread launcher\n");
+rt_public EIF_TSD_TYPE eif_global_key;
+rt_private EIF_LW_MUTEX_TYPE *eif_thread_launch_mutex = NULL;
+rt_public int volatile eif_is_gc_collecting = 0;
+#ifdef EIF_WIN32
+rt_private FARPROC yield_address = NULL;
+#endif
+rt_public struct stack_list eif_globals_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* eif_globals_list */
+};
+
 #define LAUNCH_MUTEX_LOCK	\
-	EIF_MUTEX_LOCK(eif_thread_launch_mutex, "Cannot lock mutex for the thread launcher\n")
+	EIF_LW_MUTEX_LOCK(eif_thread_launch_mutex, "Cannot lock mutex for the thread launcher\n")
 #define LAUNCH_MUTEX_UNLOCK \
-	EIF_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
+	EIF_LW_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
+
+#undef EIF_ENTER_EIFFEL
+#undef EIF_EXIT_EIFFEL
+#define EIF_ENTER_EIFFEL	eif_globals->gc_thread_status = EIF_THREAD_RUNNING
+#define EIF_EXIT_EIFFEL 	eif_globals->gc_thread_status = EIF_THREAD_BLOCKED
 
 rt_public void eif_thr_init_root(void) 
 {
@@ -90,9 +131,17 @@ rt_public void eif_thr_init_root(void)
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
 	EIF_LW_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
-	LAUNCH_MUTEX_CREATE;
+	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, "Couldn't create GC set mutex");
+	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
+	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
+#ifdef EIF_WIN32
+	{
+		HMODULE kernel_module = LoadLibrary("kernel32.dll");
+		yield_address = GetProcAddress (kernel_module, "SwitchToThread");
+	}
+#endif
 }
 
 rt_public void eif_thr_register(void)
@@ -510,6 +559,11 @@ rt_public void eif_thr_exit(void)
 	int ret;	/* Return Status of "eifaddr_offset". */
 	EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 	EIF_REFERENCE thread_object = NULL;
+
+		/* Mark current thread so that it is not taken into account by GC
+		 * synchronization */
+	eif_globals->gc_thread_status = EIF_THREAD_DYING;
+
 	RT_GC_PROTECT(thread_object);
 	thread_object = eif_access(eif_thr_context->current);
 	offset = eifaddr_offset (thread_object, "terminated", &ret);
@@ -550,7 +604,7 @@ rt_public void eif_thr_exit(void)
 	}
 
 		/* Clean GC of non-used data that were used to hold objects */
-	eif_destroy_gc_stacks();
+	eif_destroy_gc_stacks(eif_globals);
 
 	if (eif_thr_is_root ())	{	/* Is this the root thread */
 		eif_cecil_reclaim ();
@@ -605,7 +659,8 @@ rt_public void eif_thr_exit(void)
 rt_private void eif_init_gc_stacks(eif_global_context_t *eif_globals)
 {
 #ifdef ISE_GC
-	EIF_GC_MUTEX_LOCK;
+	eif_synchronize_gc(eif_globals);
+	load_stack_in_gc (&eif_globals_list, eif_globals);
 	load_stack_in_gc (&loc_stack_list, &loc_stack);	
 	load_stack_in_gc (&loc_set_list, &loc_set);	
 	load_stack_in_gc (&once_set_list, &once_set);	
@@ -616,7 +671,7 @@ rt_private void eif_init_gc_stacks(eif_global_context_t *eif_globals)
 #ifdef WORKBENCH
 	load_stack_in_gc (&opstack_list, &op_stack);
 #endif
-	EIF_GC_MUTEX_UNLOCK;
+	eif_unsynchronize_gc(eif_globals);
 #endif
 }
 
@@ -628,11 +683,11 @@ rt_private void eif_init_gc_stacks(eif_global_context_t *eif_globals)
 /* Destroy thread specific stacks and remove them from GC global stack    */
 /**************************************************************************/
 
-rt_private void eif_destroy_gc_stacks(void)
+rt_private void eif_destroy_gc_stacks(eif_global_context_t *eif_globals)
 {
-	EIF_GET_CONTEXT
-	EIF_GC_MUTEX_LOCK;
 #ifdef ISE_GC
+	eif_synchronize_gc(eif_globals);
+	remove_stack_from_gc (&eif_globals_list, eif_globals);
 	remove_stack_from_gc (&loc_stack_list, &loc_stack);
 	remove_stack_from_gc (&loc_set_list, &loc_set);	
 	remove_stack_from_gc (&once_set_list, &once_set);	
@@ -644,8 +699,8 @@ rt_private void eif_destroy_gc_stacks(void)
 	remove_stack_from_gc (&opstack_list, &op_stack);
 #endif
 	eif_stack_free (&free_stack);
+	eif_unsynchronize_gc(eif_globals);
 #endif
-	EIF_GC_MUTEX_UNLOCK;
 }
 
 
@@ -662,11 +717,11 @@ rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 	int count = st_list->count + 1;
 	st_list->count = count;
 	if (st_list->capacity < st_list->count) {
-		st_list->threads.stack = (void **) eif_realloc (st_list->threads.stack,
+		st_list->threads.data = (void **) eif_realloc (st_list->threads.data,
 															count * sizeof(struct stack **));
 		st_list->capacity = count;
 	}
-	st_list->threads.stack[count - 1] = st;
+	st_list->threads.data[count - 1] = st;
 }
 
 
@@ -683,7 +738,7 @@ rt_private void remove_stack_from_gc (struct stack_list *st_list, void *st)
 {
 	int count = st_list->count;
 	int i = 0;
-	void **stack = st_list->threads.stack;
+	void **stack = st_list->threads.data;
 
 	REQUIRE("Stack not empty", count > 0);
 
@@ -728,6 +783,107 @@ rt_private void eif_stack_free (void *stack){
 	st->st_end = NULL;
 }
 
+rt_public void eif_synchronize_for_gc ()
+	/* Synchronize current thread for a GC cycle */
+{
+	EIF_GET_CONTEXT
+
+		/* Simple synchronization, if a GC cycle was performed, then
+		 * we will lock on `gc_mutex' only if current thread is not the
+		 * one performing the GC cycle, otherwise we could cause dead-lock.
+		 * This is needed when a GC cycle trigger calls to `dispose' routines.
+		 */
+	if (eif_globals->gc_thread_status != EIF_THREAD_GC_RUNNING) {
+		eif_globals->gc_thread_status = EIF_THREAD_SUSPENDED;
+		EIF_GC_MUTEX_LOCK;
+		eif_globals->gc_thread_status = EIF_THREAD_RUNNING;
+		EIF_GC_MUTEX_UNLOCK;
+	}
+}
+
+rt_public void eif_enter_eiffel_code()
+	/* Synchronize current thread as we enter some Eiffel code */
+{
+	EIF_GET_CONTEXT
+	eif_globals->gc_thread_status = EIF_THREAD_RUNNING;
+}
+
+rt_public void eif_exit_eiffel_code()
+	/* Synchronize current thread as we exit some Eiffel code */
+{
+	EIF_GET_CONTEXT
+	eif_globals->gc_thread_status = EIF_THREAD_BLOCKED;
+}
+
+#ifdef DEBUG
+rt_private int counter = 0;
+#endif
+
+rt_shared void eif_synchronize_gc (eif_global_context_t *eif_globals)
+	/* Synchronize all threads under GC control */
+{
+	struct stack_list all_thread_list;
+	struct stack_list running_thread_list = {0, 0, NULL};
+	eif_global_context_t *thread_globals;
+	int status, i;
+
+		/* We are marking ourself to show that we are requesting a safe access
+		 * to GC data. */
+	eif_globals->gc_thread_status = EIF_THREAD_GC_REQUESTED;
+	EIF_GC_MUTEX_LOCK;
+#ifdef DEBUG
+	printf ("Starting Collection number %d ...", counter);
+#endif
+	eif_is_gc_collecting = 1;
+	eif_globals->gc_thread_status = EIF_THREAD_GC_RUNNING;
+
+		/* We have acquired the lock, now, process all running threads and wait until
+		 * they are all not marked `EIF_THREAD_RUNNING'. */
+	memcpy(&all_thread_list, &eif_globals_list, sizeof(struct stack_list));
+	all_thread_list.threads.data = eif_malloc (eif_globals_list.count * sizeof(void *));
+	memcpy(all_thread_list.threads.data, eif_globals_list.threads.data,
+		eif_globals_list.count * sizeof(void *));
+
+	while (all_thread_list.count != 0) {
+		for (i = 0; i < all_thread_list.count; i++) {
+			thread_globals = (eif_global_context_t *) all_thread_list.threads.data[i];
+			if (thread_globals != eif_globals) {
+				status = thread_globals->gc_thread_status;
+				if (status == EIF_THREAD_RUNNING) {
+					load_stack_in_gc (&running_thread_list, thread_globals);
+				}
+			}
+		}
+		eif_free (all_thread_list.threads.data);
+		memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
+		memset(&running_thread_list, 0, sizeof(struct stack_list));
+
+			/* For performance reasons on systems with a poor scheduling policy, 
+			 * we switch context to one of the remaining running thread. Not doing
+			 * so on a uniprocessor WinXP system, the execution was about 1000 times
+			 * slower than on a bi-processor WinXP system. */
+		EIF_THR_YIELD;
+	}
+#ifdef DEBUG
+	printf ("Synchronized...");
+#endif
+}
+
+rt_shared void eif_unsynchronize_gc (eif_global_context_t *eif_globals)
+	/* Free all threads under GC control from GC control */
+{
+		/* Here we have still the lock of `gc_mutex'. So it is safe to update
+		 * `eif_is_gc_collecting'. */
+	eif_is_gc_collecting = 0;
+
+		/* Let's mark ourself as a running thread. */
+	eif_globals->gc_thread_status = EIF_THREAD_RUNNING;
+#ifdef DEBUG
+	printf ("... finishing %d\n", counter);
+	counter++;
+#endif
+	EIF_GC_MUTEX_UNLOCK;
+}
 
 rt_public void eif_thr_yield(void)
 {
@@ -824,6 +980,7 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
 
+	EIF_ENTER_C;
 #ifdef EIF_NO_CONDVAR
 
 	/* This version is for platforms that don't support condition
@@ -856,6 +1013,9 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 
 #endif
 	RT_GC_WEAN(thread_object);
+
+	RTGC;
+	EIF_EXIT_C;
 }
 
 rt_public void eif_thr_join (EIF_POINTER tid)
@@ -867,7 +1027,11 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 	 */
 
 	if (tid != (EIF_POINTER) 0) {
+		EIF_GET_CONTEXT;
+		EIF_ENTER_C;
 		EIF_THR_JOIN(* (EIF_THR_TYPE *) tid);
+		RTGC;
+		EIF_EXIT_C;
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}
@@ -929,8 +1093,11 @@ rt_public EIF_POINTER eif_thr_mutex_create(void) {
 rt_public void eif_thr_mutex_lock(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
+		EIF_GET_CONTEXT
+		EIF_ENTER_C;
 		EIF_MUTEX_LOCK(a_mutex_pointer, "cannot lock mutex\n");
-		/* Don't remove curly braces, macro could be several lines */
+		RTGC;
+		EIF_EXIT_C;
 	} else 
 		eraise("Trying to lock a NULL mutex", EN_EXT);
 }
@@ -939,7 +1106,6 @@ rt_public void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
 		EIF_MUTEX_UNLOCK(a_mutex_pointer, "cannot unlock mutex\n");
-		/* Don't remove curly braces, macro could be several lines */
 	} else
 		eraise("Trying to unlock a NULL mutex", EN_EXT);
 }
@@ -948,8 +1114,11 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
 	int status = 0;
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
+		EIF_GET_CONTEXT
+		EIF_ENTER_C;
 		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot trylock mutex\n");
-		/* Don't remove curly braces, macro could be several lines */
+		RTGC;
+		EIF_EXIT_C;
 	} else
 		eraise("Trying to lock a NULL mutex", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
@@ -992,7 +1161,11 @@ rt_public void eif_thr_sem_wait (EIF_POINTER sem)
 #ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
+		EIF_GET_CONTEXT
+		EIF_ENTER_C;
 		EIF_SEM_WAIT(a_sem_pointer, "cannot lock semaphore");
+		RTGC;
+		EIF_EXIT_C;
 	} else 
 		eraise("Trying to lock a NULL semaphore", EN_EXT);
 #endif
@@ -1015,7 +1188,11 @@ rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 	int status = 0;
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
+		EIF_GET_CONTEXT
+		EIF_ENTER_C;
 		EIF_SEM_TRYWAIT(a_sem_pointer, status, "cannot trywait semaphore\n");
+		RTGC;
+		EIF_EXIT_C;
 	} else
 		eraise("Trying to trywait a NULL semaphore", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
@@ -1088,7 +1265,11 @@ rt_public void eif_thr_cond_wait (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr)
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
+		EIF_GET_CONTEXT
+		EIF_ENTER_C;
 		EIF_COND_WAIT(cond, mutex, "cannot cond_wait");
+		RTGC;
+		EIF_EXIT_C;
 	} else
 		eraise ("Trying to cond_wait on NULL", EN_EXT);
 #endif /* EIF_NO_CONDVAR */
@@ -1101,7 +1282,11 @@ rt_public void eif_thr_cond_wait_with_timeout (EIF_POINTER cond_ptr, EIF_POINTER
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
+		EIF_GET_CONTEXT
+		EIF_ENTER_C;
 		EIF_COND_WAIT_WITH_TIMEOUT(cond, mutex, a_timeout, "cannot cond_wait with timeout");
+		RTGC;
+		EIF_EXIT_C;
 	} else
 		eraise ("Trying to cond_wait_with_timeout on NULL", EN_EXT);
 #endif /* EIF_NO_CONDVAR */

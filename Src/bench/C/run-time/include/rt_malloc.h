@@ -14,6 +14,7 @@
 #define _rt_malloc_h_
 
 #include "eif_malloc.h"
+#include "rt_threads.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -111,6 +112,11 @@ extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
 extern long eiffel_usage;			/* For memory statistics */
 extern int eif_max_mem;				/* Maximum memory that can be allocated */
+
+#ifdef EIF_THREADS
+extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;	/* GC mutex */
+#endif
+
 #endif /* ISE_GC */
 
 #ifdef __cplusplus

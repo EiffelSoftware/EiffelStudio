@@ -66,8 +66,29 @@ extern "C" {
 
 /* Macro used to protect concurrent running of GC. */
 #ifdef EIF_THREADS
-#define EIF_GC_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
-#define EIF_GC_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
+	/* For GC collection locking */
+#define EIF_GC_MUTEX_LOCK \
+	EIF_LW_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
+#define EIF_GC_MUTEX_UNLOCK \
+	EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
+
+	/* For insertion in various global set such as `rem_set', `moved_set' */
+#define EIF_GC_SET_MUTEX_LOCK \
+	EIF_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex")
+#define EIF_GC_SET_MUTEX_UNLOCK \
+	EIF_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
+
+	/* Values used to set the running status of a thread. */
+#define EIF_THREAD_RUNNING		0
+#define EIF_THREAD_GC_REQUESTED	1001
+#define EIF_THREAD_GC_RUNNING	1002
+#define EIF_THREAD_GC_GSZ		1003
+#define EIF_THREAD_BLOCKED 		3
+#define EIF_THREAD_SUSPENDED	4
+#define EIF_THREAD_DYING		5
+#define GC_THREAD_PROTECT(x)	(x)
+#else
+#define GC_THREAD_PROTECT(x)
 #endif
 
 #ifdef __cplusplus

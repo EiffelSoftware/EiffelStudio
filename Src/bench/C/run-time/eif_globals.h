@@ -116,6 +116,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	EIF_COND_TYPE *children_cond_cx;	/* Condition variable for join, join_all */
 #endif
 
+#ifdef ISE_GC
+		/* Synchronizations for GC*/
+	int volatile gc_thread_status;
+#endif
+
 		/* except.c */
 	struct xstack eif_stack_cx;		/* Calling stack (rt_public) */
 	struct xstack eif_trace_cx;		/* Unsolved exception trace */

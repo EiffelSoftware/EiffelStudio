@@ -72,6 +72,57 @@ extern "C" {
 #define FUNCTION_CAST_TYPE(r_type, call_type, arg_types)	(r_type (call_type *) arg_types)
 
 
+/*
+ * Macro for GC synchronization
+ */
+#if defined(ISE_GC) && defined(EIF_THREADS)
+RT_LNK int volatile eif_is_gc_collecting;
+RT_LNK void eif_synchronize_for_gc();
+RT_LNK void eif_enter_eiffel_code();
+RT_LNK void eif_exit_eiffel_code();
+#define RTGC	if (eif_is_gc_collecting) eif_synchronize_for_gc()
+#define EIF_ENTER_EIFFEL	eif_enter_eiffel_code()
+#define EIF_EXIT_EIFFEL		eif_exit_eiffel_code()
+#define	EIF_ENTER_C			EIF_EXIT_EIFFEL
+#define	EIF_EXIT_C			EIF_ENTER_EIFFEL
+#else
+#define RTGC
+#define EIF_ENTER_EIFFEL
+#define EIF_EXIT_EIFFEL
+#define EIF_ENTER_C
+#define EIF_EXIT_C
+#endif
+
+/* Function pointer call from C to Eiffel which makes sure that all arguments are correctly
+ * pushed onto stack. It takes care of the synchronization needed in a multithreaded application.
+ * EIFFEL_CALL will call Eiffel procedures `proc_ptr' with `arg_values' using prototype given by
+ *   `arg_types'.
+ * EIFFEL_FUNCTION_CALL will call Eiffel functions `fn_ptr' with `arg_values' using prototype give
+ *   by `r_type' and `arg_types'.
+ */
+#if defined(ISE_GC) && defined(EIF_THREADS)
+#define EIFFEL_CALL(arg_types, proc_ptr, arg_values) \
+	{ \
+	EIF_ENTER_EIFFEL; \
+	(FUNCTION_CAST(void, arg_types) proc_ptr) arg_values; \
+	RTGC; \
+	EIF_EXIT_EIFFEL; \
+	}
+#define EIFFEL_FUNCTION_CALL(r_type, arg_types, target, fn_ptr, arg_values) \
+	{\
+	EIF_ENTER_EIFFEL; \
+	target = (FUNCTION_CAST(r_type, arg_types) fn_ptr) arg_values; \
+	RTGC; \
+	EIF_EXIT_EIFFEL; \
+	}
+#else
+#define EIFFEL_CALL(arg_types, proc_ptr, arg_values) \
+	(FUNCTION_CAST(void, arg_types) proc_ptr) arg_values
+
+#define EIFFEL_FUNCTION_CALL(r_type, arg_types, target, fn_ptr, arg_values) \
+	target = (FUNCTION_CAST(r_type, arg_types) fn_ptr) arg_values
+#endif
+
 
 /* Macro used for allocation:
  *  RTLN(x) allocates a new object of dftype 'x'

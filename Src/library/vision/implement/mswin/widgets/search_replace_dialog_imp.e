@@ -76,7 +76,8 @@ inherit
 			on_size,
 			on_key_up,
 			on_key_down,
-			on_draw_item
+			on_draw_item,
+			on_get_min_max_info
 		redefine
 			on_control_id_command,
 			wel_parent,

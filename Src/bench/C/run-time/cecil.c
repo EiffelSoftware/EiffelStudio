@@ -47,6 +47,14 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+#ifndef EIF_THREADS
+/* If this variable is non-null, cecil will raise an exception when trying
+ * to get the address of a routine of an invisible class.
+ */
+
+rt_shared unsigned char eif_ignore_invisible = (unsigned char) 0;
+#endif
+
 /*
  * Type ID handling
  */
@@ -285,8 +293,11 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 	 * null pointer if the routine does not exist.
 	 */
 
+	EIF_GET_CONTEXT
+
 	int dtype = cid_to_dtype(cid);		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
+	EIF_FN_REF *ref;
 #ifdef WORKBENCH
 	int32 *feature_ptr;
 	int32 rout_id;
@@ -301,11 +312,16 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 	ptr_table = &Cecil(dtype);			/* Get associated H table */
 
 #ifndef WORKBENCH
-	return *(EIF_FN_REF *) ct_value(ptr_table, routine);	/* Code location */
+	ref = (EIF_FN_REF *) ct_value(ptr_table, routine);	/* Code location */
+	if (!ref && !eif_ignore_invisible)
+		eraise ("Unknown routine (visible?)", EN_PROG);
+	return *ref;
 #else
-	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0)
+	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0) {
+		if (!eif_ignore_invisible)
+			eraise ("Unknown routine (visible?)", EN_PROG);
 		return (EIF_FN_REF) 0;
-
+	}
 	cn_routids = System(dtype).cn_routids;
 	if (cn_routids)
 		rout_id = cn_routids[*feature_ptr];
@@ -332,13 +348,15 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 		xraise(EN_DOL);
 #endif
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
  * Class ID versus dynamic type
  */
 
-rt_public int eiftype(EIF_OBJ *object)
+rt_public int eiftype(EIF_OBJ object)
 {
 	/* Return the dynamic type of the specified object */
 

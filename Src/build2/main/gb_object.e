@@ -42,6 +42,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			type := a_type
 				-- The names should never be `Void'.
 			create name.make (0)
+			create events.make (0)
 			create edited_name.make (0)
 		ensure
 			type_assigned: type = a_type
@@ -58,6 +59,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			type := a_type
 			build_display_object
 			create name.make (0)
+			create events.make (0)
 			create edited_name.make (0)
 		ensure
 			type_assigned: type = a_type
@@ -77,6 +79,9 @@ feature -- Access
 		
 	name: STRING
 		-- User set name for `Current'.
+		
+	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+		-- All events connected to `Current'.
 		
 	type: STRING
 		-- A type corresponding to the current vision2 object.

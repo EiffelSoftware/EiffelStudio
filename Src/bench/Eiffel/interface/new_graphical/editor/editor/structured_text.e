@@ -46,12 +46,6 @@ feature -- Access
 
 	nb_of_lines_displayed: INTEGER
 
-	cursor: CURSOR
-
-	selection_start: CURSOR
-
-	selection_end: CURSOR
-
 	count: INTEGER is
 		do
 			Result := chapter.count

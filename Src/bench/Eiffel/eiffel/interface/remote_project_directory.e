@@ -190,7 +190,7 @@ feature -- Check
 				-- should be present. If they are not, issue a warning.
 			check_precompiled_optional (<<Eiffelgen, W_code>>, Platform_constants.Driver);
 --			if has_precompiled_preobj then
---				check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj)
+--				check_precompiled_optional (<<Eiffelgen, W_code>>, Platform_constants.Preobj)
 --			end;
 		end
 

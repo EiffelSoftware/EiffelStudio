@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 					tmp_string.append (Underscore)
 					tmp_string.append (Class_object_variable_name)
 					tmp_string.append (Dot)
-					tmp_string.append ("Intialize")
+					tmp_string.append ("Initialize")
 					tmp_string.append (Open_parenthesis)
 					tmp_string.append (Close_parenthesis)
 					tmp_string.append (Semicolon)
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (Close_curly_brace)
 			tmp_string.append (New_line_tab)
 
-			tmp_string.append (Module_file_name_set_up)
+			tmp_string.append (exe_module_file_name_set_up)
 
 			-- Register ('Component_entries', 'component_entries_count')
 			tmp_string.append (New_line_tab)
@@ -758,7 +758,57 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_string)
 		end
 
-	module_file_name_set_up: STRING is
+	exe_module_file_name_set_up: STRING is
+			-- Code to set up module file name
+		do
+			-- GetModuleFileName (0, file_name, MAX_PATH);
+			Result := "GetModuleFileName (0, "
+			Result.append (Module_file_name)
+			Result.append (Comma_space)
+			Result.append (Max_path)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- #ifdef UNICODE
+			Result.append (New_line)
+			Result.append (New_line)
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Unicode)
+			Result.append (New_line_tab)
+
+			-- lString_copy_function ('wide_string_module_file_name', 'module_file_name')
+			Result.append (Unicode_string_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Wide_string_module_file_name)
+			Result.append (Comma_space)
+			Result.append (Module_file_name)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- #else
+			Result.append (New_line)
+			Result.append (Hash_else)
+
+			-- mbstowcs ('wide_string_module_file_name', 'module_file_name', MAX_PATH)
+			Result.append (New_line_tab)
+			Result.append (Non_unicode_string_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Wide_string_module_file_name)
+			Result.append (Comma_space)
+			Result.append (Module_file_name)
+			Result.append (Comma_Space)
+			Result.append ("MAX_PATH")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- #endif
+			Result.append (New_line)
+			Result.append (Hash_end_if)			
+
+		end
+
+	dll_module_file_name_set_up: STRING is
 			-- Code to set up module file name
 		do
 			-- getcwd (file_name, MAX_PATH);
@@ -908,7 +958,7 @@ feature {NONE} -- Implementation
 
 			-- Set up module file name
 			tmp_body := clone (Tab)
-			tmp_body.append (module_file_name_set_up)
+			tmp_body.append (dll_module_file_name_set_up)
 
 			-- return Register ('Component_entries', 'component_entries_count')
 			tmp_body.append (New_line_tab)

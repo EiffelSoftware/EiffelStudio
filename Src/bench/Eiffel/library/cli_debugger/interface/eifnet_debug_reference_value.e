@@ -33,16 +33,15 @@ create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
 			-- 	Set `value' to `v'.
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
 			a_prepared_value_not_void: a_prepared_value /= Void
---			a_frame_not_void: f /= Void
 		do
 			set_default_name
 			
-			init_dotnet_data (a_referenced_value, a_prepared_value, f)
+			init_dotnet_data (a_referenced_value, a_prepared_value)
 
 			object_value := icd_value_info.interface_debug_object_value
 			if object_value /= Void then
@@ -198,35 +197,34 @@ feature {NONE} -- Children implementation
 		do	
 			if object_value /= Void then
 				l_icd_class := object_value.get_class
-				if 
-					dynamic_class /= Void 
-					and l_icd_class /= Void
-				then
-					l_feature_table := dynamic_class.feature_table
-					create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_feature_table.count)
-					from
-						l_feature_table.start
-					until
-						l_feature_table.after
-					loop
-						l_feature_i := l_feature_table.item_for_iteration
-						debug ("DEBUGGER_TRACE_CHILDREN")
-							print (">>> CHILDREN :: " + l_feature_i.feature_name + "<<<%N")
-							print ("%T - from feature_i     => "
-									+ l_feature_i.written_class.name_in_upper + "." + l_feature_i.feature_name
-									+ " :: " + l_feature_i.written_class.class_id.out + "%N")
-							print ("%T - from dynamic_class => " + dynamic_class.name_in_upper
-									+ "." + l_feature_i.feature_name + " :: " + dynamic_class.class_id.out + "%N")
-						end
-
-						if l_feature_i.is_attribute then
-							l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
-							if l_att_debug_value /= Void then
-								Result.put_last (l_att_debug_value)
+				if l_icd_class /= Void then
+					if dynamic_class /= Void then
+						l_feature_table := dynamic_class.feature_table
+						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_feature_table.count)
+						from
+							l_feature_table.start
+						until
+							l_feature_table.after
+						loop
+							l_feature_i := l_feature_table.item_for_iteration
+							debug ("DEBUGGER_TRACE_CHILDREN")
+								print (">>> CHILDREN :: " + l_feature_i.feature_name + "<<<%N")
+								print ("%T - from feature_i     => "
+										+ l_feature_i.written_class.name_in_upper + "." + l_feature_i.feature_name
+										+ " :: " + l_feature_i.written_class.class_id.out + "%N")
+								print ("%T - from dynamic_class => " + dynamic_class.name_in_upper
+										+ "." + l_feature_i.feature_name + " :: " + dynamic_class.class_id.out + "%N")
 							end
+							if l_feature_i.is_attribute then
+								l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
+								if l_att_debug_value /= Void then
+									Result.put_last (l_att_debug_value)
+								end
+							end
+							l_feature_table.forth
 						end
-						l_feature_table.forth
 					end
+					l_icd_class.clean_on_dispose
 				end
 			end
 		ensure then
@@ -249,7 +247,6 @@ feature {NONE} -- Children implementation
 					else
 						create {DEBUG_VALUE[INTEGER]} Result.make (0)
 						Result.set_name ("ERROR on " + f.feature_name)
-													
 							--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
 							--| we had problem to get its value ...
 						debug ("DEBUGGER_TRACE_CHILDREN")
@@ -297,14 +294,12 @@ feature -- Once request
 			has_result: a_feat.is_function
 		local
 			l_icd_class: ICOR_DEBUG_CLASS
-			l_icd_module: ICOR_DEBUG_MODULE
 			l_origin_class_c: CLASS_C
-			l_origin_class_token: INTEGER
-			l_origin_class_module_name: STRING
 			l_cl_type_a: CL_TYPE_A
 			l_adapted_class_type: CLASS_TYPE
 
 			l_icd_dv_result: ICOR_DEBUG_VALUE
+			l_icd_frame: ICOR_DEBUG_FRAME
 			l_eifnet_debugger: EIFNET_DEBUGGER
 		do
 			--| In case the once is attached to an ancestor
@@ -339,24 +334,19 @@ feature -- Once request
 							and then l_adapted_class_type.associated_class = l_origin_class_c
 				end
 
-				l_origin_class_module_name := Il_debug_info_recorder.module_file_name_for_class (l_adapted_class_type)
-				l_icd_module := l_eifnet_debugger.Eifnet_debugger_info.icor_debug_module (l_origin_class_module_name)
-				if l_icd_module /= Void then
-						--| It may occurs the ICorDebugModule is not yet loaded
-					l_origin_class_token := Il_debug_info_recorder.class_token (l_origin_class_module_name, l_adapted_class_type)
-					l_icd_class := l_icd_module.get_class_from_token (l_origin_class_token)
-				end
+				l_icd_class := l_eifnet_debugger.icor_debug_class (l_adapted_class_type)
 			end
 
 			if l_icd_class /= Void then
 					--| now we have the correct ICOR_DEBUG_CLASS as a_icd_class
-					--| and we know the good CLASS_TYPE as 
-
-				l_icd_dv_result := l_eifnet_debugger.once_function_value_on_icd_class (icd_frame, l_icd_class, l_adapted_class_type, a_feat)
+					--| and we know the good CLASS_TYPE as
+				l_icd_frame := eifnet_debugger.current_icor_debug_frame
+				l_icd_dv_result := l_eifnet_debugger.once_function_value_on_icd_class (l_icd_frame, l_icd_class, l_adapted_class_type, a_feat)
 				if l_icd_dv_result /= Void then
 					Result := debug_value_from_icdv (l_icd_dv_result)
 					Result.set_name (a_feat.name)
 				end
+				l_icd_class.clean_on_dispose
 			end
 
 			debug ("DEBUGGER_TRACE")

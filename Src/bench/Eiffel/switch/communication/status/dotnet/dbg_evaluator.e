@@ -53,25 +53,20 @@ feature {NONE} -- Properties
 
 	error_occurred: BOOLEAN
 			-- Did an error occurred during processing ?
+			
+	current_icor_debug_frame: ICOR_DEBUG_FRAME is
+			-- Current shared ICorDebugFrame encapsulated instance
+		do
+			Result := eifnet_debugger.current_icor_debug_frame
+		end
+		
 
 feature -- Bridge
 
-	active_icd_frame: ICOR_DEBUG_FRAME is
+	new_active_icd_frame: ICOR_DEBUG_FRAME is
 			-- Default ICorDebugFrame which is the active frame
 		do
-			Result := eifnet_debugger.active_frame
-		end
-		
-	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
-			-- ICorDebugClass related to `a_class_type'
-		do		
-			Result := eifnet_debugger.icor_debug_class (a_class_type)
-		end
-
-	once_function_value_on_icd_class (a_icd_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS; a_adapted_class_type: CLASS_TYPE; a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
-			-- ICorDebugValue object representing the once value.
-		do
-			Result := eifnet_debugger.once_function_value_on_icd_class (a_icd_frame, a_icd_class, a_adapted_class_type, a_feat)			
+			Result := eifnet_debugger.new_active_frame
 		end
 		
 feature -- Access
@@ -99,6 +94,7 @@ feature -- Access
 		do
 			icdv := dump_value_to_icdv (dmp)
 			if icdv /= Void then
+-- FIXME JFIAT
 				dv := debug_value_from_icdv (icdv)
 				Result := dv.dump_value
 			else
@@ -111,7 +107,6 @@ feature -- Access
 		local
 			l_class_type: CLASS_TYPE
 			l_class_c: CLASS_C
-			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_adv: ABSTRACT_DEBUG_VALUE
 		do
@@ -127,9 +122,7 @@ feature -- Access
 			l_class_type := l_class_c.types.first
 			--| FIXME jfiat [2004/03/15] : do we really need to use adapted_class_type (..) ?
 			l_class_type := adapted_class_type (l_class_type, f.associated_feature_i)
-
-			l_icd_class := icor_debug_class (l_class_type)
-			l_icd_value := once_function_value_on_icd_class (Void, l_icd_class, l_class_type, f)
+			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_type, f)			
 			if l_icd_value /= Void then
 				l_adv := debug_value_from_icdv (l_icd_value)
 				Result := l_adv.dump_value
@@ -153,7 +146,6 @@ feature -- Access
 			l_icdv_param: ICOR_DEBUG_VALUE
 			l_param_i: INTEGER
 			l_ctype: CLASS_TYPE
-			
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".dotnet_evaluate_function : ")
@@ -194,12 +186,6 @@ feature -- Access
 						display_funct_info_on_object (l_icd_function)
 					end
 
-					l_icd_frame := l_icdv_obj.associated_frame
-					if l_icd_frame = Void then
-							-- In case `associated_frame' is not set
-						l_icd_frame := active_icd_frame
-					end
-
 						--| Build the arguments for dotnet
 					if a_params /= Void then
 						create l_icdv_args.make (1, a_params.count + 1)
@@ -238,6 +224,12 @@ feature -- Access
 						
 						l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
 
+						l_icd_frame := eifnet_debugger.current_icor_debug_frame
+						if l_icd_frame = Void then
+								-- In case `associated_frame' is not set
+							l_icd_frame := new_active_icd_frame
+						end
+
 						l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
 						error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
 						
@@ -246,13 +238,14 @@ feature -- Access
 							Result := l_adv.dump_value	
 						end
 					end
+					l_icd_function.clean_on_dispose
 				end
 			end
 			
 			debug ("debugger_trace_eval_data")
 				if l_result /= Void then
-						print (generating_type + ".dotnet_evaluate_function: result ... %N")
-						display_info_on_object (l_result)				
+					print (generating_type + ".dotnet_evaluate_function: result ... %N")
+					display_info_on_object (l_result)				
 				end
 			end
 		end
@@ -269,13 +262,13 @@ feature {NONE} -- Implementation
 					--| We need to build the corresponding ICorDebugValue object.
 				inspect dmv.type 
 				when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-					Result := eifnet_evaluator.new_i4_evaluation (active_icd_frame, dmv.value_integer)
+					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmv.value_integer)
 				when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
-					Result := eifnet_evaluator.new_boolean_evaluation (active_icd_frame, dmv.value_boolean )
+					Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmv.value_boolean )
 				when feature {DUMP_VALUE_CONSTANTS}.type_character then
-					Result := eifnet_evaluator.new_char_evaluation (active_icd_frame, dmv.value_character )
+					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmv.value_character )
 				when feature {DUMP_VALUE_CONSTANTS}.type_string then
-					Result := eifnet_evaluator.new_eiffel_string_evaluation (active_icd_frame, dmv.value_string )				
+					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )				
 				else					
 				end
 
@@ -295,17 +288,17 @@ feature {NONE} -- Implementation
 						--| typically result of previous expression
 					inspect dmv.type 
 					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-						Result := eifnet_evaluator.icdv_reference_integer_from_icdv_integer (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_reference_integer_from_icdv_integer (new_active_icd_frame, Result)
 					when feature {DUMP_VALUE_CONSTANTS}.type_real then
-						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (active_icd_frame, Result)							
+						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (new_active_icd_frame, Result)							
 					when feature {DUMP_VALUE_CONSTANTS}.type_double then
-						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (active_icd_frame, Result)	
+						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (new_active_icd_frame, Result)	
 					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
-						Result := eifnet_evaluator.icdv_reference_boolean_from_icdv_boolean (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_reference_boolean_from_icdv_boolean (new_active_icd_frame, Result)
 					when feature {DUMP_VALUE_CONSTANTS}.type_character then
-						Result := eifnet_evaluator.icdv_reference_character_from_icdv_character (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_reference_character_from_icdv_character (new_active_icd_frame, Result)
 					when feature {DUMP_VALUE_CONSTANTS}.type_string then
-						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (new_active_icd_frame, Result)
 					else					
 					end
 				else
@@ -315,17 +308,17 @@ feature {NONE} -- Implementation
 						--| We need to build the corresponding ICorDebugValue object.
 					inspect dmv.type 
 					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
-						Result := eifnet_evaluator.new_reference_i4_evaluation (active_icd_frame, dmv.value_integer)
+						Result := eifnet_evaluator.new_reference_i4_evaluation (new_active_icd_frame, dmv.value_integer)
 					when feature {DUMP_VALUE_CONSTANTS}.type_real then
-						Result := eifnet_evaluator.new_reference_real_evaluation (active_icd_frame, dmv.value_real )
+						Result := eifnet_evaluator.new_reference_real_evaluation (new_active_icd_frame, dmv.value_real )
 					when feature {DUMP_VALUE_CONSTANTS}.type_double then
-						Result := eifnet_evaluator.new_reference_double_evaluation (active_icd_frame, dmv.value_double )
+						Result := eifnet_evaluator.new_reference_double_evaluation (new_active_icd_frame, dmv.value_double )
 					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
-						Result := eifnet_evaluator.new_reference_boolean_evaluation (active_icd_frame, dmv.value_boolean )
+						Result := eifnet_evaluator.new_reference_boolean_evaluation (new_active_icd_frame, dmv.value_boolean )
 					when feature {DUMP_VALUE_CONSTANTS}.type_character then
-						Result := eifnet_evaluator.new_reference_character_evaluation (active_icd_frame, dmv.value_character )
+						Result := eifnet_evaluator.new_reference_character_evaluation (new_active_icd_frame, dmv.value_character )
 					when feature {DUMP_VALUE_CONSTANTS}.type_string then
-						Result := eifnet_evaluator.new_eiffel_string_evaluation (active_icd_frame, dmv.value_string )
+						Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
 					else					
 					end
 				end
@@ -402,12 +395,15 @@ feature {NONE} -- Debug purpose only
 			-- debug purpose only
 		local
 			mdi: MD_IMPORT
+			l_class: ICOR_DEBUG_CLASS
 		do
 			debug ("debugger_trace_eval_data")
 				if icd_f /= Void then
 					mdi := icd_f.get_class.get_module.interface_md_import
 					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.get_token) + "%N")
-					print (generating_type + " :      on class : " + mdi.get_typedef_props (icd_f.get_class.get_token) + "%N")
+					l_class := icd_f.get_class
+					print (generating_type + " :      on class : " + mdi.get_typedef_props (l_class.get_token) + "%N")
+					l_class.clean_on_dispose
 				end			
 			end
 		end
@@ -416,19 +412,19 @@ feature {NONE} -- Debug purpose only
 			-- Display information related to object `icdv'
 			-- debug purpose only
 		local
-			edvi: EIFNET_DEBUG_VALUE_INFO
+			l_edvi: EIFNET_DEBUG_VALUE_INFO
 			retried: BOOLEAN
 		do
 			debug ("debugger_trace_eval_data")
 				if not retried then
-					create edvi.make (icdv)
-					if edvi.has_object_interface then
-						print (generating_type + " : ClassName = " + edvi.value_class_name + "%N")
+					create l_edvi.make (icdv)
+					if l_edvi.has_object_interface then
+						print (generating_type + " : ClassName = " + l_edvi.value_class_name + "%N")
 					else
-						if edvi.is_reference_type then
-							print ("IsNull =? " + edvi.is_null.out +"%N")
+						if l_edvi.is_reference_type then
+							print ("IsNull =? " + l_edvi.is_null.out +"%N")
 						end
-						print (generating_type + " : Basic type = " + edvi.is_basic_type.out + "%N")
+						print (generating_type + " : Basic type = " + l_edvi.is_basic_type.out + "%N")
 					end
 				else
 					print (generating_type + " : Error in display info .. %N")

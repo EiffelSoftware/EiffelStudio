@@ -34,7 +34,10 @@ feature -- Access
 			l_icdv: ICOR_DEBUG_VALUE
 		do
 			l_icdv := prepared_debug_value (a_data)
-			Result := prepared_icor_debug_value_as_icd_string_value (l_icdv)
+			Result := l_icdv.query_interface_icor_debug_string_value
+			if l_icdv /= a_data then
+				l_icdv.clean_on_dispose
+			end
 		end
 
 feature -- Transforming
@@ -42,7 +45,7 @@ feature -- Transforming
 	icor_debug_string_value_to_sub_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE; 
 					min, max: INTEGER): STRING is
 		do
-			Result := get_sub_string_value (a_icd_string_value, min, max)			
+			Result := get_sub_string_value (a_icd_string_value, min, max)
 		end
 
 	icor_debug_string_value_to_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE): STRING is
@@ -56,7 +59,9 @@ feature -- Transforming
 		do
 			l_data := prepared_debug_value (a_data)
 			if last_strip_references_call_success /= 0 then
-				print ("[!] Error on strip_references (dereference..) %N%T=> " + error_code_to_string (last_strip_references_call_success) + "%N")
+				debug ("debugger_icor_data")
+					io.error.put_string ("[!] Error on strip_references (dereference..) %N%T=> " + error_code_to_string (last_strip_references_call_success) + "%N")
+				end
 				Result := "ERROR while Dereferencing"
 			else
 				Result := prepared_icor_debug_value_to_string (l_data)
@@ -65,26 +70,25 @@ feature -- Transforming
 		
 	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is
 		local
-			l_data: ICOR_DEBUG_VALUE
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			l_data := prepared_debug_value (a_data)
-			Result := prepared_icor_debug_value_as_integer (l_data)
+			l_icdv := prepared_debug_value (a_data)
+			Result := prepared_icor_debug_value_as_integer (l_icdv)
+			if l_icdv /= a_data then
+				l_icdv.clean_on_dispose
+			end
 		end
 
 feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_VALUE_EXPORTER} -- Dereferenced to Specialized Value
-
-	prepared_icor_debug_value_as_icd_string_value (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
-		do
-			Result := a_data.query_interface_icor_debug_string_value
-		end
 
 	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE
 		do
-			l_string := prepared_icor_debug_value_as_icd_string_value (a_data)
+			l_string := a_data.query_interface_icor_debug_string_value
 			if l_string /= Void then
 				Result := get_string_value (l_string)
+				l_string.clean_on_dispose
 			end
 		end
 
@@ -163,7 +167,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 	prepared_icor_debug_value_as_reference_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
 			l_type: INTEGER
-			l_data: ICOR_DEBUG_VALUE
 
 			l_string: ICOR_DEBUG_STRING_VALUE
 			l_array: ICOR_DEBUG_ARRAY_VALUE
@@ -172,50 +175,54 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 
 			l_found_value: BOOLEAN
 			l_result_string: STRING
+			l_icd_class: ICOR_DEBUG_CLASS
 		do
-			l_data := a_data
-			l_type := l_data.get_type
+			l_type := a_data.get_type
 
 			--| Now start getting info
 
 			l_found_value := False
 			l_result_string := "TypeID ["+ l_type.out +"]::" + cor_element_type_to_string (l_type)
-			l_result_string.prepend_string ("[" + l_data.item.out +"] :: ")
+			l_result_string.prepend_string ("[" + a_data.item.out +"] :: ")
 			
 				--| At this point the argument 
 				--| of this feature is already ref-stripped and out of any box.
 	
 	            --| Is this object a string object ? |--
 			if not l_found_value then
-				l_string := l_data.query_interface_icor_debug_string_value
-				if l_data.last_call_succeed then
+				l_string := a_data.query_interface_icor_debug_string_value
+				if a_data.last_call_succeed then
 					l_result_string := get_string_value (l_string)
 					l_found_value := True
+					l_string.clean_on_dispose
 				end
 			end
 
 	            --| Might be an array... |--
 			if not l_found_value then
-				l_array := l_data.query_interface_icor_debug_array_value
-				if l_data.last_call_succeed then
+				l_array := a_data.query_interface_icor_debug_array_value
+				if a_data.last_call_succeed then
 					l_result_string.append_string ("<<ARRAY>>")
 					l_result_string.append_string (" rank=" + l_array.get_rank.out)
 					l_result_string.append_string (" count=" + l_array.get_count.out)
 					l_found_value := True
+					l_array.clean_on_dispose
 				end
 			end
 
 			if not l_found_value then
 					--| Check if OBJECT |--
-				l_object := l_data.query_interface_icor_debug_object_value
-				if l_data.last_call_succeed then
+				l_object := a_data.query_interface_icor_debug_object_value
+				if a_data.last_call_succeed then
 					l_result_string.append_string ("<<OBJECT>>")
---					l_result_string := "<<OBJECT>>"
-					l_result_string.append_string (" class token = 0x" + l_object.get_class.get_token.to_hex_string)
+					l_icd_class := l_object.get_class
+					l_result_string.append_string (" class token = 0x" + l_icd_class.get_token.to_hex_string)
 					
 					l_found_value := True
+					l_icd_class.clean_on_dispose
+					l_object.clean_on_dispose
 				else
-					l_result_string.append_string ("<<OBJECT-ERROR:"+l_data.last_error_code_id+">>")
+					l_result_string.append_string ("<<OBJECT-ERROR:" + a_data.last_error_code_id + ">>")
 				end
 			end
 
@@ -224,18 +231,14 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					--| Should not occur since we work on dereferenced ICorDebugValue !!!
 					--| Except if Null ...
 
-				l_reference := l_data.query_interface_icor_debug_reference_value
-				if l_data.last_call_succeed then
+				l_reference := a_data.query_interface_icor_debug_reference_value
+				if a_data.last_call_succeed then
 					l_result_string.append_string ("<<REFERENCE>>")
 					if l_reference.is_null then
 						l_result_string := " IsNull"
-						l_found_value := True								
-					else
---						l_mp := value_data_pointer (l_data)
---						l_found_value := True
+						l_found_value := True
+						l_reference.clean_on_dispose
 					end
---				else
---					l_result_string.append_string ("<<?? REFERENCE-ERROR:"+l_data.last_error_code_id+">>")
 				end
 			end
 
@@ -311,11 +314,11 @@ feature -- Dereferenced to Value
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_max then
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_modifier then
 				else			
---					Result := "Unknown type (for now)"
 				end
 			else
-				print ("[!] Error on ICorDebugValue->GetType() %N")
---				Result := ""
+				debug ("debugger_icor_data")
+					io.error.put_string ("[!] Error on ICorDebugValue->GetType() %N")
+				end
 			end
 		end
 
@@ -350,7 +353,7 @@ feature {NONE} -- preparing
 			l_new_value: ICOR_DEBUG_VALUE
 			do_break: BOOLEAN
 			l_is_null: BOOLEAN
-			l_real_value: MANAGED_POINTER
+			l_real_value_mp: MANAGED_POINTER
 		do
 			last_strip_references_call_success := 0
 			from
@@ -362,8 +365,8 @@ feature {NONE} -- preparing
 				l_icor_ref := Result.query_interface_icor_debug_reference_value
 				if not Result.last_call_succeed then
 					last_strip_references_call_success := 0
-					debug ("ICorDebugReferenceValue")
-						print ("Not a ICorDebugReferenceValue %N")
+					debug ("debugger_icor_data")
+						io.error.put_string ("Not a ICorDebugReferenceValue %N")
 					end
 					do_break := True
 				end
@@ -372,8 +375,8 @@ feature {NONE} -- preparing
 					l_is_null := l_icor_ref.is_null
 					if not l_icor_ref.last_call_succeed then
 						last_strip_references_call_success := l_icor_ref.last_call_success
-						debug ("ICorDebugReferenceValue")
-							print ("Failed on ICorDebugReferenceValue->IsNULL ()  %N")
+						debug ("debugger_icor_data")
+							io.error.put_string ("Failed on ICorDebugReferenceValue->IsNULL ()  %N")
 						end
 						do_break := True
 					end
@@ -383,12 +386,12 @@ feature {NONE} -- preparing
 				end
 					--| GetValue
 				if not do_break then
-					create l_real_value.make (sizeof_CORDB_ADDRESS)
-					l_icor_ref.get_value (l_real_value.item)
+					create l_real_value_mp.make (sizeof_CORDB_ADDRESS)
+					l_icor_ref.get_value (l_real_value_mp.item)
 					if not l_icor_ref.last_call_succeed then
 						last_strip_references_call_success := l_icor_ref.last_call_success
-						debug ("ICorDebugReferenceValue")
-							print ("Failed on ICorDebugReferenceValue->GetValue (..)  %N")
+						debug ("debugger_icor_data")
+							io.error.put_string ("Failed on ICorDebugReferenceValue->GetValue (..)  %N")
 						end
 						do_break := True
 					end
@@ -400,8 +403,8 @@ feature {NONE} -- preparing
 					if not l_icor_ref.last_call_succeed then
 							--| FIXME jfiat [2003/10/10 - 14:51] DerefrenceStrong may not be implemented on 1.2
 							--| so let's use Derefrence as a patch
-						debug ("ICorDebugReferenceValue")
-							print ("Failed on ICorDebugReferenceValue->DereferenceStrong ()%N This may not be implemented on Whidtbey (1.2)%N")
+						debug ("debugger_icor_data")
+							io.error.put_string ("Failed on ICorDebugReferenceValue->DereferenceStrong ()%N This may not be implemented on Whidtbey (1.2)%N")
 						end
 						l_new_value := l_icor_ref.dereference					
 					end
@@ -415,17 +418,21 @@ feature {NONE} -- preparing
 							--	  CORDBG_S_VALUE_POINTS_TO_VOID 
 							--		-> "0x%p", realObjectPtr
 						last_strip_references_call_success := l_icor_ref.last_call_success
-						debug ("ICorDebugReferenceValue")
-							print ("Failed on ICorDebugReferenceValue->Dereference () error on 0x" + l_real_value.out +"%N")
+						debug ("debugger_icor_data")
+							io.error.put_string ("Failed on ICorDebugReferenceValue->Dereference () error on 0x" 
+													+ l_real_value_mp.out +"%N")
 						end
 						do_break := True
 					else
 						--| got a new real value, let's check if no dereferencing is needed anymore
 						Result := l_new_value
-						debug ("ICorDebugReferenceValue")
-							print ("Got a sub reference !!%N")
+						debug ("debugger_icor_data")
+							io.error.put_string ("Got a sub reference !!%N")
 						end
 					end
+				end
+				if l_icor_ref /= Void then
+					l_icor_ref.clean_on_dispose
 				end
 			end
 		end
@@ -448,6 +455,7 @@ feature {NONE} -- preparing
 				check
 					l_box.last_call_succeed
 				end
+				l_box.clean_on_dispose
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -463,25 +471,26 @@ feature {NONE} -- Implementation
 			"sizeof(CORDB_ADDRESS)"
 		end
 
-	value_data_pointer (icdvalue: ICOR_DEBUG_VALUE): MANAGED_POINTER is
+	value_data_pointer (a_icdvalue: ICOR_DEBUG_VALUE): MANAGED_POINTER is
 		local
 			l_icd_with_value: ICOR_DEBUG_VALUE_WITH_VALUE
 			l_size: INTEGER
 			l_mp: MANAGED_POINTER
 		do
-			l_icd_with_value := icdvalue.query_interface_icor_debug_generic_value
-			if not icdvalue.last_call_succeed then
-				l_icd_with_value := icdvalue.query_interface_icor_debug_reference_value
+			l_icd_with_value := a_icdvalue.query_interface_icor_debug_generic_value
+			if not a_icdvalue.last_call_succeed then
+				l_icd_with_value := a_icdvalue.query_interface_icor_debug_reference_value
 			end
-			if l_icd_with_value /= Void and then icdvalue.last_call_succeed then
+			if l_icd_with_value /= Void and then a_icdvalue.last_call_succeed then
 				l_size := l_icd_with_value.get_size
-				if icdvalue.last_call_succeed then
+				if l_icd_with_value.last_call_succeed then
 					create l_mp.make (l_size)
 					l_icd_with_value.get_value (l_mp.item)
 					if l_icd_with_value.last_call_succeed then
 						Result := l_mp
 					end
 				end
+				l_icd_with_value.clean_on_dispose
 			end
 		end
 

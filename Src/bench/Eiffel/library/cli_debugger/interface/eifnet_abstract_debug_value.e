@@ -8,8 +8,14 @@ deferred class
 	EIFNET_ABSTRACT_DEBUG_VALUE
 
 inherit
+	
 	ABSTRACT_DEBUG_VALUE
 
+	SHARED_EIFNET_DEBUGGER
+		undefine
+			is_equal
+		end	
+	
 	DEBUG_VALUE_EXPORTER
 		export
 			{NONE} all
@@ -22,51 +28,50 @@ inherit
 			{NONE} all
 		undefine
 			is_equal
-		end	
-		
+		end
+
 	EIFNET_EXPORTER
 		export
 			{NONE} all
 		undefine
 			is_equal
-		end			
+		end
 
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all
 		undefine
-			is_equal			
-		end		
+			is_equal
+		end
 
-	SHARED_EIFNET_DEBUG_VALUE_FORMATTER		
+	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 		export
 			{NONE} all
 		undefine
 			is_equal
-		end	
+		end
 
 	SHARED_IL_DEBUG_INFO_RECORDER
 		export
 			{NONE} all
 		undefine
-			is_equal			
-		end	
-		
+			is_equal
+		end
+
 	SHARED_DEBUG_VALUE_KEEPER
 		export
 			{NONE} all
 		undefine
-			is_equal			
+			is_equal
 		end
-		
+
 feature {NONE} -- Init
 
-	init_dotnet_data (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
+	init_dotnet_data (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
 			-- Init data regarding to dotnet specific values
 		do
 			icd_referenced_value := a_referenced_value
 			icd_value := a_prepared_value
-			icd_frame := f
 			create icd_value_info.make_from_prepared_value (icd_referenced_value, a_prepared_value)
 		end
 
@@ -78,10 +83,10 @@ feature {NONE} -- Init
 					print (generating_type + ".register_dotnet_data : " + address)
 					print ("%N")
 				end
-				Debug_value_keeper.keep_dotnet_value (Current)				
+				Debug_value_keeper.keep_dotnet_value (Current)
 			end
 		end
-		
+
 feature -- Special Dotnet status
 
 	is_static: BOOLEAN
@@ -91,8 +96,8 @@ feature -- Special Dotnet status
 			-- Set `is_static' as `v'
 		do
 			is_static := v
-		end		
-		
+		end
+
 feature {NONE} -- Special childrens
 
 	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
@@ -123,15 +128,12 @@ feature {NONE} -- Special childrens
 			l_is_static: BOOLEAN
 		do
 			if icd_value_info.has_object_interface then
-				l_object_value := icd_value_info.interface_debug_object_value			
+				l_object_value := icd_value_info.interface_debug_object_value
 			end
 			
 			if l_object_value /= Void then
 				l_icd_class := l_object_value.get_class
-				l_icd_frame := l_object_value.associated_frame
-				if l_icd_frame = Void then
-					l_icd_frame := icd_frame					
-				end
+				l_icd_frame := Eifnet_debugger.current_icor_debug_frame
 				check
 					l_icd_frame /= Void
 				end
@@ -148,12 +150,12 @@ feature {NONE} -- Special childrens
 					if l_tokens_count > 0 then
 						create l_tokens.make (l_tokens_count)
 						from
-							l_t_upper := l_tokens_array.upper						
+							l_t_upper := l_tokens_array.upper
 							l_t_index := l_tokens_array.lower
 						until
 							l_t_index > l_t_upper
 						loop
-							l_tokens.put_last (l_tokens_array.item (l_t_index))				
+							l_tokens.put_last (l_tokens_array.item (l_t_index))
 							l_t_index := l_t_index + 1
 						end
 						if l_tokens_count > l_tokens_array.count then
@@ -166,9 +168,9 @@ feature {NONE} -- Special childrens
 							until
 								l_t_index > l_t_upper
 							loop
-								l_tokens.put_last (l_tokens_array.item (l_t_index))				
+								l_tokens.put_last (l_tokens_array.item (l_t_index))
 								l_t_index := l_t_index + 1
-							end						
+							end
 						end
 					end
 					l_md_import.close_enum (l_enum_hdl)
@@ -236,13 +238,14 @@ feature {NONE} -- Special childrens
 							l_tokens_cursor.forth
 						end
 					end
+					l_icd_module.clean_on_dispose
+					l_icd_class.clean_on_dispose
 				end
+				l_object_value.clean_on_dispose
 			end
-		end		
+		end
 
 feature -- Properties
-
-	icd_frame: ICOR_DEBUG_FRAME
 
 	icd_referenced_value: ICOR_DEBUG_VALUE
 			-- Original ICorDebugValue from Debugger
@@ -255,5 +258,5 @@ feature -- Properties
 
 	icd_value_info: EIFNET_DEBUG_VALUE_INFO
 			-- Value info of object.
-	
+
 end

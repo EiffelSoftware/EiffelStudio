@@ -29,14 +29,14 @@ create {CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
 			-- 	Set `value' to `a_prepared_value'.
 		require
 			a_prepared_value_not_void: a_prepared_value /= Void
 		do
 			set_default_name
 			
-			init_dotnet_data (a_referenced_value, a_prepared_value, f)
+			init_dotnet_data (a_referenced_value, a_prepared_value)
 
 			is_null := icd_value_info.is_null
 			if not is_null then
@@ -178,7 +178,6 @@ feature -- Output
 				end
 			end
 		end
-
 
 end -- class EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 

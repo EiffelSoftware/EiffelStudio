@@ -117,10 +117,9 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			Result := last_icor_debug_eval.create_value (Element_type_i4 , Void)
 			if Result /= Void then
 				l_gen_obj := Result.query_interface_icor_debug_generic_value
-				check l_gen_obj /= Void end					
-
+				check l_gen_obj /= Void end
 				l_gen_obj.set_value ($a_val)
-				l_gen_obj.set_associated_frame (a_frame)				
+				l_gen_obj.clean_on_dispose
 			end
 			end_evaluation
 		end
@@ -134,10 +133,9 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			Result := last_icor_debug_eval.create_value (element_type_r4 , Void)
 			if Result /= Void then
 				l_gen_obj := Result.query_interface_icor_debug_generic_value
-				check l_gen_obj /= Void end					
-
+				check l_gen_obj /= Void end
 				l_gen_obj.set_value ($a_val)
-				l_gen_obj.set_associated_frame (a_frame)				
+				l_gen_obj.clean_on_dispose
 			end
 			end_evaluation
 		end
@@ -151,13 +149,12 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			Result := last_icor_debug_eval.create_value (element_type_r8 , Void)
 			if Result /= Void then
 				l_gen_obj := Result.query_interface_icor_debug_generic_value
-				check l_gen_obj /= Void end					
-
+				check l_gen_obj /= Void end
 				l_gen_obj.set_value ($a_val)
-				l_gen_obj.set_associated_frame (a_frame)				
+				l_gen_obj.clean_on_dispose
 			end
 			end_evaluation
-		end			
+		end
 		
 	new_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Boolean
@@ -168,10 +165,9 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			Result := last_icor_debug_eval.create_value (element_type_boolean , Void)
 			if Result /= Void then
 				l_gen_obj := Result.query_interface_icor_debug_generic_value
-				check l_gen_obj /= Void end					
-
+				check l_gen_obj /= Void end
 				l_gen_obj.set_value ($a_val)
-				l_gen_obj.set_associated_frame (a_frame)				
+				l_gen_obj.clean_on_dispose
 			end
 			end_evaluation
 		end
@@ -185,10 +181,9 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			Result := last_icor_debug_eval.create_value (element_type_char , Void)
 			if Result /= Void then
 				l_gen_obj := Result.query_interface_icor_debug_generic_value
-				check l_gen_obj /= Void end					
-
+				check l_gen_obj /= Void end
 				l_gen_obj.set_value ($a_val)
-				l_gen_obj.set_associated_frame (a_frame)				
+				l_gen_obj.clean_on_dispose
 			end
 			end_evaluation
 		end	
@@ -198,7 +193,6 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 		do
 			prepare_evaluation (a_frame)
 			Result := last_icor_debug_eval.create_value (element_type_class, Void)
-			Result.set_associated_frame (a_frame)
 			end_evaluation
 		end	
 		
@@ -207,47 +201,62 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 	new_eiffel_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: STRING): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with String
 		local
-			l_str_icdv: ICOR_DEBUG_VALUE
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			l_str_icdv := new_string_evaluation (a_frame, a_val)
-			Result := icdv_string_from_icdv_system_string (a_frame, l_str_icdv)
+			l_icdv := new_string_evaluation (a_frame, a_val)
+			Result := icdv_string_from_icdv_system_string (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
 		end	
 		
 	new_reference_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with i4 _REF
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			Result := new_i4_evaluation (a_frame, a_val)
-			Result := icdv_reference_integer_from_icdv_integer (a_frame, Result)
+			l_icdv := new_i4_evaluation (a_frame, a_val)
+			Result := icdv_reference_integer_from_icdv_integer (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
 		end
 		
 	new_reference_real_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with real _REF
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			Result := new_r4_evaluation (a_frame, a_val)
-			Result := icdv_reference_real_from_icdv_real (a_frame, Result)
+			l_icdv := new_r4_evaluation (a_frame, a_val)
+			Result := icdv_reference_real_from_icdv_real (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
 		end	
 		
 	new_reference_double_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with double _REF
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			Result := new_r8_evaluation (a_frame, a_val)
-			Result := icdv_reference_double_from_icdv_double (a_frame, Result)
+			l_icdv := new_r8_evaluation (a_frame, a_val)
+			Result := icdv_reference_double_from_icdv_double (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
 		end	
 
 	new_reference_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with boolean _REF
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			Result := new_boolean_evaluation (a_frame, a_val)
-			Result := icdv_reference_boolean_from_icdv_boolean (a_frame, Result)
+			l_icdv := new_boolean_evaluation (a_frame, a_val)
+			Result := icdv_reference_boolean_from_icdv_boolean (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
 		end	
 
 	new_reference_character_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with char _REF
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
-			Result := new_char_evaluation (a_frame, a_val)
-			Result := icdv_reference_character_from_icdv_character (a_frame, Result)
+			l_icdv := new_char_evaluation (a_frame, a_val)
+			Result := icdv_reference_character_from_icdv_character (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
 		end
-		
 		
 feature {DBG_EVALUATOR} -- Class construction facilities
 
@@ -259,7 +268,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			Result := complete_function_evaluation
 			
 			method_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, a_sys_string>>)
-			Result.set_associated_frame (a_frame)
 		end	
 		
 	icdv_reference_integer_from_icdv_integer (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
@@ -269,7 +277,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			last_icor_debug_eval.new_object_no_constructor (reference_integer_32_icd_class)
 			Result := complete_function_evaluation		
 			method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv_integer>>)
-			Result.set_associated_frame (a_frame)
 		end	
 		
 	icdv_reference_real_from_icdv_real (a_frame: ICOR_DEBUG_FRAME; a_icdv_real: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
@@ -279,7 +286,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			last_icor_debug_eval.new_object_no_constructor (reference_real_icd_class)
 			Result := complete_function_evaluation		
 			method_evaluation (a_frame, reference_real_set_item_method, <<Result, a_icdv_real>>)
-			Result.set_associated_frame (a_frame)
 		end	
 
 	icdv_reference_double_from_icdv_double (a_frame: ICOR_DEBUG_FRAME; a_icdv_double: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
@@ -289,7 +295,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			last_icor_debug_eval.new_object_no_constructor (reference_double_icd_class)
 			Result := complete_function_evaluation		
 			method_evaluation (a_frame, reference_double_set_item_method, <<Result, a_icdv_double>>)
-			Result.set_associated_frame (a_frame)
 		end			
 		
 	icdv_reference_boolean_from_icdv_boolean (a_frame: ICOR_DEBUG_FRAME; a_icdv_boolean: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
@@ -299,7 +304,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			last_icor_debug_eval.new_object_no_constructor (reference_boolean_icd_class)
 			Result := complete_function_evaluation		
 			method_evaluation (a_frame, reference_boolean_set_item_method, <<Result, a_icdv_boolean>>)
-			Result.set_associated_frame (a_frame)
 		end		
 
 	icdv_reference_character_from_icdv_character (a_frame: ICOR_DEBUG_FRAME; a_icdv_character: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
@@ -309,7 +313,6 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			last_icor_debug_eval.new_object_no_constructor (reference_character_icd_class)
 			Result := complete_function_evaluation		
 			method_evaluation (a_frame, reference_character_set_item_method, <<Result, a_icdv_character>>)
-			Result.set_associated_frame (a_frame)
 		end				
 
 feature {NONE} -- Backup state
@@ -341,6 +344,7 @@ feature {NONE}
 	prepare_evaluation (a_frame: ICOR_DEBUG_FRAME) is
 			-- Prepare data for evaluation.
 		local
+			l_frame: ICOR_DEBUG_FRAME
 			l_chain: ICOR_DEBUG_CHAIN
 			l_icd_thread: ICOR_DEBUG_THREAD
 			l_icd_eval: ICOR_DEBUG_EVAL
@@ -348,13 +352,24 @@ feature {NONE}
 		do
 			last_eval_is_exception := False
 			save_state_info
-			if a_frame /= Void then
-				l_chain := a_frame.get_chain
-				l_icd_thread := l_chain.get_thread
-			else
-				l_icd_thread := eifnet_debugger.icor_debug_thread
+			l_frame := a_frame
+			if l_frame /= Void then
+				l_frame := eifnet_debugger.current_icor_debug_frame
 			end
-			l_icd_eval := l_icd_thread.create_eval
+			-- FIXME JFIAT: check deeply if this does not cause any crash
+			-- so far no crash, but if it crashes, comment next {if .. end}
+			if l_frame /= Void then
+				l_chain := l_frame.get_chain
+				l_icd_thread := l_chain.get_thread
+				l_icd_eval := l_icd_thread.create_eval
+				l_chain.clean_on_dispose
+				l_icd_thread.clean_on_dispose --| this is a temp data
+			end
+			if l_icd_eval = Void then
+				l_icd_thread := eifnet_debugger.icor_debug_thread
+				l_icd_eval := l_icd_thread.create_eval
+			end
+			
 			l_status := application.imp_dotnet.status
 			l_status.set_is_evaluating (True)
 				--| Let use the evaluating mecanism instead of the normal one
@@ -381,7 +396,8 @@ feature {NONE}
 			last_call_success := l_icd_eval.last_call_success
 			l_status := last_app_status
 			l_status.set_is_evaluating (False)
-			restore_state_info			
+			restore_state_info
+			clean_temp_data
 		end
 
 	complete_method_evaluation is
@@ -401,7 +417,7 @@ feature {NONE}
 
 			eifnet_debugger.do_continue
 				--| And we wait for all callback to be finished
-			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_process)
+			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
 			eifnet_debugger.reset_data_changed
 			if 
 				eifnet_debugger.last_managed_callback_is_exception 
@@ -409,7 +425,7 @@ feature {NONE}
 				check False end
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception
-					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
+					io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 				end
 				eifnet_debugger.do_clear_exception
 			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
@@ -419,6 +435,7 @@ feature {NONE}
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
 			restore_state_info
+			clean_temp_data			
 		end
 
 	complete_function_evaluation: ICOR_DEBUG_VALUE is
@@ -437,7 +454,7 @@ feature {NONE}
 
 			eifnet_debugger.do_continue
 				--| And we wait for all callback to be finished
-			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_process)
+			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
 			eifnet_debugger.reset_data_changed
 			if 
 				eifnet_debugger.last_managed_callback_is_exception 
@@ -446,7 +463,7 @@ feature {NONE}
 				Result := Void --"WARNING: Could not evaluate output"
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception
-					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
+					io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 				end
 				eifnet_debugger.do_clear_exception
 			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
@@ -461,7 +478,15 @@ feature {NONE}
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
 			restore_state_info
-			last_call_success := l_icd_eval.last_call_success			
+			last_call_success := l_icd_eval.last_call_success
+			clean_temp_data			
+		end
+		
+	clean_temp_data	is
+			-- Clean temporary data used for evaluation
+		do
+			last_icor_debug_eval.clean_on_dispose
+			last_icor_debug_eval := Void
 		end
 
 	display_last_exception is
@@ -473,13 +498,16 @@ feature {NONE}
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 			l_exception: ICOR_DEBUG_VALUE
 		do
-			l_exception := eifnet_debugger.active_exception_value
+			l_exception := eifnet_debugger.new_active_exception_value
 			if l_exception /= Void then
 				create l_exception_info.make (l_exception)
 
-				print ("%N%NException ....%N")
-				print ("%T Class   => " + l_exception_info.value_class_name + "%N")
-				print ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
+				io.error.put_string ("%N%NException ....%N")
+				io.error.put_string ("%T Class   => " + l_exception_info.value_class_name + "%N")
+				io.error.put_string ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
+				l_exception_info.icd_prepared_value.clean_on_dispose
+				l_exception_info.clean
+				l_exception.clean_on_dispose
 			end
 		end
 
@@ -629,25 +657,71 @@ feature {NONE} -- Implementation : ICor... once per session
 			Result /= Void
 		end
 
-feature {NONE} -- Private Implementation : ICor... once per session
+feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
+
+	reset is
+			-- Reset all data
+		do
+			reset_once_per_session
+			last_app_status := Void
+			last_icor_debug_eval := Void
+		end		
 
 	reset_once_per_session is
 			-- Reset the data related to one debugging session
 		do
-			once_reference_integer_32_icd_class          := Void
-			once_reference_real_icd_class                := Void
-			once_reference_double_icd_class              := Void
-			once_reference_boolean_icd_class             := Void
-			once_reference_character_icd_class           := Void
-			once_eiffel_string_icd_class                 := Void
+				--| Clean kept ICorDebugClass
+			if once_reference_integer_32_icd_class /= Void then
+				once_reference_integer_32_icd_class.clean_on_dispose
+				once_reference_integer_32_icd_class          := Void
+			end
+			if once_reference_real_icd_class /= Void then
+				once_reference_real_icd_class.clean_on_dispose
+				once_reference_real_icd_class                := Void
+			end
+			if once_reference_double_icd_class /= Void then
+				once_reference_double_icd_class.clean_on_dispose
+				once_reference_double_icd_class              := Void
+			end
+			if once_reference_boolean_icd_class /= Void then
+				once_reference_boolean_icd_class.clean_on_dispose
+				once_reference_boolean_icd_class             := Void
+			end
+			if once_reference_character_icd_class /= Void then
+				once_reference_character_icd_class.clean_on_dispose
+				once_reference_character_icd_class           := Void
+			end
+			if once_eiffel_string_icd_class /= Void then
+				once_eiffel_string_icd_class.clean_on_dispose
+				once_eiffel_string_icd_class                 := Void
+			end
 
-			once_reference_integer_32_set_item_method    := Void
-			once_reference_real_set_item_method          := Void
-			once_reference_double_set_item_method        := Void
-			once_reference_boolean_set_item_method       := Void
-			once_reference_character_set_item_method     := Void
+				--| Clean kept ICorDebugFunction
+			if once_reference_integer_32_set_item_method /= Void then
+				once_reference_integer_32_set_item_method.clean_on_dispose
+				once_reference_integer_32_set_item_method    := Void
+			end
+			if once_reference_real_set_item_method /= Void then
+				once_reference_real_set_item_method.clean_on_dispose
+				once_reference_real_set_item_method          := Void
+			end
+			if once_reference_double_set_item_method /= Void then
+				once_reference_double_set_item_method.clean_on_dispose
+				once_reference_double_set_item_method        := Void
+			end
+			if once_reference_boolean_set_item_method /= Void then
+				once_reference_boolean_set_item_method.clean_on_dispose
+				once_reference_boolean_set_item_method       := Void
+			end
+			if once_reference_character_set_item_method /= Void then
+				once_reference_character_set_item_method.clean_on_dispose
+				once_reference_character_set_item_method     := Void
+			end
 
-			once_eiffel_string_make_from_cil_constructor := Void
+			if once_eiffel_string_make_from_cil_constructor /= Void then
+				once_eiffel_string_make_from_cil_constructor.clean_on_dispose
+				once_eiffel_string_make_from_cil_constructor := Void
+			end
 		end
 
 	once_reference_integer_32_icd_class          : ICOR_DEBUG_CLASS

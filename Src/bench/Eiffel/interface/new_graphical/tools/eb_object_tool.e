@@ -225,8 +225,6 @@ feature -- Status setting
 				if Application.is_dotnet then
 					if tree_item /= Void then
 						abstract_value ?= tree_item.data
-					else
-						abstract_value ?= a_stone.debug_value
 					end
 					if abstract_value /= Void then
 						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (Current, abstract_value)
@@ -462,9 +460,6 @@ feature -- Memory management
 			set_integer_resource ("min_slice", min_slice_ref.item)
 			set_integer_resource ("max_slice", max_slice_ref.item)
 			debugger_manager.kept_objects.wipe_out
-			if Application.is_dotnet then
-				Application.imp_dotnet.recycle_kept_object
-			end
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
 			explorer_bar_item.recycle
@@ -473,6 +468,7 @@ feature -- Memory management
 				display_first_attributes := current_object.display_attributes
 				display_first_special := current_object.display_special
 				display_first_onces := current_object.display_onces
+				current_object := Void
 			end
 		end
 

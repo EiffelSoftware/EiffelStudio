@@ -25,12 +25,11 @@ create {DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Redefinition of make
 
-	make (a_referenced_value: like icd_referenced_value; a_frame: ICOR_DEBUG_FRAME; v: like value) is
+	make (a_referenced_value: like icd_referenced_value; v: like value) is
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
 		do
 			icd_referenced_value := a_referenced_value
-			icd_frame := a_frame
 			dv_make (v)
 		end
 		
@@ -43,8 +42,7 @@ feature -- Access : Redefinition of dump_value
 			Result := Precursor {DEBUG_VALUE}
 			if Result /= Void then
 				Result.set_value_dotnet (icd_referenced_value)
-				Result.set_value_frame_dotnet (icd_frame)				
 			end
-		end		
+		end
 		
 end

@@ -164,7 +164,6 @@ feature -- Dotnet creation
 			arg_not_void: a_eifnet_dsv /= Void		
 		do
 			eifnet_debug_value := a_eifnet_dsv
-			value_frame_dotnet := eifnet_debug_value.icd_frame
 			value_dotnet := eifnet_debug_value.icd_referenced_value
 
 			value_string_dotnet := a_eifnet_dsv.icd_value_info.interface_debug_string_value
@@ -188,7 +187,6 @@ feature -- Dotnet creation
 		do
 			is_dotnet_value := True
 			eifnet_debug_value := a_eifnet_drv
-			value_frame_dotnet := eifnet_debug_value.icd_frame
 			value_dotnet := eifnet_debug_value.icd_referenced_value
 
 			value_object_dotnet := a_eifnet_drv.icd_value_info.interface_debug_object_value
@@ -231,8 +229,11 @@ feature -- Access
 	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
 			-- ICorDebugStringValue for the dotnet String
 	
-	value_frame_dotnet: ICOR_DEBUG_FRAME
+	value_frame_dotnet: ICOR_DEBUG_FRAME is
 			-- ICorDebugFrame in this DUMP_VALUE context
+		do
+			Result := application.imp_dotnet.eifnet_debugger.current_icor_debug_frame
+		end
 	
 feature -- change
 
@@ -242,12 +243,6 @@ feature -- change
 			value_dotnet := v	
 		end	
 
-	set_value_frame_dotnet (v: like value_frame_dotnet) is
-			-- Set `value_frame_dotnet' as `v'
-		do
-			value_frame_dotnet := v	
-		end			
-	
 feature {NONE} -- Implementation dotnet
 
 	value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE

@@ -10,7 +10,7 @@ class
 	ICOR_DEBUG_VALUE
 
 inherit
-	ICOR_OBJECT_WITH_FRAME
+	ICOR_OBJECT
 		redefine
 			init_icor
 		end
@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			size := get_size
 			address_as_string := get_address.to_integer.to_hex_string	
 		end
-	
 			
 feature {ICOR_EXPORTER} -- Properties
 
@@ -54,10 +53,13 @@ feature -- helpers
 					heap_value := deref_value.query_interface_icor_debug_heap_value
 					if heap_value /= Void then
 						Result := heap_value.is_valid
+						heap_value.clean_on_dispose
 					end
+					deref_value.clean_on_dispose
 				else
 					Result := False
 				end
+				ref_value.clean_on_dispose
 			end
 		end
 	
@@ -70,8 +72,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugGenericValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)				
-				Result.add_ref
 			end
 		end
 
@@ -82,8 +82,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugReferenceValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)				
-				Result.add_ref
 			end
 		end
 
@@ -94,8 +92,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugHeapValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)				
-				Result.add_ref
 			end
 		end
 
@@ -106,8 +102,6 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			last_call_success := cpp_query_interface_ICorDebugObjectValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)
-				Result.add_ref
 			end
 		end
 
@@ -120,8 +114,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			last_call_success := cpp_query_interface_ICorDebugBoxValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)				
-				Result.add_ref
 			end
 		end
 
@@ -132,8 +124,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			last_call_success := cpp_query_interface_ICorDebugStringValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)				
-				Result.add_ref
 			end
 		end
 
@@ -144,8 +134,6 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			last_call_success := cpp_query_interface_ICorDebugArrayValue (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (associated_frame)				
-				Result.add_ref
 			end
 		end
 
@@ -263,50 +251,59 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugArrayValue, (void **) $a_p)"
 		end
 		
-feature -- only for test purpose (evaluation in debugger)
 
-	query: TUPLE [STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE] is
-			-- Debug purpose only, will be removed soon
-		local
-			i_obj: like query_interface_icor_debug_object_value
-			i_ref: like query_interface_icor_debug_reference_value
-			i_str: like query_interface_icor_debug_string_value
-			i_gen: like query_interface_icor_debug_generic_value
-			i_arr: like query_interface_icor_debug_array_value
-			i_hea: like query_interface_icor_debug_heap_value
-		do
-			i_obj := query_interface_icor_debug_object_value
-			i_ref := query_interface_icor_debug_reference_value
-			i_str := query_interface_icor_debug_string_value			
-			i_gen := query_interface_icor_debug_generic_value			
-			i_arr := query_interface_icor_debug_array_value	
-			i_hea := query_interface_icor_debug_heap_value			
+--| NOTA JFIAT: uncomment this to equipped those classes with nice expression to evaluate
+--| for debugging purpose only
 
-			Result := [
-						"Object", i_obj, 
-						"Reference", i_ref, 
-						"String", i_str, 
-						"Generic", i_gen, 
-						"Array", i_arr ,
-						"Heap", i_hea						
-						]
-			
-		end
-		
-	to_string: STRING is
-			-- Debug purpose only, will be removed soon
-		local
-			vi: EIFNET_DEBUG_VALUE_INFO
-		do
-			create vi.make (Current)
-			Result := vi.value_to_string --   "test"
-			if vi.value_module_file_name /= Void then
-				Result.append ("%N module=" + vi.value_module_file_name)
-			end
-			if vi.value_class_type /= Void then
-				Result.append ("%N class_type=" + vi.value_class_type.full_il_implementation_type_name)
-			end			
-		end
+--feature -- only for test purpose (evaluation in debugger)
+--
+--	query: TUPLE [STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE] is
+--			-- Debug purpose only, will be removed soon
+--		local
+--			i_obj: like query_interface_icor_debug_object_value
+--			i_ref: like query_interface_icor_debug_reference_value
+--			i_str: like query_interface_icor_debug_string_value
+--			i_gen: like query_interface_icor_debug_generic_value
+--			i_arr: like query_interface_icor_debug_array_value
+--			i_hea: like query_interface_icor_debug_heap_value
+--		do
+--			i_obj := query_interface_icor_debug_object_value
+--			i_ref := query_interface_icor_debug_reference_value
+--			i_str := query_interface_icor_debug_string_value			
+--			i_gen := query_interface_icor_debug_generic_value			
+--			i_arr := query_interface_icor_debug_array_value	
+--			i_hea := query_interface_icor_debug_heap_value			
+--
+--			Result := [
+--						"Object", i_obj, 
+--						"Reference", i_ref, 
+--						"String", i_str, 
+--						"Generic", i_gen, 
+--						"Array", i_arr ,
+--						"Heap", i_hea						
+--						]
+--			i_obj.dispose
+--			i_ref.dispose
+--			i_str.dispose
+--			i_gen.dispose
+--			i_arr.dispose
+--			i_hea.dispose
+--		end
+--		
+--	to_string: STRING is
+--			-- Debug purpose only, will be removed soon
+--		local
+--			vi: EIFNET_DEBUG_VALUE_INFO
+--		do
+--			create vi.make (Current)
+--			Result := vi.value_to_string --   "test"
+--			if vi.value_module_file_name /= Void then
+--				Result.append ("%N module=" + vi.value_module_file_name)
+--			end
+--			if vi.value_class_type /= Void then
+--				Result.append ("%N class_type=" + vi.value_class_type.full_il_implementation_type_name)
+--			end			
+--		end
 
 end -- class ICOR_DEBUG_VALUE
 

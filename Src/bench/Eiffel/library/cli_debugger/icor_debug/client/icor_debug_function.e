@@ -29,17 +29,24 @@ feature {ICOR_EXPORTER} -- Access
 feature -- Addons
 
 	to_string: STRING is
-			-- 
+			-- String representation of the Current ICorDebugFunction.
+			-- For debug purpose only
+		local
+			l_cl: ICOR_DEBUG_CLASS
+			l_mod: ICOR_DEBUG_MODULE
 		do
 			Result := "Function [Ox" + item.out + "] " 
-					+ " Token="+ get_token.out + "~0x"+get_token.to_hex_string
-			if get_class /= Void then
-				Result.append (" ClassToken=" + get_class.get_token.out + "~0x"+get_class.get_token.to_hex_string)
+					+ " Token="+ get_token.out + "~0x" + get_token.to_hex_string
+			l_cl := get_class	
+			if l_cl /= Void then
+				Result.append (" ClassToken=" + l_cl.get_token.out + "~0x" + l_cl.get_token.to_hex_string)
+				l_cl.clean_on_dispose
 			else
 				Result.append (" Class= not IL ")
-				
 			end
-			Result.append (" Module["+get_module.get_token.out+"]=" + get_module.get_name + " .")
+			l_mod := get_module
+			Result.append (" Module[" + l_mod.get_token.out + "]=" + l_mod.get_name + " .")
+			l_mod.clean_on_dispose
 		end
 		
 feature {ICOR_EXPORTER} -- Access

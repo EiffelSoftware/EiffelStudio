@@ -20,12 +20,29 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_initialize (item)
 		end
 
-	terminate is 
-		do
-			last_call_success := cpp_terminate (item)
+	terminate is
+			-- Terminate current ICorDebug
+			-- this will close access to .Net COM debugger
+		local
+			retried: BOOLEAN
+			n: INTEGER
+ 		do
+ 			if not retried then
+				last_call_success := cpp_terminate (item)
+				n := feature {CLI_COM}.release (item)
+
+				last_icd_managed_callback.terminate_callback
+				last_icd_unmanaged_callback.terminate_callback
+				last_icd_managed_callback := Void
+				last_icd_unmanaged_callback := Void				
+ 			end
+ 		rescue
+ 			retried := True
+ 			retry
 		end
 	
-	create_process (a_command_line, a_working_directory: STRING) is 
+	create_process (a_command_line, a_working_directory: STRING): POINTER is 
+			-- Pointer on the freshly creared ICorDebugProcess
 		require
 			non_void_command_line: a_command_line /= Void
 			not_empty_command_line: not a_command_line.is_empty
@@ -33,6 +50,7 @@ feature {ICOR_EXPORTER} -- Access
 			not_empty_working_directory: not a_working_directory.is_empty
 		local
 			icordebug_process: POINTER
+			l_hr: INTEGER
 		do
 			create process_info.make
 			last_call_success := cpp_createprocess (item, 
@@ -50,18 +68,22 @@ feature {ICOR_EXPORTER} -- Access
 										cwin_debug_no_specials_options,
 										$icordebug_process
 									)
+			Result := icordebug_process
+			l_hr := feature {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
 		end
 
 	set_managed_handler (a_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK) is
 		do
-			last_call_success := cpp_set_managed_handler (item, a_cordebug_managed_callback.item)
+			last_icd_managed_callback := a_cordebug_managed_callback
+			last_call_success := cpp_set_managed_handler (item, last_icd_managed_callback.item)
 		ensure
 			success: last_call_success = 0
 		end
 
 	set_unmanaged_handler (a_cordebug_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK) is
 		do
-			last_call_success := cpp_set_unmanaged_handler (item, a_cordebug_unmanaged_callback.item)
+			last_icd_unmanaged_callback := a_cordebug_unmanaged_callback
+			last_call_success := cpp_set_unmanaged_handler (item, last_icd_unmanaged_callback.item)
 		ensure
 			success: last_call_success = 0
 		end
@@ -76,6 +98,18 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		ensure
 			success: last_call_success = 0
+		end
+
+feature {ICOR_EXPORTER} -- Access
+
+	clean_data is
+			-- Clean used data for the previous debugging session
+		local
+			l_hr: INTEGER
+		do	
+			l_hr := cwin_close_handle (last_icor_debug_process_handle)
+			l_hr := cwin_close_handle (process_info.process_handle)
+			l_hr := cwin_close_handle (process_info.thread_handle)
 		end
 
 feature {NONE} -- Implementation
@@ -124,7 +158,6 @@ feature {NONE} -- Implementation
 			"Terminate"
 		end
 
-
 	cpp_set_managed_handler (obj: POINTER; a_icordebug_managed_callback: POINTER): INTEGER is
 		external
 			"[
@@ -155,8 +188,19 @@ feature {NONE} -- Implementation
 			"GetProcess"
 		end		
 
+feature -- ICorDebugProcess handle
+
+	last_icor_debug_process_handle: INTEGER
+			-- Handle on the process debugged
+
 feature {NONE} -- Implementation routines
 
+	last_icd_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK
+		-- Last ICorDebugManagedCallback associated with Current
+
+	last_icd_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK
+		-- Last ICorDebugUnmanagedCallback associated with Current
+	
 	process_info: WEL_PROCESS_INFO
 			-- Process information
 	

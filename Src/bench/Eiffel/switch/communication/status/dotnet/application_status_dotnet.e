@@ -37,7 +37,6 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 		do
 			Eifnet_debugger_info.init_current_callstack
-
 			l_current_stack_info := Eifnet_debugger_info.current_stack_info
 			if l_current_stack_info.is_synchronized then
 				l_curr_mod_name := l_current_stack_info.current_module_name
@@ -97,7 +96,7 @@ feature -- settings
 feature -- Output
 	
 	display_status (st: STRUCTURED_TEXT) is
-			-- 
+			-- Display status of debugged system
 		do
 			check
 				il_generation: Eiffel_system.System.il_generation
@@ -107,14 +106,25 @@ feature -- Output
 				st.add_string ("System is running")
 				st.add_new_line
 			end
---			st.add_string ("Last debug callback ["+Eifnet_debugger_info.last_managed_callback.out+"] = " + Eifnet_debugger_info.last_managed_callback_name)
 			st.add_new_line
+			-- NOTA jfiat [2004/07/02] : maybe we could display more information
+			-- for instance if we run with or without break points
 		end
 
 feature -- Class stack creation
 
-	create_where_with (a_stack_max_depth: INTEGER) is
+	clean_where is
+			-- Clean Eiffel callstack data
 		do
+			if where /= Void then
+				where.clean
+			end
+		end
+
+	create_where_with (a_stack_max_depth: INTEGER) is
+			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+		do
+			clean_where
 			create where.make (a_stack_max_depth)
 		end
 

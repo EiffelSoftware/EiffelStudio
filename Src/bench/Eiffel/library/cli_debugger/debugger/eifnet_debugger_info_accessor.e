@@ -85,9 +85,9 @@ feature -- Queries
 		
 feature -- Access
 
-	icor_debug: ICOR_DEBUG is
+	icor_debug_controller: ICOR_DEBUG_CONTROLLER is
 		do
-			Result := Eifnet_debugger_info.icd
+			Result := Eifnet_debugger_info.icd_controller
 		end
 
 	icor_debug_process: ICOR_DEBUG_PROCESS is
@@ -102,9 +102,9 @@ feature -- Access
 
 feature {NONE} -- Change by pointer
 
-	set_last_icor_debug_by_pointer (p: POINTER) is
+	set_last_controller_by_pointer (p: POINTER) is
 		do
-			eifnet_debugger_info.set_last_icd (p)
+			eifnet_debugger_info.set_last_icd_controller (p)
 		end
 
 	set_last_process_by_pointer (p: POINTER) is
@@ -112,22 +112,11 @@ feature {NONE} -- Change by pointer
 			eifnet_debugger_info.set_last_icd_process (p)
 		end
 
-	set_last_app_domain_by_pointer (p: POINTER) is
-		do
-			eifnet_debugger_info.set_last_icd_app_domain (p)
-		end
-
 	set_last_thread_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.set_last_icd_thread (p)
 		end
 		
-	set_last_thread_by_pointer_if_unset (p: POINTER) is
-		do
-			if Eifnet_debugger_info.last_p_icd_thread = Default_pointer then
-				eifnet_debugger_info.set_last_icd_thread (p)			
-			end
-		end		
 
 	set_last_breakpoint_by_pointer (p: POINTER) is
 		do
@@ -148,19 +137,19 @@ feature {NONE} -- Change by value
 
 feature {NONE} -- reset
 		
-	reset_last_process_by_pointer (p: POINTER) is
+	reset_last_controller_by_pointer (p: POINTER) is
 		do
-			if Eifnet_debugger_info.last_p_icd_process.is_equal (p) then
-				set_last_process_by_pointer (Default_pointer)
+			if Eifnet_debugger_info.last_p_icd_controller.is_equal (p) then
+				set_last_controller_by_pointer (Default_pointer)
 			end
 		end
 
-	reset_last_app_domain_by_pointer (p: POINTER) is
+	reset_last_process_by_pointer (p: POINTER) is
 		do
-			if Eifnet_debugger_info.last_p_icd_app_domain.is_equal (p) then
-				set_last_app_domain_by_pointer (Default_pointer)
+			if eifnet_debugger_info.last_p_icd_process.is_equal (p) then
+				set_last_process_by_pointer (default_pointer)
 			end
-		end
+		end		
 
 	reset_last_thread_by_pointer (p: POINTER) is
 		do

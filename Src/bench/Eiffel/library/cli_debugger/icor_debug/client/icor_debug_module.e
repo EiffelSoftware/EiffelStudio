@@ -10,8 +10,10 @@ class
 inherit
 
 	ICOR_OBJECT
+		export
+			{EIFNET_DEBUGGER_INFO} release
 		redefine
-			init_icor
+			init_icor, clean_on_dispose
 		end
 
 	OPERATING_ENVIRONMENT
@@ -30,8 +32,7 @@ feature {ICOR_EXPORTER} -- Access
 			Precursor
 			name := get_name
 			token := get_token
-			
-		end		
+		end
 
 	interface_md_import: like internal_md_import is
 			-- IMetaDataImport Interface current ICorDebugModule.
@@ -43,6 +44,18 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
+feature -- Dispose
+
+	clean_on_dispose is
+			-- Clean data on dispose
+		do
+			Precursor
+			if internal_md_import /= Void then
+				internal_md_import.clean_on_dispose
+				internal_md_import := Void
+			end
+		end
+		
 feature {ICOR_EXPORTER} -- Meta Data queries
 
 	md_member_token_by_names (a_type_name: STRING; a_feat_name: STRING): INTEGER is
@@ -62,7 +75,19 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 	md_member_token (a_class_token: INTEGER; a_feat_name: STRING): INTEGER is
 			-- member token for type identified by `a_class_token' and `a_feat_name'
 		do
-			Result := internal_md_import.find_member (a_class_token, a_feat_name)
+			Result := interface_md_import.find_member (a_class_token, a_feat_name)
+		end
+		
+	md_feature_token (a_class_token: INTEGER; a_name: STRING): INTEGER is
+			-- Function or Method token
+		do
+			Result := interface_md_import.find_method (a_class_token, a_name)
+		end
+
+	md_type_name (a_class_token: INTEGER): STRING is
+			-- Type (Class) name for `a_class_token'.
+		do
+			Result := interface_md_import.get_typedef_props (a_class_token)
 		end
 	
 feature {ICOR_EXPORTER} -- Access
@@ -99,7 +124,6 @@ feature {ICOR_DEBUG_MODULE} -- Restricted Access
 					io.put_string ("     for [" + module_name + "] %N")					
 				end
 				create Result.make_by_pointer (p)
-				Result.add_ref
 			end			
 		end
 		
@@ -166,8 +190,6 @@ feature {ICOR_EXPORTER} -- Access
             --   settings will override global settings.
 		do
 			last_call_success := cpp_enable_jit_debugging (item, a_trackjitinfo.to_integer, a_allowjitopts.to_integer)
-		ensure
-			success: last_call_success = 0
 		end
 
 	enable_class_load_callbacks (a_value: BOOLEAN) is

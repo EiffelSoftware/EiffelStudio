@@ -134,42 +134,24 @@ feature {NONE} -- get member data
 		
 feature {EIFNET_DEBUGGER} -- Restricted access
 
---| Unused for now ...
---	member_token (a_type_name: STRING; a_member_name: STRING): INTEGER is
---		local
---			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
---			l_mscorlib_meta_data: MD_IMPORT
---			l_type_token: INTEGER
---		do
---			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
---			if l_mscorlib_icd_module /= Void then
---				l_mscorlib_meta_data := l_mscorlib_icd_module.interface_md_import
---				l_type_token := l_mscorlib_meta_data.find_type_def_by_name (a_type_name, 0)
---				Result := l_mscorlib_meta_data.find_member (l_type_token, a_member_name)
---			end
---		end
-		
 	get_member_tokens is
 			-- Get all tokens we need in this context
 		local
 			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
-			l_mscorlib_meta_data: MD_IMPORT
 			l_type_token: INTEGER
 		do
 			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
 			if l_mscorlib_icd_module /= Void then
-				l_mscorlib_meta_data := l_mscorlib_icd_module.interface_md_import
-
 					--| System.Text.StringBuilder |--
-				l_type_token := l_mscorlib_meta_data.find_type_def_by_name ("System.Text.StringBuilder", 0)
-				private_token_StringBuilder_m_StringValue := l_mscorlib_meta_data.find_member (l_type_token, "m_StringValue")
-				
+				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Text.StringBuilder")
+				private_token_StringBuilder_m_StringValue := l_mscorlib_icd_module.md_member_token (l_type_token, "m_StringValue")
+
 					--| System.Exceptione |--
-				l_type_token := l_mscorlib_meta_data.find_type_def_by_name ("System.Exception", 0)
-				private_token_Exception__message := l_mscorlib_meta_data.find_member (l_type_token, "_message")
-				private_token_Exception__className := l_mscorlib_meta_data.find_member (l_type_token, "_className")
-				private_token_Exception_ToString := l_mscorlib_meta_data.find_member (l_type_token, "ToString")
-				private_token_Exception_get_Message := l_mscorlib_meta_data.find_member (l_type_token, "get_Message")
+				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Exception")
+				private_token_Exception__message    := l_mscorlib_icd_module.md_member_token (l_type_token, "_message")
+				private_token_Exception__className  := l_mscorlib_icd_module.md_member_token (l_type_token, "_className")
+				private_token_Exception_ToString    := l_mscorlib_icd_module.md_member_token (l_type_token, "ToString")
+				private_token_Exception_get_Message := l_mscorlib_icd_module.md_member_token (l_type_token, "get_Message")
 			end
 		end
 		

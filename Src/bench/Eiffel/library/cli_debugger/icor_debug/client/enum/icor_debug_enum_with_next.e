@@ -42,14 +42,15 @@ feature {ICOR_EXPORTER} -- Access
 					loop
 						l_p := mp_tab.read_pointer((i - 1) * l_pointer_size)
 						l_icor := icor_object_made_by_pointer (l_p)
-						l_icor.add_ref
 						Result.put (l_icor, i)
 						i := i + 1
 					end
 				end
 			end
 		rescue
-			print ("Error in IcorDebugXyzEnum->Next() %N")
+			debug ("debugger_icor_data")
+				io.error.put_string ("Error in IcorDebugXyzEnum->Next() %N")
+			end
 			Result := Void
 			retried := True
 			retry

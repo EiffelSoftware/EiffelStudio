@@ -74,8 +74,6 @@ feature {ICOR_EXPORTER} -- Access
 			a_state = enum_cor_debug_thread_state__thread_suspend
 		do
 			last_call_success := cpp_set_debug_state (item, a_state)
---		ensure
---			success: last_call_success = 0
 		end
 
 	get_debug_state: INTEGER is
@@ -109,22 +107,19 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_current_exception (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (get_active_frame)
 			end
---		ensure
---			success: last_call_success = 0
 		end
 
 	clear_current_exception is
 		do
 			last_call_success := cpp_clear_current_exception (item)
---		ensure
---			success: last_call_success = 0
 		end
 
 	create_stepper: ICOR_DEBUG_STEPPER is
 		local
 			l_p: POINTER
+			l_app_domain: ICOR_DEBUG_APP_DOMAIN
+			l_enum: ICOR_DEBUG_STEPPER_ENUM
 		do
 			last_call_success := cpp_create_stepper (item, $l_p)
 			if l_p /= default_pointer then
@@ -132,10 +127,12 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			
 			debug ("DEBUGGER_EIFNET_DATA")
-				print ("=== CreateStepper ===%N  --> EnumSteppers count=" + get_app_domain.enumerate_steppers.count.out + "%N")
+				l_app_domain := get_app_domain
+				l_enum := l_app_domain.enumerate_steppers
+				io.error.put_string ("=== CreateStepper ===%N  --> EnumSteppers count=" + l_enum.count.out + "%N")
+				l_enum.clean_on_dispose
+				l_app_domain.clean_on_dispose
 			end
---		ensure
---			success: last_call_success = 0
 		end
 
 	enumerate_chains: ICOR_DEBUG_CHAIN_ENUM is
@@ -146,8 +143,6 @@ feature {ICOR_EXPORTER} -- Access
 			if l_p /= default_pointer then
 				create Result.make_by_pointer (l_p)
 			end
---		ensure
---			success: last_call_success = 0
 		end
 
 	get_active_chain: ICOR_DEBUG_CHAIN is
@@ -158,8 +153,6 @@ feature {ICOR_EXPORTER} -- Access
 			if last_call_succeed and then p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
---		ensure
---			success: last_call_success = 0
 		end
 		
 	get_active_frame: ICOR_DEBUG_FRAME is
@@ -170,8 +163,6 @@ feature {ICOR_EXPORTER} -- Access
 			if last_call_succeed and then p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
---		ensure
---			success: last_call_success = 0
 		end
 
 	create_eval: ICOR_DEBUG_EVAL is
@@ -187,10 +178,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_create_eval (item, $p)
 			if last_call_succeed and then p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (get_active_frame)
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	get_object: ICOR_DEBUG_VALUE is
@@ -201,10 +189,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_object (item, $p)
 			if last_call_succeed and then p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.set_associated_frame (get_active_frame)			
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 feature {ICOR_EXPORTER} -- Implementation

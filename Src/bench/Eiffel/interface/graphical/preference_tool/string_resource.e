@@ -35,8 +35,26 @@ feature -- Access
 	is_valid (a_value: STRING): BOOLEAN is
 			-- Is `a_value' valid for use in Current?
 			--| Always `True'.
+		local
+			lexer: RESOURCE_STRING_LEX;
+			str: STRING
 		do
-			Result := True
+			if a_value /= Void and then not a_value.empty then
+				if a_value @ 1 /= '%"' then
+					!! str.make (0);
+					str.extend ('%"');
+					str.append (a_value)
+				else
+					str := clone (value)
+				end
+				if str @ str.count /= '%"' then
+					str.extend ('%"')
+				end;
+				!! lexer;
+				Result := lexer.is_value_valid (str)
+			else
+				Result := True
+			end
 		end
 
 feature -- Properties

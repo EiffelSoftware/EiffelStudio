@@ -1,7 +1,7 @@
 # wel.lib - Makefile for Microsoft C
 
-EIFFEL_SRC="E:\43dev"
-EIFFEL_SRC2="F:\Eiffel43f"
+EIFFEL_SRC="E:"
+EIFFEL_SRC2="d:\Eiffel43-6"
 CC = cl
 CFLAGS = -c -Ox -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
 

@@ -273,9 +273,9 @@ feature -- Inlining
 
 	size: INTEGER is
 		do
-			Result := 1
+			Result := 0
 		ensure
-			Result_greater_or_equal_to_one: Result >= 1
+			Result_greater_or_equal_to_one: Result >= 0
 		end
 
 	pre_inlined_code: like Current is

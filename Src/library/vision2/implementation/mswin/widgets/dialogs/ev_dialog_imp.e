@@ -218,23 +218,11 @@ feature {EV_BUTTON_IMP} -- Implementation
 
 	on_dialog_key_down (virtual_key: INTEGER) is
 			-- Executed when the Enter or Escape key is pressed.
-		local
-			button_actions: EV_NOTIFY_ACTION_SEQUENCE
-			button: EV_BUTTON
 		do
-			if not interface.is_destroyed then
-				if virtual_key = Vk_escape then
-					button := interface.default_cancel_button
-				elseif virtual_key = Vk_return then
-					button := interface.default_push_button
-				end
-				
-				if button /= Void then
-					button_actions := button.select_actions
-					if button_actions /= Void then
-						button_actions.call ([])
-					end
-				end
+			if virtual_key = Vk_escape then
+				call_default_button_action (False)
+			elseif virtual_key = Vk_return then
+				call_default_button_action (True)
 			end
 		end
 	
@@ -266,10 +254,8 @@ feature {NONE} -- Implementation
 			new_style := style
 			if user_can_resize then
 				new_style := bit_op.set_flag (new_style, Ws_thickframe)
-				new_style := bit_op.set_flag (new_style, Ws_maximizebox)
 			else
 				new_style := bit_op.clear_flag (new_style, Ws_thickframe)
-				new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
 			end
 			if is_closeable then
 				new_style := bit_op.set_flag (new_style, Ws_sysmenu)
@@ -277,6 +263,7 @@ feature {NONE} -- Implementation
 				new_style := bit_op.clear_flag (new_style, Ws_sysmenu)
 			end
 			new_style := bit_op.set_flag (new_style, Ws_minimizebox)
+			new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
 			set_style (new_style)
 		end
 
@@ -421,21 +408,33 @@ feature {NONE} -- Implementation
 
 	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
 			-- Process all message plus `WM_INITDIALOG'.
-		local
-			button_actions: EV_NOTIFY_ACTION_SEQUENCE
-			cancel_button: EV_BUTTON
 		do
 			if msg = Wm_close then
 					-- Simulate a click on the default_cancel_button
-				cancel_button := interface.default_cancel_button
-				if cancel_button /= Void then
-					button_actions := cancel_button.select_actions
+				call_default_button_action (False)
+			end
+			Result := Precursor {EV_TITLED_WINDOW_IMP} (hwnd, msg, wparam, lparam)
+		end
+
+	call_default_button_action (use_push_button: BOOLEAN) is
+			-- Call the action for the default push button if `a_push_button' is
+			-- set, for the default cancel button otherwise.
+		local
+			button_actions: EV_NOTIFY_ACTION_SEQUENCE
+			button: EV_BUTTON
+		do
+			if not interface.is_destroyed then
+				if use_push_button then
+					button := interface.default_push_button
+				else
+					button := interface.default_cancel_button
+				end
+				if button /= Void and then button.is_sensitive and then button.is_displayed then
+					button_actions := button.select_actions
 					if button_actions /= Void then
 						button_actions.call ([])
 					end
 				end
-			else
-				Result := Precursor {EV_TITLED_WINDOW_IMP} (hwnd, msg, wparam, lparam)
 			end
 		end
 

@@ -44,7 +44,7 @@ feature {NONE}
 	dynamic_class: CLASS_C;
 			-- Class associated with dynamic type of object being inspected
 
-	display_info (i: INTEGER; object: OBJECT_STONE) is
+	display_info (object: OBJECT_STONE) is
 		local
 			feature_table: FEATURE_TABLE;
 			once_func_list: PART_SORTED_TWO_WAY_LIST [FEATURE_I];

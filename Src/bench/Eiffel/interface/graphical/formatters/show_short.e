@@ -39,7 +39,7 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Short_form_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
 		do
 			text_window.process_text (short_context_text (c))

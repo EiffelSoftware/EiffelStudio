@@ -75,7 +75,7 @@ feature -- Output
 		deferred
 		end;
 
-feature {COMPILER_EXPORTER, INTERVAL_AS} -- Type check and dead code removal
+feature -- Type check
 
 	good_integer: BOOLEAN is
 			-- Is the atomic a good integer bound for multi-branch ?
@@ -88,6 +88,8 @@ feature {COMPILER_EXPORTER, INTERVAL_AS} -- Type check and dead code removal
 		do
 			-- Do nothing
 		end
+
+feature {COMPILER_EXPORTER, INTERVAL_AS} -- Dead code removal
 
 	record_dependances is
 			-- Record the dependances

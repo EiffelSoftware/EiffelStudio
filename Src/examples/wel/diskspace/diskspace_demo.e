@@ -19,17 +19,19 @@ feature -- Initialization
 				drive := 'C'
 				disk_space.query_local_drive(drive)
 			until
-				disk_space.last_query_success = False
+				drive > 'Z'
 			loop
-				io.putstring ("Drive ")
-				io.putchar (drive)
-				io.putstring (" :%T");
-				io.putstring (disk_space.last_free_space_in_string+" Free / ")
-				io.putstring (disk_space.last_total_space_in_string+ " Total")
-				io.new_line
+				disk_space.query_local_drive(drive)
+				if disk_space.last_query_success then
+					io.putstring ("Drive ")
+					io.putchar (drive)
+					io.putstring (" :%T");
+					io.putstring (disk_space.last_free_space_in_string+" Free / ")
+					io.putstring (disk_space.last_total_space_in_string+ " Total")
+					io.new_line
+				end
 
 				drive := drive + 1
-				disk_space.query_local_drive(drive)
 			end
 		end
 

@@ -38,6 +38,16 @@ feature -- Properties
 			Result := associated_eclass /= Void
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := is_expanded = other.is_expanded and then
+				is_separate = other.is_separate and then
+				equal (base_class_id, other.base_class_id)
+		end
+
 feature -- Access
 
 	base_class_id: CLASS_ID;
@@ -51,7 +61,8 @@ feature -- Access
 			other_class_type ?= other;
 			Result := 	other_class_type /= Void
 						and then
-						base_class_id.is_equal (other_class_type.base_class_id)
+							-- FIXME
+						equal (base_class_id, other_class_type.base_class_id)
 						and then
 						is_expanded = other_class_type.is_expanded
 						and then
@@ -361,17 +372,17 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			!! Result.make (Void, associated_class.id.id)
 		end;
 
-    storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
-            -- Storage info for Current type in class `classc'
-            -- and store the name of the class for Current
+	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+			-- and store the name of the class for Current
 		local
 			ass_classc: CLASS_C
 			class_name: STRING
-        do
+		do
 			ass_classc := associated_class;
 			!! class_name.make (ass_classc.class_name.count);
 			class_name.append (ass_classc.class_name);
 			!! Result.make (class_name, ass_classc.id.id)
-        end;
+		end;
 
 end -- class CL_TYPE_A

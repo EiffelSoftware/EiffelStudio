@@ -98,6 +98,12 @@ feature -- Access
 		do
 			Result := compiler_kernel.completion_information
 		end
+		
+	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+			-- html documentation generator
+		do
+			Result := compiler_kernel.html_doc_generator
+		end
 
 feature -- Basic Operations
 

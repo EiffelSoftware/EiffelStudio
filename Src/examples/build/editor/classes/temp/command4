@@ -1,0 +1,31 @@
+class COMMAND4
+
+inherit
+
+	BUILD_NON_UNDOABLE_CMD
+
+creation
+
+	make
+
+feature -- Initialization
+
+	make (arg1: SCROLLED_T) is
+		do
+			argument1 := arg1
+		end
+
+feature -- Access
+
+	argument1: SCROLLED_T
+
+	back_label: STRING is "back"
+
+feature -- Command
+
+	execute is
+		do
+			set_transition_label (back_label)
+		end
+
+end

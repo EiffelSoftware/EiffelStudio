@@ -12,24 +12,24 @@ feature
 	application_screen: SCREEN is
 		once
 			!!Result.make ("")
-		end;
+		end
 
-	init_toolkit: MOTIF is
+	init_toolkit: TOOLKIT_IMP is
 		once
 			!!Result.make ("")
-		end;
+		end
 
 	init_windowing is
 		do
-			if (init_toolkit = Void) then end;
-			if (toolkit = Void) then end;
-			Perm_wind1.realize;
+			if (init_toolkit = Void) then end
+			if (toolkit = Void) then end
+			Perm_wind1.realize
 			iterate
-		end;
+		end
 
 	Perm_wind1: PERM_WIND1 is
 		once
-			!!Result.make ("Perm_wind1", application_screen);
-		end;
+			!!Result.make ("Perm_wind1", application_screen)
+		end
 
 end

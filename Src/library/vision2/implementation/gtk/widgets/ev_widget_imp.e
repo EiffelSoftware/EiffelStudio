@@ -328,9 +328,9 @@ feature -- Status report
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
-			Result := has_struct_flag (visual_widget, feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
+			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
 			check
-				Result = ((((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget)// feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)) = 1)
+				Result = ((((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)// feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)) = 1)
 			end
 		end
 

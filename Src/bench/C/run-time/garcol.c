@@ -858,6 +858,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	static double lastsys[GST_NBR];		/* Last kernel time for last call */
 #endif
 	long mem_used;						/* Current amount of memory used */
+	long e_mem_used;
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
@@ -871,6 +872,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 
 	nb_full = g_data.nb_full;
 	mem_used = m_data.ml_used + m_data.ml_over;		/* Count overhead */
+	e_mem_used = e_data.ml_used + e_data.ml_over;
 	nbstat = ++nb_stats[i];							/* One more computation */
 
 	/* Reset scavenging-related figures, since those will be updated by the
@@ -963,6 +965,16 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 				plsc_per = PLSC_PER;
 			}
 			clsc_per = 2 * plsc_per;
+		}
+	} else {
+		e_mem_used -= e_data.ml_used + e_data.ml_over;
+		if (e_mem_used > 0 ) {
+				// Some memory of free list was freed, so we should update `eiffel_usage'
+				// accordingly.
+			eiffel_usage -= e_mem_used;
+			if (eiffel_usage < 0) {
+				eiffel_usage = 0;
+			}
 		}
 	}
 			

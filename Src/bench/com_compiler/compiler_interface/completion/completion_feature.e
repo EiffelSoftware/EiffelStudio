@@ -53,18 +53,20 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_arguments: like arguments_internal; a_feature_type: INTEGER; a_file_name: like file_name; a_start_position: like start_position) is
+	make (a_name: like name; a_arguments: like arguments_internal; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
 			-- create an instance
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
+			non_void_description: a_description /= Void
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		do
-			name := clone (a_name)
-			name.to_lower
+			internal_name := clone (a_name)
+			internal_name.to_lower
 			file_name := clone (a_file_name)
 			file_name.to_lower
+			description := a_description
 			start_position := a_start_position
 			if a_arguments /= Void then
 				arguments_internal := a_arguments
@@ -78,25 +80,55 @@ feature {NONE} -- Initialization
 			create {ARRAYED_LIST [STRING]} overloads_return_types.make (0)
 		end
 		
-	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_file_name: like file_name; a_start_position: like start_position) is
+	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
 			-- create an instance with a return type
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 			non_void_return_type: a_return_type /= Void
 			valid_return_type: not a_return_type.is_empty
+			non_void_description: a_description /= Void
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		do
-			make (a_name, a_arguments, a_feature_type, a_file_name, a_start_position) 
-			return_type := clone (a_return_type)
-			return_type.to_upper
+			make (a_name, a_arguments, a_feature_type, a_description, a_file_name, a_start_position) 
+			return_type := a_return_type
 		end
-
+		
 feature -- Access
 
-	name: STRING
-			-- name of feature
+	name: STRING is
+			-- Name of feature qualified with kind of feature
+		do
+			create Result.make (20)
+			if is_once then
+				Result.append ("once ")
+			end
+			if is_constant then
+				Result.append ("constant ")
+			end
+			if is_frozen then
+				Result.append ("frozen ")
+			end
+			if is_external then
+				Result.append ("external ")
+			end
+			if is_deferred then
+				Result.append ("deferred ")
+			end
+			if is_infix then
+				Result.append ("Infix operator ")
+			elseif is_prefix then
+				Result.append ("prefix operator ")
+			elseif is_attribute then
+				Result.append ("attribute ")
+			elseif is_function then
+				Result.append ("function ")
+			elseif is_procedure then
+				Result.append ("procedure ")
+			end
+			Result.append (internal_name)
+		end
 
 	overloads_count: INTEGER
 			-- Number of overloads (0 means the feature is not overloaded)
@@ -113,30 +145,8 @@ feature -- Access
 	overloads_return_types: LIST [STRING]
 			-- Feature overloaded return types
 
-	description: STRING is
+	description: STRING
 			-- Feature description.
-		do
-			Result := internal_description (signature)
-		end
-		
-	overloads_descriptions: LIST [STRING] is
-			-- Overloaded features descriptions
-		local
-			l_signatures: LIST [STRING]
-		do
-			create {ARRAYED_LIST [STRING]} Result.make (overloads_count)
-			from
-				l_signatures := overloads_signatures
-				l_signatures.start
-			until
-				l_signatures.after
-			loop
-				Result.extend (internal_description (l_signatures.item))
-				l_signatures.forth
-			end
-		ensure
-			non_void_descriptions: Result /= void
-		end
 
 	signature: STRING is
 			-- Main feature signature
@@ -294,45 +304,6 @@ feature {NONE} -- Dummy implementations
 		end
 
 feature {NONE} -- Implementation
-
-	internal_description (a_signature: STRING): STRING is
-			-- Feature description with signature `a_signature'
-		do
-			create Result.make (20)
-			if is_once then
-				Result.append ("Once ")
-			end
-			if is_constant then
-				Result.append ("Constant ")
-			end
-			if is_frozen then
-				Result.append ("Frozen ")
-			end
-			if is_external then
-				Result.append ("External ")
-			end
-			if is_deferred then
-				Result.append ("Deferred ")
-			end
-			if is_infix then
-				Result.append ("Infix operator ")
-			elseif is_prefix then
-				Result.append ("Prefix operator ")
-			elseif is_attribute then
-				Result.append ("Attribute: ")
-			elseif is_function then
-				Result.append ("Function: ")
-			elseif is_procedure then
-				Result.append ("Procedure: ")
-			end
-			Result.append (name)
-			Result.append ("%NSignature: ")
-			Result.append (a_signature)
-			Result.prune_all ('%R')
-			Result.prune_all ('%T')
-		ensure then
-			result_exists: Result /= void
-		end
 
 	internal_signature (a_parameters: PARAMETER_ENUMERATOR): STRING is
 			-- Signature of function with parameters `parameters'

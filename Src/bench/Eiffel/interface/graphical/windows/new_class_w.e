@@ -156,9 +156,10 @@ feature -- Access
 			valid_args: class_n /= Void 
 		local
 			str, str2: STRING;
-			clus: LINKED_LIST [CLUSTER_I];
+			clus_list: LINKED_LIST [CLUSTER_I];
 			str_el: SCROLLABLE_LIST_STRING_ELEMENT;
-			selected_pos: INTEGER
+			selected_pos: INTEGER;
+			clus: CLUSTER_I
 		do
 			cluster := cl;
 			class_name := clone (class_n);
@@ -172,27 +173,32 @@ feature -- Access
 			file_name := clone (class_name);
 			file_name.append (".e");
 			file_entry.set_text (file_name);
-			clus := Eiffel_universe.clusters_sorted_by_tag
-			if not clus.empty then
+			clus_list := Eiffel_universe.clusters_sorted_by_tag
+			if not clus_list.empty then
 				from
 					selected_pos := 1;
-					clus.start
+					clus_list.start
 				until
-					clus.after
+					clus_list.after
 				loop
-					!! str_el.make (0);
-					str_el.append (clus.item.cluster_name);
-					if clus.item = cl then	
-						selected_pos := clus.index
+					clus := clus_list.item;
+					if not clus.is_precompiled then
+						!! str_el.make (0);
+						str_el.append (clus.cluster_name);
+						if clus = cl then	
+							selected_pos := clus_list.index
+						end;
+						cluster_list.extend (str_el);
 					end;
-					cluster_list.extend (str_el);
-					clus.forth
+					clus_list.forth
 				end;
-				cluster_list.select_i_th (selected_pos);
-				if cluster_list.count < 10 then
-					cluster_list.set_visible_item_count (cluster_list.count)
-				else
-					cluster_list.set_visible_item_count (10);
+				if not cluster_list.empty then
+					cluster_list.select_i_th (selected_pos);
+					if cluster_list.count < 10 then
+						cluster_list.set_visible_item_count (cluster_list.count)
+					else
+						cluster_list.set_visible_item_count (10);
+					end
 				end
 			else
 				create_b.set_insensitive

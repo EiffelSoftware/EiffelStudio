@@ -1,0 +1,43 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>stddlgs</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Stddlgs">
+	</HEAD>
+
+	<BODY>
+		<H1>Stddlgs Sample</H1>
+		<CENTER><IMG SRC="stddlgs.png" ALT="stddlgs" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\stddlgs\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program, a window will displayed with a menu allowing you to select some of the standard dialogs provided by WEL.
+		<H2>Under the Hood</H2>
+		<A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_on_menu_command">on_menu_command</A> has been redefined in <A CLASS="eclass" HREF="/libraries/wel/samples/stddlgs/root_cluster/main_window_chart.html">MAIN_WINDOW</A> to
+		display a different standard dialog when each of the menu items is selected.
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/stddlgs/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/stddlgs/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/stddlgs/root_cluster/stddlg_demo_chart.html">STDDLG_DEMO</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/stddlgs/wel_open_file_dialog.html">WEL_OPEN_FILE_DIALOG</A>
+		<BR><A HREF="/libraries/wel/content/stddlgs/wel_choose_font_dialog.html">WEL_CHOOSE_FONT_DIALOG</A>
+		<BR><A HREF="/libraries/wel/content/stddlgs/wel_choose_color_dialog.html">WEL_CHOOSE_COLOR_DIALOG</A>
+		<BR><A HREF="/libraries/wel/content/stddlgs/wel_print_dialog.html">WEL_PRINT_DIALOG</A></P>
+	</BODY>
+</HTML>

@@ -252,7 +252,6 @@ feature
 		local
 			arg: TYPE_I;
 			i, count: INTEGER;
-			exp_arg: ARGUMENT_BL;
 		do
 			generated_file.putstring ("char *Current;");
 			generated_file.new_line;

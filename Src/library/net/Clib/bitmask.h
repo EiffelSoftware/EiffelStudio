@@ -16,7 +16,7 @@
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 #else
 #include <sys/param.h>		/* For NOFILE */
 #endif

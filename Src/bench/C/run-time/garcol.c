@@ -404,6 +404,7 @@ rt_public int acollect(void)
 	int status;						/* Status returned by scollect() */
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
+	int half_tau;					
 	int allocated;					/* Memory used since last full collect */
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;			/* Was this the original entry point? */
@@ -421,7 +422,14 @@ rt_public int acollect(void)
 #endif
 
 	if (g_data.status & GC_STOP)
+#ifdef DEBUG
+	{
+		dprintf(1)("acollect: Nothing has to be done because GC_STOP\n");
+#endif
 		return -1;					/* Garbage collection stopped */
+#ifdef DEBUG
+	}
+#endif
 
 #ifdef DEBUG
 	dprintf(1)("acollect: automatic garbage collection with %s\n",
@@ -443,9 +451,10 @@ rt_public int acollect(void)
 
 	freemem = e_data.ml_total - e_data.ml_used - e_data.ml_over;
 	tau = plsc_per * th_alloc;
+	half_tau = tau >> 1;
 	allocated = e_data.ml_total - eif_total;
 
-	if (allocated < tau && freemem > (.5 * tau) && freemem < (1.5 * tau)) {
+	if (allocated < tau && freemem > half_tau && freemem < (tau + half_tau)) {
 
 #ifdef DEBUG
 		dprintf(1)("acollect: skipping call (%d bytes free)\n", freemem);
@@ -493,12 +502,14 @@ rt_public int scollect(int (*gc_func) (void), int i)
 
 	EIF_GET_CONTEXT
 	static uint32 nb_stats[GST_NBR];	/* For average computation */
+#ifndef FAST_RUNTIME
 	static Timeval lastreal[GST_NBR];	/* Last real time of invocation */
-	static double lastuser[GST_NBR];	/* Last CPU time for last call */
-	static double lastsys[GST_NBR];		/* Last kernel time for last call */
 	Timeval realtime, realtime2;		/* Real time stamps */
 	double usertime, systime;			/* CPU stats before collection */
 	double usertime2, systime2;			/* CPU usage after collection */
+	static double lastuser[GST_NBR];	/* Last CPU time for last call */
+	static double lastsys[GST_NBR];		/* Last kernel time for last call */
+#endif
 	long mem_used;						/* Current amount of memory used */
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
@@ -530,6 +541,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	g_data.mem_move = 0;				/* Memory subject to scavenging */
 	g_data.mem_copied = 0;				/* Amount of that memory which moved */
 
+#ifndef FAST_RUNTIME
 	/* Get the current time before CPU time, because the accuracy of the
 	 * real time clock is usually less important than the one used for CPU
 	 * accounting.
@@ -539,6 +551,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 		gettime(&realtime);					/* Get current time stamp */
 		getcputime(&usertime, &systime);	/* Current CPU usage */
 	}
+#endif
 
 #ifdef MEMCHK
 #ifdef DEBUG
@@ -556,6 +569,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 #endif
 #endif
 
+#ifndef FAST_RUNTIME
 	/* Get CPU time before real time, so that we have a more precise figure
 	 * (gettime uses a system call)--RAM.
 	 */
@@ -564,7 +578,8 @@ rt_public int scollect(int (*gc_func) (void), int i)
 		getcputime(&usertime2, &systime2);	/* Current CPU usage */
 		gettime(&realtime2);				/* Get current time stamp */
 	}
-	
+#endif
+
 	/* Now collect the statistics in the g_stat structure. The real time
 	 * field will not be really significant if the time() system call is
 	 * used (granularity is one second).
@@ -579,6 +594,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 		g_data.mem_copied - g_data.mem_move;
 	gstat->mem_avg = ((gstat->mem_avg * (nbstat - 1)) +
 		gstat->mem_collect) / nbstat;					/* Average mem freed */
+#ifndef FAST_RUNTIME
 	if (gc_monitor) {
 		gstat->real_time = elapsed(&realtime, &realtime2);
 		gstat->cpu_time = usertime2 - usertime;			/* CPU time (user) */
@@ -629,6 +645,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 		bcopy(&realtime2, &lastreal[i], sizeof(Timeval));
 #endif
 	}
+#endif /* ifndef FAST_RUNTIME */
 
 #ifdef DEBUG
 	dprintf(1)("scollect: statistics for %s\n",
@@ -641,18 +658,20 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	dprintf(1)("scollect: Collected: %ld bytes\n", gstat->mem_collect);
 	dprintf(1)("scollect: (Scavenging collect: %ld bytes)\n",
 		g_data.mem_copied - g_data.mem_move);
-	dprintf(1)("scollect: Real time: %lfs\n", gstat->real_time / 100.);
-	dprintf(1)("scollect: CPU time: %lfs\n", gstat->cpu_time);
-	dprintf(1)("scollect: System time: %lfs\n", gstat->sys_time);
-	dprintf(1)("scollect: Average real time: %lfs\n", gstat->real_avg / 100.);
-	dprintf(1)("scollect: Average CPU time: %lf\n", gstat->cpu_avg);
-	dprintf(1)("scollect: Average system time: %lf\n", gstat->sys_avg);
-	dprintf(1)("scollect: Interval time: %lf\n", gstat->real_itime / 100.);
-	dprintf(1)("scollect: Interval CPU time: %lf\n", gstat->cpu_itime);
-	dprintf(1)("scollect: Interval sys time: %lf\n", gstat->sys_itime);
-	dprintf(1)("scollect: Avg interval time: %lf\n", gstat->real_iavg / 100.);
-	dprintf(1)("scollect: Avg interval CPU time: %lf\n", gstat->cpu_iavg);
-	dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
+	if (gc_monitor) {
+		dprintf(1)("scollect: Real time: %lfs\n", gstat->real_time / 100.);
+		dprintf(1)("scollect: CPU time: %lfs\n", gstat->cpu_time);
+		dprintf(1)("scollect: System time: %lfs\n", gstat->sys_time);
+		dprintf(1)("scollect: Average real time: %lfs\n", gstat->real_avg / 100.);
+		dprintf(1)("scollect: Average CPU time: %lf\n", gstat->cpu_avg);
+		dprintf(1)("scollect: Average system time: %lf\n", gstat->sys_avg);
+		dprintf(1)("scollect: Interval time: %lf\n", gstat->real_itime / 100.);
+		dprintf(1)("scollect: Interval CPU time: %lf\n", gstat->cpu_itime);
+		dprintf(1)("scollect: Interval sys time: %lf\n", gstat->sys_itime);
+		dprintf(1)("scollect: Avg interval time: %lf\n", gstat->real_iavg / 100.);
+		dprintf(1)("scollect: Avg interval CPU time: %lf\n", gstat->cpu_iavg);
+		dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
+	}
 #endif
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
@@ -1459,7 +1478,6 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 	int done = 0;					/* Top of stack not reached yet */
 
 #ifdef DEBUG
-	int saved_roots; struct ex_vect *saved_last;
 	dprintf(1)("mark_ex_stack: scanning exception %s stack for %s collector\n",
 		stk == &eif_trace ? "trace" : "vector",
 		marker == GEN_SWITCH ? "generation" : "traditional");
@@ -5042,7 +5060,7 @@ rt_public char *onceset(void)
 
 	EIF_GET_CONTEXT
 #ifdef DEBUG
-	dprintf(32)("onceset: value 0x%lx at 0x%lx\n", *ptr, ptr);
+	dprintf(32)("onceset");
 	flush;
 #endif
 	
@@ -5238,6 +5256,7 @@ rt_private int reset(register1 struct stack *stk)
 	}
 
 	bzero(stk, sizeof(struct stack));	/* Reset to null pointers ? -- RAM */
+	return 0;
 }
 
 rt_private int nb_items(register1 struct stack *stk)

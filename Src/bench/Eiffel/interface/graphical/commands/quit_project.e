@@ -18,7 +18,6 @@ inherit
 		redefine
 			license_checked
 		end;
-	SHARED_DEBUG;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as exit_anyway,

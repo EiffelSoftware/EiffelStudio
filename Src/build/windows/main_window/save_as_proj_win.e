@@ -9,10 +9,7 @@ inherit
 			{NONE} all;
 			{ANY} popup
 		end;
-	ERROR_POPUPER
-		undefine
-			continue_after_popdown
-		end;
+	ERROR_POPUPER;
 	WINDOWS;
 	CONSTANTS
 
@@ -88,5 +85,10 @@ feature {NONE}
 		do
 			continue_after_error
 		end
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := main_panel.base
+		end;
 
 end	

@@ -62,5 +62,9 @@ feature
 			Result := True;
 		end;
 
+	popuper_parent: COMPOSITE is
+		do
+			Result := main_panel.base
+		end
 
 end

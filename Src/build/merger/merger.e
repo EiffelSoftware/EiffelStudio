@@ -5,7 +5,10 @@ inherit
 	SHARED_ERROR_HANDLER
 	SHARED_RESCUE_STATUS
 	CONSTANTS;
-	ERROR_POPUPER;
+	ERROR_POPUPER
+			redefine
+				continue_after_error_popdown
+			end
 	WINDOWS
 
 feature -- Result of merging the three files
@@ -108,6 +111,15 @@ feature
 				if Rescue_status.is_error_exception then
 					Rescue_status.set_is_error_exception (False);
 					Error_handler.trace;
+					if command_caller /= Void then
+						Error_box.put_string ("Class: ");
+						Error_box.put_string 
+								(command_caller.current_command.eiffel_type_to_upper);
+						Error_box.put_string (" (");
+						Error_box.put_string (command_caller.current_command.label);
+						Error_box.put_string (")");
+					end;
+					Error_box.display_error_message (Current);
 					Error_handler.wipe_out
 				else
 					Error_box.popup (Current, Messages.update_text_er,
@@ -138,55 +150,47 @@ feature
 			file: RAW_FILE;
 			comment_server: EIFFEL_FILE
 		do
-			!! file.make (user);
-			if file.exists and then 
-				file.is_readable and then
-				not file.empty
-			then
-				!! comment_server.make (file);
-				debug ("MERGER") 
-					io.error.putstring (" %T setting comment");
-				end
-				user_ast.set_comments (comment_server)
-				debug ("MERGER") 
-					io.error.putstring (" end comment%N");
-				end
-			end;
-
-			!! file.make (old_template);
-			if file.exists and then 
-				file.is_readable and then
-				not file.empty 
-			then
-				debug ("MERGER") 
-					io.error.putstring (" %T setting comment");
-				end
-				!! comment_server.make (file)
-				old_temp_ast.set_comments (comment_server)
-				debug ("MERGER") 
-					io.error.putstring (" end comment%N");
-				end
-			end;
-
-			!! file.make (new_template)
-			if file.exists and then 
-				file.is_readable and then
-				not file.empty
-			then
-				debug ("MERGER") 
-					io.error.putstring (" %T setting comment");
-				end
-				!! comment_server.make (file)
-				new_temp_ast.set_comments (comment_server)
-				debug ("MERGER") 
-					io.error.putstring (" end comment%N");
-				end
-			end;
-
-			!! class_merger
-			class_merger.merge3 (old_temp_ast, user_ast, new_temp_ast)
-			merge_as := class_merger.merge_result
-			merge_result := ast_to_string (merge_as)
+			if not retried then
+				!! file.make (user);
+				if file.exists and then 
+					file.is_readable and then
+					not file.empty
+				then
+					!! comment_server.make (file);
+					user_ast.set_comments (comment_server)
+				end;
+	
+				!! file.make (old_template);
+				if file.exists and then 
+					file.is_readable and then
+					not file.empty 
+				then
+					!! comment_server.make (file)
+					old_temp_ast.set_comments (comment_server)
+				end;
+	
+				!! file.make (new_template)
+				if file.exists and then 
+					file.is_readable and then
+					not file.empty
+				then
+					!! comment_server.make (file)
+					new_temp_ast.set_comments (comment_server)
+				end;
+	
+				!! class_merger
+				class_merger.merge3 (old_temp_ast, user_ast, new_temp_ast)
+				merge_as := class_merger.merge_result
+				merge_result := ast_to_string (merge_as)
+			else
+				retried := False;
+				Error_box.popup (Current, Messages.update_text_er,
+						user)
+			end
+		rescue
+			error := True;
+			retried := True;
+			retry
 		end;
 
 	ast_to_string (ast: CLASS_AS): STRING is
@@ -221,9 +225,31 @@ feature -- Integrate command
 			ignore_optimization := True;
 			parse_files (old_tmpl, user_file, new_tmpl);
 			ignore_optimization := false;
+			command_caller := Void;
 			if not error then
 				merge_files (old_tmpl, user_file, new_tmpl)
 			end
+		end;
+
+	command_caller: CMD_EDITOR;
+
+	set_command_caller (c: like command_caller) is
+		do
+			command_caller := c
+		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			if command_caller = Void then
+				Result := main_panel.base
+			else
+				Result := command_caller
+			end
+		end;
+
+	continue_after_error_popdown is
+		do
+			command_caller := Void
 		end;
 
 feature {NONE} -- Integrate Command

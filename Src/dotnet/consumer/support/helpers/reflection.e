@@ -32,6 +32,13 @@ feature -- Status Report
 						is_cls_compliant (m)
 		end
 
+	is_consumed_field (f: FIELD_INFO): BOOLEAN is
+			-- Is `f' a public/family CLS compliant field?
+		do
+			Result := (f.get_is_public or f.get_is_family or f.get_is_family_or_assembly) and
+						is_cls_compliant (f)
+		end
+
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is
 			-- 	Is `member' CLS compliant?
 		local

@@ -52,7 +52,7 @@ feature -- Output
 				end;
 			   	set_x_y (new_x, new_y)
 			end;
-			{PREFERENCE_TOOL} precursor
+			{PREFERENCE_TOOL} Precursor
 			if not already_realized then
 				set_title (Interface_names.t_Preference_tool);
 				set_icon_name (Interface_names.t_Preference_tool);

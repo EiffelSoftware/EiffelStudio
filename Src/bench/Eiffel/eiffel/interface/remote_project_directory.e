@@ -19,7 +19,8 @@ inherit
 		rename
 			mode as file_mode
 		end;
-	SHARED_ERROR_HANDLER
+	SHARED_ERROR_HANDLER;
+	COMPILER_EXPORTER
 
 creation
 

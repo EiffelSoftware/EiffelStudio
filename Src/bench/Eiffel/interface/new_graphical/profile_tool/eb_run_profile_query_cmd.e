@@ -54,8 +54,7 @@ feature {NONE} -- Execution
 					tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
 --					mp.restore
 				else
-					!! error_dialog.make_default (tool.container, "Error", message) --"Query_syntax")
---					error_dialog.set_message (message)
+					!! error_dialog.make_default (tool.container, "Error", message)
 					error_dialog.show
 				end
 			end

@@ -39,6 +39,7 @@ feature -- Initialization
 
 	make is
 		do
+			!! history.make
 			System_resources.add_user (Current)
 		end;
 

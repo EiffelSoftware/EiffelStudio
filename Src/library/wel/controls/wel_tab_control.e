@@ -9,7 +9,9 @@ indexing
 		%buttons. Clicking a button should immediately perform a %
 		%command instead of displaying a page."
 	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+		%be loaded to use this control.%
+		%Inheritance from WEL_COMPOSITE_WINDOW in order to propagate the%
+		%events (most especially wm_command and wm_notify) to the children."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +21,26 @@ class
 
 inherit
 	WEL_CONTROL
+		undefine
+			process_message,
+			on_wm_notify
 		redefine
-			process_notification,
+			process_notification_info,
+			resize,
+			move_and_resize
+		end
+
+	WEL_COMPOSITE_WINDOW
+		undefine
+			destroy,
+			on_wm_destroy,
+			set_default_window_procedure,
+			call_default_window_procedure,
+			minimal_width,
+			minimal_height,
+			move
+		redefine
+			on_wm_paint,
 			resize,
 			move_and_resize
 		end
@@ -210,7 +230,7 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_tcn_keydown is
+	on_tcn_keydown (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
 		require
 			exists: exists
@@ -283,18 +303,21 @@ feature {NONE} -- Basic operation
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification_info (notification_info: WEL_NMHDR) is
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
+		local
+			keydown_info: WEL_TC_KEYDOWN
+			code: INTEGER
 		do
-			if notification_code = Tcn_keydown then
-				on_tcn_keydown
-			elseif notification_code = Tcn_selchange then
+			code := notification_info.code
+			if code = Tcn_keydown then
+				!! keydown_info.make_by_nmhdr (notification_info)
+				on_tcn_keydown (keydown_info.virtual_key, keydown_info.key_data)
+			elseif code = Tcn_selchange then
 				on_tcn_selchange
-			elseif notification_code = Tcn_selchanging then
+			elseif code = Tcn_selchanging then
 				on_tcn_selchanging
-			else
-				default_process_notification (notification_code)
 			end
 		end
 
@@ -329,11 +352,17 @@ feature {NONE} -- Implementation
 						+ Tcs_multiline
 		end
 
+  	on_wm_paint (wparam: INTEGER) is
+   			-- Wm_paint message.
+   			-- Need to do nothing
+   		do
+ 		end
+
 feature {NONE} -- Externals
 
 	cwin_tabcontrol_class: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"WC_TABCONTROL"
 		end

@@ -18,13 +18,15 @@ feature -- Access
 	figure: EV_REGULAR_POLYGON is
 		local
 			pt: EV_POINT
+			angle: EV_ANGLE
 		do
 			!! Result.make
 			Result.path.set_line_width (2)
 			!! pt.set (150, 150)
 			Result.set_center (pt)
 			Result.set_radius (100)
-			Result.set_orientation (30)
+			create angle.make_in_degrees (30)
+			Result.set_orientation (angle)
 			Result.set_number_of_sides (13)
 		end
 

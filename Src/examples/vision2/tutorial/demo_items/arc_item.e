@@ -18,15 +18,20 @@ feature -- Access
 	figure: EV_ARC is
 		local
 			pt: EV_POINT
+			angle1, angle2, angle3: EV_ANGLE
 		do
 			!! Result.make
 			!! pt.set (150, 150)
 			Result.set_center (pt)
 			Result.set_radius1 (100)
-			Result.set_radius2 (50)
-			Result.set_angle1 (45)
-			Result.set_angle2 (123)
+			Result.set_radius2 (100)
+			create angle1.make_in_degrees (0)
+			create angle2.make_in_degrees (110)
+			create angle3.make (0)
+			Result.set_angle1 (angle1)
+			Result.set_angle2 (angle2)
 			Result.set_line_width (2)
+			Result.set_orientation (angle3)
 		end
 
 end -- class ARC_ITEM

@@ -18,16 +18,20 @@ feature -- Access
 	figure: EV_SLICE is
 		local
 			pt: EV_POINT
+			angle1, angle2, angle3: EV_ANGLE
 		do
 			!! Result.make
 			Result.path.set_line_width (2)
 			!! pt.set (90, 150)
 			Result.set_center (pt)
 			Result.set_radius1 (100)
-			Result.set_radius2 (160)
-			Result.set_orientation (69)
-			Result.set_angle1 (45)
-			Result.set_angle2 (78)
+			Result.set_radius2 (100)
+			create angle1.make_in_degrees (69)
+			Result.set_orientation (angle1)
+			create angle2.make_in_degrees (69)
+			Result.set_angle1 (angle2)
+			create angle3.make_in_degrees (90)
+			Result.set_angle2 (angle3)
 			Result.set_pieslice_arc
 		end
 

@@ -19,7 +19,7 @@ creation
 
 feature -- Close window
 
-	close is
+	close_search_window is
 			-- Close the search window.
 		do
 			if search_window /= Void then

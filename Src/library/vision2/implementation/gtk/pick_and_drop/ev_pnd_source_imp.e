@@ -110,6 +110,10 @@ feature -- Implementation
 				check
 					app_imp_not_void: app_imp /= Void
 				end
+				if pebble_function /= Void then
+					pebble_function.call ([a_x, a_y]);
+					pebble := pebble_function.last_result
+				end
 				app_imp.on_pick (pebble)
 				interface.pick_actions.call ([a_x, a_y])
 
@@ -243,6 +247,9 @@ feature -- Implementation
 			pick_x := 0
 			pick_y := 0
 			last_pointed_target := Void
+			if pebble_function /= Void then
+				pebble := Void
+			end
 			check
 				motion_notify_not_connected: motion_notify_connection_id = 0
 				enter_notify_not_connected: enter_notify_connection_id = 0
@@ -462,6 +469,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/27 19:43:36  oconnor
+--| added support for pebble_funtion
+--|
 --| Revision 1.17  2000/03/23 19:17:40  king
 --| Changed pebble_over_widget to pass mouse coords
 --|
@@ -554,7 +564,6 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|
 --| Revision 1.6.2.2  1999/11/02 17:20:03  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

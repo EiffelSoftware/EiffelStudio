@@ -51,6 +51,7 @@ feature -- Status setting
 
 	set_pebble (a_pebble: like pebble) is
 			-- Assign `a_pebble' to `pebble'.
+			-- Overrides `set_pebble_function'.
 		require
 			a_pebble_not_void: a_pebble /= Void
 		do
@@ -59,8 +60,28 @@ feature -- Status setting
 			pebble_assigned: pebble = a_pebble
 		end
 
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [], ANY]) is
+			-- Set `a_function' to compute `pebble'.
+			-- It will be called once each time a pick occurs, the result
+			-- will be assigned to `pebble' for the duration of transport.
+			-- When a pick occurs, the pick position in widget coordinates,
+			-- <<x, y>> in pixels, is passed.
+			-- To handle this data use `a_function' of type
+			-- FUNTION [ANY, TUPLE [INTEGER, INTERGER], ANY] and return the
+			-- pebble as a function of x and y.
+			-- Overrides `set_pebble'.
+		require
+			a_function_not_void: a_function /= Void
+			a_function_takes_two_integer_open_operands:
+				a_function.valid_operands ([1,1])
+				-- Note that `a_funtion' with no operands or one integer
+				-- operand meets this criteria.
+		do
+			implementation.set_pebble_function (a_function)
+		end
+
 	remove_pebble is
-			-- Remove `pebble'.
+			-- Make `pebble' `Void'.
 		do
 			implementation.remove_pebble
 		ensure
@@ -201,6 +222,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/27 19:44:12  oconnor
+--| added support for pebble_funtion
+--|
 --| Revision 1.6  2000/03/24 02:19:58  oconnor
 --| use new not_empty_actions from ACTION_SEQUENCE
 --|

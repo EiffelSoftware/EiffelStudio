@@ -104,6 +104,8 @@ feature -- Basic operation
 			box_exists: vb /= Void
 		do
 			build_widget_structure (vb)
+			type_selector.ensure_top_item_visible
+			initialize_split_areas
 			command_handler.update
 		end
 		

@@ -2,6 +2,7 @@
 	WEL_THR_INIT
 */
 
+#include "eif_lmalloc.h"
 #include "wel_thr_init.h"
 
 #ifdef EIF_THREADS

@@ -9,7 +9,7 @@ class EB_SLICE_COMMAND
 
 inherit
 
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 --		export
 --			{ANY} button_three_action
 		redefine
@@ -69,7 +69,7 @@ feature {EB_SLICE_DIALOG} -- Implementation
 			slice_window: EB_SLICE_DIALOG
 				-- Associated popup window
 		do
---			!! mp.set_watch_cursor
+--			create mp.set_watch_cursor
 			if argument = Void then
 				create slice_window.make_default (tool.parent_window, Current)
 			else

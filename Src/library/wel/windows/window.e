@@ -405,16 +405,6 @@ feature -- Status setting
 			default_processing_disabled: not default_processing_enabled
 		end
 
-	set_default_processing (new_state: BOOLEAN) is
-			-- Set the window default processing state with
-			-- `new_state'.
-		do
-			default_processing.set_item (new_state)
-		ensure
-			default_processing_set:
-				default_processing_enabled = new_state
-		end
-
 	enable is
 			-- Enable mouse and keyboard input.
 		require
@@ -493,8 +483,6 @@ feature -- Status setting
 			exists: exists
 		do
 			cwin_set_focus (item)
-		ensure
-			has_focus: has_focus
 		end
 
 	set_capture is
@@ -553,7 +541,6 @@ feature -- Element change
 		require
 			exists: exists
 			a_placement_not_void: a_placement /= Void
-			a_placement_exists: a_placement.exists
 		do
 			cwin_set_window_placement (item, a_placement.item)
 		ensure
@@ -854,7 +841,6 @@ feature -- Basic operations
 		require
 			exists: exists
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		do
 			cwin_invalidate_rect (item, rect.item, erase_background)
 		end
@@ -876,7 +862,6 @@ feature -- Basic operations
 		require
 			exists: exists
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		do
 			cwin_validate_rect (item, rect.item)
 		end
@@ -1183,6 +1168,20 @@ feature {NONE} -- Implementation
 			Result.set_item (True)
 		end
 
+	on_wm_destroy is
+			-- Wm_destroy message.
+			-- The window must be unregistered
+		require
+			exists: exists
+		do
+			on_destroy
+			exists := False
+			unregister_window (Current)
+		ensure
+			destroyed: not exists
+			unregistered: not registered (Current)
+		end
+
 feature {WEL_DISPATCHER}
 
 	frozen window_process_message, process_message (hwnd: POINTER; msg,
@@ -1262,18 +1261,14 @@ feature {WEL_DISPATCHER}
 				lparam)
 		end
 
-	on_wm_destroy is
-			-- Wm_destroy message.
-			-- The window must be unregistered
-		require
-			exists: exists
+	set_default_processing (new_state: BOOLEAN) is
+			-- Set the window default processing state with
+			-- `new_state'.
 		do
-			on_destroy
-			exists := False
-			unregister_window (Current)
+			default_processing.set_item (new_state)
 		ensure
-			destroyed: not exists
-			unregistered: not registered (Current)
+			default_processing_set:
+				default_processing_enabled = new_state
 		end
 
 feature {NONE} -- Removal
@@ -1282,10 +1277,8 @@ feature {NONE} -- Removal
 		do
 			-- At this stage, the window has been already destroyed
 			-- by Windows (see `on_wm_destroy').
-			if exists then
-				exists := False
-				item := default_pointer
-			end
+			exists := False
+			item := default_pointer
 		end
 
 feature {NONE} -- Externals

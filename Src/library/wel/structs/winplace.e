@@ -133,7 +133,7 @@ feature -- Element change
 			-- normal_position_set: normal_position = a_rect
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

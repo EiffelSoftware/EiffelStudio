@@ -164,7 +164,7 @@ feature -- Access
 			Result := cwel_text_metric_get_tmcharset (item)
 		end
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

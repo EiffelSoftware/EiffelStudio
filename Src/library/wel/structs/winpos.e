@@ -178,7 +178,7 @@ feature -- Element change
 				cwel_integer_to_pointer (Hwnd_notopmost))
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

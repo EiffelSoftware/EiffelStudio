@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create tmp_string.make (0)
+			create tmp_string.make (1000)
 			arguments := func_desc.arguments
 			if arguments /= Void and not arguments.empty then
 				from
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			out_variable: BOOLEAN
 		do
 			create free_arguments.make
-			create return_value.make (0)
+			create return_value.make (10000)
 
 			Result := check_interface_pointer (interface_name)
 			Result.append (New_line_tab)
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			type: INTEGER
 		do
 			type := visitor.vt_type
-			create Result.make (0)
+			create Result.make (1000)
 
 			Result.append (New_line_tab)
 			if not visitor.is_basic_type and not visitor.is_enumeration then

@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 		do
 			create func_writer.make
 
-			create tmp_body.make (0)
+			create tmp_body.make (1000)
 
 			tmp_body.append (tab)
 			tmp_body.append ("if (itinfo != 0) %N%T%Treturn ResultFromScode(DISP_E_BADINDEX);")
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr")
 
-			create body_code.make (0)
+			create body_code.make (100000)
 
 			body_code.append (Tab)
 			body_code.append (Hresult)
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 		do
 			create prop_get_functions.make (2)
 			create prop_put_functions.make (2)
-			create Result.make (0)			
+			create Result.make (10000)			
 
 			from
 				interface_desc.functions.start
@@ -694,7 +694,7 @@ feature {NONE} -- Implementation
 				Result.append (prop_get_func.item (prop_desc.member_id))
 				prop_get_func.remove (prop_desc.member_id)
 			else
-				create Result.make (0)
+				create Result.make (10000)
 				Result.append (If_keyword)
 				Result.append (Space_open_parenthesis)
 				Result.append ("wFlags")
@@ -770,7 +770,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_descriptor: func_desc /= Void
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_descriptor: func_desc /= Void
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
@@ -805,7 +805,7 @@ feature {NONE} -- Implementation
 			non_void_return_code: a_return_code /= Void
 			valid_return_code: not a_return_code.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
 			Result.append (Failed)
@@ -909,8 +909,8 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			local_buffer: STRING
 		do
-			create local_buffer.make (0)
-			create Result.make (0)
+			create local_buffer.make (10000)
+			create Result.make (10000)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab_tab)

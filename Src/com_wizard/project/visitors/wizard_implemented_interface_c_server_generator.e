@@ -119,8 +119,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			create a_signature.make (0)
-			create constructor_body.make (0)
+			create a_signature.make (100)
+			create constructor_body.make (100)
 			constructor_body.append (Tab)
 			Result.set_body (constructor_body)
 		ensure

@@ -26,11 +26,11 @@ feature -- Basic operations
 			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			element_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR
 		do
-			create ce_function_name.make (0)
-			create ec_function_name.make (0)
-			create c_type.make (0)
-			create c_post_type.make (0)
-			create eiffel_type.make (0)
+			create ce_function_name.make (100)
+			create ec_function_name.make (100)
+			create c_type.make (100)
+			create c_post_type.make (100)
+			create eiffel_type.make (100)
 
 			need_generate_ce := False
 			need_generate_ec := False
@@ -248,7 +248,7 @@ feature -- Basic operations
 				ec_function_body := safearray_safearray_ec_function_body (element_safearray_descriptor)
 
 			else
-				create tmp_string.make (0)
+				create tmp_string.make (100)
 				tmp_string.append (element_visitor.c_type)
 				tmp_string.append (Space)
 				tmp_string.append (message_output.Unknown_type_of_safearray_element)
@@ -284,7 +284,7 @@ feature -- Basic operations
 			minor_ver_number := a_record_descriptor.library_descriptor.minor_version_number
 			a_lcid := a_record_descriptor.library_descriptor.lcid
 
-			create tmp_string.make (0)
+			create tmp_string.make (100)
 			tmp_string.append_integer (major_ver_number)
 			tmp_string.append (Comma_space)
 			tmp_string.append_integer (minor_ver_number)
@@ -403,7 +403,7 @@ feature -- Basic operations
 			tmp_element_c_type := a_visitor.c_type
 			tmp_element_eiffel_type := a_visitor.eiffel_type
 
-			create tmp_string.make (0)
+			create tmp_string.make (100)
 			tmp_string.append_integer (major_ver_number)
 			tmp_string.append (Comma_space)
 			tmp_string.append_integer (minor_ver_number)
@@ -542,7 +542,7 @@ feature -- Basic operations
 			minor_ver_number := an_interface_descriptor.library_descriptor.minor_version_number
 			a_lcid := an_interface_descriptor.library_descriptor.lcid
 
-			create tmp_string.make (0)
+			create tmp_string.make (100)
 			tmp_string.append_integer (major_ver_number)
 			tmp_string.append (Comma_space)
 			tmp_string.append_integer (minor_ver_number)

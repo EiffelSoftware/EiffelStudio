@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if func_desc.arguments.empty and func_desc.return_type.name.is_equal (Void_c_keyword) then
 				Result.append (Void_c_keyword)					
 			else
@@ -122,9 +122,9 @@ feature {NONE} -- Implementation
 				arguments.append (Eiffel_object)
 				arguments.append (Close_parenthesis)
 
-				create variables.make (0)
-				create out_value.make (0)
-				create free_object.make (0)
+				create variables.make (1000)
+				create out_value.make (10000)
+				create free_object.make (10000)
 
 				from
 					func_desc.arguments.start

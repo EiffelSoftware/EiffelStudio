@@ -35,7 +35,7 @@ feature -- Basic operations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Iid_type)
 			Result.append ("_")
 			Result.append (a_name)
@@ -50,7 +50,7 @@ feature -- Basic operations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append ("static ")
 			Result.append (Const)
 			Result.append (Space)

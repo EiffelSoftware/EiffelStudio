@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (dll_register_server_name)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Register Server")
 			Result.set_comment (tmp_comment)
 
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (dll_unregister_server_name)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Unregister Server")
 			Result.set_comment (tmp_comment)
 
@@ -235,11 +235,11 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (dll_get_class_object_name)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Get class object.")
 			Result.set_comment (tmp_comment)
 
-			create tmp_argument.make (0)
+			create tmp_argument.make (100)
 			tmp_argument.append ("a_clsid, a_riid, ppv")
 			tmp_argument.append (Colon)
 			tmp_argument.append (Space)
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 
 			Result.set_comment ("Get Class Object.")
 
-			create tmp_argument.make (0)
+			create tmp_argument.make (100)
 			tmp_argument.append ("a_clsid, a_riid, ppv")
 			tmp_argument.append (Colon)
 			tmp_argument.append (Space)
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (dll_can_unload_now_name)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Can unload now?")
 			Result.set_comment (tmp_comment)
 

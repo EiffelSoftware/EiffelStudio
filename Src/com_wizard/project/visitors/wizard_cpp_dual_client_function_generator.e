@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 	retval_struct_pointer_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Create Eiffel object
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (New_line_tab);
 
 			-- TYPE_ID tid = -1;

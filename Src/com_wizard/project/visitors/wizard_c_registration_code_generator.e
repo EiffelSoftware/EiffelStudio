@@ -89,7 +89,7 @@ feature -- Basic operations
 					tmp_string.append (Header_file_extension)
 					c_writer.add_import (tmp_string)
 
-					create tmp_string.make (0)
+					create tmp_string.make (100)
 					tmp_string.append (Dword)
 					tmp_string.append (Space)
 					tmp_string.append (Class_object_registration_token)
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Const)
 			Result.append (Space)
 			Result.append (Iid_type)
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 		do
 			-- extern "C" IID LIBID_`a_name';
 
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Extern)
 			Result.append (Space)
 			Result.append (Double_quote)
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 	ccom_initialize_com_macro: STRING is
 			-- Macro for `ccom_initialize_com' function.
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Clean up COM.")
 			Result.set_result_type (Void_c_keyword)
 
-			create tmp_string.make (0)
+			create tmp_string.make (10000)
 			tmp_string.append (Tab)
 			from
 				system_descriptor.coclasses.start
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 	ccom_cleanup_com_macro: STRING is
 			-- Macro for `ccom_cleanup_com' function.
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 	ccom_unregserver_macro: STRING is
 			-- Macro for `ccom_unregister_server' function.
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 	ccom_regserver_macro: STRING is
 			-- Macro for `ccom_register_server' function.
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -864,7 +864,7 @@ feature {NONE} -- Implementation
 		dll_get_class_object_macro: STRING is
 			-- Macro for `ccom_dll_get_class_object' function.
 		do
-			create Result.make (0)
+			create Result.make (200)
 			Result.append (Hash_define)
 			Result.append (Space)
 			Result.append (Ccom_dll_get_class_object)
@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 	dll_register_server_macro: STRING is
 			-- Macro for `ccom_dll_register_server' function.
 		do
-			create Result.make (0)
+			create Result.make (1000)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 	dll_unregister_server_macro: STRING is
 			-- Macro for `ccom_dll_unregister_server' function.
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -1024,7 +1024,7 @@ feature {NONE} -- Implementation
 	dll_can_unload_now_macro: STRING is
 			-- Macro for `ccom_dll_can_unload_now' function.
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append (Hash_define)
 			Result.append (Space)
@@ -1125,7 +1125,7 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Eif_integer)
 			Result.set_signature ("const REG_DATA *rgEntries, int cEntries")
 
-			create tmp_string.make (0)
+			create tmp_string.make (10000)
 			tmp_string.append (Tab)
 			tmp_string.append (libid_definition (system_descriptor.name, 
 								system_descriptor.type_lib_guid))
@@ -1564,7 +1564,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_descriptor: coclass_descriptor /= Void
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			from
 				coclass_descriptor.interface_descriptors.start
 			until
@@ -1629,7 +1629,7 @@ feature {NONE} -- Implementation
 			new_guid: ECOM_GUID
 			counter: INTEGER
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			-- Register interfaces
 			from
@@ -1657,7 +1657,7 @@ feature {NONE} -- Implementation
 			string_one.append (Inproc_server32)
 
 			tmp_file_name := shared_wizard_environment.proxy_stub_file_name
-			create string_two.make (0)
+			create string_two.make (10000)
 			from
 				counter := 1
 			until

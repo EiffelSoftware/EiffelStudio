@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name ("default_show_command")
 			Result.set_once
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Default command used to show ")
 			tmp_comment.append (Back_quote)
 			tmp_comment.append ("main_window")
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (default_show_cmd)
 			Result.set_attribute
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Default command used to show ")
 			tmp_comment.append (Back_quote)
 			tmp_comment.append ("main_window")
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (initialize_com)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Initialize COM ")
 			Result.set_comment (tmp_comment)
 
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (Cleanup_com)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Clean up COM ")
 			Result.set_comment (tmp_comment)
 
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (Register_server)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Register Server")
 			Result.set_comment (tmp_comment)
 
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name (Unregister_server)
 			Result.set_effective
-			create tmp_comment.make (0)
+			create tmp_comment.make (100)
 			tmp_comment.append ("Unregister Server")
 			Result.set_comment (tmp_comment)
 

@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Clsid_type)
 			Result.append ("_")
 			Result.append (a_name)
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			non_void_guid: guid /= Void
 			valid_guid: guid.item /= default_pointer
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append ("static ")
 			Result.append (Const)
 			Result.append (Space)
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append ("static ")
 			Result.append (Const)
 			Result.append (Space)
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		do
 			-- extern "C" CLSID CLSID_`a_name';
 
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Extern)
 			Result.append (Space)
 			Result.append (Double_quote)

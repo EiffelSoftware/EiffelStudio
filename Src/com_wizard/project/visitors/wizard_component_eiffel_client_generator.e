@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error code.")
 			Result.set_result_type (Integer_type)
 
-			create feature_body.make (0)
+			create feature_body.make (1000)
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Result_clause)
 			feature_body.append (ccom_last_error_code_name)
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last source of exception.")
 			Result.set_result_type (String_type)
 
-			create feature_body.make (0)
+			create feature_body.make (1000)
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Result_clause)
 			feature_body.append (ccom_last_source_of_exception_name)
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error description.")
 			Result.set_result_type (String_type)
 
-			create feature_body.make (0)
+			create feature_body.make (1000)
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Result_clause)
 			feature_body.append (ccom_last_error_description_name)
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error help file.")
 			Result.set_result_type (String_type)
 
-			create feature_body.make (0)
+			create feature_body.make (1000)
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Result_clause)
 			feature_body.append (ccom_last_error_help_file_name)

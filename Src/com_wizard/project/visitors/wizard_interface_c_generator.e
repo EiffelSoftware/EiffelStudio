@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append (Const)
 			Result.append (Space)
 			Result.append (Iid_type)

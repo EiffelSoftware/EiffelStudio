@@ -115,7 +115,7 @@ feature {NONE} -- Implementations
 			tmp_body: STRING 
 		do
 			create Result.make
-			create tmp_body.make (0)
+			create tmp_body.make (1000)
 			tmp_body.append (Tab)
 			tmp_body.append ("IsInitialized")
 			tmp_body.append (Space_equal_space)
@@ -146,7 +146,7 @@ feature {NONE} -- Implementations
 			Result.set_comment ("Initialize")
 			Result.set_result_type (Void_c_keyword)
 
-			create tmp_body.make (0)
+			create tmp_body.make (1000)
 			tmp_body.append (Tab)
 			tmp_body.append (Type_id)
 			tmp_body.append (Space_equal_space)

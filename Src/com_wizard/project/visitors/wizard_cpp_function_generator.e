@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			arguments := func_desc.arguments
 			from
 				arguments.start

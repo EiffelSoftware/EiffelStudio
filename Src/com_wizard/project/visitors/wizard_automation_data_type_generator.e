@@ -22,11 +22,11 @@ feature -- Basic operations
 		local
 			a_type: INTEGER
 		do
-			create ce_function_name.make (0)
-			create ec_function_name.make (0)
-			create c_type.make (0)
-			create eiffel_type.make (0)
-			create cecil_type.make (0)
+			create ce_function_name.make (100)
+			create ec_function_name.make (100)
+			create c_type.make (50)
+			create eiffel_type.make (50)
+			create cecil_type.make (50)
 
 			need_generate_ce := False
 			need_generate_ec := False

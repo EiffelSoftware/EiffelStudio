@@ -219,6 +219,40 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
+	valid_variable_name (name: STRING): STRING is
+			-- Format `name' to Eiffel valid variable name.
+		require
+			non_void_name: name /= Void
+			name_not_empty: not name.is_empty
+		local
+			i: INTEGER
+			l_name: STRING
+			l_var: like variable_mapping_table
+		do
+				-- resolve conflict names	
+			l_name := clone (name)
+			l_name.to_lower
+			l_var := variable_mapping_table
+			l_var.search (l_name)
+			if l_var.found then
+				Result := l_var.found_item
+			else
+				Result := clone (name)
+				if Result.item (Result.count) = '&' then
+					Result.keep_head (Result.count - 1)
+				end
+				Result.replace_substring_all (Single_dot_string, Single_underscore_string)
+				Result.replace_substring_all (Triple_underscore_string, Single_underscore_string)
+				Result.replace_substring_all (Double_underscore_string, Single_underscore_string)
+				if Result.item (1) = '_' then
+					Result.prepend_character ('a')
+				end
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+
+
 feature {NONE} -- Implementation
 
 	eiffel_format (s: STRING): STRING is

@@ -205,7 +205,7 @@ feature {NONE} -- Constant strings
 			Result.append (
 				"Interactive Software Engineering Inc.%N%
 				%ISE Building%N%
-				%360 Storke Road, Goleta, CA 93117 USA%N%
+				%356 Storke Road, Goleta, CA 93117 USA%N%
 				%Telephone: 805-685-1006, Fax 805-685-6869%N%
 				%Electronic mail: <info@eiffel.com>%N%
 				% %N%

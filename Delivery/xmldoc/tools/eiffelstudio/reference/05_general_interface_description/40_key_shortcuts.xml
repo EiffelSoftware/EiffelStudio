@@ -13,20 +13,10 @@
 		<heading>
 			<size>2</size>Editor shortcuts
 		</heading>
+		<heading><size>3</size>Clipboard shortcuts</heading>
+		<paragraph>
 		<table>
-			<row>
-				<cell>
-					<bold>Key shortcut</bold>
-				</cell>
-				<cell>
-					<bold>Purpose</bold>
-				</cell>
-			</row>
-			<row>
-				<cell>
-					<italic>- clipboard shortcuts -</italic>
-				</cell>
-			</row>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Ctrl+C</cell>
 				<cell>Copy : Copy selected text into the clipboard.</cell>
@@ -51,11 +41,12 @@
 				<cell>Shift+Ins</cell>
 				<cell>Equivalent to Ctrl+V.</cell>
 			</row>
-			<row>
-				<cell>
-					<italic>- undo/redo shortcuts -</italic>
-				</cell>
-			</row>
+		</table>
+		</paragraph>
+		<heading><size>3</size>Undo/redo shortcuts</heading>
+		<paragraph>
+		<table>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Ctrl+Z</cell>
 				<cell>Undo last action.</cell>
@@ -64,11 +55,12 @@
 				<cell>Ctrl+Y</cell>
 				<cell>Redo last undone action.</cell>
 			</row>
-			<row>
-				<cell>
-					<italic>- search shortcuts -</italic>
-				</cell>
-			</row>
+		</table>
+		</paragraph>
+		<heading><size>3</size>Search shortcuts</heading>
+		<paragraph>
+		<table>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Ctrl+F</cell>
 				<cell>Display the Search tool and give the focus to the "Search for..." text field.
@@ -83,7 +75,7 @@
 			</row>
 			<row>
 				<cell>F3</cell>
-				<cell>Search the next occurrence of currently selected text or, if there is no selection, of the last searched expression.
+				<cell>Search the next occurrence of currently selected text or, if there<line_break/> is no selection, of the last searched expression.
 					<line_break/>This shortcut may be customized.
 				</cell>
 			</row>
@@ -93,11 +85,12 @@
 					<line_break/>This shortcut may be customized.
 				</cell>
 			</row>
-			<row>
-				<cell>
-					<italic>- shortcuts to modify selected text -</italic>
-				</cell>
-			</row>
+		</table>
+		</paragraph>
+		<heading><size>3</size>Shortcuts to modify selected text</heading>
+		<paragraph>
+		<table>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Tab</cell>
 				<cell>Indent selection (only if several lines are selected).</cell>
@@ -118,17 +111,18 @@
 			</row>
 			<row>
 				<cell>Ctrl+I</cell>
-				<cell>Embed selection (or the current line if there is no selection) in an "if...then...end" structure.</cell>
+				<cell>Embed selection (or the current line if there is no selection)<line_break/> in an "if...then...end" structure.</cell>
 			</row>
 			<row>
 				<cell>Ctrl+D</cell>
-				<cell>Embed selection (or the current line if there is no selection) in an "debug...end" structure.</cell>
+				<cell>Embed selection (or the current line if there is no selection)<line_break/> in an "debug...end" structure.</cell>
 			</row>
-			<row>
-				<cell>
-					<italic>- other shortcuts -</italic>
-				</cell>
-			</row>
+		</table>
+		</paragraph>
+		<heading><size>3</size>Other shortcuts</heading>
+		<paragraph>
+		<table>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Ctrl+A</cell>
 				<cell>Select the entire text.</cell>
@@ -140,28 +134,23 @@
 				</cell>
 			</row>
 		</table>
+		</paragraph>
 		<note>
 			<bold>Note</bold>: These shortcuts are not available everywhere. All operations that do not imply changes in the text are available both in the editor and in the class and feature tabs of the context tool. Other operations are available only in the editor.
 		</note>
-		<heading>
-			<size>2</size>Compiler
-		</heading>
+		<heading><size>2</size>Compiler</heading>
+		<paragraph>
 		<table>
-			<row>
-				<cell>
-					<bold>Key shortcut</bold>
-				</cell>
-				<cell>
-					<bold>Purpose</bold>
-				</cell>
-			</row>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>F7</cell>
 				<cell>Melt the system. This is the standard way to compile a  debuggable system.</cell>
 			</row>
 			<row>
 				<cell>Shift+F7</cell>
-				<cell>Melt classes that have been edited in EiffelStudio since the last  compilation. This is the recommended way to compile a  debuggable system as long as classes are not modified outside EiffelStudio.</cell>
+				<cell>Melt classes that have been edited in EiffelStudio since the last  compilation.<line_break/>
+				This is the recommended way to compile a  debuggable system as long as<line_break/>
+				classes are not modified outside EiffelStudio.</cell>
 			</row>
 			<row>
 				<cell>Ctrl+F7</cell>
@@ -172,18 +161,11 @@
 				<cell>Finalize the system. This generates an optimized executable  which is not debuggable.</cell>
 			</row>
 		</table>
-		<heading>
-			<size>2</size>Debugger
-		</heading>
+		</paragraph>
+		<heading><size>2</size>Debugger</heading>
+		<paragraph>
 		<table>
-			<row>
-				<cell>
-					<bold>Key shortcut</bold>
-				</cell>
-				<cell>
-					<bold>Purpose</bold>
-				</cell>
-			</row>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>F5</cell>
 				<cell>Run. This is the standard way to run a system and debug it.</cell>
@@ -213,18 +195,12 @@
 				<cell>Step out.</cell>
 			</row>
 		</table>
-		<heading>
-			<size>2</size>Miscellaneous
-		</heading>
+		</paragraph>
+		<heading>	<size>2</size>Miscellaneous</heading>
+		<heading><size>3</size>File shortcuts</heading>
+		<paragraph>
 		<table>
-			<row>
-				<cell>
-					<bold>Key shortcut</bold>
-				</cell>
-				<cell>
-					<bold>Purpose</bold>
-				</cell>
-			</row>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>
 					<italic>- File shortcuts -</italic>
@@ -242,11 +218,12 @@
 				<cell>Ctrl+N</cell>
 				<cell>Open a new window.</cell>
 			</row>
-			<row>
-				<cell>
-					<italic>- Editor views shortcuts -</italic>
-				</cell>
-			</row>
+		</table>
+		</paragraph>
+		<heading><size>3</size>Editor views shortcuts</heading>
+		<paragraph>
+		<table>
+			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Ctrl+Shift+T</cell>
 				<cell>Display the text view in the editor.</cell>
@@ -268,4 +245,6 @@
 				<cell>Display the flat contract view in the editor.</cell>
 			</row>
 		</table>
-	</paragraph></document>
+		</paragraph>
+	</paragraph>
+</document>

@@ -31,14 +31,30 @@ feature {EWB_GENERATE} -- Initialization
 					io.putstring (": File does not exist.%N%N")
 				else
 
-						-- Check whether the specified project directory
-						-- is valid.
-					check_project_directory (arguments.item (2));
-					if not exists then
-						io.putstring (arguments.item (2));
-						io.putstring (": File `TRANSLAT' does not exist in this directory.%N%N")
-					else
+					if config.get_config_name.is_equal ("eiffel") then
+							-- We don't care about the project directory:
+							-- The eiffel profiler is smarter than external
+							-- tools.
 						do_convertion
+					else
+							-- Check whether the specified project directory
+							-- is valid.
+							-- Ie. check whether there is a TRANSLAT file in
+							-- ./EIFGEN/W_code/. We need this to translate
+							-- cryptic names back to human readable ones.
+						check_project_directory (arguments.item (2));
+						if not exists then
+								-- Too bad. Either the user has been smart:
+								-- he's been using precompiles *or*
+								-- he's been stupid and removed TRANSLAT by
+								-- by hand.
+								-- What do we do??? ***** FIXME *****
+							io.putstring (arguments.item (2));
+							io.putstring (": File `TRANSLAT' does not exist in this directory.%N%N")
+						else
+								-- Cool! Everything is fine!
+							do_convertion
+						end
 					end
 				end
 			end

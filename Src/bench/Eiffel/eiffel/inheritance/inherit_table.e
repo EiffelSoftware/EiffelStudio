@@ -221,6 +221,7 @@ feature
 				-- Check-sum error after analysis fo the inherited
 				-- features
 			Error_handler.checksum;
+
 				-- Analyze local features
 			if a_class.changed then
 					-- Remove all changed features if any
@@ -237,15 +238,20 @@ feature
 					-- or more ancestor has a new feature table.
 				recompute_declarations;
 			end;
+
 				-- Check the redefine and select clause, and kepp track
 				-- of possible joins between deferred features
 			check_validity2;
+			
 				-- Computes a good size for the feature table
 			resulting_table := clone (inherited_features);
+			
 				-- Check redeclarations into an attribute
 			check_redeclarations (resulting_table);
+			
 				-- Check sum
 			Error_handler.checksum;
+			
 				-- Compute selection table
 			Origin_table.compute_feature_table
 					(parents, feature_table, resulting_table);
@@ -253,6 +259,7 @@ feature
 				-- Check sum error: because of possible bad selections,
 				-- anchored types on features could not be evaluated here.
 			Error_handler.checksum;
+
 				-- Check types in the feature table
 			resulting_table.check_table;
 				-- Check the adaptations
@@ -274,6 +281,7 @@ feature
 					-- Compute invariant clause
 				compute_invariant;
 			end;
+
 				-- Check sum error
 			Error_handler.checksum;
 			check
@@ -316,8 +324,7 @@ feature
 			if old_creators = Void then
 				if
 					new_creators /= Void
-				or else
-					(a_class.is_deferred and then pass_c.deferred_modified)
+					or else (a_class.is_deferred and then pass_c.deferred_modified)
 				then
 						-- the clients using !! without a creation routine
 						-- must be recompiled
@@ -359,7 +366,7 @@ debug ("ACTIVITY")
 	io.error.putstring (creation_name);
 	io.error.putstring (" inserted in pass2_control.propagators%N");
 end;
-							!!depend_unit.make (a_class.id, resulting_table.item (creation_name).feature_id);
+							!!depend_unit.make (a_class.id, resulting_table.found_item.feature_id);
 							pass2_control.propagators.extend (depend_unit);
 						end;
 					end;
@@ -393,11 +400,6 @@ end;
 					-- new feature table is equivalent to the old one
 				equiv_tables := resulting_table.equiv (feature_table, pass2_control);
 			end;
-
---			equiv_tables := resulting_table.equiv (feature_table);
---			if equiv_tables and then previous_feature_table /= Void then
---				equiv_tables := resulting_table.equiv (previous_feature_table)
---			end;
 
 				-- Propagation
 			pass_c.propagate (resulting_table, equiv_tables,
@@ -679,8 +681,7 @@ end;
 							feat_name := name_list.item;
 								-- Computes an internal name for the feature
 								-- taking care of prefix/infix notations
-							feature_i := feature_unit
-												(single_feature, feat_name);
+							feature_i := feature_unit (single_feature, feat_name);
 								-- Attributes `body_id', `feature_name' and
 								-- `written_in' are ok now. If it is an old
 								-- instance of FEATURE_I from a previous
@@ -1110,7 +1111,7 @@ end;
 				a_feature := resulting_table.item (origins.item);
 				if System.has_separate and then a_class.is_used_as_separate then
 					if a_feature.sep_process_pattern and then System.byte_context.generation_mode then
-						System.set_freeze (True);	
+						System.set_freeze
 					end;
 				else
 					a_feature.process_pattern;
@@ -1486,7 +1487,7 @@ end;
 													written_in_cont);
 						end;
 						if tmp_rep_class_info.has (written_in_cont.id) then
-							s_rep_name_list := tmp_rep_class_info.item (written_in_cont.id);
+							s_rep_name_list := tmp_rep_class_info.found_item
 						else
 							!!s_rep_name_list.make (
 								rep_name_list.parent_clause.parent_id);

@@ -169,6 +169,11 @@ feature {NONE} -- Compilation implementation
 			progress_dialog.disable_cancel
 			Degree_output.put_string (Interface_names.d_Resynchronizing_tools)
 			window_manager.synchronize_all
+			if Workbench.successful then
+				window_manager.display_message (Interface_names.E_compilation_succeeded)
+			else
+				window_manager.display_message (Interface_names.E_compilation_failed)
+			end
 			Debugger_manager.on_compile_stop
 
 			if dynamic_lib_window_is_valid and then dynamic_lib_window.is_visible then
@@ -314,6 +319,7 @@ feature {NONE} -- Execution
 
 	confirm_and_compile is
 			-- Ask for confirmations and options, then compile.
+			--| Can be redefined in descendants!
 		do
 			confirm_execution_halt
 		end

@@ -39,6 +39,7 @@
 #include "eif_eiffel.h"
 #include "eif_memory.h"
 #include "eif_debug.h"
+#include "x2c.h"	/* For macro LNGPAD */
 #include "proto.h"
 
 #ifdef EIF_WIN32
@@ -866,7 +867,7 @@ rt_private void rec_sinspect(register1 char *object)
 	int dt_type;
 
 	zone = HEADER(object);
-	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 	count = *(long *) o_ref;
 	elem_size = *(long *) (o_ref + sizeof(long));
 	flags = zone->ov_flags;

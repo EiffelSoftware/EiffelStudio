@@ -103,6 +103,9 @@
 							<item>Improved resizing of tool bar buttons. A tool bar button with  a text and no associated pixmap used to display an empty area where the pixmap would be displayed if set. Now, in this case,  the button is just large enough to  display its text.</item>
 						</list>
 					</item>
+					<item>
+						<bold>EV_FONT</bold> - Fixed bug in `is_equal' which occasionally failed due to rounding errors between `height' and `height_in_points'. Now, `is_equal' compares `height_in_points' for the font which is more accurate and prevents this issue.
+					</item>
 				</list>
 			</item>
 			<item>

@@ -13,6 +13,21 @@ inherit
 	
 -- EV_SELECTABLE
 
+create {EV_GRID_I}
+	make_with_grid_i
+
+feature {NONE} -- Initialization
+
+	make_with_grid_i (a_grid_i: EV_GRID_I) is
+			-- Make `Current' associated with `a_grid_i'
+		require
+			a_grid_i_not_void: a_grid_i /= Void
+		do
+			parent_grid_i := a_grid_i
+		ensure
+			parent_grid_i = a_grid_i
+		end
+
 feature -- Access
 
 	subrow (i: INTEGER): EV_GRID_ROW is

@@ -44,8 +44,26 @@ public interface COMPILER_PROXY_I
 	void StartClassMappings( int ClassCount );
 	
 	// Generate a class map between name and TypeID
-	void GenerateClassMappings (string ClassName, int TypeID, int InterfaceID,
-		string SourceFileName, string ElementTypeName);
+	void generate_class_mappings (string dotnet_name, string eiffel_name, int TypeID,
+		int InterfaceID, string SourceFileName, string ElementTypeName);
+
+	void generate_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.TYPE and `type_id'.
+
+	void generate_class_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.CLASS_TYPE and `type_id'.
+
+	void generate_generic_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.GENERIC_TYPE and `type_id'.
+
+	void generate_formal_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.FORMAL_TYPE and `type_id'.
+
+	void generate_anchored_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.ANCHORED_TYPE and `type_id'.
+
+	void generate_basic_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.BASIC_TYPE and `type_id'.
 
 	// Generate class name and its specifier.
 	void GenerateClassHeader (bool IsInterface,
@@ -149,7 +167,7 @@ public interface COMPILER_PROXY_I
 	void AddCAStringArg( string Value );
 	
 	// Add custom attribute constructor real argument
-	void AddCARealArg( float Value );
+	void AddCARealArg( double Value );
 	
 	// Add custom attribute constructor double argument
 	void AddCADoubleArg( double Value );
@@ -178,7 +196,7 @@ public interface COMPILER_PROXY_I
 	void AddCAArrayStringArg( string[] Value );
 	
 	// Add custom attribute constructor real argument
-	void AddCAArrayRealArg( float[] Value );
+	void AddCAArrayRealArg( double[] Value );
 	
 	// Add custom attribute constructor double argument
 	void AddCAArrayDoubleArg( double[] Value );
@@ -195,6 +213,7 @@ public interface COMPILER_PROXY_I
 	void StartIlGeneration( int TypeID );
 	
 	// Generate info about current feature.
+	void generate_formal_feature (int feature_id);
 	void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID);
 	void GenerateFeatureInternalClone (int FeatureID);
 	void GenerateImplementationFeatureIL (int FeatureID);
@@ -212,9 +231,7 @@ public interface COMPILER_PROXY_I
 			int ExternalKind,
 			string[] ParameterTypes,
 			string ReturnType,
-			bool IsVirtual,
-			int TypeID,
-			int FeatureID);
+			bool IsVirtual);
 
 /* Local Variable Info Generator */
 
@@ -229,8 +246,6 @@ public interface COMPILER_PROXY_I
 	void CreateObject( int TypeID );
 
 	void CreateAttributeObject( int TypeID, int FeatureID );
-
-	void SetEiffelType (int ExportedTypeID);
 
 /* IL stack managment */
 
@@ -275,7 +290,10 @@ public interface COMPILER_PROXY_I
 	void GenerateFeatureAccess( int TypeID, int FeatureID, bool IsVirtual );
 	void GeneratePrecursorFeatureAccess( int TypeID, int FeatureID);
 	void PutMethodToken (int TypeID, int FeatureID);
-	
+
+	void put_type_token (int type_id);
+		// Put type token associated to type `type_id'.
+
 	// Generate access to `n'-th argument of current feature.
 	// Cannot be `0', reserved for `Current'.
 	void GenerateArgument( int n );
@@ -412,7 +430,7 @@ public interface COMPILER_PROXY_I
 
 	// Put `d' on IL stack.
 	void PutDoubleConstant( double d );
-	void PutRealConstant( float d );
+	void PutRealConstant( double d );
 
 	// Put `c' on IL stack.
 	void PutCharacterConstant( char c );

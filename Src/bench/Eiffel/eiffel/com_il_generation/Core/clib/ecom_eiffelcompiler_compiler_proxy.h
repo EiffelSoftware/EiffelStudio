@@ -90,7 +90,43 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER interface_id,  /* [in] */ EIF_OBJECT source_file_name,  /* [in] */ EIF_OBJECT element_type_name );
+	void ccom_generate_class_mappings(  /* [in] */ EIF_OBJECT dotnet_name,  /* [in] */ EIF_OBJECT eiffel_name,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER interface_id,  /* [in] */ EIF_OBJECT source_file_name,  /* [in] */ EIF_OBJECT element_type_name );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_class_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_generic_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_formal_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_anchored_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_generate_basic_type_class_mapping(  /* [in] */ EIF_INTEGER type_id );
 
 
 	/*-----------------------------------------------------------
@@ -240,7 +276,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_add_careal_arg(  /* [in] */ EIF_REAL a_value );
+	void ccom_add_careal_arg(  /* [in] */ EIF_DOUBLE a_value );
 
 
 	/*-----------------------------------------------------------
@@ -306,6 +342,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	void ccom_generate_formal_feature(  /* [in] */ EIF_INTEGER feature_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	void ccom_generate_feature_il(  /* [in] */ EIF_INTEGER feature_id,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER code_feature_id );
 
 
@@ -336,7 +378,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_external_call(  /* [in] */ EIF_OBJECT external_type_name,  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_OBJECT parameter_types,  /* [in] */ EIF_OBJECT return_type,  /* [in] */ EIF_BOOLEAN is_virtual,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	void ccom_generate_external_call(  /* [in] */ EIF_OBJECT external_type_name,  /* [in] */ EIF_OBJECT name,  /* [in] */ EIF_INTEGER external_kind,  /* [in] */ EIF_OBJECT parameter_types,  /* [in] */ EIF_OBJECT return_type,  /* [in] */ EIF_BOOLEAN is_virtual );
 
 
 	/*-----------------------------------------------------------
@@ -367,12 +409,6 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	void ccom_create_attribute_object(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_set_eiffel_type(  /* [in] */ EIF_INTEGER exported_type_id );
 
 
 	/*-----------------------------------------------------------
@@ -493,6 +529,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	void ccom_put_method_token(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_put_type_token(  /* [in] */ EIF_INTEGER type_id );
 
 
 	/*-----------------------------------------------------------
@@ -756,7 +798,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_real_constant(  /* [in] */ EIF_REAL d );
+	void ccom_put_real_constant(  /* [in] */ EIF_DOUBLE d );
 
 
 	/*-----------------------------------------------------------

@@ -90,7 +90,43 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GenerateClassMappings(  /* [in] */ BSTR class_name1, /* [in] */ LONG type_id, /* [in] */ LONG interface_id, /* [in] */ BSTR source_file_name, /* [in] */ BSTR element_type_name ) = 0;
+	virtual STDMETHODIMP generate_class_mappings(  /* [in] */ BSTR dotnet_name, /* [in] */ BSTR eiffel_name, /* [in] */ LONG type_id, /* [in] */ LONG interface_id, /* [in] */ BSTR source_file_name, /* [in] */ BSTR element_type_name ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_class_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_generic_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_formal_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_anchored_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_basic_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -240,7 +276,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP AddCARealArg(  /* [in] */ FLOAT a_value ) = 0;
+	virtual STDMETHODIMP AddCARealArg(  /* [in] */ double a_value ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -306,6 +342,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_formal_feature(  /* [in] */ LONG feature_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	virtual STDMETHODIMP GenerateFeatureIL(  /* [in] */ LONG feature_id, /* [in] */ LONG type_id, /* [in] */ LONG code_feature_id ) = 0;
 
 
@@ -336,7 +378,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GenerateExternalCall(  /* [in] */ BSTR external_type_name, /* [in] */ BSTR name, /* [in] */ LONG external_kind, /* [in] */ SAFEARRAY *  parameter_types, /* [in] */ BSTR return_type, /* [in] */ VARIANT_BOOL is_virtual, /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
+	virtual STDMETHODIMP GenerateExternalCall(  /* [in] */ BSTR external_type_name, /* [in] */ BSTR name, /* [in] */ LONG external_kind, /* [in] */ SAFEARRAY *  parameter_types, /* [in] */ BSTR return_type, /* [in] */ VARIANT_BOOL is_virtual ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -367,12 +409,6 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP CreateAttributeObject(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetEiffelType(  /* [in] */ LONG exported_type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -493,6 +529,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP PutMethodToken(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP put_type_token(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -756,7 +798,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP PutRealConstant(  /* [in] */ FLOAT d ) = 0;
+	virtual STDMETHODIMP PutRealConstant(  /* [in] */ double d ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -56,8 +56,8 @@ feature -- Basic Operations
 		end
 
 	generate_external_call (base_name: STRING; name: STRING; external_kind: INTEGER;
-				parameters: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN;
-				type_id, feature_id: INTEGER) is
+				parameters: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN)
+		is
 			-- Build an empty array if `parameter_types' is Void.
 		local
 			actual_parameters: ECOM_ARRAY [STRING]
@@ -75,7 +75,7 @@ feature -- Basic Operations
 				actual_return_type := return_type
 			end
 			proxy_generate_external_call (base_name, name, external_kind, actual_parameters,
-				actual_return_type, is_virtual, type_id, feature_id)
+				actual_return_type, is_virtual)
 		end
 
 	generate_external_identification (name, com_name: STRING; external_kind, feature_id: INTEGER; routine_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; parameters: ARRAY [STRING]; return_type: STRING) is
@@ -117,7 +117,7 @@ feature -- Object creation
 			create actual_feature_ids.make_from_array (feature_ids, 1, Zero_array, Parameterized_array)
 			proxy_mark_creation_routines (actual_feature_ids)
 		end
-
+		
 feature -- Custom Attributes Generation
 
 	add_cacharacter_arg (a_value: CHARACTER) is
@@ -152,20 +152,6 @@ feature -- Custom Attributes Generation
 				create actual_parameters.make_from_array (a_value, 1, Zero_array, Parameterized_array)
 			end
 			proxy_add_caarray_string_arg (actual_parameters)
-		end
-
-	add_caarray_real_arg (a_value: ARRAY [REAL]) is
-			-- Add custom attribute constructor real array argument `a_value'.
-		local
-			actual_parameters: ECOM_ARRAY [REAL]
-		do
-			if a_value = Void then
-				create actual_parameters.make (1, Zero_array, Zero_array)
-			else
-				Parameterized_array.put (a_value.count, 1)
-				create actual_parameters.make_from_array (a_value, 1, Zero_array, Parameterized_array)
-			end
-			proxy_add_caarray_real_arg (actual_parameters)
 		end
 
 	add_caarray_double_arg (a_value: ARRAY [DOUBLE]) is

@@ -3,7 +3,7 @@
 // typelib filename: EiffelCompiler.tlb
 
 [
-  uuid(FEA1D8C7-0C0B-352D-9A59-1E2E768EA771),
+  uuid(C947355E-AE58-3607-957C-7565E8CC09A1),
   version(5.1)
 ]
 library EiffelCompiler
@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(5A1F9896-A4A3-3472-9C7C-D0BB21E18626),
+      uuid(75DA17F3-0D39-354C-A339-564A657C805F),
       version(1.0),
       oleautomation
     ]
@@ -34,12 +34,19 @@ library EiffelCompiler
                         [in] VARIANT_BOOL Debug);
         HRESULT _stdcall EndAssemblyGeneration();
         HRESULT _stdcall StartClassMappings([in] long ClassCount);
-        HRESULT _stdcall GenerateClassMappings(
-                        [in] BSTR ClassName, 
+        HRESULT _stdcall generate_class_mappings(
+                        [in] BSTR dotnet_name, 
+                        [in] BSTR eiffel_name, 
                         [in] long TypeID, 
                         [in] long InterfaceID, 
                         [in] BSTR SourceFileName, 
                         [in] BSTR ElementTypeName);
+        HRESULT _stdcall generate_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_class_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_generic_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_formal_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_anchored_type_class_mapping([in] long type_id);
+        HRESULT _stdcall generate_basic_type_class_mapping([in] long type_id);
         HRESULT _stdcall GenerateClassHeader(
                         [in] VARIANT_BOOL IsInterface, 
                         [in] VARIANT_BOOL IsDeferred, 
@@ -100,17 +107,18 @@ library EiffelCompiler
                         [in] long TypeID);
         HRESULT _stdcall AddCAIntegerArg([in] long Value);
         HRESULT _stdcall AddCAStringArg([in] BSTR Value);
-        HRESULT _stdcall AddCARealArg([in] float Value);
+        HRESULT _stdcall AddCARealArg([in] double Value);
         HRESULT _stdcall AddCADoubleArg([in] double Value);
         HRESULT _stdcall AddCACharacterArg([in] unsigned short Value);
         HRESULT _stdcall AddCABooleanArg([in] VARIANT_BOOL Value);
         HRESULT _stdcall AddCAArrayIntegerArg([in] SAFEARRAY(long) Value);
         HRESULT _stdcall AddCAArrayStringArg([in] SAFEARRAY(BSTR) Value);
-        HRESULT _stdcall AddCAArrayRealArg([in] SAFEARRAY(float) Value);
+        HRESULT _stdcall AddCAArrayRealArg([in] SAFEARRAY(double) Value);
         HRESULT _stdcall AddCAArrayDoubleArg([in] SAFEARRAY(double) Value);
         HRESULT _stdcall AddCAArrayCharacterArg([in] SAFEARRAY(unsigned short) Value);
         HRESULT _stdcall AddCAArrayBooleanArg([in] SAFEARRAY(VARIANT_BOOL) Value);
         HRESULT _stdcall StartIlGeneration([in] long TypeID);
+        HRESULT _stdcall generate_formal_feature([in] long feature_id);
         HRESULT _stdcall GenerateFeatureIL(
                         [in] long FeatureID, 
                         [in] long TypeID, 
@@ -128,9 +136,7 @@ library EiffelCompiler
                         [in] long ExternalKind, 
                         [in] SAFEARRAY(BSTR) ParameterTypes, 
                         [in] BSTR ReturnType, 
-                        [in] VARIANT_BOOL IsVirtual, 
-                        [in] long TypeID, 
-                        [in] long FeatureID);
+                        [in] VARIANT_BOOL IsVirtual);
         HRESULT _stdcall PutResultInfo([in] long TypeID);
         HRESULT _stdcall PutLocalInfo(
                         [in] long TypeID, 
@@ -140,7 +146,6 @@ library EiffelCompiler
         HRESULT _stdcall CreateAttributeObject(
                         [in] long TypeID, 
                         [in] long FeatureID);
-        HRESULT _stdcall SetEiffelType([in] long ExportedTypeID);
         HRESULT _stdcall DuplicateTop();
         HRESULT _stdcall Pop();
         HRESULT _stdcall GenerateMetamorphose([in] long TypeID);
@@ -172,6 +177,7 @@ library EiffelCompiler
         HRESULT _stdcall PutMethodToken(
                         [in] long TypeID, 
                         [in] long FeatureID);
+        HRESULT _stdcall put_type_token([in] long type_id);
         HRESULT _stdcall GenerateArgument([in] long n);
         HRESULT _stdcall GenerateLocal([in] long n);
         HRESULT _stdcall GenerateInAssertionTest([in] long EndOfAssertLabel);
@@ -227,7 +233,7 @@ library EiffelCompiler
         HRESULT _stdcall PutInteger32Constant([in] long i);
         HRESULT _stdcall PutInteger64Constant([in] int64 i);
         HRESULT _stdcall PutDoubleConstant([in] double d);
-        HRESULT _stdcall PutRealConstant([in] float d);
+        HRESULT _stdcall PutRealConstant([in] double d);
         HRESULT _stdcall PutCharacterConstant([in] unsigned short c);
         HRESULT _stdcall PutBooleanConstant([in] VARIANT_BOOL b);
         HRESULT _stdcall BranchOnTrue([in] long label);
@@ -266,11 +272,10 @@ library EiffelCompiler
     };
 
     [
-      uuid(7B9FA8F1-CA49-3A7D-A206-D08D67AB42B9),
+      uuid(284806C7-1637-361D-9C9E-2E4B4C00378A),
       version(1.0)
     ]
     coclass COMPILER_PROXY {
         [default] interface COMPILER_PROXY_I;
     };
 };
-

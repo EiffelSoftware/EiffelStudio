@@ -43,15 +43,51 @@ namespace ISE.Runtime {
 			return tmp;
 		}
 
-		public static int generic_parameter_count (object o) {
-				// Number of generic Parameter if any.
-			_EIFFEL_TYPE_INFO gen;		
-			if (o is _EIFFEL_TYPE_INFO) {
-				gen = (_EIFFEL_TYPE_INFO) o;
-				return gen.____type_id();
+		public static String generator (object o)
+			// Generator class name of `o'.
+		{
+			String Result;
+
+			if (o is EIFFEL_TYPE_INFO) {
+					// This is a generated Eiffel type, we extract
+					// stored type.
+				Result = ((EIFFEL_TYPE_INFO) o).____class_name ();
 			} else {
-				return 0;
+				Result = o.GetType().Name;
 			}
+			return Result;
+		}
+
+		public static String generating_type (object o)
+			// Generating type name of `o'.
+		{
+			EIFFEL_DERIVATION der;
+			String Result;
+
+			if (o is EIFFEL_TYPE_INFO) {
+					// This is a generated Eiffel type.
+				EIFFEL_TYPE_INFO info = (EIFFEL_TYPE_INFO) o;
+				der = info.____type ();
+				if (der == null) {
+						// Not a generic class, we extract stored name.
+					Result = info.____class_name ();
+				} else {
+					Result = der.type_name ();
+				}
+			} else {
+				Result = o.GetType().Name;
+			}
+			return Result;
+		}
+
+		public static int generic_parameter_count (object o)
+			// Number of generic Parameter if any.
+		{
+			int Result = 0;
+			if (o is EIFFEL_TYPE_INFO) {
+				Result = ((EIFFEL_TYPE_INFO) o).____type ().nb_generics;
+			}
+			return Result;
 		}
 	}
 

@@ -8,18 +8,15 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	BTPRESS_DATA 
 
 inherit
-
 	BUTTON_DATA
 		rename
 			make as button_data_make
 		end
 
 creation
-
 	make
 
 feature -- Initialization

@@ -44,7 +44,6 @@ inherit
 			on_set_cursor,
 			on_draw_item,
 			background_brush,
-			on_accelerator_command,
 			on_color_control,
  			on_wm_vscroll,
  			on_wm_hscroll,
@@ -191,6 +190,9 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/21 02:34:11  brendel
+--| Removed on_accelerator_command from undefine clause.
+--|
 --| Revision 1.17  2000/03/14 03:02:54  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -1734,8 +1734,6 @@ feature {NONE} -- Implementation
 			change_color_cmd.disable_sensitive
 			fill_cluster_cmd.disable_sensitive
 			toggle_quality_cmd.disable_sensitive
-			toggle_force_cmd.disable_sensitive
-			remove_anchor_cmd.disable_sensitive
 			toggle_cluster_legend_cmd.disable_sensitive
 			toggle_cluster_cmd.disable_sensitive
 		end

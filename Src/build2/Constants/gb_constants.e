@@ -105,6 +105,8 @@ feature -- String representations of class names.
 	
 	Ev_spin_button_string: STRING is "EV_SPIN_BUTTON"
 	
+	gb_ev_container: STRING is "GB_EV_CONTAINER"
+	
 feature -- GB_EV_FIXED
 
 	select_widget_prompt: STRING is "Please select desired widget."
@@ -351,6 +353,8 @@ feature -- Generation constants
 			Result := indent + "%T-- Initialize properties of all widgets."
 		end
 		
+	merged_groups_string: STRING is "merged_radio_button_groups"
+		
 feature -- Wizard
 
 	wizard_completion_file_name: STRING is "completion_status.txt"
@@ -397,6 +401,9 @@ feature -- XML constants
 		
 	Name_string: STRING is "name"
 		-- String constant representing "name".
+		
+	Id_String: STRING is "id"
+		-- String constant representing "id".
 	
 	Schema_instance: STRING is "http://www.w3.org/1999/XMLSchema-instance"
 		-- Schema information for inclusion in XML files.

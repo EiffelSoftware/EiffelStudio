@@ -303,7 +303,7 @@ feature {NONE} -- Initialization
 			gtkarg2: POINTER
 		do
 			gtkarg2 := gtk_args_array_i_th (args, 1)
-			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
+			Result := [gtk_marshal.gtk_value_int (args) + 1, gtk_marshal.gtk_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
 		end
 
@@ -956,7 +956,7 @@ feature {NONE} -- Implementation
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			Result := [gtk_value_int (args)]
+			Result := [gtk_marshal.gtk_value_int (args)]
 		end
 
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is

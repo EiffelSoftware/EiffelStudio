@@ -85,9 +85,9 @@ feature -- Initialization
 			attach_bottom (form, 5);
 			cluster_name.set_text (Interface_names.l_Cluster);
 			file_label.set_text (Interface_names.l_File_name);
-			file_entry.add_activate_action (Current, create);
+			file_entry.add_activate_action (Current, create_new_class);
 			cancel_b.add_activate_action (Current, cancel);
-			create_b.add_activate_action (Current, create);
+			create_b.add_activate_action (Current, create_new_class);
 			set_composite_attributes (Current);
 			realize;
 			set_exclusive_grab
@@ -126,7 +126,7 @@ feature -- Properties
 
 	form: FORM;
 
-	create: ANY is
+	create_new_class: ANY is
 		once
 			!!Result
 		end;
@@ -264,7 +264,7 @@ feature -- Execution
 			str: STRING;
 			base_name: STRING;
 		do
-			if argument = create then
+			if argument = create_new_class then
 				change_cluster;
 				file_name := file_entry.text;
 				if aok then

@@ -1,0 +1,36 @@
+system
+	eiffel_time_calendar
+
+root
+
+	calculator: "make"
+
+default
+
+	assertion (all);
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
+cluster
+
+	ROOT_CLUSTER:	"$EIFFEL4/examples/time/calculator";
+
+		-- EiffelTime
+
+	eiffel_time:	"$EIFFEL4/library/time";
+	localizer:		"$EIFFEL4/library/time/format";
+	language:		"$EIFFEL4/library/time/format/english";
+
+		-- EiffelBase
+
+	all base:		"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+external
+
+	object:
+		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/libdatetime.a"
+
+end
+

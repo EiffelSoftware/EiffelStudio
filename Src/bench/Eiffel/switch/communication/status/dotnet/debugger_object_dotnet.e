@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature
+feature -- Access
 
 	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
 			-- Make debugged object with hector address `addr'
@@ -35,6 +35,7 @@ feature
 			l_val: ABSTRACT_DEBUG_VALUE
 			l_spec_val: ABSTRACT_SPECIAL_VALUE
 			l_ref_val: EIFNET_DEBUG_REFERENCE_VALUE
+			l_str_val: EIFNET_DEBUG_STRING_VALUE
 		do
 			debug ("debug_recv")
 				print ("DEBUGGED_OBJECT_DOTNET.make%N")
@@ -44,10 +45,15 @@ feature
 			attributes := l_val.children;
 
 			l_spec_val ?= l_val
-			is_special := (l_spec_val /= Void)
-
-			if is_special then
-				capacity := l_spec_val.capacity;
+			if l_spec_val /= Void then
+				is_special := True
+				capacity := l_spec_val.capacity
+			else
+				l_str_val ?= l_val
+				if l_str_val /= Void then
+					is_string_value := True
+					capacity := l_str_val.length				
+				end			
 			end
 
 			dtype := l_val.dynamic_class
@@ -68,7 +74,11 @@ feature
 			max_capacity := -1
 		ensure
 			set: addr = object_address
-		end;	
+		end;
+		
+feature -- Properties
+
+	is_string_value: BOOLEAN
 
 feature {NONE} -- Implementation
 

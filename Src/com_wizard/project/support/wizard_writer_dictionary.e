@@ -411,6 +411,8 @@ feature -- COM constants -- 6
 
 	Interlocked_decrement: STRING is "InterlockedDecrement"
 
+	Automation_marshaler_guid: STRING is "{00020424-0000-0000-C000-000000000046}"
+
 feature -- COM types -- 7
 
 	Excepinfo: STRING is "EXCEPINFO"
@@ -906,6 +908,12 @@ feature -- COM function names -- 10
 	Co_register_class_object: STRING is "CoRegisterClassObject"
 
 	Co_revoke_class_object: STRING is "CoRevokeClassObject"
+
+	Proxy_stub_clsid_32: STRING is "ProxyStubClsid32"
+
+	Type_library: STRING is "TypeLib"
+
+	Num_methods: STRING is "NumMethods"
 
 feature -- Paths -- 11
 

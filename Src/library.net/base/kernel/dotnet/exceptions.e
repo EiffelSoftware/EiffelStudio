@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 		require
 			valid_ex: ex /= Void
 		local
-			conv_io: IOEXCEPTION
+			conv_io: IO_EXCEPTION
 			conv_sys: SYSTEM_EXCEPTION
 			conv_acc: UNAUTHORIZED_ACCESS_EXCEPTION
 			conv_sec: SECURITY_EXCEPTION

@@ -1,0 +1,5 @@
+Warning: Attempting to make use of an optimized precompile library that
+    has not been finalized.
+What to do: Either change the precompiled library to an optimized equivalent
+    or do not attempt to use a optimized precompiled library for the project.
+    

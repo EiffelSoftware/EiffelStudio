@@ -1,6 +1,6 @@
 indexing
 	Generator: "Eiffel Emitter 2.7b2"
-	assembly: "ise_runtime", "5.2.0.0", "neutral", "def26f296efef469"
+	assembly: "ISE.Runtime", "5.2.0.0", "neutral", "def26f296efef469"
 	external_name: "ISE.Runtime.EXCEPTION_MANAGER"
 	date: "$Date$"
 	revision: "$Revision$"

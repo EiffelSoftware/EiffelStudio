@@ -64,12 +64,7 @@ feature -- Status setting
 			end
 			wel_win.ev_move (an_x, a_y)
 			wel_win.invalidate
-			if
-				an_x + wel_win.width > width or else
-				a_y + wel_win.height > height
-			then
-				notify_change (Nc_minsize, wel_win)
-			end
+			notify_change (Nc_minsize, wel_win)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -83,12 +78,7 @@ feature -- Status setting
 				wel_win_not_void: wel_win /= Void
 			end
 			wel_win.parent_ask_resize (a_width, a_height)
-			if
-				wel_win.x_position + wel_win.width > width or else
-				wel_win.y_position + wel_win.height > height
-			then
-				notify_change (Nc_minsize, wel_win)
-			end
+			notify_change (Nc_minsize, wel_win)
 		end
 
 feature {EV_ANY_I} -- Implementation

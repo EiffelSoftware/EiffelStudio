@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -328,6 +327,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/01 18:09:22  oconnor
+--| released
+--|
 --| Revision 1.43  2000/03/01 18:04:44  king
 --| Changed on_select bug comment
 --|

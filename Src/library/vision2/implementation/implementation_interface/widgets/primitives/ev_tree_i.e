@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -97,6 +96,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/01 18:09:22  oconnor
+--| released
+--|
 --| Revision 1.18  2000/02/29 00:02:53  king
 --| Added multiple select features
 --|

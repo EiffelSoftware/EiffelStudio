@@ -309,6 +309,7 @@ feature
 		do
 			from
 				!! Result.make;
+				Result.start;
 				ext_name := MfileListItems.to_c;
 				xt_table := get_xmstring_tab (screen_object, $ext_name);
 				current_position := 1;
@@ -332,6 +333,7 @@ feature
 		do
 			from
 				!! Result.make;
+				Result.start;
 				ext_name := MdirListItems.to_c;
 				xt_table := get_xmstring_tab (screen_object, $ext_name);
 				current_position := 1;

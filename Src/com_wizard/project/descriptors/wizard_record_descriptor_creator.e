@@ -62,9 +62,11 @@ feature -- Basic operations
 			c_type_name.append (name)
 			
 			create c_header_file_name.make (0)
-			c_header_file_name.append ("ecom_")
-			c_header_file_name.append (name)
-			c_header_file_name.append (".h")
+			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
+				c_header_file_name.append ("ecom_")
+				c_header_file_name.append (name)
+				c_header_file_name.append (".h")
+			end
 
 			create_field_descriptors (a_type_info)
 			size_of_instance := a_type_info.type_attr.size_instance

@@ -58,9 +58,11 @@ feature -- Basic operations
 			c_type_name.append (name)
 			
 			create c_header_file_name.make (0)
-			c_header_file_name.append ("ecom_")
-			c_header_file_name.append (name)
-			c_header_file_name.append (".h")
+			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
+				c_header_file_name.append ("ecom_")
+				c_header_file_name.append (name)
+				c_header_file_name.append (".h")
+			end
 
 			type_desc := a_type_info.type_attr.type_alias
 			type_descriptor := data_type_descriptor_factory.create_data_type_descriptor 

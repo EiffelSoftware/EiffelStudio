@@ -61,7 +61,10 @@ feature -- Basic operations
 
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid	
-			if not tmp_guid.is_equal (Iunknown_guid) then
+			tmp_type_attr := a_type_info.type_attr
+			create guid.make_from_guid (tmp_type_attr.guid)
+
+			if not guid.is_equal (Iunknown_guid) then
 				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
 				if name = Void or else name.empty then
 					create name.make (0)
@@ -76,12 +79,12 @@ feature -- Basic operations
 				c_type_name := clone (name)
 			
 				create c_header_file_name.make (0)
-				c_header_file_name.append ("ecom_")
-				c_header_file_name.append (name)
-				c_header_file_name.append (".h")
+				if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
+					c_header_file_name.append ("ecom_")
+					c_header_file_name.append (name)
+					c_header_file_name.append (".h")
+				end
 
-				tmp_type_attr := a_type_info.type_attr
-				create guid.make_from_guid (tmp_type_attr.guid)
 				lcid := tmp_type_attr.lcid
 				vtbl_size := tmp_type_attr.vtbl_size
 				flags := tmp_type_attr.flags

@@ -151,6 +151,11 @@ feature {NONE} -- Implementation
 			tmp_writer.set_name (coclass_descriptor.eiffel_class_name)
 
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
+
+			create tmp_writer.make
+			tmp_writer.set_name ("ECOM_EXCEPTION")
+
+			an_eiffel_writer.add_inherit_clause (tmp_writer)
 		end
 
 end -- class WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR

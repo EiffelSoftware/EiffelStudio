@@ -49,7 +49,7 @@ feature -- Basic operations
 
 			-- Set description, function body
 			feature_writer.set_comment (func_desc.description)
-			feature_writer.set_body (Empty_function_body)
+			feature_writer.set_body (Exception_body)
 
 			feature_writer.set_effective
 		ensure

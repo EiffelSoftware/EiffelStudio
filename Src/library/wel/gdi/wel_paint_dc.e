@@ -62,7 +62,7 @@ feature -- Basic operations
 			item := cwin_begin_paint (hwindow, paint_struct.item)
 		end
 
-	release is
+	release, quick_release is
 			-- Release the device context
 		require else
 			window_not_void: window /= Void

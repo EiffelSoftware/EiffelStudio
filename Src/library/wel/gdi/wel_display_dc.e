@@ -23,9 +23,25 @@ feature -- Basic operations
 		end
 
 	release is 
-			-- Release the device context.
+			-- Release the device context after having
+			-- unselected any selected pen, brush, ...
 		require else
 			exists: exists
+		deferred
+		ensure then
+			not_exists: not exists
+		end
+
+	quick_release is 
+			-- Release the device context without unselecting
+			-- selected item. To Avoid memory leak, the caller
+			-- must be certain that everything is already unselected.
+		require
+			exists: exists
+			no_selected_pen: not pen_selected
+			no_selected_brush: not brush_selected
+			no_selected_bitmap: not bitmap_selected
+			no_selected_font: not font_selected
 		deferred
 		ensure then
 			not_exists: not exists

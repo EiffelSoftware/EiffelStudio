@@ -40,7 +40,8 @@ feature -- Access
 		require
 			exists: not destroyed
 			item_exists: index <= count
-		deferred
+		do
+			Result ?= (ev_children.i_th (index)).interface
 		end
 
 	selected_item: EV_LIST_ITEM is
@@ -89,6 +90,15 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' of the list.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= count
+		deferred
+		end
 
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
@@ -139,6 +149,10 @@ feature {EV_LIST_ITEM} -- Implementation
 			-- Add `item' to the list
 		deferred
 		end
+
+feature {EV_LIST_ITEM_IMP} -- Implementation
+
+	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP]
 
 end -- class EV_LIST_I
 

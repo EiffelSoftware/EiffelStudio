@@ -67,14 +67,12 @@ feature {AST_EIFFEL} -- Output
 			dummy_call: ACCESS_INV_AS
 			dummy_name: ID_AS
 		do
-			ctxt.put_breakable
 			ctxt.put_text_item (ti_Create_keyword)
 			ctxt.put_space
 			ctxt.set_type_creation (type)
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.format_ast (type)
 			ctxt.put_text_item (ti_R_curly)
-			ctxt.put_space
 
 			if call /= Void then
 					--| We have to create a dummy call because the current formating
@@ -87,7 +85,7 @@ feature {AST_EIFFEL} -- Output
 					--| way `call' is correctly formatted thanks to the information provided
 					--| by the call to `dummy_call.format'.
 				create dummy_call
-				create dummy_name.initialize ("")
+				create dummy_name.initialize (" ")
 				dummy_call.set_feature_name (dummy_name)
 				ctxt.format_ast (dummy_call)
 				ctxt.need_dot
@@ -134,6 +132,7 @@ feature -- Type check
 			vgcc5: VGCC5
 			vtug: VTUG
 			not_supported: NOT_SUPPORTED
+			is_default_creation: BOOLEAN
 			dcr_id: ID_AS
 			dcr_feat: FEATURE_I
 			the_call: like call
@@ -211,6 +210,7 @@ feature -- Type check
 				-- Use default create
 				-- if it actually does something.
 				dcr_feat := creation_class.default_create_feature
+				is_default_creation := True
 
 				if not dcr_feat.empty_body then
 					dcr_id := default_call.feature_name
@@ -258,7 +258,7 @@ feature -- Type check
 				end
 			else
 				context.replace (creation_type)
-				if (creators = Void) then
+				if (creators = Void) or is_default_creation then
 				elseif creators.empty then
 					!!vgcc5
 					context.init_error (vgcc5)

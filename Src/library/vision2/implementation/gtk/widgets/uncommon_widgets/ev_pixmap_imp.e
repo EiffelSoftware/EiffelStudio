@@ -385,6 +385,7 @@ temp_alpha := temp_alpha_int.ascii_char
 				--| FIXME IEK Add support for pixmap alpha.
 				array_offset := array_offset + 4
 			end
+			C.gdk_image_destroy (a_gdkimage)
 		end
 
 	mask: POINTER is
@@ -526,6 +527,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2001/06/27 00:17:00  king
+--| Added gdk image destruction, thanks to DH for reporting Wild bug number 6
+--|
 --| Revision 1.41  2001/06/19 16:59:17  king
 --| Uncommented needed alpha setting
 --|

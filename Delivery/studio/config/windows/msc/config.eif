@@ -66,7 +66,7 @@ cp: "copy"
 ranlib: "echo"
 
 -- platform remove command
-rm: "-del"
+rm: "del"
 rmdir: "rd"
 
 -- make program

@@ -1,7 +1,7 @@
 
 -- Command to update the Eiffel
 
-class UPDATE_PROJECT 
+class UPDATE_PROJECT
 
 inherit
 
@@ -22,17 +22,24 @@ feature
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window);
+			set_action ("!c<Btn1Down>", Current, generate_code_only)
 			!!request
 		end;
 
 feature {NONE}
+
+	generate_code_only: ANY is
+			-- Used to comile the Eiffel code without starting the C compilation
+		once
+			!! Result
+		end
 
 	reset_debugger is
 		do
 			debug_info.wipe_out;
 			quit_cmd.exit_now;
 			if Run_info.is_running then
-				debug_window.clear_window;   
+				debug_window.clear_window;
 				debug_window.put_string ("System terminated%N");
 				debug_window.display;
 				run_info.set_is_running (false);
@@ -128,14 +135,16 @@ feature {NONE}
 	launch_c_compilation (argument: ANY) is
 		do
 			error_window.put_string ("System recompiled%N");
-			if System.freezing_occurred then
-				error_window.put_string 
-					("System had to be frozen to include new externals.%N%
-						%Background C compilation launched.%N");
-				finish_freezing 
-			else
-				link_driver
-			end;		
+			if start_c_compilation then
+				if System.freezing_occurred then
+					error_window.put_string
+						("System had to be frozen to include new externals.%N%
+							%Background C compilation launched.%N");
+					finish_freezing
+				else
+					link_driver
+				end;
+			end
 		end;
 
 	freezing_actions is
@@ -148,14 +157,14 @@ feature {NONE}
 
 	confirm_and_compile (argument: ANY) is
 		do
-			if 
+			if
 				not Run_info.is_running or else
-				(argument /= Void and 
+				(argument /= Void and
 				argument = last_confirmer and end_run_confirmed)
 			then
 				compile (argument)
 			else
-				confirmer (text_window).call (Current, 
+				confirmer (text_window).call (Current,
 						"Recompiling project will end current run.%N%
 						%Start compilation anyway?", "Compile");
 				end_run_confirmed := true
@@ -165,34 +174,47 @@ feature {NONE}
 	end_run_confirmed: BOOLEAN;
 			-- Was the last confirmer popped up to confirm the end of run?
 
+	start_c_compilation: BOOLEAN;
+			-- Do we have to start the C compilation after C Code generation?
+
 	work (argument: ANY) is
 			-- Recompile the project.
 		local
 			fn: STRING;
 			f: PLAIN_TEXT_FILE;
 			temp: STRING
+			arg: ANY
 		do
+			if argument = generate_code_only then
+				arg := text_window
+				start_c_compilation := False
+			else
+				if argument = text_window then
+					start_c_compilation := True
+				end;
+				arg := argument
+			end
 			if Project_read_only.item then
 				warner (text_window).gotcha_call (w_Cannot_compile)
 			elseif project_tool.initialized then
-				if not_saved and  argument = text_window then
-					confirmer (text_window).call (Current, 
+				if not_saved and arg = text_window then
+					confirmer (text_window).call (Current,
 						"Some files have not been saved.%N%
 						%Start compilation anyway?", "Compile");
 					end_run_confirmed := false
 				elseif compilation_allowed then
 					if Lace.file_name /= Void then
-						confirm_and_compile (argument);
+						confirm_and_compile (arg);
 						if resources.get_boolean (r_Raise_on_error, false) then
 							project_tool.raise
 						end
-					elseif argument = Void then
-						system_tool.display;	
-						load_default_ace;	
-					elseif argument = last_warner then
+					elseif arg = Void then
+						system_tool.display;
+						load_default_ace;
+					elseif arg = last_warner then
 						name_chooser.set_window (text_window);
 						name_chooser.call (Current)
-					elseif argument = name_chooser then
+					elseif arg = name_chooser then
 						fn := clone (name_chooser.selected_file);
 						!! f.make (fn);
 						if
@@ -201,12 +223,12 @@ feature {NONE}
 							Lace.set_file_name (fn);
 							work (Current)
 						else
-							warner (text_window).custom_call 
-								(Current, w_Cannot_read_file_retry (fn), 
+							warner (text_window).custom_call
+								(Current, w_Cannot_read_file_retry (fn),
 								" OK ", Void, "Cancel");
 						end
 					else
-						warner (text_window).custom_call (Current, 
+						warner (text_window).custom_call (Current,
 							l_Specify_ace, "Choose", "Template", "Cancel");
 					end;
 				else
@@ -233,7 +255,7 @@ feature {NONE}
 					cmd_string.append
 							("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
 					cmd_string.append (Precompilation_driver);
-					cmd_string.append (" ");
+					cmd_string.append_character (' ');
 					cmd_string.append (arg2);
 					request.set_command_name (cmd_string);
 					request.send
@@ -284,10 +306,10 @@ feature {NONE}
 		local
 			file_name: STRING;
 		do
-				!!file_name.make (50);	
-				file_name.append (Default_ace_name);
-				system_tool.text_window.show_file_content (file_name);
-				system_tool.text_window.set_changed (True)
+			!!file_name.make (50);
+			file_name.append (Default_ace_name);
+			system_tool.text_window.show_file_content (file_name);
+			system_tool.text_window.set_changed (True)
 		end;
 
 	c_code_directory: STRING is
@@ -307,7 +329,7 @@ feature
 			cmd.append (c_code_directory);
 			cmd.append ("; ");
 			cmd.append (Finish_freezing_script);
- 
+
 			!!d.make (c_code_directory);
 			if not d.has_entry (Finish_freezing_script) then
 				!!cp_cmd.make (50);
@@ -327,8 +349,7 @@ feature
 		once
 			Result := bm_Update
 		end;
- 
-	
+
 feature {NONE}
 
 	command_name: STRING is do Result := l_Update end;

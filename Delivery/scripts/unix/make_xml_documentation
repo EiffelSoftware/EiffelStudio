@@ -1,42 +1,27 @@
 #!/bin/sh
 
-echo "Check the status"
-if [ ! -d $DOCUMENT_DIR ]; then
-	echo DOCUMENT_DIR is not defined.  Cannot continue.;
-fi
-
-echo --------------------------------------------------------
-echo Checkout up to date version of XML documentation files |
-echo --------------------------------------------------------
-
+remtrace Checkout up to date version of XML documentation files
 cd $DOCUMENT_DIR
-if [ -d xmldoc ]; then rm -rf xmldoc; fi
-cvs co -d xmldoc Delivery/xmldoc 
+exprt -r $DEFAULT_CVS_TAG -d xmldoc Delivery/xmldoc 
 
-echo ---------------------------------------------
-echo Checkout and compile the Documentation tool |
-echo ---------------------------------------------
-
+remtrace Checkout and compile the Documentation tool
+cd $EIFFEL_SRC
+safe_md tools
 cd $EIFFEL_SRC/tools
-cvs co -d doc_builder Src/tools/doc_builder
+exprt -r $DEFAULT_CVS_TAG -d doc_builder Src/tools/doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
-ec -finalize -ace docbuilder.unix.ace -c_compile
+ec -finalize -ace docbuilder.unix.ace -c_compile &> $INSTALL_LOG
 if [ -e doc_builder ]; then
-	echo Couldnt generate doc_builder.exe
+	remtrace Couldnt generate doc_builder.exe
+	CANCEL
 fi
 
-echo ---------------------------------------------------------------
-echo Compile all required libraries and generate XML documentation |
-echo ---------------------------------------------------------------
-
+remtrace Compile all required libraries and generate XML documentation
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml
-ec -ace all_libs.ace
-ec -flatshort -filter xml -all -project all_libs.epr
+ec -ace all_libs.ace &> $INSTALL_LOG
+ec -flatshort -filter xml -all -project all_libs.epr &> $INSTALL_LOG
 
-echo ------------------------------------------------------
-echo Copy XML docs into appropriate written docs location |
-echo ------------------------------------------------------
-
+remtrace Copy XML docs into appropriate written docs location
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
 rm -rf *.html
 rm -rf *_links.xml
@@ -62,10 +47,16 @@ mv web $DOCUMENT_DIR/xmldoc/libraries/web/reference
 mv store $DOCUMENT_DIR/xmldoc/libraries/store/reference
 
 
-echo ---------------------------------------------------------------------------------------------
-echo Run the documentation tool to generate the documentation for EiffelStudio as web based help |
-echo ---------------------------------------------------------------------------------------------
-
+remtrace Run the documentation tool to generate the documentation for EiffelStudio as web based help
 cd $EIFFEL_SRC/tools/doc_builder/EIFGEN/F_code
+
+export DOCUMENT_DIR
+export EIFFEL_SRC
+
 ./doc_builder -gen /xml2help -o /studio -t /web_simple -nohtml $DOCUMENT_DIR/xmldoc/documentation.dpr
 
+move $EIFFEL_SRC/tools/doc_builder/temp/Help $INSTALL_DIR/docs
+
+fullrd $EIFFEL_SRC/xmldoc
+
+cd $EIFFEL_SRC

@@ -11,7 +11,6 @@ deferred class
 	EV_INVISIBLE_CONTAINER_IMP
 	
 inherit
-	
 	EV_INVISIBLE_CONTAINER_I
 
 	EV_CONTAINER_IMP
@@ -43,11 +42,11 @@ inherit
 			on_char,
 			on_key_up,
 			on_draw_item,
+			background_brush,
 			on_menu_command
 		redefine
 			default_style,
-			default_ex_style,
-			background_brush
+			default_ex_style
 		end
 
 feature {NONE} -- Initialization
@@ -111,7 +110,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 		end
 
 
-feature {NONE} -- Implementation : WEL features
+feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		once
@@ -122,16 +121,6 @@ feature {NONE} -- Implementation : WEL features
 	default_ex_style: INTEGER is
 		once
 			Result := Ws_ex_controlparent
-		end
-
-	background_brush: WEL_BRUSH is
-			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-			-- By default there is no background
-		do
-			if background_color /= Void then
-				!! Result.make_solid (background_color_imp)
-			end
 		end
 
 end -- class EV_INVISIBLE_CONTAINER_IMP

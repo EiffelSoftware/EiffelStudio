@@ -151,7 +151,7 @@ feature -- Status report
 
 	is_valid: BOOLEAN is
 		do
-			Result := true
+			Result := True
 		end
 
 feature -- Status setting
@@ -213,7 +213,6 @@ feature -- Basic operations
 		local
 			old_dc: WEL_DC
 			printer_dc: WEL_DEFAULT_PRINTER_DC
-			t: INTEGER
 			expose_data: EXPOSE_DATA
 			coord: COORD_XY
 			clip: CLIP
@@ -226,7 +225,7 @@ feature -- Basic operations
 				printer_dc.set_map_mode (mm_isotropic)
 				printer_dc.set_window_extent (width, height)
 				printer_dc.set_viewport_extent (printer_dc.device_caps (horizontal_resolution), printer_dc.device_caps (vertical_resolution))
-				painting := true
+				painting := True
 				old_dc := drawing_dc
 				drawing_dc := printer_dc
 				!! coord
@@ -239,7 +238,7 @@ feature -- Basic operations
 				printer_dc.end_page
 				printer_dc.end_document
 				drawing_dc := old_dc
-				painting := false
+				painting := False
 			else
 				!! msg_box.make
 				msg_box.basic_message_box (Void, "No default printer set. Printing unavailable.", 
@@ -255,7 +254,6 @@ feature -- Basic operations
 			a_printer_dc_exists: a_printer_dc.exists
 		local
 			old_dc: WEL_DC
-			t: INTEGER
 			expose_data: EXPOSE_DATA
 			coord: COORD_XY
 			clip: CLIP
@@ -265,7 +263,7 @@ feature -- Basic operations
 			a_printer_dc.set_map_mode (mm_isotropic)
 			a_printer_dc.set_window_extent (width, height)
 			a_printer_dc.set_viewport_extent (a_printer_dc.device_caps (horizontal_resolution), a_printer_dc.device_caps (vertical_resolution))
-			painting := true
+			painting := True
 			old_dc := drawing_dc
 			drawing_dc := a_printer_dc
 			!! coord
@@ -278,7 +276,7 @@ feature -- Basic operations
 			a_printer_dc.end_page
 			a_printer_dc.end_document
 			drawing_dc := old_dc
-			painting := false
+			painting := False
 		end
 
 	output_to_file (a_file_name: FILE_NAME) is
@@ -288,7 +286,6 @@ feature -- Basic operations
 			old_dc: WEL_DC
 			virtual_dc: WEL_MEMORY_DC
 			virtual_bitmap: WEL_BITMAP
-			t: INTEGER
 			expose_data: EXPOSE_DATA
 			coord: COORD_XY
 			clip: CLIP
@@ -296,7 +293,7 @@ feature -- Basic operations
 			!! virtual_dc.make_by_dc (drawing_dc)
 			!! virtual_bitmap.make_compatible (drawing_dc, width, height)
 			virtual_dc.select_bitmap (virtual_bitmap)
-			painting := true
+			painting := True
 			old_dc := drawing_dc
 			drawing_dc := virtual_dc
 			clear
@@ -309,7 +306,7 @@ feature -- Basic operations
 			unset_drawing_dc
 			drawing_dc := old_dc
 			drawing_dc.save_bitmap (virtual_bitmap, a_file_name)
-			painting := false
+			painting := False
 		end
 
 feature -- WEL
@@ -343,7 +340,6 @@ feature -- WEL
 			clip: CLIP
 			coord_xy: COORD_XY
 			expose_data: EXPOSE_DATA
-			old_pen: WEL_PEN
 		do
 			if drawing_dc /= Void then
 				clear_rect (invalid_rect.left, 

@@ -35,8 +35,6 @@ feature -- Initialization
 		require
 			name_not_void: a_name /= Void
 			parent_not_void: a_parent /= Void
-		local
-			nothing: ANY
 		do
 -- FIXME
 		end

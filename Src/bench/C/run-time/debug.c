@@ -10,6 +10,7 @@
 	Debugging control.
 */
 
+#include "eif_project.h"
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_confmagic.h"		/* %%ss added for bcopy, bzero */
@@ -1007,7 +1008,7 @@ rt_public void drecord_bc(int body_idx, int body_id, char *addr)
 	old_body_id = dispatch[body_idx];
 	if (old_body_id < zeroc) {			/* The routine was frozen */
 		mpatidtab[body_id] = 			/* Get the pattern id from the */
-			fpatidtab[old_body_id];		/* frozen table of pattern ids */
+			egc_fpatidtab[old_body_id];		/* frozen table of pattern ids */
 		melt[body_id] = addr;			/* And record new byte code */
 
 #ifdef DEBUG
@@ -1235,7 +1236,7 @@ rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int 
 	old_IC = IC;				/* IC back up */
 	if (body_id < zeroc) {		/* We are below zero Celsius, i.e. ice */
 		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(frozen[body_id], 0);		/* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body_id], 0);		/* Call pattern */
 	} else
 #ifndef DLE
 		xinterp(MTC melt[body_id]);

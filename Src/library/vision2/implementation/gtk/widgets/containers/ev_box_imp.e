@@ -29,19 +29,17 @@ feature {NONE} -- Initialization
 
 feature -- Element change (box specific)
 	
-	set_homogeneous (homogeneous: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN) is
 			-- Homogenous controls whether each object in
-			-- the box has the same size. If homogenous =
-			-- True, expand argument for each child is
-			-- automatically True
+			-- the box has the same size.
 		do
-			gtk_box_set_homogeneous (widget, homogeneous)
+			gtk_box_set_homogeneous (widget, flag)
 		end
 	
-	set_spacing (spacing: INTEGER) is
+	set_spacing (value: INTEGER) is
 			-- Spacing between the objects in the box
 		do
-			gtk_box_set_spacing (widget, spacing)
+			gtk_box_set_spacing (widget, value)
 		end	
 	
 feature {EV_BOX} -- Implementation
@@ -56,7 +54,7 @@ feature {EV_BOX} -- Implementation
 					    Default_padding)
 		end
 
-end
+end -- class EV_BOX_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

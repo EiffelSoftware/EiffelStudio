@@ -18,7 +18,7 @@ cluster
 		end
 
 		-- Thread Library
-	thread:			"$ISE_EIFFEL\library\thread";
+	all thread:			"$ISE_EIFFEL\library\thread";
 
 		-- WEL
 	all wel:		"$ISE_EIFFEL\library\wel"

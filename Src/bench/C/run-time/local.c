@@ -334,7 +334,9 @@ rt_shared void initstk(void)
 	 */
 
 	EIF_GET_CONTEXT
+#ifdef ISE_GC
 	char **top;
+#endif
 
 #ifdef EIF_ASSERTIONS
 #if defined(EIF_WIN32) && defined(_DEBUG)

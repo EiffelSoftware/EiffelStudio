@@ -1040,7 +1040,9 @@ rt_public void reclaim(void)
 
 	EIF_GET_CONTEXT
 
+#ifdef ISE_GC
 	struct chunk *c, *cn;
+#endif
 
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;

@@ -1,0 +1,214 @@
+//
+//		Eif_compiler.idl
+//
+//
+//
+
+
+import "oaidl.idl";
+
+interface IEiffelProject;
+interface IEiffelCompiler;
+interface IEiffelSystemBrowser;
+interface IEiffelClassDescriptor;
+interface IEiffelFeatureDescriptor;
+
+[
+	oleautomation,
+	uuid (53E4FF57-2F3C-4ed2-8B08-89AF6E2C10BA),
+	helpstring ("Eiffel Project.")
+]
+interface IEiffelProject: IUnknown
+{
+	[helpstring ("Retrieve project.")]
+	HRESULT retrieve_project ([in] BSTR project_file_name);
+	
+	[helpstring ("Create new project.")]
+	HRESULT create_project ([in] BSTR ace_file_name, [in] BSTR project_directory_path);
+	
+	[helpstring ("Is project valid?")]
+	HRESULT valid_project ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("Last error message.")]
+	HRESULT last_error_message ([out, retval] BSTR * return_value);
+
+	[helpstring ("Compiler.")]
+	HRESULT compiler ([out, retval] IEiffelCompiler ** return_value);
+	
+	[helpstring ("System Browser.")]
+	HRESULT system_browser ([out, retval] IEiffelSystemBrowser ** return_value);
+};
+
+[
+	oleautomation,
+	uuid (590282FD-2BEE-44a1-91B3-61C926BAD512),
+	helpstring ("Eiffel Compiler.")
+]
+interface IEiffelCompiler: IUnknown
+{
+	[helpstring ("Compile.")]
+	HRESULT compile ();
+	
+	[helpstring ("Was last compilation successful?")]
+	HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("Last error message.")]
+	HRESULT last_error_message ([out, retval] BSTR * return_value);
+};
+
+[
+	oleautomation,
+	uuid (A4CAF314-6659-48d8-A68E-463492D79D8A),
+	helpstring ("System Browser.")
+]
+interface IEiffelSystemBrowser: IUnknown
+{	
+	[helpstring ("List of classes in system.")]
+	HRESULT system_classes ([out, retval] SAFEARRAY (BSTR) * names);
+
+	[helpstring ("Class descriptor.")]
+	HRESULT class_descriptor ([in] BSTR class_name, [out, retval] IEiffelClassDescriptor ** return_value);
+	
+	[helpstring ("Feature descriptor.")]
+	HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
+};
+
+
+[
+	oleautomation,
+	uuid (2138B7F7-250E-4156-A3F5-A4E9F4AF8C5D),
+	helpstring ("Eiffel Class Descriptor.")
+]
+interface IEiffelClassDescriptor: IUnknown
+{
+	[helpstring ("Class name.")]
+	HRESULT name ([out, retval] BSTR * return_value);
+
+	[helpstring ("Class description.")]
+	HRESULT description ([out, retval] BSTR * return_value);
+	
+	[helpstring ("List of class features.")]
+	HRESULT features ([out, retval] SAFEARRAY (IEiffelFeatureDescriptor *) * some_features);
+	
+	[helpstring ("List of class clients.")]
+	HRESULT clients ([out, retval] SAFEARRAY (IEiffelClassDescriptor *) * some_clients);
+
+	[helpstring ("List of class suppliers.")]
+	HRESULT suppliers ([out, retval] SAFEARRAY (IEiffelClassDescriptor *) * some_suppliers);
+
+	[helpstring ("List of class ancestors.")]
+	HRESULT ancestors ([out, retval] SAFEARRAY (IEiffelClassDescriptor *) * some_ancestors);
+	
+	[helpstring ("List of class descendants.")]
+	HRESULT descendants ([out, retval] SAFEARRAY (IEiffelClassDescriptor *) * some_descendants);
+	
+	[helpstring ("Full path to file.")]
+	HRESULT class_path ([out, retval] BSTR * path);
+	
+	[helpstring ("Is class deferred?")]
+	HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("Is class external?")]
+	HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is class generic?")]
+	HRESULT is_generic ([out, retval] VARIANT_BOOL * return_value);
+};
+
+[
+	oleautomation,
+	uuid (2CB5C09A-2222-42f7-9371-398FB71EBB93),
+	helpstring ("Eiffel Feature Descriptor.")
+]
+interface IEiffelFeatureDescriptor: IUnknown
+{
+	[helpstring ("Feature name.")]
+	HRESULT name ([out, retval] BSTR * return_value);
+
+	[helpstring ("Class name.")]
+	HRESULT class_name ([out, retval] BSTR * return_value);
+
+	[helpstring ("Feature description.")]
+	HRESULT description ([out, retval] BSTR * return_value);
+
+	[helpstring ("Feature location, full path to file and line number")]
+	HRESULT feature_location (	[in, out] BSTR * file_path, 
+								[in, out] LONG * line_number);
+	
+	[helpstring ("Feature signature.")]
+	HRESULT signature ([out, retval] BSTR * return_value);
+	
+	[helpstring ("List of feature callers.")]
+	HRESULT callers ([out, retval] SAFEARRAY (IEiffelFeatureDescriptor *) * some_callers);
+	
+	[helpstring ("List of implementers.")]
+	HRESULT implementers ([out, retval] SAFEARRAY (IEiffelFeatureDescriptor *) * some_implementers);
+	
+	[helpstring ("List of ancestor versions.")]
+	HRESULT ancestor_versions ([out, retval] SAFEARRAY (IEiffelFeatureDescriptor *) * some_implementers);
+	
+	[helpstring ("List of descendant versions.")]
+	HRESULT descendant_versions ([out, retval] SAFEARRAY (IEiffelFeatureDescriptor *) * some_implementers);
+	
+	[helpstring ("List of classes, to which feature is exported.")]
+	HRESULT exported_to ([out, retval] SAFEARRAY (BSTR) * names);
+	
+	[helpstring ("Is once feature?")]
+	HRESULT is_once ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("Is external feature?")]
+	HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("Is deferred feature?")]
+	HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("Is constant?")]
+	HRESULT is_constant ([out, retval] VARIANT_BOOL * return_value);
+	
+	[helpstring ("is frozen feature?")]
+	HRESULT is_frozen ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is infix?")]
+	HRESULT is_infix ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is prefix?")]
+	HRESULT is_prefix ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is attribute?")]
+	HRESULT is_attribute ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is procedure?")]
+	HRESULT is_procedure ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is function?")]
+	HRESULT is_function ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is unique?")]
+	HRESULT is_unique ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Is obsolete feature?")]
+	HRESULT is_obsolete ([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Does feature have precondition?")]
+	HRESULT has_precondition([out, retval] VARIANT_BOOL * return_value);
+
+	[helpstring ("Does feature have postcondition?")]
+	HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
+};
+
+[
+	uuid (A81CA1A9-3EEF-4e47-BEAE-C16325EEFA3F)
+]
+library eiffel_compiler
+{
+	importlib ("stdole2.tlb");
+	importlib ("stdole2.tlb");
+	
+	[
+		uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)
+	]
+	coclass CEiffelProject
+	{
+		[default] interface IEiffelProject;
+	}
+};

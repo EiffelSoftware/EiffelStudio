@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_HT_CONSTANTS
 		export
 			{NONE} all
@@ -71,11 +76,6 @@ feature {NONE} -- Access
 	is_splitting: BOOLEAN
 			-- Is the user currently moving the split ?
 
-	splitter_rect: WEL_RECT is
-			-- The rect filled by the splitter
-		deferred
-		end
-
 feature {EV_SPLIT_IMP} -- Access
 
 	level: INTEGER
@@ -112,14 +112,46 @@ feature -- Basic routines
 		end
 
 	invert_split is
-			-- Invert the vertical split. Used when the user move the split
-		do
-			dc.get
-			dc.invert_rect (splitter_rect)	
-			dc.release
+			-- Invert the vertical split from `first' position to `last' position
+			-- Used when the user move the split
+		deferred
 		end
 
 feature {NONE} -- Implementation
+
+	splitter_brush: WEL_BRUSH is
+			-- Create the brush used to draw the invert splitter.
+			-- For this, it creates a bitmap :	black / white
+			--                                  white / black
+			-- In the following code, `hexa_number' and `string_bitmap'
+			-- are hexadecimal representations of the bitmap. 
+			-- Here follows the representation of the picture:
+ 			-- binary: 0 / 1     hexa : 40 / 00     decimal : 128 / 0
+			--         1 / 0            80 / 00                64 / 0
+		local
+			bitmap: WEL_BITMAP
+			log: WEL_LOG_BITMAP
+			string_bitmap: STRING
+			hexa_number: INTEGER
+			c: ANY
+		once
+			string_bitmap := ""
+				-- First line of the bitmap
+			hexa_number := 128
+			string_bitmap.append_character (hexa_number.ascii_char)
+			hexa_number := 0
+			string_bitmap.append_character (hexa_number.ascii_char)
+				-- Second line of the bitmap
+			hexa_number := 64
+			string_bitmap.append_character (hexa_number.ascii_char)
+			hexa_number := 0
+			string_bitmap.append_character (hexa_number.ascii_char)
+			c := string_bitmap.to_c
+				-- Then, we create the brush
+			!! log.make (2, 2, 2, 1, 1, $c)
+			!! bitmap.make_indirect (log)
+			!! Result.make_by_pattern (bitmap)
+		end
 
 	window_frame_pen: WEL_PEN is
 			-- Pen with the window frame color

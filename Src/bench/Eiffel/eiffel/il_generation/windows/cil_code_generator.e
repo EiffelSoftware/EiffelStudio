@@ -4726,6 +4726,26 @@ feature -- Labels and branching
 		do
 			method_body.put_opcode_label (feature {MD_OPCODES}.Br, label.id)
 		end
+		
+	branch_on_condition (comparison: INTEGER_16; label: IL_LABEL) is
+			-- Generate a branch instruction to `label' if two top-level operands on
+			-- IL stack when compared using conditional instruction `comparison' yield True.
+		require
+			valid_comparison:
+				comparison = feature {MD_OPCODES}.beq or else
+				comparison = feature {MD_OPCODES}.bge or else
+				comparison = feature {MD_OPCODES}.bge_un or else
+				comparison = feature {MD_OPCODES}.bgt or else
+				comparison = feature {MD_OPCODES}.bgt_un or else
+				comparison = feature {MD_OPCODES}.ble or else
+				comparison = feature {MD_OPCODES}.ble_un or else
+				comparison = feature {MD_OPCODES}.blt or else
+				comparison = feature {MD_OPCODES}.blt_un or else
+				comparison = feature {MD_OPCODES}.bne_un
+			label_not_void: label /= Void
+		do
+			method_body.put_opcode_label (comparison, label.id)
+		end
 
 	mark_label (label: IL_LABEL) is
 			-- Mark a portion of code with `label'.

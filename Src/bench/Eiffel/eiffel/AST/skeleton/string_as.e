@@ -53,7 +53,7 @@ feature -- Type check and byte code
 			-- Interface value
 		do
 			!! Result
-			Result.set_str_val (value)
+			Result.set_string_value (value)
 		end
 
 	type_check is

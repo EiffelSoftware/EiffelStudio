@@ -17,13 +17,13 @@ inherit
 			force as array_force,
 			empty as array_empty,
 			full as array_full, 
-			has as array_has
+			has as array_has,
+			wipe_out as array_wipe_out
 		export
 			{NONE} array_create, array_put, array_count, array_force,
-				array_empty, array_full, array_has
-		redefine
-			wipe_out
-		end;
+				array_empty, array_full, array_has, array_wipe_out
+		end
+
 	COMPILER_EXPORTER
 		undefine
 			copy, setup, is_equal, consistent
@@ -224,8 +224,8 @@ feature {COMPILER_EXPORTER}
 	wipe_out is
 			-- Clear the structure.
 		do
-			count := 0;
-			clear_all;
+			count := 0
+			clear_all
 		end;
 
 feature {NONE}

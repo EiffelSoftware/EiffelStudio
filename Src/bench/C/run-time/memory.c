@@ -21,8 +21,8 @@ extern "C" {
 #else
 #include <strings.h>
 #endif
-#include <assert.h>
 #include "eif_portable.h"
+#include <assert.h>
 #include "eif_constants.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"

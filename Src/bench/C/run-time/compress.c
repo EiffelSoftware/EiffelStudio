@@ -92,6 +92,7 @@ clearness. In this example there are six padding bits.
 #include <stdio.h>
 #include <memory.h>
 #ifdef DEBUG_CMPS
+#include "eif_confmagic.h"
 #include <assert.h>
 #endif
 #include "eif_compress.h"

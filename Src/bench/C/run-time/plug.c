@@ -11,9 +11,9 @@
 */
 
 #include "eif_project.h" /* for egc... */
+#include "eif_eiffel.h"
 #include <assert.h>			/* For assertions checkings. */
 #include "eif_config.h"
-#include "eif_eiffel.h"
 #include "eif_plug.h"
 #include "eif_malloc.h"
 #if !defined CUSTOM || defined NEED_OPTION_H

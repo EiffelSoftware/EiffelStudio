@@ -29,7 +29,7 @@
 #include "eif_traverse.h"
 #include "eif_compress.h"
 #include "x2c.header"	/* For macro LNGPAD */
-#include "assert.h"
+#include <assert.h>
 
 #include <ctype.h>					/* For isspace() */
 

@@ -10,10 +10,11 @@
 	Therein lie paths I would not have dared tredding alone.
 */
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include "eif_portable.h"	/* Must be before assert.h */
+#include <assert.h>
 
 #include "eif_project.h"
 #include "eif_config.h"
@@ -22,7 +23,6 @@
 #else
 #include <strings.h>
 #endif
-#include "eif_portable.h"
 #include "eif_urgent.h"
 #include "eif_garcol.h"
 #include "eif_except.h"

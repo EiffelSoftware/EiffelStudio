@@ -9,7 +9,6 @@
 
 	Eiffel storing mechanism.
 */
-
 #include <assert.h>
 #include "eif_project.h" /* for egc_ce_gtype */
 #include "eif_config.h"
@@ -31,6 +30,8 @@
 #include "eif_compress.h"
 #include "eif_lmalloc.h"
 #include "x2c.header"	/* For macro LNGPAD */
+#include <assert.h>
+
 
 #ifdef EIF_WIN32
 #include <io.h>

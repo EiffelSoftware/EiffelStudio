@@ -18,7 +18,6 @@
 
 */
 
-#include <assert.h>
 #include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_threads.h"
@@ -27,6 +26,7 @@
 #include "eif_err_msg.h"
 #include "eif_hector.h"      /* for efreeze() and eufreeze() */
 #include "eif_sig.h"
+#include <assert.h>
 
 
 #ifdef EIF_THREADS

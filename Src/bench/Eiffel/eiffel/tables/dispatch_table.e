@@ -243,7 +243,7 @@ feature -- DLE
 				file.putstring ("#include %"portable.h%"");
 				file.new_line;
 				file.new_line;
-				file.putstring ("void dle_edisptch()");
+				file.putstring ("void dle_edisptch(void)");
 				file.new_line;
 				file.putchar ('{');
 				file.new_line;

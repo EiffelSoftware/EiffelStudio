@@ -468,5 +468,26 @@ feature -- Implementation
 	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
 		do
 		end
+		
+	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
+		do
+		end
+		
+	process_use_list_as (l_as: USE_LIST_AS) is
+		do
+		end
+
+	process_internal_as (l_as: INTERNAL_AS) is
+		do
+		end
+		
+	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
+		do
+		end
+		
+	process_access_address_as (l_as: ACCESS_ADDRESS_AS) is
+		do
+		end
+
 
 end -- class AST_VISITOR_IMP

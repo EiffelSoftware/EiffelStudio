@@ -205,20 +205,18 @@ feature -- Basic operations
 		
 	unparent_tree_node (tree_node: EV_TREE_NODE) is
 			-- Remove `tree_node' from its `parent'.
+			-- Do not change `index' of `parent'.
 		require
 			tree_node_not_void:tree_node /= Void
 		local
-			tree: EV_TREE
-			tree_item: EV_TREE_ITEM
+			tree_node_list: EV_TREE_NODE_LIST
+			previous_index: INTEGER
 		do
-			tree ?= tree_node.parent
-			if tree /= Void then
-				tree.prune_all (tree_node)
-			else
-				tree_item ?= tree_node.parent
-				if tree_item /= Void then
-					tree_item.prune_all (tree_node)
-				end
+			tree_node_list ?= tree_node.parent
+			if tree_node_list /= Void then
+				previous_index := tree_node_list.index
+				tree_node_list.prune_all (tree_node)
+				tree_node_list.go_i_th (previous_index.min (tree_node_list.count))
 			end
 		ensure
 			tree_node_unparented: tree_node.parent = Void

@@ -11,6 +11,11 @@ default
 	assertion (invariant)
 	arguments (" ")
 	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
 	debug (no)
 	line_generation (no)
 	profile (no)
@@ -21,13 +26,10 @@ default
 	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (no)
-	address_expression (no)
 	array_optimization (no)
 	dead_code_removal (yes)
-	dynamic_runtime (no)
 	exception_trace (no)
 	inlining (no)
-	multithreaded (no)
 
 
 -- EiffelBase
@@ -35,15 +37,15 @@ default
 -- unicode_demo
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\examples\wel\unicode"
+	root_cluster:		"$ISE_EIFFEL\examples\wel\unicode"
 
 
-	all base:		"$EIFFEL_SRC\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"; "desc"; 
 		end
 
-	all wel:		"$EIFFEL_SRC\library\wel"
+	all wel:		"$ISE_EIFFEL\library\wel"
 		exclude
 			"spec"; "clib"; "ascii"; 
 		end
@@ -51,12 +53,9 @@ cluster
 external
 
 	include_path:
-		"$(EIFFEL_SRC)\library\wel\spec\windows\include -D_UNICODE -DUNICODE",
-		"F:\52dev\examples\wel\unicode\clib"
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include -D_UNICODE -DUNICODE"
 
 	object:
-		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"Imm32.lib",
-		"F:\52dev\examples\wel\unicode\clib\wel_imm.lib"
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end

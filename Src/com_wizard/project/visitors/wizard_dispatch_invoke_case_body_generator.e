@@ -399,6 +399,9 @@ feature -- Basic operations
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
 
+			local_buffer.append ("VariantClear (pVarResult);")
+			local_buffer.append (New_line_tab_tab_tab)
+			local_buffer.append (Tab)
 			local_buffer.append ("pVarResult")
 			local_buffer.append (Struct_selection_operator)
 			local_buffer.append ("vt")
@@ -495,8 +498,6 @@ feature -- Basic operations
 		require
 			non_void_descriptor: func_desc /= Void
 		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			counter: INTEGER
 			dispatch: BOOLEAN
 		do
 			dispatch := func_desc.func_kind = func_dispatch

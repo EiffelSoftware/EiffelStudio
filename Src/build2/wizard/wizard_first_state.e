@@ -30,9 +30,12 @@ feature -- Basic Operation
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			create directory.make (Current)
-			directory.set_label_string_and_size ("Please enter a directory for you project.", 50)
+			directory.set_label_string_and_size ("Please enter a directory for your project.", 50)
 			directory.enable_directory_browse_button
 			directory.generate
+			if not (project_settings.project_location = Void) and then not project_settings.project_location.is_empty then
+				directory.set_text (project_settings.project_location)
+			end
 			choice_box.extend (directory.widget)
 		end
 
@@ -40,16 +43,15 @@ feature -- Basic Operation
 			-- User has clicked next, go to next step.
 		do
 			Precursor
-				-- Now we must set the project location into the
-				-- project settings.
-			project_settings.set_project_location (directory.text)
-			
 			proceed_with_new_state(create {WIZARD_SECOND_STATE}.make(wizard_information))
 		end
 
 	update_state_information is
 			-- Check User Entries
 		do
+				-- Now we must set the project location into the
+				-- project settings.
+			project_settings.set_project_location (directory.text)
 			Precursor
 		end
 		

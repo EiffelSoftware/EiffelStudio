@@ -5,7 +5,7 @@ indexing
 class
 	BANK_ACCOUNT
 
-creation
+create
 
 	make
 

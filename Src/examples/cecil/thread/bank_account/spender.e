@@ -16,7 +16,7 @@ inherit
 			withdraw
 		end
 	
-creation
+create
 	make
 
 feature -- Execution

@@ -6,7 +6,7 @@ indexing
 
 class
 	POST_OFFICE
-creation
+create
 	make
 
 feature	-- Initialization

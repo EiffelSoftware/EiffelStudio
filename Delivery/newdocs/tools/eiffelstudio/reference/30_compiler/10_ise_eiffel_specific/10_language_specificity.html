@@ -5,12 +5,21 @@
 		<META NAME="MS-HKWD" CONTENT="Freeze">
 		<META NAME="MS-HKWD" CONTENT="Melt">
 		<META NAME="MS-HKWD" CONTENT="Finalize">
-		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+		<LINK REL=Stylesheet HREF="../../../../../default.css" TYPE="text/css">
 	</HEAD>
 
 	<BODY>
 		<H1>Differences between ETL 2nd edition and ISE implementation</H1>
-        <h2>Added keywords:</h2>
+		<p>&nbsp;</p>
+        <h2>Added classes</h2>
+        <ul>
+          <li>new basic classes have been added: INTEGER_8, INTEGER_16,
+            INTEGER_64 and WIDE_CHARACTER. INTEGER is now specified as having a
+            32 bits representation</li>
+          <li>new TUPLE, ROUTINE, PROCEDURE and FUNCTION classes required by the
+            agent mechanism.</li>
+        </ul>
+        <h2>Added keywords</h2>
         <ul>
           <li><a href="/general/guided_tour/language/tutorial-10.html"><span class="ekeyword">Precursor</span></a>
           <li><span class="ekeyword">agent</span>: new keyword used by the Agent mechanism.
@@ -46,7 +55,7 @@
             </table>
             </center></li>
         </ul>
-        <h2>Added semantics:</h2>
+        <h2>Added semantics</h2>
         <ul>
           <li><a href="/general/guided_tour/language/tutorial-08.html">Generic
             creation</a>
@@ -90,8 +99,8 @@
           <li><a href="/general/guided_tour/language/tutorial-12.html">Agents</a></li>
         </ul>
         <h2>Added external support</h2>
-        <p>Look at the page for <a href="30_external_features/10_c_externals.html">C</a>
-        and <a href="30_external_features/20_cpp_externals.html">C++</a>
+        <p>Look at the page for <a href="../30_external_features/10_c_externals.html">C</a>
+        and <a href="../30_external_features/20_cpp_externals.html">C++</a>
         with the introduction of `struct' and C++ external features encapsulation.</p>
 	</BODY>
 </HTML>

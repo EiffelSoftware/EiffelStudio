@@ -56,6 +56,7 @@ inherit
 			insert_item as wel_insert_item,
 			set_column_width as wel_set_column_width,
 			get_column_width as wel_get_column_width,
+			set_column_title as wel_set_column_title,
 			item as wel_item,
 			move as wel_move,
 			enabled as is_sensitive, 
@@ -85,7 +86,6 @@ inherit
 			show,
 			hide
 		redefine
-			set_column_title,
 			on_lvn_columnclick,
 			on_lvn_itemchanged,
 			on_size,
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			--|FIXME This is only required as column title does not correctly
 			--|Work at the moment.
-			create column_titles.make (1, 1)
+		--	create column_titles.make (1, 1)
 		end
 
 	initialize is
@@ -173,69 +173,7 @@ feature -- Status report
 			Result := not flag_set (style, Lvs_nocolumnheader)
 		end
 
-	column_title (a_column: INTEGER): STRING is
-			-- Title of `a_column'.
-		local
-			c: WEL_LIST_VIEW_COLUMN
-		do
-			Result := column_titles @ a_column
-			if Result = Void then
-				Result := ""
-			end
-			--|FIXME This appears to be a bug in WEL.
-			--|It appears that the correct parameters are passed.
-			--create c.make
-			--cwin_send_message (wel_item, Lvm_getcolumn, column , c.to_integer)
-			--Result := c.text
-		end
-	
-	column_width (a_column: INTEGER): INTEGER is
-			-- Width of `a_column' in pixels.
-		do
-			Result := wel_get_column_width (a_column - 1)
-		end
-
 feature -- Status setting
-	
-	set_columns (c: INTEGER) is
-			-- Assign `c' to `columns'.
-		local
-			par_imp: WEL_WINDOW
-			a_column: WEL_LIST_VIEW_COLUMN
-			i, a_x, a_y, a_width, a_height: INTEGER 
-		do
-			-- Once the columns have been set, they are fixed.
-			-- Therefore, we destroy the old WEL_LIST_VIEW,
-			-- and create another with the same information.
-
-			if parent_imp /= Void then
-				par_imp ?= parent_imp
-			else
-				par_imp := default_parent
-			end
-			a_x := x_position
-			a_y := y_position
-			a_width := width
-			a_height := height
-				-- Store parent, x, y, width, height
-			wel_destroy
-				-- Destroy the windows object.
-			wel_make (par_imp, a_x, a_y, a_width, a_height, 0)
-				-- Create a new windows object with information from
-				-- The previous.
-			from
-				i := 1
-			until
-				i = c + 1
-			loop
-				!! a_column.make
-				a_column.set_cx (80)
-				a_column.set_text ("")
-				append_column (a_column)
-				i := i + 1
-			end
-			-- Add columns to the list.
-		end
 
 	select_item (an_index: INTEGER) is
 			-- Select item at `an_index'.
@@ -338,64 +276,8 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_column_title (a_title: STRING; a_column: INTEGER) is
-			-- Assign `a_title' to the `column_title'(`a_column').
-		do
-			column_titles.force (a_title, a_column)
-			{WEL_LIST_VIEW} Precursor (a_title, a_column - 1)
-		end
-
-	set_column_titles (titles: ARRAY [STRING]) is         
-			-- Assign `titles' to titles of columns in order.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	set_column_width (a_width: INTEGER; a_column: INTEGER) is
-			-- Assign `a_width' `column_width'(`a_column').
-		local
-			counter: INTEGER
-			current_width: INTEGER
-		do
-			if a_column /= columns then
-				wel_set_column_width (a_width, a_column - 1)
-			else
-				last_column_width_setting := a_width
-				from
-					counter := 1
-					current_width := width
-				until
-					counter = columns
-				loop
-					current_width := current_width 
-						- column_width (counter)
-					counter:= counter + 1
-				end
-				wel_set_column_width (current_width, a_column - 1)
-			end
-		end
-
-	set_column_widths (widths: ARRAY [INTEGER]) is         
-			-- Assign `widths' to column widths in order.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
 	set_row_height (a_height: INTEGER) is
 			-- Assign `a_height' to ??.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	set_rows_height (a_height: INTEGER) is
-			-- Assign `a_height' to ??.
-			--| FIXME Remove
 		do
 			check
 				to_be_implemented: False
@@ -420,6 +302,29 @@ feature {NONE} -- Implementation
 			wel_column.set_cx (80)
 			wel_column.set_text ("")
 			append_column (wel_column)
+		end
+
+	column_title_changed (a_title: STRING; a_column: INTEGER) is
+			-- Replace title of `a_column' with `a_title' if column present.
+			-- If `a_title' is Void, remove it.
+		local
+			txt: STRING
+		do
+			if a_column > columns then
+				txt := a_title
+				if txt = Void then
+					txt := ""
+				end
+				wel_set_column_title (txt, a_column - 1)
+			end
+		end
+
+	column_width_changed (a_width, a_column: INTEGER) is
+			-- Replace width of `a_column' with `a_width' if column present.
+		do
+			if a_column > columns then
+				wel_set_column_width (a_width, a_column - 1)
+			end
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
@@ -538,7 +443,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-				set_columns (v.count)
+	--| FIXME			set_columns (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -549,7 +454,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-				set_columns (v.count)
+	--| FIXME			set_columns (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -562,7 +467,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-				set_columns (v.count)
+	--| FIXME			set_columns (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -767,7 +672,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	column_titles: ARRAY [STRING]
+	--column_titles: ARRAY [STRING]
 		--|FIXME This has been added as the column_title appears not to
 		--|be working correctly in WEL. This needs to be tested and fixed.
 		--|Julian Rogers 03/21/00
@@ -1008,6 +913,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/03/25 01:14:56  brendel
+--| Implemented according to new _I.
+--|
 --| Revision 1.64  2000/03/24 19:43:07  brendel
 --| Cleanup. More will be necessary.
 --|

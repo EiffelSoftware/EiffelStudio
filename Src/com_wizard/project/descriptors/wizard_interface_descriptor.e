@@ -25,6 +25,16 @@ inherit
 			{NONE} all
 		end
 
+	ECOM_FUNC_KIND
+		export
+			{NONE} all
+		end
+
+	ECOM_VAR_TYPE
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -41,16 +51,21 @@ feature -- Initialization
 			feature_c_names.compare_objects
 			
 			a_creator.initialize_descriptor (Current)
-		ensure
-			dual: dual implies dispinterface_descriptor /= Void
 		end
 
 feature -- Access
 
-	functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]
-			-- Descriptions of interface's functions
+	vtable_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]
+			-- Descriptions of interface's vtable functions.
 
-	properties: LINKED_LIST[WIZARD_PROPERTY_DESCRIPTOR]
+	dispatch_functions: LINKED_LIST [WIZARD_FUNCTION_DESCRIPTOR]
+			-- Descriptions of interface's dispatch functions.
+	
+	function_table: LINKED_LIST [WIZARD_FUNCTION_DESCRIPTOR]
+			-- Table of interface functions.
+			-- Needed for fast search.
+			
+	properties: LINKED_LIST [WIZARD_PROPERTY_DESCRIPTOR]
 			-- Descriptions of interface's properties
 
 	inherited_interface: WIZARD_INTERFACE_DESCRIPTOR
@@ -120,21 +135,21 @@ feature -- Access
 				Result.append (description)
 			end
 			from
-				functions.start
-				if not functions.after then
+				functions_start
+				if not functions_after then
 					Result.append (New_line_tab)
 					Result.append (Functions_string)
 				end				
 			until
-				functions.after
+				functions_after
 			loop
 				Result.append (New_line_tab)
-				Result.append (functions.item.to_string)
+				Result.append (functions_item.to_string)
 				Result.append (New_line_tab_tab)
 				Result.append (Double_dash)
 				Result.append (Space)
-				Result.append (functions.item.description)
-				functions.forth
+				Result.append (functions_item.description)
+				functions_forth
 			end
 			from
 				properties.start
@@ -175,6 +190,39 @@ feature -- Access
 			non_void_implemnted_interface: Result /= Void
 		end
 
+	functions_item: WIZARD_FUNCTION_DESCRIPTOR is
+			-- Item for iteration.
+		require
+			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
+			not_after: not functions_after
+		do
+			if in_vtable then
+				Result := vtable_functions.item
+			else
+				Result := dispatch_functions.item
+			end
+		ensure
+			non_void_function: Result /= Void
+		end
+	
+	functions_count: INTEGER is
+			-- Function count.
+		local
+			vtable_count, dispatch_count: INTEGER
+		do
+			if vtable_functions = Void then
+				vtable_count := 0
+			else
+				vtable_count := vtable_functions.count
+			end
+			if dispatch_functions = Void then
+				dispatch_count := 0
+			else
+				dispatch_count := dispatch_functions.count
+			end
+			Result := vtable_count + dispatch_count
+		end
+
 feature -- Element Change
 
 	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
@@ -187,17 +235,37 @@ feature -- Element Change
 			valid_type_library: type_library_descriptor = a_descriptor
 		end
 
-	set_functions (some_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]) is
+	set_vtable_functions (some_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]) is
 			-- Set `functions' with `some_functions'
 		require
 			valid_functions: some_functions /= Void
 		do
-			functions := some_functions
+			vtable_functions := some_functions
 		ensure
-			valid_functions: functions /= Void and functions = some_functions
+			valid_functions: vtable_functions /= Void and vtable_functions = some_functions
 		end
 
-	set_properties (some_properties: LINKED_LIST[WIZARD_PROPERTY_DESCRIPTOR]) is
+	set_dispatch_functions (some_functions: LINKED_LIST [WIZARD_FUNCTION_DESCRIPTOR]) is
+			-- Set `functions' with `some_functions'
+		require
+			valid_functions: some_functions /= Void
+		do
+			dispatch_functions := some_functions
+		ensure
+			valid_functions: dispatch_functions /= Void and dispatch_functions = some_functions
+		end
+
+	set_function_table (some_functions: LINKED_LIST [WIZARD_FUNCTION_DESCRIPTOR]) is
+			-- Set `function_table' with `some_functions'
+		require
+			valid_functions: some_functions /= Void
+		do
+			function_table := some_functions
+		ensure
+			valid_functions: function_table /= Void and function_table = some_functions
+		end
+
+	set_properties (some_properties: LINKED_LIST [WIZARD_PROPERTY_DESCRIPTOR]) is
 			-- Set `properties' with `some_properties'
 		require
 			valid_properties: some_properties /= Void
@@ -223,14 +291,6 @@ feature -- Element Change
 			interface_set: inherited_interface_descriptor = a_descriptor
 		end
 
-	set_dispinterface_descriptor (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
-			-- Set `dispinterface_descriptor' with `an_interface'
-		do
-			dispinterface_descriptor := an_interface
-		ensure
-			interface_set: dispinterface_descriptor = an_interface
-		end
-
 	update_dual (a_dual_value: BOOLEAN) is
 			-- Set `dual' with `a_dual_value'
 		do
@@ -245,6 +305,14 @@ feature -- Element Change
 			dispinterface := a_dispinterface_value
 		ensure
 			valid_dispinterface: dispinterface = a_dispinterface_value
+		end
+
+	set_dispinterface_descriptor (a_dispinterface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Set `dispinterface_descriptor' with `a_dispinterface_descriptor'
+		do
+			dispinterface_descriptor := a_dispinterface_descriptor
+		ensure
+			interface_set: dispinterface_descriptor = a_dispinterface_descriptor
 		end
 
 	set_lcid (a_lcid: INTEGER) is
@@ -273,42 +341,227 @@ feature -- Element Change
 
 feature -- Status Report
 
-	has_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
-			-- Does interface have `a_function'?
-		require
-			non_void_function: a_function /= Void
+	dual_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): WIZARD_FUNCTION_DESCRIPTOR is
+			-- Return dual function.
+		local
+			cursor: CURSOR
 		do
-			if inherited_interface /= Void then
+			cursor := function_table.cursor
+			from
+				function_table.start
+			until
+				function_table.after or
+				Result /= Void
+			loop
+				if
+					a_function.member_id = function_table.item.member_id and
+					a_function.invoke_kind = function_table.item.invoke_kind
+				then
+					Result := function_table.item
+				end
+				
+				function_table.forth
+			end
+			function_table.go_to (cursor)
+		end
+		
+	has_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+			-- Does `function_table' or `function_table' of
+			-- `inherited_interface' have function with `member_id'?
+		require
+			non_void_table: function_table /= Void
+		local
+			cursor: CURSOR
+		do
+			cursor := function_table.cursor
+			from
+				function_table.start
+			until
+				function_table.after or 
+				Result
+			loop
+				Result := a_function.member_id = function_table.item.member_id and
+					a_function.invoke_kind = function_table.item.invoke_kind
+				
+				function_table.forth
+			end
+			if not Result and inherited_interface /= Void then
 				Result := inherited_interface.has_function (a_function)
 			end
-			from
-				functions.start
-			until
-				functions.after or Result
-			loop
-				Result := a_function.is_equal_function (functions.item)
-				functions.forth
-			end
-		end	
+			function_table.go_to (cursor)
+		end
 
 	has_property (a_property: WIZARD_PROPERTY_DESCRIPTOR): BOOLEAN is
-			-- Does interface have `a_property?
+			-- Does interface have `a_property'?
 		require
 			non_void_property: a_property /= Void
+		local
+			cursor: CURSOR
 		do
-			if inherited_interface /= Void then
-				Result := inherited_interface.has_property (a_property)
-			end
+			cursor := properties.cursor
 			from
 				properties.start
 			until
-				properties.after or Result
+				properties.after or 
+				Result
 			loop
-				Result := a_property.is_equal_property (properties.item)
+				Result := a_property.member_id = properties.item.member_id and
+					a_property.var_flags = properties.item.var_flags
+				
 				properties.forth
 			end
+			if not Result and inherited_interface /= Void then
+				Result := inherited_interface.has_property (a_property)
+			end
+			properties.go_to (cursor)
 		end	
 
+	functions_after: BOOLEAN is
+			-- Is after?
+		require
+			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
+		do
+			Result := not in_vtable and dispatch_functions.after
+		end
+		
+	functions_empty: BOOLEAN is
+			-- Are functions empty?
+		do
+			Result := (vtable_functions = Void or else vtable_functions.empty) and 
+					(dispatch_functions = Void or else dispatch_functions.empty)
+		end
+	
+feature -- Cursor movement
+	
+	functions_start is
+			-- Start for iteration.
+		require
+			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
+		do
+			if not vtable_functions.empty then
+				vtable_functions.start
+				in_vtable := True
+			else
+				dispatch_functions.start
+				in_vtable := False
+			end
+		end
+		
+	functions_forth is
+			-- Forth for iteratyion.
+		require
+			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
+		do
+			if in_vtable then
+				vtable_functions.forth
+				if vtable_functions.after then
+					in_vtable := False
+					dispatch_functions.start
+				end
+			else
+				dispatch_functions.forth
+			end
+		end
+
+feature -- Miscellaneous
+	
+	finalize_interface_functions is
+			-- Finalize interface functions.
+		local
+			a_function_descriptor: WIZARD_FUNCTION_DESCRIPTOR
+		do
+			from
+				function_table.start
+			until
+				function_table.after
+			loop
+				a_function_descriptor := function_table.item
+				if 
+					inherited_interface = Void or else 
+					not inherited_interface.has_function (a_function_descriptor)
+				then
+					if a_function_descriptor.func_kind = Func_dispatch then
+						dispatch_functions.force (a_function_descriptor)
+					else
+						vtable_functions.force (a_function_descriptor)
+					end
+					
+				end
+				function_table.forth
+			end
+			if dispinterface_descriptor /= Void then
+				finalize_functions
+			end
+		end
+		
+	finalize_functions is
+			-- Since dual interface may have functions that accessible
+			-- through IDisptch only or Vtable only,
+			-- Review both descriptions and make uniform function list.
+		require
+			dual: dual
+			non_void_dispinterface: dispinterface_descriptor /= Void
+		local
+			virtual_function, dispatch_function: WIZARD_FUNCTION_DESCRIPTOR
+			
+		do
+			from
+				vtable_functions.start
+			until
+				vtable_functions.after
+			loop
+				virtual_function := vtable_functions.item
+				dispatch_function := dispinterface_descriptor.dual_function (virtual_function)
+				
+				if 
+					(dispatch_function /= Void) 
+				then
+					if dispatch_access (virtual_function, dispatch_function) then
+						vtable_functions.replace (dispatch_function)
+					else
+						virtual_function.set_dual (True)
+					end
+					dispinterface_descriptor.function_table.prune (dispatch_function)
+				end
+				
+				vtable_functions.forth
+			end
+			if not dispinterface_descriptor.function_table.empty then
+				from
+					dispinterface_descriptor.function_table.start
+				until
+					dispinterface_descriptor.function_table.after
+				loop
+					if 
+						not has_function 
+							(dispinterface_descriptor.function_table.item) and 
+						not is_unknown_dispatch_function 
+							(dispinterface_descriptor.function_table.item)
+					then
+						dispatch_functions.force (dispinterface_descriptor.function_table.item)
+					end
+					dispinterface_descriptor.function_table.forth
+				end
+			end
+		end
+	
+	is_unknown_dispatch_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+			-- Is IUnknown or IDispatch function.
+		require
+			non_void_function: a_function /= Void
+		local
+			a_name: STRING
+		do
+			a_name := a_function.name
+			Result := a_name.is_equal (Add_reference) or
+					a_name.is_equal (Release) or
+					a_name.is_equal (Query_interface) or
+					a_name.is_equal (Invoke) or
+					a_name.is_equal (Get_ids_of_names) or
+					a_name.is_equal (Get_type_info) or
+					a_name.is_equal (Get_type_info_count)
+		end
+		
 feature -- Basic operations
 
 	initialize_inherited_interface is
@@ -336,12 +589,12 @@ feature -- Basic operations
 					feature_eiffel_names.append (inherited_interface.feature_eiffel_names)
 				end
 				from
-					functions.start
+					functions_start
 				until
-					functions.after
+					functions_after
 				loop
-					functions.item.disambiguate_eiffel_names (Current)
-					functions.forth
+					functions_item.disambiguate_eiffel_names (Current)
+					functions_forth
 				end
 
 				from
@@ -354,31 +607,31 @@ feature -- Basic operations
 				end
 
 				from
-					functions.start
+					functions_start
 				until
-					functions.after
+					functions_after
 				loop
-					if functions.item.argument_count > 0 then
+					if functions_item.argument_count > 0 then
 						from
-							functions.item.arguments.start
+							functions_item.arguments.start
 						until
-							functions.item.arguments.after
+							functions_item.arguments.after
 						loop
 							if 
-								feature_eiffel_names.has (functions.item.arguments.item.name)  or
-								eiffel_key_words.has (functions.item.arguments.item.name)
+								feature_eiffel_names.has (functions_item.arguments.item.name)  or
+								eiffel_key_words.has (functions_item.arguments.item.name)
 							then
-								functions.item.arguments.item.name.prepend ("a_")
+								functions_item.arguments.item.name.prepend ("a_")
 							end
-							functions.item.arguments.forth
+							functions_item.arguments.forth
 						end
 					end
-					functions.forth
+					functions_forth
 				end
 
 			end
 		ensure
-			not_empty_feature_names: not functions.empty and not properties.empty implies 
+			not_empty_feature_names: not functions_empty and not properties.empty implies 
 									not feature_eiffel_names.empty
 		end
 
@@ -399,12 +652,12 @@ feature -- Basic operations
 				feature_c_names.append (inherited_interface.feature_c_names)
 			end
 			from
-				functions.start
+				functions_start
 			until
-				functions.after
+				functions_after
 			loop
-				functions.item.disambiguate_names (Current, a_coclass_descriptor)
-				functions.forth
+				functions_item.disambiguate_names (Current, a_coclass_descriptor)
+				functions_forth
 			end
 
 			from
@@ -416,7 +669,7 @@ feature -- Basic operations
 				properties.forth
 			end
 		ensure
-			not_empty_feature_names: not functions.empty and not properties.empty implies 
+			not_empty_feature_names: not functions_empty and not properties.empty implies 
 									not feature_c_names.empty
 		end
 
@@ -428,6 +681,9 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+	
+	in_vtable: BOOLEAN
+			-- Cursor in vtable.
 
 	counter: INTEGER is
 			-- Counter
@@ -446,6 +702,38 @@ feature {NONE} -- Implementation
 	instance_implemented_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 			-- Implemented interface descriptor.
 
+	dispatch_access (virtual_function, dispatch_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+			-- Check Vtable description.
+		require
+			non_void_virtual_function: virtual_function /= Void
+			non_void_dispatch_function: dispatch_function /= Void
+			valid_dispatch: dispatch_function.func_kind = Func_dispatch
+			same_function: virtual_function.member_id = dispatch_function.member_id
+		local
+			has_result, return_hresult: BOOLEAN
+			argument_count: INTEGER
+			type: INTEGER
+		do
+			if 
+				dispatch_function.return_type /= Void
+			then
+				type := dispatch_function.return_type.type
+				has_result := not (type = Vt_void or type = Vt_empty or type = Vt_null)
+			end
+						
+			if has_result then
+				argument_count := dispatch_function.argument_count + 1
+			else
+				argument_count := dispatch_function.argument_count
+			end
+			
+			return_hresult := virtual_function.return_type /= Void and then
+				virtual_function.return_type.type = Vt_hresult
+			
+			Result := not return_hresult or
+				virtual_function.argument_count /= argument_count
+		end
+			
 end -- class WIZARD_INTERFACE_DESCRIPTOR
 
 --|----------------------------------------------------------------

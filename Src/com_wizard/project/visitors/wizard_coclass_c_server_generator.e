@@ -182,7 +182,14 @@ feature {NONE} -- Implementation
 			tmp_body.append (Space_equal_space)
 			tmp_body.append (Static_cast)
 			tmp_body.append (Less)
-			tmp_body.append (interface_names.first)
+			if 
+				a_coclass_descriptor.interface_descriptors.first.namespace /= Void and then
+				not a_coclass_descriptor.interface_descriptors.first.namespace.empty
+			then
+				tmp_body.append (a_coclass_descriptor.interface_descriptors.first.namespace)
+				tmp_body.append ("::")
+			end
+			tmp_body.append (a_coclass_descriptor.interface_descriptors.first.c_type_name)
 			tmp_body.append (Asterisk)
 			tmp_body.append (More)
 			tmp_body.append (Open_parenthesis)
@@ -217,23 +224,30 @@ feature {NONE} -- Implementation
 			end
 
 			from
-				interface_names.start
+				a_coclass_descriptor.interface_descriptors.start
 			until
-				interface_names.off
+				a_coclass_descriptor.interface_descriptors.off
 			loop
 				tmp_body.append (Space)
 				tmp_body.append (If_keyword)
 				tmp_body.append (Space_open_parenthesis)
 				tmp_body.append (Riid)
 				tmp_body.append (C_equal)
-				tmp_body.append (iid_name (interface_names.item))
+				tmp_body.append (iid_name (a_coclass_descriptor.interface_descriptors.item.c_type_name))
 				tmp_body.append (Close_parenthesis)
 				tmp_body.append (New_line_tab_tab)
 				tmp_body.append (Star_ppv)
 				tmp_body.append (Space_equal_space)
 				tmp_body.append (Static_cast)
 				tmp_body.append (Less)
-				tmp_body.append (interface_names.item)
+				if 
+					a_coclass_descriptor.interface_descriptors.item.namespace /= Void and then
+					not a_coclass_descriptor.interface_descriptors.item.namespace.empty
+				then
+					tmp_body.append (a_coclass_descriptor.interface_descriptors.item.namespace)
+					tmp_body.append ("::")
+				end
+				tmp_body.append (a_coclass_descriptor.interface_descriptors.item.c_type_name)
 				tmp_body.append (Asterisk)
 				tmp_body.append (More)
 				tmp_body.append (Open_parenthesis)
@@ -242,7 +256,7 @@ feature {NONE} -- Implementation
 				tmp_body.append (Semicolon)
 				tmp_body.append (New_line_tab)
 				tmp_body.append (Else_keyword)
-				interface_names.forth
+				a_coclass_descriptor.interface_descriptors.forth
 			end
 
 			tmp_body.append (New_line_tab_tab)

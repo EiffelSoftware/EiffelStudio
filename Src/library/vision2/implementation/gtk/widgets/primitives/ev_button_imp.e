@@ -65,14 +65,9 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the button is pressed.
 		do
-			check False end
+			remove_commands (clicked_id)
 		end
 	
-feature {NONE} -- Implementation
-	
-	gtk_command_id: INTEGER
-                        -- Id of the command handler
-        
 end -- class EV_BUTTON_IMP
 
 --|----------------------------------------------------------------

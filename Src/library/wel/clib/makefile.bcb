@@ -1,7 +1,8 @@
 # wel.lib - Makefile for Borland C
 
-CC = bcc32
-CFLAGS = -q -w-8064 -w-8065 -w-8057 -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib
+CFLAGS = -q -w-8064 -w-8065 -w-8057 -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 .c.obj:
 	$(CC) @&&|
@@ -12,15 +13,15 @@ OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj disks
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
-	tlib $@ +disptchr.obj
-	tlib $@ +enumfont.obj
-	tlib $@ +estream.obj
-	tlib $@ +choose_folder.obj
-	tlib $@ +msgboxpa.obj
-	tlib $@ +diskspace.obj
-	tlib $@ +dynload.obj
-	tlib $@ +drawstate.obj
-	tlib $@ +mousehook.obj
+	$(AR) $@ +disptchr.obj
+	$(AR) $@ +enumfont.obj
+	$(AR) $@ +estream.obj
+	$(AR) $@ +choose_folder.obj
+	$(AR) $@ +msgboxpa.obj
+	$(AR) $@ +diskspace.obj
+	$(AR) $@ +dynload.obj
+	$(AR) $@ +drawstate.obj
+	$(AR) $@ +mousehook.obj
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib

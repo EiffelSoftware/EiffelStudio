@@ -1,10 +1,12 @@
 # wel_hook.dll - Makefile for Borland C
 
-CC = bcc32.exe
-CFLAGS = -q -w-8057 -c -O2 
-LFLAGS = /Tpd
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
+LINK = $(ISE_EIFFEL)\BCC55\bin\ilink32.exe
+CFLAGS = -q -w-8057 -c -O2 -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+LFLAGS = -Tpd -L$(ISE_EIFFEL)\BCC55\lib
 
-LIBS = kernel32.lib user32.lib advapi32.lib
+LIBS = CW32.lib IMPORT32.lib OLE2w32.lib
 
 .c.obj:
     $(CC) @&&|
@@ -14,7 +16,7 @@ LIBS = kernel32.lib user32.lib advapi32.lib
 OBJS = wel_hook.obj
 
 wel_hook.dll: $(OBJS)
-    ilink32 $(LFLAGS) $(OBJS) $(LIBS)
+    $(LINK) $(LFLAGS) $(OBJS) $(LIBS)
 	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\dll mkdir ..\spec\bcb\dll
 	copy $@ ..\spec\bcb\dll

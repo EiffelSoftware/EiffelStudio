@@ -182,12 +182,6 @@ feature
 			used_table.put (True, body_index)
 		end
 
-	mark_dead (body_index: INTEGER) is
-			-- forget feature of body_index
-		do
-			used_table.put (False, body_index)
-		end
-
 	mark_treated (body_index: INTEGER; rout_id: INTEGER) is
 			-- record feature of body_index
 		local

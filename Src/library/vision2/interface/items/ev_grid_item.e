@@ -69,7 +69,8 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_x_position
---		ensure
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
 --			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
 		end
 		
@@ -81,7 +82,8 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.virtual_y_position
---		ensure
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
 --			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
 		end
 

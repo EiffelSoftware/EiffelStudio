@@ -11,15 +11,8 @@
 /* Feature which is deferred */
 #define IS_DEFERRED		0x01
 
-#ifdef DEBUG
-struct poly_debug {
-	int size;
-	unsigned char* area;
-};
-#endif
-
 /* Allocate table */
-unsigned char *table_malloc (int nb_classes) {
+AREA_TYPE table_malloc (int nb_classes) {
 	unsigned char *area;
 	int logical_size;
 #ifdef DEBUG
@@ -29,18 +22,22 @@ unsigned char *table_malloc (int nb_classes) {
 
 	logical_size = ((nb_classes >> 2) + 1) * sizeof (unsigned char);
 	area = (unsigned char *) malloc (logical_size);
+	
+	if (area == (unsigned char *)0)
+		enomem();
+
 	area = (unsigned char *) memset ((void *) area, 0, logical_size);
 
-#ifdef debug
+#ifdef DEBUG
 	my_poly_table->area = area;
 	my_poly_table->size = logical_size;
-	return (unsigned char *) my_poly_table;
+	return my_poly_table;
 #else
 	return area;
 #endif
 }
 
-void table_free (unsigned char *area)
+void table_free (AREA_TYPE area)
 {
 	if (area) {
 #ifdef DEBUG
@@ -58,7 +55,7 @@ void table_free (unsigned char *area)
 #define get_status(area, type_id)	\
 	((unsigned char) ((area [type_id >> 2]) >> ((type_id & 0x00000003) << 1)))
 
-void put_value (unsigned char *area, int type_id, EIF_BOOLEAN v)
+void put_value (AREA_TYPE area, int type_id, EIF_BOOLEAN v)
 {
 		/* Now we compute the mask to which is going to be used to set the entry
 		 * area[index] to mark the status of the `type_id'
@@ -71,6 +68,9 @@ void put_value (unsigned char *area, int type_id, EIF_BOOLEAN v)
 		 * Then we shift IS_POLYMORPHIC or NOT_POLYMORPHIC to be in front of the
 		 * correct offset in area[index] and we add the new value to area[index]
 		 */
+#ifdef DEBUG
+#define area area->area
+#endif
 	if (v == EIF_TRUE)
 			/* It is a polymorphic call */
 		set_status (area, type_id, IS_POLYMORPHIC);
@@ -78,20 +78,32 @@ void put_value (unsigned char *area, int type_id, EIF_BOOLEAN v)
 		set_status (area, type_id, NOT_POLYMORPHIC);
 
 #ifdef DEBUG
-	if ((type_id >> 2) > (((struct poly_debug *) area)->size))
-		printf ("Access error: size max is %d, accessed item is %d\n", (((struct poly_debug *) area)->size, type_id >> 2));
+#undef area
+#endif
+
+#ifdef DEBUG
+	if ((type_id >> 2) > (area->size))
+		printf ("Access error: size max is %d, accessed item is %d\n", area->size, type_id >> 2);
 #endif
 }
 
 
-EIF_INTEGER get_value (unsigned char *area, int type_id)
+EIF_INTEGER get_value (AREA_TYPE area, int type_id)
 {
+#ifdef DEBUG
+#define area area->area
+#endif
+
 	register unsigned char item = area [type_id >> 2];
 	register int offset = (type_id & 0x00000003) << 1;
 
 #ifdef DEBUG
-	if ((type_id >> 2) > (((struct poly_debug *) area)->size))
-		printf ("Access error: size max is %d, accessed item is %d\n", (((struct poly_debug *) area)->size, type_id >> 2));
+#undef area
+#endif
+
+#ifdef DEBUG
+	if ((type_id >> 2) > (area->size))
+		printf ("Access error: size max is %d, accessed item is %d\n", area->size, type_id >> 2);
 #endif
 
 	if (item & (1 << (offset + 1))) {

@@ -102,8 +102,10 @@ feature -- Status Setting
 					end
 				end
 				if l_assembly /= Void then
-					Referenced_assemblies.extend (create {CODE_REFERENCED_ASSEMBLY}.make (l_assembly))
-					assembly_added := True
+					if not has (l_assembly.get_name) then
+						Referenced_assemblies.extend (create {CODE_REFERENCED_ASSEMBLY}.make (l_assembly))
+						assembly_added := True
+					end
 				end
 			end
 		ensure

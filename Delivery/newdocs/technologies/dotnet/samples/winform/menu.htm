@@ -27,7 +27,7 @@
 var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\mdi\\";
 var ace_file_name = "Ace";
 var path_eifp_file = "..\\..\\examples\\winforms\\menu\\"
-var eifp_name = "Eiffel project.eifp";
+var eifp_name = "menu.eifp";
 
 if (eiffel_studio) {
 	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
@@ -41,18 +41,18 @@ else {
 <p>To see compiling instructions, you have to enable javascript.</p></noscript>
 
 <h2>Running</h2>
-<p>After launching the application, you will see a window displayed with a 
-similar appearance to the one above. The main window contain a main menu with two 
+<p>After launching the application, you will see a window displayed with a
+similar appearance to the one above. The main window contain a main menu with two
 entries (File and Format).</p>
-<p>The main window also has a blue <span class="eClass">LABEL</span> that contains a context menu, 
-that is the clone of &quot;Format&quot; in the main menu. Right 
+<p>The main window also has a blue <span class="eClass">LABEL</span> that contains a context menu,
+that is the clone of &quot;Format&quot; in the main menu. Right
 click on the <span class="eClass">LABEL</span> and a
-<a href="../../images/menu_contextuel.png">context menu 
+<a href="../../../../images/dotnet_samples/menu_contextuel.png">context menu
 will appear</a>. </p>
 <p>&nbsp;</p>
 <h2>Under the Hood</h2>
-<p>This application shows how to create a main menu and how to associate a 
-context menu to a control (here to a <span class="eClass">LABEL)</span>. To do understand 
+<p>This application shows how to create a main menu and how to associate a
+context menu to a control (here to a <span class="eClass">LABEL)</span>. To do understand
 exactly how it is done, <a href="menus_details.htm">go here</a>.</p>
 <p>This sample contains the following class: </p>
 <ul>

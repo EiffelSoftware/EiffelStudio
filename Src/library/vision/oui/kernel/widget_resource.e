@@ -29,15 +29,15 @@ feature		-- Status report
 
 	resource_value: STRING is
 			-- Value of the resource 'resource_name' for widget 'widget_name'
-                do
-                        Result := implementation.resource_value;
-                end;
+		do
+			Result := implementation.resource_value;
+		end;
 
 	widget_name: STRING is
 			-- widget name to which 'resource_name' refers to
-                do
-                        Result := implementation.widget_name;
-                end;
+		do
+			Result := implementation.widget_name;
+		end;
 
 	resource_string: STRING is
 			-- The joining of widget name, resource name and resource value

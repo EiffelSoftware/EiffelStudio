@@ -81,7 +81,6 @@ feature {NONE} -- Initialization
 			C.gtk_ctree_set_show_stub (list_widget, True)
 			C.gtk_ctree_set_indent (list_widget, 17)
 			C.gtk_widget_show (list_widget)
-			--C.gtk_container_add (c_object, list_widget)
 			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 			
 			create ev_children.make (0)

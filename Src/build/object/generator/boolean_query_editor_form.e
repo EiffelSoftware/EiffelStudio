@@ -519,7 +519,7 @@ feature -- Command generation
 			end	
 		end
 
-	generate_eiffel_text (counter: INT_GENERATOR): STRING is
+	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING is
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		local
@@ -527,11 +527,11 @@ feature -- Command generation
 		do
  			!! Result.make (0)
  			Result.append ("%T%T%T")
-			Result.append ("if argument")
-			Result.append_integer (counter.value)
+			Result.append ("if ")
+			Result.append (argument_namer.value)
 			if new_opt_pull_c /= Void then
-				Result.append (".selected_button = argument")
-				Result.append_integer (counter.value)
+				Result.append (".selected_button = ")
+				Result.append (argument_namer.value)
 				Result.append (".children.first")
  			else
  				Result.append (extension_to_add)
@@ -541,8 +541,8 @@ feature -- Command generation
 			if test_toggle_b.state and not procedure.precondition_list.empty then
 				Result.append ("%N%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
 				Result.append (test_text_field.text)
-				Result.append ("%", argument")
-				Result.append_integer (counter.value)
+				Result.append ("%", ")
+				Result.append (argument_namer.value)
 				Result.append (".parent)%N%T%T%Tend%N")
 			end	
 			Result.append ("%N%T%T%Telse%N%T%T%T%T")
@@ -550,8 +550,8 @@ feature -- Command generation
 			if test_toggle_b.state and not procedure.precondition_list.empty then
  				Result.append ("%N%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
  				Result.append (test_text_field.text)
-				Result.append ("%", argument")
-				Result.append_integer (counter.value)
+				Result.append ("%", ")
+				Result.append (argument_namer.value)
 				Result.append (".parent)%N%T%T%Tend%N")
 			end
 			Result.append ("%N%T%T%Tend%N")

@@ -25,7 +25,8 @@ inherit
 			on_right_button_down, on_left_button_down,
 			on_middle_button_down, on_left_button_up,
 			on_left_button_double_click, on_middle_button_double_click,
-			on_right_button_double_click, pnd_press, escape_pnd
+			on_right_button_double_click, pnd_press, escape_pnd, set_background_color,
+			set_foreground_color
 		redefine
 			make, on_key_down, on_mouse_move, set_default_minimum_size,
 			initialize, interface, on_size, enable_sensitive, disable_sensitive
@@ -270,6 +271,28 @@ feature -- Status setting
 			clear_selection
 			invalidate
 			update
+		end
+		
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+			set_text_background_color (background_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			foreground_color_imp ?= color.implementation
+			set_text_foreground_color (foreground_color_imp)
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
@@ -674,7 +697,11 @@ feature {EV_ANY_I} -- Implementation
 			set_message_return_value (1)
 				-- Create a brush corresponding to the background color.
 			if is_sensitive then
-				bkg_color := get_background_color
+				if background_color_imp = Void then
+					bkg_color := get_background_color	
+				else
+					bkg_color := background_color_imp
+				end
 			else
 				create bkg_color.make_system (Color_btnface)
 			end

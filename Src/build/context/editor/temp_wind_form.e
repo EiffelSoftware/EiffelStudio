@@ -53,10 +53,15 @@ feature {NONE}
 			!!Result
 		end;
 
-	Temp_resize_cmd: TEMP_RESIZE_CMD is
+	Temp_resize_cmd: WINDOW_RESIZE_CMD is
 		once
 			!!Result
 		end;
+
+--	Temp_resize_cmd: TEMP_RESIZE_CMD is
+--		once
+--			!!Result
+--		end;
 
 feature
 

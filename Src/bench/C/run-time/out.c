@@ -470,61 +470,48 @@ rt_private void write_string(char *str)
 
 rt_public EIF_REFERENCE c_outb(EIF_BOOLEAN b)
 {
+	EIF_GET_CONTEXT
 	if (b)
-		return makestr("true", 4);
+		return makestr("True", 4);
 	else
-		return makestr("false", 5);
+		return makestr("False", 5);
 }
 
 rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 {
 	EIF_GET_CONTEXT
-
-	sprintf(buffero, "%ld", i);
-	return makestr(buffero, strlen(buffero));
-
-	EIF_END_GET_CONTEXT
+	register int len;
+	len = sprintf(buffero, "%ld", i);
+	return makestr(buffero, len);
 }
 
 rt_public EIF_REFERENCE c_outr(EIF_REAL f)
 {
 	EIF_GET_CONTEXT
-
-	sprintf(buffero, "%g", f);
-	return makestr(buffero, strlen(buffero));
-
-	EIF_END_GET_CONTEXT
+	register int len;
+	len = sprintf(buffero, "%g", f);
+	return makestr(buffero, len);
 }
 
 rt_public EIF_REFERENCE c_outd(EIF_DOUBLE d)
 {
 	EIF_GET_CONTEXT
-
-	sprintf(buffero, "%.17g", d);
+	register int len;
+	len = sprintf(buffero, "%.17g", d);
 	return makestr(buffero, strlen(buffero));
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
 {
-	EIF_GET_CONTEXT
-
-	buffero[0] = c;
-	buffero[1] = '\0';
-	return makestr(buffero, 1);
-
-	EIF_END_GET_CONTEXT
+	return makestr(&c, 1);
 }
 
 rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 {
 	EIF_GET_CONTEXT
-
-	sprintf(buffero, "0x%lX", p);
-	return makestr(buffero, strlen(buffero));
-
-	EIF_END_GET_CONTEXT
+	register int len;
+	len = sprintf(buffero, "0x%lX", p);
+	return makestr(buffero, len);
 }
 
 #ifdef WORKBENCH

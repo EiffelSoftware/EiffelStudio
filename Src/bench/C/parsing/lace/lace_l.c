@@ -8,6 +8,15 @@
 
 #include <stdio.h>
 
+/* Original skeleton (flex 2.4.7) modified for OS2 port */
+#include "config.h"
+ 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+ 
+/* End of modification */
+
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
 #ifdef c_plusplus
@@ -583,6 +592,7 @@ char *xxtext_ptr;
 	Lace lex analyzer description
 */
 
+#include "config.h"
 #include "lace_y.h"
 #include "limits.h"
 #include "err_msg.h"
@@ -699,7 +709,7 @@ YY_DECL
 	register char *xx_cp, *xx_bp;
 	register int xx_act;
 
-# line 39 "lace_l.l"
+# line 40 "lace_l.l"
 
 
 	if ( xx_init )
@@ -799,54 +809,54 @@ do_action:	/* This label is used only to access EOF actions. */
 	{ /* beginning of action switch */
 case 1:
 YY_USER_ACTION
-# line 40 "lace_l.l"
+# line 41 "lace_l.l"
 {	start_position = end_position;
 											end_position += xxleng;}
 	YY_BREAK
 case 2:
 YY_USER_ACTION
-# line 42 "lace_l.l"
+# line 43 "lace_l.l"
 return process(LAC_COLUMN);
 	YY_BREAK
 case 3:
 YY_USER_ACTION
-# line 43 "lace_l.l"
+# line 44 "lace_l.l"
 return process(LAC_COMMA);
 	YY_BREAK
 case 4:
 YY_USER_ACTION
-# line 44 "lace_l.l"
+# line 45 "lace_l.l"
 {	start_position = end_position;
 											end_position += xxleng;}
 	YY_BREAK
 case 5:
 YY_USER_ACTION
-# line 46 "lace_l.l"
+# line 47 "lace_l.l"
 return process(LAC_LEFT_PARAM);
 	YY_BREAK
 case 6:
 YY_USER_ACTION
-# line 47 "lace_l.l"
+# line 48 "lace_l.l"
 return process(LAC_RIGHT_PARAM);
 	YY_BREAK
 case 7:
 YY_USER_ACTION
-# line 48 "lace_l.l"
+# line 49 "lace_l.l"
 return process(LAC_SEMICOLON);
 	YY_BREAK
 case 8:
 YY_USER_ACTION
-# line 49 "lace_l.l"
+# line 50 "lace_l.l"
 return get_string();
 	YY_BREAK
 case 9:
 YY_USER_ACTION
-# line 50 "lace_l.l"
+# line 51 "lace_l.l"
 return process_name(LAC_IDENTIFIER);
 	YY_BREAK
 case 10:
 YY_USER_ACTION
-# line 51 "lace_l.l"
+# line 52 "lace_l.l"
 {	/* Unknown character */
 											start_position = end_position;
 											end_position += xxleng;
@@ -854,7 +864,7 @@ YY_USER_ACTION
 	YY_BREAK
 case 11:
 YY_USER_ACTION
-# line 56 "lace_l.l"
+# line 57 "lace_l.l"
 ECHO;
 	YY_BREAK
 			case YY_STATE_EOF(INITIAL):
@@ -1549,7 +1559,7 @@ void *ptr;
 	{
 	free( ptr );
 	}
-# line 56 "lace_l.l"
+# line 57 "lace_l.l"
 
 
 static int process(token_code)

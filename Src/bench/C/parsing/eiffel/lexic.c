@@ -8,6 +8,15 @@
 
 #include <stdio.h>
 
+/* Original skeleton (flex 2.4.7) modified for OS2 port */
+#include "config.h"
+ 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+ 
+/* End of modification */
+
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
 #ifdef c_plusplus

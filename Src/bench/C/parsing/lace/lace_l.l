@@ -11,14 +11,11 @@
 	Lace lex analyzer description
 */
 
+#include "config.h"
 #include "lace_y.h"
 #include "limits.h"
 #include "err_msg.h"
 #include <ctype.h>
-
-#ifdef EIF_OS2
-#include <io.h>
-#endif
 
 /* private functions for lex */
 static int process();

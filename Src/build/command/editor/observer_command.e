@@ -14,10 +14,11 @@ inherit
 
 feature
 
-	make (a_command: CMD_INSTANCE) is
+	make (observed_cmd, observer_cmd: CMD_INSTANCE) is
 			-- Set `observed_command' to `a_command'.
 		do
-			observed_command := a_command
+			observed_command := observed_cmd
+			observer := observer_cmd 
 		end
 feature
 
@@ -30,7 +31,7 @@ feature
 
 	execute (argument: ANY) is
 		do
-			observer ?=  argument
+--			observer ?=  argument
 			if observer /= Void then
 				command_work
 				update_history

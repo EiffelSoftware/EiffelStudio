@@ -34,6 +34,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_editable: BOOLEAN is
+			-- Is the text editable
+		do
+			Result := not read_only
+		end
+
 	position: INTEGER is
 			-- Current position of the caret.
 		do
@@ -190,6 +196,11 @@ feature {NONE} -- Deferred features
 
 	set_text_limit (value: INTEGER) is
 			-- Make `value' the new maximal length of the text.
+		deferred
+		end
+
+	read_only: BOOLEAN is
+			-- Is the current edit control read-only?
 		deferred
 		end
 

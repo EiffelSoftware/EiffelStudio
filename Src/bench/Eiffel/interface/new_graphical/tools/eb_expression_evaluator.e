@@ -385,21 +385,13 @@ feature {NONE} -- Implementation
 			Result.extend (expr.context)
 			Result.extend (expr.expression)
 			if expr.error_message = Void then
-				dv := expr.final_result
-				if dv /= Void then
-					Result.extend (dv.output_value)
-					if dv.address /= Void then
-						create ost.make (dv.address, dv.name, dv.dynamic_class)
-						Result.set_pebble (ost)
-						Result.set_accept_cursor (ost.stone_cursor)
-						Result.set_deny_cursor (ost.X_stone_cursor)
-					end
-				else
-						-- This can happen if we evaluate a constant (nuts)
-					dmp := expr.final_result_value
-					if dmp /= Void then
-						Result.extend (dmp.output_value)
-					end
+				dmp := expr.final_result_value
+				Result.extend (dmp.output_value)
+				if dmp.address /= Void then
+					create ost.make (dmp.address, " ", dmp.dynamic_type)
+					Result.set_pebble (ost)
+					Result.set_accept_cursor (ost.stone_cursor)
+					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
 			else
 				Result.extend (expr.error_message)

@@ -48,7 +48,7 @@ feature -- Search
 				i >= difference and then pattern_index = 0
 			loop
 				if text_area.item (i) /= pattern_area.item (pattern_index) then
-debug("Guus-KMP")
+debug("KMP")
 	print ("Before index update statement%NInfo:%N-----%N");
 	print ("i: ")
 	print (i);

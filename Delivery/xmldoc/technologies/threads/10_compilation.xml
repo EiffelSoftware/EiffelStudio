@@ -48,10 +48,7 @@
 			<item>Check what you are importing is safe: you cannot arbitrarily enter non-threaded code in a multithreaded program. Check your include files and libraries you use for the linking to decide if they can be used in multithreaded mode. </item>
 			<item>If you are using CECIL in multithreaded mode, you must compile your C files with the same defined symbols as those used to compile the generated C-code in multithreaded mode. </item>
 			<item>Threaded code can safely refer to unsafe code ONLY from the initial thread. </item>
-		</list>
-		<paragraph>
-			<bold>Note</bold>: if you use the libraries Net and MEL in multithreaded mode, you should use libmtnet. a and libmtmel. a. When using MEL, you have to be aware that Motif 1. 2 is not threaded-safe (i.e not reentrant). Motif 2. x is threaded-safe.
-		</paragraph>
+		</list><note><bold>Note</bold>: if you use the libraries Net and MEL in multithreaded mode, you should use libmtnet. a and libmtmel. a. When using MEL, you have to be aware that Motif 1. 2 is not threaded-safe (i.e not reentrant). Motif 2. x is threaded-safe.</note>
 		<heading>
 			<size>2</size>Thread Safe Eiffel libraries
 		</heading>

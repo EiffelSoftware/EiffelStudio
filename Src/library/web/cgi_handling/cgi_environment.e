@@ -16,6 +16,8 @@ inherit
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
+		redefine
+			put, eif_getenv
 		end;
 	SHARED_STDOUT
 
@@ -168,6 +170,25 @@ feature {NONE} -- Implementation
 			if Result = Void then
 				Result := ""
 			end
+		end;
+
+	eif_getenv (s : POINTER): POINTER is
+			-- Value of environment variable `s',
+			-- even on Windows.
+		external
+			"C"
+		alias
+			"getenv"
+		end;
+
+
+	eif_putenv (v, k: ANY): INTEGER is
+			-- Safe eiffel putenv using environment variables,
+			-- even on Windows.
+		external
+			"C | %"eif_misc.h%""
+		alias
+			"eif_safe_putenv"
 		end;
 
 end -- class CGI_ENVIRONMENT

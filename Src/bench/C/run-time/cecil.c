@@ -312,6 +312,7 @@ EIF_TYPE_ID cid;
 	int32 rout_id;
 	uint32 body_id;
 	uint16 body_index;
+	int32 *cn_routids;
 #endif
 
 	if (dtype < 0)						/* Invalid type (not a reference) */
@@ -325,7 +326,11 @@ EIF_TYPE_ID cid;
 	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0)
 		return (EIF_FN_REF) 0;
 
-	rout_id = (System(dtype).cn_routids)[*feature_ptr];
+	cn_routids = System(dtype).cn_routids;
+	if (cn_routids)
+		rout_id = cn_routids[*feature_ptr];
+	else /* precompiled routine */
+		rout_id = *feature_ptr;
 	CBodyIdx(body_index,rout_id,dtype);
 	body_id = dispatch[body_index];
 

@@ -244,7 +244,7 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 #endif
 }
 
-rt_public EIF_INTEGER eif_safe_putenv (EIF_OBJECT v, EIF_OBJECT k) 
+rt_public EIF_INTEGER eif_safe_putenv (char *v, char *k) 
 {
 	/* Safe Eiffel putenv using environment variables. This has been added
 	 * for EiffelWeb, because on windows we needed to deal with environment

@@ -225,47 +225,34 @@ feature -- Output
 	display_feature (st: STRUCTURED_TEXT) is
 			-- Display information about associated routine.
 		local
-			nb_blanks, i: INTEGER;
 			c, oc: E_CLASS;
 			ef: E_FEATURE;
-			ft: FEATURE_TABLE
+			ft: FEATURE_TABLE;
+			last_pos: INTEGER
 		do
+			
 			c := dynamic_class;
 			oc := origin_class;
 				-- Print object address (14 characters)
 			st.add_string ("[");
 			if c /= Void then
 				st.add_address (object_address, c)
-				nb_blanks := 14 - object_address.count
+				last_pos := object_address.count + 2;
 			else
 				st.add_string ("0x0");
-				nb_blanks := 11
+				last_pos := 5;
 			end
 			st.add_string ("]");
-			if nb_blanks <= 0 then 
-				nb_blanks := 1 
-			end;
-			from 
-				i := 1 
-			until 
-				i > nb_blanks 
-			loop 
-				st.add_string (" "); 
-				i := i + 1
-			end;
-
+			st.add_column_number (14);
 				-- Print class name
 			if c /= Void then
 				c.append_name (st);
-				nb_blanks := 18 - c.name.count;
-				if nb_blanks <= 0 then nb_blanks := 1 end;
-				from i := 1 until i > nb_blanks 
-				loop 
-					st.add_string (" "); i := i + 1
-				end;
+				last_pos := c.name.count + 14;
 			else
-				st.add_string ("NOT FOUND		   ");
+				st.add_string ("NOT FOUND");
+				last_pos := 9 + 14 
 			end;
+			st.add_column_number (26);
 
 			st.add_feature_name (routine_name, oc);
 			if oc /= c then

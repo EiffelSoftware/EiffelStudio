@@ -241,7 +241,6 @@ feature -- Commands
 					-- warnings only. If there was an error during the compilation,
 					-- this feature won't never be called and the Error_handler.trace
 					-- from the rescue clause will print the warnings
-				Error_handler.force_display
 				Error_handler.trace_warnings
 			else
 				retried := 2

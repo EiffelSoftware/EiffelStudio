@@ -15,11 +15,13 @@ feature {NONE} -- Initialization
 		local
 			control_site: CONTROL_SITE
 			bull_eye: BULLS_EYE_PROXY
+			a_client_rect: WEL_RECT
 		do
 			make_top ("Control container")
-			create control_site.make (Current, "control site")
-			control_site.resize (100, 100)
 			resize (600, 400)
+			a_client_rect := client_rect
+			create control_site.make (Current, "control site")
+			control_site.resize (a_client_rect.width, a_client_rect.height)
 			
 			create bull_eye.make
 			

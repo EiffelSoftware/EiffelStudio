@@ -292,12 +292,6 @@ feature {NONE} -- Command arguments
 
 	context_data_useful: BOOLEAN is True;
 
-	matcher: KMP_MATCHER is
-			-- Matcher for strings pattern
-		once
-			!! Result.make_empty
-		end;
-
 	new_tooler_action: ANY is
 			-- Callback value to indicate that a new tool should come up.
 		once

@@ -1,7 +1,6 @@
 indexing
 
-	desciption:
-			"Window where the user can make choice.";
+	desciption: "Window where the user can make choice.";
 	date: "$Date$";
 	revision: "$Revision$"
 

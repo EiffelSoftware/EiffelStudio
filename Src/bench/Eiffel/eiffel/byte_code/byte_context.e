@@ -712,7 +712,7 @@ feature -- Setting
 			-- Set `need_gc_hook' for current instance of BYTE_CODE
 			-- If `has_assertions_checking_enabled', `need_gc_hook' is set to True.
 		local
-			assign: ASSIGN_BL
+			l_assign: ASSIGN_BL
 			reverse_b: REVERSE_BL
 			call: CALL_B
 			expr_b: EXPR_B
@@ -742,17 +742,17 @@ feature -- Setting
 				compound := byte_code.compound
 				if compound /= Void and then compound.count = 1 then
 					byte_node := compound.first
-					assign ?= byte_node
-					if assign /= Void then
-						if assign.expand_return then
+					l_assign ?= byte_node
+					if l_assign /= Void then
+						if l_assign.expand_return then
 								-- Assignment in Result is expanded in a return instruction
 							tmp := False
 						else
-							reverse_b ?= assign
+							reverse_b ?= l_assign
 								-- FIXME: Manu 05/31/2002: we should try to optimize
 								-- so that not all reverse assignment prevent the optimization
 								-- to be made.
-							call ?= assign.source
+							call ?= l_assign.source
 							if call /= Void and then call.is_single and reverse_b = Void then
 									-- Simple assignment of a single call
 								creation_expr ?= call
@@ -763,13 +763,13 @@ feature -- Setting
 								else
 									if call.is_constant then
 										tmp := False
-									elseif assign.target.is_predefined then
+									elseif l_assign.target.is_predefined then
 											-- Assignment on a predefined target is always safe.
 										tmp := False
 									else
 											-- We can optimize target := call when
 											-- no metamorphosis occurs on source.
-										tmp := not real_type (assign.target.type).is_basic and
+										tmp := not real_type (l_assign.target.type).is_basic and
 											real_type (call.type).is_basic
 										
 										if not tmp then
@@ -788,7 +788,7 @@ feature -- Setting
 									end
 								end
 							else
-								expr_b ?= assign.source
+								expr_b ?= l_assign.source
 								tmp := expr_b.has_call or expr_b.allocates_memory
 							end
 						end

@@ -9,6 +9,8 @@ deferred class
 	EV_DRAWABLE_I
 
 inherit
+	EV_ANY_I
+
 --	EV_PIXMAP_CONTAINER_I
 
 end -- class EV_DRAWABLE_I

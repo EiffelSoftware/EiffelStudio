@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision text container, implementation interface."
 	status: "See notice at end of class"
@@ -8,9 +7,10 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_TEXT_CONTAINER_I
 
+inherit
+	EV_ANY_I
 
 feature -- Access
 
@@ -35,7 +35,6 @@ feature -- Status setting
 			-- Set text alignment of current label to left.
 		deferred
 		end
-
 
 feature -- Element change
 

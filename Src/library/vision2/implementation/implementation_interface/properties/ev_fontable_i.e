@@ -1,18 +1,21 @@
 indexing
-
-	description: "Widgets which define a font";
+	description: "EiffelVision fontable, implementation interface.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 deferred class
-
 	EV_FONTABLE_I 
+
+inherit
+	EV_ANY_I
 
 feature -- Access
 
 	font: EV_FONT is
 			-- Font name of label
+		require
+			exists: not destroyed
 		deferred
 		end
 
@@ -21,7 +24,8 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set font label to `font_name'.
 		require
-			a_font_exists: a_font /= Void
+			exists: not destroyed
+			valid_font: a_font.is_valid
 			a_font_specified: a_font.is_specified
 		deferred
 		end

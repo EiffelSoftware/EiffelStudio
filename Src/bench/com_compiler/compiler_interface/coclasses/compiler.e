@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			was_compilation_successful := False
 			create last_error_message.make_from_string ("System has not been compiled")
 			display_warnings := True
+			discard_assertions := False
 			set_compiler (Current)
 		end
 

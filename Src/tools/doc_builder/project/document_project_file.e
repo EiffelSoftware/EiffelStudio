@@ -78,6 +78,8 @@ feature -- Basic operations
 		local
 			l_root, l_element: XM_ELEMENT
 			l_ns: XM_NAMESPACE
+			l_text: STRING
+			l_file: PLAIN_TEXT_FILE
 		do
 			if document = Void then
 				create document.make
@@ -174,8 +176,14 @@ feature -- Basic operations
 			
 			write_filters (l_root)
 			write_shortcuts (l_root)
-			
-			save_xml_document (document, project.file.name)
+				
+			l_text := pretty_xml (document_text (document))
+			create l_file.make_open_write (project.file.name)
+			if not l_file.exists then
+				create l_file.make_create_read_write (project.file.name)
+			end
+			l_file.put_string (l_text)
+			l_file.close
 		end
 		
 	write_filters (root: XM_ELEMENT) is

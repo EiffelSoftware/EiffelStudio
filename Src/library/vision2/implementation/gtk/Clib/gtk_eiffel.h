@@ -322,6 +322,7 @@ EIF_POINTER c_gtk_toolbar_new_horizontal (void);
 ==============================================================================*/
 
 gint c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor);
+GdkCursor * c_gtk_create_cursor_with_pixmap (char *fname, gint X, gint Y);
 
 /*==============================================================================
  button functions

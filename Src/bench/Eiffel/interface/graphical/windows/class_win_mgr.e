@@ -58,18 +58,18 @@ feature -- Access
 
 feature -- Update
 
-    update_array_resource (old_res, new_res: ARRAY_RESOURCE) is
-            -- Update `old_res' with the value of `new_res',
-            -- if the value of `new_res' is applicable.
-            -- Also update the interface.
-        local
-            cr: like Class_tool_resources
-        do
-            cr := Class_tool_resources;
-            if old_res = cr.feature_clause_order then
-                clear_class_tables
-            end
-        end;
+	update_array_resource (old_res, new_res: ARRAY_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+			-- Also update the interface.
+		local
+			cr: like Class_tool_resources
+		do
+			cr := Class_tool_resources;
+			if old_res = cr.feature_clause_order then
+				clear_class_tables
+			end
+		end
 
 feature {NONE} -- Properties
 

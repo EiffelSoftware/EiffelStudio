@@ -278,7 +278,12 @@ feature {NONE} -- Implementation
 						if current_name.is_equal (Internal_properties_string) and depth > 2 then
 								full_information := get_unique_full_info (current_element)
 								element_info := full_information @ (name_string)
-								add_local (current_type, element_info.data)
+									-- If `Grouped_locals' then group all locals together.
+								if system_status.current_project_settings.grouped_locals then
+									add_local_on_grouped_line (current_type, element_info.data)
+								else
+									add_local_on_single_line (current_type, element_info.data)
+								end
 								create_local (element_info.data)
 						else
 						end
@@ -408,11 +413,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_local (local_type, name: STRING) is
+	add_local_on_single_line (local_type, name: STRING) is
 			-- Add code representation of new local named `name' of type
 			-- `local_type' to `local_string'.
+			-- Each new local is placed on an individual line. e.g.
+			-- button1: EV_BUTTON
+			-- button2: EV_BUTTON
 		local
 			temp_string: STRING
+			position: INTEGER
 		do
 			if local_string = Void then
 				local_string := ""
@@ -423,6 +432,75 @@ feature {NONE} -- Implementation
 			
 			local_string := local_string + temp_string
 		end
+		
+	add_local_on_grouped_line (local_type, name: STRING) is
+			-- Add code representation of new local named `name' of type
+			-- `local_type' to `local_string'.
+			-- Each new local will be grouped with other locals of same type. e.g.
+			-- button1, button2: EV_BUTTON
+		local
+			temp_string: STRING
+			index_of_type: INTEGER
+			found_correctly: BOOLEAN
+			search_counter: INTEGER
+			new_line_counter: INTEGER
+		do
+			if local_string = Void then
+				local_string := name + ": " + local_type
+			else
+				if name.is_equal ("l_tool_bar_button_2") then
+					do_nothing	
+				end
+				from
+					search_counter := 1
+				until
+					found_correctly or search_counter > local_string.count or search_counter = 0
+				loop
+					index_of_type := local_string.substring_index (local_type, search_counter)
+					
+						-- Notes on the first `if'.
+						-- The first check checks that we have found the index, and that the folowing character is a new line character.
+						-- This handles the case where the string contains EV_MENU_ITEM and we are searching for EV_MENU, as this will fail on
+						-- the new line character check.
+						-- The second check ignores the new line character if we are at the last position in `local_string'.
+					if ( local_string @ (index_of_type + local_type.count) = '%R') or --index_of_type + local_type.count - 1 <= local_string.count and
+						(index_of_type + local_type.count - 1  = local_string.count) then
+						found_correctly := True
+						-- Otherwise, continue searching.
+					elseif index_of_type /= 0 then
+						search_counter := index_of_type + 1
+						-- The string was not found, so we set a condition to exit the loop.
+					elseif index_of_type = 0 then
+						search_counter := 0
+					end
+				end
+				if index_of_type > 0 then
+					if name.is_equal ("l_tool_bar_button_5") then
+						do_nothing	
+					end
+					local_string.insert_string (", " + name, index_of_type - 2)
+					from
+						search_counter := index_of_type
+						found_correctly := False
+					until
+						search_counter = index_of_type - 80 or found_correctly
+					loop
+						if (local_string @ search_counter) = '%R' then
+							found_correctly := True
+						end
+						search_counter := search_counter - 1
+					end
+					if not found_correctly then
+						local_string.insert_string (indent, index_of_type)--"%R%N", index_of_type)
+					end
+				else
+					temp_string := indent + name + ": " + local_type
+					local_string := local_string + temp_string
+				end
+			end
+			
+		end
+		
 		
 	create_local (name: STRING) is
 			-- Add code representation of the creation of local `name'

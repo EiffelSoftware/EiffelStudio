@@ -1487,8 +1487,6 @@ feature {NONE} -- Implementation
 			current_class_name_is_not_void: current_class_name /= Void
 			cluster_name_is_not_void: cluster_name /= Void
 			workbench_is_not_compiling: not workbench.is_compiling
-		local
-			class_i: CLASS_I
 		do
 			current_class_i := Universe.class_named (current_class_name,
 				Universe.cluster_of_name (cluster_name))

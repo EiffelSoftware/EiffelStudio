@@ -29,7 +29,6 @@ feature -- Initialisation
 			a_class_name_is_not_void: a_class_name /= Void
 			a_cluster_name_is_not_void: a_cluster_name /= Void
 		local
-			current_cluster_i: CLUSTER_I
 			class_c: CLASS_C
 		do
 			current_class_name := a_class_name

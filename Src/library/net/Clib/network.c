@@ -1111,9 +1111,8 @@ EIF_INTEGER c_packet_number_size(void)
 	return (EIF_INTEGER) (sizeof(uint32));
 }
 
-EIF_INTEGER c_get_number(data_obj)
+EIF_INTEGER c_get_number(EIF_OBJECT data_obj)
 	/*x packet number out of packet structure */
-EIF_OBJ data_obj;
 {
 	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
 	 * is either 4 or 8.

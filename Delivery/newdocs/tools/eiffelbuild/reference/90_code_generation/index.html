@@ -1,0 +1,29 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Code Generation</TITLE><LINK REL=StyleSheet HREF="/default.css"></HEAD>
+<BODY><H1>Code Generation</H1>
+<P>To generate Eiffel code representing your system, select <B>Generate code</B> from the <B>Project</B> menu or click <img SRC="/images/eiffelbuild/icons/icon_code_generation_color.png" > on the <A HREF="/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html">main toolbar</A>.
+<P>The length of time taken to generate your code will be dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar will be displayed during the generation of your system.</P>
+<P>The code will be generated according to the options you selected in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A></P>
+
+<H2>Project build type</H2>
+<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build_type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then the following will be generated:
+	<UL>
+		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name">window class name</A> setting + '_IMP' representing the implementation of your window.</LI>
+		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#window_class_name">window class name</A> setting representing the interface of your window.</LI>
+		<LI>A class named as <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#application_class_name">application class name</A> setting which is an EV_APPLICATION which will launch your window class.</LI>
+		<LI>An ace file which will contain all the information to compile your system.</LI>
+
+	</UL>
+</P>
+<P>Below is a <A HREF="http://www.eiffel.com/products/bon.html">BON</A> diagram of the generated system once compiled (All names are the EiffelBuild defaults):</P>
+
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/complete_project_diagram.png"></p>
+
+<H2>Class build type</H2>
+
+
+<P CLASS="note"><B>Note</B>: note here.</P>
+
+
+
+<P CLASS="seealso"><B>See also</B>: <BR><A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A></P>
+</BODY></HTML>

@@ -8,6 +8,6 @@ inherit
 
 feature 
 
-	where: STRING is "In LOOP statement"
+	where: STRING is "In until clause"
 
 end

@@ -8,6 +8,6 @@ inherit
 
 feature 
 
-	where: STRING is "In IF statement"
+	where: STRING is "In if clause"
 
 end

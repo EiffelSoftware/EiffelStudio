@@ -8,6 +8,6 @@ inherit
 
 feature
 
-	where: STRING is "In assertion"
+	where: STRING is "In assertion clause"
 
 end

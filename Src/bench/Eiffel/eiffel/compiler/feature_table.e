@@ -134,6 +134,7 @@ feature -- Access: compatibility
 			if l_id > 0 then
 				search_id (l_id)
 			else
+				control := Not_found_constant
 				found_item := Void
 			end
 		end

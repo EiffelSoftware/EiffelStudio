@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WINDOWS_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -29,6 +34,9 @@ feature {NONE} -- Initialization
 				10, 70, 90, 35, -1)
 			!! demo3d_button.make (Current, "3D",
 				10, 110, 90, 35, -1)
+			if not is_win32 then
+				demo3d_button.disable
+			end
 		end
 
 feature -- Access

@@ -61,6 +61,17 @@ feature
 			Result := not generation_mode
 		end
 
+	has_cpp_externals_calls: BOOLEAN
+			-- Does the current generated class have a C++ call?
+
+	set_has_cpp_externals_calls (v: BOOLEAN) is
+			-- Set `has_cpp_externals_calls' with `v'.
+		do
+			has_cpp_externals_calls := v
+		ensure
+			has_cpp_externals_calls_set: has_cpp_externals_calls = v
+		end
+
 	current_type: CL_TYPE_I
 			-- Current class type in which byte code is processed
 

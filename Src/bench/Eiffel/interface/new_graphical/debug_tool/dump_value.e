@@ -181,10 +181,25 @@ feature -- Status report
 			expr: EB_EXPRESSION
 			obj: DEBUGGED_OBJECT
 			cv_spec: SPECIAL_VALUE
+			int_value: DEBUG_VALUE [INTEGER]
+			l_count: INTEGER
 			sc: CLASS_C
+			l_conform_to_string: BOOLEAN
+			l_area_name, l_count_name: STRING
 		do
 			sc := Eiffel_system.string_class.compiled_class
-			if dynamic_type = sc then
+			l_conform_to_string := dynamic_type /= sc and then dynamic_type.simple_conform_to (sc)
+			if dynamic_type = sc or l_conform_to_string then
+				if l_conform_to_string then
+						-- Take name of `area' and `count' from STRING in descendant version.
+					f := sc.feature_with_name (area_name).ancestor_version (dynamic_type)
+					l_area_name := f.name
+					f := sc.feature_with_name (count_name).ancestor_version (dynamic_type)
+					l_count_name := f.name
+				else
+					l_area_name := area_name
+					l_count_name := count_name
+				end
 				create obj.make (value_object, min, max)
 				from
 					obj.attributes.start
@@ -192,26 +207,31 @@ feature -- Status report
 					obj.attributes.after
 				loop
 					cv_spec ?= obj.attributes.item
-					if cv_spec /= Void and then cv_spec.name.is_equal (area_name) then
+					if cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
 						Result := cv_spec.raw_string_value
 						Result.prune_all ('%U')
+					else
+						int_value ?= obj.attributes.item					
+						if int_value /= Void and then int_value.name.is_equal (l_count_name) then
+							l_count := int_value.value
+						end
 					end
 					obj.attributes.forth
 				end
-			elseif dynamic_type.simple_conform_to (sc) then
-				f := sc.feature_with_name (area_name).ancestor_version (dynamic_type)
-				create obj.make (value_object, min, max)
-				from
-					obj.attributes.start
-				until
-					obj.attributes.after
-				loop
-					cv_spec ?= obj.attributes.item
-					if cv_spec /= Void and then cv_spec.name.is_equal (f.name) then
-						Result := cv_spec.raw_string_value
-						Result.prune_all ('%U')
-					end
-					obj.attributes.forth
+					-- At the point `area' and `count' from STRING should have been found in
+					-- STRING object.
+				check
+					count_attribute_found: True
+					area_attribute_found: True
+				end
+					-- We now have retrieved the full `area' of STRING object. Let's check
+					-- if we need to display the complete area, or just part of it.
+				Result.keep_head (l_count.min (Result.count))
+				
+					-- If what is displayed is less than the count of the STRING object,
+					-- we display `...' to show that there is something more.
+				if l_count > (max - min + 1) then
+					Result.append ("...")
 				end
 			else
 				f := debug_output_feature.ancestor_version (dynamic_type)
@@ -470,6 +490,7 @@ feature {NONE} -- Private Constants
 	
 	debuggable_class_name: STRING is "debug_output"
 	area_name: STRING is "area"
+	count_name: STRING is "count"
 	
 	Type_unknown	: INTEGER is 0
 	Type_boolean	: INTEGER is 1

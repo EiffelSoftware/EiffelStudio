@@ -35,6 +35,18 @@ feature {NONE} -- For workbench requests.
 		-- #define ONCE 25
 		-- /* Once routines inspection */
 
+	Rqst_interrupt: INTEGER is 26;
+		-- #define EWB_INTERRUPT 26
+		-- /* Debugger asking interruption of application */
+
+	Rqst_sp_lower: INTEGER is 30;
+		-- #define SP_LOWER 30
+		-- /* Bounds for special objects inspection */
+
+	Rqst_sp_upper: INTEGER is 31;
+		-- #define SP_UPPER 31
+		-- /* Bounds for special objects inspection */
+
 	Rqst_resume: INTEGER is 11;
 		-- #define RESUME 11
 		-- /* Resume execution */
@@ -108,6 +120,9 @@ feature {NONE} -- For workbench requests.
 
 	Pg_break: INTEGER is 3;
 		-- Breakpoint reached
+
+	Pg_interrupt: INTEGER is 4;
+		-- System execution interrupted
 
 	Rqst_quit: INTEGER is 12;
 		-- #define QUIT            12

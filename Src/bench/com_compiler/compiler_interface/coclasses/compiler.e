@@ -132,6 +132,8 @@ feature -- Basic Operations
 						Eiffel_project.finalize (not discard_assertions)
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile then
 						Eiffel_project.precompile (True)
+					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_finalized_precompile then
+						Eiffel_project.finalize_precompile (True, not discard_assertions)
 					end
 					
 					-- close output pipe for piped output

@@ -137,7 +137,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 									mp.restore;
 									warner (popup_parent).gotcha_call (w_Cannot_find_feature (rname, e_class.name))
 								else
-									!! feature_stone.make (e_feature, e_class);
+									!! feature_stone.make (e_feature);
 									tool.process_feature (feature_stone);
 									mp.restore;
 								end

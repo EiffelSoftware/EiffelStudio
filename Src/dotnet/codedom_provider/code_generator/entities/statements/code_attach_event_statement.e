@@ -66,11 +66,19 @@ feature {NONE} -- Implementation
 			is_in_code_generation: current_state = Code_generation
 		local
 			l_name: STRING
+			l_type: CODE_TYPE_REFERENCE
+			l_member: CODE_MEMBER_REFERENCE
 		do
 			create l_name.make (method_prefix (Adder).count + attached_event.event_name.count)
 			l_name.append (method_prefix (Adder))
 			l_name.append (attached_event.event_name)
-			Result := attached_event.target.type.member_from_name (l_name).eiffel_name
+			l_type := attached_event.target.type
+			if l_type /= Void then
+				l_member := l_type.member_from_name (l_name)
+				if l_member /= Void then
+					Result := l_member.eiffel_name
+				end
+			end
 		end
 		
 invariant

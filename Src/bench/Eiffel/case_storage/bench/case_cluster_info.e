@@ -399,13 +399,11 @@ end
 					window.skip_case_class
 				end;	
 debug ("CASE_ID")
-	if view_id /= Void then
-		io.error.putstring ("id: ");
-		io.error.putint (s_class_data.id);
-		io.error.putstring (" reusing view id: ");
-		io.error.putint (s_class_data.view_id);
-		io.error.new_line;
-	end
+	io.error.putstring ("id: ");
+	io.error.putint (s_class_data.id);
+	io.error.putstring (" reusing view id: ");
+	io.error.putint (s_class_data.view_id);
+	io.error.new_line;
 end
 				if view_id = 0 then
 					Old_case_info.increment_class_view_number;

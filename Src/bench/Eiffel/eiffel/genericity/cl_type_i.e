@@ -23,7 +23,13 @@ inherit
 			generate_cid,
 			make_gen_type_byte_code,
 			generate_cid_array,
-			generate_cid_init
+			generate_cid_init,
+			generate_gen_type_il
+		end
+	
+	DEBUG_OUTPUT
+		export
+			{NONE} all
 		end
 
 feature -- Access
@@ -304,17 +310,8 @@ feature -- Formatting
 		end
 
 	dump (buffer: GENERATION_BUFFER) is
-		local
-			s: STRING
 		do
-			if is_true_expanded then
-				buffer.putstring ("expanded ")
-			elseif is_separate then
-				buffer.putstring ("separate ")
-			end
-			s := clone (base_class.name)
-			s.to_upper
-			buffer.putstring (s)
+			buffer.putstring (debug_output)
 		end
 
 feature -- C generation
@@ -421,4 +418,31 @@ feature -- Generic conformance
 
 			dummy := idx_cnt.next
 		end
+
+feature -- Generic conformance for IL
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
+		do
+			if use_info and then cr_info /= Void then
+					-- It's an ancored type 
+			end	
+			il_generator.generate_class_type_instance (Current)
+		end
+
+feature -- Output
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make (32)
+			if is_true_expanded then
+				Result.append ("expanded ")
+			elseif is_separate then
+				Result.append ("separate ")
+			end
+			Result.append (base_class.name_in_upper)
+		end
+	
 end

@@ -26,7 +26,8 @@ inherit
 			generate_cid,
 			make_gen_type_byte_code,
 			generate_cid_array,
-			generate_cid_init
+			generate_cid_init,
+			generate_gen_type_il
 		end
 
 feature -- Access
@@ -216,7 +217,7 @@ feature -- Access
 			-- Name of current class
 		local
 			i, count: INTEGER
-			tmp: STRING
+			sep, tmp: STRING
 			l_meta: like meta_generic
 		do
 			Result := Precursor {CL_TYPE_I}
@@ -228,12 +229,14 @@ feature -- Access
 			if count > 0 then
 				from
 					i := 1
-					tmp := "_"
+					sep := "_"
 				until
 					i > count
 				loop
+					Result.append (sep)
+					tmp := clone (l_meta.item (i).il_type_name)
+					tmp.remove_head (tmp.last_index_of ('.', tmp.count))
 					Result.append (tmp)
-					Result.append (l_meta.item (i).il_type_name)
 					i := i + 1
 				end
 			end
@@ -392,6 +395,52 @@ feature -- Generic conformance
 			end
 		end
 
+feature -- Generic conformance for IL
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
+		local
+			i, up : INTEGER
+		do
+			il_generator.generate_generic_type_instance (true_generics.count)
+			
+			from
+				i  := true_generics.lower
+				check
+					i_start_at_one: i = 1
+				end
+				up := true_generics.upper
+			until
+				i > up
+			loop
+				il_generator.duplicate_top
+				il_generator.put_integer_32_constant (i - 1)
+				true_generics.item (i).generate_gen_type_il (il_generator, use_info)
+				il_generator.generate_array_write (feature {IL_CONST}.il_ref)
+				i := i + 1
+			end
+			
+			il_generator.generate_generic_type_settings (Current)
+		end
+
+feature {NONE} -- Implementation: generic conformance
+
+	generate_gen_type_il_array_init (il_generator: IL_CODE_GENERATOR; cnt: INTEGER) is
+			-- Generate new array type containing info of `cnt' about Current
+		require
+			il_generator_not_void: il_generator /= Void
+			cnt_not_void: cnt /= Void
+		do
+				-- duplicate newly created object
+			il_generator.duplicate_top
+
+				-- Create array that will hold values to create appropriate
+				-- type in case of an instance of a generic type.
+			il_generator.put_integer_32_constant (cnt)
+			il_generator.generate_array_creation (il_generator.type_id)
+		end
+		
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is

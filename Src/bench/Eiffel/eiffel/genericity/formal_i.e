@@ -10,7 +10,12 @@ inherit
 		redefine
 			is_formal, same_as, has_true_formal, has_formal, instantiation_in,
 			complete_instantiation_in, creation_instantiation_in,
-			generated_id, is_explicit
+			generated_id, is_explicit, generate_gen_type_il
+		end
+
+	SHARED_BYTE_CONTEXT
+		export
+			{NONE} all
 		end
 
 feature -- Access
@@ -109,6 +114,34 @@ feature -- Generic conformance
 			-- Id of a generic formal parameter.
 		do
 			Result := Formal_type - position
+		end
+
+feature -- Generic conformance for IL
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		local
+			l_gen_type: GEN_TYPE_I
+			l_decl_type: CL_TYPE_I
+			l_formal: FORMAL_ATTRIBUTE_I
+		do
+			l_gen_type ?= context.current_type
+			
+				-- We must be in a generic class otherwise having a formal creation
+				-- does not make sense.
+			check
+				l_gen_type_not_void: l_gen_type /= Void
+			end
+			
+				-- Generate call to feature, defined in every descendant of
+				-- generic class represented by `l_gen_type', that will
+				-- create the corresponding runtime type associated with formal
+				-- in descendant class.
+			l_formal := l_gen_type.base_class.formal_at_position (position)
+			il_generator.generate_current
+			l_decl_type := il_generator.implemented_type (l_formal.origin_class_id, context.current_type)
+			il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, True)
 		end
 
 feature {NONE} -- Code generation

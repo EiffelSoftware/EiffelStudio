@@ -280,6 +280,14 @@ feature -- Numeric types
 
 feature -- Generic conformance
 
+	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
+			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
+		do
+			ba.append_short_integer (generated_id (False))
+		end
+		
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 			-- Mode dependent type id - just for convenience
 		do
@@ -298,14 +306,6 @@ feature -- Generic conformance
 		do
 			buffer.putint (generated_id (final_mode))
 			buffer.putstring (", ")
-		end
-
-	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
-			-- Put type id's in byte array.
-			-- `use_info' is true iff we generate code for a 
-			-- creation instruction.
-		do
-			ba.append_short_integer (generated_id (False))
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER; 
@@ -344,4 +344,14 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
+feature -- Generic conformance for IL
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
+		require
+			il_generator_not_void: il_generator /= Void
+		do
+		end
+		
 end -- class TYPE_I

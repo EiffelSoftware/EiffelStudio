@@ -37,8 +37,8 @@
 
 /* Make sure NSIG is defined. If not, set it to 32 (cross your fingers)--RAM */
 #ifndef NSIG
-#ifdef __WINDOWS_386__
-#define NSIG 8
+#ifdef EIF_WINDOWS
+#define NSIG 16
 #else
 #define NSIG 32		/* Number of signals (acess from 1 to NSIG-1) */
 #endif
@@ -484,7 +484,7 @@ shared void initsig()
 	for (sig = 1; sig < NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	for (sig = 1; sig < NSIG; sig++)
 		sig_ign[sig] = 0;
 #endif
@@ -728,7 +728,10 @@ private struct sig_desc sig_name[] = {
 #ifdef SIGCONT
 	{ 37, SIGCONT, "Continue after stop" },
 #endif
-	{ 38, 0, "Unknown signal" }
+#ifdef SIGBREAK
+	{ 38, SIGBREAK, "Ctrl-Break"},
+#endif
+	{ 39, 0, "Unknown signal" }
 };
 
 public char *signame(sig)
@@ -1000,7 +1003,7 @@ long sig;
  * To run this, compile the file with -DTEST.
  */
 
-struct except exdata;	/* Exception handling global flags */
+struct eif_except exdata;	/* Exception handling global flags */
 private int bufstate();	/* Print circular buffer state */
 
 Signal_t test_handler(sig)

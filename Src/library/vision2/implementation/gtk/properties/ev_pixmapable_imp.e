@@ -17,6 +17,29 @@ inherit
 
 	EV_CONTAINER_IMP
 	
+feature -- Initialization
+
+	create_pixmap_place is
+			-- prepare the place for the pixmap in the `box'.
+			-- For that, we add a pixmap with a default gdk pixmap
+			-- in the `box'.
+		require
+			pixmap_widget_null: pixmap_widget_is_default_pointer
+			box_already_created: box /= default_pointer
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			-- create the pixmap with a default xpm.
+			pixmap_widget := c_gtk_pixmap_create_empty (box)
+
+			-- Set the pixmap in the `box'.
+			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, False, False, 0)
+
+			-- show the pixmap now that it has a parent.
+			gtk_widget_show (pixmap_widget)
+		end			
+		
+
 feature -- Access
 
 	box: POINTER is
@@ -39,52 +62,70 @@ feature {EV_CONTAINER} -- Element change
 			check
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
-			gtk_widget_show (pixmap_imp.widget)
-			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 0)
 
-			-- (2) We need to unreference the pixmap as, it has one extra reference
-			-- because of the reference added in `unset_pixmap'.
-			gtk_object_unref (pixmap_imp.widget)
+			-- Was there a pixmap in the `box'?
+			if (pixmap = Void) then
+				-- No pixmap in the `box', so create the place
+				-- for it.
+				create_pixmap_place
+			end
+
+			-- We replace the former gdk_pixmap of the gtk_pixmap (in pixmap_widget)
+			-- by the new one (in pix_widget).
+			c_gtk_pixmap_set_from_pixmap (pixmap_widget, pixmap_imp.widget) 
 
 			-- updating status
 			pixmap := pix
-			pixmap_imp.set_parent (Current)
-
-			-- Destroy the temporary window which
-			-- was needed at the creation of the pixmap
-			if (pixmap_imp.creation_window /= Default_pointer) then
-				gtk_widget_destroy (pixmap_imp.creation_window)
-				pixmap_imp.set_window_pointer (Default_pointer)
-			end
 		end
 
 	unset_pixmap is
-			-- Remove the pixmap from the container
+			-- Remove the pixmap location from the `box'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
 			pixmap_imp ?= pixmap.implementation
+			check
+				pixmap_imp_not_void: pixmap_imp /= Void
+			end
 
-			-- (1) Add a reference to the pixmap otherwise
-			-- it will be destroyed when removed from the box.
-			gtk_object_ref (pixmap_imp.widget)
+			-- Remove the pixmap_widget from the box. The gtk object
+			-- `pixmap_widget' will be detroyed.
+			gtk_container_remove (GTK_CONTAINER (box), pixmap_widget)
 
-			-- Remove the pixmap from the box.
-			gtk_container_remove (GTK_CONTAINER (box), pixmap_imp.widget)
+			-- updating status
 			pixmap := Void
+			set_pixmap_widget (default_pointer)
 		end
 
+feature -- Implementation
+
+	pixmap_widget_is_default_pointer: BOOLEAN is
+			-- Is `pixmap_widget' a default_pointer
+		do
+			Result := (pixmap_widget = default_pointer)
+		end
+	
 feature {NONE} -- Implementation
 		-- We defined this here because the label must be added
 		-- by EV in case we want to add a pixmap.
 
 	set_label_widget (new_label_widget: POINTER) is
+			-- Sets `label_widget' to `new_label_widget'.
 		do
 			label_widget := new_label_widget
 		end        
 	
         label_widget: POINTER 
-                        -- gtk widget of the label inside the button
+                        -- gtk widget of the label inside the `box'.
+
+	set_pixmap_widget (new_pixmap_widget: POINTER) is
+			-- Sets `pixmap_widget' to `new_pixmap_widget'.
+		do
+			pixmap_widget := new_pixmap_widget
+		end        
+
+	pixmap_widget: POINTER 
+			-- gtk widget of the pixmap inside the `box'.
 
 end -- EV_PIXMAPABLE_IMP
 

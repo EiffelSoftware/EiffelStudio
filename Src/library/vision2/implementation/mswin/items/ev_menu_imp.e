@@ -262,8 +262,7 @@ feature {NONE} -- Implementation
 					-- Retrieve the index of `Current'.
 				pos := parent_imp.interface.index_of (interface, 1)
 					-- Modify `Current'.
-				cwin_modify_menu (parent_imp.wel_item, pos - 1, Mf_Byposition +
-					Mf_String + Mf_popup, to_integer, wel_string.item)
+				cwin_modify_menu (parent_imp.wel_item, pos - 1, Mf_Byposition +	Mf_String + Mf_popup, to_integer, wel_string.item)
 					-- Re-draw the menu bar.
 				if top_level_window_imp /= Void then
 					cwin_draw_menu_bar (top_level_window_imp.wel_item)

@@ -79,33 +79,7 @@ feature -- Comparison
 			end
 		end
 	
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			-- Do nothing
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- adapt to replication
-		do
-			Result := clone (Current)
-		end
-
 feature {SERVER} -- Identity
-
-	is_feature_obj: BOOLEAN is
-			-- Is the current object an instance of FEATURE_AS ?
-		do
-			-- Do nothing
-		end
-
-	is_invariant_obj: BOOLEAN is
-			-- Is the current object an instance of INVARIANT_AS ?
-		do
-			-- Do nothing
-		end
 
 	position: INTEGER is
 			-- position of the item in text

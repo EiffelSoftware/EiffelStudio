@@ -259,19 +259,23 @@ feature {EV_ANY_I} -- Implementation
 			-- Draw a rubber band from pick position to pointer position.
 		local
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
+			real_target: EV_PICK_AND_DROPABLE
 			application: EV_APPLICATION_IMP
 		do
 			draw_rubber_band
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 			
-			target := real_pointed_target
-			application ?= (create {EV_ENVIRONMENT}).application.implementation
-			check
-				application_not_void: application /= Void
-			end
-			if application.pnd_motion_actions_internal /= Void then
-				application.pnd_motion_actions_internal.call ([a_x, a_y, real_pointed_target])
+			target := pointed_target
+			real_target ?= target
+			if real_target /= Void then
+				application ?= (create {EV_ENVIRONMENT}).application.implementation
+				check
+					application_not_void: application /= Void
+				end
+				if application.pnd_motion_actions_internal /= Void then
+					application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
+				end
 			end
 			
 			--| FIXME we should only need to call update_pointer_style

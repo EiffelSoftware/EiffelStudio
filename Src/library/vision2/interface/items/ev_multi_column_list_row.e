@@ -21,6 +21,7 @@ inherit
 			create_action_sequences
 		end
 
+	--| FIXME IEK Should inherit from PND
 	--EV_PICK_AND_DROPABLE
 	--	redefine
 	--		implementation,
@@ -84,7 +85,7 @@ feature -- Implementation
 		do
 			{EV_COMPOSED_ITEM} Precursor
 			create select_actions
-			--| FIXME create deselect_actions
+			create deselect_actions
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
@@ -110,6 +111,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/19 01:20:38  king
+--| Reinstated deselect_actions
+--|
 --| Revision 1.23  2000/02/18 23:54:11  oconnor
 --| released
 --|

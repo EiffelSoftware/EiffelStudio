@@ -10,8 +10,14 @@ inherit
 		end;
 	GRAPH_ELEMENT;
 	WINDOWS;
-	NAMABLE;
-	EDITABLE
+	NAMABLE
+		redefine
+			is_valid_new_name,
+			check_new_name
+		end;
+	EDITABLE;
+	SHARED_APPLICATION;
+	ERROR_POPUPER
 
 creation
 
@@ -159,6 +165,39 @@ feature -- Query
 			output_list.go_i_th (old_pos)
 		end;
 
+feature -- Namable
+
+	is_valid_new_name: BOOLEAN
+
+	popuper_parent: COMPOSITE is
+		once
+			Result := namer_window
+		end;
+
+	check_new_name (new_name: STRING) is
+		local
+			a_name: STRING;
+			id: IDENTIFIER
+		do
+			is_valid_new_name := True;
+			a_name := new_name;
+			if not Shared_app_graph.has_state_name (a_name) then
+				!! id.make (a_name.count);
+				id.append (a_name);
+				if not id.is_valid then
+					is_valid_new_name := False;
+					error_box.popup (Current,
+							Messages.invalid_state_name_er,
+							a_name)
+				end
+			else
+				is_valid_new_name := False;
+				Error_window.popup (Current,
+						Messages.state_name_exists_er,
+						a_name);
+			end
+		end;
+
 feature -- Editing
 
 	internal_name: STRING;
@@ -242,7 +281,8 @@ feature -- Editing
 			else
 				visual_name := clone (s);
 			end;
-			app_editor.update_circle_text (Current);
+			App_editor.update_circle_text (Current);
+			Context_catalog.update_state_name_in_behavior_page (Current)
 		end;
 
 	retrieve_set_visual_name (s: STRING) is
@@ -250,6 +290,17 @@ feature -- Editing
 			valid_s: s /= Void
 		do
 			visual_name := clone (s);
+		end;
+
+	remove_line_command_for_context (c: CONTEXT): FUNC_CUT is
+		local
+			cut_elt_line_cmd: FUNC_CUT;
+		do
+			find_input (c);
+			if not input_list.after then
+				!! Result;
+				Result.set_not_record
+			end;
 		end;
 
 feature 

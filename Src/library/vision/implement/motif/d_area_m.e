@@ -14,13 +14,19 @@ inherit
 	DRAWING_X
 		export
 			{NONE} all
+		undefine
+			display
+		redefine
+			display_handle
 		end;
 
 	D_AREA_I;
 
 	PRIMITIVE_M
 		undefine
-			create_callback_struct, clean_up
+			create_callback_struct, clean_up, object_clean_up, mel_destroy
+		redefine	
+			display_handle
 		end;
 
 	MEL_DRAWING_AREA
@@ -32,7 +38,15 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
+			draw_arc as mel_draw_arc,
+			draw_point as mel_draw_point,
+			draw_rectangle as mel_draw_rectangle,
+			fill_arc as mel_fill_arc,
+			fill_polygon as mel_fill_polygon,
+			fill_rectangle as mel_fill_rectangle,
 			is_shown as shown
+		redefine
+			display_handle
 		select
 			shown
 		end
@@ -45,14 +59,19 @@ feature {NONE} -- Initialization
 
 	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif drawing area.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_draw_make (a_drawing_area.identifier,
-					mel_parent (a_drawing_area, widget_index),
-					man);
-			display_pointer := xt_display (screen_object);
-			create_gc
-		end;
+			mel_draw_make (a_drawing_area.identifier, mc, man);
+			make_gc (mel_screen)
+		end
+
+feature -- Access
+
+	display_handle: POINTER;
+			-- C handle to the display
 
 feature -- Element change
 

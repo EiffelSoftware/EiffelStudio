@@ -543,20 +543,51 @@ feature -- Function Evaluation
 	icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugClass for `a_class_c'.`a_f_name'
 		local
-			l_mod_name: STRING
-			l_icd_module: ICOR_DEBUG_MODULE
-			l_feat_ctor : FEATURE_I
-			l_feat_ctor_tok: INTEGER
+			l_feat_i : FEATURE_I
+			l_feat_tok: INTEGER
 			l_class_c: CLASS_C			
 		do
 			l_class_c := ct.associated_class
-			l_feat_ctor := l_class_c.feature_named (a_f_name)
-			l_feat_ctor_tok := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_ctor)
+			l_feat_i := l_class_c.feature_named (a_f_name)
+-- FIXME jfiat [2004/03/11] : check why this was done with non_generic before ...
+--			l_feat_tok := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_i)
+			l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat_i, ct)
 			
+			if l_feat_tok = 0 then
+				l_feat_tok := feature_token (ct, a_f_name)
+			end
+			if l_feat_tok > 0 then
+				Result := icd_function_by_token (ct, l_feat_tok)				
+			end
+		end
+		
+	feature_token (ct: CLASS_TYPE; a_f_name: STRING): INTEGER is
+		local
+			l_mod_name: STRING
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_md_import: MD_IMPORT
+			l_class_token: INTEGER
+		do
 			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)
 			l_icd_module := icor_debug_module (l_mod_name)
-			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
-		end		
+			l_md_import := l_icd_module.get_md_import_interface
+			
+			l_class_token := l_md_import.find_type_def_by_name (ct.full_il_implementation_type_name, 0)
+			Result := l_md_import.find_member (l_class_token, a_f_name)
+		end
+		
+	icd_function_by_token (ct: CLASS_TYPE; a_f_token: INTEGER): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugClass for `a_class_c'.`a_f_name'
+		require
+			feature_token_valid: a_f_token > 0
+		local
+			l_mod_name: STRING
+			l_icd_module: ICOR_DEBUG_MODULE
+		do
+			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)
+			l_icd_module := icor_debug_module (l_mod_name)
+			Result := l_icd_module.get_function_from_token (a_f_token)
+		end			
 	
 	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for STRING
@@ -566,42 +597,70 @@ feature -- Function Evaluation
 			ct := Eiffel_system.String_class.compiled_class.types.first
 			Result := icd_class (ct)
 		end
-		
-	integer_32_ref_icd_class: ICOR_DEBUG_CLASS is
+
+	reference_integer_32_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference INTEGER'
 		do
 			Result := icd_class (int32_c_type.associated_reference_class_type)
 		end	
 		
-	integer_32_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+	reference_integer_32_set_item_method: ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `reference INTEGER'.set_item
 		do
 			Result := icd_function_by_name (int32_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
 		end	
+		
+	reference_real_icd_class: ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for `reference REAL'
+		do
+			Result := icd_class (float_c_type.associated_reference_class_type)
+		end	
 
-	boolean_ref_icd_class: ICOR_DEBUG_CLASS is
+	reference_real_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for `reference REAL'.set_item
+		do
+			Result := icd_function_by_name (float_c_type.associated_reference_class_type, "set_item")
+		ensure
+			Result /= Void
+		end		
+		
+	reference_double_icd_class: ICOR_DEBUG_CLASS is
+			-- ICorDebugClass for `reference DOUBLE'
+		do
+			Result := icd_class (double_c_type.associated_reference_class_type)
+		end
+		
+	reference_double_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for `reference DOUBLE'.set_item
+		do
+			Result := icd_function_by_name (double_c_type.associated_reference_class_type, "set_item")
+		ensure
+			Result /= Void
+		end
+
+	reference_boolean_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference BOOLEAN'
 		do
 			Result := icd_class (boolean_c_type.associated_reference_class_type)
-		end	
+		end
 		
-	boolean_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+	reference_boolean_set_item_method: ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `reference BOOLEAN'.set_item
 		do
 			Result := icd_function_by_name (boolean_c_type.associated_reference_class_type, "set_item")
 		ensure
 			Result /= Void
-		end	
+		end
 		
-	character_ref_icd_class: ICOR_DEBUG_CLASS is
+	reference_character_icd_class: ICOR_DEBUG_CLASS is
 			-- ICorDebugClass for `reference CHARACTER'
 		do
 			Result := icd_class (char_c_type.associated_reference_class_type)
 		end	
 		
-	character_ref_set_item_method: ICOR_DEBUG_FUNCTION is
+	reference_character_set_item_method: ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `reference CHARACTER'.set_item
 		do
 			Result := icd_function_by_name (char_c_type.associated_reference_class_type, "set_item")

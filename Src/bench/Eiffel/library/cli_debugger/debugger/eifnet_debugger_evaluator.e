@@ -122,6 +122,40 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
 			end_evaluation
 		end
 		
+	new_r4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with real
+		local
+			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
+		do
+			prepare_evaluation (a_frame)
+			Result := last_icor_debug_eval.create_value (element_type_r4 , Void)
+			if Result /= Void then
+				l_gen_obj := Result.query_interface_icor_debug_generic_value
+				check l_gen_obj /= Void end					
+
+				l_gen_obj.set_value ($a_val)
+				l_gen_obj.set_associated_frame (a_frame)				
+			end
+			end_evaluation
+		end
+		
+	new_r8_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with real
+		local
+			l_gen_obj: ICOR_DEBUG_GENERIC_VALUE
+		do
+			prepare_evaluation (a_frame)
+			Result := last_icor_debug_eval.create_value (element_type_r8 , Void)
+			if Result /= Void then
+				l_gen_obj := Result.query_interface_icor_debug_generic_value
+				check l_gen_obj /= Void end					
+
+				l_gen_obj.set_value ($a_val)
+				l_gen_obj.set_associated_frame (a_frame)				
+			end
+			end_evaluation
+		end			
+		
 	new_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with Boolean
 		local
@@ -176,26 +210,41 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			Result := icdv_string_from_icdv_system_string (a_frame, l_str_icdv)
 		end	
 		
-	new_i4_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
+	new_reference_i4_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: INTEGER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with i4 _REF
 		do
 			Result := new_i4_evaluation (a_frame, a_val)
-			Result := icdv_integer_ref_from_icdv_integer (a_frame, Result)
+			Result := icdv_reference_integer_from_icdv_integer (a_frame, Result)
+		end
+		
+	new_reference_real_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: REAL): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with real _REF
+		do
+			Result := new_r4_evaluation (a_frame, a_val)
+			Result := icdv_reference_real_from_icdv_real (a_frame, Result)
+		end	
+		
+	new_reference_double_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: DOUBLE): ICOR_DEBUG_VALUE is
+			-- New Object evaluation with double _REF
+		do
+			Result := new_r8_evaluation (a_frame, a_val)
+			Result := icdv_reference_double_from_icdv_double (a_frame, Result)
 		end	
 
-	new_boolean_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
+	new_reference_boolean_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: BOOLEAN): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with boolean _REF
 		do
 			Result := new_boolean_evaluation (a_frame, a_val)
-			Result := icdv_boolean_ref_from_icdv_boolean (a_frame, Result)
+			Result := icdv_reference_boolean_from_icdv_boolean (a_frame, Result)
 		end	
 
-	new_character_ref_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
+	new_reference_character_evaluation (a_frame: ICOR_DEBUG_FRAME; a_val: CHARACTER): ICOR_DEBUG_VALUE is
 			-- New Object evaluation with char _REF
 		do
 			Result := new_char_evaluation (a_frame, a_val)
-			Result := icdv_character_ref_from_icdv_character (a_frame, Result)
-		end			
+			Result := icdv_reference_character_from_icdv_character (a_frame, Result)
+		end
+		
 		
 feature {DBG_EVALUATOR} -- Class construction facilities
 
@@ -210,58 +259,94 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			Result.set_associated_frame (a_frame)
 		end	
 		
-	icdv_integer_ref_from_icdv_integer (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	icdv_reference_integer_from_icdv_integer (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue for INTEGER_REF object created from SystemInteger `a_icdv_integer'
 		do
 			prepare_evaluation (a_frame)
-			last_icor_debug_eval.new_object_no_constructor (integer_32_ref_icd_class)
+			last_icor_debug_eval.new_object_no_constructor (reference_integer_32_icd_class)
 			Result := complete_function_evaluation		
-			method_evaluation (a_frame, integer_32_ref_set_item_method, <<Result, a_icdv_integer>>)
+			method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv_integer>>)
 			Result.set_associated_frame (a_frame)
 		end	
 		
-	icdv_boolean_ref_from_icdv_boolean (a_frame: ICOR_DEBUG_FRAME; a_icdv_boolean: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	icdv_reference_real_from_icdv_real (a_frame: ICOR_DEBUG_FRAME; a_icdv_real: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue for REAL_REF object created from SystemReal `a_icdv_real'
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (reference_real_icd_class)
+			Result := complete_function_evaluation		
+			method_evaluation (a_frame, reference_real_set_item_method, <<Result, a_icdv_real>>)
+			Result.set_associated_frame (a_frame)
+		end	
+
+	icdv_reference_double_from_icdv_double (a_frame: ICOR_DEBUG_FRAME; a_icdv_double: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+			-- ICorDebugValue for DOUBLE_REF object created from SystemDouble `a_icdv_double'
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.new_object_no_constructor (reference_double_icd_class)
+			Result := complete_function_evaluation		
+			method_evaluation (a_frame, reference_double_set_item_method, <<Result, a_icdv_double>>)
+			Result.set_associated_frame (a_frame)
+		end			
+		
+	icdv_reference_boolean_from_icdv_boolean (a_frame: ICOR_DEBUG_FRAME; a_icdv_boolean: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue for BOOLEAN_REF object created from SystemBoolean `a_icdv_boolean'
 		do
 			prepare_evaluation (a_frame)
-			last_icor_debug_eval.new_object_no_constructor (boolean_ref_icd_class)
+			last_icor_debug_eval.new_object_no_constructor (reference_boolean_icd_class)
 			Result := complete_function_evaluation		
-			method_evaluation (a_frame, boolean_ref_set_item_method, <<Result, a_icdv_boolean>>)
+			method_evaluation (a_frame, reference_boolean_set_item_method, <<Result, a_icdv_boolean>>)
 			Result.set_associated_frame (a_frame)
 		end		
 
-	icdv_character_ref_from_icdv_character (a_frame: ICOR_DEBUG_FRAME; a_icdv_character: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	icdv_reference_character_from_icdv_character (a_frame: ICOR_DEBUG_FRAME; a_icdv_character: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue for CHARACTER_REF object created from SystemChar `a_icdv_character'
 		do
 			prepare_evaluation (a_frame)
-			last_icor_debug_eval.new_object_no_constructor (character_ref_icd_class)
+			last_icor_debug_eval.new_object_no_constructor (reference_character_icd_class)
 			Result := complete_function_evaluation		
-			method_evaluation (a_frame, character_ref_set_item_method, <<Result, a_icdv_character>>)
+			method_evaluation (a_frame, reference_character_set_item_method, <<Result, a_icdv_character>>)
 			Result.set_associated_frame (a_frame)
 		end				
 
 feature {NONE} -- Implementation : ICorDebugClass
 
-	integer_32_ref_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for INTEGER_REF
+	reference_integer_32_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference INTEGER
 		once
-			Result := eifnet_debugger.integer_32_ref_icd_class
+			Result := eifnet_debugger.reference_integer_32_icd_class
+		ensure
+			Result /= Void
+		end
+		
+	reference_real_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference REAL
+		once
+			Result := eifnet_debugger.reference_real_icd_class
+		ensure
+			Result /= Void
+		end
+		
+	reference_double_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference DOUBLE
+		once
+			Result := eifnet_debugger.reference_double_icd_class
+		ensure
+			Result /= Void
+		end		
+
+	reference_boolean_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference BOOLEAN
+		once
+			Result := eifnet_debugger.reference_boolean_icd_class
 		ensure
 			Result /= Void
 		end
 
-	boolean_ref_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for BOOLEAN_REF
+	reference_character_icd_class: ICOR_DEBUG_CLASS is
+			-- IcorDebugClass for reference CHARACTER
 		once
-			Result := eifnet_debugger.boolean_ref_icd_class
-		ensure
-			Result /= Void
-		end
-
-	character_ref_icd_class: ICOR_DEBUG_CLASS is
-			-- IcorDebugClass for CHARACTER_REF
-		once
-			Result := eifnet_debugger.character_ref_icd_class
+			Result := eifnet_debugger.reference_character_icd_class
 		ensure
 			Result /= Void
 		end
@@ -274,26 +359,42 @@ feature {NONE} -- Implementation : ICorDebugClass
 			Result /= Void
 		end
 		
-	integer_32_ref_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for INTEGER_32_REF.set_item (..)
+	reference_integer_32_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference INTEGER.set_item (..)
 		once
-			Result := eifnet_debugger.integer_32_ref_set_item_method
+			Result := eifnet_debugger.reference_integer_32_set_item_method
 		ensure
 			Result /= Void
-		end		
+		end
 		
-	boolean_ref_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for BOOLEAN_REF.set_item (..)
+	reference_real_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference REAL.set_item (..)
 		once
-			Result := eifnet_debugger.boolean_ref_set_item_method
+			Result := eifnet_debugger.reference_real_set_item_method
 		ensure
 			Result /= Void
-		end	
-				
-	character_ref_set_item_method: ICOR_DEBUG_FUNCTION is
-			-- ICorDebugFunction for CHARACTER_REF.set_item (..)
+		end
+		
+	reference_double_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference DOUBLE.set_item (..)
 		once
-			Result := eifnet_debugger.character_ref_set_item_method
+			Result := eifnet_debugger.reference_double_set_item_method
+		ensure
+			Result /= Void
+		end
+		
+	reference_boolean_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference BOOLEAN.set_item (..)
+		once
+			Result := eifnet_debugger.reference_boolean_set_item_method
+		ensure
+			Result /= Void
+		end
+				
+	reference_character_set_item_method: ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for reference CHARACTER.set_item (..)
+		once
+			Result := eifnet_debugger.reference_character_set_item_method
 		ensure
 			Result /= Void
 		end	

@@ -101,10 +101,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					renaming := renamings.item;
 					create old_name.make (10);
 					old_name.append (renaming.old_name);
-					old_name.to_lower;
+					old_name.to_upper;
 					create new_name.make (10);
 					new_name.append (renaming.new_name);
-					new_name.to_lower;
+					new_name.to_upper;
 						-- Check physical existence of class named `old_name'
 						-- in cluster
 					a_class := cluster.classes.item (old_name);

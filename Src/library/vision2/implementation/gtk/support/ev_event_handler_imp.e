@@ -51,8 +51,13 @@ feature {NONE} -- Status report
 			end
 		end
 
-	which_event_id (ev_str: STRING; mouse_but: INTEGER; double_clic: BOOLEAN): INTEGER is
-			-- gives the event_id number corresponding to the `event' string
+	which_event_id (wid: POINTER; ev_str: STRING; mouse_but: INTEGER; double_clic: BOOLEAN): INTEGER is
+			-- Gives the event_id number corresponding to the `event' string.
+			-- We need the parameter `wid' because for some EV_WIDGET the event is connected
+			-- to other pointer than `widget'. Therefore we need to redefine this
+			-- feature in those classes to be able to store the commands in different
+			-- location in `event_command_array' so we can retrieve the commands easily.
+			-- (example: see EV_FILE_SELECTION_DIALOG_IMP). 
 		require
 			event_not_void: ev_str/=void
 --			mouse_button_ok: (mouse_but>=0 and mouse_but<=3) 
@@ -140,7 +145,7 @@ feature {NONE} -- Status report
 			elseif ev_str.is_equal ("activate") then
 				Result := activate_id
 
-			-- For buttons:
+			-- For buttons and file selection dialog:
 			elseif ev_str.is_equal ("clicked") then
 				Result := clicked_id
 			elseif ev_str.is_equal ("toggled") then
@@ -225,7 +230,7 @@ feature {NONE} -- Status setting
 			-- Updating the `event_command_array' by including the new command :
 
 			-- select the right `event_id' corresponding to the `event'
-			event_id:= which_event_id (event, mouse_button, double_click)
+			event_id:= which_event_id (wid, event, mouse_button, double_click)
 
 			-- first, we create the list if it doesn't exist.
 			if event_command_array = Void then
@@ -284,7 +289,7 @@ feature {NONE} -- Status setting
 			-- Updating the `event_command_array' by including the new command :
 
 			-- select the right event_id corresponding to the `event'
-			event_id:= which_event_id (event, 0, False)
+			event_id:= which_event_id (wid, event, 0, False)
 
 			-- first, we create the list if it doesn't exist.
 			if event_command_array = Void then

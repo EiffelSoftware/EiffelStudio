@@ -40,7 +40,13 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	gslist: POINTER is
+	set_radio_group (a_gslist: POINTER) is
+			-- Make current a member of `a_gslist' radio group.
+		do
+			C.gtk_radio_menu_item_set_group (c_object, a_gslist)
+		end
+
+	radio_group: POINTER is
 		do
 			Result := C.gtk_radio_menu_item_group (c_object)
 		end
@@ -70,6 +76,9 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/25 18:44:07  king
+--| Added set_radio_group, gslist->radio-group
+--|
 --| Revision 1.17  2000/02/25 01:54:56  brendel
 --| Added inheritance of EV_RADIO_PEER_IMP, which means: effecting of `gslist'
 --| and features `peers' and `selected_peer' could be removed.

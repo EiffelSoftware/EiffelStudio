@@ -75,7 +75,7 @@ feature -- Type check
 			error: BOOLEAN
 			cpp_error: EXT_CPP
 		do
-			a_feat ?= context.a_feature
+			a_feat ?= context.current_feature
 
 				-- Check first argument if necessary
 			inspect
@@ -180,7 +180,7 @@ feature -- Type check
 			error_msg: STRING
 		do
 			if has_signature then
-				a_feat := context.a_feature
+				a_feat := context.current_feature
 				feature_count := a_feat.argument_count
 				if argument_types /= Void then
 						-- Check for arguments

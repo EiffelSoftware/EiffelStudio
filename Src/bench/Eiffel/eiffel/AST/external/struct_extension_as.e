@@ -106,7 +106,7 @@ feature -- Type check
 				create struct_error
 				struct_error.set_error_message ("The struct field name part should always be present.")
 			else
-				feat ?= context.a_feature
+				feat ?= context.current_feature
 				if feat.is_function then
 						-- A struct external function definition has always one
 						-- argument of type POINTER

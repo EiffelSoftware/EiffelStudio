@@ -104,11 +104,11 @@ feature -- Type check
 		do
 			if has_signature then
 				if argument_types /= Void then
-					if argument_types.count /= context.a_feature.argument_count then
+					if argument_types.count /= context.current_feature.argument_count then
 						error := True
 					end
 				end
-				if (return_type = 0) = context.a_feature.is_function then
+				if (return_type = 0) = context.current_feature.is_function then
 					error := True
 				end
 

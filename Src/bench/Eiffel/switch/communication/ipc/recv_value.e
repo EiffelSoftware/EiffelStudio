@@ -10,22 +10,53 @@ class RECV_VALUE
 
 inherit
 	DEBUG_VALUE_EXPORTER
+	
+	REFACTORING_HELPER
 		
 feature	{} -- Initialization of the C/Eiffel interface
 
 	init_recv_c is
 			-- Pass routine addresses to C.
 		once
-			c_pass_recv_routines ($set_int8, $set_int16, $set_int32, $set_int64, $set_bool,
-					$set_char, $set_wchar, $set_real, 
-					$set_double, $set_ref, $set_point, 
-					$set_bits, $set_error, $set_void)
+			c_pass_recv_routines ($set_nat8, $set_nat16, $set_nat32, $set_nat64,
+				$set_int8, $set_int16, $set_int32, $set_int64, $set_bool,
+				$set_char, $set_wchar, $set_real, 
+				$set_double, $set_ref, $set_point, 
+				$set_bits, $set_error, $set_void)
 		end
 
 	set_error is
 			-- An error occurred.
 		do
 			error := True
+		end
+
+	set_nat8 (v: INTEGER_8) is
+			-- Receive an integer value.
+		do
+			fixme ("Use NATURAL_XX instead when compiler support them.")
+--			create {DEBUG_VALUE [NATURAL_8]} item.make (v)
+		end
+
+	set_nat16 (v: INTEGER_16) is
+			-- Receive an integer value.
+		do
+			fixme ("Use NATURAL_XX instead when compiler support them.")
+--			create {DEBUG_VALUE [NATURAL_16]} item.make (v)
+		end
+
+	set_nat32 (v: INTEGER) is
+			-- Receive an integer value.
+		do
+			fixme ("Use NATURAL_XX instead when compiler support them.")
+--			create {DEBUG_VALUE [NATURAL_} item.make (v)
+		end
+		
+	set_nat64 (v: INTEGER_64) is
+			-- Receive an integer value.
+		do
+			fixme ("Use NATURAL_XX instead when compiler support them.")
+--			create {DEBUG_VALUE [NATURAL_64]} item.make (v)
 		end
 
 	set_int8 (v: INTEGER_8) is
@@ -123,8 +154,11 @@ feature {NONE} -- External routines
 			"C"
 		end
 
-	c_pass_recv_routines (d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double, 
-						d_ref, d_point, d_bits, d_error, d_void: POINTER) is
+	c_pass_recv_routines (
+			d_nat8, d_nat16, d_nat32, d_nat64,
+			d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double, 
+			d_ref, d_point, d_bits, d_error, d_void: POINTER)
+		is
 		external
 			"C"
 		end

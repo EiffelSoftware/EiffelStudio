@@ -86,13 +86,15 @@ feature -- Basic Operations
 	link is
 			-- Create proxy/stub dll.
 		local
-			a_string: STRING
+			a_string, a_working_directory: STRING
 		do
 			generate_def_file
 			a_string := clone (linker)
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
 			add_message (Current, a_string)
+			a_working_directory := current_working_directory
+			change_working_directory (Shared_wizard_environment.destination_folder)
 			generate_make_file (Linker_command_line, Temporary_input_file_name)
 			a_string := clone (Linker)
 			a_string.append (Space)
@@ -103,6 +105,7 @@ feature -- Basic Operations
 			a_string.append (clone (shared_wizard_environment.project_name))
 			a_string.append (Dll_file_extension)
 			shared_wizard_environment.set_proxy_stub_file_name (a_string)
+			change_working_directory (a_working_directory)
 		end
 
 feature {NONE} -- Implementation

@@ -459,6 +459,7 @@ feature -- Basic operation
 		end
 		
 	string_is_feature_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+			-- Is `object_name' already used as a feature name for event connection?
 		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 			name_lower: STRING

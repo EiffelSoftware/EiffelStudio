@@ -554,6 +554,7 @@
 			<TEXT>debugger__show_text_in_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>debug_main_splitter_position<INTEGER>250</INTEGER></TEXT>
 			<TEXT>last_saved_stack_path<STRING>C:\</STRING></TEXT>
+			<TEXT>last_browsed_cluster_directory<STRING>C:\</STRING></TEXT>
 			<TEXT>max_slice<INTEGER>50</INTEGER></TEXT>
 			<TEXT>min_slice<INTEGER>0</INTEGER></TEXT>
 			<TEXT>dyn_lib_window_height<INTEGER>300</INTEGER></TEXT>

@@ -48,6 +48,18 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			{EV_WIDGET} Precursor
+			create scr
+			scr.set_line_width (3)
+			scr.set_invert_mode
+			sep.set_minimum_height (8)
+			sep.set_minimum_width (8)
+			create first_cell
+			split_box.extend (first_cell)
+			split_box.extend (sep)
+			split_box.disable_child_expand (sep)
+			create second_cell
+			split_box.extend (second_cell)
+			implementation.box.extend (split_box)
 			first_cell.merge_radio_button_groups (second_cell)
 		end
 
@@ -148,8 +160,7 @@ feature -- Status report
 			-- Items may be removed.
 
 	split_position: INTEGER is
-			-- Current position of the splitter.
-			--| FIXME position relative to...?
+			-- Offset of the splitter from left or top.
 		deferred
 		ensure
 			result_large_enough: Result >= minimum_split_position
@@ -319,23 +330,6 @@ feature {NONE}-- Implementation
 	scr: EV_SCREEN
 		-- Used for drawing guideline on screen.
 
-	initialize_split_area is
-			-- Initialize the split area and screen.
-		do
-			create scr
-			scr.set_line_width (3)
-			scr.set_invert_mode
-			sep.set_minimum_height (8)
-			sep.set_minimum_width (8)
-			create first_cell
-			split_box.extend (first_cell)
-			split_box.extend (sep)
-			split_box.disable_child_expand (sep)
-			create second_cell
-			split_box.extend (second_cell)
-			implementation.box.extend (split_box)
-		end
-
 	create_implementation is
 		do
 			create {EV_AGGREGATE_WIDGET_IMP} implementation.make (Current)
@@ -375,6 +369,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/03 23:00:28  brendel
+--| Moved all initialization to `initialize'.
+--|
 --| Revision 1.20  2000/03/03 20:27:41  brendel
 --| Cosmetics.
 --|

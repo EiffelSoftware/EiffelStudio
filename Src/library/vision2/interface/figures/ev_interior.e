@@ -14,6 +14,9 @@ inherit
 --	EV_CHILD_CLIPABLE
 
 	EV_DRAWING_ATTRIBUTES
+		redefine
+			set_drawing_attributes
+		end
 
 creation
 
@@ -31,11 +34,9 @@ feature {NONE}-- Initialization
 feature {EV_FIGURE} -- Element change
 
 	set_drawing_attributes (drawing: EV_DRAWABLE) is
-			-- Set the attributes to `a_drawing'.
-		require
-			drawing_exists: drawing /= Void
+			-- Set the attributes to `drawing'.
 		do
-			drawing.set_logical_mode (logical_function_mode)
+			{EV_DRAWING_ATTRIBUTES} Precursor (drawing)
 --			drawing.set_subwindow_mode (subwindow_mode)
 --			drawing.set_fill_style (fill_style)
 --			inspect

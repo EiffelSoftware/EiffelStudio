@@ -507,6 +507,7 @@ void exitprf(void)
 		SYSTEMTIME *execution_time;
 #endif  /* HAS_GERUSAGE */
 
+		char *meltpath = (char *) 0;			/* directory of .UPDT */
 		unsigned long *keys;		/* Keys from H table */
 		struct feat_table *f_values;	/* Values from class H table */
 		struct prof_info *features;	/* Features from H tables */
@@ -517,8 +518,17 @@ void exitprf(void)
 			
 		double percentage; /* the computed percentage of each routine */
 		
-		chdir (starting_working_directory);	/* change the current directory to EIFGEN/W_code or
+		meltpath = (char*) eif_getenv ("MELT_PATH");
+		
+		if (meltpath != NULL)
+		{
+			chdir (meltpath);
+		}
+		else
+		{
+			chdir (starting_working_directory);	/* change the current directory to EIFGEN/W_code or
 						/* EIFGEN/F_code before to crete the profile_output_file */
+		}
 
 #ifdef HAS_GETRUSAGE
 		execution_time = (struct prof_rusage *) eif_malloc (sizeof (struct prof_rusage));

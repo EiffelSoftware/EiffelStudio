@@ -64,56 +64,107 @@
 
 #include "bitmask.h"
 
-#ifdef EIF_OS2
-void do_init(void);
+#ifdef EIF_WIN32
+#define EIFNET_ERROR_HAPPENED SOCKET_ERROR
+#else
+#define EIFNET_ERROR_HAPPENED -1
+#endif
 
-void do_init()
+	/* Raise an Eiffel exception in case an error occured */
+
+void eif_net_check (int retcode) {
+	/* Check the return code of connect(), recv(), send(), ... */
+
+	char buf[80]="Net error #";
+	int errcode;
+
+#ifdef EIF_WIN32
+	if (retcode == SOCKET_ERROR) {
+		errcode = WSAGetLastError();
+		if (errcode==WSANOTINITIALISED)
+			eraise("WSANOTINITIALISED A successful WSAStartup must occur before using this function.",EN_PROG);
+		if (errcode==WSAENETDOWN)
+			eraise("WSAENETDOWN The network subsystem has failed.",EN_PROG);
+		if (errcode==WSAEADDRINUSE)
+			eraise("WSAEADDRINUSE The specified address is already in use. (See the SO_REUSEADDR socket option under setsockopt).",EN_PROG);
+		if (errcode==WSAEFAULT)
+			eraise("WSAEFAULT The name or the namelen parameter is not a valid part of the user address space, the namelen parameter is too small, the name parameter contains incorrect address format for the associated address family, or the first two bytes of the memory block specified by name does not match the address family associated with the socket descriptor s.",EN_PROG);
+		if (errcode==WSAEINPROGRESS)
+			eraise("WSAEINPROGRESS A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.",EN_PROG);
+		if (errcode==WSAEINVAL)
+			eraise("WSAEINVAL The socket is already bound to an address.",EN_PROG);
+		if (errcode==WSAENOBUFS)
+			eraise("WSAENOBUFS Not enough buffers available, too many connections.",EN_PROG);
+		if (errcode==WSAENOTSOCK)
+			eraise("WSAENOTSOCK The descriptor is not a socket.",EN_PROG);
+		if ((errcode != EWOULDBLOCK) && (errcode != EINPROGRESS)) {
+			itoa(errcode,&buf[11],10);
+			eraise(buf,EN_IO);
+		}
+	}
+#else
+		/* FIXME */
+		/* Get the last error here, and signal it like above...*/
+	if (retcode < 0) {
+		eraise("Error happened when accessing net",EN_IO);
+	}
+#endif
+
+}
+
+void eif_net_check_recv (int r) {
+	/* Check the value returned returned by recv() */
+
+#ifdef EIF_WIN32
+	if (r == SOCKET_ERROR) {
+		eif_net_check(r);
+	} else if (r == 0) {
+		eraise ("Connection closed", EN_PROG);
+	}
+#else
+		/* FIXME */
+	if (r < 0)
+		eif_net_check(r);
+#endif
+
+}
+
+
+#ifdef EIF_OS2
+void do_init(void)
 {
 	static int done = FALSE;
-	int sockint;
 
 	if (! done)
-		{
-		if ((sockint = sock_init()) != 0)
-			{
-				fprintf(stderr, " INET.SYS probably is not running.");
-				exit (1);
-			}
-
-		}
+		eif_net_check (sock_init());
 }
 #endif
 
+
 #ifdef EIF_WIN32
-extern void eio(void);
-void do_init(void);
 
 void eif_winsock_cleanup(void)
 {
-	int err = 0;
-	err = WSACleanup();
-	/* bad luck if this is an error ! */
+	eif_net_check(WSACleanup());
 }
 
-void do_init()
+void do_init(void)
 {
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	int err = 0;
 	static BOOL done = FALSE;
 
-	if (! done)
-		{
-		wVersionRequested = MAKEWORD(1, 1);
+	if (!done) {
+		wVersionRequested = MAKEWORD(2, 0);
 		err = WSAStartup(wVersionRequested, &wsaData);
-		if (err != 0)
-			{
+		if (err != 0) {
 			fprintf (stderr, "Communications error %d", err);
 			eraise ("Unable to start WINSOCK", EN_PROG);
-			}
+		}
 		eif_register_cleanup(eif_winsock_cleanup);
 		done = TRUE;
-		}
+	}
 }
 #endif
 
@@ -130,9 +181,9 @@ void do_init()
 #define ise_htond(x)		change_double_order(x)
 
 static char ise_order_flag=0; /* value 1: No order reversing is necessary;
-															 *       2: Order reversing is necessary;
-															 *       0: Test if order reversing is necessary
-															 */
+							   *       2: Order reversing is necessary;
+							   *       0: Test if order reversing is necessary
+							   */
 
 float change_float_order(float f) 
 {
@@ -182,7 +233,7 @@ double change_double_order(double d)
 
 
 
-/*x** select facilities ***/
+/*** select facilities ***/
 
 EIF_INTEGER mask_size()
 	/*x size of mask fd_set */
@@ -292,7 +343,7 @@ void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 	hp = gethostbyname((char *) name);
 
 	if (hp == (struct hostent *) 0)
-		eio();
+		eif_net_check(EIFNET_ERROR_HAPPENED);
 
 	((struct in_addr *) addr)->s_addr = ((struct in_addr *) (hp->h_addr))->s_addr;
 }
@@ -447,7 +498,7 @@ void c_close_socket(EIF_INTEGER s)
 	/*x close socket descriptor s */
 {
 #ifdef EIF_WIN32
-	closesocket(s);
+	closesocket((SOCKET)s);
 #elif defined EIF_OS2
 	soclose((int) s);
 #else
@@ -461,15 +512,12 @@ void c_bind(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 {
 #ifdef EIF_WIN32
 	do_init();
-	if (bind((int) s, (struct sockaddr *) add, (int) length) == SOCKET_ERROR)
-        	eio();
+	eif_net_check (bind((SOCKET) s, (struct sockaddr *) add, (int) length));
 #elif defined EIF_OS2
 	do_init();
-	if (bind((int) s, (struct sockaddr *) add, (int) length) == -1)
-        	eio();
+	eif_net_check (bind((int) s, (struct sockaddr *) add, (int) length));
 #else
-	if (bind((int) s, (struct sockaddr *) add, (int) length) < 0)
-        	eio();
+	eif_net_check (bind((int) s, (struct sockaddr *) add, (int) length));
 #endif
 }
 
@@ -477,30 +525,34 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x accept connections on socket descriptor s, set peer address
 	    into socket address structure add (of length *length) */
 {
-	int a_length, result;
+	int a_length = length;
 
-	a_length = (int) length;
+#if defined EIF_WIN32
 
-#if defined EIF_WIN32 || defined EIF_OS2
+	SOCKET result;
+
 	do_init();
-#endif
+	result = accept((SOCKET) s, (struct sockaddr *) add, &a_length);
+	eif_net_check ((result==INVALID_SOCKET) ? EIFNET_ERROR_HAPPENED : 0);
+
+#elif defined EIF_OS2
+
+	int result;
+
+	do_init();
+	result = accept((int) s, (struct sockaddr *) add, &a_length);
+	eif_net_check ((result==-1) ? EIFNET_ERROR_HAPPENED : 0);
+#else
+
+	int result;
 
 	result = accept((int) s, (struct sockaddr *) add, &a_length);
+	eif_net_check ((result<0) ? ((errno!=EWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 
-#ifdef EIF_WIN32
-	if (result == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
-#elif defined EIF_OS2
-	if (result == -1)
-		if (sock_errno() != SOCEWOULDBLOCK)
-			eio();
-#else
-	if (result < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
 #endif
+
 	return (EIF_INTEGER) result;
+
 }
 
 void c_listen(EIF_INTEGER s, EIF_INTEGER backlog)
@@ -508,15 +560,12 @@ void c_listen(EIF_INTEGER s, EIF_INTEGER backlog)
 {
 #ifdef EIF_WIN32
 	do_init();
-	if ((listen((int) s, (int) backlog)) == SOCKET_ERROR)
-		eio();
+	eif_net_check (listen((SOCKET) s, (int) backlog));
 #elif defined EIF_OS2
 	do_init();
-	if ((listen((int) s, (int) backlog)) < 0)
-		eio();
+	eif_net_check (listen((int) s, (int) backlog));
 #else
-	if ((listen((int) s, (int) backlog)) < 0)
-		eio();
+	eif_net_check (listen((int) s, (int) backlog));
 #endif
 }
 
@@ -525,18 +574,12 @@ void c_connect(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 {
 #ifdef EIF_WIN32
 	do_init();
-	if ((connect((int) s, (struct sockaddr *) add, (int) length)) == SOCKET_ERROR)
-		if (WSAGetLastError() != EINPROGRESS)
-			eio();
+	eif_net_check (connect((SOCKET) s, (struct sockaddr *) add, (int) length));
 #elif defined EIF_OS2
 	do_init();
-	if ((connect((int) s, (struct sockaddr *) add, (int) length)) < 0)
-		if (sock_errno() != SOCEINPROGRESS)
-			eio();
+	eif_net_check ((connect((int) s, (struct sockaddr *) add, (int) length)==EIFNET_ERROR_HAPPENED) ? ((sock_errno()!=SOCEINPROGRESS) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #else
-	if ((connect((int) s, (struct sockaddr *) add, (int) length)) < 0)
-		if (errno != EINPROGRESS)
-			eio();
+	eif_net_check ((connect((int) s, (struct sockaddr *) add, (int) length)==EIFNET_ERROR_HAPPENED) ? ((errno!=EINPROGRESS) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #endif
 }
 
@@ -556,14 +599,11 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_OBJ rmask, EIF_OBJ wmask, EIF_OBJ ema
 #endif
 	if (timeout == -1) {
 #ifdef EIF_WIN32
-		if ((result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) == SOCKET_ERROR)
-			eio();
+		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
 #elif defined EIF_OS2
-		if ((result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) == -1)
-			eio();
+		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
 #else
-		if ((result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) < 0)
-			eio();
+		eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL));
 #endif
 		return (EIF_INTEGER) result;
 	}
@@ -572,14 +612,11 @@ EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_OBJ rmask, EIF_OBJ wmask, EIF_OBJ ema
 	t.tv_usec = timeoutm;
 
 #ifdef EIF_WIN32
-	if ((result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) == SOCKET_ERROR)
-		eio();
+	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
 #elif defined EIF_OS2
-	if ((result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) == -1)
-		eio();
+	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
 #else
-	if ((result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) < 0)
-		eio();
+	eif_net_check (result = select((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t));
 #endif
 	return (EIF_INTEGER) result;
 }
@@ -598,14 +635,7 @@ void c_sock_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 
 	result = getsockname((int) s, (struct sockaddr *) addr, &a_length);
 
-#ifdef EIF_WIN32
-	if (result == SOCKET_ERROR)
-#elif defined EIF_OS2
-	if (result == -1)
-#else
-	if (result < 0)
-#endif
-		eio();
+	eif_net_check (result);
 }
 
 EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
@@ -622,14 +652,8 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 
 	result = getpeername((int) s, (struct sockaddr *) addr, &a_length);
 
-#ifdef EIF_WIN32
-	if (result == SOCKET_ERROR)
-#elif defined EIF_OS2
-	if (result == -1)
-#else
-	if (result < 0)
-#endif
-		eio();
+	eif_net_check (result);
+
 	return (EIF_INTEGER) a_length;
 }
 
@@ -638,20 +662,14 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 
 #ifdef EIF_WIN32
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
-	if (sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr) == SOCKET_ERROR) \
-		if (WSAGetLastError() != EWOULDBLOCK) \
-            		eio();
+	eif_net_check (sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr));
 #elif defined EIF_OS2
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
-	if (sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr) == -1) \
-		if (sock_errno() != SOCEWOULDBLOCK) \
-			eio();
+	eif_net_check ((sendto (descriptor, element_pointer, sizeofelement, flags, addr_pointer, sizeofaddr)==EIFNET_ERROR_HAPPENED) ? ((sock_errno()!=SOCEWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #else
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
-	if (sendto ((int) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags, \
-		(struct sockaddr *) addr_pointer, (int) sizeofaddr) < 0) \
-		if (errno != EWOULDBLOCK) \
-			eio();
+	eif_net_check ((sendto ((int) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags, \
+		(struct sockaddr *) addr_pointer, (int) sizeofaddr)<0) ? ((errno!=EWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #endif
 
 void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
@@ -701,19 +719,13 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length
 
 #ifdef EIF_WIN32
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
-	if (send (descriptor, element_pointer, sizeofelement, 0) == SOCKET_ERROR) \
-		if (WSAGetLastError() != EWOULDBLOCK) \
-            		eio();
+	eif_net_check (send (descriptor, element_pointer, sizeofelement, 0));
 #elif defined EIF_OS2
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
-	if (send (descriptor, element_pointer, sizeofelement, 0) == -1) \
-		if (sock_errno() != SOCEWOULDBLOCK) \
-			eio();
+	eif_net_check ((send (descriptor, element_pointer, sizeofelement, 0)==-1) ? ((sock_errno()!=SOCEWOULDBLOCK) ? -1 : 0) : 0);
 #else
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
-	if (write ((int) descriptor, (char *) element_pointer, (int) sizeofelement) < 0) \
-		if (errno != EWOULDBLOCK) \
-			eio();
+	eif_net_check ((write((int) descriptor, (char *) element_pointer, (int) sizeofelement) < 0) ? ((errno!=EWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #endif
 
 
@@ -764,9 +776,7 @@ void c_put_stream(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length)
 
 #ifdef EIF_WIN32
 #define CREADX(descriptor, element_pointer, sizeofelement) \
-	if (recv((int) descriptor, (char *) element_pointer, sizeofelement, 0) == SOCKET_ERROR) \
-		if (WSAGetLastError() != EWOULDBLOCK) \
-			eio(); 
+	eif_net_check_recv (recv((int) descriptor, (char *) element_pointer, sizeofelement, 0));
 #elif defined EIF_OS2
 #define CREADX(descriptor, element_pointer, sizeofelement) \
 	if (recv((int) descriptor, (char *) element_pointer, sizeofelement, 0) == SOCEWOULDBLOCK) \
@@ -819,9 +829,7 @@ EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_OBJ buf)
         int nr;
 
 #ifdef EIF_WIN32
-	if ((nr = recv(fd, (char *) buf, (int) len, 0)) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
+	eif_net_check (nr = recv(fd, (char *) buf, (int) len, 0));
 #elif defined EIF_OS2
 	if ((nr = recv(fd, (char *) buf, (int) len, 0)) == -1)
 		if (sock_errno() != SOCEWOULDBLOCK)
@@ -843,9 +851,7 @@ EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER 
 
 	result = recv((int) fd, (char *) buf, (int) len, (int) flags);
 #ifdef EIF_WIN32
-	if (result == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
+	eif_net_check (result);
 #elif defined EIF_OS2
 	if (result == -1)
 		if (sock_errno() != SOCEWOULDBLOCK)
@@ -867,9 +873,7 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 	result = recvfrom ((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int *) addr_len);
 
 #ifdef EIF_WIN32
-	if (result == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
+	eif_net_check (result);
 #elif defined EIF_OS2
 	if (result == -1)
 		if (sock_errno() != SOCEWOULDBLOCK)
@@ -889,9 +893,7 @@ EIF_INTEGER c_write(EIF_INTEGER fd, EIF_INTEGER l, EIF_OBJ buf)
 	int result;
 #ifdef EIF_WIN32
 	result = send(fd, (char *) buf, (int) l, 0);
-	if (result == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
+	eif_net_check (result);
 #elif defined EIF_OS2
 	result = send(fd, (char *) buf, (int) l, 0);
 	if (result == -1)
@@ -927,14 +929,14 @@ EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER
 {
 	int result;
 
-	if ((result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len)) < 0)
 #ifdef EIF_WIN32
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
+	eif_net_check (result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len));
 #elif defined EIF_OS2
+	if ((result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len)) < 0)
 		if (sock_errno() != SOCEWOULDBLOCK)
 			eio();
 #else
+	if ((result = sendto((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
 #endif
@@ -945,9 +947,7 @@ void c_set_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt, EIF_
 	/*x set socket fd options */
 {
 	int arg = (int) val;
-
-	if ((setsockopt((int) fd, (int) level, (int) opt, (char *) &arg, sizeof(arg))) < 0)
-		eio();
+	eif_net_check (setsockopt((int) fd, (int) level, (int) opt, (char *) &arg, sizeof(arg)));
 }
 
 EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt)

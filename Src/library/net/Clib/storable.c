@@ -61,6 +61,7 @@ int net_socket_ready (int read)
 
 int net_char_read(char *pointer, int size)
 {
+	GTCX
 	int i;
 
 #ifdef EIF_WIN32
@@ -80,6 +81,7 @@ int net_char_read(char *pointer, int size)
 		}
 	}
 	return i;
+	EDCX
 }
  
 int net_char_write(char *pointer, int size)
@@ -105,7 +107,7 @@ int net_char_write(char *pointer, int size)
 	return i;
 }
 
-void net_store_write()
+void net_store_write(void)
 {
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;

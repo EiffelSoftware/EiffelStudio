@@ -509,7 +509,8 @@ feature {NONE} -- Translation
 			from
 				lastline := clone (makefile_sh.laststring)
 			until
-				lastline.count > appl.count and then lastline.substring (1, appl.count).is_equal (appl)
+				lastline.count > ("OBJECTS=").count and then lastline.substring (1, ("OBJECTS=").count).is_equal ("OBJECTS=")
+				--lastline.count > appl.count and then lastline.substring (1, appl.count).is_equal (appl)
 			loop
 				debug ("translate_dependencies")
 					debug ("input")
@@ -590,6 +591,9 @@ feature {NONE} -- Translation
 
 				lastline := clone (makefile_sh.laststring)
 			end
+			
+			read_next -- On windows, we skip the OBJECTS=..., it is done after
+			--read_next
 
 				-- Generate the `OBJECTS = ' line
 			from
@@ -821,7 +825,6 @@ feature {NONE} -- Translation
 			if appl /= Void and then lastline.count>=appl.count and then lastline.substring (1, appl.count).is_equal (appl) then
 				translate_appl
 			elseif lastline.count>13 and then lastline.substring (1,13).is_equal ("STATIC_CECIL=") then
-			--elseif lastline.count>6 and then lastline.substring (1,6).is_equal ("cecil:") then
 				translate_cecil
 			else
 				debug ("translate_line_change")
@@ -929,6 +932,8 @@ feature {NONE} -- Translation
 				io.putstring ("%Tcecil%N")
 			end
 
+			makefile.putstring ("%N#STATIC_CECIL PART%N")
+
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".a",".lib")
 			makefile.putstring (lastline)
@@ -968,26 +973,22 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 
-			read_next
 
-			read_next
-			read_next
-			read_next
-			read_next
 			read_next
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".exe.a",".lib")
-			lastline.replace_substring_all (".a",".lib")
-			makefile.putstring (lastline)
+			from
+			until
+				lastline.count>13 and then lastline.substring (1,13).is_equal ("SHARED_CECIL=")
+			loop
+				read_next
+				lastline := clone (makefile_sh.laststring)
+			end
+				
+			makefile.new_line
 			makefile.new_line
 
-			makefile.new_line
-			read_next
-
-
+			makefile.putstring ("%N#SHARED_CECIL PART%N")
 -- SHARED_CECIL= appl.dll
-			read_next
-			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".so", ".dll")
 			makefile.putstring (lastline)
 			makefile.new_line
@@ -1023,12 +1024,14 @@ feature {NONE} -- Translation
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			makefile.putstring (lastline)
-			makefile.putstring (" \%N")
 			if options.has ("cecil_dll") 
 			then 
+				makefile.putstring (" \%N")
 				lastline := clone (options.get_string ("cecil_dll", Void))
 				lastline.replace_substring_all ("$appl", appl)
 				makefile.putstring (lastline)
+				makefile.new_line
+			else
 				makefile.new_line
 			end
 

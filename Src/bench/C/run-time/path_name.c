@@ -95,7 +95,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p)
 		/* Test to see if `p' is a well constructed directory path */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
-	int i, len, last_bslash;
+	size_t i, len, last_bslash;
 	EIF_BOOLEAN result;
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
@@ -210,7 +210,7 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER *p)
 #define MAX_FILE_LEN 256
 
 		/* Test to see if `p' is a valid file name (no directory part) */
-	int len;
+	size_t len;
 	char *s, valid [] = "_^$~!#%&-{}@'`()";
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
@@ -274,7 +274,7 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER *p)
 		/* Test to see if `p' is a well constructed file name (with directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
-	int i, len;
+	size_t i, len;
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 

@@ -63,22 +63,10 @@ feature -- Access
 			Result := implementation.sizeall
 		end
 
-	sizenesw: INTEGER is
-			-- Double-pointed arrow pointing northeast and southwest
-		do
-			Result := implementation.sizenesw
-		end
-
 	sizens: INTEGER is
 			-- Double-pointed arrow pointing north and south
 		do
 			Result := implementation.sizens
-		end
-
-	sizenwse: INTEGER is
-			-- Double-pointed arrow pointing west and east
-		do
-			Result := implementation.sizenwse
 		end
 
 	sizewe: INTEGER is
@@ -101,7 +89,7 @@ feature -- Access
 
 feature -- Implementation
 
-	implementation: EV_CURSOR_CODE_I
+	implementation: EV_CURSOR_CODE_IMP
 			-- Platform dependent access
 
 end -- class EV_CURSOR_CODE

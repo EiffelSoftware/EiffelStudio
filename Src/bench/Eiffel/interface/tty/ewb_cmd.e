@@ -5,7 +5,6 @@ deferred class EWB_CMD
 
 inherit
 
-	SHARED_WORKBENCH;
 	SHARED_ERROR_BEHAVIOR;
 	PROJECT_CONTEXT
 		redefine

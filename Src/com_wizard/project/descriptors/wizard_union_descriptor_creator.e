@@ -75,7 +75,7 @@ feature -- Basic operations
 			count := a_type_info.type_attr.count_variables
 			from
 				i := 0
-				fields.make
+				create fields.make
 			variant
 				count - i
 			until

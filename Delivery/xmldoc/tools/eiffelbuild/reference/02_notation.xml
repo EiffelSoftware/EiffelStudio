@@ -1,14 +1,5 @@
 <document title="EiffelBuild Notation">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_location></envision_location>
-				<envision_title>Notation</envision_title>
-				<studio_location></studio_location>
-				<studio_title></studio_title>
-			</toc>
-		</help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>EiffelBuild Notation

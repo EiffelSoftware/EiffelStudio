@@ -108,10 +108,6 @@ feature {NONE} -- Implementation
 
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 
-			create tmp_writer.make
-			tmp_writer.set_name ("ECOM_EXCEPTION")
-			an_eiffel_writer.add_inherit_clause (tmp_writer)
-
 			if shared_wizard_environment.new_eiffel_project then
 				create tmp_writer.make
 				tmp_writer.set_name ("ECOM_STUB")

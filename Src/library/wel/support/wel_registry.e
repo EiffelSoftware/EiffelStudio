@@ -24,29 +24,9 @@ feature -- Actions
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: ARRAYED_LIST [STRING]
-			index_value, i: POINTER
+			index_value: POINTER
 		do
-			node_list := value_keys_list (key_path)
-			check
-				node_list_possible: node_list.count > 0
-				first_element_possible: basic_valid_name_for_HKEY (node_list.first)
-			end
-			node_list.start
-			index_value := index_value_for_root_keys (node_list.item)
-			from
-				node_list.forth
-			until
-				node_list.after
-			loop
-				i := open_key (index_value,node_list.item, Key_create_sub_key)
-				if i = default_pointer then
-					i := create_key (index_value, node_list.item, Key_create_sub_key)
-				end
-				close_key (index_value)
-				index_value := i
-				node_list.forth
-			end
+			index_value := key_from_path (key_path, True, Key_create_sub_key)
 		end
 
 	open_key_with_access (key_path: STRING; acc: INTEGER): POINTER is
@@ -55,28 +35,8 @@ feature -- Actions
 				-- Return the key reference (default_pointer if the operation failed).
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
-		local
-			node_list: ARRAYED_LIST [STRING]
-			index_value, i: POINTER
 		do
-			node_list := value_keys_list(key_path)
-			check
-				node_list_possible: node_list.count>0
-				first_element_possible: basic_valid_name_for_HKEY(node_list.first)
-			end
-			node_list.start
-			index_value := index_value_for_root_keys (node_list.item)
-			from
-				node_list.forth
-			until
-				node_list.after or index_value = default_pointer
-			loop
-				i := open_key (index_value,node_list.item, acc)
-				close_key (index_value)
-				index_value := i
-				node_list.forth
-			end
-			Result := index_value
+			Result := key_from_path (key_path, False, acc)
 		end
 
 	open_key_value (key_path: STRING; value_name: STRING): WEL_REGISTRY_KEY_VALUE is
@@ -89,29 +49,10 @@ feature -- Actions
 			key_name_possible: value_name /= Void
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: ARRAYED_LIST [STRING]
-			index_value, i: POINTER
-			stop: BOOLEAN
+			index_value: POINTER
 		do
-			node_list := value_keys_list(key_path)
-			check
-				node_list_possible: node_list.count>0
-				first_element_possible: basic_valid_name_for_HKEY(node_list.first)
-			end
-			node_list.start
-			index_value := index_value_for_root_keys (node_list.item)
-			from
-				node_list.forth
-			until
-				node_list.after or stop
-			loop
-				i := open_key (index_value, node_list.item, Key_read)
-				stop := i = default_pointer
-				close_key (index_value)
-				index_value := i
-				node_list.forth
-			end
-			if not stop then
+			index_value := key_from_path (key_path, False, Key_read)
+			if index_value /= default_pointer then
 				Result := key_value (index_value, value_name)
 			end
 		end
@@ -126,30 +67,28 @@ feature -- Actions
 			key_name_possible: value_name /= Void
 			valid_value: value /= Void
 		local
-			node_list: ARRAYED_LIST [STRING]
-			index_value, i: POINTER
+			index_value: POINTER
 		do
-			node_list := value_keys_list (key_path)
-			check
-				node_list_possible: node_list.count > 0
-				first_element_possible: basic_valid_name_for_HKEY (node_list.first)
+			index_value := key_from_path (key_path, True, Key_all_access)
+			if index_value /= default_pointer then
+				set_key_value (index_value, value_name, value)
 			end
-			node_list.start
-			index_value := index_value_for_root_keys (node_list.item)
-			from
-				node_list.forth
-			until
-				node_list.after
-			loop
-				i := open_key (index_value, node_list.item, Key_all_access)
-				if i = default_pointer then
-					i := create_key (index_value, node_list.item, Key_all_access)
-				end
-				close_key (index_value)
-				index_value := i
-				node_list.forth
+		end
+
+	delete_key_value (key_path, value_name: STRING) is
+			-- Delete `key_path' key value `value_name'.
+			-- The path should be like "a\b\c"
+			-- Please refer to WEL_HKEY for possible value for a.
+		require
+			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			key_name_possible: value_name /= Void
+		local
+			index_value: POINTER
+		do
+			index_value := key_from_path (key_path, False, Key_write)
+			if index_value /= default_pointer then
+				delete_value (index_value, value_name)
 			end
-			set_key_value (index_value, value_name, value)
 		end
 
 feature -- Status
@@ -188,6 +127,37 @@ feature {NONE} -- Internal Results
 			value_keys_list_not_void: Result /= Void
 		end
 	
+	key_from_path (key_path: STRING; generate: BOOLEAN; access: INTEGER): POINTER is
+			-- Key at `key_path'.
+			-- Create keys if `generate'.
+		require
+			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+		local
+			node_list: ARRAYED_LIST [STRING]
+			i: POINTER
+		do
+			node_list := value_keys_list (key_path)
+			check
+				node_list_possible: node_list.count > 0
+				first_element_possible: basic_valid_name_for_HKEY (node_list.first)
+			end
+			node_list.start
+			Result := index_value_for_root_keys (node_list.item)
+			from
+				node_list.forth
+			until
+				node_list.after or Result = default_pointer
+			loop
+				i := open_key (Result, node_list.item, access)
+				if i = default_pointer and generate then
+					i := create_key (Result, node_list.item, access)					
+				end
+				close_key (Result)
+				Result := i
+				node_list.forth
+			end
+		end
+
 feature -- Access
 	
 	key_from_remote_host (host_name: STRING; root_key: POINTER): POINTER is

@@ -805,9 +805,10 @@ feature -- Status setting
 			hashed_character_format: STRING
 			temp_string: STRING
 			format_index: INTEGER
-			counter: INTEGER
+			vertical_offset, counter: INTEGER
 			character: CHARACTER
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
+			screen_dc: WEL_SCREEN_DC
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -824,6 +825,7 @@ feature -- Status setting
 				is_current_format_striked_through := False
 				is_current_format_bold := False
 				is_current_format_italic := False
+				current_vertical_offset := 0
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -869,6 +871,17 @@ feature -- Status setting
 			elseif is_current_format_italic and not format_italic then
 				temp_string.append ("\i0")
 				is_current_format_italic := False
+			end
+			vertical_offset := formats.i_th (format_index).effects.vertical_offset
+			if vertical_offset /= current_vertical_offset then
+				temp_string.append ("\up")
+					-- Create a screen DC for access to metrics
+					-- We must specify the vertical offset in half points.
+				create screen_dc
+				screen_dc.get
+				temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
+				screen_dc.release
+				current_vertical_offset := vertical_offset
 			end
 			
 			temp_string.append ("\f")
@@ -936,11 +949,12 @@ feature -- Status setting
 	flush_buffer is
 			-- Flush any buffered operations.
 		local
-			last_end_value, counter, format_index, original_position: INTEGER
+			last_end_value, counter, format_index, original_position, vertical_offset: INTEGER
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 			temp_string, font_text, color_text, default_font_format: STRING
 			a_color: EV_COLOR
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
+			screen_dc: WEL_SCREEN_DC
 		do
 				-- Store original caret position.
 			original_position := caret_position
@@ -948,7 +962,11 @@ feature -- Status setting
 				-- Do nothing if buffer is not is format mode or append mode,
 				-- as there is nothing to flush. A user may call them however, as there
 				-- is no need to restrict against such calls.
-			if buffer_locked_in_format_mode then		
+			if buffer_locked_in_format_mode then
+				-- Create a screen DC for access to metrics
+					create screen_dc
+					screen_dc.get
+					
 				buffered_text := text.twin
 					-- Generate an insertion string to use for default font
 				default_font_format := "\cf1\highlight2\f0\fs"
@@ -1068,13 +1086,21 @@ feature -- Status setting
 							temp_string.append ("\i0")
 							is_current_format_italic := False
 						end
-
+						vertical_offset := formats.i_th (format_index).effects.vertical_offset
+						if vertical_offset /= current_vertical_offset then
+							temp_string.append ("\up")
+								-- We must specify the vertical offset in half points.
+							temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
+							current_vertical_offset := vertical_offset
+						end
+						
 						temp_string.append ("\f")
 						temp_string.append (format_index.out)
 						temp_string.append ("\fs")
 						temp_string.append (heights.i_th (format_index).out)
 						temp_string.append (" ")
 						internal_text.append_string (temp_string)
+						screen_dc.release
 					end
 					if end_formats.item (counter) /= Void and start_formats.item (counter) = Void then
 						internal_text.append_string (default_font_format)
@@ -1483,6 +1509,7 @@ feature {NONE} -- Implementation
 	is_current_format_striked_through: BOOLEAN
 	is_current_format_bold: BOOLEAN
 	is_current_format_italic: BOOLEAN
+	current_vertical_offset: INTEGER
 
 	default_string_size: INTEGER is 50000
 		-- Default size used for all internal strings for buffering.

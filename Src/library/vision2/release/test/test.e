@@ -147,15 +147,54 @@ feature
 	pool_da: EV_DRAWING_AREA
 
 	update_pool is
+		local
+			i: INTEGER
 		do
 			pool_da.draw_pixmap (0, 0, pool.item)
+			pool_da.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+			from i := 1 until i = 10 loop
+				pool_da.draw_point (43 + random_int (14), 43 + random_int (14))
+				i := i + 1
+			end
+			from i := 1 until i = 10 loop
+				pool_da.draw_point (45 + random_int (10), 45 + random_int (10))
+				i := i + 1
+			end
+			pool_da.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 1, 0))
+			from i := 1 until i = 10 loop
+				pool_da.draw_point (47 + random_int (6), 47 + random_int (6))
+				i := i + 1
+			end
 			pool.forth
+		end
+
+	snow is
+		local
+			i: INTEGER
+			scr: EV_SCREEN
+		do
+			create scr
+			scr.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
+			scr.draw_point (scr.pointer_position.x - 10 + random_int (20), scr.pointer_position.y - 10 + random_int (20))
+			i := i + 1
 		end
 	
 	update_widget_tool (a_tool: EV_LABEL; a_widget: EV_WIDGET) is
 			-- Update `widget_tool'.
+		local
+			snow_timer: EV_TIMEOUT
 		do
+			create snow_timer.make_with_interval (50)
+			snow_timer.actions.extend (~snow)
 			a_tool.set_text (a_widget.generating_type)
+		end
+
+	random: RANDOM is once create Result.make end
+
+	random_int (max: INTEGER): INTEGER is
+		do
+			random.forth
+			Result := (random.real_item * max).rounded
 		end
 
 	nuke (w: EV_WIDGET) is
@@ -486,6 +525,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/26 21:43:25  oconnor
+--| added snow
+--|
 --| Revision 1.32  2000/04/26 21:09:44  brendel
 --| Added tool bar and status bar.
 --|

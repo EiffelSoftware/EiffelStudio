@@ -50,6 +50,7 @@ feature {EV_BOX} -- Implementation
 			-- Add child into composite. Several children
 			-- possible.
 		do
+			child ?= child_imp
 			gtk_box_pack_start (widget, child_imp.widget, 
 					    Default_expand, Default_fill, 
 					    Default_padding)

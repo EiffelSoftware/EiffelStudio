@@ -15,6 +15,8 @@ inherit
 	EV_CONTAINER_I
 	
 	EV_WIDGET_IMP
+
+	EV_GTK_CONTAINERS_EXTERNALS
 	
 feature -- Access
 	
@@ -58,12 +60,15 @@ feature {NONE} -- Implementation
 	rbg_pointer: POINTER
 						
 
-feature {EV_CONTAINER} -- Element change
+feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
-	add_child (child_imp: EV_WIDGET_IMP) is
+	add_child (child_i: EV_WIDGET_I) is
 			-- Add child into composite
+--		local
+--			child_imp: EV_WIDGET_IMP
 		do
-			gtk_container_add (widget, child_imp.widget)
+			child ?= child_i
+			gtk_container_add (widget, child.widget)
 		end
 	
 

@@ -363,7 +363,7 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 #ifndef WORKBENCH
 	{
 		void (*cn_inv)(EIF_REFERENCE, EIF_INTEGER);
-		cn_inv = node->cn_inv;
+		cn_inv = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) node->cn_inv;
 		if (cn_inv)
 			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) cn_inv)(obj, where);
 	}

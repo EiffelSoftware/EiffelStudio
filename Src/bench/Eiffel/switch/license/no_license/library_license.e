@@ -7,7 +7,7 @@ inherit
 			set_application_name as set_library_name
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

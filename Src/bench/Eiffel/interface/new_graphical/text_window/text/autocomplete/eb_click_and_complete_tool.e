@@ -16,7 +16,7 @@ inherit
 			reset
 		end
 
-creation
+create
 
 	default_create
 

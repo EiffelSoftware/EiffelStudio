@@ -13,7 +13,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	EB_CONSTANTS
 
-creation 
+create 
 	initialize
 
 feature {NONE} -- Initialization

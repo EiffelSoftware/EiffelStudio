@@ -7,7 +7,7 @@ class CONCURRENCY_LICENSE inherit
 			handle_error
 		end;
 
-creation
+create
 
 	make
 

@@ -7,7 +7,7 @@ indexing
 class
 	REGISTRY_RESOURCE
 
-creation
+create
 	make, make_from_resource
 
 feature -- Initialization

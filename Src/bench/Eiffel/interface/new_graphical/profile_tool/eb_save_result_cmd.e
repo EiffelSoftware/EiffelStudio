@@ -8,7 +8,7 @@ class EB_SAVE_RESULT_CMD
 inherit
 	EB_FILE_OPENER_CALLBACK
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -10,7 +10,7 @@ class
 inherit
 	EB_PREFERENCE_COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Useless

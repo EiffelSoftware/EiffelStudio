@@ -4,7 +4,7 @@ inherit
 
 	STRING
 
-creation
+create
 
 	make
 

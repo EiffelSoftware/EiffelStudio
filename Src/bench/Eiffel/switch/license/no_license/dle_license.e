@@ -3,7 +3,7 @@ class DLE_LICENSE
 inherit
 	DUMMY_LICENSE
 
-creation
+create
 	make
 
 feature

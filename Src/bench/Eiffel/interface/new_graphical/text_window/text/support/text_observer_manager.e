@@ -10,7 +10,7 @@ class
 inherit
 	EB_RECYCLABLE
 
-creation
+create
 	make
 
 feature -- Initialization

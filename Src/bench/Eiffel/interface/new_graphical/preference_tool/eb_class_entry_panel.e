@@ -20,7 +20,7 @@ inherit
 		end
 	NEW_EB_CONSTANTS
 
-creation
+create
 	make 
 
 feature {NONE} -- Initialization

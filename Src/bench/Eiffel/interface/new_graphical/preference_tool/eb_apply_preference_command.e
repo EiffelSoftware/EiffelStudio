@@ -11,7 +11,7 @@ class EB_APPLY_PREFERENCE_COMMAND
 inherit
 	EB_PREFERENCE_COMMAND
 
-creation
+create
 	make
 
 feature {EB_PREFERENCE_COMMAND} -- Execution

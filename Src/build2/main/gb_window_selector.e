@@ -228,22 +228,6 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	assign_root_window_button: EV_TOOL_BAR_BUTTON is
-			-- `Result' is a tool bar button that
-			-- sets the root window for the project.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
-			Result.select_actions.extend (agent change_root_window)
-			Result.drop_actions.extend (agent change_root_window_to)
-			Result.set_tooltip ("Root window")
-		ensure
-			result_not_void: Result /= Void
-		end
-		
 	objects: ARRAYED_LIST [GB_TITLED_WINDOW_OBJECT] is
 			-- `Result' is all objects represented in `Current'.
 			-- No paticular order is guaranteed.
@@ -340,7 +324,7 @@ feature -- Access
 			create Result
 			Result.extend (new_directory_button)
 			Result.extend (expand_all_button)
-			Result.extend (assign_root_window_button)
+			Result.extend (set_root_window_command.new_toolbar_item (True, False))
 		end
 		
 	name: STRING is "Window Selector"
@@ -803,6 +787,26 @@ feature {GB_XML_LOAD} -- Implementation
 		ensure
 			has_root_window_if_not_empty: Object_handler.root_window_object /= Void
 		end
+		
+feature {GB_SET_ROOT_WINDOW_COMMAND}		
+		
+	change_root_window is
+			-- Ensure that the window selected in the layout constructor is the
+			-- root window of the project.
+		local
+			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			layout_constructor_item := Layout_constructor.root_item
+			titled_window_object ?= layout_constructor_item.object
+			check
+				root_object_was_window: titled_window_object /= Void
+			end
+			titled_window_object.set_as_root_window
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
+		end
 
 feature {NONE} -- Implementation
 
@@ -821,7 +825,7 @@ feature {NONE} -- Implementation
 		ensure
 			count_increaed: count = old count + 1
 		end
-
+		
 	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Change the root window of the project to `titled_window_object'.
 		require
@@ -833,25 +837,6 @@ feature {NONE} -- Implementation
 			command_handler.update
 		ensure
 			root_window_set: object_handler.root_window_object = titled_window_object
-		end
-		
-
-	change_root_window is
-			-- Ensure that the window selected in the layout constructor is the
-			-- root window of the project.
-		local
-			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
-		do
-			layout_constructor_item := Layout_constructor.root_item
-			titled_window_object ?= layout_constructor_item.object
-			check
-				root_object_was_window: titled_window_object /= Void
-			end
-			titled_window_object.set_as_root_window
-				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
 		end
 
 	add_new_directory is

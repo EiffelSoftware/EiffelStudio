@@ -190,7 +190,12 @@ feature -- Element change
 				text.add_new_line
 				text.add_indent
 				if current_feature.is_frozen or l_feature.is_frozen then
+						-- Check if feature is frozen.
 					text.add (Ti_frozen_keyword)
+					text.add_space
+				elseif current_feature.is_deferred or l_feature.is_deferred then
+						-- Check if feature is deferred.
+					text.add (Ti_deferred_keyword)
 					text.add_space
 				end
 				text.add_feature (l_feature, name_of_current_feature)

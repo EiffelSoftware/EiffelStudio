@@ -16,14 +16,14 @@ inherit
 	BULLETIN_M
 		rename
 			is_valid as is_widget_valid,
-            attach_right as child_attach_right,
-            attach_left as child_attach_left,
-            attach_top as child_attach_top,
-            attach_bottom as child_attach_bottom,
-            detach_right as child_detach_right,
-            detach_left as child_detach_left,
-            detach_top as child_detach_top,
-            detach_bottom as child_detach_bottom
+			attach_right as child_attach_right,
+			attach_left as child_attach_left,
+			attach_top as child_attach_top,
+			attach_bottom as child_attach_bottom,
+			detach_right as child_detach_right,
+			detach_left as child_detach_left,
+			detach_top as child_detach_top,
+			detach_bottom as child_detach_bottom
 		undefine
 			create_widget, is_form
 		redefine
@@ -42,14 +42,14 @@ inherit
 			destroy as mel_destroy,
 			screen as mel_screen,
 			is_shown as shown,
-            attach_right as child_attach_right,
-            attach_left as child_attach_left,
-            attach_top as child_attach_top,
-            attach_bottom as child_attach_bottom,
-            detach_right as child_detach_right,
-            detach_left as child_detach_left,
-            detach_top as child_detach_top,
-            detach_bottom as child_detach_bottom,
+			attach_right as child_attach_right,
+			attach_left as child_attach_left,
+			attach_top as child_attach_top,
+			attach_bottom as child_attach_bottom,
+			detach_right as child_detach_right,
+			detach_left as child_detach_left,
+			detach_top as child_detach_top,
+			detach_bottom as child_detach_bottom,
 			is_valid as is_widget_valid
 		select
 			form_make, make_no_auto_unmanage

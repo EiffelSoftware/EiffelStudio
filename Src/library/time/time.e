@@ -120,9 +120,9 @@ feature -- Initialization
 			-- `default_format_string'.
 		require
 			s_exists: s /= Void;
-			time_valid: time_valid_default (s)
+			time_valid: time_valid (s, Default_format_string)
 		do
-			make_from_string (s, default_format_string)
+			make_from_string (s, Default_format_string)
 		end
 
 	make_from_string (s: STRING; code: STRING) is

@@ -1624,7 +1624,6 @@ rt_public int retrieve_read_with_compression ()
 	int read_size = 0;
 	int part_read = 0;
 	int total_read = 0;
-	register i = 0;
 	
 	end_of_buffer = 0;
 	

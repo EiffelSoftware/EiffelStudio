@@ -198,6 +198,36 @@ feature
 			end
 		end;
 
+	hide is
+			-- Make widget invisible on the screen.
+		do
+			d_xt_unmap_widget (d_xt_parent (screen_object))
+		end;
+
+	show is
+			-- Make widget visible on the screen.
+		do
+			d_xt_map_widget (d_xt_parent (screen_object))
+		end;
+
+	shown: BOOLEAN is
+			-- Is current widget visible on the screen?
+		require
+			widget_realized: realized
+		do
+			Result := d_xt_is_visible (d_xt_parent (screen_object))
+		end;
+
+	destroy_xt_widget is
+			-- Destroy Xt widget.
+		do
+			popdown;
+			d_xt_destroy_widget (screen_object);
+		end;
+
+	realized: BOOLEAN is
+		deferred
+		end;
 
 feature 
 
@@ -245,6 +275,34 @@ feature
 	action_target: POINTER;
 
 feature {NONE} -- External features
+
+	d_xt_destroy_widget (scr_obj: POINTER) is
+		external
+			"C"
+		alias
+			"xt_destroy_widget"
+		end;
+
+	d_xt_is_visible (scr_obj: POINTER): BOOLEAN is
+		external
+			"C"
+		alias
+			"xt_is_visible"
+		end;
+
+	d_xt_unmap_widget (scr_obj: POINTER) is
+		external
+			"C"
+		alias
+			"xt_unmap_widget"
+		end;
+
+	d_xt_map_widget (scr_obj: POINTER) is
+		external
+			"C"
+		alias
+			"xt_map_widget"
+		end;
 
 	d_to_left_xm_string (scr_obj: POINTER; name1, name2: ANY) is
 		external

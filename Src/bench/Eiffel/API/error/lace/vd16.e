@@ -1,25 +1,19 @@
 -- Error when a class name in a target list of an option clause is not
--- valid
+-- a class of the cluster at hand.
 
 class VD16
 
 inherit
 
-	CLUSTER_ERROR
+	CLASS_ERROR
+		redefine
+			build_explain
+		end
 
 feature
 
-	class_name: ID_SD;
-			-- Class name involved
-
 	node: O_OPTION_SD;
 			-- Option node
-
-	set_class_name (s: ID_SD) is
-			-- Assign `s' to `class_name'.
-		do
-			class_name := s;
-		end;
 
 	set_node (n: like node) is
 			-- Assign `n' to `node'.
@@ -27,7 +21,13 @@ feature
 			node := n;
 		end;
 
-	code: STRING is "VD16";
-			-- Error code
-
+	build_explain is
+		do
+			put_cluster_name;
+			put_class_name;
+			put_string ("Option: `");
+			put_string (node.option.option_name);
+			put_char ('%'');
+			new_line
+		end;
 end

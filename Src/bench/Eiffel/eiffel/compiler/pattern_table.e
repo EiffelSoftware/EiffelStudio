@@ -73,7 +73,7 @@ feature
 						types := info.associated_class.types;
 						types.start
 					until
-						types.offright
+						types.after
 					loop
 						c_pattern := 
 							info.instantiation_in (types.item.type).c_pattern;
@@ -191,7 +191,7 @@ feature
 			from
 				c_patterns.start
 			until
-				c_patterns.offright
+				c_patterns.after
 			loop
 				c_patterns.item_for_iteration.generate_pattern;
 				c_patterns.forth;

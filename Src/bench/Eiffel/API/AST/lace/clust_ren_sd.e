@@ -43,6 +43,7 @@ feature -- Lace compilation
 
 		do
 			!!warning;
+			warning.set_cluster_name (cluster_name);
 			Error_handler.insert_warning (warning);
 
 				-- Check first existence of cluster named `cluster_name'.

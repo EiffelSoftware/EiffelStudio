@@ -30,7 +30,7 @@ feature
 				or else
 				generics.count /= 1
 			then
-				!!special_error.make (Case_1, id);
+				!!special_error.make (Case_1, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -43,7 +43,7 @@ feature
 				or else
 				not deep_equal (area_feature.type.actual_type, Area_type)
 			then
-				!!special_error.make (Case_2, id);
+				!!special_error.make (Case_2, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -53,7 +53,7 @@ feature
 				or else
 				make_area_feature.written_in /= id
 			then
-				!!special_error.make (Case_3, id);
+				!!special_error.make (Case_3, Current);
 				Error_handler.insert_error (special_error);
 			end;
 		end;

@@ -45,7 +45,7 @@ feature
 				end;
 				deferred_features.go (2);
 			until
-				deferred_features.offright
+				deferred_features.after
 			loop
 				info := deferred_features.item;
 				old_feat := info.a_feature;

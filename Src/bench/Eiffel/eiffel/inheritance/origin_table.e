@@ -84,7 +84,7 @@ feature
 				l.start;
 				l.search_same (info);
 				check
-					not l.offright
+					not l.after
 				end;
 				l.remove;
 
@@ -104,7 +104,7 @@ feature
 				!!computed.make (count);
 				start;
 			until
-				offright
+				after
 			loop
 				rout_id := key_for_iteration;
 				selected := item_for_iteration.selection
@@ -112,7 +112,7 @@ feature
 				if selected = Void then
 						-- No selected feature
 					!!vmrc3;
-					vmrc3.set_class_id (System.current_class.id);
+					vmrc3.set_class (System.current_class);
 					vmrc3.set_selection_list (item_for_iteration);
 					Error_handler.insert_error (vmrc3);
 				else

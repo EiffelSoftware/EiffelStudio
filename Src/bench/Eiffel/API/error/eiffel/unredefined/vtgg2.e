@@ -6,7 +6,17 @@ class VTGG2
 inherit
 
 	VTGG1
-	
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is
+		do
+			Result := 2;
+		end;
+
 feature 
 
 	entity_name: ID_AS;

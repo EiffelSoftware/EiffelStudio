@@ -5,15 +5,8 @@ class VMSS2
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
 	
 feature 
@@ -39,17 +32,18 @@ feature
 	code: STRING is "VMSS";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `a_clickable'.
-        do
-            old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tfeature: ");
+	subcode: INTEGER is 2;
+
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			put_string ("%Tfeature: ");
 -- FIXME 
-			a_clickable.put_string (feature_name);
-			a_clickable.put_string (" in parent ");
-			System.class_of_id (parent_id).append_clickable_signature (a_clickable);
-			a_clickable.new_line;
+			put_string (feature_name);
+			put_string (" in parent ");
+			System.class_of_id (parent_id).append_clickable_signature (error_window);
+			new_line;
 		end;
 
 end

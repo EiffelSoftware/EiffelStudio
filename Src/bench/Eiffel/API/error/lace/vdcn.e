@@ -2,24 +2,21 @@
 
 class VDCN
 
-
 inherit
 
 	CLUSTER_ERROR
 		redefine
-			build_explain
-		end
+			code
+		end;
 
 feature
 
 	code: STRING is "VDCN";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 		do
-			a_clickable.put_string ("%TCluster ");
-			a_clickable.put_string (cluster.cluster_name);
-			a_clickable.new_line;
+			put_cluster_name;
 		end;
 
 end

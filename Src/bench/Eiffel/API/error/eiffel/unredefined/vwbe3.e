@@ -5,7 +5,14 @@ class VWBE3
 inherit
 
 	VWBE
-	
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 3;
+
 feature 
 
 	assertion: TAGGED_AS;

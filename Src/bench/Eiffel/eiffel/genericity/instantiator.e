@@ -65,7 +65,7 @@ end;
 				-- Look for the item in the insertion list
 			insertion_list.start;
 			insertion_list.search_equal (type_i);
-			if insertion_list.offright then
+			if insertion_list.after then
 					-- New data or item
 				insertion_list.add_front (type_i);
 			end;

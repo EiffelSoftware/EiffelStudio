@@ -8,11 +8,11 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_pointer, dump, type_i, associated_class, same_as
+			is_pointer, type_i, associated_class, same_as
 		end;
 	BASIC_A
 		redefine
-			is_pointer, dump, type_i, associated_class, same_as,
+			is_pointer, type_i, associated_class, same_as,
 			internal_conform_to
 		select
 			internal_conform_to
@@ -25,9 +25,6 @@ feature
 		do
 			Result := True;
 		end;
-
-	dump: STRING is "POINTER";
-			-- Dumped trace
 
 	type_i: POINTER_I is
 			-- Pointer C type

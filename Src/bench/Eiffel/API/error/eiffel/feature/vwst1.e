@@ -5,18 +5,16 @@ class VWST1
 inherit
 
 	FEATURE_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
 	
 feature
+
+	subcode: INTEGER is
+		do
+			Result := 1;
+		end;
 
 	attribute_name: ID_AS;
 			-- Attribute name in the strip expresssion
@@ -39,16 +37,15 @@ feature
 	code: STRING is "VWST";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation image for current error
-            -- in `a_clickable'.
+	build_explain is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
 		local
 			compiled_class: CLASS_C
-        do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tattribute name: ");
-			a_clickable.put_string (attribute_name);
-			a_clickable.put_string ("%N")
+		do
+			put_string ("%Tattribute name: ");
+			put_string (attribute_name);
+			new_line
 		end
 
 end

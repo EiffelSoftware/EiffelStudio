@@ -4,7 +4,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set, format
+			set, format, append_clickable_signature
 		end
 
 feature -- Attributes
@@ -46,6 +46,11 @@ feature
 			Result.append_integer (bits_value.value);
 		end;
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("BITS ");
+			a_clickable.put_int (bits_value.value);
+		end;
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

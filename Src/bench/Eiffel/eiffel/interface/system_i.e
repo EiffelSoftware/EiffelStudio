@@ -244,6 +244,9 @@ feature
 	remover: REMOVER;
 			-- Dead code removal control
 
+	remover_off: BOOLEAN;
+			-- Is the remover off (by specifying the Ace option)
+
 	current_pass: PASS;
 			-- Current compiler pass
 			-- Useful for `current_class'
@@ -464,7 +467,7 @@ end;
 					types := a_class.types;
 					types.start
 				until
-					types.offright
+					types.after
 				loop
 					class_types.put (Void, types.item.type_id);
 					types.forth;
@@ -539,7 +542,9 @@ end;
 			-- Class type of type id `type_id'.
 		require
 			index_small_enough: type_id <= class_types.count;
-			valid_index: type_id <= type_id_counter.value;
+				-- Removed: if the index is bigger than type_id_counter.value
+				-- then the corresponding entry is Void
+			--valid_index: type_id <= type_id_counter.value;
 		do
 			Result := class_types.item (type_id);
 		end;
@@ -671,6 +676,7 @@ end;
 					-- because the topological sort modified the class ids, and the
 					-- second pass needs it and rebuild the conformance tables
 				pass2_controler.sort;
+				pass3_controler.sort;
 				pass4_controler.sort;
 				build_conformance_table;
 
@@ -1151,7 +1157,7 @@ end;
 			from
 				m_rout_id_server.start
 			until
-				m_rout_id_server.offright
+				m_rout_id_server.after
 			loop
 				class_id := m_rout_id_server.key_for_iteration;
 				a_class := class_of_id (class_id);
@@ -1198,7 +1204,7 @@ end;
 			from
 				M_desc_server.start
 			until
-				M_desc_server.offright
+				M_desc_server.after
 			loop
 				class_id := M_desc_server.key_for_iteration;
 				M_desc_server.item (class_id).store (Update_file);
@@ -1362,7 +1368,7 @@ feature  -- Freeezing
 				!WBENCH_MAKER!makefile_generator.make
 			end;
 				-- Re-process dynamic types
---			process_dynamic_types;
+			--process_dynamic_types;
 
 				-- Process the C pattern table
 debug ("ACTIVITY")
@@ -1566,7 +1572,7 @@ end;
 
 				dispatch_table.start
 			until
-				dispatch_table.offright
+				dispatch_table.after
 			loop
 				dispatch_unit := dispatch_table.item_for_iteration;
 				if dispatch_unit.is_valid then
@@ -1607,12 +1613,18 @@ end;
 				-- Not called because the descriptors must be reprocessed
 				-- if a dispatch unit is moved (real_body_index changes)
 
-			--real_shake;
+			execution_table.shake;
+			dispatch_table.shake;
+
+			if precompilation then
+				execution_table.set_precomp_level;
+				dispatch_table.set_precomp_level
+			end;
 
 			from
 				execution_table.start
 			until
-				execution_table.offright
+				execution_table.after
 			loop
 				exec_unit := execution_table.item_for_iteration;
 				if exec_unit.is_valid and then exec_unit.is_external then
@@ -1628,8 +1640,8 @@ end;
 
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
-			frozen_level := execution_table.count;
-		
+			frozen_level := execution_table.frozen_level;
+
 				-- Freeze the external table: reset the real body ids,
 				-- remove all unused externals and make the duplication
 			externals.freeze;
@@ -1684,11 +1696,13 @@ end;
 			io.error.putstring ("Pass 5 on system%N");
 
 				-- Dead code removal
---			remove_dead_code;
+			if not remover_off then
+				remove_dead_code;
+			end;
 
 			!FINAL_MAKER!makefile_generator.make;
 
---			process_dynamic_types;
+			--process_dynamic_types;
 
 				-- Generation of C files associated to the classes of
 				-- the system.
@@ -1734,6 +1748,12 @@ end;
 		end;
 
 feature -- Dead code removal
+
+	set_remover_off (b: BOOLEAN) is
+			-- Assign `b' to `remover_off'
+		do
+			remover_off := b;
+		end;
 
 	remove_dead_code is
 			-- Dead code removal
@@ -1790,10 +1810,8 @@ feature -- Dead code removal
 			-- Is feature `f' used in the system ?
 		require
 			good_argument: f /= Void;
---			remover_exists: remover /= Void;
 		do
---			Result := remover.is_alive (f)
-			Result := True;
+			Result := remover_off or else remover.is_alive (f)
 		end;
 
 feature -- Generation
@@ -1909,7 +1927,7 @@ end;
 			from
 				Tmp_poly_server.start
 			until
-				Tmp_poly_server.offright
+				Tmp_poly_server.after
 			loop
 				rout_id := Tmp_poly_server.key_for_iteration;
 
@@ -2780,7 +2798,7 @@ feature -- Main file generation
 				Main_file.putint (class_counter.value);
 					-- Set C variable `dcount'.
 				Main_file.putstring (";%N%Tdcount = ");
-				Main_file.putint (dispatch_table.count);
+				Main_file.putint (dispatch_table.counter);
 					-- Set the frozen level
 				Main_file.putstring (";%N%Tzeroc = ");
 				Main_file.putint (frozen_level);

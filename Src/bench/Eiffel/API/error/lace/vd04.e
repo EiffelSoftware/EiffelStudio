@@ -1,11 +1,11 @@
--- Error when unvalid class name in renaming clause of a cluster
+-- Error when invalid class name in renaming clause of a cluster
 -- adaptation
-
+-- NOT USED CURRENTLY
 class VD04
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end
@@ -33,14 +33,15 @@ feature
 	code: STRING is "VD04";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 			-- Debug purpose
 		do
-			a_clickable.put_string ("%Tcluster of path ");
-			a_clickable.put_string (cluster.path);
-			a_clickable.put_string (" has no class named ");
-			a_clickable.put_string (old_name);
-			a_clickable.new_line;
+			put_string ("Cluster path: `");
+			put_string (cluster.path);
+			put_string ("'; class name: `");
+			put_string (old_name);
+			put_char ('%'');
+			new_line
 		end;
 
 end

@@ -108,9 +108,21 @@ feature -- C code generation
 						-- Polymorphic function redefined as a constant
 						-- or a constant string implies the generation
 						-- of a C function.
-					(	(is_once or else not is_origin)
-						and then
-						System.is_used (Current)))
+
+-- FIXME: Constants are generated if they are used in the system
+-- even if they are not called polymorphically.
+
+-- This is done to generate the correct code for:
+-- class CONST feature c: INTEGER is 1 end;
+-- class P feature f: INTEGER is deferred end; end
+-- class D inherit P; CONST rename c as f end; end;
+-- class TEST p: P; make !D!p; p.f; end;
+
+-- c must be generated even if it is an origin !!!
+
+--					(	(is_once or else not is_origin)
+--						and then
+					(	System.is_used (Current)))
 			then
 				type_i := type.actual_type.type_i;
 				internal_name := Encoder.feature_name (class_type.id, body_id); 

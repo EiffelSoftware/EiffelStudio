@@ -6,8 +6,13 @@ class VTEC2
 inherit
 
 	VTEC1
-	
+		redefine
+			subcode
+		end;
+
 feature 
+
+	subcode: INTEGER is 2;
 
 	--entity_name: ID_AS;
 			-- I-th argument of the involved feature ?

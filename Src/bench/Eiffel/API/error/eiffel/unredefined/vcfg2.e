@@ -5,11 +5,16 @@ class VCFG2
 inherit
 
 	EIFFEL_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
 	code: STRING is "VCFG";
 			-- Error code
+
+	subcode: INTEGER is 2;
 
 	formal_name1: ID_AS;
 			-- First formal generic name

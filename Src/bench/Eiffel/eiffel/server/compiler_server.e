@@ -232,7 +232,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				info := item_for_iteration;
 				server_file := Server_controler.file_of_id (info.id);
@@ -270,7 +270,7 @@ feature
 			from
 				other.start
 			until
-				other.offright
+				other.after
 			loop
 				info := other.item_for_iteration;
 				id := other.key_for_iteration;
@@ -324,13 +324,13 @@ feature
 				order := file_ids;
 				order.start
 			until
-				order.offright
+				order.after
 			loop
 				file_id := order.item;
 				from
 					start
 				until
-					offright
+					after
 				loop
 					old_info := item_for_iteration;
 					old_server_file :=

@@ -8,12 +8,14 @@ inherit
 
 	VDRD51
 		redefine
-			code
+			code, subcode
 		end
 	
 feature 
 
 	code: STRING is "VE02";
 			-- Error code: should be added to VDRD validity rule
+
+	subcode: INTEGER is 0;
 
 end 

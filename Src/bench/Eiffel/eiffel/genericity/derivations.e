@@ -20,7 +20,7 @@ feature
 			if derivations /= Void then
 				derivations.start;
 				derivations.search_equal (a_type);
-				if not derivations.offright then
+				if not derivations.after then
 					Result := True
 				end;
 			end;

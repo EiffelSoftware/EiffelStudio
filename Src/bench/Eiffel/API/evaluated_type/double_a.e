@@ -8,12 +8,12 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_double, dump, associated_class, same_as,
+			is_double, associated_class, same_as,
 			is_numeric, heaviest
 		end;
 	BASIC_A
 		redefine
-			is_double, dump, associated_class, same_as,
+			is_double, associated_class, same_as,
 			is_numeric, heaviest, internal_conform_to
 		select
 			internal_conform_to
@@ -48,9 +48,6 @@ feature
 		do	
 			Result := Current
 		end;
-
-	dump: STRING is "DOUBLE";
-			-- Dumped trace
 
 	type_i: DOUBLE_I is
 			-- C type

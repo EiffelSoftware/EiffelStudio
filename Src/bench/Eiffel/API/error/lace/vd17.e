@@ -1,10 +1,10 @@
--- Error when unvaid file name in C/Object file name list
+-- Error when invalid file name in C/Object file name list
 
 class VD17
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end
@@ -32,9 +32,11 @@ feature
 	code: STRING is "VD17";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 		do
-not in the system ?????
+			put_string ("Cluster path: `");
+			put_string (FIX ME!);
+			put_char ('%'');
+			new_line
 		end;
-
 end

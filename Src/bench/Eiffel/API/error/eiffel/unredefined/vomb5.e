@@ -5,6 +5,13 @@ class VOMB5
 
 inherit
 
-	VOMB1
+	VOMB
+		redefine
+			subcode
+		end
+
+feature
+
+	subcode: INTEGER is 5;
 
 end

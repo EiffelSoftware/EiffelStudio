@@ -154,7 +154,7 @@ feature
 			from
 				feat.start;
 			until
-				feat.offright
+				feat.after
 			loop
 				next := feat.item;
 				feature_name := next.a_feature.feature_name;
@@ -171,7 +171,7 @@ feature
 						body_id := next.a_feature.code_id;
 						feat.start;
 					until
-						feat.offright or else duplication
+						feat.after or else duplication
 					loop
 						next_info := feat.item;
 						if 	next_info /= next
@@ -249,7 +249,7 @@ feature
 					-- Check unvalid undefintions of deferred features
 				deferred_features.start
 			until
-				deferred_features.offright
+				deferred_features.after
 			loop
 				info := deferred_features.item;
 				if info.parent.is_undefining (feature_name) then
@@ -265,7 +265,7 @@ feature
 			from
 				features.start
 			until
-				features.offright
+				features.after
 			loop
 				info := features.item;
 				if info.parent.is_undefining (feature_name) then
@@ -320,7 +320,7 @@ feature
 			else
 					-- Name clash
 				!!vmfn2;
-				vmfn2.set_class_id (System.current_class.id);
+				vmfn2.set_class (System.current_class);
 				vmfn2.set_features (features);
 				Error_handler.insert_error (vmfn2);
 			end;
@@ -340,7 +340,7 @@ feature
 				Result := True;
 				features.start;
 			until
-				features.offright or else not Result
+				features.after or else not Result
 			loop
 				inherit_info := features.item;
 				Result := inherit_info.parent.is_redefining (feature_name);
@@ -377,7 +377,7 @@ feature
 				features.start;
 				features.forth;
 			until
-				features.offright or else not Result
+				features.after or else not Result
 			loop
 				Result := body_id = features.item.a_feature.code_id;
 				features.forth;
@@ -397,7 +397,7 @@ feature
 							(features.first.parent.parent_type, written_id);
 						features.go (2);
 					until
-						features.offright or else not Result
+						features.after or else not Result
 					loop
 						written_type := written_actual_type.duplicate;
 						written_type := written_type.instantiation_in
@@ -419,7 +419,7 @@ feature
 					Result := True;
 					features.start
 				until
-					features.offright or else not Result
+					features.after or else not Result
 				loop
 					Result := features.item.a_feature.is_attribute;
 					features.forth;
@@ -442,7 +442,7 @@ feature
 			from
 				features.start
 			until
-				features.offright or else Result.is_all
+				features.after or else Result.is_all
 			loop
 				info := features.item;
 					-- First look for a new export status for the
@@ -458,7 +458,7 @@ feature
 			from
 				deferred_features.start;
 			until
-				deferred_features.offright or else Result.is_all
+				deferred_features.after or else Result.is_all
 			loop
 				info := deferred_features.item;
 					-- First look for a new export status for the

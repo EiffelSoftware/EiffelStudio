@@ -6,7 +6,7 @@ inherit
 
 	VTUG1
 		redefine
-			code
+			subcode
 		end;
 	
 feature 
@@ -20,10 +20,10 @@ feature
 			entity_name := i;
 		end;
 
-	code: STRING is
+	subcode: INTEGER is
 			-- Error code
 		do
-			Result := "VTUG2"
+			Result := 2
 		end;
 
 end

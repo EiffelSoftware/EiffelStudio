@@ -22,7 +22,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				item.check_validity1;
 				forth;
@@ -35,7 +35,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				item.check_validity2;
 				forth;
@@ -48,7 +48,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				if not (item.selecting = Void) then
 					item.check_validity4;
@@ -65,7 +65,7 @@ feature
 			from
 				start
 			until
-				offright or else Result
+				after or else Result
 			loop
 				Result := item.is_selecting (feature_name);
 				forth

@@ -5,8 +5,12 @@ class VWBE1
 inherit
 
 	VWBE
-	
+		redefine
+			subcode
+		end
 feature 
+
+	subcode: INTEGER is 1;
 
 	conditional: IF_AS;
 			-- Conditional instruction involved

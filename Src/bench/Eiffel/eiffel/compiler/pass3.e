@@ -3,7 +3,7 @@ class PASS3
 
 inherit
 
-	PASS
+	SORTED_PASS
 		redefine
 			changed_classes
 		end
@@ -14,7 +14,7 @@ creation
 
 feature
 
-	changed_classes: LINKED_LIST [PASS3_C];
+	changed_classes: SORTED_TWO_WAY_LIST [PASS3_C];
 
 	new_controler (a_class: CLASS_C): PASS3_C is
 		do

@@ -5,7 +5,10 @@ class VHRC1
 inherit
 
 	EIFFEL_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
 	parent_id: INTEGER;
@@ -19,6 +22,8 @@ feature
 
 	code: STRING is "VHRC";
 			-- Error for unvalid renaming
+
+	subcode: INTEGER is 1;
 
 	set_parent_id (i: INTEGER) is
 			-- Assgn `i' to `parent_id'.

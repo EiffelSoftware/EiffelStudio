@@ -190,9 +190,9 @@ feature
 		require
 			good_argument: not (e = Void);
 		do
-			e.set_class_id (a_class.id);
+			e.set_class (a_class);
 			if a_feature /= Void then
-				e.set_feature_name (a_feature.feature_name);
+				e.set_feature (a_feature);
 			end;
 		end;
 
@@ -230,7 +230,7 @@ feature
 					locals.start;
 					!!local_dec.make (1, local_count);
 				until
-					locals.offright
+					locals.after
 				loop
 					local_info := locals.item_for_iteration;
 					local_dec.put (local_info.type.type_i, local_info.position);
@@ -285,7 +285,7 @@ feature
 			from
 				locals.start
 			until
-				locals.offright or else Result /= Void
+				locals.after or else Result /= Void
 			loop
 				local_info := locals.item_for_iteration;
 				if local_info.position = i then

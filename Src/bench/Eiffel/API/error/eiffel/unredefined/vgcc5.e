@@ -5,8 +5,16 @@ class VGCC5
 inherit
 
 	VGCC
-	
+		redefine
+			subcode
+		end
+
 feature
+
+	subcode: INTEGER is
+		do
+			Result := 5;
+		end;
 
 	creation_feature: FEATURE_I;
 			-- Creation feature involved

@@ -1,10 +1,13 @@
--- Error when the root cluster name is unvalid
+-- Error when the root cluster name is not in cluster list
 
 class VD19
 
 inherit
 
-	ERROR
+	LACE_ERROR
+		redefine
+			build_explain
+		end;
 
 feature
 
@@ -17,7 +20,11 @@ feature
 			root_cluster_name := s;
 		end;
 
-	code: STRING is "VD19";
-			-- Error code
-
+	build_explain is
+		do
+			put_string ("Cluster name: `");
+			put_string (root_cluster_name);
+			put_char ('%'');
+			new_line
+		end;
 end

@@ -5,8 +5,15 @@ class VOMB4
 
 inherit
 
-	VOMB1
-	
+	VOMB
+		redefine
+			subcode
+		end
+
+feature
+
+	subcode: INTEGER is 4;
+
 feature
 
 	unique_name: STRING;

@@ -40,7 +40,7 @@ feature
 
 	is_valid: BOOLEAN is
 			-- Is the dispatch unit still valid ?
-		require
+		require else
 			execution_unit_exists: execution_unit /= Void
 		do
 			Result := execution_unit.is_valid;

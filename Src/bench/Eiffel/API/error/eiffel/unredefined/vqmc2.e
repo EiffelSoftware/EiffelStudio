@@ -5,8 +5,13 @@ class VQMC2
 inherit
 
 	VQMC
-	
+		redefine
+			subcode
+		end;
+
 feature 
+
+	subcode: INTEGER is 2;
 
 	constant_value: VALUE_I;
 			-- Constant value

@@ -65,7 +65,7 @@ feature -- Compiled parent computation
 					Result.set_exports (export_adapt);
 					exports.start;
 				until
-					exports.offright
+					exports.after
 				loop
 					exports.item.update (export_adapt, Result);
 					exports.forth;
@@ -77,13 +77,13 @@ feature -- Compiled parent computation
 					Result.set_renaming (renaming_c);
 					renaming.start;
 				until
-					renaming.offright
+					renaming.after
 				loop
 					rename_pair := renaming.item;
 					s := rename_pair.old_name.internal_name;
 					if renaming_c.has (s) then
 						!!vhrc2;
-						vhrc2.set_class_id (System.current_class.id);
+						vhrc2.set_class (System.current_class);
 						vhrc2.set_parent (Current);
 						vhrc2.set_conflict_name (rename_pair.old_name);
 						Error_handler.insert_error (vhrc2);
@@ -121,7 +121,7 @@ feature -- Compiled parent computation
 				!!Result.make (clause.count);
 				clause.start
 			until
-				clause.offright
+				clause.after
 			loop
 				s := clause.item.internal_name;	
 				if Result.has (s) then
@@ -138,7 +138,7 @@ feature -- Compiled parent computation
 						vdrs3 := vmss3;
 					else
 					end;
-					vdrs3.set_class_id (System.current_class.id);
+					vdrs3.set_class (System.current_class);
 					vdrs3.set_parent (Current);
 					vdrs3.set_feature_name (clause.item);
 					Error_handler.insert_error (vdrs3);

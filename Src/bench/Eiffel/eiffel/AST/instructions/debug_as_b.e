@@ -63,7 +63,7 @@ feature -- Type check, byte code and dead code removal
 						node_keys.start;
 						keys.start
 					until
-						keys.offright
+						keys.after
 					loop
 						node_keys.put (keys.item.value);
 						node_keys.forth;

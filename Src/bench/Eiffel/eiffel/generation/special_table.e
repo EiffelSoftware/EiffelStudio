@@ -42,7 +42,7 @@ feature
 			until
 				i > nb
 			loop
-				if 	(not offright) and then i = item.type_id then
+				if 	(not after) and then i = item.type_id then
 					entry := item;
 					r_name := entry.routine_name;
 					file.putstring ("(char *(*)()) ");

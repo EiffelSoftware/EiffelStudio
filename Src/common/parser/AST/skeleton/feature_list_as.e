@@ -34,14 +34,14 @@ feature -- Export status computing
 			from
 				features.start
 			until
-				features.offright
+				features.after
 			loop
 				feature_name := features.item.internal_name;
 				if not export_adapt.has (feature_name) then
 					export_adapt.put (export_status, feature_name);
 				else
 					!!vlel3;
-					vlel3.set_class_id (System.current_class.id);
+					vlel3.set_class (System.current_class);
 					vlel3.set_parent_id (parent.parent_id);
 					vlel3.set_feature_name (feature_name);
 					Error_handler.insert_error (vlel3);

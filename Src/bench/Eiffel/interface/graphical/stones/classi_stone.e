@@ -33,7 +33,7 @@ feature -- dragging
 		do
 			Result := class_i.class_name.duplicate;
 			Result.to_upper;
-			Result.append (" (not in system)")
+--			Result.append (" (not in system)")
 		end;
  
 	stone_type: INTEGER is do Result := Class_type end;

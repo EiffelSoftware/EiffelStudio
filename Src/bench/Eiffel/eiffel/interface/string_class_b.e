@@ -31,20 +31,20 @@ feature
 			from
 				parents.start
 			until
-				parents.offright or else stop
+				parents.after or else stop
 			loop
 				stop := deep_equal (parents.item, To_special_parent);
 				parents.forth;
 			end;
 			if not stop then
-				!!special_error.make (Case_4, id);
+				!!special_error.make (Case_4, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
 			-- Second check if class has only one reference attribute
 			-- only (which is necessary `area' then).
 			if types.first.skeleton.nb_reference /= 1 then
-				!!special_error.make (Case_5, id);
+				!!special_error.make (Case_5, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
@@ -59,7 +59,7 @@ feature
 												(Make_signature);
 			end;
 			if error then
-				!!special_error.make (Case_6, id);
+				!!special_error.make (Case_6, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -71,7 +71,7 @@ feature
 				or else
 				set_count_feat.written_in /= id
 			then
-				!!special_error.make (Case_17, id);
+				!!special_error.make (Case_17, Current);
 				Error_handler.insert_error (special_error);
 			end;
 		end; -- check_validity

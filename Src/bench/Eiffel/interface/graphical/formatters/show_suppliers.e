@@ -34,21 +34,23 @@ feature {NONE}
 			-- Display suppliers of `c' in tree form.
 		local
 			suppliers: SUPPLIER_LIST;
-			classc_stone: CLASSC_STONE
+			class_c: CLASS_C;
+			a_supplier: CLASS_C;
 		do
+			class_c := c.class_c;
 			text_window.put_string ("Suppliers of class ");
-			text_window.put_clickable_string (c, c.signature);
+			class_c.append_clickable_signature (text_window);
 			text_window.put_string (":%N%N");	
 			from
-				suppliers := c.class_c.suppliers;
+				suppliers := class_c.suppliers;
 				suppliers.start
 			until
 				suppliers.after
 			loop
-				!!classc_stone.make (suppliers.item.supplier);
-				if (c.class_c /= classc_stone.class_c) then
+				a_supplier := suppliers.item.supplier;
+				if (class_c /= a_supplier) then
 					text_window.put_string (tabs (1));
-					text_window.put_clickable_string (classc_stone, classc_stone.signature);
+					a_supplier.append_clickable_signature (text_window);
 					text_window.new_line;
 				end;
 				suppliers.forth

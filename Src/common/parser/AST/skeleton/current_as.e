@@ -37,7 +37,7 @@ feature -- Type check and byte code
 		do
 			access_line := context.access_line;
 			check
-				access_line_is_ok: not access_line.offright
+				access_line_is_ok: not access_line.after
 			end;
 			Result ?= access_line.access;
 			access_line.forth;

@@ -62,7 +62,7 @@ feature
 			from
 				feats.start
 			until
-				feats.offright
+				feats.after
 			loop
 				feature_i := feats.item.a_feature;
 
@@ -133,7 +133,7 @@ feature
 						attribute_list := old_features.features;
 						attribute_list.start
 					until
-						attribute_list.offright or else stop
+						attribute_list.after or else stop
 					loop
 						attr_precursor ?= attribute_list.item.a_feature;
 						stop := attr_precursor.generate_in > 0;

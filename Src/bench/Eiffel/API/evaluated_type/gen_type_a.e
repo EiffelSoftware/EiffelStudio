@@ -8,7 +8,9 @@ inherit
 		rename
 			expanded_deferred as basic_expanded_deferred,
 			valid_expanded_creation as basic_valid_expanded_creation,
-			dump as old_dump
+			is_valid as basic_is_valid,
+			dump as old_dump,
+			append_clickable_signature as old_append_clickable_signature
 		redefine
 			generics,
 			valid_generic,
@@ -31,6 +33,7 @@ inherit
 			valid_generic,
 			parent_type,
 			dump,
+			append_clickable_signature,
 			has_like,
 			duplicate,
 			solved_type,
@@ -40,12 +43,14 @@ inherit
 			has_formal_generic,
 			instantiated_in,
 			has_expanded,
+			is_valid,
 			expanded_deferred,
 			valid_expanded_creation,
 			same_as,
 			same_class_type
 		select
-			dump, expanded_deferred, valid_expanded_creation
+			dump, expanded_deferred, valid_expanded_creation,
+			is_valid, append_clickable_signature
 		end;
 
 feature -- Attributes
@@ -91,6 +96,22 @@ feature -- Primitives
 				i > count or else Result
 			loop
 				Result := generics.item (i).has_expanded;
+				i := i + 1;
+			end;
+		end;
+
+	is_valid: BOOLEAN is
+		local
+			i, count: INTEGER
+		do
+			from
+				Result := basic_is_valid;
+				i := 1;
+				count := generics.count
+			until
+				i > count or else not Result
+			loop
+				Result := generics.item (i).is_valid;
 				i := i + 1;
 			end;
 		end;
@@ -273,6 +294,27 @@ feature -- Primitives
 				i := i + 1;
 			end;
 			Result.append ("]");
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		local
+			i, count: INTEGER;
+		do
+			old_append_clickable_signature (a_clickable);
+			a_clickable.put_string (" [");
+			from
+				i := 1;
+				count := generics.count;
+			until
+				i > count
+			loop
+				generics.item (i).append_clickable_signature (a_clickable);
+				if i /= count then
+					a_clickable.put_string (", ");
+				end;
+				i := i + 1;
+			end;
+			a_clickable.put_string ("]");
 		end;
 
 	has_like: BOOLEAN is

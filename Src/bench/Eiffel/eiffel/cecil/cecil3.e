@@ -44,7 +44,7 @@ feature
 						types := a_class.types;
 						types.start;
 					until
-						types.offright
+						types.after
 					loop
 						gen_type ?= types.item.type;
 						gen_type.meta_generic.generate_cecil_values(Cecil_file);
@@ -58,7 +58,7 @@ feature
 					from
 						types.start
 					until
-						types.offright
+						types.after
 					loop
 						Cecil_file.putint (types.item.type_id - 1);
 						Cecil_file.putstring (",%N");
@@ -140,7 +140,7 @@ feature
 					from
 						types.start
 					until
-						types.offright
+						types.after
 					loop
 						gen_type ?= types.item.type;
 						gen_type.meta_generic.make_byte_code (ba);
@@ -150,7 +150,7 @@ feature
 					from
 						types.start
 					until
-						types.offright
+						types.after
 					loop
 						ba.append_short_integer (types.item.type_id - 1);
 						types.forth;

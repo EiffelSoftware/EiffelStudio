@@ -80,7 +80,7 @@ feature
 				Result := True;
 				depend_list.start;
 			until
-				depend_list.offright or else not Result
+				depend_list.after or else not Result
 			loop
 				propagators.start;
 				propagators.search_equal (depend_list.item);				
@@ -103,7 +103,7 @@ feature
 				Result := True;
 				depend_list.start;
 			until
-				depend_list.offright or else not Result
+				depend_list.after or else not Result
 			loop
 				melted_propagators.start;
 				melted_propagators.search_equal (depend_list.item);

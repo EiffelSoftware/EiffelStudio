@@ -54,8 +54,8 @@ feature -- Initialization
 					project_is_new := False
 				end;
 				if project_dir /= Project_directory then end;
-				if Compilation_directory /= Compilation_directory then end;
-				if Generation_directory /= Generation_directory then end;
+				Create_compilation_directory;
+				Create_generation_directory;
 			else
 				error_occurred := True;
 				io.error.putstring (project_name);

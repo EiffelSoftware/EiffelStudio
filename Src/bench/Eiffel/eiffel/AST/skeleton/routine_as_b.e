@@ -199,13 +199,13 @@ feature -- Type check, byte code and dead code removal
 					f_table := context.feature_table;
 					locals.start
 				until
-					locals.offright
+					locals.after
 				loop
 					from
 						id_list := locals.item.id_list;
 						id_list.start;
 					until
-						id_list.offright
+						id_list.after
 					loop
 						local_name := id_list.item;
 						if
@@ -259,7 +259,7 @@ feature -- Type check, byte code and dead code removal
 				context_locals := context.locals;
 				locals.start
 			until
-				locals.offright
+				locals.after
 			loop
 				from
 					id_list := locals.item.id_list;
@@ -278,7 +278,7 @@ feature -- Type check, byte code and dead code removal
 
 					id_list.start;
 				until
-					id_list.offright
+					id_list.after
 				loop
 					local_name := id_list.item;
 					if 
@@ -398,7 +398,7 @@ feature -- Type check, byte code and dead code removal
 					feat_tbl := a_feature.written_class.feature_table;
 					locals.start
 				until
-					locals.offright
+					locals.after
 				loop
 					from
 						local_type := locals.item.type;
@@ -408,7 +408,7 @@ feature -- Type check, byte code and dead code removal
 											(local_type, feat_tbl, a_feature);
 						id_list.start;
 					until
-						id_list.offright
+						id_list.after
 					loop
 						local_name := id_list.item;
 						!!local_info;

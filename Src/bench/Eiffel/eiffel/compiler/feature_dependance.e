@@ -67,7 +67,7 @@ feature -- Incrementality
 			from
 				suppliers.start
 			until
-				suppliers.offright or else Result
+				suppliers.after or else Result
 			loop
 				if System.class_of_id (suppliers.item) = Void then
 					Result := True
@@ -77,7 +77,7 @@ feature -- Incrementality
 			from
 				start
 			until
-				offright or else Result
+				after or else Result
 			loop
 				if System.class_of_id (item.id) = Void then
 					Result := True

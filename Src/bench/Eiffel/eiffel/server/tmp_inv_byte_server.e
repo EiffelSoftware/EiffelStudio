@@ -64,7 +64,7 @@ feature
 			from
 				to_remove.start;
 			until
-				to_remove.offright
+				to_remove.after
 			loop
 				Inv_byte_server.remove (to_remove.item);
 				to_remove.forth;

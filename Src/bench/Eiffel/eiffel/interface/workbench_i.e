@@ -151,7 +151,7 @@ feature -- Commands
 					class_list := Universe.clusters.item.classes;
 					class_list.start
 				until
-					class_list.offright
+					class_list.after
 				loop
 					i := i + 1;
 					change_class (class_list.item_for_iteration);

@@ -21,7 +21,7 @@ feature
 			from
 				start
 			until
-				offright or else stop
+				after or else stop
 			loop
 				stop := item.same_as (t);
 				if not stop then

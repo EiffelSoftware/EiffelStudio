@@ -4,11 +4,15 @@ class VEEN2A
 
 inherit
 
-	FEATURE_ERROR
-	
-feature 
+	VEEN
+		redefine
+			build_explain
+		end;
 
-	code: STRING is "VEEN2A";
-			-- Error code
+feature
 
+	build_explain is
+		do
+			put_string ("Identifier: `Result'%N")
+		end;
 end

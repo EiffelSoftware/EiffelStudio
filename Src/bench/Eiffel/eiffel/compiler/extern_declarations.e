@@ -85,7 +85,7 @@ feature
 			from
 				routines.start
 			until
-				routines.offright
+				routines.after
 			loop
 				f.putstring ("extern ");
 				routines.item_for_iteration.generate (f);
@@ -96,7 +96,7 @@ feature
 			from
 				routine_tables.start
 			until
-				routine_tables.offright
+				routine_tables.after
 			loop
 				f.putstring ("extern fnptr ");
                 f.putstring (routine_tables.item_for_iteration);
@@ -106,7 +106,7 @@ feature
 			from
                 attribute_tables.start
             until
-                attribute_tables.offright
+                attribute_tables.after
             loop
                 f.putstring ("extern long ");
                 f.putstring (attribute_tables.item_for_iteration);
@@ -116,7 +116,7 @@ feature
 			from
 				type_tables.start
 			until
-				type_tables.offright
+				type_tables.after
 			loop
 				f.putstring ("extern int16 ");
                 f.putstring (type_tables.item_for_iteration);

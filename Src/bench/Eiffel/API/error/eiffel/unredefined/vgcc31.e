@@ -6,5 +6,12 @@ class VGCC31
 inherit
 
 	VGCC
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 32;
 
 end

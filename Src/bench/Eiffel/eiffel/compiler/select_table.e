@@ -11,7 +11,7 @@ inherit
 	SHARED_HISTORY_CONTROL
 		undefine
 			twin
-		end;
+		end
 
 creation
 
@@ -30,7 +30,7 @@ feature -- Final mode
 			from
 				start
 			until
-				offright
+				after
 			loop
 				feature_i := item_for_iteration;
 				if feature_i.has_poly_unit then
@@ -60,7 +60,7 @@ feature -- Incrementality
 					start;
 					Result := True
 				until
-					offright or else not Result
+					after or else not Result
 				loop
 					id := key_for_iteration;
 					f2 := other.item (id);

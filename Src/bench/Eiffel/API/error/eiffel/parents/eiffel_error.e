@@ -15,30 +15,33 @@ inherit
 
 feature 
 
-	class_id: INTEGER;
-			-- Id of the class where the error is encountered
+	class_c: CLASS_C;
+			-- Class where the error is encountered
 
-	set_class_id (i: INTEGER) is
-			-- Assign `i' to `class_id'.
+	set_class (c: CLASS_C) is
+			-- Assign `c' to `class_c'.
 		do
-			class_id := i
+			class_c := c
+		end;
+
+	set_class_id (id: INTEGER) is
+		obsolete "Use `set_class'"
+			-- Assign `c' to `class_c'.
+		do
+			class_c := System.class_of_id (id)
 		end;
 
 	trace is
-			-- Debug purpose
-		local
-			compiled_class: CLASS_C;
-			dummy_reference: CLASS_C;
 		do
-			error_window.put_string (Error_string);
-			error_window.put_clickable_string (stone (dummy_reference), code);
-			error_window.put_string (" (");
-			error_window.put_string (generator);
-			error_window.put_string (") in class ");
-			compiled_class := System.class_of_id (class_id);
-			compiled_class.append_clickable_signature (error_window);
-			error_window.put_string (":%N");
-			build_explain (error_window)
-		end
+			print_error_message;
+			put_string ("Class: ");
+			class_c.append_clickable_signature (error_window);
+			new_line;
+			build_explain
+		end;
+
+	build_explain is
+		do
+		end;
 
 end

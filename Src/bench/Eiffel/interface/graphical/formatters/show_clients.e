@@ -35,22 +35,23 @@ feature {NONE}
 			-- Display clients of `c' in tree form.
 		local
 			clients: LINKED_LIST [CLASS_C];
-			class_c: CLASSC_STONE
+			class_c, a_client: CLASS_C
 		do
 			text_window.put_string ("Clients of class ");
-			text_window.put_clickable_string (c, c.signature);
+			class_c := c.class_c;
+			class_c.append_clickable_signature (text_window);
 			text_window.put_string (":%N%N");
 			from
-				clients := c.class_c.clients;
+				clients := class_c.clients;
 				clients.start
 			until
 				clients.after
 			loop
-				if (c.class_c /= clients.item) then
-					!!class_c.make (clients.item);
+				a_client := clients.item;
+				if (class_c /= a_client) then
 					text_window.put_string (tabs (1));
-					text_window.put_clickable_string (class_c, class_c.signature);
-					text_window.put_string ("%N");
+					a_client.append_clickable_signature (text_window);
+					text_window.new_line;
 				end;
 				clients.forth
 			end

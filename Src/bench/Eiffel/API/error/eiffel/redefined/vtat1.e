@@ -10,17 +10,10 @@ class VTAT1
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
-	
+
 feature
 
 	type: TYPE;
@@ -46,19 +39,16 @@ feature
 	code: STRING is "VTAT";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `a_clickable'.
-		local
-			class_stone: CLASSC_STONE;
-			class_c: CLASS_C
-        do
-            old_build_explain (a_clickable);
-			error_window.put_string ("%Ttype: ");
+	subcode: INTEGER is 1;
+
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			put_string ("%Ttype: ");
 -- FIXME: pass the classc for the type as argument
-			!!class_stone.make (class_c);
-			error_window.put_clickable_string (class_stone, type.dump);
-			error_window.put_string ("%N");
+			put_string (type.dump);
+			new_line;
 		end;
 
 end

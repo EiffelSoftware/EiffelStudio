@@ -6,7 +6,10 @@ class VAOL1
 inherit
 
 	FEATURE_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
 	old_expr: UN_OLD_AS;
@@ -20,5 +23,10 @@ feature
 
 	code: STRING is "VAOL";
 			-- Error code
+
+	subcode: INTEGER is
+		do
+			Result := 1
+		end;
 
 end

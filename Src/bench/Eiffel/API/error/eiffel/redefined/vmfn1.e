@@ -10,7 +10,7 @@ inherit
 			other_feature as inherited_feature,
 			set_other_feature as set_inherited_feature
 		redefine
-			build_explain
+			build_explain, subcode
 		end
 
 feature
@@ -24,18 +24,19 @@ feature
 			parent_id := i;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `a_clickable'.
-        do
-            old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tfeature ");
-			a_feature.append_clickable_signature (a_clickable);
-			a_clickable.put_string ("%N%Tand feature ");
-			inherited_feature.append_clickable_signature (a_clickable);
-			a_clickable.put_string (" inherited from ");
-			System.class_of_id (parent_id).append_clickable_name (a_clickable);
-			a_clickable.new_line;
+	subcode: INTEGER is 1;
+
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			put_string ("%Tfeature ");
+			a_feature.append_clickable_signature (error_window);
+			put_string ("%N%Tand feature ");
+			inherited_feature.append_clickable_signature (error_window);
+			put_string (" inherited from ");
+			System.class_of_id (parent_id).append_clickable_name (error_window);
+			new_line;
 		end;
 
 end

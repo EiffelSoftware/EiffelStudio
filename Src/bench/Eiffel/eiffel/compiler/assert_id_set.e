@@ -152,7 +152,7 @@ end;
 			from
 				l.start;
 			until
-				l.offright
+				l.after
 			loop
 				merge (l.item.a_feature.assert_id_set);
 				l.forth

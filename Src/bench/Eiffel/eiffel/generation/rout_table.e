@@ -37,7 +37,7 @@ feature
 				-- Go to the entry of type id greater or equal than `type_id':
 				-- note than deferred feature have no entries in the tables
 			goto_used (type_id);
-			if not offright then
+			if not after then
 				from
 					entry := item;
 					first_body_id := entry.body_id;
@@ -45,7 +45,7 @@ feature
 					first_class := cl_type.associated_class;
 					forth;
 				until
-					offright or else Result
+					after or else Result
 				loop
 					entry := item;
 					cl_type := System.class_type_of_id (entry.type_id);
@@ -112,7 +112,7 @@ feature
 		do
 			goto_used (type_id);
 			check
-				not_off: not offright
+				not_off: not after
 			end;
 			Result := item.routine_name
 		end;

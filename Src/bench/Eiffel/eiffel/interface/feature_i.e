@@ -33,6 +33,7 @@ inherit
 	SHARED_ARRAY_BYTE;
 	SHARED_EXEC_TABLE;
 	HASHABLE;
+	PART_COMPARABLE;
 	
 feature 
 
@@ -81,6 +82,11 @@ feature
 				feature_name_exists: feature_name /= Void
 			end;
 			Result := feature_name.hash_code
+		end;
+
+	infix "<" (other: like Current): BOOLEAN is
+		do
+			Result := feature_name < other.feature_name
 		end;
 
 	set_feature_id (i: INTEGER) is
@@ -245,19 +251,43 @@ feature -- Incrementality
 						deep_equal (type, other.type);
 		end;
 
+	is_valid: BOOLEAN is
+			-- Is the feature still valid?
+			-- Incrementality: The types of the arguments and/or result
+			-- are still defined in the system
+		local
+			type_a: TYPE_A;
+		do
+			type_a ?= type;
+			Result := type_a.is_valid;
+			if Result and then has_arguments then
+				Result := arguments.is_valid;
+			end;
+		end;
+
 	same_interface (other: FEATURE_I): BOOLEAN is
 			-- Has `other' the same interface than Current ?
 			-- [Semnatic for second pass is `old_feat.same_interface (new)']
 		require
 			good_argument: other /= Void;
 			same_names: other.feature_name.is_equal (feature_name);
-			export_statuses_exist: not ( 	export_status = Void
-											or else
-											other.export_status = Void);
+--			export_statuses_exist: not ( 	export_status = Void
+--											or else
+--											other.export_status = Void);
 		do
-			Result := 	type.same_as (other.type)
-						and then
-						export_status.equiv (other.export_status);
+			Result := 	type.same_as (other.type);
+--						and then
+--						export_status.equiv (other.export_status);
+debug ("ACTIVITY")
+	if not Result then
+		io.error.putstring (feature_name);
+		io.error.putstring (": NEW RETURN TYPE%N");
+		type.trace;
+		io.error.new_line;
+		other.type.trace;
+		io.error.new_line;
+	end;
+end;
 			if Result then
 				if argument_count = 0 then
 					Result := other.argument_count = 0;
@@ -270,6 +300,12 @@ feature -- Incrementality
 			Result := 	Result
 						and then
 						is_attribute = other.is_attribute;
+debug ("ACTIVITY")
+	if not Result then
+		io.error.putstring (feature_name);
+		io.error.putstring (": NEW INTERFACE%N");
+	end;
+end;
 		end;
 
 feature -- Type id
@@ -498,7 +534,7 @@ feature -- Export checking
 				from
 					arguments.start
 				until
-					arguments.offright
+					arguments.after
 				loop
 					type_a ?= arguments.item;
 					a_class := type_a.associated_class;
@@ -754,14 +790,14 @@ feature -- Signature checking
 				arg_names := argument_names;
 				arg_names.start;
 			until
-				arg_names.offright
+				arg_names.after
 			loop
 				arg_id := arg_names.item;
 				if arg_names.index_of (arg_id, 2) /= 0 then
 						-- Two arguments with the same name
 					!!vreg;
-					vreg.set_class_id (written_in);
-					vreg.set_feature_name (feature_name);
+					vreg.set_class (written_class);
+					vreg.set_feature (Current);
 					vreg.set_argument_name (arg_id);
 					Error_handler.insert_error (vreg);
 				end;
@@ -769,7 +805,7 @@ feature -- Signature checking
 						-- An argument name is a feature name of the feature
 						-- table.
 					!!vrfa;
-					vrfa.set_class_id (written_in);
+					vrfa.set_class (written_class);
 					vrfa.set_feature_i (Current);
 					vrfa.set_argument_name (arg_id);
 					Error_handler.insert_error (vrfa);
@@ -830,7 +866,7 @@ end;
 					-- Check valididty of a generic class type
 				if not solved_type.good_generics then
 					!!vtug1;
-					vtug1.set_class_id (written_in);
+					vtug1.set_class (written_class);
 					vtug1.set_body_id (body_id);
 					vtug1.set_type (solved_type);
 					Error_handler.insert_error (vtug1);
@@ -841,7 +877,7 @@ end;
 				solved_type.check_constraints (written_class);
 				if not Constraint_error_list.empty then
 					!!vtgg1;
-					vtgg1.set_class_id (written_in);
+					vtgg1.set_class (written_class);
 					vtgg1.set_body_id (body_id);
 					vtgg1.set_error_list
 										(deep_clone (Constraint_error_list));
@@ -865,14 +901,14 @@ end;
 				if is_infix and then argument_count /= 1 then
 						-- Infixed features should have only one argument
 					!!vffd6;
-					vffd6.set_class_id (written_in);
+					vffd6.set_class (written_class);
 					vffd6.set_body_id (body_id);
 					Error_handler.insert_error (vffd6);
 				end;
 				if is_prefix and then argument_count /= 0 then
 						-- Prefixed features shouldn't have any argument
 					!!vffd5;
-					vffd5.set_class_id (written_in);
+					vffd5.set_class (written_class);
 					vffd5.set_body_id (body_id);
 					Error_handler.insert_error (vffd5);
 				end;
@@ -904,13 +940,13 @@ end;
 				if	solved_type.has_expanded then
 					if 	solved_type.expanded_deferred then
 						!!vtec1;
-						vtec1.set_class_id (written_in);	
+						vtec1.set_class (written_class);	
 						vtec1.set_body_id (body_id);
 						vtec1.set_type (solved_type);
 						Error_handler.insert_error (vtec1);
 					elseif not solved_type.valid_expanded_creation then
 						!!vtec2;
-						vtec2.set_class_id (written_in);	
+						vtec2.set_class (written_class);	
 						vtec2.set_body_id (body_id);
 						vtec2.set_type (solved_type);
 						Error_handler.insert_error (vtec2);
@@ -1504,13 +1540,13 @@ feature -- PS
 				from
 					arguments.start
 				until
-					arguments.offright
+					arguments.after
 				loop
 					Result.append (arguments.argument_names.i_th (arguments.position));
 					Result.append (": ");
 					Result.append (arguments.item.actual_type.dump);
 					arguments.forth;
-					if not arguments.offright then
+					if not arguments.after then
 						Result.append (", ")
 					end
 				end;

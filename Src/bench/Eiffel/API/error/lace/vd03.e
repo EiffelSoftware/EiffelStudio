@@ -1,10 +1,10 @@
--- Error for an unvalid cluster name specified in an adaptation clause
+-- Error for an invalid cluster name specified in an adaptation clause
 
 class VD03
 
 inherit
 
-	ERROR
+	LACE_ERROR
 		redefine
 			build_explain
 		end
@@ -20,16 +20,12 @@ feature
 			cluster_name := s;
 		end;
 
-	code: STRING is
-			-- Error code
+	build_explain is
 		do
-			Result := "VD03";
-		end;
-
-	build_explain (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string (cluster_name);
-			a_clickable.put_string (" is invalid%N");
+			put_string ("Cluster name: `");
+			put_string (cluster_name);
+			put_char ('%'');
+			new_line
 		end;
 
 end

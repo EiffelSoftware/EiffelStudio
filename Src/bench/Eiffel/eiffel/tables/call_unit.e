@@ -1,6 +1,6 @@
 -- Call unit description
 
-class CALL_UNIT 
+deferred class CALL_UNIT 
 
 inherit
 
@@ -59,23 +59,37 @@ feature
 		end;
 
 	type_id: INTEGER is
-			-- Type id of `class_type'
+			-- `type_id' of `class_type'
 		require
 			class_type_exists: class_type /= Void
 		do
 			Result := class_type.type_id
 		end;
 
+	class_type_id: INTEGER is
+			-- `id' of `class_type'
+		require
+			class_type_exists: class_type /= Void
+		do
+			Result := class_type.id
+		end;
+
+	is_valid: BOOLEAN is
+		deferred
+		end;
+
+feature -- Hash coding
+
 	hash_code: INTEGER is 
 			-- Hash code
 		do
-			Result := type_id * Mask + id;
+			Result := class_type_id * Mask + id;
 		end;
 
 	is_equal (other: CALL_UNIT): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := 	type_id = other.type_id
+			Result := 	class_type_id = other.class_type_id
 						and then
 						id = other.id
 		end;

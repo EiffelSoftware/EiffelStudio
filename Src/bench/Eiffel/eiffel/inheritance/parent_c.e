@@ -139,7 +139,7 @@ feature
 					parent_table := parent.feature_table;
 					renaming.start
 				until
-					renaming.offright
+					renaming.after
 				loop
 					if renaming.key_for_iteration.is_equal (renaming.item_for_iteration) then
 						!!vhrc3;
@@ -175,7 +175,7 @@ feature
 				from
 					redefining.start
 				until
-					redefining.offright
+					redefining.after
 				loop
 					feature_name := redefining.item_for_iteration;
 						-- Take care of renaming
@@ -196,7 +196,7 @@ feature
 				from
 					selecting.start
 				until
-					selecting.offright
+					selecting.after
 				loop	
 					feature_name := selecting.item_for_iteration;
 						-- Take care of renaming
@@ -217,7 +217,7 @@ feature
 				from
 					undefining.start
 				until	
-					undefining.offright
+					undefining.after
 				loop
 					feature_name := undefining.item_for_iteration;
 						-- Take care of renaming
@@ -238,7 +238,7 @@ feature
 				from
 					exports.start
 				until
-					exports.offright
+					exports.after
 				loop
 					feature_name := exports.key_for_iteration;
 						-- Take care of renamings
@@ -266,11 +266,11 @@ feature
 			from
 				selecting.start
 			until
-				selecting.offright
+				selecting.after
 			loop
 				Selected.start;
 				Selected.search_equal (selecting.item_for_iteration);
-				if Selected.offright then
+				if Selected.after then
 					!!vmss2;
 					vmss2.set_class_id (System.current_class.id);
 					vmss2.set_parent_id (parent_id);
@@ -292,7 +292,7 @@ feature
 				from
 					renaming.start
 				until
-					renaming.offright or else Result /= Void
+					renaming.after or else Result /= Void
 				loop
 					new_name := renaming.item_for_iteration;
 					if new_name.is_equal (feature_name) then
@@ -323,7 +323,7 @@ feature -- Debug
 			from
 				renaming.start
 			until
-				renaming.offright
+				renaming.after
 			loop
 				io.error.putstring ("%T");
 				io.error.putstring (renaming.key_for_iteration);
@@ -352,7 +352,7 @@ feature -- Debug
 			from
 				a_list.start
 			until
-				a_list.offright
+				a_list.after
 			loop
 				io.error.putstring ("%T");
 				io.error.putstring (a_list.item_for_iteration);

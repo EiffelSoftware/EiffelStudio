@@ -5,7 +5,14 @@ class VTGG4
 inherit
 
 	VTGG
-	
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 4;
+
 feature 
 
 	parent_type: CL_TYPE_A;

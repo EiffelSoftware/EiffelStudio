@@ -381,20 +381,25 @@ feature -- Iteration
 				stop
 			loop
 				pos_for_iter := pos_for_iter + 1;
-				stop := offright or else valid_key (array_item (pos_for_iter));
+				stop := after or else valid_key (array_item (pos_for_iter));
 			end
 		end;
 
-	offright: BOOLEAN is
+	after: BOOLEAN is
 			-- Is the iteration cursor off ?
 		do
 			Result := pos_for_iter > upper
 		end;
 
+	offright: BOOLEAN is obsolete "Use `after'"
+		do
+			Result := after
+		end;
+
 	item_for_iteration: H is
 			-- Item at cursor position
 		require
-			not_off: not offright
+			not_off: not after
 		do
 			Result := array_item (pos_for_iter)
 		end;

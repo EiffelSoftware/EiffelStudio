@@ -90,7 +90,7 @@ feature
 					from
 						parameters.start;
 					until
-						parameters.offright or Result
+						parameters.after or Result
 					loop
 						expr_b ?= parameters.item;
 						Result := expr_b.has_gcable_variable;
@@ -112,7 +112,7 @@ feature
 				from
 					parameters.start;
 				until
-					parameters.offright or Result
+					parameters.after or Result
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 					Result := expr.used(r);
@@ -139,7 +139,7 @@ feature
 					from
 						parameters.start;
 					until
-						parameters.offright or not Result
+						parameters.after or not Result
 					loop
 						expr_b ?= parameters.item;
 						Result := not expr_b.has_call;
@@ -256,7 +256,7 @@ feature
 				from
 					parameters.start;
 				until
-					parameters.offright
+					parameters.after
 				loop
 					expr_b ?= parameters.item;	-- Cannot fail
 					expr_b.unanalyze;
@@ -274,7 +274,7 @@ feature
 				from
 					parameters.start;
 				until
-					parameters.offright
+					parameters.after
 				loop
 					expr_b ?= parameters.item;	-- Cannot fail
 					expr_b.free_register;

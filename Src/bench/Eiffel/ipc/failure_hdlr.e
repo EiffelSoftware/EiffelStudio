@@ -23,10 +23,9 @@ feature
 	execute is
 			-- Announce in error window that the job was finished.
 		do
-			bench_error_window.clean;
-		--	bench_error_window.put_string ("Failure%N");
-			bench_error_window.show_image;
-			bench_error_window.set_changed (false);
+			error_window.clear_window;
+		--	error_window.put_string ("Failure%N");
+			error_window.display;
 			debug_info.restore
 		end
 

@@ -4,9 +4,17 @@ class VGCP3
 
 inherit
 
-	VGCP1
-	
+	VGCP
+		redefine
+			subcode
+		end;
+
 feature
+
+	subcode: INTEGER is
+		do
+			Result := 3
+		end;
 
 	feature_name: STRING;
 			-- Feature name repeated in the creation clause of the class

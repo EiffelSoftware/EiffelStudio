@@ -90,8 +90,8 @@ feature
 				if project_dir.count < 3 then
 						-- Create new project
 					if project_dir /= Project_directory then end;
-					if Compilation_directory /= Compilation_directory then end;
-					if Generation_directory /= Generation_directory then end;
+					Create_compilation_directory;
+					Create_generation_directory;
 
 					get_precompilation_directory;
 
@@ -114,9 +114,9 @@ feature
 				else
 						-- Retrieve existing project
 					if project_dir /= Project_directory then end;
-					if Compilation_directory /= Compilation_directory then end;
-					if Generation_directory /= Generation_directory then end;
-					
+					Create_compilation_directory;
+					Create_generation_directory;
+
 					!!workb;
 					!!workbench_file.make_open_read (Project_file_name);
 					workb ?= workb.retrieved (workbench_file);

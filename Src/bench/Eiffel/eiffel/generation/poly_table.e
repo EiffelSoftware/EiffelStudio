@@ -67,7 +67,7 @@ feature
 	generable: BOOLEAN is
 			-- Has the table to be generated ?
 		require
-			not_empty: not empty;
+			not_empty: not empty
 		do
 --			Result := used and then is_polymorphic (min_used);
 			Result := used;
@@ -182,7 +182,7 @@ feature
 		do
 			pos := position;
 			goto (type_id);
-			Result := not offright;
+			Result := not after;
 			go (pos);
 		end;
 			
@@ -195,7 +195,7 @@ feature
 			from
 				start
 			until
-				offright or else item.type_id >= type_id
+				after or else item.type_id >= type_id
 			loop
 				forth
 			end;
@@ -213,7 +213,7 @@ feature
             from
                 start
             until
-                offright or else stop
+                after or else stop
             loop
 				entry := item;
 				stop := 	entry.type_id >= type_id
@@ -246,7 +246,7 @@ feature
 				forth;
 				Result := True;
 			until
-				offright or else not Result
+				after or else not Result
 			loop
 				entry := item;
 				Result := entry.feature_type_id = first_type;

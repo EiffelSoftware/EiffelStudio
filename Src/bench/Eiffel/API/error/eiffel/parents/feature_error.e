@@ -1,4 +1,4 @@
--- Abstract description of error in third pass
+
 
 deferred class FEATURE_ERROR 
 
@@ -6,37 +6,48 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain
-		end
+			trace
+		end;
 
 feature 
 
-	feature_name: STRING;
-			-- Feature name involved in the error
+	feature_i: FEATURE_I;
+			-- Feature involved in the error
 			-- [if Void it is in the invariant]
 
-	set_feature_name (i: STRING) is
-			-- Assign `i' to `feature_name'.
+	set_feature (f: FEATURE_I) is
+			-- Assign `f' to `feature'.
 		do
-			feature_name := i;
+			feature_i := f;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation image for current error
-            -- in `a_clickable'.
-        do
-			if feature_name = Void then
-				a_clickable.put_string ("%Tin invariant%N");
+	feature_name: STRING;
+
+	set_feature_name (s: STRING) is
+		obsolete "Use `set_feature' if a FEATURE_I is defined%N%
+				%or change the inheritance clause from FEATURE_ERROR%N%
+				%to FEATURE_NAME_ERROR"
+		do
+			feature_name := s;
+		end;
+
+	trace is
+		do
+			print_error_message;
+			put_string ("Class: ");
+			class_c.append_clickable_signature (error_window);
+			if feature_i /= Void then
+				put_string ("%NFeature: ");
+				feature_i.append_clickable_name (error_window);
+				new_line;
+			elseif feature_name /= Void then
+				put_string ("%NFeature: ");
+				put_string (feature_name);
+				new_line;
 			else
-				a_clickable.put_string ("%Tin feature `");
--- FIXME
--- 				Should be a feature stone
---				a_clickable.put_clickable_string (
---					System.class_of_id (class_id).feature_named (feature_name),
---					feature_name);
-				a_clickable.put_string (feature_name);
-				a_clickable.put_string ("'%N")
-			end
-		end
+				put_string ("%NFeature: invariant%N");
+			end;
+			build_explain;
+		end;
 
 end

@@ -201,7 +201,7 @@ feature
 	display is
 		do
 			show_image;
-			bench_error_window.set_changed (False);	
+			set_changed (False);	
 		end;
 	
 feature {NONE}

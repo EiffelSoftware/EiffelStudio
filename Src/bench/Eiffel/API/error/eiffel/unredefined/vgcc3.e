@@ -6,5 +6,12 @@ class VGCC3
 inherit
 
 	VGCC
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 3
 
 end

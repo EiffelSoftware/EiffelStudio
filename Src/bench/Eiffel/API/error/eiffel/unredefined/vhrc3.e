@@ -6,7 +6,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain
+			build_explain, subcode
 		end;
 	
 feature 
@@ -19,6 +19,8 @@ feature
 
 	code: STRING is "VHRC";
 			-- Error for unvalid renaming
+
+	subcode: INTEGER is 3;
 
 	set_parent_id (i: INTEGER) is
 			-- Assgn `i' to `parent_id'.

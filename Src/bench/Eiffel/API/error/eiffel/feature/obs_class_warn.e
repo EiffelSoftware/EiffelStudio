@@ -6,7 +6,7 @@ inherit
 
 	WARNING
 		redefine
-			build_explain
+			build_explain, infix "<"
 		end;
 
 feature
@@ -27,21 +27,32 @@ feature
 			obsolete_class := c
 		end;
 
+feature 
+
 	code: STRING is
 			-- Error code
 		do
 			Result := "Obsolete";
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	infix "<" (other: like Current): BOOLEAN is
 		do
-			a_clickable.put_string ("%Tin class ");
-			associated_class.append_clickable_name (a_clickable);
-			a_clickable.put_string ("%T");
-			obsolete_class.append_clickable_name (a_clickable);
-			a_clickable.put_string (" is obsolete:%N%T");
-			a_clickable.put_string (obsolete_class.obsolete_message);
-			a_clickable.new_line;
+			Result := code < other.code or else
+				(code.is_equal (other.code) and then
+					associated_class < other.associated_class)
+		end;
+
+feature 
+
+	build_explain is
+		do
+			put_string ("%Tin class ");
+			associated_class.append_clickable_name (error_window);
+			put_char ('%T');
+			obsolete_class.append_clickable_name (error_window);
+			put_string (" is obsolete:%N%T");
+			put_string (obsolete_class.obsolete_message);
+			new_line;
 		end;
 
 end

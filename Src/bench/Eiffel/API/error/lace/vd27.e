@@ -1,13 +1,10 @@
--- Error when root creation routine name is not valid
+-- Error when root creation procedure name is not valid
 
 class VD27
 
 inherit
 
-	ERROR
-		redefine
-			build_explain
-		end;
+	LACE_ERROR
 
 feature
 
@@ -25,16 +22,14 @@ feature
 			root_class := a_class_c;
 		end;
 
-	code: STRING is "VD27";
-
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 		do
-			a_clickable.put_string ("There is no creation routine called ");
-			a_clickable.put_string (creation_routine);
-			a_clickable.put_string (" in the root class (");
-			root_class.append_clickable_name (a_clickable);
-			a_clickable.put_string (")%N");
+			put_string ("Creation procedure name: `");
+			put_string (creation_routine);
+			put_string ("'%Nroot class: `");
+			root_class.append_clickable_name (error_window);
+			put_char ('%'');
+			new_line
 		end;
 
 end
-

@@ -103,7 +103,7 @@ feature -- Initialization
 				if a_class = Void then
 					!!vd20;
 					vd20.set_cluster (cluster);
-					vd20.set_root_class_name (root_name);
+					vd20.set_class_name (root_name);
 					Error_handler.insert_error (vd20);
 				else
 					System.set_root_class_name (root_class_name);

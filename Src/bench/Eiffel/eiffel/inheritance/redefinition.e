@@ -46,8 +46,8 @@ feature
 					)
 			then
 				!!vdrd8;
-				vdrd8.set_class_id (System.current_class.id);
-				vdrd8.set_a_feature (new_feature);
+				vdrd8.set_class (System.current_class);
+				vdrd8.set_feature (new_feature);
 				Error_handler.insert_error (vdrd8);
 			end;
 		end;

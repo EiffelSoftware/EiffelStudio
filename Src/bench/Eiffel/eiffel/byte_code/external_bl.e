@@ -209,7 +209,7 @@ feature
 				from
 					parameters.start;
 				until
-					parameters.offright
+					parameters.after
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 					expr.print_register;
@@ -231,7 +231,7 @@ feature
 				from
 					parameters.start;
 				until
-					parameters.offright
+					parameters.after
 				loop
 					protect_b ?= parameters.item;
 					if protect_b /= Void then
@@ -269,7 +269,7 @@ feature
 			feature_name := e.feature_name;
 			if parameters /= Void then
 				from parameters.start;
-				until parameters.offright
+				until parameters.after
 				loop
 					expr_b ?= parameters.item;	-- Cannot fail
 						-- Ensure run-time protection for references which are
@@ -302,7 +302,7 @@ feature
 				from
 					parameters.start;
 				until
-					Result or parameters.offright
+					Result or parameters.after
 				loop
 					protect_b ?= parameters.item;
 					Result := protect_b /= Void;

@@ -124,7 +124,7 @@ feature -- Conveniences
 				parents := associated_class.parents;
 				parents.start;
 			until
-				parents.offright
+				parents.after
 			loop
 				parent_type := parents.item.type_i;
 				if parent_type.has_formal then
@@ -137,7 +137,7 @@ feature -- Conveniences
 					already_in := False;
 					Result.start
 				until
-					Result.offright or else already_in
+					Result.after or else already_in
 				loop
 					already_in := Result.item.type.same_as (parent_type);
 					Result.forth;
@@ -183,7 +183,7 @@ feature -- Generation
 				from
 					feature_table.start
 				until
-					feature_table.offright or else generate_c_code
+					feature_table.after or else generate_c_code
 				loop
 					feature_i := feature_table.item_for_iteration;
 					if feature_i.to_generate_in (current_class) and then
@@ -232,7 +232,7 @@ feature -- Generation
 				byte_context.init (Current);
 				--byte_context.set_class_type (Current);
 			until
-				feature_table.offright
+				feature_table.after
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.to_generate_in (current_class) then
@@ -328,7 +328,7 @@ feature -- Generation
 			--| i.e has the skeleton a bit or an expanded attribute at least ?
 		do
 			skeleton.go_bits;
-			Result := not skeleton.offright;
+			Result := not skeleton.after;
 		end;
 
 	dispose_feature: FEATURE_I is
@@ -377,7 +377,7 @@ feature -- Generation
 			file.new_line;
 			from
 			until
-				skeleton.offright or else not skeleton.item.is_bits
+				skeleton.after or else not skeleton.item.is_bits
 			loop
 					-- Initialize dynamic type of the bit attribute
 				file.putstring ("HEADER(l[0] + ");
@@ -399,7 +399,7 @@ feature -- Generation
 			from
 				i := 0;
 			until
-				skeleton.offright
+				skeleton.after
 			loop
 				file.putstring ("*(char **) (l[0] + REFACS(");
 				file.putint (nb_ref + i);
@@ -460,7 +460,7 @@ feature -- Generation
 				sub_class_type := exp_desc.class_type;
 				sub_skel := sub_class_type.skeleton;
 				sub_skel.go_expanded;
-				if not sub_skel.offright then
+				if not sub_skel.after then
 					file.putstring (sub_class_type.init_procedure_name);
 					file.putchar ('(');
 					file.putstring("l[0] + ");
@@ -509,7 +509,7 @@ feature -- Byte code generation
 
 				feat_tbl := associated_class.feature_table;
 			until
-				melted_list.offright
+				melted_list.after
 			loop
 					-- Generation of byte code
 				melted_list.item.melt (Current, feat_tbl);
@@ -575,7 +575,7 @@ feature -- Skeleton generation
 			from
 				parent_list.start
 			until
-				parent_list.offright
+				parent_list.after
 			loop
 				Skeleton_file.putint (parent_list.item.type_id - 1);
 				Skeleton_file.putstring (", ");
@@ -818,7 +818,7 @@ feature -- Byte code generation
 				ba.append_short_integer (parent_list.count);
 				parent_list.start
 			until
-				parent_list.offright
+				parent_list.after
 			loop
 					-- 5.2: parent dynamic type
 				ba.append_short_integer (parent_list.item.type_id - 1);

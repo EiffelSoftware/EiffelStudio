@@ -84,7 +84,6 @@ feature -- Initialization
 				!!vd25;
 				vd25.set_class_name (class_name);
 				vd25.set_cluster (cluster);
-				vd25.set_node (Current);
 				Error_handler.insert_error (vd25);
 			else
 					-- First tset if there is no ambiguity for the 

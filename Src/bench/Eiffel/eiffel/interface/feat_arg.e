@@ -111,7 +111,7 @@ feature
 					solved_type.check_constraints (associated_class);
 					if not Constraint_error_list.empty then
 						!!vtgg2;
-						vtgg2.set_class_id (associated_class.id);
+						vtgg2.set_class (associated_class);
 						vtgg2.set_body_id (f.body_id);
 						vtgg2.set_error_list
 							(deep_clone (Constraint_error_list));
@@ -175,6 +175,23 @@ feature
 			end;
 		end;
 
+	is_valid: BOOLEAN is
+			-- All the types are still in the system
+		local
+			type_a: TYPE_A;
+		do
+			from
+				Result := True;
+				start
+			until
+				after or else not Result
+			loop
+				type_a ?= item;
+				Result := type_a.is_valid;
+				forth
+			end;
+		end;
+
 	solve_types (feat_tbl: FEATURE_TABLE; f: FEATURE_I) is
 			-- Evaluates argument types in the context of `feat_tbl'.
 			-- | Take care of possible anchored types.
@@ -182,7 +199,7 @@ feature
 			from
 				start
 			until
-				offright
+				after
 			loop
 				put (Arg_evaluator.evaluated_type (item, feat_tbl, f));
 				forth

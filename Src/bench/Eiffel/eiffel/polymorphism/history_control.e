@@ -56,7 +56,7 @@ feature
 			from
 				new_units.start
 			until
-				new_units.offright
+				new_units.after
 			loop
 				new_set := new_units.item_for_iteration;
 				rout_id := new_set.rout_id;

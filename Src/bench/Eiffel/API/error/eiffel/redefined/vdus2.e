@@ -6,14 +6,8 @@ class VDUS2
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end;
 	
 feature
@@ -39,14 +33,18 @@ feature
 	code: STRING is "VDUS";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-			-- Build specific explanation image for current error
-			-- in `a_clickable'.
+	subcode: INTEGER is
 		do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tfeature ");
-			a_feature.append_clickable_signature (a_clickable);
-			a_clickable.new_line
+			Result := 2;
+		end;
+
+	build_explain is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
+		do
+			put_string ("%Tfeature ");
+			a_feature.append_clickable_signature (error_window);
+			new_line
 		end
 
 end

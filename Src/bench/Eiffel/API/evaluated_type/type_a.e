@@ -7,6 +7,8 @@ inherit
 	TYPE
 		rename
 			position as comment_position
+		undefine
+			append_clickable_signature
 		redefine
 			is_solved, same_as, format
 		end;
@@ -221,6 +223,12 @@ feature
 	is_solved: BOOLEAN is
 		do
 			Result := True;
+		end;
+
+	is_valid: BOOLEAN is
+			-- The associated class is still in the system
+		do
+			Result := True
 		end;
 
 	duplicate: like Current is

@@ -5,7 +5,14 @@ class VDJR2
 inherit
 
 	VDJR1
-	
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 2;
+
 feature
 
 	argument_number: INTEGER;

@@ -58,7 +58,7 @@ feature -- Query
 				cluster := System.class_of_id (written_in).cluster;
 				clients.start
 			until
-				clients.offright or else Result
+				clients.after or else Result
 			loop
 				supplier_class := Universe.class_named (clients.item, cluster);
 				if 	supplier_class /= Void
@@ -89,12 +89,12 @@ feature -- Incrementality
 				Result := True;
 				clients.start;
 			until
-				clients.offright or else not Result
+				clients.after or else not Result
 			loop
 				other_pos := other_clients.position;
 				other_clients.start;
 				other_clients.search_equal (clients.item);
-				Result := not other_clients.offright;
+				Result := not other_clients.after;
 				other_clients.go (other_pos);
 				clients.forth;
 			end;
@@ -140,7 +140,7 @@ feature -- Debug purpose
 			from
 				clients.start
 			until
-				clients.offright
+				clients.after
 			loop
 				io.error.putchar ('%T');
 				io.error.putstring (clients.item);
@@ -164,7 +164,7 @@ feature -- formatter
                 other_clients.start ;
                 Result := true;
             until
-                other_clients.offright or Result = false
+                other_clients.after or Result = false
             loop
                 Result := valid_for ( Universe.class_named (
                         other_clients.item, other_cluster).compiled_class);

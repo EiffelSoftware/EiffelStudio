@@ -86,6 +86,12 @@ feature -- Primitives
 			Result.append (actual_dump);
 		end;
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("(like Current)");
+			actual_type.append_clickable_signature (a_clickable);
+		end;
+
 	has_like: BOOLEAN is
 			-- Does the type have anchored types in its definition ?
 		do

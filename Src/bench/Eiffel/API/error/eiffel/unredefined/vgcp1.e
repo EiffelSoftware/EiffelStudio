@@ -1,14 +1,16 @@
 -- Error when a deferred class has a creation clause
 
-class VGCP1 
+class VGCP1
 
 inherit
 
-	EIFFEL_ERROR
-	
+	VGCP
+		redefine
+			subcode
+		end;
+
 feature 
 
-	code: STRING is "VGCP";
-			-- Error code
+	subcode: INTEGER is 1;
 
 end 

@@ -1,18 +1,11 @@
 -- Error for non signature-conformance for a redefinition
 
-deferred class VDRD5 
+class VDRD5 
 
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as eiffel_error_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -31,23 +24,27 @@ feature
 		do
 			redeclaration := new_feature;
 			precursor := old_feature;
-			class_id := System.current_class.id;
+			class_c := System.current_class;
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-			-- Build specific explanation image for current error
-			-- in `a_clickable'.
+	code: STRING is
 		do
-			eiffel_error_build_explain (a_clickable);
-			a_clickable.put_string ("%Tprecursor: ");
-			precursor.append_clickable_signature (a_clickable);
-			a_clickable.put_string (" written in ");
-			precursor.written_class.append_clickable_name (a_clickable);
-			a_clickable.put_string ("%N%Tredeclaration: ");
-			redeclaration.append_clickable_signature (a_clickable);
-			a_clickable.put_string (" written in ");
-			redeclaration.written_class.append_clickable_name (a_clickable);
-			a_clickable.new_line;
+			Result := "VDRD"
+		end;
+
+	build_explain is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
+		do
+			put_string ("%Tprecursor: ");
+			precursor.append_clickable_signature (error_window);
+			put_string (" written in ");
+			precursor.written_class.append_clickable_name (error_window);
+			put_string ("%N%Tredeclaration: ");
+			redeclaration.append_clickable_signature (error_window);
+			put_string (" written in ");
+			redeclaration.written_class.append_clickable_name (error_window);
+			new_line;
 		end;
 
 end

@@ -8,12 +8,12 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_integer, dump, associated_class,
+			is_integer, associated_class,
 			same_as, is_numeric, heaviest
 		end;
 	BASIC_A
 		redefine
-			is_integer, dump, associated_class,
+			is_integer, associated_class,
 			same_as, is_numeric, heaviest, internal_conform_to
 		select
 			internal_conform_to
@@ -52,9 +52,6 @@ feature
 		do	
 			Result := type;
 		end;
-
-	dump: STRING is "INTEGER";
-			-- Dumped trace
 
 	type_i: LONG_I is
 			-- C type

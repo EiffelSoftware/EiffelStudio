@@ -6,7 +6,10 @@ class VHRC2
 inherit
 
 	EIFFEL_ERROR
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
 	parent: PARENT_AS;
@@ -17,6 +20,8 @@ feature
 
 	code: STRING is "VHRC";
 			-- Error code
+
+	subcode:INTEGER is 2;
 
 	set_parent (p: PARENT_AS) is
 			-- Assign `p' to `parent'.

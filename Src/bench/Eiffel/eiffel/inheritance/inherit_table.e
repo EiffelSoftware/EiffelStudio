@@ -275,7 +275,7 @@ feature
 				from
 					old_creators.start
 				until
-					old_creators.offright
+					old_creators.after
 				loop
 					creation_name := old_creators.key_for_iteration;
 					if
@@ -307,11 +307,22 @@ feature
 				-- Update the assert_id_set of redefined features.
 			update_inherited_assertions;
 
-			equiv_tables := resulting_table.equiv (feature_table);
-			if equiv_tables and then previous_feature_table /= Void then
+			if previous_feature_table /= Void then
+					-- If there is a table in the tmp server,
+					-- the propagation is done again only if the new
+					-- table is different.
 				equiv_tables := resulting_table.equiv (previous_feature_table)
+			else
+					-- There is no table in the tmp server, see if the
+					-- new feature table is equivalent to the old one
+				equiv_tables := resulting_table.equiv (feature_table);
 			end;
-			
+
+--			equiv_tables := resulting_table.equiv (feature_table);
+--			if equiv_tables and then previous_feature_table /= Void then
+--				equiv_tables := resulting_table.equiv (previous_feature_table)
+--			end;
+
 				-- Propagation
 			pass_c.propagate (resulting_table, equiv_tables,
 								pass2_control, assert_prop_list);
@@ -428,7 +439,7 @@ feature
 					-- Iteration on the parent feature table
 				parent_table.start;
 			until
-				parent_table.offright
+				parent_table.after
 			loop
 					-- Take one feature 
 				feature_i := parent_table.item_for_iteration.duplicate;
@@ -469,7 +480,7 @@ feature
 			from
 				start;
 			until
-				offright
+				after
 			loop
 					-- Check the renamings on one name
 				item_for_iteration.check_renamings;
@@ -495,7 +506,7 @@ feature
 					-- Iteration on the structure
 				start
 			until
-				offright
+				after
 			loop
 					-- Calculates an inherited feature: instance of
 					-- FEATURE_I
@@ -554,7 +565,7 @@ feature
 				from
 					clauses.start
 				until
-					clauses.offright
+					clauses.after
 				loop
 					feature_clause := clauses.item;
 						-- Evaluation of the export status
@@ -565,14 +576,14 @@ feature
 						features := feature_clause.features;
 						features.start;
 					until
-						features.offright
+						features.after
 					loop
 						single_feature := features.item;
 						from
 							name_list := single_feature.feature_names;
 							name_list.start;
 						until
-							name_list.offright
+							name_list.after
 						loop
 							feat_name := name_list.item;
 								-- Computes an internal name for the feature
@@ -613,7 +624,7 @@ feature
 				id := a_class.id;
 				feature_table.start;
 			until
-				feature_table.offright
+				feature_table.after
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.written_in = id then
@@ -813,6 +824,7 @@ end;
 			if feature_i /= Void then
 				old_feature_in_class := feature_i.written_in = a_class.id;
 				if old_feature_in_class then
+io.error.putstring ("Old feature in class%N");
 						-- Found a feature of same name and written in the
 						-- same class.
 					old_body_id := feature_i.original_body_id;
@@ -828,17 +840,19 @@ debug ("ACTIVITY")
 		io.error.putstring (" assertions has syntactically changed%N");
 	end;
 end;
-					if is_the_same then
+					if not is_the_same then
+							-- assertions have changed
+						!!assert_prop_list.make;
+						assert_prop_list.add (feature_i.rout_id_set.first)
+					else
 						is_the_same := old_description.is_body_equiv (yacc_feature);
+--							and then Result.same_interface (feature_i);
 debug ("ACTIVITY")
 	if not is_the_same then
 		io.error.putchar ('%T');
 		io.error.putstring (feature_name);
 	end;
 end;
-					else
-						!!assert_prop_list.make;
-						assert_prop_list.add (feature_i.rout_id_set.first)
 					end;
 
 						-- If old representation written in the class,
@@ -853,6 +867,16 @@ end;
 					not pass2_controler.changed_status.disjoint (feature_i.suppliers))
 							-- The status of one of the suppliers of the feature has changed
 				then
+io.error.putstring ("Is the same ");
+io.error.putbool (is_the_same);
+io.error.putstring ("%Nsupplier_status_modified ");
+io.error.putbool (supplier_status_modified);
+io.error.putstring ("%Nchanged status ");
+io.error.putbool (not pass2_controler.changed_status.disjoint (feature_i.suppliers));
+io.error.putstring ("%Nold_feature_in_class ");
+io.error.putbool (old_feature_in_class);
+io.error.new_line;
+
 					-- Feature has changed of body between two 
 					-- recompilations; attribute `body_id' must be renew and the
 					-- old body id should be remove from the body
@@ -897,7 +921,7 @@ end;
 					-- features of `a_class'.
 debug ("ACTIVITY")
 	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features%N");
+	io.error.putstring (" inserted in changed_features (new body id %N");
 end;
 				changed_features.add_front (feature_name);
 			end;
@@ -944,7 +968,7 @@ end;
 			from
 				origins.start
 			until
-				origins.offright
+				origins.after
 			loop
 				a_feature := resulting_table.item (origins.item);
 				a_feature.process_pattern;
@@ -980,7 +1004,7 @@ end;
 			from
 				changed_features.start
 			until
-				changed_features.offright
+				changed_features.after
 			loop
 				a_class.insert_changed_feature (changed_features.item);
 				changed_features.forth;
@@ -1033,7 +1057,7 @@ end;
 			from
 				start
 			until
-				offright
+				after
 			loop
 				inherit_feat := item_for_iteration;
 				inherited_info := inherit_feat.inherited_info;
@@ -1146,7 +1170,7 @@ end;
 			from
 				adaptations.start;
 			until
-				adaptations.offright
+				adaptations.after
 			loop
 				adaptations.item.check_adaptation (resulting_table);
 				adaptations.forth;
@@ -1159,7 +1183,7 @@ end;
 			from
 				adaptations.start;
 			until
-				adaptations.offright
+				adaptations.after
 			loop
 				adaptations.item.check_redeclaration
 					(resulting_table, feature_table, origins, Origin_table);

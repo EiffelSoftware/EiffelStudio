@@ -5,10 +5,12 @@ class VDRD52
 inherit
 
 	VDRD5
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
-	code: STRING is "VDRD";
-			-- Error code
+	subcode: INTEGER is 52;
 
 end

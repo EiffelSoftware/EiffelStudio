@@ -6,7 +6,10 @@ class VTUG1
 inherit
 
 	VTUG
-	
+		redefine
+			subcode
+		end;
+
 feature 
 
 	body_id: INTEGER;
@@ -19,10 +22,11 @@ feature
 			body_id := i;
 		end;
 
-	code: STRING is
-			-- Error code
+	code: STRING is "VTUG";
+
+	subcode: INTEGER is
 		do
-			Result := "VTUG1";
+			Result := 1;
 		end;
 
 end

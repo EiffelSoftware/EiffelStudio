@@ -7,17 +7,8 @@ inherit
 	FEATURE_ERROR
 		rename
 			feature_name as other_feature_name,
-			set_feature_name as set_other_feature_name,
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
-		rename
-			feature_name as other_feature_name,
 			set_feature_name as set_other_feature_name
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -45,28 +36,21 @@ feature
 	code: STRING is "VUEX";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation image for current error
-            -- in `a_clickable'.
-		local
-			compiled_class: CLASS_C
-        do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tfeature ");
+	build_explain is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
+		do
+			put_string ("%Tfeature ");
 -- FIXME
---			a_clickable.put_clickable_string (
+--			put_clickable_string (
 --				static_class.feature_named (feature_name),
 --				feature_name);
-			a_clickable.put_string (feature_name);
-			a_clickable.put_string (" from class ");
--- FIXME
---			a_clickable.put_clickable_string (static_class, static_class.signature);
-			a_clickable.put_string (static_class.signature);
-			a_clickable.put_string (" is not exported to class ");
-			compiled_class := System.class_of_id (class_id);
---			a_clickable.put_clickable_string (compiled_class, compiled_class.signature);
-			a_clickable.put_string (compiled_class.signature);
-			a_clickable.put_string ("%N")
+			put_string (feature_name);
+			put_string (" from class ");
+			static_class.append_clickable_signature (error_window);
+			put_string (" is not exported to class ");
+			class_c.append_clickable_name (error_window);
+			new_line
 		end
 
 end

@@ -51,6 +51,25 @@ feature
 			Result.append (">>");
 		end;
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		local
+			i: INTEGER
+		do
+			a_clickable.put_string ("<<");
+			from
+				i := 1;
+			until
+				i > count
+			loop
+				item (i).append_clickable_signature (a_clickable);
+				if i /= count then
+					a_clickable.put_string (", ");
+				end;
+				i := i + 1;
+			end;
+			a_clickable.put_string (">>");
+		end;
+
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
 		local

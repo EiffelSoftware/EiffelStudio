@@ -5,7 +5,17 @@ class VDJR1
 inherit
 
 	VDJR
-	
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is
+		do
+			Result := 1
+		end;
+
 feature
 
 	type: TYPE_A;

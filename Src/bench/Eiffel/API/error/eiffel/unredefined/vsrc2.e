@@ -4,7 +4,16 @@ class VSRC2
 
 inherit
 
-	VSRC1
+	EIFFEL_ERROR
+		redefine
+			subcode
+		end;
+
+feature
+
+	code: STRING is "VSRC";
+
+	subcode: INTEGER is 2;
 	
 feature
 

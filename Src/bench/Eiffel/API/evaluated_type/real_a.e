@@ -8,11 +8,11 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_real, dump, associated_class, same_as, is_numeric, heaviest
+			is_real, associated_class, same_as, is_numeric, heaviest
 		end;
 	BASIC_A
 		redefine
-			is_real, dump, associated_class, same_as, is_numeric, heaviest,
+			is_real, associated_class, same_as, is_numeric, heaviest,
 			internal_conform_to
 		select
 			internal_conform_to
@@ -53,9 +53,6 @@ feature
 				Result := Current
 			end;
 		end;
-
-	dump: STRING is "REAL";
-			-- Dumped trace
 
 	type_i: FLOAT_I is
 			-- C type

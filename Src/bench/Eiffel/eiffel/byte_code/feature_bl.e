@@ -272,7 +272,7 @@ end;
 				from
 					parameters.start;
 				until
-					parameters.offright
+					parameters.after
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 					generated_file.putstring (", ");
@@ -293,7 +293,7 @@ end;
 				from
 					parameters.start;
 				until
-					parameters.offright
+					parameters.after
 				loop
 					parameters.put (parameters.item.enlarged);
 					parameters.forth;

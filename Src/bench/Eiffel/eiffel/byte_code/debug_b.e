@@ -59,7 +59,7 @@ feature
 				from
 					keys.start
 				until
-					keys.offright or else Result
+					keys.after or else Result
 				loop
 					Result := debug_level.is_debug (keys.item);
 					keys.forth;
@@ -93,7 +93,7 @@ feature
 						from
 							keys.start
 						until
-							keys.offright
+							keys.after
 						loop
 							generated_file.putstring ("WDBG(");
 							generated_file.putint (static_type);
@@ -101,7 +101,7 @@ feature
 							generated_file.putstring (keys.item);
 							generated_file.putstring ("%")");
 							keys.forth;
-							if not keys.offright then
+							if not keys.after then
 								generated_file.putstring (" ||");
 								generated_file.new_line;
 							end;
@@ -138,7 +138,7 @@ feature -- Byte code generation
 					from
 						keys.start
 					until
-						keys.offright
+						keys.after
 					loop
 						ba.append_raw_string (keys.item);
 						keys.forth;

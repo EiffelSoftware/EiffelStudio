@@ -8,11 +8,11 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_boolean, dump, type_i, associated_class, same_as
+			is_boolean, type_i, associated_class, same_as
 		end;
 	BASIC_A
 		redefine
-			is_boolean, dump, type_i, associated_class, same_as,
+			is_boolean, type_i, associated_class, same_as,
 			internal_conform_to
 		select
 			internal_conform_to
@@ -35,9 +35,6 @@ feature
 		do
 			Result := True;
 		end;
-
-	dump: STRING is "BOOLEAN";
-			-- Dumped trace
 
 	type_i: BOOLEAN_I is
 			-- C type

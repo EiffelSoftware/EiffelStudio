@@ -6,5 +6,12 @@ class VGCC4
 inherit
 
 	VGCC
+		redefine
+			subcode
+		end;
+
+feature
+
+	subcode: INTEGER is 4;
 
 end

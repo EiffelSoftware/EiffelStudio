@@ -5,15 +5,8 @@ class VDRS1
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
 	
 feature 
@@ -42,14 +35,15 @@ feature
 			Result := "VDRS";
 		end;
 
-	build_explain (a_clickable: CLICK_WINDOW) is
-            -- Build specific explanation explain for current error
-            -- in `a_clickable'.
-        do
-            old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tfeature: ");
-			a_clickable.put_string (feature_name);
-			a_clickable.new_line;
+	subcode: INTEGER is 1;
+
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			put_string ("%Tfeature: ");
+			put_string (feature_name);
+			new_line;
 		end;
 
 end

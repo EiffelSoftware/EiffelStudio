@@ -16,10 +16,10 @@ feature -- Attributes
 	new_error: BOOLEAN;
 			-- Boolean for testing if new error since last `mark'
 
-	error_list: LINKED_LIST [ERROR];
+	error_list: SORTED_TWO_WAY_LIST [ERROR];
 			-- Error list
 
-	warning_list: LINKED_LIST [WARNING];
+	warning_list: SORTED_TWO_WAY_LIST [WARNING];
 			-- Warning list
 
 feature -- Creation feature
@@ -43,8 +43,7 @@ debug_window.put_string ("Inserting error object:%N");
 e.trace;
 end;
 			new_error := True;
-			error_list.finish;	
-			error_list.add_right (e);
+			error_list.add (e);
 		end;
 
 	insert_warning (w: WARNING) is
@@ -56,8 +55,7 @@ debug
 debug_window.put_string ("Inserting warning object:%N");
 w.trace;
 end;
-			warning_list.finish;	
-			warning_list.add_right (w);
+			warning_list.add (w);
 		end;
 
 	mark is
@@ -112,8 +110,17 @@ feature -- Syntax errors
 			string_too_long: STRING_TOO_LONG;
 		do
 			!!string_too_long.init;
-			string_too_long.init;
 			insert_error (string_too_long);
+			raise_error;
+		end;
+
+	make_id_too_long is
+			-- Build an error message for a too long identifier.
+		local
+			id_too_long: STRING_TOO_LONG;
+		do
+			!!id_too_long.init;
+			insert_error (id_too_long);
 			raise_error;
 		end;
 
@@ -166,7 +173,8 @@ feature -- Syntax errors
 									$make_string_extension,
 									$make_string_uncompleted,
 									$make_bad_character,
-									$make_string_empty);
+									$make_string_empty,
+									$make_id_too_long);
 		end;
 
 	wipe_out is
@@ -207,7 +215,7 @@ feature -- Debug purpose
 
 feature {NONE} -- Externals
 
-	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6: POINTER) is
+	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7: POINTER) is
 			-- Initialize syntac error handling C primitives.
 		external
 			"C"

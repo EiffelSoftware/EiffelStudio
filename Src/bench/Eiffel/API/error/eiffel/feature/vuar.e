@@ -8,19 +8,23 @@ inherit
 	
 feature 
 
-	feature_i: FEATURE_I;
-			-- Feature_i of the involved feature
+	called_feature: FEATURE_I;
 
-	set_feature_i (f: FEATURE_I) is
-			-- Assign `f' to `feature_i'.
+	set_called_feature (f: FEATURE_I) is
 		do
-			feature_i := f;
-			
+			called_feature := f;
 		end;
 
-	code: STRING is
-			-- Error code
+	code: STRING is "VUAR";
+
+	print_called_feature is
 		do
-			Result := "VUAR"
-		end
+			put_string ("Called feature: `");
+			called_feature.append_clickable_signature (error_window);
+			put_string ("' written in `");
+			called_feature.written_class.append_clickable_name (error_window);
+			put_char ('%'');
+			new_line;
+		end;
+
 end

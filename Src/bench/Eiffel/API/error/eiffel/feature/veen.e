@@ -5,14 +5,7 @@ class VEEN
 inherit
 
 	FEATURE_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	FEATURE_ERROR
 		redefine
-			build_explain
-		select
 			build_explain
 		end
 	
@@ -30,14 +23,13 @@ feature
 	code: STRING is "VEEN";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	build_explain is
 			-- Build specific explanation image for current error
-			-- in `a_clickable'.
+			-- in `error_window'.
 		do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tidentifier: `");
-			a_clickable.put_string (identifier);
-			a_clickable.put_string ("'%N")
+			put_string ("Identifier: `");
+			put_string (identifier);
+			put_string ("'%N")
 		end
 
 end

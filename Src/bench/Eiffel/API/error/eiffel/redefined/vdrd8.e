@@ -6,15 +6,8 @@ class VDRD8
 inherit
 
 	EIFFEL_ERROR
-		rename
-			build_explain as old_build_explain
-		end;
-
-	EIFFEL_ERROR
 		redefine
-			build_explain
-		select
-			build_explain
+			build_explain, subcode
 		end
 
 feature
@@ -22,7 +15,7 @@ feature
 	a_feature: FEATURE_I;
 			-- Feature violatting the rule
 
-	set_a_feature (f: FEATURE_I) is
+	set_feature (f: FEATURE_I) is
 			-- Assign `f' to `a_feature'.
 		do
 			a_feature := f;
@@ -31,14 +24,15 @@ feature
 	code: STRING is "VDRD";
 			-- Error code
 
-	build_explain (a_clickable: CLICK_WINDOW) is
+	subcode: INTEGER is 8;
+
+	build_explain is
             -- Build specific explanation explain for current error
-            -- in `a_clickable'.
+            -- in `error_window'.
         do
-			old_build_explain (a_clickable);
-			a_clickable.put_string ("%Tfeature: ");
-			a_feature.append_clickable_signature (a_clickable);
-			a_clickable.new_line;
+			put_string ("%Tfeature: ");
+			a_feature.append_clickable_signature (error_window);
+			new_line;
 		end;
 
 end

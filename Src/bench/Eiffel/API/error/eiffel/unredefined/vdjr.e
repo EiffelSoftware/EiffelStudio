@@ -24,7 +24,7 @@ feature
 		do
 			old_feature := old_feat;
 			new_feature := new_feat;
-			class_id := System.current_class.id;
+			class_c := System.current_class;
 		end;
 
 end

@@ -19,9 +19,10 @@ inherit
 			make
 		end
 
-	EV_ITEM_HOLDER [EV_MULTI_COLUMN_LIST_ROW]
+	EV_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			item_type
 		end
 
 creation
@@ -322,6 +323,11 @@ feature {NONE} -- Inapplicable
 			check
 				inapplicable: False
 			end
+		end
+
+	item_type: EV_MULTI_COLUMN_LIST_ROW is
+			-- Gives a type.
+		do
 		end
 
 end -- class EV_MULTI_COLUMN_LIST

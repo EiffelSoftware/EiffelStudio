@@ -11,14 +11,22 @@ deferred class
 	EV_MENU_ITEM_HOLDER
 
 inherit
-	EV_ITEM_HOLDER [EV_MENU_ITEM]
+	EV_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			item_type
 		end
 
 feature -- Implementation
 
 	implementation: EV_MENU_ITEM_HOLDER_I
+
+feature {NONE} -- Implementation
+
+	item_type: EV_MENU_ITEM is
+			-- Gives a type.
+		do
+		end
 
 end -- class EV_MENU_ITEM_HOLDER
 

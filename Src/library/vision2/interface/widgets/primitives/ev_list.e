@@ -19,9 +19,10 @@ inherit
 			implementation
 		end
 
-	EV_ITEM_HOLDER [EV_LIST_ITEM]
+	EV_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			item_type
 		end
 
 creation
@@ -156,6 +157,13 @@ feature -- Implementation
 	
 	implementation: EV_LIST_I	
 			-- Platform dependant access.
+
+feature {NONE} -- Implementation
+
+	item_type: EV_LIST_ITEM is
+			-- Current item is a list item.
+		do
+		end
 
 end -- class EV_LIST
 

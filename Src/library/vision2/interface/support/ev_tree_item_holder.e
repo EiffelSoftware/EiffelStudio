@@ -9,15 +9,23 @@ deferred class
 	EV_TREE_ITEM_HOLDER
 
 inherit
-	EV_ITEM_HOLDER [EV_TREE_ITEM]
+	EV_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			item_type
 		end
 
 feature -- Implementation
 
 	implementation: EV_TREE_ITEM_HOLDER_I
 			-- Platform dependent access.
+
+feature {NONE} -- Implementation
+
+	item_type: EV_TREE_ITEM is
+			-- Current item is a tree item.
+		do
+		end
 
 end -- class EV_TREE_ITEM_HOLDER
 

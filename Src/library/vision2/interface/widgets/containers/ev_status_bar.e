@@ -19,9 +19,10 @@ inherit
 			parent_needed
 		end
 
-	EV_ITEM_HOLDER [EV_STATUS_BAR_ITEM]
+	EV_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			item_type
 		end
 
 creation
@@ -58,6 +59,13 @@ feature -- Implementation
 
 	implementation: EV_STATUS_BAR_I
 			-- Platform dependent access.
+
+feature {NONE} -- Implementation
+
+	item_type: EV_STATUS_BAR_ITEM is
+			-- Gives a type.
+		do
+		end
 
 end -- class EV_STATUS_BAR
 

@@ -28,6 +28,7 @@ inherit
 
 	EV_GTK_KEY_CONVERSION
 		undefine
+			Gdk_delete_enum,
 			default_create
 		end
 
@@ -320,6 +321,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/18 01:33:22  brendel
+--| Fixed inheritance clash of Gdk_delete_enum.
+--|
 --| Revision 1.13  2000/03/18 01:07:42  king
 --| Removed renaming error
 --|

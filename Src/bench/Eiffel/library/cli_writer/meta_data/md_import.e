@@ -57,20 +57,6 @@ feature -- Enumerating collections
 			last_call_success := cpp_reset_enum (item, a_enum_hdl, a_pos)
 		end
 
-	is_valid_token (a_tok: INTEGER): BOOLEAN is
-			-- Returns true if tk is a valid metadata token in the current scope.
-			-- [The method checks the token type is one of those in the CorTokenType 
-			-- enumeration in CorHdr.h, and then that its RID is less than or equal
-			-- to the current count of those token types]
-		local
-			l_result: INTEGER
-		do
-			l_result := cpp_is_valid_token (item, a_tok)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
-		ensure
-			success: last_call_success = 0
-		end
-
 	enum_type_defs (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all TypedDefs within the current scope.  
 			-- Note: the collection will contain Classes, Interfaces, etc,
@@ -287,8 +273,7 @@ feature -- Obtaining Properties of a Specified Object
 				$l_code_rva, l_pdwimpl_flags, l_cplustype_flag, l_cst_ppvalue, $l_pcchvalue)
 
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
-		end		
-
+		end
 
 	get_method_props (a_tok: INTEGER): STRING is
 			-- Get method 's name property
@@ -317,21 +302,62 @@ feature -- Obtaining Properties of a Specified Object
 			mp_name: MANAGED_POINTER
 			l_r_classtoken: INTEGER
 			l_rsize: INTEGER
-			l_flag: POINTER
 			l_sig: POINTER
 			l_sigsize: INTEGER
 			l_pdwdef_type: POINTER
 			l_ppvalue: POINTER
 			l_pcbvalue: INTEGER
-			
 		do
 			create mp_name.make (256 * 2)
 
 			last_call_success := cpp_get_field_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, 
-				l_flag, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue)
-
+				$last_get_field_dwattr, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue)
+				
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
-		end	
+		end
+		
+	last_field_is_static: BOOLEAN is
+			-- Last `get_field_props' is_static property
+		do
+			Result := (last_get_field_dwattr & fdStatic) /= 0
+		end
+		
+	last_field_is_literal: BOOLEAN is
+			-- Last `get_field_props' is_literal property
+		do
+			Result := (last_get_field_dwattr & fdLiteral) /= 0
+		end
+		
+	last_get_field_dwattr: INTEGER
+			-- Last `get_field_props' property
+	
+			
+feature -- Status
+
+	is_valid_token (a_tok: INTEGER): BOOLEAN is
+			-- Returns true if tk is a valid metadata token in the current scope.
+			-- [The method checks the token type is one of those in the CorTokenType 
+			-- enumeration in CorHdr.h, and then that its RID is less than or equal
+			-- to the current count of those token types]
+		local
+			l_result: INTEGER
+		do
+			l_result := cpp_is_valid_token (item, a_tok)
+			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+		ensure
+			success: last_call_success = 0
+		end		
+
+	is_global (a_tok: INTEGER): BOOLEAN is
+			-- is type, field or method identified by `_a_tok' global ?
+		local
+			l_result: INTEGER
+		do
+			last_call_success := cpp_is_global (item, a_tok, $l_result)
+			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+		ensure
+			success: last_call_success = 0
+		end		
 
 feature {NONE} -- Implementation Enum...
 
@@ -363,16 +389,6 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"ResetEnum"
-		end		
-
-	frozen cpp_is_valid_token (obj: POINTER; a_tok: INTEGER): INTEGER is
-		external
-			"[
-				C++ IMetaDataImport signature(mdToken): EIF_INTEGER 
-				use "cli_headers.h"
-			]"
-		alias
-			"IsValidToken"
 		end	
 
 	frozen cpp_enum_type_defs (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; r_typedefs: POINTER; a_max: INTEGER; r_typedefs_count: POINTER): INTEGER is
@@ -575,6 +591,30 @@ feature {NONE} -- Implementation Obtaining information
 						(ULONG*)$a_def_val_byte_count)				
 			]"
 		end	
+		
+feature {NONE} -- Implementation Status
+
+	frozen cpp_is_valid_token (obj: POINTER; a_tok: INTEGER): INTEGER is
+		external
+			"[
+				C++ IMetaDataImport signature(mdToken): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"IsValidToken"
+		end
+		
+	frozen cpp_is_global (obj: POINTER; 
+				a_md_token: INTEGER; r_b_global: TYPED_POINTER [INTEGER]; 
+							): INTEGER is
+		external
+			"[
+				C++ IMetaDataImport signature(mdToken, int*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"IsGlobal"
+		end		
 
 feature {NONE} -- Implementation
 
@@ -649,6 +689,28 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+feature {NONE} -- Implementation : helper
+
+--0x0010
+
+	frozen fdStatic: INTEGER is
+		external
+			"[
+				C++ macro use "cli_headers.h"
+			]"
+		alias
+			"fdStatic"
+		end
+
+	frozen fdLiteral: INTEGER is
+		external
+			"[
+				C++ macro use "cli_headers.h"
+			]"
+		alias
+			"fdLiteral"
+		end		
 
 end
 

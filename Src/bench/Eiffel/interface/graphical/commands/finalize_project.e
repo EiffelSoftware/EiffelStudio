@@ -15,7 +15,7 @@ inherit
 			warner_ok as update_project_warner_ok
 		redefine
 			c_code_directory, launch_c_compilation,
-			confirm_and_compile, name, symbol, 
+			confirm_and_compile, name, symbol, grey_symbol,
 			compilation_allowed, finalization_error, perform_compilation
 		end;
 	UPDATE_PROJECT
@@ -24,7 +24,7 @@ inherit
 			warner_ok as keep_assertions
 		redefine
 			c_code_directory, launch_c_compilation,
-			confirm_and_compile, name, symbol,
+			confirm_and_compile, name, symbol, grey_symbol,
 			compilation_allowed, finalization_error, perform_compilation,
 			discard_assertions, keep_assertions
 		select
@@ -85,6 +85,12 @@ feature -- Properties
 			-- Pixmap for the button.
 		once 
 			Result := bm_Finalize
+		end;
+
+	grey_symbol: PIXMAP is
+			-- Pixmap to indicate insensitivity
+		once
+			Result := bm_Grey_Finalize
 		end;
 
 feature {NONE} -- Attributes

@@ -81,11 +81,11 @@ feature -- Basic Operation
 				new_directory_item := window_selector.directory_object_from_name (new_directory)
 			end
 			
-			unparent_tree_node (object.window_selector_item)
+			object.window_selector_item.unparent
 			if new_directory_item /= Void then
-				add_to_tree_node_alphabetically (new_directory_item, object.window_selector_item)
+				new_directory_item.add_alphabetically (object.window_selector_item)
 			else
-				add_to_tree_node_alphabetically (window_selector, object.window_selector_item)
+				window_selector.add_alphabetically (object.window_selector_item)
 			end
 			
 			window_selector.update_class_files_location (object.window_selector_item, original_directory_item, new_directory_item)
@@ -119,11 +119,11 @@ feature -- Basic Operation
 				new_directory_item := window_selector.directory_object_from_name (new_directory)
 			end
 			
-			unparent_tree_node (object.window_selector_item)
+			object.window_selector_item.unparent
 			if original_directory_item /= Void then
-				add_to_tree_node_alphabetically (original_directory_item, object.window_selector_item)
+				original_directory_item.add_alphabetically (object.window_selector_item)
 			else
-				add_to_tree_node_alphabetically (window_selector, object.window_selector_item)
+				window_selector.add_alphabetically (object.window_selector_item)
 			end
 			window_selector.update_class_files_location (object.window_selector_item, new_directory_item, original_directory_item)
 		end

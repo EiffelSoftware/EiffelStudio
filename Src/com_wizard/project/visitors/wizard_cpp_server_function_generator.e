@@ -620,7 +620,9 @@ feature {NONE} -- Implementation
 					is_integer4 (visitor.vt_type) or 
 					is_unsigned_int (visitor.vt_type) or 
 					is_unsigned_long (visitor.vt_type) or 
-					is_unsigned_short (visitor.vt_type) 
+					is_unsigned_short (visitor.vt_type) or
+					is_long_long (visitor.vt_type) or
+					is_unsigned_long_long(visitor.vt_type) 
 				then
 					Result := cecil_function_declaration_code (Eif_integer_function, Eif_integer_function_name)
 
@@ -631,7 +633,7 @@ feature {NONE} -- Implementation
 					Result := cecil_function_declaration_code (Eif_character_function, Eif_character_function_name)	
 					
 				elseif is_real4 (visitor.vt_type) then
-					Result := cecil_function_declaration_code (Eif_real_function, Eif_real_function_name)
+					Result := cecil_function_declaration_code (Eif_double_function, Eif_real_function_name)
 					
 				elseif is_real8 (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_double_function, Eif_double_function_name)

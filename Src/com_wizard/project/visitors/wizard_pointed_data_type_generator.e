@@ -221,6 +221,16 @@ feature -- Basic operations
 					ec_function_name.append ("ccom_ec_pointed_unsigned_short")
 					ce_function_name.append ("ccom_ce_pointed_unsigned_short")
 
+				elseif is_long_long (a_type) then
+					eiffel_type.append (Integer64_ref_type)
+					ec_function_name.append ("ccom_ec_pointed_long_long")
+					ce_function_name.append ("ccom_ce_pointed_long_long")
+
+				elseif is_unsigned_long_long (a_type) then
+					eiffel_type.append (Integer64_ref_type)
+					ec_function_name.append ("ccom_ec_pointed_ulong_long")
+					ce_function_name.append ("ccom_ce_pointed_ulong_long")
+
 				elseif is_real4 (a_type) then 
 					eiffel_type.append (Real_ref_type)
 					ec_function_name.append ("ccom_ec_pointed_real")

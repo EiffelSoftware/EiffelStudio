@@ -9,166 +9,74 @@ class
 
 feature -- Access
 
-	Tvm_createdragimage: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_CREATEDRAGIMAGE"
-		end
+	Tvm_createdragimage: INTEGER is 4370
+			-- Declared in Windows as TVM_CREATEDRAGIMAGE
 
-	Tvm_deleteitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_DELETEITEM"
-		end
+	Tvm_deleteitem: INTEGER is 4353
+			-- Declared in Windows as TVM_DELETEITEM
 
-	Tvm_editlabel: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_EDITLABEL"
-		end
+	Tvm_editlabel: INTEGER is 4366
+			-- Declared in Windows as TVM_EDITLABEL
 
-	Tvm_endeditlabelnow: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_ENDEDITLABELNOW"
-		end
+	Tvm_endeditlabelnow: INTEGER is 4374
+			-- Declared in Windows as TVM_ENDEDITLABELNOW
 
-	Tvm_ensurevisible: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_ENSUREVISIBLE"
-		end
+	Tvm_ensurevisible: INTEGER is 4372
+			-- Declared in Windows as TVM_ENSUREVISIBLE
 
-	Tvm_expand: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_EXPAND"
-		end
+	Tvm_expand: INTEGER is 4354
+			-- Declared in Windows as TVM_EXPAND
 
-	Tvm_getcount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETCOUNT"
-		end
+	Tvm_getcount: INTEGER is 4357
+			-- Declared in Windows as TVM_GETCOUNT
 
-	Tvm_geteditcontrol: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETEDITCONTROL"
-		end
+	Tvm_geteditcontrol: INTEGER is 4367
+			-- Declared in Windows as TVM_GETEDITCONTROL
 
-	Tvm_getimagelist: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETIMAGELIST"
-		end
+	Tvm_getimagelist: INTEGER is 4360
+			-- Declared in Windows as TVM_GETIMAGELIST
 
-	Tvm_getindent: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETINDENT"
-		end
+	Tvm_getindent: INTEGER is 4358
+			-- Declared in Windows as TVM_GETINDENT
 
-	Tvm_getisearchstring: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETISEARCHSTRING"
-		end
+	Tvm_getisearchstring: INTEGER is 4375
+			-- Declared in Windows as TVM_GETISEARCHSTRING
 
-	Tvm_getitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETITEM"
-		end
+	Tvm_getitem: INTEGER is 4364
+			-- Declared in Windows as TVM_GETITEM
 
-	Tvm_getitemrect: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETITEMRECT"
-		end
+	Tvm_getitemrect: INTEGER is 4356
+			-- Declared in Windows as TVM_GETITEMRECT
 
-	Tvm_getnextitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETNEXTITEM"
-		end
+	Tvm_getnextitem: INTEGER is 4362
+			-- Declared in Windows as TVM_GETNEXTITEM
 
-	Tvm_getvisiblecount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_GETVISIBLECOUNT"
-		end
+	Tvm_getvisiblecount: INTEGER is 4368
+			-- Declared in Windows as TVM_GETVISIBLECOUNT
 
-	Tvm_hittest: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_HITTEST"
-		end
+	Tvm_hittest: INTEGER is 4369
+			-- Declared in Windows as TVM_HITTEST
 
-	Tvm_insertitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_INSERTITEM"
-		end
+	Tvm_insertitem: INTEGER is 4352
+			-- Declared in Windows as TVM_INSERTITEM
 
-	Tvm_selectitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_SELECTITEM"
-		end
+	Tvm_selectitem: INTEGER is 4363
+			-- Declared in Windows as TVM_SELECTITEM
 
-	Tvm_setimagelist: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_SETIMAGELIST"
-		end
+	Tvm_setimagelist: INTEGER is 4361
+			-- Declared in Windows as TVM_SETIMAGELIST
 
-	Tvm_setindent: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_SETINDENT"
-		end
+	Tvm_setindent: INTEGER is 4359
+			-- Declared in Windows as TVM_SETINDENT
 
-	Tvm_setitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_SETITEM"
-		end
+	Tvm_setitem: INTEGER is 4365
+			-- Declared in Windows as TVM_SETITEM
 
-	Tvm_sortchildren: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_SORTCHILDREN"
-		end
+	Tvm_sortchildren: INTEGER is 4371
+			-- Declared in Windows as TVM_SORTCHILDREN
 
-	Tvm_sortchildrencb: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVM_SORTCHILDRENCB"
-		end
+	Tvm_sortchildrencb: INTEGER is 4373
+			-- Declared in Windows as TVM_SORTCHILDRENCB
 
 end -- class WEL_TVM_CONSTANTS
 

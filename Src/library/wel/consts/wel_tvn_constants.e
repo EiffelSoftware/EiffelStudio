@@ -9,96 +9,44 @@ class
 
 feature -- Access
 
-	Tvn_begindrag: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_BEGINDRAG"
-		end
+	Tvn_begindrag: INTEGER is -407
+			-- Declared in Windows as TVN_BEGINDRAG
 
-	Tvn_beginlabeledit: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_BEGINLABELEDIT"
-		end
+	Tvn_beginlabeledit: INTEGER is -410
+			-- Declared in Windows as TVN_BEGINLABELEDIT
 
-	Tvn_beginrdrag: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_BEGINRDRAG"
-		end
+	Tvn_beginrdrag: INTEGER is -408
+			-- Declared in Windows as TVN_BEGINRDRAG
 
-	Tvn_deleteitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_DELETEITEM"
-		end
+	Tvn_deleteitem: INTEGER is -409
+			-- Declared in Windows as TVN_DELETEITEM
 
-	Tvn_endlabeledit: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_ENDLABELEDIT"
-		end
+	Tvn_endlabeledit: INTEGER is -411
+			-- Declared in Windows as TVN_ENDLABELEDIT
 
-	Tvn_getdispinfo: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_GETDISPINFO"
-		end
+	Tvn_getdispinfo: INTEGER is -403
+			-- Declared in Windows as TVN_GETDISPINFO
 
-	Tvn_itemexpanded: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_ITEMEXPANDED"
-		end
+	Tvn_itemexpanded: INTEGER is -406
+			-- Declared in Windows as TVN_ITEMEXPANDED
 
-	Tvn_itemexpanding: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_ITEMEXPANDING"
-		end
+	Tvn_itemexpanding: INTEGER is -405
+			-- Declared in Windows as TVN_ITEMEXPANDING
 
-	Tvn_keydown: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_KEYDOWN"
-		end
+	Tvn_keydown: INTEGER is -412
+			-- Declared in Windows as TVN_KEYDOWN
 
-	Tvn_selchanged: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_SELCHANGED"
-		end
+	Tvn_selchanged: INTEGER is -402
+			-- Declared in Windows as TVN_SELCHANGED
 
-	Tvn_selchanging: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_SELCHANGING"
-		end
+	Tvn_selchanging: INTEGER is -401
+			-- Declared in Windows as TVN_SELCHANGING
 
-	Tvn_setdispinfo: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_SETDISPINFO"
-		end
+	Tvn_setdispinfo: INTEGER is -404
+			-- Declared in Windows as TVN_SETDISPINFO
 
-	Tvn_getinfotip: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVN_GETINFOTIP"
-		end
+	Tvn_getinfotip: INTEGER is -413
+			-- Declared in Windows as TVN_GETINFOTIP
 
 end -- class WEL_TVN_CONSTANTS
 

@@ -9,74 +9,44 @@ class
 
 feature -- Access
 
-	Tvis_bold: INTEGER is
+	Tvis_bold: INTEGER is 16
 			-- The cChildren member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_BOLD"
-		end
+			--
+			-- Declared in Windows as TVIS_BOLD
 
-	Tvis_cut: INTEGER is
+	Tvis_cut: INTEGER is 4
 			-- The iImage member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_CUT"
-		end
+			--
+			-- Declared in Windows as TVIS_CUT
 
-	Tvis_drophilited: INTEGER is
+	Tvis_drophilited: INTEGER is 8
 			-- The lParam member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_DROPHILITED"
-		end
+			--
+			-- Declared in Windows as TVIS_DROPHILITED
 
-	Tvis_expanded: INTEGER is
+	Tvis_expanded: INTEGER is 32
 			-- The iSelectedImage member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_EXPANDED"
-		end
+			--
+			-- Declared in Windows as TVIS_EXPANDED
 
-	Tvis_expandedonce: INTEGER is
+	Tvis_expandedonce: INTEGER is 64
 			-- The state and stateMask members are valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_EXPANDEDONCE"
-		end
+			--
+			-- Declared in Windows as TVIS_EXPANDEDONCE
 
-	Tvis_overlaymask: INTEGER is
+	Tvis_overlaymask: INTEGER is 3840
 			-- The pszText and cchTextMax members are valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_OVERLAYMASK"
-		end
+			--
+			-- Declared in Windows as TVIS_OVERLAYMASK
 
-	Tvis_selected: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_SELECTED"
-		end
+	Tvis_selected: INTEGER is 2
+			-- Declared in Windows as TVIS_SELECTED
 
-	Tvis_stateimagemask: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_STATEIMAGEMASK"
-		end
+	Tvis_stateimagemask: INTEGER is 61440
+			-- Declared in Windows as TVIS_STATEIMAGEMASK
 
-	Tvis_usermask: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIS_USERMASK"
-		end
+	Tvis_usermask: INTEGER is 61440
+			-- Declared in Windows as TVIS_USERMASK
 
 feature -- Status report
 

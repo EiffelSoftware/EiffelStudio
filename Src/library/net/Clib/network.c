@@ -1,10 +1,17 @@
 /*
 	Eiffel Net C interfacing
+	.../library/net/Clib/network.c
 */
 
+#ifdef __VMS	/* module name clash with .../C/ipc/shared/network.c */
+#pragma module NET_NETWORK
+#endif /* __VMS */
+
 #include "eif_config.h"
-#include "eif_except.h"
-#include "eif_size.h" /* for LNGSIZ */
+#include "eif_portable.h" 	/* required for VMS, recommended for others */
+#include "eif_except.h"  
+#include "eif_size.h"     	/* for LNGSIZ */
+#include "eif_error.h"    	/* for eio() */
 
 #ifdef EIF_WIN32
 #define FD_SETSIZE 256
@@ -22,7 +29,11 @@
 #include <io.h>
 #endif
 
+#ifdef EIF_VMS
+#include "netvmsdef.h"
+#else
 #include <sys/types.h>
+#endif
 
 #ifndef EIF_WIN32
 #include <sys/time.h>
@@ -57,7 +68,7 @@
 #include <sys/in.h>
 #endif
 
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 #else
 #include <sys/un.h>
 #endif
@@ -525,7 +536,11 @@ EIF_INTEGER c_accept(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 	/*x accept connections on socket descriptor s, set peer address
 	    into socket address structure add (of length *length) */
 {
+#ifdef EIF_VMS
+	size_t a_length = length;
+#else
 	int a_length = length;
+#endif
 
 #if defined EIF_WIN32
 
@@ -625,7 +640,11 @@ void c_sock_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	/*x socket s address structure into addr
 	    of length length (to be provided a priori) */
 {
+#ifdef EIF_VMS
+	size_t a_length; int result;
+#else
 	int a_length, result;
+#endif
 
 #if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
@@ -642,7 +661,11 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 	/*x get peer address of socket s in socket address structure addr
 	    of length length (to be provided a priori) */
 {
+#ifdef EIF_VMS
+	size_t a_length; int result;
+#else
 	int a_length, result;
+#endif
 
 #if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
@@ -870,7 +893,11 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 {
 	int result;
 
+#ifdef EIF_VMS /* requires size_t cast */
+	result = recvfrom ((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (size_t*) addr_len);
+#else
 	result = recvfrom ((int) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int *) addr_len);
+#endif
 
 #ifdef EIF_WIN32
 	eif_net_check (result);
@@ -953,7 +980,11 @@ void c_set_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt, EIF_
 EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt)
 	/*x get socket fd options */
 {
+#ifdef EIF_VMS
+	int arg; size_t asize;
+#else
 	int arg, asize;
+#endif
 
 	asize = sizeof(arg);
 #ifdef EIF_WIN32
@@ -971,8 +1002,11 @@ EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
 	/*x does socket discard data on close ? (default linger off -> no) */
 {
 	struct linger arg;
+#ifdef EIF_VMS
+	size_t asize;
+#else
 	int asize;
-
+#endif
 	asize = sizeof(arg);
 
 #ifdef EIF_WIN32
@@ -990,7 +1024,11 @@ EIF_INTEGER c_linger_time(EIF_INTEGER fd)
 	/*x non null values are equivalent (despite original specification) */
 {
 	struct linger arg;
+#ifdef EIF_VMS
+	size_t asize;
+#else
 	int asize;
+#endif
 
 	asize = sizeof(arg);
 
@@ -1020,6 +1058,11 @@ EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 	/*x set possibly open fd socket options */
 {
 #if defined EIF_WIN32 || defined EIF_OS2
+	return 0;
+#elif defined EIF_VMS
+#  ifdef DEBUG
+	printf("c_fcntl(%d, %d, %d) called\n", fd, cmd, arg);
+#  endif /* DEBUG */
 	return 0;
 #else
 	return (EIF_INTEGER) fcntl((int) fd, (int) cmd, (int) arg);
@@ -1133,3 +1176,69 @@ void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
 	if (shutdown((int) sock,(int) how) < 0)
 		eio(); */
 	}
+
+
+
+#ifdef EIF_VMS
+# ifdef VMS_MULTINET
+    int     decc$get_sdc(int __descrip_no);
+# else
+    int     decc$get_sdc(int __descrip_no);
+# endif
+
+#if !defined VMS_MULTINET && defined EIF_VMS_VER && EIF_VMS_VER < 70000000 
+/* and no ioctl is available... */
+/*  actually, ioctl may be available. We don't know what version the object
+    will run on, so must call lib$find_image_symbol...
+*/
+
+static int my_ioctl (int sd, int r, void * argp) {
+    static int first_time;
+    /* typedef int (*ioctl_fptr) (int __sd, int __r, void * __argp) ;
+    static ioctl_fptr ioctl_p;						*/
+    static int (*ioctl_p) (int __sd, int __r, void * __argp) ;
+    printf("my_ioctl(%d, %d, %d) called\n", sd, r, *(int*)argp);
+    return -1;
+}
+#   endif
+# endif /* VMS_MULTINET || __DECC_VER ( > 5.x) */
+
+#ifdef DEBUG
+int debug_sockopt(s)
+int s;
+{
+    unsigned int err, errn, val;
+#ifndef VMS_MULTINET
+    unsigned
+#endif
+    int siz;
+
+#ifdef EIF_VMS
+    unsigned int sdc = decc$get_sdc(s);
+#endif
+    siz = sizeof(val);
+    err = getsockopt(s, SOL_SOCKET, SO_KEEPALIVE, &val, &siz);
+    siz = sizeof(val);
+    err = getsockopt(s, SOL_SOCKET, O_NONBLOCK, &val, &siz);
+    errn = errno;
+    return 0;
+}
+#endif
+
+#define DEBUG
+#if defined(EIF_VMS) && defined(DEBUG)
+static int print_errno()
+{
+    int err = (errno == EVMSERR ? vaxc$errno : errno);
+#ifdef VMS_MULTINET
+#include "multinet_root:[multinet.include]netdb.h"
+    int err1 = h_errno;
+    printf("\nnetwork_debug: errno = %d (%s), h_errno = %d\n", 
+	errno, strerror(errno, vaxc$errno), h_errno);
+#else
+    printf("\nnetwork_debug: errno = %d (%s), h_errno = (not avail)\n", 
+	errno, strerror(errno, vaxc$errno));
+#endif
+    return errno;
+}
+#endif /* VMS && DEBUG */

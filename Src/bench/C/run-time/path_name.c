@@ -4,7 +4,7 @@
 	platform independent manipulation of path names
 
 */
-
+#define implement
 #include "config.h"
 #include "portable.h"
 

@@ -7,6 +7,14 @@ inherit
 		end
 
 	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
+
+	SHARED_EVALUATOR
+		export
+			{NONE} all
+		end
 
 feature {AST_FACTORY} -- Initialization
 
@@ -158,18 +166,13 @@ feature -- Type check, byte code and dead code removal
 				if type /= Void then
 						-- Check specified creation type
 					if type.has_like then
-							-- FIXME
-							-- !like a! is not supported in 3.2
-							-- The resolution of the type should be done
-							-- as the one for local variables (call to
-							-- local_evalutor and use of solved typecreate )
-						create not_supported
-						context.init_error (not_supported)
-						not_supported.set_message ("An anchored type cannot be used as an explicit creation type")
-						Error_handler.insert_error (not_supported)
-						Error_handler.raise_error
+							-- We need to evaluate `type' in context of current class
+							-- and current feature.
+						new_creation_type := creation_evaluator.evaluated_type (
+							type, Context.feature_table, Context.current_feature)
+					else
+						new_creation_type := type.actual_type
 					end
-					new_creation_type := type.actual_type
 					if new_creation_type /= Void then
 						if is_formal_creation then
 							create vgcc3
@@ -377,7 +380,7 @@ feature -- Type check, byte code and dead code removal
 			if formal_type /= Void then
 				create {CREATE_FORMAL_TYPE} create_info.make (formal_type.type_i)
 			elseif type /= Void then
-				create {CREATE_TYPE} create_info.make (creation_type.type_i)
+				create_info := creation_type.create_info
 			elseif access.is_result then
 				feature_type ?= context.current_feature.type
 				create_info := feature_type.create_info

@@ -237,7 +237,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := create {STRING}.make_from_cil (feature {ISE_RUNTIME}.tagged_out (Current))
+			Result := generating_type
 		end
 
 	print (some: ANY) is

@@ -125,8 +125,11 @@ feature -- Output
 
 	out: STRING is
 			-- Printable representation of pointer value
+		local
+			l_obj: SYSTEM_OBJECT
 		do
-			create Result.make_from_cil (feature {ISE_RUNTIME}.tagged_out (item))
+			l_obj := item
+			create Result.make_from_cil (l_obj.to_string)
 			Result.prepend ("0x")
 		end
 

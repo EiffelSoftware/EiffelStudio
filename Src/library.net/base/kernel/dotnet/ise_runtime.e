@@ -46,15 +46,6 @@ feature -- Duplication
 			"deep_clone"
 		end
 		
-feature -- Output
-
-	frozen tagged_out (o: SYSTEM_OBJECT): SYSTEM_STRING is
-		external
-			"IL static signature (System.Object): System.String use ISE.Runtime.RUN_TIME"
-		alias
-			"tagged_out"
-		end
-
 feature -- Hash code
 
 	frozen hash_code (o: SYSTEM_OBJECT): INTEGER is

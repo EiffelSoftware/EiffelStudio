@@ -570,7 +570,7 @@
 								<File Id="deselectable_control.e" Name="DESELE~1.E" LongName="deselectable_control.e" />
 								<File Id="Ace.unix.ace148" Name="ACEUNI~4.ACE" LongName="Ace.unix.ace" />
 								<File Id="Ace.win.ace149" Name="ACEWIN~6.ACE" LongName="Ace.win.ace" />
-				<File Id="Ace.dotnet.ace101" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace101" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="bm_About.png151" Name="bm_About.png" />
 							</Component>
 						</Directory>
@@ -579,7 +579,7 @@
 								<File Id="Ace.win.ace" Name="ACEWIN~1.ACE" LongName="Ace.win.ace" KeyPath="yes" />
 								<File Id="gauges.e" Name="gauges.e" />
 								<File Id="Ace.unix.ace144" Name="ACEUNI~3.ACE" LongName="Ace.unix.ace" />
-				<File Id="Ace.dotnet.ace2" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace2" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="accelerator" Name="ACCELE~1" LongName="accelerator">
@@ -597,7 +597,7 @@
 								<File Id="bm_About.png" Name="bm_About.png" />
 								<File Id="viewport.e" Name="viewport.e" />
 								<File Id="Ace.win.ace145" Name="ACEWIN~2.ACE" LongName="Ace.win.ace" />
-				<File Id="Ace.dotnet.ace5" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace5" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="standard_dialogs" Name="STANDA~1" LongName="standard_dialogs">
@@ -606,7 +606,7 @@
 								<File Id="dialog_test.e" Name="DIALOG~7.E" LongName="dialog_test.e" />
 								<File Id="standard_dialogs.e" Name="STANDA~2.E" LongName="standard_dialogs.e" />
 								<File Id="Ace.unix.ace152" Name="ACEUNI~6.ACE" LongName="Ace.unix.ace" />
-				<File Id="Ace.dotnet.ace4" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace4" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 							</Component>
 						</Directory>
 						<Directory Id="cursor" Name="cursor">
@@ -623,7 +623,7 @@
 								<File Id="main_window.e137" Name="MAIN_W~3.E" LongName="main_window.e" />
 								<File Id="vision2_application.e" Name="VISION~2.E" LongName="vision2_application.e" />
 								<File Id="constants.e" Name="CONSTA~1.E" LongName="constants.e" />
-				<File Id="Ace.dotnet.ace3" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
+								<File Id="Ace.dotnet.ace3" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
 								<File Id="ace.Unix.ace" Name="ACEUNI~7.ACE" LongName="ace.Unix.ace" />
 								<File Id="constants_imp.e" Name="CONSTA~2.E" LongName="constants_imp.e" />
 								<File Id="main_window_imp.e" Name="MAIN_W~4.E" LongName="main_window_imp.e" />
@@ -637,13 +637,60 @@
 								<File Id="strike.png" Name="strike.png" />
 								<File Id="italic.png" Name="italic.png" />
 								<File Id="bold.png" Name="bold.png" />
-				<File Id="icon_save_color.png" Name="ICON_S~1.PNG" LongName="icon_save_color.png" />
-				<File Id="welcome.rtf" Name="welcome.rtf" />
+								<File Id="icon_save_color.png" Name="ICON_S~1.PNG" LongName="icon_save_color.png" />
+								<File Id="welcome.rtf" Name="welcome.rtf" />
 							</Component>
 						</Directory>
 					</Directory>
 				</Directory>
 				<Directory Id="library" Name="library">
+					<Directory Id="graph" Name="graph">
+						<Directory Id="events3" Name="events">
+							<Component Id="events3" Guid="9A183898-3FC2-40bb-9030-BC10B9E1575E">
+								<File Id="eg_cluster_action.e" Name="EG_CLU~1.E" LongName="eg_cluster_action.e" />
+								<File Id="eg_linkable_action.e" Name="EG_LIN~2.E" LongName="eg_linkable_action.e" />
+								<File Id="eg_link_action.e" Name="EG_LIN~1.E" LongName="eg_link_action.e" />
+								<File Id="eg_node_action.e" Name="EG_NOD~1.E" LongName="eg_node_action.e" />
+							</Component>
+						</Directory>
+						<Directory Id="model2" Name="model">
+							<Component Id="model2" Guid="A7AAE0D7-29E0-43cd-845F-79FFA2682EB5">
+								<File Id="eg_cluster.e" Name="EG_CLU~1.E" LongName="eg_cluster.e" />
+								<File Id="eg_graph.e" Name="eg_graph.e" />
+								<File Id="eg_item.e" Name="eg_item.e" />
+								<File Id="eg_link.e" Name="eg_link.e" />
+								<File Id="eg_linkable.e" Name="EG_LIN~1.E" LongName="eg_linkable.e" />
+								<File Id="eg_node.e" Name="eg_node.e" />
+							</Component>
+						</Directory>
+						<Directory Id="view" Name="view">
+							<Component Id="view" Guid="C039B825-B267-45ac-9F3D-1CD796689FCB">
+								<File Id="eg_circle_layout.e" Name="EG_CIR~1.E" LongName="eg_circle_layout.e" />
+								<File Id="eg_cluster_figure.e" Name="EG_CLU~1.E" LongName="eg_cluster_figure.e" />
+								<File Id="eg_edge.e" Name="eg_edge.e" />
+								<File Id="eg_figure.e" Name="EG_FIG~1.E" LongName="eg_figure.e" />
+								<File Id="eg_figure_factory.e" Name="EG_FIG~2.E" LongName="eg_figure_factory.e" />
+								<File Id="eg_figure_world.e" Name="EG_FIG~3.E" LongName="eg_figure_world.e" />
+								<File Id="eg_force_directed_layout.e" Name="EG_FOR~1.E" LongName="eg_force_directed_layout.e" />
+								<File Id="eg_grid_layout.e" Name="EG_GRI~1.E" LongName="eg_grid_layout.e" />
+								<File Id="eg_layout.e" Name="EG_LAY~1.E" LongName="eg_layout.e" />
+								<File Id="eg_linkable_figure.e" Name="EG_LIN~2.E" LongName="eg_linkable_figure.e" />
+								<File Id="eg_link_figure.e" Name="EG_LIN~1.E" LongName="eg_link_figure.e" />
+								<File Id="eg_polyline_label.e" Name="EG_POL~1.E" LongName="eg_polyline_label.e" />
+								<File Id="eg_polyline_link_figure.e" Name="EG_POL~2.E" LongName="eg_polyline_link_figure.e" />
+								<File Id="eg_projector.e" Name="EG_PRO~1.E" LongName="eg_projector.e" />
+								<File Id="eg_resizable_cluster_figure.e" Name="EG_RES~1.E" LongName="eg_resizable_cluster_figure.e" />
+								<File Id="eg_simple_cluster.e" Name="EG_SIM~1.E" LongName="eg_simple_cluster.e" />
+								<File Id="eg_simple_factory.e" Name="EG_SIM~2.E" LongName="eg_simple_factory.e" />
+								<File Id="eg_simple_link.e" Name="EG_SIM~3.E" LongName="eg_simple_link.e" />
+								<File Id="eg_simple_node.e" Name="EG_SIM~4.E" LongName="eg_simple_node.e" />
+								<File Id="eg_xml_storable.e" Name="EG_XML~1.E" LongName="eg_xml_storable.e" />
+								<File Id="ranged_random.e" Name="RANGED~1.E" LongName="ranged_random.e" />
+								<File Id="shared_xml_routines.e" Name="SHARED~1.E" LongName="shared_xml_routines.e" />
+								<File Id="xml_routines.e" Name="XML_RO~1.E" LongName="xml_routines.e" />
+							</Component>
+						</Directory>
+					</Directory>
 					<Directory Id="vision" Name="vision">
 						<Component Id="Readme" Guid="D08C2C3D-B29F-461F-B693-48AC7E485259">
 							<File Id="Readme" Name="Readme" KeyPath="yes" />
@@ -1351,6 +1398,7 @@
 									<File Id="ev_dialog_constants.e" Name="EV_DIA~7.E" LongName="ev_dialog_constants.e" />
 									<File Id="ev_text_rich_alignment.e" Name="EV_TEX~G.E" LongName="ev_text_rich_alignment.e" />
 									<File Id="ev_radio_peer.e" Name="EV_RAD~7.E" LongName="ev_radio_peer.e" />
+									<File Id="ev_model_print_projector.e" Name="EV_MOD~1.E" LongName="ev_model_print_projector.e" />
 									<File Id="ev_font_constants.e" Name="EV_FON~7.E" LongName="ev_font_constants.e" />
 									<File Id="ev_tree_node_list.e" Name="EV_TRE~D.E" LongName="ev_tree_node_list.e" />
 									<File Id="ev_graphical_format.e" Name="EV_GRA~1.E" LongName="ev_graphical_format.e" />
@@ -1363,7 +1411,7 @@
 									<File Id="V137" Name="EV_PAR~3.E" LongName="ev_paragraph_format_range_information.e" />
 									<File Id="ev_character_format_constants.e" Name="EV_CHA~6.E" LongName="ev_character_format_constants.e" />
 									<File Id="ev_active_list.e" Name="EV_ACT~2.E" LongName="ev_active_list.e" />
-					<File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
+									<File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
 								</Component>
 							</Directory>
 							<Directory Id="items" Name="items">
@@ -1423,6 +1471,64 @@
 									<File Id="ev_figure_drawer.e" Name="EV_FIG~4.E" LongName="ev_figure_drawer.e" />
 									<File Id="ev_figure.e" Name="EV_FIG~1.E" LongName="ev_figure.e" />
 									<File Id="ev_closed_figure.e" Name="EV_CLO~1.E" LongName="ev_closed_figure.e" />
+								</Component>
+							</Directory>
+							<Directory Id="model" Name="model">
+								<Component Id="model" Guid="F2E11F2E-8763-4ce7-AE3E-224F02DE7227">
+									<File Id="ev_coordinate_array.e" Name="EV_COO~1.E" LongName="ev_coordinate_array.e" />
+									<File Id="ev_double_value_change_action_sequence.e" Name="EV_DOU~1.E" LongName="ev_double_value_change_action_sequence.e" />
+									<File Id="ev_identified_font.e" Name="EV_IDE~1.E" LongName="ev_identified_font.e" />
+									<File Id="ev_identified_pixmap.e" Name="EV_IDE~2.E" LongName="ev_identified_pixmap.e" />
+									<File Id="ev_model.e" Name="ev_model.e" />
+									<File Id="ev_model_arc.e" Name="EV_MOD~1.E" LongName="ev_model_arc.e" />
+									<File Id="ev_model_arrowed.e" Name="EV_MOD~2.E" LongName="ev_model_arrowed.e" />
+									<File Id="ev_model_atomic.e" Name="EV_MOD~3.E" LongName="ev_model_atomic.e" />
+									<File Id="ev_model_buffer_manager.e" Name="EV_MOD~4.E" LongName="ev_model_buffer_manager.e" />
+									<File Id="ev_model_buffer_projector.e" Name="EV5C6C~1.E" LongName="ev_model_buffer_projector.e" />
+									<File Id="ev_model_closed.e" Name="EV18D3~1.E" LongName="ev_model_closed.e" />
+									<File Id="ev_model_dot.e" Name="EVD269~1.E" LongName="ev_model_dot.e" />
+									<File Id="ev_model_double_math.e" Name="EV0453~1.E" LongName="ev_model_double_math.e" />
+									<File Id="ev_model_double_pointed.e" Name="EV8B45~1.E" LongName="ev_model_double_pointed.e" />
+									<File Id="ev_model_drawer.e" Name="EVF36F~1.E" LongName="ev_model_drawer.e" />
+									<File Id="ev_model_drawing_area_projector.e" Name="EV2318~1.E" LongName="ev_model_drawing_area_projector.e" />
+									<File Id="ev_model_drawing_routines.e" Name="EVB2BA~1.E" LongName="ev_model_drawing_routines.e" />
+									<File Id="ev_model_ellipse.e" Name="EV40C0~1.E" LongName="ev_model_ellipse.e" />
+									<File Id="ev_model_elliptic.e" Name="EV7A50~1.E" LongName="ev_model_elliptic.e" />
+									<File Id="ev_model_equilateral.e" Name="EV9C54~1.E" LongName="ev_model_equilateral.e" />
+									<File Id="ev_model_group.e" Name="EV0CD7~1.E" LongName="ev_model_group.e" />
+									<File Id="ev_model_line.e" Name="EVAF94~1.E" LongName="ev_model_line.e" />
+									<File Id="ev_model_math.e" Name="EVC79A~1.E" LongName="ev_model_math.e" />
+									<File Id="ev_model_move_handle.e" Name="EVF065~1.E" LongName="ev_model_move_handle.e" />
+									<File Id="ev_model_multi_pointed.e" Name="EV19DF~1.E" LongName="ev_model_multi_pointed.e" />
+									<File Id="ev_model_parallelogram.e" Name="EVD53B~1.E" LongName="ev_model_parallelogram.e" />
+									<File Id="ev_model_picture.e" Name="EV5ED3~1.E" LongName="ev_model_picture.e" />
+									<File Id="ev_model_pie_slice.e" Name="EV8B30~1.E" LongName="ev_model_pie_slice.e" />
+									<File Id="ev_model_pixmap_projector.e" Name="EVFBDA~1.E" LongName="ev_model_pixmap_projector.e" />
+									<File Id="ev_model_polygon.e" Name="EV76E1~1.E" LongName="ev_model_polygon.e" />
+									<File Id="ev_model_polyline.e" Name="EV81EE~1.E" LongName="ev_model_polyline.e" />
+									<File Id="ev_model_postscript_projector.e" Name="EVF09B~1.E" LongName="ev_model_postscript_projector.e" />
+									<File Id="ev_model_projection_routines.e" Name="EV28E1~1.E" LongName="ev_model_projection_routines.e" />
+									<File Id="ev_model_projector.e" Name="EV079E~1.E" LongName="ev_model_projector.e" />
+									<File Id="ev_model_rectangle.e" Name="EV51BD~1.E" LongName="ev_model_rectangle.e" />
+									<File Id="ev_model_rotated_arc.e" Name="EVFA0A~1.E" LongName="ev_model_rotated_arc.e" />
+									<File Id="ev_model_rotated_ellipse.e" Name="EV74E3~1.E" LongName="ev_model_rotated_ellipse.e" />
+									<File Id="ev_model_rotated_elliptic.e" Name="EV9CE9~1.E" LongName="ev_model_rotated_elliptic.e" />
+									<File Id="ev_model_rotated_pie_slice.e" Name="EV9DCD~1.E" LongName="ev_model_rotated_pie_slice.e" />
+									<File Id="ev_model_rounded_parallelogram.e" Name="EVC6FD~1.E" LongName="ev_model_rounded_parallelogram.e" />
+									<File Id="ev_model_rounded_rectangle.e" Name="EV15B8~1.E" LongName="ev_model_rounded_rectangle.e" />
+									<File Id="ev_model_single_pointed.e" Name="EV0C33~1.E" LongName="ev_model_single_pointed.e" />
+									<File Id="ev_model_star.e" Name="EV833B~1.E" LongName="ev_model_star.e" />
+									<File Id="ev_model_text.e" Name="EVE70D~1.E" LongName="ev_model_text.e" />
+									<File Id="ev_model_tranformation.e" Name="EV69AD~1.E" LongName="ev_model_tranformation.e" />
+									<File Id="ev_model_widget_projector.e" Name="EV34AD~1.E" LongName="ev_model_widget_projector.e" />
+									<File Id="ev_model_world.e" Name="EVC78B~1.E" LongName="ev_model_world.e" />
+									<File Id="ev_model_world_cell.e" Name="EV1A19~1.E" LongName="ev_model_world_cell.e" />
+									<File Id="ev_postscript_drawable.e" Name="EV_POS~1.E" LongName="ev_postscript_drawable.e" />
+									<File Id="ev_postscript_drawable_imp.e" Name="EV_POS~2.E" LongName="ev_postscript_drawable_imp.e" />
+									<File Id="ev_scaled_font_factory.e" Name="EV_SCA~1.E" LongName="ev_scaled_font_factory.e" />
+									<File Id="ev_scaled_pixmap_factory.e" Name="EV_SCA~2.E" LongName="ev_scaled_pixmap_factory.e" />
+									<File Id="ev_shared_application.e" Name="EV_SHA~1.E" LongName="ev_shared_application.e" />
+									<File Id="ev_shared_scale_factory.e" Name="EV_SHA~2.E" LongName="ev_shared_scale_factory.e" />
 								</Component>
 							</Directory>
 							<Directory Id="events" Name="events">
@@ -1620,6 +1726,7 @@
 								<Directory Id="support22" Name="support">
 									<Component Id="ev_radio_peer_imp.e" Guid="FB2C7C91-4630-4B94-9D80-D40C6B2C5415">
 										<File Id="ev_radio_peer_imp.e" Name="EV_RAD~1.E" LongName="ev_radio_peer_imp.e" KeyPath="yes" />
+										<File Id="ev_model_print_projector_imp.e" Name="EV_MOD~1.E" LongName="ev_model_print_projector_imp.e" />
 										<File Id="ev_menu_item_handler_imp.e" Name="EV_MEN~2.E" LongName="ev_menu_item_handler_imp.e" />
 										<File Id="ev_id_imp.e" Name="EV_ID_~1.E" LongName="ev_id_imp.e" />
 										<File Id="ev_gdi_allocated_brushes.e" Name="EV_GDI~1.E" LongName="ev_gdi_allocated_brushes.e" />
@@ -1852,6 +1959,7 @@
 								<Directory Id="support29" Name="support">
 									<Component Id="ev_radio_peer_i.e" Guid="61129521-DECE-4CDF-B192-68A44AFA6C54">
 										<File Id="ev_radio_peer_i.e" Name="EV_RAD~2.E" LongName="ev_radio_peer_i.e" KeyPath="yes" />
+										<File Id="ev_model_print_projector_i.e" Name="EV_MOD~1.E" LongName="ev_model_print_projector_i.e" />
 										<File Id="ev_tree_node_list_i.e" Name="EV_TRE~7.E" LongName="ev_tree_node_list_i.e" />
 										<File Id="ev_dynamic_list_i.e" Name="EV_DYN~5.E" LongName="ev_dynamic_list_i.e" />
 										<File Id="ev_shared_transport_i.e" Name="EV_SHA~3.E" LongName="ev_shared_transport_i.e" />

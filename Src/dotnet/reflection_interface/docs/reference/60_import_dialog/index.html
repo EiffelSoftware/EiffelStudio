@@ -1,0 +1,68 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Import dialog</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="import dialog, import a signed assembly, import assembly, import">
+	</head>
+
+	<body>
+		<center>
+			<h1>The Import Dialog</h1>
+		</center>
+
+		<p>
+            This dialog lets you import shared assemblies into the <a href="../00_definitions/eiffel_assembly_cache.html"> Eiffel
+            Assembly Cache</a>. You can
+		</p>
+
+        <p>To choose the destination path where the classes will be generated,
+        either:
+		</p>
+		<ul>
+			<li>Leave the box <i>Default path</i> checked. The files will be
+              saved in the path written in the disabled text field.</li>
+		</ul>
+
+		<ul>
+			<p>
+				<center>
+					<img src = "../../images/import_dialog.png" no border>
+				</center>
+			</p>
+			<li>Uncheck the box <i>Default path</i>. Enter the path to the saved
+              files either by typing it in or by browsing for it.</li>
+				<center>
+					<table width="100%">
+						<tr>
+							<td align="center"><img src = "../../images/import_editable_dialog.png" no border width="497" height="330"></td>
+							<td align="center"><img src = "../../images/browse_dialog_from_dotnet_library.png" no border></td>
+						</tr>
+					</table>
+				</center>
+
+			<li>
+                Uncheck <i>Generate </i><i>Eiffel-friendly names</i> to keep the
+                original .NET method names in the generated <a href="../00_definitions/external_class.html">external
+                classes</a>.
+			</li>
+
+			<li>
+                Click <i>Cancel</i> to quit the Import Dialog without importing
+                any assembly.
+			</li>
+
+			<li>
+                Click <i>Ok</i> to start the generation process. The following
+                message box appears:
+			</li>
+		</ul>
+
+		<p>
+			<center>
+				<img src = "../../images/import_message_box.png" no border>
+			</center>
+		</p>
+	</body>
+</html>

@@ -312,10 +312,7 @@ feature -- Breakpoints
 				debug_item.breakable_points.i_th (i).set_stop (is_stop);
 				debug_bodies.forth
 			end;
-			if 
-				(is_stop and removed_routines.has (f)) or
-				(not has_breakpoint_set (f) and debugged_routines.has (f))
-			then
+			if is_stop and removed_routines.has (f) then
 				switch_feature (f)
 			end
 		end;
@@ -372,6 +369,64 @@ feature -- Breakpoints setting
 			loop
 				set_routine_breakpoints (debugged_routines.item);
 				debugged_routines.forth
+			end
+		end;
+
+	set_all_breakables is 
+			-- Set all the breakable points of all the debugged routines.
+		do
+			from
+				debugged_routines.start
+			until
+				debugged_routines.after
+			loop
+				set_routine_breakables (debugged_routines.item);
+				debugged_routines.forth
+			end
+		end;
+
+	set_out_of_routine_breakables (fi: FEATURE_I) is 
+			-- Set all the breakable points of all the debugged routines
+			-- execept those of `fi'.
+		require
+			fi_exists: fi /= Void
+		local
+			d_list: LINKED_LIST [DEBUGGABLE];
+			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
+			r_body_id: INTEGER;
+			bp: BREAKPOINT
+		do
+			set_all_breakables;
+			if 
+				has_feature (fi) and then 
+				not once_debuggables.has (fi.body_id) 
+			then
+					-- If the supermelted byte code of a once routine has 
+					-- not been sent to the application (because it had 
+					-- already been called at that time) we don't sent its
+					-- breakpoints neither.
+				from
+					d_list := debuggables (fi);
+					d_list.start
+				until
+					d_list.after
+				loop
+					from
+						breakable_points := d_list.item.breakable_points;
+						r_body_id := d_list.item.real_body_id;
+						breakable_points.start
+					until
+						breakable_points.after
+					loop
+						!! bp;
+						bp.set_continue;
+						bp.set_offset (breakable_points.item.position);
+						bp.set_real_body_id	(r_body_id);
+						new_breakpoints.extend (bp);
+						breakable_points.forth
+					end;
+					d_list.forth
+				end
 			end
 		end;
 

@@ -279,7 +279,7 @@ feature -- Saving
 				check
 						-- Signing should be available as it is checked
 						-- by caller.
-					Signing_should_be_present: (create {MD_STRONG_NAME}).present
+					Signing_should_be_present: (create {MD_STRONG_NAME}.make).exists
 				end
 				create l_pe_file.make_open_read (file_name)
 				create l_padding.make (l_pe_file.count)

@@ -537,6 +537,8 @@ feature -- Generation Structure
 
 	end_assembly_generation is
 			-- Finish creation of current assembly.
+		require
+			hashing_present: (create {MD_STRONG_NAME}.make).exists
 		local
 			l_types: like class_types
 			l_type: CLASS_TYPE

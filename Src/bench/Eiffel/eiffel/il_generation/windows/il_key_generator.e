@@ -25,7 +25,7 @@ feature -- Initialization
 		do
 			if not retried then
 				status := No_error
-				if (create {MD_STRONG_NAME}).present then
+				if (create {MD_STRONG_NAME}.make).exists then
 					l_result := feature {MD_STRONG_NAME}.strong_name_key_gen (default_pointer,
 						0, $public_key, $key_size)
 					if l_result /= 1 then

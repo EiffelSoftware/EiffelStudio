@@ -39,6 +39,7 @@ feature -- Initialization
 			create_widget (a_parent.screen_object, widget_name, True);
 			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
+			set_default
 		ensure
 			nont_void_parent: parent /= Void;
 			parent_set: parent.parent = a_parent;
@@ -58,6 +59,7 @@ feature -- Initialization
 			create_widget (a_parent.screen_object, widget_name, False);
 			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
+			set_default
 		ensure
 			nont_void_parent: parent /= Void;
 			parent_set: parent.parent = a_parent;

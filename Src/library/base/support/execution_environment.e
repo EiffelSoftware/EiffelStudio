@@ -93,7 +93,7 @@ feature -- Status setting
 		do
 			v_to_c := value.to_c
 			k_to_c := key.to_c
-			return_code := eif_putenv(v_to_c, k_to_c)
+			return_code := eif_putenv($v_to_c, $k_to_c)
 		ensure
 			variable_set: (return_code = 0) implies (value.is_equal (get (key)))
 		end
@@ -122,7 +122,7 @@ feature {NONE} -- External
 			"C | %"eif_misc.h%""
 		end
 
-	eif_putenv (v, k: ANY): INTEGER is
+	eif_putenv (v, k: POINTER): INTEGER is
 			-- Set `s' in the environment.
 		external
 			"C | %"eif_misc.h%""

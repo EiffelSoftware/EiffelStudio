@@ -1,14 +1,17 @@
 @echo off
 echo ------------------------------------------------------------------------
-echo Compiling Wel.lib
+echo Compiling wel.lib and mtwel.lib
 echo ------------------------------------------------------------------------
-nmake /NOLOGO /C /S /f makefile.msc 
+echo Compiling monothreaded version of the library
+nmake /NOLOGO /C /S /f makefile.msc > make.log
+echo Compiling multithreaded version of the library
+nmake /NOLOGO /C /S /f mt-makefile.msc >> make.log
 
+echo. 
 echo ------------------------------------------------------------------------
-echo Compiling mousehook.dll
+echo Compiling wel_hook.dll
 echo ------------------------------------------------------------------------
-nmake /NOLOGO /C /S /f makefile_dll.msc
+nmake /NOLOGO /C /S /f makefile_dll.msc >> make.log
 
-echo ------------------------------------------------------------------------
+echo. 
 echo done.
-echo ------------------------------------------------------------------------

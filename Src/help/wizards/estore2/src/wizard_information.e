@@ -15,17 +15,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize Current with Default Values
 		do
-			new_project:= True
-			username:= ""
-			password:= ""
-			data_source:= ""
-			location:= ""
-			project_name:= "sample"
+			new_project := True
+			username := ""
+			password := ""
+			data_source := ""
+			location := ""
+			project_name := "sample"
 			create table_list.make
-			is_oracle:= False
-			compile_project:= True
-			precompiled_base:= False
-			vision_example:= True
+			is_oracle := False
+			compile_project := True
+			precompiled_base := False
+			vision_example := True
 		end
 
 feature {WIZARD_STATE_WINDOW} -- Settings
@@ -33,10 +33,22 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 	set_database_info (s1, s2, s3: STRING; oracle_selected: BOOLEAN) is
 			-- Set the database information.
 		do
-			username:= s1
-			password:= s2
-			data_source:= s3
-			is_oracle:= oracle_selected
+			if s1 /= Void then
+				username := s1
+			else
+				username := ""
+			end
+			if s2 /= Void then
+				password := s2
+			else
+				password := ""
+			end
+			if s3 /= Void then
+				data_source := s3
+			else
+				data_source := ""
+			end
+			is_oracle := oracle_selected
 		end
 
 	set_generation_type (b: BOOLEAN) is

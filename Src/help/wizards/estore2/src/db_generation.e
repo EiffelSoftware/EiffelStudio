@@ -8,7 +8,7 @@ class
 	DB_GENERATION
 
 inherit
-	INTERMEDIARY_STATE_WINDOW
+	WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,

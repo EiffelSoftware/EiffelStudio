@@ -4,23 +4,32 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EB_OBJECT_DISPLAY_PARAMETERS
 
 inherit
 	SHARED_DEBUG
+		export
+			{NONE} all
+		end
 
 	SHARED_APPLICATION_EXECUTION
-
+		export
+			{NONE} all
+		end
 	EB_CONSTANTS
-
+		export
+			{NONE} all
+		end
 	EB_DEBUG_TOOL_DATA
-
+		export
+			{NONE} all
+		end
 	VALUE_TYPES
-
-create
-	make, make_from_debug_value, make_from_stack_element
-
+		export
+			{NONE} all
+		end
+		
 feature {NONE} -- Initialization
 
 	make (n_type: CLASS_C; n_addr: STRING) is
@@ -43,19 +52,19 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' and associate it with object
 			-- represented by `val'.
 		local
-			conv_ref: REFERENCE_VALUE
-			conv_spec: SPECIAL_VALUE
+			conv_abs_ref: ABSTRACT_REFERENCE_VALUE
+			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 			addr: STRING
 		do
-			conv_ref ?= val
-			if conv_ref /= Void then
-				addr := conv_ref.address
+			conv_abs_ref ?= val
+			if conv_abs_ref /= Void then
+				addr := conv_abs_ref.address
 			else
-				conv_spec ?= val
-				if conv_spec /= Void then
-					addr := conv_spec.address
+				conv_abs_spec ?= val
+				if conv_abs_spec /= Void then
+					addr := conv_abs_spec.address
 					is_special := True
-					capacity := conv_spec.capacity
+					capacity := conv_abs_spec.capacity
 				else
 					addr := "Unknown address"
 				end
@@ -74,7 +83,7 @@ feature -- Access
 
 feature -- Measurement
 
-feature -- Status report
+feature {EB_OBJECT_TOOL,EB_SET_SLICE_SIZE_CMD} -- Status report
 
 	display_attributes: BOOLEAN
 			-- Should attributes be displayed or not?
@@ -99,11 +108,20 @@ feature -- Status report
 
 	is_special: BOOLEAN
 			-- Do we have information concerning the capacity of Current, if it is a special object?
-			
+
 	capacity: INTEGER
 			-- If `is_special', what is the expected capacity of this object? (this information is only
 			-- available when `Current' is created from a special value)
 
+feature -- Transformation
+
+	object_full_output: STRING is
+			-- Full ouput representation for related object
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+	
 	to_tree_item (parent: EV_TREE_NODE_LIST) is
 			-- Generate a tree item representing the managed object located at `address' and attach it to `parent'.
 		local
@@ -115,6 +133,8 @@ feature -- Status report
 			has_onces: BOOLEAN
 			ft: FEATURE_TABLE
 			f: FEATURE_I
+
+			dv: ABSTRACT_DEBUG_VALUE
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_DISPLAY_PARAMETERS.to_tree_item%N")
@@ -124,7 +144,7 @@ feature -- Status report
 			create title.make (50)
 			title.append (dtype.external_class_name)
 			title.append_character (' ')
-			title.append ((create {DUMP_VALUE}.make_object (address, dtype)).full_output)
+			title.append (object_full_output)
 			create main_item.make_with_text (title)
 			create ost.make (address, " ", dtype)
 			main_item.set_accept_cursor (ost.stone_cursor)
@@ -153,7 +173,7 @@ feature -- Status report
 				ft.forth
 			end
 
-			if has_attributes or dtype.is_special or dtype.is_tuple then
+			if has_attributes or dtype.is_special or dtype.is_tuple or is_special then
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
 				attr_item.set_pixmap (Pixmaps.Icon_attributes)
 				ost.set_associated_tree_item (attr_item)
@@ -190,8 +210,8 @@ feature -- Status report
 			main_item.expand_actions.extend (agent on_expand (main_id))
 			main_item.collapse_actions.extend (agent on_unexpand (main_id))
 		end
-
-feature -- Status setting
+		
+feature {EB_OBJECT_TOOL} -- Status setting
 
 	set_display_attributes (b: BOOLEAN) is
 			-- Should attributes be displayed in the future?
@@ -217,6 +237,14 @@ feature -- Status setting
 			display := b
 		end
 
+	set_front (f: BOOLEAN) is
+			-- Future tree items will be added in first position of their parent if `f'.
+		do
+			to_front := f
+		end
+
+feature {EB_SET_SLICE_SIZE_CMD} -- Size settings
+
 	set_lower (min: INTEGER) is
 			-- Set `spec_lower' to `min'.
 		do
@@ -228,51 +256,12 @@ feature -- Status setting
 		do
 			spec_higher := max
 		end
-
-	set_front (f: BOOLEAN) is
-			-- Future tree items will be added in first position of their parent if `f'.
-		do
-			to_front := f
-		end
+		
+feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 
 	refresh is
 			-- Reload attributes (useful if `Current' represents a special object)
-		local
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			obj: DEBUGGED_OBJECT
-		do
-			debug ("debug_recv")
-				print ("EB_OBJECT_DISPLAY_PARAMETERS.refresh%N")
-			end
-			attr_item.wipe_out
-			attr_item.expand_actions.wipe_out
-			attr_item.collapse_actions.wipe_out
-			attributes_loaded := True
-			create obj.make (address, spec_lower, spec_higher)
-			list := obj.attributes
-			if not list.is_empty then
-				from
-					list.start
-				until
-					list.after
-				loop
-					attr_item.extend (debug_value_to_item (list.item))
-					list.forth
-				end
-				if obj.is_special then
-					if spec_lower > 0 then
-						attr_item.put_front (create {EV_TREE_ITEM}.make_with_text (
-							Interface_names.l_More_items))
-					end
-					if spec_higher = spec_lower + list.count - 1 then
-						attr_item.extend (create {EV_TREE_ITEM}.make_with_text (
-							Interface_names.l_More_items))
-					end
-				end
-				attr_item.expand
-				attr_item.expand_actions.extend (agent on_expand (attributes_id))
-				attr_item.collapse_actions.extend (agent on_unexpand (attributes_id))
-			end
+		deferred
 		end
 
 feature -- Element change
@@ -295,6 +284,49 @@ feature -- Obsolete
 
 feature -- Inapplicable
 
+feature {NONE} -- Specific Implementation
+
+	load_attributes_under (parent: EV_TREE_NODE_LIST) is
+			-- Fill in `parent' with the once functions associated object.
+		require
+			attributes_not_loaded_yet: not attributes_loaded
+		deferred
+		end
+
+	fill_onces_with_list (parent: EV_TREE_NODE_LIST; a_once_list: LIST [E_FEATURE]; dv: ABSTRACT_DEBUG_VALUE) is
+			-- Fill `parent' with the once functions `a_once_list'.
+		require
+			parent_not_void: parent /= Void
+			once_list_not_void: a_once_list /= Void
+		deferred
+		end
+
+feature {NONE} -- Implementation (once)
+
+	load_onces_under (parent: EV_TREE_NODE_LIST) is
+			-- Fill in `parent' with the once functions associated object.
+		local
+			flist: LIST [E_FEATURE]
+		do
+			flist := dtype.once_functions
+			fill_onces_with_list (parent, flist, Void)
+			onces_loaded := True
+		end
+
+	fill_onces (parent: EV_TREE_ITEM) is
+			-- Fill `parent' with the once functions of the debug_value it is in.
+		local
+			flist: LIST [E_FEATURE]
+			dv: ABSTRACT_DEBUG_VALUE
+		do
+			dv ?= parent.data
+			parent.expand_actions.wipe_out
+			if dv /= Void then
+				flist := dv.dynamic_class.once_functions
+				fill_onces_with_list (parent, flist, dv)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	main_id: INTEGER is unique
@@ -314,69 +346,13 @@ feature {NONE} -- Implementation
 	icons: ARRAY [EV_PIXMAP] is
 			-- List of available icons for objects.
 		once
-			create Result.make (Immediate_value, Special_value)
+			create Result.make (Immediate_value, External_reference_value)
 			Result.put (Pixmaps.Icon_void_object, Void_value)
 			Result.put (Pixmaps.Icon_object_symbol, Reference_value)
 			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
 			Result.put (Pixmaps.Icon_object_symbol, Special_value)
 			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
-		end
-
-	load_onces_under (parent: EV_TREE_NODE_LIST) is
-			-- Fill in `parent' with the once functions associated object.
-		require
-			onces_not_loaded_yet: not onces_loaded
-		local
-			once_r: ONCE_REQUEST
-			item: EV_TREE_ITEM
-			flist: LIST [E_FEATURE]
-		do
-			once_r := Application.debug_info.Once_request
-			flist := dtype.once_functions
-			from
-				flist.start
-			until
-				flist.after
-			loop
-				if once_r.already_called (flist.item) then
-					item := debug_value_to_item (once_r.once_result (flist.item))
-				else
-					create item
-					item.set_pixmap (Pixmaps.Icon_void_object)
-					item.set_text (flist.item.name + Interface_names.l_Not_yet_called)
-				end
-				parent.extend (item)
-				flist.forth
-			end
-			parent.start
-			parent.remove
-			onces_loaded := True
-		end
-
-	load_attributes_under (parent: EV_TREE_NODE_LIST) is
-			-- Fill in `parent' with the once functions associated object.
-		require
-			attributes_not_loaded_yet: not attributes_loaded
-		local
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			obj: DEBUGGED_OBJECT
-		do
-			debug ("debug_recv")
-				print ("EB_OBJECT_DISPLAY_PARAMETERS.load_attributes_under%N")
-			end
-			create obj.make (address, spec_lower, spec_higher)
-			list := obj.attributes
-			from
-				list.start
-			until
-				list.after
-			loop
-				parent.extend (debug_value_to_item (list.item))
-				list.forth
-			end
-			parent.start
-			parent.remove
-			attributes_loaded := True
+			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)
 		end
 
 	debug_value_to_item (dv: ABSTRACT_DEBUG_VALUE): EV_TREE_ITEM is
@@ -400,10 +376,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
 	fill_item (item: EV_TREE_ITEM) is
 			-- If a tree item was expandable, fill it with its children. (Not the onces)
 		local
-			conv_spec: SPECIAL_VALUE
+			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 			dv: ABSTRACT_DEBUG_VALUE
 			folder_item: EV_TREE_ITEM
 			new_item: EV_TREE_ITEM
@@ -427,13 +405,13 @@ feature {NONE} -- Implementation
 						folder_item.extend (debug_value_to_item (list.item))
 						list.forth
 					end
-					conv_spec ?= dv
-					if conv_spec /= Void then
-						if conv_spec.sp_lower > 0 then
+					conv_abs_spec ?= dv
+					if conv_abs_spec /= Void then
+						if conv_abs_spec.sp_lower > 0 then
 							folder_item.put_front (create {EV_TREE_ITEM}.make_with_text (
 								Interface_names.l_More_items))
 						end
-						if 0 <= conv_spec.sp_upper and then conv_spec.sp_upper < conv_spec.capacity - 1 then
+						if 0 <= conv_abs_spec.sp_upper and then conv_abs_spec.sp_upper < conv_abs_spec.capacity - 1 then
 							folder_item.extend (create {EV_TREE_ITEM}.make_with_text (
 								Interface_names.l_More_items))
 						end
@@ -442,55 +420,27 @@ feature {NONE} -- Implementation
 						folder_item.expand
 					end
 				end
-				flist := dv.dynamic_class.once_functions
-				if not flist.is_empty then
-					create folder_item.make_with_text (Interface_names.l_Once_functions)
-					folder_item.set_pixmap (Pixmaps.Icon_once_objects)
-					item.extend (folder_item)
-					create new_item.make_with_text (Interface_names.l_Dummy)
-						--| Add expand actions.
-					folder_item.extend (new_item)
-					folder_item.set_data (dv)
-					folder_item.expand_actions.extend (agent fill_onces (folder_item))
+				if dv.dynamic_class = Void then
+					--| FIXME: JFIAT : why do we have Void dynamic_class ?
+					--| ANSWER : because of external class in dotnet system
+					--| UPDATE: should be fixed by returning SYSTEM_OBJECT
+				else
+					flist := dv.dynamic_class.once_functions
+					if not flist.is_empty then
+						create folder_item.make_with_text (Interface_names.l_Once_functions)
+						folder_item.set_pixmap (Pixmaps.Icon_once_objects)
+						item.extend (folder_item)
+						create new_item.make_with_text (Interface_names.l_Dummy)
+							--| Add expand actions.
+						folder_item.extend (new_item)
+						folder_item.set_data (dv)
+						folder_item.expand_actions.extend (agent fill_onces (folder_item))
+					end
 				end
 			end
 				-- We remove the dummy item.
 			item.start
 			item.remove
-		end
-
-	fill_onces (parent: EV_TREE_ITEM) is
-			-- Fill `parent' with the once functions of the debug_value it is in.
-		local
-			once_r: ONCE_REQUEST
-			item: EV_TREE_ITEM
-			flist: LIST [E_FEATURE]
-			dv: ABSTRACT_DEBUG_VALUE
-		do
-			dv ?= parent.data
-			parent.expand_actions.wipe_out
-			if dv /= Void then
-				once_r := Application.debug_info.Once_request
-				flist := dv.dynamic_class.once_functions
-				from
-					flist.start
-				until
-					flist.after
-				loop
-					if once_r.already_called (flist.item) then
-						item := debug_value_to_item (once_r.once_result (flist.item))
-					else
-						create item
-						item.set_pixmap (Pixmaps.Icon_void_object)
-						item.set_text (flist.item.name + Interface_names.l_Not_yet_called)
-					end
-					parent.extend (item)
-					flist.forth
-				end
-			end
-				-- We remove the dummy item.
-			parent.start
-			parent.remove
 		end
 
 	on_expand (id: INTEGER) is

@@ -27,11 +27,11 @@ iff isdir newdocs then
 	iff %? != 0 then
 		echo Couldn't update newdocs... checking out instead
 		fullrd newdocs
-		co -r HEAD -d newdocs Delivery/newdocs
+		co -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
 	endiff
 else
 	if exist newdocs fullrf newdocs
-	co -r HEAD -d newdocs Delivery/newdocs
+	co -r %DEFAULT_CVS_TAG -d newdocs Delivery/newdocs
 endiff
 remtrace Setup files
 cd newdocs
@@ -45,7 +45,7 @@ document -g >>& %INSTALL_LOG
 copy ..\default.css .
 remtrace Compile the documentation (eiffel.chm)
 hhc eiffel.hhp
-iff not exist eiffel.chm then
+iff %? != 0 .or. not exist eiffel.chm then
 	echo Could not generate the help file
 	CANCEL
 endiff
@@ -53,7 +53,8 @@ move eiffel.chm %INSTALL_DIR\docs
 	
 remtrace Compile the Resource Bench help
 cdd %DOCUMENT_DIR
-safe_up Src/resource_bench/RB_documentation/docrb rbdoc
+if isdir rbdoc fullrd rbdoc
+exprt -r %DEFAULT_CVS_TAG -d rbdoc Src/resource_bench/RB_documentation/docrb
 cd rbdoc
 copy ..\document.exe .
 document -g

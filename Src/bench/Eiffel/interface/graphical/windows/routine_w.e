@@ -20,7 +20,8 @@ inherit
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource, create_toolbar, build_toolbar_menu,
 			set_title, set_mode_for_editing, parse_file, display,
-			history_window_title, has_editable_text, help_index, icon_id
+			history_window_title, has_editable_text, help_index, icon_id,
+			set_default_format
 		end
 
 creation
@@ -249,6 +250,17 @@ feature -- Update
 			synchronize
 		ensure
 			set: showstop_frmt_holder = last_format
+		end
+
+	set_default_format is
+			-- Set to `last_format' to debugged format by default
+			-- when widget is in project tool.
+		do
+			if is_in_project_tool then
+				set_last_format (showstop_frmt_holder)
+			else
+				Precursor {BAR_AND_TEXT}
+			end
 		end
 
 	show_stoppoint (f: E_FEATURE index: INTEGER) is

@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 	make_rgb (a_red, a_green, a_blue: INTEGER) is
 			-- Create the color corresponding to the given name.
 		do
+			set_rgb (a_red, a_green, a_blue)
 		end
 
 feature -- Access
@@ -31,15 +32,33 @@ feature -- Access
 	red: INTEGER is
 			-- Intensity value for the red component
 		do
+			Result := rval
 		end
 
 	green: INTEGER is
 			-- Intensity value for the green component
 		do
+			Result := gval
 		end
 
 	blue: INTEGER is
 			-- Intensity value for the blue component
+		do
+			Result := bval
+		end
+
+feature -- Status report
+
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
+		do
+			Result := False
+		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
 		do
 		end
 
@@ -49,22 +68,36 @@ feature -- Element change
 			-- Make `a_red', `a_green' and `a_blue' the new
 			-- `red', `green' and `blue' value.
 		do
+			rval := a_red
+			gval := a_green
+			bval := a_blue
 		end
 
 	set_red (value: INTEGER) is
 			-- Make `value' the new `red' value.
 		do
+			rval := value
 		end
 
 	set_green (value: INTEGER) is
 			-- Make `value' the new `green' value.
 		do
+			gval := value
 		end
 
 	set_blue (value: INTEGER) is
 			-- Make `value' the new `blue' value.
 		do
+			bval := value
 		end
+
+feature -- Implementation
+
+	rval: INTEGER
+	
+	gval: INTEGER
+	
+	bval: INTEGER
 
 end -- class EV_COLOR_IMP
 

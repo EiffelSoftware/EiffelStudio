@@ -1677,7 +1677,7 @@ feature -- Constants generation
 			implementation.put_integer32_constant (i)
 		end
 		
-	put_integer_64_constant (i: INTEGER) is
+	put_integer_64_constant (i: INTEGER_64) is
 			-- Put `i' on IL stack.
 		require
 			il_generation_started: il_generation_started

@@ -739,9 +739,13 @@ feature -- Constants generation
 
 	put_integer8_constant,
 	put_integer16_constant,
-	put_integer32_constant,
-	put_integer64_constant (i: INTEGER) is
-			-- Put `i' as INTEGER_8, INTEGER_16, INTEGER or INTEGER_64 on IL stack
+	put_integer32_constant (i: INTEGER) is
+			-- Put `i' as INTEGER_8, INTEGER_16 or INTEGER on IL stack
+		deferred
+		end
+		
+	put_integer64_constant (i: INTEGER_64) is
+			-- Put `i' as INTEGER_64 on IL stack
 		deferred
 		end
 		

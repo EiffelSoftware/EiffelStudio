@@ -12,6 +12,7 @@ inherit
 	
 	EV_SIMPLE_ITEM_IMP
 		redefine
+			make,
 			has_parent
 		end
 
@@ -35,35 +36,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Create an item with an empty name.
 		do
+			-- Create the gtk object.
 			widget := gtk_tree_item_new
 			gtk_object_ref (widget)
+
+			-- Create the `box'.
+			initialize
+
+			-- Set the text to "".
+			Create_text_label ("")
 		end
 	
-	make_with_text (txt: STRING) is
-			-- Create an item with `txt' as label.
-		local
-			a: ANY
-		do
-			a := txt.to_c
-			widget := gtk_tree_item_new_with_label ($a)
-			gtk_object_ref (widget)
-		end
-
-feature -- Access
-
---	parent: EV_TREE_ITEM_HOLDER is
---			-- Parent of the current item.
---		do
---			if parent_imp /= Void then
---				Result ?= parent_imp.interface
---			else
---				Result := Void
---			end
---		end
-
---	parent_imp: EV_TREE_ITEM_HOLDER_IMP
---			-- Parent implementation
-
 feature -- Status report
 
 	is_selected: BOOLEAN is
@@ -123,10 +106,6 @@ feature -- Element change
 					parent_not_void: par_imp /= Void
 				end
 				parent_imp := par_imp
-
-
-				parent_temp ?= parent_imp.interface
-
 				par_imp.add_item (Current)
 				show
 				gtk_object_unref (widget)
@@ -228,12 +207,12 @@ feature {NONE} -- Implementation
 			-- remove the gtk_tree_item of the gtk_tree_item:
 			gtk_tree_remove_item (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
 
-			-- Set the `tree_parent_widget' of the tree item to Void:
-			set_tree_parent_imp (Void)
-
 			-- Remove the item from the array `ev_children' of the tree parent.
 			tree_parent_imp.ev_children.search (item_imp)
 			tree_parent_imp.ev_children.remove
+
+			-- Set the `tree_parent_widget' of the tree item to Void:
+			item_imp.set_tree_parent_imp (Void)
 		end
 
 end -- class EV_TREE_ITEM_IMP

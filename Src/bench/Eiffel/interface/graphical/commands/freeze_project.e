@@ -21,14 +21,26 @@ feature {NONE}
 	confirm_and_compile (argument: ANY) is
 		do
 			if 
-				(argument = text_window) or else  
-				(argument = Current)
+				(argument = text_window) or (argument = Current) or
+				(argument /= Void and then 
+				argument = last_confirmer and not end_run_confirmed) 
 			then
-				warner.set_window (text_window);
-				warner.custom_call (Current, w_Freeze_warning,
+				warner (text_window).custom_call (Current, w_Freeze_warning,
 							"Freeze now", Void, "Cancel");
-			elseif argument = warner then
-				compile (argument);
+			elseif (argument /= Void and then argument = last_warner) then
+				if Run_info.is_running then
+					confirmer (text_window).call (Current,
+							"Recompiling project will end current run.%N%
+							%Start compilation anyway?", "Compile");
+					end_run_confirmed := true
+				else
+					compile (argument)
+				end
+			elseif 
+				argument /= Void and 
+				argument = last_confirmer and end_run_confirmed 
+			then
+				compile (argument)
 			end;
 		end;
 

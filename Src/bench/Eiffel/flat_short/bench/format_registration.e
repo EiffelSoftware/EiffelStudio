@@ -38,13 +38,13 @@ feature -- Initialization
 			if not order_same_as_text then
 				creators := target.creators;
 			end;
-			processed_parents.extend (System.any_class.compiled_class);
+			ancestors.extend (System.any_class.compiled_class);
 		end;
 
 	initialize is
 			-- Initialize Current structures.
 		do
-			!! processed_parents.make (5);
+			!! ancestors.make (5);
 			!! categories.make;
 			!! invariant_server.make;
 			!! current_category.make;
@@ -86,8 +86,8 @@ feature -- Properties
 	target_ast: like current_ast;
 			-- Ast structure for target_class
 
-	processed_parents: ARRAYED_LIST [CLASS_C];
-			-- Processed parents when analyzing ancestors
+	ancestors: ARRAYED_LIST [CLASS_C];
+			-- Ancestors of target class 
 
 	assert_server: ASSERTION_SERVER;
 			-- Assertion server for pre and post conditions
@@ -163,7 +163,7 @@ feature -- Setting
 			--| For EiffelCase.
 		require
 			valid_categories: categories /= Void;
-			valid_processed_parents: processed_parents /= Void;
+			valid_ancestors: ancestors /= Void;
 			valid_current_category: current_category /= Void;
 		do
 			target_class := target;
@@ -192,10 +192,10 @@ feature -- Element change
 				!! assert_server.make_for_class_only
 			else
 				!! assert_server.make (target_feature_table.count);
+				!! l.make;
+				l.extend (System.general_class.compiled_class);
+				register_skipped_classes_assertions (l);
 			end;
-			!! l.make;
-			l.extend (System.general_class.compiled_class);
-			register_skipped_classes_assertions (l);
 			current_class := target_class;
 			System.set_current_class (current_class);
 debug ("FLAT_SHORT")
@@ -309,6 +309,28 @@ end;
 			inv_adapter.register (invariant_part, Current);	
 		end;
 
+	register_ancestors_invariants is
+			-- Register the invarians defined in `ancestors'.
+			-- (class ANY is skipped)
+		local
+			inv_as: INVARIANT_AS_B
+		do
+			from 
+				record_ancestors_of_class (target_class);
+				ancestors.start; -- Skip class ANY
+				ancestors.forth
+			until
+				ancestors.after
+			loop
+				current_class := ancestors.item;
+				inv_as ?= current_class.e_class.invariant_ast;
+				if inv_as /= Void then
+					register_invariant (inv_as)
+				end;
+				ancestors.forth
+			end
+		end
+
 feature -- Removal
 
 	wipe_out is
@@ -319,7 +341,7 @@ feature -- Removal
 			target_feature_table := Void;
 			current_class := Void;
 			current_feature_table := Void;
-			processed_parents.wipe_out;
+			ancestors.wipe_out;
 			categories.wipe_out;
 			current_category.wipe_out;
 			assert_server := Void;
@@ -437,7 +459,11 @@ debug ("FLAT_SHORT")
 	io.error.new_line;
 end;
 				current_feature_table := current_class.feature_table;
-				Result := Ast_server.item (current_class.id)
+				if Tmp_ast_server.has (current_class.id) then
+					Result := Tmp_ast_server.item (current_class.id)
+				else
+					Result := Ast_server.item (current_class.id)
+				end		
 			else
 debug ("FLAT_SHORT")
 	io.error.putstring ("Reparsing class ast: ");
@@ -487,33 +513,25 @@ end;
 
 	parse_ancestors is
 			-- Parse the ancestores of target_class.
-		local
-			parents: FIXED_LIST [CL_TYPE_A];
-			index: INTEGER;	
 		do
 			from 
-				parents := current_class.parents;
-				parents.start
+				record_ancestors_of_class (current_class);
+				ancestors.start; -- Skip class ANY
+				ancestors.forth
 			until
-				parents.after
+				ancestors.after
 			loop
-				current_class := parents.item.associated_class;
-				if not processed_parents.has (current_class) then
-					current_feature_table := current_class.feature_table;
-					System.set_current_class (current_class);
+				current_class := ancestors.item;
+				current_feature_table := current_class.feature_table;
+				System.set_current_class (current_class);
 debug ("FLAT_SHORT")
 	io.error.putstring ("%TParsing & Registering class: ");
 	io.error.putstring (current_class.class_name);
 	io.error.new_line;
 end;
-					current_ast := current_class_ast;
-					register_current_ast;
-					processed_parents.extend (current_class);
-					index := parents.index;
-					parse_ancestors;
-					parents.go_i_th (index);
-				end;
-				parents.forth;
+				current_ast := current_class_ast;
+				register_current_ast;
+				ancestors.forth;
 			end;
 		end;
 
@@ -524,7 +542,8 @@ end;
 			f: FEATURE_I;
 			t: FEATURE_TABLE;
 			id: CLASS_ID;
-			f_adapter: FEATURE_ADAPTER
+			f_adapter: FEATURE_ADAPTER;
+			inv_as: INVARIANT_AS_B
 		do
 debug ("FLAT_SHORT")
 	io.error.putstring ("%TSkipped classes assertions.");
@@ -535,7 +554,12 @@ end
 			until
 				l.after
 			loop
-				t := l.item.feature_table;
+				current_class := l.item;
+				inv_as ?= current_class.e_class.invariant_ast;
+				if inv_as /= Void then
+					register_invariant (inv_as)
+				end;
+				t := current_class.feature_table;
 				id := t.feat_tbl_id;
 				from
 					t.start
@@ -590,6 +614,31 @@ end
 		ensure
 			consistency: (eiffel_file = Void) = (class_comments /= Void)
 		end;
+
+	record_ancestors_of_class (a_class: CLASS_C) is
+			-- Record all ancestores of `a_class' in `ancestors' .
+		require
+			class_not_void: a_class /= Void
+			ancestors_parents_not_void: ancestors /= Void
+		local
+			parents: FIXED_LIST [CL_TYPE_A];
+			index: INTEGER;	
+			a_parent: CLASS_C
+		do
+			from 
+				parents := a_class.parents;
+				parents.start
+			until
+				parents.after
+			loop
+				a_parent := parents.item.associated_class;
+				if not ancestors.has (a_parent) then
+					ancestors.extend (a_parent);
+					record_ancestors_of_class (a_parent)
+				end;
+				parents.forth
+			end
+		end
 
 feature {NONE} -- Implementation
 

@@ -26,9 +26,9 @@ default
 
 	assertion (no);
 	multithreaded (no);
-	inlining (yes);
-	inlining_size ("4");
-	array_optimization (yes);
+--	inlining (yes);
+--	inlining_size ("4");
+--	array_optimization (yes);
 
 cluster
 

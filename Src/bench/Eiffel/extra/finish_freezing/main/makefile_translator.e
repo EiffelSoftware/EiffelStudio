@@ -29,6 +29,11 @@ feature -- Initialization
 				io.error.putstring ("ERROR: Key 'COMPILER' was not found in registry!%N")
 			end
 
+			read_options
+
+			directory_separator := options.get_string ("directory_separator", "\")
+			object_extension := clone (options.get_string ("obj_file_ext", "obj"))
+			object_extension.prepend_character ('.')
 		end
 
 feature -- Access
@@ -76,6 +81,12 @@ feature -- Access
 			-- The number of EOBJ# parts
 
 	uses_precompiled: BOOLEAN
+
+	directory_separator: STRING
+			-- Directory separator which needs to be used for the Makefile translation.
+
+	object_extension: STRING
+			-- File extension name for C generated object files.
 
 feature -- Execution
 
@@ -521,7 +532,7 @@ feature {NONE} -- Translation
 				end
 
 				-- get directory name and filename
-				dir_sep_pos := lastline.index_of (operating_environment.directory_separator, 1)
+				dir_sep_pos := lastline.index_of (directory_separator.item (1), 1)
 				if dir_sep_pos = 0 then
 					dir_sep_pos := lastline.index_of ('/', 1)
 				end
@@ -530,7 +541,7 @@ feature {NONE} -- Translation
 				filename := lastline.substring (dir_sep_pos+1, lastline.index_of ('.', 1)-1)
 
 				makefile.putstring (dir)
-				makefile.putchar (operating_environment.directory_separator)
+				makefile.putstring (directory_separator)
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
 					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
@@ -545,7 +556,7 @@ feature {NONE} -- Translation
 						makefile.putstring (emain_line)
 						makefile.putchar (' ')
 						makefile.putstring (dir)
-						makefile.putchar (operating_environment.directory_separator)
+						makefile.putstring (directory_separator)
 						makefile.putstring ("emain.c%N")
 						read_next
 					else
@@ -607,7 +618,7 @@ feature {NONE} -- Translation
 				dir.item (1) = 'E' or else dependent_directories.after
 			loop		
 				makefile.putstring (dir)
-				makefile.putchar (operating_environment.directory_separator)
+				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
 				makefile.putstring (options.get_string ("obj_file_ext", Void))
 				makefile.putstring (dir.substring (2, dir.count))
@@ -645,7 +656,7 @@ feature {NONE} -- Translation
 				end
 
 				makefile.putstring (dir)
-				makefile.putchar (operating_environment.directory_separator)
+				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
 				makefile.putstring (options.get_string ("obj_file_ext", Void))
 				makefile.putstring (dir.substring (2, dir.count))
@@ -689,7 +700,7 @@ feature {NONE} -- Translation
 				number := number + 1
 
 				makefile.putstring (dir)
-				makefile.putchar (operating_environment.directory_separator)
+				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
 				makefile.putstring (options.get_string ("obj_file_ext", Void))
 				makefile.putint (number)
@@ -1032,7 +1043,7 @@ feature {NONE} -- Translation
 				-- SHARED_CECIL_OBJECT
 			read_next
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".o", ".obj")
+			lastline.replace_substring_all (".o", object_extension)
 			subst_library (lastline)
 			subst_precomp_libs (lastline, precompile_libs)
 			subst_dir_sep (lastline)
@@ -1102,7 +1113,7 @@ feature {NONE} -- Translation
 				-- egc_dynlib.obj
 			read_next
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".o", ".obj")
+			lastline.replace_substring_all (".o", object_extension)
 			subst_eiffel (lastline)
 			subst_platform (lastline)
 			subst_compiler (lastline)
@@ -1125,7 +1136,7 @@ feature {NONE} -- Translation
 
 			read_next -- $(MAKE) ...
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".o", ".obj")
+			lastline.replace_substring_all (".o", object_extension)
 			makefile.putstring (lastline)
 			makefile.new_line
 
@@ -1136,7 +1147,7 @@ feature {NONE} -- Translation
 				-- edynlib.obj
 			read_next
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".o", ".obj")
+			lastline.replace_substring_all (".o", object_extension)
 			subst_dir_sep (lastline)
 			makefile.putstring (lastline)
 			makefile.new_line
@@ -1147,7 +1158,7 @@ feature {NONE} -- Translation
 
 			read_next -- $(MAKE) ...
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".o", ".obj")
+			lastline.replace_substring_all (".o", object_extension)
 			makefile.putstring (lastline)
 			makefile.new_line
 
@@ -1158,7 +1169,7 @@ feature {NONE} -- Translation
 				-- SYSTEM_IN_DYNAMIC_LIB_OBJ
 			read_next
 			lastline := clone (makefile_sh.laststring)
-			lastline.replace_substring_all (".o", ".obj")
+			lastline.replace_substring_all (".o", object_extension)
 			subst_library (lastline)
 			subst_precomp_libs (lastline, precompile_libs)
 			subst_dir_sep (lastline)
@@ -1248,17 +1259,17 @@ feature {NONE}	-- substitutions
 			if concurrent then
 				library_name.append_character (' ')
 				default_net_lib := clone (eiffel4)
-				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (directory_separator)
 				default_net_lib.append ("library")
-				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (directory_separator)
 				default_net_lib.append ("net")
-				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (directory_separator)
 				default_net_lib.append ("spec")
-				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (directory_separator)
 				default_net_lib.append (platform)
-				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (directory_separator)
 				default_net_lib.append ("lib")
-				default_net_lib.append_character (operating_environment.directory_separator)
+				default_net_lib.append (directory_separator)
 				default_net_lib.append ("net.lib")
 				library_name.append (options.get_string ("eiffelnet_lib", default_net_lib))
 			end
@@ -1276,7 +1287,7 @@ feature {NONE}	-- substitutions
 			end
 
 			dir_sep := ""
-			dir_sep.append_character (operating_environment.directory_separator)
+			dir_sep.append (directory_separator)
 
 			if not line.empty then
 				line.replace_substring_all ("/", dir_sep)
@@ -1507,9 +1518,12 @@ feature {NONE} -- Implementation
 			line: STRING
 			next_precomp_lib: STRING
 			precomp_lib_start: INTEGER
+			preobj: STRING
 		once
 			Result := ""
-			
+			preobj := "preobj"
+			preobj.append (object_extension)
+
 			debug ("implementation")
 				io.putstring ("%Tget_libs%N")
 			end
@@ -1518,7 +1532,7 @@ feature {NONE} -- Implementation
 
 			from
 				if not line.empty then
-					precomp_lib_start :=  (line.substring_index ("preobj.obj", 1))
+					precomp_lib_start :=  (line.substring_index (preobj, 1))
 				end
 
 				if precomp_lib_start > 0 then
@@ -1530,8 +1544,10 @@ feature {NONE} -- Implementation
 					loop
 						Result.remove (1)
 					end
-					Result.append_character (operating_environment.directory_separator)
-					Result.append ("$(COMPILER)\precomp.lib")
+					Result.append (directory_separator)
+					Result.append ("$(COMPILER)")
+					Result.append (directory_separator)
+					Result.append ("precomp.lib")
 				else
 					uses_precompiled := false
 				end
@@ -1555,7 +1571,7 @@ feature {NONE} -- Implementation
 					end
 
 				if not line.empty then
-					precomp_lib_start := line.substring_index ("preobj.obj", 1)
+					precomp_lib_start := line.substring_index (preobj, 1)
 				else
 					precomp_lib_start := 0
 				end
@@ -1569,8 +1585,10 @@ feature {NONE} -- Implementation
 					loop
 						next_precomp_lib.remove (1)
 					end
-					next_precomp_lib.append_character (operating_environment.directory_separator)
-					next_precomp_lib.append ("$(COMPILER)\precomp.lib")
+					next_precomp_lib.append (directory_separator)
+					next_precomp_lib.append ("$(COMPILER)")
+					next_precomp_lib.append (directory_separator)
+					next_precomp_lib.append ("precomp.lib")
 
 					if not Result.empty then
 						Result.append_character (' ')

@@ -24,7 +24,7 @@ feature
 			a_class.append_clickable_signature (output_window);
 			output_window.new_line;
 			rec_display (1, a_class);
-			displayed := void;	
+			displayed := void;
 		end;
 
 	displayed: LINKED_LIST [CL_TYPE_A];
@@ -42,6 +42,21 @@ feature
 				Result.append ("    ");
 				j := j + 1
 			end;
+		end;
+
+	already_processed (t: CL_TYPE_A): BOOLEAN is
+		do
+			from
+				displayed.start
+			until
+				Result or else displayed.after
+			loop
+				if displayed.item.same_as (t) then
+					Result := True
+				else
+					displayed.forth
+				end
+			end
 		end;
 
 	rec_display (i: INTEGER; c: CLASS_C) is
@@ -64,7 +79,7 @@ feature
 						parent_class := parents.item.associated_class;
 						output_window.put_string (tabs (i));
 						parent_class.append_clickable_signature (output_window);
-						if displayed.has (parents.item) then
+						if already_processed (parents.item) then
 							output_window.put_string ("...%N")
 						else	
 							output_window.new_line;

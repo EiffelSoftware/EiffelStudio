@@ -45,6 +45,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for retry instruction.
 		do
+			il_generator.put_line_info (line_number)
 			il_generator.generate_leave_to (il_label_factory.retry_label)
 		end
 

@@ -34,8 +34,8 @@ feature {NONE} -- Basic operation
 			temp_height: INTEGER
 		do
 			if new_height /= height then
-				temp_height := minimum_height.max (new_height)
-				resize (width, temp_height)
+				resize (width, minimum_height.max (new_height))
+				temp_height := minimum_height.max (new_height) - 2 * border_width
 				if not ev_children.empty then
 					from
 						ev_children.start
@@ -114,13 +114,13 @@ feature {NONE} -- Basic operation
 		
 								-- Then, we ask the children to move and resize.
 								from
-									mark := 0
+									mark := border_width
 									ev_children.start
 								until
 									ev_children.after
 								loop
 									if ev_children.item.shown or else not shown then
-										ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
+										ev_children.item.set_move_and_size (mark, border_width, ev_children.item.child_cell.width + rate + rest (total_rest), client_height)
 										mark := mark + spacing + ev_children.item.child_cell.width
 									end
 									ev_children.forth
@@ -177,16 +177,16 @@ feature {NONE} -- Basic operation
 							-- Then, we ask the children to move and resize.
 							-- Be carefull to the expanded child.
 							from
-								mark := 0
+								mark := border_width
 								ev_children.start
 							until
 								ev_children.after
 							loop
 								if ev_children.item.shown or else not shown then
 									if ev_children.item.expandable then
-										ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width + rate + rest (total_rest), height)
+										ev_children.item.set_move_and_size (mark, border_width, ev_children.item.child_cell.width + rate + rest (total_rest), client_height)
 									else
-										ev_children.item.set_move_and_size (mark, 0, ev_children.item.child_cell.width, height)
+										ev_children.item.set_move_and_size (mark, border_width, ev_children.item.child_cell.width, client_height)
 									end
 									mark := mark + spacing + ev_children.item.child_cell.width
 								end
@@ -200,7 +200,7 @@ feature {NONE} -- Basic operation
 					end
 
 					-- At the end, we resize the window
-					resize (mark, height)
+					resize (mark + border_width, height)
 				end		
 			end
 		end
@@ -210,7 +210,7 @@ feature {NONE} -- Basic operation
 			-- Must be called for anychangement not due to the parent :
 			-- a child has resized, homogeneous or spacing has changed.
 		local
-			mark: INTEGER	
+			mark: INTEGER
 		do
 				-- We initialize the index at one because all the children will
 				-- have exactly the same size at the end.
@@ -222,13 +222,13 @@ feature {NONE} -- Basic operation
 				from
 					childvisible_nb := 0
 					ev_children.start
-					mark := 0
+					mark := border_width
 				until
 					ev_children.after
 				loop
 					if ev_children.item.shown or else not shown then
 						childvisible_nb := childvisible_nb + 1
-						ev_children.item.set_move_and_size (mark, 0, child.minimum_width, height)
+						ev_children.item.set_move_and_size (mark, border_width, child.minimum_width, client_height)
 						mark := mark + ev_children.item.child_cell.width + spacing
 					end
 					ev_children.forth
@@ -241,7 +241,7 @@ feature {NONE} -- Basic operation
 				from
 					childexpand_nb := 0
 					ev_children.start
-					mark := 0
+					mark := border_width
 				until
 					ev_children.after
 				loop
@@ -249,7 +249,7 @@ feature {NONE} -- Basic operation
 						if ev_children.item.expandable then
 							childexpand_nb := childexpand_nb + 1
 						end
-						ev_children.item.set_move_and_size (mark, 0, ev_children.item.minimum_width, height)
+						ev_children.item.set_move_and_size (mark, border_width, ev_children.item.minimum_width, client_height)
 						mark := mark + ev_children.item.child_cell.width + spacing
 					end
 					ev_children.forth
@@ -258,7 +258,7 @@ feature {NONE} -- Basic operation
 			end
 
 				-- Then, we set the minimum size of the widget and we resize it.
-			set_minimum_width (mark)
+			set_minimum_width (mark + border_width)
 			resize (minimum_width, height)
 		end
 
@@ -340,9 +340,9 @@ feature {NONE} -- Implementation
 					initialize_display
 				else
 					if is_homogeneous then
-						set_minimum_width (child.minimum_width * ev_children.count + total_spacing)
+						set_minimum_width (child.minimum_width * ev_children.count + total_spacing + 2 * border_width)
 					else
-						set_minimum_width (add_children_minimum_width + total_spacing)
+						set_minimum_width (add_children_minimum_width + total_spacing + 2 * border_width)
 					end
 				end
 			end
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
    			-- Change the minimum width of the container because
    			-- the child changed his own minimum width.
    		do
- 			set_minimum_height (value.max (minimum_height))
+ 			set_minimum_height ((value + 2 * border_width).max (minimum_height))
  		end
 
 	add_child (child_imp: EV_WIDGET_IMP) is

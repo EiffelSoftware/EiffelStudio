@@ -396,7 +396,6 @@ feature {NONE} -- Initialization
 			st_not_void: st /= Void
 		local
 			vbox: EV_VERTICAL_BOX
-			hbox: EV_HORIZONTAL_BOX
 			list: ARRAYED_LIST [EV_WIDGET]
 		do
 			create Result.make_with_text (st)

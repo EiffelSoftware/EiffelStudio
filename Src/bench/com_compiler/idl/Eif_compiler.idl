@@ -17,13 +17,13 @@ interface IEiffelFeatureDescriptor;
 interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
 
-typedef enum __EIF_COMPILATON_TYPES
+typedef enum __EIF_COMPILATION_TYPES
 {
     is_application,
     is_library,
     is_precompilation
     
-} EIF_COMPILATON_TYPES;
+} EIF_COMPILATION_TYPES;
 
 [
   oleautomation,
@@ -185,7 +185,7 @@ interface IEiffelClassDescriptor: IUnknown
   [helpstring ("List of class clients.")]
   HRESULT clients ([out, retval] VARIANT * some_clients);
 
-  [helpstring ("Number of class client.")]
+  [helpstring ("Number of class clients.")]
   HRESULT client_count ([out, retval] LONG * return_value);
 
   [helpstring ("List of class suppliers.")]
@@ -197,7 +197,7 @@ interface IEiffelClassDescriptor: IUnknown
   [helpstring ("List of direct ancestors of class.")]
   HRESULT ancestors ([out, retval] VARIANT * some_ancestors);
 
-  [helpstring ("Number of direct ancestor.")]
+  [helpstring ("Number of direct ancestors.")]
   HRESULT ancestor_count ([out, retval] LONG * return_value);
   
   [helpstring ("List of direct descendants of class.")]
@@ -335,7 +335,7 @@ interface IEiffelFeatureDescriptor: IUnknown
 interface IEiffelProjectProperties: IDispatch
 {
   [id (101), propget, helpstring ("Apply changes")]
-  HRESULT appply ();
+  HRESULT apply ();
   
   [id (DISPID_VALUE), propget, helpstring ("System name.")]
   HRESULT system_name ([out, retval] BSTR * return_value);

@@ -77,54 +77,53 @@ feature -- Access
 
 	index: INTEGER is
 			-- Index of the current item.
+		local
+			par: POINTER
 		do
-			Result := C.gtk_list_child_position (
-				parent_imp.list_widget,
-				Current.c_object
-			) + 1 
+			par := parent_imp.list_widget
+			if par /= NULL then
+				Result := 1 + C.gtk_list_child_position (par, c_object)
+			end
 		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
+		local
+			par: POINTER
 		do
-			Result := C.c_gtk_list_item_is_selected (
-				parent_imp.list_widget,
-				c_object
-			) = 1
-		end
-
-	is_first: BOOLEAN is
-			-- Is the item first in the list ?
-		do
-			Result := C.gtk_list_child_position (
-				parent_imp.list_widget,
-				Current.c_object
-			) + 1 = 1
-		end
-
-	is_last: BOOLEAN is
-			-- Is the item last in the list ?
-		do
-			Result := (C.gtk_list_child_position (
-				parent_imp.list_widget,
-				Current.c_object
-			) + 1 ) = C.c_gtk_list_rows (parent_imp.list_widget)
+			par := parent_imp.list_widget
+			if par /= NULL then
+				Result := C.g_list_find (
+					C.gtk_list_struct_selection (par),
+					c_object
+				) /= NULL
+			end
 		end
 
 feature -- Status setting
 
 	enable_select is
 			-- Select the item.
+		local
+			par: POINTER
 		do
-			C.c_gtk_list_item_select (c_object)
+			par := parent_imp.list_widget
+			if par /= NULL then
+				C.gtk_list_select_child (par, c_object);
+			end
 		end
 
 	disable_select is
 			-- Deselect the item.
+		local
+			par: POINTER
 		do
-			C.c_gtk_list_item_unselect (c_object)
+			par := parent_imp.list_widget
+			if par /= NULL then
+				C.gtk_list_unselect_child (par, c_object);
+			end
 		end
 
 feature -- Element change
@@ -183,6 +182,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/18 19:14:17  oconnor
+--| Removed reliance on externals
+--|
 --| Revision 1.33  2000/04/07 22:35:53  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

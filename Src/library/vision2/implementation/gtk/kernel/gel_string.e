@@ -1,5 +1,9 @@
 indexing
-	description: "Objects that ..."
+	description:
+		"[
+			Low-level string class used to solve GC problems (object move).
+			The end-user must not use this class, use STRING instead.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

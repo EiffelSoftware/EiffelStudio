@@ -218,7 +218,7 @@ feature -- Access
 			-- Horizontal bar at top of client area that contains menu's.
 
 feature -- Status setting
-
+		
 	lock_update is
 			-- Lock updates for this window on certain platforms until
 			-- `unlock_update' is called.

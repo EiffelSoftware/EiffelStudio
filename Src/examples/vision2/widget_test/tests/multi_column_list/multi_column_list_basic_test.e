@@ -25,23 +25,17 @@ feature {NONE} -- Implementation
 			
 				-- Build the first row.
 			create multi_column_list_row
-			multi_column_list_row.extend ("1, 1")
-			multi_column_list_row.extend ("2, 1")
-			multi_column_list_row.extend ("2, 1")
+			multi_column_list_row.fill (<<"1, 1", "2, 1", "3, 1">>)
 			multi_column_list.extend (multi_column_list_row)
 			
 				-- Build the second row.
 			create multi_column_list_row
-			multi_column_list_row.extend ("1, 2")
-			multi_column_list_row.extend ("2, 2")
-			multi_column_list_row.extend ("2, 2")
+			multi_column_list_row.fill (<<"1, 2", "2, 2", "3, 2">>)
 			multi_column_list.extend (multi_column_list_row)
 			
 				-- Build the third row.		
 			create multi_column_list_row
-			multi_column_list_row.extend ("1, 3")
-			multi_column_list_row.extend ("2, 3")
-			multi_column_list_row.extend ("2, 3")
+			multi_column_list_row.fill (<<"1, 3", "2, 3", "3, 3">>)
 			multi_column_list.extend (multi_column_list_row)
 			
 			widget := multi_column_list

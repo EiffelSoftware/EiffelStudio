@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			dc: WEL_SCREEN_DC
 			raw_file: RAW_FILE
 		do
-			internal_window_make (a_parent, "", default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
+			internal_window_make (a_parent, create {STRING}.make (0), default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id
 		
 				-- Read the bitmap file
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a static control
 		do
-			internal_window_make (a_parent, "", default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
+			internal_window_make (a_parent, create {STRING}.make (0), default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id
 		
 				-- Read the bitmap file

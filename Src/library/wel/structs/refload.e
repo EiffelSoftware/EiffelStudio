@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 				file.read_stream (length)
 				buffer := file.last_string
 			else
-				buffer := ""
+				buffer := create {STRING}.make (0)
 			end
 		end
 

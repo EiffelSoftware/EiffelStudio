@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			temp_window: WEL_CONTROL_WINDOW
 		do
 			make
-			create temp_window.make_with_coordinates (a_parent, "", 0, 0, 0, 0)
+			create temp_window.make_with_coordinates (a_parent, create {STRING}.make (0), 0, 0, 0, 0)
 			set_window (temp_window)
 		end
 		

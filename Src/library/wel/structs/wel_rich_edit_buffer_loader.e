@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			-- Set to buffer a substring of `string'.
 		do
 			if last_position > string.count then
-				buffer := ""
+				buffer := create {STRING}.make (0)
 			else
 				buffer := string.substring (last_position,
 					(last_position + length - 1).min (string.count))

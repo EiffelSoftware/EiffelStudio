@@ -449,7 +449,7 @@ feature -- Element change
 		do
 			from
 				i := strings.lower
-				s := ""
+				s := create {STRING}.make (0)
 			until
 				i > strings.upper
 			loop
@@ -648,7 +648,7 @@ feature {NONE} -- Inapplicable
 
 	text: STRING is
 		do
-			Result := ""
+			Result := create {STRING}.make (0)
 		end
 
 	text_length: INTEGER is

@@ -380,7 +380,7 @@ feature {NONE} -- Inapplicable
 	text: STRING is
 			-- Window text
 		do
-			Result := ""
+			Result := create {STRING}.make (0)
 		end
 
 	text_length: INTEGER is

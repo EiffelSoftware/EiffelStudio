@@ -381,7 +381,7 @@ feature -- Status setting
 		local
 			a_column: WEL_LIST_VIEW_COLUMN
 		do
-			create a_column.make_with_attributes (Lvcf_fmt, index, fmt, "")
+			create a_column.make_with_attributes (Lvcf_fmt, index, fmt, create {STRING}.make (0))
 			cwin_send_message (item, Lvm_setcolumn, index, a_column.to_integer)
 		end
 

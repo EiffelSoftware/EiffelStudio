@@ -161,7 +161,7 @@ feature -- Basic operations
 					selected := True
 				end
 			else
-				str_folder_name.set_string ("")
+				str_folder_name.set_string (create {STRING}.make (0))
 			end
 		end
 

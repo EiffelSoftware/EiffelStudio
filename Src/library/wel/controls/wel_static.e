@@ -70,7 +70,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			set_text ("")
+			set_text (create {STRING}.make (0))
 		ensure
 			text_empty: text.is_empty
 		end

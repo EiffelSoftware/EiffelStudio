@@ -153,12 +153,12 @@ feature -- Color
 			color_implementation: COLOR_X;
 			pix: POINTER
 		do
-			if not (bg_pixmap = Void) then
+			if bg_pixmap /= Void then
 				pixmap_implementation ?= bg_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
 				bg_pixmap := Void
 			end;
-			if not (bg_color = Void) then
+			if bg_color /= Void then
 				color_implementation ?= bg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
@@ -169,7 +169,11 @@ feature -- Color
 			xm_change_bg_color (screen_object, pix);
 			xm_change_bg_color (action_target, pix);
 			xm_change_bg_color (vertical_widget, pix);
-			xm_change_bg_color (horizontal_widget, pix);
+			if not is_word_wrap_mode then
+					-- There are no horizontal_widget when
+					-- Current is word wrapped.
+				xm_change_bg_color (horizontal_widget, pix);
+			end;
 			if fg_color /= Void then
 				update_foreground_color
 			end
@@ -205,7 +209,11 @@ feature {COLOR_X}
 			pix := color_implementation.pixel (screen);
 			xm_change_bg_color (screen_object, pix);
 			xm_change_bg_color (action_target, pix);
-			xm_change_bg_color (horizontal_widget, pix);
+			if not is_word_wrap_mode then
+					-- There are no horizontal_widget when
+					-- Current is word wrapped.
+				xm_change_bg_color (horizontal_widget, pix);
+			end;
 			xm_change_bg_color (vertical_widget, pix);
 			if fg_color /= Void then
 				update_foreground_color

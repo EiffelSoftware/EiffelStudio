@@ -150,15 +150,15 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 	internal_store(object);
 }
 
-rt_public void sstore (EIF_INTEGER fd, char *object)
+rt_public void sstore (EIF_INTEGER file_desc, char *object)
 {
 	/* Use file decscriptor so sockets and files can be used for storage
 	 * Store object hierarchy of root `object' and produce a header
 	 * so it can be retrieved by other systems.
 	 */
 
-	fides = (int) fd;
-	accounting = INDEPEND_ACCOUNT;
+	fides = (int) file_desc;
+	accounting = INDEPEND_ACCOUNT; 
 	make_header_func = imake_header;
 	flush_buffer_func = idr_flush;
 	st_write_func = ist_write;
@@ -214,7 +214,7 @@ rt_private void internal_store(char *object)
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = INDEPENDENT_STORE_3_2;
+			c = INDEPENDENT_STORE_4_0;
 		else {
 			c = GENERAL_STORE_4_0;
 

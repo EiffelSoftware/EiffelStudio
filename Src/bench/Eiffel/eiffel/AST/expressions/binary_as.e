@@ -270,38 +270,41 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-	byte_node: BINARY_B is
+	byte_node: EXPR_B is
 			-- Associated byte node
 		local
 			access_line: ACCESS_LINE
 			call_access_b: CALL_ACCESS_B
 			l_info: CONVERSION_INFO
+			l_byte_node: BINARY_B
 		do
-			Result := byte_anchor
+			l_byte_node := byte_anchor
 
 			if parameters_convert_info /= Void then
 				l_info := parameters_convert_info.item (0)
 			end
 			if l_info /= Void then
-				Result.set_left (l_info.byte_node (left.byte_node))
+				l_byte_node.set_left (l_info.byte_node (left.byte_node))
 			else
-				Result.set_left (left.byte_node)
+				l_byte_node.set_left (left.byte_node)
 			end
 
 			if parameters_convert_info /= Void then
 				l_info := parameters_convert_info.item (1)
 			end
 			if l_info /= Void then
-				Result.set_right (l_info.byte_node (right.byte_node))
+				l_byte_node.set_right (l_info.byte_node (right.byte_node))
 			else
-				Result.set_right (right.byte_node)
+				l_byte_node.set_right (right.byte_node)
 			end
 
 			access_line := context.access_line
 			call_access_b ?= access_line.access
-			Result.init (call_access_b)
-			Result.set_attachment (attachment.type_i)
+			l_byte_node.init (call_access_b)
+			l_byte_node.set_attachment (attachment.type_i)
 			access_line.forth
+			
+			Result := l_byte_node
 		end
 
 	byte_anchor: BINARY_B is

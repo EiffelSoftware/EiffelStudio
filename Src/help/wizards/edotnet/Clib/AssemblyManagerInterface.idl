@@ -3,13 +3,13 @@
 // typelib filename: <could not determine filename>
 
 [
-  uuid(47F6DEF3-AA03-3525-9E52-707E61E19C5D),
+  uuid(16E9DA68-EC9F-39A2-86B3-CEE7DEC3750C),
   version(0.1)
 ]
 library AssemblyManagerInterface
 {
     // TLib :     // TLib : Common Language Runtime Library : {BED7F4EA-1A96-11D2-8F08-00A0C9A6186D}
-   // importlib("mscorlib.tlb");
+    // importlib("mscorlib.tlb");
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
     importlib("stdole2.tlb");
 
@@ -34,7 +34,7 @@ library AssemblyManagerInterface
     };
 
     [
-      uuid(C43459AF-EC97-3356-9E9B-2FD2F16922A4),
+      uuid(4449EF7D-ABF1-3317-84B8-2D5568E7229C),
       version(1.0)
     ]
     coclass AssemblyManagerInterface {

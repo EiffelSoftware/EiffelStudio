@@ -5,7 +5,7 @@ inherit
 
 	EDITOR_MGR
 		redefine
-			editor_type
+			editor_type, synchronize
 		end
 
 creation
@@ -16,32 +16,14 @@ feature
 
 	objects_kept: LINKED_SET [STRING] is
 			-- Hector references to objects clickable from object tools
-		local
-			text_window: TEXT_STRUCT;
-			click_list: ARRAY [CLICK_STONE];
-			obj_stone: OBJECT_STONE;
-			i, clickable_count: INTEGER
 		do
+			!! Result.make;
 			from
-				!! Result.make;
 				active_editors.start
 			until
 				active_editors.after
 			loop
-				text_window := active_editors.item.text_window;
-				clickable_count := text_window.clickable_count;
-				click_list := text_window;
-				from
-					i := 1
-				until
-					i > clickable_count
-				loop
-					obj_stone ?= click_list.item (i).node;
-					if obj_stone /= Void then
-						Result.extend (obj_stone.object_address)
-					end;
-					i := i + 1
-				end;
+				Result.merge (active_editors.item.text_window.kept_objects);
 				active_editors.forth
 			end
 		end;
@@ -54,7 +36,7 @@ feature
 			until
 				active_editors.after
 			loop
-				active_editors.item.text_window.synchronize;
+				active_editors.item.synchronize;
 				active_editors.forth
 			end
 		end;
@@ -68,6 +50,19 @@ feature
 				active_editors.after
 			loop
 				active_editors.item.text_window.hang_on;
+				active_editors.forth
+			end
+		end;
+
+	reset is
+			-- Reset each object tool.
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.reset;
 				active_editors.forth
 			end
 		end;

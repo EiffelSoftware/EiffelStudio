@@ -226,9 +226,9 @@ feature -- Status setting
 			if (not selected) or (selected and then not equal (wel_selected_item, an_index - 1)) then
 					-- Only select an item if it is not already selected.
 				if selected then
-					interface.deselect_actions.call ([(ev_children @ old_selected_item.index).interface])
 					(ev_children @ old_Selected_item.index).interface.deselect_actions.call ([])
 						-- Call deselect events on child.
+					interface.deselect_actions.call ([(ev_children @ old_selected_item.index).interface])
 				end
 				wel_select_item (an_index - 1)
 				old_selected_item := ev_children @ (an_index)
@@ -237,11 +237,11 @@ feature -- Status setting
 					-- it as specified by user.
 					cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
 					cwel_pointer_to_integer (wel_item))
-					interface.select_actions.call ([(ev_children @ an_index).interface])
-						-- Must now manually inform the combo box that a selection is taking place.
 					(ev_children @ an_index).interface.select_actions.call ([])
 						-- Call select events on child.
-			end
+					interface.select_actions.call ([(ev_children @ an_index).interface])
+						-- Must now manually inform the combo box that a selection is taking place.
+				end
 		end
 
 	deselect_item (an_index: INTEGER) is
@@ -440,9 +440,9 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					(virtual_key /= 40) and (virtual_key /= 38) then
 					t_item ?= selected_item.implementation
 					unselect
-					interface.deselect_actions.call ([(ev_children @ t_item.index).interface])
 					(ev_children @ t_item.index).interface.deselect_actions.call ([])
 						-- Call deselect events on child.
+					interface.deselect_actions.call ([(ev_children @ t_item.index).interface])
 					old_selected_item := Void
 				end
 			end
@@ -478,18 +478,18 @@ feature {NONE} -- WEL Implementation
 			if selected and then wel_selected_item /= Void then
 				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					if old_selected_item /= Void then
-						interface.deselect_actions.call ([(ev_children @ old_selected_item.index).interface])
 						old_selected_item.interface.deselect_actions.call ([])
-								-- Call deselect events on child.
+							-- Call deselect events on child.
+						interface.deselect_actions.call ([(ev_children @ old_selected_item.index).interface])
 					end
 	
 						-- Only performed if an item is selected and the new selection is not equal to
 						-- the current selection.
 					old_selected_item := ev_children.i_th (wel_selected_item + 1)
+					(ev_children @ (wel_selected_item + 1)).interface.select_actions.call ([])
+						-- Call select events on child.
 					interface.select_actions.call ([(ev_children @ (wel_selected_item + 1)).interface])
 						-- Must now manually inform combo box that a selection is taking place
-					(ev_children @ (wel_selected_item + 1)).interface.select_actions.call ([])
-							-- Call select events on child.
 				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					old_selected_item := Void
 				end
@@ -626,6 +626,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/03/07 00:19:55  rogers
+--| Corrected all select and deselect actions which did not previously call the child's events first.
+--|
 --| Revision 1.59  2000/03/06 20:51:32  rogers
 --| The list select and deselect action sequences now only return the selected item, so any calls to these action sequences have been modified.
 --|

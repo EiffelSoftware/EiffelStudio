@@ -187,14 +187,10 @@ feature -- Initialization
 					hb.set_border_width (5)
 					hb.set_padding (5)
 
-					create percentage_button
+					create percentage_button.make_with_text ("Display as percentage.")
 					percentage_button.select_actions.extend (~enable_save)
 					hb.extend (percentage_button)
 					hb.disable_item_expand (percentage_button)
-
-					create label.make_with_text ("Display as percentage.")
-					hb.extend (label)
-					hb.disable_item_expand (label)
 
 				frame.extend (hb)
 				extend (frame)

@@ -201,8 +201,7 @@ feature {EV_ANY_I} -- Status report
 			if top_parent_imp /= Void then
 				Result := top_parent_imp.is_parent (Current)
 			else
-				Result := (internal_children /= Void) and then 
-				(internal_children.count > 0)
+				Result := not internal_children.is_empty
 			end
 		end
 
@@ -528,6 +527,8 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Make `list' the new list of children.
 		do
 			internal_children := list
+		ensure
+			internal_children_set: internal_children = list
 		end
 
 	relative_position: TUPLE [INTEGER, INTEGER] is
@@ -603,6 +604,9 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE
+	
+invariant
+	internal_children_not_void_when_not_parented: is_initialized and top_level_window_imp = Void implies internal_children /= Void
 
 end -- class EV_TREE_NODE_IMP
 

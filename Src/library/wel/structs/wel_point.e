@@ -26,7 +26,8 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_by_pointer,
+	make_by_cursor_position
 
 feature {NONE} -- Initialization
 
@@ -40,6 +41,14 @@ feature {NONE} -- Initialization
 		ensure
 			x_set: x = a_x
 			y_set: y = a_y
+		end
+
+	make_by_cursor_position (a_x, a_y: INTEGER) is
+			-- Make a point and set `x' and `y' with 
+			-- the current cursor position.
+		do
+			structure_make
+			get_cursor_position
 		end
 
 feature -- Access
@@ -84,7 +93,14 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_cursor_position is
+	set_cursor_position (x, y: INTEGER) is
+			-- set the current cursor position to
+			-- `x' and `y'.
+		do
+			cwin_set_cursor_position (x, y)
+		end
+
+	get_cursor_position is
 			-- Set `x' and `y' to the current cursor position.
 		do
 			cwin_get_cursor_position (item)
@@ -205,6 +221,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (POINT *)"
 		alias
 			"GetCursorPos"
+		end
+
+	cwin_set_cursor_position (x, y: INTEGER) is
+			-- SDK SetCursorPos
+		external
+			"C [macro <wel.h>] (int, int)"
+		alias
+			"SetCursorPos"
 		end
 
 end -- class WEL_POINT

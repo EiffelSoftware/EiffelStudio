@@ -105,7 +105,6 @@ feature -- Basic operations
 		require
 			sql_not_void: sql /= Void
 			not_exists: not exists
-			args: not arguments_set or arguments_set
 		do
 			implementation.store (sql)
 			if not is_ok and then is_tracing then
@@ -121,7 +120,7 @@ feature -- Basic operations
 			-- if any.
 		require
 			destination_not_void: destination /= Void
-		--	exists: exists
+			exists: exists
 		do
 			implementation.execute (destination)
 			if not is_ok and then is_tracing then

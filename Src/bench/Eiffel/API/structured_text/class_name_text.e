@@ -9,7 +9,9 @@ class CLASS_NAME_TEXT
 
 inherit
 
-	CLICKABLE_TEXT
+	BASIC_TEXT
+		rename
+			make as old_make
 		redefine
 			append_to
 		end
@@ -18,27 +20,37 @@ creation
 
 	make
 
+feature -- Initialization
+
+    make (t: like image; c: like class_i) is
+            -- Initialize Current with class_i `e'
+            -- and image `t'.
+        do
+            image := t;
+            class_i := c;
+        ensure
+            set: image = t and then
+                    class_i = c
+        end;
+
+feature -- Property
+
+	class_i: CLASS_I;
+			-- Eiffel class associated with class text
+
 feature -- Access
 
 	file_name: STRING is
 			-- Name of the file where the class text is stored;
 			-- The final ".e" has been removed
 		local
-			classc_stone: CLASSC_STONE;
-			classi_stone: CLASSI_STONE;
 			count: INTEGER
 		do
-			classc_stone ?= stone;
-			if classc_stone /= Void then
-				Result := clone (classc_stone.file_name)
+			if class_i = Void then
+				!! Result.make (0)
 			else
-				classi_stone ?= stone;
-				if classi_stone /= Void then
-					Result := clone (classi_stone.file_name)
-				else
-					!!Result.make (0)
-				end
-			end;
+				Result := clone (class_i.file_name)
+			end
 			count := Result.count;
 			if 
 				count > 1 and then 
@@ -48,15 +60,15 @@ feature -- Access
 				Result.head (count - 2)
 			end
 		ensure
-			Result /= Void
+			non_void_result: Result /= Void
 		end;
 
 feature {TEXT_FORMATTER} -- Implementation
 
-    append_to (text: TEXT_FORMATTER) is
-            -- Append Current class name text to `text'.
-        do
+	append_to (text: TEXT_FORMATTER) is
+			-- Append Current class name text to `text'.
+		do
 			text.process_class_name_text (Current)
-        end
+		end
 
 end -- class CLASS_NAME_TEXT

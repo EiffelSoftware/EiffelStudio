@@ -64,8 +64,8 @@
 			<TEXT DESCRIPTION="The autocomplete adds else in the new if...then structure">autocomplete_if_with_else<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="The autocomplete adds variant in the loop structure">autocomplete_loop_with_variant<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="The autocomplete adds invariant in the loop structure">autocomplete_loop_with_invariant<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>False</BOOLEAN></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="System_tool_preferences">
 			<HEAD>System tool preferences</HEAD>

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			i.add_click_command (Current, Build_it)
 			create i.make_with_text (action_area, b_Cancel)
 			i.add_click_command (Current, Void)
-			set_modal
+			set_modal (True)
 			show
 		end
 

@@ -128,23 +128,6 @@ feature -- Access
 	is_valid_varflag (flag: INTEGER): BOOLEAN is
 			-- Is `flag' a valid combination of varflags?
 		do
-			print (Varflag_freadonly + Varflag_fsource
-						+ Varflag_fbindable + Varflag_frequestedit
-						+ Varflag_fdisplaybind + Varflag_fdefaultbind
-						+ Varflag_fhidden + Varflag_frestricted
-						+ Varflag_fdefaultcollelem + Varflag_fuidefault
-						+ Varflag_fnonbrowsable + Varflag_freplaceable
-						+ Varflag_fimmediatebind)
-			print ("%Nand ")
-			print (flag)	
-			print ("= ")
-			print (c_and (Varflag_freadonly + Varflag_fsource
-						+ Varflag_fbindable + Varflag_frequestedit
-						+ Varflag_fdisplaybind + Varflag_fdefaultbind
-						+ Varflag_fhidden + Varflag_frestricted
-						+ Varflag_fdefaultcollelem + Varflag_fuidefault
-						+ Varflag_fnonbrowsable + Varflag_freplaceable
-						+ Varflag_fimmediatebind, flag))
 			Result := c_and (Varflag_freadonly + Varflag_fsource
 						+ Varflag_fbindable + Varflag_frequestedit
 						+ Varflag_fdisplaybind + Varflag_fdefaultbind

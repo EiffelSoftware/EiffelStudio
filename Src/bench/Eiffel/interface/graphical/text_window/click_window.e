@@ -306,8 +306,8 @@ feature -- Breakpoint update
 			-- from `focus_start' to `focus_end'.
 			-- Put cursor on the focus if not already done.
 		do
-			highlight_selected (focus_start, focus_end)
 			set_cursor_position (focus_start)
+			highlight_selected (focus_start, focus_end)
 		end
 
 feature {NONE} -- Implementation

@@ -344,8 +344,8 @@ feature -- Update
 			end			
 
 			if start_position /= -1 then
-				highlight_selected (start_position, start_position + s.count)
 				set_cursor_position (start_position + s.count)
+				highlight_selected (start_position, start_position + s.count)
 			else
 				eif_beep
 			end

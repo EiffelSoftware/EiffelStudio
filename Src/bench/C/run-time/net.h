@@ -2,6 +2,8 @@
 #define _CONCURRENT_NET_
 
 #include "config.h"
+#include <signal.h>
+
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
@@ -45,7 +47,6 @@
 #endif
 
 #include <stdio.h>
-#include <signal.h>
 #include <fcntl.h>
 
 #include <sys/types.h>

@@ -170,10 +170,10 @@ feature -- Widgets.
 	right_list: EV_MULTI_COLUMN_LIST
 		-- List of values attached to field selected in the left list 'left_list'.
 
-	info_bar: EV_STATUS_BAR_ITEM
+	info_bar: EV_LABEL
 		-- Message that we display.
 
-	progression: EV_STATUS_BAR_ITEM
+	progression: EV_HORIZONTAL_PROGRESS_BAR
 
 feature -- Execution
 

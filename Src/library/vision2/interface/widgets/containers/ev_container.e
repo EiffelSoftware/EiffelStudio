@@ -17,6 +17,12 @@ inherit
 		end
 
 	BOX [EV_WIDGET]
+		export
+			{NONE}
+				changeable_comparison_criterion,
+				compare_references,
+				compare_objects,
+				object_comparison
 		undefine
 			default_create,
 			copy
@@ -28,6 +34,12 @@ inherit
 		rename
 			extend as cl_extend,
 			put as cl_put
+		export
+			{NONE}
+				changeable_comparison_criterion,
+				compare_references,
+				compare_objects,
+				object_comparison
 		undefine
 			default_create,
 			copy
@@ -86,10 +98,6 @@ feature -- Access
 				cs.go_to (c)
 			end
 		end
-		
-	changeable_comparison_criterion: BOOLEAN is False
-			-- May `object_comparison' be changed?
-			-- (Answer: no by default.)
 
 feature -- Status setting
 
@@ -372,6 +380,10 @@ feature {EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
+
+	changeable_comparison_criterion: BOOLEAN is False
+			-- May `object_comparison' be changed?
+			-- (Answer: no by default.)
 
 	cl_put (v: like item) is
 			-- Replace `item' with `v'.

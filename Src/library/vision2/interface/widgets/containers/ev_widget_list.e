@@ -25,6 +25,12 @@ inherit
 		end
 
 	EV_DYNAMIC_LIST [EV_WIDGET]
+		export
+			{NONE}
+				changeable_comparison_criterion,
+				compare_references,
+				compare_objects,
+				object_comparison
 		redefine
 			implementation,
 			is_in_default_state

@@ -38,7 +38,11 @@ inherit
 		export
 			{NONE}
 				array_make, array_item, array_force,
-				array_resize, wipe_out, bag_put, extend
+				array_resize, wipe_out, bag_put, extend,
+				changeable_comparison_criterion,
+				compare_references,
+				compare_objects,
+				object_comparison
 			{EV_TABLE}
 				array_put;
 			{ANY}

@@ -50,13 +50,17 @@ feature -- Basic Operations
 		local
 			a_directory: DIRECTORY
 			a_string: STRING
+			displayed: BOOLEAN
 		do
+			displayed := displayed_while_running
+			set_displayed_while_running (True)
 			create a_directory.make_open_read (a_folder_name)
 			if a_directory.has_entry ("Makefile") then
 				a_string := "nmake"
 				launch (a_string, a_folder_name)
 				check_return_code
 			end
+			set_displayed_while_running (displayed)				
 		end
 	
 	compile_file (a_file_name: STRING) is

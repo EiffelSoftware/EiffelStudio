@@ -44,7 +44,7 @@ feature -- Access
 		external
 			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
 		alias
-			"last_error"
+			"LastError"
 		end
 
 	frozen error_messages: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES is

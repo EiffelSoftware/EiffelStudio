@@ -32,6 +32,7 @@ feature -- Basic operations
 		require
 			length_small_enough: length <= structure_size
 			length_large_enough: length > 0
+			exists: exists
 		do
 			check
 				source_pointer_exists: source_pointer /= default_pointer
@@ -41,12 +42,16 @@ feature -- Basic operations
 
 	initialize is
 			-- Fill Current with zeros.
+		require
+			exists: exists
 		do
 			initialize_with_character ('%U')
 		end
 
 	initialize_with_character (a_character: CHARACTER) is
 			-- Fill current with `a_character'.
+		require
+			exists: exists
 		do
 			c_memset (item, a_character, structure_size)
 		end
@@ -113,9 +118,6 @@ feature {NONE} -- Externals
 		alias
 			"memset"
 		end
-
-invariant
-	exists: exists
 
 end -- class WEL_STRUCTURE
 

@@ -8,10 +8,16 @@
 			<list ordered="false">
 				<item>Added full configuration of colors used in editor</item>
 				<item>Added docking facilities for various tools. It permits the re-ordering of tools within the interface, including making them "float" externally.</item>
+				<item>Ability to see when a class is deferred in the context tool formatters. It is shown by adding the `*' character at the end of the class name.</item>
+			</list>
+			<heading><size>3</size>Changes</heading>
+			<list ordered="false">
+				<item>One cannot add a .NET assembly from the GAC anymore, instead you have to specify the path to the assembly in the assembly references list.</item>
 			</list>
 			<heading><size>3</size>Bug fixes</heading>
 			<list ordered="false">
 				<item>Fixed a crash when performing feature completion on classes with errors.</item>
+				<item>On Windows, prevented the EiffelStudio window to go to the back of all windows when you click Ok on the dialog box which appears when a syntax error occurs while compiling a project.</item>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
@@ -20,6 +26,9 @@
 				<item>Improved object viewer window (word wrapping for large text, ability to see the whole content in one click without having to enter the lower and upper index of a range).</item>
 			</list>
 		<heading><size>2</size>EiffelBuild</heading>
+			<list ordered="false">
+				<item>Click <link><url>../../../eiffelbuild/version_history/index.xml</url><label>here</label></link> for the EiffelBuild release notes.</item>
+			</list>
 		<heading><size>2</size>Compiler</heading>
 		<list ordered="false">
 			<item>Click <link><url>../30_compiler/60_version_history/05_55_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
@@ -37,6 +46,10 @@
 			<item>Fixed <feature_name>dynamic_type_from_string</feature_name> from <class_name>INTERNAL</class_name> under .NET which was not working if you were using the .NET naming convention or if you specified a namespace.</item>
 			<item>Added <feature_name>generic_count</feature_name>, <feature_name>generic_count_with_type</feature_name> in <class_name>INTERNAL</class_name> to find out how many generic parameter a type has.</item>
 			<item>Added <feature_name>generic_dynamic_type_with_type</feature_name> in <class_name>INTERNAL</class_name> to find out the type of the i-th generic parameter of a given type.</item>
+			<item>Added <feature_name>memory_map</feature_name> and <feature_name>memory_count_map</feature_name> to give you a precise accounting of all living objects in the running system. It will help you find out any potential memory leak because objects are still referenced where they should not.</item>
+			<item>Improved performance of <class_name>FILE</class_name> objects creation by not allocating the <feature_name>last_string</feature_name> internal buffer until it is needed.</item>
+			<item>On Windows, removed side effects of <feature_name>put</feature_name> from <class_name>EXECUTION_ENVIRONMENT</class_name>. Before it was setting also some registry keys, now it only set the environment variable for the running process and its children when launched.</item>
+			<item>Allowed zero sized <class_name>MANAGED_POINTER</class_name>. Allowed <class_name>MANAGED_POINTER</class_name> to share a pointer rather than doing a full memory copy at creation time.</item>
 		</list>
 		<heading><size>3</size>EiffelTime</heading>
 		<list ordered="false">
@@ -67,6 +80,7 @@
 			<item>Made <feature_name>default_key_value</feature_name> obsolete in <class_name>WEL_REGISTRY</class_name>.</item>
 			<item>Properly defined <feature_name>is_equal</feature_name> and <feature_name>copy</feature_name> in <class_name>WEL_STRUCTURE</class_name>, possibly causing some compilation errors while analyzing the inheritance structure of your classes.</item>
 			<item>Changed signature of non exported routine <feature_name>cwin_destroy_window</feature_name> from <class_name>WEL_WINDOW</class_name> to now return a value.</item>
+			<item>Fixed issues when using WEL in a multithreaded application. It would crash if a non WEL thread was trying to destroy a WEL window.</item>
 		</list>
 	</paragraph>
 </document>

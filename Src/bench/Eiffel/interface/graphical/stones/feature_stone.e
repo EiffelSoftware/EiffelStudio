@@ -150,15 +150,17 @@ feature -- dragging
 			classc_stone: CLASSC_STONE
 		do 
 			!! Result.make (1, 2);
-				temp := "-- Version from class: ";
-				sp := temp.count;
-				ep := e_feature.written_class.name.count;
-				ep := ep + sp;
+			temp := "-- Version from class: ";
+			sp := temp.count;
+			ep := sp + e_feature.written_class.name.count;
+
 			!! classc_stone.make (e_feature.written_class);
 			!! cs.make (classc_stone, sp, ep);
 			Result.put (cs, 1);
+
 			sp := ep + 3;
 			ep := sp + end_position - start_position;
+
 			!! cs.make (Current, sp, ep);
 			Result.put (cs, 2);
 		end;

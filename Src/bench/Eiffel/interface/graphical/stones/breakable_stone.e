@@ -90,7 +90,9 @@ feature -- Access
  
 	header: STRING is "Stop point";
 
-	click_list: ARRAY [CLICK_STONE] is do end;
+	click_list: ARRAY [CLICK_STONE] is
+		do
+		end
 
 	icon_name: STRING is
 		do

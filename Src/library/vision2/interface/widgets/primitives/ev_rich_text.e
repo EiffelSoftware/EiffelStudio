@@ -296,7 +296,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		require
@@ -306,6 +306,23 @@ feature -- Status setting
 			format_not_void: format /= Void
 		do
 			implementation.modify_region (start_position, end_position, format, applicable_attributes)
+		ensure
+			text_not_changed: text.is_equal (old text)
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
+	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		require
+			not_destroyed: not is_destroyed
+			applicable_attributes_not_void: applicable_attributes /= Void
+			valid_positions: start_line < end_line and start_line >= 1 and end_line <= line_count
+			format_not_void: format /= Void
+		do
+			implementation.modify_paragraph (start_line, end_line, format, applicable_attributes)
 		ensure
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position

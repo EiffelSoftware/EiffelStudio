@@ -239,6 +239,21 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
+	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		require
+			applicable_attributes_not_void: applicable_attributes /= Void
+			valid_positions: start_line < end_line and start_line >= 1 and end_line <= line_count
+			format_not_void: format /= Void
+		deferred
+		ensure
+			text_not_changed: text.is_equal (old text)
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.

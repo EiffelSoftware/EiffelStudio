@@ -4452,7 +4452,7 @@ feature -- Anchored types
 						l_anchor.set_is_origin (True)
 						l_anchor.set_origin_class_id (class_id)
 						l_anchor.set_origin_feature_id (l_anchor.feature_id)
-						l_anchor.set_feature_name ("_type_" + l_rout_id.out)
+						l_anchor.set_feature_name ("_" + System.name + "_type_" + l_rout_id.out)
 					end
 
 					l_anchored_features.put (l_anchor, l_rout_id)

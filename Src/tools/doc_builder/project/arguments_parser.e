@@ -110,21 +110,21 @@ feature -- Commands
 				elseif equal (first_char, "/") then
 					flag := argument (count).substring (2, argument (count).count);
 					if equal (flag, "xml2html") then
-						file_generation_type := op.Xml_to_html_flag
+						file_generation_type := op.xml_to_html_flag
 					elseif equal (flag, "html2help") then
-						file_generation_type := op.Html_to_help_flag
+						file_generation_type := op.html_to_help_flag
 					elseif equal (flag, "xml2help") then
-						file_generation_type := op.Xml_to_help_flag
+						file_generation_type := op.xml_to_help_flag
 					elseif equal (flag, "web") then
-						help_generation_type := op.Web_help_flag
+						help_generation_type := op.web_help_flag
 					elseif equal (flag, "mshtml") then
-						help_generation_type := op.Studio_help_flag
+						help_generation_type := op.mshtml_help_flag
 					elseif equal (flag, "vsip") then
-						help_generation_type := op.Envision_help_flag
+						help_generation_type := op.vsip_help_flag
 					elseif equal (flag, "studio") then
-						output_filter_type := op.Studio_flag
+						output_filter_type := op.studio_flag
 					elseif equal (flag, "envision") then
-						output_filter_type := op.Envision_flag
+						output_filter_type := op.envision_flag
 					elseif equal (flag, "all") then
 						output_filter_type := op.unfiltered_flag
 					end

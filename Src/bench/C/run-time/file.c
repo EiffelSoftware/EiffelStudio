@@ -1611,7 +1611,7 @@ rt_public EIF_INTEGER file_fd(FILE *f)
 	return (EIF_INTEGER) fileno(f);	/* Might be an int */
 }
 
-rt_public char *file_owner(int uid)
+rt_public EIF_REFERENCE file_owner(int uid)
 {
 	/* Return the Eiffel string filled in with the name associated with 'uid'
 	 * if found in /etc/passwd. Otherwise, return fill it in with the numeric
@@ -1634,7 +1634,7 @@ rt_public char *file_owner(int uid)
 	return makestr(str, strlen(str));
 }
 
-rt_public char *file_group(int gid)
+rt_public EIF_REFERENCE file_group(int gid)
 {
 	/* Return the Eiffel string filled in with the name associated with 'gid'
 	 * if found in /etc/group. Otherwise, return fill it in with the numeric

@@ -172,8 +172,8 @@ RT_LNK void file_move(FILE *f, EIF_INTEGER pos);
 RT_LNK EIF_INTEGER stat_size(void);
 RT_LNK EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length);
 RT_LNK EIF_INTEGER file_fd(FILE *f);
-RT_LNK char *file_owner(int uid);
-RT_LNK char *file_group(int gid);
+RT_LNK EIF_REFERENCE file_owner(int uid);
+RT_LNK EIF_REFERENCE file_group(int gid);
 
 #ifdef HAS_GETGROUPS
 /* Does the list of groups the user belongs to include `gid'? */

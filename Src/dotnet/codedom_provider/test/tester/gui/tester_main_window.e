@@ -584,21 +584,6 @@ feature {NONE} -- Events
 			browse_for_file ("Browse for CodeDom Provider dll...", "*.dll", agent provider_combo_box.set_text)
 		end
 
-	on_change_notebook_tab is
-			-- Called by `selection_actions' of `tests_notebook'.
-			-- Enable codedom trees frame only for `Generator' tab.
-		do
-			if tests_notebook.item_text (tests_notebook.selected_item).is_equal (Generator_tab_title) then
-				if not codedom_trees_frame.is_sensitive then
-					codedom_trees_frame.enable_sensitive
-				end
-			else
-				if codedom_trees_frame.is_sensitive then
-					codedom_trees_frame.disable_sensitive
-				end
-			end
-		end
-
 	on_change_generation_path is
 			-- Called by `change_actions' of `generation_path_text_field'.
 		do

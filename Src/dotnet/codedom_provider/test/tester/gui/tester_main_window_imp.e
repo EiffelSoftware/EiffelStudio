@@ -35,7 +35,7 @@ feature {NONE}-- Initialization
 			initialize_constants
 			
 				-- Create all widgets.
-			create main_box
+			create main_split
 			create left_box
 			create codedom_provider_frame
 			create code_provider_box
@@ -187,8 +187,8 @@ feature {NONE}-- Initialization
 			create output_text
 			
 				-- Build_widget_structure.
-			extend (main_box)
-			main_box.extend (left_box)
+			extend (main_split)
+			main_split.extend (left_box)
 			left_box.extend (codedom_provider_frame)
 			codedom_provider_frame.extend (code_provider_box)
 			code_provider_box.extend (provider_label)
@@ -209,7 +209,7 @@ feature {NONE}-- Initialization
 			codedom_tree_buttons_box.extend (add_button)
 			codedom_tree_buttons_box.extend (remove_button)
 			codedom_tree_buttons_box.extend (right_buttons_padding_cell)
-			main_box.extend (tests_notebook)
+			main_split.extend (tests_notebook)
 			tests_notebook.extend (code_generator_box)
 			code_generator_box.extend (generation_tests_frame)
 			generation_tests_frame.extend (generation_tests_box)
@@ -688,7 +688,6 @@ feature {NONE}-- Initialization
 			provider_browse_button.select_actions.extend (agent on_provider_browse)
 			add_button.select_actions.extend (agent on_add_codedom_tree)
 			remove_button.select_actions.extend (agent on_remove_codedom_tree)
-			tests_notebook.selection_actions.extend (agent on_change_notebook_tab)
 			generation_path_text_field.change_actions.extend (agent on_change_generation_path)
 			browse_button.select_actions.extend (agent on_browse_generated_file_folder)
 			generated_filename_text_field.change_actions.extend (agent on_change_generated_filename)
@@ -723,7 +722,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	main_box: EV_HORIZONTAL_SPLIT_AREA
+	main_split: EV_HORIZONTAL_SPLIT_AREA
 	left_box, code_provider_box, codedom_trees_box, code_generator_box, generation_tests_box, 
 	generation_filename_box, identifier_tests_box, type_output_test_box, properties_box, 
 	compiler_box, compiler_tests_box, compile_from_file_box, compile_from_source_box, 
@@ -801,11 +800,6 @@ feature {NONE} -- Implementation
 	
 	on_remove_codedom_tree is
 			-- Called by `select_actions' of `remove_button'.
-		deferred
-		end
-	
-	on_change_notebook_tab is
-			-- Called by `selection_actions' of `tests_notebook'.
 		deferred
 		end
 	

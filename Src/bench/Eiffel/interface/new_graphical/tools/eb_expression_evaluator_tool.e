@@ -216,8 +216,22 @@ feature {NONE} -- Event handling
 			-- Create a new expression.
 		local
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
+			ce: EB_EDITOR
+			l_text: STRING
 		do
-			create dlg.make
+			ce := debugger_manager.debugging_window.current_editor
+			if ce /= Void and then ce.has_selection then
+				l_text := ce.string_selection
+				if l_text.has ('%N') then
+						--| No Multiple line ...
+					l_text := Void
+				end
+			end
+			if l_text /= Void and then not l_text.is_empty then
+				create dlg.make_with_expression_text (l_text)
+			else
+				create dlg.make
+			end
 			dlg.set_callback (agent add_expression (dlg))
 			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end

@@ -9,110 +9,50 @@ class
 
 feature -- Access
 
-	Dt_top: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_TOP"
-		end
+	Dt_top: INTEGER is 0
+			-- Declared in Windows as DT_TOP
 
-	Dt_left: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_LEFT"
-		end
+	Dt_left: INTEGER is 0
+			-- Declared in Windows as DT_LEFT
 
-	Dt_center: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_CENTER"
-		end
+	Dt_center: INTEGER is 1
+			-- Declared in Windows as DT_CENTER
 
-	Dt_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_RIGHT"
-		end
+	Dt_right: INTEGER is 2
+			-- Declared in Windows as DT_RIGHT
 
-	Dt_vcenter: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_VCENTER"
-		end
+	Dt_vcenter: INTEGER is 4
+			-- Declared in Windows as DT_VCENTER
 
-	Dt_bottom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_BOTTOM"
-		end
+	Dt_bottom: INTEGER is 8
+			-- Declared in Windows as DT_BOTTOM
 
-	Dt_wordbreak: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_WORDBREAK"
-		end
+	Dt_wordbreak: INTEGER is 16
+			-- Declared in Windows as DT_WORDBREAK
 
-	Dt_singleline: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_SINGLELINE"
-		end
+	Dt_singleline: INTEGER is 32
+			-- Declared in Windows as DT_SINGLELINE
 
-	Dt_expandtabs: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_EXPANDTABS"
-		end
+	Dt_expandtabs: INTEGER is 64
+			-- Declared in Windows as DT_EXPANDTABS
 
-	Dt_tabstop: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_TABSTOP"
-		end
+	Dt_tabstop: INTEGER is 128
+			-- Declared in Windows as DT_TABSTOP
 
-	Dt_noclip: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_NOCLIP"
-		end
+	Dt_noclip: INTEGER is 256
+			-- Declared in Windows as DT_NOCLIP
 
-	Dt_externalleading: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_EXTERNALLEADING"
-		end
+	Dt_externalleading: INTEGER is 512
+			-- Declared in Windows as DT_EXTERNALLEADING
 
-	Dt_calcrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_CALCRECT"
-		end
+	Dt_calcrect: INTEGER is 1024
+			-- Declared in Windows as DT_CALCRECT
 
-	Dt_noprefix: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_NOPREFIX"
-		end
+	Dt_noprefix: INTEGER is 2048
+			-- Declared in Windows as DT_NOPREFIX
 
-	Dt_internal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DT_INTERNAL"
-		end
+	Dt_internal: INTEGER is 4096
+			-- Declared in Windows as DT_INTERNAL
 
 end -- class WEL_DT_CONSTANTS
 

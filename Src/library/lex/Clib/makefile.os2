@@ -1,5 +1,5 @@
 CC= icc
-CFLAGS = -oc -c -W1 -I$(EIFFEL3)\bench\spec\$(PLATFORM)\include
+CFLAGS = -oc -c -W1 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 LDFLAGS = 
 LIBS = 
 MAKE = make
@@ -15,10 +15,10 @@ lex.lib: $(OBJECTS)
 	if exist lex.lib $(RM) lex.lib
 	ilib  /nobackup /noignorecase /nologo lex.lib buffer.obj,,
 	ilib  /nobackup /noignorecase /nologo lex.lib rou.obj,,
-	if not exist $(EIFFEL3)\library\lex\spec mkdir $(EIFFEL3)\library\lex\spec
-	if not exist $(EIFFEL3)\library\lex\spec\$(PLATFORM) mkdir $(EIFFEL3)\library\lex\spec\$(PLATFORM)
-	if not exist $(EIFFEL3)\library\lex\spec\$(PLATFORM)\lib mkdir $(EIFFEL3)\library\lex\spec\$(PLATFORM)\lib
-	$(MV) lex.lib $(EIFFEL3)\library\lex\spec\$(PLATFORM)\lib\lex.lib
+	if not exist $(EIFFEL4)\library\lex\spec mkdir $(EIFFEL4)\library\lex\spec
+	if not exist $(EIFFEL4)\library\lex\spec\$(PLATFORM) mkdir $(EIFFEL4)\library\lex\spec\$(PLATFORM)
+	if not exist $(EIFFEL4)\library\lex\spec\$(PLATFORM)\lib mkdir $(EIFFEL4)\library\lex\spec\$(PLATFORM)\lib
+	$(MV) lex.lib $(EIFFEL4)\library\lex\spec\$(PLATFORM)\lib\lex.lib
 
 clean:
 	if exist lex.lib $(RM) lex.lib

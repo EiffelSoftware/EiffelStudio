@@ -5,20 +5,20 @@
 #define New_String                      1
 #define Open_String                     2
 #define Save_String                     3
+#define IDOK2                           3
 #define Clear_Output_String             4
 #define Launch_String                   5
-#define Wizard_Dialog                   101
 #define Wizard_Initial_Dialog           101
 #define Wizard_IDL_Dialog               102
-#define Wizard_PS_Dialog                103
 #define Wizard_Final_Dialog             104
-#define Wizard_Output_Dialog            105
+#define Wizard_PS_Dialog                105
+#define Wizard_Introduction_Dialog      106
 #define Toolbar_Bitmap                  113
 #define Wizard1_Bitmap                  114
 #define Wizard2_Bitmap                  115
 #define Wizard3_Bitmap                  116
 #define Wizard4_Bitmap                  117
-#define Wizard_Bitmap                   1006
+#define Wizard_Icon                     119
 #define Definition_File_Edit            1007
 #define IDL_Static                      1008
 #define Browse_Button                   1009
@@ -27,8 +27,7 @@
 #define In_Process_Check                1013
 #define Local_Check                     1014
 #define Remote_Check                    1015
-#define Generate_Static					1016
-#define About_Button                    1017
+#define Generate_Static                 1016
 #define Help_Button                     1018
 #define Client_Check                    1019
 #define Server_Check                    1020
@@ -45,23 +44,27 @@
 #define Proxy_Stub_Static               1028
 #define Minimum_Radio                   1029
 #define Proxy_Stub_File_Edit            1030
-#define Output_Progress                 1031
 #define Output_Static                   1032
-#define Generate2_Static                1035
 #define Output_level_Static             1036
 #define Maximum_Radio                   1037
-#define Final_Static2                   1038
-#define Final_Static                    1039
-#define Final_Static3                   1040
+#define Output2_Static                  1038
+#define IDBACK                          1040
+#define Introduction_Static             1041
+#define Introduction2_Static            1042
+#define Introduction3_Static            1043
+#define Paths_Static                    1043
+#define Paths_Static2                   1044
+#define Marshalling_Static              1044
+#define Marshalling2_Static             1045
 #define Location_Static                 -1
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        117
+#define _APS_NEXT_RESOURCE_VALUE        121
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1040
+#define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

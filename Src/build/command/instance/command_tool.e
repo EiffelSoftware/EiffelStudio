@@ -67,9 +67,9 @@ feature -- Creation
 			!! exit_entry.make (Menu_names.Exit, file_category)
 				--| Entries in the Actions category
 			!! new_command_entry.make (Menu_names.create_command, action_category)
-			!! separator_2.make ("", action_category)
-			!! add_formal_argument_entry.make (Menu_names.Add_formal_argument, action_category)
-			!! remove_formal_argument_entry.make (Menu_names.Remove_formal_argument, action_category)
+--			!! separator_2.make ("", action_category)
+--			!! add_formal_argument_entry.make (Menu_names.Add_formal_argument, action_category)
+--			!! remove_formal_argument_entry.make (Menu_names.Remove_formal_argument, action_category)
 				--| Top form
 			!! separator_3.make ("", top_form)
 			!! command_hole.make (top_form)
@@ -246,9 +246,9 @@ feature {NONE} -- Graphical interface
 	exit_entry: PUSH_B
 		--| Entries in the Action category
 	new_command_entry: NEW_COMMAND_BUTTON
-	separator_2: SEPARATOR
-	add_formal_argument_entry: PUSH_B
-	remove_formal_argument_entry: PUSH_B
+--	separator_2: SEPARATOR
+--	add_formal_argument_entry: PUSH_B
+--	remove_formal_argument_entry: PUSH_B
 
 		--| Button row
 	command_hole: COMMAND_TOOL_HOLE

@@ -380,26 +380,28 @@ feature -- Update
 			txt, msg: STRING
 		do
 			classc_stone ?= stone;
-			e_class := classc_stone.e_class;
-			if classc_stone /= Void and then not e_class.is_precompiled then
-					-- Only interested in compiled classes.
-				e_class.parse_ast;
-				syn_error := e_class.last_syntax_error;
-				if syn_error /= Void then	
-					txt := "Class has syntax error ";
-					msg := syn_error.syntax_message;
-					if not msg.empty then
-						txt.extend ('(');
-						txt.append (msg);
-						txt.extend (')');
-					end;
-						-- syntax error occurred
-					!! syn_stone.make (syn_error, e_class);
-					process_class_syntax (syn_stone);
-					e_class.clear_syntax_error;
-					warner (popup_parent).gotcha_call (txt);
-				else
-					text_window.update_clickable_from_stone (stone)
+			if classc_stone /= Void then
+				e_class := classc_stone.e_class;
+				if not e_class.is_precompiled then
+						-- Only interested in compiled classes.
+					e_class.parse_ast;
+					syn_error := e_class.last_syntax_error;
+					if syn_error /= Void then	
+						txt := "Class has syntax error ";
+						msg := syn_error.syntax_message;
+						if not msg.empty then
+							txt.extend ('(');
+							txt.append (msg);
+							txt.extend (')');
+						end;
+							-- syntax error occurred
+						!! syn_stone.make (syn_error, e_class);
+						process_class_syntax (syn_stone);
+						e_class.clear_syntax_error;
+						warner (popup_parent).gotcha_call (txt);
+					else
+						text_window.update_clickable_from_stone (stone)
+					end
 				end
 			end
 		end;
@@ -599,6 +601,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! save_as_menu_entry.make (save_as_cmd, file_menu);
 			!! save_as_cmd_holder.make_plain (save_as_cmd);
 			save_as_cmd_holder.set_menu_entry (save_as_menu_entry);
+			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! sep.make (new_name, file_menu);

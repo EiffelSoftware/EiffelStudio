@@ -571,6 +571,8 @@ feature -- Warning Dialogs
 
 feature -- Object editor properties
 
+	gb_ev_widget_is_show_requested: STRING is "Is Show Requested?"
+	gb_ev_widget_is_show_requested_tooltip: STRING is "feature `is_displayed' from EV_WIDGET"
 	gb_ev_widget_minimum_width: STRING is "Minimum Width"
 	gb_ev_widget_minimum_width_tooltip: STRING is "feature `minimum_width' from EV_WIDGET."
 	gb_ev_widget_minimum_height: STRING is "Minimum Height"

@@ -340,6 +340,9 @@ feature {NONE} -- Implementation
 							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
 							fi.is_exported_for (class_i.compiled_class)
 			end
+			if Result and fi.has_static_access and call_type /= Static_call then
+				Result := not context.is_external_class
+			end
 		end
 	
 	feature_variables (fi: FEATURE_I; feature_table: FEATURE_TABLE): HASH_TABLE [TYPE, STRING] is

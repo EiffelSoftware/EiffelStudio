@@ -331,22 +331,22 @@ end;
 				-- Now generate the parameters of the call, if needed.
 			if class_type.is_separate then
 			else
-			if not is_attribute then
-				generated_file.putchar ('(');
-			end;
-			if is_feature_call then
-				gen_reg.print_register;
-			end;
-			if parameters /= Void then
-				generate_parameters_list;
-			end;
-			if not is_attribute then
-				generated_file.putchar (')');
-			end;
-			if meta then
-					-- Close parenthesis opened by metamorphosis code
-				generated_file.putchar (')');
-			end;
+				if not is_attribute then
+					generated_file.putchar ('(');
+				end;
+				if is_feature_call then
+					gen_reg.print_register;
+				end;
+				if parameters /= Void then
+					generate_parameters_list;
+				end;
+				if not is_attribute then
+					generated_file.putchar (')');
+				end;
+				if meta then
+						-- Close parenthesis opened by metamorphosis code
+					generated_file.putchar (')');
+				end;
 			end;
 			release_hector_protection;
 		end;

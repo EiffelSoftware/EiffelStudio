@@ -1,8 +1,8 @@
 indexing
 
 	description:
-		"Command to validate all changes made to resources.";
-	date: "$Date$";
+		"Command to validate all changes made to resources."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -28,7 +28,7 @@ feature {EB_PREFERENCE_COMMAND} -- Execution
 				until
 					pl.after
 				loop
-					pl.item.validate;
+					pl.item.validate
 					pl.forth
 				end
 			end

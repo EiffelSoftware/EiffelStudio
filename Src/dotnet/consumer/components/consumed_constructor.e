@@ -11,7 +11,7 @@ inherit
 		rename
 			make as entity_make
 		redefine
-			has_arguments, arguments, is_public
+			has_arguments, arguments, is_public, set_is_public
 		end
 
 create
@@ -48,6 +48,16 @@ feature -- Status report
 			-- Does current have arguments?
 		do
 			Result := arguments /= Void and then arguments.count /= 0
+		end
+
+feature -- Settings
+
+	set_is_public (pub: like is_public) is
+			-- Set `is_public' with `pub'.
+		do
+			is_public := pub
+		ensure
+			is_public_set: is_public = pub
 		end
 
 invariant

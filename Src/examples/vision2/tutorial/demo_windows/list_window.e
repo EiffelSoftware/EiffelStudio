@@ -35,6 +35,11 @@ feature {NONE} -- Initialization
 			set_multiple_selection
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 feature -- Access
 
 	item1: EV_LIST_ITEM

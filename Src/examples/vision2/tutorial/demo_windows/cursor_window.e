@@ -50,6 +50,12 @@ feature {NONE} -- Initialization
 			create but.make_with_text (hbox, "Button 2")
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window
+		do
+		end
+
+
 feature -- Access
 
 	cur: EV_CURSOR

@@ -75,6 +75,12 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window
+		do
+		end
+
+
 feature -- Access
 
 	lab1, lab2, lab3, lab4: EV_TEXT

@@ -8,10 +8,11 @@ class
 	CHECK_BUTTON_WINDOW
 
 inherit
-	EV_VERTICAL_BOX
+	EV_CHECK_BUTTON
 		redefine
 			make
 		end
+
 	DEMO_WINDOW
 
 creation
@@ -24,16 +25,19 @@ feature {NONE} -- Initialization
 			-- We create the box first without parent because it
 			-- is faster.
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
+			{EV_CHECK_BUTTON} Precursor (par)
+			set_text ("Check Button")
 
-			set_homogeneous (False)
-		
+		end
 
-			!! check_b.make_with_text (Current, "Check Button")
-
-				--Sets the tabs for the action window
-			
+	set_tabs is
+			-- Set the tabs for the action window
+		do
 			set_primitive_tabs
+			tab_list.extend(textable_tab)
+			tab_list.extend(fontable_tab)
+			tab_list.extend(pixmapable_tab)
+			tab_list.extend(check_button_tab)
 			create action_window.make(Current,tab_list)
 		end
 

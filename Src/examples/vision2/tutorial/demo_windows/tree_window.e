@@ -42,6 +42,11 @@ feature {NONE} -- Initialization
 			action_item.add_select_command (cmd, Void)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 feature -- Access
 
 	tree_item1: EV_TREE_ITEM

@@ -114,6 +114,11 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 feature -- Test functions
 
 	execute (arg: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA) is

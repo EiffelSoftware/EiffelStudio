@@ -14,6 +14,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -60,6 +61,21 @@ feature {NONE} -- Initialization
 --			!! menu_item2.make_with_text (menu_item, "Selection 1")
 --			!! menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
 --			!! menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
+
+			set_parent(par)
+
+
+		end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_primitive_tabs
+			tab_list.extend(textable_tab)
+			tab_list.extend(fontable_tab)
+			tab_list.extend(pixmapable_tab)
+			tab_list.extend(option_tab)
+			create action_window.make (Current,tab_list)
 		end
 
 feature -- Access

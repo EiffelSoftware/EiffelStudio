@@ -27,4 +27,10 @@ feature -- Initialization
 			{EV_WINDOW} Precursor (par)
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window
+		do
+		end
+
+
 end -- class CONTROL_WINDOW

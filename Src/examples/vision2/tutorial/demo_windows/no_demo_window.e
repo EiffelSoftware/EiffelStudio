@@ -28,6 +28,11 @@ feature {NONE} -- Initialization
 			set_center_alignment
 		end
 
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+		end
+
 end -- class NO_DEMO_WINDOW
 
 --|----------------------------------------------------------------

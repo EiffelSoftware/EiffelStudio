@@ -14,7 +14,7 @@ inherit
 		redefine
 			make
 		end
-
+	DEMO_WINDOW
 creation
 	make
 
@@ -26,6 +26,16 @@ feature {NONE} -- Initialization
 			make_with_text (par, "A Label")
 			set_vertical_resize (False)
 			set_center_alignment
+		end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_primitive_tabs
+			tab_list.extend(textable_tab)
+			tab_list.extend(fontable_tab)
+			tab_list.extend(pixmapable_tab)
+			create action_window.make (Current, tab_list)
 		end
 
 feature -- Access

@@ -14,7 +14,7 @@ inherit
 		redefine
 			make
 		end
-
+	DEMO_WINDOW
 creation
 	make
 
@@ -27,21 +27,23 @@ feature {NONE} -- Initialization
 			frame: EV_FRAME
 		do
 			{EV_VERTICAL_BOX} Precursor (Void)
-			!! frame.make_with_text (Current, "A Text Field")
-			!! textfield.make_with_text (frame, "Edit me")
-			!! frame.make_with_text (Current, "A Password Field")
-			!! passwordfield.make_with_text (frame, "Me too")
-			set_parent (par)
+			!! textfield.make_with_text (Current, "Edit me")
+			set_parent (par)	
+		end
+
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
+			set_primitive_tabs
+			tab_list.extend(text_component_tab)
+			tab_list.extend(text_field_tab)
+			create action_window.make (Current, tab_list)
 		end
 
 feature -- Access
 
 	TextField: EV_TEXT_FIELD
 			-- A text field in the demo
-
-	PasswordField: EV_PASSWORD_FIELD
-			-- A password field
-
 end -- class TEXT_FIELD_WINDOW
 
 --|----------------------------------------------------------------

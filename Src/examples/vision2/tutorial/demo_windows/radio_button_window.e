@@ -30,10 +30,16 @@ feature {NONE} -- Initialization
 		
 
 			!! radio_b.make_with_text (Current, "Radio Button")
+		end
 
-				--Sets the tabs for the action window
-			
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
 			set_primitive_tabs
+			tab_list.extend(textable_tab)
+			tab_list.extend(fontable_tab)
+			tab_list.extend(pixmapable_tab)
+			tab_list.extend(radio_button_tab)
 			create action_window.make(Current,tab_list)
 		end
 

@@ -32,11 +32,14 @@ feature {NONE} -- Initialization
 			!! texta.make (Current)
 			set_position (50)
 			set_parent (par)
+		end
 
-				--Sets the tabs for the action window
+	set_tabs is
+			-- Set the tabs for the action window.
+		do
 			set_container_tabs
-			tab_list.extend(split_area_tab)
-			create action_window.make(hsplit,tab_list)
+			tab_list.extend (split_area_tab)
+			create action_window.make (hsplit, tab_list)
 		end
 
 feature -- Access

@@ -254,6 +254,7 @@ RT_LNK int fcount;
  *  RTXI(x) makes room on the stack for 'x' addresses when feature has rescue
  *  RTXE restores the current chunk, in case an exception was raised
  *  RTXL saves the current local chunk in case exception is raised
+ *  RTYL same as RTXL except that RTXI cannot be applied
  *  RTLXE restores the current local variables chunk, in case an exception was raised
  *  RTLXL saves the current local variables chunk in case exception is raised
  *  RTLXD declares the current local variables chunk in case exception is raised
@@ -295,10 +296,12 @@ RT_LNK int fcount;
 	loc_set.st_cur = lc; \
 	if (lc) loc_set.st_end = lc->sk_end; \
 	loc_set.st_top = lt
-#define RTXL \
-	EIF_REFERENCE * volatile l = loc_set.st_top; \
+#define RTYL \
 	EIF_REFERENCE * volatile lt = loc_set.st_top; \
 	struct stchunk * volatile lc = loc_set.st_cur
+#define RTXL \
+	EIF_REFERENCE * volatile l = loc_set.st_top; \
+	RTYL
 #define RTLXD \
 	struct item * EIF_VOLATILE lv
 #define RTLXL \
@@ -316,6 +319,7 @@ RT_LNK int fcount;
 #define RTLR(x,y)
 #define RTXI(x)
 #define RTXE 
+#define RTYL
 #define RTXL \
 	EIF_REFERENCE l
 #define RTLXD
@@ -331,8 +335,143 @@ RT_LNK int fcount;
 #define RTOC(x)			onceset();
 #define RTOC_NEW(x)		new_onceset((EIF_REFERENCE) &x);
 #define RTOC_GLOBAL(x)	globalonceset((EIF_REFERENCE) &x);
-#define RTOVP(n,c,a)	if (!(CAT2(n,_done))) { c a; } else { (void) a; }
-#define RTOVF(n,c,a)	(CAT2(n,_done) ? ((void) a, CAT2(n,_result)) : c a)
+#define RTOVP(n,c,a)	if (CAT2(n,_succeeded)) { (void) a; } else { c a; }
+#define RTOVF(n,c,a)	(CAT2(n,_succeeded)? ((void) a, CAT2(n,_result)) : c a)
+
+/* Service macros for once routines:
+ * RTO_TRY - try to excute routine body
+ * RTO_EXCEPT - start processing exception
+ * RTO_END_EXCEPT - stop processing exception
+ */
+
+#define RTO_TRY                                                              \
+	{                                                                    \
+			/* Declare variables for exception handling. */      \
+		jmp_buf exenvo;                                              \
+			/* Save stack contexts. */                           \
+		RTYD;                                                        \
+			/* Record execution vector to catch exception. */    \
+		excatch (&exenvo);                                           \
+		if (!setjmp(exenvo)) {                                       \
+				/* Provide stack record for rescue/retry. */ \
+			struct ex_vect * EIF_VOLATILE exvect;                \
+			exvect = exft();
+
+#define RTO_EXCEPT                                                           \
+				/* Evaluation is completed successfully. */  \
+				/* Remove stack record for rescue/retry. */  \
+			expop(&eif_stack);                                   \
+				/* Remove execution vector to restore    */  \
+				/* previous exception catch point.       */  \
+			expop (&eif_stack);                                  \
+		} else {                                                     \
+				/* Exception occurred. */
+
+#define RTO_END_EXCEPT                                                       \
+				/* Restore stack contexts. */                \
+			RTXSC;                                               \
+		}                                                            \
+	}
+
+/* Macros for single-threaded once routines:
+ * RTOSH - declaration of variables for a single-threaded once routine (for header file)
+ * RTOSD - definition of variables for a single-threaded once routine (for implementation)
+ * RTOSP - prologue for a single-threaded once routine
+ * RTOSE - epilogue for a single-threaded once routine
+ */
+
+#define RTOSH(n)                                                             \
+	extern EIF_BOOLEAN CAT2(n,_succeeded);
+
+#define RTOSD(n)                                                             \
+	EIF_BOOLEAN CAT2(n,_done) = EIF_FALSE;                               \
+	unsigned char CAT2(n,_failed) = 0;                                   \
+	EIF_BOOLEAN CAT2(n,_succeeded) = EIF_FALSE;
+
+#define RTOSP(n)                                                             \
+		/* Check if evaluation has succeeded. */                     \
+		/* If yes, skip any other calculations. */                   \
+	if (!CAT2(n,_succeeded)) {                                           \
+			/* Check if evaluation is started earlier. */        \
+			/* If yes, evaluation is completed.        */        \
+		if (!CAT2(n,_done)) {                                        \
+				/* Evaluation has not been started yet.   */ \
+				/* Start it now.                          */ \
+			CAT2(n,_done) = EIF_TRUE;                            \
+				/* Try to exceute routine body. */           \
+			RTO_TRY
+
+#define RTOSE(n)                                                             \
+				/* Record successful execution result. */    \
+			CAT2(n,_succeeded) = EIF_TRUE;                       \
+				/* Catch exception. */                       \
+			RTO_EXCEPT                                           \
+				/* Handle exception.                */       \
+				/* Record exception for future use. */       \
+			CAT2(n,_failed) = echval;                            \
+			RTO_END_EXCEPT                                       \
+		}                                                            \
+		if (CAT2(n,_failed)) {                                       \
+			xraise (CAT2(n,_failed));                            \
+		}                                                            \
+	}
+
+/* Macros for thread-relative once routines:
+ * RTOTDB - declaration and initialization of variables for once function returning basic type
+ * RTOTDR - declaration and initialization of variables for once function returning reference
+ * RTOTDV - declaration and initialization of variables for once procedure
+ * RTOTW - stores in a list the body id of the just called once routine
+ * RTOTRB - declaration of a result macro for once function returning basic type
+ * RTOTRR - declaration of a result macro for once function returning reference
+ * RTOTP - prologue for a thread-relative once routine
+ * RTOTE - epilogue for a thread-relative once routine
+ */
+                                                                             
+#define RTOTDV(index)                                                        \
+	MTOT OResult = (MTOT) 0;                                             \
+	OResult = MTOI(index)
+
+#define RTOTDB(type,index)                                                   \
+	RTOTDV(index);                                                       \
+	if (!MTOD(OResult)) {                                                \
+		MTOP(type, OResult, (type) 0);                               \
+	}
+
+#define RTOTDR(index)                                                        \
+	RTOTDV(index);                                                       \
+	if (!MTOD(OResult)) {                                                \
+		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
+	}
+
+
+#ifdef WORKBENCH
+#	define RTOTW(body_id) if (!MTOD(OResult)) RTWO(body_id);
+#endif
+
+#define RTOTRB(type) MTOR(type,OResult)
+#define RTOTRR(type) (*MTOR(type,OResult))
+
+#define RTOTP                                                                \
+		/* Check if evaluation is started earlier. */                \
+		/* If yes, evaluation is completed.        */                \
+	if (!MTOD(OResult)) {                                                \
+			/* Evaluation has not been started yet.   */         \
+			/* Start it now.                          */         \
+		MTOM(OResult);                                               \
+			/* Try to exceute routine body. */                   \
+		RTO_TRY
+
+#define RTOTE                                                                \
+			/* Catch exception. */                               \
+		RTO_EXCEPT                                                   \
+			/* Handle exception. */                              \
+			/* Record exception for future use. */               \
+		MTOE(OResult, echval);                                       \
+		RTO_END_EXCEPT                                               \
+	}                                                                    \
+	if (MTOF(OResult)) {                                                 \
+		xraise (MTOF(OResult));                                      \
+	}                                                                    
 
 #ifdef EIF_THREADS
 
@@ -344,6 +483,7 @@ RT_LNK int fcount;
  * RTOPW - let thread that started once evaluation to complete
  * RTOPLP - once prologue that is executed with locked mutex
  * RTOPLE - once epilogue that is executed with locked mutex
+ * RTOPRE - raise previously recorded exception
  *
  * Main macros for process-relative once routines:
  * RTOPD - declaration of local variables for a process-relative once routine
@@ -390,10 +530,17 @@ RT_LNK int fcount;
 			/* Evaluation has not been started yet.   */         \
 			/* Record thread id and start evaluation. */         \
 		thread_id = eif_thr_thread_id();                             \
-		started = EIF_TRUE;
+		started = EIF_TRUE;                                          \
+			/* Try to exceute routine body. */                   \
+		RTO_TRY
 
 #define RTOPLE(completed)                                                    \
-			/* Evaluation is completed.                  */      \
+			/* Catch exception. */                               \
+		RTO_EXCEPT                                                   \
+			/* Handle exception.                */               \
+			/* Record exception for future use. */               \
+		failed = echval;                                             \
+		RTO_END_EXCEPT                                               \
 			/* Clear field that holds locking thread id. */      \
 		thread_id = NULL;                                            \
 			/* Ensure memory is flushed (if required). */        \
@@ -402,9 +549,15 @@ RT_LNK int fcount;
 		completed = EIF_TRUE;                                        \
 	}
 
+#define RTOPRE                                                               \
+	if (failed) {                                                        \
+		xraise (failed);                                             \
+	}
+
 #define RTOPD                                                                \
 	static volatile EIF_BOOLEAN started = 0;                             \
 	static volatile EIF_BOOLEAN completed = 0;                           \
+	static volatile unsigned char failed = 0;                            \
 	static volatile EIF_POINTER thread_id = NULL;
 
 #ifdef EIF_HAS_MEMORY_BARRIER
@@ -432,7 +585,8 @@ RT_LNK int fcount;
 					/* Unlock mutex. */                              \
 				RTOPLU (mutex);                                          \
 			}                                                                \
-		}
+		}                                                                        \
+		RTOPRE
 
 #else /* !defined(EIF_HAS_MEMORY_BARRIER) */
 
@@ -458,7 +612,8 @@ RT_LNK int fcount;
 				/* Evaluation has been started. */                       \
 				/* Let it to complete.          */                       \
 			RTOPW (mutex, thread_id);                                        \
-		}
+		}                                                                        \
+		RTOPRE
 
 #endif /* EIF_HAS_MEMORY_BARRIER */
 
@@ -524,10 +679,14 @@ RT_LNK int fcount;
  *  RTEU enters in rescue clause
  *  RTEF ends the rescue clause
  *  RTXD declares the variables used to save the run-time stacks context
+ *  RTYD same as RTXD except that RTXI cannot be used
  *  RTXSC resynchronizes the run-time stacks in a pseudo rescue clause in C
  *  RTXS(x) resynchronizes the run-time stacks in a rescue clause
  *  RTEOK ends a routine with a rescue clause by cleaning the trace stack
  *  RTSO stops the tracing as well as the profiling
+ *  RTE_T start try block (for body)
+ *  RTE_E start except block (for rescue)
+ *  RTE_EE end except block
  */
 #define RTED		jmp_buf exenv; int EIF_VOLATILE saved_assertion = in_assertion
 #define RTES		if (setjmp(exenv)) goto rescue
@@ -541,20 +700,32 @@ RT_LNK int fcount;
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect; uint32 EIF_VOLATILE db_cstack
 #define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z,i,j,b); db_cstack = ++d_data.db_callstack_depth;
 #define RTEE		RTSO; d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
-#define RTEOK		RTSO; d_data.db_callstack_depth = --db_cstack; exok()
+#define RTEOK		RTSO; d_data.db_callstack_depth = --db_cstack; exok ()
 
 #define RTEJ		current_call_level = trace_call_level; \
 					if (prof_stack) saved_prof_top = prof_stack->st_top; \
 					start: exvect->ex_jbuf = &exenv; RTES
 
 #define RTEU d_data.db_callstack_depth = db_cstack; exresc(MTC exvect);
+
+#define RTE_T \
+	current_call_level = trace_call_level; \
+	if (prof_stack) saved_prof_top = prof_stack->st_top; \
+	start: exvect->ex_jbuf = &exenv; \
+	if (!setjmp(exenv)) {
+
 #else
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect
 #define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z, 0, 0, 0)
 #define RTEE		expop(&eif_stack)
-#define RTEOK		exok()
+#define RTEOK		exok ()
 #define RTEJ		start: exvect->ex_jbuf = &exenv; RTES
 #define RTEU		exresc(MTC exvect)
+
+#define RTE_T \
+	start: exvect->ex_jbuf = &exenv; \
+	if (!setjmp(exenv)) {
+
 #endif
 
 #define RTER		in_assertion = saved_assertion; \
@@ -563,7 +734,15 @@ RT_LNK int fcount;
 #define RTXS(x)		RTXSC; RTXI(x)
 #define RTXSC		RTXE; RTHS; RTLS
 #define RTXD		RTXL; RTXH; RTXLS
-	
+#define RTYD		RTYL; RTXH; RTXLS
+
+#define RTE_E \
+	} else { \
+		RTEU;
+#define RTE_EE \
+		RTEF; \
+	}
+
 /* new debug */
 #ifdef WORKBENCH
 #define RTLU(x,y)	insert_local_var (x, y)

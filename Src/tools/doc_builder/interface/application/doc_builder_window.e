@@ -80,6 +80,7 @@ feature {NONE} -- Initialization
 			validator_menu_item.select_actions.extend 		(agent open_validator_tool)
 			expression_menu_item.select_actions.extend 		(agent open_expression_dialog)
 			character_menu_item.select_actions.extend 		(agent open_character_dialog)
+			shortcuts_menu_item.select_actions.extend 		(agent open_shortcuts_dialog)
 			
 					-- Help Menu
 			help_menu_item.select_actions.extend 			(agent display_help)
@@ -124,7 +125,7 @@ feature {NONE} -- Initialization
 			initialize_temp_directory
 			should_update := True
 			update			
-			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+			close_request_actions.extend (agent close_application)
 		end
 		
 	initialize_temp_directory is
@@ -584,6 +585,12 @@ feature {NONE} -- Dialog
 			Shared_dialogs.character_dialog.show_relative_to_window (Current)
 		end
 
+	open_shortcuts_dialog is
+			-- Shortcut dialog
+		do
+			Shared_dialogs.shortcut_dialog.show_relative_to_window (Current)
+		end
+
 	open_document_properties_dialog is
 			-- Properties dialog for currently loaded document
 		local
@@ -635,6 +642,16 @@ feature {NONE} -- Dialog
 				shared_dialogs.error_dialog.set_error_list (l_error.errors)
 				shared_dialogs.error_dialog.show_modal_to_window (Current)
 			end	
+		end		
+
+	close_application is
+			-- Close application
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			l_env := (create {EV_ENVIRONMENT})			
+			shared_project.preferences.write
+			l_env.application.destroy
 		end		
 
 end -- class MAIN_WINDOW

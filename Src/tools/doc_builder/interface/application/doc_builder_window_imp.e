@@ -67,6 +67,7 @@ feature {NONE}-- Initialization
 			create gen_menu_item
 			create expression_menu_item
 			create character_menu_item
+			create shortcuts_menu_item
 			create help_menu
 			create help_menu_item
 			create l_ev_menu_separator_7
@@ -218,6 +219,7 @@ feature {NONE}-- Initialization
 			tool_menu.extend (gen_menu_item)
 			tool_menu.extend (expression_menu_item)
 			tool_menu.extend (character_menu_item)
+			tool_menu.extend (shortcuts_menu_item)
 			l_ev_menu_bar_1.extend (help_menu)
 			help_menu.extend (help_menu_item)
 			help_menu.extend (l_ev_menu_separator_7)
@@ -377,6 +379,7 @@ feature {NONE}-- Initialization
 			gen_menu_item.set_text ("Generator..")
 			expression_menu_item.set_text ("Expression Builder..")
 			character_menu_item.set_text ("Character Codes..")
+			shortcuts_menu_item.set_text ("Shortcuts..")
 			help_menu.set_text ("Help")
 			help_menu_item.set_text ("Contents")
 			about_menu_item.set_text ("About..")
@@ -567,7 +570,7 @@ feature -- Access
 	new_menu_item, open_menu_item, open_project_menu_item, save_menu_item, close_menu_item, 
 	cut_menu_item, copy_menu_item, paste_menu_item, font_menu_item, parser_menu_item, 
 	search_menu_item, settings_menu_item, validator_menu_item, gen_menu_item, expression_menu_item, 
-	character_menu_item, help_menu_item, about_menu_item: EV_MENU_ITEM
+	character_menu_item, shortcuts_menu_item, help_menu_item, about_menu_item: EV_MENU_ITEM
 	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3, l_ev_menu_separator_4, 
 	l_ev_menu_separator_5, l_ev_menu_separator_6, l_ev_menu_separator_7: EV_MENU_SEPARATOR
 	wrap_menu_item, menu_uppercase_tags, element_selector_menu, types_selector_menu, 

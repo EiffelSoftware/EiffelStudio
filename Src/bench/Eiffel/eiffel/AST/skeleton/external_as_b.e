@@ -4,12 +4,12 @@ inherit
 
 	EXTERNAL_AS
 		redefine
-			language_name, alias_name, set
+			language_name, alias_name, check_validity
 		end;
 
 	ROUT_BODY_AS_B
 		undefine
-			is_external, has_instruction, index_of_instruction
+			is_external
 		redefine
 			byte_node, type_check
 		end;
@@ -29,8 +29,8 @@ feature -- Attributes
 
 feature -- Initialization
 
-	set is
-			-- Yacc initialization
+	check_validity is
+			-- Check to see if the construct is supported by the compiler.
 		local
 			melt_only_error: MELT_ONLY
 		do
@@ -42,64 +42,19 @@ feature -- Initialization
 				Error_handler.insert_error (melt_only_error);
 				Error_handler.raise_error;
 			end;
-			language_name ?= yacc_arg (0);
-			alias_name ?= yacc_arg (1);
-		ensure then
-			language_name /= Void;
 		end;
 
 feature -- Conveniences
 
 	type_check is
-			-- Put a comment here please
+			-- Type checking
 		local
-			sp_id: INTEGER;
-			ext_dll_sign: EXT_DLL_SIGN;
-			ext_dll_alias: EXT_DLL_ALIAS;
-			ext_same_sign: EXT_SAME_SIGN;
-			raise_an_error: BOOLEAN;
+			extension: EXTERNAL_EXTENSION_AS_B
 		do
-				-- Check if the signature has the proper number of elements
-				-- and if a result type is given only with a function
-			if language_name.has_signature then
-				if language_name.has_arg_list and then
-					not (language_name.arg_list.count = 
-						context.a_feature.argument_count)
-				then
-					raise_an_error := True;
-				elseif language_name.has_return_type /= 
-										context.a_feature.is_function then
-					raise_an_error := True;
-				end;
-				if raise_an_error then
-					!! ext_same_sign;
-					context.init_error (ext_same_sign);
-					Error_handler.insert_error (ext_same_sign);
-					Error_handler.raise_error;
-				end;
-			end;
-				-- For DLL - Windows, a signature is compulsory
-			sp_id := language_name.special_id;
-			if ((sp_id = dll16_id) or (sp_id = dll32_id)) and then
-				((context.a_feature.argument_count > 0 and not 
-				language_name.has_arg_list) or
-				(context.a_feature.is_function and not 
-				language_name.has_return_type))
-			then
-				!! ext_dll_sign;
-				context.init_error (ext_dll_sign);
-				Error_handler.insert_error (ext_dll_sign);
-				Error_handler.raise_error;
-			end;
-			if
-				sp_id = dll32_id
-			and then
-				(alias_name = Void or else not alias_name.value.is_integer)
-			then
-				!! ext_dll_alias;
-				context.init_error (ext_dll_alias);
-				Error_handler.insert_error (ext_dll_alias);
-				Error_handler.raise_error;
+			extension := language_name.extension
+
+			if extension /= Void then
+				extension.type_check (Current)
 			end
 		end;
 
@@ -113,21 +68,33 @@ feature -- Byte code
 			i: INTEGER;
 			local_dec: ARRAY[TYPE_I];
 			arg_c: INTEGER;
+			extension: EXTERNAL_EXTENSION_AS_B
+			extension_bc: EXT_EXT_BYTE_CODE
 		do
 			check
 				extern_exists: context.a_feature /= Void;
 				is_extern: context.a_feature.is_external
 			end;
-			!!Result;
+
+			extension := language_name.extension
+
+			if extension /= Void then
+				extension_bc := extension.byte_node
+				extension.init_byte_node (extension_bc)
+
+				Result := extension_bc
+			else
+				!! Result
+			end
+
 			extern ?= context.a_feature;
 			Result.set_external_name (extern.external_name);
 			Result.set_encapsulated (extern.encapsulated);
-			Result.set_special_id (language_name.special_id);
-			Result.set_special_file_name (language_name.special_file_name);
-			Result.set_arg_list (language_name.arg_list);
-			Result.set_include_list (language_name.include_list);
-			Result.set_return_type (language_name.return_type);
-			if language_name.is_special or language_name.has_signature then
+
+			if
+				extension /= Void and then
+				(extension.is_macro or extension.has_signature)
+			then
 				Result.set_result_type (extern.type.actual_type.type_i);
 				arg_c := extern.argument_count;
 				if arg_c > 0 then
@@ -139,7 +106,7 @@ feature -- Byte code
 						i > arg_c
 					loop
 						local_dec.put 
-								(arguments.i_th (i).actual_type.type_i, i);
+							(arguments.i_th (i).actual_type.type_i, i);
 						i := i + 1;
 					end;
 					Result.set_arguments (local_dec);

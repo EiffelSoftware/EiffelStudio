@@ -182,24 +182,32 @@ feature -- Access
 			end
 		end;
 
+	root_class: CLASS_I is
+			-- Root class of the system
+		do
+			Result := root_cluster.classes.item (root_class_name);
+		end;
+
+feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, APPLICATION_STATUS}
+
 	valid_dynamic_id (i: INTEGER): BOOLEAN is
 			-- Is the class_type dynamic id `i' valid?
 		do
 			Result := System.class_types.valid_index (i)
 		end;
 
-	class_type_of_dynamic_id (i: INTEGER): CLASS_TYPE is
-			-- Eiffel Class type of dynamic id `i'
+	class_of_dynamic_id (i: INTEGER): E_CLASS is
+			-- Eiffel Class of dynamic id `i'
 		require
 			positive_i: i >= 0;
+			valid_i: valid_dynamic_id (i)
+		local
+			ct: CLASS_TYPE
 		do
-			Result := System.class_types.item (i);
-		end;
-
-	root_class: CLASS_I is
-			-- Root class of the system
-		do
-			Result := root_cluster.classes.item (root_class_name);
+			ct := System.class_types.item (i);
+			if ct /= Void then
+				Result := ct.associated_eclass
+			end
 		end;
 
 feature {NONE} -- Implementation

@@ -2157,12 +2157,13 @@ feature {INHERIT_TABLE} -- Access
 
 	private_external_name: STRING is
 			-- External name of feature if any in IL generation.
+		require
+			valid_private_external_name_id: private_external_name_id > 0
 		do
 			Result := Names_heap.item (private_external_name_id)
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
-
 		end
 
 feature -- Concurrent Eiffel

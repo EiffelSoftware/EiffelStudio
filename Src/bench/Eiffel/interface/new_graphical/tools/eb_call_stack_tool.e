@@ -245,6 +245,7 @@ feature {NONE} -- Implementation
 		do
 			ev_application.idle_actions.prune_all (update_agent)			
 			if Application.status /= Void then
+				application.status.update				
 				display_stop_cause
 				stack_list.wipe_out
 				stack := Application.status.where

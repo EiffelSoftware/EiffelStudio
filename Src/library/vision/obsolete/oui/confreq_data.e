@@ -11,6 +11,9 @@ indexing
 
 class CONFREQ_DATA 
 
+obsolete
+	"Use class CONTEXT_DATA instead."
+
 inherit
 
 	CONFNOT_DATA

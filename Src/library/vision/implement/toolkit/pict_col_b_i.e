@@ -22,6 +22,11 @@ feature -- Access
 			valid_result: Result.is_valid
 		end;
 
+	is_pressed: BOOLEAN is
+			-- Is the pict color button pressed?
+		deferred
+		end
+
 feature -- Element change
 
 	set_pixmap (a_pixmap: PIXMAP) is
@@ -32,7 +37,14 @@ feature -- Element change
 		deferred
 		ensure
 			pixmap = a_pixmap
-		end
+		end;
+
+	set_pressed (b: like is_pressed) is
+			-- Set `is_pressed' to `b'.
+		deferred
+		ensure
+			set: b = is_pressed
+		end;
 
 end -- class PICT_COLOR_B
 

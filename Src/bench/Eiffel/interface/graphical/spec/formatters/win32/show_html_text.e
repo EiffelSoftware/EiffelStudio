@@ -31,7 +31,6 @@ feature -- format
 			same_stone, error: BOOLEAN;
 			mp: MOUSE_PTR;
 			cur: CURSOR;
-			routine_w: ROUTINE_W;
 			st: STRUCTURED_TEXT
 		do
 			if not retried then
@@ -84,17 +83,7 @@ feature -- format
 							tool.set_file_name (file_name (filed_stone));
 						end;
 						tool.set_stone (stone);
-						routine_w ?= tool;
-						if 	
-							routine_w /= Void and then
-							routine_w.stone.e_feature.written_class.lace_class.hide_implementation
-						then
-							st := rout_flat_context_text (routine_w.stone);
-							text_window.process_text (st);
-							text_window.display
-						else	
-							text_window.set_text (stone_text)
-						end;
+						text_window.set_text (stone_text)
 						tool.update_save_symbol;
 						if stone.clickable then
 							if modified_class then
@@ -123,9 +112,6 @@ feature -- format
 						tool.set_mode_for_editing;
 						tool.show_editable_text;
 
-						if routine_w /= Void then
-							routine_w.highlight_routine
-						end
 						tool.set_last_format (holder);
 						display_header (stone);
 						mp.restore

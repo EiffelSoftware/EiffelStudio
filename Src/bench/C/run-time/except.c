@@ -2345,6 +2345,8 @@ rt_public void expop(register1 struct xstack *stk)
 	register3 struct stxchunk *s;			/* To walk through stack chunks */
 	register4 struct ex_vect *arena;		/* Base address of current chunk */
 
+	EIF_GET_CONTEXT
+
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
 	 * which may induce swapping, who knows?
@@ -2380,6 +2382,7 @@ rt_public void expop(register1 struct xstack *stk)
 #else
 	stack_truncate(stk);			/* Try removal of unused chunks */
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared struct ex_vect *extop(register1 struct xstack *stk)

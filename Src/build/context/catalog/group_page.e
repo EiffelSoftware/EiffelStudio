@@ -4,6 +4,10 @@ class GROUP_PAGE
 inherit
 
 	CONTEXT_CAT_PAGE
+
+creation
+	
+	make
 	
 feature 
 

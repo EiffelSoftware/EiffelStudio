@@ -24,8 +24,6 @@ feature {NONE}
 		do
 			source.add_button_press_action (2, show_command, Current);
 			source.add_button_release_action (2, show_command, Nothing);
-			--source.add_button_press_action (3, transport_command, Current);
-			--source.set_action ("<Btn1Up>(2)", transport_command, Current);
 			source.add_button_click_action (3, transport_command, Current);
 		end;
 	

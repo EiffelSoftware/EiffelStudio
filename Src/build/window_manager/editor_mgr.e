@@ -99,7 +99,7 @@ feature
 			then
 				ed.hide;
 				active_editors.remove;
-				if free_list.count > 5 then
+				if free_list.count >= free_list_max then
 					ed.destroy
 				else
 					free_list.extend (ed)

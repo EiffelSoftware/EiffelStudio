@@ -97,7 +97,7 @@ feature {NONE}
 						context_group := a_context.group
 					else
 						!!context_group.make;
-						context_group.add_right (a_context);
+						context_group.put_right (a_context);
 					end;
 					!!new_group.make (a_name, context_group);
 					set_symbol (Context_pixmap);

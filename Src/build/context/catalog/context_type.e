@@ -42,6 +42,14 @@ feature
 
 	identifier: INTEGER;
 
+	reset is
+		do
+			int_generator.reset;
+			if dummy_context /= Void then
+				dummy_context.reset_name;
+			end;
+		end;
+
 	
 feature {NONE}
 

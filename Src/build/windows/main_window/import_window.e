@@ -69,7 +69,7 @@ feature
 			file_selec.add_ok_action (import_cmd, Current);
 			file_selec.add_cancel_action (Current, Second);
 			set_exclusive_grab;
-			file_selec.set_file_sel_mask (1);
+			file_selec.set_directory_selection;
 			file_selec.hide_file_selection_list;
 			file_selec.hide_file_selection_label;
 

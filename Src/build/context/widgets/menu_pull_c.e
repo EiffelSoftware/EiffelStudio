@@ -13,9 +13,8 @@ inherit
 
 	PULLDOWN_C
 		rename
-			create_context as old_create_context
-			--, cut as pulldown_cut,
-			--undo_cut as pulldown_undo_cut
+			create_context as old_create_context,
+			full_name as pulldown_full_name
 		redefine
 			reset_widget_callbacks, remove_widget_callbacks, 
 			add_widget_callbacks, stored_node, initialize_transport,
@@ -26,12 +25,10 @@ inherit
 		redefine
 			reset_widget_callbacks, remove_widget_callbacks, 
 			add_widget_callbacks, initialize_transport, 
---			 undo_cut, cut, 
-			stored_node, create_context,
+			stored_node, create_context, full_name,
 			is_selectionnable, widget
 		select
-			create_context
---			, cut, undo_cut
+			create_context, full_name
 		end
 
 
@@ -87,6 +84,22 @@ feature
 	is_selectionnable: BOOLEAN is
 			-- Is current context selectionnable
 		do
+		end;
+
+	full_name: STRING is
+		local
+			mp: MENU_PULL_C;
+		do
+			mp ?= parent;
+			if mp = Void then
+				result := parent.intermediate_name;
+				result.append (".");
+				result.append (entity_name);
+			else
+				result := intermediate_name;
+				result.append (".");
+				result.append (entity_name);
+			end;
 		end;
 
 	

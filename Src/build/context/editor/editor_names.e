@@ -56,6 +56,7 @@ feature {NONE}
 	C_enter_alignment: STRING is "Center Alignment";
 	L_eft_alignment: STRING is "Left Alignment";
 	S_ame_size: STRING is "Same size";
+	S_et_shown: STRING is "Start hidden";
 
 	C_olumn: STRING is "Column";
 	R_ow: STRING is "Row";

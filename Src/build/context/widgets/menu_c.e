@@ -8,13 +8,14 @@ inherit
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
-			option_list, context_initialization, widget, full_name
+			option_list, context_initialization, widget,
+			intermediate_name
 		end;
 
 	COMPOSITE_C
 		redefine
 			context_initialization, reset_modified_flags, copy_attributes, 
-			option_list, widget, full_name
+			option_list, widget, intermediate_name
 		select
 			copy_attributes, reset_modified_flags
 		end
@@ -46,11 +47,9 @@ feature {NONE}
 feature 
 
 
-
-	full_name: STRING is
-			-- full name of the context i.e. with root, group, ...
+	intermediate_name: STRING is
 		do
-			Result := intermediate_name;
+			Result := parent.intermediate_name;
 		end;
 
 	set_title (new_title: STRING) is

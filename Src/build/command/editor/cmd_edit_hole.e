@@ -25,7 +25,10 @@ inherit
 			{NONE} all
 		end;
 
-	CMD_STONE;
+	CMD_STONE
+		redefine
+			transportable
+		end;
 
 	REMOVABLE
 		export
@@ -89,6 +92,11 @@ feature
 		end;
 
 	original_stone: CMD;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+		end;
 
 	eiffel_text: STRING is
 		do

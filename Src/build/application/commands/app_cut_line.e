@@ -84,13 +84,13 @@ feature {NONE}
 			from
 				temp_tran.start
 			until
-				temp_tran.over
+				temp_tran.off
 			loop
 				!!cut_label_command;
 				cut_label_command.set_for_macro;
 				cut_label_command.set_source_element (source_element);
 				cut_label_command.execute (temp_tran.key_for_iteration);
-				labels_cut.add_right (cut_label_command);
+				labels_cut.put_right (cut_label_command);
 				temp_tran.forth	
 			end;
 			do_specific_work;

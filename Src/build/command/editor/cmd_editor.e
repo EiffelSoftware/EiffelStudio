@@ -509,6 +509,16 @@ feature {NONE}
 			error_box.popup (Current, s);
 		end;
 
+feature {USER_CMD}
+	
+	set_unsaved_application is
+		do
+			if history_window.saved_application then
+				history_window.set_unsaved_application;
+			end;
+		end;
+
+
 feature -- Top shell features
 
 	realize is

@@ -6,11 +6,6 @@ inherit
 
 	COMMAND;
 
-	COMMAND_ARGS;
---		select
---			First, Second
---		end;
-
 	CONTEXT_SHARED
 		export
 			{NONE} all
@@ -21,7 +16,7 @@ inherit
 		redefine
 			create_context, cut, position_initialization,
 			is_in_a_group, link_to_parent, root, set_position,
-			intermediate_name, is_bulletin,
+			intermediate_name, is_bulletin, full_name,
 			deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name
 		end;
@@ -29,7 +24,7 @@ inherit
 		redefine
 			create_context, cut, position_initialization,
 			is_in_a_group, link_to_parent, root, set_position,
-			intermediate_name, is_bulletin,
+			intermediate_name, is_bulletin, full_name,
 			deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name,
 			reset_modified_flags
@@ -126,6 +121,17 @@ feature {NONE}
 
 feature 
 
+	set_start_hidden (flag: BOOLEAN) is
+		do
+			start_hidden := flag;
+			start_hidden_modified := True;
+		end;
+
+	start_hidden: BOOLEAN;
+
+	start_hidden_modified: BOOLEAN;
+
+
 	set_visual_name (s: STRING) is
 		do
 			if (s = Void) then
@@ -152,7 +158,7 @@ feature
 			True;
 		do
 			window_list.finish;
-			window_list.add_right (Current);
+			window_list.put_right (Current);
 		end;
 
 	root: CONTEXT is
@@ -170,6 +176,8 @@ feature
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
 		do
+			old_x := new_x;
+			old_y := new_y;
 			position_modified := True;
 			widget.set_x_y (new_x, new_y);
 		end;
@@ -177,6 +185,8 @@ feature
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of widget
 		do
+			old_width := new_w;
+			old_height := new_h;
 			size_modified := True;
 			widget.set_size (new_w, new_h);
 		end;
@@ -184,9 +194,15 @@ feature
 	
 feature {CONTEXT}
 
-	intermediate_name: STRING is
+	full_name: STRING is
 		do
 			!!Result.make (0);
+			Result.append (entity_name);
+		end;
+
+	intermediate_name: STRING is
+		do
+			Result := full_name;
 		end;
 
 	
@@ -227,6 +243,8 @@ feature
 		end;
 
 	cut is
+		require else
+			no_parent: True;
 		do
 			window_list.start;
 			window_list.search (Current);
@@ -240,19 +258,28 @@ feature
 
 	
 	execute (argument: like Current) is
-		local
-			ed: CONTEXT_EDITOR;
 		do
-			if argument = Current then
-				ed := context_catalog.editor (Current, geometry_form_number);
-				if ed /= Void then
-					ed.current_form.reset_form;
-				end;
+			if win_cmd = void then
+				old_x := x;
+				old_y := y;
+				old_width := width;
+				old_height := height;
+				!!win_cmd.make (Current);
+			elseif argument = Fourth then
+				!!win_cmd.make (Current);
+				old_x := x;
+				old_y := y;
+				old_width := width;
+				old_height := height;
+				win_cmd.execute (argument);
 			end;
 		end;
 
+	old_x, old_y, old_width, old_height: INTEGER;
 
 feature {NONE}
+
+	win_cmd: WIN_CONFIG_CMD;
 
 	position_initialization (context_name: STRING): STRING is
 			-- Eiffel code for the position of current context

@@ -35,6 +35,8 @@ feature {NONE}
 
 	forbid_recomp: EB_TOGGLE_B;
 
+	start_hidden: EB_TOGGLE_B;
+
 	
 feature 
 
@@ -53,15 +55,18 @@ feature
 			!!title_label.make (T_itle, Current);
 			!!title.make (T_extfield, Current, temp_title_cmd, a_parent);
 			!!forbid_recomp.make (F_orbid_recomp_size, Current, temp_resize_cmd, a_parent);
+			!!start_hidden.make (S_et_shown, Current, temp_hidden_cmd, a_parent);
 
 			attach_left (title_label, 10);
 			attach_left (title, 100);
 			attach_right (title, 10);
 			attach_left (forbid_recomp, 10);
+			attach_left (start_hidden, 10);
 
 			attach_top (title, 10);
 			attach_top (title_label, 15);
-			attach_top_widget (title, forbid_recomp, 15);
+			attach_top_widget (title, start_hidden, 15);
+			attach_top_widget (start_hidden, forbid_recomp, 15);
 			detach_bottom (forbid_recomp);
 		end;
 
@@ -77,6 +82,7 @@ feature {NONE}
 			else
 				title.set_text ("")
 			end;
+			start_hidden.set_state (context.start_hidden);
 			forbid_recomp.set_state (context.resize_policy_disabled);
 		end;
 
@@ -91,6 +97,9 @@ feature
 				end
 			elseif not title.text.is_equal (context.title) then
 				context.set_title (title.text)
+			end;
+			if context.start_hidden /= start_hidden.state then
+				context.set_start_hidden (start_hidden.state);
 			end;
 			if context.resize_policy_disabled /= forbid_recomp.state then
 				context.disable_resize_policy (forbid_recomp.state);

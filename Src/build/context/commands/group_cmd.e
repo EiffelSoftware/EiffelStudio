@@ -126,11 +126,13 @@ feature
 			loop
 					-- Reset the parent
 				old_contexts.item.set_parent (parent);
+				old_contexts.item.set_modified_flags;
 					-- Change the widget attributes
 				old_contexts.forth
 			end;
 				-- Restore previous elements
 			undo_cut_old_contexts;
+			cut_old_command.set_group_uncreated (True);
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
 			mp.restore
@@ -145,6 +147,7 @@ feature
 			parent.hide_tree_elements;
 				-- cut the contexts
 			cut_old_command.redo;
+			cut_old_command.set_group_uncreated (False);
 				-- undo cut on group_c
 			context.set_parent (parent);
 			context.undo_cut;
@@ -157,6 +160,7 @@ feature
 			loop
 					-- Reset the parent
 				old_contexts.item.set_parent (context);
+				old_contexts.item.reset_modified_flags;
 					-- Change the widget attributes
 					-- Reset the group_c list
 				context.add_group_child (old_contexts.item);
@@ -176,7 +180,7 @@ feature {NONE}
 			from
 				widget_table.start
 			until
-				widget_table.over
+				widget_table.off
 			loop
 				widget_table.key_for_iteration.change_widget (widget_table);
 				widget_table.forth

@@ -37,11 +37,11 @@ feature
 				iterate;
 				init.licence.unregister;				
 			end;
-		--rescue
-			--if init.licence.registered then
-				--init.licence.unregister;
-			--end;
-			--save_rescue
+		rescue
+			if init.licence.registered then
+				init.licence.unregister;
+			end;
+			save_rescue
 		end;
 	
 feature {NONE}

@@ -31,6 +31,8 @@ feature
 
 	clear is
 			-- Clear commands from all pages;
+		local
+			uc: USER_CMD;
 		do
 			from 
 				pages.start
@@ -40,6 +42,8 @@ feature
 				pages.item.wipe_out;
 				pages.forth
 			end;
+			!!uc.make;
+			uc.reset_name;
 		end;
 
 	user_commands: LINKED_LIST [LINKED_LIST [USER_CMD]] is
@@ -221,7 +225,7 @@ feature
 			attach_top_widget (separator1, page_sw, 10);
 			attach_bottom (page_sw, 10);
 			focus_label.set_text ("");
-			!!pages.make;;
+			!!pages.make;
 			define_command_pages;
 			update_interface;
 		end;

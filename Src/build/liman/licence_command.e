@@ -23,7 +23,6 @@ feature
 				work (argument);
 			else
 				if licence.daemon_alive and then try_reconnect then
-					io.putstring ("Reconnected %N");
 					work (argument);
 				else
 					cancel_request (argument);

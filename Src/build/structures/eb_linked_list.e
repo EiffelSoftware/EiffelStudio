@@ -24,7 +24,7 @@ feature
 			until
 				before
 			loop
-				Result.add_right (item);
+				Result.put_right (item);
 				back;
 			end;
 			go_to (cur);
@@ -46,8 +46,8 @@ feature
             -- Set the current list to `other' and manage the
             -- corresponding icons to `other'.
         do
-            wipe_out;
-			merge (other);	
+		wipe_out;
+		merge (other);	
         end; -- set
 
 end

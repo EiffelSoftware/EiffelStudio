@@ -21,6 +21,7 @@ feature
 	make (cat: like associated_catalog) is
 		do
 			linked_list_make;
+			!!icons.make;
 			associated_catalog := cat;
 		end;
 

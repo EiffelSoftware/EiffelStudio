@@ -29,6 +29,8 @@ inherit
 	BEHAVIOR_STONE
 		export
 			{NONE} all
+		redefine
+			transportable
 		end;
 
 	PIXMAPS
@@ -75,6 +77,11 @@ feature
 feature {NONE}
 
 	original_stone: BEHAVIOR;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+		end;
 
 	identifier: INTEGER is
 		do

@@ -75,7 +75,7 @@ feature {NONE}
 			cmd := clone (command);
 			cmd.work (a_context);
 			if not cmd.failed then
-				cmd_list.add_right (cmd);
+				cmd_list.put_right (cmd);
 			end;
 		end;
 

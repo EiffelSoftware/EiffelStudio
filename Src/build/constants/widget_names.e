@@ -115,7 +115,7 @@ feature {NONE}
 	C_ontexttool: STRING is "Context Tool";
 	C_ontexttree: STRING is "Context Tree";
 	C_ontextcatalog: STRING is "Context Catalog";
-	C_ommandcatalog: STRING is "Command catalog";
+	C_ommandcatalog: STRING is "Command Catalog";
 	S_tatetool: STRING is "State Tool";
 	C_ommandtypetool: STRING is "Command Type Tool";
 	C_mdinstancetool: STRING is "Command Instance Tool";

@@ -36,6 +36,7 @@ feature {NONE}
 			old_font_name := context.font_name;
 			if (old_font_name = Void) then 
 				font_list := c_efb_get_font_list (context.widget.implementation.screen_object);
+				!!old_font_name.make (0);
 			end;
 		end;
 

@@ -26,7 +26,10 @@ inherit
 	PIXMAPS;
 	WINDOWS;
 
-	CMD_STONE;
+	CMD_STONE
+		redefine
+			transportable
+		end;
 
 	REMOVABLE
 		export
@@ -98,6 +101,11 @@ feature {NONE}
 
 
 	original_stone: CMD;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+		end;
 
 
 	identifier: INTEGER is

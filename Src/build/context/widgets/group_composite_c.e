@@ -7,12 +7,14 @@ inherit
 		rename
 			create_context as old_create_context
 		redefine
-			is_group_composite, set_size, full_name	
+			is_group_composite, set_size, full_name,
+			retrieve_oui_widget, import_oui_widget
 		end;
 
 	COMPOSITE_C
 		redefine
-			create_context, is_group_composite, set_size, full_name
+			create_context, is_group_composite, set_size, full_name,
+			retrieve_oui_widget, import_oui_widget
 		select
 			create_context
 		end
@@ -62,6 +64,7 @@ feature
 			a_child, previous_child: CONTEXT;
 			modification: BOOLEAN;
 		do
+			size_modified := True;
 			widget.set_managed (False);
 			widget.set_size (new_w, new_h);
 			children_number := arity;
@@ -102,6 +105,50 @@ feature
 				tree.display (Current);
 			end;
 			widget.set_managed (True);
+		end;
+
+
+	retrieve_oui_widget is
+		local
+			parent_widget: COMPOSITE
+		do
+			if not (parent = Void) then
+				parent_widget ?= parent.widget;
+			end;
+			oui_create (parent_widget);
+			from
+				child_start
+			until
+				child_offright
+			loop
+				child.retrieve_oui_widget;
+				child_forth
+			end;
+			retrieved_node.set_context_attributes (Current);
+			retrieved_node := Void;
+		end;
+
+
+	import_oui_widget (group_table: INT_H_TABLE [INTEGER]) is
+		local
+			parent_widget: COMPOSITE
+		do
+			generate_internal_name;
+			retrieved_node.set_name_change (full_name);
+			if not (parent = Void) then
+				parent_widget ?= parent.widget;
+			end;
+			oui_create (parent_widget);
+			from
+				child_start
+			until
+				child_offright
+			loop
+				child.import_oui_widget (group_table);
+				child_forth
+			end;
+			retrieved_node.set_context_attributes (Current);
+			retrieved_node := Void
 		end;
 
 end

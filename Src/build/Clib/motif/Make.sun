@@ -1,7 +1,7 @@
 CC= cc -Bstatic
 LINK= 
 DEFINES= -DSTRINGS_ALIGNED -D_NO_PROTO -DNO_REGEX 
-INCLUDES= -I$(RUN_TIME3)  -I/bern1/questwin/include -I/bern1/questwin/include/X11/motif
+INCLUDES= -I/moscow/deramat/work/Eiffel3/C/run-time  -I/bern1/questwin/include -I/bern1/questwin/include/X11/motif
 
 CFLAGS= $(LINK) $(INCLUDES) $(DEFINES)
 LIBPATHS=

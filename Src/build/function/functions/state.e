@@ -30,6 +30,12 @@ feature -- Creation
 			identifier := int_generator.value;
 		end;
 
+	reset_namer is
+		do
+			namer.reset;
+			int_generator.reset;
+		end;
+
 feature -- Editable
 
 	create_editor is
@@ -72,7 +78,7 @@ feature -- Command Labels
 				until
 					sublist.after
 				loop
-					Result.add_right (sublist.item);
+					Result.put_right (sublist.item);
 					sublist.forth
 				end;
 				forth
@@ -124,7 +130,7 @@ feature -- Editing
 				if 
 					not (output.empty or input.deleted)
 				then
-					Result.add_right (output)
+					Result.put_right (output)
 				end;
 				forth	
 			end;

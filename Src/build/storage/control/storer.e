@@ -51,7 +51,6 @@ feature
 		do
 			!!context_storer;
 			!!command_storer;
-			--behavior_storer.Create;
 			!!state_storer;
 			!!namer_storer;
 			!!application_storer;
@@ -82,8 +81,6 @@ feature {NONE}
 
 	command_storer: COMMAND_STORER;
 
-	--behavior_storer: B_STORER;
-
 	state_storer: S_STORER;
 
 	application_storer: APPLICATION_STORER;
@@ -113,9 +110,6 @@ feature
 				fn := clone (file_name);
 				fn.append ("/commands");
 			command_storer.store (fn);
-			--	fn := clone (file_name);
-			--	fn.append ("/behaviors");
-			--behavior_storer.store (fn);
 				fn := clone (file_name);
 				fn.append ("/states");
 			state_storer.store (fn);
@@ -154,7 +148,7 @@ feature
 				a_context := contexts.item;
 				a_context.retrieve_oui_widget;
 				window_list.finish;
-				window_list.add_right (a_context);
+				window_list.put_right (a_context);
 				contexts.forth
 			end;
 			tree.enable_drawing;

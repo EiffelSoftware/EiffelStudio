@@ -20,6 +20,7 @@ inherit
 feature 
 
 	label: STRING;
+
 	set_label (s: STRING) is do label := s end;
 
 	eiffel_text: STRING is

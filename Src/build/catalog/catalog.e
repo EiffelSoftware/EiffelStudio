@@ -26,9 +26,11 @@ feature
 	pages: LINKED_LIST [like current_page];
 			-- Contains all pages in the catalog
 
-feature {NONE}
+feature {COMMAND_PAGE}
 
 	button_form, page_form: FORM;
+
+feature {NONE}
 
 	page_sw: SCROLLED_W;
 

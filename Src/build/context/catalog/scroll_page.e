@@ -17,6 +17,10 @@ inherit
 			{NONE} all
 		end
 
+creation
+
+	make
+
 feature 
 
 	to_string (i: INTEGER): STRING is 

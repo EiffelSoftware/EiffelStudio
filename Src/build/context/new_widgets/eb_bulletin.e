@@ -23,7 +23,9 @@ inherit
 	COMMAND
 		export
 			{NONE} all
-		end
+		end;
+
+	SCALABLE;
 
 
 creation
@@ -57,7 +59,7 @@ feature
 		end;
 
 	width_resizeable (a_widget: WIDGET; flag: BOOLEAN) is
-		require
+		require else
 			valid_widget: a_widget.parent = Current
 		do
 			search_widget (a_widget);
@@ -66,7 +68,7 @@ feature
 		end;
 
 	height_resizeable (a_widget: WIDGET; flag: BOOLEAN) is
-		require
+		require else
 			valid_widget: a_widget.parent = Current
 		do
 			search_widget (a_widget);
@@ -75,7 +77,7 @@ feature
 		end;
 
 	follow_x (a_widget: WIDGET; flag: BOOLEAN) is
-		require
+		require else
 			valid_widget: a_widget.parent = Current
 		do
 			search_widget (a_widget);
@@ -84,7 +86,7 @@ feature
 		end;
 
 	follow_y (a_widget: WIDGET; flag: BOOLEAN) is
-		require
+		require else
 			valid_widget: a_widget.parent = Current
 		do
 			search_widget (a_widget);
@@ -117,7 +119,7 @@ feature {PERM_WIND_C} -- only exported for ebuild. Not needed for generated appl
 			end;
 			if widget_coordinates.after then
 				!!widget_ratio.make (a_widget);
-				widget_coordinates.add_left (widget_ratio);
+				widget_coordinates.put_left (widget_ratio);
 				widget_coordinates.back;
 			end;
 			if not widget_coordinates.item.initialized and then

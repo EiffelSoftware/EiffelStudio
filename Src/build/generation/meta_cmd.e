@@ -40,7 +40,7 @@ feature
 			from
 				start
 			until
-				over
+				off
 			loop
 				namer.next;
 				Result.append ("%T%T%T");
@@ -61,7 +61,7 @@ feature
 			from
 				start
 			until
-				over
+				off
 			loop
 				namer.next;
 

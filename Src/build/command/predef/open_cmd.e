@@ -44,7 +44,7 @@ feature
 			!!arguments.make;
 			!!labels.make;
 			!!lab.make ("open");
-			labels.add_right (lab);
+			labels.put_right (lab);
 			!!lab.make ("cancel");
 			labels.extend (lab);
 			!!arg.session_init (context_catalog.text_type);

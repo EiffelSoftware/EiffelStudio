@@ -35,11 +35,11 @@ feature {NONE}
 			else
 				if edited_command.label_exist (element.label) then
 					list.go_i_th (index - 1);
-					list.add_right (element);
+					list.put_right (element);
 					edited_command.refresh_parent;
 				else
 					list.go_i_th (index - 1);
-					list.add_right (element);
+					list.put_right (element);
 				end;
 			end;
 			edited_command.update_text

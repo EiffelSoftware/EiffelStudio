@@ -35,7 +35,7 @@ feature -- Instance
 			from
 				graph.start
 			until
-				graph.over or Result
+				graph.off or Result
 			loop
 				s ?= graph.key_for_iteration;
 				if not (s = Void) then
@@ -90,6 +90,10 @@ feature -- Stone
 
 feature -- Editing
 
+	set_eiffel_text (s: STRING) is
+		do
+		end;
+
 	command_editor: CMD_EDITOR;
 			-- Associated command_editor
 
@@ -110,6 +114,7 @@ feature -- Editing
 		do
 			Result := not (command_editor = Void)
 		end;
+
 
 feature -- Code Generation
 

@@ -122,8 +122,6 @@ feature -- Access
 			font_specified: is_specified
 		do
 			Result := implementation.name
-		ensure
-			valid_result: Result /= Void
 		end;
 
 	foundry: STRING is

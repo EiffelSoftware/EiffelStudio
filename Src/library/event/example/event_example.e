@@ -23,6 +23,7 @@ feature -- Initialization
 			birthday_actions.extend (~send_card (?, ?, "Sam"))
 			birthday_actions.extend (~buy_gift (?, ?, "cigars", "Sam"))
 			birthday_actions.extend (~buy_gift (?, ?, "wine", "Sam"))
+			birthday_actions.extend (birthday_actions~wrapper (?, ~do_nothing))
 
 			create nirvana_actions.make ("nirvana", <<>>)
 			nirvana_actions.extend (~bliss_out)
@@ -72,6 +73,11 @@ feature -- Brown-nosing
 			else
 				increase_carma
 			end
+		end
+
+	foo_bar is
+		do
+			do_nothing
 		end
 
 feature -- Virtue

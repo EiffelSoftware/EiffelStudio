@@ -384,7 +384,7 @@ feature -- Status setting
 			implementation.flush_buffer_to (start_position, end_position)
 		ensure	
 			buffer_locked_for_append: not buffer_locked_in_append_mode
-			caret_not_moved: caret_position = old caret_position
+			caret_consistent: old caret_position <= text_length + 1 implies caret_position = old caret_position
 			unselected: not has_selection
 		end
 
@@ -398,7 +398,8 @@ feature -- Status setting
 			implementation.flush_buffer
 		ensure
 			buffer_not_locked: not buffer_locked_in_append_mode and not buffer_locked_in_format_mode
-			caret_not_moved: caret_position = old caret_position
+			caret_consistent: (old buffer_locked_in_append_mode implies caret_position = 1) or
+				old buffer_locked_in_format_mode implies (caret_position = old caret_position)
 			unselected: not has_selection
 		end
 		
@@ -437,9 +438,8 @@ feature -- Status setting
 		do
 			implementation.set_with_named_file (a_filename)
 		ensure
-			caret_not_moved: caret_position = old caret_position
-			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+			caret_reset: caret_position = 1
+			unselected: not has_selection
 		end
 
 feature {NONE} -- Contract support

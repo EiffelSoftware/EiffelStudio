@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			-- Compiling generated C code
 			message_output.add_title (Current, Compilation_title)
 			execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
-			if shared_wizard_environment.client and not shared_wizard_environment.abort then
+			if not shared_wizard_environment.abort then
 				Clib_folder_name := clone (Client)
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 				compiler.compile_folder (Clib_folder_name)
 				compiler.link_all (Clib_folder_name, CLib_name)
 			end
-			if shared_wizard_environment.server and not shared_wizard_environment.abort then
+			if not shared_wizard_environment.abort then
 				Clib_folder_name := clone (Server)
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)

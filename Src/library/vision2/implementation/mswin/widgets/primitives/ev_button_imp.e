@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 			extra_width := 10
-			set_default_minimum_size	
+			set_default_minimum_size
 		end
 
 	widget_make (an_interface: EV_WIDGET) is
@@ -179,7 +179,7 @@ feature {NONE} -- WEL Implementation
 			execute_command (Cmd_click, Void)
 		end
 
-feature {NONE} -- WEL Implementation
+feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -195,6 +195,24 @@ feature {NONE} -- WEL Implementation
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_x (lparam)
+		end
+
+	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_y (lparam)
 		end
 
 end -- class EV_BUTTON_IMP

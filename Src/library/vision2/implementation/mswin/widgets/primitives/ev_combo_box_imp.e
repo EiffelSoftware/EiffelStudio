@@ -444,6 +444,17 @@ feature {NONE} -- WEL implementation
 						+ Cbs_autohscroll
 		end
 
+feature -- Temp
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+			-- We add nine for the borders.
+		do
+			set_minimum_width (nb * 6 + 9)
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
+
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
@@ -460,13 +471,22 @@ feature {NONE} -- WEL implementation
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
-feature -- Temp
-
-	set_minimum_width_in_characters (nb: INTEGER) is
-			-- Make `nb' characters visible on one line.
-			-- We add nine for the borders.
+	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
 		do
-			set_minimum_width (nb * 6 + 9)
+			Result := c_mouse_message_x (lparam)
+		end
+
+	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_y (lparam)
 		end
 
 end -- class EV_COMBO_BOX_IMP

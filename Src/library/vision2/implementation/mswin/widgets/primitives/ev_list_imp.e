@@ -338,22 +338,6 @@ feature {NONE} -- Implementation : WEL features
 			Result := foreground_color_imp
 		end
 
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
-		end
-
 feature {NONE} -- Copy of WEL features
 
 	wel_select_item (index: INTEGER) is
@@ -442,6 +426,42 @@ feature {NONE} -- Copy of WEL features
 		do
 			Result := cwin_send_message_result (item,
 				Lb_getcaretindex, 0, 0)
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_x (lparam)
+		end
+
+	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_y (lparam)
 		end
 
 end -- class EV_LIST_IMP

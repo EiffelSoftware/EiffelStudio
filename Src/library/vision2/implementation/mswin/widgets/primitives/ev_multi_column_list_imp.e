@@ -560,6 +560,18 @@ feature {NONE} -- WEL Implementation
 			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
 		end
 
+feature -- Inapplicable
+
+	make is
+			-- Not applicable
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
+
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
@@ -576,14 +588,22 @@ feature {NONE} -- WEL Implementation
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
-feature {NONE} -- Inapplicable
-
-	make is
-			-- Do nothing here
+	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
 		do
-			check
-				Inapplicable: False
-			end
+			Result := c_mouse_message_x (lparam)
+		end
+
+	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := c_mouse_message_y (lparam)
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

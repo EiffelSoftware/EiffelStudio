@@ -1048,7 +1048,7 @@ feature {NONE} -- Completion implementation
 				insert_in_completion_possibilities (name)
 			elseif not feat.is_prefix then
 				create name.make_with_name (feat.feature_signature)
-				if feat.is_once or feat.is_constant then
+				if (feat.is_once or feat.is_constant) and Editor_preferences.once_and_constant_in_upper then
 					name.put ((name @ 1).upper, 1)
 				end
 				insert_in_completion_possibilities (name)

@@ -29,6 +29,7 @@
 #include <sql.h>
 #include <sqlext.h>
 #include "odbc.h"
+#include "eif_eiffel.h"
 
 
 void odbc_error_handler (HSTMT,int);
@@ -41,7 +42,7 @@ char *odbc_date_to_str(int, int, int, int, int, int, int);
 
 ODBCSQLDA * odbc_descriptor[MAX_DESCRIPTOR];
 short   flag[MAX_DESCRIPTOR];
-HSTMT   hstmt[MAX_DESCRIPTOR];
+SQLHSTMT   hstmt[MAX_DESCRIPTOR];
 SDWORD  *pcbValue[MAX_DESCRIPTOR];
 HENV    henv;
 HDBC    hdbc;
@@ -63,36 +64,26 @@ char dbmsVer[DB_MAX_NAME_LEN];
 // Added for multiple connection
 short number_connection=0;
 
+/* Messages */
+char *error_message;
+char *warn_message;
+
 static int error_number,  tmp_int;
 static int data_type, size, max_size, * past_time;
-static char * error_message;
-static char * warn_message;
-static char * tmp_st;
+static char *tmp_st;
 char odbc_user_name[40];
 
 short odbc_tranNumber=0; /* number of transaction opened at present */
-void * odbc_safe_alloc (void *ptr)
-{
-  if (ptr == NULL) {
-      enomem ();
-  }
-  return ptr;
-}
 
-void change_to_low(char *buf) {
-    int i;
-    if (buf != NULL) {
-	i=strlen(buf)-1;
-	for (;i>=0;i--)
-	    buf[i]=tolower(buf[i]);
-    }
-}
+rt_private int odbc_first_descriptor_available (void);
+rt_private void change_to_low(char *buf, int length);
+
 
 /* each function return 0 in case of success */
 /* and database error code ( >= 1) else */
 
 /*****************************************************************/
-/* initialise ODBC   c-module                                                                    */
+/* initialise ODBC   c-module                                    */
 /*****************************************************************/
 
 int c_odbc_make (int m_size)
@@ -100,19 +91,15 @@ int c_odbc_make (int m_size)
   int count;
   
   if (error_message == NULL) {
-	 error_message = (char *) odbc_safe_alloc(malloc (sizeof (char) * (m_size + ERROR_MESSAGE_SIZE)));
-	 warn_message = (char *) odbc_safe_alloc (malloc (sizeof (char) * (m_size + WARN_MESSAGE_SIZE)));
+	 ODBC_SAFE_ALLOC(error_message, (char *) malloc (sizeof (char) * (m_size + ERROR_MESSAGE_SIZE)));
+	 ODBC_SAFE_ALLOC(warn_message, (char *) malloc (sizeof (char) * (m_size + WARN_MESSAGE_SIZE)));
   }
 
   odbc_clear_error ();
   max_size = m_size;
   
-  
   for (count = 0; count < MAX_DESCRIPTOR; count++)
-    {
       odbc_descriptor[count] = NULL;
-    }
-
   
   return error_number;
 }
@@ -155,7 +142,7 @@ int odbc_new_descriptor ()
       }
 	
       /* malloc area for the descriptor and then initialize it */
-      /* odbc_descriptor[result] = (ODBCSQLDA *)odbc_safe_alloc (malloc(IISQDA_HEAD_SIZE + IISQDA_VAR_SIZE));
+      /* ODBC_SAFE_ALLOC(odbc_descriptor[result], (ODBCSQLDA *) malloc(IISQDA_HEAD_SIZE + IISQDA_VAR_SIZE));
       SetVarNum(odbc_descriptor[result], 1); */
       odbc_descriptor[result] = (ODBCSQLDA *)(0x1); 
       pcbValue[result] = NULL;
@@ -179,7 +166,7 @@ int odbc_new_descriptor ()
 /*return NO_MORE_DESCRIPTOR.                                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_first_descriptor_available ()
+int odbc_first_descriptor_available (void)
 {
   int no_descriptor;    
 
@@ -263,9 +250,9 @@ int odbc_pre_immediate(int no_desc, int argNum) {
 		strcat(error_message, "\nInvalid Descriptor Number!");
 		return error_number;
 	}
-	if (argNum > 0) 
-		pcbValue[no_desc] = (SDWORD *)(odbc_safe_alloc(malloc(sizeof(SDWORD)*argNum)));
-	else
+	if (argNum > 0) {
+		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SDWORD *) malloc(sizeof(SDWORD)*argNum));
+	} else
 		pcbValue[no_desc] = NULL;
 	return error_number;
 }
@@ -333,7 +320,6 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 	int i, j;
 	int type;
 	SWORD indColName;
-	SWORD tmpScale;
 	SWORD tmpNullable;
 	int bufSize;
 	char *dataBuf;
@@ -365,7 +351,7 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 	if (strlen(order) >= 9) {
 		memcpy(tmpBuf, order, 9);
 		tmpBuf[10] = '\0';
-		change_to_low(tmpBuf);
+		change_to_low(tmpBuf, 10);
 		if (memcmp(tmpBuf, sqltab, 9) == 0) {
 			flag[no_desc] = ODBC_CATALOG_TAB;
 			for (i=9; order[i] != '(' && order[i] != '\0'; i++);
@@ -466,9 +452,9 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 		} 
 	}
 
-	if (argNum > 0) 
-		pcbValue[no_desc] = (SDWORD *)(odbc_safe_alloc(malloc(sizeof(SDWORD)*argNum)));
-	else
+	if (argNum > 0) {
+		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SDWORD *) malloc(sizeof(SDWORD)*argNum));
+	} else
 		pcbValue[no_desc] = NULL;
 
 	return error_number;
@@ -498,9 +484,9 @@ int odbc_start_order (int no_desc)
 	short colNum;
 	int i, j;
 	int type;
-	SWORD indColName;
-	SWORD tmpScale;
-	SWORD tmpNullable;
+	SQLSMALLINT indColName;
+	SQLSMALLINT tmpScale;
+	SQLSMALLINT tmpNullable;
 	int bufSize;
 	char *dataBuf;
 	// Added by Jacques. 5/14/98
@@ -645,7 +631,7 @@ int odbc_start_order (int no_desc)
 	else
 		i = 1;
 	/* Reallocate the DESCRIPTOR area.   */
-	odbc_descriptor[no_desc] = (ODBCSQLDA *)odbc_safe_alloc (malloc(IISQDA_HEAD_SIZE + (i*IISQDA_VAR_SIZE)));
+	ODBC_SAFE_ALLOC(odbc_descriptor[no_desc], (ODBCSQLDA *) malloc(IISQDA_HEAD_SIZE + i * IISQDA_VAR_SIZE));
 	dap = odbc_descriptor[no_desc];
 	SetVarNum(dap,i);
 	SetColNum(dap, colNum);
@@ -654,7 +640,16 @@ int odbc_start_order (int no_desc)
 	for (i=0; i < colNum && !error_number; i++) {
 	/* fill in the describing information for each column, and calculate */
 	/* the total length of the data buffer                               */
-		rc = SQLDescribeCol(hstmt[no_desc], i+1, (dap->sqlvar)[i].sqlname.sqlnamec, DB_MAX_NAME_LEN, &indColName, &((dap->sqlvar)[i].sqltype), &((dap->sqlvar)[i].sqllen), &tmpScale, &tmpNullable);
+		rc = SQLDescribeCol(
+					hstmt[no_desc],
+					(SQLSMALLINT) i+1,
+					(dap->sqlvar)[i].sqlname.sqlnamec,
+					DB_MAX_NAME_LEN,
+					&indColName,
+					&((dap->sqlvar)[i].sqltype),
+					&((dap->sqlvar)[i].sqllen),
+					&tmpScale,
+					&tmpNullable);
 		if (rc)
 			odbc_error_handler(hstmt[no_desc],6);
 		if (error_number == 0) {
@@ -724,7 +719,7 @@ int odbc_start_order (int no_desc)
 	/* allocate the data  buffer, and then assign the data buffer to */
 	/* each database table field.                                    */
 	if (colNum) {
-		dataBuf = (char *)odbc_safe_alloc(malloc(bufSize+2));
+		ODBC_SAFE_ALLOC(dataBuf, (char *) malloc(bufSize+2));
 	}
 	for (i=0; i<colNum; i++) {
 		SetDbColPtr(dap, i, dataBuf);
@@ -733,7 +728,7 @@ int odbc_start_order (int no_desc)
 	}
 
 	/* allocate buffer for INDICATORs of the output fields           */
-	odbc_indicator[no_desc] = (SDWORD *)odbc_safe_alloc(malloc((colNum+1)*sizeof(long))); 
+	ODBC_SAFE_ALLOC(odbc_indicator[no_desc], (SDWORD *) malloc((colNum+1)*sizeof(long))); 
 	return error_number;
 }
 
@@ -1106,7 +1101,7 @@ char *odbc_qualifier_seperator() {
 /* to implement command "SQLTable(tanle_name)" conviently.       */ 
 /*                                                               */
 /*****************************************************************/
-int odbc_set_qualifier(char *qfy) {
+void odbc_set_qualifier(char *qfy) {
 	if (qfy == NULL) 
 		odbc_qualifier[0] = '\0';
 	else
@@ -1124,7 +1119,7 @@ int odbc_set_qualifier(char *qfy) {
 /* to implement command "SQLTable(tanle_name)" conviently.       */ 
 /*                                                               */
 /*****************************************************************/
-int odbc_set_owner(char *owner) {
+void odbc_set_owner(char *owner) {
 	if (owner == NULL)
 		odbc_owner[0] = '\0';
 	else
@@ -1201,7 +1196,7 @@ char *odbc_date_to_str(int year, int month, int day, int hour, int minute, int s
 char *odbc_stru_of_date(int year, int month, int day, int hour, int minute, int sec, int type) {
 	TIMESTAMP_STRUCT *res;
 
-	res = (TIMESTAMP_STRUCT *)odbc_safe_alloc(malloc(sizeof(TIMESTAMP_STRUCT)));
+	ODBC_SAFE_ALLOC(res, (TIMESTAMP_STRUCT *) malloc(sizeof(TIMESTAMP_STRUCT)));
 	res->year = year;
 	res->month = month;
 	res->day = day;
@@ -1215,7 +1210,7 @@ char *odbc_stru_of_date(int year, int month, int day, int hour, int minute, int 
 char *odbc_str_from_str(char *ptr) {
 	char *val;
 
-	val = (char *)odbc_safe_alloc(malloc(strlen(ptr) + 1));
+	ODBC_SAFE_ALLOC(val, (char *) malloc(strlen(ptr) + 1));
 	strcpy(val, ptr);
 	return val;
 }
@@ -1827,80 +1822,6 @@ void odbc_clear_error ()
   error_message[0] = '\0';
 }
 
-
-
-
-char * odbc_get_error_message ()
-{
-  return error_message;
-}
-
-char * odbc_get_warn_message ()
-{
-  return warn_message;
-}
-
-
-odbc_c_free(char *ptr) {
-	free(ptr);
-}
-
-/***************/
-/* eiffel_type */
-/***************/
-
-int odbc_c_string_type ()
-{
-  return STRING_TYPE;
-}
-
-int odbc_c_character_type ()
-{
-  return CHARACTER_TYPE;
-}
-
-int odbc_c_integer_type ()
-{
-  return INTEGER_TYPE;
-}
-
-int odbc_c_float_type ()
-{
-  return FLOAT_TYPE;
-}
-
-
-int odbc_c_real_type ()
-{
-  return REAL_TYPE;
-}
-
-
-int odbc_c_boolean_type ()
-{
-  return BOOLEAN_TYPE;
-}
-
-int odbc_c_date_type ()
-{
-  return DATE_TYPE;
-}
-
-int odbc_c_time_type ()
-{
-  return TIME_TYPE;
-}
-
-/* EOF ODBC.c */
-
-
-
-
-
-
-
-
-
 void odbc_error_handler(HSTMT h_err_stmt, int code) {
 	SDWORD nErr;
 	UCHAR msg[MAX_ERROR_MSG +1];
@@ -2107,3 +2028,7 @@ void odbc_disp_rec(int no_des) {
 }
 
 
+rt_private void change_to_low (char *buf, int length) {
+	for (; length >= 0; length--)
+	    buf[length] = tolower(buf[length]);
+}

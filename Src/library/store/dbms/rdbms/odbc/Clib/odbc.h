@@ -17,6 +17,18 @@
    Database: "ODBC"
 */
 
+extern char *error_message;
+extern char *warn_message;
+
+/* Macro for memory allocation */
+#define ODBC_SAFE_ALLOC(x,function)	\
+	x = function; \
+		if (x == NULL) \
+				enomem()
+
+#define ODBC_C_FREE free
+
+/* Missing declaration in the Borland compiler */
 #ifdef EIF_BORLAND
 #ifndef SQL_HANDLE_ENV
 #define SQL_HANDLE_ENV      1

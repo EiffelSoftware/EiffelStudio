@@ -153,9 +153,9 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_GOTO_BODY		106
 #define BC_NOT_REC			107
 #define BC_END_PRE			108
-#define BC_CAST_LONG     	110
-#define BC_CAST_FLOAT    	111
-#define BC_CAST_DOUBLE  	112
+#define BC_CAST_INTEGER    	110
+#define BC_CAST_REAL_32    	111
+#define BC_CAST_REAL_64  	112
 #define BC_INV_NULL  		113
 #define BC_CREAT_INV		114
 #define BC_END_EVAL_OLD		115
@@ -215,37 +215,24 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_ONCE_STRING		(unsigned char) 144
 #define BC_ALLOCATE_ONCE_STRINGS	(unsigned char) 145
 
-#ifdef CONCURRENT_EIFFEL
-/* Instructions for Concurrent Eiffel */
-#define BC_SEP_SET			(unsigned char) 150
-#define BC_SEP_UNSET		(unsigned char) 151
-#define BC_SEP_RESERVE		(unsigned char) 152
-#define BC_SEP_FREE			(unsigned char) 153
-#define BC_SEP_TO_SEP		(unsigned char) 154
-#define BC_SEP_RAISE_PREC	(unsigned char) 155
-#define BC_SEP_CREATE		(unsigned char) 156
-#define BC_SEP_CREATE_END	(unsigned char) 157
-
-#define BC_SEP_ATTRIBUTE_INV	(unsigned char) 158
-#define BC_SEP_EXTERN_INV	(unsigned char) 159
-#define BC_SEP_FEATURE_INV	(unsigned char) 160
-
-#define BC_SEP_PATTRIBUTE_INV	(unsigned char) 161
-#define BC_SEP_PEXTERN_INV	(unsigned char) 162
-#define BC_SEP_PFEATURE_INV	(unsigned char) 163
-
-#define BC_SEP_EXTERN		(unsigned char) 164
-#define BC_SEP_FEATURE		(unsigned char) 165
-#define BC_SEP_PEXTERN		(unsigned char) 166
-#define BC_SEP_PFEATURE		(unsigned char) 167
-
-/* NOTE: We can get rid of the following instructions:
- * BC_SEP_FEATURE
- * BC_SEP_PFEATURE
- * BC_SEP_EXTERN
- * BC_SEP_PEXTERN
-*/
-#endif
+#define BC_NOTUSED_150		(unsigned char) 150
+#define BC_NOTUSED_151		(unsigned char) 151
+#define BC_NOTUSED_152		(unsigned char) 152
+#define BC_NOTUSED_153		(unsigned char) 153
+#define BC_NOTUSED_154		(unsigned char) 154
+#define BC_NOTUSED_155		(unsigned char) 155
+#define BC_NOTUSED_156		(unsigned char) 156
+#define BC_NOTUSED_157		(unsigned char) 157
+#define BC_NOTUSED_158		(unsigned char) 158
+#define BC_NOTUSED_159		(unsigned char) 159
+#define BC_NOTUSED_160		(unsigned char) 160
+#define BC_NOTUSED_161		(unsigned char) 161
+#define BC_NOTUSED_162		(unsigned char) 162
+#define BC_NOTUSED_163		(unsigned char) 163
+#define BC_NOTUSED_164		(unsigned char) 164
+#define BC_NOTUSED_165		(unsigned char) 165
+#define BC_NOTUSED_166		(unsigned char) 166
+#define BC_NOTUSED_167		(unsigned char) 167
 
 /* Manifest tuple */
 #define BC_TUPLE	(unsigned char) 168

@@ -7,11 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-
-	CLIENT
-
-inherit
+deferred class CLIENT inherit
 
 	SOCKET_RESOURCES
 
@@ -24,15 +20,18 @@ feature -- Access
 			-- message received on `in'
 
 	cleanup is
+			-- Cleanup client.
 		deferred
 		end;
 
 	send (msg : ANY) is
+			-- Send `msg'.
 		do
 			in_out.independent_store (msg)
 		end;
 
 	receive is
+			-- Receive message.
 		do
 			received ?= in_out.retrieved
 		end

@@ -7,11 +7,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
+deferred class NETWORK_SERVER inherit
 
-	NETWORK_SERVER
-
-inherit
 	SERVER
 		redefine
 			in, resend
@@ -22,8 +19,8 @@ feature -- Access
 	in: NETWORK_STREAM_SOCKET;
 			-- Receive socket.
 
-	make (a_port : INTEGER) is
-			-- Make a network server.
+	make (a_port: INTEGER) is
+			-- Make a network server listening to `a_port'.
 		require 
 			valid_port: a_port >= 0
 		do
@@ -36,13 +33,13 @@ feature -- Access
 		end;
 
 	cleanup is
-			-- Clean close of server
+			-- Clean close of server.
 		do
 			in.close
 		end;
 
 	receive is
-			-- Receive activity of server
+			-- Receive activity of server.
 		do
 			in.accept;
 			outflow ?= in.accepted;

@@ -120,11 +120,11 @@ feature {NONE} -- Initialization
 			Precursor {EV_APPLICATION}
 			-- Any General initialization can be added here.
 			-- This will be executed before the program is launched.
-			pnd_motion_actions.extend (agent display_object)
-			cancel_actions.extend (agent clear_status)
+			pnd_motion_actions.extend (agent clear_status_during_transport)
+			cancel_actions.extend (agent clear_status_after_transport)
 		end
 		
-	display_object (an_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	clear_status_during_transport (an_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Clear status bar if `a_target' is Void.
 		do
 			if a_target = Void then
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	clear_status (a: ANY) is
+	clear_status_after_transport (a: ANY) is
 			-- Clear `status_bar'.
 		do
 			clear_status_bar

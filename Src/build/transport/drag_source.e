@@ -22,9 +22,12 @@ feature
 feature
 
 	transportable: BOOLEAN is
+		local
+			st: STONE
 		do
-			Result := stone /= Void and then
-				stone.data /= Void
+			st := stone;
+			Result := st /= Void and then
+				st.data /= Void
 		end;
 
 feature {TRANSPORT}

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Commonly used console input and output mechanisms. % 
+		"Commonly used console input and output mechanisms. %
 		%This class may be used as ancestor by classes needing its facilities.";
 
 	status: "See notice at end of class";
@@ -15,19 +15,19 @@ class CONSOLE inherit
 			make_open_read as make_open_stdin,
 			make_open_write as make_open_stdout
 		export
-			{NONE} 
+			{NONE}
 				all;
 			{ANY}
-				separator, append, file_pointer, last_character, last_integer, 
+				separator, append, file_pointer, last_character, last_integer,
 				last_real, last_string, last_double, file_readable,
-				lastchar, lastint, lastreal, laststring, lastdouble 
+				lastchar, lastint, lastreal, laststring, lastdouble
 		redefine
 			make_open_stdin, make_open_stdout, count, empty, exists,
 			read_integer, read_real, read_double, read_character,
-			read_line, read_stream, read_word, next_line, put_integer, 
-			put_boolean, put_real, put_double, put_string, put_character, 
+			read_line, read_stream, read_word, next_line, put_integer,
+			put_boolean, put_real, put_double, put_string, put_character,
 			new_line, end_of_file, file_close,
-			readint, readreal, readdouble, readchar, readline, readstream, 
+			readint, readreal, readdouble, readchar, readline, readstream,
 			readword, putint, putbool, putreal, putdouble, putstring, putchar,
 			dispose
 		end
@@ -209,7 +209,7 @@ feature -- Input
 			console_next_line (file_pointer)
 		end;
 
-feature -- Output 
+feature -- Output
 
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
@@ -253,8 +253,8 @@ feature -- Output
 				put_string ("true")
 			else
 				put_string ("false")
-			end 
-		end; 
+			end
+		end;
 
 	new_line is
 			-- Write line feed at end of default output.
@@ -331,25 +331,25 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
-	
+
 	console_readchar (file: POINTER): CHARACTER is
 			-- Read a character from the console
 		external
 			"C"
 		end;
-	
+
 	console_readint (file: POINTER): INTEGER is
 			-- Read an integer from the console
 		external
 			"C"
 		end;
-	
+
 	console_readdouble (file: POINTER): DOUBLE is
 			-- Read a double from the console
 		external
 			"C"
 		end;
-	
+
 	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a string excluding white space and stripping
 			-- leading white space from `file' into `a_string'.

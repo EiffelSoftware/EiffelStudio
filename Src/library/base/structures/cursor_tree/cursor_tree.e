@@ -118,10 +118,10 @@ feature -- Status report
 			Result := not off
 		end;
 
-	extendible: BOOLEAN is 
+	extendible: BOOLEAN is
 			-- May new items be added?
 		do
-			Result := not above 
+			Result := not above
 		end
 
 	is_leaf: BOOLEAN is

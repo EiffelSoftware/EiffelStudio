@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Stacks with a bounded physical size, implemented by arrays"; 
+		"Stacks with a bounded physical size, implemented by arrays";
 
 	status: "See notice at end of class";
 	names: dispenser, array;
@@ -16,14 +16,14 @@ class BOUNDED_STACK [G] inherit
 
 	STACK [G]
 		redefine
-			replace, item, 
+			replace, item,
 			linear_representation
 		end;
 
 	BOUNDED [G]
 		undefine
 			consistent, copy, setup, is_equal
-		end; 
+		end;
 
 creation
 
@@ -148,7 +148,7 @@ feature -- Conversion
 				i < 0
 			loop
 				Result.extend (fl.item (i));
-				i := i - 1 
+				i := i - 1
 			end
 		end;
 
@@ -196,7 +196,7 @@ feature {STACK} -- Implementation
 			Result := (index < 1) or else (index > count)
 		end;
 
-	fl: ARRAY [G] 
+	fl: ARRAY [G]
 			-- Storage
 
 	index: INTEGER

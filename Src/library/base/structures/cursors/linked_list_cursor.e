@@ -13,8 +13,8 @@ class LINKED_LIST_CURSOR [G] inherit
 
 	CURSOR
 
-creation 
-	
+creation
+
 	make
 
 feature {LINKED_LIST} -- Initialization

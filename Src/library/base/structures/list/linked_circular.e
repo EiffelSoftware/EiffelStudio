@@ -29,7 +29,7 @@ class LINKED_CIRCULAR [G] inherit
 			before as l_before,
 			remove as l_remove,
 			first as l_first,
-			off as l_off, 
+			off as l_off,
 			prune as l_prune,
 			prune_all as l_prune_all,
 			go_i_th as l_go_i_th,
@@ -76,7 +76,7 @@ feature -- Element change
 		do
 			list.merge_right (other.list)
 		end
-	
+
 	put_right (v : like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
@@ -111,8 +111,8 @@ feature -- Element change
 		do
 			list.put_left (v)
 		end
-	
-feature --  Access 
+
+feature --  Access
 
 	item : G is
 			-- Current item
@@ -144,7 +144,7 @@ feature -- Status report
 		do
 			c_c ?= p;
 			if c_c /= Void then
-				Result := list.valid_cursor(c_c.cursor) 
+				Result := list.valid_cursor(c_c.cursor)
 			end
 		end
 
@@ -241,7 +241,7 @@ feature -- Removal
 			count > 1
 		do
 			if standard_islast then
-				standard_start; 
+				standard_start;
 				remove;
 				finish
 			else
@@ -264,7 +264,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 				end
 			end
 		end;
-		
+
 	starter: INTEGER
 			-- The position currently selected as first
 
@@ -275,9 +275,9 @@ feature {LINKED_CIRCULAR} -- Implementation
 		do
 			!! Result.make
 		end;
-	
+
 	list : LINKED_LIST[G]
-	
+
 	standard_after : BOOLEAN is
 			do
 				Result := list.after

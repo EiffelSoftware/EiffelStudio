@@ -16,7 +16,7 @@ class ARRAYED_QUEUE [G] inherit
 
 	QUEUE [G]
 		undefine
-			copy, is_equal, 
+			copy, is_equal,
 			consistent, setup, prune_all
 		redefine
 			linear_representation, has, empty
@@ -34,7 +34,7 @@ class ARRAYED_QUEUE [G] inherit
 			grow as array_grow,
 			empty as array_empty
 		export
-			{NONE} 
+			{NONE}
 				all;
 		redefine
 			wipe_out, extend, prunable,
@@ -78,7 +78,7 @@ feature -- Access
 		do
 			if object_comparison then
 				if v /= Void then
-					from 
+					from
 						i := out_index
 					until
 						i = in_index or (i_th (i) /= Void and then v.is_equal (i_th (i)))
@@ -90,7 +90,7 @@ feature -- Access
 					end
 				end
 			else
-				from 
+				from
 					i := out_index
 				until
 					i = in_index or v = i_th (i)
@@ -102,10 +102,10 @@ feature -- Access
 				end
 			end;
 			Result := (i /= in_index)
-		end;				
-			
+		end;
+
 feature -- Measurement
-	
+
 	count: INTEGER is
 			-- Number of items.
 		do
@@ -123,7 +123,7 @@ feature -- Status report
 		end;
 
 	full: BOOLEAN is
-			-- Is structure filled to capacity? 
+			-- Is structure filled to capacity?
 			-- (Answer: no.)
 		do
 			Result := False
@@ -146,7 +146,7 @@ feature -- Element change
 	extend, put, force (v: G) is
 			-- Add `v' as newest item.
 		do
-			if count + 1 >= array_count then grow end;	
+			if count + 1 >= array_count then grow end;
 			put_i_th (v, in_index);
 			in_index := (in_index + 1) \\ capacity;
 			if in_index = 0 then in_index := capacity end;
@@ -163,7 +163,7 @@ feature -- Removal
 	remove is
 			-- Remove oldest item.
 		local
-			default_value: G;	
+			default_value: G;
 		do
 			put_i_th (default_value, out_index);
 			out_index := (out_index + 1) \\ capacity;
@@ -225,7 +225,7 @@ feature {ARRAYED_QUEUE} -- Implementation
 
 	in_index: INTEGER;
 			-- Position for next insertion
-			
+
 	grow is
 		local
 			i,j: INTEGER;
@@ -254,7 +254,7 @@ invariant
 	not_full: not full;
 	extendible: extendible;
 	prunable: prunable;
-					
+
 end -- class ARRAYED_QUEUE
 
 

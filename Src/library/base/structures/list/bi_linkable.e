@@ -99,7 +99,7 @@ feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 			-- Remove right link (do nothing to right neighbor).
 		do
 			right := Void
-		end;	
+		end;
 
 	simple_forget_left is
 			-- Remove left link (do nothing to left neighbor).

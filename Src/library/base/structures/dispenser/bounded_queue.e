@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Queues with a bounded physical size, implemented by arrays"; 
+		"Queues with a bounded physical size, implemented by arrays";
 
 	status: "See notice at end of class";
 	names: dispenser, array;
@@ -38,7 +38,7 @@ feature -- Initialization
 			!!fl.make (0, n);
 				-- One entry is kept free (the last one in the list)
 		ensure
-			capacity_expected: capacity = n 
+			capacity_expected: capacity = n
 		end;
 
 feature -- Access
@@ -86,7 +86,7 @@ feature -- Access
 						end
 					end
 				end
-			else	
+			else
 				if out_index > in_index then
 					from
 						i := out_index
@@ -116,7 +116,7 @@ feature -- Access
 				end
 			end
 		end;
-			
+
 
 feature -- Measurement
 
@@ -238,7 +238,7 @@ feature -- Conversion
 					Result.extend (fl.item (i));
 					i := i + 1
 				end;
-				from 
+				from
 					i := 1
 				until
 					i >= in_index
@@ -247,7 +247,7 @@ feature -- Conversion
 					i := i + 1
 				end
 			else
-				from 
+				from
 					i := out_index
 				until
 					i >= in_index

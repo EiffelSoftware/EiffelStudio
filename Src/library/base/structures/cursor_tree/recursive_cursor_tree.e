@@ -39,7 +39,7 @@ feature -- Measurement
 
 	arity: INTEGER is
 			-- Number of children of active node; if cursor is `above',
-			-- 0 if tree is empty, 1 otherwise. 
+			-- 0 if tree is empty, 1 otherwise.
 		do
 			Result := active.arity
 		end;
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			-- Make `active' the current child of `active_parent'.
 		do
 			if active_parent /= Void then
-				active_parent.child_go_i_th (1);	
+				active_parent.child_go_i_th (1);
 				--active_parent.search (active);
 			end;
 		end;

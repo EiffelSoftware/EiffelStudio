@@ -20,7 +20,7 @@ feature -- Access
 	Eiffel_memory: INTEGER is 1;
 			-- Code for the Eiffel memory managed
 			-- by the garbage collector
-	
+
 	C_memory: INTEGER is 2;
 			-- Code for the C memory managed
 			-- by the garbage collector

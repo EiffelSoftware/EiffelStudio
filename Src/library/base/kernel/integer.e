@@ -67,7 +67,7 @@ feature -- Basic operations
 			-- Unary minus
 		do
 			-- Built-in
-		end; 
+		end;
 
 	infix "//" (other: like Current): like Current is
 			-- Integer division of Current by `other'

@@ -41,7 +41,7 @@ class HEAP_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 			put, extendible,
 			linear_representation
 		end
-		
+
 creation
 
 	make
@@ -52,7 +52,7 @@ feature -- Initialization
 			-- Allocate heap space.
 		do
 			array_make (1, n);
-		end;	
+		end;
 
 feature -- Access
 
@@ -69,7 +69,7 @@ feature -- Measurement
 feature -- Status report
 
 	extendible: BOOLEAN is
-			-- May items be added? 
+			-- May items be added?
 		do
 			Result := not full
 		end
@@ -78,11 +78,11 @@ feature -- Status report
 			-- Is structure filled to capacity?
 		do
 			Result := (count = capacity)
-		end	
+		end
 
 	prunable: BOOLEAN is true;
 			-- May items be removed? (Answer: yes.)
-		
+
 feature -- Element change
 
 	force, put (v: like item) is
@@ -96,7 +96,7 @@ feature -- Element change
 feature -- Removal
 
 	remove is
-			-- Remove item of highest value. 
+			-- Remove item of highest value.
 		do
 			put_i_th (i_th (count), 1);
 			count := count - 1;
@@ -126,7 +126,7 @@ feature -- Conversion
 			loop
 				put_i_th (Result.i_th (i), i);
 				i := i + 1
-			end;	
+			end;
 		end;
 
 feature -- Duplication

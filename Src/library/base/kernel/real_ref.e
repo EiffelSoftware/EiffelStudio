@@ -159,7 +159,7 @@ feature -- Status report
 		do
 			Result := item /= 0.0
 		end;
-	
+
 feature -- Conversion
 
 	truncated_to_integer: INTEGER is

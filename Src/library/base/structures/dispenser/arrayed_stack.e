@@ -37,7 +37,7 @@ class ARRAYED_STACK [G] inherit
 			before as after
 		export
 			{NONE} all;
-			{ANY} 
+			{ANY}
 				count, readable, writable, extendible,
 			 	make, wipe_out
 			{STACK} start, finish, forth, back
@@ -56,7 +56,7 @@ feature -- Element change
 
 	extend, put, force (v: like item) is
 			-- Push `v' on top.
-		do							
+		do
 			al_extend (v);
 			start
 		end;
@@ -88,7 +88,7 @@ feature -- Conversion
 			loop
 				Result.extend (i_th (i));
 				i := i - 1
-			end		
+			end
 		end;
 
 feature -- Obsolete

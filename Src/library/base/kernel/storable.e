@@ -57,7 +57,7 @@ feature -- Access
 				file.close
 			end
 		end
-	
+
 feature -- Element change
 
 	basic_store (file: IO_MEDIUM) is
@@ -79,7 +79,7 @@ feature -- Element change
 			-- Retrievable from other systems for same platform
 			-- (machine architecture).
 			--| This feature may use a visible name of a class written
-			--| in the `visible' clause of the Ace file. This makes it 
+			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		require
 			file_not_void: file /= Void;
@@ -106,7 +106,7 @@ feature -- Element change
 
 	store_by_name (file_name: STRING) is
 			-- Produce on file called `file_name' an external
-			-- representation of the entire object structure 
+			-- representation of the entire object structure
 			-- reachable from current object.
 			-- Retrievable from other systems for same platform
 			-- (machine architecture).
@@ -120,7 +120,7 @@ feature -- Element change
 			!!file.make (file_name)
 			if (file.exists and then file.is_writable) or else
 				(file.is_creatable) then
-				file.open_write 
+				file.open_write
 				c_general_store (file.descriptor, $Current)
 				file.close
 			else

@@ -71,7 +71,7 @@ feature -- Basic operations
 			-- Unary minus
 		do
 			-- Built-in
-		end; 
+		end;
 
 end -- class DOUBLE
 

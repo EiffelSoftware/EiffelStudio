@@ -23,7 +23,7 @@ feature -- Measurement
 	occurrences (v: G): INTEGER is
 			-- Number of times `v' appears in structure
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 		deferred
 		ensure
 			non_negative_occurrences: Result >= 0

@@ -47,7 +47,7 @@ deferred class CHAIN [G] inherit
 			occurrences as sequential_occurrences
 		export
 			{NONE}
-				sequential_index_of, sequential_has, 
+				sequential_index_of, sequential_has,
 				sequence_put
 		redefine
 			off
@@ -84,7 +84,7 @@ feature -- Access
 	has (v: like item): BOOLEAN is
 			-- Does chain include `v'?
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 
 		local
 			pos: CURSOR
@@ -97,7 +97,7 @@ feature -- Access
 	index_of (v: like item; i: INTEGER): INTEGER is
 			-- Index of `i'-th occurrence of item identical to `v'.
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 			-- 0 if none.
 		local
 			pos: CURSOR
@@ -126,7 +126,7 @@ feature -- Access
 	occurrences (v: like item): INTEGER is
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 		local
 			pos: CURSOR
 		do
@@ -299,7 +299,7 @@ feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-chain beginning at current position
-			-- and having min (`n', `from_here') items, 
+			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
 			-- at or to the right of current position.
 		require

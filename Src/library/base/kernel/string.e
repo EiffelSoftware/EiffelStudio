@@ -93,7 +93,7 @@ feature -- Initialization
 			!! Result.make (0);
 			Result.share (s)
 		end;
-			
+
 	from_c (c_string: POINTER) is
 			-- Reset contents of string from contents of `c_string',
 			-- a string created by some external C function.
@@ -112,7 +112,7 @@ feature -- Initialization
 			-- Perform actions on a freshly created object so that
 			-- the contents of `other' can be safely copied onto it.
 		do
-			remake (other.capacity)	
+			remake (other.capacity)
 		end;
 
 feature -- Access
@@ -178,7 +178,7 @@ feature -- Access
 			Result := str_search ($area, c, start, count)
 		ensure
 			correct_place: Result > 0 implies item (Result) = c
-			-- forall x : start..Result 
+			-- forall x : start..Result
 			--  item (x) /= c
 		end;
 
@@ -195,7 +195,7 @@ feature -- Access
 		ensure
 			correct_place: Result > 0 implies
 				substring (Result, Result+other.count - 1).is_equal (other)
-			-- forall x : start..Result 
+			-- forall x : start..Result
 		 	--	not substring (x, x+other.count -1).is_equal (other)
 		end;
 
@@ -242,7 +242,7 @@ feature -- Measurement
 				counter := counter + 1;
 			end
 		end;
-			
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -268,7 +268,7 @@ feature -- Comparison
 			Result := str_cmp ($other_area, $area, other.count, count)>0
 		end;
 
-feature -- Status report	
+feature -- Status report
 
 	consistent (other: like Current): BOOLEAN is
 				-- Is object in a consistent state so that `other'
@@ -402,12 +402,12 @@ feature -- Element change
 			loop
 				replace_substring (new, change_pos, change_pos + original.count - 1)
 				if change_pos + new.count <= count then
-					change_pos := substring_index (original, change_pos + new.count)	
+					change_pos := substring_index (original, change_pos + new.count)
 				else
 					change_pos := 0
 				end
 			end
-		end; 
+		end;
 
 	fill_blank is
 			-- Fill with blanks.
@@ -460,7 +460,7 @@ feature -- Element change
 		do
 			count := str_left ($area, count);
 		ensure
-			new_count: (count /= 0) implies 
+			new_count: (count /= 0) implies
 				((item (1) /= ' ') and
 				 (item (1) /= '%T') and
 				 (item (1) /= '%R') and
@@ -472,7 +472,7 @@ feature -- Element change
 		do
 			count := str_right ($area, count)
 		ensure
-			new_count: (count /= 0) implies 
+			new_count: (count /= 0) implies
 				((item (count) /= ' ') and
 				 (item (count) /= '%T') and
 				 (item (count) /= '%R') and
@@ -596,7 +596,7 @@ feature -- Element change
 				append (s)
 			end
 		end;
-			
+
 	append_integer (i: INTEGER) is
 			-- Append the string representation of `i' at end.
 		do
@@ -765,21 +765,21 @@ feature -- Resizing
 feature -- Conversion
 
 	left_justify is
-			-- Left justify the string using 
+			-- Left justify the string using
 			-- the capacity as the width
 		do
 			str_ljustify ($area, count, capacity)
 		end
 
 	center_justify is
-			-- Center justify the string using 
+			-- Center justify the string using
 			-- the capacity as the width
 		do
 			str_cjustify ($area, count, capacity)
 		end
 
 	right_justify is
-			-- Right justify the string using 
+			-- Right justify the string using
 			-- the capacity as the width
 		do
 			str_rjustify ($area, count, capacity)
@@ -792,7 +792,7 @@ feature -- Conversion
 			-- This will grow the string if necessary
 			-- to get the pivot in the correct place.
 		require
-			valid_position: position <= capacity 
+			valid_position: position <= capacity
 			positive_position: position >= 1
 			pivot_not_space: pivot /= ' '
 			not_empty: not empty
@@ -863,7 +863,7 @@ feature -- Conversion
 
 	to_boolean: BOOLEAN is
 			-- Boolean value;
-			-- "true" yields `True', "false" yields `False' 
+			-- "true" yields `True', "false" yields `False'
 			-- (case-insensitive)
 		require
 			is_boolean: is_boolean
@@ -978,13 +978,13 @@ feature -- Duplication
 				i := n
 			until
 				i = 1
-			loop 
+			loop
 				append (s)
-				i := i - 1	
+				i := i - 1
 			end
 		end
 
-feature -- Output	
+feature -- Output
 
 	out: like Current is
 			-- Printable representation
@@ -1055,7 +1055,7 @@ feature {STRING} -- Implementation
 		external
 			"C"
 		end;
-	
+
 	str_str (c_str, o_str: like area; clen, olen, i, fuzzy: INTEGER): INTEGER is
 			-- Forward search of `o_str' within `c_str' starting at `i'.
 			-- Return the index within `c_str' where the pattern was
@@ -1064,7 +1064,7 @@ feature {STRING} -- Implementation
 			-- mismatches within the pattern. A 0 means an exact match.
 		external
 			"C"
-		end;	
+		end;
 
 	c_p_i: INTEGER is
 			-- Number of characters per INTEGER
@@ -1079,21 +1079,21 @@ feature {STRING} -- Implementation
 		end;
 
 	str_ljustify (c_string: POINTER; length,cap: INTEGER) is
-			-- Left justify in a field of `capacity' 
+			-- Left justify in a field of `capacity'
 			-- the `c_string' of length `length'
 		external
 			"C"
 		end;
 
 	str_cjustify (c_string: POINTER; length,cap: INTEGER) is
-			-- Center justify in a field of `capacity' 
+			-- Center justify in a field of `capacity'
 			-- the `c_string' of length `length'
 		external
 			"C"
 		end;
 
 	str_rjustify (c_string: POINTER; length,cap: INTEGER) is
-			-- Right justify in a field of `capacity' 
+			-- Right justify in a field of `capacity'
 			-- the `c_string' of length `length'
 		external
 			"C"
@@ -1167,7 +1167,7 @@ feature {STRING} -- Implementation
 		external
 			"C"
 		end;
-	
+
 	str_cpy (to_str: POINTER; from_str: POINTER; length_from: INTEGER) is
 			-- Copy `length_from' characters from `from_str' into `to_str'.
 		external

@@ -15,10 +15,10 @@ class FIXED_LIST [G] inherit
 
 	LIST [G]
 		export
-			{ANY} 
+			{ANY}
 				put
 			{NONE}
-				force, extend, 
+				force, extend,
 				fill,
 				prune, prune_all;
 		undefine
@@ -34,7 +34,7 @@ class FIXED_LIST [G] inherit
 			finish,
 			go_i_th
 		end;
-	
+
 	ARRAY [G]
 		rename
 			make as array_make,
@@ -74,7 +74,7 @@ class FIXED_LIST [G] inherit
 creation
 
 	make
-	
+
 feature -- Initialization
 
 	make (n: INTEGER) is
@@ -90,35 +90,35 @@ feature -- Access
 
 	index: INTEGER;
 		-- Current position in the list
-		
+
 	item: G is
             -- Current item
 		do
 			Result := area.item (index - 1)
 		end;
-		
+
 	first: G is
             -- Item at first position
 		do
 			Result := area.item (0)
 		end;
-		
+
 	last: like first is
             -- Item at last position
 		do
 			Result := area.item (count - 1)
 		end;
-		
+
 	cursor: CURSOR is
 			-- Current cursor position
 		do
 			!ARRAYED_LIST_CURSOR! Result.make (index)
 		end;
-		
+
 feature -- Status report
 
 	extendible: BOOLEAN is false;
-	
+
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Is `p' a valid cursor?
 		local
@@ -142,37 +142,37 @@ feature -- Cursor movement
 				index := 0
 			end
 		end;
-		
+
 	start is
 			-- Move cursor to first position.
 		do
 			index := 1
 		end;
-		
+
 	finish is
 			-- Move cursor to last position.
 		do
 			index := count
 		end;
-		
+
 	forth is
 			-- Move cursor to next position, if any.
 		do
 			index := index + 1
 		end;
-		
+
 	back is
 			-- Move cursor to previous position, if any.
 		do
 			index := index - 1
 		end;
-		
+
 	go_i_th (i: INTEGER) is
 			-- Move cursor to `i'-th position.
 		do
 			index := i
 		end;
-		
+
 	go_to (p: CURSOR) is
 			-- Move cursor to element remembered in `p'.
 		local
@@ -184,7 +184,7 @@ feature -- Cursor movement
 			end;
 			index := fl_c.index
 		end;
-		
+
 feature -- Element change
 
 	replace (v: like first) is
@@ -228,7 +228,7 @@ feature -- Duplication
 			Result.start;
 			index := pos;
 		end;
-		
+
 feature {NONE} 	-- Inapplicable
 
 	force (v: like item) is
@@ -237,7 +237,7 @@ feature {NONE} 	-- Inapplicable
 		end;
 
 
-end -- class FIXED_LIST	
+end -- class FIXED_LIST
 
 
 --|----------------------------------------------------------------

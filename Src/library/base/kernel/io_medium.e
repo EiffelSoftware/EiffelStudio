@@ -6,7 +6,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class IO_MEDIUM 
+deferred class IO_MEDIUM
 
 inherit
 	MEMORY
@@ -131,7 +131,7 @@ feature -- Removal
 			end;
 		end;
 
-feature -- Output 
+feature -- Output
 
 	new_line is
 			-- Write a new line character to medium
@@ -168,14 +168,14 @@ feature -- Output
 			extendible: extendible
 		deferred
 		end;
-	
+
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' to medium.
 		require
 			extendible: extendible
 		deferred
 		end;
-	
+
 	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' to medium.
 		require
@@ -183,8 +183,8 @@ feature -- Output
 		deferred
 		end;
 
-feature -- Input 
-	
+feature -- Input
+
 	read_real, readreal is
 			-- Read a new real.
 			-- Make result available in `last_real'.
@@ -234,7 +234,7 @@ feature -- Input
 			is_readable: readable
 		deferred
 		end;
-			
+
 feature -- Obsolete
 
 	lastchar: CHARACTER is

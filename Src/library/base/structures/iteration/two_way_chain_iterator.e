@@ -41,7 +41,7 @@ class TWO_WAY_CHAIN_ITERATOR [G] inherit
 		end;
 
 	LINEAR_ITERATOR [G]
-		rename   
+		rename
 			start as finish,
 			forth as back,
 			do_all as do_all_back,

@@ -19,7 +19,7 @@ feature -- Access
 		do
 			Result := c_generator ($Current);
 		end;
- 
+
 feature -- Status report
 
 	conforms_to (other: GENERAL): BOOLEAN is
@@ -38,7 +38,7 @@ feature -- Status report
 		do
 			Result := c_same_type ($other, $Current)
 		ensure
-			definition: Result = (conforms_to (other) and 
+			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
 		end;
 
@@ -145,7 +145,7 @@ feature -- Duplication
 	frozen clone (other: GENERAL): like other is
 			-- Void if `other' is void; otherwise new object
 			-- equal to `other'
-			--			
+			--
 			-- For non-void `other', `clone' calls `copy';
 		 	-- to change copying/cloning semantics, redefine `copy'.
 		local
@@ -199,7 +199,7 @@ feature -- Duplication
 			copy (temp)
 		ensure
 			deep_equal: deep_equal (Current, other)
-		end; 
+		end;
 
 	setup (other: like Current) is
 			-- Assuming current object has just been created, perform
@@ -211,7 +211,7 @@ feature -- Duplication
 		end;
 
 feature -- Output
-	
+
 	io: STD_FILES is
 			-- Handle to standard file setup
 		once
@@ -233,7 +233,7 @@ feature -- Output
 			if some /= Void then
 				io.put_string (some.out)
 			end
-		end; 
+		end;
 
 feature -- Basic operations
 
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		end;
 
 	frozen c_same_type (obj1, obj2: POINTER): BOOLEAN is
-			-- Are dynamic type of object attached to `obj1' and 
+			-- Are dynamic type of object attached to `obj1' and
 			-- dynamic type of object attached to `obj2' the same?
 		external
 			"C"

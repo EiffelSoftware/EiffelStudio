@@ -19,7 +19,7 @@ feature -- Access
 	has (v: G): BOOLEAN is
 			-- Does structure include `v'?
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 		deferred
 		ensure
 			not_found_in_empty: Result implies not empty
@@ -42,7 +42,7 @@ feature -- Status report
 		do
 			Result := True
 		end;
-		
+
 feature -- Status setting
 
 	compare_objects is

@@ -166,7 +166,7 @@ feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-chain beginning at current position
-			-- and having min (`n', `from_here') items, 
+			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
 			-- at or to the right of current position.
 		local

@@ -31,7 +31,7 @@ feature -- Initialization
 		end;
 
 feature -- Access
-	
+
 	type: INTEGER;
 			-- Memory type (Total, Eiffel, C)
 
@@ -40,11 +40,11 @@ feature -- Measurement
 	total: INTEGER;
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
-	
+
 	used: INTEGER;
 			-- Number of bytes used for `type'
 			-- before last call to `update'
-	
+
 	free: INTEGER is
 			-- Number of bytes still free for `type'
 			-- before last call to `update'

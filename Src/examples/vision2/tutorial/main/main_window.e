@@ -52,8 +52,8 @@ feature -- Initialization
 			setp: EV_HORIZONTAL_SEPARATOR
 		do
 			{EV_WINDOW} Precursor
-			set_minimum_size (640, 480)
-			
+			set_minimum_size (500, 310)
+			set_size (800, 600)
 			set_title ("EiffelVision Tutorial")
 			create split.make (Current)
 
@@ -98,18 +98,6 @@ feature -- Initialization
 			notebook.append_page (item.example_page, "Example text")
 			item.destroy
 			notebook.set_minimum_size (250, 250)
-
-			-- We create a tooltip
---			create tooltip.make
---			create color.make_rgb (0, 255, 0)
----			tooltip.set_background_color (color)
-	---		create color.make_rgb (0, 0, 255)
-	--		tooltip.set_foreground_color (color)
-	--		tooltip.add_tips (tree, "EiffelVision components")
-	--		tooltip.add_tip (notebook, "Demo Area")
-
-			--create cmd.make(~execute1)
-			--action_button.add_click_command (cmd, Void)
 		end
 
 feature -- Features needed for the status bar of the window.
@@ -120,9 +108,9 @@ feature -- Menu Features
 		local
 			menu: EV_MENU
 			menu_item: EV_MENU_ITEM
-			
 			check_item: EV_CHECK_MENU_ITEM
 			ri1, ri2, ri3: EV_RADIO_MENU_ITEM
+			msep: EV_MENU_SEPARATOR
 		do
 			create menu.make_with_text (mbar, "Categories")
 			create menu_item.make_with_text (menu, "Widgets")
@@ -134,6 +122,7 @@ feature -- Menu Features
 			create ri2.make_peer_with_text (menu, "Documentation", ri1)
 			create ri3.make_peer_with_text (menu, "Text", ri1)
 			create check_item.make_with_text (menu, "Control Window")
+			create msep.make_with_index (menu, 4)
 		end
 
 feature -- Tree features
@@ -236,11 +225,11 @@ feature -- Tree features
 			create composed.make_with_title (items, "ev_composed_item", "no_demo_window")
 			create mcitem.make_with_title (composed, "ev_multi_column_list_row", "mc_item_window")
 			create tb_button.make_with_title (simple, "ev_tool_bar_button", "tb_button_window")
-			create tb_toggle.make_with_title (tb_toggle, "ev_tool_bar_toggle_button", "tb_toggle_window")
-			create tb_radio.make_with_title (tb_radio, "ev_tool_bar_radio_button", "tb_radio_window")
+			create tb_toggle.make_with_title (tb_button, "ev_tool_bar_toggle_button", "tb_toggle_window")
+			create tb_radio.make_with_title (tb_toggle, "ev_tool_bar_radio_button", "tb_radio_window")
 			create listitem.make_with_title (simple, "ev_list_item", "listitem_window")
 			create treeitem.make_with_title (simple, "ev_tree_item", "treeitem_window")
-			create statusitem.make_with_title (simple, "ev_status_item", "statusitem_window")
+			create statusitem.make_with_title (simple, "ev_status_bar_item", "statusitem_window")
 			create menuitem.make_with_title (simple, "ev_menu_item", "menuitem_window")
 
 			-- The demos
@@ -291,7 +280,7 @@ feature -- Tree features
 
 				-- Containers demos
 			create window.make_with_title (container, "ev_window", "window_window")
-			create dialogd.make_with_title (container, "ev_dialog" , "dialog_window")
+			create dialogd.make_with_title (window, "ev_dialog" , "dialog_window")
 			create fixed.make_with_title (container, "ev_fixed", "fixed_window")
 			create box.make_with_title (container, "ev_box", "box_window")
 			create notebook.make_with_title (container, "ev_notebook", "notebook_window")

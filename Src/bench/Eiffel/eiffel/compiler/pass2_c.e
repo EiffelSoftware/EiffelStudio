@@ -47,7 +47,7 @@ feature
 			supplier_status_modified := True
 		end;
 
-	set_assert_prop_list (l: like assert_prop_list) is
+	set_assertion_prop_list (l: like assert_prop_list) is
 			-- Set `supplier_status_modified' to `True'.
 		do
 			assert_prop_list := l

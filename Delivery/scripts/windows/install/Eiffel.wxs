@@ -3,13 +3,13 @@
 	<Product Name='EiffelStudio 5.6' Id="0A21C24B-51D8-49b9-ABD2-BD8E7BF59BC6"
 			Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='Eiffel Software'>
 
-		<Package Id="4FFA09EF-A48B-4051-9F9F-A26EB3B24B75" Keywords='Installer' Description="EiffelStudio 5.6 Installer"
+		<Package Id="????????-????-????-????-????????????" Keywords='Installer' Description="EiffelStudio 5.6 Installer"
 			Comments='EiffelStudio is a registered trademark of Eiffel Software' Manufacturer='Eiffel Software'
 			InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
 
 		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" /></Property>
 		<Property Id="SELECTEDCCOMPILER" Secure="yes">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Type="registry" /></Property>
-		<Condition Message="Please run &quot;setup.exe&quot; to install [ProductName]"><![CDATA[1 OR ((%USERNAMEFOREIFFELSOFTWARE <> "") AND (%CDKEYFOREIFFELSOFTWARE <> "")) OR (VALID_INSTALL <> "") OR (FREEVERSION = "TRUE")]]></Condition>
+	 	<Condition Message='This installation can only run in full UI mode.'><![CDATA[UILevel = 5]]></Condition>
 
 		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="EiffelStudio 5.6 Installation CD-ROM" />
 
@@ -32,7 +32,15 @@
 					<Merge Id="ec" Language="1033" src="MSMs\ec_enterprise.msm" DiskId="1" />
 					<Merge Id="build" Language="1033" src="MSMs\build_enterprise.msm" DiskId="1" />
 				<?endif?>
+				<Merge Id="base_libraries" Language="1033" src="MSMs\base_libraries.msm" DiskId="1" />
+				<Merge Id="borland" Language="1033" src="MSMs\borland.msm" DiskId="1" />
+				<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
+				<Merge Id="dotnet" Language="1033" src="MSMs\dotnet.msm" DiskId="1" />
+				<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
+				<Merge Id="free_add_ons" Language="1033" src="MSMs\free_add_ons.msm" DiskId="1" />
+				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
+				<Merge Id="vision2_tour" Language="1033" src="MSMs\vision2_tour.msm" DiskId="1" />
 			</Directory>
 
 			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="MyProjects" />
@@ -50,11 +58,29 @@
 
 			<Feature Id='MainProgram' Title='Program' Description='The main executable.' TypicalDefault='install' Level='1'>
 				<ComponentRef Id='configure_all.exe' />
-				<MergeRef Id="ec" />
 				<MergeRef Id="build" />
+				<MergeRef Id="base_libraries" />
+				<MergeRef Id="c_library" />
+				<MergeRef Id="dotnet" />
+				<MergeRef Id="ec" />
+				<MergeRef Id="eiffel_com" />
+				<MergeRef Id="free_add_ons" />
+				<MergeRef Id="graphical_libraries" />
 				<MergeRef Id="studio_core" />
+				<MergeRef Id="vision2_tour" />
 			</Feature>
+
+			<!--
+			<Feature Id="Borland" Title="Borland" Display="hidden" Level="3" AllowAdvertise="system">
+				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
+				<MergeRef Id="borland" />
+			</Feature>
+			-->
+
 		</Feature>
+		
+		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" />
+		<CustomAction Id="retrieve_cd_key" BinaryKey="setup_dll" DllEntry="retrieve_cd_key" />
 
 		<UI>
 			<Property Id="DefaultUIFont">DlgFont8</Property>
@@ -393,7 +419,12 @@
 				</Control>
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
-					<Publish Event="NewDialog" Value="Single_Feature_Destination"><![CDATA[IAgree = "Yes"]]></Publish>
+					<?if $(var.EDITION)="enterprise" ?>
+						<Publish Event="DoAction" Value="retrieve_cd_key">IAgree = "Yes" AND PidKeySet = "0"</Publish>
+						<Publish Event="NewDialog" Value="UserRegistrationDlg">IAgree = "Yes"</Publish>
+					<?else?>
+						<Publish Event="NewDialog" Value="Single_Feature_Destination">1</Publish>
+					<?endif?>
 					<Condition Action="disable"><![CDATA[IAgree <> "Yes"]]></Condition>
 					<Condition Action="enable">IAgree = "Yes"</Condition>
 				</Control>
@@ -412,12 +443,59 @@
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="[EDITIONNAME]" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 			</Dialog>
 
-			<Dialog Id="Single_Feature_Destination" Width="375" Height="270" Title="[ProductName]" CustomPalette="yes">
+		 	<Dialog Id="UserRegistrationDlg" Width="375" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
+				<Control Id="NameLabel" Type="Text" X="45" Y="73" Width="100" Height="15" TabSkip="no" Text="&amp;User Name:" />
+				<Control Id="NameEdit" Type="Edit" X="45" Y="85" Width="220" Height="18" Property="USERNAME" Text="{80}" />
+				<Control Id="OrganizationLabel" Type="Text" X="45" Y="110" Width="100" Height="15" TabSkip="no" Text="&amp;Organization:" />
+				<Control Id="OrganizationEdit" Type="Edit" X="45" Y="122" Width="220" Height="18" Property="COMPANYNAME" Text="{80}" />
+				<Control Id="CDKeyLabel" Type="Text" X="45" Y="147" Width="50" Height="10" TabSkip="no">
+					<Text>CD &amp;Key:</Text>
+				</Control>
+				<Control Id="CDKeyEdit" Type="MaskedEdit" X="45" Y="159" Width="250" Height="16" Property="PIDKEY" Text="[PIDTemplate]" />
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+				</Control>
+				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
+					<Publish Event="ValidateProductID" Value="0">0</Publish>
+					<Publish Event="DoAction" Value="is_cd_key_valid">1</Publish>
+					<Publish Event="SpawnDialog" Value="InvalidPidDlg">PIDACCEPTED = "0"</Publish>
+					<Publish Event="NewDialog" Value="Single_Feature_Destination">ProductID AND PIDACCEPTED = "1"</Publish>
+				</Control>
+				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
+					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+				</Control>
+				<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="44" TabSkip="no" Text="[BannerBitmap]" />
+				<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
+					<Text>Please enter your customer information</Text>
+				</Control>
+				<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
+					<Text>{\DlgTitleFont}Customer Information</Text>
+				</Control>
+				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
+				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
+			</Dialog>
+
+			<Dialog Id="InvalidPidDlg" Width="260" Height="85" Title="[ProductName] [Setup]" NoMinimize="yes">
+				<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="Information icon" FixedSize="yes" IconSize="32" Text="[ExclamationIcon]" />
+				<Control Id="Return" Type="PushButton" X="100" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="[ButtonText_OK]">
+					<Publish Event="EndDialog" Value="Return">1</Publish>
+				</Control>
+				<Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30" TabSkip="no">
+					<Text>The user key you entered is invalid. Please, enter the key printed on the label of the jewel case of the installation CD.</Text>
+				</Control>
+			</Dialog>
+
+			<Dialog Id="Single_Feature_Destination" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
+				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
+					<?if $(var.EDITION)="enterprise" ?>
+						<Publish Event="NewDialog" Value="UserRegistrationDlg">1</Publish>
+					<?else?>
+						<Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+					<?endif?>
 				</Control>
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[ButtonText_Next]">
 					<Publish Event="SetInstallLevel" Value="3"><![CDATA[InstallMode = "Typical"]]></Publish>
@@ -455,10 +533,10 @@ To install into a different folder, click the Browse button, and select another 
 					<Text>You can choose not to install [ProductName] by clicking Cancel to exit the Installation Wizard.</Text>
 				</Control>
 				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="[EDITIONNAME]" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 			</Dialog>
 
-			<Dialog Id="C_Compiler_Dialog" Width="375" Height="270" Title="[ProductName]" CustomPalette="yes">
+			<Dialog Id="C_Compiler_Dialog" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Single_Feature_Destination"><![CDATA[FRAMEWORKPATH <> "empty"]]></Publish>
 					<Publish Event="NewDialog" Value="Dotnet_Error_Dialog"><![CDATA[FRAMEWORKPATH = "empty"]]></Publish>
@@ -489,10 +567,10 @@ Otherwise select "Install and use the free Borland C++ 5.5 compiler". This will 
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="1" />
 				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="[EDITIONNAME]" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 			</Dialog>
 
-			<Dialog Id="Dotnet_Error_Dialog" Width="279" Height="153" Title="[ProductName]" CustomPalette="yes">
+			<Dialog Id="Dotnet_Error_Dialog" Width="279" Height="153" Title="[ProductName] [Setup]" CustomPalette="yes">
 				<Control Id="Previous" Type="PushButton" X="15" Y="120" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Single_Feature_Destination">1</Publish>
 				</Control>
@@ -509,7 +587,7 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 				</Control>
 			</Dialog>
 
-			<Dialog Id="Precompile_Dialog" Width="375" Height="270" Title="[ProductName]" CustomPalette="yes">
+			<Dialog Id="Precompile_Dialog" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="C_Compiler_Dialog">1</Publish>
 				</Control>
@@ -534,10 +612,10 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="1" />
 				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="[EDITIONNAME]" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 			</Dialog>
 
-			<Dialog Id="Project_Path_Dialog" Width="375" Height="270" Title="[ProductName]" CustomPalette="yes">
+			<Dialog Id="Project_Path_Dialog" Width="375" Height="270" Title="[ProductName] [Setup]" CustomPalette="yes">
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Precompile_Dialog">1</Publish>
 				</Control>
@@ -550,9 +628,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				<Control Id="Text19" Type="Text" X="23" Y="23" Width="221" Height="14" Transparent="yes">
 					<Text>Select a path where new projects will be created.</Text>
 				</Control>
-				<Control Id="Text20" Type="Text" X="2" Y="230" Width="92" Height="12">
-					<Text>[EDITIONNAME]</Text>
-				</Control>
+				<Control Id="Text20" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 				<Control Id="Text18" Type="Text" X="8" Y="8" Width="150" Height="13" Transparent="yes">
 					<Text>{\DlgTitleFont}New Project Path</Text>
 				</Control>
@@ -572,7 +648,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="1" />
 				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="[EDITIONNAME]" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 			</Dialog>
 
 			<Dialog Id="MaintenanceTypeDlg" Width="375" Height="270" Title="[ProductName] [Setup]">
@@ -737,7 +813,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="375" Height="0" />
 				<Control Id="BottomLine" Type="Line" X="94" Y="234" Width="281" Height="1" />
-				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="[EDITIONNAME]" />
+				<Control Id="ReleaseType" Type="Text" X="2" Y="230" Width="92" Height="12" Text="$(var.EDITIONNAME)" />
 			</Dialog>
 
 			<Dialog Id="VerifyRemoveDlg" Width="375" Height="270" Title="[ProductName] [Setup]" TrackDiskSpace="yes">
@@ -1187,7 +1263,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 		<Property Id="IAgree">No</Property>
 		<Property Id="Wizard">Setup Wizard</Property>
 		<Property Id="ProductID">none</Property>
-		<Property Id="PIDTemplate"><![CDATA[12345<#######>@@@@@]]></Property>
+		<Property Id="PIDTemplate"><![CDATA[12345<#####-#####-#####-#####-#####-#####>@@@@@]]></Property>
 
 		<Property Id="BannerBitmap">bannrbmp</Property>
 		<Property Id="DialogBitmap">dlgbmp</Property>
@@ -1196,15 +1272,17 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 		<Property Id="RemoveIcon">removico</Property>
 		<Property Id="RepairIcon">repairic</Property>
 
-		<Property Id="PRECOMPILEDLIBRARIES" Secure="yes"><![CDATA[base]]></Property>
-		<Property Id="EDITIONNAME" Secure="yes">Enterprise Edition</Property>
-		<Property Id="FREEVERSION" Secure="yes">FALSE</Property>
+		<Property Id="PRECOMPILEDLIBRARIES">base</Property>
 		<Property Id="PROJECTDIR" Secure="yes" />
 		<Property Id="INSTALLDIR" Secure="yes" />
+		<Property Id="PidKeySet">0</Property>
+
+		<Property Id="PIDKEY" Hidden="yes" />
 
 		<AdminExecuteSequence />
 
 		<InstallExecuteSequence>
+			<LaunchConditions After='AppSearch' />
 			<RemoveExistingProducts After='InstallFinalize' />
 		</InstallExecuteSequence>
 
@@ -1215,6 +1293,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 		<Binary Id="New" src="Binary\New.ico" />
 		<Binary Id="removico" src="Binary\Remove.ico" />
 		<Binary Id="repairic" src="Binary\Repair.ico" />
+		<Binary Id="setup_dll" src="Binary\setup.dll" />
 		<Binary Id="Up" src="Binary\Up.ico" />
 	</Product>
 </Wix>

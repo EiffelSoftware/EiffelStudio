@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 
 			create tmp_writer.make
 			tmp_writer.set_name ("WEL_APPLICATION")
-			tmp_writer.add_redefine (Make_word)
+			tmp_writer.add_rename (Make_word, "wel_make")
 			tmp_writer.add_redefine ("default_show_command")
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 
@@ -339,13 +339,9 @@ feature {NONE} -- Implementation
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Tab)
 
-			-- 	Precursor {WEL_APPLICATION}
+			-- 	wel_make
 
-			tmp_body.append (Precursor_keyword)
-			tmp_body.append (Space)
-			tmp_body.append (Open_curly_brace)
-			tmp_body.append ("WEL_APPLICATION")
-			tmp_body.append (Close_curly_brace)
+			tmp_body.append ("wel_make")
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Tab)
 

@@ -665,16 +665,18 @@ feature {NONE} -- Implementation
 			if hwnd_control /= default_pointer then
 				-- Message comes from a control
 				on_wm_control_id_command (control_id)
-				control ?= window_of_item (hwnd_control)
-				if control /= Void then
-					if exists and then control.exists then
-						on_control_command (control)
-					end
-					if exists and then control.exists then
-						notify (control, notify_code)
-					end
-					if control.exists then
-						control.process_notification (notify_code)
+				if is_window (hwnd_control) then
+					control ?= window_of_item (hwnd_control)
+					if control /= Void then
+						if exists and then control.exists then
+							on_control_command (control)
+						end
+						if exists and then control.exists then
+							notify (control, notify_code)
+						end
+						if control.exists then
+							control.process_notification (notify_code)
+						end
 					end
 				end
 			elseif notify_code = 0 then

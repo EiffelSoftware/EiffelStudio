@@ -1,0 +1,54 @@
+--!----------------------------------------------------------------
+--! DRAWING_AREA_TEST Project Ace-file for Unix platforms using GTK.
+--!----------------------------------------------------------------
+
+system
+	drawing_area_test
+
+root 
+	DA_TEST (root_cluster): "make_and_launch"
+
+default
+	assertion			(all)
+	multithreaded		(no)
+	console_application	(no)
+	dynamic_runtime		(no)
+	dead_code_removal	(yes)
+	profile				(no)
+	line_generation		(no)
+	debug				(no)
+	array_optimization	(no)
+	inlining			(no)
+	inlining_size		("4")
+
+cluster 
+		-- Root cluster
+	root_cluster:		"$EIFFEL4/examples/vision2/pixmap"
+
+		-- EiffelBase
+	all base: 			"$EIFFEL4/library/base"
+		exclude
+			"table_eiffel3"
+		end
+
+		-- GEL
+	all gel:			"$EIFFEL4/library/gel"
+
+		-- Vision2
+	event:				"$EIFFEL4/library/event"
+
+	all vision2:		"$EIFFEL4/library/vision2"
+		exclude 
+			"mswin"
+			"EIFGEN"
+			"tmp"
+			"temp"
+			"release"
+			"obsolete"
+		end
+
+external
+	include_path:	"$EIFFEL4/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:			"$(EIFFEL4)/library/vision2/implementation/gtk/Clib/gtk_eiffel.o `gtk-config --libs`"
+
+end -- drawing_area_test

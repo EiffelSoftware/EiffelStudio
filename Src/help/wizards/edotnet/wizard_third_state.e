@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			-- Disable the caption text for this state.
 		do
 			title.set_text ("Assembly selection")
-			subtitle.set_text ("Choose the external assemblies the Eiffel project should include")
+			subtitle.set_text ("Choose the .NET assemblies the Eiffel project should include")
 			message_box.hide
 		end
 

@@ -37,7 +37,7 @@ feature -- basic Operations
 				%the lace specification.%N%
 				%%N%
 				%A valid root class name is not empty and only contains letters,%N%
-				%figures, and underscores. Moreover the first character must%N%
+				%figures, and underscores. The first character must%N%
 				%be a letter.%N%
 				%%N%
 				%Click Back and choose a valid root class name.")

@@ -9,8 +9,12 @@ class
 
 inherit
 	EV_TITLED_WINDOW 
+		rename
+			copy as copy_titled_window
 		redefine
 			destroy
+		select
+			copy_titled_window
 		end
 
 	WIZARD_STATE_MANAGER

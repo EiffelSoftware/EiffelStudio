@@ -182,34 +182,23 @@ feature -- Basic operation
 			available_assemblies_exists: available_assemblies /= Void
 		local
 			imported_assemblies: ECOM_ARRAY [STRING]
-			i: INTEGER
-			a_name: STRING
-			a_version: STRING
-			a_culture: STRING
-			a_public_key: STRING
-			a_path: STRING
-			an_assembly_info: ASSEMBLY_INFORMATION
+			retried: BOOLEAN
 		do
-			imported_assemblies := proxy.imported_assemblies
-			check
-				unidimensional_assemblies: imported_assemblies.dimension_count = 1
-			end
-			from
-			until
-				i = imported_assemblies.count
-			loop
-				a_name := imported_assemblies.array_item (i)
-				a_version := imported_assemblies.array_item (i + 1)
-				a_culture := imported_assemblies.array_item (i + 2)
-				a_public_key := imported_assemblies.array_item (i + 3)
-				a_path := imported_assemblies.array_item (i + 4)
-				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index ("$ISE_EIFFEL", 1) > 0 then
-					a_path.replace_substring_all ("$ISE_EIFFEL", Eiffel_installation_dir_name)
+			if not retried then
+				imported_assemblies := proxy.imported_assemblies
+				if proxy.last_importation_successful then
+					intern_retrieve_available_assemblies (imported_assemblies)
+				else
+					display_confirmation_dialog
 				end
-				create an_assembly_info.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
-				available_assemblies.extend (an_assembly_info)
-				i := i + 5
+			else
+				if confirmation_dialog = Void then
+					display_confirmation_dialog
+				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 	
 	remove_kernel_assembly is
@@ -273,5 +262,82 @@ feature {NONE} -- Implementation
 				i := i + 5
 			end
 		end
+	
+	intern_retrieve_available_assemblies (imported_assemblies: ECOM_ARRAY [STRING]) is
+			-- Retrieve imported assemblies from the Eiffel Assembly Cache.
+		require
+			unidimensional_assemblies: imported_assemblies.dimension_count = 1
+		local
+			i: INTEGER
+			a_name: STRING
+			a_version: STRING
+			a_culture: STRING
+			a_public_key: STRING
+			a_path: STRING
+			an_assembly_info: ASSEMBLY_INFORMATION		
+		do
+			from
+			until
+				i = imported_assemblies.count
+			loop
+				a_name := imported_assemblies.array_item (i)
+				a_version := imported_assemblies.array_item (i + 1)
+				a_culture := imported_assemblies.array_item (i + 2)
+				a_public_key := imported_assemblies.array_item (i + 3)
+				a_path := imported_assemblies.array_item (i + 4)
+				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index ("$ISE_EIFFEL", 1) > 0 then
+					a_path.replace_substring_all ("$ISE_EIFFEL", Eiffel_installation_dir_name)
+				end
+				create an_assembly_info.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
+				available_assemblies.extend (an_assembly_info)
+				i := i + 5
+			end
+		end
+
+	display_confirmation_dialog is
+			-- Display confirmation dialog
+		local
+			buttons_labels: ARRAY [STRING]
+		do
+			create buttons_labels.make (1, 3)
+			buttons_labels.put ("Abort", 1)
+			buttons_labels.put ("Retry", 2)
+			buttons_labels.put ("Ignore", 3)
+			create confirmation_dialog.make_with_text (Confirmation_message)
+			confirmation_dialog.set_buttons (buttons_labels)
+			confirmation_dialog.button ("Retry").select_actions.extend (~on_retry)
+			confirmation_dialog.button ("Ignore").select_actions.extend (~on_ignore)
+			confirmation_dialog.set_default_push_button (confirmation_dialog.button ("Abort"))
+			confirmation_dialog.set_title (".NET Wizard - Error")
+			confirmation_dialog.show
+		end
+
+	confirmation_dialog: EV_QUESTION_DIALOG
+			-- Confirmation dialog
+	
+	Confirmation_message: STRING is "[The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
+						%- Abort: To close this dialog without doing anything.%N%
+						%- Retry: To retry in case the other process has exited.%N%
+						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache.]"
+			-- Confirmation message
 		
+	on_retry is
+			-- Retry assembly importation.
+		local
+			imported_assemblies: ECOM_ARRAY [STRING]
+		do
+			imported_assemblies := proxy.imported_assemblies
+			intern_retrieve_available_assemblies (imported_assemblies)
+		end
+	
+	on_ignore is
+			-- Force access to the Eiffel Assembly Cache.
+		local
+			imported_assemblies: ECOM_ARRAY [STRING]
+		do
+			proxy.clean_assemblies
+			imported_assemblies := proxy.imported_assemblies
+			intern_retrieve_available_assemblies (imported_assemblies)			
+		end
+			
 end -- class WIZARD_INFORMATION

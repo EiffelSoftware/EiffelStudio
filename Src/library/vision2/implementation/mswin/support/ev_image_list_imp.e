@@ -68,7 +68,7 @@ feature -- Element change
 			end
 		end
 
-	add_pixmap (a_pixmap_imp: EV_PIXMAP_IMP_STATE) is
+	add_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Add `a_pixmap_imp' to the image list.
 			-- The pixmap is resized if needed to fit into the 
 			-- image list.
@@ -76,9 +76,8 @@ feature -- Element change
 			-- The position in the image list of the pixmap is 
 			-- set to `last_position'.
 		require
-			a_pixmap_imp_not_void: a_pixmap_imp /= Void
+			a_pixmap_not_void: a_pixmap /= Void
 		local
-			pixmap_i	: EV_PIXMAP_I
 			item_value	: INTEGER
 			mask_bitmap	: WEL_BITMAP
 			bitmap		: WEL_BITMAP
@@ -86,9 +85,12 @@ feature -- Element change
 			loc_tuple	: TUPLE [INTEGER, INTEGER]
 			info		: like image_list_info
 			wel_row		: WEL_LIST_VIEW_ITEM
+			resized_pixmap: EV_PIXMAP
+			pixmap_imp	: EV_PIXMAP_IMP_STATE
 		do
+			pixmap_imp ?= a_pixmap.implementation
 			info := image_list_info
-			icon := a_pixmap_imp.icon
+			icon := pixmap_imp.icon
 
 			if icon /= Void then
 					-- Assign `icon.item' to `item_value'
@@ -106,15 +108,20 @@ feature -- Element change
 					last_position := loc_tuple.integer_item (1)
 				end
 			else
-				if (a_pixmap_imp.height /= bitmaps_height) or 
-				   (a_pixmap_imp.width /= bitmaps_width)
+				if (pixmap_imp.height /= bitmaps_height) or 
+				   (pixmap_imp.width /= bitmaps_width)
 				then
-					pixmap_i ?= a_pixmap_imp
-					pixmap_i.stretch (16, 16)
+					create resized_pixmap
+					resized_pixmap.copy (a_pixmap)
+					resized_pixmap.stretch (
+						bitmaps_width,
+						bitmaps_height
+						)
+					pixmap_imp ?= resized_pixmap.implementation
 				end
 
-				bitmap := a_pixmap_imp.bitmap
-				mask_bitmap := a_pixmap_imp.mask_bitmap
+				bitmap := pixmap_imp.bitmap
+				mask_bitmap := pixmap_imp.mask_bitmap
 				if mask_bitmap /= Void then
 					add_masked_bitmap(bitmap, mask_bitmap)
 				else

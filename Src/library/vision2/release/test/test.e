@@ -1,5 +1,15 @@
+indexing
+	description:
+		"Eiffel Vision test program.%N%
+		%Displays one of each widget in a notbook and a number of procedure%N%
+		%widgets that can be used to manipulate them."
+	status: "See notice at end of class"
+	keywords: "test, example"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
-	TEST
+	EV_TEST
 
 inherit
 	EV_APPLICATION
@@ -15,662 +25,362 @@ feature
 		end
 
 	prepare is
+			-- Pre launch preperation.
+			--  Create some procedure widgets in a notebook.
+			--  Create one of each Vision widget in a notebook.
 		local
-			main_split: EV_VERTICAL_SPLIT_AREA
-			notebook: EV_NOTEBOOK
-			widget_tool_box: EV_VERTICAL_BOX
-			textable_tool_box: EV_VERTICAL_BOX
-			tree_tool: EV_LABEL
-			hb: EV_HORIZONTAL_BOX
-			label, label2: EV_LABEL
-			button: EV_BUTTON
 			frame: EV_FRAME
+			scroll: EV_SCROLLABLE_AREA
+			notebook: EV_NOTEBOOK
+			box: EV_BOX
+			label: EV_LABEL
 			i: INTEGER
-			widgets: LINKED_LIST [EV_WIDGET]
 			textable: EV_TEXTABLE
 			pixmapable: EV_PIXMAPABLE
 			container: EV_CONTAINER
-			wnotebook: EV_NOTEBOOK
-			box: EV_HORIZONTAL_BOX
-			proc_box: EV_VERTICAL_BOX
-			ev_proc: EV_PROCEDURE_WIDGET [TEST, TUPLE [EV_LABEL, EV_WIDGET]]
-
-			EV_GDK_FONT_OBJECT: EV_GDK_FONT
-			ASSIGN_ATTEMPT_OBJECT: ASSIGN_ATTEMPT [REAL]
-			EV_C_EXTERNALS_OBJECT: EV_C_EXTERNALS
-			EV_C_GTK_OBJECT: EV_C_GTK
-			EV_GDK_FONT_EXTERNALS_OBJECT: EV_GDK_FONT_EXTERNALS
-			EV_GLIB_EXTERNALS_OBJECT: EV_GLIB_EXTERNALS
-			EV_GTK_BUTTONS_EXTERNALS_OBJECT: EV_GTK_BUTTONS_EXTERNALS
-			EV_GTK_CALLBACK_MARSHAL_OBJECT: EV_GTK_CALLBACK_MARSHAL
-			EV_GTK_CONTAINERS_EXTERNALS_OBJECT: EV_GTK_CONTAINERS_EXTERNALS
-			EV_GTK_DRAWABLE_EXTERNALS_OBJECT: EV_GTK_DRAWABLE_EXTERNALS
-			EV_GTK_GENERAL_EXTERNALS_OBJECT: EV_GTK_GENERAL_EXTERNALS
-			EV_GTK_ITEMS_EXTERNALS_OBJECT: EV_GTK_ITEMS_EXTERNALS
-			EV_GTK_TYPES_EXTERNALS_OBJECT: EV_GTK_TYPES_EXTERNALS
-			EV_GTK_WIDGETS_EXTERNALS_OBJECT: EV_GTK_WIDGETS_EXTERNALS
-			EV_RADIO_GROUP_OBJECT: EV_RADIO_GROUP
-			EV_PND_ACTION_SEQUENCE_OBJECT: EV_PND_ACTION_SEQUENCE
-			EV_ANGLE_OBJECT: EV_ANGLE
-			EV_ANGLE_ROUTINES_OBJECT: EV_ANGLE_ROUTINES
-			EV_FIGURE_ARC_OBJECT: EV_FIGURE_ARC
-			EV_FIGURE_DOT_OBJECT: EV_FIGURE_DOT
-			EV_FIGURE_DRAWER_OBJECT: EV_FIGURE_DRAWER
-			EV_FIGURE_ELLIPSE_OBJECT: EV_FIGURE_ELLIPSE
-			EV_FIGURE_EQUILATERAL_OBJECT: EV_FIGURE_EQUILATERAL
-			EV_FIGURE_GROUP_OBJECT: EV_FIGURE_GROUP
-			EV_FIGURE_LINE_OBJECT: EV_FIGURE_LINE
-			EV_FIGURE_MATH_OBJECT: EV_FIGURE_MATH
-			EV_FIGURE_PICTURE_OBJECT: EV_FIGURE_PICTURE
-			EV_FIGURE_PIE_SLICE_OBJECT: EV_FIGURE_PIE_SLICE
-			EV_FIGURE_POLYGON_OBJECT: EV_FIGURE_POLYGON
-			EV_FIGURE_POLYLINE_OBJECT: EV_FIGURE_POLYLINE
-			EV_FIGURE_RECTANGLE_OBJECT: EV_FIGURE_RECTANGLE
-			EV_FIGURE_TEXT_OBJECT: EV_FIGURE_TEXT
-			EV_FIGURE_TRIANGLE_OBJECT: EV_FIGURE_TRIANGLE
-			EV_FIGURE_WORLD_OBJECT: EV_FIGURE_WORLD
-			EV_PROJECTION_OBJECT: EV_PROJECTION
-			EV_RELATIVE_POINT_OBJECT: EV_RELATIVE_POINT
-			EV_STANDARD_PROJECTION_OBJECT: EV_STANDARD_PROJECTION
-			EV_CHECK_MENU_ITEM_OBJECT: EV_CHECK_MENU_ITEM
-			EV_LIST_ITEM_OBJECT: EV_LIST_ITEM
-			EV_MENU_ITEM_OBJECT: EV_MENU_ITEM
-			EV_MENU_SEPARATOR_OBJECT: EV_MENU_SEPARATOR
-			EV_STATUS_BAR_ITEM_OBJECT: EV_STATUS_BAR_ITEM
-			EV_TOOL_BAR_BUTTON_OBJECT: EV_TOOL_BAR_BUTTON
-			EV_TOOL_BAR_SEPARATOR_OBJECT: EV_TOOL_BAR_SEPARATOR
-			EV_TOOL_BAR_TOGGLE_BUTTON_OBJECT: EV_TOOL_BAR_TOGGLE_BUTTON
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT1: EV_TOOL_BAR_RADIO_BUTTON
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT2: EV_TOOL_BAR_RADIO_BUTTON
-			EV_ACCELERATOR_OBJECT: EV_ACCELERATOR
-			EV_COLOR_OBJECT: EV_COLOR
-			EV_COORDINATES_OBJECT: EV_COORDINATES
-			EV_CURSOR_OBJECT: EV_CURSOR
-			EV_CURSOR_CODE_OBJECT: EV_CURSOR_CODE
-			EV_ENVIRONMENT_OBJECT: EV_ENVIRONMENT
-			EV_FONT_OBJECT: EV_FONT
-			EV_FONT_CONSTANTS_OBJECT: EV_FONT_CONSTANTS
-			EV_KEY_CODE_OBJECT: EV_KEY_CODE
-			EV_RECTANGLE_OBJECT: EV_RECTANGLE
-			EV_TIMEOUT_OBJECT: EV_TIMEOUT
-			EV_DRAWABLE_CONSTANTS_OBJECT: EV_DRAWABLE_CONSTANTS
-			EV_BASIC_COLORS_OBJECT: EV_BASIC_COLORS
-			EV_DEFAULT_COLORS_OBJECT: EV_DEFAULT_COLORS
-			EV_DIRECTORY_DIALOG_OBJECT: EV_DIRECTORY_DIALOG
-			EV_ERROR_DIALOG_OBJECT: EV_ERROR_DIALOG
-			EV_FILE_OPEN_DIALOG_OBJECT: EV_FILE_OPEN_DIALOG
-			EV_FILE_SAVE_DIALOG_OBJECT: EV_FILE_SAVE_DIALOG
-			EV_INFORMATION_DIALOG_OBJECT: EV_INFORMATION_DIALOG
-			EV_MESSAGE_DIALOG_OBJECT: EV_MESSAGE_DIALOG
-			EV_QUESTION_DIALOG_OBJECT: EV_QUESTION_DIALOG
-			EV_WARNING_DIALOG_OBJECT: EV_WARNING_DIALOG
-			EV_AGGREGATE_BOX_OBJECT: EV_AGGREGATE_BOX
-			EV_CELL_OBJECT: EV_CELL
-			EV_DIALOG_OBJECT: EV_DIALOG
-			EV_FRAME_OBJECT: EV_FRAME
-			EV_HORIZONTAL_BOX_OBJECT: EV_HORIZONTAL_BOX
-			EV_HORIZONTAL_SPLIT_AREA_OBJECT: EV_HORIZONTAL_SPLIT_AREA
-			EV_NOTEBOOK_OBJECT: EV_NOTEBOOK
-			EV_SCROLLABLE_AREA_OBJECT: EV_SCROLLABLE_AREA
-			EV_TITLED_WINDOW_OBJECT: EV_TITLED_WINDOW
-			EV_VERTICAL_BOX_OBJECT: EV_VERTICAL_BOX
-			EV_VERTICAL_SPLIT_AREA_OBJECT: EV_VERTICAL_SPLIT_AREA
-			EV_VIEWPORT_OBJECT: EV_VIEWPORT
-			EV_WIDGET_LIST_CURSOR_OBJECT: EV_WIDGET_LIST_CURSOR
-			EV_WINDOW_OBJECT: EV_WINDOW
-			EV_BUTTON_OBJECT: EV_BUTTON
-			EV_CHECK_BUTTON_OBJECT: EV_CHECK_BUTTON
-			EV_DRAWING_AREA_OBJECT: EV_DRAWING_AREA
-			EV_HORIZONTAL_PROGRESS_BAR_OBJECT: EV_HORIZONTAL_PROGRESS_BAR
-			EV_HORIZONTAL_RANGE_OBJECT: EV_HORIZONTAL_RANGE
-			EV_HORIZONTAL_SCROLL_BAR_OBJECT: EV_HORIZONTAL_SCROLL_BAR
-			EV_HORIZONTAL_SEPARATOR_OBJECT: EV_HORIZONTAL_SEPARATOR
-			EV_LABEL_OBJECT: EV_LABEL
-			EV_LIST_OBJECT: EV_LIST
-			EV_OPTION_BUTTON_OBJECT: EV_OPTION_BUTTON
-			EV_SPIN_BUTTON_OBJECT: EV_SPIN_BUTTON
-			EV_TEXT_FIELD_OBJECT: EV_TEXT_FIELD
-			EV_TOGGLE_BUTTON_OBJECT: EV_TOGGLE_BUTTON
-			EV_TOOL_BAR_OBJECT: EV_TOOL_BAR
-			EV_VERTICAL_PROGRESS_BAR_OBJECT: EV_VERTICAL_PROGRESS_BAR
-			EV_VERTICAL_RANGE_OBJECT: EV_VERTICAL_RANGE
-			EV_VERTICAL_SCROLL_BAR_OBJECT: EV_VERTICAL_SCROLL_BAR
-			EV_VERTICAL_SEPARATOR_OBJECT: EV_VERTICAL_SEPARATOR
-			EV_MENU_OBJECT: EV_MENU
-			EV_MENU_BAR_OBJECT: EV_MENU_BAR
-			EV_PIXMAP_OBJECT: EV_PIXMAP
-			EV_SCREEN_OBJECT: EV_SCREEN
-			EV_STATUS_BAR_OBJECT: EV_STATUS_BAR
-			EV_C_UTIL_OBJECT: EV_C_UTIL
-			EV_GDK_EXTERNALS_OBJECT: EV_GDK_EXTERNALS
-			EV_GDK_KEYSYMS_EXTERNALS_OBJECT: EV_GDK_KEYSYMS_EXTERNALS
-			EV_GTK_CONSTANTS_OBJECT: EV_GTK_CONSTANTS
-			EV_GTK_EXTERNALS_OBJECT: EV_GTK_EXTERNALS
-			EV_NOTIFY_ACTION_SEQUENCE_OBJECT: EV_NOTIFY_ACTION_SEQUENCE
-			EV_POINTER_BUTTON_ACTION_SEQUENCE_OBJECT: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			EV_POINTER_BUTTON_LEFT_PRESS_ACTION_SEQUENCE_OBJECT: EV_POINTER_BUTTON_LEFT_PRESS_ACTION_SEQUENCE
-			EV_POINTER_MOTION_ACTION_SEQUENCE_OBJECT: EV_POINTER_MOTION_ACTION_SEQUENCE
-			EV_PROXIMITY_ACTION_SEQUENCE_OBJECT: EV_PROXIMITY_ACTION_SEQUENCE
-			EV_ACCELERATOR_ACTION_SEQUENCE_OBJECT: EV_ACCELERATOR_ACTION_SEQUENCE
-			EV_KEY_ACTION_SEQUENCE_OBJECT: EV_KEY_ACTION_SEQUENCE
-			EV_GEOMETRY_ACTION_SEQUENCE_OBJECT: EV_GEOMETRY_ACTION_SEQUENCE
-			EV_PND_START_ACTION_SEQUENCE_OBJECT: EV_PND_START_ACTION_SEQUENCE
-			EV_ITEM_SELECT_ACTION_SEQUENCE_OBJECT: EV_ITEM_SELECT_ACTION_SEQUENCE
-			EV_FOCUS_ACTION_SEQUENCE_OBJECT: EV_FOCUS_ACTION_SEQUENCE
-			pixfile: RAW_FILE
-			cbox: EV_COMBO_BOX
-			counter: INTEGER
+			menu_bar: EV_MENU_BAR
+			object_menu: EV_MENU
+			button: EV_BUTTON
 		do
-			create main_split
-			first_window.extend (main_split)
-
-			create frame
-			frame.set_text ("Eiffel Vision Widgets")
-			main_split.extend (frame)
-
-			create wnotebook
-			frame.extend  (wnotebook)
-
+			create scroll
 			create notebook
-			main_split.extend (notebook)
+			notebook.position_tabs_left
+			create frame.make_with_text ("Eiffel Vision Widgets")
+			create menu_bar
+			create object_menu.make_with_text ("Other objects")
+			create {EV_VERTICAL_BOX} box
 
-			create widget_tool_box
-			notebook.extend (widget_tool_box)
-			notebook.set_item_text (widget_tool_box, "Widget tool")
+			first_window.set_menu_bar (menu_bar)
+			menu_bar.extend (object_menu)
 
-			create textable_tool_box
-			notebook.extend (textable_tool_box)
-			notebook.set_item_text (notebook.last, "Textable widget tool")
+			first_window.set_title ("Eiffel Vision Widgets")
+			first_window.extend (box)
+			box.extend (frame)
+			frame.extend (scroll)
+			scroll.extend  (notebook)
 
-			create box
-
-			notebook.extend (box)
-			notebook.set_item_text (box, "Box in a box in a box ...")
-
-			create proc_box
-			notebook.extend (proc_box)
-			notebook.set_item_text (proc_box, "Procedure widgets")
-			create ev_proc.make (
-				~widget_tool_update,
-				"widget_tool_update",
-				<<"lab", "w">>
-			)
-			proc_box.extend (ev_proc)
-			proc_box.extend (create {EV_PROCEDURE_WIDGET [EV_TEXTABLE, TUPLE [EV_TEXTABLE, STRING]]}.make (
-				{EV_TEXTABLE}~set_text,
-				"set_text",
-				<<"textable", "text">>
-			))
-			proc_box.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_WIDGET]]}.make (
-				{EV_CONTAINER}~extend,
-				"extend",
-				<<"container", "widget">>
-			))
-			proc_box.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make (
-				{EV_WIDGET}~destroy,
-				"destroy",
-				<<"widget">>
-			))
-			proc_box.extend (create {EV_HORIZONTAL_SPLIT_AREA})
-			proc_box.last.set_pebble (proc_box.last)
-
-			widget_tool_box.extend (create {EV_LABEL}.make_with_text ("Drop here!"))
-			label ?= widget_tool_box.last
-			widget_tool_box.extend (create {EV_LABEL})
-			label2 ?= widget_tool_box.last
-
-			label2.align_text_left
-			widget_tool_box.disable_child_expand (label)
-			widget_tool_box.disable_child_expand (label2)
-			label.drop_actions.extend (~widget_tool_update (label2, ?))
-
-			textable_tool_box.extend (create {EV_LABEL}.make_with_text ("Drop here!"))
-			label ?= textable_tool_box.last
-			textable_tool_box.extend (create {EV_LABEL})
-			label2 ?= textable_tool_box.last
-
-			textable_tool_box.disable_child_expand (label)
-			label.drop_actions.extend (~textable_tool_update (label2, ?))
-			label.drop_actions.extend (~text_field_tool_update (label2, ?))
-
-			create widgets.make
-			create EV_PIXMAP_OBJECT
-				create pixfile.make_open_read ("/var/sw/Eiffel46/bench/bitmaps/xpm/open.xpm")
-				EV_PIXMAP_OBJECT.set_with_file (pixfile)
-				widgets.extend (EV_PIXMAP_OBJECT)
-	
-
-			create EV_STATUS_BAR_OBJECT
-			first_window.set_status_bar (EV_STATUS_BAR_OBJECT)
-			first_window.set_title ("EiffelVision Widget Test")
-
-			create EV_STATUS_BAR_ITEM_OBJECT
-			EV_STATUS_BAR_ITEM_OBJECT.set_text ("EV_STATUS_BAR_ITEM 1")
-			EV_STATUS_BAR_ITEM_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
-			EV_STATUS_BAR_OBJECT.extend (EV_STATUS_BAR_ITEM_OBJECT)
-
-			create EV_STATUS_BAR_ITEM_OBJECT
-			EV_STATUS_BAR_ITEM_OBJECT.set_text ("EV_STATUS_BAR_ITEM 2")
-			EV_STATUS_BAR_ITEM_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
-			EV_STATUS_BAR_OBJECT.extend (EV_STATUS_BAR_ITEM_OBJECT)
-
-			create ASSIGN_ATTEMPT_OBJECT
-			create EV_C_EXTERNALS_OBJECT
-			create EV_C_GTK_OBJECT
-			create EV_GDK_FONT_EXTERNALS_OBJECT
-			create EV_GLIB_EXTERNALS_OBJECT
-			create EV_GTK_BUTTONS_EXTERNALS_OBJECT
-			create EV_GTK_CALLBACK_MARSHAL_OBJECT
-			create EV_GTK_CONTAINERS_EXTERNALS_OBJECT
-			create EV_GTK_DRAWABLE_EXTERNALS_OBJECT
-			create EV_GTK_GENERAL_EXTERNALS_OBJECT
-			create EV_GTK_ITEMS_EXTERNALS_OBJECT
-			create EV_GTK_TYPES_EXTERNALS_OBJECT
-			create EV_GTK_WIDGETS_EXTERNALS_OBJECT
---FIMXE			create EV_RADIO_GROUP_OBJECT
-			create EV_PND_ACTION_SEQUENCE_OBJECT
-			create EV_ANGLE_OBJECT
-			create EV_ANGLE_ROUTINES_OBJECT
-			create EV_FIGURE_ARC_OBJECT
-			create EV_FIGURE_DOT_OBJECT
---FIMXE			create EV_FIGURE_DRAWER_OBJECT
-			create EV_FIGURE_ELLIPSE_OBJECT
-			create EV_FIGURE_EQUILATERAL_OBJECT
-			create EV_FIGURE_GROUP_OBJECT
-			create EV_FIGURE_LINE_OBJECT
-			create EV_FIGURE_MATH_OBJECT
---FIXME BUG			create EV_FIGURE_PICTURE_OBJECT
-			create EV_FIGURE_PIE_SLICE_OBJECT
-			create EV_FIGURE_POLYGON_OBJECT
-			create EV_FIGURE_POLYLINE_OBJECT
-			create EV_FIGURE_RECTANGLE_OBJECT
-			create EV_FIGURE_TEXT_OBJECT
-			create EV_FIGURE_TRIANGLE_OBJECT
-			create EV_FIGURE_WORLD_OBJECT
---FIMXE			create EV_PROJECTION_OBJECT
-			create EV_RELATIVE_POINT_OBJECT
---FIMXE			create EV_STANDARD_PROJECTION_OBJECT
-			create EV_CHECK_MENU_ITEM_OBJECT
-			create EV_LIST_ITEM_OBJECT
-			create EV_MENU_ITEM_OBJECT
-			create EV_MENU_SEPARATOR_OBJECT
-
-			create EV_TOOL_BAR_OBJECT
-				widgets.extend (EV_TOOL_BAR_OBJECT)
-
-
-			create EV_TOOL_BAR_BUTTON_OBJECT
-			EV_TOOL_BAR_BUTTON_OBJECT.set_text ("TOOL BAR%NBUTTON")
-			EV_TOOL_BAR_BUTTON_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
-			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_BUTTON_OBJECT)
-
-			create EV_TOOL_BAR_TOGGLE_BUTTON_OBJECT
-			EV_TOOL_BAR_TOGGLE_BUTTON_OBJECT.set_text ("TOOL BAR%NTOGGLE%NBUTTON")
-			EV_TOOL_BAR_TOGGLE_BUTTON_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
-			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_TOGGLE_BUTTON_OBJECT)
-
-			create EV_TOOL_BAR_SEPARATOR_OBJECT
-			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_SEPARATOR_OBJECT)
-
-			create EV_TOOL_BAR_RADIO_BUTTON_OBJECT1
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT1.set_text ("TOOL BAR%NRADIO%NBUTTON")
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT1.set_pixmap (EV_PIXMAP_OBJECT)
-			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_RADIO_BUTTON_OBJECT1)
+			create label.make_with_text ("Drop here!")
+			box.extend (label)
+			box.set_minimum_width (800)
+			box.set_minimum_height (600)
+			box.disable_child_expand (label)
+			label.drop_actions.extend (~update_widget_label (label, ?))
+			create button.make_with_text ("Destroy widget")
+			button.press_actions.extend (~destroy_current_widget)
+			box.extend (button)
+			box.disable_child_expand (button)
 			
-			create EV_TOOL_BAR_RADIO_BUTTON_OBJECT2
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT1.set_peer (EV_TOOL_BAR_RADIO_BUTTON_OBJECT2)
-			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_RADIO_BUTTON_OBJECT2)
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT2.set_text ("TOOL BAR%NRADIO%NBUTTON")
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT2.set_pixmap (EV_PIXMAP_OBJECT)
-
-
---FIXME BUG			create EV_ACCELERATOR_OBJECT
-			create EV_COLOR_OBJECT
-			create EV_COORDINATES_OBJECT
-			create EV_CURSOR_OBJECT
---FIMXE			create EV_CURSOR_CODE_OBJECT
-			create EV_ENVIRONMENT_OBJECT
-			create EV_FONT_OBJECT
-			create EV_FONT_CONSTANTS_OBJECT
---FIXME			create EV_KEY_CODE_OBJECT
-			create EV_RECTANGLE_OBJECT
-			create EV_TIMEOUT_OBJECT
-			create EV_DRAWABLE_CONSTANTS_OBJECT
-			create EV_BASIC_COLORS_OBJECT
-			create EV_DEFAULT_COLORS_OBJECT
-			create EV_DIRECTORY_DIALOG_OBJECT
-			create EV_ERROR_DIALOG_OBJECT
-			create EV_FILE_OPEN_DIALOG_OBJECT
-			create EV_FILE_SAVE_DIALOG_OBJECT
-			create EV_INFORMATION_DIALOG_OBJECT
-				widgets.extend (create {EV_BUTTON}.make_with_text_and_action (
-						"EV_INFORMATION_DIALOG", EV_INFORMATION_DIALOG_OBJECT~show ))
-			create EV_MESSAGE_DIALOG_OBJECT
-				widgets.extend (create {EV_BUTTON}.make_with_text_and_action (
-						"EV_MESSAGE_DIALOG", EV_MESSAGE_DIALOG_OBJECT~show ))
-			create EV_QUESTION_DIALOG_OBJECT
-				widgets.extend (create {EV_BUTTON}.make_with_text_and_action (
-						"EV_QUESTION_DIALOG", EV_QUESTION_DIALOG_OBJECT~show))
-			create EV_WARNING_DIALOG_OBJECT
-				widgets.extend (create {EV_BUTTON}.make_with_text_and_action (
-						"EV_WARNING_DIALOG", EV_WARNING_DIALOG_OBJECT~show))
-			create EV_AGGREGATE_BOX_OBJECT
-			create EV_DIALOG_OBJECT
-				widgets.extend (create {EV_BUTTON}.make_with_text_and_action (
-						"EV_DIALOG", EV_DIALOG_OBJECT~show ))
-			create EV_CELL_OBJECT
-				widgets.extend (EV_CELL_OBJECT)
-			create cbox
-				widgets.extend (cbox)
-
+			notebook.fill (widgets)
+			
 			from
-				counter := 1
+				notebook.start
 			until
-				counter > 10
+				notebook.after
 			loop
-				create EV_LIST_ITEM_OBJECT
-				EV_LIST_ITEM_OBJECT.set_text ("Combo box list item " + counter.out)
-				EV_LIST_ITEM_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
-				cbox.extend (EV_LIST_ITEM_OBJECT)
-				counter := counter + 1
-			end
-
-			create EV_FRAME_OBJECT
-				widgets.extend (EV_FRAME_OBJECT)
-			create EV_HORIZONTAL_BOX_OBJECT
-				widgets.extend (EV_HORIZONTAL_BOX_OBJECT)
-			create EV_HORIZONTAL_SPLIT_AREA_OBJECT
-				widgets.extend (EV_HORIZONTAL_SPLIT_AREA_OBJECT)
-			create EV_NOTEBOOK_OBJECT
-				widgets.extend (EV_NOTEBOOK_OBJECT)
---FIXME			create EV_SCROLLABLE_AREA_OBJECT
-			create EV_TITLED_WINDOW_OBJECT
-			create EV_VERTICAL_BOX_OBJECT
-				widgets.extend (EV_VERTICAL_BOX_OBJECT)
-			create EV_VERTICAL_SPLIT_AREA_OBJECT
-				widgets.extend (EV_VERTICAL_SPLIT_AREA_OBJECT)
---FIXME			create EV_VIEWPORT_OBJECT
---FIXME			create EV_WIDGET_LIST_CURSOR_OBJECT
-			create EV_WINDOW_OBJECT
-			create EV_BUTTON_OBJECT
-				widgets.extend (EV_BUTTON_OBJECT)
-			create EV_CHECK_BUTTON_OBJECT
-				widgets.extend (EV_CHECK_BUTTON_OBJECT)
-			create EV_DRAWING_AREA_OBJECT
-				widgets.extend (EV_DRAWING_AREA_OBJECT)
-			create EV_HORIZONTAL_PROGRESS_BAR_OBJECT
-				widgets.extend (EV_HORIZONTAL_PROGRESS_BAR_OBJECT)
-			create EV_HORIZONTAL_RANGE_OBJECT
-				widgets.extend (EV_HORIZONTAL_RANGE_OBJECT)
-			create EV_HORIZONTAL_SCROLL_BAR_OBJECT
-				widgets.extend (EV_HORIZONTAL_SCROLL_BAR_OBJECT)
-			create EV_HORIZONTAL_SEPARATOR_OBJECT
-				widgets.extend (EV_HORIZONTAL_SEPARATOR_OBJECT)
-			create EV_LABEL_OBJECT
-				widgets.extend (EV_LABEL_OBJECT)
-			create EV_LIST_OBJECT
-				widgets.extend (EV_LIST_OBJECT)
-				EV_LIST_OBJECT.extend (create {EV_LIST_ITEM}.make_with_text ("item1"))
-				EV_LIST_OBJECT.extend (create {EV_LIST_ITEM}.make_with_text ("item2"))
-				EV_LIST_OBJECT.extend (create {EV_LIST_ITEM}.make_with_text ("item3"))
-				EV_LIST_OBJECT.extend (create {EV_LIST_ITEM}.make_with_text ("item4"))
-				EV_LIST_OBJECT.extend (create {EV_LIST_ITEM}.make_with_text ("item5"))
-
-			from
-				EV_LIST_OBJECT.start
-			until
-				EV_LIST_OBJECT.off
-			loop
-				EV_LIST_OBJECT.item.set_pixmap (EV_PIXMAP_OBJECT)
-				EV_LIST_OBJECT.forth
-			end
-				
---FIXME			create EV_OPTION_BUTTON_OBJECT
-			create EV_SPIN_BUTTON_OBJECT
-				widgets.extend (EV_SPIN_BUTTON_OBJECT)
-			create EV_TEXT_FIELD_OBJECT
-				widgets.extend (EV_TEXT_FIELD_OBJECT)
-			create EV_TOGGLE_BUTTON_OBJECT
-				widgets.extend (EV_TOGGLE_BUTTON_OBJECT)
-
-			create EV_VERTICAL_PROGRESS_BAR_OBJECT
-				widgets.extend (EV_VERTICAL_PROGRESS_BAR_OBJECT)
-			create EV_VERTICAL_RANGE_OBJECT
-				widgets.extend (EV_VERTICAL_RANGE_OBJECT)
-			create EV_VERTICAL_SCROLL_BAR_OBJECT
-				widgets.extend (EV_VERTICAL_SCROLL_BAR_OBJECT)
-			create EV_VERTICAL_SEPARATOR_OBJECT
-				widgets.extend (EV_VERTICAL_SEPARATOR_OBJECT)
-			create EV_MENU_BAR_OBJECT
-				first_window.set_menu_bar (ev_menu_bar_OBJECT)
-			create EV_MENU_OBJECT
-				ev_menu_bar_OBJECT.extend (EV_MENU_OBJECT)
-				ev_menu_OBJECT.set_text ("Menu 1")
-			create EV_MENU_ITEM_OBJECT
-				EV_MENU_ITEM_OBJECT.set_text ("item1")
-				ev_menu_OBJECT.extend (EV_MENU_ITEM_OBJECT)
-			create EV_MENU_ITEM_OBJECT
-				EV_MENU_ITEM_OBJECT.set_text ("item2")
-				ev_menu_OBJECT.extend (EV_MENU_ITEM_OBJECT)
-			create EV_MENU_ITEM_OBJECT
-				EV_MENU_ITEM_OBJECT.set_text ("item3")
-				ev_menu_OBJECT.extend (EV_MENU_ITEM_OBJECT)
-			create EV_MENU_OBJECT
-				ev_menu_bar_OBJECT.extend (EV_MENU_OBJECT)
-				ev_menu_OBJECT.set_text ("Menu 2")
-			create EV_MENU_ITEM_OBJECT
-				EV_MENU_ITEM_OBJECT.set_text ("item1")
-				ev_menu_OBJECT.extend (EV_MENU_ITEM_OBJECT)
-			create EV_MENU_ITEM_OBJECT
-				EV_MENU_ITEM_OBJECT.set_text ("item2")
-				ev_menu_OBJECT.extend (EV_MENU_ITEM_OBJECT)
-			create EV_MENU_ITEM_OBJECT
-				EV_MENU_ITEM_OBJECT.set_text ("item3")
-				ev_menu_OBJECT.extend (EV_MENU_ITEM_OBJECT)
-			create EV_SCREEN_OBJECT
-			create EV_STATUS_BAR_OBJECT
-			create EV_C_UTIL_OBJECT
-			create EV_GDK_EXTERNALS_OBJECT
-			create EV_GDK_KEYSYMS_EXTERNALS_OBJECT
-			create EV_GTK_CONSTANTS_OBJECT
-			create EV_GTK_EXTERNALS_OBJECT
-			create EV_NOTIFY_ACTION_SEQUENCE_OBJECT
-			create EV_POINTER_BUTTON_ACTION_SEQUENCE_OBJECT
---FIXME			create EV_POINTER_BUTTON_LEFT_PRESS_ACTION_SEQUENCE_OBJECT
-			create EV_POINTER_MOTION_ACTION_SEQUENCE_OBJECT
-			create EV_PROXIMITY_ACTION_SEQUENCE_OBJECT
-			create EV_ACCELERATOR_ACTION_SEQUENCE_OBJECT
-			create EV_KEY_ACTION_SEQUENCE_OBJECT
-			create EV_GEOMETRY_ACTION_SEQUENCE_OBJECT
-			create EV_PND_START_ACTION_SEQUENCE_OBJECT
-			create EV_ITEM_SELECT_ACTION_SEQUENCE_OBJECT
-			create EV_FOCUS_ACTION_SEQUENCE_OBJECT
-			wnotebook.position_tabs_left
-			wnotebook.fill (widgets)
-			from
-				widgets.start
-			until
-				widgets.after
-			loop
-				textable ?= widgets.item
-					-- Set notebook tab to widget class name.
+				textable ?= notebook.item
 				if textable /= Void then
-					if textable.text /= Void then
-						wnotebook.set_item_text (widgets.item, textable.text)
-					else
-						textable.set_text ("I'm an " + textable.generating_type)
-					end
+					textable.set_text ("some text")
 				end
 			
-				pixmapable ?= widgets.item
-				if pixmapable /= Void then
-					pixmapable.set_pixmap (EV_PIXMAP_OBJECT)
-				end
-				if wnotebook.item_text (widgets.item).count = 0 then
-					wnotebook.set_item_text (widgets.item, widgets.item.generating_type)
-				end
-		
-					-- Put some children in containers.
-				container ?= widgets.item
+--|				pixmapable ?= notebook.item
+--|				if pixmapable /= Void then
+--|					pixmapable.set_pixmap (EV_PIXMAP_OBJECT)
+--|				end
+
+				container ?= notebook.item
 				if container /= Void then
+					notebook.remove
+					create {EV_VERTICAL_BOX} box
+					box.extend (create {EV_LABEL}.make_with_text (container.generating_type))
+					box.last.set_pebble (container)
+					box.disable_child_expand (box.last)
+					box.extend (container)
+					notebook.put_left (box)
+					notebook.set_item_text (box, container.generating_type)
 					from
 						i := 1
 					until
 						i = 6 or container.full
 					loop
-						create button.make_with_text ("item " + i.out)
-						container.extend (button)
+						create label.make_with_text ("item " + i.out)
+						container.extend (label)
+						label.set_pebble (label)
 						inspect i
-						when 1 then
-							button.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
-						when 2 then
-							button.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
-						when 3 then
-							button.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
-						when 4 then
-							button.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
-						when 5 then
-							button.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
+						when 1 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
+						when 2 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
+						when 3 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
+						when 4 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
+						when 5 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
 						end
-							
 						i := i + 1
 					end
+				else
+					notebook.set_item_text (notebook.item, notebook.item.generating_type)
+					notebook.item.set_pebble (notebook.item)
+					notebook.forth
 				end
-					-- Set a pebble.
-				widgets.item.set_pebble (widgets.item)
-				widgets.forth
 			end
+--|			menu_bar.extend (decendants (first_window))
 
 			from
-				i := 1
+				non_widgets.start
 			until
-				i > 10
+				non_widgets.after
 			loop
-				box.extend (create {EV_HORIZONTAL_BOX})
-				box ?= box.last
-				i := i + 1
-			end
-			box.extend (create {EV_BUTTON}.make_with_text ("I'm in 10 nested boxes!"))
-
-			ev_menu_bar_OBJECT.extend (decendants (first_window))
-			ev_menu_bar_OBJECT.last.set_text ("Widgets in a menu")
-			
-			if False then
--- FIXME BUG			EV_CHECK_MENU_ITEM_OBJECT.destroy
--- FIXME BUG			EV_LIST_ITEM_OBJECT.destroy
--- FIXME BUG			EV_MENU_ITEM_OBJECT.destroy
--- FIXME BUG			EV_MENU_SEPARATOR_OBJECT.destroy
--- FIXME BUG			EV_STATUS_BAR_ITEM_OBJECT.destroy
--- FIXME BUG			EV_TOOL_BAR_BUTTON_OBJECT.destroy
--- FIXME BUG			EV_TOOL_BAR_SEPARATOR_OBJECT.destroy
--- FIXME BUG			EV_TOOL_BAR_TOGGLE_BUTTON_OBJECT.destroy
--- FIXME BUG			EV_ACCELERATOR_OBJECT.destroy
-			EV_COLOR_OBJECT.destroy
---			EV_COORDINATES_OBJECT.destroy
--- FIXME BUG			EV_CURSOR_OBJECT.destroy
---			EV_CURSOR_CODE_OBJECT.destroy
-			EV_ENVIRONMENT_OBJECT.destroy
--- FIXME BUG			EV_FONT_OBJECT.destroy
-			EV_TIMEOUT_OBJECT.destroy
--- FIXME BUG			EV_DIRECTORY_DIALOG_OBJECT.destroy
-			EV_ERROR_DIALOG_OBJECT.destroy
--- FIXME BUG			EV_FILE_OPEN_DIALOG_OBJECT.destroy
--- FIXME BUG			EV_FILE_SAVE_DIALOG_OBJECT.destroy
-			EV_INFORMATION_DIALOG_OBJECT.destroy
-			EV_MESSAGE_DIALOG_OBJECT.destroy
-			EV_QUESTION_DIALOG_OBJECT.destroy
-			EV_WARNING_DIALOG_OBJECT.destroy
-			EV_AGGREGATE_BOX_OBJECT.destroy
-			EV_CELL_OBJECT.destroy
-			EV_DIALOG_OBJECT.destroy
-			EV_FRAME_OBJECT.destroy
-			EV_HORIZONTAL_BOX_OBJECT.destroy
-			EV_HORIZONTAL_SPLIT_AREA_OBJECT.destroy
-			EV_NOTEBOOK_OBJECT.destroy
--- FIXME BUG			EV_SCROLLABLE_AREA_OBJECT.destroy
-			EV_TITLED_WINDOW_OBJECT.destroy
-			EV_VERTICAL_BOX_OBJECT.destroy
-			EV_VERTICAL_SPLIT_AREA_OBJECT.destroy
--- FIXME BUG			EV_VIEWPORT_OBJECT.destroy
-			EV_WINDOW_OBJECT.destroy
--- FIXME BUG			EV_BUTTON_OBJECT.destroy
--- FIXME BUG			EV_CHECK_BUTTON_OBJECT.destroy
-			EV_DRAWING_AREA_OBJECT.destroy
-			EV_HORIZONTAL_PROGRESS_BAR_OBJECT.destroy
-			EV_HORIZONTAL_RANGE_OBJECT.destroy
-			EV_HORIZONTAL_SCROLL_BAR_OBJECT.destroy
-			EV_HORIZONTAL_SEPARATOR_OBJECT.destroy
-			EV_LABEL_OBJECT.destroy
-			EV_LIST_OBJECT.destroy
--- FIXME BUG			EV_OPTION_BUTTON_OBJECT.destroy
--- FIXME BUG			EV_SPIN_BUTTON_OBJECT.destroy
--- FIXME BUG			EV_TEXT_FIELD_OBJECT.destroy
--- FIXME BUG			EV_TOGGLE_BUTTON_OBJECT.destroy
-			EV_TOOL_BAR_OBJECT.destroy
-			EV_VERTICAL_PROGRESS_BAR_OBJECT.destroy
-			EV_VERTICAL_RANGE_OBJECT.destroy
-			EV_VERTICAL_SCROLL_BAR_OBJECT.destroy
-			EV_VERTICAL_SEPARATOR_OBJECT.destroy
-			EV_MENU_OBJECT.destroy
-			EV_MENU_BAR_OBJECT.destroy
-			EV_PIXMAP_OBJECT.destroy
-			EV_SCREEN_OBJECT.destroy
-			EV_STATUS_BAR_OBJECT.destroy
+				object_menu.extend (
+					create {EV_MENU_ITEM}.make_with_text (
+						non_widgets.item.generating_type
+					)
+				)
+				non_widgets.forth
 			end
 		end
 
-	widget_tool_update (lab: EV_LABEL; w: EV_WIDGET) is
-		do
-			lab.set_text (
-				w.generating_type + "%N" +
-				"width: " + w.width.out + "%N" +
-				"height: " + w.height.out + "%N" +
-				"screen_x: " + w.screen_x.out + "%N" +
-				"screen_y: " + w.screen_y.out + "%N" +
-				"minimum_width: " + w.minimum_width.out + "%N" +
-				"minimum_height: " + w.minimum_height.out
-			)
+	widgets: LINKED_LIST [EV_WIDGET] is
+			-- List of different widgets.
+		once
+			create Result.make
+			Result.extend (create {EV_CELL})
+			Result.extend (create {EV_FRAME})
+			Result.extend (create {EV_HORIZONTAL_BOX})
+			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA})
+			Result.extend (create {EV_NOTEBOOK})
+			Result.extend (create {EV_SCROLLABLE_AREA})
+			Result.extend (create {EV_VERTICAL_BOX})
+			Result.extend (create {EV_VERTICAL_SPLIT_AREA})
+			Result.extend (create {EV_VIEWPORT})
+			Result.extend (create {EV_BUTTON})
+			Result.extend (create {EV_CHECK_BUTTON})
+			Result.extend (create {EV_DRAWING_AREA})
+			Result.extend (create {EV_HORIZONTAL_PROGRESS_BAR})
+			Result.extend (create {EV_HORIZONTAL_RANGE})
+			Result.extend (create {EV_HORIZONTAL_SCROLL_BAR})
+			Result.extend (create {EV_HORIZONTAL_SEPARATOR})
+			Result.extend (create {EV_LABEL})
+			Result.extend (create {EV_LIST})
+--|FIXME		Result.extend (create {EV_OPTION_BUTTON})
+			Result.extend (create {EV_SPIN_BUTTON})
+			Result.extend (create {EV_TEXT_FIELD})
+			Result.extend (create {EV_TOGGLE_BUTTON})
+			Result.extend (create {EV_TOOL_BAR})
+			Result.extend (create {EV_VERTICAL_PROGRESS_BAR})
+			Result.extend (create {EV_VERTICAL_RANGE})
+			Result.extend (create {EV_VERTICAL_SCROLL_BAR})
+			Result.extend (create {EV_VERTICAL_SEPARATOR})
+			Result.extend (create {EV_PIXMAP})
 		end
 
-	textable_tool_update (lab: EV_LABEL; w: EV_TEXTABLE) is
-		do
-			lab.set_text ("The text is:%N" + w.text)
+	windows: LINKED_LIST [EV_WINDOW] is
+			-- List of different windows.
+		once
+			create Result.make
+			Result.extend (create {EV_WINDOW})
+			Result.extend (create {EV_TITLED_WINDOW})
 		end
 
-	text_field_tool_update (lab: EV_LABEL; w: EV_TEXT_FIELD) is
-		do
-			lab.set_text ("The text is:%N" + w.text)
+	dialogs: LINKED_LIST [EV_DIALOG] is
+			-- List of different dialogs.
+		once
+			create Result.make
+			Result.extend (create {EV_DIALOG})
+--|FIXME		Result.extend (create {EV_DIRECTORY_DIALOG})
+			Result.extend (create {EV_ERROR_DIALOG})
+--|FIXME		Result.extend (create {EV_FILE_OPEN_DIALOG})
+--|FIXME		Result.extend (create {EV_FILE_SAVE_DIALOG})
+			Result.extend (create {EV_INFORMATION_DIALOG})
+			Result.extend (create {EV_MESSAGE_DIALOG})
+			Result.extend (create {EV_QUESTION_DIALOG})
+			Result.extend (create {EV_WARNING_DIALOG})
 		end
 
-    decendants (cont: EV_CONTAINER): EV_MENU is
-        local
-            c: EV_CONTAINER
-            l: LINEAR [EV_WIDGET]
-            m: EV_MENU
+	non_widgets: LINKED_LIST [ANY] is
+			-- List of other Vision objects.
+		once
+			create Result.make
+			Result.extend (create {EV_ANGLE})
+			Result.extend (create {EV_ANGLE_ROUTINES})
+			Result.extend (create {EV_FIGURE_ARC})
+			Result.extend (create {EV_FIGURE_DOT})
+--|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
+			Result.extend (create {EV_FIGURE_ELLIPSE})
+			Result.extend (create {EV_FIGURE_EQUILATERAL})
+			Result.extend (create {EV_FIGURE_GROUP})
+			Result.extend (create {EV_FIGURE_LINE})
+			Result.extend (create {EV_FIGURE_MATH})
+			Result.extend (create {EV_FIGURE_PICTURE})
+			Result.extend (create {EV_FIGURE_PIE_SLICE})
+			Result.extend (create {EV_FIGURE_POLYGON})
+			Result.extend (create {EV_FIGURE_POLYLINE})
+			Result.extend (create {EV_FIGURE_RECTANGLE})
+			Result.extend (create {EV_FIGURE_TEXT})
+			Result.extend (create {EV_FIGURE_TRIANGLE})
+			Result.extend (create {EV_FIGURE_WORLD})
+--|FIXME		Result.extend (create {EV_PROJECTION})
+--|FIXME		Result.extend (create {EV_RELATIVE_POINT})
+--|FIXME		Result.extend (create {EV_STANDARD_PROJECTION})
+			Result.extend (create {EV_CHECK_MENU_ITEM})
+			Result.extend (create {EV_LIST_ITEM})
+			Result.extend (create {EV_MENU_ITEM})
+			Result.extend (create {EV_MENU_SEPARATOR})
+			Result.extend (create {EV_STATUS_BAR_ITEM})
+			Result.extend (create {EV_TOOL_BAR_BUTTON})
+			Result.extend (create {EV_TOOL_BAR_SEPARATOR})
+			Result.extend (create {EV_TOOL_BAR_TOGGLE_BUTTON})
+			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
+			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
+			Result.extend (create {EV_ACCELERATOR})
+			Result.extend (create {EV_COLOR})
+			Result.extend (create {EV_COORDINATES})
+			Result.extend (create {EV_CURSOR})
+--|FIXME		Result.extend (create {EV_CURSOR_CODE})
+			Result.extend (create {EV_ENVIRONMENT})
+			Result.extend (create {EV_FONT})
+			Result.extend (create {EV_FONT_CONSTANTS})
+--|FIXME		Result.extend (create {EV_KEY_CODE})
+			Result.extend (create {EV_RECTANGLE})
+			Result.extend (create {EV_TIMEOUT})
+			Result.extend (create {EV_DRAWABLE_CONSTANTS})
+			Result.extend (create {EV_BASIC_COLORS})
+			Result.extend (create {EV_DEFAULT_COLORS})
+			Result.extend (create {EV_MENU})
+			Result.extend (create {EV_MENU_BAR})
+			Result.extend (create {EV_SCREEN})
+			Result.extend (create {EV_STATUS_BAR})
+		end
+
+--|	features: LINKED_LIST [EV_PROCEDURE_WIDGET [ANY, TUPLE]] is
+--|			-- Assorted Vision feature as procedure widgets.
+--|		once
+--|			create Result.make
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_TEXTABLE, TUPLE [EV_TEXTABLE, STRING]]}.make ( {EV_TEXTABLE}~set_text, "set_text", <<"textable", "text">> ))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_WIDGET]]}.make ( {EV_CONTAINER}~extend, "extend", <<"container", "widget">> ))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ( {EV_WIDGET}~destroy, "destroy", <<"widget">> ))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER]]}.make ({EV_CONTAINER}~compare_objects, "compare_objects", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER]]}.make ({EV_CONTAINER}~compare_references, "compare_references", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~disable_capture, "disable_capture", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~disable_sensitive, "disable_sensitive", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~enable_capture, "enable_capture", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~enable_sensitive, "enable_sensitive", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~hide, "hide", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~remove_pebble, "remove_pebble", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, EV_CURSOR]]}.make ({EV_WIDGET}~set_accept_cursor, "set_accept_cursor", <<"target", "a_cursor">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~set_default_colors, "set_default_colors", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, EV_CURSOR]]}.make ({EV_WIDGET}~set_deny_cursor, "set_deny_cursor", <<"target", "a_cursor">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~set_drag_and_drop_mode, "set_drag_and_drop_mode", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~set_focus, "set_focus", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, ANY]]}.make ({EV_WIDGET}~set_pebble, "set_pebble", <<"target", "a_pebble">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, INTEGER,  INTEGER]]}.make ({EV_WIDGET}~set_pebble_position, "set_pebble_position", <<"target", "a_x", "a_y">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~set_pick_and_drop_mode, "set_pick_and_drop_mode", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~show, "show", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_WIDGET]]}.make ({EV_CONTAINER}~extend, "extend", <<"target", "v">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, CONTAINER [EV_WIDGET]]]}.make ({EV_CONTAINER}~fill, "fill", <<"target", "other">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_WIDGET]]}.make ({EV_CONTAINER}~put, "put", <<"target", "v">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER]]}.make ({EV_CONTAINER}~remove_tooltip, "remove_tooltip", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_COLOR]]}.make ({EV_CONTAINER}~set_background_color, "set_background_color", <<"target", "a_color">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_COLOR]]}.make ({EV_CONTAINER}~set_foreground_color, "set_foreground_color", <<"target", "a_color">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, INTEGER]]}.make ({EV_WIDGET}~set_minimum_height, "set_minimum_height", <<"target", "a_minimum_height">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET,INTEGER,  INTEGER]]}.make ({EV_WIDGET}~set_minimum_size, "set_minimum_size", <<"target", "a_minimum_width", "a_minimum_height">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, INTEGER]]}.make ({EV_WIDGET}~set_minimum_width, "set_minimum_width", <<"target", "a_minimum_width">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET, STRING]]}.make ({EV_WIDGET}~set_tooltip, "set_tooltip", <<"target", "a_text">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_WIDGET]]}.make ({EV_CONTAINER}~prune, "prune", <<"target", "v">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER, EV_WIDGET]]}.make ({EV_CONTAINER}~prune_all, "prune_all", <<"target", "v">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER]]}.make ({EV_CONTAINER}~wipe_out, "wipe_out", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER]]}.make ({EV_CONTAINER}~propagate_background_color, "propagate_background_color", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_CONTAINER, TUPLE [EV_CONTAINER]]}.make ({EV_CONTAINER}~propagate_foreground_color, "propagate_foreground_color", <<"target">>))
+--|			Result.extend (create {EV_PROCEDURE_WIDGET [EV_WIDGET, TUPLE [EV_WIDGET]]}.make ({EV_WIDGET}~destroy, "destroy", <<"target">>))
+--|		end
+
+	decendants (a_container: EV_CONTAINER): EV_MENU is
+			-- Children of `a_container
+		local
+			c: EV_CONTAINER
+			l: LINEAR [EV_WIDGET]
+			m: EV_MENU
 			t: EV_TEXTABLE
 			s: STRING
-        do
+		do
 			create Result
-            l := cont.linear_representation
-            from l.start until l.after loop
-                c ?= l.item
-                if c /= Void then
-			m := decendants (c)
-			m.set_text (l.item.generating_type)
-                    	Result.extend (m)
-		else
-			if l.item /= Void then
-				s := l.item.generating_type
-				t ?= l.item
-				if t /= Void then
-					if t.text /= Void then
-						s.append (" (" + t.text + ")")
+			l := a_container.linear_representation
+			from l.start until l.after loop
+				c ?= l.item
+				if c /= Void then
+					m := decendants (c)
+					m.set_text (l.item.generating_type)
+					Result.extend (m)
+				else
+					if l.item /= Void then
+						s := l.item.generating_type
+						t ?= l.item
+						if t /= Void then
+							if t.text /= Void then
+								s.append (" (" + t.text + ")")
+							end
+						end
+						Result.extend (create {EV_MENU_ITEM}.make_with_text (s))
 					end
 				end
-				Result.extend (create {EV_MENU_ITEM}.make_with_text (s))
 			end
 		end
-                l.forth
-            end
-        end
+
+	update_widget_label (a_label: EV_LABEL; a_widget: EV_WIDGET) is
+			-- Update `a_lable' with information about `a_widget'.
+		local
+			t: EV_TEXTABLE
+			s: STRING
+		do
+			current_widget := a_widget
+			s := "type   = " + a_widget.generating_type + "%N"
+			s.append ("width  = " + a_widget.width.out + "%N")
+			s.append ("height = " + a_widget.height.out + "%N")
+			t ?= a_widget
+			if t /= Void then
+				s.append ("text   = " + t.text + "%N")
+			end
+			a_label.set_text (s)
+		end
+
+	destroy_current_widget is
+		do
+			if current_widget /= Void then
+				current_widget.destroy
+				current_widget := Void
+			end
+		end
+
+	current_widget: EV_WIDGET
+
 end
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 12:11:41  oconnor
+--| moved test2 to test
+--|
+--| Revision 1.2  2000/02/14 12:05:15  oconnor
+--| added from prerelease_20000214
+--|
+--| Revision 1.1.2.2  2000/02/14 11:41:54  oconnor
+--| more tests
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

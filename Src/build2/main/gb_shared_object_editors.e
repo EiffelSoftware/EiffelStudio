@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 	all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR] is
 			-- All object editors in system, floating and docked.
 		do
-			create Result.make_from_array (floating_object_editors)
+			Result := clone (floating_object_editors)
 			Result.force (docked_object_editor)
 		end
 

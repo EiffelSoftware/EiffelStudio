@@ -157,6 +157,9 @@
 					<item>
 						<bold>EV_WIDGET</bold> - Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string "%R" which is the Windows specific newline character. We now pass "%N" when the Enter key is pressed.
 					</item>
+					<item>
+						<bold>EV_TEXT</bold> - Fixed bug where `caret_position' was returning an incorrect value if it the text had word wrapping enabled and one or more lines in the text were currently word wrapped.
+					</item>
 				</list>
 			</item>
 			<item>

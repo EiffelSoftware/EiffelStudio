@@ -15,9 +15,9 @@
 
 void xxerror(s)
 {
-	extern int yychar;			/* Last token */
+	extern int xxchar;			/* Last token */
 
-	switch (yychar){
+	switch (xxchar){
 	case LAC_ERROR2:
 		/* String too long: call feature `make_string_too_long' of
 		 * class ERROR_HANDLER.

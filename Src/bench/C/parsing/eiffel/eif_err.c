@@ -14,6 +14,7 @@
 #include "parser.h"
 
 void yyerror(s)
+char *s;
 {
 	extern int yychar;			/* Last token */
 

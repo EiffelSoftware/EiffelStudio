@@ -2557,7 +2557,7 @@ char *from;
 		if (size != nbytes) {
 			num++;
 			printf("memck: object 0x%x should be %d bytes (is %d)\n",
-				nbytes, size);
+				object, nbytes, size);
 		}
 	}
 

@@ -426,6 +426,14 @@ shared void initsig()
 #ifdef SIGWINCH
 	sig_ign[SIGWINCH] = 1;			/* Ignore window size change */
 #endif
+#ifdef SIGTTIN
+	sig_ign[SIGTTIN] = 1;			/* Ignore background input signal */
+	(void) signal(SIGTTIN, SIG_IGN);
+#endif
+#ifdef SIGTTOU
+	sig_ign[SIGTTOU] = 1;			/* Ignore background output signal */
+	(void) signal(SIGTTOU, SIG_IGN);
+#endif
 
 	/* Do not catch SIGTSTP (stop signal from tty like ^Z under csh or ksh)
 	 * otherwise job control will not be allowed. However, SIGSTOP is caught.

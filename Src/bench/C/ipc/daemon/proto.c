@@ -353,7 +353,11 @@ Request *rqst;
 		add_log(2, "ERROR cannot run asynchronous command");
 #endif
 		dans.rq_opaque.op_second = AK_ERROR;
+/*
+ * Asynchronous commands do not send acknowledgment back anymore
+ * -- FRED
 		send_packet(writefd(sp), &dans);
+*/
 		break;
 	case 0:					/* Child is performing the command */
 #ifdef USE_ADD_LOG
@@ -398,7 +402,12 @@ Request *rqst;
 	else
 		dans.rq_opaque.op_second = AK_ERROR;	/* Comamnd failed */
 
-	send_packet(writefd(sp), &dans);	/* Send command status back */
+/*
+ * Asynchronous commands do not send command status back anymore
+ * 
+ * -- FRED
+	send_packet(writefd(sp), &dans);
+*/
 #ifdef USE_ADD_LOG
 	add_log(12, "child exiting");
 #endif

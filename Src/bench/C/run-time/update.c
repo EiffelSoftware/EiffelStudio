@@ -75,6 +75,11 @@ if (meltpath) strcpy (filename, meltpath);
 else strcpy (filename, ".");
 strcat(filename, "/.UPDT");
 
+#ifdef DEBUG
+	dprintf(1)("Frozen level = %d\n", zeroc);
+	dprintf(1)("Reading .UPDT in: %s\n", filename);
+#endif
+
 if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	fprintf(stderr, "ISE Eiffel3: could not open .UPDT file\n");
 	exit(0);
@@ -123,7 +128,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	/* Read the dispatch table new count */
 	count = wlong();
 #ifdef DEBUG
-	dprintf(1)("New count for dispatch table: %ld [old = %ld]\n", count, dcount);
+	dprintf(1)("=== New count for dispatch table: %ld [old = %ld] ===\n", count, dcount);
 #endif
 	/* Allocation of variable `dispatch' */
 	dispatch = (uint32 *) cmalloc(count * sizeof(uint32));
@@ -137,14 +142,14 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	while ((body_index = wlong()) != -1) {
 		dispatch[body_index] = wlong();
 #ifdef DEBUG
-	dprintf(2)("dispatch[%ld] = %ld\n", body_index, dispatch[body_index]);
+	dprintf(1)("dispatch[%ld] = %ld\n", body_index, dispatch[body_index]);
 #endif
 	}
 
 	/* Updating of the melting table */
 	mcount = wlong();		/* Read the size of the byte code array */
 #ifdef DEBUG
-	dprintf(1)("Size of melted table: %ld\n", mcount);
+	dprintf(1)("=== Size of melted table: %ld ===\n", mcount);
 #endif
 	/* Allocation of the variable `melt' */
 	melt = (char **) cmalloc(mcount * sizeof(char *));
@@ -156,24 +161,27 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 		enomem();
 
 	while ((body_id = wlong()) != -1) {
+if (body_id < 0 ) {printf ("body_id == %d\n", body_id); }
 		bsize = wlong();
 		pattern_id = wlong();
+if (body_id >= 0)
 		mpatidtab[body_id] = (int) pattern_id;
 		bcode = cmalloc(bsize * sizeof(char));
 		if (bcode == (char *) 0)
 			enomem();
 		/* Read the byte code */
 		wread(bcode, bsize * sizeof(char));
+if (body_id >= 0)
 		melt[body_id] = bcode;
-/*
-printf ("========\n");
-idump(stdout, bcode); 
-printf ("========\n");
-*/
+
 #ifdef DEBUG
-	dprintf(2)("sizeof(melt[%ld]) = %ld\n", body_id, bsize);
-#ifdef TEST
+	dprintf(2)("------------------\n");
+	if (DEBUG & (2)) idump(stdout, bcode); 
+	dprintf(2)("------------------\n");
 #endif
+
+#ifdef DEBUG
+	dprintf(1)("sizeof(melt[%ld]) = %ld\n", body_id, bsize);
 #endif
 	}
 
@@ -214,7 +222,7 @@ int nbytes;
 	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
 #endif
 	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
-		printf("Error while reading\n");
+		fprintf(stderr, "ISE Eiffel3: error while reading .UPDT file\n");
 		exit(0);
 	}
 #ifdef DEBUG
@@ -239,6 +247,11 @@ private void root_class_updt ()
 	rcdt = wlong();
 	rcfid = wlong();
 	rcarg = wlong();
+
+#ifdef DEBUG
+	dprintf(1)("Root class info:\n\trcst = %ld, rcdt = %ld\n", rcst, rcdt);
+	dprintf(1)("\trcfid = %ld, rcarg = %ld\n", rcfid, rcarg);
+#endif
 }
 
 private void cnode_updt()
@@ -271,7 +284,7 @@ private void cnode_updt()
 	dtype = wshort();
 	node = &System(dtype);
 #ifdef DEBUG
-	dprintf(2)("Updating cnode of dyn type %d\n", dtype);
+	dprintf(4)("Updating cnode of dyn type %d\n", dtype);
 #endif
 
 		/* 2. Generator string: the terminator null character is not
@@ -285,14 +298,14 @@ private void cnode_updt()
 	wread(str, str_count * sizeof(char));
 	str[str_count] = '\0';
 #ifdef DEBUG
-	dprintf(2)("\tgenerator = %s\n", node->cn_generator);
+	dprintf(4)("\tgenerator = %s\n", node->cn_generator);
 #endif
 
 		/* 3. Number of attributes */
 	nbattr = wlong();
 	node->cn_nbattr = nbattr;
 #ifdef DEBUG
-	dprintf(2)("\tattribute number = %ld\n", node->cn_nbattr);
+	dprintf(4)("\tattribute number = %ld\n", node->cn_nbattr);
 #endif
 
 		/* 4. Attribute names array */
@@ -306,7 +319,7 @@ private void cnode_updt()
 			enomem();
 		node->cn_types = types;
 #ifdef DEBUG
-	dprintf(2)("\tattribute names = ");
+	dprintf(4)("\tattribute names = ");
 #endif
 		for (i=0; i<nbattr; i++) {
 			str_count = wshort();
@@ -317,16 +330,16 @@ private void cnode_updt()
 			str[str_count] = '\0';
 			names[i] = str;
 #ifdef DEBUG
-	dprintf(2)("%s ", str);
+	dprintf(4)("%s ", str);
 #endif
 		}
 #ifdef DEBUG
-	dprintf(2)("\tattribute types = ");
+	dprintf(4)("\tattribute types = ");
 #endif
 		for (i=0; i<nbattr; i++) {
 			types[i] = wuint32();
 #ifdef DEBUG
-	dprintf(2)("0x%x ", types[i]);
+	dprintf(4)("0x%x ", types[i]);
 #endif
 		}
 		
@@ -342,12 +355,12 @@ private void cnode_updt()
 		enomem();
 	node->cn_parents = parents;
 #ifdef DEBUG
-	dprintf(2)("\n\tparents = ");
+	dprintf(4)("\n\tparents = ");
 #endif
 	for (i=0; i<nbparents; i++) {
 		parents[i] = (int) wshort();
 #ifdef DEBUG
-	dprintf(2)("%d ", parents[i]);
+	dprintf(4)("%d ", parents[i]);
 #endif
 	}
 	parents[nbparents] = -1;
@@ -360,9 +373,9 @@ private void cnode_updt()
 		node->cn_attr = rout_ids;
 		wread(rout_ids, nbattr * sizeof(int32));
 #ifdef DEBUG
-	dprintf(2)("\n\trout id array = ");
+	dprintf(4)("\n\trout id array = ");
 	for (i=0; i<nbattr; i++)
-		dprintf(2)("%ld ", rout_ids[i]);
+		dprintf(4)("%ld ", rout_ids[i]);
 #endif
 	} else
 		node->cn_attr = (int32 *) 0;
@@ -370,13 +383,13 @@ private void cnode_updt()
 		/* 7. Reference number */
 	node->nb_ref = wlong();
 #ifdef DEBUG
-	dprintf(2)("\n\treference number = %ld\n", node->nb_ref);
+	dprintf(4)("\n\treference number = %ld\n", node->nb_ref);
 #endif
 
 		/* 8. Node size */
 	node->size = wlong();
 #ifdef DEBUG
-	dprintf(2)("\tsize = %ld\n", node->size);
+	dprintf(4)("\tsize = %ld\n", node->size);
 #endif
 
 	wread(&node->cn_deferred, 1);		/* Deferred flag */
@@ -385,9 +398,9 @@ private void cnode_updt()
 	node->static_id = wint32();			/* Static id of Class */
 	wread(&node->cn_disposed, 1);		/* Dispose flag */ 
 #ifdef DEBUG
-	dprintf(2)("\tcreation_id = %ld\n", node->cn_creation_id);
-	dprintf(2)("\tstatic_id = %ld\n", node->static_id);
-	dprintf(2)("\tdispose_id = %ld\n", node->cn_disposed);
+	dprintf(4)("\tcreation_id = %ld\n", node->cn_creation_id);
+	dprintf(4)("\tstatic_id = %ld\n", node->static_id);
+	dprintf(4)("\tdispose_id = %ld\n", node->cn_disposed);
 #endif
 }
 
@@ -406,7 +419,7 @@ private void routid_updt()
 	while ((class_id = wlong()) != -1L) {
 		array_size = wlong();   /* Array size */
 #ifdef DEBUG
-	dprintf(2)("Updating rids of class of id %ld [%ld]\n",
+	dprintf(4)("Updating rids of class of id %ld [%ld]\n",
 		class_id, array_size);
 #endif
 		cn_eroutid = (int32 *) cmalloc(array_size * sizeof(int32));
@@ -417,7 +430,7 @@ private void routid_updt()
 {
 	long i;
     for (i=0; i<array_size; i++) 
-        dprintf(2)("ra%d[%ld] = %ld\n", class_id, i, cn_eroutid[i]);
+        dprintf(4)("ra%d[%ld] = %ld\n", class_id, i, cn_eroutid[i]);
 }
 #endif
 		wread(&has_cecil, 1);		/* Cecil ? */
@@ -431,7 +444,7 @@ private void routid_updt()
 		}
 		while ((dtype = wlong()) != -1L) {	/* Dynamic type */
 #ifdef DEBUG
-	dprintf(2)("\tfor %s [dt = %ld]\n", System(dtype).cn_generator, dtype);
+	dprintf(4)("\tfor %s [dt = %ld]\n", System(dtype).cn_generator, dtype);
 #endif
 			orig_dtype = wlong();
 			Routids(orig_dtype) = cn_eroutid;
@@ -689,7 +702,7 @@ private void desc_updt()
 					desc_ptr[i].type = wshort();
 				}
 #ifdef DEBUG
-	dprintf(2)("Melted descriptor\n\torigin = %d, dtype = %d, RTUD = %d, size = %d\n", 
+	dprintf(4)("Melted descriptor\n\torigin = %d, dtype = %d, RTUD = %d, size = %d\n", 
 						org_id, type_id, RTUD(type_id-1), rout_count);
 	{
 		int i;

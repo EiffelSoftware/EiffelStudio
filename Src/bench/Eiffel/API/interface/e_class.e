@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class E_CLASS
+deferred class E_CLASS
 
 inherit
 
@@ -27,14 +27,10 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SHARED_PASS
 
-creation
-
-	make
-	
 feature -- Initialization
 
-	make (l: CLASS_I) is
-			-- Creation
+	initialize (l: CLASS_I) is
+			-- Initialization of Current.
 		require
 			good_argument: l /= Void;
 		do
@@ -55,7 +51,7 @@ feature -- Properties
 			-- Class id
 
 	lace_class: CLASS_I;
-			-- Lace class (class type to be changed to E_CLASS)
+			-- Lace class 
 
 	parents: FIXED_LIST [CL_TYPE_A];
 			-- Parent classes
@@ -70,11 +66,8 @@ feature -- Properties
 			-- Suppliers of the class in terms of calls
 			-- [Useful for incremental type check].
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS] is
+	generics: EIFFEL_LIST [FORMAL_DEC_AS];
 			-- Formal generical parameters
-		do
-			Result := private_generics
-		end;
 
 	topological_id: INTEGER;
 			-- Unique number for a class. Could change during a topological
@@ -101,15 +94,13 @@ feature -- Properties
 			-- Is the class able to be debugged?
 			-- (not if it doesn't have class types 
 			-- or is a special class)
-		do
-			Result := class_is_debuggable and then	
-				has_types
+		deferred
 		end;
 
 	name: STRING is
-			-- Raw class name
+			-- Class name
 		do
-			Result := lace_class.class_name
+			Result := lace_class.name
 		end;
 
 	text: STRING is
@@ -144,7 +135,7 @@ feature -- Access
 	invariant_ast: INVARIANT_AS is
 			-- Associated invariant AST structure
 		do
-			if compiled_info.invariant_feature /= Void then
+			if invariant_feature /= Void then
 				Result := Inv_ast_server.item (id)
 			end
 		end;
@@ -344,7 +335,7 @@ feature -- Server Access
 
 feature -- Comparison
 
-	infix "<" (other: E_CLASS): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN is
 			-- Order relation on classes
 		do
 			Result := topological_id < other.topological_id;
@@ -362,15 +353,17 @@ feature -- Element change
 		local
 			class_ast: CLASS_AS_B;
 			error: BOOLEAN;
-			syntax_error: SYNTAX_ERROR
+			syntax_error: SYNTAX_ERROR;
+			compiled_info: CLASS_C
 		do
 			if not error then
 				last_syntax_cell.put (Void);
-				class_ast := compiled_info.build_ast;
+				class_ast := build_ast;
 				class_ast.set_id (id);
 					-- Mark the class syntactically changed
-				compiled_info.set_changed (True);
+				set_changed (True);
 				Tmp_ast_server.put (class_ast);
+				compiled_info ?= Current;
 				pass1_controler.insert_parsed_class (compiled_info);
 				pass2_controler.insert_new_class (compiled_info);
 				pass3_controler.insert_new_class (compiled_info);
@@ -401,11 +394,11 @@ feature -- Output
 			formal_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
 			old_cluster: CLUSTER_I;
-			gens: like private_generics
+			gens: like generics
 		do
 			!!Result.make (50);
 			Result.append (name);
-			gens := private_generics;
+			gens := generics;
 			if gens /= Void then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
@@ -415,7 +408,7 @@ feature -- Output
 				until
 					gens.after
 				loop
-					formal_dec := gens.item;
+					formal_dec ?= gens.item;
 					Result.append (formal_dec.formal_name);
 					constraint_type := formal_dec.constraint;
 					if constraint_type /= Void then
@@ -442,10 +435,10 @@ feature -- Output
 			constraint_type: TYPE_B;
 			c_name: STRING;
 			old_cluster: CLUSTER_I;
-			gens: like private_generics
+			gens: like generics
 		do
 			append_name (st);
-			gens := private_generics;
+			gens := generics;
 			if gens /= Void then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
@@ -455,7 +448,7 @@ feature -- Output
 				until
 					gens.after
 				loop
-					formal_dec := gens.item;
+					formal_dec ?= gens.item;
 					c_name := clone (formal_dec.formal_name);
 					c_name.to_upper;
 					st.add_string (c_name);
@@ -482,31 +475,7 @@ feature -- Output
 			st.add_classi (lace_class, name_in_upper)
 		end;
 
-feature {COMPILER_EXPORTER} -- Implementation
-
-	class_is_debuggable: BOOLEAN;
-			-- Is the class debuggable
-
-	compiled_info: CLASS_C;
-			-- Information for compiling Current eiffel class
-
-feature {CLASS_C} -- Implementation
-
-	private_generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
-			 -- Formal generical parameters
-
-	set_compiled_info (c: like compiled_info) is
-		do
-			compiled_info := c
-		end;
-
-	set_is_debuggable (b: BOOLEAN) is
-			-- Set `class_is_debuggable' to `b'
-		do
-			class_is_debuggable := b
-		end;
-
-feature {CLASS_C, CLASS_SORTER} -- Setting
+feature {COMPILER_EXPORTER} -- Setting
 
 	set_topological_id (i: INTEGER) is
 			-- Assign `i' to `topological_id'.
@@ -550,10 +519,10 @@ feature {CLASS_C, CLASS_SORTER} -- Setting
 			suppliers := s
 		end;
 
-	set_generics (g: like private_generics) is
+	set_generics (g: like generics) is
 			-- Assign `g' to `generics'.
 		do
-			private_generics := g
+			generics := g
 		end;
 
 	set_reverse_engineered (b: BOOLEAN) is
@@ -582,9 +551,24 @@ feature -- Removal
 
 feature {COMPILER_EXPORTER} -- Implementation
 
+	invariant_feature: INVARIANT_FEAT_I;
+			-- Invariant feature
+
 	types: TYPE_LIST;
 			-- Meta-class types associated to the class: it contains
 			-- only one type if the class is not generic
+
+	feature_named (n: STRING): FEATURE_I is
+			-- Feature whose internal name is `n'
+		do
+			if
+				Tmp_feat_tbl_server.has (id)
+			then
+				Result := Tmp_feat_tbl_server.item (id).item (n)
+			else
+				Result := Feat_tbl_server.item (id).item (n)
+			end
+		end;
 
 feature {NONE} -- Implementation
 
@@ -598,37 +582,6 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void
 		end;
 
-feature {COMPILER_EXPORTER} -- Merging
-
-	merge (other: like Current) is
-			-- Merge `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-			same_class: id.is_equal (other.id)
-		local
-			classes: LINKED_LIST [E_CLASS]
-			ec: E_CLASS
-		do
-			classes := other.clients;
-			from classes.start until classes.after loop
-				ec := Eiffel_system.class_of_id (classes.item.id);
-				if not clients.has (ec) then
-					clients.extend (ec)
-				end;
-				classes.forth
-			end;
-			classes := other.descendants;
-			from classes.start until classes.after loop
-				ec := Eiffel_system.class_of_id (classes.item.id);
-				if not descendants.has (ec) then
-					descendants.extend (ec)
-				end;
-				classes.forth
-			end;
-			types.append (other.types)
-		end
-
 feature {NONE} -- Implementation
 
 	last_syntax_cell: CELL [SYNTAX_ERROR] is
@@ -637,6 +590,19 @@ feature {NONE} -- Implementation
 		once
 			!! Result.put (Void)
 		end;
+
+feature {NONE} -- Deferred routines to be implemented in CLASS_C
+
+	build_ast: CLASS_AS_B is
+			-- Build the AST structure of Current class
+		deferred
+		end
+
+	set_changed (b: BOOLEAN) is
+			-- Mark the associated lace class changed.
+		deferred
+		end;
+
 invariant
 
 	lace_class_exists: lace_class /= Void;

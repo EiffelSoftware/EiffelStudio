@@ -252,11 +252,11 @@ feature -- Status setting
 				if is_positioned or positioned_by_user then
 					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_none_enum)
 					app_implementation.process_events
-					{EV_CONTAINER_IMP} Precursor
+					Precursor {EV_CONTAINER_IMP}
 					set_position (user_x_position, user_y_position)
 				else
 					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum)
-					{EV_CONTAINER_IMP} Precursor
+					Precursor {EV_CONTAINER_IMP}
 				end
 				is_positioned := True
 			end

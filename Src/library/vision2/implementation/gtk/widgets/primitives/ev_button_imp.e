@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 		local
 			dummy_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
-			{EV_PRIMITIVE_IMP} Precursor
+			Precursor {EV_PRIMITIVE_IMP}
 			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 			pixmapable_imp_initialize
@@ -186,20 +186,20 @@ feature -- Element change
 					feature {EV_GTK_EXTERNALS}.Gtk_pack_end_enum
 				)
 			end
-			{EV_TEXTABLE_IMP} Precursor (a_text)
+			Precursor {EV_TEXTABLE_IMP} (a_text)
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			align_text_left
-			{EV_PIXMAPABLE_IMP} Precursor (a_pixmap)
+			Precursor {EV_PIXMAPABLE_IMP} (a_pixmap)
 		end
 
 	remove_text is
 			-- Assign `Void' to text.
 		do
-			{EV_TEXTABLE_IMP} Precursor
+			Precursor {EV_TEXTABLE_IMP}
 			feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
 				button_box,
 				pixmap_box,
@@ -213,7 +213,7 @@ feature -- Element change
 	remove_pixmap is
 			-- Assign Void to `pixmap'.
 		do
-			{EV_PIXMAPABLE_IMP} Precursor
+			Precursor {EV_PIXMAPABLE_IMP}
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 			align_text_center
 		end

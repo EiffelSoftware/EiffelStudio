@@ -55,8 +55,8 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_menu_item_set_submenu (
 				c_object, list_widget
 			)
-			{EV_MENU_ITEM_LIST_IMP} Precursor
-			{EV_MENU_ITEM_IMP} Precursor
+			Precursor {EV_MENU_ITEM_LIST_IMP}
+			Precursor {EV_MENU_ITEM_IMP}
 		end
 
 feature -- Element change
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 	dispose is
 			-- Disposal routine
 		do
-			{EV_MENU_ITEM_IMP} Precursor
+			Precursor {EV_MENU_ITEM_IMP}
 			list_widget := NULL
 		end
 

@@ -1097,8 +1097,8 @@ feature {NONE} -- Events
 		do
 			if b = 3 and then ctrl_pressed then
 				pebble_as_stone ?= pebble
-				if pebble_as_stone /= Void then
-					cluster_diagram.context_editor.create_development_window (pebble_as_stone)
+				if pebble_as_stone /= Void and then pebble_as_stone.is_valid then
+					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (pebble_as_stone)
 				end
 			end
 		end

@@ -27,6 +27,7 @@ inherit
 			dispose
 		end
 
+
 feature --  Access
 
 	hresult: INTEGER is

@@ -1,7 +1,7 @@
 indexing
 	description: "Include all the information needed to generate xml assembly description file"
 	external_name: "ISE.Reflection.EiffelAssemblyFactory"
-	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class 
 	EIFFEL_ASSEMBLY_FACTORY
@@ -16,9 +16,6 @@ feature {NONE} -- Initialization
 			description: "Initialize `types'."
 			external_name: "Make"
 		do
-			create types.make
-		ensure
-			non_void_types: types /= Void
 		end
 
 feature -- Access
@@ -57,13 +54,6 @@ feature -- Access
 		indexing	
 			description: "Emitter version number"
 			external_name: "EmitterVersionNumber"
-		end
-	
-	types: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_CLASS]
-		indexing
-			description: "Assembly types"
-			external_name: "Types"
 		end
 		
 feature -- Status Setting
@@ -146,23 +136,4 @@ feature -- Status Setting
 			emitter_version_number_set: emitter_version_number.Equals_String (a_value)
 		end
 
-feature -- Basic Operations
-
-	add_type (a_type: EIFFEL_CLASS) is
-		indexing
-			description: "Add `a_type' to `types'."
-			external_name: "AddType"
-		require
-			non_void_type: a_type /= Void
-		local
-			added: INTEGER
-		do
-			added := types.extend (a_type)
-		ensure
-			type_added: types.has (a_type)
-		end
-
-invariant
-	non_void_types: types /= Void
-	
 end -- class EIFFEL_ASSEMBLY_FACTORY

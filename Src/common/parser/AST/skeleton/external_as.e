@@ -69,8 +69,8 @@ feature -- Simple formatting
 			ctxt.new_line;
 			ctxt.format_ast (language_name.language_name)
 			ctxt.exdent;
+			ctxt.new_line;
 			if external_name /= void then
-				ctxt.new_line;
 				ctxt.put_text_item (ti_Alias_keyword);
 				ctxt.indent;
 				ctxt.new_line;

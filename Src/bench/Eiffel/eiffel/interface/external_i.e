@@ -21,7 +21,27 @@ inherit
 			transfer_to
 		end;
 	
-feature -- external characteristics
+feature -- Attributes for externals
+
+	dll_arg: STRING;
+			-- Extra arg for dll (Windows)
+
+	special_id: INTEGER;
+			-- special id of external if it is
+
+	special_file_name: STRING;
+			-- File name including the macro definition
+ 
+	arg_list: ARRAY[STRING];
+			-- List of arguments for the signature
+
+	return_type: STRING;
+			-- Result type of signature
+
+	include_list: ARRAY[STRING];
+			-- List of include files
+
+feature -- Routines for externals
 
 	is_special: BOOLEAN is
 			-- Does the external declaration include a macro
@@ -53,50 +73,41 @@ feature -- external characteristics
 			Result := (include_list /= Void) and then (include_list.count > 0);
 		end;
 
-	special_type: STRING;
-			-- special type of external if it is
+	set_dll_arg (s: STRING) is
+			-- set `dll_arg' to s
+		do
+			dll_arg := s;
+		end;
 
-	special_file_name: STRING;
-			-- File name including the macro definition
- 
-	arg_list: ARRAY[STRING];
-			-- List of arguments for the signature
-
-	return_type: STRING;
-			-- Result type of signature
-
-	include_list: ARRAY[STRING];
-			-- List of include files
-
-	set_special_type (s: STRING) is
-			-- Assign `s' to `special_type'
-	do
-		special_type := s;
-	end;
+	set_special_id (i: INTEGER) is
+			-- Assign `i' to `special_id'
+		do
+			special_id := i;
+		end;
 
 	set_special_file_name (s: STRING) is
 			-- Assign `s' to `special_file_name'
-	do
-		special_file_name := s;
-	end;
+		do
+			special_file_name := s;
+		end;
 
 	set_arg_list (a: ARRAY[STRING]) is
 			-- Assign `a' to `arg_list'
-	do
-		arg_list := a;
-	end;
+		do
+			arg_list := a;
+		end;
 
 	set_return_type (s: STRING) is
 			-- Assign `s' to `return_type'
-	do
-		return_type := s;
-	end;
+		do
+			return_type := s;
+		end;
 
 	set_include_list (a: ARRAY[STRING]) is
 			-- Assign `a' to `include_list'
-	do
-		include_list := a;
-	end;
+		do
+			include_list := a;
+		end;
 
 feature 
 
@@ -155,11 +166,12 @@ feature
 			external_b.set_type (access_type);
 			external_b.set_external_name (external_name);
 			external_b.set_encapsulated (encapsulated);
-			external_b.set_special_type (special_type);
+			external_b.set_special_id (special_id);
 			external_b.set_special_file_name (special_file_name);
 			external_b.set_include_list (include_list);
 			external_b.set_arg_list (arg_list);
 			external_b.set_return_type (return_type);
+			external_b.set_dll_arg (dll_arg);
 			
 			Result := external_b;
 		end;
@@ -170,9 +182,12 @@ feature
 			procedure_transfer_to (other);
 			other.set_alias_name (alias_name);
 			other.set_encapsulated (encapsulated);
-			other.set_special_type (special_type);
+			other.set_special_id (special_id);
 			other.set_arg_list (arg_list);
 			other.set_return_type (return_type);
+			other.set_special_file_name (special_file_name);
+			other.set_include_list (include_list);
+			other.set_dll_arg (dll_arg);
 		end;
 
 	new_rout_unit: EXTERNAL_UNIT is
@@ -184,6 +199,7 @@ feature
 			Result.set_written_in (written_in);
 			Result.set_pattern_id (pattern_id);
 			Result.set_external_name (external_name);
+			Result.set_encapsulated (encapsulated);
 		end;
 
 	replicated: FEATURE_I is

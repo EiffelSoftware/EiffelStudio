@@ -20,6 +20,15 @@ feature
 			external_name := s
 		end;
 
+	encapsulated: BOOLEAN;
+			-- Has the external to be encapsulated ?
+
+	set_encapsulated (b: BOOLEAN) is
+			-- set `encapsulated' to b
+		do
+			encapsulated := b;
+		end;
+
 	entry (class_type: CLASS_TYPE): EXTERN_ENTRY is
 			-- Entry for an external feature
 		local
@@ -32,6 +41,7 @@ feature
 			written_type := written_class.meta_type (class_type.type);
 			Result.set_written_type_id (written_type.type_id);
 			Result.set_external_name (external_name);
+			Result.set_encapsulated (encapsulated);
 			-- Not necessary anymore
 			--Result.set_pattern_id
 			--	(Pattern_table.c_pattern_id (pattern_id, written_type) - 1);

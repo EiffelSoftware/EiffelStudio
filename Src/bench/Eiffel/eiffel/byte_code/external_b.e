@@ -26,6 +26,37 @@ feature
 	parameters: BYTE_LIST [BYTE_NODE];
 			-- Feature parameters {list of EXPR_B}: can be Void
 
+feature -- Attributes for externals
+
+	special_id: INTEGER;
+			-- special id of external if it is
+
+	special_file_name: STRING;
+			-- File name including the macro definition
+
+	include_list: ARRAY[STRING];
+			-- List of include files
+
+	dll_arg: STRING;
+			-- Extra arg for dll (Windows)
+
+	arg_list: ARRAY[STRING];
+			-- List of arguments for the signature
+
+	return_type: STRING;
+			-- Result type of signature
+
+	external_name: STRING;
+			-- Name of the C external
+
+	encapsulated: BOOLEAN;
+			-- Has the feature some assertion declared ?
+
+	is_external: BOOLEAN is true;
+			-- Access is an external call
+
+feature -- Routines for externals
+
 	is_special_ext: BOOLEAN is
 			-- Does the external declaration include a macro, a dll16 or dll32 ?
 		do
@@ -38,14 +69,11 @@ feature
 			Result := (include_list /= Void) and then (include_list.count > 0);
 		end;
 
-	special_type: STRING;
-			-- special type of external if it is
-
-	special_file_name: STRING;
-			-- File name including the macro definition
-
-	include_list: ARRAY[STRING];
-			-- List of include files
+	set_dll_arg (s: STRING) is
+			-- Assign s to `dll_arg'
+		do
+			dll_arg := s;
+		end;
 
 	has_signature: BOOLEAN is
 			-- Does the external declaration include a signature ?
@@ -65,12 +93,6 @@ feature
 			Result := (return_type /= Void);
 		end;
 
-	arg_list: ARRAY[STRING];
-			-- List of arguments for the signature
-
-	return_type: STRING;
-			-- Result type of signature
-
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
 		do
@@ -83,10 +105,10 @@ feature
 			type := t;
 		end;
 
-	set_special_type (s: STRING) is
-			-- Assign `s' to `special_type'
+	set_special_id (i: INTEGER) is
+			-- Assign `i' to `special_id'
 		do
-			special_type := s;
+			special_id := i;
 		end;
 
 	set_special_file_name (s: STRING) is
@@ -123,12 +145,6 @@ feature
 			feature_id := f.feature_id;
 		end;
 
-	external_name: STRING;
-			-- Name of the C external
-
-	encapsulated: BOOLEAN;
-			-- Has the feature some assertion declared ?
-
 	set_external_name (s: STRING) is
 			-- Assign `s' to `external_name'.
 		do
@@ -140,9 +156,6 @@ feature
 		do
 			encapsulated := b;
 		end;
-
-	is_external: BOOLEAN is true;
-			-- Access is an external call
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?

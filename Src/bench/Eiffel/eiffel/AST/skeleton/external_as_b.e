@@ -96,7 +96,8 @@ feature -- Byte code
 			extern ?= context.a_feature;
 			Result.set_external_name (extern.external_name);
 			Result.set_encapsulated (extern.encapsulated);
-			Result.set_special_type (language_name.special_type);
+			Result.set_special_id (language_name.special_id);
+			Result.set_dll_arg (language_name.dll_arg);
 			Result.set_special_file_name (language_name.special_file_name);
 			Result.set_arg_list (language_name.arg_list);
 			Result.set_return_type (language_name.return_type);

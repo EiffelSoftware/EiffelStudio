@@ -157,11 +157,12 @@ feature -- New feature description
 					external_body ?= routine.routine_body;
 					ext_lang := external_body.language_name;
 					extern_proc.set_alias_name (external_body.external_name);
-					extern_proc.set_special_type (ext_lang.special_type);
+					extern_proc.set_special_id (ext_lang.special_id);
 					extern_proc.set_special_file_name (ext_lang.special_file_name);
 					extern_proc.set_arg_list (ext_lang.arg_list);
 					extern_proc.set_return_type (ext_lang.return_type);
 					extern_proc.set_include_list (ext_lang.include_list);
+					extern_proc.set_dll_arg (ext_lang.dll_arg);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
@@ -206,11 +207,12 @@ feature -- New feature description
 					external_body ?= routine.routine_body;
 					ext_lang := external_body.language_name;
 					extern_func.set_alias_name (external_body.external_name);
-					extern_func.set_special_type (ext_lang.special_type);
+					extern_func.set_special_id (ext_lang.special_id);
 					extern_func.set_special_file_name (ext_lang.special_file_name);
 					extern_func.set_arg_list (ext_lang.arg_list);
 					extern_func.set_return_type (ext_lang.return_type);
 					extern_func.set_include_list (ext_lang.include_list);
+					extern_func.set_dll_arg (ext_lang.dll_arg);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.

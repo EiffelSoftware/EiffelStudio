@@ -4,10 +4,10 @@ indexing
 	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_SPLIT_AREA_IMP
-	
+
 inherit
 	EV_SPLIT_AREA_I
 
@@ -156,6 +156,18 @@ feature -- Status settings
 		end
 
 feature -- Element change
+
+	set_position (value: INTEGER) is
+			-- Make `value' the new position of the splitter.
+			-- `value' is given in pixel.
+			-- Has an effect only if the split area has
+			-- already a child.
+		do
+			position := value
+			if displayed then
+				resize_children (value)
+			end
+		end
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into split area. Split area can 
@@ -343,6 +355,12 @@ feature {NONE} -- Deferred features
 	invert_split is
 			-- Invert the vertical split from `first' position to `last' position
 			-- Used when the user move the split
+		deferred
+		end
+
+	resize_children (value: INTEGER) is
+			-- Resize the two children according to the new position of the 
+			-- splitter.
 		deferred
 		end
 

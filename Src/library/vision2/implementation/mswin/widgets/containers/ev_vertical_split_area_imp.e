@@ -82,16 +82,6 @@ feature -- Element change
 			internal_set_minimum_height (size)
 		end
 
-	set_position (value: INTEGER) is
-			-- Make `value' the new position of the splitter.
-			-- `value' is given in pixel.
-			-- Has an effect only if the split area has
-			-- already a child.
-		do
-			position := value
-			resize_children (value)
-		end
-
 feature {NONE} -- Basic operation
 
 	resize_children (value: INTEGER) is
@@ -235,8 +225,8 @@ feature {NONE} -- WEL Implementation
 			-- No care about has_changes.
 		do
 			{EV_SPLIT_AREA_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
-			if position > (height - size).max (0) then
-				set_position ((height - size).max (0))
+			if a_height /= 0 and then position > (a_height - size).max (0) then
+				set_position ((a_height - size).max (0))
 			else
 				resize_children (position)
 			end

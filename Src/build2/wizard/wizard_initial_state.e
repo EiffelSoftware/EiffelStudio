@@ -53,7 +53,9 @@ feature {NONE} -- Implementation
 			-- Set the messages for this state.
 		do
 			title.set_text ("Welcome to the%NEiffel Build Wizard")
-			message.set_text ("Describe here what your wizard does.")
+			message.set_text ("This wizard enables you to develop a new Eiffel Vision2 project.%
+				%%N%NEiffel Build will be launched as part of this process, which will%
+				%%Nenable a non trivial interface to be developed if so desired.")
 		end
 	
 	pixmap_icon_location: FILE_NAME is

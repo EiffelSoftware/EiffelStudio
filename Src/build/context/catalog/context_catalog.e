@@ -57,6 +57,7 @@ feature
 	make is 
 		local
 			edit_hole: CON_ED_HOLE;
+			cut_hole: CUT_HOLE;
 			del_com: DELETE_WINDOW;
 			cat_button: CON_CAT_BUTTON;
 			rc: ROW_COLUMN;
@@ -79,6 +80,7 @@ feature
 			!! focus_label.make (top_form);
 
 			!! edit_hole.make (top_form, focus_label);
+			!! cut_hole.make (top_form, focus_label);
 			!! close_b.make (Current, top_form, focus_label);
 
 			!! window_page.make (form, rc);
@@ -91,14 +93,17 @@ feature
 			current_button := window_page.button;
 
 			top_form.attach_top (edit_hole, 0);
+			top_form.attach_top (cut_hole, 0);
 			top_form.attach_top (close_b, 0);
 			top_form.attach_top (focus_label, 0);
 			top_form.attach_left (edit_hole, 0);
+			top_form.attach_left_widget (edit_hole, cut_hole, 0);
 			top_form.attach_right (close_b, 0);
-			top_form.attach_left_widget (edit_hole, focus_label, 0);
+			top_form.attach_left_widget (cut_hole, focus_label, 0);
 			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (edit_hole, 0);
+			top_form.attach_bottom (cut_hole, 0);
 			top_form.attach_bottom (close_b, 0);
 
 			form.attach_left (first_separator, 0);
@@ -282,29 +287,57 @@ feature -- Group management
 		do
 			!!group_c;
 			group_c.set_type (a_group);
-
 			!!a_context_type.make (a_group.entity_name, group_c);
-			append_group_type (a_context_type);
+			add_group_type (a_context_type);
 		end;
 
-	append_group_type (a_context_group: CONTEXT_GROUP_TYPE) is
+	has_group_name (group_name: STRING): BOOLEAN is
+			-- Does `group_name' exists?
+		require
+			valid_group_name: group_name /= Void
+		local
+			a_name, e_name: STRING
 		do
-			context_group_types.finish;
-			context_group_types.put_right (a_context_group);
-			group_page.icon_box.extend (a_context_group);
+			a_name := clone (group_name);
+			a_name.to_upper
+			from
+				Shared_group_list.start
+			until
+				Shared_group_list.after or Result
+			loop
+				e_name := Shared_group_list.item.entity_name;
+				Result :=  a_name.is_equal (e_name);
+				Shared_group_list.forth;
+			end;
 		end;
 
 	update_groups is
+		local
+			a_context_type: CONTEXT_GROUP_TYPE;
+			group_c: GROUP_C;
+			a_group: GROUP
 		do
+			group_page.icon_box.unmanage;
 			group_page.icon_box.wipe_out;
 			from
 				Shared_group_list.start
 			until
 				Shared_group_list.after
 			loop
-				add_new_group (Shared_group_list.item);
+				a_group := Shared_group_list.item;
+				!!group_c;
+				group_c.set_type (a_group);
+				!!a_context_type.make (a_group.entity_name, group_c);
+				append_group_type (a_context_type);
 				Shared_group_list.forth
 			end;
+			group_page.icon_box.manage;
+		end;
+
+	add_group_type (a_context_type: CONTEXT_GROUP_TYPE) is
+		do
+			append_group_type (a_context_type);
+			Shared_group_list.extend (a_context_type.group);
 		end;
 
 	remove_group_type (a_context_type: CONTEXT_GROUP_TYPE) is
@@ -313,14 +346,29 @@ feature -- Group management
 			Shared_group_list.search (a_context_type.group);
 			Shared_group_list.remove;
 			context_group_types.start;
-			context_group_types.search (a_context_type);
+			from 
+				context_group_types.start
+			until
+				context_group_types.after or 
+				else (context_group_types.item.group 
+						= a_context_type.group)
+			loop
+				context_group_types.forth
+			end
 			context_group_types.remove;
 			update_groups;
 		end;
 
-	-- ***********************
-	-- * Context_editor list *
-	-- ***********************
+feature {NONE}
+
+	append_group_type (a_context_group: CONTEXT_GROUP_TYPE) is
+		do
+			context_group_types.finish;
+			context_group_types.put_right (a_context_group);
+			group_page.icon_box.extend (a_context_group);
+		end;
+
+feature -- Context_editor list
 
 	update_name_in_editors (a_context: CONTEXT) is
 			-- Update the icon name of `a_context' that
@@ -408,6 +456,7 @@ feature -- Group management
 			tree.clear;
 			group_page.clear;	
 			Shared_translation_list.wipe_out;
+			Shared_group_list.wipe_out;
 			update_translation_page;
 			perm_wind_type.reset;
 			temp_wind_type.reset;

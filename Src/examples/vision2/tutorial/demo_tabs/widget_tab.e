@@ -27,6 +27,7 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 			available_colors: LINKED_LIST[EV_COLOR]
 			l1: EV_LIST_ITEM
+			s1: EV_HORIZONTAL_SEPARATOR
 		do
 			{ANY_TAB} Precursor (par)
 				
@@ -65,7 +66,13 @@ feature -- Initialization
 				l1.set_data (available_colors.item)
 				available_colors.forth
 			end
-
+			create s1.make (Current)
+			set_child_position (s1,8,0,9,3)
+			create cmd1.make (~hide_show)
+			create b1.make_with_text (Current, "Hide")
+			b1.add_click_command (cmd1, Void)
+			b1.set_vertical_resize (False)
+			set_child_position (b1,9,1,10,2)
 		end
 
 feature -- element change
@@ -102,7 +109,7 @@ feature -- Access
 			-- Some text modifiers.
 	c1, c2: COMBO_FEATURE_MODIFIER
 			-- Combo feture modifiers.
-
+	b1: EV_BUTTON
 
 feature -- Execution feature
 
@@ -224,4 +231,15 @@ feature -- Execution feature
 			end
 		end
 
+	hide_show (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- toggle `current_widget' between hidden and shown.
+		do
+			if current_widget.shown then
+				current_widget.hide
+				b1.set_text ("Show")
+			else
+				current_widget.show
+				b1.set_text ("Hide")
+			end
+		end
 end -- class WIDGET_TAB

@@ -34,7 +34,7 @@
 					<item>"<keyword>agent</keyword> <feature_name>f</feature_name> (?, {<class_name>A</class_name>})" is now rejected, as it would conflict with a manifest type expression, instead you should write "<keyword>agent</keyword> <feature_name>f </feature_name>(?, {<class_name>A</class_name>} ?)".</item>
 				</list>
 			</item>
-			<item>In .NET, all usage of INTEGER_8 from .NET libraries have been changed to NATURAL_8.</item>
+			<item>In .NET, all usage of <class_name>INTEGER_8</class_name> from .NET libraries have been changed to <class_name>NATURAL_8</class_name>.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -81,7 +81,8 @@
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed issue where declaring a <class_name>NATIVE_ARRAY</class_name> of a .NET expanded type would be rejected by the compiler.</item>
+			<item>Fixed issue where assigning a .NET expanded type to an entity of type <class_name>ANY</class_name> would be rejected by the compiler.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues

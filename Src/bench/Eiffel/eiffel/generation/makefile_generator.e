@@ -294,10 +294,7 @@ feature -- Sub makefile generation
 					subdir_name.append_integer (i);
 					f_name.extend (subdir_name);
 					f_name.set_file_name (Makefile_SH);
-
--- INTEGRATION: remove ".path"
-
-					!!new_makefile.make (f_name.path);
+					!!new_makefile.make (f_name);
 					System.set_make_file (new_makefile);
 					Make_file.open_write;
 						-- Generate main /bin/sh preamble
@@ -346,10 +343,7 @@ feature -- Sub makefile generation
 			subdir_name.append_integer (1);
 			f_name.extend (subdir_name);
 			f_name.set_file_name (Makefile_SH);
-
--- INTEGRATION remove ".path"
-
-			!!new_makefile.make (f_name.path);
+			!!new_makefile.make (f_name);
 			System.set_make_file (new_makefile);
 			Make_file.open_write;
 				-- Generate main /bin/sh preamble

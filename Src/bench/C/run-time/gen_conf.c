@@ -384,6 +384,17 @@ rt_private void eif_put_gen_seq (int16, int16*, int16*, int16);
 
 #ifdef WORKBENCH
 #define RTUD_INV(x)  (((x) >= fcount)?(x):rtud_inv[(x)])
+
+/*
+doc:	<routine name="eif_id_for_typarr" return_type="int16" export="public">
+doc:		<summary>Perform call to RTUD_INV from generated code. Needed as RTUD_INV is not exported.</summary>
+doc:		<param name="id" type="int16">Full dynamic type converted back to its associated RTUD_INV.</param>
+doc:		<return>RTUD_INV of `id'</return>
+doc:	</routine>
+*/
+rt_public int16 eif_id_for_typarr (int16 id) {
+	return RTUD_INV(id);
+}
 #else
 #define RTUD_INV(x) (x)
 #endif
@@ -1965,7 +1976,6 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 {
 	int16   dftype, gcount = 0, i, hcode, uniformizer = 0;
-	int16	ltype; /* No need to initialize it */
 	int16   *save_otab;
 	int     pos, mcmp;
 	char    is_expanded, is_tuple;
@@ -2007,47 +2017,6 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		is_tuple = '1';
 	} else {
 		is_tuple = (char) 0;
-	}
-
-	/* Process anchored types */
-
-	if
-		((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE) ||
-		(dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE))
-	{
-		/* Anchor to a feature */
-		/* Anchor to argument or Current */
-
-		*cachable = (char) 0;   /* Cannot cache - may change */
-		(*intab)++;
-		ltype = **intab;    /* Actual type of object */
-		++(*intab);
-
-		/* If ltype is < 0 then the object was void (e.g.void argument) */
-
-		if (ltype >= 0)                 /* Object was not void */
-			ltype = RTUD_INV(ltype);    /* Reverse RTUD */
-
-		/* Process static type now */
-
-		save_otab = *outtab;
-		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
-		*outtab = save_otab;
-
-		if (ltype >= 0)
-			dftype = ltype;     /* Use dynamic type of object */
-
-		**outtab = dftype;
-		(*outtab)++;
-
-		if (dftype <= EXPANDED_LEVEL)
-		{
-			/* expanded */
-			dftype   = EXPANDED_LEVEL-dftype;
-			is_expanded = '1';
-		}
-
-		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
 	if (dftype <= FORMAL_TYPE) {

@@ -344,10 +344,12 @@ rt_private struct dcall *safe_dtop(void)
 	 * there is nothing on the stack. Here, we only return a null pointer.
 	 */
 
+	EIF_GET_CONTEXT
 	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena)
 		return (struct dcall *) 0;
 
 	return dtop();		/* Stack is not empty */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -381,6 +383,7 @@ rt_private struct dump *variable(void)
 	static int argn = 0;				/* Argument number */
 	static int locn = 0;				/* Local number */
 	
+	EIF_GET_CONTEXT
 	if (d_cxt.pg_active == (struct dcall *) 0)
 		return (struct dump *) 0;		/* No active routine */
 
@@ -411,6 +414,7 @@ rt_private struct dump *variable(void)
 	}
 
 	return dp;			/* Pointer to static data or null */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private struct dump *local(int n)

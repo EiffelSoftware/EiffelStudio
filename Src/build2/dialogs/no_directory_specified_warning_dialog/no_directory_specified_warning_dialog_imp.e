@@ -34,32 +34,32 @@ feature {NONE}-- Initialization
 			create l_vertical_box_21
 			create l_horizontal_box_22
 			create l_vertical_box_22
-			create l_cell_9
-			create pixmap_cell
 			create l_cell_10
+			create pixmap_cell
+			create l_cell_11
 			create l_label_9
 			create l_horizontal_box_23
 			create l_label_10
 			create directory_name_field
-			create l_cell_11
-			create l_horizontal_box_24
 			create l_cell_12
+			create l_horizontal_box_24
+			create l_cell_13
 			create ok_button
 			create cancel_button
 			
 			extend (l_vertical_box_21)
 			l_vertical_box_21.extend (l_horizontal_box_22)
 			l_horizontal_box_22.extend (l_vertical_box_22)
-			l_vertical_box_22.extend (l_cell_9)
-			l_vertical_box_22.extend (pixmap_cell)
 			l_vertical_box_22.extend (l_cell_10)
+			l_vertical_box_22.extend (pixmap_cell)
+			l_vertical_box_22.extend (l_cell_11)
 			l_horizontal_box_22.extend (l_label_9)
 			l_vertical_box_21.extend (l_horizontal_box_23)
 			l_horizontal_box_23.extend (l_label_10)
 			l_horizontal_box_23.extend (directory_name_field)
-			l_vertical_box_21.extend (l_cell_11)
+			l_vertical_box_21.extend (l_cell_12)
 			l_vertical_box_21.extend (l_horizontal_box_24)
-			l_horizontal_box_24.extend (l_cell_12)
+			l_horizontal_box_24.extend (l_cell_13)
 			l_horizontal_box_24.extend (ok_button)
 			l_horizontal_box_24.extend (cancel_button)
 			
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	
 	l_vertical_box_21, l_vertical_box_22: EV_VERTICAL_BOX
 	l_horizontal_box_22, l_horizontal_box_23, l_horizontal_box_24: EV_HORIZONTAL_BOX
-	l_cell_9, pixmap_cell, l_cell_10, l_cell_11, l_cell_12: EV_CELL
+	l_cell_10, pixmap_cell, l_cell_11, l_cell_12, l_cell_13: EV_CELL
 	l_label_9, l_label_10: EV_LABEL
 	directory_name_field: EV_TEXT_FIELD
 	ok_button, cancel_button: EV_BUTTON

@@ -43,7 +43,9 @@ feature {NONE}-- Initialization
 			create l_frame_6
 			create l_vertical_box_17
 			create pixmap_list
+			create check_buttons_cell
 			create check_buttons_box
+			create l_cell_8
 			create check_all_button
 			create uncheck_all_button
 			create l_horizontal_box_17
@@ -69,7 +71,7 @@ feature {NONE}-- Initialization
 			create l_vertical_box_20
 			create ok_button
 			create cancel_button
-			create l_cell_8
+			create l_cell_9
 			
 			extend (l_horizontal_box_12)
 			l_horizontal_box_12.extend (l_vertical_box_15)
@@ -83,7 +85,9 @@ feature {NONE}-- Initialization
 			l_horizontal_box_16.extend (l_frame_6)
 			l_frame_6.extend (l_vertical_box_17)
 			l_vertical_box_17.extend (pixmap_list)
+			l_vertical_box_17.extend (check_buttons_cell)
 			l_vertical_box_17.extend (check_buttons_box)
+			check_buttons_box.extend (l_cell_8)
 			check_buttons_box.extend (check_all_button)
 			check_buttons_box.extend (uncheck_all_button)
 			l_vertical_box_15.extend (l_horizontal_box_17)
@@ -109,7 +113,7 @@ feature {NONE}-- Initialization
 			l_horizontal_box_12.extend (l_vertical_box_20)
 			l_vertical_box_20.extend (ok_button)
 			l_vertical_box_20.extend (cancel_button)
-			l_vertical_box_20.extend (l_cell_8)
+			l_vertical_box_20.extend (l_cell_9)
 			
 			set_title (pixmap_settings_dialog_title)
 			l_horizontal_box_12.set_padding_width (10)
@@ -127,10 +131,13 @@ feature {NONE}-- Initialization
 			select_directory_button.set_text ("Select Directory...")
 			l_frame_6.set_minimum_width (150)
 			l_frame_6.set_minimum_height (150)
+			l_vertical_box_17.set_border_width (small_padding)
+			l_vertical_box_17.disable_item_expand (check_buttons_cell)
 			l_vertical_box_17.disable_item_expand (check_buttons_box)
-			check_buttons_box.disable_sensitive
-			check_buttons_box.set_padding_width (5)
-			check_buttons_box.set_border_width (5)
+			check_buttons_cell.set_minimum_height (small_padding)
+			check_buttons_box.set_padding_width (small_padding)
+			check_buttons_box.disable_item_expand (check_all_button)
+			check_buttons_box.disable_item_expand (uncheck_all_button)
 			check_all_button.set_text ("Check all")
 			check_all_button.set_tooltip ("Check all items, for inclusion as new pixmap constants")
 			uncheck_all_button.set_text ("Uncheck all")
@@ -208,12 +215,12 @@ feature {NONE} -- Implementation
 	ok_button, cancel_button: EV_BUTTON
 	l_frame_6, built_from_frame: EV_FRAME
 	pixmap_list: EV_CHECKABLE_LIST
+	check_buttons_cell, l_cell_8, l_cell_9: EV_CELL
 	pixmap_location_label, pixmap_path_label, l_label_7, l_label_8: EV_LABEL
 	absolute_constant_radio_button, relative_constant_radio_button: EV_RADIO_BUTTON
 	absolute_text, relative_text: EV_TEXT_FIELD
 	l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	relative_directory_combo: EV_COMBO_BOX
-	l_cell_8: EV_CELL
 	
 	select_pixmap_pressed is
 			-- Called by `select_actions' of `select_pixmap_button'.

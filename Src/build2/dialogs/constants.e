@@ -35,10 +35,14 @@ feature -- Access
 			Result := "No Matching DIRECTORY Constant"
 		end
 
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
-		once
-			Result := "Close"
+	lightbulb_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (png_location)
+			a_file_name.extend ("lightbulb.png")
+			Result.set_with_named_file (a_file_name)
 		end
 
 	constants_dialog_title: STRING is
@@ -53,6 +57,12 @@ feature -- Access
 			Result := 80
 		end
 
+	ok_button_text: STRING is
+			-- `Result' is STRING constant named `ok_button_text'.
+		once
+			Result := "OK"
+		end
+
 	next_tip_text: STRING is
 			-- `Result' is STRING constant named `next_tip_text'.
 		once
@@ -63,16 +73,6 @@ feature -- Access
 			-- `Result' is STRING constant named `system_window_title'.
 		once
 			Result := "Project Configuration"
-		end
-
-	lightbulb_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (png_location)
-			a_file_name.extend ("lightbulb.png")
-			Result.set_with_named_file (a_file_name)
 		end
 
 	new_button_add_text: STRING is
@@ -105,16 +105,16 @@ feature -- Access
 			Result := "Pixmap Selection"
 		end
 
+	modify_button_text: STRING is
+			-- `Result' is STRING constant named `modify_button_text'.
+		once
+			Result := "Modify"
+		end
+
 	negative: INTEGER is 
 			-- `Result' is INTEGER constant named negative.
 		once
 			Result := -100
-		end
-
-	ok_button_text: STRING is
-			-- `Result' is STRING constant named `ok_button_text'.
-		once
-			Result := "OK"
 		end
 
 	large_spacing_width: INTEGER is 
@@ -135,10 +135,10 @@ feature -- Access
 			Result := "Cancel"
 		end
 
-	modify_button_text: STRING is
-			-- `Result' is STRING constant named `modify_button_text'.
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
 		once
-			Result := "Modify"
+			Result := "Close"
 		end
 
 	png_location: STRING is
@@ -159,7 +159,7 @@ feature -- Access
 			Result := initialized_cell.item
 		end
 
-	constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING is
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -169,6 +169,23 @@ feature -- Access
 			Result := clone (all_constants.item (a_name))
 		ensure
 			Result_not_void: Result /= Void
+		end
+		
+	integer_constant_by_name (a_name: STRING): INTEGER is
+			-- `Result' is STRING 
+		require
+			initialized: constants_initialized
+			name_valid: a_name /= Void and not a_name.is_empty
+			has_constant (a_name)
+		local
+			l_string: STRING
+		do
+			l_string := clone (all_constants.item (a_name))
+			check
+				is_integer: l_string.is_integer
+			end
+			
+			Result := l_string.to_integer
 		end
 		
 	has_constant (a_name: STRING): BOOLEAN is

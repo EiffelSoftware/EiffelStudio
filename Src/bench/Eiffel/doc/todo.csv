@@ -77,7 +77,7 @@ Formats,,,,,,
 ,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10
 ,3,Being able to query location of creation of class instance,Manus,FMT0010,,
 ,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,
-,3,List of creation features for a class,Xavier,FMT0012,,
+,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,
 
 
 

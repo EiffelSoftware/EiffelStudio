@@ -13,6 +13,9 @@ inherit
 	EV_MENU_ITEM_I
 
 	EV_MENU_ITEM_CONTAINER_IMP
+		redefine
+			add_item
+		end
 
 	EV_ITEM_IMP
 		export {EV_MENU_ITEM_CONTAINER_IMP}
@@ -48,7 +51,13 @@ feature {NONE} -- Initialization
 			end
 			text := txt
 			initialize_list (item_command_count)
+			ev_children := parent_imp.ev_children
 		end
+
+feature -- Access
+
+	text: STRING
+			-- Text of the current item
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
 	
@@ -69,9 +78,6 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
 
 	submenu: WEL_MENU
 			-- Wel menu used when the item is a sub-menu.
-
-	text: STRING
-			-- Text of the current item
 
 feature -- Status report
 
@@ -124,8 +130,6 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 
 	add_item (an_item: EV_MENU_ITEM) is
 			-- Add `an_item' into container.
-		local
-			item_imp: EV_MENU_ITEM_IMP
 		do
 			-- First, we transform the item into a menu.
 			if submenu = Void then
@@ -134,43 +138,16 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 				parent_menu.delete_item (id)
 				parent_imp.insert_item (submenu, position, text)
 			end
-
-			-- Then, we add the object
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
-			ev_children.extend (item_imp)
-			submenu.append_string (item_imp.text, ev_children.count)
-			item_imp.set_id (ev_children.count)
-			item_imp.set_position (submenu.count - 1)
+			{EV_MENU_ITEM_CONTAINER_IMP} Precursor (an_item)
 		end
 
-	insert_item (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is
-			-- Insert a new menu-item which is a menu into
-			-- container.
---		require
---			submenu_not_void: submenu /= Void
-		do
-			submenu.insert_popup (wel_menu, pos, label)
-		end
-
-	remove_item (an_id: INTEGER) is
-			-- Remove the item with `id' as identification
-		do
-		end
-
-	uncheck_radio_items is
-			-- Uncheck all the radio-items of the container.
-		do
-		end
-
-feature {EV_MENU_CONTAINER_IMP} -- Implementation
+feature {EV_CONTAINER_IMP} -- Implementation
 
 	on_activate is
 			-- Is called by the menu when the item is activated.
 		do
 			execute_command (Cmd_item_activate, Void)
+			parent_container.on_selection_changed (Current)
 		end
 
 	wel_window: WEL_WINDOW

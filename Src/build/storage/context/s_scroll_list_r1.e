@@ -18,7 +18,6 @@ feature
 	make (node: SCROLL_LIST_C) is
 		do
 			save_attributes (node);
-			visible_item_count := node.visible_item_count;
 		end;
 
 	context (a_parent: COMPOSITE_C): SCROLL_LIST_C is
@@ -30,11 +29,8 @@ feature
 	set_context_attributes (a_context: SCROLL_LIST_C) is
 		do
 			set_attributes (a_context);
-			a_context.set_visible_item_count (visible_item_count);
 		end;
 	
-feature {NONE}
-
 	visible_item_count: INTEGER;
 
 end

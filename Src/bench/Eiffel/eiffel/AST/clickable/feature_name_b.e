@@ -35,19 +35,9 @@ feature -- Stoning
 			!! Result.make (25)
 		end;
  
-	stone (reference_class: CLASS_C): FEATURE_STONE is
-		local
-			a_feature_i: FEATURE_I
+	stone (reference_class: E_CLASS): FEATURE_NAME_STONE is
 		do
-			a_feature_i := reference_class.feature_named (internal_name);
-			if a_feature_i /= Void then
-				Result := a_feature_i.stone (reference_class)
-			else
---io.error.putstring ("error in making feature stone ");
---io.error.putstring (internal_name);
---io.error.new_line;
-				!! Result.make_with_positions (Void, reference_class, 0, 0);
-			end
+			!! Result.make (internal_name, reference_class)
 		end
 
 feature -- Formatting

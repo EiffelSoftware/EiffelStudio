@@ -15,8 +15,10 @@ inherit
 	
 	EV_PRIMITIVE_IMP
 		undefine
-			build
+			set_default_options,
+			set_default_colors
 		end
+
 feature -- Access
 
 	text_length: INTEGER is
@@ -25,10 +27,49 @@ feature -- Access
 			Result := text.count
 		end
 
+feature -- Status report
+
+	position: INTEGER is
+			-- Current position of the caret.
+		do
+			Result := c_gtk_editable_position (widget)
+		end
+
+	has_selection: BOOLEAN is
+			-- Is something selected?
+		do
+			Result := c_gtk_editable_has_selection (widget)
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected
+		do
+			Result := c_gtk_editable_selection_start (widget)
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected
+		do
+			Result := c_gtk_editable_selection_end (widget)
+		end
+
 feature -- status settings
 
-		set_maximum_line_lenght (lenght: INTEGER) is
-			-- Maximum number of charachters on line
+	set_editable (flag: BOOLEAN) is
+			-- `flag' true make the component read-write and
+			-- `flag' false make the component read-only.
+		do
+			gtk_editable_set_editable (widget, flag)
+		end
+
+	set_position (pos: INTEGER) is
+			-- set current insertion position
+		do
+			gtk_editable_set_position (widget, pos)
+		end
+
+	set_maximum_text_lenght (lenght: INTEGER) is
+			-- Maximum number of charachters on text
 		do
 			check
 				not_yet_implemented: False
@@ -45,15 +86,29 @@ feature -- Resizing
 
 feature -- Basic operation
 
-	search (str: STRING): INTEGER is
-			-- Search the string `str' in the text.
-			-- If `str' is find, it returns its start
-			-- index in the text, otherwise, it returns
-			-- `Void'
+	select_region (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) the text between 
+			-- 'start_pos' and 'end_pos'
 		do
-			check
-				not_yet_implemented: False
-			end
+			gtk_editable_select_region (widget, start_pos, end_pos)
+		end	
+
+	select_all is
+			-- Select all the text.
+		do
+			gtk_editable_select_region (widget, 0, text_length)
+		end
+
+	deselect_all is
+			-- Unselect the current selection.
+		do
+			gtk_editable_select_region (widget, 0, text_length)
+		end
+
+	delete_selection is
+			-- Delete the current selection.
+		do
+			gtk_editable_delete_selection (widget)
 		end
 
 	cut_selection is
@@ -63,9 +118,7 @@ feature -- Basic operation
 			-- If the `selectd_region' is empty, it does
 			-- nothing.
 		do
-			check
-				not_yet_implemented: False
-			end
+			gtk_editable_cut_clipboard (widget)
 		end
 
 	copy_selection is
@@ -74,9 +127,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			check
-				not_yet_implemented: False
-			end
+			gtk_editable_copy_clipboard (widget)
 		end
 
 	paste (index: INTEGER) is
@@ -84,6 +135,24 @@ feature -- Basic operation
 			-- Clipboard at the `index' postion in the
 			-- text.
 			-- If the Clipboard is empty, it does nothing. 
+		do
+			gtk_editable_paste_clipboard (widget)
+		end
+
+feature -- Event - command association
+
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+		do
+			add_command ("changed", cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
 		do
 			check
 				not_yet_implemented: False

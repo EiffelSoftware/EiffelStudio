@@ -96,27 +96,45 @@ feature -- Access
             create Result.make (class_descs)
         end
 
-    target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): FEATURE_DESCRIPTOR is
-            -- Feature information
-            -- `target' [in].
-            -- `feature_name' [in].
-            -- `file_name' [in].
+ 	target_feature (target: STRING; location_name: STRING; file_name: STRING; use_overloading: BOOLEAN; feature_name: CELL [STRING]; descriptions: ECOM_VARIANT; return_types: ECOM_VARIANT; params: ECOM_VARIANT) is
+ 			-- Feature information
+			-- `target' [in].  
+			-- `location_name' [in].  
+			-- `file_name' [in].  
+			-- `use_overloading' [in].  
+			-- `feature_name' [out].  
+			-- `descriptions' [out].  
+			-- `return_types' [out].  
+			-- `params' [out].  
         local
-            l_retriever: FEATURE_RETRIEVER
-        do
-            if feature_name.is_empty then
-                trigger (E_invalidarg)
-            end
-            create l_retriever.make (file_name)
-            l_retriever.set_locals (locals)
-            l_retriever.set_arguments (arguments)
-            l_retriever.set_completion_features (completion_features)
-            l_retriever.set_feature_name (feature_name)
-            l_retriever.find (target, use_overloading)
-            if l_retriever.found then
-                Result := l_retriever.found_item
-            end
-        end
+            l_feature: COMPLETION_FEATURE
+            l_descriptions: ECOM_ARRAY [STRING]
+			l_return_types: ECOM_ARRAY [STRING]
+			l_params: ECOM_ARRAY [PARAMETER_ENUMERATOR]
+			l_overloads_count: INTEGER
+			l_overload_descriptions: LIST [STRING]
+			l_overload_return_types: LIST [STRING]
+			l_overload_params: LIST [PARAMETER_ENUMERATOR]
+		do
+			l_feature := internal_target_feature (target, location_name, file_name, use_overloading)
+			l_overloads_count := l_feature.overloads_count + 1
+			create l_descriptions.make (1, <<1>>, <<l_overloads_count>>)
+			create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
+			create l_params.make (1, <<1>>, <<l_overloads_count>>)
+			l_descriptions.put (l_feature.description, <<1>>)
+			l_return_types.put (l_feature.return_type, <<1>>)
+			l_params.put (l_feature.parameters, <<1>>)
+			l_overload_descriptions := l_feature.overloads_descriptions
+			l_overload_return_types := l_feature.overloads_return_types
+			l_overload_params := l_feature.overloads_parameters
+			append_list_to_com_array (l_overload_return_types, l_return_types, 2)
+			append_list_to_com_array (l_overload_descriptions, l_descriptions, 2)
+			append_list_to_com_array (l_feature.overloads_parameters, l_params, 2)
+			feature_name.put (l_feature.name)
+			descriptions.set_string_array (l_descriptions)
+			return_types.set_string_array (l_return_types)
+			params.set_unknown_array (l_params)
+		end
 
     target_features (target, location_name: STRING; location_type: INTEGER; file_name: STRING; use_overloading: BOOLEAN; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is
             -- Features accessible from target.
@@ -215,7 +233,7 @@ feature -- Access
                     create ecom_var.make
                     ecom_var.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
                     initialize_feature (def_parser.parsed_result_feature, ecom_var, ecom_var, def_parser.parsed_result_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name)
-                    fd := target_feature (def_parser.parsed_result, def_parser.parsed_result_feature, target_file_name, false)
+                    fd := internal_target_feature (def_parser.parsed_result, def_parser.parsed_result_feature, target_file_name, false)
                     if fd /= Void then
                         fd.feature_location (source_file_name, source_row)
                     end
@@ -264,7 +282,7 @@ feature -- Access
                         create def_parser.make
                         feat_name := def_parser.extract_feature_name_from_text (class_text, target_row, target_col)
                         if feat_name /= Void and then not feat_name.is_empty then
-                            fd := target_feature (feat_name, "default_create", ci.file_name, False)
+                            fd := internal_target_feature (feat_name, "default_create", ci.file_name, False)
                             if fd /= Void then
                                 fd.feature_location (source_file_name, source_row)
                             else
@@ -567,7 +585,52 @@ feature {NONE} -- Implementation
         ensure
             non_void_lister: Result /= Void
         end
-        
+
+ 	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): COMPLETION_FEATURE is
+            -- Feature information
+            -- `target' [in].
+            -- `feature_name' [in].
+            -- `file_name' [in].
+        local
+            l_retriever: FEATURE_RETRIEVER
+        do
+            if feature_name.is_empty then
+                trigger (E_invalidarg)
+            end
+            create l_retriever.make (file_name)
+            l_retriever.set_locals (locals)
+            l_retriever.set_arguments (arguments)
+            l_retriever.set_completion_features (completion_features)
+            l_retriever.set_feature_name (feature_name)
+            l_retriever.find (target, use_overloading)
+            if l_retriever.found then
+                Result := l_retriever.found_item
+            else
+            	trigger (E_fail)
+            end
+        end
+
+	append_list_to_com_array (a_list: LIST [ANY]; a_com_array: ECOM_ARRAY [ANY]; start_index: INTEGER) is
+			-- Append `a_list' into `a_com_array' starting at index `start_index'.
+		require
+			non_void_list: a_list /= Void
+			non_void_com_array: a_com_array /= Void
+			valid_com_array: a_list.count > 0 implies (a_com_array.upper_indices.item (1) = a_list.count - start_index + 1) and (a_com_array.lower_indices.item (1) = 1)
+		local
+			i: INTEGER
+		do
+			from
+				i := start_index
+				a_list.start
+			until
+				a_list.after
+			loop
+				a_com_array.put (a_list.item, <<i>>)
+				i := i + 1
+				a_list.forth
+			end
+		end
+
 invariant
     non_void_completion_features: completion_features /= Void
 

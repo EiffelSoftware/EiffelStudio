@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 		local
 			style_timer: EV_TIMEOUT
 		do
-			Precursor
+			default_create
+			extend (create {EV_LABEL})
 			create style_timer.make_with_interval (2500)
 			style_timer.actions.extend (~cycle_style)
 		end
@@ -85,17 +86,26 @@ feature {NONE} -- Implementation
 			-- Set another `style'.
 		local
 			next_style: INTEGER
+			textable: EV_TEXTABLE
 		do
 			next_style := style + 1
 			if not valid_frame_border (next_style) then
 				next_style := Ev_frame_lowered
+				if text = Void then
+					set_text ("Text label")
+				else
+					remove_text
+				end
 			end
 			set_style (next_style)
-			inspect next_style
-				when Ev_frame_lowered then set_text ("Lowered")
-				when Ev_frame_raised then set_text ("Raised")
-				when Ev_frame_etched_in then set_text ("Etched in")
-				when Ev_frame_etched_out then set_text ("Etched out")
+			textable ?= item
+			if textable /= Void then
+				inspect next_style
+					when Ev_frame_lowered then textable.set_text ("Lowered")
+					when Ev_frame_raised then textable.set_text ("Raised")
+					when Ev_frame_etched_in then textable.set_text ("Etched in")
+					when Ev_frame_etched_out then textable.set_text ("Etched out")
+				end
 			end
 		end
 
@@ -128,6 +138,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/27 18:29:38  brendel
+--| Improved make_for_test.
+--|
 --| Revision 1.13  2000/04/27 17:31:08  brendel
 --| Improved make_for_test.
 --|

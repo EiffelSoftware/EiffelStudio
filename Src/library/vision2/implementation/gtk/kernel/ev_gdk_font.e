@@ -9,9 +9,6 @@ indexing
 class
 	EV_GDK_FONT
 
-inherit
-	EV_C_UTIL
-
 create
 	make
 

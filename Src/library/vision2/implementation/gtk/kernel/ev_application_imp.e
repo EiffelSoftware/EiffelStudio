@@ -21,8 +21,6 @@ inherit
 			copy
 		end
 
-	EV_C_UTIL
-
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
 
 	EXECUTION_ENVIRONMENT
@@ -42,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
---			put ("localhost:0", "DISPLAY")
+			--put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 			
 			create locale_str.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_set_locale)
@@ -476,7 +474,7 @@ feature -- External implementation
 
 invariant
 	window_oids_not_void: is_usable implies window_oids /= void
-	tooltips_not_void: tooltips /= NULL
+	tooltips_not_void: tooltips /= default_pointer
 
 end -- class EV_APPLICATION_IMP
 

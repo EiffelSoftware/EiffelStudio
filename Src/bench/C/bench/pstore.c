@@ -245,7 +245,7 @@ rt_private int parsing_char_write (char *pointer, int size)
 {
 	if (parsing_buffer_size - parsing_position < size) {
 		parsing_buffer_size += parsing_buffer_size;
-		parsing_buffer = realloc (parsing_buffer, parsing_buffer_size);
+		parsing_buffer = (char *) realloc ((void *)parsing_buffer, parsing_buffer_size);
 	}
 
 	memcpy ((parsing_buffer + parsing_position), pointer, size);

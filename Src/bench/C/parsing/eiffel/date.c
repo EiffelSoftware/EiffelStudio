@@ -27,9 +27,8 @@ EIF_INTEGER eif_date(char *path)
 	/* Return last modification time of file of path `path' */
 
 	static struct stat info;
-	static struct timeb current_time;
-
 #ifdef EIF_WIN32
+	static struct timeb current_time;
 	ftime (&current_time);
 	if (current_time.dstflag == 1)
 			/* We are not in the same daylight saving zone (here we are in summer) and thus in order
@@ -48,9 +47,9 @@ EIF_BOOLEAN eif_file_has_changed(char *path, EIF_INTEGER date)
 	/* Check to see if the directory `path' has changed after `date' */
 
 	static struct stat info;
+#ifdef EIF_WIN32
 	static struct timeb current_time;
 
-#ifdef EIF_WIN32
 	ftime (&current_time);
 	if (current_time.dstflag == 1)
 			/* We are not in the same daylight saving zone (here we are in summer) and thus in order

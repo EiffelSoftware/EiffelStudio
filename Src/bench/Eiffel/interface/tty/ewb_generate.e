@@ -52,16 +52,16 @@ feature {NONE} -- Execution
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
 		do
---			!! conf_load.make_and_load (profiler);
---			if conf_load.error_occured then
---				raise_config_error;
---			else
---				!! prof_invoker.make (conf_load.profiler, arguments, proffile_dir, compile_type);
---				if prof_invoker.must_invoke_profiler then
---					prof_invoker.invoke_profiler;
---				end;
---				!! prof_converter.make (<<proffile_dir, compile_type>>, conf_load.shared_prof_config);
---			end;
+			!! conf_load.make_and_load (profiler);
+			if conf_load.error_occured then
+				raise_config_error;
+			else
+				!! prof_invoker.make (conf_load.profiler, arguments, proffile_dir, compile_type);
+				if prof_invoker.must_invoke_profiler then
+					prof_invoker.invoke_profiler;
+				end;
+				!! prof_converter.make (<<proffile_dir, compile_type>>, conf_load.shared_prof_config);
+			end;
 		end;
 
 feature {NONE} -- Attributes

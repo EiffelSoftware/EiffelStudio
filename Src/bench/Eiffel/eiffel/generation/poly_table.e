@@ -17,42 +17,61 @@ inherit
 			empty as array_empty,
 			is_empty as array_is_empty,
 			entry as array_entry
+		export
+			{NONE} all
+			{POLY_TABLE} array_item
+			{ANY} count
 		end
 
 	IDABLE
 		rename
 			id as rout_id,
 			set_id as set_rout_id
+		export
+			{NONE} all
+			{ANY} rout_id, set_rout_id
 		undefine
 			copy, is_equal
 		end
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 	SHARED_CODE_FILES
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 	SHARED_ARRAY_BYTE
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 	SHARED_SERVER
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 	SHARED_GENERATION
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 	COMPILER_EXPORTER
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
@@ -616,7 +635,7 @@ feature {POLY_TABLE} -- Special data
 
 	bad_cast_but_valid (e: POINTER): T is
 		external
-			"C [macro %"eif_eiffel.h%"]"
+			"C macro use %"eif_eiffel.h%""
 		alias
 			"(EIF_REFERENCE)"
 		end

@@ -13,6 +13,8 @@ inherit
 			object, display_object, is_full, build_display_object, build_drop_actions_for_layout_item,
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child
 		end
+		
+	GB_PARENT_OBJECT
 
 	GB_SHARED_TOOLS
 	

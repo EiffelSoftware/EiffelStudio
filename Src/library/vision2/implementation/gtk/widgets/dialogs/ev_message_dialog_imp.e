@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_window_new (GTK_WINDOW_DIALOG)
 			c_gtk_window_set_modal (widget, True)
-			gtk_window_set_position (GTK_WINDOW (widget), 1)
+			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_CENTER)
 
 			initialize
 			parent_imp ?= par.implementation

@@ -80,8 +80,6 @@ feature {NONE} -- Initialization
 	initialize is
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
-		local
-			dummy_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (visual_widget, 0)
@@ -91,7 +89,6 @@ feature {NONE} -- Initialization
 			initialize_button_box
 			is_initialized := True
 			align_text_center
-			dummy_focus_in_actions := focus_in_actions
 		end
 
 	initialize_button_box is

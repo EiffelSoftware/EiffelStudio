@@ -55,7 +55,10 @@ feature
 						Workbench.set_system (sys);
 		
 						Eiffel_project.set_system (project.system);
+						project_dir.set_has_precompiled_preobj
+							(sys.has_precompiled_preobj);
 						sys.set_precompilation (False);
+						sys.set_has_precompiled_preobj (False);
 						Workbench.precompiled_directories.force
 							(project_dir, sys.compilation_id);
 						Workbench.set_precompiled_driver
@@ -64,8 +67,13 @@ feature
 							(project_dir.precompiled_descobj);
 						set_precomp_dir;
 						sys.init_counters;
-						Universe.update_cluster_paths;
-						sys.server_controler.init
+						if merge_project_names /= Void then
+							merge_precompiled;
+							merge_project_names := Void
+						else
+							sys.server_controler.init
+						end
+						Universe.update_cluster_paths
 					else
 						!! vd41;	
 						vd41.set_path (project_dir.name);
@@ -99,7 +107,7 @@ feature
 			driver_not_void: Workbench.precompiled_driver /= Void
 			descobj_not_void: Workbench.precompiled_descobj /= Void
 		local
-			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
 			Precompilation_driver.make_from_string
 				(Workbench.precompiled_driver);
@@ -156,23 +164,90 @@ feature {NONE} -- Implementation
 						end
 					end;
 					project_names.forth
-				end
+				end;
+				!! merge_project_names.make;
 				from project_names.start until project_names.after loop
 					project_name := project_names.item;
 					if
-						not project_name.is_equal (project_dir.dollar_name) and
+						not project_name.is_equal (Result.dollar_name) and
 						not precomp_info.has (project_name)
 					then
--- TO DO
--- TEMPORARY: this is the wrong error message but I don't want to bother
--- writing a new error class since this piece of code will be removed
--- very soon.
+						merge_project_names.extend (project_name)
+					end;
+					project_names.forth
+				end;
+				if merge_project_names.empty then
+					merge_project_names := Void
+				end
+			else
+				if 
+					project_eif /= Void and then 
+					not project_eif.is_closed 
+				then
+					project_eif.close
+				end;
+				merge_project_names := Void;
+				retried := False;
+				!! vd41;	
+				vd41.set_path (project_dir.name);
+				Error_handler.insert_error (vd41);
+				Error_handler.raise_error
+			end
+		ensure
+			valid_project: Result /= Void implies Result.is_valid
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
+		end
+
+	merge_project_names: LINKED_LIST [STRING]
+			-- Name of precompiled projects to be merged
+
+	merge_precompiled is
+			-- Merge precompiled project listed in `merge_project_names'
+			-- to current system.
+		require
+			merge_project_names_not_void: merge_project_names /= Void
+		local
+			project_dir: REMOTE_PROJECT_DIRECTORY;
+			project: E_PROJECT;
+			project_eif: RAW_FILE;
+			vd41: VD41;
+			sys: SYSTEM_I
+		do
+			if not retried then
+				from
+					merge_project_names.start
+				until
+					merge_project_names.after
+				loop
+						-- The project validity has already been checked
+						-- in `precompiled_project_directory'.
+					!! project_dir.make (merge_project_names.item);
+					!! project_eif.make_open_read (project_dir.project_eif);
+					project ?= Eiffel_project.retrieved (project_eif);
+					project_eif.close;
+	
+						-- Check that it is a precompiled cluster
+					if project /= Void then
+						sys := project.saved_workbench.system
+					end;
+					if sys /= Void and then sys.is_precompiled then
+						project_dir.set_has_precompiled_preobj
+							(sys.has_precompiled_preobj);
+						Workbench.precompiled_directories.force
+							(project_dir, sys.compilation_id);
+						Eiffel_project.system.merge (project.system);
+						Workbench.merge (project.saved_workbench)
+					else
 						!! vd41;	
-						vd41.set_path (project_name);
+						vd41.set_path (project_dir.name);
 						Error_handler.insert_error (vd41);
 						Error_handler.raise_error
 					end;
-					project_names.forth
+					merge_project_names.forth
 				end
 			else
 				if 
@@ -187,8 +262,6 @@ feature {NONE} -- Implementation
 				Error_handler.insert_error (vd41);
 				Error_handler.raise_error
 			end
-		ensure
-			valid_project: Result /= Void implies Result.is_valid
 		rescue
 			if Rescue_status.is_unexpected_exception then
 				retried := True;

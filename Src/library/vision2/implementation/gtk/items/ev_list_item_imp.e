@@ -11,13 +11,11 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_ITEM_IMP
-		rename
-			set_parent as widget_set_parent,
-			parent_imp as widget_parent_imp
 		redefine
 			make,
 			make_with_text,
-			create_text_label
+			create_text_label,
+			has_parent
 		end
 
 creation
@@ -29,7 +27,7 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create an item with an empty name.
+			-- Create a list item with an empty name.
 		do
 			widget := gtk_list_item_new
 			gtk_object_ref (widget)		
@@ -39,7 +37,7 @@ feature {NONE} -- Initialization
 		end
 	
 	make_with_text (txt: STRING) is
-			-- Create an item with `txt' as label.
+			-- Create a list item with `txt' as label.
 		local
 			a: ANY
 		do
@@ -48,7 +46,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
+			-- Create a list item with `par' as parent and `pix'
 			-- as pixmap.
 		do
 			make
@@ -56,7 +54,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_all (txt: STRING; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent, `txt' as text
+			-- Create a list item with `par' as parent, `txt' as text
 			-- and `pix' as pixmap.
 		do
 			make_with_text (txt)
@@ -64,16 +62,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Acces
-
-	parent: EV_LIST is
-			-- Parent of the current item.
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
 
 	parent_imp: EV_LIST_IMP
 			-- Parent of the Current item
@@ -89,25 +77,19 @@ feature -- Status report
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := gtk_list_child_position(parent_imp.widget, Current.widget) + 1 
 		end
 
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := ( gtk_list_child_position(parent_imp.widget, Current.widget) + 1 = 1 )
 		end
 
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := ( gtk_list_child_position(parent_imp.widget, Current.widget) + 1 = c_gtk_list_rows(parent_imp.widget) )
 		end
 
 feature -- Status setting
@@ -154,15 +136,25 @@ feature -- element change
 				parent_imp := Void
 			end
 			if par /= Void then
-				show
 				par_imp ?= par.implementation
 				check
 					parent_not_void: par_imp /= Void
 				end
 				parent_imp ?= par_imp
 				par_imp.add_item (Current)
+				show
 				gtk_object_unref (widget)
 			end
+		end
+
+feature -- Assertion
+
+	has_parent : BOOLEAN is
+			-- Redefinition of has_a_parent, already defined
+			-- in EV_WIDGET_I, because parent_imp has been
+			-- redefined as widget_parent_imp
+		do
+			Result := parent_imp /= void
 		end
 
 feature -- Event : command association

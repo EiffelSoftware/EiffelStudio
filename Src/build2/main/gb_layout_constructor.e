@@ -115,6 +115,7 @@ feature -- Access
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
+			Result.set_tooltip ("Expand all")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -129,6 +130,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent object_higlightable)
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_view_small_color"))
+			Result.set_tooltip ("Show object")
 		end
 		
 	tool_bar: EV_TOOL_BAR is

@@ -207,6 +207,7 @@ feature -- Access
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
+			Result.set_tooltip ("New directory")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -222,6 +223,7 @@ feature -- Access
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
+			Result.set_tooltip ("Expand all")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -237,6 +239,7 @@ feature -- Access
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
 			Result.select_actions.extend (agent change_root_window)
 			Result.drop_actions.extend (agent change_root_window_to)
+			Result.set_tooltip ("Root window")
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -46,7 +46,13 @@ feature -- Basic operation
 
 	splash_pixmap (pix: EV_PIXMAP) is
 			-- Show the splash screen pixmap `pix'.
-		deferred
+--		deferred
+--		end
+		do
+			create splash_screen.make
+			splash_screen.set_background_pixmap (pix)
+			splash_screen.set_minimum_size (pix.width, pix.height)
+			splash_screen.show
 		end
 
 feature {EV_APPLICATION} -- Implementation
@@ -54,9 +60,12 @@ feature {EV_APPLICATION} -- Implementation
 	iterate is
 			-- Loop the application.
 		deferred
-		end	
+		end
 
-feature {EV_UNTITLED_WINDOW_IMP} -- Root windows management
+	splash_screen: EV_UNTITLED_WINDOW_IMP
+			-- Splash screen of the application
+
+feature {EV_UNTITLED_WINDOW_I} -- Root windows management
 
 	root_windows: ARRAYED_LIST [EV_UNTITLED_WINDOW_IMP] is
 			-- List of the root windows
@@ -68,40 +77,44 @@ feature {EV_UNTITLED_WINDOW_IMP} -- Root windows management
 			-- Add `w' to the list of root windows.
 		require
 			valid_window: w /= Void
-		do
-			root_windows.extend (w)
+		deferred
 		end
+--		do
+--			root_windows.extend (w)
+--		end
 
 	remove_root_window (w: EV_UNTITLED_WINDOW_IMP) is
 			-- Remove `w' from the root windows list.
 		require
 			valid_window: w /= Void
-		do
-			if root_windows.count /= 1 then
-				root_windows.start
-				if root_windows.item = w then
-					root_windows.remove
-					set_root_window
-				else
-					root_windows.prune (w)
-				end
-			end
-		end
-
-	set_root_window is
-			-- Set the root window for the application.
-		require
-			valid_root_window: root_window /= Void
 		deferred
 		end
+--		do
+--			if root_windows.count /= 1 then
+--				root_windows.start
+--				if root_windows.item = w then
+--					root_windows.remove
+--					set_root_window
+--				else
+--					root_windows.prune (w)
+--				end
+--			end
+--		end
 
-	root_window: EV_UNTITLED_WINDOW_IMP is
-			-- The root window of the application.
-		do
-			if not root_windows.empty then
-				Result := root_windows.first
-			end
-		end
+--	set_root_window is
+--			-- Set the root window for the application.
+--		require
+--			valid_root_window: root_window /= Void
+--		deferred
+--		end
+
+--	root_window: EV_UNTITLED_WINDOW_IMP is
+--			-- The root window of the application.
+--		do
+--			if not root_windows.empty then
+--				Result := root_windows.first
+--			end
+--		end
 
 end -- class EV_APPLICATION_I
 

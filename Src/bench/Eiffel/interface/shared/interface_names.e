@@ -178,6 +178,7 @@ feature -- Accelerator, focus label and menu name
 	m_Cluster_tool: STRING is			"&Clusters"
 	f_Cluster_tool: STRING is			"Facility to view your cluster hierarchy"
 	m_Complete_word: STRING is			"Complete &word"
+	m_Complete_class_name: STRING is	"Complete class &name"
 	m_Context_tool: STRING is			"Conte&xt"
 	f_Context_tool: STRING is			"Context for current project and class"
 	m_Copy: STRING is					"C&opy%TCtrl+C"

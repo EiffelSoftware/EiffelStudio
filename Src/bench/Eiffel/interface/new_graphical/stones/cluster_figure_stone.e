@@ -11,7 +11,7 @@ inherit
 		rename
 			make as make_with_cluster
 		end
-
+		
 create
 	make
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 	make (a_figure: CLUSTER_FIGURE) is
 		do
-			make_with_cluster (a_figure.cluster_i)
+			make_with_cluster (a_figure.model.cluster_i)
 			source := a_figure
 		end
 

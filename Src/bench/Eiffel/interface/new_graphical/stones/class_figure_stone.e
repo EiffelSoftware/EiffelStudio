@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_figure: CLASS_FIGURE) is
+	make (a_figure: EIFFEL_CLASS_FIGURE) is
 		do
 			make_with_class_i (a_figure.class_i)
 			source := a_figure
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: CLASS_FIGURE
+	source: EIFFEL_CLASS_FIGURE
 			-- Source this stone was picked from.
 
 end -- class CLASS_FIGURE_STONE

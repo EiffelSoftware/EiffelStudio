@@ -26,10 +26,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_figure: CLASS_FIGURE) is
+	make (a_figure: EIFFEL_CLASS_FIGURE) is
 			-- Initialize with `a_figure'.
 		do
-			make_with_class_c (a_figure.class_i.compiled_class)
+			make_with_class_c (a_figure.model.class_i.compiled_class)
 			source := a_figure
 		end
 

@@ -9,7 +9,9 @@ inherit
 			analyze, unanalyze, generate,
 			print_register, free_register,
 			propagate, enlarged,
-			has_gcable_variable, has_call, make_byte_code
+			has_gcable_variable, has_call, make_byte_code,
+			is_unsafe, optimized_byte_node,
+			calls_special_features
 		end;
 	
 feature 
@@ -111,21 +113,25 @@ feature
 		do
 		end;
 
+	nested_b: NESTED_B is
+			-- Change this node into a nested call
+		local
+			a_access_expr: ACCESS_EXPR_B;
+		do
+			!!Result;
+			!!a_access_expr;
+			a_access_expr.set_expr (expr);
+			a_access_expr.set_parent (Result);
+			Result.set_target (a_access_expr);
+			access.set_parent (Result);
+			Result.set_message (access);
+		end;
+
 	enlarged: EXPR_B is
 			-- Enlarge the expression
-		local
-			nested_b: NESTED_B;
-			a_access_expr: ACCESS_EXPR_B;
 		do
 			if not is_built_in then
 					-- Change this node into a nested call
-				!!nested_b;
-				!!a_access_expr;
-				a_access_expr.set_expr (expr);
-				a_access_expr.set_parent (nested_b);
-				nested_b.set_target (a_access_expr);
-				access.set_parent (nested_b);
-				nested_b.set_message (access);
 				Result := nested_b.enlarged;
 			else
 					-- Enlarge current node
@@ -186,5 +192,31 @@ feature -- Byte code generation
 			-- operation
 		deferred
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := expr.calls_special_features (array_desc) or else
+				access.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+				-- Use the nested form of the byte code (the type resolution
+				-- does not work otherwise)
+			Result := nested_b.is_unsafe
+		end
+
+	optimized_byte_node: EXPR_B is
+		do
+			if is_built_in then
+				Result := Current
+				expr := expr.optimized_byte_node
+				access := access.optimized_byte_node
+			else
+				Result := nested_b.optimized_byte_node
+			end
+		end
 
 end

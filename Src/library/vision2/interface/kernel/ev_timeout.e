@@ -71,7 +71,8 @@ feature -- Access
 feature -- Status report
 
 	count: INTEGER is
-			-- Number of times `actions' have been called.
+			-- Number of times `actions' have been called since last
+			-- call to `reset_count'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -114,23 +115,6 @@ feature {NONE} -- Implementation
 			-- Create implementation of button.
 		do
 			create {EV_TIMEOUT_IMP} implementation.make (Current)
-		end
-		
-	on_value_change (new_value: INTEGER; a_label: EV_LABEL) is
-			-- `interval_gauge.value' changed.
-		require
-			not_destroyed: not is_destroyed
-		do
-			set_interval (new_value)
-			a_label.set_text ("Interval: " + interval.out + " milliseconds")
-		end
-
-	on_timer (a_label: EV_LABEL) is
-			-- `Current' fired `actions'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			a_label.set_text ("Count: " + count.out)
 		end
 
 invariant

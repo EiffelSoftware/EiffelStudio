@@ -89,17 +89,17 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-			update
+			update_price
 		end
 
 feature {NONE} -- Implementation
 
-	update is
+	update_price is
 		local
 			price: REAL
 		do
 			text_info.wipe_out
-			text_info.append ("$")
+			text_info.extend ('$')
 			price := 1.5 + items_selected * 0.5 + size_price
 			if radio_stuff.checked then
 				price := price + 1

@@ -243,6 +243,12 @@ feature -- Status report
 			font_imp ?= a_font.implementation
 			create a_wel_font.make_indirect (wel_character_format.log_font)
 			font_imp.set_by_wel_font (a_wel_font)
+			if flag_set (effects, cfm_italic) then
+				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+			end
+			if flag_set (effects, cfm_bold) then
+				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+			end
 			
 			create character_effects
 			if flag_set (effects, cfm_strikeout) then
@@ -257,6 +263,22 @@ feature -- Status report
 				character_effects)
 				
 			safe_restore_caret
+		end
+		
+	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		local
+			mask: INTEGER
+			wel_character_format: WEL_CHARACTER_FORMAT
+		do
+	--		safe_store_caret
+	--		if start_index /= selection_start or end_index /= selection_end then
+	--			set_selection (start_index - 1, end_index)
+	--		end
+			wel_character_format := current_selection_character_format
+			mask := wel_character_format.mask
+			print ("Mask : " + mask.out + "%N")
+	--		safe_restore_caret
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -871,17 +893,32 @@ feature -- Status setting
 	safe_store_caret is
 			-- Store caret position, and block caret change events from occuring.
 		do
+			must_restore_selection := False
 			internal_actions_blocked := True
-			original_caret_position := caret_position
+			original_caret_position := internal_caret_position.min (text_length)
+			if has_selection then
+				must_restore_selection := True
+				original_selection_start := wel_selection_start
+				original_selection_end := wel_selection_end
+			end
 		end
 		
 	safe_restore_caret is
 			-- Restore caret position stored by last call to `safe_store_caret' and restore
 			-- change events.
 		do
-			set_caret_position (original_caret_position)
+			internal_set_caret_position (original_caret_position)
+			if must_restore_selection then
+				if last_known_caret_position < original_selection_end then
+						-- The direction of the selection is important when selecting with the keyboard
+						-- and originally starting with no selection. See comment of `must_restore_selection'
+						-- for details of problem case.
+					set_selection (original_selection_start, original_selection_end)
+				else
+					set_selection (original_selection_end, original_selection_start)
+				end
+			end
 			internal_actions_blocked := False
-
 		end
 		
 	internal_actions_blocked: BOOLEAN
@@ -893,6 +930,19 @@ feature -- Status setting
 	original_caret_position: INTEGER
 		-- Original position of caret before call `to `safe_store_caret', to be restored by `safe_restore_caret'.
 		
+	must_restore_selection: BOOLEAN
+		-- Must a selection be restored by `safe_restore_caret'?
+		-- It is not just enough to check that there was originally a selection. For example, in the case
+		-- where the `En_selchange_message' is received during an operation that will then call `safe_restore_caret'.
+		-- As the selection may have changed from none to something between `safe_store_caret' and `safe_restore_caret',
+		-- it is flagged, so the selection can be set. To reproduce such dangerous behaviour, remove selection from the rich text,
+		-- connect an event to the `selection_change_actions' that queries the character format (internally this manipulates the selection)
+		-- and select using shift and left or right. Without this boolean being set from `on_en_selchange' the new selection would not
+		-- be correctly shown in the control. Julian.
+		
+	original_selection_start, original_selection_end: INTEGER
+		-- Original selection when `safe_store_caret' called.
+		
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	on_en_selchange (selection_type: INTEGER; character_range: WEL_CHARACTER_RANGE) is
@@ -901,6 +951,15 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- equal when caret is moved with no selection.
 		do
 			if not internal_actions_blocked then
+				if character_range.minimum /= character_range.maximum then
+						-- Selection has changed, so must ensure that `safe_restore_caret' will set the appropriate
+						-- selection if not flagged during `safe_store_caret'.
+					must_restore_selection := True
+				else
+						-- Store last known caret position, so that `safe_restore_caret' can determine in which
+						-- direction the selection is changing, and set it appropriately.
+					last_known_caret_position := internal_caret_position
+				end
 				if selection_type = feature {WEL_EN_SELCHANGE_CONSTANTS}.sel_empty then
 					if must_fire_final_selection then
 							-- A selection has just been removed from `Current' so fire `selection_change_actions'
@@ -908,7 +967,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 						must_fire_final_selection := False
 						if selection_change_actions_internal /= Void then
 							selection_change_actions_internal.call ([Void])
-						end	
+						end
 					end
 					check
 						character_range_consistent: character_range.minimum = character_range.maximum
@@ -927,6 +986,10 @@ feature {EV_CONTAINER_IMP} -- Implementation
 				end	
 			end
 		end
+	
+	last_known_caret_position: INTEGER
+		-- Caret position kept internally for use in `safe_restore_caret', only set when there is no selection.
+		-- Permits implementation to know the direction a selection is occuring, by comparing to the selection limits.
 		
 	must_fire_final_selection: BOOLEAN
 		-- Must the selection change actions be fired when there is no selection, notifying

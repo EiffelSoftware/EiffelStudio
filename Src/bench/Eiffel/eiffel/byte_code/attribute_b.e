@@ -12,8 +12,7 @@ inherit
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
 			creation_access, enlarged, is_creatable, is_attribute, read_only,
-			assigns_to, pre_inlined_code,
-			make_end_byte_code, make_end_precomp_byte_code
+			assigns_to, pre_inlined_code
 		end;
 
 feature 
@@ -205,15 +204,8 @@ feature -- Byte code generation
 
 	code_next: CHARACTER is
 			-- Byte code when access is nested (invariant)
-		local
-			class_type: CL_TYPE_I;
-		do
-			class_type ?= context_type;
-			if class_type /= Void and then class_type.is_separate then
-				Result := Bc_sep_attribute_inv; 
-			else
-				Result := Bc_attribute_inv;
-			end;
+		once
+			Result := Bc_attribute_inv;
 		end;
 
 	precomp_code_first: CHARACTER is
@@ -224,15 +216,8 @@ feature -- Byte code generation
 
 	precomp_code_next: CHARACTER is
 			-- Byte code when precompiled access is nested (invariant)
-		local
-			class_type: CL_TYPE_I;
-		do
-			class_type ?= context_type;
-			if class_type /= Void and then class_type.is_separate then
-				Result := Bc_sep_pattribute_inv;
-			else
-				Result := Bc_pattribute_inv;
-			end;
+		once
+			Result := Bc_pattribute_inv;
 		end;
 
 feature -- Array optimization
@@ -257,64 +242,4 @@ feature -- Inlining
 			end
 		end
 
-feature -- Concurrent Eiffel
-
-		make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
-					real_feat_id: INTEGER; static_type: INTEGER) is
-			-- Make final portion of the standard byte code.
-		local
-			my_code: CHARACTER;
-			class_type: CL_TYPE_I;
-		do
-			if  is_first or flag then
-				my_code := code_first;
-			else
-				my_code := code_next;
-			end;
-			ba.append (my_code);
-			if my_code = Bc_sep_attribute_inv then
-					-- keep the class name of the target of the attribute call
-				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.name_in_upper);
-					-- keep the attribute name of the attribute call
-				ba.append_raw_string (attribute_name);
-			end
-			if  my_code = Bc_attribute_inv then
-					-- Generate attribute name for test of void reference
-				ba.append_raw_string (attribute_name);
-			end;
-				-- Generate attribute id
-			ba.append_integer (real_feat_id);
-			ba.append_short_integer (static_type);
-		end;
-
-	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
-					origin: INTEGER; offset: INTEGER) is
-			-- Make final portion of the standard byte code
-			-- for a precompiled call.
-		local
-			my_code: CHARACTER;
-			class_type: CL_TYPE_I;
-		do
-			if  is_first or flag then
-				my_code := precomp_code_first;
-			else
-				my_code := precomp_code_next;
-			end;
-			ba.append (my_code);
-			if my_code = Bc_sep_pattribute_inv then
-					-- keep the class name of the target of the attribute call
-				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.name_in_upper);
-					-- keep the attribute name of the attribute call
-				ba.append_raw_string (attribute_name);
-			end
-			if  my_code = Bc_pattribute_inv then
-					-- Generate attribute name for test of void reference
-				ba.append_raw_string (attribute_name);
-			end;
-			ba.append_integer (origin);
-			ba.append_integer (offset);
-		end;
-																	
 end

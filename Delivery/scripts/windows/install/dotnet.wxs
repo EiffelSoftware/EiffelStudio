@@ -4,10 +4,8 @@
     <Package Id="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Keywords="MergeModule, MSI, Database" Description="Eiffel for .NET Support" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="registry" Guid="1E275E79-401F-4B47-A0DE-E1B839C1D8F0">
-        <Registry Root="HKLM" Key="SOFTWARE\ISE\Eiffel55\emitter" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+        <Registry Root="HKLM" Key="SOFTWARE\ISE\Eiffel55\EiffelSoftware.MetadataConsumer" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
         <Registry Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Value="[$EiffelSoftware.Runtime.dll2]" Id="registry2" />
-        <Registry Root="HKCR" Key="CLSID\{E1FFE16A-FB59-4F0C-9D85-ADDD9366E359}\InprocServer32" Name="CodeBase" Value="[#emitter.exe]" Id="registry11.26D33D6D_3A8D_4EEE_A3CD_664C59885A41" />
-        <Registry Root="HKCR" Key="CLSID\{E1FFE16A-FB59-4F0C-9D85-ADDD9366E359}\InprocServer32\5.5.316.0" Name="CodeBase" Value="[#emitter.exe]" Id="registry15.26D33D6D_3A8D_4EEE_A3CD_664C59885A41" />
       </Component>
 	  <Directory Id="Application" Name=".">
         <Directory Id="dotnet" Name="dotnet">
@@ -33,8 +31,8 @@
 				<Component Id="EiffelSoftware.Runtime.dll2" Guid="12B3E0B2-0646-4dd5-9DC5-D7EAE23A4A7E">
 					<File Id="EiffelSoftware.Runtime.dll2" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll"/>
 				</Component>
-				<Component Id="emitter.exe" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
-					<File Id="emitter.exe" Name="emitter.exe" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes" AssemblyApplication="emitter.exe" src="$(env.INSTALL_DIR)\dotnet_binaries\emitter.exe">
+				<Component Id="EiffelSoftware.MetadataConsumer.dll" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
+					<File Id="EiffelSoftware.MetadataConsumer.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.MetadataConsumer.dll" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes" AssemblyApplication="EiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.MetadataConsumer.dll">
 					</File>
 				</Component>
 				<Component Id="ISE.VS.FusionSupport.dll" Guid="74612B43-50C6-4769-828C-AC55E479CB92">

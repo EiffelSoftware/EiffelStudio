@@ -1,42 +1,34 @@
 indexing
  
 	description:
-		"A resource value for color resources.";
-	date: "$Date$";
+		"A resource value for color resources."
+	date: "$Date$"
 	revision: "$Revision$"
  
-class COLOR_RESOURCE 
+class
+	COLOR_RESOURCE 
  
 inherit
 	STRING_RESOURCE
 		redefine
-			set_value,make,make_with_values,get_value
+			set_value, make, get_value
 		end
  
 creation
-	make,
-	make_with_values
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_values (a_name: STRING; a_value: STRING) is
-			-- Initialie Current
+	make (a_name: STRING; a_value: STRING) is
+			-- Initialize Current
 		do
 			name := a_name
-			value := a_value
+			default_value := a_value
 			if a_value /= Void then
 				set_value (a_value)
 			end
-		end;
- 
-	make (a_name: STRING; rt: RESOURCES_TABLE; def_value: STRING) is
-			-- Initialize Current
-		do
-			--default_value := def_value
-			make_with_values (a_name, def_value)
-			rt.put(Current,a_name)
 		end
-
+ 
 feature -- Access
 
 	actual_value: EV_COLOR
@@ -45,7 +37,7 @@ feature -- Access
 	valid_actual_value: EV_COLOR is
 			-- Non void color value
 		do
-			Result := actual_value;	
+			Result := actual_value
 			if Result = Void then
 				Result := default_color
 			end
@@ -56,7 +48,7 @@ feature -- Access
 	default_color: EV_COLOR is
 			-- Default color
 		once
-			!!Result.make_rgb(255,255,255)
+			create Result.make_rgb(255,255,255)
 		end
 
 	get_value: EV_COLOR is
@@ -67,7 +59,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_value_with_color(new_value: STRING; col: EV_COLOR) is
+	set_value_with_color (new_value: STRING; col: EV_COLOR) is
 		require
 			color_exists: col /= Void
 			value_exists: new_value /= Void
@@ -113,7 +105,7 @@ feature -- Status setting
 			end
 		end
 
-	convert(s: STRING; i: INTEGER):INTEGER is
+	convert (s: STRING; i: INTEGER):INTEGER is
 		require
 			not_void: s /= Void
 			index_possible: i>1 and then i<=s.count+1	

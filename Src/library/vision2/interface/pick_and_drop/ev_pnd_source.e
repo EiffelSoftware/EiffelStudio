@@ -16,7 +16,7 @@ inherit
 			implementation
 		end
 
-feature -- Attributes 
+feature -- Status report 
 
 	transported_data: ANY
 			-- Transported data
@@ -24,22 +24,7 @@ feature -- Attributes
 	data_type: EV_PND_TYPE
 			-- Type of the transported data
 
-feature -- Access
-
-	transportable: BOOLEAN is
-			-- Is the data transportable.
-		do
-			Result := transported_data /= Void and then data_type /= Void
-		end
-
-	activate_pick_and_drop (cmd: EV_COMMAND; args: EV_ARGUMENT) is
-			-- Activate the mechanism of pick and drop,
-			-- when clicking on the right button of the mouse.
-			-- Add `cmd' (if not Void) to the list of commands to be
-			-- executed just before initializing the transport.
-		do
-			implementation.activate_pick_and_drop (cmd, args)
-		end
+feature -- Status setting
 
 	set_pick_position (a_x, a_y: INTEGER) is
 			-- Set the initial position for the pick and drop.
@@ -57,6 +42,29 @@ feature -- Access
 			-- Make `dt_type' the new data type.
 		do
 			data_type := dt_type
+		end
+
+feature -- Basic action
+
+	transportable: BOOLEAN is
+			-- Is the data transportable.
+		do
+			Result := transported_data /= Void and then data_type /= Void
+		end
+
+	activate_pick_and_drop (cmd: EV_COMMAND; args: EV_ARGUMENT) is
+			-- Activate the mechanism of pick and drop,
+			-- when clicking on the right button of the mouse.
+			-- Add `cmd' (if not Void) to the list of commands to be
+			-- executed just before initializing the transport.
+		do
+			implementation.activate_pick_and_drop (cmd, args)
+		end
+
+	desactivate_pick_and_drop is
+			-- Desactivate the pick and drop mechanism.
+		do
+			implementation.desactivate_pick_and_drop
 		end
 
 feature {NONE} -- Implementation

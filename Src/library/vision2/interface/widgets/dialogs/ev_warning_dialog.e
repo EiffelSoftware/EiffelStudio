@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			-- Create a message dialog with `par' as parent.
 		do
 			!EV_WARNING_DIALOG_IMP! implementation.make (par)
+			implementation.set_interface (Current)
+			implementation.build
 		end
 
 	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
@@ -33,6 +35,8 @@ feature {NONE} -- Initialization
 			-- title and `a_msg' as message.
 		do
 			!EV_WARNING_DIALOG_IMP! implementation.make_with_text (par, a_title, a_msg)
+			implementation.set_interface (Current)
+			implementation.build
 		end
 
 	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
@@ -41,6 +45,9 @@ feature {NONE} -- Initialization
 			-- and displays it.
 		do
 			!EV_WARNING_DIALOG_IMP! implementation.make_default (par, a_title, a_msg)
+			implementation.set_interface (Current)
+			implementation.build
+			implementation.set_default (a_msg, a_title)
 		end
 
 feature {NONE} -- Implementation

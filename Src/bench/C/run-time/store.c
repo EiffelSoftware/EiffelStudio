@@ -882,14 +882,15 @@ private void make_header()
 	struct gt_info *info;
 	int nb_line = 0;
 	int bsize = 80;
+	jmp_buf exenv;
+	RTXD;
 
-        jmp_buf exenv;
-
-        excatch((char *) exenv);        /* Record pseudo execution vector */
-        if (setjmp(exenv)) {
-                st_clean();                            /* Clean data structure */
-                ereturn();                              /* Propagate exception */
-        }
+	excatch((char *) exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
+		st_clean();				/* Clean data structure */
+		ereturn();				/* Propagate exception */
+	}
 
 	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
@@ -1052,13 +1053,15 @@ private void imake_header()
 	int nb_line = 0;
 	int bsize = 600;
 	uint32 num_attrib;
-        jmp_buf exenv;
+	jmp_buf exenv;
+	RTXD;
 
-        excatch((char *) exenv);        /* Record pseudo execution vector */
-        if (setjmp(exenv)) {
-                st_clean();                             /* Clean data structure */
-                ereturn();                              /* Propagate exception */
-        }
+	excatch((char *) exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
+		st_clean();				/* Clean data structure */
+		ereturn();				/* Propagate exception */
+	}
 
 	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */

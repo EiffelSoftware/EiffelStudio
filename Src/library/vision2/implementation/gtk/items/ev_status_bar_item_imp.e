@@ -13,11 +13,19 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		rename
 			set_width as widget_set_width
+		export {NONE}
+			box,
+			label_widget,
+			initialize,
+			create_text_label
 		redefine
 			destroy,
 			set_expand,
+			make_with_text,
 			set_text,
-			text
+			text,
+			set_pixmap,
+			unset_pixmap
 		end
 
 creation
@@ -53,8 +61,6 @@ feature -- Initialization
 			message_id := gtk_statusbar_push (widget, context_id, $a2)
 
 			text := txt
-		ensure then
-			text_set: text.is_equal (txt)
 		end
 
 feature -- Access
@@ -162,6 +168,40 @@ feature -- Element change
 		end
 	
 feature {NONE} -- Implementation
+
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Add a pixmap in the status bar item
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			pixmap_imp ?= pix.implementation
+			check
+				pixmap_imp_not_void: pixmap_imp /= Void
+			end
+
+			c_gtk_statusbar_item_set_pixmap (widget, pixmap_imp.widget)
+			pixmap := pix
+
+			-- Destroy the temporary window which
+			-- was needed at the creation of the pixmap
+			if (pixmap_imp.creation_window /= Default_pointer) then
+				gtk_widget_destroy (pixmap_imp.creation_window)
+				pixmap_imp.set_window_pointer (Default_pointer)
+			end
+		end
+
+	unset_pixmap is
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			pixmap_imp ?= pixmap.implementation
+			check
+				pixmap_imp_not_void: pixmap_imp /= Void
+			end
+
+			c_gtk_statusbar_item_unset_pixmap (widget, pixmap_imp.widget)
+			pixmap := Void
+		end
 
 end -- class EV_STATUS_BAR_ITEM_IMP
 

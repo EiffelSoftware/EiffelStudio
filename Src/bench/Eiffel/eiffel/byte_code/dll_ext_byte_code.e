@@ -6,7 +6,7 @@ indexing
 class DLL_EXT_BYTE_CODE
 
 inherit
-	EXT_EXT_BYTE_CODE
+	EXT_BYTE_CODE
 		redefine
 			is_special, generate_body
 		end

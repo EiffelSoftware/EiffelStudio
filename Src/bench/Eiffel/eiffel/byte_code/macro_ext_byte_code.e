@@ -7,9 +7,9 @@ indexing
 class MACRO_EXT_BYTE_CODE
 
 inherit
-	EXT_EXT_BYTE_CODE
+	EXT_BYTE_CODE
 		redefine
-			is_special, generate, generate_body, generate_signature,
+			is_special, generate_body,
 			generate_arguments_with_cast
 		end
 
@@ -30,12 +30,6 @@ feature -- Initialization
 
 feature -- Code generation
 
-	generate is
-		do
-			generate_include_files
-			generate_signature
-		end
-
 	generate_body is
 			-- Generate the body for an external of type macro
 		do
@@ -43,12 +37,6 @@ feature -- Code generation
 				context.set_has_cpp_externals_calls (True)
 			end
 			generate_basic_body
-		end
-
-	generate_signature is
-			-- Generate the signature for the macro.
-		do
-			generate_basic_signature
 		end
 
 	generate_arguments_with_cast is

@@ -6,10 +6,9 @@ indexing
 class CPP_EXT_BYTE_CODE
 
 inherit
-	EXT_EXT_BYTE_CODE
+	EXT_BYTE_CODE
 		redefine
 			is_special,
-			generate,
 			generate_body,
 			generate_basic_arguments_with_cast
 		end
@@ -39,12 +38,6 @@ feature -- Convenience
 feature -- Code generation
 
 	is_special: BOOLEAN is True
-
-	generate is
-		do
-			generate_include_files
-			generate_signature
-		end
 
 	generate_body is
 		local

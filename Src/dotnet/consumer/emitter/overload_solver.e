@@ -225,7 +225,7 @@ feature -- Basic Operations
 				method_list.go_to (cursor)
 			end
 		ensure
-			method_list_position_identical: method_list.cursor.is_equal (old method_list.cursor)
+			method_list_position_identical: method_list.is_equal (old method_list)
 		end
 
 feature -- Status Report

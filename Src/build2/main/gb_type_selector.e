@@ -64,15 +64,7 @@ feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Basic operations
 		do
 			recursive_do_all (agent set_up_drop_actions (an_object,  ?))
 		end
-		
-	update_shift_drop_actions_for_all_children (an_object: GB_OBJECT) is
-			-- Generate correct drop_actions for every child in `Current' when
-			-- `a_node' is the type to be transported. This sets up for shift drop
-			-- which inserts into parent of `Current', before `Current'.
-		do
-		end
-		
-		
+
 	set_up_drop_actions (an_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
 			-- Generate correct drop actions for `an_item' when `a_node'
 			-- is the type to be transported.

@@ -6,36 +6,33 @@ include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make -l'
 #
+output_cmd='-o'
+input_cmd=''
+resource_compiler='brc32'
+#
 obj='obj'
 lib='lib'
 #
-#-- MT debug
-#-----------
-#optimize='-O2'
-#ccflags='-q -v -tWM -DEIF_THREADS'
-#
-#-- MT no debug
-#--------------
-#ccflags='-q -tWM -DEIF_THREADS'
-#
-#-- no MT debug
-#--------
-#ccflags='-q -v'
-#
-#-- no MT no debug
-#--------
-ccflags='-q '
+# Standard runtime
+#-----------------
+ccflags='-q $debug'
+mtccflags='-q $debug -tWM -DEIF_THREADS'
+output_libraries='standard'
 #
 #
-optimize='-O2'
-#optimize=''
 link_line='&$compiler_path\bin\tlib /p256 $@ +-$**'
 link_wline='&$compiler_path\bin\tlib /p256 $@ +-$**'
 link_eline='&$compiler_path\bin\tlib /p256 $@ +-$**'
+link_mtline='&$compiler_path\bin\tlib /p256 $@ +-$**'
+link_mtwline='&$compiler_path\bin\tlib /p256 $@ +-$**'
+#
+#
+optimize='-O2'
+debug=''
+#optimize=''
+#debug='-v'
+#
 cc='bcc32'
-resource_compiler='brc32'
-output_cmd='-o'
-input_cmd=''
 compiler_path='d:\apps\borland\Cbuilder4'
 all_dependency=''
 #

@@ -173,7 +173,11 @@ feature -- Comparison
 				until
 					i > nb or not Result
 				loop
-					Result := l_cur.item (i) = l_other.item (i)
+					if is_reference_item (i + 1) then
+						Result := l_cur.item (i) = l_other.item (i)
+					else
+						Result := equal (l_cur.item (i), l_other.item (i))
+					end
 					i := i + 1
 				end
 			end

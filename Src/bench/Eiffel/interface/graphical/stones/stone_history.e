@@ -17,8 +17,8 @@ inherit
 			extend as twl_extend
 		export
 			{NONE} all;
-			{ANY} item, forth, back, isfirst, islast, wipe_out, empty;
-			{ANY} after, before, index, go_i_th, start, finish, make
+			{ANY} item, forth, back, isfirst, islast, wipe_out, empty, go_to;
+			{ANY} after, before, index, go_i_th, start, finish, make, has, cursor
 		end;
 
 	SHARED_BENCH_RESOURCES;
@@ -37,8 +37,12 @@ feature -- Element change
 			-- Do not insert `v' if it was the last inserted item.
 			-- Move the cursor to the last inserted stone.
 		do
-			if v /= Void and
-					(empty or else not equal (v, last) or else not equal (v.signature, item.signature)) then
+			if
+				v /= Void and
+				(empty or else
+				not v.same_as (last) or else
+				not equal (v.signature, item.signature))
+			then
 				twl_extend (v);
 				if count > capacity then
 					start; remove

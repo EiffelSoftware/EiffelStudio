@@ -415,7 +415,7 @@ end;
 			a_class.update_generic_features
 
 				-- Find main_parent of current class.
-			compute_main_parent
+			compute_main_parent (resulting_table)
 
 				-- Put the resulting table in the temporary feature table
 				-- server.
@@ -1417,8 +1417,10 @@ end;
 
 feature {NONE} -- Implementation
 
-	compute_main_parent is
+	compute_main_parent (a_feat_tbl: FEATURE_TABLE) is
 			-- Set `number_of_features' and `main_parent' of `a_class'
+		require
+			a_feat_tbl_not_void: a_feat_tbl /= Void
 		local
 			l_parent, l_main_parent: CLASS_C
 			l_number_of_features, l_max: INTEGER
@@ -1429,13 +1431,13 @@ feature {NONE} -- Implementation
 				parents.after
 			loop
 				l_parent := parents.item.parent
-				l_number_of_features := l_parent.feature_table.count
 				if l_parent.is_single or (l_parent.is_external and not l_parent.is_interface) then
 						-- We cannot optimize here, we have to take it
 						-- as main parent even if there is no feature in it.
 					l_main_parent := l_parent
 					parents.finish
 				else
+					l_number_of_features := l_parent.feature_table.count
 					if l_number_of_features > l_max then
 						l_main_parent := parents.item.parent
 						l_max := l_number_of_features
@@ -1444,13 +1446,13 @@ feature {NONE} -- Implementation
 				parents.forth
 			end
 			check
-				l_max > 0
 				l_main_parent /= Void
 			end
 			a_class.set_main_parent (l_main_parent)
-			a_class.set_number_of_features (l_max)
+			a_class.set_number_of_features (a_feat_tbl.count)
 		ensure
 			main_parent_set: a_class.main_parent /= Void
+			nb_features_set: a_class.number_of_features = a_feat_tbl.count
 		end
 
 feature {NONE} -- Temporary body index

@@ -10,8 +10,8 @@
 	Some useful macros for bitmasks manipulation (for select() masks)
 */
 
-#ifndef _bitmask_h_
-#define _bitmask_h_
+#ifndef _eif_bitmask_h_
+#define _eif_bitmask_h_
 
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */

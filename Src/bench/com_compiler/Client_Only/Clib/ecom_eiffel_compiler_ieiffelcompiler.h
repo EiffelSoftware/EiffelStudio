@@ -94,12 +94,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return ISE_EIFFEL environment var.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ise_eiffel(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Takes a path and expands it using the env vars.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value ) = 0;
@@ -151,6 +145,12 @@ public:
 	Is compiler output sent to pipe `output_pipe_name'
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP is_output_piped(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Can product be run? (i.e. is it activated or was run less than 10 times)
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP can_run(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
 
 
 

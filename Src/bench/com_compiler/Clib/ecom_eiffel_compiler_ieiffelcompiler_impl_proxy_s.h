@@ -91,12 +91,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return ISE_EIFFEL environment var.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ise_eiffel(  );
-
-
-	/*-----------------------------------------------------------
 	Takes a path and expands it using the env vars.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_expand_path(  /* [in] */ EIF_OBJECT a_path );

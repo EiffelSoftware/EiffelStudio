@@ -208,36 +208,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::compiler_version( 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::ise_eiffel(  /* [out, retval] */ BSTR * return_value )
-
-/*-----------------------------------------------------------
-	Return ISE_EIFFEL environment var.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("ise_eiffel", type_id);
-	EIF_REFERENCE tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "ise_eiffel", EIF_REFERENCE);
-	if (tmp_value != NULL)
-	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
-		eif_wean (tmp_object);
-	}
-	else
-		*return_value = NULL;
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
@@ -473,6 +443,29 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::is_output_piped(  
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_output_piped", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::can_run(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Can product be run? (i.e. is it activated or was run less than 10 times)
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("can_run", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "can_run", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;

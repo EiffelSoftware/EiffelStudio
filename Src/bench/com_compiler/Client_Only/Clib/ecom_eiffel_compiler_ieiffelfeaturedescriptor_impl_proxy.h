@@ -101,7 +101,7 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of all feature callers, includding callers of ancestor and descendant versions.
+	List of all feature callers, including callers of ancestor and descendant versions.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_all_callers(  );
 

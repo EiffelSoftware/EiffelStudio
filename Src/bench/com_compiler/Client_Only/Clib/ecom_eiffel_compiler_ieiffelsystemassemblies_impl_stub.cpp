@@ -113,6 +113,46 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_assemb
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_local_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR cluster_name, /* [in] */ BSTR a_path )
+
+/*-----------------------------------------------------------
+	Add a local assembly to the project.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_assembly_prefix = NULL;
+	if (assembly_prefix != NULL)
+	{
+		tmp_assembly_prefix = eif_protect (rt_ce.ccom_ce_bstr (assembly_prefix));
+	}
+	EIF_OBJECT tmp_cluster_name = NULL;
+	if (cluster_name != NULL)
+	{
+		tmp_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (cluster_name));
+	}
+	EIF_OBJECT tmp_a_path = NULL;
+	if (a_path != NULL)
+	{
+		tmp_a_path = eif_protect (rt_ce.ccom_ce_bstr (a_path));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("add_local_assembly", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_assembly_prefix != NULL) ? eif_access (tmp_assembly_prefix) : NULL), ((tmp_cluster_name != NULL) ? eif_access (tmp_cluster_name) : NULL), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL));
+	if (tmp_assembly_prefix != NULL)
+		eif_wean (tmp_assembly_prefix);
+	if (tmp_cluster_name != NULL)
+		eif_wean (tmp_cluster_name);
+	if (tmp_a_path != NULL)
+		eif_wean (tmp_a_path);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::remove_assembly(  /* [in] */ BSTR assembly_identifier )
 
 /*-----------------------------------------------------------
@@ -163,7 +203,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_p
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_133 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_135 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -433,36 +473,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::is_valid_p
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_assembly_prefix != NULL) ? eif_access (tmp_assembly_prefix) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_valid_prefix", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	if (tmp_assembly_prefix != NULL)
-		eif_wean (tmp_assembly_prefix);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::is_prefix_allocated(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value )
-
-/*-----------------------------------------------------------
-	Has the 'prefix' already been allocated to another assembly
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_assembly_prefix = NULL;
-	if (assembly_prefix != NULL)
-	{
-		tmp_assembly_prefix = eif_protect (rt_ce.ccom_ce_bstr (assembly_prefix));
-	}
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("is_prefix_allocated", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_assembly_prefix != NULL) ? eif_access (tmp_assembly_prefix) : NULL));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "is_prefix_allocated", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	if (tmp_assembly_prefix != NULL)
 		eif_wean (tmp_assembly_prefix);
@@ -754,6 +764,90 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 
 		case 1610743810:
 			{
+				if (pDispParams->cArgs != 3)
+					return DISP_E_BADPARAMCOUNT;
+
+				tmp_value = (VARIANTARG **)CoTaskMemAlloc (3*sizeof (VARIANTARG*));
+
+				VARTYPE vt_type [] = {8, 8, 8};
+
+				if (cNamedArgs >0)
+					for (i = 0; i < cNamedArgs; i++)
+					{
+						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
+					}
+
+				for (i = cArgs; i > cNamedArgs; i--)
+				{
+					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
+				}
+
+				
+				if (tmp_value [0]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 0;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
+				
+				if (tmp_value [1]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 1;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
+				
+				if (tmp_value [2]->vt != 8)
+				{
+					hr = VariantChangeType (tmp_value [2], tmp_value [2], VARIANT_NOUSEROVERRIDE, 8);
+					if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					*puArgErr = 2;
+					return DISP_E_TYPEMISMATCH;
+				}
+			
+				}
+				BSTR arg_2 = (BSTR)tmp_value [2]->bstrVal;
+				
+				hr = add_local_assembly ( arg_0, arg_1, arg_2);
+				
+				if (FAILED (hr))
+				{
+					CoTaskMemFree (tmp_value);
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				CoTaskMemFree (tmp_value);
+			}
+			break;
+
+		case 1610743811:
+			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
 
@@ -810,7 +904,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743811:
+		case 1610743812:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -876,7 +970,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743812:
+		case 1610743813:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -942,7 +1036,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743813:
+		case 1610743814:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1008,7 +1102,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743814:
+		case 1610743815:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -1113,7 +1207,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743815:
+		case 1610743816:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1179,7 +1273,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743816:
+		case 1610743817:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -1284,7 +1378,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743817:
+		case 1610743818:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1350,72 +1444,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743818:
-			{
-				if (pDispParams->cArgs != 1)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				VARIANT_BOOL result = 0;
-				
-				hr = is_valid_prefix ( arg_0,&result);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
 		case 1610743819:
 			{
 				if (pDispParams->cArgs != 1)
@@ -1451,7 +1479,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				VARIANT_BOOL result = 0;
 				
-				hr = is_prefix_allocated ( arg_0,&result);
+				hr = is_valid_prefix ( arg_0,&result);
 				
 				if (FAILED (hr))
 				{

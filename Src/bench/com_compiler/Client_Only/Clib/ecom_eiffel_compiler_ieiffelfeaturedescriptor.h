@@ -104,7 +104,7 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of all feature callers, includding callers of ancestor and descendant versions.
+	List of all feature callers, including callers of ancestor and descendant versions.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP all_callers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_callers ) = 0;
 

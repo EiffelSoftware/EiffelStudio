@@ -191,12 +191,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Name of the parent cluster.
-	-----------------------------------------------------------*/
-	void ccom_set_parent_name(  /* [in] */ EIF_OBJECT return_value );
-
-
-	/*-----------------------------------------------------------
 	Does the current cluster have a parent cluster?
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_has_parent(  );

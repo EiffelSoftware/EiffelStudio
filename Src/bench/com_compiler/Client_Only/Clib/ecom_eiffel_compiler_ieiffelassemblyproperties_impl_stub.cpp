@@ -178,29 +178,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::is_local
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::is_signed(  /* [out, retval] */ VARIANT_BOOL * a_bool )
-
-/*-----------------------------------------------------------
-	Is the assembly local
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("is_signed", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "is_signed", EIF_BOOLEAN);
-	*a_bool = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly_cluster_name(  /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
@@ -506,43 +483,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 				VARIANT_BOOL result = 0;
 				
 				hr = is_local (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			break;
-
-		case 15:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = is_signed (&result);
 				
 				if (FAILED (hr))
 				{

@@ -21,7 +21,8 @@ cp release/test/Ace.win.ace test/
 cp release/test/test_pixmap test/
 cp release/test/test_pixmap.win test/
 cp release/figure_test/figure_test.e figure_test/
-cp release/figure_test/Ace.ace figure_test/ rm -rf release
+cp release/figure_test/Ace.ace figure_test/
+rm -rf release
 echo -n "."
 rm -rf `find . -name '*_notes*'`
 echo -n "."

@@ -25,6 +25,8 @@ feature -- Creation
 		do
 			l_count := feature {ISE_RUNTIME}.generic_parameter_count (Current)
 			create native_array.make (l_count)
+		ensure
+			non_void_native_array: native_array /= Void
 		end
 
 feature -- Access
@@ -644,6 +646,14 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
+	to_cil: NATIVE_ARRAY [SYSTEM_OBJECT] is
+			-- A reference to a CIL form of current tuple.
+		do
+			Result := native_array
+		ensure
+			non_void_to_cil: Result /= Void
+		end
+		
 feature {ROUTINE, TUPLE}
 
 	arg_item_code (index: INTEGER): INTEGER_8 is
@@ -754,7 +764,10 @@ feature {NONE} -- Implementation
 			Result.put (integer_16_code, feature {TYPE}.get_type_string (("System.Int16").to_cil))
 			Result.put (integer_64_code, feature {TYPE}.get_type_string (("System.Int64").to_cil))
 		end
-	
+
+invariant
+	non_void_native_array: native_array /= Void
+
 indexing
 
 	library: "[

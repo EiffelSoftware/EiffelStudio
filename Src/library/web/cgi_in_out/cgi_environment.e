@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			-- Value of environment variable `s',
 			-- even on Windows.
 		external
-			"C"
+			"C (char *): char * | <stdlib.h>"
 		alias
 			"getenv"
 		end;

@@ -224,7 +224,7 @@ feature {NONE} -- Externals
 
 	cwel_choose_color_get_lpcustcolors (ptr: POINTER): POINTER is
 		external
-			"C [macro <chooseco.h>]"
+			"C [macro <chooseco.h>] (CHOOSECOLOR *): EIF_POINTER"
 		end
 
 	cwel_choose_color_get_flags (ptr: POINTER): INTEGER is

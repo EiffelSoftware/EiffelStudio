@@ -123,7 +123,7 @@ feature {NONE} -- Externals
 
 	cwel_enum_font_fam_procedure: POINTER is
 		external
-			"C [macro %"enumfont.h%"]"
+			"C [macro %"enumfont.h%"] :EIF_POINTER"
 		end
 
 	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is

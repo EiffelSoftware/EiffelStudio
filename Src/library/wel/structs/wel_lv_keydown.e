@@ -61,12 +61,12 @@ feature {NONE} -- Externals
 
 	cwel_lv_keydown_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"lvkeydown.h%"]"
+			"C [macro %"lvkeydown.h%"] (LV_KEYDOWN*): EIF_POINTER"
 		end
 
 	cwel_lv_keydown_get_wvkey (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"lvkeydown.h%"]"
+			"C [macro %"lvkeydown.h%"] (LV_KEYDOWN *): EIF_INTEGER"
 		end
 
 end -- class WEL_LV_KEYDOWN

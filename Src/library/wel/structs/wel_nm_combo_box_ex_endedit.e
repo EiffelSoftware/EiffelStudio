@@ -85,7 +85,7 @@ feature {NONE} -- Externals
 
 	cwel_nm_cbeendedit_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmcbeendedit.h%"]"
+			"C [macro %"nmcbeendedit.h%"] (NMCBEENDEDIT*): EIF_POINTER"
 		end
 
 	cwel_nm_cbeendedit_get_fchanged (ptr: POINTER): INTEGER is
@@ -100,7 +100,7 @@ feature {NONE} -- Externals
 
 	cwel_nm_cbeendedit_get_tchar (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmcbeendedit.h%"]"
+			"C [macro %"nmcbeendedit.h%"] (NMCBEENDEDIT*): EIF_POINTER"
 		end
 
 	cwel_nm_cbeendedit_get_iwhy (ptr: POINTER): INTEGER is

@@ -191,7 +191,7 @@ feature {NONE} -- Externals
 
 	cwel_lv_column_get_psztext (ptr: POINTER): POINTER is
 		external
-			"C [macro <lvcolumn.h>]"
+			"C [macro <lvcolumn.h>] (LV_COLUMN*): EIF_POINTER"
 		end
 
 	cwel_lv_column_get_cchtextmax (ptr: POINTER): INTEGER is

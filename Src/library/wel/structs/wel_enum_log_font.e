@@ -75,17 +75,17 @@ feature {NONE} -- Externals
 
 	cwel_enumlogfont_get_elflogfont (ptr: POINTER): POINTER is
 		external
-			"C [macro <enumlf.h>]"
+			"C [macro <enumlf.h>] (ENUMLOGFONT*): EIF_POINTER"
 		end
 
 	cwel_enumlogfont_get_elffullname (ptr: POINTER): POINTER is
 		external
-			"C [macro <enumlf.h>]"
+			"C [macro <enumlf.h>] (ENUMLOGFONT*): EIF_POINTER"
 		end
 
 	cwel_enumlogfont_get_elfstyle (ptr: POINTER): POINTER is
 		external
-			"C [macro <enumlf.h>]"
+			"C [macro <enumlf.h>] (ENUMLOGFONT*): EIF_POINTER"
 		end
 
 end -- class WEL_ENUM_LOG_FONT

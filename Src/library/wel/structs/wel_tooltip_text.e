@@ -189,17 +189,17 @@ feature {NONE} -- Externals
 
 	cwel_tooltiptext_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro <tooltipt.h>]"
+			"C [macro <tooltipt.h>] (TOOLTIPTEXT*): EIF_POINTER"
 		end
 
 	cwel_tooltiptext_get_hinst (ptr: POINTER): POINTER is
 		external
-			"C [macro <tooltipt.h>]"
+			"C [macro <tooltipt.h>] (TOOLTIPTEXT*): EIF_POINTER"
 		end
 
 	cwel_tooltiptext_get_uflags (ptr: POINTER): INTEGER is
 		external
-			"C [macro <tooltipt.h>]"
+			"C [macro <tooltipt.h>] (TOOLTIPTEXT*): EIF_POINTER"
 		end
 
 end -- class WEL_TOOLTIP_TEXT

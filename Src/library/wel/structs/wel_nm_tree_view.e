@@ -96,27 +96,27 @@ feature {NONE} -- Externals
 
 	cwel_nm_treeview_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmtv.h>]"
+			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
 	cwel_nm_treeview_get_action (ptr: POINTER): INTEGER is
 		external
-			"C [macro <nmtv.h>]"
+			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
 	cwel_nm_treeview_get_itemnew (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmtv.h>]"
+			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
 	cwel_nm_treeview_get_itemold (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmtv.h>]"
+			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
 	cwel_nm_treeview_get_ptdrag (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmtv.h>]"
+			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
 end -- class WEL_NM_TREE_VIEW

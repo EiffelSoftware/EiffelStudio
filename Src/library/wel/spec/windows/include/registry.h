@@ -18,42 +18,43 @@
 
 typedef struct {
 		EIF_POINTER name;
-		EIF_POINTER class;
+		EIF_POINTER KeyClass;
 		PFILETIME LastWriteTime;
 		} REG_KEY;
 
-extern EIF_INTEGER cwin_reg_create_key (EIF_INTEGER parent_key,
+extern EIF_POINTER cwin_reg_create_key (EIF_POINTER parent_key,
 									EIF_POINTER keyName, EIF_INTEGER access_mode);
 
-extern EIF_INTEGER cwin_reg_open_key (EIF_INTEGER parent_key, EIF_POINTER keyName,
+extern EIF_POINTER cwin_reg_open_key (EIF_POINTER parent_key, EIF_POINTER keyName,
 									EIF_INTEGER access_mode);
 
-extern EIF_BOOLEAN cwin_reg_delete_key (EIF_INTEGER key, EIF_POINTER subkey);
+extern EIF_BOOLEAN cwin_reg_delete_key (EIF_POINTER key, EIF_POINTER subkey);
 
 
-extern void cwin_reg_set_key_value (EIF_INTEGER key, EIF_POINTER keyname,
+extern void cwin_reg_set_key_value (EIF_POINTER key, EIF_POINTER keyname,
 									EIF_POINTER keyvalue);
 									
-extern EIF_BOOLEAN cwin_reg_close_key (EIF_INTEGER key);
+extern EIF_BOOLEAN cwin_reg_close_key (EIF_POINTER key);
 
 
-extern EIF_POINTER cwin_reg_query_value (EIF_INTEGER key, EIF_POINTER value_name);
+extern EIF_POINTER cwin_reg_query_value (EIF_POINTER key, EIF_POINTER value_name);
 
-extern EIF_POINTER cwin_reg_def_query_value (EIF_INTEGER key, EIF_POINTER value_name);
+extern EIF_POINTER cwin_reg_def_query_value (EIF_POINTER key, EIF_POINTER value_name);
 
-extern EIF_POINTER cwin_reg_enum_key (EIF_INTEGER key, EIF_INTEGER index);
+extern EIF_POINTER cwin_reg_enum_key (EIF_POINTER key, EIF_INTEGER index);
 
-extern EIF_POINTER cwin_reg_enum_value (EIF_INTEGER key, EIF_INTEGER index);
+extern EIF_POINTER cwin_reg_enum_value (EIF_POINTER key, EIF_INTEGER index);
 
-extern EIF_BOOLEAN cwin_reg_delete_value (EIF_INTEGER key, EIF_POINTER value_name);
+extern EIF_BOOLEAN cwin_reg_delete_value (EIF_POINTER key, EIF_POINTER value_name);
 
-extern EIF_INTEGER cwin_reg_subkey_number(EIF_INTEGER key);
+extern EIF_INTEGER cwin_reg_subkey_number(EIF_POINTER key);
 
-extern EIF_INTEGER cwin_reg_value_number(EIF_INTEGER key);
+extern EIF_INTEGER cwin_reg_value_number(EIF_POINTER key);
 
-extern EIF_INTEGER cwin_reg_connect_key(EIF_POINTER hostname, EIF_INTEGER key);
+extern EIF_POINTER cwin_reg_connect_key(EIF_POINTER hostname, EIF_POINTER key);
 
 extern void cwin_reg_value_destroy(EIF_POINTER eif_value);
+
 #endif  /* __WEL_REGISTRY__ */
 
 /*

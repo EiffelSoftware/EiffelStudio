@@ -11,28 +11,28 @@ feature -- Access
 
 	Hwnd_top: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_TOP"
 		end
 
 	Hwnd_bottom: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_BOTTOM"
 		end
 
 	Hwnd_topmost: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_TOPMOST"
 		end
 
 	Hwnd_notopmost: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_NOTOPMOST"
 		end

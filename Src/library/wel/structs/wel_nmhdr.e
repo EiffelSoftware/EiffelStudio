@@ -59,7 +59,7 @@ feature {NONE} -- Externals
 
 	cwel_nmhdr_get_hwndfrom (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmhdr.h>]"
+			"C [macro <nmhdr.h>] (NMHDR*): EIF_POINTER"
 		end
 
 	cwel_nmhdr_get_idfrom (ptr: POINTER): INTEGER is

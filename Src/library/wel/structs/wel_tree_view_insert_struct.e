@@ -23,7 +23,7 @@ creation
 
 feature -- Access
 
-	parent: INTEGER is
+	parent: POINTER is
 			-- Handle to the parent item. If this member is
 			-- the Tvi_root value or NULL, the item is inserted
 			-- at the root of the tree-view control.
@@ -31,7 +31,7 @@ feature -- Access
 			Result := cwel_insertstruct_get_hparent (item)
 		end
 
-	insert_after: INTEGER is
+	insert_after: POINTER is
 			-- Handle to the item after which the new item is to
 			-- be inserted or one of the Tvi_* values.
 			-- See class WEL_TVI_CONSTANTS.
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent (a_parent: INTEGER) is
+	set_parent (a_parent: POINTER) is
 			-- Set `parent' with `a_parent'.
 		do
 			cwel_insertstruct_set_hparent (item, a_parent)
@@ -57,7 +57,7 @@ feature -- Element change
 			parent_set: parent = a_parent
 		end
 
-	set_insert_after (a_insert_after: INTEGER) is
+	set_insert_after (a_insert_after: POINTER) is
 			-- Set `insert_after' with `a_insert_after'.
 		do
 			cwel_insertstruct_set_hinsertafter (item,
@@ -125,12 +125,12 @@ feature {NONE} -- Externals
 			"sizeof (TV_INSERTSTRUCT)"
 		end
 
-	cwel_insertstruct_set_hparent (ptr: POINTER; value: INTEGER) is
+	cwel_insertstruct_set_hparent (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <tvinss.h>]"
 		end
 
-	cwel_insertstruct_set_hinsertafter (ptr: POINTER; value: INTEGER) is
+	cwel_insertstruct_set_hinsertafter (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <tvinss.h>]"
 		end
@@ -140,19 +140,19 @@ feature {NONE} -- Externals
 			"C [macro <tvinss.h>]"
 		end
 
-	cwel_insertstruct_get_hparent (ptr: POINTER): INTEGER is
+	cwel_insertstruct_get_hparent (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvinss.h>]"
+			"C [macro <tvinss.h>] (TV_INSERTSTRUCT*): EIF_POINTER"
 		end
 
-	cwel_insertstruct_get_hinsertafter (ptr: POINTER): INTEGER is
+	cwel_insertstruct_get_hinsertafter (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvinss.h>]"
+			"C [macro <tvinss.h>] (TV_INSERTSTRUCT*): EIF_POINTER"
 		end
 
 	cwel_insertstruct_get_item (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvinss.h>]"
+			"C [macro <tvinss.h>] (TV_INSERTSTRUCT*): EIF_POINTER"
 		end
 
 end -- class WEL_TREE_VIEW_INSERT_STRUCT

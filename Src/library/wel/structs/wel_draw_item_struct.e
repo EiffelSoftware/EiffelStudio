@@ -136,17 +136,17 @@ feature {NONE} -- Externals
 
 	cwel_drawitemstruct_get_hwnditem (ptr: POINTER): POINTER is
 		external
-			"C [macro <drawitem.h>]"
+			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
 	cwel_drawitemstruct_get_hdc (ptr: POINTER): POINTER is
 		external
-			"C [macro <drawitem.h>]"
+			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
 	cwel_drawitemstruct_get_rcitem (ptr: POINTER): POINTER is
 		external
-			"C [macro <drawitem.h>]"
+			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
 	cwel_drawitemstruct_get_itemdata (ptr: POINTER): INTEGER is

@@ -3,43 +3,44 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
+	note: "Constants changed from INTEGER to POINTER"
+	
 class
 	WEL_IDI_CONSTANTS
 
 feature -- Access
 
-	Idi_application: INTEGER is
+	Idi_application: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_APPLICATION"
 		end
 
-	Idi_hand: INTEGER is
+	Idi_hand: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_HAND"
 		end
 
-	Idi_question: INTEGER is
+	Idi_question: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_QUESTION"
 		end
 
-	Idi_exclamation: INTEGER is
+	Idi_exclamation: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_EXCLAMATION"
 		end
 
-	Idi_asterisk: INTEGER is
+	Idi_asterisk: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_ASTERISK"
 		end

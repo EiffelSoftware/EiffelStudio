@@ -173,7 +173,7 @@ feature {NONE} -- Externals
 
 	cwin_updown_class: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"UPDOWN_CLASS"
 		end

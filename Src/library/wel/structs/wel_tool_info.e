@@ -263,7 +263,7 @@ feature {NONE} -- Externals
 
 	cwel_toolinfo_get_hwnd (ptr: POINTER): POINTER is
 		external
-			"C [macro <toolinfo.h>]"
+			"C [macro <toolinfo.h>] (TOOLINFO*): EIF_POINTER"
 		end
 
 	cwel_toolinfo_get_uid (ptr: POINTER): INTEGER is
@@ -273,22 +273,22 @@ feature {NONE} -- Externals
 
 	cwel_toolinfo_get_rect (ptr: POINTER): POINTER is
 		external
-			"C [macro <toolinfo.h>]"
+			"C [macro <toolinfo.h>] (TOOLINFO*): EIF_POINTER"
 		end
 
 	cwel_toolinfo_get_hinst (ptr: POINTER): POINTER is
 		external
-			"C [macro <toolinfo.h>]"
+			"C [macro <toolinfo.h>] (TOOLINFO*): EIF_POINTER"
 		end
 
 	cwel_toolinfo_get_lpsztext (ptr: POINTER): POINTER is
 		external
-			"C [macro <toolinfo.h>]"
+			"C [macro <toolinfo.h>] (TOOLINFO*): EIF_POINTER"
 		end
 
 	Lpstr_textcallback: POINTER is
 		external
-			"C [macro <toolinfo.h>]"
+			"C [macro <toolinfo.h>] : EIF_POINTER"
 		alias
 			"LPSTR_TEXTCALLBACK"
 		end

@@ -36,7 +36,7 @@ feature {NONE} -- Externals
 	cwel_integer_to_pointer (i: INTEGER): POINTER is
 			-- Converts an integer `i' to a pointer
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (int): EIF_POINTER"
 		end
 
 end -- class WEL_NOTIFY_MESSAGE

@@ -98,7 +98,7 @@ feature {NONE} -- Externals
 
 	cwel_nmtoolbar_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmtb.h%"]"
+			"C [macro %"nmtb.h%"] (NMTOOLBAR*): EIF_POINTER"
 		end
 
 	cwel_nmtoolbar_get_iitem (ptr: POINTER): INTEGER is
@@ -108,7 +108,7 @@ feature {NONE} -- Externals
 
 	cwel_nmtoolbar_get_tbbutton (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmtb.h%"]"
+			"C [macro %"nmtb.h%"] (NMTOOLBAR*): EIF_POINTER"
 		end
 
 	cwel_nmtoolbar_get_cchtext (ptr: POINTER): INTEGER is
@@ -118,7 +118,7 @@ feature {NONE} -- Externals
 
 	cwel_nmtoolbar_get_psztext (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmtb.h%"]"
+			"C [macro %"nmtb.h%"] (NMTOOLBAR*): EIF_POINTER"
 		end
 
 end -- class WEL_NM_TOOL_BAR

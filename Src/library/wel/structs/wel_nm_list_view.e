@@ -98,7 +98,7 @@ feature {NONE} -- Externals
 
 	cwel_nm_listview_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmlv.h%"]"
+			"C [macro %"nmlv.h%"] (NM_LISTVIEW*): EIF_POINTER"
 		end
 
 	cwel_nm_listview_get_iitem (ptr: POINTER): INTEGER is
@@ -128,7 +128,7 @@ feature {NONE} -- Externals
 
 	cwel_nm_listview_get_ptaction (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmlv.h%"]"
+			"C [macro %"nmlv.h%"] (NM_LISTVIEW*): EIF_POINTER"
 		end
 
 	cwel_nm_listview_get_lparam (ptr: POINTER): INTEGER is

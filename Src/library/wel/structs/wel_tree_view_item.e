@@ -59,7 +59,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	h_item: INTEGER is
+	h_item: POINTER is
 			-- Item to which this structure refers.
 		do
 			Result := cwel_tv_item_get_hitem (item)
@@ -123,7 +123,7 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_h_item (a_h_item: INTEGER) is
+	set_h_item (a_h_item: POINTER) is
 			-- Set `h_item' with `a_h_item'.
 		do
 			cwel_tv_item_set_hitem (item, a_h_item)
@@ -180,7 +180,7 @@ feature {NONE} -- Externals
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_hitem (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_hitem (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <tvitem.h>]"
 		end
@@ -230,9 +230,9 @@ feature {NONE} -- Externals
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_hitem (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_hitem (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvitem.h>]"
+			"C [macro <tvitem.h>] (TV_ITEM*): POINTER"
 		end
 
 	cwel_tv_item_get_state (ptr: POINTER): INTEGER is

@@ -68,12 +68,12 @@ feature {NONE} -- Externals
 
 	cwel_nm_comboboxex_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmcomboboxex.h%"]"
+			"C [macro %"nmcomboboxex.h%"] (NMCOMBOBOXEX*): EIF_POINTER"
 		end
 
 	cwel_nm_comboboxex_get_ceitem (ptr: POINTER): POINTER is
 		external
-			"C [macro %"nmcomboboxex.h%"]"
+			"C [macro %"nmcomboboxex.h%"] (NMCOMBOBOXEX*): EIF_POINTER"
 		end
 
 end -- class WEL_NM_COMBO_BOX_EX

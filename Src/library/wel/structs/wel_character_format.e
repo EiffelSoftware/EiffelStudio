@@ -423,7 +423,7 @@ feature {NONE} -- Externals
 
 	cwel_charformat_get_szfacename (ptr: POINTER): POINTER is
 		external
-			"C [macro <charfmt.h>]"
+			"C [macro <charfmt.h>] (CHARFORMAT*): EIF_POINTER"
 		end
 
 	Lf_facesize: INTEGER is

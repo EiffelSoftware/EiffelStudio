@@ -1800,8 +1800,7 @@ feature {NONE} -- Externals
 			init_data: POINTER): POINTER is
 			-- SDK CreateDC
 		external
-			"C [macro <windows.h>] (LPCSTR, LPCSTR, LPCSTR, %
-				%void *): EIF_POINTER"
+			"C [macro <windows.h>] (LPCSTR, LPCSTR, LPCSTR, CONST DEVMODE* ): EIF_POINTER"
 		alias
 			"CreateDC"
 		end

@@ -614,7 +614,7 @@ feature {NONE} -- Externals
 
 	cwin_toolbar_class: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"TOOLBARCLASSNAME"
 		end

@@ -55,7 +55,7 @@ feature {NONE} -- Externals
 
 	cwel_paintstruct_get_rcpaint (ptr: POINTER): POINTER is
 		external
-			"C [macro <paint.h>]"
+			"C [macro <paint.h>] (PAINTSTRUCT*): EIF_POINTER"
 		end
 
 end -- class WEL_PAINT_STRUCT

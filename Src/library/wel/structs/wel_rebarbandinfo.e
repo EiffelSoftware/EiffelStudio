@@ -467,7 +467,7 @@ feature {NONE} -- Externals
 
 	cwel_rebarbandinfo_get_lptext (ptr: POINTER): POINTER is
 		external
-			"C [macro %"rebarbandinfo.h%"]"
+			"C [macro %"rebarbandinfo.h%"] (REBARBANDINFO *): EIF_POINTER"
 		end
 
 	cwel_rebarbandinfo_get_cch (ptr: POINTER): INTEGER is
@@ -482,7 +482,7 @@ feature {NONE} -- Externals
 
 	cwel_rebarbandinfo_get_hwndchild (ptr: POINTER): POINTER is
 		external
-			"C [macro %"rebarbandinfo.h%"]"
+			"C [macro %"rebarbandinfo.h%"] (REBARBANDINFO *): EIF_POINTER"
 		end
 
 	cwel_rebarbandinfo_get_cxminchild (ptr: POINTER): INTEGER is
@@ -500,16 +500,16 @@ feature {NONE} -- Externals
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_hbmback (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_hbmback (ptr: POINTER): POINTER is
 		external
-			"C [macro %"rebarbandinfo.h%"]"
+			"C [macro %"rebarbandinfo.h%"] (REBARBANDINFO *): EIF_POINTER"
 		end
 
 	cwel_rebarbandinfo_get_wid (ptr: POINTER): INTEGER is
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
-
+		
 end -- class WEL_REBARINFO
 
 --|----------------------------------------------------------------

@@ -4,6 +4,9 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	note: "Not all variants of the bmp format can be read. If you have%
+			%problems with a certain image please use i.e. MS Paint to convert%
+			%the image to the standard bmp format and then try again."
 
 class
 	WEL_DIB
@@ -155,8 +158,38 @@ feature {NONE} -- Implementation
 		end
 
 	calculate_palette is
+			-- Calculates pallete for images regardless of their colordepth
 		require
 			exists: exists
+		local
+			num_color: INTEGER
+		do
+			num_color := color_count
+			if
+				num_color /= 0
+			then
+				calculate_palette_all_but_24_bits
+			elseif
+				has_24_bits
+			then
+				calculate_palette_24_bits
+			else
+				-- Dead end! This code must never be reached
+				check
+					dead_end: False
+				end
+			end
+		ensure
+			palette_not_void: palette /= Void
+			palette_exists: palette.exists
+		end
+
+	calculate_palette_all_but_24_bits is
+			-- Calculates pallete for images with all colordepths except 24 bits
+		require
+			exists: exists
+			has_not_24_bits: not has_24_bits
+
 		local
 			ind: INTEGER
 			pal_entry: WEL_PALETTE_ENTRY
@@ -183,6 +216,66 @@ feature {NONE} -- Implementation
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
 		end
+		
+	calculate_palette_24_bits is
+			-- Calculates pallete for images with a colordepth of 24 bits
+         -- A 24 bitcount DIB has no color table entries so, set the number of
+         -- to the maximum value (max_palette).
+		require
+			exists: exists
+			has_24_bits: has_24_bits
+		local
+			ind, red, green, blue: INTEGER
+			pal_entry: WEL_PALETTE_ENTRY
+			log_pal: WEL_LOG_PALETTE
+		do
+			!! log_pal.make (768, max_palette)
+			from
+				ind := 0
+			until
+				ind = max_palette
+			loop
+				!! pal_entry.make (red, green, blue, 0)
+				log_pal.set_pal_entry (ind, pal_entry)
+
+
+				red := red + 32
+				if
+					red = 256
+				then
+					red := 0
+					green := green + 32
+					if
+						green = 256
+					then
+						green := 0
+						blue := blue + 64
+						if
+							blue = 256
+						then
+							blue := 0
+						end
+					end
+				end
+			
+				
+				
+				ind := ind + 1
+			end
+			!! palette.make (log_pal)	
+		ensure
+			palette_not_void: palette /= Void
+			palette_exists: palette.exists
+		end
+
+	has_24_bits: BOOLEAN is
+		require
+			exists: exists
+		do
+			Result := info_header.bit_count = 24		
+		end
+
+	max_palette: INTEGER is 256
 
 	rgb_quad_size: INTEGER is
 		local

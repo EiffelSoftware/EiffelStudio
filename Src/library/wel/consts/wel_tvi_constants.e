@@ -9,34 +9,34 @@ class
 
 feature -- Access
 
-	Tvi_root: INTEGER is
+	Tvi_root: POINTER is
 			-- Inserts the item as the root of the list.
 		external
-			"C [macro %"cctrl.h%"]"
+			"C [macro %"cctrl.h%"] : HTREEITEM"
 		alias
 			"TVI_ROOT"
 		end
 
-	Tvi_first: INTEGER is
+	Tvi_first: POINTER is
 			-- Inserts the item at the beginning of the list.
 		external
-			"C [macro %"cctrl.h%"]"
+			"C [macro %"cctrl.h%"] : HTREEITEM"
 		alias
 			"TVI_FIRST"
 		end
 
-	Tvi_last: INTEGER is
+	Tvi_last: POINTER is
 			-- Inserts the item at the end of the list.
 		external
-			"C [macro %"cctrl.h%"]"
+			"C [macro %"cctrl.h%"] : HTREEITEM"
 		alias
 			"TVI_LAST"
 		end
 
-	Tvi_sort: INTEGER is
+	Tvi_sort: POINTER is
 			-- Inserts the item into the list in alphabetical order.
 		external
-			"C [macro %"cctrl.h%"]"
+			"C [macro %"cctrl.h%"] : HTREEITEM"
 		alias
 			"TVI_SORT"
 		end

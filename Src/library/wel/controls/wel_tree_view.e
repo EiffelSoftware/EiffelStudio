@@ -74,16 +74,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_item: INTEGER
+	last_item: POINTER
 			-- Handle of the last item inserted
 
 	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM is
 			-- Return the parent item of the given item.
 		local
-			handle: INTEGER
+			handle: POINTER
 		do
-			handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_parent, an_item.h_item)
-			if handle /= 0 then
+			handle := cwel_integer_to_pointer (cwin_send_message_result (item, Tvm_getnextitem, Tvgn_parent, cwel_pointer_to_integer (an_item.h_item)))
+			if handle /= default_pointer then
 				!! Result.make
 				Result.set_h_item (handle)
 				Result := get_item_with_data (Result)
@@ -257,10 +257,10 @@ feature -- Status report
 			exists: exists
 			selected: selected
 		local
-			handle: INTEGER
+			handle: POINTER
 		do
-			handle := cwin_send_message_result (item, Tvm_getnextitem,
-				Tvgn_caret, 0)
+			handle := cwel_integer_to_pointer (cwin_send_message_result (item, Tvm_getnextitem,
+				Tvgn_caret, 0))
 			!! Result.make
 			Result.set_h_item (handle)
 			Result := get_item_with_data (Result)
@@ -276,8 +276,9 @@ feature -- Status setting
 			exists: exists
 			valid_item: has_item (an_item)
 		do
+
 			cwin_send_message (item, Tvm_selectitem,
-				Tvgn_caret, an_item.h_item)
+				Tvgn_caret, cwel_pointer_to_integer (an_item.h_item))
 		ensure
 			item_selected: is_selected (an_item)
 		end
@@ -308,7 +309,7 @@ feature -- Status setting
 			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_expand, Tve_expand,
-				an_item.h_item)
+				cwel_pointer_to_integer (an_item.h_item))
 		ensure
 			item_expanded: is_expanded (an_item)
 		end
@@ -321,7 +322,7 @@ feature -- Status setting
 			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_expand, Tve_collapse,
-				an_item.h_item)
+				cwel_pointer_to_integer (an_item.h_item))
 		ensure
 			item_collapse: not is_expanded (an_item)
 		end
@@ -334,7 +335,7 @@ feature -- Status setting
 			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
-				Tvgn_firstvisible, an_item.h_item)
+				Tvgn_firstvisible, cwel_pointer_to_integer (an_item.h_item))
 		end
 
 	select_drop_target (an_item: WEL_TREE_VIEW_ITEM) is
@@ -345,7 +346,7 @@ feature -- Status setting
 			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
-				Tvgn_drophilite, an_item.h_item)
+				Tvgn_drophilite, cwel_pointer_to_integer (an_item.h_item))
 		end
 
 	set_indent (an_indent: INTEGER) is
@@ -365,8 +366,8 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			an_item_exists: an_item.exists
 		do
-			last_item := cwin_send_message_result (item,
-				Tvm_insertitem, 0, an_item.to_integer)
+			last_item := cwel_integer_to_pointer (cwin_send_message_result (item,
+				Tvm_insertitem, 0, an_item.to_integer))
 			an_item.tree_view_item.set_h_item (last_item)
 			an_item.user_tree_view_item.set_h_item (last_item)
 		ensure
@@ -383,7 +384,7 @@ feature -- Element change
 		local
 			msg_result: INTEGER
 		do
-			msg_result := cwin_send_message_result (item, Tvm_deleteitem, 0, an_item.h_item)
+			msg_result := cwin_send_message_result (item, Tvm_deleteitem, 0, cwel_pointer_to_integer (an_item.h_item))
 			check
 				item_deleted: msg_result /= 0
 			end
@@ -589,7 +590,7 @@ feature {NONE} -- Externals
 
 	cwin_wc_treeview: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"WC_TREEVIEW"
 		end

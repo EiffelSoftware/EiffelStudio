@@ -62,22 +62,22 @@ feature {NONE} -- Externals
 
 	cwin_reg_key_name (ptr: POINTER): POINTER is
 		external
-			"C [macro %"registry_key.h%"]"
+			"C [macro %"registry_key.h%"] (REG_KEY*): EIF_POINTER"
 		end
 		
 	cwin_reg_key_class (ptr: POINTER): POINTER is
 		external
-			"C [macro %"registry_key.h%"]"
+			"C [macro %"registry_key.h%"] (REG_KEY*): EIF_POINTER"
 		end
 		
 	cwin_reg_key_time (ptr: POINTER): POINTER is
 		external
-			"C [macro %"registry_key.h%"]"
+			"C [macro %"registry_key.h%"] (REG_KEY*): EIF_POINTER"
 		end
 	
 	cwin_reg_key_destroy (ptr: POINTER) is
 		external
-			"C [macro %"registry_key.h%"]"
+			"C [macro %"registry_key.h%"] (REG_KEY*)"
 		end
 
 end -- class WEL_REGISTRY_KEY

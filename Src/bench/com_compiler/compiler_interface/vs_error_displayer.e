@@ -76,13 +76,13 @@ feature -- Output
 			-- Display error messages from `handler'.
 		local
 			error_list: LINKED_LIST [ERROR]
-			st, st2: STRUCTURED_TEXT
+			st: STRUCTURED_TEXT
 			syntax_error: SYNTAX_ERROR
 			feature_error: FEATURE_ERROR
 			eiffel_error: EIFFEL_ERROR
 			error: ERROR
 			error_pos: INTEGER
-			error_file, error_string, class_name: STRING
+			error_file, error_string: STRING
 		do
 			if not retried then
 				from

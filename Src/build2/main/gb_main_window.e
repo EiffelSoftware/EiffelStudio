@@ -129,6 +129,7 @@ feature {NONE} -- Implementation
 			view_menu_builder_window, view_menu_history, project_menu_build,
 			project_menu_settings,  file_new: EV_MENU_ITEM
 			menu_separator: EV_MENU_SEPARATOR
+			
 		do
 				-- Initialize the file menu.
 			create file_menu.make_with_text (Gb_file_menu_text)
@@ -148,6 +149,12 @@ feature {NONE} -- Implementation
 			view_menu.extend (command_handler.show_hide_builder_window_command.new_menu_item)
 			view_menu.extend (command_handler.show_hide_display_window_command.new_menu_item)
 			view_menu.extend (command_handler.show_hide_component_viewer_command.new_menu_item)
+			create menu_separator
+			view_menu.extend (menu_separator)
+			view_menu.extend (command_handler.expand_layout_tree_command.new_menu_item)
+			view_menu.extend (command_handler.collapse_layout_tree_command.new_menu_item)
+			
+			
 			create menu_separator
 			view_menu.extend (menu_separator)
 			view_menu.extend (command_handler.show_history_command.new_menu_item)

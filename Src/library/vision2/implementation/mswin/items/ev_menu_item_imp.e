@@ -79,6 +79,13 @@ feature -- Status setting
 			end
 		end
 
+	set_selected is
+   			-- Set current item as the selected one.
+			-- We use it only when the grand parent is an option button.
+   		do
+			parent_imp.on_selection_changed (Current)
+   		end
+
 feature -- Element change
 
 	set_parent (par: EV_MENU_ITEM_HOLDER) is
@@ -125,7 +132,28 @@ feature -- Element change
 			{EV_MENU_ITEM_HOLDER_IMP} Precursor (an_item)
 		end
 
-feature {EV_MENU_ITEM_HOLDER_IMP} -- Access
+feature -- Assertion
+
+	grand_parent_is_option_button: BOOLEAN is
+			-- Is true if the grand parent is an option button.
+			-- False otherwise.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- We use it only when the grand parent is an option button.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation
 	
 	parent_menu: WEL_MENU is
 			-- Wel menu that contains the current item.

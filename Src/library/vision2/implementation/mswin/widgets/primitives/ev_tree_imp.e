@@ -139,6 +139,25 @@ feature -- Access
 				Result := Void
 			end
 		end
+		
+	selected_item_imp: EV_TREE_NODE_IMP is
+			-- Currently selected_item_imp.
+			-- Added for speed, if we did not have this,
+			-- then we would have to do another reverse assigment
+			-- after `selected_item' to get the _IMP.
+		local
+			handle: POINTER
+		do
+			if selected then
+				handle := cwel_integer_to_pointer (cwin_send_message_result 
+				(wel_item, Tvm_getnextitem, Tvgn_caret, 0))
+				Result ?= all_ev_children @ handle
+			else
+				Result := Void
+			end
+			
+		end
+		
 
 feature -- Basic operations
 
@@ -180,9 +199,19 @@ feature -- Basic operations
 				-- Then, we redraw the tree
 			invalidate
 		end
-
+		
 	general_remove_item (item_imp: EV_TREE_NODE_IMP) is
 			-- Remove `item_imp' from `Current'.
+		do
+			internal_general_remove_item (item_imp, 0)
+		end
+		
+
+	internal_general_remove_item (item_imp: EV_TREE_NODE_IMP; depth: INTEGER;) is
+			-- Remove `item_imp' from `Current'.
+			-- This should only be called by `internal_remove_item'.
+			-- We need to track `depth' so that we only assign `False'
+			-- to `removing_item' when we return from the top level of the recursion.
 		local
 			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
 		do
@@ -194,17 +223,26 @@ feature -- Basic operations
 				until
 					c.after
 				loop
-					general_remove_item (c.item)
+					internal_general_remove_item (c.item, depth + 1)
 					c.forth
 				end
 				item_imp.set_internal_children (c)
+			end
+			if item_imp = selected_item_imp then
+				item_imp.deselect_actions.call ([])
+				deselect_actions.call ([item_imp.interface])
 			end
 			all_ev_children.remove (item_imp.h_item)
 			delete_item (item_imp)
 	
 				-- Then, we redraw the tree
 			invalidate
-			removing_item := False
+				-- Only signify that we have ended the
+				-- removal when we are back to the top level
+				-- of the recursion.
+			if depth = 0 then
+				removing_item := False
+			end
 		end
 
 	get_children (item_imp: EV_TREE_NODE_IMP): 

@@ -65,14 +65,7 @@ feature  -- Access
 			-- If the widget is an EV_WINDOW without parent,
 			-- this attribute will be `Void'
 		do
-			if implementation.parent_imp /= Void then
-				Result ?= implementation.parent_imp.interface
-				check
-					result_not_void: Result /= Void
-				end
-			else
-				Result := Void
-			end
+			Result ?= {EV_CONTAINER} Precursor
 		end
 
 	maximum_width: INTEGER is

@@ -222,7 +222,7 @@ feature
 				   					%%T%T%THEADER(ref)->ov_flags = ");
 					file.putint (dtype);
 					file.putstring (" + EO_EXP;%N%
-									%%T%T%Tif ((fnptr) 0 != init)%N%
+									%%T%T%Tif ((char *(*)()) 0 != init)%N%
 									%%T%T%T%T(init)(ref, l[1]);%N%
 									%%T%T};%N%T};%N");
 				end

@@ -6,7 +6,10 @@ class
 
 inherit
 	EIFFEL_XML_SERIALIZATION_ERRORS
-
+		export
+			{NONE} all
+		end
+		
 feature -- Access
 
 	deserialized_object: ANY
@@ -39,7 +42,7 @@ feature -- Basic Operation
 					create l_xml_file.make (path)
 					if l_bin_file.last_write_time >= l_xml_file.last_write_time then
 							-- Only use binary file if XML file is not newer.
-						create f.make_open_read (binary_path)
+						create f.make_open_read (".bin")
 						if f.exists and then f.support_storable then
 							deserialized_object := f.retrieved
 						end

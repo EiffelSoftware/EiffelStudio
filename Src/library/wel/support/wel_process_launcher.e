@@ -46,11 +46,13 @@ feature -- Basic Operations
 			if not a_working_directory.is_empty then
 				create a_wel_string2.make (a_working_directory)
 				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-							default_pointer, default_pointer, True, cwin_detached_process, default_pointer, a_wel_string2.item,
+							default_pointer, default_pointer, True, cwin_detached_process,
+							default_pointer, a_wel_string2.item,
 							startup_info.item, process_info.item)
 			else
 				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-							default_pointer, default_pointer, True, detached_process, default_pointer, default_pointer,
+							default_pointer, default_pointer, True, detached_process,
+							default_pointer, default_pointer,
 							startup_info.item, process_info.item)
 			end
 		end
@@ -75,9 +77,11 @@ feature -- Basic Operations
 				end
 				output_pipe.read_stream (Block_size)
 			end
-			last_launch_successful := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite) = cwin_wait_object_0
+			last_launch_successful := cwin_wait_for_single_object (process_info.process_handle,
+				cwin_infinite) = cwin_wait_object_0
 			if last_launch_successful then
-				last_launch_successful := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+				last_launch_successful := cwin_exit_code_process (process_info.process_handle,
+					$last_process_result)
 			end
 			cwin_close_handle (process_info.process_handle)
 			output_pipe.close_output
@@ -102,7 +106,8 @@ feature -- Basic Operations
 			until
 				finished
 			loop
-				a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+				a_boolean := cwin_exit_code_process (process_info.process_handle,
+					$last_process_result)
 				check
 					valid_external_call_2: a_boolean
 				end

@@ -28,7 +28,7 @@ feature -- Element Change
 			-- Set `title' with `a_title'.
 		require
 			non_void_title: a_title /= Void
-			valid_title: not a_title.empty
+			valid_title: not a_title.is_empty
 		deferred
 		ensure
 			title_set: title.is_equal (a_title)
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			-- Start report (i.e. activate dialog).
 		require
 			non_void_title: title /= Void
-			valid_title: not title.empty
+			valid_title: not title.is_empty
 		deferred
 		ensure
 			running: running

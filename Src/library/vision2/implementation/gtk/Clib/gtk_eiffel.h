@@ -19,7 +19,7 @@
 #include "eif_eiffel.h"
 #include "eif_argv.h"
 
-char * c_match_font_name (char * pattern);
+EIF_REFERENCE c_match_font_name (char * pattern);
 
 EIF_REFERENCE generize (EIF_OBJECT g_item);
 

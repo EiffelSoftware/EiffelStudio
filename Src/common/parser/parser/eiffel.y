@@ -164,7 +164,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 121
+%expect 98
 
 %%
 
@@ -1820,8 +1820,6 @@ Typed_expression:	Typed
 			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Typed_nosigned_real
 			{ create {VALUE_AS} $$.initialize ($1) }
-	|	Typed Simple_factor
-			{ create {TYPE_ADAPTATION_AS} $$.make ($1, $2) }
 	;
 
 Free_operator: TE_FREE

@@ -157,7 +157,7 @@ feature {NONE} -- `struct timeb' encapsulation
 		end
 
 	get_time (p: POINTER): INTEGER is
-			-- Get `p->millitm'.
+			-- Get `p->time'.
 		external
 			"C struct struct timeb access time use <sys/timeb.h>"
 		end

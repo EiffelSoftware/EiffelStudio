@@ -31,8 +31,6 @@
 #define In_Process_Check                1013
 #define Destination_Folder_Input_Static 1016
 #define Help_Button                     1018
-#define Client_Check                    1019
-#define Server_Check                    1020
 #define Proxy_Stub_Static               1028
 #define Automation_Radio                1029
 #define Proxy_Stub_Input_Edit           1030
@@ -43,7 +41,6 @@
 #define ID_BACK                         1040
 #define Definition_File_Static          1043
 #define Marshalling_Static              1044
-#define Introduction4_Static            1044
 #define Destination_Folder_Static       1044
 #define Title_Question_Static           1044
 #define Progress_Bar                    1045
@@ -56,7 +53,6 @@
 #define Create_Project_Check            1050
 #define Definition_File_Browse_Button   1051
 #define Code_Type_Static                1052
-#define Code_Type_Info_Static           1053
 #define Component_Type_Static           1054
 #define Marshalling_Question_Static     1056
 #define Out_Of_Proces_Check2            1056
@@ -65,7 +61,9 @@
 #define Marshallin_Description_Static   1059
 #define Warnings_Check                  1060
 #define Information_Check               1061
+#define Client_radio                    1061
 #define Stop_check                      1062
+#define Server_radio                    1062
 
 // Next default values for new objects
 // 
@@ -73,7 +71,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        128
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1061
+#define _APS_NEXT_CONTROL_VALUE         1063
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

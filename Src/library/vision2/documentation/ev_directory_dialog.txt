@@ -1,2 +1,0 @@
-EV_DIRECTORY_DIALOG
--------------------

@@ -1,2 +1,0 @@
-EV_REGULAR_POLYGON
-------------------

@@ -7,6 +7,7 @@ inherit
 
 	SHARED_STORAGE_INFO;
 	CONSTANTS
+	SHARED_INSTANTIATOR
 
 creation
 
@@ -29,12 +30,12 @@ feature
 			end;
 			args := c.arguments;
 			from
-				!!arguments.make;
+				!! arguments.make
 				args.start
 			until
 				args.after
 			loop
-				!!arg.make (args.item);	
+				!! arg.make (args.item);
 				arguments.extend (arg);
 				args.forth
 			end;
@@ -57,8 +58,8 @@ feature
 
 	update (c: USER_CMD; dir_name: STRING) is
 		local
-			arg: ARG;
-			args: EB_LINKED_LIST [ARG];
+			arg: ARG
+			args: EB_LINKED_LIST [ARG]
 			lab: CMD_LABEL;
 			labs: EB_LINKED_LIST [CMD_LABEL];
 			p: CMD;
@@ -106,6 +107,7 @@ feature
 			if not internal_name.is_equal (c.eiffel_type) then
 				update_text (c.eiffel_type, new_text);
 			end;
+			command_instantiator.add_command (c)
 		end;
 
 	update_text (s, nt: STRING) is
@@ -171,7 +173,7 @@ feature {NONE}
 
 	visual_name: STRING;
 
-	arguments: LINKED_LIST [S_ARG];
+	arguments: LINKED_LIST [S_ARG]
 
 	labels: LINKED_LIST [STRING];
 

@@ -56,7 +56,7 @@ feature -- Element change
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
-			assigned: file_name.is_equal (a_name)
+			assigned: not file_name.is_empty implies file_name.is_equal (a_name)
 		end
 
 	set_start_directory (a_path: STRING) is

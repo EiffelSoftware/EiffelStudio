@@ -39,7 +39,7 @@ feature -- Access
 	Cfm_offset: INTEGER is 268435456
 			-- The yOffset member is valid.
 
-	Cfm_size: INTEGER is 2147483648
+	Cfm_size: INTEGER is -2147483648
 			-- The yHeight member is valid.
 
 	Cfm_charset: INTEGER is 134217728

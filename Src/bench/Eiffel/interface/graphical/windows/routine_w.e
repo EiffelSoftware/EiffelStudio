@@ -57,7 +57,8 @@ feature -- Initialization
 			-- Create a feature tool from a form.
 		do
 			show_menus := False;
-			make_form (a_form)
+			make_form (a_form);
+			init_text_window;
 		end;
 
 feature -- Window Properties
@@ -218,8 +219,8 @@ feature -- Status setting
 			else
 				update_edit_bar;
 				set_icon_name (s.icon_name);
-				hole.set_full_symbol;
-				class_hole.set_full_symbol
+				hole_button.set_full_symbol;
+				class_hole_button.set_full_symbol
 			end
 		end;
 
@@ -327,7 +328,6 @@ feature -- Graphical Interface
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			if show_menus then
 				fill_menus
@@ -338,6 +338,8 @@ feature -- Graphical Interface
 
 	attach_all is
 			-- Attach all widgets.
+		local
+			separator: SEPARATOR
 		do
 			if show_menus then
 				global_form.attach_left (menu_bar, 0);
@@ -351,31 +353,27 @@ feature -- Graphical Interface
 				global_form.attach_top_widget (menu_bar, edit_bar, 0)
 			else
 				global_form.attach_top (edit_bar, 0)
-			end
-
-			global_form.attach_left (editable_text_window.widget, 0);
-			global_form.attach_right (editable_text_window.widget, 0);
-			global_form.attach_bottom_widget (format_bar, editable_text_window.widget, 0);
-			global_form.attach_top_widget (edit_bar, editable_text_window.widget, 0);
-			global_form.detach_right (editable_text_window.widget);
-			global_form.attach_right_widget (command_bar, editable_text_window.widget, 0);
-			if editable_text_window /= read_only_text_window then
-				global_form.attach_left (read_only_text_window.widget, 0);
-				global_form.attach_right (read_only_text_window.widget, 0);
-				global_form.attach_bottom_widget (format_bar, read_only_text_window.widget, 0);
-				global_form.attach_top_widget (edit_bar, read_only_text_window.widget, 0);
-				global_form.detach_right (read_only_text_window.widget);
-				global_form.attach_right_widget (command_bar, read_only_text_window.widget, 0);
 			end;
+
+			!! separator.make ("", global_form);
+			global_form.attach_left (separator, 0);
+			global_form.attach_right (separator, 0);
+			global_form.attach_top_widget (edit_bar, separator, 1);
 
 			global_form.attach_left (format_bar, 0);
 			global_form.attach_right (format_bar, 0);
-			global_form.attach_bottom (format_bar, 0);
+			global_form.attach_top_widget (separator, format_bar, 1);
 
-			global_form.attach_right (command_bar, 0);
-			global_form.attach_bottom (command_bar, 0);
-			global_form.attach_top_widget (edit_bar, command_bar, 0);
-			global_form.attach_right_widget (command_bar, format_bar, 0);
+			global_form.attach_left (editable_text_window.widget, 0);
+			global_form.attach_right (editable_text_window.widget, 0);
+			global_form.attach_bottom (editable_text_window.widget, 0);
+			global_form.attach_top_widget (format_bar, editable_text_window.widget, 0);
+			if editable_text_window /= read_only_text_window then
+				global_form.attach_left (read_only_text_window.widget, 0);
+				global_form.attach_right (read_only_text_window.widget, 0);
+				global_form.attach_bottom (read_only_text_window.widget, 0);
+				global_form.attach_top_widget (format_bar, read_only_text_window.widget, 0);
+			end
 		end
 
 feature {TEXT_WINDOW} -- Forms And Holes
@@ -389,8 +387,14 @@ feature {TEXT_WINDOW} -- Forms And Holes
 	class_hole: ROUT_CLASS_CMD;
 			-- Hole for version of routine for a particular class.
 
+	class_hole_button: ROUT_CLASS_HOLE;
+			-- Button for the class hole.
+
 	stop_hole: DEBUG_STOPIN_CMD;
 			-- To set breakpoints
+
+	stop_hole_button: DEBUG_STOPIN;
+			-- Button for the stop points hole
 
 feature {TEXT_WINDOW, PROJECT_W} -- Formats
 
@@ -462,8 +466,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: SEPARATOR;
 			history_list_cmd: LIST_HISTORY
 		do
-			!! shell_cmd.make (command_bar, text_window);
-			!! shell_button.make (shell_cmd, command_bar);
+			!! shell_cmd.make (edit_bar, text_window);
+			!! shell_button.make (shell_cmd, edit_bar);
 			shell_button.add_button_press_action (3, shell_cmd, Void);
 			if show_menus then
 				!! shell_menu_entry.make (shell_cmd, special_menu);
@@ -473,17 +477,16 @@ feature {NONE} -- Implementation; Graphical Interface
 				shell.set_button (shell_button);
 			end;
 			!! current_target_cmd.make (Current);
-			!! current_target_button.make (current_target_cmd, command_bar);
 			if show_menus then
 				!! sep.make (new_name, special_menu);
 				!! current_target_menu_entry.make (current_target_cmd, special_menu);
-				!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry)
+				!! current_target_cmd_holder.make_plain (current_target_cmd);
+				current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
 			else
 				!! current_target_cmd_holder.make_plain (current_target_cmd);
-				current_target_cmd_holder.set_button (current_target_button)
 			end;
 			!! next_target_cmd.make (text_window);
-			!! next_target_button.make (next_target_cmd, command_bar);
+			!! next_target_button.make (next_target_cmd, edit_bar);
 			if show_menus then
 				!! next_target_menu_entry.make (next_target_cmd, special_menu);
 				!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
@@ -492,7 +495,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				next_target_cmd_holder.set_button (next_target_button)
 			end;
 			!! previous_target_cmd.make (text_window);
-			!! previous_target_button.make (previous_target_cmd, command_bar);
+			!! previous_target_button.make (previous_target_cmd, edit_bar);
 			if show_menus then
 				!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
 				!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
@@ -505,42 +508,46 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
-			command_bar.attach_left (shell_button, 0);
-			command_bar.attach_bottom (shell_button, 0);
-			command_bar.attach_left (current_target_button, 0);
-			command_bar.attach_bottom_widget (shell_button, current_target_button, 10);
-			command_bar.attach_left (next_target_button, 0);
-			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
-			command_bar.attach_left (previous_target_button, 0);
-			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0);
+			edit_bar.attach_left_widget (stop_hole_button, shell_button, 0);
+			edit_bar.attach_top (shell_button, 0);
+			previous_target_button.unmanage;
+			next_target_button.unmanage;
+			edit_bar.attach_top (next_target_button, 0);
+			edit_bar.attach_top (previous_target_button, 0);
+			edit_bar.detach_left (previous_target_button);
+			edit_bar.detach_left (next_target_button);
+			edit_bar.attach_right_widget (next_target_button, previous_target_button, 0);
+			edit_bar.attach_right_position (next_target_button, 11);
+			next_target_button.manage;
+			previous_target_button.manage;
 		end;
 
 	build_format_bar is
 			-- Build the format bar.
 		local
 			rout_cli_cmd: SHOW_ROUTCLIENTS;
-			rout_cli_button: EB_BUTTON;
+			rout_cli_button: FORMAT_BUTTON;
 			rout_cli_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			rout_hist_cmd: SHOW_ROUT_HIST;
-			rout_hist_button: EB_BUTTON;
+			rout_hist_button: FORMAT_BUTTON;
 			rout_hist_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			past_cmd: SHOW_PAST;
-			past_button: EB_BUTTON;
+			past_button: FORMAT_BUTTON;
 			past_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			rout_flat_cmd: SHOW_ROUT_FLAT;
-			rout_flat_button: EB_BUTTON;
+			rout_flat_button: FORMAT_BUTTON;
 			rout_flat_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			future_cmd: SHOW_FUTURE;
-			future_button: EB_BUTTON;
+			future_button: FORMAT_BUTTON;
 			future_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			stop_cmd: SHOW_BREAKPOINTS;
-			stop_button: EB_BUTTON;
+			stop_button: FORMAT_BUTTON;
 			stop_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			text_cmd: SHOW_TEXT;
-			text_button: EB_BUTTON;
+			text_button: FORMAT_BUTTON;
 			text_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			homonym_cmd: SHOW_HOMONYMS;
-			homonym_button: EB_BUTTON;
+			homonym_button: FORMAT_BUTTON;
 			homonym_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			sep: SEPARATOR
 		do
@@ -642,7 +649,6 @@ feature {NONE} -- Implementation; Graphical Interface
 	build_bar is
 			-- Build top bar: editing commands.
 		local
-			hole_form: FORM;
 			label: LABEL;
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
@@ -654,25 +660,22 @@ feature {NONE} -- Implementation; Graphical Interface
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
 			search_menu_entry: EB_MENU_ENTRY;
-			class_hole_button: ROUT_CLASS_HOLE;
 			class_hole_holder: HOLE_HOLDER;
-			stop_hole_button: DEBUG_STOPIN;
 			stop_hole_holder: HOLE_HOLDER
 		do
 			edit_bar.set_fraction_base (31);
 
 				-- First we create the needed objects.
-			!! hole_form.make (new_name, edit_bar);
 			!! hole.make (text_window);
-			!! hole_button.make (hole, hole_form);
+			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
 			!! class_hole.make (text_window);
-			!! class_hole_button.make (class_hole, hole_form);
+			!! class_hole_button.make (class_hole, edit_bar);
 			!! class_hole_holder.make_plain (class_hole);
 			class_hole_holder.set_button (class_hole_button);
 			!! stop_hole.make (text_window);
-			!! stop_hole_button.make (stop_hole, hole_form);
+			!! stop_hole_button.make (stop_hole, edit_bar);
 			!! stop_hole_holder.make_plain (stop_hole);
 			stop_hole_holder.set_button (stop_hole_button);
 			!! routine_text_field.make (edit_bar, Current);
@@ -693,16 +696,12 @@ feature {NONE} -- Implementation; Graphical Interface
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			end;
 			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
 			if show_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-				!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry)
-			else
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
-				change_font_cmd_holder.set_button (change_font_button)
+				change_font_cmd_holder.set_menu_entry (change_font_menu_entry)
+			else
+				!! change_font_cmd_holder.make_plain (change_font_cmd)
 			end;
 			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
@@ -715,43 +714,41 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 
 				-- Now we do all the attachments. This is done here for speed.
-			edit_bar.attach_left (hole_form, 0);
-			edit_bar.attach_top (hole_form, 0);
-			edit_bar.attach_bottom (hole_form, 0);
-			hole_form.attach_left (hole_button, 0);
-			hole_form.attach_top (hole_button, 0);
-			hole_form.attach_left_widget (hole_button, class_hole_button, 0);
-			hole_form.attach_top (class_hole_button, 0);
-			hole_form.attach_left_widget (class_hole_button, stop_hole_button, 0);
-			hole_form.attach_top (stop_hole_button, 0);
+			edit_bar.attach_left (hole_button, 0);
+			edit_bar.attach_top (hole_button, 0);
+			edit_bar.attach_left_widget (hole_button, class_hole_button, 0);
+			edit_bar.attach_top (class_hole_button, 0);
+			edit_bar.attach_left_widget (class_hole_button, stop_hole_button, 0);
+			edit_bar.attach_top (stop_hole_button, 0);
+			routine_text_field.unmanage;
 			edit_bar.attach_left_position (routine_text_field, 11);
 			edit_bar.attach_top (routine_text_field, 0);
 			edit_bar.attach_bottom (routine_text_field, 0);
 			edit_bar.attach_right_position (routine_text_field, 17);
 			routine_text_field.set_width (80);
+			routine_text_field.manage;
 			label.set_text ("from: ");
 			label.set_right_alignment;
+			label.unmanage;
 			edit_bar.attach_left_position (label, 17);
 			edit_bar.attach_top (label, 0);
 			edit_bar.attach_bottom (label, 0);
 			edit_bar.attach_right_position (label, 20);
+			label.manage;
 			edit_bar.attach_left_position (class_text_field, 20);
 			edit_bar.attach_top (class_text_field, 0);
 			edit_bar.attach_bottom (class_text_field, 0);
 			class_text_field.set_width (80);
 			edit_bar.attach_top (quit_button, 0);
 			edit_bar.attach_right (quit_button, 0);
-			edit_bar.attach_top (change_font_button, 0);
-			edit_bar.attach_right_widget (quit_button, change_font_button, 10);
+			edit_bar.detach_left (quit_button);
+			edit_bar.attach_right_widget (quit_button, search_button, 10);
 			edit_bar.attach_top (search_button, 0);
-			edit_bar.attach_right_widget (change_font_button, search_button, 0);
+			edit_bar.detach_left (search_button);
 			edit_bar.attach_right_widget (search_button, class_text_field, 2)
 		end;
 
 feature {NONE} -- Properties
-
-	command_bar: FORM;
-			-- Bar with the command buttons
 
 	show_menus: BOOLEAN;
 			-- Should the menus be shown?

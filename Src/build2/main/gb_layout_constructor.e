@@ -99,6 +99,19 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+	view_object_button: EV_TOOL_BAR_BUTTON is
+			-- `Result' is a tool bar button that highlights an object in `Current'.
+		local
+			pixmaps: GB_SHARED_PIXMAPS
+		do
+			create Result
+			Result.drop_actions.extend (agent highlight_object)
+			Result.drop_actions.set_veto_pebble_function (agent object_higlightable)
+			create pixmaps
+			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_view_small_color"))
+		end
+		
 
 feature {GB_XML_LOAD} -- Implementation
 
@@ -134,8 +147,32 @@ feature {GB_WINDOW_SELECTOR} -- Implementation
 		ensure
 			has_one_item: count = 1
 		end
+
+feature {GB_OBJECT} -- Implementation
+
+	highlight_object (an_object: GB_OBJECT) is
+			-- Ensure `an_object' is highlighted object in `Current'.
+			-- Only if `an_object' is contained in the structure of `Current', and
+			-- is not a titled window.
+		do
+			if an_object.layout_item.is_selectable then
+				an_object.layout_item.enable_select
+				ensure_item_visible (an_object.layout_item)
+			end
+		end
+
+feature {NONE} -- Implementation	
+
+	object_higlightable (an_object: GB_OBJECT): BOOLEAN is
+			-- Is `an_object' a valid object for highlighting via
+			-- `highlight_object'.
+		local
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+		do
+			titled_window_object ?= an_object
+			Result := titled_window_object = Void
+		end
 		
-feature {NONE} -- Implementation
 
 	expand_layout_item (an_object: GB_OBJECT) is
 			-- If `an_object' is expanded, expand `layout_item' of `an_object'.

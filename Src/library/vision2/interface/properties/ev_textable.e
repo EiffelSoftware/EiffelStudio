@@ -116,25 +116,13 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_ANY} and text.is_empty
 		end
 
-	cycle_alignment is
-			-- Set another alignment.
-		do
-			if alignment.is_left_aligned then
-				align_text_center
-			elseif alignment.is_center_aligned then
-				align_text_right
-			elseif alignment.is_right_aligned then
-				align_text_left
-			end
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXTABLE_I
 			-- Responsible for interaction with native graphics toolkit.
 			
 invariant
-	text_not_void_implies_text_not_empty: is_usable implies text /= Void
+	text_not_void: is_usable implies text /= Void
 
 end -- class EV_TEXTABLE
 

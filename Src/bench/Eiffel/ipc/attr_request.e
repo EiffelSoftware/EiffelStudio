@@ -41,14 +41,19 @@ feature
 			obj_addr, dt_lower: STRING;
 			c_stone: CLASSC_STONE
 		do
+			send_rqst_3 (Rqst_sp_lower, 0, 0, sp_lower);
+			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper);
 			send_rqst_3 (request_code, In_h_addr, 0, 
 											hex_to_integer (object_address));
 			dynamic_type := clone (c_tread);
 			obj_addr := c_tread;
 			if dynamic_type.is_equal ("SPECIAL") then
+				is_special := true;
 				!LINKED_LIST [ATTRIBUTE]! attributes.make;
+				capacity := c_tread.to_integer;
 				recv_attributes (attributes, Void)
 			else
+				is_special := false;
 				!SORTED_TWO_WAY_LIST [ATTRIBUTE]! attributes.make;
 				dt_lower := clone (dynamic_type);
 				dt_lower.to_lower;
@@ -110,7 +115,8 @@ feature
 					exp_attr ?= attr;
 					recv_attributes (exp_attr.attributes, c_stone.class_c)
 				elseif type_name.is_equal ("SPECIAL") then
-					!SPECIAL_ATTR!attr.make (attr_name, class_c,clone(c_tread));
+					!SPECIAL_ATTR!attr.make (attr_name, class_c, 
+								clone(c_tread), c_tread.to_integer);
 					spec_attr ?= attr;
 					recv_attributes (spec_attr.items, Void)
 				else
@@ -121,5 +127,26 @@ feature
 				i := i + 1
 			end
 		end;
+
+feature -- Special object inspection
+
+	sp_lower, sp_upper: INTEGER;
+			-- Bounds for special object inspection
+			-- A negative value for `sp_lower' stands for 0;
+			-- A negative value for `sp_upper' stands for the
+			-- upper bound of the inspected special object
+
+	set_sp_bounds (l, u: INTEGER) is
+			-- Set the bounds for special object inspection.
+		do
+			sp_lower := l;
+			sp_upper := u
+		end;
+
+	capacity: INTEGER;
+			-- Capacity of the object in case it is SPECIAL
+
+	is_special: BOOLEAN;
+			-- Is the object being inspected SPECIAL?
 
 end -- class ATTR_REQUEST

@@ -34,18 +34,19 @@ feature -- Initialization
 			ace_name := ace
 			project_path := project
 			project_name := name
-			eif_4 := get ("EIFFEL4")
-			plat := get ("PLATFORM")
+			eif_4 := get ("ISE_EIFFEL")
+			plat := get ("ISE_PLATFORM")
 			if eif_4 = void then
-				io.put_string ("Your environment variable $EIFFEL4 is not defined !!! %N You have to compile the generated project by your own")
---			elseif plat = Void then
---				io.put_string ("Your environment variable $PLATFORM is not defined !!! %N You have to compile the generated project by your own")
+				io.put_string ("Your environment variable $ISE_EIFFEL is not defined ! %N You have to compile the generated project on your own")
+			elseif plat = Void then
+				io.put_string ("Your environment variable $ISE_PLATFORM is not defined ! %N You have to compile the generated project on your own")
 			end
 			if plat = Void then
 				plat := "windows"
 			end
 
-			es4_location := eif_4 + "/bench/spec/" + plat + "/bin/"
+			create es4_location.make_from_string (eif_4)
+			es4_location.extend_from_array (<<"studio", "spec", plat, "bin">>)
 		end
 
 	launch is
@@ -55,26 +56,45 @@ feature -- Initialization
 			valid_ace: ace_name /= Void and then not ace_name.is_equal ("")
 		local
 			command: STRING
+			fn: FILE_NAME
+			ecn: FILE_NAME
+			ffn: FILE_NAME
 		do					
-				command:= es4_location + "ec -batch -ace " + ace_name + " -project_path " + project_path
+				ecn := clone (es4_location)
+				ecn.set_file_name ("ec")
+				command := ecn
+				command := command + " -batch -ace " + ace_name + " -project_path " + project_path
 				system (command)
-				change_working_directory (project_path + "\EIFGEN\W_Code")
-				ex_launch (es4_location + "finish_freezing.exe")
+				create fn.make_from_string (project_path)
+				fn.extend ("EIFGEN")
+				fn.extend ("W_code")
+				change_working_directory (fn)
+				ffn := clone (es4_location)
+				ffn.set_file_name ("finish_freezing")
+				ex_launch (ffn)
 				is_compiled := TRUE
 		end
 
 	display is
-			-- launch ebench to use the generated project
+			-- launch estudio to use the generated project
 		require
 			project_already_compile: is_compiled
 		local
 			command: STRING
 			dir: DIRECTORY
+			fn: FILE_NAME
+			stn: FILE_NAME
 		do
 			change_working_directory (project_path)
 			create dir.make (project_path)
-			if dir.has_entry (project_name + ".epr") then
-				command:= es4_location + "ebench " + project_path + "\" + project_name + ".epr"
+			create fn.make_from_string (project_name)
+			fn.add_extension ("epr")
+			if dir.has_entry (fn) then
+				fn.set_directory (project_path)
+				stn := clone (es4_location)
+				stn.set_file_name ("estudio")
+				command := stn
+				command := command + " " + fn
 				ex_launch (command)
 			end
 		end
@@ -89,8 +109,8 @@ feature -- Access
 	ace_name: STRING
 		-- Name of the ace file
 
-	es4_location: STRING
-		-- Location of es4, and ebench
+	es4_location: FILE_NAME
+		-- Location of es4, and estudio
 
 	project_name: STRING
 		-- Name of the project

@@ -26,6 +26,7 @@ feature -- Status Report
 	last_error_message: STRING is
 			-- Last error message, if any
 		do
+			Result := "No help is available"
 		end
 			
 feature -- Basic Operations

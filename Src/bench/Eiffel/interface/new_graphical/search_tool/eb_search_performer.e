@@ -9,7 +9,7 @@ class
 
 inherit
 
-	EB_UNDO_REDO_OBSERVER
+	UNDO_REDO_OBSERVER
 		redefine
 			on_changed
 		end

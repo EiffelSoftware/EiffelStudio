@@ -20,7 +20,8 @@ inherit
 			is_bulletin, is_in_a_group, is_a_group, save_widget, 
 			stored_node, widget, set_modified_flags, 
 			help_file_name, is_able_to_be_grouped,
-			update_group_name_in_tree
+			update_group_name_in_tree, remove_callbacks,
+			reset_callbacks
 		end;
 	COMPOSITE_C
 		redefine
@@ -31,12 +32,41 @@ inherit
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
 			cut_list, is_bulletin, is_in_a_group, is_a_group, save_widget, 
 			stored_node, widget, set_modified_flags, help_file_name,
-			is_able_to_be_grouped, update_group_name_in_tree
+			is_able_to_be_grouped, update_group_name_in_tree, 
+			remove_callbacks, reset_callbacks
 		select
 			reset_modified_flags, cut_list, cut, 
 			undo_cut, eiffel_callback_calls
 		end
-	
+
+feature -- Reseting/reseting callbacks
+
+	remove_callbacks is
+		do
+			remove_widget_callbacks;
+			from
+				subtree.start
+			until
+				subtree.after
+			loop
+				subtree.item.remove_callbacks;
+				subtree.forth
+			end;
+		end;
+
+	reset_callbacks is
+		do
+			reset_widget_callbacks;
+			from
+				subtree.start
+			until
+				subtree.after
+			loop
+				subtree.item.reset_callbacks;
+				subtree.forth
+			end;
+		end;
+
 feature 
 
 	widget: EB_BULLETIN_EXT;
@@ -203,11 +233,11 @@ feature
 		end;
 
 	is_able_to_be_grouped: BOOLEAN is
-            -- Is Current group able to be grouped?
-        do
-            Result := not is_in_a_group and then
+			-- Is Current group able to be grouped?
+		do
+			Result := not is_in_a_group and then
 				grouped and then group.count > 1
-        end;
+		end;
 
 	is_in_a_group: BOOLEAN is
 		do
@@ -262,8 +292,8 @@ feature
 				until
 					subtree.after
 				loop
-					tree.cut (subtree.item.tree_element);
 					subtree.item.hide_tree_elements;
+					tree.cut (subtree.item.tree_element);
 					subtree.forth
 				end;
 			end;

@@ -24,6 +24,7 @@ feature -- Resource names
 	r_Graphics_disabled: STRING is "graphics_disabled"
 	r_Windows_timer_delay: STRING is "windows_timer_delay"
 	r_Metamorphosis_disabled: STRING is	"metamorphosis_disabled"
+	r_Smart_file_system: STRING is "smart_file_system"
 
 feature {NONE} -- Convenient access
 
@@ -33,10 +34,17 @@ feature {NONE} -- Convenient access
 			Result := Configure_resources.get_boolean (r_Fail_on_rescue, False)
 		end
 
-	metamorphosis_disabled: BOOLEAN is
+	Metamorphosis_disabled: BOOLEAN is
 			-- Is extra metamorphosis disabled?
 		once
 			Result := Configure_resources.get_boolean (r_Metamorphosis_disabled, False)
+		end
+
+	Has_smart_file_system: BOOLEAN is
+			-- Is the file system we are on smart enough not to check the content
+			-- of each directory to see if something changed?
+		once
+			Result := Configure_resources.get_boolean (r_Smart_file_system, False)
 		end
 
 end -- class SHARED_CONFIGURE_RESOURCES

@@ -175,6 +175,7 @@ feature {NONE} -- Implementation
 			tmp_safearray: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR
 			pointer_var: LINKED_LIST[STRING]
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			tmp_name: STRING
 		do
 			Result := check_interface_pointer (interface_name)
 
@@ -202,18 +203,28 @@ feature {NONE} -- Implementation
 						c_header_files.force (visitor.c_header_file)
 					end
 
-	
-					if is_paramflag_fout (arguments.item.flags) then  -- if out or inout
+					signature.append (Space)
+					if is_paramflag_fout (arguments.item.flags)or is_paramflag_fin (arguments.item.flags) then  
 						if 
-							visitor.is_interface or 
-							visitor.is_structure or 
 							visitor.is_interface_pointer or
 							visitor.is_structure_pointer or 
 							visitor.is_array_basic_type or
-							visitor.is_coclass or 
 							visitor.is_coclass_pointer
 						then
 							signature.append (arguments.item.name)
+
+						elseif
+							visitor.is_interface or 
+							visitor.is_structure or 
+							visitor.is_coclass 
+						then
+							signature.append (Asterisk)
+							signature.append (Open_parenthesis)
+							signature.append (visitor.c_type)
+							signature.append (Asterisk)
+							signature.append (Close_parenthesis)
+							signature.append (arguments.item.name)
+
 						else
 							variables.append (New_line_tab)
 							variables.append (visitor.c_type)
@@ -238,12 +249,20 @@ feature {NONE} -- Implementation
 							signature.append (arguments.item.name)
 	
 							variables.append ( in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
-							out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
+							if is_paramflag_fout (arguments.item.flags) then
+								out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
+							else
+								tmp_name := clone (Tmp_clause)
+								tmp_name.append (arguments.item.name)
+
+								if is_safearray (arguments.item.type.type) then
+									free_memory.append (free_safearray_set_up (tmp_name))
+
+								elseif (arguments.item.type.type = Vt_bstr) then
+									free_memory.append (free_bstr_set_up (tmp_name))
+								end
+							end
 						end
-						signature.append (Comma)
-	
-					else  --if is_paramflag_fin (arguments.item.flags) and not is_paramflag_fout (arguments.item.flags) then -- in parameter
-						signature.append (in_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
 						signature.append (Comma)
 					end
 					
@@ -259,122 +278,10 @@ feature {NONE} -- Implementation
 					return_value := clone (New_line_tab)
 					return_value.append (Return)
 
-					if not visitor.is_pointed then
-						if visitor.is_basic_type or visitor.is_enumeration then
-							variables.append (visitor.c_type)
-							variables.append (Space)
-							variables.append (Return_value_name)
-							variables.append (Space_equal_space)
-							variables.append (Zero)
-							variables.append (Semicolon)
-							variables.append (New_line_tab)
-
-							signature.append (Space)
-							signature.append (Ampersand)
-							signature.append (Return_value_name)
-
-							return_value.append (Space_open_parenthesis)
-							return_value.append (visitor.cecil_type)
-							return_value.append (Close_parenthesis)
-							return_value.append (Return_value_name)
-
-						elseif is_boolean (visitor.vt_type) and then not visitor.is_pointed then
-							variables.append (visitor.c_type)
-							variables.append (Space)
-							variables.append (Return_value_name)
-							variables.append (Space_equal_space)
-							variables.append (Zero)
-							variables.append (Semicolon)
-							variables.append (New_line_tab)
-
-							signature.append (Space)
-							signature.append (Ampersand)
-							signature.append (Return_value_name)
-
-							return_value.append (Space_open_parenthesis)
-							return_value.append (Eif_boolean)
-							return_value.append (Close_parenthesis)
-							return_value.append (Ce_mapper)
-							return_value.append (Dot)
-							return_value.append (visitor.ce_function_name)
-							return_value.append (Space_open_parenthesis)
-							return_value.append (Return_value_name)
-							return_value.append (Close_parenthesis)
-							return_value.append (Semicolon)
-
-						elseif visitor.is_structure or visitor.is_interface then
-
-							variables.append (retval_struct_pointer_set_up (visitor))
-							
-							signature.append (Space)
-							signature.append (Return_value_name)
-							
-							return_value.append (Space)
-							return_value.append (Eif_wean)
-							return_value.append (Space_open_parenthesis)
-							return_value.append (C_result)
-							return_value.append (Close_parenthesis)
-							
-						else
-							if is_bstr (visitor.vt_type) then
-								variables.append (visitor.c_type)
-								variables.append (Space)
-								variables.append (Return_value_name)
-								variables.append (Space_equal_space)
-								variables.append ("SysAllocString")
-								variables.append (Space_open_parenthesis)
-								variables.append ("OLESTR")
-								variables.append (Space_open_parenthesis)
-								variables.append (Double_quote)
-								variables.append (Double_quote)
-								variables.append (Close_parenthesis)
-								variables.append (Close_parenthesis)
-								variables.append (Semicolon)
-								variables.append (New_line_tab)
-
-								free_memory.append ("SysFreeString")
-								free_memory.append (Space_open_parenthesis)
-								free_memory.append (Return_value_name)
-								free_memory.append (Close_parenthesis)
-								free_memory.append (Semicolon)
-								free_memory.append (New_line_tab)
-							else
-								variables.append (visitor.c_type)
-								variables.append (Space)
-								variables.append (Return_value_name)
-								variables.append (Space_equal_space)
-								variables.append (Zero)
-								variables.append (Semicolon)
-								variables.append (New_line_tab)
-							end
-							signature.append (Space)
-							signature.append (Ampersand)
-							signature.append (Return_value_name)
-
-							return_value.append (Space_open_parenthesis)
-							return_value.append (Eif_reference)
-							return_value.append (Close_parenthesis)
-
-							if visitor.need_generate_ce then
-								return_value.append (Generated_ce_mapper)
-							else
-								return_value.append (Ce_mapper)
-							end
-							return_value.append (Dot)
-							return_value.append (visitor.ce_function_name)
-							return_value.append (Space_open_parenthesis)
-							return_value.append (Return_value_name)
-							if visitor.writable then
-								return_value.append (Comma_space)
-								return_value.append (Null)
-							end
-							return_value.append (Close_parenthesis)
-						end
-					else
+					if visitor.is_basic_type or visitor.is_enumeration then
 						variables.append (visitor.c_type)
 						variables.append (Space)
 						variables.append (Return_value_name)
-						variables.append (visitor.c_post_type)
 						variables.append (Space_equal_space)
 						variables.append (Zero)
 						variables.append (Semicolon)
@@ -385,8 +292,65 @@ feature {NONE} -- Implementation
 						signature.append (Return_value_name)
 
 						return_value.append (Space_open_parenthesis)
+						return_value.append (visitor.cecil_type)
+						return_value.append (Close_parenthesis)
+						return_value.append (Return_value_name)
+
+					elseif (visitor.vt_type = Vt_bool) then
+						variables.append (visitor.c_type)
+						variables.append (Space)
+						variables.append (Return_value_name)
+						variables.append (Space_equal_space)
+						variables.append (Zero)
+						variables.append (Semicolon)
+						variables.append (New_line_tab)
+
+						signature.append (Space)
+						signature.append (Ampersand)
+						signature.append (Return_value_name)
+
+						return_value.append (Space_open_parenthesis)
+						return_value.append (Eif_boolean)
+						return_value.append (Close_parenthesis)
+						return_value.append (Ce_mapper)
+						return_value.append (Dot)
+						return_value.append (visitor.ce_function_name)
+						return_value.append (Space_open_parenthesis)
+						return_value.append (Return_value_name)
+						return_value.append (Close_parenthesis)
+						return_value.append (Semicolon)
+
+					elseif visitor.is_structure or visitor.is_interface then
+
+						variables.append (retval_struct_pointer_set_up (visitor))
+
+						signature.append (Space)
+						signature.append (Return_value_name)
+
+						return_value.append (Space)
+						return_value.append (Eif_wean)
+						return_value.append (Space_open_parenthesis)
+						return_value.append (C_result)
+						return_value.append (Close_parenthesis)
+
+					else
+
+						variables.append (visitor.c_type)
+						variables.append (Space)
+						variables.append (Return_value_name)
+						variables.append (Space_equal_space)
+						variables.append (Zero)
+						variables.append (Semicolon)
+						variables.append (New_line_tab)
+						
+						signature.append (Space)
+						signature.append (Ampersand)
+						signature.append (Return_value_name)
+
+						return_value.append (Space_open_parenthesis)
 						return_value.append (Eif_reference)
 						return_value.append (Close_parenthesis)
+
 						if visitor.need_generate_ce then
 							return_value.append (Generated_ce_mapper)
 						else
@@ -396,17 +360,17 @@ feature {NONE} -- Implementation
 						return_value.append (visitor.ce_function_name)
 						return_value.append (Space_open_parenthesis)
 						return_value.append (Return_value_name)
-
 						if visitor.writable then
 							return_value.append (Comma_space)
 							return_value.append (Null)
 						end
-						return_value.append (Close_parenthesis)	
+						return_value.append (Close_parenthesis)
 					end
+
 					return_value.append (Semicolon)
 					return_value.append (New_line_tab)
 				else
-					if not signature.empty then
+					if not arguments.empty then
 						signature.remove (signature.count)
 					end
 				end

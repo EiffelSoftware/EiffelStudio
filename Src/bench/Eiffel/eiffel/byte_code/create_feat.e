@@ -179,7 +179,8 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for an anchored creation type.
-
+		local
+			l_type_feature: TYPE_FEATURE_I
 		do
 				-- Generate call to feature that will give the type we want to create.
 			generate_il_type
@@ -187,6 +188,12 @@ feature -- IL code generation
 				-- Evaluate the computed type and create a corresponding object type.
 			il_generator.generate_current
 			il_generator.create_type
+			
+			l_type_feature := context.class_type.
+				associated_class.anchored_features.item (routine_id)
+				
+			il_generator.generate_check_cast (Void,
+				context.real_type (l_type_feature.type.actual_type.type_i))
 		end
 
 	generate_il_type is

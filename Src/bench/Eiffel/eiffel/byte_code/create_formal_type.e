@@ -61,6 +61,8 @@ feature -- IL code generation
 				-- Evaluate the type and create a corresponding object type.
 			il_generator.generate_current
 			il_generator.create_type
+			
+			il_generator.generate_check_cast (Void, context.real_type (formal))
 		end
 		
 feature -- Byte code generation

@@ -52,6 +52,7 @@ feature -- Il code generation
 		do
 			il_generator.generate_current
 			il_generator.create_like_object
+			il_generator.generate_check_cast (Void, context.current_type)
 		end
 
 	generate_il_type is

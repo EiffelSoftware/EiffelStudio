@@ -42,5 +42,12 @@ feature -- Access
 		once
 			Create Result
 		end
+		
+	project_settings_window: GB_SYSTEM_WINDOW is
+			-- Window which displays current project properties.
+		once
+			create Result
+		end
+		
 
 end -- class GB_ACCESSIBLE

@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			register_window (Current)
 
 				-- Initialise the common controls
-			common_controls_dll: WEL_COMMON_CONTROLS_DLL
+			create common_controls_dll.make	
 
 			if a_name /= Void then
 				-- Load by name

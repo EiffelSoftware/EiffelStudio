@@ -405,11 +405,16 @@ feature -- Generation constants
 			"window: " + Ev_titled_window_string + indent_less_one + "-- `Result' is window with which `Current' is implemented"
 		end
 		
-	window_access_as_dialog: STRING is
-			-- String used to define window when we are a client of window.
+	window_access_as_dialog_part1: STRING is
+			-- Part 1 of string used to define window when we are a client of window.
 		once
-			Result := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
-			"-- `Result' is dialog with which `Current' is implemented"
+			Result := "inherit" + Indent_less_two
+		end
+	window_access_as_dialog_part2: STRING is
+			-- Part 2 of string used to define window when we are client of window.
+		once
+			Result := "%N%Nfeature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
+				"-- `Result' is dialog with which `Current' is implemented"
 		end
 		
 	client_window_string: STRING is "window"

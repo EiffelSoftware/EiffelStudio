@@ -224,14 +224,16 @@ feature -- Status report
 					count_attribute_found: True
 					area_attribute_found: True
 				end
-					-- We now have retrieved the full `area' of STRING object. Let's check
-					-- if we need to display the complete area, or just part of it.
-				Result.keep_head (l_count.min (Result.count))
-				
-					-- If what is displayed is less than the count of the STRING object,
-					-- we display `...' to show that there is something more.
-				if l_count > (max - min + 1) then
-					Result.append ("...")
+				if Result /= Void then
+						-- We now have retrieved the full `area' of STRING object. Let's check
+						-- if we need to display the complete area, or just part of it.
+					Result.keep_head (l_count.min (Result.count))
+					
+						-- If what is displayed is less than the count of the STRING object,
+						-- we display `...' to show that there is something more.
+					if l_count > (max - min + 1) then
+						Result.append ("...")
+					end
 				end
 			else
 				f := debug_output_feature.ancestor_version (dynamic_type)
@@ -246,6 +248,8 @@ feature -- Status report
 			if Result = Void then
 				Result := "Could not find string representation"
 			end
+		ensure
+			string_representation_not_void: Result /= Void
 		end
 
 	formatted_output: STRING is
@@ -260,11 +264,11 @@ feature -- Status report
 				debug ("debugger_interface")
 					io.put_string ("Finding output value of constant string")
 				end
-				Result := "%"" + (create {CHARACTER_ROUTINES}).eiffel_string (value_object) + "%""
+				Result := "%"" + Character_routines.eiffel_string (value_object) + "%""
 			else
 				create Result.make (Application.displayed_string_size + 2)
 				Result.append_character ('%"')
-				Result.append ((create {CHARACTER_ROUTINES}).eiffel_string (string_representation (0, Application.displayed_string_size)))
+				Result.append (Character_routines.eiffel_string (string_representation (0, Application.displayed_string_size)))
 				Result.append_character ('%"')
 			end
 		ensure
@@ -359,7 +363,7 @@ feature -- Access
 				Result.append_character ('/')
 				Result.append_integer (value_character.code)
 				Result.append ("/ : %'")
-				Result.append ((create {CHARACTER_ROUTINES}).char_text (value_character))
+				Result.append (Character_routines.char_text (value_character))
 				Result.append_character ('%'')
 			when Type_integer then
 				Result := value_integer.out
@@ -502,5 +506,14 @@ feature {NONE} -- Private Constants
 	Type_pointer	: INTEGER is 7
 	Type_object		: INTEGER is 8
 	Type_string		: INTEGER is 9
+
+	character_routines: CHARACTER_ROUTINES is
+			-- To have a printable output of Eiffel strings that have
+			-- non-printable characters.
+		once
+			create Result
+		ensure
+			character_routines_not_void: Result /= Void
+		end
 
 end -- class DUMP_VALUE

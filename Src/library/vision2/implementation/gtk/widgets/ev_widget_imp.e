@@ -227,7 +227,7 @@ feature -- Element change
 			par_imp: EV_CONTAINER_IMP
 		do
 			if parent_imp /= Void then
-				if (box_widget /= Void) then
+				if (box_widget /= default_pointer) then
 					gtk_object_ref (box_widget)
 				else
 					gtk_object_ref (widget)

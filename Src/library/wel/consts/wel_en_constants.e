@@ -27,6 +27,8 @@ feature -- Access
 
 	En_msgfilter: INTEGER is 1792
 	
+	En_requestresize: INTEGER is 1793
+	
 end -- class WEL_EN_CONSTANTS
 
 

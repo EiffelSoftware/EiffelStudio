@@ -84,23 +84,19 @@ rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
 rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
-    EIF_GET_CONTEXT
 	assert (cecil_lock);
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 0;
 	EIF_CECIL_UNLOCK;
-    EIF_END_GET_CONTEXT
 }
 
 rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
-    EIF_GET_CONTEXT
 	assert (cecil_lock);
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 1;
 	EIF_CECIL_UNLOCK;
-    EIF_END_GET_CONTEXT
 }
 
 /* 
@@ -110,7 +106,6 @@ rt_public void eifuvisex (void)  {
 rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
     /* Return type of `routine' defined in class of type `cid' */
    
-    EIF_GET_CONTEXT
     struct cnode *sk;               /* Skeleton entry in system */
     char **n;                       /* Pointer in cn_names array */
     int nb_attr;                    /* Number of attributes */
@@ -145,7 +140,6 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
         case SK_POINTER:    return EIF_POINTER_TYPE;
         default:        return EIF_NO_TYPE;
     }
-    EIF_END_GET_CONTEXT
 }  
 
 /*
@@ -265,8 +259,6 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	 * null pointer if the routine does not exist.
 	 */
 
-	EIF_GET_CONTEXT
-
 	int dtype = Deif_bid(cid_to_dtype(cid));		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
 #ifdef WORKBENCH
@@ -328,8 +320,6 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 		xraise(EN_DOL);
 #endif
 #endif
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -393,7 +383,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	 * Should be preceded by *(EIF_TYPE*). 
 	 */
 
-	void *addr = (void *) 0;
+	void *addr;
 	int tid;
 
 	addr = eifaddr (object, name, ret);
@@ -423,8 +413,6 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 	 * If it fails, "*ret" is EIF_NO_ATTRIBUTE, EIF_CECIL_OK, otherwise.
 	 * (was necessary was getting value of basic types failed).
 	 */
-	
-	EIF_GET_CONTEXT
 	int i;							/* Index in skeleton */
 #ifdef WORKBENCH
 	int32 rout_id;					/* Attribute routine id */
@@ -519,20 +507,21 @@ rt_public EIF_BIT eifgbit(EIF_REFERENCE object, char *name)
 	 */
 
 	int i;							/* Index in skeleton structure */
-	struct cnode *sk;				/* Skeleton entry in system */
 #ifdef WORKBENCH
 	int32 rout_id;					/* Bit attribute routine id */
 	int16 dtype;					/* Object dynamic type */
 	long offset;					/* Bit attribute offset */
+#else
+	struct cnode *sk;				/* Skeleton entry in system */
 #endif
 
 	i = locate(object, name);		/* Locate attribute by name */
 	if (i == EIF_NO_ATTRIBUTE)					/* Attribute not found */
 		return EIF_NO_BIT_FIELD;		/* No bit field */
 
+#ifndef WORKBENCH
 	sk = &System(Dtype(object));	/* Fetch skeleton entry */
 
-#ifndef WORKBENCH
 	if (!(sk->cn_types[i] & SK_BIT))
 		return EIF_NO_BIT_FIELD;		/* Wrong type (not a bit field) */
 

@@ -180,9 +180,11 @@ feature {NONE} -- Implementation
 			-- Restore `background_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
+			p: PROCEDURE [EV_ANY, TUPLE]
 		do
 			colorizable ?= default_object_by_type (class_name (first))
-			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (colorizable.background_color))
+			p := agent {EV_COLORIZABLE}.set_background_color (colorizable.background_color)
+			for_all_objects (p)
 			update_editors
 			update_background_display
 		end
@@ -191,9 +193,11 @@ feature {NONE} -- Implementation
 			-- Restore `foreground_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
+			p: PROCEDURE [EV_ANY, TUPLE]
 		do
 			colorizable ?= default_object_by_type (class_name (first))
-			for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (colorizable.foreground_color))
+			p := agent {EV_COLORIZABLE}.set_foreground_color (colorizable.foreground_color)
+			for_all_objects (p)
 			update_editors
 			update_foreground_display
 		end
@@ -212,15 +216,18 @@ feature {NONE} -- Implementation
 			-- Actually update the background colors.
 		local
 			container: EV_CONTAINER
+			p: PROCEDURE [EV_ANY, TUPLE]
 		do
-			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (color))
-			container ?= objects.i_th (2)
-			if container /= Void then
-				container ?= container.parent
-				if container /= Void then
-					container.set_background_color (color)
-				end
-			end
+			p := agent {EV_COLORIZABLE}.set_background_color (color)
+			for_all_objects (p)
+--| FIXME ADD THIS and propagate to all instances.
+--			container ?= objects.i_th (2)
+--			if container /= Void then
+--				container ?= container.parent
+--				if container /= Void then
+--					container.set_background_color (color)
+--				end
+--			end
 			background_color := color
 			update_editors
 			update_background_display
@@ -252,8 +259,11 @@ feature {NONE} -- Implementation
 		
 	actually_set_foreground_color (color: EV_COLOR) is
 			-- Actually update the foreground colors.
+		local
+			p: PROCEDURE [EV_ANY, TUPLE]
 		do
-			for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (color))
+			p := agent {EV_COLORIZABLE}.set_foreground_color (color)
+			for_all_objects (p)
 			foreground_color := color
 			update_editors
 			update_foreground_display

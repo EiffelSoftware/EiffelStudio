@@ -76,5 +76,3 @@ call cleanup.bat
 cd ..\..\..\..\..\..
 
 %DEL% cleanup.bat
-
-exit

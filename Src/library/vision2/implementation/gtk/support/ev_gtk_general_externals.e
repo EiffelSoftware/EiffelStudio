@@ -45,6 +45,13 @@ feature {NONE} -- general GTK C functions
 			"C | <gtk/gtk.h>"
 		end
 
+feature {NONE} -- Event queue manager
+
+	c_gtk_events_process_events_queue is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_init_toolkit is

@@ -169,55 +169,57 @@ feature -- Byte code generation
 			cl_type_i: CL_TYPE_I
 			gen_type : GEN_TYPE_I
 		do
-			-- Arguments
+			make_breakable (ba)
+
+				-- Arguments
 			if arguments /= Void then
 				arguments.make_byte_code (ba)
 			end
 
-			-- Open map
+				-- Open map
 			if open_map /= Void then
 				open_map.make_byte_code (ba)
 			end
 
-			-- Closed map
+				-- Closed map
 			if closed_map /= Void then
 				closed_map.make_byte_code (ba)
 			end
 
-			-- Get address
+				-- Get address
 			ba.append (Bc_addr)
 			ba.append_integer (feature_id)
 
 			cl_type_i ?= context.real_type (class_type)
 			ba.append_short_integer
 				   (cl_type_i.associated_class_type.id.id - 1)
-			-- Use RTWPPR
+				-- Use RTWPPR
 			ba.append_short_integer (1)
 
-			-- Now create routine object
+				-- Now create routine object
 			ba.append (Bc_rcreate)
 
 			if arguments /= Void then
-				-- We have arguments (a TUPLE) on the stack
+					-- We have arguments (a TUPLE) on the stack
 				ba.append_short_integer (1)
 			else
-				-- We don't have arguments on the stack
+					-- We don't have arguments on the stack
 				ba.append_short_integer (0)
 			end
 
 			if open_map /= Void then
-				-- We have an open map
+					-- We have an open map
 				ba.append_short_integer (1)
 			else
-				-- We don't have an open map
+					-- We don't have an open map
 				ba.append_short_integer (0)
 			end
 
 			if closed_map /= Void then
-				-- We have a closed map
+					-- We have a closed map
 				ba.append_short_integer (1)
 			else
-				-- We don't have a closed map
+					-- We don't have a closed map
 				ba.append_short_integer (0)
 			end
 
@@ -234,4 +236,3 @@ feature -- Byte code generation
 		end
 
 end -- class ROUTINE_CREATION_B
-

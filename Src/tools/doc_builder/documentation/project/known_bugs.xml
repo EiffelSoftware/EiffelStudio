@@ -1,0 +1,28 @@
+<document title="Known issues and bugs">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Here is a list of current known bugs and pending issues.
+			<list ordered="false">
+				<item>After pretty printing code_blocks don't format correctly (have to restart)</item>
+				<item>If you change editor font then it changes when the file error dialog pops up</item>
+				<item>If there is no space or newline character after the first 'paragraph' tag the first word is missing in the generated HTML.  To prevent this add a newline for now.</item>
+				<item>Changing the schema during a session causes schema information to not display correctly in the element tree and sub element list</item>
+				<item>HTML stylesheet only works if it in is the project root directory</item>
+				<item>Search is case sensitive</item>
+				<item>Open file dialog filter does not work (Vision2 bug in .NET)</item>
+				<item>Can open same file twice in editor</item>
+				<item>HTML generation produces 2 &lt;br> tags for a single schema &lt;line_break> tag</item>
+				<item>Schema needs new tags adding for underline, anchors, image legends</item>
+				<item>The pretty code formatting button is not enabled unless you use the mouse to highlight the text</item>
+				<item>Schema does not support empty lists, must have at least one item in them</item>
+				<item>Address in the address bar shows a combination of '/' and '\' in paths</item>
+				<item>The &lt;url> node in &lt;image_link> is translated to a href, as it should, but the href attribute is inside the image &lt;img> and not the anchor &lt;a></item>
+				<item>When you have a pragraph format within a note tag, it moves the text to outside of the note.</item>
+			</list>
+		</paragraph>
+		<paragraph>Here is a list of old bugs now fixed
+			<list ordered="false">
+				<item>Caret position only reports up to 64836 bytes</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

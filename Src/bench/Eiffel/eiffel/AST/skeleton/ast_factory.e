@@ -581,15 +581,16 @@ feature -- Access
 			generics_set: Result.generics = g
 		end
 
-	new_click_ast (n: CLICKABLE_AST; s, e: INTEGER): CLICK_AST is
+	new_click_ast (n: CLICKABLE_AST; l, s, e: INTEGER): CLICK_AST is
 			-- New clickable element for `n'
 		require
 			n_not_void: n /= Void
 		do
-			create Result.initialize (n, s, e)
+			create Result.initialize (n, l, s, e)
 		ensure
 			click_ast_not_void: Result /= Void
 			node_set: Result.node = n
+			start_line_number_set: Result.start_line_number = l
 			start_position_set: Result.start_position = s
 			end_position_set: Result.end_position = e
 		end
@@ -1055,7 +1056,7 @@ feature -- Access
 			location_set: Result.location.is_equal (s)
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; s, e: INTEGER): FEATURE_AS is
+	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; l, s, e: INTEGER): FEATURE_AS is
 			-- New FEATURE AST node
 		require
 			f_not_void: f /= Void
@@ -1064,7 +1065,7 @@ feature -- Access
 			can_have_indexing_clause: i /= Void implies f.count = 1
 		do
 			create Result
-			Result.initialize (f, b, i, s, e)
+			Result.initialize (f, b, i, l, s, e)
 		ensure
 			feature_as_not_void: Result /= Void
 			feature_names_set: Result.feature_names = f

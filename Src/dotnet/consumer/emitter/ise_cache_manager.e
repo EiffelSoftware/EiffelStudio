@@ -13,7 +13,7 @@ inherit
 			error_category as error_category_emitter,
 			error_message_table as error_message_table_emitter
 		export 
-			{COM_ISE_CACHE_MANAGER} all
+			{NONE} all
 		undefine
 			start
 		redefine
@@ -28,11 +28,6 @@ inherit
 			error_category,
 			error_message_table
 		end
-		
-	CACHE_PATH
-		export
-			{NONE} all
-		end
 
 create
 	make,
@@ -40,18 +35,21 @@ create
 
 feature {NONE}-- Initialization 
 
-	make is
+	make (a_clr_version: STRING) is
 			-- create an instance of ISE_CACHE_MANAGER
 		do
+			cache_path_make (a_clr_version)
 			is_successful := True
 			last_error_message := ""	
 			no_output := True
-
+			create consumed_assemblies.make
+			consumed_assemblies.compare_objects
+			
 			assembly_consumer.set_status_printer (agent display_status)
 			assembly_consumer.set_error_printer (agent process_error)
 		end
-
-	make_with_path (a_path: STRING) is
+		
+	make_with_path (a_path: STRING; a_clr_version: STRING) is
 			-- create instance of ISE_CACHE_MANAGER with ISE_EIFFEL path set to `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -59,18 +57,74 @@ feature {NONE}-- Initialization
 			path_exists: (create {DIRECTORY}.make (a_path)).exists
 		do
 			set_internal_eiffel_path (a_path)
-			make
+			make (a_clr_version)
 		end
-
+		
 feature -- Access
 
 	is_successful: BOOLEAN
-
+	
 	last_error_message: STRING
 		-- last error message
-
+		
 feature -- Basic Oprtations
 
+	consume_gac_assembly (aname, aversion, aculture, akey: STRING) is
+			-- consume an assembly from the gac defined by
+			-- "'aname', Version='aversion', Culture='aculture', PublicKeyToken='akey'"
+		require
+			non_void_name: aname /= Void
+			non_void_version: aversion /= Void
+			non_void_culture: aculture /= Void
+			non_void_key: akey /= Void
+			non_empty_name: aname.count > 0
+			non_empty_version: aversion.count > 0
+			non_empty_culture: aculture.count > 0
+			non_empty_key: akey.count > 0
+		local
+			assembly: ASSEMBLY
+		do
+			is_successful := True
+			last_error_message := ""
+			
+			put_in_eac := True
+			assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (aname, aversion, aculture, akey).to_cil)
+			if assembly /= Void then
+				consume_in_eac (assembly)
+			else
+				set_error (Cannot_load_gac_assembly, Void)
+				process_error (error_message)
+			end
+		ensure
+			successful: is_successful
+		end
+		
+	consume_local_assembly (apath, adest: STRING) is
+			-- consume a local assembly from 'apath' into 'adest'
+		require
+			non_void_path: apath /= Void
+			non_void_dest: adest /= Void
+			path_exists: (create {RAW_FILE}.make (apath)).exists
+			dest_exists: (create {DIRECTORY}.make (adest)).exists
+		local
+			assembly: ASSEMBLY
+		do	
+			is_successful := True
+			last_error_message := ""
+			
+			destination_path := adest.clone (adest)
+			assembly_consumer.set_destination_path (adest)
+			assembly := feature {ASSEMBLY}.load_from (apath.to_cil)
+			if assembly /= Void then
+				consume_into_path (assembly)
+			else
+				set_error (Cannot_load_local_assembly, Void)
+				process_error (error_message)
+			end
+		ensure
+			successful: is_successful
+		end
+		
 	relative_folder_name (aname, aversion, aculture, akey: STRING): STRING is
 			-- retruns the relative path to an assembly
 		require
@@ -95,7 +149,7 @@ feature -- Basic Oprtations
 			non_void_result: Result /= Void
 			non_empty_result: Result.count > 0
 		end
-
+		
 	assembly_info_from_assembly (apath: STRING): CONSUMED_ASSEMBLY is
 			-- retrieve a local assembly's information
 		require
@@ -144,6 +198,7 @@ feature {NONE} -- Basic Operations
 			non_void_result: Result /= Void
 			non_empty_result: Result.count > 0
 		end
+		
 
 feature {NONE} -- Internal Agents
 
@@ -159,12 +214,13 @@ feature {NONE} -- Internal Agents
 			is_successful := False
 			last_error_message := s.clone (s)
 		end
-
+		
 	display_status (s: STRING) is
 			-- Display progress status.
 		do
 			--| Do nothing
 		end
+		
 
 invariant
 	invariant_clause: True -- Your invariant here

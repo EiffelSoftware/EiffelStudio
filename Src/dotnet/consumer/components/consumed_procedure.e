@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			dotnet_name_set: dotnet_name = dn
 			dotnet_eiffel_name_set: equal (dotnet_eiffel_name, den)
 			arguments_set: arguments = args
-			is_frozen_set: is_frozen = froz or not virt
+			is_frozen_set: is_frozen = froz
 			is_static_set: is_static = static
 			is_deferred_set: is_deferred = defer
 			is_public_set: is_public = pub

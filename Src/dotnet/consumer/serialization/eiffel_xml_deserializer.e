@@ -164,6 +164,8 @@ feature {NONE} -- Implementation
 				end
 				read_next
 			end
+		ensure
+			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void
 		end
 
 	array_from_xml: ANY is

@@ -5,20 +5,20 @@ indexing
 
 class
 	LOCAL_CACHE_READER
-
+	
 inherit
 	CACHE_READER
 		redefine
 			absolute_assembly_path_from_consumed_assembly,
 			consumed_type
 		end
-
+		
 create
 	make_with_path
-
+	
 feature {NONE}
 
-	make_with_path (a_path: STRING) is
+	make_with_path (a_path: STRING; a_clr_version: STRING) is
 			-- Initialize cache reader to read from `a_path'.
 		require
 			a_path_not_void: a_path /= Void
@@ -28,15 +28,17 @@ feature {NONE}
 		do
 			create a_op_env
 			local_cache_path := a_path
+			clr_version := a_clr_version
 			-- Add trailing directory separator if needed.
 			if not (local_cache_path.item (local_cache_path.count) = a_op_env.Directory_separator) then
 				local_cache_path.append (a_op_env.Directory_separator.out)
 			end	
+			local_cache_path.append (clr_version)
+			local_cache_path.append_character ('\')
 		end
-
+		
 	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `ca' types.
-
 		local
 			relative_path, a_absolute_path: STRING
 			a_dir: DIRECTORY
@@ -56,17 +58,17 @@ feature {NONE}
 			end
 			Result := a_absolute_path
 		end
-
+		
 	local_info_path: STRING is
 			-- Absolute path of the info xml file.
 		once
 			create Result.make (local_cache_path.count + info_path.count)
 			Result.append (local_cache_path + info_path)
 		end
-
+		
 	local_cache_path: STRING
 		-- Path to local cache path.
-
+		
 	local_info: LOCAL_CACHE_INFO is
 			-- Information on local assembly cache content
 			-- May be Void if not cache is present.
@@ -80,26 +82,19 @@ feature {NONE}
 			end
 		end
 
-	prefix_lookup: HASH_TABLE [STRING, STRING] is
-			-- Used to get a prefix from an assembly name.
-		once
-			create Result.make (5)
-			Result.compare_objects
-		end
-
-	total_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY_INFO] is
+	total_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
 			-- Array of consumed assemblies from both local and global caches.
 		local
-			a_info_assemblies, a_local_info_assemblies: ARRAY [CONSUMED_ASSEMBLY_INFO]
+			a_info_assemblies, a_local_info_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			a_local_info: LOCAL_CACHE_INFO
 			i, a_count: INTEGER
 		do
 			if is_initialized then
-				a_info_assemblies := info.assemblies_info
+				a_info_assemblies := info.assemblies
 				a_count := a_info_assemblies.count
 				a_local_info := local_info
 				if a_local_info /= Void then
-					a_local_info_assemblies := local_info.assemblies_info
+					a_local_info_assemblies := local_info.assemblies
 					a_count := a_count + a_local_info_assemblies.count
 				end
 
@@ -126,6 +121,12 @@ feature {NONE}
 			end
 		end
 
+	prefix_lookup: HASH_TABLE [STRING, STRING] is
+			-- Used to get a prefix from an assembly name.
+		once
+			create Result.make (5)
+			Result.compare_objects
+		end
 
 feature -- Conversion
 

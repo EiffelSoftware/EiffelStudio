@@ -231,6 +231,7 @@ feature {NONE} -- Implementation
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
 	is_selected_implies_selected_items_count_equals_count: is_selected implies selected_items.count = count
+	tree_disabled_in_parent_implies_no_subrows: parent /= Void and then not parent.is_tree_enabled implies subrow_count = 0
 
 end
 

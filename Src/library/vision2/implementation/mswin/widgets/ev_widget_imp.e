@@ -861,7 +861,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_mouse_wheel (delta, x_pos, y_pos: INTEGER) is
+	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel received.
 		do			
 			if mouse_wheel_actions_internal /= Void then

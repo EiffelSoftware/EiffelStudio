@@ -98,44 +98,16 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			propname, propvalue: C_STRING
 			color_struct: POINTER
 			tempbool: BOOLEAN
-			font_weight: INTEGER
 			font_desc: POINTER
 		do
 			
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
 			
 			if internal_font_imp /= Void then
-				inspect
-					internal_font_imp.weight
-				when
-					feature {EV_FONT_CONSTANTS}.weight_bold
-				then
-					font_weight := pango_weight_bold
-				when
-					feature {EV_FONT_CONSTANTS}.weight_regular
-				then
-					font_weight := pango_weight_normal
-				when
-					feature {EV_FONT_CONSTANTS}.weight_thin
-				then
-					font_weight := pango_weight_ultra_light
-				when
-					feature {EV_FONT_CONSTANTS}.weight_black
-				then
-					font_weight := pango_weight_heavy
-				end
-
-				font_desc := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_new
-				create propvalue.make (internal_font_imp.pango_family_string )
-				if internal_font_imp.shape_string.is_equal ("o") then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_style (font_desc, 2)
-				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_desc, propvalue.item)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_desc, internal_font_imp.height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_weight (font_desc, font_weight)
+				font_desc := internal_font_imp.font_description_from_values
 				create propname.make ("font-desc")
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set (Result, propname.item, font_desc, default_pointer)
-				
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_desc)
 			end
 
 			if internal_color_imp /= Void then
@@ -162,14 +134,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	pango_weight_ultra_light: INTEGER is 200
-	pango_weight_light: INTEGER is 300
-	pango_weight_normal: INTEGER is 200
-	pango_weight_bold: INTEGER is 700
-	pango_weight_ultrabold: INTEGER is 800
-	pango_weight_heavy: INTEGER is 900
-		-- Pango font weight constants
 
 
 	internal_font_imp: EV_FONT_IMP

@@ -119,6 +119,9 @@ feature -- Error
 	
 	error_line: INTEGER
 			-- Error line
+			
+	error_byte: INTEGER
+			-- Error byte position
 
 feature -- Status Setting
 
@@ -362,6 +365,7 @@ feature -- Commands
 				error_description := l_parser.last_error_extended_description
 				error_column := l_parser.column
 				error_line := l_parser.line
+				error_byte := l_parser.byte_position
 				Result := Void
 			end
 		end

@@ -1,10 +1,30 @@
-To run EiffelBuild set up licence as per environment manual.
-Copy XeiffelBuild to the app default directory for X11.
+EiffelBuild 4.2
+===============
 
-	This is normally /usr/lib/X11/app_defaults
+Installation
+------------
 
-If you are unable to do this then you will need to load
-the defaults using the following command.
+- Set environment variable EIFFEL4
 
-		xrdb -load XeiffelBuild
+for example, setenv EIFFEL4 /usr/local/Eiffel4
+
+
+- Set environment variable PLATFORM according to your platform.
+
+for example, setenv PLATFORM linux-elf
+
+
+- Untar or copy the files into EIFFEL4 directory.
+
+cd $EIFFEL4
+gunzip -c eiffelbuild-4.2.tar.gz | tar xvf -
+
+
+- Add directory $EIFFEL4/build/spec/$PLATFORM into your path
+
+
+- Run EiffelBuild
+
+ebuild
+
 

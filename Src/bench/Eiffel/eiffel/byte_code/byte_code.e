@@ -700,7 +700,7 @@ feature -- Byte code generation
 
 							if gen_type /= Void then
 								gen_type.make_gen_type_byte_code 
-										(Temp_byte_code_array)
+										(Temp_byte_code_array, true)
 							end
 							Temp_byte_code_array.append_short_integer(-1)
 						end

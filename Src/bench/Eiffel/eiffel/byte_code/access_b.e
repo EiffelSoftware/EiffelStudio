@@ -588,9 +588,8 @@ feature -- Byte code generation
 				ba.append_short_integer (cl_type.type_id - 1)
 
 				gen_type ?= cl_type
-
 				if gen_type /= Void then
-					gen_type.make_gen_type_byte_code (ba)
+					gen_type.make_gen_type_byte_code (ba, true)
 				end
 				ba.append_short_integer (-1)
 			end

@@ -64,6 +64,19 @@ feature -- Generic conformance
 		deferred
 		end
 
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+			-- Additional info for creation of generic
+			-- types with anchored parameters.
+		do
+			!!Result.make (0)
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+			-- Additional info for creation of generic
+			-- types with anchored parameters.
+		do
+		end
+
 	type_to_create : CL_TYPE_I is
 			-- Type of this info.
 		deferred

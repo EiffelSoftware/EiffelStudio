@@ -4,7 +4,10 @@ class CREATE_ARG
 
 inherit
 
-	CREATE_INFO;
+	CREATE_INFO
+		redefine
+			gen_type_string, make_gen_type_byte_code
+		end
 	SHARED_GENERATION_CONSTANTS
 
 feature 
@@ -65,7 +68,7 @@ feature -- Byte code generation
 			ba.append_short_integer (cl_type_i.type_id - 1);
 				-- Generics (if any)
 			if gen_type /= Void then
-				gen_type.make_gen_type_byte_code (ba);
+				gen_type.make_gen_type_byte_code (ba, True);
 			end
 			ba.append_short_integer (-1);
 				-- Argument position
@@ -108,6 +111,23 @@ feature -- Generic conformance
 
 			Result.append_character (')');
 		end;
+
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+
+		do
+			!!Result.make (0)
+			Result.append_integer (-11)
+			Result.append (", RTCA(arg")
+			Result.append_integer (position)
+			Result.append (",-10), ")
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append_short_integer (-11)
+			ba.append_short_integer (position)
+		end
 
 	type_to_create : CL_TYPE_I is
 

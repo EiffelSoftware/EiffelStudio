@@ -248,7 +248,7 @@ rt_shared void map_reset(int emergency)
 	/* At the end of a cloning operation, the stack is reset (i.e. emptied)
 	 * and a consistency check is made to ensure it is really empty.
 	 */
-
+	EIF_GET_CONTEXT
 	struct stchunk *next;	/* Next chunk in stack list */
 	struct stchunk *cur;	/* Current chunk in stack list */
 
@@ -279,6 +279,7 @@ rt_shared void map_reset(int emergency)
 	 */
 
 	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJ pointers */
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef DEBUG

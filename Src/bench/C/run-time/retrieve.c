@@ -828,7 +828,7 @@ rt_private void rt_clean(void)
 	/* Clean the data structure before raising an exception of code `code'
 	/* after having cleaned the hash table */
 	/* and allocated memory and reset function pointers. */
-
+	EIF_GET_CONTEXT
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
 	if (rt_table != (struct htable *) 0) {
@@ -882,6 +882,7 @@ rt_private void rt_clean(void)
 	}
 	free_sorted_attributes();
 	rt_reset_retrieve();
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void rt_update1 (register char *old, register EIF_OBJ new)

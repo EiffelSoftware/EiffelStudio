@@ -174,6 +174,7 @@ shared char *eif_spset();				/* Set special Eiffel object */
 shared int split_block();				/* Split a block (return length) */
 shared void lxtract();					/* Extract a block from free list */
 shared char *gmalloc();					/* Wrapper to xmalloc */
+shared char *get_to_from_core();		/* Get a free eiffel chunk from kernel */
 
 #ifdef HAS_SMART_MMAP
 extern Caddr_t mmap();
@@ -797,6 +798,16 @@ register5 union overhead *hlist[];
 	return set_up(selected, nbytes);
 }
 
+shared char *get_to_from_core (nbytes)
+unsigned int nbytes;
+{
+	/* For the partial scavenging algorithm, gets a new free chunk for
+	 * the to_space.
+	 */
+
+	return allocate_from_core (nbytes, e_hlist);
+}
+
 private char *allocate_from_core(nbytes, hlist)
 unsigned int nbytes;
 union overhead *hlist[];
@@ -1261,6 +1272,21 @@ private int free_last_chunk()
 	cklst.ck_tail = last_desc.ck_prev;
 	if (last_desc.ck_prev == (struct chunk *) 0)
 		cklst.ck_head = (struct chunk *) 0;
+
+	/* Now the tail has been updated, update the new last block so that
+	 * its ck_next does not point to the removed chunk anymore.
+	 * Note that the previous chunk of same type has been updated, but
+	 * not the previous chunk (which might not be of same type).
+	 * The code is not optmized. I just try to fix a bug here.
+	 * It fixes malloc-free-collect-coalesc.
+	 * -- Fabrice
+	 */
+
+	if (last_desc.ck_prev != (struct chunk *) 0)
+	{
+		if (last_desc.ck_prev->ck_next == last_chk)
+			last_desc.ck_prev->ck_next = (struct chunk *) 0;
+	};
 
 	/* The garbage collector keeps track of 'last_from', the latest chunk which
 	 * has been scavenged in the partial scavenging collection cycle. If the

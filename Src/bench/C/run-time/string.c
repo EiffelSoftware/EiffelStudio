@@ -374,27 +374,21 @@ rt_public void str_upper(register char *str, int l)
 	}
 }
 
-/*
- * Comparaison and copy.
- */
-
 rt_public int str_cmp(register char *str1, register char *str2, int l1, int l2)
 {
 	/* Compare the two strings 'str1' and 'str2'.
 	 * Return the sign of 'str1 - str2'.
 	 */
 
-	register3 int c1;
-	register4 int c2;
-
-	for (; l1 > 0 && l2 > 0; l1--, l2--) {
-		c1 = *str1++;
-		c2 = *str2++;
-		if (c1 != c2)
-			return c1 > c2 ? 1 : -1;
+	if (l2 == l1)
+		return (strncmp (str1, str2, l1) > 0);
+	else {
+		if (l2 < l1) 
+			return (strncmp (str1, str2, l2) >= 0);
+		else
+			return (strncmp (str1, str2, l1) > 0);
 	}
 
-	return (l1 + l2) == 0 ? 0 : (l1 > l2 ? 1 : -1);
 }
 
 rt_public void str_cpy(char *to, char *from, int len)

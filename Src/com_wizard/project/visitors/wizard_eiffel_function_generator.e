@@ -62,16 +62,20 @@ feature {NONE} -- Implementation
 
 					if pointed_descriptor /= Void then
 						visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+						add_enumeration_comments ("Result", pointed_descriptor.pointed_data_type_descriptor, visitor)
 					else
 						visitor.visit (arguments.item.type)
+						add_enumeration_comments ("Result", arguments.item.type, visitor)
 					end
 					feature_writer.set_result_type (visitor.eiffel_type)
+					
 				else
 					tmp_string := clone (arguments.item.name)
 					tmp_string.append (Colon)
 					tmp_string.append (Space)
 					tmp_string.append (visitor.eiffel_type)
 					feature_writer.add_argument (tmp_string)
+					add_enumeration_comments (arguments.item.name, arguments.item.type, visitor)
 				end
 				visitor := Void
 				arguments.forth
@@ -87,6 +91,39 @@ feature {NONE} -- Implementation
 
 		end
 
+	add_enumeration_comments (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
+				a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Add coments for enumeration types.
+		local
+			a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			an_index: INTEGER
+			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
+			a_comment: STRING
+		do
+			if a_visitor.is_enumeration then
+				a_user_defined_descriptor ?= a_type
+				if (a_user_defined_descriptor /= Void) then
+					an_index := a_user_defined_descriptor.type_descriptor_index
+					a_type_descriptor := a_user_defined_descriptor.library_descriptor.descriptors.item (an_index)
+					if (feature_writer.comment = Void) then
+						create a_comment.make (0)
+						feature_writer.set_comment (a_comment)
+					end
+					if not feature_writer.comment.empty then
+						feature_writer.comment.append ("%N%T%T%T-- ")
+					end
+					create a_comment.make (0)
+					a_comment.append ("See ")
+					a_comment.append (a_type_descriptor.eiffel_class_name)
+					a_comment.append (" for possible ")
+					a_comment.append (Back_quote)
+					a_comment.append (a_name)
+					a_comment.append (Single_quote)
+					a_comment.append (" values.")
+					feature_writer.comment.append (a_comment)
+				end
+			end
+		end
 
 	set_feature_assertions is
 			-- Set precondition.

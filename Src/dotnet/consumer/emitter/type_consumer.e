@@ -117,7 +117,10 @@ feature {NONE} -- Initialization
 --			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 --					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public)
 
-			internal_constructors := t.get_constructors
+			internal_constructors := t.get_constructors_binding_flags (
+				feature {BINDING_FLAGS}.instance | feature {BINDING_FLAGS}.public |
+				feature {BINDING_FLAGS}.non_public)
+
 			internal_referenced_type := referenced_type_from_type (t)
 			
 			create properties_and_events.make

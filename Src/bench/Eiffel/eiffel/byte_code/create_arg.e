@@ -10,7 +10,6 @@ inherit
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
-			generate_reverse,
 			generate_cid_array, generate_cid_init
 		end
 
@@ -48,17 +47,13 @@ feature -- C code generation
 			end
 		end
 
-	generate is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
 		local
 			cl_type_i: CL_TYPE_I
 			gen_type_i: GEN_TYPE_I
-			buffer: GENERATION_BUFFER
 		do
-			buffer := context.buffer
-			
-			buffer.put_string ("RTLNSMART(")
 			cl_type_i := type_to_create
 			gen_type_i ?= cl_type_i
 			buffer.put_string ("RTCA(arg")
@@ -76,7 +71,6 @@ feature -- C code generation
 					buffer.put_type_id (cl_type_i.type_id)
 				end
 			end
-			buffer.put_character (')')
 			buffer.put_character (')')
 		end
 
@@ -194,7 +188,8 @@ feature -- Generic conformance
 			buffer.put_integer (position)
 			buffer.put_character (',')
 			buffer.put_integer (None_type)
-			buffer.put_string ("), ")
+			buffer.put_character (')')
+			buffer.put_character (',')
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
@@ -236,21 +231,6 @@ feature -- Generic conformance
 		do
 			type_i := context.byte_code.arguments.item (position)
 			Result ?= context.creation_type (type_i)
-		end
-
-feature -- Assignment attempt
-
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
-		local
-			cl_type_i : CL_TYPE_I
-		do
-			cl_type_i := type_to_create
-			buffer.put_string ("RTCA(arg")
-			buffer.put_integer (position)
-			buffer.put_string (gc_comma)
-			buffer.put_integer (cl_type_i.generated_id (final_mode))
-			buffer.put_character (')')
 		end
 
 end -- class CREATE_ARG

@@ -8,7 +8,7 @@ class CREATE_FEAT
 inherit
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code, generate_reverse,
+			generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init, is_explicit
 		end
 
@@ -89,19 +89,15 @@ feature -- C code generation
 			end
 		end
 
-	generate is
-			-- Generate the creation type of the feature.
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+			-- Generate the creation type id of the feature.
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
 			gen_type: GEN_TYPE_I
-			buffer: GENERATION_BUFFER
 		do
-			buffer := context.buffer
-			buffer.put_string ("RTLNSMART(")
-
-			if context.final_mode then
+			if final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
 				if table = Void then
@@ -129,12 +125,12 @@ feature -- C code generation
 						buffer.put_integer (context.current_type.generated_id (context.final_mode))
 						buffer.put_character (',')
 						buffer.put_string (table_name)
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						buffer.put_string (table_name)
 						buffer.put_string ("_gen_type")
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						context.generate_current_dftype
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						buffer.put_type_id (table.min_type_id)
 						buffer.put_character (')')
 
@@ -169,7 +165,6 @@ feature -- C code generation
 				context.Current_register.print_register
 				buffer.put_character (')')
 			end
-			buffer.put_character (')')
 		end
 
 feature -- IL code generation
@@ -308,14 +303,15 @@ feature -- Genericity
 						buffer.put_integer (context.current_type.generated_id (context.final_mode))
 						buffer.put_character (',')
 						buffer.put_string (table_name)
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						buffer.put_string (table_name)
 						buffer.put_string ("_gen_type")
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						context.generate_current_dftype
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						buffer.put_type_id (table.min_type_id)
-						buffer.put_string ("), ")
+						buffer.put_character (')')
+						buffer.put_character (',')
 
 							-- Side effect. This is not nice but
 							-- unavoidable.
@@ -346,7 +342,8 @@ feature -- Genericity
 
 				buffer.put_string (gc_comma)
 				context.Current_register.print_register
-				buffer.put_string ("), ")
+				buffer.put_character (')')
+				buffer.put_character (',')
 			end
 		end
 
@@ -385,12 +382,12 @@ feature -- Genericity
 							dummy := idx_cnt.next
 						end
 					else
-						buffer.put_string ("0, ")
+						buffer.put_string ("0,")
 						dummy := idx_cnt.next
 					end
 				end
 			else
-				buffer.put_string ("0, ")
+				buffer.put_string ("0,")
 				dummy := idx_cnt.next
 			end
 		end
@@ -434,12 +431,12 @@ feature -- Genericity
 						buffer.put_integer (context.current_type.generated_id (context.final_mode))
 						buffer.put_character (',')
 						buffer.put_string (table_name)
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						buffer.put_string (table_name)
 						buffer.put_string ("_gen_type")
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						context.generate_current_dftype
-						buffer.put_string (", ")
+						buffer.put_character (',')
 						buffer.put_type_id (table.min_type_id)
 						buffer.put_string (");")
 						buffer.put_new_line
@@ -514,79 +511,6 @@ feature -- Genericity
 				if table /= Void and then table.has_one_type then
 					Result ?= table.first.type
 				end
-			end
-		end
-
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
-		local
-			table: POLY_TABLE [ENTRY]
-			table_name: STRING
-			rout_info: ROUT_INFO
-		do
-			if context.final_mode then
-				table := Eiffel_table.poly_table (routine_id)
-
-				if table = Void then
-					-- Creation with `like feature' where
-					-- feature is deferred and has no effective
-					-- version anywhere.
-					-- Create anything - cannot be called anyway
-
-					buffer.put_string ("0")
-				else
-					-- Feature has at least one effective version
-					if table.has_one_type then
-							-- There is a table, but with only one type
-
-						buffer.put_type_id (table.first.feature_type_id)
-					else
-							-- Attribute is polymorphic
-						table_name := Encoder.type_table_name (routine_id)
-
-						buffer.put_string ("RTFCID2(")
-						buffer.put_integer (context.current_type.generated_id (context.final_mode))
-						buffer.put_character (',')
-						buffer.put_string (table_name)
-						buffer.put_string (", ")
-						buffer.put_string (table_name)
-						buffer.put_string ("_gen_type")
-						buffer.put_string (", ")
-						context.generate_current_dftype
-						buffer.put_string (", ")
-						buffer.put_type_id (table.min_type_id)
-						buffer.put_character (')')
-
-							-- Side effect. This is not nice but
-							-- unavoidable.
-							-- Mark routine id used
-						Eiffel_table.mark_used (routine_id)
-							-- Remember extern declaration
-						Extern_declarations.add_type_table (table_name)
-					end
-				end
-			else
-				if
-					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
-				then
-					buffer.put_string ("RTWPCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
-					buffer.put_string (gc_comma)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string (gc_comma)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.current_type.associated_class_type.static_type_id)
-					buffer.put_string (gc_comma)
-					buffer.put_integer (feature_id)
-				end
-
-				buffer.put_string (gc_comma)
-				context.Current_register.print_register
-				buffer.put_string (")")
 			end
 		end
 

@@ -9,7 +9,7 @@ class
 inherit
 	CREATE_TYPE
 		redefine
-			generate, generate_gen_type_conversion, generate_reverse,
+			generate, generate_type_id, generate_gen_type_conversion,
 			generate_cid, type_to_create, make_byte_code,
 			analyze, generate_il, type, is_explicit
 		end
@@ -31,24 +31,18 @@ feature -- C code generation
 		end
 
 	generate is
-			-- Generate formal creation type
+			-- Generate creation type
 		local
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-
-			buffer.put_string ("RTLNSMART(RTGPTID(")
-			buffer.put_integer (context.current_type.generated_id (context.final_mode))
-			buffer.put_character (',')
-			context.current_register.print_register
-			buffer.put_character (',')
-			buffer.put_integer (type.position)
-			buffer.put_character (')')
+			buffer.put_string ("RTLNSMART(")
+			generate_type_id (buffer, context.final_mode)
 			buffer.put_character (')')
 		end
 
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-			-- Generate computed type of creation for assignment attempt.
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+			-- Generate formal creation type id
 		do
 			buffer.put_string ("RTGPTID(")
 			buffer.put_integer (context.current_type.generated_id (final_mode))
@@ -101,6 +95,8 @@ feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 		do
+			generate_type_id (buffer, final_mode)
+			buffer.put_character (',')
 		end
 
 	type_to_create : CL_TYPE_I is

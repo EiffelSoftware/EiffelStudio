@@ -257,18 +257,19 @@ feature -- Interface
 						if date.year.out.count = 1 then
 							Result.append ("000")
 							Result.append (date.year.out)
-						end
-						if date.year.out.count = 2 then
+						elseif date.year.out.count = 2 then
 							Result.append ("00")
 							Result.append (date.year.out)
-						end
-						if date.year.out.count = 3 then
+						elseif date.year.out.count = 3 then
 							Result.append ("0")
 							Result.append (date.year.out)
 						end
 					end
 				when 5 then 
 					int := date.year - base_century
+					if int < 10 then
+						Result.append ("0")
+					end
 					Result.append (int.out)
 				when 6 then
 					Result.append (date.month.out)

@@ -30,11 +30,15 @@ inherit
 			set_position as wel_set_value,
 			height as wel_height,
 			width as wel_width,
-			move as move_to,
 			enabled as is_sensitive,
 			item as wel_item,
 			set_step as wel_set_step,
-			set_range as wel_set_range
+			set_range as wel_set_range,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			move_and_resize as wel_move_and_resize,
+			resize as wel_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -111,8 +115,8 @@ feature -- Status setting
 			new_style := clear_flag (style, Pbs_smooth)
 
 			wel_imp ?= parent_imp
-			tx := x
-			ty := y
+			tx := x_position
+			ty := y_position
 			tw := width
 			th := height
 			--| FIXME wel_destroy
@@ -134,8 +138,8 @@ feature -- Status setting
 			new_style := set_flag (style, Pbs_smooth)
 
 			wel_imp ?= parent_imp
-			tx := x
-			ty := y
+			tx := x_position
+			ty := y_position
 			tw := width
 			th := height
 			--| FIXME wel_destroy
@@ -235,6 +239,18 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/17 20:51:33  rogers
+--| renamed
+--| 	x -> x_position,
+--| 	y -> y_position,
+--| 	move -> wel_move,
+--| 	move_and_resize -> wel_move_and_Resize,
+--| 	resize -> wel_resize
+--| from
+--| 	WEL_PROGRESS_BAR
+--|
+--| Changed any references accordingly.
+--|
 --| Revision 1.13  2000/02/15 03:20:32  brendel
 --| Changed order of initialization. All gauges are now initialized in
 --| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.

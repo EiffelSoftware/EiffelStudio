@@ -32,7 +32,12 @@ inherit
 		export
 			{NONE} all
 		end
-
+	
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+		
 create
     make
     
@@ -365,7 +370,7 @@ feature -- Validation
 	        non_void_cluster_name: a_cluster_name /= Void
 	        valid_cluter_name: is_valid_cluster_name (a_cluster_name)
 	    do
-	        Result := not clusters_table.has (a_cluster_name)
+	        Result := eiffel_universe.cluster_of_name (a_cluster_name) = Void
 	    end
 	    
 	is_valid_cluster_name (a_name: STRING): BOOLEAN is
@@ -379,10 +384,8 @@ feature -- Validation
 	has_cluster (a_cluster_name: STRING): BOOLEAN is
 	        -- does cluster 'a_cluster_name' exists?
 	    do
-	        clusters_table.compare_objects
-	        Result := clusters_table.has (a_cluster_name)
+	        Result := not is_cluster_name_available (a_cluster_name)
 	    end
-    
 
 feature {NONE} -- Implementation        
 

@@ -18,7 +18,7 @@ feature -- Access
 	file_name: STRING is
 			-- Name of the lace ifle
 		do
-			Result := Eiffel_project.lace_file_name
+			Result := Eiffel_ace.file_name
 		end;
  
 	click_list: CLICK_STONE_ARRAY is
@@ -64,7 +64,7 @@ feature -- Setting
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name' of lace.
 		do
-			Eiffel_project.set_lace_file_name (s)
+			Eiffel_ace.set_file_name (s)
 		end;
  
 feature -- Update

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="xmlparse"
 	SccProjectName=""
 	SccLocalPath="">
@@ -38,8 +38,6 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
 				OutputFile="..\bin\xmlparse.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -47,14 +45,16 @@
 				SubSystem="2"
 				EntryPointSymbol="DllMain"
 				BaseAddress="0x20000000"
-				ImportLibrary=".\MinSize/xmlparse.lib"/>
+				ImportLibrary=".\MinSize/xmlparse.lib"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\MinSize/xmlparse.tlb"/>
+				TypeLibraryName=".\MinSize/xmlparse.tlb"
+				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -68,7 +68,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -79,6 +85,7 @@
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\xmltok,..\xmlwf"
 				PreprocessorDefinitions="XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);NDEBUG;XML_NS;WIN32;_WINDOWS;XML_DTD"
@@ -97,22 +104,22 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
 				OutputFile="..\bin\xmlparse.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				ProgramDatabaseFile=".\Release/xmlparse.pdb"
 				SubSystem="2"
 				BaseAddress="0x20000000"
-				ImportLibrary=".\Release/xmlparse.lib"/>
+				ImportLibrary=".\Release/xmlparse.lib"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/xmlparse.tlb"/>
+				TypeLibraryName=".\Release/xmlparse.tlb"
+				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -126,7 +133,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
@@ -154,23 +167,23 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
 				OutputFile="..\dbgbin\xmlparse.dll"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/xmlparse.pdb"
 				SubSystem="2"
 				BaseAddress="0x20000000"
-				ImportLibrary=".\Debug/xmlparse.lib"/>
+				ImportLibrary=".\Debug/xmlparse.lib"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/xmlparse.tlb"/>
+				TypeLibraryName=".\Debug/xmlparse.tlb"
+				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -184,9 +197,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -194,49 +215,115 @@
 			<File
 				RelativePath="..\xmltok\dllmain.c">
 				<FileConfiguration
+					Name="MinSize|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="1"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XML_MIN_SIZE;XML_WINLIB;XMLPARSEAPI=__declspec(dllexport);NDEBUG;WIN32;_WINDOWS;$(NoInherit)"/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"/>
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);NDEBUG;XML_NS;WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"/>
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="_DEBUG;XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\xmlparse.c">
+				RelativePath="xmlparse.c">
+				<FileConfiguration
+					Name="MinSize|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="1"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XML_MIN_SIZE;XML_WINLIB;XMLPARSEAPI=__declspec(dllexport);NDEBUG;WIN32;_WINDOWS;$(NoInherit)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);NDEBUG;XML_NS;WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="_DEBUG;XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\xmltok\xmlrole.c">
 				<FileConfiguration
+					Name="MinSize|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="1"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XML_MIN_SIZE;XML_WINLIB;XMLPARSEAPI=__declspec(dllexport);NDEBUG;WIN32;_WINDOWS;$(NoInherit)"/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"/>
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);NDEBUG;XML_NS;WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"/>
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="_DEBUG;XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\xmltok\xmltok.c">
 				<FileConfiguration
+					Name="MinSize|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="1"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XML_MIN_SIZE;XML_WINLIB;XMLPARSEAPI=__declspec(dllexport);NDEBUG;WIN32;_WINDOWS;$(NoInherit)"/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"/>
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);NDEBUG;XML_NS;WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
-						Name="VCCLCompilerTool"/>
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions="_DEBUG;XMLTOKAPI=__declspec(dllimport);XMLPARSEAPI=__declspec(dllexport);WIN32;_WINDOWS;XML_DTD;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
@@ -244,7 +331,7 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
-				RelativePath=".\xmlparse.h">
+				RelativePath="xmlparse.h">
 			</File>
 		</Filter>
 		<Filter

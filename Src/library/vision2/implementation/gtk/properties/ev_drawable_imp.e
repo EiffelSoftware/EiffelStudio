@@ -228,7 +228,6 @@ feature -- Element change
 
 	set_clip_area (an_area: EV_RECTANGLE) is
 			-- Set an area to clip to.
-			-- Set to Void when no clipping should be applied.
 		local
 			rectangle_struct: POINTER
 		do

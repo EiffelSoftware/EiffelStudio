@@ -125,8 +125,8 @@ feature -- Status setting
 				check
 					font_not_void: fw /= Void
 				end
-				w := w + fw.string_width (Current, text)
-				h := h.max (7 * fw.string_height (Current, text) // 4 )
+				w := w + fw.string_width (text)
+				h := h.max (7 * fw.height // 4 )
 			end
 
 			-- Finaly, we set the minimum values.

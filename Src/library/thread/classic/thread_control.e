@@ -48,7 +48,7 @@ feature -- Sleep
 		require
 			non_negative_nanoseconds: nanoseconds >= 0
 		external
-			"C | %"eif_threads.h%""
+			"C blocking use %"eif_threads.h%""
 		alias
 			"eif_thr_sleep"
 		end

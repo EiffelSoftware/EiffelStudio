@@ -18,6 +18,18 @@ feature {NONE}
 	Sk_char: INTEGER is 0x08000000
 			-- Defined in eif_struct.h as SK_CHAR
 
+	sk_uint8: INTEGER is 0x30000000
+			-- Define in eif_struct.h as SK_UINT8
+
+	sk_uint16: INTEGER is 0x34000000
+			-- Define in eif_struct.h as SK_UINT16
+
+	sk_uint32: INTEGER is 0x38000000
+			-- Define in eif_struct.h as SK_UINT32
+
+	sk_uint64: INTEGER is 0x3c000000
+			-- Define in eif_struct.h as SK_UINT64
+
 	Sk_int8: INTEGER is 0x0c000000
 			-- Defined in eif_struct.h as SK_INT8
 

@@ -153,6 +153,14 @@ feature -- IL code generation
 					type_kind := il_i2
 				when C_int64 then
 					type_kind := il_i8
+				when c_uint8 then
+					type_kind := il_u1
+				when c_uint16 then
+					type_kind := il_u2
+				when c_uint32 then
+					type_kind := il_u2
+				when c_uint64 then
+					type_kind := il_u8
 				when C_real32 then
 					type_kind := il_r4
 				when C_real64 then

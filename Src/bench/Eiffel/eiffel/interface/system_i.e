@@ -381,6 +381,10 @@ feature -- Properties
 
 			local_workbench.change_class (real_64_class)
 			local_workbench.change_class (real_32_class)
+			local_workbench.change_class (natural_8_class)
+			local_workbench.change_class (natural_16_class)
+			local_workbench.change_class (natural_32_class)
+			local_workbench.change_class (natural_64_class)
 			local_workbench.change_class (integer_8_class)
 			local_workbench.change_class (integer_16_class)
 			local_workbench.change_class (integer_32_class)
@@ -412,6 +416,10 @@ feature -- Properties
 			any_class.compiled_class.record_precompiled_class_in_system
 			real_64_class.compiled_class.record_precompiled_class_in_system
 			real_32_class.compiled_class.record_precompiled_class_in_system
+			natural_8_class.compiled_class.record_precompiled_class_in_system
+			natural_16_class.compiled_class.record_precompiled_class_in_system
+			natural_32_class.compiled_class.record_precompiled_class_in_system
+			natural_64_class.compiled_class.record_precompiled_class_in_system
 			integer_8_class.compiled_class.record_precompiled_class_in_system
 			integer_16_class.compiled_class.record_precompiled_class_in_system
 			integer_32_class.compiled_class.record_precompiled_class_in_system
@@ -1178,6 +1186,10 @@ end
 			any_class.compiled_class.mark_class (marked_classes)
 			real_64_class.compiled_class.mark_class (marked_classes)
 			real_32_class.compiled_class.mark_class (marked_classes)
+			natural_8_class.compiled_class.mark_class (marked_classes)
+			natural_16_class.compiled_class.mark_class (marked_classes)
+			natural_32_class.compiled_class.mark_class (marked_classes)
+			natural_64_class.compiled_class.mark_class (marked_classes)
 			integer_8_class.compiled_class.mark_class (marked_classes)
 			integer_16_class.compiled_class.mark_class (marked_classes)
 			integer_32_class.compiled_class.mark_class (marked_classes)
@@ -2618,6 +2630,22 @@ feature -- Dead code removal
 
 				-- Protection of feature `set_item' of `reference DOUBLE'
 			l_class := real_64_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_8'
+			l_class := natural_8_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_16'
+			l_class := natural_16_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_32'
+			l_class := natural_32_class.compiled_class
+			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+
+				-- Protection of feature `set_item' of `reference INTEGER_64'
+			l_class := natural_64_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference INTEGER_8'

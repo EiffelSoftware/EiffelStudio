@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			an_item_not_void: an_item /= Void
 		do
 			control_make (a_parent, "WINFORM_CONTAINER")
-			create winform_container.make_winforms_container_control
+			create winform_container.make
 			an_item.set_parent (winform_container)
 			cwin_set_parent (winform_container.get_handle, item)
 			winform := an_item
@@ -45,7 +45,7 @@ feature {NONE} -- Messages
 		local
 			l_size: DRAWING_SIZE
 		do
-			l_size.make_drawing_size_1 (a_width, a_height)
+			l_size.make_from_width_and_height (a_width, a_height)
 			winform_container.set_size (l_size)
 			winform.set_size (l_size)
 		end

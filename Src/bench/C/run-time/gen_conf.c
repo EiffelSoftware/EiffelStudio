@@ -15,7 +15,6 @@
 #endif
 
 
-
 /*------------------------------------------------------------------*/
 /* Debugging flag. If set, the names of the generated types will be */
 /* output to the file 'logfile'. Simple facility.                   */
@@ -68,7 +67,6 @@ rt_public int16 *rtud_inv = (int16 *) 0;
 /*                                                                  */
 /* Access   : Read/Write (read with macros Deif_bid, Dtype and      */
 /*                        Mapped_flags).                            */
-/*            In multi-threaded mode read with eif_cid_map_acc.     */
 /* Indexing : full type id; RTUD(yes).                              */
 /* Result   : base id; RTUD(yes).                                   */
 /*------------------------------------------------------------------*/
@@ -88,7 +86,6 @@ rt_public int egc_any_dtype = 2; /* Precise value determined in init */
 /*------------------------------------------------------------------*/
 
 typedef struct eif_gen_der {
-
 	long                size;       /* Size of type array/ nr. of bits in BIT type */
 	int16               hcode;      /* Hash code to speedup search */
 	int16               *typearr;   /* Array of types (cid) */
@@ -116,7 +113,6 @@ typedef struct eif_gen_der {
 	char                is_tuple;   /* Is it a TUPLE type? */
 	char                is_array;   /* Is it an ARRAY type? */
 	struct eif_gen_der  *next;      /* Next derivation */
-
 } EIF_GEN_DER;
 /*------------------------------------------------------------------*/
 /* Structure for conformance information. The `lower' ids are the   */
@@ -127,7 +123,6 @@ typedef struct eif_gen_der {
 /*------------------------------------------------------------------*/
 
 typedef struct {
-
 	int16           min_low_id;     /* Minimal lower conforming id */
 	int16           max_low_id;     /* Maximal lower conforming id */
 	int16           min_high_id;    /* Minimal high conforming id */
@@ -140,14 +135,12 @@ typedef struct {
 	unsigned char   *high_comp;     /* Bit table for computed high conf. */
 	unsigned char   slow_comp [8];  /* Small bit table for computed low conf.*/
 	unsigned char   shigh_comp [8]; /* Small bit table for computed high conf.*/
-
 } EIF_CONF_TAB;
 /*------------------------------------------------------------------*/
 /* Structure for ancestor id information.                           */
 /*------------------------------------------------------------------*/
 
 typedef struct {
-
 	int16           min_id;         /* Minimal ancestor id; RTUD(no) */
 	int16           max_id;         /* Maximal ancestor id; RTUD(no) */
 	int16           *map;           /* Ancestor id map.
@@ -158,7 +151,6 @@ typedef struct {
 									   Index : RTUD(no)
 									   Result: RTUD(yes)
 									*/
-
 } EIF_ANC_ID_MAP;
 /*------------------------------------------------------------------*/
 
@@ -210,15 +202,6 @@ rt_private int16 egc_pointer_dtype = -1;
 rt_private int16 tuple_static_type = -1;
 
 /*------------------------------------------------------------------*/
-/* Macros GDtype and GDeif_bid. In multithreaded mode the usual     */
-/* macros Dtype and Deif_bid call eif_cid_map_acc. But we must have */
-/* direct access to eif_cid_map here.                               */
-/*------------------------------------------------------------------*/
-
-#define GDtype(x) (eif_cid_map[(HEADER(x)->ov_flags & EO_TYPE)])
-#define GDeif_bid(x) (eif_cid_map[(x) & EO_TYPE])
-
-/*------------------------------------------------------------------*/
 /* THREADS.                                                         */
 /* Calls to public routines are indirected and protected by a mutex */
 /* The indirection avoids problems with recursive calls.            */
@@ -228,7 +211,6 @@ rt_private int16 tuple_static_type = -1;
 
 rt_private EIF_MUTEX_TYPE   *eif_gen_mutex = (EIF_MUTEX_TYPE *) 0;
 
-rt_public void eifthd_gen_conf_init (int);
 rt_public int16 eifthd_compound_id (int16 *, char *, int16, int16 *);
 rt_public int16 eifthd_final_id (int16, int16 *, int16 **, char *);
 rt_public int16 eifthd_gen_param (int16, char *, int, char *, long *);
@@ -281,17 +263,6 @@ rt_private void eif_put_gen_seq (int16, int16*, int16*, int16);
 
 /*------------------------------------------------------------------*/
 /* Public features protected with a MUTEX.                          */
-/*------------------------------------------------------------------*/
-
-rt_public void eif_gen_conf_init (int max_dtype)
-{
-	EIFMTX_CREATE;
-	EIFMTX_LOCK;
-
-	eifthd_gen_conf_init (max_dtype);
-
-	EIFMTX_UNLOCK;
-}
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int16 *types)
@@ -517,24 +488,9 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	return result;
 }
 /*------------------------------------------------------------------*/
-
-rt_public int eif_cid_map_acc (int idx)
-{
-	int result;
-
-	EIFMTX_LOCK;
-
-	result = (int) eif_cid_map [idx];
-
-	EIFMTX_UNLOCK;
-
-	return result;
-}
-/*------------------------------------------------------------------*/
 /* Rename public features if EIF_THREADS is on.                     */
 /*------------------------------------------------------------------*/
 
-#define eif_gen_conf_init         eifthd_gen_conf_init
 #define eif_compound_id           eifthd_compound_id
 #define eif_final_id              eifthd_final_id
 #define eif_gen_param             eifthd_gen_param
@@ -565,7 +521,16 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	char   *cname;
 	struct eif_par_types **pt;
 
+#ifdef EIF_THREADS
+		/* First we create the mutex */
+	EIFMTX_CREATE;
+		/* Since we want to avoid any locks to happen on the access on 
+		 * eif_cid_map, we make sure that `eif_cid_map' can't be resized
+		 * by giving the maximum size it can have, ie 0x0000FFFF */
+	eif_cid_size = 65535;
+#else
 	eif_cid_size = max_dtype + 32;
+#endif
 	first_gen_id = next_gen_id = max_dtype + 1;
 
 	/* Set `eif_par_table2' if it is null. */
@@ -770,19 +735,19 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char 
 
 	if (gttable != (int16 **) 0)
 	{
-		gtp = gttable [GDtype(Current)];
+		gtp = gttable [Dtype(Current)];
 
 		if ((gtp != (int16 *) 0) && (*(gtp+1) != -1))
 		{
 			*gtp = stype;
 
-			result = eif_compound_id ((int16 *)0, Current, ttable[GDtype(Current)], gtp);
+			result = eif_compound_id ((int16 *)0, Current, ttable[Dtype(Current)], gtp);
 
 			return result;
 		}
 	}
 
-	result = ttable[GDtype(Current)];
+	result = ttable[Dtype(Current)];
 
 	if (result <= -256)        /* expanded */
 		return -256 - result;
@@ -2400,6 +2365,9 @@ rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16 min_id, int16 max_id)
 
 rt_private void eif_expand_tables(int new_size)
 {
+#ifdef EIF_THREADS
+	eif_panic ("Cannot resize Generic conformance tables in multithreaded mode.");
+#else
 	EIF_GEN_DER **new;
 	EIF_CONF_TAB **tab;
 	EIF_ANC_ID_MAP **amap;
@@ -2443,6 +2411,7 @@ rt_private void eif_expand_tables(int new_size)
 	}
 
 	eif_cid_size = new_size;
+#endif
 }
 /*------------------------------------------------------------------*/
 /* Full type name for type `dftype' as C string.                    */
@@ -2862,7 +2831,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	/* Get parent table */
 
-	dtype = GDeif_bid(dftype);
+	dtype = Deif_bid(dftype);
 
 	pt = par_info (RTUD_INV(dtype));
 
@@ -3071,7 +3040,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 
 	/* Get parent table */
 
-	dtype = GDeif_bid(dftype);
+	dtype = Deif_bid(dftype);
 
 	pt = par_info (RTUD_INV(dtype));
 

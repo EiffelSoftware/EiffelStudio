@@ -13,6 +13,9 @@
 	executable.
 */
 
+/*
+doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage collection routines">
+*/
 
 #include "eif_portable.h"
 #include "eif_project.h" /* for egc_prof_enabled */
@@ -48,7 +51,7 @@
 #include "eif_option.h"		/* For exitprf */
 #endif
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-#include "eif_object_id.h"	/* For the object id and separate stacks */
+#include "rt_object_id.h"	/* For the object id and separate stacks */
 #endif
 #include "eif_hector.h"
 #include "rt_main.h"
@@ -78,10 +81,15 @@ extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE);
 /*#define DEBUG 63 */				/* Debugging level */
 /*#define MEMCHK		*/		/* Activate memory checking */
 /*#define MEM_STAT		*/		/* Activate Eiffel memory monitoring */
-/* Internal data structure used to monitor the activity of the garbage
- * collection process and help the auto-adaptative algorithm in its
- * decisions (heuristics).
- */
+
+/*
+doc:	<attribute name="g_data" return_type="struct gcinfo" export="shared">
+doc:		<summary>Internal data structure used to monitor the activity of the garbage collection process and help the auto-adaptative algorithm in its decisions (heuristics).</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Mostly through `eif_gc_mutex'</synchronization>
+doc:		<fixme>Some access to `g_data' are not protected.</fixme>
+doc:	</attribute>
+*/
 rt_shared struct gacinfo g_data = {			/* Global status */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
@@ -89,6 +97,14 @@ rt_shared struct gacinfo g_data = {			/* Global status */
 	0,			/* gc_to */
 	(char) 0,	/* status */
 };
+
+/*
+doc:	<attribute name="g_stat" return_type="struct gacstat [GST_NBR]" export="shared">
+doc:		<summary>Run-time statistics, one for partial scavenging and one for generational.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 	{
 		0L,		/* mem_used */
@@ -112,16 +128,18 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 	}
 };
 
-/* The following structs are used as stack by the garbage collector.
- * The only public one is the stack for local variables. The others
- * are used internally. All these points to objects which may be moved by
- * the garbage collector or the memory management routines.
- */
 
 #endif /* ISE_GC */
 
 #ifndef EIF_THREADS
 #ifdef ISE_GC
+/*
+doc:	<attribute name="loc_stack" return_type="struct stack" export="shared">
+doc:		<summary>To protect EIF_REFERENCE in C routines through RT_GC_PROTECT/RT_GC_WEAN macros. Used internally by runtime. Content points to ojbects which may be moved by garbage collector or memory management routines.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct stack loc_stack = {			/* Local indirection stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -129,6 +147,14 @@ rt_shared struct stack loc_stack = {			/* Local indirection stack */
 	(EIF_REFERENCE *) 0,			/* st_top */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
+
+/*
+doc:	<attribute name="loc_set" return_type="struct stack" export="public">
+doc:		<summary>To protect Eiffel objects in C generated code. Same purpose as `loc_stack' but only used for C generated code.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack loc_set = {				/* Local variable stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -137,6 +163,13 @@ rt_public struct stack loc_set = {				/* Local variable stack */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 #endif
+/*
+doc:	<attribute name="once_set" return_type="struct stack" export="public">
+doc:		<summary>Keep safe references of once function results which are computed per thread (default behavior).</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack once_set = {			/* Once functions */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -145,25 +178,14 @@ rt_public struct stack once_set = {			/* Once functions */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 #else
-	/* Same as above except that GC keeps track of all thread specific stack to
-	 * perform a GC cycle among all threads */
-#ifdef ISE_GC
-rt_public struct stack_list loc_stack_list = {
-	(int) 0,	/* count */
-	(int) 0,	/* capacity */
-	{NULL}		/* threads_stack */
-};
-rt_public struct stack_list loc_set_list = {
-	(int) 0,	/* count */
-	(int) 0,	/* capacity */
-	{NULL}		/* threads_stack */
-};
-#endif
-rt_public struct stack_list once_set_list = {
-	(int) 0,	/* count */
-	(int) 0,	/* capacity */
-	{NULL}		/* threads_stack */
-};
+/*
+doc:	<attribute name="global_once_set" return_type="struct stack" export="public">
+doc:		<summary>Same as `once_set' but for results that are computed per process.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>We should synchronize insertions. Although it is partially done with `eif_global_once_mutex' this is not perfect as we can easily create a dead lock (for recursive calls on same global once.</fixme>
+doc:	</attribute>
+*/
 rt_public struct stack global_once_set = {			/* Once functions */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -172,27 +194,94 @@ rt_public struct stack global_once_set = {			/* Once functions */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 
+	/* Same as above except that GC keeps track of all thread specific stack to
+	 * perform a GC cycle among all threads */
 #ifdef ISE_GC
-	/* Other containers needed by GC but are not specific to garcol */
-	/* hector.c */
+/*
+doc:	<attribute name="loc_stack_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `loc_stack'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack_list loc_stack_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+
+/*
+doc:	<attribute name="loc_set_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `loc_set'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack_list loc_set_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+#endif
+/*
+doc:	<attribute name="once_set_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `once_set'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack_list once_set_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+#ifdef ISE_GC
+/*
+doc:	<attribute name="hec_stack_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `hec_stack'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack_list hec_stack_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
 };
+
+/*
+doc:	<attribute name="hec_saved_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `hec_saved'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack_list hec_saved_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
 };
 #endif
-
-	/* except.c */
+/*
+doc:	<attribute name="eif_stack_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `eif_stack'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack_list eif_stack_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
 };
+
+/*
+doc:	<attribute name="eif_trace_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `eif_trace'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack_list eif_trace_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
@@ -200,6 +289,13 @@ rt_public struct stack_list eif_trace_list = {
 };
 
 #ifdef WORKBENCH
+/*
+doc:	<attribute name="opstack_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `op_stack'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack_list opstack_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
@@ -210,6 +306,13 @@ rt_public struct stack_list opstack_list = {
 #endif
 
 #ifdef ISE_GC
+/*
+doc:	<attribute name="rem_set" return_type="struct stack" export="private">
+doc:		<summary>Remembered set. Remembers all old objects pointing on new ones.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_set_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_private struct stack rem_set = {			/* Remembered set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -218,6 +321,13 @@ rt_private struct stack rem_set = {			/* Remembered set */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
 
+/*
+doc:	<attribute name="moved_set" return_type="struct stack" export="shared">
+doc:		<summary>Moved objets set. Track all objects allocated outside the scavenge zone.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_set_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_shared struct stack moved_set = {			/* Moved objects set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -225,25 +335,14 @@ rt_shared struct stack moved_set = {			/* Moved objects set */
 	(EIF_REFERENCE *) 0,	/* st_top */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
-	/* Stack containing objects that are not yet traversed because
-	 * it could generate a stack overflow during GC */
-rt_private struct stack overflow_stack_set = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
-};
-	/* Number of elements in `overflow_stack_set' */
-rt_private uint32 overflow_stack_count = 0;
-	/* Current depth of marking calls */
-rt_private uint32 overflow_stack_depth = 0;
-rt_shared uint32 overflow_stack_limit = 0;
 
-	/********************************************************************
-	 * Memory set: Record memory objects in the GS zone.		 		*
-	 * It is traversed to call the 'dispose' routine when it is garbage.*
-	 ********************************************************************/
+/*
+doc:	<attribute name="memory_set" return_type="struct stack" export="public">
+doc:		<summary>Memory set. Track all objects allocated in the scavenge zone which have a `dispose' routine.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_set_mutex for insertion, eif_gc_mutex for manipulating it.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct stack memory_set = 
 {
 	(struct stchunk *) 0,	/* st_hd */
@@ -252,6 +351,49 @@ rt_public struct stack memory_set =
 	(EIF_REFERENCE *) 0,	/* st_top */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
+
+/*
+doc:	<attribute name="overflow_stack_set" return_type="struct stack" export="private">
+doc:		<summary>Stack containing objects that are not yet traversed because it could generate a stack overflow during a GC cycle.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private struct stack overflow_stack_set = {
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
+};
+
+/*
+doc:	<attribute name="overflow_stack_count" return_type="uint32" export="private">
+doc:		<summary>Number of elements in `overflow_stack_set'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private uint32 overflow_stack_count = 0;
+
+/*
+doc:	<attribute name="overflow_stack_depth" return_type="uint32" export="private">
+doc:		<summary>Depth current recursive call to marking routine.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private uint32 overflow_stack_depth = 0;
+
+/*
+doc:	<attribute name="overflow_stack_limit" return_type="uint32" export="shared">
+doc:		<summary>Limit on `overflow_stack_depth'. When limit is reached, recursive calls are stopped and current element is stored in `overflow_stack_set' for later traversal.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_shared uint32 overflow_stack_limit = 0;
+
 
 	/* Signature of marking functions. They take the address where
 	 * reference is stored (to be updated by `mark_overflow_stack'
@@ -262,48 +404,177 @@ typedef EIF_REFERENCE (*MARKER) (EIF_REFERENCE *);
 #endif
 
 #ifdef EIF_THREADS
-rt_public EIF_LW_MUTEX_TYPE *eif_gc_mutex = NULL;	/* Mutex used to protect GC collection or allocation */
-rt_public EIF_LW_MUTEX_TYPE *eif_gc_set_mutex = NULL;	/* Mutex used to protect insertion into `rem_set' */
+/*
+doc:	<attribute name="eif_gc_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used for run-time synchronization when performing a GC cycle. All running threads should be stopped on `eif_gc_mutex' or be blocked before starting a GC cycle</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_public EIF_LW_MUTEX_TYPE *eif_gc_mutex = NULL;
+
+/*
+doc:	<attribute name="eif_gc_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used to access all the global sets `moved_set', `rem_set' and `memory_set'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_public EIF_LW_MUTEX_TYPE *eif_gc_set_mutex = NULL;
+
+/*
+doc:	<attribute name="eif_global_once_mutex" return_type="EIF_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used to compute result of global onces.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<fixme>There is a potential deadlock so code generation needs to be changed.</fixme>
+doc:	</attribute>
+*/
 rt_public EIF_MUTEX_TYPE *eif_global_once_mutex = NULL;	/* Mutex used to protect insertion and computation of global onces. */
 #endif
 
-/* Array used to store the number of objects used, indexed by object's age.
- * This is used when computing the demographic feedback-mediated tenuring
- * threshold for the next step (generation collcetion). The size_table array
- * is used by the generation scavenging algorithm.
- */
-
+/*
+doc:	<attribute name="age_table" return_type="uint32 [TENURE_MAX]" export="private">
+doc:		<summary>Array used to store the number of objects used, indexed by object's age. This is used when computing the demographic feedback-mediated tenuring threshold for the next step (generation collection).</summary>
+doc:		<indexing>age</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ 
+
+/*
+doc:	<attribute name="size_table" return_type="uint32 [TENURE_MAX]" export="private">
+doc:		<summary>Array used to store the size of objects used, indexed by object's age. This is used when computing the demographic feedback-mediated tenuring threshold for the next step (generation collection) and by the generation scavenging algorithm.</summary>
+doc:		<indexing>age</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ 
-rt_shared int tenure;				/* Maximum age for tenuring.
-									 * Initialized in main.c	*/ 
+
+/*
+doc:	<attribute name="tenure" return_type="int" export="shared">
+doc:		<summary>Maximum age for tenuring.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c'.</synchronization>
+doc:		<fixme>Because `tenure' is also accessed in `hector' this causes a potential thread safe access. We need to protect his access in `efreeze'.</fixme>
+doc:	</attribute>
+*/
+rt_shared int tenure;
 											
-rt_public long plsc_per;				/* Period of plsc in acollect
-										 * Initialized in main.c. */
+/*
+doc:	<attribute name="plsc_per" return_type="long" export="public">
+doc:		<summary>Period of calls to `plsc' in `acollect'.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c'.</synchronization>
+doc:		<fixme>Add protection to routines that modify its value.</fixme>
+doc:	</attribute>
+*/
+rt_public long plsc_per;
+
+/*
+doc:	<attribute name="gc_running" return_type="int" export="public">
+doc:		<summary>Is GC running?</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Does not seem to be used anymore apart in `option.c' for profiling but we don't even know why? We might want to get rid of it.</fixme>
+doc:	</attribute>
+*/
 rt_public int gc_running = 0;			/* Is the GC running */ 
-rt_public double last_gc_time = 0; 		/* The time spent on the last collect, 
-										 * sweep or whatever the GC did */ 
+
+/*
+doc:	<attribute name="last_gc_time" return_type="double" export="public">
+doc:		<summary>Last time spent on last collect, sweep or whatever the GC did.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>As with `gc_running' we don't know when it is really used.</fixme>
+doc:	</attribute>
+*/
+rt_public double last_gc_time = 0;
+
+/*
+doc:	<attribute name="gc_ran" return_type="int" export="public">
+doc:		<summary>Has the GC been running?</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Same as `gc_running'. There is a mistery to solve.</fixme>
+doc:	</attribute>
+*/
 rt_public int gc_ran = 0;				/* Has the GC been running */ 
+
+/*
+doc:	<attribute name="clsc_per" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Period of full coalescing. If `0', it is never called.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Updated needs to be synchronized with a mutex.</fixme>
+doc:	</attribute>
+*/
 rt_public EIF_INTEGER clsc_per;			/* Period of full coalescing: 0 => never. */
 
-/* Spoilt chunks are put into a search table, to avoid taking them as 'from'
- * space more than once: for each spoilt chunk we find, we have to allocate a
- * new 'to' zone at the next partial scavenge.
- */
-
-rt_private struct s_table *spoilt_tbl = (struct s_table *) 0;
+/*
+doc:	<attribute name="spoilt_tbl" return_type="struct s_table *" export="private">
+doc:		<summary>Spoilt chunks are put into a search table, to avoid taking them as 'from' space more than once: for each spoilt chunk we find, we have to allocate a new 'to' zone at the next partial scavenge.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private struct s_table *spoilt_tbl = NULL;
 
 /* Zones used for partial scavenging */
-rt_shared struct sc_zone ps_from;		/* From zone */ 
-rt_shared struct sc_zone ps_to;		/* To zone */ 
-rt_shared struct chunk *last_from =
-	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */ 
+/*
+doc:	<attribute name="ps_from" return_type="struct sc_zone" export="shared">
+doc:		<summary>From zone used for partial scavenging</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct sc_zone ps_from;
 
-rt_public long th_alloc;		/* Allocation threshold before calling GC.
-								 * Initialized in main.c */
-rt_public int gc_monitor = 0;		/* Disable GC time-monitoring by default */ 
-rt_public EIF_REFERENCE root_obj = NULL;	
-									/* Address of the 'root' object */ 
+/*
+doc:	<attribute name="ps_to" return_type="struct sc_zone" export="shared">
+doc:		<summary>To zone used for partial scavenging</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct sc_zone ps_to;
+
+/*
+doc:	<attribute name="last_from" return_type="struct chunk *" export="shared">
+doc:		<summary>Last `from' zone used by partial scavenging.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct chunk *last_from = NULL;
+
+/*
+doc:	<attribute name="th_alloc" return_type="long" export="public">
+doc:		<summary>Allocation threshold before calling GC. Initialized in `main.c', updated in `memory.c'.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Propose mutex in `memory.c' to update its value.</fixme>
+doc:	</attribute>
+*/
+rt_public long th_alloc;
+
+/*
+doc:	<attribute name="gc_monitor" return_type="int" export="public">
+doc:		<summary>Disable GC time-monitoring. By default it is 0.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Propose mutex in `memory.c' to updated its value.</fixme>
+doc:	</attribute>
+*/
+rt_public int gc_monitor = 0;
+
+/*
+doc:	<attribute name="root_obj" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Pointer to root object of current system. Initialized by generated C code.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE root_obj = NULL;
 
 #ifdef ISE_GC
 
@@ -2119,8 +2390,10 @@ rt_private int partial_scavenging(void)
 	EIF_GET_CONTEXT
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
+	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 	run_plsc();				/* Normal sequence */
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 
 	return 0;
 }
@@ -4655,3 +4928,7 @@ rt_public void eif_panic(char *s)
 #ifdef __cplusplus
 }
 # endif
+
+/*
+doc:</file>
+*/

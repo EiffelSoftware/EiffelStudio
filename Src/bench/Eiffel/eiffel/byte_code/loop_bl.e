@@ -32,26 +32,27 @@ feature
 				from_part.analyze;
 			end;
 			context.init_propagation;
-			stop.propagate (No_register);
-			stop.analyze;
 			workbench_mode := context.workbench_mode;
 			check_loop := workbench_mode or else
 				context.assertion_level.check_loop;
 
 			if check_loop then
-				if invariant_part /= Void then
-					if workbench_mode then
-						context.add_dt_current;
-					end;
-					invariant_part.analyze;
-				end;
 				if variant_part /= Void then
 					if workbench_mode then
 						context.add_dt_current;
 					end;
 					variant_part.analyze;
 				end;
+				if invariant_part /= Void then
+					if workbench_mode then
+						context.add_dt_current;
+					end;
+					invariant_part.analyze;
+				end;
 			end;
+
+			stop.propagate (No_register);
+			stop.analyze;
 
 			if compound /= Void then
 				compound.analyze;

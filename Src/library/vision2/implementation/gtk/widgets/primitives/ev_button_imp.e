@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, padding)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, padding)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, padding)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)

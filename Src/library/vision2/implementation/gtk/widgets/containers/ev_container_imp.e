@@ -326,6 +326,14 @@ feature -- Event handling
 			a_widget_imp.set_parent_imp (Void)
 			remove_radio_button (an_item)
 		end
+		
+feature {EV_WIDGET_IMP} -- Implementation
+
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP) is
+			-- 
+		do
+			-- By default do nothing
+		end
 
 feature {NONE} -- Externals
 	

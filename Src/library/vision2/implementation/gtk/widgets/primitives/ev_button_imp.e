@@ -57,8 +57,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_button_new)
-		--	GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
-		--	GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
 		end
 
 	initialize is
@@ -66,8 +64,8 @@ feature {NONE} -- Initialization
 			-- create button box to hold label and pixmap.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			C.gtk_container_set_border_width (visual_widget, 0)
-			C.gtk_button_set_relief (visual_widget, C.gtk_relief_half_enum)
+			C.gtk_container_set_border_width (c_object, 0)
+			C.gtk_button_set_relief (visual_widget, C.gtk_relief_normal_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -93,23 +91,29 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	is_default_push_button: BOOLEAN --is
+	is_default_push_button: BOOLEAN
 			-- Is this button currently a default push button 
 			-- for a particular container?
---		do
---			Result := GTK_WIDGET_HAS_DEFAULT (visual_widget)
---		end
 		
 feature -- Status Setting
 
 	enable_default_push_button is
 			-- Set the style of the button corresponding
 			-- to the default push button.
+		local
+			par_ptr: POINTER
 		do
-			--| FIXME IEK Add default push button style
-			is_default_push_button := True
-		--	enable_can_default
-			--C.gtk_widget_grab_default (visual_widget)
+			enable_can_default
+			from
+				par_ptr := C.gtk_widget_struct_parent (visual_widget)
+			until
+				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
+			loop
+				par_ptr := C.gtk_widget_struct_parent (par_ptr)
+			end
+			if par_ptr /= NULL then
+				C.gtk_window_set_default (par_ptr, visual_widget)
+			end	
 		end
 
 	disable_default_push_button is
@@ -117,9 +121,8 @@ feature -- Status Setting
 			-- to the default push button.
 		local
 			par_ptr: POINTER
-		do
-			--GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_HAS_DEFAULT_ENUM)
-			--C.gtk_widget_draw_default (visual_widget)
+		do		
+			--| FIXME IEK Undraw default widget style.
 			is_default_push_button := False
 			from
 				par_ptr := C.gtk_widget_struct_parent (visual_widget)
@@ -137,7 +140,8 @@ feature -- Status Setting
 	enable_can_default is
 			-- Allow the style of the button to be the default push button.
 		do
-			GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_DEFAULT_ENUM)
+			is_default_push_button := True
+			--| FIXME IEK Draw fake default style that represents gtk one (but nicer).
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is

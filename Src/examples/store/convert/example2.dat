@@ -1,8 +1,8 @@
-(true)$quantity/ 5 $	6.99$author:"John Wikrosky"$	"Learning"
-(false)$quantity/ 10 $	4.95$author:"Joe Mitchell"$"Learning it easy"
-(true)$quantity/ 12 $	9.95$author:"Jill D."$	"Cooking"
-(true)$quantity/ 25 $	5.0$author:"Herbert  W.F.T & Al."$	"Reading"
-(false)$quantity/ 8 $	6.95$author:"Max W."$	"Teaching"
-(true)$quantity/ 2 $	23.50$author:"Franck K."$	"Horse-riding"
- ( true ) $ quantity / 7 $	12.00 $ author : "Michael F.W." $ "Computer Science"
-(false)$quantity/100$	2.50$author:"Mike H."$	"Mathematics"
+author:"John Wikrosky"$	"Learning"$quantity/ 5 $	6.99$
+author:"Joe Mitchell"$"Learning it easy"$quantity/ 10 $	4.95$
+author:"Jill D."$	"Cooking"$quantity/ 12 $	9.95$
+author:"Herbert  W.F.T & Al."$	"Reading"$quantity/ 25 $	5.0$
+author:"Max W."$	"Teaching"$quantity/ 8 $	6.95$
+author:"Franck K."$	"Horse-riding"$quantity/ 2 $	23.50$
+author : "Michael F.W." $ "Computer Science"$quantity / 7 $	12.00 $
+author:"Mike H."$	"Mathematics"$quantity/100$	2.50$

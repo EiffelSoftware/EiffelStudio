@@ -23,7 +23,7 @@ feature {NONE}
 
 	descriptor: EC_DESCRIPTOR;
 
-	book: BOOK;
+	book: BOOK2;
 
 	converter1, converter2: CONVERTER;
 
@@ -34,7 +34,7 @@ feature {NONE}
 			io.putstring ("First example file:%N");
 			descriptor.make_conform (book);
 			converter1.set_descriptor (descriptor);
-			converter1.set_file_name ("example1.dat");
+			converter1.set_file_name ("e:\Eiffel42F\examples\store\convert\example1.dat");
 			converter1.parse_file;
 			if converter1.conv_error then 
 				io.putstring (converter1.conv_message)
@@ -88,17 +88,15 @@ end -- class PARSER
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-1997 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

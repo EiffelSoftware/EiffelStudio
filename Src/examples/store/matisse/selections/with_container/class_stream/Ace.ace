@@ -1,0 +1,81 @@
+system
+
+	selection_appl_with_container
+
+	-- Replace 'template_application' by the name of the executable file
+	-- to be generated for your system.
+
+root
+
+	example (root_cluster): "make"
+
+	-- Replace 'get_info', 'root_cluster' and creation_procedure 'make'
+	-- by the names of the root class, root class cluster and
+	-- root creation procedure for your system.
+
+default
+
+	assertion (all);
+
+		-- Check all assertions
+
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
+		-- Use precompiled base library
+
+cluster
+
+	root_cluster: 	"$EIFFEL4/examples/store/matisse/selections/with_container/class_stream";
+
+		-- Replace 'root_cluster' and path '.' by the names of the
+		-- root class cluster and corresponding path for your system.
+		-- Add any other clusters that your system will need.
+
+	-- EiffelBase
+
+	access:             "$EIFFEL4/library/base/structures/access";
+	cursors:            "$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+	iteration:          "$EIFFEL4/library/base/structures/iteration";
+	kernel:             "$EIFFEL4/library/base/kernel";
+	list:               "$EIFFEL4/library/base/structures/list";
+	--obsolete:           "$EIFFEL4/library/base/structures/obsolete";
+	set:                "$EIFFEL4/library/base/structures/set";
+	sort:               "$EIFFEL4/library/base/structures/sort";
+	storage:            "$EIFFEL4/library/base/structures/storage";
+	support:            "$EIFFEL4/library/base/support";
+	table:              "$EIFFEL4/library/base/structures/table";
+	traversing:         "$EIFFEL4/library/base/structures/traversing";
+	tree:               "$EIFFEL4/library/base/structures/tree";
+
+
+	-- EiffelStore
+
+	estore_support:		"$EIFFEL4/library/store/support";
+	estore_interface:	"$EIFFEL4/library/store/interface";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+
+	-- EiffelTime
+
+	time: "$EIFFEL4/library/time/time";
+
+	-- Matisse for EiffelStore
+    matisse_interface : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_interface";
+    matisse_entities : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities";
+    matisse_entities_externals : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities/externals";
+    matisse_entities_streams : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_entities/streams";
+	matisse_sr : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_sr";
+	matisse_odl : "$EIFFEL4/library/store/dbms/oodbms/matisse/matisse_odl";
+
+external
+
+	object:	
+			"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
+			"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
+			"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/matisse_store.lib",
+			"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/matisse.lib",	
+			"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/special.lib",	
+			"matisse.lib" -- in your system
+
+end

@@ -21,7 +21,7 @@ feature
 
 	price: REAL
 
-	year: ABSOLUTE_DATE
+	year: DATE_TIME
 
 	double_value: DOUBLE
 
@@ -56,8 +56,11 @@ feature
 
 	set_year (y: INTEGER) is
 			-- Set `year' with `y'
+		local
+			date:DATE
 		do
-			year.change_date(1,1,y)
+			!!date.make_month_day_year (1,1,y)
+			year.set_date(date)
 		end
 
 
@@ -77,7 +80,7 @@ feature
 		do
 			!! title.make (80)
 			!! author.make (80)
-			!! year.make
+			!! year.make_now
 		end
 
 
@@ -117,17 +120,15 @@ end -- class BOOK2
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-1997 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -11,7 +11,7 @@ class
 
 feature -- Status report
 
-	proxy_host_ok (h: STRING): BOOLEAN is
+	host_ok (h: STRING): BOOLEAN is
 			-- Is `h' a valid host?
 		do
 			if h /= Void and then not h.is_empty then

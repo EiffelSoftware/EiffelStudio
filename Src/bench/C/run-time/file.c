@@ -11,10 +11,6 @@
 
 */
 
-#ifdef EIF_WIN32
-#define WIN32_LEAN_AND_MEAN
-#endif
-
 #include "config.h"
 #include "portable.h"
 #include "except.h"
@@ -29,6 +25,8 @@
 #ifdef EIF_OS2
 #include <io.h>
 #include <direct.h>
+#elif defined EIF_WINDOWS
+	/* <unistd.h> doesn't exist under Windows */
 #else
 #include <unistd.h>
 #endif
@@ -1330,7 +1328,10 @@ int flag;		/* Add (1) or remove (0) permissions */
 		while (*what)
 			switch (*what++) {
 #if defined EIF_WIN32
-			case 's', 'r', 'w', 'x': break;
+			case 's': break;
+			case 'r': break;
+			case 'w': break;
+			case 'x': break;
 #elif defined EIF_OS2
 			case 's': break;
 			case 'r': break;

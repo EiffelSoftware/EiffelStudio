@@ -34,7 +34,8 @@ feature -- Initialization
 							Help_spelled_switch, No_logo_switch, List_assemblies_switch,
 							List_assemblies_short, Init_switch, No_output_switch,
 							No_output_short, Eac_switch, Eac_short, Remove_switch,
-							Remove_short, Nice_switch, Force_switch, Force_short, No_references_switch, Consume_from_fullname_switch, Consume_from_fullname_short>>)
+							Remove_short, Nice_switch, Force_switch, Force_short, No_references_switch, 
+							Consume_from_fullname_switch, Consume_from_fullname_short, Eiffel_var_switch>>)
 			parse
 			
 			if not successful then
@@ -106,6 +107,9 @@ feature -- Access
 			
 	Consume_from_fullname_short: STRING is "fn"
 			-- consume an assembly from the GAC
+			
+	Eiffel_var_switch: STRING is "eiffel_var"
+			-- Swtich to specify alternative ISE_EIFFEL variable
 
 feature -- Status report
 
@@ -249,6 +253,8 @@ feature {NONE} -- Implementation
 				force_local_generation := True
 			elseif switch.is_equal (Consume_from_fullname_switch) or switch.is_equal (Consume_from_fullname_short) then
 				consume_from_fullname := True
+			elseif switch.is_equal (Eiffel_var_switch) then
+				set_internal_eiffel_path (switch_value)
 			elseif target_path = Void or target_path.is_empty then
 				set_error (Invalid_target_path, "None Set!")
 			elseif switch.is_equal (No_references_switch) then
@@ -258,8 +264,15 @@ feature {NONE} -- Implementation
 
 	process_non_switch (non_switch_value: STRING) is
 			-- process the args with no swtiches
+		local
+			l_exe_env: EXECUTION_ENVIRONMENT
 		do
 			target_path := non_switch_value
+			if target_path.index_of (':', 1) = 0 then
+				-- if path is not full path append current working path
+				create l_exe_env
+				target_path.prepend (l_exe_env.current_working_directory + "\")
+			end
 		end
 
 	post_process is
@@ -312,13 +325,13 @@ feature {NONE} -- Implementation
 		do
 			io.put_string ("Usage: ")
 			io.put_string (System_name)
-			io.put_string (" <assembly> [/g] [/a | /r] [/n] [/nologo] [/nice]%N")
+			io.put_string (" <assembly> [/g] [/a | /r] [/n] [/nologo] [/nice] [/eiffel_var:<path>]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" <assembly> [/g] [/d:destination] [/n] [/nologo] [/nice] [/f | /noref]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" /l [/nologo]%N")
 			io.put_string ("       " + System_name)
-			io.put_string (" /init [/n] [/nologo] [/nice]%N%N")
+			io.put_string (" /init [/n] [/nologo] [/nice] [/eiffel_var:<path>]%N%N")
 			io.put_string (" - Options -%N%N")
 			io.put_string ("/fullname%N   Consume an assembly using its fullname. Short form is '/fn'.%N%N")
 			io.put_string ("/dest:destination%N   Generate XML in directory 'destination'. Short form is '/d'.%N%N")
@@ -331,10 +344,12 @@ feature {NONE} -- Implementation
 			io.put_string ("/nice%N   XML output is indented.%N%N")
 			io.put_string ("/force%N   Consume a local assembly's GAC dependancies into same location. Short form is '/f'.%N%N")
 			io.put_string ("/noref%N   Do not generated assembly dependancies..%N%N")
+			io.put_string ("/eiffel_var:<path>%N   Use a..%N%N")
 			io.put_string (" - Arguments -%N%N")
 			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for. <assembly> can%N")
 			io.put_string ("   be either a path to a local assembly or an assembly's fully quantified name ONLY when '/fn' is used%N")
 			io.put_string ("   e.g. - %"System.Xml, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089%".%N%N")
+			io.put_string ("<path>%N   Valid path to existing folder%N%N")
 		end
 	
 	display_status (s: STRING) is

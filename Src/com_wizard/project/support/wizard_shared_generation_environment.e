@@ -353,6 +353,8 @@ feature -- Access
 			Result.force (clone (set_max_mem_routine), clone (set_max_mem_routine))
 			Result.force (clone (set_memory_threshold_routine), clone (set_memory_threshold_routine))
 			Result.force (clone (tenure_routine), clone (tenure_routine))
+			Result.force ("f", "f")
+			Result.force (clone (exists_routine), clone (exists_routine))
 		end
 
 	windows_structures: HASH_TABLE [WIZARD_WINDOWS_STRUCTURE, STRING] is
@@ -388,6 +390,45 @@ feature -- Access
 					end
 				end
 			end
+		end
+
+	browse_directory: STRING is
+			-- Browse directory.
+		do
+			if browse_directory_cell.item /= Void then
+				Result := browse_directory_cell.item
+
+			elseif (get (Eiffelcom_browse_directory) /= Void) then
+				Result := get (Eiffelcom_browse_directory)
+				set_browse_directory (Result)
+
+			else
+				Result := "c:\"
+				set_browse_directory (Result)
+			end
+		end
+
+feature -- Basic Operations
+
+	set_browse_directory (a_directory: STRING) is
+			-- Set browse directory.
+		require
+			non_void_directory: a_directory /= Void
+			valid_directory: not a_directory.empty
+		do
+			browse_directory_cell.put (a_directory)
+			put (a_directory, Eiffelcom_browse_directory)
+		end
+
+	safe_browse_directory_from_dialog (a_file_dialog: WEL_FILE_DIALOG) is
+			-- Safe last open directory.
+		local
+			a_name, a_title: STRING	
+		do
+			a_name := clone (a_file_dialog.file_name)
+			a_title := a_file_dialog.file_title
+			a_name.head (a_name.count - a_title.count)
+			set_browse_directory (a_name)
 		end
 
 feature {WIZARD_MANAGER} -- Element Change
@@ -441,6 +482,15 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		end
+
+	browse_directory_cell: CELL [STRING] is
+			-- Browse directory shell
+		once
+			create Result.put (Void)
+		end
+
+	Eiffelcom_browse_directory: STRING is "EIFFELCOM_PATH"
+			-- Environment variable for browsing.
 
 end -- class WIZARD_SHARED_GENERATION_ENVIRONMENT
 

@@ -1,7 +1,7 @@
 indexing
 
 	description:	
-		"Shared tabulatr information.";
+		"Shared tabular information.";
 	date: "$Date$";
 	revision: "$Revision$"
 

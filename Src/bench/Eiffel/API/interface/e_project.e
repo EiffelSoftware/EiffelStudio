@@ -472,11 +472,14 @@ feature -- Update
 						Degree_output.put_resynchronizing_breakpoints_message
 						Application.resynchronize_breakpoints
 					end
-					if not manager.is_project_loaded then
-						manager.on_project_loaded
-					end
 				elseif exit_on_error and then exit_agent /= Void then
 					exit_agent.call ([])
+				end
+				if
+					not manager.is_project_loaded and then
+					Workbench.last_reached_degree < 3
+				then
+					manager.on_project_loaded
 				end
 				Compilation_modes.reset_modes
 				is_compiling_ref.set_item (False)
@@ -590,9 +593,12 @@ feature -- Update
 				if not save_error then
 					save_precomp (licensed)
 				end
-				if not Manager.is_project_loaded then
-					Manager.on_project_loaded
-				end
+			end
+			if
+				not manager.is_project_loaded and then
+				Workbench.last_reached_degree < 3
+			then
+				manager.on_project_loaded
 			end
 			--Compilation_modes.reset_modes
 		ensure

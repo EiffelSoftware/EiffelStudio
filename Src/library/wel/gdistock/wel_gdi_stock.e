@@ -22,6 +22,9 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_get_stock_object (stock_id)
 			shared := True
+			debug ("GDI_COUNT")
+				increase_gdi_objects_count
+			end
 		ensure
 			exists: exists
 			shared: shared

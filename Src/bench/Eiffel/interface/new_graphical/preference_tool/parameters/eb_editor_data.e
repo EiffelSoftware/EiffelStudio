@@ -202,8 +202,8 @@ feature
 	local_text_color: EV_COLOR
 	local_background_color: EV_COLOR
 
-	font: EDITOR_FONT
-			-- Current text font.
+	font, keyword_font: EDITOR_FONT
+			-- Current text font and keyword font.
 
 	automatic_update: BOOLEAN
 			-- if the text has been emodified by an external editor, should we
@@ -353,6 +353,7 @@ feature -- Update
 			df.preferred_families.extend ("arial")
 			df.preferred_families.extend ("helvetica")
 			create font.make_with_font (font_resource_value ("editor_font", df))
+			create keyword_font.make_with_font (font_resource_value ("keyword_font", df))
 			update_preferences
 		end
 

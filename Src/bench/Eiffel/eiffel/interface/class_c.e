@@ -246,6 +246,11 @@ feature -- Access: CLI implementation
 	class_interface: CLASS_INTERFACE
 			-- CLI corresponding interface of Current class.
 
+feature -- Status report
+
+	has_externals: BOOLEAN
+			-- Does current class have external declarations in its text?
+
 feature -- Action
 
 	remove_c_generated_files is
@@ -1074,7 +1079,11 @@ debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.new_line
 end
 							-- Remember the melted feature information
-							-- if it is not deferred.
+							-- if it is not deferred. If it is an external, then
+							-- we need to trigger a freeze.
+						if feature_i.is_external then
+							system.set_freeze
+						end
 						add_feature_to_melted_set (feature_i)
 					end
 					type_check_error := False
@@ -1899,6 +1908,7 @@ feature -- Class initialization
 
 				-- Class status
 			is_external := ast_b.is_external
+			has_externals := ast_b.has_externals
 			old_is_frozen := is_frozen
 			is_frozen := ast_b.is_frozen
 
@@ -3448,6 +3458,14 @@ end
 			-- New class type for current class
 		do
 			create Result.make (data)
+			if True then -- has_externals then
+					-- When a new generic derivation of a class that
+					-- has some externals in its text is needed, we
+					-- need to freeze the code to properly generate
+					-- the call to the external routine.
+					-- Fixes eweasel test incr213.
+				System.set_freeze
+			end
 		ensure
 			new_type_not_void: Result /= Void
 		end

@@ -241,9 +241,6 @@ feature -- Status report
 			exists: exists
 		do
 			Result := window_rect.width
-		ensure
-			result_small_enough: Result <= maximal_width
-			result_large_enough: Result >= minimal_width
 		end
 
 	height: INTEGER is
@@ -252,9 +249,6 @@ feature -- Status report
 			exists: exists
 		do
 			Result := window_rect.height
-		ensure
-			result_small_enough: Result <= maximal_height
-			result_large_enough: Result >= minimal_height
 		end
 
 	absolute_x: INTEGER is
@@ -551,48 +545,32 @@ feature -- Element change
 			-- Set `x' with `a_x'
 		require
 			exists: exists
-			not_minimized: not minimized
 		do
 			move (a_x, y)
-		ensure
-			x_set: x = a_x
 		end
 
 	set_y (a_y: INTEGER) is
 			-- Set `y' with `a_y'
 		require
 			exists: exists
-			not_minimized: not minimized
 		do
 			move (x, a_y)
-		ensure
-			y_set: y = a_y
 		end
 
 	set_width (a_width: INTEGER) is
 			-- Set `width' with `a_width'
 		require
 			exists: exists
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
-			not_minimized: not minimized
 		do
 			resize (a_width, height)
-		ensure
-			width_set: width = a_width
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `height' with `a_height'
 		require
 			exists: exists
-			a_height_small_enough: a_height <= maximal_height
-			a_height_large_enough: a_height >= minimal_height
-			not_minimized: not minimized
 		do
 			resize (width, a_height)
-		ensure
-			height_set: height = a_height
 		end
 
 	set_timer (timer_id, time_out: INTEGER) is
@@ -627,51 +605,29 @@ feature -- Basic operations
 			-- resize it with `a_width', `a_height'.
 		require
 			exists: exists
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
-			a_height_small_enough: a_height <= maximal_height
-			a_height_large_enough: a_height >= minimal_height
-			not_minimized: not minimized
 		do
 			cwin_move_window (item, a_x, a_y,
 				a_width, a_height, repaint)
-		ensure
-			x_set: x = a_x
-			y_set: y = a_y
-			width_set: width = a_width
-			height_set: height = a_height
 		end
 
 	move (a_x, a_y: INTEGER) is
 			-- Move the window to `a_x', `a_y'.
 		require
 			exists: exists
-			not_minimized: not minimized
 		do
 			cwin_set_window_pos (item, default_pointer,
 				a_x, a_y, 0, 0,
 				Swp_nosize + Swp_nozorder + Swp_noactivate)
-		ensure
-			x_set: x = a_x
-			y_set: y = a_y
 		end
 
 	resize (a_width, a_height: INTEGER) is
 			-- Resize the window with `a_width', `a_height'.
 		require
 			exists: exists
-			a_width_small_enough: a_width <= maximal_width
-			a_width_large_enough: a_width >= minimal_width
-			a_height_small_enough: a_height <= maximal_height
-			a_height_large_enough: a_height >= minimal_height
-			not_minimized: not minimized
 		do
 			cwin_set_window_pos (item, default_pointer,
 				0, 0, a_width, a_height,
 				Swp_nomove + Swp_nozorder + Swp_noactivate)
-		ensure
-			width_set: width = a_width
-			height_set: height = a_height
 		end
 
 	set_z_order (z_order: INTEGER) is
@@ -1176,7 +1132,8 @@ feature {NONE} -- Implementation
 		end
 
 	default_style: INTEGER is
-			-- Default style used to create the window
+			-- Default style used to create the window.
+			-- See class WEL_WS_CONSTANTS.
 		deferred
 		end
 

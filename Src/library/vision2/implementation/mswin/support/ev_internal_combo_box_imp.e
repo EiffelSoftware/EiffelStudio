@@ -195,7 +195,9 @@ feature {NONE} -- Implementation
 	on_kill_focus is
 			-- Wm_killfocus message.
 		do
-			parent.on_kill_focus
+			if not parent.is_editable then
+				parent.on_kill_focus
+			end
 		end
 
 	on_set_cursor (hit_code: INTEGER) is

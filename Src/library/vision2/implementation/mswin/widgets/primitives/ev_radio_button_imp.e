@@ -27,7 +27,8 @@ inherit
 			initialize,
 			update_current_push_button,
 			redraw_current_push_button,
-			internal_default_height
+			internal_default_height,
+			set_default_minimum_size
 		select
 			wel_make
 		end
@@ -117,7 +118,19 @@ feature {NONE} -- Initalization
 		end			
 
 feature -- Status setting
-	
+
+	set_default_minimum_size is
+			-- Reset `Current' to its default minimum size.
+		do
+				-- This extra width only needs to be added if
+				-- we are using a large font, hence we do nothing
+				-- with the system font.
+			if not has_system_font and not text.is_empty then
+				extra_width := 20 + wel_font.height // 2
+			end
+			Precursor {EV_BUTTON_IMP}
+		end
+
 	enable_select is
 			-- Set `Current' as selected.
 			--| On WEL, this happens automatically in a WEL_CONTROL, but we
@@ -171,6 +184,9 @@ feature {NONE} -- Implementation, focus event
 			-- The default minimum height of `Current' with no text.
 			-- This is used in set_default_size.
 		do
+				--|FIXME As soon as we find a nice way to
+				--| know how large the check part of `Current'
+				--| will be drawn by Windows, we can query this directly.
 			Result := 12
 		end
 

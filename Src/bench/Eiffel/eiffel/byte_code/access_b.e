@@ -609,25 +609,21 @@ feature -- Byte code generation
 			basic_target, basic_source: BASIC_I
 		do
 			target_type := Context.real_type (type)
-			if target_type.is_none then
-				ba.append (Bc_none_assign)
+			if target_type.is_expanded and source_type.is_none then
+				ba.append (Bc_exp_excep)
 			elseif target_type.is_bit then
 				ba.append (bit_assign_code);	
 				assignment := True
 			elseif target_type.is_basic then
 					-- Target is basic: simple attachment if source type
 					-- is not none
-				if source_type.is_none then
-					ba.append (Bc_exp_excep)
-				else
-					if target_type.is_numeric and then source_type.is_numeric then
-						basic_target ?= target_type
-						basic_source ?= source_type
-						basic_target.generate_byte_code_cast (ba)
-					end
-					ba.append (assign_code)
-					assignment := True
+				if target_type.is_numeric and then source_type.is_numeric then
+					basic_target ?= target_type
+					basic_source ?= source_type
+					basic_target.generate_byte_code_cast (ba)
 				end
+				ba.append (assign_code)
+				assignment := True
 			elseif target_type.is_expanded then
 					-- Target is expanded: copy with possible exeception
 				ba.append (expanded_assign_code)

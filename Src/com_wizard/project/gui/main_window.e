@@ -505,6 +505,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
 			output_edit.resize (a_width, a_height - rebar.height)
+			rebar.reposition
 		end
 
 invariant

@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class
+deferred class
 	
 	EV_CONTAINER_IMP
 	

@@ -1,8 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision list, implementation interface."
+	description: "Eiffel Vision list. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -11,14 +10,13 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
-		rename
-			interface as primitive_interface
 		redefine
-			set_default_colors
+			set_default_colors,
+			interface
 		end
 
 	EV_ITEM_LIST_I [EV_LIST_ITEM]
-		select
+		redefine
 			interface
 		end
 
@@ -38,20 +36,19 @@ feature {EV_WIDGET} -- Initialization
 feature -- Access
 
 	selected_item: EV_LIST_ITEM is
-			-- Item which is currently selected
-			-- It needs to be in single selection mode
+			-- Currently selected item.
+			-- Topmost selected item if multiple items are selected.
+		local
+			l: LINKED_LIST [EV_LIST_ITEM]
 		do
-			if selected_items.count > 0 then
-				Result := selected_items.first
+			l := selected_items
+			if not l.empty then
+				Result := l.first
 			end
 		end
 
 	selected_items: LINKED_LIST [EV_LIST_ITEM] is
-			-- List of all the selected items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
+			-- Currently selected items.
 		local
 			litem: EV_LIST_ITEM
 			original_position: INTEGER
@@ -73,54 +70,44 @@ feature -- Access
 
 feature -- Status report
 
-	selected: BOOLEAN is
-			-- Is at least one item selected ?
-		require
+	multiple_selection_enabled: BOOLEAN is
+			-- Can more than one item be selected?
 		deferred
 		end
 
-	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items
-			-- False otherwise
-		require
-		deferred
-		end
+--	selected: BOOLEAN is
+--			-- Is at least one item selected ?
+--		deferred
+--		end
 
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
-			-- Select an item at the one-based `an_index' of the list.
+			-- Select item at `an_index'.
 		require
-			index_large_enough: an_index > 0
-			index_small_enough: an_index <= count
+			index_within_range: an_index > 0 and an_index <= count
 		deferred
 		end
 
 	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `an_index'.
+			-- Deselect item at `an_index'.
 		require
-			index_large_enough: an_index > 0
-			index_small_enough: an_index <= count
+			index_within_range: an_index > 0 and an_index <= count
 		deferred
 		end
 
 	clear_selection is
-			-- Clear the selection of the list.
-		require
+			-- Ensure there are no `selected_items'.
 		deferred
 		end
 
 	enable_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
-		require
+			-- Allow more than one item to be selected.
 		deferred
 		end
 
 	disable_multiple_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list
-		require
+			-- Allow only one item to be selected.
 		deferred
 		end
 
@@ -128,6 +115,9 @@ feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 			-- List of the children
+
+	interface: EV_LIST
+
 end -- class EV_LIST_I
 
 --!-----------------------------------------------------------------------------
@@ -151,6 +141,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/28 20:32:08  brendel
+--| Revised.
+--|
 --| Revision 1.42  2000/03/01 18:09:08  king
 --| Added lists_equal assertion feature
 --|

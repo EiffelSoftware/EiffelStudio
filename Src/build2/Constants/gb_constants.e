@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	Gb_main_window_title: STRING is "Graphical builder"
+	Gb_main_window_title: STRING is "EiffelBuild"
 		-- Title to be displayed in GB_MAIN_WINDOW.
 		
 	Gb_display_window_title: STRING is "Display window"

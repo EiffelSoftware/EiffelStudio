@@ -9,7 +9,7 @@ root
 	EDITOR_WINDOW (gui): "make_and_launch"
 
 default
-	assertion			(no)
+	assertion			(all)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)
@@ -49,6 +49,7 @@ cluster
 			"tmp"
 			"temp"
 			"release"
+			"bench_used"
 		end
 
 		-- Gobo
@@ -59,7 +60,11 @@ cluster
 
 external
 	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include",
+					"$(EIFFEL4)\library\vision2\spec\include",
 					"$(GOBO)\library\kernel\include"
-	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+					"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+					"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+					"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
 
 end -- system editor

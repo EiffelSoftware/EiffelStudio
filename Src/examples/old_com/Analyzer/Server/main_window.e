@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 		
-creation
+create
 	make
 
 feature -- Initialization
@@ -33,8 +33,8 @@ feature -- Initialization
 			resize (400, 400)
 			set_x (350)
 			set_y (100)
-			!! descriptions.make
-			!! values.make
+			create descriptions.make
+			create values.make
 		end
 
 feature -- Access
@@ -58,7 +58,7 @@ feature -- Element Change
 		local
 			string_value: STRING
 		do
-			!! string_value.make (10)
+			create string_value.make (10)
 			string_value.append_integer (value)
 			descriptions.extend (description)
 			values.extend (string_value)
@@ -74,8 +74,8 @@ feature -- Element Change
 			space_height: INTEGER
 			max_lines: INTEGER
 		do
-			!! log_font.make (14, "Arial")
-			!! font.make_indirect (log_font)
+			create log_font.make (14, "Arial")
+			create font.make_indirect (log_font)
 			paint_dc.select_font (font)
 			space_height := paint_dc.string_height (" ")
 			font.delete
@@ -110,13 +110,13 @@ feature {NONE} -- Implementation
 	class_background: WEL_WHITE_BRUSH is
 			-- White background
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (1)
+			create Result.make_by_id (1)
 		end
 
 end -- class MAIN_WINDOW

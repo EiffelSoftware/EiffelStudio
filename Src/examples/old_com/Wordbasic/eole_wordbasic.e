@@ -66,9 +66,9 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
-			!! bstr.adapt (filename)
+			create bstr.adapt (filename)
 			variantarg.set_bstr (bstr)
 			dispparams.add_argument (variantarg)
 			dispatch.invoke (Fileopen_dispid, dispatch_method, dispparams, Void, function_exception)
@@ -92,9 +92,9 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
-			!! bstr.adapt (text)
+			create bstr.adapt (text)
 			variantarg.set_bstr (bstr)
 			dispparams.add_argument (variantarg)
 			dispatch.invoke (Insert_dispid, dispatch_method, dispparams, Void, function_exception)
@@ -137,7 +137,7 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
 			variantarg.set_integer2 (count)
 			dispparams.add_argument (variantarg)
@@ -155,7 +155,7 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
 			variantarg.set_integer2 (count)
 			dispparams.add_argument (variantarg)
@@ -198,7 +198,7 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
 			variantarg.set_integer2 (style)
 			dispparams.add_argument (variantarg)
@@ -247,9 +247,9 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
-			!! bstr.adapt ("Microsoft Word")
+			create bstr.adapt ("Microsoft Word")
 			variantarg.set_bstr (bstr)
 			dispparams.add_argument (variantarg)
 			dispatch.invoke (Appshow_dispid, dispatch_method, dispparams, Void, function_exception)
@@ -264,9 +264,9 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! variantarg
+			create variantarg
 			variantarg.init
-			!! bstr.adapt ("Microsoft Word")
+			create bstr.adapt ("Microsoft Word")
 			variantarg.set_bstr (bstr)
 			dispparams.add_argument (variantarg)
 			dispatch.invoke (Apphide_dispid, dispatch_method, dispparams, Void, function_exception)
@@ -289,7 +289,7 @@ feature -- Element change
 		local
 			a: ARRAY [STRING]
 		do
-			!! a.make (1,1)
+			create a.make (1,1)
 			a.put (func,1)
 			Result := dispatch.get_IDs_of_names (a).item (1)
 		end
@@ -319,8 +319,8 @@ feature {NONE} -- Implementation
 			mess_box: WEL_MSG_BOX
 			error_string: STRING
 		do
-			!! mess_box.make
-			!! error_string.make (20)
+			create mess_box.make
+			create error_string.make (20)
 			if function_exception.error_code /= S_ok then
 				error_string.append ("Error #")
 				error_string.append_integer (function_exception.error_code)

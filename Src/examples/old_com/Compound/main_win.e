@@ -24,7 +24,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			make_top (Title, main_menu.popup_menu (1), 1000)
 			set_menu (main_menu)
-			!! ole_dispatcher.make
+			create ole_dispatcher.make
 		end
 
 feature {NONE} -- Implementation
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			when Cmd_file_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					!! child.make (Current, open_file_dialog.file_name)
+					create child.make (Current, open_file_dialog.file_name)
 				end
 			when Cmd_file_close then
 				if has_active_window then
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	open_file_dialog: WEL_OPEN_FILE_DIALOG is
 			-- Dialog to open compound files.
 		once
-			!! Result.make
+			create Result.make
 			Result.set_filter (<<"All file (*.*)">>,
 					<<"*.*">>)
 			Result.add_flag (Ofn_filemustexist)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	main_menu: WEL_MENU is
 			-- Main window's menu
 		once
-			!! Result.make_by_id (Id_menu_application)
+			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Main window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "Compound files viewer"

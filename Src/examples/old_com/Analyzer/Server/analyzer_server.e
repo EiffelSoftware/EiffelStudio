@@ -10,7 +10,7 @@ class
 inherit
 	EOLE_LOCAL_AUTOMATION_SERVER
 	
-creation
+create
 	init
 
 feature -- Access
@@ -18,14 +18,14 @@ feature -- Access
 	main_window: MAIN_WINDOW is
 			-- Server main window
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	dispatch_interface: ANALYZER_DISPATCH is
 		local
 			ref_counter: INTEGER
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end
 		
 end -- class ANALYZER_SERVER

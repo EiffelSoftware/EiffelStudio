@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			Precursor
 			update_splitter
 			second_expandable := True
+			C.gtk_container_set_border_width (c_object, 0)
 		end
 
 feature

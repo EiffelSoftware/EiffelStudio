@@ -19,20 +19,23 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			ok.select_actions.extend (agent hide)
+			close.select_actions.extend (agent close_error_list)
 		end		
 
 feature -- Status Setting
 
-	set_error_list (a_error_list: LIST [ERROR]) is
-			-- Set errors with `error_list'.  Put current error list, if any,
-			-- in `error_reports'.
+	set_error_list (a_error_list: LIST [ERROR]; a_context: STRING) is
+			-- Set errors with `error_list'.
 		require
 			error_list_not_void: a_error_list /= Void
 			error_list_not_empty: not a_error_list.is_empty
-		do
+		do			
 			error_list := a_error_list
-			errors.wipe_out
+			create errors
 			error_list.do_all (agent show_error_description (?))
+			errors_notebook.extend (errors)
+			errors_notebook.set_item_text (errors, a_context)
+			errors_notebook.select_item (errors)
 		end			
 		
 feature {NONE} -- Implementation
@@ -46,17 +49,22 @@ feature {NONE} -- Implementation
 			if a_error.action /= Void then
 				l_item.pointer_double_press_actions.force_extend (a_error.action)
 			end
-			errors.extend (l_item)
+			errors.extend (l_item)			
+		end		
+		
+	close_error_list is
+			-- Close error list with focus
+		do
+			if not errors_notebook.is_empty then
+				errors_notebook.prune_all (errors_notebook.selected_item)
+			end	
 		end		
 	
 	error_list: LIST [ERROR]
 			-- Errors
-	
-	error_reports: ARRAYED_LIST [ERROR_REPORT] is
-			-- List of error reports for quick browsing
-		once
-			create Result.make (5)
-		end
+			
+	errors: EV_LIST
+			-- Error widget
 	
 end -- class ERROR_DIALOG
 

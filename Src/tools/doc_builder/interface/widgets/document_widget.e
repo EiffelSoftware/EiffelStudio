@@ -47,9 +47,10 @@ feature {NONE} -- Initialization
 		do	
 				-- Edit widget
 			create internal_edit_widget.make (document)
-			internal_edit_widget.resize_actions.force_extend (agent editor_resized)
+			--internal_edit_widget.resize_actions.force_extend (agent editor_resized)
 			set_first (internal_edit_widget)
 			update
+			internal_edit_widget.resize_actions.force_extend (agent editor_resized)
 		end
 
 feature -- Access

@@ -19,6 +19,12 @@ inherit
 			default_create
 		end
 	
+	OBSERVED
+		undefine 
+			copy,
+			default_create
+		end
+	
 	SHARED_OBJECTS
 		undefine 
 			copy,
@@ -43,7 +49,8 @@ feature -- Creation
 		do
 			document := a_document	
 			default_create
-			document.attach (Current)								
+			document.attach (Current)
+			attach (application_window)
 		end
 
 feature {NONE} -- Initialization
@@ -85,9 +92,13 @@ feature -- Query
 				if not Result then
 					create error_report.make ("Invalid XML")
 					create l_error.make_with_line_information (error_description, error_line, error_column)
-					l_error.set_action (agent (error_report.actions).highlight_text_in_editor (error_line, error_column))
+					l_error.set_action (agent (error_report.actions).highlight_text_byte_in_editor (error_byte))
 					error_report.append_error (l_error)
 				end
+			else
+				create error_report.make ("Invalid XML")
+				create l_error.make ("File is empty")
+				error_report.append_error (l_error)
 			end
 		end		
 
@@ -252,10 +263,12 @@ feature -- Status Setting
 		local
 			l_text,
 			l_prev_text: STRING
+			l_selected: BOOLEAN
 		do
+			l_selected := has_selection
 			create l_text.make_from_string (a_tag)
 			
-			if has_selection then
+			if l_selected then
 				if l_text.has_substring ("[tag]") then
 					l_text.replace_substring_all ("[tag]", selected_text)
 				else			
@@ -269,7 +282,11 @@ feature -- Status Setting
 				cut_selection
 			end
 			insert_text (l_text)
-			select_region (caret_position, caret_position + l_text.count - 1)
+			if l_selected then
+				select_region (caret_position, caret_position + (l_text.count - 1))
+			elseif l_text.has_substring ("[tag]") then				
+				select_region (caret_position + l_text.substring_index ("[tag]", 1) - 1, caret_position + l_text.substring_index ("[tag]", 1) + 3)
+			end
 			if l_prev_text /= Void then
 				shared_document_editor.clipboard.set_text (l_prev_text)
 			end
@@ -282,10 +299,12 @@ feature -- Status Setting
 		local
 			l_text,
 			l_prev_text: STRING
+			l_selected: BOOLEAN
 		do
+			l_selected := has_selection
 			create l_text.make_from_string ("<" + a_tag + ">")			
 			
-			if has_selection then
+			if l_selected then
 				if l_text.has_substring ("[tag]") then
 					l_text.replace_substring_all ("[tag]", selected_text)
 				else
@@ -300,7 +319,11 @@ feature -- Status Setting
 			
 			l_text.append ("</" + a_tag + ">")			
 			insert_text (l_text)
-			select_region (caret_position, caret_position + l_text.count - 1)
+			if l_selected then
+				select_region (caret_position + (a_tag.count + 2), caret_position + (l_text.count - 1) - (a_tag.count + 3))
+			else
+				set_caret_position (caret_position + a_tag.count + 2)
+			end			
 			if l_prev_text /= Void then
 				shared_document_editor.clipboard.set_text (l_prev_text)
 			end
@@ -316,8 +339,8 @@ feature -- Status Setting
 			done: BOOLEAN
 			l_char: CHARACTER
 		do
-			should_update := False
-			if a_key.code = (create {EV_KEY_CONSTANTS}).key_enter then
+			if a_key.code = enter_key_code then
+				should_update := False
 				l_string := line (current_line_number - 1)
 				if l_string /= Void and then not l_string.is_empty then
 					from
@@ -346,9 +369,9 @@ feature -- Status Setting
 						insert_text (l_string)
 						set_caret_position (caret_position + l_tab_count)
 					end
-				end
+				end				
 			end
-			internal_update_subject			
+			should_update := True
 		end 
 
 feature -- Query
@@ -394,10 +417,8 @@ feature {NONE} -- Implementation
 	internal_update_subject is
 			-- Update subject
 		do
-			should_update := False
-			document.set_text (text)
-			update_line_display	
-			should_update := True
+			notify_observers
+			update_line_display
 		end		
 
 	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -551,11 +572,20 @@ feature {NONE} -- Implementation
 				l_url := a_url
 			end
 			l_end_pos := l_start_pos + l_url.count
+			if has_selection then
+				cut_selection
+			end
 			insert_text (l_url)
 			select_region (l_start_pos, l_end_pos)
 		end		
 
 	is_in_default_state: BOOLEAN is True
 			-- Is in default state
+
+    enter_key_code: INTEGER is
+    		-- Enter key
+    	once    		
+    		Result := (create {EV_KEY_CONSTANTS}).key_enter	
+    	end
 
 end -- class DOCUMENT_TEXT_WIDGET

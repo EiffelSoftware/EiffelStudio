@@ -110,6 +110,7 @@ feature {NONE} -- Implementation
 			Result.extend ("TM", "&amp;#153;")
 			Result.extend ("copyright", "&amp;#169;")
 			Result.extend ("registered trademark", "&amp;#174;")			
+			Result.extend ("blank space", "&amp;nbsp;")
 		end
 
 end -- class CHARACTER_DIALOG

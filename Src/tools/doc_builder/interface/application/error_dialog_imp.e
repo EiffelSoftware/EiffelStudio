@@ -35,9 +35,8 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_1
 			create l_ev_label_1
 			create l_ev_tool_bar_1
-			create back
-			create forth
-			create errors
+			create close
+			create errors_notebook
 			create l_ev_cell_1
 			create l_ev_horizontal_box_2
 			create error_count
@@ -49,9 +48,8 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_1)
-			l_ev_tool_bar_1.extend (back)
-			l_ev_tool_bar_1.extend (forth)
-			l_ev_vertical_box_1.extend (errors)
+			l_ev_tool_bar_1.extend (close)
+			l_ev_vertical_box_1.extend (errors_notebook)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (error_count)
@@ -60,7 +58,7 @@ feature {NONE}-- Initialization
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_height)
-			set_title ("Error Report")
+			set_title ("Error Report Dialog")
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
@@ -69,11 +67,10 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.set_padding_width (padding_width)
 			l_ev_horizontal_box_1.set_border_width (border_width)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_1)
-			l_ev_label_1.set_text ("The following listed errors occured:")
-			l_ev_label_1.set_minimum_height (25)
+			l_ev_label_1.set_text ("Double-click an error for context sensitive information")
 			l_ev_label_1.align_text_left
-			back.set_tooltip ("Back")
-			forth.set_tooltip ("Forth")
+			close.set_tooltip ("Close")
+			close.set_pixmap (icon_file_close_ico)
 			l_ev_cell_1.set_minimum_height (4)
 			l_ev_horizontal_box_2.set_padding_width (padding_width)
 			l_ev_horizontal_box_2.set_border_width (border_width)
@@ -97,8 +94,8 @@ feature -- Access
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	l_ev_label_1, error_count: EV_LABEL
 	l_ev_tool_bar_1: EV_TOOL_BAR
-	back, forth: EV_TOOL_BAR_BUTTON
-	errors: EV_LIST
+	close: EV_TOOL_BAR_BUTTON
+	errors_notebook: EV_NOTEBOOK
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	ok: EV_BUTTON
 

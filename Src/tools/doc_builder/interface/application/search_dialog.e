@@ -43,6 +43,9 @@ feature -- Display
 		do
 			Precursor (a_window)	
 			search_text.set_focus
+			if not search_text.text.is_empty then				
+				search_text.select_all	
+			end
 		end		
 		
 feature -- Status Setting
@@ -53,6 +56,49 @@ feature -- Status Setting
 			widget_not_void: a_widget /= Void
 		do
 			text_widget := a_widget			
+		end
+
+feature -- Commands
+
+	search is
+			-- Search for text in 'search_text' and highlight in 
+			-- `text_widget' if found.  If not found load message dialog
+		local
+			l_match_pos,
+			l_last_position,
+			l_string_length,
+			l_text_length: INTEGER
+			l_text,
+			l_search_text: STRING
+		do
+			if not search_text.text.is_empty then 
+				l_last_position := text_widget.caret_position
+				l_string_length := search_text.text.count
+				l_text_length := text_widget.text.count
+				l_text := text_widget.text.substring (l_last_position, l_text_length)
+				l_search_text := search_text.text.twin
+				l_text.to_upper
+				l_search_text.to_upper
+						
+				l_match_pos := l_text.substring_index (l_search_text, 1)
+				
+				if l_match_pos = 0 then
+						-- If there was no match from the caret go back to the start
+					l_last_position := 1
+					l_text := text_widget.text.substring (l_last_position, l_text_length)
+					l_text.to_upper
+					l_match_pos := l_text.substring_index (l_search_text, 1)
+				end
+												
+				if l_match_pos > 0 then
+					l_match_pos := l_match_pos + l_last_position
+					if not text_widget.has_focus then
+						text_widget.set_focus
+					end
+					text_widget.select_region (l_match_pos - 1, l_match_pos + l_string_length - 2)
+					text_widget.scroll_to_line (text_widget.current_line_number)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -66,26 +112,6 @@ feature {NONE} -- Implementation
 			Result := text_widget.caret_position
 			if Result = 0 then
 				Result := 1
-			end
-		end
-
-	search is
-			-- Search for text in 'search_text' and highlight in 
-			-- `text_widget' if found.  If not found load message dialog
-		local
-			l_string_pos,
-			l_string_length: INTEGER
-		do
-			if not search_text.text.is_empty then 
-				l_string_pos := text_widget.search (search_text.text, start_position)
-				l_string_length := search_text.text.count
-				if l_string_pos > 0 then
-					if not text_widget.has_focus then
-						text_widget.set_focus
-					end
-					text_widget.select_region (l_string_pos, l_string_pos + l_string_length - 1)
-					text_widget.scroll_to_line (text_widget.current_line_number)
-				end	
 			end
 		end
 	

@@ -179,10 +179,8 @@ feature {NONE} -- Implementation
 	set_options is
 			-- Set options chosen in widgets
 		local
-			l_formatter: XM_ESCAPED_FORMATTER
 			l_meta_array,
 			l_toc_array: ARRAY [STRING]
-			l_output: KL_STRING_OUTPUT_STREAM
 		do
 			l_meta_array := <<"document", "meta_data">>
 			l_toc_array := <<"document", "meta_data", "help", "toc">>
@@ -229,14 +227,10 @@ feature {NONE} -- Implementation
 				if not toc_20_pseudo_text.text.is_empty then
 					document.set_element (xm_document, l_toc_array, "envision_pseudo_name", toc_20_pseudo_text.text)
 				end
-			end	
-				
-			create l_formatter.make
-			create l_output.make_empty
-			l_formatter.set_output (l_output)
-			l_formatter.process_document (xm_document)			
-			document.set_text (pretty_xml (l_output.string))
-			document.widget.internal_edit_widget.set_text (document.text)
+			end					
+			
+			document.set_text (document_text (xm_document))
+			document.widget.internal_edit_widget.set_text (pretty_xml (document.text))
 			
 					-- Synchronization
 			Shared_document_manager.Synchronizer.add_document (document)

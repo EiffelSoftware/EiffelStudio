@@ -294,6 +294,8 @@ feature -- Basic Operations
 			class_desc: CLASS_DESCRIPTOR
 			count, i: INTEGER
 			matcher: KMP_MATCHER
+			eiffel_class: CLASS_I
+			dotnet_class: EXTERNAL_CLASS_I
 		do
 			if Eiffel_project.initialized and then a_string /= Void then
 				if is_substring then
@@ -308,17 +310,29 @@ feature -- Basic Operations
 					until
 						i > count
 					loop
-						matcher.set_text (classes.item (i).lace_class.name)
+						eiffel_class := classes.item (i).lace_class
+						matcher.set_text (eiffel_class.name)
 						if matcher.search_for_pattern then
-							create class_desc.make_with_class_i (classes.item (i).lace_class)
-							if not class_desc.is_external then
-								res.extend (class_desc)
+							create class_desc.make_with_class_i (eiffel_class)
+							res.extend (class_desc)
+						else
+							dotnet_class ?= eiffel_class
+							if dotnet_class /= Void then
+								if dotnet_class.is_compiled then
+									matcher.set_text (dotnet_class.compiled_class.name)
+								else
+									matcher.set_text (dotnet_class.external_name)
+								end
+								if matcher.search_for_pattern then
+									create class_desc.make_with_class_i (dotnet_class)
+									res.extend (class_desc)
+								end
 							end
-						end
+						end	
 						i := i + 1
 					end
 				else
-					matching_classes := Eiffel_universe.compiled_classes_with_name (a_string)
+					matching_classes := Eiffel_universe.classes_with_name (a_string)
 					create res.make (matching_classes.count)
 					from
 						matching_classes.start

@@ -18,6 +18,10 @@ inherit
 			feature_count,
 			flat_features,
 			flat_feature_count,
+			inherited_features,
+			inherited_feature_count,
+			creation_routines,
+			creation_routine_count,
 			clients,
 			client_count,
 			suppliers,
@@ -199,6 +203,72 @@ feature -- Access
 			end
 		end
 		
+	inherited_features: FEATURE_ENUMERATOR is
+			-- List of all inherited class features.
+		local
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			l: ARRAYED_LIST [FEATURE_I]
+			f: FEATURE_DESCRIPTOR
+		do
+			if is_in_system then
+				l := compiler_class.compiled_class.feature_table.linear_representation
+				create res.make (l.count)
+				from
+					l.start
+				until
+					l.after
+				loop
+					if l.item.written_in /= compiler_class.compiled_class.feature_table.feat_tbl_id then
+						create f.make_with_class_i_and_feature_i (compiler_class, l.item)
+						res.extend (f)						
+					end
+					l.forth
+				end
+				create Result.make (res)
+			end
+		ensure then
+			result_exists: is_in_system implies Result /= Void			
+		end
+		
+	inherited_feature_count: INTEGER is
+			-- Number of inherited features.
+		do
+			if is_in_system then
+				Result := inherited_features.count
+			end		
+		end
+		
+	creation_routines: FEATURE_ENUMERATOR is
+			-- Creation routines of current.
+		local
+			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
+			l: HASH_TABLE [EXPORT_I, STRING]
+		do
+			if is_in_system then
+				l := compiler_class.compiled_class.creators
+				create res.make (l.count)
+				from
+					l.start
+				until
+					l.after
+				loop
+					res.extend (feature_with_name (l.key_for_iteration))
+					l.forth
+				end
+				create Result.make (res)
+			end
+		ensure then
+			result_exists: Result /= Void
+		end
+		
+	creation_routine_count: INTEGER is
+			-- 
+		do
+			if is_in_system then
+				Result := creation_routines.count
+			end
+		end
+
 	feature_with_name (a_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature with name `a_name' in `Current'.
 			-- Void if none.

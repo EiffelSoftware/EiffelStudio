@@ -80,6 +80,34 @@ feature -- Status Report
 			Result := True
 		end
 
+	inherited_features_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `inherited_features'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	inherited_feature_count_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `inherited_feature_count'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	creation_routines_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `creation_routines'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	creation_routine_count_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `creation_routine_count'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	clients_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `clients'.
 			-- Redefine in descendants if needed.
@@ -249,6 +277,38 @@ feature -- Basic Operations
 			-- Number of flat class features.
 		require
 			flat_feature_count_user_precondition: flat_feature_count_user_precondition
+		deferred
+
+		end
+
+	inherited_features: IENUM_FEATURE_INTERFACE is
+			-- List of class inherited features.
+		require
+			inherited_features_user_precondition: inherited_features_user_precondition
+		deferred
+
+		end
+
+	inherited_feature_count: INTEGER is
+			-- Number of inherited features.
+		require
+			inherited_feature_count_user_precondition: inherited_feature_count_user_precondition
+		deferred
+
+		end
+
+	creation_routines: IENUM_FEATURE_INTERFACE is
+			-- List of class creation routines.
+		require
+			creation_routines_user_precondition: creation_routines_user_precondition
+		deferred
+
+		end
+
+	creation_routine_count: INTEGER is
+			-- Number of creation routines.
+		require
+			creation_routine_count_user_precondition: creation_routine_count_user_precondition
 		deferred
 
 		end

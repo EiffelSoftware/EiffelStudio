@@ -120,6 +120,30 @@ public:
 
 
 	/*-----------------------------------------------------------
+	List of class inherited features.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP inherited_features(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Number of inherited features.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP inherited_feature_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	List of class creation routines.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP creation_routines(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Number of creation routines.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP creation_routine_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	List of class clients.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_clients ) = 0;

@@ -41,7 +41,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumAssembly_impl_stub::Next(  /* [out] */ e
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_135 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_137 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -58,7 +58,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumAssembly_impl_stub::Next(  /* [out] */ e
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_135 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_137 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
 	
 	END_ECATCH;
@@ -145,7 +145,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumAssembly_impl_stub::ith_item(  /* [in] *
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_135 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_137 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -157,7 +157,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumAssembly_impl_stub::ith_item(  /* [in] *
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_135 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_137 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	
 	END_ECATCH;
 	return S_OK;

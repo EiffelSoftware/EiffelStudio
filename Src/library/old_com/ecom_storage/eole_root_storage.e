@@ -10,9 +10,29 @@ class
 
 inherit
 	EOLE_UNKNOWN
+		export
+			{NONE}	create_ole_interface_ptr
+		redefine
+			interface_identifier,
+			is_initializable_from_eiffel
+		end
 
 creation
 	make
+
+feature -- Access
+
+	interface_identifier: STRING is
+			-- Interface identifier
+		once
+			Result := Iid_root_storage
+		end
+
+	is_initializable_from_eiffel: BOOLEAN is
+			-- Does interface support Callbacks?
+		once
+			Result := False
+		end
 	
 feature -- Message Transmission
 

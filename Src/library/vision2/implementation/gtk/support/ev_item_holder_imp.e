@@ -124,7 +124,7 @@ feature -- Element change
 		do
 			remove
 			add_to_container (v)
-			reorder_child (v, index - 1)
+			reorder_child (v, index)
 		end
 
 	put_front (v: like item) is
@@ -133,7 +133,7 @@ feature -- Element change
 		do
 			index := index + 1
 			add_to_container (v)
-			reorder_child (v, 0)
+			reorder_child (v, 1)
 		end
 
 	put_right (v: like item) is
@@ -141,7 +141,7 @@ feature -- Element change
 			-- Do not move cursor.
 		do
 			add_to_container (v)
-			reorder_child (v, index)
+			reorder_child (v, index + 1)
 		end
 
 
@@ -150,10 +150,10 @@ feature -- Removal
 	prune (v: like item) is
 			-- Remove `v' if present.
 		local
-			imp: EV_WIDGET_IMP
+			a_position: INTEGER
 		do
-			imp ?= v.implementation
-			C.gtk_container_remove (list_widget, imp.c_object)
+			a_position := interface.index_of (v, 1)
+			remove_item_from_position (a_position)
 		end
 
 	remove is
@@ -210,7 +210,7 @@ feature -- Implementation
 			imp: EV_WIDGET_IMP
 		do
 			imp ?= v.implementation
-			gtk_reorder_child (list_widget, imp.c_object, a_position)
+			gtk_reorder_child (list_widget, imp.c_object, a_position - 1)
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -251,6 +251,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/17 21:48:34  king
+--| Corrected reorder_child functions, reimplemented prune
+--|
 --| Revision 1.10  2000/02/16 20:25:05  king
 --| Abstracted a remove_item_from_position to avoid a lot of redefinition in mclist
 --|

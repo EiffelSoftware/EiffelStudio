@@ -1,5 +1,7 @@
 indexing
-	description: ""
+	description: "Monitor example root class."
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class
 	MONITOR_SYNCHRONIZATION
@@ -10,8 +12,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			-- Main entry point.
 		local
 			 counter: INTEGER
 			 dummy : BOOLEAN
@@ -22,7 +23,8 @@ feature {NONE} -- Initialization
 			until
 				counter > num_operations
 			loop
-				dummy := feature {THREAD_POOL}.queue_user_work_item_wait_callback_object (create {WAIT_CALLBACK}.make (Current, $update_resource), counter)
+				dummy := feature {THREAD_POOL}.queue_user_work_item_wait_callback_object (
+					create {WAIT_CALLBACK}.make (Current, $update_resource), counter)
 				counter := counter + 1
 			end
 
@@ -67,7 +69,7 @@ feature -- Basic Operation
 --			if num_operations <= 0 then
 --				dummy := l_async_operations.set
 --			end
-			if feature {INTERLOCKED}.decrement_integer (num_operations) = 0 then
+			if feature {INTERLOCKED}.decrement_integer ($num_operations) = 0 then
 				dummy := l_async_operations.set
 			end
 		end

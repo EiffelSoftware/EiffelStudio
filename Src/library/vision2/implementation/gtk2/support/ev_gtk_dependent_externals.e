@@ -8,6 +8,154 @@ class
 
 feature -- Externals
 
+	frozen gdk_event_window_state_struct_changed_mask (a_c_struct: POINTER): INTEGER is
+			-- (from C_GDK_EVENT_CONFIGURE_STRUCT)
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventWindowState): EIF_INTEGER"
+		alias
+			"changed_mask"
+		end
+
+	frozen gdk_event_window_state_struct_new_window_state (a_c_struct: POINTER): INTEGER is
+			-- (from C_GDK_EVENT_CONFIGURE_STRUCT)
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventWindowState): EIF_INTEGER"
+		alias
+			"new_window_state"
+		end
+
+	frozen gdk_window_state_withdrawn_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_WITHDRAWN"
+		end
+
+	frozen gdk_window_state_iconified_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_ICONIFIED"
+		end
+
+	frozen gdk_window_state_maximized_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_MAXIMIZED"
+		end
+
+	frozen gdk_window_state_sticky_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_STICKY"
+		end
+
+	frozen gdk_window_state_fullscreen_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_FULLSCREEN"
+		end
+
+	frozen gdk_window_state_above_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_ABOVE"
+		end
+
+	frozen gdk_window_state_below_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_BELOW"
+		end
+
+	frozen pango_pixels (a_value: INTEGER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"PANGO_PIXELS ($a_value)"
+		end
+
+	frozen gtk_widget_set_redraw_on_allocate (a_widget: POINTER; redraw_on_allocate: BOOLEAN) is
+		external
+			"C signature (GtkWidget*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_set_double_buffered (a_widget: POINTER; is_buffered: BOOLEAN) is
+		external
+			"C signature (GtkWidget*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_invalidate_rect (a_window, a_rectangle: POINTER; invalidate_children: BOOLEAN) is
+		external
+			"C signature (GdkWindow*, GdkRectangle*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_set_debug_updates (a_setting: BOOLEAN) is
+		external
+			"C signature (gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_set_modal_hint (a_window: POINTER; a_hint: BOOLEAN) is
+		external
+			"C signature (GdkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_peek_children (a_window: POINTER): POINTER is
+		external
+			"C signature (GdkWindow*): GList use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_process_all_updates is
+		external
+			"C use <gtk/gtk.h>"
+		end
+
+	frozen gtk_event_box_set_visible_window (a_event_box: POINTER; visible_window: BOOLEAN) is
+		external
+			"C signature (GtkEventBox*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_event_box_set_above_child (a_event_box: POINTER; above_child: BOOLEAN) is
+		external
+			"C signature (GtkEventBox*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_scroll_up_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_SCROLL_UP"
+		end
+
+	frozen gdk_scroll_down_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_SCROLL_DOWN"
+		end
+
+	frozen gdk_window_freeze_updates (a_window: POINTER) is
+		external
+			"C signature (GdkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_thaw_updates (a_window: POINTER) is
+		external
+			"C signature (GdkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_set_minimum_size (a_widget: POINTER; a_width, a_height: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_widget_set_size_request ((GtkWidget*) $a_widget, (gint) $a_width, (gint) $a_height)"
+		end
+
 	frozen gtk_file_chooser_list_filters (a_file_chooser: POINTER): POINTER is
 		external
 			"C signature (GtkFileChooser*): GSList use <gtk/gtk.h>"
@@ -1406,6 +1554,30 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"g_value_get_int ((GValue*) $arg)"
+		end
+
+	frozen gtk_value_uchar (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_uchar ((GValue*) $arg)"
+		end
+
+	frozen gtk_value_enum (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_enum ((GValue*) $arg)"
+		end
+
+	frozen gtk_value_flags (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_flags ((GValue*) $arg)"
 		end
 
 	frozen gtk_value_uint (arg: POINTER): INTEGER is

@@ -1,31 +1,60 @@
 system
-	brushes_demo
+	"brushes_demo"
 
-root 
-	BRUSHES_DEMO (root_cluster): "make"
+root
+	BRUSHES_DEMO: make
 
 default
-	assertion (all)
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
 
-cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\brushes"
 
-		-- EiffelBase
-	all base: 		"$ISE_EIFFEL\library\base"
+-- EiffelBase
+-- WEL
+-- brushes_demo
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\wel\brushes"
+
+
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"
-			"desc"
+			"table_eiffel3"; "desc"; 
 		end
 
-		-- WEL
-	all wel: 		"$ISE_EIFFEL\library\wel"
+	all wel:		"$ISE_EIFFEL\library\wel"
 		exclude
-			"spec"
-			"clib"
+			"spec"; "clib";
 		end
 
 external
-	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
-	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
-end -- brushes_demo
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+
+end

@@ -389,12 +389,6 @@ feature {EV_APPLICATION_IMP} -- Destruction
 
 feature {NONE} -- Implementation
 
-	C: EV_C_EXTERNALS is
-			--
-		once
-			create Result
-		end
-
 	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER) is
 			-- Call `action' with GTK+ event data from `args'.
 			-- There are `n_args' GtkArg*s in `args'.

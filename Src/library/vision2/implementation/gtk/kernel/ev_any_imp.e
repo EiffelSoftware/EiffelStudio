@@ -99,13 +99,11 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			end
 			is_destroyed := True
 			disconnect_all_signals
-			C.gtk_tooltips_set_tip (
-				app_implementation.tooltips,
-				c_object,
-				NULL,
-				NULL
-			)
-			C.gtk_object_destroy (c_object)
+			if C.gtk_is_window (c_object) then
+				C.gtk_object_destroy (c_object)
+			else
+				C.gtk_object_unref (c_object)
+			end	
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL
@@ -142,10 +140,12 @@ feature {EV_ANY_I} -- Event handling
 			an_agent_not_void: an_agent /= Void
 		local
 			a_connection_id: INTEGER
+			temp_string: ANY
 		do
+			temp_string := a_signal_name.to_c
 			a_connection_id := c_signal_connect_true (
 				c_object,
-				eiffel_to_c (a_signal_name),
+				$temp_string,
 				an_agent
 			)
 			signal_ids.extend (a_connection_id)
@@ -304,8 +304,7 @@ feature {EV_ANY_I} -- Event handling
 			)
 		end
 
-	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is
-		
+	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
 		once
 			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
@@ -328,7 +327,7 @@ feature {NONE} -- Implementation
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
-				gtk_object_destroy (c_object)
+				gtk_object_unref (c_object)
 			end
 			Precursor {IDENTIFIED}
 		end
@@ -399,14 +398,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External implementation
 
-	c_memory_free (a_pointer: POINTER) is
-			-- Free memory allocated by malloc, calloc and realloc.
-		external
-			"C | <stdlib.h>"
-		alias
-			"free"
-		end
-
 	set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
 		c_object_dispose_address: POINTER) is
 				-- Store Eiffel object_id in `gtk_object'.
@@ -471,14 +462,6 @@ feature {NONE} -- External implementation
         	external
             		"C (GtkObject*, gpointer) | <gtk/gtk.h>"
         	end
-
-feature {EV_GTK_CALLBACK_MARSHAL}
-
-	C: EV_C_EXTERNALS is
-			-- Access to external C functions.
-		once
-			create Result
-		end
 
 invariant
 	c_invariant: c_object /= NULL implies c_invariant (c_object)

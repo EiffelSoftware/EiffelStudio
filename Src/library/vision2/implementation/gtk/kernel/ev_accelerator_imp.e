@@ -54,11 +54,14 @@ feature {NONE} -- Implementation
 
 	add_accel is
 			-- Add the current key combination to the invisible button.
+		local
+			temp_string: ANY
 		do
 			if accel_group /= NULL then
+				temp_string := ("pressed").to_c
 				C.gtk_widget_add_accelerator (
 					c_object,
-					eiffel_to_c ("pressed"),
+					$temp_string,
 					accel_group,
 					key_code_to_gtk (key.code),
 					modifier_mask,

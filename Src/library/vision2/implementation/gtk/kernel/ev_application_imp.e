@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			temp_int: INTEGER
 		do
 			base_make (an_interface)
-			create C
 	
 			-- Set Debug mode from environment variable.
 			temp_string := get ("ISE_GTK_DEBUG")
@@ -347,9 +346,6 @@ feature -- Implementation
 
 	is_in_gtk_main: BOOLEAN
 			-- Is execution currently in gtk_main?
-
-	C: EV_C_EXTERNALS
-			-- Access to C externals.
 
 	internal_idle_actions_connection_id: INTEGER
 			-- GTK connection handle.

@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
  	make (an_interface: like interface) is
  			-- Create the default font.
 		do
-			create C
 			base_make (an_interface)
 			family := Family_sans
 			weight := Weight_regular
@@ -161,8 +160,11 @@ feature -- Status report
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
+		local
+			temp_string: ANY
 		do
-			Result := C.gdk_string_width (c_object, eiffel_to_c (a_string))
+			temp_string := a_string.to_c
+			Result := C.gdk_string_width (c_object, $temp_string)
 		end
 
 	horizontal_resolution: INTEGER is
@@ -517,9 +519,7 @@ feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 		-- Reference to the GdkFont object.
 
 feature {NONE} -- Implementation
-
-	C: EV_C_EXTERNALS
-
+		
 	full_name: STRING
 			-- The full name of the string.
 

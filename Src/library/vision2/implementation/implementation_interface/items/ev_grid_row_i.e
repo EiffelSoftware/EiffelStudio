@@ -216,80 +216,51 @@ feature -- Status setting
 		require
 			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
-		local
-			subrow_index: INTEGER
-			expanded_items: INTEGER
 		do
 			if not is_expanded then
 				is_expanded := True
 					
-					-- Now calculate how may items have been expanded.
-				from
-					subrow_index := 1
-				until
-					subrow_index > subrow_count
-						-- iterate all rows parented within `Current'.
-				loop
-					expanded_items := expanded_items + 1
-						-- Add one for the current row which is now visible.
-						
-					expanded_items := expanded_items + subrows.i_th (subrow_index).expanded_subnode_count_recursive
-						-- Add the number of expanded items for that row.
-						
-					subrow_index := subrow_index + 1
-				end			
-				update_parent_expanded_node_counts_recursively (expanded_items)
+				update_parent_expanded_node_counts_recursively (contained_expanded_items_recursive)
 					-- Update the expanded node counts for `Current' and all parent nodes.
-					
-				parent_i.adjust_hidden_node_count ( - expanded_items)
-					-- Update the hidden node count.
 			
-				parent_i.recompute_row_offsets (index)
+				if displayed_in_grid_tree then
+						-- Only recompute the row offsets if `Current' is visible
+						-- otherwise the row offsets are already correct.
+					parent_i.recompute_row_offsets (index)
+				end
+
 				parent_i.recompute_vertical_scroll_bar
 				parent_i.redraw_client_area
 			end
 		ensure
 			is_expanded: is_expanded
+			node_counts_correct: node_counts_correct
 		end
-		
+	
 	collapse is
 			-- Hide all subrows of `Current'.
 		require
 			is_parented: parent /= Void
-		local
-			subrow_index: INTEGER
-			collapsed_items: INTEGER
 		do
 			if is_expanded then
 				is_expanded := False
-				
-					-- Now calculate how may items have been collapsed.
-				from
-					subrow_index := 1
-				until
-					subrow_index > subrow_count
-						-- iterate all rows parented within `Current'.
-				loop
-					collapsed_items := collapsed_items + 1
-						-- Add one for the current row which is now hidden.
-						
-					collapsed_items := collapsed_items + subrows.i_th (subrow_index).expanded_subnode_count_recursive
-						-- Add the number of expanded items for that row.
-						
-					subrow_index := subrow_index + 1
-				end
-				update_parent_expanded_node_counts_recursively (- collapsed_items)
+
+				update_parent_expanded_node_counts_recursively (- contained_expanded_items_recursive)
 					-- Update the expanded node counts for `Current' and all parent nodes.
-					
-				parent_i.adjust_hidden_node_count (collapsed_items)
-					-- Update the hidden node count.
+
 				
-				parent_i.recompute_row_offsets (index)
+				if displayed_in_grid_tree then
+						-- Only recompute the row offsets if `Current' is visible
+						-- otherwise the row offsets are already correct.
+					parent_i.recompute_row_offsets (index)
+				end
+				
 				parent_i.recompute_vertical_scroll_bar
 				parent_i.redraw_client_area
 			end
 		ensure
 			not_is_expanded: not is_expanded
+			node_counts_correct: node_counts_correct
 		end
 		
 	set_height (a_height: INTEGER) is
@@ -360,6 +331,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
+			node_counts_correct: node_counts_correct
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -577,12 +549,91 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			from
 				parent_row_imp := Current
 			until
-				parent_row_imp = Void
+				(parent_row_imp = Void) or (parent_row_imp /= Current and not parent_row_imp.is_expanded)
 			loop
 				parent_row_imp.set_expanded_subnode_count_recursive (parent_row_imp.expanded_subnode_count_recursive + adjustment_value)
 				parent_row_imp := parent_row_imp.parent_row_i
 			end
+			if parent_row_imp = Void then
+				parent_i.adjust_hidden_node_count ( - adjustment_value)
+			end
 		end
+		
+feature {NONE} -- Implementation
+
+	node_counts_correct: BOOLEAN is
+			-- Are the node counts for `Current' in a valid state?
+			-- This was originally written as class invaraints, but as the node setting
+			-- is performed recursively, we would need a global variable to turn this checking
+			-- off. Instead we now check this function from the postcondition of and feature
+			-- that may modify the expanded states of nodes.
+		do
+			Result := True
+			if is_initialized and then subrows.count = 0 then
+				Result := subnode_count_recursive = 0
+			end
+			if is_initialized and then subrows.count = 0 then
+				Result := Result and expanded_subnode_count_recursive = 0
+			end
+			if is_initialized and then subrow_count > 0 then
+				Result := Result and subnode_count_recursive >= subrow_count
+			end
+			if is_initialized and then subrow_count > 0 and then is_expanded then
+				Result := Result and expanded_subnode_count_recursive >= subrow_count
+			end
+			if is_initialized and then subrow_count > 0 and then not is_expanded then
+				Result := Result and expanded_subnode_count_recursive >= 0
+			end
+			Result := Result and expanded_subnode_count_recursive <= subnode_count_recursive
+			if parent_i.is_tree_enabled then
+				Result := Result and parent_i.hidden_node_count <= parent_i.row_count - 1
+			end
+		end
+		
+	contained_expanded_items_recursive: INTEGER is
+			-- `Result' is sum of of expanded nodes for each of the child rows
+			-- of `Current', and each child row themselves. This is used when expanding
+			-- or collapsing items to determine how many nodes are now visible or hidden.
+		local
+			subrow_index: INTEGER
+		do
+			from
+				subrow_index := 1
+			until
+				subrow_index > subrow_count
+					-- iterate all rows parented within `Current'.
+			loop
+				Result := Result + 1
+					-- Add one for the current row which is now hidden.
+					
+				Result := Result + subrows.i_th (subrow_index).expanded_subnode_count_recursive
+					-- Add the number of expanded items for that row.
+					
+				subrow_index := subrow_index + 1
+			end
+		ensure
+			result_non_negative: result >= 0
+		end
+		
+		displayed_in_grid_tree: BOOLEAN is
+				-- Is `Current' displayed in the tree of `grid'?
+				-- If not parented at any level or one of these
+				-- parents is not expanded then `Result' is `False'.
+			local
+				l_parent: EV_GRID_ROW_I
+			do
+				Result := True
+				from
+					l_parent := parent_row_i
+				until
+					l_parent = Void or not Result
+				loop
+					if not l_parent.is_expanded then
+						Result := False
+					end
+					l_parent := l_parent.parent_row_i
+				end
+			end
 		
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 
@@ -594,11 +645,6 @@ invariant
 	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
 	selected_item_count_valid: is_initialized implies selected_item_count >= 0 and then selected_item_count <= count
 	subrows_not_void: is_initialized implies subrows /= Void
-	subnode_count_recursive_zero_when_no_subrows: is_initialized and then subrows.count = 0 implies subnode_count_recursive = 0
-	expanded_subnode_count_recursive_zero_when_no_subrows: is_initialized and then subrows.count = 0 implies expanded_subnode_count_recursive = 0
---	subnode_count_recursive_at_least_subrow_count: is_initialized and then subrow_count > 0 implies subnode_count_recursive >= subrow_count
-	expanded_subnode_count_recursive_at_least_subrow_count_when_expanded: is_initialized and then subrow_count > 0 and then is_expanded implies expanded_subnode_count_recursive >= subrow_count
-	expanded_subnode_count_recursive_non_negative_while_collapsed: is_initialized and then subrow_count > 0 and then not is_expanded implies expanded_subnode_count_recursive >= 0
 end
 
 --|----------------------------------------------------------------

@@ -624,8 +624,7 @@ feature -- JIT info
 			l_module_key_name := module_key (a_module.get_name)
 			if loaded_modules.is_empty then
 					-- We have to deal with the MSCORLIB.DLL module 
-					--| FIXME: JFIAT : 2003/12/23 : to check if the first module 
-					--|              : is always MSCORLIB
+					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module 
 				mscorlid_module := a_module
 			end
 			loaded_modules.put (a_module, l_module_key_name)

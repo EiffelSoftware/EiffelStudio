@@ -205,8 +205,9 @@ feature {NONE} -- Constants
 	token_Exception_ToString_v1_2: INTEGER is 0x06000212			
 			--| v1.2 => System.Exception::_message: string :: 0x06000212 |--	
 
-	token_Exception_get_Message_v1_2: INTEGER is 0x06000185	--| FIXME: JFIAT: please put real data
-			--| v1.2 => System.Exception::get_Message(): string :: 0x |--
+	token_Exception_get_Message_v1_2: INTEGER is 0x06000185	
+			--| v1.2 => System.Exception::get_Message(): string :: 0x??? |--
+			--| FIXME JFIAT: please put real data for token_Exception_get_Message_v1_2
 			
 	token_Exception_get_Message_v1_1: INTEGER is 0x06000185			
 			--| v1.1 => System.Exception::get_Message(): string :: 0x06000185 |--	

@@ -1,6 +1,6 @@
 # Finalized Version
-#CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
-CFLAGS = -nologo -Zi -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION -DASSERTIONS
+CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+#CFLAGS = -nologo -Zi -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION -DASSERTIONS
 
 all:: cli_writer.lib
 	del *.lib

@@ -79,7 +79,7 @@ feature -- Element change
 				loop
 					create eiffel_list.make (1);
 					eiffel_list.extend (names.i_th (i));
-					new_feature_as := clone (feature_as);
+					new_feature_as := feature_as.twin
 					new_feature_as.set_feature_names (eiffel_list);
 					create adapter;
 					adapter.register (new_feature_as, format_reg);
@@ -107,9 +107,9 @@ feature -- Element change
 						list.after
 					loop
 						t_feat := list.item;	
-						new_feature_as := clone (feature_as);
+						new_feature_as := feature_as.twin
 						create adapter;
-						f_name := clone (names.first)
+						f_name := names.first.twin
 						f_name.set_name (source_feature.feature_name);
 						create eiffel_list.make (1);
 						eiffel_list.extend (f_name);
@@ -147,8 +147,7 @@ feature {NONE} -- Implementation
 			create Result.make (40)
 			Result.append (" Was declared")
 			if class_name /= Void then
-				s := clone (class_name)
-				s.to_upper
+				s := class_name.as_upper
 				Result.append (" in ")
 				Result.append (s)
 			end

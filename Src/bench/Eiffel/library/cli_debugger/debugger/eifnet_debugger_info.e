@@ -193,7 +193,7 @@ feature -- Progression
 
 	save_current_stack_as_previous is
 		do
-			previous_stack_info := clone (current_stack_info)
+			previous_stack_info := current_stack_info.twin
 		ensure
 			current_stack_saved: previous_stack_info.is_equal (current_stack_info)
 		end
@@ -601,7 +601,7 @@ feature -- JIT info
 			end
 			
 			debug ("debugger_trace_eifnet")
-				l_module_key_name_tail := clone (l_module_key_name)
+				l_module_key_name_tail := l_module_key_name.twin
 				l_module_key_name_tail.keep_tail (30)
 				print ("Load module [.. " + l_module_key_name_tail + "]%N")
 			end
@@ -636,8 +636,7 @@ feature {NONE} -- JIT info implementation
 	module_key (a_module_name: STRING): STRING is
 			-- module name formatted to be a key
 		do
-			Result := clone (a_module_name)
-			Result.to_lower
+			Result := a_module_name.as_lower
 		end
 
 	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING]

@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 					if eif_comments = Void or else eif_comments.is_empty then
 						order := default_feature_clause_order
 					else
-						comment := clone (eif_comments.first);
+						comment := eif_comments.first.twin
 						comment.left_adjust; -- Remove leading blanks
 						order := feature_clause_order_table.item (comment);
 						if order = 0 then

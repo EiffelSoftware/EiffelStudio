@@ -11,10 +11,6 @@ inherit
 
 	IDABLE;
 	SHARED_COUNTER;
-	SHARED_SERVER
-		export
-			{ANY} all
-		end;
 	SHARED_AST_CONTEXT
 		rename
 			context as ast_context
@@ -87,7 +83,7 @@ feature -- Access
 	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			-- Formal generical parameters
 
- 	descendants: LINKED_LIST [CLASS_C];
+	descendants: LINKED_LIST [CLASS_C];
 			-- Direct descendants of the current class
 
 	clients: LINKED_LIST [CLASS_C];
@@ -107,6 +103,9 @@ feature -- Access
 		do
 			Result := propagators.make_pass3;
 		end; -- changed3
+
+	changed3a : BOOLEAN
+			-- Type check?
 
 	changed4: BOOLEAN;
 			-- Has the class a new class type ?
@@ -366,7 +365,62 @@ feature -- Access
 				end;
 			end;
 		end;
+feature -- Conformance dependenies
 
+	conf_dep_classes : LINKED_LIST [CLASS_C]
+			-- Classes which depend on Current's conformance
+			-- to some other class.
+
+	add_dep_class (a_class : CLASS_C) is
+			-- Add `a_class' to `conf_dep_classes'
+			-- Do nothing if already there.
+		require
+			not_void : a_class /= Void
+		do
+			if conf_dep_classes = Void then
+				!!conf_dep_classes.make
+			end
+
+			if not conf_dep_classes.has (a_class) then
+				conf_dep_classes.extend (a_class)
+			end
+		ensure
+			has_dep_class : has_dep_class (a_class)
+		end
+
+	remove_dep_class (a_class : CLASS_C) is
+			-- Remove `a_class' from `conf_dep_classes'
+		require
+			not_void : a_class /= Void
+			has      : has_dep_class (a_class)
+		local
+			found : BOOLEAN
+		do
+			from
+				conf_dep_classes.start
+			until
+				found or else conf_dep_classes.after
+			loop
+				if conf_dep_classes.item = a_class then
+					conf_dep_classes.remove
+					found := true
+				else
+					conf_dep_classes.forth
+				end
+			end
+		ensure
+			removed : not has_dep_class (a_class)
+		end
+
+	has_dep_class (a_class : CLASS_C) : BOOLEAN is
+			-- Is `a_class' in `conf_dep_classes'?
+		require
+			not_void : a_class /= Void
+		do
+			Result := (conf_dep_classes = Void) or else
+					   conf_dep_classes.has (a_class)
+		end
+ 
 feature -- Building conformance table
 
 	fill_conformance_table is
@@ -435,11 +489,7 @@ end;
 				loop
 					generic_dec := generics.item;
 					constraint_type := generic_dec.constraint_type;
-					if
-						constraint_type /= Void
-					and then
-						constraint_type.has_generics
-					then
+					if constraint_type /= Void and then constraint_type.has_generics then
 						System.expanded_checker.check_actual_type
 							(constraint_type)
 					end;
@@ -493,6 +543,7 @@ feature -- Third pass: byte code production and type check
 				-- For Concurrent Eiffel
 			body_id_changed: BOOLEAN
 			def_resc_depend: DEPEND_UNIT
+			type_checked   : BOOLEAN
 		do
 			def_resc := default_rescue_feature
 
@@ -532,6 +583,7 @@ feature -- Third pass: byte code production and type check
 			loop
 				feature_i := feat_table.item_for_iteration;
 				feature_name := feature_i.feature_name;
+				type_checked := False
 
 debug ("SEP_DEBUG")
 io.error.putstring ("CLASS_C.PASS3 Feature ");
@@ -653,11 +705,11 @@ debug ("SEP_DEBUG", "ACTIVITY");
 		io.error.new_line;
 	end;
 end;
+
 							feature_i.type_check;
+							type_checked := True
 							type_check_error := Error_handler.new_error;
 
-		--					if 	feature_changed
-		--						and then
 							if
 								not type_check_error
 							then
@@ -694,11 +746,6 @@ end;
 								end;
 
 									-- Byte code processing
---								if feature_i.is_deferred then
---										-- No byte code and melted info for
---										-- deferred features
---									feature_changed := False;
---								else
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
@@ -710,7 +757,6 @@ end;
 									end;
 									feature_i.compute_byte_code;
 									byte_code_generated := True;
---								end;
 
 							end;
 						else
@@ -744,6 +790,15 @@ end;
 					type_check_error := False;
 					byte_code_generated := False;
 
+					if not type_checked and then changed3 and then
+						not (feature_i.is_attribute or else feature_i.is_constant) then
+						-- Forced type check on the feature
+						ast_context.set_a_feature (feature_i);
+
+						feature_i.type_check;
+						ast_context.clear2;
+					end
+
 				elseif ((not feature_i.in_pass3) or else
 							-- The feature is deferred and written in the current class
 						(feature_i.is_deferred and then id.is_equal (feature_i.written_in))) then
@@ -751,20 +806,12 @@ end;
 							-- Just type check it. See if VRRR or
 							-- VMRX error has occurred.
 						ast_context.set_a_feature (feature_i);
+
 						feature_i.type_check;
 						ast_context.clear2;
 					end;
 					record_suppliers (feature_i, dependances);
-				--elseif (feature_i.is_deferred or else
-						--feature_i.is_external) and then
-					--(id.is_equal (feature_i.written_in)) then
-						-- Just type check it. See if VRRR or
-						-- VMRX error has occurred.
-					--ast_context.set_a_feature (feature_i);
-					--feature_i.type_check;
-					--ast_context.clear2;
 				end;
-
 				feat_table.forth;
 			end; -- Main loop
 
@@ -818,8 +865,7 @@ debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%TType check for invariant%N");
 end;
 					invar_clause.type_check;
-					--if	invariant_changed
-					--	and then
+
 					if
 						not Error_handler.new_error
 					then
@@ -849,7 +895,6 @@ end;
 
 						!!inv_melted_info;
 						melt_set.put (inv_melted_info);
-
 					end;
 						-- Clean context
 					ast_context.clear2;
@@ -1000,38 +1045,6 @@ end;
 			!!f_suppliers.make;
 			feature_i.record_suppliers (f_suppliers);
 			dependances.put (f_suppliers, feature_name);
-		end;
-
-	print_clients is
-		do
-			io.error.putstring ("Clients of ");
-			io.error.putstring (name);
-			io.error.new_line;
-			from
-				clients.start
-			until
-				clients.after
-			loop
-				io.error.putstring ("%T");
-				io.error.putstring (clients.item.name);
-				io.error.new_line;
-				clients.forth
-			end;
-			io.error.new_line;
-			io.error.putstring ("Syntactical clients of ");
-			io.error.putstring (name);
-			io.error.new_line;
-			from
-				syntactical_clients.start
-			until
-				syntactical_clients.after
-			loop
-				io.error.putstring ("%T");
-				io.error.putstring (syntactical_clients.item.name);
-				io.error.new_line;
-				syntactical_clients.forth
-			end;
-			io.error.new_line;
 		end;
 
 	invariant_pass3 (	dependances: CLASS_DEPENDANCE;
@@ -1682,7 +1695,7 @@ feature -- Class initialization
 					check p.lower = 1 end;
 					lower := 1;
 					upper := p.upper;
-					!! pars.make (upper);
+					!! pars.make_filled (upper);
 				until
 					lower > upper
 				loop
@@ -1707,7 +1720,7 @@ feature -- Class initialization
 					-- no parent at all (we don't want a cycle in the
 					-- inheritance graph, otherwise the topological sort
 					-- on the classes will fail...).
-				!! pars.make (1);
+				!! pars.make_filled (1);
 				pars.put_i_th (Any_type, 1);
 					-- Add a descendant to class ANY
 				System.any_class.compiled_class.add_descendant (Current);
@@ -1783,6 +1796,7 @@ feature -- Class initialization
 				if not same_parents (old_parents) then
 						-- Conformance tables incrementality
 					set_changed (True);
+					set_changed3a (True);
 					System.set_update_sort (True);
 
 --						-- Take care of signature conformance for redefinion of
@@ -2406,7 +2420,23 @@ feature -- Order relation for inheritance and topological sort
 		require
 			good_argument: other /= Void;
 			conformance_table_exists: conformance_table /= Void;
+		local
+			dep_class : CLASS_C
+			must_add  : BOOLEAN
 		do
+			dep_class := System.current_class
+			must_add  := (dep_class /= Void) and then (dep_class /= Current)
+			must_add  := must_add and then (Current /= other)
+			must_add  := must_add and then 
+							not name_in_upper.is_equal ("NONE")
+			must_add  := must_add and then 
+							not other.name_in_upper.is_equal ("ANY")
+
+
+			if must_add then
+				add_dep_class (dep_class)
+			end
+
 			Result := 	other.topological_id <= topological_id
 							-- A parent has necessarily a class id
 							-- less or equal than the one of the heir class
@@ -2461,6 +2491,12 @@ feature -- Convenience features
 			-- Assign `b' to `changed2'.
 		do
 			changed2 := b;
+		end;
+
+	set_changed3a (b: BOOLEAN) is
+			-- Assign `b' to `changed3a'.
+		do
+			changed3a := b;
 		end;
 
 	set_changed4 (b: BOOLEAN) is
@@ -3029,13 +3065,13 @@ feature -- Conformance table generation
 
 feature -- Redeclaration valididty
 
-	valid_redeclaration (precursor: TYPE_A; redeclared: TYPE_A): BOOLEAN is
-			-- Is the redeclaration of `precursor' into `redeclared' valid
+	valid_redeclaration (a_precursor: TYPE_A; redeclared: TYPE_A): BOOLEAN is
+			-- Is the redeclaration of `a_precursor' into `redeclared' valid
 			-- in the current class ?
 		require
-			good_argument: not (precursor = Void or else redeclared = Void)
+			good_argument: not (a_precursor = Void or else redeclared = Void)
 		do
-			Result := redeclared.redeclaration_conform_to (precursor);
+			Result := redeclared.redeclaration_conform_to (a_precursor);
 		end;
 
 feature -- Invariant feature

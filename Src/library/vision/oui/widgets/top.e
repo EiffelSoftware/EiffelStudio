@@ -28,12 +28,16 @@ feature
 	icon_name: STRING is
 			-- Short form of application name to be displayed
 			-- by the window manager when application is iconified
+		require
+			exists: not destroyed
 		do
 			Result := implementation.icon_name
 		end; 
 
 	is_iconic_state: BOOLEAN is
 			-- Does application start in iconic state?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_iconic_state
 		end;
@@ -41,6 +45,7 @@ feature
 	set_icon_name (a_name: STRING) is
 			-- Set `icon_name' to `a_name'.
 		require
+			exists: not destroyed;
 			Valid_name: a_name /= Void
 		do
 			implementation.set_icon_name (a_name)
@@ -48,12 +53,16 @@ feature
 
 	set_iconic_state is
 			-- Set start state of the application to be iconic.
+		require
+			exists: not destroyed
 		do
 			implementation.set_iconic_state
 		end;
 
 	set_normal_state is
 			-- Set start state of the application to be normal.
+		require
+			exists: not destroyed
 		do
 			implementation.set_normal_state
 		end;
@@ -67,12 +76,17 @@ feature
 		end ;
 
 	delete_window_action is
-			-- Called when 'top' is destroyed
+			-- Called when 'top' is destroyed.
+			-- (Will exit application if
+			-- `delete_command' is not set).
 		local
-			Nothing: ANY;
+			quit_app_com: QUIT_NOW_COM;
 		do
-			if delete_command /= Void then
-				delete_command.execute (Nothing);
+			if delete_command = Void then
+				!! quit_app_com;
+				quit_app_com.execute (Void);
+			else
+				delete_command.execute (Void);
 			end;
 		end;
 

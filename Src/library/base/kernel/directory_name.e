@@ -18,21 +18,12 @@ creation
 
 feature
 
-	exists: BOOLEAN is
-			-- Does the directory exist?
-		local
-			any: ANY
-		do
-			any := path.to_c
-			Result := eif_dir_exists ($any)
-		end
-
 	is_valid: BOOLEAN is
 			-- Is the directory name valid?
 		local
 			any: ANY
 		do
-			any := path.to_c
+			any := to_c
 			Result := c_is_directory_valid ($any);
 		end
 
@@ -43,16 +34,11 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	eif_dir_exists (p: POINTER): BOOLEAN is
-		external
-			"C"
-		end
-
 end -- class DIRECTORY_NAME
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, 1995 Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -25,6 +25,9 @@ extern "C" {
 #include "rt_main.h"
 #include "eif_memory.h"
 
+/* Global variable to find out if we are performing the final collect */
+rt_public EIF_BOOLEAN eif_is_in_final_collect = EIF_FALSE;
+
 rt_public void mem_free(EIF_REFERENCE object)
 {
 	/* Unconditionally free object, if not in generational scavenge zone, in

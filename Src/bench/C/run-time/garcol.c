@@ -886,6 +886,9 @@ rt_public void reclaim(void)
 
 	struct chunk *c, *cn;
 
+		/* Mark final collection */
+	eif_is_in_final_collect = EIF_TRUE;
+
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
@@ -947,6 +950,9 @@ rt_public void reclaim(void)
 	eif_lm_display ();
 	eif_lm_free ();
 #endif	/* LMALLOC_CHECK */
+
+		/* Final collection terminated, unmark the flag */
+	eif_is_in_final_collect = EIF_FALSE;
 }
 
 rt_private void run_collector(void)

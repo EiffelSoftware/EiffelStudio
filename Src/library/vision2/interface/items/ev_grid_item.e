@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EV_GRID_ITEM
 
 inherit
@@ -26,6 +26,9 @@ inherit
 		redefine
 			implementation
 		end
+
+create
+	default_create
 
 feature -- Access
 
@@ -70,6 +73,14 @@ feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_GRID_ITEM_I} implementation.make (Current)
+		end
 
 end
 

@@ -17,20 +17,20 @@ lib='lib'
 #
 # Standard runtime:
 #------------------
-ccflags='-W3 $debug -nologo'
-mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS'
+ccflags='$warning_level $debug -nologo'
+mtccflags='$warning_level $debug -nologo -MT -DEIF_THREADS'
 output_libraries='standard mtstandard'
 #
 # Standard runtime with Boehm GC:
 #--------------------------------
-#ccflags='-W3 $debug -nologo -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
-#mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
+#ccflags='$warning_level $debug -nologo -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
+#mtccflags='$warning_level $debug -nologo -MT -DEIF_THREADS -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
 #output_libraries='standard mtstandard'
 #
 #-- DLL:
 #--------
-#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug'
-#mtccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS'
+#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug'
+#mtccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -DEIF_THREADS'
 #output_libraries='dll mtdll'
 #
 #
@@ -49,6 +49,7 @@ link_debug=''
 #optimize=''
 #debug='-Zi'
 #link_debug='-DEBUGTYPE:BOTH'
+warning_level='-W3'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
 #
 cc='cl'

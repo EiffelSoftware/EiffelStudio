@@ -7,7 +7,8 @@ inherit
 			make as mdi_child_window_make
 		redefine
 			on_paint,
-			class_icon
+			class_icon,
+			on_destroy
 		end
 
 	APPLICATION_IDS
@@ -54,6 +55,19 @@ feature -- Basic operations
 			paint_dc.draw_bitmap (bitmap, 0, 0,
 				bitmap.width, bitmap.height)
 		end
+		
+	on_destroy is
+			-- Notify `parent' that `Current' is being destroyed.
+		local
+			main_window: MAIN_WINDOW
+		do
+			main_window ?= parent
+			check
+				parent_of_correct_type: main_window /= Void
+			end
+			main_window.remove_child_reference (Current)
+		end
+		
 
 feature {NONE} -- Implementation
 

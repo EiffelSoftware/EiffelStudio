@@ -545,6 +545,32 @@ feature -- IL code generation
 			end
 		end
 
+	generate_il_address is
+			-- Generate address of current if it makes sense, otherwise
+			-- do nothing. Usually used in conjonction with creation of
+			-- expanded types.
+		local
+			res: RESULT_B
+			attr: ATTRIBUTE_B
+			loc: LOCAL_B
+			cl_type: CL_TYPE_I
+		do
+			if is_attribute then
+				attr ?= Current
+				cl_type ?= attr.context_type
+				il_generator.generate_attribute_address (
+					il_generator.implemented_type (attr.written_in, cl_type),
+					Context.real_type (attr.type),
+					attr.attribute_id)
+			elseif is_local then
+				loc ?= Current
+				il_generator.generate_local_address (loc.position)
+			elseif is_result then
+				res ?= Current
+				il_generator.generate_result_address
+			end
+		end
+
 	generate_il_start_assignment is
 			-- Generate location of assignment if needed.
 		do
@@ -553,26 +579,54 @@ feature -- IL code generation
 			end
 		end
 
-	generate_il_assignment (source_type: TYPE_I)  is
+	frozen generate_il_assignment (source_type: TYPE_I)  is
 			-- Generate source assignment IL code.
 		require
-			is_creatable
+			is_creatable: is_creatable
+			source_type_not_void: source_type /= Void
 		local
-			attr: ATTRIBUTE_B
-			loc: LOCAL_B
-			res: RESULT_B
 			target_type: TYPE_I
-			cl_type: CL_TYPE_I
 		do
 			target_type := Context.real_type (type)
 			if target_type.is_reference and then source_type.is_expanded then
 				generate_il_metamorphose (source_type, target_type, True)
-			elseif target_type.is_numeric then
-				if not target_type.same_as (source_type) then
-					target_type.il_convert_from (source_type)
-				end
+			elseif target_type.is_numeric and then not target_type.same_as (source_type) then
+				target_type.il_convert_from (source_type)
 			end
 
+			generate_il_simple_assignment (target_type, source_type)
+		end
+
+	frozen generate_il_reverse_assignment (source_type: TYPE_I) is
+			-- Generate reverse assignment IL code.
+		require
+			is_creatable: is_creatable
+			source_type_not_void: source_type /= Void
+		local
+			target_type: TYPE_I
+		do
+			target_type := Context.real_type (type)
+			if target_type.is_numeric and then not target_type.same_as (source_type) then
+				target_type.il_convert_from (source_type)
+			end
+
+			generate_il_simple_assignment (target_type, source_type)
+		end
+
+feature {NONE} -- Il code generation
+
+	frozen generate_il_simple_assignment (target_type, source_type: TYPE_I) is
+			-- Generate simple source assignment
+		require
+			is_creatable: is_creatable
+			target_type_not_void: target_type /= Void
+			source_type_not_void: source_type /= Void
+		local
+			attr: ATTRIBUTE_B
+			loc: LOCAL_B
+			res: RESULT_B
+			cl_type: CL_TYPE_I
+		do
 					-- Generate cast if we have to generate verifiable code
 					-- since access might have been redefined and in this
 					-- case its type for IL generation is the one from the
@@ -598,32 +652,6 @@ feature -- IL code generation
 			elseif is_result then
 				res ?= Current
 				il_generator.generate_result_assignment
-			end
-		end
-
-	generate_il_address is
-			-- Generate address of current if it makes sense, otherwise
-			-- do nothing. Usually used in conjonction with creation of
-			-- expanded types.
-		local
-			res: RESULT_B
-			attr: ATTRIBUTE_B
-			loc: LOCAL_B
-			cl_type: CL_TYPE_I
-		do
-			if is_attribute then
-				attr ?= Current
-				cl_type ?= attr.context_type
-				il_generator.generate_attribute_address (
-					il_generator.implemented_type (attr.written_in, cl_type),
-					Context.real_type (attr.type),
-					attr.attribute_id)
-			elseif is_local then
-				loc ?= Current
-				il_generator.generate_local_address (loc.position)
-			elseif is_result then
-				res ?= Current
-				il_generator.generate_result_address
 			end
 		end
 

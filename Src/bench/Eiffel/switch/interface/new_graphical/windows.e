@@ -154,13 +154,13 @@ feature {NONE}
 			!! Result.make
 		end
 
-	Preference_tool: EB_PREFERENCE_WINDOW is
+	Preference_tool: EB_PREFERENCE_TOOL is
 			-- The preference tool
 		do
 			Result := preference_tool_cell.item
 		end
 
-	Profile_tool: PROFILE_TOOL is
+	Profile_tool: EB_PROFILE_TOOL is
 			-- The profile tool
 		do
 			Result := profile_tool_cell.item
@@ -213,13 +213,13 @@ feature {NONE} -- Implementation
 			!! Result
 		end
 
-	preference_tool_cell: CELL [EB_PREFERENCE_WINDOW] is
+	preference_tool_cell: CELL [EB_PREFERENCE_TOOL] is
 			-- Cell for the preference tool
 		once
 			!! Result.put (Void)
 		end
 
-	profile_tool_cell: CELL [PROFILE_TOOL] is
+	profile_tool_cell: CELL [EB_PROFILE_TOOL] is
 			-- Cell for the profile tool
 		once
 			!! Result.put (Void)

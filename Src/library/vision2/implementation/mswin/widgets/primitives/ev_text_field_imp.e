@@ -44,10 +44,9 @@ inherit
 			caret_position as internal_caret_position,
 			enabled as is_sensitive,
 			item as wel_item,
-			move as move_to,
+			move as wel_move,
 			x as x_position,
 			y as y_position,
-			move as wel_resize,
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize
 		undefine
@@ -223,8 +222,8 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.34  2000/03/16 23:53:53  rogers
---| Fixed missing comma.
+--| Revision 1.35  2000/03/17 00:01:52  rogers
+--| move is now correctly re-named to wel_move.
 --|
 --| Revision 1.32  2000/02/23 01:49:08  rogers
 --| Removed old command association. Change events are now fired when the text of changes.

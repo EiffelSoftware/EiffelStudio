@@ -21,7 +21,11 @@ feature -- Initialization
 			create file_name.make_from_string (default_file)
 			create table.make (100)
 			create {RESOURCE_FOLDER_IMP} root_folder_i.make_default_root (file_name, interface)
-			root_folder_i.create_interface
+			if root_folder_i.child_list = Void then
+				root_folder_i := Void
+			else
+				root_folder_i.create_interface
+			end
 		end
 
 feature -- Access

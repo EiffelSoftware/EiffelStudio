@@ -620,7 +620,7 @@ feature -- Plug and Makefile file
 			generate_dynamic_ref_type (buffer)
 
 			buffer.putstring ("%N%Tegc_ce_type = egc_ce_type_init;%N")
-			buffer.putstring ("%Tegc_ce_gtype = egc_ce_gtype_init;%N")
+			buffer.putstring ("%N%Tegc_ce_exp_type = egc_ce_exp_type_init;%N")
 			buffer.putstring ("%Tegc_fsystem = egc_fsystem_init;%N")
 			buffer.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init;%N")
 			buffer.putstring ("%Tegc_partab = egc_partab_init;%N")

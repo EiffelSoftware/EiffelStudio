@@ -113,6 +113,7 @@ feature -- Constants
 	internal_hash_code_name_id: INTEGER is 103
 	base_address_name_id: INTEGER is 104
 	item_address_name_id: INTEGER is 105
+	internal_argument_array_name_id: INTEGER is 106
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

@@ -277,6 +277,7 @@ feature {NONE} -- Implementation: access
 			put ("internal_hash_code") check found_item = internal_hash_code_name_id end
 			put ("base_address") check found_item = base_address_name_id end
 			put ("item_address") check found_item = item_address_name_id end
+			put ("internal_argument_array") check found_item = internal_argument_array_name_id end
 		end
 		
 invariant

@@ -79,10 +79,10 @@ rt_private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 
 /* Public data declarations */
 
-#ifdef __VMS		/* r_fides declared in garcol.c for vms */
+#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP		/* r_fides declared in garcol.c for vms */
 #else
-rt_public int r_fides;			/* File descriptor use for retrieve */
-rt_public char r_fstoretype;	/* File storage type used for retrieve */
+rt_public int r_fides;			/* File descriptor use for retrieve */ /* %%zmt */
+rt_public char r_fstoretype;	/* File storage type used for retrieve */ /* %%zmt */
 #endif
 
 /*
@@ -143,6 +143,7 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 {
 	/* Retrieve object store in file `filename' */
 
+	EIF_GET_CONTEXT
 	char *retrieved;
 	char rt_type;
 
@@ -265,6 +266,7 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 	rt_reset_retrieve();
 
 	return retrieved;
+	EIF_END_GET_CONTEXT
 }
 
 
@@ -1439,6 +1441,7 @@ rt_private int readline (register char *ptr, register int *maxlen)
 			
 rt_private int direct_read (register char *object, int size)
 {
+	EIF_GET_CONTEXT
 	int i, amount = 0;
 	char *buf = object;
 
@@ -1457,6 +1460,7 @@ rt_private int direct_read (register char *object, int size)
 		buf += i;
 	}
 	return amount;
+	EIF_END_GET_CONTEXT
 }
 
 		
@@ -1489,6 +1493,7 @@ rt_private int buffer_read (register char *object, int size)
 
 rt_public int old_retrieve_read (void)
 {
+	EIF_GET_CONTEXT
 	char * ptr = general_buffer;
 
 #ifdef EIF_WIN32
@@ -1504,10 +1509,12 @@ rt_public int old_retrieve_read (void)
 
 	current_position = 0;
 	return (end_of_buffer);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public int old_retrieve_read_with_compression (void)
 {
+	EIF_GET_CONTEXT
 	  char* dcmps_in_ptr = (char *)0;
 	  char* dcmps_out_ptr = (char *)0;
 	  char* pdcmps_in_size = (char *)0;
@@ -1566,10 +1573,12 @@ rt_public int old_retrieve_read_with_compression (void)
 	  current_position = 0;
 	  end_of_buffer = dcmps_out_size;
 	  return (end_of_buffer);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public int retrieve_read (void)
 {
+	EIF_GET_CONTEXT
 	char * ptr = general_buffer;
 	short read_size;
 	int part_read = 0, total_read = 0;
@@ -1605,10 +1614,12 @@ rt_public int retrieve_read (void)
 	}
 	current_position = 0;
 	return (end_of_buffer);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public int retrieve_read_with_compression (void)
 {
+	EIF_GET_CONTEXT
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
 	char* pdcmps_in_size = (char *)0;
@@ -1669,6 +1680,7 @@ rt_public int retrieve_read_with_compression (void)
 	current_position = 0;
 	end_of_buffer = dcmps_out_size;
 	return (end_of_buffer);
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void gen_object_read (char *object, char *parent)

@@ -69,24 +69,34 @@ feature {NONE} -- Initialization
 --| FIXME XR: When clusters can be moved for real, uncomment this line.
 --			drop_actions.extend (~on_cluster_drop)
 			create classes_double_click_agents.make
-
+			create expanded_clusters.make (20)
 			set_minimum_height (20)
 		end
 
 	prepare is
 			-- Create the controls and setup the layout.
-		local
 		do
 			set_pixmaps_size (16, 16)
 		end
 
 	build_tree is
+			-- Remove and replace contents of `Current'.
 		local
 			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
 			an_item: EB_CLASSES_TREE_FOLDER_ITEM
 			tmp_list: ARRAYED_LIST [EV_TREE_ITEM]
 		do
+			if window /= Void then
+					-- Lock update of window, so rebuilding of `Current'
+					-- is hidden.
+				window.lock_update
+			end
+			
+			store_expanded_state
+				-- Store expanded state of `Current'
+				
 			wipe_out
+				-- Remove all items, ready for rebuilding.
 			if Eiffel_project.initialized then
 				clusters := manager.clusters
 				create tmp_list.make (clusters.count)
@@ -115,6 +125,16 @@ feature {NONE} -- Initialization
 					clusters.forth
 				end
 				append (tmp_list)
+			end
+			
+			restore_expanded_state
+				-- Restore original expanded state, stored during last call to
+				-- `store_expanded_state'.
+			
+			if window /= Void then
+					-- Unlock update of window as `Current' has
+					-- been rebuilt.
+				window.unlock_update
 			end
 		end
 
@@ -280,10 +300,6 @@ feature -- Observer pattern
 						a_folder.forth
 					end
 				end
-				if not a_folder.is_expanded then
-						-- We may have removed the only loaded class of the cluster.
-					a_folder.fake_load
-				end
 			end
 		end
 
@@ -306,10 +322,6 @@ feature -- Observer pattern
 					else
 						a_folder.forth
 					end
-				end
-				if not a_folder.is_expanded then
-						-- We may have removed the only loaded cluster of the cluster.
-					a_folder.fake_load
 				end
 			else
 					-- We have to remove a top-cluster, or a cluster whose parent is not displayed (nothing to do).
@@ -456,6 +468,171 @@ feature -- Memory management
 		do
 			manager.remove_observer (Current)
 			window := Void
+		end
+		
+feature {NONE} -- Rebuilding
+
+	expanded_clusters: HASH_TABLE [STRING, STRING]
+		-- All cluster names marked as expanded during last call to
+		-- `store_expanded_state'.
+	
+	selected_name: STRING
+		-- Full name of item selected in `Current' before rebuilding,
+		-- including path. 
+	
+	store_expanded_state is
+			-- Store expanded state of `Current' into `expanded_clusters'.
+		local
+			selected_cluster: EB_SORTED_CLUSTER
+			selected_class: CLASS_I
+		do
+			expanded_clusters.wipe_out
+				-- Clear last set of expanded clusters.
+				
+			if selected_item /= Void then
+					-- Store inclusive path of item currently selected in `Current'.
+					-- This is used to restore the selected item post rebuilding.
+				selected_cluster ?= selected_item.data
+				if selected_cluster /= Void then
+					selected_name := selected_cluster.actual_cluster.cluster_name
+				else
+					selected_class ?= selected_item.data
+					check
+						class_selected: selected_class /= Void
+					end
+					selected_name := selected_class.cluster.cluster_name + "." + selected_class.name
+				end
+			end
+			recursive_store (Current)
+				-- Actually perform recursion.
+		end
+		
+	recursive_store (tree_list: EV_TREE_NODE_LIST) is
+			-- Store full path name of clusters associated with all
+			-- expanded nodes of `tree_item', recursively into `expanded_clusters'.
+		require
+			tree_list_not_void: tree_list /= Void
+		local
+			cluster: EB_SORTED_CLUSTER
+			current_node: EV_TREE_NODE
+		do
+			from
+				tree_list.start
+			until
+				tree_list.off
+			loop
+				current_node := tree_list.item
+				if current_node.is_expanded then
+					cluster ?= current_node.data
+					check
+						data_was_cluster: cluster /= Void
+					end
+					recursive_store (current_node)
+					expanded_clusters.put (cluster.actual_cluster.cluster_name, cluster.actual_cluster.cluster_name)
+				end
+				tree_list.forth
+			end
+		end
+
+	restore_expanded_state is
+			-- Restore all nodes of `Current', represented in `expanded_clusters'.
+		local
+			keys: ARRAY [STRING]
+			counter: INTEGER
+			key: STRING
+		do
+			keys := expanded_clusters.current_keys
+			from
+				counter := 1				
+			until
+				counter > keys.count
+			loop
+				key := keys.item (counter)
+				expand_tree_item (key, Current)
+				counter := counter + 1
+			end
+			if selected_name /= Void then
+					-- If an item was selected before the rebuild, re-select
+					-- the item.
+				select_tree_item (selected_name, Current)
+				ensure_item_visible (selected_item)
+					-- Ensure that the selected item is visible on screen.
+			elseif not is_empty and is_displayed then
+					-- Ensure that the first item is displayed.
+					--| FIXME Julian Rogers 08/12/03
+					--| When EiffelVision2 provides a method of returning the displayed index
+					--| back to its exact original position, use this instead.
+				ensure_item_visible (first)
+			end
+		end
+		
+	select_tree_item (full_path: STRING; tree_list: EV_TREE_NODE_LIST) is
+			-- Select item in `tree_list' recursively, whose data path matches `full_path'.
+		require
+			full_path_not_void: full_path /= Void
+			tree_list_not_void: tree_list /= Void
+		local
+			key: STRING
+			item_key: STRING
+			dot_index: INTEGER
+		do
+			key := full_path
+			dot_index := key.index_of ('.', 1)
+			if dot_index = 0 then
+					-- If there is no dot, `item_key' is set to `key'.
+				item_key := key
+			else
+					-- Set `item_key' to the next part of `key' up to the dot. 
+				item_key := key.substring (1, dot_index - 1)
+			end
+			from
+				tree_list.start
+			until
+				tree_list.off
+			loop
+				if tree_list.item.text.is_equal (item_key) or else tree_list.item.text.is_equal (item_key.as_upper) then
+					if dot_index /= 0 then
+						select_tree_item (full_path.substring (dot_index + 1,full_path.count), tree_list.item)
+					else
+						tree_list.item.enable_select
+					end
+				end
+				tree_list.forth
+			end
+		end
+		
+	expand_tree_item (full_path: STRING; tree_item: EV_TREE_NODE_LIST) is
+			-- Expand item of `tree_item', whose data matches `full_path'.
+		require
+			full_path_not_void: full_path /= Void
+			tree_item_not_void: tree_item /= Void
+		local
+			key: STRING
+			item_key: STRING
+			dot_index: INTEGER
+		do
+			key := full_path
+			dot_index := key.index_of ('.', 1)
+			item_key := key.substring (1, dot_index - 1)
+			from
+				tree_item.start
+			until
+				tree_item.off
+			loop
+				if tree_item.item.text.is_equal (item_key) or tree_item.item.text.is_equal (key) then
+					if dot_index /= 0 then
+						if not tree_item.item.is_expanded then
+							tree_item.item.expand
+						end
+						expand_tree_item (full_path.substring (dot_index + 1, full_path.count), tree_item.item)
+					else
+						if not tree_item.item.is_expanded then
+							tree_item.item.expand
+						end
+					end
+				end
+				tree_item.forth
+			end
 		end
 
 feature {NONE} -- Implementation

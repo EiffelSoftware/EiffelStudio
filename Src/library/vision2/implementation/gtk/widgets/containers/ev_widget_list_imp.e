@@ -198,25 +198,6 @@ feature -- Element change
 			new_item_actions.call ([v])
 		end
 
-	put_left (v: like item) is
-			-- Add `v' to the left of cursor position.
-			-- Do not move cursor.
-		local
-			imp: EV_WIDGET_IMP
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			imp ?= v.implementation
-			check
-				imp_not_void: imp /= Void
-			end
-			C.gtk_container_add (c_object, imp.c_object)
-			gtk_reorder_child (c_object, imp.c_object, index - 1)
-			index := index + 1
-			new_item_actions.call ([v])
-		end
-
 feature -- Removal
 
 	prune (v: like item) is
@@ -331,6 +312,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/03 19:28:53  brendel
+--| Removed feature `put_left'.
+--|
 --| Revision 1.11  2000/03/03 18:38:54  brendel
 --| Implemented `put_left'.
 --|

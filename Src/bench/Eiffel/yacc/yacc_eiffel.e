@@ -133,6 +133,7 @@ feature -- Initialization
 			as115: EXTERNAL_LANG_AS;
 			as116: EXPR_ADDRESS_AS;
 			as117: SEPARATE_TYPE_AS;
+			as118: PRECURSOR_AS
 
 			-- Initialized by lace normally but since we are not
 			-- using lace for parsing eiffel we need to initialize
@@ -362,6 +363,9 @@ feature -- Initialization
 			as116.pass_address (expr_address_as);
 			!!as117;
 			as117.pass_address (separate_type_as);
+			!!as118;
+			as118.pass_address (precursor_as);
+
 			!!as141.make (0);
 			as141.pass_address (click_list_sd);
 			!!as142;

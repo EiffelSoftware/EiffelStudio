@@ -41,6 +41,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_except.h"
 #include "rt_memory.h"
 #include "rt_option.h"
+#include "rt_rw_lock.h"
 
 #include <string.h>
 
@@ -1259,6 +1260,55 @@ rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 	EIF_COND_DESTROY(cond, "destroying condition variable");
 #endif /* EIF_NO_CONDVAR */
+}
+
+/*
+ * class READ_WRITE_LOCK externals
+ */
+
+rt_public EIF_POINTER eif_thr_rwl_create (void)
+{
+	EIF_RWL_TYPE *rwlp;
+
+	EIF_RWL_CREATE(rwlp, "cannot create rwl variable");
+	return (EIF_POINTER) rwlp;
+}
+
+rt_public void eif_thr_rwl_rdlock (EIF_POINTER rwlp_ptr)
+{
+	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
+
+	REQUIRE("rwlp not null", rwlp);
+
+	EIF_RWL_RDLOCK(rwlp, "cannot read lock");
+}
+
+rt_public void eif_thr_rwl_wrlock (EIF_POINTER rwlp_ptr)
+{
+	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
+
+	REQUIRE("rwlp not null", rwlp);
+
+	EIF_RWL_WRLOCK(rwlp, "cannot write lock");
+}
+
+
+rt_public void eif_thr_rwl_unlock (EIF_POINTER rwlp_ptr)
+{
+	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
+
+	REQUIRE("rwlp not null", rwlp);
+
+	EIF_RWL_UNLOCK(rwlp, "cannot unlock");
+}
+
+rt_public void eif_thr_rwl_destroy (EIF_POINTER rwlp_ptr)
+{
+	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
+
+	REQUIRE("rwlp not null", rwlp);
+
+	EIF_RWL_DESTROY(rwlp, "cannot destroy rwl");
 }
 
 

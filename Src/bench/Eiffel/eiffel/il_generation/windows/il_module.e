@@ -263,6 +263,7 @@ feature -- Access: tokens
 	ise_none_type_token,
 	ise_basic_type_token,
 	ise_eiffel_name_attr_ctor_token,
+	ise_eiffel_name_attr_generic_ctor_token,
 	ise_assertion_level_attr_ctor_token,
 	ise_interface_type_attr_ctor_token,
 	type_handle_class_token,
@@ -2492,8 +2493,13 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make ("is_invariant_checked_for"),
 				ise_runtime_type_token, l_meth_sig)
 
-				-- Define constructor of custom attribute class that keeps Eiffel
-				-- name classes in their Eiffel formatting.
+				-- Get token for `System.Type'
+			l_system_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (system_type_class_name), mscorlib_token)
+
+				-- Define constructors of custom attribute class that keeps Eiffel
+				-- name classes in their Eiffel formatting. The first one is for non-generic
+				-- classes, the second one for generic classes.
 			l_meth_sig.reset
 			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
@@ -2504,9 +2510,21 @@ feature {NONE} -- Once per modules being generated.
 			ise_eiffel_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_eiffel_name_attr_token, l_meth_sig)
 
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (2)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				l_system_type_token)
+
+			uni_string.set_string (".ctor")
+			ise_eiffel_name_attr_generic_ctor_token := md_emit.define_member_ref (uni_string,
+				l_ise_eiffel_name_attr_token, l_meth_sig)
+
+
 				-- Definition of `.ctor' for ASSERTION_LEVEL_ATTRIBUTE
-			l_system_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Type"), mscorlib_token)
 			ise_assertion_level_enum_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Assertion_level_enum_class_name), ise_runtime_token)
 

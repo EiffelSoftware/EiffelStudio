@@ -79,7 +79,7 @@ feature {EV_ANY_IMP} -- Access
 					an_agent.call (t)
 				end
 			else
-				gdk_event := gtk_value_pointer (args)
+				gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 				if 
 					gdk_event = default_pointer or else
 					feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) /= feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM
@@ -133,7 +133,7 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 			keyval: INTEGER
 			key: EV_KEY
 		do
-			gdk_event := gtk_value_pointer (args)
+			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 			Result := empty_tuple
 			if feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
 			inspect
@@ -241,7 +241,7 @@ feature {EV_ANY_IMP}
 			key: EV_KEY
 			a_key_press: BOOLEAN
 		do
-			gdkeventkey := gtk_value_pointer (p)
+			gdkeventkey := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
 			if feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (gdkeventkey) = feature {EV_GTK_EXTERNALS}.gdk_key_press_enum then
 				a_key_press := True
 				create a_key_string.make (0)
@@ -260,7 +260,7 @@ feature {EV_ANY_IMP}
 		local
 			gtk_alloc: POINTER
 		do
-			gtk_alloc := gtk_value_pointer (p)
+			gtk_alloc := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
 			set_dimension_tuple (
 				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_x (gtk_alloc),
 				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_y (gtk_alloc),
@@ -275,7 +275,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			integer_tuple.put (gtk_value_int (args), 1)
+			integer_tuple.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
 			Result := integer_tuple
 		end	
 		
@@ -285,7 +285,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			gtkarg2: POINTER
 		do
 			gtkarg2 := gtk_args_array_i_th (args, 1)
-			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
+			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args) + 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
 		end
 		
@@ -340,7 +340,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 			gtkarg2: POINTER
 		do
 			gtkarg2 := gtk_args_array_i_th (args, 1)
-			Result := [gtk_value_int (gtkarg2)]
+			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 		end
 		
 	empty_tuple_tuple: TUPLE is
@@ -372,7 +372,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			pointer_tuple.put (gtk_value_pointer (args), 1)
+			pointer_tuple.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
 			Result := pointer_tuple
 		end
 
@@ -401,24 +401,14 @@ feature {NONE} -- Externals
 
 feature {EV_ANY_IMP} -- Externals
 
-	frozen gtk_value_pointer (arg: POINTER): POINTER is
-			-- Pointer to the value of a GtkArg.
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
-		end
-
-	frozen gtk_value_int (arg: POINTER): INTEGER is
-			-- Integer value from a GtkArg.
-		external
-			"C | %"ev_gtk_callback_marshal.h%""
-		end
-		
 	frozen gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
 			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
 			--	return (GtkArg*)(args_array + index);
 			-- }
 		external
-			"C | %"ev_c_util.h%""
+			"C inline use <gtk/gtk.h>"
+		alias
+			"(GtkArg*) ((GtkArg**) $args_array + (int) $an_index )"
 		end
 		
 	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;

@@ -17,7 +17,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			eif_getenv
+			eif_getenv, eif_putenv
 		end;
 	SHARED_STDOUT
 
@@ -181,8 +181,7 @@ feature {NONE} -- Implementation
 			"getenv"
 		end;
 
-
-	eif_putenv (v, k: ANY): INTEGER is
+	eif_putenv (v, k: POINTER): INTEGER is
 			-- Safe eiffel putenv using environment variables,
 			-- even on Windows.
 		external

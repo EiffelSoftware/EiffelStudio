@@ -1,7 +1,7 @@
 indexing
 	description: "[
 		Check whether product is correctly activated,
-		always true for free version.
+		Currently true for command-line only version.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -22,12 +22,8 @@ feature {NONE}
 
 	system_tool: SYSTEM_W is
 			-- Unique assembly tool
-		local
-			ts: EB_TOP_SHELL
 		once
-			!! ts.make ("", project_tool.screen);
-			!! Result.make_shell (ts);
-			ts.set_title (Result.tool_name)
+			!! Result
 		end;
 
 	name_chooser (popup_parent: COMPOSITE): NAME_CHOOSER_W is

@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			from
 				local_children.finish
 			variant
-				local_children.count - local_children.index
+				local_children.index
 			until
 				local_children.before
 			loop

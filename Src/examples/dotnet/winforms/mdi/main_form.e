@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	dispose_boolean (a_disposing: BOOLEAN) is
-			-- method called when form is disposed.
+			-- Method called when form is disposed.
 		local
 			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			doc: DOCUMENT
 		do
 			window_count := window_count + 1 
-			create doc.make_with_name ((("").to_cil).concat_string_string (("Document ").to_cil, window_count.to_string))
+			create doc.make_with_name (("Document " + window_count.out).to_cil)
 			doc.set_mdi_parent (Current)
 			doc.show
 		end

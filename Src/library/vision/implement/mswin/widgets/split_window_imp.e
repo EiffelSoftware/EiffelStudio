@@ -239,6 +239,10 @@ feature -- Element change
 				split_position := split_size // 2
 				split_visible := True
 				resize_second_child
+			else
+				split_position := split_size // 2
+				split_visible := True
+				resize_first_child
 			end
 		end
 
@@ -247,7 +251,17 @@ feature -- Element change
 		do
 			if a_window = second_child then
 				remove_second_child
+			else
+				remove_first_child
 			end
+		end
+
+	remove_first_child is
+			-- Remove `second_child' from the display.
+		do
+			split_position := 0
+			split_visible := False
+			resize_second_child
 		end
 
 	remove_second_child is
@@ -265,6 +279,8 @@ feature {SPLIT_WINDOW_CHILD} -- Element change
 		do
 			if a_child = second_child then
 				remove_second_child
+			else
+				remove_first_child
 			end
 		end
 
@@ -282,13 +298,21 @@ feature -- {NONE} -- Implementation
 
 	resize_second_child is
 			-- Resize the bottom child to the correct dimensions.
+		local
+			add_size:INTEGER
 		do
-			if is_vertical then
-				second_child.set_x_y (split_position + split_width, 0)
-				second_child.set_size (width - split_position - split_width, height)
+			if split_visible then
+				add_size := split_width
 			else
-				second_child.set_x_y (0, split_position + split_width)
-				second_child.set_size (width, height - split_position - split_width)
+				add_size := 0
+			end
+
+			if is_vertical then
+				second_child.set_x_y (split_position + add_size, 0)
+				second_child.set_size (width - split_position - add_size, height)
+			else
+				second_child.set_x_y (0, split_position + add_size)
+				second_child.set_size (width, height - split_position - add_size)
 			end
 		end
 

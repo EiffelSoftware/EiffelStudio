@@ -83,7 +83,6 @@ extern "C" {
 	RT_LNK long *egc_fsize;
 #endif
 
-
 	RT_LNK int32 egc_rcdt;				/* E1/einit.c */
 	RT_LNK int32 egc_rcorigin;			/* E1/einit.c */
 	RT_LNK int32 egc_rcoffset;			/* E1/einit.c */

@@ -632,7 +632,10 @@ feature {NONE} -- File copying
 			
 				-- Only copy the file if it is not already there or if the original
 				-- file is more recent.
-			if not l_target.exists or else l_target.date < l_source.date then
+			if
+				l_source.exists and then
+				(not l_target.exists or else l_target.date < l_source.date)
+			then
 				l_source.open_read
 				l_target.open_write
 				l_source.copy_to (l_target)

@@ -55,8 +55,15 @@
 
 #define null (char *) 0					/* Null pointer */
 
+/* The following line is automatically uncommented when compiling a non commercial run-time */
+/*#define NON_COMMERCIAL*/
+
 #ifdef WORKBENCH
 extern void dbreak_create_table(void); /* defined in debug.c */
+#elif defined( NON_COMMERCIAL )
+#include "splashcom.x"
+rt_private void display_non_commercial(void);
+
 #endif
 
 rt_public int eif_no_reclaim = 0;			/* Call reclaim on termination. */
@@ -441,8 +448,17 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 		int value;
 		value = 0x00000025 * egc_platform_level;
 		value = value + egc_compiler_tag;
+#ifndef WORKBENCH
+#ifdef NON_COMMERCIAL
 		if (value != egc_type_of_gc)
 			display_reminder();
+		else
+			display_non_commercial();
+#else
+		if (value != egc_type_of_gc)
+			display_reminder();
+#endif // NON_COMMERCIAL
+#endif // WORKBENCH
 	}
 }
 
@@ -526,4 +542,51 @@ rt_private void display_reminder(void)
 	printf ("%s", msg);
 #endif
 }
+
+#if !defined( WORKBENCH ) && defined( NON_COMMERCIAL)
+rt_private void display_non_commercial(void)
+{
+#ifdef EIF_WIN32
+	HDC dc, MemDC;
+	HBITMAP Bitmap, OldBitmap;
+	BITMAP bm;
+	RECT sr;
+	BITMAPINFO* pbmi;
+	int non_commercial_splash_width;
+	int non_commercial_splash_height;
+	int non_commercial_splash_size;
+	char * non_commercial_splash_array;
+
+	dc = CreateDC ("DISPLAY", NULL, NULL, NULL);
+	pbmi = (BITMAPINFO*) non_commercial_splash; // We initialize the BITMAPINFO with a raw copy of the splash.
+	non_commercial_splash_width = pbmi -> bmiHeader.biWidth;
+	non_commercial_splash_height = pbmi -> bmiHeader.biHeight;
+	non_commercial_splash_size = pbmi -> bmiHeader.biSizeImage;
+	non_commercial_splash_array = ((char*) pbmi) + 1024 + 40; // 1024: Palette; 40: BITMAPINFO (header)
+
+	MemDC = CreateCompatibleDC (dc);
+	Bitmap = CreateDIBitmap (dc, &(pbmi -> bmiHeader), CBM_INIT, non_commercial_splash_array, pbmi, DIB_RGB_COLORS);
+	OldBitmap = (HBITMAP) SelectObject (MemDC, Bitmap);
+	GetObject (Bitmap, sizeof (BITMAP), &bm);
+	sr.left = (GetSystemMetrics (SM_CXSCREEN) - bm.bmWidth) / 2;
+	sr.top = (GetSystemMetrics (SM_CYSCREEN) - bm.bmHeight) / 2;
+	sr.right = sr.left + bm.bmWidth;
+	sr.bottom = sr.top + bm.bmHeight;
+		/* If someone feels like it, they can realize the current palette depending on the palette of the splash... */
+	BitBlt (dc, sr.left, sr.top, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
+	DeleteObject (SelectObject (MemDC, OldBitmap));
+	DeleteDC (MemDC);
+	DeleteDC (dc);
+	Sleep (2000);
+	InvalidateRect (NULL, NULL, TRUE); // Wipe the splash out.
+
+#else
+	char *msg;
+
+	msg = "This program has been produced with a demo or non-commercial version\nof ISE EiffelStudio, the full lifecycle object-oriented development\nenvironment from Interactive Software Engineering (ISE).\nThis version is reserved for non-production use of Eiffel. Any other\nuse requires purchase of a license.\n\nISE offers commercial and academic licenses and\nsupport/maintenance contracts covering diverse needs.\n\nFor more information please contact\nISE at the address below or consult the Eiffel products page\nat http://www.eiffel.com/products/.\n\n\tInteractive Software Engineering\n\tISE Building, 360 Storke Road\n\tGoleta CA 93117 USA \n\tTelephone 805-685-1006, Fax 805-685-6869\n\tE-mail sales@eiffel.com\n\thttp://www.eiffel.com\n";
+
+	printf ("%s", msg);
+#endif // EIF_WIN32
+}
+#endif // NON_COMMERCIAL && WORKBENCH
 

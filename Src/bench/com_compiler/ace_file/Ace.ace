@@ -119,6 +119,8 @@ cluster
 			"CVS"; 
 		end
 
+	all helpers:			"$EIFFEL_SRC\library\helpers";
+
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
 

@@ -113,9 +113,7 @@ feature -- File creation
 				end
 				metric_file.wipe_out
 				metric_file.open_read_write
-				save_xml_document (metric_file, file_header)
-
-				--metric_file.put_string ("<?xml version = %"1.0%" encoding = %"UTF-8%"?>" + file_header.out)
+				save_xml_document (metric_file.name, file_header)
 			end
 		rescue
 			retried := True

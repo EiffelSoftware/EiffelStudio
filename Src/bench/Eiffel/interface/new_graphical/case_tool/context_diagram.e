@@ -890,7 +890,7 @@ feature -- View management
 						a_cursor.forth
 					end
 				end
-				save_xml_document (ptf, diagram_output)
+				save_xml_document (ptf.name, diagram_output)
 			end
 		end
 		
@@ -1653,14 +1653,14 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 					view_output := xml_element
 					view_output.set_parent (diagram_output)
 					diagram_output.root_element.force_first (view_output)
-					save_xml_document (ptf, diagram_output)
+					save_xml_document (ptf.name, diagram_output)
 				end
 			else
 				create l_namespace.make ("", "")
 				create node.make_root ("CONTEXT_DIAGRAM", l_namespace)
 				create diagram_output.make
 				diagram_output.force_first (node)
-				save_xml_document (ptf, diagram_output)
+				save_xml_document (ptf.name, diagram_output)
 			end
 		end
 

@@ -524,8 +524,11 @@ feature -- Edition Operations on text
 		require
 			text_is_not_empty: number_of_lines /= 0
 			text_is_editable: is_editable
+		local
+			a_text: STRING
 		do
-			if clipboard.text /= Void and then not clipboard.text.is_empty then
+			a_text := clipboard.text
+			if not a_text.is_empty then
 				text_displayed.insert_string (clipboard.text)
 				refresh_now
 			end

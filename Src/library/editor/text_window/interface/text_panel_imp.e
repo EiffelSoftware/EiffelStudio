@@ -54,7 +54,8 @@ feature {NONE}-- Initialization
 			horizontal_scrollbar.set_step (5)
 			scroll_vbox.disable_item_expand (scroll_cell)
 			vertical_scrollbar.disable_sensitive
-			vertical_scrollbar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1))
+			vertical_scrollbar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 1))			
+			
 			widget.disable_item_expand (scroll_vbox)
 			
 				--Connect events.

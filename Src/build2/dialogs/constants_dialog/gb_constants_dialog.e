@@ -354,24 +354,6 @@ feature {NONE} -- Implementation
 				rebuild_for_selected_type (directory_item.text)
 			end
 		end
-		
---	file_name_item_selected is
---			-- Called by `select_actions' of `file_name_item'.
---		do
---			name_field.enable_edit
---			name_field.remove_text
---			new_button.disable_sensitive
---			new_button.set_text (New_button_text)
---			if not directory_item.select_actions.state.is_equal (directory_item.select_actions.blocked_state) then
---				constants_list.remove_selection
---				filename_input.remove_text
---			end
---			remove_displayed_input_field
---			entry_selection_parent.extend (filename_input)
---			if not display_all_types.is_selected then
---				rebuild_for_selected_type (file_name_item.text)
---			end
---		end
 	
 	pixmap_item_selected is
 			-- Called by `select_actions' of `pixmap_item'.
@@ -457,6 +439,7 @@ feature {NONE} -- Implementation
 				row.set_pixmap (pixmap_constant.small_pixmap)
 			elseif directory_constant /= Void then
 				create directory_dialog
+				directory_dialog.set_title (select_directory_location_modify_string + directory_constant.name + "%"")
 				directory_dialog.set_start_directory (directory_constant.value)
 				directory_dialog.show_modal_to_window (Current)
 				if not directory_dialog.directory.is_empty then

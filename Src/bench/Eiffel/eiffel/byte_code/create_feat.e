@@ -6,7 +6,7 @@ inherit
 
 	CREATE_INFO
 		redefine
-			gen_type_string, make_gen_type_byte_code
+			generate_cid, make_gen_type_byte_code
 		end
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
@@ -98,7 +98,7 @@ feature
 					gen_file.putchar ('-');
 					gen_file.putint (table.min_type_id - 1);
 					gen_file.putstring ("), ");
-					gen_file.putstring (context.Current_register.register_name)
+					context.Current_register.print_register_by_name
 					gen_file.putchar (')')
 
 						-- Side effect. This is not nice but
@@ -128,7 +128,8 @@ feature
 					gen_file.putint (feature_id);
 				end;
 				gen_file.putstring (gc_comma);
-				gen_file.putstring (context.Current_register.register_name)
+				context.Current_register.print_register_by_name
+
 				gen_file.putchar (')');
 			end;
 		end;
@@ -167,7 +168,7 @@ feature -- Genericity
 			end
 		end
 
-	gen_type_string (final_mode : BOOLEAN) : STRING is
+	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
 
 		local
 			table: POLY_TABLE [ENTRY];
@@ -175,8 +176,7 @@ feature -- Genericity
 			rout_info: ROUT_INFO;
 			gen_type: GEN_TYPE_I;
 		do
-			!!Result.make (0)
-			Result.append ("-13, ")
+			f.putstring ("-13, ")
 			if context.final_mode then
 				table := Eiffel_table.poly_table (rout_id)
 				if table.has_one_type then
@@ -184,31 +184,31 @@ feature -- Genericity
 					gen_type ?= table.first.type
 
 					if gen_type /= Void then
-						Result.append ("-10, ")
-						Result.append (gen_type.gen_type_string (final_mode, True))
+						f.putstring ("-10, ")
+						gen_type.generate_cid (f, final_mode, True)
 					else
-						Result.append_integer (table.first.feature_type_id - 1)
-						Result.append (", ")
+						f.putint (table.first.feature_type_id - 1)
+						f.putstring (", ")
 					end
 				else
 						-- Attribute is polymorphic
 					table_name := rout_id.type_table_name
 
-					Result.append ("RTFCID(")
-					Result.append_integer (context.current_type.generated_id (context.final_mode))
-					Result.append (",(")
-					Result.append (table_name)
-					Result.append ("-")
-					Result.append_integer (table.min_type_id - 1)
-					Result.append ("), (")
+					f.putstring ("RTFCID(")
+					f.putint (context.current_type.generated_id (context.final_mode))
+					f.putstring (",(")
+					f.putstring (table_name)
+					f.putstring ("-")
+					f.putint (table.min_type_id - 1)
+					f.putstring ("), (")
 
-					Result.append (table_name)
-					Result.append ("_gen_type")
-					Result.append ("-")
-					Result.append_integer (table.min_type_id - 1)
-					Result.append ("), ")
-					Result.append (context.Current_register.register_name)
-					Result.append ("), ")
+					f.putstring (table_name)
+					f.putstring ("_gen_type")
+					f.putstring ("-")
+					f.putint (table.min_type_id - 1)
+					f.putstring ("), ")
+					f.putstring (context.Current_register.register_name)
+					f.putstring ("), ")
 
 						-- Side effect. This is not nice but
 						-- unavoidable.
@@ -222,23 +222,23 @@ feature -- Genericity
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
 				then
-					Result.append ("RTWPCT(")
-					Result.append (context.class_type.id.generated_id)
-					Result.append (gc_comma)
+					f.putstring ("RTWPCT(")
+					f.putstring (context.class_type.id.generated_id)
+					f.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id)
-					Result.append (rout_info.origin.generated_id)
-					Result.append (gc_comma)
-					Result.append_integer (rout_info.offset)
+					f.putstring (rout_info.origin.generated_id)
+					f.putstring (gc_comma)
+					f.putint (rout_info.offset)
 				else
-					Result.append ("RTWCT(")
-					Result.append_integer
+					f.putstring ("RTWCT(")
+					f.putint
 						(context.current_type.associated_class_type.id.id - 1)
-					Result.append (gc_comma)
-					Result.append_integer (feature_id)
+					f.putstring (gc_comma)
+					f.putint (feature_id)
 				end
-				Result.append (gc_comma)
-				Result.append (context.Current_register.register_name)
-				Result.append ("), ")
+				f.putstring (gc_comma)
+				f.putstring (context.Current_register.register_name)
+				f.putstring ("), ")
 			end
 		end
 

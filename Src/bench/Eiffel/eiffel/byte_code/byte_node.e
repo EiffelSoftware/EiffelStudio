@@ -223,7 +223,7 @@ feature -- Generic conformance
 
 			generated_file.putint (context.current_type.generated_id (context.final_mode))
 			generated_file.putstring (", ")
-			generated_file.putstring (gtype.gen_type_string (context.final_mode, True))
+			gtype.generate_cid (generated_file, context.final_mode, True)
 			generated_file.putstring ("-1};")
 			generated_file.new_line
 			generated_file.putstring ("int16 typres;")
@@ -233,7 +233,7 @@ feature -- Generic conformance
 			generated_file.new_line
 			generated_file.putstring ("typres = RTCID(&typcache,")
 
-			generated_file.putstring (context.Current_register.register_name) 
+			context.Current_register.print_register_by_name
 
 			generated_file.putstring (", ")
 			generated_file.putint (gtype.generated_id (context.final_mode))

@@ -209,16 +209,15 @@ feature -- Generic conformance
 			Result := -10       -- Invalid type id.
 		end
 
-	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
-			-- Mode dependent sequence of type id's separated by commas.
-			-- `use_info' is true iff we generate code for a 
-			-- creation instruction.
+	generate_cid (f : INDENT_FILE; final_mode, use_info : BOOLEAN) is
+			-- Generate mode dependent sequence of type id's 
+			-- separated by commas. `use_info' is true iff 
+			-- we generate code for a creation instruction.
+		require
+			valid_file : f /= Void
 		do
-			!!Result.make (0)
-			Result.append_integer (generated_id (final_mode))
-			Result.append (", ")
-		ensure
-			exists : Result /= Void
+			f.putint (generated_id (final_mode))
+			f.putstring (", ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

@@ -6,7 +6,7 @@ inherit
 
 	CREATE_INFO
 		redefine
-			gen_type_string, make_gen_type_byte_code
+			generate_cid, make_gen_type_byte_code
 		end
 	SHARED_GENERATION_CONSTANTS
 
@@ -24,10 +24,9 @@ feature
 		local
 			gen_file: INDENT_FILE;
 		do
---            context.generate_current_dtype;
 			gen_file := context.generated_file;
 			gen_file.putstring ("Dftype(")
-			gen_file.putstring (context.Current_register.register_name)
+			context.Current_register.print_register_by_name
 			gen_file.putchar (')')
 		end;
 
@@ -47,23 +46,13 @@ feature -- Generic conformance
 			-- Nothing.
 		end
 
-	generated_type_id : STRING is
+	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
 
 		do
-			!!Result.make (0)
-			Result.append ("Dftype(")
-			Result.append (context.Current_register.register_name)
-			Result.append_character (')')
-		end
-
-	gen_type_string (final_mode : BOOLEAN) : STRING is
-
-		do
-			!!Result.make (0)
-			Result.append_integer (-12)
-			Result.append (", Dftype(")
-			Result.append (context.Current_register.register_name)
-			Result.append ("), ")
+			f.putint (-12)
+			f.putstring (", Dftype(")
+			context.Current_register.print_register_by_name
+			f.putstring ("), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is

@@ -4,6 +4,9 @@ class CREATE_TYPE
 
 inherit
 	CREATE_INFO
+		redefine
+			generate_cid
+		end
 	
 feature -- Access
 
@@ -88,7 +91,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generated_type_id : STRING is
+	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
 
 		local
 			cl_type_i : CL_TYPE_I;
@@ -97,17 +100,15 @@ feature -- Generic conformance
 			cl_type_i ?= context.real_type (type);
 			gen_type  ?= cl_type_i;
 
-			!!Result.make (0);
-
 			if gen_type /= Void then
-				Result.append ("typres");
+				f.putstring ("typres");
 			else
 				if context.workbench_mode then
-					Result.append ("RTUD(")
-					Result.append (cl_type_i.associated_class_type.id.generated_id)
-					Result.append_character (')')
+					f.putstring ("RTUD(")
+					f.putstring (cl_type_i.associated_class_type.id.generated_id)
+					f.putchar (')')
 				else
-					Result.append_integer (cl_type_i.type_id - 1);
+					f.putint (cl_type_i.type_id - 1);
 				end
 			end
 		end;

@@ -417,6 +417,16 @@ feature {NONE} -- GTK C functions for menu
 			"C (GtkMenu *) | %"gtk_eiffel.h%""
 		end		
 
+	c_gtk_menu_get_child (menu: POINTER; i: INTEGER): POINTER is
+		external
+			"C (GtkMenu *, gint): EIF_POINTER | %"gtk_eiffel.h%""
+		end		
+
+	c_gtk_menu_nb_children (menu: POINTER): INTEGER is
+		external
+			"C (GtkMenu *): EIF_INTEGER | %"gtk_eiffel.h%""
+		end		
+
 feature {NONE} -- GTK C functions for menu item
 
 	gtk_menu_bar_new: POINTER is

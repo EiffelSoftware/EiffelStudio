@@ -50,6 +50,8 @@ feature -- Initialization
 			set_title ("")
 				-- set title also realizes the window.
 			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
+			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
+			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
 		end
@@ -190,7 +192,6 @@ feature -- Status setting
 			win_imp ?= a_window.implementation
 			C.gtk_window_set_transient_for (c_object, win_imp.c_object)
 		end
-
 
 	set_x_position (a_x: INTEGER) is
 			-- Set horizontal offset to parent to `a_x'.
@@ -528,6 +529,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2001/06/19 16:53:04  king
+--| Further restricted chances of user movement
+--|
 --| Revision 1.50  2001/06/19 01:12:58  king
 --| Changed from popup to top level with no wdm decorations
 --|

@@ -5,24 +5,11 @@ class OPT_PULL_C
 inherit
 
 	PULLDOWN_C
-		rename
-			context_initialization as pull_context_initialization
-		redefine
-			stored_node, real_y, real_x,  
-			set_size, set_x_y, height, width, y, x, widget, 
-			is_resizable
-		end
-
-	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, widget, 
-			is_resizable
-		select
-			context_initialization
+			display_resize_squares
 		end
-
--- samik	G_ANY
 
 feature 
 
@@ -45,9 +32,25 @@ feature
 						Context_const.Submenu_format_nbr);
 		end;
 
-	is_resizable: BOOLEAN is
+feature {SELECTION_MANAGER}
+
+	display_resize_squares (logical_mode: INTEGER) is
+			-- Draw squares in the corners of the context, used to resize it.
+		local
+			x_position, y_position, corner_side: INTEGER
+			previous_logical_mode: INTEGER
 		do
-			Result := False
+			set_drawing (eb_screen)
+			previous_logical_mode := drawing_i.logical_mode
+			set_logical_mode (logical_mode)
+			set_subwindow_mode (1)
+			corner_side := Eb_selection_mgr.corner_side // 2
+			x_position := real_x + corner_side // 2
+			y_position := real_y + corner_side // 2
+			draw_squares (x_position, y_position)
+			x_position := x_position + width - corner_side
+			draw_squares (x_position, y_position)
+			set_logical_mode (previous_logical_mode)
 		end
 
 feature 
@@ -67,7 +70,7 @@ feature
 			else
 				function_string_to_string (Result, context_name, "set_caption", "");
 			end;
-			Result.append (pull_context_initialization (context_name));
+			Result.append (Precursor (context_name));
 		end
 	
 	create_oui_widget (a_parent: COMPOSITE) is

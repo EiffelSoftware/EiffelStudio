@@ -21,7 +21,7 @@ feature
 	type: TYPE_I is
 			-- Boolean type
 		once
-			Result := Char_c_type;
+			Result := Boolean_c_type;
 		end;
 
 	print_register is

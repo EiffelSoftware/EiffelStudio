@@ -219,6 +219,16 @@ feature {NONE} -- Implementation
 			C.c_gdk_color_struct_free (fg)
 		end
 
+feature -- Duplication
+
+	copy (other: EV_PIXMAP) is
+			-- Update `Current' to have same appearence as `other'.
+			-- (So as to satisfy `is_equal'.)
+		do
+			set_size (other.width, other.height)
+			draw_pixmap (0, 0, other)
+		end
+
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
@@ -264,6 +274,10 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/20 23:43:50  pichery
+--| Moved implementation of `read_from_named_file' from interface
+--| to implementation cluster
+--|
 --| Revision 1.19  2000/03/18 00:55:32  king
 --| Added creation of mask, need to implement transparency for cursor compatibility
 --|

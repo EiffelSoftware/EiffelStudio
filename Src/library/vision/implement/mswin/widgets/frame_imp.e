@@ -273,17 +273,17 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
-			Result := Precursor + Ws_dlgframe
+			Result := {WEL_CONTROL_WINDOW} Precursor + Ws_dlgframe
 		end
 
 	frame_height: INTEGER is 
-			--Height of frame border
+			-- Height of frame border
 		once
 			Result := 2 * dialog_window_frame_height
 		end
 
 	frame_width: INTEGER is 
-			--Width of frame border
+			-- Width of frame border
 		once
 			Result := 2 * dialog_window_frame_width
 		end

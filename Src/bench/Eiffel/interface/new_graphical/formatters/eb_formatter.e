@@ -40,8 +40,8 @@ feature -- Setting
 
 feature -- Formatting
 
-	format (stone: STONE) is
-			-- Show special format of `stone' in class text `text_area',
+	format is
+			-- Show special format of tool stone in class text `text_area',
 			-- if it's clickable; do nothing otherwise.
 		local
 			retried: BOOLEAN
@@ -52,32 +52,35 @@ feature -- Formatting
 			if not retried then 
 				if 
 					do_format or else filtered or else
-					(tool.last_format /= Current or
-					(stone /= Void and then not stone.same_as (tool.stone)))
+					(tool.last_format /= Current)
+--|					or (stone /= Void and then not stone.same_as (tool.stone)))
+--| FIXME
+--| Christophe, 5 nov 1999
+--| How do we know that `tool.stone' has just changed?
 				then
-					if stone /= Void and then stone.is_valid then
---						tool.close_search_dialog	
-						if stone.clickable then
-							display_temp_header (stone)
---							create mp.set_watch_cursor
+					if tool.stone /= Void and then tool.stone.is_valid then
+--|						tool.close_search_dialog	
+						if tool.stone.clickable then
+							display_temp_header (tool.stone)
+--|							create mp.set_watch_cursor
 							tool.text_area.freeze
 							tool.text_area.clear_window
 							tool.text_area.set_editable (True)
-							tool.set_stone (stone)
---							tool.set_file_name (file_name (stone))
-							display_info (stone)
+--|							tool.set_stone (stone)
+--|							tool.set_file_name (file_name (stone))
+							display_info (tool.stone)
 							tool.text_area.set_position (1)
 							tool.text_area.set_editable (False)
 							tool.text_area.thaw
 							tool.set_last_format (Current)
 							filtered := false
-							display_header (stone)
+							display_header (tool.stone)
 --							mp.restore
 						else
 							set_selected (False)
 							edit_tool ?= tool
 							if edit_tool /= Void then
-								edit_tool.format_list.text_format.format (stone)
+								edit_tool.format_list.text_format.format
 							end
 						end
 					else

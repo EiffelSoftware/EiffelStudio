@@ -1,0 +1,36 @@
+class EWB_SHORT 
+
+inherit
+
+	EWB_FS
+		redefine
+			loop_execute, help_message, name
+		end;
+
+creation
+
+	null
+
+feature
+
+	name: STRING is
+		do
+			Result := short_cmd_name;
+		end;
+
+	help_message: STRING is
+		do
+			Result := short_help
+		end;
+
+	loop_execute is
+		do
+			get_class_name;
+			class_name := last_input;
+			class_name.to_lower;
+			troffed := False;
+			only_current_class := True;
+			execute;
+		end;
+
+end

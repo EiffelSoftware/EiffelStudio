@@ -284,12 +284,17 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
-			lower_bar.wipe_out
-			upper_bar.wipe_out
-			remove_menu_bar
-			is_destroyed := True
-			Precursor {EV_CONTAINER_IMP}
+			if not in_destroy then
+				in_destroy := True
+				lower_bar.wipe_out
+				upper_bar.wipe_out
+				remove_menu_bar
+				Precursor {EV_CONTAINER_IMP}
+			end
 		end
+
+	in_destroy: BOOLEAN
+		-- Is destroy in the process of being called?
 		
 	show is
 			-- Map the Window to the screen.

@@ -57,7 +57,9 @@ feature -- Status setting
 	destroy is
 			-- Destroy actual object.
 		do
-			parent_imp := Void
+			if parent_imp /= Void then
+				parent_imp.interface.prune_all (interface)
+			end
 			is_destroyed := True
 		end
 

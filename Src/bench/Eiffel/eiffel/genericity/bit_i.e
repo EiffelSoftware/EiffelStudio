@@ -11,7 +11,8 @@ inherit
 			generate_cid_array, generate_cid_init,
 			generate_default_value, generate_expanded_creation,
 			generate_expanded_initialization, default_create,
-			tuple_code, name, has_associated_class_type
+			tuple_code, name, has_associated_class_type,
+			associated_class_type
 		end
 
 create
@@ -36,6 +37,13 @@ feature -- Status report
 	has_associated_class_type: BOOLEAN is True
 			-- Since there is only one associated class type, which is
 			-- the type for BIT_REF, we are always sure to find it.
+
+	associated_class_type: CLASS_TYPE is
+			-- Associated class type
+		do
+				-- Return class type for BIT_REF
+			Result := base_class.types.first
+		end
 
 	reference_type: CL_TYPE_I is
 			-- Assocated reference type of Current.

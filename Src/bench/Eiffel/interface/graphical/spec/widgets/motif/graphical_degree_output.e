@@ -28,7 +28,7 @@ inherit
 			put_case_class_message, put_case_message, put_string,
 			put_resynchronizing_breakpoints_message,
 			put_class_document_message,
-			put_start_documentation, put_recursive_degree_6
+			put_start_documentation, put_recursive_degree_6,
 			display_degree_output
 		end 
 

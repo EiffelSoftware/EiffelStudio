@@ -208,12 +208,8 @@ feature
 								context.assertion_level.check_invariant) and
 								source.used (target))
 							then
-								if not source_type.is_none then
-									source.propagate (target)
-									target_propagated := context.propagated
-								else
-									source.propagate (No_register)
-								end
+								source.propagate (target)
+								target_propagated := context.propagated
 							end
 						end
 					end
@@ -339,9 +335,6 @@ feature
 	Copy_assignment: INTEGER is unique
 			-- Copy source into target, raise exception if source is Void
 
-	None_assignment: INTEGER is unique
-			-- A none entity is assigned
-
 	source_print_register is
 			-- Generate source (the True one or the metamorphosed one)
 		do
@@ -357,7 +350,6 @@ feature
 		local
 			target_type: TYPE_I
 			source_type: TYPE_I
-			access_b: ACCESS_B
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -381,24 +373,7 @@ feature
 				elseif source_type.is_true_expanded then
 					generate_regular_assignment (Clone_assignment)
 				else
-					if source_type.is_none then
-						-- Assigned a NONE entity (may be side effect)
-						-- Generate unless it is the 'Void' entity.
-						access_b ?= source
-						if access_b = Void or else not access_b.is_void_entity
-						then
-							source.generate
-							buf.putstring ("(void) ")
-							source.print_register
-							buf.putchar (';')
-							buf.new_line
-						end
-						target.print_register
-						buf.putstring (" = (EIF_REFERENCE) 0;")
-						buf.new_line
-					else
-						generate_regular_assignment (Simple_assignment)
-					end
+					generate_regular_assignment (Simple_assignment)
 				end
 			end
 		end
@@ -577,12 +552,7 @@ feature
 				elseif source_type.is_true_expanded then
 					generate_last_assignment (Clone_assignment)
 				else
-					if source_type.is_none then
-						-- Assigned a NONE entity
-						generate_last_assignment (None_assignment)
-					else
-						generate_last_assignment (Simple_assignment)
-					end
+					generate_last_assignment (Simple_assignment)
 				end
 			end
 		end
@@ -603,15 +573,11 @@ feature
 				buf.new_line
 			end
 			buf.putstring ("return ")
-			if how = None_assignment then
-				buf.putstring ("(EIF_REFERENCE) 0")
-			else
-					-- Always ensure that we perform a cast to type of target.
-					-- Cast in case of basic type will never loose information
-					-- as it has been validated by the Eiffel compiler.
-				target.c_type.generate_cast (buf)
-				source_print_register
-			end
+				-- Always ensure that we perform a cast to type of target.
+				-- Cast in case of basic type will never loose information
+				-- as it has been validated by the Eiffel compiler.
+			target.c_type.generate_cast (buf)
+			source_print_register
 			buf.putchar (';')
 			buf.new_line
 		end

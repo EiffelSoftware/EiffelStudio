@@ -6,12 +6,10 @@ indexing
 
 class
 	WIZARD_TYPES
-
+	
 feature -- Eiffel types
 
 	Arguments_type: STRING is "ARGUMENTS"
-
-	User_precondition: STRING is "user_precondition"
 
 	Integer_type: STRING is "INTEGER"
 
@@ -105,7 +103,7 @@ feature -- COM/C types
 
 	Variant_bool: STRING is "VARIANT_BOOL"
 
-	Date_c_keyword: STRING is "DATE"
+	Date_c_keyword, Com_date_type: STRING is "DATE"
 
 	Hresult: STRING is "HRESULT"
 
@@ -113,7 +111,7 @@ feature -- COM/C types
 
 	Variant_c_keyword: STRING is "VARIANT"
 
-	Currency: STRING is "CURRENCY"
+	Currency, Com_currency_type: STRING is "CURRENCY"
 
 	Decimal: STRING is "DECIMAL"
 
@@ -122,6 +120,8 @@ feature -- COM/C types
 	Iunknown: STRING is "IUnknown *"
 
 	Bstr: STRING is "BSTR"
+
+	Com_char_type: STRING is "CHAR"
 
 	Olechar: STRING is "OLECHAR"
 
@@ -132,6 +132,8 @@ feature -- COM/C types
 	Iunknown_pointer: STRING is "IUnknown *"
 
 	Safearray: STRING is "SAFEARRAY"
+
+	Com_safearray_type: STRING is "SAFEARRAY *"
 
 	Variantarg: STRING is "VARIANTARG"
 
@@ -162,6 +164,8 @@ feature -- COM/C types
 	Unsigned_long: STRING is "unsigned long"
 
 	Float: STRING is "float"
+
+	Com_float_type: STRING is "FLOAT"
 
 	Double_c_keyword: STRING is "double"
 

@@ -11,28 +11,20 @@ inherit
 
 feature
 	
-	make (a_id: INTEGER) is
-			-- Create with `a_id'
-		require
-			valid_id: a_id > 0
+	make is
+			-- Create
 		do
 			clear
-			identifier := a_id
 			create output_string.make_empty
 		end		
 
 feature -- Access
 
-	identifier: INTEGER
-			-- Unique identifier
-
-	description: STRING is
-			-- Description of this filter
-		deferred
-		end
-
 	output_string: STRING
 			-- Output string after filter processing
+			
+	description: STRING
+			-- Textual description of this filter
 
 feature -- Status Setting
 
@@ -41,8 +33,5 @@ feature -- Status Setting
 		do
 			output_string := ""
 		end		
-
-invariant
-	has_valid_id: identifier > 0
 
 end -- class DOCUMENT_FILTER

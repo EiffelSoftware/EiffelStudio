@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			loop
 				window_selector_item ?= window_selector.item
 				 if window_selector_item /= Void then
-				 	output_file.putstring ((window_selector_item.object.name + "_IMP%N").as_upper)
+				 	output_file.putstring ((window_selector_item.object.name + Class_implementation_extension).as_upper + ".e%N")
 				end
 				window_selector_layout ?= window_selector.item
 				if window_selector_layout /= Void then
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 					loop
 						window_selector_item ?= window_selector_layout.item
 						if window_selector_item /= Void then
-							output_file.putstring ((window_selector_layout.text + "\" + window_selector_item.object.name + "_IMP%N").as_upper)
+							output_file.putstring ((window_selector_layout.text + "\" + window_selector_item.object.name + Class_implementation_extension).as_upper + ".e%N")
 						end
 						window_selector_layout.forth
 					end

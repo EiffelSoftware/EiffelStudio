@@ -67,6 +67,8 @@ feature -- Access
 			exists: exists
 		do
 			Result := log_pen.style
+		ensure
+			valid_result: valid_pen_style_constant (Result)
 		end
 
 	width: INTEGER is

@@ -40,7 +40,7 @@ typedef struct {			/* Position in program execution flow */
 	rt_int_ptr wh_obj;		/* Object address (can't use (char *) with XDR) */
 	int wh_origin;			/* Where feature comes from */
 	int wh_type;			/* Dynamic type of Current */
-	long wh_offset;			/* Offset within byte code (-1 if none) */
+	int wh_offset;			/* Offset within byte code (-1 if none) */
 } Where;
 
 typedef struct {			/* Stopping notification */

@@ -105,11 +105,15 @@ feature -- Status report
 				inspect
 					mode
 				when Readable then
-					res.set_proxy_information (source_proxy)
+					if res.is_proxy_supported then
+						res.set_proxy_information (source_proxy)
+					end
 					Result := add_reference 
 						(readable_set, res, res~is_readable)
 				when Writable then
-					res.set_proxy_information (target_proxy)
+					if res.is_proxy_supported then
+						res.set_proxy_information (target_proxy)
+					end
 					Result := add_reference 
 						(writable_set, res, res~is_writable)
 				end

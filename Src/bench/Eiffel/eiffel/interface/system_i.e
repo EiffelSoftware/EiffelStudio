@@ -65,6 +65,7 @@ feature -- Counters
 	init_counters is
 			-- Initialize various counters.
 		do
+			set_compilation_id;
 			routine_id_counter.init_counter;
 			class_counter.init_counter;
 			static_type_id_counter.init_counter;
@@ -76,17 +77,23 @@ feature -- Counters
 			feature_as_counter.init_counter
 		end;
 
-	compilation_id: INTEGER is 
+	compilation_id: INTEGER
 			-- Precompilation identifier
-		once
+
+	set_compilation_id is
+			-- Set `compilation_id' value.
+		local
+			str: ANY
+		do
 			if Compilation_modes.is_precompiling then
-				Result := 1
+				str := Project_directory.to_c;
+				compilation_id := eif_date ($str)
 			elseif Compilation_modes.is_extending then
-				Result := Dle_compilation
+				compilation_id := Dle_compilation
 			else
-				Result := Normal_compilation
+				compilation_id := Normal_compilation
 			end
-		end;
+		end
 
 feature -- Properties
 
@@ -377,6 +384,7 @@ feature -- Properties
 	make is
 			-- Create the system.
 		do
+			set_compilation_id;
 			!!server_controler;
 			server_controler.make;
 				-- Creation of the system hash table
@@ -1886,6 +1894,9 @@ end;
 			generate_dle_file;
 				-- Empty update file
 			generate_empty_update_file;
+			if Compilation_modes.is_precompiling then
+				generate_descriptor_tables
+			end
 		end;
 
 	generate_empty_update_file is
@@ -2280,6 +2291,17 @@ feature -- Generation
 				-- using DLE stuff.
 			generate_plug
 		end;
+
+	generate_descriptor_tables is
+			-- Generate descriptor tables.
+		do
+			Desc_generator.init;
+			from classes.start until classes.after loop
+				classes.item_for_iteration.generate_precomp_descriptor_tables;
+				classes.forth
+			end;
+			Desc_generator.finish
+		end
 
 	process_dynamic_types is
 			-- Processing of the dynamic types.
@@ -3687,9 +3709,9 @@ feature -- Precompilation
 			-- Initialization before a precompilation.
 		do
 			if not general_class.compiled then
-				init;
-				Workbench.change_all
+				init
 			end;
+			Workbench.change_all;
 			private_freeze := True;
 		end;
 
@@ -3777,6 +3799,12 @@ feature {SYSTEM_I} -- Implementation
 feature {NONE} -- External features
 
 	write_int (f: POINTER; v: INTEGER) is
+		external
+			"C"
+		end;
+
+	eif_date (s: POINTER): INTEGER is
+			-- Date of file of name `s'.
 		external
 			"C"
 		end;

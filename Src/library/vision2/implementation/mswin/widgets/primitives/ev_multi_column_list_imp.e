@@ -20,9 +20,6 @@ inherit
 			on_left_button_down,
 			on_middle_button_down,
 			on_right_button_down,
-			on_left_button_up,
-			on_middle_button_up,
-			on_right_button_up,
 			on_mouse_move,
 			on_key_down,
 			interface
@@ -691,7 +688,6 @@ feature {NONE} -- WEL Implementation
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
@@ -700,72 +696,17 @@ feature {NONE} -- WEL Implementation
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
 		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_two_press) then
---				execute_command (Cmd_button_two_press, ev_data)
---			end
---			internal_propagate_event
---		(Cmd_button_two_press, x_pos, y_pos, ev_data)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
 		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_three_press) then
---				execute_command (Cmd_button_three_press, ev_data)
---			end
---			internal_propagate_event
---(Cmd_button_three_press, x_pos, y_pos, ev_data)
---			disable_default_processing
-		end
-
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (1, keys, x_pos, y_pos)
---			if has_command (Cmd_button_one_release) then
---				execute_command (Cmd_button_one_release, ev_data)
---			end
---			internal_propagate_event
---(Cmd_button_one_release, x_pos, y_pos, ev_data)
-		end
-
-	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_mbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			if has_command (Cmd_button_two_release) then
---				execute_command (Cmd_button_two_release, ev_data)
---			end
---			internal_propagate_event
---(Cmd_button_two_release, x_pos, y_pos, ev_data)
-		end
-
-	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_rbuttonup message
-			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
-		do
---			ev_data := get_button_data (3, keys, x_pos, y_pos)
---			if has_command (Cmd_button_three_release) then
---				execute_command (Cmd_button_three_release, ev_data)
---			end
---			internal_propagate_event
---(Cmd_button_three_release, x_pos, y_pos, ev_data)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -896,6 +837,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/03/14 19:02:00  rogers
+--| Removed all commented code from on_****_button_down, and implemented correctly. Removed all on_****_button_up.
+--|
 --| Revision 1.52  2000/03/14 18:41:05  rogers
 --| Changed internal_propagate_event to internal_propagate_pointer_press and implemented this feature. Re-implemented child_y.
 --|

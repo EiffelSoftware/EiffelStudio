@@ -21,8 +21,8 @@ feature {NONE}
 		do
 			ic_init (a_composite, a_tool.text_window);
 			tool := a_tool;
-			!!transporter_arg;
-			add_button_click_action (3, Current, transporter_arg)
+			set_action ("<Btn3Down>", Current, transporter_arg);
+			set_action ("!c<Btn3Down>", Current, new_tooler_arg)
 		ensure
 			parent = a_composite
 		end;
@@ -30,7 +30,8 @@ feature {NONE}
 	tool: TOOL_W;
 			-- Tool attached to Current
 
-	transporter_arg: ANY;
+	transporter_arg: ANY is once !!Result end;
+	new_tooler_arg: ANY is once !!Result end;
 
 	icon_name: STRING is do end;
 	
@@ -60,6 +61,11 @@ feature {NONE}
 				if rs /= Void then
 					tool.transport (rs, void, screen.x, screen.y)
 				end;
+			elseif argument = new_tooler_arg then
+				rs := transport_stone;
+				if rs /= Void then
+					project_tool.receive (rs)
+				end
 			else
 				if tool /= project_tool then
 					tool.synchronize

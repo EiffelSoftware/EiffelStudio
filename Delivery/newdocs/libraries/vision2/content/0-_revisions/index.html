@@ -43,9 +43,11 @@
 					<li><B>EV_WINDOW</B> - `move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.</li>
 				</ul>
 				<li><B>EV_FONT</B> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.</li>
-			<LI>
+				<li><B>EV_SCROLL_BAR</B> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.</li>
+			</UL>
 				<b>Gtk</b>
 				<UL>
+				</ul>
 		
 		</UL>
 		<h2>

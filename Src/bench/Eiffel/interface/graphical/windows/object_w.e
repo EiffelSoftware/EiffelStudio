@@ -18,7 +18,7 @@ inherit
 		redefine
 			build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
-			process_object, build_basic_bar,
+			process_object, build_bar,
 			close, set_default_size,
 			update_boolean_resource,
 			update_integer_resource,
@@ -31,7 +31,7 @@ inherit
 			build_format_bar, hole, close_windows,
 			tool_name, build_widgets, attach_all, set_default_format,
 			stone, stone_type, synchronize, process_object,
-			build_basic_bar, close, make_shell, reset,
+			build_bar, close, make_shell, reset,
 			update_boolean_resource, set_default_size,
 			update_integer_resource,
 			set_title, resources, history_window_title
@@ -50,18 +50,19 @@ feature {NONE} -- Initialization
 	make_shell (a_shell: EB_SHELL) is
 			-- Create an object tool.
 		do
-			create_menus := True;
+			is_in_project_tool := False;
 			old_make_shell (a_shell);
 			set_default_sp_bounds
 		end;
 
-	form_create (a_form: FORM; edit_m, format_m, special_m: MENU_PULL) is
+	form_create (a_form: FORM; file_m, edit_m, format_m, special_m: MENU_PULL) is
 			-- Create a feature tool from a form.
 		require
 			valid_args: a_form /= Void and then edit_m /= Void and then
 				format_m /= Void and then special_m /= Void
 		do
-			create_menus := False;
+			is_in_project_tool := True;
+			file_menu := file_m;
 			edit_menu := edit_m;
 			format_menu := format_m;
 			special_menu := special_m;
@@ -335,8 +336,8 @@ feature {NONE} -- Properties; Forms And Holes
 
 feature {NONE} -- Implementation; Graphical Interface
 
-	build_basic_bar is
-			-- Build top bar (only the basics).
+	build_bar is
+			-- Build top bar.
 		local
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
@@ -350,18 +351,15 @@ feature {NONE} -- Implementation; Graphical Interface
 			hole_holder.set_button (hole_button);
 			build_edit_menu (edit_bar);
 			build_print_menu_entry;
+			build_save_as_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
-			if create_menus then
-				!! quit_menu_entry.make (quit_cmd, file_menu);
-				!! quit.make (quit_cmd, quit_button, quit_menu_entry);
-
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+			if not is_in_project_tool then
 				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
-			else
-				!! quit.make_plain (quit_cmd);
-				quit.set_button (quit_button)
 			end;
 
 				-- Attachments are done here, because of speed.
@@ -411,7 +409,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			create_toolbar_parent (global_form);
 
 			build_text_windows;
-			if create_menus then
+			if not is_in_project_tool then
 				build_menus
 			end
 			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
@@ -420,7 +418,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
-			if create_menus then
+			if not is_in_project_tool then
 				fill_menus;
 			end;
 			build_toolbar_menu
@@ -438,7 +436,7 @@ feature {NONE} -- Implementation; Graphical Interface
 
 	attach_all is
 		do
-			if create_menus then
+			if not is_in_project_tool then
 				global_form.attach_left (menu_bar, 0);
 				global_form.attach_right (menu_bar, 0);
 				global_form.attach_top (menu_bar, 0)
@@ -446,10 +444,10 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			global_form.attach_left (toolbar_parent, 0);
 			global_form.attach_right (toolbar_parent, 0);
-			if create_menus then
-				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
-			else
+			if is_in_project_tool then
 				global_form.attach_top (toolbar_parent, 0)
+			else
+				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
 			end
 
 			global_form.attach_left (text_window.widget, 0);
@@ -519,7 +517,7 @@ feature {NONE} -- Properties
 			Result := showattr_frmt_holder
 		end;
 
-	create_menus: BOOLEAN
-			-- Did the menus get created for this tool?
+	is_in_project_tool: BOOLEAN
+			-- Is the current object tool in the project tool window?
 
 end -- class OBJECT_W

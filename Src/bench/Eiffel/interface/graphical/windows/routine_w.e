@@ -22,12 +22,12 @@ inherit
 			set_stone, synchronize, process_feature,
 			process_class, process_breakable, compatible,
 			close, editable_text_window,
-			set_editable_text_window, has_editable_text, 
+			set_editable_text_window, 
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
 			set_title, set_mode_for_editing, parse_file, resources,
-			history_window_title
+			history_window_title, has_editable_text
 		end
 
 	BAR_AND_TEXT
@@ -39,12 +39,12 @@ inherit
 			stone, stone_type, set_stone, synchronize, process_feature,
 			process_class, process_breakable, compatible,
 			make_shell, close, editable_text_window,
-			set_editable_text_window, has_editable_text,
+			set_editable_text_window, 
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
 			set_title, set_mode_for_editing, parse_file, resources,
-			history_window_title 
+			history_window_title, has_editable_text
 		select
 			reset, make_shell, close_windows
 		end;
@@ -59,23 +59,25 @@ feature -- Initialization
 	make_shell (a_shell: EB_SHELL) is
 			-- Create a feature tool
 		do
-			create_menus := True;
+			is_in_project_tool := False;
 			bar_and_text_make_shell (a_shell);
 		end;
 
-	form_create (a_form: FORM; edit_m, format_m, special_m: MENU_PULL) is
+	form_create (a_form: FORM; file_m, edit_m, format_m, special_m: MENU_PULL) is
 			-- Create a feature tool from a form.
 		require
 			valid_args: a_form /= Void and then edit_m /= Void and then	
 				format_m /= Void and then special_m /= Void
 		do
-			create_menus := False;
+			is_in_project_tool := True;
+			file_menu := file_m;
 			edit_menu := edit_m;
 			format_menu := format_m;
 			special_menu := special_m;
 			make_form (a_form);
 			init_text_window;
 			set_composite_attributes (a_form);
+			set_composite_attributes (file_m);
 			set_composite_attributes (edit_m);
 			set_composite_attributes (format_m);
 			set_composite_attributes (special_m)
@@ -168,6 +170,11 @@ feature -- Window Properties
 			Result := Interface_names.t_Select_feature
 		end;
 
+	has_editable_text: BOOLEAN is
+		do
+			Result := True
+		end;
+
 feature -- Resetting
 
 	reset is
@@ -206,12 +213,6 @@ feature -- Access
 			-- Does window show breakable points of routine?
 		do
 			Result := last_format = showstop_frmt_holder
-		end;
-
-	has_editable_text: BOOLEAN is
-			-- Does Current tool have an editable text window?
-		do
-			Result := True
 		end;
 
 feature -- Update
@@ -498,7 +499,7 @@ feature -- Graphical Interface
 			sep: SEPARATOR
 		do
 			build_text_windows;
-			if create_menus then
+			if not is_in_project_tool then
 				build_menus
 			end;
 
@@ -510,7 +511,7 @@ feature -- Graphical Interface
 			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
-			if create_menus then
+			if not is_in_project_tool then
 				fill_menus;
 			end;
 			build_toolbar_menu;
@@ -529,7 +530,7 @@ feature -- Graphical Interface
 	attach_all is
 			-- Attach all widgets.
 		do
-			if create_menus then
+			if not is_in_project_tool then
 				global_form.attach_left (menu_bar, 0);
 				global_form.attach_right (menu_bar, 0);
 				global_form.attach_top (menu_bar, 0)
@@ -537,10 +538,10 @@ feature -- Graphical Interface
 
 			global_form.attach_left (toolbar_parent, 0);
 			global_form.attach_right (toolbar_parent, 0);
-			if create_menus then
-				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
-			else
+			if is_in_project_tool then
 				global_form.attach_top (toolbar_parent, 0)
+			else
+				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
 			end;
 
 			global_form.attach_left (editable_text_window.widget, 0);
@@ -650,7 +651,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			history_list_cmd: LIST_HISTORY;
 			new_class_button: EB_BUTTON_HOLE
 		do
-			if create_menus then
+			if not is_in_project_tool then
 				!! shell_cmd.make (Current);
 				!! shell_button.make (shell_cmd, edit_bar);
 				shell_button.add_third_button_action;
@@ -663,6 +664,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 			!! super_melt_cmd.make (Current);
 			!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
+			build_filter_menu_entry;
 			!! current_target_cmd.make (Current);
 			!! sep.make (new_name, special_menu);
 			!! current_target_menu_entry.make (current_target_cmd, special_menu);
@@ -680,7 +682,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
-			if create_menus then
+			if not is_in_project_tool then
 				edit_bar.attach_left_widget (stop_hole_button, shell_button, 0);
 				edit_bar.attach_left_widget (shell_button, new_class_button, 0);
 				edit_bar.attach_top (shell_button, 0);
@@ -808,7 +810,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! class_hole_button.make (class_hole, edit_bar);
 			!! class_hole_holder.make_plain (class_hole);
 			class_hole_holder.set_button (class_hole_button);
-			if create_menus then
+			if not is_in_project_tool then
 				!! stop_hole.make (Current);
 				!! stop_hole_button.make (stop_hole, edit_bar);
 				!! stop_hole_holder.make_plain (stop_hole);
@@ -821,18 +823,14 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_edit_menu (edit_bar);
 			search_button := search_cmd_holder.associated_button;
 
+			build_save_as_menu_entry;
 			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
-			if create_menus then
-				!! quit_menu_entry.make (quit_cmd, file_menu);
-				!! quit.make (quit_cmd, quit_button, quit_menu_entry)
-			else
-				!! quit.make_plain (quit_cmd);
-				quit.set_button (quit_button)
-			end
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
-			if create_menus then
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry)
+			if not is_in_project_tool then
+				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			end;
@@ -844,7 +842,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_left_widget (hole_button, class_hole_button, 0);
 			edit_bar.attach_top (class_hole_button, 0);
-			if create_menus then
+			if not is_in_project_tool then
 				edit_bar.attach_left_widget (class_hole_button, stop_hole_button, 0);
 				edit_bar.attach_top (stop_hole_button, 0);
 			end;
@@ -874,25 +872,25 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_top (search_button, 0);
 			edit_bar.detach_left (search_button);
 			edit_bar.attach_right_widget (search_button, class_text_field, 2)
-			if create_menus then
-				class_text_field.set_width (110);
-			else
+			if is_in_project_tool then
 				class_text_field.set_width (100);
+			else
+				class_text_field.set_width (110);
 			end;
 		end;
 
 feature {NONE} -- Properties
 
-	create_menus: BOOLEAN;
-			-- Did the menus be created for current tool?
+	is_in_project_tool: BOOLEAN;
+			-- Is the current feature tool in the project tool
 
 	routine_text_field_position: INTEGER is
 			-- Position for the routine text field
 		do
-			if create_menus then
-				Result := 11
-			else
+			if is_in_project_tool then
 				Result := 8 
+			else
+				Result := 11
 			end
 		end
 

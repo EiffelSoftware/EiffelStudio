@@ -430,6 +430,9 @@ feature -- XML constants
 	
 	Event_string: STRING is "Event"
 		-- String constant representing `Event'.
+		
+	Root_window_string: STRING is "Is_root_window"
+		-- String constant used for root window of system
 	
 feature -- Dialogs
 

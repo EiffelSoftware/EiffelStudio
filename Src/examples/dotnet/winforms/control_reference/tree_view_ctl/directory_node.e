@@ -1,5 +1,7 @@
 indexing
 	description: "Representation of a directory."
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class
 	DIRECTORY_NODE
@@ -16,8 +18,6 @@ create
 feature {NONE} -- Initialization
 
 	make_from_text (a_text: SYSTEM_STRING) is
-		indexing
-			description: "Entry point."
 		do
 			make_tree_node (a_text)
 		end
@@ -26,7 +26,6 @@ feature -- Access
 
 	sub_directories_added: BOOLEAN
 			-- subdirectories added?
-			
 
 feature -- Status Setting
 

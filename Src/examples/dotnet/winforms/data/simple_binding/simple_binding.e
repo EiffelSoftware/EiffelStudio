@@ -1,5 +1,7 @@
 indexing
 	description:"Simple binding example."
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class
 	SIMPLE_BINDING
@@ -22,8 +24,6 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description:"Entry point."
 		local
 			dob_binding: WINFORMS_BINDING
 			dummy: WINFORMS_BINDING

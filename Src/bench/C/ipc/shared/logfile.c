@@ -12,6 +12,7 @@
 */
 
 #include "eif_config.h"
+#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include <sys/types.h>
 
@@ -122,7 +123,20 @@ rt_public int open_log(char *name)
 	if (logfile != -2)
 		close(logfile);
 
+#ifdef __VMS	/* create a new file the first time called only */
+	{
+	    static int been_here_done_that = FALSE;
+	    if (been_here_done_that)
+	        logfile = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	    else
+	        logfile = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	    been_here_done_that = TRUE;
+	}
+
+#else
 	logfile = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+#endif  /* vms */
+
 	logname = name;					/* Save file name */
 
 	if (logfile == -1) {

@@ -62,6 +62,9 @@ feature -- IL code generation
 				il_generator.branch_to (il_label_end)
 			end
 			il_generator.mark_label (il_label_compute)
+
+				-- Mark once as being computed from now on.
+			il_generator.generate_once_computed
 			generate_il_body
 			if has_result then
 				il_generator.generate_result

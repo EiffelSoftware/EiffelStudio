@@ -51,6 +51,13 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
+	process_difference_text_item (text: DIFFERENCE_TEXT_ITEM) is
+				-- Process difference text text.
+		require
+			text_not_void: text /= Void
+		deferred
+		end;
+
 	process_quoted_text (text: QUOTED_TEXT) is
 			-- Process the quoted `text' within a comment.
 		require

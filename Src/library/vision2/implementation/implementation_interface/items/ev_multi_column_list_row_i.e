@@ -69,6 +69,26 @@ feature -- Status setting
 			end
 		end
 
+feature -- Element Change
+
+	set_pixmap (a_pix: EV_PIXMAP) is
+			-- Set the rows `pixmap' to `a_pix'.
+		do
+			create pixmap
+			pixmap.copy (a_pix)
+			update
+		end
+
+	pixmap: EV_PIXMAP
+			-- Pixmap used at the start of the row.
+
+	remove_pixmap is
+			-- Remove the rows pixmap.
+		do
+			pixmap := Void
+			update
+		end
+
 feature -- Basic operations
 
 	update is
@@ -135,6 +155,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/29 01:42:33  king
+--| Redefined pixmapping functions to call update
+--|
 --| Revision 1.37  2000/03/28 00:33:12  king
 --| Added dirty_child feature
 --|

@@ -9,6 +9,9 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
+// Revision 1.3  1998/01/20 23:47:54  raphaels
+// Removed obsolete files.
+//
 // Revision 1.2  1998/01/20 00:25:54  raphaels
 // Modified sources to be compatible with Borland compiler.
 //
@@ -246,8 +249,11 @@ extern "C" void eole2_auto_add_name( EIF_POINTER str_ptr )
     LPOLESTR oleStr = Eif2OleString( str_ptr );
     /*wcscpy( &( mappableNamesBuffer[mappableNamesCount * EOLE_DISP_MAXSTRSIZE] ),
             oleStr );*/
-    for (int i = 0; oleStr[i]; i++); // Count the length of the OLE string
-    int nBytes = i * 2;              // Calculate the number of bytes to copy
+	int i;
+	int nBytes;
+	
+    for (i = 0; oleStr[i]; i++); // Count the length of the OLE string
+    nBytes = i * 2;              // Calculate the number of bytes to copy
     memmove (&( mappableNamesBuffer[mappableNamesCount * EOLE_DISP_MAXSTRSIZE]),
       oleStr, nBytes);
     free( oleStr );

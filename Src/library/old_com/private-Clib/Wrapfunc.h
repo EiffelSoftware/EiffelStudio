@@ -2084,9 +2084,9 @@ extern "C" HRESULT E_IEnumConnectionPoints_Skip(
         ULONG cConnections );
 extern "C" HRESULT E_IEnumConnectionPoints_Reset(
         void* ptr, BOOL incomingCall );
-//extern "C" HRESULT E_IEnumConnectionPoints_Clone(
-//        void* ptr, BOOL incomingCall,
-//        LPENUMCONNECTIONPOINTS FAR* ppEnum );
+extern "C" HRESULT E_IEnumConnectionPoints_Clone(
+        void* ptr, BOOL incomingCall,
+        LPENUMCONNECTIONPOINTS FAR* ppEnum );
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2103,9 +2103,9 @@ extern "C" HRESULT E_IEnumConnections_Skip(
         ULONG cConnections );
 extern "C" HRESULT E_IEnumConnections_Reset(
         void* ptr, BOOL incomingCall );
-//extern "C" HRESULT E_IEnumConnections_Clone(
-//        void* ptr, BOOL incomingCall,
-//        LPENUMCONNECTIONS FAR* ppecn );
+extern "C" HRESULT E_IEnumConnections_Clone(
+        void* ptr, BOOL incomingCall,
+        LPENUMCONNECTIONS FAR* ppecn );
 
 /////////////////////////////////////////////////////////////////////////////
 //

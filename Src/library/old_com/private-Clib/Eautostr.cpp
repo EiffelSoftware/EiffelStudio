@@ -136,17 +136,11 @@ extern "C" void eole2_var_set_real8( EIF_POINTER ptr, EIF_REAL real8 )
 
 //---------------------------------------------------------------------------
 
-extern "C" void eole2_var_set_bool( EIF_POINTER ptr,
-
-#pragma warning (disable: 4237)
-                                    EIF_BOOLEAN bool)
-#pragma warning (default: 4237)
+extern "C" void eole2_var_set_bool( EIF_POINTER ptr, EIF_BOOLEAN boolean)
 {
     VARIANT* v = (VARIANT*)ptr;
     v->vt = (VARTYPE)VT_BOOL;
-#pragma warning (disable: 4237)
-    v->boolVal = (VARIANT_BOOL)bool; // VARIANT_TRUE = -1, VARIANT_FALSE = 0
-#pragma warning (default: 4237)
+    v->boolVal = (VARIANT_BOOL)boolean; // VARIANT_TRUE = -1, VARIANT_FALSE = 0
 }
 
 //---------------------------------------------------------------------------

@@ -1637,7 +1637,7 @@ public:
             ULONG __RPC_FAR *pceltFetched );
     STDMETHOD( Skip )( ULONG celt );
     STDMETHOD( Reset )( void );
-//    STDMETHOD( Clone )( IEnumUnknown __RPC_FAR *__RPC_FAR *ppenum );
+    STDMETHOD( Clone )( IEnumUnknown __RPC_FAR *__RPC_FAR *ppenum );
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1653,7 +1653,7 @@ public:
             ULONG FAR* lpcFetched );
     STDMETHOD( Skip )( ULONG cConnections );
     STDMETHOD( Reset )( void );
-//    STDMETHOD( Clone )( LPENUMCONNECTIONPOINTS FAR* ppEnum );
+    STDMETHOD( Clone )( LPENUMCONNECTIONPOINTS FAR* ppEnum );
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1669,7 +1669,7 @@ public:
             ULONG FAR* lpcFetched );
     STDMETHOD( Skip )( ULONG cConnections );
     STDMETHOD( Reset )( void );
-//    STDMETHOD( Clone )( LPENUMCONNECTIONS FAR* ppecn );
+    STDMETHOD( Clone )( LPENUMCONNECTIONS FAR* ppecn );
 };
 
 

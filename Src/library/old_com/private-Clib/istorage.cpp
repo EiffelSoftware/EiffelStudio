@@ -867,10 +867,15 @@ extern "C" void eole2_stream_seek (EIF_POINTER pIStreamThis,
                                    EIF_INTEGER origin) {
    LARGE_INTEGER dlibMove;
 
+#ifdef EIF_BORLAND
+   (dlibMove).u.HighPart = ((long)((DWORD)offset)) < 0 ? -1 : 0;
+   (dlibMove).u.LowPart = ((DWORD)offset);
+#else
    LISet32(dlibMove, (DWORD)offset);
+#endif /* EIF_BORLAND */
+
    g_hrStatusCode = ((LPSTREAM)pIStreamThis) ->
                                        Seek (dlibMove, (DWORD)origin, NULL);
-   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -893,9 +898,13 @@ extern "C" void eole2_stream_set_size (EIF_POINTER pIStreamThis,
 
    ULARGE_INTEGER libNewSize;
 
+#ifdef EIF_BORLAND
+   (libNewSize).u.HighPart = 0;
+   (libNewSize).u.LowPart = (new_size);
+#else
    ULISet32(libNewSize, new_size);
+#endif /* EIF_BORLAND */
    g_hrStatusCode = ((LPSTREAM)pIStreamThis)->SetSize (libNewSize);
-   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -922,10 +931,14 @@ extern "C" void eole2_stream_copy_to (EIF_POINTER pIStreamThis,
                                       EIF_INTEGER cb) {
    ULARGE_INTEGER liNumBytes;
 
+#ifdef EIF_BORLAND
+   (liNumBytes).u.HighPart = 0;
+   (liNumBytes).u.LowPart = ((DWORD)cb);
+#else
    ULISet32(liNumBytes, (DWORD)cb);
+#endif /* EIF_BORLAND */
    g_hrStatusCode = ((LPSTREAM)pIStreamThis) ->
                  CopyTo ((LPSTREAM)pIStreamDest, liNumBytes, NULL, NULL);
-   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1119,7 +1132,6 @@ extern "C" void eole2_statstg_set_element_name (EIF_POINTER _this,
 extern "C" void eole2_statstg_set_element_type (EIF_POINTER _this,
                                                 EIF_INTEGER element_type) {
    ((STATSTG FAR *)_this)->type = (DWORD)element_type;
-   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1141,8 +1153,12 @@ extern "C" void eole2_statstg_set_element_size (EIF_POINTER _this,
                                                 EIF_INTEGER size) {
    STATSTG FAR * lpStg = (STATSTG FAR *)_this;
 
+#ifdef EIF_BORLAND
+   (lpStg->cbSize).u.HighPart = ((DWORD)size) < 0 ? -1 : 0;
+   (lpStg->cbSize).u.LowPart = ((DWORD)size);
+#else
    LISet32(lpStg->cbSize, (DWORD)size);
-   return;
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

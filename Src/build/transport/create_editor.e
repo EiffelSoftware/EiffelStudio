@@ -13,9 +13,11 @@ feature {NONE}
 			ed: EDITABLE
 		do
 			ds ?= argument;
-			ed ?= ds.stone.data;
-			if ed /= Void then
-				ed.create_editor
+			if ds.stone /= Void then
+				ed ?= ds.stone.data;
+				if ed /= Void then
+					ed.create_editor
+				end
 			end;
 		end;
 

@@ -131,7 +131,7 @@ feature -- Execution
 					if d_name /= Void then
 						!! dir.make (d_name);
 						if not dir.exists then
-							dir.create
+							dir.create_dir
 						end
 					end;
 					!! st.make;
@@ -161,7 +161,7 @@ feature -- Execution
 						if d_name /= Void then
 							!! dir.make (d_name);
 							if not dir.exists then
-								dir.create;
+								dir.create_dir
 							end;
 							file_name := a_cluster.document_file_name;
 							if file_name /= Void then

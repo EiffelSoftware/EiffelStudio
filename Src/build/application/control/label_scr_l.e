@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 		do
 			Precursor (par)
-			activate_pick_and_drop (3, Current, Void) 
+			activate_pick_and_drop (Current, Void) 
 			set_data_type (Pnd_types.label_type)
 		end 
 

@@ -20,16 +20,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_TOOL_BAR) is
 		local
 			rout_cmd: EV_ROUTINE_COMMAND
 		do
 			Precursor (par)
-			activate_pick_and_drop (3, Current, Void)
+			activate_pick_and_drop (Current, Void)
 			set_data_type (Pnd_types.new_state_type)
 			create rout_cmd.make (~process_state)
 			add_pnd_command (Pnd_types.state_type, rout_cmd, Void)
-			add_click_command (Current, Void)
+			create rout_cmd.make (~create_state)
+			add_select_command (rout_cmd, Void)
 		end
 	
 feature -- Access
@@ -69,7 +70,7 @@ feature {APP_NEW_STATE} -- Commands
 			end
 		end
 
-	execute (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
+	create_state (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- Create a new state
 		local
 			add_state_cmd: APP_ADD_FIGURE
@@ -78,15 +79,16 @@ feature {APP_NEW_STATE} -- Commands
 			pt: EV_POINT
 		do
 			create new_state.make
-			if ev_data = Void then
-				new_state.set_internal_name ("")
-				create add_state_cmd
-				create pt.set (50, 50)
-				create args.make (pt, new_state)
-				add_state_cmd.execute (args, Void)	
-			else
-				set_transported_data (new_state)
-			end
+			new_state.set_internal_name ("")
+			create add_state_cmd
+			create pt.set (50, 50)
+			create args.make (pt, new_state)
+			add_state_cmd.execute (args, Void)	
+		end
+
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+		do		
+			set_transported_data (create {BUILD_STATE}.make)
 		end
 
 end -- class APP_NEW_STATE

@@ -29,14 +29,7 @@ feature -- Access
 		local
 			i: INTEGER
 		once
-			create Result.make (0, argument_count)
-			from
-			until
-				i > argument_count
-			loop
-				Result.put (arg_option (i), i)
-				i := i + 1
-			end
+			Result := internal_argument_array
 		end
 
 	command_line: STRING is
@@ -348,6 +341,21 @@ feature {NONE} -- Implementation
 				Result := arg.has (c)
 			elseif arg.item (1) = option_sign.item then
 				Result := arg.substring (2, arg.count).has (c)
+			end
+		end
+
+	internal_argument_array: ARRAY [STRING] is
+			-- Array containing command name (position 0) and arguments
+		local
+			i: INTEGER
+		do
+			create Result.make (0, argument_count)
+			from
+			until
+				i > argument_count
+			loop
+				Result.put (arg_option (i), i)
+				i := i + 1
 			end
 		end
 

@@ -95,11 +95,15 @@ feature -- Access
 				Result.append ("generic ")
 			end
 			if is_external then
-				Result.append ("external ")
+				Result.append (".NET type ")
+			else
+				Result.append ("class ")
 			end
-			Result.append ("class " + name)
+			Result.append (name)
 			if is_external then
-				Result.append (", %Nexternal name: " + external_name)
+				Result.append (" (")
+				Result.append (external_name)
+				Result.append (")")
 			end
 			if tool_tip /= Void and then not tool_tip.is_empty then
 				Result.append ("%N")

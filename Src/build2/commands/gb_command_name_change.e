@@ -28,6 +28,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMMAND_HANDLER
 		export
@@ -71,6 +76,7 @@ feature -- Basic Operation
 			titled_window_object ?= object
 			if titled_window_object /= Void then
 				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
+				window_selector.update_class_files_of_window (titled_window_object, old_name, new_name)
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			update_all_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_merged_containers)
@@ -91,6 +97,7 @@ feature -- Basic Operation
 			titled_window_object ?= object
 			if titled_window_object /= Void then
 				titled_window_object.window_selector_item.set_text (name_and_type_from_object(titled_window_object))
+				window_selector.update_class_files_of_window (titled_window_object, new_name, old_name)
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			command_handler.update

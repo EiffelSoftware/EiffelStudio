@@ -1649,19 +1649,21 @@ feature {WEL_WINDOW} -- Implementation
 
 	on_wm_destroy is
 			-- Wm_destroy message.
-			-- The window must be unregistered
 		require
 			exists: exists
 		do
 			on_destroy
+		end
+		
+	on_wm_nc_destroy is
+			--  Wm_ncdestroy message.
+		do
 			destroy_item
-				-- Stop default processing because no more C objects attached
-				-- to WEL object.
---			disable_default_processing
 		ensure
 			destroyed: not exists
 			unregistered: not registered (Current)
 		end
+		
 
 	on_wm_notify (wparam, lparam: INTEGER) is
 			-- Wm_notify message
@@ -1792,6 +1794,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_notify (wparam, lparam)
 			when Wm_destroy then
 				on_wm_destroy
+			when Wm_ncdestroy then
+				on_wm_nc_destroy
 			when Wm_erasebkgnd then
 				on_wm_erase_background (wparam)
 			when Wm_activate then
@@ -2347,6 +2351,13 @@ feature {NONE} -- Externals
 	cwel_dispatcher_pointer: POINTER is
 		external
 			"C [macro %"disptchr.h%"]"
+		end
+
+	cwel_get_message_pos: INTEGER is
+		external
+			"C (): DWORD"
+		alias
+			"GetMessagePos"
 		end
 
 end -- class WEL_WINDOW

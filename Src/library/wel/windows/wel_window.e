@@ -1381,7 +1381,7 @@ feature {NONE} -- Messages
 		do
 		end
 		
-	on_mouse_wheel (delta, x_pos, y_pos: INTEGER) is
+	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel message
 		require
 			exists: exists
@@ -1746,7 +1746,7 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
 			when Wm_mousewheel then
-				on_mouse_wheel (wparam |>> 16, cwin_lo_word (lparam), cwin_hi_word (lparam))
+				on_mouse_wheel (wparam |>> 16, cwin_lo_word (wparam), cwin_lo_word (lparam), cwin_hi_word (lparam))
 			when Wm_timer then
 				on_timer (wparam)
 			when Wm_setfocus then
@@ -1823,7 +1823,7 @@ feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 			cwin_set_window_long (item, Gwl_userdata, v)
 		end
 
-feature {WEL_BLOCKING_DISPATCHER, WEL_WINDOW} -- Properties
+feature {WEL_WINDOW} -- Properties
 
 	is_located_inside (window: WEL_WINDOW): BOOLEAN is
 			-- Is `Current' directly or indirectly located inside `window'?

@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 
 			Result.append (Eif_procedure)
 			Result.append (Space)
-			Result.append ("make")
+			Result.append (Make_word)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 

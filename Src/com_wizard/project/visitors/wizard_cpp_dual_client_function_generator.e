@@ -23,33 +23,38 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (New_line_tab);
 
-			-- TYPE_ID tid;
+			-- TYPE_ID tid = -1;
 
 			Result.append (Type_id_variable)
 			Result.append (tab)
 
-			-- EIF_OBJECT result;
+			-- EIF_OBJECT result = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append (C_result)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_PROCEDURE make;
+			-- EIF_PROCEDURE make = 0;
 
 			Result.append (Eif_procedure)
 			Result.append (Space)
-			Result.append ("make")
+			Result.append (Make_word)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- `visitor.c_type' a_ptr;
+			-- `visitor.c_type' a_ptr = 0;
 			--
 
 			Result.append (visitor.c_type)
 			Result.append (Space)
 			Result.append (Asterisk)
+			Result.append (Space)
 			Result.append (Return_value_name)
 			Result.append (Space_equal_space)
 			Result.append (Zero)
@@ -127,6 +132,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 			Result.append (C_result)
 			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
 			Result.append (Double_quote)
 			Result.append (Item_clause)
 			Result.append (Double_quote)
@@ -143,7 +149,7 @@ feature {NONE} -- Implementation
 		local
 			visitor : WIZARD_DATA_TYPE_VISITOR
 		do
-			Precursor
+			Precursor {WIZARD_CPP_CLIENT_FUNCTION_GENERATOR}
 
 			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
 				create visitor
@@ -297,7 +303,6 @@ feature {NONE} -- Implementation
 							
 							signature.append (Space)
 							signature.append (Return_value_name)
-							signature.append (Comma)
 							
 							return_value.append (Space)
 							return_value.append (Eif_wean)

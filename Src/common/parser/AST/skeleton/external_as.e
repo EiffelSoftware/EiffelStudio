@@ -11,7 +11,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_external
+			is_external, has_instruction, index_of_instruction
 		end;
 
 feature {NONE} -- Initialization
@@ -54,6 +54,21 @@ feature -- Properties
 			end;
 		end; -- external_name
 
+feature -- Access
+
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+			-- Does current routine body has instruction `i'?
+		do
+			Result := False
+		end;
+
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i' in this external feature.
+			-- Result is `0'.
+		do
+			Result := 0
+		end;
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
@@ -62,7 +77,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_External_keyword);
 			ctxt.indent;
 			ctxt.new_line;
-			language_name.simple_format (ctxt)
+			ctxt.format_ast (language_name.language_name)
 			ctxt.exdent;
 			ctxt.new_line;
 			if external_name /= void then

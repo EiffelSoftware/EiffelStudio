@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature {EV_ANY_I} -- Implementation
 
 	real_parent: EV_CONTAINER
-
+		-- The actual widget parent that is seen by the user.
 
 feature {NONE} -- Invariant
 

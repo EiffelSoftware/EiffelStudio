@@ -520,7 +520,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- has been created with only one override_cluster in mind. As a consequence
 					-- I (Manu) kept the previous implementation of `all' specification in
 					-- CLUSTER_I, where all classes belong to the top cluster.
-				Degree_output.put_start_degree_6 (clusters.count + assemblies.count);
+				Degree_output.put_start_degree_6 (clusters_count);
 				from
 					clusters.start
 					override_name := Universe.override_cluster_name
@@ -536,7 +536,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						clus.expand_recursive_clusters (clusters)
 					end
 					Degree_output.put_degree_6 (clus.cluster_name,
-						clusters.count + assemblies.count - clusters.index + 1)
+						clusters_count - clusters.index + 1)
 					clus.build
 					clusters.forth
 				end
@@ -752,6 +752,17 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		end
 
 feature {NONE} -- Incrementality
+	
+	clusters_count: INTEGER is
+			-- Number of cluster and assemblies.
+		do
+			if clusters /= Void then
+				Result := clusters.count
+			end
+			if assemblies /= Void then
+				Result := Result + assemblies.count
+			end
+		end
 
 	is_subset (original_list, new_list: LIST [STRING]): BOOLEAN is
 			-- Is `new_list' a subset of `original_list'?

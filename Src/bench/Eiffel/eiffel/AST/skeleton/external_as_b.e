@@ -83,7 +83,7 @@ feature -- Conveniences
 			end;
 				-- For DLL - Windows, a signature is compulsory
 			sp_id := language_name.special_id;
-			if (sp_id = dll16_id) or (sp_id = dll32_id) and then
+			if ((sp_id = dll16_id) or (sp_id = dll32_id)) and then
 				((context.a_feature.argument_count > 0 and not language_name.has_arg_list) or
 				(context.a_feature.is_function and not language_name.has_return_type))
 			then

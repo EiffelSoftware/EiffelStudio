@@ -4,12 +4,15 @@ class DEBUG_INFO
 inherit
 
 	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
 
-creation
+creation {APPLICATION_EXECUTION}
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make is
 			-- Initialize Current.
@@ -19,6 +22,8 @@ feature
 			!! debugged_routines.make;
 			!! removed_routines.make
 		end;
+
+feature -- Removal
 
 	wipe_out is
 			-- Empty Current.
@@ -53,52 +58,7 @@ feature -- Properties
 	removed_routines: LINKED_LIST [E_FEATURE];
 			-- Routines that are not currently debugged
 
-	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
-			-- Debuggable structures not 
-			-- sent to the application yet
-
-	sent_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
-			-- Debuggable structures already 
-			-- sent to the application
-
-	once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
-			-- Debuggable structures of once routines which have already
-			-- been called. In That case, the supermelted byte code
-			-- won't be sent to the application until next execution
-			-- to prevent any overriding of once's memory (i.e. already
-			-- called and result value if any)
-
-	new_once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
-			-- Debuggable structures of once routines which have already
-			-- been called, but were not recorded in `once_debuggables' last
-			-- time we sent information to the application
-			--| This table is useful to figure out the number of new melted
-			--| routines, and be able to reallocate the corresponding
-			--| data structures once and for all.
-			--| The structures held in this table are also held in
-			--| `once_debuggables', and this table must be cleared each
-			--| information are sent to the application.
-
 feature -- Access
-
-	debuggables (f: E_FEATURE): LINKED_LIST [DEBUGGABLE] is
-			-- List of debuggables corresponding to feature `f'
-		require
-			has_feature: has_feature (f)
-		local
-			body_id: INTEGER
-		do
-			body_id := f.body_id;
-			if new_debuggables.has (body_id) then
-				Result := new_debuggables.item (body_id);
-			elseif once_debuggables.has (body_id) then
-				Result := once_debuggables.item (body_id)
-			else
-				Result := sent_debuggables.item (body_id);
-			end;
-		ensure
-			Result /= Void
-		end; 
 
 	has_feature (f: E_FEATURE): BOOLEAN is
 			-- Has debuggable byte code already been 
@@ -121,6 +81,9 @@ feature -- Element change
 			-- Generate debuggable byte code corresponding to
 			-- `e_feature' and record the corresponding information.
 			-- Do nothing if `f' has previously been added.
+		require
+			valid_f: f /= Void;
+			f_is_debuggable: f.is_debuggable
 		local
 			f_debuggables: LINKED_LIST [DEBUGGABLE];
 			body_id: INTEGER
@@ -136,6 +99,8 @@ feature -- Element change
 				end;
 				debugged_routines.extend (f)
 			end
+		ensure
+			has_feature: has_feature (f)
 		end; 
 
 	switch_feature (f: E_FEATURE) is
@@ -210,6 +175,33 @@ feature -- Breakpoints
 			Result := has_feature (f) and then 
 						debuggables (f).first.has_breakpoint_set
 		end;
+
+	breakpoints_set_for (f: E_FEATURE): LIST [INTEGER] is
+			-- Breakpoints set for feature `f'
+		require
+			has_feature: has_feature (f);
+		local
+			debuggable: DEBUGGABLE;
+			i, bp_count: INTEGER
+		do
+			! LINKED_LIST [INTEGER] ! Result.make;
+			debuggable := debuggables (f).first;
+			if debuggable.has_breakpoint_set then
+				from
+					bp_count := debuggable.breakable_points.count;
+					i := 1
+				until
+					i > bp_count
+				loop
+					if debuggable.is_breakpoint_set (i) then
+						Result.extend (i)
+					end;
+					i := i + 1
+				end;
+			end
+		ensure
+			non_void: Result /= Void
+		end;
 			
 feature -- Debug
 
@@ -251,7 +243,7 @@ feature -- Debug
 			end;
 		end
 
-feature {DEAD_HDLR, FAILURE_HDLR}
+feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 
 	restore is
 			-- Restore all the data structures marked
@@ -261,7 +253,7 @@ feature {DEAD_HDLR, FAILURE_HDLR}
 			restore_breakpoints;
 		end;
 
-feature {RUN_INFO}
+feature {APPLICATION_STATUS}
 
 	breakable_index (f: INTEGER; offset: INTEGER): INTEGER is
 		local
@@ -315,6 +307,10 @@ feature {EWB_REQUEST}
 	sent_breakpoints: BREAK_LIST;
 			-- Breakpoint settings or removals already
 			-- been sent to the application
+
+	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			-- Debuggable structures not 
+			-- sent to the application yet
 
 	set_all_breakpoints is 
 			-- Set all the user-defined breakpoints.
@@ -605,6 +601,27 @@ feature {EWB_REQUEST}
 			end
 		end;
 
+feature {APPLICATION_EXECUTION, NONE}
+
+	debuggables (f: E_FEATURE): LINKED_LIST [DEBUGGABLE] is
+			-- List of debuggables corresponding to feature `f'
+		require
+			has_feature: has_feature (f)
+		local
+			body_id: INTEGER
+		do
+			body_id := f.body_id;
+			if new_debuggables.has (body_id) then
+				Result := new_debuggables.item (body_id);
+			elseif once_debuggables.has (body_id) then
+				Result := once_debuggables.item (body_id)
+			else
+				Result := sent_debuggables.item (body_id);
+			end;
+		ensure
+			Result /= Void
+		end; 
+
 feature {NONE} -- Implementation
 
 	Once_request: ONCE_REQUEST is
@@ -613,6 +630,28 @@ feature {NONE} -- Implementation
 		once
 			!! Result.make
 		end;
+
+	once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			-- Debuggable structures of once routines which have already
+			-- been called. In That case, the supermelted byte code
+			-- won't be sent to the application until next execution
+			-- to prevent any overriding of once's memory (i.e. already
+			-- called and result value if any)
+
+	new_once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			-- Debuggable structures of once routines which have already
+			-- been called, but were not recorded in `once_debuggables' last
+			-- time we sent information to the application
+			--| This table is useful to figure out the number of new melted
+			--| routines, and be able to reallocate the corresponding
+			--| data structures once and for all.
+			--| The structures held in this table are also held in
+			--| `once_debuggables', and this table must be cleared each
+			--| information are sent to the application.
+
+	sent_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			-- Debuggable structures already 
+			-- sent to the application
 
 	tenure_breakpoints is
 			-- Tenure breakpoints. See comment

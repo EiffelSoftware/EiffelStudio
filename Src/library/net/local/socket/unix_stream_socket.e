@@ -56,7 +56,7 @@ feature -- Initialization
 		do
 			make;
 			create peer_address.make;
-			peer_address.set_path (clone (a_peer))
+			peer_address.set_path (a_peer.twin)
 		end;
 
 	make_server (a_name: STRING) is
@@ -67,7 +67,7 @@ feature -- Initialization
 		do
 			make;
 			create address.make;
-			address.set_path (clone (a_name));
+			address.set_path (a_name.twin);
 			bind
 		end
 

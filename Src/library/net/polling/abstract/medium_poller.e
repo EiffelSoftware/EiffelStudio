@@ -80,16 +80,16 @@ feature
 			lrm, lwm, lem: POINTER
 		do
 			if not ignore_read and then not read_command_list.all_default then
-				last_read_mask := clone (read_mask);
+				last_read_mask := read_mask.twin
 				lrm := last_read_mask.mask.item
 			end;
 			if not ignore_write and then not write_command_list.all_default then
-				last_write_mask := clone (write_mask);
+				last_write_mask := write_mask.twin
 				lwm := last_write_mask.mask.item
 			end;
 			if not ignore_exception and then 
 				not exception_command_list.all_default then
-				last_except_mask := clone (except_mask);
+				last_except_mask := except_mask.twin
 				lem := last_except_mask.mask.item
 			end;
 

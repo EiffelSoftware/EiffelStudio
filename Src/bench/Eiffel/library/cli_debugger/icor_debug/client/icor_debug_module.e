@@ -89,6 +89,12 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 		do
 			Result := interface_md_import.get_typedef_props (a_class_token)
 		end
+		
+	md_member_name (a_feat_token: INTEGER): STRING is
+			-- (Feature) name for `a_feat_token'.
+		do
+			Result := interface_md_import.get_member_props (a_feat_token)
+		end		
 	
 feature {ICOR_EXPORTER} -- Access
 

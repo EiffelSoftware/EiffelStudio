@@ -204,6 +204,12 @@ feature -- Status setting
 			cancel_button.select_actions.extend (an_agent)
 		end
 
+	destroy is
+			-- Destroy the dialog (update the preferences based on the check button first)
+		do
+			Precursor {EV_DIALOG}
+		end
+
 feature {NONE} -- Contract support
 	
 	is_in_default_state: BOOLEAN is
@@ -239,12 +245,6 @@ feature {NONE} -- Implementation
 	no_action: PROCEDURE [ANY, TUPLE]
 			-- Action performed when ok is selected.
 	
-	destroy is
-			-- Destroy the dialog (update the preferences based on the check button first)
-		do
-			Precursor {EV_DIALOG}
-		end
-
 	save_check_state is
 			-- Save the state of the check button to the preferences.
 		do

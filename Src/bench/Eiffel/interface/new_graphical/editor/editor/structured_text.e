@@ -157,9 +157,9 @@ feature -- Basic Operations
 			t2 := end_selection.token
 			if t = t2 then
 				if start_selection.pos_in_token = end_selection.pos_in_token then
-					Result := t.image.substring (start_selection.pos_in_token, end_selection.pos_in_token -1)
-				else
 					Result := ""
+				else
+					Result := t.image.substring (start_selection.pos_in_token, end_selection.pos_in_token -1)
 				end
 			else
 				line := start_selection.line

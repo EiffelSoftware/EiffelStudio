@@ -1758,13 +1758,13 @@ feature -- Byte code generation
 				-- Creation feature id if any.
 			creation_feature := associated_class.creation_feature
 			if creation_feature /= Void then
-				ba.append_int32_integer (creation_feature.feature_id)
+				ba.append_integer_32 (creation_feature.feature_id)
 			else
-				ba.append_int32_integer (0)
+				ba.append_integer_32 (0)
 			end
 
 				-- Static type id
-			ba.append_int32_integer (static_type_id - 1)
+			ba.append_integer_32 (static_type_id - 1)
 
 			Result := ba.feature_table
 		end

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			extend (pixmap)
 			pixmap.set_minimum_width (pixmap.width)
 			pixmap.set_minimum_height (pixmap.height)
-			create rotate_timer.make_with_interval (1000 // 35)
+			create rotate_timer.make_with_interval (1000 // 10)
 			rotate_timer.actions.extend (~on_test_timer (rotate_timer))
 		end
 
@@ -199,6 +199,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/24 23:51:23  brendel
+--| reduced refresh rate to 10 fps.
+--|
 --| Revision 1.13  2000/04/24 18:19:38  brendel
 --| Corrected preconditions.
 --|

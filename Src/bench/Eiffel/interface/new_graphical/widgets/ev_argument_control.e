@@ -1,7 +1,6 @@
 indexing
 	description: 	"Abstraction of an control allowing adding, removal and in-place editing of%
 					%project-wide and user customised program arguments"
-	author: ""
 	date: "08/05/2002"
 	revision: "1.0"
 
@@ -79,13 +78,14 @@ feature {NONE} -- Retrieval
 			argument_value: STRING
 			free_option: FREE_OPTION_SD
 			l_row: EV_MULTI_COLUMN_LIST_ROW
+			l_root_ast: ACE_SD
 		do
 			ace_arguments_list.wipe_out
 			ace_combo.wipe_out
 			set_mode (Ace_mode)
-			root_ast := retrieve_ace
-			if root_ast /= Void then
-				defaults := root_ast.defaults
+			l_root_ast := retrieve_ace
+			if l_root_ast /= Void then
+				defaults := l_root_ast.defaults
 				if defaults /= Void then
 					from
 						defaults.start
@@ -114,16 +114,15 @@ feature {NONE} -- Retrieval
 									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (argument_value)))
 								end					
 								defaults.remove
-								defaults.back
 							when feature {FREE_OPTION_SD}.working_directory then
 								defaults.remove
-								defaults.back
 								set_working_directory (val.value)
 							else
-								-- Do nothing
+								defaults.forth
 							end
+						else
+							defaults.forth
 						end
-						defaults.forth
 					end
 				end
 			end
@@ -201,6 +200,40 @@ feature {NONE} -- Retrieval
 
 feature -- Storage
 
+	store_ace_arguments (a_root_ast: ACE_SD) is
+			-- Store new arguments in `a_root_ast'.
+		require
+			a_root_ast_not_void: a_root_ast /= Void
+		do
+			if not argument_check.is_selected or current_argument.text.is_empty then
+				saved_argument := ""
+			else
+				saved_argument := current_argument.text	
+			end
+			current_selected_cmd_line_argument.put (saved_argument)
+			if Workbench.system_defined then
+				Lace.argument_list.put_front (saved_argument)
+			end
+			save_ace_arguments (a_root_ast)
+			synch_with_others
+		end
+	
+	store_custom_arguments is
+			-- Store new arguments in `a_root_ast'.
+		do
+			if not argument_check.is_selected or current_argument.text.is_empty then
+				saved_argument := ""
+			else
+				saved_argument := current_argument.text	
+			end
+			current_selected_cmd_line_argument.put (saved_argument)
+			if Workbench.system_defined then
+				Lace.argument_list.put_front (saved_argument)
+			end
+			save_custom_arguments
+			synch_with_others
+		end
+
 	store_arguments (a_root_ast: ACE_SD) is
 			-- Store the current arguments to their corresponding files and set current 
 			-- arguments for system execution.
@@ -208,15 +241,17 @@ feature -- Storage
 			if not argument_check.is_selected or current_argument.text.is_empty then
 				saved_argument := ""
 			else
-      			saved_argument := current_argument.text	
-      		end
-      		current_selected_cmd_line_argument.put (saved_argument)
+				saved_argument := current_argument.text	
+			end
+			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
-      			Lace.argument_list.put_front (saved_argument)
-      		end
-      		if Ace_modified then
-	           	save_ace_arguments (a_root_ast)	
-      		end
+				Lace.argument_list.put_front (saved_argument)
+			end
+			if a_root_ast /= Void then
+				save_ace_arguments (a_root_ast)
+			else
+				save_ace_arguments (retrieve_ace)
+			end
 			save_custom_arguments
 			synch_with_others
 		end
@@ -224,78 +259,79 @@ feature -- Storage
 feature {NONE} -- Storage
 
 	save_ace_arguments (a_root_ast: ACE_SD) is
-         	-- Store content of `ace_arguments_list' into `root_ast'.
+			-- Store content of `ace_arguments_list' into `a_root_ast'.
+		require
+			a_root_ast_not_void: a_root_ast /= Void
  		local
-          	defaults: LACE_LIST [D_OPTION_SD]
-            free_option: FREE_OPTION_SD
-            val: OPT_VAL_SD
-            d_option: D_OPTION_SD
-            opt: OPTION_SD
-            wd, argument_text, sel_arg: STRING
-     	do
-            root_ast := retrieve_ace
-
-            defaults := root_ast.defaults
-            if defaults = void then
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_option: FREE_OPTION_SD
+			val: OPT_VAL_SD
+			d_option: D_OPTION_SD
+			opt: OPTION_SD
+			wd, argument_text, sel_arg: STRING
+		do
+			defaults := a_root_ast.defaults
+			if defaults = Void then
 				create defaults.make (10)
-				root_ast.set_defaults (defaults)
+				a_root_ast.set_defaults (defaults)
 			end
-            
-            from
-            	defaults.start
-           	until
-             	defaults.after
-           	loop
-            	d_option := defaults.item
-             	opt := d_option.option
-             	val := d_option.value
-	          	if opt.is_free_option then
-	             	free_option ?= opt
-		         	inspect
-		            	free_option.code
-		          	when feature {FREE_OPTION_SD}.arguments then
-		             	defaults.remove
-					 	defaults.back
+			
+			from
+				defaults.start
+			until
+				defaults.after
+			loop
+				d_option := defaults.item
+				opt := d_option.option
+				val := d_option.value
+				if opt.is_free_option then
+					free_option ?= opt
+					inspect
+						free_option.code
+					when feature {FREE_OPTION_SD}.arguments then
+						defaults.remove
 					when feature {FREE_OPTION_SD}.Working_directory then
 					 	defaults.remove
-					 	defaults.back
-		           	else
-	          		end
-	         	end
-            	defaults.forth
-           	end
-            
-            if ace_arguments_list.count > 0 then
-            	if ace_arguments_list.selected_item /= Void then
-            		sel_arg := clone (ace_arguments_list.selected_item.i_th (1))
-            		defaults.extend (new_d_option (sel_arg))
-            	end
+					else
+						defaults.forth
+					end
+				else
+					defaults.forth
+				end
+			end
+			
+			if ace_arguments_list.count > 0 then
+				if ace_arguments_list.selected_item /= Void then
+					sel_arg := clone (ace_arguments_list.selected_item.i_th (1))
+					defaults.extend (new_d_option (sel_arg))
+				end
  				from
-             		ace_arguments_list.start
-             	until
-            		ace_arguments_list.after
-             	loop
-             		if 
-             			sel_arg /= Void and then 
-             			not ace_arguments_list.item.i_th (1).is_equal (sel_arg) 
-             		then
-             			argument_text := clone (ace_arguments_list.item.i_th (1))
-             			defaults.extend (new_d_option (argument_text))
-			    	end
-		    		ace_arguments_list.forth
-             	end
-             end
-            
-            	-- Save working directory. 
-            wd := working_directory_path
+					ace_arguments_list.start
+				until
+					ace_arguments_list.after
+				loop
+					if 
+						sel_arg /= Void and then 
+						not ace_arguments_list.item.i_th (1).is_equal (sel_arg) 
+					then
+						argument_text := clone (ace_arguments_list.item.i_th (1))
+						defaults.extend (new_d_option (argument_text))
+					end
+					ace_arguments_list.forth
+				end
+			end
+			
+				-- Save working directory. 
+			wd := working_directory_path
 			if not wd.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.working_directory, wd, True))
+				defaults.extend (
+					new_special_option_sd (feature {FREE_OPTION_SD}.working_directory, wd, True))
 			end
 			if Workbench.system_defined then
 				Lace.set_application_working_directory (wd)
 			end
-			save_ace
-     	end	
+			save_ace (a_root_ast)
+		end	
 
 	save_custom_arguments is
 			-- Save user custom arguments to 'arguments.wb'.	
@@ -327,14 +363,16 @@ feature {NONE} -- Storage
 			arguments_file.close
 		end
 
-	save_ace is
+	save_ace (a_root_ast: ACE_SD) is
 			-- Save the arguments to the Ace file.
+		require
+			a_root_ast_not_void: a_root_ast /= Void
 		local
 			ast: ACE_SD
 			ace_file: PLAIN_TEXT_FILE
 			st: GENERATION_BUFFER
 		do
-			ast := root_ast.duplicate
+			ast := a_root_ast.duplicate
 			create st.make (2048)
 			ast.save (st)
 			if Eiffel_ace.file_name = Void then
@@ -346,7 +384,6 @@ feature {NONE} -- Storage
 				st.put_in_file (ace_file)
 				ace_file.close
 			end
-			ast := Eiffel_ace.Lace.parsed_ast
 		end	
 
 feature {NONE} -- GUI
@@ -512,7 +549,7 @@ feature -- Status Setting
 			create mem
 			l_controls_list := mem.objects_instance_of (Current)
 			from
-				l_counter := 1
+				l_counter := 0
 			until
 				l_counter = l_controls_list.count
 			loop
@@ -561,10 +598,11 @@ feature -- Status Setting
 					notebook.select_item (notebook.i_th (2))
 					set_mode (User_mode)
 				end			
+				current_argument.set_text (saved_argument)
 			else
+				current_argument.remove_text
 				argument_check.disable_select
 			end
-			refresh
 			if not is_with_argument then
 				argument_check.disable_select
 			end
@@ -651,10 +689,11 @@ feature {NONE} -- Element Change
 				when Ace_mode then
 					ace_modified := True
 					ace_arguments_list := argument_list
+					store_ace_arguments (retrieve_ace)
 				when User_mode then
 					user_arguments_list := argument_list
+					store_custom_arguments
 			end
-			store_arguments (root_ast)
 			synch_with_others
 		end
 	
@@ -786,7 +825,7 @@ feature {NONE} -- Actions
 				create l_row
 				l_row.put_front (l_argument)
 				saved_argument := l_argument
-				if not argument_list.there_exists (agent row_duplicate (?))  then
+				if not argument_list.there_exists (agent row_duplicate (?)) then
 					argument_list.extend (l_row)
 					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (saved_argument))
 					argument_list.last.enable_select
@@ -818,7 +857,7 @@ feature {NONE} -- Actions
 					current_argument.set_text (argument_combo.selected_item.text)
 				else
 					argument_combo.wipe_out
-					current_argument.set_text ("")
+					current_argument.remove_text
 				end
 				update_arguments
 			end
@@ -855,7 +894,7 @@ feature {NONE} -- Actions
 					current_argument.set_text (argument_list.selected_item.i_th (1))
 				end
 			else
-				current_argument.set_text ("")
+				current_argument.remove_text
 			end	
 		ensure
 			column_is_full_width: argument_list.column_width (1) = argument_list.width - 30
@@ -894,9 +933,6 @@ feature {NONE} -- Implementation
 		
 	saved_argument: STRING
 			-- The argument last used in opposite 'mode'
-			
-	root_ast: ACE_SD
-			-- Ace file.
 			
 	parent_window: EV_WINDOW
 			-- Parent window.

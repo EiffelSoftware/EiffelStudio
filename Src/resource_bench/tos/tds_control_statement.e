@@ -13,9 +13,14 @@ inherit
 	TDS_CONTROL_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			is_equal, copy
 		end
 
 	TDS_DEFINE_TABLE
+		undefine
+			is_equal, copy
+		end
 
 feature -- Initialization
 
@@ -147,7 +152,7 @@ feature -- Element change
 		require
 			a_text_exist: a_text /= Void and then a_text.count > 0
 		do
-			text := clone (a_text)
+			text := a_text.twin
 		ensure
 			text_set: text.is_equal (a_text)
 		end
@@ -181,7 +186,7 @@ feature -- Element change
 		require
 			a_class_name_exists: a_class_name /= Void and then a_class_name.count > 0
 		do
-			class_name := clone (a_class_name)
+			class_name := a_class_name.twin
 		ensure
 			class_name_set: class_name.is_equal (a_class_name)
 		end
@@ -191,7 +196,7 @@ feature -- Element change
 		require
 			a_class_name_exists: a_class_name /= Void and then a_class_name.count > 0
 		do
-			wel_class_name := clone (a_class_name)
+			wel_class_name := a_class_name.twin
 		ensure
 			wel_class_name_set: wel_class_name.is_equal (a_class_name)
 		end
@@ -250,9 +255,9 @@ feature -- Element change
 			a_name_exists: a_name.count > 0
 		do
 			if variable_name = Void then
-				variable_name := clone (a_name)
+				variable_name := a_name.twin
 				if a_name.count <=8 and then specific_id.has (a_name) then
-					variable_name.tail (a_name.count - 2)
+					variable_name.keep_tail (a_name.count - 2)
 					variable_name.prepend ("id_")
 				end
 			end

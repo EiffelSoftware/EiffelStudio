@@ -79,6 +79,7 @@ feature -- Code generation
 				end                
 
 				a_resource_file.putstring (the_cursor.filename)
+				a_resource_file.put_new_line
 				forth
 			end
 

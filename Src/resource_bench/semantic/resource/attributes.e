@@ -15,6 +15,9 @@ inherit
 		end
 
 	TABLE_OF_SYMBOLS
+		undefine
+			is_equal, copy
+		end
 
 creation
 	make
@@ -23,7 +26,7 @@ feature
 
 	action is
 		do
-			tds.current_resource.load_and_mem_attributes.extend (clone (token.string_value))
+			tds.current_resource.load_and_mem_attributes.extend (token.string_value.twin)
 		end
 
 end -- class ATTRIBUTES

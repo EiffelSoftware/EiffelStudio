@@ -65,7 +65,7 @@ feature -- Element change
 		require
 			a_token_exists: a_token /= Void and then a_token.count > 0
 		do
-			last_token := clone (a_token)
+			last_token := a_token.twin
 		ensure
 			last_token_set: last_token.is_equal (a_token)
 		end
@@ -111,7 +111,7 @@ feature -- Error Managment
 
 feature
 
-	convert (an_identifier: STRING) : INTEGER is
+	convert_identifier (an_identifier: STRING) : INTEGER is
 			-- Convert `an_identifier' which can be a string or a integer string
 			-- into a integer value.
 		require
@@ -374,8 +374,7 @@ feature {NONE}
 		local
 			first_character: STRING
 		do
-			Result := clone (a_string)
-			Result.to_lower
+			Result := a_string.as_lower
 
 			first_character := Result.substring (1,1)
 			first_character.to_upper

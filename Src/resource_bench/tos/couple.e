@@ -39,7 +39,7 @@ feature -- Element change
 		require
 			a_name_exists: a_name /= Void and then a_name.count > 0
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			name_set: name.is_equal (a_name)
 		end
@@ -49,7 +49,7 @@ feature -- Element change
 		require
 			a_value_not_void: a_value /= Void
 		do
-			value := clone (a_value)
+			value := a_value.twin
 		ensure
 			value_set: value.is_equal (a_value)
 		end

@@ -46,7 +46,7 @@ feature -- Element change
 		require
 			a_id_exists: a_id /= Void and then a_id.count > 0
 		do
-			name_id := clone (a_id)
+			name_id := a_id.twin
 			is_number := false
 			has_name := true
 		ensure
@@ -75,7 +75,7 @@ feature -- Conversion
 			first_character: STRING
 		do
 			if (not has_name) then
-				Result := clone (number_id.out)
+				Result := number_id.out
 			else
 				Result := to_variable_style
 
@@ -96,8 +96,7 @@ feature -- Conversion
 		require
 			name_id_exists: name_id /= Void and then name_id.count > 0
 		do
-			Result := clone (name_id)
-			Result.to_lower
+			Result := name_id.as_lower
 		end
 
 	to_class_style (a_standard_class_name: STRING): STRING is
@@ -108,10 +107,9 @@ feature -- Conversion
 			temp: INTEGER
 		do
 			if has_name then
-				Result := clone (name_id)
-				Result.to_upper
+				Result := name_id.as_upper
 			else
-				Result := clone (a_standard_class_name)
+				Result := a_standard_class_name.twin
 				Result.append ("_")
 				if number_id < 0 then
 					temp := -number_id
@@ -153,7 +151,6 @@ feature -- Code generation
        		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item: WEL_TREE_VIEW_ITEM
-			parent: POINTER
 		do
 			!! tvis.make
 			tvis.set_sort
@@ -174,15 +171,11 @@ feature -- Code generation
 			-- Generate the eiffel code in `a_text_file'
 		require
 			a_text_file_exists: a_text_file.exists
-		local
-			wel_name: STRING
 		do
 			if (is_number) then
 				a_text_file.putint (number_id)
 			else
-				wel_name := clone (name_id)
-				wel_name.to_upper
-				a_text_file.putstring (wel_name)
+				a_text_file.putstring (name_id.as_upper)
 			end
 		end
 

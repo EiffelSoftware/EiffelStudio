@@ -330,7 +330,7 @@ feature -- Element change
 					loop
 						control := control_list.item
 
-						control_name := clone (control.variable_name)
+						control_name := control.variable_name.twin
 						control_name.append (" (")
 						control_name.append (control.wel_class_name)
 						control_name.append (")")

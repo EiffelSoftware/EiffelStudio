@@ -56,11 +56,11 @@ feature -- Element change
 
 feature -- Basic operations
 
-	convert (input_file: STRING) is
+	convert_definition (input_file: STRING) is
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_Void: input_file /= Void
-			input_file_not_empty: not input_file.empty
+			input_file_not_empty: not input_file.is_empty
 			input_file_exists: file_exists (input_file)
 			condition_stack_not_empty: condition_stack /= void
 		local
@@ -152,9 +152,9 @@ feature -- Implementation
 
 			if a_file.last_string.is_equal ("define") then
 				a_file.read_word
-				name := clone (a_file.last_string)
+				name := a_file.last_string.twin
 				a_file.read_line
-				expression := clone (a_file.last_string)
+				expression := a_file.last_string.twin
 				
 				if old_level then
 					!! couple.make (name, expression)
@@ -163,13 +163,13 @@ feature -- Implementation
 
 			elseif a_file.last_string.is_equal ("if") then
 				a_file.read_line
-				expression := clone (a_file.last_string)
+				expression := a_file.last_string.twin
 
 				condition_stack.extend (old_level)
 
 			elseif a_file.last_string.is_equal ("ifdef") then
 				a_file.read_word
-				name := clone (a_file.last_string)
+				name := a_file.last_string.twin
 				a_file.next_line
 
 				if define_table.has (name) then
@@ -182,7 +182,7 @@ feature -- Implementation
                                                                                                 
 			elseif a_file.last_string.is_equal ("ifndef") then
 				a_file.read_word
-				name := clone (a_file.last_string)
+				name := a_file.last_string.twin
 				a_file.next_line
 
 				if define_table.has (name) then
@@ -208,7 +208,7 @@ feature -- Implementation
 
 			elseif a_file.last_string.is_equal ("elif") then
 				a_file.read_line
-				expression := clone (a_file.last_string)
+				expression := a_file.last_string.twin
 
 				new_level := old_level
 				condition_stack.extend (new_level)
@@ -220,12 +220,12 @@ feature -- Implementation
 			elseif a_file.last_string.is_equal ("include") then
 				if old_level then	
 					a_file.read_word
-					name := clone (a_file.last_string)
+					name := a_file.last_string.twin
 	
 					if name.item (1) = '%"' then
 						if file_exists (make_path (name)) then
 							actual_path.extend (actual_path.item)
-							convert (make_path (name))
+							convert_definition (make_path (name))
 						else
 							!! error_message.make (50)
 							error_message.append ("%NCan't include the file ")
@@ -245,7 +245,7 @@ feature -- Implementation
 
 			elseif a_file.last_string.is_equal ("undef") then
 				a_file.read_word
-				name:= clone (a_file.last_string)
+				name:= a_file.last_string.twin
 				a_file.next_line
 
 				if old_level then
@@ -259,9 +259,9 @@ feature -- Implementation
 		require
 			a_name_exists: a_name /= Void and then a_name.count > 0 
 		do
-			Result := clone (a_name)
-			Result.head (a_name.count -1)
-			Result.tail (a_name.count - 2)
+			Result := a_name.twin
+			Result.keep_head (a_name.count -1)
+			Result.keep_tail (a_name.count - 2)
 		ensure
 			Result_exists: Result /= Void and then Result.count = a_name.count - 2
 		end
@@ -275,7 +275,7 @@ feature -- Implementation
 			!! Result.make (64)
 			Result.append (actual_path.item)
 			Result.append ("\")
-			Result.append (clone (extract_name (a_name)))
+			Result.append (extract_name (a_name))
 		ensure
 			Result_exists: Result /= Void and then Result.count > 0
 		end
@@ -326,7 +326,7 @@ feature -- Implementation
 			env: EXECUTION_ENVIRONMENT
 		once
 			!! env
-			Result := clone (env.get ("INCLUDE"))
+			Result := env.get ("INCLUDE").twin
 		end
 
 end -- class PREPROCESSOR

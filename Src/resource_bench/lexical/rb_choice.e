@@ -16,10 +16,19 @@ inherit
 		end
 
 	ERROR_HANDLING
+		undefine
+			is_equal, copy
+		end
 		
 	WEL_MESSAGE_BOX
+		undefine
+			is_equal, copy
+		end
 
 	WEL_MB_CONSTANTS	
+		undefine
+			is_equal, copy
+		end
 
 feature {NONE} -- Implementation
 

@@ -11,6 +11,9 @@ inherit
 	LINKED_LIST [TDS_RESOURCE]
 
 	TDS_RESOURCE_CONSTANTS
+		undefine
+			is_equal, copy
+		end
 
 feature -- Access
 
@@ -86,8 +89,16 @@ feature -- Access
 	filename: STRING
 	
 	set_filename (s: STRING) is
+		require
+			s_not_void: s /= Void
 		do
 			filename := s
+			if s.item (1) = '%"' then
+				s.remove_head (1)
+			end
+			if s.item (s.count) = '%"' then
+				s.remove_tail (1)
+			end
 		end
 
 	display is

@@ -43,7 +43,7 @@ feature -- Element change
 		require
 			a_text_exists: a_text /= Void and then a_text.count > 0
 		do
-			text := clone (a_text)
+			text := a_text.twin
 		ensure
 			text_set: text.is_equal (a_text)
 		end
@@ -65,7 +65,7 @@ feature -- Element change
 				!! flags.make
 			end
 
-			flags.extend (clone (a_flag))
+			flags.extend (a_flag.twin)
 		end
 
 	set_separator is

@@ -15,6 +15,9 @@ inherit
 		end
 
 	TABLE_OF_SYMBOLS
+		undefine
+			is_equal, copy
+		end
 
 creation
 	make
@@ -24,7 +27,6 @@ feature
 	post_action is
 		local
 			toolbar: TDS_TOOLBAR
-			id: TDS_ID
 		do
 			toolbar ?= tds.current_resource
 			toolbar.insert_button (Void)

@@ -13,6 +13,8 @@ inherit
 	TDS_CONTROL_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			is_equal, copy
 		end
 
 creation

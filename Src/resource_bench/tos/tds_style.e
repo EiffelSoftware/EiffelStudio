@@ -42,7 +42,7 @@ feature -- Element change
 		require
 			a_style_exists: a_style /= Void and then a_style.count > 0
 		do
-			style := clone (a_style)
+			style := a_style.twin
 		ensure
 			style_set: style.is_equal (a_style)
 		end

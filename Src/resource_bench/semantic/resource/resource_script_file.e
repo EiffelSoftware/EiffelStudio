@@ -16,8 +16,14 @@ inherit
 		end
 
 	TABLE_OF_SYMBOLS
+		undefine
+			is_equal, copy
+		end
 	
 	ERROR_HANDLING
+		undefine
+			is_equal, copy
+		end
 
 creation
 	make

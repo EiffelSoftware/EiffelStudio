@@ -153,7 +153,6 @@ feature -- Code generation
 		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item: WEL_TREE_VIEW_ITEM
-			parent: POINTER
 		do
 			!! tvis.make
 			tvis.set_sort

@@ -35,7 +35,7 @@ feature -- Element change
 			a_path_not_void: a_path /= Void
 			a_path_exists: a_path.count > 0
 		do
-			application_directory := clone (a_path)
+			application_directory := a_path.twin
 		ensure
 			application_directory_set: application_directory.is_equal (a_path)
 		end
@@ -46,7 +46,7 @@ feature -- Element change
 			a_path_not_void: a_path /= Void
 			a_path_exists: a_path.count > 0
 		do
-			working_directory := clone (a_path)
+			working_directory := a_path.twin
 		ensure
 			working_directory_set: working_directory.is_equal (a_path)
 		end

@@ -8,6 +8,82 @@ class
 
 feature -- Externals
 
+	frozen gtk_file_chooser_list_filters (a_file_chooser: POINTER): POINTER is
+		external
+			"C signature (GtkFileChooser*): GSList use <gtk/gtk.h>"
+		end
+
+	frozen c_pango_rectangle_struct_allocate: POINTER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"calloc (sizeof(PangoRectangle), 1)"
+		end
+
+	frozen pango_rectangle_struct_x (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (PangoRectangle): EIF_INTEGER"
+		alias
+			"x"
+		end
+
+	frozen pango_rectangle_struct_y (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (PangoRectangle): EIF_INTEGER"
+		alias
+			"y"
+		end
+
+	frozen pango_rectangle_struct_width (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (PangoRectangle): EIF_INTEGER"
+		alias
+			"width"
+		end
+
+	frozen pango_rectangle_struct_height (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (PangoRectangle): EIF_INTEGER"
+		alias
+			"height"
+		end
+
+	frozen pango_layout_get_extents (a_layout: POINTER; ink_rect, logical_rect: POINTER) is
+		external
+			"C signature (PangoLayout*, PangoRectangle*, PangoRectangle*) use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_get_pixel_extents (a_layout: POINTER; ink_rect, logical_rect: POINTER) is
+		external
+			"C signature (PangoLayout*, PangoRectangle*, PangoRectangle*) use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_context_changed (a_layout: POINTER) is
+		external
+			"C signature (PangoLayout*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_event_scroll_struct_x (a_c_struct: POINTER): DOUBLE is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventScroll): EIF_DOUBLE"
+		alias
+			"x"
+		end
+
+	frozen gdk_event_scroll_struct_y (a_c_struct: POINTER): DOUBLE is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventScroll): EIF_DOUBLE"
+		alias
+			"y"
+		end
+
+	frozen gdk_event_scroll_struct_scroll_direction (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventScroll): EIF_INTEGER"
+		alias
+			"direction"
+		end
+
 	frozen gtk_tree_view_scroll_to_cell (a_tree_view, a_tree_path, a_tree_column: POINTER; use_align: BOOLEAN; x_align, y_align: REAL) is
 		external
 			"C signature (GtkTreeView*, GtkTreePath*, GtkTreeViewColumn*, gboolean, gfloat, gfloat) use <gtk/gtk.h>"

@@ -21,7 +21,12 @@ inherit
 		export
 			{NONE} all
 		end
- 
+		
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -42,14 +47,32 @@ feature {NONE} -- Implementation
 			qd: EV_QUESTION_DIALOG
 		do
 			create qd.make_with_text (Warning_messages.w_Precompile_warning)
-			qd.button ("Yes").select_actions.extend (agent set_c_compilation_and_compile (True))
-			qd.button ("No").select_actions.extend (agent set_c_compilation_and_compile (False))
+			qd.button ("Yes").select_actions.extend (agent set_c_compilation_and_confirm_finalization (True))
+			qd.button ("No").select_actions.extend (agent set_c_compilation_and_confirm_finalization (False))
 			qd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
+		
+	set_c_compilation_and_confirm_finalization (c_comp: BOOLEAN) is
+			-- Ask for confirmation for finalization, and compile thereafter.
+		local
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 
-	set_c_compilation_and_compile (c_comp: BOOLEAN) is
 		do
 			start_c_compilation := c_comp
+			if is_dotnet_project then
+				create cd.make_initialized (3, "confirm_finalize_precompile", Warning_messages.w_Finalize_precompile, interface_names.l_discard_finalize_precompile_dialog)
+				cd.set_ok_action (agent confirm_finalization_and_compile (True))
+				cd.set_no_action (agent confirm_finalization_and_compile (False))
+				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			else
+				confirm_finalization_and_compile (False)
+			end
+		end
+
+	confirm_finalization_and_compile (fin_comp: BOOLEAN) is
+			-- Ask for confirmation to finalize and discard assertions and compile	
+		do
+			finalize_precompile := fin_comp
 			compile
 		end
 
@@ -66,6 +89,9 @@ feature {NONE} -- Implementation
 				output_text.add_string ("Launching C compilation in background...")
 				output_text.add_new_line
 				Eiffel_project.call_finish_freezing (True)
+				if finalize_precompile then
+					Eiffel_project.call_finish_freezing (False)	
+				end
 			end
 
 				-- Display message.
@@ -75,7 +101,11 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			Eiffel_project.precompile (False)
+			if finalize_precompile then
+				Eiffel_project.finalize_precompile (False, True)
+			else
+				Eiffel_project.precompile (False)
+			end
 		end
 
 feature {NONE} -- Attributes
@@ -91,5 +121,37 @@ feature {NONE} -- Attributes
 
 	is_precompiling: BOOLEAN is True
 			-- We are doing a precompilation here.
+			
+	finalize_precompile: BOOLEAN
+			-- should precompile be finalized also?
+		
+			
+feature {NONE} -- Implementation
+
+	is_dotnet_project: BOOLEAN is
+			-- is current loaded ace a .net project
+		require
+			non_void_lace: lace /= Void
+		local
+			d_options: LACE_LIST [D_OPTION_SD]
+			fopt: FREE_OPTION_SD
+		do
+			d_options := lace.parsed_ast.defaults
+			if d_options /= Void then
+				from 
+					d_options.start
+				until
+					d_options.after
+				loop
+					if d_options.item.option.is_free_option then
+						fopt ?= d_options.item.option
+						if fopt.code = feature {FREE_OPTION_SD}.msil_generation then
+							Result := d_options.item.value.is_yes
+						end	
+					end
+					d_options.forth
+				end
+			end
+		end
 
 end -- class EB_PRECOMPILE_PROJECT_CMD

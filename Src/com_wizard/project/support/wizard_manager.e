@@ -356,11 +356,6 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	generate_user_ace_file is
-			-- Generate ace file that uses generated precompiled library.
-		do
-		end
-		
 	finish is
 			-- Abort code generation.
 		local

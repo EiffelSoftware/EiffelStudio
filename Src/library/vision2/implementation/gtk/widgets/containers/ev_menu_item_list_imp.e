@@ -54,21 +54,64 @@ feature {NONE} -- implementation
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
 			C.gtk_menu_reorder_child (a_container, a_child, a_position)
-			reset_radio_groups
+
+			if needs_radio_regrouping (eif_object_from_c (a_child)) then
+				reset_radio_groups
+			end
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item at `a_position'
-		
+		local
+			item_imp: EV_ITEM_IMP
 		do
 			Precursor (a_position)
-			reset_radio_groups
+
+			item_imp ?= eif_object_from_c (
+				C.g_list_nth_data (
+					C.gtk_container_children (list_widget),
+					a_position - 1
+				)
+			)
+			if needs_radio_regrouping (item_imp) then
+				reset_radio_groups
+			end
+		end
+
+	needs_radio_regrouping (item_imp: EV_ANY_IMP): BOOLEAN is
+		local
+			sep_imp: EV_MENU_SEPARATOR_IMP
+			radio_imp: EV_RADIO_MENU_ITEM_IMP
+		do
+			sep_imp ?= item_imp
+			radio_imp ?= item_imp
+			Result := sep_imp /= Void or else radio_imp /= Void	
 		end
 
 	reset_radio_groups is
 			-- Update radio grouping after reorder or removal of separator.
+		local
+			cur: CURSOR
+			cur_item: INTEGER
+			sep: EV_MENU_SEPARATOR
+			last_rgroup: POINTER
 		do
-			--| FIXME To be implemented
+			check
+				to_be_implemented: False
+			end
+		--	cur := interface.cursor
+		--	from
+		--		interface.start
+		--	until
+		--		interface.off
+		--	loop
+		--		sep ?= interface.item
+		--		if sep /= Void then
+		--			--Result ?= sep.implementation
+		--		end
+		--		interface.forth
+		--	end
+		--	interface.go_to (cur)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -125,6 +168,10 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/25 01:53:02  brendel
+--| While not implemented, a check false is performed when removing or moving
+--| a separator or radio item around.
+--|
 --| Revision 1.4  2000/02/22 19:58:17  brendel
 --| Added functionality that groups radio-menu-items together between
 --| separators.

@@ -27,24 +27,19 @@ feature -- Access
 		deferred
 		end
 
-	-- A remplacer par parent_widget
-	parent_container: EV_MENU_CONTAINER_IMP
-			-- Top parent container of the menu.
-			-- Used by EV_MENU_CONTAINER_IMP and
-			-- EV_MENU_ITEM_CONTAINER_IMP
-
 feature -- Element change
-
-	set_parent_container (con: EV_MENU_CONTAINER_IMP) is
-			-- Make `con' the new parent_container.
-		do
-			parent_container := con
-		end
 
 	set_position (pos: INTEGER) is
 			-- Make `pos' the new position of the item.
 		do
 			position := pos
+		end
+
+feature -- Event association
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+		deferred
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -68,7 +63,6 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			submenu.append_string (item_imp.text, ev_children.count)
 			item_imp.set_id (iid)
 			item_imp.set_position (submenu.count - 1)
-			item_imp.set_parent_container (parent_container)
 		end
 
 	insert_item (wel_menu: WEL_MENU; pos: INTEGER; label: STRING) is

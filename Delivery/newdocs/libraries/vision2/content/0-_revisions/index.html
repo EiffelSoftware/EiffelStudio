@@ -32,6 +32,7 @@
 					<LI>
 						<B>EV_TEXT_COMPONENT</B> - fixed bug in `select_region' which would fail if 
 						`start_pos' was greater than `end_pos'.</LI>
+					<LI><B>EV_PIXMAP</B> - `expose_actions' previously had a feature contained related to the implementation, and calling `wipe_out' on `expose_actions' would stop the image from being redrawn. There are now no side effects related to `expose_actions'.</LI>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

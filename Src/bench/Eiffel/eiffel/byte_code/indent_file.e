@@ -21,8 +21,7 @@ inherit
 		end
 
 creation
-
-	make
+	make, make_open_append, make_open_write
 
 feature
 

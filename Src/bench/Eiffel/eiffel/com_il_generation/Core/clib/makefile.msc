@@ -1,30 +1,42 @@
 # ecom.lib - Makefile for Microsoft C
 
+MV = copy
 CC = cl
-CFLAGS = -Ox -D "_WIN32_DCOM" -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include
-MTCFLAGS = -Ox -MT -DEIF_THREADS -D "_WIN32_DCOM" -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include
+OUTPUT_CMD = -Fo
+CFLAGS = -Ox -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+MTCFLAGS = -Ox -MT -DEIF_THREADS -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+
+OBJ = ecom_core_core.obj \
+ecom_gce_core_c.obj \
+ecom_gec_core_c.obj \
+
+
+WOBJ = wecom_core_core.obj \
+wecom_gce_core_c.obj \
+wecom_gec_core_c.obj \
+
+
+all:: wecom.lib ecom.lib
+
+wecom.lib: $(WOBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(WOBJ)
+	del *.obj
+
+ecom.lib: $(OBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(OBJ)
+	del *.obj
 
 .cpp.obj:
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -nologo $<
 
-OBJECTS = ecom_gce_core_c.obj ecom_gec_core_c.obj ecom_core_core.obj
+wecom_core_core.obj: ecom_core_core.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH -nologo $(OUTPUT_CMD)$@ $?
 
-MT_OBJECTS = MTecom_gce_core_c.obj MTecom_gec_core_c.obj MTecom_core_core.obj
+wecom_gce_core_c.obj: ecom_gce_core_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH -nologo $(OUTPUT_CMD)$@ $?
 
-all:: ecom.lib mtecom.lib
-
-ecom.lib: $(OBJECTS)
-	lib /OUT:$@ $(OBJECTS)
-
-mtecom.lib: $(MT_OBJECTS)
-	lib /OUT:$@ $(MT_OBJECTS)
-
-MTecom_gce_core_c.obj: ecom_gce_core_c.cpp
-	$(CC) -Fo$@ $(MTCFLAGS) -c $?
-
-MTecom_gec_core_c.obj: ecom_gec_core_c.cpp
-	$(CC) -Fo$@ $(MTCFLAGS) -c $?
-
-MTecom_core_core.obj: ecom_core_core.cpp
-	$(CC) -Fo$@ $(MTCFLAGS) -c $?
+wecom_gec_core_c.obj: ecom_gec_core_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH -nologo $(OUTPUT_CMD)$@ $?
 

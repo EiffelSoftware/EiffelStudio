@@ -12,6 +12,11 @@ inherit
 			make as parser_make
 		end
 
+	SHARED_XML_OUTPUT
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -24,7 +29,7 @@ feature -- Initialization
 							Help_spelled_switch, No_logo_switch, List_assemblies_switch,
 							List_assemblies_short, Init_switch, No_output_switch,
 							No_output_short, Eac_switch, Eac_short, Remove_switch,
-							Remove_short>>)
+							Remove_short, Nice_switch>>)
 			parse
 			if not successful then
 				process_error (error_message)
@@ -76,6 +81,8 @@ feature -- Access
 	
 	Remove_short: STRING is "r"
 			-- Shortcut equivaleent of `Eac_switch'
+
+	Nice_switch: STRING is "nice"
 
 feature -- Status report
 
@@ -199,6 +206,8 @@ feature {NONE} -- Implementation
 				put_in_eac := True
 			elseif switch.is_equal (Remove_switch) or switch.is_equal (Remove_short) then
 				remove := True
+			elseif switch.is_equal (Nice_switch) then
+				has_indented_output.set_item (True)
 			end
 		end
 
@@ -237,11 +246,11 @@ feature {NONE} -- Implementation
 		do
 			io.put_string ("Usage: ")
 			io.put_string (System_name)
-			io.put_string (" <assembly>.dll|.exe [/d:destination | /a | /r] [/n] [/nologo]%N")
+			io.put_string (" <assembly>.dll|.exe [/d:destination | /a | /r] [/n] [/nologo] [/nice]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" /l [/nologo]%N")
 			io.put_string ("       " + System_name)
-			io.put_string (" /init [/n] [/nologo]%N%N")
+			io.put_string (" /init [/n] [/nologo] [/nice]%N%N")
 			io.put_string (" - Options -%N%N")
 			io.put_string ("/dest:destination%N   Generate XML in directory 'destination'. Short form is '/d'.%N%N")
 			io.put_string ("/add%N   Put assembly in Eiffel Assembly Cache. Short form is '/a'.%N%N")
@@ -250,6 +259,7 @@ feature {NONE} -- Implementation
 			io.put_string ("/nologo%N   Prevent display of copyright notice.%N%N")
 			io.put_string ("/init%N   Initialize Eiffel Assembly Cache (can only be run once).%N%N")
 			io.put_string ("/list%N   List assemblies in EAC. Short form is '/l'.%N%N")
+			io.put_string ("/nice%N   XML output is indented.%N%N")
 			io.put_string (" - Arguments -%N%N")
 			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for.%N%N")
 		end

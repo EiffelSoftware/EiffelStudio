@@ -610,10 +610,10 @@ register1 char *key;
 		try < hsize;
 		try++, pos = (pos + inc) % hsize
 	) {
-		if (0 == strcmp(hkeys[pos], key))
-			return ct->h_values + (pos * ct->h_sval);
-		else if (hkeys[pos] == (char *) 0)
+		if (hkeys[pos] == (char *) 0)
 			break;
+		else if (0 == strcmp(hkeys[pos], key))
+			return ct->h_values + (pos * ct->h_sval);
 	}
 
 	return (char *) 0;			/* Item was not found */

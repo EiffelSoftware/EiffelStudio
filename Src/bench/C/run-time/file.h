@@ -13,6 +13,7 @@
 
 #ifndef _file_h_
 #define _file_h_
+#include "macros.h"
 
 /*
  * The following universal constants might not be found in the standard headers
@@ -84,9 +85,9 @@
  * Functions declaration.
  */
 
-extern char	*file_open();
-extern char	*file_dopen();
-extern char	*file_reopen();
+extern fnptr	file_open();
+extern fnptr	file_dopen();
+extern fnptr	file_reopen();
 extern void file_close();
 extern void file_flush();
 extern char file_feof();

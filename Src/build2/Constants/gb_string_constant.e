@@ -76,7 +76,6 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			-- referers not permitted to use `new_value'?
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			gb_ev_any: GB_EV_ANY
 			validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		do
 			Result := True
@@ -101,7 +100,6 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			gb_ev_any: GB_EV_ANY
 			execution_agent: PROCEDURE [ANY, TUPLE [STRING]]
 		do
 			from

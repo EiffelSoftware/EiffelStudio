@@ -158,7 +158,6 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 			-- Rebuild representations of `Current', and update all referers within system.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			gb_ev_any: GB_EV_ANY
 			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP]]
 			file_name: FILE_NAME
 		do

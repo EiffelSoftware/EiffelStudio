@@ -131,35 +131,46 @@ feature -- Initialization
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
 				enable_standard_notifications
+
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
 				end
+
 				if private_font /= Void then
 					set_font (private_font)
 				end
+
 				if private_attributes.height = 0 then
 					fw ?= font.implementation
 					set_height (fw.string_height (Current, "I") * 7 // 4)
 				end
+
 				if private_attributes.width = 0 then
 					set_width (200)
 				end
+
 				set_text (private_text)
+
 				if maximum_size > 0 then
 					set_maximum_size (maximum_size)
 				end
+
 				set_cursor_position (private_cursor_position)
+
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
+
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
 				end
+
 				if not managed then
 					wel_hide
 				elseif parent.shown then
 					shown := true
 				end
+
 				if private_is_read_only then
 					set_read_only
 				end
@@ -208,7 +219,7 @@ feature -- Status report
 			-- Position of the beginning of the current highlighted selection
 		do
 			if exists then
-				Result := windows_position_to_eiffel (selection_start)
+				Result := selection_start
 			else
 				Result := private_begin_selection
 			end
@@ -225,7 +236,7 @@ feature -- Status report
 			-- where the next character pressed by the user will be inserted)
 		do
 			if exists then
-				Result := windows_position_to_eiffel (caret_position)
+				Result := caret_position
 			else
 				Result := private_cursor_position
 			end
@@ -235,7 +246,7 @@ feature -- Status report
 			-- Position of the end of the current selection highlightened
 		do
 			if exists then
-				Result := windows_position_to_eiffel (selection_end)
+				Result := selection_end
 			else
 				Result := private_end_selection
 			end
@@ -300,28 +311,6 @@ feature -- Status report
 		do
 			if exists then
 				Result := wel_text
-				if not Result.empty then
-						-- Remove the garbage characters added by the edit control
-					if Result.valid_index (Result.count) and then
-						Result.item (Result.count).code = 0 then
-						Result.remove (Result.count)
-					end
-					if not is_multi_line_mode then
-						from
-						until
-							Result.empty or Result.item (Result.count).code >= 32 
-						loop
-							Result.remove (Result.count)
-						end
-					end
-					if text_translated then
-						Result.prune_all ('%R')
-					elseif special_translation then
-						Result.replace_substring_all ("%R%N", "%N")
-						Result.prune_all ('%R')
-						Result.replace_substring_all ("%N", "%R%N")
-					end
-				end
 			else
 				Result := private_text
 			end
@@ -333,8 +322,7 @@ feature -- Status report
 		local
 			win_point: WEL_POINT
 		do
-			win_point := position_from_character_index (
-				eiffel_position_to_windows (char_pos))
+			win_point := position_from_character_index (char_pos)
 			!! Result
 			Result.set (win_point.x, win_point.y)
 		end
@@ -344,16 +332,16 @@ feature -- Status report
 			-- of current text widget at character position `char_pos'
 		do
 			if exists then
-				Result := position_from_character_index (eiffel_position_to_windows (char_pos)).x
+				Result := position_from_character_index (char_pos).x
 			end
 		end
 
-	y_coordinate (char_pos: INTEGER): INTEGER is
+	y_coordinate (windows_char_pos: INTEGER): INTEGER is
 			-- Y coordinate relative to upper left corner
 			-- of current text widget at character position `char_pos'
 		do
 			if exists then
-				Result := position_from_character_index (eiffel_position_to_windows (char_pos)).y
+				Result := position_from_character_index (windows_char_pos).y
 			end
 		end
 
@@ -361,8 +349,7 @@ feature -- Status report
 			-- character position at position `cx' and `cy'.
 		do
 			if exists then
-				Result := windows_position_to_eiffel
-					(character_index_from_position (cx, cy))
+				Result := character_index_from_position (cx, cy)
 			end
 		end
 
@@ -373,7 +360,7 @@ feature -- Status report
 		do
 			if exists then
 				win_pos := line_index (first_visible_line)
-				Result := windows_position_to_eiffel (win_pos)
+				Result := win_pos
 			end
 		end
 
@@ -535,7 +522,7 @@ feature -- Status setting
 			if exists then
 				if not has_selection then
 					enable_scroll_caret_at_selection
-					set_caret_position (eiffel_position_to_windows (pos))
+					set_caret_position (pos)
 					disable_scroll_caret_at_selection
 				end
 			end
@@ -575,9 +562,7 @@ feature -- Status setting
 		do
 			maximum_size := a_max
 			if exists then
-				if text_translated then
-					nb_cr := private_text.occurrences ('%N')
-				end
+--				nb_cr := private_text.occurrences ('%N')
 				set_text_limit (a_max + nb_cr)
 			end
 		end
@@ -597,37 +582,18 @@ feature -- Status setting
 		do
 			private_begin_selection := first
 			private_end_selection := last
+			
 			if exists then
-				wel_set_selection (eiffel_position_to_windows
-					(first), eiffel_position_to_windows (last))
-				if
-					y_coordinate (first) >= height or else
-					line_from_char (eiffel_position_to_windows
-						(first)) < first_visible_line
-				then
-					scroll (0, line_from_char (eiffel_position_to_windows
-						(first)) - first_visible_line)
-				end
+				wel_set_selection (first, last)
 			end
 		end
 
 	set_text (a_text: STRING) is
 			-- Set window text to `a_text'
-		local
-			local_text : STRING
 		do
 			update_private_text (a_text)
 			if exists then
-				local_text := clone (a_text)
-				if not a_text.empty then
-					if text_translated then
-						local_text.replace_substring_all ("%N", "%R%N")
-					elseif special_translation then
-						local_text.replace_substring_all ("%R%N", "%N")
-						local_text.replace_substring_all ("%N", "%R%N")
-					end
-				end
-				wel_set_text (local_text)
+				wel_set_text (clone (a_text))
 			end
 		end
 
@@ -636,8 +602,7 @@ feature -- Status setting
 		do
 			private_top_character_position := char_pos
 			if exists then
-				scroll (0, line_from_char (eiffel_position_to_windows
-					(char_pos)) - first_visible_line)
+				scroll (0, line_from_char (char_pos) - first_visible_line)
 			end
 		end
 
@@ -708,8 +673,8 @@ feature -- Element change
 				if has_selection then
 					unselect
 				end
-				set_caret_position (eiffel_position_to_windows (text.count))
-				replace_selection (translate_to_windows_text (s))
+				set_caret_position (text.count)
+				replace_selection (s)
 			end
 		end
 
@@ -730,8 +695,8 @@ feature -- Element change
 				if has_selection then
 					unselect
 				end
-				set_caret_position (eiffel_position_to_windows (a_position))
-				replace_selection (translate_to_windows_text (s))
+				set_caret_position (a_position)
+				replace_selection (s)
 			end
 		end
 
@@ -752,11 +717,11 @@ feature -- Element change
 					unselect
 				end
 				if from_position = to_position then
-					set_caret_position (eiffel_position_to_windows (from_position))
-					replace_selection (translate_to_windows_text (s))
+					set_caret_position (from_position)
+					replace_selection (s)
 				else
 					set_selection (from_position, to_position)
-					replace_selection (translate_to_windows_text (s))
+					replace_selection (s)
 				end
 			end
 		end
@@ -833,134 +798,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	windows_position_to_eiffel (pos: INTEGER) : INTEGER is
-			-- Translate a position in a string with %R%N as delimiters 
-			-- to a position in a string with %R as delimiter.
-		local
-			a_text : STRING
-			i : INTEGER
-		do
-			Result := pos
-			if Result > 1 and then text_translated then
-				a_text := clone (text)
-				if not a_text.empty and text_translated then
-					a_text.replace_substring_all ("%N", "%R%N")
-				end
-				a_text := a_text.substring (1, Result)
-				Result := Result - a_text.occurrences ('%R')
-			elseif special_translation then
-				from
-					i := 1
-				until
-					i > translation_table.count or else 
-					translation_table.item(i) + i > pos
-				loop
-					i := i + 1
-				end
-				Result := result - i + 1
-			end
-		end
-
-	eiffel_position_to_windows (pos: INTEGER) : INTEGER is
-			-- Translate a position in a string with %R as delimiters 
-			-- to a position in a string with %R%N as delimiter.
-		local
-			a_text: STRING
-			i : INTEGER
-		do
-			Result := pos
-			if pos > 1 and then text_translated then
-				a_text := text.substring (1, pos)
-				Result := Result + a_text.occurrences ('%N')
-			elseif special_translation then
-				from
-					i := 1
-				until
-					i > translation_table.count or else 
-					translation_table.item(i) > pos
-				loop
-					i := i + 1
-				end
-				Result := result + i - 1
-			end
-		end
-
-	translate_to_windows_text (s: STRING): STRING is
-			-- Translate a piece of text to "Windows" text.
-		do
-			Result := clone (s)
-			if not Result.empty then
-				if Result.occurrences ('%N') /= Result.occurrences ('%R') then
-					Result.replace_substring_all ("%R%N", "%N")
-					Result.replace_substring_all ("%N", "%R%N")
-				else
-					Result.replace_substring_all ("%N", "%R%N")
-				end
-			end
-		end
-
 	update_private_text (a_text: STRING) is
 			-- Update the private text and rebuild the
-			-- `translation_table' if necessary.
 		do
 			private_text := clone (a_text)
-			special_translation := false
-			if a_text.count > 0 and then a_text.substring_index ("%R%N",1) = 0 then
-				text_translated := true
-			else
-				text_translated := false
-				if a_text.occurrences ('%N') /= a_text.occurrences ('%R') then
-					special_translation := true
-					build_translation_table (a_text)
-				end
-			end
 		end
-
-	build_translation_table (a_text: STRING) is
-			-- Build table to remember position of %N
-		local
-			table_size : INTEGER
-			i, pos : INTEGER
-		do
-			table_size := a_text.occurrences ('%N') - a_text.occurrences ('%R')
-			if table_size < 0 then
-				table_size := 0
-			end
-			!! translation_table.make (1, table_size)
-			from
-				i := 1
-				pos := a_text.index_of ('%N', 1)
-				if pos > 1 then
-					if a_text.item (pos-1) /= '%R' then
-						translation_table.force (pos, 1)
-						i := 2
-					end
-				elseif pos = 1 then
-					translation_table.force (1, 1) 
-					i := 2
-				end
-			until
-				i > table_size
-			loop
-				pos := a_text.index_of ('%N', pos+1)
-				if a_text.item (pos -1) /= '%R' then
-					translation_table.force (pos,i) 
-					i := i + 1
-				end
-			end
-		end
-
-	special_translation: BOOLEAN
-			-- Is this text delimited by a mixture of %R%N and %N.
-			-- This means that counts must lookup using the translation_table
-
-	translation_table: ARRAY [INTEGER] 
-			-- Each %N in the original text is placed in this array at its 
-			-- occurrence.  This way we can use it for looking up counts
-
-	text_translated: BOOLEAN
-			-- Is this text translated so that "%R%N" are inserted instead of
-			-- just a "%N".  This affects counts etc.
 
 	private_top_character_position: INTEGER
 			-- Fist visible line containing character position.
@@ -989,9 +831,6 @@ feature {NONE} -- Implementation
 
 	private_text: STRING
 			-- Value of current text field
-
-invariant
-	translation_property: special_translation implies translation_table /= Void
 
 end -- class TEXT_WINDOWS
 

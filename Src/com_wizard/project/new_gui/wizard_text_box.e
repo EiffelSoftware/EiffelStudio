@@ -137,7 +137,6 @@ feature -- Basic Operations
 		do
 			text_combo.start
 			text_combo.remove
-			text_combo.first.enable_select
 		end
 	
 	initialize_focus is
@@ -174,7 +173,7 @@ feature {NONE} -- Events Handling
 	on_change is
 			-- Called by `change_actions' of `path_combo'.
 		local
-			l_valid: BOOLEAN
+			l_status: WIZARD_VALIDITY_STATUS
 			l_text: STRING
 		do
 			if not excluded then
@@ -182,14 +181,16 @@ feature {NONE} -- Events Handling
 			end
 			l_text := text_combo.text
 			if text_processor /= Void then
-				l_valid := text_processor.item ([l_text])
-				if l_valid then
+				l_status := text_processor.item ([l_text])
+				if l_status.is_error then
+					text_combo.set_foreground_color (Invalid_value_color)
+					text_combo.set_tooltip (l_status.error_message)
+				else
+					text_combo.remove_tooltip
 					text_combo.set_foreground_color (Valid_value_color)
 					if auto_save then
 						save_combo_text
 					end
-				else
-					text_combo.set_foreground_color (Invalid_value_color)
 				end
 			end
 		end
@@ -241,8 +242,9 @@ feature {NONE} -- Events Handling
 		
 feature {NONE} -- Private Access
 
-	text_processor: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	text_processor: FUNCTION [ANY, TUPLE [STRING], WIZARD_VALIDITY_STATUS]
 			-- Process combo text upon changes
+			-- Return validity status
 
 	enter_processor: PROCEDURE [ANY, TUPLE []]
 			-- Process `enter' key press

@@ -67,10 +67,10 @@ feature {NONE} -- Initialization
 			initialize_checker
 			close_request_actions.extend (agent on_exit)
 			com_project_box.hide
-			destination_folder_box.setup ("Generate files into:", "destination_key", "Browse for destination folder", agent is_valid_destination_folder)
-			set_validator (agent initialize_generate_button)
-			eiffel_project_box.set_validator (agent initialize_generate_button)
-			com_project_box.set_validator (agent initialize_generate_button)
+			destination_folder_box.setup ("Generate files into:", "destination_key", "Browse for destination folder", agent destination_folder_validity)
+			validity_change_request_actions.extend (agent initialize_generate_button)
+			eiffel_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
+			com_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
 			update_environment
 			
 			-- Setup project box last so that profile change actions are registered
@@ -120,7 +120,7 @@ feature -- Basic Operations
 				environment.set_is_out_of_process
 			end
 			l_text := destination_folder_box.value
-			if is_valid_destination_folder (l_text) then
+			if not destination_folder_validity (l_text).is_error then
 				environment.set_destination_folder (l_text)
 			end
 			environment.set_compile_c (not compile_c_code_check_button.is_selected)
@@ -140,6 +140,7 @@ feature {WIZARD_OUTPUT_BOX} -- Implementation
 			if eiffel_project_box.is_show_requested then
 				eiffel_project_box.save_values
 			end
+			destination_folder_box.save_combo_text
 			project_box.save_combo_text
 			start_generation
 		end
@@ -148,7 +149,11 @@ feature {NONE} -- Implementation
 
 	on_help is
 			-- Called by `select_actions' of `help_menu_item'.
+		local
+			l_help_engine: EB_HELP_ENGINE
 		do
+			create l_help_engine.make
+			l_help_engine.show (create {EB_HELP_CONTEXT}.make_absolute ("/tools/wizards/com/index.html"))
 		end
 
 	on_about is
@@ -161,24 +166,24 @@ feature {NONE} -- Implementation
 			l_about_dialog.show_modal_to_window (Current)
 		end
 
-	on_project_change (a_project_name: STRING): BOOLEAN is
+	on_project_change (a_project_name: STRING): WIZARD_VALIDITY_STATUS is
 			-- Set `current_project' with `a_project_name'.
 		require
 			non_void_project_name: a_project_name /= Void
 		do
-			Result := is_valid_project_name (a_project_name)
-			if Result then
-				project_button.enable_sensitive
-			else
+			Result := project_name_validity (a_project_name)
+			if Result.is_error then
 				project_button.disable_sensitive
-			end
-			if Profile_manager.available_profiles.has (a_project_name) then
-				project_button.set_text ("Load")
 			else
-				project_button.set_text ("New")
+				project_button.enable_sensitive
+				if Profile_manager.available_profiles.has (a_project_name) then
+					project_button.set_text ("Load")
+				else
+					project_button.set_text ("New")
+				end
+				project_button.enable_default_push_button
 			end
 			initialize_generate_button
-			project_button.enable_default_push_button
 			in_delete_mode := False
 			project_selected := False
 		end
@@ -209,7 +214,7 @@ feature {NONE} -- Implementation
 			l_project_name, l_active_profile: STRING
 		do
 			l_project_name := project_box.value
-			if is_valid_project_name (l_project_name) then
+			if not project_name_validity (l_project_name).is_error then
 				l_active_profile := Profile_manager.active_profile
 				if l_active_profile /= Void and then l_active_profile.is_equal (l_project_name) and not project_selected and first_generate_button.is_sensitive then
 					on_generate
@@ -354,6 +359,7 @@ feature {NONE} -- Implementation
 			if eiffel_project_box.is_show_requested then
 				eiffel_project_box.save_values
 			end
+			destination_folder_box.save_combo_text
 			project_box.save_combo_text;
 			((create {EV_ENVIRONMENT}).application).destroy
 		end
@@ -414,40 +420,51 @@ feature {NONE} -- Implementation
 			l_manager := Void
 		end
 		
-	is_valid_project_name (a_project_name: STRING): BOOLEAN is
+	project_name_validity (a_project_name: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_project_name' a valid project name?
 		require
 			non_void_project_name: a_project_name /= Void
 		local
 			i, l_count: INTEGER
 			l_symbols: ARRAY [CHARACTER]
+			l_is_valid: BOOLEAN
 		do
-			Result := not a_project_name.is_empty
-			if Result then
+			l_is_valid := not a_project_name.is_empty
+			if l_is_valid then
 				l_symbols := forbidden_registry_key_name_symbols
 				from
 					i := 1
 					l_count := l_symbols.count
 				until
-					i > l_count or not Result
+					i > l_count or not l_is_valid
 				loop
-					Result := not a_project_name.has (l_symbols.item (i))
+					l_is_valid := not a_project_name.has (l_symbols.item (i))
 					i := i + 1
 				end
 			end
-			set_error (Result, "Invalid project name")
+			if l_is_valid then
+				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Project_name)
+			else
+				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Project_name)
+			end
+			set_status (Result)
 		end
 
-	is_valid_destination_folder (a_folder: STRING): BOOLEAN is
+	destination_folder_validity (a_folder: STRING): WIZARD_VALIDITY_STATUS is
 			-- Check whether destination folder is correctly initialized.
 			-- Initialize environment accordingly
+		local
+			l_success: BOOLEAN
 		do
-			Result := is_valid_folder (a_folder)
-			set_error (Result, "Invalid destination folder")
-			if Result then
+			l_success := not a_folder.is_empty
+			if l_success then
+				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
 				output_box.disable_eiffelstudio_button
 				environment.set_destination_folder (a_folder)
+			else
+				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
 			end
+			set_status (Result)
 		end
 
 	initialize_generate_button is

@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			initialize_checker
-			definition_file_box.setup ("Component definition file:", "definition_key", agent definition_file_validity (?, Invalid_component_file), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
+			definition_file_box.setup ("Component definition file:", "definition_key", agent definition_file_validity (?), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
 		end
 
 feature -- Basic Operations
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			l_file_name: STRING
 		do
 			l_file_name := definition_file_box.value.as_lower
-			if is_valid_file_name (l_file_name, Invalid_component_file) then
+			if is_valid_file (l_file_name) then
 				if l_file_name.substring_index (".idl", l_file_name.count - 3) = l_file_name.count - 3 then
 					environment.set_idl_file_name (l_file_name)
 					marshaller_box.show
@@ -119,35 +119,18 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Implementation
 
-	definition_file_validity (a_file_name, a_error_message: STRING): WIZARD_VALIDITY_STATUS is
+	definition_file_validity (a_file_name: STRING): WIZARD_VALIDITY_STATUS is
 			-- Is `a_file_name' a valid definition file?
 			-- Show marshaller box if `a_file_name' corresponds to an IDL file.
 		do
-			if is_valid_file_name (a_file_name, a_error_message) then
-				create Result.make_success
+			if is_valid_file (a_file_name) then
+				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Component_definition_file)
 				update_environment
 			else
-				create Result.make_error (a_error_message)
+				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Component_definition_file)
 			end
+			set_status (Result)
 		end
-		
-	is_valid_file_name (a_file_name, a_error_message: STRING): BOOLEAN is
-			-- Is `a_file_name' a valid file name?
-		require
-			non_void_file_name: a_file_name /= Void
-		do
-			Result := not a_file_name.is_empty and then (create {RAW_FILE}.make (a_file_name)).exists
-			if Result then
-				set_status (create {WIZARD_VALIDITY_STATUS}.make_success)
-			else
-				set_status (create {WIZARD_VALIDITY_STATUS}.make_error (a_error_message))
-			end
-		end
-
-feature {NONE} -- Private Access
-
-	Invalid_component_file: STRING is "Invalid component definition file: File does not exist"
-			-- Invalid component file error
 
 end -- class WIZARD_COM_PROJECT_BOX
 

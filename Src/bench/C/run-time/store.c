@@ -29,7 +29,7 @@
 #include "eif_main.h"
 #include "eif_compress.h"
 
-#ifdef EIF_OS2
+#ifdef EIF_WIN32
 #include <io.h>
 #endif
 
@@ -65,17 +65,32 @@ rt_private void internal_store(char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
 rt_private void ist_write(char *object);
 rt_private void gst_write(char *object);
-rt_private void make_header(EIF_CONTEXT_NOARG);				/* Make header */
-rt_private void imake_header(EIF_CONTEXT_NOARG);				/* Make header */
+rt_private void make_header(void);				/* Make header */
+rt_private void imake_header(void);				/* Make header */
 rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
 rt_public void allocate_gen_buffer(void);
-void store_write(void);
-rt_private void st_clean(void);
+rt_private void store_write(void);
 rt_public void free_sorted_attributes(void);
+
+rt_public void rt_reset_store (void);
+rt_public void rt_init_store(
+	void (*store_function) (void),
+	int (*char_write_function)(char *, int),
+	void (*flush_buffer_function) (void),
+	void (*st_write_function) (char *),
+	void (*make_header_function) (void),
+	int accounting_type,
+	int buf_size);
+
+rt_public void (*make_header_func)(void);
+rt_public void (*st_write_func)(char *);
+rt_public void (*flush_buffer_func)(void);
+rt_public void (*store_write_func)(void);
+rt_public int (*char_write_func)(char *, int);
 
 /*
  * Shared data declarations
@@ -90,24 +105,25 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-/*function pointers to save on if statements*/
-
-void (*make_header_func)(EIF_CONTEXT_NOARG) = make_header;
-void (*st_write_func)(char *) = st_write;
-void (*flush_buffer_func)(void) = flush_st_buffer;
-void (*store_write_func)(void) = store_write;
-int (*char_write_func)() = char_write;
-
-/*
- * Convenience functions
- */
+/* Convenience functions */
 
 /* Initialize store function pointers and globals */
 /* reset buffer size if argument is non null */
-rt_public void rt_init_store(void (*store_function) (void), int (*char_write_function)(char *, int), int buf_size)
+rt_public void rt_init_store(
+	void (*store_function) (void),
+	int (*char_write_function)(char *, int),
+	void (*flush_buffer_function) (void),
+	void (*st_write_function) (char *),
+	void (*make_header_function) (void),
+	int accounting_type,
+	int buf_size)
 {
 	store_write_func = store_function;
 	char_write_func = char_write_function;
+	flush_buffer_func = flush_buffer_function;
+	st_write_func = st_write_function;
+	make_header_func = make_header_function;
+	accounting = accounting_type;
 	if (buf_size)
 		buffer_size = buf_size;
 }
@@ -117,14 +133,54 @@ rt_public void rt_init_store(void (*store_function) (void), int (*char_write_fun
 rt_public void rt_reset_store(void) {
 	store_write_func = store_write;
 	char_write_func = char_write;
+	flush_buffer_func = flush_st_buffer;
+	st_write_func = st_write;
+	make_header_func = make_header;
+
+	accounting = 0;
 	buffer_size = EIF_BUFFER_SIZE;
+
+	if (s_buffer != (char *) 0) {
+		xfree(s_buffer);
+		s_buffer = (char *) 0;
+	}
+	if (account != (char *) 0) {
+		xfree(account);
+		account = (char *) 0;
+	}
+
+	free_sorted_attributes();
+
+	if (idr_temp_buf != (char *) 0) {
+		xfree(idr_temp_buf);
+		idr_temp_buf = (char *) 0;
+	}
 }
 
+/* Functions definitions */
 
-/*
- * Functions definitions
- */
+/* Basic store */
+rt_public void estore(EIF_INTEGER file_desc, char *object)
+{
+	/* Store object hierarchy of root `object' without header. */
+	fides = (int) file_desc;
 
+	rt_init_store (
+		store_write,
+		char_write,
+		flush_st_buffer,
+		gst_write,
+		make_header,
+		0,
+		EIF_BUFFER_SIZE);
+
+	allocate_gen_buffer();
+	internal_store(object);
+
+	rt_reset_store ();
+}
+
+/* General store */
 rt_public void eestore(EIF_INTEGER file_desc, char *object)
 {
 	/* Store object hierarchy of root `object' and produce a header
@@ -132,24 +188,23 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 	 */
 
 	fides = (int) file_desc;
-	accounting = TR_ACCOUNT;
-	st_write_func = gst_write;
+
+	rt_init_store (
+		store_write,
+		char_write,
+		flush_st_buffer,
+		gst_write,
+		make_header,
+		TR_ACCOUNT,
+		EIF_BUFFER_SIZE);
+
 	allocate_gen_buffer();
 	internal_store(object);
-	free_sorted_attributes();
-	accounting = 0;
-	st_write_func = st_write;
+
+	rt_reset_store ();
 }
 
-rt_public void estore(EIF_INTEGER file_desc, char *object)
-{
-	/* Store object hierarchy of root `object' without header. */
-	fides = (int) file_desc;
-	accounting = 0;
-	allocate_gen_buffer();
-	internal_store(object);
-}
-
+/* Independent store */
 rt_public void sstore (EIF_INTEGER file_desc, char *object)
 {
 	/* Use file decscriptor so sockets and files can be used for storage
@@ -158,20 +213,26 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	 */
 
 	fides = (int) file_desc;
-	accounting = INDEPEND_ACCOUNT; 
-	make_header_func = imake_header;
-	flush_buffer_func = idr_flush;
-	st_write_func = ist_write;
+
+	rt_init_store (
+		store_write,
+		char_write,
+		idr_flush,
+		ist_write,
+		imake_header,
+		INDEPEND_ACCOUNT,
+		EIF_BUFFER_SIZE);
+
 	run_idr_init ();
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+
 	internal_store(object);
-	accounting = 0;
+
 	run_idr_destroy ();
-	make_header_func = make_header;
-	flush_buffer_func = flush_st_buffer;
-	st_write_func = st_write;
 	xfree (idr_temp_buf);
 	idr_temp_buf = (char *)0;
+
+	rt_reset_store ();
 }
 
 rt_public void allocate_gen_buffer (void)
@@ -195,6 +256,7 @@ if no compression, use buffer_size -> 1k instead of 32k + padding
 
 		g_data.status = g_status;
 	}
+
 	current_position = 0;
 	end_of_buffer = 0;
 	EIF_END_GET_CONTEXT
@@ -891,14 +953,14 @@ rt_private void make_header(EIF_CONTEXT_NOARG)
 	char *vis_name;			/* Visible name of a class */
 	struct gt_info *info;
 	int nb_line = 0;
-	int bsize = 80;
+	size_t bsize = 80;
 	jmp_buf exenv;
 	RTXD;
 
 	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
-		st_clean();				/* Clean data structure */
+		rt_reset_store ();				/* Reset data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1000,8 +1062,8 @@ rt_public void sort_attributes(int dtype)
 	uint32 *attr_types;
 	unsigned int no_swap, swapped, tmp;
 
-	long attr_nb;
-	unsigned int j;
+	unsigned long attr_nb;
+	unsigned long j;
 
 	class_info = &(System(dtype));
 	attr_nb = class_info->cn_nbattr;
@@ -1063,7 +1125,7 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 	char *vis_name;			/* Visible name of a class */
 	struct gt_info *info;
 	int nb_line = 0;
-	int bsize = 600;
+	size_t bsize = 600;
 	uint32 num_attrib;
 	jmp_buf exenv;
 	RTXD;
@@ -1071,7 +1133,7 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
-		st_clean();				/* Clean data structure */
+		rt_reset_store ();				/* Clean data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1102,10 +1164,9 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 		/* vis_name = Visible(i) */;/* Visible name of the dyn. type */
 		vis_name = System(i).cn_generator;
 
-		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6))
-			{
-				bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
-				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
+		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6)) {
+			bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
+			s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
 		info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
@@ -1127,7 +1188,7 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 			for (;;) {
 #if DEBUG &1
 				if (*gt_type == SK_INVALID)
-					eif_panic("corrupted cecil table");
+					eif_panic("Corrupted cecil table");
 #endif
 				if ((*gt_type++ & SK_DTYPE) == (int16) i)
 					break;
@@ -1181,32 +1242,9 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 	EIF_END_GET_CONTEXT
 }
 
-
-rt_private void st_clean(void)
-{
-	/* clean up memory allocation and reset function pointers */
-
-	make_header_func = make_header;
-	flush_buffer_func = flush_st_buffer;
-	st_write_func = st_write;
-	if (s_buffer != (char *) 0) {
-		xfree(s_buffer);
-		s_buffer = (char *) 0;
-	}
-	if (account != (char *)0) {
-		xfree(account);
-		account = (char *) 0;
-	}
-	free_sorted_attributes();
-	if (idr_temp_buf != (char *)0) {
-		xfree(idr_temp_buf);
-		idr_temp_buf = (char *)0;
-	}
-}
-
 rt_public void free_sorted_attributes(void)
 {
-	unsigned int i;
+	int i;
 	unsigned int *s_attr;
 
 	if (sorted_attributes != (unsigned int **)0){
@@ -1282,7 +1320,7 @@ void store_write(void)
 		ptr += number_writen;
 	}
 
-	if (ptr - cmps_general_buffer == cmps_out_size + EIF_CMPS_HEAD_SIZE)
+	if (((unsigned int) (ptr - cmps_general_buffer)) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
 		current_position = 0;
 	else
 		eio();

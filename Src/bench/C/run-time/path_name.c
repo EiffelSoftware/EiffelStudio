@@ -314,7 +314,8 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTE
 #elif defined EIF_WIN32 || defined EIF_OS2
 	strcat ((char *)p, (char *)v);
 #else	/* Unix */
-	strcat ((char *)p, "/");
+	if (*((char*)v) != '/' )
+		strcat ((char *)p, "/");
 	strcat ((char *)p, (char *)v);
 #endif
 	(egc_strset)(string, strlen ((char *)p));

@@ -10,7 +10,7 @@
 #include <stdio.h>
 #define print_err_msg fprintf
 #else
-extern int print_err_msg()
+extern int print_err_msg();
 #endif
 
 #endif

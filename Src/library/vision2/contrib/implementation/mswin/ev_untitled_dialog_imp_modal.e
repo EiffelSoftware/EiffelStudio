@@ -20,7 +20,7 @@ inherit
 
 	EV_UNTITLED_DIALOG_IMP_COMMON
 		undefine
-			hide, is_modal
+			hide, is_modal, setup_dialog
 		redefine
 			interface,
 			other_imp

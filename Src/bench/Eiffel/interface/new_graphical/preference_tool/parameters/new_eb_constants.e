@@ -11,7 +11,7 @@ feature {NONE} -- Resources
 	Pixmaps: EB_SHARED_PIXMAPS is
 	
 		once
-			Create Result
+			create Result
 		end
 
 	Interface_names: INTERFACE_NAMES is

@@ -105,10 +105,8 @@ feature -- Actions
 			until
 				node_list.after or stop
 			loop
-				i := open_key (index_value,node_list.item, Key_read)
-				if i = default_pointer then
-					stop := True
-				end
+				i := open_key (index_value, node_list.item, Key_read)
+				stop := i = default_pointer
 				close_key (index_value)
 				index_value := i
 				node_list.forth
@@ -116,6 +114,42 @@ feature -- Actions
 			if not stop then
 				Result := key_value (index_value, value_name)
 			end
+		end
+
+	save_key_value (key_path, value_name: STRING; value: WEL_REGISTRY_KEY_VALUE) is
+			-- Set value of key in `key_path' with name `value_name' to `value'.
+			-- Create key if needed.
+			-- The path should be like "a\b\c"
+			-- Please refer to WEL_HKEY for possible value for a.
+		require
+			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			key_name_possible: value_name /= Void
+			valid_value: value /= Void
+		local
+			node_list: ARRAYED_LIST [STRING]
+			index_value, i: POINTER
+		do
+			node_list := value_keys_list (key_path)
+			check
+				node_list_possible: node_list.count > 0
+				first_element_possible: basic_valid_name_for_HKEY (node_list.first)
+			end
+			node_list.start
+			index_value := index_value_for_root_keys (node_list.item)
+			from
+				node_list.forth
+			until
+				node_list.after
+			loop
+				i := open_key (index_value, node_list.item, Key_all_access)
+				if i = default_pointer then
+					i := create_key (index_value, node_list.item, Key_all_access)
+				end
+				close_key (index_value)
+				index_value := i
+				node_list.forth
+			end
+			set_key_value (index_value, value_name, value)
 		end
 
 feature -- Status

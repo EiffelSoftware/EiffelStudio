@@ -15,6 +15,14 @@ inherit
 		end
 
 	SHARED_TYPES
+		export
+			{NONE} all
+		end
+		
+	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
 
 feature {AST_FACTORY} -- Initialization
 
@@ -58,6 +66,7 @@ feature -- Type check, byte code and dead code removal
 			access_b: ACCESS_B
 			access_address: ACCESS_ADDRESS_AS
 			id_type: TYPE_A
+			l_typed_ptr: TYPED_POINTER_A
 			not_supported: NOT_SUPPORTED
 		do
 				-- Initialization of the type stack
@@ -71,7 +80,10 @@ feature -- Type check, byte code and dead code removal
 			access_b := context.access_line.access
 
 			if not access_b.is_feature then
-				id_type := pointer_type
+				create l_typed_ptr.make_typed (id_type)
+				id_type := l_typed_ptr
+				Instantiator.dispatch (l_typed_ptr, Context.current_class)
+				Context.typed_pointer_line.insert (id_type)
 			end
 
 			if access_b.is_external then
@@ -104,7 +116,8 @@ feature -- Type check, byte code and dead code removal
 				create address.make (context.current_class.class_id, a_feature)
 				Result := address
 			else
-				create hector.make (access)
+				create hector.make_with_type (access, context.typed_pointer_line.item.type_i)
+				Context.typed_pointer_line.forth
 				Result := hector
 			end
 		end

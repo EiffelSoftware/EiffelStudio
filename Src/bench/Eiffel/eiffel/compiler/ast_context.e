@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			create access_line.make
 			create array_line.make
 			create tuple_line.make
+			create typed_pointer_line.make
 			create interval_line.make
 			create creation_infos.make
 			create creation_types.make
@@ -82,6 +83,9 @@ feature -- Access
 
 	tuple_line: LINE [TUPLE_TYPE_A]
 			-- Line of manifest tuple types
+
+	typed_pointer_line: LINE [TYPE_A]
+			-- Line of TYPED_POINTER types use with `$' operator.
 
 	interval_line: LINE [INTERVAL_B]
 			-- Line of intervals
@@ -393,6 +397,7 @@ feature -- Managing the type stack
 			access_line.start;
 			array_line.start;	
 			tuple_line.start;	
+			typed_pointer_line.start;	
 			interval_line.start;
 			creation_infos.start;
 			creation_types.start;
@@ -419,6 +424,7 @@ feature -- Managing the type stack
 			access_line.wipe_out;
 			array_line.wipe_out;
 			tuple_line.wipe_out;
+			typed_pointer_line.wipe_out;
 			interval_line.wipe_out;
 			creation_infos.wipe_out;
 			creation_types.wipe_out;

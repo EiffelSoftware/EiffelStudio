@@ -472,6 +472,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_real_class, "real")
 			l_actions.put (agent system.set_double_class, "double")
 			l_actions.put (agent system.set_pointer_class, "pointer")
+			l_actions.put (agent system.set_typed_pointer_class, "typed_pointer")
 			l_actions.put (agent system.set_string_class, "string")
 			l_actions.put (agent system.set_array_class, "array")
 			l_actions.put (agent system.set_special_class, "special")

@@ -522,6 +522,8 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				create {DOUBLE_B} Result.make (Current)
 			elseif Current = local_system.pointer_class then
 				create {POINTER_B} Result.make (Current)
+			elseif Current = local_system.typed_pointer_class then
+				create {POINTER_B} Result.make (Current)
 			elseif Current = local_system.special_class then
 				create {SPECIAL_B} Result.make (Current)
 			elseif Current = local_system.to_special_class then

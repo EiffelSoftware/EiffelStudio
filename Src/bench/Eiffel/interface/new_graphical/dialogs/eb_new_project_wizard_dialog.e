@@ -422,10 +422,4 @@ feature {NONE} -- Constants
 	No_description: STRING is "No description is available for this wizard"
 			-- Description when no description is available.
 
-	New_project_wizards_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "wizards", "new_projects">>)
-		end
-
 end -- class EB_CREATE_PROJECT_DIALOG

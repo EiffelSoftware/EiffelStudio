@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			-- Create a status bar with `par' as parent and only
 			-- one part.
 		do
-			!EV_STATUS_BAR_IMP! implementation.make
-			widget_make (par)
+			!EV_STATUS_BAR_IMP! implementation.make (par)
+			implementation.set_interface (Current)
 		end
 
 feature -- Access

@@ -29,14 +29,6 @@ feature -- Properties
 	has_like: BOOLEAN is True
 			-- Does the type have anchored type in its definition ?
 
-	rout_id: INTEGER
-
-	set_rout_id (rid: like rout_id) is
-			-- Set `set_rout_id' to `rid'.
-		do
-			rout_id := rid
-		end
-
 	class_id: INTEGER
 			-- Class ID of the class where the anchor is referenced
 
@@ -111,7 +103,7 @@ feature -- Primitives
 			cl_type ?= Result
 
 			if cl_type /= Void then
-				-- Remember that it's an anchored type 
+					-- Remember that it's an anchored type 
 				cl_type.set_cr_info (create_info)
 			end
 		end

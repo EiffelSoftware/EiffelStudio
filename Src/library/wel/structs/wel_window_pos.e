@@ -193,42 +193,42 @@ feature {NONE} -- Externals
 
 	cwel_windowpos_set_hwnd (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, HWND)"
 		end
 
 	cwel_windowpos_set_hwndinsertafter (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, HWND)"
 		end
 
 	cwel_windowpos_set_x (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
 	cwel_windowpos_set_y (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
 	cwel_windowpos_set_width (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
 	cwel_windowpos_set_height (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
 	cwel_windowpos_set_flags (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*, UINT)"
 		end
 
 	cwel_windowpos_get_hwnd (ptr: POINTER): POINTER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_POINTER"
 		end
 
 	cwel_windowpos_get_hwndinsertafter (ptr: POINTER): POINTER is
@@ -238,27 +238,27 @@ feature {NONE} -- Externals
 
 	cwel_windowpos_get_x (ptr: POINTER): INTEGER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
 	cwel_windowpos_get_y (ptr: POINTER): INTEGER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
 	cwel_windowpos_get_width (ptr: POINTER): INTEGER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
 	cwel_windowpos_get_height (ptr: POINTER): INTEGER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
 	cwel_windowpos_get_flags (ptr: POINTER): INTEGER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
 end -- class WEL_WINDOW_POS

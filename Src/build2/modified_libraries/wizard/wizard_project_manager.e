@@ -93,8 +93,13 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
+			-- We center the dialog on the screen.
+		local
+			screen: EV_SCREEN
 		do
 			first_window.set_title (Wizard_title)
+			create screen
+			first_window.set_position (screen.width // 2 - first_window.width // 2, screen.height // 2 - first_window.width // 2)
 			first_window.show_modal_to_hwnd (hwnd)
 		end
 

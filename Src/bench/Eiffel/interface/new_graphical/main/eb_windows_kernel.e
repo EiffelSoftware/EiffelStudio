@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 		local
 			local_string: STRING
 			com_compiler: ECOM_ISE_REGISTRATION
+			new_resources: TTY_RESOURCES
 		do
 			if argument_count > 0 then
 				local_string :=argument (1)
@@ -35,6 +36,7 @@ feature {NONE} -- Initialization
 			then
 				register_basic_graphical_types
 				initialize_resources (system_general, Eiffel_preferences)
+				create new_resources.initialize
 				create com_compiler.make
 			else
 				standard_make

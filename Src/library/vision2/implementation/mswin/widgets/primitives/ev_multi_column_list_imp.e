@@ -482,8 +482,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					litem.to_integer)
 				list.forth
 			end
-		--	ev_children.go_i_th (an_index - 1)
-		--	ev_children.put_right (item_imp)
 		end
 
 	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
@@ -507,10 +505,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			-- First, we remove the child from the graphical component
 			an_index := ev_children.index_of (item_imp, 1) - 1
 			delete_item (an_index)
-
-			-- Then, we update the children
-		--	ev_children.go_i_th (an_index + 1)
-		--	ev_children.remove
 		end
 
 	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
@@ -766,6 +760,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.83  2000/04/20 18:51:19  rogers
+--| Removed redundent ev_children update's from insert_item
+--| and remove_item.
+--|
 --| Revision 1.82  2000/04/20 01:21:39  pichery
 --| Fixed call to an obsolete feature
 --|

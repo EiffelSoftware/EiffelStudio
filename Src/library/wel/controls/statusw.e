@@ -33,7 +33,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_by_id
 
 feature {NONE} -- Initialization
 

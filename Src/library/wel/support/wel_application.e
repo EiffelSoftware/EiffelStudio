@@ -43,8 +43,6 @@ feature -- Access
 	main_window: WEL_COMPOSITE_WINDOW is
 			-- Must be defined as a once funtion to create the
 			-- application's main_window.
-		require
-			once_declaration: application_main_window = Void
 		deferred
 		ensure
 			result_not_void: Result /= Void

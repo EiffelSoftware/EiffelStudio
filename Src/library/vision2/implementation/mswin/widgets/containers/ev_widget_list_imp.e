@@ -1,11 +1,8 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: 
-		"EiffelVision widget list, mswin implementation."
+	description: "Eiffel Vision widget list. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id:"
-	date: "$Date:"
-	revision: "$Revision:"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EV_WIDGET_LIST_IMP
@@ -24,7 +21,7 @@ inherit
 feature -- Access
 
 	item: EV_WIDGET is
-			-- Current item
+			-- Current item.
 		local
 			w: EV_WIDGET
 		do
@@ -38,19 +35,19 @@ feature -- Access
 		end
 
 	cursor: CURSOR is
-			-- Cursor
+			-- Current cursor position.
 		do
 			Result := ev_children.cursor
 		end
 
 	index: INTEGER is
-			-- Index of current position
+			-- Current cursor index.
 		do
 			Result := ev_children.index
 		end
 
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP] is
-			-- List of the children
+			-- List of children.
 		deferred
 		end
 
@@ -65,7 +62,7 @@ feature -- Measurement
 feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Is `p' a valid cursor position.
+			-- Is `p' a valid cursor position?
 		do
 			Result := ev_children.valid_cursor (p)
 		end
@@ -85,7 +82,7 @@ feature -- Cursor movement
 		end
 
 	go_to (p: CURSOR) is
-			-- Move cursor to position `p'
+			-- Move cursor to position `p'.
 		do
 			ev_children.go_to (p)	
 		end
@@ -113,8 +110,6 @@ feature -- Element change
 			was_after := ev_children.after
 			ev_children.extend (v_imp)
 			if was_after then
-				--| This is to work around a difference in behaviour of
-				--| ARRAYED_LIST.
 				ev_children.go_i_th (ev_children.count + 1)
 			end
 			ww ?= Current
@@ -279,3 +274,33 @@ feature {NONE} -- Implementation
 	interface: EV_WIDGET_LIST
 
 end -- class EV_WIDGET_LIST_IMP
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/03/02 21:58:45  brendel
+--| Reviewed.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------
+

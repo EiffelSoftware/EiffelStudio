@@ -55,44 +55,44 @@ mtipc.$lib: $(MT_OBJECTS)
 	$link_mtline
 
 MTcom.$obj: com.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidentify.$obj: identify.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTlock.$obj: lock.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTlogfile.$obj: logfile.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTnetwork.$obj: network.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTnetworku.$obj: networku.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTselect.$obj: select.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTshword.$obj: shword.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTstack.$obj: stack.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTstream.$obj: stream.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTsystem.$obj: system.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTtransfer.$obj: transfer.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTrqst_idrs.$obj: rqst_idrs.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTuu.$obj: uu.c
-	$(CC) -c $(JMTCFLAGS) $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 

@@ -186,6 +186,22 @@ feature -- Initialization
 						set_visible_item_count (1)
 					end
 				end
+				if multiple_selection then
+					from
+						private_selected_positions.start
+					variant
+						private_selected_positions.count - private_selected_positions.index
+					until
+						private_selected_positions.after
+					loop
+						select_i_th (private_selected_positions.item)
+						private_selected_positions.forth
+					end
+				else
+					if private_selected_position >0 then
+						select_i_th (private_selected_position)
+					end
+				end
 				if parent.shown then
 					shown := true
 				end
@@ -485,8 +501,10 @@ feature {NONE} -- Implementation
 
 	selected_position: INTEGER is
 		do
-			if wel_single_selected and then not multiple_selection then
+			if exists and then wel_single_selected and then not multiple_selection then
 				Result := wel_selected_item + 1
+			else
+				Result := private_selected_position
 			end
 		end
 

@@ -92,20 +92,12 @@ feature -- Iteration
 					until
 						i = 0
 					loop
-						action.call (empty_tuple)
+						action.call (Void)
 						i := i - 1
 					end
-					action.call (empty_tuple)
+					action.call (Void)
 				end
 			end
-		end
-
-feature {NONE} -- Implementation: iteration
-
-	empty_tuple: TUPLE is
-			-- Empty tuple
-		once
-			create Result
 		end
 
 feature -- Code generation
@@ -128,11 +120,11 @@ feature -- Byte code generation
 
 feature -- IL code generation
 
-	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL) is
+	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B) is
 			-- Generate branch to `label' if value on IL stack it greater than this value.
 			-- Assume that current value is included in lower interval if `is_included' is true.
 		do
-			il_generator.duplicate_top
+			instruction.generate_il_load_value
 			il_generator.put_integer_32_constant (generation_value)
 			if is_included then
 				il_generator.branch_on_condition (feature {MD_OPCODES}.bgt, label)

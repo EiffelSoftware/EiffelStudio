@@ -22,7 +22,7 @@ inherit
 			make as font_box_make
 		undefine
 			lower, raise, 
-			show, hide, is_shown, destroy,
+			show, hide, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			is_stackable
 		redefine

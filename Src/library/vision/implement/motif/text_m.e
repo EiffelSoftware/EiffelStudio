@@ -20,6 +20,8 @@ inherit
 	SHARED_CALLBACK_STRUCT;
 
 	PRIMITIVE_M
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		end;
@@ -47,14 +49,14 @@ inherit
 			set_string as set_text,
 			max_length as maximum_size,
 			set_max_length as set_maximum_size,
-			set_single_line_edit_mode as set_single_line_mode,
 			top_character as top_character_position,
 			set_top_character as set_top_character_position,
 			clear_selection as clear_selecton_with_time,
 			clear_selection_with_current_time as clear_selection,
 			set_selection as set_selecton_with_time,
 			set_selection_with_current_time as set_selection,
-			insert as mel_insert
+			insert as mel_insert,
+			is_shown as shown
 		end
 
 creation
@@ -77,7 +79,7 @@ feature {NONE} -- Initialization
 			-- Create a motif text enabling word wrap.
 		do
 			make (a_text, man);
-			set_single_line_mode (False);
+			set_multi_line_mode;
 			set_word_wrap (True)
 		end;
 
@@ -204,6 +206,18 @@ feature -- Status setting
 			-- accommodate all the text contained.
 		do
 			set_resize_width (True);
+		end;
+
+	set_single_line_mode is
+			-- Enable single line editing.
+		do
+			set_single_line_edit_mode (True)
+		end;
+
+	set_multi_line_mode is
+			-- Enabble multi line editing.
+		do
+			set_single_line_edit_mode (False)
 		end;
 
 feature -- Element change

@@ -14,7 +14,8 @@ inherit
 
 	TOP_M
 		rename
-			make as top_shell_make
+			make as top_shell_make,
+			is_shown as shown
 		redefine
 			mel_screen
 		end;
@@ -31,7 +32,8 @@ inherit
 			set_icon_mask as mel_set_icon_mask,
 			icon_pixmap as mel_icon_pixmap,
 			set_icon_pixmap as mel_set_icon_pixmap,
-			screen as mel_screen
+			screen as mel_screen,
+			is_shown as shown
 		undefine
 			set_x, set_y, set_x_y
 		redefine

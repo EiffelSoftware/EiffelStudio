@@ -31,9 +31,10 @@ inherit
 			set_foreground_color as mel_set_foreground_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+            is_shown as shown
 		undefine
-			raise, lower, show, hide, is_shown
+			raise, lower, show, hide
 		redefine
 			dialog_shell, screen_object
 		select 

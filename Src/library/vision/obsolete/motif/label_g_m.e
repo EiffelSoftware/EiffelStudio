@@ -13,6 +13,9 @@ inherit
 	LABEL_G_I;
 
 	BUTTON_G_M
+		rename
+			is_shown as shown
+		end;
 
 creation
 
@@ -28,6 +31,22 @@ feature {NONE} -- Initialization
 					mel_parent (a_label_gadget, widget_index),
 					man);
 			a_label_gadget.set_font_imp (Current)
+		end;
+
+feature -- Status setting
+
+	allow_recompute_size is
+			-- Allow Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (True)
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (False)
 		end;
 
 end -- class LABEL_G_M

@@ -15,10 +15,13 @@ inherit
 
 	SHELL_M
 		rename
-			popdown as mel_popdown
+			popdown as mel_popdown,
+			is_shown as shown
 		end;
 
 	SHELL_M
+		rename
+			is_shown as shown
 		redefine
 			popdown
 		select

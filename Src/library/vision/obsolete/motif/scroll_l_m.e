@@ -19,8 +19,10 @@ inherit
 		end;
 
 	LIST_MAN_M
+		rename
+			is_shown as shown
 		undefine
-			height, real_x, real_y, realized, is_shown, width,
+			height, real_x, real_y, realized, shown, width,
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize,
 			make_from_existing, create_callback_struct,
@@ -49,9 +51,10 @@ inherit
 			selected_items as mel_selected_items,
 			deselect_all_items as deselect_all,
 			select_item as mel_select_item,
-			index_of as mel_index_of
+			index_of as mel_index_of,
+            is_shown as shown
 		undefine
-			height, real_x, real_y, realized, is_shown, width,
+			height, real_x, real_y, realized, width,
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize
 		redefine	

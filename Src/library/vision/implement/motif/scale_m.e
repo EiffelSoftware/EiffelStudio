@@ -23,7 +23,8 @@ inherit
 			set_y as p_set_y,
 			set_size as p_set_size,
 			set_width as p_set_width,
-			set_height as p_set_height
+			set_height as p_set_height,
+            is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
@@ -33,6 +34,8 @@ inherit
 		end;
 
 	MANAGER_M
+        rename
+            is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
@@ -59,7 +62,8 @@ inherit
 			screen as mel_screen,
 			set_horizontal as mel_set_horizontal,
 			scale_multiple as granularity,
-			set_scale_multiple as set_granularity
+			set_scale_multiple as set_granularity,
+            is_shown as shown
 		redefine
 			width, height, x, y, real_x, real_y, set_x, set_y,
 			set_x_y, set_height, set_width, set_size

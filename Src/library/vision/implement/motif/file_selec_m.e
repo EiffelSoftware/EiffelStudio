@@ -36,7 +36,8 @@ inherit
 			set_pattern as mel_set_pattern,
 			pattern as mel_pattern,
 			set_directory as mel_set_directory,
-			directory as mel_directory
+			directory as mel_directory,
+            is_shown as shown
 		select
 			file_selection_make, make_no_auto_unmanage
 		end

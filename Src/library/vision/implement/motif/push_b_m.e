@@ -30,7 +30,8 @@ inherit
             set_background_color as mel_set_background_color,
             set_background_pixmap as mel_set_background_pixmap,
             destroy as mel_destroy,
-            screen as mel_screen
+            screen as mel_screen,
+			is_shown as shown
 		select
 			mel_pb_make
         end
@@ -49,6 +50,22 @@ feature {NONE} -- Initialization
                     mel_parent (a_push_b, widget_index),
                     man);
 			a_push_b.set_font_imp (Current)
+		end;
+
+feature -- Status setting
+
+	allow_recompute_size is
+			-- Allow Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (True)
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (False)
 		end;
 
 feature -- Element change

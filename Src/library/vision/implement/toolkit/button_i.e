@@ -31,14 +31,14 @@ feature
 		end; -- forbid_recompute_size
 
 	set_center_alignment is
-            -- Set text alignment of current label to center
-        deferred
-        end; -- set_center_alignment
+			-- Set text alignment of current label to center
+		deferred
+		end;
  
-    set_left_alignment is
-            -- Set text alignment of current label to left.
-        deferred
-        end; -- set_left_alignment
+	set_left_alignment is
+			-- Set text alignment of current label to left.
+		deferred
+		end;
 
 	text: STRING is
 			-- Text of current button

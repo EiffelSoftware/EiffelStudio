@@ -24,9 +24,10 @@ inherit
 		rename
 			make as mel_pb_make,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+			is_shown as shown
 		select
-			mel_pb_make
+			mel_pb_make, shown
 		end
 
 creation
@@ -43,6 +44,22 @@ feature {NONE} -- Initialization
 					mel_parent (a_push_bg, widget_index),
 					man);
 			a_push_bg.set_font_imp (Current)
+		end;
+
+feature -- Status setting
+
+	allow_recompute_size is
+			-- Allow Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (True)
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (False)
 		end;
 
 feature -- Element change

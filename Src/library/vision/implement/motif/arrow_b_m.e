@@ -31,7 +31,10 @@ inherit
 			is_left as left,
 			is_right as right,
 			is_down as down,
-			is_up as up
+			is_up as up,
+			is_shown as shown
+		select
+			shown
 		end
 
 creation

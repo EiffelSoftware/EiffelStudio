@@ -87,10 +87,22 @@ feature -- Incrementality
 		deferred
 		end;
 
+feature -- Output
+
+	append_to (st: STRUCTURED_TEXT) is
+			-- Append a representation of `Current' to `st'.
+		deferred
+		end
+
 feature {FEATURE_CLAUSE_EXPORT, FORMAT_FEAT_CONTEXT} -- formatter
 
 	format (ctxt: FORMAT_CONTEXT) is
 		deferred
 		end;
+
+feature {NONE} -- Implementation
+
+	S_l_curly: STRING is "{"
+	S_r_curly: STRING is "}"
 
 end

@@ -38,6 +38,14 @@ feature -- Comparison
 			Result := not other.is_all
 		end
 
+feature -- Output
+
+	append_to (st: STRUCTURED_TEXT) is
+			-- Append a representation of `Current' to `st'.
+		do
+			
+		end
+
 feature {COMPILER_EXPORTER}
 
 	equiv (other: EXPORT_I): BOOLEAN is

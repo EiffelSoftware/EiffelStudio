@@ -98,7 +98,7 @@ creation
 %type <INSPECT_AS>			Multi_branch
 %type <INSTR_CALL_AS>		Call
 %type <INSTRUCTION_AS>		Instruction Instruction_impl
-%type <INTEGER_AS>			Integer_constant
+%type <INTEGER_CONSTANT>	Integer_constant
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
@@ -1282,6 +1282,10 @@ Choice: Integer_constant
 			{ $$ := new_interval_as ($1, $3) }
 	|	A_static_constant_call
 			{ $$ := new_interval_as ($1, Void) }
+	|	A_static_constant_call TE_DOTDOT Identifier
+			{ $$ := new_interval_as ($1, $3) }
+	|	Identifier TE_DOTDOT A_static_constant_call
+			{ $$ := new_interval_as ($1, $3) }
 	|	A_static_constant_call TE_DOTDOT A_static_constant_call
 			{ $$ := new_interval_as ($1, $3) }
 	|	A_static_constant_call TE_DOTDOT Integer_constant
@@ -1887,7 +1891,7 @@ Expression_constant: Boolean_constant
 	|	TE_INTEGER
 			{
 				if token_buffer.is_integer then
-					$$ := new_integer_as (token_buffer.to_integer)
+					$$ := new_integer_as (False, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -1896,7 +1900,7 @@ Expression_constant: Boolean_constant
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (0)
+					$$ := new_integer_as (False, "0")
 				end
 			}
 	|	TE_REAL
@@ -1923,7 +1927,7 @@ Character_constant: TE_CHAR
 Integer_constant: TE_INTEGER
 			{
 				if token_buffer.is_integer then
-					$$ := new_integer_as (token_buffer.to_integer)
+					$$ := new_integer_as (False, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -1932,13 +1936,13 @@ Integer_constant: TE_INTEGER
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (0)
+					$$ := new_integer_as (False, "0")
 				end
 			}
 	|	TE_PLUS TE_INTEGER
 			{
 				if token_buffer.is_integer then
-					$$ := new_integer_as (token_buffer.to_integer)
+					$$ := new_integer_as (False, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -1947,13 +1951,13 @@ Integer_constant: TE_INTEGER
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (0)
+					$$ := new_integer_as (False, "0")
 				end
 			}
 	|	TE_MINUS TE_INTEGER
 			{
 				if token_buffer.is_integer then
-					$$ := new_integer_as (- token_buffer.to_integer)
+					$$ := new_integer_as (True, token_buffer)
 				elseif
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
@@ -1963,7 +1967,7 @@ Integer_constant: TE_INTEGER
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (0)
+					$$ := new_integer_as (False, "0")
 				end
 			}
 	;

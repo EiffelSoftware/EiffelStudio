@@ -12,8 +12,6 @@ inherit
 		rename
 			make as form_d_make
 		end;
-	INTERFACE_W;
-	SHARED_RESOURCES;
 	EB_CONSTANTS;
 	SHARED_TABS
 
@@ -90,19 +88,18 @@ feature {NONE} -- Graphical User Interface
 
 			!! query_label.make (Interface_names.l_Query, query_form);
 			!! query_text.make (Interface_names.t_Empty, query_form);
-			query_text.set_multi_line_mode;
-			query_text.set_rows (3);
 			query_text.set_read_only;
+			query_text.set_rows (3);
 
 			!! text_label.make (Interface_names.l_Results, text_form);
 			if is_graphics_disabled then
 				if tabs_disabled then
-					!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, Current)
+					!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
 				else
-					!TABBED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, Current)
+					!TABBED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
 				end
 			else
-				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, Current)
+				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
 			end;
 
 			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
@@ -111,6 +108,7 @@ feature {NONE} -- Graphical User Interface
 			!! run_button.make (Interface_names.b_Run_subquery, button_form);
 			!! run_subquery_cmd.make (Current);
 			run_button.add_activate_action (run_subquery_cmd, Void);
+			subquery_text.add_activate_action (run_subquery_cmd, Void);
 			!! save_as_button.make (Interface_names.b_Save_as, button_form);
 			!! save_result_cmd.make (Current);
 			save_as_button.add_activate_action (save_result_cmd, Void);
@@ -122,7 +120,8 @@ feature {NONE} -- Graphical User Interface
 			attach_all;
 
 				--| Sizing
-			set_size (300, 400)
+			set_size (Profiler_resources.query_tool_width.actual_value, 
+					Profiler_resources.query_tool_height.actual_value)
 		end;
 
 	attach_all is
@@ -226,10 +225,10 @@ feature {NONE} -- Attributes
 	subquery_label: LABEL;
 			-- Label for `subquery_text'
 
-	subquery_text: TEXT;
+	subquery_text: TEXT_FIELD;
 			-- Text field for eventual subqueries
 
-	query_text: SCROLLED_T;
+	query_text: TEXT;
 			-- Text field for the query
 
 	text_window: TEXT_WINDOW;
@@ -302,7 +301,7 @@ feature {NONE} -- Implementation
 	is_graphics_disabled: BOOLEAN is
 			-- Is Graphics disabled for the text window?
 		once 
-			Result := Resources.get_boolean (r_Graphics_disabled, False) 
+			Result := Configure_resources.get_boolean (r_Graphics_disabled, False) 
 		end
 
 end -- class PROFILE_QUERY_WINDOW

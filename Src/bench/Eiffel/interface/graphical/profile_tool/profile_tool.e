@@ -10,10 +10,15 @@ class PROFILE_TOOL
 inherit
 	TOP_SHELL
 		rename
-			make as top_shell_make,
-			realize as display
+			make as top_shell_make
 		end;
-	COMMAND_W;
+	COMMAND;
+	EB_CONSTANTS;
+	WINDOWS;
+	RESOURCE_USER
+		redefine
+			update_integer_resource
+		end
 
 creation
 	make
@@ -27,11 +32,45 @@ feature {NONE} -- Initialization
 			!! open_tools.make 
 			command := a_command;
 			top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen);
-			set_title (INterface_names.t_Profile_tool);
+			set_title (Interface_names.t_Profile_tool);
 			!! quit_cmd.make (Current);
 			!! run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);
+			Profiler_resources.add_user (Current);
 			build_widgets
+		end
+
+feature -- Updating
+
+	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+		local
+			pr: like Profiler_resources
+		do
+			pr := Profiler_resources;
+			if new_res.actual_value >= 0 then
+				if old_res = pr.tool_width then
+					set_width (new_res.actual_value)
+				elseif old_res = pr.query_tool_width then
+					from
+						open_tools.start
+					until
+						open_tools.after
+					loop
+						open_tools.item.set_width (new_res.actual_value)
+						open_tools.forth
+					end;
+				elseif old_res = pr.query_tool_height then
+					from
+						open_tools.start
+					until
+						open_tools.after
+					loop
+						open_tools.item.set_height (new_res.actual_value)
+						open_tools.forth
+					end;
+				end;
+				old_res.update_with (new_res)
+			end;
 		end
 
 feature -- Graphical User Interface
@@ -46,7 +85,18 @@ feature -- Graphical User Interface
 			new_window.set_query_result (st, pq, po, profinfo);
 			new_window.popup;
 			open_tools.extend (new_window)
-		end
+		end;
+
+	display is
+			-- Display the tool
+		do
+			if not realized then
+				realize
+			else
+				show
+			end
+			raise
+		end;
 
 feature {RUN_PROFILE_QUERY_CMD} -- Access
 
@@ -91,8 +141,10 @@ feature {RUN_PROFILE_QUERY_CMD} -- Access
 			shared_values.filenames.force (input_text.text, shared_values.filenames.count + 1);
 
 				--| Copy the subqueries
-			!! parser;
-			parser.parse (query_text.text, shared_values)
+			if not query_text.text.empty then
+				!! parser;
+				parser.parse (query_text.text, shared_values)
+			end
 		end
 
 feature {NONE} -- Graphical User Interface
@@ -120,6 +172,7 @@ feature {NONE} -- Graphical User Interface
 			!! menu_bar.make (Interface_names.t_Empty, global_form);
 			!! file_menu.make (Interface_names.m_File, menu_bar);
 			!! command_menu.make (Interface_names.m_Commands, menu_bar);
+			!! window_menu.make (Interface_names.m_Windows, menu_bar);
 			!! help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
@@ -154,6 +207,7 @@ feature {NONE} -- Graphical User Interface
 				-- Commands
 			exit_button.add_activate_action (quit_cmd, Void);
 			run_button.add_activate_action (run_prof_query_cmd, Void);
+			query_text.add_activate_action (run_prof_query_cmd, Void);
 
 			global_form.set_fraction_base (2);
 
@@ -215,7 +269,7 @@ feature {NONE} -- Graphical User Interface
 			text_form.attach_right (query_text, 5);
 
 				-- Sizing policy
-			set_width (400)
+			set_width (Profiler_resources.tool_width.actual_value)
 		end;
 
 	fill_menus is
@@ -225,13 +279,30 @@ feature {NONE} -- Graphical User Interface
 			generate_cmd: GENERATE_PROFILE_INFO_CMD
 			quit_menu_entry: EB_MENU_ENTRY;
 			help_cmd: PROFILE_HELP_CMD;
-			help_menu_entry: EB_MENU_ENTRY
+			help_menu_entry: EB_MENU_ENTRY;
+			show_pref_cmd: SHOW_PREFERENCE_TOOL;
+			show_pref_menu_entry: EB_MENU_ENTRY;
+			menu_entry: EB_MENU_ENTRY;
+			raise_tool_cmd: RAISE_TOOL_CMD;
+			sep: SEPARATOR
 		do
-			!! quit_menu_entry.make (quit_cmd, file_menu);
-			!! generate_cmd.make (Current);
-			!! generate_menu_entry.make (generate_cmd, command_menu);
+			!! quit_menu_entry.make_default (quit_cmd, file_menu);
+			!! generate_cmd;
+			!! generate_menu_entry.make_default (generate_cmd, command_menu);
 			!! help_cmd;
-			!! help_menu_entry.make (help_cmd, help_menu);
+			!! help_menu_entry.make_default (help_cmd, help_menu);
+
+			!! menu_entry.make 
+				(Project_tool.class_hole_holder.associated_command, window_menu);
+			!! menu_entry.make 
+				(Project_tool.routine_hole_holder.associated_command, window_menu);
+			!! menu_entry.make 
+				(Project_tool.object_hole_holder.associated_command, window_menu);
+			!! sep.make (Interface_names.t_Empty, window_menu);
+			!! show_pref_cmd.make (Profiler_resources);
+			!! show_pref_menu_entry.make_default (show_pref_cmd, window_menu);
+			!! raise_tool_cmd.make (Project_tool);
+			!! menu_entry.make (raise_tool_cmd, window_menu);
 		end
 
 feature {NONE} -- Attributes
@@ -297,7 +368,7 @@ feature {NONE} -- Attributes
 	recursive_switch: TOGGLE_B;
 			-- Switch for display of recursive funtions.
 
-	query_text: TEXT
+	query_text: TEXT_FIELD
 			-- Text field for query input
 
 	input_text: TEXT_FIELD;
@@ -321,6 +392,9 @@ feature {NONE} -- Attributes
 	file_menu: MENU_PULL;
 			-- File menu
 
+	window_menu: MENU_PULL;
+			-- Windows menu
+
 	command: SHOW_PROFILE_TOOL;
 			-- Command that invokes Current
 
@@ -334,7 +408,7 @@ feature {NONE} -- Execution Arguments
 			!! Result
 		end
 
-feature {QUIT_PROFILE_TOOL} -- Implementation
+feature {QUIT_PROFILE_TOOL, CLOSE_ALL_CMD} -- Implementation
 
 	close is
 			-- Close Current
@@ -356,7 +430,7 @@ feature {QUIT_PROFILE_TOOL} -- Implementation
 
 feature {NONE} -- Execution
 
-	work (arg: ANY) is
+	execute (arg: ANY) is
 			-- Execute Current
 		do
 			if arg = browse_it then

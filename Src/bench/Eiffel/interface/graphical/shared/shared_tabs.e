@@ -9,7 +9,8 @@ class SHARED_TABS
 
 inherit
 
-	SHARED_BENCH_RESOURCES
+	SHARED_CONFIGURE_RESOURCES;
+	EB_CONSTANTS
 
 feature -- Properties
 
@@ -18,7 +19,7 @@ feature -- Properties
 		local
 			tabs_resource: STRING
 		once
-			Result := resources.get_boolean (r_Tabs_disabled, False);
+			Result := Configure_resources.get_boolean (r_Tabs_disabled, False);
 		end;
 
 	default_tab_length: INTEGER_REF is
@@ -27,7 +28,7 @@ feature -- Properties
 			tab_integer: INTEGER
 		once
 			!!Result;
-			tab_integer := resources.get_integer (r_Tab_step, Default_tab_step);
+			tab_integer := General_resources.tab_step.actual_value;
 			if valid_tab_step (tab_integer) then
 				Result.set_item (tab_integer)
 			else

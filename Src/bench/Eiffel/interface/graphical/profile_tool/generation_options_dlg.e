@@ -13,7 +13,6 @@ inherit
 		rename
 			make as top_shell_make
 		end;
-	INTERFACE_W;
 	EB_CONSTANTS;
 	EIFFEL_ENV;
 	COMMAND

@@ -23,15 +23,15 @@ feature
 			root_class_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Class name: ");
-			put_string (root_class_name);
-			put_string ("%NFirst cluster: ");
-			put_string (cluster.cluster_name);
-			put_string ("%NSecond cluster: ");
-			put_string (second_cluster_name);
-			new_line
+			ow.put_string ("Class name: ");
+			ow.put_string (root_class_name);
+			ow.put_string ("%NFirst cluster: ");
+			ow.put_string (cluster.cluster_name);
+			ow.put_string ("%NSecond cluster: ");
+			ow.put_string (second_cluster_name);
+			ow.new_line
 		end;
 
 end

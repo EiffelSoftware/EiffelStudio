@@ -9,7 +9,7 @@ class COMMAND_LINE_IO
 
 feature -- Properties
 
-	output_window: CLICK_WINDOW;
+	output_window: OUTPUT_WINDOW;
 			-- Output window
 
 	last_input: STRING;
@@ -163,7 +163,7 @@ feature -- Input/output
 
 feature -- Setting
 
-	set_output_window (display: CLICK_WINDOW) is
+	set_output_window (display: OUTPUT_WINDOW) is
 		do
 			output_window := display
 		end;

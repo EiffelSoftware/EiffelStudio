@@ -25,16 +25,16 @@ feature
 			option_value := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Option: ");
-			put_string (option_name);
+			ow.put_string ("Option: ");
+			ow.put_string (option_name);
 			if option_value /= Void then
-				put_string ("%NInvalid option value: ");
-				put_string (option_value);
-				new_line
+				ow.put_string ("%NInvalid option value: ");
+				ow.put_string (option_value);
+				ow.new_line
 			else
-				put_string ("%NNo option value%N");
+				ow.put_string ("%NNo option value%N");
 			end;
 		end;
 

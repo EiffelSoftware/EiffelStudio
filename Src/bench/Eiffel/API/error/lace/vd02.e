@@ -17,12 +17,12 @@ feature
 			use_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_string ("File name: ");
-			put_string (use_name);
-			new_line;
+			put_cluster_name (ow);
+			ow.put_string ("File name: ");
+			ow.put_string (use_name);
+			ow.new_line;
 		end;
 
 end

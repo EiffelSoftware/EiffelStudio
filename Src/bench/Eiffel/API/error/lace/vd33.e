@@ -20,11 +20,11 @@ feature
 			language_name := s
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Invalid language name: ");
-			put_string (language_name);
-			new_line
+			ow.put_string ("Invalid language name: ");
+			ow.put_string (language_name);
+			ow.new_line
 		end;
 
 end

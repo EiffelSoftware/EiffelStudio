@@ -7,7 +7,7 @@ inherit
 
 	WINDOWS;
 
-	CLICK_WINDOW
+	OUTPUT_WINDOW
 
 creation
 
@@ -44,12 +44,6 @@ feature
 --		end;
 
 	put_string (s: STRING) is
-		do
-			error_window.put_string (s);
-			stored_output.append (s)
-		end;
-
-	put_clickable_string (a: STONE; s: STRING) is
 		do
 			error_window.put_string (s);
 			stored_output.append (s)

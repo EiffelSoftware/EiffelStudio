@@ -21,12 +21,12 @@ feature
 			node := n;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_string ("Option: ");
-			put_string (node.option.option_name);
-			new_line;
-			put_class_name;
+			put_cluster_name (ow);
+			ow.put_string ("Option: ");
+			ow.put_string (node.option.option_name);
+			ow.new_line;
+			put_class_name (ow);
 		end;
 end

@@ -5,10 +5,7 @@ class FILE_WINDOW
 
 inherit
 
-	CLICK_WINDOW
-		rename
-			putstring as click_w_putstring
-		end;
+	OUTPUT_WINDOW;
 
 	PLAIN_TEXT_FILE
 
@@ -34,8 +31,6 @@ feature
 		end;
 
 feature
-
-	put_clickable_string (a: STONE; s: STRING) is do put_string (s) end;
 
 	put_char (c: CHARACTER) is do putchar (c) end;
 

@@ -17,17 +17,17 @@ feature
 			file_name := s;
 		end;
 
-	put_file_name is
+	put_file_name (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("File name: ");
-			put_string (file_name);
-			new_line;
+			ow.put_string ("File name: ");
+			ow.put_string (file_name);
+			ow.new_line;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_file_name;
+			put_cluster_name (ow);
+			put_file_name (ow);
 		end;
 
 

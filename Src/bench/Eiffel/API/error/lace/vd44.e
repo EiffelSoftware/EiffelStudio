@@ -8,7 +8,7 @@ inherit
 
 feature
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 		end;
 

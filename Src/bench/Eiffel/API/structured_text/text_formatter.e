@@ -45,16 +45,16 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
-	process_clickable_text (t: CLICKABLE_TEXT) is
-			-- Process basic text `t'.
+	process_class_name_text (t: CLASS_NAME_TEXT) is
+			-- Process class name text `t'.
 		do
-			process_basic_text (t);
+			process_basic_text (t)
 		end;
 
-	process_class_name_text (t: CLASS_NAME_TEXT) is
-			-- Process clickable text `t'.
+	process_feature_name_text (t: FEATURE_NAME_TEXT) is
+			-- Process feature name text `t'.
 		do
-			process_clickable_text (t)
+			process_basic_text (t)
 		end;
 
 	process_breakpoint is

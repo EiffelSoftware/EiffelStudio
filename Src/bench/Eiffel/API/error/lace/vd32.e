@@ -4,7 +4,7 @@ class VD32
 
 inherit
 
-	WARNING
+	ERROR
 		redefine
 			build_explain
 		end;
@@ -23,11 +23,11 @@ feature
 			option_name := s
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Unknown option: ");
-			put_string (option_name);
-			new_line;
+			ow.put_string ("Unknown option: ");
+			ow.put_string (option_name);
+			ow.new_line;
 		end;
 
 end

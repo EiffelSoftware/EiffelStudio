@@ -20,10 +20,10 @@ feature
 			root_cluster_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Unknown cluster name: ");
-			put_string (root_cluster_name);
-			new_line
+			ow.put_string ("Unknown cluster name: ");
+			ow.put_string (root_cluster_name);
+			ow.new_line
 		end;
 end

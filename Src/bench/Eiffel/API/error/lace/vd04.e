@@ -33,14 +33,14 @@ feature
 	code: STRING is "VD04";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Debug purpose
 		do
-			put_string ("Cluster path: ");
-			put_string (cluster.path);
-			put_string ("%NClass name: ");
-			put_string (old_name);
-			new_line
+			ow.put_string ("Cluster path: ");
+			ow.put_string (cluster.path);
+			ow.put_string ("%NClass name: ");
+			ow.put_string (old_name);
+			ow.new_line
 		end;
 
 end

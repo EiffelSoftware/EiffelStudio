@@ -15,14 +15,14 @@ feature
 			second_cluster_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_path;
-			put_string ("First cluster: ");
-			put_string (cluster.cluster_name);
-			put_string ("%NSecond cluster: ");
-			put_string (second_cluster_name);
-			new_line;
+			put_cluster_path (ow);
+			ow.put_string ("First cluster: ");
+			ow.put_string (cluster.cluster_name);
+			ow.put_string ("%NSecond cluster: ");
+			ow.put_string (second_cluster_name);
+			ow.new_line;
 		end;
 
 end

@@ -28,13 +28,13 @@ feature
 			cluster_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Cluster name: ");
-			put_string (cluster_name);
-			put_string ("%NPath name: ");
-			put_string (path);
-			new_line
+			ow.put_string ("Cluster name: ");
+			ow.put_string (cluster_name);
+			ow.put_string ("%NPath name: ");
+			ow.put_string (path);
+			ow.new_line
 		end;
 
 end

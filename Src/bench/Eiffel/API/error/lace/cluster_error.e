@@ -17,20 +17,20 @@ feature
 			cluster := c;
 		end;
 
-	put_cluster_name is
+	put_cluster_name (ow: OUTPUT_WINDOW) is
 			-- Display the cluster name
 		do
-			put_string ("Cluster name: ");
-			put_string (cluster.cluster_name);
-			new_line;
+			ow.put_string ("Cluster name: ");
+			ow.put_string (cluster.cluster_name);
+			ow.new_line;
 		end;
 
-	put_cluster_path is
+	put_cluster_path (ow: OUTPUT_WINDOW) is
 			-- Display the cluster path
 		do
-			put_string ("Path name: ");
-			put_string (cluster.path);
-			new_line;
+			ow.put_string ("Path name: ");
+			ow.put_string (cluster.path);
+			ow.new_line;
 		end;
 
 end

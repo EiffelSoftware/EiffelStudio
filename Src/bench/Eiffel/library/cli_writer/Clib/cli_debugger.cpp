@@ -385,7 +385,9 @@ rt_public void dbg_lock_and_wait_callback () {
 		while (InterlockedExchangeAdd (&dbg_state, 0) != 1) {
 			if (once_enter == 0) {/*D*/
 				DBGTRACE("[eStudio::Eval] waiting for callback begin (state = 1)");/*D*/
-				once_enter = 1;/*D*/
+
+				once_enter = (once_enter + 1) % 500;/*D*/
+//				once_enter = 1;/*D*/
 			}/*D*/
 			Sleep (1);
 		}

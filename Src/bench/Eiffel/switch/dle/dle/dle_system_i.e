@@ -383,7 +383,7 @@ feature -- Freeezing
 
 	shake_tables is
 			-- Compress dispatch and execution tables.
-        do
+		do
 			execution_table.shake_dle;
 			dispatch_table.shake_dle
 		end;
@@ -395,29 +395,36 @@ feature -- Final mode
 		local
 			a_class: CLASS_C;
 			class_id: CLASS_ID;
-			temp: STRING
+			deg_output: DEGREE_OUTPUT;
+			id_list: like dynamic_class_ids;
+			i: INTEGER
 		do
+			deg_output := Degree_output;
 				-- Retrieve data stored during the last finalization
 				-- of the dynamically extendible system.
 			tmp_poly_server.copy (dle_poly_server);
 			Eiffel_table.init_dle (Old_eiffel_table);
 
-			from dynamic_class_ids.start until dynamic_class_ids.after loop
-				class_id := dynamic_class_ids.item_for_iteration;
+			from 
+				id_list := dynamic_class_ids;
+				i := id_list.count;
+				deg_output.put_start_degree (-4, i);
+				id_list.start 
+			until 
+				id_list.after 
+			loop
+				class_id := id_list.item_for_iteration;
 				a_class := class_of_id (class_id);
 				if a_class /= Void then
-						-- Verbose
-					io.error.putstring ("Degree -4: class ");
-						temp := clone (a_class.class_name)
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					deg_output.put_degree_minus_4 (a_class.e_class, i)
 
 					a_class.process_polymorphism;
 					History_control.check_overload
 				end;
-				dynamic_class_ids.forth
+				i := i - 1;
+				id_list.forth
 			end;
+			deg_output.put_end_degree;
 			History_control.transfer;
 			tmp_poly_server.flush
 		end
@@ -426,24 +433,29 @@ feature -- Final mode
 			-- Process Degree -5.
 		local
 			a_class: CLASS_C;
-			temp: STRING
+			deg_output: DEGREE_OUTPUT;
+			i: INTEGER
 		do
+			deg_output := Degree_output;
 			!FINAL_DLE_MAKER! makefile_generator.make;
 			open_log_files;
 				-- Generation of C files associated to the classes of
 				-- the system.
-			from classes.start until classes.after loop
+			from 
+				deg_output.put_start_degree (-5, i);
+				i := classes.count;
+				classes.start 
+			until 
+				classes.after 
+			loop
 				a_class := classes.item_for_iteration;
 						-- Verbose
 				current_class := a_class;
 				if a_class.dle_generate_final_code then
-					io.error.putstring ("Degree -5: class ");
-						temp := clone (a_class.class_name)
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line
+					deg_output.put_degree_minus_5 (a_class.e_class, i)
 				end;
-				classes.forth
+				classes.forth;
+				i := i - 1
 			end;
 			close_log_files
 		end

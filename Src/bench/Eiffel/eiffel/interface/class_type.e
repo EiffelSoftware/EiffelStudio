@@ -271,128 +271,122 @@ feature -- Generation
 
 			if generate_c_code then
 
-			file := generation_file;
+				file := generation_file;
 
 				file.open_write_c;
 				-- Write header
 				file.putstring ("/*%N * Code for class ");
-			type.dump (file);
+				type.dump (file);
 				file.putstring ("%N */%N%N");
 				-- Includes wanted
-			file.putstring ("#include %"eiffel.h%"");
-			file.new_line;
-			if final_mode then
-				file.putstring ("#include %"");
-				file.putstring (base_file_name);
-				file.putstring (".h%"%N");
+				file.putstring ("#include %"eiffel.h%"");
 				file.new_line;
+				if final_mode then
+					file.putstring ("#include %"");
+					file.putstring (base_file_name);
+					file.putstring (".h%"%N");
+					file.new_line;
 
 					-- Generation of extern declarations
-				Extern_declarations.generate_header (extern_declaration_filename);
-			elseif Compilation_modes.is_precompiling then
-				Class_counter.generate_extern_offsets (file);
-				Static_type_id_counter.generate_extern_offsets (file);
-				Real_body_id_counter.generate_extern_offsets (file)
-			end;
-			file.new_line;
-
-			if final_mode then
-				!! extern_decl_file.make (extern_declaration_filename);
-				extern_decl_file.open_append;
-			else
-				extern_decl_file := file
-			end
-
-			byte_context.set_generated_file (file);
-			byte_context.set_extern_declaration_file (extern_decl_file);
-
-			if final_mode and then has_creation_routine then
-					-- Generate the creation routine in final mode
-				generate_creation_routine (file, extern_decl_file);
-			end;
-
-			-- Count once routines which must be generated
-			-- in the current class
-
-			from
-				feature_table.start;
-			until
-				feature_table.after
-			loop
-				feature_i := feature_table.item_for_iteration;
-				if feature_i.to_generate_in (current_class) and then
-								feature_i.is_once then
-					once_count := once_count + 1
+					Extern_declarations.generate_header (extern_declaration_filename);
+				elseif Compilation_modes.is_precompiling then
+					Class_counter.generate_extern_offsets (file);
+					Static_type_id_counter.generate_extern_offsets (file);
+					Real_body_id_counter.generate_extern_offsets (file)
 				end;
-				feature_table.forth;
-			end;
+				file.new_line;
 
-			-- Create index offset variable, if necessary.
+				if final_mode then
+					!! extern_decl_file.make (extern_declaration_filename);
+					extern_decl_file.open_append;
+				else
+					extern_decl_file := file
+				end
 
-			if once_count > 0 then
-				file.putstring ("static int EIF_oidx_off = 0;")
-				file.new_line
-			end
+				byte_context.set_generated_file (file);
+				byte_context.set_extern_declaration_file (extern_decl_file);
 
-			-- Create module initialization procedure
-
-			file.generate_function_signature (
-						   "void", id.module_init_name, True, file, <<>>, <<>>
-											 )
-
-
-			if once_count > 0 then
-				file.putstring ("%TEIF_oidx_off = EIF_once_count;")
-				file.new_line
-				file.putstring ("%TEIF_once_count += ")
-				file.putint (once_count)
-				file.putchar (';')
-				file.new_line
-			end
-
-			file.putstring ("%TEDCX%N}")
-			file.new_line
-			file.new_line
-
-			from
-				feature_table.start;
-				byte_context.init (Current);
-			until
-				feature_table.after
-			loop
-				feature_i := feature_table.item_for_iteration;
-				if feature_i.to_generate_in (current_class) then
-
-					if feature_i.is_once then
-						-- If it's a once, give it a key.
-						byte_context.set_once_index (oidx)
-						oidx := oidx + 1
-					end
-					generate_feature (feature_i, file);
+				if final_mode and then has_creation_routine then
+						-- Generate the creation routine in final mode
+					generate_creation_routine (file, extern_decl_file);
 				end;
-				feature_table.forth;
-			end;
 
-			if 	current_class.has_invariant
-				and then
-					((not final_mode)
-					or else
-					current_class.assertion_level.check_invariant)
-			then
-				inv_byte_code := Inv_byte_server.disk_item
-													(current_class.id);
-				inv_byte_code.generate_invariant_routine;
-				byte_context.clear_all;
-			end;
+				-- Count once routines which must be generated
+				-- in the current class
 
-			if final_mode then
-				extern_decl_file.close;
+				from
+					feature_table.start;
+				until
+					feature_table.after
+				loop
+					feature_i := feature_table.item_for_iteration;
+					if feature_i.to_generate_in (current_class) and then
+									feature_i.is_once then
+						once_count := once_count + 1
+					end;
+					feature_table.forth;
+				end;
 
-				Extern_declarations.generate (extern_declaration_filename);
-				Extern_declarations.wipe_out;
-			end;
+				-- Create index offset variable, if necessary.
+
+				if once_count > 0 then
+					file.putstring ("static int EIF_oidx_off = 0;")
+					file.new_line
+				end
+
+				-- Create module initialization procedure
+
+				file.generate_function_signature (
+						   "void", id.module_init_name, True, file, <<"">>, <<"void">>
+												 )
+
+
+				if once_count > 0 then
+					file.putstring ("%TEIF_oidx_off = EIF_once_count;")
+					file.new_line
+					file.putstring ("%TEIF_once_count += ")
+					file.putint (once_count)
+					file.putstring (";%N")
+				end
+
+				file.putstring ("%TEDCX%N}%N%N")
+
+				from
+					feature_table.start;
+					byte_context.init (Current);
+				until
+					feature_table.after
+				loop
+					feature_i := feature_table.item_for_iteration;
+					if feature_i.to_generate_in (current_class) then
+						if feature_i.is_once then
+							-- If it's a once, give it a key.
+							byte_context.set_once_index (oidx)
+							oidx := oidx + 1
+						end
+						generate_feature (feature_i, file);
+					end;
+					feature_table.forth;
+				end;
+
+				if 	current_class.has_invariant
+					and then
+						((not final_mode)
+						or else
+						current_class.assertion_level.check_invariant)
+				then
+					inv_byte_code := Inv_byte_server.disk_item (current_class.id);
+					inv_byte_code.generate_invariant_routine;
+					byte_context.clear_all;
+				end;
+
+				if final_mode then
+					extern_decl_file.close;
+
+					Extern_declarations.generate (extern_declaration_filename);
+					Extern_declarations.wipe_out;
+				end;
 				file.close_c;
-
 			elseif not Compilation_modes.is_extending then
 					-- The file hasn't been generated
 				System.makefile_generator.record_empty_class_type (id)

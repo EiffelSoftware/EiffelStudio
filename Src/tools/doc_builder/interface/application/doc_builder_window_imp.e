@@ -395,6 +395,7 @@ feature {NONE}-- Initialization
 			toolbar_validate.set_pixmap (icon_validate_ico)
 			toolbar_properties.disable_sensitive
 			toolbar_properties.set_tooltip ("Document Properties")
+			toolbar_properties.set_pixmap (icon_info_ico)
 			toolbar_web.set_tooltip ("Unfiltered")
 			toolbar_web.set_pixmap (icon_ie_ico)
 			toolbar_studio.set_tooltip ("Filter for EiffelStudo")

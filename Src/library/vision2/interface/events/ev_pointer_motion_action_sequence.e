@@ -17,6 +17,9 @@ inherit
 create
 	default_create
 
+create {EV_POINTER_MOTION_ACTION_SEQUENCE}
+	make_filled
+
 feature -- Access
 
 	force_extend (action: PROCEDURE [ANY, TUPLE]) is
@@ -31,6 +34,16 @@ feature -- Access
 		do
 			action.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 		end
+		
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 end
 
 --|----------------------------------------------------------------

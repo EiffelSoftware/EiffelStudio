@@ -17,6 +17,9 @@ inherit
 create
 	default_create
 
+create {EV_PND_FINISHED_ACTION_SEQUENCE}
+	make_filled
+
 feature -- Access
 
 	force_extend (action: PROCEDURE [ANY, TUPLE]) is
@@ -30,6 +33,15 @@ feature -- Access
 			-- Calls `action' passing all other arguments.
 		do
 			action.call ([a_pick_and_dropable])
+		end
+
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class EV_PND_FINISHED_ACTION_SEQUENCE

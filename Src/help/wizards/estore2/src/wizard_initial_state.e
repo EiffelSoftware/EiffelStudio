@@ -29,7 +29,7 @@ feature -- basic Operations
 			message.set_text ("%TWelcome,%
 								%%N%N%NThis wizard will help you to build your first EiffelStore Application.%
 								%%N%N%NYou will have to connect to the database you are going to use with%NEiffelStore.%
-								%%N%NBy choosing the table you want to work with, this wizard will generate%Nan Eiffel Project.%
+								%%N%NBy choosing the tables you want to work with, this wizard will generate%Nan Eiffel Project.%
 								%%N%NThen, you will be able to use the generated classes to build your own%NProject.")
 		end
 

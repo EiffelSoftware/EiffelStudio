@@ -42,6 +42,8 @@ rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 */
 
 rt_public struct stack *prof_stack;
+static char cwd [MAX_PATH];	/* Store the working directory during the session, */
+							/* ie where to put the profile_output_file */
 
 extern EIF_INTEGER prof_enabled;
 
@@ -457,6 +459,11 @@ void initprf(void)
 	 */
 
 	if(prof_enabled) {
+			/* Get the current working directory, ie the one where we
+			/* are going to save the profile_ouput_file */
+		if ( _getcwd(cwd, MAX_PATH) == NULL)
+			print_err_msg(stderr, "Unable to get the current working directory.\n");
+
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
@@ -486,6 +493,9 @@ void exitprf(void)
 	    	j,					/* Inner-loop-counter */
 	    	index;				/* Index counter for output */
 		FILE *prof_output;		/* Storage file */
+
+		chdir (cwd);	/* change the current directory to EIFGEN/W_code or
+						/* EIFGEN/F_code before to crete the profile_output_file */
 
 		prof_output = fopen(profile_output_file, "w");
 		if (!prof_output) {
@@ -528,6 +538,12 @@ void exitprf(void)
 			/* No need to `xfree' the struct: is done by `ht_free()' */
 		ht_free(class_table);		/* Free memory */
 		prof_stack_free();			/* Deallocate stack */
+
+		prof_enabled = 0;		/* Disactive the profiler to avoid the use of it during */
+								/* the `full_sweep' from `reclaim' which makes come calls */
+								/* calls to the `dispose' routines and since there are */
+								/* eiffel function, they can be recorded in the profiler */
+								/* which is not what we want */
 	}
 }
 

@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 	icon_name: STRING;
 			-- Icon name of project tool
 
-	Zero_percent: STRING is "0%%	";
+	Zero_percent: STRING is "0%%";
 
 	Empty_string: STRING is "  ";
 

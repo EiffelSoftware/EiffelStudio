@@ -9,9 +9,19 @@ class
 
 inherit
 	EV_DIALOG_IMP_COMMON
+		rename
+			show as show_internal
 		redefine
 			setup_dialog
 		end
+		
+	EV_DIALOG_IMP_COMMON
+		redefine
+			setup_dialog,
+			show
+		select
+			show
+		end	
 
 create
 	make_with_dialog_window
@@ -49,7 +59,7 @@ feature -- Basic operations
 					parent_window := a_parent_window
 					parent_window_imp ?= a_parent_window.implementation
 				else
-					show
+					show_internal
 				end
 				if show_actions_internal /= Void then
 					show_actions_internal.call ([])
@@ -66,6 +76,20 @@ feature -- Basic operations
 					interface.set_menu_bar (other_menu_bar)	
 				end
 			end
+		end
+		
+	show is
+			-- Show window represented by `interface'
+			-- no longer modeless to a window. We need
+			-- to promote this implementation, to effect
+			-- this change.
+			-- Note that we had to inherit from EV_DIALOG_IMP_COMMON
+			-- twice, so that we could get two versions - `show' and
+			-- `show_internal' as we need different implementations
+			-- depending on from where they were called.
+		do
+			promote_to_dialog_window
+			interface.implementation.show
 		end
 
 	terminate (a_result: INTEGER) is
@@ -142,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Display the window
-			show
+			show_internal
 		end
 		
 feature {NONE} -- External

@@ -92,7 +92,6 @@ feature
 		do
 		end
 
-<<<<<<< io_handler_windows.e
 feature {NONE} -- Implmentation
 
 	win_ioh_make_client (cb: POINTER; obj: IO_HANDLER_WINDOWS): POINTER is
@@ -109,8 +108,6 @@ feature {NONE} -- Implmentation
 			"DestroyWindow"
 		end
 
-=======
->>>>>>> 1.4
 end -- class IO_HANDLER_WINDOWS
 
 --|----------------------------------------------------------------

@@ -53,27 +53,20 @@ feature {EV_ANY_IMP} -- Access
 			translate_not_void: translate /= Void
 		local
 			t: TUPLE
-			gdk_event: POINTER
 		do
-			-- integer_pointer_tuple has been already correctly set by `marshal'.
-			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
-			if gdk_event /= default_pointer and then feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
-				-- Do nothing as we do not want 3 button presses processed
-			else
-				t := translate.item (integer_pointer_tuple)
-				if
-					--| FIXME IEK This needs to be optimized.
-					t /= empty_tuple and then internal.type_conforms_to (
-						internal.dynamic_type (an_agent),
-						f_of_tuple_type_id
-					)
-				then
-					-- This is a call to {ACTION_SEQUENCE}.call ([])
-					tuple_tuple.put (t, 1)
-					an_agent.call (tuple_tuple)
-				else	
-					an_agent.call (t)
-				end
+			t := translate.item (integer_pointer_tuple)
+			if
+				--| FIXME IEK This needs to be optimized.
+				t /= empty_tuple and then internal.type_conforms_to (
+					internal.dynamic_type (an_agent),
+					f_of_tuple_type_id
+				)
+			then
+				-- This is a call to {ACTION_SEQUENCE}.call ([])
+				tuple_tuple.put (t, 1)
+				an_agent.call (tuple_tuple)
+			else	
+				an_agent.call (t)
 			end
 		end
 		
@@ -263,7 +256,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			Result := [n_args, args]
 		end
 
-	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
+	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER] is
 			-- Translate function for MCL
 		local
 			gtkarg2: POINTER
@@ -324,7 +317,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 			gtkarg2: POINTER
 		do
 			gtkarg2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
-			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
+			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (gtkarg2)]
 		end
 		
 	empty_tuple_tuple: TUPLE is

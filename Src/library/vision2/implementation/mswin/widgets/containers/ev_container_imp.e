@@ -18,6 +18,8 @@ inherit
 
 	EV_SIZEABLE_CONTAINER_IMP
 
+	EV_MENU_ITEM_HANDLER_IMP
+
 	EV_WIDGET_IMP
 		undefine
 			internal_set_minimum_width,
@@ -27,22 +29,12 @@ inherit
 			minimum_width,
 			minimum_height
 		redefine
-			move_and_resize,
-			widget_make
+			move_and_resize
 		end
 
 	WEL_SB_CONSTANTS
 		export
 			{NONE} all
-		end
-
-feature {NONE} -- Initialization
-
-	widget_make (an_interface: EV_WIDGET) is
-			-- Creation of the widget.
-		do
-			{EV_WIDGET_IMP} Precursor (an_interface)
-			!! menu_items.make (1)
 		end
 
 feature -- Access
@@ -71,7 +63,7 @@ feature -- Access
 			Result := client_rect.height
 		end
 
-	background_pixmap: EV_PIXMAP
+	background_pixmap_imp: EV_PIXMAP_IMP
 			-- Pixmap used for the background of the widget
 
 feature -- Element change
@@ -104,7 +96,10 @@ feature -- Element change
 	set_background_pixmap (pix: EV_PIXMAP) is
 			-- Set the background pixmap and redraw the container.
 		do
-			background_pixmap := pix
+			if pix /= Void then
+				background_pixmap_imp ?= pix.implementation
+				background_pixmap_imp.reference
+			end
 			if exists then
 				invalidate
 			end
@@ -117,12 +112,6 @@ feature -- Assertion test
 		do
 			Result := is_child (a_child)
 		end
-
-feature {EV_MENU_HOLDER_IMP, EV_MENU_ITEM_HOLDER_IMP} -- Implementation
-
-	menu_items: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			-- It can be only one list by container because
-			-- all the ids must be different
 
 feature {NONE} -- WEL Implementation
 
@@ -139,14 +128,6 @@ feature {NONE} -- WEL Implementation
 			if pixcon /= Void then
 				pixcon.on_draw (draw_item)
 			end
-		end
-
-	on_menu_command (menu_id: INTEGER) is
-			-- The `menu_id' has been choosen from the menu.
-			-- If this feature is called, it means that the 
-			-- child is a menu.
-		do
-			menu_items.item(menu_id).on_activate
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
@@ -171,13 +152,10 @@ feature {NONE} -- WEL Implementation
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background  
-		local
-			pix: EV_PIXMAP_IMP
 		do
  			if exists then
-				if background_pixmap /= Void then
-					pix ?= background_pixmap.implementation
-					create Result.make_by_pattern (pix.bitmap)
+				if background_pixmap_imp /= Void then
+					create Result.make_by_pattern (background_pixmap_imp.bitmap)
 				elseif background_color_imp /= Void then
 					create Result.make_solid (background_color_imp)
 				end
@@ -247,8 +225,8 @@ feature {NONE} -- WEL Implementation
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
 		do
-			if background_pixmap /= Void then
-				background_pixmap.destroy
+			if background_pixmap_imp /= Void then
+				background_pixmap_imp.unreference
 			end
 		end
 

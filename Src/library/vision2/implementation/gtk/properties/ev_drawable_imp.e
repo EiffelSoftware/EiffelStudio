@@ -109,13 +109,13 @@ feature -- Drawing operations
 		do
 		end
 
-	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		do
 		end
 
-	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
 			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -140,13 +140,13 @@ feature -- filling operations
 		do
 		end
 
-	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		do
 		end
 
-	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
 			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.

@@ -289,11 +289,11 @@ int idx;			/* Index within string where insertion begins */
  * General routines.
  */
 
-public int str_code(str, i)
-char *str;
-int i;
+public EIF_INTEGER str_code(str, i)
+EIF_CHARACTER *str;
+EIF_INTEGER i;
 {
-    return (int) str[i-1];	/* Numeric code of 'i'-th character in 'str' */
+    return (EIF_INTEGER) str[i-1]; /* Numeric code of 'i'-th character in 'str' */
 }
 
 public void str_blank(str, n)

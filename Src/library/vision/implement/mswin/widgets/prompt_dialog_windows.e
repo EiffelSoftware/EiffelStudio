@@ -345,6 +345,10 @@ feature {NONE} -- Implementation
 				ok_button.move (width_used, client_rect.height - b_height - 2 * Dialog_unit)
 				width_used := width_used + ok_button.width + Dialog_unit
 			end
+			if not apply_button_hidden then
+				apply_button.move (width_used, client_rect.height - b_height - 2 * Dialog_unit)
+				width_used := width_used + apply_button.width + Dialog_unit
+			end
 			if not cancel_button_hidden then
 				cancel_button.move (width_used, client_rect.height - b_height - 2 * Dialog_unit)
 				width_used := width_used + cancel_button.width + Dialog_unit
@@ -352,9 +356,6 @@ feature {NONE} -- Implementation
 			if not help_button_hidden then
 				help_button.move (width_used, client_rect.height - b_height - 2 * Dialog_unit)
 				width_used := width_used + help_button.width + Dialog_unit
-			end
-			if not apply_button_hidden then
-				apply_button.move (width_used, client_rect.height - b_height - 2 * Dialog_unit)
 			end
 		end
 

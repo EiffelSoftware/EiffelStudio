@@ -16,10 +16,13 @@ feature
 			class_path: STRING
 			jvm: JAVA_VM
 			ex: EXCEPTIONS
+			exec: EXECUTION_ENVIRONMENT
 		once
+			create exec
+
 				-- First obtain the value of the CLASSPATH environment 
 				-- variable
-			cpp := getenv ($(("CLASSPATH").to_c))
+			cpp := exec.get ($(("CLASSPATH").to_c))
 			if cpp = default_pointer then
 				!!ex
 				ex.raise ("Can't get CLASSPATH")
@@ -37,12 +40,6 @@ feature
 			Result := jvm.create_vm (class_path)
 		ensure
 			Result /= Void
-		end
-
-feature {NONE}
-
-	getenv (str: POINTER): POINTER is
-		external "C"
 		end
 
 end

@@ -17,122 +17,39 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TREE [G] inherit
-
-	LINEAR [G] --| Operations on items of children	
-		rename
-			item as child_item,
-			readable as child_readable,
-			start as child_start,
-			finish as child_finish,
-			forth as child_forth,
-			back as child_back,
-			off as child_off,
-			before as child_before,
-			after as child_after,
-			index as child_index
-		undefine
-			exhausted, child_off
-		redefine
-			has, sequential_representation
-		select
-			child_item
-		end;
-
-	CURSOR_STRUCTURE [G] --| Operations on items of children
-		rename
-			readable as child_readable,
-			add as child_add,
-			replace as child_replace,
-			writable as child_writable,
-			remove as child_remove,
-			count as arity,
-			go_to as child_go_to,
-			cursor as child_cursor,
-			fill as old_fill
-		export
-			{NONE} old_fill
-		undefine
-			old_fill
-		redefine
-			empty
-		end;
-
-	ACTIVE [TREE [G]] --| Operations on children
-		rename
-			item as child,
-			readable as readable_child,
-			add as add_child,
-			replace as replace_child,
-			writable as writable_child,
-			remove as remove_child,
-			contractable as child_contractable,
-			count as arity,
-			remove_item as active_rmv_item,
-			sequential_representation as active_seq_rep,
-			fill as active_fill,
-			has as active_has
-		export
-			{NONE}	active_seq_rep, active_fill,
-					active_has, active_rmv_item
-		redefine
-			empty
-		end;
-
-	LINEAR [TREE [G]] --| Operations on children
-		rename
-			search as search_child,
-			search_equal as search_equal_child,
-			index_of as index_of_child,
-			readable as child_readable,
-			start as child_start,
-			finish as child_finish,
-			forth as child_forth,
-			back as child_back,
-			off as child_off,
-			before as child_before,
-			after as child_after,
-			index as child_index,
-			sequential_representation as linear_seq_rep,
-			sequential_search as linear_seq_srch,
-			seq_search_equal as linear_seq_srch_equal,
-			search_same as linear_search_same,
-			has as linear_has,
-			item as child2
-		export
-			{NONE}
-				linear_seq_rep, linear_has,
-				linear_seq_srch, child2,
-				linear_seq_srch_equal,
-				linear_search_same
-		select
-			index_of, search, sequential_search,
-			search_equal, search_same, seq_search_equal
-		end;
-
-	FINITE
-		redefine
-			empty
-		end;
-
-	ACTIVE [G] --| Operations on item of `Current'
-		rename
-			fill as old_fill
-		export
-			{NONE} old_fill
-		redefine
-			empty
-		select
-			item, replace, add, writable, remove, count,
-			readable, contractable, sequential_representation,
-			has, old_fill, remove_item
-		end
-
+deferred class TREE [G]
 
 feature -- Access
 
 	parent: TREE [G];
 			-- Parent of `Current'
+
+	child: like parent is
+		deferred
+		end;
+
+   item: G is
+			-- Item in current node
+		deferred
+		end; -- item
+
+   child_item: like item is
+		deferred
+		end; -- child_item
+
+	arity: INTEGER is
+		deferred
+		end;
+
+	child_cursor: CURSOR is
+			-- Current cursor position
+		deferred
+		end;
+
+	child_go_to (p: CURSOR) is
+			-- Move cursor to position `p'.
+		deferred
+		end;
 
 	first_child: like parent is
 			-- Left most child
@@ -175,7 +92,6 @@ feature -- Access
 		end;
 
 	readable: BOOLEAN is true;
-			-- Is there a current item that may be read?
 
 	child_readable: BOOLEAN is
 			-- Is there a current `child_item' to be read?
@@ -187,6 +103,22 @@ feature -- Access
 			-- Is there a current child to be read?
 		do
 			Result := not child_off
+		end;
+
+	child_off: BOOLEAN is
+		deferred
+		end;
+
+	child_before: BOOLEAN is
+		deferred
+		end;
+
+	child_after: BOOLEAN is
+		deferred
+		end;
+
+	child_index: INTEGER is
+		deferred
 		end;
 
 feature {TREE} -- Access
@@ -220,6 +152,15 @@ feature {TREE} -- Access
 
 feature -- Insertion
 
+	replace (v: like item) is
+			-- Replace item in `Current' by `v'.
+		require
+			is_writable: writable
+		deferred
+		ensure
+			item_inserted: item = v
+		end; -- replace
+		
 	put (v: like item) is
 			-- Replace item in `Current' by `v'.
 			-- (Synonym for replace)
@@ -228,9 +169,17 @@ feature -- Insertion
 		do
 			replace (v)
 		ensure
-			item_inserted: item = v;
-	--		same_count: count = old count
-		end;
+			item_inserted: item = v
+		end; -- put
+
+	child_replace (v: like item) is
+			-- Put `v' at current child position.
+		require
+			child_writable: child_writable
+		deferred
+		ensure
+			item_inserted: child_item = v
+		end; -- child_replace
 
 	child_put (v: like item) is
 			-- Put `v' at current child position.
@@ -240,9 +189,17 @@ feature -- Insertion
 		do
 			child_replace (v)
 		ensure
-			item_inserted: child_item = v;
-	--		same_count: count = old count
-		end;
+			item_inserted: child_item = v
+		end; -- child_put
+
+	replace_child (n: like parent) is
+			-- Put `n' at current child position.
+		require
+			writable_child: writable_child
+		deferred
+		ensure
+			child_replaced: child = n
+		end; -- replace_child
 
 	put_child (n: like parent) is
 			-- Put `n' at current child position.
@@ -252,9 +209,8 @@ feature -- Insertion
 		do
 			replace_child (n)
 		ensure
-			child_replaced: child = n;
-	--		same_count: count = old count
-		end;
+			child_replaced: child = n
+		end; -- put_child
 
 	fill (other: TREE [G]) is
 			-- Fill `Current' with as many elements of `other'
@@ -280,7 +236,7 @@ feature -- Insertion
 			-- Is there a current child that may be modified?
 		do
 			Result := not child_off
-		end;
+		end
 
 feature {TREE} -- Insertion
 
@@ -335,7 +291,9 @@ feature -- Transformation
 			fl: FIXED_LIST [G]
 		do
 			!!fl.make (count);
-			fl.add (item);
+			fl.start;
+			fl.replace (item);
+			fl.forth;
 			fill_list (fl);
 			Result := fl
 		end;
@@ -351,7 +309,8 @@ feature {TREE} -- Transformation
 				child_off
 			loop
 				if child /= Void then
-					fl.add (child_item);
+					fl.replace (child_item);
+					fl.forth;
 					child.fill_list (fl)
 				end;
 				child_forth
@@ -421,6 +380,10 @@ feature -- Cursor
 		ensure then
 			is_last_child: not empty implies child_islast
 		end; -- child_finish
+
+	child_forth is
+		deferred
+		end;
 
 	child_go_i_th (i: INTEGER) is
 			-- Move cursor to `i'-th child.

@@ -21,18 +21,14 @@ class BINARY_SEARCH_TREE [G -> PART_COMPARABLE] inherit
 	BINARY_TREE [G]
 		rename
 			make as bt_make,
-			put as bt_put
-		export
-			{BINARY_SEARCH_TREE}
-				put_left_child, put_right_child,
-				remove_left_child, remove_right_child
+			put as bt_put,
+			min as bt_min,
+			max as bt_max
+		export {BINARY_SEARCH_TREE}
+			put_left_child, put_right_child,
+			remove_left_child, remove_right_child
 		redefine
 			parent, has
-		end;
-
-	SORTED_STRUCT [G]
-		redefine
-			min, max
 		end
 
 creation
@@ -62,7 +58,7 @@ feature -- Access
 			-- Is there a node with item `v' in `Current'?
 			-- (According to the `='
 			-- discrimination rule)
-		require
+		require else
 			item_exists: v /= Void
 		do
 			if v = item then
@@ -396,6 +392,30 @@ feature {NONE} -- Creation
 		ensure
 			new_tree_exist: Result /= Void;
 			new_tree_item: Result.item = v
-		end;
+		end
+
+feature
+
+   --sorted: BOOLEAN is
+         -- Is `Current' sorted?
+      --local
+         --m: like item
+      --do
+         --if empty then
+            --Result := true
+         --else
+            --from
+               --start;
+               --m := item;
+               --forth
+            ----until
+               --exhausted or else (item < m)
+            --loop
+               --m := item;
+               --forth
+            --end;
+            --Result := exhausted
+         --end
+      --end
 
 end -- class BINARY_SEARCH_TREE

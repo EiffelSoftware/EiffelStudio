@@ -46,7 +46,7 @@ feature -- Creation
 
 feature -- Access
 
-	parent: BINARY_TREE [G];
+	parent: BINARY_TREE [G]
 			-- Parent of `Current'
 
 feature -- Insertion

@@ -30,10 +30,8 @@ class LINKED_TREE [G] inherit
 			put_between as l_put_between,
 			put_right as l_put_right
 		export
-			{LINKED_TREE}
-				l_put_right, forget_right;
-			{NONE}
-				l_put_between
+			{LINKED_TREE} l_put_right, forget_right;
+			{NONE} l_put_between
 		end;
 
 	LINKABLE [G]
@@ -90,18 +88,15 @@ class LINKED_TREE [G] inherit
 			isfirst as child_isfirst,
 			islast as child_islast
 		export
-			{NONE}
-				ll_has, ll_add, ll_duplicate,
-				ll_put, ll_replace, ll_fill,
-				ll_merge_left, ll_merge_right,
-				ll_contractable, ll_full
+			{ANY} child
 		undefine
-			child_readable, is_leaf, arity,
-			child_writable, child_extensible,
+			child_readable, is_leaf,
+			child_writable,
 			child_contractable,
-			sequential_representation
+			sequential_representation,
+			child_isfirst, child_islast, valid_cursor_index
 		redefine
-			first_child
+			first_child, new_cell
 		end
 
 creation
@@ -113,7 +108,7 @@ feature -- Creation
 	make (v: like item) is
 			-- Create single node with item `v'.
 		do
-			l_put (v);
+			put (v);
 			ll_make
 		end;
 
@@ -125,13 +120,27 @@ feature -- Access
 	first_child: like parent;
 			-- First child of `Current'
 
+   left_sibling: like parent is
+			-- Left neighbor of `Current' (if any)
+			do
+				if parent /= Void then
+					from
+						Result := parent.first_child;
+					until
+						Result = Void or else Result.right_sibling = Current
+					loop
+						Result := Result.right_sibling
+					end
+				end
+			end
+
 feature -- Insertion
 
 	child_add (v: like item) is
 			-- Add `v' to the children list of `Current'.
 			-- Do not move child cursor.
 		do
-			add (v);
+			ll_add (v);
 			last_child.attach_to_parent (Current)
 		end;
 
@@ -262,6 +271,11 @@ feature {NONE} -- Insertion
 		end;
 
 feature {LINKED_TREE} -- Creation
+
+	new_cell (v: like item): like first_child is
+		do
+			!!Result.make (v)
+		end;
 
 	new_tree: like Current is
 			-- Instance of class `like Current'.

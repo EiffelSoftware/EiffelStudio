@@ -73,7 +73,7 @@ feature -- Creation
 
 feature -- Access
 
-	item: G is
+	item: like first is
 			-- Current item
 		require else
 			index_is_valid: valid_index (index)
@@ -87,7 +87,7 @@ feature -- Access
 			Result := i_th (1);
 		end;
 
-	last: G is
+	last: like first is
 			-- Item at last position
 		do
 			Result := i_th (count)
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Insertion
 
-	replace (v: G) is
+	replace (v: like first) is
 			-- Replace current item by `v'.
 		do
 			put_i_th (v, index)

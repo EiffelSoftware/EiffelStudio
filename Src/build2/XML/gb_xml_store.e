@@ -154,35 +154,71 @@ feature -- Basic operation
 		do
 			object_written_action := an_agent
 		end
+		
+	store_individual_object (object: GB_OBJECT) is
+			-- Build a representation of `object' as root node within `last_stored_individual_object'
+		require
+			object_not_void: object /= Void
+		local
+			first_element, current_element: XM_ELEMENT
+		do
+			create last_stored_individual_object_document.make_with_root_named ("new_object", create {XM_NAMESPACE}.make_default)
+			create first_element.make_root (last_stored_individual_object_document, item_string, create {XM_NAMESPACE}.make_default)
+			
+			
+			current_element := new_child_element (first_element, item_string, "")
+			add_attribute_to_element (current_element, "type", "", object.type)
+			first_element.force_first (current_element)
+			
+			add_new_object_to_output (object, current_element, create {GB_GENERATION_SETTINGS})
+		end
+		
+	last_stored_individual_object: XM_ELEMENT is
+			-- `Result' is XML representation of last GB_OBJECT passed to
+			-- `store_individual_object'.
+		do
+			if last_stored_individual_object_document /= Void then
+				 Result := last_stored_individual_object_document.root_element
+			end
+		end
 
-feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
+feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 
 	add_new_object_to_output (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			-- Add XML representation of `an_object' to `element'.
 		local
-			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			new_widget_element: XM_ELEMENT
 			gb_parent_object: GB_PARENT_OBJECT
+			current_object: GB_OBJECT
+			children: ARRAYED_LIST [GB_OBJECT]
 		do
+			
 			output_attributes (an_object, element, generation_settings)
 			gb_parent_object ?= an_object
 				-- We check that the object may have children.
 			if gb_parent_object /= Void then
-				layout_item ?= gb_parent_object.layout_item
-				if layout_item /= Void and then not layout_item.is_empty then
-					from
-						layout_item.start	
+				if not gb_parent_object.children.is_empty then
+					create children.make (gb_parent_object.children.count)
+					from	
+						gb_parent_object.children.start
 					until
-						layout_item.off
+						gb_parent_object.children.off
 					loop
-						current_layout_item ?= layout_item.item
-						new_widget_element := create_widget_instance (element, current_layout_item.object.type)
+						children.extend (gb_parent_object.children.item)
+						gb_parent_object.children.forth
+					end		
+					from	
+						children.start
+					until
+						children.off
+					loop
+						current_object := children.item
+						new_widget_element := create_widget_instance (element, current_object.type)
 						element.force_last (new_widget_element)
-						add_new_object_to_output (current_layout_item.object, new_widget_element, generation_settings)
-						layout_item.forth
+						add_new_object_to_output (current_object, new_widget_element, generation_settings)
+						children.forth
 					end
 				end
-				
 			end
 		end
 		
@@ -359,5 +395,8 @@ feature {NONE} -- Implementation
 		
 	object_written_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]
 			-- An agent to be fired when a new object is written to the XML.
+			
+	last_stored_individual_object_document: XM_DOCUMENT
+		-- Document used by `store_individual_object'.
 
 end -- class GB_XML_STORE

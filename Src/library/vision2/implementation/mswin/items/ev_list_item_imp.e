@@ -12,9 +12,6 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_ITEM_IMP
-		redefine
-			parent
-		end
 
 	EV_SYSTEM_PEN_IMP
 		export
@@ -23,37 +20,39 @@ inherit
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_pixmap,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_LIST) is
-			-- Add and create an item with an empty label.
+	make is
+			-- Create the widget with `par' as parent.
 		do
-			make_with_text (par, "")
-		end
-
-	make_with_text (par: EV_LIST; txt: STRING) is
-			-- Add and create an item with `txt' as label.
-		do
-			parent ?= par.implementation
-			check
-				parent_not_void: parent /= Void
-			end
-			text := txt
+			set_text ("")
 		end
 
 feature -- Access
 
-	text: STRING 
-			-- Current label of the item
+	parent_imp: EV_LIST_ITEM_CONTAINER_IMP
+			-- Tree that contains the item
+
+	parent: EV_LIST is
+			-- Parent of the current item.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
+		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := parent.is_selected (id)
+			Result := parent_imp.is_selected (id)
 		end
 
 	destroyed: BOOLEAN is
@@ -61,7 +60,6 @@ feature -- Status report
 			-- Yes if the item doesn't exist in the parent.
 		do
 			Result := False
-				--not parent.ev_children.has (Current)
 		end
 
 	index: INTEGER is
@@ -80,7 +78,7 @@ feature -- Status report
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			Result := (index = parent.count)
+			Result := (index = parent_imp.count)
 		end
 	
 feature -- Status setting
@@ -88,14 +86,17 @@ feature -- Status setting
 	destroy is
 			-- Destroy the actual item.
 		do
-			parent.remove_item (id)
-			interface.remove_implementation
+			if parent_imp /= Void then
+				parent_imp.remove_item (id)
+				parent_imp := Void
+			end
+			interface := Void
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
-			parent.select_item (id + 1)
+			parent_imp.select_item (id + 1)
 		end
 
 	toggle is
@@ -105,38 +106,29 @@ feature -- Status setting
 			set_selected (not is_selected)
 		end
 
---	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void.
-			-- We have to add the child to the new parent before
-			-- to remove it from the old one.
---		local
---			par_imp: EV_CONTAINER_IMP
---		do
---			parent.remove_item
---			if par /= Void then
---				par.set_name (text)
---				par.
---
---				parent ?= par
---				check
---					parent_not_void: parent /= Void
---				end
---			else
---				parent := Void
---			end
---		end
-
 feature -- Element change
+
+	set_parent (par: EV_LIST) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (id)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
 
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
 			text := txt
---			parent.invalidate
-			if parent /= Void then
-				parent.delete_string (id)
-				parent.insert_string_at (txt, id)
+			if parent_imp /= Void then
+				parent_imp.delete_string (id)
+				parent_imp.insert_string_at (txt, id)
 			end
 		end
 
@@ -157,11 +149,6 @@ feature -- Event -- removing command association
 		do
 			remove_command (Cmd_item_dblclk)
 		end	
-
-feature {NONE} -- Implementation
-
-	parent: EV_LIST_ITEM_CONTAINER_IMP
-			-- list that contains the current item.
 
 feature {EV_LIST_ITEM_CONTAINER_IMP} -- Implementation for drawing
 
@@ -233,18 +220,18 @@ feature {NONE} -- Implementation for drawing
 	draw_unselected_body (dc: WEL_DC; rect: WEL_RECT) is
 			-- Draw the body of the button : bitmap + text
 		do
-			dc.set_background_color (parent.background_color_imp)
-			dc.fill_rect (rect, parent.background_brush)
+			dc.set_background_color (parent_imp.background_color_imp)
+			dc.fill_rect (rect, parent_imp.background_brush)
 			if pixmap_imp /= Void and text /= "" then
 				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
 			rect.set_left (pixmap_imp.width + 5)
-				dc.set_text_color (parent.foreground_color_imp)
+				dc.set_text_color (parent_imp.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 				rect.set_left (0)
 			elseif pixmap_imp /= Void then
 				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
 			elseif text /= "" then
-				dc.set_text_color (parent.foreground_color_imp)
+				dc.set_text_color (parent_imp.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 			end
 		end	

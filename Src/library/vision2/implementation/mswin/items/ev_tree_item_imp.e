@@ -11,9 +11,6 @@ inherit
 	EV_TREE_ITEM_I
 
 	EV_ITEM_IMP
-		redefine
-			parent
-		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
 		rename
@@ -38,33 +35,34 @@ inherit
 		end
 
 creation
-	make_with_text
+	make,
+	make_with_text,
+	make_with_pixmap,
+	make_with_all
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (par: EV_TREE_ITEM_CONTAINER) is
-			-- Create a tree-item with an empty label and
-			-- `par' as parent.
+	make is
+			-- Create the widget with `par' as parent.
 		do
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
-			parent ?= par.implementation
-		end
-
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
-			-- Create a tree-item with `txt' as label and
-			-- `par' as parent.
-		do
-			wel_make
-			set_mask (Tvif_text + Tvif_state + Tvif_handle)
-			parent ?= par.implementation
-			set_text (txt)
 		end
 
 feature -- Access
 
-	text: STRING
-			-- Text of the item
+	parent_imp: EV_TREE_ITEM_CONTAINER_IMP
+			-- Tree that contains the item
+
+	parent: EV_TREE_ITEM_CONTAINER is
+			-- Parent of the current item.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
+		end
 
 feature -- Status report
 
@@ -97,6 +95,10 @@ feature -- Status setting
 	destroy is
 			-- Destroy the current item
 		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
 			destroy_item
 		end
 
@@ -105,6 +107,48 @@ feature -- Status setting
 		do
 			text := txt
 			wel_set_text (txt)
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
+
+	add_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Add `item_imp' to the list
+		local
+			insert_struct: WEL_TREE_VIEW_INSERT_STRUCT
+			tree: WEL_TREE_VIEW
+			ev_tree: EV_TREE_IMP
+		do
+			!! insert_struct.make
+			insert_struct.set_parent (h_item)
+			insert_struct.set_tree_view_item (item_imp)
+			tree ?= wel_window
+			tree.insert_item (insert_struct)
+			item_imp.set_h_item (tree.last_item)
+			ev_tree ?= wel_window
+			ev_tree.ev_children.extend (item_imp, tree.last_item)
+		end
+
+	remove_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Remove `item_imp' from the children.
+		local
+			ev_tree: EV_TREE_IMP
+		do
+			ev_tree ?= wel_window
+			ev_tree.remove_item (item_imp)
 		end
 
 feature -- Event : command association
@@ -123,33 +167,6 @@ feature -- Event -- removing command association
 			-- the selection subtree is expanded or collapsed.
 		do
 			remove_command (Cmd_item_subtree)
-		end
-
-feature {NONE} -- Implementation
-
-	parent: EV_TREE_ITEM_CONTAINER_IMP
-			-- Tree that contains the item
-
-	add_item (an_item: EV_TREE_ITEM) is
-			-- Add `item' to the list
-		local
-			item_imp: EV_TREE_ITEM_IMP
-			insert_struct: WEL_TREE_VIEW_INSERT_STRUCT
-			tree: WEL_TREE_VIEW
-			ev_tree: EV_TREE_IMP
-		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
-			!! insert_struct.make
-			insert_struct.set_parent (h_item)
-			insert_struct.set_tree_view_item (item_imp)
-			tree ?= wel_window
-			tree.insert_item (insert_struct)
-			item_imp.set_h_item (tree.last_item)
-			ev_tree ?= wel_window
-			ev_tree.ev_children.extend (item_imp, tree.last_item)
 		end
 
 end -- class EV_TREE_ITEM_IMP

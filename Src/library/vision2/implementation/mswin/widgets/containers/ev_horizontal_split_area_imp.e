@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelVision vertical split area. Mswindows implementation."
+	description: "EiffelVision horizontal split. Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
@@ -7,17 +7,17 @@ indexing
 	
 class
 	
-	EV_VERTICAL_SPLIT_AREA_IMP
+	EV_HORIZONTAL_SPLIT_AREA_IMP
 	
 inherit
 	
-	EV_VERTICAL_SPLIT_AREA_I
+	EV_HORIZONTAL_SPLIT_AREA_I
 		
 	EV_SPLIT_AREA_IMP
 		redefine
-			child_minwidth_changed,
 			child_minheight_changed,
-			child_height_changed,
+			child_minwidth_changed,
+			child_width_changed,
 			wel_window
 		end
 	
@@ -28,7 +28,7 @@ creation
 feature -- Initilization
 
 	make (par: EV_CONTAINER) is
-			-- Create a fixed widget. 	
+			-- Create a fixed widget. 
 		do
 			test_and_set_parent (par)
 			!! wel_window.make (parent_imp.wel_window, Current)
@@ -40,7 +40,7 @@ feature {EV_WEL_SPLIT_WINDOW} -- Access
 			-- Position of the splitter in the window
 		do
 			if child1 /= Void then
-				Result := child1.height
+				Result := child1.width
 			else
 				Result := 0
 			end
@@ -53,7 +53,7 @@ feature {EV_WEL_SPLIT_WINDOW} -- Access
 			if child1 = Void then
 				Result := 0
 			else
-				Result := child1.minimum_height
+				Result := child1.minimum_width
 			end
 		end	
 
@@ -62,40 +62,30 @@ feature {EV_WEL_SPLIT_WINDOW} -- Access
 			-- Depends of the second child minimum size
 		do
 			if child2 = Void then
-				Result := height - wel_window.size
+				Result := width - wel_window.size
 			else
-				Result := height - child2.minimum_height - wel_window.size
+				Result := width - child2.minimum_width - wel_window.size
 			end
 		end
 
 feature -- Implementation
 
-	child_height_changed (new_height: INTEGER; the_child: EV_WIDGET_IMP) is
+	child_width_changed (new_width: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the window and redraw the split according to
 			-- the resize of a child.
 		local
-			local_height: INTEGER
+			temp_width: INTEGER
 		do
 			if the_child = child1 then
 				wel_window.refresh
 			else
-				local_height := wel_window.size + child1.height
+				temp_width := wel_window.size + child1.width
 				if child2 /= Void then
-					child2.set_y (local_height)
-					local_height := local_height + child2.height
-					wel_window.set_height (local_height)
+					child2.set_x (temp_width)
+					temp_width := temp_width + child2.width
+					wel_window.set_width (temp_width)
 				end
-				parent_imp. child_height_changed (height, Current)
-			end
-		end
-
-	set_local_width (new_width: INTEGER) is
-			-- Make `new_width' the new `width' of the 
-			-- container and both children.
-		do
-			if new_width > minimum_width then
-				wel_window.set_width (new_width)
-				resize_children (level)
+				parent_imp.child_width_changed (width, Current)
 			end
 		end
 
@@ -105,50 +95,62 @@ feature -- Implementation
 		do
 			if new_height > minimum_height then
 				wel_window.set_height (new_height)
-				child2.parent_ask_resize (child2.width, new_height - child1.height - wel_window.size)
+				resize_children (level)
 			end
 		end
 
-	child_minheight_changed (child_new_minimum: INTEGER) is
-			-- Change the current minimum_width because the child did.
-		local
-			local_height: INTEGER
+	set_local_width (new_width: INTEGER) is
+			-- Make `new_width' the new `width' of the 
+			-- container and both children.
 		do
-			if child1 /= Void then
-				local_height := local_height + child1.minimum_height
+			if new_width > width then
+				wel_window.set_width (new_width)
+				if child2 /= Void then
+					child2.parent_ask_resize (new_width - child1.width - wel_window.size, child2.height)
+				end
 			end
-			if child2 /= Void then
-				local_height := local_height + child2.minimum_height
-			end
-			set_minimum_height (local_height + wel_window.size)
 		end
 
 	child_minwidth_changed (child_new_minimum: INTEGER) is
+			-- Change the current minimum_width because the child did.
+		local
+			local_width: INTEGER
+		do
+			if child1 /= Void then
+				local_width := local_width + child1.minimum_width
+			end
+			if child2 /= Void then
+				local_width := local_width + child2.minimum_width
+			end
+			set_minimum_width (local_width + wel_window.size)
+		end
+
+	child_minheight_changed (child_new_minimum: INTEGER) is
 			-- Change the current minimum_height because onr of the children did.
 		do
-			set_minimum_width (child_new_minimum.max(minimum_width))
+			set_minimum_height (child_new_minimum.max(minimum_height))
 		end
 
 feature {EV_WEL_SPLIT_WINDOW} -- Implementation
 
 	resize_children (a_level: INTEGER) is
 			-- Resize the two children according to the new level of the 
-			-- splitter
+			-- splitter.
 		do
 			if child1 /= Void then
-				child1.parent_ask_resize (width, a_level)
+				child1.parent_ask_resize (a_level, height)
 			end
 			if child2 /= Void then
-				child2.set_move_and_size (0, a_level + wel_window.size, 
-							width, height - a_level - wel_window.size)
+				child2.set_move_and_size (a_level + wel_window.size, 0, 
+							width - a_level - wel_window.size, height)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	wel_window: EV_WEL_VERTICAL_SPLIT_WINDOW
+	wel_window: EV_WEL_HORIZONTAL_SPLIT_WINDOW
 
-end -- EV_VERTICAL_SPLIT_AREA_IMP
+end -- EV_HORIZONTAL_SPLIT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

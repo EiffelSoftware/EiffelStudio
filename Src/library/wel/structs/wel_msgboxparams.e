@@ -22,6 +22,11 @@ feature {NONE} -- initialization
 	make_basic (a_window: WEL_WINDOW; a_text, a_title: STRING; a_style,a_language,a_sublanguage: INTEGER) is
 			-- create a MSGBOXPARAMS structure
 			-- without user icon.
+			-- With `a_window' as parent, `a_text' displayed as message, `a_title' displayed in title bar.
+			-- `a_style' as the window style.
+			-- `a_language' and `a_sublanguage' specify in which language the text on the buttons is displayed.
+			-- Note that in order for the langauge settings to work, the necessary components must be installed
+			-- on the system.
 		require
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void
@@ -45,7 +50,12 @@ feature {NONE} -- initialization
 
 	make_by_id (a_window: WEL_WINDOW; a_text, a_title: STRING; a_style, an_id, a_language, a_sublanguage: INTEGER)is
 			-- create a MSGBOXPARAMS structure 
-			-- with user icon defined by `an_id'
+			-- with user icon defined by `an_id, `a_window' as parent, `a_text' displayed as message,
+			--`a_title' displayed in title bar and `a_style' as the window style.
+			-- `a_language' and `a_sublanguage' specify in which language the text on the buttons is displayed.
+			-- Note that in order for the langauge settings to work, the necessary components must be installed
+			-- on the system.
+
 		require
 			text_not_void: a_text /= Void
 			title_not_void: a_title /= Void

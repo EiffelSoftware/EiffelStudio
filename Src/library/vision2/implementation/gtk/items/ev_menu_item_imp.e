@@ -48,17 +48,18 @@ feature {NONE} -- Initialization
 			-- Create menu item
 		do
 			widget := gtk_menu_item_new
+			show
 			initialize
 			create_text_label (txt)
 			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
-			show
 		end		
 
 	initialize is
 			-- Common initialization for buttons
 		do
 			box := gtk_hbox_new (False, 5)
+			gtk_widget_show (box)
 			gtk_container_add (GTK_CONTAINER (widget), box)
 		end
 

@@ -11,9 +11,6 @@ inherit
 	EV_TREE_ITEM_I
 	
 	EV_ITEM_IMP
-		undefine
-			show
-		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
 		rename
@@ -69,6 +66,7 @@ feature {EV_TREE_ITEM} -- Implementation
 			end
 			if GTK_TREE_ITEM_SUBTREE(widget) = default_pointer then
 				p := gtk_tree_new
+				--gtk_widget_show (p)
 				gtk_tree_item_set_subtree (widget, p)
 			end
 			gtk_tree_append (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)

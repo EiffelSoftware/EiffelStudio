@@ -16,6 +16,8 @@ inherit
 		undefine
 			set_label_widget,
 			label_widget
+		redefine
+			create_text_label
 		end
 
 	EV_PIXMAP_CONTAINER_IMP
@@ -34,7 +36,8 @@ feature {NONE} -- Initialization
 	make (par: EV_LIST) is
 			-- Create an item with an empty name.
 		do
-			widget := gtk_list_item_new			
+			widget := gtk_list_item_new
+			show		
 			initialize
 		end
 	
@@ -55,6 +58,7 @@ feature {NONE} -- Initialization
 			-- Common initialization for buttons
 		do
 			box := gtk_hbox_new (False, 0)
+			gtk_widget_show (box)
 			gtk_container_add (GTK_CONTAINER (widget), box)
 		end			
 
@@ -85,6 +89,18 @@ feature -- Status setting
 		do
 			set_selected (not is_selected)
 		end
+
+	create_text_label (txt: STRING) is
+		local
+                        a: ANY
+		do
+			a ?= txt.to_c
+			
+			set_label_widget (gtk_label_new ($a))
+			gtk_widget_show (label_widget)
+			gtk_box_pack_start (GTK_BOX (box), label_widget, False, True, 0)
+		end			
+
 
 feature -- Event : command association
 

@@ -429,9 +429,9 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (Max_text_face)
+			create Result.make (Max_text_face)
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			nb := cwin_get_text_face (item,
 				Max_text_face, a_wel_string.item)
 			Result := a_wel_string.string
@@ -454,6 +454,14 @@ feature -- Status report
 			exists: exists
 		do
 			Result := device_caps (Vertical_resolution)
+		end
+
+	mask_blt_supported: BOOLEAN is
+		once
+			if not mask_blt_funcaddr_retrieved then
+				retrieve_mask_blt_funcaddr
+			end
+			Result := (internal_mask_blt_funcaddr /= Void)
 		end
 
 feature -- Status setting
@@ -1248,6 +1256,30 @@ feature -- Basic operations
 			cwin_bit_blt (item, x_destination, y_destination,
 				a_width, a_height, dc_source.item, x_source,
 				y_source, raster_operation)
+		end
+
+	mask_blt (x_destination, y_destination, a_width, a_height: INTEGER;
+			dc_source: WEL_DC; x_source, y_source: INTEGER;
+			mask_bitmap: WEL_BITMAP; x_mask, y_mask,
+			raster_operation: INTEGER) is
+		-- Combines the color data for the source and destination bitmaps using the specified mask and raster operation. 
+			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
+			-- `raster_operation' values.
+		require
+			exists: exists
+			positive_width: a_width >= 0
+			positive_height: a_height >= 0
+			dc_source_not_void: dc_source /= Void
+			dc_source_exists: dc_source.exists
+			mask_bitmap_not_void: mask_bitmap /= Void
+			function_is_supported: mask_blt_supported
+		do
+			if not mask_blt_funcaddr_retrieved then
+				retrieve_mask_blt_funcaddr
+			end
+			cwin_mask_blt (mask_blt_funcaddr, item, x_destination, y_destination,
+				a_width, a_height, dc_source.item, x_source, y_source,
+				mask_bitmap.item, x_mask, y_mask, raster_operation)
 		end
 
 	stretch_blt (x_destination, y_destination, width_destination,
@@ -2077,6 +2109,8 @@ feature {NONE} -- Externals
 			"file_ps"
 		end
 
+	
+
 	Opaque: INTEGER is
 		external
 			"C [macro <windows.h>]"
@@ -2089,6 +2123,46 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>]"
 		alias
 			"TRANSPARENT"
+		end
+
+	cwin_get_function_address (module_name: POINTER; function_name: POINTER): POINTER is
+		external
+			"C(char *, char *): FARPROC | %"wel_dynload.h%""
+		end
+
+	cwin_mask_blt (function_addr: POINTER; hdc_dest: POINTER; x_dest, y_dest, a_width,
+			a_height: INTEGER; hdc_src: POINTER; x_src,
+			y_src: INTEGER; hbm_mask: POINTER; x_mask, y_mask, rop: INTEGER) is
+			-- SDK MaskBlt
+		external
+			"C (FARPROC, HDC, int, int, int, int, HDC, int, int, HBITMAP, int, int, DWORD) | %"wel_dynload.h%""
+		end
+
+	mask_blt_funcaddr: POINTER is
+		require
+			mask_blt_is_supported: mask_blt_supported
+		do
+			Result := internal_mask_blt_funcaddr
+		end
+
+	mask_blt_funcaddr_retrieved: BOOLEAN
+		-- Have we already retrieved the address of the function "MaskBlt" ?
+
+	internal_mask_blt_funcaddr: POINTER
+		-- Address of the function "MaskBlt" if it exists.
+		-- Void if the function is not present on the current system.
+
+	retrieve_mask_blt_funcaddr is
+		local
+			a_string: STRING
+			module_name_ptr: ANY
+			function_name_ptr: ANY
+		do
+			a_string := "Gdi32.dll"
+			module_name_ptr := a_string.to_c
+			a_string := "MaskBlt"
+			function_name_ptr := a_string.to_c
+			internal_mask_blt_funcaddr := cwin_get_function_address($module_name_ptr, $function_name_ptr)
 		end
 
 invariant

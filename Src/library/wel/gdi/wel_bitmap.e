@@ -19,12 +19,19 @@ inherit
 			{ANY} valid_dib_colors_constant
 		end
 
+	WEL_IMAGE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make_by_id,
 	make_by_name,
 	make_by_dib,
 	make_compatible,
-	make_indirect
+	make_indirect,
+	make_by_pointer,
+	make_by_bitmap
 
 feature {NONE} -- Initialization
 
@@ -57,7 +64,13 @@ feature {NONE} -- Initialization
 		ensure
 			bitmap_created: item /= item.default
 		end
-		
+
+	make_by_bitmap(a_bitmap: WEL_BITMAP) is
+			-- Create a WEL_BITMAP from another WEL_BITMAP. The
+			-- bitmap is copied by value
+		do
+			item := cwin_copy_image(a_bitmap.item, Image_bitmap, a_bitmap.width, a_bitmap.height, 0)	
+		end
 
 	make_indirect (a_log_bitmap: WEL_LOG_BITMAP) is
 			-- Make a bitmap using `a_log_bitmap'.
@@ -94,7 +107,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_bitmap (Current)
+			create Result.make_by_bitmap (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -161,6 +174,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
 		alias
 			"LoadBitmap"
+		end
+
+	cwin_copy_image (himage: POINTER; utype, new_width, new_height, flags: INTEGER): POINTER is
+			-- SDK CopyImage
+		external
+			"C [macro <wel.h>] (HANDLE, UINT, int, int, UINT): EIF_POINTER"
+		alias
+			"CopyImage"
 		end
 
 	cwin_create_bitmap_indirect (a_log_bitmap: POINTER): POINTER is

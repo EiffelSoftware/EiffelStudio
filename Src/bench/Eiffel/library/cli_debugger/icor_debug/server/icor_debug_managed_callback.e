@@ -600,8 +600,12 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_exit_process)
 				reset_last_controller_by_pointer (p_process)
-				reset_last_process_by_pointer (p_process)	
+				reset_last_process_by_pointer (p_process)
 				n := feature  {CLI_COM}.release (p_process)
+				debug ("com_object")
+					io.error.put_string ("ExitProcess Release ref pProcess <" + p_process.out + 
+							"> -> n= " + n.out + " %N")
+				end					
 				end_of_managed_callback (Cst_managed_cb_exit_process)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_exit_process)
@@ -664,6 +668,9 @@ feature -- Basic Operations
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				if p_module /= Default_pointer then
 					create l_module.make_by_pointer (p_module)
+					debug ("debugger_trace_callback_data")
+						io.error.put_string ("Loading module : " + l_module.get_name + "%N")
+					end
 					Eifnet_debugger_info.register_new_module (l_module)
 				end
 				end_of_managed_callback_without_stopping (Cst_managed_cb_load_module)
@@ -746,6 +753,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_debugger_error)
 				set_last_controller_by_pointer (p_process)
+				set_last_process_by_pointer (p_process)
 				eifnet_debugger_info.notify_debugger_error (error_hr, error_code)
 				end_of_managed_callback (Cst_managed_cb_debugger_error)
 			else
@@ -814,7 +822,11 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_create_app_domain)
 				set_last_controller_by_pointer (p_process)
-				
+				set_last_process_by_pointer (p_process)
+				debug ("debugger_trace_callback_data")
+					io.error.put_string ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p_app_domain)).get_name + "%N")
+				end
+
 				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p_app_domain)
 				check
 					l_hr = 0
@@ -837,9 +849,8 @@ feature -- Basic Operations
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_exit_app_domain)
-				set_last_controller_by_pointer (p_process)
-				-- NOTA jfiat [2004/06/21] : Maybe we should use controller interface
-				-- of p_app_domain, but I don't see why
+				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
+				set_last_process_by_pointer (p_process)
 				end_of_managed_callback_without_stopping (Cst_managed_cb_exit_app_domain)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_exit_app_domain)

@@ -43,9 +43,10 @@ feature {NONE} -- Initialization
 			
 			init_dotnet_data (a_referenced_value, a_prepared_value)
 
-			object_value := icd_value_info.interface_debug_object_value
+			get_object_value
 			if object_value /= Void then
 				value_class_token := icd_value_info.value_class_token
+				release_object_value
 			end
 
 			is_null := icd_value_info.is_null
@@ -76,6 +77,23 @@ feature {NONE} -- Initialization
 --			value_set: value = v
 --		end		
 
+feature -- Get 
+
+	get_object_value is
+			-- Get `object_value' value
+		require
+			object_value_void: object_value = Void
+		do
+			object_value := icd_value_info.interface_debug_object_value
+		end
+		
+	release_object_value is
+			-- Release `object_value'
+		do
+			object_value.clean_on_dispose
+			object_value := Void
+		end
+		
 feature -- Access
 
 	object_value: ICOR_DEBUG_OBJECT_VALUE
@@ -194,7 +212,8 @@ feature {NONE} -- Children implementation
 
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
-		do	
+		do
+			get_object_value
 			if object_value /= Void then
 				l_icd_class := object_value.get_class
 				if l_icd_class /= Void then
@@ -216,7 +235,7 @@ feature {NONE} -- Children implementation
 										+ "." + l_feature_i.feature_name + " :: " + dynamic_class.class_id.out + "%N")
 							end
 							if l_feature_i.is_attribute then
-								l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
+								l_att_debug_value := attribute_value (object_value, l_icd_class, l_feature_i)
 								if l_att_debug_value /= Void then
 									Result.put_last (l_att_debug_value)
 								end
@@ -227,19 +246,22 @@ feature {NONE} -- Children implementation
 					l_icd_class.clean_on_dispose
 				end
 			end
+			release_object_value
 		ensure then
 			Result /= Void
 		end
 
-	attribute_value (a_icd_class: ICOR_DEBUG_CLASS; f: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+	attribute_value (a_obj_value: ICOR_DEBUG_OBJECT_VALUE; a_icd_class: ICOR_DEBUG_CLASS; f: FEATURE_I): ABSTRACT_DEBUG_VALUE is
 			-- Attribute's value in the context of Current related to `f'
+		require
+			object_value_not_void: a_obj_value /= Void
 		local
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 		do
 			l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f, dynamic_class_type) 
 			if l_att_token /= 0 then
-				l_att_icd_debug_value := object_value.get_field_value (a_icd_class, l_att_token)
+				l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 				if l_att_icd_debug_value /= Void then
 					Result := debug_value_from_icdv (l_att_icd_debug_value)
 					if Result /= Void then
@@ -252,7 +274,7 @@ feature {NONE} -- Children implementation
 						debug ("DEBUGGER_TRACE_CHILDREN")
 							print ("Unable to build debug value for : " 
 									+ dynamic_class.name_in_upper + "." + f.feature_name 
-									+ "%N"				
+									+ "%N"
 								)
 						end
 					end
@@ -290,6 +312,7 @@ feature -- Once request
 	once_function_value (a_feat: E_FEATURE): ABSTRACT_DEBUG_VALUE is
 			-- If Result = Void, this mean the once has not been already called !
 		require
+			object_value_not_void: object_value /= Void
 			is_once: a_feat.is_once
 			has_result: a_feat.is_function
 		local

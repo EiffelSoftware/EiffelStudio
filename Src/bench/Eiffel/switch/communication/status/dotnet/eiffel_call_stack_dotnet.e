@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 			l_il_offset: INTEGER
 
 			l_stack_object: ICOR_DEBUG_VALUE
-			l_stack_adv: ABSTRACT_DEBUG_VALUE
+			l_stack_adv: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			l_hexaddress: STRING
 		do
@@ -250,7 +250,6 @@ feature {NONE} -- Initialization
 													l_line_number 	-- break_index / line number
 													)
 												extend (call)
-	
 												level := level + 1
 											end
 										end

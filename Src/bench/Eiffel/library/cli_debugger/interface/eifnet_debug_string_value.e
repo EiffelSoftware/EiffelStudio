@@ -40,9 +40,10 @@ feature {NONE} -- Initialization
 
 			init_dotnet_data (a_referenced_value, a_prepared_value)
 
-			icd_string_value := icd_value_info.interface_debug_string_value
+			get_icd_string_value
 			if icd_string_value /= Void then
-				length := icd_string_value.get_length				
+				length := icd_string_value.get_length
+				release_icd_string_value
 			end
 			
 			is_external_type := True
@@ -73,6 +74,21 @@ feature {NONE} -- Initialization
 --			value_set: value = v
 --		end
 
+feature -- get
+
+	get_icd_string_value is
+			-- Get `icd_string_value'
+		do
+			icd_string_value := icd_value_info.interface_debug_string_value
+		end
+		
+	release_icd_string_value is
+			-- Release `icd_string_value'
+		do
+			icd_string_value.clean_on_dispose
+			icd_string_value := Void
+		end
+		
 feature -- Access
 		
 	icd_string_value: ICOR_DEBUG_STRING_VALUE

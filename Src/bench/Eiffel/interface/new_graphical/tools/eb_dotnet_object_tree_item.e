@@ -41,8 +41,9 @@ feature {NONE} -- Initialization
 -- FIXME jfiat 2004-07-06: Maybe we should have EIFNET_DEBUG_STRING_VALUE conform to EIFNET_DEBUG_REFERENCE_VALUE
 -- in the futur, we should make this available
 
-			if l_dotnet_ref_value /= Void then
+			if l_dotnet_ref_value /= Void and not flist.is_empty then
 					--| Eiffel dotnet |--
+				l_dotnet_ref_value.get_object_value
 				from
 					flist.start
 				until
@@ -60,7 +61,8 @@ feature {NONE} -- Initialization
 					a_parent.extend (l_item)
 	
 					flist.forth
-				end				
+				end
+				l_dotnet_ref_value.release_object_value				
 			end
 				-- We remove the dummy item.
 			a_parent.start

@@ -43,9 +43,10 @@ feature {NONE} -- Initialization
 				address := icd_value_info.address_as_hex_string
 			end
 
-			array_value := icd_value_info.interface_debug_array_value
+			get_array_value
 			if array_value /= Void then
 				capacity := array_value.get_count
+				release_array_value
 			end
 			register_dotnet_data
 		ensure
@@ -67,6 +68,21 @@ feature {NONE} -- Initialization
 --		ensure
 --			value_set: value = v
 --		end
+
+feature -- get
+
+	get_array_value is
+			-- get `array_value'
+		do
+			array_value := icd_value_info.interface_debug_array_value
+		end
+		
+	release_array_value is
+			-- Release `array_value'
+		do
+			array_value.clean_on_dispose
+			array_value := Void
+		end		
 
 feature -- Access
 
@@ -101,7 +117,6 @@ feature -- Access
 			else
 				l_str.append (NONE_representation)
 			end
-
 			create Result.make_object (address, dynamic_class)
 		end
 
@@ -162,6 +177,7 @@ feature -- Output
 			if capacity > 0 then
 				set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
 				if sp_lower <= sp_upper then
+					get_array_value
 					from
 						i := sp_lower
 					until
@@ -175,6 +191,7 @@ feature -- Output
 						end
 						i := i + 1
 					end
+					release_array_value
 				end
 			end
 		end

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	database_handle_name: STRING is "SYBASE"
+	database_handle_name: STRING is "INGRES"
 
 feature -- For DATABASE_STATUS
 

@@ -19,18 +19,6 @@ creation
 	make,
 	make_default
 
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-		do
-			!EV_WARNING_DIALOG_IMP! implementation.make (par)
-		end
-
-	make_default (par: EV_CONTAINER; txt, title: STRING) is
-		do
-			!EV_WARNING_DIALOG_IMP! implementation.make_default (par, txt, title)
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: EV_WARNING_DIALOG_I

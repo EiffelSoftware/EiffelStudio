@@ -10,10 +10,33 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_MESSAGE_DIALOG
 
+inherit
+	EV_DIALOG
+		export
+			{NONE} action_area
+			{NONE} display_area
+		redefine
+			implementation
+		end
+
+feature {NONE} -- Initialization
+
+	make_default (par: EV_WINDOW; msg, dtitle: STRING) is
+		do
+			make (par)
+			implementation.set_default (msg, dtitle)
+		end
+
 feature -- Status settings
+
+	set_message (msg: STRING) is
+			-- Set the message to be displayed
+		do
+			implementation.set_message (msg)
+		end
 
 	add_ok_button is
 			-- Add an OK button in the dialog
@@ -35,12 +58,12 @@ feature -- Status settings
 
 feature -- Miscellaneous
 
-	display (txt, title: STRING) is
-			-- Must be called to display a dialog that wasn't
-			-- created with default options.
-		do
-			implementation.display (txt, title)
-		end
+--	display (txt, title: STRING) is
+--			-- Must be called to display a dialog that wasn't
+--			-- created with default options.
+--		do
+--			implementation.display (txt, title)
+--		end
 
 feature -- Event - command association
 

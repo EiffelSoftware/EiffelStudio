@@ -62,6 +62,18 @@ extern "C" {
 	RT_LNK int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
 	RT_LNK int egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
 	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
+	
+	RT_LNK int egc_int8_dtype;	/* Dynamic type of INTEGER_8 */
+	RT_LNK int egc_int16_dtype;	/* Dynamic type of INTEGER_16 */
+	RT_LNK int egc_int32_dtype;	/* Dynamic type of INTEGER_32 */
+	RT_LNK int egc_int64_dtype;	/* Dynamic type of INTEGER_64 */
+	RT_LNK int egc_bool_dtype;	/* Dynamic type of BOOLEAN */
+	RT_LNK int egc_real_dtype;	/* Dynamic type of REAL */
+	RT_LNK int egc_doub_dtype;	/* Dynamic type of DOUBLE */
+	RT_LNK int egc_char_dtype;	/* Dynamic type of CHARACTER */
+	RT_LNK int egc_wchar_dtype;	/* Dynamic type of WIDE_CHARACTER */
+	RT_LNK int egc_point_dtype;	/* Dynamic type of POINTER */
+
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_gtype;			/* Generic class name -> gt_info */

@@ -54,12 +54,23 @@ extern "C" {
 	int egc_wchar_ref_dtype;	
 	int egc_point_ref_dtype;	
 
+	int egc_int8_dtype;	
+	int egc_int16_dtype;	
+	int egc_int32_dtype;	
+	int egc_int64_dtype;	
+	int egc_bool_dtype;	
+	int egc_real_dtype;	
+	int egc_doub_dtype;	
+	int egc_char_dtype;	
+	int egc_wchar_dtype;	
+	int egc_point_dtype;	
+
 	struct ctable egc_ce_type;			
 	struct ctable egc_ce_gtype;			
 	struct cnode *egc_fsystem;	
 	struct conform **egc_fco_table;  
 	struct eif_par_types **egc_partab;
-	int    egc_partab_size;
+	int egc_partab_size;
 	void (*egc_system_mod_init) (void);	
 	int egc_type_of_gc;
 

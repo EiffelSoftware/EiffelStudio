@@ -8,12 +8,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
-	
+class
 	EV_DIALOG
 
 inherit
-
 	EV_WINDOW
 		redefine 
 			make,
@@ -21,7 +19,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -29,10 +26,10 @@ feature {NONE} -- Initialization
 	make (par: EV_WINDOW) is
 			-- Create the dialog box.
 		do
-			!!implementation.make (par)
+			!EV_DIALOG_IMP!implementation.make (par)
 			implementation.set_interface (Current)
-			implementation.build
 			implementation.plateform_build (par.implementation)
+			implementation.build
 		end
 
 feature -- Access

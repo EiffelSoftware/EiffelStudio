@@ -1389,7 +1389,6 @@ feature {NONE} -- Implementation
 
 
 					counter := counter + 1
-					func_desc.arguments.forth
 				end
 				if func_desc.return_type.name.is_equal (Void_c_keyword) then
 					Result.remove (Result.count)

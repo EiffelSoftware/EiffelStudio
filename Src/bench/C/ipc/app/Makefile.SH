@@ -37,6 +37,7 @@ DIR = $DIR
 # Parameters set by Configure -- edit config.sh if changes are needed
 
 CC = $cc
+JLKFLAGS = $ldflags
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $mtccflags $large

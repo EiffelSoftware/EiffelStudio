@@ -7,12 +7,12 @@ inherit
 		rename
 			create_context as old_create_context
 		redefine
-			widget
+			widget, default_commands_list
 		end;
 
 	LABEL_TEXT_C
 		redefine
-			create_context, widget
+			create_context, widget, default_commands_list
 		select
 			create_context
 		end
@@ -35,6 +35,18 @@ feature
 		do
 			Result := widget.text
 		end;
+
+	default_commands_list: LINKED_LIST [CMD] is
+		local
+			predefined_cmds: SHARED_PREDEF_COMS
+		do
+			Result := Precursor
+			!! predefined_cmds
+			Result.extend (predefined_cmds.open_cmd)
+			Result.extend (predefined_cmds.save_cmd)
+			Result.extend (predefined_cmds.popup_cmd)
+			Result.extend (predefined_cmds.popdown_cmd)
+		end
 
 feature {NONE}
 

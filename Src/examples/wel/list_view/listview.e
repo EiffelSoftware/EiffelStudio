@@ -34,11 +34,6 @@ inherit
 			{NONE} all
 		end 
 
---	WEL_TVIF_CONSTANTS
---		export
---			{NONE} all
---		end
-
 	WEL_ILC_CONSTANTS
 		export
 			{NONE} all
@@ -122,23 +117,23 @@ feature {NONE} -- Initialization
 
 				-- We add the columns
 			create column.make
-			column.set_cx (80)
-			column.set_fmt (Lvcfmt_left)
+			column.set_width (80)
+			column.set_alignment (Lvcfmt_left)
 			column.set_text ("Left")
 			append_column (column)
 			create column.make
-			column.set_cx (80)
-			column.set_fmt (Lvcfmt_center)
+			column.set_width (80)
+			column.set_alignment (Lvcfmt_center)
 			column.set_text ("Center")
 			append_column (column)
 			create column.make
-			column.set_cx (80)
-			column.set_fmt (Lvcfmt_right)
+			column.set_width (80)
+			column.set_alignment (Lvcfmt_right)
 			column.set_text ("Right")
 			append_column (column)
 			create column.make
-			column.set_cx (80)
-			column.set_fmt (Lvcfmt_justifymask)
+			column.set_width (80)
+			column.set_alignment (Lvcfmt_justifymask)
 			column.set_text ("Justify")
 			append_column (column)
 

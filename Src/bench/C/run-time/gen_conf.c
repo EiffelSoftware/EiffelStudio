@@ -2506,7 +2506,7 @@ rt_private void eif_expand_tables(int new_size)
 /* Full type name for type `dftype' as C string.                    */
 /*                                                                  */
 /* dftype : full type id; RTUD(yes)                                 */
-/* Attentionr! This routine is not threaded safe (because of the    */
+/* Attention! This routine is not threaded safe (because of the    */
 /* static buffer "result"). It must be protected by a lock.         */
 /*------------------------------------------------------------------*/
 

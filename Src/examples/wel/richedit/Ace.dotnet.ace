@@ -1,22 +1,45 @@
 system
-	richedit_demo
+	"richedit_demo"
 
-root 
-	RICHEDIT_DEMO (root_cluster): "make"
+root
+	RICHEDIT_DEMO: make
 
 default
 	assertion (require)
 	msil_generation (yes)
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
+	dotnet_naming_convention (no)
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
+	msil_clr_version ("v1.1.4322")
+	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\wel\richedit"
+
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
@@ -33,14 +56,14 @@ cluster
 	all wel_net:		"$ISE_EIFFEL\library.net\wel"
 
 assembly
-	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
+	"mscorlib":	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
 
-	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
+	"system_":	"$ISE_DOTNET_FRAMEWORK\System.dll"
 		prefix
 			"SYSTEM_DLL_"
 		end
 
-	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
+	"system_xml":	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
 		prefix
 			"XML_"
 		end

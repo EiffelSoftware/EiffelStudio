@@ -201,9 +201,9 @@ void c_ev_load_pixmap(
 	
 	if (pszFileName == NULL)
 		{
-		FILE *pFile2 = fopen ("C:\\validate.png", "wb");
-		fwrite (default_vision2_icon, 1, sizeof (default_vision2_icon), pFile2);
-		fclose (pFile2);
+//		FILE *pFile2 = fopen ("C:\\validate.png", "wb");
+//		fwrite (default_vision2_icon, 1, sizeof (default_vision2_icon), pFile2);
+//		fclose (pFile2);
 
 		// Load the default Vision2 icon
 		pFile = tmpfile(); // create a temporary file

@@ -8,6 +8,13 @@
 
 /* 12-NOV-1990 added d_namlen field -GJC@MITECH.COM */
 
+#ifndef _eif_vmsdirent_h_
+#define _eif_vmsdirent_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
     /* Data structure returned by READDIR(). */
 struct dirent {
     char	d_name[100];		/* File name		*/
@@ -36,3 +43,9 @@ extern long		telldir(DIR *dd);
 extern void		seekdir(DIR *dd, long pos);
 extern void		closedir(DIR *dd);
 extern void		vmsreaddirversions(DIR *dd, int flag);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _eif_vmsdirent_h_ */

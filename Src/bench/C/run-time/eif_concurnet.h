@@ -1,6 +1,10 @@
 #ifndef _CONCURRENT_CONCURNET_
 #define _CONCURRENT_CONCURNET_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+		
 #ifdef EIF_WIN32
 #define my_set_sock_option(s) \
             { struct linger my_opt; \
@@ -110,4 +114,8 @@ extern 		void eif_net_independent_store(EIF_INTEGER, char *);
 	}
 #endif
 		
+#ifdef __cplusplus
+}
+#endif
+
 #endif

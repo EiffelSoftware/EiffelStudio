@@ -3,6 +3,10 @@
 #ifndef _eif_rout_obj
 #define _eif_rout_obj
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 /* New object of type `dftype' with routine dispatcher `rout_disp',
    target `tgt', argument tuple `args' and target_position `tpos'.
 */
@@ -50,6 +54,9 @@ extern void rout_obj_call_function (char *cur, char *res, char *rout, char *args
 #define rout_obj_putp(a,i,v) (((EIF_ARG_UNION *)(a))[i].parg = RPVAL(v))
 #define rout_obj_putf(a,i,v) (((EIF_ARG_UNION *)(a))[i].farg = RFVAL(v))
 #define rout_obj_putr(a,i,v) (((EIF_ARG_UNION *)(a))[i].rarg = (EIF_REFERENCE)v)
-
+			
+#ifdef __cplusplus
+}
 #endif
 
+#endif

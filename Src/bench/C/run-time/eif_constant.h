@@ -8,6 +8,10 @@ to indicate indirect(also called Eiffel or protected) address.
 #ifndef _CONCURRENT_CONSTANT_
 #define _CONCURRENT_CONSTANT_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+		
 #define DELETE_SEP_OBJ
 
 #define tDISP_LIST
@@ -957,5 +961,9 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 */
 #define CURRSO(x) reserve_sep_obj(x)
 #define CURFSO(x) free_sep_obj(x)
+			
+#ifdef __cplusplus
+	}
+#endif
 
 #endif

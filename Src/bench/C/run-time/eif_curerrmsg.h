@@ -1,6 +1,10 @@
 #ifndef _CONCURRENT_ERRMSG_
 #define _CONCURRENT_ERRMSG_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+		
 /* the following several macros are used to display request info */
 #define GET_CMD_MSG1	"\n%d/%d Got command %s "
 #define GET_CMD_MSG2	" OID:%d, CLASS:%s, FEATURE:%s, ACK:%d "
@@ -273,5 +277,9 @@
 /*
 #define CURERR25	
 */
+			
+#ifdef __cplusplus
+}
+#endif
 
 #endif

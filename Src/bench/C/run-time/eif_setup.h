@@ -11,6 +11,9 @@
 
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "eif_except.h"		/* Exception vectors definition */
 #include "eif_sig.h"		/* initsig() */
@@ -159,5 +162,8 @@
 #define EIF_DISPOSE_ALL \
 	EIF_RT_BASIC_CLEANUP
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* EIF_THREADS */

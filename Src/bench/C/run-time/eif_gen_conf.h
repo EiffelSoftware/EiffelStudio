@@ -3,6 +3,10 @@
 #ifndef _eif_gen_conf
 #define _eif_gen_conf
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+				
 /* Initialize module */
 extern void eif_gen_conf_init (int);
 
@@ -73,6 +77,10 @@ extern int16 *rtud_inv;
 
 /* Maximum nr. of entries in a compound typeid array */
 #define MAX_CID_SIZE    200
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

@@ -13,6 +13,10 @@
 #ifndef _eif_struct_h_
 #define _eif_struct_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "eif_globals.h"
 #include "eif_config.h"
 #include "eif_portable.h"
@@ -211,5 +215,8 @@ extern struct p_interface *pattern;
 extern fnptr separate_pattern[];
 #endif
 
+#ifdef __cplusplus
+}
 #endif
 
+#endif

@@ -1,6 +1,10 @@
 #ifndef _CONCURRENT_EXTERN_GLOBALS_
 #define _CONCURRENT_EXTERN_GLOBALS_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 /*****************************************************************
     In the C-programs, we use EIF_OBJ and char * to indicate
 direct(also called raw or unprotected) address; use EIF_REFERENCE
@@ -180,6 +184,10 @@ extern EIF_INTEGER _concur_blk_cli_list_count;
 RT_LNK char *root_obj;
 #ifndef WORKBENCH
 extern struct ctable *ce_sep_pat;
+#endif
+			
+#ifdef __cplusplus
+}
 #endif
 
 #endif

@@ -25,7 +25,7 @@ OBJECTS = math.obj malloc.obj garcol.obj local.obj except.obj store.obj \
 	boolstr.obj search.obj main.obj dle.obj option.obj \
 	console.obj run_idr.obj  ..\extra\win32\networku\networku.lib \
 	path_name.obj object_id.obj ..\extra\win32\console\econsole.lib \
-	compress.obj $extra_object_files
+	compress.obj eif_threads.obj $extra_object_files
 
 WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj \
@@ -37,7 +37,7 @@ WOBJECTS = $(NETWORK) wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wconsole.obj wrun_idr.obj wdle.obj \
 	..\idrs\idr.lib ..\extra\win32\networku\networku.lib wpath_name.obj \
 	wobject_id.obj ..\extra\win32\console\econsole.lib \
-	compress.obj $extra_object_files
+	compress.obj weif_threads.obj $extra_object_files
 
 EOBJ = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 	wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj winterna.obj \
@@ -48,7 +48,7 @@ EOBJ = wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 	woption.obj update.obj wbench.obj wconsole.obj wrun_idr.obj \
 	..\extra\win32\networku\networku.lib wdle.obj \
 	wpath_name.obj wobject_id.obj ..\extra\win32\console\econsole.lib \
-	compress.obj
+	compress.obj weif_threads.obj
 
 all:: size.h
 
@@ -94,7 +94,7 @@ all:: x2c.exe
 
 x2c.exe: x2c.c
 	$(RM) $@
-	$(CC) x2c.c 
+	$(CC) x2c.c
 
 all:: config.h portable.h
 
@@ -117,6 +117,10 @@ wmalloc.c : malloc.c
 wgarcol.c : garcol.c
 	$(RM) wgarcol.c
 	$(LN) garcol.c wgarcol.c
+
+weif_threads.c : eif_threads.c
+	$(RM) weif_threads.c
+	$(LN) eif_threads.c weif_threads.c
 
 wlocal.c : local.c
 	$(RM) wlocal.c
@@ -277,6 +281,9 @@ wmalloc.obj : wmalloc.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 wgarcol.obj : wgarcol.c
+	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
+
+weif_threads.obj : weif_threads.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 wlocal.obj : wlocal.c
@@ -952,3 +959,5 @@ object_id.obj : portable.h
 object_id.obj : garcol.h
 object_id.obj : except.h
 object_id.obj : hector.h
+eif_threads.obj : eif_threads.h
+weif_threads.obj : eif_threads.h

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	selected_item: EV_TREE_NODE is
-			-- Currently selcted tree item.
+			-- Currently selected tree item.
 		deferred
 		end
 
@@ -47,7 +47,6 @@ feature -- Status report
 
 	selected: BOOLEAN is
 			-- Is at least one tree item selected?
-		require
 		deferred
 		end
 

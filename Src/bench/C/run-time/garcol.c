@@ -3762,8 +3762,6 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	 */
 	EIF_GET_CONTEXT
 	register2 union overhead *zone;	/* Malloc info header */
-	EIF_REFERENCE new;						/* New object's address */
-	EIF_REFERENCE exp;						/* Expanded data space */
 	int length;						/* Length of scavenged object */
 
 	zone = HEADER(root);
@@ -3781,6 +3779,8 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	 */
 	if (zone->ov_flags & EO_EXP) {
 		/* Compute original object's address (before scavenge) */
+		EIF_REFERENCE exp;					/* Expanded data space */
+		EIF_REFERENCE new;					/* New object's address */
 		zone = (union overhead *) ((EIF_REFERENCE) zone - (zone->ov_size & B_SIZE));
 		if (!(zone->ov_size & B_FWD))
 			return root;

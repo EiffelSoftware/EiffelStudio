@@ -8,9 +8,15 @@ class
 
 feature -- Access
 
+	is_dotnet_installed: BOOLEAN is
+			-- Is dotnet installed?
+		once
+		end
+	
 	dotnet_framework_path: STRING is
 			-- Path to .NET Framework.
-		local
+		require
+			is_dotnet_installed: is_dotnet_installed
 		once
 		end
 		

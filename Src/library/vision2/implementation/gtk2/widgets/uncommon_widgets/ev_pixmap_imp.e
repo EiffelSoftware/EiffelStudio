@@ -12,7 +12,8 @@ inherit
 	EV_PIXMAP_I
 		redefine
 			interface,
-			flush
+			flush,
+			save_to_named_file
 		end
 
 	EV_DRAWABLE_IMP
@@ -130,14 +131,22 @@ feature -- Element change
 
 	read_from_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
-			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
-			-- exceptions.
-			--|FIXME do this!
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
+			g_error: POINTER
+			pixbuf: POINTER
+			a_gdkpix, a_gdkmask: POINTER
 		do
 			create a_cs.make (file_name)
-			c_ev_load_pixmap ($Current, a_cs.item, $update_fields)
+			pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+			if g_error /= default_pointer then
+				-- We could not load the image so raise an exception
+				(create {EXCEPTIONS}).raise ("Could not load image file.")
+			else
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (pixbuf, $a_gdkpix, $a_gdkmask, 0)
+				set_pixmap (a_gdkpix, a_gdkmask)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pixbuf)
+			end
 		end
 
 	set_with_default is
@@ -146,7 +155,7 @@ feature -- Element change
 			--
 			-- Exceptions "Unable to retrieve icon information"
 		do
-			c_ev_load_pixmap ($Current, NULL, $update_fields)
+			set_from_xpm_data (default_pixmap_xpm)
 		end
 
 	stretch (a_x, a_y: INTEGER) is
@@ -377,6 +386,26 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+			-- 
+		local
+			png_format: EV_GRAPHICAL_FORMAT--EV_PNG_FORMAT
+		do
+			png_format ?= a_format
+			if png_format /= Void then
+				-- Perform custom PNG saving with GdkPixbuf
+			end
+			Precursor {EV_PIXMAP_I} (a_format, a_filename)
+		end
+
+	gdk_pixbuf_png_save (a_pixbuf, a_file_handle: POINTER; a_error: TYPED_POINTER [POINTER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_save ((GdkPixbuf*) $a_pixbuf, (char*) $a_file_handle, %"png%", (GError**) $a_error, %"quality%", %"100%", NULL)"
+		end
+		
+
 	parent_widget: POINTER
 			-- Parent widget for Current.
 
@@ -397,35 +426,6 @@ feature {NONE} -- Implementation
 			fg.memory_free
 		end
 
-	update_fields (
-		error_code		: INTEGER; -- Loadpixmap_error_xxxx 
-		data_type		: INTEGER; -- Loadpixmap_hicon, ...
-		pixmap_width	: INTEGER; -- Height of the loaded pixmap
-		pixmap_height	: INTEGER; -- Width of the loaded pixmap
-		rgb_data		: POINTER; -- Pointer on a C memory zone
-		alpha_data		: POINTER; -- Pointer on a C memory zone
-		) is
-			-- Callback function called from the C code by c_ev_load_pixmap.
-			-- 
-			-- See `read_from_named_file'
-			-- Exceptions "Unable to retrieve icon information",
-			--            "Unable to load the file"
-		require
-			valid_data_type: data_type = Loadpixmap_rgb_data
-		local
-			gdkpix, gdkmask: POINTER
-		do
-			if error_code /= Loadpixmap_error_noerror then
-				(create {EXCEPTIONS}).raise ("Could not load image file.")
-			end
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, pixmap_width, pixmap_height, Default_color_depth)
-			feature {EV_GTK_EXTERNALS}.gdk_draw_rgb_image (gdkpix, gc, 0, 0, pixmap_width, pixmap_height, feature {EV_GTK_EXTERNALS}.Gdk_rgb_dither_normal_enum, rgb_data, pixmap_width * 3)
-			if alpha_data /= Default_pointer then
-				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (App_implementation.default_gdk_window, alpha_data, pixmap_width, pixmap_height)
-			end
-			set_pixmap (gdkpix, gdkmask)
-		end
-		
 	destroy is
 			-- Destroy the pixmap and resources.
 		do
@@ -448,27 +448,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
+	default_pixmap_xpm: POINTER is
+		external
+			"C | %"ev_c_util.h%""
+		alias
+			"default_pixmap_xpm"
+		end
+
 	Default_color_depth: INTEGER is -1
 			-- Default color depth, use the one from gdk_root_parent.
 
 	Monochrome_color_depth: INTEGER is 1
 			-- Black and White color depth (for mask).
-
-	Loadpixmap_error_noerror: INTEGER is 0
-			-- `c_ev_load_pixmap' has reported no error.
-
-	Loadpixmap_rgb_data: INTEGER is 0
-			-- `c_ev_load_pixmap' has loaded an RBG bitmap (no mask).
-			
-	Loadpixmap_alpha_data: INTEGER is 1
-			-- `c_ev_load_pixmap' has loaded an RBGA bitmap.
-
-feature -- Externals
-
-	c_ev_load_pixmap(curr_object: POINTER; file_name: POINTER; update_fields_routine: POINTER) is
-		external
-			"C | %"load_pixmap.h%""
-		end
 
 feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
 

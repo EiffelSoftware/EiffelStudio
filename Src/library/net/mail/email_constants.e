@@ -39,7 +39,7 @@ feature -- Constants for SMTP Protocol
 
 	Struct_error: INTEGER is 552
 
-	Size_Error: INTEGER is 500
+	Size_error: INTEGER is 500
 
 	No_valid_recipient: INTEGER is 554
 

@@ -258,7 +258,7 @@ feature -- Status setting
 		do
 			--| Do nothing as this is the default on Win32.
 		end
-
+		
 feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
@@ -518,7 +518,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Create `memory_dc' for double buffering, and select
 				-- a bitmap compatible with `dc' ready for drawing.
 			create memory_dc.make_by_dc (dc)
-			create wel_bitmap.make_compatible (dc, dc.width, dc.height)
+			create wel_bitmap.make_compatible (dc, rect.width, rect.height)
 			memory_dc.select_bitmap (wel_bitmap)
 			wel_bitmap.dispose
 

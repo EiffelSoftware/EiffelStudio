@@ -143,7 +143,10 @@ feature -- Settings
 		require
 			valid_i: i > 0
 		do
-			update_stack_depth (1)
+			update_stack_depth (i)
+		ensure
+			max_stack_set: max_stack >= old max_stack
+			current_stack_depth_set: current_stack_depth = old current_stack_depth + i
 		end
 		
 feature -- Opcode insertion

@@ -29,7 +29,6 @@ inherit
 		redefine
 			interface,
 			set_text,
-			remove_text,
 			text
 		end
 
@@ -104,24 +103,6 @@ feature -- Element change
 				feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			end	
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
-		end
-
-	remove_text is
-			-- Assign `Void' to `text'.
-		do
-			real_text := ""
-			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, NULL)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
-		end
-		
-feature {EV_MENU_ITEM_LIST_IMP} -- Assignment optimization
-
-	Radio_type, Check_type, Separator_type, Item_type, Menu_type: INTEGER is Unique
-	
-	menu_item_type: INTEGER is
-			-- 
-		do
-			Result := Item_type
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation

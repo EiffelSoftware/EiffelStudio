@@ -41,13 +41,11 @@ echo %DEL% cleanup.bat >> cleanup.bat
 rem Precompiling EiffelBase
 cd precomp\spec\windows\base
 %RM% EIFGEN
-echo on
 %EC% -precompile
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .
 %FF%
 call cleanup.bat
-echo off
 
 if .%2. == .wel. goto wel
 if .%2. == .vision2. goto wel
@@ -56,13 +54,11 @@ goto END
 rem Precompiling WEL
 cd ..\..\..\wel
 %RM% EIFGEN
-echo on
 %EC% -precompile
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .
 %FF%
 call cleanup.bat
-echo off
 
 if .%2. == .vision2. goto vision2
 goto END
@@ -70,13 +66,11 @@ goto END
 rem Precompiling EiffelVision2
 cd ..\..\..\vision2
 %RM% EIFGEN
-echo on
 %EC% -precompile
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .
 %FF%
 call cleanup.bat
-echo off
 
 :END
 cd ..\..\..\..\..\..

@@ -1332,6 +1332,7 @@ feature -- Conversion
 			left_adjust
 			from
 				cnt := capacity
+				i := count
 				set_count (cnt)
 			until
 				i = capacity

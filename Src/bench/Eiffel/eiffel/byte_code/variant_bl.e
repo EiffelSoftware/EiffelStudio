@@ -49,8 +49,40 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			register.print_register;
-			buf.putstring (" = -1L;");
+				-- Assertion recording on stack
+			if tag /= Void then
+				buf.putstring ("RTCT(")
+				buf.putchar ('"')
+				buf.putstring (tag)
+				buf.putchar ('"')
+				buf.putstring (gc_comma)
+			else
+				buf.putstring ("RTCS(")
+			end
+			generate_assertion_code (In_loop_variant)
+			buf.putstring (gc_rparan_comma)
+			buf.new_line
+			expr.generate
+			register.print_register
+			buf.putstring (" = ")
+			expr.print_register
+			buf.putchar (';')
+			buf.new_line
+			buf.putstring ("if (")
+			register.print_register
+			buf.putstring (" >= 0) {")
+			buf.new_line
+			buf.indent
+			buf.putstring ("RTCK;");
+			buf.new_line
+			buf.exdent
+			buf.putstring("} else {")
+			buf.new_line
+			buf.indent
+			buf.putstring ("RTCF;")
+			buf.new_line;
+			buf.exdent;
+			buf.putchar ('}');
 			buf.new_line;
 		end;
 
@@ -81,8 +113,6 @@ feature
 			buf.new_line;
 				-- Variant check
 			buf.putstring ("if ((");
-			register.print_register;
-			buf.putstring (" == -1L || ");
 			register.print_register;
 			buf.putstring (" > ");
 			new_register.print_register;

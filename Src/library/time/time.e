@@ -239,7 +239,7 @@ feature -- Element change
 			s_large_enough: s >= 0; 
 			s_small_enough: s < Seconds_in_minute 
 		do 
-			c_set_second (s, compact_time)
+			c_set_second (s, $compact_time)
 		ensure 
 			second_set: second = s 
 		end;
@@ -276,7 +276,7 @@ feature -- Element change
 			m_large_enough: m >= 0; 
 			m_small_enough: m < Minutes_in_hour 
 		do 
-			c_set_minute (m, compact_time) 
+			c_set_minute (m, $compact_time) 
 		ensure 
 			minute_set: minute = m 
 		end;
@@ -287,7 +287,7 @@ feature -- Element change
 			h_large_enough: h >= 0; 
 			h_small_enough: h < Hours_in_day 
 		do 
-			c_set_hour (h, compact_time)
+			c_set_hour (h, $compact_time)
 		ensure 
 			hour_set: hour = h 
 		end;
@@ -480,17 +480,17 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	c_set_hour (h, c_t: INTEGER) is
+	c_set_hour (h:INTEGER; c_t: POINTER) is
 		external
 			"C"
 		end;
 
-	c_set_minute (h, c_t: INTEGER) is
+	c_set_minute (h:INTEGER; c_t: POINTER) is
 		external
 			"C"
 		end;
 
-	c_set_second (h, c_t: INTEGER) is
+	c_set_second (h:INTEGER;c_t: POINTER) is
 		external
 			"C"
 		end;

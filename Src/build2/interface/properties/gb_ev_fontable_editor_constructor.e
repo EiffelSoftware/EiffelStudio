@@ -30,23 +30,25 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
-			font_button: EV_BUTTON
 			reset_button: EV_BUTTON
 			horizontal_box: EV_HORIZONTAL_BOX
+			label: EV_LABEL
 		do
 			create Result
 			initialize_attribute_editor (Result)
+			create label.make_with_text (gb_ev_fontable_font)
+			label.align_text_left
+			Result.extend (label)
+			Result.disable_item_expand (label)
 			create horizontal_box
-			create font_button.make_with_text ("Select font...")
-			font_button.select_actions.extend (agent show_dialog)
-			horizontal_box.extend (font_button)
+			create font_entry.make (Current, horizontal_box, font_string, "", gb_ev_fontable_font_tooltip,
+				agent set_font (?), agent valid_font (?))
 			create reset_button.make_with_text ("Reset")
 			reset_button.select_actions.extend (agent reset_font)
-			horizontal_box.set_padding_width (4)
 			horizontal_box.extend (reset_button)
 			horizontal_box.disable_item_expand (reset_button)
-			horizontal_box.disable_item_expand (font_button)
 			Result.extend (horizontal_box)
+			
 			update_attribute_editor
 		end
 		
@@ -54,8 +56,7 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-			-- Nothing to do, as there is no display of the
-			-- current font at the moment.
+			font_entry.update_constant_display (first.font)
 		end
 
 feature {NONE} -- Implementation
@@ -79,25 +80,43 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	reset_font is
-			-- Reset font of `object' in `Current' to default.
-		local
-			fontable: EV_FONTABLE
+	set_font (a_font: EV_FONT) is
+			-- Assign `a_font' to all instances of `object'.
+		require
+			a_font_not_void: a_font /= Void
 		do
-			fontable ?= default_object_by_type (class_name (first))
-			for_all_objects (agent {EV_FONTABLE}.set_font (fontable.font))
+			for_all_objects (agent {EV_FONTABLE}.set_font (a_font))
 		end
 		
-		
+	valid_font (a_font: EV_FONT): BOOLEAN is
+			-- Is `font' a valid font? Always true as all fonts
+			-- are permitted.
+		require
+			a_font_not_Void: a_font /= Void
+		do
+			Result := True
+		end
+
+	reset_font is
+			-- Reset font of `object' in `Current' to default, removing
+			-- constant value if set.
+		local
+			fontable: EV_FONTABLE
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			constant_context := object.constants.item (type + font_string)
+			if constant_context /= Void then
+				constant_context.destroy
+			end
+			fontable ?= default_object_by_type (class_name (first))
+			for_all_objects (agent {EV_FONTABLE}.set_font (fontable.font))
+			font_entry.update_constant_display (first.font)
+		end
+
 	font_dialog: EV_FONT_DIALOG
 		-- Dialog for user font choices.
-
--- Constants for XML
-
-	family_string: STRING is "Family"
-	weight_string: STRING is "Weight"
-	shape_string: STRING is "Shape"
-	height_string: STRING is "Height"
-	preferred_family_string: STRING is "Preferred_family"
+		
+	font_entry: GB_FONT_INPUT_FIELD
+		-- Input field for retrieving font information.
 
 end -- class GB_EV_FONTABLE_EDITOR_CONSTRUCTOR

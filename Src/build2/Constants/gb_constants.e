@@ -78,13 +78,20 @@ feature -- Default values
 
 feature -- Generation constants
 
-	window_template_file_name: FILE_NAME is
-			-- `Result' is location of build template file,
-			-- including the name.
+	template_file_location: FILE_NAME is
+			-- Location of templates.
 		do
 			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
 			Result.extend ("build")
 			Result.extend ("templates")
+		end
+		
+
+	window_template_file_name: FILE_NAME is
+			-- `Result' is location of build template file,
+			-- including the name.
+		do
+			Result := template_file_location
 			Result.extend ("build_class_template.e")
 		end
 		
@@ -92,18 +99,14 @@ feature -- Generation constants
 			-- `Result' is location of build application template file,
 			-- including the name.
 		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
-			Result.extend ("build")
-			Result.extend ("templates")
+			Result := template_file_location
 			Result.extend ("build_application_template.e")
 		end
 		
 	windows_ace_file_name: FILE_NAME is
 			-- `Result' is location of windows ace file template.
 		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
-			Result.extend ("build")
-			Result.extend ("templates")
+			Result := template_file_location
 			Result.extend ("windows")
 			Result.extend ("ace_template.ace")
 		end
@@ -111,9 +114,7 @@ feature -- Generation constants
 	unix_ace_file_name: FILE_NAME is
 			-- `Result' is location of windows ace file template.
 		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
-			Result.extend ("build")
-			Result.extend ("templates")
+			Result := template_file_location
 			Result.extend ("unix")
 			Result.extend ("ace_template.ace")
 		end

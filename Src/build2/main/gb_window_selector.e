@@ -458,8 +458,6 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			-- from `old_name' to `new_name'.
 		require
 			window_object_not_void: window_object /= Void
-			old_name_valid: old_name /= Void and then not old_name.is_empty
-			new_name_valid: new_name /= Void and then not new_name.is_empty
 		local
 			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			file_name: FILE_NAME
@@ -470,12 +468,16 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 				file_name.extend (directory_object.text)
 			end
 			
-			rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + ".e", new_name + ".e")
-				--| FIXME must now go into class, and change name.
+				--| FIXME we need a better solution for name changes on windows.
+				--| as undo allows their name to become empty.
+			if not new_name.is_empty or old_name.is_empty then
+				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + ".e", new_name + ".e")
+					--| FIXME must now go into class, and change name.
 			
-			rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
-				new_name + Class_implementation_extension.as_lower + ".e")
-				--| FIXME must now go into class, and change name.
+				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
+					new_name + Class_implementation_extension.as_lower + ".e")
+					--| FIXME must now go into class, and change name.
+			end
 		end
 
 feature {GB_XML_LOAD} -- Implementation

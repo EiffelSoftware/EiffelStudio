@@ -74,12 +74,14 @@ feature -- Basic Operations
 			l_assembly_path: STRING
 			l_assembly_info_updated: BOOLEAN
 			l_lower_path: like a_path
+			l_reader: like cache_reader
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
 			guard.lock
 			if not l_retried then
-				l_ca := cache_reader.consumed_assembly_from_path (a_path)
+				l_reader := cache_reader
+				l_ca := l_reader.consumed_assembly_from_path (a_path)
 				if l_ca = Void then
 					l_lower_path := a_path.as_lower
 				else
@@ -96,7 +98,7 @@ feature -- Basic Operations
 							-- This case presents itself either when the assembly has never been consumed,
 							-- or when an assembly has been consumed as a referenced assembly, which means
 							-- it, at present, only has a GAC path.
-						l_ca := cache_reader.consumed_assembly_from_path (l_assembly_path)
+						l_ca := l_reader.consumed_assembly_from_path (l_assembly_path)
 					end
 					
 					if l_ca /= Void and then l_ca.is_consumed then
@@ -123,7 +125,7 @@ feature -- Basic Operations
 						
 						if l_assembly_info_updated then
 								-- The assembly information requires updating
-							l_info := cache_reader.info
+							l_info := l_reader.info
 							l_info.update_assembly (l_ca)
 							update_info (l_info)
 							update_client_assembly_mappings (l_ca)	
@@ -158,7 +160,7 @@ feature -- Basic Operations
 					if l_ca = Void then
 						l_ca := consumed_assembly_from_path (l_lower_path)
 					end
-					l_assembly_folder := cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
+					l_assembly_folder := l_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
 					create l_dir.make (l_assembly_folder)
 					if not l_dir.exists then
 						l_dir.create_dir
@@ -180,7 +182,7 @@ feature -- Basic Operations
 						set_error (Consume_error, a_path)
 					else
 						l_assembly_info_updated := True
-						l_info := cache_reader.info
+						l_info := l_reader.info
 						l_ca.set_is_consumed (True)
 		 				l_info.update_assembly (l_ca)
 						update_info (l_info)
@@ -196,7 +198,7 @@ feature -- Basic Operations
 					loop
 						l_name := l_names.item (i)
 						l_assembly := load_assembly_by_name (l_name)
-						if l_assembly /= Void and then not cache_reader.is_assembly_in_cache (l_assembly.location, True) or else is_assembly_stale (l_assembly.location) then
+						if l_assembly /= Void and then not l_reader.is_assembly_in_cache (l_assembly.location, True) or else is_assembly_stale (l_assembly.location) then
 							add_assembly (l_assembly.location)
 							l_assembly_info_updated := True
 						end
@@ -235,6 +237,7 @@ feature -- Basic Operations
 			l_dir: DIRECTORY
 			l_ca: CONSUMED_ASSEMBLY
 			l_info: CACHE_INFO
+			l_reader: like cache_reader
 			l_retried: BOOLEAN
 		do
 			check
@@ -242,17 +245,18 @@ feature -- Basic Operations
 			end
 			guard.lock
 			if not l_retried then
+				l_reader := cache_reader
 				if status_printer /= Void then
 					create l_string_tuple
 					l_string_tuple.put ("Updating assembly consumed metadata: '" + a_path +
 						"' has been modified since last consumption.%N", 1)
 					status_printer.call (l_string_tuple)
 				end
-				l_ca := cache_reader.consumed_assembly_from_path (a_path)
+				l_ca := l_reader.consumed_assembly_from_path (a_path)
 				if l_ca /= Void then
-					l_info := cache_reader.info
+					l_info := l_reader.info
 						-- Remove consumed metadata
-					create l_dir.make (cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
+					create l_dir.make (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
 					if l_dir.exists then
 						l_dir.recursive_delete
 					end
@@ -278,20 +282,22 @@ feature -- Basic Operations
 			l_ca: CONSUMED_ASSEMBLY
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			l_retried: BOOLEAN
+			l_reader: like cache_reader
 			i: INTEGER
 		do
 			guard.lock
 			if not l_retried then
+				l_reader := cache_reader
 				remove_assembly_internal (a_path)
 				l_ca := consumed_assembly_from_path (a_path)
 
-				l_assemblies := cache_reader.client_assemblies (l_ca)
+				l_assemblies := l_reader.client_assemblies (l_ca)
 				from
 					i := 1
 				until
 					i > l_assemblies.count
 				loop
-					if cache_reader.is_assembly_in_cache (l_assemblies.item (i).gac_path, False) then
+					if l_reader.is_assembly_in_cache (l_assemblies.item (i).gac_path, False) then
 						remove_recursive_assembly (l_assemblies.item (i).gac_path)					
 					end
 					i := i + 1
@@ -485,17 +491,18 @@ feature {NONE} -- Implementation
 			l_ca: CONSUMED_ASSEMBLY
 			l_dir: DIRECTORY
 			l_info: CACHE_INFO
+			l_reader: like cache_reader
 			l_retried: BOOLEAN
 		do
 			guard.lock
 			if not l_retried then
 				l_ca := consumed_assembly_from_path (a_path)
-				create l_dir.make (cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
+				create l_dir.make (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))
 				if l_dir.exists then
 					l_dir.recursive_delete
 				end
-				if cache_reader.is_assembly_in_cache (a_path, False) then
-					l_info := cache_reader.info
+				if l_reader.is_assembly_in_cache (a_path, False) then
+					l_info := l_reader.info
 					l_info.remove_assembly (l_ca)
 					update_info (l_info)
 				end

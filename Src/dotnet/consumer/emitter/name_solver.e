@@ -18,18 +18,20 @@ feature -- Access
 			valid_name: not name.is_empty
 		local
 			count: INTEGER
+			l_names: like reserved_names
 		do
 			count := 2
+			l_names := reserved_names
 			from
 				Result := formatted_feature_name (name)
 			until
-				not reserved_names.has (Result)
+				not l_names.has (Result)
 			loop
 				trim_end_digits (Result)
 				Result.append (count.out)
 				count := count + 1
 			end
-			reserved_names.put (Result, Result)
+			l_names.put (Result, Result)
 		end
 
 	reserved_names: HASH_TABLE [STRING, STRING]

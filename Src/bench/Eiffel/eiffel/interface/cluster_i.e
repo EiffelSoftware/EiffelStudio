@@ -8,6 +8,7 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	SHARED_ENV;
 	SHARED_RESCUE_STATUS;
+	SHARED_LACE_PARSER
 	PROJECT_CONTEXT;
 	COMPARABLE
 		undefine
@@ -632,7 +633,8 @@ end;
 					vd22.set_file_name (file_name);
 					Error_handler.insert_error (vd22);
 				else
-					Result := c_clname (class_file.file_pointer);
+					Classname_finder.parse (class_file)
+					Result := Classname_finder.classname
 					class_file.close;
 					if Result /= Void then
 							-- Eiffel class in file
@@ -1254,12 +1256,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Externals
-
-	c_clname (file_pointer: POINTER): STRING is
-			-- Class in file `file_pointer'.
-		external
-			"C"
-		end;
 
 	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.

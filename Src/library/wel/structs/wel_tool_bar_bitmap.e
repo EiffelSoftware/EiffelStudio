@@ -139,27 +139,27 @@ feature {NONE} -- Externals
 
 	cwel_tbaddbitmap_set_hinst (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro <tbaddbmp.h>]"
+			"C [macro <tbaddbmp.h>] (TBADDBITMAP *, HINSTANCE)"
 		end
 
 	cwel_tbaddbitmap_set_nid (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <tbaddbmp.h>]"
+			"C [macro <tbaddbmp.h>] (TBADDBITMAP *, UINT)"
 		end
 
 	cwel_tbaddbitmap_get_hinst (ptr: POINTER): POINTER is
 		external
-			"C [macro <tbaddbmp.h>]"
+			"C [macro <tbaddbmp.h>] (TBADDBITMAP *): EIF_POINTER"
 		end
 
 	cwel_tbaddbitmap_get_nid (ptr: POINTER): INTEGER is
 		external
-			"C [macro <tbaddbmp.h>]"
+			"C [macro <tbaddbmp.h>] (TBADDBITMAP *): EIF_POINTER"
 		end
 
 	Hinst_commctrl: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"HINST_COMMCTRL"
 		end

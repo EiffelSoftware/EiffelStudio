@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			tab_list.extend(textable_tab)
 			tab_list.extend(fontable_tab)
 			tab_list.extend(pixmapable_tab)
+			tab_list.extend(toggle_button_tab)
 			tab_list.extend(check_button_tab)
 			create action_window.make(Current,tab_list)
 		end

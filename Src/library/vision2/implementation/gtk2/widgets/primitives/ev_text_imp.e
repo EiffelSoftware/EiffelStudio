@@ -139,12 +139,8 @@ feature -- Status setting
 
 	set_caret_position (pos: INTEGER) is
 			-- set current insertion position
-		local
-			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_iter.make
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
+			internal_set_caret_position (pos)
 		end
 
 feature -- Basic operation
@@ -330,14 +326,18 @@ feature -- Status report
 		local
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			from
-				Result := 1
-				create a_iter.make
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
-			until
-				not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
-			loop
-				Result := Result + 1
+			if has_word_wrapping then
+				from
+					Result := 1
+					create a_iter.make
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+				until
+					not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				loop
+					Result := Result + 1
+				end				
+			else
+				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_line_count (text_buffer)
 			end
 		end
 
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			-- The text within the widget has changed.
 		do
 			if change_actions_internal /= Void then
-				change_actions_internal.call (Void)
+				change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
 			end
 		end
 
@@ -545,12 +545,25 @@ feature {NONE} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_car_pos: INTEGER
 		do
+			a_car_pos := caret_position
 			create a_cs.make (a_text)
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (a_text_buffer, a_iter.item, a_cs.item, -1)
+			internal_set_caret_position (a_car_pos)
+		end
+
+	internal_set_caret_position (pos: INTEGER) is
+			-- set current insertion position
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
 		end
 		
 	text_view: POINTER

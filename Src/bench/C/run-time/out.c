@@ -30,10 +30,10 @@
  */
 
 #ifndef EIF_THREADS
-rt_private char buffero[TAG_SIZE];		/* Buffer for printing an object in a string */ /* %%ss mt renamed */
-rt_private char *tagged_out = (char *) 0;	/* String where the tagged out is written */ /* %%ss mt */
-rt_private int tagged_max = 0;			/* Actual maximum size of `tagged_out' */ /* %%ss mt */
-rt_private int tagged_len = 0;			/* Actual length of `tagged_out' */ /* %%ss mt */
+rt_private char buffero[TAG_SIZE];		/* Buffer for printing an object in a string */
+rt_private char *tagged_out = (char *) 0;	/* String where the tagged out is written */
+rt_private int tagged_max = 0;			/* Actual maximum size of `tagged_out' */
+rt_private int tagged_len = 0;			/* Actual length of `tagged_out' */
 #endif /* EIF_THREADS */
 
 rt_private void write_string(char *str);	/* Write a string in `tagged_out' */

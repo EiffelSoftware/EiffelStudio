@@ -77,6 +77,7 @@ feature
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			class_type: CL_TYPE_I
+			class_type_id: INTEGER
 		do
 			buf := buffer
 			if context.workbench_mode then
@@ -87,7 +88,8 @@ feature
 				buf.putchar (')');
 			else
 				class_type := context.current_type
-				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True)
+				class_type_id := class_type.type_id
+				array_index := Eiffel_table.is_polymorphic (rout_id, class_type_id, True)
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
@@ -107,12 +109,12 @@ feature
 					Extern_declarations.add_routine (feature_type, table_name);
 				else
 					rout_table ?= Eiffel_table.poly_table (rout_id)
-					if rout_table.is_implemented (class_type.type_id) then
-						internal_name := clone (rout_table.feature_name (class_type.type_id))
+					if rout_table.is_implemented (class_type_id) then
+						internal_name := clone (rout_table.feature_name (class_type_id))
 						buf.putstring ("(EIF_POINTER) ")
 						buf.putstring (internal_name)
 
-						if not equal (class_id, type.base_id) then
+						if not equal (class_id, class_type.base_id) then
 								-- Current addressed feature has not been generated in
 								-- current generated class, so we need to 
 								-- remember extern declarations

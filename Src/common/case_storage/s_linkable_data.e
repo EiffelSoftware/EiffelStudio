@@ -139,7 +139,7 @@ feature -- Setting
             y := a
         end
 
-	set_color_name ( s : STRING ) is
+	set_color ( s : STRING ) is
 		do
 			if	s /= void
 			then

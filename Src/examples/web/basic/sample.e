@@ -15,9 +15,6 @@ feature -- Access
 	Debug_mode: BOOLEAN is True
 			-- Should exception trace be displayed in case a crash occurs?
 
-	reponse_header: CGI_RESPONSE_HEADER
-			-- HTTP response header.
-
 	return_message: HTML_PAGE
 			-- Message which is sent back to the browser.
 

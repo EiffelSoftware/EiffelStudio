@@ -10,28 +10,15 @@ class CASE_STORAGE
 inherit
 
 	ICONED_COMMAND
-		redefine
-			text_window
+		rename
+			init as make
 		end;
 
 creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: SYSTEM_TEXT) is
-			-- Initialize the format button  with its bitmap.
-			-- Set up the mouse click and control-click actions
-			-- (click requires a confirmation, control-click doesn't).
-		do
-			init (a_text_window);
-		end;
-
 feature -- Properties
-
-	text_window: SYSTEM_TEXT;
-			-- Text window associated with Current.
 
 	control_click: ANY is
 			-- No confirmation required, used in work
@@ -70,7 +57,7 @@ feature {NONE} -- Implementation
 				format_storage.execute;
 				mp.restore
 			else
-				confirmer (text_window).call (Current,
+				confirmer (popup_parent).call (Current,
 					"This command requires exploring the entire%N%
 					%system and may take a long time...",
 					"Continue")

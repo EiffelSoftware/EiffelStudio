@@ -526,18 +526,6 @@ feature {NONE} -- Implementation
 	split: EB_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `local_tree' and `object_tree'.
 
-	icons: ARRAY [EV_PIXMAP] is
-			-- List of available icons for objects.
-		once
-			create Result.make (Immediate_value, External_reference_value)
-			Result.put (Pixmaps.Icon_void_object, Void_value)
-			Result.put (Pixmaps.Icon_object_symbol, Reference_value)
-			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
-			Result.put (Pixmaps.Icon_object_symbol, Special_value)
-			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
-			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)
-		end
-
 	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Procedure used to update Current.
 

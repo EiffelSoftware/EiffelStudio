@@ -229,10 +229,10 @@ feature {NONE} -- Implementation
 	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to container.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (v_imp.text)
-			feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_gs.item)
+			create a_cs.make (v_imp.text)
+			feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)

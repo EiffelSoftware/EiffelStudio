@@ -168,11 +168,11 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- set the `text' of the frame
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			internal_text := clone (a_text)
-			create a_gs.make (a_text)
-			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_gs.item)
+			create a_cs.make (a_text)
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_cs.item)
 		end
 
 	remove_text is

@@ -46,16 +46,16 @@ feature -- Access
 			-- `Result' is current clipboard content.
 		local
 			a_success: INTEGER
-			a_gs1, a_gs2: GEL_STRING
+			a_cs1, a_cs2: C_STRING
 			edit_chars: POINTER
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
-			create a_gs1.make ("CLIPBOARD")
-			create a_gs2.make ("COMPOUND_TEXT")
+			create a_cs1.make ("CLIPBOARD")
+			create a_cs2.make ("COMPOUND_TEXT")
 			a_success := feature {EV_GTK_EXTERNALS}.gtk_selection_convert (
 				clipboard_widget,
-				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_gs1.item, 1),
-				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_gs2.item, 1),
+				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_cs1.item, 1),
+				feature {EV_GTK_EXTERNALS}.gdk_atom_intern (a_cs2.item, 1),
 				feature {EV_GTK_EXTERNALS}.GDK_CURRENT_TIME
 			)
 			edit_chars := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (clipboard_widget, 0, -1)
@@ -69,16 +69,16 @@ feature -- Status Setting
 			-- Assign `a_text' to clipboard.
 		local
 			clip_text: STRING
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			if a_text /= Void then
 				clip_text := a_text
 			else
 				clip_text := ""
 			end
-			create a_gs.make (clip_text)
+			create a_cs.make (clip_text)
 			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
-			gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_gs.item, -1)
+			gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_cs.item, -1)
 			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (clipboard_widget, 0, -1)
 			feature {EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (clipboard_widget)
 		end

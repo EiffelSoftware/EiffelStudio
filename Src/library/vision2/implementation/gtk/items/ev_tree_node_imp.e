@@ -300,10 +300,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	insert_pixmap is
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 			is_leaf: INTEGER
 		do
-			create a_gs.make (text)
+			create a_cs.make (text)
 			if parent_tree_imp /= Void then
 				if pix_height > parent_tree_imp.row_height then
 					feature {EV_GTK_EXTERNALS}.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
@@ -311,7 +311,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				feature {EV_GTK_EXTERNALS}.gtk_ctree_set_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
-					a_gs.item,-- text,
+					a_cs.item,-- text,
 					parent_tree_imp.spacing, -- spacing
 					gdk_pixmap,
 					gdk_mask,

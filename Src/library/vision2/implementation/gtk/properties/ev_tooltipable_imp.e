@@ -40,13 +40,13 @@ feature -- Element change
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_text)
+			create a_cs.make (a_text)
 			feature {EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				visual_widget,
-				a_gs.item,
+				a_cs.item,
 				NULL
 			)
 		end

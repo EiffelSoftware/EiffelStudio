@@ -89,19 +89,19 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			temp_string: STRING
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			real_text := clone (a_text)	
 			if a_text.has ('&') then
 				temp_string := clone (a_text)
 				filter_ampersand (temp_string, '_')
-				create a_gs.make (temp_string)
+				create a_cs.make (temp_string)
 				key := feature {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
-				a_gs.item)
+				a_cs.item)
 			else
 				key := 0
-				create a_gs.make (a_text)
-				feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_gs.item)
+				create a_cs.make (a_text)
+				feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			end	
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end

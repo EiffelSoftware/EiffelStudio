@@ -30,15 +30,15 @@ feature {NONE} -- Initialization
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			base_make (an_interface)
 
 			-- Create the gtk object.
-			create a_gs.make ("Color selection dialog")
+			create a_cs.make ("Color selection dialog")
 			set_c_object (
 				feature {EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
-					a_gs.item
+					a_cs.item
 				)
 			)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (

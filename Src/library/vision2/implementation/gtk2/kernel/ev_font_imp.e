@@ -159,10 +159,10 @@ feature -- Status report
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_string)
-			Result := feature {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_gs.item)
+			create a_cs.make (a_string)
+			Result := feature {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_cs.item)
 		end
 
 	horizontal_resolution: INTEGER is
@@ -293,10 +293,10 @@ feature {EV_FONT_IMP} -- Implementation
 		require
 			pattern_not_void: pattern /= Void
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (pattern)
-			Result := feature {EV_GTK_EXTERNALS}.c_match_font_name (a_gs.item)
+			create a_cs.make (pattern)
+			Result := feature {EV_GTK_EXTERNALS}.c_match_font_name (a_cs.item)
 		end
 
 feature {EV_FONT_DIALOG_IMP} -- Implementation

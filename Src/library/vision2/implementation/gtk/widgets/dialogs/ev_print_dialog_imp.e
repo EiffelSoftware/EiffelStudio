@@ -30,12 +30,12 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gTK_WINDOW_DIALOG_ENUM))
-			create a_gs.make ("Print")
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_gs.item)
+			create a_cs.make ("Print")
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 

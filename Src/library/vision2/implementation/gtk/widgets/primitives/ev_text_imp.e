@@ -205,10 +205,10 @@ feature -- Status setting
 	
 	insert_text (txt: STRING) is
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (txt)
-			gtk_text_insert (entry_widget, NULL, NULL, NULL, a_gs.item, -1)
+			create a_cs.make (txt)
+			gtk_text_insert (entry_widget, NULL, NULL, NULL, a_cs.item, -1)
 		end
 	
 	set_text (txt: STRING) is

@@ -209,16 +209,16 @@ feature -- Element change
 			-- Set current button text to `txt'.
 		local
 			combo_par: EV_COMBO_BOX_IMP
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			Precursor (txt)
-			create a_gs.make (txt)
+			create a_cs.make (txt)
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then
 				feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (
 					combo_par.container_widget,
-					c_object, a_gs.item
+					c_object, a_cs.item
 				)
 			end
 		end

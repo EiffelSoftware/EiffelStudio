@@ -275,10 +275,10 @@ feature -- Implementation
 
 	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (signal)
-			feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_gs.item)
+			create a_cs.make (signal)
+			feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end
 
 	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER;

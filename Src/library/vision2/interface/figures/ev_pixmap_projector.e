@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 	project_rectangle (u: EV_RECTANGLE) is
 			-- Project area under `u' and flush pixmap.
 		do
-			Precursor (u)
+			Precursor {EV_WIDGET_PROJECTOR} (u)
 			widget.flush
 		end
 

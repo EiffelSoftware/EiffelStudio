@@ -169,7 +169,7 @@ feature -- Recomputation
 	calculate_absolute_position is
 			-- Recalculates all absolute positions inside this group.
 		do
-			Precursor
+			Precursor {EV_FIGURE}
 			from
 				start
 			until
@@ -183,7 +183,7 @@ feature -- Recomputation
 	invalidate is
 			-- Some property of `Current' has changed.
 		do
-			Precursor
+			Precursor {EV_FIGURE}
 			from start until after loop
 				item.invalidate
 				forth
@@ -193,7 +193,7 @@ feature -- Recomputation
 	validate is
 			-- Invalidate `Current'.
 		do
-			Precursor
+			Precursor {EV_FIGURE}
 			from start until after loop
 				item.validate
 				forth
@@ -205,7 +205,7 @@ feature -- List operations
 	insert (fig: like item; i: INTEGER) is
 			-- Add `fig' to the group.
 		do
-			Precursor (fig, i)
+			Precursor {ARRAYED_LIST} (fig, i)
 			fig.set_group (Current)
 			full_redraw
 		end
@@ -213,7 +213,7 @@ feature -- List operations
 	force_i_th (fig: like item; i: INTEGER) is
 			-- Add `fig' to the group.
 		do
-			Precursor (fig, i)
+			Precursor {ARRAYED_LIST} (fig, i)
 			fig.set_group (Current)
 			full_redraw
 		end
@@ -222,7 +222,7 @@ feature -- List operations
 			-- Add `fig' to the group.
 		do
 			item.unreference_group
-			Precursor (fig)
+			Precursor {ARRAYED_LIST} (fig)
 			fig.set_group (Current)
 			full_redraw
 		end
@@ -231,7 +231,7 @@ feature -- List operations
 			-- Remove `item' from figure.
 		do
 			item.unreference_group
-			Precursor
+			Precursor {ARRAYED_LIST}
 			full_redraw
 		end
 
@@ -241,7 +241,7 @@ feature -- List operations
 			if has (fig) then
 				fig.unreference_group
 			end
-			Precursor (fig)
+			Precursor {ARRAYED_LIST} (fig)
 			full_redraw
 		end
 
@@ -250,7 +250,7 @@ feature -- List operations
 			-- `other' will be empty afterwards.
 		do
 			change_group (other)
-			Precursor (other)
+			Precursor {ARRAYED_LIST} (other)
 			full_redraw
 		end
 
@@ -259,7 +259,7 @@ feature -- List operations
 			-- `other' will be empty afterwards.
 		do
 			change_group (other)
-			Precursor (other)
+			Precursor {ARRAYED_LIST} (other)
 			full_redraw
 		end
 
@@ -270,7 +270,7 @@ feature -- List operations
 				item.unreference_group
 				forth
 			end
-			Precursor
+			Precursor {ARRAYED_LIST}
 			full_redraw
 		end
 		

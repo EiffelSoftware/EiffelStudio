@@ -147,6 +147,7 @@ feature {IL_CODE_GENERATOR} -- Access
 			else
 				save (final_il_info_file_name)				
 			end
+			is_recording := False
 		ensure
 			is_outside_recording: not is_recording
 		end		

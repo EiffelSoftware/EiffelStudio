@@ -6,7 +6,8 @@ inherit
 	DATA;
 	EVENT_STONE;
 	SHARED_STORAGE_INFO;
-	EB_HASHABLE
+	EB_HASHABLE;
+	SHARED_APPLICATION
 	
 feature {NONE}
 
@@ -34,6 +35,41 @@ feature {NONE}
 	help_file_name: STRING is
 		do
 			Result := Help_const.event_help_fn
+		end;
+
+feature {CAT_EV_IS}
+
+	exists_in_application: BOOLEAN is
+		local
+			s: STATE;
+			b: BEHAVIOR;
+		do
+			from
+				Shared_app_graph.start
+			until
+				Shared_app_graph.off
+			loop
+				s ?= Shared_app_graph.key_for_iteration;
+				if s /= Void then
+					from
+						s.start
+					until
+						s.after
+					loop
+						b := s.output.data;
+						from
+							b.start
+						until
+							b.after or else Result
+						loop
+							Result := b.input = Current;
+							b.forth
+						end;
+						s.forth
+					end;
+				end;
+				Shared_app_graph.forth
+			end;
 		end;
 	
 feature 

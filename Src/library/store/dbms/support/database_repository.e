@@ -35,7 +35,7 @@ feature -- Initialization
 	make is
 			-- Create attributes
 		do
-			!! table.make
+			!! table.make (1)
 			!! tmp_acc_col
 			!! repository_name.make(1)
 			!! rep_qualifier.make(1)
@@ -65,6 +65,8 @@ feature -- Basic operations
 	generate_class(f: FILE) is
 			-- Generate Eiffel class template according to data
 			-- representation given by `repository_name'.
+		obsolete
+			"Wrong location for this feature: please use class DB_CLASS_GENERATOR instead."
 		require
 			file_exists: f /= Void and then f.exists
 		local
@@ -290,16 +292,16 @@ feature -- Status setting
 feature -- Status report
 
 	repository_name: STRING
-			-- Repository name corresponding to table name in DB schema
+			-- Repository name corresponding to table name in DB schema.
 
 	rep_qualifier: STRING
-			-- Qualifier of the Repository
+			-- Qualifier of the Repository.
 
 	rep_owner: STRING
-			-- Owner of the table
+			-- Owner of the table.
 
 	dimension: INTEGER is
-			-- Table column count
+			-- Table column count.
 		require else
 			repository_exists: exists
 		do
@@ -307,7 +309,7 @@ feature -- Status report
 		end
 
 	column_name (i :INTEGER): STRING is
-			-- Name of i-th column of table-like repository
+			-- Name of i-th column of table-like repository.
 		require else
 			repository_exists: exists
 			good_position: 0 < i and i <= dimension
@@ -387,13 +389,13 @@ feature -- Status report
 		end
 
 	exists: BOOLEAN is
-			-- Does current repository exist in database schema ?
+			-- Does current repository exist in database schema?
 		do
 			Result := not table.empty
 		end
 
 	column_number: INTEGER is
-			-- Column Number
+			-- Column Number.
 		do
 			Result := table.count
 		ensure
@@ -401,7 +403,7 @@ feature -- Status report
 		end
 
 	column_i_th(i: INTEGER): COLUMNS[DATABASE] is
-			-- Column corresponding to indice 'i'
+			-- Column corresponding to indice 'i'.
 		require
 			indice_valid: i>=1 and i<=column_number
 		do
@@ -414,19 +416,22 @@ feature -- Status report
 feature {NONE} -- Status report
 
 	tmp_acc_col: COLUMNS [G]
-			-- Temporary column related information holder
+			-- Temporary column related information holder.
 
-	table: LINKED_LIST [COLUMNS [G]]
-			-- List of column related information
+	table: ARRAYED_LIST [COLUMNS [G]]
+			-- List of column related information.
+			--| Cedric: LINKED_LIST replaced with an ARRAYED_LIST:
+			--| no element move in the class, feature to access list
+			--| elements is `column_i_th'.
 
 	request_select: DB_SELECTION is
-			-- Selection utility object
+			-- Selection utility object.
 		once
 			!! Result.make
 		end
 
 	request_create: DB_CHANGE is
-			-- Modification utility object
+			-- Modification utility object.
 		once
 			!! Result.make
 		end

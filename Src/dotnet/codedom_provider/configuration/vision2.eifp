@@ -28,7 +28,7 @@
         {
         "RootClass" = "ANY"
         "CreationRoutine" = ""
-        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.Base\\obj\\Debug"
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.EiffelBase\\obj\\Debug"
         "OptimizeCode" = "false"
         "GenerateCLSCompliantCode" = "true"
         "GenerateVerifiableCode" = "true"
@@ -48,7 +48,7 @@
         {
         "RootClass" = "ANY"
         "CreationRoutine" = ""
-        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.Base\\obj\\Release"
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.EiffelBase\\obj\\Release"
         "OptimizeCode" = "true"
         "GenerateCLSCompliantCode" = "true"
         "GenerateVerifiableCode" = "true"
@@ -96,40 +96,10 @@
 }
 "Clusters"
 {
-    "base"
-    {
-    "RelPath" = "${EIFFEL_SRC}\\library\\base"
-    "Namespace" = ""
-    "Library" = "true"
-    "IncSubDir" = "true"
-    "Override" = "false"
-    "ExcludedItems" = "CVS;classic;desc;table_eiffel3"
-    "UseDefaults" = "false"
-    "EvalPostconditions" = "true"
-    "EvalPreconditions" = "false"
-    "EvalChecks" = "false"
-    "EvalLoops" = "false"
-    "EvalInvariants" = "false"
-    }
-    "base_net"
-    {
-    "RelPath" = "${EIFFEL_SRC}\\library.net\\base"
-    "Namespace" = ""
-    "Library" = "true"
-    "IncSubDir" = "true"
-    "Override" = "false"
-    "ExcludedItems" = "CVS;"
-    "UseDefaults" = "true"
-    "EvalPostconditions" = "true"
-    "EvalPreconditions" = "false"
-    "EvalChecks" = "false"
-    "EvalLoops" = "false"
-    "EvalInvariants" = "false"
-    }
     "wel"
     {
     "RelPath" = "${EIFFEL_SRC}\\library\\wel"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.WEL"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"
@@ -144,7 +114,7 @@
     "wel_net"
     {
     "RelPath" = "${EIFFEL_SRC}\\library.net\\wel"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.WELNet"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"
@@ -159,7 +129,7 @@
     "vision2"
     {
     "RelPath" = "${EIFFEL_SRC}\\library\\vision2"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.EiffelVision2"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"
@@ -174,7 +144,7 @@
     "vision2_extension"
     {
     "RelPath" = "${EIFFEL_SRC}\\library\\vision2_extension"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.EiffelVision2Extension"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"
@@ -189,7 +159,7 @@
     "vision2_net"
     {
     "RelPath" = "${EIFFEL_SRC}\\library.net\\vision2"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.EiffelVision2Net"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"

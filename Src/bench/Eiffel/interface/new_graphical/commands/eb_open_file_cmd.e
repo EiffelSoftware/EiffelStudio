@@ -33,6 +33,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -96,7 +101,7 @@ feature {NONE} -- Implementation
 			fod: EV_FILE_OPEN_DIALOG
 		do
 			create fod
-			fod.set_filter ("*.e")
+			set_dialog_filters_and_add_all (fod, <<eiffel_class_files_filter>>)
 			fod.open_actions.extend (agent execute_callback (fod))
 			fod.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end

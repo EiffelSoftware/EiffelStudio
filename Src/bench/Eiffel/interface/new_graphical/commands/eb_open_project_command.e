@@ -55,6 +55,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make,
@@ -136,7 +141,7 @@ feature -- Execution
 				fod.set_start_directory (last_directory_opened.substring (1,last_directory_opened.index_of(';',1) -1 ))
 			end
 			fod.set_title (Interface_names.t_Select_a_file)
-			fod.set_filter ("*.epr")
+			set_dialog_filters_and_add_all (fod, <<eiffel_project_files_filter>>)
 			fod.open_actions.extend (agent file_choice_callback (fod))
 			fod.show_modal_to_window (parent_window)
 		end

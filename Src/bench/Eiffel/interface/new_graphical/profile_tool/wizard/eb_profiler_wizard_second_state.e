@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
+	
 create
 	make
 
@@ -47,7 +52,7 @@ feature -- Basic Operation
 			create generate_execution_profile.make_with_text (Interface_names.l_Generate_profile_from_rtir)
 			
 			create execution_profile_text_field.make (Current)
-			execution_profile_text_field.enable_file_browse_button ("*."+Dot_profile_information)
+			execution_profile_text_field.enable_file_browse_button (profile_files_filter)
 			execution_profile_text_field.set_starting_directory (information.generation_path)
 			execution_profile_text_field.generate
 			create empty_box

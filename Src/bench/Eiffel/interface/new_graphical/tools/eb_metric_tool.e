@@ -11,8 +11,14 @@ inherit
 	SHARED_WORKBENCH
 
 	SHARED_XML_ROUTINES
+		export
+			{NONE} all
+		end
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	EB_METRIC_OBSERVER
 		redefine
@@ -20,6 +26,11 @@ inherit
 		end
 
 	EB_METRIC_SCOPE_INFO
+	
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -728,7 +739,7 @@ feature -- Archive
 			ee: EXECUTION_ENVIRONMENT
 		do
 			create open_dialog
-			open_dialog.set_filter ("*.xml")
+			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory
 			open_dialog.open_actions.extend (agent import_archive_for_measure)

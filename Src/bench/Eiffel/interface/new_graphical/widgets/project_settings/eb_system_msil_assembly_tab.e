@@ -172,7 +172,7 @@ feature {NONE} -- Filling
 					al.after
 				loop
 					assembly := al.item
-					if assembly_type (assembly).is_equal ("local") then
+					if is_local_assembly (assembly) then
 							-- Add local reference row
 						create list_row
 						list_row.extend (assembly.cluster_name)
@@ -223,96 +223,69 @@ feature -- Checking
 
 feature -- Actions
 
-	add_gac_assembly_reference (assembly_list: EV_MULTI_COLUMN_LIST) is
-			-- Add item selected in 'assembly_list' to the 'gac_assembly_list' references
-		require
-			list_not_void: assembly_list /= Void
-		local
-			list_row, selected_item: EV_MULTI_COLUMN_LIST_ROW
-			l_ass_name: STRING
-		do			
-			selected_item := assembly_list.selected_item
-			if selected_item /= Void then
-				check
-					assembly_interface_exists: assembly_interface.exists
-				end
-				assembly_interface.go_i_th (assembly_list.index_of (selected_item, 1) - 1)
-				l_ass_name := selected_item.i_th (1).twin
-				create list_row
-				list_row.extend (unique_assembly_cluster_name ("GAC",
-									l_ass_name,
-									selected_item.i_th (2).twin,
-									selected_item.i_th (3).twin,
-									selected_item.i_th (4).twin))
-				list_row.extend (assembly_prefix (l_ass_name))	
-				list_row.extend (selected_item @ 1)
-				list_row.extend (selected_item @ 2)
-				list_row.extend (selected_item @ 3)
-				list_row.extend (selected_item @ 4)
-				gac_assembly_list.extend (list_row)
-				if special_assembly (l_ass_name) then
-					gac_assembly_list.set_row_editable (False, gac_assembly_list.index_of (list_row, 1))	
-				end
-				assembly_list.go_i_th (assembly_list.index_of (assembly_list.selected_item, 1))
-				assembly_list.remove
-			end	
-		end
-
 	add_local_assembly_reference is
 			-- Open the browse dialog for adding of local assembly reference
 		local
 			fd: EV_FILE_OPEN_DIALOG
 			l_dir: STRING
 			list_row: EV_MULTI_COLUMN_LIST_ROW
-			l_ass_name: STRING
+			l_ass_path: STRING
 			l_exec: EXECUTION_ENVIRONMENT
+			l_error: EV_INFORMATION_DIALOG
+			l_assembly_info: IL_ASSEMBLY_FACADE
+			l_prefix: STRING
+			l_has_error: BOOLEAN
 		do
 			create l_exec
 			l_dir := l_exec.current_working_directory
 			create fd
-			fd.set_filter ("*.*")
-			fd.set_title ("Select an Assembly")
+			fd.filters.extend (["*.dll", ".NET Library (*.dll)"])
+			fd.filters.extend (["*.exe", ".NET Application (*.exe)"])
+			fd.filters.extend (["*.exe;*.dll", "All Assemblies (*.exe; *.dll)"])
+			fd.set_title ("Select an assembly")
 			fd.show_modal_to_window (system_window.window)
 			l_exec.change_working_directory (l_dir)
-			if fd.file_name /= Void and then not fd.file_name.is_empty then
-				l_ass_name := fd.file_name
+				-- If it is empty, it means that user chose the `Cancel' button.
+			if not fd.file_name.is_empty then
+				l_ass_path := fd.file_name
 				if
-					(l_ass_name.substring_index (".dll", l_ass_name.count - 4) > 0)
-					or (l_ass_name.substring_index (".exe", l_ass_name.count - 4) > 0)
+					(l_ass_path.substring_index (".dll", l_ass_path.count - 4) > 0)
+					or (l_ass_path.substring_index (".exe", l_ass_path.count - 4) > 0)
 				then
-					create assembly_interface.make
-					if assembly_interface.exists then
-						assembly_interface.get_assembly_info_from_assembly (l_ass_name)
-						create list_row
-						if assembly_interface.signed (l_ass_name) then
-								-- Assembly is signed.
-							list_row.extend (unique_assembly_cluster_name ("local",
-								assembly_interface.assembly_name,
-								assembly_interface.assembly_version,
-								assembly_interface.assembly_culture,
-								assembly_interface.assembly_public_key_token))
+					create l_assembly_info.make
+					if l_assembly_info.exists then
+						l_assembly_info.get_assembly_info_from_assembly (l_ass_path)
+						if l_assembly_info.is_valid then
+							l_prefix := assembly_prefix (l_assembly_info.assembly_name)
 						else
-								-- Assembly is not signed.
-							list_row.extend (unique_assembly_cluster_name ("local",
-								assembly_interface.assembly_name,
-								assembly_interface.assembly_version,
-								assembly_interface.assembly_culture,
-								""))
+							l_has_error := True
 						end
-						list_row.extend ("")
-						list_row.extend (l_ass_name)
+					else
+						l_prefix := ""
+					end
+					if not l_has_error then
+						create list_row
+						list_row.extend (l_ass_path)
+						list_row.extend (l_prefix)
+						list_row.extend (l_ass_path)
 						local_assembly_list.extend (list_row)
 					end
+				else
+					l_has_error := True
 				end
+			end
+			if l_has_error then
+				create l_error.make_with_text ("Selected file is not an assembly and has not been added.")
+				l_error.show_modal_to_window (system_window.window)
 			end
 		end
 		
-	remove_reference (ass_type: STRING) is
+	remove_reference (is_gac_assembly: BOOLEAN) is
 			-- Remove selected reference from list
 		do
-			if ass_type.is_equal ("GAC") then
+			if is_gac_assembly then
 				gac_assembly_list.remove_selected_item
-			elseif ass_type.is_equal ("Local") then
+			else
 				local_assembly_list.remove_selected_item
 			end
 		end		
@@ -348,8 +321,8 @@ feature {NONE} -- Initialization
 				-- change some options.
 			widgets_set_before_has_compilation_started.extend (md_cache_path)
 
-			extend (msil_assembly_info ("GAC", Void, agent remove_reference ("GAC")))
-			extend (msil_assembly_info ("local", agent add_local_assembly_reference, agent remove_reference ("Local")))
+			extend (msil_assembly_info (True, Void, agent remove_reference (True)))
+			extend (msil_assembly_info (False, agent add_local_assembly_reference, agent remove_reference (False)))
 			
 			msil_specific_widgets.extend (Current)
 		end
@@ -365,11 +338,8 @@ feature {NONE} -- Initialization
 			local_assembly_list_empty: local_assembly_list.is_empty
 		end
 
-	msil_assembly_info (a_assembly_type: STRING; add_proc, remove_proc: PROCEDURE [ANY, TUPLE]): EV_FRAME is
+	msil_assembly_info (is_gac_assembly: BOOLEAN; add_proc, remove_proc: PROCEDURE [ANY, TUPLE]): EV_FRAME is
 			-- MSIL information about assembly references
-		require
-			type_not_void: a_assembly_type /= Void
-			type_not_empty: not a_assembly_type.is_empty
 		local
 			vbox, item_box: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
@@ -382,7 +352,7 @@ feature {NONE} -- Initialization
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			
-			if a_assembly_type.is_equal ("GAC") then
+			if is_gac_assembly then
 				create Result.make_with_text ("GAC Assembly References")
 				create gac_assembly_list.make (system_window.window)
 				gac_assembly_list.set_column_titles 
@@ -393,8 +363,8 @@ feature {NONE} -- Initialization
 				gac_assembly_list.set_unique_column_values (True)
 				gac_assembly_list.deselect_actions.force_extend (agent check_cluster_names_valid)
 				item_box.extend (gac_assembly_list)
-			elseif a_assembly_type.is_equal ("local") then
-				create Result.make_with_text ("Local Assembly References")
+			else
+				create Result.make_with_text ("Assembly References")
 				create local_assembly_list.make (system_window.window)
 				local_assembly_list.set_column_titles
 					(<<"Cluster Name", "Prefix", "Path">>)
@@ -434,96 +404,38 @@ feature {NONE} -- Initialization
 			Result.extend (vbox)
 		end
 
-	assembly_interface: IL_ASSEMBLY_FACADE
-			-- Interface to the FusionSupport component
-		
 feature -- Implementation
 
-	assembly_type (a_assembly: ASSEMBLY_SD): STRING is
-			-- String representation of assembly type, "local" or "GAC"
+	is_local_assembly (a_assembly: ASSEMBLY_SD): Boolean is
+			-- Is `a_assembly' a local assembly?
 		require
 			a_assembly_not_void: a_assembly /= Void
 		local
-			a_file: RAW_FILE
+			l_file: RAW_FILE
+			l_name: ID_SD
 		do
-			if (a_assembly.public_key_token /= Void and not a_assembly.public_key_token.is_empty) then
-				create a_file.make (a_assembly.assembly_name)
-				if a_file.exists then
-					if a_assembly.assembly_name.count >= 4 then
-						if a_assembly.assembly_name.substring_index (".dll", a_assembly.assembly_name.count - 4) > 0 then
-							Result := "local"
-						elseif a_assembly.assembly_name.substring_index (".exe", a_assembly.assembly_name.count - 4) > 0 then
-							Result := "local"
+			if
+				(a_assembly.public_key_token /= Void and
+				not a_assembly.public_key_token.is_empty)
+			then
+				l_name := a_assembly.assembly_name
+				create l_file.make (l_name)
+				if l_file.exists then
+					if l_name.count >= 4 then
+						if l_name.substring_index (".dll", l_name.count - 4) > 0 then
+							Result := True
+						elseif l_name.substring_index (".exe", l_name.count - 4) > 0 then
+							Result := True
 						end
 					end
 				else
-					Result := "GAC"
+					Result := False
 				end
 			else
-				Result := "local"
+				Result := True
 			end	
 		end
-	
-	unique_assembly_cluster_name (ass_type, a_name, a_culture, a_version, a_public_key: STRING): STRING is
-			-- Produce a unique cluster name from assembly details relative to 'a_list'
-		local
-			i: INTEGER
-			finished: BOOLEAN
-			current_cluster_names: ARRAYED_LIST [STRING]
-			temp_id_string: STRING
-		do
-			from
-				i := 1
-				current_cluster_names := cluster_names
-			until	
-				i = 5 or finished
-			loop
-				inspect i
-				when 1 then
-					if a_name.is_empty then 
-						create temp_id_string.make_from_string ("Assembly")
-					elseif a_name.is_equal ("System") then
-						create temp_id_string.make_from_string (a_name + "_")
-					else	
-						create temp_id_string.make_from_string (a_name)
-					end
-				when 2 then
-					if not a_version.is_empty then
-						temp_id_string.append (a_version)
-					end
-				when 3 then
-					if not a_culture.is_empty then
-						temp_id_string.append (a_culture)
-					end	
-				when 4 then		
-					if not a_public_key.is_empty then
-						temp_id_string.append (a_public_key)
-					end		
-				end
-				if current_cluster_names.has (temp_id_string) then
-					i := i + 1
-				else
-					finished := True
-				end			
-			end
-			from
-				i := 1
-				temp_id_string.replace_substring_all (".", "_")
-			until
-				i = temp_id_string.count
-			loop
-				if
-					not (temp_id_string.item (i).is_alpha or 
-					temp_id_string.item (i).is_digit or
-					temp_id_string.item (i).is_equal ('_'))
-				then
-					temp_id_string.remove (i)
-				end
-				i := i + 1
-			end
-			Result := temp_id_string
-		end
-		
+
 	check_cluster_names_valid is
 			-- Are the assembly cluster names valid?
 		local
@@ -558,36 +470,24 @@ feature -- Implementation
 			end
 		end
 		
-	special_assembly (a_name: STRING): BOOLEAN is
-			-- Is assembly with name 'a_name' a special assembly?
-		require
-			a_name_not_void: a_name /= Void
-		do
-			Result := 	a_name.is_equal ("System") or
-						a_name.is_equal ("System.Xml") or
-						a_name.is_equal ("System.Windows.Forms")
-		end
-		
 	assembly_prefix (a_name: STRING): STRING is
 			-- Return the required prefix for the assembly with name 'a_name'.
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if special_assembly (a_name) then
-				if a_name.is_equal ("System") then
-					Result := "system_dll_"
-				elseif a_name.is_equal ("System.Xml") then
-					Result := "xml_"
-				elseif a_name.is_equal ("System.Windows.Forms") then
-					Result := "winforms_"
-				end
+			if a_name.is_equal ("System") then
+				Result := "system_dll_"
+			elseif a_name.is_equal ("System.Xml") then
+				Result := "xml_"
+			elseif a_name.is_equal ("System.Windows.Forms") then
+				Result := "winforms_"
 			else
 				Result := ""
 			end
 		ensure
 			result_not_void: Result /= Void			
-		end
-		
+  		end
+
 	cluster_names: ARRAYED_LIST [STRING] is
 			-- Get the cluster names for referenced assemblies
 		do
@@ -609,7 +509,7 @@ feature -- Implementation
 				local_assembly_list.forth
 			end
 		end
-	
+  		
 	reserved_words: ARRAYED_LIST [STRING] is
 			-- List of Lace reserved words which cannot be used for cluster names
 		once
@@ -653,7 +553,7 @@ feature -- Implementation
 			Result.extend ("visible")
 			Result.extend ("yes")
 		end	
-	
+
 invariant
 	widgets_not_void:
 		gac_assembly_list /= Void and

@@ -21,6 +21,8 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 	
+	EB_SHARED_DEBUG_TOOLS
+	
 	SHARED_APPLICATION_EXECUTION
 
 create
@@ -182,9 +184,14 @@ feature {NONE} -- Implementation
 				then
 					str := clone (class_i.name)
 					str.to_upper
-					create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_class (str),
+					if Application.is_running then
+						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<~delete_class>>)
+						cd.show_modal_to_window (window.window)
+					else
+						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_class (str),
 												<<~delete_class>>)
-					cd.show_modal_to_window (window.window)
+						cd.show_modal_to_window (window.window)
+					end
 					class_i := Void
 				else
 					create wd.make_with_text (Warning_messages.w_Cannot_delete_read_only_class (class_i.name_in_upper))
@@ -197,9 +204,14 @@ feature {NONE} -- Implementation
 					not cluster_i.is_precompiled
 				then
 					str := clone (cluster_i.cluster_name)
-					create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
-												<<~delete_cluster>>)
-					cd.show_modal_to_window (window.window)
+					if Application.is_running then
+						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<~delete_cluster>>)
+						cd.show_modal_to_window (window.window)
+					else
+						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
+													<<~delete_cluster>>)
+						cd.show_modal_to_window (window.window)
+					end
 					cluster_i := Void
 				else
 					create wd.make_with_text (Warning_messages.w_Cannot_delete_library_cluster (cluster_i.cluster_name))
@@ -220,6 +232,10 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
+				if Application.is_running then
+					Application.kill
+				end
+				Debugger_manager.disable_debug
 				create file.make (class_i.file_name)
 				if
 					file.exists and then
@@ -245,6 +261,10 @@ feature {NONE} -- Implementation
 	delete_cluster is
 			-- Remove `cluster_i' from the system.
 		do
+			if Application.is_running then
+				Application.kill
+			end
+			Debugger_manager.disable_debug
 			manager.remove_cluster_i (cluster_i)
 			Application.resynchronize_breakpoints
 			Window_manager.synchronize_all

@@ -6,22 +6,12 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MANAGER_M 
+class 
+	MANAGER_M 
 
 inherit
 
-	COMPOSITE_M
-		rename
-			set_background_color as widget_set_background_color,
-			update_background_color as widget_update_background_color
-		end;
-
-	COMPOSITE_M
-		redefine
-			set_background_color, update_background_color
-		select
-			set_background_color, update_background_color
-		end;
+	COMPOSITE_M;
 
 	MEL_MANAGER
 		rename
@@ -53,7 +43,9 @@ feature -- Status Report
 			if private_foreground_color = Void then
 				!! private_foreground_color.make;
 				fg_color_x ?= private_foreground_color.implementation;
-				--fg_color_x.set_pixel (xt_pixel (screen_object, Mforeground_color));
+				fg_color_x.set_default_pixel (mel_foreground_color,
+						mel_screen.default_colormap);
+				fg_color_x.increment_users
 			end;
 			Result := private_foreground_color;
 		ensure
@@ -73,81 +65,38 @@ feature -- Status Setting
 		do
 			if private_foreground_color /= Void then
 				color_implementation ?= private_foreground_color.implementation;
-				color_implementation.remove_object (Current)
+				color_implementation.decrement_users;
 			end;
 			private_foreground_color := a_color;
 			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			--ext_name := Mforeground_color.to_c;
-			pixel := color_implementation.pixel (screen);
-			--c_set_color (screen_object, pixel, $ext_name)
-			update_other_fg_color (pixel)
+			color_implementation.increment_users;
+			color_implementation.allocate_pixel;
+			set_foreground_color_from_imp (color_implementation)
 		ensure
-			foreground_color = a_color
+			set: foreground_color = a_color
 		end;
 
-	set_background_color (a_color: COLOR) is
-			-- Set background_color to `a_color'.
-			--| Make sure to reset the foreground color
-			--| if it has been set.
-		local
-			color_implementation: COLOR_X;
-			ext_name: ANY;
-			pixel: POINTER;
-		do
-			widget_set_background_color (a_color);
-			color_implementation ?= private_background_color.implementation;
-			pixel := color_implementation.pixel (screen);
-			update_other_bg_color (pixel);
-			if private_foreground_color /= Void then
-				update_foreground_color
-			end;
-		end;
-
-feature -- Update
-
-	update_other_bg_color (pixel: POINTER) is
-		do
-		end;
-
-	update_other_fg_color (pixel: POINTER) is
-		do
-		end;
-
-feature {NONE} -- Implementation
+feature {COLOR_X} -- Implementation
 
 	private_foreground_color: COLOR;
 			-- foreground_color color
 
-feature {COLOR_X} -- Implementation
-
 	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
-			ext_name: ANY;
-			color_implementation: COLOR_X;	
-			pixel: POINTER;
-		do
-			--ext_name := Mforeground_color.to_c;
-			color_implementation ?= foreground_color.implementation;
-			pixel := color_implementation.pixel (screen);
-			--c_set_color (screen_object, pixel, $ext_name)
-			update_other_fg_color (pixel);
-		end
-
-	update_background_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			pixel: POINTER;
 			color_implementation: COLOR_X
 		do
-			widget_update_background_color;
-			color_implementation ?= private_background_color.implementation;
-			pixel := color_implementation.pixel (screen);
-			update_other_bg_color (pixel);
-			if private_foreground_color /= Void then
-				update_background_color
-			end
+			color_implementation ?= private_foreground_color.implementation;
+			color_implementation.allocate_pixel;
+			set_foreground_color_from_imp (color_implementation);
+		end
+
+	set_foreground_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
+		require
+			valid_color_imp: color_imp /= Void and color_imp.is_valid
+		do
+			mel_set_foreground_color (color_imp)
 		end;
 
 end -- class MANAGER_M

@@ -94,6 +94,9 @@ feature -- Basic operations
 			non_void_type: l_type /= Void
 			support_type: support_eiffel_type (l_type)
 		do
+			in_type := False
+			inout_type := False
+
 			if in_types.has (l_type) then
 				Result := in_types.item (l_type)
 				in_type := True

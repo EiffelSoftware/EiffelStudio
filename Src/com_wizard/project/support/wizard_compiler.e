@@ -308,6 +308,9 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
+	cluster_info: EI_CLUSTER_DATA_INPUT
+			-- Cluster information
+
 	proxy_stub_file_name: STRING is
 			-- Proxy/Stub fil name
 		once
@@ -389,6 +392,13 @@ feature {NONE} -- Implementation
 			end
 			Result.append (New_line_tab_tab)
 			Result.append (End_keyword)
+
+			if shared_wizard_environment.new_eiffel_project then
+				Result.append (New_line)
+				Result.append (New_line_tab)
+				Result.append (clusters_from_project)
+			end
+			
 			Result.append (New_line)
 			Result.append (New_line_tab)
 			Result.append (Common_cluster)
@@ -418,12 +428,26 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab_tab)
 			Result.append (End_keyword)
 			Result.append (New_line)
-			Result.append (New_line_tab)
+			Result.append (New_line)
 			Result.append (New_line)
 			Result.append (Partial_ace_file_part_two)
-			Result.append (Tab)
-			Result.append (Tab)
-			Result.append (Tab)
+			Result.append (Tab_tab_tab)
+
+			if cluster_info /= Void and not cluster_info.include_path.empty then
+				from
+					cluster_info.include_path.start
+				until
+					cluster_info.include_path.after
+				loop
+					if not cluster_info.include_path.item.empty then
+						Result.append (cluster_info.include_path.item)
+						Result.append (New_line_tab_tab_tab)
+					end
+
+					cluster_info.include_path.forth
+				end
+			end
+
 			Result.append (Double_quote)
 			Result.append (clone (Shared_wizard_environment.destination_folder))
 			Result.append (Client)
@@ -443,8 +467,67 @@ feature {NONE} -- Implementation
 			Result.append (New_line)
 			Result.append (New_line)
 			Result.append (End_ace_file)
+
+			if cluster_info /= Void and not cluster_info.include_path.empty then
+				from
+					cluster_info.objects.start
+				until
+					cluster_info.objects.after
+				loop
+					if not cluster_info.objects.item.empty then
+						Result.append (New_line_tab_tab_tab)
+						Result.append (cluster_info.objects.item)
+					end
+
+					cluster_info.objects.forth
+				end
+			end
+			Result.append (New_line)
 		end
-			
+
+	clusters_from_project: STRING is
+			-- Clusters code from project Ace file
+		local
+			input_file: PLAIN_TEXT_FILE
+			retried: BOOLEAN
+			str_buffer: STRING
+		do
+			if retried then
+				Result := ""
+			else
+				create cluster_info.make
+				create Result.make (0)
+
+				create input_file.make_open_read (shared_wizard_environment.ace_file_name)
+
+				cluster_info.input_from_file (input_file)
+
+				if not cluster_info.clusters.empty then
+					from
+						cluster_info.clusters.start
+					until
+						cluster_info.clusters.after
+					loop
+						if cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
+							str_buffer := clone (shared_wizard_environment.eiffel_project_name)
+							str_buffer.head (str_buffer.last_index_of ('\', 1))
+							str_buffer.prepend ("%"")
+							str_buffer.append ("%"")
+							cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
+						else
+							Result.append (cluster_info.clusters.item)
+						end
+						Result.append (New_line)
+						Result.append (Tab_tab)
+						cluster_info.clusters.forth
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	Idl_compiler_command_line: STRING is
 			-- MIDL command line
 		do

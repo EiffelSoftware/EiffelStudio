@@ -14,16 +14,12 @@ inherit
 			code
 		end
 
-	ECOM_PARAM_FLAGS
-		export
-			{NONE} all
-		end
-
 	WIZARD_SPECIAL_SYMBOLS
 		export
 			{NONE} all
 		end
 
+	ECOM_PARAM_FLAGS
 
 create
 	make
@@ -35,18 +31,21 @@ feature {NONE} -- Initialization
 		do
 			Precursor (l_name, l_type)
 			flag := Paramflag_fin
+
 		end
 
 feature -- Access
 
 	flag: INTEGER
 			-- Parameter flag.
-			-- See {ECOM_PARAM_FLAGS} for value
+			-- See ECOM_PARAM_FLAGS
 
 feature -- Element change
 
 	set_flag (l_flag: INTEGER) is
 			-- Set 'flag' to 'l_flag'.
+		require
+			valid_flag: is_valid_paramflag (l_flag)
 		do
 			flag := l_flag
 		ensure
@@ -63,7 +62,6 @@ feature -- Output
 			else
 				Result := "[in, out]"
 			end
-
 			Result.append (type)
 			Result.append (" ")
 			Result.append (name)

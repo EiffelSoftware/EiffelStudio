@@ -32,8 +32,10 @@ feature {NONE} -- Initialization
 			create id_ok.make_by_id (Current, Idok)
 			create id_cancel.make_by_id (Current, Idcancel)
 			create project_file_edit.make_by_id (Current, Project_file_edit_constant)
+			create ace_file_name_edit.make_by_id (Current, Ace_file_edit_constant)
 			create destination_folder_edit.make_by_id (Current, Destination_folder_edit_constant)
 			create class_name_edit.make_by_id (Current, Eiffel_class_edit_constant)
+			create ace_file_browse_button.make_by_id (Current, Ace_file_browse_button_constant)
 			create project_file_browse_button.make_by_id (Current, Project_file_browse_button_constant)
 			create destination_folder_browse_button.make_by_id (Current, Destination_folder_browse_button_constant)
 			-- create help_button.make_by_id (Current, Help_button_constant)
@@ -57,18 +59,21 @@ feature -- Behavior
 				browse_for_project_file
 			elseif control = destination_folder_browse_button then
 				browse_for_destination_folder
+			elseif control = ace_file_browse_button then
+				browse_for_ace_file
 			end
 		end
 
 	on_ok is
 			-- Process Next button activation.
 		local
-			folder_name, project_file_name, idl_file_name, eiffel_class_name: STRING
+			folder_name, project_file_name, idl_file_name, eiffel_class_name, ace_file_name: STRING
 			a_file: RAW_FILE
 		do
 			folder_name := destination_folder_edit.text
 			project_file_name := project_file_edit.text
 			eiffel_class_name := class_name_edit.text
+			ace_file_name := ace_file_name_edit.text
 
 			project_file_name.to_lower
 			if folder_name = Void or folder_name.empty then
@@ -77,7 +82,11 @@ feature -- Behavior
 				msg_box.error_message_box (Current, Empty_project_file, Initialization_error)
 			elseif eiffel_class_name = Void or eiffel_class_name.empty then
 				msg_box.error_message_box (Current, Empty_class_name, Initialization_error)
+			elseif ace_file_name = Void or ace_file_name.empty then
+				msg_box.error_message_box (Current, Empty_ace_file, Initialization_error)
 			else
+				shared_wizard_environment.set_ace_file_name (ace_file_name)
+
 				if folder_name.item (folder_name.count) = Directory_separator then
 					folder_name.head (folder_name.count -1)
 				end
@@ -111,11 +120,17 @@ feature -- Access
 	class_name_edit: WEl_SINGLE_LINE_EDIT
 			-- Class name edit
 
+	ace_file_name_edit: WEL_SINGLE_LINE_EDIT
+			-- Ace file name edit
+
 	project_file_edit: WEL_SINGLE_LINE_EDIT
 			-- Project file location edit
 
 	destination_folder_edit: WEL_SINGLE_LINE_EDIT
 			-- Destination folder location edit
+
+	ace_file_browse_button: WEL_PUSH_BUTTON
+			-- Browse for Ace file button
 
 	project_file_browse_button: WEL_PUSH_BUTTON
 			-- Browse for project file button
@@ -124,6 +139,15 @@ feature -- Access
 			-- Browse for destination folder button
 
 feature -- Basic Operations
+
+	browse_for_ace_file is
+			-- Browse for Ace file
+		do
+			ace_file_selection_dialog.activate (Current)
+			if ace_file_selection_dialog.selected then
+				ace_file_name_edit.set_text (ace_file_selection_dialog.file_name)
+			end
+		end
 
 	browse_for_project_file is
 			-- Browse for Eiffel file.
@@ -158,6 +182,13 @@ feature -- Basic Operations
 			Result.set_title (Folder_selection_dialog_title)
 		end
 
+	ace_file_selection_dialog: WEL_OPEN_FILE_DIALOG is
+			-- Ace file selection dialog
+		once
+			create Result.make
+			Result.set_filter (Ace_file_filter_descriptions, Ace_file_filters)
+		end
+
 feature {NONE} -- Implementation
 
 	msg_box: WEL_MSG_BOX
@@ -181,6 +212,9 @@ feature {NONE} -- Implementation
 	Empty_project_file: STRING is "Empty project file%NPlease enter a valid project file"
 			-- Invalid destination folder message
 
+	Empty_ace_file: STRING is "Empty Ace file%NPlease enter a valid Ace file"
+			-- Invalid destination folder message
+
 	Empty_class_name: STRING is "Empty class name%NPlease enter a valid class name"
 			-- Invalid class name message
 
@@ -196,6 +230,18 @@ feature {NONE} -- Implementation
 			Result := <<"*.epr">>
 		end
 
+	Ace_file_filter_descriptions: ARRAY[STRING] is
+			-- Ace file dialog file filter descriptions
+		once
+			Result := <<"Ace file (*.ace)", "All files">>
+		end
+
+	Ace_file_filters: ARRAY[STRING] is
+			-- Ace file filters
+		once
+			Result := <<"*.ace","*.*">>
+		end
+
 	Folder_selection_dialog_title: STRING is "Choose Destination Folder"
 			-- Folder selection dialog title
 
@@ -209,11 +255,15 @@ feature {NONE} -- Implementation
 				project_file_edit.set_text (shared_wizard_environment.eiffel_project_name)
 			end
 			if shared_wizard_environment.destination_folder /= Void then
-				destination_folder_edit.set_text (shared_wizard_environment.destination_folder)
+				destination_folder_edit.set_text (clone (shared_wizard_environment.destination_folder))
 			end
 
 			if shared_wizard_environment.eiffel_class_name /= Void then
 				class_name_edit.set_text (shared_wizard_environment.eiffel_class_name)
+			end
+
+			if shared_wizard_environment.ace_file_name /= Void then
+				ace_file_name_edit.set_text (shared_wizard_environment.ace_file_name)
 			end
 		end
 

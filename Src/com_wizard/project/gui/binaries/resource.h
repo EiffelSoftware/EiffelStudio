@@ -6,6 +6,7 @@
 #define Open_String                     2
 #define Save_String                     3
 #define Clear_Output_String             4
+#define Exit_String                     4
 #define Launch_String                   5
 #define Generate_String                 6
 #define Wizard_Definition_File_Dialog   101
@@ -22,12 +23,14 @@
 #define Wizard_First_Choice_Dialog      123
 #define Wizard0_Bitmap                  124
 #define Splash_screen_dialog            125
+#define wizard_splash_dialog            125
 #define Splash_bitmap                   127
 #define Wizard_Eiffel_Project_Dialog    129
 #define Wizard_Eiffel_Project_File_Dialog 129
 #define Definition_File_Edit            1007
 #define Definition_File_Input_Static    1008
 #define Browse_Button                   1009
+#define Definition_File_Input_Static2   1009
 #define Destination_Folder_Edit         1010
 #define Destination_Folder_Browse_Button 1012
 #define In_Process_Check                1013
@@ -61,6 +64,7 @@
 #define Component_Type_Static           1054
 #define Marshalling_Question_Static     1056
 #define Out_Of_Proces_Check2            1056
+#define Out_Of_Process_Check            1056
 #define Virtual_Table_Universal_Radio   1057
 #define Virtual_Table_Standard_Radio    1058
 #define Marshallin_Description_Static   1059
@@ -72,6 +76,8 @@
 #define Project_File_Edit               1064
 #define Project_File_Browse_Button      1065
 #define Eiffel_Class_Edit               1066
+#define Ace_File_Edit                   1067
+#define Ace_File_Browse_Button          1068
 
 // Next default values for new objects
 // 

@@ -106,9 +106,9 @@ feature -- Status setting
 		require
 			s_exists: s /= Void
 		local
-			np: PROCESS
+			np: SYSTEM_DLL_PROCESS
 			nm: SYSTEM_STRING
-			si: PROCESS_START_INFO
+			si: SYSTEM_DLL_PROCESS_START_INFO
 		do
 			if s.is_empty then
 				nm := ("cmd.exe").to_cil
@@ -116,7 +116,7 @@ feature -- Status setting
 				nm := s.to_cil
 			end
 			create si.make_from_file_name (nm)
-			np := feature {PROCESS}.start_process_start_info (si)
+			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
 		end
 
 	launch (s: STRING) is
@@ -126,9 +126,9 @@ feature -- Status setting
 		require
 			s_not_void: s /= Void
 		local
-			np: PROCESS
+			np: SYSTEM_DLL_PROCESS
 			nm: SYSTEM_STRING
-			si: PROCESS_START_INFO
+			si: SYSTEM_DLL_PROCESS_START_INFO
 		do
 			if s.is_empty then
 				nm := ("cmd.exe").to_cil
@@ -136,7 +136,7 @@ feature -- Status setting
 				nm := s.to_cil
 			end
 			create si.make_from_file_name (nm)
-			np := feature {PROCESS}.start_process_start_info (si)
+			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
 			np.wait_for_exit
 			np.close
 		end

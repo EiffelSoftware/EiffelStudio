@@ -45,6 +45,7 @@
 #include "proto.h"
 #include "rt_assert.h"
 #include "rt_macros.h"
+#include "rt_gen_types.h"
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -794,24 +795,31 @@ rt_private void load_bc(int slots, int amount)
 
 rt_private void rec_inspect(EIF_REFERENCE object);
 rt_private void rec_sinspect(EIF_REFERENCE object);
+rt_private void rec_tinspect(EIF_REFERENCE object);
 
 rt_private void obj_inspect(EIF_OBJ object)
 {
 	uint32 flags;		/* Object flags */
-	EIF_BOOLEAN is_special;
+	EIF_BOOLEAN is_special, is_tuple;
 	int32 dtype;
 	EIF_REFERENCE ref = eif_access(object);
 
 	flags = HEADER(ref)->ov_flags;
 	is_special = EIF_TEST(flags & EO_SPEC);	
+	is_tuple = EIF_TEST(flags & EO_TUPLE);	
 	twrite (&is_special, sizeof(EIF_BOOLEAN));
+	twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 		/* Send class dynamic id */
 	dtype = Deif_bid(flags);
 	twrite (&dtype, sizeof(int32));
 					
 	if (is_special) {
 			/* Send items recursively */
-		rec_sinspect(ref);
+		if (is_tuple) {
+			rec_tinspect(ref);
+		} else {
+			rec_sinspect(ref);
+		}
 	} else {
 			/* Inspect recursively `object' */
 		rec_inspect(ref);
@@ -898,13 +906,20 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 						twrite (&sk_type, sizeof(uint32));
 						twrite (reference, sizeof(EIF_POINTER));
 					} else {
+						int32 dtype = Dtype(reference);
 						twrite (&sk_type, sizeof(uint32));
 						if (ref_flags & EO_SPEC) {
+							EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
 							is_special = EIF_TRUE;
 							twrite (&is_special, sizeof(EIF_BOOLEAN));
-							rec_sinspect (reference);
+							twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+							if (is_tuple) {
+								twrite (&dtype, sizeof(int32));
+								twrite (&reference, sizeof(EIF_POINTER));
+							} else {
+								rec_sinspect (reference);
+							}
 						} else {
-							int32 dtype = Dtype(reference);
 							twrite (&is_special, sizeof(EIF_BOOLEAN));
 							twrite (&is_void, sizeof(EIF_BOOLEAN));
 							twrite (&dtype, sizeof(int32));
@@ -1076,6 +1091,124 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 	}
 }
 
+rt_private void rec_tinspect(EIF_REFERENCE object)
+{
+	/* Inspect special object */
+
+	int32 count, i;
+	uint32 sk_type;
+	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
+
+		/* Send address of Current object */
+	twrite (&object, sizeof (EIF_POINTER));
+
+	count = RT_SPECIAL_COUNT(object) - 1;
+
+		/* Send the capacity of the special object */
+	twrite (&count, sizeof(int32));
+
+		/* Send the number of items to be inspected */
+	twrite (&count, sizeof(uint32));
+
+		/* Send the items within the bounds */
+	if (count > 0) {
+		EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
+			/* Don't forget that first element of TUPLE is just a placeholder
+			 * to avoid offset computation from Eiffel code */
+		l_item++;
+		for (i = 1; count > 0; count--, i++, l_item++) {
+			sprintf (buffer, "%ld", i);
+			twrite (buffer, strlen(buffer));
+			switch (eif_tuple_item_type(l_item)) {
+				case EIF_INTEGER_8_CODE:
+					sk_type = SK_INT8;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_integer_8_tuple_item(l_item), sizeof(EIF_INTEGER_8));
+					break;
+				case EIF_INTEGER_16_CODE:
+					sk_type = SK_INT16;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_integer_16_tuple_item(l_item), sizeof(EIF_INTEGER_16));
+					break;
+				case EIF_INTEGER_32_CODE:
+					sk_type = SK_INT32;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_integer_32_tuple_item(l_item), sizeof(EIF_INTEGER_32));
+					break;
+				case EIF_INTEGER_64_CODE:
+					sk_type = SK_INT64;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_integer_64_tuple_item(l_item), sizeof(EIF_INTEGER_64));
+					break;
+				case EIF_BOOLEAN_CODE:
+					sk_type = SK_BOOL;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_boolean_tuple_item(l_item), sizeof(EIF_BOOLEAN));
+					break;
+				case EIF_CHARACTER_CODE:
+					sk_type = SK_CHAR;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER));
+					break;
+				case EIF_DOUBLE_CODE:
+					sk_type = SK_DOUBLE;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_double_tuple_item(l_item), sizeof(EIF_DOUBLE));
+					break;
+				case EIF_REAL_CODE:
+					sk_type = SK_REAL;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_real_tuple_item(l_item), sizeof(EIF_REAL));
+					break;
+				case EIF_POINTER_CODE:
+					sk_type = SK_POINTER;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_pointer_tuple_item(l_item), sizeof(EIF_POINTER));
+					break;
+				case EIF_WIDE_CHAR_CODE:
+					sk_type = SK_WCHAR;
+					twrite (&sk_type, sizeof(uint32));
+					twrite (&eif_wide_character_tuple_item(l_item), sizeof(EIF_WIDE_CHAR));
+					break;
+				case EIF_REFERENCE_CODE:
+					{
+						EIF_BOOLEAN is_special = EIF_FALSE, is_void = FALSE;
+						EIF_REFERENCE reference = eif_reference_tuple_item(l_item);
+						sk_type = SK_REF;
+						twrite (&sk_type, sizeof(uint32));
+
+						if (reference) {
+							uint32 ref_flags = HEADER(reference)->ov_flags;
+							int32 dtype = Dtype(reference);
+							if (ref_flags & EO_SPEC) {
+								EIF_BOOLEAN is_tuple = EIF_TEST(ref_flags & EO_TUPLE);
+								is_special = EIF_TRUE;
+								twrite (&is_special, sizeof(EIF_BOOLEAN));
+								twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+								if (is_tuple) {
+									twrite (&dtype, sizeof(int32));
+									twrite (&reference, sizeof(EIF_POINTER));
+								} else {
+									rec_sinspect (reference);
+								}
+							} else {
+								twrite (&is_special, sizeof(EIF_BOOLEAN));
+								twrite (&is_void, sizeof(EIF_BOOLEAN));
+								twrite (&dtype, sizeof(int32));
+								twrite (&reference, sizeof(EIF_POINTER));
+							}
+						} else {
+							is_void = EIF_TRUE;
+							twrite (&is_special, sizeof(EIF_BOOLEAN));
+							twrite (&is_void, sizeof(EIF_BOOLEAN));
+						}
+						break;
+					}
+			}
+		}
+	}
+}
+
 rt_private void bit_inspect(EIF_OBJ object)
                		/* Reference to a bit object (= BIT_REF) */
 {
@@ -1228,8 +1361,12 @@ rt_private unsigned char modify_attr(char *object, long attr_number, struct item
 	ref_flags = HEADER(object)->ov_flags;
 
 	if (ref_flags & EO_SPEC) {
-		/* Special object */
-		return smodify_attr(object, attr_number, new_value);
+		if (ref_flags & EO_TUPLE) {
+			/* FIXME: to implement */
+		} else {
+			/* Special object */
+			return smodify_attr(object, attr_number, new_value);
+		}
 	} else {
 		/* get characteristic of the object */
 		nb_attr = obj_desc->cn_nbattr;

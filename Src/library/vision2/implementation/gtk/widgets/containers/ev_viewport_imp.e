@@ -35,7 +35,6 @@ create
 
 feature {NONE} -- Initialization
 
-	
 	make (an_interface: like interface) is
 			-- Initialize. 
 		do
@@ -148,16 +147,15 @@ feature -- Element change
 			-- Set `x_offset' to `a_x'.
 		do
 			block_resize_actions
+			internal_x_offset := a_x
 			if a_x < 0 then
 				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -a_x, -1)
-				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -a_x, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, 0)
 			else
 				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, 0, -1)
-				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, 0, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 			end
-			internal_x_offset := a_x
+			
 			unblock_resize_actions
 		end
 
@@ -165,16 +163,14 @@ feature -- Element change
 			-- Set `y_offset' to `a_y'.
 		do
 			block_resize_actions
+			internal_y_offset := a_y
 			if a_y < 0 then
 				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -1, -a_y)
-				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, -a_y)
 				internal_set_value_from_adjustment (vertical_adjustment, 0)
 			else
 				feature {EV_GTK_EXTERNALS}.gtk_fixed_move (fixed_widget, container_widget, -1, 0)
-				--feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, 0)
 				internal_set_value_from_adjustment (vertical_adjustment, a_y)
 			end
-			internal_y_offset := a_y
 			unblock_resize_actions
 		end
 		
@@ -216,10 +212,7 @@ feature {NONE} -- Implementation
 			else
 				temp_height := -1
 			end
-		--	feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
-		--	feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (container_widget, temp_width, temp_height)
-		--	feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is
@@ -250,10 +243,8 @@ feature {NONE} -- Implementation
 		do
 			if feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_lower (l_adj) > a_value then
 				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (l_adj, a_value)
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (l_adj)
 			elseif feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (l_adj) < a_value then
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (l_adj)				
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)			
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (l_adj, a_value)
 		ensure

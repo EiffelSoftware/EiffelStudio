@@ -129,7 +129,7 @@ feature -- Initialization
 
 feature  -- Access
 
-	selected:BOOLEAN is
+	selected: BOOLEAN is
 		do
 			if multiple_selection then
 				Result := count_selected_items > 0

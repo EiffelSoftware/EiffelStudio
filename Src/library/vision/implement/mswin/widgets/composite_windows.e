@@ -54,7 +54,7 @@ feature -- Element change
 		end
 
 	realize is
-			-- Realize curent widget
+			-- Realize current widget and children.
 		do
 			if not realized then
 				realize_current

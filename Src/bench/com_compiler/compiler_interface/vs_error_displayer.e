@@ -117,7 +117,7 @@ feature -- Output
 					elseif syntax_error /= Void then
 						error_pos := line_number (syntax_error.file_name, syntax_error.start_position)
 						error_file := syntax_error.file_name
-						error_string := "Syntax Error: " + syntax_error.syntax_message
+						error_string := "Syntax Error" + syntax_error.syntax_message
 					end
 					compiler_coclass.event_last_error (error_string, error_file, error_pos)
 					error_list.forth

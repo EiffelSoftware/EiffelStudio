@@ -179,6 +179,8 @@ feature -- Commands
 				l_question_dialog.show_modal_to_window (parent_window)
 				if l_question_dialog.selected_button.is_equal (l_constants.ev_yes) then
 					save_document
+				else
+					Shared_document_manager.remove_document (current_document)
 				end
 			end
 			Documents.prune (current_document)

@@ -76,12 +76,14 @@ feature {NONE}
 
 	launch_c_compilation (argument: ANY) is
 		do
-			error_window.put_string
-				("Launching C compilation in background...%N");
-			if not System.freezing_occurred then
-				link_driver
+			if start_c_compilation then
+				error_window.put_string
+					("Launching C compilation in background...%N");
+				if not System.freezing_occurred then
+					link_driver
+				end;
+				finish_freezing;
 			end;
-			finish_freezing;
 			if System.poofter_finalization then
 				error_window.put_string 
 					("Warning: the finalized system might not be optimal%N%

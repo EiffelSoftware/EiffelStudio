@@ -1,4 +1,4 @@
-test_name is-equal
+test_name list-is-equal
 test_description New implementation of LIST.is_equal tested with different descendants
 
 define OUTPUT $TEST

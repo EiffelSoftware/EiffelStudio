@@ -756,7 +756,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Insert 'a_item_imp' in 'par_node' above 'a_sibling' sibling node.
 		local
 			text_ptr: POINTER
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_item_imp.text)
 			text_ptr := a_cs.item

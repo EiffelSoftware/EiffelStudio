@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 			create a_cs.make ("Select directory")
@@ -101,7 +101,7 @@ feature -- Element change
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			start_directory := a_path
 			if start_directory.item (start_directory.count) /= '/' then

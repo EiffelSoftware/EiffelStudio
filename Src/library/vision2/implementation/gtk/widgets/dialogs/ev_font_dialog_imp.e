@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Connect `interface' and initialize `c_object'.
 		local
 			temp_font: EV_FONT
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 			create a_cs.make ("Font selection dialog")
@@ -121,7 +121,7 @@ feature -- Element change
 		local
 			a_success_flag: BOOLEAN
 			font_imp: EV_FONT_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			font_imp ?= a_font.implementation
 			create a_cs.make (font_imp.system_name)

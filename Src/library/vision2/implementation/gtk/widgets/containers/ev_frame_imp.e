@@ -168,7 +168,7 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- set the `text' of the frame
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			internal_text := a_text.twin
 			create a_cs.make (a_text)

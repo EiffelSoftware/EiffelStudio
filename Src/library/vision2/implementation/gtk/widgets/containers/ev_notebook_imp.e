@@ -200,7 +200,7 @@ feature -- Element change
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			item_imp ?= an_item.implementation
 			check

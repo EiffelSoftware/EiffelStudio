@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 			create a_cs.make ("Select file")
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			-- Setup action sequences.
 		local
 			a_child_list, a_label: POINTER
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
@@ -119,7 +119,7 @@ feature -- Element change
 	set_filter (a_filter: STRING) is
 			-- Set `a_filter' as new filter.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			filter := a_filter.twin
 			create a_cs.make (filter)
@@ -129,7 +129,7 @@ feature -- Element change
 	set_file_name (a_name: STRING) is
 			-- Make `a_name' the selected file.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_name)
 			feature {EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (c_object, a_cs.item)
@@ -138,7 +138,7 @@ feature -- Element change
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			start_directory := a_path
 			if start_directory.item (start_directory.count) /= '/' then

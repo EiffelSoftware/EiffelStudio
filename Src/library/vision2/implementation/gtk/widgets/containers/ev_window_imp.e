@@ -371,7 +371,7 @@ feature -- Element change
 			-- Set `title' to `new_title'.
 		local
 			a_title: STRING
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			a_title := new_title
 			if a_title.is_equal ("") then
@@ -392,7 +392,7 @@ feature -- Element change
 		local
 			mb_imp: EV_MENU_BAR_IMP
 			menu_imp: EV_MENU_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			Precursor (a_key, a_key_string, a_key_press)
 			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then

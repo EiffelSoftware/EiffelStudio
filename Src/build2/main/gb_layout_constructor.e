@@ -103,22 +103,6 @@ feature -- Access
 		ensure
 			not_empty_implies_has_root_object: not is_empty implies Result /= Void
 		end
-
-	expand_all_button: EV_TOOL_BAR_BUTTON is
-			-- `Result' is a tool bar button that
-			-- calls `add_new_directory'.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent expand_tree_recursive (Current))
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
-			Result.set_tooltip ("Expand all")
-		ensure
-			result_not_void: Result /= Void
-		end
 		
 	view_object_button: EV_TOOL_BAR_BUTTON is
 			-- `Result' is a tool bar button that highlights an object in `Current'.

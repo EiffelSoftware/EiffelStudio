@@ -68,6 +68,7 @@ feature {NONE}
 			l: LICENSE
 		do
 			from
+				ht := licenses
 				ht.start
 			until
 				Result or else ht.after
@@ -90,6 +91,7 @@ feature {NONE}
 		do
 			!! Result.make (20)
 			from
+				ht := licenses
 				ht.start
 			until
 				ht.after

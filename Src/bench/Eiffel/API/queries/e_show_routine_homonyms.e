@@ -50,7 +50,7 @@ feature -- Execution
 					classes.after 
 				loop
 					e_class := classes.item_for_iteration.compiled_class;
-					if e_class /= Void then 
+					if e_class /= Void and e_class.has_feature_table then 
 						feat := e_class.feature_with_name (feature_name);
 						if feat /= Void then
 							class_name := e_class.name;

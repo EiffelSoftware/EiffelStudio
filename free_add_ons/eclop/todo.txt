@@ -1,0 +1,52 @@
+Todo file for ECLOP
+===================
+
+author: "Paul Cohen"
+date: "$Date$"
+revision: "$Revision$"
+
+1. Review and refactor the parsers, at least for readability. Possibly use Gobo 
+   lex and yacc!
+
+2. Rewrite for Gobo and make sure it works with SmartEiffel and VisualEiffel.
+
+3. Add support for specifying that an option takes *exactly* 1 (one) argument
+   Or maybe even exactly N arguments!?
+
+4. Add support for specifying the expected type of an option argument. Examples:
+   "-s=SIZE:INTEGER"
+   Types to consider: INTEGER, REAL, STRING (default), FILE, DIRECTORY.
+   Another type would be a "set element type". Example:
+   "--optimize=MODE:{speed,memory,accuracy}"
+   The above specification would only accept one of the the following option 
+   arguments for the option --optimize: 
+   >foo --optimize=speed
+   >foo --optimize=memory
+   >foo --optimize=accuracy
+
+5. Add support for specifying for a set of mutually exclusive options, that 
+   one of them must be given on the command line. Probably like: "(-a|-b|-c)!" 
+
+6. The COMMAND_LINE_SYNTAX should generate an error if any option used in a
+   mutually exclusivity specification is also marked as a required option.
+
+7. Sort out how multiple option arguments can be given in different Unix 
+   shells and Windows command prompts and how to handle it. Example:
+   > foo -i"bar car"
+
+8. Generate proper grouping of mutually exclusive options in the usage string.
+   Examples:
+   If "(-a|-b|-c)" has been specified then usage shoud produce something like
+   this
+   Usage: foo [(-a|-b|-c)] 
+   If "(-a|-b|-c)!" has been specified then usage shoud produce something like
+   this
+   Usage: foo (-a|-b|-c) 
+
+9. Enable the clients of COMMAND_LINE_SYNTAX to specify what parsing
+   conventions/rules to apply. For example, use_posix_rules, use_gnu_rules etc.
+
+10. Set up a SourceForge project for ECLOP.
+
+11. Add support for adding locale (language) specific messages.
+

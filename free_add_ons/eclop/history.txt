@@ -1,0 +1,22 @@
+History file for ECLOP
+======================
+
+author: "Paul Cohen"
+date: "$Date$"
+revision: "$Revision$"
+
+Release 0.1.1 (2004-03-07):
+    * 1 bug fix. Calling COMMAND_LINE_PARSER.parse caused a "Feature call on
+      void target" exception in PARSED_COMMAND_LINE_ARGUMENT.synonym_short_name
+      when:
+      1) specifying at least one long option.
+      2) specifying at least one short option with no long option synonym.
+      3) invoking parse with at least one long option.
+    * Minor changes to the feature COMMAND_LINE_SYNTAX.program_help
+
+Release 0.1.0 (2003-10-31):
+    * First release!
+
+
+
+

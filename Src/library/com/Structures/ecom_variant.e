@@ -1593,7 +1593,8 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Free `item'
 		do
-			if not shared then
+			-- FIXME Paul - Temporary Hack to avoid freeing arrays.
+			if not shared and item /= default_pointer and then not is_array (variable_type) then
 				ccom_variant_clear (item)
 			end
 			Precursor {ECOM_STRUCTURE}

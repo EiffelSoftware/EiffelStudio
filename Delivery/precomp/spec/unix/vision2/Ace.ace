@@ -1,0 +1,54 @@
+system
+ EiffelVision2
+
+ root
+  ANY     
+
+  default
+   assertion(require)
+	assertion(check)
+	assertion(loop)
+	address_expression(no)
+	array_optimization(no)
+	console_application(yes)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments(" ")
+	disabled_debug(yes)
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+cluster
+	root_cluster:           "."
+
+	all base:               "$ISE_EIFFEL/library/base"
+	       exclude
+	            "table"; "desc"; "CVS"; 
+	       end
+
+	gel:                "$ISE_EIFFEL/library/gel"
+	       exclude
+	            "CVS"; "glib"; 
+	       end
+
+	all vision2:            "$ISE_EIFFEL/library/vision2"
+	       exclude
+	           "mswin"; "EIFGEN"; "components"; "tmp"; "temp"; "test"; "release"; "obsolete"; "CVS"; 
+	      end
+
+external
+	 include_path:
+         "\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+         "\$(EIFFEL_SRC)/library/vision2/spec/include";          
+																												   object:
+        "$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+        "$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+       "-L/usr/X11R6/lib -lXt -lX11 -lpng -lz -lXext -lXp -lSM -lICE -lXtst"
+end
+																																																																						

@@ -1,0 +1,49 @@
+system EiffelVision
+
+root
+	ANY
+
+default
+	assertion (require)
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/mel")
+
+cluster
+
+		-- EiffelVision
+
+	vision:							"$ISE_EIFFEL/library/vision"
+	vision_kernel (vision):			"$/oui/kernel"
+	vision_widgets (vision):		"$/oui/widgets"
+	vision_context_data (vision):	"$/oui/context_data"
+
+	vision_figures (vision):	"$/figures"
+	vision_tools (vision):		"$/tools"
+
+	-- Toolkit
+	vision_toolkit (vision):		"$/implement/toolkit"
+	vision_toolkit_kernel (vision_toolkit):	"$/kernel"
+	vision_toolkit_widgets (vision_toolkit):	"$/widgets"
+	vision_toolkit_support (vision_toolkit):	"$/support"
+
+	-- Implementation clusters for x/Motif
+	vision_imp (vision):		"$/implement/motif"
+	vision_imp_kernel (vision_imp):		"$/kernel"
+	vision_imp_widgets (vision_imp):		"$/widgets"
+	vision_imp_support (vision_imp):		"$/support"
+
+	vision_imp_x (vision):		"$/implement/x"
+	vision_imp_x_kernel (vision_imp_x):		"$/kernel"
+--	vision_imp_x_widgets (vision_imp_x):		"$/widgets"
+	vision_imp_x_support (vision_imp_x):		"$/support"
+
+external
+
+	include_path:
+		"\$(ISE_EIFFEL)/library/mel/Clib"
+
+	object:
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
+		"-lXm -lXt -lX11"
+
+end

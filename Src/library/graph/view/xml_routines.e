@@ -319,26 +319,6 @@ feature -- Deserialization
 			end
 		end
 
-feature {SHARED_XML_ROUTINES} -- Walk around
-
-	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING; a_parent: XM_ELEMENT) is
-			-- add attribute to `a_parent'.
-			-- | The feature `add_attribute' of XM_ELEMENT is not exported to ANY
-			-- | in gobo 3.1, so we have to use this walk around.
-		require
-			a_name_not_void: a_name /= void
-			a_name_not_empty: a_name.count > 0
-			a_value_not_void: a_value /= void
-			a_parent_not_void: a_parent /= Void
-		local
-			an_attribute: XM_ATTRIBUTE
-		do
-			create an_attribute.make (a_name, a_ns, a_value, a_parent)
-			a_parent.force_last (an_attribute)
-		ensure
-			attribute_added: a_parent.has_attribute_by_name (a_name)
-		end
-
 feature {SHARED_XML_ROUTINES} -- Error management
 
 	display_warning_message (a_warning_msg: STRING) is

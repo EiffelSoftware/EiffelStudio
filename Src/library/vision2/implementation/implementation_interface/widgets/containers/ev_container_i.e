@@ -41,15 +41,15 @@ feature {EV_WIDGET_I} -- Status report
 	
 feature {EV_WIDGET_I} -- Element change
 	
-	add_child (child_i: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		require
 			exists: not destroyed
-			valid_child: child_i /= Void --and then not child_i.destroyed
+			valid_child: child_imp /= Void
 			add_child_ok: add_child_ok
 		deferred
 		ensure
-			child_add_successful: child_add_successful (child_i)
+			child_add_successful: child_add_successful (child_imp)
 		end
 
 feature -- Access

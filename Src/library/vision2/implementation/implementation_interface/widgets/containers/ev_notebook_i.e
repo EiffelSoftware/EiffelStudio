@@ -62,7 +62,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-		add_child_ok: BOOLEAN is
+	add_child_ok: BOOLEAN is
    			-- Used in the precondition of
    			-- 'add_child'. True, if it is ok to add a
    			-- child to container. Normal container have

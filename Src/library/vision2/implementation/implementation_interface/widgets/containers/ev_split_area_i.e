@@ -48,34 +48,34 @@ feature -- Status report
 
 feature {EV_SPLIT_AREA} -- Implementation
 
-	add_child (child_i: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into split area. Split area can 
 			-- have two children.
 		do
-			child ?= child_i
+			child := child_imp
 			if child1 = Void then
-				add_child1 (child_i)
+				add_child1 (child_imp)
 			else
-				add_child2 (child_i)
+				add_child2 (child_imp)
 			end
 		end
 	
-	add_child1 (child_i: EV_WIDGET_I) is
+	add_child1 (child_imp: EV_WIDGET_I) is
 			-- Add the first child of the split.
 		require
-			child_not_void: child_i /= Void
+			child_not_void: child_imp /= Void
 		do
-			child1 ?= child_i
+			child1 ?= child_imp
 		ensure then
 			child1 /= Void
 		end
 	
-	add_child2 (child_i: EV_WIDGET_I) is
+	add_child2 (child_imp: EV_WIDGET_I) is
 			-- Add the second child.
 		require
-			child_not_void: child_i /= Void
+			child_not_void: child_imp /= Void
 		do
-			child2 ?= child_i
+			child2 ?= child_imp
 		ensure then
 			child2 /= Void
 		end

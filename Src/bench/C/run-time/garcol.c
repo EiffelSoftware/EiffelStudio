@@ -84,6 +84,8 @@ shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * The only public one is the stack for local variables. The others
  * are used internally. All these points to objects which may be moved by
  * the garbage collector or the memory management routines.
+ * The stacks are now all public. That was necessary to implement the
+ * explicit `mem_free' routine in "memory.c"--FRED
  */
 
 shared struct stack loc_stack = {			/* Local indirection stack */
@@ -100,7 +102,7 @@ public struct stack loc_set = {				/* Local variable stack */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-private struct stack rem_set = {			/* Remembered set */
+public struct stack rem_set = {			/* Remembered set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */

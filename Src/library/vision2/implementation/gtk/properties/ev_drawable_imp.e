@@ -443,6 +443,7 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then
 				C.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
+				flush
 			end
 		end
 
@@ -645,6 +646,11 @@ feature {NONE} -- Implemention
 		end
 
 feature {NONE} -- Implementation
+
+	flush is
+			-- Force all queued expose events to be called.
+		deferred
+		end
 
 	whole_circle: INTEGER is 23040
 		-- Number of 1/64 th degrees in a full circle (360 * 64)

@@ -82,6 +82,7 @@ feature {NONE} -- Implementation
 		local
 			editor: GB_OBJECT_EDITOR
 			local_parent: GB_OBJECT
+			window_parent: EV_WINDOW
 		do
 			local_parent := deleted_object.parent_object
 			from
@@ -98,8 +99,9 @@ feature {NONE} -- Implementation
 					if editor = docked_object_editor then
 						editor.make_empty
 					else
-						editor.window_parent.destroy
+						window_parent := editor.window_parent
 						editor.destroy
+						window_parent.destroy
 						floating_object_editors.prune (editor)
 					end
 				end

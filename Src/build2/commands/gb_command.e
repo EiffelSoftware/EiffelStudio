@@ -6,6 +6,9 @@ indexing
 
 deferred class
 	GB_COMMAND
+	
+inherit
+	GB_ACCESSIBLE_COMMAND_HANDLER
 
 feature -- Basic operations
 

@@ -125,9 +125,11 @@ feature
 					-- possible creation routine attached to it.
 					-- NB: there is no need to call `generate_assignment' as
 					-- the assignment is implicitely done by the "return".
+				if target_type.is_separate then
+					generate_creation_for_separate_object(target_type);
+				end;
 				if call /= Void then
 					if target_type.is_separate then
-						generate_creation_for_separate_object(target_type);
 						generated_file.putstring ("while (CURRSO(");
 						print_register;
 						generated_file.putstring (")) {};");

@@ -65,21 +65,40 @@ feature -- Byte code generation
 			-- Generate byte code for a creation instruction
 		local
 			target_type: TYPE_I;
+			feat: FEATURE_B;
+			cl_type: CL_TYPE_I;
 		do
 debug
 	info.trace;
 end;
-			make_breakable (ba);
-			ba.append (Bc_create);
-			info.make_byte_code (ba);
 			target_type := Context.real_type (target.type);
-			target.make_assignment_code (ba, target_type);
-			if call /= Void then
-				call.make_creation_byte_code (ba);
-			end;
-			if not target_type.is_basic then
-				target.make_byte_code (ba);
-				ba.append (Bc_create_inv);
+			make_breakable (ba);
+			if target_type.is_separate then
+				ba.append (Bc_sep_create);
+				cl_type ?= target_type -- can't be fail
+				ba.append_raw_string (cl_type.associated_class_type.associated_class.e_class.name_in_upper);
+				if call = Void then
+					ba.append_raw_string ("");
+				else
+					feat ?= call.message; -- Can't Fail here
+					ba.append_raw_string (feat.feature_name);
+				end;
+				target.make_assignment_code (ba, target_type);
+				if call /= Void then
+					call.make_creation_byte_code (ba);
+				end;
+				ba.append (Bc_sep_create_end);
+			else
+				ba.append (Bc_create);
+				info.make_byte_code (ba);
+				target.make_assignment_code (ba, target_type);
+				if call /= Void then
+					call.make_creation_byte_code (ba);
+				end;
+				if not target_type.is_basic then
+					target.make_byte_code (ba);
+					ba.append (Bc_create_inv);
+				end;
 			end;
 		end;
 

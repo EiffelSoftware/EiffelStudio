@@ -3052,7 +3052,7 @@ end;
 			Cecil_file.open_write;
 			Cecil_file.putstring ("#include %"eif_cecil.h%"%N");
 			if final_mode then
-				Cecil_file.putstring ("#include %"eif_ececil.h%"%N");
+				Cecil_file.putstring ("#include %"ececil.h%"%N");
 			end;
 			Cecil_file.putstring ("#include %"eif_struct.h%"%N%N");
 

@@ -857,7 +857,7 @@ feature {NONE} -- Retrieval
 						Precompilation_directories.copy (precomp_dirs)
 						create remote_dir.make (project_directory.name)
 						remote_dir.set_licensed (Comp_system.licensed_precompilation)
-						remote_dir.set_system_name (Comp_system.system_name)
+						remote_dir.set_system_name (Comp_system.name)
 						Precompilation_directories.force
 							(remote_dir, Comp_system.compilation_id)
 					else

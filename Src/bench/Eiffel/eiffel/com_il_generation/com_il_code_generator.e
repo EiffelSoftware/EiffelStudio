@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 	Key_filename: STRING is
 			-- Key pair filename
 		do
-			Result := System.system_name + Key_filename_extension
+			Result := System.name + Key_filename_extension
 		end
 
 	Key_filename_extension: STRING is ".snk"

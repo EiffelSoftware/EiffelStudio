@@ -38,7 +38,7 @@ feature -- Access
 	name: STRING is
 			-- System name specified in Lace file
 		do
-			Result := System.system_name
+			Result := System.name
 		end;
 
 	root_cluster: CLUSTER_I is
@@ -77,7 +77,7 @@ feature -- Access
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		do	
-			Result := System.document_file_name (System.system_name)
+			Result := System.document_file_name (System.name)
 		end;
 
 	sub_clusters: ARRAYED_LIST [CLUSTER_I]

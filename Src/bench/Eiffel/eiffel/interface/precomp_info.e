@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			compiler_version := Version_number;
 			compilation_id := System.compilation_id
 			licensed := check_license
-			name := System.system_name
+			name := System.name
 		end
 
 feature -- Access

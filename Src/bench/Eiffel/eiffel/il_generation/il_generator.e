@@ -79,8 +79,8 @@ feature -- Generation
 				il_generator.set_meta_data_generator (il_md_gen)
 
 					-- Compute name of generated file if any.
-				file_name := System.system_name + "." + System.msil_generation_type
-				il_generator.start_assembly_generation (System.system_name, file_name)
+				file_name := System.name + "." + System.msil_generation_type
+				il_generator.start_assembly_generation (System.name, file_name)
 
 					-- Set attributes of generated executable.
 				if System.msil_generation_type.is_equal (dll_type) then

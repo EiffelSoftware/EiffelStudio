@@ -33,7 +33,7 @@ feature
 
 	index: REAL_BODY_ID;
 
-	pattern_id: INTEGER;
+	pattern_id: PATTERN_ID;
 		-- Pattern id of feature corresponding to Current
 		-- unit
 
@@ -160,7 +160,7 @@ feature -- Debug
 			io.error.putstring ("%NIndex: ");
 			index.trace;
 			io.error.putstring ("%NPattern id: ");
-			io.error.putint (pattern_id);
+			io.error.putint (pattern_id.id);
 			io.error.putstring ("%Nwritten_in: ");
 			written_in.trace;
 			io.error.putstring ("%NType: ");

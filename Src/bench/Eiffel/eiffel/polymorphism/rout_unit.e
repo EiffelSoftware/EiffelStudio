@@ -16,7 +16,7 @@ feature
 			-- Id of the class where the associated feature of the
 			-- unit is written in
 
-	pattern_id: INTEGER;
+	pattern_id: PATTERN_ID;
 			-- Pattern id of the unit
 
 	set_body_index (i: BODY_INDEX) is
@@ -31,7 +31,7 @@ feature
 			written_in := i
 		end;
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: PATTERN_ID) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i;
@@ -43,7 +43,7 @@ feature
 			Result := System.class_of_id (written_in);
 		end;
 
-	new_poly_table (pid: INTEGER): ROUT_UNIT_TABLE is
+	new_poly_table (pid: PATTERN_ID): ROUT_UNIT_TABLE is
 			-- New associated polymorhic table
 		do
 			!!Result.make;

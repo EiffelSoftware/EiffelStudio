@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Call to both precursors.
 		do
-			connect_signal_to_actions ("activate", interface.press_actions)
+			signal_connect ("activate", ~on_activate)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
@@ -58,6 +58,17 @@ feature {NONE} -- Initialization
 		end
 	
 feature {EV_ANY_I} -- Implementation
+
+	on_activate is
+		local
+			p_imp: EV_MENU_ITEM_LIST_IMP
+		do
+			interface.press_actions.call ([])
+			p_imp ?= parent_imp
+			if p_imp /= Void then
+				p_imp.interface.item_select_actions.call ([interface])
+			end
+		end
 
 	menu_item_box: POINTER is
 		do
@@ -90,6 +101,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/23 02:27:13  brendel
+--| Added call to item_select_actions.
+--|
 --| Revision 1.39  2000/03/06 23:51:51  brendel
 --| Moved connection of action sequence to initialize, to make sure that it
 --| is called by descendants.

@@ -1,0 +1,62 @@
+<document output="studio" title="XY Co-ordinates">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>xy.png</url> 
+			<alt_text>xy</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\xy\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the sample, you should see a WEL_FRAME_WINDOW displayed. If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the 
+		<link>
+			<url>/libraries/wel/reference/controls/wel_push_button_chart.html</url>
+			<label>WEL_PUSH_BUTTON</label>
+		</link> marked "Clear" will clear the client area of the window. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>A WEL_CLIENT_DC is used to display output in the client area of the window during the execution of on_left_button_down which has been redefined in MAIN_WINDOW.</paragraph>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>XY_DEMO</item>
+				<item>MAIN_WINDOW</item>
+			</list>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>/libraries/wel/samples/tutorial/step3/index.html</url>
+				<label>tutorial_step3</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>/libraries/wel/content/controls/wel_push_button.html</url>
+				<label>WEL_PUSH_BUTTON</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

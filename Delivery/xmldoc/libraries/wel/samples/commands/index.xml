@@ -1,0 +1,50 @@
+<document output="studio" title="Commands">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>commands.png</url> 
+			<alt_text>commands</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\commands\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons              (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, you will see a window displayed with a similar appearance to the one illustrated above. Please follow the instructions displayed in the window. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>MAIN_DIALOG inherits WEL_MAIN_DIALOG which provides the feature put_command, used to associate a WEL_COMMAND to a Windows message received by the window. A WEL_COMMAND contains a deferred feature, execute which is executed when the command is fired. SHOW_COMMAND_INFORMATION, SHOW_MOUSE_BUTTON_INFORMATION and SHOW_MOVE_INFORMATION all inherit WEL_COMMAND. 
+		<note>
+			<bold>Note </bold>execute has an argument of type ANY  which is used to pass any additional information required.        
+		</note>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION_IDS</item>
+				<item>COMMANDS_DEMO</item>
+				<item>MAIN_DIALOG</item>
+				<item>SHOW_COMMAND_INFORMATION</item>
+				<item>SHOW_MOUSE_BUTTON_INFORMATION</item>
+				<item>SHOW_MOVE_INFORMATION</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,58 @@
+<document output="studio" title="Bmpview">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>bmpview.png</url> 
+			<alt_text>bmpview</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\bmpview\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace              file. If              you select another directory than the default one, please copy icons              (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will be displayed as illustrated above, although no child windows will be present. Selecting "Open" from the "File" menu will allow you to browse for a .BMP file to view. Multiple files may be opened and each opens in a new child window. The options on the "Window" menu provide features for positioning the child windows. Selecting "Close" will close the currently selected child window, while selecting "Exit" or closing the window manually will exit the program. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>MAIN_WINDOW inherits WEL_MDI_FRAME_WINDOW and redefines `on_menu_command' to handle the menu selections. CHILD_WINDOW inherits WEL_MDI_CHILD_WINDOW and implements make to load a named bitmap, while on_paint has been redefined to re-draw the bitmap. A WEL_OPEN_FILE_DIALOG is used to select files for viewing. 
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>BMP_VIEW</item>
+				<item>MAIN_WINDOW</item>
+				<item>CHILD_WINDOW</item>
+				<item>APPLICATION_IDS</item>
+			</list>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_open_file_dialog.html</url>
+					<label>WEL_OPEN_FILE_DIALOG</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/samples/mdi/index.html</url>
+					<label>Mdi sample</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

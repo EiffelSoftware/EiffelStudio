@@ -1,0 +1,85 @@
+<document output="studio" title="Rich Edit">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>richedit.png</url> 
+			<alt_text>richedit</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\list_view\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy              images (*.bmp), icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the program, a window will be displayed as shown above. The program is a simple text editor which allows you to load and save files; select fonts and colors; and print files. The operations are accessible through the menu bar and/or the tool bar.</paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>Both the menu items and the tool bar buttons are handled by on_menu_command which has been redefined in MAIN_WINDOW.</paragraph>
+		<paragraph>Four of the 
+			<link>
+				<url>/libraries/wel/content/stddlgs/index.html</url>
+				<label>standard dialogs</label>
+			</link> provided by WEL are used to receive input from the user. 
+			<paragraph>This sample contains the following classes: 
+				<list ordered="false">
+					<item>APPLICATION_IDS</item>
+					<item>MAIN_WINDOW</item>
+					<item>RICHEDIT_DEMO</item>
+				</list>
+				<seealso>
+					<bold>See Also</bold>
+					<line_break/>
+					<link>
+						<url>/libraries/wel/reference/controls/wel_rich_edit.html</url>
+						<label>WEL_RICH_EDIT</label>
+					</link>
+					<line_break/>
+					<link>
+						<url>/libraries/wel/content/stddlgs/wel_print_dialog.html</url>
+						<label>WEL_PRINT_DIALOG</label>
+					</link>
+					<line_break/>
+					<link>
+						<url>/libraries/wel/content/stddlgs/wel_save_file_dialog.html</url>
+						<label>WEL_SAVE_FILE_DIALOG</label>
+					</link>
+					<line_break/>
+					<link>
+						<url>/libraries/wel/content/stddlgs/wel_open_file_dialog.html</url>
+						<label>WEL_OPEN_FILE_DIALOG</label>
+					</link>
+					<line_break/>
+					<link>
+						<url>/libraries/wel/content/stddlgs/wel_choose_color_dialog.html</url>
+						<label>WEL_CHOOSE_COLOR_DIALOG</label>
+					</link>
+					<line_break/>
+					<link>
+						<url>/libraries/wel/content/stddlgs/wel_choose_font_dialog.html</url>
+						<label>WEL_CHOOSE_FONT_DIALOG</label>
+					</link>
+				</seealso>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

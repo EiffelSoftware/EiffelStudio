@@ -1,0 +1,56 @@
+<document output="studio" title="List View">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>list_view.png</url> 
+			<alt_text>list_view</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\list_view\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will be displayed containing a pair of WEL_LIST_VIEW. Clicking the button marked "style" will modify the style of the lower list view. If you click the mouse within this lower list view, you will see notification of events appearing in the upper list view. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>LISTVIEW_DEMO redefines `init_application' in order to load the WEL_COMMON_CONTROLS_DLL and the WEL_RICH_EDIT_DLL.</paragraph>
+		<paragraph>LISTVIEW redefines many of the `on_' features inherited from WEL_LIST_VIEW in order to generate output for the user.</paragraph>
+		<paragraph>The style of the LISTVIEW_DEMO is changed by calling set_style with the required new style.</paragraph>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>LISTVIEW</item>
+				<item>MAIN_WINDOW</item>
+				<item>LISTVIEW_DEMO</item>
+				<item>APPLICATION_IDS</item>
+			</list>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/samples/list_view/root_cluster/listview.html</url>
+					<label>WEL_LIST_VIEW</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

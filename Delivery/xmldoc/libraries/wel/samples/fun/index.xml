@@ -1,0 +1,47 @@
+<document output="studio" title="Fun">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>fun.png</url> 
+			<alt_text>fun</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\fun\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy              images (*.bmp), icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will be displayed as illustrated above. Clicking the push button marked "Maze" will open a new window and draw a maze within this window. Clicking the push button marked "Artist" will open a new window, and display output dependent on the movement of the mouse pointer within the client area of that window. Clicking the push button marked "Fun" will open a new window which contains a fake error message and a close push button which moves when you try to move the mouse pointer over it. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading> Both FUN_DIALOG and ARTIST redefine `on_mouse_move' to track the actions of the mouse pointer and respond accordingly. 
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION_IDS</item>
+				<item>ARTIST</item>
+				<item>FUN_DEMO</item>
+				<item>FUN_DIALOG</item>
+				<item>MAIN_WINDOW</item>
+				<item>MAZE</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

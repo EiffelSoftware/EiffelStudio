@@ -1,0 +1,53 @@
+<document output="studio" title="Split Area">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>splitarea.png</url> 
+			<alt_text>splitarea</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\splitarea\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will be displayed containing a pair of WEL_RICH_EDIT in a split area. Clicking the mouse on the split area (between the two rich edits) and dragging the mouse, will adjust the split area and its content accordingly. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph> There is no split area class provided with WEL, but WEL_SPLIT_AREA was created for this sample to illustrate how new controls can be built when required. Redefining some of the `on_' features inherited from WEL_WINDOW in WEL_SPLIT_AREA shows how the control over the contents of the split area is acheived.</paragraph>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION</item>
+				<item>SPLIT_AREA_DEMO</item>
+				<item>WEL_SPLIT_AREA</item>
+			</list>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>/libraries/wel/reference/controls/wel_rich_edit.html</url>
+				<label>WEL_RICH_EDIT</label>
+			</link>
+		</seealso>
+	</paragraph></document>

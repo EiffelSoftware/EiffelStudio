@@ -1,0 +1,44 @@
+<document output="studio" title="Timer">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>timer.png</url> 
+			<alt_text>timer</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\timer\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace              file. If              you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will be displayed as illustarated above. Clicking on any of the push buttons marked "Start Timer" will start a timer running, and the hatched area immdiately above the push button will change its appearence to reflect the interval of the timer. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading> A WEL_WINDOW supports multiple timers, set by set_timer which takes a unique id for each timer. The on_timer feature is called every time a timer interval is reached with an argument corresponding to the id of the timer. Within MAIN_WINDOW, on_timer has been redefined to update the appearence of the hatched areas. 
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION_IDS</item>
+				<item>MAIN_WINDOW</item>
+				<item>TIMER</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

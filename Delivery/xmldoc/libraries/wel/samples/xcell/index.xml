@@ -1,0 +1,34 @@
+<document output="studio" title="Xcell">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>xcell.png</url> 
+			<alt_text>xcell</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will be displayed. Selecting "New" from the "Game" menu or pressing F2, will cause a new game to start and the window should take a similar appearance to the above illustration. Selecting "How to play..." from the "Help" menu will display the instructions for playing the game. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APP_CONSTANTS</item>
+				<item>CARD</item>
+				<item>COLUMN</item>
+				<item>GAME</item>
+				<item>GAME_CONSTANTS</item>
+				<item>GAME_MANAGER</item>
+				<item>MAIN_WINDOW</item>
+				<item>SELECT_GAME_NUMBER_DIALOG</item>
+				<item>SELECT_NUMBER_OF_CARDS_DIALOG</item>
+				<item>XCELL_DEMO</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

@@ -381,8 +381,8 @@ feature -- Checking
 		local
 			l_is_valid: BOOLEAN
 		do
-			l_is_valid := app_name_field.text /= Void and then
-				root_class_field.text /= Void
+			l_is_valid := not app_name_field.text.is_empty and then
+				not root_class_field.text.is_empty
 			set_is_valid (l_is_valid)
 		end
 

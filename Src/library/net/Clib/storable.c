@@ -265,12 +265,13 @@ rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 
 rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
+#define RECOVERABLE_SCAFFOLDING
 #ifndef EIF_IL_DLL
 	GTCX
 	socket_fides = file_desc;
 
 #ifdef RECOVERABLE_SCAFFOLDING
-	if (eif_is_new_recoverable_format) {
+	if (eif_is_new_recoverable_format_active()) {
 #endif
 	rt_init_store(
 		store_write,

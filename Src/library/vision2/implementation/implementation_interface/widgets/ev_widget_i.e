@@ -107,6 +107,13 @@ feature -- Status Report
 		deferred
 		end
 
+	set_focus is
+			-- Set focus to Current
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	horizontal_resizable: BOOLEAN is
 			-- Does the widget change its width when the parent
 			-- want to resize the widget

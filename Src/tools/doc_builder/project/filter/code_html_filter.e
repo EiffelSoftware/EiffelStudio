@@ -95,7 +95,6 @@ feature {NONE} -- Commands
 			l_path, l_dir, 
 			l_text, 
 			l_html,
-			l_stylesheet,
 			l_title: STRING
 			l_file, l_target_file: PLAIN_TEXT_FILE
 		do
@@ -130,18 +129,24 @@ feature {NONE} -- Commands
 								l_title := file_no_extension (short_name (l_file.name))
 								l_dir_name.extend (l_title)
 								l_dir_name.add_extension ("html")
-								create l_target_file.make_create_read_write (l_dir_name.string)
-								l_text := template_text (code_template_file_name).twin
-								l_html := generated_html (l_file)
-								replace_token (l_text, Html_content_token, l_html)
-								l_stylesheet := stylesheet_path (l_file.name, True)	
+
+								create l_target_file.make_create_read_write (l_dir_name.string)					
 								
 									-- Workaround as result if including extra reference directory
 								l_title.replace_substring_all (Chart_suffix, "")
 								l_title.replace_substring_all (Contract_suffix, "")
 								l_title.to_upper								
-								replace_token (l_text, Html_title_token, l_title)
-								replace_token (l_text, Html_stylesheet_token, l_stylesheet)
+								
+								l_html := generated_html (l_file)
+								l_text := 
+									"<html><head><title>" + 
+									l_title +
+									"</title><link rel=%"stylesheet%" href=%"" + 
+									stylesheet_path (l_file.name, True)	+
+									"%" type=%"text/css%"></head><body><pre>" +
+									l_html +
+									"</pre></body></html>"
+									
 								l_target_file.putstring (l_text)
 								l_target_file.close
 							end

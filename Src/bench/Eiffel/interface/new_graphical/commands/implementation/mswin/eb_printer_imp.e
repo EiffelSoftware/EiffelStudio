@@ -27,6 +27,9 @@ inherit
 		end
 
 	EB_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 create {EB_PRINTER}
 	make

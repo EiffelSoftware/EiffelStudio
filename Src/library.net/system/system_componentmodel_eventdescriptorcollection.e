@@ -23,7 +23,7 @@ inherit
 			index_of as system_collections_ilist_index_of,
 			has as system_collections_ilist_contains,
 			clear as system_collections_ilist_clear,
-			add as system_collections_ilist_add,
+			extend as system_collections_ilist_add,
 			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item,
 			get_enumerator as system_collections_ienumerable_get_enumerator,

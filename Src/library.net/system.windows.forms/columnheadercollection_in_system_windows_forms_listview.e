@@ -161,7 +161,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	remove_at (index: INTEGER) is
+	prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.ListView+ColumnHeaderCollection"
 		alias

@@ -18,7 +18,7 @@ inherit
 			remove as system_collections_ilist_remove,
 			insert as system_collections_ilist_insert,
 			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
+			has as system_collections_ilist_has,
 			extend as system_collections_ilist_add,
 			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
 			get_is_synchronized as system_collections_icollection_get_is_synchronized,
@@ -124,7 +124,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (value: SYSTEM_WINDOWS_FORMS_MENUITEM): BOOLEAN is
+	frozen has (value: SYSTEM_WINDOWS_FORMS_MENUITEM): BOOLEAN is
 		external
 			"IL signature (System.Windows.Forms.MenuItem): System.Boolean use System.Windows.Forms.Menu+MenuItemCollection"
 		alias
@@ -138,7 +138,7 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	add (item: SYSTEM_WINDOWS_FORMS_MENUITEM): INTEGER is
+	extend (item: SYSTEM_WINDOWS_FORMS_MENUITEM): INTEGER is
 		external
 			"IL signature (System.Windows.Forms.MenuItem): System.Int32 use System.Windows.Forms.Menu+MenuItemCollection"
 		alias
@@ -173,7 +173,7 @@ feature -- Basic Operations
 			"Add"
 		end
 
-	remove_at (index: INTEGER) is
+	prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.Menu+MenuItemCollection"
 		alias
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_contains (value: ANY): BOOLEAN is
+	frozen system_collections_ilist_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.Menu+MenuItemCollection"
 		alias

@@ -21,11 +21,11 @@ inherit
 			remove as system_collections_ilist_remove,
 			insert as system_collections_ilist_insert,
 			index_of as system_collections_ilist_index_of,
-			contains as system_collections_ilist_contains,
-			add as system_collections_ilist_add,
+			has as system_collections_ilist_contains,
+			extend as system_collections_ilist_add,
 			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
 			get_is_read_only as system_collections_ilist_get_is_read_only,
-			set_item as system_collections_ilist_set_item,
+			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE

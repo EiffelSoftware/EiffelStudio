@@ -41,7 +41,7 @@ inherit
 			remove as system_collections_ilist_remove,
 			insert as system_collections_ilist_insert,
 			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
+			has as system_collections_ilist_has,
 			clear as system_collections_ilist_clear,
 			extend as system_collections_ilist_add
 		end
@@ -100,7 +100,7 @@ feature -- Basic Operations
 			"ResetPropertyDescriptors"
 		end
 
-	frozen contains_data_grid_column_style (column: SYSTEM_WINDOWS_FORMS_DATAGRIDCOLUMNSTYLE): BOOLEAN is
+	frozen has_data_grid_column_style (column: SYSTEM_WINDOWS_FORMS_DATAGRIDCOLUMNSTYLE): BOOLEAN is
 		external
 			"IL signature (System.Windows.Forms.DataGridColumnStyle): System.Boolean use System.Windows.Forms.GridColumnStylesCollection"
 		alias
@@ -121,7 +121,7 @@ feature -- Basic Operations
 			"Clear"
 		end
 
-	frozen contains (name: STRING): BOOLEAN is
+	frozen has (name: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Windows.Forms.GridColumnStylesCollection"
 		alias
@@ -135,14 +135,14 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	add (column: SYSTEM_WINDOWS_FORMS_DATAGRIDCOLUMNSTYLE): INTEGER is
+	extend (column: SYSTEM_WINDOWS_FORMS_DATAGRIDCOLUMNSTYLE): INTEGER is
 		external
 			"IL signature (System.Windows.Forms.DataGridColumnStyle): System.Int32 use System.Windows.Forms.GridColumnStylesCollection"
 		alias
 			"Add"
 		end
 
-	frozen contains_property_descriptor (prop_desc: SYSTEM_COMPONENTMODEL_PROPERTYDESCRIPTOR): BOOLEAN is
+	frozen has_property_descriptor (prop_desc: SYSTEM_COMPONENTMODEL_PROPERTYDESCRIPTOR): BOOLEAN is
 		external
 			"IL signature (System.ComponentModel.PropertyDescriptor): System.Boolean use System.Windows.Forms.GridColumnStylesCollection"
 		alias
@@ -156,7 +156,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.GridColumnStylesCollection"
 		alias
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			"System.Collections.ICollection.get_Count"
 		end
 
-	frozen system_collections_ilist_contains (value: ANY): BOOLEAN is
+	frozen system_collections_ilist_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.GridColumnStylesCollection"
 		alias

@@ -19,7 +19,7 @@ inherit
 			copy_to as system_collections_icollection_copy_to,
 			insert as system_collections_ilist_insert,
 			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
+			has as system_collections_ilist_has,
 			extend as system_collections_ilist_add,
 			put_i_th as system_collections_ilist_set_item,
 			get_item as system_collections_ilist_get_item,
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (index: INTEGER; value: SYSTEM_DRAWING_IMAGE) is
+	frozen put_i_th (index: INTEGER; value: SYSTEM_DRAWING_IMAGE) is
 		external
 			"IL signature (System.Int32, System.Drawing.Image): System.Void use System.Windows.Forms.ImageList+ImageCollection"
 		alias
@@ -92,7 +92,7 @@ feature -- Basic Operations
 			"AddStrip"
 		end
 
-	frozen add (value: SYSTEM_DRAWING_IMAGE) is
+	frozen extend (value: SYSTEM_DRAWING_IMAGE) is
 		external
 			"IL signature (System.Drawing.Image): System.Void use System.Windows.Forms.ImageList+ImageCollection"
 		alias
@@ -134,7 +134,7 @@ feature -- Basic Operations
 			"Clear"
 		end
 
-	frozen contains (image: SYSTEM_DRAWING_IMAGE): BOOLEAN is
+	frozen has (image: SYSTEM_DRAWING_IMAGE): BOOLEAN is
 		external
 			"IL signature (System.Drawing.Image): System.Boolean use System.Windows.Forms.ImageList+ImageCollection"
 		alias
@@ -162,7 +162,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.ImageList+ImageCollection"
 		alias
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_contains (image: ANY): BOOLEAN is
+	frozen system_collections_ilist_has (image: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.ImageList+ImageCollection"
 		alias

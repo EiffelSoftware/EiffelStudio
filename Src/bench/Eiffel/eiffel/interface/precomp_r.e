@@ -53,6 +53,7 @@ feature
 						Workbench.set_system (sys);
 		
 						sys.server_controler.init;
+						sys.init_counters;
 						Eiffel_project.set_system (project.system);
 						sys.set_precompilation (False);
 						Workbench.set_precompiled_directory_name (project_name);

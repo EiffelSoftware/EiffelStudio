@@ -313,8 +313,7 @@ feature -- IL Code generation
 			-- Generate IL code for constant.
 		local
 			type_i: TYPE_I
-			has_result: BOOLEAN
-			il_label_compute, il_label_end, il_return_result: IL_LABEL
+			il_label_compute: IL_LABEL
 		do
 			type_i := type.actual_type.type_i
 			if is_once then
@@ -322,23 +321,16 @@ feature -- IL Code generation
 				il_generator.generate_once_done_info (feature_name)
 				il_generator.generate_once_result_info (feature_name, type_i)
 				il_label_compute := il_label_factory.new_label
-				il_label_end := il_label_factory.new_label
 				il_generator.generate_once_test
 				il_generator.branch_on_false (il_label_compute)
-				il_return_result := il_label_factory.new_label
 				il_generator.generate_once_result
-				il_generator.branch_to (il_return_result)
+				il_generator.generate_return
 				il_generator.mark_label (il_label_compute)
 				il_generator.generate_once_computed
 				value.generate_il
-				il_generator.generate_result_assignment
-				il_generator.generate_result
+				il_generator.duplicate_top
 				il_generator.generate_once_store_result
-				il_generator.branch_to (il_label_end)
-				il_generator.mark_label (il_return_result)
-				il_generator.generate_result_assignment
-				il_generator.mark_label (il_label_end)
-				il_generator.generate_return_value
+				il_generator.generate_return
 				il_generator.set_once_generation (False)
 			else
 				il_generator.put_result_info (type_i)

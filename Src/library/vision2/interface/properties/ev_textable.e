@@ -31,7 +31,17 @@ feature {NONE} -- Initialization
 		ensure
 			text_assigned: text.is_equal (a_text) and text /= a_text
 		end
-	
+
+	make_for_test is
+			-- Cycle through alignments.
+		local
+			align_timer: EV_TIMEOUT
+		do
+			create align_timer.make_with_interval (1500)
+			align_timer.actions.extend (~cycle_alignment)
+			create alignment
+		end
+
 feature -- Access
 
 	text: STRING is
@@ -113,6 +123,24 @@ feature -- Obsolete
 
 feature {EV_TEXTABLE_I} -- Implementation
 
+	alignment: EV_TEXT_ALIGNMENT
+			-- Current text positioning.
+
+	cycle_alignment is
+			-- Set another alignment.
+		do
+			if alignment.is_left_aligned then
+				alignment.set_center_alignment
+				align_text_center
+			elseif alignment.is_center_aligned then
+				alignment.set_right_alignment
+				align_text_right
+			elseif alignment.is_right_aligned then
+				alignment.set_left_alignment
+				align_text_left
+			end
+		end
+
 	implementation: EV_TEXTABLE_I
 			-- Responsible for interaction with the native graphics toolkit.
 
@@ -143,6 +171,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/28 00:41:00  brendel
+--| Added make_for_test that sets all aligments.
+--|
 --| Revision 1.20  2000/03/29 20:24:16  brendel
 --| Improved postconditions.
 --|

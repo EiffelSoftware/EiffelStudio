@@ -41,5 +41,7 @@ feature {DOCUMENT_PROJECT_PREFERENCES} -- Access
 	include_navigation_links_tag: STRING is "include_navigation_links"
 	
 	generate_dhtml_filter_tag: STRING is "generate_dhtml_filter"
+	
+	generate_feature_nodes_tag: STRING is "generate_feature_nodes"
 
 end -- class DOCUMENT_PROJECT_XML_TAGS

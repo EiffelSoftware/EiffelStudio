@@ -128,6 +128,7 @@ feature {NONE} -- Commands
 			project_preferences.set_generate_dhtml_filter (dhtml_filter_check.is_selected)
 			project_preferences.set_use_header_file (header_file_radio.is_selected)
 			project_preferences.set_use_footer_file (footer_file_radio.is_selected)
+			project_preferences.set_generate_feature_nodes (generate_feature_nodes_check.is_selected)
 				
 			project_preferences.write
 		end		

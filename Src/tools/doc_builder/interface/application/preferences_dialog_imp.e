@@ -94,23 +94,25 @@ feature {NONE}-- Initialization
 			create nav_links_check
 			create l_ev_horizontal_box_17
 			create dhtml_filter_check
-			create l_ev_vertical_box_12
 			create l_ev_horizontal_box_18
+			create generate_feature_nodes_check
+			create l_ev_vertical_box_12
+			create l_ev_horizontal_box_19
 			create l_ev_vertical_box_13
 			create l_ev_label_7
 			create filters_list
-			create l_ev_horizontal_box_19
+			create l_ev_horizontal_box_20
 			create filter_description_text
 			create add_description_button
 			create l_ev_cell_1
 			create l_ev_vertical_box_14
 			create l_ev_label_8
 			create tags_list
-			create l_ev_horizontal_box_20
+			create l_ev_horizontal_box_21
 			create filter_tag_name_text
 			create add_tag_button
 			create l_ev_cell_2
-			create l_ev_horizontal_box_21
+			create l_ev_horizontal_box_22
 			create l_ev_cell_3
 			create apply_bt
 			create okay_bt
@@ -180,27 +182,29 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_16.extend (nav_links_check)
 			l_ev_vertical_box_7.extend (l_ev_horizontal_box_17)
 			l_ev_horizontal_box_17.extend (dhtml_filter_check)
+			l_ev_vertical_box_7.extend (l_ev_horizontal_box_18)
+			l_ev_horizontal_box_18.extend (generate_feature_nodes_check)
 			l_ev_notebook_1.extend (l_ev_vertical_box_12)
-			l_ev_vertical_box_12.extend (l_ev_horizontal_box_18)
-			l_ev_horizontal_box_18.extend (l_ev_vertical_box_13)
+			l_ev_vertical_box_12.extend (l_ev_horizontal_box_19)
+			l_ev_horizontal_box_19.extend (l_ev_vertical_box_13)
 			l_ev_vertical_box_13.extend (l_ev_label_7)
 			l_ev_vertical_box_13.extend (filters_list)
-			l_ev_vertical_box_13.extend (l_ev_horizontal_box_19)
-			l_ev_horizontal_box_19.extend (filter_description_text)
-			l_ev_horizontal_box_19.extend (add_description_button)
-			l_ev_horizontal_box_18.extend (l_ev_cell_1)
-			l_ev_horizontal_box_18.extend (l_ev_vertical_box_14)
+			l_ev_vertical_box_13.extend (l_ev_horizontal_box_20)
+			l_ev_horizontal_box_20.extend (filter_description_text)
+			l_ev_horizontal_box_20.extend (add_description_button)
+			l_ev_horizontal_box_19.extend (l_ev_cell_1)
+			l_ev_horizontal_box_19.extend (l_ev_vertical_box_14)
 			l_ev_vertical_box_14.extend (l_ev_label_8)
 			l_ev_vertical_box_14.extend (tags_list)
-			l_ev_vertical_box_14.extend (l_ev_horizontal_box_20)
-			l_ev_horizontal_box_20.extend (filter_tag_name_text)
-			l_ev_horizontal_box_20.extend (add_tag_button)
+			l_ev_vertical_box_14.extend (l_ev_horizontal_box_21)
+			l_ev_horizontal_box_21.extend (filter_tag_name_text)
+			l_ev_horizontal_box_21.extend (add_tag_button)
 			l_ev_vertical_box_12.extend (l_ev_cell_2)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_21)
-			l_ev_horizontal_box_21.extend (l_ev_cell_3)
-			l_ev_horizontal_box_21.extend (apply_bt)
-			l_ev_horizontal_box_21.extend (okay_bt)
-			l_ev_horizontal_box_21.extend (cancel_bt)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_22)
+			l_ev_horizontal_box_22.extend (l_ev_cell_3)
+			l_ev_horizontal_box_22.extend (apply_bt)
+			l_ev_horizontal_box_22.extend (okay_bt)
+			l_ev_horizontal_box_22.extend (cancel_bt)
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_height)
@@ -210,7 +214,7 @@ feature {NONE}-- Initialization
 			l_ev_frame_1.set_text ("Project Settings")
 			l_ev_vertical_box_2.set_padding_width (padding_width)
 			l_ev_vertical_box_2.set_border_width (border_width)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_21)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_22)
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_3, "General")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_4, "Schema")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "HTML")
@@ -297,6 +301,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_15)
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_16)
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_17)
+			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_18)
 			l_ev_horizontal_box_13.set_padding_width (2)
 			l_ev_horizontal_box_13.set_border_width (border_width)
 			l_ev_horizontal_box_13.disable_item_expand (l_ev_label_6)
@@ -331,33 +336,37 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_17.set_border_width (5)
 			dhtml_filter_check.enable_select
 			dhtml_filter_check.set_text ("Generate DHTML combo-box filter for displaying output blocks")
+			l_ev_horizontal_box_18.set_padding_width (5)
+			l_ev_horizontal_box_18.set_border_width (5)
+			generate_feature_nodes_check.enable_select
+			generate_feature_nodes_check.set_text ("Generate feature nodes in TOC")
 			l_ev_vertical_box_12.set_padding_width (padding_width)
 			l_ev_vertical_box_12.set_border_width (border_width)
-			l_ev_horizontal_box_18.set_padding_width (padding_width)
-			l_ev_horizontal_box_18.set_border_width (border_width)
-			l_ev_horizontal_box_18.disable_item_expand (l_ev_cell_1)
+			l_ev_horizontal_box_19.set_padding_width (padding_width)
+			l_ev_horizontal_box_19.set_border_width (border_width)
+			l_ev_horizontal_box_19.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_13.set_padding_width (padding_width)
 			l_ev_vertical_box_13.set_border_width (border_width)
 			l_ev_vertical_box_13.disable_item_expand (l_ev_label_7)
-			l_ev_vertical_box_13.disable_item_expand (l_ev_horizontal_box_19)
+			l_ev_vertical_box_13.disable_item_expand (l_ev_horizontal_box_20)
 			l_ev_label_7.set_text ("Filter description")
 			l_ev_label_7.align_text_left
-			l_ev_horizontal_box_19.disable_item_expand (add_description_button)
+			l_ev_horizontal_box_20.disable_item_expand (add_description_button)
 			add_description_button.set_text ("Add")
 			l_ev_cell_1.set_minimum_width (padding_width)
 			l_ev_vertical_box_14.set_padding_width (padding_width)
 			l_ev_vertical_box_14.set_border_width (border_width)
 			l_ev_vertical_box_14.disable_item_expand (l_ev_label_8)
-			l_ev_vertical_box_14.disable_item_expand (l_ev_horizontal_box_20)
+			l_ev_vertical_box_14.disable_item_expand (l_ev_horizontal_box_21)
 			l_ev_label_8.set_text ("Filter tags")
 			l_ev_label_8.align_text_left
-			l_ev_horizontal_box_20.disable_item_expand (add_tag_button)
+			l_ev_horizontal_box_21.disable_item_expand (add_tag_button)
 			add_tag_button.set_text ("Add")
-			l_ev_horizontal_box_21.set_padding_width (padding_width)
-			l_ev_horizontal_box_21.set_border_width (border_width)
-			l_ev_horizontal_box_21.disable_item_expand (apply_bt)
-			l_ev_horizontal_box_21.disable_item_expand (okay_bt)
-			l_ev_horizontal_box_21.disable_item_expand (cancel_bt)
+			l_ev_horizontal_box_22.set_padding_width (padding_width)
+			l_ev_horizontal_box_22.set_border_width (border_width)
+			l_ev_horizontal_box_22.disable_item_expand (apply_bt)
+			l_ev_horizontal_box_22.disable_item_expand (okay_bt)
+			l_ev_horizontal_box_22.disable_item_expand (cancel_bt)
 			apply_bt.set_text (button_apply_text)
 			apply_bt.set_minimum_width (button_width)
 			okay_bt.set_text (button_ok_text)
@@ -386,7 +395,7 @@ feature -- Access
 	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
 	l_ev_horizontal_box_13, l_ev_horizontal_box_14, l_ev_horizontal_box_15, l_ev_horizontal_box_16, 
 	l_ev_horizontal_box_17, l_ev_horizontal_box_18, l_ev_horizontal_box_19, l_ev_horizontal_box_20, 
-	l_ev_horizontal_box_21: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_21, l_ev_horizontal_box_22: EV_HORIZONTAL_BOX
 	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, 
 	l_ev_label_7, l_ev_label_8: EV_LABEL
 	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, 
@@ -396,7 +405,8 @@ feature -- Access
 	browse_schema_bt, browse_css_bt, browse_header_button, browse_footer_button, add_description_button, 
 	add_tag_button, apply_bt, okay_bt, cancel_bt: EV_BUTTON
 	header_override_check, footer_override_check, use_include_tags, header_include_check, 
-	footer_include_check, html_stylesheet_check, nav_links_check, dhtml_filter_check: EV_CHECK_BUTTON
+	footer_include_check, html_stylesheet_check, nav_links_check, dhtml_filter_check, 
+	generate_feature_nodes_check: EV_CHECK_BUTTON
 	header_file_radio, header_generate_check, footer_file_radio, footer_generate_check: EV_RADIO_BUTTON
 	filters_list, tags_list: EV_LIST
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL

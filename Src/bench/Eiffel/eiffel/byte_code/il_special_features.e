@@ -166,13 +166,29 @@ feature -- IL code generation
 				il_generator.pop
 				inspect type_of (type)
 				when integer_type then
-					il_generator.put_integer_constant (type, 1)
+					if is_signed_integer then
+						il_generator.put_integer_constant (type, 1)
+					else
+						il_generator.put_natural_constant (type, 1)
+					end
 				when real_64_type then
 					il_generator.put_double_constant (1.0)
 				when real_32_type then
 					il_generator.put_double_constant (1.0)
 					il_generator.convert_to_real
 				end
+
+			when to_natural_8_type then
+				il_generator.convert_to_natural_8
+
+			when to_natural_16_type then
+				il_generator.convert_to_natural_16
+
+			when to_natural_32_type then
+				il_generator.convert_to_natural_32
+
+			when to_natural_64_type then
+				il_generator.convert_to_natural_64
 
 			when to_integer_8_type then
 				il_generator.convert_to_integer_8
@@ -252,6 +268,9 @@ feature -- IL code generation
 
 			when is_digit_type then
 				il_generator.generate_is_digit
+
+			when twin_type then
+					-- Nothing to do, top of the stack has correct value
 				
 			else
 
@@ -273,6 +292,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, to_integer_32_name_id)
 			Result.put (to_integer_32_type, to_integer_name_id)
 			Result.put (to_integer_64_type, to_integer_64_name_id)
+			Result.put (to_natural_8_type, to_natural_8_name_id)
+			Result.put (to_natural_16_type, to_natural_16_name_id)
+			Result.put (to_natural_32_type, to_natural_32_name_id)
+			Result.put (to_natural_64_type, to_natural_64_name_id)
 			Result.put (bit_and_type, bit_and_name_id)
 			Result.put (bit_and_type, infix_and_name_id)
 			Result.put (bit_or_type, bit_or_name_id)
@@ -305,6 +328,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (generator_type, generator_name_id)
  			Result.put (generator_type, generating_type_name_id)
  			Result.put (three_way_comparison_type, three_way_comparison_name_id)
+			Result.put (twin_type, twin_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -349,7 +373,12 @@ feature -- Fast access to feature name
 	is_digit_type: INTEGER is 32
 	to_real_64_type: INTEGER is 33
 	three_way_comparison_type: INTEGER is 34
-	max_type_id: INTEGER is 34
+	to_natural_8_type: INTEGER is 35
+	to_natural_16_type: INTEGER is 36
+	to_natural_32_type: INTEGER is 37
+	to_natural_64_type: INTEGER is 38
+	twin_type: INTEGER is 39
+	max_type_id: INTEGER is 39
 
 feature {NONE} -- IL code generation
 
@@ -499,6 +528,10 @@ feature {NONE} -- Type information
 	unknown_type: INTEGER is 8
 			-- Constant defining type
 
+	is_signed_integer: BOOLEAN
+			-- Is integer_type corresponding to INTEGER_I?
+			-- False when corresponding to NATURAL_I.
+
 	is_wide: BOOLEAN
 			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
 
@@ -513,11 +546,19 @@ feature {NONE} -- Type information
 			when Character_code, Wide_char_code then Result := character_type
 			when Boolean_code then Result := boolean_type
 			when
-				Integer8_code, Integer16_code,
-				Integer32_code, Integer64_code
+				Integer_8_code, Integer_16_code,
+				Integer_32_code, Integer_64_code
 			then
 				Result := integer_type
-			
+				is_signed_integer := True
+	
+			when
+				natural_8_code, natural_16_code,
+				natural_32_code, natural_64_code
+			then
+				Result := integer_type
+				is_signed_integer := False
+		
 			when Real_32_code then	Result := real_32_type
 			when Real_64_code then Result := real_64_type
 			when Pointer_code then Result := pointer_type

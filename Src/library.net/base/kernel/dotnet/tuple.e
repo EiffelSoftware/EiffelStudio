@@ -339,7 +339,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_boolean: is_boolean_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	character_item (index: INTEGER): CHARACTER is
@@ -348,7 +348,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_character: is_character_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	double_item (index: INTEGER): DOUBLE is
@@ -357,7 +357,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_numeric: is_numeric_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	integer_8_item (index: INTEGER): INTEGER_8 is
@@ -366,7 +366,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_8_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	integer_16_item (index: INTEGER): INTEGER_16 is
@@ -375,7 +375,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_16_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	integer_item, integer_32_item (index: INTEGER): INTEGER is
@@ -384,7 +384,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	integer_64_item (index: INTEGER): INTEGER_64 is
@@ -393,7 +393,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_64_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	pointer_item (index: INTEGER): POINTER is
@@ -402,7 +402,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_pointer: is_pointer_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 	real_item (index: INTEGER): REAL is
@@ -411,7 +411,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
 		do
-			Result ?= item (index)
+			Result ?= fast_item (index - 1)
 		end
 
 feature -- Conversion
@@ -429,7 +429,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				a ?= item (i)
+				a ?= fast_item (i - 1)
 				Result.put (a, i)
 				i := i + 1
 			end
@@ -592,7 +592,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				s ?= item (i)
+				s ?= fast_item (i - 1)
 				Result.put (s, i)
 				i := i + 1
 			end
@@ -650,12 +650,12 @@ feature {NONE} -- Implementation
 				if code /= reference_code then
 					first_type := codemap.item (code)
 				else
-					first_type := item (1).get_type
+					first_type := fast_item (0).get_type
 				end
 			until
 				i > nb or not Result
 			loop
-				Result := first_type.equals_object (item (i))
+				Result := first_type.equals_object (fast_item (i - 1))
 				i := i + 1
 			end
 		end

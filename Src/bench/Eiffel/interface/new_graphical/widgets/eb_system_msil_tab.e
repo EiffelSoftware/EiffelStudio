@@ -329,8 +329,6 @@ feature {NONE} -- Initialization
 
 	options_box: EV_HORIZONTAL_BOX is
 			-- Box containing use options.
-		local
-			b: EV_FRAME
 		do
 			create Result
 			Result.set_border_width (Layout_constants.Small_border_size)

@@ -53,92 +53,95 @@ feature -- Events for buttons
 			-- The 2 state button change its state
 
 feature -- Events for list and mc-list
+	
+	Cmd_select: INTEGER is 20
+			-- The list has been selected.
 
-	Cmd_selection: INTEGER is 18
-			-- The selection of the list has changed
+	Cmd_unselect: INTEGER is 21
+			-- The list has been unselected.
 
-	Cmd_column_click: INTEGER is 19
+	Cmd_column_click: INTEGER is 22
 			-- The user double clicked on an item
 
 feature -- Events for windows
 
-	Cmd_size: INTEGER is 18
+	Cmd_size: INTEGER is 23
 			-- The window has been resized
 
-	Cmd_close: INTEGER is 19
+	Cmd_close: INTEGER is 24
 			-- The window has been closed
 
-	Cmd_move: INTEGER is 20
+	Cmd_move: INTEGER is 25
 			-- The window has moved
 
 feature -- Event for drawing area
 
---	Cmd_size: INTEGER is 18
+--	Cmd_size: INTEGER is 26
 --			-- The drawing has been resized
 
-	Cmd_paint: INTEGER is 19
+	Cmd_paint: INTEGER is 27
 			-- The drawing need to be repainted.
 
 feature -- Event for text_components
 
---	Cmd_selection: INTEGER is 18
+--	Cmd_selection: INTEGER is 28
 			-- The text inside the component is modified by the
 			-- user
 
-	Cmd_activate: INTEGER is 19
+	Cmd_activate: INTEGER is 29
 			-- The text inside the componant is going to be
 			-- update after a change of the user.
 
-	Cmd_change: INTEGER is 20
+	Cmd_change: INTEGER is 30
 			-- The text in the text container have changed.
 
 feature -- Event for the gauge
 
-	Cmd_gauge: INTEGER is 21
+	Cmd_gauge: INTEGER is 31
 			-- The value has been changed by the user.
 
 feature -- Event for notebook
 
-	Cmd_switch: INTEGER is 18
+	Cmd_switch: INTEGER is 32
 			-- The user has switch between two pages of a notebook.
 
 feature -- Event for rich text
 
-	Cmd_insert_text: INTEGER is 21
+	Cmd_insert_text: INTEGER is 33
 			-- The user inserts a character
 
-	Cmd_delete_text: INTEGER is 22
+	Cmd_delete_text: INTEGER is 34
 			-- The user deletes a character to the left of the current position
 
-	Cmd_delete_right_character: INTEGER is 23
+	Cmd_delete_right_character: INTEGER is 35
 			-- The user deletes a character to the right of the current position
 
-	Cmd_undo: INTEGER is 24
+	Cmd_undo: INTEGER is 36
 			-- The user wants to undo a command
 
-	Cmd_redo: INTEGER is 25
+	Cmd_redo: INTEGER is 37
 			-- The user wants to redo a command
 
-	Cmd_paste: INTEGER is 26
+	Cmd_paste: INTEGER is 38
 			-- The user wants to redo a command
 
 feature -- Event for text editor
 
-	Cmd_indent_lines: INTEGER is 27
+	Cmd_indent_lines: INTEGER is 39
 			-- The user wants to indent the selected lines
 
-	Cmd_deindent_lines: INTEGER is 28
+	Cmd_deindent_lines: INTEGER is 40
 			-- The user wants to deindent the selected lines
 
-	Cmd_comment_lines: INTEGER is 29
+	Cmd_comment_lines: INTEGER is 41
 			-- The user wants to comment the selected lines
 
-	Cmd_decomment_lines: INTEGER is 30
+	Cmd_decomment_lines: INTEGER is 42
 			-- The user wants to decomment the selected lines
 	
 feature -- Upper constants value
 
-	command_count: INTEGER is 30
+	command_count: INTEGER is 42
 			-- Number of different events.
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

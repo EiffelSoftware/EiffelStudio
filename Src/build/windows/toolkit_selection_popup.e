@@ -32,13 +32,13 @@ feature {NONE}
 			!! top_form.make (Widget_names.form, form_d);
 			!! focus_label.initialize (top_form);
 			!! close_button.make (Current, top_form);
-			top_form.attach_left (focus_label, 0);
-			top_form.attach_bottom (focus_label, 0);
-			top_form.attach_top (focus_label, 0);
+--			top_form.attach_left (focus_label, 0);
+--			top_form.attach_bottom (focus_label, 0);
+--			top_form.attach_top (focus_label, 0);
 			top_form.attach_right (close_button, 0);
 			top_form.attach_bottom (close_button, 0);
 			top_form.attach_top (close_button, 0);
-			top_form.attach_right_widget (close_button, focus_label, 0)
+--			top_form.attach_right_widget (close_button, focus_label, 0)
 			form_d.attach_top (top_form, 0);
 			form_d.attach_left (top_form, 0);
 			form_d.attach_right (top_form, 0);

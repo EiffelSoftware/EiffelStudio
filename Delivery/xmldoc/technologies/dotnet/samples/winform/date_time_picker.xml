@@ -51,8 +51,8 @@
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left side of the main window a date is displayed in a 
 			<span><code><class_name>COMBO_BOX</class_name></code></span>. Clicking on this 
 			<span><code><class_name>COMBO_BOX</class_name></code></span> and a 
-			<span><code><class_name>CALENDAR</class_name></code></span> control will appear showing the same date than in the 
-			<span><code><class_name>COMBO_BOX</class_name></code></span>. On the right side of the main window are the commands to control the format of the displayed date and the style of the 
+			<span><code><class_name>CALENDAR</class_name></code></span> control will appear showing the same date as in the 
+			<span><code><class_name>COMBO_BOX</class_name></code></span>. On the right side of the main window are the controls for selecting the format of the displayed date and the style of the 
 			<span><code><class_name>CALENDAR</class_name></code></span> control.
 		</paragraph>
 		<paragraph>Clicking on the "Change font" button and a 
@@ -82,7 +82,7 @@
 		</paragraph>
 		<paragraph>When one of the buttons "Change font" or "Change color" is pressed, an event is launched and open the corresponding dialog box. </paragraph>
 		<paragraph>When the entry in the 
-			<span><code><class_name>COMBO_BOX</class_name></code></span> format change, an event is launched and modify the format of the displayed date.
+			<span><code><class_name>COMBO_BOX</class_name></code></span> format changes, an event is launched and modify the format of the displayed date.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">

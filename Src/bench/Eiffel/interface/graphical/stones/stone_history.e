@@ -88,12 +88,9 @@ feature -- Element change
 			-- Do not insert `v' if it was the last inserted item.
 			-- Move the cursor to the last inserted stone.
 		do
-			if
-				not do_not_update and then
-				v /= Void and then
-				(empty or else
-				not v.same_as (last) or else
-				not equal (v.signature, item.signature))
+			if not do_not_update and then v /= Void
+				and then (empty or else not v.same_as (last)
+				or else not equal (v.signature, item.signature))
 			then
 				if not empty and then not islast then
 					from
@@ -102,12 +99,15 @@ feature -- Element change
 					loop
 						remove_right
 					end
-				end;
-				twl_extend (v);
+				end
+
+				twl_extend (v)
+
 				if count > capacity then
-					start; 
+					start
 					remove
-				end;
+				end
+
 				finish
 			end
 		end

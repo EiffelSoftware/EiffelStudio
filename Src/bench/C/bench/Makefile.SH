@@ -26,9 +26,10 @@ INCLUDE_PATH=../run-time
 special_tables.o : special_tables.c
 	\$(CC) \$(CFLAGS) -I../run-time -I. -c special_tables.c
 
-clean:
+clean::
 	\$(RM) *.o 
-clobber:
+clobber:: clean
 	\$(RM) Makefile *.o
 	
+Makefiles::
 !GROK!THIS!

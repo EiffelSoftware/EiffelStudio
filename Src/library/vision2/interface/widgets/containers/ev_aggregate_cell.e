@@ -37,7 +37,7 @@ feature {EV_ANY_I} -- Implementation
 	real_parent: EV_CONTAINER
 		-- The actual widget parent that is seen by the user.
 
-feature {NONE} -- Invariant
+feature {NONE} -- Contract support
 
 	parent_of_items_is_current: BOOLEAN is
 		do

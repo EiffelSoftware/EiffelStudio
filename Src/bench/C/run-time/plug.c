@@ -40,6 +40,112 @@ private void recursive_chkinv();		/* Internal invariant control loop */
  * Manifest string creation
  */
 
+public char *createarr(curr, dtype, items, nbr)
+register1 char *curr;
+register2 int dtype;
+register3 char **items;
+register4 long nbr;
+{
+	/* Create an Eiffel ARRAY[ANY] using current object curr. 
+	 * This routine creates the object and returns a pointer to the newly
+	 * allocated array or raises a "No more memory" exception.
+	 * This object will contain all the attributes of curr except for
+	 * items.
+	 */
+
+	char *array, *sp, *o_ref; 
+	char *new_obj , *new_attr;
+	long nbr_attr, offset, stripped_nbr;
+	struct cnode *obj_desc;
+#ifndef WORKBENCH
+	register5 long **offsets;
+#else
+	register6 int32 *rout_ids;
+#endif
+	register7 char** attr_names;
+	char *attr;
+	int found, i;
+	int16 curr_dtype;
+	uint32 type, *types;
+	long temp;
+
+	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
+	obj_desc = &System(dtype); 	/* Dynamic type where strip is found */
+	nbr_attr = obj_desc->cn_nbattr;
+	attr_names = obj_desc->cn_names;
+#ifndef WORKBENCH
+    offsets = obj_desc->cn_offsets;
+#else
+    rout_ids = obj_desc->cn_attr;
+#endif
+	types = obj_desc->cn_types;
+
+	stripped_nbr = nbr_attr - nbr;
+	array = emalloc(arr_dtype);	/* If we return, it succeeded */
+	epush(&loc_stack, &array); 	/* Protect address in case it moves */
+	(arrmake)(array, 1L, stripped_nbr);	
+								/* Call feature `make' in class ARRAY[ANY] */
+	sp = *(char **) array;
+	epush (&loc_stack, &sp);	/* Protect address in case it moves */
+
+	while (nbr_attr--) {
+		found = 0;
+		for (i=0; i<nbr & (!found); i++) {
+			attr = items[i];
+			if (!(strcmp (attr, attr_names[nbr_attr])))
+				found = 1;
+		}
+		if (!found) {
+			type = types[nbr_attr];
+#ifndef WORKBENCH
+			o_ref = curr + (offsets[nbr_attr][curr_dtype]);		
+#else
+			o_ref = curr + ((long *) Table(rout_ids[nbr_attr])) [curr_dtype];
+#endif
+			switch(type & SK_HEAD) {
+			case SK_REF:
+				new_obj = *(char **) o_ref;
+				break;
+			case SK_CHAR:
+				new_obj = RTLN(char_ref_dtype);
+				*new_obj = * (char *) o_ref;
+				break;
+			case SK_BOOL:
+				new_obj = RTLN(bool_ref_dtype);
+				*new_obj = * (char *) o_ref;
+				break;
+			case SK_INT:
+				new_obj = RTLN(int_ref_dtype);
+				*(long *) new_obj = *(long *) o_ref;
+				break;
+			case SK_DOUBLE:
+				new_obj = RTLN(doub_ref_dtype);
+				temp = *(double *) o_ref;
+				*(double *) new_obj = temp;
+				break;
+			case SK_FLOAT:
+				new_obj = RTLN(doub_ref_dtype);
+				*(float *) new_obj = *(float *) o_ref;
+				break;
+			case SK_POINTER:
+				new_obj = RTLN(point_ref_dtype);
+				*(fnptr *) new_obj = *(fnptr *) o_ref;
+				break;
+			case SK_BIT:
+				new_obj = b_clone(o_ref);
+				break;
+			default:
+				panic("unknown attribute type");
+				/* NOTREACHED */
+			}
+		*((char **) sp) ++ = new_obj;
+		}
+	}
+	epop(&loc_stack, 1);		/* Remove protection for area */
+	epop(&loc_stack, 1);		/* Remove protection for array */
+	return array;
+}
+
 public char *makestr(s, len)
 register1 char *s;
 register2 int len;

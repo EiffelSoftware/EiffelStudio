@@ -14,7 +14,7 @@ deferred class
 inherit
 	EV_ANY_I
 		export
-			{EV_INTERMEDIARY_ROUTINES}
+			{EV_INTERMEDIARY_ROUTINES, EV_ANY_IMP}
 				is_destroyed
 		end
 
@@ -41,6 +41,15 @@ feature {EV_ANY_I} -- Access
 			a_c_object_not_null: a_c_object /= NULL
 		do
 			c_object := a_c_object
+			if needs_event_box then
+				c_object := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
+				feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, a_c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
+			end
+			
+				-- Add reference and removing floating state
+			feature {EV_GTK_EXTERNALS}.object_ref (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_object_sink (c_object)
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
@@ -53,8 +62,17 @@ feature {EV_ANY_I} -- Access
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
 		require
 			a_c_object_not_null: a_c_object /= NULL
-		do
-			Result := feature {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (a_c_object)
+		external
+			"C inline use %"ev_any_imp.h%""
+		alias
+			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
+		end
+
+	frozen gtk_is_object (a_c_object: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_IS_OBJECT ($a_c_object)"
 		end
 
 feature {EV_ANY, EV_ANY_IMP} -- Command
@@ -77,11 +95,13 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 					end
 				end
 				is_destroyed := True
-				if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+				if internal_id /= 0 then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+				end	
+	
 					-- Windows are explicitly reffed on initialization as they are toplevel widgets.
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-				end
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 				c_object := NULL
 			end
 		ensure then
@@ -176,13 +196,18 @@ feature {EV_ANY_I} -- Event handling
 		
 feature {NONE} -- Implementation
 
+	needs_event_box: BOOLEAN is
+			-- 
+		do
+			Result := False
+		end
+
 	dispose is
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		do
-			if c_object /= NULL and then not is_in_final_collect and then not App_implementation.gtk_marshal.is_destroyed then
-				-- Destroy has not been explicitly called.
-				is_destroyed := True
+			if not is_destroyed and then not is_in_final_collect then
+					-- Destroy has not been explicitly called.
 					-- This is incase events are fired from the calls to gtk upon disposal
 				if internal_id /= 0 then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
@@ -191,7 +216,6 @@ feature {NONE} -- Implementation
 				--| used for GC/Ref-Counting interaction.
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-				c_object := NULL
 			end
 			Precursor {IDENTIFIED}
 		end
@@ -210,8 +234,16 @@ feature {NONE} -- Implementation
 
 	visual_widget: POINTER is
 			-- Pointer to the widget viewed by user.
+		local
+			a_child_list: POINTER
 		do
-			Result := c_object
+			if needs_event_box then
+				a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (c_object)
+				Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
+				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+			else
+				Result := c_object
+			end
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -226,19 +258,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			check
 				Result_not_void: Result /= Void
 			end
-		end
-
-feature -- Conversion
-
-	pointer_to_integer (pointer: POINTER): INTEGER is
-			-- int pointer_to_integer (void* pointer) {
-			--     return (int) pointer;
-			-- }
-			-- Hack used for Result = ((EIF_INTEGER)(pointer)), blank alias avoids parser rules.
-		external
-			"C [macro <stdio.h>] (EIF_POINTER): EIF_INTEGER"
-		alias
-			" "
 		end
 		
 feature -- Measurement

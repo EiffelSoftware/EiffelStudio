@@ -112,8 +112,7 @@ feature -- Constants
 	memory_calloc_name_id: INTEGER is 102
 	internal_hash_code_name_id: INTEGER is 103
 	base_address_name_id: INTEGER is 104
-	element_address_name_id: INTEGER is 105
-	
+	item_address_name_id: INTEGER is 105
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

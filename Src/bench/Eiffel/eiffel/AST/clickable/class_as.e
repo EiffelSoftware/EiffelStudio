@@ -30,7 +30,7 @@ inherit
 
 	SHARED_INST_CONTEXT
 
-feature {AST_FACTORY} -- Initialization
+feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 
 	initialize (n: like class_name;
 		ext_name: STRING;

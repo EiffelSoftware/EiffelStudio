@@ -39,6 +39,14 @@ feature -- Access
 			Result := implementation.text_length
 		end
 
+	selected_text: STRING is
+			-- Text which is currently selected
+		require
+			exists: not destroyed
+		do
+			Result := implementation.selected_text
+		end
+
 feature -- Status report
 
 	position: INTEGER is
@@ -100,16 +108,6 @@ feature -- Status setting
 		do
 			implementation.set_position (pos)
 		end
-	
---	set_maximum_text_length (value: INTEGER) is
---			-- Make `value' the new maximal lenght of the text
---			-- in characte number.
---		require
---			exist: not destroyed
---			valid_length: value >= 0
---		do
---			implementation.set_maximum_text_length (value)
---		end
 
 feature -- Element change
 
@@ -117,18 +115,27 @@ feature -- Element change
 			-- Make `txt' the new `text'.
 		require
 			exists: not destroyed			
-			not_void: txt /= Void
+			valid_text: txt /= Void
 		do
 			implementation.set_text (txt)
 		ensure
 			text_set: text.is_equal (txt)
 		end
-	
+
+	insert_text (txt: STRING) is
+			-- Insert `txt' at the current position.
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		do
+			implementation.insert_text (txt)
+		end
+
 	append_text (txt: STRING) is
 			-- Append `txt' into component.
 		require
 			exist: not destroyed			
-			not_void: txt /= Void
+			valid_text: txt /= Void
 		do
 			implementation.append_text (txt)
 		ensure
@@ -139,7 +146,7 @@ feature -- Element change
 			-- Prepend `txt' into component.
 		require
 			exist: not destroyed			
-			not_void: txt /= Void
+			valid_text: txt /= Void
 		do
 			implementation.prepend_text (txt)
 		ensure
@@ -164,8 +171,8 @@ feature -- Basic operation
 			-- `start_pos' and `end_pos'
 		require
 			exist: not destroyed
-			valid_start: start_pos > 0 and start_pos <= text_length
-			valid_end: end_pos > 0 and end_pos <= text_length
+			valid_start: start_pos > 0 and start_pos <= text_length + 1
+			valid_end: end_pos > 0 and end_pos <= text_length + 1
 		do
 			implementation.select_region (start_pos, end_pos)
 		ensure

@@ -136,6 +136,7 @@ feature -- Type check, byte code and dead code removal
 			multi: MULTI_TYPE_A
 			was_overloaded: BOOLEAN
 			l_source_type, l_target_type: CL_TYPE_A
+			l_feature_name: like feature_name
 		do
 			last_type := context_last_type
 
@@ -175,8 +176,15 @@ feature -- Type check, byte code and dead code removal
 				-- Look for a feature in the class associated to the
 				-- last actual type onto the context type stack. If it
 				-- is a generic take the associated constraint.
+			l_feature_name := feature_name
 			if last_class.feature_table.has_overloaded (feature_name) then
 				a_feature := overloaded_feature (last_type, last_class)
+				if a_feature /= Void then
+						-- Update `feature_name' with appropriate resolved name.
+						-- Otherwise some routine using `feature_name' will fail although
+						-- it succeeds here (e.g. CREATION_EXPR_AS and CREATION_AS)
+					create feature_name.initialize (a_feature.feature_name)
+				end
 				was_overloaded := True
 			else
 				a_feature := last_class.feature_table.item (feature_name)
@@ -406,7 +414,7 @@ feature -- Type check, byte code and dead code removal
 			else
 					-- `a_feature' was not valid for current, report
 					-- corresponding error.
-				report_error_for_feature (a_feature)
+				report_error_for_feature (a_feature, l_feature_name)
 			end
 		end
 
@@ -434,9 +442,11 @@ feature -- Type check, byte code and dead code removal
 			Result := a_feature /= Void	
 		end
 
-	report_error_for_feature (a_feature: FEATURE_I) is
+	report_error_for_feature (a_feature: FEATURE_I; a_feature_name: like feature_name) is
 			-- Report error during `type_check' because `a_feature'
 			-- was not valid for call.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
 		local
 			veen: VEEN
 		do
@@ -444,7 +454,7 @@ feature -- Type check, byte code and dead code removal
 					-- Not a valid feature name.
 				create veen
 				context.init_error (veen)
-				veen.set_identifier (feature_name)
+				veen.set_identifier (a_feature_name)
 				veen.set_parameter_count (parameter_count)
 				error_handler.insert_error (veen)
 				error_handler.raise_error

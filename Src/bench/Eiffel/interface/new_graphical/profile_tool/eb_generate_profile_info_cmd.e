@@ -12,9 +12,8 @@ class
 inherit
 	EB_TOOL_COMMAND
 	NEW_EB_CONSTANTS
---	EB_SHARED_INTERFACE_TOOLS
-	WINDOWS
-		-- for argument_window.
+	EB_SHARED_INTERFACE_TOOLS
+		-- for argument_list only.
 
 creation
 	make
@@ -50,7 +49,7 @@ feature -- Command execution
 			if conf_load.error_occured then
 				raise_config_error
 			else
-				create prof_invoker.make (profiler, argument_window.argument_list, profinfo, compile)
+				create prof_invoker.make (profiler, Argument_list, profinfo, compile)
 				if prof_invoker.must_invoke_profiler then
 					prof_invoker.invoke_profiler
 				end

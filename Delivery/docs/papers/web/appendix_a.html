@@ -1,0 +1,197 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<H1><br>
+Appendix A: class CGI_INTERFACE</H1>
+
+<table border="1" width="92%">
+  <tr>
+    <td width="100%" bgcolor="#FFFFCC">
+
+<DL COMPACT><DT><B>indexing</B><BR>
+	<BR>
+	<DD><I><font color="#FF0000">description: "Access to information provided by a user through an HTML form.
+		 This class may be used as ancestor by classes needing its facilities."</font>
+	<DD><font color="#FF0000">status: ""</font>
+	<DD><font color="#FF0000">date: "$Date$"</font>
+	<DD><font color="#FF0000">revision: "$Revision$"</font></I>
+</DL>
+<DL COMPACT><DT><B>deferred class interface</B>
+	<DD><I>CGI_INTERFACE</I>
+</DL>
+
+<DL COMPACT><DT><B>feature</B> <font color="#FF0000"> -- Initialization</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>make</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Initiate input data parsing and process information.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>make_debug (args: ARRAY [STRING])</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Set environment variables and proceed to regular execution.</font>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B>  <font color="#FF0000"> -- Access</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>fields: ARRAY [STRING]</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Names of fields in the form.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>value (field_name: STRING): STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- First (unique?) value for a field.</font>
+		<DT><B>require</B><BR>
+			<DD><I>field_not_void: field_name /= Void;<BR>
+			field_exists: field_defined (field_name)</I>
+		<DT><B>ensure</B><BR>
+			<DD><I>value_exists: Result /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>value_count (field_name: STRING): INTEGER</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Number of values for a field.</font>
+		<DT><B>require</B><BR>
+			<DD><I>field_not_void: field_name /= Void;<BR>
+			field_exists: field_defined (field_name)</I>
+		<DT><B>ensure</B><BR>
+			<DD><I>valid_count: Result &gt;= 0</I>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>value_list (field_name: STRING): LINKED_LIST [STRING]</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- List of values for a field.</font>
+		<DT><B>require</B><BR>
+			<DD><I>field_not_void: field_name /= Void;<BR>
+			field_exists: field_defined (field_name)</I>
+		<DT><B>ensure</B><BR>
+			<DD><I>valid_count: Result.count = value_count (field_name)</I>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B> -- Status report
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>field_defined (field_name: STRING): BOOLEAN</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Is field <I>field_name</I> defined?</font>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B> -- Status setting
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>set_exception_trace</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Display exception trace on exception.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>set_message</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Display error message on exception.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>set_no_debug</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Do nothing on exception.</font>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B> -- HTTP facilities
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>Generate_html_header</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Generate CGI header reply.</font>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B> -- Miscellanous
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>execute</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Process user provided information.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>set_environment</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Set environment variable to user value.</font>
+		</DL>
+	</DL>
+<DT><B>end</B> -- class CGI_INTERFACE
+</DL>
+
+      <p>&nbsp;</td>
+  </tr>
+</table>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="appendix_b.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

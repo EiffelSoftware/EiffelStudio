@@ -1,0 +1,304 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+<h1><br>
+Appendix C: class HTML_GENERATOR</h1>
+
+<table border="1" width="90%">
+  <tr>
+    <td width="100%" bgcolor="#FFFFCC">
+
+<DL COMPACT><DT><B>indexing</B><BR>
+	<BR>
+	<DD><I><font color="#FF0000">description: "HTML generation. This class may be used as ancestor by classes
+		 needing its facilities"</font>
+	<DD><font color="#FF0000">status: ""</font>
+	<DD><font color="#FF0000">date: "$Date$"</font>
+	<DD><font color="#FF0000">revision: "$Revision$"</font></I>
+</DL>
+<DL COMPACT><DT><B>class interface</B>
+	<DD><I>HTML_GENERATOR</I>
+</DL>
+
+<DL COMPACT><DT><B>feature</B>  <font color="#FF0000"> -- Transformation</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>put_basic (s: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Write s to medium.</font>
+		<DT><B>require</B>
+			<DD><I>string_not_void: s /= Void</I>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B> <font color="#FF0000"> -- Miscellaneous</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>put_bold (text: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put text in bold face.</font>
+		<DT><B>require</B>
+			<DD><I>text_not_void: text /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_glossary_definition</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put glossary definition tag.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_glossary_end</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- End glossary list.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_glossary_start</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Start glossary list.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_glossary_term (text: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put text as glossary term.</font>
+		<DT><B>require</B>
+			<DD><I>text_not_void: text /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_header1 (title: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put title as level 1 header.</font>
+		<DT><B>require</B>
+			<DD><I>title_not_void: title /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_header2 (title: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put title as level 2 header.</font>
+		<DT><B>require</B>
+			<DD><I>title_not_void: title /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_header3 (title: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put title as level 3 header.</font>
+		<DT><B>require</B>
+			<DD><I>title_not_void: title /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_header4 (title: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put title as level 4 header.</font>
+		<DT><B>require</B>
+			<DD><I>title_not_void: title /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_header5 (title: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put title as level 5 header.</font>
+		<DT><B>require</B>
+			<DD><I>title_not_void: title /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_header6 (title: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put title as level 6 header.</font>
+		<DT><B>require</B>
+			<DD><I>title_not_void: title /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_horizontal_rule</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put a horizontal rule.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_italic (text: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put text in italic.</font>
+		<DT><B>require</B>
+			<DD><I>text_not_void: text /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_line_break</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put line break.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_link (url, anchor: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Attach text anchor to url</font>
+		<DT><B>require</B>
+			<DD><I>anchor_not_void: anchor /= Void;<BR>
+			url_not_void: url /= Void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_list_item_end</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Write list item end tag.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_list_item_start</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Write list item start tag.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_ordered_list_end</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- End ordered list.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_ordered_list_start</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Start ordered list.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_paragraph_end</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- End paragraph</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_paragraph_start</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Start paragraph.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_preformatted (text: STRING)</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Put preformatted text text.</font>
+		<DT><B>require</B>
+			<DD><I>text_not_void: text /= void</I>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_unordered_list_end</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- End unordered list.</font>
+		</DL>
+	</DL>
+	<BR>
+
+	<DL COMPACT><DT><I>put_unordered_list_start</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Start unordered list.</font>
+		</DL>
+	</DL>
+	<BR>
+<DT><B>end</B>  <font color="#FF0000"> -- class HTML_GENERATOR</font>
+</DL>
+
+      <p>&nbsp;</td>
+  </tr>
+</table>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="appendix_d.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

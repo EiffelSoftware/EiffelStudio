@@ -1,0 +1,53 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+
+<H1><br>
+6. GENERATING HTML OUTPUT</H1>
+
+<P>Many form-processing systems will have to display information back to
+the visitor, if only to thank the visitor for filling in the form.</P>
+
+<P>This information must be in HTML format; it will often include some
+of the form's input, or elements generated from that input.</P>
+
+<P>To avoid forcing you to write low-level HTML code, the class <I>HTML_GENERATOR</I>
+provides a set of procedures to take care of the most common cases, such
+as:</P>
+
+<UL>
+<LI><I>put_bold</I>: write a string in boldface.</LI>
+
+<LI><I>put_header1</I>: write a level 1 title.</LI>
+
+<LI><I>put_preformatted:</I> write a string exactly as it was.</LI>
+</UL>
+
+<P>You can still, of course, include specific HTML codes if you wish. The
+procedures provided cover only a subset of HTML.</P>
+
+<P>By default all written information will go to the standard output. You
+can redirect it through the procedure <I>put_basic</I>.</P>
+
+<P>All the features listed are part of class <I>HTML_GENERATOR</I> whose
+complete specification appears in <A HREF="appendix_c.html">Appendix C</A>. </P>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="appendix_a.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

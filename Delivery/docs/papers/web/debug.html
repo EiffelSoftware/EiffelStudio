@@ -1,0 +1,252 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+<H1><br>
+5. USING THE DEBUGGING FACILITIES</H1>
+
+<P>One of the most difficult steps in writing form processing software
+with traditional CGI scripts is debugging. When the script does not complete
+successfully, it exits with an error code; in such a case the Web server
+merely reports an internal error occurred, which is not much help.</P>
+
+<P>EiffelWeb makes the debugging process much more convenient through features
+of class CGI_INTERFACE.</P>
+
+<h2><A NAME="5.1">Using <I>make_debug</I> as a creation procedure</A></h2>
+
+<P>Besides <I>make</I>, <I>CGI_INTERFACE</I> provides another procedure
+that can be used as creation procedure: <I>make_debug</I>, which extends
+<I>make</I>. Using <I>make_debug</I> you can perform extra operations,
+for example set environment variables to special values, and you can parse
+the input before starting any processing.</P>
+
+<P>A piece of methodological advice: once you are done with debugging,
+remember to set the creation procedure back to the normal <I>make,</I>
+just in case <I>make_debug</I> sets environment variables to values which
+are not appropriate for normal processing, or generates output that is
+intended for you and not for your visitors.</P>
+
+<h2><A NAME="5.2">Environment variables</A></h2>
+
+<P>To recreate the context in which the application is called by the WWW
+server, you need to set the corresponding environment variables. This can
+lead to one of the most annoying aspects of traditional CGI script creation
+and debugging. You must have exit the working environment, set the variables,
+and restart the environment; or you could set the variables from the script,
+but this is just as inconvenient.</P>
+
+<P>EiffelWeb provides a better solution: set the variables on-the-fly by
+passing them as argument to the script. You will for example call the application
+as:</P>
+
+<UL>
+<P><I>your_script REQUEST_METHOD=GET QUERY_STRING=&quot;name=foo&quot;</I></P>
+</UL>
+
+<P>setting the variables <I>REQUEST_METHOD</I> and <I>QUERY_STRING</I>
+to <I>GET</I> and to <I>name=foo</I>.</P>
+
+<P>To set the default values, <I>make_debug </I>calls the procedure <I>set_environment</I>;
+in its version inherited from <I>CGI_INTERFACE</I>, <I>set_environment
+</I>does nothing, but you can redefine it to set environment variables
+to specific values. To set an individual environment variable, use <I>set_environment_variable</I>.
+The defaults will be overriden by the scripts arguments if any.</P>
+
+<P>Here is an example class using these facilities:</P>
+
+<table border="1" width="93%">
+  <tr>
+    <td width="100%" bgcolor="#FFFFCC"><DL COMPACT><DT><B>class</B><BR>
+    <DD><I>CGI_SCRIPT</I>
+</DL>
+<DL COMPACT><DT><B>inherit</B><BR>
+    <DL COMPACT><DT><I>CGI_INTERFACE</I><BR>
+        <DD>
+        <B>redefine</B><BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>set_environment</I>
+        <DD>
+        <B>end</B>
+    </DL>
+</DL>
+<DL COMPACT><DT><B>creation</B>
+    <DD><I>make_debug</I>
+</DL>
+      <p><B>feature</B><BR>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>set_environment</I> <B>is</B></p>
+		<DL COMPACT>
+			<DD>
+            <font color="#FF0000">
+			-- Set two environment variables</font>
+        <DT><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do</B>
+            <DD>
+            <I>set_environment_variable (&quot;SCRIPT_NAME&quot;, &quot;form_handler&quot;);<BR>
+            set_environment_variable (&quot;SERVER_NAME&quot;, &quot;test.oursite.com&quot;);</I><BR>
+        <DT><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</B>
+        </DL>
+<DL COMPACT>
+<DT><B>end </B>-- class CGI_SCRIPT
+</DL>
+
+      <p>&nbsp;</td>
+  </tr>
+</table>
+
+<P>Of course, you can still test your script manually and set the environment
+variables from the command line as follows (here expressed in C-shell syntax):</P>
+
+<UL>
+<P><I>setenv REQUEST_METHOD &quot;GET&quot;<BR>
+setenv QUERY_STRING &quot;&quot;<BR>
+setenv CONTENT_LENGTH 0<BR>
+setenv SERVER_NAME &quot;no_server&quot;<BR>
+setenv SCRIPT_NAME &quot;test_script&quot;</I></P>
+</UL>
+
+<h2><A NAME="5.3">Error handling</A></h2>
+
+<P>The creation procedure, whether <I>make </I>or <I>make_debug</I>,
+will catch any exception occurring during the execution of the script and
+will handle it according to the choosen option which <I>set_environment</I>
+can set by calling one of the three following procedures:</P>
+
+<UL>
+<LI><I>set_no_debug</I>: an exception will terminate processing with no
+further action.</LI>
+
+<LI><I>set_message</I>: an exception will terminate processing and display
+a message explaining that an internal error occurred.</LI>
+
+<LI><I>set_exception_trace</I>: an exception will cause the the script
+to terminate and display the exception trace. This will only be in effect
+if the Lace option <I>exception_trace</I> is on; this is the case by default
+in all modes except final mode, for which you may turn it on through the
+line <I>exception_trace</I> (<B>yes</B>) in the <B>default </B>paragraph
+of your Ace.</LI>
+</UL>
+
+<P>In all cases the application will not return an error code but keep
+control of the execution, therefore preventing the Web server from displaying
+its own message.</P>
+
+<P>If you detect an irrecoverable error during processing, you can stop
+execution using procedure <I>raise_error</I>. This will display an error
+message, which you can set through an earlier call to <I>set_error</I>.</P>
+
+<P>All the features listed in this section belong to class <I>CGI_INTERFACE</I>,
+whose complete specification appears in <A HREF="appendix_a.html">Appendix A</A>.</P>
+
+<h2><A NAME="5.4">An example using <I>make_debug</I></A></h2>
+
+<P>Let's use again the basic example. Employing <I>make_debug</I> instead
+of <I>make </I>as creation procedure will allow us to change the debug
+level - e.g. to get the exception trace if an exception occurs. This will
+also allow us to set default values for some environment variables. This
+time instead of an indented list the results will be displayed in a bulleted
+list.</P>
+
+<table border="1" width="92%">
+  <tr>
+    <td width="100%" bgcolor="#FFFFCC">
+<DL COMPACT><DT><B>class</B><BR>
+    <DD><I>CGI_DEMO</I><BR>
+</DL>
+<DL COMPACT><DT><B>inherit</B>
+    <DD><I>CGI_INTERFACE</I><DL COMPACT>
+        <DD>
+        <DL COMPACT><DT><B>redefine</B>
+            <DD><I>set_environment</I>
+        <DT><B>end</B>
+        </DL>
+    </DL>
+</DL>
+<DL COMPACT><DT><B>creation</B>
+    <DD><I>make_debug</I>
+</DL>
+<DL COMPACT><DT><B>feature</B>
+    <DD>
+    <DL COMPACT><DT><I>set_environment</I> <B>is</B>
+        <DD>
+        <DL COMPACT><DT><B>do</B>
+            <DD>&nbsp;
+            <DD><I>set_exception_trace;
+</I>
+            <DD><I>set_environment_variable (&quot;SERVER_NAME&quot;, &quot;no_server&quot;);
+</I>
+            <DD><I>set_environment_variable (&quot;SCRIPT_NAME&quot;, &quot;test_script&quot;);
+</I>
+          <dt>&nbsp;</dt>
+        <DT><B>end</B>
+        </DL>
+      <DT><I>execute</I> <B>is</B>
+        <DD>
+        <DL COMPACT><DT><B>local</B>
+          <dd>&nbsp;</dd>
+            <DD><I>i: INTEGER;</I>
+            <DD><I>l: LINKED_LIST[STRING]</I>
+          <dt>&nbsp;</dt>
+        <DT><B>do</B>
+          <dd>&nbsp;</dd>
+            <DD><I>generate_html_header;<br>
+              put_basic (&quot;You have submitted the following name / value pairs:&quot;);<br>
+              put_unordered_list_start;</I>
+            <DL COMPACT><DT><B>from</B><BR>
+                <DD><I>i := fields.lower</I><BR>
+            <DT><B>until</B><BR>
+                <DD><I>i &gt; fields.upper</I><BR>
+            <DT><B>loop</B><BR>
+                <DD>
+                <I><br>
+                put_list_item_start;<BR>
+                put_bold (fields.item (i));<BR>
+                put_line_break;<BR>
+                vl := value_list (fields.item (i));</I><BR>
+                <p><B>from<br>
+                </B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>vl.start</I>
+                <DL COMPACT>
+                <DT><B>until<br>
+                  </B>
+                    <DD><br>
+                      <i>vl.after</i><BR>
+                <DT><B>loop</B>
+                    <DD><I><br>
+                      put_basic (vl.item);<BR>
+                      vl.forth;</I><BR>
+                      <br>
+                      <B>if not</B> <I>vl.after</I> <B>then</B> <I>io.putstring (&quot;, &quot;)</I>
+                      <B>end</B><BR>
+                <DT><B>end</B>;<br>
+                </DL>
+                <p>
+                <I>put_list_item_end;<BR>
+                i := i + 1</I><BR>
+            <DT><B>end</B>;
+            </DL>
+            <I>put_unordered_list_end</I><BR>
+        <DT><B>end</B><BR>
+        </DL>
+    </DL>
+<DT><B>end</B>  <font color="#FF0000"> -- class CGI_DEMO</font>
+</DL>
+      <p>&nbsp;</td>
+  </tr>
+</table>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="generator.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

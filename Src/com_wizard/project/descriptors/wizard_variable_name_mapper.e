@@ -24,6 +24,13 @@ inherit
 
 feature -- Access
 
+	implemented_coclass_name (a_coclass_name: STRING): STRING is
+			-- Name of heir of coclass `a_coclass_name'
+		do
+			Result := clone (a_coclass_name)
+			Result.append ("_IMP")
+		end
+
 	registration_class_name: STRING is
 			-- Registration class name
 		do

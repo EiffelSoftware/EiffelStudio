@@ -535,17 +535,6 @@ feature -- Hash code
 	}
 
 /*
-feature -- Type creation
-*/
-
-	public static GENERIC_TYPE eiffel_type_of (string class_type_name)
-		// Given `class_type_name' representing a generic class, we create its
-		// associated GENERIC_TYPE instance.
-	{
-		return null;
-	}
-	
-/*
 feature -- Duplication
 */
 

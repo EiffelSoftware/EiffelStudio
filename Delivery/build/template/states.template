@@ -1,0 +1,11 @@
+class STATES
+
+feature
+
+	Exit_from_application: INTEGER is -2
+
+	Return_to_previous: INTEGER is -1
+
+	State1: INTEGER is 1
+
+end

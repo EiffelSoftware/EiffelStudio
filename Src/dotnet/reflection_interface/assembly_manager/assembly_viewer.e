@@ -646,12 +646,6 @@ feature {NONE} -- Implementation
 			data_grid_table_style: SYSTEM_WINDOWS_FORMS_DATAGRIDTABLESTYLE		
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
-			--assembly_name_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDBOOLCOLUMN
-			--assembly_version_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDBOOLCOLUMN
-			--assembly_culture_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDBOOLCOLUMN
-			--assembly_public_key_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDBOOLCOLUMN
-			--dependancies_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDBOOLCOLUMN
-			--eiffel_path_column_style: SYSTEM_WINDOWS_FORMS_DATAGRIDBOOLCOLUMN
 			added: INTEGER
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
 			on_select_table_event_handler_delegate: SYSTEM_WINDOWS_FORMS_MOUSEEVENTHANDLER
@@ -677,7 +671,7 @@ feature {NONE} -- Implementation
 
 				-- Fill table
 			fill_assemblies_table_with_imported_assemblies
-			-- fill_assemblies_table_with_other_shared_assemblies
+			fill_assemblies_table_with_other_shared_assemblies
 			
 				-- Build data grid				
 			create data_grid.make_datagrid
@@ -695,17 +689,10 @@ feature {NONE} -- Implementation
 			data_grid.set_DataSource (data_table)
 			data_grid.set_TabIndex (0)
 						
-			--assembly := assembly.LoadFrom (System_Windows_Forms_assembly_path)
-			--type := assembly.GetType_String_Boolean (System_windows_forms_mouse_event_handler_type, True)
-			--on_select_table_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "on_select_table_event_handler")
-			--data_grid.Add_MouseDown (on_select_table_event_handler_delegate)
-
 				-- Set styles.
 			create data_grid_table_style.make_datagridtablestyle_1 
 			data_grid_table_style.set_GridLineStyle (1)
 			data_grid_table_style.set_AllowSorting (False)
-			--data_grid_table_style.set_PreferredRowHeight (20)
-			--data_grid_table_style.set_PreferredColumnWidth ((Window_width - 2 * Margin) // 6)
 			
 			if data_grid.TableStyles.System_Collections_ICollection_get_Count = 0 then
 				added := data_grid.TableStyles.Add (data_grid_table_style)
@@ -853,59 +840,72 @@ feature {NONE} -- Implementation
 			end	
 		end
 
---	fill_assemblies_table_with_other_shared_assemblies is
---			-- Fill `data_table' with assemblies from GAC, which have not been imported yet.
---		indexing
---			external_name: "FillAssembliesTableWithOtherSharedAssemblies"
---		local
---			--gac_browser: GAC_BROWSER
---			i: INTEGER
---			a_shared_assembly: ISE_REFLECTION_EIFFELASSEMBLY
---			row: SYSTEM_DATA_DATAROW
---			--dependancies: SYSTEM_COLLECTION_ARRAYLIST
---			--dependancies_string: STRING
---			--j: INTEGER
---			--a_dependancy: STRING
---		do
---			--create gac_browser.make
---			--shared_assemblies := gac_browser.shared_assemblies
---			from
---			until
---				i = shared_assemblies.count
---			loop
---				a_shared_assembly ?= shared_assemblies.item (i)
---				if a_shared_assembly /= Void then
---					if not is_imported (a_shared_assembly) then
---						row := data_table.NewRow
---						data_table.Rows.Add_datarow (row)
---						row.Table.DefaultView.set_AllowEdit (False)
---						row.set_Item_String (Assembly_name_column_title, a_shared_assembly.AssemblyName)
---						row.set_Item_String (Assembly_version_column_title, a_shared_assembly.AssemblyVersion)
---						row.set_Item_String (Assembly_culture_column_title, a_shared_assembly.AssemblyCulture)
---						row.set_Item_String (Assembly_name_public_key_title, a_shared_assembly.AssemblyPublicKey)
---						--dependancies := a_shared_assembly.Dependancies
---						--create dependancies_string.make_2 ('%U', 0)
---						--from
---						--	j := 0
---						--until
---						--	j = dependancies.Count
---						--loop
---						--	a_dependancy ?= dependancies.item (j)
---						--	if a_dependancy /= Void then
---						--		dependancies_string.Concat_String_String (dependancies_string, a_dependancy)
---						--		if j /= dependancies.Count - 2 then
---						--			dependancies_string.Concat_String_String (dependancies_string, ", ")
---						--		end
---						--	end
---						--	j := j + 1
---						--end
---						--row.set_Item_String (Dependancies_column_title, dependancies_string)
---						row.set_Item_String (Eiffel_path_column_title, Not_imported_yet)			
---					end
---				end
---				i := i + 1
---			end
---		end
+	fill_assemblies_table_with_other_shared_assemblies is
+			-- Fill `data_table' with assemblies from GAC, which have not been imported yet.
+		indexing
+			external_name: "FillAssembliesTableWithOtherSharedAssemblies"
+		local
+			gac_browser: GAC_BROWSER
+			i: INTEGER
+			row: SYSTEM_DATA_DATAROW
+			type: SYSTEM_TYPE
+			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			row_count: INTEGER
+			dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+			dependancies_string: STRING
+			j: INTEGER
+			a_dependancy: SYSTEM_REFLECTION_ASSEMBLYNAME
+			row_descriptor: ROW_DESCRIPTOR
+		do
+			create gac_browser
+			shared_assemblies := gac_browser.shared_assemblies
+			from
+				row_count := 0
+				i := 0
+			until
+				i = shared_assemblies.Count
+			loop
+				a_descriptor ?= shared_assemblies.Item (i)
+				if a_descriptor /= Void then
+					row := data_table.NewRow
+					data_table.Rows.Add_datarow (row)
+					row.Table.DefaultView.set_AllowEdit (False)
+					row.Table.DefaultView.set_AllowNew (False)
+					row.Table.DefaultView.set_AllowDelete (False)
+					row.set_Item_String (Assembly_name_column_title, a_descriptor.name)
+					row.set_Item_String (Assembly_version_column_title, a_descriptor.version)
+					row.set_Item_String (Assembly_culture_column_title, a_descriptor.culture)
+					row.set_Item_String (Assembly_public_key_column_title, a_descriptor.publickey)
+
+					dependancies := dependancies_from_info (a_descriptor)
+					if dependancies.count > 0 then
+						create dependancies_string.make_2 ('%U', 0)
+						from
+							j := 0
+						until
+							j = dependancies.Count
+						loop
+							a_dependancy := dependancies.item (j)
+							dependancies_string := dependancies_string.Concat_String_String_String_String (dependancies_string, a_dependancy.Name, " ", a_dependancy.Version.ToString)
+							if j < dependancies.Count - 1 then
+								dependancies_string := dependancies_string.Concat_String_String (dependancies_string, ", ")
+							end
+							j := j + 1
+						end
+						row.set_Item_String (Dependancies_column_title, dependancies_string)
+					else
+						row.set_Item_String (Dependancies_column_title, No_dependancy)
+					end
+					row.set_Item_String (Eiffel_path_column_title, Not_imported_yet)
+--##FIXME##################################################
+					create row_descriptor.make (row_count)
+					assemblies.Add (row_descriptor, a_descriptor)
+--##################################################
+					row_count := row_count + 1
+				end
+				i := i + 1
+			end	
+		end
 		
 	create_edit_button is
 			-- Create `edit_button'.

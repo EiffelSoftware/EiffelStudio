@@ -72,7 +72,7 @@ feature -- Store/Retrieve
 					else
 						pref_string := Void
 					end		
-					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
+					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, True),
 						new_id_sd (l_row @ 3, True),
 						pref_string,
 						Void,
@@ -93,7 +93,7 @@ feature -- Store/Retrieve
 					else
 						pref_string := Void
 					end
-					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
+					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, True),
 						new_id_sd (l_row @ 3, True),
 						pref_string,
 						new_id_sd (l_row @ 4, True),
@@ -136,11 +136,7 @@ feature {NONE} -- Filling
 					if assembly_type (assembly).is_equal ("local") then
 							-- Add local reference row
 						create list_row
-						if not valid_cluster_name (assembly.cluster_name) then
-							list_row.extend ("%"" + assembly.cluster_name + "%"")
-						else
-							list_row.extend (assembly.cluster_name)
-						end
+						list_row.extend (assembly.cluster_name)
 						if (assembly.prefix_name /= Void and not assembly.prefix_name.is_empty) then
 							list_row.extend (assembly.prefix_name)
 						else
@@ -157,11 +153,7 @@ feature {NONE} -- Filling
 					else
 							-- Add GAC reference row
 						create list_row
-						if not valid_cluster_name (assembly.cluster_name) then
-							list_row.extend ("%"" + assembly.cluster_name + "%"")
-						else
-							list_row.extend (assembly.cluster_name)
-						end
+						list_row.extend (assembly.cluster_name)
 						if (assembly.prefix_name /= Void and not assembly.prefix_name.is_empty) then
 							list_row.extend (assembly.prefix_name)
 						else
@@ -555,14 +547,15 @@ feature -- Implementation
 			until
 				i = temp_id_string.count
 			loop
-				if not (temp_id_string.item (i).is_alpha or 
-						temp_id_string.item (i).is_digit or
-						temp_id_string.item (i).is_equal ('_')) then
-					temp_id_string.replace_substring ("%%", i, i)
+				if
+					not (temp_id_string.item (i).is_alpha or 
+					temp_id_string.item (i).is_digit or
+					temp_id_string.item (i).is_equal ('_'))
+				then
+					temp_id_string.remove (i)
 				end
 				i := i + 1
 			end
-			temp_id_string.replace_substring_all ("%%", "")
 			Result := temp_id_string
 		end
 		
@@ -583,9 +576,7 @@ feature -- Implementation
 			until
 				names.after or not valid
 			loop
-				if not valid_cluster_name (names.item) then
-					valid := False
-				elseif names.occurrences (names.item) > 1 then
+				if names.occurrences (names.item) > 1 then
 					valid := False
 				else
 					names.forth
@@ -601,34 +592,6 @@ feature -- Implementation
 				end
 			end
 		end
-		
-	valid_cluster_name (a_name: STRING): BOOLEAN is
-			-- Is 'a_name' valid? A name enclosed by quotes will always be valid.	
-		local
-			valid: BOOLEAN
-			i: INTEGER
-		do
-			valid := True
-			if not (a_name.item (1) = '"' and a_name.item (a_name.count) = '"') then
-				from
-					i := 1
-					if (not a_name.item (i).is_alpha) or reserved_words.has (a_name) then
-						valid := False
-					end
-				until
-					i = a_name.count + 1 or not valid
-				loop
-					if not (a_name.item (i).is_alpha or 
-							a_name.item (i).is_digit or
-							a_name.item (i) = '_' or						
-							a_name.is_empty) then
-						valid := False
-					end
-					i := i + 1
-				end
-			end
-			Result := valid
-		end	
 		
 	special_assembly (a_name: STRING): BOOLEAN is
 			-- Is assembly with name 'a_name' a special assembly?

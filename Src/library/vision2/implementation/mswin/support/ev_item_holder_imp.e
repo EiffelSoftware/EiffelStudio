@@ -15,14 +15,6 @@ inherit
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
-feature {NONE} -- Initialization
-
---	initialize is
---			-- Initilize all the parameters of the container.
---		do
---			!! ev_children.make
---		end
-
 feature {NONE} -- Implementation
 
 	ev_children: LINKED_LIST [EV_ITEM_IMP] is

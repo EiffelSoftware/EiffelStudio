@@ -531,6 +531,7 @@ feature -- Byte code generation
 			if old_expressions /= Void then
 				from
 					nb := old_expressions.count;
+					old_expressions.start;
 					i := i
 				until
 					i > nb

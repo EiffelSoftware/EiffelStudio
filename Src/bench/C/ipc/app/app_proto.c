@@ -230,7 +230,7 @@ int s;
 		if (echtg != (char *) 0)		/* XDR might not like a null pointer */
 			rqst.rq_stop.st_tag = echtg;	/* Exception tag computed */
 		else
-			rqst.rq_stop.st_tag = "FOO";
+			rqst.rq_stop.st_tag = "";
 	}
 
 	ewhere(&wh);			/* Find out where we are */

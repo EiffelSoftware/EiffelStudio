@@ -58,11 +58,6 @@ feature
 			rout_id_set := feature_i.rout_id_set;
 			from
 				i := 1;
-				display.put_string ("Past of feature `");
-				feature_i.append_clickable_name (display, class_c);
-				display.put_string ("' of class ");	
-				class_c.append_clickable_name (display);
-				display.new_line;
 			until
 				i > rout_id_set.count
 			loop
@@ -85,7 +80,7 @@ feature
 							classes.item.append_clickable_name (display);
 							display.put_string (" ");
 							other_feature.append_clickable_signature (display,classes.item);
-							display.put_string ("%N%TWritten in class ");
+							display.put_string ("%N%TVersion from class ");
 							other_feature.written_class.append_clickable_name (display);
 							display.new_line;	
 						end;

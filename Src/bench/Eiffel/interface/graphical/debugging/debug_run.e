@@ -44,7 +44,6 @@ feature {NONE}
 			application_path: STRING;
 			status: BOOLEAN
 		do
-			debug_info.trace;
 			if Run_info.is_running then
 					-- Application is running. Continue execution.
 				status := cont_request.send_byte_code;
@@ -60,7 +59,7 @@ feature {NONE}
 					application_path.append (Generation_path);
 					application_path.append ("/");
 					application_path.append (System.system_name);
-io.putstring ("Pop up prompt window to ask for arguments%N");
+--io.putstring ("Pop up prompt window to ask for arguments%N");
 					run_request.set_application_name (application_path);
 					run_request.send
 				end

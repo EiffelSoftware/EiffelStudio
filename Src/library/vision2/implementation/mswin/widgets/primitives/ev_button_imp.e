@@ -8,10 +8,10 @@ indexing
         revision: "$Revision$"
         
 class
-        EV_BUTTON_IMP
+    EV_BUTTON_IMP
         
 inherit
-        EV_BUTTON_I
+    EV_BUTTON_I
         
 	EV_BAR_ITEM_IMP
 		redefine
@@ -25,12 +25,17 @@ inherit
 	
 creation
 
-        make
+        make_with_label
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a wel push button.
+		make (par: EV_CONTAINER) is
+			do
+				make_with_label (par, "")
+			end
+
+        make_with_label (par: EV_CONTAINER; txt: STRING) is
+        		-- Create a wel push button.
 		local
 			cont_imp: EV_CONTAINER_IMP
 		do
@@ -38,11 +43,12 @@ feature {NONE} -- Initialization
 			check
 				valid_container: cont_imp /= Void
 			end
-			-- Create a button with 0 size
-			!!wel_window.make (cont_imp.wel_window, "", 0, 0, 0, 0, 0)
+
+			!!wel_window.make (cont_imp.wel_window, txt, 0, 0, 10, 10, 0)
 			set_font (font)
 			set_default_size
 		end
+
 
 feature {NONE} -- Implementation
        	

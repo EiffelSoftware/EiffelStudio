@@ -150,7 +150,12 @@ feature -- Status report
 
 feature -- Bridge to dbg_expression_evaluator
 
-	error_message: STRING is
+	error_occurred: BOOLEAN is
+		do
+			Result := evaluation_error_code < 0 or syntax_error_occurred
+		end		
+
+	evaluation_error_message: STRING is
 			-- Error message text if any error occurred
 		local
 			l_evaluator: DBG_EXPRESSION_EVALUATOR
@@ -161,9 +166,19 @@ feature -- Bridge to dbg_expression_evaluator
 			end
 		end
 		
+	evaluation_error_code: INTEGER is
+		local
+			l_evaluator: DBG_EXPRESSION_EVALUATOR
+		do
+			l_evaluator := expression_evaluator
+			if Result = Void and then l_evaluator /= Void then
+				Result := l_evaluator.error
+			end			
+		end		
+		
 feature -- Bridge to dbg_expression
 		
-	syntax_error: BOOLEAN is
+	syntax_error_occurred: BOOLEAN is
 			-- Is there a syntax error in dbg_expression ?
 		do
 			Result := dbg_expression.syntax_error

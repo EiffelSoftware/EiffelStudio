@@ -99,6 +99,7 @@ feature {NONE} -- Initialization
 			thread_id.align_text_left
 			thread_id.set_foreground_color (special_label_col)
 			thread_id.set_text ("..Unknown..")
+			thread_id.set_minimum_height (20)
 			thread_id.pointer_enter_actions.extend (agent bold_this_label (True, thread_id))
 			thread_id.pointer_leave_actions.extend (agent bold_this_label (False, thread_id))			
 			thread_id.pointer_button_press_actions.extend (agent select_call_stack_thread (thread_id, ?,?,?,?,?,?,?,?))
@@ -250,9 +251,10 @@ feature -- Status setting
 
 	set_callstack_thread (tid: INTEGER) is
 		do
+				-- FIXME jfiat: check what happens if the application is not stopped ?
 			if application.status.current_thread_id /= tid then
 				application.status.set_current_thread_id (tid)
-				application.status.reload_call_stack
+				application.status.reload_current_call_stack
 				real_update
 			end
 		end
@@ -547,7 +549,7 @@ feature {NONE} -- Implementation
 				Result := application.imp_dotnet.exception_to_string
 			end
 			if Result = Void then
-				Result := exception_tag_text
+				Result := ""
 			end
 		end	
 

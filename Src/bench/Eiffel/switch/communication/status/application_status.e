@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Callstack
 
-	reload_call_stack is
+	reload_current_call_stack is
 			-- reload the call stack from application (after having edited an
 			-- object for example to make sure the modification was successful).
 		do

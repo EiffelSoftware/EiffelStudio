@@ -77,13 +77,88 @@ feature -- Properties
 	on_context: BOOLEAN
 			-- Is the expression relative to a context ?	
 
+	context_class_type: CLASS_TYPE
+			-- Class related to the target, in on_object context	
+	
 	context_class: CLASS_C
 			-- Class related to the expression
 	
 	context_address: STRING
 			-- Object's address related to the expression	
 
+feature -- Change
+
+	reset_error is
+		do
+			error := 0
+			error_message := Void
+			error_tag := Void
+		end
+
+	set_error_evaluation (mesg: STRING) is
+		do
+			error := cst_error_evaluation
+			error_message := mesg
+		end
+
+	set_error_exception (mesg: STRING) is
+		do
+			error := cst_error_exception
+			error_message := mesg
+		end
+
+	set_error_expression_and_tag (mesg: STRING; t: STRING) is
+		do
+			error := cst_error_expression
+			error_message := mesg
+			error_tag := t
+		end
+
+	set_error_expression (mesg: STRING) is
+		do
+			error := cst_error_expression
+			error_message := mesg
+		end
+
+	set_error_not_implemented (mesg: STRING) is
+		do
+			error := cst_error_not_implemented
+			error_message := mesg
+		end
+	
+feature -- Error code
+
+	cst_error_evaluation: INTEGER is -1
+	cst_error_expression: INTEGER is -2
+	cst_error_exception: INTEGER is -3
+	cst_error_not_implemented: INTEGER is -9
+
 feature -- Access
+
+	is_error_evaluation: BOOLEAN is
+		do
+			Result := error = cst_error_evaluation
+		end
+
+	is_error_expression: BOOLEAN is
+		do
+			Result := error = cst_error_expression
+		end
+
+	is_error_exception: BOOLEAN is
+		do
+			Result := error = cst_error_exception
+		end
+
+	is_error_not_implemented: BOOLEAN is
+		do
+			Result := error = cst_error_not_implemented
+		end
+
+	error: INTEGER
+	
+	error_tag: STRING
+			-- Short error message if needed
 
 	error_message: STRING
 			-- Error's message if any otherwise Void
@@ -91,7 +166,7 @@ feature -- Access
 	error_occurred: BOOLEAN is
 			-- Did an error occurred ?
 		do
-			Result := error_message /= Void
+			Result := error < 0
 		end		
 	
 	is_condition (f: E_FEATURE): BOOLEAN is
@@ -139,9 +214,9 @@ feature -- Evaluation
 			running_and_stopped: Application.is_running and Application.is_stopped
 		deferred
 		ensure
-			error_message_if_failed: ((final_result_value = Void) implies (error_message /= Void)) and
-									 ((final_result_static_type = Void) implies (error_message /= Void)) and
-									 ((final_result_type = Void) implies (error_message /= Void))
+			error_message_if_failed: ((final_result_value = Void) implies (error_occurred)) and
+									 ((final_result_static_type = Void) implies (error_occurred)) and
+									 ((final_result_type = Void) implies (error_occurred))
 		end
 
 end -- class DBG_EXPRESSION_EVALUATOR

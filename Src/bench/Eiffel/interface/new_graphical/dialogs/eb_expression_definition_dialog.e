@@ -333,7 +333,7 @@ feature {NONE} -- Event handling
 						if cl /= Void then
 								--| Now we have the class, create the expression.
 							create new_expression.make_with_class (cl, expression_field.text)
-							if new_expression.syntax_error then
+							if new_expression.syntax_error_occurred then
 								expression_field.set_focus
 								create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 								wd.show_modal_to_window (dialog)
@@ -365,12 +365,12 @@ feature {NONE} -- Event handling
 						application.is_valid_object_address (t)
 					then
 						if application.is_dotnet then
-							create {DEBUGGED_OBJECT_DOTNET} o.make (t, 0, 1)							
+							create {DEBUGGED_OBJECT_DOTNET} o.make (t, 0, 1)
 						else
 							create {DEBUGGED_OBJECT_CLASSIC} o.make (t, 0, 1)
 						end
 						create new_expression.make_with_object (o, expression_field.text)
-						if new_expression.syntax_error then
+						if new_expression.syntax_error_occurred then
 							expression_field.set_focus
 							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 							wd.show_modal_to_window (dialog)
@@ -384,7 +384,7 @@ feature {NONE} -- Event handling
 					end
 				else
 					create new_expression.make_for_context (expression_field.text)
-					if new_expression.syntax_error then
+					if new_expression.syntax_error_occurred then
 						expression_field.set_focus
 						create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 						wd.show_modal_to_window (dialog)
@@ -393,7 +393,7 @@ feature {NONE} -- Event handling
 			else
 				oe := modified_expression.expression
 				modified_expression.set_expression (expression_field.text)
-				if modified_expression.syntax_error then
+				if modified_expression.syntax_error_occurred then
 						-- Restore the previous expression, since the new one is broken.
 					modified_expression.set_expression (oe)
 					expression_field.set_focus
@@ -406,7 +406,7 @@ feature {NONE} -- Event handling
 			if 
 				not do_not_close_dialog 
 				and then new_expression /= Void 
-				and then not new_expression.syntax_error 
+				and then not new_expression.syntax_error_occurred
 			then
 				destroy
 				if callback /= Void then

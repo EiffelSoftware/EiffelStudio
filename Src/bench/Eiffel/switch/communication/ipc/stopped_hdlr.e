@@ -122,16 +122,16 @@ feature
 						if expr /= Void then
 							expr.evaluate
 							evaluator := expr.expression_evaluator
-							if evaluator.error_message = Void then
-								need_to_stop := evaluator.final_result_is_true_boolean_value
-							else
+							if evaluator.error_occurred then
 								need_to_stop := False
+							else
+								need_to_stop := evaluator.final_result_is_true_boolean_value
 							end
 						end
 					end
 					if need_to_stop then
 							-- Load the call stack.
-						l_status.reload_call_stack
+						l_status.reload_current_call_stack
 						Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 							-- Inspect the application's current state.
 

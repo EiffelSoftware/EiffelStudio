@@ -127,13 +127,12 @@ feature -- global
 				breakpoints.item_for_iteration.set_application_not_set
 				breakpoints.forth
 			end
-
 			update
 		end
 	
 	update is
 			-- remove breakpoint that no more usefull from the hash_table
-			-- see BREAKPOINT/is_usefull for further comments
+			-- see BREAKPOINT/is_not_usefull for further comments
 		local
 			bp: BREAKPOINT
 		do
@@ -772,7 +771,7 @@ feature -- changing a specified breakpoint
 		require
 			valid_f: f /= Void and then f.is_debuggable
 			valid_i: i > 0 and i <= f.number_of_breakpoint_slots
-			valid_expr: expr /= Void and then not expr.syntax_error
+			valid_expr: expr /= Void and then not expr.syntax_error_occurred
 			good_semantics: expr.is_condition (f)
 		local
 			bp: BREAKPOINT

@@ -378,7 +378,7 @@ feature -- Element change
 		require
 			valid_f: f /= Void and then f.is_debuggable
 			valid_i: i > 0 and i <= f.number_of_breakpoint_slots
-			valid_expr: expr /= Void and then not expr.syntax_error
+			valid_expr: expr /= Void and then not expr.syntax_error_occurred
 			good_semantics: expr.is_condition (f)
 		do
 			debug_info.set_condition (f, i, expr)

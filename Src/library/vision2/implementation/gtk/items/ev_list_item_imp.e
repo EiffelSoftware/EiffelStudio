@@ -41,13 +41,23 @@ feature {NONE} -- Initialization
 	make_with_index (par: EV_LIST; value: INTEGER) is
 			-- Create an item with `par' as parent and `value'
 			-- as index.
+		local
+			par_imp: EV_LIST_IMP
 		do
+			par_imp ?= par.implementation
+			make
+
+			-- set `par' as parent and put the item at the given position.
+			set_parent (par)
+			set_index (value)
 		end
 
 	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
 			-- Create an item with `par' as parent, `txt' as text
 			-- and `value' as index.
 		do
+			make_with_index (par, value)
+			set_text (txt)
 		end
 
 feature -- Access
@@ -58,7 +68,7 @@ feature -- Access
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			Result := gtk_list_child_position(parent_imp.widget, Current.widget) + 1 
+			Result := gtk_list_child_position(parent_imp.list_widget, Current.widget) + 1 
 		end
 
 feature -- Status report
@@ -66,19 +76,19 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := False
+			Result := c_gtk_list_item_is_selected (parent_imp.list_widget, widget)
 		end
 
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		do
-			Result := ( gtk_list_child_position (parent_imp.widget, Current.widget) + 1 = 1 )
+			Result := ( gtk_list_child_position (parent_imp.list_widget, Current.widget) + 1 = 1 )
 		end
 
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			Result := ( gtk_list_child_position (parent_imp.widget, Current.widget) + 1 = c_gtk_list_rows (parent_imp.widget) )
+			Result := ( gtk_list_child_position (parent_imp.list_widget, Current.widget) + 1 = c_gtk_list_rows (parent_imp.list_widget) )
 		end
 
 feature -- Status setting
@@ -103,7 +113,30 @@ feature -- Status setting
 	set_index (value: INTEGER) is
 			-- Make `value' the new index of the item in the
 			-- list.
+		local
+			local_array: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
+			-- Reference the widget otherwise it will be destroyed
+			-- when removed from the list.
+			gtk_object_ref (widget)
+
+			-- Remove the item from the list.
+			c_gtk_list_remove_item (parent_imp.list_widget, widget)
+
+			-- Add the item at the given index.
+			c_gtk_list_insert_item (parent_imp.list_widget, widget, value - 1)
+
+			-- Unreference the widget which has an extra reference.
+			gtk_object_unref (widget)
+
+			-- updating the parent `ev_children' array
+			local_array := parent_imp.ev_children
+			local_array.search (Current)
+			local_array.remove
+
+			local_array.go_i_th (value)
+			local_array.put_left (Current)
+			
 		end
 
 feature -- element change

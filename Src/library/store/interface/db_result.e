@@ -71,6 +71,13 @@ feature {DB_SELECTION} -- Status setting
 			descriptor = d
 		end
 
+	update_metadata is
+			-- Cursor must update database metadata to
+			-- fill in properly.
+		do
+			data.update_metadata
+		end
+
 feature {DB_RESULT} -- Implementation
 
 	implementation: DATABASE_TUPLE [DATABASE]

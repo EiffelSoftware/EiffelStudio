@@ -237,7 +237,6 @@ feature {NONE} -- Implementation
 			-- Call the selections actions for `clicked_row'
 		do
 			if not previous_selection.has (clicked_row.interface) then
-					print ("Calling select actions on " + clicked_row.interface.i_th(1) + "%N")
 					if clicked_row.select_actions_internal /= Void then
 						clicked_row.select_actions_internal.call (void)
 					end

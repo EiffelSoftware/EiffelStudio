@@ -37,11 +37,14 @@ feature -- Settings
 		do
 			internal_put (element_type, current_position)
 			current_position := current_position + 1
-			if
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
+			inspect
+				element_type
+			when
+				feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
 			then
 				compress_type_token (token)
+			else
 			end
 		end
 
@@ -115,13 +118,8 @@ feature {NONE} -- Implementation
 			-- Safe insertion that will resize `internal_body' if needed.
 		require
 			valid_pos: pos >= 0
-		local
-			l_capacity: INTEGER
 		do
-			l_capacity := item.count
-			if pos >= l_capacity then
-				item.resize (pos.max (l_capacity + Default_size))
-			end
+			allocate (pos + 1)
 			item.put_integer_8 (val, pos)
 		end
 
@@ -132,6 +130,21 @@ feature {NONE} -- Internal signature
 
 	default_size: INTEGER is 20
 			-- Default allocated size for a signature.
+
+feature {NONE} -- Stack depth management
+
+	allocate (new_size: INTEGER) is
+			-- Resize `item' if needed so that it can accomdate `new_size'.
+		local
+			l_capacity: INTEGER
+		do
+			l_capacity := item.count
+			if new_size > l_capacity then
+				item.resize (new_size.max (l_capacity + Default_size))
+			end
+		ensure
+			enough_size: item.count >= new_size
+		end
 
 invariant
 	item_not_void: item /= Void

@@ -104,7 +104,6 @@ feature -- Access
 			result_not_void: result /= Void
 		end
 		
-		
 	show_hide_empty_directories_button: EV_TOOL_BAR_TOGGLE_BUTTON is
 			-- A button used to show/hide all empty directories within `Current'.
 		once
@@ -181,7 +180,7 @@ feature {NONE} -- Implementation
 			window_selector_common_item_not_void: window_selector_common_item /= Void
 		do
 			window_selector_common_item.expand_recursive
-			set_timed_status_text (all_expanded_text)
+			set_timed_status_text ("All nodes of " + window_selector_common_item.name + " expanded.")
 		end
 		
 	show_hide_all_empty_directories is

@@ -54,6 +54,7 @@ feature -- Basic Operation
 				child_layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
+			update_all_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_merged_containers)
 			command_handler.update
 		end
 		

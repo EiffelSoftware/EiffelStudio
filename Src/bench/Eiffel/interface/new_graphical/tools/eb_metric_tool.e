@@ -204,9 +204,7 @@ feature -- Implementation
 		do
 			is_shown := True
 			if must_set_stone then
-				real_set_stone (stone_to_set)
-				stone_to_set := Void
-				must_set_stone := False
+				set_stone (stone_to_set)
 			end
 			if widget.is_sensitive then
 				file_handler.load_files
@@ -1472,6 +1470,8 @@ feature {NONE} -- Implementation
 					)
 				then
 					feature_stone := new_feature_stone
+					class_stone := Void
+					cluster_stone := Void
 					new_scope := scope (interface_names.metric_this_feature).index
 				end
 			else
@@ -1487,6 +1487,8 @@ feature {NONE} -- Implementation
 						)
 					then
 						class_stone := new_class_stone
+						feature_stone := Void
+						cluster_stone := Void
 						new_scope := scope (interface_names.metric_this_class).index
 					end
 				else
@@ -1494,6 +1496,8 @@ feature {NONE} -- Implementation
 					if new_cluster_stone /= Void then
 						if not new_cluster_stone.same_as (cluster_stone) then
 							cluster_stone := new_cluster_stone
+							class_stone := Void
+							feature_stone := Void
 							new_scope := scope (interface_names.metric_this_cluster).index
 						end
 					else

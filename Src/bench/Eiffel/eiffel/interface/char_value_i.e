@@ -5,7 +5,7 @@ inherit
 	VALUE_I
 		redefine
 			generate, is_character, equiv,
-			append_clickable_signature, string_value
+			append_signature, string_value
 		end
 	CHARACTER_ROUTINES
 
@@ -62,7 +62,7 @@ feature
 			Result := char_val.out;
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_signature (a_clickable: OUTPUT_WINDOW) is
 		do
 			a_clickable.put_char ('%'');
 			a_clickable.put_string (char_text (char_val));

@@ -20,15 +20,12 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			set_editable,
+			set_default_minimum_size,
 			move_and_resize,
-			on_key_down,
-			paste
+			set_editable
 		end
 		
-	EV_BAR_ITEM_IMP
-
-	WEL_DROP_DOWN_LIST_COMBO_BOX
+	WEL_COMBO_BOX_EX
 		rename
 			make as wel_make,
 			parent as wel_parent,
@@ -38,7 +35,8 @@ inherit
 			destroy as wel_destroy,
 			select_item as wel_select_item,
 			selected_item as wel_selected_item,
-			height as wel_height
+			height as wel_height,
+			insert_item as wel_insert_item
 		undefine
 			remove_command,
 			set_width,
@@ -56,11 +54,17 @@ inherit
 			on_key_up,
 			on_set_cursor
 		redefine
-			default_process_message,
-			on_cbn_selchange,
+			on_cben_endedit_item,
 			on_cbn_editchange,
+			on_cbn_selchange,
+			on_cbn_dblclk,
 			move_and_resize,
 			default_style
+		end
+
+	WEL_EM_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -117,19 +121,34 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Has a current selection?
 		do
-			Result := cwin_lo_word (cwin_send_message_result (item,
-				Cb_geteditsel, 0, 0)) /=
-				cwin_hi_word (cwin_send_message_result (item,
-				Cb_geteditsel, 0, 0))
+			Result := cwin_lo_word (cwin_send_message_result (edit_item,
+				Em_getsel, 0, 0)) /=
+				cwin_hi_word (cwin_send_message_result (edit_item,
+				Em_getsel, 0, 0))
+		end
+
+	caret_position: INTEGER is
+			-- Caret position
+		do
+			Result := cwin_hi_word (cwin_send_message_result (edit_item,
+				Em_getsel, 0, 0))
 		end
 
 feature -- Status setting
+
+	set_default_minimum_size is
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		do
+			set_minimum_height (22)
+			set_minimum_width (30)
+		end
 
 	set_text_limit (value: INTEGER) is
 			-- Make `value' the new maximal length of the text.
 		do
 			if is_editable then
-				cwin_send_message (item, Cb_limittext, value, 0)
+				cwin_send_message (edit_item, Em_limittext, value, 0)
 			end
 		end
 
@@ -140,18 +159,21 @@ feature -- Status setting
 			-- of index.
 		do
 			wel_select_item (index - 1)
+			old_selected_item := ev_children @ index
 		end
 
 	deselect_item (index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
 			unselect
+			old_selected_item := Void
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
 		do
 			unselect
+			old_selected_item := Void
 		end
 
 	set_editable (flag: BOOLEAN) is
@@ -167,19 +189,16 @@ feature -- Status setting
 			end
 		end
 
-feature -- Element change
-
-	clear_items is
-			-- Remove all the elements of the combo-box.
-		do
-			reset_content
-			clear_ev_children
-		end
-
 	set_extended_height (value: INTEGER) is
 			-- Make `value' the new extended-height of the box.
 		do
 			resize (width, value)
+		end
+
+	set_caret_position (pos: INTEGER) is
+			-- Set the caret position with `position'.
+		do
+			cwin_send_message (edit_item, Em_setsel, pos, pos)
 		end
 
 feature -- Basic operation
@@ -187,42 +206,53 @@ feature -- Basic operation
 	select_all is
 			-- Select all the text.
 		do
-			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (0, -1))
+			cwin_send_message (edit_item, Em_setsel, 0, -1)
 		end
 
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (-1, 0))
+			cwin_send_message (edit_item, Em_setsel, -1, 0)
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			cwin_send_message (item, Wm_clear, 0, 0)
+			cwin_send_message (edit_item, Wm_clear, 0, 0)
 		end
 
 	cut_selection is
 			-- Cut the current selection to the clipboard.
 		do
-			cwin_send_message (item, Wm_cut, 0, 0)
+			cwin_send_message (edit_item, Wm_cut, 0, 0)
 		end
 
 	copy_selection is
 			-- Copy the current selection to the clipboard.
 		do
-			cwin_send_message (item, Wm_copy, 0, 0)
+			cwin_send_message (edit_item, Wm_copy, 0, 0)
 		end
 
-	paste (index: INTEGER) is
-			-- Insert the string which is in the 
-			-- Clipboard at the `index' postion in the
-			-- text.
-			-- If the Clipboard is empty, it does nothing. 
-		local
-			pos: INTEGER
+	clip_paste is
+			-- Paste at the current caret position the
+			-- content of the clipboard.
 		do
-			cwin_send_message (item, Wm_paste, 0, 0)
+			cwin_send_message (edit_item, Wm_paste, 0, 0)
+		end
+
+	replace_selection (txt: STRING) is
+			-- Replace the current selection with `new_text'.
+			-- If there is no selection, `new_text' is inserted
+			-- at the current `caret_position'.
+		require
+			exists: exists
+			text_not_void: txt /= Void
+		local
+			wel_str: WEL_STRING
+		do
+			!! wel_str.make (txt)
+			cwin_send_message (edit_item, Em_replacesel, 0,
+				cwel_pointer_to_integer (wel_str.item))
 		end
 
 feature -- Event : command association
@@ -259,41 +289,31 @@ feature -- Event -- removing command association
 			remove_command (Cmd_activate)
 		end
 
-feature {NONE} -- Inapplicable
-
-	caret_position: INTEGER is
-			-- Caret position
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	set_caret_position (a_position: INTEGER) is
-			-- Set the caret position with `position'.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
 feature {NONE} -- Implementation
+
+	graphical_insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
+			-- Insert `item_imp' at the `index' position of the 
+			-- graphical object.
+		local
+			citem: WEL_COMBO_BOX_EX_ITEM
+		do
+			!! citem.make_with_index (index)
+			citem.set_text (item_imp.text)
+			wel_insert_item (citem)
+		end
 
 	set_read_only is
 			-- Set the read-only state.
 		local
 			par_imp: WEL_WINDOW
-			temp_list: ARRAYED_LIST [STRING]
 		do
 			if is_editable then
 				par_imp ?= parent_imp
-				!! temp_list.make (0)
-				save_list (temp_list)
 				wel_destroy
   				internal_window_make (par_imp, void, default_style + Cbs_dropdownlist,
 					0, 0, 0, 90, 0, default_pointer)
  	 			id := 0
-				copy_list (temp_list)
+				internal_copy_list --(temp_list)
 			end
 		end
 
@@ -301,17 +321,14 @@ feature {NONE} -- Implementation
 			-- Set the read-write state.
 		local
 			par_imp: WEL_WINDOW
-			temp_list: ARRAYED_LIST [STRING]
 		do
 			if not is_editable then
 				par_imp ?= parent_imp
-				!! temp_list.make (0)
-				save_list (temp_list)
 				wel_destroy
   				internal_window_make (par_imp, void, default_style + Cbs_dropdown,
 					0, 0, 0, 90, 0, default_pointer)
  	 			id := 0
-				copy_list (temp_list)
+				internal_copy_list --(temp_list)
 			end
 		end
 
@@ -321,52 +338,16 @@ feature {NONE} -- Implementation
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
 
-	save_list (temp_list: ARRAYED_LIST [STRING]) is
-			-- Take an empty list and initialize all the children with
-			-- the contents of `ev_children'.
+feature {NONE} -- Notification messages
+
+	old_selected_item: EV_LIST_ITEM_IMP
+			-- The previously selected item
+
+	on_cben_endedit_item (info: WEL_NM_COMBO_BOX_EX_ENDEDIT) is
+			-- The user has concluded an operation within the edit box
+			-- or has selected an item from the control's drop-down list.
 		do
-			if not ev_children.empty then
-				from
-					ev_children.start
-				until
-					ev_children.after
-				loop
-					temp_list.extend (ev_children.item.text)
-					ev_children.forth
-				end
-			end
-		end
-
-	copy_list (temp_list: ARRAYED_LIST [STRING]) is
-			-- Take an empty list and initialize all the children with
-			-- the contents of `ev_children'.
-		do
-			if not ev_children.empty then
-				from
-					temp_list.start
-				until
-					temp_list.after
-				loop
-					add_string (temp_list.item)
-					temp_list.forth
-				end
-			end
-		end
-
-feature {NONE} -- Wel implementation
-
-   	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-   			-- We must not resize the height of the combo-box.
-   		do
-  			cwin_move_window (item, a_x, a_y, a_width, height, repaint)
-  		end
-
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- We check if the enter key is pressed)
-			-- 13 is the number of the return key.
-		do
-			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
-			if virtual_key = Vk_return then
+			if info.why = Cbenf_return then
 				execute_command (Cmd_activate, Void)
 			end
 		end
@@ -374,9 +355,28 @@ feature {NONE} -- Wel implementation
 	on_cbn_selchange is
 			-- The selection is about to be changed.
 		do
+			-- Event on the ocmbo box
 			execute_command (Cmd_selection, Void)
+
+			-- Event for the unselected item
+			if old_selected_item /= Void then
+				old_selected_item.execute_command (Cmd_item_deactivate, Void)
+			end
+
+			-- Event for the newly selected item
 			if selected then
-				(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_activate, Void)
+				old_selected_item := ev_children.i_th (wel_selected_item + 1)
+				old_selected_item.execute_command (Cmd_item_activate, Void)
+			else
+				old_selected_item := Void
+			end
+		end
+
+	on_cbn_dblclk is
+			-- The user double-clicks a string in the list box.
+		do
+			if selected then
+				(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_dblclk, Void)
 			end
 		end
 
@@ -387,26 +387,40 @@ feature {NONE} -- Wel implementation
 			execute_command (Cmd_change, Void)
 		end
 
+feature {NONE} -- WEL implementation
+
+   	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+   			-- We must not resize the height of the combo-box.
+   		do
+  			cwin_move_window (item, a_x, a_y, a_width, height, repaint)
+  		end
+
+	set_selection (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) the text between 
+			-- `start_pos' and `end_pos'. Both `start_pos' and
+			-- `end_pos' are selected.
+		do
+			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (start_pos, end_pos))
+		end
+
+	wel_selection_start: INTEGER is
+			-- Index of the first character selected
+		do
+			Result := cwin_lo_word (cwin_send_message_result (edit_item, Em_getsel, 0, 0))
+		end
+
+	wel_selection_end: INTEGER is
+			-- Index of the last character selected
+		do
+			Result := cwin_hi_word (cwin_send_message_result (edit_item, Em_getsel, 0, 0))
+		end
+
 	default_style: INTEGER is
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 						+ Ws_tabstop + Ws_vscroll
-						+ Cbs_autohscroll --+ Cbs_ownerdrawfixed
-						+ Cbs_hasstrings
+						+ Cbs_autohscroll
 		end
-
-	default_process_message (msg, wparam, lparam: INTEGER) is
-		   -- Process `msg' which has not been processed by
-		   -- `process_message'.
-		local
-			top: INTEGER
-			paint_dc: WEL_PAINT_DC
-			rect: WEL_RECT
-		do
-			if msg = Wm_erasebkgnd then
-				disable_default_processing
-			end
-  		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -422,35 +436,6 @@ feature {NONE} -- Wel implementation
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
-		end
-
-	set_selection (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
-			-- `start_pos' and `end_pos'. Both `start_pos' and
-			-- `end_pos' are selected.
-		do
-			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (start_pos, end_pos))
-		end
-
-	wel_selection_start: INTEGER is
-			-- Index of the first character selected
-		do
-			Result := cwin_lo_word (cwin_send_message_result (item, Cb_geteditsel, 0, 0))
-		end
-
-	wel_selection_end: INTEGER is
-			-- Index of the last character selected
-		do
-			Result := cwin_hi_word (cwin_send_message_result (item, Cb_geteditsel, 0, 0))
-		end
-
-	clip_paste is
-			-- Paste at the current caret position the
-			-- content of the clipboard.
-		do
-			Check
-				Never_called: False
-			end
 		end
 
 end -- class EV_COMBO_BOX_IMP

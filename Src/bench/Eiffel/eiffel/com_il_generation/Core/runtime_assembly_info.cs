@@ -1,3 +1,11 @@
+/*
+indexing
+	description: "Collects all information about the ISE runtime component"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+using System.Reflection;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -10,7 +18,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Interactive Software Engineering Inc.")]
-[assembly: AssemblyProduct("ISE EiffelBench")]
+[assembly: AssemblyProduct("ISE EiffelStudio")]
 [assembly: AssemblyCopyright("ISE")]
 [assembly: AssemblyTrademark("ISE")]
 [assembly: AssemblyCulture("")]		

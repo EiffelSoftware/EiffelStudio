@@ -130,10 +130,12 @@ feature
 		do
 			pixmap_name_modified := False;
 			pixmap_name := a_name;
-			if pixmap_name = Void then
+			if pixmap_name = Void or else pixmap_name.empty then
 				widget.hide;
 				cloned_current := clone (Current);
 				p := widget.parent;
+					-- Need to do this so the pixmap 
+					-- can be reset to nothing
 				!! widget.make_unmanaged (entity_name, p);
 				cloned_current.copy_attributes (Current);
 				widget.set_x_y (cloned_current.widget.x, cloned_current.widget.y);

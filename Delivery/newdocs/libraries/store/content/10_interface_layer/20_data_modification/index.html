@@ -1,0 +1,54 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Data Modification</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Change">
+		<META NAME="MS-HKWD" CONTENT="Database, Modification">
+		<META NAME="MS-HKWD" CONTENT="Database, Deletion">
+		<META NAME="MS-HKWD" CONTENT="Database, Update">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Updating your database content</H1>
+
+		<P>Use the <A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A> class to perform any operation on your database that does not require access to
+		a result. You can for instance modify table row content, drop table rows, create and delete tables.</P>
+
+		<P CLASS="note"><B>Note</B>: Take a look at the <A HREF="../50_data_object_coupling/index.html#insert">Data Storing</A>
+		capability if you want to <B>insert</B> table rows.</P>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A> allows you to modify the database data using the SQL language:</P>
+
+		<UL>
+			<LI>Prepare your SQL query and use modify:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">modification</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Modification tool.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">modification</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_change.html#f_make">make</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">modification</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_change.html#f_modify">modify</A><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Update CONTACTS set Firstname = 'John'"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+</CODE><BR>
+
+			<LI>Commit your changes with your session control:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Session control.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_commit">commit</A><BR>
+</CODE><BR>
+
+		<P CLASS="tip"><B>Tip</B>: It is always better to check the database status for errors before committing
+		changes.</P>
+		</UL>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../50_data_object_coupling/index.html#insert">Data storing</A><BR>
+					<A HREF="../70_stored_procedures/index.html">Stored procedures</A><BR>
+					<A HREF="Decision.html">Implementation</A><BR>
+		</P>
+	</BODY>
+</HTML>

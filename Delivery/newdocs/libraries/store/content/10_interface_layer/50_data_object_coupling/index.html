@@ -1,0 +1,125 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Data Object Coupling</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Repository">
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Storing Data">
+		<META NAME="MS-HKWD" CONTENT="Database, Table Description">
+		<META NAME="MS-HKWD" CONTENT="Database, Insertions">
+		<META NAME="MS-HKWD" CONTENT="Database, Objects Mapping Database Data">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Coupling database data with Eiffel objects</H1>
+
+		<P>A smart way to work with relational databases is to have Eiffel objects directly
+		mapping relational tables. 3 EiffelStore main capabilities enable this coupling:</P>
+
+		<UL>
+			<LI><A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A> objects <A HREF="#describe">describe a relational table</A> and enable to create Eiffel objects
+			mapping database tables.
+			<LI><A CLASS="eclass" HREF="../../../reference/interface/db_store.html">DB_STORE</A> enables to <A HREF="#insert">insert data into relational tables</A> using directly <A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A>
+			objects.
+			<LI><A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> can <A HREF="#map">map a database query result into Eiffel objects</A>.
+		</UL>
+
+		<H2><A NAME="describe"></A>Describing relational tables with DB_REPOSITORY</H2>
+
+		<P>A <A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A> object stores available information about a table. To access this
+		information, you mainly have to give the table name and load the table description:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">repository</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">repository</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_repository.html#f_make">make</A> (<SPAN CLASS="estring">"CONTACTS"</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">repository</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_repository.html#f_load">load</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">repository</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_repository.html#f_exists">exists</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<P CLASS="tip"><B>Tip</B>: Loading a table description is often a costly operation: table has to be fetched
+		among existing tables then every table column description must be loaded. Hence it is better to store and reuse
+		a repository (maybe with a <A CLASS="eclass" HREF="../../../../base/reference/structures/table/hash_table.html">HASH_TABLE</A>) once it has been loaded.</P>
+
+		<P>You can also generate an Eiffel class mapping a relational table using {<A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A>}.<A CLASS="efeature" HREF="../../../reference/interface/db_repository.html#f_generate_class">generate_class</A> feature. Generated class may look like:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="eclass">CONTACTS</SPAN><BR>
+<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Access</SPAN><BR>
+<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">id</SPAN>: <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Settings</SPAN><BR>
+<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">set_id</SPAN> (<SPAN CLASS="elocal">an_id</SPAN>: <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>) <SPAN CLASS="ekeyword">is</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Set <SPAN CLASS="elocal">an_id</SPAN> to <SPAN CLASS="efeature">id</SPAN>.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">id</SPAN> := <SPAN CLASS="elocal">an_id</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+</CODE><BR>
+
+		<P CLASS="note"><B>Note</B>: You can use class <A CLASS="eclass" HREF="../../../reference/generation/generator/db_class_generator.html">DB_CLASS_GENERATOR</A> to create customized classes
+		mapping a database table.</P>
+
+
+		<H2><A NAME="insert"></A>Inserting data in the database</H2>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_store.html">DB_STORE</A> enables you to easily insert rows into a table using:
+
+		<UL>
+			<LI>the table description provided by <A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A>.
+			<LI>a class mapping the relational table.
+		</UL>
+		This is straight-forward since you only have
+		to give <A CLASS="eclass" HREF="../../../reference/interface/db_store.html">DB_STORE</A> the object filled with the table values. Suppose you want to add a contact into your
+		database:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">storage</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_store.html">DB_STORE</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">contacts_rep</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">a_contact</SPAN>: <SPAN CLASS="eclass">CONTACTS</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">storage</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_store.html#f_make">make</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- <SPAN CLASS="efeature">contacts_rep</SPAN> is loaded and exists.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">storage</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_store.html#f_set_repository">set_repository</A> (<SPAN CLASS="efeature">contacts_rep</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- <SPAN CLASS="efeature">a_contact</SPAN> carries values to insert into the database.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">storage</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_store.html#f_put">put</A> (<SPAN CLASS="efeature">a_contact</SPAN>)<BR>
+</CODE><BR>
+
+		<H2><A NAME="map"></A>Accessing database content with Eiffel objects</H2>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> enables you to map data retrieved from the database into Eiffel objects:
+		Result column names must match object attributes names so you can use for instance classes
+		created by <A CLASS="eclass" HREF="../../../reference/interface/db_repository.html">DB_REPOSITORY</A>. Class <A CLASS="eclass" HREF="../../../reference/support/db_action.html">DB_ACTION</A> redefines <A CLASS="eclass" HREF="../../../reference/support/action.html">ACTION</A> and can be used to retrieve
+		Eiffel objects directly into an <A CLASS="eclass" HREF="../../../../base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A>:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">list_filling</SPAN>: <A CLASS="eclass" HREF="../../../reference/support/db_action.html">DB_ACTION</A> [<SPAN CLASS="eclass">CONTACTS</SPAN>]<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">contact</SPAN>: <SPAN CLASS="eclass">CONTACTS</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_object_convert">object_convert</A> (<SPAN CLASS="efeature">contact</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">list_filling</SPAN>.<A CLASS="efeature" HREF="../../../reference/support/db_action.html#f_make">make</A> (<SPAN CLASS="efeature">selection</SPAN>, <SPAN CLASS="efeature">contact</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_action">set_action</A> (<SPAN CLASS="efeature">list_filling</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_load_result">load_result</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_is_ok">is_ok</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN> := <SPAN CLASS="efeature">list_filling</SPAN>.<A CLASS="efeature" HREF="../../../reference/support/db_action.html#f_list">list</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<P CLASS="note"><B>Note</B>: You can see <A HREF= "../40_selection_access/index.html#action">how actions are used</A>
+		in <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A>.</P>
+
+<BR>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../30_database_selection/index.html">Performing a database selection.</A><BR>
+		</P>
+	</BODY>
+</HTML>

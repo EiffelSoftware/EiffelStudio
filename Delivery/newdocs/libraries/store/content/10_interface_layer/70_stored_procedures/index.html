@@ -1,0 +1,103 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Stored Procedures</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Procedures">
+		<META NAME="MS-HKWD" CONTENT="Database, Stored Procedures">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Using stored procedures</H1>
+
+		<P>When sending requests to the database, the request is first parsed then executed. Instead of parsing many times
+		the same requests, i.e. with only changes in expression values, most of RDBMS enable to <B>precompile</B>
+		requests. These requests can then be executed as routines and are identified by a name and
+		a signature.</P>
+		<P>EiffelStore lets you use stored procedures with
+		<A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A> class to:</P>
+
+		<UL>
+			<LI><A HREF="#execute">Execute</A> a stored procedure.
+			<LI><A HREF="#create">Create</A> a stored procedure.
+		</UL>
+
+		<H2><A NAME="execute"></A>Executing a stored procedure</H2>
+
+		<P>To execute a stored procedure:</P>
+
+		<UL>
+			<LI>Create a <A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A> object and load the stored procedure you want to use:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_make">make</A> (<SPAN CLASS="estring">"UPDATE"</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_load">load</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_exists">exists</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+			<LI>Execute the procedure through a <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> (if a result is expected) or a <A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A> object (otherwise).
+
+			<P CLASS="note"><B>Note</B>: Requests with a result (<A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A>) or without (<A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A>) are both abstract
+			<B>expressions</B>. <A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A> executes an abstract expression using an object of <A CLASS="eclass" HREF="../../../reference/interface/db_expression.html">DB_EXPRESSION</A> type, which
+			corresponds to an abstract expression. <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> and <A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A> inherits from <A CLASS="eclass" HREF="../../../reference/interface/db_expression.html">DB_EXPRESSION</A>.</P>
+
+			<P>You can execute your request mostly like a basic one:</P>
+
+			<UL>
+				<LI>Create your request.
+				<LI>Bind request variables. Variables are stored procedure arguments.
+
+				<P CLASS="note"><B>Note</B>: Take a look at how to <A HREF="../60_query_variables/index.html">bind variables</A>
+				to a query.</P>
+
+				<LI>Execute the query through the <A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A> object.
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">expr</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_execute">execute</A> (<SPAN CLASS="efeature">expr</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">expr</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_change.html#f_clear_all">clear_all</A></A><BR>
+</CODE><BR>
+
+				<LI>Check for errors and load result if any.
+			</UL>
+		</UL>
+
+		<H2><A NAME="create"></A>Creating a stored procedure</H2>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A> also enables you to create or drop stored procedures:
+
+		<UL>
+			<LI>Use <A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_store">store</A> to create a procedure.
+			<LI>Use <A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_drop">drop</A> to delete one.
+		</UL>
+		The following example shows how to overwrite a procedure in the database:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_proc.html">DB_PROC</A></P>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_make">make</A> (<SPAN CLASS="estring">"NEW_PROCEDURE"</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_load">load</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_exists">exists</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_drop">drop</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_load">load</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if not</SPAN> <SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_exists">exists</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_set_arguments">set_arguments</A> (&lt;&lt;<SPAN CLASS="estring">"one_arg"</SPAN>>>, &lt;&lt;<SPAN CLASS="estring">""</SPAN>>>)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">procedure</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_proc.html#f_store">store</A> (<SPAN CLASS="estring">"update contacts set firstname = one_arg where
+contactid = 1"</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../30_database_selection/index.html">Performing a database selection.</A><BR>
+					<A HREF="../50_data_object_coupling/index.html">Coupling database data and Eiffel objects.</A><BR>
+		</P>
+	</BODY>
+</HTML>

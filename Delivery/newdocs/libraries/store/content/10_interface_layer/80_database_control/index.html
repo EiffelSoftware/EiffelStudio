@@ -1,0 +1,105 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Database control</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Error handling">
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Control">
+		<META NAME="MS-HKWD" CONTENT="Database, Errors">
+		<META NAME="MS-HKWD" CONTENT="Database, Control">
+		<META NAME="MS-HKWD" CONTENT="Database, Status">
+		<META NAME="MS-HKWD" CONTENT="Database, Commit">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Handling database status and behavior</H1>
+
+		<P>Use the <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A> class to check or change database status and behavior. The main operations
+		you are likely to use are:</P>
+
+		<UL>
+			<LI><A HREF="#errors">Handling</A> database errors.
+			<LI><A HREF="#connection">Connecting</A> to the database.
+			<LI><A HREF="#commit">Committing</A> changes in the database.
+		</UL>
+
+		<H2><A NAME="errors"></A>Handling database errors</H2>
+
+		<P>Every EiffelStore interface class has an <A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_is_ok">is_ok</A> feature. This enables to check
+		directly if the last database operation has been successful.</P>
+
+		<P>When an error is detected, you can access through <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A> further information about
+		the error:</P>
+
+		<UL>
+			<LI><A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_error_message">error_message</A> provides a description of the error that occurred.
+			<LI><A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_error_code">error_code</A> returns a code corresponding to the error type. This
+			code enables to handle specific errors within your code without parsing
+			the <A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_error_message">error_message</A>.
+			<LI><A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_warning_message">warning_message</A> provides a warning message about the last transaction
+			performed.
+		</UL>
+
+		<P>Once you have handled your error, for instance by displaying the <A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_error_message">error_message</A>
+		on screen, you can call <A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_reset">reset</A> to perform new database transactions.</P>
+
+		<H2><A NAME="connection"></A>Managing database connection</H2>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A> lets you connect, check connection and disconnect from
+		the database.</P>
+
+		<P>The following example sum up these capabilities:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_connect">connect</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_is_connected">is_connected</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Perform your transactions here.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_disconnect">disconnect</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<H2><A NAME="commit"></A>Committing changes in the database</H2>
+
+		<P>Every modification you do in the database are usually not directly saved. This enables to
+		limit damage caused by mishandlings. You can then manage database modification through 2 commands:</P>
+
+		<UL>
+			<LI><I>Commit</I> saves the changes in the database.
+			<LI><I>Rollback</I> restores the database content corresponding to
+			last commitment.
+		</UL>
+
+		<P>The following example illustrates the use of these commands:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">transaction_completed</SPAN> <SPAN CLASS="ekeyword">or else not</SPAN> <SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_is_ok">is_ok</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Perform your transaction here.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_is_ok">is_ok</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_commit">commit</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">else</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_rollback">rollback</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<P>The loop performs a multi-step transaction. If transaction is not carried out
+		entirely, the database could stay in an invalid state: this code ensures that
+		database remains in a valid state.</P>
+
+		<P CLASS="warning"><B>Caution</B>: Some databases can be in an auto-commit mode. Furthermore,
+		some special database commands can automatically commit database changes.</P>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../10_database_connection/index.html">Database connection</A><BR>
+					<A HREF="Decision.html">Implementation</A><BR>
+		</P>
+	</BODY>
+</HTML>

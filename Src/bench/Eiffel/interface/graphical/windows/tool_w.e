@@ -298,18 +298,6 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-feature -- Focus Label
-
-	tell_type (a_type_name: STRING) is
-			-- Display `a_type_name' in type teller.
-		deferred
-		end;
- 
-	clean_type is
-			-- Clean what's said in the type teller window.
-		deferred
-		end;
-
 invariant
 
 	non_void_history: history /= Void

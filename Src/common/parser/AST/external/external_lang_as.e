@@ -11,7 +11,11 @@ inherit
 		redefine
 			is_equivalent, location
 		end
+
 	EXTERNAL_CONSTANTS
+
+create
+	initialize
 
 feature {AST_FACTORY} -- Initialization
 
@@ -41,6 +45,9 @@ feature -- Attributes
 	language_name: STRING_AS;
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
+
+	extension: EXTERNAL_EXTENSION_AS
+			-- Parsed external extension
 
 	location: TOKEN_LOCATION
 			-- Location of AST

@@ -1505,11 +1505,15 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 		mask = (1 << (idx % 8));
 
 		/* If we have computed it already, return result */
-
+		/* We check first if the computed value is '1', if so, it means both that we already
+		 * computed it and that is True.
+		 * If the computed value is '0' we check if we compute a value, if so we return 0
+		 * because we already know the computed value, otherwise we compute it
+		 * /
+		if (mask == ((stab->high_tab)[idx/8] & mask))
+			return 1;
 		if (mask == ((stab->high_comp)[idx/8] & mask))
-		{
-			return (mask == ((stab->high_tab)[idx/8] & mask)) ? 1 : 0;
-		}
+			return 0;
 
 		/* We have to compute it now (once!) */
 

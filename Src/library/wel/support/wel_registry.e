@@ -233,15 +233,15 @@ feature -- Access
 		require
 			key_possible:valid_value_for_hkey(key)
 		local
-			a: ANY
+			a: WEL_STRING
 			res, size: INTEGER
 			ext: WEL_STRING
 		do
 			size := 512
 			create ext.make_empty (size)
 			if path /= Void then
-				a := path.to_c
-				res := cwin_reg_query_value (key, $a, ext.item, $size)
+				create a.make (path)
+				res := cwin_reg_query_value (key, a.item, ext.item, $size)
 			else
 				res := cwin_reg_query_value (key, default_pointer, ext.item, $size)
 			end
@@ -262,15 +262,15 @@ feature -- Settings
 			valid_value_name: value_name /= Void
 			key_possible:valid_value_for_hkey(key)
 		local
-			a, b: ANY
+			a, b: WEL_STRING
 			res: INTEGER
 		do
-			b := value.value.to_c
+			create b.make (value.value)
 			if value_name /= Void then
-				a := value_name.to_c
-				res := cwin_reg_set_key_value (key, $a, 0, value.type, $b, value.value.capacity)
+				create a.make (value_name)
+				res := cwin_reg_set_key_value (key, a.item, 0, value.type, b.item, value.value.capacity)
 			else
-				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type, $b, value.value.capacity)
+				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type, b.item, value.value.capacity)
 			end
 			last_call_successful := res = Error_success
 		end
@@ -284,13 +284,13 @@ feature -- Basic Actions
 				key_name_possible: key_name /= Void and then not key_name.is_empty
 				parent_key_possible:valid_value_for_hkey(parent_key)
 		local
-			a: ANY
+			a: WEL_STRING
 			disp, res: INTEGER
 		do
-			a := key_name.to_c
+			create a.make (key_name)
 			res := cwin_reg_create_key (
 				parent_key,
-				$a,
+				a.item,
 				0,
 				Reg_none,
 				Reg_option_non_volatile,
@@ -311,11 +311,11 @@ feature -- Basic Actions
 			key_name_possible: key_name /= Void and then not key_name.is_empty
 			parent_key_possible:valid_value_for_hkey(parent_key)
 		local
-			a: ANY
+			a: WEL_STRING
 			res: INTEGER
 		do
-			a := key_name.to_c
-			res := cwin_reg_open_key (parent_key, $a, 0, access_mode, $Result)
+			create a.make (key_name)
+			res := cwin_reg_open_key (parent_key, a.item, 0, access_mode, $Result)
 			if res /= Error_success then
 				Result := default_pointer
 			end
@@ -340,11 +340,11 @@ feature -- Basic Actions
 			key_name_possible: key_name /= Void and then not key_name.is_empty
 			parent_key_possible:valid_value_for_hkey(parent_key)
 		local
-			a: ANY
+			a: WEL_STRING
 			res: INTEGER
 		do
-			a := key_name.to_c
-			res := cwin_reg_delete_key (parent_key, $a)
+			create a.make (key_name)
+			res := cwin_reg_delete_key (parent_key, a.item)
 			last_call_successful := res = Error_success
 		end
 
@@ -378,11 +378,11 @@ feature  -- New actions
 			key_possible: valid_value_for_hkey(parent_key)
 			name_possible: name /= Void
 		local
-			a: ANY
+			a: WEL_STRING
 			res: INTEGER
 		do
-			a := name.to_c
-			res := cwin_reg_delete_value (parent_key, $a)
+			create a.make (name)
+			res := cwin_reg_delete_value (parent_key, a.item)
 			last_call_successful := res = Error_success
 		end
 
@@ -447,14 +447,14 @@ feature -- Access
         	value_name_possible: value_name /= Void
 			key_valid:valid_value_for_hkey(key)
 		local
-			a: ANY
+			a: WEL_STRING
 			res, type, size: INTEGER
 			ext: WEL_STRING
 		do
-			a := value_name.to_c
+			create a.make (value_name)
 			size := 512
 			create ext.make_empty (size)
-			res := cwin_reg_query_value_ex (key, $a, default_pointer, $type, ext.item, $size)
+			res := cwin_reg_query_value_ex (key, a.item, default_pointer, $type, ext.item, $size)
 			if res = Error_success then
 				create Result.make (type, ext.string)
 			else
@@ -462,7 +462,7 @@ feature -- Access
 						-- Size was given by first call to RegQueryValueEx, we create
 						-- a string that can hold that much.
 					create ext.make_empty (size)
-					res := cwin_reg_query_value_ex (key, $a, default_pointer, $type, ext.item, $size)
+					res := cwin_reg_query_value_ex (key, a.item, default_pointer, $type, ext.item, $size)
 					if res = Error_success then
 						create Result.make (type, ext.string)
 					end

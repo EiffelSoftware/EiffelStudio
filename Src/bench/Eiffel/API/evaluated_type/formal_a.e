@@ -1,19 +1,20 @@
 indexing
 	description: "Descripion of a actual formal generic type"
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class FORMAL_A
 
 inherit
-	TYPE_A
+	NAMED_TYPE_A
 		redefine
 			is_formal,
 			instantiation_in,
 			has_formal_generic,
 			instantiated_in,
 			same_as,
-			format
+			format,
+			is_full_named_type
 		end
 
 feature -- Property
@@ -21,6 +22,15 @@ feature -- Property
 	is_formal: BOOLEAN is True
 			-- Is the current actual type a formal generic type ?
 
+	is_full_named_type: BOOLEAN is True
+			-- Current is a named type.
+
+	hash_code: INTEGER is
+			-- 
+		do
+			Result := position
+		end
+		
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -102,8 +112,8 @@ feature {COMPILER_EXPORTER}
 			Result := True
 		end
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 		local
 			other_formal: FORMAL_A
 			constrain: TYPE_A
@@ -119,7 +129,7 @@ feature {COMPILER_EXPORTER}
 					count_ok: System.current_class.generics.count >= position
 				end
 				constrain := System.current_class.constraint (position)
-				Result := constrain.internal_conform_to (other, in_generics)
+				Result := constrain.conform_to (other)
 			end
 		end
 
@@ -148,8 +158,7 @@ feature {COMPILER_EXPORTER}
 	type_i: FORMAL_I is
 			-- C type
 		do
-			create Result
-			Result.set_position (position)
+			create Result.make (position)
 		end
 
 	create_info: CREATE_FORMAL_TYPE is

@@ -71,28 +71,17 @@ feature {APP_DR_AREA} -- Pick and drop
 
 	execute (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
 		local
-			nm: NAMABLE
-			ed: EDITABLE
+			pnd_cmd: INITIALIZE_PND
+			arg2: EV_ARGUMENT2 [EV_PND_TYPE, ANY]
 		do
 			app_editor.find_pointed_figure (ev_data.x, ev_data.y)
 			if app_editor.pointed_figure /= Void then
-				if ev_data.shift_key_pressed then
-						-- Rename command
-					nm ?= app_editor.pointed_figure.data
-					if nm /= Void then
-						change_name (nm)
-					end
-				elseif ev_data.control_key_pressed then
-						-- Create editor command
-					ed ?= app_editor.pointed_figure.data
-					if ed /= Void then
-						ed.create_editor
-					end
-				else	-- Prepare the transport
-					set_transported_data (app_editor.pointed_figure)
-					set_data_type (app_editor.pointed_figure.data_type)
-				end
+				create pnd_cmd.make (Current)
+				create arg2.make (app_editor.pointed_figure.data_type,
+									app_editor.pointed_figure.data)
+				pnd_cmd.execute (arg2, ev_data)
 			end
+			set_transported_data (app_editor.pointed_figure)
 		end
 
 	process_state (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is

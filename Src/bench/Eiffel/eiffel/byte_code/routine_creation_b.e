@@ -177,7 +177,7 @@ feature -- IL code generation
 		local
 			set_rout_disp_feat: FEATURE_I
 			real_ty: GEN_TYPE_I
-			l_decl_type: CL_TYPE_I
+			l_decl_type, l_cl_type: CL_TYPE_I
 			cl_type: like class_type
 		do
 			real_ty ?= context.real_type (type)
@@ -189,7 +189,8 @@ feature -- IL code generation
 			l_decl_type := il_generator.implemented_type (set_rout_disp_feat.origin_class_id,
 				real_ty)
 
-			cl_type := il_generator.implemented_type (class_id, class_type)
+			l_cl_type ?= context.real_type (class_type)
+			cl_type := il_generator.implemented_type (class_id, l_cl_type)
 			il_generator.put_method_token (cl_type, feature_id)
 
 				-- Arguments

@@ -544,7 +544,6 @@
                 <File Id="hello_demo.e" Name="HELLO_~1.E" LongName="hello_demo.e" />
 				<File Id="ace_with_precompiled.ace267" Name="ACE_WI~T.ACE" LongName="ace_with_precompiled.ace" />
                 <File Id="main_win.e287" Name="main_win.e" />
-				<File Id="Ace.dotnet.ace17" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
               </Component>
             </Directory>
           </Directory>
@@ -1694,7 +1693,7 @@
                     <File Id="ev_menu_item_imp.e" Name="EV_MEN~H.E" LongName="ev_menu_item_imp.e" />
                     <File Id="ev_separator_item_imp.e" Name="EV_SEP~5.E" LongName="ev_separator_item_imp.e" />
                     <File Id="ev_list_item_imp.e" Name="EV_LIS~C.E" LongName="ev_list_item_imp.e" />
-                    <File Id="ev_tool_bar_separator_imp.e" Name="EV_TOO~A.E" LongName="ev_tool_bar_separator_imp.e" />
+                    <File Id="ev_tool_bar_separator_imp.e" Name="EV_TOO~B.E" LongName="ev_tool_bar_separator_imp.e" />
                   </Component>
                 </Directory>
                 <Directory Id="events24" Name="events">
@@ -2075,6 +2074,17 @@
               </Component>
             </Directory>
             <Directory Id="support46" Name="support">
+              <Directory Id="classic" Name="classic">
+                <Component Id="wel_main_arguments.e" Guid="B65814AD-096E-44EB-A6E0-2637F2B17E85">
+                  <File Id="wel_main_arguments.e" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" KeyPath="yes" />
+                  <File Id="wel_identified.e" Name="WEL_ID~1.E" LongName="wel_identified.e" />
+                  <File Id="wel_font_family_enumerator.e" Name="WEL_FO~5.E" LongName="wel_font_family_enumerator.e" />
+                  <File Id="wel_object_id_manager.e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
+                  <File Id="wel_dispatcher.e" Name="WEL_DI~3.E" LongName="wel_dispatcher.e" />
+                  <File Id="wel_disk_space_callback.e" Name="WEL_DI~2.E" LongName="wel_disk_space_callback.e" />
+                  <File Id="wel_window_enumerator.e" Name="WEL_WI~B.E" LongName="wel_window_enumerator.e" />
+                </Component>
+              </Directory>
               <Component Id="wel_system_parameters_info.e" Guid="BC44338C-CBE7-4DF8-A3C6-8BAFA5824038">
                 <File Id="wel_system_parameters_info.e" Name="WEL_SY~2.E" LongName="wel_system_parameters_info.e" KeyPath="yes" />
                 <File Id="wel_shared_memory.e" Name="WEL_SH~1.E" LongName="wel_shared_memory.e" />
@@ -2129,17 +2139,6 @@
                 <File Id="wel_lock.e" Name="wel_lock.e" />
                 <File Id="wel_bit_operations.e2" Name="WEL_BI~9.E" LongName="wel_bit_operations.e" />
               </Component>
-              <Directory Id="classic" Name="classic">
-                <Component Id="wel_main_arguments.e" Guid="A3F908D3-C6F7-46D7-B4DB-5D2218C31A40">
-                  <File Id="wel_main_arguments.e" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" KeyPath="yes" />
-                  <File Id="wel_identified.e" Name="WEL_ID~1.E" LongName="wel_identified.e" />
-                  <File Id="wel_font_family_enumerator.e" Name="WEL_FO~5.E" LongName="wel_font_family_enumerator.e" />
-                  <File Id="wel_object_id_manager.e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
-                  <File Id="wel_dispatcher.e" Name="WEL_DI~3.E" LongName="wel_dispatcher.e" />
-                  <File Id="wel_disk_space_callback.e" Name="WEL_DI~2.E" LongName="wel_disk_space_callback.e" />
-                  <File Id="wel_window_enumerator.e" Name="WEL_WI~B.E" LongName="wel_window_enumerator.e" />
-                </Component>
-              </Directory>
             </Directory>
             <Directory Id="structs" Name="structs">
               <Directory Id="classic2" Name="classic">

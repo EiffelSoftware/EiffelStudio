@@ -955,7 +955,7 @@ feature {NONE} -- Implementation
 						from
 							locals.start
 						until
-							locals.after
+							locals.after or result_static_type /= Void
 						loop
 							t := locals.item
 							if t /= Void then
@@ -963,7 +963,7 @@ feature {NONE} -- Implementation
 									pos := 1
 									cnt := t.id_list.count
 								until
-									pos > cnt
+									pos > cnt or result_static_type /= Void
 								loop
 									if t.item_name (pos).is_equal (n) then
 										result_static_type := t.type.actual_type.associated_class

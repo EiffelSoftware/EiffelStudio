@@ -121,7 +121,7 @@ feature -- Access
 	vtbl_offset: INTEGER is
 			-- Offset in VTBL when `func_kind' is Func_virtual
 		require
-			valid_func_kind: func_kind = Func_virtual or func_kind = Func_purevirtual
+--			valid_func_kind: func_kind = Func_virtual or func_kind = Func_purevirtual
 		do
 			Result := ccom_funcdesc_vtbl_offset (item)
 		end

@@ -15,7 +15,7 @@ inherit
 	SHARED_NAMES_HEAP
 
 create
-	make, make_il_parser, make_type_parser, make_expression_parser
+	make, make_il_parser, make_type_parser, make_expression_parser, make_indexing_parser
 %}
 
 %start		Eiffel_parser
@@ -65,11 +65,11 @@ create
 %type <ACCESS_INV_AS>		Creation_call
 %type <ARRAY_AS>			Manifest_array
 %type <ASSIGN_AS>			Assignment
-%type <ATOMIC_AS>			Index_value Manifest_constant Non_integer_expression_constant
+%type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
 %type <BOOL_AS>				Boolean_constant
-%type <CALL_AS>				Remote_call Feature_call
+%type <CALL_AS>				Remote_call Expression_feature_call
 %type <CASE_AS>				When_part
 %type <CHAR_AS>				Character_constant
 %type <CHECK_AS>			Check
@@ -83,7 +83,7 @@ create
 %type <ELSIF_AS>			Elseif_part
 %type <ENSURE_AS>			Postcondition
 %type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Expression Factor
+%type <EXPR_AS>				Expression Factor Simple_factor Typed_expression
 %type <EXTERNAL_AS>			External
 %type <EXTERNAL_LANG_AS>	External_language
 %type <FEATURE_AS>			Feature_declaration
@@ -97,19 +97,19 @@ create
 %type <INSPECT_AS>			Multi_branch
 %type <INSTR_CALL_AS>		Call
 %type <INSTRUCTION_AS>		Instruction Instruction_impl
-%type <INTEGER_CONSTANT>	Integer_constant Signed_integer Unsigned_integer
+%type <INTEGER_CONSTANT>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
 %type <LOOP_AS>				Loop
 %type <NESTED_AS>			Call_on_feature_access Call_on_precursor
-							Call_on_feature Call_on_result Call_on_current Call_on_static
+							Call_on_feature Call_on_result Call_on_current Call_on_static Old_call_on_static New_call_on_static
 %type <NESTED_EXPR_AS>		Call_on_expression
 %type <OPERAND_AS>			Delayed_actual Agent_target
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
-%type <STATIC_ACCESS_AS>	A_static_call A_static_constant_call
-%type <REAL_AS>				Real_constant
+%type <STATIC_ACCESS_AS>	A_static_call Old_a_static_call New_a_static_call
+%type <REAL_AS>				Real_constant Signed_real Nosigned_real Typed_real Typed_nosigned_real Typed_signed_real
 %type <RENAME_AS>			Rename_pair
 %type <REQUIRE_AS>			Precondition
 %type <RETRY_AS>			Retry
@@ -118,10 +118,10 @@ create
 %type <ROUTINE_AS>			Routine
 %type <ROUTINE_CREATION_AS>	Agent_call
 %type <PAIR[ROUTINE_CREATION_AS, TOKEN_LOCATION]> Tilda_agent_call
-%type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string
+%type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string Default_manifest_string Typed_manifest_string
 %type <TAGGED_AS>			Assertion_clause Assertion_clause_impl
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Type_mark Class_type Creation_type Non_class_type
+%type <TYPE_AS>				Type Type_mark Class_type Creation_type Non_class_type Typed
 %type <TYPE_DEC_AS>			Entity_declaration_group Local_entity_declaration_group
 %type <VARIANT_AS>			Variant
 
@@ -149,7 +149,7 @@ create
 %type <EIFFEL_LIST [RENAME_AS]>			Rename Rename_list
 %type <EIFFEL_LIST [STRING_AS]>			Debug_keys Debug_key_list
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list Invariant
-%type <EIFFEL_LIST [TYPE_AS]>				Generics Generics_opt Type_list
+%type <EIFFEL_LIST [TYPE_AS]>			Generics_opt Type_list
 %type <EIFFEL_LIST [TYPE_DEC_AS]>		Formal_arguments Entity_declaration_list_opt
 										Entity_declaration_list Local_declarations
 										Local_entity_declaration_list_opt
@@ -164,35 +164,48 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 93
+%expect 118
 
 %%
 
 
--- Root rule
-
-
-
+--###################################################################
+--# Root rule actually divided in 4 different parsers:
+--# 1 - parsing Eiffel classes
+--# 2 - parsing Eiffel types (differentiated by reading first a
+--#     random Identifier
+--# 3 - parsing Eiffel expression (differentiated by reading first
+--#     the TE_FEATURE token)
+--# 4 - parsing Eiffel indexing clause (needed for reading
+--#     `indexing.txt' file used to describe a cluster)
+--###################################################################
 Eiffel_parser:
 		Class_declaration
 			{
-				if type_parser then
+				if type_parser or expression_parser or indexing_parser then
 					raise_error
 				end
 			}
 	|	Identifier_as_lower Type
 			{
-				if not type_parser then
+				if not type_parser or expression_parser or indexing_parser then
 					raise_error
 				end
 				type_node := $2
 			}
 	|	TE_FEATURE Expression
 			{
-				if not expression_parser then
+				if not expression_parser or type_parser or indexing_parser then
 					raise_error
 				end
 				expression_node := $2
+			}
+	|	Indexing
+			{
+				if not indexing_parser or type_parser or expression_parser then
+					raise_error
+				end
+				indexing_node := $1
 			}
 	;
 
@@ -579,12 +592,12 @@ Constant_or_routine: Dotnet_indexing
 
 Feature_value: Manifest_constant Dotnet_indexing
 			{
-				$$ := new_constant_as (create {VALUE_AS}.initialize ($1))
+				create {CONSTANT_AS} $$.make (create {VALUE_AS}.initialize ($1))
 				feature_indexes := $2
 			}
 	|	TE_UNIQUE Dotnet_indexing
 			{
-				$$ := new_constant_as (create {VALUE_AS}.initialize (new_unique_as))
+				create {CONSTANT_AS} $$.make (create {VALUE_AS}.initialize (new_unique_as))
 				feature_indexes := $2
 			}
 	|	Dotnet_indexing_opt Routine
@@ -1129,12 +1142,6 @@ Generics_opt: -- Empty
 			{ $$ := $2 }
 	;
 
-Generics:	TE_LSQURE TE_RSQURE
-			-- { $$ := Void }
-	|	TE_LSQURE Type_list TE_RSQURE
-			{ $$ := $2 }
-	;
-
 Type_list: Type
 			{
 				$$ := new_eiffel_list_type (Initial_type_list_size)
@@ -1364,21 +1371,21 @@ Choice: Integer_constant
 			{ $$ := new_interval_as ($1, $3) }
 	|	Character_constant TE_DOTDOT Identifier_as_lower
 			{ $$ := new_interval_as ($1, $3) }
-	|	A_static_constant_call
+	|	A_static_call
 			{ $$ := new_interval_as ($1, Void) }
-	|	A_static_constant_call TE_DOTDOT Identifier_as_lower
+	|	A_static_call TE_DOTDOT Identifier_as_lower
 			{ $$ := new_interval_as ($1, $3) }
-	|	Identifier_as_lower TE_DOTDOT A_static_constant_call
+	|	Identifier_as_lower TE_DOTDOT A_static_call
 			{ $$ := new_interval_as ($1, $3) }
-	|	A_static_constant_call TE_DOTDOT A_static_constant_call
+	|	A_static_call TE_DOTDOT A_static_call
 			{ $$ := new_interval_as ($1, $3) }
-	|	A_static_constant_call TE_DOTDOT Integer_constant
+	|	A_static_call TE_DOTDOT Integer_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Integer_constant TE_DOTDOT A_static_constant_call
+	|	Integer_constant TE_DOTDOT A_static_call
 			{ $$ := new_interval_as ($1, $3) }
-	|	A_static_constant_call TE_DOTDOT Character_constant
+	|	A_static_call TE_DOTDOT Character_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Character_constant TE_DOTDOT A_static_constant_call
+	|	Character_constant TE_DOTDOT A_static_call
 			{ $$ := new_interval_as ($1, $3) }
 
 	;
@@ -1592,8 +1599,8 @@ Agent_target: Identifier_as_lower
 		{ $$ := new_result_operand_as }
 	|	TE_CURRENT
 		{ $$ := new_operand_as (Void, Void, Void) }
-	|	TE_LCURLY Type TE_RCURLY
-		{ $$ := new_operand_as ($2, Void, Void)}
+	|	Typed
+		{ $$ := new_operand_as ($1, Void, Void)}
 	|	TE_QUESTION
 		{ $$ := Void }
 	;
@@ -1620,33 +1627,12 @@ Delayed_actual_list: Delayed_actual
 
 Delayed_actual: TE_QUESTION
 			{ $$ := new_operand_as (Void, Void, Void) }
--- Manu: 05/02/2003: Should be just the below expression, but to resolve conflicts we have to
--- expand it using its definition
---	|	TE_LCURLY Type TE_RCURLY
---			{ $$ := new_operand_as ($2, Void, Void) }
-	|	TE_LCURLY Clickable_identifier_as_upper TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, Void, False, False), Void, Void) }
-	|	TE_LCURLY Clickable_identifier_as_upper Generics TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, $3, False, False), Void, Void) }
-	|	Position TE_LCURLY TE_EXPANDED Clickable_identifier_as_upper Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_class_type ($4, $5, True, False), Void, Void)
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.start_position,
-						$1.end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
-				end
-		}
-	|	TE_LCURLY TE_SEPARATE Clickable_identifier_as_upper Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($3, $4, False, True), Void, Void) }
-	|	TE_LCURLY TE_BIT Integer_constant TE_RCURLY
-			{ $$ := new_operand_as (new_bits_as ($3), Void, Void) }
-	|	TE_LCURLY TE_BIT Identifier_as_lower TE_RCURLY
-			{ $$ := new_operand_as (new_bits_symbol_as ($3), Void, Void) }
-	|	TE_LCURLY TE_LIKE Identifier_as_lower TE_RCURLY
-			{ $$ := new_operand_as (new_like_id_as ($3), Void, Void) }
-	|	TE_LCURLY TE_LIKE TE_CURRENT TE_RCURLY
-			{ $$ := new_operand_as (new_like_current_as, Void, Void) }
+-- Manu: 01/19/2005: Due to syntax ambiguity we cannot have `Typed' only
+-- as there will be no way to distinguish it from a Manifest type expression.
+-- To preserve this feature in case it is needed by some of our customers
+-- we have invented the new syntax ? Typed.
+	|	TE_QUESTION Typed
+			{ $$ := new_operand_as ($2, Void, Void) }
 	|	Expression
 			{ $$ := new_operand_as (Void, Void, $1) }
 	;
@@ -1662,12 +1648,12 @@ Creation: Position TE_BANG Creation_type TE_BANG Creation_target Creation_call
 			}
 	|	Position TE_CREATE Creation_target Creation_call
 			{ $$ := new_creation_as (Void, $3, $4, $1) }
-	|	Position TE_CREATE TE_LCURLY Type TE_RCURLY Creation_target Creation_call
-			{ $$ := new_creation_as ($4, $6, $7, $1) }
+	|	Position TE_CREATE Typed Creation_target Creation_call
+			{ $$ := new_creation_as ($3, $4, $5, $1) }
 	;
 
-Creation_expression: TE_CREATE TE_LCURLY Type TE_RCURLY Position Creation_call
-			{ $$ := new_creation_expr_as ($3, $6, $5) }
+Creation_expression: TE_CREATE Typed Position Creation_call
+			{ $$ := new_creation_expr_as ($2, $4, $3) }
 	|	TE_BANG Type TE_BANG Position Creation_call
 			{
 				$$ := new_creation_expr_as ($2, $5, $4)
@@ -1727,12 +1713,19 @@ Check: Position TE_CHECK Assertion TE_END
 
 
 -- Expression
- 
+
+Typed: TE_LCURLY Type TE_RCURLY
+			{ $$ := $2 }
+	;
 
 Expression:
-		Unsigned_integer
+		Nosigned_integer
 			{ create {VALUE_AS} $$.initialize ($1) }
+	|	Nosigned_real
+			{ create {VALUE_AS} $$.initialize ($1) }	
 	|	Factor
+			{ $$ := $1 }
+	|	Typed_expression
 			{ $$ := $1 }
 	|	Expression TE_PLUS Expression
 			{ $$ := new_bin_plus_as ($1, $3) }
@@ -1777,17 +1770,19 @@ Expression:
 	;
 
 Factor:
-		Non_integer_expression_constant
+		Expression_constant
 			{ create {VALUE_AS} $$.initialize ($1) }
-	|	Signed_integer
-			{ create {VALUE_AS} $$.initialize ($1) }
-	|	TE_VOID
+	|	Simple_factor
+			{ $$ := $1}
+	;
+
+Simple_factor:	TE_VOID
 			{ create {VOID_AS} $$ }
 	|	Manifest_array
 			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Manifest_tuple
 			{ create {VALUE_AS} $$.initialize ($1) }
-	|	Feature_call
+	|	Expression_feature_call
 			{ $$ := new_expr_call_as ($1) }
 	|	Agent_call
 			{ $$ := $1 }
@@ -1815,15 +1810,27 @@ Factor:
 			{ $$ := new_address_result_as }
 	;
 
+Typed_expression:	Typed
+			{ create {TYPE_EXPR_AS} $$.make ($1) }
+	|	Typed_nosigned_integer
+			{ create {VALUE_AS} $$.initialize ($1) }
+	|	Typed_nosigned_real
+			{ create {VALUE_AS} $$.initialize ($1) }
+	|	New_call_on_static
+			{ $$ := new_expr_call_as ($1) }
+	|	New_a_static_call
+			{ $$ := new_expr_call_as ($1) }
+	|	Typed Simple_factor
+			{ create {TYPE_ADAPTATION_AS} $$.make ($1, $2) }
+	;
+
 Free_operator: TE_FREE
 			{ create $$.initialize (token_buffer) }
 	;
 
 
 -- Expression call
-
-
-Feature_call: Call_on_current
+Expression_feature_call: Call_on_current
 			{ $$ := $1 }
 	|	Call_on_result
 			{ $$ := $1 }
@@ -1841,9 +1848,9 @@ Feature_call: Call_on_current
 			{ $$ := $1 }
 	|	Call_on_precursor
 			{ $$ := $1 }
-	|	A_static_call
+	|	Old_a_static_call
 			{ $$ := $1 }
-	|	Call_on_static
+	|	Old_call_on_static
 			{ $$ := $1 }
 	|	Creation_expression
 			{ $$ := $1 }
@@ -1873,30 +1880,44 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := new_precursor_as (Void, $2) }
 	|	TE_PRECURSOR TE_LCURLY Clickable_identifier_as_upper TE_RCURLY Parameters
 			{ $$ := new_precursor ($3, $5, Void) }
-	|	TE_LCURLY TE_LCURLY Clickable_identifier_as_upper TE_RCURLY TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($3, $8, $6) }
-	|	TE_LCURLY Clickable_identifier_as_upper TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
 	;
 
-Call_on_static: A_static_call TE_DOT Remote_call
+Call_on_static: New_call_on_static
+			{ $$ := $1 }
+	|	Old_call_on_static
+			{ $$ := $1 }
+	;
+			  
+New_call_on_static: New_a_static_call TE_DOT Remote_call
+			{ $$ := new_nested_as ($1, $3) }
+	;
+
+Old_call_on_static: Old_a_static_call TE_DOT Remote_call
 		{ $$ := new_nested_as ($1, $3) }
 	;
 
-A_static_call:
-		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier_as_lower Parameters
-			{
-				$$ := new_static_access_as ($3, $6, $7);
-			}
+A_static_call: New_a_static_call
+			{ $$ := $1 }
+	|	Old_a_static_call
+			{ $$ := $1 }
 	;
 
-A_static_constant_call:
-		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier_as_lower
-			{
-				$$ := new_static_access_as ($3, $6, Void);
-			}
+New_a_static_call:
+		Typed TE_DOT Identifier_as_lower Parameters
+			{ $$ := new_static_access_as ($1, $3, $4); }
 	;
 
+Old_a_static_call:
+		TE_FEATURE Position Typed TE_DOT Identifier_as_lower Parameters
+			{
+				$$ := new_static_access_as ($3, $5, $6);
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($2.start_position,
+							$2.end_position, filename, 0, "Remove the `feature' keyword."))
+				end
+			}
+	;
 
 Remote_call: Call_on_feature_access
 			{ $$ := $1 }
@@ -2000,13 +2021,20 @@ Manifest_constant: Boolean_constant
 			{ $$ := $1 }
 	;
 
-Non_integer_expression_constant:
+-- It contains all constants except the Integer/Real one without a sign mark.
+Expression_constant:
 		Boolean_constant
+			{ $$ := $1 }
+	|	Signed_integer
+			{ $$ := $1 }
+	|	Typed_signed_integer
+			{ $$ := $1 }
+	|	Signed_real
+			{ $$ := $1 }
+	|	Typed_signed_real
 			{ $$ := $1 }
 	|	Character_constant
 			{ $$ := $1 }
-	|	TE_REAL
-			{ $$ := new_real_as (cloned_string (token_buffer)) }
 	|	Bit_constant
 			{ $$ := $1 }
 	|	Manifest_string
@@ -2030,96 +2058,118 @@ Character_constant: TE_CHAR
 				check is_character: not token_buffer.is_empty end
 				$$ := new_character_as (token_buffer.item (1))
 			}
+	|	Typed TE_CHAR
+			{
+				check is_character: not token_buffer.is_empty end
+				fixme ("We should handle `Type' instead of ignoring it.")
+				$$ := new_character_as (token_buffer.item (1))
+			}
 	;
 
+--###################################################################
+--# Integer constants
+--###################################################################
 Integer_constant:
 		Signed_integer
 			{ $$ := $1 }
-	|	Unsigned_integer
+	|	Nosigned_integer
+			{ $$ := $1 }
+	|	Typed_integer
 			{ $$ := $1 }
 	;
 
-Unsigned_integer: TE_INTEGER
-			{
-				if token_buffer.is_integer then
-					$$ := new_integer_as (False, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					$$ := new_integer_as_from_hexa ('%U', token_buffer)
-				else
-					report_integer_too_large_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (False, "0")
-				end
-				if not $$.is_initialized then
-					report_integer_too_large_error (token_buffer)
-				end
-			}
-	;
-
 Signed_integer: TE_PLUS TE_INTEGER
-			{
-				if token_buffer.is_integer then
-					$$ := new_integer_as (False, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					$$ := new_integer_as_from_hexa ('+', token_buffer)
-				else
-					report_integer_too_large_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (False, "0")
-				end
-				if not $$.is_initialized then
-					report_integer_too_large_error (token_buffer)
-				end
-			}
+			{ $$ := new_integer_value (True, '+', Void, token_buffer) }
 	|	TE_MINUS TE_INTEGER
-			{
-				if token_buffer.is_integer then
-					$$ := new_integer_as (True, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					$$ := new_integer_as_from_hexa ('-', token_buffer)
-				else
-					token_buffer.precede ('-')
-					report_integer_too_small_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (False, "0")
-				end
-				if not $$.is_initialized then
-					token_buffer.precede ('-')
-					report_integer_too_small_error (token_buffer)
-				end
-			}
+			{ $$ := new_integer_value (True, '-', Void, token_buffer) }
 	;
 
-Real_constant: TE_REAL
-			{ $$ := new_real_as (cloned_string (token_buffer)) }
-	|	TE_PLUS TE_REAL
-			{ $$ := new_real_as (cloned_string (token_buffer)) }
+Nosigned_integer: TE_INTEGER
+			{ $$ := new_integer_value (False, '%U', Void, token_buffer) }
+	;
+
+Typed_integer: Typed_nosigned_integer
+			{ $$ := $1 }
+	|	Typed_signed_integer
+			{ $$ := $1 }
+	;
+
+Typed_nosigned_integer: Typed TE_INTEGER
+			{ $$ := new_integer_value (False, '%U', $1, token_buffer) }
+	;
+
+Typed_signed_integer:	Typed TE_PLUS TE_INTEGER
+			{ $$ := new_integer_value (True, '+', $1, token_buffer) }
+	|	Typed TE_MINUS TE_INTEGER
+			{ $$ := new_integer_value (True, '-', $1, token_buffer) }
+	;
+
+--###################################################################
+--# Real constants
+--###################################################################
+Real_constant: Signed_real
+			 { $$ := $1 }
+	|	Nosigned_real
+			 { $$ := $1 }
+	|	Typed_real
+			{ $$ := $1 }
+	;
+
+Nosigned_real: TE_REAL
+			{ $$ := new_real_value (False, '%U', Void, token_buffer) }
+	;
+
+Signed_real: TE_PLUS TE_REAL
+			{ $$ := new_real_value (True, '+', Void, token_buffer) }
 	|	TE_MINUS TE_REAL
-			{
-				token_buffer.precede ('-')
-				$$ := new_real_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_real_value (True, '-', Void, token_buffer) }
 	;
 
+Typed_real: Typed_nosigned_real
+			{ $$ := $1 }
+	|	Typed_signed_real
+			{ $$ := $1 }
+	;
+
+Typed_nosigned_real: Typed TE_REAL
+			{ $$ := new_real_value (False, '%U', $1, token_buffer) }
+	;
+
+Typed_signed_real: Typed TE_PLUS TE_REAL
+			{ $$ := new_real_value (True, '+', $1, token_buffer) }
+	|	Typed TE_MINUS TE_REAL
+			{ $$ := new_real_value (True, '-', $1, token_buffer) }
+	;
+
+--###################################################################
+--# Bit constants
+--###################################################################
 Bit_constant: TE_A_BIT
 			{ $$ := new_bit_const_as (create {ID_AS}.initialize (token_buffer)) }
 	;
 
-Manifest_string: Non_empty_string
+--###################################################################
+--# Manifest string constants
+--###################################################################
+Manifest_string: Default_manifest_string
+			{ $$ := $1 }
+	|	Typed_manifest_string
+			{ $$ := $1 }
+	;
+
+Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
 			{ $$ := new_empty_string_as }
 	|	TE_EMPTY_VERBATIM_STRING
 			{ $$ := new_empty_verbatim_string_as (verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']') }
+	;
+
+Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
+			{
+				fixme ("We should handle `Type' instead of ignoring it.")
+				$$ := $4
+			}
 	;
 
 Non_empty_string: TE_STRING

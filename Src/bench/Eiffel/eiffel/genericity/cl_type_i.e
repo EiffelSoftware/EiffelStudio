@@ -54,6 +54,18 @@ feature
 			-- No meta generic in non-generic type
 		end
 
+	cr_info : CREATE_INFO
+			-- Additional information for the creation
+			-- of generic types with anchored parameters
+
+	set_cr_info (cinfo : CREATE_INFO) is
+			-- Set `cr_infoï to `cinfoï.
+		do
+			cr_info := cinfo
+		ensure
+			cr_info_set : cr_info = cinfo
+		end
+
 	true_generics : ARRAY [TYPE_I] is
 			-- Array of generics: no mapping reference -> REFERENCE_I
 		do
@@ -297,7 +309,6 @@ feature
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
-
 		do
 			if has_associated_class_type then
 				if final_mode then
@@ -314,17 +325,24 @@ feature -- Generic conformance
 			end
 		end
 
-	gen_type_string (final_mode : BOOLEAN) : STRING is
-
+	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
 		do
 			!!Result.make (0)
+
+			if use_info and then (cr_info /= Void) then
+				-- It's an ancored type 
+				Result.append (cr_info.gen_type_string (final_mode))
+			end
 			Result.append_integer (generated_id (final_mode))
 			Result.append (", ")
 		end
 
-	make_gen_type_byte_code (ba : BYTE_ARRAY) is
-
+	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 		do
+			if use_info and then (cr_info /= Void) then
+				-- It's an ancored type 
+				cr_info.make_gen_type_byte_code (ba)
+			end
 			ba.append_short_integer (generated_id (False))
 		end
 

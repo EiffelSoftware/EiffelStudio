@@ -156,13 +156,11 @@ feature
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
-
 		do
 			Result := -7        -- Code for BITs
 		end
 
-	gen_type_string (final_mode : BOOLEAN) : STRING is
-
+	gen_type_string (final_mode, use_info : BOOLEAN) : STRING is
 		do
 			!!Result.make (0)
 			Result.append_integer (generated_id (final_mode))
@@ -171,8 +169,7 @@ feature -- Generic conformance
 			Result.append (", ")
 		end
 
-	make_gen_type_byte_code (ba : BYTE_ARRAY) is
-
+	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 		do
 			ba.append_short_integer (generated_id (False))
 			ba.append_short_integer (size)

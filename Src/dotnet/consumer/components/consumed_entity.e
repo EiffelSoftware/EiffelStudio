@@ -11,24 +11,37 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en: STRING; pub: BOOLEAN) is
-			-- Initialize `Current' with `en' and `pub'.
+	make (en: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
+			-- Initialize `Current' with `en', `pub' written in `a_type'.
 		require
-			non_void_eiffel_name: en /= Void
+			eiffel_name_not_void: en /= Void
 			valid_eiffel_name: not en.is_empty
+			a_type_not_void: a_type /= Void
 		do
 			eiffel_name := en
 			set_is_public (pub)
+			declared_type := a_type
 		ensure
 			eiffel_name_set: eiffel_name = en
 			is_public_set: is_public = pub
+			declared_type_set: declared_type = a_type
 		end
 
 feature -- Access
 
 	eiffel_name: STRING
 			-- Eiffel entity name
+			
+	dotnet_name: STRING is
+			-- Dotnet name of entity
+		do
+		ensure
+			dotnet_name_not_void: dotnet_name /= Void
+		end
 
+	declared_type: CONSUMED_REFERENCED_TYPE
+			-- Type in which feature is written/declared.
+		
 	arguments: ARRAY [CONSUMED_ARGUMENT] is
 			-- Arguments if any.
 		do
@@ -41,6 +54,11 @@ feature -- Access
 
 	is_public: BOOLEAN is
 			-- Is .NET entity public?
+		do
+		end
+		
+	is_literal: BOOLEAN is
+			-- Is .NET entity a static literal?
 		do
 		end
 
@@ -83,5 +101,6 @@ feature -- Settings
 invariant
 	non_void_eiffel_name: eiffel_name /= Void
 	valid_eiffel_name: not eiffel_name.is_empty
+	declared_type_not_void: declared_type /= Void
 
 end -- class CONSUMED_ENTITY

@@ -11,26 +11,29 @@ inherit
 		rename
 			make as entity_make
 		redefine
+			dotnet_name,
 			is_static, is_deferred, is_public,
 			set_is_public
 		end
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; pub: BOOLEAN) is
+	make (en, dn: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
 			-- Initialize with `en', `dn' and `pub'.
 		require
 			non_void_eiffel_name: en /= Void
 			valid_eiffel_name: not en.is_empty
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
+			a_type_not_void: a_type /= Void
 		do
-			entity_make (en, pub)
+			entity_make (en, pub, a_type)
 			dotnet_name := dn
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
 			is_public_set: is_public = pub
+			declared_type_set: declared_type = a_type
 		end
 		
 feature -- Access

@@ -1490,8 +1490,9 @@ feature {NONE} -- Implementation
 				end
 				parents.forth
 			end
-			check
-				l_main_parent /= Void
+			if l_main_parent = Void then
+					-- No parents, means that we are handling ANY.
+				l_main_parent := a_class
 			end
 			a_class.set_main_parent (l_main_parent)
 			a_class.set_number_of_features (a_feat_tbl.count)

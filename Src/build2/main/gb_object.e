@@ -349,7 +349,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT} -- Element change
 							-- We only need to check this if we are not a component,
 							-- as this means there is no way we could be contained in `Current'.
 						if an_object /= Void then
-							funct_result := override_drop_on_child (an_object)
+							funct_result := parent_object.override_drop_on_child (an_object)
 							if not funct_result then
 									-- Now display output if we are attempting to insert the object in itself
 									-- or one of its children.
@@ -586,6 +586,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			end
 		end
 		
+feature {GB_OBJECT} -- Implementation
 		
 	override_drop_on_child (an_object: GB_OBJECT): BOOLEAN is
 			-- If `Current' is held within `an_object' or

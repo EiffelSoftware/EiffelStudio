@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_drawing_area_new)
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
 				-- This means that when the drawing area is resized, only the new portions are redrawn
 			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)

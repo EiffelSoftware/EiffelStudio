@@ -251,6 +251,7 @@ feature -- Server Access
 		end;
 
 	click_list: CLICK_LIST is
+			-- Associated click list
 		require
 			has_ast: has_ast
 		local

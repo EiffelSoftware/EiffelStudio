@@ -53,17 +53,17 @@ feature {NONE} -- Initialization
 			pos: INTEGER
 		do
 			set_title (private_title)
-			directories_list := get ("DirectoryList")
-			if directories_list /= Void then
-				pos := directories_list.index_of (';', 1) - 1
-			end
-			if pos > 1 then
-				fill_recently_used
-				directory := clone (directories_list)
-				directory.head (directory.index_of (';', 1) - 1)
+			if search_directory /= Void and then not search_directory.empty then
+				directory := search_directory
 			else
-				if search_directory /= Void then
-					directory := search_directory
+				directories_list := get ("DirectoryList")
+				if directories_list /= Void then
+					pos := directories_list.index_of (';', 1) - 1
+				end
+				if pos > 1 then
+					fill_recently_used
+					directory := clone (directories_list)
+					directory.head (directory.index_of (';', 1) - 1)
 				else
 					directory := current_working_directory
 				end
@@ -100,7 +100,6 @@ feature -- Access
 
 	search_directory: STRING
 			-- Directory to begin search in
-			-- Void indicates current directory
 
 	selection_made: BOOLEAN
 			-- Has a selection been made

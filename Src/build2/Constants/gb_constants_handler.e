@@ -446,7 +446,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 			all_constants.clear_all
 		end
 
-feature {GB_XML_LOAD} -- Implementation
+feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
 	build_deferred_elements is
 			-- Build all XM_ELEMENT that were deferred for building

@@ -66,16 +66,16 @@ feature -- Access
 			end
 			Result.append (
 					"external%N%
-					%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
-					%			%"$EIFFEL4\library\com\spec\windows\include%",%N")
+					%	include_path:	%"$EIFFEL5\library\wel\spec\windows\include%",%N%
+					%			%"$EIFFEL5\library\com\spec\windows\include%",%N")
 		end
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system
-		"	object: 	%"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib%",%N%
-		%			%"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib%",%N%
-		%			%"$(EIFFEL4)\library\com\spec\msc\lib\com.lib%",%N%
-		%			%"$(EIFFEL4)\library\com\spec\msc\lib\com_runtime.lib%",%N"
+		"	object: 	%"$(EIFFEL5)\library\wel\spec\$(COMPILER)\lib\wel.lib%",%N%
+		%			%"$(EIFFEL5)\library\time\spec\msc\lib\datetime.lib%",%N%
+		%			%"$(EIFFEL5)\library\com\spec\msc\lib\com.lib%",%N%
+		%			%"$(EIFFEL5)\library\com\spec\msc\lib\com_runtime.lib%",%N"
 
 
 	Visible: STRING is "visible"
@@ -144,7 +144,7 @@ feature -- Access
 			create Result.make
 			Result.extend (
 					"	-- BASE%N%
-					%	all base:						%"$EIFFEL4\library\base%"%N%
+					%	all base:						%"$EIFFEL5\library\base%"%N%
 					%		exclude%N%
 					%			%"table_eiffel3%";%N%
 					%			%"desc%"%N%
@@ -161,11 +161,11 @@ feature -- Access
 
 			Result.extend (
 					"	-- WEL%N%
-					%	all wel:						%"$EIFFEL4\library\wel%"%N%N")
+					%	all wel:						%"$EIFFEL5\library\wel%"%N%N")
 
 			Result.extend (
 					"	-- TIME%N%
-					%	all time: 						%"$EIFFEL4\library\time%"%N%
+					%	all time: 						%"$EIFFEL5\library\time%"%N%
 					%		exclude%N%
 					%			%"french%";%N%
 					%			%"german%"%N%
@@ -175,7 +175,7 @@ feature -- Access
 
 			Result.extend (
 					"	-- COM%N%
-					%	all ecom:						%"$EIFFEL4\library\com%"%N%
+					%	all ecom:						%"$EIFFEL5\library\com%"%N%
 					%		visible%N%
 					%			ECOM_DECIMAL;%N%
 					%			ECOM_CURRENCY;%N%
@@ -241,6 +241,10 @@ feature -- Basic operations
 				a_string.append (server_generated_ace_file)
 			else
 				a_string.append (client_generated_ace_file)
+			end
+			
+			if Eiffel4_defined then
+				a_string.replace_substring_all ("EIFFEL5", "EIFFEL4")
 			end
 
 			if not is_empty_clib_folder (Client) then
@@ -323,9 +327,9 @@ feature -- Basic operations
 
 			if not system_descriptor.coclasses.empty then
 				Result.replace_substring_all (Any_type, tmp_string)
-			end
-			if Shared_wizard_environment.in_process_server then
-				Result.replace_substring_all (Default_keyword, Shared_library_option)
+				if Shared_wizard_environment.in_process_server then
+					Result.replace_substring_all (Default_keyword, Shared_library_option)
+				end
 			end
 		end
 

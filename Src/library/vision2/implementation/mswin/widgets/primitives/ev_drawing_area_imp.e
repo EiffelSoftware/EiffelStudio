@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style that memories the drawings.
 		do
-			Result := Ws_child + Ws_visible
+			Result := Ws_child + Ws_visible + Ws_clipchildren + Ws_clipsiblings
 		end
 
 	class_style: INTEGER is

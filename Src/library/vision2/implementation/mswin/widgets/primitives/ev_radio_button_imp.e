@@ -155,6 +155,7 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control.
 		once
 			Result := Ws_visible + Ws_child + Ws_tabstop + Bs_radiobutton
+				+ Ws_clipchildren + Ws_clipsiblings
 		end
 
 feature {NONE} -- Implementation, focus event

@@ -121,6 +121,7 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_tabstop
 					+ Ws_group + Ws_border + Es_left + Es_autohscroll
+					+ Ws_clipchildren + Ws_clipsiblings
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is

@@ -89,7 +89,8 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		do
-			Result := Ws_visible + Ws_childwindow
+			Result := Ws_visible + Ws_childwindow +
+				Ws_clipchildren + Ws_clipsiblings
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

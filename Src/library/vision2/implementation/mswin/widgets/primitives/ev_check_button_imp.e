@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			-- Not visible or child at creation
 		do
 			Result := Ws_child + Ws_visible + Ws_group
-					+ Ws_tabstop + Bs_autocheckbox
+					+ Ws_tabstop + Bs_autocheckbox + Ws_clipchildren + Ws_clipsiblings
 		end
 
 	interface: EV_CHECK_BUTTON

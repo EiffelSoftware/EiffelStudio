@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create `Current'.
 		do
-			Result := Ws_visible + Ws_child
+			Result := Ws_visible + Ws_child + Ws_clipchildren + Ws_clipsiblings
 		end
 
 feature {EV_ANY_I} -- Implementation

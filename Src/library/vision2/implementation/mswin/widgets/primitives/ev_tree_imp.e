@@ -506,6 +506,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				+ Ws_tabstop + Ws_border + Tvs_haslines
 				+ Tvs_hasbuttons + Tvs_linesatroot
 				+ Tvs_showselalways + Tvs_infotip
+				+ Ws_clipchildren + Ws_clipsiblings
 		end
 
 	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is

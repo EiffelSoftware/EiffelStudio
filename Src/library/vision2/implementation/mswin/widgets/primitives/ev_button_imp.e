@@ -337,7 +337,7 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style used to create `Current'.
 		do
-			Result := ws_visible + ws_child + ws_group + ws_tabstop
+			Result := ws_visible + ws_child + ws_group + ws_tabstop + Ws_clipchildren + Ws_clipsiblings
 		end
 
 	on_bn_clicked is

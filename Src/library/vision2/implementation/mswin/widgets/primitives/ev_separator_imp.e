@@ -55,7 +55,8 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default style of `Current'.
 		do
-			Result := Ws_child + Ws_visible
+			Result := Ws_child + Ws_visible + Ws_clipchildren
+				+ Ws_clipsiblings
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is

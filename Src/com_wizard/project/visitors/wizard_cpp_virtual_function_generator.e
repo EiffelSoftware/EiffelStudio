@@ -26,7 +26,7 @@ feature -- Basic operations
 			create c_header_files.make
 			ccom_feature_writer.set_pure_virtual
 
-			create signature.make (0)
+			create signature.make (1000)
 
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment(func_desc.description)
@@ -93,7 +93,7 @@ feature -- Basic operations
 			create c_header_files.make
 			ccom_feature_writer.set_pure_virtual
 
-			create signature.make (0)
+			create signature.make (1000)
 
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment(func_desc.description)

@@ -24,7 +24,7 @@ feature -- Basic operations
 			a_precondition_feature_writer.set_name (vartype_namer.user_precondition_name (function_name))
 			a_precondition_feature_writer.set_effective
 
-			create a_body.make (0)
+			create a_body.make (100)
 			a_body.append (Tab_tab_tab)
 			a_body.append (Result_keyword)
 			a_body.append (Space)

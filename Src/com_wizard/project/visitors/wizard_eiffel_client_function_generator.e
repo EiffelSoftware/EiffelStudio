@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create return_type.make (0)
+			create return_type.make (100)
 			
 			Result := clone(Tab_tab_tab)
 			Result.append (Double_quote)

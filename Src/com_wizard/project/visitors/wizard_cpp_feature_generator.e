@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 		do
 			create pointer_var.make
 
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Tab)
 			Result.append (Hresult)
 			Result.append (Space)
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			non_void_name: variable_name /= Void
 			valid_name: not variable_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 
 			-- if (FAILED (`variable_name'))
 

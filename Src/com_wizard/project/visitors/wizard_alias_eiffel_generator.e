@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (200)
 
 			body.append (tab_tab_tab)
 			body.append ("make_from_array")
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (100)
 
 			body.append (tab_tab_tab)
 			body.append ("make_from_array")
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (100)
 
 			body.append (tab_tab_tab)
 			body.append ("put")
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (100)
 
 			body.append (tab_tab_tab)
 			body.append ("set_item")
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (100)
 
 			body.append (tab_tab_tab)
 			body.append ("make_from_pointer")
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (100)
 
 			body.append (tab_tab_tab)
 			body.append ("make_by_pointer")
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_alias")
 
-			create argument.make (0)
+			create argument.make (50)
 			argument.append ("an_alias")
 			argument.append (Colon)
 			argument.append (Space)
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 			create assertion.make ("non_void_alias", "an_alias /= Void")
 			Result.add_precondition (assertion)
 
-			create body.make (0)
+			create body.make (100)
 
 			body.append (tab_tab_tab)
 			body.append ("make_from_string")

@@ -60,18 +60,18 @@ feature -- Processing
 			a_type_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			c_type := clone (alias_descriptor.c_type_name)
-			create c_post_type.make (0)
+			create c_post_type.make (100)
 			c_header_file := clone (alias_descriptor.c_header_file_name)
 			eiffel_type := clone (alias_descriptor.eiffel_class_name)
 
 			need_generate_ce := True
 
-			create ce_function_name.make (0)
+			create ce_function_name.make (100)
 			ce_function_name.append ("ccom_ce_alias_")
 			ce_function_name.append (eiffel_type)
 			ce_function_name.append_integer (local_counter)
 
-			create ce_function_signature.make (0)
+			create ce_function_signature.make (100)
 			ce_function_signature.append (c_type)
 			ce_function_signature.append (Space)
 			ce_function_signature.append ("an_alias")
@@ -111,14 +111,14 @@ feature -- Processing
 				ce_function_body := ce_function_body_alias 
 					(eiffel_type, a_type_visitor.ce_function_name, a_type_visitor.need_generate_ce, a_type_visitor.writable)
 
-				create ce_function_return_type.make (0)
+				create ce_function_return_type.make (100)
 				ce_function_return_type.append (Eif_reference)
 			end
 
 			if a_type_visitor.need_generate_ec then
 				need_generate_ec := True
 
-				create ec_function_name.make (0)
+				create ec_function_name.make (100)
 				ec_function_name.append ("ccom_ec_alias_")
 				ec_function_name.append (eiffel_type)
 				ec_function_name.append_integer (local_counter)
@@ -149,7 +149,7 @@ feature -- Processing
 			-- process coclass
 		do
 			c_type := clone (coclass_descriptor.default_interface_descriptor.c_type_name)
-			create c_post_type.make (0)
+			create c_post_type.make (100)
 			c_header_file := clone (coclass_descriptor.default_interface_descriptor.c_header_file_name)
 			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
 
@@ -158,30 +158,30 @@ feature -- Processing
 			need_generate_ce := True
 			need_generate_ec := True
 
-			create ce_function_name.make (0)
+			create ce_function_name.make (100)
 			ce_function_name.append ("ccom_ce_interface_")
 			ce_function_name.append (eiffel_type)
 			ce_function_name.append_integer (local_counter)
 
-			create ce_function_signature.make (0)
+			create ce_function_signature.make (100)
 			ce_function_signature.append (c_type)
 			ce_function_signature.append (" * a_interface")
 
-			create ce_function_body.make (0)
+			create ce_function_body.make (10000)
 			ce_function_body.append (ce_function_body_interface (eiffel_type))
 
-			create ce_function_return_type.make (0)
+			create ce_function_return_type.make (100)
 			ce_function_return_type.append (Eif_reference)
 
-			create ec_function_name.make (0)
+			create ec_function_name.make (100)
 			ec_function_name.append ("ccom_ec_interface_")
 			ec_function_name.append (eiffel_type)
 			ec_function_name.append_integer (local_counter)
 
-			create ec_function_return_type.make (0)
+			create ec_function_return_type.make (100)
 			ec_function_return_type.append (c_type)
 
-			create ec_function_signature.make (0)
+			create ec_function_signature.make (100)
 			ec_function_signature.append (Eif_reference)
 			ec_function_signature.append (Space)
 			ec_function_signature.append (Eif_ref_variable)
@@ -194,11 +194,11 @@ feature -- Processing
 			-- process interface
 		do
 			c_type := clone (interface_descriptor.c_type_name)
-			create c_post_type.make (0)
+			create c_post_type.make (100)
 			c_header_file := clone (interface_descriptor.c_header_file_name)
 			eiffel_type := clone (interface_descriptor.eiffel_class_name)
-			create ce_function_name.make (0)
-			create ec_function_name.make (0)
+			create ce_function_name.make (100)
+			create ec_function_name.make (100)
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -208,11 +208,11 @@ feature -- Processing
 		do
 			create impl_interface.make_from_interface (interface_descriptor)
 			c_type := clone (interface_descriptor.c_type_name)
-			create c_post_type.make (0)
+			create c_post_type.make (100)
 			is_interface := True
 			c_header_file := clone (interface_descriptor.c_header_file_name)
-			create ce_function_name.make (0)
-			create ec_function_name.make (0)
+			create ce_function_name.make (100)
+			create ec_function_name.make (100)
 
 			if c_type.is_equal (Iunknown_type) then
 				vt_type := Vt_unknown
@@ -241,24 +241,24 @@ feature -- Processing
 				ce_function_name.append (eiffel_type)
 				ce_function_name.append_integer (local_counter)
 
-				create ce_function_signature.make (0)
+				create ce_function_signature.make (100)
 				ce_function_signature.append (c_type)
 				ce_function_signature.append (" * a_interface")
 
-				create ce_function_body.make (0)
+				create ce_function_body.make (10000)
 				ce_function_body.append (ce_function_body_interface (eiffel_type))
 
-				create ce_function_return_type.make (0)
+				create ce_function_return_type.make (100)
 				ce_function_return_type.append (Eif_reference)
 
 				ec_function_name.append ("ccom_ec_interface_")
 				ec_function_name.append (eiffel_type)
 				ec_function_name.append_integer (local_counter)
 
-				create ec_function_return_type.make (0)
+				create ec_function_return_type.make (100)
 				ec_function_return_type.append (c_type)
 
-				create ec_function_signature.make (0)
+				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append (Eif_ref_variable)
@@ -273,8 +273,8 @@ feature -- Processing
 			Precursor {WIZARD_TYPE_VISITOR} (enum_descriptor)
 			c_type := clone (Int)
 			cecil_type := clone (Eif_integer)
-			create c_post_type.make (0)
-			create c_header_file.make (0)
+			create c_post_type.make (100)
+			create c_header_file.make (100)
 			eiffel_type := clone (Integer_type)
 			vt_type := Vt_int
 
@@ -285,7 +285,7 @@ feature -- Processing
 			-- process structure
 		do
 			c_type := clone (record_descriptor.c_type_name)
-			create c_post_type.make (0)
+			create c_post_type.make (100)
 			c_header_file := clone (record_descriptor.c_header_file_name)
 			eiffel_type := clone (record_descriptor.eiffel_class_name)
 
@@ -294,31 +294,31 @@ feature -- Processing
 			need_generate_ce := True
 			need_generate_ec := True
 
-			create ce_function_name.make (0)
+			create ce_function_name.make (100)
 			ce_function_name.append ("ccom_ce_record_")
 			ce_function_name.append (eiffel_type)
 			ce_function_name.append_integer (local_counter)
 
-			create ce_function_signature.make (0)
+			create ce_function_signature.make (100)
 			ce_function_signature.append (c_type)
 			ce_function_signature.append (Space)
 			ce_function_signature.append ("a_record")
 
-			create ce_function_body.make (0)
+			create ce_function_body.make (10000)
 			ce_function_body.append (ce_function_body_record (eiffel_type, c_type))
 
-			create ce_function_return_type.make (0)
+			create ce_function_return_type.make (100)
 			ce_function_return_type.append (Eif_reference)
 
-			create ec_function_name.make (0)
+			create ec_function_name.make (100)
 			ec_function_name.append ("ccom_ec_record_")
 			ec_function_name.append (eiffel_type)
 			ec_function_name.append_integer (local_counter)
 
-			create ec_function_return_type.make (0)
+			create ec_function_return_type.make (100)
 			ec_function_return_type.append (c_type)
 
-			create ec_function_signature.make (0)
+			create ec_function_signature.make (100)
 			ec_function_signature.append (Eif_reference)
 			ec_function_signature.append (Space)
 			ec_function_signature.append (Eif_ref_variable)
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			non_void_c_type: a_c_type /= Void
 			valid_c_type: not a_c_type.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			Result.append (tab)
 			Result.append (Return)
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			non_void_class_name: a_class_name /= Void
 			valid_class_name: not a_class_name.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (tab)
 
 			Result.append (Return)
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			non_void_c_type: a_c_type /= Void
 			valid_c_type: not a_c_type.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (tab)
 
 			-- EIF_TYPE_ID type_id = -1;
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			non_void_ce_function: ce_function_for_alias /= Void
 			valid_ce_function: not ce_function_for_alias.empty
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (Tab)
 
 			-- EIF_TYPE_ID type_id = -1;

@@ -86,10 +86,10 @@ feature {NONE} -- Implementation
 				arguments.append (Eiffel_object)
 				arguments.append (Close_parenthesis)
 
-				create cecil_call.make (0)
-				create variables.make (0)				
-				create return_value.make (0)
-				create free_object.make (0)
+				create cecil_call.make (1000)
+				create variables.make (1000)				
+				create return_value.make (1000)
+				create free_object.make (1000)
 
 				from
 					func_desc.arguments.start
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			non_void_arg_name: arg_name /= Void
 			valid_arg_name: not arg_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if visitor.is_basic_type then
 				Result.append (visitor.cecil_type)
 				Result.append (Space)
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			non_void_string: arg_name /= Void
 			valid_arg_name: not arg_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 
 			Result.append (Eif_object)
 			Result.append (Space)
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			non_void_name: arg_name /= Void
 			valid_arg_name: not arg_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 
 			if not visitor.is_array_basic_type and not visitor.is_structure_pointer then
 				if visitor.need_generate_ec then
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 		local
 			return_type: STRING
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if visitor.is_basic_type then
 				if is_int (visitor.vt_type) or is_integer2 (visitor.vt_type) or is_integer4 (visitor.vt_type) or is_unsigned_int (visitor.vt_type)
 						or is_unsigned_long (visitor.vt_type) or is_unsigned_short (visitor.vt_type) then
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if not func_desc.arguments.empty then
 				from
 					func_desc.arguments.start

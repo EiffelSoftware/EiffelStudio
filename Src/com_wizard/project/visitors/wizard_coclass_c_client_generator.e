@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			create constructor_body.make (0)
+			create constructor_body.make (1000)
 			constructor_body.append (Tab)
 			constructor_body.append (Hresult)
 			constructor_body.append (Space)
@@ -267,13 +267,13 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			create a_signature.make (0)
+			create a_signature.make (100)
 			a_signature.append (Iunknown_pointer)
 			a_signature.append (Space)
 			a_signature.append (A_pointer)
 			Result.set_signature (a_signature)
 
-			create constructor_body.make (0)
+			create constructor_body.make (1000)
 			constructor_body.append (Tab)
 			constructor_body.append (Hresult)
 			constructor_body.append (Space)
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 		local
 			tmp_string: STRING
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Tab)
 			Result.append (multiple_query_interfaces)
 			Result.append (New_line_tab)

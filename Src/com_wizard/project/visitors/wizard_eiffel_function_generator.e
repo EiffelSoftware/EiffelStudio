@@ -106,13 +106,13 @@ feature {NONE} -- Implementation
 					an_index := a_user_defined_descriptor.type_descriptor_index
 					a_type_descriptor := a_user_defined_descriptor.library_descriptor.descriptors.item (an_index)
 					if (feature_writer.comment = Void) then
-						create a_comment.make (0)
+						create a_comment.make (100)
 						feature_writer.set_comment (a_comment)
 					end
 					if not feature_writer.comment.empty then
 						feature_writer.comment.append ("%N%T%T%T-- ")
 					end
-					create a_comment.make (0)
+					create a_comment.make (100)
 					a_comment.append ("See ")
 					a_comment.append (a_type_descriptor.eiffel_class_name)
 					a_comment.append (" for possible ")
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			a_type: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
 			arguments := func_desc.arguments
-			create comments.make (0)
+			create comments.make (100)
 
 			from
 				arguments.start
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			loop
 
 				if not is_paramflag_fretval (arguments.item.flags) then
-					create a_comment.make (0)
+					create a_comment.make (100)
 					a_comment.append (Double_dash)
 					a_comment.append (Space)
 

@@ -23,8 +23,8 @@ feature -- Basic operations
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			func_desc := a_descriptor
-			create original_name.make (0)
-			create changed_name.make (0)
+			create original_name.make (100)
+			create changed_name.make (100)
 
 			create feature_writer.make
 			create visitor

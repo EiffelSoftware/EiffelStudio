@@ -32,7 +32,7 @@ feature -- Access
 				c_writer.add_import (clone (included_name))
 			end
 
-			create type_definition.make (0)
+			create type_definition.make (100)
 			type_definition.append (Typedef)
 			type_definition.append (Space)
 	--		if a_data_visitor.is_structure then

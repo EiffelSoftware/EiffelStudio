@@ -125,16 +125,16 @@ feature {NONE} -- Implementation
 		do
 			a_coclass_name := name_for_feature (clone (a_coclass_descriptor.eiffel_class_name))
 
-			create ccom_create_feature_name.make (0)
+			create ccom_create_feature_name.make (1000)
 			ccom_create_feature_name.append (Ccom_clause)
 			ccom_create_feature_name.append ("create_")
 			ccom_create_feature_name.append (a_coclass_name)
 
-			create ccom_create_from_pointer_feature_name.make (0)
+			create ccom_create_from_pointer_feature_name.make (1000)
 			ccom_create_from_pointer_feature_name.append (ccom_create_feature_name)
 			ccom_create_from_pointer_feature_name.append ("_from_pointer")
 
-			create ccom_delete_feature_name.make (0)
+			create ccom_delete_feature_name.make (1000)
 			ccom_delete_feature_name.append (Ccom_clause)
 			ccom_delete_feature_name.append ("delete_")
 			ccom_delete_feature_name.append (a_coclass_name)

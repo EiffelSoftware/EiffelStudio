@@ -28,21 +28,21 @@ feature -- Basic operations
 			element_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			element_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create ce_function_name.make (0)
-			create ec_function_name.make (0)
+			create ce_function_name.make (100)
+			create ec_function_name.make (100)
 
-			create ce_function_signature.make (0)
-			create ec_function_signature.make (0)
+			create ce_function_signature.make (100)
+			create ec_function_signature.make (100)
 
-			create ce_function_body.make (0)
-			create ec_function_body.make (0)
+			create ce_function_body.make (100)
+			create ec_function_body.make (100)
 
-			create ce_function_return_type.make (0)
-			create ec_function_return_type.make (0)
+			create ce_function_return_type.make (100)
+			create ec_function_return_type.make (100)
 
-			create c_type.make (0)
+			create c_type.make (50)
 			create c_post_type.make (0)
-			create eiffel_type.make (0)
+			create eiffel_type.make (50)
 
 			need_generate_ce := True
 			need_generate_ec := True
@@ -68,7 +68,7 @@ feature -- Basic operations
 
 			writable := True
 
-			create c_header_file.make (0)
+			create c_header_file.make (100)
 			element_descriptor := an_array_descriptor.array_element_descriptor
 			create element_visitor
 			element_visitor.visit (element_descriptor)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			zero_index: STRING
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			-- EIF_INTEGER  some_element_counts [dim_count];
 			--                               value of ^
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 
 			from
 				i := 1
-				create zero_index.make (0)
+				create zero_index.make (50)
 			variant
 				dim_count - i + 1
 			until
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			zero_index: STRING
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			-- EIF_INTEGER some_element_counts [dim_count];
 			--                               value of ^
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 
 			from
 				i := 1
-				create zero_index.make (0)
+				create zero_index.make (50)
 			variant
 				dim_count - i + 1
 			until
@@ -1109,7 +1109,7 @@ feature {NONE} -- Implementation
 			valid_rt_function_name: not rt_function_name.empty
 			valid_dim_count: dim_count > 0
 		do
-			create Result.make (0)
+			create Result.make (10000)
 
 			-- return ec_mapper.`rt_functuion_name' (`A_ref', `dim_count', `Old_keyword');
 
@@ -1152,7 +1152,7 @@ feature {NONE} -- Implementation
 			valid_dim_count: dim_count > 0
 			valid_element_count: element_count /= Void and then element_count.count = dim_count
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			Result.append (Tab)
 			
 			-- EIF_OBJECT eif_array;

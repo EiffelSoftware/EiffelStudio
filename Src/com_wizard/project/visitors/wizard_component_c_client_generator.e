@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			function_writer.set_comment ("IUnknown interface")
 			function_writer.set_result_type (Eif_pointer)
 
-			create function_body.make (0)
+			create function_body.make (1000)
 			function_body.append (tab)
 			function_body.append (Return)
 			function_body.append (Space_open_parenthesis)
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error code")
 			Result.set_result_type  (Eif_integer)
 
-			create function_body.make (0)
+			create function_body.make (1000)
 			function_body.append (tab)
 
 			-- return (EIF_INTEGER) excepinfo->wCode;
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last source of exception")
 			Result.set_result_type  (Eif_reference)
 
-			create function_body.make (0)
+			create function_body.make (1000)
 			function_body.append (tab)
 
 			-- return (EIF_INTEGER) excepinfo->wCode;
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error description")
 			Result.set_result_type  (Eif_reference)
 
-			create function_body.make (0)
+			create function_body.make (1000)
 			function_body.append (tab)
 
 			-- return (EIF_INTEGER) excepinfo->wCode;
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error help file")
 			Result.set_result_type  (Eif_reference)
 
-			create function_body.make (0)
+			create function_body.make (1000)
 			function_body.append (tab)
 
 			-- return (EIF_INTEGER) excepinfo->wCode;

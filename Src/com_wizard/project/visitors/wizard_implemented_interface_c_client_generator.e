@@ -121,13 +121,13 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			create a_signature.make (0)
+			create a_signature.make (100)
 			a_signature.append (Iunknown_pointer)
 			a_signature.append (Space)
 			a_signature.append (A_pointer)
 			Result.set_signature (a_signature)
 
-			create constructor_body.make (0)
+			create constructor_body.make (1000)
 			constructor_body.append (Tab)
 			constructor_body.append (Hresult)
 			constructor_body.append (Space)

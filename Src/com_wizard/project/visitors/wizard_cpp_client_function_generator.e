@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			tmp_name: STRING
 		do
 			Result := check_interface_pointer (interface_name)
-			create return_value.make (0)
+			create return_value.make (10000)
 
 			if func_desc.argument_count > 0 then
 				create pointer_var.make
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Tab)
 			Result.append (Hresult_variable_name)
 			Result.append (Space_equal_space)
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Tab)
 			Result.append ("SysFreeString")
 			Result.append (Space_open_parenthesis)
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: a_visitor /= Void
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if a_visitor.is_basic_type then
 				Result.append (Space_open_parenthesis)
 				Result.append (a_visitor.cecil_type)
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 			array_data_type: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if visitor.is_basic_type or visitor.is_enumeration then
 				Result.append (Tmp_clause)
 				Result.append (name)
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 		local
 			tmp_string: STRING
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if visitor.is_basic_type  then
 
 			elseif visitor.is_enumeration then
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 		local
 			tmp_string: STRING
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			if visitor.is_basic_type and not is_ptr (visitor.vt_type) then
 				message_output.add_warning (Current, message_output.Not_pointer_type)
 
@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 		do
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (New_line_tab);
 
 			-- TYPE_ID tid;

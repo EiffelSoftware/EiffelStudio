@@ -71,7 +71,7 @@ feature -- Access
 			create Result.make
 			Result.set_body (ce_function_body)
 
-			create comment.make (0)
+			create comment.make (100)
 			comment.append ("Convert ")
 			comment.append (c_type)
 			comment.append (c_post_type)
@@ -98,7 +98,7 @@ feature -- Access
 			create Result.make
 			Result.set_body (ec_function_body)
 
-			create comment.make (0)
+			create comment.make (100)
 			comment.append ("Convert ")
 			comment.append (eiffel_type)
 			comment.append (" to ")

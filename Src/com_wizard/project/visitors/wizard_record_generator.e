@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 			non_void_field_name: field_descriptor.name /= Void
 			valid_field_name: not field_descriptor.name.empty
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append ("ccom_")
 			Result.append (name_for_feature (record_name))
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			non_void_field_name: field_descriptor.name /= Void
 			valid_field_name: not field_descriptor.name.empty
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append ("ccom_")
 			Result.append (name_for_feature (record_name))

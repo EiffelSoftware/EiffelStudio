@@ -356,6 +356,6 @@ rt_private EIF_OBJ hector_addr(char *root)
 				return (EIF_OBJ) arena;				/* Return indirection ptr */
 	}
 
-	panic("hector stack inconsistency");		/* We must have found it */
+	panic(MTC "hector stack inconsistency");		/* We must have found it */
 }
 

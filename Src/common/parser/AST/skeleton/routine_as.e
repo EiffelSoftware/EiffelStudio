@@ -9,7 +9,7 @@ inherit
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
 			type_check, byte_node, check_local_names,
-			find_breakable, format
+			find_breakable, format, is_assertion_equiv, is_body_equiv
 		end;
 	SHARED_INSTANTIATOR;
 	SHARED_CONSTRAINT_ERROR;

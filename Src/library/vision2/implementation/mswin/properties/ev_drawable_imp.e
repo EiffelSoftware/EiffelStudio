@@ -72,6 +72,19 @@ inherit
 			class_name as exception_class_name
 		end
 
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Set some default values.
+		do
+			dc.set_background_opaque
+			set_logical_mode (3)
+			dc.select_brush (background_brush)
+			dc.select_pen (background_pen)
+			set_line_width (1)
+			set_line_style (ps_solid)
+		end
+
 feature -- Access
 
 	dc: WEL_DC is

@@ -423,6 +423,7 @@ feature -- Status report
 			-- unecessary optimizations.
 		do
 			Precursor {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
+			safe_store_caret
 			internal_actions_blocked := True
 			disable_redraw
 			if selection_change_actions_internal /= Void then
@@ -444,6 +445,7 @@ feature -- Status report
 				caret_move_actions_internal.resume
 			end
 			internal_actions_blocked := False
+			safe_restore_caret
 			enable_redraw
 		end
 		

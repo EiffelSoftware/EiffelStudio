@@ -33,7 +33,7 @@ feature -- Access
 		
 	items: ARRAY [STRING] is
 		once
-			Result := <<"EV_LIST_ITEM">>
+			Result := <<"EV_LIST_ITEM", "EV_MENU_BAR", "EV_MENU", "EV_MENU_ITEM">>
 		end
 		
 	tool_bar_items: ARRAY [STRING] is

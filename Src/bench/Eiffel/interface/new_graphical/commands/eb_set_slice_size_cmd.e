@@ -137,9 +137,11 @@ feature -- Basic operations
 			
 			dobj: DEBUGGED_OBJECT
 			item: EV_TREE_ITEM
+			l_addr: STRING
 		do
 			if for_tool then
 				conv_obj ?= st
+				l_addr := conv_obj.object_address
 				if conv_obj /= Void then
 					item := conv_obj.tree_item 
 					if item /= Void then
@@ -151,12 +153,12 @@ feature -- Basic operations
 					else
 						if Application.is_dotnet then
 							--| not working in case of not registered object
-							nat_dv ?= Application.imp_dotnet.kept_object_item (conv_obj.object_address)
+							nat_dv ?= Application.imp_dotnet.kept_object_item (l_addr)
 							Result := nat_dv /= Void
 						else
-							obj := tool.get_object_display_parameters (conv_obj.object_address)
+							obj := tool.get_object_display_parameters (l_addr)
 							if obj /= Void then
-								create {DEBUGGED_OBJECT_CLASSIC} dobj.make (conv_obj.object_address, 0, 1)
+								create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_addr, 0, 1)
 								if dobj.is_special then
 									Result := True
 								end
@@ -165,12 +167,15 @@ feature -- Basic operations
 					end
 				end
 			else
+				l_addr := pretty_dlg.current_object.object_address
 				if Application.is_dotnet then
 						--| not working in case of not registered object
-					nat_dv ?= Application.imp_dotnet.kept_object_item (pretty_dlg.current_object.object_address)
+					if application.imp_dotnet.know_about_kept_object (l_addr) then
+						nat_dv ?= Application.imp_dotnet.kept_object_item (l_addr)
+					end
 					Result := nat_dv /= Void
 				else
-					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (pretty_dlg.current_object.object_address, 0, 1)
+					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_addr, 0, 1)
 					if dobj.is_special then
 						Result := True
 					end
@@ -376,11 +381,13 @@ feature {NONE} -- Implementation
 			dobj: DEBUGGED_OBJECT
 			parent: EV_TREE_NODE_LIST
 			item, item2: EV_TREE_ITEM
+			l_st_addr: STRING
 		do
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("dropped stone%N")
 			end
-			
+
+			l_st_addr := st.object_address
 			item := st.tree_item 
 			if item /= Void then
 				abs_spec_dv ?= item.data
@@ -401,7 +408,7 @@ feature {NONE} -- Implementation
 
 					spec_dv ?= abs_spec_dv
 					if spec_dv /= Void then --| SPECIAL_VALUE						
-						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (spec_dv.address, slice_min, slice_max)
+						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_st_addr, slice_min, slice_max)
 						spec_dv.items.append (dobj.attributes)
 					else
 						nat_arr_dv ?= abs_spec_dv
@@ -426,14 +433,17 @@ feature {NONE} -- Implementation
 					-- XR: This shouldn't happen (no toolbar button for
 					-- this command in the pretty print dialog!)
 				end
-				obj := tool.get_object_display_parameters (st.object_address)
+				obj := tool.get_object_display_parameters (l_st_addr)
 				if obj /= Void then
 					debug ("DEBUGGER_INTERFACE")
-						io.putstring ("Found an object at address " + st.object_address + "!%N")
+						io.putstring ("Found an object at address " + l_st_addr + "!%N")
 					end
-					--| FIXME jfiat [2003/10/08 - 18:19] Not very nice design ..
-					if Application.is_dotnet then 
-						abs_dv := Application.imp_dotnet.kept_object_item (st.object_address)
+	
+						--| FIXME jfiat [2003/10/08 - 18:19] Not very nice design ..
+					if Application.is_dotnet then
+						if application.imp_dotnet.know_about_kept_object (l_st_addr) then
+							abs_dv := Application.imp_dotnet.kept_object_item (l_st_addr)							
+						end
 						str_dv ?= abs_dv
 						if str_dv /= Void then
 							slice_min := 0
@@ -441,7 +451,7 @@ feature {NONE} -- Implementation
 						else
 							nat_arr_dv ?= abs_dv
 							if nat_arr_dv /= Void then -- is Special
-								get_slice_limits (False, st.object_address, Void)
+								get_slice_limits (False, l_st_addr, Void)
 								if get_effective then
 									obj.set_lower (slice_min)
 									obj.set_higher (slice_max)
@@ -450,12 +460,12 @@ feature {NONE} -- Implementation
 							end
 						end
 					else
-						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (st.object_address, 0, 1)
+						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_st_addr, 0, 1)
 						debug ("DEBUGGER_INTERFACE")
 							io.putstring ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
 						end
 						if dobj.is_special then
-							get_slice_limits (False, st.object_address, Void)
+							get_slice_limits (False, l_st_addr, Void)
 							if get_effective then
 								obj.set_lower (slice_min)
 								obj.set_higher (slice_max)

@@ -22,7 +22,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel50\examples\wel\unicode\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\unicode\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -56,13 +56,13 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>There is one MAIN_WINDOW class used for all the controls. The feature 'init_locale_list' is used to determine the systems available input locales and populate the corresponding "Input Locales" combo box.  The features 'change_font' and 'change_control' are used to change the applications font (in case the curently selected font does not correctly display Unicode characters), and to set the 'text' property of all controls to the same as that in the rich-edit box. 
+		<paragraph>There is one <code><class_name>MAIN_WINDOW</class_name></code> class used for all the controls. The feature <code><feature_name>init_locale_list</feature_name></code> is used to determine the systems available input locales and populate the corresponding "Input Locales" combo box.  The features 'change_font' and 'change_control' are used to change the applications font (in case the curently selected font does not correctly display Unicode characters), and to set the <code><feature_name>text</feature_name></code> property of all controls to the same as that in the rich-edit box. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item>UNICODE_DEMO</item>
-					<item>MAIN_WINDOW</item>
-					<item>DISPLAY_TEXT</item>
-					<item>APPLICATION_IDS</item>
+					<item><code><class_name>UNICODE_DEMO</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>DISPLAY_TEXT</class_name></code></item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
 				</list>
 			</paragraph>
 		</paragraph>

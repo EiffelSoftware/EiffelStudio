@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\brushes\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\brushes\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -33,19 +33,20 @@
 		</heading> After launching the program you will see a window displayed containing three push buttons marked "Brushes", "Rectangles" and "3D". Clicking "Brushes" will open a new window demonsatrating different brushes available. Clicking "Rectangles" will open a new window within which many different shaped and colored rectangles will be drawn. Clicking"3D" will open a new window demonstrating the use of multiple bitmaps for animation. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> Each of the three windows that are opened from the programs MAIN_WINDOW inherit WEL_FRAME_WINDOW and contains code for generating their output. BRUSHES_DEMO redefinesidle_action to force a re-draw on the applicable windows. 
+		</heading> Each of the three windows that are opened from the programs <code><class_name>MAIN_WINDOW</class_name></code> inherit <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> and contains code for generating their output. <code><feature_name>BRUSHES_DEMO</feature_name></code> redefines <code><feature_name>idle_action</feature_name></code> to force a re-draw on the applicable windows. 
 		<note>
-			<bold>Note</bold>. If enable_idle_action is not called, then idle_action is never executed.
+			<bold>Note</bold>. If <code><feature_name>enable_idle_action</feature_name></code> is not called, then <code>
+	<feature_name>idle_action</feature_name></code> is never executed.
 		</note>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APPLICATION_IDS</item>
-				<item>BRUSH_DEMO</item>
-				<item>BRUSHES_DEMO</item>
-				<item>DEMO_3D</item>
-				<item>MAIN_WINDOW</item>
-				<item>PROJECTION</item>
-				<item>RECTANGLE_DEMO</item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>BRUSH_DEMO</class_name></code></item>
+				<item><code><class_name>BRUSHES_DEMO</class_name></code></item>
+				<item><code><class_name>DEMO_3D</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>PROJECTION</class_name></code></item>
+				<item><code><class_name>RECTANGLE_DEMO</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

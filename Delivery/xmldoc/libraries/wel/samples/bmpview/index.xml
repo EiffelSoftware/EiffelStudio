@@ -33,13 +33,13 @@
 		</heading> After launching the program, a window will be displayed as illustrated above, although no child windows will be present. Selecting "Open" from the "File" menu will allow you to browse for a .BMP file to view. Multiple files may be opened and each opens in a new child window. The options on the "Window" menu provide features for positioning the child windows. Selecting "Close" will close the currently selected child window, while selecting "Exit" or closing the window manually will exit the program. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading>MAIN_WINDOW inherits WEL_MDI_FRAME_WINDOW and redefines `on_menu_command' to handle the menu selections. CHILD_WINDOW inherits WEL_MDI_CHILD_WINDOW and implements make to load a named bitmap, while on_paint has been redefined to re-draw the bitmap. A WEL_OPEN_FILE_DIALOG is used to select files for viewing. 
+		</heading><code><class_name>MAIN_WINDOW</class_name></code> inherits <link><url>../../reference/windows/WEL_MDI_FRAME_WINDOW_chart.html</url><label>WEL_MDI_FRAME_WINDOW</label></link> and redefines <code><feature_name>on_menu_command</feature_name></code> to handle the menu selections. <code><class_name>CHILD_WINDOW</class_name></code> inherits <link><url>../../reference/windows/WEL_MDI_CHILD_WINDOW_chart.html</url><label>WEL_MDI_CHILD_WINDOW</label></link> and implements make to load a named bitmap, while <code><feature_name>on_paint</feature_name></code> has been redefined to re-draw the bitmap. A <link><url>../../reference/stddlgs/WEL_OPEN_FILE_DIALOG_chart.html</url><label>WEL_OPEN_FILE_DIALOG</label></link> is used to select files for viewing. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>BMP_VIEW</item>
-				<item>MAIN_WINDOW</item>
-				<item>CHILD_WINDOW</item>
-				<item>APPLICATION_IDS</item>
+				<item><code><class_name>BMP_VIEW</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>CHILD_WINDOW</class_name></code></item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
 			</list>
 			<seealso>
 				<bold>See Also</bold>

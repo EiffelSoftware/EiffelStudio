@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\fontenum\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\fontenum\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -35,12 +35,12 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>MAIN_DIALOG inherits from WEL_MAIN_DIALOG and also WEL_FONT_ENUMARATOR.  MAIN_DIALOG implements action which was deferred from WEL_FONT_ENUMARATOR and executed every an enumeration finds a new font. This new implementation is used to display the available fonts in the WEL_LIST_VIEW</paragraph>
+		<paragraph><code><class_name>MAIN_DIALOG</class_name></code> inherits from <link><url>../../reference/windows/WEL_MAIN_DIALOG_chart.html</url><label>WEL_MAIN_DIALOG</label></link> and also <link><url></url><label>WEL_FONT_FAMILY_ENUMERATOR</label></link>.  <code><class_name>MAIN_DIALOG</class_name></code> implements action which was deferred from WEL_FONT_ENUMERATOR and executed every an enumeration finds a new font. This new implementation is used to display the available fonts in the <link><url>../../reference/controls/WEL_LIST_VIEW_chart.html</url><label>WEL_LIST_VIEW</label></link></paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APPLICATION_IDS</item>
-				<item>FONTENUM_DEMO</item>
-				<item>MAIN_DIALOG</item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>FONTENUM_DEMO</class_name></code></item>
+				<item><code><class_name>MAIN_DIALOG</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

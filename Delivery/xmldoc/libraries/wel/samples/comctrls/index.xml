@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\comctrls\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\comctrls\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -35,12 +35,12 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>There is one WEL_TOOLTIP used for all the controls, but each control adds a new WEL_TOOL_INFO to provide different output for each control. The feature `on_notify' has been redefined to handle the Ttn_needtext notification which is posted by a control, and received by the controls parent, when a control needs to display a tooltip. The feature `on_menu_select' has been redefined to output the text of the selected menu item in the WEL_STATUS_WINDOW located at the bottom of MAIN_WINDOW. 
+		<paragraph>There is one <link><url>../../reference/controls/WEL_TOOLTIP_chart.html</url><label>WEL_TOOLTIP</label></link> used for all the controls, but each control adds a new <link><url>../../reference/structs/WEL_TOOL_INFO_chart.html</url><label>WEL_TOOL_INFO</label></link> to provide different output for each control. The feature <code><feature_name>on_notify</feature_name></code> has been redefined to handle the Ttn_needtext notification which is posted by a control, and received by the controls parent, when a control needs to display a tooltip. The feature <code><feature_name>on_menu_select</feature_name></code> has been redefined to output the text of the selected menu item in the <link><url>../../reference/controls/WEL_STATUS_WINDOW_chart.html</url><label>WEL_STATUS_WINDOW</label></link> located at the bottom of <code><class_name>MAIN_WINDOW</class_name></code>. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item>APPLICATION_IDS</item>
-					<item>MAIN_WINDOW</item>
-					<item>COMCTRLS_DEMO</item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>COMCTRLS_DEMO</class_name></code></item>
 				</list>
 			</paragraph>
 		</paragraph>

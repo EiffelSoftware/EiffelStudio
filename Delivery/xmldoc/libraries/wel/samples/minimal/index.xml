@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\minimal\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\minimal\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -33,9 +33,9 @@
 		</heading> After launching the program, a window will be displayed as illustrated above. There is no other functionality, but clicking on the close icon (Cross in top right hand corner), will close the window. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading>MINIMAL_DEMO inherits WEL_APPLICATION and redefines main_Window in order to display a WEL_FRAME_WINDOW. 
+		</heading><code><class_name>MINIMAL_DEMO</class_name></code> inherits <link><url>../../reference/support/WEL_APPLICATION_chart.html</url><label>WEL_APPLICATION</label></link> and redefines <code><feature_name>main_window</feature_name></code> in order to display a <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link>. 
 		<paragraph>This sample contains only one class: 
-			<list ordered="false"><item>MINIMAL_DEMO</item></list>
+			<list ordered="false"><item><code><class_name>MINIMAL_DEMO</class_name></code></item></list>
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>

@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\tree_view\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\tree_view\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -35,13 +35,13 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>TREEVIEW inherits WEL_TREE_VIEW and redefines make to initialize items within the tree. A WEL_TREE_VIEW_INSERT_STRUCT is used to insert each WEL_TREE_VIEW_ITEM while a WEL_IMAGE_LIST is used to reference images within the tree. 
+		<paragraph><code><class_name>TREEVIEW</class_name></code> inherits <link><url>../../reference/controls/WEL_TREE_VIEW_chart.html</url><label>WEL_TREE_VIEW</label></link> and redefines make to initialize items within the tree. A <link><url>../../reference/structs/WEL_TREE_VIEW_INSERT_STRUCT_chart.html</url><label>WEL_TREE_VIEW_INSERT_STRUCT</label></link> is used to insert each <link><url>../../reference/structs/WEL_TREE_VIEW_ITEM_chart.html</url><label>WEL_TREE_VIEW_ITEM</label></link> while a <link><url>../../reference/structs/WEL_IMAGE_LIST_chart.html</url><label>WEL_IMAGE_LIST</label></link> is used to reference images within the tree. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item>TREEVIEW</item>
-					<item>MAIN_WINDOW</item>
-					<item>TREEVIEW_DEMO</item>
-					<item>APPLICATION_IDS</item>
+					<item><code><class_name>TREEVIEW</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>TREEVIEW_DEMO</class_name></code></item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
 				</list>
 				<seealso>
 					<bold>See Also</bold>

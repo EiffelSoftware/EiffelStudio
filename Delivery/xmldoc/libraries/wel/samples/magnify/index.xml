@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\magnify\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\magnify\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -34,12 +34,12 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>In order to be able to control the output of the sample, MAIN_WINDOW redefines many features from WEL_FRAME_WINDOW. The feature draw_zoom_rectangle is used to display the output and on_menu_command handles the notifications sent to the window when a menu_selection has been made.</paragraph>
+		<paragraph>In order to be able to control the output of the sample, <code><class_name>MAIN_WINDOW</class_name></code> redefines many features from <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link>. The feature <code><feature_name>draw_zoom_rectangle</feature_name></code> is used to display the output and <code><feature_name>on_menu_command</feature_name></code> handles the notifications sent to the window when a <code><feature_name>menu_selection</feature_name></code> has been made.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>APPLICATION_IDS</item>
-				<item>MAIN_WINDOW</item>
-				<item>MAGNIFY_DEMO</item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>MAGNIFY_DEMO</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

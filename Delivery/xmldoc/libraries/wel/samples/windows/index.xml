@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\windows\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\windows\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -31,19 +31,19 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the program, a window will appear with a custom ON_OFF_CONTROL control displayed. Clicking on this control will cause it's state to change. If you select one of the options from the "Windows" menu, that type of window will be displayed. 
+		<paragraph>After launching the program, a window will appear with a custom <code><class_name>ON_OFF_CONTROL</class_name></code> control displayed. Clicking on this control will cause its state to change. If you select one of the options from the "Windows" menu, that type of window will be displayed. 
 			<heading>
 				<size>2</size>Under the Hood
 			</heading>
-			<paragraph>The ON_OFF_CONTROL inherits WEL_CONTROL_WINDOW and demonstrates how to build your controls. The classes MODAL and MODELESS inherit WEL_MODAL_DIALOG and WEL_MODELESS_DIALOG respectively. </paragraph>
+			<paragraph>The <code><class_name>ON_OFF_CONTROL</class_name></code> inherits <link><url>../../reference/windows/WEL_CONTROL_WINDOW_chart.html</url><label>WEL_CONTROL_WINDOW</label></link> and demonstrates how to build your controls. The classes <code><class_name>MODAL</class_name></code> and <code><class_name>MODELESS</class_name></code> inherit <link><url>../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> and <link><url>../../reference/windows/WEL_MODELESS_DIALOG_chart.html</url><label>WEL_MODELESS_DIALOG</label></link> respectively. </paragraph>
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item>APPLICATION_IDS</item>
-					<item>MAIN_WINDOW</item>
-					<item>MODAL</item>
-					<item>MODELESS</item>
-					<item>ON_OFF_CONTROL</item>
-					<item>WINDOWS_DEMO</item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>MODAL</class_name></code></item>
+					<item><code><class_name>MODELESS</class_name></code></item>
+					<item><code><class_name>ON_OFF_CONTROL</class_name></code></item>
+					<item><code><class_name>WINDOWS_DEMO</class_name></code></item>
 				</list>
 			</paragraph>
 		</paragraph>

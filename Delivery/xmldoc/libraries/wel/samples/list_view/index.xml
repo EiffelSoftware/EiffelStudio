@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\wel\list_view\</italic>. 
+				<italic>$ISE_EIFFEL\examples\wel\list_view\</italic>. 
 			</item>
 			<item>Choose 
 				<italic>Ace.ace</italic>
@@ -30,19 +30,19 @@
 		</list>
 		<heading>
 			<size>2</size>Running
-		</heading> After launching the program, a window will be displayed containing a pair of WEL_LIST_VIEW. Clicking the button marked "style" will modify the style of the lower list view. If you click the mouse within this lower list view, you will see notification of events appearing in the upper list view. 
+		</heading> After launching the program, a window will be displayed containing a pair of <link><url>../../reference/controls/WEL_LIST_VIEW_chart.html</url><label>WEL_LIST_VIEW</label></link>. Clicking the button marked "style" will modify the style of the lower list view. If you click the mouse within this lower list view, you will see notification of events appearing in the upper list view. 
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>LISTVIEW_DEMO redefines `init_application' in order to load the WEL_COMMON_CONTROLS_DLL and the WEL_RICH_EDIT_DLL.</paragraph>
-		<paragraph>LISTVIEW redefines many of the `on_' features inherited from WEL_LIST_VIEW in order to generate output for the user.</paragraph>
-		<paragraph>The style of the LISTVIEW_DEMO is changed by calling set_style with the required new style.</paragraph>
+		<paragraph><code><class_name>LISTVIEW_DEMO</class_name></code> redefines <code><feature_name>init_application</feature_name></code> in order to load the <link><url>../../reference/controls/WEL_COMMON_CONTROLS_DLL_chart.html</url><label>WEL_COMMON_CONTROLS_DLL</label></link> and the <link><url>../../reference/controls/WEL_RICH_EDIT_DLL_chart.html</url><label>WEL_RICH_EDIT_DLL</label></link>.</paragraph>
+		<paragraph><code><class_name>LISTVIEW</class_name></code> redefines many of the `on_' features inherited from <link><url>../../reference/controls/WEL_LIST_VIEW_chart.html</url><label>WEL_LIST_VIEW</label></link> in order to generate output for the user.</paragraph>
+		<paragraph>The style of the <code><class_name>LISTVIEW_DEMO</class_name></code> is changed by calling <code><feature_name>set_style</feature_name></code> with the required new style.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item>LISTVIEW</item>
-				<item>MAIN_WINDOW</item>
-				<item>LISTVIEW_DEMO</item>
-				<item>APPLICATION_IDS</item>
+				<item><code><class_name>LISTVIEW</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>LISTVIEW_DEMO</class_name></code></item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
 			</list>
 			<seealso>
 				<bold>See Also</bold>

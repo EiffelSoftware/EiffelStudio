@@ -7,7 +7,7 @@ DPFLAGS = -I$(TOP)
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 LN = copy
 MV = \bin\mv
-RM = del
+RM = $del
 OBJECTS = argcargv.$obj econsole.$obj
 
 .c.$obj:
@@ -16,4 +16,5 @@ OBJECTS = argcargv.$obj econsole.$obj
 all:: winconsole.$lib
 
 winconsole.$lib: $(OBJECTS)
+	$(RM) $@
 	$link_line

@@ -7,7 +7,7 @@ DPFLAGS = -I$(TOP) -I$(TOP)\run-time -I..\shared
 CFLAGS = $(DPFLAGS)
 MAKE = $make
 MV = copy
-RM = del
+RM = $del
 
 OBJECTS = lace_y.$obj keyword.$obj lac_err.$obj lace_c.$obj lace_l.$obj eif_l.$obj
 

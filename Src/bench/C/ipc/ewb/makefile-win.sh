@@ -7,7 +7,7 @@ CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(TOP)\console -I$(LIBIDR)
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 MAKE = make
 MV = copy
-RM = del
+RM = $del
 
 # Where shared archive is located (path and name)
 LIBDIR = ..\shared

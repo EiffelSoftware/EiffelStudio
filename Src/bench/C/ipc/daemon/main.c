@@ -490,7 +490,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, LONG wParam, LONG lParam)
 	return DefWindowProc (hwnd, message, wParam, lParam);
 }
 
-int WINAPI WinMain (HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
 /* Initialize Ebench, launch es4 and establish communications */
 

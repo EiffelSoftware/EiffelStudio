@@ -4,7 +4,7 @@ INDIR= .
 CC = $cc
 JCFLAGS = $ccflags -I$(TOP)\run-time -I$(TOP)\ipc\shared $optimize -I$(TOP)
 MV = copy
-RM = del
+RM = $del
 
 OBJECTS = \
 	idr_double.$obj \

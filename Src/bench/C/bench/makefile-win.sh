@@ -8,7 +8,7 @@ LIB_EXE = $lib_exe
 LN = copy
 MAKE = $make
 MV = move
-RM = del
+RM = $del
 LINK32 = $link32
 DLLFLAGS = $dllflags
 

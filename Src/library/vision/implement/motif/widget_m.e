@@ -583,8 +583,6 @@ feature {NONE} -- Implementation
 	mel_parent (a_widget: WIDGET; index: INTEGER): MEL_COMPOSITE is
 			-- Retrieve mel parent from the widget manage for 
 			-- `widget' using `index'
-		local
-			motif_decl: MOTIF_DECLARATOR
 		do
 			Result ?= widget_manager.parent_using_index
 						(a_widget, index - 1).implementation

@@ -18,9 +18,11 @@
 #ifdef I_TIME
 # include <time.h>
 #endif
+
 #ifdef I_SYS_TIME
 # include <sys/time.h>
 #endif
+
 #ifdef I_SYS_TIME_KERNEL
 # define KERNEL
 # include <sys/time.h>
@@ -30,6 +32,7 @@
 #ifdef I_FCNTL
 #include <fcntl.h>
 #endif
+
 #ifdef I_SYS_FILE
 #include <sys/file.h>
 #endif
@@ -41,6 +44,7 @@
 #endif
 
 #ifdef USE_ADD_LOG
+#include "logfile.h"
 
 #define MAX_STRING	1024			/* Maximum length for logging string */
 
@@ -52,15 +56,22 @@ rt_private int add_error(char *);			/* Prints description of error in errno */
 rt_private int add_errcode(char *);			/* Print the symbolic error name */
 
 rt_public char *progname = "ram";	/* Program name */
+
+#ifndef EIF_WIN32
 rt_public Pid_t progpid = 0;		/* Program PID */
+extern int errno;				/* System error report variable */
+#endif
 
 extern Time_t time(time_t *);			/* Time in seconds since the Epoch */
-extern int errno;				/* System error report variable */
 extern int file_lock();			/* Obtain a lock file with .lock extension */ /* %%ss undefined nowhere */
 extern void release_lock(void);		/* Release previous lock */
 
 /* VARARGS2 */
+#ifdef EIF_WIN32
+rt_public void add_log(int level, char *format, int arg1, HANDLE arg2, HANDLE arg3, HANDLE arg4, HANDLE arg5)
+#else
 rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, int arg4, int arg5)
+#endif
 {
 	/* Add logging informations at specified level. Note that the arguments are
 	 * declared as 'int', but it should work fine, even when we give doubles,
@@ -94,8 +105,11 @@ rt_public void add_log(int level, char *format, int arg1, int arg2, int arg3, in
 	sprintf(buffer, "%d/%.2d/%.2d %.2d:%.2d:%.2d %s[%d]: %s\n",
 		ct->tm_year, ct->tm_mon + 1, ct->tm_mday,
 		ct->tm_hour, ct->tm_min, ct->tm_sec,
+#ifdef EIF_WIN32
+		progname, 0, message);
+#else
 		progname, progpid, message);
-
+#endif
 	(void) write(fd, buffer, strlen(buffer));
 }
 
@@ -104,10 +118,10 @@ rt_public int open_log(char *name)
 	/* Open log file 'name' for logging. If a previous log file was opened,
 	 * it is closed before. The routine returns -1 in case of error.
 	 */
-	
+
 	if (logfile != -2)
 		close(logfile);
-	
+
 	logfile = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	logname = name;					/* Save file name */
 
@@ -199,7 +213,7 @@ rt_private int add_errcode(char *where)
 	/* Prints the symbolic description of the error code heldin in 'errno' into
 	 * 'where' if possible. Otherwise, prints the error number.
 	 */
-	
+
 #ifdef HAS_SYS_ERRNOLIST
 	extern int sys_nerrno;					/* Size of sys_errnolist[] */
 	extern char *sys_errnolist[];			/* Error code to symbolic name */
@@ -218,4 +232,3 @@ rt_private int add_errcode(char *where)
 }
 
 #endif
-

@@ -200,6 +200,7 @@ feature {EV_ANY_I} -- Implementation
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 			target := pointed_target
+
 			if
 				target /= Void and then (
 					target.drop_actions.accepts_pebble (pebble)
@@ -207,10 +208,17 @@ feature {EV_ANY_I} -- Implementation
 			then
 				over_valid_target := True
 				last_pointed_target := target
-				target_imp ?= target.implementation
-				set_pointer_style (target_imp.accept_cursor)
+				if accept_cursor /= Void then
+					set_pointer_style (accept_cursor)
+				else
+					set_pointer_style (default_accept_cursor)
+				end
 			else
-				set_pointer_style (deny_cursor)
+				if deny_cursor /= Void then
+					set_pointer_style (deny_cursor)
+				else
+					set_pointer_style (default_deny_cursor)
+				end
 			end
 		end
 
@@ -296,6 +304,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/21 01:33:12  rogers
+--| Fixed the changing of the mouse pointer within execute.
+--|
 --| Revision 1.19  2000/03/20 18:04:06  rogers
 --| Added default_accept_cursor and default_deny_cursor.
 --|

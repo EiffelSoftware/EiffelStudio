@@ -8,7 +8,7 @@ class
 	GB_EV_SENSITIVE
 	
 	-- The following properties from EV_SENSITIVE are manipulated by `Current'.
-	-- Is_sensitive - Performed on the real object and the display_object.
+	-- Is_sensitive - Performed on the real object only. Not the display object.
 
 inherit
 	GB_EV_ANY
@@ -74,9 +74,9 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (is_sensitive_string)
 			if element_info.data.is_equal (True_string) then
-				for_all_objects (agent {EV_SENSITIVE}.enable_sensitive)
+				for_first_object (agent {EV_SENSITIVE}.enable_sensitive)
 			else
-				for_all_objects (agent {EV_SENSITIVE}.disable_sensitive)
+				for_first_object (agent {EV_SENSITIVE}.disable_sensitive)
 			end
 		end
 		
@@ -107,9 +107,9 @@ feature {NONE} -- Implementation
 			-- Update sensitive state.
 		do
 			if check_button.is_selected then
-				for_all_objects (agent {EV_SENSITIVE}.enable_sensitive)
+				for_first_object (agent {EV_SENSITIVE}.enable_sensitive)
 			else
-				for_all_objects (agent {EV_SENSITIVE}.disable_sensitive)
+				for_first_object (agent {EV_SENSITIVE}.disable_sensitive)
 			end
 		end
 

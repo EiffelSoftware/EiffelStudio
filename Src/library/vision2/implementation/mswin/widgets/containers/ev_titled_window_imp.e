@@ -64,7 +64,9 @@ feature -- Access
 			-- Application name to be displayed by
 			-- the window manager.
 		do
-				Result := clone (internal_title)
+			if internal_title /= Void then
+				Result := internal_title.twin
+			end
 		end
 
 	internal_title: STRING
@@ -76,7 +78,9 @@ feature -- Access
 			-- displayed by the window manager when
 			-- application is iconified.
 		do
-			Result := clone (internal_icon_name)
+			if internal_icon_name /= Void then
+				Result := internal_icon_name.twin
+			end
 		end
 
 	icon_pixmap: EV_PIXMAP is
@@ -164,7 +168,7 @@ feature -- Element change
 	set_title (txt: STRING) is
 			-- Make `txt' the title of `Current'.            
 		do
-			internal_title := clone (txt)
+			internal_title := txt.twin
 			if not is_minimized then
 				set_text (txt)
 			end
@@ -173,7 +177,7 @@ feature -- Element change
 	set_icon_name (txt: STRING) is
 			-- Make `txt' the new icon name.
 		do
-			internal_icon_name := clone (txt)
+			internal_icon_name := txt.twin
 			if is_minimized then
 				set_text (txt)
 			end

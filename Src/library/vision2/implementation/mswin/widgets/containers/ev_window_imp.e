@@ -339,7 +339,7 @@ feature -- Element change
 	set_title (txt: STRING) is
 			-- Make `txt' the title of `Current'.            
 		do
-			set_text (clone (txt))
+			set_text (txt.twin)
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is

@@ -79,8 +79,8 @@ feature -- Element change
 		local
 			filter_name: STRING
 		do
-			filter := clone (a_filter)
-			filter_name := clone (a_filter)
+			filter := a_filter.twin
+			filter_name := a_filter.twin
 			if
 				filter_name.count >= 3 and
 				filter_name.item (1) = '*' and
@@ -109,7 +109,7 @@ feature -- Element change
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
 		do
-			start_directory := clone (a_path)
+			start_directory := a_path.twin
 			wel_set_initial_directory (a_path)
 		end
 		

@@ -202,7 +202,7 @@ feature -- Access
 				internal_selected_items := retrieve_selected_items
 				internal_selected_items_uptodate := True
 			end
-			Result := clone (internal_selected_items)
+			Result := internal_selected_items.twin
 		ensure then
 			valid_result: Result.is_equal(retrieve_selected_items)
 		end
@@ -946,7 +946,9 @@ feature {NONE} -- Selection implementation
 				interf ?= (c @ (wel_sel_items @ i + 1)).interface
 				Result.extend (interf)
 				i := i + 1
-			end		
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- WEL Implementation

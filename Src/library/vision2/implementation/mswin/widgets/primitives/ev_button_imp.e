@@ -269,7 +269,7 @@ feature -- Element change
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER
 		do
-			private_pixmap := clone (pix)
+			private_pixmap := pix.twin
 			if not text.is_empty then
 				if private_font /= Void then
 

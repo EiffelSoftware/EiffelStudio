@@ -2055,7 +2055,7 @@ feature -- IL Generation
 					loop
 						generate_argument (i)
 						if is_verifiable and l_cur_sig.item (i) /= l_impl_sig.item (i) then
-							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
+							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 								class_type_token (l_impl_sig.item (i)))
 						end
 						i := i + 1
@@ -2064,7 +2064,7 @@ feature -- IL Generation
 						nb, feat.has_return_value)
 					if feat.has_return_value then
 						if is_verifiable and l_cur_sig.item (0) /= l_impl_sig.item (0) then
-							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
+							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 								class_type_token (l_cur_sig.item (0)))
 						end
 					end
@@ -2296,7 +2296,7 @@ feature -- IL Generation
 				loop
 					generate_argument (i)
 					if is_verifiable and l_cur_sig.item (i) /= l_inh_sig.item (i) then
-						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
+						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 							class_type_token (l_cur_sig.item (i)))
 					end
 					i := i + 1
@@ -2306,7 +2306,7 @@ feature -- IL Generation
 
 				if cur_feat.has_return_value then
 					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
-						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
+						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 							class_type_token (l_inh_sig.item (0)))
 					end
 				end
@@ -2340,7 +2340,7 @@ feature -- IL Generation
 					generate_current
 					generate_argument (1)
 					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
-						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.castclass,
+						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 							class_type_token (l_cur_sig.item (0)))
 					end
 					method_body.put_call (feature {MD_OPCODES}.Callvirt,
@@ -3173,10 +3173,20 @@ feature -- Assignments
 			-- Generate `checkcast' byte code instruction.
 		require
 			target_type_not_void: target_type /= Void
+		local
+			l_source, l_target: CL_TYPE_I
 		do
 			if is_verifiable and not target_type.is_expanded then
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-					class_type_token (target_type.static_type_id))
+				l_source ?= source_type
+				l_target ?= target_type
+				if
+					source_type = Void or else
+					l_source = Void or else l_target = Void or else
+					not l_source.base_class.simple_conform_to (l_target.base_class)
+				then
+					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
+						class_type_token (target_type.static_type_id))
+				end
 			end
 		end
 

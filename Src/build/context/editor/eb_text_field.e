@@ -14,15 +14,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_with_label (par: EV_CONTAINER; txt: STRING) is
+	make_with_label (par: EV_BOX; txt: STRING) is
 			-- Create the text field with the text `txt' before.
 		local
 			hbox: EV_HORIZONTAL_BOX
 		do
 			create hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 			create label.make_with_text (hbox, txt)
-			label.set_expand (False)
+			hbox.set_child_expandable (label, False)
 			make (hbox)
 		end
 

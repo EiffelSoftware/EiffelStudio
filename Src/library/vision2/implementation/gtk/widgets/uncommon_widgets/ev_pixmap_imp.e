@@ -197,6 +197,78 @@ feature -- Element change
 
 feature -- Access
 
+	bitmap_array: ARRAY [CHARACTER] is
+			-- Monochromatic representation of `Current' used for cursors.
+			-- Representation in bits stored in characters.
+		local
+			a_gdkimage, a_visual: POINTER
+			a_visual_type, a_pixel: INTEGER
+			a_color: POINTER
+			a_color_map: POINTER
+			a_width: INTEGER
+			array_offset, array_size: INTEGER
+			array_area: SPECIAL [CHARACTER]
+			color_struct_size: INTEGER
+			temp_alpha: CHARACTER
+			temp_alpha_int: INTEGER
+			local_c: EV_C_EXTERNALS
+			bit_number, array_result: INTEGER
+			character_result, n_character: INTEGER
+			red_value: INTEGER
+		do
+			local_c := C
+			array_size := width * height
+			if (array_size \\ 8) > 0 then
+				array_size := array_size + (8 - (array_size \\ 8))
+			end
+			check
+				array_size_factor_of_8: (array_size \\ 8) = 0
+			end
+			array_size := array_size // 8
+			create Result.make (1, array_size)
+			
+			a_gdkimage := local_c.gdk_image_get (local_c.gtk_pixmap_struct_pixmap (gtk_pixmap), 0, 0, width, height)
+			from
+				a_width := width
+				a_color_map := local_c.gdk_rgb_get_cmap
+				a_visual := local_c.gdk_colormap_get_visual (a_color_map)
+				a_visual_type := local_c.gdk_visual_struct_type (a_visual)
+				a_color := local_c.c_gdk_color_struct_allocate
+				array_area := Result.area
+				color_struct_size := local_c.c_gdk_color_struct_size
+				array_offset := 0
+				n_character := 0
+			until
+				array_offset = width * height
+			loop
+				a_pixel := local_c.gdk_image_get_pixel (
+					a_gdkimage,
+					(array_offset \\ (a_width)), -- Zero based X coord
+					((array_offset) // a_width) -- Zero based Y coord
+				)
+				local_c.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+				-- RGB values of a_color are 16 bit.
+				if n_character = 8 then
+					n_character := 0
+					character_result := 0
+				end		
+				red_value := local_c.gdk_color_struct_red (a_color)
+				if red_value > 0  then
+					character_result := character_result + (2 ^ (n_character)).rounded
+					-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
+				end
+				if array_offset \\ 8 = 7 then
+					Result.put (character_result.to_character, (array_offset // 8) + 1)
+				end
+				n_character := n_character + 1
+				array_offset := array_offset + 1
+			end
+			local_c.c_gdk_color_struct_free (a_color)
+			local_c.gdk_image_destroy (a_gdkimage)
+		end
+
+		
+
 	raw_image_data: EV_RAW_IMAGE_DATA is
 		local
 			a_gdkimage, a_visual: POINTER
@@ -235,9 +307,10 @@ feature -- Access
 					((array_offset) // a_width) -- Zero based Y coord
 				)
 				local_c.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
-				array_area.put (local_c.gdk_color_struct_red (a_color).to_character, array_offset)
-				array_area.put (local_c.gdk_color_struct_green (a_color).to_character, array_offset + 1)
-				array_area.put (local_c.gdk_color_struct_blue (a_color).to_character, array_offset + 2)
+				-- RGB values of a_color are 16 bit.
+				array_area.put ((local_c.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
+				array_area.put ((local_c.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
+				array_area.put ((local_c.gdk_color_struct_blue (a_color) // 256).to_character, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end
@@ -275,7 +348,7 @@ feature -- Duplication
 			set_pixmap (gdkpix, gdkmask)
 		end
 
-feature {EV_DRAWABLE_IMP, EV_TITLED_WINDOW_IMP} -- Implementation
+feature {EV_DRAWABLE_IMP, EV_WIDGET_IMP} -- Implementation
 
 	drawable: POINTER is
 		do

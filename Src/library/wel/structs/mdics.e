@@ -25,6 +25,8 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_class_name: STRING; a_title: STRING) is
+			-- Make a MDI create structure with `a_class_name' and
+			-- `a_title'.
 		do
 			structure_make
 			set_class_name (a_class_name)

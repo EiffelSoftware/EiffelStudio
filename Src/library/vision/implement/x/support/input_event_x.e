@@ -50,13 +50,13 @@ feature {NONE} -- Implementation
 		
 	application_context: MEL_APPLICATION_CONTEXT is
 		local
-			motif: MOTIF
+			motif: TOOLKIT_IMP
 		do
 			motif ?= toolkit;
 			Result := motif.application_context;
 		end;
 
-end -- class IO_HANDLER_X
+end -- class INPUT_EVENT_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

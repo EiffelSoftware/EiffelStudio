@@ -267,6 +267,12 @@ feature -- Output
 			output_edit.clear
 		end
 
+	refresh is
+			-- Refresh output window.
+		do
+			output_edit.refresh
+		end
+
 feature {NONE} -- State management
 
 	First_state, Introduction_state, Initial_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
@@ -336,7 +342,9 @@ feature {NONE} -- State management
 				when Introduction_state then
 					state := Initial_state
 				when Initial_state then
-					if shared_wizard_environment.idl then
+					if not shared_wizard_environment.server then
+						state := Final_state
+					elseif shared_wizard_environment.idl then
 						state := Idl_state
 					else
 						state := Ps_state

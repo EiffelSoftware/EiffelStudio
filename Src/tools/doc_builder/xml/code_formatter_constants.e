@@ -77,12 +77,16 @@ feature -- Access
 		once
 			create Result.make (19)
 			Result.compare_objects
+			Result.extend ("=")
+			Result.extend ("&lt;")
+			Result.extend ("&gt;")
 			Result.extend (":")
+			Result.extend ("<<")
+			Result.extend (">>")
 			Result.extend ("!!")
 			Result.extend ("/=")			
 			Result.extend (":=")
 			Result.extend ("?=")
-			Result.extend ("=")
 			Result.extend ("->")
 			Result.extend ("(")
 			Result.extend (")")
@@ -90,12 +94,10 @@ feature -- Access
 			Result.extend ("]")
 			Result.extend ("{")
 			Result.extend ("}")
-			Result.extend ("<<")
-			Result.extend (">>")
 			Result.extend ("'")
 			Result.extend ("+")
 			Result.extend ("$")
-			Result.extend ("%%")			
+			Result.extend ("%%")
 		end
 	
 	format_tags: HASH_TABLE [STRING, STRING] is

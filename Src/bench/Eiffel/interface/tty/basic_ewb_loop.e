@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Batch compiler invoked by the -loop option.%
+		%Does not show C compilation options.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BASIC_EWB_LOOP
 
@@ -8,74 +15,49 @@ inherit
 			name as loop_cmd_name,
 			help_message as loop_help,
 			abbreviation as loop_abb
-		redefine
-			check_permissions, make_new_project
-		end;
-
-feature
-
-	make_new_project is
-			-- Initialize project as a new one.
-			--| Redefined because we shouldn't complain if
-			--|`Ace.ace' or `Ace' are not there (as default)
-		local
-			workb: WORKBENCH_I;
-			init_work: INIT_WORKBENCH;
-		do
-				-- Do not do anything if already initialized.
-				-- (Introduced for the command loop)
-			if not initialized.item then
-				!!workb;
-				!!init_work.make (workb);
-				workb.make;
-				if Ace_name /= Void then
-					check_ace_file (Ace_name);
-				end;
-				Workbench.lace.set_file_name (Ace_name);
-					-- The project is now initialized
-					-- (Introduced for the command loop)
-				initialized.put (True);
-			end
 		end
+	COMMAND_LINE_PROJECT
 
-	execute is
-		do
-			init_project;
-			if not error_occurred then
-				if project_is_new then
-					make_new_project;
-						-- The user will have to specify the Ace file
-					Lace.set_file_name (Void);
-				else
-					retrieve_project;
-				end
-			end;
-			if not error_occurred then
-				ewb_iterate				
-			end;
-		end;
+creation
 
-	check_permissions is
-		do
-			if is_project_writable then
-				Project_read_only.set_item (false)
-			elseif is_project_readable then
-				Project_read_only.set_item (true);
-				io.error.put_string (
-					"No write permissions on project.%N%
-					%Project opened in read-only mode.%N")
-			else
-				io.error.put_string (
-					"Project is not readable; check permissions.%N");
-				error_occurred := true
-			end
-		end
+	make
 
 feature -- Initialization
 
-	command_list: EWB_MENU;
+	make (proj: COMMAND_LINE_PROJECT) is
+			-- Create loop with project `proj'.
+		require
+			valid_proj: proj /= Void
+		do
+			project := proj
+		ensure
+			project = proj
+		end;
+
+feature -- Properties
+
+	project: COMMAND_LINE_PROJECT
+			-- Project for the batch command line
+
+	yank_window: YANK_WINDOW is
+			-- Output window to be saved to a file
+		once
+			!!Result.make;
+		end;
+
+	menu_command_list: EWB_MENU;
+			-- List of commands for menu
+
+	last_request_abb: CHARACTER;
+			-- Last character option
+
+	last_request_cmd: EWB_CMD;
+			-- Last command selected from menu
+
+feature -- Initialization
 
 	main_menu: EWB_MENU is
+			-- Main menu options
 		local
 			ewb_cmd: EWB_CMD;
 		once
@@ -84,18 +66,16 @@ feature -- Initialization
 
 			!EWB_STRING! ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu);
 			Result.add_entry (ewb_cmd)
-	
 			!EWB_STRING! ewb_cmd.make (compile_cmd_name, compile_help, compile_abb, compile_menu);
 			Result.add_entry (ewb_cmd)
-	
 			!EWB_STRING! ewb_cmd.make (feature_cmd_name, feature_help, feature_abb, feature_menu);
 			Result.add_entry (ewb_cmd)
-	
 			!EWB_STRING! ewb_cmd.make (system_cmd_name, system_help, system_abb, system_menu);
 			Result.add_entry (ewb_cmd)
 		end;
 
 	System_menu: EWB_MENU is
+			-- System menu options
 		local
 			ewb_cmd: EWB_CMD;
 		once
@@ -103,115 +83,91 @@ feature -- Initialization
 
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-			
 			!EWB_CLASS_LIST! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_CLUSTERS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_EDIT_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_INDEXING! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_MODIFIED! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_STATISTICS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_CASE_STORAGE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 		end;
 
 	class_menu: EWB_MENU is
+			-- Class menu options
 		local
 			ewb_cmd: EWB_CMD;
 		once
 			!!Result.make (1, 15)
 			
-			!EWB_ANCESTORS! ewb_cmd.null;
+			!EWB_ANCESTORS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_ATTRIBUTES! ewb_cmd.null;
+			!EWB_ATTRIBUTES! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_CLIENTS! ewb_cmd.null;
+			!EWB_CLIENTS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_DEFERRED! ewb_cmd.null;
+			!EWB_DEFERRED! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_DESCENDANTS! ewb_cmd.null;
+			!EWB_DESCENDANTS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
 			!EWB_EDIT_CLASS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_EXPORTED! ewb_cmd.null;
+			!EWB_EXPORTED! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_EXTERNALS! ewb_cmd.null;
+			!EWB_EXTERNALS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_FLAT! ewb_cmd.null;
+			!EWB_FLAT! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_FS! ewb_cmd.null;
+			!EWB_FS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_ONCE! ewb_cmd.null;
+			!EWB_ONCE! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_ROUTINES! ewb_cmd.null;
+			!EWB_ROUTINES! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_SHORT! ewb_cmd.null;
+			!EWB_SHORT! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_SUPPLIERS! ewb_cmd.null;
+			!EWB_SUPPLIERS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
-
-			!EWB_TEXT! ewb_cmd.null;
+			!EWB_TEXT! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd)
 		end;
 
 	feature_menu: EWB_MENU is
+			-- Feature menu options
 		local
 			ewb_cmd: EWB_CMD;
 		once
 			!!Result.make (1, 7)
-
-			!EWB_PAST! ewb_cmd.null;
+			!EWB_PAST! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_SENDERS! ewb_cmd.null;
+			!EWB_SENDERS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_FUTURE! ewb_cmd.null;
+			!EWB_FUTURE! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_R_FLAT! ewb_cmd.null;
+			!EWB_R_FLAT! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_HOMONYMS! ewb_cmd.null;
+			!EWB_HOMONYMS! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_HISTORY! ewb_cmd.null;
+			!EWB_HISTORY! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_R_TEXT! ewb_cmd.null;
+			!EWB_R_TEXT! ewb_cmd.do_nothing;
 			Result.add_entry (ewb_cmd);
 		end;
 
 	compile_menu: EWB_MENU is
+			-- Menu options for compilation
 		once
 			Result := c_menu
 		end;
 
 	c_menu: EWB_MENU is
+			-- Menu options for c compilations
 		local
 			ewb_cmd: EWB_CMD;
 		do
@@ -219,42 +175,39 @@ feature -- Initialization
 
 			!EWB_ARGS! ewb_cmd;
 			Result.add_entry (ewb_cmd);
-
-			!EWB_COMP! ewb_cmd;
+			!EWB_COMP! ewb_cmd.make (project);
 			Result.add_entry (ewb_cmd);
-
 			!EWB_RUN! ewb_cmd;
 			Result.add_entry (ewb_cmd);
 		end;
 
-	commands: ARRAY [EWB_MENU] is
+	menu_commands: ARRAY [EWB_MENU] is
+			-- Menu commands
 		once
 			!!Result.make (1, 5);
-	
 			Result.put (main_menu, 1);
-
 			Result.put (system_menu, 2);
-
 			Result.put (class_menu, 3)
-
 			Result.put (feature_menu, 4);
-
 			Result.put (compile_menu, 5);
 		end
 
-	display_header is
+feature -- Execution
+
+	execute is
+			-- Execute current menu option.
 		do
-			io.putstring ("==== ISE Eiffel3 - Interactive Batch Version (v");
-			io.putstring (Version_number);
-			io.putstring (") ====%N%N");
+			if project.project_is_new then
+					-- The user will have to specify the Ace file
+				Lace.set_file_name (Void);
+			end;
+			ewb_iterate				
 		end;
 
-	display_commands is
-		do
-			command_list.print_help
-		end;
+feature -- Update
 
 	save_to_disk is
+			-- Save last output to file.
 		local
 			s: STRING;
 			file_w: FILE_WINDOW;
@@ -268,13 +221,13 @@ feature -- Initialization
 				until
 					done
 				loop
-					if no_more_arguments then
+					if not command_line_io.more_arguments then
 						io.putstring ("--> File name: ");
-						get_name;
+						command_line_io.get_name;
 					end;
-					get_last_input;
-					if not last_input.empty then
-						!!file_w.make (last_input);
+					command_line_io.get_last_input;
+					if not command_line_io.last_input.empty then
+						!!file_w.make (command_line_io.last_input);
 						if file_w.exists then
 							io.putstring ("File already exists.%N");
 						else
@@ -293,26 +246,23 @@ feature -- Initialization
 			end;
 		end;
 
-	last_request_abb: CHARACTER;
-
-	last_request_cmd: EWB_CMD;
-
 	get_user_request is
+			-- Get user request.
 		local
-			done: BOOLEAN
+			done: BOOLEAN;
+			rq: STRING
 		do
 			from
 			until
 				done
 			loop
 				io.putstring ("Command => ");
-				get_name;
-				get_last_input;
-				if last_input.empty then
-					-- do nothing
-				else
-					last_input.to_lower;
-					process_request (last_input)
+				command_line_io.get_name;
+				command_line_io.get_last_input;
+				rq := command_line_io.last_input;
+				if not rq.empty then
+					rq.to_lower;
+					process_request (rq);
 					if last_request_abb = quit_abb then
 						done := True;
 					elseif last_request_cmd /= Void then
@@ -322,16 +272,15 @@ feature -- Initialization
 			end;
 		end;
 
-	prev: EWB_MENU;
-
 	process_request (req: STRING) is
+			-- Process request `req'.
 		local
 			next_cmd: EWB_CMD;
 			menu, option : STRING
 			dot_place: INTEGER
-			main_menu_option : EWB_STRING
+			main_menu_option: EWB_STRING
 			menu_abb : CHARACTER
-		
+			prev: like menu_command_list;
 		do
 			last_request_cmd := Void
 			if req.has ('.') then
@@ -352,11 +301,10 @@ feature -- Initialization
 			 	end
 				option := req.substring (dot_place+1, req.count)
 				next_cmd := main_menu.option_item (menu)
-				if next_cmd /= Void
-				then
-					prev := command_list
+				if next_cmd /= Void then
+					prev := menu_command_list
 					main_menu_option ?= next_cmd
-					command_list := main_menu_option.sub_menu
+					menu_command_list := main_menu_option.sub_menu
 					if not option.empty then
 						process_request (option)
 					end
@@ -368,8 +316,8 @@ feature -- Initialization
 					elseif menu.is_equal (help_cmd_name) or menu_abb = help_abb or menu_abb = '?' then
 						display_commands;
 					elseif menu.is_equal (main_cmd_name) or menu_abb = main_abb then
-						prev := command_list
-						command_list := main_menu
+						prev := menu_command_list
+						menu_command_list := main_menu
 						if not option.empty then
 							process_request (option)
 						end					
@@ -380,15 +328,15 @@ feature -- Initialization
 					end
 				end
 			else
-				next_cmd := command_list.option_item(req)
+				next_cmd := menu_command_list.option_item(req)
 				if req.count = 1 then
 					menu_abb := req.item(1)
 				end
 				if next_cmd /= Void then
-					if command_list = Main_menu then
-						prev := command_list
+					if menu_command_list = Main_menu then
+						prev := menu_command_list
 						main_menu_option ?= next_cmd
-						command_list := main_menu_option.sub_menu
+						menu_command_list := main_menu_option.sub_menu
 						display_commands
 					else
 						last_request_cmd := next_cmd
@@ -402,8 +350,8 @@ feature -- Initialization
 						display_commands;
 					elseif req.is_equal (main_cmd_name) or menu_abb = main_abb 
 					then
-						prev := command_list
-						command_list := Main_menu
+						prev := menu_command_list
+						menu_command_list := Main_menu
 						display_commands
 					else
 						io.putstring ("Unknown option ")
@@ -414,6 +362,20 @@ feature -- Initialization
 			end
 		end
 
+feature -- Output
+
+	display_header is
+		do
+			io.putstring ("==== ISE Eiffel3 - Interactive Batch Version (v");
+			io.putstring (Version_number);
+			io.putstring (") ====%N%N");
+		end;
+
+	display_commands is
+		do
+			menu_command_list.print_help
+		end;
+
 feature -- Command loop
 
 	ewb_iterate is
@@ -421,9 +383,11 @@ feature -- Command loop
 			done: BOOLEAN;
 			cmd: EWB_CMD
 		do
+				-- Set the output window to yank_window
+			set_output_window (yank_window);
 			from
-				if commands = Void then end;
-				command_list := commands.item (1)
+				if menu_commands = Void then end;
+				menu_command_list := menu_commands.item (1)
 				display_header
 				display_commands
 			until
@@ -437,13 +401,16 @@ feature -- Command loop
 						licence.checked
 					or else licence.reconnected then
 						yank_window.reset_output;
-						last_request_cmd.set_output_window (yank_window);
-						last_request_cmd.loop_execute;
+						last_request_cmd.loop_action;
 					else
 						io.putstring ("You have lost your license.%N");
 					end;
 				end;
 			end;
 		end;
+
+invariant
+
+	non_void_project: project /= Void
 
 end

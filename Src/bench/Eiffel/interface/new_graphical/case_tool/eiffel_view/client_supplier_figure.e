@@ -84,4 +84,17 @@ feature {NONE} -- Implementation
 			request_update
 		end
 		
+	e_feature_from_abstract (a_feature: FEATURE_AS): E_FEATURE is
+			-- compiled version of `a_feature' if any.
+		require
+			a_feature_exists: a_feature /= Void
+		local
+			l_class: CLASS_C
+		do
+			l_class := model.client.class_c
+			if l_class /= Void then
+				Result := l_class.feature_with_name (a_feature.feature_name)
+			end
+		end
+		
 end -- class EIFFEL_CLIENT_SUPPLIER_FIGURE

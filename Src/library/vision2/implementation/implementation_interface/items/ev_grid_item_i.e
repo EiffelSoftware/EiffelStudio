@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			internal_foreground_color := Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	interface: EV_GRID_ITEM
 			-- Provides a common user interface to platform dependent

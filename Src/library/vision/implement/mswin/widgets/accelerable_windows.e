@@ -25,7 +25,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Status setting
+feature {MENU_WINDOWS} -- Status setting
 
 	new_accelerator_id (new_id: INTEGER) is
 			-- Set a new id for the accelerator.
@@ -33,6 +33,8 @@ feature -- Status setting
 			accelerator.set_command_id (new_id)
 			accelerators.add (accelerator)
 		end
+
+feature -- Status setting
 
 	set_accelerator_action (translation: STRING) is
 			-- Set the accelerator action (modifiers and key to use
@@ -48,6 +50,7 @@ feature -- Status setting
 			flags: INTEGER
 			key: INTEGER
 			key_string: STRING
+			virt_key: BOOLEAN
 		do
 			if accelerator /= Void then
 				accelerators.remove (accelerator)
@@ -56,12 +59,15 @@ feature -- Status setting
 			a_translation.to_lower
 			if a_translation.substring_index ("shift", 1) /= 0 then
 				flags := set_flag (flags, Fshift)
+				virt_key := True
 			end
 			if a_translation.substring_index ("alt", 1) /= 0 then
 				flags := set_flag (flags, Falt)
+				virt_key := True
 			end
 			if a_translation.substring_index ("ctrl", 1) /= 0 then
 				flags := set_flag (flags, Fcontrol)
+				virt_key := True
 			end
 			from
 				key_string := ""
@@ -88,7 +94,7 @@ feature -- Status setting
 					i := i + 1
 				end
 				if i < 256 then
-					if key_string.count > 1 then
+					if key_string.count > 1 or virt_key then
 						flags := set_flag (flags, Fvirtkey)
 					end
 					!! accelerator.make (key, 0, flags)

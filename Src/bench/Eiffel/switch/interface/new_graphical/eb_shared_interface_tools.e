@@ -63,17 +63,17 @@ feature {NONE} -- Shared tools access
 				(not system_tool.destroyed)
 		end
 
-	preference_tool: EB_PREFERENCE_TOOL is
-			-- The preference tool
-		do
-			Result := Preference_tool_cell.item
-		end
+--	preference_tool: EB_PREFERENCE_TOOL is
+--			-- The preference tool
+--		do
+--			Result := Preference_tool_cell.item
+--		end
 
-	preference_tool_is_valid: BOOLEAN is
-		do
-			Result := (preference_tool /= Void) and then
-				(not preference_tool.destroyed)
-		end
+--	preference_tool_is_valid: BOOLEAN is
+--		do
+--			Result := (preference_tool /= Void) and then
+--				(not preference_tool.destroyed)
+--		end
 
 	profile_tool: EB_PROFILE_TOOL is
 			-- The profile tool
@@ -125,11 +125,11 @@ feature {NONE} -- Shared tools change
 			System_tool_cell.put (tool)
 		end
 
-	set_preference_tool (tool: EB_PREFERENCE_TOOL) is
-			-- makes `tool' the shared preference tool.
-		do
-			Preference_tool_cell.put (tool)
-		end
+--	set_preference_tool (tool: EB_PREFERENCE_TOOL) is
+--			-- makes `tool' the shared preference tool.
+--		do
+--			Preference_tool_cell.put (tool)
+--		end
 
 	set_profile_tool (tool: EB_PROFILE_TOOL) is
 			-- makes `tool' the shared profiler.
@@ -225,11 +225,11 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	Preference_tool_cell: CELL [EB_PREFERENCE_TOOL] is
-			-- Cell for the preference tool
-		once
-			create Result.put (Void)
-		end
+--	Preference_tool_cell: CELL [EB_PREFERENCE_TOOL] is
+--			-- Cell for the preference tool
+--		once
+--			create Result.put (Void)
+--		end
 
 	Profile_tool_cell: CELL [EB_PROFILE_TOOL] is
 			-- Cell for the profile tool

@@ -59,22 +59,18 @@ feature -- IL generation
 			low := lower.generation_value
 			up := upper.generation_value
 			if low < up then
-					-- Generate test `val >= low'.
+					-- Generate unsigned test `val - low <= up - low' which is equivalent to
+					-- signed test `low <= val and val <= up'.
 				il_generator.duplicate_top
 				il_generator.put_integer_32_constant (low)
-				il_generator.generate_binary_operator (Il_ge)
-				il_generator.branch_on_false (next_case_label)
-
-					-- If `val >= low' then generate test `val <= up'.
-				il_generator.duplicate_top
-				il_generator.put_integer_32_constant (up)
-				il_generator.generate_binary_operator (Il_le)
+				il_generator.generate_binary_operator (il_minus)
+				il_generator.put_integer_32_constant (up - low)
+				il_generator.branch_on_condition (feature {MD_OPCODES}.bgt_un, next_case_label)
 			else
 				il_generator.duplicate_top
 				il_generator.put_integer_32_constant (low)
-				il_generator.generate_binary_operator (Il_eq)
+				il_generator.branch_on_condition (feature {MD_OPCODES}.bne_un, next_case_label)
 			end
-			il_generator.branch_on_false (next_case_label)
 		end
 
 feature -- Checking

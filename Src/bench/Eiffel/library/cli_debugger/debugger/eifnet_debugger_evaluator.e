@@ -215,7 +215,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv: ICOR_DEBUG_VALUE
 		do
 			l_icdv := new_i4_evaluation (a_frame, a_val)
-			Result := icdv_reference_integer_from_icdv_integer (a_frame, l_icdv)
+			Result := icdv_reference_integer_32_from_icdv_integer_32 (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
 		
@@ -271,13 +271,13 @@ feature {DBG_EVALUATOR} -- Class construction facilities
 			method_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, a_sys_string>>)
 		end	
 		
-	icdv_reference_integer_from_icdv_integer (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	icdv_reference_integer_32_from_icdv_integer_32 (a_frame: ICOR_DEBUG_FRAME; a_icdv_integer_32: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue for INTEGER_REF object created from SystemInteger `a_icdv_integer'
 		do
 			prepare_evaluation (a_frame, True)
 			last_icor_debug_eval.new_object_no_constructor (reference_integer_32_icd_class)
 			Result := complete_function_evaluation		
-			method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv_integer>>)
+			method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv_integer_32>>)
 		end	
 		
 	icdv_reference_real_from_icdv_real (a_frame: ICOR_DEBUG_FRAME; a_icdv_real: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
@@ -424,27 +424,32 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 		do
 			l_icd_eval := last_icor_debug_eval
-			last_call_success := l_icd_eval.last_call_success			
-
-				--| And we wait for all callback to be finished
-			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
-			eifnet_debugger.reset_data_changed
-			if 
-				eifnet_debugger.last_managed_callback_is_exception 
-			then
-				-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
-				--			as an Eval exception, maybe we should manage this differently
-				last_eval_is_exception := True
+			last_call_success := l_icd_eval.last_call_success
+			if not last_call_succeed (last_call_success) then
 				debug ("DEBUGGER_TRACE_EVAL")
-					display_last_exception
-					io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
+					print (generator + ".complete_method_evaluation %N")
+					print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
 				end
-				eifnet_debugger.do_clear_exception
-			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
-				-- Exception !!			
-				last_eval_is_exception := True
+			else			
+					--| And we wait for all callback to be finished
+				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.reset_data_changed
+				if 
+					eifnet_debugger.last_managed_callback_is_exception 
+				then
+					-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
+					--			as an Eval exception, maybe we should manage this differently
+					last_eval_is_exception := True
+					debug ("DEBUGGER_TRACE_EVAL")
+						display_last_exception
+						io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
+					end
+					eifnet_debugger.do_clear_exception
+				elseif eifnet_debugger.last_managed_callback_is_eval_exception then
+					-- Exception !!			
+					last_eval_is_exception := True
+				end
 			end
-
 			evaluation_termination (True)
 		end
 
@@ -460,30 +465,34 @@ feature {NONE}
 		do
 			l_icd_eval := last_icor_debug_eval
 			last_call_success := l_icd_eval.last_call_success
-
-				--| And we wait for all callback to be finished
-			eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
-			eifnet_debugger.reset_data_changed
-			if 
-				eifnet_debugger.last_managed_callback_is_exception 
-			then
-				-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
-				--			as an Eval exception, maybe we should manage this differently
-				last_eval_is_exception := True
-				Result := Void --"WARNING: Could not evaluate output"
-				debug ("DEBUGGER_TRACE_EVAL")
-					display_last_exception
-					io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
-				end
-				eifnet_debugger.do_clear_exception
-			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
-				Result := Void
-				last_eval_is_exception := True
-			elseif eifnet_debugger.last_managed_callback_is_exit_process then
-				eifnet_debugger.notify_exit_process_occurred
-				Result := Void
-			else				
-				Result := l_icd_eval.get_result
+			if not last_call_succeed (last_call_success) then
+				print (generator + ".complete_function_evaluation %N")
+				print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
+			else
+					--| And we wait for all callback to be finished
+				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
+				eifnet_debugger.reset_data_changed
+				if 
+					eifnet_debugger.last_managed_callback_is_exception 
+				then
+					-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
+					--			as an Eval exception, maybe we should manage this differently
+					last_eval_is_exception := True
+					Result := Void --"WARNING: Could not evaluate output"
+					debug ("DEBUGGER_TRACE_EVAL")
+						display_last_exception
+						io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
+					end
+					eifnet_debugger.do_clear_exception
+				elseif eifnet_debugger.last_managed_callback_is_eval_exception then
+					Result := Void
+					last_eval_is_exception := True
+				elseif eifnet_debugger.last_managed_callback_is_exit_process then
+					eifnet_debugger.notify_exit_process_occurred
+					Result := Void
+				else				
+					Result := l_icd_eval.get_result
+				end				
 			end
 			evaluation_termination (True)
 		end
@@ -732,5 +741,14 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 	once_reference_character_set_item_method     : ICOR_DEBUG_FUNCTION
 
 	once_eiffel_string_make_from_cil_constructor : ICOR_DEBUG_FUNCTION
+
+feature {NONE} -- Helper Impl
+
+	last_call_succeed (lcs: INTEGER): BOOLEAN is
+			-- Is last call `lcs' a success ?
+		do
+			Result := lcs = 0 or lcs = 1 -- S_OK or S_FALSE
+				--| HRESULT .. < 0 if error ...
+		end
 
 end	

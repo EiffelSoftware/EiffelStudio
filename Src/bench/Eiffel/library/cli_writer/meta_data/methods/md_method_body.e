@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 		do
 			create item.make (Chunk_size)
 			create labels.make (1, 5)
+			create labels_stack_depth.make (1, 5)
 			create exception_block.make
 			remake (token)
 		ensure
@@ -47,6 +48,7 @@ feature -- Reset
 			current_position := 0
 			max_stack := 0
 			current_stack_depth := 0
+			last_current_stack_depth := 0
 			method_token := token
 			local_token := 0
 			nb_labels := 0
@@ -74,6 +76,9 @@ feature -- Access
 	item: MANAGED_POINTER
 			-- Hold data for current method_body.
 		
+	current_stack_depth: INTEGER
+			-- Current stack depth.
+			
 	max_stack: INTEGER
 			-- Max stack of current feature.
 	
@@ -116,6 +121,7 @@ feature -- Savings
 			not_yet_written: not is_written
 			m_not_void: m /= Void
 			valid_pos: pos >= 0 and pos < m.count
+			valid_stack_depth: current_stack_depth = 0
 		do
 			(m.item + pos).memory_copy (item.item, current_position)
 			is_written := True
@@ -135,17 +141,21 @@ feature -- Settings
 			local_token_set: local_token = token
 		end
 		
-	increment_stack_depth (i: INTEGER) is
-			-- Increment current stack depth of `i'. Used for special cases
-			-- such as a catch block where the stack is automatically grown
-			-- of 1 element, the exception object.
+	update_stack_depth (delta: INTEGER) is
+			-- Update `max_stack' and `current_stack_depth' according to
+			-- new `delta' depth change.
 		require
-			valid_i: i > 0
+			not_yet_written: not is_written
+			is_valid_delta: current_stack_depth + delta >= 0
 		do
-			update_stack_depth (i)
+			current_stack_depth := current_stack_depth + delta
+			if current_stack_depth > max_stack then
+				max_stack := current_stack_depth
+			end
+			last_current_stack_depth := current_stack_depth
 		ensure
-			max_stack_set: max_stack >= old max_stack
-			current_stack_depth_set: current_stack_depth = old current_stack_depth + i
+			current_stack_depth_set: current_stack_depth = old current_stack_depth + delta
+			max_stack_set: max_stack >= current_stack_depth
 		end
 		
 feature -- Opcode insertion
@@ -157,6 +167,24 @@ feature -- Opcode insertion
 		do
 			internal_put (feature {MD_OPCODES}.nop.to_integer_8, current_position)
 			current_position := current_position + 1
+		end
+		
+	put_throw is
+			-- Insert `throw' opcode.
+		require
+			not_yet_written: not is_written
+		do
+			put_opcode (feature {MD_OPCODES}.throw)
+			last_current_stack_depth := -1
+		end
+
+	put_rethrow is
+			-- Insert `rethrow' opcode.
+		require
+			not_yet_written: not is_written
+		do
+			put_opcode (feature {MD_OPCODES}.rethrow)
+			last_current_stack_depth := -1
 		end
 		
 	put_opcode (opcode: INTEGER_16) is
@@ -279,6 +307,7 @@ feature -- Labels manipulation
 			create l_label.make
 			nb_labels := nb_labels + 1
 			labels.force (l_label, nb_labels)
+			labels_stack_depth.force (-1, nb_labels)
 			Result := nb_labels
 		end
 		
@@ -289,9 +318,24 @@ feature -- Labels manipulation
 			valid_label_id: label_id > 0 and label_id <= nb_labels
 		local
 			l_label: MD_LABEL
+			l_new_depth: INTEGER
 		do
 			l_label := labels.item (label_id)
 			l_label.mark_position (current_position, Current)
+	
+				-- Restore current stack depth for this label, which
+				-- is the depth we computed when we did a branch to it,
+				-- if no branching has been done yet, then we simply
+				-- preserve the existing value of `current_stack_depth'.
+			check
+				new_stack_depth_value_correct:
+					(labels_stack_depth.item (label_id) >= 0 and last_current_stack_depth >= 0) implies
+						labels_stack_depth.item (label_id) = last_current_stack_depth
+			end
+			l_new_depth := labels_stack_depth.item (label_id)
+			if l_new_depth >= 0 then
+				current_stack_depth := l_new_depth
+			end
 		end
 		
 	put_opcode_label (opcode: INTEGER_16; label_id: INTEGER) is
@@ -314,8 +358,22 @@ feature -- Labels manipulation
 					-- update with correct offset as soon as we
 					-- know about `l_label' position.
 				l_label.mark_branch_position (current_position)
+					-- Update the stack level for `label_id'. The following check
+					-- is to ensure that if we have multiple branches to the same
+					-- label each branching has the same stack depth, otherwise
+					-- this shows a bug in our code generation.
+				check
+					new_stack_depth_value_correct:
+						labels_stack_depth.item (label_id) >= 0 implies
+							labels_stack_depth.item (label_id) = current_stack_depth
+				end
+				labels_stack_depth.put (current_stack_depth, label_id)
 			end
 			add_integer (l_jmp)
+				-- When handling a jump we reset `last_current_stack_depth' as it
+				-- does not matter to us what the stack depth is if the next call
+				-- is a call to `mark_label'.
+			last_current_stack_depth := -1
 		end
 
 	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER) is
@@ -333,7 +391,37 @@ feature -- Labels manipulation
 		
 feature -- Opcode insertion with manual update of `current_stack_depth'.
 
-	put_call (opcode: INTEGER_16; feature_token: INTEGER; nb_arguments: INTEGER; is_function: BOOLEAN) is
+	put_static_call (feature_token, nb_arguments: INTEGER; is_function: BOOLEAN) is
+			-- Perform a static call to `feature_token' with proper stack size computation.
+		require
+			not_yet_written: not is_written
+		do
+			internal_put_call (feature {MD_OPCODES}.call, feature_token,
+				nb_arguments, is_function, False)
+		end
+		
+	put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function: BOOLEAN) is
+			-- Perform call to `feature_token' with proper stack size computation.
+		require
+			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
+		do
+			internal_put_call (opcode, feature_token, nb_arguments, is_function, True)
+		end
+	
+	put_newobj (constructor_token: INTEGER; nb_arguments: INTEGER) is
+			-- Perform creation of object through `constructor_token'
+			-- with proper stack size computation.
+		require
+			not_yet_written: not is_written
+		do
+			internal_put_call (feature {MD_OPCODES}.newobj, constructor_token,
+				nb_arguments, True, False)
+		end
+
+feature {NONE} -- Implementation
+
+	internal_put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function, needs_current: BOOLEAN) is
 			-- Perform call to `feature_token' with proper stack size computation.
 		require
 			not_yet_written: not is_written
@@ -343,7 +431,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 		do
 			put_opcode (opcode)
 			add_integer (feature_token)
-			if opcode = feature {MD_OPCODES}.Callvirt then
+			if needs_current then
 					-- We remove target of calls from stack.
 				l_additional := 1
 			end
@@ -352,17 +440,6 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 			else
 				update_stack_depth (- nb_arguments - l_additional)
 			end
-		end
-	
-	put_newobj (nb_arguments: INTEGER; constructor_token: INTEGER) is
-			-- Perform creation of object through `constructor_token'
-			-- with proper stack size computation.
-		require
-			not_yet_written: not is_written
-		do
-			put_opcode (feature {MD_OPCODES}.Newobj)
-			add_integer (constructor_token)
-			update_stack_depth (- nb_arguments + 1)
 		end
 
 feature {NONE} -- Opcode insertion helpers
@@ -481,34 +558,23 @@ feature {NONE} -- Stack depth management
 			enough_size: item.count >= new_size
 		end
 		
-	update_stack_depth (delta: INTEGER) is
-			-- Update `max_stack' and `current_stack_depth' according to
-			-- new `delta' depth change.
-		require
-			not_yet_written: not is_written
-		do
-			current_stack_depth := current_stack_depth + delta
-			if current_stack_depth > max_stack then
-				max_stack := current_stack_depth
-			end
-		ensure
-			current_stack_depth_set: current_stack_depth = old current_stack_depth + delta
-			max_stack_set: max_stack >= current_stack_depth
-		end
-
 feature {NONE} -- Implementation
 
 	current_position: INTEGER
 			-- Current position in `item' for next insertion.
 
+	last_current_stack_depth: INTEGER
+			-- Depth at the previous IL offset. Used for checking that
+			-- our generated code is indeed valid.
+
 	Chunk_size: INTEGER is 50
 			-- Default body size.
 
-	current_stack_depth: INTEGER
-			-- Current stack depth.
-			
 	labels: ARRAY [MD_LABEL]
 			-- List all labels used in current body.
+
+	labels_stack_depth: ARRAY [INTEGER]
+			-- List of depth associated for each label.
 			
 invariant
 	item_not_void: item /= Void

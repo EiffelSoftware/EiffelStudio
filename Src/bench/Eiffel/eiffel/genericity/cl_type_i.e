@@ -11,6 +11,7 @@ inherit
 			is_reference,
 			is_true_expanded,
 			is_separate,
+			is_out,
 			is_valid,
 			is_explicit,
 			is_external,
@@ -252,6 +253,9 @@ feature -- Status
 	is_separate: BOOLEAN
 			-- Is the type separate?
 
+	is_out: BOOLEAN
+			-- Is current actual type represent a out parameter type?
+
 	is_enum: BOOLEAN is
 			-- Is current type an IL enum type?
 			-- Useful to find out if some call optimization can be done
@@ -324,14 +328,26 @@ feature -- Setting
 			-- Assign `b' to `is_true_expanded'.
 		do
 			is_true_expanded := b
+		ensure
+			is_true_expanded_set: is_true_expanded = b
 		end
 
 	set_is_separate (b: BOOLEAN) is
 			-- Assign `b' to `is_separate'.
 		do
 			is_separate := b
+		ensure
+			is_separate_set: is_separate = b
 		end
 
+	set_is_out (b: BOOLEAN) is
+			-- Assign `b' to `is_out'.
+		do
+			is_out := b
+		ensure
+			is_out_set: is_out = b
+		end
+		
 	set_cr_info (cinfo : CREATE_INFO) is
 			-- Set `cr_info' to `cinfo'.
 		require

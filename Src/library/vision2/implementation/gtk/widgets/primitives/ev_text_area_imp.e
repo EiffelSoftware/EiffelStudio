@@ -67,20 +67,20 @@ feature -- Status setting
 			a: ANY
 		do
 			a := txt.to_c
-			delete_text (0, text_length)
+			delete_text (1, text_length + 1)
 			insert_text (txt)
 		end
 	
 	append_text (txt: STRING) is
 		do
-			gtk_editable_set_position (widget, text_length)
+			gtk_text_set_point (widget, text_length)
 			insert_text (txt)
 		end
 	
 	prepend_text (txt: STRING) is
 			-- prepend 'txt' to text
 		do
-			gtk_editable_set_position (widget, 0)
+			gtk_text_set_point (widget, 0)
 			insert_text (txt)
 		end
 	
@@ -89,7 +89,7 @@ feature -- Status setting
 			-- both sides include.
 		do
 			set_position (start)
-			gtk_text_backward_delete (widget, finish - start + 1)
+			gtk_text_forward_delete (widget, finish - start)
 		end
 
 feature -- Basic operation

@@ -32,7 +32,7 @@ feature -- Status report
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := c_gtk_editable_position (widget) + 1
+			Result := gtk_text_get_point (widget) + 1
 		end
 
 	has_selection: BOOLEAN is
@@ -65,7 +65,7 @@ feature -- status settings
 	set_position (pos: INTEGER) is
 			-- set current insertion position
 		do
-			gtk_editable_set_position (widget, pos - 1)
+			gtk_text_set_point (widget, pos - 1)
 		end
 
 feature -- Resizing

@@ -129,6 +129,7 @@ feature -- Type check, byte code and dead code removal
 			operand: OPERAND_AS
 			open_type: OPEN_TYPE_A
 			is_in_creation_expression: BOOLEAN
+			multi: MULTI_TYPE_A
 		do
 			last_type := context_last_type
 
@@ -141,7 +142,8 @@ feature -- Type check, byte code and dead code removal
 			context.set_is_in_creation_expression (False)
 
 			if last_type.is_multi_type then
-				last_type := System.instantiator.array_type_a
+				multi ?= last_type
+				last_type := multi.last_type
 				context.replace (last_type)
 			end
 			last_constrained := context.last_constrained_type

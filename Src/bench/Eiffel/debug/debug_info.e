@@ -13,7 +13,7 @@ feature
 			make_debuggables;
 			make_breakpoints;
 			!! debugged_routines.make;
-			!! stepped_routines.make
+			!! removed_routines.make
 		end;
 
 	Once_request: ONCE_REQUEST is
@@ -29,7 +29,7 @@ feature
 			clear_debuggables;
 			clear_breakpoints;
 			debugged_routines.wipe_out;
-			stepped_routines.wipe_out
+			removed_routines.wipe_out
 		end;
 
 	restore is
@@ -54,6 +54,9 @@ feature -- Debuggables (Byte code,...)
 
 	debugged_routines: LINKED_LIST [FEATURE_I];
 			-- Routines that are currently debugged
+
+	removed_routines: LINKED_LIST [FEATURE_I];
+			-- Routines that are not currently debugged
 
 	new_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
 			-- Debuggable structures not 
@@ -118,6 +121,30 @@ feature -- Debuggables (Byte code,...)
 				debugged_routines.extend (f)
 			end
 		end; -- add_feature
+
+	switch_feature (f: FEATURE_I) is
+			-- Switch `f' from debugged to removed or from removed to debugged.
+		require
+			has_feature (f)
+		local
+			d_list: LINKED_LIST [DEBUGGABLE];
+			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
+			r_body_id: INTEGER;
+			bp: BREAKPOINT;
+			breakpoints: BREAK_LIST;
+			removed: BOOLEAN
+		do
+			if debugged_routines.has (f) then
+				debugged_routines.start;
+				debugged_routines.prune (f);
+				removed_routines.extend (f);
+				removed := True
+			else
+				removed_routines.start;
+				removed_routines.prune (f);
+				debugged_routines.extend (f)
+			end
+		end;
 
 	debuggable_count: INTEGER is
 			-- Number of new byte arrays since last transfer
@@ -237,7 +264,7 @@ feature -- Breakpoints
 
 	sent_breakpoints: BREAK_LIST;
 			-- Breakpoint settings or removals already
-			-- be sent to the application
+			-- been sent to the application
 
 	make_breakpoints is
 			-- Create breakpoints structures.
@@ -257,56 +284,8 @@ feature -- Breakpoints
 	restore_breakpoints is
 			-- Restore breakpoints. See comment
 			-- of feature `restore'
---		local
---			debug_bodies: LINKED_LIST [DEBUGGABLE];
---			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
---			body_id: INTEGER;
---			bp: BREAKPOINT
 		do
-			new_breakpoints.append (sent_breakpoints);
-			sent_breakpoints.wipe_out;
-			from
-			until
-				stepped_routines.empty
-			loop
-				remove_step_breakpoints;
-				stepped_routines.remove
-			end
-
---			!! new_breakpoints.wipe_out;
---			from
---				new_debuggables.start
---			until
---				new_debuggables.offright
---			loop
---				from	
---					debug_bodies := new_debuggables.item_for_iteration;
---					debug_bodies.start
---				until
---					debug_bodies.after
---				loop
---					from 
---						breakables := debug_bodies.item.breakable_points;
---						body_id := debug_bodies.item.real_body_id;
---						breakables.start;
---					until
---						breakables.after
---					loop
---						!!bp;
---						if breakables.item.is_set then
---							bp.set_stop;
---						else
---							bp.set_continue
---						end;
---						bp.set_offset (breakables.item.position);
---						bp.set_real_body_id (body_id);
---						new_breakpoints.extend (bp);
---						breakables.forth
---					end;
---					debug_bodies.forth
---				end;
---				new_debuggables.forth
---			end
+			clear_breakpoints
 		end;
 						
 	clear_breakpoints is
@@ -326,20 +305,9 @@ feature -- Breakpoints
 			bp: BREAKPOINT;
 			ap: AST_POSITION;
 			pos: INTEGER;
-			debug_item: DEBUGGABLE;
-			breakpoints: BREAK_LIST
+			debug_item: DEBUGGABLE
 		do
 			debug_bodies := debuggables (f);
-			if once_debuggables.has (f.body_id) then
-					-- If the supermelted byte code of a once routine has 
-					-- not been sent to the application (because it had 
-					-- already been called at that time) we don't sent its
-					-- breakpoints neither but we keep track of them for
-					-- future execution.
-				breakpoints := sent_breakpoints
-			else
-				breakpoints := new_breakpoints
-			end;
 			from
 				debug_bodies.start;
 				ap := debug_bodies.item.breakable_points.i_th (i);
@@ -350,106 +318,127 @@ feature -- Breakpoints
 			loop
 				debug_item := debug_bodies.item;
 				debug_item.breakable_points.i_th (i).set_stop (is_stop);
-				!!bp;
-				bp.set_offset (pos);
-				bp.set_real_body_id	(debug_item.real_body_id);
-				if is_stop then
-					bp.set_stop
-				else
-					bp.set_continue
-				end;
-				breakpoints.extend (bp);
-				debug_bodies.forth;
-			end;	
-			is_last_breakpoint_set := is_stop
-		end; -- switch_breakpoint
+				debug_bodies.forth
+			end	
+		end;
 			
-		
-	is_last_breakpoint_set: BOOLEAN;	
-		-- Did last `switch_breakpoint' set a breakpoint to stop ?
 
 	is_breakpoint_set (f: FEATURE_I; i: INTEGER): BOOLEAN is
-			-- Is the `i'-th breakpoint of `f' set ?
+			-- Is the `i'-th breakpoint of `f' set?
 		do
-			Result := has_feature (f) and then debuggables (f).first.is_breakpoint_set (i)
-		end; -- is_breakpoint_set
+			Result := has_feature (f) and then 
+						debuggables (f).first.is_breakpoint_set (i)
+		end;
 
 	has_breakpoint_set (f: FEATURE_I): BOOLEAN is
-			-- Has `f' a breakpoint set to stop ?
+			-- Has `f' a breakpoint set to stop?
 		do
-			Result := has_feature (f) and then debuggables (f).first.has_breakpoint_set
-		end; -- has_breakpoint_set
+			Result := has_feature (f) and then 
+						debuggables (f).first.has_breakpoint_set
+		end;
 			
-
-feature -- Step by step debugging
-
-	
-	stepped_routines: LINKED_STACK [FEATURE_I];
-			-- Routines that are currently step-by-step debugged
-
-	add_stepped_routine (f: FEATURE_I; i: INTEGER) is
-			-- Make `f', whose execution is stopped on the `i'-th
-			-- breakpoint, the next routine to be debugged step-by-step.
-			-- If debuggable byte code has not been  generated for `f',
-			-- we probably are stopped due to an exeception and can't go
-			-- further step by step.
+	is_first_breakpoint (i: INTEGER; f: FEATURE_I): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' related to
+			-- the entrance of that routine's coumpound?
 		require
-			f_exists: f /= Void
+			f_debuggable: has_feature (f)
+		do
+			Result := i = 1
+		end;
+
+	is_last_breakpoint (i: INTEGER; f: FEATURE_I): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' the last breakable point?
+			-- (end of the compound, not of the rescue clause)
+		require
+			f_debuggable: has_feature (f)
 		local
-			retry_as: RETRY_AS
+			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
+			internal_as: INTERNAL_AS
 		do
-			if has_feature (f) then
-				if stepped_routines.empty then 
-						-- No other routines currently in step-by-step 
-						-- debugging process.
-					stepped_routines.extend (f)
-				elseif stepped_routines.item.body_id /= f.body_id then				
-						-- We just stop in a routine which was not
-						-- step-by-step debugged the step before.
-					stepped_routines.extend (f)
-				elseif is_first_breakpoint (i, f) then   
-						-- We just renter in the routine we were debugging
-						-- step-by-step (Recursive call).
-					stepped_routines.extend (f)
-				-- else
-						-- We are already debugging `f' step-by-step.
-				end;
-				if is_last_breakpoint (i, f) then 
-						-- We reached the end of `f' compound so that
-						-- there are no steps for `f' any more.
-					stepped_routines.remove
-				end;
-				if 
-					i >= 1 and i <= debuggables (f).first.breakable_points.count
-				then
-					retry_as ?= debuggables (f).first.breakable_points.i_th (i).ast_node
-				end;
-				last_step_retry := retry_as /= Void
+			breakable_points := debuggables (f).first.breakable_points;
+			if i >= 1 and i <= breakable_points.count then
+				internal_as ?= breakable_points.i_th (i).ast_node
+			end;
+			Result := internal_as /= Void
+		end;
+
+feature -- Breakpoints setting
+
+	set_all_breakpoints is 
+			-- Set all the user-defined breakpoints.
+		do
+			from
+				debugged_routines.start
+			until
+				debugged_routines.after
+			loop
+				set_routine_breakpoints (debugged_routines.item);
+				debugged_routines.forth
 			end
 		end;
 
-	remove_stepped_routine is
-			-- Remove from `stepped_routines' the last routine 
-			-- debugged step-by-step if any.
-		do
-			if not stepped_routines.empty then
-				stepped_routines.remove
-			end
-		end;
-
-	add_step_breakpoints is
-			-- Mark all the breakable points of the next routine to 
-			-- be step-by-step debugged to be sure to stop on the 
-			-- next breakpoint.
+	set_routine_breakpoints (fi: FEATURE_I) is
+			-- Set the user-defined breakpoints in `fi'.
+		require
+			fi_exists: fi /= Void;
+			has_feature (fi);
 		local
 			d_list: LINKED_LIST [DEBUGGABLE];
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
 			r_body_id: INTEGER;
 			bp: BREAKPOINT
 		do
-			if not stepped_routines.empty then
-				d_list := debuggables (stepped_routines.item);
+			if not once_debuggables.has (fi.body_id) then
+					-- If the supermelted byte code of a once routine has 
+					-- not been sent to the application (because it had 
+					-- already been called at that time) we don't sent its
+					-- breakpoints neither.
 				from
+					d_list := debuggables (fi);
+					d_list.start
+				until
+					d_list.after
+				loop
+					from
+						breakable_points := d_list.item.breakable_points;
+						r_body_id := d_list.item.real_body_id;
+						breakable_points.start
+					until
+						breakable_points.after
+					loop
+						if breakable_points.item.is_set then
+							!! bp;
+							bp.set_stop;
+							bp.set_offset (breakable_points.item.position);
+							bp.set_real_body_id	(r_body_id);
+							new_breakpoints.extend (bp);
+						end;
+						breakable_points.forth
+					end;
+					d_list.forth
+				end
+			end
+		end;
+
+	set_routine_breakables (fi: FEATURE_I) is
+			-- Set all the breakable points of `fi'.
+			-- Used for stepping through the routine.
+		require
+			fi_exists: fi /= Void;
+			has_feature (fi)
+		local
+			d_list: LINKED_LIST [DEBUGGABLE];
+			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
+			r_body_id: INTEGER;
+			bp: BREAKPOINT
+		do
+			if not once_debuggables.has (fi.body_id) then
+					-- If the supermelted byte code of a once routine has 
+					-- not been sent to the application (because it had 
+					-- already been called at that time) we don't sent its
+					-- breakpoints neither.
+				from
+					d_list := debuggables (fi);
 					d_list.start
 				until
 					d_list.after
@@ -472,77 +461,69 @@ feature -- Step by step debugging
 				end
 			end
 		end;
-	
-	remove_step_breakpoints is
-			-- Remove the breakpoints of ithe last step-by-step 
-			-- debugged routine which were set by `add_step_breakpoints'
-			-- and leave those set by the user.
+
+	set_routine_last_breakable (fi: FEATURE_I) is
+			-- Set the last breakable point of `fi'.
+			-- (end of compound, not of rescue clause)
+		require
+			fi_exists: fi /= Void;
+			has_feature (fi)
 		local
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
 			d_list: LINKED_LIST [DEBUGGABLE];
-			r_body_id: INTEGER;
+			ast_pos: AST_POSITION;
+			r_body_id, i: INTEGER;
 			bp: BREAKPOINT
 		do
-			if not stepped_routines.empty then
-				d_list := debuggables (stepped_routines.item);
+			if not once_debuggables.has (fi.body_id) then
+					-- If the supermelted byte code of a once routine has 
+					-- not been sent to the application (because it had 
+					-- already been called at that time) we don't sent its
+					-- breakpoints neither.
+				d_list := debuggables (fi);
 				from
-					d_list.start
+					i := d_list.first.breakable_points.count
 				until
-					d_list.after
+					i < 1 or else is_last_breakpoint (i, fi)
 				loop
+					i := i - 1
+				end;
+				if i >= 1 then
 					from
-						breakable_points := d_list.item.breakable_points;
-						r_body_id := d_list.item.real_body_id;
-						breakable_points.start
+						d_list.start
 					until
-						breakable_points.after
+						d_list.after
 					loop
+						r_body_id := d_list.item.real_body_id;
+						ast_pos := d_list.item.breakable_points.i_th (i);
 						!! bp;
-						if breakable_points.item.is_set then
-							bp.set_stop
-						else
-							bp.set_continue
-						end;
-						bp.set_offset (breakable_points.item.position);
+						bp.set_stop;
+						bp.set_offset (ast_pos.position);
 						bp.set_real_body_id	(r_body_id);
 						new_breakpoints.extend (bp);
-						breakable_points.forth
-					end;
-					d_list.forth
+						d_list.forth
+					end
 				end
 			end
 		end;
-	
-	last_step_retry: BOOLEAN;
-			-- Was the last step stopped on a retry instruction?
 
-	is_first_breakpoint (i: INTEGER; f: FEATURE_I): BOOLEAN is
-			-- Is the `i'-th breakpoint of `f' related to
-			-- the entrance of that routine's coumpound?
-			-- (A retry intruction is not considered as an entrance)
-		require
-			f_debuggable: has_feature (f)
-		do
-			Result := i = 1 and not last_step_retry
-		end;
-
-	is_last_breakpoint (i: INTEGER; f: FEATURE_I): BOOLEAN is
-			-- Is the `i'-th breakpoint of `f' the last breakable point?
-			-- (either the end of the compound or of the rescue clause)
-		require
-			f_debuggable: has_feature (f)
+	remove_all_breakpoints is
+			-- Remove all breakpoints which have been set and 
+			-- sent to the application.
 		local
-			internal_as: INTERNAL_AS
+			bp: BREAKPOINT
 		do
-			if i = debuggables (f).first.breakable_points.count then
-				Result := True
-			else
-				if 
-					i >= 1 and i <= debuggables (f).first.breakable_points.count
-				then
-					internal_as ?= debuggables (f).first.breakable_points.i_th (i).ast_node;
+			from
+				sent_breakpoints.start
+			until
+				sent_breakpoints.after
+			loop
+				bp := sent_breakpoints.item;
+				if not sent_breakpoints.item.is_continue then
+					bp := clone (sent_breakpoints.item);
+					bp.set_continue;
+					new_breakpoints.extend (bp)
 				end;
-				Result := internal_as /= Void
+				sent_breakpoints.forth
 			end
 		end;
 

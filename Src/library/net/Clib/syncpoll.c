@@ -11,7 +11,6 @@
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define EINPROGRESS WSAEINPROGRESS
 #include <stdio.h>
-#include "except.h"
 #endif
 
 #ifdef EIF_OS2
@@ -43,6 +42,9 @@
 #endif
 
 #include "cecil.h"
+#include "except.h"
+#include "error.h"
+
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>

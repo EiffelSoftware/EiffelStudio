@@ -1,6 +1,5 @@
 indexing
 	description: "Facilities concerning the command line management"
-	author: "Xavier Rousselot"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,10 +18,15 @@ feature -- Access
 				Result := shared_eiffel.Eiffel_ace.lace.argument_list.i_th (1)
 				if Result.is_equal (" ") then -- (No argument)
 					Result := ""
+				else
+					-- If it contains some environment variables, they are translated.
+					Result := (create {ENV_INTERP}).interpreted_string (Result)
 				end
 			else
 				Result := ""
 			end
+		ensure
+			current_cmd_line_argument_not_void: Result /= Void
 		end
 		
 feature {NONE} -- Constants
@@ -38,7 +42,12 @@ feature {NONE} -- Constants
 			Result := shared_eiffel.Eiffel_ace.lace.application_working_directory
 			if Result = Void or else Result.is_empty then
 				Result := "."
+			else
+					-- If it contains some environment variables, they are translated.			
+				Result := (create {ENV_INTERP}).interpreted_string (Result)
 			end
+		ensure
+			application_working_directory_not_void: Result /= Void
 		end
 
 end -- class EB_SHARED_ARGUMENTS

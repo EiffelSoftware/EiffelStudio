@@ -3,7 +3,8 @@ class ICON_STONE
 
 inherit
 
-	DRAG_SOURCE;
+	DRAG_SOURCE
+
 	ICON
 		rename
 			button as source,
@@ -11,6 +12,12 @@ inherit
 		end;
 
 feature 
+
+	is_centered: BOOLEAN is 
+			-- Stone used in catalog alsways centered
+		do 
+			Result := True
+		end
 
 	data: DATA;
 			-- Data to be transported.

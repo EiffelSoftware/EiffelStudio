@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<configuration>
+	<general>
+		<fail_on_error>True</fail_on_error>
+		<log_level>1</log_level>
+		<log_source_name>System</log_source_name>
+		<log_server_name>localhost</log_server_name>
+		<log_name>Application</log_name>
+	</general>
+	<prefixes>
+		<prefix value="XML_" assembly="system.xml.dll"/>
+		<prefix value="WEB_" assembly="system.web.ui.mobilecontrols.adapters.dll"/>
+		<prefix value="DRAWING_" assembly="system.drawing.dll"/>
+		<prefix value="WEB_" assembly="system.web.regularexpressions.dll"/>
+		<prefix value="WEB_" assembly="system.web.services.dll"/>
+		<prefix value="WINFORMS_" assembly="system.windows.forms.dll"/>
+		<prefix value="WEB_" assembly="system.web.dll"/>
+		<prefix value="WEB_" assembly="system.web.mobile.dll"/>
+		<prefix value="SYSTEM_DLL_" assembly="system.dll"/>
+		<prefix value="DATA_" assembly="system.data.dll"/>
+	</prefixes>
+	<compiler>
+		<default_root_class>ANY</default_root_class>
+	</compiler>
+</configuration>

@@ -26,7 +26,7 @@ feature -- Access
 			string_value: STRING
 		do
 			if has (name) then
-				string_value := item (name);
+				string_value := found_item
 				if string_value.is_integer then
 					Result := string_value.to_integer
 				else
@@ -47,7 +47,7 @@ feature -- Access
 			string_value: STRING
 		do
 			if has (name) then
-				string_value := item (name);
+				string_value := found_item
 				if string_value.is_integer then
 					Result := string_value.to_integer.abs
 				else
@@ -69,7 +69,7 @@ feature -- Access
 			string_value: STRING
 		do
 			if has (name) then
-				string_value := item (name);
+				string_value := found_item 
 				if string_value.is_boolean then
 					Result := string_value.to_boolean
 				else
@@ -89,7 +89,7 @@ feature -- Access
 			string_value: STRING
 		do
 			if has (name) then
-				string_value := item (name);
+				string_value := found_item
 				if string_value.is_real then
 					Result := string_value.to_real
 				else
@@ -107,7 +107,7 @@ feature -- Access
 			name_not_void: name /= Void
 		do
 			if has (name) then
-				Result := item (name);
+				Result := found_item
 			else
 				Result := default_value
 			end
@@ -125,7 +125,7 @@ feature -- Access
 			an_entry: STRING
 		do
 			if has (name) then
-				a_text := item (name);
+				a_text := found_item
 				!! a_list.make;
 				from
 					c := a_text.count;
@@ -180,7 +180,7 @@ feature -- Access
 			string_value: STRING
 		do
 			if has (name) then
-				string_value := item (name);
+				string_value := found_item
 				if string_value.count > 0 then
 					Result := string_value.item (1);
 				else

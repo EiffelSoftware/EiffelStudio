@@ -503,7 +503,7 @@ feature -- General Pixmaps
 
 	Unsave_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("unsave")
+			Result := symbol_file_content ("modified")
 		end;
 
 	User_command_pixmap: PIXMAP is

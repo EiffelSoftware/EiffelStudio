@@ -241,28 +241,24 @@ feature {NONE} -- Implementation
 			delete_window_object_command: GB_COMMAND_DELETE_WINDOW_OBJECT
 			selected_object: GB_OBJECT
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			delete_position: INTEGER
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-				layout_item ?= selected_item
-				check
-					selected_item_was_layout_item: layout_item /= Void
-				end
-				selected_object := layout_item.object
-				titled_window_object ?= selected_object
-				if titled_window_object /= Void then
-						-- window objects must be handled seperately.
-					create delete_window_object_command.make (titled_window_object)
-					delete_window_object_command.execute
-				else
-					delete_position := selected_object.parent_object.layout_item.index_of (selected_object.layout_item, 1)
-					create delete_object_command.make (selected_object.parent_object, selected_object, delete_position)
-					delete_object_command.execute
-				end
+			layout_item ?= selected_item
+			check
+				selected_item_was_layout_item: layout_item /= Void
+			end
+			selected_object := layout_item.object
+			titled_window_object ?= selected_object
+			if titled_window_object /= Void then
+					-- window objects must be handled seperately.
+				create delete_window_object_command.make (titled_window_object)
+				delete_window_object_command.execute
+			else
+				create delete_object_command.make (selected_object)
+				delete_object_command.execute
+			end
 		end
 		
-		
-
 invariant
 	has_only_one_root: count <= 1
 

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Angle accessable in either degrees or radians."
@@ -175,6 +176,10 @@ end -- class EV_ANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/18 17:28:12  brendel
+--| Unreleased.
+--| May still be in system. Use REAL anywhere you find this class.
+--|
 --| Revision 1.9  2000/02/14 11:40:46  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Set of trigonometric routines."
@@ -73,6 +74,10 @@ end -- class EV_ANGLE_ROUTINES
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/18 17:28:12  brendel
+--| Unreleased.
+--| May still be in system. Use REAL anywhere you find this class.
+--|
 --| Revision 1.6  2000/02/14 11:40:46  oconnor
 --| merged changes from prerelease_20000214
 --|

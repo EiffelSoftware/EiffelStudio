@@ -69,8 +69,23 @@ feature -- Access
 			-- Is the type a numeric one ?
 
 	heaviest (other : TYPE_I) : TYPE_I is
+		local
+			l_long: like Current
 		do
-			Result := other
+			if other.is_double or other.is_float then
+				Result := other
+			else
+				if other.is_long then
+					l_long ?= other
+					if size >= l_long.size then
+						Result := Current
+					else
+						Result := other
+					end
+				else
+					Result := Current
+				end
+			end
 		end
 
 	dump (buffer: GENERATION_BUFFER) is

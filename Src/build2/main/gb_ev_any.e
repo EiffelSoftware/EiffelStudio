@@ -17,18 +17,27 @@ inherit
 	GB_SHARED_OBJECT_EDITORS
 		
 	INTERNAL
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

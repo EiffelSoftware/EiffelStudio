@@ -12,7 +12,7 @@ inherit
 		redefine
 			cancel
 		end
-
+			
 feature -- Basic operations
 
 	cancel is

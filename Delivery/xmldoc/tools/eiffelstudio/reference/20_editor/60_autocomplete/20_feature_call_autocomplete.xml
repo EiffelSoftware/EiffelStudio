@@ -11,10 +11,10 @@
 		<heading>
 			<size>1</size>Feature call auto complete
 		</heading>
-		<paragraph>EiffelStudio editor now offers the possibility to complete feature calls automatically. This means that when the user types"
+		<paragraph>EiffelStudio editor now offers the possibility to complete feature calls automatically. This means that when the user types "
 			<italic>an_identifier.an_incomplete_feature_name</italic>" and then triggers the auto-complete, the editor will propose a list of possible feature names correct in this situation.
 			<line_break></line_break>To be more precise, a window will pop up and display the list of features that can be called on 
-			<italic>an_identifier</italic> and that match
+			<italic>an_identifier</italic> and that match 
 			<italic>an_incomplete_feature_name</italic>. The user can accept the suggested name, choose another name (in the list or not), or simply cancel the auto-complete.
 		</paragraph>
 		<paragraph>
@@ -23,7 +23,7 @@
 			</image>
 		</paragraph>
 		<paragraph>To trigger the auto complete, press the key combination "Ctrl+Space" or click on 
-			<bold>Complete word</bold> in the
+			<bold>Complete word</bold> in the 
 			<bold>Advanced</bold> sub-menu of the 
 			<bold></bold> 
 			<link>

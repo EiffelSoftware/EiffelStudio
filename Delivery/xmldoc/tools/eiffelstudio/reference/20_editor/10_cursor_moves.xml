@@ -1,7 +1,5 @@
 <document title="Cursor moves" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Cursor moves
@@ -12,8 +10,7 @@
 			<line_break></line_break>Left and Right arrows can be used to move respectively to the character on the left or on the right of current position. Up and Down arrows allow you to move the cursor to the previous and next lines.
 		</paragraph>
 		<tip>
-			<bold>Tip</bold>: By maintaining "Ctrl" pressed as you use Left and Right arrows, you will move the cursor to the next or previous word instead of the next or previous character.
-			<line_break></line_break>
+			<bold>Tip</bold>: By maintaining "Ctrl" pressed as you use Left and Right arrows, you will move the cursor to the next or previous word instead of the next or previous character.			
 		</tip>
 	</paragraph>
 </document>

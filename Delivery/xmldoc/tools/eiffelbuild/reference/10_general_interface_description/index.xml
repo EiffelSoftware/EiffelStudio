@@ -27,5 +27,11 @@
 					<label>Key shortcuts</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>50_docking.xml</url>
+					<label>Docking</label>
+				</link>
+			</item>
 		</list>
 	</paragraph></document>

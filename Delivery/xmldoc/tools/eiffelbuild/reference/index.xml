@@ -49,7 +49,7 @@
 			<item>
 				<link>
 					<url>50_layout_window/index.xml</url>
-					<label>Layout window</label>
+					<label>Display window</label>
 				</link>
 			</item>
 			<item>
@@ -66,6 +66,12 @@
 			</item>
 			<item>
 				<link>
+					<url>64_window_selector/index.xml</url>
+					<label>Window selector</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>65_component_viewer/index.xml</url>
 					<label>Component viewer</label>
 				</link>
@@ -78,8 +84,20 @@
 			</item>
 			<item>
 				<link>
+					<url>75_constants/index.xml</url>
+					<label>Constants</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>80_project_settings/index.xml</url>
 					<label>Project settings</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>85_preferences/index.xml</url>
+					<label>Preferences</label>
 				</link>
 			</item>
 			<item>

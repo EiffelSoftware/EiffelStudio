@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>Type: Tool
 			<line_break/>Platform: Any
-			<line_break/>Version: 5.1
+			<line_break/>Version: 5.4
 			<line_break/>Availability: Student and Enterprise versions.
 		</paragraph>
 		<paragraph>See:</paragraph>
@@ -24,7 +24,13 @@
 				<link>
 					<url>reference/index.xml</url>
 					<label>Reference</label>
-				</link>  
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>version_history/index.xml</url>
+					<label>Version History</label>
+				</link>
 			</item>
 		</list>
 	</paragraph></document>

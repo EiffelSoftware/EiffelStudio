@@ -1,20 +1,58 @@
-<document title="Key shortcuts" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<meta_content>key shortcuts</meta_content>
-				<name>MS-HKWD</name>
-			</meta>
-		</help>
-	</meta_data>
+<document title="Key shortcuts">
+	<meta_data/>
 	<paragraph>
 		<paragraph>Many operations in EiffelBuild do not require the use of the mouse. The same effect can be achieved through the keyboard only.</paragraph>
 		<paragraph>This page gathers all the keyboard shortcuts available in the environment.</paragraph>
 		<heading>
-			<size>2</size>Key shortcut reference
+			<size>2</size>Key shortcut reference 
 		</heading>
+		<table>
+			<row>
+				<cell>
+					<bold>Key shortcut</bold>
+				</cell>
+				<cell>
+					<bold>action</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- file shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+O</cell>
+				<cell>Open project.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+N</cell>
+				<cell>New Project.</cell>
+			</row>
+			<row>
+				<cell>Ctrl+S</cell>
+				<cell>Save project</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- code generation shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+G</cell>
+				<cell>Generate code from project.</cell>
+			</row>
+			<row>
+				<cell>
+					<italic>- miscellaneous shortcuts -</italic>
+				</cell>
+			</row>
+			<row>
+				<cell>Delete</cell>
+				<cell>Delete object from currently selected tool.</cell>
+			</row>
+		</table>
 		<paragraph>
-			<bold>Note</bold>: These shortcuts are not always available and are dependent on the state of EiffelBuild. For example, Ctrl+S does nothing if there is no modified project open.
+			<bold>Note</bold>: These shortcuts are not always available and are dependent on the state of EiffelBuild. For example, Ctrl+S does nothing if there is no modified project open. 
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>

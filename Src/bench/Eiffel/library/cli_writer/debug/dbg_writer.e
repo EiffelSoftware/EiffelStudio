@@ -151,13 +151,17 @@ feature -- Definition
 		local
 			l_offsets, l_start_lines, l_start_columns, l_end_lines, l_end_columns: ANY
 		do
-			l_offsets := offsets.to_c
-			l_start_lines := start_lines.to_c
-			l_start_columns := start_columns.to_c
-			l_end_lines := end_lines.to_c
-			l_end_columns := end_columns.to_c
-			last_call_success := c_define_sequence_points (item, document.item, count,
-				$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
+			if count > 0 then
+				l_offsets := offsets.to_c
+				l_start_lines := start_lines.to_c
+				l_start_columns := start_columns.to_c
+				l_end_lines := end_lines.to_c
+				l_end_columns := end_columns.to_c
+				last_call_success := c_define_sequence_points (item, document.item, count,
+					$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
+			else
+				last_call_success := 0
+			end
 		ensure
 			success: last_call_success = 0
 		end

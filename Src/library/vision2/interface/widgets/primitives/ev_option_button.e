@@ -16,6 +16,8 @@ inherit
 		end
 
 	EV_BUTTON
+		rename
+			add_click_command as add_popup_command
 		export {NONE}
 			set_center_alignment,
 			set_left_alignment,
@@ -48,7 +50,7 @@ feature -- Status setting
 	clear_selection is
 			-- Clear the selection by putting the `text'
 			-- of the menu on the option button if there is one,
-		    -- otherwise the first menu item.
+			-- otherwise the first menu item.
 		do
 			implementation.clear_selection
 		end
@@ -57,7 +59,7 @@ feature -- Status report
 
 	selected_item: EV_MENU_ITEM is
 			-- which menu item is selected.
-			-- Void if the selection is the `text' of the menu.
+			-- Void if the selection is the 'text' of the menu.
 		do
 			Result := implementation.selected_item
 		end

@@ -20,6 +20,11 @@ inherit
 
 	WIZARD_EXECUTION_ENVIRONMENT
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Shared_file_name_factory: WIZARD_FILE_NAME_FACTORY is
@@ -46,20 +51,58 @@ feature -- Access
 			Result := progress_report_cell.item
 		end
 
-	Ce_mapper: STRING is 
+	Ecom_generated_rt_globals_header_file_name: STRING is 
+			-- C++ class header file contains information that all generated class require
+			-- e.g. global variables, system header files etc.
+		once
+			Result := "ecom_grt_globals_" + Shared_wizard_environment.project_name
+			if Shared_wizard_environment.client then
+				Result.append ("_c")
+			end
+			Result.append (".h")
+		end
+		
+	Ec_mapper: STRING is "rt_ec"
+			-- C++ class holding Eiffel to C mappers
+
+	Ce_mapper: STRING is "rt_ce"
 			-- C++ class holding C to Eiffel mappers
-		do
-			Result := "rt_ce"
+
+	Generated_ec_mapper: STRING is 
+			-- C++ class holding generated Eiffel to C mappers
+		once
+			Result := "grt_ec_" + Shared_wizard_environment.project_name
+			if Shared_wizard_environment.client then
+				Result.append ("_c")
+			end
 		end
 
 	Generated_ce_mapper: STRING is 
 			-- C++ class holding generated C to Eiffel mappers, object name.
-		do
-			Result := "rt_generated_ce"
+		once
+			Result := "grt_ce_" + Shared_wizard_environment.project_name
+			if Shared_wizard_environment.client then
+				Result.append ("_c")
+			end
 		end
 
-	Generated_ce_class_name: STRING is "ecom_generated_ce"
+	Generated_ec_class_name: STRING is 
+			-- C++ class name for generated mapper functions Eiffel to C.
+		once
+			Result := "ecom_gec_" + Shared_wizard_environment.project_name
+			if Shared_wizard_environment.client then
+				Result.append ("_c")
+			end
+		end
+		
+	Generated_ce_class_name: STRING is 
 			-- C++ class name for generated mapper functions C to Eiffel.
+		once
+			Result := "ecom_gce_" + Shared_wizard_environment.project_name
+			if Shared_wizard_environment.client then
+				Result.append ("_c")
+			end
+		end
 
 	Generated_ce_mapper_writer: WIZARD_WRITER_CPP_CLASS is
 			-- Writer for generated C to Eiffel mappers class
@@ -149,19 +192,6 @@ feature -- Access
 
 	Ecom_rt_globals_header_file_name: STRING is "ecom_rt_globals.h"
 			-- C++ class holding runtime global variables
-
-	Ecom_generated_rt_globals_header_file_name: STRING is "ecom_generated_rt_globals.h"
-			-- C++ class header file contains information that all generated class require
-			-- e.g. global variables, system header files etc.
-
-	Ec_mapper: STRING is "rt_ec"
-			-- C++ class holding Eiffel to C mappers
-
-	Generated_ec_mapper: STRING is "rt_generated_ec"
-			-- C++ class holding generated Eiffel to C mappers
-
-	Generated_ec_class_name: STRING is "ecom_generated_ec"
-			-- C++ class name for generated mapper functions Eiffel to C.
 
 	Alias_header_file_name: STRING is "ecom_aliases.h"
 			-- Name of common header file name for aliases.
@@ -321,10 +351,6 @@ feature -- Access
 			tmp_string.to_lower
 			Result.force (tmp_string, tmp_string)
 
-			tmp_string := clone (Eof_word)
-			tmp_string.to_lower
-			Result.force (tmp_string, tmp_string)
-
 			Result.force (clone (Make_word), clone (Make_word))
 			Result.force (clone (Make_from_other), clone (Make_from_other))
 			Result.force (clone (Make_from_pointer), clone (Make_from_pointer))
@@ -440,6 +466,7 @@ feature -- Access
 			Result.force ("if", "if")
 			Result.force ("inline", "inline")
 			Result.force ("int", "int")
+			Result.force ("interface", "interface")
 			Result.force ("long", "long")
 			Result.force ("mutable", "mutable")
 			Result.force ("namespace", "namespace")

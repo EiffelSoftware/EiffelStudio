@@ -183,7 +183,5 @@ else
 	cd run-time; make link; cd ..
 	
 fi
-echo Moving x2c.h to x2c.header...
-cd run-time; mv x2c.h x2c.header
 
 echo quick_configure terminated.

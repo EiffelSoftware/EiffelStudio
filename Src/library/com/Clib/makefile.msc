@@ -1,7 +1,7 @@
 CC = cl
-CFLAGS = -Zi -Ic:\Eiffel43-10\bench\spec\windows\include\ -Ic:\Eiffel43-10\library\new_com\spec\Windows\include\ -c -Zp -Tp
+CFLAGS = -Zi -I$(EIFFEL4)\bench\spec\windows\include\ -Ic:\library\EiffelCOM\library\spec\Windows\include\ -c 
 
-OBJ = E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_Large_Integer.obj E_ULarge_Integer.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj 
+OBJ = E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_Large_Integer.obj E_ULarge_Integer.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj E_arraydesc.obj E_custdata.obj E_bstr.obj E_IType_lib.obj E_IType_Info.obj E_IType_Comp.obj E_guid.obj E_safe_array.obj
 
 com.lib: $(OBJ)
 	if exist $@ del $@
@@ -10,3 +10,5 @@ com.lib: $(OBJ)
 .cpp.obj:
 	$(CC) $(CFLAGS) $<
 
+.c.obj:
+	$(CC) $(CFLAGS) $<

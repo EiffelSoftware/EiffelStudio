@@ -99,7 +99,7 @@ feature
 	has_renamed (feature_name: STRING): BOOLEAN is
 			-- Is the current parent renamed a feature to `feature_name' ?
 		local
-			local_renaming: EXTEND_TABLE [STRING, STRING]
+			local_renaming: like renaming
 		do
 			local_renaming := renaming
 			if local_renaming /= Void then
@@ -118,8 +118,7 @@ feature
 			-- Is the current parent renaming `feature_name' ?
 		do
 			Result := 	renaming /= Void
-						and then
-						renaming.has (feature_name);
+						and then renaming.has (feature_name);
 		end;
 
 	is_redefining (feature_name: STRING): BOOLEAN is

@@ -325,12 +325,6 @@ feature -- Status setting
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
-	
-	show is
-			-- Request that `Current' be displayed when its parent is.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-		end
 
 	enable_capture is
 			-- Grab all the mouse and keyboard events.
@@ -480,18 +474,6 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 	parent_imp: EV_CONTAINER_IMP
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
-
-	aux_info_struct: POINTER is
-			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
-		local
-			a_cs: EV_GTK_C_STRING
-		do
-			a_cs := "gtk-aux-info"
-			Result := feature {EV_GTK_EXTERNALS}.gtk_object_get_data (
-				c_object,
-				a_cs.item
-			)
-		end
 		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		

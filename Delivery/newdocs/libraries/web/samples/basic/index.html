@@ -1,31 +1,75 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.3.0221 Enterprise Edition">
-		
-<TITLE>web_demo documentation</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>
+		<title>EiffelWeb Sample</title>
+		<link REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</head>
+	<body>
+		<h1>A Basic EiffelWeb Sample</h1>
+		<p>
 
-	</HEAD>
+			This sample shows how to retrieve and display information from a
+            basic form on a web page.<p>
+		<p CLASS="note">
+			<b>Note:</b> This sample requires a web server supporting CGI in
+            order to be run. Both the Internet Information Services web server
+            from Microsoft and the GNU Apache server may be used.<h2>Compiling</h2>
+		<p>
+			To compile the example:
+		</p>
+		<ul>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">System</SPAN>
-	<SPAN CLASS="eitag">name:     </SPAN>web_demo
-	<SPAN CLASS="eitag">location: </SPAN>F:\52dev\examples\web\basic
-	<SPAN CLASS="eitag">ace file: </SPAN>F:\52dev\examples\web\basic\Ace.mswin.ace
+			<li>Launch EiffelStudio.
+			<li>Select <b>Use existing Ace (control file)</b> and click <b>OK</b>.
+			<li>Browse to <i>Eiffel52\examples\web\basic\</i>.
+			<li>Choose <i>Ace.mswin.ace</i> on Windows platforms or <i>Ace.unix.ace</i> on Unix platforms.
+			<li>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<li>Click <b>OK</b>.</ul>
 
-<SPAN CLASS="ekeyword">Root class</SPAN>
-	<A CLASS="eclass" HREF="root_cluster/sample_chart.html">SAMPLE</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="ecluster" HREF="root_cluster/index.html">root_cluster</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="web/cgi_handling/cgi_interface_flatshort.html#f_make">make</A>
+		<p>
+		<h2>Installing</h2>
+		<p>The workbench version of the example (i.e. the version
+        compiled either by melting or freezing) relies on the file <i>
+        web_demo.melted</i> to execute properly. However the process is
+        launched by the web server which means that this file will not be in the
+        <i>path</i> of the application. It is possible to set a registry entry
+        that will tell the Eiffel runtime where to find this file. The sample includes the file <i>web.reg</i>
 
-<SPAN CLASS="ekeyword">Top-level clusters</SPAN>
-	<A CLASS="ecluster" HREF="root_cluster/index.html">root_cluster</A>
-	<A CLASS="ecluster" HREF="base/index.html">base</A>
-	<A CLASS="ecluster" HREF="time/index.html">time</A>
-	<A CLASS="ecluster" HREF="web/index.html">web</A>
+        that you can edit by replacing the line:</p>
+		<code>&quot;MELT_PATH&quot;=&quot;c:\\eiffel52\\examples\\web\\basic\\eifgen\\w_code&quot;</code><p>
+        with the path to the <i>W_Code</i> folder where you have compiled the
+        example (the <i>W_Code</i> folder is located underneath the <i>Eifgen</i>
 
-</PRE>
+        folder). Once you have edited the file, simply double click it to
+        register the changes in the registry (click <i>Yes </i>when prompted).</p>
+		<p>
+        You should then copy the file <i>web_demo.exe</i> in the <i>cgi_bin</i>
+        directory of your web server and the file <i>sample.html</i> in a
+        directory on the web server.</p>
 
-</BODY>
+		<h2>
+        Running</h2>
+		<p>
+        To run the example, access the page <i>sample.html</i> that you copied
+        on the web server with a web browser (typically <i>
+        http://localhost/sample.html</i>). Fill in the text field with a
+        username and click <i>Submit</i>. You should see a page displaying the
+        name you jsut entered. Although not earth-shattering, this sample shows
+        the basis for building more complex forms processing in Eiffel.</p>
 
-</HTML>
+		<h2>Under the Hood</h2>
+		<p>
+		This basic sample has just one class
+		<a CLASS="eclass" HREF="root_cluster/sample_chart.html">SAMPLE</a> which inherits from
+		<a CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_interface_chart.html">CGI_INTERFACE</a>.
+		<a CLASS="eclass" HREF="root_cluster/sample_chart.html">SAMPLE</a> implements
+		<a CLASS="efeature" HREF="root_cluster/sample.html#f_execute">execute</a> which retrieves the
+		name entered in the form and creates a new HTML page with it.
+		</p>
+
+		<p></p>
+		<p>
+			&nbsp;<p>
+			See the <a HREF="root_cluster/index.html">reference</a> for the class interfaces.
+		<p>
+	</body>
+</html>

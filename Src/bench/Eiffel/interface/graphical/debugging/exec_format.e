@@ -18,7 +18,7 @@ feature
 	make (c: COMPOSITE; a_text_window: PROJECT_TEXT) is
 		do
 			init (c, a_text_window);
-			add_button_click_action (3, Current, Format_and_run)
+			set_action ("!c<Btn1Down>", Current, Format_and_run)
 		end;
 
 	execute (argument: ANY) is

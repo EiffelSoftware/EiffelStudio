@@ -320,6 +320,8 @@ feature -- Formats
 feature -- Grahpical Interface
 
 	build_widgets is
+		local
+			sep: SEPARATOR
 		do
 			if eb_shell /= Void then
 				set_default_size
@@ -330,6 +332,7 @@ feature -- Grahpical Interface
 			build_text_windows;
 			build_menus;
 			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
+			!! sep.make ("", toolbar_parent);
 			build_bar;
 			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;

@@ -248,6 +248,10 @@ feature -- Type check, byte code and dead code removal
 				if
 					a_feature.is_obsolete
 				and then
+						-- If the obsolete call is in an obsolete class,
+						-- no message is displayed
+					not context.a_class.is_obsolete
+				and then
 						-- The current feature is whether the invariant or
 						-- a non obsolete feature
 					(context.a_feature = Void or else

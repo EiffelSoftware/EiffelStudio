@@ -29,7 +29,8 @@ inherit
 			interface,
 			pnd_press,
 			set_pixmap,
-			on_parented
+			on_parented,
+			on_orphaned
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -162,6 +163,60 @@ feature -- {EV_TREE_IMP}
 			index_not_changed: ev_children.index = old ev_children.index
 		end
 
+	on_orphaned is
+			-- `Current' has just been orphaned.
+			-- Because this message is only recieved when a tree item becomes the child of a tree,
+			-- we need to recurse through all children of the item and send this message.
+		do
+			remove_all_direct_references
+			
+		ensure then
+			index_not_changed: ev_children.index = old ev_children.index
+		end
+
+	
+	remove_all_direct_references is
+		local	
+			original_index: INTEGER
+			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
+			loc_tuple: TUPLE[INTEGER, INTEGER]
+			item_value: INTEGER
+		do
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.remove_all_direct_references
+				ev_children.forth
+			end
+			ev_children.go_i_th (original_index)
+			if pixmap /= Void then
+				-- If the item has a pixmap then 
+				current_images := top_parent_imp.current_image_list_info
+					-- Retrieve information about image list of the tree.
+				if pixmap_imp.icon.item /= Void then
+					item_value := cwel_pointer_to_integer (pixmap_imp.icon.item)
+				else
+					item_value := cwel_pointer_to_integer (pixmap_imp.bitmap.item)
+				end
+				loc_tuple := current_images.item (item_value)
+				-- Retrieve the tuple of info correspoding to the pixmap of the item.
+				if loc_tuple.integer_item (2) > 1 then
+					loc_tuple.enter (loc_tuple.integer_item (2) - 1, 2)
+						--Decrease and store the number of items referencing this image.
+					io.putstring ("Decreasing to " + loc_tuple.integer_item (2).out + "%N")
+				elseif loc_tuple.integer_item (2) = 1 then
+					top_parent_imp.image_list.remove_image (loc_tuple.integer_item (1))
+						-- Remove the icon from the image_list
+					current_images.remove (item_value)
+						-- Remove the image from our current_image_list_info
+					io.putstring ("Completely removed image from image list.%N")
+				end
+			end
+		end
+
+
 	set_pixmap_in_parent is
 			-- Add the pixmap to the parent by updating the parent's image list.
 		local
@@ -170,7 +225,7 @@ feature -- {EV_TREE_IMP}
 			loc_top_parent_imp :EV_TREE_IMP
 			current_images: HASH_TABLE [TUPLE[INTEGER, INTEGER], INTEGER]
 			item_value: INTEGER
-			loc_tuple: TUPLE[INTEGER, INTEGER]
+			loc_tuple: TUPLE [INTEGER, INTEGER]
 		do
 			p_imp := pixmap_imp
 			loc_top_parent_imp := top_parent_imp
@@ -370,6 +425,18 @@ feature {NONE} -- Implementation, pick and drop
 			top_parent_imp.release_capture
 		end
 
+	set_heavy_capture is
+			-- Grab user input.
+		do
+			top_parent_imp.set_heavy_capture
+		end
+
+	release_heavy_capture is
+			-- Release user input.
+		do
+			top_parent_imp.release_heavy_capture
+		end
+
 feature {EV_TREE_IMP} -- Implementation
 
 	internal_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
@@ -467,8 +534,8 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.43  2000/03/27 17:36:49  rogers
---| Modified set_pixmap_in_parent to work with the new type of current_images. A record of the number of items referencing an image in the image list is now also recorded.
+--| Revision 1.44  2000/03/27 22:16:11  rogers
+--| Added on_orphaned, remove_all_direct_references, set_heavy_capture and release_heavy_capture.
 --|
 --| Revision 1.42  2000/03/24 20:51:52  rogers
 --| Added on_parented and set_pixmap_in_parent. This allows the pixmaps to be set before parenting the items.
@@ -477,7 +544,8 @@ end -- class EV_TREE_ITEM_IMP
 --| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP. Removed commented PND inheritence.
 --|
 --| Revision 1.40  2000/03/24 17:15:36  rogers
---| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed set_pixmap so that repeated icons are shared internally in the image list.
+--| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed set_pixmap so that repeated icons are
+--| shared internally in the image list.
 --|
 --| Revision 1.39  2000/03/24 00:18:01  rogers
 --| Implemented set_pixmap.
@@ -498,19 +566,25 @@ end -- class EV_TREE_ITEM_IMP
 --| Added text coment, removed add_item and removed commented lines from count.
 --|
 --| Revision 1.33  2000/03/09 17:28:33  rogers
---| Removed redundent commented code. Insert item now uses pos - 1 correctly, instead of index when the insertion position is not one.
+--| Removed redundent commented code. Insert item now uses pos - 1 correctly, instead of index when the
+--| insertion position is not one.
 --|
 --| Revision 1.31  2000/03/08 17:33:44  rogers
---| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has been removed. Set text now sets the text to a clone of the passed text. All calls to general_insert_item now take an index.
+--| Set_text from WEL_TREE_VIEW is now redefined. Redundent make_with_text has been removed. Set text now
+--| sets the text to a clone of the passed text. All calls to general_insert_item now take an index.
 --|
 --| Revision 1.30  2000/03/07 17:43:18  rogers
---| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP. The same type change has been implemented for parent_imp, and insert item now takes EV_TREE_ITEM_IMP instead of like item_type.
+--| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP.
+--| The same type change has been implemented for parent_imp, and insert item now takes EV_TREE_ITEM_IMP 
+--|instead of like item_type.
 --|
 --| Revision 1.29  2000/03/06 21:10:21  rogers
---| Is_initialized is now set to true in initialization, and internal_children is created. Re-implemented parent_imp.
+--| Is_initialized is now set to true in initialization, and internal_children is created. Re-implemented 
+--| parent_imp.
 --|
 --| Revision 1.28  2000/03/06 19:07:22  rogers
---| Added text and also top_parent_imp which returns the implementation of parent_tree. Set text no longer calls the EV_SIMPLE_ITEM_IMP Precursor.
+--| Added text and also top_parent_imp which returns the implementation of parent_tree. Set text no longer 
+--| calls the EV_SIMPLE_ITEM_IMP Precursor.
 --|
 --| Revision 1.27  2000/02/19 06:34:12  oconnor
 --| removed old command stuff

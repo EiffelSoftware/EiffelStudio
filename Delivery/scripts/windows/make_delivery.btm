@@ -61,6 +61,8 @@ md %INSTALL_DIR
 cdd %INSTALL_DIR
 remtrace studio
 exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
+fullrd studio\help\defaults\unix
+fullrd studio\spec\unix
 remtrace eifinit
 exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace examples
@@ -88,6 +90,7 @@ remtrace root
 exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
+fullrf INSTALL VERSION README make_install compile_libraries
 
 remtrace Borland files
 gunzip bcc55.tar.gz

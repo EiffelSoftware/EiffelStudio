@@ -71,6 +71,7 @@ feature
 				not context.has_postcondition and
 				not context.has_invariant and
 				not context.has_rescue and
+				not context.current_feature.is_once and then
 				source.is_simple_expr
 			then
 				target_type := context.real_type (target.type)

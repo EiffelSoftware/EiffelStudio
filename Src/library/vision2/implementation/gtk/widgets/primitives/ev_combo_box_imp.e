@@ -130,7 +130,6 @@ feature {NONE} -- Initialization
 			 	triggering_item ?= eif_object_from_c (
 					gtk_value_pointer (an_item)
 				)
-				timer.reset_count
 				timer.set_interval (1)
 				avoid_callback := True
 			else
@@ -367,6 +366,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2001/06/19 00:02:30  etienne
+--| Removed useless call to `reset_count' on a timer.
+--|
 --| Revision 1.39  2001/06/15 17:42:26  etienne
 --| Fixed problem with focus_in/out_actions in combo boxes.
 --|

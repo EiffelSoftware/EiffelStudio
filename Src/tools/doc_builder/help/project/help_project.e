@@ -110,7 +110,7 @@ feature -- Commands
 		deferred			
 		end		
 	
-feature {HELP_PROJECT_SETTINGS_FILE, HELP_TABLE_OF_CONTENTS} -- Implementation
+feature {HELP_PROJECT_SETTINGS_FILE} -- Implementation
 
 	project_file_name: FILE_NAME is
 			-- Name for generated project file

@@ -11,10 +11,10 @@ inherit
 			{TMP_CLASS_COMMENTS_SERVER} all;
 			{ANY} put, flush, start, after, forth,
 			item_for_iteration, key_for_iteration,
-			clear_all, file_ids, current_file_id,
+			clear_all, current_file_id,
 			set_current_file_id, remove, has, off
 		redefine
-			put, remove
+			put
 		end
 
 create
@@ -44,29 +44,6 @@ feature -- Access
 		do
 			Result := t.class_id
 		end
-
-feature -- Removal
-
-	remove (an_id: INTEGER) is
-			-- Remove information of id `an_id'.
-			-- NO precondition, the feature will check if the
-			-- server has the element to remove.
-			--|Note: the element will actually be removed from
-			--|disk at the end of a succesful compilation
-		local
-			old_info: SERVER_INFO;
-			old_server_file: SERVER_FILE;
-		do
-			old_info := tbl_item (an_id);
-			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.file_id);
-				old_server_file.remove_occurrence;
-				if old_server_file.occurrence = 0 then
-					file_ids.prune (old_server_file.file_id);
-				end;
-				tbl_remove (an_id);
-			end;
-		end;
 	
 feature {NONE} -- Implementation
 

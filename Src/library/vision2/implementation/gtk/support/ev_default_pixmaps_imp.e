@@ -35,9 +35,15 @@ feature -- Access
 
 	Default_window_icon: EV_PIXMAP is
 			-- Pixmap used as default icon for new windows.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
 				-- Create a default pixmap
 			create Result
+			pixmap_imp ?= Result.implementation
+			check
+				pixmap_imp_not_void: pixmap_imp /= Void
+			end
 
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
@@ -67,6 +73,9 @@ end -- class EV_DEFAULT_PIXMAPS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/05/03 17:51:13  brendel
+--| Added pixmap_imp.
+--|
 --| Revision 1.1  2000/05/03 16:37:22  pichery
 --| New default pixmaps GTK implementation
 --|

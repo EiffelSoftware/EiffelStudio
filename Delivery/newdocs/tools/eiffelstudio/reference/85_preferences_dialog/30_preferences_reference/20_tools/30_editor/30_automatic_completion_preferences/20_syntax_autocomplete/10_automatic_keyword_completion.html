@@ -22,102 +22,73 @@
 				<LI>indexing
 				<LI>inherit </UL>
 			<LI>Feature structure keywords<UL>
-				<LI>
-				<LI>
-				<LI>
-				<LI>
-				<LI></UL>
+				<LI>is
+				<LI>require
+				<LI>require else
+				<LI>local
+				<LI>do
+				<LI>deferred
+				<LI>external
+				<LI>rescue
+				<LI>ensure
+				<LI>ensure then</UL>
 			<LI>Control structures keywords<UL>
-				<LI>
-				<LI>
-				<LI>
-				<LI>
-				<LI></UL>
-			<LI><UL>
-				<LI>
-				<LI>
-				<LI>
-				<LI>
-				<LI></UL>
-			
-		<H3>Header 3</H3>
-		<P>Text. </P>
-
-		<UL>
-			<LI>First item of bulleted list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in bulleted list.
+				<LI>if
+				<LI>then
+				<LI>elseif
+				<LI>else
+				<LI>inspect
+				<LI>when
+				<LI>from
+				<LI>variant
+				<LI>until
+				<LI>loop
+				<LI>debug
+				<LI>check</UL>
+			<LI>Inherit clauses keywords<UL>
+				<LI>rename
+				<LI>redefine
+				<LI>undefine
+				<LI>select
+				<LI>export</UL>
+			<LI>Other keywords<UL>
+				<LI>Precursor
+				<LI>create
+				<LI>obsolete
+				<LI>invariant
+				<LI>end</UL>
 		</UL>
 
-		<OL>
-			<LI>First item of ordered list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in ordered list.
-		</OL>
-
-		<CODE>
-			<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <BR>
-			 &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../vision2/ev_action_sequence.html">EV_ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/tuple.html">TUPLE</A> <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-			<BR>
-			<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/base/reference/event/action_sequence.html">ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-			<BR>
-			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
-			<BR>
-			 &nbsp; &nbsp; &nbsp;<A NAME="f_force_extend"><A CLASS="efeature" HREF="../../../vision2/ev_action_sequence.html#f_force_extend">force_extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/tuple.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extend without checking type of </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">deferred</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
-			<BR>
-			 &nbsp; &nbsp; &nbsp;<A NAME="f_extend_kamikaze"><A CLASS="efeature" HREF="../../../vision2/ev_action_sequence.html#f_extend_kamikaze">extend_kamikaze</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extend </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"> and remove it again after it is called.</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base/linked_list.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../event/action_sequence.html#f_prune_when_called">prune_when_called</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-			 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
-			 &nbsp; &nbsp; &nbsp;<BR>
-			<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_ACTION_SEQUENCE<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
-		</CODE>
-		<BR>
-
-		<TABLE>
-			<TR>
-				<TD>
-					Row 1 Column 1
-				</TD>
-				<TD>
-					Row 1 Column 2
-				</TD>
-			</TR>
-			<TR>
-				<TD>
-					Row 2 Column 1
-				</TD>
-				<TD>
-					Row 2 Column 2
-				</TD>
-			</TR>
-		</TABLE>
-
-		<P>
-		[FIGURE]
-		<P CLASS="figuretitle">Fig. 1: Figure Title</P>
-
-		<P CLASS="Note">
-		<B>Note</B>: Did you know?<BR>
-		</P>
-		<P CLASS="tip">
-		<B>Tip</B>: Cool trick<BR>
-		</P>
-		<P CLASS="warning">
-		<B>Caution</B>: Be careful<BR>
-		</P>
-
-		<P CLASS="seealso">
-		<B>See Also</B><BR>
-					<A HREF="Decision.html">Related Topic</A><BR>
-		</P>
-		<P CLASS="sample">
-		<B>Samples</B><BR>
-					<A HREF="sourcecode.html">1+1=2</A><BR>
+		<H2>Usage</H2>
+		<P>A directory is associated with each keyword. These directories contains six items which you may modify to customize
+		the automatic completion of the keyword:
+			<UL>
+				<LI><P>Autocomplete ...: If this is set to True, the automatic completion will be triggered when you
+				type the keyword in the editor. If it is set to False, the keyword will be considered as a normal word.
+				</P>
+				<LI><P>Use default autocomplete: If this is set to True, the next preferences will be ignored and the
+				default completion scheme will be used. Otherwise, the automatic completion will use the user-defined
+				strings described below.
+				</P>
+				<LI><P>Customized autocomplete (Return after keyword was typed): This defines what will be inserted as
+				you press Return just after typing the keyword if you chose not to use the default value (see Use
+				default autocomplete above).
+				</P>
+				<LI><P>Customized autocomplete (Space after keyword was typed): This defines what will be inserted as
+				you press Space just after typing the keyword if you chose not to use the default value (see Use
+				default autocomplete above).
+				</P>
+				<LI><P>Customized autocomplete (Return, other cases): This defines what will be inserted as
+				you press Return after a keyword which had been previously typed. It is effective only if you chose
+				not to use the default value (see Use default autocomplete above).
+				</P>
+				<LI><P>Customized autocomplete (Space, other cases): This defines what will be inserted as
+				you press Space after a keyword which had been previously typed. It is effective only if you chose
+				not to use the default value (see Use default autocomplete above).
+				</P>
+			</UL>
+ 		The syntax used in the four last item is described in Keyword completion customization. Default values are accessible in
+		Keyword completion default values.
 		</P>
 	</BODY>
 </HTML>

@@ -74,7 +74,7 @@ feature {NONE}
 		local
 			cmd_string: STRING;
 			filterable_format: FILTERABLE;
-			shell_request: ASYNC_SHELL;
+			shell_request: EXTERNAL_COMMAND_EXECUTOR;
 			filename, new_text: STRING
 		do
 			set_global_cursor (watch_cursor);
@@ -127,8 +127,7 @@ feature {NONE}
 						cmd_string.replace_substring_all ("$target", filename);
 					end;
 					!!shell_request;
-					shell_request.set_command_name (cmd_string);
-					shell_request.send;
+					shell_request.execute (cmd_string);
 				end
 			end;
 			restore_cursors

@@ -105,11 +105,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 				NULL,
 				NULL
 			)
-			if C.gtk_is_window (c_object) then
-				C.gtk_object_destroy (c_object)
-			else
-				C.gtk_object_unref (c_object)
-			end
+			C.gtk_object_destroy (c_object)
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL
@@ -332,7 +328,7 @@ feature {NONE} -- Implementation
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
-				gtk_object_unref (c_object)
+				gtk_object_destroy (c_object)
 			end
 			Precursor {IDENTIFIED}
 		end

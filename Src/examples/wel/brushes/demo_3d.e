@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 
 	win_dc: WEL_CLIENT_DC
 
-	virtual_dcs: ARRAY [WEL_COMPATIBLE_DC]
+	virtual_dcs: ARRAY [WEL_MEMORY_DC]
 
 	virtual_bitmaps: ARRAY [WEL_BITMAP]
 
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			ang, rap: REAL
 			nx, ny: INTEGER
 			number_bitmap: INTEGER
-			virtual_dc: WEL_COMPATIBLE_DC
+			virtual_dc: WEL_MEMORY_DC
 			message: STRING
 		do
 			!! win_dc.make (Current)
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
                         pen: WEL_PEN
 			ind: INTEGER
 			colors: ARRAY [WEL_COLOR_REF]
-			virtual_dc: WEL_COMPATIBLE_DC
+			virtual_dc: WEL_MEMORY_DC
 			virtual_bitmap: WEL_BITMAP
 		do
 			!! log_pal.make (768, max_color)
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			until
 				dec > virtual_dcs_count
 			loop
-				!! virtual_dc.make (win_dc)
+				!! virtual_dc.make_by_dc (win_dc)
 				!! virtual_bitmap.make_compatible (win_dc,
 					width, height)
 				virtual_dc.select_bitmap (virtual_bitmap)

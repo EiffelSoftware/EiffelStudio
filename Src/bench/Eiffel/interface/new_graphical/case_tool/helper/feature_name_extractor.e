@@ -13,7 +13,17 @@ inherit
 feature -- Access
 
 	feature_name (a_feature: FEATURE_AS): STRING is
-			-- Return name of `a_feature' (i.e. "feature_name, other_name")
+			-- Return name of `a_feature' (i.e. "feature_name")
+		require
+			a_feature_not_Void: a_feature /= Void
+		do
+			Result := a_feature.feature_name.twin
+		ensure
+			Result_not_Void: Result /= Void
+		end
+		
+	feature_names (a_feature: FEATURE_AS): LIST [STRING] is
+			-- Return all names of `a_feature'.
 		require
 			a_feature_not_Void: a_feature /= Void
 		local
@@ -21,8 +31,9 @@ feature -- Access
 			str: STRING
 		do
 			l_feature_names := a_feature.feature_names
+			create {ARRAYED_LIST [STRING]} Result.make (l_feature_names.count)
 			if l_feature_names.count = 1 then
-				Result := a_feature.feature_name.twin
+				Result.extend (a_feature.feature_name.twin)
 			else
 				str := l_feature_names.first.visual_name.twin
 				from
@@ -31,10 +42,9 @@ feature -- Access
 				until
 					l_feature_names.after
 				loop
-					str.append (", " + l_feature_names.item.visual_name)
+					Result.extend (l_feature_names.item.visual_name)
 					l_feature_names.forth
 				end
-				Result := str
 			end
 		ensure
 			Result_not_Void: Result /= Void
@@ -55,7 +65,7 @@ feature -- Access
 		end
 		
 	full_name_compiled (a_feature: E_FEATURE): STRING is
-			-- Full name of `a_feature' (i.e. "feature_name, another_name (foo: FOO): LIST [FOO, BAR [FOO2]]")
+			-- Full name of `a_feature' (i.e. "feature_name (foo: FOO): LIST [FOO, BAR [FOO2]]")
 		require
 			a_feature_not_Void: a_feature /= Void
 		do
@@ -65,19 +75,25 @@ feature -- Access
 		end
 
 	full_name (a_feature: FEATURE_AS): STRING is
-			-- Full name of `a_feature' (i.e. "feature_name, another_name: LIST [FOO, BAR [FOO2]]")
+			-- Full name of `a_feature' (i.e. "feature_name: LIST [FOO, BAR [FOO2]]")
 			-- without parameters.
 		require
 			a_feature_not_Void: a_feature /= Void
-		local
-			l_body: BODY_AS
 		do
-			Result := feature_name (a_feature)
-			
+			Result := feature_name (a_feature) + full_signature (a_feature)
 			if a_feature.body.content /= Void and then a_feature.is_deferred then
 				Result.append ("*")
 			end
-			Result.append (": ")
+		ensure
+			Result_not_Void: Result /= Void
+		end
+		
+	full_signature (a_feature: FEATURE_AS): STRING is
+			-- Full signature of `a_feature' (i.e. : INTEGER [FOO [BAR], INTEGER])
+		local
+			l_body: BODY_AS
+		do
+			Result := ": "
 			l_body := a_feature.body
 			if l_body /= Void then
 				Result.append (suppliers_name (l_body.type))
@@ -86,6 +102,7 @@ feature -- Access
 		ensure
 			Result_not_Void: Result /= Void
 		end
+		
 
 feature {NONE} -- Implementation
 

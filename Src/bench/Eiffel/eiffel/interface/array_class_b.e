@@ -107,8 +107,7 @@ feature {NONE}
 			f.set_position (1)
 			create gen.make (1, 1)
 			gen.put (f, 1)
-			create Result.make (gen)
-			Result.set_base_class_id (System.to_special_id)
+			create Result.make (System.to_special_id, gen)
 		end;
 
 	Make_signature: DYN_PROC_I is

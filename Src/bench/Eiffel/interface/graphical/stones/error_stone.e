@@ -51,12 +51,30 @@ feature -- Access
 
 	stone_name: STRING is do Result := l_Explain end;
 
-	help_text: STRING is
+	help_text: LINKED_LIST [STRING] is
 			-- Content of the file where the help is
+		local
+			a_file: RAW_FILE;
+			a_line: STRING
 		do
-			Result := origin_text;
-			if (Result = Void) then
-				Result := l_No_help_available
+			!! Result.make;
+			if is_valid then
+				!!a_file.make (file_name);
+				if a_file.exists and then a_file.is_readable then
+					from
+						a_file.open_read;
+						a_file.readline;
+					until
+						a_file.end_of_file
+					loop
+						a_line := clone (a_file.laststring);
+						Result.extend (a_line);
+						a_file.readline;
+					end
+				end
+			end
+			if Result.empty then
+				Result.put_front (l_No_help_available)
 			end;
 		end;
 

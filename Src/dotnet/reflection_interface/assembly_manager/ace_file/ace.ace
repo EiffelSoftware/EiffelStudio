@@ -46,37 +46,37 @@ cluster
 			"CVS";
 		end
 		
-	all dot_net_base: "$ISE_EIFFEL\library.net\base"
+	all dot_net_base: "$EIFFEL_SRC\library.net\base"
 		exclude
 			"CVS";
 		end
 	
-	system_generated: "$ISE_EIFFEL\library.net\System"
+	system_generated: "$EIFFEL_SRC\library.net\System"
 		exclude
 			"CVS";
 		end	
 
-	system_drawing_generated: "$ISE_EIFFEL\library.net\System.Drawing"
+	system_drawing_generated: "$EIFFEL_SRC\library.net\System.Drawing"
 		exclude
 			"CVS";
 		end
 
-	system_xml_generated: "$ISE_EIFFEL\library.net\System.Xml"
+	system_xml_generated: "$EIFFEL_SRC\library.net\System.Xml"
 		exclude
 			"CVS";
 		end
 
-	system_windows_forms_generated: "$ISE_EIFFEL\library.net\System.Windows.Forms"
+	system_windows_forms_generated: "$EIFFEL_SRC\library.net\System.Windows.Forms"
 		exclude
 			"CVS";
 		end
 
-	system_data_generated: "$ISE_EIFFEL\library.net\System.Data"
+	system_data_generated: "$EIFFEL_SRC\library.net\System.Data"
 		exclude
 			"CVS";
 		end
 
-	accessibility_generated: "$ISE_EIFFEL\library.net\Accessibility"
+	accessibility_generated: "$EIFFEL_SRC\library.net\Accessibility"
 		exclude
 			"CVS";
 		end

@@ -121,8 +121,9 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
+			an_object.add_client_representation_recursively
 			
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 
 	undo is
@@ -154,6 +155,7 @@ feature -- Basic Operation
 				-- Files associated are only there if already generated.
 			delete_files
 			
+			an_object.remove_client_representation_recursively
 			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		

@@ -37,7 +37,7 @@ extern int eio();				/* Raise 'I/O error' exception */
  * Opening and closing a directory.
  */
 
-public fnptr dir_open(name)
+public EIF_POINTER dir_open(name)
 char *name;
 {
 	/* Open directory `name' for reading (can't do much else on UNIX) */
@@ -49,7 +49,7 @@ char *name;
 	if (dirp == (DIR *) 0)
 		esys();
 
-	return (fnptr) dirp;
+	return (EIF_POINTER) dirp;
 }
 
 public void dir_close(dirp)

@@ -29,7 +29,7 @@ struct item {
 		double itu_double;		/* A double value */
 		char *itu_ref;			/* A reference value */
 		char *itu_bit;			/* A bit reference value */
-		fnptr itu_ptr;			/* A routine pointer */
+		char *itu_ptr;			/* A routine pointer */
 	} itu;
 };
 

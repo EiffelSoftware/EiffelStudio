@@ -1341,7 +1341,7 @@ end:
 					break;
 				case SK_POINTER:
 					new_obj = RTLN(point_ref_dtype);
-					*(fnptr *) new_obj = last->it_ptr;
+					*(char **) new_obj = last->it_ptr;
 					break;
 				case SK_REF:			/* Had to do this for bit operations */
 					new_obj = last->it_ref;
@@ -1830,7 +1830,7 @@ end:
 						sp_area += sizeof(double);
 						break;
 					case SK_POINTER:
-						*(fnptr *) sp_area = it->it_ptr;
+						*(char **) sp_area = it->it_ptr;
 						sp_area += sizeof(fnptr);
 						break;
 					default:
@@ -2886,7 +2886,7 @@ uint32 type;			/* Get attribute meta-type */
 	case SK_FLOAT: last->it_float = *(float *) (current + offset); break;
 	case SK_DOUBLE: last->it_double = *(double *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
-	case SK_POINTER: last->it_ptr = *(fnptr *) (current + offset); break;
+	case SK_POINTER: last->it_ptr = *(char **) (current + offset); break;
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
@@ -2938,7 +2938,7 @@ uint32 type;			/* Attribute meta-type */
 		}
 		break;
 	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
-	case SK_POINTER: *(fnptr *) (i->it_ref + offset) = l->it_ptr; b;
+	case SK_POINTER: *(char **) (i->it_ref + offset) = l->it_ptr; b;
 	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); b;
 	case SK_REF:
 		/* Perform aging tests: if the reference is new and is assigned to an
@@ -3263,7 +3263,7 @@ long type;
 	case SK_BIT:
 	case SK_EXP:
 	case SK_REF:		ptr->it_ref = (char *) 0; break;
-	case SK_POINTER:	ptr->it_ptr = (fnptr) 0; break;
+	case SK_POINTER:	ptr->it_ptr = (char *) 0; break;
 	case SK_VOID:		break;
 	default:			panic(unknown_type);
 	}

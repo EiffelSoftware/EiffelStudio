@@ -1,3 +1,12 @@
+indexing
+
+	description: 
+		"Batch compiler without invoking the -loop. This is the root%
+		%class used for the professional version (which enables%
+		%c compilation).";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ES
 
 inherit
@@ -13,31 +22,37 @@ creation
 
 	make
 
-feature
+feature -- Access
+
+	loop_cmd: BASIC_EWB_LOOP is
+		do
+			!EWB_LOOP!Result.make (Current)
+		end;
+
+	is_precompiled_option: BOOLEAN is
+			-- Is the current option `precompile'?
+		do
+			Result := option.is_equal ("-precompile")
+		end;
+
+feature -- Update
 
 	add_usage_special_cmds is
+			-- Print the help commands for the professional version.
 		do
 			io.putstring ("-freeze | -finalize [-keep] | -precompile |%N%T");
 		end;
 
 	add_help_special_cmds is
+			-- Add the help commands for the professional version.
 		do
 			help_messages.put (freeze_help, freeze_cmd_name);
 			help_messages.put (precompile_help, precompile_cmd_name);
 			help_messages.put (finalize_help, finalize_cmd_name);
 		end;
 
-	loop_cmd: BASIC_EWB_LOOP is
-		do
-			!EWB_LOOP!Result
-		end;
-
-	is_precompiled_option: BOOLEAN is
-		do
-			Result := option.is_equal ("-precompile")
-		end;
-
 	process_special_options is
+			-- Process the special option for the professional version.
 		local
 			keep: BOOLEAN
 		do
@@ -45,7 +60,7 @@ feature
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_FREEZE!command
+					!EWB_FREEZE!command.make (Current)
 				end
 			elseif option.is_equal ("-finalize") then
 				if command /= Void then
@@ -57,11 +72,11 @@ feature
 							keep := True;
 						end;
 					end;
-					!EWB_FINALIZE!command.make (keep);
+					!EWB_FINALIZE!command.make (keep, Current);
 				end
 			else
 				option_error := True
 			end;
 		end;
 
-end
+end -- ES

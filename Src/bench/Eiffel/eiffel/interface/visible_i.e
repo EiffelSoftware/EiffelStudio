@@ -69,9 +69,9 @@ feature
 		do
 			feature_name := feat.feature_name;
 			if renamings /= Void and then renamings.has (feature_name) then
-				Result := renamings.item (feature_name);
+				Result := renamings.found_item
 			else
-				Result := feature_name;
+				Result := feature_name
 			end;
 		end;
 

@@ -275,7 +275,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::return_ty
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_location(  /* [out] */ BSTR * file_path, /* [out] */ ULONG * line_number )
 
 /*-----------------------------------------------------------
 	Feature location, full path to file and line number

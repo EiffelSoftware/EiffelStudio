@@ -91,7 +91,7 @@ public:
 	/*-----------------------------------------------------------
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
-	STDMETHODIMP feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number );
+	STDMETHODIMP feature_location(  /* [out] */ BSTR * file_path, /* [out] */ ULONG * line_number );
 
 
 	/*-----------------------------------------------------------

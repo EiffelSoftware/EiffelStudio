@@ -458,7 +458,7 @@ when 69 then
 			yyval6: INTEGER
 		do
 
-yyval6 := 0
+yyval6 := -1
 			yyval := yyval6
 		end
 

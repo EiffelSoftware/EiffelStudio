@@ -637,6 +637,9 @@ feature {EV_ANY_I} -- Implementation
 			if not is_displayed then
 				call_show_actions := True
 				Precursor {WEL_FRAME_WINDOW}
+				if item_imp /= Void then
+					notify_change (nc_minsize, item_imp)
+				end
 					-- We call show actions
 				if call_show_actions then
 					if show_actions_internal /= Void then
@@ -1004,11 +1007,11 @@ feature {EV_ANY_I} -- Implementation
 						-- We must now restore the focus to `last_focused_widget'
 						-- as the window is now being re-activated.
 				if is_window (last_focused_widget) then
-					window_of_item (last_focused_widget).set_focus
-						-- Calling disable_default_processing is required in order to
-						-- stop the focus being removed from `last_focused_widget' after
-						-- we set it. However, this stops on_set_focus being called, so we
-						-- call the relevent parts by ourself.
+						window_of_item (last_focused_widget).set_focus
+							-- Calling disable_default_processing is required in order to
+							-- stop the focus being removed from `last_focused_widget' after
+							-- we set it. However, this stops on_set_focus being called, so we
+							-- call the relevent parts by ourself.
 					disable_default_processing
 					titled_window ?= Current
 					if titled_window /= Void then

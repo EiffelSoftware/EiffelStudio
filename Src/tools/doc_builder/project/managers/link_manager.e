@@ -62,13 +62,17 @@ feature -- Commands
 			new_not_void: a_new /= Void
 		local
 			l_doc: DOCUMENT
+			l_formatter: XM_LINK_FORMATTER
 		do
 			from
 				documents.start
 			until
 				documents.after
 			loop
-				l_doc := documents.item	
+				l_doc := documents.item
+				create l_formatter.make_with_document (l_doc)
+				l_formatter.set_update_data (a_old.filename, a_new.filename)
+				l_formatter.process_document (l_doc.xml)				
 				documents.forth
 			end		
 		end
@@ -77,35 +81,26 @@ feature -- Commands
 			-- Set links in `documents' to relative links
 		local
 			l_doc: DOCUMENT
-			l_doc_links: ARRAYED_LIST [DOCUMENT_LINK]
+			l_formatter: XM_LINK_FORMATTER
+			l_xml_routines: XML_ROUTINES
+			l_xm_doc: XM_DOCUMENT
 		do
+			create l_xml_routines
 			from
 				documents.start
 			until
 				documents.after
 			loop
-				l_doc := documents.item
-				l_doc_links := document_links (l_doc)
+				l_doc := documents.item				
+				create l_formatter.make_with_document (l_doc)
+				l_formatter.set_convert_to_relative (True)
+				l_xm_doc := l_doc.xml
+				if l_xm_doc /= Void then					
+					-- TO DO
+				end
 				documents.forth
 			end
-		end
-		
-	set_links_absolute is
-			-- Set links in `documents' to absolute links
-		local
-			l_doc: DOCUMENT
-			l_doc_links: ARRAYED_LIST [DOCUMENT_LINK]
-		do
-			from
-				documents.start
-			until
-				documents.after
-			loop
-				l_doc := documents.item
-				l_doc_links := document_links (l_doc)
-				documents.forth
-			end
-		end		
+		end	
 
 feature -- Access
 
@@ -124,7 +119,7 @@ feature -- Access
 			document_not_void: a_doc /= Void
 			document_valid: a_doc.is_valid_xml
 		local
-			l_formatter: XM_DOCUMENT_FORMATTER
+			l_formatter: XM_LINK_FORMATTER
 		do
 			create l_formatter.make_with_document (a_doc)
 			l_formatter.process_document (a_doc.xml)
@@ -139,7 +134,7 @@ feature -- Access
 			document_not_void: a_doc /= Void
 			document_valid: a_doc.is_valid_xml
 		local
-			l_formatter: XM_DOCUMENT_FORMATTER
+			l_formatter: XM_LINK_FORMATTER
 		do
 			create l_formatter.make_with_document (a_doc)
 			l_formatter.process_document (a_doc.xml)

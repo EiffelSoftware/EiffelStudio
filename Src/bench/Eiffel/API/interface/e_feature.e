@@ -383,9 +383,16 @@ feature -- Access
 			-- (First it checks if the `associated_class' is valid and
 			-- retrieves the feature using `name' from the
 			-- `associated_class' feature table)
+		local
+			class_c: CLASS_C
 		do
-			if associated_class.is_valid then
-				Result := associated_class.feature_with_name (name)
+				--| We try first to get the class on which the feature was previously
+				--| defined. In the case, where the class has been removed from the
+				--| system, there is no `associated_class' and we should no go any
+				--| further.
+			class_c := associated_class
+			if class_c /= Void and then class_c.is_valid then
+				Result := class_c.feature_with_name (name)
 			end
 		end;
 

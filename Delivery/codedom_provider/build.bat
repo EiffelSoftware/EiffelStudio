@@ -36,15 +36,15 @@ MKDIR delivery
 IF EXIST checkout GOTO COMPILER
 MKDIR checkout
 CALL checkout.bat
-CALL setup.bat
+CALL setup.bat %1 %2
 
 :COMPILER
 ECHO Building compiler
-CALL build_compiler.bat
+CALL build_compiler.bat %1
 IF "%COMPILER_BUILT%"=="" GOTO END
 
 ECHO Building codedom
-CALL build_codedom.bat
+CALL build_codedom.bat %2
 IF "%CODEDOM_BUILT%"=="" GOTO END
 
 ECHO Building installer
@@ -60,7 +60,6 @@ COPY EIFGEN\F_Code\installer.exe ..\..\..\..\delivery
 CD ..\..\..\..
 :END
 ECHO Done.
-EXIT 0
 
 :USAGE
 ECHO                                                    .

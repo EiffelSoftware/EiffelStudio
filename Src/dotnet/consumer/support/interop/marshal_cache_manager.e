@@ -119,14 +119,14 @@ feature -- Basic Exportations
 			valid_result: Result.length > 0
 		end
 		
-	assembly_info_from_assembly (a_path: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
+	assembly_info_from_path (a_path: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve a local assembly's information
 		require
 			current_initialized: is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
 		do
-			create Result.make (implementation.assembly_info_from_assembly (a_path))
+			create Result.make (implementation.assembly_info_from_path (a_path))
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -135,6 +135,7 @@ feature -- Basic Exportations
 			-- prepares all that in necessary be before running app domain in unloaded
 		do
 			implementation.compact_and_clean_cache
+			implementation.release_cached_assemblies
 		end
 
 feature {COM_CACHE_MANAGER2} -- Implementation

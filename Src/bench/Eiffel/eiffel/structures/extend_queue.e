@@ -5,7 +5,7 @@ class EXTEND_QUEUE [T]
 inherit
 	TO_SPECIAL [T]
 
-creation
+create
 	make
 
 feature 

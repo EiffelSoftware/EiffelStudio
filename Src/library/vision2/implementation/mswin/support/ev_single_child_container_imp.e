@@ -16,7 +16,6 @@ inherit
 			disable_sensitive,
 			propagate_foreground_color,
 			propagate_background_color,
-			extend,
 			propagate_syncpaint,
 			update_for_pick_and_drop,
 			on_size

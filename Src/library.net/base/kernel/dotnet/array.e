@@ -310,7 +310,7 @@ feature -- Element change
 			other_area: like area
 			other_lower: INTEGER
 			start0, end0, index0: INTEGER
-			i: INTEGER
+			i, j: INTEGER
 		do
 			other_area := other.area
 			other_lower := other.lower
@@ -322,8 +322,9 @@ feature -- Element change
 			until
 				i > end0
 			loop
-				area.put (other_area.item (i), index0 + i)
+				area.put (other_area.item (i), index0 + j)
 				i := i + 1
+				j := j + 1
 			end
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),

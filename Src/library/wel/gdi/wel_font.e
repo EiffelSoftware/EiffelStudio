@@ -219,6 +219,9 @@ feature -- Access
 				from
 					counter := 1
 					line_start_index := 1
+						-- Assign an arbitarily large value, as if we use the
+						-- default value of 0, we cannot return a negative value.
+					greatest_a := 32000
 						-- Retrieve the greatest a value for the first character before iteration.
 					greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter - 1).code))
 				until
@@ -226,9 +229,9 @@ feature -- Access
 				loop
 					current_character := area.item (counter - 1)
 					if current_character = '%N' then
-						greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (line_start_index).code))
+						greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter + 1).code))
 						if counter < count then
-							current_c := get_char_c_width (screen_dc, a_string.item (counter - 1).code)
+							current_c := get_char_c_width (screen_dc, area.item (counter - 1).code)
 						end
 						error_code := screen_dc.cwin_draw_text (screen_dc_pointer, pointer + (line_start_index - 1), counter - line_start_index, bounding_rect_pointer, text_format)
 						bounding_rect_width := bounding_rect.width
@@ -266,7 +269,7 @@ feature -- Access
 				screen_dc.quick_release
 			end
 
-			Result := [cur_width, cur_height, greatest_a.abs, greatest_c.abs]
+			Result := [cur_width, cur_height, greatest_a, greatest_c]
 		end
 
 	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is

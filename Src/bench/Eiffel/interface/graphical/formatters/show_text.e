@@ -12,6 +12,7 @@ inherit
 
 	FORMATTER
 		rename
+			init as make,
 			display_header as format_display_header,
 			class_name as exception_class_name
 		redefine
@@ -19,6 +20,7 @@ inherit
 		end;
 	FORMATTER
 		rename
+			init as make,
 			class_name as exception_class_name
 		redefine
 			format, display_header, file_name, dark_symbol, display_temp_header
@@ -30,13 +32,6 @@ inherit
 creation
 
 	make
-
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-		do
-			init (a_text_window)
-		end;
 
 feature -- Properties
 
@@ -83,7 +78,8 @@ feature -- Formatting
 			retried: BOOLEAN;
 			same_stone, error: BOOLEAN;
 			mp: MOUSE_PTR;
-			cur: CURSOR
+			cur: CURSOR;
+			routine_w: ROUTINE_W
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -95,6 +91,8 @@ feature -- Formatting
 						not e_class.is_precompiled
 					and then
 						e_class.lace_class.date_has_changed
+					and then
+						not e_class.has_syntax_error
 					then
 						modified_class := true
 					end;
@@ -136,11 +134,15 @@ feature -- Formatting
 						text_window.clear_window;
 						tool.set_editable_text;
 						filed_stone ?= stone;
-						if filed_stone /= Void then
+						if filed_stone = Void then
+							tool.set_file_name (Void);
+						else
 							tool.set_file_name (file_name (filed_stone));
 						end;
 						tool.set_stone (stone);
 						text_window.set_text (stone_text);
+						tool.update_save_symbol;
+						tool.set_mode_for_editing;
 						tool.show_editable_text;
 						if stone.clickable then
 							if modified_class then
@@ -154,12 +156,16 @@ feature -- Formatting
 										(w_Class_modified (class_name))
 								end
 							else
-								text_window.update_clickable_from_stone
+								text_window.update_clickable_from_stone (stone)
 							end
 						end;
 						if cur /= Void then
 							text_window.go_to (cur)
 						end;
+						routine_w ?= tool;
+						if routine_w /= Void then
+							routine_w.highlight_routine
+						end
 						tool.set_last_format (holder);
 						display_header (stone);
 						mp.restore

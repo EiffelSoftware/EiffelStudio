@@ -19,15 +19,6 @@ creation
 
 	make
 
-feature -- Initialization
-
-	make (a_tool: OBJECT_W) is
-			-- Intialize the command. Default indentation is 2.
-		do
-			init_from_tool (a_tool);
-			indent := 2
-		end;
-
 feature -- Properties
 
 	tool: OBJECT_W;

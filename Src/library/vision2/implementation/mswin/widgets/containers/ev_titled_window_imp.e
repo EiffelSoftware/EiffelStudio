@@ -16,8 +16,6 @@ inherit
 	EV_WINDOW_I
 					
 	EV_CONTAINER_IMP
-		rename
-			make as old_make
 		redefine
 			wel_window,
 			parent_imp,
@@ -35,20 +33,20 @@ creation
 	
 feature {NONE} -- Initialization
 	
-	old_make (par: EV_CONTAINER) is
+	old_make (par: EV_WINDOW) is
 			-- do nothing
 		do
 		end
 
-	make_top_level (interface: EV_WINDOW) is
+	make_top_level is
 			-- Create a window. Window does not have any
 			-- parents
 		do
 			!!wel_window.make_top ("EV_WINDOW")
-			wel_window.attach_container (Current)
+			wel_window.initialize (Current)
 		end
 
-	make (par: EV_WINDOW; interface: EV_WINDOW) is
+	make (par: EV_WINDOW) is
 			-- Create a window. Window does not have any
 			-- parents
 		local
@@ -60,7 +58,7 @@ feature {NONE} -- Initialization
 			end
 			set_parent_imp (par_imp)
 			!!wel_window.make_child (par_imp.wel_window, "EV_WINDOW")
-			wel_window.attach_container (Current)
+			wel_window.initialize (Current)
 		end
 
 		

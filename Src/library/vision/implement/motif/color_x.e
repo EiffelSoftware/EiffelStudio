@@ -344,7 +344,7 @@ feature {NONE}
 				widgets_to_update ?= objects;
 				widgets_to_update.start
 			until
-				widgets_to_update.off
+				widgets_to_update.after
 			loop
 				i := widgets_to_update.item;
 				c := i.background_color;	

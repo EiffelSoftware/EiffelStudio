@@ -472,6 +472,9 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
         if (!CloseHandle(m)) eif_thr_panic(msg)
 
 
+/* tid */
+#define EIF_THR_TYPE GetCurrentThread ()
+
 #elif defined SOLARIS_THREADS
 
 /*-------------------------*/

@@ -35,6 +35,8 @@ feature {NONE}
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
 			opt_list.put (Context_const.menu_sm_form_nbr,
 						Context_const.Submenu_format_nbr);
 		end;

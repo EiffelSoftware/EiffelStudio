@@ -79,6 +79,12 @@ feature -- Free options properties
 			-- Do nothing
 		end;
 
+	is_system_level_only: BOOLEAN is
+			-- Is Current option to be used
+		do
+			Result := is_system_level
+		end;
+
 	is_precompiled: BOOLEAN is
 		do
 			-- Do nothing

@@ -101,43 +101,44 @@ feature -- Access
 --				parent_window.assemblies.forth
 --			end
 			
-
-			parent_window.edit_area.remove_text
-			parent_window.edit_area.append_text ("Assembly name : " + an_assembly.name )
-			parent_window.edit_area.append_text ("%N%N")
+			parent_window.edit_comments_area.enable_edit
+			parent_window.edit_comments_area.remove_text
+			parent_window.edit_comments_area .append_text ("Assembly name : " + an_assembly.name )
+			parent_window.edit_comments_area.append_text ("%N%N")
 --			l_version := clone (an_assembly.version)
 --			l_version.replace_substring_all ("_", ".")
-			parent_window.edit_area.append_text ("Assembly version : " + an_assembly.version )
-			parent_window.edit_area.append_text ("%N%N")
-			parent_window.edit_area.append_text ("Assembly culture : " + an_assembly.culture )
-			parent_window.edit_area.append_text ("%N%N")
-			parent_window.edit_area.append_text ("Assembly key : " + an_assembly.key )
+			parent_window.edit_comments_area.append_text ("Assembly version : " + an_assembly.version )
+			parent_window.edit_comments_area.append_text ("%N%N")
+			parent_window.edit_comments_area.append_text ("Assembly culture : " + an_assembly.culture )
+			parent_window.edit_comments_area.append_text ("%N%N")
+			parent_window.edit_comments_area.append_text ("Assembly key : " + an_assembly.key )
+			parent_window.edit_comments_area.disable_edit
 		end		
 
-	edit_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
-			-- Print in `l_text_1' the features corresponding to `a_dotnet_type_name'.
-		require
-			non_void_an_assembly: an_assembly /= Void
-			non_void_a_type_name: a_dotnet_type_name /= Void
-			not_empty_a_type_name: not a_dotnet_type_name.is_empty
-		do
-			edit_type_with_selectionned_feature (an_assembly, a_dotnet_type_name, "")
-		end
+--	edit_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
+--			-- Print in `l_text_1' the features corresponding to `a_dotnet_type_name'.
+--		require
+--			non_void_an_assembly: an_assembly /= Void
+--			non_void_a_type_name: a_dotnet_type_name /= Void
+--			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+--		do
+--			edit_type_with_selectionned_feature (an_assembly, a_dotnet_type_name, "")
+--		end
 
-	edit_type_with_selectionned_feature (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING) is
-			-- Print in `l_text_1' the features corresponding to `a_dotnet_type_name'.
-		require
-			non_void_an_assembly: an_assembly /= Void
-			non_void_a_type_name: a_dotnet_type_name /= Void
-			not_empty_a_type_name: not a_dotnet_type_name.is_empty
-			non_void_an_eiffel_feature_name: an_eiffel_feature_name /= Void
---			not_empty_an_eiffel_feature_name: not an_eiffel_feature_name.is_empty
-		local
-			output: TYPE_PRINTER
-		do
-			create output.make (parent_window.edit_area)
-			output.print_type (an_assembly, a_dotnet_type_name, an_eiffel_feature_name)
-		end
+--	edit_type_with_selectionned_feature (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING) is
+--			-- Print in `l_text_1' the features corresponding to `a_dotnet_type_name'.
+--		require
+--			non_void_an_assembly: an_assembly /= Void
+--			non_void_a_type_name: a_dotnet_type_name /= Void
+--			not_empty_a_type_name: not a_dotnet_type_name.is_empty
+--			non_void_an_eiffel_feature_name: an_eiffel_feature_name /= Void
+----			not_empty_an_eiffel_feature_name: not an_eiffel_feature_name.is_empty
+--		local
+--			output: TYPE_PRINTER
+--		do
+--			create output.make (parent_window.edit_comments_area)
+--			output.print_type (an_assembly, a_dotnet_type_name, an_eiffel_feature_name)
+--		end
 		
 	edit_result_search_eiffel_type_name (dotnet_types: LINKED_LIST [SPECIFIC_TYPE]) is
 			-- Print in `l_text_1' the features corresponding to `a_dotnet_type_name'.
@@ -174,7 +175,7 @@ feature -- Access
 					l_row.extend (dotnet_types.item.type.dotnet_name)
 					l_row.extend (dotnet_types.item.assembly.name)
 					l_row.pointer_double_press_actions.force_extend (agent color_edit_type (dotnet_types.item.assembly, dotnet_types.item.type.dotnet_name))
-					l_row.pointer_double_press_actions.force_extend (agent edit_type (dotnet_types.item.assembly, dotnet_types.item.type.dotnet_name))
+--					l_row.pointer_double_press_actions.force_extend (agent edit_type (dotnet_types.item.assembly, dotnet_types.item.type.dotnet_name))
 					l_row.pointer_double_press_actions.force_extend (agent tree_factory.expand_type (dotnet_types.item.assembly, dotnet_types.item.type))
 					l_list.extend (l_row)
 					dotnet_types.forth
@@ -192,7 +193,7 @@ feature -- Access
 
 
 --	edit_info_assemblies is
---			-- print info of all assemblies in `edit_area'.
+--			-- print info of all assemblies in `edit_comments_area'.
 --		local
 --			parent_window.assemblies: EV_MULTI_COLUMN_LIST
 --			l_row: EV_MULTI_COLUMN_LIST_ROW
@@ -237,7 +238,7 @@ feature -- Access
 --		end		
 --
 --	edit_info_assembly (an_assembly: CONSUMED_ASSEMBLY) is
---			-- print info of `an_assembly' in `edit_area'.
+--			-- print info of `an_assembly' in `edit_comments_area'.
 --		require
 --			non_void_an_assembly: an_assembly /= Void
 --		local
@@ -247,19 +248,19 @@ feature -- Access
 --				-- Replace EV_MULTI_COLUMN_LIST with EV_TEXT
 --			l_split_position := parent_window.l_horizontal_split_area_1.split_position
 --			parent_window.l_horizontal_split_area_1.prune (parent_window.l_horizontal_split_area_1.second)
---			parent_window.l_horizontal_split_area_1.extend (parent_window.edit_area)
+--			parent_window.l_horizontal_split_area_1.extend (parent_window.edit_comments_area)
 --			parent_window.l_horizontal_split_area_1.set_split_position (l_split_position)
 --
---			parent_window.edit_area.remove_text
---			parent_window.edit_area.append_text ("Assembly name : " + an_assembly.name )
---			parent_window.edit_area.append_text ("%N%N")
+--			parent_window.edit_comments_area.remove_text
+--			parent_window.edit_comments_area.append_text ("Assembly name : " + an_assembly.name )
+--			parent_window.edit_comments_area.append_text ("%N%N")
 --			l_version := an_assembly.version
 --			l_version.replace_substring_all ("_", ".")
---			parent_window.edit_area.append_text ("Assembly version : " + l_version )
---			parent_window.edit_area.append_text ("%N%N")
---			parent_window.edit_area.append_text ("Assembly culture : " + an_assembly.culture )
---			parent_window.edit_area.append_text ("%N%N")
---			parent_window.edit_area.append_text ("Assembly key : " + an_assembly.key )
+--			parent_window.edit_comments_area.append_text ("Assembly version : " + l_version )
+--			parent_window.edit_comments_area.append_text ("%N%N")
+--			parent_window.edit_comments_area.append_text ("Assembly culture : " + an_assembly.culture )
+--			parent_window.edit_comments_area.append_text ("%N%N")
+--			parent_window.edit_comments_area.append_text ("Assembly key : " + an_assembly.key )
 --		end		
 --
 --	edit_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
@@ -275,10 +276,10 @@ feature -- Access
 --				-- Replace EV_MULTI_COLUMN_LIST with EV_TEXT
 ----			l_split_position := parent_window.l_horizontal_split_area_1.split_position
 ----			parent_window.l_horizontal_split_area_1.prune (parent_window.l_horizontal_split_area_1.second)
-----			parent_window.l_horizontal_split_area_1.extend (parent_window.edit_area)
+----			parent_window.l_horizontal_split_area_1.extend (parent_window.edit_comments_area)
 ----			parent_window.l_horizontal_split_area_1.set_split_position (l_split_position)
 --
-----			create output.make (parent_window.edit_area)
+----			create output.make (parent_window.edit_comments_area)
 ----			output.print_type (an_assembly, a_dotnet_type_name)
 --			edit_type_with_selectionned_feature (an_assembly, a_dotnet_type_name, "")
 --		end
@@ -298,10 +299,10 @@ feature -- Access
 --				-- Replace EV_MULTI_COLUMN_LIST with EV_TEXT
 --			l_split_position := parent_window.l_horizontal_split_area_1.split_position
 --			parent_window.l_horizontal_split_area_1.prune (parent_window.l_horizontal_split_area_1.second)
---			parent_window.l_horizontal_split_area_1.extend (parent_window.edit_area)
+--			parent_window.l_horizontal_split_area_1.extend (parent_window.edit_comments_area)
 --			parent_window.l_horizontal_split_area_1.set_split_position (l_split_position)
 --
---			create output.make (parent_window.edit_area)
+--			create output.make (parent_window.edit_comments_area)
 --			output.print_type (an_assembly, a_dotnet_type_name, an_eiffel_feature_name)
 --		end
 --		
@@ -365,7 +366,7 @@ feature -- Color edit
 		end
 
 	color_edit_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING) is
-			-- Display in `color_edit_area' the features corresponding to `a_dotnet_type_name'.
+			-- Display in `color_edit_comments_area' the features corresponding to `a_dotnet_type_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
 			non_void_a_type_name: a_dotnet_type_name /= Void
@@ -373,7 +374,7 @@ feature -- Color edit
 --		local
 --			output: COLOR_TYPE_PRINTER
 		do
---			create output.make (parent_window.color_edit_area, parent_window.l_vertical_scroll_bar_1)
+--			create output.make (parent_window.color_edit_comments_area, parent_window.l_vertical_scroll_bar_1)
 --			output.print_type (an_assembly, a_dotnet_type_name)
 --			internal_color_output.put (output)
 			parent_window.l_vertical_scroll_bar_1.set_value (0)
@@ -382,7 +383,7 @@ feature -- Color edit
 		end
 
 	color_edit_type_with_feature_selected (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING) is
-			-- Display in `color_edit_area' the features corresponding to `a_dotnet_type_name'.
+			-- Display in `color_edit_comments_area' the features corresponding to `a_dotnet_type_name'.
 		require
 			non_void_an_assembly: an_assembly /= Void
 			non_void_a_type_name: a_dotnet_type_name /= Void
@@ -391,9 +392,9 @@ feature -- Color edit
 		local
 			output: DISPLAY_TYPE
 		do
-			parent_window.notebook.select_item (parent_window.informations)
+			--parent_window.notebook.select_item (parent_window.informations)
 
-			--create output.make (parent_window.color_edit_area, parent_window.l_vertical_scroll_bar_1, parent_window.l_horizontal_scroll_bar_1)
+			--create output.make (parent_window.color_edit_comments_area, parent_window.l_vertical_scroll_bar_1, parent_window.l_horizontal_scroll_bar_1)
 			create output.make (parent_window)
 			output.set_feature_selected (an_eiffel_feature_name)
 			--output.print_type_with_feature_selected (an_assembly, a_dotnet_type_name, an_eiffel_feature_name)
@@ -404,7 +405,7 @@ feature -- Color edit
 		end
 		
 	color_refresh_type is
-			-- Refresh type displayed in `color_edit_area'.
+			-- Refresh type displayed in `color_edit_comments_area'.
 		local
 			output: DISPLAY_TYPE
 		do

@@ -61,7 +61,7 @@ feature -- Status Report
 			until
 				i > (a_url.count - url_extension.count) or not Result
 			loop
-				Result := Result and ((a_url.item (i) > 'A' and a_url.item (i) < 'z') or a_url.item (i) = '/' or a_url.item (i) = ':')
+				Result := Result and ((a_url.item (i) >= 'A' and a_url.item (i) <= 'z') or a_url.item (i) = '/' or a_url.item (i) = ':')
 				i := i + 1
 			end
 			Result := Result and then (a_url.substring (a_url.count - url_extension.count + 1, a_url.count).is_equal (url_extension) or (a_url.has ('#') and a_url.substring (a_url.index_of ('#', 1) - url_extension.count, a_url.index_of ('#', 1) - 1 ).is_equal (url_extension)))

@@ -8,25 +8,9 @@ class
 	WEL_DISPATCHER
 
 inherit
-	WEL_WINDOW_MANAGER
-		export
-			{NONE} all
-		end
+	WEL_ABSTRACT_DISPATCHER
 
-	WEL_DATA_TYPE
-		export
-			{NONE} all
-		end
-		
 	DISPOSABLE
-
-	WEL_WM_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_EN_CONSTANTS	
-		-- debug
 
 create
 	make
@@ -43,107 +27,6 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
-			-- Window messages dispatcher routine
-		local
-			window: WEL_WINDOW
-			returned_value: POINTER
-			has_return_value: BOOLEAN
-		do
-			window := window_of_item (hwnd)
-			if window /= Void then
-				if window.exists then
-					debug ("win_dispatcher")
-						print ("After look at windows table ")
-						print (window.generating_type)
-						io.put_new_line
-					end
-					window.increment_level
-	
-					Result := window.process_message (hwnd, msg, wparam, lparam)
-						--| Store `message_return_value' and `has_return_value' for later
-						--| use, since `call_default_window_procedure' can reset their value.
-					if
-						window.has_return_value
-					then
-						returned_value := window.message_return_value
-						has_return_value := window.has_return_value
-					end
-	
-					if window.default_processing then
-						Result := window.call_default_window_procedure (hwnd, msg, wparam, lparam)
-					end
-	
-					if has_return_value then
-						Result := returned_value
-					end
-	
-					window.decrement_level
-				else
-					Result := window.call_default_window_procedure (hwnd, msg, wparam, lparam)
-				end
-			else
-				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
-			end
-		end
-
-	frozen dialog_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
-			-- Dialog box messages dispatcher routine
-		local
-			window: WEL_WINDOW
-			last_result: POINTER
-		do
-			debug ("dlg_dispatcher")
-				io.put_string ("in dlg_proc ")
-				io.put_string (hwnd.out)
-				io.put_character (' ')
-				io.put_integer (msg)
-				io.put_character (' ')
-				io.put_boolean (msg = Wm_initdialog)
-				io.put_new_line
-			end
-			if msg = Wm_initdialog then
-				window := new_dialog
-				if window /= Void then
-					new_dialog_cell.put (Void)
-					window.increment_level
-	
-					-- Special case for the message
-					-- Wm_initdialog. We set the hwnd value
-					-- to the object because this value
-					-- was unknown until now.
-					--| Since it is not possible to check
-					--| if `set_focus' from WEL_WINDOW has been
-					--| called, Result is set to `1'.
-					--| As a result, any call to `set_focus' in
-					--| `setup_dialog' from WEL_DIALOG is useless.
-					window.set_item (hwnd)
-					register_window (window)
-					Result := window.process_message (hwnd, msg, wparam, lparam)
-					window.decrement_level
-				end
-				Result := to_lresult (1)
-			else
-				window := window_of_item (hwnd)
-				if window /= Void and window.exists then
-					window.increment_level
-					last_result := window.process_message (hwnd, msg, wparam, lparam)
-					if window.has_return_value then
-						Result := window.message_return_value
-					else
-						if not window.default_processing then
-							Result := to_lresult (1)
-						else
-							Result := to_lresult (0)
-						end
-					end
-					window.decrement_level
-				end
-			end
-		end
-
-feature {NONE} -- Implementation
-
 	dispose is
 			-- Wean `Current'
 		local
@@ -154,17 +37,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Externals
-
-	cwel_integer_to_pointer (i: INTEGER): POINTER is
-			-- Converts an integer `i' to a pointer
-		external
-			"C [macro %"wel.h%"] (EIF_INTEGER): EIF_POINTER"
-		end
-
-	cwel_temp_dialog_value: POINTER is
-		external
-			"C [macro %"wel.h%"]: EIF_POINTER"
-		end
 
 	cwel_set_window_procedure_address (address: POINTER) is
 		external
@@ -184,14 +56,6 @@ feature {NONE} -- Externals
 	cwel_release_dispatcher_object is
 		external
 			"C [macro %"disptchr.h%"]"
-		end
-
-	cwin_def_window_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
-			-- SDK DefWindowProc
-		external
-			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): LRESULT"
-		alias
-			"DefWindowProc"
 		end
 
 end -- class WEL_DISPATCHER

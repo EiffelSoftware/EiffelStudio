@@ -216,7 +216,7 @@ feature {NONE} -- Not applicable
 			Result := Reference_c_type
 		end
 
-	description: INTEGER_DESC is
+	description: ATTR_DESC is
 		do
 		ensure then
 			False

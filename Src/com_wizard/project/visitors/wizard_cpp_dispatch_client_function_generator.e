@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 				tmp_value := clone (name)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 
-			elseif is_boolean (type) and not visitor.is_pointed then
+			elseif (type = Vt_bool) then
 
 				tmp_value := clone (Ec_mapper)
 				tmp_value.append (Dot)

@@ -11,11 +11,14 @@ class
 inherit
 	EV_CHECK_MENU_ITEM
 		export
-			{NONE} disable_select
+			{NONE}
+			disable_select,
+			toggle
 		redefine
 			implementation,
 			create_implementation,
-			disable_select
+			disable_select,
+			toggle
 		end
 	
 create
@@ -53,6 +56,14 @@ feature -- Inapplicable
 			end
 		end
 
+	toggle is
+			-- Inapplicable for radio items.
+		do
+			check
+				inapplicable: False
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_RADIO_MENU_ITEM_I
@@ -81,6 +92,9 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/24 16:49:55  brendel
+--| Made `toggle' inapplicable to radio items.
+--|
 --| Revision 1.13  2000/02/24 01:32:17  brendel
 --| Added feature `peers' which lets the user look in the list of radio-items
 --| associated with the current item.

@@ -7,14 +7,24 @@ deferred class INTERVAL_B
 
 inherit
 	BYTE_NODE
+		rename
+			generate_il as old_generate_il
+		redefine
+			is_equal
+		end
 
 	COMPARABLE
-		undefine
+		redefine
 			is_equal
 		end
 
 	IL_CONST
-		undefine
+		redefine
+			is_equal
+		end
+
+	INTERVAL_SPAN
+		redefine
 			is_equal
 		end
 	
@@ -25,6 +35,9 @@ feature
 
 	upper: INTERVAL_VAL_B
 			-- Upper bound
+
+	case_index: INTEGER
+			-- Position of corresponding When_part in inspect instruction
 
 	intersection (other: like Current): like Current is
 			-- Instersection of `other' and Current.
@@ -62,9 +75,17 @@ feature
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is `other' greater than Current ?
+			-- Is `other' greater than Current?
 		do
-			Result := lower < other.lower
+			Result := 
+				lower < other.lower or else 
+				lower.is_equal (other.lower) and then upper < other.upper
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' equal to Current?
+		do
+			Result := lower.is_equal (other.lower) and then upper.is_equal (other.upper)
 		end
 
 	display (st: STRUCTURED_TEXT) is
@@ -74,14 +95,18 @@ feature
 			upper.display (st)
 		end
 
-feature -- IL code generation
+feature -- Access
 
-	generate_il_interval (next_case_label: IL_LABEL) is
-			-- Generate IL code for interval range
-		require
-			next_case_label_not_void: next_case_label /= Void
-		deferred
-		end
+	is_lower_included: BOOLEAN is true
+			-- Is `lower' included in an interval?
+
+	is_upper_included: BOOLEAN is true
+			-- Is `upper' included in an interval?
+
+feature -- Measurement
+
+	count: DOUBLE is 1.0
+			-- Number of intervals and gaps in current span
 
 feature -- Byte code generation
 
@@ -96,6 +121,29 @@ feature -- Byte code generation
 			ba.append (Bc_range)
 		end
 
+feature -- Modification
+
+	set_upper (new_upper: like upper) is
+			-- Set `upper' to `new_upper'.
+		require
+			new_upper_not_void: new_upper /= Void
+			new_upper_greater_than_upper: new_upper > upper
+		do
+			upper := new_upper
+		ensure
+			upper_set: upper = new_upper
+		end
+
+	set_case_index (i: INTEGER) is
+			-- Set `case_index' to `i'.
+		require
+			valid_index: i > 0
+		do
+			case_index := i
+		ensure
+			case_index_set: case_index = i
+		end
+		
 invariant
 	lower_not_void: lower /= Void
 	upper_not_void: upper /= Void

@@ -136,10 +136,21 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for a multi-branch instruction.
 		local
-			l_case: like case_list
+			else_label: IL_LABEL
 			end_label: IL_LABEL
+			intervals: like create_sorted_interval_list
+			spans: like build_spans
+			inspect_type: TYPE_I
+			min_value: INTERVAL_VAL_B
+			max_value: INTERVAL_VAL_B
+			labels: ARRAY [IL_LABEL]
+			case_index: INTEGER
+			case_label: IL_LABEL
+			case_l: like case_list
 			case_b: CASE_B
+			compound: BYTE_LIST [BYTE_NODE]
 		do
+			else_label := il_label_factory.new_label
 			end_label := il_label_factory.new_label
 			generate_il_line_info (True)
 
@@ -147,24 +158,54 @@ feature -- IL code generation
 			switch.generate_il
 
 			if case_list /= Void then
-				from
-					l_case := case_list
-					l_case.start
-				until
-					l_case.after
-				loop
-						-- Generate code
-					case_b ?= l_case.item
-					case_b.generate_il_case (end_label)
-					l_case.forth
+					-- Sort and merge intervals
+				intervals := create_sorted_interval_list
+				merge_intervals (intervals)
+				if intervals.count > 0 then
+						-- Calculate minimum and maximum values
+					inspect_type := switch.type
+					min_value := inspect_type.minimum_interval_value
+					max_value := inspect_type.maximum_interval_value
+						-- Make sure there are no different objects for the same boundary
+					if intervals.first.lower.is_equal (min_value) then
+						min_value := intervals.first.lower
+					end
+					if intervals.last.upper.is_equal (max_value) then
+						max_value := intervals.last.upper
+					end
+						-- Group intervals
+					spans := build_spans (intervals, min_value, max_value)
+						-- Create array of labels for all cases and put `else_label' to position 0
+					create labels.make (0, case_list.count)
+					labels.put (else_label, 0)
+					generate_spans (spans, 1, spans.count, min_value, max_value, true, true, labels)
+					from
+						case_index := labels.upper
+						case_l := case_list
+					until
+						case_index <= 0
+					loop
+						case_label := labels.item (case_index)
+						if case_label /= Void then
+							il_generator.mark_label (case_label)
+							case_b ?= case_l.i_th (case_index)
+							compound := case_b.compound
+							if compound /= Void then
+								compound.generate_il
+							end
+							il_generator.branch_to (end_label)
+						end
+						case_index := case_index - 1
+					end
 				end
 			end
 
+			il_generator.mark_label (else_label)
 			if else_part /= Void then
 				else_part.generate_il
 			else
 				il_generator.generate_raise_exception (feature {EXCEP_CONST}.incorrect_inspect_value, Void)
-					-- Throw an exception	
+					-- Throw an exception
 			end
 
 			il_generator.mark_label (end_label)
@@ -298,4 +339,183 @@ feature -- Inlining
 			end
 			switch := switch.inlined_byte_code
 		end
+
+feature {NONE} -- Implementation
+
+	create_sorted_interval_list: SORTED_TWO_WAY_LIST [INTERVAL_B] is
+			-- Create sorted list of all intervals in inspect instruction
+		require
+			case_list_not_void: not case_list.is_empty
+		local
+			l_case: like case_list
+			case_index: INTEGER
+			case_b: CASE_B
+			case_intervals: BYTE_LIST [INTERVAL_B]
+			case_compound: BYTE_LIST [BYTE_NODE]
+			interval_b: INTERVAL_B
+			has_empty_else_part: BOOLEAN
+		do
+			has_empty_else_part := else_part /= Void and then else_part.is_empty
+			l_case := case_list
+			create Result.make
+			from
+				l_case.start
+			until
+				l_case.after
+			loop
+				case_index := l_case.index
+				case_b ?= l_case.item
+					-- Add all intervals associated with current When_part unless they do the same as Else_part does
+				case_intervals := case_b.interval
+				case_compound := case_b.compound
+				if case_intervals /= Void and then (not has_empty_else_part or else case_compound /= Void and then not case_compound.is_empty) then
+					from
+						case_intervals.start
+					until
+						case_intervals.after
+					loop
+						interval_b := case_intervals.item
+						interval_b.set_case_index (case_index)
+						Result.extend (interval_b)
+						case_intervals.forth
+					end
+				end
+				l_case.forth
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	merge_intervals (intervals: like create_sorted_interval_list) is
+			-- Merge adjacent intervals with the same code
+		require
+			intervals_not_void: intervals /= Void
+		local
+			interval_b: INTERVAL_B
+			case_index: INTEGER
+			next_interval_b: INTERVAL_B
+			next_case_index: INTEGER
+		do
+			from
+				intervals.start
+			until
+				intervals.after
+			loop
+				next_interval_b := intervals.item
+				next_case_index := next_interval_b.case_index
+				if case_index = next_case_index and then interval_b.upper.is_next (next_interval_b.lower) then
+					interval_b.set_upper (next_interval_b.upper)
+					intervals.remove
+				else
+					interval_b := next_interval_b
+					case_index := next_case_index
+					intervals.forth
+				end
+			end
+		end
+
+	build_spans (intervals: like create_sorted_interval_list; min_value, max_value: INTERVAL_VAL_B): ARRAYED_LIST [INTERVAL_SPAN] is
+			-- New sorted list of spans built from given `intervals' bounded with `min_value' and `max_value'
+		require
+			intervals_not_void: intervals /= Void
+			min_value_not_void: min_value /= Void
+			max_value_not_void: max_value /= Void
+		local
+			groups: TWO_WAY_LIST [INTERVAL_GROUP]
+			interval_element: BI_LINKABLE [INTERVAL_B]
+			group: INTERVAL_GROUP
+		do
+			create groups.make
+				-- Merge intervals in groups by walking intervals backward
+			from
+				interval_element := intervals.last_element
+			until
+				interval_element = Void
+			loop
+				create group.make (interval_element)
+				groups.put_front (group)
+				from
+					interval_element := interval_element.left
+				until
+					interval_element = Void or else not group.is_extended
+				loop
+					group.extend_with_interval (interval_element)
+					if group.is_extended then
+						interval_element := interval_element.left
+					end
+				end
+			end
+				-- Merge heading and trailing gaps
+			group := groups.first
+			if group /= Void and then group.lower /= min_value then
+				group.extend_with_lower_gap (min_value, true)
+			end
+			group := groups.last
+			if group /= Void and then group.upper /= max_value then
+				group.extend_with_upper_gap (max_value, true)
+			end
+				-- Merge groups by walking them forward
+			from
+				create Result.make (groups.count)
+				groups.start
+			until
+				groups.after
+			loop
+				group := groups.item
+				group.set_is_extended (true)
+				from
+					groups.forth
+				until
+					groups.after or else not group.is_extended
+				loop
+					group.extend_with_group (groups.item)
+					if group.is_extended then
+						groups.remove
+					end
+				end
+				if group.count >= 4 then
+						-- This is a dense group with enough elements
+					Result.extend (group)
+				else
+						-- Group has too little elements, replace it by elements themselves
+					from
+						interval_element := group.lower_interval
+					until
+						interval_element = group.upper_interval
+					loop
+						Result.extend (interval_element.item)
+						interval_element := interval_element.right
+					end
+					Result.extend (interval_element.item)
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	generate_spans (spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]) is
+			-- Generate selectors for `spans' with indexes `lower'..`upper' within interval `min'..`max'
+			-- where these bounds are included according to `is_min_inclued' and `is_max_included'. Use
+			-- `else_label' to branch to Else_part.
+		local
+			middle: INTEGER
+			span: INTERVAL_SPAN
+			next_label: IL_LABEL
+		do
+			if lower = upper then
+					-- There is only one group
+				span := spans.i_th (lower)
+				span.generate_il (min, max, is_min_included, is_max_included, labels)
+			else
+					-- Divide groups in two parts and recurse
+				middle := (lower + upper) // 2
+				span := spans.i_th (middle)
+				next_label := il_label_factory.new_label
+				span.upper.generate_il_branch_on_greater (span.is_upper_included, next_label)
+				generate_spans (spans, lower, middle, min, span.upper, is_min_included, span.is_upper_included, labels)
+				il_generator.mark_label (next_label)
+				generate_spans (spans, middle + 1, upper, span.upper, max, not span.is_upper_included, is_max_included, labels)
+			end
+		end
+
 end

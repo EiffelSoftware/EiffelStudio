@@ -115,7 +115,9 @@ feature {NONE}
 
 	Profile_help: STRING is "information about a profiled run";
 
-	project_help: STRING is "specify the compilation directory";
+	project_path_help: STRING is "specify the compilation directory";
+
+	project_help: STRING is "specify the project file to load";
 
 	queries_help: STRING is "manipulate subqueries";
 

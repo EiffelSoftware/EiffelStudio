@@ -17,6 +17,11 @@ inherit
 		redefine
 			initialize, interface, wipe_out
 		end
+		
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
+		end
 	
 	EV_PRIMITIVE_IMP
 		undefine

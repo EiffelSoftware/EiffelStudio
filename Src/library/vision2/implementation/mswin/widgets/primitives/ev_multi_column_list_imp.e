@@ -50,6 +50,11 @@ inherit
 			initialize,
 			wipe_out
 		end
+		
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
+		end
 
 	WEL_LIST_VIEW
 		rename

@@ -43,6 +43,11 @@ inherit
 			interface,
 			initialize
 		end
+		
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
+		end
 
 	WEL_TREE_VIEW
 		rename

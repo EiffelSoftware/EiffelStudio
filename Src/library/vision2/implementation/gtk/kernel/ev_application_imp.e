@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			c_gtk_init_toolkit
 		end
 	
-       iterate is
+	iterate is
                         -- Loop the application.
                 do
 			-- Destroy the spalsh screen if there is one.

@@ -49,7 +49,9 @@ LSRCS = $(SMODE)
 OBJS = \
 	local.o \
 	network.o \
-	network_r.o
+	network_r.o \
+	hostname.o \
+	syncpoll.o
 
 local_realclean::
 	$(RM) libnet.a

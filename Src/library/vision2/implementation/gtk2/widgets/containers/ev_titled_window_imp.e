@@ -131,9 +131,19 @@ feature {NONE} -- Accelerators
 			-- Connect key combination `an_accel' to this window.
 		local
 			acc_imp: EV_ACCELERATOR_IMP
+			a_property, a_origin, a_value: EV_GTK_C_STRING
 		do
 			acc_imp ?= an_accel.implementation
 			acc_imp.add_accel (Current)
+			
+			if acc_imp.key.code = feature {EV_KEY_CONSTANTS}.key_f10 then
+					-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
+				a_property := "gtk-menu-bar-accel"
+				a_value := "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
+					-- This is a value that is highly unlikely to be used
+				a_origin := "Vision2"
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)				
+			end
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is

@@ -1,5 +1,7 @@
 #include "mel.h"
 
+XEvent global_xevent; /* Global variable for Event processing */
+
 /*
  *
  * C functions to retrieve informations on widgets according 

@@ -1240,7 +1240,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 				objects_updated_correctly ((old deleted_objects.twin), deleted_objects, an_object)
 		end
 
-feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER, GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
+feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER, GB_XML_LOAD, GB_XML_IMPORT, GB_COMMAND} -- Implementation
 		
 	add_object_to_objects (an_object: GB_OBJECT) is
 			-- Add `an_object' to `objects'.

@@ -76,10 +76,8 @@ feature {NONE} -- Implementation
 				display_object.child.set_pebble_function (agent retrieve_pebble)
 				display_object.drop_actions.extend (agent add_new_object_wrapper (?))
 				display_object.drop_actions.extend (agent add_new_component_wrapper (?))
-				--display_object.drop_actions.extend (agent add_new_object_shift_wrapper (?))
-				--display_object.drop_actions.extend (agent add_new_component_shift_wrapper (?))
-				--display_object.drop_actions.extend (agent add_new_component_in_parent_shift_wrapper (?))
-				--display_object.drop_actions.extend (agent add_new_object_in_parent_shift_wrapper (?))
+				display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
+				display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
 				display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 				display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 			end

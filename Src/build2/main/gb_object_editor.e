@@ -451,11 +451,6 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 				check
 					object_names_now_equal: object.edited_name.is_equal (object.name)
 				end
-				if object.name.is_empty then
-					object.layout_item.set_text (object.type.substring (4, object.type.count))
-				else
-					object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
-				end
 				set_title_from_name
 				update_editors_for_name_change
 				name_field.set_foreground_color (black)

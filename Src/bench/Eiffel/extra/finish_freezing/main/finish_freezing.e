@@ -25,6 +25,7 @@ feature -- Initialization
 			location_index: INTEGER
 			unc_mapper: UNC_PATH_MAPPER
 			mapped_path: BOOLEAN
+			l_exception: EXCEPTIONS
 		do
 			
 				-- Location defaults to the current directory
@@ -77,7 +78,8 @@ feature -- Initialization
 				if retried or c_error then
 						-- Make the application return a non-zero value to OS to flag an error
 						-- to calling process.
-					feature {EXCEPTIONS}.die (1)
+					create l_exception
+					l_exception.die (1)
 				end
 			end
 		rescue

@@ -82,10 +82,8 @@ feature -- Status setting
 
 	change_working_directory (path: STRING) is
 			-- Set the current directory to `path'
-		local
-			e: ENVIRONMENT
 		do
-			e.set_current_directory (path.to_cil)
+			feature {ENVIRONMENT}.set_current_directory (path)
 		end
 
 	put (value, key: STRING) is

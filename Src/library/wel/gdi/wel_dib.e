@@ -43,13 +43,15 @@ feature {NONE} -- Initialization
 			structure_make
 			file.read_stream (structure_size)
 			s := file.last_string
-			check
-					--| Make sure that what has been read match the Bitmap
-					--| file header info.
-				correct_structure_size: structure_size = s.count
-			end
 			!! a_wel_string2.make (s)
-			memory_copy (a_wel_string2.item, structure_size)
+					--| !!FIXME!!
+					--| In the next line, we should use `structure_size' that is
+					--| the size read in the header of the bitmap, instead
+					--| of `s.count' that is the size of the bitmap actually 
+					--| read directly on the disk.
+					--| BUT it seems that `structure_size' can have a wrong
+					--| value, leading to a `segmentation violation'.
+			memory_copy (a_wel_string2.item, s.count)
 			info_header.memory_copy (item, info_header.structure_size)
 			calculate_palette
 			file.close

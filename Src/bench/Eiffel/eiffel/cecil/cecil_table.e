@@ -71,11 +71,9 @@ feature
 		local
 			increment, key, position, try, hash_size: INTEGER;
 			stop: BOOLEAN;
-			local_copy: like Current
 			local_values: like values
 		do
 			from
-				local_copy := Current
 				local_values := values
 				hash_size := count;
 				key := s.hash_code;
@@ -84,9 +82,9 @@ feature
 			until
 				try >= hash_size or else stop
 			loop
-				if local_copy.array_item (position) = Void then
+				if array_item (position) = Void then
 						-- Found a free location
-					local_copy.array_put (s, position);
+					array_put (s, position);
 					local_values.put (f, position);
 					stop := True;
 				end;

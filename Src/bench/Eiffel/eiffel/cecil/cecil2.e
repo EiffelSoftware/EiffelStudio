@@ -80,18 +80,16 @@ feature
 		local
 			i: INTEGER
 			cl_name: STRING
-			local_copy: like Current
 		do
 			buffer.putstring ("static char *")
 			buffer.putstring (key_name)
 			buffer.putstring ("[] = {%N")
 			from
-				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				cl_name := local_copy.array_item (i)
+				cl_name := array_item (i)
 				if cl_name = Void then
 					buffer.putstring ("(char *) 0")
 				else
@@ -142,15 +140,13 @@ feature
 		local
 			i: INTEGER
 			cl_name: STRING
-			local_copy: like Current
 		do
 			from
-				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				cl_name := local_copy.array_item (i)
+				cl_name := array_item (i)
 				if cl_name = Void then
 					ba.append_short_integer (0)
 				else

@@ -160,18 +160,16 @@ end;
 		local
 			i: INTEGER
 			str: STRING
-			local_copy: like Current
 		do
 			buffer.putstring ("char *cl")
 			buffer.putint (id)
 			buffer.putstring (" [] = {%N")
 			from
-				local_copy := Current
 				i := 0
 			until
 				i > upper
 			loop
-				str := local_copy.array_item (i)
+				str := array_item (i)
 				if str = Void then
 					buffer.putstring ("(char *) 0")
 				else

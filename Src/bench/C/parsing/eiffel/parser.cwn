@@ -2757,10 +2757,10 @@ case 284:
 {yyval.node = create_node3(CREATION_AS,yypvt[-4].node,yypvt[-1].node,yypvt[-0].node);yacc_error_code=274;} break;
 case 285:
 # line 1101 "parser.y"
-{yyval.node=NULL;} break;
+{yyval.node=create_node2 (CREATION_EXPR_AS,yypvt[-3].node,yypvt[-0].node);} break;
 case 286:
 # line 1103 "parser.y"
-{yyval.node=NULL;} break;
+{yyval.node=create_node2 (CREATION_EXPR_AS,yypvt[-2].node,yypvt[-0].node);} break;
 case 287:
 # line 1107 "parser.y"
 {yyval.node = NULL;yacc_error_code=275;} break;

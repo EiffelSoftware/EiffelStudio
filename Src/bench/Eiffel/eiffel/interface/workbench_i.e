@@ -9,10 +9,12 @@ inherit
 	SHARED_PASS;
 	STORABLE;
 	SHARED_RESOURCES;
-	PROJECT_CONTEXT
+	PROJECT_CONTEXT;
+	SHARED_WORKBENCH
 		redefine
-			lace, universe, system
-		end
+			lace, system, universe
+		end;
+	COMPILER_EXPORTER
 
 feature -- Attributes
 
@@ -31,24 +33,24 @@ feature -- Attributes
 	compilation_counter: INTEGER;
 			-- Number of recompilations
 
-feature -- Conveniences
-
-	set_universe (u: like universe) is
-			-- Assign `u' to `universe'.
+	system_defined: BOOLEAN is
+			-- Has the system been defined?
+			-- (Yes, if the Ace file has been
+			-- parsed).
 		do
-			universe := u
-		end;
+			Result := system /= Void
+		ensure
+			defined: Result implies system /= Void
+		end
+
+feature -- Conveniences
 
 	set_system (s: like system) is
 			-- Assign `s' to `system'.
+		require
+			valid_s: s /= Void
 		do
 			system := s
-		end;
-
-	set_lace (l: LACE_I) is
-			-- Assing `l' to `lace'.
-		do
-			lace := l;
 		end;
 
 	set_precompiled_directory_name (s: STRING) is
@@ -56,18 +58,23 @@ feature -- Conveniences
 			precompiled_directory_name := s;
 		end;
 
-feature -- Creation feature
+feature -- Initialization
 
 	make is
+			-- Initialize the workbench.
+			-- (Do not create system until the
+			-- first compilation).
 		do
-			!!universe.make;
-			!!system;
-			!!lace;
-			init;
+			!! universe.make;
+			!! lace;
+			init
+		ensure
+			initialized: universe /= Void and then
+					lace /= Void
 		end;
 
 	init is
-			-- Workbench controller initialization
+			-- Create an eiffel workbench.
 		local
 			eiffel_init: YACC_EIFFEL;
 			lace_init: YACC_LACE;
@@ -102,8 +109,6 @@ feature -- Commands
 
 	recompile is
 			-- Incremental recompilation
-		require
-			system_exists: system /= Void;
 		do
 			if not retried then
 
@@ -118,6 +123,8 @@ feature -- Commands
 				Lace.recompile;
 
 				System.recompile;
+
+				Compilation_modes.reset_modes;
 			else
 				retried := False
 			end;
@@ -132,10 +139,14 @@ feature -- Commands
 			increment_compilation_counter: compilation_counter = old compilation_counter + 1
 		rescue
 			if Rescue_status.is_error_exception then
+				Compilation_modes.reset_modes;
 				Rescue_status.set_is_error_exception (False);
 				retried := True;
 				Error_handler.trace;
-				System.set_current_class (Void);
+				if System /= Void then
+						-- System is created if precompilation is valid
+					System.set_current_class (Void);
+				end;
 				retry
 			end
 		end;

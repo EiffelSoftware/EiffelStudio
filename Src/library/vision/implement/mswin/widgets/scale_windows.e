@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 		do
 			!! private_attributes
 			parent ?= oui_parent.implementation
+			a_scale.set_font_imp (Current)
 			managed := man
 			set_default
 		end

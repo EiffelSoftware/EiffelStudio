@@ -38,7 +38,7 @@
 			<row><cell>-implementers</cell> <cell>class_name, feature_name</cell> <cell>Print all the classes that declare or redeclare the feature.</cell></row>
 			<row><cell>-short</cell> <cell>class_name</cell> <cell>Print the Contract view (previously called short form) of the class.</cell></row>
 			<row><cell>-suppliers</cell> <cell>class_name, feature_name</cell> <cell>Print all the suppliers of the class.</cell></row>
-			<row><cell><italic>Others options</italic></cell></row>
+			<row><cell><italic>Other options</italic></cell></row>
 			<row><cell>-ace</cell> <cell>file_name</cell> <cell>Use the file as Ace.</cell></row>
 			<row><cell>-batch</cell> <cell></cell> <cell>Launch the compilation without user request.</cell></row>
 			<row><cell>-c_compile</cell> <cell></cell> <cell>Launch C compilation, if needed, after Eiffel compilation.</cell></row>

@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 --|   do extra setup work but need not be redefined in every descendant.
 --|   (Probably redefined in EV_WIDGET_IMP but not to many other places)
 --|   Next default_create calls initialize on Current.
---|   (Note: FIXME we can probably remove this step (see note near feature))
 --|
 --| `default_create' must be called during creation to satisfy the invariant.
 --| The normal pattern is that default_create will produce a properly
@@ -264,6 +263,9 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/02 21:04:12  oconnor
+--| Removed second comment about initialize not being needed.
+--|
 --| Revision 1.13  2000/03/02 21:00:01  oconnor
 --| Removed FIXME about possible removal from initialize,
 --| initialize is needed by platform independant widgets

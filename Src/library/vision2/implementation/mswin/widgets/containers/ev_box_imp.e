@@ -20,10 +20,11 @@ inherit
 		end
 
 	EV_INVISIBLE_CONTAINER_IMP
+		undefine
+			parent_ask_resize
 		redefine
 			set_width,
 			set_height,
-			parent_ask_resize,
 			child_add_successful,
 			on_first_display
 		end
@@ -81,6 +82,14 @@ feature -- Status setting (box specific)
 			spacing := value
 			if not ev_children.empty then
 				initialize_display
+			end
+		end
+
+	set_border_width (value: INTEGER) is
+			-- Border width around container
+		do
+			check
+				not_yet_implemented: False
 			end
 		end
 
@@ -156,29 +165,6 @@ feature {NONE} -- Basic operation
 	initialize_length_at_minimum is
 			-- Initialize the width of the window and of the children.
 		deferred
-		end
-
-	parent_ask_resize (a_width, a_height: INTEGER) is
-			-- Resize the box and all the children inside
-		do
-			child_cell.resize (minimum_width.max(a_width), minimum_height.max (a_height))
-			if resize_type = 3 then
-				set_local_width (child_cell.width)
-				set_local_height (child_cell.height)
-				move (child_cell.x, child_cell.y)
-			elseif resize_type = 2 then
-				move ((child_cell.width - width)//2 + child_cell.x, child_cell.y)
-				set_local_width (minimum_width)
-				set_local_height (child_cell.height)
-			elseif resize_type = 1 then
-				move (child_cell.x, (child_cell.height - height)//2 + child_cell.y)
-				set_local_width (child_cell.width)
-				set_local_height (minimum_height)
-			else
-				move ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y)
-				set_local_width (minimum_width)
-				set_local_height (minimum_height)
-			end
 		end
 
 feature {EV_WIDGET_I} -- Implementation

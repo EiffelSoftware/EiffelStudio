@@ -292,6 +292,42 @@ feature {NONE} -- Basic operation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	parent_ask_resize (a_width, a_height: INTEGER) is
+			-- Resize the box and all the children inside
+		local
+			cc: EV_CHILD_CELL_IMP
+		do
+			cc := child_cell
+			cc.resize (minimum_width.max(a_width), minimum_height.max (a_height))
+			if resize_type = 3 then
+				if a_width /= width then
+					resize (width, cc.height)
+					set_local_width (cc.width)
+				else
+					set_local_height (cc.height)
+				end
+				move (cc.x, cc.y)
+			elseif resize_type = 2 then
+				set_local_width (cc.width)
+				set_local_height (minimum_height)
+				move (cc.x, (cc.height - height)//2 + cc.y)
+			elseif resize_type = 1 then
+				if a_width /= width then
+					resize (cc.width, minimum_height)
+					set_local_width (cc.width)
+				else
+					set_local_height (minimum_height)
+				end	
+				move (cc.x, (cc.height - height)//2 + cc.y)
+			else
+				move ((cc.width - width)//2 + cc.x, (cc.height - height)//2 + cc.y)
+				set_local_width (minimum_width)
+				set_local_height (minimum_height)
+			end
+		end
+
 	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the current minimum_height because the child did.
 		do

@@ -97,6 +97,11 @@ feature -- Event for text_components
 			-- The text inside the componant is going to be
 			-- update after a change of the user.
 
+feature -- Event for notebook
+
+	Cmd_switch: INTEGER is 17
+			-- The user has switch between two pages of a notebook.
+
 feature -- Upper constants value
 
 	command_count: INTEGER is 19

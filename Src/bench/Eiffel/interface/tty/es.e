@@ -20,7 +20,7 @@ inherit
 
 creation
 
-	make, make_licensed
+	make
 
 feature -- Access
 
@@ -79,4 +79,4 @@ feature -- Update
 			end;
 		end;
 
-end -- ES
+end -- class ES

@@ -18,6 +18,10 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class E_Routines
 {
 public:
@@ -25,6 +29,10 @@ public:
 	~E_Routines(){};
 	int ccom_is_compound_file (WCHAR * pwcsName);
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_ROUTINES_H_INC__
 

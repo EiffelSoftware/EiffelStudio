@@ -14,7 +14,16 @@
 #include "eif_eiffel.h"
 #include <wtypes.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 Formatter f;
+
+#ifdef __cplusplus
+}
+#endif
+
 Formatter::Formatter()
 {
 }

@@ -18,6 +18,9 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 class E_IType_Lib
 {
@@ -45,6 +48,10 @@ public:
 private:
 	ITypeLib * pTypeLib;	
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_ITYPELIB_H_INC__
 

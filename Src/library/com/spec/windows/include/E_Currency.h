@@ -17,6 +17,10 @@
 #include <oleauto.h>
 #include "eif_eiffel.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ccom_currency_round(_ptr_,_value_,_ptr_2) VarCyRound((*_ptr_), _value_,_ptr_2)
 #define ccom_currency_negative(_ptr_, _ptr_2) VarCyNeg( (*_ptr_),_ptr_2)
 #define ccom_currency_integer(_ptr_, _ptr_2) VarCyInt( (*_ptr_),_ptr_2)
@@ -31,9 +35,6 @@
 #define ccom_currency_multiply_by_4bytes_integer(_ptr_, _ptr_2,_ptr_3) VarCyMulI4((*_ptr_),_ptr_2,_ptr_3)
 #define ccom_currency_subtract(_ptr_, _ptr_2,_ptr_3) VarCySub((*_ptr_), (*_ptr_2),_ptr_3)
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
 
 // Zero value
 void ccom_currency_value_zero (CY * a_value);

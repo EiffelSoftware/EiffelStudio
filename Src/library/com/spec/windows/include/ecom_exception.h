@@ -15,6 +15,9 @@
 #define __ECOM_EXCEPTION_H_INC__
 
 #include "eif_eiffel.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 class Formatter
 {
@@ -24,6 +27,10 @@ public:
 	EIF_OBJ ccom_format_message( EIF_INTEGER Code );
 	char* c_format_message( long Code );
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_EXCEPTION_H_INC__
 

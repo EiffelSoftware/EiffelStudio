@@ -21,6 +21,15 @@ inherit
 creation
 	make
 
+feature {NONE} -- Implementation
+
+	dispatch_events is
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 end -- class EV_FONT_SELECTION_DIALOG_IMP
 
 --|----------------------------------------------------------------

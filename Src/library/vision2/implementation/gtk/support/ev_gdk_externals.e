@@ -9,13 +9,6 @@ class
 	EV_GDK_EXTERNALS
 
 feature -- GTK macros for casting types
-	
-	-- Events
-	
- 	c_gdk_event_type (event: POINTER): INTEGER is
- 		external 
- 			"C [macro %"gdk_eiffel.h%"]"
- 		end	
 
 	gdk_root_parent: POINTER is
 		external
@@ -23,75 +16,7 @@ feature -- GTK macros for casting types
 		alias
 			"GDK_ROOT_PARENT()"
 		end
-	
-	-- Button, Motion
-	c_gdk_event_x  (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end
-	
-	c_gdk_event_y (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end
 
-	c_gdk_event_absolute_x (p: POINTER): INTEGER is	
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end
-
-	c_gdk_event_absolute_y (p: POINTER): INTEGER is	
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end
-
-	c_gdk_event_state (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	-- Button
-	c_gdk_event_button (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	-- Key
-	c_gdk_event_keyval (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-
-	c_gdk_event_length (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_string (p: POINTER): POINTER is
-		external 
-			"C [macro %"gdk_eiffel.h%"] (GdkEventKey *): EIF_POINTER"
-		end		
-	
-	-- Expose
-	c_gdk_event_rectangle_x (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_rectangle_y (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_rectangle_width (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_rectangle_height (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
 end
 
 

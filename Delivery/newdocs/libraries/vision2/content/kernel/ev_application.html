@@ -1,0 +1,34 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EV_APPLICATION</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>EV_APPLICATION</H1>
+			<P>
+			<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> is the basis for every vision2 application.
+			</P>
+
+			<P CLASS="note"><B>Note:</B>It is not possible to create a vision2 component unless an application exists (query <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_environment_chart.html">EV_ENVIRONMENT</A>).</P>
+			</P>
+			You may inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> or use it as a client in order to create your vision2
+			application. A simple method of using <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A> is as follows:
+				<OL>
+					<LI>create an instance of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A>.
+					<LI>create the first window for your application.
+					<LI>call <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application.html#f_launch">launch</A> on your application.
+				</OL>
+			<P>
+			<H2>Launching the application</H2>
+			In vision2, to launch an application means to pass control to the underlying operating system. Simply creating an application does not launch it. An explicit call to <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application.html#f_launch">launch</A> is required
+			for the processing to begin.
+			<P CLASS="note"><B>Note:</B>A vision2 system is an event based system. This means that you do not have control of the execution within a vision2 system, but must respond appropriately to <A HREF="/libraries/vision2/content/events/index.html">events</A> as they occur. Therefore, if you call launch on
+			an <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A>, the processing for the application will continue indefinitely unless you have provided a means to exit the application. It is essential to initialize your components
+			correctly, so your application can be exited (call <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/kernel/ev_application.html#f_destroy">destroy</A> on the application).
+			</P>
+
+	</BODY>
+</HTML>

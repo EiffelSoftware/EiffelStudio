@@ -1,85 +1,104 @@
+indexing
+	description: "Description of an export clause."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class CLIENT_I 
 
 inherit
-
 	COMPARABLE
 		redefine
 			is_equal
-		end;
+		end
 	SHARED_WORKBENCH
 		redefine
 			is_equal
-		end;
+		end
 	SHARED_TEXT_ITEMS
 		redefine
 			is_equal
 		end
 
-feature 
+feature -- Access
 
-	written_in: INTEGER;
+	written_in: INTEGER
 			-- Id of the class where the client list is written in
 
-	clients: LIST [STRING];
+	clients: LIST [STRING]
 			-- Client list
+
+feature -- Settings
 
 	set_written_in (i: INTEGER) is
 			-- Assign `i' to `written_in'.
+		require
+			valid_i: i > 0
 		do
-			written_in := i;
-		end;
+			written_in := i
+		ensure
+			written_in_set: written_in = i
+		end
 
 	set_clients (c: like clients) is
 			-- Assign `c' to `clients'.
+		require
+			c_not_void: c /= Void
 		do
-			c.compare_objects;
-			clients := c;
-		end;
+			c.compare_objects
+			clients := c
+		ensure
+			clients_set: clients = c
+		end
+
+feature -- Comparison
 
 	is_equal (other: CLIENT_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
 			Result := written_in = other.written_in
-		end;
+		end
 
 	infix "<" (other: CLIENT_I): BOOLEAN is
 			-- is `other greater than Current ?
 		do
-			Result := written_in < other.written_in;
-		end;
+			Result := written_in < other.written_in
+		end
+
+feature -- Status report
 
 	written_class: CLASS_C is
+			-- Class in which Current is written.
 		do
-			Result := System.class_of_id (written_in);
-		end;
+			Result := System.class_of_id (written_in)
+		end
 
 feature -- Query
 
 	valid_for (client: CLASS_C): BOOLEAN is
 			-- Is the client `client' valid for the current client list ?
 		require
-			good_argument: client /= Void;
-			consistency: System.class_of_id (written_in) /= Void;
+			good_argument: client /= Void
+			consistency: System.class_of_id (written_in) /= Void
 		local
-			supplier_class: CLASS_I;
-			cluster: CLUSTER_I;
+			supplier_class: CLASS_I
+			cluster: CLUSTER_I
 		do
 			from
-				cluster := System.class_of_id (written_in).cluster;
+				cluster := System.class_of_id (written_in).cluster
 				clients.start
 			until
 				clients.after or else Result
 			loop
-				supplier_class := Universe.class_named (clients.item, cluster);
-				if 	supplier_class /= Void
-					and then
+				supplier_class := Universe.class_named (clients.item, cluster)
+				if
+					supplier_class /= Void and then
 					supplier_class.compiled
 				then
-					Result := client.conform_to (supplier_class.compiled_class);
-				end;
-				clients.forth;
-			end;
-		end;
+					Result := client.conform_to (supplier_class.compiled_class)
+				end
+				clients.forth
+			end
+		end
 
 feature -- Incrementality
 
@@ -87,127 +106,127 @@ feature -- Incrementality
 			-- Is `other' equivalent to Current ?	
 			-- [Result implies "`clients' is a subset of `other.clients'"]
 		require
-			good_argument: other /= Void;
+			good_argument: other /= Void
 			consistency: other.written_in = written_in
 		local
-			other_clients: like clients;
-			cur, other_cur: CURSOR;
+			other_clients: like clients
+			cur, other_cur: CURSOR
 		do
-			cur := clients.cursor;
-			other_clients := other.clients;
+			cur := clients.cursor
+			other_clients := other.clients
 			from
-				Result := True;
-				clients.start;
+				Result := True
+				clients.start
 			until
 				clients.after or else not Result
 			loop
-				other_cur := other_clients.cursor;
-				other_clients.start;
-				other_clients.search (clients.item);
-				Result := not other_clients.after;
-				other_clients.go_to (other_cur);
-				clients.forth;
-			end;
-			clients.go_to (cur);
-		end;
+				other_cur := other_clients.cursor
+				other_clients.start
+				other_clients.search (clients.item)
+				Result := not other_clients.after
+				other_clients.go_to (other_cur)
+				clients.forth
+			end
+			clients.go_to (cur)
+		end
 
 	same_as (other: CLIENT_I): BOOLEAN is
 			-- Is `other' the same as Current ?
 		require
-			good_argument: other /= Void;
+			good_argument: other /= Void
 			same_written_in: written_in = other.written_in
 		local
-			other_clients: like clients;
-			i, pos, c: INTEGER;
+			other_clients: like clients
+			i, pos, c: INTEGER
 		do
-			c := clients.count;
-			other_clients := other.clients;
+			c := clients.count
+			other_clients := other.clients
 			if c = other_clients.count then
-				pos := other_clients.index;
+				pos := other_clients.index
 				from
-					Result := True;
-					i := 1;
+					Result := True
+					i := 1
 				until
 					i > c or else not Result
 				loop
-					other_clients.start;
-					other_clients.search (clients.i_th (i));
-					Result := not other_clients.after;
-					i := i + 1;
-				end;
-				other_clients.go_i_th (pos);
-			end;
-		end;
+					other_clients.start
+					other_clients.search (clients.i_th (i))
+					Result := not other_clients.after
+					i := i + 1
+				end
+				other_clients.go_i_th (pos)
+			end
+		end
 
 feature -- Debug purpose
 
 	trace is
 			-- Debug purpose
 		do
-			io.error.putchar ('[');
-			io.error.putstring (System.class_of_id (written_in).cluster.path);
-			io.error.putstring ("] : ");
+			io.error.putchar ('[')
+			io.error.putstring (System.class_of_id (written_in).cluster.path)
+			io.error.putstring ("] : ")
 			from
 				clients.start
 			until
 				clients.after
 			loop
-				io.error.putchar ('%T');
-				io.error.putstring (clients.item);
-				io.error.putchar (' ');
-				clients.forth;
-			end;
-		end;
+				io.error.putchar ('%T')
+				io.error.putstring (clients.item)
+				io.error.putchar (' ')
+				clients.forth
+			end
+		end
 
 feature -- formatter
 
 	less_restrictive_than (other: like Current): BOOLEAN is
 		require
-			good_argument: other /= void
+			good_argument: other /= Void
 		local
-			other_clients: LIST [STRING];
-			other_cluster: CLUSTER_I;
+			other_clients: LIST [STRING]
+			other_cluster: CLUSTER_I
 		do
-			other_clients := other.clients;
-			other_cluster := system.class_of_id (other.written_in).cluster;
+			other_clients := other.clients
+			other_cluster := system.class_of_id (other.written_in).cluster
 			from
-				other_clients.start ;
-				Result := true;
+				other_clients.start 
+				Result := True
 			until
-				other_clients.after or Result = false
+				other_clients.after or Result = False
 			loop
 				Result := valid_for (Universe.class_named
-					(other_clients.item, other_cluster).compiled_class);
-			end;
-		end;
+					(other_clients.item, other_cluster).compiled_class)
+			end
+		end
 
 
 	format (ctxt: FORMAT_CONTEXT) is
 		local
-			temp: STRING;
-			cluster: CLUSTER_I;
-			client_classi: CLASS_I;
+			temp: STRING
+			cluster: CLUSTER_I
+			client_classi: CLASS_I
 		do
-			cluster := System.class_of_id (written_in).cluster;
+			cluster := System.class_of_id (written_in).cluster
 			from
 				clients.start	
 			until
 				clients.after
 			loop
 				temp := clone (clients.item)
-				client_classi := Universe.class_named (temp, cluster);
+				client_classi := Universe.class_named (temp, cluster)
 				if client_classi /= Void then
 					ctxt.put_classi (client_classi)
 				else
-					temp.to_upper;
-					ctxt.put_string (temp);
+					temp.to_upper
+					ctxt.put_string (temp)
 				end
-				clients.forth;
+				clients.forth
 				if not clients.after then
-					ctxt.put_text_item (ti_Comma);
+					ctxt.put_text_item (Ti_comma)
 					ctxt.put_space
 				end
 			end
-		end;
+		end
 
-end
+end -- class CLIENT_I

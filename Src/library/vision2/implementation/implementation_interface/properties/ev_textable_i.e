@@ -30,7 +30,7 @@ feature -- Element change
 			a_text_not_void: a_text /= Void
 		deferred
 		ensure
-			text_assigned: text.is_equal (a_text)
+			text_assigned: text.is_equal (a_text) and then text /= a_text
 		end
 
 feature {NONE} -- Implementation

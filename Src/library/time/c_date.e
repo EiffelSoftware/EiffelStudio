@@ -44,17 +44,27 @@ feature -- Update
 	update is
 			-- Pointer to `struct tm' area.
 		local
-			p: POINTER
+			l_timeb, l_tm: POINTER
 			l_time: INTEGER
 		do
-			l_time := time (p)
+			l_timeb := l_timeb.memory_alloc (timeb_structure_size)
+			ftime (l_timeb)
+			l_time := get_time (l_timeb)
 			if is_utc then
-				p := gmtime ($l_time)
+				l_tm := gmtime ($l_time)
 			else
-				p := localtime ($l_time)
+				l_tm := localtime ($l_time)
 			end
-			create internal_item.make_from_pointer (p, tm_structure_size)
-			update_millisecond
+			create internal_item.make_from_pointer (l_tm, tm_structure_size)
+			
+			l_time := get_millitm (l_timeb)
+			if l_time < 0 or l_time > 999 then
+				millisecond_now := 0
+			else
+				millisecond_now := l_time
+			end
+			
+			l_timeb.memory_free
 		end
 		
 feature -- Status
@@ -114,38 +124,8 @@ feature -- Status
 	millisecond_now: INTEGER
 			-- Current millisecond at creation time or after last call to `update'.
 
-feature {NONE} -- Implementation
-
-	update_millisecond is
-			-- Update millisecond_now.
-		local
-			p: POINTER
-			l_val: INTEGER
-		do
-			p := p.memory_alloc (timeb_structure_size)
-			ftime (p)
-			l_val := get_millitm (p)
-			p.memory_free
-			
-			if l_val < 0 or l_val > 999 then
-				millisecond_now := 0
-			else
-				millisecond_now := l_val
-			end
-		ensure
-			millisecond_valid: millisecond_now >= 0 and millisecond_now <= 999
-		end
-
 feature {NONE} -- Externals
 
-	time (p: POINTER): INTEGER is
-			-- Number of seconds since January 1, 1970.
-		external
-			"C macro signature (time_t *): EIF_INTEGER use <time.h>"
-		alias
-			"time"
-		end
-		
 	ftime (p: POINTER) is
 			-- Set current date and time in `p', pointer to a `struct timeb' area.
 		external
@@ -174,6 +154,12 @@ feature {NONE} -- `struct timeb' encapsulation
 			-- Get `p->millitm'.
 		external
 			"C struct struct timeb access millitm use <sys/timeb.h>"
+		end
+
+	get_time (p: POINTER): INTEGER is
+			-- Get `p->millitm'.
+		external
+			"C struct struct timeb access time use <sys/timeb.h>"
 		end
 		
 feature {NONE} -- `struct tm' encapsulation

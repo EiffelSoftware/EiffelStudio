@@ -69,16 +69,14 @@ copy config.sh extra\win32\console
 copy make.w32 extra\win32\console\make.bat
 copy config.sh extra\win32\desc
 copy make.w32 extra\win32\desc\make.bat
-copy config.sh extra\win32\ipc\app
-copy make.w32 extra\win32\ipc\app\make.bat
-copy config.sh extra\win32\ipc\daemon
-copy make.w32 extra\win32\ipc\daemon\make.bat
-copy config.sh extra\win32\ipc\ewb
-copy make.w32 extra\win32\ipc\ewb\make.bat
-copy config.sh extra\win32\ipc\shared
-copy make.w32 extra\win32\ipc\shared\make.bat
-copy config.sh extra\win32\networku
-copy make.w32 extra\win32\networku\make.bat
+copy config.sh ipc\app
+copy make.w32 ipc\app\make.bat
+copy config.sh ipc\daemon
+copy make.w32 ipc\daemon\make.bat
+copy config.sh ipc\ewb
+copy make.w32 ipc\ewb\make.bat
+copy config.sh ipc\shared
+copy make.w32 ipc\shared\make.bat
 copy config.sh parsing\eiffel
 copy make.w32 parsing\eiffel\make.bat
 copy config.sh parsing\lace
@@ -96,9 +94,9 @@ copy run-time\size.win size.h
 rem
 rem Call the converter tranforming the makefile-win.sh to makefile
 rem
-cd extra\win32\ipc\shared
-..\..\..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\..\..\..\run-time
+cd ipc\shared
+..\..\rt-converter.exe makefile-win.sh makefile
+cd ..\..\run-time
 ..\rt-converter.exe makefile-win.sh makefile
 cd ..\parsing\shared
 ..\..\rt-converter.exe makefile-win.sh makefile
@@ -115,23 +113,22 @@ cd idrs
 cd ..
 cd extra\win32\console
 ..\..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\networku
-..\..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\ipc\daemon
-..\..\..\..\rt-converter.exe makefile-win.sh makefile
+cd ..\..\..\ipc\daemon
+..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\ewb
-..\..\..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\app
-..\..\..\..\rt-converter.exe makefile-win.sh makefile
+..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\shared
-..\..\..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\..\..\..
+..\..\rt-converter.exe makefile-win.sh makefile
+cd ..\..
 rem
 rem Call make
 rem
-echo cd extra\win32\ipc\shared>> make.bat
+del make.bat
+echo cd ipc\shared>> make.bat
 echo call make>> make.bat
-echo cd ..\..\..\..\run-time>> make.bat
+echo cd ..\..\run-time>> make.bat
 echo call make>> make.bat
 echo cd ..\parsing\shared>> make.bat
 echo call make>> make.bat
@@ -143,11 +140,11 @@ echo cd ..\..>> make.bat
 echo cd platform>> make.bat
 echo call make>> make.bat
 echo cd ..>> make.bat
-echo cd extra\win32\ipc\daemon>> make.bat
+echo cd ipc\daemon>> make.bat
 echo call make>> make.bat
 echo cd ..\ewb>> make.bat
 echo call make>> make.bat
-echo cd ..\..\..\..>> make.bat
+echo cd ..\..>> make.bat
 call make
 goto end
 :clean
@@ -177,11 +174,10 @@ call cleanup extra\mswin\networku
 call cleanup extra\mswin\precompd
 call cleanup extra\win32\console
 call cleanup extra\win32\desc
-call cleanup extra\win32\ipc\app
-call cleanup extra\win32\ipc\daemon
-call cleanup extra\win32\ipc\ewb
-call cleanup extra\win32\ipc\shared
-call cleanup extra\win32\networku
+call cleanup ipc\app
+call cleanup ipc\daemon
+call cleanup ipc\ewb
+call cleanup ipc\shared
 call cleanup parsing\eiffel
 call cleanup parsing\lace
 call cleanup parsing\shared

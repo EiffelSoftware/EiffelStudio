@@ -42,6 +42,10 @@ feature {NONE} -- GTK C functions for widgets
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_widget_grab_focus (w: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	gtk_widget_destroy (w: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end

@@ -230,31 +230,33 @@ feature -- Insertion
 			p: like first_element;
 			other_count: INTEGER
 		do
-			other_first_element := other.first_element;
-			other_last_element := other.last_element;
-			other_count := other.count;
-				check
-					other_first_element /= Void;
-					other_last_element /= Void
-				end;
-			if empty or else isfirst then
-				if not empty then
-					p := first_element;
-					if p /= Void then
-						other_last_element.put_right (p)
+			if not other.empty then
+				other_first_element := other.first_element;
+				other_last_element := other.last_element;
+				other_count := other.count;
+					check
+						other_first_element /= Void;
+						other_last_element /= Void
 					end;
+				if empty or else isfirst then
+					if not empty then
+						p := first_element;
+						if p /= Void then
+							other_last_element.put_right (p)
+						end;
+					end;
+					first_element := other_first_element;
+					active := first_element;
+				else
+					p := previous;
+					if p /= Void then
+						p.put_right (other_first_element)
+					end;
+					other_last_element.put_right (active)
 				end;
-				first_element := other_first_element;
-				active := first_element;
-			else
-				p := previous;
-				if p /= Void then
-					p.put_right (other_first_element)
-				end;
-				other_last_element.put_right (active)
-			end;
-			count := count + other_count;
-			other.wipe_out
+				count := count + other_count;
+				other.wipe_out;
+			end
 		end;
 
 	merge_right (other: like Current) is
@@ -266,24 +268,26 @@ feature -- Insertion
 			p: like first_element;
 			other_count: INTEGER;
 		do
-			other_first_element := other.first_element;
-			other_last_element := other.last_element;
-			other_count := other.count;
-				check
-					other_first_element /= Void;
-					other_last_element /= Void
+			if not other.empty then
+				other_first_element := other.first_element;
+				other_last_element := other.last_element;
+				other_count := other.count;
+					check
+						other_first_element /= Void;
+						other_last_element /= Void
+					end;
+				if empty then
+					first_element := other_first_element;
+					active := first_element;
+				else
+					if not islast then
+						other_last_element.put_right (active.right);
+					end;
+					active.put_right (other_first_element);
 				end;
-			if empty then
-				first_element := other_first_element;
-				active := first_element;
-			else
-				if not islast then
-					other_last_element.put_right (active.right);
-				end;
-				active.put_right (other_first_element);
-			end;
-			count := count + other_count;
-			other.wipe_out
+				count := count + other_count;
+				other.wipe_out;
+			end
 		end;
 
 feature -- Deletion

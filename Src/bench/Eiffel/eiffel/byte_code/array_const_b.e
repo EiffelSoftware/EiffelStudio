@@ -158,7 +158,7 @@ feature -- IL generation
  				then 
  						-- We generate a metamorphosed version of type.
  					expr.generate_il_metamorphose (actual_type, target_type, True)
-				elseif target_type.is_basic then
+				elseif target_type /= Void and then target_type.is_basic then
 					target_type.il_convert_from (actual_type)
  				end
 

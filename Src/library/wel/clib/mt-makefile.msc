@@ -1,12 +1,21 @@
 # mtwel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -W3 -c -MT -Ox -DEIF_THREADS -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -W3 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include_mt -DISE_GC
 
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj wel_thr_init.obj
+OBJ = 	registry.obj \
+		disptchr.obj \
+		enumfont.obj \
+		estream.obj \
+		msgboxpa.obj \
+		diskspace.obj \
+		dynload.obj \
+		mousehook.obj \
+		wel_thr_init.obj
+
 
 mtwel.lib: $(OBJ)
 	if exist $@ del $@

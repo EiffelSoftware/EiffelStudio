@@ -1,4 +1,4 @@
-INCLUDE_PATH = -I. -Id:\eiffel43\bench\spec\windows\include
+INCLUDE_PATH = -I. -Id:\eiffel43\bench\spec\windows\include -Id:\Eiffel43\library\GIF\Clib\gd_lib
 CC = cl
 CPP = cl
 CFLAGS = -Ox -YX -nologo $(INCLUDE_PATH)
@@ -9,15 +9,17 @@ RANLIB = echo
 RM = del
 RMDIR = rd
 SHAREDLINK = link
-MY_OBJECTS = gif_library.obj
+MY_OBJECTS = gif_library.obj 
+ALL_OBJECTS = gif_library.c
 .SUFFIXES:.cpp
 
-all: $(MY_OBJECTS)
+all: gif_library.lib
 .c.obj::
 	$(CC) $(CFLAGS) -c $<
 
-
-
+gif_library.lib: $(MY_OBJECTS) 
+	lib /OUT:gif_library.lib $(MY_OBJECTS)
+	
 clean: local_clean
 clobber: local_clobber
 

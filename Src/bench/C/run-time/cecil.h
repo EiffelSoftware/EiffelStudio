@@ -13,11 +13,11 @@
 #ifndef _cecil_h_
 #define _cecil_h_
 
+#include "plug.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "plug.h"
 
 /*
  * Main declarations (should be user visible)

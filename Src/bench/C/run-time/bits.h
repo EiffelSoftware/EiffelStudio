@@ -13,10 +13,6 @@
 #ifndef _bits_h_
 #define _bits_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "portable.h"
 #include "plug.h"
 
@@ -28,6 +24,10 @@ extern "C" {
 #endif
 #ifndef FALSE
 #define FALSE		0		/* The boolean false value */
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* 

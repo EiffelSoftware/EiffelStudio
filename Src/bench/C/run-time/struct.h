@@ -13,10 +13,6 @@
 #ifndef _struct_h_
 #define _struct_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 #include "portable.h"
 
@@ -213,10 +209,6 @@ extern int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
 extern struct p_interface *pattern;
 extern struct p_interface fpattern[];
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif

@@ -64,6 +64,10 @@ extern void wstdinit();				/* Composite objects initialization */
 extern char *cr_exp();				/* Creation of expanded objects */
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
 /*
  * Run time declarations (tables produced by the compiler).
  */
@@ -76,6 +80,10 @@ extern long *nbref;		/* Gives # of references given DT (updated by DLE) */
 extern void (**edispose)();			/* Records pointers to dispose routines */
 extern char *(**ecreate)();			/* Initialization routines */
 extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #define System(type)		esystem[type]	/* Object description */

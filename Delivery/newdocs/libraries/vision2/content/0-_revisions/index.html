@@ -79,6 +79,7 @@ modifications are relative to the previously released version.</p>
         an item through `select_item', even if the item was already selected. `selection_actions'
         are now only fired when the selection changes.</li>
       <li><b>EV_TREE_ITEM</b> - calling `set_pixmap' twice successively with the same EV_PIXMAP caused a postcondition failure.</LI>
+	<li><b>EV_DIALOG</b> - If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

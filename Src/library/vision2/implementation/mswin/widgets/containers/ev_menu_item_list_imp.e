@@ -280,13 +280,10 @@ feature {NONE} -- Implementation
 			ev_children.go_to (cur)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 
 	menu_item_clicked (an_id: INTEGER) is
 			-- Call `on_activate' for menu item with `an_id'.
-			--| We could also use a hash-table but considering the number
-			--| of menu items does not exceed 200 (in general), it is not
-			--| necessary. This is more space efficient.
 		local
 			cur: CURSOR
 			sub_menu: EV_MENU_IMP
@@ -333,6 +330,10 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/22 23:48:45  brendel
+--| Exported menu_item_clicked to EV_POPUP_MENU_HANDLER.
+--| Removed stupid comment about performance.
+--|
 --| Revision 1.8  2000/03/15 16:56:17  brendel
 --| Removed redefinition of insert_string, since the bug is fixed in WEL.
 --|

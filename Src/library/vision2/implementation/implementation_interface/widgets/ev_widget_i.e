@@ -205,28 +205,12 @@ feature -- Measurement
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
-		local
-			wind: EV_WINDOW_IMP
-		do
-			wind ?= Current
-			if wind /= Void then
-				Result := x_position
-			elseif parent /= Void then
-				Result := x_position + parent.screen_x
-			end
+		deferred
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
-		local
-			wind: EV_WINDOW_IMP
-		do
-			wind ?= Current
-			if wind /= Void then
-				Result := y_position
-			elseif parent /= Void then
-				Result := y_position + parent.screen_y
-			end
+		deferred
 		end
 
 	width: INTEGER is
@@ -412,6 +396,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/03/17 18:17:26  rogers
+--| screen_x and screen_y are now implemented platform dependendently and have been made deferred.
+--|
 --| Revision 1.59  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

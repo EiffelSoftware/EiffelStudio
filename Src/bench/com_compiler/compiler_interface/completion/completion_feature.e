@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 		do
 			internal_name := clone (a_name)
 			internal_name.to_lower
+			feature_name := clone (internal_name)
 			file_name := clone (a_file_name)
 			file_name.to_lower
 			description := a_description
@@ -130,6 +131,9 @@ feature -- Access
 			end
 			Result.append (internal_name)
 		end
+		
+	feature_name: STRING
+			-- name of feature
 
 	overloads_count: INTEGER
 			-- Number of overloads (0 means the feature is not overloaded)

@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by Wizard.rc
+// Used by wizard.rc
 //
 #define New_String                      1
 #define Open_String                     2
@@ -27,10 +27,11 @@
 #define Splash_screen_dialog            125
 #define wizard_splash_dialog            125
 #define Splash_bitmap                   127
-#define Wizard_Eiffel_Project_Dialog    129
 #define Wizard_Eiffel_Project_File_Dialog 129
 #define IDD_DIALOG1                     130
 #define WIZARD_ABOUT_DIALOG             130
+#define Wizard_destination_folder       131
+#define Wizard_Destination_folder_dialog 131
 #define Definition_File_Edit            1007
 #define Definition_File_Input_Static    1008
 #define Browse_Button                   1009
@@ -83,14 +84,15 @@
 #define ABOUT_STATIC                    1066
 #define Ace_File_Edit                   1067
 #define Ace_File_Browse_Button          1068
+#define Cluster_Edit                    1069
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1067
+#define _APS_NEXT_CONTROL_VALUE         1070
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -130,6 +130,39 @@ feature -- Status setting
 			tree_widget := Default_pointer
 		end
 
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the tree item holder.
+		local
+			list: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			item: EV_TREE_ITEM_IMP
+		do
+			-- Destroy the implementation of the items
+			-- and remove the children from `ev_children' and `all_children'.
+			from
+				list := ev_children
+				list.start
+			until
+				list.after
+			loop
+				item := list.item
+				if item.count > 0 then
+					item.clear_items
+				end
+
+				-- To be modified
+				gtk_ctree_remove_node (tree_parent_imp.tree_widget, item.widget)
+
+				item.interface.remove_implementation
+
+				list.forth
+			end
+			list.wipe_out
+
+			all_children.wipe_out
+		end
+
 feature -- Event : command association
 
 	add_select_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
@@ -218,7 +251,7 @@ feature {NONE} -- Implementation
 			all_children.remove
 		end
 
-feature {EV_TREE_ITEM_IMP} -- Implementation
+feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 
 	tree_widget: POINTER
 			-- Pointer to the gtk_tree because the vision `EV_TREE'

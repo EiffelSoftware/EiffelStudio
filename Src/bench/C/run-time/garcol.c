@@ -24,6 +24,7 @@
 #include "eiffel.h"		/* For bcopy/memcpy */
 #include <stdio.h>		/* For stream flushing */
 #include "dle.h"		/* For dle_reclaim */
+#include "option.h"		/* For exitprf */
 
 #ifdef WORKBENCH
 #include "interp.h"
@@ -114,6 +115,9 @@ private uint32 age_table[TENURE_MAX];		/* Number of objects/age */
 private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */
 shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */
 public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */
+public int gc_running = 0;			/* Is the GC running */
+public double last_gc_time;			/* The time spent on the last collect, sweep or whatever the GC did */
+public int gc_ran = 0;				/* Has the GC been running */
 
 #ifdef __VMS
 public int r_fides;	/* moved here from retrieve.c */
@@ -315,7 +319,17 @@ public int acollect()
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
 	int allocated;					/* Memory used since last full collect */
+	int started_here;			/* Was this the original entry point? */
 
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
+		
 	if (g_data.status & GC_STOP)
 		return -1;					/* Garbage collection stopped */
 
@@ -361,6 +375,15 @@ public int acollect()
 #endif
 
 	nb_calls++;			/* Records the call */
+
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
+
 	return status;		/* Collection done, forward status */
 }
 
@@ -385,6 +408,16 @@ int i;					/* Index in g_stat array where statistics are kept */
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
+	int started_here;
+
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
 
 	if (g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
@@ -524,6 +557,14 @@ int i;					/* Index in g_stat array where statistics are kept */
 	dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
 #endif
 
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
+
 	return status;		/* Forward status report */
 }
 
@@ -569,10 +610,29 @@ public void mksp()
 	 * maintain statistics on every call.
 	 */
 
+	int started_here;
+
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
+
 	if (g_data.status & GC_STOP)
 		return;						/* Garbage collection stopped */
 
 	(void) scollect(mark_and_sweep, GST_PART);
+
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
 }
 
 private int mark_and_sweep()
@@ -648,6 +708,8 @@ public void reclaim()
 #endif
 
 	dle_reclaim();			/* Reclaim resources introduced by DLE */
+
+	exitprf();			/* Store profile information */
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");
@@ -1579,10 +1641,29 @@ public void plsc()
 	 * updating (available to the user via MEMORY).
 	 */
 
+	int started_here;
+
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
+
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
+
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
 }
 
 private int partial_scavenging()
@@ -1622,6 +1703,17 @@ char **object;
 	 * to the address of a variable holding a reference to an Eiffel object
 	 * which must be part of the local roots for the collector.
 	 */
+
+	int started_here;
+
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
 	
 	if (g_data.status & GC_STOP)
 		return;							/* Garbage collection stopped */
@@ -1636,6 +1728,14 @@ char **object;
 	*object = recursive_mark(*object);	/* Ensure object is alive */
 
 	run_plsc();				/* Normal sequence */
+
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
 }
 
 private void clean_zones()
@@ -2458,7 +2558,29 @@ public int collect()
 	 * to the user via MEMORY primitives.
 	 */
 
-	return scollect(generational_collect, GST_GEN);
+	int result;
+	int started_here;
+
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
+
+	result = scollect(generational_collect, GST_GEN);
+
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
+
+	return result;
 }
 
 private int generational_collect()

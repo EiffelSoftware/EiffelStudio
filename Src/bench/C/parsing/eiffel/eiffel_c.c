@@ -182,6 +182,7 @@ char *inspect_else(void)
 	 * multi-branch instruction. This list can be empty. */
  
 	char *result = list_new(CONSTRUCT_LIST_AS);
+	bool_arg[0] = EIF_TRUE;
 	return result;
 }
 

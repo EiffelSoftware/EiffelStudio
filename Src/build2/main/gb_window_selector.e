@@ -12,8 +12,6 @@ class
 	
 inherit
 	EV_TREE
-		rename
-			selected_item as tree_selected_item
 		export
 			{NONE} all
 			{ANY} start, off, forth, item, extend, wipe_out, is_empty, prune_all, has
@@ -101,6 +99,20 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+	
+	GB_SHARED_PREFERENCES	
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -109,7 +121,7 @@ feature {NONE} -- Implementation
 			set_minimum_height (tool_minimum_height)
 			drop_actions.set_veto_pebble_function (agent veto_drop)
 			drop_actions.extend (agent add_new_object)			
-			
+			key_press_actions.extend (agent check_for_object_delete)
 			is_initialized := True
 		end
 
@@ -172,14 +184,18 @@ feature -- Access
 			object_comparison_on: Result.object_comparison
 		end		
 
-	selected_item: GB_WINDOW_SELECTOR_ITEM is
-			-- Item currently selected.
+	selected_window: GB_WINDOW_SELECTOR_ITEM is
+			-- Window item currently selected.
 		do
-			Result ?= tree_selected_item
-		ensure
-			has_selection_implies_result_not_void: not (tree_selected_item = Void) implies Result /= Void
+			Result ?= selected_item
 		end
 		
+	selected_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
+			-- Directory item currently selected.
+		do
+			Result ?= selected_item
+		end
+	
 	new_directory_button: EV_TOOL_BAR_BUTTON is
 			-- `Result' is a tool bar button that
 			-- calls `add_new_directory'.
@@ -348,62 +364,73 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			perform_delete := True
 			all_objects := objects
-			if all_objects.count = a_directory.count then
+			if all_objects.count = a_directory.count and then Preferences.boolean_resource_value (preferences.Show_deleting_final_directory_warning, True) then
 					-- If all of the objects in `Current' are contained in `a_directory' then prompt the user
 					-- that the root window will be moved out of the directory, as you may not delete the
 					-- root window.
-				create confirmation_dialog.make_with_text ("The directory contains the root window which will be moved from the directory. Other windows will be delted. Are you sure that you wish to remove this directory?")
-				confirmation_dialog.show_modal_to_window (parent_window (Current))
-				if confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).Ev_cancel) then
-					perform_delete := False
-				end
-			elseif not a_directory.is_empty then	
+				create warning_dialog.make_initialized (2, preferences.Show_deleting_final_directory_warning, "The directory contains the root window which will be moved from the directory.%NOther windows will be deleted. Are you sure that you wish to remove this directory?", "Do not show again, and always move root window from directory.")
+				warning_dialog.set_ok_action (agent actual_delete_directory (selected_directory))
+				warning_dialog.show_modal_to_window (parent_window (Current))
+
+			elseif not a_directory.is_empty and then Preferences.boolean_resource_value (preferences.Show_deleting_directories_warning , True) then
 					-- If the directory is not empty, then it does not matter if the root window is contained,
 					-- as if we are here, we know that there are other window objects not contained in the directory,
 					-- so just before the deletion, we can set one of these to be the root window.
-				create confirmation_dialog.make_with_text ("The directory%"" + a_directory.text + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted?")
-				confirmation_dialog.show_modal_to_window (parent_window (Current))
-				if confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).Ev_cancel) then
-					perform_delete := False
-				end
-			end
-			if perform_delete then
-				if all_objects.count = a_directory.count then
-						-- Move the root window out of the directory, as it may not be deleted.
-					add_new_object (object_handler.root_window_object)
-				else
-					directory_of_root_window ?= object_handler.root_window_object.window_selector_item.parent
-					if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
-						-- We must now select the next root window in the tree, as the root window is contained in
-						-- `a_directory'.
-						mark_next_window_as_root (a_directory.count)
-					end
-				end
-				from
-					a_directory.start
-				until
-					a_directory.is_empty
-				loop
-					window_item ?= a_directory.item
-					check
-						item_was_window: window_item /= Void
-					end
-						-- Now remove the window from the directory.
-					Command_handler.Delete_object_command.delete_object (window_item.object)
-				end
-
-				create command_delete_directory.make (a_directory.text)
-				command_delete_directory.execute
-				
-					-- Update project so it may be saved.
-				system_status.enable_project_modified
-				command_handler.update
+				create warning_dialog.make_initialized (2, preferences.Show_deleting_directories_warning, "The directory %"" + a_directory.text + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted with the dialog?", "do not show again, and always delete windows contained.")
+				warning_dialog.set_ok_action (agent actual_delete_directory (selected_directory))
+				warning_dialog.show_modal_to_window (parent_window (Current))
+			else
+				actual_delete_directory (a_directory)
 			end
 		end
-		
+
+	actual_delete_directory (a_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+			-- Actually delete `a_directory' from system.
+		require
+			a_directory_not_void: a_directory /= Void
+		local
+			window_item: GB_WINDOW_SELECTOR_ITEM
+			all_objects: ARRAYED_LIST [GB_OBJECT]
+			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
+		do
+			all_objects := objects
+			if all_objects.count = a_directory.count then
+					-- Move the root window out of the directory, as it may not be deleted.
+				add_new_object (object_handler.root_window_object)
+			else
+				directory_of_root_window ?= object_handler.root_window_object.window_selector_item.parent
+				if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
+					-- We must now select the next root window in the tree, as the root window is contained in
+					-- `a_directory'.
+					mark_next_window_as_root (a_directory.count)
+				end
+			end
+			from
+				a_directory.start
+			until
+				a_directory.is_empty
+			loop
+				window_item ?= a_directory.item
+				check
+					item_was_window: window_item /= Void
+				end
+					-- Now remove the window from the directory.
+				Command_handler.Delete_object_command.delete_object (window_item.object)
+			end
+
+			create command_delete_directory.make (a_directory.text)
+			command_delete_directory.execute
+			
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
+		end
+	
 feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 		
 	mark_next_window_as_root (index_to_move: INTEGER) is
@@ -689,7 +716,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			extend (selector_item)
 			selector_item.enable_select
 		ensure
-			has_selected_item: selected_item /= Void
+			has_selected_item: selected_window /= Void
 		end
 
 feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
@@ -872,6 +899,55 @@ feature {NONE} -- Implementation
 				-- this takes case of both cases, as dialogs inherit
 				-- windows.
 			Result :=  titled_window_object /= Void
+		end
+		
+	check_for_object_delete (a_key: EV_KEY) is
+			-- Respond to keypress of `a_key' and delete selected object.
+		require
+			a_key_not_void: a_key /= Void
+		local
+			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+			if a_key.code = Key_delete and selected_item /= Void then
+				if selected_window /= Void then
+						-- Only perform deletion if delete key pressed, and a
+						-- window object was selected.
+					if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
+						create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "window object" + delete_warning2, delete_do_not_show_again)
+						warning_dialog.set_ok_action (agent delete_window_object (selected_window.object))
+						warning_dialog.show_modal_to_window (parent_window (Current))
+					else
+						delete_window_object (selected_window.object)
+					end
+				elseif selected_directory /= Void then
+						-- There is a single case that slips through the net. If you have disabled both the non empty directory and
+						-- directory containing the root window, then you will no longer get the "show_deleting_keyboard_warning"
+						-- when deleting non empty directories. Julian. This seems a real pain, and I do not believe anybody will
+						-- ever notice this, as why would they remove the others, but not this one which is the first.
+					if selected_directory.count = 0 then
+						if Preferences.boolean_resource_value (preferences.Show_deleting_keyboard_warning, True) then
+							create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "directory object" + delete_warning2, delete_do_not_show_again)
+							warning_dialog.set_ok_action (agent remove_directory (selected_directory))
+							warning_dialog.show_modal_to_window (parent_window (Current))
+						else
+							remove_directory (selected_directory)
+						end
+					else
+						remove_directory (selected_directory)
+					end
+				end
+			end
+		end
+		
+	delete_window_object (window_object: GB_TITLED_WINDOW_OBJECT) is
+			-- Delete selected object.
+		require
+			window_object_not_void: window_object /= Void
+		local
+			delete_window_object_command: GB_COMMAND_DELETE_WINDOW_OBJECT
+		do
+			create delete_window_object_command.make (window_object)
+			delete_window_object_command.execute
 		end
 
 end -- class GB_WINDOW_SELECTOR

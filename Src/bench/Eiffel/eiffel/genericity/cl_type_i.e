@@ -17,7 +17,9 @@ inherit
 			conforms_to_array,
 			generated_id,
 			generate_cid,
-			make_gen_type_byte_code
+			make_gen_type_byte_code,
+			generate_cid_array,
+			generate_cid_init
 		end
 
 feature
@@ -340,4 +342,38 @@ feature -- Generic conformance
 			ba.append_short_integer (generated_id (False))
 		end
 
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			if
+				use_info and then (cr_info /= Void)
+				and then not (is_expanded or is_basic)
+			then
+				-- It's an anchored type 
+				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
+			end
+			buffer.putint (generated_id (final_mode))
+			buffer.putstring (", ")
+
+			-- Increment counter
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			if
+				use_info and then (cr_info /= Void)
+				and then not (is_expanded or is_basic)
+			then
+				-- It's an anchored type 
+				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
+			end
+
+			dummy := idx_cnt.next
+		end
 end

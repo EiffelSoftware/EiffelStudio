@@ -22,7 +22,7 @@ creation
 
 feature -- Initialization
 
-	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
+	make (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initialize the button in preference tool.
 		do
 			button_make (menu_entry_name, a_parent);

@@ -43,7 +43,7 @@ feature -- Status setting
 
 feature -- Initialization
 
-	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
+	make (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initialize button.
 		do
 			button_make (t_Empty, a_parent);

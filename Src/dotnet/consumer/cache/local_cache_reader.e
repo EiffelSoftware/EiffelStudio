@@ -83,7 +83,7 @@ feature {NONE}
 				Result ?= des.deserialized_object
 			end
 		end
-		
+
 	total_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
 			-- Array of consumed assemblies from both local and global caches.
 		local
@@ -99,7 +99,7 @@ feature {NONE}
 					a_local_info_assemblies := local_info.assemblies
 					a_count := a_count + a_local_info_assemblies.count
 				end
-				
+
 				create Result.make (1, a_count)
 				from 
 					i := 1
@@ -109,7 +109,7 @@ feature {NONE}
 					Result.put (a_info_assemblies @ i, i)
 					i := i + 1
 				end
-				
+
 				if a_local_info_assemblies /= Void then
 					from
 						-- i is already correctly set from last loop
@@ -122,13 +122,13 @@ feature {NONE}
 				end
 			end
 		end
-		
+
 	prefix_lookup: HASH_TABLE [STRING, STRING] is
 			-- Used to get a prefix from an assembly name.
-			once
-				create Result.make (5)
-				Result.compare_objects
-			end
+		once
+			create Result.make (5)
+			Result.compare_objects
+		end
 
 feature -- Conversion
 
@@ -141,7 +141,22 @@ feature -- Conversion
 			des.deserialize (local_cache_path + "\" + relative_type_path (t))
 			Result ?= des.deserialized_object
 		end
-		
+
+	local_assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is
+			-- Local assembly information from EAC
+		require
+			non_void_name: aname /= Void
+			valid_name: is_assembly_in_cache (aname)
+		local
+			des: EIFFEL_XML_DESERIALIZER
+		do
+			create des
+			des.deserialize (local_cache_path + "\" + relative_assembly_path (aname) + Assembly_mapping_file_name)
+			Result ?= des.deserialized_object
+		ensure
+			non_void_info: Result /= Void
+		end
+
 invariant
 	local_cache_path_not_void: local_cache_path /= Void
 

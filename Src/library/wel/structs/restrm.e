@@ -26,8 +26,7 @@ feature {NONE} -- Initialization
 			structure_make
 			set_cookie (0)
 			set_error (0)
-			cwel_editstream_set_pfncallback (item,
-				cwel_editstream_callback)
+			cwel_editstream_set_pfncallback (item, cwel_editstream_callback)
 		end
 
 feature -- Access
@@ -107,10 +106,11 @@ feature {NONE} -- Removal
 
 	destroy_item is
 			-- Free `item'.
+		local
+			default_object: like Current
 		do
 			cwel_set_editstream_procedure_address (default_pointer)
-			cwel_set_editstream_object (default_pointer)
-			ceif_wean (Current)
+			cwel_set_editstream_object (default_object)
 			c_free (item)
 			item := default_pointer
 		end
@@ -154,7 +154,7 @@ feature {NONE} -- Externals
 			"C [macro <estream.h>]"
 		end
 
-	cwel_set_editstream_object (object: POINTER) is
+	cwel_set_editstream_object (object: like Current) is
 		external
 			"C [macro <estream.h>]"
 		end
@@ -177,22 +177,6 @@ feature {NONE} -- Externals
 	cwel_set_editstream_in (value: BOOLEAN) is
 		external
 			"C [macro <estream.h>]"
-		end
-
-	ceif_adopt (object: ANY): POINTER is
-			-- Eiffel macro to adopt an object
-		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJ): EIF_POINTER"
-		alias
-			"eif_adopt"
-		end
-
-	ceif_wean (object: ANY) is
-			-- Eiffel macro to wean an object
-		external
-			"C [macro <eif_eiffel.h>] (EIF_OBJ)"
-		alias
-			"eif_wean"
 		end
 
 end -- class WEL_RICH_EDIT_STREAM

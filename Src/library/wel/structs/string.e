@@ -13,11 +13,14 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
+		redefine
+			dispose
 		end
 
 creation
 	make,
-	make_empty
+	make_empty,
+	make_by_pointer
 
 feature {NONE} -- Initialization
 
@@ -28,12 +31,16 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			capacity := a_string.count + 1
-			structure_make
+			item := c_calloc (1, a_string.count + 1)
+			if item = default_pointer then
+				-- Memory allocation problem
+				c_enomem
+			end
 			a := a_string.to_c
-			memory_copy ($a, capacity)
+			memory_copy ($a, a_string.count + 1)
+			shared := False
 		ensure
-			capacity_set: capacity = a_string.count + 1
+			not_shared: not shared
 		end
 
 	make_empty (a_length: INTEGER) is
@@ -46,8 +53,6 @@ feature {NONE} -- Initialization
 			!! s.make (a_length)
 			s.fill_blank
 			make (s)
-		ensure
-			capacity_set: capacity = a_length + 1
 		end
 
 feature -- Access
@@ -60,17 +65,20 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-
-	capacity: INTEGER
-			-- String capacity including the null character
-
+		
+	length: INTEGER is
+			-- String length
+		do
+			Result := cwel_string_length (item)
+		end
+		
 feature -- Element change
 
 	set_string (a_string: STRING) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-			count_ok: a_string.count < capacity
+			count_ok: a_string.count < length
 		local
 			a: ANY
 		do
@@ -79,18 +87,28 @@ feature -- Element change
 		ensure
 			string_set: a_string.is_equal (a_string)
 		end
-
+		
 feature -- Measurement
 
 	structure_size: INTEGER is
 			-- String length
 		do
-			Result := capacity
+			Result := length
 		end
 
-invariant
-	capacity_ok: string.count < capacity
+feature -- Dispose
 
+	dispose is
+		do
+			{WEL_STRUCTURE} precursor
+		end
+feature {NONE} -- Implementation
+
+	cwel_string_length (ptr: POINTER): INTEGER is
+		external
+			"C [macro %"wel_string.h%"]"
+		end
+		
 end -- class WEL_STRING
 
 --|-------------------------------------------------------------------------
@@ -98,7 +116,7 @@ end -- class WEL_STRING
 --| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| 270 Storke Road, ISE Building, second floor, Goleta, CA 93117 USA
 --| Telephone 805-685-1006
 --| Fax 805-685-6869
 --| Information e-mail <info@eiffel.com>

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			is_initialized := False
 			hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, hbox)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (client_area_from_c_object (c_object), hbox)
 			create main_dialog_container
 			main_dialog_container.set_padding (5)
 			main_dialog_container.set_border_width (5)
@@ -186,7 +186,7 @@ feature {NONE} -- Initialization
 			print_btn_imp.enable_can_default
 			cancel_btn_imp ?= cancel_btn.implementation
 			cancel_btn_imp.enable_can_default
-			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_default (print_btn_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_default (print_btn_imp.visual_widget)
 			enable_closeable
 			minimum_from_page := 1
 			maximum_to_page := 1

@@ -105,7 +105,7 @@ feature {NONE}
 				Result := dir_name
 			else
 					-- Interpretation of the environment variables
-				Result := interpret (Result)
+				Result := interpreted_string (Result)
 			end
 		end;
 
@@ -121,7 +121,7 @@ feature {NONE}
 				Result := dir_name
 			else
 					-- Interpretation of the environment variables
-				Result := interpret (Result)
+				Result := interpreted_string (Result)
 			end
 		end;
 
@@ -136,7 +136,7 @@ feature {NONE}
 				Result := dir_name
 			else
 					-- Interpretation of the environment variables
-				Result := interpret (Result)
+				Result := interpreted_string (Result)
 			end
 		end;
 

@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		do
 			cluster := context.current_cluster;
 			if use_name /= Void then
-				path := Environ.interpret (use_name);
+				path := Environ.interpreted_string (use_name);
 				!!use_file_path.make_from_string (cluster.path);
 				use_file_path.set_file_name (path);
 				!!use_file.make_open_read (use_file_path);

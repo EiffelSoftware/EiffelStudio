@@ -24,18 +24,20 @@ feature -- Initialisation
 		do
 			image := ""
 			length := 1
+			width := 0
 		end
 
 feature -- Display
 
-	width: INTEGER is
-		do
-			Result := 0
-		end
+	width: INTEGER
+-- is
+--		do
+--			Result := 0
+--		end
 	
 	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
-			-- device context `a_dc', with a screen width of `a_width'.
+			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its normal state.
 		do
 			display_end_token(d_y, a_device, a_width, False)
@@ -43,7 +45,7 @@ feature -- Display
 
 	display_end_token_selected(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
-			-- device context `a_dc', with a screen width of `a_width'.
+			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its selected state.
 		do
 			display_end_token(d_y, a_device, a_width, True)
@@ -81,51 +83,31 @@ feature {NONE} -- Implementation
 
 	display_end_token(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER; selected: BOOLEAN) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
-			-- device context `a_dc', with a screen width of `a_width'.
+			-- device context `a_device', with a screen width of `a_width'.
 			-- If `selected' is set, then the token is displayed in its selected
 			-- state.
 		local
-			old_text_color		: EV_COLOR
-			old_background_color: EV_COLOR
-			the_text_color		: EV_COLOR
-			the_background_color: EV_COLOR
-			curr_position		: INTEGER
+			the_text_color: EV_COLOR
 		do
--- 			curr_position := position
--- 
--- 				-- Select the drawing style we will use.
--- 			if selected then
--- 				the_text_color := selected_text_color
--- 				the_background_color := selected_background_color
--- 				the_background_brush := selected_background_brush
--- 			else
--- 				the_text_color := text_color
--- 				the_background_color := background_color
--- 				the_background_brush := normal_background_brush
--- 			end
--- 
--- 				-- Display the ¶ only if the option is set.
--- 			if editor_preferences.view_invisible_symbols then
--- 					-- Backup old drawing style and set the new one.
--- 				old_text_color := a_dc.text_color
--- 				old_background_color := a_dc.background_color
--- 				a_dc.set_text_color(the_text_color)
--- 				a_dc.set_background_color(the_background_color)
--- 				a_dc.select_font(font)
--- 
--- 					-- Display the text.
--- 				a_dc.text_out (curr_position, d_y, eol_symbol)
--- 				curr_position := curr_position + a_dc.string_width(eol_symbol)
--- 				
--- 					-- Restore drawing style here.
--- 				a_dc.set_text_color(old_text_color)
--- 				a_dc.set_background_color(old_background_color)
--- 				a_dc.unselect_font
--- 			end
--- 
--- 				-- Fill the end of the line with the specified background brush.
--- 			create wel_rect.make(curr_position, d_y, a_width, d_y+height)
--- 			a_dc.fill_rect(wel_rect, the_background_brush)
+			if selected then 
+ 				the_text_color := selected_text_color
+
+	 				-- Fill the end of the line with the specified background brush.
+				a_device.set_background_color(selected_background_color)
+ 				a_device.clear_rectangle(position, d_y, a_width, d_y+height)
+ 			else
+ 				the_text_color := text_color
+			end
+
+ 				-- Display the ¶ only if the option is set.
+ 			if editor_preferences.view_invisible_symbols then
+ 					-- Backup old drawing style and set the new one.
+ 				a_device.set_foreground_color(the_text_color)
+ 				a_device.set_font(font)
+ 
+ 					-- Display the text.
+ 				a_device.draw_text (position, d_y, eol_symbol)
+ 			end
 		end
 
 feature {NONE} -- Implementation
@@ -137,7 +119,8 @@ feature {NONE} -- Implementation
 
 	background_color: EV_COLOR is
 		do
-			Result := editor_preferences.spaces_background_color
+				-- There is no background for this symbol.
+			Result := Void
 		end
 
 end -- class EDITOR_TOKEN_EOL

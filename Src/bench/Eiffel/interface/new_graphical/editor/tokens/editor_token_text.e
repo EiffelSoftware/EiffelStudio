@@ -25,6 +25,7 @@ feature -- Initialisation
 		do
 			image := text
 			length := text.count
+			width := font.string_width(image)
 		ensure
 			image_not_void: image /= Void
 			length_positive: length > 0
@@ -32,11 +33,11 @@ feature -- Initialisation
 
 feature -- Miscellaneous
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixel of the entire token.
-		do
-			Result := font.string_width(image)
-		end
+--		do
+--			Result := font.string_width(image)
+--		end
 
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first

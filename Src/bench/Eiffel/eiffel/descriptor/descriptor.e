@@ -72,7 +72,8 @@ feature -- Generation
 				f.new_line;
 				f.putstring (C_string)
 			end;
-			f.putstring (init_string);
+
+			generate_init_function (f);
 
 			f.close
 		end;
@@ -143,29 +144,34 @@ feature -- Generation
 			Result.append ("}%N");
 		end;
 
-	init_string: STRING is
+	generate_init_function (f: INDENT_FILE) is
 			-- C code of initialization function of Current
 			-- descriptor
 		local
 			i: INTEGER
 			class_type_id: TYPE_ID
+			init_name: STRING
 		do
 			class_type_id := class_type.id;
-			!! Result.make (0);
-			Result.append (class_type_id.init_name);
-			Result.append ("()%N{%N");
+			init_name := class_type_id.init_name;
+
+			f.generate_protected_extern_declaration ("void", init_name, <<>>);
+
+			f.putstring ("void ");
+			f.putstring (init_name);
+			f.putstring ("()%N{%N");
 			if Compilation_modes.is_precompiling then
-				Result.append ("%Textern char desc_fill;%N");
-				Result.append ("%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")
+				f.putstring ("%Textern char desc_fill;%N");
+				f.putstring ("%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")
 			end;
 
 				-- Special descriptor unit (invariant)
-			Result.append ("%T");
-			Result.append (Init_macro);
-			Result.append ("(desc");
-			Result.append (", 0, RTUD(");
-			Result.append (class_type_id.generated_id);
-			Result.append ("));%N");	
+			f.putstring ("%T");
+			f.putstring (Init_macro);
+			f.putstring ("(desc");
+			f.putstring (", 0, RTUD(");
+			f.putstring (class_type_id.generated_id);
+			f.putstring ("));%N");	
 
 				-- Descriptor units for origin classes
 			from
@@ -174,20 +180,20 @@ feature -- Generation
 			until
 				after
 			loop
-				Result.append ("%T");
-				Result.append (Init_macro);
-				Result.append ("(desc");
-				Result.append ("+");
-				Result.append_integer (i);
-				Result.append (",");
-				Result.append (key_for_iteration.generated_id);
-				Result.append (",RTUD(");
-				Result.append (class_type_id.generated_id);
-				Result.append ("));%N");
+				f.putstring ("%T");
+				f.putstring (Init_macro);
+				f.putstring ("(desc");
+				f.putstring ("+");
+				f.putint (i);
+				f.putstring (",");
+				f.putstring (key_for_iteration.generated_id);
+				f.putstring (",RTUD(");
+				f.putstring (class_type_id.generated_id);
+				f.putstring ("));%N");
 				i := i + item_for_iteration.count;
 				forth
 			end;
-			Result.append ("}%N")
+			f.putstring ("}%N")
 		end;
 
 	table_size: INTEGER is

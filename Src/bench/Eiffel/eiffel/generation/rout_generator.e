@@ -40,6 +40,8 @@ feature
 			temp := clone (Infix_file_name);
 			temp.append_integer (file_counter);
 
+			Extern_declarations.generate_header (final_file_name (temp, Dot_h));
+
 			Extern_declarations.generate (final_file_name (temp, Dot_h));
 			Extern_declarations.wipe_out;
 		end;

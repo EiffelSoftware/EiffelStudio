@@ -80,7 +80,7 @@ feature
 				generate_for_separate_feature_call(reg, typ);
 			else
 				generated_file.putchar ('(');
-				real_type (type).c_type.generate_function_cast (generated_file);
+				real_type (type).c_type.generate_function_cast (generated_file, argument_types);
 				base_class := typ.base_class;
 				if 
 					Compilation_modes.is_precompiling or
@@ -262,7 +262,7 @@ feature -- Concurrent Eiffel
 			end
 
 			generated_file.putstring ("(");
-			real_type (type).c_type.generate_function_cast (generated_file);
+			real_type (type).c_type.generate_function_cast (generated_file, argument_types);
 			base_class := typ.base_class;
 
 			if

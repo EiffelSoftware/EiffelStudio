@@ -228,7 +228,7 @@ feature -- Generation
 			current_class: CLASS_C;
 			body_id: BODY_ID;
 			feature_i: FEATURE_I;
-			file: INDENT_FILE;
+			file, extern_decl_file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
 			final_mode: BOOLEAN;
 			generate_c_code: BOOLEAN;
@@ -271,6 +271,7 @@ feature -- Generation
 			if generate_c_code then
 
 			file := generation_file;
+
 			file.open_write;
 				-- Write header
 			file.putstring ("/*");
@@ -289,6 +290,9 @@ feature -- Generation
 				file.putstring (base_file_name);
 				file.putstring (".h%"%N");
 				file.new_line;
+
+					-- Generation of extern declarations
+				Extern_declarations.generate_header (extern_declaration_filename);
 			elseif Compilation_modes.is_precompiling then
 				Class_counter.generate_extern_offsets (file);
 				Static_type_id_counter.generate_extern_offsets (file);
@@ -296,11 +300,19 @@ feature -- Generation
 			end;
 			file.new_line;
 
+			if final_mode then
+				!! extern_decl_file.make (extern_declaration_filename);
+				extern_decl_file.open_write;
+			else
+				extern_decl_file := file
+			end
+
 			byte_context.set_generated_file (file);
+			byte_context.set_extern_declaration_file (extern_decl_file);
 
 			if final_mode and then has_creation_routine then
 					-- Generate the creation routine in final mode
-				generate_creation_routine (file);
+				generate_creation_routine (file, extern_decl_file);
 			end;
 
 			from
@@ -330,6 +342,8 @@ feature -- Generation
 			end;
 
 			if final_mode then
+				extern_decl_file.close;
+
 				Extern_declarations.generate (extern_declaration_filename);
 				Extern_declarations.wipe_out;
 			end;
@@ -382,7 +396,7 @@ feature -- Generation
 		end;
 
 	extern_declaration_filename: STRING is
-			-- File for external declarations in final mode
+			-- File name for external declarations in final mode
 		do
 			Result := full_file_name (Class_suffix);
 			Result.append (Dot_h);
@@ -469,7 +483,7 @@ feature -- Generation
 			Result := associated_class.dispose_feature
 		end;
 
-	generate_creation_routine (file: INDENT_FILE) is
+	generate_creation_routine (file, h_file: INDENT_FILE) is
 			-- Creation routine, if necessary (i.e. if the object is
 			-- composite and has expanded we must initialize, as well
 			-- as some special header flags).
@@ -491,12 +505,11 @@ feature -- Generation
 				-- There are some expandeds here...
 				-- Generate a procedure which will be in charge of all the
 				-- initialisation bulk.
-			file.putstring ("void ");
-			file.putstring (c_name);
-			file.putstring ("(Current, parent)");
-			file.new_line;
-			file.putstring ("char *Current, *parent;");
-			file.new_line;
+
+			file.generate_function_signature ("void", c_name,
+				"", h_file,
+				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>);
+
 			file.putchar ('{');
 			file.new_line;
 			file.indent;
@@ -1345,7 +1358,7 @@ feature -- DLE
 			current_class: CLASS_C;
 			body_id: INTEGER;
 			feature_i: FEATURE_I;
-			file: INDENT_FILE;
+			file, extern_decl_file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
 			final_mode: BOOLEAN;
 			generate_c_code: BOOLEAN
@@ -1411,8 +1424,13 @@ feature -- DLE
 				file.putstring (".h%"%N");
 				file.new_line;
 				file.new_line;
-	
+
+				Extern_declarations.generate_header (dle_extern_declaration_filename)
+				extern_decl_file := dle_extern_declaration_file;
+				extern_decl_file.open_write
+				
 				byte_context.set_generated_file (file);
+				byte_context.set_extern_declaration_file (extern_decl_file);
 	
 				if is_static then
 						-- The file has been generated
@@ -1436,7 +1454,7 @@ feature -- DLE
 				else
 					if has_creation_routine then
 							-- Generate the creation routine in final mode
-						 generate_creation_routine (file)
+						 generate_creation_routine (file, extern_decl_file)
 					end;
 					from
 						feature_table.start;
@@ -1463,8 +1481,11 @@ feature -- DLE
 					end
 				end;
 
+				extern_decl_file.close
+
 				Extern_declarations.generate (dle_extern_declaration_filename);
 				Extern_declarations.wipe_out;
+
 				file.close
 
 			elseif is_dynamic then
@@ -1496,7 +1517,7 @@ feature -- DLE
 		end;
 
 	dle_extern_declaration_filename: STRING is
-			-- File for external declarations in final mode
+			-- File name for external declarations in final mode
 		do
 			if System.is_dynamic and then is_static then
 				Result := full_file_name (Static_suffix)
@@ -1504,6 +1525,12 @@ feature -- DLE
 				Result := full_file_name (Class_suffix)
 			end;
 			Result.append (Dot_h)
+		end;
+
+	dle_extern_declaration_file: INDENT_FILE is
+			-- File for external declarations in final mode
+		do
+			!! Result.make (dle_extern_declaration_filename)
 		end;
 
 	dle_generate_cecil (file: FILE) is

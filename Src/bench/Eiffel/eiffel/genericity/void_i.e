@@ -62,6 +62,9 @@ feature
 			False
 		end;
 
+	c_string: STRING is "void"
+			-- String generated for the type.
+
 	generate (file: INDENT_FILE) is
 			-- Generation
 		do
@@ -79,12 +82,6 @@ feature
 		do
 		ensure then
 			False
-		end;
-
-	generate_function_cast (file: INDENT_FILE) is
-			-- Generate C function cast in file `file'.
-		do
-			file.putstring ("(void (*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is

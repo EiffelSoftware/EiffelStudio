@@ -201,7 +201,7 @@ feature -- Code generation
             generated_file.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);");
             generated_file.new_line;
             generated_file.putstring ("fp = ");
-            result_type.c_type.generate_function_cast (generated_file);
+            result_type.c_type.generate_function_cast (generated_file, argument_types);
             generated_file.putstring ("GetProcAddress(a_result,");
             if external_name.is_integer then
                 generated_file.putstring ("MAKEINTRESOURCE (");

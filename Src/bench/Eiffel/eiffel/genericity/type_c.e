@@ -78,12 +78,31 @@ feature
 		deferred
 		end;
 
-	generate_function_cast (file: INDENT_FILE) is
+	generate_function_cast (file: INDENT_FILE; arg_types: ARRAY [STRING]) is
 			-- Generate C function cast in file `file'.
 		require
-			good_argument: file /= Void;
+			good_arguments: file /= Void and arg_types /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
-		deferred
+			good_array: arg_types.lower = 1
+		local
+			i, nb: INTEGER
+		do
+			file.putchar ('(')
+			file.putstring (c_string)
+			file.putstring (" (*)(")
+			from
+				i := 1
+				nb := arg_types.count
+			until
+				i > nb
+			loop
+				if i /= 1 then
+					file.putstring (", ")
+				end
+				file.putstring (arg_types @ i)
+				i := i + 1
+			end
+			file.putstring (")) ")
 		end;
 
 	generate_size (file: INDENT_FILE) is
@@ -110,5 +129,10 @@ feature
 			good_context: file.is_open_write or else file.is_open_append;
 		deferred
 		end;
+
+	c_string: STRING is
+			-- String generated for the type.
+		deferred
+		end
 
 end

@@ -9,6 +9,8 @@ class EXT_EXT_BYTE_CODE
 
 inherit
 	EXT_BYTE_CODE
+		rename
+			argument_types as std_argument_types
 		redefine
 			generate
 		end
@@ -96,14 +98,11 @@ if is_special or has_signature then
 
 			add_in_log (internal_name);
 
-				-- Generate function name
-			generated_file.putstring (internal_name);
-			generated_file.putchar ('(');
-			generate_arguments;
-			generated_file.putchar (')');
-			generated_file.new_line;
-				-- Now generate C declarations for arguments
-			generate_arg_declarations;
+				-- Generate function signature
+			 generated_file.generate_function_signature
+				(type_i.c_type.c_string, internal_name, "",
+				 Context.extern_declaration_file, argument_names, argument_types)
+ 
 				-- Starting body of C routine
 			generated_file.putchar ('{');
 			generated_file.new_line;

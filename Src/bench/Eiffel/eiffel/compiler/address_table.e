@@ -161,6 +161,7 @@ end
 
 				gen_file.close
 
+				Extern_declarations.generate_header (gen_file.name)
 				Extern_declarations.generate (gen_file.name)
 				Extern_declarations.wipe_out
 			else
@@ -189,7 +190,6 @@ feature {NONE} -- Attribues
 		do
 			gen_file := Void
 			a_feature := Void
-
 		end
 
 feature {NONE} -- Generation
@@ -227,7 +227,7 @@ feature {NONE} -- Generation
 
 					type_id_array.put (a_type.type_id, a_type.id.id)
 
-					gen_file.putstring ("char *(*");
+					gen_file.putstring ("static char *(*");
 					gen_file.putstring (dle_prefix);
 					gen_file.putstring ("eif_address_t")
 					gen_file.putint (a_type.id.id)
@@ -258,7 +258,7 @@ feature {NONE} -- Generation
 				forth
 			end
 
-			gen_file.putstring ("%N%Nfnptr *")
+			gen_file.putstring ("%N%Nstatic fnptr *")
 			gen_file.putstring (dle_prefix);
 			gen_file.putstring ("eif_address_table[] = {%N")
 
@@ -313,6 +313,47 @@ feature {NONE} -- Generation
 			Result := s_type.type_i.c_type
 		end
 			
+	arg_names (nb: INTEGER): ARRAY [STRING] is
+			-- Names of the arguments
+		local
+			i: INTEGER
+			temp: STRING
+		do
+			from
+				!! Result.make (1, nb + 1)
+				Result.put ("Current", 1)
+				i := 1
+			until
+				i > nb
+			loop
+				temp := "arg"
+				temp.append_integer (i)
+				Result.put (temp, i + 1)
+				i := i + 1
+			end
+		end
+
+	arg_types (args: FEAT_ARG): ARRAY [STRING] is
+			-- Generate declaration of the argument types.
+		local
+			i, nb: INTEGER
+			solved_arg_type: TYPE_I
+			arg_type_a: TYPE_A
+		do
+			from
+				i := 1
+				nb := args.count
+				!! Result.make (1, nb + 1)
+				Result.put ("char *", 1)
+			until
+				i > nb
+			loop
+				arg_type_a := args.i_th (i).actual_type
+				Result.put (solved_type (arg_type_a).c_string, i + 1)
+				i := i + 1
+			end
+		end
+
 	generate_arg_list (nb: INTEGER) is
 			-- Generate declaration of `n' arguments.
 		local
@@ -329,28 +370,6 @@ feature {NONE} -- Generation
 			end
 		end
 
-	generate_arg_declaration (args: FEAT_ARG) is
-			-- Generate declaration of the argument types.
-		local
-			i, nb: INTEGER
-			solved_arg_type: TYPE_I
-			arg_type_a: TYPE_A
-		do
-			from
-				i := 1
-				nb := args.count
-			until
-				i > nb
-			loop
-				arg_type_a := args.i_th (i).actual_type
-				solved_type (arg_type_a).generate (gen_file)
-				gen_file.putstring ("arg")
-				gen_file.putint (i)
-				gen_file.putstring (";%N")
-				i := i + 1
-			end
-		end
-
 	generate_feature (final_mode: BOOLEAN) is
 		local
 			types: TYPE_LIST
@@ -359,7 +378,10 @@ feature {NONE} -- Generation
 			args: FEAT_ARG
 			has_arguments: BOOLEAN
 			return_type: TYPE_A
+			return_type_string: STRING
 			c_return_type: TYPE_C
+			f_name: STRING
+			a_types: like arg_types
 
 			table_name, function_name: STRING
 			entry: POLY_TABLE [ENTRY]
@@ -391,22 +413,20 @@ feature {NONE} -- Generation
 				a_type.type.dump (gen_file)
 				gen_file.putstring (" ")
 				gen_file.putstring (a_feature.feature_name)
-				gen_file.putstring ("*/%N")
+				gen_file.putstring ("*/%N");
 
 				c_return_type := solved_type (return_type)
+				return_type_string := c_return_type.c_string
 
-				c_return_type.generate (gen_file)
-				gen_file.putstring (dle_prefix)
-				gen_file.putstring (function_name)
-				gen_file.putstring ("(Current")
-				if has_arguments then
-					generate_arg_list (args.count)
-				end
-				gen_file.putstring (")%N%
-					%char *Current;%N");
-				if has_arguments then
-					generate_arg_declaration (args)
-				end
+				f_name := clone (dle_prefix)
+				f_name.append (function_name)
+
+				a_types := arg_types (args)
+
+				gen_file.generate_function_signature
+					(return_type_string, f_name, "static", gen_file,
+					 arg_names (args.count), a_types);
+
 				gen_file.putstring ("{%N%
 					%%N%
 					%%T");
@@ -466,7 +486,7 @@ feature {NONE} -- Generation
 					end
 
 					gen_file.putchar ('(')
-					c_return_type.generate_function_cast (gen_file)
+					c_return_type.generate_function_cast (gen_file, a_types)
 
 					if
 						Compilation_modes.is_precompiling or

@@ -48,6 +48,12 @@ feature
 			file.putstring ("SK_CHAR");
 		end;
 
+	c_string: STRING is
+			-- String generated for the type.
+		do
+			Result := "EIF_CHARACTER"
+		end
+
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
@@ -64,12 +70,6 @@ feature
 			-- Generate access C cast in file `file'.
 		do
 			file.putstring ("(EIF_CHARACTER *) ");
-		end;
-
-	generate_function_cast (file: INDENT_FILE) is
-			-- Generate C function cast in file `file'.
-		do
-			file.putstring ("(EIF_CHARACTER (*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is

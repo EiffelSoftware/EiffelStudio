@@ -69,6 +69,9 @@ feature
 			f.putstring ("SK_DTYPE");
 		end;
 
+	c_string: STRING is "EIF_REFERENCE"
+			-- String generated for the type.
+
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
@@ -85,12 +88,6 @@ feature
 			-- Generate C cast in file `file'.
 		do
 			file.putstring ("(EIF_REFERENCE) ");
-		end;
-
-	generate_function_cast (file: INDENT_FILE) is
-			-- Generate C function cast in file `file'.
-		do
-			file.putstring ("(EIF_REFERENCE(*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is

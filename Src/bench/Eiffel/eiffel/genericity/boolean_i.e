@@ -9,7 +9,8 @@ inherit
 			associated_reference, generate_cecil_value, sk_value,
 			generate_sk_value, type_a,
 			generate, generate_cast, generate_access_cast,
-			generate_function_cast, generate_size
+			generate_size,
+			c_string
 		end
 
 feature
@@ -73,6 +74,9 @@ feature
 			!BOOLEAN_A!Result
 		end
 
+	c_string: STRING is "EIF_BOOLEAN"
+			-- String generated for the type.
+
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
@@ -89,12 +93,6 @@ feature
 			-- Generate access C cast in file `file'.
 		do
 			file.putstring ("(EIF_BOOLEAN *) ");
-		end;
-
-	generate_function_cast (file: INDENT_FILE) is
-			-- Generate C function cast in file `file'.
-		do
-			file.putstring ("(EIF_BOOLEAN (*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is

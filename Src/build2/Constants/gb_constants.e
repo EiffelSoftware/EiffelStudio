@@ -626,9 +626,16 @@ feature -- Warning Dialogs
 	
 	cannot_delete_as_still_referenced_single: STRING is "The top level object you are attempting to delete is still referenced by a single object."
 	
+	cannot_delete_as_still_referenced_part2: STRING is "%NTo examine the current references of an object, open the client node of the object's representation within the Window Selector.%N%NDo you wish to flatten all references and delete the object?"
+	
 	cyclic_inheritance_error: STRING is "Not permitted as causes a cyclic inheritance structure."
 	
 	changing_client_warning: STRING is "You are attempting to change the client status of a class that%Nhas already been generated and exists on disk%N%NThis change may cause the generated implementation file and%Nyour current interface file to no longer compile without modification%N%NAre you sure you wish to perform this?"
+	
+	unable_to_save_part1: STRING is "Unable to save the following file :%N%N"
+	
+	unable_to_save_part2: STRING is "%N%NPlease check file permissions and try again."
+	
 
 feature -- Object editor properties
 

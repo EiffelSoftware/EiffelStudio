@@ -11,6 +11,9 @@ class EIFFEL_PARSER
 inherit
 
 	EIFFEL_PARSER_SKELETON
+		redefine
+			yy_translate
+		end
 
 	SHARED_NAMES_HEAP
 
@@ -2168,6 +2171,19 @@ Position: -- Empty
 	;
 
 %%
+
+feature {NONE} -- Implementation
+
+	yy_translate (i: INTEGER): INTEGER is
+			-- Translate lexical token `i' into 
+			-- geyacc internal token code.
+		do
+			if i <= yyMax_token then
+				Result := yytranslate.item (i)
+			else
+				Result := yyNsyms
+			end
+		end
 
 end -- class EIFFEL_PARSER
 

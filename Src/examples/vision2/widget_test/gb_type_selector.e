@@ -23,6 +23,13 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+		
+	EXECUTION_ENVIRONMENT
+		rename
+			put as execution_environment_put
+		undefine
+			copy, is_equal, default_create
+		end
 	
 create
 	default_create
@@ -37,16 +44,15 @@ feature {NONE} -- Initialization
 				--	shared_pixmaps: GB_SHARED_PIXMAPS
 		do
 			Precursor {EV_TREE}
-	--		create shared_pixmaps
 			create tree_item1.make_with_text ("Widgets")
-	--		tree_item1.set_pixmap (shared_pixmaps.pixmap_by_name ("widgets"))
+			tree_item1.set_pixmap (pixmap_by_type (tree_item1.text.as_lower))
 			extend (tree_item1)
 			create tree_item3.make_with_text ("Containers")
-	--		tree_item3.set_pixmap (shared_pixmaps.pixmap_by_name ("containers"))
+			tree_item3.set_pixmap (pixmap_by_type (tree_item3.text.as_lower))
 			tree_item1.extend (tree_item3)
 			add_tree_items (containers, tree_item3)
 			create tree_item2.make_with_text ("Primitives")
-	--		tree_item2.set_pixmap (shared_pixmaps.pixmap_by_name ("primitives"))
+			tree_item2.set_pixmap (pixmap_by_type (tree_item2.text.as_lower))
 			tree_item1.extend (tree_item2)
 			add_tree_items (primitives, tree_item2)
 				-- Expand the types when the project is started.
@@ -76,6 +82,33 @@ feature {NONE} -- Implementation
 					set_test_widget_type ("EV_" + selected_item.text)
 				end
 			end
+		end
+		
+	pixmap_by_type (a_type: STRING): EV_PIXMAP is
+			-- Retrieve a pixmap based on name `a_type', in
+			-- the correct format for the current platform.
+			-- PNG for Unix and ICO for windows.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			environment: EV_ENVIRONMENT
+			filename: FILE_NAME
+			extension: STRING
+		do
+			create filename.make_from_string (current_working_directory)
+			filename.extend ("bitmaps")
+			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
+				extension := "ico"
+				filename.extend (extension)
+			else
+				extension := "png"
+				filename.extend (extension)
+			end
+			filename.extend (a_type.as_lower + "." + extension)
+			create Result
+			Result.set_with_named_file (filename.out)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	containers: ARRAY [STRING] is
@@ -108,6 +141,7 @@ feature {NONE} -- Implementation
 				counter = list.count + 1
 			loop
 				create new_item.make_with_text (list @ counter)
+				new_item.set_pixmap (pixmap_by_type (new_item.text))
 				tree_item.extend (new_item)
 				counter := counter + 1
 			end

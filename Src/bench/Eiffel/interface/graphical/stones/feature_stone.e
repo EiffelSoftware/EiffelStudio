@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Stone representing an eiffel feature stone.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class FEATURE_STONE 
 
 inherit
@@ -7,30 +14,28 @@ inherit
 			origin_text as normal_origin_text,
 			is_valid as fs_valid
 		redefine
-			synchronized_stone
+			synchronized_stone, invalid_stone_message
 		end;
-
 	FILED_STONE
 		redefine
-			origin_text, is_valid, synchronized_stone
+			origin_text, is_valid, synchronized_stone, invalid_stone_message
 		select
 			origin_text, is_valid
 		end;
-
 	SHARED_EIFFEL_PROJECT;
-
 	HASHABLE_STONE
 		redefine
-			origin_text, is_valid, synchronized_stone, header
+			origin_text, is_valid, synchronized_stone, header, invalid_stone_message
 		end;
-
-	INTERFACE_W
+	INTERFACE_W;
+	WARNING_MESSAGES;
+	WINDOWS
 
 creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_feature: E_FEATURE; a_class: E_CLASS) is
 		do
@@ -53,6 +58,8 @@ feature -- Properties
 			-- End position of the feature in
 			-- the origin file
 
+feature -- Access
+
 	icon_name: STRING is
 		local
 			temp: STRING
@@ -71,7 +78,7 @@ feature -- Properties
 			!!Result.make (0);
 			Result.append ("Feature: ");
 			Result.append (e_feature.name);
-			Result.append ("    Class: ");
+			Result.append ("	Class: ");
 			Result.append (e_class.signature);
 		end;
  
@@ -144,12 +151,25 @@ feature -- dragging
 		end;
 
 	stone_type: INTEGER is do Result := Routine_type end;
+
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		do
+			Result := cur_Feature
+		end;
  
 	stone_name: STRING is do Result := l_Routine end;
  
 	clickable: BOOLEAN is
 		do
 			Result := True
+		end;
+
+	invalid_stone_message: STRING is
+			-- Message displayed for an invalid_stone
+		do
+			Result := w_Feature_not_compiled
 		end;
 
 	line_number: INTEGER is
@@ -238,4 +258,16 @@ feature {NONE} -- Implementation
 	private_end_position: INTEGER;
 			-- End position for feature
 
-end
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			if is_valid then
+				hole.process_feature (Current)
+			else
+				warner (hole.target).gotcha_call (invalid_stone_message)
+			end
+		end;
+
+end -- class FEATURE_STONE

@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 
 end -- class EV_HORIZONTAL_BOX_IMP
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -347,13 +347,19 @@ end -- class EV_HORIZONTAL_BOX_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| CVS log
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2001/07/14 12:16:29  manus
+--| Cosmetics, replace the long:
+--| --|-----------------------------------------------------------------------------
+--| by the short version which is standard among all ISE libraries
+--| --|----------------------------------------------------------------
+--|
 --| Revision 1.36  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|
@@ -442,6 +448,6 @@ end -- class EV_HORIZONTAL_BOX_IMP
 --| Added CVS log, redoing creation sequence
 --|
 --|
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| End of CVS log
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------

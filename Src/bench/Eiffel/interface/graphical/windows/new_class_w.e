@@ -34,6 +34,8 @@ creation
 feature -- Initialization
 
 	make (a_tool: CLASS_W) is
+		local
+			separator: THREE_D_SEPARATOR
 		do
 			tool := a_tool;
 			form_d_make (Interface_names.t_Empty, a_tool.popup_parent);
@@ -148,8 +150,6 @@ feature -- Properties
 			-- Class tool
 
 	aok: BOOLEAN;
-
-	separator: SEPARATOR
 
 feature -- Settings
 

@@ -65,11 +65,4 @@ feature -- Execution
 			--	end
 		end;
 
-	work (arg: ANY) is
-			--| Current command should not popdown the error window,
-			--| hence the redefinition
-		do
-			--execute (arg, Void)
-		end
-
 end -- class WORKAREA_SHOW_FOCUS_COM

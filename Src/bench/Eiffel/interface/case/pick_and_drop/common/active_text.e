@@ -61,7 +61,7 @@ feature -- Add/Remove elements
 		require
 			s_possible: s/=Void and then s.count>0
 		local
-			click_stone: CLICK_STONE
+			click_stone: EC_CLICK_STONE
 		do
 			!! click_stone.make(data,image.count+1,image.count+1+s.count)
 			add_stone(click_stone)
@@ -100,7 +100,7 @@ feature -- Add/Remove elements
 
 feature {NONE} -- Implementation
 
-	add_stone(stone: CLICK_STONE) is
+	add_stone(stone: EC_CLICK_STONE) is
 		require
 			stone_exists: stone/=Void
 		do
@@ -173,7 +173,7 @@ feature -- Pick and Drop
 		local
 			ev: EV_BUTTON_EVENT_DATA
 			position: INTEGER
-			st: CLICK_STONE
+			st: EC_CLICK_STONE
 		do
 			ev ?= data
 			if ev /= Void then

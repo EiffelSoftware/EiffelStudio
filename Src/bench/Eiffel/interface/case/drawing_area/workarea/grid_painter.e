@@ -51,11 +51,11 @@ feature -- Output
 			spacing: INTEGER
 		do
 			if is_drawable and system.is_grid_visible then
-				set_logical_mode (3);
-				set_line_width (1);
-				set_line_style (0);
-				set_foreground_color (Resources.grid_color);
-				spacing := system.grid_spacing;
+				set_logical_mode (3)
+				set_line_width (1)
+				set_line_style (0)
+				set_foreground_color (Resources.get_color("grid_color"))
+				spacing := system.grid_spacing
 				from
 					closure_value1 := closure.up_left_x;
 					closure_value2 := closure.down_right_x;

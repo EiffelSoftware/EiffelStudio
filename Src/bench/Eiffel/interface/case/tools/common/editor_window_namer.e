@@ -104,7 +104,7 @@ feature -- Executions
 			-- Capture the transported data, then initialize.
 		local
 			pnd_data: EV_PND_EVENT_DATA
-			stone: STONE
+			stone: EC_STONE
 			namable_data: NAME_DATA
 		do
 			pnd_data ?= dat

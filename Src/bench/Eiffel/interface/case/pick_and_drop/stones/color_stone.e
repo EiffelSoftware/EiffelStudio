@@ -8,7 +8,7 @@ class COLOR_STONE
 
 inherit
 
-	STONE
+	EC_STONE
 
 creation
 

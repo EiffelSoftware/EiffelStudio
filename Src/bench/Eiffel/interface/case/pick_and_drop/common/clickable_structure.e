@@ -8,7 +8,7 @@ class
 	CLICKABLE_STRUCTURE
 
 inherit
-	ARRAY [CLICK_STONE]
+	ARRAY [EC_CLICK_STONE]
 		rename
 			make as array_create
 		export
@@ -18,7 +18,7 @@ inherit
 
 feature 
 
-	add_click_stone (p: CLICK_STONE) is
+	add_click_stone (p: EC_CLICK_STONE) is
 			-- Move cursor one position forward, then
 			-- put element `p' at cursor position, resize if necessary.
 		require
@@ -52,7 +52,7 @@ feature
 			end
 		end
 
-	share (other: ARRAY [CLICK_STONE]) is
+	share (other: ARRAY [EC_CLICK_STONE]) is
 			-- Make current text structure share the content of `other'
 			-- wipe-out and set clickable_count to 0 if void.
 		require
@@ -85,7 +85,7 @@ feature
 			clickable_count := 0
 		end
 
-	find_stone(pos: INTEGER):CLICK_STONE is
+	find_stone(pos: INTEGER):EC_CLICK_STONE is
 		require
 			position_possible: pos > 0
 		local

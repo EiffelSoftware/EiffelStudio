@@ -115,13 +115,14 @@ feature -- Graphical properties
 
 	shared_radius: INTEGER is
 			-- Radius of 'shared_circle'
+		local
+			font: EV_FONT
 		do
-			Result := Resources.link_digit_font.string_width ("8");
-			Result := Result.max (
-					Resources.link_digit_font.ascent +
-					Resources.link_digit_font.descent);
+			font := resources.get_font("link_digit_font")
+			Result := font.string_width ("8")
+			Result := Result.max (font.ascent + font.descent)
 			Result := (Result // 2) + 4
-		end; -- shared_radius
+		end
 
 	attributes_closure: EC_CLOSURE is
 		do
@@ -301,7 +302,7 @@ feature {NONE} -- Implementation
 			end
 			if not has_multiplicity then
 				multiple_text.set_text ("1")
-				multiple_text.set_font (Resources.link_digit_font)
+				multiple_text.set_font (resources.get_font("link_digit_font"))
 			end
 		end
 
@@ -347,15 +348,16 @@ feature {NONE} -- Implementation
 		local
 			width, height: INTEGER;
 			rel_x, rel_y: INTEGER
+			font: EV_FONT
 		do
+			font := resources.get_font("link_digit_font")
 			if is_shared then
 				rel_x := link_body.points.i_th
 					(link_body.points.count - 1).x - final.x;
 				rel_y := link_body.points.i_th
 					(link_body.points.count - 1).y - final.y;
-				width := Resources.link_digit_font.string_width (multiple_text.text);
-				height := Resources.link_digit_font.ascent +
-						Resources.link_digit_font.descent;
+				width := font.string_width (multiple_text.text);
+				height := font.ascent + font.descent;
 				if has_reverse then
 					if rel_x < 0 then
 						multiple_text.base_left.set
@@ -398,13 +400,14 @@ feature {NONE} -- Implementation
 		local
 			width, height: INTEGER;
 			rel_x, rel_y: INTEGER
+			font: EV_FONT
 		do
+			font := resources.get_font("link_digit_font")
 			if is_shared then
 				rel_x := link_body.points.i_th (2).x - start.x;
 				rel_y := link_body.points.i_th (2).y - start.y;
-				width := Resources.link_digit_font.string_width (reverse_multiple_text.text);
-				height := Resources.link_digit_font.ascent +
-						Resources.link_digit_font.descent;
+				width := font.string_width (reverse_multiple_text.text);
+				height := font.ascent + font.descent
 				if rel_x < 0 then
 					reverse_multiple_text.base_left.set
 						(multiple_rhomb.center.x + 2,
@@ -538,18 +541,19 @@ feature {NONE} -- Implementation
 		local
 			additional_height: INTEGER;
 			label_data: LABEL_DATA
+			font1: EV_FONT
 		do
+			font1 := resources.get_font("link_label_font")
 			if data.is_reflexive then
 				label_data := data.label;
 				label.set_verticality (data.is_vertical_text);
-				label_height := Resources.link_label_font.ascent +
-							Resources.link_label_font.descent;
+				label_height := font1.ascent + font1.descent;
 				if label.vertical then
 					label.set_words (label_data.words);
 					additional_height :=  (label.words_count - 1)
 							* label.line_space
 				end;
-				label_width := Resources.link_label_font.string_width (label.longest_word);
+				label_width := font1.string_width (label.longest_word);
 				label.base_left.set (start.x - label_data.x_offset
 							- label_width - 10,
 							start.y - label_data.y_offset - additional_height)

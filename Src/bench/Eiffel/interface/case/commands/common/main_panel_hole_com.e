@@ -32,7 +32,7 @@ feature -- Update
 		local
 			create_win: CREATE_EDITOR_WINDOW_COM;
 			group_stone: GROUP_STONE;
-			stones: LINKED_LIST [STONE]
+			stones: LINKED_LIST [EC_STONE]
 		do
 			group_stone ?= s;
 			if group_stone = Void then

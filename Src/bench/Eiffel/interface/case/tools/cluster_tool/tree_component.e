@@ -44,7 +44,7 @@ feature -- Initialization
 	
 			!! tree.make ( v1 )
 			!! com.make(~hide_show)
-			tree.add_selection_command(com, Void)
+			tree.add_select_command(com, Void)
 
 			!! h1.make(v1)
 			h1.set_expand(FALSE)

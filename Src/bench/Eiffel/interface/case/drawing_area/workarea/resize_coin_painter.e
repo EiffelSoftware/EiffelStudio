@@ -70,10 +70,10 @@ feature -- Output
 			workarea_width, workarea_height: INTEGER
 		do
 			if is_drawable then
-				set_logical_mode (3);
-				set_line_width (1);
-				set_line_style (0);
-				set_foreground_color (Resources.resize_coin_color);
+				set_logical_mode (3)
+				set_line_width (1)
+				set_line_style (0)
+				set_foreground_color (Resources.get_color("resize_coin_color"))
 				workarea_width := workarea.width;
 				workarea_height := workarea.height;
 				draw_segment (

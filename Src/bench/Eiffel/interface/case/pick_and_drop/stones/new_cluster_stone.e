@@ -9,7 +9,7 @@ class
 
 inherit
 
-	STONE
+	EC_STONE
 		redefine
 		--	stone_type
 		end

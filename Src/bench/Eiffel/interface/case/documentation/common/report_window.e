@@ -7,22 +7,11 @@ indexing
 class
 	REPORT_WINDOW
 
-inherit
--- 	EC_TOOL
--- 		--rename
--- 		--	execute as generate
--- 		redefine
--- 			make,
--- 			global_container,
--- 			cancel
--- 		end
-	
+inherit	
 	EC_EDITOR_WINDOW [SYSTEM_DATA]
  		redefine
  			make
 		end
-
-	--EC_CLOSEABLE
 
 	SIZE_SAVABLE
 

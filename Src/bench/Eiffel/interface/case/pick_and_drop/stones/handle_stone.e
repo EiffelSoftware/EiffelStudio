@@ -8,7 +8,7 @@ class HANDLE_STONE
 
 inherit
 
-	STONE
+	EC_STONE
 
 creation
 

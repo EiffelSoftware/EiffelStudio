@@ -612,27 +612,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Compatibility implementation
 
-	dummy_all: EXPORT_ALL_I
-	dummy_none: EXPORT_NONE_I
-	dummy_s_all: S_EXPORT_ALL_I
-	dummy_s_none: S_EXPORT_NONE_I
+	--dummy_all: EXPORT_ALL_I
+	--dummy_none: EXPORT_NONE_I
+	--dummy_s_all: S_EXPORT_ALL_I
+	--dummy_s_none: S_EXPORT_NONE_I
 
-	dummy_r331 : S_FEATURE_DATA_R331
-	dummy_new: S_NEW_FEATURE_DATA
-	dummy_deleted: S_DELETED_FEATURE_DATA
+	--dummy_r331 : S_FEATURE_DATA_R331
+	--dummy_new: S_NEW_FEATURE_DATA
+	--dummy_deleted: S_DELETED_FEATURE_DATA
 
 	make_dummies is
 			--| dummies: for compatibility with 3.3.7 only;
 			--| necessary for storage/retrieval
 		once
-			!! dummy_all
-			!! dummy_none
-			!! dummy_s_all
-			!! dummy_s_none
-
-			!! dummy_r331.make ("dummy_r331")
-			!! dummy_new.make ("dummy_new")
-			!! dummy_deleted.make ("dummy_deleted")
+		--	!! dummy_all
+		--	!! dummy_none
+		--	!! dummy_s_all
+		--	!! dummy_s_none
+--
+	--		!! dummy_r331.make ("dummy_r331")
+	--		!! dummy_new.make ("dummy_new")
+	--		!! dummy_deleted.make ("dummy_deleted")
 		end
 
 end -- class RETRIEVE_PROJECT

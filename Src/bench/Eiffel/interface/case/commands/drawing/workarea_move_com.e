@@ -7,12 +7,12 @@ indexing
 
 deferred class WORKAREA_MOVE_COM
 
-inherit
+inherit 
 
 	MOVE_COM
-
-	WORKAREA_COM
 	
+	WORKAREA_COM
+
 	ONCES
 
 	CONSTANTS

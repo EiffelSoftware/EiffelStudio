@@ -66,6 +66,7 @@ feature -- Commands
 			-- Create Color Tool.
 		do
 			create color_tool.make(caller)
+			color_tool.select_color(resource.actual_value)
 		end
 
 feature -- Display

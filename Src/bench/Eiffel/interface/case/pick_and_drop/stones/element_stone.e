@@ -9,7 +9,7 @@ class ELEMENT_STONE
 
 inherit
 
-	STONE;
+	EC_STONE;
 	NAMABLE
 		redefine
 			illegal_characters

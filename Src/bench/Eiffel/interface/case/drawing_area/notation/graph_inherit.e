@@ -29,14 +29,13 @@ feature {NONE} -- Initialization
 		do
 			workarea := a_workarea;
 			data := a_inherit;
-			if data.color_name = Void then
-				if resources.link_color/= Void then
-					data.set_color_name (resources.link_color.name)
-				else
-					data.set_color_name (resources.inh_link_color.name)
-				end
-				data.set_color_name (resources.inh_link_color.name)
-			end
+			--if data.color_name = Void then
+			--	if resources.link_color/= Void the
+			--		data.set_color_na
+			--		data.set_color_name (resources.get_color(inh_link_color))
+			--	end
+				--data.set_color_name (resources.inh_link_color.name)
+			--end
 			heir := a_workarea.find_linkable (data.heir);
 			parent := a_workarea.find_linkable (data.parent);
 			if heir /= Void and then parent /= Void then

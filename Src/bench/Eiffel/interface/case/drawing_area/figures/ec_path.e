@@ -15,7 +15,7 @@ inherit
 
 	EC_DASHABLE
 
-	EC_FILLABLE
+	EC_FILLABLE 
 
 	EC_FOREGROUND
 
@@ -48,7 +48,7 @@ feature {EC_FIGURE} -- Implementation
 			drawing_exists: not (drawing = Void)
 		do
 			drawing.set_logical_mode (logical_function_mode)
-			--drawing.set_subwindow_mode (subwindow_mode)
+		--	drawing.set_subwindow_mode (subwindow_mode) 
 			drawing.set_line_width (line_width)
 			--drawing.set_line_style (line_style)
 			--drawing.set_fill_style (fill_style)
@@ -56,17 +56,17 @@ feature {EC_FIGURE} -- Implementation
 				--drawing.set_tile (tile)
 			else
 				drawing.set_foreground_color (foreground_color)
-			end;
+			end
 			if line_style /= LineSolid then
 				--drawing.set_dash_pattern (dash_pattern)
-			end;
+			end
 			if fill_style = FillOpaqueStippled then
 				drawing.set_background_color (background_color)
 			elseif fill_style /= FillTiled then
 				if line_style = LineDoubleDash then
-					drawing.set_background_color	(background_color)
+					drawing.set_background_color (background_color)
 				end
-			end;
+			end
 			if (fill_style = FillOpaqueStippled) or (fill_style = FillStippled)
 				then
 					--drawing.set_stipple (stipple)

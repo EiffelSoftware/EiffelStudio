@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			if a /= Void then
 				analysis_window := a
 				make_with_size (1000, 1000)
-				set_background_color (resources.drawing_bg_color)
+				set_background_color (Resources.get_color("drawing_background_color"))
 				create scrollable_area.make(a_parent)
 				create drawing_area.make (scrollable_area, a, Current)
 				drawing_area.set_minimum_size (1000, 1000)
@@ -1498,8 +1498,7 @@ feature -- Output
 	refresh_all is
 			-- Refresh the whole window.
 		do
-			set_background_color (resources.drawing_bg_color) 
-			clear
+			set_background_color (Resources.get_color("drawing_background_color"))			clear
 				-- It will be larger than the actual exposed area
 				-- of the workarea but it beats redrawing the whole
 				-- workarea when this routine is called.

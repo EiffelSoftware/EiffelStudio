@@ -147,7 +147,7 @@ feature -- Output
  				path.set_drawing_attributes (drawing);
  				interior.set_drawing_attributes (drawing);
  				drawing.set_foreground_color
- 							(Resources.drawing_bg_color);
+ 								(Resources.get_color("drawing_background_color"))
  				if System.uml_layout then
  						kx := origin.x + (Resources.link_bracket_size*cosine(angle)).floor
  						ky := origin.y - (Resources.link_bracket_size*sine(angle)).floor

@@ -109,10 +109,12 @@ feature -- Multiple properties
 
 	multiple_size: INTEGER is
 			-- Size of a side of 'multiple_rhomb'
+		local
+			font: EV_FONT
 		once
-			Result := Resources.link_digit_font.string_width ("8");
-			Result := Result.max (Resources.link_digit_font.ascent +
-								Resources.link_digit_font.descent) + 6
+			font := resources.get_font("link_digit_font")
+			Result := font.string_width ("8");
+			Result := Result.max (font.ascent + font.descent) + 6
 		end
 
 feature -- Access
@@ -726,8 +728,8 @@ feature {NONE}
 			else
 				multiple_text.set_text ("i")
 			end;
-			multiple_text.set_font (Resources.link_digit_font);
-		end; -- make_multiple
+			multiple_text.set_font (resources.get_font("link_digit_font"))
+		end
 
 	make_reverse_multiple is
 			-- Make the multiple attributes (rhomb & text - & bar -)
@@ -745,7 +747,7 @@ feature {NONE}
 			else
 				reverse_multiple_text.set_text ("i")
 			end;
-			reverse_multiple_text.set_font (Resources.link_digit_font);
+			reverse_multiple_text.set_font (resources.get_font("link_digit_font"))
 		end; -- make_reverse_multiple
 
 	build_multiple_rhomb is
@@ -765,16 +767,17 @@ feature {NONE}
 	build_multiple_text is
 			-- Build multiplicity number in 'multiple_rhomb'
 		local
-			width, height: INTEGER;
+			width, height: INTEGER
 			rel_x, rel_y: INTEGER
+			font: EV_FONT
 		do
+			font := resources.get_font("link_digit_font")
 			rel_x := link_body.points.i_th (link_body.points.count - 1).x -
 				final.x;
 			rel_y := link_body.points.i_th (link_body.points.count - 1).y -
 				final.y;
-			width := Resources.link_digit_font.string_width (multiple_text.text);
-			height := Resources.link_digit_font.ascent +
-				Resources.link_digit_font.descent
+			width := font.string_width (multiple_text.text);
+			height := font.ascent + font.descent
 			if has_reverse then
 				if rel_x < 0 then
 					multiple_text.base_left.set
@@ -809,14 +812,15 @@ feature {NONE}
 	build_reverse_multiple_text is
 			-- Build multiplicity number in 'multiple_rhomb' in right side
 		local
-			width, height: INTEGER;
+			width, height: INTEGER
 			rel_x, rel_y: INTEGER
+			font: EV_FONT
 		do
+			font := resources.get_font("link_digit_font")
 			rel_x := link_body.points.i_th (2).x - start.x;
 			rel_y := link_body.points.i_th (2).y - start.y;
-			width := Resources.link_digit_font.string_width (reverse_multiple_text.text);
-			height := Resources.link_digit_font.ascent +
-				Resources.link_digit_font.descent;
+			width := font.string_width (reverse_multiple_text.text);
+			height := font.ascent + font.descent
 			if rel_x < 0 then
 				reverse_multiple_text.base_left.set
 						(multiple_rhomb.center.x + 2,
@@ -890,16 +894,18 @@ feature {NONE}
 		end;
 
 	make_reverse_label is
+		local
+			font: EV_FONT
 		do
-			reverse_ascent := Resources.link_label_font.ascent;
-			reverse_label_height := reverse_ascent +
-						Resources.link_label_font.descent;
+			font := resources.get_font("link_label_font")
+			reverse_ascent := font.ascent
+			reverse_label_height := reverse_ascent + font.descent;
 			!! reverse_label.make;
-			reverse_label.set_text (data.reverse_label.output_value);
-			reverse_label.set_font (Resources.link_label_font);
+			reverse_label.set_text (data.reverse_label.output_value)
+			reverse_label.set_font (font)
 			reverse_label.set_line_space (Resources.link_label_space *
-							(reverse_label_height // 2));
-			reverse_label.set_separator (',');
+							(reverse_label_height // 2))
+			reverse_label.set_separator (',')
 		end; -- make_reverse_label
 
 	recompute_label_closure is
@@ -909,10 +915,10 @@ feature {NONE}
 		do
 			if erase_label_rectangle = Void then
 				!! interior.make
-				interior.set_foreground_color (Resources.drawing_bg_color)
+				interior.set_foreground_color (Resources.get_color("drawing_background_color"))
 				!! erase_label_rectangle.make
 				erase_label_rectangle.path.set_foreground_color
-					(Resources.drawing_bg_color)
+					(Resources.get_color("drawing_background_color"))
 				erase_label_rectangle.set_interior (interior)
 				erase_label_rectangle.attach_drawing (workarea)
 			end
@@ -956,7 +962,7 @@ feature {NONE}
 			if label_figure.vertical then
 				label_figure.set_words (label_data.words);
 			end;
-			reverse_label_width := Resources.link_label_font.string_width (label_figure.longest_word);
+			reverse_label_width := resources.get_font("link_label_font").string_width (label_figure.longest_word);
 			base_left := compute_label_coord (True, 
 				data.is_reverse_left_position, 
 				rel_from_pt, rel_to_pt, data.reverse_label.from_ratio);
@@ -991,13 +997,15 @@ feature {NONE, WORKAREA_MOVE_LABEL_COM} -- Implementation
 
 	make_label is
 			-- Make the label of current relation
+		local
+			font: EV_FONT
 		do
-			ascent := Resources.link_label_font.ascent
-			label_height := ascent +
-					Resources.link_label_font.descent
+			font := resources.get_font("link_label_font")
+			ascent := font.ascent
+			label_height := ascent + font.descent
 			!! label.make
 			label.set_text (data.label.output_value)
-			label.set_font (Resources.link_label_font)
+			label.set_font (Resources.get_font("link_label_font"))
 			label.set_line_space (Resources.link_label_space *
 						(label_height // 2))
 			label.set_separator (',')
@@ -1034,7 +1042,7 @@ feature {NONE, WORKAREA_MOVE_LABEL_COM} -- Implementation
 			if label_figure.vertical then
 				label_figure.set_words (label_data.words);
 			end;
-			label_width := Resources.link_label_font.string_width (label_figure.longest_word);
+			label_width := resources.get_font("link_label_font").string_width (label_figure.longest_word);
 			base_left := compute_label_coord (False, 
 						data.is_left_position, 
 						rel_from_pt, rel_to_pt, label_data.from_ratio)

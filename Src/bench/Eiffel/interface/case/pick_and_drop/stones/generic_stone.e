@@ -8,7 +8,7 @@ indexing
 class GENERIC_STONE
 
 	inherit
-		STONE
+		EC_STONE
 
 		NAMABLE
 

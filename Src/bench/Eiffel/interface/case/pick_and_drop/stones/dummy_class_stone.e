@@ -20,7 +20,7 @@ inherit
 			--setup_namer,
 			process, is_valid
 		end;
-	STONE
+	EC_STONE
 		select
 			data
 		end;

@@ -415,7 +415,7 @@ EIF_INTEGER a_date;
 	char *date_string = ctime(&a_date);
 
 	result = RTMS(date_string);
-	free (date_string);
+	/* free (date_string); FIXME - check with xavier */
 	return (EIF_REFERENCE) result;
 }
 

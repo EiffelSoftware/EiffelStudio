@@ -451,7 +451,7 @@ feature {DIRECTORY} -- Implementation
 			-- Return the `DIRENTRY' structure corresponding
 			-- to the name `entry' of directory `dir_ptr'.
 		external
-			"C | %"eif_dir.h%""
+			"C signature (EIF_POINTER, char *): EIF_POINTER use %"eif_dir.h%""
 		end
 
 feature {NONE} -- Implementation
@@ -467,67 +467,67 @@ feature {NONE} -- Implementation
 	file_mkdir (dir_name: POINTER) is
 			-- Make directory `dir_name'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *) use %"eif_file.h%""
 		end
 
 	dir_open (dir_name: POINTER): POINTER is
 			-- Open the directory `dir_name'.
 		external
-			"C | %"eif_dir.h%""
+			"C signature (char *): EIF_POINTER use %"eif_dir.h%""
 		end
 
 	dir_rewind (dir_ptr: POINTER) is
 			-- Rewind the directory `dir_ptr'.
 		external
-			"C | %"eif_dir.h%""
+			"C use %"eif_dir.h%""
 		end
 
 	dir_close (dir_ptr: POINTER) is
 			-- Close the directory `dir_ptr'.
 		external
-			"C | %"eif_dir.h%""
+			"C use %"eif_dir.h%""
 		end
 
 	dir_next (dir_ptr: POINTER): STRING is
 			-- Return the next entry for directory 'dir_ptr'.
 		external
-			"C | %"eif_dir.h%""
+			"C use %"eif_dir.h%""
 		end
 
 	eif_dir_delete (dir_name: POINTER) is
 			-- Delete the directory `dir_name'.
 		external
-			"C | %"eif_dir.h%""
+			"C signature (char *) use %"eif_dir.h%""
 		end
 
 	eif_dir_exists (dir_name: POINTER): BOOLEAN is
 			-- Does the directory `dir_name' exist?
 		external
-			"C | %"eif_dir.h%""
+			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
 	eif_dir_is_readable (dir_name: POINTER): BOOLEAN is
 			-- Is `dir_name' readable?
 		external
-			"C | %"eif_dir.h%""
+			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
 	eif_dir_is_executable (dir_name: POINTER): BOOLEAN is
 			-- Is `dir_name' executable?
 		external
-			"C | %"eif_dir.h%""
+			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
 	eif_dir_is_writable (dir_name: POINTER): BOOLEAN is
 			-- Is `dir_name' writable?
 		external
-			"C | %"eif_dir.h%""
+			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
 	eif_dir_rename (old_name, new_name: POINTER) is
 			-- Change directory name from `old_name' to `new_name'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, char *) use %"eif_file.h%""
 		alias
 			"file_rename"
 		end

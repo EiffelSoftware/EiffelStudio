@@ -261,14 +261,32 @@ feature -- Generation
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			if size = 64 then
-				buf.putstring (integer_64_cast)
+			if compatibility_size /= size then 
+				inspect size
+				when 8 then buf.putstring (integer_8_cast)
+				when 16 then buf.putstring (integer_16_cast)
+				when 32 then buf.putstring (integer_32_cast)
+				when 64 then buf.putstring (integer_64_cast)
+				end
+			end
+
+			inspect compatibility_size
+			when 8 then
+				buf.putstring (integer_8_cast)
 				buf.append_character ('(')
-				buf.putstring (to_integer_64.out)
-			else
+				buf.putstring (lower.out)
+			when 16 then
+				buf.putstring (integer_16_cast)
+				buf.append_character ('(')
+				buf.putstring (lower.out)
+			when 32 then
 				buf.putstring (integer_32_cast)
 				buf.append_character ('(')
 				buf.putstring (lower.out)
+			when 64 then
+				buf.putstring (integer_64_cast)
+				buf.append_character ('(')
+				buf.putstring (to_integer_64.out)
 			end
 			buf.putchar ('L')
 			buf.append_character (')')
@@ -277,22 +295,52 @@ feature -- Generation
 	generate_il is
 			-- Generate IL code for integer constant value.
 		do
-			if size = 64 then
-				il_generator.put_integer_64_constant (to_integer_64)
-			else
+			inspect compatibility_size
+			when 8 then
+				il_generator.put_integer_8_constant (lower)
+			when 16 then
+				il_generator.put_integer_16_constant (lower)
+			when 32 then
 				il_generator.put_integer_32_constant (lower)
+			when 64 then
+				il_generator.put_integer_64_constant (to_integer_64)
+			end
+
+			if compatibility_size /= size then
+				inspect size
+				when 8 then
+					il_generator.convert_to_integer_8
+				when 16 then
+					il_generator.convert_to_integer_16
+				when 32 then
+					il_generator.convert_to_integer_32
+				when 64 then
+					il_generator.convert_to_integer_64
+				end
 			end
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an integer constant value.
 		do
-			if size = 64 then
-				ba.append (Bc_int64)
-				ba.append_integer_64 (to_integer_64)
-			else
+			inspect compatibility_size
+			when 8 then
+				ba.append (Bc_int8)
+				ba.append (lower.to_character)
+			when 16 then
+				ba.append (Bc_int16)
+				ba.append_short_integer (lower)
+			when 32 then
 				ba.append (Bc_int32)
 				ba.append_integer (lower)
+			when 64 then
+				ba.append (Bc_int64)
+				ba.append_integer_64 (to_integer_64)
+			end
+
+			if compatibility_size /= size then
+				ba.append (Bc_cast_long)
+				ba.append_integer (size)
 			end
 		end
 
@@ -313,6 +361,8 @@ feature {COMPILER_EXPORTER}
 
 feature {NONE} -- Code generation string constants
 
+	integer_8_cast: STRING is "(EIF_INTEGER_8) "
+	integer_16_cast: STRING is "(EIF_INTEGER_16) "
 	integer_32_cast: STRING is "(EIF_INTEGER_32) "
 	integer_64_cast: STRING is "(EIF_INTEGER_64) "
 			-- String used to generate a cast.

@@ -436,9 +436,13 @@ feature {COMPILER_EXPORTER}
 					end
 
 				when msil_clr_version then
-					if value.is_name then
-						System.set_clr_runtime_version (value.value)
-					else
+						-- Do not perform any processing as it was done in `build_universe'
+						-- from ACE_SD through call to `set_clr_runtime_version'. We only
+						-- check it is consistent with the value previously set.
+					if
+						not value.is_name or else
+						not equal (System.clr_runtime_version, value.value.string)
+					then
 						error_found := True
 					end
 

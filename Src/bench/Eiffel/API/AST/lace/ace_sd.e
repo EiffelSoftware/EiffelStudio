@@ -275,6 +275,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 				-- Initialize override_cluster_name if any
 			set_override_cluster
+			
+				-- Initialize CLR runtime version
+			set_clr_runtime_version
 
 				-- Then build the clusters with the files *.e found
 				-- in the clusters
@@ -313,6 +316,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 			if Compilation_modes.is_precompiling then
 				update_document_path
+			end
+			
+			if System.il_generation and then System.clr_runtime_version = Void then
+					-- Check that runtime version has been set, if not, we set it to
+					-- default version.
+				System.set_clr_runtime_version ((create {IL_ENVIRONMENT}).default_version)
 			end
 		end;
 
@@ -756,6 +765,43 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 							free_option_sd.error (l_val)
 						else
 							Universe.set_override_cluster_name (l_val.value)
+						end
+					end
+					defaults.forth
+				end
+			end
+		end
+
+	set_clr_runtime_version is
+			-- Initialize `Universe' with override_cluster_name found in Ace file
+			-- if any. This name can be invalid in which case it does not matter,
+			-- otherwise it helps us to build a valid override cluster during
+			-- `build_clusters'.
+		local
+			free_option_sd: FREE_OPTION_SD
+			l_val: OPT_VAL_SD
+			l_has_value: BOOLEAN
+			l_installed_runtimes: LINEAR [STRING]
+		do
+			Universe.set_override_cluster_name (Void)
+			if defaults /= Void then
+				from
+					l_installed_runtimes := (create {IL_ENVIRONMENT}).installed_runtimes
+					defaults.start
+				until
+					defaults.after
+				loop
+					free_option_sd ?= defaults.item.option
+					if free_option_sd /= Void and then free_option_sd.code = feature {FREE_OPTION_SD}.Msil_clr_version then
+						l_val := defaults.item.value
+						if
+							l_has_value or else not l_val.is_name or else
+							not l_installed_runtimes.has (l_val.value.string)
+						then
+							free_option_sd.error (l_val)
+						else
+							l_has_value := True
+							System.set_clr_runtime_version (l_val.value)
 						end
 					end
 					defaults.forth

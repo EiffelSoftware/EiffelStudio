@@ -15,7 +15,8 @@ inherit
 		end
 
 creation
-	make_horizontal, make_vertical
+	make_horizontal, make_vertical,
+	make_horizontal_with_proportion, make_vertical_with_proportion
 
 feature -- Initialization
 
@@ -24,6 +25,15 @@ feature -- Initialization
 			-- `a_parent' as parent and call `set_default'.
 		do
 			make (a_name, a_parent, False)
+			set_proportion(50)
+		end
+
+	make_horizontal_with_proportion (a_name: STRING; a_parent: COMPOSITE; proportion: INTEGER) is
+			-- Create an horizontal frame with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			make (a_name, a_parent, False)
+			set_proportion(proportion)
 		end
 
 	make_vertical (a_name: STRING; a_parent: COMPOSITE) is
@@ -31,6 +41,15 @@ feature -- Initialization
 			-- `a_parent' as parent and call `set_default'.
 		do
 			make (a_name, a_parent, True)
+			set_proportion(50)
+		end
+
+	make_vertical_with_proportion (a_name: STRING; a_parent: COMPOSITE; proportion: INTEGER) is
+			-- Create a vertical frame with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			make (a_name, a_parent, True)
+			set_proportion(proportion)
 		end
 
 feature {NONE} -- Implementation
@@ -62,6 +81,13 @@ feature -- Access
 			-- Is the split window a vertical one?
 
 feature -- Status Setting
+
+	set_proportion (p:INTEGER) is
+			-- Set the split proportion from 1 to 99.
+		do
+			implementation.set_proportion (p)
+		end
+
 
 	set_widget_pane_minimum (a_widget: WIDGET; a_dimension: INTEGER) is
 		local

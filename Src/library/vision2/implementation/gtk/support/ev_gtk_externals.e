@@ -25899,7 +25899,7 @@ feature -- Externals
 			-- `pattern' and `Result': char *
 			-- (from EV_C_GTK)
 		external
-			" C | %"gtk_eiffel.h%""
+			" C signature (char *): EIF_REFERENCE use %"gtk_eiffel.h%""
 		end
 
 	gdk_current_time: INTEGER is

@@ -18,7 +18,7 @@ feature -- Basic operations
 				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_POINTED_DATA_TYPE_DESCRIPTOR is
 		require
 			valid_type_desc: a_type_desc /= Void
-			valid_type_desc_type: a_type_desc.var_type = Vt_ptr
+			valid_type_desc_type: is_ptr (a_type_desc.var_type)
 		local
 			descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
@@ -29,7 +29,7 @@ feature -- Basic operations
 
 			create Result.make (Current)
 		ensure
-			valid_result: Result /= Void and then Result.type = Vt_ptr
+			valid_result: Result /= Void and then is_ptr (Result.type)
 		end
 
 	initialize_descriptor (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR) is

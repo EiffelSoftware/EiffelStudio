@@ -9,11 +9,10 @@ inherit
 
 	ROUT_BODY_AS_B
 		undefine
-			simple_format, has_instruction,
-			index_of_instruction
+			has_instruction, index_of_instruction
 		redefine
 			type_check, byte_node,
-			find_breakable, format,
+			find_breakable, 
 			fill_calls_list, replicate
 		end
 
@@ -50,24 +49,6 @@ feature -- Debugger
 				compound.find_breakable;
 			end;
 			record_break_node;
-		end;
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_text_item (begin_keyword);
-			if compound /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.format(ctxt);
-			end;
-			ctxt.put_breakable;
-			ctxt.commit;
 		end;
 
 feature -- Replication

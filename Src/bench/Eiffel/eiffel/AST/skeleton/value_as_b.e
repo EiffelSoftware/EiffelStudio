@@ -14,10 +14,8 @@ inherit
 		end;
 
 	EXPR_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node, 
 			fill_calls_list, replicate
 		end
 
@@ -44,14 +42,6 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte node
 		do
 			Result := terminal.byte_node;
-		end;
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			terminal.format (ctxt);
 		end;
 
 feature -- Replicate

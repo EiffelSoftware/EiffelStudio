@@ -17,11 +17,11 @@ inherit
 	ATOMIC_AS_B
 		undefine
 			copy, out, is_equal, setup, consistent,
-			pass_address, is_id, string_value, simple_format
+			pass_address, is_id, string_value
 		redefine
 			good_integer, good_character,
 			make_integer, make_character,
-			record_dependances, format
+			record_dependances
 		end;
 
 	STRING
@@ -88,13 +88,6 @@ feature -- Conveniences
 			constant_i ?= context.a_class.feature_table.item (Current);
 			char_value ?= constant_i.value;
 			!!Result.make (char_value.char_val, constant_i);
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.put_string (Current);
-			ctxt.always_succeed;
 		end;
 
 end -- class ID_AS_B

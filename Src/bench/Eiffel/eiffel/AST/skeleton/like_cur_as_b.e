@@ -16,8 +16,6 @@ inherit
 	TYPE_B
 		undefine
 			has_like, simple_format
-		redefine
-			format
 		end;
 
 feature
@@ -37,12 +35,4 @@ feature
 			Result.set_actual_type (feat_table.associated_class.actual_type);
 		end;
 		
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_Like_keyword);
-			ctxt.put_string (" Current");
-			ctxt.always_succeed;
-		end;
-
 end -- class LIKE_CUR_AS_B

@@ -10,8 +10,8 @@ deferred class
 
 inherit
 	WEL_RICH_EDIT_STREAM
-		rename
-			make as rich_edit_stream_make
+		redefine
+			make
 		end
 
 feature {NONE} -- Initialization
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize the C variables.
 		do
-			rich_edit_stream_make
+			Precursor {WEL_RICH_EDIT_STREAM}
 			cwel_set_editstream_in_procedure_address ($internal_callback)
 			cwel_editstream_set_pfncallback_in (item)
 		end

@@ -81,7 +81,7 @@ feature {NONE}
 			!! Result
 		end;
 
-	close_button: PUSH_BG;
+	close_button: PUSH_B;
 			-- Button to close the history window
 
 	close_commmand: POPDOWN_COM is
@@ -127,7 +127,7 @@ feature {HISTORY_LIST}
 
 feature {NONE}
 
-	redo_button: PUSH_BG;
+	redo_button: PUSH_B;
 			-- Button to redo a command
 
 	redo_command: HISTORY_REDO is
@@ -183,7 +183,7 @@ feature
 
 feature {NONE}
 
-	undo_button: PUSH_BG;
+	undo_button: PUSH_B;
 			-- Button to undo a command
 
 	undo_command: HISTORY_UNDO is

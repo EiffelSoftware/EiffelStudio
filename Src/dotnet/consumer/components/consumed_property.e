@@ -24,23 +24,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args:ARRAY [CONSUMED_ARGUMENT]; has_getter, has_setter, pub, stat: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
+	make (egn, esn, dn: STRING; args:ARRAY [CONSUMED_ARGUMENT]; has_getter, has_setter, pub, stat: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
 			-- Initialize event.
 		require
-			non_void_eiffel_name: en /= Void
+--			non_void_eiffel_name: en /= Void
 			non_void_dotnet_name: dn /= Void
 			non_void_args: args /= Void
-			valid_eiffel_name: not en.is_empty
-			valid_dotnet_name: not dn.is_empty
+--			valid_eiffel_name: not en.is_empty
+--			valid_dotnet_name: not dn.is_empty
+			getter: egn = Void implies not has_getter
+			setter: esn = Void implies not has_setter
 			non_void_type: type /= Void
 			non_void_declaring_type: decl_type /= Void
 		do
 			dotnet_name := dn
 			is_public := pub
 			is_static := stat
-			entity_make (en, pub, decl_type)
+			entity_make (egn, pub, decl_type)
 			if has_getter then
-				create getter.make (	en,
+				create getter.make (	egn,
 									dn,
 									args,
 									type,
@@ -48,9 +50,8 @@ feature {NONE} -- Initialization
 									decl_type)
 			end
 			if has_setter then
-				create setter.make (
-									"set_" + en,
-									"set_" + dn,
+				create setter.make (esn,
+									dn,
 									args,
 									False, stat, False, pub, True,
 									decl_type)

@@ -11,7 +11,7 @@ feature {NONE} -- Initialization
 	make_in (ptr: POINTER) is
 		do
 			ptr_window := ptr
-			create mutex_continue.make
+			create mutex_continue
 			create thread_continue
 			thread_continue.set_item (True)
 			create proxy_continue.put (thread_continue)

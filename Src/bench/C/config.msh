@@ -38,6 +38,14 @@ lib='lib'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
+#-- DLL: MT no debug
+#--------
+#ccflags='-DEIF_MAKE_DLL -W3 -nologo -MT -DEIF_THREADS'
+#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
+#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
+#
+#
 #-- DLL: no MT no debug
 #--------
 #ccflags='-DEIF_MAKE_DLL -W3 -nologo'

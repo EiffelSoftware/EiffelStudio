@@ -675,6 +675,9 @@ feature -- Object editor properties
 	gb_ev_pixmapable_pixmap: STRING is "Pixmap"
 	gb_ev_pixmapable_pixmap_tooltip: STRING is "feature `pixmap' from EV_PIXMAPABLE"
 	
+	gb_ev_pixmap_pixmap: STRING is "Pixmap image"
+	gb_ev_pixmap_pixmap_tooltip: STRING is "feature `set_with_named_file' from EV_PIXMAP"
+	
 	gb_ev_container_radio_groups: STRING is "Merged radio groups"
 	gb_ev_container_radio_groups_tooltip: STRING is "feature `merge_radio_groups' from EV_CONTAINER"
 	gb_ev_container_propagate_foreground_color: STRING is "Propagate"

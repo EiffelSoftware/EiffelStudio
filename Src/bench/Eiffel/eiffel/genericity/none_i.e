@@ -6,7 +6,8 @@ inherit
 			dump, is_none, is_void, is_bit, is_basic, 
 			is_reference, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			cecil_value, append_signature, generated_id
+			cecil_value, append_signature, generated_id,
+			generate_gen_type_il
 		end
 
 	TYPE_C
@@ -148,5 +149,14 @@ feature -- Generic conformance
 			Result := None_type
 		end
 
+feature -- Generic conformace for IL
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+			-- `use_info' is true iff we generate code for a 
+			-- creation instruction.
+		do
+			il_generator.generate_none_type_instance
+		end
+		
 end -- class NONE_I
 

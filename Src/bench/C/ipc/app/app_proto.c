@@ -239,7 +239,7 @@ rt_public void stop_rqst(int s)
 	 * current location. We also indicate why the program stopped and set
 	 * a proper exception tag if that is the reason we stopped.
 	 */
-
+	EIF_GET_CONTEXT
 	Request rqst;			/* XDR request built */
 	struct where wh;		/* Where did the program stop? */
 
@@ -291,6 +291,7 @@ rt_public void stop_rqst(int s)
 #undef st_where
 
 	send_packet(s, &rqst);	/* Send stopped notification */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void inspect(int s, Opaque *what)

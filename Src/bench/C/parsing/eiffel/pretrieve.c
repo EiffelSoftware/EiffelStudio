@@ -17,15 +17,15 @@
 #include "retrieve.h"
 #include "store.h"
 #include "error.h"
+#include "eif_globals.h"
 
 #ifdef EIF_OS2
 #include <io.h>
 #endif
 
 char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
-
-
 {
+	EIF_GET_CONTEXT
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
@@ -42,12 +42,12 @@ char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	rt_reset_retrieve();
 
 	return result;
+	EIF_END_GET_CONTEXT
 }
 
 char *retrieve_all(EIF_INTEGER f_desc, long position)
-
-
 {
+	EIF_GET_CONTEXT
 	/* Return object graph retrieved in file `file_ptr' read at
 	 * position. */
 	char *result;
@@ -65,4 +65,5 @@ char *retrieve_all(EIF_INTEGER f_desc, long position)
 	rt_reset_retrieve();
 
 	return result;
+	EIF_END_GET_CONTEXT
 }

@@ -26,6 +26,7 @@
 #include "com.h"
 #include "request.h"
 #include "macros.h"
+#include "eif_globals.h"
 
 #define IGNORE	-1	/*	We do not want this item sent, but there are still
 					 *	items to send. Useful for getting rid of EX_OSTK
@@ -479,7 +480,7 @@ rt_private struct dump *argument(int n)
 rt_private struct dump *once(void)
 {
 	/* Dumping of the once stack */
-
+	EIF_GET_CONTEXT
 	char *obj;							/* Object in once Result variable */
 	static struct dump dumped;			/* Item returned */
 
@@ -499,6 +500,7 @@ rt_private struct dump *once(void)
 			HEADER(obj)->ov_flags & EO_TYPE;
 
 	return &dumped;			/* Pointer to static data */
+	EIF_END_GET_CONTEXT
 }
 
 /*

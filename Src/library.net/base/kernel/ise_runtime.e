@@ -24,4 +24,22 @@ feature -- Externals
 			"generic_parameter_count"
 		end
 
+	frozen generator (o: ANY): SYSTEM_STRING is
+			-- Generating class name of object `o'.
+			-- (base class of the type of which it is a direct instance)
+		external
+			"IL static signature (System.Object): System.String use ISE.Runtime.RUN_TIME"
+		alias
+			"generator"
+		end
+
+	frozen generating_type (o: ANY): SYSTEM_STRING is
+			-- Generating type name of object `o'.
+			-- (type of which it is a direct instance)
+		external
+			"IL static signature (System.Object): System.String use ISE.Runtime.RUN_TIME"
+		alias
+			"generating_type"
+		end
+	
 end -- class ISE_RUNTIME

@@ -152,7 +152,7 @@ end;
 			info, old_info: SERVER_INFO;
 		do
 			server_file := Server_controler.file_of_id (current_id);
-			if (server_file.count > Size_limit) or else
+			if (server_file.count > Size_limit*Server_controler.chunk_size) or else
 				server_file.precompiled
 			then 
 				set_current_id;

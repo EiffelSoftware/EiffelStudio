@@ -93,6 +93,6 @@ feature
 			end;
 		end;
 
-	Size_limit: INTEGER is 750000;
+	Size_limit: INTEGER is 15;
 
 end

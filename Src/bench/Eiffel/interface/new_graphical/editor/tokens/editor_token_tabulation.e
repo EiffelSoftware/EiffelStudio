@@ -92,6 +92,19 @@ feature {NONE} -- Implementation
 				-- Compute the number of pixel represented by a tabulation based on
 				-- user preferences.
 			create dc.make
+			dc.select_font(font)
 			Result := editor_preferences.tabulation_spaces * dc.string_width(" ")
+			dc.unselect_font
 		end
+
+	font: WEL_FONT is
+			-- Font used to draw the text
+		local
+			log_font: WEL_LOG_FONT
+		once
+				-- create the font
+			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
+			create Result.make_indirect(log_font)
+		end
+
 end -- class EDITOR_TOKEN_TABULATION

@@ -147,6 +147,9 @@ feature -- Status report
 		if (is_eiffel_string (o)) {
 			eiffel_string_type = o.GetType();	
 			string_builder_info = eiffel_string_type.GetField ("$$internal_string_builder");
+			if (string_builder_info == null) {
+				string_builder_info = eiffel_string_type.GetField ("$$InternalStringBuilder");
+			}
 			builder = (StringBuilder) string_builder_info.GetValue (o);
 			Result = builder.ToString();
 		}
@@ -166,11 +169,17 @@ feature -- Status report
 				// Get SPECIAL object
 			eiffel_array_type = o.GetType();	
 			area_info = eiffel_array_type.GetField ("$$area");
+			if (area_info == null) {
+				area_info = eiffel_array_type.GetField ("$$Area");
+			}
 			special = area_info.GetValue (o);
 
 				// Get System.Array
 			eiffel_special_type = special.GetType();
 			native_info = eiffel_special_type.GetField ("$$native_array");
+			if (native_info == null) {
+				native_info = eiffel_special_type.GetField ("$$NativeArray");
+			}
 			Result = (Array) native_info.GetValue (special);
 		}
 

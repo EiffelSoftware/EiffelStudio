@@ -10,11 +10,6 @@ deferred class
 	EV_ITEM_I
 
 inherit
-	EV_ITEM_I
-		redefine
-			interface
-		end
-
 	EV_PICK_AND_DROPABLE_I
 		redefine
 			interface
@@ -70,6 +65,9 @@ end -- class EV_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/07 22:10:00  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.12  2000/04/07 20:47:35  brendel
 --| Merged with EV_SIMPLE_ITEM_I. (except for EV_TEXTABLE_I).
 --|

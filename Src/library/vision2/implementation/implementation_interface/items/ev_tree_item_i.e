@@ -9,12 +9,17 @@ deferred class
 	EV_TREE_ITEM_I
 
 inherit
-	EV_SIMPLE_ITEM_I
+	EV_ITEM_I
 		redefine
 			interface
 		end
 
 	EV_TREE_ITEM_LIST_I
+		redefine
+			interface
+		end
+
+	EV_TEXTABLE_I
 		redefine
 			interface
 		end
@@ -105,6 +110,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/07 22:10:00  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.32  2000/03/17 00:01:26  king
 --| Accounted for name change of tree_item_holder
 --|

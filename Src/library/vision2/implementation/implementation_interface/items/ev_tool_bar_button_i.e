@@ -10,13 +10,18 @@ deferred class
 	EV_TOOL_BAR_BUTTON_I
 
 inherit
-	EV_SIMPLE_ITEM_I
+	EV_ITEM_I
 		redefine
 			parent,
 			interface
 		end
 
 	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
+
+	EV_TEXTABLE_I
 		redefine
 			interface
 		end
@@ -106,6 +111,9 @@ end -- class EV_TOOL_BAR_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/07 22:09:23  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.14  2000/03/29 20:23:29  brendel
 --| Improved `parent'.
 --|

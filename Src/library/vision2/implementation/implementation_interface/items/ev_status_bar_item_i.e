@@ -9,18 +9,23 @@ deferred class
 	EV_STATUS_BAR_ITEM_I
 
 inherit
-	EV_SIMPLE_ITEM_I
+	EV_ITEM_I
 		redefine
-			parent
+			parent,
+			interface
+		end
+
+	EV_TEXTABLE_I
+		redefine
+			interface
 		end
 
 feature -- Access
 
 	parent: EV_STATUS_BAR is
-			-- The parent of the Current widget
-			-- Can be void.
+			-- The parent of the Current widget.
 		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+			Result ?= {EV_ITEM_I} Precursor
 		end
 
 feature -- Measurement
@@ -53,6 +58,10 @@ feature -- Element change
 --		deferred
 --		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_STATUS_BAR_ITEM
+
 end -- class EV_STATUS_BAR_ITEM_I
 
 --!-----------------------------------------------------------------------------
@@ -76,6 +85,9 @@ end -- class EV_STATUS_BAR_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/07 22:10:00  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.12  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

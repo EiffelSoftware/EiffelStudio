@@ -32,11 +32,18 @@ feature -- Conversion String
 
 feature -- StringBuilder
 
+	icor_debug_string_value_from_string_builder (v: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
+		require
+			v_not_void: v /= Void			
+		do
+			Result := icor_debug_string_value_from (v, token_StringBuilder_m_StringValue)
+		end		
+
 	string_from_string_builder (v: ICOR_DEBUG_VALUE): STRING is
 		require
 			v_not_void: v /= Void	
 		do
-			Result := string_from (v, token_StringBuilder_m_StringValue) 
+			Result := string_from (v, token_StringBuilder_m_StringValue)
 		end
 
 feature -- exception
@@ -65,7 +72,7 @@ feature -- exception
 
 feature {NONE} -- get member data
 
-	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
+	icor_debug_string_value_from (v: ICOR_DEBUG_VALUE; token: INTEGER): ICOR_DEBUG_STRING_VALUE is
 		require
 			v_not_void: v /= Void
 		local
@@ -80,9 +87,21 @@ feature {NONE} -- get member data
 			if l_icd_obj_value /= Void then
 				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
 				if l_icd_value /= Void then
-					Result := system_string_value_to_string (l_icd_value)
+					Result := edv_formatter.icor_debug_string_value (l_icd_value)
 				end
 			end	
+		end
+		
+	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
+		require
+			v_not_void: v /= Void
+		local
+			l_icds_value: ICOR_DEBUG_STRING_VALUE
+		do
+			l_icds_value := icor_debug_string_value_from (v, token)
+			if l_icds_value /= Void then
+				Result := edv_formatter.icor_debug_string_value_to_string (l_icds_value)
+			end
 		end
 
 	integer_from (v: ICOR_DEBUG_VALUE; token: INTEGER): INTEGER is

@@ -15,6 +15,7 @@ default
 	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (yes)
+	dotnet_naming_convention (yes)
 
 
 cluster
@@ -31,7 +32,6 @@ assembly
 	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
 
 external
-
 	include_path:
 		"$(ISE_EIFFEL)\library\vision2\spec\include",
 		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
@@ -39,7 +39,7 @@ external
 	object:
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
- 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
- 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 
 end

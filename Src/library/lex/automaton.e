@@ -42,7 +42,7 @@ feature -- Status setting
 		end; 
 
 	set_final (state, f: INTEGER) is
-			-- Set to `f' the `final' value of `state'.
+			-- Make `state' final for regular expression `f'.
 		deferred
 		end; 
 

@@ -12,7 +12,7 @@ class STATE
 feature -- Access
 
 	final: INTEGER;
-			-- Number of the regular expression of which Current
+			-- Number of the regular expression of which `Current'
 			-- is a final state; 0 if not final.
 			-- (When you go from state to state
 			-- in an automaton, at the end of the course the

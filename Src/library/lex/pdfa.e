@@ -35,14 +35,14 @@ creation
 feature -- Initialization
 
 	make (n, i: INTEGER) is
-			-- Make a PDFA with n states, and i + 1 inputs.
+			-- Make a PDFA with `n' states, and `i' + 1 inputs.
 		do
 			nb_states := n;
 			greatest_input := i;
-			!!input_array.make (0, greatest_input);
-			!!final_array.make (1, nb_states);
+			!! input_array.make (0, greatest_input);
+			!! final_array.make (1, nb_states);
 			array_make (1, nb_states);
-			!!keywords_list.make
+			!! keywords_list.make
 		end; 
 
 feature -- Access
@@ -52,10 +52,11 @@ feature -- Access
 			-- a transition on this input to the following state
 
 	final_array: ARRAY [INTEGER];
-			-- Attributes "final" of each state
+			-- The `final' value for each state
+			-- (regular expression, if any, for which it is final).
 
 	keywords_list: LINKED_LIST [STRING];
-			-- Keywords associated with Current
+			-- Keywords associated with current automaton.
 
 	has_letters: BOOLEAN;
 			-- Are there any letters among the active transitions?
@@ -69,7 +70,7 @@ feature -- Status setting
 		end; 
 
 	set_final (s, r: INTEGER) is
-			-- Declare state `s' as final state of regular expression `r'.
+			-- Make `s' the final state of regular expression `r'.
 		do
 			final_array.put (r, s)
 		end; 
@@ -85,7 +86,7 @@ feature -- Status setting
 			set: FIXED_INTEGER_SET
 		do
 			if input_array.item (input_doc) = Void then
-				!!set.make (nb_states);
+				!! set.make (nb_states);
 				input_array.put (set, input_doc)
 			end;
 			input_array.item (input_doc).put (source)
@@ -97,7 +98,7 @@ feature -- Status setting
 			list: LINKED_LIST [INTEGER]
 		do
 			if item (source) = Void then
-				!!list.make;
+				!! list.make;
 				put (list, source)
 			end;
 			item (source).put_right (target);
@@ -264,8 +265,8 @@ feature {NONE} -- Implementation
 			top, int: INTEGER;
 			e_successors_list: LINKED_LIST [INTEGER]
 		do
-			!!stack.make;
-			!!Result.make (nb_states);
+			!! stack.make;
+			!! Result.make (nb_states);
 			Result.put (state);
 			from
 				stack.put (state)
@@ -313,8 +314,8 @@ feature {NONE} -- Implementation
 		end; 
 
 	initial_final_designation is
-			-- Set the final and initial attributes of dfa,
-			-- in harmony with those of Current.
+			-- Set the final and initial attributes of the dfa,
+			-- consistent with those of the current automaton.
 		require else
 			dfa_exists: dfa /= Void
 		local
@@ -343,7 +344,7 @@ feature {NONE} -- Implementation
 		end; 
 
 	dfa_set_final (s, f: INTEGER) is
-			-- Assign f to the attribute final of state s.
+			-- Make `f' the `final' state for `s'.
 		do
 			dfa.item (s).set_final (final_array.item (f))
 		end; 
@@ -386,7 +387,7 @@ feature {NONE} -- Implementation
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		do
 			if input_array.item (input_doc).has (source) then
-				!!Result.make;
+				!! Result.make;
 				Result.put_right (source + 1)
 			end
 		end; 

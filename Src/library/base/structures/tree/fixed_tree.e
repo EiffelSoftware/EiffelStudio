@@ -184,7 +184,7 @@ feature -- Element change
 		end;
 
 	put_child, replace_child (n: like parent) is
-			-- Assign `n' to child.
+			-- Make `n' the node's child.
 		do
 			fl_replace (n);
 			n.attach_to_parent (Current)
@@ -193,7 +193,7 @@ feature -- Element change
 		end;
 
 	put_left_sibling (other: like parent) is
-			-- Assign `other' to left sibling.
+			-- Make `other' the left sibling of current node.
 		require
 			is_not_root: not is_root;
 			has_left_sibling: left_sibling /= Void
@@ -205,7 +205,7 @@ feature -- Element change
 		end;
 
 	put_right_sibling (other: like parent) is
-			-- Assign `other' to right sibling.
+			-- Make `other' the right sibling of current node.
 		require
 			is_not_root: not is_root;
 			has_right_sibling: right_sibling /= Void

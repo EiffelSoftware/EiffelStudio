@@ -1,5 +1,14 @@
+indexing
+
+	description:
+		"Formatter for non-integral numbers";
+
+	copyright: "See notice at end of class";
+	names: format_double;
+	date: "$Date$";
+	revision: "$Revision$"
+
 class FORMAT_DOUBLE
-	-- Given a double and a series of details produce formatted strings.
 
 inherit
 	FORMAT_INTEGER
@@ -32,6 +41,7 @@ feature -- Initialization
 		do
 			set_defaults (w)
 			decimals := d
+			decimal := '.'
 		ensure 
 			blank_fill: fill_character = ' '
 			show_sign_negative: show_sign_negative
@@ -40,6 +50,7 @@ feature -- Initialization
 			right_justified: right_justified
 			leading_sign: leading_sign
 			decimals_set: decimals = d
+			decimal_point: decimal = '.'
 		end
 
 feature -- Access
@@ -50,7 +61,39 @@ feature -- Access
 	decimals: INTEGER
 			-- Number of digits after the decimal point.
 
+	zero_not_shown: BOOLEAN
+			-- Show 0.5 as .5 or 0.5?
+
+	decimal: CHARACTER
+			-- What is used for the decimal
+
 feature -- Status setting
+
+	point_decimal is
+			-- Use . as the decimal point.
+		do
+			decimal := '.'
+		ensure
+			decimal = '.'
+		end
+
+	comma_decimal is
+			-- Use , as the decimal point.
+		do
+			decimal := ','
+		ensure
+			decimal = ','
+		end
+
+	set_decimals (d :INTEGER) is
+			-- `d' decimals to be displayed.
+		require
+			d <= width
+		do
+			decimals := d
+		ensure
+			decimals = d
+		end
 
 	separate_after_decimal is
 			-- Use separators after the decimal.
@@ -95,6 +138,23 @@ feature -- Status setting
 			not after_decimal_separate
 		end
 
+
+	show_zero is
+			-- Show 0.5 as 0.5 .
+		do
+			zero_not_shown := false
+		ensure
+			not zero_not_shown
+		end 
+
+	hide_zero is
+			-- Show 0.5 as .5 .
+		do
+			zero_not_shown := true
+		ensure
+			zero_not_shown
+		end
+
 feature -- Conversion
 
 	formatted (d : DOUBLE): STRING is
@@ -125,8 +185,10 @@ feature -- Conversion
 				fracs := pad_fraction (fraction)
 			end
 			!!Result.make (width)
-			Result.append (ints)
-			Result.append (".")
+			if integral /= 0 or else not zero_not_shown then
+				Result.append (ints)
+			end
+			Result.extend (decimal)
 			if decimals > 0 then
 				Result.append (fracs)
 			end
@@ -146,7 +208,8 @@ feature {NONE} -- Implementation
 	pad_fraction (f: DOUBLE): STRING is
 			-- Stretch or shrink `f' to length `decimals' .
 		do
-			Result := f.out
+			Result := (f+5).out
+			Result.head (Result.count - 1)
 			if Result.count > decimals then
 				Result := Result.substring (1, decimals)
 			else
@@ -198,3 +261,15 @@ invariant
 	separate_all: no_separator implies not after_decimal_separate
 
 end -- class FORMAT_REAL
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

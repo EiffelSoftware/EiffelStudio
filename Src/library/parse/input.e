@@ -43,7 +43,7 @@ feature  -- Access
 		end;
 
 	set_lexical (lexical: LEXICAL) is
-			-- Assign `lexical' to `analyzer'.
+			-- Designate `lexical' as the `analyzer' to be used.
 		require
 			lex_not_void: analyzer /= Void
 		do

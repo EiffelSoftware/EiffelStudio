@@ -322,11 +322,6 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	marked: CURSOR is
-			-- Retained position, for possible later return.
-		do
-		end;
-
 	go_to (r: CURSOR) is
 			-- Go to position marked `r'.
 		do

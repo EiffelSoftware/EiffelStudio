@@ -79,7 +79,7 @@ feature -- Initialization
 
 
 	initialize (v: G) is
-			-- Assign `v' to each entry.
+			-- Make each entry have value `v'.
 		local
 			row, column: INTEGER
 		do
@@ -122,7 +122,7 @@ feature -- Measurement
 feature -- Element change
 
 	put (v: like item; row, column: INTEGER) is
-			-- Replace entry at coordinates (`row', `column') by `v'.
+			-- Assign item `v' at coordinates (`row', `column').
 		require
 			valid_row: 1 <= row and row <= height;
 			valid_column: 1 <= column and column <= width

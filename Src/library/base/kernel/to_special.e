@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Element change
 
 	set_area (other: like area) is
-			-- Assign `other' to `area'
+			-- Make `other' the new `area'
 		do
 			area := other
 		end;

@@ -39,7 +39,7 @@ feature -- Access
 feature -- Status setting
 
 	set_final (state, f: INTEGER) is
-			-- Assign f to the attribute "final" of state.
+			-- Make `state' `final' for regular expression `f'.
 		require
 			is_in_automaton: state <= upper and state >= lower
 		do
@@ -49,7 +49,7 @@ feature -- Status setting
 feature -- Element change
 
 	add_right (s: S) is
-			-- Assign s to the first possible item.
+			-- Assign `s' to the first possible item.
 		require
 			not_full: last_position < count
 		do

@@ -10,9 +10,11 @@ indexing
 
 class FIBONACCI inherit
 
-	COUNTABLE [INTEGER]
+	COUNTABLE_SEQUENCE [INTEGER]
 		rename
 			has as is_fibonacci
+		redefine
+			i_th, is_fibonacci
 		end
 
 feature -- Access
@@ -21,7 +23,7 @@ feature -- Access
 
 	Second : INTEGER is 1;
 
-	higher_prime (n: INTEGER): INTEGER is
+	higher_fibonacci (n: INTEGER): INTEGER is
 			-- Lowest fibonacci number greater than or equal to `n'
 		do
 			if n <= First then
@@ -38,7 +40,7 @@ feature -- Access
 			end
 		end;
 
-	lower_prime (n: INTEGER): INTEGER is
+	lower_fibonacci (n: INTEGER): INTEGER is
 			-- Greatest fibonacci number lower than or equal to `n'
 		require
 			argument_big_enough: n >= Second
@@ -57,7 +59,7 @@ feature -- Access
 			end
 		end;
 
-	all_lower_primes (n: INTEGER): ARRAY [BOOLEAN] is
+	all_lower_fibonacci (n: INTEGER): ARRAY [BOOLEAN] is
 			-- Array of `n' boolean values, where the
 			-- value at index `i' is true if and only if
 			-- `i' is a fibonacci number.
@@ -67,13 +69,13 @@ feature -- Access
 			from
 				!! Result.make (1, n);
 				j := 1
-				i := item (j)
+				i := i_th (j)
 			until
 				i > n
 			loop
 				Result.put (true, i);
 				j := j + 1
-				i := item (j)
+				i := i_th (j)
 			end;
 		end;
 
@@ -89,18 +91,18 @@ feature -- Access
 			else
 				from
 					count := First
-					to_test := item (count)
+					to_test := i_th (count)
 				until
 				   to_test >= n	
 				loop
 					count := count + 1
-					to_test := item (count)
+					to_test := i_th (count)
 				end;
 				Result := to_test = n
 			end
 		end;
 
-	item (i: INTEGER): INTEGER is
+	i_th (i: INTEGER): INTEGER is
 			-- The `i'-th fibonacci number
 		local
 			count : INTEGER
@@ -124,12 +126,6 @@ feature -- Access
 					count := count + 1
 				end
 			end
-		end;
-
-feature {NONE} -- Inapplicable
-
-	linear_representation: LINEAR [INTEGER] is
-		do
 		end;
 
 end -- class FIBONACCI

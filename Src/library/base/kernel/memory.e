@@ -180,7 +180,7 @@ feature -- Removal
 		end;
 
 	full_coalesce is
-			-- Coalesce the whole memory; merge adjacent free
+			-- Coalesce the whole memory: merge adjacent free
 			-- blocks to reduce fragmentation.
 		external
 			"C"

@@ -38,7 +38,7 @@ feature -- Comparison
 feature -- Element change
 
 	set_item (d: DOUBLE) is
-			-- Assign `d' to `item'.
+			-- Make `d' the `item' value.
 		do
 			item := d
 		end;

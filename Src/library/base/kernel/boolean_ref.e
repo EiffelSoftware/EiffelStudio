@@ -24,7 +24,7 @@ feature -- Access
 feature -- Element change
 
 	set_item (b: BOOLEAN) is
-			-- Assign `b' to `item'.
+			-- Make `b' the `item' value.
 		do
 			item := b;
 		end;

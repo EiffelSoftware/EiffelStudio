@@ -68,7 +68,7 @@ feature -- Initialization
 		end;
 
 	from_c (c_string: ANY) is
-			-- Assign to current string the contents of `c_string',
+			-- Reset contents of string from contents of `c_string',
 			-- a string created by some external C function.
 		require
 			c_string /= Void
@@ -500,7 +500,7 @@ feature -- Removal
 		end;
 
 	prune (c: CHARACTER) is
-			-- Remove `c'.
+			-- Remove first occurrence of `c'.
 			-- No effect if string does not include `c'.
 		require else
 			true

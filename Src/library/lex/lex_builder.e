@@ -1192,7 +1192,7 @@ feature {NONE} -- Implementation
 		end;
 
 	dfa_set_final (s, new_final: INTEGER) is
-			-- Set the attribute final of state s to new_final.
+			-- Set the attribute `final' of state `s' to `new_final'.
 		local
 			old_final: INTEGER;
 		do

@@ -17,24 +17,30 @@ inherit
 feature -- Status report
 
 	meaning (except: INTEGER): STRING is
-		do
+			-- A message in English describing what `except' is
+		external
+			"C"
+		alias
+			"eename"
 		end;
 
 	assertion_violation: BOOLEAN is
+			-- Was last exception due to a violated assertion or
+			-- non-decreasing variant?
 		do
 			Result := 
-				(exception = Check_instruction) or else
-				(exception = Class_invariant) or else
-				(exception = Loop_invariant) or else
-				(exception = Loop_variant) or else
-				(exception = Postcondition) or else
-				(exception = Precondition)
+				(original_exception = Check_instruction) or else
+				(original_exception = Class_invariant) or else
+				(original_exception = Loop_invariant) or else
+				(original_exception = Loop_variant) or else
+				(original_exception = Postcondition) or else
+				(original_exception = Precondition)
 		end;
 
 	is_developer_exception: BOOLEAN is
 			-- Is the last exception a developer exception?
 		do
-			Result := (exception = Developer_exception)
+			Result := (original_exception = Developer_exception)
 		end;
 
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
@@ -47,16 +53,15 @@ feature -- Status report
 
 	developer_exception_name: STRING is
 			-- Name of last developer-raised exception
-		external
-			"C"
-		alias
-			"eeotag"
+		do
+			Result := original_recipient_name
 		end;
 
 	is_signal: BOOLEAN is
-			-- Is exception due to an external event (operating
+			-- Is last exception due to an external event (operating
 			-- system signal)?
 		do
+			Result := (original_exception = Signal_exception)
 		end;
 
 	is_system_exception: BOOLEAN is
@@ -64,36 +69,51 @@ feature -- Status report
 			-- external event (operating system error)?
 		do
 			Result := 
-				(exception = External_exception) or else
-				(exception = Operating_system_exception)
+				(original_exception = External_exception) or else
+				(original_exception = Operating_system_exception)
 		end;
 
 	tag_name: STRING is
 			-- Tag of last violated asssertion clause
-		do
+		external
+			"C"
+		alias
+			"eeltag"
 		end;
 
 	recipient_name: STRING is
 			-- Name of the routine whose execution was
 			-- interrupted by last exception
-		do
+		external
+			"C"
+		alias
+			"eelrout"
 		end;
 
 	class_name: STRING is
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
-		do
+		external
+			"C"
+		alias
+			"eelclass"
 		end;
 
 	exception: INTEGER is
 			-- Code of last exception that occurred
-		do
+		external
+			"C"
+		alias
+			"eelcode"
 		end;
 
 	original_tag_name: STRING is
 			-- Assertion tag for original form of last
 			-- assertion violation.
-		do
+		external
+			"C"
+		alias
+			"eeotag"
 		end;
 
 	original_exception: INTEGER is
@@ -108,13 +128,19 @@ feature -- Status report
 	original_recipient_name: STRING is
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
-		do
+		external
+			"C"
+		alias
+			"eeorout"
 		end;
 
 	original_class_name: STRING is
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
-		do
+		external
+			"C"
+		alias
+			"eeoclass"
 		end;
 
 feature -- Status setting 
@@ -122,13 +148,19 @@ feature -- Status setting
 	catch (code: INTEGER) is
 			-- Make sure that any exception of code `code' will be
 			-- caught. This is the default.
-		do
+		external
+			"C"
+		alias
+			"eecatch"
 		end;
 
 	ignore (code: INTEGER) is
 			-- Make sure that any exception of code `code' will be
 			-- ignored. This is not the default.
-		do
+		external
+			"C"
+		alias
+			"eeignore"
 		end;
 
 	raise (name: STRING) is
@@ -187,3 +219,4 @@ end -- class EXCEPTIONS
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <eiffel@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Element change
 	put, replace (v : like item) is
-			-- Assign `v' to `item'.
+			-- Make `v' the cell's `item'.
 		do
 			item := v
 		ensure

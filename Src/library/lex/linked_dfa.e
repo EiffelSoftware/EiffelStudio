@@ -93,7 +93,7 @@ feature -- Status setting
 		end;
 
 	set_final (state, f: INTEGER) is
-			-- Assign f to the attribute "final" of state.
+			-- Make `state' a final state for regular expression `f'.
 		do
 			l_set_final (state, f)
 		end 

@@ -416,7 +416,7 @@ feature {COMPILER_EXPORTER}
 
 				when metadata_cache_path then
 					if value.is_name then
-						System.set_metadata_cache_path (value.value)
+						System.set_metadata_cache_path ((create {ENV_INTERP}).interpreted_string (value.value))
 					else
 						error_found := True
 					end
@@ -492,7 +492,7 @@ feature {COMPILER_EXPORTER}
 
 				when msil_key_file_name then
 					if value.is_name then
-						System.set_msil_key_file_name (value.value)	
+						System.set_msil_key_file_name ((create {ENV_INTERP}).interpreted_string (value.value))
 					else
 						error_found := True
 					end
@@ -605,7 +605,7 @@ feature {COMPILER_EXPORTER}
 							-- we do not take the option into account in the Ace.
 						if has_dll_generation then
 							string_value := value.value
-							System.set_dynamic_def_file (string_value)
+							System.set_dynamic_def_file ((create {ENV_INTERP}).interpreted_string (string_value))
 						end
 					else
 						error_found := True

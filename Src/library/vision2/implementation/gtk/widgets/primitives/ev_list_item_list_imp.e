@@ -180,6 +180,7 @@ feature -- Removal
 			item_imp: EV_LIST_ITEM_IMP
 			a_child_list: POINTER
 		do
+			clear_selection
 			a_child_list := C.gtk_container_children (list_widget)
 			C.gtk_list_remove_items_no_unref (list_widget, a_child_list)
 			C.g_list_free (a_child_list)

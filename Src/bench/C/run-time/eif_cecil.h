@@ -52,8 +52,8 @@ extern "C" {
 #define eif_type			eiftype			/* Dynamic type ID */
 #define eif_name			eifname			/* Reverts class ID to name */
 #define eif_bit_clone		eifbcln			/* Clones a bit structure */
-#define eif_set_visible_exception   eifvisex /* When a class is not visible, raise an exception */
-#define eif_unset_visible_exception eifuvisex /* Disable the visible exception */
+#define eif_enable_visible_exception   eifvisex /* When a class is not visible, raise an exception */
+#define eif_disable_visible_exception eifuvisex /* Disable the visible exception */
 #define eif_return_type    eifreturntype           /* Get the return type of feature, 0 if procedure */
 
 /* Types defined for easier reference when dealing with function pointers.

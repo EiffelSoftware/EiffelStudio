@@ -344,7 +344,7 @@ RT_LNK int fcount;
  *  RTEOK ends a routine with a rescue clause by cleaning the trace stack
  *  RTSO stops the tracing as well as the profiling
  */
-#define RTED		jmp_buf exenv
+#define RTED		jmp_buf exenv; int EIF_VOLATILE saved_assertion = in_assertion
 #define RTES		if (setjmp(exenv)) goto rescue
 #define RTEA(x,y,z)	exvect = new_exset(MTC x, y, z, 0, 0, 0)
 #define RTEV		exvect = exft()
@@ -372,7 +372,7 @@ RT_LNK int fcount;
 #define RTEU		exresc(MTC exvect)
 #endif
 
-#define RTER		in_assertion = 0; \
+#define RTER		in_assertion = saved_assertion; \
 					exvect = exret(exvect); goto start
 #define RTEF		exfail()
 #define RTXS(x)		RTXSC; RTXI(x)

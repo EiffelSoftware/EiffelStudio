@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
   <Module Id="free_add_ons" Guid="93464090-5F6E-495C-914E-4472CD8CBA6F" Language="0" Version="1.0">
-    <Package Id="93464090-5F6E-495C-914E-4472CD8CBA6F" Keywords="Gobo, Zad miner, free add ons, MergeModule, MSI, Database" Description="Free add ons" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" />
+    <Package Id="93464090-5F6E-495C-914E-4472CD8CBA6F" Keywords="Gobo, Zad miner, free add ons, MergeModule, MSI, Database" Description="Free add ons" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="Application" Name=".">
         <Directory Id="free_add_ons" Name="FREE_A~1" LongName="free_add_ons">

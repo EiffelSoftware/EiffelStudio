@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
   <Module Id="c_library" Guid="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Language="0" Version="1.0">
-    <Package Id="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Keywords="MergeModule, MSI, Database" Description="C_library" Manufacturer="ISE Inc" InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
+    <Package Id="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Keywords="MergeModule, MSI, Database" Description="C_library" Manufacturer="ISE Inc" InstallerVersion="200" Languages="1033" Compressed="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="Application" Name=".">
         <Directory Id="C_library" Name="C_LIBR~1" LongName="C_library">

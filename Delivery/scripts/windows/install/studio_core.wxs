@@ -1,35 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
   <Module Id="studio_core" Guid="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Language="0" Version="5.6">
-    <Package Id="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Keywords="MergeModule, MSI, Database" Description="EiffelCompilerFiles" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
+    <Package Id="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Keywords="MergeModule, MSI, Database" Description="EiffelCompilerFiles" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
 	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
 	<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="Registry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF">
-        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry34" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry36" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" />
-        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_EIFFEL" Value="[Application]" Id="registry46" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry42" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PLATFORM" Value="$(var.ISE_PLATFORM)" Id="registry38" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_PLATFORM" Value="$(var.ISE_PLATFORM)" Id="registry43" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PLATFORM" Value="$(var.ISE_PLATFORM)" Id="registry47" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_CFLAGS" Id="registry41" />
-        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry40" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry34" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry36" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_EIFFEL" Value="[Application]" Id="registry46" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry42" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry38" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry43" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry47" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_CFLAGS" Id="registry41" Type="string" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry40" Type="string" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" Type="string" />
       </Component>
 	  <!--      <Component Id="registry" Guid="F746C614-200F-47DF-AA21-E42FBD216D54">
-        <Registry Root="HKCR" Key="estudio.project\shell\open\command" Value="&quot;[Application]studio\spec\windows\bin\estudio.exe&quot; &quot;%1&quot;" Id="registry53" />
-        <Registry Root="HKCR" Key="estudio.project\shell\open" Value="open" Id="registry51" />
-        <Registry Root="HKCR" Key="estudio.project\shell" Value="open" Id="registry54" />
-        <Registry Root="HKCR" Key="estudio.project" Value="EiffelStudio Project" Id="registry52" />
-        <Registry Root="HKCR" Key=".epr" Value="estudio.project" KeyPath="yes" Id="registry" />
+        <Registry Root="HKCR" Key="estudio.project\shell\open\command" Value="&quot;[Application]studio\spec\windows\bin\estudio.exe&quot; &quot;%1&quot;" Id="registry53" Type="string" />
+        <Registry Root="HKCR" Key="estudio.project\shell\open" Value="open" Id="registry51" Type="string" />
+        <Registry Root="HKCR" Key="estudio.project\shell" Value="open" Id="registry54" Type="string" />
+        <Registry Root="HKCR" Key="estudio.project" Value="EiffelStudio Project" Id="registry52" Type="string" />
+        <Registry Root="HKCR" Key=".epr" Value="estudio.project" KeyPath="yes" Id="registry" Type="string" />
 	</Component>
 	-->
 	  <Directory Id="DesktopFolder" Name="." />
@@ -154,7 +154,7 @@
                   </Component>
                 </Directory>
                 <Directory Id="spec11" Name="spec">
-                  <Directory Id="windows13" Name="$(var.ISE_PLATFORM)">
+                  <Directory Id="windows13" Name="$(env.ISE_PLATFORM)">
                     <Component Id="wizard.exe" Guid="D662316B-7D98-4CB3-9E32-26C4F5D31270">
                       <File Id="wizard.exe" Name="wizard.exe" KeyPath="yes" />
                     </Component>
@@ -226,7 +226,7 @@
                   </Component>
                 </Directory>
                 <Directory Id="spec14" Name="spec">
-                  <Directory Id="windows15" Name="$(var.ISE_PLATFORM)">
+                  <Directory Id="windows15" Name="$(env.ISE_PLATFORM)">
                     <Component Id="wizard.exe2" Guid="4AE01885-ABAA-4554-87CE-DC52661C62D6">
                       <File Id="wizard.exe2" Name="wizard.exe" KeyPath="yes" />
                     </Component>
@@ -259,7 +259,7 @@
                   </Component>
                 </Directory>
                 <Directory Id="spec18" Name="spec">
-                  <Directory Id="windows21" Name="$(var.ISE_PLATFORM)">
+                  <Directory Id="windows21" Name="$(env.ISE_PLATFORM)">
                     <Component Id="wizard.exe3" Guid="E3AFB42F-69F8-4F7A-9D2B-EA778A8B6958">
                       <File Id="wizard.exe3" Name="wizard.exe" KeyPath="yes" />
                     </Component>
@@ -267,19 +267,21 @@
                 </Directory>
               </Directory>
             </Directory>
-            <Directory Id="precompile" Name="PRECOM~1" LongName="precompile">
-              <Directory Id="pixmaps" Name="pixmaps">
-                <Component Id="pixmaps" Guid="FC3DE46B-A3B3-42E9-A32A-D1F5AD13119E">
-                  <File Id="eiffel_wizard.png" Name="EIFFEL~1.PNG" LongName="eiffel_wizard.png" KeyPath="yes" />
-                  <File Id="eiffel_wizard_icon.png" Name="EIFFEL~2.PNG" LongName="eiffel_wizard_icon.png" />
-                  <File Id="wizard.png" Name="wizard.png" />
-                </Component>
-              </Directory>
-              <Directory Id="spec2" Name="spec">
-                <Directory Id="windows3" Name="$(var.ISE_PLATFORM)">
-                  <Component Id="wizard.exe1" Guid="A31D074A-9275-43ED-863B-93447FE5886A">
-                    <File Id="wizard.exe1" Name="wizard.exe" KeyPath="yes" />
+            <Directory Id="others" Name="others">
+              <Directory Id="precompile" Name="PRECOM~1" LongName="precompile">
+                <Directory Id="pixmaps" Name="pixmaps">
+                  <Component Id="pixmaps" Guid="FC3DE46B-A3B3-42E9-A32A-D1F5AD13119E">
+                    <File Id="eiffel_wizard.png" Name="EIFFEL~1.PNG" LongName="eiffel_wizard.png" KeyPath="yes" />
+                    <File Id="eiffel_wizard_icon.png" Name="EIFFEL~2.PNG" LongName="eiffel_wizard_icon.png" />
+                    <File Id="wizard.png" Name="wizard.png" />
                   </Component>
+                </Directory>
+                <Directory Id="spec2" Name="spec">
+                  <Directory Id="windows3" Name="$(env.ISE_PLATFORM)">
+                    <Component Id="wizard.exe1" Guid="A31D074A-9275-43ED-863B-93447FE5886A">
+                      <File Id="wizard.exe1" Name="wizard.exe" KeyPath="yes" />
+                    </Component>
+                  </Directory>
                 </Directory>
               </Directory>
             </Directory>
@@ -294,7 +296,7 @@
                 </Component>
               </Directory>
             </Directory>
-            <Directory Id="windows4" Name="$(var.ISE_PLATFORM)">
+            <Directory Id="windows4" Name="$(env.ISE_PLATFORM)">
               <Directory Id="bcb" Name="bcb">
                 <Component Id="bcb" Guid="DBA2CF11-BC3A-45B2-AD9D-FBBDECE62BF3">
                   <File Id="version.eif" Name="version.eif" KeyPath="yes" />
@@ -1069,7 +1071,7 @@
               </Directory>
             </Directory>
             <Directory Id="defaults" Name="defaults">
-              <Directory Id="windows9" Name="$(var.ISE_PLATFORM)">
+              <Directory Id="windows9" Name="$(env.ISE_PLATFORM)">
                 <Component Id="windows9" Guid="345FD620-3BB3-4A7D-8C76-C860972E4D22">
                   <File Id="full.cls" Name="full.cls" KeyPath="yes" />
                   <File Id="default.cls" Name="default.cls" />
@@ -1080,7 +1082,7 @@
             </Directory>
           </Directory>
           <Directory Id="spec6" Name="spec">
-            <Directory Id="windows7" Name="$(var.ISE_PLATFORM)">
+            <Directory Id="windows7" Name="$(env.ISE_PLATFORM)">
               <Directory Id="bin8" Name="bin">
                 <Component Id="estudio.exe" Guid="80B6C77B-41F5-4346-B02F-E00153176E46">
 					<File Id="estudio.exe" Name="estudio.exe" KeyPath="yes" />
@@ -1199,7 +1201,7 @@
         </Directory>
         <Directory Id="precomp" Name="precomp">
           <Directory Id="spec22" Name="spec">
-            <Directory Id="windows23" Name="$(var.ISE_PLATFORM)">
+            <Directory Id="windows23" Name="$(env.ISE_PLATFORM)">
               <Directory Id="vision224" Name="vision2">
                 <Component Id="vision224" Guid="F7EEAA67-0F78-48A8-85DE-3E90F58C5AC1">
                   <File Id="ace.ace140" Name="ace.ace" KeyPath="yes" />

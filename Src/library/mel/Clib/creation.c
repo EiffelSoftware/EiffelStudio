@@ -14,7 +14,7 @@ private Arg auto_unmanage_arg[1];
 EIF_POINTER c_auto_unmanage_arg()
 {
 	XtSetArg (auto_unmanage_arg[0], XmNautoUnmanage, False);
-	return (EIF_POINTER *) auto_unmanage_arg;
+	return (EIF_POINTER) auto_unmanage_arg;
 }
 
 EIF_POINTER xm_create_scrolled_list_constant (w, a_name)

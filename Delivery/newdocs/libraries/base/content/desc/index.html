@@ -1,0 +1,64 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Dynamic External Shared Call (DESC) Overview</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="DLL">
+		<META NAME="MS-HKWD" CONTENT="Shared Call">
+		<META NAME="MS-HKWD" CONTENT="DESC">
+	</HEAD>
+	<BODY>
+		<H1>DESC Overview</H1>
+		<P>
+			The DESC mechanism enables you to construct objects representing external
+			routines determined at execution time through their name and libraries, and
+			call these routines with the appropriate arguments.
+		<P>
+			Two classes, <A HREF="../reference/desc/spec/win32/dll_32.html">DLL_32</A> and
+			<A HREF="../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			, supported by an auxiliary class
+			<A HREF="../reference/desc/general/shared_library_constants.html">
+			SHARED_LIBRARY_CONSTANTS</A> provide the basis for DESC under	Windows:
+		<UL>
+			<LI>An instance of class
+			<A HREF="../reference/desc/spec/win32/dll_32.html">DLL_32</A> describes
+			a 32-bit Dynamically Linked Library. This class is a descendant of the deferred
+			class <A HREF="../reference/desc/general/shared_library.html">
+			SHARED_LIBRARY</A>, covering the platform-independent notion of shared
+			library.
+			<LI>An instance of class
+			<A HREF="../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			describes a routine from a 32-bit DLL. Predictably, this class has an attribute of type
+			<A HREF="../reference/desc/spec/win32/dll_32.html">DLL_32</A> describing the
+			library to which the routine belongs. It has a deferred ancestor
+			<A HREF="../reference/desc/general/shared_library_routine.html">
+			SHARED_LIBRARY_ROUTINE</A> capturing the platform-independent notion of
+			shared library routine.
+			<LI><A HREF="../reference/desc/general/shared_library_constants.html">
+			SHARED_LIBRARY_CONSTANTS</A> introduces a few declarations useful for
+			dealing with shared libraries and routines, in particular a few integer constants
+			describing error codes and type codes. It is an ancestor to both of the preceding
+			classes; application classes using DESC can also inherit from it to gain access
+			to its facilities.
+		</UL>
+		<P>
+			The basic sequence of instructions to use the DESC mechanism is the following:
+		<OL>
+			<LI><A HREF="library.html">Create</A> a library object (an instance of
+			<A HREF="../reference/desc/spec/win32/dll_32.html">DLL_32</A>, providing the
+			library's name as argument to the creation procedure.
+			<LI><A HREF="routine.html">Create</A> a routine object (an instance of
+			<A HREF="../../reference/desc/spec/win32/dll_32_routine.html">DLL_32_ROUTINE</A>
+			), providing the library object, the routine's name or index in the library, and the
+			routine's signature - number of arguments, types of arguments, type of result
+			if any - as arguments to the creation procedure.
+			<LI><A HREF="routine_call.html">Apply</A> procedure
+			<A HREF="../../reference/desc/spec/win32/dll_32_routine.html#f_call">call</A>
+			to the routine object, passing an array that contains the actual arguments
+			required by the external routine.
+		</OL>
+		<P>
+			Each of these steps may be repeated as often as necessary to use multiple libraries,
+			multiple routines in a library, or multiple calls to a given routine.
+	</BODY>
+</HTML>

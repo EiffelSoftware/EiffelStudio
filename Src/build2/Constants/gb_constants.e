@@ -105,6 +105,8 @@ feature -- String representations of class names.
 	
 	Ev_widget_list_string: STRING is "EV_WIDGET_LIST"
 	
+	Ev_notebook_string: STRING is "EV_NOTEBOOK"
+	
 	Ev_table_string: STRING is "EV_TABLE"
 	
 	Ev_split_area_string: STRING is "EV_SPLIT_AREA"

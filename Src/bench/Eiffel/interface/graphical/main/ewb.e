@@ -19,6 +19,8 @@ feature
 
 	make is
 			-- Create and map the first window: the system window.
+		local
+			screen: SCREEN;
 		do
 			if argument_count = 2 and then
 				argument (1).is_equal ("-bench")
@@ -50,6 +52,7 @@ feature {NONE}
 			if project_tool = Void then end;
 			if name_chooser = Void then end;
 			if confirmer = Void then end;
+			project_tool.popup_file_selection;
 		end
  
 end

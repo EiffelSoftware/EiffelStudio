@@ -29,6 +29,17 @@ feature -- making
  
 	feature_i: FEATURE_I;
 	class_c: CLASS_C;
+
+	header: STRING is
+		require else
+			is_valid
+		do
+			!!Result.make (0);
+			Result.append ("Routine: ");
+			Result.append (feature_i.feature_name);
+			Result.append ("    Class: ");
+			Result.append (class_c.signature);
+		end;
  
 feature -- dragging
 

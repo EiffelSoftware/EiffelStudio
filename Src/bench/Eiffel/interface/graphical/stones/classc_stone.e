@@ -28,6 +28,16 @@ feature -- dragging
 			Result := class_c.signature
 		end;
 
+	header: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("Cluster: ");
+			Result.append (class_c.cluster.cluster_name);
+			Result.append ("    ");
+			Result.append ("Class: ");
+			Result.append (signature);
+		end;
+
 	stone_type: INTEGER is do Result := Class_type end;
 
 	stone_name: STRING is do Result := l_Class end;

@@ -3,6 +3,9 @@ deferred class FILED_STONE
 inherit
 
 	STONE
+		undefine
+			header
+		end
 	
 feature 
 

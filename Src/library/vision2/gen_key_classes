@@ -18,6 +18,9 @@ $v2_to_gtk_array = "";
 $gtk_to_v2_array = "";
 $key_strings = "";
 $key_constants = "";
+$gdk_externals = "";
+$first = "";
+$last = "";
 
 # For every line in the file from stdin.
 while (<>) {
@@ -37,34 +40,49 @@ while (<>) {
 		
 		@fields = split (/SEPARATOR[ 	]*/,$_);
 		
-		# Put the fields in separate named strings.
+		# Create Eiffel comment.
 		$comment = shift (@fields);
 		$comment = "-- Code representing $comment.";
+
+		# Create Eiffel identifier.
 		$identifier = shift (@fields);
 		$identifier = "Key_$identifier";
+		$last = $identifier;
+		if ($first eq "") { $first = $identifier; }
+
+		# Create literal string.
 		$string = shift (@fields);
 		$string = "\"$string\"";
+
+		# Create GTK-code with GDK external.
 		$gtk_code = shift (@fields);
+		$gdk_ext = $gtk_code;
+		$gdk_ext =~ tr/[a-z]/[A-Z]/;
+		$gtk_code = "$gtk_code\_enum";
+		
 		$wel_code = shift (@fields);
 
 		# Append to the big strings.
-		$eif_statement = "Result.put ($identifier, $wel_code)";
+		$eif_statement = "Result.put ($wel_code, $identifier)";
 		$v2_to_wel_array = "$v2_to_wel_array\t\t\t$eif_statement\n";
 
-		$eif_statement = "Result.put ($wel_code, $identifier)";
+		$eif_statement = "Result.put ($identifier, $wel_code)";
 		$wel_to_v2_array = "$wel_to_v2_array\t\t\t$eif_statement\n";
 
-		$eif_statement = "Result.put ($identifier, $gtk_code)";
+		$eif_statement = "Result.put ($gtk_code, $identifier)";
 		$v2_to_gtk_array = "$v2_to_gtk_array\t\t\t$eif_statement\n";
 
-		$eif_statement = "Result.put ($gtk_code, $identifier)";
+		$eif_statement = "Result.put ($identifier, $gtk_code)";
 		$gtk_to_v2_array = "$gtk_to_v2_array\t\t\t$eif_statement\n";
 
-		$eif_statement = "Result.put ($identifier, $string)";
+		$eif_statement = "Result.put ($string, $identifier)";
 		$key_strings = "$key_strings\t\t\t$eif_statement\n";
 
 		$eif_statement = "$identifier: INTEGER is unique";
 		$key_constants = "$key_constants\n\t$eif_statement\n\t\t\t$comment\n";
+
+		$eif_statement = "\t$gtk_code: INTEGER is\n\t\texternal\n\t\t\t\"C [macro <gdk/gdkkeysyms.h>]\"\n\t\talias\n\t\t\t\"$gdk_ext\"\n\t\tend\n";
+		$gdk_externals = "$gdk_externals$eif_statement\n";
 	}
 }
 
@@ -87,7 +105,7 @@ feature -- Contract support
 	valid_key_code (a_code: INTEGER): BOOLEAN is
 			-- Is ``a_code'' a valid key code?
 		do
-			Result := a_code >= Key_0 and then a_code <= Key_z
+			Result := a_code >= $first and then a_code <= $last
 		end
 
 feature -- Constants
@@ -97,7 +115,7 @@ feature -- Access
 	key_strings: ARRAY [STRING] is
 			-- String representations of all key codes.
 		once
-			create Result.make (Key_0, Key_z)
+			create Result.make ($first, $last)
 $key_strings		end
 
 end -- class EV_KEY_CONSTANTS
@@ -150,9 +168,17 @@ feature -- Conversion
 	key_code_from_wel (a_wel_code: INTEGER): INTEGER is
 			-- Corresponding key code for ``a_wel_code''.
 		require
-				a_wel_code_valid: True --| FIXME
+				a_wel_code_valid: valid_wel_code (a_wel_code)
 		do
 			Result := wel_to_v2_table @ a_wel_code
+		end
+
+feature -- Contract support
+
+	valid_wel_code (a_wel_code: INTEGER): BOOLEAN is
+			-- Is ``a_wel_code'' valid?
+		do
+			Result := True
 		end
 
 feature {NONE} -- Implementation
@@ -160,7 +186,7 @@ feature {NONE} -- Implementation
 	v2_to_wel_table: ARRAY [INTEGER] is
 			-- WEL keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_z)
+			create Result.make ($first, $last)
 $v2_to_wel_array		end
 
 	wel_to_v2_table: ARRAY [INTEGER] is
@@ -217,22 +243,25 @@ feature -- Conversion
 	key_code_from_gtk (a_gtk_code: INTEGER): INTEGER is
 			-- Corresponding key code for ``a_gtk_code''.
 		require
-				a_gtk_code_valid: gtk_to_v2_table.has (a_gtk_code)
+			a_gtk_code_valid: valid_gtk_code (a_gtk_code)
 		do
 			Result := gtk_to_v2_table.item (a_gtk_code)
 		end
 
-feature {NONE} -- Implementation
+feature -- Contract support
 
-	C: EV_C_EXTERNALS is
-		once
-			create Result
+	valid_gtk_code (a_gtk_code: INTEGER): BOOLEAN is
+			-- Is ``a_gtk_code'' valid?
+		do
+			Result := True
 		end
+
+feature {NONE} -- Implementation
 
 	v2_to_gtk_table: ARRAY [INTEGER] is
 			-- GTK keycodes indexed by Vision2 key code.
 		once
-			create Result.make (Key_0, Key_z)
+			create Result.make ($first, $last)
 $v2_to_gtk_array		end
 
 	gtk_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
@@ -241,6 +270,8 @@ $v2_to_gtk_array		end
 		create Result.make (10)
 $gtk_to_v2_array		end
 
+feature {NONE} -- Externals
+$gdk_externals
 end -- class EV_GTK_KEY_CONVERSION
 
 --!-----------------------------------------------------------------------------
@@ -266,6 +297,10 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.4  2000/03/17 17:41:01  brendel
+# Fixed compiler errors in generated code.
+# Defined GDK externals in EV_GTK_KEY_CONVERSION.
+#
 # Revision 1.3  2000/03/17 02:14:54  brendel
 # Now generates the classes in the right directory.
 #

@@ -443,7 +443,6 @@ feature {NONE} -- Implementation
 			create wizard_manager
 			wizard_manager.run
 			wizard_manager := Void
-			full_collect
 		end
 
 	open_project (a_project: STRING) is

@@ -86,6 +86,10 @@ feature -- Properties
 	is_expanded: BOOLEAN;
 			-- Is the class expanded ?
 
+	obsolete_message: STRING;
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
+
 	is_debuggable: BOOLEAN is
 			-- Is the class able to be debugged?
 			-- (not if it doesn't have class types 
@@ -129,6 +133,12 @@ feature -- Access
 		do
 			Result :=
 					(types /= Void) and then (not types.empty)
+		end;
+
+	is_obsolete: BOOLEAN is
+			-- Is Current feature obsolete?
+		do
+			Result := obsolete_message /= Void
 		end;
 
 	feature_with_name (n: STRING): E_FEATURE is
@@ -444,6 +454,12 @@ feature {CLASS_C, CLASS_SORTER} -- Setting
 			reverse_engineered := b
 		ensure
 			reverse_engineered_set: reverse_engineered = b
+		end;
+
+	set_obsolete_message (m: like obsolete_message) is
+			-- Set `obsolete_message' to `m'.
+		do
+			obsolete_message := m
 		end;
 
 feature {COMPILER_EXPORTER} -- Implementation

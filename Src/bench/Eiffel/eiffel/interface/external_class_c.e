@@ -595,15 +595,17 @@ feature {NONE} -- Initialization
 
 				-- In case we have a conflict (mostly due to a routine of ANY)
 				-- we will rename the feature coming from ANY into `any_xxx'
-				-- and preserve the .NET name.
+				-- and preserve the .NET name, if it is not coming from ANY,
+				-- it will be `unknown_xxx'
 			if a_feat_tbl.has_id (a_feat.feature_name_id) then
 				l_feat := a_feat_tbl.found_item
-				check
-					feature_of_any: l_feat.written_in = system.any_id
-				end
 				a_feat_tbl.remove (l_feat.feature_name_id)
 				l_base_name := l_feat.feature_name.twin
-				l_base_name.prepend ("any_")
+				if l_feat.written_in = system.any_id then
+					l_base_name.prepend ("any_")
+				else
+					l_base_name.prepend ("unknown_")
+				end
 				l_feat.set_feature_name (l_base_name)
 				from
 					i := 1
@@ -614,6 +616,7 @@ feature {NONE} -- Initialization
 					l_new_name.append_character ('_')
 					l_new_name.append_integer (i)
 					l_feat.set_feature_name (l_new_name)
+					i := i + 1
 				end
 					-- Insert back routine we just removed above.
 					-- No need to update `l_orig_tbl' since this table

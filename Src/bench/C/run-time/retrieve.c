@@ -82,27 +82,27 @@ rt_private int r_fides;			/* File descriptor use for retrieve */
 /*
  * Function declations
  */
-rt_public char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
+rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
 rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *);	/* Retrieve object store in stream */
-rt_public char *portable_retrieve(int (*char_read_function)(char *, int));
+rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int));
 
-rt_public char *irt_make(void);			/* Do the independant retrieve */
-rt_public char *grt_make(void);			/* Do the general retrieve (3.3 and later) */
-rt_public char *irt_nmake(long int objectCount);			/* Retrieve n objects independent form*/
-rt_public char *grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
+rt_public EIF_REFERENCE irt_make(void);			/* Do the independant retrieve */
+rt_public EIF_REFERENCE grt_make(void);			/* Do the general retrieve (3.3 and later) */
+rt_public EIF_REFERENCE irt_nmake(long int objectCount);			/* Retrieve n objects independent form*/
+rt_public EIF_REFERENCE grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
 rt_private void iread_header(EIF_CONTEXT_NOARG);		/* Read independent header */
 rt_private void rt_clean(void);			/* Clean data structure */
-rt_private void rt_update1(register char *old, register EIF_OBJECT new);			/* Reference correspondance update */
-rt_private void rt_update2(char *old, char *new, char *parent);			/* Fields updating */
-rt_public char *rt_make(void);				/* Do the retrieve */
-rt_public char *rt_nmake(long int objectCount);			/* Retrieve n objects */
+rt_private void rt_update1(register EIF_REFERENCE old, register EIF_OBJECT new_obj);			/* Reference correspondance update */
+rt_private void rt_update2(EIF_REFERENCE old_obj, EIF_REFERENCE new_obj, EIF_REFERENCE parent);			/* Fields updating */
+rt_public EIF_REFERENCE rt_make(void);				/* Do the retrieve */
+rt_public EIF_REFERENCE rt_nmake(long int objectCount);			/* Retrieve n objects */
 rt_private void read_header(char rt_type);
 
 
 
 		/* Read general header */
-rt_private void object_read (char *object, char *parent);		/* read the individual attributes of the object*/
-rt_private void gen_object_read (char *object, char *parent);	/* read the individual attributes of the object*/
+rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent);		/* read the individual attributes of the object*/
+rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent);	/* read the individual attributes of the object*/
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
 
 rt_private int readline (register char *ptr, register int *maxlen);
@@ -173,7 +173,7 @@ rt_public void rt_reset_retrieve(void) {
  * Function definitions
  */
 
-rt_public char *eretrieve(EIF_INTEGER file_desc)
+rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc)
 {
 	EIF_GET_CONTEXT
 	r_fides = file_desc;
@@ -193,12 +193,12 @@ rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *buffer, EIF_INTEGER size, 
 	return new_object;
 }
 
-rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
+rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int))
 {
 	/* Retrieve object store in file `filename' */
 
 	EIF_GET_CONTEXT
-	char *retrieved = (char *) 0;
+	EIF_REFERENCE retrieved = (EIF_REFERENCE) 0;
 	char rt_type = (char) 0;
 
 #ifdef EIF_ALPHA
@@ -285,7 +285,7 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, int (*retrieve_function) (void))
 {
 	EIF_GET_CONTEXT
-	EIF_REFERENCE retrieved = (char *) 0;
+	EIF_REFERENCE retrieved = (EIF_REFERENCE) 0;
 	char rt_type = (char) 0;
 
 	rt_kind = BASIC_STORE;
@@ -353,7 +353,7 @@ rt_private void independent_retrieve_reset (void) {
 	dattrib = (int **) 0;
 }
 
-rt_public char *rt_make(void)
+rt_public EIF_REFERENCE rt_make(void)
 {
 		/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -420,10 +420,16 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				/* Special object: read the saved size */
 			buffer_read((char *) &spec_size, (sizeof(uint32)));
 			nb_byte = spec_size & B_SIZE;
-			if (!(flags & EO_REF))
+			if (!(flags & EO_REF)) {
 				newadd = spmalloc(nb_byte, EIF_TRUE);
-			else
+			} else {
 				newadd = spmalloc(nb_byte, EIF_FALSE);
+			}
+			if (newadd == (EIF_REFERENCE) 0) {
+					/* Creation of Eiffel object failed */
+				xraise(EN_MEM);
+			}
+
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 				/* Normal object */
@@ -434,12 +440,12 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				nb_byte = EIF_Size((uint16)(flags & EO_TYPE));
 				newadd = emalloc(crflags & EO_TYPE);
 			}
+			if (newadd == (EIF_REFERENCE) 0) {
+					/* Creation of Eiffel object failed */
+				xraise(EN_MEM);
+			}
 		}
 		
-			/* Creation of the Eiffel object */	
-		if (newadd == (EIF_REFERENCE) 0)
-			xraise(EN_MEM);
-
 			/* Stop in the garbage collector because we have now an unstable
 			 * object. */
 		g_data.status |= GC_STOP;
@@ -467,7 +473,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	return newadd;
 }
 
-rt_public char *grt_make(void)
+rt_public EIF_REFERENCE grt_make(void)
 {
 		/* Make the retrieve of all objects in file */
 	long objectCount;
@@ -478,7 +484,7 @@ rt_public char *grt_make(void)
 	return grt_nmake(objectCount);
 }
 
-rt_public char *grt_nmake(long int objectCount)
+rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -612,10 +618,15 @@ rt_public char *grt_nmake(long int objectCount)
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			if (!(crflags & EO_REF))
+			if (!(crflags & EO_REF)) {
 				newadd = spmalloc(nb_byte, EIF_TRUE);
-			else
+			} else {
 				newadd = spmalloc(nb_byte, EIF_FALSE);
+			}
+			if (newadd == (EIF_REFERENCE) 0) {
+					/* Creation of Eiffel object failed */
+				xraise(EN_MEM);
+			}
 			{
 				long * o_ref;
 
@@ -629,33 +640,33 @@ rt_public char *grt_nmake(long int objectCount)
 			/* Normal object */
 			nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
+			if (newadd == (EIF_REFERENCE) 0) {
+					/* Creation of Eiffel object failed */
+				xraise(EN_MEM);
+			}
 		}
-		
-		/* Creation of the Eiffel object */	
-		if (newadd == (EIF_REFERENCE) 0)
-			xraise(EN_MEM);
 
-		/* Stop in the garbage collector because we have know an unstable
-		 * object. */
+			/* Stop in the garbage collector because we have know an unstable
+			 * object. */
 		g_data.status |= GC_STOP;
 
-		/* Record the new object in hector table */
+			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
 		nb_recorded++;
 
-		/* Update unsolved references on `newadd' */
+			/* Update unsolved references on `newadd' */
 		rt_update1 (oldadd, new_hector);
 
-		/* Read the object's body */
+			/* Read the object's body */
 		gen_object_read (newadd, newadd);
 
-		/* Update fileds: the garbage collector should not be called
-		 * during `rt_update2' because the object is in a very unstable
-		 * state.
-		 */
+			/* Update fileds: the garbage collector should not be called
+			 * during `rt_update2' because the object is in a very unstable
+			 * state.
+			 */
 		rt_update2(oldadd, newadd, newadd);
 
-		/* Restore garbage collector status */
+			/* Restore garbage collector status */
 		g_data.status = g_status;
 	}
 	expop(&eif_stack);
@@ -663,7 +674,7 @@ rt_public char *grt_nmake(long int objectCount)
 	return newadd;
 }
 
-rt_public char *irt_make(void)
+rt_public EIF_REFERENCE irt_make(void)
 {
 	/* Make the retrieve of all objects in file */
 	EIF_INTEGER_32 objectCount;
@@ -678,7 +689,7 @@ rt_public char *irt_make(void)
 	return irt_nmake(objectCount);
 }
 
-rt_public char *irt_nmake(long int objectCount)
+rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -817,10 +828,15 @@ rt_public char *irt_nmake(long int objectCount)
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			if (!(crflags & EO_REF))
+			if (!(crflags & EO_REF)) {
 				newadd = spmalloc(nb_byte, EIF_TRUE);
-			else
+			} else {
 				newadd = spmalloc(nb_byte, EIF_FALSE);
+			}
+			if (newadd == (EIF_REFERENCE) 0) {
+					/* Creation of Eiffel object failed */
+				xraise(EN_MEM);
+			}
 			{
 				long * o_ref;
 
@@ -834,12 +850,12 @@ rt_public char *irt_nmake(long int objectCount)
 			/* Normal object */
 			nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
+			if (newadd == (EIF_REFERENCE) 0) {
+					/* Creation of Eiffel object failed */
+				xraise(EN_MEM);
+			}
 		}
 		
-			/* Creation of the Eiffel object */	
-		if (newadd == (EIF_REFERENCE) 0)
-			xraise(EN_MEM);
-
 			/* Stop in the garbage collector because we have know an unstable
 			 * object. */
 		g_data.status |= GC_STOP;
@@ -928,9 +944,9 @@ rt_private void rt_clean(void)
 	rt_reset_retrieve();
 }
 
-rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new)
+rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_obj)
 {
-	/* `new' is hector pointer to a retrieved object. We have to solve
+	/* `new_obj' is hector pointer to a retrieved object. We have to solve
 	 * possible references with it, before putting it in the hash table.
 	 */
 
@@ -968,12 +984,12 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new)
 
 		/* Attachement to hector pointer dereference */
 		client = eif_access(rt_solved->rt_obj);
-		supplier = eif_access(new);
+		supplier = eif_access(new_obj);
 
 		*(EIF_REFERENCE *)(client + offset) = supplier;	/* Attachment */
 #ifdef EIF_REM_SET_OPTIMIZATION
 		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
-			CHECK ("No expanded objects in `new'", !(HEADER (new)->ov_flags & EO_COMP));
+			CHECK ("No expanded objects in `new_obj'", !(HEADER (new_obj)->ov_flags & EO_COMP));
 			RTAS_OPT (supplier, offset >> EIF_REFERENCE_BITS, client);	
 					/* Casting with (EIF_REFERENCE *) gives directly the
 					 * index instead of the offset. */
@@ -990,19 +1006,20 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new)
 
 	/* Put the new hector pointer as a solved reference in the hash table */
 	rt_info->rt_status = SOLVED;
-	rt_info->rt_obj = new;
+	rt_info->rt_obj = new_obj;
 }
 
-rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE parent)
+rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFERENCE parent)
 {
 	/* Reference field updating: record new unsolved references.
 	 * The third argument is needed because of expanded objects:
-	 * if `new' is not an expanded object,parent is equal to it. */
+	 * if `new_obj' is not an expanded object,parent is equal to it. */
 
 	long nb_references = 0;
 	uint32 flags, fflags;
 	EIF_REFERENCE reference, addr;
-	union overhead *zone = HEADER(new);
+	union overhead *zone = HEADER(new_obj);
+	int nb_attr = 0;
 	long size;				/* New object size */
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
@@ -1020,7 +1037,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE p
 			return;
 
 		size = zone->ov_size & B_SIZE;	
-		o_ref = (EIF_REFERENCE) (new + size - LNGPAD_2);
+		o_ref = (EIF_REFERENCE) (new_obj + size - LNGPAD_2);
 		count = *(EIF_INTEGER *) o_ref; 		
 		if (!(flags & EO_COMP)) {		/* Special of references */
 			nb_references = count;
@@ -1035,7 +1052,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE p
 			} else
 				old_elem_size = spec_elm_size[flags & EO_TYPE];
 
-			for (	addr = new + OVERHEAD, old_addr = old + old_overhead;
+			for (	addr = new_obj + OVERHEAD, old_addr = old + old_overhead;
 					count>0 ;
 					count--, addr += elem_size, old_addr += old_elem_size) {
 				rt_update2(old_addr, addr, parent);
@@ -1050,35 +1067,35 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE p
 
 update:
 	/* Update references */
-	for (addr = new; 	nb_references > 0;
+	nb_attr = System(flags & EO_TYPE).cn_nbattr;
+	for (addr = new_obj; nb_references > 0;
 			nb_references--, addr = (EIF_REFERENCE)(((EIF_REFERENCE *) addr) + 1)) {
-		int total_ref = nb_references;
 
-		/* *(char **)new is a pointer an a stored object: check if
+		/* *(EIF_REFERENCE *)new_obj is a pointer an a stored object: check if
 		 * the corresponding reference is already in the hash table
 		 */
 		reference = *(EIF_REFERENCE *)addr;
 		if (reference == (EIF_REFERENCE) 0)
 			continue;
-		if (System(flags & EO_TYPE).cn_nbattr) {
-			if (((System(flags & EO_TYPE).cn_types[total_ref - nb_references]) & SK_HEAD) == SK_EXP) {
+		if (nb_attr) {
+			if (((System(flags & EO_TYPE).cn_types[nb_attr - nb_references]) & SK_HEAD) == SK_EXP) {
 				/* This is an internal expanded reference */
 				long new_offset;
 				long offset = reference - old;
 	
 				if (rt_kind == INDEPENDENT_STORE) {
-					new_offset = get_expanded_pos (flags & EO_TYPE, (uint32)(total_ref - nb_references));
+					new_offset = get_expanded_pos (flags & EO_TYPE, (uint32)(nb_attr - nb_references));
 				} else
 					new_offset = offset;
 	
-				*(EIF_REFERENCE *) addr = new + new_offset;				/* Expanded reference */
+				*(EIF_REFERENCE *) addr = new_obj + new_offset;				/* Expanded reference */
 				if (rt_kind) {
 					/* CHECK THIS - M.S. */
-					uint32 old_flags = HEADER(new + new_offset)->ov_flags;
-					HEADER(new + new_offset)->ov_flags &= ~EO_TYPE;
-					HEADER(new + new_offset)->ov_flags |= dtypes[old_flags & EO_TYPE];
+					uint32 old_flags = HEADER(new_obj + new_offset)->ov_flags;
+					HEADER(new_obj + new_offset)->ov_flags &= ~EO_TYPE;
+					HEADER(new_obj + new_offset)->ov_flags |= dtypes[old_flags & EO_TYPE];
 				}
-				rt_update2(old + offset, new + new_offset, parent);	/* Recursion */
+				rt_update2(old + offset, new_obj + new_offset, parent);	/* Recursion */
 				continue;
 			} 
 		} 
@@ -1093,16 +1110,16 @@ update:
 				supplier = eif_access(rt_info->rt_obj);
 				*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
 #ifdef EIF_REM_SET_OPTIMIZATION
-				if ((HEADER (new)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
-					CHECK ("No expanded objects in `new'", !(HEADER (new)->ov_flags & EO_COMP));
-					RTAS_OPT (supplier, (EIF_REFERENCE *) addr - (EIF_REFERENCE *) new , new);
+				if ((HEADER (new_obj)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
+					CHECK ("No expanded objects in `new_obj'", !(HEADER (new_obj)->ov_flags & EO_COMP));
+					RTAS_OPT (supplier, (EIF_REFERENCE *) addr - (EIF_REFERENCE *) new_obj , new_obj);
 						/* Casting with (EIF_REFERENCE *) gives directly the
 						 * index instead of the offset. */
 				} else	{
-					RTAS(supplier, new);						/* Age check */
+					RTAS(supplier, new_obj);						/* Age check */
 				}
 #else	/* EIF_REM_SET_OPTIMIZATION */
-				RTAS(supplier, new);					/* Age check */
+				RTAS(supplier, new_obj);					/* Age check */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
 			} else {
@@ -1118,7 +1135,7 @@ update:
 				new_cell->next = old_cell;
 				rt_info->rt_list = new_cell;
 				rt_info->rt_status = UNSOLVED;
-				*(EIF_REFERENCE *) addr = (char *) 0; 
+				*(EIF_REFERENCE *) addr = (EIF_REFERENCE) 0; 
 						/* Set to zero the unsolved reference
 						 * in order to put the object in a
 						 * stable state. */
@@ -1628,7 +1645,7 @@ rt_public int retrieve_read_with_compression (void)
 	return (end_of_buffer);
 }
 
-rt_private void gen_object_read (char *object, char *parent)
+rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 {
 	long attrib_offset;
 	/* int z;*/ /* %%ss removed */
@@ -1646,7 +1663,8 @@ rt_private void gen_object_read (char *object, char *parent)
 		for (; num_attrib > 0;) {
 			uint32 types_cn;
 
-			attrib_offset = get_alpha_offset(o_type, --num_attrib);
+			num_attrib--;
+			attrib_offset = get_alpha_offset(o_type, num_attrib);
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
@@ -1699,8 +1717,7 @@ rt_private void gen_object_read (char *object, char *parent)
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
 					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
-					/* FIXME size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);*/
-					size_count = get_expanded_pos (o_type, --num_attrib);
+					size_count = get_expanded_pos (o_type, num_attrib);
 
 					HEADER(object + size_count)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 					HEADER(object + size_count)->ov_size = (uint32)(get_expanded_pos (o_type, -1) + (object - parent));
@@ -1724,7 +1741,7 @@ rt_private void gen_object_read (char *object, char *parent)
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
-			char *ref, *o_ptr;
+			EIF_REFERENCE ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
 			int16 *gt_type;
@@ -1732,7 +1749,7 @@ rt_private void gen_object_read (char *object, char *parent)
 			int nb_gen;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
+			o_ptr = (EIF_REFERENCE) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 
@@ -1835,7 +1852,7 @@ rt_private void gen_object_read (char *object, char *parent)
 }
 
 
-rt_private void object_read (char *object, char *parent)
+rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 {
 #if DEBUG & 1
 	int z;
@@ -1856,7 +1873,9 @@ rt_private void object_read (char *object, char *parent)
 		for (; num_attrib > 0;) {
 			uint32 types_cn;
 
-			attrib_offset = get_offset(o_type, attrib_order[--num_attrib]);
+			num_attrib--;
+
+			attrib_offset = get_offset(o_type, attrib_order[num_attrib]);
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
@@ -1920,10 +1939,10 @@ rt_private void object_read (char *object, char *parent)
 					ridr_multi_any (object + attrib_offset, 1);
 					ridr_norm_int (&old_flags);
 					rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
-					size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);
+					size_count = get_expanded_pos (o_type, attrib_order[num_attrib]);
 
 #if DEBUG & 1
-					printf ("\n %lx", *((char **)(object + attrib_offset)));
+					printf ("\n %lx", *((EIF_REFERENCE *)(object + attrib_offset)));
 					printf (" %lx", old_flags);
 #endif
 					HEADER(object + size_count)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
@@ -1935,7 +1954,7 @@ rt_private void object_read (char *object, char *parent)
 				case SK_REF:
 					ridr_multi_any (object + attrib_offset, 1);
 #if DEBUG & 1
-					printf (" %lx", *((char **)(object + attrib_offset)));
+					printf (" %lx", *((EIF_REFERENCE *)(object + attrib_offset)));
 #endif
 					break;
 				case SK_POINTER:
@@ -1952,7 +1971,7 @@ rt_private void object_read (char *object, char *parent)
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
-			char *ref, *o_ptr;
+			EIF_REFERENCE ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
 			int16 *gt_type;
@@ -1960,7 +1979,7 @@ rt_private void object_read (char *object, char *parent)
 			int nb_gen;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
+			o_ptr = (EIF_REFERENCE) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(long *) o_ptr;
 			vis_name = System(o_type).cn_generator;
 
@@ -2131,8 +2150,8 @@ rt_private void object_read (char *object, char *parent)
 					ridr_multi_any (object, count);
 #if DEBUG & 1
 					for (ref = object; count > 0; count--,
-							ref = (char *) ((char **) ref + 1)) {
-						printf (" %lx", *(char **)(ref));
+							ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
+						printf (" %lx", *(EIF_REFERENCE *)(ref));
 						if (!(count % 40))
 							printf ("\n");
 					}
@@ -2171,7 +2190,6 @@ rt_private long obj_size(long s, long t, long u, long v, long w, long x, long y,
 
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 {
-	/* long Result;*/ /* %%ss removed */
 	int numb, counter, bit_size = 0;
 	int num_ref = 0, num_char = 0, num_float = 0, num_double = 0;
 	int num_pointer = 0, num_int = 0, exp_size = 0; 

@@ -77,7 +77,7 @@ feature -- Status setting
 			-- Select `Current' in its grouping.
 		do
 			if not is_selected then
-				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (c_object, True)
+				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
 			end
 		end
 
@@ -86,7 +86,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `Current' selected.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
 		end
 
 feature {NONE} -- Implementation
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	connect_signals is
 			-- Connect on_activate to toggled signal.
 		do
-			real_signal_connect (c_object, "toggled", agent (App_implementation.gtk_marshal).on_tool_bar_radio_button_activate (c_object), Void)
+			real_signal_connect (visual_widget, "toggled", agent (App_implementation.gtk_marshal).on_tool_bar_radio_button_activate (c_object), Void)
 		end
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -130,7 +130,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			if not avoid_reselection then
 				avoid_reselection := True
-				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (c_object, True)
+				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
 				-- Calls on_activate callback immediately
 				avoid_reselection := False
 			end				
@@ -143,7 +143,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if is_selected then
 				avoid_reselection := True
-				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (c_object, False)
+				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, False)
 				-- Calls on_activate callback immediately
 				avoid_reselection := False
 			end

@@ -278,7 +278,9 @@ feature -- Comparison
 		local
 			o_area: like area;
 		do
-			if count = other.count then
+			if other = Current then
+				Result := True
+			elseif count = other.count then
 				o_area := other.area;
 				Result := str_strict_cmp ($area, $o_area, count) = 0;
 			end;
@@ -786,19 +788,17 @@ feature -- Removal
 			make_area(0);
 			count := 0;
 		ensure then
-			Empty_string: count = 0;
-			Empty_area: capacity = 0
+			empty: count = 0;
+			empty_capacity: capacity = 0
 		end;
 
 	clear_all is
-			-- Reset all characters and keep current `capacity
-		require
-			area_exists: area /= Void
+			-- Reset all characters.
 		do
 			count := 0
 		ensure
-			Empty_string: count = 0
-			Same_area: capacity = old capacity
+			empty: count = 0
+			same_capacity: capacity = old capacity
 		end
 
 feature -- Resizing

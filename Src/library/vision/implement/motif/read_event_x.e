@@ -86,16 +86,6 @@ feature {NONE}
 								modifiers_state)
 		end;
 
-	clik_time: INTEGER;
-			-- last button press
-
-	click_threshold: INTEGER_REF is
-			-- time granted for clicking
-		once
-			!! Result;
-			Result.set_item (200)
-		end;
-
 	set_click_threshold (time: INTEGER) is
 			-- time is in millisecond, default is 200 ms
 		do
@@ -111,6 +101,13 @@ feature {NONE}
 	get_multi_click_time: INTEGER is
 		do
 			Result := click_threshold.item
+		end;
+
+	click_threshold: INTEGER_REF is
+			-- time granted for clicking
+		once
+			!! Result;
+			Result.set_item (200)
 		end;
 
 	set_multi_click_time (time: INTEGER) is
@@ -189,14 +186,9 @@ feature
 			inspect
 				get_event_type
 			when ButtonPress then
-				clik_time := get_time;		
 				Result := button_press_data (widget_oui)
 			when ButtonRelease then
-				if (get_time - clik_time < click_threshold.item) then
-					Result := button_click_data (widget_oui)
-				else	
-					Result := button_release_data (widget_oui)
-				end
+				Result := button_release_data (widget_oui)
 			when CirculateNotify then
 				Result := circulate_notify_data (widget_oui)
 			when CirculateRequest then

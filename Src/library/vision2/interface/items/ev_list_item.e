@@ -39,7 +39,7 @@ feature -- Status setting
 		require
 			parent_not_void: parent /= Void
 		do
-			implementation.set_selected (True)
+			implementation.enable_select
 		ensure
 			is_selected: is_selected
 		end
@@ -49,7 +49,7 @@ feature -- Status setting
 		require
 			parent_not_void: parent /= Void
 		do
-			implementation.set_selected (False)
+			implementation.disable_select
 		ensure
 			not_selected: not is_selected
 		end
@@ -102,9 +102,6 @@ feature -- Obsolete
 		require
 			parent_not_void: parent /= Void
 		do
-			Result := implementation.is_first
-		ensure
-			bridge_ok: Result = implementation.is_first
 		end
 
 	is_last: BOOLEAN is
@@ -114,9 +111,6 @@ feature -- Obsolete
 		require
 			parent_not_void: parent /= Void
 		do
-			Result := implementation.is_last
-		ensure
-			bridge_ok: Result = implementation.is_last
 		end
 
 invariant
@@ -146,6 +140,9 @@ end -- class EV_LIST_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/29 20:26:04  brendel
+--| Removed implementation of obsolete features is_last and is_first.
+--|
 --| Revision 1.29  2000/03/23 01:39:43  oconnor
 --| comments, formatting
 --|

@@ -23,6 +23,7 @@ Formats,,,,,,,,,,
 ,3,2,Really hide the implementation of precompiled classes when it is required (including descendants),,Xavier,,,,FMT0004,11/16/2001
 ,2,3,"When searching for the comments of an attribute, the search goes one line too far",,Xavier,,,,FMT0005,11/16/2001
 ,3,2,"When a feature was undefined, the written-in class still is the class of the parent feature",,Xavier,,,,FMT0006,11/16/2001
+,3,2,"When implementing a deferred feature with a feature inherited from another branch, the other feature is not detected as an implementer",,Xavier,,,,FMT0007,12/04/2001
 
 
 

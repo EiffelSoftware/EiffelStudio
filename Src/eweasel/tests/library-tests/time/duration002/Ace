@@ -27,7 +27,7 @@ cluster
 	
 	time:			"$TIME";
 	format:			"$TIME_FORMAT";
-	english:		"$TIME_ENGLISH";
+	german:			"$TIME_GERMAN";
 
 external
 	include_path: "$TIME_INCLUDE";

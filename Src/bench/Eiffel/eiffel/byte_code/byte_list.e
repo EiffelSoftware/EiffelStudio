@@ -11,7 +11,7 @@ inherit
 			enlarge_tree, analyze, generate, generate_il, make_byte_code,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
-			inlined_byte_code, has_separate_call
+			inlined_byte_code
 		end
 
 	FIXED_LIST [T]
@@ -285,26 +285,6 @@ feature -- Convenience
 					--| There are no void elements
 					Result := Current
 				end
-			end
-		end
-
-feature -- Concurrent Eiffel
-
-	has_separate_call: Boolean is
-			-- Loop over `list' and determine is there is a separate
-			-- call
-		local
-			l_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				Result or i = nb
-			loop
-				Result := l_area.item (i).has_separate_call
-				i := i + 1
 			end
 		end
 

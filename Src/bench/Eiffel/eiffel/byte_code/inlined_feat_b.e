@@ -325,7 +325,7 @@ feature -- Generation
 			local_inliner.set_inlined_feature (Void);
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 		do
 			Context.set_inlined_current_register (current_reg);
 			if result_reg /= Void then
@@ -339,7 +339,7 @@ feature -- Generation
 		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		do
-			generate_end (gen_reg, class_type, class_type.is_separate)
+			generate_end (gen_reg, class_type)
 		end
 
 feature -- Registers

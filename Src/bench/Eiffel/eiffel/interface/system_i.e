@@ -2551,10 +2551,6 @@ feature -- Generation
 				-- Generate makefile
 			deg_output.display_degree_output (degree_message, 0, 10)
 			t.generate_make_file
-
-			if System.has_separate then
-				generate_only_separate_pattern_table
-			end
 		end
 
 	process_dynamic_types is
@@ -2734,9 +2730,6 @@ end
 
 				buffer.putstring (",%N")
 				i := i + 1
-			end
-			if has_separate then
-				buffer.putint (0)
 			end
 			buffer.putstring ("%N};%N")
 
@@ -2996,15 +2989,6 @@ end
 				buffer.putstring (",%N")
 				i := i + 1
 			end
-			if has_separate then
-				if not final_mode then
-					buffer.putstring 
-						("{%N0L,%N%"SEP_OBJ%",%N(char**) 0,%N(int*) 0,%N%
-						%(uint32*) 0,%N(int16**)0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
-						%(int32) 0,(int32) 0, %N1,%N(int32*) 0,%N%
-						%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}%N")
-				end
-			end
 			buffer.putstring ("};%N%N")
 
 			if not final_mode then
@@ -3145,28 +3129,6 @@ end
 					i := i + 1
 				end
 				buffer.putstring ("};%N")
-
-				if System.has_separate then
-						-- Now, generate for Concurrent Eiffel
-					buffer.putstring ("%Nstruct ctable fce_sep_pat[] = {%N")
-					from
-						i := 1
-						nb := Type_id_counter.value
-					until
-						i > nb
-					loop
-						cl_type := class_types.item (i)
-						if cl_type /= Void then
-							cl_type.generate_separate_pattern (buffer)
-						else
-								-- FIXME
-							buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
-						end
-						buffer.putstring (",%N")
-						i := i + 1
-					end
-					buffer.putstring ("};%N%Nstruct ctable *ce_sep_pat = fce_sep_pat;%N%N")
-				end
 			end
 
 			create_cecil_tables
@@ -3388,14 +3350,6 @@ feature -- Pattern table generation
 			pattern_table.generate
 		end
 
-	generate_only_separate_pattern_table is
-			-- Generate pattern table.
-		require
-			finalized_mode: byte_context.final_mode
-		do
-			pattern_table.generate_in_finalized_mode
-		end
-
 	generate_init_file is
 			-- Generation of the main file
 		local
@@ -3435,10 +3389,6 @@ feature -- Pattern table generation
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%N")
 
-			if has_separate then
-				buffer.putstring ("#include %"eif_curextern.h%"%N%N")
-			end
-
 			buffer.start_c_specific_code
 			
 			if creation_name /= Void then
@@ -3466,33 +3416,6 @@ feature -- Pattern table generation
 --											%%Textern char *root_obj;%N%
 --											%#endif%N")
 
-
-			if has_separate then
-				buffer.putstring ("%Tif (argc < 2) {%N%
-					%%T%Tsprintf(crash_info, CURERR7, 1);%N%
-					%%T%Tdefault_rescue();%N%
-					%%T}%N")
-				buffer.putstring ("%
-					%%Tif (strcmp(argv[1], constant_init_flag) && strcmp(argv[1], constant_creation_flag)) {%N%
-					%%T%Tsprintf(crash_info, CURERR8);%N%
-					%%T%Tdefault_rescue();%N%
-					%%T}%N")
-				buffer.putstring ("%
-					%%Tif (!memcmp(argv[1], constant_init_flag, strlen(argv[1]))) {%N%
-					%%T%Tchar **root_argv;%N%
-					%%T%Tint i;%N%
-					%%T%Troot_argv = (char **) cmalloc(argc*sizeof(char *));%N%
-					%%T%Tvalid_memory(root_argv);%N")
-				buffer.putstring ("%
-					%%T%Troot_argv[0] = argv[0];%N%
-					%%T%Tfor(i=2; i<argc; i++)%N%
-					%%T%T%Troot_argv[i-1] = argv[i];%N%
-					%%T%Troot_argv[argc-1] = NULL;%N%
-					%%T%T_concur_root_of_the_application = 1;%N%
-					%%T%T_concur_invariant_checked = 1;%N")
-					-- The last line Only for Workbench Mode
-			end
-
 			buffer.putstring ("%Troot_obj = RTLN(")
 			if final_mode then
 				buffer.putint (dtype)
@@ -3501,58 +3424,22 @@ feature -- Pattern table generation
 			end
 			buffer.putstring (");%N")
 
-			if has_separate then
-				buffer.putstring ("%T%TCURIS;%N")
-			end
-
 			if final_mode then
 				if creation_name /= Void then
 					buffer.putstring ("%T")
 					buffer.putstring (c_name)
 					buffer.putstring ("(root_obj")
 					if root_feat.has_arguments then
-						if has_separate then
-							buffer.putstring (", argarr(argc-1, root_argv)")
-						else
-							buffer.putstring (", argarr(argc, argv)")
-						end
+						buffer.putstring (", argarr(argc, argv)")
 					end
 					buffer.putstring (");%N")
 				end
 			else
-				if has_separate then
-					buffer.putstring ("%T%Tif (egc_rcorigin != -1)%N%
-						%%T%T%Tif (egc_rcarg)%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc-1, root_argv));%N%
-						%%T%T%Telse%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
-				else
-					buffer.putstring ("%Tif (egc_rcorigin != -1)%N%
-						%%T%Tif (egc_rcarg)%N%
-						%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
-						%%T%Telse%N%
-						%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
-				end
-			end
-
-			if has_separate then
-				buffer.putstring ("%T}%N")
-
-				buffer.putstring ("%Telse {%N%
-					%%T%T_concur_root_of_the_application = 0;%N%
-					%%T%Troot_obj = RTLN(eif_type_id(argv[4]));%N")
-				buffer.putstring ("%T%TCURIS;%N")
-
-					-- Only for Workbench Mode
-				buffer.putstring ("%T%Tif (!strcmp(argv[5], %"_no_cf%")) {%N%
-					%%T%T%TRTCI(root_obj);%N%
-					%%T%T%T_concur_invariant_checked = 1;%N%
-					%%T%T}%N%
+				buffer.putstring ("%Tif (egc_rcorigin != -1)%N%
+					%%T%Tif (egc_rcarg)%N%
+					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
 					%%T%Telse%N%
-					%%T%T%T_concur_invariant_checked = 0;%N")
-
-				buffer.putstring ("%T}%N")
-				buffer.putstring ("%Tserver_execute();%N")
+					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 			end
 
 			buffer.putstring ("%N}%N")
@@ -3961,33 +3848,6 @@ feature {NONE} -- External features
 			"C signature (time_t *): EIF_INTEGER use <time.h>"
 		alias
 			"time"
-		end
-
-feature -- Concurrent Eiffel
-
-	Concurrent_eiffel: BOOLEAN is
-			-- Can this compiler generate Concurrent Eiffel code?
-			--| This should be called only during the initial steps
-			--| of the compilation or after retrieving a project
-			--| s this can raise an error
-		do
-			Result := False
-		end
-
-	has_separate: BOOLEAN
-			-- Is there a separate declaration in the system?
-
-	set_has_separate is
-			-- Set `has_separate' to True.
-		require
-			concurrent_eiffel_allowed: Concurrent_eiffel
-		do
-			if not has_separate then
-				has_separate := True
-					-- We need to link with the Concurrent Eiffel
-					-- run-time
-				set_freeze
-			end
 		end
 
 end -- class SYSTEM_I

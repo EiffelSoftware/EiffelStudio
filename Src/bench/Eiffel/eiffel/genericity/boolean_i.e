@@ -93,12 +93,6 @@ feature
 			create Result
 		end
 
-	separate_get_macro: STRING is "CURGB"
-			-- String generated to access the argument to a separate call
-
-	separate_send_macro: STRING is "CURSQRB"
-			-- String generated to return the result of a separate call
-
 	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.

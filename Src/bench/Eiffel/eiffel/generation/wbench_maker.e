@@ -251,18 +251,10 @@ feature
 				Result.append ("$mt_prefix")
 			end
 	
-			if System.has_separate then
-				Result.append ("$concurrent_prefix")
-			end
-	
 			Result.append ("$wkeiflib")
 	
 			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
-			end
-	
-			if System.has_separate then
-				Result.append (Libnet_location)
 			end
 		end;
 

@@ -22,21 +22,7 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new SEPARATE_CLASS_TYPE AST node.
 		do
 			Precursor {CLASS_TYPE_AS} (n, g)
-			record_separate
-		end
-
-feature {NONE} -- Initialization
-
-	record_separate is
-			-- Record the use of the separate keyword
-		do
-			if System.Concurrent_eiffel then
-				System.set_has_separate
-			elseif System.current_class.lace_class = System.any_class then
-				-- Allow declaration of `deep_import' in ANY
-			else
-				Error_handler.make_separate_syntax_error
-			end
+			Error_handler.make_separate_syntax_error
 		end
 
 feature -- Visitor
@@ -53,7 +39,6 @@ feature
 		do
 			Result := Precursor {CLASS_TYPE_AS} (feat_table, f)
 			Result.set_is_separate (True)
-			record_separate_dependance (Result.associated_class);		
 		end
 
 	actual_type: CL_TYPE_A is

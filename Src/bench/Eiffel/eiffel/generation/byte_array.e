@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			create forward_marks3.make (Jump_stack_size)
 			create forward_marks4.make (Jump_stack_size)
 			create backward_marks.make (Jump_stack_size)
-			create sep_backward_marks.make (Jump_stack_size)
 		end
 
 feature -- Access
@@ -495,24 +494,6 @@ feature -- Debugger
 		do
 			append (Bc_nhook)
 			append_integer (lnr)
-		end
-
-feature -- Concurrent Eiffel
-
-	sep_backward_marks: ARRAYED_STACK [INTEGER]
-			-- Backward jump stack
-
-	sep_mark_backward is
-			-- Mark a backward offset
-		do
-			sep_backward_marks.put (position)
-		end
-
-	sep_write_backward is
-			-- Write a backward jump
-		do
-			append_integer (- position - Int32_size + sep_backward_marks.item)
-			sep_backward_marks.remove
 		end
 
 feature {BYTE_ARRAY} -- Access

@@ -266,13 +266,7 @@ feature -- Analyzis
 				-- Eiffel local variables, Result, temporary registers...
 			generate_execution_declarations
 			generate_locals
-			if system.has_separate then
-				search_for_separate_call_in_precondition
-				if has_separate_call_in_precondition then
-					buf.putstring ("CURDSFC;")
-					buf.new_line
-				end
-			end
+
 				-- If necessary, generate the once stuff (i.e. checks if
 				-- the value of the once was already set within the same
 				-- thread).  That way we do not enter the body of the
@@ -316,10 +310,7 @@ feature -- Analyzis
 			if context.workbench_mode then
 				generate_save_assertion_level
 			end
-			if system.has_separate then
-					-- Reserve separate parameters
-				reserve_separate_parameters
-			end
+
 				-- Precondition check generation
 			generate_precondition
 			if Context.has_chained_prec then
@@ -351,12 +342,6 @@ feature -- Analyzis
 
 				-- Now the postcondition
 			generate_postcondition
-
-			if system.has_separate then
-				   	-- Free separate parameters
-				free_separate_parameters
-			end
-
 
 			if not result_type.is_void then
 					-- Function returns something. So generate the return
@@ -1075,18 +1060,7 @@ end
 					buf.new_line
 					buf.indent
 				end
-				if has_separate_call_in_precondition then
-					buf.exdent
-					buf.putstring ("check_sep_pre:")
-					buf.indent
-					buf.new_line
-					buf.putstring ("CURCSFC;")
-					buf.new_line
-				end
 			
-				Context.set_has_separate_call_in_precondition
-					(has_separate_call_in_precondition)
-
 				if inh_assert.has_precondition then
 					inh_assert.generate_precondition
 				end
@@ -1099,31 +1073,7 @@ end
 				buf.putstring ("RTJB;")
 				Context.generate_current_label_definition
 
-				if has_separate_call_in_precondition then
-					buf.putstring ("if (!CURSFC) {")
-					buf.new_line
-					buf.indent
-					buf.putstring ("RTCF;")
-					buf.new_line
-					buf.exdent
-					buf.putstring ("} else {")
-					buf.new_line
-					buf.indent
-					buf.putstring ("RTCK;")
-					buf.new_line
-						-- free separate parameters
-					free_separate_parameters
-						-- Reserve separate parameters
-					buf.putstring ("CURCSPFW;")
-					buf.new_line
-					reserve_separate_parameters
-					buf.putstring ("CURCSPF;")
-					buf.new_line
-					buf.exdent
-					buf.putstring ("}")
-				else
-					buf.putstring ("RTCF;")
-				end
+				buf.putstring ("RTCF;")
 				buf.new_line
 				buf.exdent
 				buf.putchar ('}')
@@ -1487,11 +1437,6 @@ feature -- Byte code generation
 			have_assert, has_old: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 		do
-			if system.has_separate and then arguments /= Void then
-					-- Reserve separeate parameters
-				process_sep_paras_in_byte_code (ba, True)
-				search_for_separate_call_in_precondition
-			end
 			inh_assert := Context.inherited_assertion
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else inh_assert.has_precondition)
@@ -1501,10 +1446,6 @@ feature -- Byte code generation
 				context.set_assertion_type (In_precondition)
 				ba.append (Bc_precond)
 				ba.mark_forward
-				if has_separate_call_in_precondition then
-					ba.sep_mark_backward
-					ba.append (Bc_sep_unset)
-				end
 			end
 
 			if Context.origin_has_precondition then
@@ -1526,14 +1467,7 @@ feature -- Byte code generation
 					ba.write_forward4
 				end
 
-				if has_separate_call_in_precondition then
-					ba.append (Bc_sep_raise_prec)
-						-- Reserve separeate parameters
-					process_sep_paras_in_byte_code (ba, True)
-					ba.sep_write_backward
-				else
-					ba.append (Bc_raise_prec)
-				end
+				ba.append (Bc_raise_prec)
 				if inh_assert.has_precondition then
 					inh_assert.write_forward (ba)
 				
@@ -1600,11 +1534,6 @@ feature -- Byte code generation
 
 			if have_assert then
 				ba.write_forward
-			end
-
-			if system.has_separate and then arguments /= Void then
-					-- Reserve separeate parameters
-				process_sep_paras_in_byte_code (ba, False)
 			end
 
 				-- Generate the hook corresponding to the final end.
@@ -1767,259 +1696,6 @@ feature -- Inlining
 				inliner.reset
 			else
 				Result := Current
-			end
-		end
-
-feature -- Concurrent Eiffel
-
-	has_separate_call_in_precondition: BOOLEAN 
-			-- is there separate feature call in the prtecondition?
-
-	search_for_separate_call_in_precondition is
-		local
-			tmp: BOOLEAN
-			inh_pre: LINKED_LIST [BYTE_LIST [BYTE_NODE]]
-			inh_assert: INHERITED_ASSERTION
-		do
-			if precondition /= Void then
-				tmp := precondition.has_separate_call
-			else
-				tmp := False
-			end
-			inh_assert := Context.inherited_assertion
-			if inh_assert.has_precondition then
-				from
-					inh_pre := inh_assert.precondition_list
-					inh_pre.start
-				until
-					tmp or inh_pre.after
-				loop
-					tmp := inh_pre.item.has_separate_call;		
-					inh_pre.forth
-				end
-			end
-			has_separate_call_in_precondition := tmp
-		end
-
-	reserve_separate_parameters is
-			-- generate codes for reserving separate parameters of a feature
-			-- whose indexes are less than "idx".
-		local
-			i, count: INTEGER
-			var_name: STRING
-			reg: REGISTRABLE
-			buf: GENERATION_BUFFER
-		do
-				-- Reserve separate parameters
-			if arguments /= Void and then has_separate_call_in_the_feature then
-				buf := buffer
-				buf.exdent
-				Context.inc_reservation_label
-				Context.print_reservation_label
-				buf.putstring (":")
-				buf.indent
-				buf.new_line
-				create var_name.make(10)
-				from 
-					create var_name.make(10)
-					i := arguments.lower
-					count := arguments.count + i - 1
-				until
-					i > count
-				loop
-					if real_type(arguments.item(i)).is_separate 
-						and then separate_call_on_argument (i) then
-						var_name.wipe_out
-						var_name.append("arg")
-						var_name.append(i.out);							
-						reg := context.associated_register_table.item(var_name)
-						buf.putstring ("if (CURRSO(")
-						if reg /= Void then
-							reg.print_register
-						else
-							buf.putstring (var_name)
-						end
-						buf.putstring (")) {")
-						buf.indent
-						buf.new_line
-						free_partial_sep_paras (i)
-						buf.putstring ("CURRSFW;")
-						buf.new_line
-						buf.putstring ("goto ")
-						Context.print_reservation_label
-						buf.putstring (";")
-						buf.new_line
-						buf.exdent
-						buf.putstring ("}")
-						buf.new_line
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	free_separate_parameters is 
-			-- generate codes for freeing separate parameters of a feature
-		local
-			i, count: INTEGER
-			var_name: STRING
-			reg: REGISTRABLE
-			buf: GENERATION_BUFFER
-		do
-				-- Free separate parameters
-			if arguments /= Void then
-				from 
-					create var_name.make(10)
-					i := arguments.lower
-					count := arguments.count + i - 1
-					buf := buffer
-				until
-					i > count
-				loop
-					if
-						real_type(arguments.item(i)).is_separate 
-						and then separate_call_on_argument (i)
-					then
-						var_name.wipe_out
-						var_name.append("arg")
-						var_name.append(i.out);                            
-						reg := context.associated_register_table.item(var_name)
-						buf.putstring ("CURFSO(")
-						if reg /= Void then
-							reg.print_register
-						else
-							buf.putstring (var_name)
-						end
-						buf.putstring (");")
-						buf.new_line
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	free_partial_sep_paras (idx: INTEGER) is 
-			-- generate codes for freeing separate parameters of a feature
-			-- whose indexes are less than "idx".
-		local
-			i, count: INTEGER
-			var_name: STRING
-			reg: REGISTRABLE
-			buf: GENERATION_BUFFER
-		do
-				-- Free separate parameters
-			if arguments /= Void then
-				from 
-					create var_name.make(10)
-					i := arguments.lower
-					count := arguments.count + i - 1
-					buf := buffer
-				until
-					i >= idx or i > count
-				loop
-					if
-						real_type(arguments.item(i)).is_separate 
-						and then separate_call_on_argument (i)
-					then
-						var_name.wipe_out
-						var_name.append("arg")
-						var_name.append(i.out);                            
-						reg := context.associated_register_table.item(var_name)
-						buf.putstring ("CURFSO(")
-						if reg /= Void then
-							reg.print_register
-						else
-							buf.putstring (var_name)
-						end
-					  	buf.putstring (");")
-					   	buf.new_line
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	separate_call_on_argument (i: INTEGER): BOOLEAN is
-			-- Is argument `i' used in a separate call?
-		local
-			s: like separate_calls
-		do
-			s := separate_calls
-			if s /= Void and then i>= s.lower and i <= s.upper then
-				Result := s @ i
-			end
-		end
-
-	separate_calls: ARRAY [BOOLEAN]
-			-- Record separate calls on arguments
-
-	record_separate_calls_on_arguments is
-			-- Record separate calls on arguments
-		local
-			ast_sep_call: ARRAY [BOOLEAN]
-		do
-			if System.has_separate then
-				ast_sep_call := Ast_context.separate_calls
-				if not ast_sep_call.is_empty then
-					separate_calls := ast_sep_call.twin
-				end
-			end
-		end
-
-	has_separate_call_in_the_feature: BOOLEAN is
-		local
-			i: INTEGER
-			s: like separate_calls
-		do
-			s := separate_calls
-			if s /= Void then
-				i := s.lower
-			end
-			from 
-			until
-				Result or (s = Void or else i > s.upper)
-			loop
-				Result := s.item (i)
-				i := i + 1
-			end
-		end
-
-	process_sep_paras_in_byte_code (ba: BYTE_ARRAY; reserve: BOOLEAN) is
-			-- generate codes for reserving/freeing separate parameters of a feature
-		local
-			i, count: INTEGER
-			s: like separate_calls
-		do
-			s := separate_calls
-			if s /= Void then
-				i := s.lower
-			end
-			from 
-			until
-				s = Void or else i > s.upper
-			loop
-				if s.item(i) then
-					count := count + 1
-				end
-				i := i + 1
-			end
-			if count > 0 then
-				if reserve then
-					ba.append (Bc_sep_reserve)
-				else
-					ba.append (Bc_sep_free)
-				end
-				ba.append_short_integer (count)
-				from
-					i := s.lower
-				until
-					i > s.upper
-				loop
-					if s.item (i) then
-						ba.append_short_integer (i - 1)
-					end
-					i := i + 1
-				end
 			end
 		end
 

@@ -530,10 +530,6 @@ feature -- Generation, Header
 				make_file.putstring ("$shared_flags ")
 			end
 
-			if System.has_separate then
-				make_file.putstring ("-DCONCURRENT_EIFFEL ")
-			end
-
 			if not System.uses_ise_gc_runtime then
 				make_file.putstring ("-DNO_ISE_GC ")
 			end
@@ -555,10 +551,6 @@ feature -- Generation, Header
 				make_file.putstring ("$mtcppflags $large ")
 			else
 				make_file.putstring ("$cppflags $large ")
-			end
-
-			if System.has_separate then
-				make_file.putstring ("-DCONCURRENT_EIFFEL ")
 			end
 
 			if not System.uses_ise_gc_runtime then
@@ -953,11 +945,7 @@ feature -- Generation (Linking rules)
 			i, nb: INTEGER
 			emain_file: STRING
 		do
-			if not System.has_separate then
-				emain_file := "emain.template"
-			else
-				emain_file := "emain.separate_template"
-			end
+			emain_file := "emain.template"
 
 				-- Generate the dependence rule for E1/Makefile
 			make_file.putchar (System_object_prefix)
@@ -1158,8 +1146,5 @@ feature {NONE} -- Constants
 				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/other-lib/"
 			end
 		end
-
-	libnet_location: STRING is "\$(ISE_EIFFEL)/library/net/spec/\$(ISE_PLATFORM)/lib/libnet.a"
-			-- Library name + location of EiffelNet.
 
 end

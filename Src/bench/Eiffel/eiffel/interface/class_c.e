@@ -175,9 +175,6 @@ feature -- Access
 			Result := (not (is_special or else is_basic)) and then has_types
 		end
 
-	is_used_as_separate: BOOLEAN
-			-- Is the class used as a separate class ?
-
 	has_expanded: BOOLEAN
 			-- Does the class use expanded ?
 
@@ -1810,7 +1807,6 @@ feature -- Class initialization
 			old_parents: like parents
 			old_generics: like generics
 			old_is_expanded: BOOLEAN
-			old_is_separate: BOOLEAN
 			old_is_deferred: BOOLEAN
 			old_is_frozen: BOOLEAN
 			parents_as: EIFFEL_LIST [PARENT_AS]
@@ -1827,7 +1823,7 @@ feature -- Class initialization
 			dummy_list: LINKED_LIST [INTEGER]
 			a_client: CLASS_C
 			changed_status, changed_frozen: BOOLEAN
-			is_exp, changed_generics, changed_expanded, changed_separate: BOOLEAN
+			is_exp, changed_generics, changed_expanded: BOOLEAN
 			pars: like parents
 			gens: like generics
 			obs_msg: like obsolete_message
@@ -1916,15 +1912,6 @@ feature -- Class initialization
 				changed_expanded := True
 			end
 
-				-- Separate mark
-			old_is_separate := is_separate
-			if ast_b.is_separate then
-				set_is_separate (True)
-				System.set_has_separate
-			else
-				set_is_separate (False)
-			end
-
 				-- Class status
 			is_external := ast_b.is_external
 			has_externals := ast_b.has_externals
@@ -1939,12 +1926,6 @@ feature -- Class initialization
 				changed_frozen := True
 			end
 
-			if (is_separate /= old_is_separate and then old_parents /= Void) then
-				Degree_4.set_separate_modified (Current)
-				changed_status := True
-				changed_separate := True
-			end
-
 			if changed_status then
 				Degree_4.add_changed_status (Current)
 				from
@@ -1953,7 +1934,7 @@ feature -- Class initialization
 					syntactical_clients.after
 				loop
 					a_client := syntactical_clients.item
-					if changed_expanded or changed_separate then
+					if changed_expanded then
 							-- `changed' is set to True so that a complete
 							-- pass2 is done on the client. `feature_unit'
 							-- will find the type changes
@@ -3121,13 +3102,6 @@ feature -- Convenience features
 			is_used_as_expanded_set: is_used_as_expanded
 		end
 
-	set_is_used_as_separate is
-		do
-			is_used_as_separate := True
-		ensure
-			is_used_as_separate_set: is_used_as_separate
-		end
-
 	set_invariant_feature (f: INVARIANT_FEAT_I) is
 			-- Set `invariant_feature' with `f'.
 		do
@@ -3258,11 +3232,7 @@ feature -- Convenience features
 	visible_level: VISIBLE_I is
 			-- Visible level
 		do
-			if is_used_as_separate then
-				create {VISIBLE_SEPARATE_I} Result
-			else
-				Result := lace_class.visible_level
-			end
+			Result := lace_class.visible_level
 		end
 
 feature -- Actual class type
@@ -3859,9 +3829,6 @@ feature -- Properties
 			-- Is class basic?
 		do
 		end
-
-	is_separate: BOOLEAN
-			-- Is the class separate ?
 
 	is_single: BOOLEAN
 			-- Is class generated as a single entity in IL code generation.
@@ -4514,14 +4481,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_enum_set: is_enum = b
 		end
 
-	set_is_separate (b: BOOLEAN) is
-			-- Assign `b' to `is_separate'.
-		do
-			is_separate := b
-		ensure
-			is_separate_set: is_separate = b
-		end
-
 	set_parents (p: like parents) is
 			-- Assign `p' to `parents'.
 		do
@@ -5042,7 +5001,6 @@ feature {DEGREE_4} -- Degree 4
 			degree_4_processed := False
 			expanded_modified := False
 			deferred_modified := False
-			separate_modified := False
 			supplier_status_modified := False
 		ensure
 			removed: not degree_4_needed
@@ -5058,10 +5016,6 @@ feature {DEGREE_4} -- Degree 4
 
 	expanded_modified: BOOLEAN
 			-- Has the expanded status of current
-			-- class been modified?
-
-	separate_modified: BOOLEAN
-			-- Has the separate status of current
 			-- class been modified?
 
 	supplier_status_modified: BOOLEAN
@@ -5089,14 +5043,6 @@ feature {DEGREE_4} -- Degree 4
 			deferred_modified := True
 		ensure
 			deferred_modified_set: deferred_modified
-		end
-
-	set_separate_modified is
-			-- Set `separate_modified' to True.
-		do
-			separate_modified := True
-		ensure
-			separate_modified_set: separate_modified
 		end
 
 	set_supplier_status_modified is

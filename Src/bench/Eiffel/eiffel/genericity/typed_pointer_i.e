@@ -118,12 +118,6 @@ feature
 		
 	union_tag: STRING is "parg"
 
-	separate_get_macro: STRING is "CURGP"
-			-- String generated to access the argument to a separate call
-
-	separate_send_macro: STRING is "CURSQRP"
-			-- String generated to return the result of a separate call
-
 	associated_reference: CLASS_TYPE is
 			-- Reference class associated with simple type. See comments of `metamorphose_type'
 			-- to understand why we say that POINTER_REF is the associated reference type of Current.

@@ -171,16 +171,6 @@ feature
 		deferred
 		end
 
-	separate_get_macro: STRING is
-			-- String generated to access the argument to a separate call
-		deferred
-		end
-
-	separate_send_macro: STRING is
-			-- String generated to return the result of a separate call
-		deferred
-		end
-
 feature {NONE} -- Constants
 
 	Sizeof: STRING is "sizeof("

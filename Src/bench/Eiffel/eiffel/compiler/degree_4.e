@@ -228,15 +228,6 @@ feature -- Setting
 			a_class.set_deferred_modified
 		end
 
-	set_separate_modified (a_class: CLASS_C) is
-			-- The separate status of `a_class' has been modified.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			insert_class (a_class)
-			a_class.set_separate_modified
-		end
-
 	set_supplier_status_modified (a_class: CLASS_C) is
 			-- The status of a supplier has changed.
 		require
@@ -335,8 +326,6 @@ feature {INHERIT_TABLE} -- Propagation
 						io.error.put_boolean (a_class.expanded_modified)
 						io.error.put_string ("%Ndeferred_modified: ")
 						io.error.put_boolean (a_class.deferred_modified)
-						io.error.put_string ("%Nseparate_modified: ")
-						io.error.put_boolean (a_class.separate_modified)
 						if a_class.assert_prop_list /= Void then
 							if a_class.assert_prop_list.is_empty then
 								io.error.put_string ("%Nassert_prop_list: empty")
@@ -372,7 +361,7 @@ feature {INHERIT_TABLE} -- Propagation
 				-- Incremetality test: asked the compiler to apply at
 				-- least Degree 4 to the direct descendants of `a_class'.
 			real_pass2 := (not equivalent_table) or else a_class.expanded_modified
-					or else a_class.deferred_modified or else a_class.separate_modified
+					or else a_class.deferred_modified
 
 				-- If the set of ancestors has changed (changed3a)
 				-- we must propagate.
@@ -394,7 +383,7 @@ feature {INHERIT_TABLE} -- Propagation
 				if do_pass3 then
 						-- Propagation to Degree 3 in order to
 						-- type check clients of `a_class'.
-					propagate_pass3 (a_class, pass2_control, a_class.expanded_modified or a_class.deferred_modified or a_class.separate_modified)
+					propagate_pass3 (a_class, pass2_control, a_class.expanded_modified or a_class.deferred_modified)
 				end
 				if chg3a then
 						-- Propagation to Degree 3 in order to type check

@@ -11,7 +11,7 @@ inherit
 	INSTR_B
 		redefine
 			analyze, generate, generate_il, size, pre_inlined_code, inlined_byte_code,
-			has_separate_call, assigns_to, calls_special_features, is_unsafe,
+			assigns_to, calls_special_features, is_unsafe,
 			optimized_byte_node, enlarge_tree, make_byte_code
 		end
 
@@ -113,15 +113,6 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			create Result.make (compound.inlined_byte_code)
-		end
-
-feature -- Concurrent Eiffel
-
-	has_separate_call: BOOLEAN is
-			-- Loop over `list' and determine is there is a separate
-			-- call
-		do
-			Result := compound.has_separate_call
 		end
 
 invariant

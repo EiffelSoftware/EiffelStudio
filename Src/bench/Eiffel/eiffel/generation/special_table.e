@@ -36,10 +36,6 @@ feature
 			empty_function_ptr_string := "(char *(*)()) 0,%N"
 			function_ptr_cast_string := "(char *(*)()) "
 
-			if System.has_separate then
-				buffer.putstring ("extern void sep_obj_dispose(char *);%N");
-			end;
-
 			from
 				buffer.putstring ("char *(*");
 				buffer.putstring (Encoder.table_name (rout_id));
@@ -74,9 +70,6 @@ feature
 				i := i + 1;
 			end;
 
-			if System.has_separate then
-				buffer.putstring ("(char *(*)()) sep_obj_dispose%N");
-			end;
 			buffer.putstring ("};%N%N");
 		end;
 

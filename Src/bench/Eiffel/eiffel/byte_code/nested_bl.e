@@ -351,7 +351,6 @@ end
 			-- Generate a call on entity held in `reg'
 		local
 			message_target: ACCESS_B
-			value_type: TYPE_I
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -361,68 +360,18 @@ end
 				-- Now if there is a result for the call and the result
 				-- has to be stored in a real register, do generate the
 				-- assignment.
-			if system.has_separate then
-					-- generated directly by a call to `print_register'.
-					-- Otherwise, we have to generate it now.
-				if register /= Void and register /= No_register	and not real_type(target.type).is_separate then
-					register.print_register
-					buf.putstring (" = ")
-				end
-					-- If register is No_register, then the call will be
-					-- generated directly by a call to `print_register'.
-					-- Otherwise, we have to generate it now.
-				if register /= No_register then
-					message_target.generate_on (reg)
-					if not real_type(target.type).is_separate then
-						buf.putchar (';')
-						buf.new_line
-					end
-				end
-					-- Now, we process separate feature call which return a basic data
-					-- or separate object.
-				if register /= Void and register /= No_register and real_type(target.type).is_separate then
-					register.print_register
-					buf.putstring (" = ")
-					value_type := context.real_type(message.target.type)
---					value_type := message.target.context_type
---					value_type := context.real_type(message.type)
---					value_type := context.real_type(type)
-					if value_type.is_boolean then
-						buf.putstring ("CURGB(0);")
-					elseif value_type.is_char then
-						buf.putstring ("CURGC(0);")
-					elseif value_type.is_double then
-						buf.putstring ("CURGD(0);")
-					elseif value_type.is_float then
-						buf.putstring ("CURGR(0);")
-					elseif value_type.is_long then
-						buf.putstring ("CURGI(0);")
-					elseif value_type.is_feature_pointer then
-						buf.putstring ("CURGP(0);")
-					elseif value_type.is_true_expanded then
-						buf.putstring ("CURGO(0);")
-					else
-					-- if value_type.is_separate or value_type.is_reference then
-						buf.putstring ("CURGSO(0);")
-					end	
-					
-					buf.new_line
-				end
-			else
-				if register /= Void and register /= No_register then
-					register.print_register
-					buf.putstring (" = ")
-				end
-					-- If register is No_register, then the call will be
-					-- generated directly by a call to `print_register'.
-					-- Otherwise, we have to generate it now.
-				if register /= No_register then
-					message_target.generate_on (reg)
-					buf.putchar (';')
-					buf.new_line
-				end
+			if register /= Void and register /= No_register then
+				register.print_register
+				buf.putstring (" = ")
 			end
-			message_target.reset_added_gc_hooks
+				-- If register is No_register, then the call will be
+				-- generated directly by a call to `print_register'.
+				-- Otherwise, we have to generate it now.
+			if register /= No_register then
+				message_target.generate_on (reg)
+				buf.putchar (';')
+				buf.new_line
+			end
 		end
 
 	has_call: BOOLEAN is True

@@ -230,11 +230,6 @@ feature -- Conveniences
 			if l_class.is_expanded then
 				record_exp_dependance (l_class)
 			end
-				-- Base type class is expanded
-			Result.set_is_separate (l_class.is_separate)
-			if l_class.is_separate then
-				record_separate_dependance (l_class)
-			end
 		end
 
 	actual_type: CL_TYPE_A is
@@ -430,12 +425,6 @@ feature -- Conveniences
 					end
 				end
 			end
-		end
-
-	record_separate_dependance (a_class: CLASS_C) is
-			-- Mark the class `a_class' used as separate
-		do
-			a_class.set_is_used_as_separate
 		end
 
 feature -- Output

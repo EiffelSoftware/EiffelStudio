@@ -74,7 +74,6 @@ feature -- Byte code generation
 			-- Generate byte code for an assignment
 		local
 			source_type: TYPE_I
-			target_type: TYPE_I
 			hector_b: HECTOR_B
 		do
 			generate_melted_debugger_hook (ba);
@@ -90,12 +89,6 @@ feature -- Byte code generation
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).
 			source_type ?= context.real_type (source.type);
-			
-			target_type ?= context.real_type (target.type);
-			if target_type.is_separate and then not source_type.is_separate then
-				ba.append (Bc_sep_to_sep);
-			end;
-
 			target.make_assignment_code (ba, source_type);
 		end;
 

@@ -85,24 +85,6 @@ feature -- Code generation
 			pattern.generate_pattern (c_pattern_id, buffer)
 		end
 
-feature -- Concurrent Eiffel
-
-	generate_separate_pattern (buffer: GENERATION_BUFFER) is
-			-- Generate pattern for separate calls
-		require
-			buffer_not_void: buffer /= Void
-		do
-			pattern.generate_separate_pattern (c_pattern_id, buffer)
-		end
-
-	generate_only_separate_pattern (buffer: GENERATION_BUFFER) is
-			-- Generate pattern for separate calls in FINALIZED mode
-		require
-			buffer_not_void: buffer /= Void
-		do
-			pattern.generate_separate_pattern (c_pattern_id, buffer)
-		end
-
 feature -- Debug
 
 	trace is

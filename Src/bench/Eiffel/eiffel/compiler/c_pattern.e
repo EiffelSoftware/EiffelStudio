@@ -226,38 +226,6 @@ feature -- Pattern generation
 			generate_toc_compound (id, buffer)
 		end
 
-	generate_separate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
-		local
-			f_name: STRING
-		do
-			f_name := "sepcall";
-			f_name.append_integer (id);
-
-			buffer.generate_function_signature ("void", f_name, False, buffer,
-					<<"ptr">>, <<"fnptr">>);
-
-			buffer.putstring ("%
-				%%TEIF_REFERENCE Current;%N%
-				%%TEIF_INTEGER ack = _concur_command_ack;%N");
-			if not result_type.is_void then
-				buffer.putchar ('%T');
-				result_type.generate (buffer);
-				buffer.putstring ("result;%N");
-			end;
-			generate_argument_declaration (1, buffer);
-			generate_separate_get (buffer);
-			buffer.putchar ('%T')
-			generate_routine_call (buffer);
-			if result_type.is_void then
-				buffer.putstring ("%TCURSPA(_concur_current_client->sock, ack);%N")
-			else
-				buffer.putstring ("%T");
-				buffer.putstring (result_type.separate_send_macro);
-				buffer.putstring ("(result);%N");
-			end;
-			buffer.putstring ("}%N%N"); -- ss MT
-		end;
-
 	generate_toc_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate compound pattern from interpreter to C code
 		local
@@ -370,28 +338,6 @@ feature -- Pattern generation
 				buffer.putstring (";%N");
 				i := i - 1;
 			end;
-		end;
-
-	generate_separate_get (buffer: GENERATION_BUFFER) is
-			-- Generate get instructions for pattern for separate call
-		local
-			i: INTEGER
-		do
-			buffer.putstring ("%TCurrent = CUROBJ;%N");
-			from
-				i := argument_count;
-			until
-				i < 1
-			loop
-				buffer.putstring ("%Targ");
-				buffer.putint (i);
-				buffer.putstring (" = ");
-				buffer.putstring (argument_types.item (i).separate_get_macro);
-				buffer.putchar ('(');
-				buffer.putint (i - 1);
-				buffer.putstring (");%N");
-				i := i - 1;
-			end
 		end;
 
 	generate_routine_call (buffer: GENERATION_BUFFER) is

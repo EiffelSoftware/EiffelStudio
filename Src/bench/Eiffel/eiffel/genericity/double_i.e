@@ -85,12 +85,6 @@ feature
 		
 	union_tag: STRING is "darg"
 
-	separate_get_macro: STRING is "CURGD"
-			-- String generated to access the argument to a separate call
-
-	separate_send_macro: STRING is "CURSQRD"
-			-- String generated to return the result of a separate call
-
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once

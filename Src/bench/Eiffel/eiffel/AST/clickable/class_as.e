@@ -83,8 +83,8 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			suppliers := s
 			obsolete_message := o
 
-				-- Check for Concurrent Eiffel
-			if is_separate and not System.Concurrent_eiffel then
+				-- Check for Concurrent Eiffel which is not yet supported
+			if is_separate then
 				Error_handler.make_separate_syntax_error
 			end
 

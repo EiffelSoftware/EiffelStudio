@@ -415,13 +415,13 @@ feature -- Plug and Makefile file
 			any_cl, string_cl, bit_cl, array_cl, rout_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
 			id: INTEGER
-			to_c_feat, str_make_feat, set_count_feat: FEATURE_I
+			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, exp_init_name,
-			set_count_name, to_c_name: STRING
+			set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			correct_mismatch_name: STRING
 			special_cl: SPECIAL_B
@@ -486,14 +486,6 @@ feature -- Plug and Makefile file
 				set_count_name := Encoder.feature_name (id, set_count_feat.body_index).twin
 				buffer.putstring ("extern void ")
 				buffer.putstring (set_count_name)
-				buffer.putstring ("();%N")
-			end
-
-			if system.has_separate then
-				to_c_feat := string_cl.feature_table.item_id (Names_heap.to_c_name_id)
-				to_c_name := Encoder.feature_name (id, to_c_feat.body_index).twin
-				buffer.putstring ("extern void ")
-				buffer.putstring (to_c_name)
 				buffer.putstring ("();%N")
 			end
 
@@ -566,13 +558,6 @@ feature -- Plug and Makefile file
 					buffer.putstring (dispose_name)
 					buffer.putstring ("[])();%N%N")
 				end
-			end
-
-			if system.has_separate then
-					--Pointer on `to_c' of class STRING
-				buffer.putstring ("void (*eif_strtoc)() = ")
-				buffer.putstring (to_c_name)
-				buffer.putstring (";%N")
 			end
 
 				-- Declaration and definition of the egc_init_plug function.

@@ -251,16 +251,6 @@ feature -- Element change
 			emitted := False
 		end
 
-	put_protected_local_set (i: INTEGER) is
-			-- Write "l[`i']".
-		do
-			emit_tabs
-			current_buffer.append_character ('l')
-			current_buffer.append_character ('[')
-			current_buffer.append_integer (i)
-			current_buffer.append_character (']')
-		end
-
 	put_local_registration (i: INTEGER; loc_name: STRING) is
 			-- Write "RTLR(`i',`loc_name');".
 		require
@@ -313,18 +303,6 @@ feature -- Element change
 			append ("RTLR(")
 			current_buffer.append_integer (i)
 			append (",Result);")
-		end
-
-	reset_local_registration (i: INTEGER) is
-			-- Write "RTLRC(`i');".
-		require
-			i_positive: i >= 0
-		do
-			emit_tabs
-			append ("RTLRC(")
-			current_buffer.append_integer (i)
-			current_buffer.append_character (')')
-			current_buffer.append_character (';')
 		end
 
 	putchar (c: CHARACTER) is

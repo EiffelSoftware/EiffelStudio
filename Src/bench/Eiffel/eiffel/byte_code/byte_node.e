@@ -346,14 +346,6 @@ feature -- Inlining
 			Result_not_void: Result /= Void
 		end
 
-feature -- Concurrent Eiffel
-
-	has_separate_call: BOOLEAN is
-			-- Is there a separate call in this byte node?
-		do
-			Result := False;
-		end
-
 feature -- Generic conformance
 
 	generate_block_open is

@@ -185,7 +185,7 @@ end
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 			-- Generate final portion of C code.
 		local
 			buf: GENERATION_BUFFER
@@ -320,9 +320,6 @@ end
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B
-			para: PARAMETER_B
-			para_type: TYPE_I
-			loc_idx: INTEGER
 			buf: GENERATION_BUFFER
 			l_area: SPECIAL [EXPR_B]
 			i, nb: INTEGER
@@ -335,37 +332,14 @@ end
 					l_area := p.area
 					nb := p.count
 					p := Void
-					if system.has_separate then
-						from
-						until
-							i = nb
-						loop
-							expr := l_area.item (i);	-- Cannot fail
-							para ?= expr
-							buf.putstring (gc_comma)
-							if para /= Void and then para.stored_register.register_name /= Void then
-								loc_idx := context.local_index (para.stored_register.register_name)
-								para_type := real_type(para.attachment_type)
-								if para_type /= Void and then para_type.is_separate then
-									buf.put_protected_local_set (context.ref_var_used + loc_idx)
-								else
-									expr.print_register
-								end
-							else
-								expr.print_register
-							end
-							i := i + 1
-						end
-					else
-						from
-						until
-							i = nb
-						loop
-							buf.putstring (gc_comma)
-							expr := l_area.item (i);	-- Cannot fail
-							expr.print_register
-							i := i + 1
-						end
+					from
+					until
+						i = nb
+					loop
+						buf.putstring (gc_comma)
+						expr := l_area.item (i);	-- Cannot fail
+						expr.print_register
+						i := i + 1
 					end
 				end
 			end
@@ -409,102 +383,6 @@ end
 			-- The expression has at least one call
 
 	allocates_memory: BOOLEAN is True
-
-feature -- Concurrent Eiffel
-
-		-- We put the feature here because we don't want FEATURE_BWS to inherit
-		-- FEATURE_BLS, which will require us to undefine a lot of features.
-	put_parameters_into_array is
-		local
-			expr: PARAMETER_B
-			para_type: TYPE_I
-			i: INTEGER
-			loc_idx: INTEGER
-			buf: GENERATION_BUFFER
-		do
-			if parameters /= Void then
-				buf := buffer
-				from
-					parameters.start
-					i := 0
-				until
-					parameters.after
-				loop
-					expr ?= parameters.item;    -- Cannot fail
-					para_type := real_type(expr.attachment_type)
-					if para_type.is_boolean then
-						buf.putstring ("CURPB(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_long then
-						buf.putstring ("CURPI(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_feature_pointer then
-						buf.putstring ("CURPP(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_char then
-						buf.putstring ("CURPC(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_double then
-						buf.putstring ("CURPD(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_float then
-						buf.putstring ("CURPR(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_reference and not para_type.is_separate then
-						buf.putstring ("CURPO(")
-						expr.print_register
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					elseif para_type.is_separate then
-						buf.putstring ("CURPSO(")
---                    expr.print_register
-						if expr.stored_register.register_name /= Void then
-							loc_idx := context.local_index (expr.stored_register.register_name)
-						else
-							loc_idx := -1
-						end
-						if loc_idx /= -1 then
-							buf.put_protected_local_set (context.ref_var_used + loc_idx)
-						else
-							-- It'll be the case when the value is "Void"
-							expr.print_register
-						end
-						buf.putstring (", ")
-						buf.putint (i)
-						buf.putstring (");")
-						buf.new_line
-					end
-					i := i + 1
-					parameters.forth
-				end
-			end
-		end
 
 feature {NONE} -- Implementation
 

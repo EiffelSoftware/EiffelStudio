@@ -1120,13 +1120,7 @@ end;
 				l_origins.after
 			loop
 				a_feature := resulting_table.item_id (l_origins.item);
-				if sys.has_separate and then a_class.is_used_as_separate then
-					if a_feature.sep_process_pattern and then sys.byte_context.workbench_mode then
-						sys.set_freeze
-					end;
-				else
-					a_feature.process_pattern;
-				end;
+				a_feature.process_pattern;
 				l_origins.forth;
 			end;
 		end;

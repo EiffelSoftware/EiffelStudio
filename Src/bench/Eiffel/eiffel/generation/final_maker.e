@@ -45,9 +45,6 @@ feature
 		do
 			add_in_primary_system_basket (Eref);
 			add_in_primary_system_basket (Esize);
-			if System.has_separate then
-				add_in_primary_system_basket (Epattern);
-			end;
 
 				-- Routine tables.
 			from
@@ -242,18 +239,10 @@ feature
 				Result.append ("$mt_prefix")
 			end
 
-			if System.has_separate then
-				Result.append ("$concurrent_prefix")
-			end
-
 			Result.append ("$eiflib")
 
 			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
-			end
-
-			if System.has_separate then
-				Result.append (Libnet_location)
 			end
 		end;
 

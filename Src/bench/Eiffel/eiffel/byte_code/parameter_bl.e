@@ -76,7 +76,6 @@ feature
 			-- Generate expression
 		local
 			target_type, source_type: TYPE_I;
-			loc_idx: INTEGER;
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -89,28 +88,6 @@ feature
 				expression.generate;
 				if need_metamorphosis then
 					generate_metamorphose;
-				end;
-				if system.has_separate then
-					if real_type(attachment_type).is_separate then
-						if expression.stored_register.register_name /= Void then
-							loc_idx := context.local_index (expression.stored_register.register_name);
-						else
-							loc_idx := -1;
-						end;
-						if loc_idx /= -1 then
-							buf.put_protected_local_set (context.ref_var_used + loc_idx);
-							buf.putstring (" = ");
-							if not real_type(expression.type).is_separate then
-								buf.putstring (" CURLTS(");
-								expression.stored_register.print_register;
-								buf.putstring ("); ");
-							else
-								expression.stored_register.print_register;
-								buf.putstring (";");
-							end;
-							buf.new_line;
-						end;
-					end;
 				end;
 			end;
 		end;

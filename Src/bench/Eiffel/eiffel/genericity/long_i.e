@@ -174,22 +174,6 @@ feature -- Access
 			end
 		end
 
-	separate_get_macro: STRING is
-			-- String generated to access the argument to a separate call
-		do
-			create Result.make (7)
-			Result.append ("CURGI")
-			Result.append_integer (size)
-		end
-
-	separate_send_macro: STRING is
-			-- String generated to return the result of a separate call
-		do
-			create Result.make (9)
-			Result.append ("CURSQRI")
-			Result.append_integer (size)
-		end
-
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do

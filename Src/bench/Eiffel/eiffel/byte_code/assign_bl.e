@@ -434,17 +434,9 @@ feature
 			elseif how = Clone_assignment then
 				print_register
 				buf.putstring (" = ")
-				if context.real_type(target.type).is_separate and
-					not context.real_type(source.type).is_separate then 
-					buf.putstring ("CURLTS(")
-					buf.putstring ("RTCL(")
-					source.print_register
-					buf.putstring ("));/* Really happened ?! */")
-				else
-					buf.putstring ("RTCL(")
-					source.print_register
-					buf.putstring (gc_rparan_semi_c)
-				end
+				buf.putstring ("RTCL(")
+				source.print_register
+				buf.putstring (gc_rparan_semi_c)
 				buf.new_line
 			end
 		end
@@ -476,15 +468,8 @@ feature
 				if register /= Void and not register_for_metamorphosis then
 					print_register
 					buf.putstring (" = ")
-					if context.real_type(target.type).is_separate and
-						not context.real_type(source.type).is_separate then 
-						buf.putstring ("CURLTS(")
-						source.print_register
-						buf.putstring (");/* Really happened ?! */")
-					else
-						source.print_register
-						buf.putchar (';')
-					end
+					source.print_register
+					buf.putchar (';')
 					buf.new_line
 					buf.putstring ("RTAR(")
 					context.Current_register.print_register
@@ -527,12 +512,7 @@ feature
 					if register /= Void and not register_for_metamorphosis then
 						print_register
 					else
-						if context.real_type(target.type).is_separate and
-							not context.real_type(source.type).is_separate then 
-							buf.putstring ("CURLTS(")
-							source_print_register
-							buf.putstring (")")
-						elseif is_bit_assignment then
+						if is_bit_assignment then
 							buf.putstring (gc_comma)
 							target.print_register
 							buf.putchar (')')
@@ -549,14 +529,7 @@ feature
 							target.print_register
 							buf.putchar (')')
 						else
-							if context.real_type(target.type).is_separate and
-								not context.real_type(source.type).is_separate then 
-								buf.putstring ("CURLTS(")
-								source_print_register
-								buf.putstring (")")
-							else
-								source_print_register
-							end
+							source_print_register
 						end
 						buf.putchar (';')
 						buf.new_line

@@ -76,9 +76,6 @@ feature
 					types.after
 				loop
 					Cecil1.generate_final (buffer, types.item.type_id);
-					if System.has_separate then
-						Cecil1.generate_separate_pattern_id_table (buffer, types.item.type_id);
-					end;
 					types.forth
 				end;
 			elseif a_class.is_precompiled then

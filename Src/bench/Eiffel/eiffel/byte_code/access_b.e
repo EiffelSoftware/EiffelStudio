@@ -11,7 +11,7 @@ inherit
 			free_register, print_register,
 			has_gcable_variable, propagate, generate, unanalyze,
 			optimized_byte_node, inlined_byte_code,
-			has_separate_call, generate_il
+			generate_il
 		end
 		
 	SHARED_NAMES_HEAP
@@ -326,21 +326,10 @@ feature -- C generation
 				if register /= Void then
 					register.print_register
 					buf.putstring (" = ")
-					if register.is_separate and then
-						not context.real_type(type).is_separate then
-						buf.putstring ("CURLTS(")
-					end
 				end
 				generate_access
-				if  register /= Void and then register.is_separate and then
-					not context.real_type(type).is_separate then
-					buf.putstring (")")
-				end
 				buf.putchar (';')
 				buf.new_line
-				if System.has_separate then
-					reset_added_gc_hooks
-				end
 			end
 		end
 
@@ -759,20 +748,6 @@ feature -- Inlining
 			-- Redefined for type check
 		do
 			Result := Current
-		end
-
-feature -- concurrent Eiffel
-
-	has_separate_call: BOOLEAN is
-		-- Is there separate feature call in the assertion?
-		do
-			Result := context_type.is_separate
-		end
-	
-feature -- Concurrent Eiffel
-
-	reset_added_gc_hooks is
-		do
 		end
 
 end

@@ -11,6 +11,8 @@ inherit
 
 	PROJECT_CONTEXT;
 	BAR_AND_TEXT
+		rename
+			dispatch_modified_resource as old_dispatch
 		redefine
 			hole, build_format_bar, build_widgets,
 			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
@@ -19,10 +21,27 @@ inherit
 			process_class, process_classi, process_ace_syntax, compatible,
 			set_mode_for_editing, hide, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window, realized
+			set_read_only_text_window, realized,
+			update_boolean_resource,
+			update_integer_resource
+		end;
+	BAR_AND_TEXT
+		redefine
+			hole, build_format_bar, build_widgets,
+			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
+			tool_name, editable, create_edit_buttons,
+			display, stone, stone_type, synchronise_stone, process_system,
+			process_class, process_classi, process_ace_syntax, compatible,
+			set_mode_for_editing, hide, editable_text_window,
+			set_editable_text_window, has_editable_text, read_only_text_window,
+			set_read_only_text_window, realized,
+			update_boolean_resource,
+			dispatch_modified_resource,
+			update_integer_resource
+		select
+			dispatch_modified_resource
 		end;
 	EB_CONSTANTS;
-	RESOURCE_USER
 
 creation
 	make
@@ -33,6 +52,60 @@ feature -- Initialization
 		do
 			System_tool_resources.add_user (Current)
 		end;
+
+feature -- Dispatch Resource
+
+	dispatch_modified_resource (old_res, new_res: RESOURCE) is
+			-- Dispatch the modified resource based on
+			-- the actual type of `old_res'.
+		local
+			old_a, new_a: ARRAY_RESOURCE
+		do
+			old_a ?= old_res
+			if old_a /= Void then
+				new_a ?= new_res;
+				update_array_resource (old_a, new_a)
+			else
+				old_dispatch (old_res, new_res)
+			end
+		end;
+
+	update_array_resource (old_res, new_res: ARRAY_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+		do
+			old_res.update_with (new_res)
+		end;
+
+	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+		local
+			sr: like System_tool_resources
+		do
+			sr := System_tool_resources
+			if old_res = sr.command_bar then
+				if new_res.actual_value then
+					edit_bar.add
+				else
+					edit_bar.remove
+				end
+			elseif old_res = sr.format_bar then
+				if new_res.actual_value then
+					format_bar.add
+				else
+					format_bar.remove
+				end
+			end;
+			old_res.update_with (new_res)
+		end;
+
+	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+		do
+			old_res.update_with (new_res)
+		end
 
 feature -- Properties
 

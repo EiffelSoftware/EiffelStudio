@@ -10,13 +10,31 @@ class EXPLAIN_WIN_MGR
 inherit
 
 	EDITOR_MGR
+		rename
+			make as mgr_make
 		redefine
 			editor_type
-		end
+		end;
+	EDITOR_MGR
+		redefine
+			editor_type, make
+		select
+			make
+		end;
+	EB_CONSTANTS
 
 creation
 
 	make
+
+feature -- Initialization
+
+	make (a_screen: SCREEN; i: INTEGER) is
+		 	-- Initialize Current.
+		do
+			mgr_make (a_screen, i);
+			Explain_tool_resources.add_user (Current)
+		end
 
 feature {NONE} -- Properties
 

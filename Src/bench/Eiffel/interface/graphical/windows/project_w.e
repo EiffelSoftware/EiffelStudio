@@ -79,8 +79,25 @@ feature -- Initialization
 
 feature -- Resource Update
 
-	update_boolean_resource (old_res, new: BOOLEAN_RESOURCE) is
+	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
+		local
+			pr: like Project_resources
 		do
+			pr := Project_resources
+			if old_res = pr.command_bar then
+				if new_res.actual_value then
+					classic_bar.add
+				else
+					classic_bar.remove
+				end
+			elseif old_res = pr.format_bar then
+				if new_res.actual_value then
+					format_bar.add
+				else
+					format_bar.remove
+				end
+			end;
+			old_res.update_with (new_res)
 		end;
 
 	update_integer_resource (old_res, new: INTEGER_RESOURCE) is
@@ -283,9 +300,6 @@ feature -- Pulldown Menus
 			-- Help menu.
 
 feature -- Window Forms
-
-	form_manager: FORM;
-			-- Manager of constraints on sub widgets
 
 	std_form: SPLIT_WINDOW_CHILD;
 			-- Form on which the std protject tool is displayed

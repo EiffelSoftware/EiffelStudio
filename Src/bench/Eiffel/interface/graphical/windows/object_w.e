@@ -19,7 +19,9 @@ inherit
 			build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
 			process_object, hole_button, build_basic_bar,
-			close
+			close,
+			update_boolean_resource,
+			update_integer_resource
 		end;
 	BAR_AND_TEXT
 		rename
@@ -28,12 +30,15 @@ inherit
 			build_format_bar, hole, close_windows,
 			tool_name, build_widgets, attach_all, set_default_format,
 			stone, stone_type, synchronize, process_object, hole_button,
-			build_basic_bar, close, make_shell, reset
+			build_basic_bar, close, make_shell, reset,
+			update_boolean_resource,
+			update_integer_resource
 		select
 			close_windows, make_shell, reset
 		end;
 	SHARED_APPLICATION_EXECUTION;
-	WARNING_MESSAGES
+	WARNING_MESSAGES;
+	EB_CONSTANTS
 
 creation
 
@@ -55,6 +60,53 @@ feature {NONE} -- Initialization
 			show_menus := False;
 			make_form (a_form)
 		end;
+
+feature -- Resource Update
+
+	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+		local
+			otr: like Object_tool_resources
+		do
+			otr := Object_tool_resources
+			if old_res = otr.command_bar then
+				if new_res.actual_value then
+					edit_bar.add
+				else
+					edit_bar.remove
+				end
+			elseif old_res = otr.format_bar then
+				if new_res.actual_value then
+					format_bar.add
+				else
+					format_bar.remove
+				end
+			end;
+			old_res.update_with (new_res)
+		end;
+
+	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+			-- Also update the interface.
+		local
+			otr: like Object_tool_resources
+		do
+			otr := Object_tool_resources;
+			if new_res.actual_value > 0 then
+				if old_res = otr.tool_height then
+					if old_res.actual_value /= new_res.actual_value then
+						set_height (new_res.actual_value)
+					end
+				elseif old_res = otr.tool_width then
+					if old_res.actual_value /= new_res.actual_value then
+						set_width (new_res.actual_value)
+					end
+				end;
+				old_res.update_with (new_res)
+			end
+		end
 
 feature -- Window Properties
 
@@ -367,6 +419,14 @@ feature {NONE} -- Implementation; Graphical Interface
 				fill_menus
 			end
 			set_last_format (default_format);
+
+			if Object_tool_resources.command_bar.actual_value = False then
+				edit_bar.remove
+			end;
+			if Object_tool_resources.format_bar.actual_value = False then
+				format_bar.remove
+			end;
+
 			attach_all
 		end;
 

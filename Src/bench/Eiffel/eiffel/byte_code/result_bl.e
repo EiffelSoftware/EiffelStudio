@@ -1,32 +1,19 @@
 -- Enlarged access to Result
 
-class RESULT_BL 
+class
+	RESULT_BL 
 
 inherit
-
-	RESULT_B
-		rename
-			print_register_by_name as print_register_name
-		redefine
-			used, generate, parent, set_parent,
-			free_register, print_register, propagate,
-			type
-		end;
 	RESULT_B
 		redefine
 			used, generate, parent, set_parent,
 			free_register, print_register, propagate,
-			type,
-			print_register_by_name
-		select
-			print_register_by_name
+			type, print_register_by_name
 		end;
 
 creation
-
 	make
 
-	
 feature 
 
 	parent: NESTED_BL;
@@ -78,7 +65,7 @@ feature
 			if context.result_used then
 					-- Once function have their result recorded into the GC,
 					-- so it's useless to use an l[] variable.
-				if c_type.is_pointer and not context.byte_code.is_once then
+				if c_type.is_pointer then
 					print_register_by_name;
 				else
 					generated_file.putstring (register_name);
@@ -96,10 +83,10 @@ feature
 			-- The reason is that once function record their Result variable
 			-- into the GC, so there is no need to use an l[] function.
 		do
-			if context.byte_code.is_once then
-				generated_file.putstring (register_name);
+			if not context.byte_code.is_once then
+				{RESULT_B} Precursor;
 			else
-				print_register_name;
+				generated_file.putstring (register_name);
 			end;
 		end;
 

@@ -299,8 +299,10 @@ feature
 		do
 			if is_special or has_signature then
 				!!Result.make (cl_type, Current);
+			elseif has_include_list then
+				!EXT_INCL_EXEC_UNIT! Result.make (cl_type, Current)
 			else
-				!EXT_EXECUTION_UNIT!Result.make (cl_type, Current);
+				!EXT_EXECUTION_UNIT! Result.make (cl_type, Current)
 			end;
 		end; 
 

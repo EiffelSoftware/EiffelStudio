@@ -150,17 +150,10 @@ end;
 			-- server file. (It might have changed 
 			-- between compilations)
 		local
-			fname: FILE_NAME;
+			fname: FILE_NAME
 			temp: STRING
 		do
-			if precompiled then
-				temp := Precompilation_path
-			elseif is_static then
-				temp := Extendible_path
-			else
-				temp := Compilation_path
-			end;
-			!!fname.make_from_string (temp);
+			!!fname.make_from_string (id.directory_path);
 			!!temp.make (5);
 			temp.extend ('S');
 			temp.append_integer (id.packet_number);

@@ -1729,6 +1729,7 @@ private void dump_trace_stack()
 	 */
 	eif_trace.st_bot = eif_trace.st_hd->sk_arena;	/* Very first item */
 	eif_trace.st_cur = eif_trace.st_hd;				/* Is now where bottom is */
+	eif_trace.st_end = eif_trace.st_cur->sk_end;
 
 	/* Print header of history table */
 	print_err_msg(stderr, "%s\n", failed);
@@ -2195,19 +2196,22 @@ shared struct ex_vect *exnext()
 	if (eif_trace.st_bot == eif_trace.st_top)
 		return (struct ex_vect *) 0;		/* Reached the end of the stack */
 
-	first_item = eif_trace.st_bot++;		/* Make a guess */
-	if (first_item > eif_trace.st_end) {	/* Bad guess */
-		eif_trace.st_cur =
-			eif_trace.st_cur->sk_next;
-		if (eif_trace.st_cur == (struct stxchunk *) 0)
-			return (struct ex_vect *) 0;
+	first_item = eif_trace.st_bot++;
+
+	if  (eif_trace.st_bot == eif_trace.st_top)
+			/* We don't need to check if we reached the end of the chunk */
+			/* because the end of the stack is forseen */
+		return first_item;
+
+	if (eif_trace.st_bot >= eif_trace.st_cur->sk_end) {	
+			/* We reached the end of the current chunk. Set the bottom */
+			/* pointer to the beginning of the next chunk for the next */
+			/* call. (This next chunk exists because we didn't reach */
+			/* the top of the stack yet.) */
+		eif_trace.st_cur = eif_trace.st_cur->sk_next;
 		eif_trace.st_end = eif_trace.st_cur->sk_end;
 		eif_trace.st_bot = eif_trace.st_cur->sk_arena;
-		first_item = eif_trace.st_bot;
 	}
-	
-	if (first_item == eif_trace.st_top)
-		return (struct ex_vect *) 0;		/* Reached the end of the stack */
 	
 	return first_item;
 }
@@ -2222,17 +2226,6 @@ private int exend()
 	/* If we already reached the end of the stack, return immediately */
 	if (eif_trace.st_bot == eif_trace.st_top)
 		return 1;		/* Reached the end of the stack */
-
-	item = eif_trace.st_bot + 1;		/* Make a guess */
-	if (item > eif_trace.st_end) {		/* Bad guess */
-		next = eif_trace.st_cur->sk_next;
-		if (next == (struct stxchunk *) 0)
-			return 1;
-		item = next->sk_arena;
-	}
-	
-	if (item == eif_trace.st_top)
-		return 1;
 
 	return 0;
 }

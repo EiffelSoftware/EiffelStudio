@@ -342,17 +342,7 @@ feature -- Implementation
 			else
 				C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), NULL)
 			end
-
-			--a_mouse_window := C.gdk_window_at_pointer ($a_mouse_x, $a_mouse_y)
-			--if pointer_over_widget (a_mouse_window, a_mouse_x, a_mouse_y) then
-			--	target := interface
-			--	print ("Pointer over source%N")
-			--end
-
-			--if not able_to_transport (a_button) and target /= Void then
-			--	print ("PND Cancelled on widget%N")
-			--end
-
+			
 			check
 				motion_notify_not_connected: motion_notify_connection_id = 0
 				enter_notify_not_connected: enter_notify_connection_id = 0

@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"Eiffel Vision Frame. Implementation interface."
+		"Eiffel Vision frame. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,26 @@ inherit
 	EV_TEXTABLE_I
 		redefine
 			interface
+		end
+
+	EV_FRAME_CONSTANTS
+
+feature -- Access
+
+	style: INTEGER is
+			-- Visual appearance. See: EV_FRAME_CONSTANTS.
+		deferred
+		end
+
+feature -- Element change
+
+	set_style (a_style: INTEGER) is
+			-- Assign `a_style' to `style'.
+		require
+			a_style_valid: valid_frame_border (a_style)
+		deferred
+		ensure
+			style_assigned: style = a_style
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -48,6 +68,9 @@ end -- class EV_FRAME_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/27 17:11:57  brendel
+--| Added `style' and `set_style'.
+--|
 --| Revision 1.5  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

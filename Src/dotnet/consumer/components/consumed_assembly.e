@@ -23,13 +23,13 @@ feature {NONE} -- Initialization
 			-- Set `culture' with `c'.
 			-- Set `key' with `k'.
 		require
-			non_void_name: name /= Void
-			valid_name: not name.is_empty
+			non_void_name: n /= Void
+			valid_name: not n.is_empty
 			non_void_version: v /= Void
 			valid_version: not v.is_empty
-			non_void_culture: culture /= Void
-			valid_culture: not culture.is_empty
-			valid_key: key /= Void implies not key.is_empty
+			non_void_culture: c /= Void
+			valid_culture: not c.is_empty
+			valid_key: k /= Void implies not k.is_empty
 		do
 			name := n
 			version := v

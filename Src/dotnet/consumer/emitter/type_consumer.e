@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 						-- Conversion to integer is required to get associated value of `info',
 						-- Otherwise we simply get an object where calling `ToString' on it
 						-- will print out field name.
-					l_value := feature {CONVERT}.to_int64_object (info.get_value (Void))
+					l_value := feature {CONVERT}.to_int_64_object (info.get_value (Void))
 				else
 					l_value := info.get_value (Void)
 				end
@@ -356,12 +356,12 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
 			l_processed: HASHTABLE
 		do
-			create l_processed.make_1 (10)
+			create l_processed.make_from_capacity (10)
 			internal_members := internal_update_interface_members (t, l_processed)
 
 			create l_members.make (internal_members.count + Object_members.count)
-			feature {SYSTEM_ARRAY}.copy_ (internal_members, l_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy__array_int32 (Object_members, 0, l_members,
+			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer_32 (Object_members, 0, l_members,
 				internal_members.count, Object_members.count)
 			internal_members := l_members
 		end
@@ -390,8 +390,8 @@ feature {NONE} -- Added features of System.Object to Interfaces
 				if not processed.Contains (l_interface) then
 					l_members := internal_update_interface_members (l_interface, processed)
 					create l_merged_members.make (Result.count + l_members.count)
-					feature {SYSTEM_ARRAY}.copy_ (Result, l_merged_members, Result.count)
-					feature {SYSTEM_ARRAY}.copy__array_int32 (l_members, 0, l_merged_members,
+					feature {SYSTEM_ARRAY}.copy (Result, l_merged_members, Result.count)
+					feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_members, 0, l_merged_members,
 						Result.count, l_members.count)
 					Result := l_merged_members
 				end
@@ -495,18 +495,18 @@ feature {NONE} -- Added features for ENUM types.
 			r: REAL
 			a: NATIVE_ARRAY [INTEGER_8]
 		do
-			if val.get_type.equals (Double_type) then
+			if val.get_type.equals_type (Double_type) then
 				d ?= val
 				check
 					is_double: d /= Void
 				end
 				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
-			elseif val.get_type.equals (Real_type) then
+			elseif val.get_type.equals_type (Real_type) then
 				r ?= val
 				check
 					is_real: r /= Void
 				end
-				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_single (r))
+				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
 			else
 				create Result.make_from_cil (val.to_string)
 			end

@@ -54,7 +54,7 @@ feature -- Status Report
 				internal_is_infix := internal_method.get_name.get_length > 3 and then
 						internal_method.get_is_special_name and then
 						internal_method.get_name.starts_with (Operator_name_prefix.to_cil) and then
-						internal_method.get_parameters.item (0).get_parameter_type.equals (internal_method.get_reflected_type)
+						internal_method.get_parameters.item (0).get_parameter_type.equals_type (internal_method.get_reflected_type)
 				internal_is_infix_set := True
 			end
 			Result := internal_is_infix
@@ -79,7 +79,7 @@ feature -- Status Report
 			-- Is method a function?
 		do
 			if not internal_is_function_set then
-				internal_is_function := not internal_method.get_return_type.equals (Void_type)
+				internal_is_function := not internal_method.get_return_type.equals_type (Void_type)
 				internal_is_function_set := True
 			end
 			Result := internal_is_function

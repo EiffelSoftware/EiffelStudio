@@ -46,7 +46,7 @@ feature -- Basic Operations
 			last_error := No_error
 			last_error_context := Void
 			if not retried then
-				create f.make_stream_writer_3 (path.to_cil)
+				create f.make_from_path (path.to_cil)
 				f.write_string (Xml_header)
 				internal_serialize (Root_reference, a, 0, f)
 				f.close
@@ -195,11 +195,11 @@ feature {NONE} -- Implementation
 			f.write_string (Quote_space)
 			f.write_string (Array_lower_bound_xml_attribute)
 			f.write_string (Equal_quote)
-			f.write_int32 (ar.lower)
+			f.write_integer_32 (ar.lower)
 			f.write_string (Quote_space)
 			f.write_string (Array_count_xml_attribute)
 			f.write_string (Equal_quote)
-			f.write_int32 (ar.count)
+			f.write_integer_32 (ar.count)
 			f.write_string (Quote_space)
 			f.write_string (Type_xml_attribute)
 			f.write_string (Equal_quote)

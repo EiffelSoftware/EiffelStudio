@@ -1173,7 +1173,7 @@ feature -- Generation (Linking rules)
 
 			from i := 1 until i > partial_system_objects loop
 				make_file.putstring (System_object_prefix)
-				make_file.putint (i)
+				make_file.putint (1)
 				make_file.putchar ('/')
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")

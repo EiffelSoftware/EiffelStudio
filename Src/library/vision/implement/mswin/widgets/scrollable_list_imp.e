@@ -963,11 +963,13 @@ feature {NONE} -- Implementation
 			if multiple_selection then
 				Result := Ws_visible + Ws_child + Ws_group +
 					Ws_tabstop + Ws_border + Ws_vscroll +
-					Lbs_notify + Lbs_multiplesel + Ws_hscroll
+					Lbs_notify + Lbs_multiplesel +
+					Lbs_nointegralheight + Ws_hscroll
 			else
 				Result := Ws_visible + Ws_child + Ws_group +
 					Ws_tabstop + Ws_border + Ws_vscroll +
-					Lbs_notify + Ws_hscroll
+					Lbs_notify + Ws_hscroll +
+					Lbs_nointegralheight
 			end
 		end
 

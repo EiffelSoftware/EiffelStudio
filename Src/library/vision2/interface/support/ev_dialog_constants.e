@@ -7,9 +7,6 @@ indexing
 class
 	EV_DIALOG_CONSTANTS
 	
-create
-	default_create
-	
 feature -- Button Texts
 
 	ev_ok: STRING is
@@ -18,6 +15,24 @@ feature -- Button Texts
 			Result := "OK"
 		end
 		
+	ev_open: STRING is
+			-- Text displayed on "open" buttons.
+		do
+			Result := "Open"
+		end
+		
+	ev_save: STRING is
+			-- Text displayed on "save" buttons.
+		do
+			Result := "Save"
+		end
+
+	ev_print: STRING is
+			-- Text displayed on "print" buttons.
+		do
+			Result := "Print"
+		end
+
 	ev_cancel: STRING is
 			-- Text displayed on "cancel" buttons.
 		do

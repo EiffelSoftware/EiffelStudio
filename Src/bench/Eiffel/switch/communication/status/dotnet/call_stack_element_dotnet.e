@@ -80,6 +80,10 @@ feature -- Filling
 			break_index := a_line_number
 
 			object_address := a_address
+			display_object_address := object_address
+			if display_object_address.is_equal ("0x00000000") then
+				display_object_address := "Unavailable"
+			end
 
 			is_melted := melted
 			routine_name := a_feature.feature_name
@@ -99,19 +103,10 @@ feature -- Properties
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 
-	result_value: ABSTRACT_DEBUG_VALUE is
-			-- Result value of routine
-		do
-			if not callstack_initialized then
-				initialize_stack
-			end
-			Result := private_result
-		end
-
 	current_object: ABSTRACT_DEBUG_VALUE is
 			-- Current object value
 		do
-			if not callstack_initialized then
+			if not initialized then
 				initialize_stack
 			end
 			Result := private_current_object
@@ -128,24 +123,6 @@ feature -- Properties
 			end
 			Result := private_current_exception
 		end		
-
-	locals: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Value of local variables
-		do
-			if not callstack_initialized then
-				initialize_stack
-			end
-			Result := private_locals
-		end
-
-	arguments: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Value of arguments
-		do
-			if not callstack_initialized then
-				initialize_stack
-			end
-			Result := private_arguments
-		end
 
 	object_address: STRING
 			-- Hector address of associated object 
@@ -194,25 +171,6 @@ feature -- Dotnet Properties
 			Result := private_dotnet_module_filename
 		end		
 
-feature -- Output
-
-	display_arguments (st: STRUCTURED_TEXT) is
-			-- Display the arguments passed to the routine
-			-- associated with Current call.
-		do
-		end
-
-	display_locals (st: STRUCTURED_TEXT) is
-			-- Display the local entities and result (if it exists) of 
-			-- the routine associated with Current call.
-		do
-		end
-
-	display_feature (st: STRUCTURED_TEXT) is
-			-- Display information about associated routine.
-		do
-		end
-
 feature {NONE} -- Implementation Dotnet Properties
 
 	dotnet_initialized: BOOLEAN
@@ -228,8 +186,6 @@ feature {NONE} -- Implementation Dotnet Properties
 
 feature {NONE} -- Implementation Properties
 
-	callstack_initialized: BOOLEAN
-			-- Is the stack initialized
 
 	private_current_object: ABSTRACT_DEBUG_VALUE
 			-- Current object value
@@ -237,21 +193,13 @@ feature {NONE} -- Implementation Properties
 	private_current_exception: ABSTRACT_DEBUG_VALUE
 			-- Current Exception value
 
-	private_locals: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
-			-- Associated locals
-
-	private_arguments: FIXED_LIST [ABSTRACT_DEBUG_VALUE]
-			-- Associated arguments
-
-	private_result: like result_value
-			-- Associated result
+	display_object_address:like object_address
 
 feature {NONE} -- Implementation
 
 	initialize_dotnet_info is
 			-- 
 		local
---			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
 			l_function: ICOR_DEBUG_FUNCTION
 		do			
 			l_function := icd_il_frame.get_function
@@ -271,10 +219,7 @@ feature {NONE} -- Implementation
 			dotnet_initialized
 		end
 		
-
 	initialize_stack is
-		require
-			not_initialized: not callstack_initialized
 		local
 			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list			: ARRAYED_LIST [INTEGER]
@@ -306,6 +251,7 @@ feature {NONE} -- Implementation
 				private_current_object.set_name ("Current")
 
 				object_address := private_current_object.address
+				display_object_address := object_address
 
 				Application.imp_dotnet.keep_object (private_current_object)
 				l_list.remove
@@ -427,14 +373,12 @@ feature {NONE} -- Implementation
 				--| Associate to private list |--
 			private_arguments := args_list
 			private_locals := locals_list
-			callstack_initialized := True
+			initialized := True
 			
 			debug ("DEBUGGER_TRACE_CALLSTACK"); 
 				io.put_string ("  @-> Finished initializating stack: "+routine_name+"%N"); 
 				io.put_string ("%N-------------------------------------------------%N"); 
 			end
-		ensure
-			initialized: callstack_initialized
 		end
 
 	internal_arg_list: LIST [ABSTRACT_DEBUG_VALUE]  is

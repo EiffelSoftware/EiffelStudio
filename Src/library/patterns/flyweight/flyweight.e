@@ -9,7 +9,7 @@ indexing
 class
 	FLYWEIGHT[G,H]
 
-feature -- Initialization
+feature {FLYWEIGHT_FACTORY} -- Initialization
 
 	initialize(unsh: like unshared;sh: like shared) is
 			-- Initialize Current

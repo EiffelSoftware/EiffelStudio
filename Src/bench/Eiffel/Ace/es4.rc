@@ -110,33 +110,40 @@ BEGIN
     LTEXT           "100 %",Txt_percentage,209,41,21,10
 END
 
-IDD_PROMPT DIALOG DISCARDABLE  0, 0, 350, 156
+IDD_PROMPT DIALOG DISCARDABLE  0, 0, 382, 156
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "ISE EiffelBench Free Trial Edition"
+CAPTION "ISE EiffelBench Trial Edition"
 FONT 8, "MS Sans Serif"
 BEGIN
+    LTEXT           "ISE offers a variety of personal and professional licenses and support/maintenance contracts covering the diverse needs of users, commercial and academic.",
+                    IDC_STATIC,231,55,144,41
     DEFPUSHBUTTON   "OK",IDOK,149,137,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,263,137,50,14
-    PUSHBUTTON      "Register...",IDC_REGISTER,36,137,50,14
-    CONTROL         202,IDC_STATIC,"Static",SS_BITMAP,7,7,222,127
-    LTEXT           "Welcome to the Free Trial Edition of ISE EiffelBench.\n\nTo unlock your copy click Register.\n\nThis version is fully functional. but when you launch it you will be reminded that you are required to pay for it if you continue to make use of it.",
-                    IDC_STATIC,242,7,98,93
-    LTEXT           "http://eiffel.com",IDC_STATIC,242,111,92,8
+    PUSHBUTTON      "Purchase",IDC_REGISTER,36,137,50,14
+    CONTROL         202,IDC_STATIC,"Static",SS_BITMAP,4,5,222,127
+    LTEXT           "Thank you for using EiffelDemo, the demo version of ISE Eiffel from Interactive Software Engineering (ISE). This version is reserved for evaluation of Eiffel; any other use, commercial or academic, requires a license.",
+                    IDC_STATIC,231,5,144,42
+    LTEXT           "Please press ""Purchase"" below to order or for links to information about available versions.",
+                    IDC_STATIC,231,105,144,18
 END
 
-IDD_REGISTER DIALOG DISCARDABLE  0, 0, 197, 104
+IDD_REGISTER DIALOG DISCARDABLE  0, 0, 178, 151
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Registration"
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        IDC_USER,67,35,100,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_KEY,67,54,100,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,35,81,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,112,81,50,14
-    RTEXT           "Username:",IDC_STATIC,28,37,36,8
-    RTEXT           "Key:",IDC_STATIC,39,56,25,8
-    LTEXT           "Please contact ISE at register@eiffel.com or by phone (805)685-1006 to get your key.",
-                    IDC_STATIC,14,7,169,24
+    EDITTEXT        IDC_USER,59,88,100,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_KEY,59,107,100,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,25,131,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,102,131,50,14
+    RTEXT           "Username:",IDC_STATIC,20,90,36,8
+    RTEXT           "Key:",IDC_STATIC,31,109,25,8
+    LTEXT           "To get your ""Username"" and ""Key"", please contact\nISE at:",
+                    IDC_STATIC,9,8,154,19
+    LTEXT           "Interactive Software Engineering\nISE Building, 270 Storke Road, second floor\nGoleta CA 93117 USA",
+                    IDC_STATIC,21,32,142,24
+    LTEXT           "Telephone 805-685-1006, Fax 805-685-6869\nE-mail sales@eiffel.com\nhttp://eiffel.com",
+                    IDC_STATIC,21,56,142,27
 END
 
 

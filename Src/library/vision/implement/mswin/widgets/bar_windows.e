@@ -128,7 +128,7 @@ feature -- Access
 		require
 			realized: realized
 		do
-			cwin_delete_menu (wel_item, index_of (w) - unmanaged_count (w), Mf_byposition)
+			delete_position (index_of (w) - unmanaged_count (w))
 		end
 
 feature -- Measurement

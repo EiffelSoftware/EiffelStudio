@@ -4,7 +4,7 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code
+			enlarged, make_byte_code
 		end
 
 feature 
@@ -32,10 +32,16 @@ feature
 			ba.append_bit (value)
 		end;
 
+	enlarged: BIT_CONST_BL is
+			-- Enlarged node
+		do
+			!!Result;
+			Result.set_value (value)
+		end;
+
 	used (r: REGISTRABLE): BOOLEAN is
             -- Is register `r' used in local or forthcomming dot calls ?
         do
-			-- FIXME
         end;
 
 end

@@ -35,11 +35,6 @@ inherit
 			{NONE} all
 		end
 	
-	GB_XML_UTILITIES
-		export
-			{NONE} all
-		end
-	
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all

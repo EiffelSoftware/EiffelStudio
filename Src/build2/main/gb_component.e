@@ -24,11 +24,6 @@ inherit
 			{NONE} all
 		end
 	
-	GB_XML_UTILITIES
-		export
-			{NONE} all
-		end
-	
 	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all

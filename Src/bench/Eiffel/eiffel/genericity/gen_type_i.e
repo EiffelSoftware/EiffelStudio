@@ -8,6 +8,8 @@ class
 
 inherit
 	CL_TYPE_I
+		rename
+			make as old_make
 		redefine
 			meta_generic,
 			true_generics,
@@ -26,41 +28,62 @@ inherit
 			generate_cid_array,
 			generate_cid_init,
 			generate_gen_type_il,
-			name
+			name, dump
 		end
 
 create
 	make
-	
+
+feature {NONE} -- Initialization
+
+	make (an_id: like class_id; a_mgen: like meta_generic; a_tgen: like true_generics) is
+			-- New instance of a type based on a class of id `an_id'
+			-- and with `a_tgen' as generic paramters.
+		require
+			an_id_positive: an_id > 0
+			a_mgen_not_void: a_mgen /= Void
+			a_tgen_not_void: a_tgen /= Void
+		do
+			old_make (an_id)
+			meta_generic := a_mgen
+			true_generics := a_tgen
+		ensure
+			class_id_set: class_id = an_id
+			meta_generic_set: meta_generic = a_mgen
+			true_generics_set: true_generics = a_tgen
+		end
+
 feature -- Access
 
 	meta_generic: META_GENERIC
 			-- Meta generic description of the type class
 
-	set_meta_generic (m: META_GENERIC) is
-			-- Assign `m' to `meta_generic'.
-		do
-			if m = Void then
-				-- TUPLE without generic parameters
-				create meta_generic.make (0)
-			else
-				meta_generic := m
-			end
-		end
-
 	true_generics : ARRAY [TYPE_I]
 			-- True generic types.
 
+feature {GEN_TYPE_I} -- Settings
+
+	set_meta_generic (m: META_GENERIC) is
+			-- Assign `m' to `meta_generic'.
+		require
+			m_not_void: m /= Void
+		do
+			meta_generic := m
+		ensure
+			meta_generic_set: meta_generic = m
+		end
+
 	set_true_generics (tgen: ARRAY [TYPE_I]) is
 			-- Assign `tgen' to `true_generics'.
+		require
+			tgen_not_void: tgen /= Void
 		do
-			if tgen = Void then
-				-- TUPLE without generic parameters
-				create true_generics.make (1,0)
-			else
-				true_generics := tgen
-			end
+			true_generics := tgen
+		ensure
+			true_generics_set: true_generics = tgen
 		end
+
+feature -- Status Report
 
 	is_valid: BOOLEAN is
 			-- Are all the base classes still in the system ?
@@ -79,11 +102,10 @@ feature -- Access
 			Result.set_true_generics (true_generics.twin)
 		end
 
-	instantiation_in (other: GEN_TYPE_I): like Current is
+	instantiation_in (other: CLASS_TYPE): like Current is
 			-- Instantiation of Current in context of `other'
 		local
-			i		: INTEGER
-			count	: INTEGER
+			i, count: INTEGER
 			l_meta, meta_gen: like meta_generic
 			l_true, true_gen: like true_generics
 		do
@@ -192,6 +214,35 @@ feature -- Access
 			end
 		end
 
+	dump (buffer: GENERATION_BUFFER) is
+			-- String that should be displayed in debugger to represent `Current'.
+		local
+			i, nb: INTEGER
+			l_meta: like meta_generic
+		do
+			buffer.put_string (base_name)
+			from
+				i := 1
+				l_meta := meta_generic
+				nb := l_meta.count
+				if nb > 0 then
+					buffer.put_string (" [")
+				end
+			until
+				i > nb
+			loop
+				l_meta.item (i).dump (buffer)
+				if i < nb then
+					buffer.put_character (',')
+					buffer.put_character (' ')
+				end
+				i := i + 1
+			end
+			if nb > 0 then
+				buffer.put_character (']')
+			end
+		end
+
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class
 		local
@@ -258,11 +309,25 @@ feature -- Access
 			loop
 				l_type := l_meta.item (i)
 				if l_type.is_reference then
-					meta_gen.put (l_type, i)
-					true_gen.put (create {FORMAL_I}.make (True, False, i), i)
+					meta_gen.put (reference_c_type, i)
 				else
 					meta_gen.put (l_type.generic_derivation, i)
-					true_gen.put (true_gen.item (i).generic_derivation, i)
+				end
+				
+				l_type := l_true.item (i)
+				if l_type.is_reference then
+					true_gen.put (create {FORMAL_I}.make (True, False, i), i)
+				else
+						-- We have an expanded type
+					if l_type.is_true_expanded then
+						true_gen.put (create {FORMAL_I}.make (True, False, i), i)
+					else
+							-- We have a basic type, as an optimization, we
+							-- store the basic type data, rather than a formal
+							-- generic paramter to save some time at run-time
+							-- when computing the dynamic type.
+						true_gen.put (l_type.generic_derivation, i)
+					end
 				end
 				i := i + 1
 			end
@@ -492,5 +557,9 @@ feature -- Comparison
 						and then meta_generic.same_as (gen_type_i.meta_generic)
 			end
 		end
+
+invariant
+	meta_generic_not_void: meta_generic /= Void
+	true_generics_not_void: true_generics /= Void
 
 end -- class GEN_TYPE_I

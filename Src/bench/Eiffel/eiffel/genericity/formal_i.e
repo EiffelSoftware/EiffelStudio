@@ -84,22 +84,16 @@ feature -- Status report
 	has_true_formal, has_formal: BOOLEAN is True
 			-- Has the type formal in its structure ?
 
-	instantiation_in (other: GEN_TYPE_I): TYPE_I is
+	instantiation_in (other: CLASS_TYPE): TYPE_I is
 			-- Instantiation of Current in context of `other'
 		do
-			Result := other.meta_generic.item (position)
+			Result := other.type.meta_generic.item (position)
 		end
 
-	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+	complete_instantiation_in (other: CLASS_TYPE): TYPE_I is
 			-- Instantiation of Current in context of `other'.
 		do
-				-- Keep formal generic parameters iff the
-				-- actual is not an expanded type.
-			Result := other.true_generics.item (position)
-
-			if not Result.is_expanded then
-				Result := Current
-			end
+			Result := other.type.true_generics.item (position)
 		end
 
 	name: STRING is

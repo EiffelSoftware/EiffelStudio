@@ -66,28 +66,27 @@ feature -- Access
 		ensure
 			valid_result: Result > 0
 		end
-		
-feature -- Status report
 
-	instantiation_in (other: GEN_TYPE_I): TYPE_I is
-			-- Instantiation of Current in context of `other'
+	instantiation_in (other: CLASS_TYPE): TYPE_I is
+			-- Instantiation of Current in context of `other' generic derivation.
 		require
-			good_argument: other /= Void
+			other_not_void: other /= Void
+			other_is_generic: other.is_generic
 		do
 			Result := Current
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
-			-- Instantiation of Current in context of `other'
-			-- Actual generics of reference type are kept.
+
+	complete_instantiation_in (other: CLASS_TYPE): TYPE_I is
+			-- Instantiation of Current in context of `other'. Used
+			-- by `GEN_TYPE_I' to properly instantiate formal generic
+			-- parameters of Current in `other'.
 		require
-			good_argument: other /= Void
+			other_not_void: other /= Void
+			other_is_generic: other.is_generic
 		do
 			Result := instantiation_in (other)
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 	generic_derivation: TYPE_I is
@@ -142,6 +141,8 @@ feature -- Status report
 			name_not_void: Result /= Void
 		end
 		
+feature -- Status report
+
 	is_valid: BOOLEAN is
 			-- Is the associated class still in the system ?
 		do

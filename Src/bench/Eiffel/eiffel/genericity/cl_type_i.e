@@ -109,22 +109,11 @@ feature -- Access
 
 	name: STRING is
 			-- String that should be displayed in debugger to represent `Current'.
-		local
-			l_base_class: like base_class
 		do
-			create Result.make (32)
-			l_base_class := base_class
-			if is_expanded and not l_base_class.is_expanded then
-				Result.append ("expanded ")
-			elseif not is_expanded and l_base_class.is_expanded then
-				Result.append ("reference ")
-			elseif is_separate then
-				Result.append ("separate ")
-			end
-			Result.append (l_base_class.name_in_upper)
+			Result := base_name
 		end
-
-	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
+		
+	instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
 			-- Instantation of Current in `other'
 		do
 			Result := Current
@@ -508,6 +497,23 @@ feature -- Generic conformance for IL
 		end
 
 feature {NONE} -- Implementation
+
+	base_name: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		local
+			l_base_class: like base_class
+		do
+			create Result.make (32)
+			l_base_class := base_class
+			if is_expanded and not l_base_class.is_expanded then
+				Result.append ("expanded ")
+			elseif not is_expanded and l_base_class.is_expanded then
+				Result.append ("reference ")
+			elseif is_separate then
+				Result.append ("separate ")
+			end
+			Result.append (l_base_class.name)
+		end
 
 	frozen internal_il_type_name (a_base_name, a_prefix: STRING): STRING is
 			-- Full type name of `a_base_name' using `a_prefix' in IL code generation

@@ -7,6 +7,8 @@ class TYPED_POINTER_I
 
 inherit
 	BASIC_I
+		rename
+			make as old_make
 		undefine
 			is_equal, generate_cid, il_type_name, generate_cid_array,
 			generate_cid_init, is_explicit,
@@ -22,7 +24,7 @@ inherit
 		
 	GEN_TYPE_I
 		undefine
-			is_basic, is_reference, cecil_value, is_void, c_type, is_valid, generate_cecil_value
+			is_basic, is_reference, cecil_value, is_void, c_type, is_valid, generate_cecil_value, dump
 		redefine
 			is_feature_pointer, type_a, description, sk_value,
 			element_type, tuple_code,
@@ -39,7 +41,7 @@ feature {NONE} -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 		do
-			make (id)
+			old_make (id)
 			create meta_generic.make (1)
 			create true_generics.make (1, 1)
 			meta_generic.put (a_type.meta_type, 1)

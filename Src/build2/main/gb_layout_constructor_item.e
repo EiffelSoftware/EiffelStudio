@@ -28,17 +28,14 @@ inherit
 		end
 		
 	GB_ACCESSIBLE_OBJECT_HANDLER
-		export
-			{NONE} copy
-			{ANY} is_equal
 		undefine
-			default_create, copy, is_equal
+			copy, default_create, is_equal
 		end
 		
 	GB_ACCESSIBLE_OBJECT_EDITOR
-		undefine
-			default_create, copy, is_equal
-		end
+	--	undefine
+	--		default_create, copy, is_equal
+	--	end
 		
 	GB_CONSTANTS
 		

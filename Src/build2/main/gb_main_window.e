@@ -27,9 +27,6 @@ inherit
 		end
 		
 	GB_ACCESSIBLE_OBJECT_EDITOR
-		undefine
-			default_create, copy, is_equal
-		end
 		
 	GB_DEFAULT_STATE
 	

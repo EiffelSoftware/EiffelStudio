@@ -114,7 +114,7 @@ feature -- Basic operation
 			if not file.exists then
 				str := "Could not open file : "
 				str.append (path)
-				create warning.make_default (demo_page, "File not found", str)
+			--	create warning.make_default (demo_page, "File not found", str)
 			else
 				file.open_read
 				file.start
@@ -135,7 +135,7 @@ feature -- Basic operation
 			if not file.exists then
 				str := "Could not open file : "
 				str.append (path)
-				create warning.make_default (demo_page, "File not found", str)
+	--			create warning.make_default (demo_page, "File not found", str)
 			else
 				file.open_read
 --				file.start

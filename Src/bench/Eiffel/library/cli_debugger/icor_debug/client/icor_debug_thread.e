@@ -101,6 +101,7 @@ feature {ICOR_EXPORTER} -- Access
 		end		
 
 	get_current_exception: ICOR_DEBUG_VALUE is
+			-- WARNING: Should be called inside Callback !
 		local
 			p: POINTER
 		do
@@ -111,6 +112,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	clear_current_exception is
+			-- Nota: Should be called before exception occurred
 		do
 			last_call_success := cpp_clear_current_exception (item)
 		end

@@ -27,11 +27,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	Default_profile: STRING is "default"
+			-- Name of default profile
+		
 	available_profiles: LIST [STRING] is
 			-- List of available profiles
 		do
 			if is_saved_list (Profiles_key) then
 				Result := saved_list (Profiles_key)
+				Result.compare_objects
 			else
 				create {ARRAYED_LIST [STRING]} Result.make (0)
 			end
@@ -66,11 +70,16 @@ feature -- Element Settings
 			l_actions: like active_profile_change_actions
 			l_old_saved_blocked: BOOLEAN
 		do
+			active_profile := a_profile
+			if not a_profile.is_equal (Default_profile) then
+				if not available_profiles.has (a_profile) then
+					initialize_profile (a_profile)
+				end
+			end
 			l_old_saved_blocked := save_blocked
 			if not l_old_saved_blocked then
 				save_blocked := True
 			end
-			active_profile := a_profile
 			l_actions := active_profile_change_actions
 			from
 				l_actions.start
@@ -100,32 +109,9 @@ feature -- Basic Operations
 			-- Add profile to available profiles if not there already.
 			--| Profile items are stored in registry as follows:
 			--| name1,value11,value12,...,value1n,##,name2,value21,value22,...,value2n,##,...,namen,valuen1,...,valuenn,##
-		local
-			l_item: WIZARD_PROFILE_ITEM
-			l_stored_list: ARRAYED_LIST [STRING]
-			l_profiles: LIST [STRING]
 		do
 			if active_profile /= Void and not save_blocked then
-				create l_stored_list.make (active_profile_save_actions.count)
-				from
-					active_profile_save_actions.start
-				until
-					active_profile_save_actions.after
-				loop
-					l_item := active_profile_save_actions.item.item (Void)
-					l_stored_list.append (l_item.linear_representation)
-					active_profile_save_actions.forth
-				end
-				save_list (l_stored_list, active_profile)
-				if is_saved_list (Profiles_key) then
-					l_profiles := saved_list (Profiles_key)
-				else
-					create {ARRAYED_LIST [STRING]} l_profiles.make (1)
-				end
-				if not l_profiles.has (active_profile) then
-					l_profiles.extend (active_profile)
-					save_list (l_profiles, Profiles_key)
-				end
+				save_active_profile_as (active_profile)
 			end
 		end
 		
@@ -190,6 +176,46 @@ feature {WIZARD_MAIN_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
+	initialize_profile (a_profile: STRING) is
+			-- Initialize `a_profile' with values taken from `default_profile'.
+		do
+			set_active_profile (default_profile)
+			save_active_profile_as (a_profile)
+			set_active_profile (a_profile)
+		end
+	
+	save_active_profile_as (a_profile: STRING) is
+			-- Save current profile with name `a_profile'.
+		require
+			non_void_profile_name: a_profile /= Void
+			unblocked_save: not save_blocked
+		local
+			l_item: WIZARD_PROFILE_ITEM
+			l_stored_list: ARRAYED_LIST [STRING]
+			l_profiles: LIST [STRING]
+		do
+			create l_stored_list.make (active_profile_save_actions.count)
+			from
+				active_profile_save_actions.start
+			until
+				active_profile_save_actions.after
+			loop
+				l_item := active_profile_save_actions.item.item (Void)
+				l_stored_list.append (l_item.linear_representation)
+				active_profile_save_actions.forth
+			end
+			save_list (l_stored_list, a_profile)
+			if is_saved_list (Profiles_key) then
+				l_profiles := saved_list (Profiles_key)
+			else
+				create {ARRAYED_LIST [STRING]} l_profiles.make (1)
+			end
+			if not l_profiles.has (a_profile) then
+				l_profiles.extend (a_profile)
+				save_list (l_profiles, Profiles_key)
+			end
+		end
+		
 	Profile_key_suffix: STRING is "_profile_key"
 			-- Registry key name suffix for key storing profiles
 

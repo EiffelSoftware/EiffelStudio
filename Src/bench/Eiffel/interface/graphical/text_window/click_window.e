@@ -20,7 +20,8 @@ inherit
 			put_error, put_class, put_after_class, put_classi, put_cluster,
 			put_class_syntax, put_ace_syntax, process_breakpoint, 
 			process_padded, disable_clicking, update_clickable_from_stone,
-			put_operator, process_column_text, process_call_stack_item
+			put_operator, process_column_text, process_call_stack_item,
+			put_feature_error
 		end
 
 feature -- Properties
@@ -149,6 +150,16 @@ feature -- Input
 			put_stone (stone, str)
 		end;
 
+	put_feature_error (feat: E_FEATURE; str: STRING; a_pos: INTEGER) is
+			-- Put feature `feat' with string
+			-- representation `str' at current position.
+		local
+			stone: FEATURE_ERROR_STONE	
+		do
+			!! stone.make (feat, a_pos);
+			put_stone (stone, str)
+		end;
+
 	put_feature_name (f_name: STRING; e_class: E_CLASS) is
 			-- Put feature name `f_name' defined in `e_class'.
 		local
@@ -247,13 +258,13 @@ feature -- Processing for text_struct
 
 feature -- Update
 
-	update_clickable_from_stone is
+	update_clickable_from_stone (a_stone: STONE) is
 			-- Update the clickable information from tool's stone.
 			-- click list if text uses character position.
 		local
 			c_list: ARRAY [CLICK_STONE]
 		do
-			c_list := tool.stone.click_list;
+			c_list := a_stone.click_list;
 			if c_list /= Void then
 				share (c_list)
 			end

@@ -186,8 +186,8 @@ feature -- Accelerator, focus label and menu name
 	a_Precompile: STRING is				"Ctrl Alt<Key>P";
 	f_Precompile: STRING is				"&Precompile...";
 	m_Precompile: STRING is				"Precompile...%TCtrl+Alt+P";
-	f_Print: STRING is					"&Print...";
-	m_Print: STRING is					"Print";
+	f_Print: STRING is					"Print...";
+	m_Print: STRING is					"&Print";
 	f_Preferences: STRING is			"Preferences";
 	m_Preferences: STRING is			"&Preferences";
 	f_Profile_tool: STRING is			"Profile tool";

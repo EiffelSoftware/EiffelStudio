@@ -35,24 +35,18 @@ feature -- Access
 
 	height: INTEGER is
 			-- Height (ascent + descent) of characters
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmheight (item)
 		end
 
 	ascent: INTEGER is
 			-- Ascent (units above the base line) of characters
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmascent (item)
 		end
 
 	descent: INTEGER is
 			-- Descent (units below the base line) of characters
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmdescent (item)
 		end
@@ -60,8 +54,6 @@ feature -- Access
 	internal_leading: INTEGER is
 			-- Amount of leading (space) inside the bounds set by
 			-- `height'
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tminternalleading (item)
 		end
@@ -69,8 +61,6 @@ feature -- Access
 	external_leading: INTEGER is
 			-- Amount of extra leading (space) that the application
 			-- adds between rows
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmexternalleading (item)
 		end
@@ -78,16 +68,12 @@ feature -- Access
 	average_character_width: INTEGER is
 			-- Average width of characters in the font (generally
 			-- defined as the width of the letter x)
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmavecharwidth (item)
 		end
 
 	maximum_character_width: INTEGER is
 			-- Width of the widest character in the font
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmmaxcharwidth (item)
 		end
@@ -95,8 +81,6 @@ feature -- Access
 	weight: INTEGER is
 			-- Weight of the font.
 			-- See class WEL_FW_CONSTANTS for values.
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmweight (item)
 		end
@@ -104,8 +88,6 @@ feature -- Access
 	overhang: INTEGER is
 			-- Extra width per string that may be added to some
 			-- synthesized fonts
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmoverhang (item)
 		end
@@ -113,8 +95,6 @@ feature -- Access
 	digitized_aspect_x: INTEGER is
 			-- Horizontal aspect of the device for which the
 			-- font was designed
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmdigitizedaspectx (item)
 		end
@@ -122,24 +102,18 @@ feature -- Access
 	digitized_aspect_y: INTEGER is
 			-- Vertical aspect of the device for which the font
 			-- was designed
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmdigitizedaspecty (item)
 		end
 
 	first_character: INTEGER is
 			-- Value of the first character defined in the font
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmfirstchar (item)
 		end
 
 	last_character: INTEGER is
 			-- Value of the last character defined in the font
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmlastchar (item)
 		end
@@ -147,8 +121,6 @@ feature -- Access
 	default_character: INTEGER is
 			-- Value of the character to be substituted for
 			-- characters not in the font
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmdefaultchar (item)
 		end
@@ -156,32 +128,24 @@ feature -- Access
 	break_character: INTEGER is
 			-- Value of the character that will be used to define
 			-- word breaks for text justification
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmbreakchar (item)
 		end
 
 	italic: INTEGER is
 			-- Italic font if it is nonzero
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmitalic (item)
 		end
 
 	underlined: INTEGER is
 			-- Underlined font if it is nonzero
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmunderlined (item)
 		end
 
 	struckout: INTEGER is
 			-- Strikeout font if it is nonzero
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmstruckout (item)
 		end
@@ -190,16 +154,12 @@ feature -- Access
 			-- Information about the pitch, the technology, and
 			-- the family of a physical font.
 			-- See class WEL_TMPF_CONSTANTS for values.
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmpitchandfamily (item)
 		end
 
 	character_set: INTEGER is
 			-- Character set of the font
-		require
-			exists: exists
 		do
 			Result := cwel_text_metric_get_tmcharset (item)
 		end
@@ -212,7 +172,7 @@ feature {NONE} -- Measurement
 			Result := c_size_of_text_metric
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Externals
 
 	c_size_of_text_metric: INTEGER is
 		external
@@ -220,8 +180,6 @@ feature {NONE} -- Implementation
 		alias
 			"sizeof (TEXTMETRIC)"
 		end
-
-feature {NONE} -- Implementation
 
 	cwel_text_metric_get_tmheight (ptr: POINTER): INTEGER is
 		external

@@ -65,7 +65,7 @@ feature {NONE}
 		external
 			"C [macro %"eif_eiffel.h%"]"
 		alias
-			"sizeof(char *(*)())"
+			"sizeof(EIF_POINTER)"
 		end;
 
 	Reference_size: INTEGER is

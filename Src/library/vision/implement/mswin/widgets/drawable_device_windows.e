@@ -62,6 +62,12 @@ inherit
 			{NONE} all
 		end
 
+	EXCEPTIONS
+		rename
+			raise as exception_raise,
+			class_name as exception_class_name
+		end
+
 feature -- Access
 
 	draw_brush: WEL_BRUSH
@@ -309,6 +315,8 @@ feature -- Input
 
 	copy_bitmap (a_point: COORD_XY; a_bitmap : PIXMAP) is
 			-- Copy `a_bitmap' to the drawing at `a_point'.
+			-- If there is not enough space to create auxiliery bitmap (DDB) 
+			-- exception will be raised
 		require
 			a_point_exists: a_point /= Void
 			a_bitmap_exists: a_bitmap /= Void
@@ -328,7 +336,12 @@ feature -- Input
 			dib := pw.dib
 			if dib /= Void then
 				!! bitmap.make_by_dib (drawing_dc, dib, dib_rgb_colors)
+				if bitmap.item = bitmap.item.default then
+					-- windows function "CreateDIBitmap" failed
+					exception_raise("Can not create windows bitmap");
+				end
 				drawing_dc.draw_bitmap (bitmap, a_point.x, a_point.y, bitmap.width, bitmap.height)
+				bitmap.delete
 			else
 				icon := pw.icon
 				if icon /= Void then

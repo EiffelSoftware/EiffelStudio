@@ -135,11 +135,11 @@ feature -- Settings
 feature {NONE} -- Implementation
 
 	structure_size: INTEGER is
-			-- Size of IMAGE_OPTIONAL_HEADER structure.
+			-- Size of CLI_IMAGE_OPTIONAL_HEADER structure.
 		external
-			"C macro use <windows.h>"
+			"C macro use %"cli_writer.h%""
 		alias
-			"sizeof(IMAGE_OPTIONAL_HEADER)"
+			"sizeof(CLI_IMAGE_OPTIONAL_HEADER)"
 		end
 
 feature {NONE} -- Access
@@ -147,7 +147,7 @@ feature {NONE} -- Access
 	c_directories (an_item: POINTER): POINTER is
 			-- 
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access &DataDirectory use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access &DataDirectory use %"cli_writer.h%""
 		end
 		
 feature {NONE} -- Settings: standard fields
@@ -155,55 +155,55 @@ feature {NONE} -- Settings: standard fields
 	c_set_magic (an_item: POINTER; i: INTEGER_16) is
 			-- Set `Magic' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access Magic type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access Magic type WORD use %"cli_writer.h%""
 		end
 
 	c_set_major_linker_version (an_item: POINTER; i: INTEGER_8) is
 			-- Set `MajorLinkerVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MajorLinkerVersion type BYTE use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MajorLinkerVersion type BYTE use %"cli_writer.h%""
 		end
 
 	c_set_minor_linker_version (an_item: POINTER; i: INTEGER_8) is
 			-- Set `MinorLinkerVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MinorLinkerVersion type BYTE use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MinorLinkerVersion type BYTE use %"cli_writer.h%""
 		end
 
 	c_set_size_of_code (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfCode' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfCode type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfCode type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_initialized_data (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfInitializedData' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfInitializedData type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfInitializedData type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_uninitialized_data (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfUninitializedData' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfUninitializedData type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfUninitializedData type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_address_of_entry_point (an_item: POINTER; i: INTEGER) is
 			-- Set `AddressOfEntryPoint' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access AddressOfEntryPoint type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access AddressOfEntryPoint type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_base_of_code (an_item: POINTER; i: INTEGER) is
 			-- Set `BaseOfCode' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access BaseOfCode type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access BaseOfCode type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_base_of_data (an_item: POINTER; i: INTEGER) is
 			-- Set `BaseOfData' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access BaseOfData type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access BaseOfData type DWORD use %"cli_writer.h%""
 		end
 
 feature {NONE} -- Settings: NT additional fields
@@ -211,127 +211,127 @@ feature {NONE} -- Settings: NT additional fields
 	c_set_image_base (an_item: POINTER; i: INTEGER) is
 			-- Set `ImageBase' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access ImageBase type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access ImageBase type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_section_alignment (an_item: POINTER; i: INTEGER) is
 			-- Set `SectionAlignment' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SectionAlignment type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SectionAlignment type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_file_alignment (an_item: POINTER; i: INTEGER) is
 			-- Set `FileAlignment' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access FileAlignment type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access FileAlignment type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_major_operating_system_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MajorOperatingSystemVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MajorOperatingSystemVersion type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MajorOperatingSystemVersion type WORD use %"cli_writer.h%""
 		end
 
 	c_set_minor_operating_system_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MinorOperatingSystemVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MinorOperatingSystemVersion type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MinorOperatingSystemVersion type WORD use %"cli_writer.h%""
 		end
 
 	c_set_major_image_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MajorImageVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MajorImageVersion type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MajorImageVersion type WORD use %"cli_writer.h%""
 		end
 
 	c_set_minor_image_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MinorImageVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MinorImageVersion type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MinorImageVersion type WORD use %"cli_writer.h%""
 		end
 
 	c_set_major_subsystem_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MajorSubsystemVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MajorSubsystemVersion type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MajorSubsystemVersion type WORD use %"cli_writer.h%""
 		end
 
 	c_set_minor_subsystem_version (an_item: POINTER; i: INTEGER_16) is
 			-- Set `MinorSubsystemVersion' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access MinorSubsystemVersion type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access MinorSubsystemVersion type WORD use %"cli_writer.h%""
 		end
 
 	c_set_win32_version_value (an_item: POINTER; i: INTEGER) is
 			-- Set `Win32VersionValue' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access Win32VersionValue type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access Win32VersionValue type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_image (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfImage' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfImage type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfImage type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_headers (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfHeaders' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfHeaders type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfHeaders type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_check_sum (an_item: POINTER; i: INTEGER) is
 			-- Set `CheckSum' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access CheckSum type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access CheckSum type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_subsystem (an_item: POINTER; i: INTEGER_16) is
 			-- Set `Subsystem' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access Subsystem type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access Subsystem type WORD use %"cli_writer.h%""
 		end
 
 	c_set_dll_characteristics (an_item: POINTER; i: INTEGER_16) is
 			-- Set `DllCharacteristics' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access DllCharacteristics type WORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access DllCharacteristics type WORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_stack_reserve (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfStackReserve' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfStackReserve type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfStackReserve type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_stack_commit (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfStackCommit' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfStackCommit type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfStackCommit type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_heap_reserve (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfHeapReserve' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfHeapReserve type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfHeapReserve type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_size_of_heap_commit (an_item: POINTER; i: INTEGER) is
 			-- Set `SizeOfHeapCommit' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access SizeOfHeapCommit type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access SizeOfHeapCommit type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_loader_flags (an_item: POINTER; i: INTEGER) is
 			-- Set `LoaderFlags' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access LoaderFlags type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access LoaderFlags type DWORD use %"cli_writer.h%""
 		end
 
 	c_set_number_of_rva_and_sizes (an_item: POINTER; i: INTEGER) is
 			-- Set `NumberOfRvaAndSizes' to `i'.
 		external
-			"C struct IMAGE_OPTIONAL_HEADER access NumberOfRvaAndSizes type DWORD use <windows.h>"
+			"C struct CLI_IMAGE_OPTIONAL_HEADER access NumberOfRvaAndSizes type DWORD use %"cli_writer.h%""
 		end
 
 end -- class CLI_OPTIONAL_HEADER

@@ -86,6 +86,11 @@ feature {NONE}
 			!!Result.make;
 		end;
 
+	Tmp_opt_byte_server: TMP_OPT_BYTE_SERVER is
+		once
+			!!Result.make;
+		end;
+
 	Tmp_poly_server: TMP_POLY_SERVER is
 		once
 			!!Result.make;

@@ -142,7 +142,7 @@ feature {COMPILER_EXPORTER}
 			gen_type ?= other
 			if
 				gen_type /= Void and then
-				gen_type.base_class_id = System.array_id
+				gen_type.class_id = System.array_id
 			then
 				Result := True
 				if nb > 0 then

@@ -118,7 +118,7 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE; a_class_id: INTEGER): TYPE_A is
 			-- Instantiation of type `type' written in class of id `class_id'
 			-- in the context of Current
 		do

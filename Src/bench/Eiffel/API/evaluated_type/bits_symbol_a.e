@@ -8,8 +8,7 @@ class BITS_SYMBOL_A
 inherit
 	BITS_A
 		rename
-			make as make_with_count,
-			base_class_id as class_id
+			make as make_with_count
 		redefine
 			solved_type, dump, ext_append_to,
 			is_equivalent

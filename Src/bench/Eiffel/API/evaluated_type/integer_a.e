@@ -8,6 +8,8 @@ class
 
 inherit
 	BASIC_A
+		rename
+			make as cl_make
 		redefine
 			is_integer, associated_class,
 			same_as, is_numeric, weight, internal_conform_to

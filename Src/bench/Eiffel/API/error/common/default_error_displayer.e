@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Displays warnings and errors of compilation for ebench.";
+		"Displays warnings and errors of compilation.";
 	date: "$Date$";
 	revision: "$Revision $"
 

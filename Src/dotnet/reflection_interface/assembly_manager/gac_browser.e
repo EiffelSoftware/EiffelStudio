@@ -38,6 +38,12 @@ feature -- Access
 		    Result_exists: Result /= Void
 		end 
 
+	Neutral_culture: STRING is "neutral"
+			-- Neutral culture as a string
+		indexing
+			external_name: "NeutralCulture"
+		end
+		
 feature {NONE} -- Implementation
 
 	assembly_versions (dir: SYSTEM_IO_DIRECTORYINFO): SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -71,7 +77,12 @@ feature {NONE} -- Implementation
 					if assembly /= Void then
 						name := assembly.name
 						version := assembly.version.tostring
-						culture := assembly.cultureinfo.displayname
+						culture := assembly.cultureinfo.name
+						if culture /= Void then
+							if culture.length = 0 then
+								culture := Neutral_culture
+							end
+						end
 						public_key := decode_key (assembly.getpublickeytoken)
 						create desc.make1
 						desc.make (name, version, culture, public_key)

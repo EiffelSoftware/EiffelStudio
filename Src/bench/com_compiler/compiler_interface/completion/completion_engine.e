@@ -94,9 +94,9 @@ feature -- Element settings
 			cf: COMPLETION_FEATURE
 		do
 			feature_name := a_feature_name
-			feature_i := feature_table.item (feature_name)
+			feature_i := feature_table.item (feature_name.as_lower)
 			if feature_i = Void then
-				cf := uncompiled_completion_feature (feature_name)
+				cf := uncompiled_completion_feature (feature_name.as_lower)
 				if cf /= Void then
 					create {R_DYN_FUNC_I} feature_i
 				end

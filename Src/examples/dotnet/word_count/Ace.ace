@@ -5,15 +5,11 @@ root
 	APPLICATION: "make"
 
 default
-	assertion (no)
 	il_generation ("exe")
-	line_generation (no)
 
 cluster
-	
-	root_cluster: ".";
+	root_cluster:		"."
 
-		-- EiffelBase
-	all base:						"$EIFFEL_SRC\library\base.net"
+	all base:		"$EIFFEL5\library\base.net"
 
 end

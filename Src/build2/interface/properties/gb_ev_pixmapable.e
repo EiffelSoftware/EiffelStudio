@@ -68,7 +68,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				info.enable_pixmaps_set
 				data := element_info.data
-				data := data.substring (data.last_index_of ('\', data.count), data.count)
+				data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
 				data := "constant_by_name (%"pixmap_location%") + %"" + data
 				Result := pixmap_name + ".set_with_named_file (" + data + "%")"
 

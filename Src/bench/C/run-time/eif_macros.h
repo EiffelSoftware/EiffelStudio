@@ -456,7 +456,7 @@ RT_LNK int fcount;
 #define	RTMS(s) makestr(s,strlen(s))
 #define	RTMS_EX(s,c) makestr(s,c)
 #define RTSOF(s,o) ((EIF_CHARACTER *)(s)+(o))
-#define RTSOFN(s,o,n) (*(EIF_POINTER *)((s)+(o)*(n)))
+#define RTSOFN(s,o,n) ((EIF_POINTER *)((s)+(o)*(n)))
 #define	RTST(c,d,i,n) striparr(c,d,i,n);
 #define RTXA(x,y) xcopy(x, y)
 #define RTEQ(x,y) xequal(x, y)

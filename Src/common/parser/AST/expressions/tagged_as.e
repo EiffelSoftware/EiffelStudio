@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 		do
 			tag ?= yacc_arg (0);
 			expr ?= yacc_arg (1);
+			start_position := yacc_position
 		ensure then
 			expr_exists: expr /= Void;
 		end;
@@ -29,6 +30,9 @@ feature -- Properties
 
 	expr: EXPR_AS;
 			-- Expression
+
+    start_position: INTEGER; 
+			-- Start position of AST
 
 feature -- Comparison
 
@@ -66,6 +70,6 @@ feature {TAGGED_AS}	-- Replication
 			valid_arg: e /= Void
 		do
 			expr := e;
-		end
+		end;
 
 end -- class TAGGED_AS

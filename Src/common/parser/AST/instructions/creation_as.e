@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			type ?= yacc_arg (0);
 			target ?= yacc_arg (1);
 			call ?= yacc_arg (2);
+			start_position := yacc_position
 		ensure then
 			target_exists: target /= Void;
 		end;

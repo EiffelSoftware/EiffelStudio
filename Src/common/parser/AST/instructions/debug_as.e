@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 					keys.forth
 				end;
 			end;
+			start_position := yacc_position
 		end;
 
 feature -- Properties

@@ -51,8 +51,6 @@ feature -- Access
 			valid_id: is_event_id (an_id)
 		do
 			Result := events.item (an_id).integer_item (4)
-		ensure
-			has_source: Result /= Void
 		end
 
 	event_message_marker (an_index: INTEGER): STRING is

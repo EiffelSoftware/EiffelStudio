@@ -91,8 +91,6 @@ feature {NONE} -- Implementation
 
 	formatted_date_time (a_date: SYSTEM_DATE_TIME): STRING is
 			-- Text corresponding to `a_date'
-		require
-			non_void_date_time: a_date /= Void
 		do
 			Result := a_date.to_long_date_string
 			Result.append (", ")

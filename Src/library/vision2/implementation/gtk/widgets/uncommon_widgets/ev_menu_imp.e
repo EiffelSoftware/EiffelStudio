@@ -68,7 +68,7 @@ feature -- Element change
 			a_temp_str: ANY
 		do
 			real_text := clone (a_text)
-			a_temp_str := u_lined_filter (a_text).to_c
+			a_temp_str := u_lined_filter (real_text).to_c
 			key := C.gtk_label_parse_uline (text_label,
 				$a_temp_str)
 			C.gtk_widget_show (text_label)

@@ -9,9 +9,9 @@
 		<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>vi +$line $target</STRING></TEXT>
 		<TEXT>filter_name<STRING>PostScript</STRING></TEXT>
 		<TEXT>filter_command<STRING>none</STRING></TEXT>
-		<TEXT DESCRIPTION="Use an external command to print?">use_external_editor<STRING>False</STRING></TEXT>
+		<TEXT DESCRIPTION="Use an external command to print?">use_external_editor<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>notepad /p $target</STRING></TEXT>
-		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<STRING>False</STRING></TEXT>
+		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<BOOLEAN>False</BOOLEAN></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>

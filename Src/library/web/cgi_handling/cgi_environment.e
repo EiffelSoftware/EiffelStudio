@@ -16,6 +16,7 @@ inherit
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
+		end;
 	SHARED_STDOUT
 
 feature -- Not request-specific environment variables

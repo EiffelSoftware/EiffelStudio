@@ -32,5 +32,15 @@ feature -- Access
 		do
 			Result := clipboard.object_type
 		end
+		
+feature {GB_CLIPBOARD_COMMAND} -- Implementation
+		
+	set_associated_top_level_object (an_id: INTEGER) is
+			-- Assign `an_id' to `associated_top_level_object'.
+		require
+			an_id_positive: an_id > 0
+		do
+			associated_top_level_object := an_id
+		end
 
 end -- class GB_CLIPBOARD_OBJECT_STONE

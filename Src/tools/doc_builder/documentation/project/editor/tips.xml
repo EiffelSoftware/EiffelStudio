@@ -1,0 +1,65 @@
+<document title="Handy Shortcuts and Tips">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Handy Shortcuts and Tags</heading>
+		<heading>
+			<size>3</size>Shortcuts
+		</heading>
+		<paragraph>The following shortcuts are defined whilst in the editor:</paragraph>
+		<table>
+			<row>
+				<cell>CTRL-A</cell>
+				<cell>Highlight all text</cell>
+			</row>
+			<row>
+				<cell>CTRL-C</cell>
+				<cell>Copy highlighted text to clipboard</cell>
+			</row>
+			<row>
+				<cell>CTRL-X</cell>
+				<cell>Cut highlighted</cell>
+			</row>
+			<row>
+				<cell>CTRL-V</cell>
+				<cell>Paste clipboard at cursor or highlighted area</cell>
+			</row>
+			<row>
+				<cell>CTRL-S</cell>
+				<cell>Save</cell>
+			</row>
+			<row>
+				<cell>CTRL-B</cell>
+				<cell>Tag text as bold ('a' becomes '
+					<bold>a</bold>')
+				</cell>
+			</row>
+			<row>
+				<cell>CTRL-I</cell>
+				<cell>Tag text as italic (a becomes '
+					<italic>a</italic>')
+				</cell>
+			</row>
+		</table>
+		<heading>
+			<size>3</size>Quick tags
+		</heading>
+		<paragraph>To quickly input tags that are known to the editor through the loaded 
+			<link>
+				<url>../xml/index.xml</url>
+				<label>schema definition</label>
+			</link> just right-click in the text and the editor will display a drop down list of available tags based upon the cursor position.
+		</paragraph>
+		<image>
+			<alt_text>Tag List</alt_text>
+			<url>taglist.png</url>
+		</image>
+		<paragraph>If you right click over highlighted text and select a tag it will enclose the highlighted text in that tag.</paragraph>
+		<heading>
+			<size>3</size>Quick Urls
+		</heading>
+		<paragraph>To quickly add a url link to a document within your project navigate to the file in the project tree, right-click, and drop the rubber band in the editor.  A relative url to the dropped document will be inserted at the current cursor position.</paragraph>
+		<image>
+			<url>quickurl.png</url>
+		</image>
+	</paragraph>
+</document>

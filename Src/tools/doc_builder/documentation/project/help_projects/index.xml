@@ -1,0 +1,34 @@
+<document title="Help Projects">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Help Projects</heading>
+		<paragraph>The document tool can produce help projects for:</paragraph>
+		<list ordered="false">
+			<item>Windows application help systems (.chm files)</item>
+			<item>Visual Stusio Help Integration (VSIP) Help</item>
+			<item>HTML help for internet/web use.</item>
+		</list>
+		<heading>
+			<size>3</size>Creating Help
+		</heading>
+		<paragraph>Creating a help system is easy.  Once you have 
+			<link>
+				<url>../toc/index.xml</url>
+				<label>created a table of contents</label>
+			</link> to provide the physical navigation structure of the help you are ready to begin....
+		</paragraph>
+		<list ordered="true">
+			<item>Go to 
+				<bold>'Tools'</bold> -&gt; 
+				<bold>'Generator..'</bold>
+			</item>
+			<item>Choose if you wish to convert your documents to HTML, or to a full help project.  Converting to just HTML does not require a table contents and will simply convert all your document to HTML.</item>
+			<item>Select a filter if appropriate.  The document content will be filtered for the filter you specify, otherwise they will be unfiltered</item>
+			<item>Choose an output location fot the converted files and help project files.</item>
+			<item>Choose a name for the help project</item>
+			<item>Choose the type of help you wish to create</item>
+			<item>Select the table of contents which contains the navigation structure you need for this help project.  <note>Note, if you selected to generatet a web based help project above you can select multiple table of contents.  Output will be created for each chosen toc according to the filter you specify for each one.</note></item>
+			<item>Thsi step only applies if you chose to create a web based help project.  Select the which filters should be associated with which toc.</item>
+			<item>Click OK.  The project will be created along with all the files necessary.</item>
+		</list>
+	</paragraph></document>

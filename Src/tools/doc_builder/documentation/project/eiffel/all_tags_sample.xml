@@ -1,0 +1,349 @@
+<document title="Sample document containing every schema tag available">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Sample document containing every schema tag available</heading>
+		<heading>
+			<size>3</size>Textual tags
+		</heading>
+		<paragraph>A paragraph with regular text</paragraph>
+		<paragraph>A paragraph with 
+			<span>'span' text</span> inside
+		</paragraph>
+		<paragraph>A paragraph with 
+			<div>'div' text</div> inside
+		</paragraph>
+		<paragraph>A paragraph with 
+			<italic>Italic text </italic>
+		</paragraph>
+		<paragraph>A paragraph with 
+			<bold>Bold Text </bold>
+		</paragraph>
+		<heading>
+			<size>3</size>Headings
+		</heading>
+		<heading>
+			<size>1</size>
+			<content>A heading 1</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>A heading 2</content>
+		</heading>
+		<heading>
+			<size>3</size>
+			<content>A heading 3</content>
+		</heading>
+		<heading>
+			<size>4</size>
+			<content>A heading 4</content>
+		</heading>
+		<heading>
+			<size>5</size>
+			<content>A heading 5</content>
+		</heading>
+		<heading>
+			<size>6</size>
+			<content>A heading 6</content>
+		</heading>Headings with content (in this case links)
+		<heading>
+			<size>1</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 1</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 2</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>3</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 3</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>4</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 4</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>5</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 5</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>6</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 6</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>3</size>Hyperlinks
+		</heading>
+		<paragraph>
+			<link>
+				<url>www.eiffel.com</url>
+				<label>Link Same Window</label>
+			</link>
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>www.eiffel.com</url>
+				<label>Link New Window</label>
+				<target>new</target>
+			</link>
+		</paragraph>
+		<heading>
+			<size>3</size>Images
+		</heading>
+		<paragraph>Standard image
+			<image>
+				<url>image.gif</url>
+			</image>
+		</paragraph>
+		<paragraph>Image with attributes (alt text, border)
+			<image>
+				<url>image.gif</url>
+				<alt_text>Hello Everybody</alt_text>
+				<border>1</border>
+			</image>
+		</paragraph>
+		<paragraph>Image 50 x 50 pixels
+			<image>
+				<url>image.gif</url>
+				<width>50</width>
+				<height>50</height>
+			</image>
+		</paragraph>
+		<heading>
+			<size>3</size>Lists
+		</heading>
+		<paragraph>Ordered List
+			<list ordered="true">
+				<item>Item 1</item>
+				<item>Item 2</item>
+				<item>Item 3</item>
+			</list>
+		</paragraph>
+		<paragraph>Unordered List
+			<list ordered="false">
+				<item>Item 1</item>
+				<item>Item 2</item>
+				<item>Item 3</item>
+			</list>
+		</paragraph>
+		<heading>
+			<size>3</size>Special Formatting Blocks
+		</heading>
+		<seealso>Seealso</seealso>
+		<sample>Sample</sample>
+		<note>Note</note>
+		<tip>Tip</tip>
+		<warning>Warning!</warning>
+		<heading>
+			<size>3</size>Tables
+		</heading>
+		<paragraph>Two Row Two Cell Table
+			<table>
+				<row>
+					<cell>1,1</cell>
+					<cell>1,2</cell>
+				</row>
+				<row>
+					<cell>2,1</cell>
+					<cell>2,2</cell>
+				</row>
+			</table>
+		</paragraph>
+		<heading>
+			<size>3</size>Code Formatting
+		</heading>
+		<paragraph>Inline code</paragraph>
+		<list ordered="false">
+			<item>
+				<code>A character: 
+					<character>.</character>
+				</code>
+			</item>
+			<item>
+				<code>A class name: 
+					<class_name>STRING</class_name>
+				</code>
+			</item>
+			<item>
+				<code>A cluster name: 
+					<cluster_name>my_cluster</cluster_name>
+				</code>
+			</item>
+			<item>
+				<code>A comment: 
+					<comment>my comment</comment>
+				</code>
+			</item>
+			<item>
+				<code>A contract tag: 
+					<contract_tag>is_true:</contract_tag> x = True
+				</code>
+			</item>
+			<item>
+				<code>A feature name: 
+					<feature_name>my_feature</feature_name>
+				</code>
+			</item>
+			<item>
+				<code>Generics: LIST [
+					<generics>G</generics>]
+				</code>
+			</item>
+			<item>
+				<code>Indexing tag: 
+					<indexing_tag>author: mr frog</indexing_tag>
+				</code>
+			</item>
+			<item>
+				<code>Keywords: 
+					<keyword>is, do, end</keyword>...
+				</code>
+			</item>
+			<item>
+				<code>Local variable: 
+					<local_variable>my_local</local_variable>
+				</code>
+			</item>
+			<item>
+				<code>Quoted local variable: 
+					<local_variable_quoted>my_local</local_variable_quoted>
+				</code>
+			</item>
+			<item>
+				<code>Number: 
+					<number>23</number>
+				</code>
+			</item>
+			<item>
+				<code>Reserved words: 
+					<reserved_word>ensure, create</reserved_word>
+				</code>
+			</item>
+			<item>
+				<code>String: 
+					<string>my string</string>
+				</code>
+			</item>
+			<item>
+				<code>Symbols: 
+					<symbol>:=, &gt;, &lt;</symbol>
+				</code>
+			</item>
+			<item>
+				<code>Compiler error code: 
+					<compiler_error>VC10</compiler_error>
+				</code>
+			</item>
+			<item>
+				<code>A class link: 
+					<class_name>
+						<label>STRING</label>
+						<url>/librarires/base/string.xml</url>
+					</class_name>
+				</code>
+			</item>
+			<item>
+				<code>A cluster link: 
+					<class_name>
+						<label>my_cluster</label>
+						<url>/librarires/base/index.xml</url>
+					</class_name>
+				</code>
+			</item>
+			<item>
+				<code>A feature link: 
+					<class_name>
+						<label>my_feature</label>
+						<url>/librarires/base/string.xml#my_feature</url>
+					</class_name>
+				</code>
+			</item>
+		</list>
+		<paragraph>Block of formatted code</paragraph>
+		<code_block>
+	<keyword>class</keyword>
+		<class_name>MY_CLASS</class_name>
+
+	<keyword>inherit</keyword>
+		<class_name>LINKED_LIST</class_name>
+
+	<keyword>feature</keyword>
+
+
+		<feature_name>a_feature</feature_name> <symbol>(</symbol>a_arg<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+				<comment>-- Sample feature</comment>
+			<keyword>require</keyword>
+				arg_not_void<symbol>:</symbol> a_arg <symbol>/</symbol>=<symbol/> Void
+			<keyword>local</keyword>
+				l_int<symbol>:</symbol> <keyword>like</keyword> a_arg
+			<keyword>do</keyword>
+				l_int <symbol>:</symbol><symbol>=</symbol> 4
+				Result <symbol>:</symbol><symbol>=</symbol> l_int <symbol>=</symbol> a_arg
+			<keyword>ensure</keyword>
+				one_or_the_other<symbol>:</symbol> Result <keyword>or</keyword> <keyword>not</keyword> Result
+			<keyword>end</keyword>
+	<keyword>end</keyword> -- <class_name>MY_CLASS</class_name>
+		</code_block>
+		<paragraph>Special characters
+			<table>
+				<row>
+					<cell>&lt;</cell>
+				</row>
+				<row>
+					<cell>&amp;#169;</cell>
+				</row>
+				<row>
+					<cell>&amp;#064;</cell>
+				</row>
+				<row>
+					<cell>&amp;#153;</cell>
+				</row>
+				<row>
+					<cell>&amp;#174;</cell>
+				</row>
+				<row>
+					<cell>'</cell>
+				</row>
+				<row>
+					<cell>&gt;</cell>
+				</row>
+				<row>
+					<cell>&amp;#133;</cell>
+				</row>
+				<row>
+					<cell>&amp;</cell>
+				</row>
+				<row>
+					<cell>"</cell>
+				</row>
+			</table>
+		</paragraph>
+	</paragraph></document>

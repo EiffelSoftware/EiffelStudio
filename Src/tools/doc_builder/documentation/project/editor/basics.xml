@@ -1,0 +1,22 @@
+<document title="Basics">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Basics</heading>
+		<heading>
+			<size>3</size>Text Formatting
+		</heading>
+		<paragraph>Using the 'Edit' Menu you may cut, copy and paste text.  You may also change the font used and enable or disabled word wrapping.</paragraph>
+		<image>
+			<url>editmenu.png</url>
+		</image>
+		<heading>
+			<size>3</size>Searching
+		</heading>
+		<paragraph>To search for text in a document go to 
+			<bold>Edit</bold> -&gt; 
+			<bold>Search</bold> or use the shortcut combination CTRL-F
+		</paragraph>
+		<image>
+			<url>searchdialog.png</url>
+		</image>
+	</paragraph></document>

@@ -347,15 +347,15 @@ OBJECT_CONTROL</a>
 
 
 
-	- Do not use non-multithreaded precompiled libraries. The corresponding multithreaded libraries of base, WEL and VISION should be located&nbsp;in $EIFFEL4/precomp/spec/$PLATFORM/ with the mt prefix.
+	- Do not use non-multithreaded precompiled libraries. The corresponding multithreaded libraries of base, WEL and VISION should be located&nbsp;in $EIFFEL4/precomp/spec/$PLATFORM/ with the mt prefix or suffix.
 
 <p>
 
 
 
-	- If you have no multithreaded precompiled library, check that&nbsp;the cluster thread is in your ace file:<br>
+	- You must include the thread cluster in your ace file:<br>
 
-		$EIFFEL4/library/thread
+		thread: "$EIFFEL4/library/thread";
 
 <p>
 
@@ -1071,9 +1071,9 @@ object from being disposed by a thread, which is not its creator thread.
 
 
 
-	At the moment, we have to call the once_per_process for the first&nbsp;time in the process in the
+	At the moment, you must call the once_per_process for the first&nbsp;time in the process in the
 
-    root_thread. If we did it in a thread,&nbsp;it will work until this thread dies (because it will reclaim&nbsp;the once_per_process object that belongs to its private memory).&nbsp;
+    root_thread. If you did it in a thread,&nbsp;it will work until this thread dies (because it will reclaim&nbsp;the once_per_process object that belongs to its private memory).&nbsp;
 
 <p>
 

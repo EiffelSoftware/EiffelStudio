@@ -42,7 +42,6 @@ default
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
-	disabled_debug ("liman")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("optimization")
 	disabled_debug ("options")
@@ -82,16 +81,15 @@ cluster
 			"table"; "CVS"; 
 		end
 
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"CVS"; "french"; "german"; 
+		end
+
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
 		end
-
-	liman:		"$EIFFEL_SRC\Eiffel\limand"
-
-	liman_bench (liman):		"$\bench"
-
-	liman_abstract (liman):		"$\abstract"
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
@@ -149,7 +147,7 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:		"$EIFFEL_SRC/library/helpers"
+	all helpers:		"$EIFFEL_SRC\library\helpers"
 		exclude
 			"CVS"; 
 		end
@@ -181,6 +179,16 @@ cluster
 	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
+		exclude
+			"enterprise"; "free"; "CVS"; 
+		end
+
+	all keygen:		"$EIFFEL_SRC\library\keygen"
+		exclude
+			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
+		end
 
 external
 

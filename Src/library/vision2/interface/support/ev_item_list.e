@@ -22,6 +22,18 @@ inherit
 			implementation
 		end
 
+feature -- Access
+
+	item_by_data (data: ANY): like item is
+			-- First item with `data'.
+		require
+			data_not_void: data /= Void
+		do
+			Result := implementation.item_by_data (data)
+		ensure
+			bridge_ok: Result = implementation.item_by_data (data)
+		end
+
 feature -- Contract support
 
 	parent_void (v: like item): BOOLEAN is
@@ -150,6 +162,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/11 17:32:55  brendel
+--| Added `item_by_data'.
+--|
 --| Revision 1.13  2000/04/05 21:16:13  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

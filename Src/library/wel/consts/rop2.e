@@ -121,6 +121,29 @@ feature -- Access
 			"R2_WHITE"
 		end
 
+feature -- Status report
+
+	valid_rop2_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid rop2 constant?
+		do
+			Result := c = R2_black or else
+				c = R2_copypen or else
+				c = R2_masknotpen or else
+				c = R2_maskpen or else
+				c = R2_maskpennot or else
+				c = R2_mergenotpen or else
+				c = R2_mergepen or else
+				c = R2_mergepennot or else
+				c = R2_nop or else
+				c = R2_not or else
+				c = R2_notcopypen or else
+				c = R2_notmaskpen or else
+				c = R2_notmergepen or else
+				c = R2_notxorpen or else
+				c = R2_white or else
+				c = R2_xorpen
+		end
+
 end -- class WEL_ROP2_CONSTANTS
 
 --|-------------------------------------------------------------------------

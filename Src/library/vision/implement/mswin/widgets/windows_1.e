@@ -19,6 +19,7 @@ feature -- Access
 		do
 			!! Result.make (a_bar, managed, oui_parent)
 		end;
+
 	base (a_base: BASE): BASE_WINDOWS is
                         -- MS-Windows implementation of `a_base'
 		do

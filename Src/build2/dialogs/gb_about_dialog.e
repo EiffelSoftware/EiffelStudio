@@ -108,6 +108,7 @@ feature -- Initialization
 			extend (vbox)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (ok_button)
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
 feature -- Constant strings

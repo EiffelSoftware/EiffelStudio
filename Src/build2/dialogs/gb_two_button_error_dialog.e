@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			set_buttons (<<"Continue", ev_abort>>)
 			set_default_push_button(button ("Continue"))
 			set_default_cancel_button(button (ev_abort))
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
 end -- class GB_TWO_BUTTON_ERROR_DIALOG

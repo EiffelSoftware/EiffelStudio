@@ -204,6 +204,7 @@ feature {NONE} -- Initialization
 				-- the window, and the windows client area to coordinate difference.
 			set_size (600, (main_vertical_box.minimum_height + 50).min (400))
 			set_minimum_size (200, 200)
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
 feature -- Access

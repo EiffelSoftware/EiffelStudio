@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			widget_holder.set_padding_width (20)
 			widget_holder.set_border_width (20)
 			extend (widget_holder)
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 		
 feature {GB_GENERATION_COMMAND} -- Basic operation

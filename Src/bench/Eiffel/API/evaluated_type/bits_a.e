@@ -5,9 +5,19 @@ class BITS_A
 inherit
 
 	BASIC_A
+		rename
+			internal_conform_to as old_conform_to
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			heaviest, same_as
+		end;
+
+	BASIC_A
+		redefine
+			is_bits, internal_conform_to, associated_class, dump,
+			heaviest, same_as
+		select
+			internal_conform_to
 		end;
 
 feature
@@ -24,6 +34,8 @@ feature
 				else
 					Result := other_actual.base_type >= base_type;
 				end;
+			else
+				Result := old_conform_to (other, False);
 			end;
 		end;
 

@@ -422,9 +422,9 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Re-initialize from `other'.
 		do
-			set_keys (clone (keys));
-			set_content (clone (content));
-			set_deleted_marks (clone (deleted_marks))
+			set_keys (clone (other.keys));
+			set_content (clone (other.content));
+			set_deleted_marks (clone (other.deleted_marks))
 		end;
 
 feature -- Obsolete

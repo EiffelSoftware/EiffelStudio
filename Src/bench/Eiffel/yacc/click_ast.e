@@ -8,6 +8,22 @@ inherit
 
 	AST_YACC
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like node; s, e: INTEGER) is
+			-- Create a new clickable element for `n'.
+		require
+			n_not_void: n /= Void
+		do
+			node := n
+			start_position := s
+			end_position := e
+		ensure
+			node_set: node = n
+			start_position_set: start_position = s
+			end_position_set: end_position = e
+		end
+
 feature -- Properties
 
 	start_position: INTEGER;
@@ -19,7 +35,7 @@ feature -- Properties
 	node: CLICKABLE_AST;
 			-- Node AST that has a position
 
-feature {CLASS_AS} 
+feature -- Setting
 
 	set_node (n: like node) is
 			-- Set `node' to `n'.

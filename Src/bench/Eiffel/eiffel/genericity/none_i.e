@@ -22,13 +22,13 @@ feature -- Status report
 	element_type: INTEGER_8 is
 			-- NONE element type
 		do
-			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
+			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_object
 		end
 
 	tuple_code: INTEGER_8 is
 			-- Formal tuple code. Should not be called.
 		do
-			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
+			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 
 feature

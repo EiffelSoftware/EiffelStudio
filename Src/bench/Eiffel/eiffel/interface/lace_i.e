@@ -176,7 +176,7 @@ feature -- Status setting
 						root_ast.defaults.after
 					loop
 						conv_opt ?= root_ast.defaults.item.option
-						if conv_opt /= Void and then conv_opt.code = feature {FREE_OPTION_SD}.force_recompile then
+						if conv_opt /= Void and then conv_opt.code = {FREE_OPTION_SD}.force_recompile then
 							root_ast.defaults.remove
 						else
 							root_ast.defaults.forth
@@ -387,7 +387,7 @@ feature -- Status setting
 						conv_opt ?= new_ast.defaults.item.option
 						if
 							conv_opt /= Void and then
-							conv_opt.code = feature {FREE_OPTION_SD}.Force_recompile and then
+							conv_opt.code = {FREE_OPTION_SD}.Force_recompile and then
 							new_ast.defaults.item.value.is_yes
 						then
 							full_degree_6_needed := True
@@ -683,24 +683,24 @@ feature {NONE} -- Implementation
 				
 				create l_factory
 				l_option := l_factory.new_special_option_sd (
-					feature {FREE_OPTION_SD}.msil_generation, Void, True)
+					{FREE_OPTION_SD}.msil_generation, Void, True)
 				l_defaults.extend (l_option)
 				if compilation_modes.is_precompiling then
 					l_option := l_factory.new_special_option_sd (
-						feature {FREE_OPTION_SD}.msil_generation_type, "dll", True)
+						{FREE_OPTION_SD}.msil_generation_type, "dll", True)
 				else				
 					l_option := l_factory.new_special_option_sd (
-						feature {FREE_OPTION_SD}.msil_generation_type, "exe", True)
+						{FREE_OPTION_SD}.msil_generation_type, "exe", True)
 				end
 				l_defaults.extend (l_option)
 				if l_runtime_version /= Void then
 					l_option := l_factory.new_special_option_sd (
-						feature {FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
+						{FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
 					l_defaults.extend (l_option)
 				end
 
 				l_option := l_factory.new_special_option_sd (
-					feature {FREE_OPTION_SD}.console_application, Void, True)
+					{FREE_OPTION_SD}.console_application, Void, True)
 				l_defaults.extend (l_option)
 				
 				l_assemblies := a_root.assemblies

@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			
 			l_warning.set_buttons_and_actions (<<"Quit">>, <<agent die>>)
 			create l_accelerator
-			l_accelerator.set_key (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_enter))
+			l_accelerator.set_key (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_enter))
 			l_accelerator.actions.extend (agent die)
 			l_warning.accelerators.extend (l_accelerator)
 			l_warning.button ("Quit").set_focus

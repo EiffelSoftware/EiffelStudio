@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {MD_SIGNATURE}
 			reset
-			internal_put (feature {MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
+			internal_put ({MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
 			current_position := 1
 			state := local_count_state
 		ensure then
@@ -40,7 +40,7 @@ feature -- Reset
 	reset is
 			-- Reset content.
 		do
-			internal_put (feature {MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
+			internal_put ({MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
 			current_position := 1
 			state := local_count_state
 		ensure

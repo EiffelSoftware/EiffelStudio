@@ -61,11 +61,11 @@ feature -- Query
 					l_xml_parser := Xml_parser
 					l_file.open_read
 					debug ("disable_assertions")
-						l_bool := feature {ISE_RUNTIME}.check_assert (False)
+						l_bool := {ISE_RUNTIME}.check_assert (False)
 					end
 					l_xml_parser.parse_from_stream (l_file)
 					debug ("disable_assertions")
-						l_bool := feature {ISE_RUNTIME}.check_assert (l_bool)
+						l_bool := {ISE_RUNTIME}.check_assert (l_bool)
 					end
 					l_file.close
 	

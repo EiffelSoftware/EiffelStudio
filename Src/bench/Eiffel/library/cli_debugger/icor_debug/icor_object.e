@@ -84,7 +84,7 @@ feature {NONE}
 				end			
 			end				
 			if item /= Default_pointer then
-				l_nb_ref := feature {CLI_COM}.release (item)
+				l_nb_ref := {CLI_COM}.release (item)
 				item := default_pointer
 			end	
 			debug ("com_object")
@@ -145,7 +145,7 @@ feature -- Ref management
 			debug ("COM_OBJECT")
 				io.error.put_string ("Entering ["+ generating_type +"].add_ref ... on " + item.out + "%N")
 			end				
-			l_nb_ref := feature {CLI_COM}.add_ref (item)
+			l_nb_ref := {CLI_COM}.add_ref (item)
 			debug ("COM_OBJECT")
 				io.error.put_string ("Quitting ["+ generating_type +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
@@ -160,7 +160,7 @@ feature -- Ref management
 			debug ("COM_OBJECT")
 				io.error.put_string ("Entering [" + generating_type + "].release ... on " + item.out + "%N")
 			end						
-			l_nb_ref := feature {CLI_COM}.release (item)
+			l_nb_ref := {CLI_COM}.release (item)
 			debug ("COM_OBJECT")
 				io.error.put_string ("Quitting [" + generating_type + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end

@@ -193,7 +193,7 @@ end
 
 					if not in_comments then
 						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > feature {CHARACTER}.Max_value then
+						if code_ > {CHARACTER}.Max_value then
 							-- Character error. Consedered as text.
 							create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
 						else

@@ -101,7 +101,7 @@ feature -- Access
 			-- option clause. If `a_name' Void then it is `free_option (flag)'.
 		require
 			valid_type_id: type_id > 0
-			type_id_big_enough: type_id < feature {FREE_OPTION_SD}.free_option_count
+			type_id_big_enough: type_id < {FREE_OPTION_SD}.free_option_count
 		local
 			argument_sd: FREE_OPTION_SD
 			v: OPT_VAL_SD

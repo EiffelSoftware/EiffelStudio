@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			
 			if is_valid then
 					-- Read public key from `l_orig_key' key pair.
-				l_result := feature {MD_STRONG_NAME}.strong_name_get_public_key (default_pointer,
+				l_result := {MD_STRONG_NAME}.strong_name_get_public_key (default_pointer,
 					key_pair.item, key_pair.count, $l_ptr, $l_key_size)
 	
 					-- Initializes `item' with retrieved data.		
@@ -35,16 +35,16 @@ feature {NONE} -- Initialization
 				item.item.memory_copy (l_ptr, l_key_size)
 
 					-- Free allocated data from call to `strong_name_get_public_key'.
-				feature {MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
+				{MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
 
 					-- Get public key token.
-				l_result := feature {MD_STRONG_NAME}.strong_name_token_from_public_key (item.item,
+				l_result := {MD_STRONG_NAME}.strong_name_token_from_public_key (item.item,
 					item.count, $l_ptr, $l_key_size)
 				create public_key_token.make (l_key_size)
 				public_key_token.item.memory_copy (l_ptr, l_key_size)
 
 					-- Free allocated data from call to `strong_name_token_from_public_key'.
-				feature {MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
+				{MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
 			else
 					-- Dummy empty key.
 				create item.make (0)

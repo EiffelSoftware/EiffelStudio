@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	on_run_button_key_press (key: EV_KEY) is
 			-- Key was pressed whilst button had focus.
 		do
-			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
+			if key.code = {EV_KEY_CONSTANTS}.key_enter then
 				execute
 			end
 		end
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 		require
 			key_not_void: key /= Void
      	do
-        	if key.code = feature {EV_KEY_CONSTANTS}.key_escape then
+        	if key.code = {EV_KEY_CONSTANTS}.key_escape then
             	on_cancel
             end
       	end

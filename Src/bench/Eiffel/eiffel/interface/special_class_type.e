@@ -231,22 +231,22 @@ feature -- C code generation
 			f_name_id := feat.feature_name_id
 			
 			inspect feat.feature_name_id
-			when feature {PREDEFINED_NAMES}.put_name_id then
+			when {PREDEFINED_NAMES}.put_name_id then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_put (feat, buffer)
 			when
-				feature {PREDEFINED_NAMES}.item_name_id,
-				feature {PREDEFINED_NAMES}.infix_at_name_id
+				{PREDEFINED_NAMES}.item_name_id,
+				{PREDEFINED_NAMES}.infix_at_name_id
 			then
 					-- Generate built-in feature `item' of class SPECIAL
 				generate_item (feat, buffer)
 			
-			when feature {PREDEFINED_NAMES}.Item_address_name_id then
+			when {PREDEFINED_NAMES}.Item_address_name_id then
 					-- Temporary code generation of `item_address' so
 					-- that it is thread safe (no GC sync calls in body).
 				generate_item_address (feat, buffer)
 				
-			when feature {PREDEFINED_NAMES}.base_address_name_id then
+			when {PREDEFINED_NAMES}.base_address_name_id then
 					-- Temporary code generation of `base_address'
 					-- so that it is thread safe (no GC sync calls in body).
 				generate_base_address (feat, buffer)
@@ -264,7 +264,7 @@ feature {NONE} -- C code generation
 		require
 			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
-			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.put_name_id;
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.put_name_id;
 		local
 			gen_param: TYPE_I;
 			expanded_type: CL_TYPE_I;
@@ -337,8 +337,8 @@ feature {NONE} -- C code generation
 		require
 			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
-			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.item_name_id or
-				feat.feature_name_id = feature {PREDEFINED_NAMES}.infix_at_name_id
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.item_name_id or
+				feat.feature_name_id = {PREDEFINED_NAMES}.infix_at_name_id
 		local
 			gen_param: TYPE_I;
 			expanded_type: CL_TYPE_I;
@@ -425,7 +425,7 @@ feature {NONE} -- C code generation
 		require
 			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
-			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.item_address_name_id
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.item_address_name_id
 		local
 			result_type, gen_param: TYPE_I;
 			l_param_is_expanded: BOOLEAN;
@@ -492,7 +492,7 @@ feature {NONE} -- C code generation
 		require
 			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
-			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.base_address_name_id
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.base_address_name_id
 		local
 			gen_param, result_type: TYPE_I;
 			l_param_is_expanded: BOOLEAN;
@@ -582,9 +582,9 @@ feature -- IL code generation
 			-- very efficient.
 		require
 			valid_name_id:
-				name_id = feature {PREDEFINED_NAMES}.Item_name_id or
-				name_id = feature {PREDEFINED_NAMES}.Infix_at_name_id or
-				name_id = feature {PREDEFINED_NAMES}.Put_name_id 
+				name_id = {PREDEFINED_NAMES}.Item_name_id or
+				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
+				name_id = {PREDEFINED_NAMES}.Put_name_id 
 			special_type_not_void: special_type /= Void
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
@@ -593,7 +593,7 @@ feature -- IL code generation
 		do
 				-- Get `native_array' field info.
 			l_native_array ?= associated_class.feature_table.item_id (
-				feature {PREDEFINED_NAMES}.Native_array_name_id)
+				{PREDEFINED_NAMES}.Native_array_name_id)
 			check
 				l_native_array_not_void: l_native_array /= Void
 			end
@@ -607,9 +607,9 @@ feature -- IL code generation
 			-- very efficient.
 		require
 			valid_name_id:
-				name_id = feature {PREDEFINED_NAMES}.Item_name_id or
-				name_id = feature {PREDEFINED_NAMES}.Infix_at_name_id or
-				name_id = feature {PREDEFINED_NAMES}.Put_name_id 
+				name_id = {PREDEFINED_NAMES}.Item_name_id or
+				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
+				name_id = {PREDEFINED_NAMES}.Put_name_id 
 			special_type_not_void: special_type /= Void
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
@@ -621,7 +621,7 @@ feature -- IL code generation
 			l_class_type: CLASS_TYPE
 			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 		do
-			if name_id = feature {PREDEFINED_NAMES}.Put_name_id then
+			if name_id = {PREDEFINED_NAMES}.Put_name_id then
 					-- Because `put' from SPECIAL and `put' from NATIVE_ARRAY
 					-- have their argument inverted, we need to swap the two
 					-- elements on top of the stack.
@@ -643,7 +643,7 @@ feature -- IL code generation
 				Il_generator.generate_local (l_element)
 			end
 				-- Get `native_array' field info.
-			l_native_array ?= associated_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Native_array_name_id)
+			l_native_array ?= associated_class.feature_table.item_id ({PREDEFINED_NAMES}.Native_array_name_id)
 			check
 				l_native_array_not_void: l_native_array /= Void
 			end

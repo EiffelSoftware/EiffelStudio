@@ -131,21 +131,21 @@ feature {NONE} -- Initialization
 			vp.extend (label)
 			vp.set_offset (-1, -(16 - label.height) // 2)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (vp)
 			widget.extend (f)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (project_label)
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (coordinate_label)
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create cel
 			cel.extend (edition_icon)
 				-- 16: Size of the icons.
@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create cel
 			cel.extend (compilation_icon)
 				-- We cannot set the minimum width on the frame directly because
@@ -165,7 +165,7 @@ feature {NONE} -- Initialization
 			widget.extend (f)
 			widget.disable_item_expand (f)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create debugger_cell
 			debugger_cell.extend (debugger_icon)
 			debugger_cell.set_minimum_width (16)

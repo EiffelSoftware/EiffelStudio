@@ -108,11 +108,11 @@ feature -- Store/Retrieve
 			store_debug (root_ast)
 
 			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
+				{FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
 
 			if Has_profiler then
 				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
+					{FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
 			defaults.extend (new_trace_option_sd (trace_check.is_selected))
@@ -246,13 +246,13 @@ feature {NONE} -- Filling GUI
 				inspect
 					free_option.code
 
-				when feature {FREE_OPTION_SD}.line_generation then
+				when {FREE_OPTION_SD}.line_generation then
 					set_selected (line_generation, val.is_yes)
 
-				when feature {FREE_OPTION_SD}.working_directory then
+				when {FREE_OPTION_SD}.working_directory then
 					arguments_control.set_working_directory (val.value)
 
-				when feature {FREE_OPTION_SD}.profile then
+				when {FREE_OPTION_SD}.profile then
 					if Has_profiler then
 						set_selected (profile_check, val.is_yes)
 					end

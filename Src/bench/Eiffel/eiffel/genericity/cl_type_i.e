@@ -218,16 +218,16 @@ feature -- Status
 			-- Void element type
 		do
 			if is_expanded then
-				Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
+				Result := {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
 			else
 				if class_id = System.system_string_class.compiled_class.class_id then
-					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_string
+					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_string
 				elseif class_id = System.system_object_id or class_id = system.any_id then
 						-- For ANY or SYSTEM_OBJECT, we always generate a System.Object
 						-- signature since we can now assign SYSTEM_OBJECTs into ANYs.
-					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
+					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_object
 				else
-					Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_class
+					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_class
 				end
 			end
 		end
@@ -235,7 +235,7 @@ feature -- Status
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type
 		do
-			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
+			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 		
 	is_expanded: BOOLEAN

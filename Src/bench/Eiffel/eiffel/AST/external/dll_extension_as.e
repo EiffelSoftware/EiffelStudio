@@ -22,8 +22,8 @@ feature {EXTERNAL_FACTORY} -- Initialization
 		is
 			-- Create a new C_EXTENSION_AS node
 		require
-			a_dll_type_valid: a_dll_type = feature {EXTERNAL_CONSTANTS}.dll32_type or
-				a_dll_type = feature {EXTERNAL_CONSTANTS}.dllwin32_type
+			a_dll_type_valid: a_dll_type = {EXTERNAL_CONSTANTS}.dll32_type or
+				a_dll_type = {EXTERNAL_CONSTANTS}.dllwin32_type
 			a_dll_name_not_void: a_dll_name /= Void
 		do
 			type := a_dll_type

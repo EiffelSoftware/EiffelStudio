@@ -54,7 +54,7 @@ feature -- Method body definition
 			not_closed: not is_closed
 			last_one_has_been_emitted: is_previous_body_written
 			is_method_token:
-				token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
+				token & {MD_TOKEN_TYPES}.Md_mask = {MD_TOKEN_TYPES}.Md_method_def
 		do
 			Result := internal_method_body
 			if Result = Void then
@@ -140,7 +140,7 @@ feature -- Settings
 			l_m := internal_item
 			method_locations.put (l_pos, l_meth.method_token)
 
-			update_size (l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count)
+			update_size (l_pos + l_meth_size + {MD_FAT_METHOD_HEADER}.Count)
 			
 			if
 				not l_meth.has_locals and then not l_meth.has_exceptions_handling
@@ -156,7 +156,7 @@ feature -- Settings
 					l_meth_size, l_meth.local_token)
 					
 				if l_meth.has_exceptions_handling then
-					Fat_method_header.set_flags (feature {MD_METHOD_CONSTANTS}.More_sections)
+					Fat_method_header.set_flags ({MD_METHOD_CONSTANTS}.More_sections)
 				end
 				
 				Fat_method_header.write_to_stream (l_m, l_pos)

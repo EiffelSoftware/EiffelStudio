@@ -44,10 +44,10 @@ feature -- Properties
 				create Result.make (1, 2)
 				inspect
 					flag
-				when feature {DEPEND_UNIT}.is_in_assignment_flag then
+				when {DEPEND_UNIT}.is_in_assignment_flag then
 					Result.put (pixmaps.icon_format_assigners, 1)
 					Result.put (pixmaps.icon_format_assigners, 2)
-				when feature {DEPEND_UNIT}.is_in_creation_flag then
+				when {DEPEND_UNIT}.is_in_creation_flag then
 					Result.put (pixmaps.icon_format_creators, 1)
 					Result.put (pixmaps.icon_format_creators, 2)
 				else
@@ -65,9 +65,9 @@ feature -- Properties
 			-- Identifier of `Current' in menus.
 		do
 			inspect flag
-			when feature {DEPEND_UNIT}.is_in_assignment_flag then
+			when {DEPEND_UNIT}.is_in_assignment_flag then
 				Result := interface_names.m_show_assigners
-			when feature {DEPEND_UNIT}.is_in_creation_flag then
+			when {DEPEND_UNIT}.is_in_creation_flag then
 				Result := interface_names.m_show_creators
 			else
 				Result := Interface_names.m_Showcallers
@@ -86,9 +86,9 @@ feature {NONE} -- Properties
 			-- Name of the command.
 		do
 			inspect flag
-			when feature {DEPEND_UNIT}.is_in_assignment_flag then
+			when {DEPEND_UNIT}.is_in_assignment_flag then
 				Result := interface_names.l_assigners
-			when feature {DEPEND_UNIT}.is_in_creation_flag then
+			when {DEPEND_UNIT}.is_in_creation_flag then
 				Result := interface_names.l_creators
 			else
 				Result := Interface_names.l_callers
@@ -99,9 +99,9 @@ feature {NONE} -- Properties
 			-- String symbol of the command, used as an extension when saving.
 		do
 			inspect flag
-			when feature {DEPEND_UNIT}.is_in_assignment_flag then
+			when {DEPEND_UNIT}.is_in_assignment_flag then
 				Result := "ass"
-			when feature {DEPEND_UNIT}.is_in_creation_flag then
+			when {DEPEND_UNIT}.is_in_creation_flag then
 				Result := "cre"
 			else
 				Result := "cal"

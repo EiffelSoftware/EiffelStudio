@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			hb.set_border_width (Layout_constants.Default_border_size)
 			
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (list)
 			
 			hb.extend (f)
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 	on_key (k: EV_KEY) is
 			-- A key was pressed in the list. Process it.
 		do
-			if k.code = feature {EV_KEY_CONSTANTS}.Key_delete then
+			if k.code = {EV_KEY_CONSTANTS}.Key_delete then
 				if list /= Void and list.selected_item /= Void then
 					delete_command
 				end

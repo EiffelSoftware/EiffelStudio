@@ -280,7 +280,7 @@ feature {NONE} -- Generation
 										il_ext ?= ext.extension
 										if
 											il_ext /= Void and then
-											il_ext.type = feature {SHARED_IL_CONSTANTS}.enum_field_type
+											il_ext.type = {SHARED_IL_CONSTANTS}.enum_field_type
 										then
 											il_enum_ext ?= il_ext
 											check
@@ -298,7 +298,7 @@ feature {NONE} -- Generation
 											l_feat ?= nested_b.message
 											if
 												l_feat /= Void and
-												l_feat.feature_name_id = feature {PREDEFINED_NAMES}.to_cil_name_id
+												l_feat.feature_name_id = {PREDEFINED_NAMES}.to_cil_name_id
 											then
 												string ?= l_target.expr
 												if string /= Void then

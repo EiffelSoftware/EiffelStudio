@@ -1198,11 +1198,11 @@ feature -- Assertions
 			-- Check wether or not we need to check assertion for current type.
 		require
 			valid_level:
-				level = feature {ASSERTION_I}.ck_require or
-				level = feature {ASSERTION_I}.ck_ensure or
-				level = feature {ASSERTION_I}.ck_check or
-				level = feature {ASSERTION_I}.ck_loop or
-				level = feature {ASSERTION_I}.ck_invariant
+				level = {ASSERTION_I}.ck_require or
+				level = {ASSERTION_I}.ck_ensure or
+				level = {ASSERTION_I}.ck_check or
+				level = {ASSERTION_I}.ck_loop or
+				level = {ASSERTION_I}.ck_invariant
 		do
 		end
 
@@ -1392,16 +1392,16 @@ feature -- Labels and branching
 			-- IL stack when compared using conditional instruction `comparison' yield True.
 		require
 			valid_comparison:
-				comparison = feature {MD_OPCODES}.beq or else
-				comparison = feature {MD_OPCODES}.bge or else
-				comparison = feature {MD_OPCODES}.bge_un or else
-				comparison = feature {MD_OPCODES}.bgt or else
-				comparison = feature {MD_OPCODES}.bgt_un or else
-				comparison = feature {MD_OPCODES}.ble or else
-				comparison = feature {MD_OPCODES}.ble_un or else
-				comparison = feature {MD_OPCODES}.blt or else
-				comparison = feature {MD_OPCODES}.blt_un or else
-				comparison = feature {MD_OPCODES}.bne_un
+				comparison = {MD_OPCODES}.beq or else
+				comparison = {MD_OPCODES}.bge or else
+				comparison = {MD_OPCODES}.bge_un or else
+				comparison = {MD_OPCODES}.bgt or else
+				comparison = {MD_OPCODES}.bgt_un or else
+				comparison = {MD_OPCODES}.ble or else
+				comparison = {MD_OPCODES}.ble_un or else
+				comparison = {MD_OPCODES}.blt or else
+				comparison = {MD_OPCODES}.blt_un or else
+				comparison = {MD_OPCODES}.bne_un
 			label_not_void: label /= Void
 		do
 		end
@@ -1659,7 +1659,7 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 			-- Feature ID of `make_from_cil' of STRING.
 		once
 			Result := System.string_class.compiled_class.
-				feature_table.item_id (feature {PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		end
 
 feature {NONE} -- Constants

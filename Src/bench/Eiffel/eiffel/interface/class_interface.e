@@ -329,10 +329,10 @@ feature {NONE} -- Implementation
 				l_ext ?= new_feat.extension
 				if l_ext /= Void then
 					l_type := l_ext.type
-					Result := l_type /= feature {SHARED_IL_CONSTANTS}.Creator_type and
-						l_type /= feature {SHARED_IL_CONSTANTS}.Static_type and
-						l_type /= feature {SHARED_IL_CONSTANTS}.Static_field_type and
-						l_type /= feature {SHARED_IL_CONSTANTS}.Field_type
+					Result := l_type /= {SHARED_IL_CONSTANTS}.Creator_type and
+						l_type /= {SHARED_IL_CONSTANTS}.Static_type and
+						l_type /= {SHARED_IL_CONSTANTS}.Static_field_type and
+						l_type /= {SHARED_IL_CONSTANTS}.Field_type
 				end
 			end
 		end

@@ -89,7 +89,7 @@ feature -- IL code generation
 			
 			il_generator.generate_argument (position)
 			il_generator.put_default_value (cl_type)
-			il_generator.generate_binary_operator (feature {IL_CONST}.il_eq)
+			il_generator.generate_binary_operator ({IL_CONST}.il_eq)
 			il_generator.branch_on_false (creation_label)
 			
 				-- Object is null, we are therefore creating an object of
@@ -124,7 +124,7 @@ feature -- IL code generation
 			
 			il_generator.generate_argument (position)
 			il_generator.put_default_value (cl_type)
-			il_generator.generate_binary_operator (feature {IL_CONST}.il_eq)
+			il_generator.generate_binary_operator ({IL_CONST}.il_eq)
 			il_generator.branch_on_false (creation_label)
 			
 				-- Object is null, we are therefore creating an object of

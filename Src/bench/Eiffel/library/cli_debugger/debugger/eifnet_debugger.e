@@ -519,7 +519,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				debug ("debugger_trace_callback_data")
 					io.error.put_string ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p)).get_name + "%N")
 				end
-				r := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p)
+				r := {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p)
 				check r = 0 end
 				dbgsync_cb_without_stopping := True
 			when Cst_managed_cb_create_process then
@@ -597,7 +597,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				p := dbg_cb_info_pointer_item (1) -- p_process
 				reset_last_controller_by_pointer (p)
 				reset_last_process_by_pointer (p)
-				r := feature  {CLI_COM}.release (p)
+				r := {CLI_COM}.release (p)
 				debug ("com_object")
 					io.error.put_string ("ExitProcess Release ref pProcess <" + p.out + 
 							"> -> nb= " + r.out + " %N")
@@ -710,15 +710,15 @@ feature {NONE} -- Callback actions
 			n: INTEGER
 		do
 			if p_controller /= Default_pointer then
-				l_hr := feature {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $Result)
+				l_hr := {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $Result)
 			end		
 			if l_hr /= 0 then
-				l_hr := feature {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $p_app_domain)
-				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
+				l_hr := {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $p_app_domain)
+				l_hr := {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
 				Result := p_process
-				n := feature {CLI_COM}.release (p_app_domain)
+				n := {CLI_COM}.release (p_app_domain)
 			end
-			n := feature {CLI_COM}.release (p_controller)			
+			n := {CLI_COM}.release (p_controller)			
 		end
 
 	continue_on_cb (cb_id: INTEGER): BOOLEAN is
@@ -1026,9 +1026,9 @@ feature -- Interaction with .Net Debugger
 		do
 			l_icd_process := icor_debug.create_process (debug_param_executable + " " + debug_param_arguments, debug_param_directory)
 			if icor_debug.last_call_succeed then
-				n := feature {CLI_COM}.add_ref (l_icd_process)
+				n := {CLI_COM}.add_ref (l_icd_process)
 				set_last_controller_by_pointer (l_icd_process)
-				n := feature {CLI_COM}.release (l_icd_process)
+				n := {CLI_COM}.release (l_icd_process)
 			end
 		end
 
@@ -2020,7 +2020,7 @@ feature -- Specific function evaluation
 					end
 					l_icd_debug_value.clean_on_dispose
 				else
-					if (l_icd_class.last_call_success & 0xFFFF) = feature {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
+					if (l_icd_class.last_call_success & 0xFFFF) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
 						l_once_already_called := False
 					else
 						l_once_not_available := True

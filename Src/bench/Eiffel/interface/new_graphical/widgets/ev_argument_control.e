@@ -109,7 +109,7 @@ feature {NONE} -- Retrieval
 							free_option ?= opt
 							inspect 
 								free_option.code
-							when feature {FREE_OPTION_SD}.arguments then
+							when {FREE_OPTION_SD}.arguments then
 								argument_value := val.value
 								if 
 									not (argument_value.is_empty or else
@@ -124,7 +124,7 @@ feature {NONE} -- Retrieval
 									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
 								end					
 								defaults.remove
-							when feature {FREE_OPTION_SD}.working_directory then
+							when {FREE_OPTION_SD}.working_directory then
 								defaults.remove
 								set_working_directory (val.value)
 							else
@@ -297,9 +297,9 @@ feature {NONE} -- Storage
 					free_option ?= opt
 					inspect
 						free_option.code
-					when feature {FREE_OPTION_SD}.arguments then
+					when {FREE_OPTION_SD}.arguments then
 						defaults.remove
-					when feature {FREE_OPTION_SD}.Working_directory then
+					when {FREE_OPTION_SD}.Working_directory then
 					 	defaults.remove
 					else
 						defaults.forth
@@ -334,7 +334,7 @@ feature {NONE} -- Storage
 			wd := working_directory_path
 			if not wd.is_empty then
 				defaults.extend (
-					new_special_option_sd (feature {FREE_OPTION_SD}.working_directory, wd, True))
+					new_special_option_sd ({FREE_OPTION_SD}.working_directory, wd, True))
 			end
 			if Workbench.system_defined then
 				Lace.set_application_working_directory (wd)
@@ -644,7 +644,7 @@ feature {NONE} -- Status Setting
 			free_option: FREE_OPTION_SD
 			val: OPT_VAL_SD
 		do
-			create free_option.make (feature {FREE_OPTION_SD}.arguments)
+			create free_option.make ({FREE_OPTION_SD}.arguments)
 			create val.make (new_id_sd (a_string, True))
 			create Result.initialize (free_option, val)
 		end
@@ -766,7 +766,7 @@ feature {NONE} -- Actions
 			l_caret_pos: INTEGER
 			l_argument_dialog: EB_ARGUMENT_DIALOG
 		do
-			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
+			if key.code = {EV_KEY_CONSTANTS}.key_enter then
 				
 					-- Disallow new line character.
 				l_caret_pos := current_argument.caret_position

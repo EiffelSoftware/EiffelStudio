@@ -34,12 +34,12 @@ feature {NONE} -- Initialization
 				-- PE file header basic initialization.
 			create pe_header.make
 			pe_header.set_number_of_sections (2)
-			l_characteristics := feature {CLI_PE_FILE_CONSTANTS}.Image_file_32bit_machine |
-				feature {CLI_PE_FILE_CONSTANTS}.Image_file_executable_image |		
-				feature {CLI_PE_FILE_CONSTANTS}.Image_file_line_nums_stripped |
-				feature {CLI_PE_FILE_CONSTANTS}.Image_file_local_syms_stripped
+			l_characteristics := {CLI_PE_FILE_CONSTANTS}.Image_file_32bit_machine |
+				{CLI_PE_FILE_CONSTANTS}.Image_file_executable_image |		
+				{CLI_PE_FILE_CONSTANTS}.Image_file_line_nums_stripped |
+				{CLI_PE_FILE_CONSTANTS}.Image_file_local_syms_stripped
 			if is_dll then
-				l_characteristics := l_characteristics | feature {CLI_PE_FILE_CONSTANTS}.Image_file_dll
+				l_characteristics := l_characteristics | {CLI_PE_FILE_CONSTANTS}.Image_file_dll
 			end
 			pe_header.set_characteristics (l_characteristics)
 
@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			create optional_header.make
 			if is_console then
 				optional_header.set_subsystem (
-					feature {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_console)
+					{CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_console)
 			else
 				optional_header.set_subsystem (
-					feature {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_gui)
+					{CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_gui)
 			end
 				
 			create text_section_header.make (".text")
@@ -197,13 +197,13 @@ feature -- Settings
 		do
 			public_key := a_key
 			has_strong_name := True
-			cli_header.set_flags (feature {CLI_HEADER}.il_only |
-				feature {CLI_HEADER}.strong_name_signed)
+			cli_header.set_flags ({CLI_HEADER}.il_only |
+				{CLI_HEADER}.strong_name_signed)
 		ensure
 			public_key_set: public_key = a_key
 			has_strong_name_set: has_strong_name
 			cli_header_flags_set: cli_header.flags = 
-				feature {CLI_HEADER}.il_only | feature {CLI_HEADER}.strong_name_signed
+				{CLI_HEADER}.il_only | {CLI_HEADER}.strong_name_signed
 		end
 
 	set_resources (r: like resources) is
@@ -316,7 +316,7 @@ feature -- Saving
 				l_pe_file.close
 				
 				create l_uni_string.make (file_name)
-				l_result := feature {MD_STRONG_NAME}.strong_name_signature_generation (
+				l_result := {MD_STRONG_NAME}.strong_name_signature_generation (
 					l_uni_string.item, default_pointer, public_key.key_pair.item,
 					public_key.key_pair.count, $l_ptr, $l_size)
 					
@@ -326,7 +326,7 @@ feature -- Saving
 				l_pe_file.put_data (l_padding.item, l_padding.count)
 				l_pe_file.close
 
-				feature {MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
+				{MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
 			end
 			
 		ensure
@@ -358,7 +358,7 @@ feature {NONE} -- Saving
 			end
 
 			if has_strong_name then
-				l_result := feature {MD_STRONG_NAME}.strong_name_signature_size (
+				l_result := {MD_STRONG_NAME}.strong_name_signature_size (
 					public_key.item.item, public_key.item.count, $l_size)
 				strong_name_size := l_size
 			else
@@ -421,18 +421,18 @@ feature {NONE} -- Saving
 			optional_header.set_headers_size (pad_up (headers_size, file_alignment))
 			
 			import_directory := optional_header.directory (
-				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_import)
+				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_import)
 			import_directory.set_rva (import_directory_rva)
 			import_directory.set_data_size (import_table.count - 1)
 			
 			reloc_directory := optional_header.directory (
-				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_basereloc)
+				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_basereloc)
 			reloc_directory.set_rva (reloc_rva)
 			reloc_directory.set_data_size (reloc_size)
 
 			if has_debug_info then
 				l_debug_directory := optional_header.directory (
-					feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
+					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
 				l_debug_directory.set_rva (text_rva + iat.count + cli_header.count + code_size)
 				l_debug_directory.set_data_size (debug_directory.count)
 				
@@ -444,12 +444,12 @@ feature {NONE} -- Saving
 			end
 			
 			iat_directory := optional_header.directory (
-				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
+				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
 			iat_directory.set_rva (text_rva)
 			iat_directory.set_data_size (iat.count)
 			
 			cli_directory := optional_header.directory (
-				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_cli_descriptor)
+				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_cli_descriptor)
 			cli_directory.set_rva (text_rva + iat.count)
 			cli_directory.set_data_size (cli_header.count)
 			
@@ -459,18 +459,18 @@ feature {NONE} -- Saving
 			text_section_header.set_raw_data_size (text_size_on_disk)
 			text_section_header.set_pointer_to_raw_data (headers_size_on_disk)
 			text_section_header.set_characteristics (
-				feature {CLI_SECTION_CONSTANTS}.code |
-				feature {CLI_SECTION_CONSTANTS}.execute |
-				feature {CLI_SECTION_CONSTANTS}.read)
+				{CLI_SECTION_CONSTANTS}.code |
+				{CLI_SECTION_CONSTANTS}.execute |
+				{CLI_SECTION_CONSTANTS}.read)
 
 			reloc_section_header.set_virtual_size (pad_up (reloc_size, 4))
 			reloc_section_header.set_virtual_address (reloc_rva)
 			reloc_section_header.set_raw_data_size (reloc_size_on_disk)
 			reloc_section_header.set_pointer_to_raw_data (headers_size_on_disk + text_size_on_disk)
 			reloc_section_header.set_characteristics (
-				feature {CLI_SECTION_CONSTANTS}.initialized_data |
-				feature {CLI_SECTION_CONSTANTS}.discardable |
-				feature {CLI_SECTION_CONSTANTS}.read)
+				{CLI_SECTION_CONSTANTS}.initialized_data |
+				{CLI_SECTION_CONSTANTS}.discardable |
+				{CLI_SECTION_CONSTANTS}.read)
 			
 				-- CLI header.
 			if has_strong_name then

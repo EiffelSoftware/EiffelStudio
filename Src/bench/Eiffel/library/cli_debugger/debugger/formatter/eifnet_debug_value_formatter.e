@@ -335,54 +335,54 @@ feature -- Dereferenced to Value
 			l_type := l_icd.get_type
 			if l_icd.last_call_succeed then
 				inspect l_type
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_end then
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_void then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_end then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_void then
 					Result := "Void" -- FIXME
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
 					Result := prepared_icor_debug_value_as_boolean (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_char then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_char then
 					Result := prepared_icor_debug_value_as_character (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i then
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_i then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_u then
 					Result := prepared_icor_debug_value_as_pointer (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
 					Result := prepared_icor_debug_value_as_integer_8 (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
 					Result := prepared_icor_debug_value_as_natural_8 (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
 					Result := prepared_icor_debug_value_as_integer_16 (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
 					Result := prepared_icor_debug_value_as_natural_16 (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
 					Result := prepared_icor_debug_value_as_integer_32 (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
 					Result := prepared_icor_debug_value_as_natural_32 (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
 					Result := prepared_icor_debug_value_as_integer_64 (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
 					Result := prepared_icor_debug_value_as_natural_64 (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
 					Result := prepared_icor_debug_value_as_real (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
 					Result := prepared_icor_debug_value_as_double (l_icd)
 
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_byref then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_byref then
 				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_object,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_array,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype
+					{MD_SIGNATURE_CONSTANTS}.element_type_class,
+					{MD_SIGNATURE_CONSTANTS}.element_type_object,
+					{MD_SIGNATURE_CONSTANTS}.element_type_szarray,
+					{MD_SIGNATURE_CONSTANTS}.element_type_array,
+					{MD_SIGNATURE_CONSTANTS}.element_type_valuetype
 				then
 					Result := prepared_icor_debug_value_as_reference_to_string (l_icd)
-				when feature {MD_SIGNATURE_CONSTANTS}.element_type_string then
+				when {MD_SIGNATURE_CONSTANTS}.element_type_string then
 					Result := prepared_icor_debug_value_as_string (l_icd)
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_fnptr then

@@ -46,7 +46,7 @@ feature -- Visitor
 			args := [an_element]
 
 			create internal
-			type_id := feature {ISE_RUNTIME}.dynamic_type ($an_element)
+			type_id := {ISE_RUNTIME}.dynamic_type ($an_element)
 
 			if actions_cache.valid_index (type_id) and then actions_cache.item (type_id) /= Void then
 				actions_cache.item (type_id).call (args)

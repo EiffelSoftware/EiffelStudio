@@ -298,9 +298,9 @@ feature {IL_CODE_GENERATOR} -- Custom attributes: modification
 				attribute_class_token := md_emit.define_type_ref (create {UNI_STRING}.make ("System.ThreadStaticAttribute"), mscorlib_token)
 				l_method_sig := method_sig
 				l_method_sig.reset
-				l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current | feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+				l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current | {MD_SIGNATURE_CONSTANTS}.default_sig)
 				l_method_sig.set_parameter_count (0)
-				l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				l_method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				thread_static_attribute_ctor_token := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"), attribute_class_token, l_method_sig)
 			end
 			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, Void).do_nothing
@@ -322,10 +322,10 @@ feature {IL_CODE_GENERATOR} -- Synchronization tokens
 			monitor_token := md_emit.define_type_ref (create {UNI_STRING}.make ("System.Threading.Monitor"), mscorlib_token)
 			l_sig := method_sig
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 			l_sig.set_parameter_count (1)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
 			uni_string.set_string (method_name)
 			Result := md_emit.define_member_ref (uni_string, monitor_token, l_sig)
 		ensure
@@ -353,12 +353,12 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: access
 					-- Define field signature.
 				l_field_sig := field_sig
 				l_field_sig.reset
-				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
 				if is_cil_string then
-					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 				else
-					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
+					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
 						actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
 				end
 					-- Define field token.
@@ -390,11 +390,11 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: access
 					-- Define method signature.
 				l_method_sig := method_sig
 				l_method_sig.reset
-				l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+				l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 				l_method_sig.set_parameter_count (2)
-				l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
-				l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
-				l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				l_method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 					-- Define method token.
 				Result := md_emit.define_member_ref (once_string_allocation_routine_name, once_string_class_token, l_method_sig)
 				once_string_allocation_routine_token_value := Result
@@ -461,7 +461,7 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: management
 				-- Define helper class.
 			helper_class_token := md_emit.define_type (
 				runtime_helper_class_name,
-				feature {MD_TYPE_ATTRIBUTES}.Auto_class | feature {MD_TYPE_ATTRIBUTES}.Auto_layout | feature {MD_TYPE_ATTRIBUTES}.Public,
+				{MD_TYPE_ATTRIBUTES}.Auto_class | {MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.Public,
 				object_type_token,
 				Void)
 			once_string_class_token_value := helper_class_token
@@ -469,44 +469,44 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: management
 				-- Emit field for CIL strings.
 			l_field_sig := field_sig
 			l_field_sig.reset
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 			once_string_field_cil_token := md_emit.define_field (
 				once_string_field_cil_name,
 				helper_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.public | feature {MD_FIELD_ATTRIBUTES}.static,
+				{MD_FIELD_ATTRIBUTES}.public | {MD_FIELD_ATTRIBUTES}.static,
 				l_field_sig)
 			define_thread_static_attribute (once_string_field_cil_token)
 
 				-- Emit field for Eiffel strings.
 			l_field_sig.reset
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
 			once_string_field_eiffel_token := md_emit.define_field (
 				once_string_field_eiffel_name,
 				helper_class_token,
-				feature {MD_FIELD_ATTRIBUTES}.public | feature {MD_FIELD_ATTRIBUTES}.static,
+				{MD_FIELD_ATTRIBUTES}.public | {MD_FIELD_ATTRIBUTES}.static,
 				l_field_sig)
 			define_thread_static_attribute (once_string_field_eiffel_token)
 
 				-- Emit method to allocate storage for strings.
 			l_method_sig := method_sig
 			l_method_sig.reset
-			l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+			l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 			l_method_sig.set_parameter_count (2)
-			l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
-			l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
-			l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+			l_method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+			l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+			l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 			once_string_allocation_routine_token_value := md_emit.define_method (
 				once_string_allocation_routine_name, 
 				helper_class_token,
-				feature {MD_METHOD_ATTRIBUTES}.public |
-				feature {MD_METHOD_ATTRIBUTES}.static |
-				feature {MD_METHOD_ATTRIBUTES}.hide_by_signature,
+				{MD_METHOD_ATTRIBUTES}.public |
+				{MD_METHOD_ATTRIBUTES}.static |
+				{MD_METHOD_ATTRIBUTES}.hide_by_signature,
 				l_method_sig,
-				feature {MD_METHOD_ATTRIBUTES}.il | feature {MD_METHOD_ATTRIBUTES}.managed)
+				{MD_METHOD_ATTRIBUTES}.il | {MD_METHOD_ATTRIBUTES}.managed)
 		ensure
 			helper_class_defined: is_once_string_class_defined
 			once_string_field_cil_defined: is_once_string_field_cil_defined
@@ -724,14 +724,14 @@ feature {NONE} -- Implementations: signatures
 			l_native_array_type: NATIVE_ARRAY_TYPE_I
 		do
 			if a_is_by_ref then
-				a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+				a_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
 			end
 			if a_type.is_basic and not a_type.is_bit then
 				a_sig.set_type (a_type.element_type, 0)
 			else
 				l_native_array_type ?= a_type
 				if l_native_array_type /= Void then
-					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+					a_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 					set_signature_type (a_sig, l_native_array_type.true_generics.item (1))
 				else
 					if a_type.is_expanded then
@@ -781,9 +781,9 @@ feature -- Code generation
 
 				-- Create default signature.
 			create default_sig.make
-			default_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			default_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			default_sig.set_parameter_count (0)
-			default_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			default_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 				-- Create permanent signature for feature.
 			create method_sig.make
@@ -810,7 +810,7 @@ feature -- Code generation
 				end
 				
 				if public_key /= Void then
-					l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
+					l_assembly_flags := {MD_ASSEMBLY_FLAGS}.public_key
 				end
 				associated_assembly_token :=
 					md_emit.define_assembly (uni_string, l_assembly_flags, ass, public_key)
@@ -850,21 +850,21 @@ feature -- Code generation
 			l_type_id := a_class_type.implementation_id
 
 			entry_type_token := md_emit.define_type (
-				create {UNI_STRING}.make ("MAIN"), feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-					feature {MD_TYPE_ATTRIBUTES}.Auto_layout | feature {MD_TYPE_ATTRIBUTES}.public,
+				create {UNI_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
 				object_type_token, Void)
 
 			l_sig := method_sig
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			entry_point_token := md_emit.define_method (create {UNI_STRING}.make ("Main"),
-				entry_type_token, feature {MD_METHOD_ATTRIBUTES}.Public |
-				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				feature {MD_METHOD_ATTRIBUTES}.Static, l_sig,
-				feature {MD_METHOD_ATTRIBUTES}.Managed)
+				entry_type_token, {MD_METHOD_ATTRIBUTES}.Public |
+				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				{MD_METHOD_ATTRIBUTES}.Static, l_sig,
+				{MD_METHOD_ATTRIBUTES}.Managed)
 
 			if is_debug_info_enabled then
 				il_code_generator.define_custom_attribute (entry_point_token,
@@ -880,7 +880,7 @@ feature -- Code generation
 				il_code_generator.put_type_token (l_type_id)
 				il_code_generator.internal_generate_external_call (ise_runtime_token, 0,
 					Runtime_class_name, "assertion_initialize",
-					feature {SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
+					{SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
 					Void, False)
 			end
 
@@ -895,10 +895,10 @@ feature -- Code generation
 			end
 
 			if a_class_type.is_generated_as_single_type then
-				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Callvirt,
+				il_code_generator.method_body.put_call ({MD_OPCODES}.Callvirt,
 					feature_token (l_type_id, a_feature_id), l_nb_args, False)
 			else
-				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call,
+				il_code_generator.method_body.put_call ({MD_OPCODES}.Call,
 					implementation_feature_token (l_type_id, a_feature_id), l_nb_args, False)
 			end
 			il_code_generator.generate_return (False)
@@ -1024,22 +1024,22 @@ feature -- Metadata description
 			else
 				update_parents (class_type, class_c, True)
 
-				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-					feature {MD_TYPE_ATTRIBUTES}.Ansi_class
+				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.Ansi_class
 
 				if class_type.is_generated_as_single_type then
-					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_class |
-						feature {MD_TYPE_ATTRIBUTES}.Serializable
+					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_class |
+						{MD_TYPE_ATTRIBUTES}.Serializable
 					if class_c.is_frozen or class_type.is_expanded then
-						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
+						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
 					end
 
 					single_parent_mapping.put (single_inheritance_parent_id,
 						class_type.implementation_id)
 				else
-					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_interface |
-						feature {MD_TYPE_ATTRIBUTES}.Abstract
+					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_interface |
+						{MD_TYPE_ATTRIBUTES}.Abstract
 				end
 
 				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
@@ -1086,18 +1086,18 @@ feature -- Metadata description
 			then
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
-				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
-					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
-					feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-					feature {MD_TYPE_ATTRIBUTES}.Is_class |
-					feature {MD_TYPE_ATTRIBUTES}.Serializable
+				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Is_class |
+					{MD_TYPE_ATTRIBUTES}.Serializable
 				
 				if class_c.is_deferred then
-					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
+					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Abstract
 				end
 
 				if class_c.is_frozen or class_type.is_expanded then
-					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
+					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
 				end
 			
 				update_parents (class_type, class_c, False)
@@ -1298,18 +1298,18 @@ feature -- Metadata description
 			else
 				l_meth_token := md_emit.define_method (l_uni_string,
 					actual_class_type_token (class_type.implementation_id),
-					feature {MD_METHOD_ATTRIBUTES}.Public |
-					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					feature {MD_METHOD_ATTRIBUTES}.Special_name |
-					feature {MD_METHOD_ATTRIBUTES}.Rt_special_name,
-					l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Special_name |
+					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
+					l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 				l_ctor_token := constructor_token (single_parent_mapping.item (
 						class_type.implementation_id))
 
 				il_code_generator.start_new_body (l_meth_token)
 				il_code_generator.generate_current
-				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call, l_ctor_token,
+				il_code_generator.method_body.put_call ({MD_OPCODES}.Call, l_ctor_token,
 					0, False)
 
 				il_code_generator.generate_return (False)
@@ -1325,8 +1325,8 @@ feature -- Local saving
 			-- Store `local_types' into `il_code_generator.method_body' for routine `a_meth_token'.
 		require
 			is_generated: is_generated
-			method_token_valid: a_meth_token & feature {MD_TOKEN_TYPES}.Md_mask =
-				feature {MD_TOKEN_TYPES}.Md_method_def
+			method_token_valid: a_meth_token & {MD_TOKEN_TYPES}.Md_mask =
+				{MD_TOKEN_TYPES}.Md_method_def
 		local
 			l_sig: like local_sig
 			l_count: INTEGER
@@ -1374,8 +1374,8 @@ feature -- Local saving
 		require
 			is_generated: is_generated
 			debug_info_requested: is_debug_info_enabled
-			method_token_valid: a_method_token & feature {MD_TOKEN_TYPES}.Md_mask =
-				feature {MD_TOKEN_TYPES}.Md_method_def
+			method_token_valid: a_method_token & {MD_TOKEN_TYPES}.Md_mask =
+				{MD_TOKEN_TYPES}.Md_method_def
 		local
 			l_locals: like local_types
 			l_sig: MD_TYPE_SIGNATURE
@@ -1439,7 +1439,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		ensure
 			external_token_mapping_valid:
-				Result & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_type_ref
+				Result & {MD_TOKEN_TYPES}.Md_mask = {MD_TOKEN_TYPES}.Md_type_ref
 		end
 
 	internal_external_token_mapping: HASH_TABLE [INTEGER, STRING]
@@ -1491,9 +1491,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					-- Generate reference to invariant defined in a different assembly.
 				l_sig := method_sig
 				l_sig.reset
-				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 				l_sig.set_parameter_count (1)
-				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				set_signature_type (l_sig, l_class_type.type)
 
 				Result := md_emit.define_member_ref (create {UNI_STRING}.make ("$$_invariant"),
@@ -1605,7 +1605,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		ensure
 			is_token_defined: Result /= 0
-			is_token_assembly_ref: Result & feature {MD_TOKEN_TYPES}.md_mask =  feature {MD_TOKEN_TYPES}.md_assembly_ref
+			is_token_assembly_ref: Result & {MD_TOKEN_TYPES}.md_mask =  {MD_TOKEN_TYPES}.md_assembly_ref
 		end
 
 	class_data_token (class_c: CLASS_C): INTEGER is
@@ -1637,9 +1637,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					if class_module = Current then
 						Result := md_emit.define_type (
 							class_data_name,
-							feature {MD_TYPE_ATTRIBUTES}.auto_class | feature {MD_TYPE_ATTRIBUTES}.auto_layout |
-							feature {MD_TYPE_ATTRIBUTES}.is_class | feature {MD_TYPE_ATTRIBUTES}.public |
-							feature {MD_TYPE_ATTRIBUTES}.sealed,
+							{MD_TYPE_ATTRIBUTES}.auto_class | {MD_TYPE_ATTRIBUTES}.auto_layout |
+							{MD_TYPE_ATTRIBUTES}.is_class | {MD_TYPE_ATTRIBUTES}.public |
+							{MD_TYPE_ATTRIBUTES}.sealed,
 							object_type_token,
 							Void)
 					else
@@ -1651,9 +1651,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		ensure
 			is_token_defined: Result /= 0
 			is_type_token: 
-				Result & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_def or else
-				Result & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_ref or else
-				Result & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_spec
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_def or else
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_ref or else
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_spec
 		end
 
 	class_types: ARRAY [CLASS_TYPE] is
@@ -2271,10 +2271,10 @@ feature {NONE} -- Once per modules being generated.
 				-- `System.Runtime.InteropServices.ComVisibleAttribute'.
 			l_sig := method_sig
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_sig.set_parameter_count (1)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 
 			cls_compliant_ctor_token := md_emit.define_member_ref (uni_string,
 				l_cls_compliant_token, l_sig)
@@ -2283,9 +2283,9 @@ feature {NONE} -- Once per modules being generated.
 				l_com_visible_token, l_sig)
 
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			debugger_hidden_ctor_token := md_emit.define_member_ref (uni_string,
 				l_debugger_hidden_token, l_sig)
@@ -2309,11 +2309,11 @@ feature {NONE} -- Once per modules being generated.
 		do
 			l_sig := method_sig
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (2)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
 			uni_string.set_string ("Pow")
 			power_method_token := md_emit.define_member_ref (uni_string, math_type_token, l_sig)
 		ensure
@@ -2329,16 +2329,16 @@ feature {NONE} -- Once per modules being generated.
 		do
 			l_sig := method_sig
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 			to_string_method_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("ToString"), object_type_token, l_sig)
 
 			l_sig.reset
-			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_sig.set_parameter_count (0)
-			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 			memberwise_clone_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("MemberwiseClone"), object_type_token, l_sig)
 		ensure
@@ -2378,7 +2378,7 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_last_exception_token'.
 			l_sig := field_sig
 			l_sig.reset
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				system_exception_token)
 
 			ise_last_exception_token := md_emit.define_member_ref (
@@ -2388,18 +2388,18 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_in_assertion_token'.
 			l_meth_sig := method_sig
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (0)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 
 			ise_in_assertion_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("in_assertion"), ise_runtime_type_token, l_meth_sig)
 
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
 
 			ise_set_in_assertion_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("set_in_assertion"), ise_runtime_type_token, l_meth_sig)
@@ -2411,27 +2411,27 @@ feature {NONE} -- Once per modules being generated.
 
 			l_meth_sig := method_sig
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (2)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 			ise_eiffel_exception_ctor_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make (".ctor"), l_token, l_meth_sig)
 
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (3)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
 			ise_eiffel_exception_chained_ctor_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make (".ctor"), l_token, l_meth_sig)
 
 				-- Define `ise_assertion_tag_token'
 			l_sig.reset
-			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
 			ise_assertion_tag_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("assertion_tag"), ise_runtime_type_token, l_sig)
@@ -2462,10 +2462,10 @@ feature {NONE} -- Once per modules being generated.
 
 				-- Define `ise_set_type_token'.
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, 
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, 
 				ise_generic_type_token)
 
 			ise_set_type_token := md_emit.define_member_ref (
@@ -2474,20 +2474,20 @@ feature {NONE} -- Once per modules being generated.
 
 				-- Define `ise_check_invariant_token'.
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (2)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0) 
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0) 
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
 			ise_check_invariant_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
 
 				-- Define `ise_is_invariant_checked_for'.
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
 				runtime_type_handle_token) 
 			ise_is_invariant_checked_for_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("is_invariant_checked_for"),
@@ -2501,22 +2501,22 @@ feature {NONE} -- Once per modules being generated.
 				-- name classes in their Eiffel formatting. The first one is for non-generic
 				-- classes, the second one for generic classes.
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
 			uni_string.set_string (".ctor")
 			ise_eiffel_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_eiffel_name_attr_token, l_meth_sig)
 
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (2)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				l_system_type_token)
 
 			uni_string.set_string (".ctor")
@@ -2529,12 +2529,12 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (Assertion_level_enum_class_name), ise_runtime_token)
 
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (2)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				l_system_type_token)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
 				ise_assertion_level_enum_token)
 
 			uni_string.set_string (".ctor")
@@ -2543,10 +2543,10 @@ feature {NONE} -- Once per modules being generated.
 
 				-- Definition of `.ctor' for CREATION_TYPE_ATTRIBUTE
 			l_meth_sig.reset
-			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				l_system_type_token)
 
 			uni_string.set_string (".ctor")
@@ -2571,7 +2571,7 @@ feature {NONE} -- Implementation
 		do
 			l_arg_type := system.arguments_class.compiled_class.types.first
 			l_root := system.arguments_class.compiled_class.feature_table.
-				item_id (feature {PREDEFINED_NAMES}.internal_argument_array_name_id)
+				item_id ({PREDEFINED_NAMES}.internal_argument_array_name_id)
 
 			check
 				has_routine: l_root /= Void

@@ -64,10 +64,10 @@ feature -- Status report
 			-- Pointer element type
 		do
 			inspect size
-			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
-			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2
-			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4
-			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8
+			when 8 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_u1
+			when 16 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_u2
+			when 32 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_u4
+			when 64 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_u8
 			end
 		end
 
@@ -76,10 +76,10 @@ feature -- Status report
 		do
 			inspect
 				size
-			when 8 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_8_tuple_code
-			when 16 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_16_tuple_code
-			when 32 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_32_tuple_code
-			when 64 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_64_tuple_code
+			when 8 then Result := {SHARED_GEN_CONF_LEVEL}.natural_8_tuple_code
+			when 16 then Result := {SHARED_GEN_CONF_LEVEL}.natural_16_tuple_code
+			when 32 then Result := {SHARED_GEN_CONF_LEVEL}.natural_32_tuple_code
+			when 64 then Result := {SHARED_GEN_CONF_LEVEL}.natural_64_tuple_code
 			end
 		end
 
@@ -237,7 +237,7 @@ feature -- Code generation
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
 		do
 			if size = 64 then
-				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 				buffer.put_string ("eif_uint64_to_real64 (")
 			else
 				buffer.put_string ("(EIF_REAL_64) (")
@@ -249,7 +249,7 @@ feature -- Code generation
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_32.
 		do
 			if size = 64 then
-				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 				buffer.put_string ("eif_uint64_to_real32 (")
 			else
 				buffer.put_string ("(EIF_REAL_32) (")

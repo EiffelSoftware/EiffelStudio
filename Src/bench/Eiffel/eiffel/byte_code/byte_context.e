@@ -380,7 +380,7 @@ feature -- Access: once manifest strings
 			non_negative_number: number >= 0
 		do
 			if number > 0 then
-				ba.append (feature {BYTE_CONST}.Bc_allocate_once_strings)
+				ba.append ({BYTE_CONST}.Bc_allocate_once_strings)
 				ba.append_integer (original_body_index - 1)
 				ba.append_integer (number)
 			end

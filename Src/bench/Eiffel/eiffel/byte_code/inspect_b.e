@@ -184,7 +184,7 @@ feature -- IL code generation
 			if else_part /= Void then
 				else_part.generate_il
 			else
-				il_generator.generate_raise_exception (feature {EXCEP_CONST}.incorrect_inspect_value, Void)
+				il_generator.generate_raise_exception ({EXCEP_CONST}.incorrect_inspect_value, Void)
 					-- Throw an exception
 			end
 

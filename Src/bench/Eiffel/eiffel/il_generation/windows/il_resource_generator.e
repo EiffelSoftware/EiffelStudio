@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 
 				-- Add entry in manifest resource table of current module.
 			l_token := a_module.md_emit.define_manifest_resource (
-				create {UNI_STRING}.make (a_name), 0, last_resource_offset, feature {MD_RESOURCE_FLAGS}.Public)
+				create {UNI_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
 			last_resource_offset := last_resource_offset + l_data.count
 		ensure
 			inserted: a_module.resources /= Void

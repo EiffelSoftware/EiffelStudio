@@ -26,7 +26,7 @@ feature -- Initialization
 			if not retried then
 				status := No_error
 				if (create {MD_STRONG_NAME}.make).exists then
-					l_result := feature {MD_STRONG_NAME}.strong_name_key_gen (default_pointer,
+					l_result := {MD_STRONG_NAME}.strong_name_key_gen (default_pointer,
 						0, $public_key, $key_size)
 					if l_result /= 1 then
 						status := Could_not_generate_key
@@ -39,7 +39,7 @@ feature -- Initialization
 						l_status := 4
 						a_file.close
 						l_status := 5
-						feature {MD_STRONG_NAME}.strong_name_free_buffer (public_key)
+						{MD_STRONG_NAME}.strong_name_free_buffer (public_key)
 					end
 				else
 					status := Could_not_load_mscorsn_dll

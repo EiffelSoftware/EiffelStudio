@@ -167,8 +167,8 @@ feature -- Status
 				if Result then
 					if
 						wc.is_special and then
-						(byte_code.feature_name_id = feature {PREDEFINED_NAMES}.item_address_name_id or
-						byte_code.feature_name_id = feature {PREDEFINED_NAMES}.base_address_name_id)
+						(byte_code.feature_name_id = {PREDEFINED_NAMES}.item_address_name_id or
+						byte_code.feature_name_id = {PREDEFINED_NAMES}.base_address_name_id)
 					then
 							-- Even if the routine is big we inline it, but only for `item_address'
 							-- and `base_address' of SPECIAL.

@@ -128,73 +128,71 @@ feature -- Store/Retrieve
 				defaults.finish
 	
 					-- Save check box options
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.il_verifiable,
+				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.il_verifiable,
 					Void, verifiable_check.is_selected))
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant,
+				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.cls_compliant,
 					Void, cls_compliant_check.is_selected))
 				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.dotnet_naming_convention, Void,
+					{FREE_OPTION_SD}.dotnet_naming_convention, Void,
 					dotnet_naming_convention_check.is_selected))
 				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.use_cluster_name_as_namespace, Void,
+					{FREE_OPTION_SD}.use_cluster_name_as_namespace, Void,
 					cluster_name_check.is_selected))
 				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.use_all_cluster_name_as_namespace, Void,
+					{FREE_OPTION_SD}.use_all_cluster_name_as_namespace, Void,
 					full_cluster_name_check.is_selected))
 				
 				if dll_check.is_selected then
 					defaults.extend (new_special_option_sd (
-						feature {FREE_OPTION_SD}.msil_generation_type, "dll", False))
+						{FREE_OPTION_SD}.msil_generation_type, "dll", False))
 				else
 					defaults.extend (new_special_option_sd (
-						feature {FREE_OPTION_SD}.msil_generation_type, "exe", False))
+						{FREE_OPTION_SD}.msil_generation_type, "exe", False))
 				end
 			
 					-- Save text field values
 				if not full_name_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Namespace, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Namespace, 
 						full_name_field.text, False))
 				end
 				if not version_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Version, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Version, 
 						version_field.text, False))
 				end
 				if not company_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Company, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Company, 
 						company_field.text, False))
 				end
 				if not product_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Product, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Product, 
 						product_field.text, False))
 				end
 				if not trademark_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Trademark, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Trademark, 
 						trademark_field.text, False))
 				end
 				if not copyright_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Copyright, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Copyright, 
 						copyright_field.text, False))
 				end
 				if not signing_key_field.text.is_empty then
-					defaults.extend (new_special_option_sd (feature 
-						{FREE_OPTION_SD}.Msil_key_file_name, signing_key_field.text, False))
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_key_file_name, signing_key_field.text, False))
 				end
 	
 					-- Save combobox selections
 				if not culture_combo.selected_item.text.substring 
 					(1, culture_combo.selected_item.text.index_of (',', 1) - 1).is_equal ("n/a") then
-						defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_culture, 
+						defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_culture, 
 							culture_combo.selected_item.text.substring 
 							(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
 				end
 
 				if not clr_runtime_version_combo.is_empty then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_clr_version,
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_clr_version,
 						clr_runtime_version_combo.text, False))
 				end
 		
-				defaults.extend (new_special_option_sd (feature 
-					{FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
+				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
 			end
 		end
 
@@ -261,37 +259,37 @@ feature {NONE} -- Filling
 				free_option ?= opt
 				is_item_removable := True
 				inspect free_option.code	
-				when feature {FREE_OPTION_SD}.Namespace then
+				when {FREE_OPTION_SD}.Namespace then
 					full_name_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Version then
+				when {FREE_OPTION_SD}.Version then
 					version_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Company then
+				when {FREE_OPTION_SD}.Company then
 					company_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Product then
+				when {FREE_OPTION_SD}.Product then
 					product_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Trademark then
+				when {FREE_OPTION_SD}.Trademark then
 					trademark_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Copyright then
+				when {FREE_OPTION_SD}.Copyright then
 					copyright_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Msil_culture then
+				when {FREE_OPTION_SD}.Msil_culture then
 					select_culture (val.value)
-				when feature {FREE_OPTION_SD}.Msil_assembly_compatibility then
+				when {FREE_OPTION_SD}.Msil_assembly_compatibility then
 					select_assembly_compatibility (val.value)
-				when feature {FREE_OPTION_SD}.Msil_key_file_name then
+				when {FREE_OPTION_SD}.Msil_key_file_name then
 					signing_key_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.Il_verifiable then
+				when {FREE_OPTION_SD}.Il_verifiable then
 					set_selected (verifiable_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.Msil_generation_type then
+				when {FREE_OPTION_SD}.Msil_generation_type then
 					set_selected (dll_check, val.value.is_equal (new_id_sd ("dll", True))) 
-				when feature {FREE_OPTION_SD}.Cls_compliant then
+				when {FREE_OPTION_SD}.Cls_compliant then
 					set_selected (cls_compliant_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.Dotnet_naming_convention then
+				when {FREE_OPTION_SD}.Dotnet_naming_convention then
 					set_selected (dotnet_naming_convention_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.Use_cluster_name_as_namespace then
+				when {FREE_OPTION_SD}.Use_cluster_name_as_namespace then
 					set_selected (cluster_name_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace then
+				when {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace then
 					set_selected (full_cluster_name_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.Msil_clr_version then
+				when {FREE_OPTION_SD}.Msil_clr_version then
 					select_runtime_version (val.value)
 				else
 					is_item_removable := False

@@ -70,11 +70,11 @@ feature -- Saving
 			size: INTEGER
 		do
 			if is_fat then
-				kind := feature {MD_METHOD_CONSTANTS}.Section_ehtable |
-					feature {MD_METHOD_CONSTANTS}.Section_fat_format
+				kind := {MD_METHOD_CONSTANTS}.Section_ehtable |
+					{MD_METHOD_CONSTANTS}.Section_fat_format
 				size := clause_count * 24 + count
 			else
-				kind := feature {MD_METHOD_CONSTANTS}.Section_ehtable
+				kind := {MD_METHOD_CONSTANTS}.Section_ehtable
 				size := clause_count * 12 + count
 			end
 			m.put_integer_8 (kind, pos)

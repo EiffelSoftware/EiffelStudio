@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 					if
 						client_type.type.same_as (current_type.type) and then
 						(not System.il_generation or else (attr.extension = Void or else
-						attr.extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type))
+						attr.extension.type /= {SHARED_IL_CONSTANTS}.static_field_type))
 					then
 							-- Found expanded circuit
 						create vlec

@@ -116,24 +116,24 @@ feature {NONE} -- Internal Initialisation
 				is_reference_type := True			
 				inspect l_type
 				when
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_string
+					{MD_SIGNATURE_CONSTANTS}.element_type_string
 				then
-					is_string_type := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_string)
+					is_string_type := (l_type = {MD_SIGNATURE_CONSTANTS}.element_type_string)
 				when
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_array
+					{MD_SIGNATURE_CONSTANTS}.element_type_szarray,
+					{MD_SIGNATURE_CONSTANTS}.element_type_array
 				then
 					is_array_type := True
 				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_object,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_byref
+					{MD_SIGNATURE_CONSTANTS}.element_type_class,
+					{MD_SIGNATURE_CONSTANTS}.element_type_object,
+					{MD_SIGNATURE_CONSTANTS}.element_type_valuetype,
+					{MD_SIGNATURE_CONSTANTS}.element_type_byref
 				then
-					is_class := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_class)
-					is_object := (l_type = feature {MD_SIGNATURE_CONSTANTS}.element_type_object)
-					is_valuetype := (l_type =	feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype)
-					is_byref := (l_type =	feature {MD_SIGNATURE_CONSTANTS}.element_type_byref)
+					is_class := (l_type = {MD_SIGNATURE_CONSTANTS}.element_type_class)
+					is_object := (l_type = {MD_SIGNATURE_CONSTANTS}.element_type_object)
+					is_valuetype := (l_type =	{MD_SIGNATURE_CONSTANTS}.element_type_valuetype)
+					is_byref := (l_type =	{MD_SIGNATURE_CONSTANTS}.element_type_byref)
 				else
 					is_reference_type := False
 				end

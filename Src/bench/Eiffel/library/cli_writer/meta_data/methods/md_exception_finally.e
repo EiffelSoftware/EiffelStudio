@@ -17,9 +17,9 @@ feature -- Status report
 	flags: INTEGER_16 is
 			-- Flags of exception clause
 		do
-			Result := feature {MD_METHOD_CONSTANTS}.clause_finally
+			Result := {MD_METHOD_CONSTANTS}.clause_finally
 		ensure then
-			definition: Result = feature {MD_METHOD_CONSTANTS}.clause_finally
+			definition: Result = {MD_METHOD_CONSTANTS}.clause_finally
 		end
 
 invariant

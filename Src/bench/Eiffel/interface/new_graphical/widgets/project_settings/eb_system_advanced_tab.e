@@ -118,43 +118,43 @@ feature -- Store/Retrieve
 			defaults.finish
 			
 			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.Check_vape, Void, vape_check.is_selected))
+				{FREE_OPTION_SD}.Check_vape, Void, vape_check.is_selected))
 			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.Console_application, Void, console_check.is_selected))
+				{FREE_OPTION_SD}.Console_application, Void, console_check.is_selected))
 			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.syntax_warning, Void, syntax_warning_check.is_selected))
+				{FREE_OPTION_SD}.syntax_warning, Void, syntax_warning_check.is_selected))
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.address_expression,
+			defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.address_expression,
 				Void, address_expression_check.is_selected))
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.array_optimization,
+			defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.array_optimization,
 				Void, array_optimization_check.is_selected))
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Dead_code, Void,
+			defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Dead_code, Void,
 				dead_code_removal_check.is_selected))
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dynamic_runtime,
+			defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.dynamic_runtime,
 				Void, dynamic_rt_check.is_selected))
 
 			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.Exception_stack_managed, Void,
+				{FREE_OPTION_SD}.Exception_stack_managed, Void,
 				exception_trace_check.is_selected))
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining, Void,
+			defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.inlining, Void,
 				inlining_check.is_selected))
 			if inlining_check.is_selected then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.inlining_size,
+				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.inlining_size,
 					inlining_size_field.text, True))
 			end
 
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.multithreaded,
+			defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.multithreaded,
 				Void, mt_runtime_check.is_selected))
 
 			if shared_library_check.is_selected then
 				l_name := shared_library_field.text
 				if not l_name.is_empty then
 					defaults.extend (new_special_option_sd (
-						feature {FREE_OPTION_SD}.shared_library_definition, l_name, True))
+						{FREE_OPTION_SD}.shared_library_definition, l_name, True))
 				end
 			end
 		end
@@ -220,30 +220,30 @@ feature {NONE} -- Filling
 				free_option ?= opt
 				is_item_removable := True
 				inspect free_option.code
-				when feature {FREE_OPTION_SD}.address_expression then
+				when {FREE_OPTION_SD}.address_expression then
 					set_selected (address_expression_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.array_optimization then
+				when {FREE_OPTION_SD}.array_optimization then
 					set_selected (array_optimization_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.console_application then
+				when {FREE_OPTION_SD}.console_application then
 					set_selected (console_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.dead_code then
+				when {FREE_OPTION_SD}.dead_code then
 					set_selected (dead_code_removal_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.dynamic_runtime then
+				when {FREE_OPTION_SD}.dynamic_runtime then
 					set_selected (dynamic_rt_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.exception_stack_managed then
+				when {FREE_OPTION_SD}.exception_stack_managed then
 					set_selected (exception_trace_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.inlining then
+				when {FREE_OPTION_SD}.inlining then
 					set_selected (inlining_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.inlining_size then
+				when {FREE_OPTION_SD}.inlining_size then
 					inlining_size_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.multithreaded then
+				when {FREE_OPTION_SD}.multithreaded then
 					set_selected (mt_runtime_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.shared_library_definition then
+				when {FREE_OPTION_SD}.shared_library_definition then
 					enable_select (shared_library_check)
 					shared_library_field.set_text (val.value)
-				when feature {FREE_OPTION_SD}.check_vape then
+				when {FREE_OPTION_SD}.check_vape then
 					set_selected (vape_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.syntax_warning then
+				when {FREE_OPTION_SD}.syntax_warning then
 					set_selected (syntax_warning_check, val.is_yes)
 				else
 					is_item_removable := False		

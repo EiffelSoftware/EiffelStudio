@@ -425,9 +425,9 @@ feature {NONE} -- Event handling
 		do
 			if k /= Void then
 				inspect k.code
-				when feature {EV_KEY_CONSTANTS}.Key_delete then
+				when {EV_KEY_CONSTANTS}.Key_delete then
 					remove_selected
-				when feature {EV_KEY_CONSTANTS}.Key_f2 then
+				when {EV_KEY_CONSTANTS}.Key_f2 then
 					edit_expression
 				else
 					

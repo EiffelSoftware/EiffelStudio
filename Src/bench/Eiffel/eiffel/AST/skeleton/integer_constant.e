@@ -524,7 +524,7 @@ feature -- Generation
 							-- the end it is ok with the cast.
 						buf.put_string (integer_32_cast)
 						l_int := integer_32_value
-						if l_int = feature {INTEGER}.min_value then
+						if l_int = {INTEGER}.min_value then
 							buf.put_string ("0x")
 							buf.put_string (l_int.to_hex_string)
 						else

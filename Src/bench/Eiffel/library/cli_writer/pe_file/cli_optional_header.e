@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			c_set_size_of_heap_reserve (item, 0x100000)
 			c_set_size_of_heap_commit (item, 0x1000)
 			c_set_loader_flags (item, 0)
-			c_set_number_of_rva_and_sizes (item, feature {CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries)
+			c_set_number_of_rva_and_sizes (item, {CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries)
 		end
 
 feature -- Access
@@ -62,7 +62,7 @@ feature -- Access
 			p: POINTER
 		do
 			p := c_directories (item)
-			create Result.make_by_pointer (p + i * feature {CLI_DIRECTORY}.structure_size)
+			create Result.make_by_pointer (p + i * {CLI_DIRECTORY}.structure_size)
 		end
 		
 feature -- Measurement
@@ -96,8 +96,8 @@ feature -- Settings
 	set_subsystem (i: INTEGER_16) is
 			-- Set `subsystem' to `i'.
 		require
-			valid_i: i = feature {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_console 
-				or i = feature {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_gui
+			valid_i: i = {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_console 
+				or i = {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_gui
 		do
 			c_set_subsystem (item, i)
 		end

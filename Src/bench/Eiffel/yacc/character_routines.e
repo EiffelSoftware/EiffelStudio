@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 				Result := "%%U"
 			else
 				code := char.code;
-				if code < feature {ASCII}.First_printable then
+				if code < {ASCII}.First_printable then
 					create Result.make (6)
 					Result.append ("%%/")
 					Result.append_integer (code)
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 --				Result := "%%%""
 			else
 				code := char.code;
-				if code < feature {ASCII}.First_printable then
+				if code < {ASCII}.First_printable then
 					create Result.make (6);
 					Result.append ("%%/");
 					Result.append_integer (code);

@@ -51,7 +51,7 @@ feature {NONE} -- Disposal
 			debug ("COM_OBJECT")
 				dispose_debug_output (1, item, $Current, 0)
 			end
-			l_nb_ref := feature {CLI_COM}.release (item)
+			l_nb_ref := {CLI_COM}.release (item)
 			item := default_pointer
 			debug ("COM_OBJECT")
 				dispose_debug_output (2, item, $Current, l_nb_ref)

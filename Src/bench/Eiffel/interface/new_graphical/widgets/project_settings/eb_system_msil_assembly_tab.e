@@ -73,7 +73,7 @@ feature -- Store/Retrieve
 					root_ast.set_defaults (l_defaults)
 				end
 				if not md_cache_path.text.is_empty then
-					l_defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.metadata_cache_path, md_cache_path.text, False))
+					l_defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.metadata_cache_path, md_cache_path.text, False))
 				end
 					
 				al := root_ast.assemblies
@@ -159,7 +159,7 @@ feature {NONE} -- Filling
 					l_defaults.after
 				loop
 					l_free_opt ?= l_defaults.item.option
-					if l_free_opt /= Void and then l_free_opt.code = feature {FREE_OPTION_SD}.metadata_cache_path then
+					if l_free_opt /= Void and then l_free_opt.code = {FREE_OPTION_SD}.metadata_cache_path then
 						if l_defaults.item.value.is_name then
 							md_cache_path.set_text (l_defaults.item.value.value)
 							l_defaults.remove

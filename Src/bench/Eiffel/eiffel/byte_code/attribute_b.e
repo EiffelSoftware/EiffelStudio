@@ -200,7 +200,7 @@ feature -- IL code generation
 						l_feature_call /= Void and then
 						l_feature_call.is_il_feature_special (cl_type) and then
 						l_feature_call.Il_special_routines.function_type =
-							feature {IL_SPECIAL_FEATURES}.set_item_type
+							{IL_SPECIAL_FEATURES}.set_item_type
 					then
 							-- Since we do not need to load attribute value onto the stack,
 							-- we cancel the attribute generation.

@@ -289,11 +289,11 @@ feature -- Execution
 			keep_only_objects (kept_objects)
 --			cont_request.send_breakpoints
 			inspect application.execution_mode
-			when feature {EXEC_MODES}.step_into then 
+			when {EXEC_MODES}.step_into then 
 				step_into
-			when feature {EXEC_MODES}.step_by_step then 
+			when {EXEC_MODES}.step_by_step then 
 				step_next
-			when feature {EXEC_MODES}.out_of_routine then 
+			when {EXEC_MODES}.out_of_routine then 
 				step_out
 			else
 				process_before_running
@@ -380,9 +380,9 @@ feature -- Controle execution
 			
 			Application.debug_info.update
 			inspect Application.execution_mode
-			when feature {EXEC_MODES}.no_stop_points then 
+			when {EXEC_MODES}.no_stop_points then 
 				send_no_breakpoints
-			when feature {EXEC_MODES}.step_by_step, feature {EXEC_MODES}.step_into then 
+			when {EXEC_MODES}.step_by_step, {EXEC_MODES}.step_into then 
 				if not Application.is_running then
 					debug ("DEBUGGER_TRACE_STEPPING")
 						print ("Let's add a breakpoint at the entry point of the system%N")
@@ -589,7 +589,7 @@ feature -- Breakpoints controller
 			loop
 				l_bp_item := l_bp_list.item_for_iteration
 				inspect l_bp_item.update_status
-				when feature {BREAKPOINT}.Breakpoint_to_add then
+				when {BREAKPOINT}.Breakpoint_to_add then
 					debug ("debugger_trace_breakpoint")
 						print ("ADD BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
 					end
@@ -597,13 +597,13 @@ feature -- Breakpoints controller
 						add_dotnet_breakpoint (l_bp_item)
 						l_bp_item.set_application_set
 					end
-				when feature {BREAKPOINT}.Breakpoint_to_remove then
+				when {BREAKPOINT}.Breakpoint_to_remove then
 					debug ("debugger_trace_breakpoint")
 						print ("DEL BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
 					end
 					remove_dotnet_breakpoint (l_bp_item)
 					l_bp_item.set_application_not_set					
-				when feature {BREAKPOINT}.Breakpoint_do_nothing then
+				when {BREAKPOINT}.Breakpoint_do_nothing then
 					debug ("debugger_trace_breakpoint")
 						print ("NADA BP %N")					
 					end

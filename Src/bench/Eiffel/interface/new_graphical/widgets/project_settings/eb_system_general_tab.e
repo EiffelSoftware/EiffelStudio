@@ -126,7 +126,7 @@ feature -- Store/Retrieve
 
 				-- Store special compilation type
 			if generation_combo.index_of (generation_combo.selected_item, 1) = msil_code then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.msil_generation, Void, True))
+				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.msil_generation, Void, True))
 			end
 		end
 
@@ -272,7 +272,7 @@ feature {NONE} -- Filling
 				is_item_removable := True
 			elseif opt.is_free_option then
 				free_option ?= opt
-				if free_option.code = feature {FREE_OPTION_SD}.msil_generation then
+				if free_option.code = {FREE_OPTION_SD}.msil_generation then
 					if val.is_yes and Platform_constants.is_windows then
 							-- FIXME: Manu: 06/10/2004, there is a bug when you first load the
 							-- project settings on an already compiled MSIL project because the
@@ -288,7 +288,7 @@ feature {NONE} -- Filling
 						end
 					end
 					is_item_removable := True
-				elseif free_option.code = feature {FREE_OPTION_SD}.msil_use_optimized_precompile then
+				elseif free_option.code = {FREE_OPTION_SD}.msil_use_optimized_precompile then
 					if val.is_yes then
 						if use_optimized_precompile_check.is_sensitive then
 							enable_select (use_optimized_precompile_check)
@@ -327,7 +327,7 @@ feature {NONE} -- Filling AST
 				root_ast.defaults.extend (d_option)
 				
 				if msil_widgets_enabled then
-					create fopt.make (feature {FREE_OPTION_SD}.msil_use_optimized_precompile)
+					create fopt.make ({FREE_OPTION_SD}.msil_use_optimized_precompile)
 					if use_optimized_precompile_check.is_selected then
 						create v.make_yes
 					else

@@ -77,7 +77,7 @@ feature -- Access
 			nb: INTEGER
 		do
 			create u_string.make_empty (a_count)
-			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_acp, 0, item,
+			nb := cwel_wide_char_to_multi_byte ({WEL_CP_CONSTANTS}.Cp_acp, 0, item,
 				a_count, u_string.item, u_string.capacity, default_pointer, default_pointer)
 			create Result.make (a_count + 1)
 			Result.from_c_substring (u_string.item, 1, a_count)

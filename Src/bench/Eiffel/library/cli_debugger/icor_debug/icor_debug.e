@@ -32,7 +32,7 @@ feature {ICOR_EXPORTER} -- Access
  		do
  			if not retried then
 				last_call_success := cpp_terminate (item)
-				n := feature {CLI_COM}.release (item)
+				n := {CLI_COM}.release (item)
 
 				last_icd_managed_callback.terminate_callback
 				last_icd_unmanaged_callback.terminate_callback
@@ -73,7 +73,7 @@ feature {ICOR_EXPORTER} -- Access
 									)
 			if last_call_succeed then
 				Result := icordebug_process
-				l_hr := feature {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
+				l_hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
 			end
 		end
 

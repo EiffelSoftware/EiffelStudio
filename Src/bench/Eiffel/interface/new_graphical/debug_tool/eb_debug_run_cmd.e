@@ -308,7 +308,7 @@ feature -- Execution
 							l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
 							if l_app_string /= Void then
 									--| This means we are using either dbgclr or cordbg
-								if Application.execution_mode = feature {EXEC_MODES}.User_stop_points then
+								if Application.execution_mode = {EXEC_MODES}.User_stop_points then
 										--| With BP
 									if l_il_env.use_cordbg (dotnet_debugger) then
 											-- Launch cordbg.exe.

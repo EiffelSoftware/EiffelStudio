@@ -46,7 +46,7 @@ feature -- IL code generation
 			il_generator.duplicate_top
 			il_generator.generate_local_assignment (a_local)
 			il_generator.put_integer_32_constant (0)
-			il_generator.generate_binary_operator (feature {IL_CONST}.il_ge)
+			il_generator.generate_binary_operator ({IL_CONST}.il_ge)
 			
 			if tag = Void then
 				il_generator.generate_assertion_check (context.assertion_type, "")
@@ -78,7 +78,7 @@ feature -- IL code generation
 			il_generator.duplicate_top
 			
 			il_generator.generate_local (a_local)
-			il_generator.generate_binary_operator (feature {IL_CONST}.Il_lt)
+			il_generator.generate_binary_operator ({IL_CONST}.Il_lt)
 
 			if tag = Void then
 				il_generator.generate_assertion_check (context.assertion_type, "")
@@ -88,7 +88,7 @@ feature -- IL code generation
 
 			il_generator.generate_local_assignment (a_local)
 			il_generator.put_integer_32_constant (0)
-			il_generator.generate_binary_operator (feature {IL_CONST}.il_ge)
+			il_generator.generate_binary_operator ({IL_CONST}.il_ge)
 			
 			if tag = Void then
 				il_generator.generate_assertion_check (context.assertion_type, "")

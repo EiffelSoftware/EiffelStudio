@@ -192,32 +192,32 @@ feature -- Reason for stopping
 		
 	set_reason_as_break is
 		do
-			set_reason (feature {IPC_SHARED}.Pg_break)
+			set_reason ({IPC_SHARED}.Pg_break)
 		end
 
 	set_reason_as_interrupt is
 		do
-			set_reason (feature {IPC_SHARED}.Pg_interrupt)
+			set_reason ({IPC_SHARED}.Pg_interrupt)
 		end		
 		
 	set_reason_as_raise is
 		do
-			set_reason (feature {IPC_SHARED}.Pg_raise)
+			set_reason ({IPC_SHARED}.Pg_raise)
 		end		
 
 	set_reason_as_viol is
 		do
-			set_reason (feature {IPC_SHARED}.Pg_viol)
+			set_reason ({IPC_SHARED}.Pg_viol)
 		end		
 		
 	set_reason_as_new_breakpoint is
 		do
-			set_reason (feature {IPC_SHARED}.Pg_new_breakpoint)
+			set_reason ({IPC_SHARED}.Pg_new_breakpoint)
 		end	
 		
 	set_reason_as_step is
 		do
-			set_reason (feature {IPC_SHARED}.Pg_step)
+			set_reason ({IPC_SHARED}.Pg_step)
 		end		
 
 end -- class APPLICATION_STATUS_DOTNET

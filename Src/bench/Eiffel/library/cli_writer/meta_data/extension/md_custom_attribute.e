@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
-			item.put_integer_16 (feature {MD_SIGNATURE_CONSTANTS}.Ca_prolog, 0)
+			item.put_integer_16 ({MD_SIGNATURE_CONSTANTS}.Ca_prolog, 0)
 			current_position := 2
 		ensure then
 			current_position_set: current_position = 2

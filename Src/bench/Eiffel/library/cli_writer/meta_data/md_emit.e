@@ -97,7 +97,7 @@ feature -- Definition: access
 			last_call_success := c_define_type_ref_by_name (item, resolution_scope,
 				type_name.item, $Result)
 
-			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
 		ensure
@@ -119,7 +119,7 @@ feature -- Definition: access
 			last_call_success := c_define_member_ref (item, in_class_token,
 				method_name.item, a_signature.item.item, a_signature.count, $Result)
 
-			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
 		ensure
@@ -150,7 +150,7 @@ feature -- Definition: creation
 			assembly_name_not_empty: not assembly_name.is_empty
 			assembly_info_not_void: assembly_info /= Void
 			valid_flags: public_key /= Void implies assembly_flags &
-				feature {MD_ASSEMBLY_FLAGS}.public_key = feature {MD_ASSEMBLY_FLAGS}.public_key
+				{MD_ASSEMBLY_FLAGS}.public_key = {MD_ASSEMBLY_FLAGS}.public_key
 		do
 			Result := assembly_emitter.define_assembly (assembly_name, assembly_flags,
 				assembly_info, public_key)
@@ -166,10 +166,10 @@ feature -- Definition: creation
 			resource_name_not_void: resource_name /= Void
 			resource_name_not_empty: not resource_name.is_empty
 			valid_flags:
-				(resource_flags & feature {MD_RESOURCE_FLAGS}.public =
-					feature {MD_RESOURCE_FLAGS}.public) or
-				(resource_flags & feature {MD_RESOURCE_FLAGS}.private =
-					feature {MD_RESOURCE_FLAGS}.private)
+				(resource_flags & {MD_RESOURCE_FLAGS}.public =
+					{MD_RESOURCE_FLAGS}.public) or
+				(resource_flags & {MD_RESOURCE_FLAGS}.private =
+					{MD_RESOURCE_FLAGS}.private)
 		do
 			Result := assembly_emitter.define_manifest_resource (resource_name,
 				implementation_token, offset, resource_flags)
@@ -216,7 +216,7 @@ feature -- Definition: creation
 		do
 			last_call_success := c_define_type_spec (item, a_signature.item.item,
 				a_signature.count, $Result)
-			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
 		ensure
@@ -251,7 +251,7 @@ feature -- Definition: creation
 			hash_value_not_empty: hash_value.count > 0
 			valid_file_flags:
 				(file_flags = 0) or
-				(file_flags = feature {MD_FILE_FLAGS}.has_no_meta_data)
+				(file_flags = {MD_FILE_FLAGS}.has_no_meta_data)
 		do
 			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		ensure
@@ -354,7 +354,7 @@ feature -- Definition: creation
 		do
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, a_signature.item.item, a_signature.count,
-				feature {MD_SIGNATURE_CONSTANTS}.element_type_end, default_pointer, 0, $Result)
+				{MD_SIGNATURE_CONSTANTS}.element_type_end, default_pointer, 0, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_field_def
@@ -386,19 +386,19 @@ feature -- Definition: creation
 				inspect
 					a_value.size
 				when 8 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i1
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i1
 					l_i1 := a_value.integer_8_value
 					l_ptr := $l_i1
 				when 16 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i2
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i2
 					l_i2 := a_value.integer_16_value
 					l_ptr := $l_i2
 				when 32 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i4
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i4
 					l_i4 := a_value.integer_32_value
 					l_ptr := $l_i4
 				when 64 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_i8
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i8
 					l_i8 := a_value.integer_64_value
 					l_ptr := $l_i8
 				end
@@ -406,19 +406,19 @@ feature -- Definition: creation
 				inspect
 					a_value.size
 				when 8 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u1
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u1
 					l_u1 := a_value.natural_8_value
 					l_ptr := $l_u1
 				when 16 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u2
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u2
 					l_u2 := a_value.natural_16_value
 					l_ptr := $l_u2
 				when 32 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u4
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u4
 					l_u4 := a_value.natural_32_value
 					l_ptr := $l_u4
 				when 64 then
-					l_constant_type := feature {MD_SIGNATURE_CONSTANTS}.element_type_u8
+					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u8
 					l_u8 := a_value.natural_64_value
 					l_ptr := $l_u8
 				end
@@ -448,10 +448,10 @@ feature -- Definition: creation
 		do
 			create l_field_signature.make
 			create l_uni_str.make (a_string)
-			l_field_signature.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+			l_field_signature.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, l_field_signature.item.item, l_field_signature.count,
-				feature {MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.count, $Result)
+				{MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.count, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_field_def
@@ -465,7 +465,7 @@ feature -- Definition: creation
 		do
 			last_call_success := c_define_signature (item, a_signature.item.item,
 				a_signature.count, $Result)
-			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
 		ensure

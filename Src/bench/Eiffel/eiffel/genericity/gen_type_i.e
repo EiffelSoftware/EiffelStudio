@@ -493,7 +493,7 @@ feature -- Generic conformance for IL
 					il_generator.duplicate_top
 					il_generator.put_integer_32_constant (i - 1)
 					true_generics.item (i).generate_gen_type_il (il_generator, use_info)
-					il_generator.generate_array_write (feature {IL_CONST}.il_ref, 0)
+					il_generator.generate_array_write ({IL_CONST}.il_ref, 0)
 					i := i + 1
 				end
 				

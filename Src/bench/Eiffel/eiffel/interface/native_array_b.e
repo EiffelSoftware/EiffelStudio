@@ -61,7 +61,7 @@ feature -- Validity
 			end
 
 				-- Third, check if class has a feature item and infix "@" (INTEGER): Generic #1
-			l_feat := l_feat_tbl.item_id (feature {PREDEFINED_NAMES}.item_name_id)
+			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.item_name_id)
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
@@ -71,7 +71,7 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 			
-			l_feat := l_feat_tbl.item_id (feature {PREDEFINED_NAMES}.infix_at_name_id)
+			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.infix_at_name_id)
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
@@ -82,7 +82,7 @@ feature -- Validity
 			end
 	
 				-- Fourth, check if class has a feature put (Generic #1, INTEGER)
-			l_feat := l_feat_tbl.item_id (feature {PREDEFINED_NAMES}.put_name_id)
+			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
@@ -93,7 +93,7 @@ feature -- Validity
 			end
 
 				-- Fourth, check if class has a feature count, INTEGER)
-			l_feat := l_feat_tbl.item_id (feature {PREDEFINED_NAMES}.count_name_id)
+			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.count_name_id)
 			if
 				l_feat = Void
 				or else not (l_feat.written_in = class_id)
@@ -187,7 +187,7 @@ feature {NONE}
 			args.put_i_th (Integer_type, 1)
 			create  Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.make_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id)
 		end
 
 	count_signature: DYN_FUNC_I is
@@ -199,7 +199,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (Integer_type)
-			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.count_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.count_name_id)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -216,7 +216,7 @@ feature {NONE}
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
 			Result.set_type (f)
-			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.item_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -233,7 +233,7 @@ feature {NONE}
 			Result.set_arguments (args)
 			create f.make (False, False, 1)
 			Result.set_type (f)
-			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.infix_at_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -250,7 +250,7 @@ feature {NONE}
 			args.put_i_th (f, 2)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (feature {PREDEFINED_NAMES}.put_name_id)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id)
 		ensure
 			put_signature_not_void: Result /= Void
 		end

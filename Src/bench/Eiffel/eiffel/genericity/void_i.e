@@ -22,7 +22,7 @@ feature -- Status report
 	element_type: INTEGER_8 is
 			-- Void element type
 		do
-			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_void
+			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_void
 		end
 		
 	tuple_code: INTEGER_8 is

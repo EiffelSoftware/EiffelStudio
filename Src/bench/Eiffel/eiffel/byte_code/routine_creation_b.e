@@ -171,7 +171,7 @@ feature -- IL code generation
 			il_generator.duplicate_top
 
 			set_rout_disp_feat := real_ty.base_class.feature_table.
-				item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id)
+				item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id)
 			l_decl_type := il_generator.implemented_type (set_rout_disp_feat.origin_class_id,
 				real_ty)
 

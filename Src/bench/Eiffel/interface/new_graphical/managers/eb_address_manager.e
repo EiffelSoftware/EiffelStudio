@@ -2111,7 +2111,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			-- Font used to highlight labels.
 		do
 			Result := Default_font
-			Result.set_weight (feature {EV_FONT_CONSTANTS}.Weight_black)
+			Result.set_weight ({EV_FONT_CONSTANTS}.Weight_black)
 		end
 
 	Default_font: EV_FONT is

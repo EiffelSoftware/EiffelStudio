@@ -111,8 +111,8 @@ feature -- Access
 			-- Needed to ensure that old expression only appears in
 			-- postconditions
 		do
-			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_ensure_flag) =
-				feature {DEPEND_UNIT}.is_in_ensure_flag
+			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_ensure_flag) =
+				{DEPEND_UNIT}.is_in_ensure_flag
 		end
 
 	is_checking_invariant: BOOLEAN is
@@ -122,8 +122,8 @@ feature -- Access
 			-- Useful for analyzing class invariant.
 			-- [Set on when analyzing invariants].
 		do
-			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_invariant_flag) =
-				feature {DEPEND_UNIT}.is_in_invariant_flag
+			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_invariant_flag) =
+				{DEPEND_UNIT}.is_in_invariant_flag
 		end
 
 	is_ignoring_export: BOOLEAN
@@ -138,29 +138,29 @@ feature -- Access
 	is_checking_precondition: BOOLEAN is
 			-- Level for analysis of precondition
 		do
-			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_require_flag) =
-				feature {DEPEND_UNIT}.is_in_require_flag
+			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_require_flag) =
+				{DEPEND_UNIT}.is_in_require_flag
 		end
 
 	is_checking_check: BOOLEAN is
 			-- Level for analyzis of check clauses
 		do
-			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_check_flag) =
-				feature {DEPEND_UNIT}.is_in_check_flag
+			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_check_flag) =
+				{DEPEND_UNIT}.is_in_check_flag
 		end
 
 	is_in_assignment: BOOLEAN is
 			-- Level for analysis of target of an assignment
 		do
-			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_assignment_flag) =
-				feature {DEPEND_UNIT}.is_in_assignment_flag
+			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_assignment_flag) =
+				{DEPEND_UNIT}.is_in_assignment_flag
 		end
 
 	is_in_creation: BOOLEAN is
 			-- Level for analyzis of target of a creation
 		do
-			Result := (depend_unit_level & feature {DEPEND_UNIT}.is_in_creation_flag) =
-				feature {DEPEND_UNIT}.is_in_creation_flag
+			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_creation_flag) =
+				{DEPEND_UNIT}.is_in_creation_flag
 		end
 
 	check_for_special_error: BOOLEAN
@@ -232,10 +232,10 @@ feature -- Setting
 			-- Assign `b' to `is_checking_postcondition'.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_ensure_flag
+				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_ensure_flag
 			else
 				depend_unit_level := depend_unit_level &
-					feature {DEPEND_UNIT}.is_in_ensure_flag.bit_not
+					{DEPEND_UNIT}.is_in_ensure_flag.bit_not
 			end
 		ensure
 			is_checking_postcondition_set: is_checking_postcondition = b
@@ -245,10 +245,10 @@ feature -- Setting
 			-- Assign `b' to `is_checking_invariant'.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_invariant_flag
+				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_invariant_flag
 			else
 				depend_unit_level := depend_unit_level &
-					feature {DEPEND_UNIT}.is_in_invariant_flag.bit_not
+					{DEPEND_UNIT}.is_in_invariant_flag.bit_not
 			end
 		ensure
 			is_checking_invariant_set: is_checking_invariant = b
@@ -289,10 +289,10 @@ feature -- Setting
 			-- Also set `b' to check_for_vape.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_require_flag
+				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_require_flag
 			else
 				depend_unit_level := depend_unit_level &
-					feature {DEPEND_UNIT}.is_in_require_flag.bit_not
+					{DEPEND_UNIT}.is_in_require_flag.bit_not
 			end
 				-- FIXME: Manu: 03/20/2004: It is not normal that we
 				-- set `check_for_special_error'.
@@ -305,10 +305,10 @@ feature -- Setting
 			-- Assign `b' to `is_checking_check'.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_check_flag
+				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_check_flag
 			else
 				depend_unit_level := depend_unit_level &
-					feature {DEPEND_UNIT}.is_in_check_flag.bit_not
+					{DEPEND_UNIT}.is_in_check_flag.bit_not
 			end
 		ensure
 			is_checking_check_set: is_checking_check = b
@@ -318,10 +318,10 @@ feature -- Setting
 			-- Assign `b' to `is_in_assignment'.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_assignment_flag
+				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_assignment_flag
 			else
 				depend_unit_level := depend_unit_level &
-					feature {DEPEND_UNIT}.is_in_assignment_flag.bit_not
+					{DEPEND_UNIT}.is_in_assignment_flag.bit_not
 			end
 		ensure
 			is_in_assignment_set: is_in_assignment = b
@@ -331,10 +331,10 @@ feature -- Setting
 			-- Assign `b' to `is_in_creation'.
 		do
 			if b then
-				depend_unit_level := depend_unit_level | feature {DEPEND_UNIT}.is_in_creation_flag
+				depend_unit_level := depend_unit_level | {DEPEND_UNIT}.is_in_creation_flag
 			else
 				depend_unit_level := depend_unit_level &
-					feature {DEPEND_UNIT}.is_in_creation_flag.bit_not
+					{DEPEND_UNIT}.is_in_creation_flag.bit_not
 			end
 		ensure
 			is_in_creation_set: is_in_creation = b

@@ -21,11 +21,11 @@ feature -- Generation
 			buf: like buffer
 		do
 			inspect feature_name_id
-			when feature {PREDEFINED_NAMES}.put_name_id then
+			when {PREDEFINED_NAMES}.put_name_id then
 				generate_put (gen_reg)
-			when feature {PREDEFINED_NAMES}.item_name_id then
+			when {PREDEFINED_NAMES}.item_name_id then
 				generate_item (gen_reg)
-			when feature {PREDEFINED_NAMES}.base_address_name_id then
+			when {PREDEFINED_NAMES}.base_address_name_id then
 				buf := buffer
 				buf.put_string ("/* INLINED CODE (SPECIAL.base_address) */")
 				buf.put_new_line
@@ -36,7 +36,7 @@ feature -- Generation
 				buf.put_new_line
 				buf.put_string ("/* END INLINED CODE */")
 				buf.put_new_line
-			when feature {PREDEFINED_NAMES}.item_address_name_id then
+			when {PREDEFINED_NAMES}.item_address_name_id then
 				generate_item_address (gen_reg)
 			else
 				Precursor {INLINED_FEAT_B} (gen_reg)

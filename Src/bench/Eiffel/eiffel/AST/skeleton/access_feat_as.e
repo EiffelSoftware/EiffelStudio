@@ -415,7 +415,7 @@ feature -- Type check, byte code and dead code removal
 					-- Supplier dependances update
 				if is_in_creation_call then
 					create depend_unit.make_with_level (last_id, a_feature,
-						feature {DEPEND_UNIT}.is_in_creation_flag | context.depend_unit_level)
+						{DEPEND_UNIT}.is_in_creation_flag | context.depend_unit_level)
 				else
 					create depend_unit.make_with_level (last_id, a_feature, context.depend_unit_level)
 				end

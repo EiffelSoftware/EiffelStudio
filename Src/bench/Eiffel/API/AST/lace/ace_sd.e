@@ -103,7 +103,7 @@ feature -- Status report
 				loop
 					if d_options.item.option.is_free_option then
 						fopt ?= d_options.item.option
-						if fopt.code = feature {FREE_OPTION_SD}.msil_generation then
+						if fopt.code = {FREE_OPTION_SD}.msil_generation then
 							Result := d_options.item.value.is_yes
 						end	
 					end
@@ -861,7 +861,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					free_option_sd ?= defaults.item.option
 					if
 						free_option_sd /= Void and then
-						free_option_sd.code = feature {FREE_OPTION_SD}.Msil_clr_version
+						free_option_sd.code = {FREE_OPTION_SD}.Msil_clr_version
 					then
 						l_val := defaults.item.value
 						if
@@ -905,7 +905,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					l_free_option_sd ?= defaults.item.option
 					if
 						l_free_option_sd /= Void and then
-						l_free_option_sd.code = feature {FREE_OPTION_SD}.metadata_cache_path
+						l_free_option_sd.code = {FREE_OPTION_SD}.metadata_cache_path
 					then
 						l_val := defaults.item.value
 						if l_has_value or else not l_val.is_name then

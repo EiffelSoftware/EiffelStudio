@@ -108,7 +108,7 @@ feature -- Updating
 			l_dmp := last_dump_value
 			if l_dmp /= Void then
 				inspect l_dmp.type 
-					when feature {DUMP_VALUE_CONSTANTS}.Type_integer_32 then
+					when {DUMP_VALUE_CONSTANTS}.Type_integer_32 then
 						l_text := text
 						l_pos := l_text.index_of ('=', 1) + 1
 						check
@@ -122,7 +122,7 @@ feature -- Updating
 							l_text.append_string (l_integer32_value.out)
 						end
 						set_text (l_text)
-					when feature {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
+					when {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
 						l_text := text
 						l_pos := l_text.index_of ('=', 1) + 1
 						check

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {WEL_STRUCTURE}
 			c_set_machine (item, 0x14C)
-			c_set_time_date_stamp (item, feature {CLI_TIME}.time (default_pointer))
+			c_set_time_date_stamp (item, {CLI_TIME}.time (default_pointer))
 			c_set_pointer_to_symbol_table (item, 0)
 			c_set_size_of_optional_header (item, 0x00E0)
 			c_set_number_of_symbols (item, 0)

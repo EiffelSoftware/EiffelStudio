@@ -34,7 +34,7 @@ feature -- Status report
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type
 		do
-			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
+			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 
 	has_associated_class_type: BOOLEAN is True

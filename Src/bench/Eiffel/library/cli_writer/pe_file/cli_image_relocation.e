@@ -52,7 +52,7 @@ feature -- Settings
 			end
 			i := data_location - block_rva
 			c_set_block_rva (item, block_rva)
-			c_set_fixup (item, feature {CLI_PE_FILE_CONSTANTS}.Image_reloc_highlow +
+			c_set_fixup (item, {CLI_PE_FILE_CONSTANTS}.Image_reloc_highlow +
 				i.to_integer_16)
 		end
 

@@ -106,7 +106,7 @@ feature {COMPILER_EXPORTER}
 						bits_value := int_value.integer_32_value
 						error :=
 							bits_value <= 0 or else
-							bits_value > feature {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
+							bits_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
 					end
 				end
 				if error then

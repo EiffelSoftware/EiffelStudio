@@ -343,7 +343,7 @@ feature {NONE} -- Initialization
 			
 				-- Close window when user press escape.
 			create l_accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_escape), False, False, False)
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_escape), False, False, False)
 			l_accelerator.actions.extend (agent cancel_action)
 			window.accelerators.extend (l_accelerator)
 

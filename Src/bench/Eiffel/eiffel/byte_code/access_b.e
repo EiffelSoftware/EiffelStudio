@@ -505,7 +505,7 @@ feature -- IL code generation
 						if l_ext /= Void then
 							l_il_ext ?= l_ext.extension
 							Result := l_il_ext = Void or else l_il_ext.type /= 
-								feature {SHARED_IL_CONSTANTS}.Operator_type
+								{SHARED_IL_CONSTANTS}.Operator_type
 						end
 					end
 				end

@@ -62,13 +62,13 @@ feature -- Access
 			create Result
 		end
 
-	is_feature_special (compilation_type: BOOLEAN): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
 			-- Search for feature_name in special_routines.
 			-- This is used for simple types only.
 			-- If found return True (and keep reference position).
 			-- Otherwize, return false
 		do
-			Result := special_routines.has (feature_name, compilation_type)
+			Result := special_routines.has (feature_name, compilation_type, target_type)
 		end
 
 	init (f: FEATURE_I) is
@@ -142,6 +142,7 @@ feature -- IL code generation
 			local_number: INTEGER
 			real_metamorphose: BOOLEAN
 			is_call_optimized: BOOLEAN
+			basic_type: BASIC_I
 		do
 				-- Get type on which call will be performed.
 			cl_type ?= context_type
@@ -152,8 +153,9 @@ feature -- IL code generation
 				-- Let's find out if we are performing a call on a basic type
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
+			basic_type ?= cl_type
 			is_call_optimized := (cl_type.is_basic or cl_type.is_enum)
-				and then is_feature_special (False)
+				and then is_feature_special (False, basic_type)
 
 			class_type := cl_type.associated_class_type
 			class_c := class_type.associated_class

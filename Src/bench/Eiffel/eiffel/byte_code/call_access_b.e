@@ -121,7 +121,7 @@ feature -- Byte code generation
 							and then not inst_cont_type.is_bit
 			if metamorphosed then
 				basic_type ?= inst_cont_type
-				if is_feature_special (False) then
+				if is_feature_special (False, basic_type) then
 					make_special_byte_code (ba, basic_type)
 				else
 						-- Process the feature id of `feature_name' in the
@@ -348,8 +348,8 @@ end
 		do
 		end
 
-	is_feature_special (compilation_type: BOOLEAN): BOOLEAN is
-			-- Is feature a special routine 
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
+			-- Is feature a special routine of class of `target_type'?
 			-- (Only for feature calls)
 		do
 		end
@@ -369,7 +369,7 @@ end
 				-- (they have to be themselves known by the compiler).
 			if type_i.is_basic then
 				basic_type ?= type_i
-				if not basic_type.is_bit and then is_feature_special (True) then
+				if not basic_type.is_bit and then is_feature_special (True, basic_type) then
 					generate_special_feature (reg, basic_type)
 				else
 					buf := buffer

@@ -517,8 +517,8 @@ wmain.obj : eif_except.h eif_garcol.h main.c eif_malloc.h eif_plug.h eif_sig.h e
 
 object_id.obj : eif_garcol.h eif_except.h eif_hector.h
 
-eif_threads.obj : eif_threads.h
+eif_threads.obj : eif_threads.h eif_cond_var.h
 eif_cond_var.obj : eif_cond_var.h
 
-weif_threads.obj : eif_threads.h
+weif_threads.obj : eif_threads.h eif_cond_var.h
 weif_cond_var.obj : eif_cond_var.h

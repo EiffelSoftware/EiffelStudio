@@ -268,7 +268,7 @@ feature {EV_ANY_I} -- implementation
 			-- functionality implemented by `Current'
 
 invariant
-	button_box_not_void: is_usable implies button_box /= Void
+	button_box_not_null: is_usable implies button_box /= NULL
 
 end -- class EV_BUTTON_IMP
 

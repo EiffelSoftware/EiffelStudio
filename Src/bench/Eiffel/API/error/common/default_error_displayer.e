@@ -40,6 +40,7 @@ feature -- Output
 		do
 			if not retried then
 				warning_list := handler.warning_list
+				!! st.make;
 				from
 					warning_list.start
 				until

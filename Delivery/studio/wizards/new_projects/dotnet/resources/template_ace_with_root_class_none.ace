@@ -17,8 +17,14 @@ cluster
 		-- The application
 	root_cluster: "<FL_LOCATION>"
 
+		-- Eiffel base
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic";
+		end
+
 		-- EiffelBase.NET
 	all base: "$ISE_EIFFEL\library.net\base"
-<FL_EXTERNAL_CLASSES>	
+
 <FL_EXTERNAL_ASSEMBLIES>
 end

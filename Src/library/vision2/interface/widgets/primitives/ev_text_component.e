@@ -101,13 +101,14 @@ feature -- Status setting
 			implementation.set_position (pos)
 		end
 	
-	set_maximum_line_length (len: INTEGER) is
-			-- Make `len' the new number of characters on a line.
-			-- If `len' < `text.cout' then the text is truncated
+	set_maximum_text_length (value: INTEGER) is
+			-- Make `value' the new maximal lenght of the text
+			-- in characte number.
 		require
-			exist: not destroyed			
+			exist: not destroyed
+			valid_length: value >= 0
 		do
-			implementation.set_maximum_line_length (len)
+			implementation.set_maximum_text_length (value)
 		end
 
 feature -- Element change
@@ -242,6 +243,29 @@ feature -- Basic operation
 			exists: not destroyed
 		do
 			implementation.paste (index)
+		end
+
+feature -- Event - command association
+
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_change_command (cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_change_commands
 		end
 
 feature {NONE} -- Implementation

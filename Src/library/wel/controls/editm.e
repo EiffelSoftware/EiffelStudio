@@ -112,8 +112,7 @@ feature -- Status setting
 		do
 			scroll_caret_at_selection := True
 		ensure
-			scroll_caret_at_selection_enabled:
-				scroll_caret_at_selection
+			scroll_caret_at_selection_enabled: scroll_caret_at_selection
 		end
 
 	disable_scroll_caret_at_selection is
@@ -125,8 +124,7 @@ feature -- Status setting
 		do
 			scroll_caret_at_selection := False
 		ensure
-			scroll_caret_at_selection_disabled: not
-				scroll_caret_at_selection
+			scroll_caret_at_selection_disabled: not scroll_caret_at_selection
 		end
 
 feature -- Status report
@@ -147,8 +145,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Em_lineindex,
-				-1, 0)
+			Result := cwin_send_message_result (item, Em_lineindex, -1, 0)
 		ensure
 			positive_result: Result >= 0
 		end
@@ -158,8 +155,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Em_getfirstvisibleline, 0, 0)
+			Result := cwin_send_message_result (item, Em_getfirstvisibleline, 0, 0)
 		ensure
 			positive_result: Result >= 0
 			result_small_enough: Result < line_count

@@ -54,6 +54,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SCF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_CAPABILITIES_CONSTANTS
 		export
 			{NONE} all
@@ -244,6 +249,12 @@ feature -- Status report
 			Result := cwin_send_message_result (item, Wm_gettextlength, 0, 0)
 		end
 
+	options: INTEGER is
+			-- Give the current set of options.
+		do
+			Result := cwin_send_message_result (item, Em_getoptions, 0, 0)
+		end
+
 feature -- Status setting
 
 	set_selection (start_position, end_position: INTEGER) is
@@ -257,6 +268,7 @@ feature -- Status setting
 				range.to_integer)
 		end
 
+	
 	move_to_selection is
 			-- Move the selected text to be visible
 		do
@@ -536,6 +548,16 @@ feature -- Basic operations
 
 feature -- Element change
 
+	set_character_format_all (a_char_format: WEL_CHARACTER_FORMAT) is
+			-- Set the current selection with `a_char_format'.
+		require
+			exists: exists
+			a_char_format_not_void: a_char_format /= Void
+		do
+			cwin_send_message (item, Em_setcharformat,
+				Scf_all, a_char_format.to_integer)
+		end
+
 	set_character_format_selection (a_char_format: WEL_CHARACTER_FORMAT) is
 			-- Set the current selection with `a_char_format'.
 		require
@@ -661,22 +683,6 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_border +
 				Ws_hscroll + Ws_vscroll + Es_savesel +
 				Es_disablenoscroll + Es_multiline
-		end
-
-feature {NONE} -- Externals
-
-	Scf_selection: INTEGER is
-		external
-			"C [macro <redit.h>]"
-		alias
-			"SCF_SELECTION"
-		end
-
-	Scf_word: INTEGER is
-		external
-			"C [macro <redit.h>]"
-		alias
-			"SCF_WORD"
 		end
 
 end -- class WEL_RICH_EDIT

@@ -483,6 +483,12 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef
  */
 #$i_limits I_LIMITS		/**/
 
+/* I_MEMORY:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <memory.h> for using memset. Otherwise, you may try <string.h>.
+ */
+/*#$i_memory I_MEMORY */
+
 /* I_NETINET_IN:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <netinet/in.h>. Otherwise, you may try <sys/in.h>.

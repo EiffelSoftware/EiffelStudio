@@ -72,7 +72,7 @@ feature -- Access
 			Result := is_list_subset_of (exports, other.exports)
 			if Result then
 				Result := is_list_subset_of (redefining, other.redefining)
-		   end
+			end
 			if Result then
 				Result := is_list_subset_of (renaming, other.renaming)
 			end
@@ -81,7 +81,7 @@ feature -- Access
 			end
 			if Result then
 				Result := is_list_subset_of (undefining, other.undefining)
-		   end
+			end
 		end
 
 feature -- Compiled parent computation
@@ -282,6 +282,9 @@ is
 		local
 			item: AST_EIFFEL
 			found: BOOLEAN
+			l_area, o_area: SPECIAL [AST_EIFFEL]
+			l_count, o_count: INTEGER
+			i, j: INTEGER
 		do
 			Result := True
 			if list /= Void then
@@ -289,29 +292,31 @@ is
 					Result := False
 				else
 					from
-						list.start
+						l_area := list.area
+						l_count := list.count
+						o_area := other_list.area
+						o_count := other_list.count
 					until
-						list.after or else not Result
+						i = l_count or else not Result
 					loop
-						item := list.item
+						item := l_area.item (i)
 						from
+							j := 0
 							found := False
-							other_list.start
 						until
-							other_list.after or else found
+							j = o_count or else found
 						loop
-							found := equivalent (item, other_list.item)
-							other_list.forth
+							found := equivalent (item, o_area.item (j))
+							j := j + 1
 						end
 						Result := found
-						list.forth
+						i := i + 1
 					end
 				end
 			end
 		end
 
-	merge_list (list, other_list: EIFFEL_LIST [AST_EIFFEL]): EIFFEL_LIST 
-																[AST_EIFFEL] is
+	merge_list (list, other_list: EIFFEL_LIST [AST_EIFFEL]): EIFFEL_LIST [AST_EIFFEL] is
 			-- Merge `other_list' with `list'?
 		local
 			item: AST_EIFFEL

@@ -50,13 +50,6 @@ feature -- Access
 			Result := c_gtk_clist_rows (widget)
 		end
 
---	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
---			-- Give the item of the list at the zero-base
---			-- `index'.
---		do
---			Result := ev_children @ index
---		end
-
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Item which is currently selected, for a multiple
 			-- selection, it gives the item which has the focus.
@@ -64,7 +57,7 @@ feature -- Access
 			index: INTEGER
 		do
 			index := c_gtk_clist_ith_selected_item (widget, c_gtk_clist_selection_length (widget))
-			Result := ev_children @ (index + 1)
+			Result ?= (ev_children @ (index + 1)).interface
 		end
 
 	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
@@ -77,6 +70,7 @@ feature -- Access
 			i: INTEGER
 			index: INTEGER
 			upper: INTEGER
+			row: EV_MULTI_COLUMN_LIST_ROW
 		do
 			upper := c_gtk_clist_selection_length (widget)
 			!! Result.make
@@ -86,7 +80,8 @@ feature -- Access
 				i = upper
 			loop
 				index := c_gtk_clist_ith_selected_item (widget, i)
-				Result.extend (ev_children @ (index + 1))
+				row ?= (ev_children @ (index + 1)).interface
+				Result.extend (row)
 				i := i + 1
 			end
 		end
@@ -150,6 +145,24 @@ feature -- Status setting
 			gtk_clist_set_column_justification (widget, column - 1, type)
 		end
 
+	select_item (index: INTEGER) is
+			-- Select an item at the one-based `index' the list.
+		do
+			(ev_children @ index).set_selected (True)
+		end
+
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			(ev_children @ index).set_selected (False)
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		do
+			gtk_clist_unselect_all (widget)
+		end
+
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
@@ -158,7 +171,7 @@ feature -- Element change
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_clist_set_column_title (widget, column - 1, $a)
 		end
 
@@ -177,16 +190,22 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+		local
+			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+				-- to work with local variable which
+				-- increases speed if there are many elements
+				-- in `ev_children'
 		do
 			from
-				ev_children.start
+				c := ev_children
+				c.start
 			until
-				ev_children.after
+				c.after
 			loop
-				ev_children.item.remove_implementation
-				ev_children.forth
+				c.item.interface.remove_implementation
+				c.forth
 			end
-			ev_children.wipe_out
+			c.wipe_out
 			
 			gtk_clist_clear (widget)
 		end
@@ -214,35 +233,49 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			check False end
+			remove_commands (select_row_id)
+			remove_commands (unselect_row_id)
 		end
 
 	remove_column_click_commands is
 			-- Empty the list of commands to be executed
 			-- when a column is clicked.
 		do
-			Check False end
+			remove_commands (click_column_id)
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
---	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
---			-- We have to store the children of the
---			-- list because gtk doesn't.
-
-	add_item (item: EV_MULTI_COLUMN_LIST_ROW) is
+	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Add `item' to the list
 		local
-			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			index: INTEGER
+			column_i: INTEGER
 		do
-			item_imp ?= item.implementation
-			check
-				correct_imp: item_imp /= Void
-			end
+			-- add an empty row to the gtk column list:
 			index := c_gtk_clist_append_row (widget)
+
+			-- add text in the gtk column list row:
 			item_imp.set_index (index)
-			ev_children.force (item)
+			from
+				item_imp.text.start
+				column_i := 1
+			until
+				column_i > columns
+			loop
+				item_imp.set_cell_text ( column_i, item_imp.text.item)
+				item_imp.text.forth
+				column_i := column_i + 1
+			end
+				
+			-- update the list of rows of the column list:
+			ev_children.force (item_imp)
+
+		end
+
+	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+		do
+			gtk_clist_remove (widget, item_imp.index)
 		end
 
 feature {NONE} -- Inapplicable

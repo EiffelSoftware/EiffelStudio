@@ -11,7 +11,9 @@ inherit
 
 	SHARED_WORKBENCH;
 	COMPILER_EXPORTER;
-	SHARED_INST_CONTEXT
+	SHARED_INST_CONTEXT;
+	SHARED_MELT_ONLY;
+	PROJECT_CONTEXT
 
 creation
 
@@ -52,7 +54,7 @@ feature -- Properties
 feature -- Access
 
 	current_class: E_CLASS is
-        obsolete "to be removed"
+		obsolete "to be removed"
 		local
 			c: CLASS_C
 		do
@@ -186,6 +188,56 @@ feature -- Access
 			-- Root class of the system
 		do
 			Result := root_cluster.classes.item (root_class_name);
+		end;
+
+	application_name (compile_type: BOOLEAN): STRING is
+			-- Get the full qualified name of the application
+			-- For workbench-mode application `compile_type' is true
+		local
+			system_name: STRING;
+			f_name: FILE_NAME;
+			f: PLAIN_TEXT_FILE;
+			make_f: PLAIN_TEXT_FILE
+		do
+			system_name := clone (name);
+			if system_name = Void then
+				io.putstring ("You must compile a project first.%N");
+			else
+				if melt_only then
+					Result := (Precompilation_driver)
+				else
+					system_name.append (Executable_suffix);
+					if compile_type then
+						!! f_name.make_from_string (Workbench_generation_path);
+					else
+						!! f_name.make_from_string (Final_generation_path);
+					end;
+					f_name.set_file_name (system_name);
+					Result := f_name
+				end;
+				!! f.make (Result);
+				if not f.exists then
+					io.putstring ("The system ");
+					io.putstring (Result);
+					io.putstring (" does not exist.%N");
+					Result := Void;
+				else
+					if not melt_only then
+						if compile_type then
+							!! f_name.make_from_string (Workbench_generation_path);
+						else
+							!! f_name.make_from_string (Final_generation_path);
+						end;
+						f_name.set_file_name (Makefile_SH);
+						!! make_f.make (f_name);
+						if make_f.exists and then make_f.date > f.date then
+							io.putstring (Makefile_SH);
+							io.putstring (" is more recent than the system.%N");
+							Result := Void
+						end
+					end
+				end
+			end
 		end;
 
 feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, APPLICATION_STATUS}

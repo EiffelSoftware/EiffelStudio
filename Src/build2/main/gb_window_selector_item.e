@@ -8,6 +8,9 @@ class
 	
 inherit
 	GB_WINDOW_SELECTOR_COMMON_ITEM
+		redefine
+			destroy
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
 		export
@@ -103,6 +106,14 @@ feature {GB_OBJECT} -- Implementation
 		ensure
 			object_set: object = an_object
 		end
+		
+	destroy is
+			-- Destroy `Current'.
+		do
+			object := Void
+			Precursor {GB_WINDOW_SELECTOR_COMMON_ITEM}
+		end
+		
 
 invariant
 	object_not_void: object /= Void

@@ -60,8 +60,8 @@ public class GENERIC_CONFORMANCE {
 			CreateInstance (Type.GetTypeFromHandle (type_to_create.type));
 
 			// Properly initializes `Result'.
-		if (type_to_create is GENERIC_TYPE) {
-			computed_type = (GENERIC_TYPE) type_to_create;
+		computed_type = type_to_create as GENERIC_TYPE;
+		if (computed_type != null ) {
 			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
 				(CLASS_TYPE []) computed_type.type_array);
 			Result.____set_type (derivation);

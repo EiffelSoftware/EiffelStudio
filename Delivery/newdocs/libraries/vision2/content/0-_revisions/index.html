@@ -17,6 +17,14 @@ library listed by the release version of EiffelStudio. All bug fixes and
 modifications are relative to the previously released version.</p>
 <h2>Eiffel Studio 5.3</h2>
 <p><b>Interface modifications</b></p>
+<ul class=circle>
+<li><B>EV_TITLED_WINDOW_ACTION_SEQUENCES</b> added which is inherited only by EV_TITLED_WINDOW and provides three new action sequences :- `minimize_actions', `maximize_actions' and `restore_actions'.</li>
+<li><b>EV_TITLED_WINDOW</b>
+	<ul class=square>
+		<li>You may now only call `maximize' and `minimize' if `is_show_requested'.</li>
+		<li>When minimized, `is_displayed' now returns False.</li>
+	</ul>
+</ul>
 <p><b>Bug fixes</b></p>
 <ul>
   <li><b>Platform independent</b>

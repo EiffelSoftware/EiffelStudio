@@ -33,7 +33,8 @@ inherit
 			put_error, put_class, put_after_class, put_classi, put_cluster,
 		   	process_breakpoint, process_padded, 
 			put_quoted_comment, put_operator, put_symbol, 
-			put_keyword, put_indent, process_quoted_text, put_comment
+			put_keyword, put_indent, process_quoted_text, put_comment,
+			process_basic_text
 		end;
 	TEXT_WINDOW
 		rename
@@ -46,7 +47,7 @@ inherit
 			process_breakpoint, process_padded, 
 			put_quoted_comment, put_operator, is_editable,
 			process_text, put_symbol, put_keyword, 
-			put_indent, process_quoted_text, put_comment
+			put_indent, process_quoted_text, put_comment, process_basic_text
 		select
 			process_text
 		end;
@@ -171,9 +172,9 @@ feature -- Update
 						-- Go back until one is found
 					from
 						a := area;
-						i := index - 1
+						i := index - 2
 					until
-						fig /= Void or else i = 0
+						fig /= Void or else i < 0
 					loop
 						line := a.item (i);
 						fig := line.clickable_from_end;
@@ -192,7 +193,7 @@ feature -- Input
 		do
 			put_comment (" -- ");
 			put_keyword ("class ");
-			put_class (e_class, str);
+			put_class (e_class, e_class.name_in_upper);
 			new_line
 		end;
 
@@ -227,7 +228,7 @@ feature -- Input
 	put_string (s: STRING) is
 			-- Add text `s'.
 		local
-			fig: DEFAULT_TEXT_IMAGE
+			fig: STRING_TEXT_IMAGE
 		do
 			!! fig;
 			add_text_figure (fig, s);
@@ -397,6 +398,15 @@ end
 		end;
 
 feature -- Text formatting
+
+    process_basic_text (s: STRING_TEXT) is
+            -- Process string text `t'.
+		local
+			fig: DEFAULT_TEXT_IMAGE
+		do
+			!! fig;
+			add_text_figure (fig, s.image);
+        end;
 
 	process_text (t: STRUCTURED_TEXT) is
 			-- Process structured text `text' to be

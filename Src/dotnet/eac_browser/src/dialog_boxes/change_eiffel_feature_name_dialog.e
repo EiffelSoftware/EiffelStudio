@@ -133,27 +133,6 @@ feature {NONE} -- Implementation
 			until
 				counter > array.count
 			loop
---				signature_feature := array.item (counter).dotnet_name
---				from
---					counter_2 := 1
---				until
---					array.item (counter).arguments = Void
---					or else
---					counter_2 > array.item (counter).arguments.count
---				loop
---					if counter_2 = 1 then
---						signature_feature := signature_feature + " ("
---					else
---						signature_feature := signature_feature + "; "
---					end
---					signature_feature := signature_feature + array.item (counter).arguments.item (counter_2).dotnet_name + ": " + array.item (counter).arguments.item (counter_2).type.name
---
---					counter_2 := counter_2 + 1
---				end
---				if counter_2 /= 1 then
---					signature_feature := signature_feature + ")"
---				end
-
 				create l_item
 				l_item.set_text (signature.signature_constructor (array.item (counter)))
 				l_item.set_data (array.item (counter))
@@ -182,8 +161,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_array: array /= Void
 		local
-			counter, counter_2: INTEGER
---			signature_feature: STRING
+			counter: INTEGER
 			signature: SIGNATURE
 			l_item: EV_LIST_ITEM_COMPARABLE
 			l_tri_list: SORTABLE_ARRAY [EV_LIST_ITEM_COMPARABLE]
@@ -195,27 +173,6 @@ feature {NONE} -- Implementation
 			until
 				counter > array.count
 			loop
---				signature_feature := array.item (counter).dotnet_name
---				from
---					counter_2 := 1
---				until
---					array.item (counter).arguments = Void
---					or else
---					counter_2 > array.item (counter).arguments.count
---				loop
---					if counter_2 = 1 then
---						signature_feature := signature_feature + " ("
---					else
---						signature_feature := signature_feature + "; "
---					end
---					signature_feature := signature_feature + array.item (counter).arguments.item (counter_2).dotnet_name + ": " + array.item (counter).arguments.item (counter_2).type.name
---
---					counter_2 := counter_2 + 1
---				end
---				if counter_2 /= 1 then
---					signature_feature := signature_feature + ")"
---				end
-
 				create l_item
 				l_item.set_text (signature.signature_member (array.item (counter)))
 				l_item.set_data (array.item (counter))
@@ -324,7 +281,6 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `dotnet_features_combo'.
 		do
 			new_eiffel_feature_name.set_text (eiffel_features_combo.text)
---			(create {EV_ENVIRONMENT}).application
 		end
 	
 	on_change_select_eiffel_feature is
@@ -366,6 +322,5 @@ feature {NONE} -- Implementation
 		do
 			destroy
 		end
-	
 
 end -- class CHANGE_EIFFEL_FEATURE_NAME_DIALOG

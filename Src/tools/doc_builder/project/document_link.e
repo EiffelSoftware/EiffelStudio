@@ -96,10 +96,14 @@ feature -- Access
 								cnt := cnt + 1
 							end
 							
-								-- If match is false here the filename array must have been exhausted
+								-- If match is false here
 							if not l_match then
-								from
+								if l_file_name.count > l_url_arr.count then
+									l_no_parents := l_filename_arr.count - (l_last_match_index)
+								else
 									l_no_parents := cnt - l_last_match_index
+								end
+								from									
 								until
 									l_no_parents = 0
 								loop				
@@ -376,28 +380,6 @@ feature {DOCUMENT_LINK} -- Query
 			l_first_char := url.item (1)
 			Result := l_first_char = '\' or l_first_char = '/'
 		end		
-
-	in_document (a_document: DOCUMENT): BOOLEAN is
-			-- Is there a link to `url' in `a_document'?
-		require
-			document_not_void: a_document /= Void
-			document_valid: a_document.is_valid_xml
-		local
-			l_link: like Current
-			l_links: ARRAYED_LIST [like Current]
-			l_manager: LINK_MANAGER
-		do
-			create l_manager.make_with_documents (shared_project.documents)
-			l_links := l_manager.document_links (a_document)
-			from 
-				l_links.start
-			until
-				l_links.after
-			loop
-				l_link := l_links.item
-				l_links.forth
-			end
-		end
 		
 feature {NONE} -- Implmentation
 

@@ -65,7 +65,7 @@ feature -- Element change
 		local
 			a_cs: C_STRING
 		do
-			real_text := clone (a_text)
+			real_text := a_text.twin
 			create a_cs.make (u_lined_filter (real_text))
 			key := feature {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
 				a_cs.item)

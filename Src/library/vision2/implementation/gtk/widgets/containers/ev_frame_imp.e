@@ -160,7 +160,7 @@ feature -- Access
 			if internal_text = Void then
 				internal_text := ""
 			end
-			Result := clone (internal_text)
+			Result := internal_text.twin
 		end
 
 feature -- Element change
@@ -170,7 +170,7 @@ feature -- Element change
 		local
 			a_cs: C_STRING
 		do
-			internal_text := clone (a_text)
+			internal_text := a_text.twin
 			create a_cs.make (a_text)
 			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_cs.item)
 		end

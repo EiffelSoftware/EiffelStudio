@@ -76,7 +76,9 @@ feature -- Access
 	text: STRING is
 			-- Displayed on menu item.
 		do
-			Result := clone (real_text)
+			if real_text /= Void then
+				Result := real_text.twin
+			end
 		end
 
 	key: INTEGER
@@ -92,9 +94,9 @@ feature -- Element change
 		do
 			a_text.replace_substring_all ("%T", " ")
 				-- Replace tab characters with spaces.
-			real_text := clone (a_text)	
+			real_text := a_text.twin	
 			if a_text.has ('&') then
-				temp_string := clone (a_text)
+				temp_string := a_text.twin
 				filter_ampersand (temp_string, '_')
 				create a_cs.make (temp_string)
 				key := feature {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
@@ -151,15 +153,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			s_not_void: s /= Void
 		do
 			if s.has ('&') then
-				Result := clone (s)
+				Result := s.twin
 				filter_ampersand (Result, '_')
 			else
 				Result := s
 			end
 		ensure
 			copied_only_if_s_had_ampersand:
-				((old clone (s)).has ('&')) = (s /= Result)
-			s_not_changed: (old clone (s)).is_equal (s) 
+				((old s.twin).has ('&')) = (s /= Result)
+			s_not_changed: (old s.twin).is_equal (s) 
 		end
 
 	on_activate is

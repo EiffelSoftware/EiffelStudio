@@ -112,7 +112,7 @@ feature -- Element change
 	set_key (a_key: EV_KEY) is
 			-- Set `a_key' as new key that has to be pressed.
 		do
-			key := clone (a_key)
+			key := a_key.twin
 		end
 
 	enable_shift_required is

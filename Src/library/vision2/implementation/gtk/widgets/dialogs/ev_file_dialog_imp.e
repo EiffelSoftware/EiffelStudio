@@ -107,7 +107,7 @@ feature -- Status report
 			-- Path of `file_name'.
 		do
 			if not file_name.is_empty then
-				Result := clone (file_name)
+				Result := file_name.twin
 				Result.keep_head	(Result.count - Result.mirrored.index_of ('/', 1) + 1)
 			else
 				Result := ""
@@ -121,7 +121,7 @@ feature -- Element change
 		local
 			a_cs: C_STRING
 		do
-			filter := clone (a_filter)
+			filter := a_filter.twin
 			create a_cs.make (filter)
 			feature {EV_GTK_EXTERNALS}.gtk_file_selection_complete (c_object, a_cs.item)
 		end

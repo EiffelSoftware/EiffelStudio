@@ -327,7 +327,7 @@ feature -- Status setting
 	set_background_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the container background pixmap to `pixmap'. 
 		do
-			background_pixmap := clone (a_pixmap)
+			background_pixmap := a_pixmap.twin
 			internal_set_background_pixmap (a_pixmap)
 		end
 		

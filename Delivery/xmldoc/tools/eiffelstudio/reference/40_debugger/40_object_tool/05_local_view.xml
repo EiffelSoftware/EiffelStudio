@@ -26,4 +26,14 @@
 				<label>set slice size command</label>
 			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><code><class_name>SPECIAL</class_name></code></label></link> objects.
 		</paragraph>
+	<paragraph>
+	<paragraph><bold>Specific case for .NET system :</bold></paragraph>
+	<paragraph>When the system is stopped, the first tree item of the local tree view displays the module name for the feature where we are stopped.</paragraph>
+		<paragraph>When an exception occurs (for instance, an assertion violation), the local tree will also display the exception information :
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/debugger/locals_tree_dotnet_exception.png</url>
+			</image>
+		</paragraph></paragraph>				
+	</paragraph>		
 	</paragraph></document>

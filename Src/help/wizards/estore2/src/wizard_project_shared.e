@@ -5,9 +5,9 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROJECT_WIZARD_SHARED
+	WIZARD_PROJECT_SHARED
 
 inherit
 	WIZARD_SPECIFIC
 
-end -- class PROJECT_WIZARD_SHARED
+end -- class WIZARD_PROJECT_SHARED

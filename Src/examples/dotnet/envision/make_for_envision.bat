@@ -194,9 +194,9 @@ mkdir debug
 mkdir release
 cd ..
 call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\menu\ace.ace" "$EIFFEL_SRC\..\samples\winforms\menu" "debug"
-copy %EIFFEL_SRC%\examples\dotnet\envision\envision.ace .\\tree_view\\debug\\ace.ace
+copy %EIFFEL_SRC%\examples\dotnet\envision\envision.ace .\\menu\\debug\\ace.ace
 call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\menu\ace.ace" "$EIFFEL_SRC\..\samples\winforms\menu" "release"
-copy %EIFFEL_SRC%\examples\dotnet\envision\envision.ace .\\tree_view\\release\\ace.ace
+copy %EIFFEL_SRC%\examples\dotnet\envision\envision.ace .\\menu\\release\\ace.ace
 copy .\\eiffel_project.eifp .\\menu\\menu.eifp
 del %EIFFEL_SRC%\examples\dotnet\envision\envision.ace
 

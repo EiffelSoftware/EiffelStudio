@@ -47,10 +47,12 @@ inherit
 			item as wel_item,
 			selected_item as wel_selected_item
 		undefine
+			on_hide,
+			on_show,
 			on_size,
 			on_move,
 			on_left_button_up,
-			on_right_button_up ,
+			on_right_button_up,
 			on_left_button_down,
 			on_right_button_down,
 			on_key_up,
@@ -59,6 +61,7 @@ inherit
 			on_mouse_move,
 			on_destroy
 		redefine
+			on_cbn_killfocus,
 			exists
 		end
 
@@ -83,50 +86,17 @@ feature -- Initialization
 	realize_current, realize is
 			-- Display a  option pull
 		local
-			s: STRING
-			l: ARRAYED_LIST [WIDGET]
 			wc: WEL_COMPOSITE_WINDOW
-			b: BUTTON
-			c: COMPOSITE
-			h, max_width: INTEGER
-			screen_dc: WEL_SCREEN_DC
 		do
 			if not realized then
 				wc ?= parent
-				!! button_list.make (5)
-				c ?= owner
-				l := c.children
-				from
-					l.start
-				until
-					l.after
-				loop
-					if l.item.managed then
-						b ?= l.item
-						button_list.extend (b)
-					end
-					l.forth
-				end
-				max_width := width
+				set_width (25)
+				set_height (item_height)
 				wel_make (wc, x, y, width, height, id_default)
-				from
-					button_list.finish
-					!! screen_dc
-					screen_dc.get
-				until
-					button_list.before
-				loop
-					button_list.item.realize
-					s := button_list.item.text
-					max_width := screen_dc.string_width (s).max (max_width)
-					add_string (s)
-					button_list.back
-				end
-				if not fixed_size_flag then
-					set_size (max_width, item_height)
-				end
-				screen_dc.release
-				if private_selected_button /= Void then
+				!! button_list.make (5)
+				realize_children
+				if private_selected_button /= Void
+				and then private_selected_button.managed then
 					set_selected_button (private_selected_button)
 				end
 			end
@@ -146,20 +116,74 @@ feature -- Access
 			end
 		end
 
+feature -- Element change
+
+	manage_item (bw: BUTTON_WINDOWS) is
+			-- Manage a item in the combobox.
+		local
+			b: BUTTON
+		do
+			b ?= bw.owner
+			insert_string_at (b.text, button_index (b) - unmanaged_count (b) - 1)
+			adjust_size (b)
+		end
+
+	unmanage_item (bw: BUTTON_WINDOWS) is
+			-- Unmanage a item in the combobox.
+		local
+			b: BUTTON
+		do
+			b ?= bw.owner
+			delete_string (button_index (b) - unmanaged_count (b))
+			adjust_size (b)
+		end
+
+	add_a_child (button: BUTTON_WINDOWS) is
+			-- Add a button to the option pull.
+		require
+			button_not_void: button /= Void
+			button_realized: button.realized
+			button_text_not_void: button.text /= Void
+		local
+			max_width: INTEGER
+			screen_dc: WEL_SCREEN_DC
+			s: STRING
+			b: BUTTON
+		do
+			b ?= button.owner
+			if b.managed then
+				s := button.text
+				if not fixed_size_flag then
+					adjust_size (b)	
+				end
+				add_string (s)
+			end
+			button_list.extend (b)
+		ensure
+			count_increased: button.managed implies count = old count + 1
+			list_count_increased: button_list.count = old button_list.count + 1
+		end
+
+feature -- Status report
+
 	text: STRING
+			-- Text of the option pull
 
 	title: STRING
+			-- Title of the option pull
 
 	width: INTEGER is
+			-- Width of the option pull
 		do
 			if exists then
-				Result := wel_height - 25
+				Result := wel_width - 25
 			else
 				Result := private_attributes.width
 			end
 		end
 
 	height: INTEGER is
+			-- Height of the option pull
 		do
 			if exists then
 				Result := wel_height - number_of_buttons * item_height
@@ -168,11 +192,30 @@ feature -- Access
 			end
 		end
 
-feature -- Status setting
+feature -- Removal
 
 	remove_title is
+			-- Remove the tile
 		do
 			title := Void
+		end
+
+feature -- Status setting
+
+	adjust_size (b: BUTTON) is
+			-- Adjust the width and height on
+			-- managing and unmanaging, no shrinking is allowed.
+		local
+			screen_dc: WEL_SCREEN_DC
+			max_width: INTEGER
+			s: STRING
+		do
+			!! screen_dc
+			screen_dc.get
+			s := b.text
+			max_width := screen_dc.string_width (s).max (width)
+			screen_dc.release
+			set_size (max_width, item_height)
 		end
 
 	set_caption (a_caption: STRING) is
@@ -180,20 +223,13 @@ feature -- Status setting
 			caption := clone (a_caption)
 		end
 
-	set_selected_button (a_button: BUTTON) is
+	set_selected_button (b: BUTTON) is
+			-- Select the entry in the menu
+			-- corresponding the button
 		do
-			private_selected_button := a_button
-			if exists then
-				from
-					button_list.start
-				until
-					button_list.after
-				loop
-					if button_list.item = a_button then
-						select_item (number_of_buttons - button_list.index)
-					end
-					button_list.forth
-				end
+			private_selected_button := b
+			if exists and then b.managed then
+				select_item (button_index (b) - unmanaged_count (b) - 1)
 			end
 		end
 
@@ -203,24 +239,61 @@ feature -- Status setting
 			private_attributes.set_width (new_width)
 			private_attributes.set_height (new_height)
 			if exists then
-				resize (new_width + 25, new_height + number_of_buttons * item_height)
+				resize (new_width + 25, new_height + (number_of_buttons + 1) * item_height)
 			end
 			if parent /= Void then
 				parent.child_has_resized
 			end
 		end
-			
+
 	set_text (s: STRING) is
+			-- Set text for option pull.
 		do
 			text := clone (s)
 		end
 
 	set_title (t: STRING) is
+			-- Set title for option pull.
 		do
 			title := t
 		end
 
 feature {NONE} -- Implementation
+
+	unmanaged_count (b: BUTTON): INTEGER is
+			-- Number of unmanaged buttons in the list before `b'.
+			-- Including `b' itself
+		do
+			from
+				button_list.start
+				button_list.search (b)
+			until
+				button_list.before
+			loop
+				if not button_list.item.managed then
+					Result := Result + 1
+				end
+				button_list.back
+			end
+		end
+
+	button_index (b: BUTTON): INTEGER is
+			-- The index of the button `b' in the `button_list'.
+		require
+			has_button: button_list.has (b)
+		do
+			button_list.start
+			button_list.search (b)
+			Result := button_list.index
+		end
+
+	on_cbn_killfocus is
+			-- Hide the list when the focus is removed.
+		do
+			if list_shown then
+				hide_list
+			end
+		end
 
 	button_list: ARRAYED_LIST [BUTTON]
 
@@ -236,7 +309,7 @@ feature {NONE} -- Implementation
 	wel_set_menu (a_menu: WEL_MENU) is
 		do
 		end
-	
+
 	wel_children: LINKED_LIST [WEL_WINDOW]
 
 	item_height: INTEGER is
@@ -252,7 +325,9 @@ feature {NONE} -- Implementation
 	number_of_buttons: INTEGER is
 			-- Number of buttons in option pull
 		do
-			Result := button_list.count
+			if not button_list.empty then
+				Result := button_list.count - unmanaged_count (button_list.last)
+			end
 		end
 
 	private_selected_button: BUTTON 

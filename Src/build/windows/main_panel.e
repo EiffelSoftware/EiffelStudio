@@ -59,7 +59,7 @@ feature -- Creation
 			!! create_command_entry.make (Menu_names.create_command, action_category)
 			!! application_editor_entry.make (Menu_names.Application_editor, view_category)
 			!! class_importer_entry.make (Menu_names.Class_importer, view_category)
-			!! command_sub_menu.make (Menu_names.Command, view_category)
+			!! command_catalog_entry.make (Menu_names.Command_catalog, view_category)
 			!! context_sub_menu.make (Menu_names.Context, view_category)
 			!! editors_entry.make (Menu_names.Editors, view_category)
 			!! history_window_entry.make (Menu_names.History_window, view_category)
@@ -69,8 +69,6 @@ feature -- Creation
 			!! context_catalog_entry.make (Menu_names.Context_catalog, context_sub_menu)
 			!! context_editor_entry.make (Menu_names.Context_editor, context_sub_menu)
 			!! context_tree_entry.make (Menu_names.Context_tree, context_sub_menu)
-			!! command_catalog_entry.make (Menu_names.Command_catalog, command_sub_menu)
-			!! command_tool_entry.make (Menu_names.Instance_editor, command_sub_menu)
 				--| Separators
 			!! separator1.make (widget_names.separator, form)
 			!! separator2.make (widget_names.separator, form)
@@ -97,20 +95,14 @@ feature -- Creation
 			!! v_separator_3.make ("", button_form)
 				--| Split windows
 			!! main_split_window.make_horizontal ("Main split window", form)
-			!! top_split_form.make ("Top split form", main_split_window)
+			!! context_tree_split_form.make ("Context tree form", main_split_window)
 			!! bottom_split_form.make ("Bottom split form", main_split_window)
-			!! top_split_window.make_horizontal ("Top split window", top_split_form)
-			!! bottom_split_window.make_horizontal ("Bottom split window", bottom_split_form)
-			!! context_tree_split_form.make ("Context tree form", top_split_window)
-			!! context_split_form.make ("Context form", top_split_window)
-			!! context_split_window.make_vertical ("Context split window", context_split_form)
+			!! bottom_split_window.make_vertical ("Bottom split window", bottom_split_form)
+			!! context_split_form.make ("Context form", bottom_split_window)
+			!! command_catalog_split_form.make ("Command catalog form", bottom_split_window)
+			!! context_split_window.make_horizontal ("Context split window", context_split_form)
 			!! context_catalog_split_form.make ("Context catalog form", context_split_window)
 			!! context_editor_split_form.make ("Context editor form", context_split_window)
-			!! command_split_form.make ("Command split form", bottom_split_window)
-			!! command_editor_split_form.make ("Command editor form", bottom_split_window)
-			!! command_split_window.make_vertical ("Command split window", command_split_form)
-			!! command_catalog_split_form.make ("Command catalog form", command_split_window)
-			!! command_tool_split_form.make ("Instance Editor form", command_split_window)
 
 				--| Context Tree
 			!! scrolled_w.make ("Scrolled Window", context_tree_split_form)
@@ -127,8 +119,6 @@ feature -- Creation
 
 				--| Command split window
 			!! command_catalog_widget.make (widget_names.Command_catalog, command_catalog_split_form)
-			!! command_tool.make ("Instance editor", command_tool_split_form)
-			!! command_editor.make ("Command editor", command_editor_split_form)
 				
 			set_values
 			attach_all
@@ -159,18 +149,15 @@ feature -- Creation
 			context_tree_entry.set_toggle_on
 			context_editor_entry.set_toggle_on
 			command_catalog_entry.set_toggle_on
-			command_tool_entry.set_toggle_on
 			editors_entry.set_toggle_on
 			interface_entry.set_toggle_on
 			vertical_separator.set_horizontal (False)
-			command_editor.set_command_tool (command_tool)
 			v_separator_1.set_horizontal (False)
 			v_separator_2.set_horizontal (False)
 			v_separator_3.set_horizontal (False)
-			main_split_window.set_proportion (66)
-			top_split_window.set_proportion (50)
-			command_split_window.set_proportion (50)
-			context_split_window.set_proportion (50)
+			main_split_window.set_proportion (30)
+			bottom_split_window.set_proportion (70)
+			context_split_window.set_proportion (25)
 		end
 
 	attach_all is
@@ -242,13 +229,7 @@ feature -- Creation
 			form.attach_left (main_split_window, 0)
 			form.attach_bottom (main_split_window, 0)
 
-				--| Top split window
-			top_split_form.attach_top (top_split_window, 0)
-			top_split_form.attach_left (top_split_window, 0)
-			top_split_form.attach_right (top_split_window, 0)
-			top_split_form.attach_bottom (top_split_window, 0)
-
-					--| Context tree split form
+				--| Context tree split form (top split form)
 			context_tree_split_form.attach_top (scrolled_w, 0)
 			context_tree_split_form.attach_top (context_tree_button_form, 0)
 			context_tree_split_form.attach_top (vertical_separator, 0)
@@ -270,6 +251,12 @@ feature -- Creation
 			context_tree_button_form.attach_top_widget (raise_widget_hole, show_window_hole, 0)
 			context_tree_button_form.attach_top_widget (show_window_hole, expand_parent_hole, 0)
 
+				--| Bottom split window
+ 			bottom_split_form.attach_top (bottom_split_window, 0)
+ 			bottom_split_form.attach_left (bottom_split_window, 0)
+ 			bottom_split_form.attach_right (bottom_split_window, 0)
+ 			bottom_split_form.attach_bottom (bottom_split_window, 0)
+
 					--| Context split window
 			context_split_form.attach_top (context_split_window, 0)
 			context_split_form.attach_left (context_split_window, 0)
@@ -287,36 +274,12 @@ feature -- Creation
 			context_editor_split_form.attach_left (context_editor, 0)
 			context_editor_split_form.attach_right (context_editor, 0)
 			context_editor_split_form.attach_bottom (context_editor, 0)
-
-				--| Bottom split window
-			bottom_split_form.attach_top (bottom_split_window, 0)
-			bottom_split_form.attach_left (bottom_split_window, 0)
-			bottom_split_form.attach_right (bottom_split_window, 0)
-			bottom_split_form.attach_bottom (bottom_split_window, 0)
-
-					--| Command split window
-			command_split_form.attach_top (command_split_window, 0)
-			command_split_form.attach_left (command_split_window, 0)
-			command_split_form.attach_right (command_split_window, 0)
-			command_split_form.attach_bottom (command_split_window, 0)
-
-						--| Command catalog
+ 
+					--| Command catalog
 			command_catalog_split_form.attach_top (command_catalog_widget, 0)
 			command_catalog_split_form.attach_left (command_catalog_widget, 0)
 			command_catalog_split_form.attach_right (command_catalog_widget, 0)
 			command_catalog_split_form.attach_bottom (command_catalog_widget, 0)
-			
-						-- Instance editor
-			command_tool_split_form.attach_top (command_tool, 0)
-			command_tool_split_form.attach_left (command_tool, 0)
-			command_tool_split_form.attach_right (command_tool, 0)
-			command_tool_split_form.attach_bottom (command_tool, 0)
-
-					--| Command editor
-			command_editor_split_form.attach_top (command_editor, 0)
-			command_editor_split_form.attach_left (command_editor, 0)
-			command_editor_split_form.attach_right (command_editor, 0)
-			command_editor_split_form.attach_bottom (command_editor, 0)
 		end
 
 	set_callbacks is
@@ -403,45 +366,29 @@ feature {NONE} -- Graphical interface
 		--| Split window
 	main_split_window,
 			-- Main split window
-	top_split_window,
-			-- Top split window containing the context tree and `context_split_window'
 	bottom_split_window,
-			-- Bottom split window containing `command_split_window' and the command text editor
-	context_split_window,
+			-- Bottom split window containing
+			-- `context_split_window' and `command_catalog_split_form'
+	context_split_window: SPLIT_WINDOW
 			-- Contain context catalog and context editor
-	command_split_window: SPLIT_WINDOW
-			-- Contain command catalog and command instance editor
 
 		--| Split window children
-	top_split_form,
-			-- Top frame in `main_split_window'
 	bottom_split_form,
 			-- Bottom frame in `main_split_window'
 	context_tree_split_form,
 			-- Form enclosing the context tree
 	context_split_form,
-			-- Form enclosing the bottom frame of `top_split_window'
+			-- Form enclosing `context_split_window'
 	context_editor_split_form,
 			-- Form enclosing the context editor
 	context_catalog_split_form,
 			-- Form enclosing the context catalog
-	command_split_form,
-			-- Form enclosing the top frame of `bottom_split_window'
-	command_catalog_split_form,
+	command_catalog_split_form: SPLIT_WINDOW_CHILD
 			-- Form enclosing the command catalog
-	command_tool_split_form,
-			-- Form enclosing the command instance editor
-	command_editor_split_form: SPLIT_WINDOW_CHILD
-			-- Form enclosing the command editor
 
 	scrolled_w: SCROLLED_W
 			-- Scrolled window in which `context_tree_widget' will appear
 	
-feature {COMMAND_TOOL_WIDGET}
-
-	command_editor: COMMAND_EDITOR
-			-- Command editor included in main panel
-
 feature -- Graphical interface
 
 		--| Menu row
@@ -459,14 +406,11 @@ feature -- Graphical interface
 	create_command_entry: NEW_COMMAND_BUTTON
 		--| Entries in the View category
 	context_sub_menu: MENU_PULL
-	command_sub_menu: MENU_PULL
 	context_catalog_entry: CONTEXT_CATALOG_ENTRY
 	context_editor_entry: CONTEXT_EDITOR_ENTRY
 	context_tree_entry: CONTEXT_TREE_ENTRY
 	history_window_entry: HISTORY_WINDOW_ENTRY
 	command_catalog_entry: COMMAND_CATALOG_ENTRY
-	command_tool_entry: INSTANCE_EDITOR_ENTRY
-	command_editor_entry: COMMAND_EDITOR_ENTRY
 	editors_entry: EDITORS_ENTRY
 	application_editor_entry: APPLICATION_EDITOR_ENTRY
 	interface_entry: INTERFACE_ENTRY
@@ -522,8 +466,6 @@ feature -- Graphical interface
 			-- Context catalog
 	command_catalog_widget: COMMAND_CATALOG
 			-- Command catalog
-	command_tool: COMMAND_TOOL_WIDGET
-			-- Command tool included in main panel.
 	context_editor: CONTEXT_EDITOR_WIDGET
 			-- Context editor included in main panel.
 
@@ -719,39 +661,33 @@ feature -- Hide/Show Context tree
 			-- Hide context tree.
 		do
 			context_tree_split_form.unmanage
-			if not context_split_form.managed then
-				top_split_form.unmanage
-			end
 		end
 
 	show_context_tree is
 			-- Show_context_tree.
 		do
-			if not context_split_form.managed then
-				top_split_form.manage
-			end
 			context_tree_split_form.manage
 		end
 
 feature -- Hide/Show Context split form
-
-	hide_context_split_form is
-			-- Hide `context_split_form'.
-		do
-			context_split_form.unmanage
-			if not context_tree_split_form.managed then
-				top_split_form.unmanage
+ 
+ 	hide_context_split_form is
+ 			-- Hide `context_split_form'.
+ 		do
+ 			context_split_form.unmanage
+ 			if not command_catalog_split_form.managed then
+ 				bottom_split_form.unmanage
+ 			end
+ 		end
+ 
+ 	show_context_split_form is
+ 			-- Show `context_split_form'.
+ 		do
+ 			if not command_catalog_split_form.managed then
+				bottom_split_form.manage
 			end
-		end
-
-	show_context_split_form is
-			-- Show `context_split_form'.
-		do
-			if not context_tree_split_form.managed then
-				top_split_form.manage
-			end
-			context_split_form.manage
-		end
+ 			context_split_form.manage
+ 		end
 
 feature -- Hide/Show Context catalog	
 
@@ -793,99 +729,24 @@ feature -- Hide/Show context editor
 			context_editor_split_form.manage
 		end
 
-feature -- Hide/Show `command split form'
-
-	hide_command_split_form is
-			-- Hide `command_split_form'.
-		do
-			command_split_form.unmanage
-			if not command_editor_split_form.managed then
-				bottom_split_form.unmanage
-			end
-		end
-
-	show_command_split_form is
-			-- Show `command_split_form'.
-		do
-			if not command_editor_split_form.managed then
-				bottom_split_form.manage
-			end
-			command_split_form.manage
-		end
-
 feature -- Hide/Show Command catalog
 
 	hide_command_catalog is
 			-- Hide command catalog.
 		do
 			command_catalog_split_form.unmanage
-			if not command_tool_split_form.managed then
-				hide_command_split_form
-			end				
+			if not context_split_form.managed then
+			   bottom_split_form.unmanage
+			end	
 		end
 
 	show_command_catalog is
 			-- Show command catalog.
 		do
-			if not command_tool_split_form.managed then
-				show_command_split_form
-	  		end
-			command_catalog_split_form.manage
-		end
-
-feature -- Hide/Show Instance editor
-
-	hide_command_tool is
-			-- Hide instance editor.
-		do
-			command_tool_split_form.unmanage
-			if not command_catalog_split_form.managed then
-				hide_command_split_form
-			end
-		end
-
-	show_command_tool is
-			-- Show instance editor.
-		do
-			if not command_catalog_split_form.managed then
-				show_command_split_form
-			end
-			command_tool_split_form.manage
-		end
-
-feature -- Hide/Show Command editor
-
-	hide_command_editor is
-			-- Hide Command editor.
-		do
- 			base.set_height (form.height - command_editor_split_form.height)
-			form.set_height (base.height)
-			command_editor_split_form.unmanage
-			if not command_tool_split_form.managed then
-				bottom_split_form.unmanage
-			end
-		end
-
-	show_command_editor is
-			-- Show command editor.
-		do
-				--| at the beginning, to have the precedent height of 'command_split_form'
-			bottom_split_window.set_proportion (100 * command_split_form.height //
- 					(command_split_form.height + resources.cmd_ed_height))
- 			base.set_height (base.height + resources.cmd_ed_height)
-			form.set_height (base.height)
-			if not command_split_form.managed then
+			if not context_split_form.managed then
 				bottom_split_form.manage
 			end
-			command_editor_split_form.manage
-		end
-
-feature -- Access
-
-	command_editor_shown: BOOLEAN is
-			-- Is context editor shown?
-		do
-			Result := command_editor_split_form.managed
+			command_catalog_split_form.manage
 		end
 
 feature -- Raise

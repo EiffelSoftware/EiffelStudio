@@ -239,7 +239,11 @@ feature {NONE} -- Internal generation
 			buf.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);")
 			buf.new_line
 			buf.putstring ("fp = ")
-			result_type.c_type.generate_function_cast (buf, argument_types)
+			if has_arg_list then
+				result_type.c_type.generate_function_cast (buf, argument_types)
+			else
+				result_type.c_type.generate_function_cast (buf, <<>>)
+			end
 			buf.putstring ("GetProcAddress(a_result,")
 			if dll_index > -1 then 
 				buf.putstring ("MAKEINTRESOURCE (")

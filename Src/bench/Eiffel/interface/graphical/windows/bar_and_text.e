@@ -381,10 +381,7 @@ feature -- Window Settings
 
 	set_default_size is
 			-- Default size of the windows.
-		require else
-			is_a_shell: is_a_shell
 		do
-			eb_shell.set_size (440, 500)
 		end;
 
 	set_default_position is

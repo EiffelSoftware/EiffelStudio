@@ -29,6 +29,8 @@ feature -- Initialisation
 feature -- Display
 
 	display(d_y: INTEGER; a_dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y')
 		local
 			local_position: INTEGER
 		do
@@ -36,6 +38,9 @@ feature -- Display
 		end
 
 	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y') with its
+			-- selected state.
 		local
 			local_position: INTEGER
 		do
@@ -43,6 +48,9 @@ feature -- Display
 		end
 
 	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y') with its
+			-- selected state from beggining to `pivot'
 		local
 			local_position: INTEGER
 		do
@@ -67,6 +75,7 @@ feature -- Display
 feature -- Width & Height
 
 	width: INTEGER is
+			-- Width in pixel of the entire token.
 		do
 				-- Width of first tabulation.
 			Result := ((position // tabulation_width) + 1 ) * tabulation_width - position

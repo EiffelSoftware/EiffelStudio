@@ -153,7 +153,7 @@ feature -- Access
 	history: UNDO_REDO_STACK
 			-- List of undo and redo commands
 
-feature -- Basic operations
+feature -- Process Windows Messages
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Redraw the screen.
@@ -639,9 +639,10 @@ feature {NONE} -- Display functions
 	update_buffered_screen (dc: WEL_DC; top: INTEGER; bottom: INTEGER) is
 			-- Update the device context `dc'. Redraw the text.
 		local
-			curr_line: INTEGER
-			first_line_to_draw: INTEGER
-			last_line_to_draw: INTEGER
+			curr_line			: INTEGER
+			first_line_to_draw	: INTEGER
+			last_line_to_draw	: INTEGER
+			curr_y				: INTEGER
 		do
 				-- Draw all lines
 			first_line_to_draw := (first_line_displayed + top // line_increment - 1).max (1)
@@ -659,6 +660,15 @@ feature {NONE} -- Display functions
 					curr_line := curr_line + 1
 					text_displayed.forth
 				end
+
+				curr_y := (curr_line - first_line_displayed) * line_increment
+				if curr_y < bottom then
+					-- The file is too small for the screen, so we fill in the
+					-- last portion of the screen.
+
+--					dc.fill
+				end
+				
 			end
 		end
 

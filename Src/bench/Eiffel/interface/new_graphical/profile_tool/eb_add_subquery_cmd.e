@@ -31,7 +31,7 @@ feature -- Command Execution
 	execute (arg: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA) is
 			-- Execute Current
 		local
-			parser: QUERY_PARSER
+			parser: EB_QUERY_PARSER
 			txt: STRING
 			operator: SUBQUERY_OPERATOR
 			string_arg: STRING

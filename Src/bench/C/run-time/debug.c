@@ -253,12 +253,8 @@ int dx;
 
 public void dnext()
 {
-	/* We've reached the end of a "next" instruction, which is also a "step".
-	 * This is always a break point unless the execution status is DX_CONT.
-	 */
-
-	if (d_data.db_status != DX_CONT)
-		dbreak(PG_BREAK);			/* Break point reached */
+	dinterrupt();				/* Ask daemon whether application */
+								/* should be interrupted here. */
 }
 
 /*

@@ -168,6 +168,7 @@ extern void drecord_bc();		/* Record new byte code in run-time tables */
 #define PG_RAISE		1		/* Explicitely raised exception */
 #define PG_VIOL			2		/* Implicitely raised exception */
 #define PG_BREAK		3		/* Break point */
+#define PG_INTERRUPT	4		/* Application interrupted */
 
 #endif
 

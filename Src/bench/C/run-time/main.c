@@ -213,10 +213,11 @@ int sig;
 #ifdef NOHOOK
 
 /* When no debugging is allowed, the file network.o is not part of the
- * archive. However, we need to define a dummy dserver() entry.
+ * archive. However, we need to define dummy dserver() and dinterrupt() entries.
  */
 
 public void dserver() {}
+public void dinterrupt() {}
 #endif
 
 public void dexit(code)

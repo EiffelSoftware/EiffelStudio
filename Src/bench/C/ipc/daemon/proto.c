@@ -49,6 +49,8 @@ extern STREAM *spawn_child();		/* Start up child with ipc link */
 
 extern int errno;					/* System call error number */
 
+private int interrupted;	/* Has application been asked to be interrupted */
+
 /*
  * IDR protocol initialization.
  */
@@ -101,11 +103,25 @@ Request *rqst;				/* The received request to be processed */
 		run_asynchronous(s, rqst);
 		break;
 	case APPLICATION:		/* Start application */
+		interrupted = FALSE;
 		start_app(s);
 		break;
 	case KILL:				/* Kill application asynchronously */
 		kill_app();
 		break;
+	case EWB_INTERRUPT:		/* Debugger asking to interrupt application */
+		interrupted = TRUE;
+		break;
+	case APP_INTERRUPT:		/* Application wondering if it has to stop */
+		if (interrupted)
+			send_info(writefd(d_data.d_as), INTERRUPT_OK);
+		else
+			send_info(writefd(d_data.d_as), INTERRUPT_NO);
+		interrupted = FALSE;
+		break;
+	case RESUME:			/* Debugger asking to resume application */
+		interrupted = FALSE;
+		/* Fall through */	/* i.e. send the request to application */
 	default:
 		send_packet(writefd(OTHER(s)), rqst);
 		break;

@@ -65,6 +65,19 @@ int code;	/* The acknowledgment code */
 	send_packet(s, &pack);
 }
 
+public void send_info(s, code)
+int s;		/* The socket descriptor */
+int code;		/* The information code */
+{
+		/* Send an information report specified by code. */
+
+	Request rqst;
+
+	Request_Clean (rqst);
+	rqst.rq_type = code;
+	send_packet(s, &rqst);
+}
+
 public int send_str(sp, buffer)
 STREAM *sp;		/* The stream descriptor */
 char *buffer;	/* Where the string is held */

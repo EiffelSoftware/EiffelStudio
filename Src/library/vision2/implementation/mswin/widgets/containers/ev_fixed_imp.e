@@ -16,7 +16,8 @@ inherit
 
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
-			on_size
+			child_minwidth_changed,
+			child_minheight_changed
 		end
 		
 creation
@@ -37,12 +38,19 @@ feature {NONE} -- Initialization
 			make_with_coordinates (par_imp, "Fixed", 0, 0, 0, 0)
 		end
 
-feature {NONE} -- Implementation : WEL features
+feature {EV_WIDGET_IMP} -- Implementation
 
-	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Wm_size message
+	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Change the minimum width of the container because
+			-- the child changed his own minimum width.
 		do
-  		end
+		end
+
+	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Change the minimum width of the container because
+			-- the child changed his own minimum width.
+		do
+		end
 
 end -- class EV_FIXED_IMP
 

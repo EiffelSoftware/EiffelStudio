@@ -180,9 +180,8 @@ feature -- Standard Interface
 			build_save_as_menu_entry
 			build_print_menu_entry
 			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, edit_bar)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -192,9 +191,7 @@ feature -- Standard Interface
 			edit_bar.attach_left (hole_button, 0)
 			edit_bar.attach_top (hole_button, 0)
 			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (quit_button, 0)
-			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5)
-			edit_bar.attach_right (quit_button, 0)
+			edit_bar.attach_left_widget (hole_button, search_cmd_holder.associated_button, 5)
 		end
 
 	build_format_bar is

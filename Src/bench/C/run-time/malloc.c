@@ -40,6 +40,7 @@
 #include "x2c.header"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "eif_sig.h"
+#include "eif_err_msg.h"
 #ifdef EIF_REM_SET_OPTIMIZATION
 #include "eif_special_table.h"	/* For the special table interface. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */

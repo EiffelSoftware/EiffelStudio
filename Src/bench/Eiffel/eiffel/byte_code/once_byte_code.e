@@ -1,10 +1,3 @@
---|-------------------------------------------------------------|--
---|  Copyright (c) 1992 Interactive Software Engineering, Inc.  |--
---|	  270 Storke Road, Suite 7 Goleta, California 93117	  |--
---|					 (805) 685-1006						  |--
---| All rights reserved. Duplication or distribution prohibited |--
---|-------------------------------------------------------------|--
-
 -- Byte code for once feature
 
 class ONCE_BYTE_CODE
@@ -47,6 +40,14 @@ feature
 			generated_file.exdent;
 				-- Detach this block
 			generated_file.new_line;
+				-- Record once by recording its 'Result' address, only if it
+				-- is a reference. This will raise an exception if the address
+				-- cannot be recorded and 'done' will not be set to 1.
+			if context.result_used and real_type(result_type).c_type.is_pointer
+			then
+				generated_file.putstring("RTOC;");
+				generated_file.new_line;
+			end;
 			generated_file.putstring ("done = 1;");
 			generated_file.new_line;
 			init_dtype;

@@ -40,6 +40,7 @@
 #endif
 
 #ifdef EIF_WIN32
+#include <io.h>		/* %%ss added for read */
 #include "winsock.h"
 #endif
 
@@ -156,14 +157,14 @@ rt_public char *eretrieve(EIF_INTEGER file_desc, EIF_CHARACTER file_storage_type
 #ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		{
-		if ((read (r_fides, &rt_type, (sizeof(char)))) < sizeof (char))
+		if ((read (r_fides, (char *)(&rt_type), (sizeof(char)))) < sizeof (char))
 			eio();
 		}
 	else
-		if ((recv (r_fides, &rt_type, sizeof(char), 0)) < sizeof (char))
+		if ((recv (r_fides, (char *)(&rt_type), sizeof(char), 0)) < sizeof (char))
 			eio();
 #else
-	if ((read (r_fides, &rt_type, (sizeof(char)))) < sizeof (char))
+	if ((read (r_fides, (char *)(&rt_type), (sizeof(char)))) < sizeof (char))
 		eio();
 #endif
 
@@ -1066,7 +1067,7 @@ rt_private void read_header(char rt_type)
 	int dtype, new_dtype;
 	long size;
 	int nb_gen, bsize = 1024;
-	char vis_name[512], end;
+	char vis_name[512]; /* %%ss removed , end; */
 	char * temp_buf;
 	jmp_buf exenv;
 	RTXD;
@@ -1199,7 +1200,7 @@ rt_private void iread_header(void)
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
 	int nb_gen, bsize = 1024;
-	char vis_name[512], end;
+	char vis_name[512]; /* %%ss removed , end; */
 	char * temp_buf;
 	uint32 num_attrib;
 	long read_attrib;
@@ -1569,7 +1570,7 @@ rt_public int retrieve_read (void)
 			eio();
 		}
 	else
-		if ((recv (r_fides, &read_size, sizeof (short), 0)) < sizeof (short))
+		if ((recv (r_fides, (char *)(&read_size), sizeof (short), 0)) < sizeof (short))
 			eio();
 #else
 	if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
@@ -1661,11 +1662,11 @@ rt_public int retrieve_read_with_compression (void)
 rt_private void gen_object_read (char *object, char *parent)
 {
 	long attrib_offset;
-	int z;
+	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
 	uint32 num_attrib;
 	uint32 flags = HEADER(object)->ov_flags;
-	int *attrib_order;
+	/* int *attrib_order;*/ /* %%ss removed */
 
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
@@ -1693,7 +1694,7 @@ rt_private void gen_object_read (char *object, char *parent)
 					break;
 				case SK_BIT:
 						{
-							int q;
+							/* int q; */ /* %%ss removed */
 							uint32 old_flags;
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
@@ -1791,7 +1792,7 @@ rt_private void gen_object_read (char *object, char *parent)
 						}
 						break;
 					case SK_BIT: {
-						uint32 l;
+						/* uint32 l;*/ /* %%ss removed */
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						buffer_read((char *)object, count*elem_size); /* %%ss cast was struct bit* */
@@ -1827,8 +1828,10 @@ rt_private void gen_object_read (char *object, char *parent)
 
 rt_private void object_read (char *object, char *parent)
 {
-	long attrib_offset;
+#if DEBUG & 1
 	int z;
+#endif
+	long attrib_offset;
 	uint32 o_type;
 	uint32 num_attrib;
 	uint32 flags = HEADER(object)->ov_flags;
@@ -1877,7 +1880,9 @@ rt_private void object_read (char *object, char *parent)
 					break;
 				case SK_BIT:
 						{
+#if DEBUG & 1
 							int q;
+#endif
 							uint32 old_flags;
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
@@ -2029,17 +2034,19 @@ rt_private void object_read (char *object, char *parent)
 						}
 					}
 						break;
-					case SK_BIT: {
-						uint32 l;
-
+					case SK_BIT: 
+					{
+#if DEBUG & 1
+						uint32 l; /* %%ss read but never initialized */
+#endif
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						ridr_multi_bit ((struct bit *)object, count, elem_size);
 #if DEBUG & 1
 						printf (" %x", l);
 
-												for (ref = object; count > 0; count--, ref += elem_size ) {
-														int q;
-														for (q = 0; q < BIT_NBPACK(l) ; q++) {
+						for (ref = object; count > 0; count--, ref += elem_size ) {
+							int q;
+							for (q = 0; q < BIT_NBPACK(l) ; q++) {
 								printf (" %lx", *((uint32 *)(((struct bit *)ref)->b_value + q)));
 								if (!(q % 40))
 									printf ("\n");
@@ -2109,7 +2116,7 @@ rt_private long obj_size(long u, long v, long w, long x, long y, long z)
 
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 {
-	long Result;
+	/* long Result;*/ /* %%ss removed */
 	int numb, counter, bit_size = 0;
 	int num_ref = 0, num_char = 0, num_float = 0, num_double = 0;
 	int num_pointer = 0, num_int = 0, exp_size = 0, num_exp = 0;

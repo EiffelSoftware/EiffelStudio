@@ -22,6 +22,8 @@
 #include <direct.h>
 #elif defined EIF_WINDOWS
 	/* <unistd.h> doesn't exist under Windows */
+#include <io.h>			/* %%ss added for access, chmod */
+#include <direct.h>		/* %%ss added for (ch|mk|rm)dir */
 #else
 #include <unistd.h>
 #endif
@@ -1137,8 +1139,10 @@ rt_public void file_mkdir(char *path)
 	
 	for (;;) {
 		errno = 0;			/* Reset error condition */
-#ifdef EIF_OS2
+#ifdef EIF_OS2 
 		status = mkdir(path);		/* Create directory `path' */
+#elif defined EIF_WIN32
+		status = mkdir(path);		/* Create directory `path' */ /* %%ss above line added */
 #else
 		status = mkdir(path, 0777);	/* Create directory `path' */
 #endif
@@ -1514,9 +1518,9 @@ rt_public char *file_owner(int uid)
 	 */
 
 	char str[NAME_MAX];
-	struct passwd *pp;
-
 #ifdef HAS_GETPWUID
+	struct passwd *pp; /* %%ss moved frm above */
+
 	pp = getpwuid(uid);
 	if (pp == (struct passwd *) 0)
 		sprintf(str, "%d", uid);		/* Not available: use UID */
@@ -1537,9 +1541,9 @@ rt_public char *file_group(int gid)
 	 */
 
 	char str[NAME_MAX];
-	struct group *gp;
-
 #ifdef HAS_GETGRGID
+	struct group *gp; /* %%ss moved from above */
+
 	gp = getgrgid(gid);
 	if (gp == (struct group *) 0)
 		sprintf(str, "%d", gid);		/* Not available: use GID */

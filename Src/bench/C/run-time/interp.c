@@ -352,7 +352,7 @@ rt_private void interpret(int flag, int where)
 	int32 body_id;					/* Body id of once routine */
 	int current_trace_level;	/* Saved call level for trace, only needed when routine is retried */
 	char **saved_prof_top;	/* Saved top of `prof_stack' */
-	struct item *result_val;		/* Postcondition result value */
+	/* struct item *result_val; */		/* Postcondition result value */ /* %%ss removed */
 	RTSN;							/* Save nested flag */
  
 #ifdef CONCURRENT_EIFFEL
@@ -647,7 +647,7 @@ rt_private void interpret(int flag, int where)
 		default:
 			panic(botched);
 		}
-end:
+/* end:*/ /* %%ss removed */
 		break;
 
 	/*
@@ -964,7 +964,7 @@ end:
 		dprintf(2)("BC_EXP_ASSIGN\n");
 #endif
 		{
-			struct ac_info *info;
+			/* struct ac_info *info; */ /* %%ss removed */
 			char *ref;
 
 			ref = opop()->it_ref;		/* Expression type */
@@ -986,7 +986,7 @@ end:
 		dprintf(2)("BC_PEXP_ASSIGN\n");
 #endif
 		{
-			struct ac_info *info;
+			/* struct ac_info *info; */ /* %%ss removed */
 			char *ref;
 			int32 origin, ooffset;
 
@@ -2422,7 +2422,7 @@ end:
 		{	long nbr_of_items, temp;
 			char **stripped;
 			char *array;
-			short s_type, d_type;
+			short d_type; /* %%ss removed , s_type; */
 			unsigned long stagval;
 
 			stagval = tagval;
@@ -3283,7 +3283,7 @@ rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, 
 
 	union overhead *zone = HEADER(obj);
 	int dtype = Dtype(obj);
-	int i;
+	/* int i; */ /* %%ss removed */
 
 	if (inv_mark_table == (char *) 0)
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
@@ -3310,7 +3310,7 @@ rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, s
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
 	int p_type;
-	int32 inv_body_id;			/* Invariant body id */
+	/* int32 inv_body_id; */ /* Invariant body id */ /* %%ss removed */
 
 	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
 
@@ -4141,7 +4141,7 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	 */
 
 	char *current;							/* Current object */
-	struct ac_info *attrinfo;				/* Call info for attribute */
+	/* struct ac_info *attrinfo;*/ /* Call info for attribute */ /* %%ss removed */
 	struct item *last;						/* Value on top of the stack */
 	long offset;							/* Attribute offset */
 
@@ -4177,7 +4177,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	 */
 
 	char *current;							/* Current object */
-	struct ac_info *attrinfo;				/* Call info for attribute */
+	/* struct ac_info *attrinfo; */	/* Call info for attribute */ /* %%ss removed */
 	struct item *last;						/* Value on top of the stack */
 	long offset;							/* Attribute offset */
 
@@ -4213,7 +4213,7 @@ rt_private void assign(long int fid, int stype, uint32 type)
 	
 	long offset;					/* Offset of the attribute */
 	struct item *last;				/* Value on top of the stack */
-	struct ac_info *info;			/* Attribute access information */
+	/* struct ac_info *info;*/ /* Attribute access information */ /* %%ss removed */
 	char *ref;
 
 	/* Attribute access information evaluation */
@@ -4277,7 +4277,7 @@ rt_private void passign(int32 origin, int32 f_offset, uint32 type)
 	
 	long offset;					/* Offset of the attribute */
 	struct item *last;				/* Value on top of the stack */
-	struct ac_info *info;			/* Attribute access information */
+	/* struct ac_info *info;*/ /* Attribute access information */ /* %%ss removed */
 	char *ref;
 
 	/* Attribute access information evaluation */

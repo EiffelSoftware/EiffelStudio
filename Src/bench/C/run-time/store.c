@@ -33,6 +33,7 @@
 #endif
 
 #ifdef EIF_WIN32
+#include <io.h>		/* %%ss addded for write */
 #include "winsock.h"
 #endif
 
@@ -84,7 +85,7 @@ rt_public void free_sorted_attributes(void);
 /*
  * Shared data declarations
  */
-rt_shared char * account = (char *) 0;			/* Array of traversed dyn types */
+rt_shared char *account = (char *) 0;	/* Array of traversed dyn types */
 rt_shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
 
 rt_private int accounting = 0;
@@ -237,8 +238,8 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	/* Write the kind of store */
 #ifdef EIF_WIN32
 	if (((fstoretype == 'F')
-		? write(fides, &c, sizeof(char))
-		: send (fides, &c, sizeof(char), 0)) < 0) {
+		? write(fides, (char *)(&c), sizeof(char))
+		: send (fides, (char *)(&c), sizeof(char), 0)) < 0) {
 #else
 	if (write(fides, &c, sizeof(char)) < 0){
 #endif
@@ -536,7 +537,7 @@ rt_private void gen_object_write(char *object)
 		 */
 
 	long attrib_offset;
-	int z;
+	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
 	uint32 num_attrib;
 	uint32 flags = HEADER(object)->ov_flags;
@@ -669,7 +670,9 @@ rt_private void gen_object_write(char *object)
 rt_private void object_write(char *object)
 {
 	long attrib_offset;
-	int z;
+#if DEBUG &1
+	int z; /* %%ss added #if .. #endif */
+#endif
 	uint32 o_type;
 	uint32 num_attrib;
 	uint32 flags = HEADER(object)->ov_flags;
@@ -712,9 +715,10 @@ rt_private void object_write(char *object)
 					break;
 				case SK_BIT:
 					{
-						int q;
+						/* int q;*/ /* %%ss moved to below within the #if ..#endif */
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
 #if DEBUG &1
+						int q;
 						printf (" %x", bptr->b_length);
 						printf (" %x", HEADER(bptr)->ov_flags);
 						for (q = 0; q < BIT_NBPACK(LENGTH(bptr)) ; q++) {
@@ -827,8 +831,7 @@ rt_private void object_write(char *object)
 						elem_size = *(long *) (o_ptr + sizeof(long));
 #if DEBUG &1
 						printf (" %x", dgen_typ);
-						for (ref = object; count > 0; count--, 
-								ref += elem_size) {
+						for (ref = object; count > 0; count--, ref += elem_size) {
 							int q;
 							for (q = 0; q < BIT_NBPACK(dgen & SK_DTYPE ) ; q++) {
 								printf (" %lx", *((uint32 *)(((struct bit *)ref)->b_value + q)));

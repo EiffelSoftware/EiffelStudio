@@ -16,6 +16,7 @@
 /*#define MEMCHK /**/
 /* #define MEM_STAT /**/
 
+#include "timer.h"			/* %%ss added for getcputime */
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
@@ -1086,10 +1087,8 @@ rt_private int free_last_chunk(void)
 	 * a memory fault)--RAM.
 	 */
 
-	int status;				/* Status returned by the sbrk() system call */
 	int nbytes;				/* Number of bytes to be freed */
 	char *last_addr;		/* The first address beyond the last chunk */
-	char *brk;				/* The current value for the beak */
 	union overhead *arena;	/* The address of the arena enclosed in chunk */
 	struct chunk *last_chk;	/* Pointer to last chunk header */
 	struct chunk last_desc;	/* A copy of the overhead part from last chunk */
@@ -1162,11 +1161,15 @@ rt_private int free_last_chunk(void)
 	 */
 
 #if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
-	brk = (char *) sbrk(0);						/* Fetch current break value */
-	if (brk != last_addr) {				/* There *is* something */
-		SIGRESUME;						/* End of critical section */
-		return -2;						/* Sorry, cannot shrink data segment */
+	/*{*/
+		/* char *brk;*/	/* The current value for the beak */ /* %%ss moved from above */
+		/* brk = (char *) sbrk(0);*/	/* Fetch current break value */
+		/* if (brk != last_addr) {*/	/* There *is* something */
+	if (((char *) sbrk(0)) != last_addr) { /* Fetch current break value *//* There *is* something */
+		SIGRESUME;					/* End of critical section */
+		return -2;					/* Sorry, cannot shrink data segment */
 	}
+	/*}*/
 #endif
 	
 	/* Save a copy of the informations held in the header of the last chunk:
@@ -1211,13 +1214,16 @@ rt_private int free_last_chunk(void)
 	}
 #else
 #ifdef HAS_SBRK
-	status = (int) sbrk(-nbytes);		/* Shrink process's data segment */
-	if (status == -1) {					/* System call failed */
-		if (i != -1)						/* Was removed from free list */
-			connect_free_list(arena, i);	/* Put block back in free list */
-		SIGRESUME;							/* End of critical section */
-		return -1;							/* Propagate failure */
-	}
+	/*{ *//* int status;*/ /* Status returned by the sbrk() system call */ /* %%ss moved from above */
+		/* status = (int) sbrk(-nbytes);*/	/* Shrink process's data segment */
+		/*if (status == -1) {*/				/* System call failed */
+	if (((int) sbrk(-nbytes)) == -1) {	/* Shrink process's data segment *//* System call failed */
+		if (i != -1)					/* Was removed from free list */
+			connect_free_list(arena, i);/* Put block back in free list */
+		SIGRESUME;						/* End of critical section */
+		return -1;						/* Propagate failure */
+	} 
+	/*}*/
 #else
     free (last_chk);
 #endif

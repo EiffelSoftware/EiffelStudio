@@ -24,6 +24,7 @@
 #endif
 #endif
 #ifdef EIF_WIN32
+#include <io.h>		/* %%ss added for read, write */
 #include "winsock.h"
 #endif
 #include "eiffel.h"
@@ -144,14 +145,14 @@ rt_private int run_idr_read (IDR *bu)
 #ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		{
-		if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
+		if ((read (r_fides, (char *)(&read_size), sizeof (short))) < sizeof (short))
 			eio();
 		}
 	else
-		if ((recv (r_fides, &read_size, sizeof (short), 0)) < sizeof (short))
+		if ((recv (r_fides, (char *)(&read_size), sizeof (short), 0)) < sizeof (short))
 			eio();
 #else
-        if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
+        if ((read (r_fides, (char *)(&read_size), sizeof (short))) < sizeof (short))
                 eio();
 #endif
 
@@ -199,11 +200,11 @@ rt_private void run_idr_write (IDR *bu)
 #ifdef EIF_WIN32
 	if (fstoretype == 'F')
 		{
-		if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
+		if ((write (fides, (char *)(&host_send), sizeof (short))) < sizeof (short))
 			eio();
 		}
 	else
-		if ((send (fides, &host_send, sizeof (short), 0)) < sizeof (short))
+		if ((send (fides,(char *)(&host_send), sizeof (short), 0)) < sizeof (short))
 			eio();
 #else
 	if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
@@ -305,7 +306,7 @@ rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
 			}
 		} else {				/*decode an 8 byte long */
 			while (len > i) {
-				long upper, lower, temp;
+				long upper, lower; /* %%ss removed , temp;*/
 
 				bcopy(idrs->i_ptr, &value, 4);
 				lower = (long) ntohl(value);

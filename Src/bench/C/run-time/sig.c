@@ -107,7 +107,6 @@ rt_private Signal_t ehandlr(register int sig)
 	 */
 
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
-	int oldmask;					/* To get old signal mask */
 
 #ifndef SIGNALS_KEPT
 	(void) signal(sig, ehandlr);	/* Restore catching if disarmed */
@@ -144,6 +143,7 @@ rt_private Signal_t ehandlr(register int sig)
 		 */
 
 #ifdef HAS_SIGSETMASK
+		int oldmask;	/* To get old signal mask */ /* %%ss moved from above */
 		oldmask = sigsetmask(0xffffffff);	/* Fetch old signal mask */
 		oldmask &= ~sigmask(sig);			/* Unblock signal */
 		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
@@ -158,13 +158,13 @@ rt_public Signal_t exfpe(int sig)
 {
 	/* Raise a floating point exception */
 
-	int oldmask;			/* Signal mask value */
-
 	/* The following is really important. It is a small part of the code, but
 	 * it will make the difference on BSD systems, allowing us to use the
 	 * _longjmp and _setjmp routines which do not do any system call.
 	 */
 #ifdef HAS_SIGSETMASK
+	int oldmask;	/* Signal mask value */ /* %%ss moved from above */
+
 		oldmask = sigsetmask(0xffffffff);	/* Fetch old signal mask */
 		oldmask &= ~sigmask(sig);			/* Unblock signal */
 		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
@@ -276,7 +276,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 	int ignored;				/* Ignore status for previous handler */
 
 	if (sig >= NSIG)
-		return (Signal_t (*)()) -1;
+		return ((Signal_t (*)(int)) -1); /* %%ss added cast int */
 
 	oldfunc = esig[sig];		/* Get previous handler */
 	ignored = sig_ign[sig];		/* Was signal ignored? */
@@ -285,7 +285,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 		sig_ign[sig] = 1;
 	else if (func == SIG_DFL) {	/* Default behaviour to be restored */
 		sig_ign[sig] = osig_ign[sig];
-		esig[sig] = (Signal_t (*)()) 0;
+		esig[sig] = (Signal_t (*)(int)) 0; /* %%ss added cast int */
 	} else {
 		sig_ign[sig] = 0;		/* Do not ignore this signal */
 		esig[sig] = func;		/* Signal handler to be called */
@@ -298,7 +298,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 
 	if (ignored)
 		oldfunc = SIG_IGN;
-	else if (oldfunc == (Signal_t (*)()) 0)
+	else if (oldfunc == (Signal_t (*)(int)) 0)
 		oldfunc = SIG_DFL;
 
 	return oldfunc;				/* Previous signal handler */
@@ -401,7 +401,7 @@ rt_shared void initsig(void)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
 		else
 			sig_ign[sig] = 0;			/* Signal was not ignored */
-		esig[sig] = (Signal_t (*)()) 0;	/* No Eiffel handler provided yet */
+		esig[sig] = (Signal_t (*)(int)) 0;	/* No Eiffel handler provided yet */ /* %%ss added cast int */
 	}
 
 	/* Hardwired defaults: ignore SIGCHLD (or SIGCLD), SIGIO, SIGURG, SIGCONT
@@ -499,7 +499,9 @@ rt_private void spush(int sig)
 	 * to duplicate signals and/or losses--RAM.
 	 */
 
-	int oldmask;					/* To save old signal blocking mask */
+#ifdef HAS_SIGSETMASK
+	 int oldmask;	/* To save old signal blocking mask */ /* %%ss addded #if ..#endif */
+#endif
 	static char desc[DESC_LEN + 1];	/* Signal's description for panic */
 
 #ifdef DEBUG
@@ -514,7 +516,7 @@ rt_private void spush(int sig)
 	 * kernel doesn't do that anyway), and "dangerous" signals raise a panic
 	 * rather than being stacked if the default Eiffel handler is on.
 	 */
-	if (dangerous(sig) && esig[sig] == (Signal_t (*)()) 0) {
+	if (dangerous(sig) && esig[sig] == (Signal_t (*)(int)) 0) { /* %%ss added cast int */
 		sprintf(desc, "%s", signame(sig));	/* Translate into English name */
 		panic(desc);						/* And raise a run-time panic */
 	} else {
@@ -522,7 +524,6 @@ rt_private void spush(int sig)
 		if (sig == sig_stk.s_buf[last])
 			return;							/* Same signal already on top */
 	}
-
 #ifdef HAS_SIGSETMASK
 	oldmask = sigsetmask(0xffffffff);		/* Block 31 signals */
 #endif
@@ -530,7 +531,6 @@ rt_private void spush(int sig)
 	/* The following section is protected against being interrupted by other
 	 * signals if HAS_SIGSETMASK is defined. Otherwise, it's time to pray--RAM.
 	 */
-
 	sig_stk.s_buf[sig_stk.s_max++] = (char) sig;	/* Signal < 128 */
 	if (sig_stk.s_max >= SIGSTACK)			/* Reached the right end */
 		sig_stk.s_max = 0;					/* Back to left end */
@@ -549,10 +549,10 @@ rt_private int spop(void)
 	 */
 
 	register1 int newpos;		/* Position we'll go to if we read something */
-	int oldmask;				/* To save old signal blocking mask */
 	int cursig;					/* Current signal to be sent */
 
 #ifdef HAS_SIGSETMASK
+	int oldmask;				/* To save old signal blocking mask */ /* %%ss moved from above */
 	oldmask = sigsetmask(0xffffffff);		/* Block 31 signals */
 #endif
 

@@ -90,7 +90,7 @@ rt_public char *efreeze(EIF_OBJ object)
 
 	char *root;						/* Object's physical address */
 	union overhead *zone;			/* Malloc information zone */
-	uint32 flags;					/* Eiffel flags */
+	/* uint32 flags;*/ /* Eiffel flags */ /* %%ss removed */
 
 	/* It is impossible to freeze a special object, for at least two reasons:
 	 * the implementation of freezing uses the B_C bit and sprealloc()

@@ -109,7 +109,7 @@ EIF_INTEGER c_make_date (EIF_INTEGER d, EIF_INTEGER m, EIF_INTEGER y)
 	int compact_date;
 	compact_date = ((int) (d & 0xff) << 24);
 	compact_date = compact_date | ((int) (m & 0xff) << 16);
-	compact_date = compact_date | (y & 0xff);
+	compact_date = compact_date | (y & 0xffff);
 	return compact_date;
 }
 

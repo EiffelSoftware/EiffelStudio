@@ -447,7 +447,7 @@ void prof_stack_free()
 
 	if(eif_profiler_on) {
 		xfree(prof_stack->top);		/* Free the memory used by the top item */
-		xfree(prof_stack->bot):		/* Free the memory used by the bottom item */
+		xfree(prof_stack->bot);		/* Free the memory used by the bottom item */
 		xfree(prof_stack);		/* Free the memory used by the stack structure */
 	}
 }

@@ -39,7 +39,8 @@ inherit
 	TEXT_OBSERVER
 		redefine
 			on_text_reset, on_text_edited,
-			on_text_back_to_its_last_saved_state
+			on_text_back_to_its_last_saved_state,
+			on_text_fully_loaded
 		end
 
 create
@@ -89,6 +90,12 @@ feature -- Status setting
 			-- Enable `Current'.
 		do
 			-- Do nothing
+		end
+
+	on_text_fully_loaded is
+			-- Enable `Current'.
+		do
+			enable_sensitive
 		end
 
 feature {EB_FILE_OPENER} -- Callbacks

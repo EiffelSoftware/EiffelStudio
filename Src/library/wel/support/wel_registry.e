@@ -87,7 +87,7 @@ feature -- Actions
 				-- Please refer to WEL_HKEY for possible value for a.
 				-- Return Void if the operation did not correctly terminate.
 		require
-			key_name_possible: value_name /= Void and then not value_name.empty
+			key_name_possible: value_name /= Void and then not value_name.is_empty
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
 			node_list: LINKED_LIST [STRING]
@@ -168,7 +168,7 @@ feature -- Access
 		local
 			s: WEL_STRING
 		do
-			if not host_name.empty then
+			if not host_name.is_empty then
 				create s.make(host_name)
 				Result := cwin_reg_connect_key(s.item,root_key)
 			else
@@ -238,7 +238,7 @@ feature -- Basic Actions
 			-- Create `key_name' under `parent_key' according to `sam'.
 			-- Return handle to created key or default_pointer on failure.
 		require
-				key_name_possible: key_name /= Void and then not key_name.empty
+				key_name_possible: key_name /= Void and then not key_name.is_empty
 				parent_key_possible:valid_value_for_hkey(parent_key)
 		local
 			wel_string: WEL_STRING
@@ -251,7 +251,7 @@ feature -- Basic Actions
 			-- Open subkey `key_name' of `parent_key' according to `access_mode'.
 			-- Return handle to created key or default_pointer on failure.
 		require
-			key_name_possible: key_name /= Void and then not key_name.empty
+			key_name_possible: key_name /= Void and then not key_name.is_empty
 			parent_key_possible:valid_value_for_hkey(parent_key)
 		local
 			wel_string: WEL_STRING
@@ -276,7 +276,7 @@ feature -- Basic Actions
 			-- Under Windows NT, only specified key is deleted;
 			-- it should not have subkeys.
 		require
-			key_name_possible: key_name /= Void and then not key_name.empty
+			key_name_possible: key_name /= Void and then not key_name.is_empty
 			parent_key_possible:valid_value_for_hkey(parent_key)
 		local
 			wel_string: WEL_STRING
@@ -358,7 +358,7 @@ feature -- Access
 			-- The identifier 'key' relative to the parent key must
 			-- have been opened with the KEY_QUERY_VALUE access.
 		require
-        	value_name_possible: value_name /= Void and then not value_name.empty
+        	value_name_possible: value_name /= Void and then not value_name.is_empty
 			key_valid:valid_value_for_hkey(key)
 		local
 			wel_string: WEL_STRING

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Make a window class named `a_class_name'.
 		require
 			class_name_not_void: a_class_name /= Void
-			class_name_not_empty: not a_class_name.empty
+			class_name_not_empty: not a_class_name.is_empty
 		do
 			structure_make
 			set_style (0)
@@ -56,7 +56,7 @@ feature -- Access
 			create Result.make_from_c (cwel_wnd_class_get_class_name (item))
 		ensure
 			result_not_void: Result /= Void
-			result_not_empty: not Result.empty
+			result_not_empty: not Result.is_empty
 		end
 
 	menu_name: STRING is
@@ -241,7 +241,7 @@ feature -- Element change
 			-- Set `class_name' with `a_class_name'.
 		require
 			a_class_name_valid: a_class_name /= Void
-			a_class_name_not_empty: not a_class_name.empty
+			a_class_name_not_empty: not a_class_name.is_empty
 		do
 			!! str_class_name.make (a_class_name)
 			check

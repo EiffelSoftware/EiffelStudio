@@ -45,10 +45,12 @@ feature -- Basic Operations
 				qualified_call := l_targets.count > 1
 				if not qualified_call then
 					l_new_target := feature_name_from_target (target)
-					found_item := completion_feature_from_name (l_new_target, a_ignore_call_type)
-					if found_item = Void then
-						found_item := uncompiled_completion_feature (l_new_target)
-						found := found_item /= Void
+					if l_new_target /= Void and not l_new_target.is_empty then
+						found_item := completion_feature_from_name (l_new_target, a_ignore_call_type)
+						if found_item = Void then
+							found_item := uncompiled_completion_feature (l_new_target)
+							found := found_item /= Void
+						end	
 					end
 				else
 					l_targets.finish

@@ -35,10 +35,15 @@ inherit
 		redefine
 			recycle
 		end
+		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
 
-	EB_DEVELOPMENT_WINDOW_DATA
-		export
-			{NONE} all
+	ES_TOOLBAR_PREFERENCE
+		undefine
+			default_create
 		end
 
 feature {NONE} -- Initialization
@@ -94,7 +99,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			right_panel.set_minimize_pixmap (Pixmaps.Icon_minimize @ 1)
 			right_panel.set_restore_pixmap (Pixmaps.Icon_restore @ 1)
 			right_panel.set_close_pixmap (Pixmaps.Icon_close @ 1)
-			create left_panel.make (Current, left_panel_use_explorer_style, False)
+			create left_panel.make (Current, preferences.development_window_data.left_panel_use_explorer_style, False)
 			left_panel.set_maximize_pixmap (Pixmaps.Icon_maximize @ 1)
 			left_panel.set_minimize_pixmap (Pixmaps.Icon_minimize @ 1)
 			left_panel.set_restore_pixmap (Pixmaps.Icon_restore @ 1)
@@ -127,7 +132,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 				-- Add the content of the window (left bar + right cell).
 			container.extend (panel)
 
-			new_split_position := left_panel_width
+			new_split_position := preferences.development_window_data.left_panel_width
 			min_split_position := panel.minimum_split_position
 			splitter_position := new_split_position
 --			panel.set_split_position (splitter_position.max (min_split_position))
@@ -646,10 +651,10 @@ feature {NONE} -- Implementation / Commands
 			-- Save the apparence of the general toolbar in the registry (or in .es5rc)
 		do
 			if general_customizable_toolbar.changed then
-				set_array_resource ("development_window__general_toolbar_layout", save_toolbar (general_customizable_toolbar))
-				set_boolean_resource ("development_window__show_general_toolbar", show_general_toolbar_command.is_visible)
-				set_boolean_resource ("development_window__show_text_in_general_toolbar", general_customizable_toolbar.is_text_important)
-				set_boolean_resource ("development_window__show_all_text_in_general_toolbar", general_customizable_toolbar.is_text_displayed)
+				preferences.development_window_data.general_toolbar_layout_preference.set_value (save_toolbar (general_customizable_toolbar))
+				preferences.development_window_data.show_general_toolbar_preference.set_value (show_general_toolbar_command.is_visible)
+				preferences.development_window_data.show_text_in_general_toolbar_preference.set_value (general_customizable_toolbar.is_text_important)
+				preferences.development_window_data.show_all_text_in_general_toolbar_preference.set_value (general_customizable_toolbar.is_text_displayed)
 			end
 		end
 
@@ -664,10 +669,10 @@ feature {NONE} -- Implementation / Commands
 	save_toolbar_state is
 			-- Write in the preferences whether to display the toolbars or not.
 		do
-			set_boolean_resource ("development_window__show_general_toolbar", show_general_toolbar_command.is_visible)
-			set_boolean_resource ("development_window__show_address_toolbar", show_address_toolbar_command.is_visible)
-			set_boolean_resource ("development_window__show_project_toolbar", show_project_toolbar_command.is_visible)
-			resources.save
+			preferences.development_window_data.show_general_toolbar_preference.set_value (show_general_toolbar_command.is_visible)
+			preferences.development_window_data.show_address_toolbar_preference.set_value (show_address_toolbar_command.is_visible)
+			preferences.development_window_data.show_project_toolbar_preference.set_value (show_project_toolbar_command.is_visible)
+--			preference.preferences.save
 		end
 
 feature {NONE} -- Initialization flags
@@ -695,13 +700,11 @@ feature {NONE} -- Constants
 		once	
 			create Result
 		end
-		
-	editor_left_side: STRING is "editor_left_side"
 	
 	editor_left_side_cell: CELL [BOOLEAN] is
 			-- Is Editor and associated tools displayed on left side of window?
 		once
-			create Result.put (boolean_resource_value (editor_left_side, False))
+			create Result.put (preferences.misc_data.editor_left_side)
 		end
 		
 end -- class EB_TOOL_MANAGER

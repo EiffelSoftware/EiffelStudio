@@ -16,13 +16,10 @@ inherit
 			initialize
 		end
 		
-	SHARED_RESOURCES
-		rename
-			initialize as resource_initialize
-		export
-			{NONE} all
+	EB_SHARED_PREFERENCES
 		undefine
-			copy, default_create
+			copy,
+			default_create
 		end
 		
 create
@@ -194,10 +191,12 @@ feature -- Access
 				end
 				item_list.forth
 			end
-			
-			if full_maximize and boolean_resource_value ("editor_maximized", True) then
+
+--Where is this preference??
+--See above			
+--			if full_maximize and boolean_resource_value ("editor_maximized", True) then
 				explorer_bar_manager.close_all_bars_except (Current)
-			end
+--			end
 			item_list.go_to (cursor)
 		ensure
 			item_list_index_not_changed: item_list.index = old item_list.index

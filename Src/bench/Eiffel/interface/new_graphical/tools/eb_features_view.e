@@ -14,7 +14,7 @@ inherit
 
 	SHARED_WORKBENCH
 	
-	EB_FORMATTER_DATA
+	EB_SHARED_PREFERENCES
 
 create
 	make_with_tool
@@ -297,7 +297,7 @@ feature -- Status setting
 		local
 			real_index: INTEGER
 		do
-			real_index := default_feature_formatter_index
+			real_index := preferences.formatter_data.default_feature_formatter_index
 			if
 				real_index < 1 or
 				real_index > managed_formatters.count

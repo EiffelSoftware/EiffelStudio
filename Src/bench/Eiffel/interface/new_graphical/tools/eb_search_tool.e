@@ -28,13 +28,13 @@ inherit
 		export
 			{NONE} all
 		end
-
-	EB_SHARED_EDITOR_DATA
+	
+	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
-	
-	EV_SHARED_APPLICATION
+		
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -61,7 +61,6 @@ feature {NONE} -- Initialization
 			buttons_box: EV_BOX
 			options_box: EV_BOX
 			frame: EV_FRAME
-			preferences: EB_DEVELOPMENT_WINDOW_DATA
 		do
 			create label.make_with_text (Interface_names.l_Search_for)
 			label.align_text_left
@@ -97,8 +96,7 @@ feature {NONE} -- Initialization
 			options_box := build_options_box
 			buttons_box := build_buttons_box
 			
-			create preferences
-			if not preferences.show_search_options then
+			if not preferences.development_window_data.show_search_options then
 				toggle_options
 			end
 			
@@ -370,15 +368,15 @@ feature {NONE} -- Implementation
 				else
 					meta_keys := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
 					if 
-						(Editor_preferences.key_codes_for_actions @ 5) = k.code and then
-						meta_keys.is_equal (Editor_preferences.ctrl_alt_shift_for_actions @ 5)
+						(preferences.editor_data.key_codes_for_actions @ 5) = k.code and then
+						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 5)
 					then
 						if not keyword_field.text.is_empty and then search_only then
 							search
 						end
 					elseif
-						(Editor_preferences.key_codes_for_actions @ 6) = k.code and then
-						meta_keys.is_equal (Editor_preferences.ctrl_alt_shift_for_actions @ 6)
+						(preferences.editor_data.key_codes_for_actions @ 6) = k.code and then
+						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 6)
 					then
 						if not keyword_field.text.is_empty and then search_only then
 							search_performer.go_reverse

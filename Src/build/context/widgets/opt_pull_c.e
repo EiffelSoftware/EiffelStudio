@@ -10,16 +10,14 @@ inherit
 		redefine
 			stored_node, real_y, real_x,  
 			set_size, set_x_y, height, width, y, x, widget, 
-			initialize_transport, add_widget_callbacks,
-			add_to_option_list
+			add_to_option_list, add_widget_callbacks 
 		end;
 
 	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
 			set_size, set_x_y, height, width, y, x, widget, 
-			initialize_transport, add_widget_callbacks,
-			add_to_option_list
+			add_to_option_list, add_widget_callbacks 
 		select
 			context_initialization
 		end;
@@ -31,12 +29,10 @@ feature
 			Result := context_catalog.menu_page.option_btn_type
 		end;
 
-    symbol: PIXMAP is
-        do
-            Result := Pixmaps.opt_pull_pixmap
-        end;
-
-feature {NONE}
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.opt_pull_pixmap
+		end;
 
 	add_widget_callbacks is
 		do
@@ -45,11 +41,6 @@ feature {NONE}
 			if (parent = Void) or else not parent.is_group_composite then
 				widget.button.add_enter_action (eb_selection_mgr, Current);
 			end;
-		end;
-
-	initialize_transport is
-		do
-			widget.button.add_button_press_action (3, transport_command, Current);
 		end;
 
 feature 
@@ -77,12 +68,24 @@ feature
 			!!widget.make_unmanaged (entity_name, a_parent);
 			widget.set_text (label);
 			widget.set_caption ("");
-			if widget.button.realized then
-				widget.button.show;
-			end;
+			--if widget.button.realized then
+				--widget.button.show;
+			--end;
 		end;
 
 	widget: OPT_PULL;
+
+	set_default_selected_button (menu_entry_c: MENU_ENTRY_C) is
+			-- Set the default selected button to the first child.
+		require
+			has_children: arity > 0;
+			non_void_menu_entry: menu_entry_c /= Void;
+			valid_menu_entry_c: menu_entry_c.parent = Current
+		do
+			if widget.selected_button = Void then
+				widget.set_selected_button (menu_entry_c.widget)
+			end
+		end;
 
 feature {NONE}
 

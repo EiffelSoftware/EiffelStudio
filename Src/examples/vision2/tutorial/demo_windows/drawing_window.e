@@ -35,20 +35,20 @@ feature {NONE} -- Initialization
 			!! popup.make (par)
 			!! menu.make_with_text (popup, "Clear")
 			!! cmd.make (~execute_clear)
-			menu.add_activate_command (cmd, Void)
+			menu.add_select_command (cmd, Void)
 			!! cmenu.make_with_text (popup, "Rectangle")
-			cmenu.set_state (True)
+			cmenu.set_selected (True)
 			!! cmd.make(~execute_clear)
-			cmenu.add_activate_command (cmd, Void)
+			cmenu.add_select_command (cmd, Void)
 			!! cmd.make (~execute_type)
 			!! arg.make (False)
-			cmenu.add_activate_command (cmd, arg)
+			cmenu.add_select_command (cmd, arg)
 			!! cmenu2.make_peer_with_text (popup, "Ellipse", cmenu)
 			!! cmd.make (~execute_clear)
-			cmenu2.add_activate_command (cmd, Void)
+			cmenu2.add_select_command (cmd, Void)
 			!! cmd.make (~execute_type)
 			!! arg.make (True)
-			cmenu2.add_activate_command (cmd, arg)
+			cmenu2.add_select_command (cmd, arg)
 
 			-- Command on the drawing area
 			!! cmd.make (~execute_popup)
@@ -58,11 +58,11 @@ feature {NONE} -- Initialization
 			!! cmd.make (~execute_motion)
 			add_motion_notify_command (cmd, Void)
 
-
 			-- Colors of the drawing area
 			!! color.make_rgb (0, 255, 0)
 			set_foreground_color (color)
-			!! color.make_rgb (0, 122, 122)
+			!! color.make_rgb (255, 0, 255)
+--			!! color.make_rgb (0, 122, 122)
 			set_background_color (color)
 		end
 

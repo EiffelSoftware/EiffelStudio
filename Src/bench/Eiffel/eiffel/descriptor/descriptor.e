@@ -75,6 +75,7 @@ feature -- Generation
 			if is_precompiling then
 				buffer.append ("#include %"eif_wbench.h%"%N%N")	
 			end
+			buffer.start_c_specific_code
 			Class_counter.generate_extern_offsets (buffer);
 			Static_type_id_counter.generate_extern_offsets (buffer);
 			if is_precompiling then
@@ -93,6 +94,7 @@ feature -- Generation
 			end;
 
 			generate_init_function (buffer, class_id_string)
+			buffer.end_c_specific_code
 
 			descriptor_file := class_type.open_descriptor_file
 			descriptor_file.put_string (buffer)

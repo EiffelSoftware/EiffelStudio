@@ -1568,7 +1568,9 @@ feature -- Workbench feature and descriptor table generation
 			buffer := generation_buffer
 			buffer.clear_all
 			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+			buffer.start_c_specific_code
 			feature_table.generate (buffer)
+			buffer.end_c_specific_code
 
 			table_file_name := full_file_name
 			table_file_name.append_integer (id.id)
@@ -1604,7 +1606,9 @@ feature -- Workbench feature and descriptor table generation
 			buffer := generation_buffer
 			buffer.clear_all
 			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+			buffer.start_c_specific_code
 			feat_tbl.generate (buffer)
+			buffer.end_c_specific_code
 
 				-- Generation of workbench mode feature table for
 				-- the current class

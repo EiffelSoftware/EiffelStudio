@@ -53,7 +53,7 @@ feature -- Access
 			initialize_attribute_editor (Result)
 			create horizontal_box
 			create frame_box
-			create modify_button.make_with_text ("Set with named file")
+			create modify_button.make_with_text (Set_with_named_file_text)
 			modify_button.select_actions.extend (agent modify_pixmap)
 			modify_button.select_actions.extend (agent update_editors)
 			horizontal_box.extend (modify_button)
@@ -172,6 +172,9 @@ feature {NONE} -- Implementation
 			-- and standard selection modes.
 		do
 			if constants_button.is_selected then
+				if pixmap_container.full then
+					modify_pixmap
+				end
 				filler_label.hide
 				modify_button.hide
 				constants_combo_box.show
@@ -185,7 +188,7 @@ feature {NONE} -- Implementation
 		
 	populate_constants is
 			-- Fill `constants_combo_box' with representations
-			-- of all all pixmap constants for selection.
+			-- of all pixmap constants for selection.
 		local
 			pixmap_constants: ARRAYED_LIST [GB_CONSTANT]
 			pixmap_constant: GB_PIXMAP_CONSTANT
@@ -310,9 +313,6 @@ feature {NONE} -- Implementation
 
 	pixmap_path_string: STRING is "Pixmap_path"
 	
-	Remove_string: STRING is "Remove"
-		-- String on `modify_button' when able to remove pixmap.
-
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 		

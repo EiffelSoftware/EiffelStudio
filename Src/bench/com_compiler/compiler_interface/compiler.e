@@ -190,7 +190,7 @@ feature -- Basic Operations
 		do
 			create checker
 			checker.check_activation
-			Result := checker.can_run
+			Result := checker.can_run or checker.is_licensed
 		end
 		
 	compile is

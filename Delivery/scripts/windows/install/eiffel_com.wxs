@@ -188,24 +188,15 @@
 				</Directory>
 				<Directory Id="wizards" Name="wizards">
 					<Directory Id="com3" Name="com">
-						<Component Id="COM_WI2.EXE" Guid="1F39F603-A697-424F-B59F-FF50E4FDD1E0">
-							<File Id="com_wizard_cmd.exe" Name="COM_WI~2.EXE" LongName="com_wizard_cmd.exe" KeyPath="yes">
-								<Shortcut Id="com_wizard.exe" Directory="Tools" Name="COMWIZ~1" LongName="COM Wizard" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
-							</File>
-						</Component>
 						<Component Id="com3" Guid="44AAE90D-433C-4148-838D-9D6B7AA44651">
-							<File Id="eiffelcom.cnt" Name="EIFFEL~1.CNT" LongName="eiffelcom.cnt" KeyPath="yes" />
-						</Component>
-						<Component Id="EIFFEL1.HLP" Guid="D83CA897-8B78-40C3-9192-571F9AC8D1CB">
-							<File Id="Eiffelcom.hlp" Name="EIFFEL~1.HLP" LongName="Eiffelcom.hlp" KeyPath="yes">
+							<File Id="eiffelcom.cnt" Name="EIFFEL~1.CNT" LongName="eiffelcom.cnt" />
+							<File Id="Eiffelcom.hlp" Name="EIFFEL~1.HLP" LongName="Eiffelcom.hlp" >
 								<Shortcut Id="Eiffelcom.hlp" Directory="Documentation" Name="COMWIZ~1" LongName="COM Wizard Documentation" Description="Documentation concerning the COM wizard" Hotkey="0" Show="normal" />
 							</File>
-						</Component>
-						<Component Id="conspawn.exe" Guid="0D818C6C-17DA-4BD0-8B7F-1CBC723F95E7">
-							<File Id="conspawn.exe" Name="conspawn.exe" KeyPath="yes" />
-						</Component>
-						<Component Id="COM_WI1.EXE" Guid="E6E56A8A-095A-488C-B9A8-3A109422839F">
-							<File Id="com_wizard.exe" Name="COM_WI~1.EXE" LongName="com_wizard.exe" KeyPath="yes" />
+							<File Id="com_wizard_launcher.exe" Name="COM_WI~2.EXE" LongName="com_wizard_launcher.exe" >
+								<Shortcut Id="com_wizard.exe" Directory="Tools" Name="COMWIZ~1" LongName="COM Wizard" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
+							</File>
+							<File Id="com_wizard.exe" Name="COM_WI~1.EXE" LongName="com_wizard.exe" />
 						</Component>
 						<Directory Id="config" Name="config">
 							<Component Id="config" Guid="78E866BF-4C04-4509-8F1C-864C54055C76">
@@ -223,7 +214,7 @@
 								<File Id="compound.e" Name="compound.e" />
 								<File Id="stream_display_window.e" Name="STREAM~1.E" LongName="stream_display_window.e" />
 								<File Id="main_win.e" Name="main_win.e" />
-								<File Id="Ace.ace" Name="Ace.ace" />
+								<File Id="Ace.ace2" Name="Ace.ace" />
 								<File Id="compound.rc" Name="compound.rc" />
 								<File Id="compound.ico" Name="compound.ico" />
 								<File Id="child.ico" Name="child.ico" />

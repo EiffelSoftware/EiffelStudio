@@ -6,9 +6,6 @@ indexing
 class
 	CHARACTER_ROUTINES
 
-inherit
-	ASCII
-
 feature -- Access
 
 	char_text (char: CHARACTER): STRING is
@@ -31,7 +28,7 @@ feature -- Access
 			from
 				value_area := s.area;
 				value_count := s.count
-				!! Result.make (value_count);
+				create Result.make (value_count);
 			until
 				i >= value_count
 			loop
@@ -67,7 +64,7 @@ feature {NONE} -- Implementation
 				Result := "%%U"
 			else
 				code := char.code;
-				if code < First_printable then
+				if code < feature {ASCII}.First_printable then
 					create Result.make (6)
 					Result.append ("%%/")
 					Result.append_integer (code)
@@ -118,8 +115,8 @@ feature {NONE} -- Implementation
 --				Result := "%%%""
 			else
 				code := char.code;
-				if code < First_printable then
-					!! Result.make (6);
+				if code < feature {ASCII}.First_printable then
+					create Result.make (6);
 					Result.append ("%%/");
 					Result.append_integer (code);
 					Result.extend ('/')

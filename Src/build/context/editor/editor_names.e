@@ -126,6 +126,7 @@ feature {NONE}
 	B_utton_text: STRING is "Button text";
 
 	I_con_name: STRING is "Icon name";
+	I_con_pix_name: STRING is "Icon pixmap";
 	I_conic_state: STRING is "Iconic state";
 
 	B_ackground_color: STRING is "Background color";

@@ -78,15 +78,21 @@ feature {NONE}
 			if not rescued then
 				clear_uneeded;
 				import_directory := clone (import_window.file_selec.selected_file);
-				!!import_path_name.make (import_directory.count);
-				import_path_name.from_string (import_directory);
-				if import_path_name.exists then
-					import_from_file (import_window)
+				if import_directory /= Void and then not import_directory.empty then
+					!!import_path_name.make (import_directory.count);
+					import_path_name.from_string (import_directory);
+					if import_path_name.exists then
+						import_from_file (import_window)
+					else
+						!!msg.make (0);
+						msg.append ("Directory ");
+						msg.append (import_directory);
+						msg.append ("does not exist");
+						error_box.popup (Current, msg)
+					end;
 				else
 					!!msg.make (0);
-					msg.append ("Directory ");
-					msg.append (import_directory);
-					msg.append ("does not exist");
+					msg.append ("No Directory chosen!!");
 					error_box.popup (Current, msg)
 				end;
 			else

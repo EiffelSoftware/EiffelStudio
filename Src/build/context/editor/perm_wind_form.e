@@ -55,6 +55,7 @@ feature
 			Nothing: ANY
 			title_label: LABEL_G;
 			icon_label: LABEL_G;
+			icon_pixmap_label: LABEL_G;
 		do	
 			initialize (Perm_wind_form_name, a_parent);
 
@@ -67,6 +68,7 @@ feature
 			!!icon_name.make (T_extfield, Current, perm_icon_name_cmd, a_parent);
 			!!iconic_state.make (I_conic_state, Current, perm_iconic_cmd, a_parent);
 
+			!!icon_pixmap_label.make (I_con_pix_name, Current);
 			!!pixmap_name.make (T_extfield, Current, perm_icon_cmd, a_parent);
 			!!pixmap_open_b.make (P_Cbutton, Current);
 			attach_left (title_label, 10);
@@ -75,6 +77,7 @@ feature
 			--attach_left (forbid_recomp, 10);
 			attach_left (set_hidden, 10);
 			attach_left (icon_label, 10);
+			attach_left (icon_pixmap_label, 10);
 			attach_left (icon_name, 100);
 			attach_left (pixmap_name, 100);
 			attach_right (pixmap_name, 10);
@@ -86,6 +89,7 @@ feature
 			attach_top (title_label, 15);
 			attach_top_widget (title, icon_label, 15);
 			attach_top_widget (title, icon_name, 10);
+			attach_top_widget (icon_name, icon_pixmap_label, 15);
 			attach_top_widget (icon_name, pixmap_name, 10);
 			attach_top_widget (pixmap_name, pixmap_open_b, 10);
 			attach_top_widget (pixmap_open_b, iconic_state, 10);

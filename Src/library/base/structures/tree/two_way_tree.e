@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 feature -- Obsolete
 
 	child_add_left (v: like item) is
-			-- Put `v' to the left of the child.
+			-- Add `v' to the left of current child.
 			-- Do not move child
 		obsolete "Use %"child_put_left%" instead."
 		do
@@ -259,7 +259,7 @@ feature -- Obsolete
 		end
 
 	child_add_right (v: like item) is
-			-- Put `v' to the right of the child.
+			-- Add `v' to the right of current child.
 			-- Do not move child.
 		obsolete "Use %"child_put_right%" instead."
 		do

@@ -160,7 +160,7 @@ feature -- Element change
 		end;
 
 	put_left (v: like item) is
-			-- Put item `v' left of `Current'.
+			-- Add item `v' to the left of `Current'.
 		require
 			is_not_root: not is_root;
 			has_left_sibling: left_sibling /= Void

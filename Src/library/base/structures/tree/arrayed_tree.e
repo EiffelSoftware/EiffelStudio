@@ -100,7 +100,7 @@ feature -- Initialization
 
 	make (n: INTEGER; v: G) is
 			-- Create node with item `v'.
-			-- Allocate space for n children.
+			-- Allocate space for `n' children.
 		require
 			valid_number_of_children: n >= 0
 		do
@@ -116,7 +116,7 @@ feature -- Access
 			-- Parent of current node
 			
 	left_sibling: like parent is
-			-- Left neighbor (if any)
+			-- Left neighbor if any
 		do
 			if position_in_parent > 1 then
 				Result := parent.array_item (position_in_parent - 1)
@@ -124,7 +124,7 @@ feature -- Access
 		end;
 
 	right_sibling: like parent is
-			-- Right neighbor (if any)
+			-- Right neighbor if any
 		do
 			if position_in_parent < parent.arity then
 				Result := parent.array_item (position_in_parent + 1)
@@ -135,7 +135,7 @@ feature -- Element change
 
 
 	child_put, child_replace (v: like item) is
-			-- Replace current child item with `v'
+			-- Replace current child item with `v'.
 		do
 			child.replace (v)
 		end;
@@ -150,33 +150,45 @@ feature -- Element change
 		end;
 
 	child_extend (v: like item) is
+			-- Add `v' at end.
+			-- Do not move child cursor.
 		do
 			al_extend (new_cell (v))
 		end;
 		
 	child_put_left (v: like item) is
+			-- Add `v' to the left of cursor position.
+			-- Do not move child cursor.
 		do
 			al_put_left (new_cell (v))
 		end;
 		
 	child_put_right (v: like item) is
+			-- Add `v' to the right of cursor position.
+			-- Do not move child cursor.
 		do
 			al_put_right (new_cell (v))
 		end;
 		
 	put_child_left (n: like parent) is
+			-- Add `n' to the left of cursor position.
+			-- Do not move cursor.
 		do
 			al_put_left (n);
 			n.attach_to_parent (Current)
 		end;
 		
 	put_child_right (n: like parent) is
+			-- Add `n' to the right of the cursor position.
+			-- Do not move cursor.
 		do
 			al_put_right (n);
 			n.attach_to_parent (Current)
 		end;
 	
 	put_child (n: like parent) is
+			-- Add `n' to the list of children.
+			-- Do not move child cursor.
 		do
 			al_extend (n);
 			n.attach_to_parent (Current)
@@ -205,18 +217,24 @@ feature -- Element change
 feature -- Removal
 
 	remove_child is
+			-- Remove child at cursor position.
+			-- Move cursor to the next sibling, or `after' if none.
 		do
 			child.attach_to_parent (Void);
 			al_remove;
 		end;
 
 	remove_left_child is
+			-- Remove item to the left of cursor position.
+			-- Do not move cursor.
 		do
 			child_back;
 			remove_child
 		end;
 
 	remove_right_child is
+			-- Remove item to the right of cursor position.
+			-- Do not move cursor.
 		do
 			child_forth;
 			remove_child;
@@ -321,11 +339,13 @@ feature {ARRAYED_TREE} -- Implementation
 feature {NONE} -- Implementation
 
 	new_tree: like Current is
+			-- A newly created instance of the same type.
 		do
 			!!Result.make (0, item);
 		end;
 	
 	new_cell (v: like item): like Current is
+			-- New node with value `v' and no children.
 		do
 			!!Result.make (0, v);
 			Result.attach_to_parent (Current)
@@ -334,14 +354,14 @@ feature {NONE} -- Implementation
 	position_in_parent: INTEGER is
 			-- Position of current node in parent
 		do
-			if parent /= void then
+			if parent /= Void then
 				Result := parent.index_of  (Current, 1)
 			end
 		end;
 
 	attach (other: like first_child) is
 				-- Attach all children of `other' to current node.
-				-- Make other off
+				-- Put `other' in mode `off'.
 		local
 			c: like child;
 		do

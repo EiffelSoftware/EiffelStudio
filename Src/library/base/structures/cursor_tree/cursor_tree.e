@@ -396,7 +396,7 @@ feature -- Element change
 		end;
 
 	put_left (v: G) is
-			-- Put `v' to the left of cursor position.
+			-- Add `v' to the left of cursor position.
 		require
 			not_before: not before;
 			not_above: not above;
@@ -409,7 +409,7 @@ feature -- Element change
 		end;
 
 	put_right (v: G) is
-			-- Put `v' to the right of cursor position.
+			-- Add `v' to the right of cursor position.
 		require
 			not_after: not after;
 			not_above: not above;

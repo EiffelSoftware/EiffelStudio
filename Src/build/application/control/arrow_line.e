@@ -103,7 +103,7 @@ feature {NONE}
 			coeff: REAL;
 			temp: REAL
 		do
-			temp := integer_to_real (pt2.distance (pt1));		
+			temp := pt2.distance (pt1);		
 			!!Result;
 			if
 				temp = 0.0
@@ -123,13 +123,13 @@ feature {NONE}
 			point, pl, pr, p: COORD_XY_FIG;
 			coeff, temp: REAL
 		do
-			point := calculate_vector (hd, tl, integer_to_real (ht));
+			point := calculate_vector (hd, tl, ht);
 			p := clone (hd);
 			p.xytranslate (point.x, point.y); -- base of arrow point
 	
 			tail := tl; 
 			set (tl, p); -- Segment of the line
-			temp := integer_to_real (hd.distance (p));
+			temp := hd.distance (p);
 			if
 				temp = 0.0
 			then

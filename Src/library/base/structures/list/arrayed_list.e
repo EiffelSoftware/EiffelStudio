@@ -542,7 +542,7 @@ feature -- Duplication
 feature {NONE} --Internal
 
 	insert (v: like item; pos: INTEGER) is
-			-- Insert `v' at `pos`, moving subsequent elements
+			-- Add `v' at `pos', moving subsequent elements
 			-- to the right.
 		require
 			index_small_enough: pos <= count;

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Fibonacci number properties";
+		"The Fibonacci number sequence";
 
 	copyright: "See notice at end of class";
 	names: fibonacci;

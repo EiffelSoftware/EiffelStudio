@@ -32,7 +32,7 @@ feature -- Measurement
 feature -- Element change
 
 	extend (v: G) is
-			-- Insert a new occurrence of `v'.
+			-- Add a new occurrence of `v'.
 		deferred
 		ensure then
 			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1

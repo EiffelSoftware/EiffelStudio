@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Sequences, i.e. structures where existing items are arranged%
+		"Finite sequences: structures where existing items are arranged%
 		%and accessed sequentially, and new ones can be added at the end.";
 
 	copyright: "See notice at end of class";

@@ -189,7 +189,7 @@ feature -- Element change
 	end;
 	
 	put_left (v: like item) is
-			-- Put `v' to the left of cursor position.
+			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
 			p: like first_element;
@@ -217,7 +217,7 @@ feature -- Element change
 		end;
 
 	put_right (v: like item) is
-			-- Put `v' to the right of cursor position.
+			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		local
 			was_last: BOOLEAN;
@@ -285,7 +285,7 @@ feature -- Removal
 	remove is
 			-- Remove current item.
 			-- Move cursor to right neighbor
-			-- (or after if no right neighbor).
+			-- (or `after' if no right neighbor).
 		local
 			succ, pred, removed: like first_element;
 		do

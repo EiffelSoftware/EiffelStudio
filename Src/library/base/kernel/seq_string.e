@@ -255,7 +255,7 @@ feature -- Element change
 feature -- Removal
 
 	prune (c: CHARACTER) is
-			-- Remove `c'.
+			-- Remove first occurrence of `c'.
 		local
 			i: INTEGER
 		do

@@ -66,18 +66,41 @@ feature
 				io.putstring (filename);
 				io.putstring (" does not exist.%N");
 			end;
-			if over_ride_time = Void then
-				override := false;
-			elseif over_ride_time = time_out and then over_ride_time > current_time then
-				override := True;
-			else
-				override := False;
-			end;
+            if over_ride_time = Void then
+                override := false;
+            elseif 
+                (over_ride_time = time_out) or else
+                (over_ride_time = time_out2) or else
+                (over_ride_time = time_out3) or else
+                (over_ride_time = time_out4) or else
+                (over_ride_time = time_out5) or else
+                (over_ride_time = time_out6)
+            then
+                override := (over_ride_time > current_time)
+            else
+                override := False;
+            end;
+
 		end;
 
 	time_out: INTEGER is 757411607;	--override key in seconds. this is a hard coded time
 					--after which the licence will not be overriden
 					-- 1/1/94
+
+    time_out2: INTEGER is 762514412;
+            -- 3/1/94 
+
+    time_out3: INTEGER is 770492011;
+            -- 6/1/94
+
+    time_out4: INTEGER is 778444409
+            -- 9/1/94
+
+    time_out5: INTEGER is 788985217;
+            -- 1/1/95 
+
+    time_out6: INTEGER is 798999999;
+            
 
 	current_time: INTEGER is
 			--get the current time from the machine

@@ -324,7 +324,7 @@ feature {NONE} -- Inapplicable
 		end;
 
 	prune	(v: like item) is
-			-- Remove an occurrence of `v' if any
+			-- Remove an occurrence of `v' if any.
 		require else
 			prunable: file_prunable
 		do

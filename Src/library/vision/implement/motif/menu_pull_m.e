@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
 			parent ?= widget_manager.parent_using_index (a_pulldown, 
-						widget_index);
+						widget_index - 1);
 			check
 				intern: parent /= Void
 			end;
@@ -126,12 +126,14 @@ feature
 
 	real_x: INTEGER is
 		do
-			Result := menu_button.real_x;
+			-- Result := menu_button.real_x;
+			Result := widget_oui.parent.real_x + x
 		end;
 
 	real_y: INTEGER is
 		do
-			Result := menu_button.real_y;
+			-- Result := menu_button.real_y;
+			Result := widget_oui.parent.real_y + y
 		end;
 
 	x: INTEGER is

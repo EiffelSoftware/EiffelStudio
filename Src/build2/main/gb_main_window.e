@@ -297,7 +297,7 @@ feature -- Basic operation
 			loop
 				create recent_project_item.make_with_text (recent_projects.item (counter))
 				recent_project_item.select_actions.extend (agent open_named_project (
-					recent_project_item.text  + operating_environment.Directory_separator.out + "build_project.bpr"))
+					recent_project_item.text + operating_environment.Directory_separator.out + "build_project.bpr"))
 				recent_projects_menu.extend (recent_project_item)
 				counter := counter + 1
 			end
@@ -309,12 +309,22 @@ feature -- Basic operation
 	update_title is
 			-- Update title displayed in `Current' to include project location
 			-- if necessary.
+		local
+			temp_title: STRING
 		do
+			if system_status.project_modified then
+				temp_title := "* "
+			else
+				temp_title := ""
+			end
 			if system_status.project_open and not visual_studio_information.is_visual_studio_wizard then
 					-- No project location is displayed for the visual studio wizard.
-				set_title ("EiffelBuild - " + system_status.current_project_settings.project_location)
+				temp_title.append ("EiffelBuild - " + system_status.current_project_settings.project_location)
 			else
-				set_title ("EiffelBuild")
+				temp_title.append ("EiffelBuild")
+			end
+			if not title.is_equal (temp_title) then
+				set_title (temp_title)
 			end
 		end
 

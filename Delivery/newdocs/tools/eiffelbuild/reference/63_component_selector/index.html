@@ -1,4 +1,4 @@
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Component selector</TITLE><LINK REL=StyleSheet HREF="/default.css"></HEAD>
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Component selector</TITLE><LINK REL=StyleSheet HREF="../../../../default.css"></HEAD>
 <BODY><H1>Component Selector</H1>
 <P>The component selector allows you to build and retrieve user defined <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">components</A> for use in your project.</P>
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/component_selector.png"></p>
@@ -7,6 +7,7 @@
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/component_namer.png"></p>
 <P>Modify the suggested name as desired, and then click <B>OK</B> to create the new component. If you click <B>Cancel</B>, the component will not be created.</P>
 <P>The component that has been created will contain enough information to allow a copy to be built of the existing object. This includes all the children of the original object (to any depth) and the properties (width, height, color etc)of all objects within the structure. The only properties of the objects that will not be set inside a component are the user defined names, and any events connected to the objects.</P>
+<P>The icon associated with the component matches the root type of the component.</P>
 <H2>Using a component</H2>
 To create a new set of <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">objects</A> from a <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>, and <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> onto an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> representation. If an object is full, or does not allow other objects of the new type to be contained, then you will not be able to <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> on it.</P>
 <P>If the <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick and drop</A> completed successfully, then you should have a new set of objects matching the structure of the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>.

@@ -22,7 +22,6 @@ inherit
 			on_key_down,
 			initialize,
 			interface,
-			redraw_current_push_button,
 			update_current_push_button
 		end
    
@@ -241,12 +240,14 @@ feature -- Status setting
 			-- Set the style "default_push_button" of `Current'.
 		do
 			is_default_push_button := True
+			invalidate
 		end
 
 	disable_default_push_button is
 			-- Remove the style "default_push_button"  of `Current'. 
 		do
 			is_default_push_button := False
+			invalidate
 		end
 
 	enable_can_default is
@@ -327,28 +328,9 @@ feature {NONE} -- Implementation, focus event
 			if top_level_dialog_imp /= Void then
 				top_level_dialog_imp.set_current_push_button (interface)
 			else
-				is_default_push_button := False
-			end
-		end
-		
-feature {EV_ANY_I} -- Implementation
-
-	redraw_current_push_button (focused_button: EV_BUTTON) is
-			-- Put a bold border on the default push button
-		do
-			if focused_button = Void or else 
-				focused_button.implementation /= Current
-			then
-					-- Current is not the `focused_button' or there
-					-- is focused button at all. In all case, we should
-					-- remove our bold border.
-				is_default_push_button := False
-				invalidate
-			else
-					-- Current is the `focused_button' draw the
-					-- bold border.
-				is_default_push_button := True
-				invalidate
+					-- Current is not in a dialog so Current should not
+					-- have the `is_default_push_button' flag.
+				disable_default_push_button
 			end
 		end
 
@@ -794,42 +776,42 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- default push buttons are only used in dialogs.
 			if is_default_push_button then
 				create color.make_rgb (0, 0, 0)
-				Draw_Line(dc, r.left,  r.top, r.right, r.top, color)
-				Draw_Line(dc, r.left, r.top, r.left, r.bottom, color)
-				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				draw_line (dc, r.left,  r.top, r.right, r.top, color)
+				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
+				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
 				r.inflate (-1, -1)
 			end
 				-- If the button is out then display it accordingly. The further check
 				-- is used for handling toggle buttons.
 			if flag_set (state, button_out) or not flag_set (state, button_in) then
 				color := Rhighlight
-				Draw_Line(dc, r.left, r.top, r.right, r.top, color)
-				Draw_Line(dc, r.left, r.top,r.left,  r.bottom, color)
+				draw_line (dc, r.left, r.top, r.right, r.top, color)
+				draw_line (dc, r.left, r.top,r.left,  r.bottom, color)
 				color := Rdark_shadow
-				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
 				r.Inflate(-1, -1)
 				color := rlight
-				Draw_Line(dc, r.left, r.top, r.right, r.top, color)
-				Draw_Line(dc, r.left, r.top, r.left, r.bottom, color)
+				draw_line (dc, r.left, r.top, r.right, r.top, color)
+				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
 				color := rshadow
-				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
 			end
 			
 				-- If the button is in, then draw the appropriate border.
 	  		if flag_set (state, button_in) then
 	  			color := rdark_shadow
-				Draw_Line(dc, r.left, r.top, r.right, r.top, color)
-				Draw_Line(dc, r.left, r.top, r.left, r.bottom, color)
+				draw_line (dc, r.left, r.top, r.right, r.top, color)
+				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
 				color := Rhighlight
-				Draw_Line(dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
-				Draw_Line(dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
+				draw_line (dc, r.left, r.bottom - 1, r.right, r.bottom - 1, color)
+				draw_line (dc, r.right - 1, r.top, r.right - 1, r.bottom, color)
 				r.Inflate(-1, -1)
 				color := rshadow;
-				Draw_Line(dc, r.left,  r.top, r.right - 1, r.top, color)
-				Draw_Line(dc, r.left,  r.top, r.left,  r.bottom - 1, color)
+				draw_line (dc, r.left,  r.top, r.right - 1, r.top, color)
+				draw_line (dc, r.left,  r.top, r.left,  r.bottom - 1, color)
 			end
 		end
 		

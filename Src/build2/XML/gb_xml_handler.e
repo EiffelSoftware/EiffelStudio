@@ -80,8 +80,12 @@ feature -- Basic operations
 		local
 			xml_load: GB_XML_LOAD
 		do
+			main_window.disable_menus
+				-- During loading, menus must be disabled, as otherwise selections can be
+				-- made during the load.
 			create xml_load
 			xml_load.load
+			main_window.enable_menus
 		end
 	
 	load_components is

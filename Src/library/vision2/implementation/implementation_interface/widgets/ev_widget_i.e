@@ -12,6 +12,8 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
+		require
+			parent_not_void: par /= Void
 		deferred
 		end
 	
@@ -39,8 +41,8 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			set_background_color (parent_imp.background_color.interface)
-			set_foreground_color (parent_imp.foreground_color.interface)
+--			set_background_color (parent_imp.background_color.interface)
+--			set_foreground_color (parent_imp.foreground_color.interface)
 		end
 
 feature -- Access
@@ -174,28 +176,30 @@ feature -- Status setting
 			-- Make `flag' the new expand option.
 		require
 			exists: not destroyed
-		do
-			expandable := flag
+		deferred
+--			expandable := flag
+		ensure
+			expand_set: expandable = flag
 		end
 
 	set_horizontal_resize (flag: BOOLEAN) is
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-		do
-			if flag then
-				if vertical_resizable then
-					resize_type := 3
-				else
-					resize_type := 1
-				end
-			else
-				if vertical_resizable then
-					resize_type := 2
-				else
-					resize_type := 0
-				end				
-			end
+		deferred
+--			if flag then
+--				if vertical_resizable then
+--					resize_type := 3
+--				else
+--					resize_type := 1
+--				end
+--			else
+--				if vertical_resizable then
+--					resize_type := 2
+--				else
+--					resize_type := 0
+--				end				
+--			end
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
 		end
@@ -204,20 +208,20 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-		do
-			if flag then
-				if horizontal_resizable then
-					resize_type := 3
-				else
-					resize_type := 2
-				end
-			else
-				if horizontal_resizable then
-					resize_type := 1
-				else
-					resize_type := 0
-				end				
-			end
+		deferred
+--			if flag then
+--				if horizontal_resizable then
+--					resize_type := 3
+--				else
+--					resize_type := 2
+--				end
+--			else
+--				if horizontal_resizable then
+--					resize_type := 1
+--				else
+--					resize_type := 0
+--				end				
+--			end
 		ensure
 			vertical_resize_set: vertical_resizable = flag
 		end
@@ -226,7 +230,7 @@ feature -- Status setting
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
-			color_not_void: color /= Void
+--			color_not_void: color /= Void
 		deferred
 		ensure
 			background_color_set: background_color = color.implementation
@@ -236,7 +240,7 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed
-			color_not_void: color /= Void
+--			color_not_void: color /= Void
 		deferred
 		ensure
 			foreground_color_set: foreground_color = color.implementation
@@ -337,8 +341,7 @@ feature -- Resizing
 			height_large_enough: min_height >= 0
 		deferred
 		ensure
-			min_width = min_width
-			min_height = min_height
+			minimum_dimension_set: minimum_dimensions_set (min_width, min_height)
 		end  
         
 	set_minimum_width (value: INTEGER) is
@@ -348,7 +351,7 @@ feature -- Resizing
 			a_min_large_enough: value >= 0
 		deferred
 		ensure
-			minimum_width_set: minimum_width = value
+			minimum_width_set: minimum_width_set (value)
 		end  
 	
 	set_minimum_height (value: INTEGER) is
@@ -358,7 +361,7 @@ feature -- Resizing
 			height_large_enough: value >= 0
 		deferred
 		ensure
-			minimum_height_set: minimum_height = value
+			minimum_height_set: minimum_height_set (value)
 		end
 
 	set_x (value: INTEGER) is
@@ -368,7 +371,7 @@ feature -- Resizing
 			exists: not destroyed
 		deferred
 		ensure
-			x_set: x = value
+			x_set: x_set (value)
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
@@ -378,8 +381,7 @@ feature -- Resizing
 			exists: not destroyed
 		deferred
 		ensure
-			x_set: x = new_x	
-			y_set: y = new_y	
+			x_y_set: position_set (new_x, new_y)
 		end
 
 	set_y (value: INTEGER) is
@@ -389,18 +391,59 @@ feature -- Resizing
 			exists: not destroyed
 		deferred
 		ensure
-			y_set: y = value		
+			y_set: y_set (value)		
 		end
+
+feature -- Post-conditions
 	
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 		-- Check if the dimensions of the widget are set to 
 		-- the values given or the minimum values possible 
-		-- for that widget
+		-- for that widget.
+		-- On gtk, when the widget is not shown, the result is 1
 		do
-			Result := True
---			Result := (width = new_width or else width = minimum_width) and then (height = new_height or else height = minimum_height)
+			Result := (width = new_width or else width = minimum_width or else (not shown and width = 1)) and then
+				  (height = new_height or else height = minimum_height or else (not shown and height = 1))
 		end		
-		
+
+	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+		-- Check if the dimensions of the widget are set to 
+		-- the values given or the minimum values possible 
+		-- for that widget.
+		-- When the widget is not shown, the result is 0
+		deferred
+		end		
+
+	minimum_width_set (value: INTEGER): BOOLEAN is
+			-- Send -1 not to test the height
+		do
+			Result := minimum_dimensions_set (value, -1)
+		end
+
+	minimum_height_set (value: INTEGER): BOOLEAN is
+			-- Send -1 not to test width.
+		do
+			Result := minimum_dimensions_set (-1, value)
+		end
+
+	position_set (new_x, new_y: INTEGER): BOOLEAN is
+		-- Check if the dimensions of the widget are set to 
+		-- the values given or the minimum values possible 
+		-- for that widget.
+		-- When the widget is not shown, the result is -1
+		deferred
+		end
+
+	x_set (value: INTEGER): BOOLEAN is
+		do
+			Result := position_set (value, -1)
+		end
+
+	y_set (value: INTEGER): BOOLEAN is
+		do
+			Result := position_set (-1, value)
+		end
+
 feature -- Event - command association
 	
 	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is

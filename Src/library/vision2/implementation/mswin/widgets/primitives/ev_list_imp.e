@@ -171,7 +171,7 @@ feature -- Status setting
 					default_style + Lbs_multiplesel,
 				   	0, 0, 0, 0, 0, default_pointer)
 				id := 0
-				copy_list
+				internal_copy_list
 			end
 		end
 
@@ -188,17 +188,8 @@ feature -- Status setting
 					default_style, 0, 0, 0, 0, 0,
 				    default_pointer)
 				id := 0
-				copy_list
+				internal_copy_list
 			end
-		end
-
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		do
-			clear_ev_children
-			reset_content
 		end
 
 feature -- Event : command association
@@ -224,24 +215,14 @@ feature {NONE} -- Implementation
 	last_selected_item: EV_LIST_ITEM_IMP
 			-- Last selected item
 
-	copy_list is
-			-- Take an empty list and initialize all the children with
-			-- the contents of `ev_children'.
-		local
-			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+	graphical_insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
+			-- Insert `item_imp' at the `index' position of the
+			-- graphical object.
 		do
-			list := ev_children
-			if not list.empty then
-				from
-					list.start
-				until
-					list.after
-				loop
-					add_string (list.item.text)
-					list.forth
-				end
-			end
+			insert_string_at (item_imp.text, index)
 		end
+
+feature {NONE} -- Implementation : WEL features
 
 	on_lbn_selchange is
 			-- The selection has changed.
@@ -300,8 +281,6 @@ feature {NONE} -- Implementation
 				actual.execute_command (Cmd_item_dblclk, Void)
 			end
 		end
-
-feature {NONE} -- Implementation : WEL features
 
 	default_style: INTEGER is
 			-- Default style of the list.

@@ -34,13 +34,13 @@
 					</paragraph>
 					<list ordered="false">
 						<item>
-							<bold>UI</bold>: User interface items, encompasing Winforms, Winform Controls and  EiffelVision2 Windows and Dialogs.
+							<bold>UI</bold>: User interface items, encompassing Winforms, Winform Controls and  EiffelVision2 Windows and Dialogs.
 						</item>
 						<item>
 							<bold>Code</bold>: Various code only orientation Eiffel classes.
 						</item>
 						<item>
-							<bold>Data</bold>: Data files that can be incorperated with your project.
+							<bold>Data</bold>: Data files that can be incorporated with your project.
 						</item>
 						<item>
 							<bold>Resource</bold>: Windows and Winforms resources.
@@ -55,7 +55,7 @@
 					<paragraph>Select the type of item that you wish to add to your project and the location to  create the new item in, and click 
 						<bold>Open</bold>. The new item will then be added  to your project and opened in its default view.
 					</paragraph>
-					<paragraph>For more information on each type item follow the link to the item of intrest. </paragraph>
+					<paragraph>For more information on each type item follow the link to the item of interest. </paragraph>
 					<list ordered="false">
 						<item>
 							<bold>UI</bold>: 

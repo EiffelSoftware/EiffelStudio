@@ -105,7 +105,7 @@
 			<heading>
 				<size>3</size>Points
 			</heading>
-			<paragraph>Central in the design of the figures are points. Figures are built up as much from points as possible. For example, an ellipse is not a center point with two radiae, but the biggest fitting ellipse inside an imaginary rectangle, so of two points.</paragraph>
+			<paragraph>Central in the design of the figures are points. Figures are built up as much from points as possible. For example, an ellipse is not a center point with two radii, but the biggest fitting ellipse inside an imaginary rectangle, so of two points.</paragraph>
 			<paragraph>As you can see in the table above, each figure has a certain number of points. These values can be 1, 2 or * (any number). For each value there is a class the figure inherits from. These classes are:</paragraph>
 			<list ordered="false">
 				<item>1 (a figure has one point): <link><url>../../reference/interface/figures/ev_single_pointed_figure_chart.xml</url><label>EV_SINGLE_POINTED_FIGURE</label></link>.</item>
@@ -142,7 +142,7 @@
 					<heading>
 						<size>2</size>Projectors
 					</heading>
-					<paragraph>A projector is an object that knows what a figure world should look like. The figure world itself is not more than a hint towards its representation. For example, if a line is "20" long, this unit might mean pixels, miles, centimeters or whatever. It is up to the projector to interpret units. Also, color might be interpreted as greyscale. Typically, a projector will do the best possible job projecting the world to its device.</paragraph>
+					<paragraph>A projector is an object that knows what a figure world should look like. The figure world itself is not more than a hint towards its representation. For example, if a line is "20" long, this unit might mean pixels, miles, centimeters or whatever. It is up to the projector to interpret units. Also, color might be interpreted as gray scale. Typically, a projector will do the best possible job projecting the world to its device.</paragraph>
 					<paragraph>With EiffelVision come these projectors: 
 						<list ordered="false">
 							<item><link><url>../../reference/interface/figures/ev_postscript_projector_chart.xml</url><label>EV_POSTSCRIPT_PROJECTOR</label></link></item>

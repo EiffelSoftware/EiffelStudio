@@ -1,4 +1,4 @@
-<document output="studio" title="Differences between ETL 2nd printing and ISE implementation">
+<document output="studio" title="Differences between ETL 2nd printing and  Eiffel Software  implementation">
 	<meta_data/>
 	<paragraph>
 		<heading><size>2</size>Added classes</heading>
@@ -11,7 +11,7 @@
 			<item><code><keyword>Precursor</keyword></code></item>
 			<item><code><keyword>reference</keyword></code>: new keyword to specify that a type is used as a reference type.</item>
 			<item> <code> <keyword>agent</keyword></code>: new keyword used by the agent mechanism.</item>
-			<item><code><keyword>create</keyword></code>: Instead of using the famous exclamation mark to create an instance of a class, you can use the keyword <code><keyword>create</keyword></code>. Below you will find a correspondence table between the old and the new syntaxes. The old syntax is still valid, but at some points ISE will remove it from its implementation:
+			<item><code><keyword>create</keyword></code>: Instead of using the famous exclamation mark to create an instance of a class, you can use the keyword <code><keyword>create</keyword></code>. Below you will find a correspondence table between the old and the new syntaxes. The old syntax is still valid, but at some points  Eiffel Software  will remove it from its implementation:
 				<table>
 					<row> <cell>Old syntax</cell> <cell>New syntax</cell> </row>
 					<row> <cell>!! a</cell> <cell><code><keyword>create</keyword></code> a</cell> </row>

@@ -2,7 +2,7 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>Many client-server applications follow a standard scheme that relies    on the facilities outlined so far. When your application conforms to    this scheme, you can avoid most of the work by relying on the client and    server classes of the predefined level. There is no need to consider    sockets explicitly or to worry about synchronization.</paragraph>
-		<paragraph>As in many other cases found in the ISE Eiffel 5 libraries, the    object-oriented method makes it possible here to encapsulate the    standard pattern found in most usual cases.</paragraph>
+		<paragraph>As in many other cases found in the  Eiffel Software  Eiffel 5 libraries, the    object-oriented method makes it possible here to encapsulate the    standard pattern found in most usual cases.</paragraph>
 		<heading>
 			<size>3</size>The predefined client and server classes
 		</heading>

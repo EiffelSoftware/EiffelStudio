@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph> The EiffelCOM wizard can be launched from the Windows start menu:</paragraph>
 		<code_block>
-Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOMWizard
+Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOM Wizard
 </code_block>
 		<paragraph> where EiffelXX corresponds to your Eiffel installation (e.g. Eiffel50). The following window will be displayed:</paragraph>
 		<heading>
@@ -22,9 +22,9 @@ Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOMWizard
 			<italic>Back</italic>, 
 			<italic>Next</italic>, 
 			<italic>Cancel</italic> and 
-			<italic>Help</italic> are common to alldialogs displayed throughout the execution of the wizard. 
-			<italic>Next</italic> validates all the values entered in the current dialogand activates the next one. 
-			<italic>Back</italic> discards all the valuesentered in current dialog and displays the previous one. 
+			<italic>Help</italic> are common to all dialogs displayed throughout the execution of the wizard. 
+			<italic>Next</italic> validates all the values entered in the current dialog and activates the next one. 
+			<italic>Back</italic> discards all the values entered in current dialog and displays the previous one. 
 			<italic>Cancel</italic> exits the dialog and discards all the values entered.Finally, 
 			<italic>Help</italic> brings up this manual.
 		</paragraph>
@@ -34,7 +34,7 @@ Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOMWizard
 		<image>
 			<url>../images/com_image3.gif</url>
 		</image>
-		<paragraph> The main window includes a toolbar and a menu. The first three buttons on the toolbar correspond to the first three entries in the File menu: New, Open and Save. New resets all the information previously entered in the wizard. Open brings up an Open File Dialog that can be used to retrieve a previously saved EiffelCOM project. Save isused to save the current project. A project is defined by all the values entered in the wizard. A project can be saved only after the wizard has been run. The file extension for an EiffelCOM project ise wz.</paragraph>
+		<paragraph> The main window includes a toolbar and a menu. The first three buttons on the toolbar correspond to the first three entries in the File menu: New, Open and Save. New resets all the information previously entered in the wizard. Open brings up an Open File Dialog that can be used to retrieve a previously saved EiffelCOM project. Save is used to save the current project. A project is defined by all the values entered in the wizard. A project can be saved only after the wizard has been run. The file extension for an EiffelCOM project is wz.</paragraph>
 		<paragraph> The second menu, Build, includes the entries Launch Wizard and Generate (no wizard) corresponding respectively to the last two toolbar buttons. The former activates the Generated Code Type Dialog. while the later launches the generation with the current settings and by passes the dialogs. This last button can be used only when a project has been loaded or when the wizard has been run once.</paragraph>
 		<paragraph> The third menu, 
 			<italic>Help</italic>, includes 

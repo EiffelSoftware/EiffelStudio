@@ -96,7 +96,7 @@
 		<heading>
 			<size>2</size>Cluster
 		</heading>
-		<paragraph>A cluster is a collection of classes and subclusters. It is represented by a stippled, rounded rectangle. The cluster name is in a similar rectangle, by default located at the top of the cluster just outside of it. A cluster can be iconified, which means it is minimized to take up as less space as possible.</paragraph>
+		<paragraph>A cluster is a collection of classes and sub-clusters. It is represented by a stippled, rounded rectangle. The cluster name is in a similar rectangle, by default located at the top of the cluster just outside of it. A cluster can be iconified, which means it is minimized to take up as less space as possible.</paragraph>
 		<div>
 			<image>
 				<url>/images/eiffelstudio/diagram/bon-cluster-iconified.png</url>
@@ -117,7 +117,7 @@
 		<heading>
 			<size>2</size>Inheritance links
 		</heading>
-		<paragraph>Inheritance between classes is represented by a red arrow from a class to its parent. Typically, inheritance links pointupwards.</paragraph>
+		<paragraph>Inheritance between classes is represented by a red arrow from a class to its parent. Typically, inheritance links point upwards.</paragraph>
 		<div>
 			<image>
 				<url>/images/eiffelstudio/diagram/bon-inheritance.png</url>

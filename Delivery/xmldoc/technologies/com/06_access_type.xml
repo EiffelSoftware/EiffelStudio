@@ -8,7 +8,7 @@
 			<feature_name>invoke</feature_name>
 		</code> that allows to call a method, set or get a property on the Automation server. One advantage of that approach is that the interface has a known virtual table layout. As a result, Windows can include a built-in marshaler for that interface (See 
 		<link>
-			<url>07_deeper_into_com.xml</url><anchor_name>marshalling</anchor_name>
+			<url>07_deeper_into_com.xml</url><anchor_name></anchor_name>
 			<label>Marshaling</label>
 		</link> for information on what a marshaler is). The supported types (known as Automation types) and their Eiffel equivalents are listed in the following table:
 		<table>

@@ -19,6 +19,6 @@
 			<item>invariant</item>
 			<item>all</item>
 		</list>
-		<paragraph>The default assertion level has changed too. Not specifying anyassertion level used to be equivalent to selecting the 'require' level. This is not the caseany more in 5.0 it will be not checking assertions.</paragraph>
+		<paragraph>The default assertion level has changed too. Not specifying any assertion level used to be equivalent to selecting the 'require' level. This is not the case any more in 5.0 it will be not checking assertions.</paragraph>
 	</paragraph>
 </document>

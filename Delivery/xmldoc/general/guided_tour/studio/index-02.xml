@@ -7,7 +7,7 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<paragraph>EiffelStudio is the central tool of ISE Eiffel, letting you design, develop, debug, document, measure, maintain, revise and expand systems using the full power of object technology and Design by Contract 
+		<paragraph>EiffelStudio is the central tool of  Eiffel Software  Eiffel, letting you design, develop, debug, document, measure, maintain, revise and expand systems using the full power of object technology and Design by Contract 
 			<span>TM</span>.  
 		</paragraph>
 		<paragraph>This presentation introduces the essential properties of EiffelStudio.  It will take you through a tour of the environment, using a pre-existing example system.  </paragraph>
@@ -79,9 +79,9 @@
 		<heading>
 			<size>2</size>A note on platform differences
 		</heading>
-		<paragraph>ISE Eiffel is one of the most portable environments in the industry, running in an almost identical fashion on Windows, on the new Microsoft .  NET environment, on many variants of Unix, on Linux, on VMS.  </paragraph>
+		<paragraph> Eiffel Software  Eiffel is one of the most portable environments in the industry, running in an almost identical fashion on Windows, on the new Microsoft .  NET environment, on many variants of Unix, on Linux, on VMS.  </paragraph>
 		<paragraph>Once an EiffelStudio session has been started, you can largely forget about the operating system.  But a few operations -- mostly at the beginning, to launch EiffelStudio -- require platform-dependent mechanisms: starting a program, traversing the file structure, selecting a file.  These cases will be marked accordingly below.  </paragraph>
-		<paragraph>Windows users should particularly note thefollowing two conventions of terminology:</paragraph>
+		<paragraph>Windows users should particularly note the following two conventions of terminology:</paragraph>
 		<list ordered="false">
 			<item>Operating systems store files into hierarchically nested structures called 
 				<span>folders</span> or 
@@ -108,9 +108,9 @@
 		<heading>
 			<size>2</size>What should I have done first?
 		</heading>
-		<paragraph>To run the example you must have installed ISE Eiffel and set up the environment.  Check in particular the following:</paragraph>
+		<paragraph>To run the example you must have installed  Eiffel Software  Eiffel and set up the environment.  Check in particular the following:</paragraph>
 		<list ordered="false">
-			<item>On Windows, you must have run the installation procedure; it will have put EiffelStudio in the Programs section of the start menu, subsection "ISE Eiffel version", where version is the version number, e.  g.  5.  0.  </item>
+			<item>On Windows, you must have run the installation procedure; it will have put EiffelStudio in the Programs section of the start menu, subsection " Eiffel Software  Eiffel version", where version is the version number, e.  g.  5.  0.  </item>
 			<item>The environment variable 
 				<code>
 					<keyword>ISE_EIFFEL</keyword>

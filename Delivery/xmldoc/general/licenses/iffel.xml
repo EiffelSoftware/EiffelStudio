@@ -43,7 +43,7 @@
 		<heading>
 			<size>3</size>About the license
 		</heading>
-		<paragraph>After considering existing license contracts for publicly available software, we felt that the GPL (Gnu Public License) as wellas LGPL, its variant for libraries, while useful and interesting, were not adequate since they are too restrictive.</paragraph>
+		<paragraph>After considering existing license contracts for publicly available software, we felt that the GPL (Gnu Public License) as well as LGPL, its variant for libraries, while useful and interesting, were not adequate since they are too restrictive.</paragraph>
 		<anchor>contamination</anchor>
 		<paragraph>In particular a crucial requirement was that the license should allow commercial companies to use EiffelBase (and other libraries that may use this license in the future) in for-profit developments without any fear (justified or not) that GPL-like requirements could cause proprietary elements of their products to come under the open source umbrella themselves.</paragraph>
 		<paragraph>The closest model was that of the Perl Artistic License, which significantly influenced the terms of the agreement as shown below. It too, however, was not applicable verbatim. EiffelBase was initially designed as a commercial product and then released as free software, a different situation from that of software that was never commercial.</paragraph>
@@ -51,7 +51,7 @@
 		<heading>
 			<size>3</size>Ownership
 		</heading>
-		<paragraph>EiffelBase remains an Eiffel Software product and will continue to be distributed as such to Eiffel Software customers. This means in particular that there isn o lessening of our maintenance and support responsibilityto our customers under maintenance. In fact, the increased scrutiny and outside contributions will mean an increase of our commitment to develop EiffelBase and of the quality of the product.</paragraph>
+		<paragraph>EiffelBase remains an Eiffel Software product and will continue to be distributed as such to Eiffel Software customers. This means in particular that there is no o lessening of our maintenance and support responsibility to our customers under maintenance. In fact, the increased scrutiny and outside contributions will mean an increase of our commitment to develop EiffelBase and of the quality of the product.</paragraph>
 		<heading>
 			<size>2</size>The License Text
 		</heading>
@@ -62,7 +62,7 @@
 		<paragraph>"The Library" refers to the collection of software texts in the Eiffel language, originally written by Eiffel Software, and constituting the EiffelBase library of fundamental computing science structures, as well as any derivatives of these texts as may be created through textual modification (by people) or through translation to lower-level languages (by programs such as compilers).</paragraph>
 		<paragraph>"Standard Version" refers to the version of the Library maintained by Eiffel Software and distributed by Eiffel Software to its customers under maintenance.</paragraph>
 		<paragraph>"You" means any person interested in using, modifying or distributing the Library.</paragraph>
-		<paragraph>"Source form" means the text of the the Library's classes, in the Eiffel language.</paragraph>
+		<paragraph>"Source form" means the text of the Library's classes, in the Eiffel language.</paragraph>
 		<paragraph>"Object form" means the translation, as performed by a compiler or other program, of the Library or part of the Library into another, usually lower-level code (such as C, assembly language or machine language) intended for execution by a machine.</paragraph>
 		<anchor>reference_implementation</anchor>
 		<paragraph>"Reference implementation" means the latest officially released version of Eiffel Software's implementation of the Eiffel language.</paragraph>
@@ -75,7 +75,7 @@
 		<heading>
 			<size>3</size>Right of use
 		</heading>
-		<bold>2.</bold> Eiffel Software hereby grants you permission to do any of the following without payment to Eiffel Software, under the conditions of sections 3 to 7of this Agreement:
+		<bold>2.</bold> Eiffel Software hereby grants you permission to do any of the following without payment to Eiffel Software, under the conditions of sections 3 to 7 of this Agreement:
 		<list ordered="false">
 			<item>
 				<bold>2.1.</bold> Use the Library, in source form or object form, as part of any software you develop and distribute to other parties.
@@ -124,16 +124,16 @@
 						<label>
 							<italic>Eiffel: The Language</italic>
 						</label>
-					</link>(Prentice Hall), plus any changes or extensions that have been approved by the Nonprofit International Consortium for Eiffel (NICE) or have been accepted for discussion by the Language Committeeof NICE, provided they are accepted by the reference implementation.
+					</link>(Prentice Hall), plus any changes or extensions that have been approved by the Nonprofit International Consortium for Eiffel (NICE) or have been accepted for discussion by the Language Committee of NICE, provided they are accepted by the reference implementation.
 				</item>
 				<item>
 					<anchor>obsolete_version</anchor>
 					If Eiffel Software releases a new version of the Library, you must, no later than six months after the release of that version, either: (A) update your distribution to the new version; (B) add the following notice to all files in your distribution:"
-					<italic>This is an obsolete version of EiffelBase.  The latest versionis available from http://eiffel.com</italic>"; or (C) cease distributing your version.
+					<italic>This is an obsolete version of EiffelBase.  The latest version is available from http://eiffel.com</italic>"; or (C) cease distributing your version.
 				</item>
 			</list>
 		</paragraph>
-		<paragraph>You may not charge any fee for the distributionof the Library (source or binary), although you may charge for software that includes the Library in whole or in part as per the other provisions of this Agreement.</paragraph>
+		<paragraph>You may not charge any fee for the distribution of the Library (source or binary), although you may charge for software that includes the Library in whole or in part as per the other provisions of this Agreement.</paragraph>
 		<paragraph>
 			<bold>7.</bold> You may not use the name of Eiffel Software to endorse or promote products derived from the Library without specific prior written permission.
 		</paragraph>
@@ -147,8 +147,8 @@
 		<paragraph>			
 			<bold>General note on changes</bold>: as usage of free EiffelBase grows and more people contribute to it, some terms of the license text may occasionally have to be changed in light of this accumulated experience and of comments received from users and contributors. It is our intention to ensure that
 			<list ordered="false">
-				<item>(1) Any such changes will be minor, affecting the details of thelicensing rather than the spirit of IFELL.</item>
-				<item>(2) If they affect the substance of the license in any way, they go in the general direction of extending, not restricting, the rights of usersof EiffelBase.</item>
+				<item>(1) Any such changes will be minor, affecting the details of the licensing rather than the spirit of IFELL.</item>
+				<item>(2) If they affect the substance of the license in any way, they go in the general direction of extending, not restricting, the rights of users of EiffelBase.</item>
 			</list>
 		</paragraph>
 		<paragraph>Should a question arise regarding use of EiffelBase, the terms to be applied are those in effect at the time of use, disregarding any later change.</paragraph>

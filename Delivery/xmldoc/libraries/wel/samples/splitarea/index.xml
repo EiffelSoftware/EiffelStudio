@@ -34,7 +34,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph> There is no split area class provided with WEL, but <code><class_name>WEL_SPLIT_AREA</class_name></code> was created for this sample to illustrate how new controls can be built when required. Redefining some of the `on_' features inherited from <link><url>../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> in <code><class_name>WEL_SPLIT_AREA</class_name></code> shows how the control over the contents of the split area is acheived.</paragraph>
+		<paragraph> There is no split area class provided with WEL, but <code><class_name>WEL_SPLIT_AREA</class_name></code> was created for this sample to illustrate how new controls can be built when required. Redefining some of the `on_' features inherited from <link><url>../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> in <code><class_name>WEL_SPLIT_AREA</class_name></code> shows how the control over the contents of the split area is achieved.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>APPLICATION</class_name></code></item>

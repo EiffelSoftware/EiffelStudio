@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This sample demonstrates the use of a <link><url>../../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link> to display output in the <code><class_name>MAIN_WINDOW</class_name></code>. The ouput is shown below: </paragraph>
+		<paragraph>This sample demonstrates the use of a <link><url>../../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link> to display output in the <code><class_name>MAIN_WINDOW</class_name></code>. The output is shown below: </paragraph>
 		<image> 
 			<url>step3.png</url> 
 			<alt_text>step3</alt_text>

@@ -7,7 +7,7 @@
 		<paragraph>After you have done the appropriate steps to compile the example, you will get a `bank_account.exe' on windows, or `bank_account' on Unix. </paragraph>
 		<paragraph>This program launches two types of threads:</paragraph>
 		<list ordered="false">
-			<item>the spenders withdraw some money from a shared bank acccount</item>
+			<item>the spenders withdraw some money from a shared bank account</item>
 			<item>the savers make some deposits on it. </item>
 		</list>
 		<paragraph>The Eiffel Threads are launched from C. The synchronization is done from Eiffel. The shared bank account is a C structure, and is updated by the Eiffel Threads using some C externals. </paragraph>

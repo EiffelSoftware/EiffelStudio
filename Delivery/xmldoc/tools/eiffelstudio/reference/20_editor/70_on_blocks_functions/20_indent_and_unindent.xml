@@ -6,7 +6,7 @@
 			<item>
 				<paragraph>The "Indent" command corresponds to the 
 					<bold>Indent selection</bold> entry in the 
-					<bold>Advanced</bold> submenu of the 
+					<bold>Advanced</bold> sub menu of the 
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>
@@ -22,7 +22,7 @@
 			<item>
 				<paragraph>The "Unindent" command corresponds to the 
 					<bold>Unindent selection</bold> entry in the 
-					<bold>Advanced</bold> submenu of the 
+					<bold>Advanced</bold> sub menu of the 
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>

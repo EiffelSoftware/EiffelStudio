@@ -31,7 +31,7 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the program, a window will be displayed as illustrated above. Selecting "Progress bar demonstration" from the "File" menu will update the progress bar to a full state. Leaving the mouse stationary above the track bar, progress bar or tollbar buttons will cause a tooltip control to be displayed.</paragraph>
+		<paragraph>After launching the program, a window will be displayed as illustrated above. Selecting "Progress bar demonstration" from the "File" menu will update the progress bar to a full state. Leaving the mouse stationary above the track bar, progress bar or toolbar buttons will cause a tooltip control to be displayed.</paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>

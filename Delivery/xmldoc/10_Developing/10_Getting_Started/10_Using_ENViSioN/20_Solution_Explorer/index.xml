@@ -20,7 +20,7 @@
 		<heading>
 			<size>2</size>  References
 		</heading>
-		<paragraph>  The References folder shows all of the .Net assemblies referenced from the  Eiffel project, they are listed in alphabetically and may be either reference  assemblies located in the Global Assembly Cache or locally. Double clicking on the  Assembly node will bring up browseable information relating to the assembly in the  Object Browser. New assembly references may be added by right clicking on the  References folder and then clicking 'Add Reference' from the context menu that pops up. </paragraph>
+		<paragraph>  The References folder shows all of the .Net assemblies referenced from the  Eiffel project, they are listed in alphabetically and may be either reference  assemblies located in the Global Assembly Cache or locally. Double clicking on the  Assembly node will bring up browsable information relating to the assembly in the  Object Browser. New assembly references may be added by right clicking on the  References folder and then clicking 'Add Reference' from the context menu that pops up. </paragraph>
 		<heading>
 			<size>2</size>  Eiffel Source Files
 		</heading>

@@ -24,7 +24,7 @@
 			<line_break/>
 			<link>
 				<url>04_eiffel_project_file_d.xml</url>
-				<label>EiffelProject File Dialog</label>
+				<label>Eiffel Project File Dialog</label>
 			</link>
 			<line_break/>
 			<link>
@@ -44,7 +44,7 @@
 			<line_break/>
 			<link>
 				<url>08_final_d.xml</url>
-				<label>FinalDialog</label>
+				<label>Final Dialog</label>
 			</link>
 			<line_break/>
 			<link>
@@ -59,7 +59,7 @@
 			<line_break/>
 			<link>
 				<url>11_generated_files.xml</url>
-				<label>GeneratedFiles</label>
+				<label>Generated Files</label>
 			</link>
 			<line_break/>
 			<link>

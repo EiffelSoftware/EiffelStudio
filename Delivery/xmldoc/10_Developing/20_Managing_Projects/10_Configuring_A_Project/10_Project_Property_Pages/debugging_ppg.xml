@@ -13,11 +13,11 @@
 		<heading>
 			<size>2</size>Actions
 		</heading>
-		<paragraph>The actionpropertiesare user-specific properties and will not be  applied to the project as a whole, but saved in a separate user configuration  file. Theses user specific settings do not require a project recompilation to  reflect their changes.</paragraph>
+		<paragraph>The action properties are user-specific properties and will not be  applied to the project as a whole, but saved in a separate user configuration  file. Theses user specific settings do not require a project recompilation to  reflect their changes.</paragraph>
 		<heading>
 			<size>3</size>Start Application
 		</heading>
-		<paragraph>  Ifyour project isrequires a client application to function  correctly, such in the case of a Class Library project,then you will need  to specify a client application to use when debugging.</paragraph>
+		<paragraph>  If your project is requires a client application to function  correctly, such in the case of a Class Library project,then you will need  to specify a client application to use when debugging.</paragraph>
 		<note>
 			<bold>Note</bold>: Please ensure that  the output of the project is the same assembly that the client application will  be using when it is run.
 		</note>

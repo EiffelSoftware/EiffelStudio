@@ -83,7 +83,7 @@
 			</code>), postconditions (
 			<code>
 				<keyword>ensure</keyword>
-			</code>) and classinvariants (
+			</code>) and class invariants (
 			<code>
 				<keyword>invariant</keyword>
 			</code>), as well as other assertion constructs studied later (see 
@@ -144,7 +144,7 @@
 		<paragraph>Each assertion is made of one or more subclauses, each of them a boolean expression (with the additional possibility of the 
 			<code>
 				<keyword>old</keyword>
-			</code> construct). The effect of including more than one subclause, as in the postcondition of 
+			</code> construct). The effect of including more than one sub clause, as in the postcondition of 
 			<code>
 				<feature_name>deposit</feature_name>
 			</code> and in the invariant, is the same as connecting them through an 
@@ -170,7 +170,7 @@
 			<code>
 				<feature_name>deposit</feature_name>
 			</code> is correct if and only if the value of the argument is non-negative. The routine does not guarantee anything for a call that does not satisfy the precondition. It is in fact part of the Eiffel method that a routine body should 
-			<bold>never</bold> test for the precondition, since it is the client's responsibility to ensure it. (An apparent paradox of Design by Contract&amp;#153;, which is reflected in the bottom-right entries of the preceding and follwing contract tables, and should not be a paradox any more at the end of this discussion, is that one can get 
+			<bold>never</bold> test for the precondition, since it is the client's responsibility to ensure it. (An apparent paradox of Design by Contract&amp;#153;, which is reflected in the bottom-right entries of the preceding and following contract tables, and should not be a paradox any more at the end of this discussion, is that one can get 
 			more reliable software by having 
 			fewer explicit checks in the software text.)
 		</paragraph>
@@ -235,7 +235,7 @@
 			</code> is compatible with the 
 			<code>
 				<feature_name>balance</feature_name>
-			</code>; bad news because, in addition to its official contract as expressed by its specificpostcondition, every routine must take care of restoring the invariant on exit.
+			</code>; bad news because, in addition to its official contract as expressed by its specific postcondition, every routine must take care of restoring the invariant on exit.
 		</paragraph>
 		<paragraph>A requirement on meaningful contracts is that they should be in good faith: satisfiable by an honest partner. This implies a consistency rule: if a routine is exported to a client (either generally or selectively), any feature appearing in its precondition must also be available to that client. Otherwise -- for example if the precondition included 
 			<code>
@@ -308,7 +308,7 @@
 		</list>
 		</paragraph>
 		<paragraph>That violations indicate bugs explains why it is legitimate to enable or disable assertion monitoring through mere compilation options: for a correct system -- one without bugs -- assertions will always hold, so the compilation option makes no difference to the semantics of the system. </paragraph>
-		<paragraph>But of course for an incorrect system the best way to find out where the bug is -- or just that there is a bug -- is often to monitor the assertions during development and testing. Hence the presence of the compilation options, which ISE's EiffelStudio lets you set separately for each class, with defaults at the system and cluster levels:
+		<paragraph>But of course for an incorrect system the best way to find out where the bug is -- or just that there is a bug -- is often to monitor the assertions during development and testing. Hence the presence of the compilation options, which Eiffel Software's EiffelStudio lets you set separately for each class, with defaults at the system and cluster levels:
 		<line_break/>
 		<list ordered="false">
 			<item>
@@ -355,7 +355,7 @@
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>10722</anchor_name>
 				<label>"Instructions", page 84</label>
-			</link>). Unless the software has an explicit "retry" plan as explained in the discussion of exceptions, the violation will cause produce an exception trace and cause termination (or, in EiffelStudio, a return to the environment's browsing and debugging facilities at the point of failure). If present, the label of the violated subclause will be displayed, to help identify the problem.
+			</link>). Unless the software has an explicit "retry" plan as explained in the discussion of exceptions, the violation will cause produce an exception trace and cause termination (or, in EiffelStudio, a return to the environment's browsing and debugging facilities at the point of failure). If present, the label of the violated sub clause will be displayed, to help identify the problem.
 		</paragraph>
 		<paragraph>The default is 
 			<code>
@@ -372,7 +372,7 @@
 		<paragraph>When releasing the final version of a system, it is usually appropriate to turn off assertion monitoring, or bring it down to the 
 			<code>
 				<keyword>require</keyword>
-			</code> level. The exact policy depends on the circumstances; it is a tradeoff between efficiency considerations, the potential cost of mistakes, and how much the developers and quality assurance team trust the product. When developing the software, however, you should always assume -- to avoid loosening your guard -- that in the end monitoring will be turned off.
+			</code> level. The exact policy depends on the circumstances; it is a trade off between efficiency considerations, the potential cost of mistakes, and how much the developers and quality assurance team trust the product. When developing the software, however, you should always assume -- to avoid loosening your guard -- that in the end monitoring will be turned off.
 		</paragraph>
 		<heading>
 			<size>2</size>
@@ -381,7 +381,7 @@
 		<paragraph>Another application of assertions governs documentation. Environment mechanisms, such as clicking the 
 			<code>
 				<keyword>Form Contract</keyword>
-			</code> icon in EifffelStudio, will produce, from a class text, an abstracted version which only includes the information relevant for client authors. Here is the contract form of class 
+			</code> icon in Eiffelstudio, will produce, from a class text, an abstracted version which only includes the information relevant for client authors. Here is the contract form of class 
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code> in the latest version given:
@@ -474,7 +474,7 @@
 		<line_break/>
 		<list ordered="false">
 			<item> It is truly abstract, free from the implementation details of what it describes and concentrating instead on its functionality. </item>
-			<item> Rather than being developed separately -- an unrealistic requirement, hard to impose on developers initially and becoming impossible in practice if we expect the documentation to remain up to date as thesoftware evolves -- the documentation is extracted from the software itself. It is not a separate product but a different view of the same product. This prolongs the 
+			<item> Rather than being developed separately -- an unrealistic requirement, hard to impose on developers initially and becoming impossible in practice if we expect the documentation to remain up to date as the software evolves -- the documentation is extracted from the software itself. It is not a separate product but a different view of the same product. This prolongs the 
 				<bold>Single Product</bold> principle that lies at the basis of Eiffel's seamless development model (section 
 				<link>
 					<url>tutorial-04.xml</url><anchor_name>41726</anchor_name>

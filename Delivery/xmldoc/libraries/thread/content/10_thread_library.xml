@@ -60,7 +60,7 @@ Creating a thread is like creating an Eiffel object:
 				<code_block>	<feature_name>my_thread</feature_name>.<feature_name>launch</feature_name></code_block>On the Eiffel side, the procedure 
 				<code>
 					<feature_name>execute</feature_name>
-				</code> will be launched. This procedureis deferred in class 
+				</code> will be launched. This procedures deferred in class 
 				<code>
 					<class_name>THREAD</class_name>
 				</code>, you have to define it in 
@@ -72,7 +72,7 @@ Creating a thread is like creating an Eiffel object:
 						<bold>Caution</bold>: you may call 
 						<code>
 							<feature_name>join_all</feature_name>
-						</code> and the end of the exceution of the parent thread if you do not want it to die before its child, otherwise they may prematurily terminate.
+						</code> and the end of the execution of the parent thread if you do not want it to die before its child, otherwise they may prematurely terminate.
 						<heading>
 							<size>2</size>The class MUTEX
 						</heading>
@@ -234,7 +234,7 @@ Creating a thread is like creating an Eiffel object:
 										<paragraph>class 
 											<code>
 												<class_name>THREAD_ATTRIBUTES</class_name>
-											</code>: defines theattributes of an Eiffel Thread regarding the thread scheduling policy and priority.
+											</code>: defines the attributes of an Eiffel Thread regarding the thread scheduling policy and priority.
 											<heading>
 												<size>2</size>Controlling execution: THREAD_CONTROL
 											</heading>

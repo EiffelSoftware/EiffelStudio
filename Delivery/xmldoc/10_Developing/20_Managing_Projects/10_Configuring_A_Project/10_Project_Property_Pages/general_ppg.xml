@@ -19,9 +19,9 @@
 						<heading>
 							<size>3</size>Default Namespace
 						</heading>
-						<paragraph>The root namespace for the output file. Cluster namespaces, then class  namespaces will be append to the default namespace to yeild their fully  qualified type names. </paragraph>
+						<paragraph>The root namespace for the output file. Cluster namespaces, then class  namespaces will be append to the default namespace to yield their fully  qualified type names. </paragraph>
 						<note>
-							<bold>Note</bold>: A namespaces must begin with an alpha  character and succeeded by and alphanumberical, underscore (_) or period (.).  The character following a period must also only be an alpha character.
+							<bold>Note</bold>: A namespaces must begin with an alpha  character and succeeded by and alphanumerical, underscore (_) or period (.).  The character following a period must also only be an alpha character.
 						</note>
 						<heading>
 							<size>3</size>Root Class Name
@@ -53,15 +53,15 @@
 							<item>  <bold>Console Application</bold>: Use this project output type if you intend to use the  Windows console to display output.  </item>
 							<item>  <bold>Windows Application</bold>: Intented for project that do not require to output  information to the Windows console.</item>
 							<item>  <bold>Class Library</bold>: Reusable library of classes. When compiling, all classes found  in the selected clusters will be compiled into the library. Class libraries  projects should not be referenced from other Eiffel ENViSioN! projects.  </item>
-							<item>  <bold>Class Library with Root</bold>: Reusable library of classes. When compiling, only  those classes reachablefrom the root class will be compiled into the  library. Class libraries projects should not be referenced from other Eiffel  ENViSioN! projects.</item>
+							<item>  <bold>Class Library with Root</bold>: Reusable library of classes. When compiling, only  those classes reachable from the root class will be compiled into the  library. Class libraries projects should not be referenced from other Eiffel  ENViSioN! projects.</item>
 							<item>  <bold>Precompile Library</bold>: Reusable library of classes with additional compilation  information that other Eiffel ENViSioN! project can consume. When compiling,  all classes found in the selected clusters will be compiled into the library.  </item>
 							<item>  <bold>Precompile Library with Root</bold>: Reusable library of classes with additional  compilation information that other Eiffel ENViSioN! project can consume. When  compiling, only those classes reachable from the root class will be compiled  into the library.</item>
 						</list>
 						<note>
-							<bold>Note</bold>: Precompile and Precompile with  Rootproject outputtypes require a rebuild for every compilation.
+							<bold>Note</bold>: Precompile and Precompile with  Root project output types require a rebuild for every compilation.
 						</note>
 						<heading>
-							<size>2</size>Assembly PrivateKey
+							<size>2</size>Assembly Private Key
 						</heading>
 						<paragraph>If you wish to protect your project from malicious tampering when released, then  you should sign your project. To do this make use of the following signing  key option. </paragraph>
 						<heading>
@@ -81,7 +81,7 @@
 							<line_break/>
 							<link>
 								<url>assembly_info.xml</url>
-								<label>AssemblyInfo Property Page</label>
+								<label>Assembly Info Property Page</label>
 							</link>
 						</seealso>
 					</paragraph>

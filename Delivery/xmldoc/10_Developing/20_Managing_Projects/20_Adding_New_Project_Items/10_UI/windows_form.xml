@@ -1,8 +1,8 @@
 <document output="envision" title="Windows Form">
 	<meta_data/>
 	<paragraph>
-					<paragraph>  The Windows Form itemadds an empty Winform Classfor Windows  applications to your project.Thisitem when added will open in the  .NETWindows Form designer. </paragraph>
-					<paragraph>Please ensure thatthe 
+					<paragraph>  The Windows Form item adds an empty Winform Class for Windows  applications to your project.This item when added will open in the  ..NET Windows Form designer. </paragraph>
+					<paragraph>Please ensure that the 
 						<code>
 							<class_name>Accessiblity</class_name>
 						</code>, 

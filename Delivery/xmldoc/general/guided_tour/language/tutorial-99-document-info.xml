@@ -8,10 +8,10 @@
 			<content>MANUAL IDENTIFICATION AND COPYRIGHT</content>
 		</heading>
 		<paragraph>Title: 
-			An Eiffel Tutorial, ISE Technical Report TR-EI-66/TU.  
+			An Eiffel Tutorial,  Eiffel Software  Technical Report TR-EI-66/TU.  
 		</paragraph>
 		<paragraph>Publication history</paragraph>
-		<paragraph>First published July 2001.  Corresponds to release 5.  0 of the ISE Eiffel environment.  </paragraph>
+		<paragraph>First published July 2001.  Corresponds to release 5.  0 of the  Eiffel Software  Eiffel environment.  </paragraph>
 		<paragraph>Author</paragraph>
 		<paragraph>Software credits</paragraph>
 		<paragraph>See acknowledgments in book 
@@ -25,15 +25,15 @@
 		<paragraph>Cover design</paragraph>
 		<paragraph>Rich Ayling.  </paragraph>
 		<paragraph>Copyright notice and proprietary information</paragraph>
-		<paragraph>Copyright Interactive Software Engineering Inc.  (ISE), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of ISE.  "Eiffel Power" and the Eiffel Power logo are trademarks of ISE.  </paragraph>
-		<paragraph>All uses of the product documented here are subject to the terms and conditions of the ISE Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  </paragraph>
+		<paragraph>Copyright Interactive Software Engineering Inc.  ( Eiffel Software ), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of  Eiffel Software .  "Eiffel Power" and the Eiffel Power logo are trademarks of  Eiffel Software .  </paragraph>
+		<paragraph>All uses of the product documented here are subject to the terms and conditions of the  Eiffel Software  Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  </paragraph>
 		<paragraph>Special duplication permission for educational institutions</paragraph>
-		<paragraph>Degree-granting educational institutions using ISE Eiffel for teaching purposes as part of the 
+		<paragraph>Degree-granting educational institutions using  Eiffel Software  Eiffel for teaching purposes as part of the 
 			<span>
 				<link>
 					<url> http://www.eiffel.com/educators/resources.xml</url>
 					<label>Eiffel University Partnership Program</label>
 				</link>
-			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
+			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact  Eiffel Software  for details.  
 		</paragraph>
 	</paragraph></document>

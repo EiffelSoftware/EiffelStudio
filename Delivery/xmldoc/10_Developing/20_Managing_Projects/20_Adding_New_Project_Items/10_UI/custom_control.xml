@@ -1,10 +1,10 @@
 <document output="envision" title="Custom Control">
 	<meta_data/>
 	<paragraph>
-					<paragraph>  The Custom Control item adds a class for creating a user-drawn Windows Form control.Thisitem when added will open in the  Visual Studio .NET Windows Form designer. </paragraph>
-					<paragraph>Please ensure thatthe 
+					<paragraph>  The Custom Control item adds a class for creating a user-drawn Windows Form control.This item when added will open in the  Visual Studio .NET Windows Form designer. </paragraph>
+					<paragraph>Please ensure that the 
 						<code>
-							<class_name>Accessiblity</class_name>
+							<class_name>Accessibility</class_name>
 						</code>, 
 						<code>
 							<class_name>System.Windows.Forms</class_name>

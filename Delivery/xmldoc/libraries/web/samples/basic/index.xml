@@ -54,7 +54,7 @@
 					<paragraph>        To run the example, access the page 
 						<italic>sample.html</italic> that you copied        on the web server with a web browser (typically 
 						<italic>        http://localhost/sample.html</italic>). Fill in the text field with a        username and click 
-						<italic>Submit</italic>. You should see a page displaying the        name you jsut entered. Although not earth-shattering, this sample shows        the basis for building more complex forms processing in Eiffel.
+						<italic>Submit</italic>. You should see a page displaying the        name you just entered. Although not earth-shattering, this sample shows        the basis for building more complex forms processing in Eiffel.
 					</paragraph>
 					<heading>
 						<size>2</size>Under the Hood

@@ -11,7 +11,7 @@
 			<link>
 				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
 				<label>Class View</label>
-			</link>, there will be a set of child nodes that you  may expand in order to explore relevent information regarding the current node.  For example, if the current node represents a cluster, then the child nodes  will be all Eiffel Classes in that cluster. If you subsequently open up one of  the child nodes representing an Eiffel Class, you will be presented with a new  set of nodes, applicable only to an Eiffel Class. 
+			</link>, there will be a set of child nodes that you  may expand in order to explore relevant information regarding the current node.  For example, if the current node represents a cluster, then the child nodes  will be all Eiffel Classes in that cluster. If you subsequently open up one of  the child nodes representing an Eiffel Class, you will be presented with a new  set of nodes, applicable only to an Eiffel Class. 
 		</paragraph>
 		<paragraph>  Each node in the 
 			<link>

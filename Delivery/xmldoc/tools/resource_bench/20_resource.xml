@@ -14,7 +14,7 @@
 			</paragraph>
 
 			<paragraph>
-				2 - Open a resource file (why not the example.rc file provided with this release of Resource Bench). Let the application parse the file. You will see a dialog box that informs you of the parsing's state. 
+				2 - Open a resource file (why not the example.rc file provided with this release of Resource Bench). Let the application parse the file. You will see a dialog box that informs you of the parsings state. 
 				<line_break />
 				First, there is the preprocessing of the resource file:
 				<paragraph>

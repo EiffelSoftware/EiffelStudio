@@ -17,7 +17,7 @@
 			</image> ) marks the execution line where the program is currently stopped, whereas a green arrow ( 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_bpslot_stopped.gif</url>
-			</image> ) indicates the execution line that was attained in the feature in the current call stack element. Therefore, if a feature is recursive, and appears several times in the call stack, changing the current call stack element may cause green arrows to be displayed at different places in the same feature (if the different calls did not reach the same execution point). On the other hand, the yellow arrow can only appear at oneplace as long as the application is not started again.
+			</image> ) indicates the execution line that was attained in the feature in the current call stack element. Therefore, if a feature is recursive, and appears several times in the call stack, changing the current call stack element may cause green arrows to be displayed at different places in the same feature (if the different calls did not reach the same execution point). On the other hand, the yellow arrow can only appear at one place as long as the application is not started again.
 		</paragraph>
 		<paragraph>The 
 			<link>

@@ -12,7 +12,7 @@
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
 				<keywords>Eiffel debugging</keywords>Debugging
-			</help_link>  purposes. For example, the code that you wish to examine requires some fairly  complex steps in order for it to beexecuted. It is not possible to step  through the whole Projects execution line by line, so you set a Break Point.  When the Break Point is reached, execution will stop, and you will be able to  debug theProject.
+			</help_link>  purposes. For example, the code that you wish to examine requires some fairly  complex steps in order for it to be executed. It is not possible to step  through the whole Projects execution line by line, so you set a Break Point.  When the Break Point is reached, execution will stop, and you will be able to  debug the project.
 		</paragraph>
 		<paragraph>You have as many break points as you wish in a project.</paragraph>
 		<paragraph>You may also turn a regular Break Point into a 
@@ -70,22 +70,22 @@
 				<url>EditorWindowWithBreakpointHit.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The screenshot above demonstrates the appearence of the 
+		<paragraph>The screenshot above demonstrates the appearance of the 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
 				<keywords>Eiffel Editor</keywords>Editor
-			</help_link> when a break point has been reached, and the execution has stopped. The line  that is highlighted in yellow is the next line of theProject's code that will  be executed.
+			</help_link> when a break point has been reached, and the execution has stopped. The line  that is highlighted in yellow is the next line of the project's code that will  be executed.
 		</paragraph>
 		<heading>
 			<size>2</size>Stepping Through the Project
 		</heading>
-		<paragraph>To follow the exeuction of the system during 
+		<paragraph>To follow the execution of the system during 
 			<help_link>
 				<tab_index>0</tab_index>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>
 				<keywords>Eiffel debugging</keywords>Debugging
-			</help_link>,  you need to step through the code, line by line. This allows you to see exactly  what is happening within thesystem.
+			</help_link>,  you need to step through the code, line by line. This allows you to see exactly  what is happening within the system.
 		</paragraph>
 		<paragraph>There are two ways of stepping during 
 			<help_link>

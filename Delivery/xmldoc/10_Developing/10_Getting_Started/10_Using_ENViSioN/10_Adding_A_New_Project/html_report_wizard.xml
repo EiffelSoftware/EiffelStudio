@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This wizardwill generatethe requested HTML documentation for all or  part of you compiled ENViSioN! project.</paragraph>
+		<paragraph>This wizard will generate the requested HTML documentation for all or  part of you compiled ENViSioN! project.</paragraph>
 		<heading>
 			<size>2</size>Page content
 		</heading>
@@ -28,7 +28,7 @@
 			<item>
 				<link>
 					<anchor_name>select_configuration</anchor_name>
-					<label>Select Project Configration</label>
+					<label>Select Project Configuration</label>
 				</link>
 			</item>
 			<item>
@@ -47,7 +47,7 @@
 		<heading>
 			<size>2</size>Requirements
 		</heading>
-		<paragraph>TheHTML Report Wizard requires that you use a compiled Eiffel ENViSioN! project.  For the best results ensure that you compile in the release configuration mode,  or a configuration mode that has the 
+		<paragraph>The HTML Report Wizard requires that you use a compiled Eiffel ENViSioN! project.  For the best results ensure that you compile in the release configuration mode,  or a configuration mode that has the 
 			<link>
 				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\general_ppg.xml</url><anchor_name>OptimizeCode</anchor_name>
 				<label>Optimize  Code</label>
@@ -85,7 +85,7 @@
 		<heading>
 			<size>2</size>  Select Clusters
 		</heading>
-		<paragraph>You may generate documentation for all or a subset of the clusters in your  Project. TheSelect Clusterpage allows you to selectyour  project's configurationclusters containing those classes to generate the  documentation for.</paragraph>
+		<paragraph>You may generate documentation for all or a subset of the clusters in your  Project. The Select Cluster page allows you to select your  project's configuration clusters containing those classes to generate the  documentation for.</paragraph>
 		<paragraph>The 
 			<bold>Excluded Clusters</bold>list is the list of clusters that  will not have documentation generated for them and the 
 			<bold>Included Clusters </bold>  list will. You can include/exclude clusters using one of the four selection  buttons 
@@ -116,7 +116,7 @@
 			<size>2</size>Generate Documentation
 		</heading>
 		<paragraph>Now that you have configured the HTML Report Wizard to generate the  desired amount of documentation for the selected project configuration, click
-			<bold>  Finish</bold> to generate the documentation in the choosen path and  complete the wizard.
+			<bold>  Finish</bold> to generate the documentation in the chosen path and  complete the wizard.
 		</paragraph>
 		<line_break/>
 		<seealso>

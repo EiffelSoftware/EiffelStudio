@@ -38,7 +38,7 @@
 			<size>2</size>Debugger
 		</heading>
 		<list ordered="false">
-			<item>Right-clicking on one of the run buttons will popup a dialog enabling you to choose the command line argument (it is a shortcut for `Project Settings'-&gt; Debug tab).</item>
+			<item>Right-clicking on one of the run buttons will pop up a dialog enabling you to choose the command line argument (it is a shortcut for `Project Settings'-&gt; Debug tab).</item>
 			<item>Expressions can now be dynamically evaluated in the debugger. (
 				<link>
 					<url>../40_debugger/50_expression_evaluation/index.xml</url>

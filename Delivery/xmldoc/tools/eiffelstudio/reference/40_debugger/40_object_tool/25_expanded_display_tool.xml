@@ -20,7 +20,7 @@
 				<url>/images/eiffelstudio/debugger/expanded_display_default.png</url>
 			</image>
 		</paragraph>
-		<paragraph>If the limts are over the current slice limits, the displayed string will end by "..." to show there is more.
+		<paragraph>If the limits are over the current slice limits, the displayed string will end by "..." to show there is more.
 	<line_break></line_break>
 			 If you click on the auto expand button 
 			<image>

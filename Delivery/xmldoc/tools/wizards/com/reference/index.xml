@@ -8,37 +8,37 @@
 			<item>
 				<link>
 					<url>01_introduction_d.xml</url>
-					<label>Introduction Dialog and MainWindow</label>
+					<label>Introduction Dialog and Main Window</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>02_generated_code_type_d.xml</url>
-					<label>Generated Code TypeDialog</label>
+					<label>Generated Code Type Dialog</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>03_definition_file_d.xml</url>
-					<label>Definition FileDialog</label>
+					<label>Definition File Dialog</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>04_eiffel_project_file_d.xml</url>
-					<label>Eiffel Project FileDialog</label>
+					<label>Eiffel Project File Dialog</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>05_destination_folder_d.xml</url>
-					<label>Destination FolderDialog</label>
+					<label>Destination Folder Dialog</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>06_idl_marshalling_d.xml</url>
-					<label>IDL Marshaling DefinitionDialog</label>
+					<label>IDL Marshaling Definition Dialog</label>
 				</link>
 			</item>
 			<item>
@@ -62,7 +62,7 @@
 			<item>
 				<link>
 					<url>10_eiffel_project_processing.xml</url>
-					<label>Eiffel ProjectProcessing</label>
+					<label>Eiffel Project Processing</label>
 				</link>
 			</item>
 			<item>
@@ -80,7 +80,7 @@
 			<item>
 				<link>
 					<url>13_accessing_component.xml</url>
-					<label>Accessing aComponent</label>
+					<label>Accessing a Component</label>
 				</link>
 			</item>
 			<item>

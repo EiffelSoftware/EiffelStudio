@@ -19,7 +19,7 @@
 								<class_name>EV_TITLED_WINDOW</class_name>
 							</code>, this feature performs the initialization of the  window, and any custom initialization required for your window, can be added  here. 
 							<code>
-								<feature_name>intialize</feature_name>
+								<feature_name>initialize</feature_name>
 							</code> is executed as a result of calling  
 							<code>
 								<feature_name>default_create</feature_name>
@@ -33,7 +33,7 @@
 						<item>
 							<code>
 								<feature_name>close_requested</feature_name>
-							</code> - Destroys the window. Connected to the  close_request_actions of the window during intialize.  The close_request_actions are fired when a user  attempts to close the window, and if you wish to override the default  behaviour, add your code to this feature. 
+							</code> - Destroys the window. Connected to the  close_request_actions of the window during initialize.  The close_request_actions are fired when a user  attempts to close the window, and if you wish to override the default  behavior, add your code to this feature. 
 						</item>
 					</list>
 					<paragraph>For more information regarding the use of 
@@ -46,7 +46,7 @@
 							<label>here</label>
 						</link>
 					</paragraph>
-					<paragraph>Appearence of an  
+					<paragraph>Appearance of an  
 						<code>
 							<class_name>EV_TITLED_WINDOW</class_name>
 						</code>:

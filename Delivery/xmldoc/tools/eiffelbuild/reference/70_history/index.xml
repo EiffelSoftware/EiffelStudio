@@ -85,7 +85,7 @@
 			<bold>View</bold> menu to show the history window, and click the 
 			<bold>Close</bold> button to close the window manually.
 		</paragraph>
-		<paragraph>Looking at the screenshot above, you will see that the the last action in the history list is selected. This is always the case while working, until you start undoing your changes. To go back three steps, so that (in this case), there is just the one BUTTON added to the HORIZONTAL_BOX, you could click the undo button on the 
+		<paragraph>Looking at the screenshot above, you will see that the last action in the history list is selected. This is always the case while working, until you start undoing your changes. To go back three steps, so that (in this case), there is just the one BUTTON added to the HORIZONTAL_BOX, you could click the undo button on the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> main toolbar</label>

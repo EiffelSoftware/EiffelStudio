@@ -1,7 +1,7 @@
 <document output="envision" title="Debugging">
 	<meta_data/>
 	<paragraph>
-		<paragraph>  Debugging is the process of tracing the execution of your Project while it is  running, to find any bugs that are occuring in the project. This is achieved by  stepping through the Projects source code, line by line, and comparing the  actual execution of the Project with the desired execution. When anomalies are  found, they cannot be fixed until the debugging process is ended as you must  end the debugging in order to edit the source code of the Project and  recompile. This process will often be repeated until all known bugs are found. </paragraph>
+		<paragraph>  Debugging is the process of tracing the execution of your Project while it is  running, to find any bugs that are occurring in the project. This is achieved by  stepping through the Projects source code, line by line, and comparing the  actual execution of the Project with the desired execution. When anomalies are  found, they cannot be fixed until the debugging process is ended as you must  end the debugging in order to edit the source code of the Project and  recompile. This process will often be repeated until all known bugs are found. </paragraph>
 		<paragraph>  Rather than having to execute your Project line by line until you reach the code  that you wish to debug,  
 			<link>
 				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints/index.xml</url>
@@ -63,7 +63,7 @@
 				<link>
 					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints/index.xml</url>
 					<label>Break Points</label>
-				</link>  from the Project. In the screenshot above, this entry is greyed out as there  are no  
+				</link>  from the Project. In the screenshot above, this entry is grayed out as there  are no  
 				<link>
 					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints/index.xml</url>
 					<label>Break Points</label>

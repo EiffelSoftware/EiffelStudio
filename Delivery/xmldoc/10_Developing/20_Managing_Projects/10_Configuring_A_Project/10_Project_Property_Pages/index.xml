@@ -7,11 +7,11 @@
 		</help>
 	</meta_data>
 	<paragraph>
-					<paragraph>Eiffel for Visual Studio.NET provides the facilities to modify your projects  setting via a number of property pages. The property pages can be used to  modify a single projects configuration (debug, release, etc), modify all  configurations in aproject, modify the configurations of multiple  projects ina multiple project solution, and even multiple configurations  for multiple projects. </paragraph>
+					<paragraph>Eiffel for Visual Studio.NET provides the facilities to modify your projects  setting via a number of property pages. The property pages can be used to  modify a single projects configuration (debug, release, etc), modify all  configurations in a project, modify the configurations of multiple  projects in a multiple project solution, and even multiple configurations  for multiple projects. </paragraph>
 					<heading>
 						<size>2</size>Understanding The Property Page Dialog
 					</heading>
-					<paragraph>  The property page dialog is a common dialog to Visual Studio, it allows the  manipulate of your projects setting.To discover whateach one of the  property pages does see the below section 
+					<paragraph>  The property page dialog is a common dialog to Visual Studio, it allows the  manipulate of your projects setting.To discover what each one of the  property pages does see the below section 
 						<link>
 							<anchor_name>property_pages</anchor_name>
 							<label>The Property  Pages</label>
@@ -21,7 +21,7 @@
 					<heading>
 						<size>2</size>Viewing in multiple configuration modes:
 					</heading>
-					<paragraph>There are two ways that a projects properties can be manipulated. Firstly  therea single configuration. This is a single selected project, where the  configuration property is set to either debug or release (or any other  configuration added to the project). The alternative way is to manipulate  multiple configurations. This is can be a single project with the configuration  property set to 'All Configurations' and/or multiple projects in the solution  are selected.</paragraph>
+					<paragraph>There are two ways that a projects properties can be manipulated. Firstly  there's single configuration. This is a single selected project, where the  configuration property is set to either debug or release (or any other  configuration added to the project). The alternative way is to manipulate  multiple configurations. This is can be a single project with the configuration  property set to 'All Configurations' and/or multiple projects in the solution  are selected.</paragraph>
 					<paragraph>
 						<line_break/>
 						<image>
@@ -74,7 +74,7 @@
 					<heading>
 						<size>2</size>The Property Pages
 					</heading>
-					<paragraph>In total there are seven independantly configurable property pages for an Eiffel  ENViSioN! project. </paragraph>
+					<paragraph>In total there are seven independently configurable property pages for an Eiffel  ENViSioN! project. </paragraph>
 					<list ordered="false">
 						<item>
 							<bold>General</bold>  - For all of the general (basic) project properties.

@@ -41,7 +41,7 @@
 					<label>STRING</label>
 				</link>, button2 becomes a  valid target for the pebble contained in button1. Right clicking  the mouse pointer over the 
 				<bold>source</bold> will start the transport, and right clicking  with the mouse pointer over a valid 
-				<bold>target</bold> will end the transport.  The transport can be cancelled anytime with a simple left click, just as you  would do in Eiffel Studio. 
+				<bold>target</bold> will end the transport.  The transport can be canceled anytime with a simple left click, just as you  would do in Eiffel Studio. 
 			</paragraph>
 			<note>
 				<bold>Note</bold>: When a transport completes, the 

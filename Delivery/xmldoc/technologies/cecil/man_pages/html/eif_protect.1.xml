@@ -17,12 +17,12 @@
 		<heading>
 			<size>2</size>RETURN VALUE
 		</heading>The 
-		<bold>eif_protect()</bold> function returns an EIF_OBJECT. ThisEIF_OBJECT can be used later on to access 
+		<bold>eif_protect()</bold> function returns an EIF_OBJECT. This EIF_OBJECT can be used later on to access 
 		<italic>ref</italic> with 
 		<bold>eif_access ()</bold>.
 		<heading>
 			<size>2</size>CONFORMANCE
-		</heading>ISE Eiffel 4. 4 and later.
+		</heading> Eiffel Software  Eiffel 4. 4 and later.
 		<heading>
 			<size>2</size>COMPATIBILTY
 		</heading>It is equivalent to 

@@ -36,7 +36,7 @@
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>BreakPoint
 			</help_link>  representation, often in the editor or the breakpoint window, and selecting 
-			<bold>BreakpointProperties...</bold>  from the context menu.
+			<bold>Breakpoint Properties...</bold>  from the context menu.
 		</paragraph>
 		<paragraph>
 			<image>
@@ -241,7 +241,7 @@
 					<tab_index>0</tab_index>
 					<keywords>Eiffel break points</keywords>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>Break Point
-				</help_link>. A hit count specifies the number of times that the breakpoint must be reached before theexecution will stop. If you also have a condition on the 
+				</help_link>. A hit count specifies the number of times that the breakpoint must be reached before the execution will stop. If you also have a condition on the 
 				<help_link>
 					<tab_index>0</tab_index>
 					<keywords>Eiffel break points</keywords>

@@ -20,6 +20,6 @@
 					<heading>
 						<size>2</size>Deployment Merge Modules
 					</heading>
-					<paragraph>  If your project is using one of the provided ebcl precompiled libraries  thereare merge module available foruse, if desired. These merge  modules will automatically be referenced when deploying a project using one of  the provided precompiled libraries. </paragraph>
+					<paragraph>  If your project is using one of the provided ebcl precompiled libraries  there are merge module available for use, if desired. These merge  modules will automatically be referenced when deploying a project using one of  the provided precompiled libraries. </paragraph>
 				
 	</paragraph></document>

@@ -47,7 +47,7 @@
 				<link>
 					<url>/libraries/vision2/content/10_widgets/20_common_dialogs/index.xml</url>
 					<label>Dialogs</label>
-				</link>         -- These are popup dialog windows used for interacting with the user for tasks such as opening a  file (EV_FILE_OPEN_DIALOG) or displaying a message (EV_MESSAGE_DIALOG).  You may construct your own dialogs by inheriting EV_DIALOG. 
+				</link>         -- These are pop up dialog windows used for interacting with the user for tasks such as opening a  file (EV_FILE_OPEN_DIALOG) or displaying a message (EV_MESSAGE_DIALOG).  You may construct your own dialogs by inheriting EV_DIALOG. 
 			</item>
 		</list>
 		<heading>

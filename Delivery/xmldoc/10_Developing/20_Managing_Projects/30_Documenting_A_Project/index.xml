@@ -16,7 +16,7 @@
 					<heading>
 						<size>2</size>Documentation Checklist
 					</heading>
-					<paragraph>  The only prerequiste of documenting an Eiffel ENViSioN! project is that the  project be compiled successfully as the HTML Report Project Wizard requires and  makes use of the compiled project epr file. </paragraph>
+					<paragraph>  The only prerequisite of documenting an Eiffel ENViSioN! project is that the  project be compiled successfully as the HTML Report Project Wizard requires and  makes use of the compiled project epr file. </paragraph>
 					<heading>
 						<size>2</size>Visual Studio.NET Help Projects
 					</heading>

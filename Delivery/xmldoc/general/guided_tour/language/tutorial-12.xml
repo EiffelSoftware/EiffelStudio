@@ -42,7 +42,7 @@
 		<paragraph>where 
 			<code>
 				<feature_name>r</feature_name>
-			</code> is the name of a routine of the enclosing class.  This is an expression, which you may assign to a writable entity, or pass as argument to aroutine.  Here for example is how you will specify event handling in the style of the EiffelVision 2 GUI library:
+			</code> is the name of a routine of the enclosing class.  This is an expression, which you may assign to a writable entity, or pass as argument to a routine.  Here for example is how you will specify event handling in the style of the EiffelVision 2 GUI library:
 		</paragraph>
 <code_block>
 <feature_name>your_icon</feature_name>.<feature_name>click_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>your_routine</feature_name><symbol>)</symbol>
@@ -319,7 +319,7 @@
 		<paragraph>Assume for example that a cartographical application lets a user record the location of a city by clicking on the corresponding position on the map.  The application may do this through a procedure</paragraph>
 		<code_block>
 <feature_name>record_city</feature_name> <symbol>(</symbol><local_variable>cn</local_variable><symbol>:</symbol> <class_name>STRING</class_name>; <local_variable>pop</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name>; <local_variable>x</local_variable>, <local_variable>y</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol>
-	<comment>-- Record that the city of name name is at coordinates</comment>
+	<comment>-- Record that the city of name is at coordinates</comment>
 	<comment>-- x and y with population pop.</comment>
 </code_block>
 		<paragraph>Then you can associate it with the GUI through a call such as</paragraph>

@@ -1,7 +1,7 @@
 <document output="envision" title="Windows Service Class">
 	<meta_data/>
 	<paragraph>
-					<paragraph>  The Windows Service class is used for creating Windows services.The class  contains all of the defaultimplmentation required to create a windows  service. </paragraph>
+					<paragraph>  The Windows Service class is used for creating Windows services.The class  contains all of the default implementation required to create a windows  service. </paragraph>
 					<paragraph>Please ensure you have the 
 						<code>
 							<class_name>System.ServiceProcess</class_name>

@@ -107,7 +107,7 @@
 			</code> itself inherit from 
 			<code>
 				<class_name>NUMERIC</class_name>
-			</code>, you ensure that it satisfies itsown generic constraint and enable the definition of types such as 
+			</code>, you ensure that it satisfies its own generic constraint and enable the definition of types such as 
 			<code>
 				<class_name>VECTOR</class_name>
 			</code> 

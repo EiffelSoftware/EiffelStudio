@@ -30,8 +30,8 @@
 					<label>ancestors</label>
 				</link>.  Selecting an object in this pane will display the features defined in this  object only in the Members pane, and to see all the features available for the  object, select the all features node.
 			</item>
-			<item>  Members - Situated at the top right hand side of the object broswer, this pane  displays the current members of the selected item in the Objects pane. Certain  selections, such as ancestors, have no members, as the information is displayed  in the Objects pane when the node is expanded.  </item>
-			<item>  Description - Pertinent information regarding the selected item in the Objects  pane or Members pane will be displayed in this pane. Fot some selections, this  pane may be empty, as there will be no information on the currently selected  node.  </item>
+			<item>  Members - Situated at the top right hand side of the object browser, this pane  displays the current members of the selected item in the Objects pane. Certain  selections, such as ancestors, have no members, as the information is displayed  in the Objects pane when the node is expanded.  </item>
+			<item>  Description - Pertinent information regarding the selected item in the Objects  pane or Members pane will be displayed in this pane. For some selections, this  pane may be empty, as there will be no information on the currently selected  node.  </item>
 		</list>
 		<paragraph>  The toolbar at the very top of the object browser allows you to modify the  information displayed. </paragraph>
 		<paragraph>  Double clicking an Eiffel class or a feature in the object browser will  automatically open up its definition in the 

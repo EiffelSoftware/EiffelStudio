@@ -244,7 +244,7 @@ EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj);
 		<paragraph/>
 		<list ordered="false">
 			<item>
-				<bold>Never precompute the value returned by eif_access. </bold>
+				<bold>Never pre compute the value returned by eif_access. </bold>
 				<line_break/><bold>Example:</bold>
 				<line_break/><underline>Example:</underline>
 				<line_break/>  Instead of the code above, it would have been dangerous to write: 
@@ -446,7 +446,7 @@ main (int argc,char **argv,char **envp)
 			<line_break/> 
 			<bold> EIF_OBJECT eif_protect (EIF_REFERENCE object)</bold>
 		</paragraph>
-		<paragraph>This function is used to tell explicitely the GC that you want to keep a reference to an eiffel object from the C. It returns a static indirection pointer which is to be used afterwards to access the direct Eiffel reference object with eif_access (returned_value) where returned_value is the value returned by eif_protect . With this call, the GC artificially references object, so that it cannot collect it. It is unsafe to access directly (i.e without using eif_access) the Eiffel reference object, which may be obsolete after any collection cycle (the GC moves the objects). Ignore this rule, if you are sure that there is no Eiffel call after you pass the direct Eiffel reference to a C function and before you read it. </paragraph>
+		<paragraph>This function is used to tell explicitly the GC that you want to keep a reference to an eiffel object from the C. It returns a static indirection pointer which is to be used afterwards to access the direct Eiffel reference object with eif_access (returned_value) where returned_value is the value returned by eif_protect . With this call, the GC artificially references object, so that it cannot collect it. It is unsafe to access directly (i.e without using eif_access) the Eiffel reference object, which may be obsolete after any collection cycle (the GC moves the objects). Ignore this rule, if you are sure that there is no Eiffel call after you pass the direct Eiffel reference to a C function and before you read it. </paragraph>
 		<paragraph>To release this artificial reference, call eif_wean (returned_value)</paragraph>
 		<paragraph>eif_protect is to be called on an EIF_REFERENCE returned by eif_attribute, eif_string, or the returned value of eif_reference_function. </paragraph>
 		<paragraph>See also eif_adopt, eif_create, eif_wean, eif_access. </paragraph>
@@ -577,7 +577,7 @@ EIF_REFERENCE foo () {
 		<bold> # include "eif_cecil. h"</bold> 
 		<paragraph> EIFFEL_TYPE eif_attribute (EIF_REFERENCE object, char *name, EIFFEL_TYPE, int *status)</paragraph>
 		<paragraph>Return the attribute of an Eiffel object. </paragraph>
-		<paragraph>The `eif_attribute' macro returns the attribute of object of name name, which is of type EIFFEL_TYPE. </paragraph>
+		<paragraph>The `eif_attribute' macro returns the attribute of object of name, which is of type EIFFEL_TYPE. </paragraph>
 		<paragraph>EIFFEL_TYPE is the type of the Eiffel attribute. It can be: EIF_INTEGER, EIF_POINTER, EIF_CHARACTER, EIF_BOOLEAN, EIF_DOUBLE, EIF_REAL or EIF_REFERENCE. </paragraph>
 		<paragraph>If status is NULL then no status is set. Otherwise the status of the function is put in *status:
 			<line_break/> *status = EIF_NO_ATTRIBUTE =&gt; no attribute found. 
@@ -691,7 +691,7 @@ printf ("type is %d\n");    /* Should be EIF_INTEGER_TYPE since it returns an Ei
 </code_block>
 		</paragraph>
 		<tip>
-			<bold>Tip</bold>: *(EIFFEL_TYPE *) eif_attribute_safe (EIF_REFERENCE object, char *name, int type_int, int *status) can be used for debugging or type checking. It returns the attribute reference of name name from the object object of type type_int. status contains the status of the function call: it can be EIF_CECIL_OK, EIF_CECIL_ERROR, EIF_NO_ATTRIBUTE or EIF_WRONG_TYPE (type_int does not match with real type of object). 
+			<bold>Tip</bold>: *(EIFFEL_TYPE *) eif_attribute_safe (EIF_REFERENCE object, char *name, int type_int, int *status) can be used for debugging or type checking. It returns the attribute reference of name from the object of type type_int. status contains the status of the function call: it can be EIF_CECIL_OK, EIF_CECIL_ERROR, EIF_NO_ATTRIBUTE or EIF_WRONG_TYPE (type_int does not match with real type of object). 
 		</tip>
 		<heading>
 			<size>3</size>Getting the class name corresponding to a type id: eif_name

@@ -89,7 +89,7 @@
 						<url>/images/eiffelbuild/screenshots/constant_in_use.png</url>
 					</image>
 				</paragraph>
-				<paragraph>As objects are reliant on the constant you are removing, you must confirm that you really wish to remove it from the system. If you select "OK", the constant is removed, and the object property relying on that constant is converted to a manifest value. For example, if you are using an Integer constant with a value fo 100, and you remove the constant, the property no longer references the constant, but is set explicitly to 100.</paragraph>
+				<paragraph>As objects are reliant on the constant you are removing, you must confirm that you really wish to remove it from the system. If you select "OK", the constant is removed, and the object property relying on that constant is converted to a manifest value. For example, if you are using an Integer constant with a value of 100, and you remove the constant, the property no longer references the constant, but is set explicitly to 100.</paragraph>
 				<note>
 					<bold>Note</bold>: You may sort the constants displayed in the dialog, by clicking the associated column header.
 				</note>
@@ -146,7 +146,7 @@
  		<keyword>end</keyword></code_block>
 			</item>
 			<item>
-				<bold>Relative</bold> - The generated code contains a constant of type EV_PIXMAP, built from a file name and a directory constant. This type of pixmap constant is the most frequently used, as it is more flexible. By redefining the value of the directory constant on which it is based, your systems may easily account for the intallation location of the pixmap. A relative Pixmap constant is generated as follows:
+				<bold>Relative</bold> - The generated code contains a constant of type EV_PIXMAP, built from a file name and a directory constant. This type of pixmap constant is the most frequently used, as it is more flexible. By redefining the value of the directory constant on which it is based, your systems may easily account for the installation location of the pixmap. A relative Pixmap constant is generated as follows:
 				<code_block>
 	<feature_name>main_pixmap</feature_name><symbol>:</symbol> <class_name>EV_PIXMAP</class_name> <keyword>is</keyword>
 			<comment>-- `Result' is PIXMAP constant named main_pixmap.</comment>

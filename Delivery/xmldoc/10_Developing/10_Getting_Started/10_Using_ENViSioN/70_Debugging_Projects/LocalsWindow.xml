@@ -21,7 +21,7 @@
 				<label>Object</label>
 			</link>  in which the execution has stopped.
 		</paragraph>
-		<paragraph>  The Locals Window consists of three columns, used to display the relevent information:</paragraph>
+		<paragraph>  The Locals Window consists of three columns, used to display the relevant information:</paragraph>
 		<list ordered="false">
 			<item>  Name - The name of the local, may also include 
 				<code>

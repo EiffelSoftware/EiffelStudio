@@ -38,7 +38,7 @@
 					<paragraph>  Eiffel has been around for a very long time (in software terms, that is), and  it uses a somewhat different object model than the inherent .NET model. As a  result, </paragraph>
 					<list ordered="false">
 						<item>  if you're a C# or Visual Basic .NET programmer, you'll have to look at .NET  types a little differently when using Eiffel for .NET  </item>
-						<item>  if you're an Eiffel programmer, you'll be looking at the .NET types  as if they were Eiffel classses, with some minor differences.  </item>
+						<item>  if you're an Eiffel programmer, you'll be looking at the .NET types  as if they were Eiffel classes, with some minor differences.  </item>
 					</list>
 					<paragraph>  The
 						<help_link>

@@ -45,7 +45,7 @@
 				<italic>Next</italic> again
 			</item>
 			<item>Click the top Browse button and open the file 
-				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.epr</italic>where $ISE_EIFFEL represents the path to your EIFFEL50directory.
+				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.epr</italic>where $ISE_EIFFEL represents the path to your Eiffel installation directory.
 			</item>
 			<item>Click the second Browse button and open the file 
 				<italic>$ISE_EIFFEL\examples\com\wizard\e2idl\ eproject\Ace.ace</italic> where $ISE_EIFFEL represents the path to your EIFFEL50 directory.

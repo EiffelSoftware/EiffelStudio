@@ -23,7 +23,7 @@
 			</code> the implementation of an effective routine starts with the keyword 
 			<code>
 				<keyword>once</keyword>
-			</code>, it will only be executed the first time the routine is called during a system execution (or, in a multithreaded environment, the first time in each thread), regardless of what the caller was. Subsequent calls from the same caller or others will have no effect; if the routine is a function, it will always return the result computed by the first call -- object if an expanded type, reference otherwise.
+			</code>, it will only be executed the first time the routine is called during a system execution (or, in a multi-threaded environment, the first time in each thread), regardless of what the caller was. Subsequent calls from the same caller or others will have no effect; if the routine is a function, it will always return the result computed by the first call -- object if an expanded type, reference otherwise.
 		</paragraph>
 		<paragraph>In the case of procedures, this provides a convenient initialization mechanism. A delicate problem in the absence of a 
 			<code>
@@ -435,7 +435,7 @@
 		</heading>
 		<paragraph>One of the conditions for producing truly great reusable software is to recognize that although you should try to get everything right the first time around you won't always succeed. But if "good enough" may be good enough for application software, it's not good enough, in the long term, for reusable software. The aim is to get ever closer to the asymptote of perfection. If you find a better way, you must implement it. The activity of generalization, discussed as part of the lifecycle, doesn't stop at the first release of a reusable library.
 		</paragraph>
-		<paragraph>This raises the issue of backward compability: how to move forward with a better design, without compromising existing applications that used the previous version?</paragraph>
+		<paragraph>This raises the issue of backward compatibility: how to move forward with a better design, without compromising existing applications that used the previous version?</paragraph>
 		<paragraph>The notion of obsolete class and feature helps address this issue. By declaring a feature as 
 			<code>
 				<keyword>obsolete</keyword>

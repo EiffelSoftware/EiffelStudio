@@ -54,7 +54,7 @@
 				<code>
 					<class_name>DATAGRAM</class_name>
 				</code> for multiple inheritance 
-				<italic>. </italic>Only the classes below the dotted line are    part of EiffelNet; the others are part of EiffelBase, the fundamental    data structure and algorithm library of ISE Eiffel [2].
+				<italic>. </italic>Only the classes below the dotted line are    part of EiffelNet; the others are part of EiffelBase, the fundamental    data structure and algorithm library of  Eiffel Software  Eiffel [2].
 			</paragraph>
 			<paragraph>The most important property of this inheritance hierarchy is that it    shows how sockets fit within the overall structure. Thanks to the common    ancestor <code><class_name>IO_MEDIUM</class_name></code>,    socket classes have most of their features in common with files.</paragraph>
 			<paragraph>In normal usage, the only socket classes that you will need are four    classes appearing at the bottom of the above figure. They correspond to    two separate distinctions: single-machine versus multi-machine, and    reliable versus unreliable.</paragraph>

@@ -22,8 +22,8 @@
 				<label>second part</label>
 			</link> contains a more precise description of the Eiffel types, the protection mechanism as well as how to write and use C externals. 
 		</paragraph>
-		<paragraph>CECIL, designed by ISE, is the C library that permits C and C++ applications (as well as applications written in other languages) to take advantage of almost all Eiffel facilities: create Eiffel objects, apply features to them. The basics of CECIL are described in chapter 24 of the reference book on Eiffel, Eiffel: The Language, which covers interfaces between Eiffel and other languages. Important material can also be found in the ISE manual Eiffel: The Environment. </paragraph>
-		<paragraph>The CECIL documentation, man pages and examples are part of the standard delivery with the ISE Compiler 4. 5 and higher. </paragraph>
+		<paragraph>CECIL, designed by  Eiffel Software , is the C library that permits C and C++ applications (as well as applications written in other languages) to take advantage of almost all Eiffel facilities: create Eiffel objects, apply features to them. The basics of CECIL are described in chapter 24 of the reference book on Eiffel, Eiffel: The Language, which covers interfaces between Eiffel and other languages. Important material can also be found in the  Eiffel Software  manual Eiffel: The Environment. </paragraph>
+		<paragraph>The CECIL documentation, man pages and examples are part of the standard delivery with the  Eiffel Software  Compiler 4. 5 and higher. </paragraph>
 		<paragraph>The present document complements the descriptions of Eiffel: The Language. Note that CECIL has been revised and improved since that book was published, so the explanations below have precedence over those in the book. </paragraph>
 		<paragraph>This document is intended for both Windows and Unix users. Only a few of the sections, clearly marked, are platform-specific. </paragraph>To access Eiffel mechanisms from C or other external languages: 
 		<list ordered="false">

@@ -11,7 +11,7 @@
 			<link>
 				<url>/libraries/wel/samples/tutorial/step7/index.xml</url>
 				<label>step 7</label>
-			</link>, and also demonstrates the use of a <link><url>../../../reference/stddlgs/wel_open_file_dialog_chart.xml</url><label>WEL_OPEN_FIALOG_DIALOG</label></link> and a <link><url>../../../reference/stddlgs/wel_save_file_dialog_chart.xml</url><label>WEL_SAVE_FILE_DIALOG</label></link>. The output is shown below: 
+			</link>, and also demonstrates the use of a <link><url>../../../reference/stddlgs/wel_open_file_dialog_chart.xml</url><label>WEL_OPEN_FILE_DIALOG</label></link> and a <link><url>../../../reference/stddlgs/wel_save_file_dialog_chart.xml</url><label>WEL_SAVE_FILE_DIALOG</label></link>. The output is shown below: 
 		</paragraph>
 		<image> 
 			<url>step8.png</url> 

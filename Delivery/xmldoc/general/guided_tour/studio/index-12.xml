@@ -390,7 +390,7 @@
 				</heading>
 				<paragraph>Particularly interesting are the editor's 
 					<bold>automatic completion</bold> facilities.  Well, particularly interesting for 
-					<span>most</span> people: maybe you like your editor to do the gruntwork for you, or maybe you don't.  In the latter case -- if you prefer to be in control of all the details -- don't worry: through 
+					<span>most</span> people: maybe you like your editor to do the grunt work for you, or maybe you don't.  In the latter case -- if you prefer to be in control of all the details -- don't worry: through 
 					<code>
 						<keyword>Tools</keyword>
 					</code>

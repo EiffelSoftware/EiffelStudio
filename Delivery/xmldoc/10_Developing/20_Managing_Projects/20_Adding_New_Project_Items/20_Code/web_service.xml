@@ -1,7 +1,7 @@
 <document output="envision" title="Web Service">
 	<meta_data/>
 	<paragraph>
-					<paragraph>The Web Service class is for creating Web Services to use from other  application. The class contains all of the defaultimplmentation required  to create a web service class. You may add any number of features to this class  however by default they will not be exported. To add a 'Web Method' you must  declare individual items with the 
+					<paragraph>The Web Service class is for creating Web Services to use from other  application. The class contains all of the default implementation required  to create a web service class. You may add any number of features to this class  however by default they will not be exported. To add a 'Web Method' you must  declare individual items with the 
 						<code>
 							<class_name>WEB_METHOD_ATTRIBUTE</class_name>
 						</code>. Please review the  example below.

@@ -89,7 +89,7 @@
 							<link>
 								<url>libraries/base/index.xml</url>
 								<label>EiffelBase</label>
-							</link>: ISE's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.
+							</link>: Eiffel Software's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.
 						</item>
 						<item>
 							<link>
@@ -197,7 +197,7 @@
 			<paragraph>Eiffel is a full-lifecycle methodology and language for quality software development, based on the most advanced version of object technology and the concepts of Design by Contract.</paragraph>
 			<paragraph>Eiffel Software's Eiffel is available on many platforms and is one of the first development environments to take advantage of the Microsoft .NET framework.</paragraph>
 			<paragraph> ENViSioN! comes with extensive online documentation. Please take the time to read the documentation included with ENViSioN! so that you can make the best possible use of the language, methodology, and environment.</paragraph>
-			<paragraph>Here is your roadmap to Eiffel documentation.</paragraph>
+			<paragraph>Here is your road map to Eiffel documentation.</paragraph>
 			<heading>
 				<size>2</size>General documentation
 			</heading>Make sure to read the introductory documentation, which includes:

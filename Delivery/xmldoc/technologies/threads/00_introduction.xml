@@ -1,7 +1,7 @@
 <document title="Introduction to EiffelThread" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Information about usage of threads in ISE Eiffel is contained in the 
+		<paragraph>Information about usage of threads in  Eiffel Software  Eiffel is contained in the 
 			<link>
 				<url>/libraries/thread/index.xml</url>
 				<label>EiffelThread library</label>

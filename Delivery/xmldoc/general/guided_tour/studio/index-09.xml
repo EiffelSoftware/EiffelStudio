@@ -46,7 +46,7 @@
 			<code>
 				<keyword>XMI Export</keyword>
 			</code>
-			<span>...</span>, is directly relevant too: it will make it possible to export information in the standard XML representation for UML, for consumption by third-party products such as Rational's Rose.  But for the moment we choose the 
+			<span>...</span>, is directly relevant too: it will make it possible to export information in the standard XML representation for UML, for consumption by third-party products such as Rational Rose.  But for the moment we choose the 
 			<code>
 				<keyword>Documentation</keyword>
 			</code> entry to start the Eiffel Documentation Wizard.
@@ -223,7 +223,7 @@
 			</code> tags found anywhere in the system; those on the right will be retained for metatags.  Initially the 
 			<code>
 				<keyword>Exclude</keyword>
-			</code> list on the left contains three tags conventionally used -- at ISE and other Eiffel sites -- for interfacing with configuration management tools, and hence of internal interest only.
+			</code> list on the left contains three tags conventionally used -- at  Eiffel Software  and other Eiffel sites -- for interfacing with configuration management tools, and hence of internal interest only.
 		</paragraph>
 		<paragraph>There is no need to change the default selection, so just click 
 			<code>
@@ -513,7 +513,7 @@
 				</code_block>
 			</item>
 		</list>
-		<paragraph>The documentation generation mechanisms, using HTML or other formats, let you publish your designs, at the level of detail you desire, on an Intranet, the Internet, or as part of documents you release.  They are an important part of the power of ISE Eiffel for quality software development.  </paragraph>
+		<paragraph>The documentation generation mechanisms, using HTML or other formats, let you publish your designs, at the level of detail you desire, on an Intranet, the Internet, or as part of documents you release.  They are an important part of the power of  Eiffel Software  Eiffel for quality software development.  </paragraph>
 		<paragraph>
 			<link>
 				<url>index-08.xml</url>

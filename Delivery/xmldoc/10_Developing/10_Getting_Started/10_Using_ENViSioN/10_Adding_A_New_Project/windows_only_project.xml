@@ -45,7 +45,7 @@
 		<paragraph>This page allows you to modify the type of application that the wizard will  generate upon completion. You may select one of the following two options:</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>Frame Application</bold>: Selecting this option will cause the wizard to generate a frame based  application. This uses a main window or "frame", which can have menus,  subwindows etc.
+				<bold>Frame Application</bold>: Selecting this option will cause the wizard to generate a frame based  application. This uses a main window or "frame", which can have menus,  sub windows etc.
 			</item>
 			<item>
 				<bold>Dialog Application</bold>: Selecting this option will cause the wizard to  generate a dialog based application. This uses a sequence of dialogs for the  application.

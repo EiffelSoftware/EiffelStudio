@@ -130,7 +130,7 @@
 				<italic>check_vape </italic>(
 					<bold>yes</bold> | no)
 				: enables you to disable type checking for 
-				<code><compiler_error>VAPE</compiler_error></code> errors in preconditions, which correspond to unsufficiently exported features used in preconditions (ETL 2nd edition page 122).
+				<code><compiler_error>VAPE</compiler_error></code> errors in preconditions, which correspond to insufficiently exported features used in preconditions (ETL 2nd edition page 122).
 			</item>
 			<item>
 				<italic>console_application </italic>(yes |
@@ -441,7 +441,7 @@
 				</row>
 			</table>
 		</paragraph>
-		<paragraph>Introduced with ISE EiffelBench 4.5 the keyword <code><keyword>all</keyword></code> can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
+		<paragraph>Introduced with  Eiffel Software  EiffelBench 4.5 the keyword <code><keyword>all</keyword></code> can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
 			<code_block>
 		<comment>-- EiffelBase</comment>
 	<keyword>all</keyword> base: "$ISE_EIFFEL\library\base"

@@ -51,7 +51,7 @@
 		</heading>
 		<list ordered="false">
 			<item>New documentation generation (limited now to HTML) which is completely clickable as if within EiffelStudio. It also includes an EiffelCase-like documentation generation.</item>
-			<item>Generation of XMI which can be used in tools such as RationalRose.</item>
+			<item>Generation of XMI which can be used in tools such as Rational Rose.</item>
 		</list>
 		<heading>
 			<size>2</size>Libraries

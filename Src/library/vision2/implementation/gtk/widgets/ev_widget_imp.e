@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				real_signal_connect_after (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
+				real_signal_connect_after (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
 			else
 				real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
@@ -704,6 +704,12 @@ feature {NONE} -- Agent functions.
 			-- Translation agent used for size allocation events
 		once
 			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
+		end
+
+	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for size allocation events
+		once
+			Result := agent (App_implementation.gtk_marshal).configure_translate
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation

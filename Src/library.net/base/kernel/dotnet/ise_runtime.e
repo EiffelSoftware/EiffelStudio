@@ -1,7 +1,7 @@
 indexing
 	description: "Access to ISE runtime features for CLI"
 	external_name: "ISE.Runtime.RUN_TIME"
-	assembly: "ise_runtime", "5.2.0.0", "neutral", "def26f296efef469"
+	assembly: "ISE.Runtime", "5.2.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 

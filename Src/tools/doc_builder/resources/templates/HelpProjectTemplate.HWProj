@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<HelpWorkshopProject>
+	<ProjectFile Name="[!PROJECT_NAME].HxC"/>
+	<IncludeFile Name="[!PROJECT_NAME].HxF"/>
+	<Files>
+[!FILES]
+	</Files>
+	<Dirs>
+[!DIRECTORIES]
+	</Dirs>
+	<Options/>
+</HelpWorkshopProject>

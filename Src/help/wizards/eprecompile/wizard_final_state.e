@@ -306,8 +306,6 @@ feature {NONE} -- Implementation
 					Result := -1
 				end
 			end
-		ensure
-			result_is_integer: Result /= Void
 		rescue
 			retried := True
 			retry

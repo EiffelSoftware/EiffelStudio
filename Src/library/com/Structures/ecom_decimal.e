@@ -68,7 +68,6 @@ feature  -- Access
 	scale: INTEGER is
 			-- Scale of value.  e.g. 123.45 has a scale of 2
 		require
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			Result := ccom_decimal_scale (item)
@@ -109,7 +108,6 @@ feature -- Conversion
 			-- Round value with `value' decimal places
 		require
 			valid_value: value >= 0
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -122,7 +120,6 @@ feature -- Conversion
 			-- Integer portion of decimal value. 
 			-- The first negative integer >= to the value is returned if the value is negative.
 		require
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -135,7 +132,6 @@ feature -- Conversion
 			-- Integer portion of a decimal value. The first negative integer 
 			-- <= to the value is returned if the value is negative.
 		require
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -147,7 +143,6 @@ feature -- Conversion
 	absolute: ECOM_DECIMAL is
 			-- Absolute value of decimal
 		require
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -167,7 +162,6 @@ feature -- Basic operations
 	prefix "-": ECOM_DECIMAL is
 			-- Negative value of decimal
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -177,7 +171,6 @@ feature -- Basic operations
 	infix "-" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Subtract with `other'
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -187,7 +180,6 @@ feature -- Basic operations
 	infix "+" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Add with `other'
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -197,7 +189,6 @@ feature -- Basic operations
 	infix "*" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Multiply by `other'
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -207,7 +198,6 @@ feature -- Basic operations
 	infix "/" (other: ECOM_DECIMAL): ECOM_DECIMAL is
 			-- Multiply by `other'
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 			create Result.make
@@ -217,7 +207,6 @@ feature -- Basic operations
 	prefix "+": ECOM_DECIMAL is
 			-- Unary plus
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 		end
@@ -225,7 +214,6 @@ feature -- Basic operations
 	infix "^" (other: NUMERIC):NUMERIC is
 			-- Current objects to the power 'other'
 		require else
-			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
 		end

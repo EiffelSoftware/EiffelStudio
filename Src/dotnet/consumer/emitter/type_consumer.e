@@ -114,6 +114,11 @@ feature -- Access
 	consumed_type: CONSUMED_TYPE
 			-- Consumed type last created or initialized
 
+feature {NONE} --Implementation
+
+	overload_solver: OVERLOAD_SOLVER
+
+
 feature -- Status Report
 
 	initialized: BOOLEAN
@@ -131,8 +136,8 @@ feature -- Basic Operation
 			rescued: BOOLEAN
 			i, nb, arg_count, index: INTEGER
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
-			l_functions, l_other_functions: ARRAY [CONSUMED_FUNCTION]
-			overload_solver: OVERLOAD_SOLVER
+			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
+			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
 			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
 			field: FIELD_INFO
@@ -143,7 +148,6 @@ feature -- Basic Operation
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
-			l_unic_eiffel_name: STRING
 		do
 			if not rescued then
 				check
@@ -152,6 +156,8 @@ feature -- Basic Operation
 				end
 				create tc.make
 				create l_fields.make (0)
+				create l_functions.make (0)
+				create l_procedures.make (0)
 				create l_properties.make (0)
 				create l_events.make (0)
 				create reserved_names.make (100)
@@ -170,7 +176,8 @@ feature -- Basic Operation
 					i := i + 1
 				end
 				
-					-- Add methods and fields.
+					-- Add all methods in overload_solver.
+					-- Add methods and fields in overload_solver
 				from
 					i := 0
 					nb := internal_members.count
@@ -187,6 +194,69 @@ feature -- Basic Operation
 						if is_consumed_method (meth) then
 							if not is_property_or_event (meth) then
 								overload_solver.add_method (meth)
+							else
+								-- The method will be added at the same time than the property or the event.
+							end
+						end
+					end
+					i := i + 1
+				end
+	
+					-- Add properties in overload_solver.
+				from
+					i := 0
+					nb := internal_properties.count
+				until
+					i = nb
+				loop
+					l_property := internal_properties.item (i)
+					check
+						non_void_l_propery: l_property /= Void
+					end
+					overload_solver.add_property (l_property)
+					i := i + 1
+				end
+	
+					-- Add events in overload_solver.
+				from
+					i := 0
+					nb := internal_events.count
+				until
+					i = nb
+				loop
+					l_event := internal_events.item (i)
+					check
+						non_void_l_event: l_event /= Void
+					end
+					overload_solver.add_event (l_event)
+					i := i + 1
+				end				
+
+					-- Resolve oveload conflicts.
+				overload_solver.set_reserved_names (reserved_names)
+				overload_solver.solve
+				
+--**********************************************************************************************				
+					-- Add methods and fields.
+				from
+					i := 0
+					nb := internal_members.count
+				until
+					i = nb
+				loop
+					member := internal_members.item (i)
+					if member.get_member_type = feature {MEMBER_TYPES}.method then
+						meth ?= member
+						check
+							is_method: meth /= Void
+						end
+						if is_consumed_method (meth) then
+							if not is_property_or_event (meth) then
+								if is_function (meth) then
+									l_functions.extend (consumed_function (meth))
+								else
+									l_procedures.extend (consumed_procedure (meth))
+								end
 							else
 								-- The method will be added at the same time than the property or the event.
 							end
@@ -211,8 +281,7 @@ feature -- Basic Operation
 					i = nb
 				loop
 					l_property := internal_properties.item (i)
-					l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_property.get_name))
-					l_properties.extend (consumed_property (l_property, l_unic_eiffel_name))
+					l_properties.extend (consumed_property (l_property))
 					i := i + 1
 				end
 	
@@ -224,8 +293,7 @@ feature -- Basic Operation
 					i = nb
 				loop
 					l_event := internal_events.item (i)
-					l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_event.get_name))
-					l_events.extend (consumed_event (l_event, l_unic_eiffel_name))
+					l_events.extend (consumed_event (l_event))
 					i := i + 1
 				end
 	
@@ -233,25 +301,21 @@ feature -- Basic Operation
 				consumed_type.set_events (l_events)
 				consumed_type.set_constructors (solved_constructors (tc))
 				consumed_type.set_fields (l_fields)
-				overload_solver.set_reserved_names (reserved_names)
-				overload_solver.solve
-				consumed_type.set_procedures (overload_solver.procedures)
-				l_functions := overload_solver.functions
+				consumed_type.set_procedures (l_procedures)
 				if consumed_type.is_enum then
 					from
-						i := 1
 						l_other_functions := l_functions
-						nb := l_other_functions.count
-						create l_functions.make (1, nb + Additional_enum_features)
+						l_other_functions.start
+						create l_functions.make (l_other_functions.count + Additional_enum_features)
 					until
-						i > nb
+						l_other_functions.after
 					loop
-						l_functions.put (l_other_functions.item (i), i)
-						i := i + 1
+						l_functions.extend (l_other_functions.item)
+						l_other_functions.forth
 					end
-					l_functions.put (infix_or_feature (internal_referenced_type), i)
-					l_functions.put (from_integer_feature (internal_referenced_type), i + 1)
-					l_functions.put (to_integer_feature (internal_referenced_type), i + 2)
+					l_functions.extend (infix_or_feature (internal_referenced_type))
+					l_functions.extend (from_integer_feature (internal_referenced_type))
+					l_functions.extend (to_integer_feature (internal_referenced_type))
 				end
 				consumed_type.set_functions (l_functions)			
 				initialized := True
@@ -348,17 +412,20 @@ feature {NONE} -- Implementation
 			non_void_arguments: Result /= Void
 		end
 
-	consumed_procedure (info: METHOD_INFO; eiffel_procedure_name: STRING): CONSUMED_PROCEDURE is
+	consumed_procedure (info: METHOD_INFO): CONSUMED_PROCEDURE is
 			-- Consumed procedure.
 		require
 			non_void_info: info /= Void
-			non_void_eiffel_procedure_name: eiffel_procedure_name /= Void
-			not_empty_eiffel_procedure_name: not eiffel_procedure_name.is_empty
 		local
 			l_arguments: ARRAYED_LIST [CONSUMED_ARGUMENT]
+			l_unique_eiffel_name: STRING
 		do
+			l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
+			check
+				non_void_eiffel_name: l_unique_eiffel_name /= Void
+			end
 			create Result.make (
-				eiffel_procedure_name,
+				l_unique_eiffel_name,
 				create {STRING}.make_from_cil (info.get_name),
 				consumed_arguments (info),
 				info.get_is_final,
@@ -369,15 +436,19 @@ feature {NONE} -- Implementation
 				referenced_type_from_type (info.get_declaring_type))		
 		end
 	
-	consumed_function (info: METHOD_INFO; eiffel_function_name: STRING): CONSUMED_FUNCTION is
+	consumed_function (info: METHOD_INFO): CONSUMED_FUNCTION is
 			-- Consumed function.
 		require
 			non_void_info: info /= Void
-			non_void_eiffel_function_name: eiffel_function_name /= Void
-			not_empty_eiffel_function_name: not eiffel_function_name.is_empty
+		local
+			l_unique_eiffel_name: STRING
 		do
+			l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters)
+			check
+				non_void_eiffel_name: l_unique_eiffel_name /= Void
+			end
 			create Result.make (
-				eiffel_function_name,
+				l_unique_eiffel_name,
 				create {STRING}.make_from_cil (info.get_name),
 				consumed_arguments (info),
 				referenced_type_from_type (info.get_return_type),
@@ -391,26 +462,32 @@ feature {NONE} -- Implementation
 				referenced_type_from_type (info.get_declaring_type))			
 		end
 	
-	consumed_property (info: PROPERTY_INFO; eiffel_property_name: STRING): CONSUMED_PROPERTY is
+	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY is
 			-- Process property `info'.
 		require
 			non_void_property_info: info /= Void
-			non_void_eiffel_property_name: eiffel_property_name /= Void
-			not_empty_eiffel_property_name: not eiffel_property_name.is_empty
 		local
 			dotnet_name: STRING
-			l_info: METHOD_INFO
+			l_info, l_info_setter: METHOD_INFO
+			l_eiffel_getter_property_name, l_eiffel_setter_property_name: STRING
 		do
-			l_info := info.get_get_method
-			if l_info = Void then
+			if info.get_can_read then
+				l_info := info.get_get_method
+				l_eiffel_getter_property_name := overload_solver.unique_eiffel_name (l_info.get_name, l_info.get_parameters)
+			end
+			if info.get_can_write then
 				l_info := info.get_set_method
+				l_eiffel_setter_property_name := overload_solver.unique_eiffel_name (l_info.get_name, l_info.get_parameters)
 			end
 			check
 				is_property: l_info /= Void
+				setter_or_getter_name_not_empty: l_eiffel_setter_property_name.is_empty implies not l_eiffel_getter_property_name.is_empty 
+				setter_or_getter_name_not_empty: l_eiffel_getter_property_name.is_empty implies not l_eiffel_setter_property_name.is_empty 
 			end
 			create dotnet_name.make_from_cil (info.get_name)
 			create Result.make (
-				eiffel_property_name,
+				l_eiffel_getter_property_name,
+				l_eiffel_setter_property_name,
 				dotnet_name,
 				consumed_arguments (l_info),
 				info.get_can_read,
@@ -423,26 +500,30 @@ feature {NONE} -- Implementation
 			non_void_property: Result /= Void
 		end
 		
-	consumed_event (info: EVENT_INFO; eiffel_event_name: STRING): CONSUMED_EVENT is
+	consumed_event (info: EVENT_INFO): CONSUMED_EVENT is
 			-- Process event `info'.
 		require
 			non_void_event_info: info /= Void
-			non_void_eiffel_event_name: eiffel_event_name /= Void
-			not_empty_eiffel_event_name: not eiffel_event_name.is_empty
 		local
 			l_add_method, l_remove_method, l_raise_method: METHOD_INFO
+			l_eiffel_raiser_event_name, l_eiffel_adder_event_name, l_eiffel_remover_event_name: STRING
 			dotnet_name: STRING
-			l_raiser: CONSUMED_PROCEDURE
+			l_raiser, l_adder, l_remover: CONSUMED_PROCEDURE
 			i, nb: INTEGER
 			l_parameter_type: CONSUMED_REFERENCED_TYPE
 		do
 			l_add_method := info.get_add_method
 			l_remove_method := info.get_remove_method
 			l_raise_method := info.get_raise_method
+
 			if l_raise_method /= Void then
 				create dotnet_name.make_from_cil (l_raise_method.get_name)
+				l_eiffel_raiser_event_name := overload_solver.unique_eiffel_name (l_raise_method.get_name, l_raise_method.get_parameters)
+				check
+					non_void_raiser_name: l_eiffel_raiser_event_name /= Void
+				end
 				create l_raiser.make (
-					eiffel_event_name,
+					l_eiffel_raiser_event_name,
 					dotnet_name,
 					consumed_arguments (l_raise_method),
 					l_raise_method.get_is_final,
@@ -452,21 +533,56 @@ feature {NONE} -- Implementation
 					True,
 					referenced_type_from_type (l_raise_method.get_declaring_type))
 			end
+			if l_add_method /= Void then
+				create dotnet_name.make_from_cil (l_add_method.get_name)
+				l_eiffel_adder_event_name := overload_solver.unique_eiffel_name (l_add_method.get_name, l_add_method.get_parameters)
+				check
+					non_void_adder_name: l_eiffel_adder_event_name /= Void
+				end
+				create l_adder.make (
+					l_eiffel_adder_event_name,
+					dotnet_name,
+					consumed_arguments (l_add_method),
+					l_add_method.get_is_final,
+					l_add_method.get_is_static,
+					l_add_method.get_is_abstract,
+					l_add_method.get_is_public,
+					True,
+					referenced_type_from_type (l_add_method.get_declaring_type))
+			end
+			if l_remove_method /= Void then
+				create dotnet_name.make_from_cil (l_remove_method.get_name)
+				l_eiffel_remover_event_name := overload_solver.unique_eiffel_name (l_remove_method.get_name, l_remove_method.get_parameters)
+				check
+					non_void_remover_name: l_eiffel_remover_event_name /= Void
+				end
+				create l_remover.make (
+					l_eiffel_remover_event_name,
+					dotnet_name,
+					consumed_arguments (l_remove_method),
+					l_remove_method.get_is_final,
+					l_remove_method.get_is_static,
+					l_remove_method.get_is_abstract,
+					l_remove_method.get_is_public,
+					True,
+					referenced_type_from_type (l_remove_method.get_declaring_type))
+			end
+
 			create dotnet_name.make_from_cil (info.get_name)
 			if l_add_method /= Void then
 				l_parameter_type := referenced_type_from_type (l_add_method.get_parameters.item (0).get_parameter_type)
 			elseif l_remove_method /= Void then
 				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).get_parameter_type)
 			end
-			create Result.make (
-				eiffel_event_name,
+			create Result.my_make (
+				dotnet_name,
 				dotnet_name,
 				True,
-				(l_add_method /= Void),
-				(l_remove_method /= Void),
 				l_parameter_type,
 				l_raiser,
-				referenced_type_from_type (info.get_declaring_type))
+				l_adder,
+				l_remover
+				)
 		ensure
 			non_void_event: Result /= Void
 		end

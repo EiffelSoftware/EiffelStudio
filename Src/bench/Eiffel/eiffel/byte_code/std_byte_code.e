@@ -316,8 +316,6 @@ feature -- Analyzis
 					-- For chained precondition (to implement or else...)
 				Context.generate_body_label
 			end
-				-- Generate old variables
-			generate_old_variables
 			if rescue_clause /= Void then
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
@@ -335,6 +333,9 @@ feature -- Analyzis
 
 				-- Generate local expanded variable creations
 			generate_expanded_variables
+
+				-- Generate old variables
+			generate_old_variables
 
 				-- Now we want the body
 			generate_compound

@@ -84,14 +84,36 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_creation_routine: CODE_CREATION_ROUTINE
+			l_member: CODE_MEMBER_REFERENCE
+			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
+			l_type: CODE_TYPE_REFERENCE
+			l_parent: CODE_MEMBER_REFERENCE
 		do
-			create l_creation_routine.make (".ctor", "make")
-			set_current_feature (l_creation_routine)
-			initialize_routine (a_source)
-			l_creation_routine.set_feature_kind (Initialization)
-			current_type.add_creation_routine (l_creation_routine)
-			set_current_feature (Void)
-			set_last_feature (l_creation_routine)
+			if current_type /= Void then
+				l_arguments := code_arguments (a_source.parameters)
+				l_type := Type_reference_factory.type_reference_from_code (current_type)
+				l_member := l_type.member (a_source.name, l_arguments)
+				check
+					exists: l_member /= Void
+				end
+				create l_creation_routine.make (a_source.name, l_member.eiffel_name)
+				if l_member.is_redefined then
+					l_parent := l_member.parent
+					if l_parent /= Void then
+						current_type.add_redefine_clause (l_parent.implementing_type, l_member)
+					end
+				end
+				l_creation_routine.set_arguments (l_arguments)
+				l_creation_routine.set_feature_kind (Initialization)
+				set_current_feature (l_creation_routine)
+				initialize_routine (a_source)
+				current_type.add_creation_routine (l_creation_routine)
+				set_current_feature (Void)
+				set_last_feature (l_creation_routine)
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
+				set_last_feature (Empty_routine)
+			end
 		ensure
 			non_void_last_feature: last_feature /= Void
 		end

@@ -23,6 +23,9 @@ inherit
 		end
 
 	EV_PIXMAP_CONTAINER_IMP
+		undefine
+			pixmap_size_ok
+		end
         
 	EV_GTK_BUTTONS_EXTERNALS
 

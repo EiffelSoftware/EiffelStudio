@@ -8,6 +8,8 @@ frozen expanded external class
 
 inherit
 	VALUE_TYPE
+		undefine
+			finalize
 		redefine
 			get_hash_code,
 			equals,

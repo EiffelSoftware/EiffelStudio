@@ -4,6 +4,12 @@ indexing
 
 class
 	ANY
+
+inherit
+	SYSTEM_OBJECT
+		redefine
+			finalize
+		end
 	
 feature {NONE} -- Initialization
 
@@ -295,6 +301,20 @@ feature -- Basic operations
 			-- Has to be exported, but should not be called by user code.
 		do
 			-- Built-in
+		end
+
+feature {NONE} -- Disposal
+
+	frozen finalize is
+			-- Action to be executed just before garbage collection
+			-- reclaims an object.
+		local
+			l_memory_object: MEMORY
+		do
+			l_memory_object ?= Current
+			if l_memory_object /= Void then
+				l_memory_object.dispose
+			end
 		end
 
 feature {NONE} -- Implementation

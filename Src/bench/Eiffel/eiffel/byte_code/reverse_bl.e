@@ -136,8 +136,8 @@ feature
 					generated_file.putint (cl_type_i.type_id - 1);
 				else
 					generated_file.putstring ("RTUD(");
-					generated_file.putint
-								(cl_type_i.associated_class_type.id.id - 1);
+					generated_file.putstring
+							(cl_type_i.associated_class_type.id.generated_id);
 					generated_file.putchar (')');
 				end;
 				generated_file.putstring (gc_comma);

@@ -64,7 +64,7 @@ feature
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
 				generated_file.putstring ("RTWO(");
-				generated_file.putint (real_body_id.id - 1);
+				generated_file.putstring (real_body_id.generated_id);
 				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line
 			end;

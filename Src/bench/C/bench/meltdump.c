@@ -38,9 +38,9 @@ static  void    panic ();
 
 /*------------------------------------------------------------------*/
 
-static  char    rchar (void);
-static  long    rlong (void);
-static  short   rshort (void);
+static  EIF_CHARACTER rchar (void);
+static  EIF_INTEGER rlong (void);
+static  EIF_INTEGER_16 rshort (void);
 static  uint32  ruint32 (void);
 static  void    rseq (int);
 static  char    *rbuf (int);
@@ -948,14 +948,13 @@ static  void    analyze_desc ()
 }
 /*------------------------------------------------------------------*/
 
-static  char    rchar ()
-
+static EIF_CHARACTER rchar ()
 {
-	char    result;
+	EIF_CHARACTER    result;
 
-	if (fread (&result, sizeof (char), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_CHARACTER), 1, ifp) != 1)
 	{
-		fprintf (stderr,"Read error (char)\n");
+		fprintf (stderr,"Read error (EIF_CHARACTER)\n");
 		panic ();
 	}
 
@@ -963,14 +962,13 @@ static  char    rchar ()
 }
 /*------------------------------------------------------------------*/
 
-static  long    rlong ()
-
+static EIF_INTEGER rlong ()
 {
-	long    result;
+	EIF_INTEGER result;
 
-	if (fread (&result, sizeof (long), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_INTEGER), 1, ifp) != 1)
 	{
-		fprintf (stderr,"Read error (long)\n");
+		fprintf (stderr, "Read error (EIF_INTEGER)\n");
 		panic ();
 	}
 
@@ -978,14 +976,13 @@ static  long    rlong ()
 }
 /*------------------------------------------------------------------*/
 
-static  short   rshort ()
-
+static EIF_INTEGER_16 rshort ()
 {
-	short    result;
+	EIF_INTEGER_16 result;
 
-	if (fread (&result, sizeof (short), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_INTEGER_16), 1, ifp) != 1)
 	{
-		fprintf (stderr,"Read error (short)\n");
+		fprintf (stderr,"Read error (EIF_INTEGER_16)\n");
 		panic ();
 	}
 

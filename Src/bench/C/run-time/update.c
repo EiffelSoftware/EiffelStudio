@@ -53,8 +53,16 @@ rt_private char **names_updt(short int count);		/* String array */
 rt_private void root_class_updt(void);		/* Update the root class info */
 rt_public long melt_count;				/* Size of melting table */
 
+/* Read information from byte code file `fil'. */
+rt_private void wread(char *buffer, size_t nbytes);
+rt_private EIF_INTEGER_16 wshort(void);
+rt_private int32 wint32(void);
+rt_private uint32 wuint32(void);
+rt_private int16 *wtype_array(int16 *);
+rt_private char *wclass_name(void);
+
 /* Writing constants (same as in interp.c!)*/
-rt_private void write_long(char *where, long int value);				/* Write long constant */
+rt_private void write_long(char *where, EIF_INTEGER value);				/* Write long constant */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
@@ -174,13 +182,13 @@ rt_public void update(char ignore_updt)
 		/* Update the root class and the creation feature ids */
 	root_class_updt ();
 
-	count = wlong();			/* Read the count of class types */
-	ccount = wlong();			/* Read the count of classes */
+	count = wint32();			/* Read the count of class types */
+	ccount = wint32();			/* Read the count of classes */
 #ifdef DEBUG
 	dprintf(1)("New class type count: %ld\n", count);
 #endif
 		/* Get the Eiffel profiler status */
-	egc_prof_enabled = wlong();
+	egc_prof_enabled = wint32();
 
 		/* Allocation of variable `esystem' */
 #if CONCURRENT_EIFFEL
@@ -209,7 +217,7 @@ rt_public void update(char ignore_updt)
 
 	scount = count;
 		/* Feature table update */
-	count = wlong();
+	count = wint32();
 #ifdef DEBUG
 	dprintf(1)("Number of feature tables to update: %d\n", count);
 #endif
@@ -221,7 +229,7 @@ rt_public void update(char ignore_updt)
 	routid_updt();
 
 		/* Updating of the melting table */
-	melt_count = wlong();		/* Read the size of the byte code array */
+	melt_count = wint32();		/* Read the size of the byte code array */
 #ifdef DEBUG
 	dprintf(1)("=== Size of melted table: %ld ===\n", melt_count);
 #endif
@@ -238,10 +246,10 @@ rt_public void update(char ignore_updt)
 
 	bonce_idx = 0;
 
-	while ((body_id = wlong()) != -1) {
+	while ((body_id = wint32()) != -1) {
 		CHECK ("Body positive", body_id >= 0);
-		bsize = wlong();
-		pattern_id = wlong();
+		bsize = wint32();
+		pattern_id = wint32();
 		mpatidtab[body_id] = (int) pattern_id;
 
 		SAFE_ALLOC (bcode, unsigned char, bsize);
@@ -299,33 +307,14 @@ rt_public void update(char ignore_updt)
 fclose(fil);
 }
 
-/* TEMPORARY */
-void wread(char *buffer, size_t nbytes)
-{
-#ifdef DEBUG
-	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
-#endif
-	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
-		print_err_msg(stderr, "Error: could not read Eiffel update file\n");
-		exit(1);
-	}
-#ifdef DEBUG
-{
-	int i;
-	for (i=0; i< nbytes; i++)
-		dprintf(8)("\t%d: %d\n", i + 1, buffer[i]);
-}
-#endif
-}
-
 rt_private void root_class_updt (void)
 {
 	/* Update the root class info */
 
-	egc_rcorigin = wlong();
-	egc_rcdt = wlong();
-	egc_rcoffset = wlong();
-	egc_rcarg = wlong();
+	egc_rcorigin = wint32();
+	egc_rcdt = wint32();
+	egc_rcoffset = wint32();
+	egc_rcarg = wint32();
 
 #ifdef DEBUG
 	dprintf(1)("Root class info:\n\tegc_rcorigin = %ld, egc_rcdt = %ld\n", egc_rcorigin, egc_rcdt);
@@ -370,7 +359,7 @@ rt_public void cnode_updt(void)
 #endif
 
 		/* 3. Number of attributes */
-	nbattr = wlong();
+	nbattr = wint32();
 	node->cn_nbattr = nbattr;
 #ifdef DEBUG
 	dprintf(4)("\tattribute number = %ld\n", node->cn_nbattr);
@@ -449,13 +438,13 @@ rt_public void cnode_updt(void)
 		node->cn_attr = (int32 *) 0;
 
 		/* 7. Reference number */
-	node->nb_ref = wlong();
+	node->nb_ref = wint32();
 #ifdef DEBUG
 	dprintf(4)("\n\treference number = %ld\n", node->nb_ref);
 #endif
 
 		/* 8. Node size */
-	node->size = wlong();
+	node->size = wint32();
 #ifdef DEBUG
 	dprintf(4)("\tsize = %ld\n", node->size);
 #endif
@@ -486,8 +475,8 @@ rt_public void routid_updt(void)
 	uint32 *feature_ids = (uint32 *) 0;
 	long size = 0;
 
-	while ((class_id = wlong()) != -1L) {
-		array_size = wlong();   /* Array size */
+	while ((class_id = wint32()) != -1L) {
+		array_size = wint32();   /* Array size */
 #ifdef DEBUG
 	dprintf(4)("Updating rids of class of id %ld [%ld]\n",
 		class_id, array_size);
@@ -507,16 +496,16 @@ rt_public void routid_updt(void)
 #endif
 		wread(&has_cecil, 1);		/* Cecil ? */
 		if (has_cecil) {
-			size = wlong();		/* Hash table size */
+			size = wint32();		/* Hash table size */
 			names = names_updt((short) size);
 			SAFE_ALLOC(feature_ids, uint32, size);
 			wread((char *) feature_ids, size * sizeof(uint32));
 		}
-		while ((dtype = wlong()) != -1L) {	/* Dynamic type */
+		while ((dtype = wint32()) != -1L) {	/* Dynamic type */
 #ifdef DEBUG
 	dprintf(4)("\tfor %s [dt = %ld]\n", System(dtype).cn_generator, dtype);
 #endif
-			orig_dtype = wlong();
+			orig_dtype = wint32();
 			Routids(orig_dtype) = cn_eroutid;
 			System(dtype).cn_routids = cn_eroutid;
 			if (has_cecil) {
@@ -801,7 +790,7 @@ rt_public void desc_updt(void)
 	struct desc_info *desc_ptr;
 	int i;
 
-	while ((count = wlong()) != -1L) {
+	while ((count = wint32()) != -1L) {
 		while (count-- > 0) {
 			type_id = wshort();
 			org_count = wshort();
@@ -831,37 +820,45 @@ rt_public void desc_updt(void)
 	}
 }
 
-rt_public short wshort(void)
+rt_private void wread(char *buffer, size_t nbytes)
+{
+#ifdef DEBUG
+	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
+#endif
+	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
+		print_err_msg(stderr, "Error: could not read Eiffel update file\n");
+		exit(1);
+	}
+#ifdef DEBUG
+{
+	int i;
+	for (i=0; i< nbytes; i++)
+		dprintf(8)("\t%d: %d\n", i + 1, buffer[i]);
+}
+#endif
+}
+
+rt_private EIF_INTEGER_16 wshort(void)
 {
 	/* Next short integer. */
 
-	short result;
+	EIF_INTEGER_16 result;
 
-	wread((char *)(&result), sizeof(short));
+	wread((char *)(&result), sizeof(EIF_INTEGER_16));
 	return result;
 }
 
-rt_public long wlong(void)
+rt_private EIF_INTEGER wint32(void)
 {
 	/* Next long integer. */
 
-	long result;
+	EIF_INTEGER result;
 
-	wread((char *)(&result), sizeof(long));
+	wread((char *)(&result), sizeof(EIF_INTEGER));
 	return result;
 }
 
-rt_public int32 wint32(void)
-{
-	/* Next int32. */
-
-	int32 result;
-
-	wread((char *)(&result), sizeof(int32));
-	return result;
-}
-
-rt_public uint32 wuint32(void)
+rt_private uint32 wuint32(void)
 {
 	/* Next uint32. */
 
@@ -871,7 +868,7 @@ rt_public uint32 wuint32(void)
 	return result;
 }
 
-rt_public int16 *wtype_array(int16 *target)
+rt_private int16 *wtype_array(int16 *target)
 {
 	/* Next array of type id's */
 	/* If `targetï is null, create new array */
@@ -909,7 +906,7 @@ rt_public int16 *wtype_array(int16 *target)
 	return tp;
 }
 
-rt_public char *wclass_name(void)
+rt_private char *wclass_name(void)
 {
 	/* Next class name. Create new string. */
 	/* Maximum length is hardwired to 256. */
@@ -937,20 +934,8 @@ rt_public char *wclass_name(void)
 	return np;
 }
 
-rt_private void write_long(char *where, long int value)
+rt_private void write_long(char *where, EIF_INTEGER value)
 {
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(long)];
-		long value;
-	} xlong;
-	register1 char *p = (char *) &xlong;
-	register2 int i;
-
-	xlong.value = value;
-
-	for (i = 0; i < sizeof(long); i++)
-		where [i] = *p++;
+	memcpy (where, &value, sizeof(EIF_INTEGER));
 }
 

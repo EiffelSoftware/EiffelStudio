@@ -157,9 +157,9 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 /* Getting constants */
 rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
 rt_private EIF_DOUBLE get_double(void);			/* Get a EIF_DOUBLE constant */
-rt_private long get_long(void);				/* Get a long constant */
+rt_private EIF_INTEGER get_long(void);				/* Get a long constant */
 rt_private EIF_INTEGER_64 get_int64(void);		/* Get an INTEGER_64 constant */
-rt_private short get_short(void);				/* Get a short constant */
+rt_private EIF_INTEGER_16 get_short(void);				/* Get a short constant */
 rt_private short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
 
 /* Interpreter interface */
@@ -5214,9 +5214,9 @@ rt_private void address(int32 fid, int stype, int for_rout_obj)
 	last->type = SK_POINTER;
 
 	if (for_rout_obj)
-		last->it_ptr = (char *) RTWPPR(stype, fid);
+		last->it_ptr = (EIF_POINTER) RTWPPR(stype, fid);
 	else
-		last->it_ptr = (char *) RTWPP(stype, fid);
+		last->it_ptr = (EIF_POINTER) RTWPP(stype, fid);
 }
 
 
@@ -5244,24 +5244,24 @@ rt_private EIF_DOUBLE get_double(void)
 	return *(EIF_DOUBLE *) &xdouble;	/* Correctly aligned by union */
 }
 
-rt_private long get_long(void)
+rt_private EIF_INTEGER get_long(void)
 {
-	/* Get long int stored at IC in byte code array. The value has been stored
+	/* Get EIF_INTEGER stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
 	EIF_GET_CONTEXT
 	union {
-		char xtract[sizeof(long)];
-		long value;
+		char xtract[sizeof(EIF_INTEGER)];
+		EIF_INTEGER value;
 	} xlong;
 	register1 char *p = (char *) &xlong;
 	register2 int i;
 
-	for (i = 0; i < sizeof(long); i++)
+	for (i = 0; i < sizeof(EIF_INTEGER); i++)
 		*p++ = *IC++;
 	
-	return *(long *) &xlong;		/* Correctly aligned by union */
+	return *(EIF_INTEGER *) &xlong;		/* Correctly aligned by union */
 }
 
 rt_private EIF_INTEGER_64 get_int64(void)
@@ -5284,24 +5284,24 @@ rt_private EIF_INTEGER_64 get_int64(void)
 	return *(EIF_INTEGER_64 *) &xint64;		/* Correctly aligned by union */
 }
 
-rt_private short get_short(void)
+rt_private EIF_INTEGER_16 get_short(void)
 {
-	/* Get short int stored at IC in byte code array. The value has been stored
+	/* Get EIF_INTEGER_16 stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
 	EIF_GET_CONTEXT
 	union {
-		char xtract[sizeof(short)];
-		short value;
+		char xtract[sizeof(EIF_INTEGER_16)];
+		EIF_INTEGER_16 value;
 	} xshort;
 	register1 char *p = (char *) &xshort;
 	register2 int i;
 
-	for (i = 0; i < sizeof(short); i++)
+	for (i = 0; i < sizeof(EIF_INTEGER_16); i++)
 		*p++ = *IC++;
 	
-	return *(short *) &xshort;		/* Correctly aligned by union */
+	return *(EIF_INTEGER_16 *) &xshort;		/* Correctly aligned by union */
 }
 
 rt_private uint32 get_uint32(void)

@@ -226,8 +226,9 @@ feature -- Element change
 		end
 
 	set_rows_height (value: INTEGER) is
-			-- Make`value' the new height of all the rows.
+			-- Make `value' the new height of all the rows.
 		require
+			height_valid: value > 0
 		do
 			implementation.set_rows_height (value)
 		end
@@ -275,6 +276,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/17 21:54:19  king
+--| Added row height precond to be > 0
+--|
 --| Revision 1.24  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214
 --|

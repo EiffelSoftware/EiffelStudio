@@ -124,21 +124,20 @@ feature {EV_ANY_IMP} -- Access
 		
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
-	time_delta: INTEGER
-
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
 			-- A TUPLE containing `args' data from a GdkEvent.
 			-- `n_args' is ignored.
-		require
-			--FIXME n_args_is_one: n_args = 1
 		local
 			gdk_event: POINTER
 			p: POINTER
-			event_type, keyval: INTEGER
+			event_type: INTEGER
+			keyval: NATURAL_32
 			key: EV_KEY
 		do
-			gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
-			if {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
+
+			if n_args > 0 then
+					-- If no arguments are available then a Void tuple is returned
+				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 				event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 	
 				if event_type = {EV_GTK_ENUMS}.Gdk_motion_notify_enum
@@ -221,6 +220,9 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					Result := [key]
 				end
 			end
+			if Result = Void then
+				Result := integer_pointer_tuple
+			end
 		end
 
 feature {EV_ANY_IMP}
@@ -228,7 +230,7 @@ feature {EV_ANY_IMP}
 	key_event_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Convert GdkEventKey to tuple.
 		local
-			keyval: INTEGER
+			keyval: NATURAL_32
 			gdkeventkey: POINTER
 			a_key_string: STRING
 			key: EV_KEY
@@ -287,12 +289,6 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			Result := integer_tuple
 		end
 
-	gtk_args_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER, POINTER] is
-			-- Tuple containing the data passed from our custom Gtk marshal
-		do
-			Result := [n_args, args]
-		end
-
 	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER] is
 			-- Translate function for MCL
 		local
@@ -328,20 +324,9 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id) then
-					-- `action' isn't a translation agent and the open operands are TUPLE [TUPLE]
-					-- Direct call of ACTION_SEQUENCE.call (?).
-					action.call (Void)
-				else
-					-- `action' is a translation agent, call with TUPLE [INTEGER, POINTER].
-					-- In most cases, translate_and_call (an_agent, translate, ?, ?)
-					check
-						not_for_empty_tuple: not internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id)
-					end
 					integer_pointer_tuple.put (n_args, 1)
 					integer_pointer_tuple.put (args, 2)
 					action.call (integer_pointer_tuple)
-				end
 			end
 		rescue
 			if exception_handling_enabled then
@@ -355,23 +340,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	f_of_tuple_type_id: INTEGER is
-		once
-			Result := internal.dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
-		end
-	
 feature {EV_ANY_IMP} -- Tuple optimizations.
-		
-	empty_tuple_tuple: TUPLE is
-		once
-			Result := [[]]
-		end
-		
-	tuple_tuple: TUPLE [TUPLE] is
-		once
-			Result := [[]]
-		end
-		
+
 	pointer_tuple: TUPLE [POINTER] is
 			-- 
 		once
@@ -396,12 +366,6 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 		end
 
 feature {NONE} -- Externals
-
-	internal: INTERNAL is
-			-- Internal feature access
-		once
-			create Result
-		end
 
 	frozen c_ev_gtk_callback_marshal_init (
 		object: EV_GTK_CALLBACK_MARSHAL; a_marshal: POINTER

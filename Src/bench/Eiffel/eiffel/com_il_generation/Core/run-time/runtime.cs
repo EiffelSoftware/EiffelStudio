@@ -50,14 +50,17 @@ feature -- Assertions
 
 	[System.Diagnostics.DebuggerHiddenAttribute]
   	[System.Diagnostics.DebuggerStepThroughAttribute]
-	public static void check_invariant (object o)
+	public static void check_invariant (object o, bool is_final)
 		// Given object `o' if it has some invariant to be checked, make
 		// sure that they are checked and recursively goes to inherited
 		// invariants and check them too.
 	{
 		EIFFEL_TYPE_INFO target;
 
-		if (!in_assertion ()) {
+		if (
+			(!in_assertion ()) &&
+			((is_final) || (is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant)))
+		) {
 			if (o is EIFFEL_TYPE_INFO) {
 				set_in_assertion (true);
 				target = (EIFFEL_TYPE_INFO) o;

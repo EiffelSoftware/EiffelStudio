@@ -1,18 +1,35 @@
 indexing
-	description:
-		"Implementation of widget with a font"
+	description:"Implementation of widget with a font"
+	note : "When a heir of this class inherits from a WEL object, it needs %
+		   %to rename `font' as `wel_font' and `set_font' as `wel_set_font'"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class EV_FONTABLE_IMP
+deferred class
+	EV_FONTABLE_IMP
+
+inherit
+--	WEL_CONTROL
+--		rename
+--			font as wel_font,
+--			set_font as wel_set_font 
+--		undefine
+				-- We undefine all the features that are not necessaty here,
+				-- and that have been redefine by EV_WIDGET_IMP or 
+				-- EV_PRIMITIVE_IMP
+--			set_width,
+--			set_height,
+--			destroy,
+--			remove_command
+--		end
 
 feature -- Access
 
-	wel_window: WEL_CONTROL is
+--	wel_window: WEL_CONTROL is
 			-- Actual wel_window
-		deferred
-		end
+--		deferred
+--		end
 
 	font: EV_FONT is
 			-- font of current primitive
@@ -31,7 +48,6 @@ feature -- Access
 			Result := private_font	
 		end
 	
-
 feature -- Status setting
 
 	set_font (f: EV_FONT) is
@@ -52,17 +68,20 @@ feature -- Status setting
 	private_font: EV_FONT
 			-- font used for the implementation
 
-	wel_font: WEL_FONT is
-		do
-			Result := wel_window.font
+	destroyed: BOOLEAN is
+		deferred
 		end
 
-	wel_set_font (f:WEL_FONT) is
-		do
-			wel_window.set_font (f)
+feature {NONE} -- Implementation : the wel values, are deferred here, but
+			   -- they need to be define by the heir
+
+	wel_font: WEL_FONT is
+			-- The wel_font
+		deferred
 		end
-	
-	destroyed: BOOLEAN is
+
+	wel_set_font (a_font: WEL_FONT) is
+			-- Make `a_font' the new font of the widget.
 		deferred
 		end
 

@@ -60,6 +60,11 @@ inherit
 	COMPILER_EXPORTER
 
 	SHARED_NAMES_HEAP
+		
+	DEBUG_OUTPUT
+		rename
+			debug_output as feature_name
+		end
 			
 feature -- Access
 
@@ -933,18 +938,6 @@ feature -- Export checking
 
 feature -- Check
 
--- Note: `require else' can be used even if feature has no
--- precursor. There is no problem to raise an error in normal case,
--- only case  where we cannot do anything is when aliases are used
--- and one name references a feature with a predecessor and not 
--- other one
-
---	check_assertions is
---			-- Raise an error if "require else" or "ensure then" is used
---			-- but feature has no ancestor
---		do
---		end
-
 	body: FEATURE_AS is
 			-- Body of feature
 		local
@@ -975,21 +968,34 @@ feature -- Check
 		require
 			in_pass3
 		do
--- See the note near the declaration of `check_assertions'
---			check_assertions
 			record_suppliers (context.supplier_ids)
-				-- Take the body in the body server
-debug ("SERVER", "TYPE_CHECK")
-	io.error.putstring ("feature name: ")
-	io.error.putstring (feature_name)
-	io.error.new_line
-	io.error.putstring ("body index: ")
-	io.error.putint (body_index)
-	io.error.new_line
-end
-				-- make the type check
+
+			debug ("SERVER", "TYPE_CHECK")
+				io.error.putstring ("feature name: ")
+				io.error.putstring (feature_name)
+				io.error.new_line
+				io.error.putstring ("body index: ")
+				io.error.putint (body_index)
+				io.error.new_line
+			end
+
+				-- Make type check
 			body.type_check
 		end
+
+-- Note: `require else' can be used even if feature has no
+-- precursor. There is no problem to raise an error in normal case,
+-- only case  where we cannot do anything is when aliases are used
+-- and one name references a feature with a predecessor and not 
+-- other one
+
+-- Used to be called from `type_check':
+--
+--	check_assertions is
+--			-- Raise an error if "require else" or "ensure then" is used
+--			-- but feature has no ancestor
+--		do
+--		end
 
 	check_local_names is
 			-- Check conflicts between local names and feature names
@@ -1627,10 +1633,10 @@ end
 				-- Initialization for like-argument types
 			Argument_types.init1 (Current)
 	
-			id := a_written_type.base_class_id
+			id := a_written_type.class_id
 			old_type ?= old_feature.type	
 			old_type := old_type.conformance_type.
-				instantiation_in (a_written_type, a_written_type.base_class_id).actual_type
+				instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
 			new_type := type.actual_type
 
@@ -1647,7 +1653,7 @@ end
 			loop
 				old_type ?= old_arguments.i_th (i)
 				old_type := old_type.conformance_type.
-					instantiation_in (a_written_type, a_written_type.base_class_id).actual_type
+					instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
 				new_type := arguments.i_th (i).actual_type
 					-- Check exact match of signature for IL generation.

@@ -21,7 +21,8 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 	docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE is
-			-- Actions to be performed when a dockable source is dragged
+			-- Actions to be performed when a dockable source completes a transport
+			-- Fired only if source has been moved, after parenting.
 		do
 			Result := implementation.docked_actions
 		ensure

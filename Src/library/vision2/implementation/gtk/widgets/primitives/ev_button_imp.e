@@ -37,7 +37,6 @@ inherit
 	EV_TEXTABLE_IMP
 		redefine
 			set_text,
-			remove_text,
 			interface,
 			initialize
 		end
@@ -194,20 +193,6 @@ feature -- Element change
 		do
 			align_text_left
 			Precursor {EV_PIXMAPABLE_IMP} (a_pixmap)
-		end
-
-	remove_text is
-			-- Assign `Void' to text.
-		do
-			Precursor {EV_TEXTABLE_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
-				button_box,
-				pixmap_box,
-				True,       -- Expand pixmap box.
-				False,
-				padding,
-				feature {EV_GTK_EXTERNALS}.Gtk_pack_end_enum
-			)
 		end
 
 	remove_pixmap is

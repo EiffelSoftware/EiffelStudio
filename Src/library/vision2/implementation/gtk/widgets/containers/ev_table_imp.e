@@ -58,15 +58,6 @@ feature -- Status report
 	is_homogeneous: BOOLEAN
 			-- Does Table have homogeneous spacing, no by default.
 
-	widget_count: INTEGER is
-		local
-			a_child_list: POINTER
-		do
-			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (container_widget)
-			Result := feature {EV_GTK_EXTERNALS}.g_list_length (a_child_list)
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
-		end
-
 	row_spacing: INTEGER is
 		do
 			Result := c_gtk_table_row_spacing (container_widget)
@@ -276,22 +267,6 @@ feature -- Status settings
 		end
 
 feature {NONE} -- Externals
-
-	c_gtk_table_rows (a_table_struct: POINTER): INTEGER is
-			-- Number of rows.
-		external
-			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
-		alias
-			"nrows"
-		end
-
-	c_gtk_table_columns (a_table_struct: POINTER): INTEGER is
-			-- Number of columns.
-		external
-			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
-		alias
-			"ncols"
-		end
 
 	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER is
 			-- Spacing between two rows.

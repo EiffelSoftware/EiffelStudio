@@ -45,7 +45,6 @@ inherit
 			gtk_reorder_child,
 			initialize,
 			make,
-			selected,
 			add_to_container,
 			interface,
 			has_focus,
@@ -128,12 +127,6 @@ feature -- Status report
 			)
 		end
 
-	selected: BOOLEAN is
-			-- Is at least one item selected?
-		do
-			Result := selected_item /= Void
-		end
-		
 	selected_item: EV_LIST_ITEM is
 			-- Currently selected item if any.
 		local

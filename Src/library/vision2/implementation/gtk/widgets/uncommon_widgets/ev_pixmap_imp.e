@@ -99,19 +99,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_DRAWABLE_IMP} (x, y)
 		end
 
-	reset_to_size (a_x, a_y: INTEGER) is
-			-- Create new pixmap data of size `a_x' by `a_y'.
-		local
-			gdkpix, gdkmask: POINTER
-			loc_default_pointer: POINTER
-		do
-			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
-			if mask /= loc_default_pointer then
-				gdkmask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (NULL, a_x, a_y, Monochrome_color_depth)
-			end
-			set_pixmap (gdkpix, gdkmask)
-		end
-
 feature -- Drawing operations
 
 	flush is
@@ -164,7 +151,7 @@ feature -- Element change
 			c_ev_load_pixmap ($Current, NULL, $update_fields)
 		end
 
-	stretch, stretch_image (a_x, a_y: INTEGER) is
+	stretch (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
 			source_gdkimage, source_mask_gdkimage, destination_mask_gdkimage, destination_gdkimage: POINTER

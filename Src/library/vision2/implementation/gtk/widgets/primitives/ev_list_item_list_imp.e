@@ -139,29 +139,18 @@ feature -- Status report
 			end
 		end
 
-	selected: BOOLEAN is
-			-- Is one item selected?
-		local
-			list_pointer: POINTER
-		do
-			list_pointer := feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
-			if list_pointer /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.g_list_length (list_pointer) > 0
-			end
-		end
-		
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
-			-- Give the item of the list at the one-base index.
+			-- Select item at one based index, `an_index'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_list_select_item (list_widget, an_index - 1)
+			check do_not_call: False  end
 		end
 
 	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `index'.
+			-- Deselect item at one based index, `an_index'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_list_unselect_item (list_widget, an_index - 1)
+			check do_not_call: False  end
 		end
 
 	clear_selection is

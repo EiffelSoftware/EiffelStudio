@@ -113,6 +113,22 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
+		
+	customizeable_area_of_widget (widget: EV_WIDGET): EV_HORIZONTAL_BOX is
+			-- `Result' is an EV_HORIZONTAL_BOX contained in the header of the tool
+			-- surrounding `widget' which permits you to customize the tools appearence
+			-- in `Current'. You should not unparent, `Result' or do anything dangerous
+			-- to this widget, and it should be simply used to insert and remove
+			-- widgets for customization as required.
+		require
+			widget_contained: linear_representation.has (widget) or
+				external_representation.has (widget)
+		do
+			Result := holder_of_widget (widget).customizeable_area
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 
 feature -- Status setting
 
@@ -1185,7 +1201,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			-- `Result' is tool holder containing `a_widget'.
 		require
 			a_widget_not_void: a_widget /= Void
-			linear_representation.has (a_widget)
+			linear_representation.has (a_widget) or external_representation.has (a_widget)
 		local
 			cursor: CURSOR
 		do

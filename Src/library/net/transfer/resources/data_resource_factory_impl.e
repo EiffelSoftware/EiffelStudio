@@ -69,7 +69,7 @@ feature -- Status setting
 			s: STRING
 			pos: INTEGER
 		do
-			s := clone (addr)
+			s := addr.twin
 			pos := s.substring_index ("://", 1)
 			if pos = 0 then
 				s.prepend ("://")
@@ -107,8 +107,7 @@ feature -- Status setting
 			name_exists: service_name /= Void
 			name_not_empty: not service_name.is_empty
 		do
-			default_service := clone (service_name)
-			default_service.to_lower
+			default_service := service_name.as_lower
 		end
 	
 feature -- Basic operations

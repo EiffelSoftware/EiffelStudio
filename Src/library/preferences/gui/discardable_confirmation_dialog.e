@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			label_box.extend (create {EV_CELL})
 
 			create pixmap_box
-			pixmap_clone := clone (Default_pixmaps.Question_pixmap)
+			pixmap_clone := Default_pixmaps.Question_pixmap.twin
 			pixmap_box.extend (pixmap_clone)
 			pixmap_box.set_minimum_size (pixmap_clone.width, pixmap_clone.height)
 

@@ -32,7 +32,7 @@ feature -- Access
 	location: STRING is
 			-- Full URL of resource
 		do
-			Result := clone (service)
+			Result := service.twin
 			Result.append ("://")
 			Result.append (name)
 		end

@@ -45,7 +45,7 @@ feature -- Access
 			-- Visual name of the resource as it appears in the left
 			-- list in the preference tool.
 		do
-			Result := clone (name);
+			Result := name.twin
 			Result.replace_substring_all ("_", " ")
 			Result.put (Result.item (1).upper, 1)
 		end

@@ -115,7 +115,7 @@ feature -- Status setting
 			i: INTEGER
 		do
 			value := new_value
-			s := clone (value)
+			s := new_value.twin
 			i := s.index_of(';', 1)
 			if i > 0 then
 				r := head_integer (s, i - 1)

@@ -53,30 +53,6 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	left_button_click_actions: ACTIONS_MANAGER is
-			-- Event handler for left button click events
-		once
-			!! Result.make
-		ensure
-			result_exists: Result /= Void
-		end
-
-	right_button_click_actions: ACTIONS_MANAGER is
-			-- Event handler for right button click events
-		once
-			!! Result.make
-		ensure
-			result_exists: Result /= Void
-		end
-
-	middle_button_click_actions: ACTIONS_MANAGER is
-			-- Event handler for middle button click events
-		once
-			!! Result.make
-		ensure
-			result_exists: Result /= Void
-		end
-
 	left_button_motion_actions: ACTIONS_MANAGER is
 			-- Event handler for left button motion events
 		once
@@ -143,14 +119,6 @@ feature {NONE} -- Implementation
 
 	middle_button_release_actions: ACTIONS_MANAGER is
 			-- Event handler for middle button release events
-		once
-			!! Result.make
-		ensure
-			result_exists: Result /= Void
-		end
-
-	cancel_actions: ACTIONS_MANAGER is
-			-- Event handler for cancel events
 		once
 			!! Result.make
 		ensure
@@ -281,12 +249,16 @@ feature {NONE} -- Implementation
 			-- Event handler for menu selection events
 		once
 			!! Result.make
+		ensure
+			result_exists: Result /= Void
 		end
 
 	multiple_actions: ACTIONS_MANAGER is
 			-- Event handler for multiple selection events
 		once
 			!! Result.make
+		ensure
+			result_exists: Result /= Void
 		end
 
 	ok_actions: ACTIONS_MANAGER is
@@ -405,18 +377,60 @@ feature {NONE} -- Implementation
 			-- Event handler for a visible event
 		once
 			!! Result.make
+		ensure
+			result_exists: Result /= Void
 		end
 
 	map_actions: ACTIONS_MANAGER is
 			-- Event handler for a mapping event.
 		once
 			!! Result.make
+		ensure
+			result_exists: Result /= Void
 		end
 
 	unmap_actions: ACTIONS_MANAGER is
-			-- Event handler for a unmapping event.
+			-- Event handler for an unmapping event.
 		once
 			!! Result.make
+		ensure
+			result_exists: Result /= Void
+		end
+
+	replace_actions: ACTIONS_MANAGER is
+			-- Event handler for a replace event on
+			-- a serach replace dialog.
+		once
+			!! Result.make
+		ensure
+			result_exists: Result /= Void
+		end
+
+	find_actions: ACTIONS_MANAGER is
+			-- Event handler for a find event on
+			-- a search replace dialog.
+		once
+			!! Result.make
+		ensure
+			result_exists: Result /= Void
+		end
+
+	cancel_actions: ACTIONS_MANAGER is
+			-- Event handler for a cancel event on
+			-- a search replace dialog
+		once
+			!! Result.make
+		ensure
+			result_exists: Result /= Void
+		end
+
+	replace_all_actions: ACTIONS_MANAGER is
+			-- Event handler for a replace all event on
+			-- a search replace dialog
+		once
+			!! Result.make
+		ensure
+			result_exists: Result /= Void
 		end
 
 	system_metrics: WEL_SYSTEM_METRICS is

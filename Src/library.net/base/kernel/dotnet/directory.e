@@ -140,11 +140,13 @@ feature -- Access
 			not_new_name_void: new_name /= Void
 			file_exists: exists
 		local
-			ext_old_name, ext_new_name: SYSTEM_STRING
+			l_info: FILE_INFO
 		do
-			ext_old_name := name.to_cil
-			ext_new_name := new_name.to_cil
-			feature {SYSTEM_DIRECTORY}.move (ext_old_name, ext_new_name)
+			create l_info.make (new_name.to_cil)
+			if l_info.exists then
+				l_info.delete
+			end
+			feature {SYSTEM_DIRECTORY}.move (name.to_cil, new_name.to_cil)
 			name := new_name
 		ensure
 			name_changed: name.is_equal (new_name)

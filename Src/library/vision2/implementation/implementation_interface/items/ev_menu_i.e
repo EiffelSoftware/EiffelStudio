@@ -14,13 +14,21 @@ deferred class
 inherit
 	EV_MENU_ITEM_CONTAINER_I
 
-
 feature {NONE} -- Initialization
 
         make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
                         -- Create a menu with name. 
 			deferred
 			end	
+
+feature -- Status report
+
+	text: STRING is
+			-- Label of the current menu
+		require
+			exists: not destroyed
+		deferred
+		end
 
 end -- class EV_MENU_I
 

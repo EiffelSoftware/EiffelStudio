@@ -3427,7 +3427,7 @@ case "$d_eofpipe" in
 main()
 {
 	int pd[2];
-	int mask;
+	long mask;
 
 	pipe(pd);
 	if (0 == fork()) {

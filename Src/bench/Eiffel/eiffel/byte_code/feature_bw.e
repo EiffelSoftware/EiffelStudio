@@ -7,7 +7,7 @@ inherit
 	FEATURE_BL
 		redefine
 			check_dt_current, generate_access_on_type, is_polymorphic,
-			need_invariant, set_need_invariant
+			need_invariant, set_need_invariant, generate_for_separate_feature_call
 		end
 
 creation
@@ -74,11 +74,11 @@ feature
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C;
 		do
-			is_nested := not is_first;
 			if typ.is_separate then
 			   -- Feature call on a separate object
 				generate_for_separate_feature_call(reg, typ);
 			else
+				is_nested := not is_first;
 				generated_file.putchar ('(');
 				real_type (type).c_type.generate_function_cast (generated_file, argument_types);
 				base_class := typ.base_class;
@@ -126,97 +126,6 @@ feature
 
 feature -- Concurrent Eiffel
 
-	put_parameters_into_array is
-		local
-			expr: PARAMETER_B;
-			para_type: TYPE_I;
-			i: INTEGER;
-			loc_idx: INTEGER
-		do
-			if parameters /= Void then
-				from
-					parameters.start;
-					i := 0;
-				until
-					parameters.after
-				loop
-					expr ?= parameters.item;    -- Cannot fail
-					para_type := real_type(expr.attachment_type);
-					if para_type.is_boolean then
-						generated_file.putstring ("CURPB(");
-						expr.print_register;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					if para_type.is_long then
-						generated_file.putstring ("CURPI(");
-						expr.print_register;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					if para_type.is_char then
-						generated_file.putstring ("CURPC(");
-						expr.print_register;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					if para_type.is_double then
-						generated_file.putstring ("CURPD(");
-						expr.print_register;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					if para_type.is_float then
-						generated_file.putstring ("CURPR(");
-						expr.print_register;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					if para_type.is_reference and not para_type.is_separate then
-						generated_file.putstring ("CURPO(");
-						expr.print_register;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					if para_type.is_separate then
-						generated_file.putstring ("CURPSO(");
---						expr.print_register;
-						if expr.stored_register.register_name /= Void then
-							loc_idx := context.local_index (expr.stored_register.register_name);
-						else
-							loc_idx := -1;
-						end;
-						if loc_idx /= -1 then
-							generated_file.putstring ("l[");
-							generated_file.putint (context.ref_var_used + loc_idx);
-							generated_file.putstring ("]");
-						else
-							-- It'll be the case when the value is "Void"
-							expr.print_register;
-						end;
-						generated_file.putstring (", ");
-						generated_file.putint (i);
-						generated_file.putstring (");");
-						generated_file.new_line;
-					end
-					i := i + 1;
-					parameters.forth;
-				end;
-			end;
-		end
-
 	generate_for_separate_feature_call(reg: REGISTRABLE; typ: CL_TYPE_I) is
 		local
 			is_nested: BOOLEAN;
@@ -227,7 +136,6 @@ feature -- Concurrent Eiffel
 			cl_type: CL_TYPE_I
 		do
 		  	-- Feature call on a separate object
-			is_nested := not is_first;
 			generated_file.putstring ("if (on_local_processor(")
 			reg.print_register;
 			generated_file.putstring (")) {")
@@ -261,6 +169,7 @@ feature -- Concurrent Eiffel
 				end
 			end
 
+			is_nested := not is_first;
 			generated_file.putstring ("(");
 			real_type (type).c_type.generate_function_cast (generated_file, argument_types);
 			base_class := typ.base_class;

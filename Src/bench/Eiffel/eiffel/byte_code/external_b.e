@@ -421,8 +421,8 @@ feature -- Concurrent Eiffel
 				my_code := code_next;
 			end;
 			ba.append (my_code);
-			if my_code = Bc_sep_feature or my_code = Bc_sep_feature_inv then
-			-- "Bc_sep_feature" is impossible, delete it later.
+			if my_code = Bc_sep_extern or my_code = Bc_sep_extern_inv then
+			-- "Bc_sep_extern" is impossible, delete it later.
 					-- keep parameter number
 				if parameters /= Void then
 					ba.append_short_integer (parameters.count);
@@ -466,7 +466,7 @@ feature -- Concurrent Eiffel
 				my_code := precomp_code_next;
 			end;
 			ba.append (my_code);
-			if my_code = Bc_sep_pfeature or my_code = Bc_sep_pfeature_inv then
+			if my_code = Bc_sep_pextern or my_code = Bc_sep_pextern_inv then
 			-- Bc_sep_pfeature is impossible, delete it later.
 					-- keep parameter number
 				if parameters /= Void then

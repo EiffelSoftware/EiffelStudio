@@ -113,14 +113,12 @@ feature -- Resource Update
 				end
 			elseif old_res = pr.debugger_show_all_callers then
 				if feature_part /= Void then
-					rout_cli_cmd ?=
-						feature_part.showroutclients_frmt_holder.associated_command;
+					rout_cli_cmd ?= feature_part.showroutclients_frmt_holder.associated_command;
 					rout_cli_cmd.set_show_all_callers (new_res.actual_value)
 				end
 			elseif old_res = pr.debugger_do_flat_in_breakpoints then
 				if feature_part /= Void then
-					stop_cmd ?=
-						feature_part.showstop_frmt_holder.associated_command;
+					stop_cmd ?= feature_part.showstop_frmt_holder.associated_command;
 					stop_cmd.set_format_mode (new_res.actual_value)
 				end
 			end;

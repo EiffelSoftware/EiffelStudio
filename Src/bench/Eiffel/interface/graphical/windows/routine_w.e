@@ -209,8 +209,7 @@ feature -- Access
 	compatible (a_stone: STONE): BOOLEAN is
 			-- Is Current hole compatible with `a_stone'?
 		do
-			Result :=
-				a_stone.stone_type = Routine_type or else
+			Result := a_stone.stone_type = Routine_type or else
 				a_stone.stone_type = Breakable_type or else
 				a_stone.stone_type = Class_type
 		end;
@@ -382,9 +381,6 @@ feature -- Stone updating
 			else
 				last_format.execute (a_stone);
 				history.extend (a_stone)
-				if last_format = default_format then
-					highlight_routine;
-				end;
 				update_edit_bar
 			end
 		end;
@@ -443,30 +439,6 @@ feature -- Stone updating
 	
 feature -- Graphical Interface
 
-	highlight_routine is
-			-- Highlight the routine of the text.
-		require
-			has_stone: stone /= Void
-		local
-			err: FEATURE_ERROR_STONE;
-			end_pos, pos: INTEGER;
-			txt: STRING
-		do
-			err ?= stone;
-			if err /= Void then
-				pos := err.error_position;
-				txt := text_window.text;
-				if txt.count > pos then
-					end_pos := txt.index_of ('%N', pos);
-					if pos /= 0 then
-						text_window.highlight_selected (pos, end_pos)
-					end
-				end;
-			end
-			text_window.set_cursor_position (0);
-			--text_window.set_top_character_position (stone.start_position);
-		end;
-
 	synchronize is
 			-- Synchronize clickable elements with text, if possible.
 		do
@@ -477,9 +449,6 @@ feature -- Graphical Interface
 				routine_text_field.clear
 			else
 				update_edit_bar;
-				if last_format = default_format then
-					highlight_routine
-				end
 			end
 		end;
 
@@ -843,7 +812,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				edit_bar.attach_top (stop_hole_button, 0);
 			end;
 			routine_text_field.unmanage;
-			edit_bar.attach_left_position (routine_text_field, routine_text_field_position);
+			edit_bar.attach_left_position (routine_text_field, 10);
 			edit_bar.attach_top (routine_text_field, 0);
 			edit_bar.attach_bottom (routine_text_field, 0);
 			edit_bar.attach_right_position (routine_text_field, 17);
@@ -868,27 +837,13 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_top (search_button, 0);
 			edit_bar.detach_left (search_button);
 			edit_bar.attach_right_widget (search_button, class_text_field, 2)
-			if is_in_project_tool then
-				class_text_field.set_width (100);
-			else
-				class_text_field.set_width (110);
-			end;
+			class_text_field.set_width (100);
 		end;
 
 feature {NONE} -- Properties
 
 	is_in_project_tool: BOOLEAN;
 			-- Is the current feature tool in the project tool
-
-	routine_text_field_position: INTEGER is
-			-- Position for the routine text field
-		do
-			if is_in_project_tool then
-				Result := 8 
-			else
-				Result := 11
-			end
-		end
 
 feature {TEXT_WINDOW} -- Properties
 

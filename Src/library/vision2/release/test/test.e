@@ -72,8 +72,8 @@ feature
 			button.press_actions.extend (~destroy_current_widget)
 			box.extend (button)
 			box.disable_child_expand (button)
-			--box.extend (event_test_frame)
-			--box.disable_child_expand (event_test_frame)
+			box.extend (event_test_frame)
+			box.disable_child_expand (event_test_frame)
 			
 			notebook.fill (widgets)
 			
@@ -201,8 +201,6 @@ feature
 			-- List of other Vision objects.
 		once
 			create Result.make
-			Result.extend (create {EV_ANGLE})
-			Result.extend (create {EV_ANGLE_ROUTINES})
 			Result.extend (create {EV_FIGURE_ARC})
 			Result.extend (create {EV_FIGURE_DOT})
 --|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
@@ -244,7 +242,6 @@ feature
 			Result.extend (create {EV_RECTANGLE})
 			Result.extend (create {EV_TIMEOUT})
 			Result.extend (create {EV_DRAWABLE_CONSTANTS})
-			Result.extend (create {EV_BASIC_COLORS})
 			Result.extend (create {EV_DEFAULT_COLORS})
 			Result.extend (create {EV_MENU})
 			Result.extend (create {EV_MENU_BAR})
@@ -333,8 +330,8 @@ feature
 			t: EV_TEXTABLE
 			s: STRING
 		do
---			a_cell.wipe_out
---			a_cell.extend (a_widget.action_sequence_test_widget)
+			a_cell.wipe_out
+			a_cell.extend (a_widget.action_sequence_test_widget)
 			current_widget := a_widget
 			s := "type   = " + a_widget.generating_type + "%N"
 			s.append ("width  = " + a_widget.width.out + "%N")
@@ -379,6 +376,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/18 23:18:51  oconnor
+--| removed ANGLE* and BASIC_COLORS
+--|
 --| Revision 1.6  2000/02/17 01:09:04  oconnor
 --| more tests
 --|

@@ -7,31 +7,31 @@ root
 
 default
 
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision2");
+--	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2");
 	assertion (all);
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/vision2/hello_world";
+	ROOT_CLUSTER: 		"$EIFFEL4\examples\vision2\hello_world";
 
 ------------------------ EiffelBase:
 
-	base:						"$EIFFEL4/library/base";
-	structures(base):			"$/structures";
-	kernel(base):				"$/kernel";
-	support(base):				"$/support";
-	access(structures):			"$/access";
-	cursors(structures):		"$/cursors";
-	cursor_tree(structures):	"$/cursor_tree";
-	dispenser(structures):		"$/dispenser";
-	iteration(structures):		"$/iteration";
-	list(structures):			"$/list";
-	set(structures):			"$/set";
-	sort(structures):			"$/sort";
-	storage(structures):		"$/storage";
-	table(structures):			"$/table";
-	traversing(structures):		"$/traversing";
-	tree(structures):			"$/tree";
+	base:						"$EIFFEL4\library\base";
+	structures(base):			"$\structures";
+	kernel(base):				"$\kernel";
+	support(base):				"$\support";
+	access(structures):			"$\access";
+	cursors(structures):		"$\cursors";
+	cursor_tree(structures):	"$\cursor_tree";
+	dispenser(structures):		"$\dispenser";
+	iteration(structures):		"$\iteration";
+	list(structures):			"$\list";
+	set(structures):			"$\set";
+	sort(structures):			"$\sort";
+	storage(structures):		"$\storage";
+	table(structures):			"$\table";
+	traversing(structures):		"$\traversing";
+	tree(structures):			"$\tree";
 
 
 ------------------------ Wel:

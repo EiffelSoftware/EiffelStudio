@@ -20,7 +20,7 @@ inherit
 		redefine
 			copy
 		end;
-	
+
 creation {COMPILER_EXPORTER}
 
 	make
@@ -42,11 +42,14 @@ feature -- Properties
 	last_class: CLASS_I;
 			-- Last class subject to a query
 
+	override_cluster_name: STRING;
+			-- Tag of the (optional) override cluster.
+
 feature -- Access
 
 	class_with_name (class_name: STRING): CLASS_I is
 			-- Find class with name `class_name' in the Universe
-			-- (Void if not found).	
+			-- (Void if not found).
 		local
 			cur: CURSOR;
 			cname: STRING
@@ -184,6 +187,20 @@ feature -- Access
 			Result := cluster_of_path (cluster_path) /= Void;
 		end;
 
+	has_override_cluster: BOOLEAN is
+			-- Is there a cluster with the override flag on?
+		do
+			Result := override_cluster_name /= void
+		end;
+
+	override_cluster: CLUSTER_I is
+			-- Override cluster in the universe.
+		require
+			has_override_cluster: has_override_cluster
+		do
+			Result := cluster_of_name (override_cluster_name)
+		end;
+
 feature -- Update
 
 	update_cluster_paths is
@@ -220,6 +237,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 			last_class := c;
 		end;
 
+	set_override_cluster_name (cluster_name: STRING) is
+			-- Set `override_cluster_name' to `cluster_name'.
+		do
+			override_cluster_name := cluster_name
+		end;
+
 	insert_cluster (c: CLUSTER_I) is
 			-- Insert `c' in `clusters'.
 		require
@@ -232,7 +255,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 	copy (other: like Current) is
 			-- Clone universe
 		do
-			make;
+-- FIXME
+-- FIXME: is_equal must be redefined as well...
+-- FIXME
+			make
+			cluster_counter.set_value (other.cluster_counter.value)
+			override_cluster_name := other.override_cluster_name
 			from
 				other.clusters.start
 			until
@@ -316,7 +344,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 					!!vd23;
 					vd23.set_class_name (class_name);
 					Error_handler.insert_error (vd23);
-				elseif	Result /= Void 
+				elseif	Result /= Void
 						and then
 						last_class /= Result
 				then
@@ -331,7 +359,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				clusters.forth
 			end;
 		end;
-				
+
 	duplicate: like Current is
 			-- Duplication of universe
 		local
@@ -346,7 +374,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			clusters.go_i_th (pos);
 		end;
 
-	compute_last_class (class_name: STRING; cluster: CLUSTER_I)  is
+	compute_last_class (class_name: STRING; cluster: CLUSTER_I) is
 			-- Assign to `last_class' the class named `class_name'
 			-- in cluster `cluster'
 		require
@@ -359,6 +387,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 			renamings: HASH_TABLE [STRING, STRING];
 			ignore: LINKED_LIST [CLUSTER_I];
 			vscn: VSCN;
+			new_class, override_class, precompiled_class: CLASS_I;
+			error_list: LINKED_LIST [VSCN]
 		do
 			last_class := Void;
 
@@ -382,22 +412,52 @@ feature {COMPILER_EXPORTER} -- Implementation
 							real_name := renamings.item (class_name);
 						end;
 					end;
-	
+
 					if a_cluster.classes.has (real_name) then
+						new_class := a_cluster.classes.item (real_name)
 						if last_class = Void then
-							last_class := a_cluster.classes.item (real_name);
+							last_class := new_class
 						else
-							!!vscn;
+							!! vscn;
 							vscn.set_first (last_class);
-							vscn.set_second
-										(a_cluster.classes.item (real_name));
+							vscn.set_second (new_class);
 							vscn.set_cluster (a_cluster);
-							Error_handler.insert_error (vscn);
-						end;
-					end;	
+							if error_list = void then
+								!! error_list.make
+							end;
+							error_list.extend (vscn)
+						end
+						if a_cluster.is_override_cluster then
+							override_class := new_class
+						end
+						if a_cluster.is_precompiled then
+							precompiled_class := new_class
+						end
+					end
 				end;
 				clusters.forth
 			end;
+
+			if override_class /= Void then
+				last_class := override_class
+			end
+
+			if
+					-- Conflict detected
+				error_list /= Void
+			and then
+					-- No override or conflict override/precompiled class
+				(override_class = Void or else precompiled_class /= Void)
+			then
+				from
+					error_list.start
+				until
+					error_list.after
+				loop
+					error_handler.insert_error (error_list.item);
+					error_list.forth
+				end
+			end
 		end;
 
 	is_ambiguous_name (class_name: STRING): BOOLEAN is
@@ -418,6 +478,41 @@ feature {COMPILER_EXPORTER} -- Implementation
 				one_found := one_found or else found;
 				clusters.forth
 			end;
+		end;
+
+	process_override_cluster is
+			-- incrementality of the override_cluster option
+		local
+			old_universe: UNIVERSE_I;
+			old_tag: STRING;
+			old_cluster: CLUSTER_I;
+			classes: EXTEND_TABLE [CLASS_I, STRING];
+			a_class: CLASS_C
+		do
+			old_universe := lace.old_universe;
+			if override_cluster_name /= void then
+				cluster_of_name (override_cluster_name).set_is_override_cluster (True)
+			end;
+			if old_universe.has_override_cluster then
+				old_tag := old_universe.override_cluster_name;
+				if not equal (old_tag, override_cluster_name) then
+					if has_cluster_of_name (old_tag) then
+						old_cluster := cluster_of_name (old_tag);
+						from
+							classes := old_cluster.classes;
+							classes.start
+						until
+							classes.after
+						loop
+							a_class := classes.item_for_iteration.compiled_class;
+							if a_class /= void then
+								a_class.recompile_syntactical_clients
+							end;
+							classes.forth
+						end
+					end
+				end
+			end
 		end;
 
 feature {COMPILER_EXPORTER} -- Precompilation
@@ -508,7 +603,7 @@ feature {COMPILER_EXPORTER} -- DLE Implementation
 				clusters.forth
 			end
 		end;
-				
+
 feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is

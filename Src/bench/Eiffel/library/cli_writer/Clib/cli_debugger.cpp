@@ -107,8 +107,13 @@ rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 ////////////////////////////////////////////////////////////////////////////
 */
 #ifdef DBGTRACE_ENABLED
-//rt_private pthread_mutex_t trace_mutex;
-
+/*
+rt_private pthread_mutex_t trace_mutex;
+#define LOCK_DEBUG_OUTPUT_ACCESS WaitForSingleObject (trace_mutex, INFINITE);
+#define UNLOCK_DEBUG_OUTPUT_ACCESS ReleaseMutex (trace_mutex);
+*/
+#define LOCK_DEBUG_OUTPUT_ACCESS 
+#define UNLOCK_DEBUG_OUTPUT_ACCESS
 
 rt_public DWORD debug_thread_id () {
 	return GetCurrentThreadId();
@@ -121,6 +126,7 @@ rt_public void trace_event (char* mesg)
 
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
 
+  LOCK_DEBUG_OUTPUT_ACCESS;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s\n",
 		  			dbg_msg_displayed_index, 
@@ -129,12 +135,14 @@ rt_public void trace_event (char* mesg)
 					mesg
 					);
   fclose(out);
+  UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
 rt_public void trace_event (char* mesg, char* mesg2)
 {
   FILE *out;
 
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
+  LOCK_DEBUG_OUTPUT_ACCESS;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s %s\n",
 		  			dbg_msg_displayed_index, 
@@ -143,10 +151,12 @@ rt_public void trace_event (char* mesg, char* mesg2)
 					mesg, mesg2
 					);
   fclose(out);
+  UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
 rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
 {
   FILE *out;
+  LOCK_DEBUG_OUTPUT_ACCESS;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d - %s %d\n",
 		  			debug_thread_id(),
@@ -154,10 +164,12 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
 					hr
 					);
   fclose(out);
+  UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
 rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
 {
   FILE *out;
+  LOCK_DEBUG_OUTPUT_ACCESS;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d - %s %d \n",
 		  			debug_thread_id(),
@@ -165,6 +177,7 @@ rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
 					dw
 					);
   fclose(out);
+  UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
 #endif
 
@@ -180,17 +193,22 @@ rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
 #define DBGTRACE_DWORD(msg,dw)
 #endif
 
+#ifdef DBGTRACE_ENABLED
+rt_private UINT once_enter_cb;
+rt_private UINT once_enter_ec_cb;
+#endif
+
 
 /*
 //////////////////////////////////////////////////
 /// Variables Declaration                      ///
 //////////////////////////////////////////////////
 */
+
 rt_private UINT dbg_timer;
-rt_private UINT once_enter_cb;
-rt_private UINT once_enter_ec_cb;
 rt_private EIF_OBJECT estudio_callback_object;
 rt_private EIF_POINTER estudio_callback_event;
+
 /*
 //////////////////////////////////////////////////
 /// Synchro managing using SuspendThread       ///
@@ -328,7 +346,6 @@ rt_public void dbg_timer_callback () {
 #endif	/*D*/
 		return;
 	} else {
-		once_enter_ec_cb = 0;/*D*/
 //<1>---< dbg waiting >------------------------------------------//
 		DBGTRACE("4 - [eStudio] ec going to wait soon");/*D*/
 		dbg_stop_timer ();
@@ -338,6 +355,9 @@ rt_public void dbg_timer_callback () {
 		DBG_SUSPEND_ESTUDIO_THREAD;
 //<2>---< give hand to dbg >-------------------------------------//
 		DBGTRACE("4 - [eStudio] ec waiting while dbg_state = 2");/*D*/
+#ifdef DBGTRACE_ENABLED	/*D*/
+		once_enter_ec_cb = 0;/*D*/
+#endif	/*D*/
 		while (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
 //<2>---< wait for dbg to be done with execution >---------------//
 			// ec wait until dbg is done
@@ -363,6 +383,7 @@ rt_public void dbg_timer_callback () {
 /// dbg_lock_and_wait_callback :: eStudio evaluation    ///
 ///////////////////////////////////////////////////////////
 */
+
 rt_public void dbg_lock_and_wait_callback () {
 	/*** Local  ***/
 	UINT once_enter;
@@ -381,14 +402,16 @@ rt_public void dbg_lock_and_wait_callback () {
 	while (!eval_callback_proceed) {
 		// While we haven't reach "eval callback", and proceed it 
 
+#ifdef DBGTRACE_ENABLED	/*D*/
 		once_enter = 0; /*D*/
+#endif
 		while (InterlockedExchangeAdd (&dbg_state, 0) != 1) {
+#ifdef DBGTRACE_ENABLED	/*D*/
 			if (once_enter == 0) {/*D*/
 				DBGTRACE("[eStudio::Eval] waiting for callback begin (state = 1)");/*D*/
-
 				once_enter = (once_enter + 1) % 500;/*D*/
-//				once_enter = 1;/*D*/
 			}/*D*/
+#endif
 			Sleep (1);
 		}
 		
@@ -411,12 +434,16 @@ rt_public void dbg_lock_and_wait_callback () {
 		DBGTRACE("[eStudio::Eval] call back arrived, dbg waiting");/*D*/
 		InterlockedIncrement (&dbg_state);
 		DBG_SUSPEND_ESTUDIO_THREAD;
+#ifdef DBGTRACE_ENABLED	/*D*/
 		once_enter = 0;/*D*/
+#endif
 		while (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
+#ifdef DBGTRACE_ENABLED	/*D*/
 			if (once_enter == 0) {/*D*/
 				DBGTRACE("[eStudio::Eval] waiting for callback finished (state = 3)");/*D*/
-				once_enter = 1;/*D*/
+				once_enter = (once_enter + 1) % 500;/*D*/
 			}/*D*/
+#endif
 			Sleep (1); // maybe useless, spinlock instead ..
 		}
 		DBGTRACE("[eStudio::Eval] call back finished");/*D*/
@@ -454,17 +481,18 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #endif	/*D*/
 	}
 	// we set it again, in case this is unset by dbg_stop_timer
-	once_enter_cb = 0;/*D*/
 	// Let's tell the timer we are ready
 	DBGTRACE("2 - [Dbg] enter dbg callback");/*D*/
 	InterlockedExchange (&dbg_state, 1);
 //<1>---< give hand to ec >--------------------------------------//
 	DBGTRACE("3 - [Dbg] now dbg_state is 1, it is ec's turn");/*D*/
+#ifdef DBGTRACE_ENABLED	/*D*/
+	once_enter_cb = 0;/*D*/
+#endif	/*D*/
 	while (InterlockedExchangeAdd (&dbg_state, 0) == 1) {
 //<1>---< wait for ec to finish >--------------------------------//
 		// Dbg wait for the Ec to call back
 		// no sleep for a spinlock (active waiting)
-//		DBGTRACE("[Dbg] spinlock :: dbg callback");
 #ifdef DBGTRACE_ENABLED	/*D*/
 		if (once_enter_cb == 0) {/*D*/
 			DBGTRACE("3.5 - [Dbg] wait at entrance door");/*D*/
@@ -472,8 +500,6 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 		}/*D*/
 #endif	/*D*/
 	}
-
-	once_enter_cb = 0;/*D*/
 //<2>---< ec waiting >-------------------------------------------//
 	DBGTRACE("6 - [Dbg] start execution callback");/*D*/
 	// Executing callback code
@@ -511,9 +537,7 @@ rt_public EIF_POINTER new_cordebug ()
 
 	DBGTRACE_HR("@@@ [DEBUGGER] New ICorDebug : hr = ", hr);
 
-
 	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorDebug");
-
 	return icd;
 }
 

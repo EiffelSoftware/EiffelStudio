@@ -345,12 +345,17 @@
 		<row><td>ConfigFiles</td><td>{F67B780E-84C1-445C-B6D9-7AA14B5EA7F5}</td><td>WINDOWS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>DefaultConfigFile</td><td>{2907EBE8-0EB4-4919-99A3-EAB9F4B98B69}</td><td>CONFIGS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>{FA613F29-2860-4AB8-8058-A96110500E0F}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.cachebrowser.</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td>{D589EA4B-3CC0-4EB0-BC7F-7C17B7607DE4}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.cachebrowser.1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>{A75D2F75-AB17-4D29-AF73-0770CA95D0AE}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedom.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td>{6479FC16-C695-4B81-8276-B9FAB96638CB}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.codedom.dll1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>{CC72BC24-B220-422B-8E3F-2278DF3CB464}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedombase.d</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>{1D283AEC-4DB4-4282-8BF5-F2B2C21BDF9E}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.codedombase.d1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>{8F9AB00D-6CB8-402A-B5A6-2625676B9074}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedomvision</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td>{1A35332D-7AA0-4074-90BB-67EEF18AAD38}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.codedomvision1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>{24000EF0-0A7A-4C7F-8612-25EF2D45B7AD}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.metadataconsu</td><td>33</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>{33127FF4-7555-4BA8-A071-89DD373F8D3E}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.runtime.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>{75636316-149F-4143-814A-47128E265769}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.runtime.dll1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td>{D35F440D-96EE-47EE-BF57-E3EA55F914AD}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.runtime.dll2</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Empty</td><td>{A35E73D1-2614-4A37-8819-FA14C434E6F8}</td><td>ASSEMBLIES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ErrorFiles</td><td>{160B4CBE-AFEE-476C-817A-E462A987F12F}</td><td>ERRORS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Library</td><td>{0FEA0AF1-E705-4712-8744-33CF25097FF2}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1385,12 +1390,17 @@
 		<row><td>Feature</td><td>ConfigFiles</td></row>
 		<row><td>Feature</td><td>DefaultConfigFile</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.CacheBrowser.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CacheBrowser.dll1</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.CodeDom.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CodeDom.dll1</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.CodeDomBase.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CodeDomBase.dll1</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.CodeDomVision2.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CodeDomVision2.dll1</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.MetadataConsumer.dll</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll1</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll2</td></row>
 		<row><td>Feature</td><td>Empty</td></row>
 		<row><td>Feature</td><td>ErrorFiles</td></row>
 		<row><td>Feature</td><td>Library</td></row>
@@ -1423,12 +1433,17 @@
 		<row><td>ecdpc.exe</td><td>ecdpc.exe</td><td>ecdpc.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\ecdpc.exe</td><td>1</td><td/></row>
 		<row><td>ecdpman.exe</td><td>ecdpman.exe</td><td>ecdpman.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\ecdpman.exe</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.cachebrowser.</td><td>EiffelSoftware.CacheBrowser.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CacheBrowser.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CacheBrowser.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.cachebrowser.1</td><td>EiffelSoftware.CacheBrowser.dll1</td><td>EIFFEL~1.DLL|EiffelSoftware.CacheBrowser.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CacheBrowser.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedom.dll</td><td>EiffelSoftware.CodeDom.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDom.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDom.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.codedom.dll1</td><td>EiffelSoftware.CodeDom.dll1</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDom.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDom.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedombase.d</td><td>EiffelSoftware.CodeDomBase.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.codedombase.d1</td><td>EiffelSoftware.CodeDomBase.dll1</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedomvision</td><td>EiffelSoftware.CodeDomVision2.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.codedomvision1</td><td>EiffelSoftware.CodeDomVision2.dll1</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.metadataconsu</td><td>EiffelSoftware.MetadataConsumer.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.MetadataConsumer.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\EiffelSoftware.MetadataConsumer.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.runtime.dll</td><td>EiffelSoftware.Runtime.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.runtime.dll1</td><td>EiffelSoftware.Runtime.dll1</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.runtime.dll2</td><td>EiffelSoftware.Runtime.dll2</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedombas</td><td>libEiffelSoftware.CodeDomBase.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedomvis</td><td>libEiffelSoftware.CodeDomVision2.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
 		<row><td>setup.ace</td><td>SetupFiles</td><td>setup.ace</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.ace</td><td>1</td><td/></row>
@@ -1605,12 +1620,17 @@
 		<row><td>ConfigFiles</td><td/><td/><td>_CBFC5493_DC52_4C45_9228_A47A6ADB7277_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>DefaultConfigFile</td><td/><td/><td>_B0CA0388_18F2_4405_8233_28F07493D93B_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td/><td/><td>_28E1E2D6_F570_4435_B47D_08F84705E2F5_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td/><td/><td>_0BD94B16_F931_49D2_A1F8_D098D3976CB7_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td/><td/><td>_A3D406D2_9260_4340_8DFB_0277EC984B4E_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td/><td/><td>_E4878813_61A9_4BAC_B268_DDFFCF8D2AAF_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_4F8B46EE_03B0_4942_BF1F_0DD0FBEE34E4_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td/><td/><td>_F31D6561_9F8C_4E7C_924F_9A8DC2D9DE9A_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td/><td/><td>_14B7153B_F386_4009_90A7_26A98BDBA339_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td/><td/><td>_7F993AE4_7FEA_470D_BA23_7B050BF2D79B_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td/><td/><td>_708C68A8_3F1D_43E3_9323_20FC9B3D6D16_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td/><td/><td>_85C2255F_9D58_4532_9404_13B2E76B01E4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td/><td/><td>_09E3568D_D040_4AF7_B977_CB2F2AE00C76_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td/><td/><td>_51FF6C21_E57B_4BA4_A4E2_79000ACB78E2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Empty</td><td/><td/><td>_39C2145D_C592_42C1_A809_53CC7DBE45E8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ErrorFiles</td><td/><td/><td>_9426D662_3307_4ED0_A6F4_BE503BDA051E_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Library</td><td/><td/><td>_90E8817E_BF3D_4872_93B7_5DFC046A13B3_FILTER</td><td/><td/><td/><td/></row>
@@ -1666,8 +1686,6 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s255">ISMergeModule_</col>
 		<col key="yes" def="i2">Language_</col>
-		<row><td>Feature</td><td>OLEAUT32.8C0C59A0_7DC8_11D2_B95D_006097C4DE24</td><td>0</td></row>
-		<row><td>Feature</td><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISCommon">
@@ -1777,8 +1795,6 @@
 		<col def="s255">Name</col>
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>OLEAUT32.8C0C59A0_7DC8_11D2_B95D_006097C4DE24</td><td>0</td><td>Microsoft OLE 2.40  for Windows NT(TM) and Windows 95(TM) Operating Systems</td><td/><td/></row>
-		<row><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td><td>ASP.NET Enabler 2.0</td><td/><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
@@ -2975,11 +2991,17 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEA
 		<col def="S72">File_Application</col>
 		<col def="I2">Attributes</col>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Feature</td><td>eiffelsoftware.cachebrowser.</td><td>eiffelsoftware.cachebrowser.</td><td>0</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td>Feature</td><td>eiffelsoftware.cachebrowser.1</td><td/><td>0</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>Feature</td><td>eiffelsoftware.codedom.dll</td><td>eiffelsoftware.codedom.dll</td><td>0</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td>Feature</td><td>eiffelsoftware.codedom.dll1</td><td/><td>0</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Feature</td><td>eiffelsoftware.codedombase.d</td><td>eiffelsoftware.codedombase.d</td><td>0</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>Feature</td><td>eiffelsoftware.codedombase.d1</td><td/><td>0</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Feature</td><td>eiffelsoftware.codedomvision</td><td>eiffelsoftware.codedomvision</td><td>0</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td>Feature</td><td>eiffelsoftware.codedomvision1</td><td/><td>0</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Feature</td><td>eiffelsoftware.metadataconsu</td><td>eiffelsoftware.metadataconsu</td><td>0</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>Feature</td><td>eiffelsoftware.runtime.dll</td><td>eiffelsoftware.runtime.dll</td><td>0</td></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>Feature</td><td>eiffelsoftware.runtime.dll1</td><td>eiffelsoftware.runtime.dll1</td><td>0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td>Feature</td><td>eiffelsoftware.runtime.dll2</td><td/><td>0</td></row>
 		<row><td>ecdpman.exe</td><td>Feature</td><td>ecdpman.exe</td><td>ecdpman.exe</td><td>0</td></row>
 	</table>
 
@@ -2991,18 +3013,38 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEA
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Name</td><td>EiffelSoftware.CacheBrowser</td></row>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
 		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td>Name</td><td>EiffelSoftware.CacheBrowser</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll1</td><td>Version</td><td>2.0.1.1313</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>Culture</td><td>neutral</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>Name</td><td>EiffelSoftware.CodeDom</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
 		<row><td>EiffelSoftware.CodeDom.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td>Name</td><td>EiffelSoftware.CodeDom</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll1</td><td>Version</td><td>2.0.1.1313</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Culture</td><td>neutral</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Name</td><td>EiffelSoftware.CodeDomBase</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
 		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>Name</td><td>EiffelSoftware.CodeDomBase</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll1</td><td>Version</td><td>2.0.1.1313</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Culture</td><td>neutral</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Name</td><td>EiffelSoftware.CodeDomVision2</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
 		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td>Name</td><td>EiffelSoftware.CodeDomVision2</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll1</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Name</td><td>EiffelSoftware.MetadataConsumer</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Version</td><td>5.6.121.0</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>Culture</td><td>neutral</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>FileVersion</td><td>5.5.820.0</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>Name</td><td>EiffelSoftware.Runtime</td></row>
@@ -3013,6 +3055,10 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEA
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>Name</td><td>EiffelSoftware.Runtime</td></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>Version</td><td>5.5.820.0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td>Name</td><td>EiffelSoftware.Runtime</td></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.Runtime.dll2</td><td>Version</td><td>5.5.820.0</td></row>
 		<row><td>ecdpman.exe</td><td>Culture</td><td>neutral</td></row>
 		<row><td>ecdpman.exe</td><td>Name</td><td>ecdpman</td></row>
 		<row><td>ecdpman.exe</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>

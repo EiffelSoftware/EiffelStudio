@@ -9,6 +9,10 @@ class
 
 inherit
 	EDITOR_TOKEN
+		redefine
+			display_selected,
+			display_half_selected
+		end
 
 	SHARED_EDITOR_PREFERENCES
 		export
@@ -38,6 +42,60 @@ feature -- Miscellaneous
 	display(d_y: INTEGER; dc: WEL_DC) is
 		do
 			-- Display nothing
+		end
+
+	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
+		local
+			old_text_color: WEL_COLOR_REF
+			old_background_color: WEL_COLOR_REF
+			displayed_string: STRING
+		do
+				-- Change drawing style here.
+			old_text_color := a_dc.text_color
+			old_background_color := a_dc.background_color
+			a_dc.set_text_color(selected_text_color)
+			a_dc.set_background_color(selected_background_color)
+			a_dc.select_font(font)
+
+				-- Display the text.
+			create displayed_string.make(editor_preferences.tabulation_spaces * number_of_tabs)
+			displayed_string.fill_character(' ')
+			a_dc.text_out (position, d_y, displayed_string)
+
+				-- Restore drawing style here.
+			a_dc.set_text_color(old_text_color)
+			a_dc.set_background_color(old_background_color)
+			a_dc.unselect_font
+		end
+
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
+		local
+			old_text_color: WEL_COLOR_REF
+			old_background_color: WEL_COLOR_REF
+			displayed_string: STRING
+			local_position: INTEGER
+		do
+				-- Backup current drawing style.
+			old_text_color := a_dc.text_color
+			old_background_color := a_dc.background_color
+			local_position := position
+
+				-- Change drawing style here.
+			a_dc.set_text_color(selected_text_color)
+			a_dc.set_background_color(selected_background_color)
+			a_dc.select_font(font)
+
+			local_position := local_position + get_substring_width(start_selection-1)
+
+				-- Display the text.
+			create displayed_string.make(editor_preferences.tabulation_spaces * (end_selection-start_selection))
+			displayed_string.fill_character(' ')
+			a_dc.text_out (local_position, d_y, displayed_string)
+
+				-- Restore drawing style here.
+			a_dc.set_text_color(old_text_color)
+			a_dc.set_background_color(old_background_color)
+			a_dc.unselect_font
 		end
 
 	width: INTEGER is
@@ -92,6 +150,16 @@ feature {NONE} -- Implementation
 			create dc.make
 			dc.select_font(font)
 			Result := editor_preferences.tabulation_spaces * dc.string_width(" ")
+			dc.unselect_font
+		end
+
+	font_height: INTEGER is
+		local
+			dc: WEL_MEMORY_DC
+		once
+			create dc.make
+			dc.select_font(font)
+			Result := dc.string_height(" ")
 			dc.unselect_font
 		end
 

@@ -58,9 +58,9 @@ feature -- Initialization
 				dc.select_font(font)
 				space_size := dc.string_size(" ")
 				line_height := space_size.height
-				line_increment := line_height + 1
+--				line_increment := line_height + 1
+				line_increment := line_height
 				dc.unselect_font
-
 					-- First display the first line...
 				first_line_displayed := 1
 			end
@@ -503,14 +503,37 @@ feature {NONE} -- Display functions
 			-- Display `line' at the coordinates (`d_x',`d_y') on the
 			-- device context `dc'.
 		local
-			curr_y		: INTEGER
-			cursor_line : BOOLEAN -- Is the cursor present in the current line?
-			curr_token	: EDITOR_TOKEN
-			width_cursor: INTEGER
-			start_cursor: INTEGER
+			curr_y				: INTEGER
+			cursor_line 		: BOOLEAN -- Is the cursor present in the current line?
+			curr_token			: EDITOR_TOKEN
+			width_cursor		: INTEGER
+			start_cursor		: INTEGER
+			selected_line		: BOOLEAN -- Is the entire line selected?
+			not_selected_line	: BOOLEAN -- Is the entire line NOT selected?
+			token_selection		: INTEGER
+			token_begin_selection: INTEGER
+			token_end_selection: INTEGER
+			begin_selection		: TEXT_CURSOR -- Cursor that represents the begin of the selection
+			end_selection		: TEXT_CURSOR
 		do
 			curr_y := (a_line - first_line_displayed)*line_increment
 			cursor_line := (a_line = cursor.y_in_lines)
+
+			if has_selection then
+				if cursor > selection_start then
+					begin_selection := selection_start
+					end_selection := cursor
+				else
+					begin_selection := cursor
+					end_selection := selection_start
+				end
+				if (a_line > begin_selection.y_in_lines) and (a_line < end_selection.y_in_lines) then
+					selected_line := True
+				end
+				if (a_line < begin_selection.y_in_lines) or (a_line > end_selection.y_in_lines) then
+					not_selected_line := True
+				end
+			end
 
 			from
 				line.start
@@ -519,8 +542,74 @@ feature {NONE} -- Display functions
 			loop
 				curr_token := line.item
 
-					-- Display the token.
-				curr_token.display(curr_y, dc)
+				if has_selection then
+					-- The text contains a selection, we may have to display this token
+					-- in its selected state.
+
+						-- Initialise the token state.
+					token_selection := Token_not_selected
+
+						-- Entire line selected
+					if selected_line then
+						token_selection := Token_selected
+
+						-- No token in the line are selected
+					elseif not_selected_line then
+						token_selection := Token_not_selected
+
+						-- Some tokens in the line are selected, and the selection starts and ends on the same line
+					elseif (a_line = begin_selection.y_in_lines) and then (a_line = end_selection.y_in_lines) then
+						if (curr_token.position > begin_selection.token.position) and then (curr_token.position < end_selection.token.position) then
+							token_selection := Token_selected
+						elseif (curr_token.position < begin_selection.token.position) or else (curr_token.position > end_selection.token.position) then
+							token_selection := Token_not_selected
+						else
+							token_begin_selection := 1
+							token_end_selection := curr_token.length + 1
+							if (curr_token.position = begin_selection.token.position) then
+								token_selection := Token_half_selected
+								token_begin_selection := begin_selection.pos_in_token
+							end
+							if (curr_token.position = end_selection.token.position) then
+								token_selection := Token_half_selected
+								token_end_selection := end_selection.pos_in_token
+							end
+						end
+
+						-- Some tokens in the line are selected (first selected line)
+					elseif (a_line = begin_selection.y_in_lines) then
+						if (curr_token.position > begin_selection.token.position) then
+							token_selection := Token_selected
+						elseif (curr_token.position = begin_selection.token.position) then
+							token_selection := Token_half_selected
+							token_begin_selection := begin_selection.pos_in_token
+							token_end_selection := curr_token.length + 1
+						end
+
+						-- Some tokens in the line are selected (last selected line)
+					elseif (a_line = end_selection.y_in_lines) then
+						if (curr_token.position < end_selection.token.position) then
+							token_selection := Token_selected
+						elseif (curr_token.position = end_selection.token.position) then
+							token_selection := Token_half_selected
+							token_begin_selection := 1
+							token_end_selection := end_selection.pos_in_token
+						end
+
+					end
+				end
+
+				inspect token_selection
+				when Token_not_selected then
+						-- Normally Display the token.
+					curr_token.display(curr_y, dc)
+				when Token_selected then
+					curr_token.display_selected(curr_y, dc)
+				when Token_half_selected then
+					curr_token.display_half_selected(curr_y, token_begin_selection, token_end_selection, dc)
+				else
+					-- Unexpected value, do nothing
+				end
 
 					-- Display the cursor (if needed).
 				if cursor_line and then cursor.token = curr_token then
@@ -602,6 +691,7 @@ feature {NONE} -- Implementation
 		end
 
 	font: WEL_FONT is
+			-- Current text font.
 		local
 			log_font: WEL_LOG_FONT
 		once
@@ -611,16 +701,28 @@ feature {NONE} -- Implementation
 		end
 
 	cursor: TEXT_CURSOR is
+			-- Current cursor.
 		once
 				-- Create the cursor
 			create Result.make_from_absolute_pos(0,1,Current)
 		end
 
 	selection_start: TEXT_CURSOR
+			-- Position where the user has started to select
+			-- the text. This position can be below the current
+			-- cursor (and therefore represent the end of the
+			-- selection)
 
 	has_selection: BOOLEAN
+			-- Is there a selection?
 
 	shifted_key: BOOLEAN
+
+feature {NONE} -- Private Constants
+
+	Token_not_selected	: INTEGER is 0
+	Token_selected		: INTEGER is 1
+	Token_half_selected	: INTEGER is 4
 
 end -- class CHILD_WINDOW
 

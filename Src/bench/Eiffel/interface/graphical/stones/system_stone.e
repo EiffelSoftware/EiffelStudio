@@ -28,7 +28,8 @@ feature -- Access
  
 	signature: STRING is
 		do
-			if Eiffel_project.initialized then
+			if Eiffel_project.initialized and then
+				Eiffel_project.system_defined then
 				Result := Eiffel_system.name
 			else
 				-- FIXME: `signature' is asked only when system 

@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 			-- Default initialization of every gauge.
 		do
 			Precursor
-			wel_set_range (1, 100)
+			wel_set_range (0, 100)
 			wel_set_step (1)
 			wel_set_leap (10)
-			wel_set_value (1)
+			wel_set_value (0)
 		end
 
 feature -- Access
@@ -171,6 +171,9 @@ end -- class EV_GAUGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/13 18:18:11  brendel
+--| Default minimum = 0; value = 0.
+--|
 --| Revision 1.6  2000/02/15 16:49:25  brendel
 --| Implementation of feature `range' moved to _IMP.
 --|

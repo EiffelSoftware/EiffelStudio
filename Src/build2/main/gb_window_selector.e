@@ -454,7 +454,6 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 		require
 			an_object_not_void: an_object /= Void
 		local
-			selector_item: GB_WINDOW_SELECTOR_ITEM
 			command_move_window: GB_COMMAND_MOVE_WINDOW
 			command_add_window: GB_COMMAND_ADD_WINDOW
 		do

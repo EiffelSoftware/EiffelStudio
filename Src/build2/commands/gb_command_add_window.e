@@ -68,8 +68,6 @@ feature {NONE} -- Initialization
 			-- position `position'.
 		require
 			window_not_void: window /= Void
-		local
-			parent_item: EV_TREE_ITEM
 		do
 			History.cut_off_at_current_position
 			if a_new_directory /= Void then
@@ -84,7 +82,6 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
-			full_file_name, file_location: FILE_NAME
 			selector_item: GB_WINDOW_SELECTOR_ITEM
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
@@ -127,8 +124,6 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			file_name: FILE_NAME
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)
 			check

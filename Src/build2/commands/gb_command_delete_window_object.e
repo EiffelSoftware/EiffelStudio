@@ -85,7 +85,6 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		local
-			full_file_name, file_location: FILE_NAME
 			window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)
@@ -120,7 +119,6 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		local
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			file_name: FILE_NAME
 			window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)

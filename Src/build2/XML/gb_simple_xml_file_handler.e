@@ -138,8 +138,6 @@ feature {NONE} -- Implementation
 			-- Load file `a_filename' and parse.
 			-- `Result' is all information in `a_filename'.
 		local
-			temp_window: EV_TITLED_WINDOW
-			error_dialog:EV_ERROR_DIALOG
 			root_element: XM_ELEMENT
 			child_names: ARRAYED_LIST [STRING]
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]

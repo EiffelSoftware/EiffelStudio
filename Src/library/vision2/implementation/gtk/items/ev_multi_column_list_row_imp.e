@@ -17,15 +17,15 @@ inherit
 			set_count as set_columns
 		undefine
 			destroy,
-			destroyed--,
+			destroyed,
+			parent
 --			top_parent_imp
 		redefine
 			set_foreground_color,
 			set_background_color,
 			foreground_color,
 			background_color,
-			set_parent,
-			parent_imp
+			set_parent
 		end
 
 create
@@ -349,10 +349,10 @@ feature -- Event -- removing command association
 			end
 		end	
 
-feature {NONE} -- Implementation
-
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
-		-- Multi-column list that own the current object 
+--feature {NONE} -- Implementation
+--
+--	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+--		-- Multi-column list that own the current object 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

@@ -40,8 +40,8 @@ feature {NONE} -- Implementation
 			-- Set `value' of `scroll_bar' based on `x'.
 			-- The default value of a scroll bar is 0-100.
 		do
-			scroll_bar.set_value (((x / scroll_bar.width) *
-				(scroll_bar.value_range.capacity - scroll_bar.leap + 1)).truncated_to_integer)
+			scroll_bar.set_value ((((x / scroll_bar.width) *
+				(scroll_bar.value_range.capacity - scroll_bar.leap + 1)).truncated_to_integer).max (0).min (100))
 		end
 		
 	scroll_bar: EV_HORIZONTAL_SCROLL_BAR

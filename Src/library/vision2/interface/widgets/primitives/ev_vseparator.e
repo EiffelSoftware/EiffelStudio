@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_SEPARATOR
+		redefine
+			implementation
+		end
 
 creation
 	make
@@ -21,6 +24,10 @@ feature {NONE} -- Initialization
  			!EV_VERTICAL_SEPARATOR_IMP!implementation.make (par)
  			widget_make (par)
  		end
+
+feature {NONE} -- Implementation
+
+	implementation: EV_VERTICAL_SEPARATOR_I
 
 end -- class EV_VERTICAL_SEPARATOR
 

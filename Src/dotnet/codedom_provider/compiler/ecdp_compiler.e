@@ -181,9 +181,7 @@ feature {NONE} -- Private Implementation
 			i: INTEGER
 			l_file_name: SYSTEM_STRING
 			l_sw: STREAM_WRITER
-			l_str: SYSTEM_STRING
 			l_res: SYSTEM_OBJECT
-			l_ce: SYSTEM_DLL_COMPILER_ERROR
 			l_rescued: BOOLEAN
 		do
 			if not l_rescued then
@@ -281,9 +279,7 @@ feature {NONE} -- Private Implementation
 		require
 			non_void_options: options /= Void
 		local
-			ce: SYSTEM_DLL_COMPILER_ERROR
 			rescued: BOOLEAN
-			dummy: SYSTEM_OBJECT
     	do
 			if not rescued then
 				Result := compile (options)
@@ -309,13 +305,11 @@ feature {NONE} -- Private Implementation
 			l_np: SYSTEM_DLL_PROCESS
 			l_nm: SYSTEM_STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
-			l_temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION
-			l_sd: SYSTEM_DIRECTORY
 			l_ce: SYSTEM_DLL_COMPILER_ERROR
-			l_assembly_path, l_assembly_final_path, l_pdb_path, l_pdb_final_path, l_base_path: SYSTEM_STRING
+			l_assembly_path, l_assembly_final_path, l_pdb_path, l_pdb_final_path: SYSTEM_STRING
 			l_res: INTEGER
 		do
-			set_environment_variable (Ise_eiffel_key, Codedom_installation_path)
+			set_environment_variable ("ISE_EIFFEL", Codedom_installation_path)
 			set_environment_variable ("ISE_PLATFORM", "windows")
 			set_environment_variable ("ISE_C_COMPILER", "msc")
 			create l_exec
@@ -330,7 +324,7 @@ feature {NONE} -- Private Implementation
 			if feature {SYSTEM_DIRECTORY}.exists (l_dir) then
 				feature {SYSTEM_DIRECTORY}.delete (l_dir, True)
 			end
-			create l_si.make_from_file_name (Path_to_eiffel_compiler + Compiler_name)
+			create l_si.make_from_file_name (Eiffel_compiler_path + Compiler_name)
 			create l_ace_file_path.make_from_cil (ace_file_path)
 			l_si.set_arguments (" -precompile -ace %"" + l_ace_file_path + "%" -batch  -project_path %"" + l_output_file + "%"")
 			l_si.set_use_shell_execute (False)
@@ -348,7 +342,7 @@ feature {NONE} -- Private Implementation
 				l_dir.append ("\W_code")
 				if feature {SYSTEM_DIRECTORY}.exists (l_dir) then
 					l_exec.change_working_directory (l_dir)
-					create l_si.make_from_file_name ((Path_to_eiffel_compiler + Finish_freezing_name).to_cil)
+					create l_si.make_from_file_name ((Eiffel_compiler_path + Finish_freezing_name).to_cil)
 					l_si.set_arguments (Finish_freezing_args)
 					l_si.set_use_shell_execute (False)
 					l_si.set_redirect_standard_error (True)
@@ -489,8 +483,35 @@ feature -- Basic Operations
 			create l_event_manager
 			l_event_manager.process_exception
 		end
-		
+
 feature {NONE} -- Implementation
+
+	set_environment_variable (name, value: STRING) is
+			-- Set environment variable `name' with `value'
+		local
+			l_name, l_value: C_STRING
+			l_success: BOOLEAN
+		do
+			create l_name.make (name)
+			create l_value.make (value)
+			l_success := c_set_environment_variable (l_name.item, l_value.item)
+			check
+				environment_variable_set: feature {ENVIRONMENT}.expand_environment_variables (("%%name%%").to_cil).compare_to_string (value.to_cil) = 0
+			end
+		end
+
+feature {NONE} -- External
+
+	c_set_environment_variable (name, value: POINTER): BOOLEAN is
+			-- Set environment variable `name' with value `value'.
+			-- Return True if successful.
+		external
+			"C macro signature (LPCTSTR, LPCTSTR): EIF_BOOLEAN use <windows.h>"
+		alias
+			"SetEnvironmentVariable"
+		end
+
+feature {NONE} -- Private Access
 
 	Assembly_extension: STRING is "dll"
 			-- Assembly extension.

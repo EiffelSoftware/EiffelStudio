@@ -45,6 +45,11 @@ inherit
 			enabled as is_sensitive,
 			item as wel_item,
 			move as move_to
+			x as x_position,
+			y as y_position,
+			move as wel_resize,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -218,6 +223,15 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/16 23:51:30  rogers
+--| renamed
+--| 	x as x_position,
+--| 	y as y_position,
+--| 	move as wel_resize,
+--| 	resize as wel_resize,
+--| 	move_and_resize as wel_move_and_resize
+--| from WEL_SINGLE_EDIT
+--|
 --| Revision 1.32  2000/02/23 01:49:08  rogers
 --| Removed old command association. Change events are now fired when the text of changes.
 --|

@@ -42,7 +42,8 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_set_cursor,
-			process_notification
+			process_notification,
+			set_text
 		redefine
 			default_style
 		end

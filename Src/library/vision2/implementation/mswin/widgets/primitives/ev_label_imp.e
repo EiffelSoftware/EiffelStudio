@@ -57,7 +57,8 @@ inherit
 			on_key_down,
 			default_style,
 			wel_background_color,
-			wel_foreground_color
+			wel_foreground_color,
+			set_text
 		end
 
 creation
@@ -77,7 +78,6 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 			set_font (font)
-			set_default_minimum_size
 		end
 
 feature -- Status setting
@@ -114,6 +114,15 @@ feature -- Status setting
 			if parent_imp /= Void then
 				notify_change (1 + 2)
 			end
+		end
+
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Set the window text
+		do
+			{WEL_STATIC} Precursor (txt)
+			set_default_minimum_size
 		end
 
 feature {NONE} -- WEL Implementation

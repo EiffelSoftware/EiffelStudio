@@ -33,7 +33,6 @@ feature -- Initialization
 			set_margin_height (5)
 			only_one := True
 			managed := man
-			set_same_size
 		end
 
 	set_always_one (flag: BOOLEAN) is

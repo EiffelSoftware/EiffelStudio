@@ -31,7 +31,12 @@ feature {WIZARD_WINDOW} -- Basic Operations
 			-- Go to the next step.
 		do
 			if history.item.entries_changed and not history.islast then
-				history.remove_right
+				from
+				until
+					history.islast
+				loop
+					history.remove_right
+				end
 			end
 			if history.islast then
 				history.item.update_state_information
@@ -66,6 +71,9 @@ feature {WIZARD_WINDOW} -- Basic Operations
 				history.back
 			end
 			history.wipe_out
+
+			first_window.destroy
+
 		ensure
 			ready_to_exit: history.count=0
 		end
@@ -94,6 +102,9 @@ feature {NONE} -- Implementation
 
 	is_final_state: BOOLEAN
 		-- Is Current state a final state.
+
+	is_initial_state: BOOLEAN
+		-- Is Current state the initial state.
 
 invariant
 	state_information_defined: state_information /= Void

@@ -10,7 +10,7 @@ deferred class
 inherit
 	WIZARD_STATE_MANAGER
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make(an_info: like state_information) is
 			-- Create current object with information
@@ -19,9 +19,9 @@ feature -- Initialization
 		do
 			state_information := clone(an_info)
 			change_entries
-			if is_final_state then
-				first_window.set_final_state
-			end
+--			if is_final_state then
+--				first_window.set_final_state
+--			end
 		ensure
 			information_set: state_information /= Void
 		end
@@ -71,7 +71,6 @@ feature -- Basic Operations
 	update_state_information is
 			-- Check User entries.
 		require
-			entries_not_yet_read: not entries_checked
 			user_types_something: entries_changed
 		do
 			entries_checked := TRUE

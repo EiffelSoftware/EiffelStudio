@@ -18,7 +18,7 @@
 								<?define destination=$(var.ISE_RELEASE) ?>
 							<?endif?>
 							<Directory Id="lib" Name="lib" src="$(env.INSTALL_DIR)\releases\$(var.destination)\lib\" >
-								<?if not $(env.WIN64)="true" ?>
+								<?if not $(env.ISE_PLATFORM)="win64" ?>
 									<Directory Id="bcb" Name="bcb">
 										<Component Id="bcb" Guid="8B26D3AB-1D7C-4B7B-8726-382D0E0576BD">
 											<File Id="mtwkbench.lib" Name="MTWKBE~1.LIB" LongName="mtwkbench.lib" KeyPath="yes" />
@@ -36,7 +36,7 @@
 										<File Id="mtwkbench.lib3" Name="MTWKBE~2.LIB" LongName="mtwkbench.lib" />
 										<File Id="dll_finalized.lib" Name="DLL_FI~1.LIB" LongName="dll_finalized.lib" />
 										<File Id="finalized.lib4" Name="FINALI~2.LIB" LongName="finalized.lib" />
-										<?if not $(env.WIN64)="true" ?>
+										<?if not $(env.ISE_PLATFORM)="win64" ?>
 											<File Id="ise_desc.lib" Name="ise_desc.lib" />
 										<?endif?>
 										<File Id="dll_mtfinalized.lib" Name="DLL_MT~1.LIB" LongName="dll_mtfinalized.lib" />
@@ -45,7 +45,7 @@
 									<Component Id="FINALI1.DLL" Guid="D6592FF5-7F10-418D-9E53-264554AF7F45">
 										<File Id="finalized.dll" Name="FINALI~1.DLL" LongName="finalized.dll" KeyPath="yes" />
 									</Component>
-									<?if not $(env.WIN64)="true" ?>
+									<?if not $(env.ISE_PLATFORM)="win64" ?>
 										<Component Id="ise_desc.dll" Guid="9BB55A24-D3C6-4A10-A3D4-398C01CE1257">
 											<File Id="ise_desc.dll" Name="ise_desc.dll" KeyPath="yes" />
 										</Component>

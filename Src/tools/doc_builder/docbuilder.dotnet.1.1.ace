@@ -4,15 +4,19 @@ system
 root
 	DOC_BUILDER: make_and_launch
 
-default	
+default
 	assertion (no)
 	msil_generation (yes)
+	--working_directory ("C:\MyProjects\Documentation\Deliveries\dotnet\1.1")
 	disabled_debug (yes)
 	disabled_debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("editor")
 	disabled_debug ("gelex")
 	disabled_debug ("geyacc")
+	disabled_debug ("refactor_fixme")
 	disabled_debug ("regexp")
+	disabled_debug ("trace")
 	disabled_debug ("vision2_windows")
 	disabled_debug ("vision2_windows_gdi")
 	disabled_debug ("wel")
@@ -34,19 +38,20 @@ default
 	msil_clr_version ("v1.1.4322")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
-	console_application (no)
+	console_application (yes)
 	syntax_warning (no)
 	address_expression (no)
 	array_optimization (no)
 	dead_code_removal (yes)
 	dynamic_runtime (no)
-	exception_trace (no)
+	exception_trace (yes)
 	inlining (no)
 	multithreaded (no)
 
 
 cluster
 	all base_net:		"$EIFFEL_SRC\library.net\base"
+
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -65,75 +70,47 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "gtk2"; "ev_checkable_tree.e";
+			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "gtk2"; "ev_checkable_tree.e"; 
 		end
 
 	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"
 
 	all vision2_extensions:		"$EIFFEL_SRC\library\vision2_extension"
 
-	root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
+	all root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
 		exclude
-			"doc_builder_classic.e"; 
+			"doc_builder_classic.e"; "facade"; 
 		end
-
-	project (root_cluster):		"$\project"
-
-	managers (project):		"$\managers"
-
-	filters (project):		"$\filter"
-
-	templates (project):		"$\templates"
-
-	interface (root_cluster):		"$\interface"
-
-	interface_widgets (interface):		"$\widgets"
-
-	interface_app (interface):		"$\application"
-
-	interface_wizard (interface):		"$\wizard"
-
-	shared (root_cluster):		"$\shared"
-
-	shared_constants (shared):		"$\constants"
-
-	shared_misc (shared):		"$\miscellaneous"
-
-	misc (root_cluster):		"$\miscellaneous"
-
-	patterns (misc):		"$\patterns"
-
-	observer (patterns):		"$\observer"
-
-	xml (root_cluster):		"$\xml"
-
-	schema (xml):		"$\schema"
-
-	xsl (xml):		"$\xslt"
-
-	validation (xml):		"$\validation"
-
-	help (root_cluster):		"$\help"
-
-	help_shared (help):		"$\shared"
-
-	help_project (help):		"$\project"
-
-	help_toc (help):		"$\toc"
 
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
 			"french"; "german"; 
 		end
 
+	all editor:		"$EIFFEL_SRC\library\editor"
+		exclude
+			"constants.e"; "constants_imp.e"; 
+		end
+
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "other"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
 		end
+
+	all lex:		"$ISE_EIFFEL\library\lex"
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"CVS"; 
+			"CVS"; "xml_implementation"; 
+		default
+			assertion (no)
+			assertion (check)
+			assertion (require)
+		end
+
+	compiler_observer:		"$EIFFEL_SRC\library\patterns\observer"
+		exclude
+			"observer.e"; 
 		end
 
 	all env:		"$EIFFEL_SRC\Eiffel\lace\env"
@@ -146,44 +123,53 @@ cluster
 			"CVS"; 
 		end
 
-	spell (root_cluster):		"$\spell"
+	compiler_structures:		"$EIFFEL_SRC\Eiffel\eiffel\structures"
+		exclude
+			"names_heap.e"; 
+		end
 
 assembly
-	"AxSHDocVw":	"$EIFFEL_SRC\tools\doc_builder\AxSHDocVw.dll"
+	"AxSHDocVw":	"$EIFFEL_SRC\tools\doc_builder\Assemblies_11\AxSHDocVw.dll"
 
-	"SHDocVw":	"$EIFFEL_SRC\tools\doc_builder\SHDocVw.dll"
+	"SHDocVw":	"$EIFFEL_SRC\tools\doc_builder\Assemblies_11\SHDocVw.dll"
 		prefix
 			"sh_"
 		end
 
-	"eiffelsoftware_runtime":	"$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
-
 	"NetSpellChecker":	"$EIFFEL_SRC\tools\doc_builder\NetSpell.SpellChecker.DLL"
 
-	"mscorlib":	"mscorlib","1.0.5000.0","neutral","b77a5c561934e089"
-	           
-	"system_":	"System","1.0.5000.0","neutral","b77a5c561934e089"
+	"eiffelsoftware_runtime":	"$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
+
+	"mscorlib":	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
+
+	"system_":	"$ISE_DOTNET_FRAMEWORK\System.dll"
 		prefix
-			system_dll_
+			"SYSTEM_DLL_"
 		end
 
-	"system_xml":	"System.Xml","1.0.5000.0","neutral","b77a5c561934e089"
+	"system_xml":	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
 		prefix
-			xml_
+			"XML_"
 		end
 
-	"system_drawing":	"System.Drawing","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+	"winforms":	"$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll"
 		prefix
-			drawing_
+			"WINFORMS_"
 		end
 
-	"accessibility":	"Accessibility","1.0.5000.0","neutral","b03f5f7f11d50a3a"
-
-	"system_runtime_serialization_formatters_soap":	"System.Runtime.Serialization.Formatters.Soap","1.0.5000.0","neutral","b03f5f7f11d50a3a"
-
-	"system_windows_forms":	"System.Windows.Forms","1.0.5000.0","neutral","b77a5c561934e089"
+	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
 		prefix
-			winforms_
+			"DRAWING_"
+		end
+
+	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
+		prefix
+			"ACCESSIBILITY_"
+		end
+
+	"System.Runtime.Serialization.Formatters.Soap, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"c:\windows\assembly\gac\system.runtime.serialization.formatters.soap\1.0.5000.0__b03f5f7f11d50a3a\system.runtime.serialization.formatters.soap.dll"
+		prefix
+			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
 		end
 
 external

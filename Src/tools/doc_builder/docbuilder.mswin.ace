@@ -4,10 +4,10 @@ system
 root
 	DOC_BUILDER: make_and_launch
 
-default	
+default
 	assertion (no)
 	disabled_debug (yes)
-	debug ("console_output")
+	disabled_debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("gelex")
 	disabled_debug ("geyacc")
@@ -24,7 +24,7 @@ default
 	profile (no)
 	trace (no)
 	check_vape (yes)
-	console_application (yes)
+	console_application (no)
 	syntax_warning (no)
 	address_expression (no)
 	array_optimization (no)
@@ -37,102 +37,83 @@ default
 
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
+	all root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
 		exclude
-			"doc_builder.e"; 
-		end
-
-	project (root_cluster):		"$\project"
-
-	managers (project):		"$\managers"
-
-	filters (project):		"$\filter"
-
-	templates (project):		"$\templates"
-
-	interface (root_cluster):		"$\interface"
-
-	interface_widgets (interface):		"$\widgets"
-		exclude
+			"facade";
+			"doc_builder.e"; 			
 			"document_browser.e"; 
+			"document_schema.e"; 
+			"document_schema_element.e"; 
+			"schema_rendering_factory.e"; 
+			"spell_checker.e"; 
+			"web_browser_widget.e";
+			"schema_validator.e";
 		end
-
-	interface_app (interface):		"$\application"
-
-	interface_wizard (interface):		"$\wizard"
-
-	shared (root_cluster):		"$\shared"
-
-	shared_constants (shared):		"$\constants"
-
-	shared_misc (shared):		"$\miscellaneous"
-
-	misc (root_cluster):		"$\miscellaneous"
-
-	patterns (misc):		"$\patterns"
-
-	observer (patterns):		"$\observer"
-
-	xml (root_cluster):		"$\xml"
-
-	xsl (xml):		"$\xslt"
-		exclude
-			"xsl_transform.e"; 
-		end
-
-	help (root_cluster):		"$\help"
-
-	help_shared (help):		"$\shared"
-
-	help_project (help):		"$\project"
-
-	help_toc (help):		"$\toc"
 
 	facade (root_cluster):		"$\facade"
 		exclude
 			"help_manager.e"; "help_setting_constants.e"; 
 		end
 
-	all base:		"$EIFFEL_SRC\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"CVS"; "table_eiffel3"; "desc"; 
 		end
 
-	all wel:		"$EIFFEL_SRC\library\wel"
+	all wel:		"$ISE_EIFFEL\library\wel"
 		exclude
 			"CVS"; 
 		end
 
-	all vision2:		"$EIFFEL_SRC\library\vision2"
+	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude
-			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; "ev_checkable_tree.e";
+			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; "ev_checkable_tree.e"; 
 		end
 
-	all time:		"$EIFFEL_SRC\library\time"
+	all time:		"$ISE_EIFFEL\library\time"
 		exclude
 			"french"; "german"; 
-		end
+		end	
 
-	all gobo:		"$EIFFEL_SRC\library\gobo\library"
-		exclude
-			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "other"; 
-		default
-			assertion (no)
-		end
-
-	all preferences:		"$EIFFEL_SRC\library\preferences"
-		exclude
-			"CVS"; 
-		end
-		
 	all env:		"$EIFFEL_SRC\Eiffel\lace\env"
 		exclude
 			"CVS"; 
 		end
-		
+
 	all compiler_shared:		"$EIFFEL_SRC\Eiffel\eiffel\shared"
 		exclude
 			"CVS"; 
+		end
+		
+	all editor: 		"$EIFFEL_SRC\library\editor"
+		exclude
+			"constants.e"; "constants_imp.e";
+		end
+				
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+		end
+	
+	all lex:		"$ISE_EIFFEL\library\lex"
+
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			"CVS"; "xml_implementation"; 
+		default
+			assertion (no)
+			assertion (check)
+			assertion (require)
+		end
+	
+	compiler_observer:	"$EIFFEL_SRC\library\patterns\observer"
+		exclude
+			"observer.e";
+		end
+		
+	compiler_structures:	"$EIFFEL_SRC\Eiffel\eiffel\structures"
+		exclude
+			"names_heap.e";
 		end
 
 external

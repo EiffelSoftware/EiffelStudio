@@ -93,7 +93,7 @@ feature {NONE} -- Query
 				end
 			end
 			
-			Result := shared_error_reporter.error /= Void
+			Result := shared_error_reporter.error = Void
 		end	
 
 feature {NONE} -- GUI

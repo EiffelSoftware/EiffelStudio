@@ -75,6 +75,7 @@ feature -- Once objects
 		once
 			create Result
 			Result.set_graphical_mode (Shared_constants.Application_constants.is_gui_mode)
+			Result.suppress_progress_bar (False)
 		end
 
 feature -- Shared

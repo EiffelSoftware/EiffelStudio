@@ -23,7 +23,7 @@ default
 	line_generation (yes)
 	profile (no)
 	trace (no)
-	override_cluster ("build2_demo_version")
+	override_cluster ("preferences")
 	check_vape (no)
 	console_application (no)
 	array_optimization (yes)

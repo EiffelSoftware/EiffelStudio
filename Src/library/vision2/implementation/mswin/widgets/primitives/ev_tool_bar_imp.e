@@ -49,7 +49,8 @@ inherit
 
 	EV_HASH_TABLE_ITEM_HOLDER_IMP [EV_TOOL_BAR_ITEM]
 		redefine
-			interface
+			interface,
+			initialize
 		end
 	
 	WEL_FLAT_TOOL_BAR
@@ -123,6 +124,7 @@ feature {NONE} -- Initialization
 			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			wel_make (ctrl, 0)			
 			{EV_PRIMITIVE_IMP} Precursor
+			{EV_HASH_TABLE_ITEM_HOLDER_IMP} Precursor
 			create ev_children.make (2)
 			--create children.make (1)
 		end
@@ -677,6 +679,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/27 17:32:17  brendel
+--| Added redefinition of initialize.
+--|
 --| Revision 1.33  2000/03/22 04:12:36  pichery
 --| - Improved the minimum width and height function by using function
 --|   from Comctrl32.dll version 4.71 and above when available.

@@ -110,14 +110,15 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Initialization
 		 	l_item ?= eif_object_from_c (
 				(App_implementation.gtk_marshal).gtk_value_pointer (args)
 			)
-			if l_item.deselect_actions_internal /= Void then
-				l_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+			if l_item /= Void and then not l_item.is_destroyed then
+				if l_item.deselect_actions_internal /= Void then
+					l_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+				end
+	
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call ([l_item.interface])
+				end				
 			end
-
-			if deselect_actions_internal /= Void then
-				deselect_actions_internal.call ([l_item.interface])
-			end
-
 			previous_selected_item_imp := Void
 		end
 

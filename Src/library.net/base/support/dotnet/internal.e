@@ -180,10 +180,8 @@ feature -- Access
 
 	Boolean_type: INTEGER is 3
 
-	Integer_type: INTEGER is 4
+	Integer_type, integer_32_type: INTEGER is 4
 	
-	Integer_32_type: INTEGER is 4
-
 	Real_type: INTEGER is 5
 
 	Double_type: INTEGER is 6
@@ -199,6 +197,14 @@ feature -- Access
 	Integer_64_type: INTEGER is 11
 
 	Wide_character_type: INTEGER is 12
+	
+	natural_8_type: INTEGER is 13
+	
+	natural_16_type: INTEGER is 14
+	
+	natural_32_type: INTEGER is 15
+	
+	natural_64_type: INTEGER is 16
 
 	class_name (object: ANY): STRING is
 			-- Name of the class associated with `object'
@@ -317,7 +323,6 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
-
 	field (i: INTEGER; object: ANY): ANY is
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
@@ -328,6 +333,10 @@ feature -- Access
 			not_special: not is_special (object)
 		local
 			l_obj: SYSTEM_OBJECT
+			l_nat8: NATURAL_8
+			l_nat16: NATURAL_16
+			l_nat32: NATURAL_32
+			l_nat64: NATURAL_64
 			l_int8: INTEGER_8
 			l_int16: INTEGER_16
 			l_int32: INTEGER
@@ -354,6 +363,22 @@ feature -- Access
 			when Boolean_type then
 				l_boolean ?= l_obj
 				Result := l_boolean
+
+			when natural_8_type then
+				l_nat8 ?= l_obj
+				Result := l_nat8
+
+			when natural_16_type then
+				l_nat16 ?= l_obj
+				Result := l_nat16
+
+			when natural_32_type then
+				l_nat32 ?= l_obj
+				Result := l_nat32
+
+			when natural_64_type then
+				l_nat64 ?= l_obj
+				Result := l_nat64
 
 			when Integer_8_type then
 				l_int8 ?= l_obj
@@ -540,6 +565,50 @@ feature -- Access
 			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
+	natural_8_field (i: INTEGER; object: ANY): NATURAL_8 is
+			-- NATURAL_8 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_8_field: field_type (i, object) = natural_8_type
+		do
+			Result ?= field_of_type (i, object, dynamic_type (object))
+		end
+
+	natural_16_field (i: INTEGER; object: ANY): NATURAL_16 is
+			-- NATURAL_16 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_16_field: field_type (i, object) = natural_16_type
+		do
+			Result ?= field_of_type (i, object, dynamic_type (object))
+		end
+
+	natural_32_field (i: INTEGER; object: ANY): NATURAL_32 is
+			-- NATURAL_32 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_field: field_type (i, object) = natural_32_type
+		do
+			Result ?= field_of_type (i, object, dynamic_type (object))
+		end
+
+	natural_64_field (i: INTEGER; object: ANY): NATURAL_64 is
+			-- NATURAL_64 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_64_field: field_type (i, object) = natural_64_type
+		do
+			Result ?= field_of_type (i, object, dynamic_type (object))
+		end
+
 	integer_8_field (i: INTEGER; object: ANY): INTEGER_8 is
 			-- Integer value of `i'-th field of `object'
 		require
@@ -562,13 +631,13 @@ feature -- Access
 			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
 
-	integer_field (i: INTEGER; object: ANY): INTEGER is
+	integer_field, integer_32_field (i: INTEGER; object: ANY): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_type
+			integer_32_field: field_type (i, object) = Integer_32_type
 		do
 			Result ?= field_of_type (i, object, dynamic_type (object))
 		end
@@ -671,6 +740,46 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
+	set_natural_8_field (i: INTEGER; object: ANY; value: NATURAL_8) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_8_field: field_type (i, object) = natural_8_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
+	set_natural_16_field (i: INTEGER; object: ANY; value: NATURAL_16) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_16_field: field_type (i, object) = natural_16_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
+	set_natural_field (i: INTEGER; object: ANY; value: NATURAL_64) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_32_field: field_type (i, object) = natural_32_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
+	set_natural_64_field (i: INTEGER; object: ANY; value: NATURAL_64) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_64_field: field_type (i, object) = natural_64_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
 	set_integer_8_field (i: INTEGER; object: ANY; value: INTEGER_8) is
 		require
 			object_not_void: object /= Void
@@ -691,12 +800,12 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
-	set_integer_field (i: INTEGER; object: ANY; value: INTEGER) is
+	set_integer_field, set_integer_32_field (i: INTEGER; object: ANY; value: INTEGER) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_type
+			integer_32_field: field_type (i, object) = Integer_32_type
 		do
 			internal_set_reference_field (i, object, value)
 		end
@@ -946,11 +1055,15 @@ feature {NONE} -- Implementation
 			Result.put (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Char"), Character_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Single"), Real_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Double"), Double_type)
-			Result.put (feature {TYPE}.get_type_string ("System.Byte"), Integer_8_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Byte"), natural_8_type)
+			Result.put (feature {TYPE}.get_type_string ("System.UInt16"), natural_16_type)
+			Result.put (feature {TYPE}.get_type_string ("System.UInt32"), natural_32_type)
+			Result.put (feature {TYPE}.get_type_string ("System.UInt64"), natural_64_type)
+			Result.put (feature {TYPE}.get_type_string ("System.SByte"), Integer_8_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.put (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
 			Result.put (feature {TYPE}.get_type_string ("System.Object"), Object_type)
 		end
@@ -966,11 +1079,15 @@ feature {NONE} -- Implementation
 			Result.add (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Char"), Character_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Single"), Real_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Double"), Double_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Byte"), Integer_8_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Byte"), natural_8_type)
+			Result.add (feature {TYPE}.get_type_string ("System.UInt16"), natural_16_type)
+			Result.add (feature {TYPE}.get_type_string ("System.UInt32"), natural_32_type)
+			Result.add (feature {TYPE}.get_type_string ("System.UInt64"), natural_64_type)
+			Result.add (feature {TYPE}.get_type_string ("System.SByte"), Integer_8_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Object"), Object_type)
 		end
@@ -984,11 +1101,15 @@ feature {NONE} -- Implementation
 			Result.add (feature {TYPE}.get_type_string ("System.IntPtr"), Pointer_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Char"), Character_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Boolean"), Boolean_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Single"), Real_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Double"), Double_type)
-			Result.add (feature {TYPE}.get_type_string ("System.Byte"), Integer_8_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Byte"), natural_8_type)
+			Result.add (feature {TYPE}.get_type_string ("System.UInt16"), natural_16_type)
+			Result.add (feature {TYPE}.get_type_string ("System.UInt32"), natural_32_type)
+			Result.add (feature {TYPE}.get_type_string ("System.UInt64"), natural_64_type)
+			Result.add (feature {TYPE}.get_type_string ("System.SByte"), Integer_8_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Int16"), Integer_16_type)
+			Result.add (feature {TYPE}.get_type_string ("System.Int32"), Integer_32_type)
 			Result.add (feature {TYPE}.get_type_string ("System.Int64"), Integer_64_type)
 		end
 		

@@ -7,6 +7,10 @@ Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.Base", "ISE.Base\ISE.Ba
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.EiffelVision2", "ISE.EiffelVision2\ISE.EiffelVision2.eifp", "{AB56DE0A-3A15-40FE-B3E8-0C72F72CC806}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.CacheBrowser", "ISE.CacheBrowser\ISE.CacheBrowser.eifp", "{F5967D50-9543-4A62-9356-B51F3B534B66}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -23,6 +27,8 @@ Global
 		{20573E76-C33E-4DD2-927A-6E869AD60569}.Release.Build.0 = Release
 		{0256E70A-BA15-40CE-B3E8-0C72F72CC806}.Debug.ActiveCfg = Debug
 		{0256E70A-BA15-40CE-B3E8-0C72F72CC806}.Release.ActiveCfg = Release
+		{AB56DE0A-3A15-40FE-B3E8-0C72F72CC806}.Debug.ActiveCfg = Debug
+		{AB56DE0A-3A15-40FE-B3E8-0C72F72CC806}.Release.ActiveCfg = Release
 		{F5967D50-9543-4A62-9356-B51F3B534B66}.Debug.ActiveCfg = Debug
 		{F5967D50-9543-4A62-9356-B51F3B534B66}.Release.ActiveCfg = Release
 	EndGlobalSection

@@ -35,7 +35,8 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_with_text
 
 feature -- Access
 	
@@ -176,6 +177,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/01 20:18:47  king
+--| Added make_with_text to creation clause
+--|
 --| Revision 1.33  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -38,6 +38,7 @@ feature {NONE}-- Initialization
 			create xml_radio
 			create schema_radio
 			create link_radio
+			create spell_check_button
 			create link_radio_box
 			create document_tree_box
 			create l_ev_horizontal_box_1
@@ -54,6 +55,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (xml_radio)
 			l_ev_vertical_box_3.extend (schema_radio)
 			l_ev_vertical_box_3.extend (link_radio)
+			l_ev_vertical_box_3.extend (spell_check_button)
 			l_ev_vertical_box_3.extend (link_radio_box)
 			l_ev_vertical_box_1.extend (document_tree_box)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
@@ -80,9 +82,11 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.disable_item_expand (xml_radio)
 			l_ev_vertical_box_3.disable_item_expand (schema_radio)
 			l_ev_vertical_box_3.disable_item_expand (link_radio)
+			l_ev_vertical_box_3.disable_item_expand (spell_check_button)
 			xml_radio.set_text ("Validate project documents as XML")
 			schema_radio.set_text ("Validate project documents against schema definition")
 			link_radio.set_text ("Validate document links")
+			spell_check_button.set_text ("Spell check all documents")
 			link_radio_box.disable_sensitive
 			link_radio_box.set_padding_width (padding_width)
 			link_radio_box.set_border_width (inner_border_width)
@@ -111,7 +115,7 @@ feature -- Access
 	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, link_radio_box, 
 	document_tree_box: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL
-	xml_radio, schema_radio, link_radio: EV_RADIO_BUTTON
+	xml_radio, schema_radio, link_radio, spell_check_button: EV_RADIO_BUTTON
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_cell_1: EV_CELL
 	apply_bt, okay_bt, cancel_bt: EV_BUTTON

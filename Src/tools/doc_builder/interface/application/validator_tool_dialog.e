@@ -104,6 +104,8 @@ feature {NONE} -- Implementation
 				Shared_project.validate_files
 			elseif link_radio.is_selected then				
 				process_links
+			elseif spell_check_button.is_selected then
+				Shared_project.spell_check
 			end
 		end
 

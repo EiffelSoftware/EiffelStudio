@@ -33,9 +33,9 @@ feature -- Initialization
 			-- If use has a valid vsvars32.bat file then run it to ensure environment variables
 			-- are set correctly when attempting C compilation, otherwise do nothing.
 		local
-			l_batch_file,
-			l_temp_file: RAW_FILE
-			l_var_string: STRING
+			l_batch_file, l_temp_file: RAW_FILE
+			l_var_string, l_com_spec, l_cmd: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			if valid_vcvars then
 				create l_batch_file.make_open_write ("finish_freezing.bat")
@@ -53,10 +53,21 @@ feature -- Initialization
 				l_batch_file.put_string ("set > temp")
 				l_batch_file.put_new_line
 				l_batch_file.close
-				env.system (l_batch_file.name)
+				create l_process_launcher
+				l_process_launcher.run_hidden
+				l_com_spec := env.get ("ComSpec")
+				check
+					has_com_spec: l_com_spec /= Void
+				end
+				create l_cmd.make (l_com_spec.count + 4 + l_batch_file.name.count)
+				l_cmd.append (l_com_spec)
+				l_cmd.append (" /c ")
+				l_cmd.append (l_batch_file.name)
+				l_process_launcher.spawn (l_cmd, Void)
 				l_batch_file.delete
-				create l_temp_file.make_open_read ("temp")
+				create l_temp_file.make ("temp")
 				if l_temp_file.exists then
+					l_temp_file.open_read
 					from
 						l_temp_file.start
 					until

@@ -220,7 +220,8 @@ feature -- Status setting
 	set_extended_height (value: INTEGER) is
 			-- Make `value' the new extended-height of the box.
 		do
-			-- XX Not yet implemented.
+			--| FIXME IEK Not yet implemented.
+			check to_be_implemented: False end
 		end
 
 feature -- Basic operation
@@ -325,6 +326,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/01 18:05:52  king
+--| Changed XX to FIXME
+--|
 --| Revision 1.22  2000/02/25 17:50:02  king
 --| Now using real_connect_signal_to_actions
 --|

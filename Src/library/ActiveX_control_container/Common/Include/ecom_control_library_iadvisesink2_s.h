@@ -48,13 +48,13 @@ namespace ecom_control_library
 class IAdviseSink2 : public ecom_control_library::IAdviseSink
 {
 public:
-	IAdviseSink2 () {};
-	~IAdviseSink2 () {};
+  IAdviseSink2 () {};
+  ~IAdviseSink2 () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnLinkSrcChange(  /* [in] */ ecom_control_library::IMoniker * pmk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnLinkSrcChange(  /* [in] */ ecom_control_library::IMoniker * pmk ) = 0;
 
 
 

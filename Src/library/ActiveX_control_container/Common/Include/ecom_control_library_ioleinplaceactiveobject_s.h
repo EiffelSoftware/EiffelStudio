@@ -50,37 +50,41 @@ namespace ecom_control_library
 class IOleInPlaceActiveObject : public ecom_control_library::IOleWindow
 {
 public:
-	IOleInPlaceActiveObject () {};
-	~IOleInPlaceActiveObject () {};
+  IOleInPlaceActiveObject () {};
+  ~IOleInPlaceActiveObject () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteTranslateAccelerator( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnFrameWindowActivate(  /* [in] */ LONG f_activate ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP TranslateAccelerator( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnDocWindowActivate(  /* [in] */ LONG f_activate ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnFrameWindowActivate(  /* [in] */ LONG f_activate ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ GUID * riid, /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_frame_window ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnDocWindowActivate(  /* [in] */ LONG f_activate ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP EnableModeless(  /* [in] */ LONG f_enable ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP ResizeBorder
+          (  /* [in] */ ecom_control_library::tagRECT * prc_border, 
+          /* [in] */ REFIID riid, 
+          /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_uiwindow, 
+          /* [in] */ LONG f_frame_window ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP EnableModeless(  /* [in] */ LONG f_enable ) = 0;
 
 
 

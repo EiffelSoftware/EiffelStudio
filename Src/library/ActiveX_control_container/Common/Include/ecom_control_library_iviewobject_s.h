@@ -62,43 +62,43 @@ namespace ecom_control_library
 class IViewObject : public IUnknown
 {
 public:
-	IViewObject () {};
-	~IViewObject () {};
+  IViewObject () {};
+  ~IViewObject () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteDraw(  /* [in] */ ULONG dw_draw_aspect, /* [in] */ LONG lindex, /* [in] */ ULONG pv_aspect, /* [in] */ ecom_control_library::tagDVTARGETDEVICE * ptd, /* [in] */ ULONG hdc_target_dev, /* [in] */ ULONG hdc_draw, /* [in] */ ecom_control_library::_RECTL * lprc_bounds, /* [in] */ ecom_control_library::_RECTL * lprc_wbounds, /* [in] */ ecom_control_library::IContinue * p_continue ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetColorSet(  /* [in] */ ULONG dw_draw_aspect, /* [in] */ LONG lindex, /* [in] */ ULONG pv_aspect, /* [in] */ ecom_control_library::tagDVTARGETDEVICE * ptd, /* [in] */ ULONG hic_target_dev, /* [out] */ ecom_control_library::tagLOGPALETTE * * pp_color_set ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Draw(  /* [in] */ ULONG dw_draw_aspect, /* [in] */ LONG lindex, /* [in] */ ULONG pv_aspect, /* [in] */ ecom_control_library::tagDVTARGETDEVICE * ptd, /* [in] */ ULONG hdc_target_dev, /* [in] */ ULONG hdc_draw, /* [in] */ ecom_control_library::_RECTL * lprc_bounds, /* [in] */ ecom_control_library::_RECTL * lprc_wbounds, /* [in] */ ecom_control_library::IContinue * p_continue ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteFreeze(  /* [in] */ ULONG dw_draw_aspect, /* [in] */ LONG lindex, /* [in] */ ULONG pv_aspect, /* [out] */ ULONG * pdw_freeze ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetColorSet(  /* [in] */ ULONG dw_draw_aspect, /* [in] */ LONG lindex, /* [in] */ ULONG pv_aspect, /* [in] */ ecom_control_library::tagDVTARGETDEVICE * ptd, /* [in] */ ULONG hic_target_dev, /* [out] */ ecom_control_library::tagLOGPALETTE * * pp_color_set ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Unfreeze(  /* [in] */ ULONG dw_freeze ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Freeze(  /* [in] */ ULONG dw_draw_aspect, /* [in] */ LONG lindex, /* [in] */ ULONG pv_aspect, /* [out] */ ULONG * pdw_freeze ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetAdvise(  /* [in] */ ULONG aspects, /* [in] */ ULONG advf, /* [in] */ ecom_control_library::IAdviseSink * p_adv_sink ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Unfreeze(  /* [in] */ ULONG dw_freeze ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetAdvise(  /* [out] */ ULONG * p_aspects, /* [out] */ ULONG * p_advf, /* [out] */ ecom_control_library::IAdviseSink * * pp_adv_sink ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetAdvise(  /* [in] */ ULONG aspects, /* [in] */ ULONG advf, /* [in] */ ecom_control_library::IAdviseSink * p_adv_sink ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetAdvise(  /* [out] */ ULONG * p_aspects, /* [out] */ ULONG * p_advf, /* [out] */ ecom_control_library::IAdviseSink * * pp_adv_sink ) = 0;
 
 
 

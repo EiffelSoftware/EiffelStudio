@@ -10,36 +10,36 @@ inherit
 
 feature -- Status Report
 
-	remote_on_data_change_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]): BOOLEAN is
-			-- User-defined preconditions for `remote_on_data_change'.
+	on_data_change_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]): BOOLEAN is
+			-- User-defined preconditions for `on_data_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_on_view_change_user_precondition (dw_aspect: INTEGER; lindex: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_on_view_change'.
+	on_view_change_user_precondition (dw_aspect: INTEGER; lindex: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `on_view_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_on_rename_user_precondition (pmk: IMONIKER_INTERFACE): BOOLEAN is
-			-- User-defined preconditions for `remote_on_rename'.
+	on_rename_user_precondition (pmk: IMONIKER_INTERFACE): BOOLEAN is
+			-- User-defined preconditions for `on_rename'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_on_save_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `remote_on_save'.
+	on_save_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `on_save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_on_close_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `remote_on_close'.
+	on_close_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `on_close'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -47,7 +47,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
@@ -56,42 +56,42 @@ feature -- Basic Operations
 			valid_p_formatetc: p_formatetc.item /= default_pointer
 			non_void_p_stgmed: p_stgmed /= Void
 			valid_p_stgmed: p_stgmed.item /= Void
-			remote_on_data_change_user_precondition: remote_on_data_change_user_precondition (p_formatetc, p_stgmed)
+			on_data_change_user_precondition: on_data_change_user_precondition (p_formatetc, p_stgmed)
 		deferred
 
 		end
 
-	remote_on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
+	on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
 		require
-			remote_on_view_change_user_precondition: remote_on_view_change_user_precondition (dw_aspect, lindex)
+			on_view_change_user_precondition: on_view_change_user_precondition (dw_aspect, lindex)
 		deferred
 
 		end
 
-	remote_on_rename (pmk: IMONIKER_INTERFACE) is
+	on_rename (pmk: IMONIKER_INTERFACE) is
 			-- No description available.
 			-- `pmk' [in].  
 		require
-			remote_on_rename_user_precondition: remote_on_rename_user_precondition (pmk)
+			on_rename_user_precondition: on_rename_user_precondition (pmk)
 		deferred
 
 		end
 
-	remote_on_save is
+	on_save is
 			-- No description available.
 		require
-			remote_on_save_user_precondition: remote_on_save_user_precondition
+			on_save_user_precondition: on_save_user_precondition
 		deferred
 
 		end
 
-	remote_on_close is
+	on_close is
 			-- No description available.
 		require
-			remote_on_close_user_precondition: remote_on_close_user_precondition
+			on_close_user_precondition: on_close_user_precondition
 		deferred
 
 		end

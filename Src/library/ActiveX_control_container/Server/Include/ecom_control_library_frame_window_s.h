@@ -36,7 +36,9 @@ extern "C" const CLSID CLSID_frame_window_;
 extern "C" {
 namespace ecom_control_library
 {
-class frame_window : public ecom_control_library::IOleInPlaceFrame, public IProvideClassInfo2
+class frame_window : 
+  public ecom_control_library::IOleInPlaceFrame, 
+  public IProvideClassInfo2
 {
 public:
   frame_window (EIF_TYPE_ID tid);

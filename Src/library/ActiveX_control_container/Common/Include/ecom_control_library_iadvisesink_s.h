@@ -50,37 +50,37 @@ namespace ecom_control_library
 class IAdviseSink : public IUnknown
 {
 public:
-	IAdviseSink () {};
-	~IAdviseSink () {};
+  IAdviseSink () {};
+  ~IAdviseSink () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnRename(  /* [in] */ ecom_control_library::IMoniker * pmk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnSave( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnRename(  /* [in] */ ecom_control_library::IMoniker * pmk ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnClose( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnSave( void ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnClose( void ) = 0;
 
 
 

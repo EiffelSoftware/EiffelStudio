@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	IOLE_CONTROL_SITE_IMPL
 
 inherit

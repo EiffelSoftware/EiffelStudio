@@ -42,6 +42,8 @@ class control_site;
 
 #include "ecom_control_library_IAdviseSink_s.h"
 
+#include "ecom_control_library_iserviceprovider_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -53,58 +55,21 @@ extern "C" {
 namespace ecom_control_library
 {
 class control_site : 
-  public ecom_control_library::IAxWinHostWindow, 
-  public IOleClientSite, 
-  public IOleInPlaceSiteWindowless, 
-  public IOleControlSite, 
-  public IOleContainer, 
-  public IObjectWithSite, 
-  public IPropertyNotifySink, 
-  public IAxWinAmbientDispatch, 
-  public IDocHostUIHandler, 
-  public IAdviseSink, 
-  public IProvideClassInfo2
+  public ecom_control_library::IOleClientSite, 
+  public ecom_control_library::IOleInPlaceSiteWindowless, 
+  public ecom_control_library::IOleControlSite, 
+  public ecom_control_library::IOleContainer, 
+  public ecom_control_library::IObjectWithSite, 
+  public ecom_control_library::IPropertyNotifySink, 
+  public ecom_control_library::IAxWinAmbientDispatch, 
+  public ecom_control_library::IDocHostUIHandler, 
+  public ecom_control_library::IAdviseSink, 
+  public ecom_control_library::IServiceProvider
 {
 public:
   control_site (EIF_TYPE_ID tid);
   control_site (EIF_OBJECT eif_obj);
   virtual ~control_site ();
-
-  /*-----------------------------------------------------------
-  No description available.
-  -----------------------------------------------------------*/
-  STDMETHODIMP CreateControl(  /* [in] */ LPWSTR lp_trics_data, /* [in] */ ecom_control_library::wireHWND h_wnd, /* [in] */ ecom_control_library::IStream * p_stream );
-
-
-  /*-----------------------------------------------------------
-  No description available.
-  -----------------------------------------------------------*/
-  STDMETHODIMP CreateControlEx(  /* [in] */ LPWSTR lp_trics_data, /* [in] */ ecom_control_library::wireHWND h_wnd, /* [in] */ ecom_control_library::IStream * p_stream, /* [out] */ IUnknown * * ppunk, /* [in] */ GUID * riid_advise, /* [in] */ IUnknown * punk_advise );
-
-
-  /*-----------------------------------------------------------
-  No description available.
-  -----------------------------------------------------------*/
-  STDMETHODIMP AttachControl(  /* [in] */ IUnknown * p_unk_control, /* [in] */ ecom_control_library::wireHWND h_wnd );
-
-
-  /*-----------------------------------------------------------
-  No description available.
-  -----------------------------------------------------------*/
-  STDMETHODIMP QueryControl(  /* [in] */ GUID * riid, /* [out] */ void * * ppv_object );
-
-
-  /*-----------------------------------------------------------
-  No description available.
-  -----------------------------------------------------------*/
-  STDMETHODIMP SetExternalDispatch(  /* [in] */ IDispatch * p_disp );
-
-
-  /*-----------------------------------------------------------
-  No description available.
-  -----------------------------------------------------------*/
-  STDMETHODIMP SetExternalUIHandler(  /* [in] */ ecom_control_library::IDocHostUIHandlerDispatch * p_disp );
-
 
   /*-----------------------------------------------------------
   No description available.
@@ -373,7 +338,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetSite(  /* [in] */ GUID * riid, /* [out] */ void * * ppv_site );
+  STDMETHODIMP GetSite(  /* [in] */ REFIID riid, /* [out] */ void * * ppv_site );
 
 
   /*-----------------------------------------------------------
@@ -649,31 +614,31 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed );
+  STDMETHODIMP OnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex );
+  STDMETHODIMP OnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnRename(  /* [in] */ ecom_control_library::IMoniker * pmk );
+  STDMETHODIMP OnRename(  /* [in] */ ecom_control_library::IMoniker * pmk );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnSave( void );
+  STDMETHODIMP OnSave( void );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnClose( void );
+  STDMETHODIMP OnClose( void );
 
 
   /*-----------------------------------------------------------
@@ -718,17 +683,12 @@ public:
   STDMETHODIMP QueryInterface( REFIID riid, void ** ppv );
 
 
-  /*-----------------------------------------------------------
-  GetClassInfo
+ /*-----------------------------------------------------------
+  No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetClassInfo( ITypeInfo ** ppti );
+  STDMETHODIMP QueryService(  /* [in] */ GUID * guid_service, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_object );
 
-
-  /*-----------------------------------------------------------
-  GetGUID
-  -----------------------------------------------------------*/
-  STDMETHODIMP GetGUID( DWORD dwKind, GUID * pguid );
-
+ 
 
 
 protected:

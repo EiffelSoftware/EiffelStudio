@@ -3,11 +3,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	CONTROL_SITE
 
 inherit
-	IAX_WIN_HOST_WINDOW_IMPL
+	HOST_WINDOW_IMPL
 
 	IOLE_CLIENT_SITE_IMPL
 
@@ -30,6 +30,8 @@ inherit
 		end
 
 	IADVISE_SINK_IMPL
+	
+	ISERVICE_PROVIDER_IMPL
 
 	ECOM_STUB
 

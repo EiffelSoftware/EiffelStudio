@@ -36,13 +36,13 @@ namespace ecom_control_library
 class IServiceProvider : public IUnknown
 {
 public:
-	IServiceProvider () {};
-	~IServiceProvider () {};
+  IServiceProvider () {};
+  ~IServiceProvider () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteQueryService(  /* [in] */ GUID * guid_service, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_object ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP QueryService(  /* [in] */ REFIID guid_service, /* [in] */ REFIID riid, /* [out] */ IUnknown * * ppv_object ) = 0;
 
 
 

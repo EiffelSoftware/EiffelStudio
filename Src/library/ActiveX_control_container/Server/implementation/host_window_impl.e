@@ -3,12 +3,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	IAX_WIN_HOST_WINDOW_IMPL
+deferred class
+	HOST_WINDOW_IMPL
 
 inherit
-	IAX_WIN_HOST_WINDOW_INTERFACE
-
 	OLE_CONTROL_PROXY
 
 feature -- Basic Operations
@@ -18,8 +16,11 @@ feature -- Basic Operations
 			-- `lp_trics_data' [in].  
 			-- `h_wnd' [in].  
 			-- `p_stream' [in].  
+		local
+			ppunk: CELL [ECOM_INTERFACE]
 		do
-			-- Put Implementation here.
+			create ppunk.put (Void)
+			create_control_ex (lp_trics_data, h_wnd, p_stream, ppunk, Void, Void)
 		end
 
 	create_control_ex (lp_trics_data: STRING; h_wnd: POINTER; p_stream: ISTREAM_INTERFACE; ppunk: CELL [ECOM_INTERFACE]; riid_advise: ECOM_GUID; punk_advise: ECOM_INTERFACE) is

@@ -43,37 +43,37 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed );
+  STDMETHODIMP OnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex );
+  STDMETHODIMP OnViewChange(  /* [in] */ ULONG dw_aspect, /* [in] */ LONG lindex );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnRename(  /* [in] */ ecom_control_library::IMoniker * pmk );
+  STDMETHODIMP OnRename(  /* [in] */ ecom_control_library::IMoniker * pmk );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnSave( void );
+  STDMETHODIMP OnSave( void );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnClose( void );
+  STDMETHODIMP OnClose( void );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoteOnViewStatusChange(  /* [in] */ ULONG dw_view_status );
+  STDMETHODIMP OnViewStatusChange(  /* [in] */ ULONG dw_view_status );
 
 
   /*-----------------------------------------------------------

@@ -58,43 +58,52 @@ namespace ecom_control_library
 class IAxWinHostWindow : public IUnknown
 {
 public:
-	IAxWinHostWindow () {};
-	~IAxWinHostWindow () {};
+  IAxWinHostWindow () {};
+  ~IAxWinHostWindow () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP CreateControl(  /* [in] */ LPWSTR lp_trics_data, /* [in] */ ecom_control_library::wireHWND h_wnd, /* [in] */ ecom_control_library::IStream * p_stream ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP CreateControlEx(  /* [in] */ LPWSTR lp_trics_data, /* [in] */ ecom_control_library::wireHWND h_wnd, /* [in] */ ecom_control_library::IStream * p_stream, /* [out] */ IUnknown * * ppunk, /* [in] */ GUID * riid_advise, /* [in] */ IUnknown * punk_advise ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP CreateControl
+        (  /* [in] */ LPWSTR lp_trics_data, 
+        /* [in] */ ecom_control_library::wireHWND h_wnd, 
+        /* [in] */ ecom_control_library::IStream * p_stream ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP AttachControl(  /* [in] */ IUnknown * p_unk_control, /* [in] */ ecom_control_library::wireHWND h_wnd ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP CreateControlEx
+      (  /* [in] */ LPWSTR lp_trics_data, 
+      /* [in] */ ecom_control_library::wireHWND h_wnd, 
+      /* [in] */ ecom_control_library::IStream * p_stream, 
+      /* [out] */ IUnknown * * ppunk, 
+      /* [in] */ REFIID riid_advise, 
+      /* [in] */ IUnknown * punk_advise ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP QueryControl(  /* [in] */ GUID * riid, /* [out] */ void * * ppv_object ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP AttachControl(  /* [in] */ IUnknown * p_unk_control, /* [in] */ ecom_control_library::wireHWND h_wnd ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetExternalDispatch(  /* [in] */ IDispatch * p_disp ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP QueryControl(  /* [in] */ GUID * riid, /* [out] */ void * * ppv_object ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetExternalUIHandler(  /* [in] */ ecom_control_library::IDocHostUIHandlerDispatch * p_disp ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetExternalDispatch(  /* [in] */ IDispatch * p_disp ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetExternalUIHandler(  /* [in] */ ecom_control_library::IDocHostUIHandlerDispatch * p_disp ) = 0;
 
 
 

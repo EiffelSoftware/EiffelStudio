@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_on_link_src_change_user_precondition (pmk: IMONIKER_INTERFACE): BOOLEAN is
-			-- User-defined preconditions for `remote_on_link_src_change'.
+	on_link_src_change_user_precondition (pmk: IMONIKER_INTERFACE): BOOLEAN is
+			-- User-defined preconditions for `on_link_src_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -19,11 +19,11 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_on_link_src_change (pmk: IMONIKER_INTERFACE) is
+	on_link_src_change (pmk: IMONIKER_INTERFACE) is
 			-- No description available.
 			-- `pmk' [in].  
 		require
-			remote_on_link_src_change_user_precondition: remote_on_link_src_change_user_precondition (pmk)
+			on_link_src_change_user_precondition: on_link_src_change_user_precondition (pmk)
 		deferred
 
 		end

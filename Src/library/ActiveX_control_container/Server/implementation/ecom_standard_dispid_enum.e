@@ -8,6 +8,33 @@ class
 	
 feature -- Access
 
+	Dispid_unknown: INTEGER is                  -1
+			-- DISPID reserved to indicate an "unknown" name 
+			-- only reserved for data members (properties); 
+			-- reused as a method dispid below 
+	
+	Dispid_value: INTEGER is	                0 
+	-- DISPID reserved for the "value" property 
+
+	Dispid_propertyput: INTEGER is	            -3 
+	-- The following DISPID is reserved to indicate the param
+	-- that is the right-hand-side (or "put" value) of a PropertyPut
+
+
+	Dispid_newenum: INTEGER is	                -4 
+	-- DISPID reserved for the standard "NewEnum" method 
+
+	Dispid_evaluate: INTEGER is	                -5 
+	-- DISPID reserved for the standard "Evaluate" method 
+
+	Dispid_constructor: INTEGER is	            -6 
+
+	Dispid_destructor: INTEGER is	            -7 
+
+	Dispid_collect: INTEGER is	                -8 
+	
+feature -- The range -500 through -999 is reserved for Controls. 
+
 	Dispid_autosize: INTEGER is                 -500
 	
 	Dispid_backcolor: INTEGER is                -501

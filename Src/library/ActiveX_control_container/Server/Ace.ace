@@ -16,7 +16,7 @@ default
 	inlining (no)
 	inlining_size ("4")
 cluster
-	all client: "D:\temp_control_2\Client"
+	all client: "D:\ActiveX_control_container\Client"
 		visible
 			IADVISE_SINK_IMPL_PROXY
 				export
@@ -470,11 +470,11 @@ cluster
 				end;
 
 		end
-	all server: "D:\temp_control_2\Server"
+	all server: "D:\ActiveX_control_container\Server"
 		visible
 			FRAME_WINDOW_COCLASS_IMP;
 			UI_WINDOW_COCLASS_IMP;
-			CONTROL_SITE_COCLASS_IMP;
+			CONTROL_SITE;
 			IADVISE_SINK_IMPL_STUB;
 			IMONIKER_IMPL_STUB;
 			IPERSIST_STREAM_IMPL_STUB;
@@ -568,7 +568,7 @@ cluster
 
 		end
 
-	all common:						"D:\temp_control_2\Common"
+	all common:						"D:\ActiveX_control_container\Common"
 		visible
 						TAG_FORMATETC_RECORD;
 			WIRE_CLIPFORMAT_ALIAS
@@ -746,9 +746,9 @@ external
 			"$ISE_EIFFEL\library\com\spec\windows\include",
 			"$(ISE_EIFFEL)\library\vision2\spec\include",
 			"$(ISE_EIFFEL)\C_library\zlib",
-			"D:\temp_control_2\Client\Include",
-			"D:\temp_control_2\Server\Include",
-			"D:\temp_control_2\Common\Include";
+			"D:\ActiveX_control_container\Client\Include",
+			"D:\ActiveX_control_container\Server\Include",
+			"D:\ActiveX_control_container\Common\Include";
 
 	object: 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 			"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
@@ -758,6 +758,6 @@ external
 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 
-			"D:\temp_control_2\Client\Clib\$(ISE_C_COMPILER)\ecom.lib",
-			"D:\temp_control_2\Server\Clib\$(ISE_C_COMPILER)\ecom.lib";
+			"D:\ActiveX_control_container\Client\Clib\$(ISE_C_COMPILER)\ecom.lib",
+			"D:\ActiveX_control_container\Server\Clib\$(ISE_C_COMPILER)\ecom.lib";
 end

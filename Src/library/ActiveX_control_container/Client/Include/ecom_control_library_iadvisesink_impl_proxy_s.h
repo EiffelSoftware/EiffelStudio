@@ -39,43 +39,43 @@ namespace ecom_control_library
 class IAdviseSink_impl_proxy
 {
 public:
-	IAdviseSink_impl_proxy (IUnknown * a_pointer);
-	virtual ~IAdviseSink_impl_proxy ();
+  IAdviseSink_impl_proxy (IUnknown * a_pointer);
+  virtual ~IAdviseSink_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_on_data_change(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc,  /* [in] */ EIF_OBJECT p_stgmed );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_on_view_change(  /* [in] */ EIF_INTEGER dw_aspect,  /* [in] */ EIF_INTEGER lindex );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_data_change(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc,  /* [in] */ EIF_OBJECT p_stgmed );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_on_rename(  /* [in] */ ecom_control_library::IMoniker * pmk );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_view_change(  /* [in] */ EIF_INTEGER dw_aspect,  /* [in] */ EIF_INTEGER lindex );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_on_save();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_rename(  /* [in] */ ecom_control_library::IMoniker * pmk );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_on_close();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_save();
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_close();
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -83,16 +83,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IAdviseSink * p_IAdviseSink;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ecom_control_library::IAdviseSink * p_IAdviseSink;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

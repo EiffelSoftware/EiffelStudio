@@ -25,23 +25,23 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
 		do
-			ccom_remote_on_data_change (initializer, p_formatetc.item, p_stgmed)
+			ccom_on_data_change (initializer, p_formatetc.item, p_stgmed)
 		end
 
-	remote_on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
+	on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
 		do
-			ccom_remote_on_view_change (initializer, dw_aspect, lindex)
+			ccom_on_view_change (initializer, dw_aspect, lindex)
 		end
 
-	remote_on_rename (pmk: IMONIKER_INTERFACE) is
+	on_rename (pmk: IMONIKER_INTERFACE) is
 			-- No description available.
 			-- `pmk' [in].  
 		local
@@ -57,26 +57,26 @@ feature -- Basic Operations
 				end
 				pmk_item := pmk.item
 			end
-			ccom_remote_on_rename (initializer, pmk_item)
+			ccom_on_rename (initializer, pmk_item)
 		end
 
-	remote_on_save is
+	on_save is
 			-- No description available.
 		do
-			ccom_remote_on_save (initializer)
+			ccom_on_save (initializer)
 		end
 
-	remote_on_close is
+	on_close is
 			-- No description available.
 		do
-			ccom_remote_on_close (initializer)
+			ccom_on_close (initializer)
 		end
 
-	remote_on_view_status_change (dw_view_status: INTEGER) is
+	on_view_status_change (dw_view_status: INTEGER) is
 			-- No description available.
 			-- `dw_view_status' [in].  
 		do
-			ccom_remote_on_view_status_change (initializer, dw_view_status)
+			ccom_on_view_status_change (initializer, dw_view_status)
 		end
 
 feature {NONE}  -- Implementation
@@ -89,37 +89,37 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_on_data_change (cpp_obj: POINTER; p_formatetc: POINTER; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
+	ccom_on_data_change (cpp_obj: POINTER; p_formatetc: POINTER; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSinkEx_impl_proxy %"ecom_control_library_IAdviseSinkEx_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_OBJECT)"
 		end
 
-	ccom_remote_on_view_change (cpp_obj: POINTER; dw_aspect: INTEGER; lindex: INTEGER) is
+	ccom_on_view_change (cpp_obj: POINTER; dw_aspect: INTEGER; lindex: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSinkEx_impl_proxy %"ecom_control_library_IAdviseSinkEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
-	ccom_remote_on_rename (cpp_obj: POINTER; pmk: POINTER) is
+	ccom_on_rename (cpp_obj: POINTER; pmk: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSinkEx_impl_proxy %"ecom_control_library_IAdviseSinkEx_impl_proxy_s.h%"](ecom_control_library::IMoniker *)"
 		end
 
-	ccom_remote_on_save (cpp_obj: POINTER) is
+	ccom_on_save (cpp_obj: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSinkEx_impl_proxy %"ecom_control_library_IAdviseSinkEx_impl_proxy_s.h%"]()"
 		end
 
-	ccom_remote_on_close (cpp_obj: POINTER) is
+	ccom_on_close (cpp_obj: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSinkEx_impl_proxy %"ecom_control_library_IAdviseSinkEx_impl_proxy_s.h%"]()"
 		end
 
-	ccom_remote_on_view_status_change (cpp_obj: POINTER; dw_view_status: INTEGER) is
+	ccom_on_view_status_change (cpp_obj: POINTER; dw_view_status: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSinkEx_impl_proxy %"ecom_control_library_IAdviseSinkEx_impl_proxy_s.h%"](EIF_INTEGER)"

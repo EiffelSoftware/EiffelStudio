@@ -36,19 +36,19 @@ namespace ecom_control_library
 class IObjectWithSite : public IUnknown
 {
 public:
-	IObjectWithSite () {};
-	~IObjectWithSite () {};
+  IObjectWithSite () {};
+  ~IObjectWithSite () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetSite(  /* [in] */ IUnknown * p_unk_site ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetSite(  /* [in] */ IUnknown * p_unk_site ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetSite(  /* [in] */ GUID * riid, /* [out] */ void * * ppv_site ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetSite(  /* [in] */ REFIID riid, /* [out] */ void * * ppv_site ) = 0;
 
 
 

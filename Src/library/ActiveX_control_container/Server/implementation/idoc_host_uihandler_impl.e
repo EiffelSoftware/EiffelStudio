@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	IDOC_HOST_UIHANDLER_IMPL
 
 inherit

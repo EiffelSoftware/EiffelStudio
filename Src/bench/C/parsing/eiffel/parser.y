@@ -165,13 +165,13 @@ Declaration_body Inheritance Parent Rename New_exports New_export_item
 Feature_set Undefine Redefine Select Formal_arguments Type_mark
 Routine Routine_body External External_language
 External_name Internal Local_declarations Precondition
-Instruction1 
+Instruction 
 Postcondition Assertion_clause Type Class_type Existing_generics
 Actual_generics
 Formal_generics Formal_generic Constraint Creation_constraint Conditional Elsif Elsif_part
 Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
 Retry Rescue Assignment Reverse_assignment Creators Creation_clause
-Creation Creation_type Creation_target Creation_call Expression Actual_parameter
+Creation Creation_type Creation_target Creation_call Creation_expression Expression Actual_parameter
 Manifest_array Choice Features Rename_pair
 Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
@@ -481,7 +481,8 @@ Feature_value:			Manifest_constant
  */
 
 Inheritance:
-	{$$ = NULL;yacc_error_code=62;}
+	/* empty */
+		{$$ = NULL;yacc_error_code=62;}
 	| TE_INHERIT {list_init();yacc_error_code=63;} Parent_list 
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
@@ -688,18 +689,18 @@ Local_declarations:			/* empty */
 								{$$ = list_new(CONSTRUCT_LIST_AS);yacc_error_code=132;}
 	;
 
-Compound:					Instructionl Set_position Instruction1 Opt_Semi
+Compound:					Instruction_list Set_position Instruction Opt_Semi
 								{list_push($3);yacc_error_code=133;}
 	|						/* empty */ Opt_Semi
 	;
 Opt_Semi:					Opt_Semi TE_SEMICOLON
 	|						/* empty */
 	;
-Instructionl:				Instructionl Set_position Instruction1 Opt_Semi
+Instruction_list:			Instruction_list Set_position Instruction Opt_Semi
 								{list_push($3);yacc_error_code=134;}
 	|						/* empty */ Opt_Semi
 	;
-Instruction1:
+Instruction:
 							Creation
 								{$$ = $1;yacc_error_code=135;}
 	|						Call
@@ -1090,6 +1091,16 @@ Creation_clause:			TE_CREATION
 
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
 								{$$ = create_node3(CREATION_AS,$2,$4,$5);yacc_error_code=274;}
+	|						TE_CREATION Creation_target Creation_call
+								{$$ = create_node3(CREATION_AS,NULL,$2,$3);yacc_error_code=274;}
+	|						TE_CREATION TE_LCURLY Creation_type TE_RCURLY Creation_target Creation_call
+								{$$ = create_node3(CREATION_AS,$3,$5,$6);yacc_error_code=274;}
+	;
+
+Creation_expression:		TE_CREATION Creation_call
+								{$$=NULL;}
+	|						TE_CREATION TE_LCURLY Creation_type TE_RCURLY Creation_call
+								{$$=NULL;}
 	;
 
 Creation_type:				/* empty */
@@ -1245,6 +1256,8 @@ Feature_call:				Call_on_current
 								{$$ = $1;yacc_error_code=333;}
 	|						Call_on_precursor
 								{$$ = $1;yacc_error_code=334;}
+	|						Creation_expression
+								{$$ = $1;}
 	;
 
 Call_on_current:			TE_CURRENT TE_DOT Remote_call

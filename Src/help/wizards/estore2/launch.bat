@@ -1,0 +1,1 @@
+call .\exe\store_wizard.exe .

@@ -1,0 +1,20 @@
+Extract from PG Crismer feedback from the Wizard (version from June 01)
+
+"
+Here is my first experience report :
+0- * looks pretty good *
+1- Step4 does not create a new directory if directory name does not exist
+(failure) : it is annoying.
+2- DLL 'minilzo.dll' not found : the wizard crashes.
+3- ODBC : retrieving all tables can be time-consuming (our database has
+*thousands* of tables).  Suggestion : ask for a specific
+    catalog or user space
+4- Oracle : while connecting, only username and password are required.  Host
+name is also required.  I could get around this problem
+    by providing 'user@hostname';  The oracle version only retrieves tables
+from 'user' name space, which is better than for ODBC.
+5- "table width" problem : it is common to find tables that have *hundreds*
+of columns (I know one here with more than 200 columns).
+    Generating a class for this table would be completely crazy.  How can I
+select the columns I want ?
+"

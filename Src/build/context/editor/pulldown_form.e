@@ -79,7 +79,7 @@ feature
 			attach_top_widget (title, add_button, 10);
 			attach_top_widget (add_button, add_submenu, 10);
 			attach_top_widget (add_submenu, forbid_recomp, 10);
-			detach_top (forbid_recomp);
+			-- **** detach_top (forbid_recomp);
 			show_current
 		end;
 

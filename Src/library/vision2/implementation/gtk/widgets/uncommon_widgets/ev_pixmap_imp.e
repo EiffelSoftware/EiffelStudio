@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, 1, 1, -1)
-			gdkmask := create_mask (1, 1)
+			--gdkmask := create_mask (1, 1)
+			--| FIXME IEK correctly implement masking function	
 			set_c_object (C.gtk_pixmap_new (gdkpix, gdkmask))
 			C.gtk_widget_show (c_object)
 
@@ -72,7 +73,8 @@ feature {NONE} -- Initialization
 		do
 			unref_data
 			gdkpix := C.gdk_pixmap_new (C.gdk_root_parent, a_x, a_y, -1)
-			gdkmask := create_mask (a_x, a_y)
+			--gdkmask := create_mask (a_x, a_y)
+			--| FIXME IEK correctly implement masking function	
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -161,7 +163,8 @@ feature -- Element change
 				C.gdk_root_parent,
 				$a, 32, 32, -1, $fg, $bg)
 
-			gdkmask := create_mask (32, 32)
+			--gdkmask := create_mask (32, 32)
+			--| FIXME IEK correctly implement masking function	
 
 			C.c_gdk_color_struct_free (fg)
 			C.c_gdk_color_struct_free (bg)
@@ -183,7 +186,9 @@ feature -- Element change
 								a_x, a_y, -1)
 			C.gdk_draw_pixmap (tempgdkpix, gc, drawable, 0, 0, 0, 0, width, height)
 			unref_data
-			gdkmask := create_mask (a_x, a_y)	
+			--gdkmask := create_mask (a_x, a_y)
+			--| FIXME IEK correctly implement masking function	
+			--| FIXME IEK correctly implement masking function	
 			set_pixmap (tempgdkpix, gdkmask)
 		end
 
@@ -288,6 +293,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/24 01:31:45  king
+--| Commented out mask creation routine in features
+--|
 --| Revision 1.23  2000/03/21 00:10:05  pichery
 --| fixed small bug
 --|

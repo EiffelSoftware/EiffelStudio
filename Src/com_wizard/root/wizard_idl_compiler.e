@@ -59,6 +59,11 @@ inherit
 			output_window
 		end
 
+	WIZARD_RESCUABLE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -182,8 +187,10 @@ feature {NONE} -- Implementation
 				add_error (Current, Could_not_write_makefile)
 			end
 		rescue
-			retried := True
-			retry
+			if not failed_on_rescue then
+				retried := True
+				retry
+			end
 		end
 
 	Proxy_stub_file_name: STRING is

@@ -159,23 +159,17 @@ feature -- Cecil
 		end
 
 	generate_cecil is
-		local
-			libname: STRING
 		do
-			!! libname.make (0)
---			libname.append ("lib")
-			libname.append (system_name)
-			libname.append (".a")
-
 				-- Cecil run-time macro
 			generate_macro ("RCECIL", cecil_rt_basket)
 
 				-- Cecil library prodcution rule
-			make_file.putstring ("cecil: ")
-			make_file.putstring (libname)
-			make_file.new_line
-			make_file.putstring (libname)
-			make_file.putstring (": ")
+			make_file.putstring ("STATIC_CECIL= ")
+			make_file.putstring (system_name)
+			make_file.putstring (".a%N")
+
+			make_file.putstring ("cecil: $(STATIC_CECIL)%N")
+			make_file.putstring ("%"$(STATIC_CECIL)%": ")
 --			generate_objects_macros
 --			make_file.putchar (' ')
 --			generate_system_objects_macros
@@ -186,7 +180,7 @@ feature -- Cecil
 			make_file.putstring ("$(EIFLIB)")
 			make_file.new_line
 			make_file.putstring ("%T$(AR) cr ")
-			make_file.putstring (libname)
+			make_file.putstring ("$(STATIC_CECIL)")
 			make_file.putchar (' ')
 --			generate_objects_macros
 --			make_file.putchar (' ')
@@ -199,23 +193,22 @@ feature -- Cecil
 			make_file.putstring ("%T%T$(RCECIL)")
 			make_file.new_line
 			make_file.putstring ("%T$(RANLIB) ")
-			make_file.putstring (libname)
-			make_file.new_line
+			make_file.putstring ("$(STATIC_CECIL)%N")
 			make_file.putstring ("%T$(RM) $(RCECIL) ")
 			make_file.putstring ("$(OBJECTS)")
 			make_file.new_line
 			make_file.new_line
 
--- SHAREDTARGET
-			make_file.putstring ("SHAREDTARGET= ")
+-- SHARED_CECIL
+			make_file.putstring ("SHARED_CECIL= ")
 			make_file.putstring (system_name)
 			make_file.putstring (".so %N")
-			make_file.putstring ("dynamic_cecil: $(SHAREDTARGET) %N")
-			make_file.putstring ("SHAREDOBJECT= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/emain.o%" $precompilelibs %N")
+			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
+			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/emain.o%" $precompilelibs %N")
 			make_file.putstring ("SHAREDFLAGS= $(LDSHAREDFLAGS) %N");
-			make_file.putstring ("%"$(SHAREDTARGET)%" : $(SHAREDOBJECT) %N")
-			make_file.putstring ("%T$(RM) %"$(SHAREDTARGET)%" %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHAREDOBJECT) $(SHAREDLIB) %N")
+			make_file.putstring ("%"$(SHARED_CECIL)%" : $(SHARED_CECIL_OBJECT) %N")
+			make_file.putstring ("%T$(RM) %"$(SHARED_CECIL)%" %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
 			make_file.new_line
@@ -536,7 +529,7 @@ feature -- Generation, Header
 				%RM = $rm -f%N%
 				%RMDIR = $rmdir%N")
 			make_file.putstring ("SHAREDLINK = $sharedlink%N")
-			make_file.putstring ("SHAREDLIB = $sharedlib%N")
+			make_file.putstring ("SHAREDLIBS = $sharedlibs%N")
 
 			make_file.putstring ("%
 				%!GROK!THIS!%N%

@@ -16,6 +16,15 @@ namespace ISE.Runtime
 		public static string assertion_tag;
 				// Tag of last checked assertion
 
+
+		public static bool is_assertion_checked = true;
+
+		public static bool check_assert (bool val) {
+			bool tmp = is_assertion_checked;
+			is_assertion_checked = val;
+			return tmp;
+		}
+
     }
 
 	public class EXCEPTION_MANAGER

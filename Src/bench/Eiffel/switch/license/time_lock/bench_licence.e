@@ -20,7 +20,7 @@ inherit
 	SHARED_CODES
 		rename
 			studio_non_commercial_key_50 as non_commercial_key,
-			studio_commercial_key_50 as key
+			studio_enterprise_key_51 as key
 		export
 			{NONE} all
 		end

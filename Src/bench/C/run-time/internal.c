@@ -15,6 +15,7 @@
 #include "eif_cecil.h"
 #include "eif_project.h" /* for egc_..._ref_dtype */
 #include "rt_gen_types.h"
+#include "rt_struct.h"
 #include "rt_wbench.h"
 #include "rt_assert.h"
 

@@ -178,13 +178,17 @@ Execution of `execute' from PASS2_C:
 
 3) If `do_pass2', we called `pass2' from INHERIT_TABLE.
 a) Getting the current class, its ID, its cluster, its `is_supplier_status_modifier', its
-   CLASS_INFO, and the parents list. We wipe out the content of Selected.
+   CLASS_INFO, and the parents list. We wipe out the content of Selected, set `new_body_id'
+   to Void.
 b) We compute the feature table:
    - We search for the feature table with the ID `a_class.id' in FEAT_TBL_SERVER,
      if we found it we call `update_table' on it.
    - `Update_table' check that all the elements of the table are valid, and remove the
-      invalid one and put them in `removed_feature_ids'.
-   - We prepare `inherited_features' by setting the ID
+      invalid one and put them in `removed_feature_ids'. We also descative the body_id
+	  corresponding to the non-valid FEATURE_I. (Explanation: for example, some features are
+	  still using types which are no longer defined in the system). The content of
+	  `removed_feature_ids' is used in `fill_pass2_control' from FEATURE_TABLE.
+   - We prepare `inherited_features' by setting its ID
    - If it is a resumed compilation we do `update_table' on the feature table found
      in the TMP_FEAT_TBL_SERVER.
 c) We take each parents which have been put in the correct order and we merge them into
@@ -229,7 +233,6 @@ h) If the class has been marked `changed' we clean `changed_features' of `a_clas
 7) If the system support `code_replication' we do a single pass on all the compiled class
    of degree 4.
 
-
 Note and improvements:
 ----------------------
 
@@ -237,6 +240,11 @@ Note and improvements:
 2) We can improve the remove of `update_table' called in 3-b)
 3) We can maybe do only one call to `check_parents' from 3-c)
 4) Are we sure to do twice `check_generics' in 3-e)
+5) in PARENT_LIST, we can remove all the standard traversals by using the area instead of
+   the start/item/forth/after mechanism.
+6) Remove the `a_class: CLASS_C' attributes and give it through an extra parameter.
+7) Change the size of the INHERIT_TABLE in SHARED_INHERITED, we should put 100 instead of
+   500 since even in the compiler we reached rarely the 100 features per class.
 
 
 Between Degree 4 and 3:

@@ -376,7 +376,6 @@ feature {NONE} -- Implementation
 			valid_message: a_message /= Void
 		do
 			if not is_destroyed then
-				progress_bar.reset_percentage;
 				degree_l.set_label_as_string (a_message);
 				current_degree_l.set_label_as_string (Empty_string);
 				entity_l.set_label_as_string (Empty_string);
@@ -384,6 +383,12 @@ feature {NONE} -- Implementation
 				current_nbr_to_go_l.set_label_as_string (Empty_string);
 				current_entity_l.set_label_as_string (Empty_string);
 				percentage_l.set_label_as_string (Zero_percent);
+
+				if not is_managed then
+					popup_window
+				end
+				progress_bar.reset_percentage
+
 				process_events
 			end
 		end;

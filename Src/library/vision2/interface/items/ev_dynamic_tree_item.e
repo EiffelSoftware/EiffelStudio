@@ -79,7 +79,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			if a_subtree_function /= Void then
+			if a_subtree_function /= Void and subtree_function = Void then
 				expand_actions.extend (~fill_from_subtree_function)
 				implementation.extend (create {EV_TREE_ITEM})
 				set_subtree_function_timeout (default_subtree_function_timeout)

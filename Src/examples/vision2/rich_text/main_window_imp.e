@@ -28,9 +28,10 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local 
 			l_ev_menu_bar_1: EV_MENU_BAR
-			l_ev_menu_2: EV_MENU
-			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
+			l_ev_menu_separator_1: EV_MENU_SEPARATOR
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
+			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, 
+			l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
 			l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
 			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
 			l_ev_cell_7, l_ev_cell_8, l_ev_cell_9: EV_CELL
@@ -42,7 +43,11 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create l_ev_menu_bar_1
-			create l_ev_menu_2
+			create file_menu
+			create open_menu_item
+			create save_menu_item
+			create save_as_menu_item
+			create l_ev_menu_separator_1
 			create exit_menu_item
 			create options_menu
 			create word_wrapping_menu_item
@@ -63,6 +68,8 @@ feature {NONE}-- Initialization
 			create underlined_button
 			create striked_through_button
 			create l_ev_tool_bar_separator_2
+			create save_button
+			create l_ev_tool_bar_separator_3
 			create l_ev_label_1
 			create l_ev_cell_1
 			create l_ev_cell_2
@@ -75,7 +82,7 @@ feature {NONE}-- Initialization
 			create center_alignment_button
 			create right_alignment_button
 			create justified_button
-			create l_ev_tool_bar_separator_3
+			create l_ev_tool_bar_separator_4
 			create l_ev_cell_3
 			create l_ev_label_2
 			create l_ev_cell_4
@@ -96,14 +103,20 @@ feature {NONE}-- Initialization
 			create l_ev_cell_9
 			create l_ev_horizontal_box_3
 			create l_ev_frame_1
+			create l_ev_horizontal_box_4
 			create general_label
+			create save_progress
 			create l_ev_frame_2
 			create caret_position_label
 			
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
-			l_ev_menu_bar_1.extend (l_ev_menu_2)
-			l_ev_menu_2.extend (exit_menu_item)
+			l_ev_menu_bar_1.extend (file_menu)
+			file_menu.extend (open_menu_item)
+			file_menu.extend (save_menu_item)
+			file_menu.extend (save_as_menu_item)
+			file_menu.extend (l_ev_menu_separator_1)
+			file_menu.extend (exit_menu_item)
 			l_ev_menu_bar_1.extend (options_menu)
 			options_menu.extend (word_wrapping_menu_item)
 			options_menu.extend (show_tab_control_menu_item)
@@ -123,6 +136,8 @@ feature {NONE}-- Initialization
 			format_toolbar.extend (underlined_button)
 			format_toolbar.extend (striked_through_button)
 			format_toolbar.extend (l_ev_tool_bar_separator_2)
+			format_toolbar.extend (save_button)
+			format_toolbar.extend (l_ev_tool_bar_separator_3)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
@@ -135,7 +150,7 @@ feature {NONE}-- Initialization
 			paragraph_toolbar.extend (center_alignment_button)
 			paragraph_toolbar.extend (right_alignment_button)
 			paragraph_toolbar.extend (justified_button)
-			paragraph_toolbar.extend (l_ev_tool_bar_separator_3)
+			paragraph_toolbar.extend (l_ev_tool_bar_separator_4)
 			l_ev_horizontal_box_2.extend (l_ev_cell_3)
 			l_ev_horizontal_box_2.extend (l_ev_label_2)
 			l_ev_horizontal_box_2.extend (l_ev_cell_4)
@@ -156,14 +171,19 @@ feature {NONE}-- Initialization
 			main_vertical_box.extend (l_ev_cell_9)
 			main_vertical_box.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (l_ev_frame_1)
-			l_ev_frame_1.extend (general_label)
+			l_ev_frame_1.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (general_label)
+			l_ev_horizontal_box_4.extend (save_progress)
 			l_ev_horizontal_box_3.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (caret_position_label)
 			
 			set_minimum_width (window_width)
 			set_minimum_height (window_height)
 			set_title ("Rich Text Example")
-			l_ev_menu_2.set_text ("File")
+			file_menu.set_text ("File")
+			open_menu_item.set_text ("Open")
+			save_menu_item.set_text ("Save")
+			save_as_menu_item.set_text ("Save As")
 			exit_menu_item.set_text ("Exit")
 			options_menu.set_text ("Options")
 			word_wrapping_menu_item.enable_select
@@ -199,6 +219,7 @@ feature {NONE}-- Initialization
 			underlined_button.set_pixmap (underline_png)
 			striked_through_button.set_tooltip ("Striken Through")
 			striked_through_button.set_pixmap (strike_png)
+			save_button.set_pixmap (icon_save_color_png)
 			l_ev_label_1.set_text ("Offset")
 			l_ev_label_1.set_tooltip ("Vertical Offset of Character from Baseline")
 			l_ev_cell_1.set_minimum_width (small_padding)
@@ -245,10 +266,14 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_3.set_padding_width (tiny_padding)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_style (1)
+			save_progress.hide
 			l_ev_frame_2.set_minimum_width (caret_position_status_bar_width)
 			l_ev_frame_2.set_style (1)
 			
 				--Connect events.
+			open_menu_item.select_actions.extend (agent open_file)
+			save_menu_item.select_actions.extend (agent save_file)
+			save_as_menu_item.select_actions.extend (agent save_file_as)
 			exit_menu_item.select_actions.extend (agent exit)
 			word_wrapping_menu_item.select_actions.extend (agent word_wrapping_toggled)
 			show_tab_control_menu_item.select_actions.extend (agent show_tab_control_toggled)
@@ -262,6 +287,7 @@ feature {NONE}-- Initialization
 			italic_button.select_actions.extend (agent italic_selected)
 			underlined_button.select_actions.extend (agent underline_selected)
 			striked_through_button.select_actions.extend (agent strike_through_selected)
+			save_button.select_actions.extend (agent save_file)
 			vertical_offset.change_actions.extend (agent offset_changed (?))
 			left_alignment_button.select_actions.extend (agent left_alignment_selected)
 			center_alignment_button.select_actions.extend (agent center_alignment_selected)
@@ -280,18 +306,19 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	exit_menu_item: EV_MENU_ITEM
-	options_menu: EV_MENU
+	file_menu, options_menu: EV_MENU
+	open_menu_item, save_menu_item, save_as_menu_item, exit_menu_item: EV_MENU_ITEM
 	word_wrapping_menu_item, show_tab_control_menu_item, show_paragraph_toolbar: EV_CHECK_MENU_ITEM
 	main_vertical_box, paragraph_toolbar_holder, tab_control_holder: EV_VERTICAL_BOX
 	font_selection, size_selection: EV_COMBO_BOX
 	color_toolbar, background_color_toolbar, format_toolbar, paragraph_toolbar: EV_TOOL_BAR
-	color_button, background_color_button: EV_TOOL_BAR_BUTTON
+	color_button, background_color_button, save_button: EV_TOOL_BAR_BUTTON
 	bold_button, italic_button, underlined_button, striked_through_button, left_alignment_button, 
 	center_alignment_button, right_alignment_button, justified_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	vertical_offset, left_margin, right_margin, top_spacing, bottom_spacing: EV_SPIN_BUTTON
 	rich_text: EV_RICH_TEXT
 	general_label, caret_position_label: EV_LABEL
+	save_progress: EV_HORIZONTAL_PROGRESS_BAR
 
 feature {NONE} -- Implementation
 
@@ -305,6 +332,21 @@ feature {NONE} -- Implementation
 	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
+		deferred
+		end
+	
+	open_file is
+			-- Called by `select_actions' of `open_menu_item'.
+		deferred
+		end
+	
+	save_file is
+			-- Called by `select_actions' of `save_menu_item'.
+		deferred
+		end
+	
+	save_file_as is
+			-- Called by `select_actions' of `save_as_menu_item'.
 		deferred
 		end
 	

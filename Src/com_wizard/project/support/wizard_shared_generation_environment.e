@@ -880,6 +880,37 @@ feature -- Access
 			end
 		end
 
+	problematic_structures: HASH_TABLE [STRING, STRING] is
+			-- Problematic structures.
+		local
+			a_file: PLAIN_TEXT_FILE
+			a_directory: DIRECTORY
+			tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
+			a_count, i: INTEGER
+		once
+			create Result.make (500)
+			Result.compare_objects
+
+			tmp_path := eiffel4_location + "\wizards\com\config\problematic_structures.cfg"
+
+			create a_directory.make_open_read (eiffel4_location + "\wizards\com\config")
+			if a_directory.has_entry ("problematic_structures.cfg") then
+				create a_file.make_open_read (tmp_path)
+
+				from
+					a_file.start
+				until
+					a_file.end_of_file
+				loop
+					a_file.read_line
+					a_line := clone (a_file.last_string)
+					if not a_line.empty then
+						Result.put (a_line, a_line)
+					end
+				end
+			end
+		end
+
 	is_forbidden_c_word (a_name: STRING): BOOLEAN is
 			-- Is `a_name' forbidden c word?
 		require
@@ -889,7 +920,8 @@ feature -- Access
 			Result := c_keywords.has (a_name) or 
 					eiffel_runtime_macros.has (a_name) or 
 					windows_api.has (a_name) or
-					generator_words.has (a_name)
+					generator_words.has (a_name) or 
+					problematic_structures.has (a_name)
 		end
 
 	browse_directory: STRING is

@@ -285,7 +285,8 @@ feature {NONE} -- Implementation
 			-- Raise popup windows with exclusive grab set.
 		do
 			if 
-				last_warner /= Void and then 
+				last_warner /= Void and then
+				not last_warner.destroyed and then
 				last_warner.is_popped_up and then
 				last_warner.is_exclusive_grab 
 			then

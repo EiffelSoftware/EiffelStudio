@@ -105,7 +105,7 @@ feature -- Status report
 		do
 			Result := (days /= Void) and (months /= Void) and 
 				(base_century /= Void) and (source_string /= Void and then
-				not source_string.empty)
+				not source_string.is_empty)
 		end
 		
 	is_date: BOOLEAN is
@@ -145,7 +145,7 @@ feature -- Status setting
 	set_source_string (s: STRING) is
 			-- Assign `s' to `source_string'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			source_string := s
 			parsed := False

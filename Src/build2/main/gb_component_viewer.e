@@ -22,6 +22,9 @@ inherit
 		undefine
 			copy, default_create
 		end
+		
+	GB_CONSTANTS
+	
 
 feature {NONE} -- Implementation
 
@@ -45,6 +48,7 @@ feature {NONE} -- Implementation
 			component_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_viewer @ 1)
 			component_button.drop_actions.extend (agent set_component (?))
 			component_button.set_tooltip ("Target component into tool")
+			component_button.select_actions.extend (agent show_usage_dialog)
 			tool_bar.extend (component_button)
 			create tool_bar_separator
 			tool_bar.extend (tool_bar_separator)
@@ -157,6 +161,16 @@ feature -- Basic operation
 		end
 	
 feature {NONE} -- Implementation
+
+	show_usage_dialog is
+				-- Show an information dialog explaining usage
+				-- of the component button.
+			local
+				dialog: EV_INFORMATION_DIALOG
+			do
+				create dialog.make_with_text (Component_tool_button_warning)
+				dialog.show_modal_to_window (Current)
+			end
 
 	set_display_view is
 			-- Set `display_view' to `True' and reflect in `Current'.

@@ -155,6 +155,7 @@ feature -- Basic operations
 				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
 					a_type_library_descriptor := library_descriptor_for_iteration
 					a_type_library_descriptor.set_complete
+					a_type_library_descriptor.finalize_inherited_interfaces
 					a_type_library_descriptor.finalize_aliases
 					a_type_library_descriptor.finalize_names
 					a_type_library_descriptor.finalize_interface_feature_names

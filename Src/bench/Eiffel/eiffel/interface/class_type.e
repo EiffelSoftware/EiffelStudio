@@ -340,7 +340,7 @@ feature -- Generation
 				System.makefile_generator.record_empty_class_type (id)
 			end;
 				-- clean the list of shared include files
-			shared_include_set.wipe_out;
+			shared_include_queue.wipe_out;
 
 			end
 		end;
@@ -1472,7 +1472,7 @@ feature -- DLE
 				System.makefile_generator.record_empty_class_type (id)
 			end;
 				-- Clean the list of shared include files.
-			shared_include_set.wipe_out;
+			shared_include_queue.wipe_out;
 
 				-- Has something been generated?
 			Result := generate_c_code

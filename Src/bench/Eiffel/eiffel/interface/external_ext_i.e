@@ -115,15 +115,21 @@ feature -- Code generation
 			-- Generate header files for the extension.
 		local
 			i, nb: INTEGER
+			header_file: STRING
+			queue: like shared_include_queue
 		do
 			if has_include_list then
 				from
 					i := header_files.lower
 					nb := header_files.upper
+					queue := shared_include_queue
 				until
 					i > nb
 				loop
-					shared_include_set.extend (header_files @ i)
+					header_file := header_files @ i
+					if not queue.has (header_file) then
+						queue.extend (header_file)
+					end
 					i := i + 1
 				end
 			end

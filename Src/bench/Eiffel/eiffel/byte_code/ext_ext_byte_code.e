@@ -53,17 +53,19 @@ feature -- Code generation
 		local
 			i, nb: INTEGER
 			include_file: STRING
+			queue: like shared_include_queue
 		do
 			if header_files /= Void then
 				from
 					i := header_files.lower
 					nb := header_files.upper
+					queue := shared_include_queue
 				until
 					i > nb
 				loop
 					include_file := header_files @ i
-					if not shared_include_set.has (include_file) then
-						shared_include_set.extend (include_file)
+					if not queue.has (include_file) then
+						queue.extend (include_file)
 						if not context.final_mode then
 							generated_file.putstring ("#include ");
 							generated_file.putstring (include_file);

@@ -5,7 +5,8 @@ class
 	SHARED_INCLUDE
 
 feature
-	shared_include_set: LINKED_SET[STRING] is
+
+	shared_include_queue: LINKED_QUEUE [STRING] is
 		once
 			!!Result.make;
 			Result.compare_objects;

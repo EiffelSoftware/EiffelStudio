@@ -84,6 +84,27 @@ feature
 			type_tables.clear_all;
 		end;
 
+	generate_header_files (f: INDENT_FILE) is
+			-- Generate header files in `f'.
+		require
+			file_exists: f /= Void;
+		local
+			queue: like shared_include_queue
+		do
+			queue := shared_include_queue
+			if queue /= Void then
+				from 
+				until
+					queue.empty
+				loop
+					f.putstring ("#include ");
+					f.putstring (queue.item);
+					f.new_line;
+					queue.remove;
+				end;
+			end;
+		end;
+
 	generate (file_name: STRING) is
 			-- Generate declarations in a file of name `file_name'.
 		require
@@ -95,19 +116,10 @@ feature
 			f.open_write;
 
 			f.putstring ("#include %"portable.h%"%N%N");
+
 				-- now generate the include files required by externals
-			if shared_include_set /= Void then
-				from 
-					shared_include_set.start
-				until
-					shared_include_set.off
-				loop
-					f.putstring ("#include ");
-					f.putstring (shared_include_set.item);
-					f.new_line;
-					shared_include_set.forth;
-				end;
-			end;
+			generate_header_files (f);
+
 			from
 				routines.start
 			until

@@ -32,7 +32,9 @@ feature -- Code generation
 			-- Generate header files for the extension.
 		do
 			old_generate_header_files
-			shared_include_set.extend (special_file_name)
+			if not shared_include_queue.has (special_file_name) then
+				shared_include_queue.extend (special_file_name)
+			end
 		end
 
 	generate_external_name (gen_file: INDENT_FILE; external_name: STRING;

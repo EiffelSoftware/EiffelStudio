@@ -34,7 +34,14 @@ feature -- status settings
 				not_yet_implemented: False
 			end
 		end
-	
+
+feature -- Resizing
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+		do
+			check not_implemented: False end
+		end
 
 feature -- Basic operation
 

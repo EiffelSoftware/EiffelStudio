@@ -28,11 +28,12 @@ feature {NONE} -- Initialization
 			cluster_i: CLUSTER_I
 			dot_pos: INTEGER
 		do
+			create {CLASS_DESCRIPTOR}class_descriptor.make_with_class_i (a_class)
 			cluster_i := a_class.cluster
 			assembly_i ?= cluster_i
 			if assembly_i /= Void then
 				module_name := clone (assembly_i.assembly_name)
-				if a_class.is_external_class then
+				if class_descriptor.is_true_external then
 					if a_class.compiled_class /= Void then
 						dot_pos := a_class.compiled_class.external_name.last_index_of ('.', a_class.compiled_class.external_name.count)
 						if dot_pos > 1  then
@@ -47,7 +48,6 @@ feature {NONE} -- Initialization
 				namespace := clone (cluster_i.cluster_name)
 			end
 			class_i := a_class
-			create {CLASS_DESCRIPTOR}class_descriptor.make_with_class_i (a_class)
 		end
 
 feature -- Access

@@ -12,6 +12,10 @@ inherit
 	COMPILER_EXPORTER
 		undefine
 			is_equal, copy, consistent, setup
+		end;
+	SHARED_COUNTER
+		undefine
+			is_equal, copy, consistent, setup
 		end
 
 creation
@@ -56,7 +60,7 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						Result.append ("%T{(int16) ");
+						Result.append ("%T{(uint16) ");
 						Result.append_integer (re.real_body_index.id - 1);
 						Result.append (", (int16) ");
 						Result.append_integer (re.static_feature_type_id - 1);
@@ -68,7 +72,7 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							Result.append ("%T{(int16) ");
+							Result.append ("%T{(uint16) ");
 							Result.append_integer (ae.workbench_offset);
 							Result.append (", (int16) ");
 							Result.append_integer (ae.static_feature_type_id - 1);
@@ -78,7 +82,9 @@ feature -- Generation
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					Result.append ("%T{(int16) -1, (int16) -1},%N")
+					Result.append ("%T{(uint16) ");
+					Result.append_integer (Invalid_index);
+					Result.append (", (int16) -1},%N")
 				end;
 				i := i + 1
 			end;
@@ -114,7 +120,7 @@ feature -- Generation
 							-- of the feature.
 						Result.append ("%Tdesc[");
 						Result.append_integer (nb);
-						Result.append ("].info = (int16) (");
+						Result.append ("].info = (uint16) (");
 						Result.append (re.real_body_index.generated_id);
 						Result.append (");%N%Tdesc[");
 						Result.append_integer (nb);
@@ -130,7 +136,7 @@ feature -- Generation
 								-- the feature.
 							Result.append ("%Tdesc[");
 							Result.append_integer (nb);
-							Result.append ("].info = (int16) ");
+							Result.append ("].info = (uint16) ");
 							Result.append_integer (ae.workbench_offset);
 							Result.append (";%N%Tdesc[");
 							Result.append_integer (nb);
@@ -144,7 +150,9 @@ feature -- Generation
 						-- is not polymorphic.
 					Result.append ("%Tdesc[");
 					Result.append_integer (nb);
-					Result.append ("].info = (int16) -1;%N%Tdesc[");
+					Result.append ("].info = (uint16) ");
+					Result.append_integer (Invalid_index);
+					Result.append (";%N%Tdesc[");
 					Result.append_integer (nb);
 					Result.append ("].type = (int16) -1;%N")
 				end;

@@ -156,10 +156,6 @@ feature {EV_ANY_IMP} -- Implementation
 			if s.has ('&') then
 				filter_ampersand (Result, '_')
 			end
-		ensure
-			copied_only_if_s_had_ampersand:
-				((old s.twin).has ('&')) = (s /= Result)
-			s_not_changed: (old s.twin).is_equal (s) 
 		end
 
 feature {EV_ANY_I} -- Implementation

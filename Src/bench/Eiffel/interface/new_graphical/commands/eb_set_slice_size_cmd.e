@@ -174,7 +174,7 @@ feature -- Basic operations
 						else
 							obj := tool.get_object_display_parameters (conv_obj.object_address)
 							if obj /= Void then
-								create dobj.make (conv_obj.object_address, 0, 1)
+								create {DEBUGGED_OBJECT_CLASSIC} dobj.make (conv_obj.object_address, 0, 1)
 								if dobj.is_special then
 									Result := True
 								end
@@ -187,7 +187,7 @@ feature -- Basic operations
 					nat_dv ?= Application.imp_dotnet.kept_object_item (pretty_dlg.current_object.object_address)
 					Result := nat_dv /= Void
 				else
-					create dobj.make (pretty_dlg.current_object.object_address, 0, 1)
+					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (pretty_dlg.current_object.object_address, 0, 1)
 					if dobj.is_special then
 						Result := True
 					end
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string ("object found%N")
 						if not Application.is_dotnet then
-							create dobj.make (address, 0, 2)
+							create {DEBUGGED_OBJECT_CLASSIC} dobj.make (address, 0, 2)
 							io.putstring ("Capacity: " + dobj.capacity.out + "%N")
 							io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")							
 						end
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 
 					spec_dv ?= abs_spec_dv
 					if spec_dv /= Void then --| SPECIAL_VALUE						
-						create dobj.make (spec_dv.address, slice_min, slice_max)
+						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (spec_dv.address, slice_min, slice_max)
 						spec_dv.items.append (dobj.attributes)
 					else
 						nat_arr_dv ?= abs_spec_dv
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					else
-						create dobj.make (st.object_address, 0, 1)
+						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (st.object_address, 0, 1)
 						debug ("DEBUGGER_INTERFACE")
 							io.putstring ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
 						end

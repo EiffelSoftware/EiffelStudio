@@ -10,16 +10,21 @@ indexing
 deferred class
 	EV_PIXMAP_CONTAINER_I
 	
-inherit
-	EV_CONTAINER_I
+feature {EV_PIXMAP} -- status settings
 	
-feature {NONE} -- Initialization
-	
-	make_from_primitive (primitive: EV_PRIMITIVE) is
+--	make_from_primitive (primitive: EV_PRIMITIVE) is
 			-- Create pixmap container inside of 'primitive'
+--		deferred
+--		end
+
+	add_pixmap (pixmap: EV_PIXMAP) is
+			-- Add a pixmap in the container
+		require
+			pixmap_not_void: pixmap /= Void
 		deferred
 		end
-end
+
+end -- class EV_PIXMAP_CONTAINER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

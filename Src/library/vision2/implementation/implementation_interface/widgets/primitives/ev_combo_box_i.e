@@ -45,15 +45,15 @@ feature -- Status report
 
 feature -- Element change
 
-	add_element (a_string: STRING) is
+--	add_element (a_string: STRING) is
 			-- Add an element with the text `a_string' 
 			-- to the combo-box.
 			-- If string is `Void', it add an element with 
 			-- an empty string "".
-		require
-			exists: not destroyed
-		deferred
-		end
+--		require
+--			exists: not destroyed
+--		deferred
+--		end
 
 	insert_element (a_string: STRING; index: INTEGER) is
 			-- Insert an element with the text `a_string'
@@ -68,15 +68,15 @@ feature -- Element change
 		deferred
 		end				
 
-	remove_element (index: INTEGER) is
+--	remove_element (index: INTEGER) is
 			-- Remove the element at the zero-based
 			-- `index' position of the combo-box.
-		require
-			exists: not destroyed
-			index_large_enough: index >= 0
-			index_small_enough: index < count
-		deferred
-		end
+--		require
+--			exists: not destroyed
+--			index_large_enough: index >= 0
+--			index_small_enough: index < count
+--		deferred
+--		end
 
 	remove_all_elements is
 			-- Remove all the elements of the combo-box.

@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 	make (x0, y0: INTEGER) is
 			-- Create a text_window cursor position
 			-- with positions `c_pos' and `top_c'.
-		require
-			valid_pos: x0 >= 0 and then y0 >= 0
 		do
 			x := x0;
 			y := y0;

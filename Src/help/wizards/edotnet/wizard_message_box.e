@@ -49,7 +49,7 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Message box parent window
 			
-	Launching_message: STRING is "This may take a few seconds. Please be patient..."
+	Launching_message: STRING is "This may take a few minutes. Please be patient..."
 			-- Message displayed while importing the selected local assembly
 			
 feature {NONE} -- Implementation

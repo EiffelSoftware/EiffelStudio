@@ -120,8 +120,8 @@ meltpath = win_eif_getenv ("MELT_PATH", "es4");
 		filename = (char *)cmalloc (UPDTLEN + 3);
 	}
 	if (filename == (char *)0){
-		enomem(MTC_NOARG);	
-		exit (1);	
+		enomem(MTC_NOARG);
+		exit (1);
 	}
 	if (meltpath)
 		strcpy (filename, meltpath);

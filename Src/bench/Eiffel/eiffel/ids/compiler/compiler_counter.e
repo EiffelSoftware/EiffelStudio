@@ -89,7 +89,7 @@ feature -- Access
 	item (i: INTEGER): like current_subcounter is
 			-- Subcounter associted with compilation `i'
 		do
-			Result ?= {HASH_TABLE} precursor (i)
+			Result ?= {HASH_TABLE} Precursor (i)
 		end
 
 	current_count: INTEGER is

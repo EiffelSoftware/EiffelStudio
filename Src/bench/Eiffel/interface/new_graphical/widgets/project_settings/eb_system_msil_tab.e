@@ -593,7 +593,7 @@ feature {NONE} -- Implementation
 		require
 			clr_runtime_version_combo_not_void: clr_runtime_version_combo /= Void
 		local
-			l_versions: LINEAR [STRING]
+			l_versions: DS_LINEAR [STRING]
 			l_il_environment: IL_ENVIRONMENT
 		do
 			create l_il_environment
@@ -604,7 +604,7 @@ feature {NONE} -- Implementation
 				l_versions.after
 			loop
 				clr_runtime_version_combo.extend
-					(create {EV_LIST_ITEM}.make_with_text (l_versions.item))
+					(create {EV_LIST_ITEM}.make_with_text (l_versions.item_for_iteration))
 				l_versions.forth
 			end
 			if clr_runtime_version_combo.is_empty then

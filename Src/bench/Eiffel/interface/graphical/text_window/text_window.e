@@ -298,8 +298,22 @@ feature {NONE} -- Command arguments
 			!! Result
 		end;
 
+	retarget_tooler_action: ANY is
+			-- Callback value to indicate that a tool need to change its
+			-- content with the one selected by the user.
+		once
+			!! Result
+		end;
+
 	super_melt_action: ANY is
-			-- Callback value to indicate that a new tool should come up.
+			-- Callback value to indicate that the feature will be super melted.
+		once
+			!! Result
+		end;
+
+	insert_breakpoint_action: ANY is
+			-- Callback value to indicate that a breakpoint will be put at
+			-- the first call of the routine.
 		once
 			!! Result
 		end;
@@ -314,8 +328,12 @@ feature {NONE} -- Command arguments
 			-- Process an action based on `arg'.
 		local
 			super_melt_cmd: SUPER_MELT;
+			insert_breakpoint_cmd: BREAKPOINT_INSERTER
 			but_data: BUTTON_DATA;
 			st: STONE
+			target: HOLE
+			wid: WIDGET
+			holes: LINKED_LIST [HOLE]
 		do
 			if arg = new_tooler_action then
 				but_data ?= context_data;
@@ -324,6 +342,30 @@ feature {NONE} -- Command arguments
 				if st /= Void then
 					Project_tool.receive (st);
 					deselect_all
+				end
+
+			elseif arg = retarget_tooler_action then
+				but_data ?= context_data;
+				update_before_transport (but_data);
+				st := focus;
+				if st /= Void then
+					from
+						wid := widget.screen.widget_pointed
+						holes := Transporter.holes
+						holes.start
+					until
+						holes.after or else target /= Void
+					loop
+						if holes.item.target = wid then
+							target := holes.item
+						end;
+						holes.forth
+					end
+
+					if target /= Void then
+						target.receive (st)
+						deselect_all
+					end
 				end
 
 			elseif arg = super_melt_action then
@@ -335,6 +377,17 @@ feature {NONE} -- Command arguments
 					super_melt_cmd.work (st);
 					deselect_all
 				end
+
+			elseif arg = insert_breakpoint_action then
+				but_data ?= context_data;
+				update_before_transport (but_data);
+				st := focus;
+				if st /= Void then
+					!! insert_breakpoint_cmd.do_nothing;
+					insert_breakpoint_cmd.work (st);
+					deselect_all
+				end
+				
 			end
 		end;
 

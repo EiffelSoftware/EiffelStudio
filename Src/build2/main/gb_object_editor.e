@@ -97,6 +97,12 @@ feature -- Access
 		-- Object currently referenced by `Current'.
 		-- All object modifications are applied to this
 		-- object.
+		
+	has_object: BOOLEAN is
+			-- Is an object being edited in `Current'?
+		do
+			Result := object /= Void
+		end
 
 feature {GB_EV_ANY, GB_COMMAND_DELETE_OBJECT} -- Access
 
@@ -216,7 +222,47 @@ feature -- Status setting
 				item_parent.forth
 			end
 		end
+
+feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
 		
+	end_name_change_on_object is
+			-- Update the object to reflect the edited name.
+			-- If the edited name is not valid, then we restore the name of `object'
+			-- to the previous name before the editing began.
+		local
+			command_name_change: GB_COMMAND_NAME_CHANGE
+		do
+			name_field.change_actions.block
+				-- If the name exists, we must restore the name of `object' to
+				-- the name before the name change began.
+			if object_handler.named_object_exists (name_field.text, object) then
+				object.cancel_edited_name
+				check
+					object_names_now_equal: object.edited_name.is_equal (object.name)
+				end
+				if object.name.is_empty then
+					object.layout_item.set_text (object.type.substring (4, object.type.count))
+				else
+					object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
+				end
+				set_title_from_name
+				update_editors_for_name_change (object.object, Current)
+				name_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				name_field.set_text (object.name)
+			else
+					-- Now check that the name has actually changed. If it has not changed,
+					-- then do nothing.
+				if not object.edited_name.is_equal (object.name) then
+						-- Use the text in `name_field' as the new name of the object.
+						-- We have guaranteed that the name is unique at this point.
+					create command_name_change.make (object, object.edited_name, object.name)
+					object.accept_edited_name
+					history.cut_off_at_current_position
+					command_name_change.execute
+				end
+			end
+			name_field.change_actions.resume
+		end
 
 feature {NONE} -- Implementation
 
@@ -370,46 +416,6 @@ feature {NONE} -- Implementation
 				-- identical. We should be in a state where name is valid
 				-- and unique at this point.
 			object.set_edited_name (object.name)
-		end
-
-		
-	end_name_change_on_object is
-			-- Update the object to reflect the edited name.
-			-- If the edited name is not valid, then we restore the name of `object'
-			-- to the previous name before the editing began.
-		local
-			command_name_change: GB_COMMAND_NAME_CHANGE
-		do
-			name_field.change_actions.block
-				-- If the name exists, we must restore the name of `object' to
-				-- the name before the name change began.
-			if object_handler.named_object_exists (name_field.text, object) then
-				object.cancel_edited_name
-				check
-					object_names_now_equal: object.edited_name.is_equal (object.name)
-				end
-				if object.name.is_empty then
-					object.layout_item.set_text (object.type.substring (4, object.type.count))
-				else
-					object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
-				end
-				set_title_from_name
-				update_editors_for_name_change (object.object, Current)
-				name_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				name_field.set_text (object.name)
-			else
-					-- Now check that the name has actually changed. If it has not changed,
-					-- then do nothing.
-				if not object.edited_name.is_equal (object.name) then
-						-- Use the text in `name_field' as the new name of the object.
-						-- We have guaranteed that the name is unique at this point.
-					create command_name_change.make (object, object.edited_name, object.name)
-					object.accept_edited_name
-					history.cut_off_at_current_position
-					command_name_change.execute
-				end
-			end
-			name_field.change_actions.resume
 		end
 		
 	update_name_when_return_pressed is

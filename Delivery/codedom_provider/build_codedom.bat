@@ -39,13 +39,14 @@ COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\nmap\EIFGEN\F_code\nmap.exe bin\
 
 CD bin
 REM in delivery\codedom\bin
 MKDIR icons
 CD icons
 REM in delivery\codedom\bin\icons
-XCOPY ..\..\..\..\checkout\dotnet\codedom_provider\manager\icons /E
+XCOPY ..\..\..\..\checkout\dotnet\codedom_provider\tools\manager\icons /E
 SET CODEDOM_BUILT=1
 
 CD ..\..\..\..

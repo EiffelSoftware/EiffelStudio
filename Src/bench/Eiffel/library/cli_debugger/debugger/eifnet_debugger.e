@@ -1975,6 +1975,7 @@ feature -- Specific function evaluation
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
 			l_once_already_called: BOOLEAN
+			l_once_not_available: BOOLEAN
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -2014,16 +2015,29 @@ feature -- Specific function evaluation
 						l_prepared_icd_debug_value.clean_on_dispose						
 					end
 					l_icd_debug_value.clean_on_dispose
+				else
+					l_once_not_available := True
 				end
+			else
+				l_once_not_available := True
 			end
 
 				--| if already called then get the value (_result)
-			if l_once_already_called then
-				if l_result_token /= 0 then
-					Result := l_icd_class.get_static_field_value (l_result_token, l_icd_frame)
+			if l_once_not_available then
+				last_once_available := False
+			else
+				last_once_available := True
+				if l_once_already_called then
+					if l_result_token /= 0 then
+						Result := l_icd_class.get_static_field_value (l_result_token, l_icd_frame)
+					end
 				end
 			end
 		end
+		
+	last_once_available: BOOLEAN
+			-- Last once request show the once is available
+			-- if False, this mean the debugger had issue to get information
 
 --| NOTA jfiat [2004/03/19] : not yet ready, to be continued
 --

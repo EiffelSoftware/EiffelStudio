@@ -58,14 +58,12 @@ feature
 			end
 		end;
 
-
-
 	image: STRING is
 			-- raw text. Result is created for each call
 		local
 			s: STRING
 		do
-			!! Result.make (0);
+			!!Result.make (0);
 			from
 				start
 			until
@@ -78,8 +76,6 @@ feature
 				forth
 			end;
 		end;
-
-
 
 end
 

@@ -9,11 +9,11 @@ class SHELL_COMMAND
 
 inherit
 
+	SHARED_EIFFEL_PROJECT;
 	HOLE_COMMAND
 		redefine 
-			compatible, process_feature, process_class, is_sensitive
+			compatible, process_feature, process_class
 		end;
-	SHARED_BENCH_RESOURCES
 
 creation
 
@@ -26,23 +26,18 @@ feature -- Properties
 
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell window.
-		once
-				-- use default command (vi editor)
-			Result := resources.get_string (r_Shell_command, "xterm -geometry 80x40 -e vi +$line $target")
+		do
+			if tool = Project_tool then
+				Result := General_resources.project_shell_command.value
+			else
+				Result := General_resources.shell_command.value
+			end
 		end;
 
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
 			Result := Pixmaps.bm_Shell 
-		end;
-
-	is_sensitive: BOOLEAN is
-			-- Can Current be executed?
-		do
-			if holder /= Void then
-				Result := holder.is_sensitive
-			end
 		end;
 
 feature -- Access
@@ -116,6 +111,10 @@ feature {NONE} -- Implementation
 					if feature_stone /= Void then
 						process_feature (feature_stone)
 					end
+				elseif tool = Project_tool then
+					cmd_string.replace_substring_all ("$target", Eiffel_system.name);
+					!! req;
+					req.execute (cmd_string);
 				elseif tool.file_name /= Void and then tool.stone /= Void then
 					class_tool ?= tool;
 					if class_tool /= Void and then (

@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			create font
 			font_families.start
 			font.preferred_families.extend (font_families.item)
-			font.set_height (50)
+			font.set_height (10)
 			rich_text.set_font (font)
 			
 				-- Add the rich text tab positioner.
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 				format := rich_text.character_format (new_position)
 				display_format (format)
 				
-				paragraph_format := rich_text.paragraph_format (new_position)
+	 			paragraph_format := rich_text.paragraph_format (new_position)
 				display_paragraph_format (paragraph_format)
 			end
 			
@@ -583,10 +583,10 @@ feature {NONE} -- Implementation
 				paragraph: EV_PARAGRAPH_FORMAT
 				current_value: STRING
 			do
+
 				if rich_text.has_selection then
-					
 						-- Retrieve the format at the end of the selection.
-					format := rich_text.character_format (rich_text.selection_end)
+					format := rich_text.selected_character_format
 					
 						-- Retrieve information regarding the consistency of formatting within selected range.
 					formatting := rich_text.character_format_range_information (rich_text.selection_start, rich_text.selection_end + 1)
@@ -674,8 +674,8 @@ feature {NONE} -- Implementation
 					italic_button.select_actions.resume
 					
 						-- Now handle information regarding paragraphs.
-						
-					paragraph := rich_text.paragraph_format (rich_text.selection_end)
+
+					paragraph := rich_text.selected_paragraph_format
 					if rich_text.paragraph_format_contiguous (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end)) then
 						if paragraph.is_left_aligned then
 							unselect_all_buttons_except (left_alignment_button)
@@ -758,6 +758,7 @@ feature {NONE} -- Implementation
 		local
 			tool_bar: EV_TOOL_BAR
 			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			was_already_blocked: BOOLEAN
 		do
 			tool_bar := a_button.parent
 			from
@@ -768,15 +769,29 @@ feature {NONE} -- Implementation
 				if tool_bar.item /= a_button then
 					toggle_button ?= tool_bar.item
 					if toggle_button /= Void then
-						toggle_button.select_actions.block
+						was_already_blocked := False
+						if toggle_button.select_actions.state /= toggle_button.select_actions.blocked_state then
+							toggle_button.select_actions.block
+						else
+							was_already_blocked := True
+						end
 						toggle_button.disable_select
-						toggle_button.select_actions.resume
+						if not was_already_blocked then
+							toggle_button.select_actions.resume
+						end
 					end
 				else
 						-- Now ensure `a_button' is selected.
-					a_button.select_actions.block
+					was_already_blocked := False
+					if a_button.select_actions.state /= a_button.select_actions.blocked_state then
+						a_button.select_actions.block
+					else
+						was_already_blocked := True
+					end
 					a_button.enable_select
-					a_button.select_actions.resume
+					if not was_already_blocked then
+						a_button.select_actions.resume
+					end
 				end
 				tool_bar.forth
 			end

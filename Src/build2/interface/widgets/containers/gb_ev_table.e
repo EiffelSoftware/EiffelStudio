@@ -53,21 +53,21 @@ feature {GB_XML_STORE} -- Output
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			current_table_widget: EV_WIDGET
 		do			
-			if first.columns /= 1 then
-				add_element_containing_integer (element, columns_string, first.columns)	
+			if first.columns /= 1 or uses_constant (Columns_string) then
+				add_integer_element (element, columns_string, first.columns)	
 			end
-			if first.rows /= 1 then
-				add_element_containing_integer (element, rows_string, first.rows)	
+			if first.rows /= 1 or uses_constant (rows_string) then
+				add_integer_element (element, rows_string, first.rows)	
 			end
-			if first.column_spacing /= 0 then
-				add_element_containing_integer (element, column_spacing_string, first.column_spacing)
+			if first.column_spacing /= 0 or uses_constant (column_spacing_string) then
+				add_integer_element (element, column_spacing_string, first.column_spacing)
 			end
-			if first.row_spacing /= 0 then
-				add_element_containing_integer (element, row_spacing_string, first.row_spacing)
+			if first.row_spacing /= 0  or uses_constant (row_spacing_string) then
+				add_integer_element (element, row_spacing_string, first.row_spacing)
 			end
 			
-			if first.border_width /= 0 then
-				add_element_containing_integer (element, border_width_string, first.border_width)
+			if first.border_width /= 0 or uses_constant (border_width_string) then
+				add_integer_element (element, border_width_string, first.border_width)
 			end
 
 			an_object := object_handler.object_from_display_widget (first)
@@ -130,25 +130,20 @@ feature {GB_XML_STORE} -- Output
 		do
 			full_information := get_unique_full_info (element)
 			
-			element_info := full_information @ (Columns_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_TABLE}.resize (element_info.data.to_integer, first.rows))
+			if full_information @ (Columns_string) /= Void then
+				for_all_objects (agent {EV_TABLE}.resize (retrieve_and_set_integer_value (Columns_string), first.rows))
 			end
-			element_info := full_information @ (Rows_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_TABLE}.resize (first.columns, element_info.data.to_integer))
+			if full_information @ (Rows_string) /= Void then
+				for_all_objects (agent {EV_TABLE}.resize (first.columns, retrieve_and_set_integer_value (Rows_string)))
 			end
-			element_info := full_information @ (Column_spacing_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_TABLE}.set_column_spacing (element_info.data.to_integer))
+			if full_information @ (Column_spacing_string) /= Void then
+				for_all_objects (agent {EV_TABLE}.set_column_spacing (retrieve_and_set_integer_value (Column_spacing_string)))
 			end
-			element_info := full_information @ (Row_spacing_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_TABLE}.set_row_spacing (element_info.data.to_integer))
+			if full_information @ (Row_spacing_string) /= Void then
+				for_all_objects (agent {EV_TABLE}.set_row_spacing (retrieve_and_set_integer_value (Row_spacing_string)))
 			end
-			element_info := full_information @ (Border_width_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_TABLE}.set_border_width (element_info.data.to_integer))
+			if full_information @ (Border_width_string) /= Void then
+				for_all_objects (agent {EV_TABLE}.set_border_width (retrieve_and_set_integer_value (Border_width_string)))
 			end			
 				-- All the building for an EV_FIXED needs to be deferred so
 				-- we set up some deferred building now.

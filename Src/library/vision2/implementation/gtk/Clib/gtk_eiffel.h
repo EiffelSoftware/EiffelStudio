@@ -308,6 +308,8 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 				EIF_PROC func, EIF_OBJ object,
 				callback_data_t **p);
 
+EIF_POINTER c_gtk_toolbar_new_horizontal (void);
+
 /*==============================================================================
  button functions
 ==============================================================================*/

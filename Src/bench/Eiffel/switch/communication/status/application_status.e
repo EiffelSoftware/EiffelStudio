@@ -60,7 +60,7 @@ feature -- Callstack
 			-- reload the call stack from application (after having edited an
 			-- object for example to make sure the modification was successful).
 		local
-			ecs: EIFFEL_CALL_STACK
+			ecs: like current_call_stack
 		do
 				-- re-create the call stack
 			ecs := new_current_callstack_with (stack_max_depth)
@@ -69,7 +69,7 @@ feature -- Callstack
 		
 feature {NONE} -- CallStack Impl
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK is
+	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
 		deferred
 		end
 
@@ -111,7 +111,7 @@ feature -- Values
 
 feature -- Call Stack related
 
-	current_call_stack: like call_stack
+	current_call_stack: EIFFEL_CALL_STACK
 			-- Current Call Stack regarding Thread Id.
 			
 	get_current_call_stack is
@@ -119,15 +119,17 @@ feature -- Call Stack related
 		do
 			current_call_stack := call_stack (current_thread_id)
 		end
+		
+	stack_max_depth: INTEGER
+			-- Maximum number of stack elements that we retrieve from the application.
+
+feature -- Call Stack element related
 
 	current_call_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed.
 		do
 			Result := current_call_stack.i_th (Application.current_execution_stack_number)
 		end
-		
-	stack_max_depth: INTEGER
-			-- Maximum number of stack elements that we retrieve from the application.
 			
 feature -- Thread related access
 
@@ -136,11 +138,12 @@ feature -- Thread related access
 	
 	all_thread_ids: ARRAY [INTEGER]
 			-- All available threads' ids
-	
+			
+	all_thread_ids_count: INTEGER
 
 feature -- Thread related change
 
-	set_call_stack (tid: INTEGER; ecs: EIFFEL_CALL_STACK) is
+	set_call_stack (tid: INTEGER; ecs: like current_call_stack) is
 			-- Associate `ecs' with thread id `tid'
 		require
 			id_valid: tid > 0
@@ -170,8 +173,8 @@ feature -- Thread related change
 			a_not_empty: a /= Void and then not a.is_empty
 		do
 			all_thread_ids := a.twin
+			all_thread_ids_count := all_thread_ids.count
 		end
-		
 
 feature {NONE} -- Call stack implementation
 
@@ -181,8 +184,7 @@ feature {NONE} -- Call stack implementation
 			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
 		end
 
-	
-	call_stack (tid: INTEGER): EIFFEL_CALL_STACK is
+	call_stack (tid: INTEGER): like current_call_stack is
 			-- Call stack associated with thread id `tid'.
 		do
 			if tid > 0 then
@@ -192,7 +194,7 @@ feature {NONE} -- Call stack implementation
 			Result /= Void implies tid > 0
 		end
 	
-	call_stack_list: HASH_TABLE [EIFFEL_CALL_STACK, INTEGER]	
+	call_stack_list: HASH_TABLE [like current_call_stack, INTEGER]	
 			-- Call Stack list, associating Call Stack and their Thread Id.
 
 feature -- Access

@@ -97,6 +97,38 @@ feature {NONE} -- Initialization
 			set_pixmap (gdkpix, gdkmask)
 		end
 
+feature -- Drawing operations
+
+	redraw is
+			-- Redraw the window without clearing it.
+		do
+			check false end
+		end
+
+	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+		do
+			check false end
+		end
+
+	clear_and_redraw is
+			-- Redraw the window after clearing it.
+		do
+			check false end
+		end
+
+	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Clear and Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+		do
+			check false end
+		end
+
+	flush is
+			-- Update immediately the screen if needed
+		do
+			check false end
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
@@ -379,6 +411,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/12 15:36:04  brendel
+--| Added 5 features. To be implemented.
+--|
 --| Revision 1.27  2000/04/11 22:47:39  oconnor
 --| Inherit EV_DRAWABLE_IMP in place of EV_DRAWING_AREA_IMP in line with new
 --| interface inheritance.

@@ -96,6 +96,7 @@ feature -- Access
 			wcval: WIDE_CHARACTER_REF
 			cval: CHARACTER_REF
 			ptrval: POINTER_REF
+			bval: BOOLEAN_REF
 			val: ANY
 			syst: SYSTEM_I
 		do
@@ -105,40 +106,48 @@ feature -- Access
 			if intval /= Void then
 				create Result.make_integer (intval.item, Dynamic_class)
 			else
-				ptrval ?= val
-				if ptrval /= Void then
-					create Result.make_pointer (ptrval.item, Dynamic_class)
+				bval ?= val
+				if bval /= Void then
+					create Result.make_boolean (bval.item, Dynamic_class)
 				else
-					dblval ?= val
-					if dblval /= Void then
-						create Result.make_double (dblval.item, Dynamic_class)
+					ptrval ?= val
+					if ptrval /= Void then
+						create Result.make_pointer (ptrval.item, Dynamic_class)
 					else
-						realval ?= val
-						if realval /= Void then
-							create Result.make_real (realval.item, Dynamic_class)
+						dblval ?= val
+						if dblval /= Void then
+							create Result.make_double (dblval.item, Dynamic_class)
 						else
-							int8val ?= val
-							if int8val /= Void then
-								create Result.make_integer (int8val.to_integer, Dynamic_class)
+							realval ?= val
+							if realval /= Void then
+								create Result.make_real (realval.item, Dynamic_class)
 							else
-								int16val ?= val
-								if int16val /= Void then
-									create Result.make_integer (int16val.to_integer, Dynamic_class)
+								int8val ?= val
+								if int8val /= Void then
+									create Result.make_integer (int8val.to_integer, Dynamic_class)
 								else
-									int64val ?= val
-									if int64val /= Void then
-										create Result.make_integer (int64val.to_integer, Dynamic_class)
+									int16val ?= val
+									if int16val /= Void then
+										create Result.make_integer (int16val.to_integer, Dynamic_class)
 									else
-										wcval ?= val
-										if wcval /= Void then
-											--| FIXME XR: Why is there no conversion feature in WIDE_CHARACTER?!!!
-											create Result.make_character ('%U', Dynamic_class)
+										int64val ?= val
+										if int64val /= Void then
+											create Result.make_integer (int64val.to_integer, Dynamic_class)
 										else
-											cval ?= val
-											if cval /= Void then
-												create Result.make_character (cval.item, Dynamic_class)
+											wcval ?= val
+											if wcval /= Void then
+												--| FIXME XR: Why is there no conversion feature in WIDE_CHARACTER?!!!
+												create Result.make_character ('%U', Dynamic_class)
 											else
-												-- What the...?
+												cval ?= val
+												if cval /= Void then
+													create Result.make_character (cval.item, Dynamic_class)
+												else
+													check
+														False
+														-- Unknown basic type?!
+													end
+												end
 											end
 										end
 									end

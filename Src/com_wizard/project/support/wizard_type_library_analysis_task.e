@@ -131,6 +131,7 @@ feature {NONE} -- Implementation
 					i = l_count
 				loop
 					Result := data_type_analysis_steps_count (a_type_info, a_type_info.var_desc (i).elem_desc.type_desc)
+					i := i + 1
 				end
 			end
 		end

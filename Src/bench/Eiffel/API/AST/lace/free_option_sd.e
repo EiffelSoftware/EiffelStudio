@@ -48,13 +48,15 @@ feature
 feature {NONE}
 
 	dead_code, exception_stack_managed, collect, precompilation,
-	code_replication, fail_on_rescue, check_vape: INTEGER is UNIQUE;
+	code_replication, fail_on_rescue, check_vape,
+	optimization: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
 			!!Result.make (6);
 			Result.force (dead_code, "dead_code_removal");
+			Result.force (optimization, "optimization");
 			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_stack_managed");
@@ -91,6 +93,16 @@ feature
 					System.set_remover_off (True)
 				elseif value.is_yes then
 					System.set_remover_off (False)
+				else
+					error_found := True;
+				end;
+			when optimization then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_optimization (False)
+				elseif value.is_yes then
+					System.set_optimization (True)
 				else
 					error_found := True;
 				end;

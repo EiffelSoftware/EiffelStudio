@@ -85,7 +85,7 @@ feature -- Drawing area
 
 	close is
 		do
-			main_panel.app_edit_t.set_toggle_off
+			main_panel.application_editor_entry.set_toggle_off
 			hide
 		end;
 
@@ -440,14 +440,14 @@ feature {NONE}
 						not Result.has (a_str_scr_elt)
 					then	
 						from
-							Result.start
+							Result.finish
 						until
-							Result.after or else Result.item.value <= circle.text
+							Result.before or else Result.item.value < circle.text
 						loop
-							Result.forth
+							Result.back
 						end
-						Result.put_left (a_str_scr_elt)
-						Result.back
+						Result.put_right (a_str_scr_elt)
+--						Result.forth
 					end;
 				end
 				figures.forth

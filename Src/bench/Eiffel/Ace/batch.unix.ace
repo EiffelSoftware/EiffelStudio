@@ -77,6 +77,11 @@ cluster
 			"CVS"; 
 		end
 
+	all helpers:            "$EIFFEL_SRC/library/helpers"
+		exclude
+			"CVS"; 
+		end
+
 	switch:		"$EIFFEL_SRC/Eiffel/switch"
 
 	interface_switch (switch):		"$/interface/batch_only"
@@ -104,6 +109,7 @@ external
 
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
+		"\$(EIFFEL_SRC)/C/platform",
 		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include"
 
 	object:

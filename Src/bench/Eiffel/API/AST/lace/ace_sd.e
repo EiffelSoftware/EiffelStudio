@@ -121,8 +121,6 @@ feature -- Lace compilation
 			System.reset_generate_clause;
 			if Generation /= Void then
 				Generation.adapt
-			else
-				
 			end;
 		end;
 

@@ -410,7 +410,7 @@ feature -- Implementation
 			l_C: EV_C_EXTERNALS
 		do
 			if
-				C.gtk_events_pending = 0
+				True--C.gtk_events_pending = 0
 			then
 				l_invert_gc := invert_gc
 				l_root_parent := root_parent

@@ -71,6 +71,28 @@ feature -- Creation feature
 			classes.clear_all;
 		end;
 
+	copy_old_cluster (old_cluster_i: CLUSTER_I) is
+			-- Copy all the information except the ignore
+			-- and renaming clauses
+		local
+			cl: like classes;
+			c: CLASS_I;
+		do
+			old_cluster := old_cluster_i;
+			set_date (old_cluster_i.date);
+			from
+				cl := old_cluster.classes;
+				cl.start;
+			until
+				cl.offright
+			loop
+				c := cl.item_for_iteration;
+				classes.put (c, cl.key_for_iteration);
+				c.set_cluster (Current);
+				cl.forth
+			end;
+		end;
+
 	insert_renaming (cl: CLUSTER_I; old_name,new_name: STRING) is
 			-- Insert renaming of a class of `cl' named `old_name' 
 			-- into `new_name'.
@@ -196,8 +218,10 @@ feature -- Creation feature
 											if a_class = Void then
 												!!a_class.make;
 												a_class.set_class_name (class_name);
-												a_class.set_file_name (class_path);
 											end;
+												-- The file name may have changed even
+												-- if the class was already in this cluster
+											a_class.set_file_name (class_path);
 											a_class.set_cluster (Current);
 											classes.put (a_class, class_name);
 										else
@@ -240,6 +264,10 @@ feature -- Creation feature
 			-- Remove the CLASS_C if the class was compiled before
 			-- and propagate recompilation of the clients.
 		do
+			classes.remove (a_class.class_name);
+
+				-- If a_class has already be compiled,
+				-- all its clients must recheck their suppliers
 			remove_class_from_system (a_class);
 		end;
 
@@ -249,13 +277,8 @@ feature -- Creation feature
 			class_c: CLASS_C;
 			clients: LINKED_LIST [CLASS_C];
 		do
-			classes.remove (a_class.class_name);
-
 			class_c := a_class.compiled_class;
 			if class_c /= Void then
-					-- If a_class has already be compiled,
-					-- all its clients must recheck their suppliers
-
 				clients := class_c.clients;
 				from
 					clients.start
@@ -265,7 +288,7 @@ feature -- Creation feature
 						-- recompile the client
 						-- to be changed (the parsing of the file is not needed
 						-- unless the client has been changed)
-					Workbench.change_class (clients.item.lace_class);
+					Workbench.change_class (clients.item.lace_class);`
 					clients.forth;
 				end;
 
@@ -274,30 +297,138 @@ feature -- Creation feature
 			end;
 		end;
 
+	reset_options is
+			-- Reset the default options for all the classes
+			-- in the cluster
+		do
+			from
+				classes.start
+			until
+				classes.offright
+			loop
+					-- make on CLASS_I reset the default options
+				classes.item_for_iteration.make;
+				classes.forth
+			end;
+		end;
+
+	update_cluster is
+			-- Update the clusters: remove the classes removed
+			-- from the system, examine the differences in the
+			-- ignore and rename clauses
+		local
+			class_i: CLASS_I;
+		do
+			if old_cluster /= Void then
+				process_removed_classes;
+
+					-- Remove the reference to `old_cluster'
+				old_cluster := Void;
+			end;
+		ensure
+			old_cluster_void: old_cluster = Void
+		end;
+
 	process_removed_classes is
 			-- Check if some classes have disapeared since last compilation
 			-- and remove them from the system
+		require
+			old_cluster_not_void: old_cluster /= Void
 		local
 			old_classes: like classes;
 			old_class: CLASS_I;
 		do
-			if old_cluster /= Void then
-				from
-					old_classes := old_cluster.classes;
-					old_classes.start
-				until
-					old_classes.offright
-				loop
-					old_class := old_classes.item_for_iteration;
-					if not classes.has (old_class.class_name) then
-						-- the class has been removed
-						remove_class_from_system (old_class);
-					end;
-					old_classes.forth;
+			from
+				old_classes := old_cluster.classes;
+				old_classes.start
+			until
+				old_classes.offright
+			loop
+				old_class := old_classes.item_for_iteration;
+				if not classes.has (old_class.class_name) then
+					-- the class has been removed
+					old_cluster.remove_class (old_class);
 				end;
+				old_classes.forth;
+			end;
+		end;
 
-					-- Remove the reference to `old_cluster'
-				old_cluster := Void;
+	cluster_of_path (list: like ignore; pathname: STRING): CLUSTER_I is
+		local
+			found: BOOLEAN;
+		do
+			from
+				list.start
+			until
+				found or else list.offright
+			loop
+				if pathname.is_equal (list.item.path) then
+					Result := list.item;
+					found := True;
+				end;
+				list.forth;
+			end;
+		end;
+
+	ignore_clauses_changed: BOOLEAN is
+			--- Check the new ignore clauses and the deleted ones
+		require
+			old_cluster_not_void: old_cluster /= Void
+		local
+			old_list: like ignore;
+			cluster: CLUSTER_I;
+		do
+			old_list := old_cluster.ignore;
+				-- First the deleted clauses
+			from
+				old_list.start
+			until
+				old_list.offright or else Result
+			loop
+				cluster := cluster_of_path (ignore, old_list.item.path);
+				if cluster = Void then
+					-- The ignore clause has been removed
+					-- check the possible name conflicts
+
+					cluster := Universe.cluster_of_path (old_list.item.path);
+					if cluster /= Void then
+							-- The cluster is in the universe
+						Result := True;
+					end;
+				end;
+				old_list.forth;
+			end;
+
+				-- Check the added clauses
+			from
+				ignore.start
+			until
+				ignore.offright or else Result
+			loop
+				cluster := cluster_of_path (old_list, ignore.item.path);
+				if cluster = Void then
+					-- The clause has been added
+					-- Check all the compiled classes of the cluster
+					-- to see if they have clients in the ignored cluster
+					Result := True;
+			end;
+				ignore.forth
+			end;			
+		end;
+
+	renaming_clauses_changed: BOOLEAN is
+			--- Check the new rename clauses and the deleted ones
+		require
+			old_cluster_not_void: old_cluster /= Void
+		local
+			old_list: like renamings;
+			cluster_i: CLUSTER_I;
+			rename_clause: RENAME_I;
+		do
+			if renamings.empty and old_cluster.renamings.empty then
+				Result := False
+			else
+				Result := True
 			end;
 		end;
 

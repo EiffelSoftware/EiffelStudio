@@ -8,6 +8,9 @@ class CURSORS
 
 inherit
 	CONSTANTS
+		redefine
+			default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -159,7 +162,8 @@ feature {NONE}
 --					io.error.putstring (full_name)
 --					io.error.putstring (".%N")
 --				end
-				create Result.make_by_filename (full_name)
+--				create Result.make_by_filename (full_name)
+				create Result.make
 			else
 				io.error.putstring ("Warning: ")
 				io.error.putstring (full_name)

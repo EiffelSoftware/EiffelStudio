@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			extend (execution_frame)
 			key_press_actions.extend (agent escape_check (?))
 			focus_in_actions.extend (agent on_window_focused)
-			close_request_actions.extend (agent hide)
+			close_request_actions.extend (agent on_cancel)
 		end
 
 	execution_frame: EV_HORIZONTAL_BOX is
@@ -90,26 +90,26 @@ feature {NONE} -- Initialization
 			vbox.extend (b)
 			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			vbox.disable_item_expand (b)
-			b.select_actions.extend (agent okay)
+			b.select_actions.extend (agent on_ok)
 			
 			create b.make_with_text ("Cancel")
 			vbox.extend (b)
 			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			vbox.disable_item_expand (b)
-			b.select_actions.extend (agent cancel)
+			b.select_actions.extend (agent on_cancel)
 
 			if run /= Void then
 				create run_button.make_with_text ("Run")
 				vbox.extend (run_button)
 				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 				vbox.disable_item_expand (run_button)
-				run_button.select_actions.extend (agent execute (apply_and_run_it))
+				run_button.select_actions.extend (agent execute)
 				
 				create run_and_close_button.make_with_text ("Run & Close")
 				vbox.extend (run_and_close_button)
 				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 				vbox.disable_item_expand (run_and_close_button)
-				run_and_close_button.select_actions.extend (agent execute_and_close (apply_and_run_it))
+				run_and_close_button.select_actions.extend (agent execute_and_close)
 				run_and_close_button.key_press_actions.extend (agent on_run_button_key_press)
 			end
 
@@ -139,13 +139,13 @@ feature -- Status Setting
 
 feature {NONE} -- Actions
 
-	cancel is
-			-- Action to take when user presses 'Cancel' button.
+	on_cancel is
+	 		-- Action to take when user presses 'Cancel' button.
 		do
 			hide
 		end
 
-	okay is
+	on_ok is
 	 		-- Action to take when user presses 'OK' button.
 		do
 			arguments_control.store_arguments (Void)
@@ -156,12 +156,6 @@ feature {NONE} -- Properties
 
 	arguments_control: EB_ARGUMENT_CONTROL
 			-- Widget holding all arguments information.
-
-	apply_and_run_it: ANY is
-			-- Arguments for the command
-		once
-			create Result
-		end
 
 	run: PROCEDURE [ANY, TUPLE]
 
@@ -177,7 +171,7 @@ feature {NONE} -- Implementation
 			-- Key was pressed whilst button had focus.
 		do
 			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
-				execute (apply_and_run_it)
+				execute
 			end
 		end
 
@@ -187,29 +181,21 @@ feature {NONE} -- Implementation
 			key_not_void: key /= Void
      	do
         	if key.code = feature {EV_KEY_CONSTANTS}.key_escape then
-            	cancel
+            	on_cancel
             end
       	end
 
-	execute (arg: ANY) is
+	execute is
 		do
-			if arg /= Void then
-				if arg = Apply_and_run_it then
-					arguments_control.store_arguments (Void)
-					run.call (Void)
-				end
-			end
+			arguments_control.store_arguments (Void)
+			run.call (Void)
 		end
 		
-	execute_and_close (arg: ANY) is
+	execute_and_close is
 		do
-			if arg /= Void then
-				if arg = Apply_and_run_it then
-					arguments_control.store_arguments (Void)
-					run.call (Void)
-					hide
-				end
-			end
+			arguments_control.store_arguments (Void)
+			run.call (Void)
+			hide
 		end
 
 feature {NONE} -- Observing event handling.

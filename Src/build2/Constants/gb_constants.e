@@ -354,7 +354,7 @@ feature -- Generation constants
 		
 	merged_groups_string: STRING is "merged_radio_button_groups"
 	
-	redefined_creation: STRING is
+	redefined_window_creation: STRING is
 			--Definition of `make_with_window' and `default_create' to be used in window implementation when
 			-- we are a client of the window, and not inheriting it.
 		once
@@ -367,6 +367,19 @@ feature -- Generation constants
 				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
 				"create window" + indent + "initialize" + indent_less_one + "ensure then" + indent + "window_not_void: window /= Void" + indent_less_one + "end"
 		end
+		
+	redefined_creation: STRING is
+			--Definition of `make_with_window' and `default_create' to be used in window implementation when
+			-- we are a client of the window, and not inheriting it.
+		once
+			Result := "create" + indent_less_two + "default_create," + indent_less_two +
+				"make_with_widget%N%N" + "feature {NONE} -- Initialization%N" + indent_less_two +
+				"make_with_widget (a_widget: "+ Ev_titled_window_string + ") is" + indent + "-- Create `Current' in `a_widget'." +
+				indent_less_one + "require" + indent + "widget_not_void: a_widget /= Void" +
+				indent_less_one + "do" + indent + "widget := a_widget" + indent + "initialize" + indent_less_one + "ensure" + indent + "widget_set: widget = a_widget" + indent + "widget_not_void: widget /= Void" + indent_less_one + "end%N" +
+				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
+				"create widget" + indent + "initialize" + indent_less_one + "ensure then" + indent + "widget_not_void: widget /= Void" + indent_less_one + "end"
+		end
 	
 	default_create_redefinition: STRING is
 			-- Redefinition of `default_create' used when we are a client of the window.
@@ -374,10 +387,17 @@ feature -- Generation constants
 			Result := indent_less_one + "redefine" + indent + "default_create" + indent_less_one + "end"
 		end
 		
-	show_feature: STRING is
+	show_window_feature: STRING is
 			-- `Show' for the window implementation when we are a client of the window.
 		once
 			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_window_string +
+			".show" + indent_less_one + "end"
+		end
+		
+	show_widget_feature: STRING is
+			-- `Show' for the window implementation when we are a client of the window.
+		once
+			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_widget_string +
 			".show" + indent_less_one + "end"
 		end
 
@@ -394,27 +414,11 @@ feature -- Generation constants
 			Result := Indent_less_one + "undefine" + indent + "is_equal, default_create, copy" + Indent_less_one + "end"
 		end
 		
-	window_access: STRING is
-			-- String used to define window when we are a client of window.
-		once
-			Result := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two +
-			"window: " + Ev_titled_window_string + indent_less_one + "-- `Result' is window with which `Current' is implemented"
-		end
-		
-	window_access_as_dialog_part1: STRING is
-			-- Part 1 of string used to define window when we are a client of window.
-		once
-			Result := "inherit" + Indent_less_two
-		end
-	window_access_as_dialog_part2: STRING is
-			-- Part 2 of string used to define window when we are client of window.
-		once
-			Result := "%N%Nfeature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
-				"-- `Result' is dialog with which `Current' is implemented"
-		end
-		
 	client_window_string: STRING is "window"
 		-- Name used to access window as a client.
+		
+	client_widget_string: STRING is "widget"
+		-- Name used to access widget as a client.
 
 	Create_command_string: STRING is "create "
 			-- String corresponding to creation instruction in generated_code.
@@ -443,6 +447,9 @@ feature -- XML constants
 		
 	Item_string: STRING is "item"
 		-- String constant representing "item".
+
+	Reference_id_string: STRING is "reference_id"
+		-- String constant representing "reference_id".
 		
 	Name_string: STRING is "name"
 		-- String constant representing "name".
@@ -473,6 +480,9 @@ feature -- Dialogs
 	Save_prompt: STRING is "Do you wish to save the current project?"
 	
 feature -- Miscellaneous
+
+	initial_main_window_name: STRING is "main_window"
+		-- Name of initial main window added to system.
 
 	select_constant_string: STRING is "Select constant..."
 		-- Used in constant selection dialogs.
@@ -523,6 +533,11 @@ feature -- Miscellaneous
 		-- Currently it is limited to 127 by the GOBO implementation.
 		--| FIXME Julian
 		
+	amount_to_shift_ids_during_import: INTEGER is 32000
+		-- Amount by which all existing ids are shifted to permit the new obejcts to be loaded.
+		-- This means that you cannot import a file that has ids greater than 32000 as otherwise there
+		-- will be clashes.
+		
 feature -- GB_TOOL_HOLDER constants
 
 	maximize_tooltip: STRING is "Maximize"
@@ -564,6 +579,8 @@ feature -- Warning Dialogs
 	Reserved_word_warning: STRING is "' is a reserved word.%NPlease select a different class name."
 
 	Component_invalid_name_warning: STRING is " is not a valid Component name.%N%NComponent names must be unique, start with an alphabetic character%Nand only include alphanumeric characters and underscores.%N%NPlease select a different component name."
+
+	Object_invalid_name_warning: STRING is " is not a valid object name.%N%NObject names must be unique, start with an alphabetic character%Nand only include alphanumeric characters and underscores.%N%NPlease select a different object name."
 		
 	Event_feature_name_warning: STRING is "Please correct invalid feature names (highlighted in red).%N%NPossible causes include :-%N   Name already used as object name in system.%N   Name already used as feature name in system%N   Name is an Eiffel reserved word."
 	
@@ -589,6 +606,12 @@ feature -- Warning Dialogs
 	
 	vs_invalid_characters1: STRING is "The Advanced Gui Project Wizard only supports standard ascii characters in the range 0 to 127.%NThe project contains the following unsupported ascii characters : %N%N"
 	vs_invalid_characters2: STRING is "%N%NIn the saved project files, each of these will be replaced with '*'."
+	
+	cannot_delete_as_still_referenced_multiple: STRING is "The top level object you are attempting to delete is still referenced by multiple objects."
+	
+	cannot_delete_as_still_referenced_single: STRING is "The top level object you are attempting to delete is still referenced by a single object."
+	
+	cyclic_inheritance_error: STRING is "Not permitted as causes a cyclic inheritance structure."
 
 feature -- Object editor properties
 

@@ -15,7 +15,7 @@ feature
 	between_lines: BOOLEAN;
 			-- is the current position between two lines
 
-	make_for_feature_comments (f: PLAIN_TEXT_FILE; start_pos, end_pos:INTEGER) is
+	make_for_feature_comments (f: RAW_FILE; start_pos, end_pos:INTEGER) is
 			-- Just fill in the comment structures for file between
 			-- `start_pos' and `end_pos'.
 		require
@@ -63,7 +63,7 @@ feature
 			f.close;
 		end;
 	
-	make (f: PLAIN_TEXT_FILE) is
+	make (f: RAW_FILE) is
 			-- analyse file f, retrieve comments
 			-- the file should not be open before the call
 		require

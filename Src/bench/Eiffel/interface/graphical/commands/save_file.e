@@ -26,7 +26,7 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		local   
-			new_file: PLAIN_TEXT_FILE;
+			new_file: RAW_FILE;
 			to_write: STRING;
 			aok: BOOLEAN;
 			temp: STRING

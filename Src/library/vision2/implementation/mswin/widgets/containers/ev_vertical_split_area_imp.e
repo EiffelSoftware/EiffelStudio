@@ -36,6 +36,7 @@ feature {NONE} -- Status Setting
 			-- Assign `v' to `first'.
 		do
 			first := v
+			first.implementation.on_parented
 			disable_item_expand (first)
 			first_imp.set_parent (interface)
 			if second_visible then
@@ -52,6 +53,7 @@ feature {NONE} -- Status Setting
 			-- Assign `v' to `second'.
 		do
 			second := v
+			second.implementation.on_parented
 			second_imp.set_parent (interface)
 			notify_change (Nc_minsize, Current)
 			if first_visible then

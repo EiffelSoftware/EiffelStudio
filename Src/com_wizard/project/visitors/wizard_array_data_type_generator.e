@@ -45,7 +45,7 @@ feature -- Basic operations
 			create eiffel_type.make (0)
 
 			need_generate_ce := True
-			need_generate_ec := False
+			need_generate_ec := True
 
 			dimension_count := an_array_descriptor.dimension_count
 			an_element_type := an_array_descriptor.array_element_descriptor.type
@@ -78,9 +78,7 @@ feature -- Basic operations
 
 			elseif is_ptr (an_element_type) or is_safearray (an_element_type) or
 					is_user_defined (an_element_type) then
-				
-				need_generate_ec := True
-				
+								
 				is_array_basic_type := False
 				ce_function_name.append ("ccom_ce_array_non_automation_")
 				ce_function_name.append_integer (local_counter)
@@ -118,6 +116,11 @@ feature -- Basic operations
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append (A_ref)
+				ec_function_signature.append (Comma_space)
+				ec_function_signature.append (c_type)
+				ec_function_signature.append (Asterisk)
+				ec_function_signature.append (Space)
+				ec_function_signature.append (Old_keyword)
 				
 				ec_function_body := ec_array_function_body_non_automation 
 						(element_visitor.ec_function_name,
@@ -137,6 +140,9 @@ feature -- Basic operations
 				ce_function_name.append (Underscore)
 				ce_function_name.append_integer (local_counter)
 				ce_function_name.to_lower
+
+				ec_function_name.append ("ccom_ec_array_automation")
+				ec_function_name.append_integer (local_counter)
 
 				c_type := clone  (element_visitor.c_type)
 				if dimension_count = 1 then
@@ -162,7 +168,21 @@ feature -- Basic operations
 						ce_array_function_body_automation (vartype_namer.ce_array_function_name (element_visitor.vt_type), 
 							dimension_count, array_size, element_visitor.is_structure)
 
-				ec_function_name.append (vartype_namer.ec_array_function_name (element_visitor.vt_type))
+				ec_function_signature.append (Eif_reference)
+				ec_function_signature.append (Space)
+				ec_function_signature.append (A_ref)
+				ec_function_signature.append (Comma_space)
+				ec_function_signature.append (c_type)
+				ec_function_signature.append (Asterisk)
+				ec_function_signature.append (Space)
+				ec_function_signature.append (Old_keyword)
+
+				ec_function_body := ec_array_function_body_automation 
+						(vartype_namer.ec_array_function_name (element_visitor.vt_type),
+						dimension_count)
+
+				ec_function_return_type.append (element_visitor.c_type)
+				ec_function_return_type.append (Asterisk)
 			end
 
 			vt_type := an_array_descriptor.type
@@ -1056,6 +1076,36 @@ feature {NONE} -- Implementation
 			valid_body: not Result.empty
 		end
 
+	ec_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER): STRING is
+			--
+		require
+			non_void_rt_function_name: rt_function_name /= Void
+			valid_rt_function_name: not rt_function_name.empty
+			valid_dim_count: dim_count > 0
+		do
+			create Result.make (0)
+
+			-- return `rt_functuion_name' (`A_ref', `dim_count', `Old_keyword');
+
+			Result.append (Tab)
+			Result.append (Return)
+			Result.append (Space)
+			Result.append (rt_function_name)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (A_ref)
+			Result.append (Comma_space)
+			Result.append_integer (dim_count)
+			Result.append (Comma_space)
+			Result.append (Old_keyword)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			
+		ensure
+			non_void_body: Result /= Void
+			valid_body: not Result.empty
+		end
+
 	ec_array_function_body_non_automation (element_ec_function, element_c_type, element_eiffel_type: STRING;
 						dim_count: INTEGER; element_count: ARRAY [INTEGER];
 						is_element_structure: BOOLEAN): STRING is
@@ -1408,7 +1458,63 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			
-			-- return array;
+
+			-- if (old != NULL)
+
+			Result.append (If_keyword)
+			Result.append (Space_open_parenthesis)
+			Result.append (Old_keyword)
+			Result.append (Space)
+			Result.append (C_not_equal)
+			Result.append (Space)
+			Result.append (Null)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab)
+
+			-- {
+
+			Result.append (Open_curly_brace)
+			Result.append (New_line_tab_tab)
+
+			-- 	memcpy (old, array, a_count * sizeof (`element_c_type'));
+
+			Result.append (Memcpy)
+			Result.append (Space_open_parenthesis)
+			Result.append (Old_keyword)
+			Result.append (Comma_space)
+			Result.append (Array_word)
+			Result.append (Comma_space)
+			Result.append (A_count_word)
+			Result.append (Space)
+			Result.append (Asterisk)
+			Result.append (Space)
+			Result.append (Sizeof)
+			Result.append (Space_open_parenthesis)
+			Result.append (element_c_type)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+
+			-- 	return NULL;
+
+			Result.append (Return)
+			Result.append (Space)
+			Result.append (Null)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- }
+
+			Result.append (Close_curly_brace)
+			Result.append (New_line_tab)
+
+			-- else
+
+			Result.append (Else_keyword)
+			Result.append (New_line_tab_tab)
+
+			-- 	return array;
 			
 			Result.append (Return)
 			Result.append (Space)

@@ -211,8 +211,9 @@ feature -- Generation
 				Error_handler.raise_error
 			end
 		rescue
-			if not retried and not Error_handler.has_error then
-				if not is_assembly_loaded or not is_error_available then
+			if not retried then
+				if Error_handler.has_error then
+				elseif not is_assembly_loaded or not is_error_available then
 					Error_handler.insert_error (create {VIGE}.make_com_error)
 				else
 					if deletion_successful then

@@ -58,20 +58,26 @@ feature -- C code generation
 		do
 			buffer := context.buffer
 			
-			buffer.putstring ("RTLNSMART(")
+			buffer.put_string ("RTLNSMART(")
 			cl_type_i := type_to_create
 			gen_type_i ?= cl_type_i
-			buffer.putstring ("RTCA(arg")
-			buffer.putint (position)
-			buffer.putstring (gc_comma)
+			buffer.put_string ("RTCA(arg")
+			buffer.put_integer (position)
+			buffer.put_string (gc_comma)
 
 			if gen_type_i /= Void then
-				buffer.putstring ("typres")
+				buffer.put_string ("typres")
 			else
-				buffer.putint (cl_type_i.type_id - 1)
+				if context.workbench_mode then
+					buffer.put_string ("RTUD(")
+					buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+					buffer.put_character (')')
+				else
+					buffer.put_type_id (cl_type_i.type_id)
+				end
 			end
-			buffer.putchar (')')
-			buffer.putchar (')')
+			buffer.put_character (')')
+			buffer.put_character (')')
 		end
 
 feature -- IL code generation
@@ -156,7 +162,7 @@ feature -- Byte code generation
 			gen_type  ?= cl_type_i
 
 				-- Default creation type
-			ba.append_short_integer (cl_type_i.type_id - 1)
+			ba.append_short_integer (cl_type_i.generated_id (False))
 				-- Generics (if any)
 			if gen_type /= Void then
 				ba.append_short_integer (context.current_type.generated_id (False))
@@ -184,11 +190,11 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			buffer.putstring ("RTCA(arg")
-			buffer.putint (position)
-			buffer.putchar (',')
-			buffer.putint (None_type)
-			buffer.putstring ("), ")
+			buffer.put_string ("RTCA(arg")
+			buffer.put_integer (position)
+			buffer.put_character (',')
+			buffer.put_integer (None_type)
+			buffer.put_string ("), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
@@ -203,7 +209,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putstring ("0,")
+			buffer.put_string ("0,")
 			dummy := idx_cnt.next
 		end
 
@@ -212,14 +218,14 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.putstring ("typarr[")
-			buffer.putint (idx_cnt.value)
-			buffer.putstring ("] = RTID(RTCA(arg")
-			buffer.putint (position)
-			buffer.putchar (',')
-			buffer.putint (None_type)
-			buffer.putstring ("));")
-			buffer.new_line
+			buffer.put_string ("typarr[")
+			buffer.put_integer (idx_cnt.value)
+			buffer.put_string ("] = RTID(RTCA(arg")
+			buffer.put_integer (position)
+			buffer.put_character (',')
+			buffer.put_integer (None_type)
+			buffer.put_string ("));")
+			buffer.put_new_line
 			dummy := idx_cnt.next
 		end
 
@@ -240,11 +246,11 @@ feature -- Assignment attempt
 			cl_type_i : CL_TYPE_I
 		do
 			cl_type_i := type_to_create
-			buffer.putstring ("RTCA(arg")
-			buffer.putint (position)
-			buffer.putstring (gc_comma)
-			buffer.putint (cl_type_i.generated_id (final_mode))
-			buffer.putchar (')')
+			buffer.put_string ("RTCA(arg")
+			buffer.put_integer (position)
+			buffer.put_string (gc_comma)
+			buffer.put_integer (cl_type_i.generated_id (final_mode))
+			buffer.put_character (')')
 		end
 
 end -- class CREATE_ARG

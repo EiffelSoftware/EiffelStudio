@@ -55,7 +55,7 @@ feature -- Access
 
 	text_setting (a_name: STRING): STRING is
 			-- String value stored under `a_name' in `registry_path' registry hive
-			-- Void if none
+			-- Empty string if none
 		require
 			non_void_name: a_name /= Void
 		local
@@ -73,12 +73,12 @@ feature -- Access
 				Default_text_values.search (a_name)
 				if Default_text_values.found then
 					Result := Default_text_values.found_item
+				else
+					create Result.make_empty
 				end
 			end
 		ensure
-			valid_result: Result /= Void or else 
-			((Default_text_values.found implies Result = Default_text_values.item (a_name)) and
-			(not Default_text_values.found implies Result = Void))
+			non_void_setting: Result /= Void
 		end
 
 	Default_values: HASH_TABLE [INTEGER, STRING] is

@@ -579,6 +579,7 @@ void odbc_start_order (int no_desc)
 				}
 				//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 				rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
+				return;
 			}
 		}
 
@@ -589,7 +590,7 @@ void odbc_start_order (int no_desc)
 			if (error_number > 0) {
 				odbc_descriptor[no_desc] = NULL;
 				rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
-				return error_number;
+				return;
 			}
 		}
 */

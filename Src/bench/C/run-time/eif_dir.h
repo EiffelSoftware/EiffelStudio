@@ -53,11 +53,11 @@ extern char *   dir_dot_dir (char * dir);
 #endif
 
 #ifdef EIF_WIN32		/* %%zs moved this block to here from dir.c for EIF_WN_DIRENT definition */
-#include <windows.h>
+#include <windef.h>
 
 typedef struct tagEIF_WIN_DIRENT {
 	char	name [MAX_PATH];
-	HANDLE	handle;
+	long	handle;
 } EIF_WIN_DIRENT;
 #endif
 

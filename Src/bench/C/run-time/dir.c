@@ -193,11 +193,10 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 	strcat (filename, name);
 	h = FindFirstFile (filename, &wfd);
 	eif_free (filename);
-	if (h != INVALID_HANDLE_VALUE)
-		{
+	if (h != INVALID_HANDLE_VALUE) {
 		FindClose (h);
 		return (char *) 1;
-		}
+	}
 
 	return (char *) 0;		/* Not found */
 }
@@ -396,7 +395,7 @@ rt_public EIF_OBJ dir_current(void)
 
 rt_public EIF_CHARACTER eif_dir_separator (void)
 {
-#if defined EIF_WINDOWS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2
 	return '\\';
 #elif defined EIF_VMS
 	return '.';

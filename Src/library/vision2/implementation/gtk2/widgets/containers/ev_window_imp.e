@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			default_height := -1
 			default_width := -1
 			
-			update_request_size
+			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
 			is_initialized := True
 		end
 		
@@ -457,8 +457,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Lock drawing updates for `Current'
 		do
 			Precursor {EV_WINDOW_I}
---			feature {EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
---			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+--			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
+--			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 		
 	event_mask: INTEGER
@@ -468,8 +468,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Restore drawing updates for `Current'
 		do
 			Precursor {EV_WINDOW_I}
---			feature {EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, False)
---			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_thaw_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+--			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, False)
+--			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_thaw_updates ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES}

@@ -456,6 +456,7 @@ feature -- Status setting
 			end
 			if applicable_attributes.font_family then
 				mask := mask | cfm_face
+				mask := mask | cfm_charset
 			end
 			if applicable_attributes.font_weight then
 				mask := mask | cfm_bold

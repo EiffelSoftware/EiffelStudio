@@ -18,8 +18,8 @@ inherit
 			set_foreground_color,
 			set_background_color,
 			create_pixmap_place,
-			set_insensitive
-			
+			set_insensitive,
+			set_text
 		redefine
 			parent_imp,
 			make_with_text
@@ -41,34 +41,11 @@ inherit
 
 create
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_index,
-	make_with_all
+	make_with_text
+
 
 feature {NONE} -- Initialization
 
-	make_with_pixmap (pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			make
-			set_pixmap (pix)
-		end
-
-	make_with_index (value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		do
-		end
-
-	make_with_all (txt: STRING; pix: EV_PIXMAP; value: INTEGER) is
-			-- Create an item with `par' as parent and `txt' as
-			-- text, `pix' as pixmap and `index' as index.
-			-- Any of these attibute can be Void and `index' can
-			-- be 0 if it is not a pertinent.
-		do
-		end
 
 
 feature -- Access

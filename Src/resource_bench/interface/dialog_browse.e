@@ -50,15 +50,18 @@ feature -- Behavior
 	on_ok is
 		local
 			folder: DIRECTORY
+			directory_name: STRING
 		do
 			!! folder.make (edit_path.text)
 
 			if not folder.exists then
 				interface.display_text (std_error, "The specified directory doesn't exist")
 			else
+				directory_name := current_working_directory
 				change_working_directory (edit_path.text)
-       				tds.generate_wel_code
+				tds.generate_wel_code
 				terminate (Idok)
+				change_working_directory (directory_name)
 			end				
 		end
 

@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 			-- Create the main window of resource bench.
 		do
 			make_top (Title)
-			interface.set_parent (Current)
+			interface.set_dialog_parent (Current)
 
 				-- Create a toolbar.
 			!! tool_bar.make (Current, Idr_toolbar)
@@ -495,16 +495,24 @@ feature {NONE} -- Implementation
 			folder: DIRECTORY 
 			preprocessor: PREPROCESSOR
 			filename: STRING
+			directory_name: STRING
 		do
 			!! cursor.make_by_predefined_id (Idc_wait)
 			cursor.set
 
 			!! folder.make (Tmp_directory)
 			If (not folder.exists) then
-				folder.create
+				folder.create_dir
 			end
 
 			filename := clone (a_open_file.file_name)
+
+				-- Prepare saving of current working directory
+				-- and change to directory where file is opened from
+			create directory_name.make (a_open_file.file_name_offset)
+			directory_name.fill_blank
+			directory_name.subcopy (filename, 1, a_open_file.file_name_offset - 3, 1)
+			set_working_directory (directory_name)
 
 			temp_filename := clone (Tmp_directory)
 			temp_filename.append ("Temp_file.rc")

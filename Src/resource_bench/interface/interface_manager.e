@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
+	set_dialog_parent (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Set `parent_dialog' to `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void

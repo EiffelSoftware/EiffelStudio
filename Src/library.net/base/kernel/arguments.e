@@ -177,7 +177,7 @@ feature -- Status report
 				if p = argument_count or else
 					argument_array.item (p + 1).item (1) = option_sign
 				then
-					Result := create {STRING}.make (0)
+					Result := ""
 				else
 					Result := argument_array.item (p + 1)
 				end
@@ -204,7 +204,7 @@ feature -- Status report
 				if p = argument_count or else
 					argument_array.item (p + 1).item (1) = option_sign
 				then
-					Result := create {STRING}.make (0)
+					Result := ""
 				else
 					Result := argument_array.item (p + 1)
 				end

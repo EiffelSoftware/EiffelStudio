@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that ..."
-	author: ""
+	author: "Ian King"
 	date: "$Date$"
 	revision: "$Revision$"
 

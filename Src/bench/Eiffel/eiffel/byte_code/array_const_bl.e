@@ -64,10 +64,21 @@ feature
 
 	unanalyze is
 			-- Unanalyze expression
+		local
+			expr: EXPR_B;
 		do
 			array_area_reg := Void;
 			metamorphose_reg := Void;
 			set_register (Void)	
+			from
+				expressions.start
+			until
+				expressions.after
+			loop
+				expr ?= expressions.item;
+				expr.unanalyze;
+				expressions.forth
+			end;
 		end;
 
 	free_register is
@@ -116,7 +127,7 @@ feature {NONE} -- C code generation
 			else
 				generated_file.putint (real_ty.type_id - 1);
 			end;
-			generated_file.putstring (");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 		end;
 
@@ -161,9 +172,7 @@ feature {NONE} -- C code generation
 				actual_type := context.real_type (expr.type);
 				if need_metamorphosis (actual_type) then
 					basic_i ?= actual_type;
-					if basic_i.is_bit then
-						expr.generate;
-					end;
+					expr.generate;
 					basic_i.metamorphose 
 						(metamorphose_reg, expr, generated_file, context.workbench_mode);
 					generated_file.putchar (';');
@@ -175,19 +184,19 @@ feature {NONE} -- C code generation
 				if is_expanded then
 					generated_file.putstring ("ecopy(");
 					expr.print_register;
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					array_area_reg.print_register;
 					generated_file.putstring (" + OVERHEAD + elem_size * ");
 					generated_file.putint (position);
 					generated_file.putchar (')');
 				else
-					generated_file.putstring ("*");
+					generated_file.putchar ('*');
 					target_type.c_type.generate_access_cast (generated_file);
 					generated_file.putchar ('(');
 					array_area_reg.print_register;
-					generated_file.putstring (" + ");
+					generated_file.putstring (gc_plus);
 					generated_file.putint (position);
-					generated_file.putstring (" * ");
+					generated_file.putstring (gc_star);
 					target_type.c_type.generate_size (generated_file);
 					generated_file.putchar (')');
 					generated_file.putstring (" = ");
@@ -244,10 +253,10 @@ feature {NONE} -- C code generation
 			generated_file.putstring ("((void (*)())");
 			generated_file.putstring (" RTWF(");
 			generated_file.putint (real_ty.associated_class_type.id - 1);
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			generated_file.putint (feat_id);
-			generated_file.putstring (", ");
-			generated_file.putstring ("Dtype(");
+			generated_file.putstring (gc_comma);
+			generated_file.putstring (gc_upper_dtype_lparan);
 			print_register;
 			generated_file.putstring (")))");
 			generate_array_make_arguments;
@@ -258,12 +267,10 @@ feature {NONE} -- C code generation
 		do
 			generated_file.putchar ('(');
 			print_register;
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			generated_file.putstring ("1L, ");
 			generated_file.putint (expressions.count);
-			generated_file.putstring ("L");
-			generated_file.putchar (')');
-			generated_file.putchar (';');
+			generated_file.putstring ("L);");
 			generated_file.new_line;
 		end;
 

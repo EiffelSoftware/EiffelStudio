@@ -590,6 +590,10 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateOnceResultInfo (name, TypeID);
 	}
 
+	public void generate_once_computed () {
+		core.generate_once_computed ();
+	}
+
 	public void GenerateOnceTest() {
 		core.GenerateOnceTest ();
 	}

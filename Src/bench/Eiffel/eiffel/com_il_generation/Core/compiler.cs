@@ -1532,7 +1532,7 @@ feature -- Generation Structure
 		else if (TypeID == PointerID)
 			MethodIL.Emit (OpCodes.Ldind_I);
 		else
-			MethodIL.Emit (OpCodes.Ldobj);
+			MethodIL.Emit (OpCodes.Ldobj, Classes [TypeID].Builder);
 	}
 
 /* Array Manipulation */
@@ -1630,6 +1630,11 @@ feature -- Generation Structure
 			DefineField (name + "Result", Classes [TypeID].Builder, AttributeAttributes);
 	}
 
+	public void generate_once_computed () {
+		PutBooleanConstant (true);
+		MethodIL.Emit (OpCodes.Stsfld, DoneBuilder);
+	}
+
 	public void GenerateOnceTest() {
 		MethodIL.Emit (OpCodes.Ldsfld, DoneBuilder);
 	}
@@ -1640,8 +1645,6 @@ feature -- Generation Structure
 
 	public void GenerateOnceStoreResult() {
 		MethodIL.Emit (OpCodes.Stsfld, ResultBuilder);
-		PutBooleanConstant (true);
-		MethodIL.Emit (OpCodes.Stsfld, DoneBuilder);
 	}
 
 /* Arrays */

@@ -495,7 +495,8 @@ rt_private void run_command(int s)
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
 	status = -1;
-	if (CreateProcess (NULL,
+	if (CreateProcess (
+		NULL,
 		cmd,
 		NULL,
 		NULL,
@@ -595,8 +596,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 		NULL,
 		current_dir,
 		&siStartInfo,
-		&procinfo))
-	{
+		&procinfo)) {
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 		status = 0;

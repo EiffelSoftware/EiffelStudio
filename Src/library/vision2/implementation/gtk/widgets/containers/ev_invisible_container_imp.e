@@ -16,6 +16,9 @@ inherit
 	EV_INVISIBLE_CONTAINER_I
 		
 	EV_CONTAINER_IMP
+		undefine
+			add_child_ok
+		end
 	
 end
 

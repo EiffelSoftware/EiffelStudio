@@ -77,6 +77,17 @@ feature -- Status setting
    			flag = insensitive
    		end
 
+	set_selected is
+   			-- Set current item as the selected one.
+			-- we use it only when the grand parent is an option button.
+   		require
+			parent_is_an_option_button: grand_parent_is_option_button
+   		do
+ 			implementation.set_selected
+ 		ensure
+   			is_now_selected: is_selected
+   		end
+
 feature -- Element change
 
 	set_parent (par: EV_MENU_ITEM_HOLDER) is
@@ -88,6 +99,25 @@ feature -- Element change
 			implementation.set_parent (par)
 		ensure
 			parent_set: parent = par
+		end
+
+feature -- Assertion
+
+	grand_parent_is_option_button: BOOLEAN is
+			-- True if the grand parent is an option button.
+			-- False otherwise.
+		do
+			Result := implementation.grand_parent_is_option_button
+		end
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- we use it only when the grand parent is an option button.
+   		require
+			parent_is_an_option_button: grand_parent_is_option_button
+		do
+			Result := implementation.is_selected
 		end
 
 feature -- Implementation

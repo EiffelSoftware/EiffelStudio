@@ -10,9 +10,9 @@ class
 feature -- Access
 
 	current_instance: WEL_INSTANCE is
-					-- Current instance argument received in WinMain
+			-- Current instance argument received in WinMain
 		once
-			create Result.make (default_pointer)
+			create Result.make (cwel_get_module_handle (default_pointer))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -28,8 +28,7 @@ feature -- Access
 			l_pos: INTEGER
 		once
 				-- Note: 
-			create Result.make (cwel_get_module_handle (default_pointer))
-			l_name := Result.name
+			l_name := current_instance.name
 			l_pos := l_name.last_index_of (feature {PATH}.Directory_separator_char, l_name.count)
 			l_name.remove_head (l_pos)
 			l_name.prepend ("lib")

@@ -124,7 +124,7 @@ feature -- Access
 		end
 
 	remove_selection is
-			-- Ensure that `selected_items' and `selected_rows' are empty.
+			-- Ensure that `selected_items', `selected_rows' and `selected_columns' are empty.
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -411,11 +411,14 @@ feature -- Automatic backup
 			c: CLUSTER_I
 		do
 			!! file.make_open_write (backup_info_file_name)
-			file.putstring ("new session: ")
-			file.putbool (new_session)
+			file.putstring ("Compiler version: ")
+			file.putstring (Version_number)
 			file.new_line
 			file.putstring ("batch mode: ")
 			file.putbool (batch_mode)
+			file.new_line
+			file.putstring ("new session: ")
+			file.putbool (new_session)
 			file.new_line
 			file.putstring ("successful: ")
 			file.putbool (successfull)

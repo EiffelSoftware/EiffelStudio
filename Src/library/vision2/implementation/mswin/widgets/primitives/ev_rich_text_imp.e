@@ -212,7 +212,7 @@ feature {NONE} -- Initialization
 			-- (export status {NONE})
 		once
 			Result := Ws_visible + Ws_child + Ws_border + Ws_vscroll + Es_savesel +
-				Es_disablenoscroll + Es_multiline + es_autovscroll + Es_Wantreturn
+				Es_disablenoscroll + Es_multiline + es_autovscroll + Es_Wantreturn + ws_tabstop
 		end
 		
 	default_ex_style: INTEGER is
@@ -246,10 +246,44 @@ feature -- Status report
 			font_imp: EV_FONT_IMP
 			a_wel_font: WEL_FONT
 			character_effects: EV_CHARACTER_FORMAT_EFFECTS
+			already_set: BOOLEAN
 		do
-			lock_window_update
-			safe_store_caret
-			set_selection (caret_index - 1, caret_index - 1)
+			if not has_selection and caret_position = caret_index then
+				already_set := True
+			else
+				disable_redraw
+				safe_store_caret
+				set_selection (caret_index - 1, caret_index - 1)
+			end
+			Result := internal_selected_character_format
+			if not already_set then
+				safe_restore_caret
+				enable_redraw
+			end
+		end
+		
+	selected_character_format: EV_CHARACTER_FORMAT is
+			-- `Result' is character format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		do
+			Result := internal_selected_character_format
+		end
+			
+			
+	internal_selected_character_format: EV_CHARACTER_FORMAT is
+			-- Implementation for `selected_character_format'. No preconditions permit
+			-- calling even when there is no selection as required by some implementation
+			-- features.
+		local
+			wel_character_format: WEL_CHARACTER_FORMAT
+			a_font: EV_FONT
+			color_ref: WEL_COLOR_REF
+			effects: INTEGER
+			font_imp: EV_FONT_IMP
+			a_wel_font: WEL_FONT
+			character_effects: EV_CHARACTER_FORMAT_EFFECTS
+		do
 			wel_character_format := current_selection_character_format
 			effects := wel_character_format.effects
 			color_ref := wel_character_format.text_color
@@ -275,9 +309,7 @@ feature -- Status report
 			create Result.make_with_values (a_font,
 				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue),
 				character_effects)
-				
-			safe_restore_caret
-			unlock_window_update
+			
 		end
 		
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
@@ -286,12 +318,34 @@ feature -- Status report
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			alignment: INTEGER
 		do
-			lock_window_update
+			disable_redraw
 			safe_store_caret
 			
 			set_selection (caret_index - 1, caret_index - 1)
+			Result := internal_selected_paragraph_format
+			safe_restore_caret
+			enable_redraw
+		end	
+		
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		do
+			Result := internal_selected_paragraph_format
+		end
+		
+	internal_selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+			-- Implementation for `selected_paragraph_format'. No preconditions permit
+			-- calling even when there is no selection as required by some implementation
+			-- features.
+		local
+			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
+			alignment: INTEGER
+		do
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
+			
 			create Result
 			alignment := wel_paragraph_format.alignment
 			inspect alignment
@@ -304,10 +358,7 @@ feature -- Status report
 			when pfa_justify then
 				Result.enable_justification
 			end
-			
-			safe_restore_caret
-			unlock_window_update
-		end	
+		end
 		
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
@@ -316,7 +367,7 @@ feature -- Status report
 			wel_character_format: WEL_CHARACTER_FORMAT
 			range_already_selected: BOOLEAN
 		do
-			lock_window_update
+			disable_redraw
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
 				range_already_selected := True
 			else
@@ -328,7 +379,7 @@ feature -- Status report
 			if not range_already_selected then
 				safe_restore_caret
 			end
-			unlock_window_update
+			enable_redraw
 		end
 
 	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
@@ -337,18 +388,34 @@ feature -- Status report
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			alignment: INTEGER
 			mask: INTEGER
+			already_selected: BOOLEAN
+			first_position_on_start, last_position_on_start, first_position_on_last, last_position_on_last: INTEGER
 		do
-			lock_window_update
-			safe_store_caret
+			first_position_on_start := first_position_from_line_number (start_line)
+			last_position_on_start := last_position_from_line_number (start_line)
+			first_position_on_last := first_position_from_line_number (end_line)
+			last_position_on_last := last_position_from_line_number (end_line)
+			if selection_start >= first_position_on_start and
+				selection_start <= last_position_on_start and
+				selection_end >= first_position_on_last and
+				selection_end <= last_position_on_last then
+				already_selected := True
+			else
+				disable_redraw
+				safe_store_caret
+				set_selection (first_position_on_start, last_position_on_last)
+			end
 			
-			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
+			
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			mask := wel_paragraph_format.mask
 			Result := flag_set (mask, Pfm_alignment)
 
-			safe_restore_caret
-			unlock_window_update
+			if not already_selected then
+				safe_restore_caret
+				enable_redraw
+			end
 		end		
 		
 	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
@@ -362,10 +429,11 @@ feature -- Status report
 			wel_character_format: WEL_CHARACTER_FORMAT
 			range_already_selected: BOOLEAN
 		do
-			lock_window_update
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
 				range_already_selected := True
+				
 			else
+				disable_redraw
 				safe_store_caret
 			end
 			wel_character_format := current_selection_character_format
@@ -373,8 +441,8 @@ feature -- Status report
 			create Result.make_with_values (flag_set (mask, cfm_face), flag_set (mask, cfm_bold), flag_set (mask, cfm_italic), flag_set (mask, cfm_size), flag_set (mask, cfm_color), flag_set (mask, cfm_strikeout), flag_set (mask, cfm_underline))
 			if not range_already_selected then
 				safe_restore_caret
+				enable_redraw
 			end
-			unlock_window_update
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -516,10 +584,6 @@ feature -- Status setting
 			temp: INTEGER
 			sel_start, sel_end: INTEGER
 		do
-			lock_window_update
-			safe_store_caret
-			
-			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
 			create paragraph.make
 			paragraph.set_mask (pfm_alignment)
 			if format.is_left_aligned then
@@ -531,10 +595,12 @@ feature -- Status setting
 			elseif format.is_justified then
 				paragraph.set_alignment (pfa_justify)
 			end
+			disable_redraw
+			safe_store_caret
+			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
 			set_paragraph_format (paragraph)
-			
 			safe_restore_caret
-			unlock_window_update
+			enable_redraw
 		end
 		
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
@@ -544,7 +610,7 @@ feature -- Status setting
 			wel_character_format: WEL_CHARACTER_FORMAT
 			mask: INTEGER
 		do
-			lock_window_update
+			disable_redraw
 			safe_store_caret
 			set_selection (start_position - 1, end_position - 1)
 			wel_character_format ?= format.implementation
@@ -576,7 +642,7 @@ feature -- Status setting
 			wel_character_format.set_mask (mask)
 			set_character_format_selection (wel_character_format)
 			safe_restore_caret
-			unlock_window_update
+			enable_redraw
 		end
 		
 	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
@@ -1125,6 +1191,8 @@ feature -- Status setting
 				else
 					set_selection (original_selection_end, original_selection_start)
 				end
+			else
+				internal_set_caret_position (original_caret_position)
 			end
 			internal_actions_blocked := False
 		end

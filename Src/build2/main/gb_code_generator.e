@@ -171,7 +171,6 @@ feature {NONE} -- Implementation
 				create_tag_index, local_tag_index, build_tag_index, set_tag_index: INTEGER
 			do
 				set_progress (0.3)
-				create type_string.make_from_string ("type")
 				create store
 					-- Generate an XML representation of the current project.
 					-- We will build our class text directly from this XML.
@@ -533,8 +532,6 @@ feature {NONE} -- Implementation
 		
 	ace_text: STRING
 		-- The current representation of the ace file we are generating.
-	
-	type_string: UCSTRING
 	
 	local_string: STRING
 		-- String representation of all local declarations built

@@ -30,11 +30,9 @@ feature {NONE} -- Implementation
 			current_element: XML_ELEMENT
 			current_name: STRING
 			gb_ev_any: GB_EV_ANY
-			type_string: UCSTRING
 			display_object: GB_DISPLAY_OBJECT
 			xml_element: XML_ELEMENT
 		do
-			create type_string.make_from_string ("type")
 			xml_element ?= element.first	
 			
 			a_new_object := object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value.to_utf8)
@@ -103,9 +101,7 @@ feature {NONE} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
-			type_string: UCSTRING
 		do
-			create type_string.make_from_string ("type")
 			a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
 			
 			object_handler.add_object (object, a_new_object, object.layout_item.count + 1)

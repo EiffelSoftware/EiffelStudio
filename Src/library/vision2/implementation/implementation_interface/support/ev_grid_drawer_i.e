@@ -580,7 +580,7 @@ feature -- Basic operations
 												current_horizontal_pos := current_item_x_position.max (parent_x_indent_position)
 												if are_tree_node_connectors_shown then
 													grid.drawable.set_foreground_color (black)
-													if not row_node_clipped then
+													if current_horizontal_pos < column_offsets @ (node_index + 1) then
 														if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
 															grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
 														else	

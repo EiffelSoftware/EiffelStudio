@@ -69,14 +69,16 @@ feature -- Basic operations
 				if not bit_set (internal_changes, 1) then
 					-- If this bit is set, it means the widget
 					-- doesn't know its minimum size, then nothing need to
-					-- be done because the parent must be already awared of it.f managed then 
-					if changed and parent_imp /= Void then
-						parent_imp.notify_change (1)
-					elseif displayed then 
-						move_and_resize (x, y, width, height, True)
+					-- be done because the parent must be already awared of it.
+					if managed then 
+						if changed and parent_imp /= Void then
+							parent_imp.notify_change (1)
+						elseif displayed then 
+							move_and_resize (x, y, width, height, True)
+						end
+					else
+						move_and_resize (x, y, width.max (value), height, True)
 					end
-				else
-					move_and_resize (x, y, width.max (value), height, True)
 				end
 			elseif displayed then
 				move_and_resize (x, y, width, height, True)

@@ -28,8 +28,7 @@ inherit
 			minimum_height
 		redefine
 			move_and_resize,
-			widget_make,
-			destroy
+			widget_make
 		end
 
 	WEL_SB_CONSTANTS
@@ -74,16 +73,6 @@ feature -- Access
 
 	background_pixmap: EV_PIXMAP
 			-- Pixmap used for the background of the widget
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy the widget, but set the parent sensitive
-			-- in case it was set insensitive by the child.
-		do
-			background_pixmap.destroy
-			{EV_WIDGET_IMP} Precursor
-		end
 
 feature -- Element change
 
@@ -253,6 +242,15 @@ feature {NONE} -- WEL Implementation
  				end
 			end
  		end
+
+	on_destroy is
+			-- Wm_destroy message.
+			-- The window is about to be destroyed.
+		do
+			if background_pixmap /= Void then
+				background_pixmap.destroy
+			end
+		end
 
 feature {NONE} -- Implementation : deferred features
 

@@ -84,6 +84,7 @@ feature -- Registration
 				else
 					if Is_beta then
 						licensed := True
+						non_commercial_mode := False
 						username := "Beta user"
 					else
 						if username /= Void and then password /= Void then

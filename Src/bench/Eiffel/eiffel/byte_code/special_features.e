@@ -73,28 +73,28 @@ feature -- Byte code special generation
 			when to_character_type then
 				check integer_type: type_of (basic_type) = integer_type end
 				ba.append (Bc_cast_char)
-			when to_natural_8_type then
+			when as_natural_8_type, to_natural_8_type then
 				ba.append (bc_cast_natural)
 				ba.append_integer (8)
-			when to_natural_16_type then
+			when as_natural_16_type, to_natural_16_type then
 				ba.append (bc_cast_natural)
 				ba.append_integer (16)
-			when to_natural_32_type then
+			when as_natural_32_type, to_natural_32_type then
 				ba.append (bc_cast_natural)
 				ba.append_integer (32)
-			when to_natural_64_type then
+			when as_natural_64_type, to_natural_64_type then
 				ba.append (bc_cast_natural)
 				ba.append_integer (64)
-			when to_integer_8_type then
+			when as_integer_8_type, to_integer_8_type then
 				ba.append (Bc_cast_integer)
 				ba.append_integer (8)
-			when to_integer_16_type then
+			when as_integer_16_type, to_integer_16_type then
 				ba.append (Bc_cast_integer)
 				ba.append_integer (16)
-			when to_integer_32_type then
+			when as_integer_32_type, to_integer_32_type then
 				ba.append (Bc_cast_integer)
 				ba.append_integer (32)
-			when to_integer_64_type then
+			when as_integer_64_type, to_integer_64_type then
 				ba.append (Bc_cast_integer)
 				ba.append_integer (64)
 			when to_real_64_type then
@@ -164,28 +164,28 @@ feature -- C special code generation
 			when to_character_type then
 				buffer.put_string ("(EIF_CHARACTER) ")
 				target.print_register
-			when to_natural_8_type then
+			when as_natural_8_type, to_natural_8_type then
 				buffer.put_string ("(EIF_NATURAL_8) ")
 				target.print_register
-			when to_natural_16_type then
+			when as_natural_16_type, to_natural_16_type then
 				buffer.put_string ("(EIF_NATURAL_16) ")
 				target.print_register
-			when to_natural_32_type then
+			when as_natural_32_type, to_natural_32_type then
 				buffer.put_string ("(EIF_NATURAL_32) ")
 				target.print_register
-			when to_natural_64_type then
+			when as_natural_64_type, to_natural_64_type then
 				buffer.put_string ("(EIF_NATURAL_64) ")
 				target.print_register
-			when to_integer_8_type then
+			when as_integer_8_type, to_integer_8_type then
 				buffer.put_string ("(EIF_INTEGER_8) ")
 				target.print_register
-			when to_integer_16_type then
+			when as_integer_16_type, to_integer_16_type then
 				buffer.put_string ("(EIF_INTEGER_16) ")
 				target.print_register
-			when to_integer_32_type then
+			when as_integer_32_type, to_integer_32_type then
 				buffer.put_string ("(EIF_INTEGER_32) ")
 				target.print_register
-			when to_integer_64_type then
+			when as_integer_64_type, to_integer_64_type then
 				buffer.put_string ("(EIF_INTEGER_64) ")
 				target.print_register
 			when to_real_64_type then
@@ -264,12 +264,20 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
 			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
 			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
+			Result.put (as_integer_8_type, feature {PREDEFINED_NAMES}.as_integer_8_name_id)
+			Result.put (as_integer_16_type, feature {PREDEFINED_NAMES}.as_integer_16_name_id)
+			Result.put (as_integer_32_type, feature {PREDEFINED_NAMES}.as_integer_32_name_id)
+			Result.put (as_integer_64_type, feature {PREDEFINED_NAMES}.as_integer_64_name_id)
 			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
 			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (as_natural_8_type, feature {PREDEFINED_NAMES}.as_natural_8_name_id)
+			Result.put (as_natural_16_type, feature {PREDEFINED_NAMES}.as_natural_16_name_id)
+			Result.put (as_natural_32_type, feature {PREDEFINED_NAMES}.as_natural_32_name_id)
+			Result.put (as_natural_64_type, feature {PREDEFINED_NAMES}.as_natural_64_name_id)
 			Result.put (to_natural_8_type, feature {PREDEFINED_NAMES}.to_natural_8_name_id)
 			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
 			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
@@ -333,12 +341,20 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (bit_test_type, feature {PREDEFINED_NAMES}.bit_test_name_id)
 			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
 			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
+			Result.put (as_integer_8_type, feature {PREDEFINED_NAMES}.as_integer_8_name_id)
+			Result.put (as_integer_16_type, feature {PREDEFINED_NAMES}.as_integer_16_name_id)
+			Result.put (as_integer_32_type, feature {PREDEFINED_NAMES}.as_integer_32_name_id)
+			Result.put (as_integer_64_type, feature {PREDEFINED_NAMES}.as_integer_64_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
 			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
 			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (as_natural_8_type, feature {PREDEFINED_NAMES}.as_natural_8_name_id)
+			Result.put (as_natural_16_type, feature {PREDEFINED_NAMES}.as_natural_16_name_id)
+			Result.put (as_natural_32_type, feature {PREDEFINED_NAMES}.as_natural_32_name_id)
+			Result.put (as_natural_64_type, feature {PREDEFINED_NAMES}.as_natural_64_name_id)
 			Result.put (to_natural_8_type, feature {PREDEFINED_NAMES}.to_natural_8_name_id)
 			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
 			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
@@ -395,7 +411,15 @@ feature {NONE} -- Fast access to feature name
 	to_natural_32_type: INTEGER is 40
 	to_natural_64_type: INTEGER is 41
 	twin_type: INTEGER is 42
-	max_type_id: INTEGER is 42
+	as_integer_8_type: INTEGER is 43
+	as_integer_16_type: INTEGER is 44
+	as_integer_32_type: INTEGER is 45
+	as_integer_64_type: INTEGER is 46
+	as_natural_8_type: INTEGER is 47
+	as_natural_16_type: INTEGER is 48
+	as_natural_32_type: INTEGER is 49
+	as_natural_64_type: INTEGER is 50
+	max_type_id: INTEGER is 50
 
 feature {NONE} -- Byte code generation
 

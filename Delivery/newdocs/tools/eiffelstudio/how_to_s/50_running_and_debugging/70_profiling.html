@@ -42,8 +42,8 @@
 
 		<UL>
 			<LI>Create an object of type <A HREF="/libraries/base/reference/support/profiling_setting.html">PROFILING_SETTING</A>.
-			<LI>Call `<A HREF="/libraries/base/reference/support/profiling_setting.html#start_profiling"><SPAN CLASS="efeature">start_profiling</SPAN></A>' on this object to start the profiler.
-			<LI>Call `<A HREF="/libraries/base/reference/support/profiling_setting.html#stop_profiling"><SPAN CLASS="efeature">stop_profiling</SPAN></A>' on this object to stop the profiler.
+			<LI>Call `<A HREF="/libraries/base/reference/support/profiling_setting.html#f_start_profiling"><SPAN CLASS="efeature">start_profiling</SPAN></A>' on this object to start the profiler.
+			<LI>Call `<A HREF="/libraries/base/reference/support/profiling_setting.html#f_stop_profiling"><SPAN CLASS="efeature">stop_profiling</SPAN></A>' on this object to stop the profiler.
 		</UL>
 
         <P CLASS="tip"><B>Tip</B>: To profile only part of a program, turn off
@@ -60,9 +60,9 @@
         necessary.</span><br>
         <SPAN CLASS="ekeyword">do</span><br>
         &nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</span> ps<br>
-        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#stop_profiling"><SPAN CLASS="efeature">stop_profiling</span></A><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#f_stop_profiling"><SPAN CLASS="efeature">stop_profiling</span></A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Real program execution.</span><br>
-        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#start_profiling"><SPAN CLASS="efeature">start_profiling</span></A><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#f_start_profiling"><SPAN CLASS="efeature">start_profiling</span></A><br>
         <SPAN CLASS="ekeyword">end</span></p>
 		</CODE>
 
@@ -75,10 +75,10 @@
         necessary.</span><br>
         <SPAN CLASS="ekeyword">do</span><br>
         &nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</span> ps<br>
-        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#start_profiling"><SPAN CLASS="efeature">start_profiling</span></A><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#f_start_profiling"><SPAN CLASS="efeature">start_profiling</span></A><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">--
         What needs to be profiled.</span><br>
-        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#stop_profiling"><SPAN CLASS="efeature">stop_profiling</span></A><br>
+        &nbsp;&nbsp;&nbsp; ps.<A HREF="/libraries/base/reference/support/profiling_setting.html#f_stop_profiling"><SPAN CLASS="efeature">stop_profiling</span></A><br>
         <SPAN CLASS="ekeyword">end</span></p>
 		</CODE>
 

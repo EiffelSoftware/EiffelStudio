@@ -105,12 +105,12 @@ feature {NONE} -- Implementation
 					a_type_descriptor := a_user_defined_descriptor.library_descriptor.descriptors.item (an_index)
 					if (feature_writer.comment = Void) then
 						create a_comment.make (100)
-						feature_writer.set_comment (a_comment)
+					else
+						a_comment := feature_writer.comment
 					end
-					if not feature_writer.comment.empty then
-						feature_writer.comment.append ("%N%T%T%T-- ")
+					if not a_comment.empty then
+						a_comment.append ("%N%T%T%T-- ")
 					end
-					create a_comment.make (100)
 					a_comment.append ("See ")
 					a_comment.append (a_type_descriptor.eiffel_class_name)
 					a_comment.append (" for possible ")
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 					a_comment.append (a_name)
 					a_comment.append (Single_quote)
 					a_comment.append (" values.")
-					feature_writer.comment.append (a_comment)
+					feature_writer.set_comment (a_comment)
 				end
 			end
 		end

@@ -487,10 +487,13 @@ feature {NONE} -- Implementation
 			temp_string: STRING
 			stored_heights: ARRAYED_LIST [INTEGER]
 			stored_widths: ARRAYED_LIST [INTEGER]
+			minimized_items: ARRAYED_LIST [BOOLEAN]
+			maximized_index: INTEGER
 		do
 			multiple_split_area.wipe_out
 			create stored_heights.make (info.count)
 			create stored_widths.make (info.count)
+			create minimized_items.make (info.count)
 			from
 				counter := 1
 			until
@@ -503,6 +506,14 @@ feature {NONE} -- Implementation
 				
 				index := info_string.index_of ('_', 1)
 				state := info_string.substring (1, index - 1)
+				if state.is_equal ("maximized") then
+					maximized_index := counter					
+				end
+				if state.is_equal ("minimized") then
+					minimized_items.extend (True)
+				else
+					minimized_items.extend (False)
+				end
 				info_string := info_string.substring (index + 1, info_string.count)
 				
 				index := info_string.index_of ('_', 1)
@@ -523,12 +534,29 @@ feature {NONE} -- Implementation
 				-- The heights are only temporary, hence if the multiple split area is too small to contain
 				-- all widgets at those heights, only some will remain at the desired height.
 			from
-				stored_heights.start
+				minimized_items.start
 			until
-				stored_heights.off
+				minimized_items.off
 			loop
-				multiple_split_area.resize_widget_to (multiple_split_area.linear_representation.i_th (stored_heights.index), stored_heights.item)
-				stored_heights.forth
+				if minimized_items.item then
+					multiple_split_area.minimize_item (multiple_split_area.linear_representation.i_th (minimized_items.index))
+					multiple_split_area.set_item_restore_height (multiple_split_area.linear_representation.i_th (minimized_items.index), 200)
+				end
+				minimized_items.forth
+			end
+			if maximized_index /= 0 then
+				multiple_split_area.maximize_item (multiple_split_area.linear_representation.i_th (maximized_index))
+			else
+				from
+					stored_heights.start
+				until
+					stored_heights.off
+				loop
+					if not minimized_items.i_th (stored_heights.index) then
+						multiple_split_area.resize_widget_to (multiple_split_area.linear_representation.i_th (stored_heights.index), stored_heights.item)
+					end
+					stored_heights.forth
+				end
 			end
 		end
 		
@@ -542,7 +570,7 @@ feature {NONE} -- Implementation
 		do
 			output := ""
 			create info.make (1, multiple_split_area.count)
-			linear_rep := multiple_split_area.linear_representation
+			linear_rep := clone (multiple_split_area.linear_representation)
 			from
 				linear_rep.start
 			until
@@ -550,7 +578,13 @@ feature {NONE} -- Implementation
 			loop
 				output := storable_name_by_tool (linear_rep.item)
 				output := output + "_"
-				output := output + "normal"
+				if multiple_split_area.is_item_maximized (linear_rep.item) then
+					output := output + "maximized"
+				elseif multiple_split_area.is_item_minimized (linear_rep.item) then
+					output := output + "minimized"
+				else
+					output := output + "normal"
+				end
 				output := output + "_" + linear_rep.item.height.out
 				output := output + "_" + linear_rep.item.width.out
 				info.put (output, linear_rep.index)

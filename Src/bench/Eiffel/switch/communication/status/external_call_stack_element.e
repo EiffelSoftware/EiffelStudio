@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Change
 
-	set_info (a_oa: STRING; a_cn, a_fn: STRING; a_bi: INTEGER; a_extra: STRING) is
+	set_info (a_oa: STRING; a_cn, a_fn: STRING; a_bi: INTEGER; a_info: STRING) is
 		require
 			object_address_not_void: a_oa /= Void
 			class_name_not_void: a_cn /= Void
@@ -33,9 +33,12 @@ feature -- Change
 			routine_name := a_fn
 			break_index := a_bi
 			object_address := a_oa
+			info := a_info
 		end
 
 feature -- Properties
+
+	info: STRING
 
 	is_eiffel_call_stack_element: BOOLEAN is False
 		-- Is Current an Eiffel Call Stack Element ?

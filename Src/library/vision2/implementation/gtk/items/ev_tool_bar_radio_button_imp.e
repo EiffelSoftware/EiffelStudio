@@ -18,8 +18,6 @@ inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		redefine
 			parent_imp,
-			set_selected,
-			remove_select_commands,
 			make
 		end
 
@@ -31,49 +29,57 @@ create
 feature -- Initialization
 
 	make is
-			-- Create the tool-bar radio button
-		local
-			cmd: EV_ROUTINE_COMMAND
+			-- Create the tool-bar radio button.
 		do
 			{EV_TOOL_BAR_TOGGLE_BUTTON_IMP} Precursor
-			-- Add selected event to event list
-			remove_select_commands
+			enable_callbacks
 		end
 
-	set_selected (flag: BOOLEAN) is
-			-- Set the selection to the state of `flag'
-		do
-			{EV_TOOL_BAR_TOGGLE_BUTTON_IMP} Precursor (flag)
-			if group /= Void then
-				group.set_selection_at_no_event (Current)
-			end
-		end
 
 feature {NONE} -- Implementation
 
-	remove_select_commands is
-			-- Empty the list of commands to be executed
-			-- whilst retaining the on_activate command
-		local
-			cmd: EV_ROUTINE_COMMAND
-		do
-			remove_commands (widget, toggled_on_id)
-			create cmd.make(~on_activate)
-			add_select_command(cmd, Void)
-		end
+	cmd: EV_ROUTINE_COMMAND
 
+	enable_callbacks is
+		local
+			ptr: POINTER
+		do
+			create cmd.make (~on_activate)
+			add_command (widget, "radio_toggle", cmd, Void, c_gtk_integer_to_pointer (toggled_on_off_state))
+		end
+	
+		
 	on_activate (arg: EV_ARGUMENT; ev: EV_EVENT_DATA) is
 			-- The button has been activated.
-		do
-			if group /= Void then
-				group.set_selection_at_no_event (Current)
-			end
+		do	if not reselected then
+
+				if group /= Void then
+					if  is_selected then
+						group.set_last_selected(Current)
+						group.set_selection_at_no_event (Current)
+					else
+						if group.just_selected (Current) then
+							-- The button has been reselected
+							reselected := True
+							set_selected (True)
+							-- This will make GTK recall the on_activate callback									
+						end
+					end
+				end
+
+			else
+				reselected := False
+			end	
 		end
 
-	on_unselect is
-			-- called when the button is to be unselected
+	reselected: BOOLEAN
+
+	on_unselect (an_item: EV_RADIO_IMP [EV_ANY]) is
+			-- Button's selected state set to flag.
 		do
-			gtk_toggle_button_set_active (widget, False)
+			if is_selected then
+				set_selected(False)
+			end	
 		end
 
 feature -- Access

@@ -65,7 +65,7 @@ feature -- Basic operations
 			call_conv := a_func_desc.call_conv
 			return_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info,
 				a_func_desc.return_type.type_desc, system_descriptor)
-			tmp_names := a_type_info.names (member_id, argument_count + 1)
+			tmp_names := a_type_info.names (member_id, a_count + 1)
 			name := clone (tmp_names.item (1))
 			if name = Void or else name.empty then
 				tmp_type_lib := a_type_info.containing_type_lib

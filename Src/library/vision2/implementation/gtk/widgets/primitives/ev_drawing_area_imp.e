@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			-- Redraw the screen immediately.
 		do
 --			if not full_redraw_needed then
---				full_redraw_needed := True	
+--				full_redraw_needed := True
 --				feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 --			end
 		end
@@ -167,6 +167,7 @@ feature {NONE} -- Implementation
 		end
 
 	destroy is
+			-- Destroy implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
@@ -176,7 +177,7 @@ feature {NONE} -- Implementation
 		end
 		
 	dispose is
-			-- 
+			-- Clean up
 		do
 			if gc /= NULL then
 				gdk_gc_unref (gc)

@@ -308,4 +308,19 @@ feature
 			ctxt.put_class_name (associated_class);
 		end;
 
+feature -- Storage information for EiffelCase
+
+	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		do
+			!! Result.make (Void, associated_class.id)
+		end;
+
+    storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
+            -- Storage info for Current type in class `classc'
+            -- and store the name of the class for Current
+        do
+			!! Result.make (associated_class.class_name, associated_class.id)
+        end;
+
 end

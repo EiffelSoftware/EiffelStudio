@@ -267,14 +267,14 @@ feature
 
 feature {FEATURE_I} -- Case storage
 
-	storage_info: FIXED_LIST [S_ARGUMENT_DATA] is
+	storage_info (classc: CLASS_C): FIXED_LIST [S_ARGUMENT_DATA] is
 			-- Storage info for Current arguments.
+		require
+			valid_classc: classc /= Void
 		local
-			type_info: S_TYPE_INFO;
 			id: INTEGER;
 			arg_name: STRING;
 			type_a: TYPE_A;
-			classc: CLASS_C;
 			arg_data: S_ARGUMENT_DATA
 		do
 			!! Result.make (count);
@@ -287,19 +287,11 @@ feature {FEATURE_I} -- Case storage
 			loop
 				!! arg_name.make (0);
 				arg_name.append (argument_names.item);
-				type_a ?= item;
+				type_a := item.actual_type;
 				check
 					valid_type_a: type_a /= Void
 				end;
-				classc := type_a.associated_class;
-				if classc /= Void then
-					-- class type for non like features
-					id := type_a.associated_class.id;
-					!! type_info.make (Void, id);
-				else
-					!! type_info.make (arg_name, 0);
-				end;
-				!! arg_data.make (arg_name, type_info);
+				!! arg_data.make (arg_name, type_a.storage_info (classc));
 				Result.replace (arg_data);
 				argument_names.forth;
 				Result.forth;

@@ -142,4 +142,18 @@ feature
 			False
 		end;
 	
+feature -- Storage information for EiffelCase
+
+	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
+			-- Storage info for Current type in class `classc'
+		do
+			Result := last_type.storage_info (classc);
+		end;
+
+    storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
+            -- Storage info for Current type in class `classc'
+        do
+            Result := last_type.storage_info_with_name (classc);
+        end;
+
 end

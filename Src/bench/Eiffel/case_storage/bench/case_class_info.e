@@ -39,7 +39,7 @@ feature {CASE_CLUSTER_INFO}
 			class_ast := flat_struct.ast;
 			Inst_context.set_cluster (classc.cluster);
 				-- Record index, and name
-			s_class_data := class_ast.header_storage_info;
+			s_class_data := class_ast.header_storage_info (classc);
 				-- Record id
 			s_class_data.set_id (classc.id);
 				-- Record features, invariant
@@ -94,16 +94,9 @@ feature {NONE} -- Recording information for eiffelcase
 			suppliers: SUPPLIER_LIST;
 			c_l: ARRAYED_LIST [S_CLI_SUP_DATA];
 			cli_sup_data: S_CLI_SUP_DATA;
-			sup_class_id, class_id: INTEGER;
 			supplier: CLASS_C;
 			label: STRING;
-			gen_der_list: LINKED_LIST [GEN_TYPE_I];
-			f_table: FEATURE_TABLE;
-			feature_i: FEATURE_I;
-			result_type: TYPE_A;
-			feat_arg: FEAT_ARG
 		do
-			class_id := classc.id;
 			suppliers := classc.suppliers;
 			!! c_l.make (1);
 			if not suppliers.empty and then suppliers.count > 1 then
@@ -127,20 +120,48 @@ feature {NONE} -- Recording information for eiffelcase
 					end;
 					suppliers.forth
 				end;
-				from
-						-- Get it from the disk (don't need it in the server)
-					f_table := Feat_tbl_server.disk_item (classc.id); 
-					f_table.start
-				until
-					f_table.after
-				loop
-					feature_i := f_table.item_for_iteration;
-					if feature_i.written_in = classc.id then
-							-- First the result type
-						result_type ?= feature_i.type;
-						supplier := result_type.associated_class;
-						if supplier /= Void then
-							sup_class_id :=  supplier.id;
+				if s_class_data.features /= Void then
+					record_supplier_labels (c_l);
+				end
+				record_generic_suppliers (c_l)
+			end;
+		end
+
+	record_supplier_labels (c_l: ARRAYED_LIST [S_CLI_SUP_DATA]) is
+		require
+			valid_cl: c_l /= Void
+		local
+			sup_class_id: INTEGER;
+			features: ARRAYED_LIST [S_FEATURE_DATA];
+			feature_data: S_FEATURE_DATA;
+			result_type: S_CLASS_TYPE_INFO;
+			feat_arg: FIXED_LIST [S_ARGUMENT_DATA];
+			real_class_ids: LINKED_LIST [INTEGER]
+            cli_sup_data: S_CLI_SUP_DATA;
+            label: STRING;
+			gen_type: S_GEN_TYPE_INFO;
+			type_a: TYPE_A
+		do
+			features := s_class_data.features;
+			from
+				features.start
+			until
+				features.after
+			loop
+				feature_data := features.item;
+				if feature_data.result_type /= Void then
+					result_type ?= feature_data.result_type.type	
+					if result_type /= Void then
+						real_class_ids := result_type.real_class_ids;
+							-- Class_type would have 1
+							-- Basic_type would have 0
+							-- Gen_type would have more than one
+						from
+							real_class_ids.start
+						until
+							real_class_ids.after
+						loop
+							sup_class_id :=  real_class_ids.item;
 							from
 								c_l.start
 							until
@@ -154,58 +175,75 @@ feature {NONE} -- Recording information for eiffelcase
 								label := cli_sup_data.label;
 								if label = Void then
 									!! label.make (0);
-									label.append (feature_i.feature_name);
+									label.append (feature_data.name);
 									cli_sup_data.set_label (label);
 								else
 									label.append (", ");	
-									label.append (feature_i.feature_name);
+									label.append (feature_data.name);
 debug ("CASE")
 	io.error.putstring ("%T%TSupplier: ");
-	io.error.putstring (supplier.class_name);
+	io.error.putint (result_type.class_id);
 	io.error.putstring (" is used for ");
-	io.error.putstring (feature_i.feature_name);
+	io.error.putstring (feature_data.name);
 	io.error.new_line;
 end
 								end;
+								if result_type.has_generics then
+									gen_type ?= result_type;
+									label.append (gen_type.string_value_minus_id 
+											(sup_class_id))
+								end
 								cli_sup_data.set_implementation (False);
-							end;
-						end;
-						feat_arg := feature_i.arguments;
-						if feat_arg /= Void then
+							end
+							real_class_ids.forth
+						end
+					end;
+				end;
+				feat_arg := feature_data.arguments;
+				if feat_arg /= Void then
+					from
+						feat_arg.start
+					until
+						feat_arg.after
+					loop
+						result_type ?= feat_arg.item.type;
+						if result_type /= Void then
+							sup_class_id := result_type.class_id;
 							from
-								feat_arg.start
+								c_l.start
 							until
-								feat_arg.after
+								c_l.after or else 
+								c_l.item.supplier.is_equal (classc.id)
 							loop
-								result_type ?= feat_arg.item;
-								supplier := result_type.associated_class;
-								if supplier /= Void then
-									sup_class_id := supplier.id;
-									from
-										c_l.start
-									until
-										c_l.after or else 
-										c_l.item.supplier.is_equal (class_id)
-									loop
-										c_l.forth
-									end;
-									if not c_l.after then
+								c_l.forth
+							end;
+							if not c_l.after then
 debug ("CASE")
-	io.error.putstring ("%T%TSupplier: ");
-	io.error.putstring (supplier.class_name);
+	io.error.putstring ("%T%TSupplier with id:");
+	io.error.putint (result_type.class_id);
 	io.error.putstring (" is not implementation");
 	io.error.new_line;
 end
-										c_l.item.set_implementation (False)
-									end
-								end
-								feat_arg.forth
-							end;
+								c_l.item.set_implementation (False)
+							end
 						end
+						feat_arg.forth
 					end;
-					f_table.forth
 				end
+				features.forth
 			end;
+		end
+
+	record_generic_suppliers (c_l: ARRAYED_LIST [S_CLI_SUP_DATA]) is
+			-- Record generics suppliers
+        require
+            valid_cl: c_l /= Void
+		local
+			gen_der_list: LINKED_LIST [GEN_TYPE_I];
+			supplier: CLASS_C;
+            cli_sup_data: S_CLI_SUP_DATA;
+			sup_class_id: INTEGER
+		do
 			if classc.generics /= Void then
 					-- Check generic derivations
 				gen_der_list := classc.filters;
@@ -227,7 +265,7 @@ end
 					if c_l.after then
 							-- Not found
 						!! cli_sup_data;
-						cli_sup_data.set_class_links (class_id,
+						cli_sup_data.set_class_links (classc.id,
 							sup_class_id);
 						c_l.extend (cli_sup_data);
 					end;
@@ -251,24 +289,27 @@ end
 			-- Record parents for class `classc' into `s_class_data'.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
+			no_repeated_parents: LINKED_SET [CL_TYPE_A];
 			p_l: FIXED_LIST [S_RELATION_DATA];
 			inherit_data: S_RELATION_DATA;
 		do
 			parents := classc.parents;
 			if parents /= Void and then not parents.empty then
-				!! p_l.make (parents.count);
+				!! no_repeated_parents.make;
+				no_repeated_parents.append (parents);
+				!! p_l.make (no_repeated_parents.count);
 				from
-					parents.start;
+					no_repeated_parents.start;
 					p_l.start
 				until
-					parents.after
+					no_repeated_parents.after
 				loop
 					!! inherit_data;
 					inherit_data.set_class_links (classc.id,
-							parents.item.associated_class.id);
+							no_repeated_parents.item.associated_class.id);
 					p_l.replace (inherit_data);
 					p_l.forth;
-					parents.forth
+					no_repeated_parents.forth
 				end;
 				s_class_data.set_heir_links (p_l);
 			end

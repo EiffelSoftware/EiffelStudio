@@ -8,7 +8,8 @@ inherit
 		redefine
 			chart, set_chart
 		end;
-	S_CASE_INFO
+	S_CASE_INFO;
+	COMPARABLE
 
 creation
 
@@ -45,6 +46,14 @@ feature
 			-- Is the current class the root of
 			-- the system ?
 
+feature -- Comparable
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is Current's name before or after other's name?
+		do
+			Result := view_id < other.view_id
+		end;
+
 feature {CLASS_DATA, CLASS_CONTENT_SERVER}
 
 	disk_content: S_CLASS_CONTENT;
@@ -77,15 +86,15 @@ feature
 								is_root = is_ro;
 		end;
 
-    set_id (i: INTEGER) is
-            -- Set id to `i'.
-        require
-            valid_i: i > 0
-        do
-            id := i
-        ensure
-            id_set: id = i
-        end;
+	set_id (i: INTEGER) is
+			-- Set id to `i'.
+		require
+			valid_i: i > 0
+		do
+			id := i
+		ensure
+			id_set: id = i
+		end;
  
 	set_is_effective is
 			-- Set is_effective to `true'.
@@ -213,7 +222,7 @@ feature -- Storing
 			end;
 			path.extend (Operating_environment.directory_separator);
 			path.append_integer (view_id);
-            path.append (Tmp_file_name_ext) 
+			path.append (Tmp_file_name_ext) 
 			!! internal_file.make_open_write (path);
 			disk_content.independent_store (internal_file);
 			internal_file.close;
@@ -235,15 +244,16 @@ feature -- Storing
 			path.append_integer (directory_number (view_id));
 			path.extend (Operating_environment.directory_separator);
 			path.append_integer (view_id);
-            path.append (Tmp_file_name_ext) ;
+			path.append (Tmp_file_name_ext) ;
 			!! internal_file.make (path);
 			if internal_file.exists then
 				internal_file.delete
 			end
 		end;
 
-	retrieve_from_disk (p: STRING) is
+	retrieve_from_disk (p: STRING; is_tmp: BOOLEAN) is
 			-- Retrieve internal information from disk.
+			-- Look for temporary file if `is_tmp'.
 		require
 			valid_path: p /= Void;
 			valid_view_id: view_id > 0
@@ -253,17 +263,22 @@ feature -- Storing
 			storable: STORABLE
 		do
 			path := clone (p);
+			path.extend (Operating_environment.directory_separator);
 			path.append_integer (directory_number (view_id));
 			path.extend (Operating_environment.directory_separator);
 			path.append_integer (view_id);
-			!! internal_file.make (p);
+			if is_tmp then
+				path.append (Tmp_file_name_ext);
+			end;
+			!! internal_file.make (path);
 			if internal_file.exists and then internal_file.is_readable then
 				internal_file.open_read;
 				!! storable;	
 				disk_content ?= storable.retrieved (internal_file);
 				check
 					valid_disk_content: disk_content /= Void
-				end
+				end;
+				internal_file.close;
 			else
 				io.error.putstring ("Error in retrieving file %N");
 				io.error.putstring (p);

@@ -22,8 +22,8 @@ feature -- Setting values
 	set_class_links (f: like f_rom; t: like t_o) is
 			-- Set f_rom to `f' and set t_o to `t'.
 		require
-			valid_f: f /= Void;
-			valid_t: t /= Void
+			valid_f: f /= 0;
+			valid_t: t /= 0
 		do
 			f_rom := f;
 			t_o := t

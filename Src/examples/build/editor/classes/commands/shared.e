@@ -1,9 +1,11 @@
-class SHARED feature
+class SHARED
 
-	saved_text: STRING is
-			-- The text to be remembered before viewing
+feature
+
+	Saved_text:STRING is
+			-- Text being edited in a temporarily interrupted editing session
 		once
-			!! Result.make (0)
-		end;
+			!! Result.make(0)
+		end
 
-end
+end -- class SHARED

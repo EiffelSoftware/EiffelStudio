@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Create an empty text area with `par' as
 			-- parent.
 		do
-			!EV_RICH_TEXT_IMP! implementation.make
+			create {EV_RICH_TEXT_IMP} implementation.make
 			widget_make (par)
 		end
 

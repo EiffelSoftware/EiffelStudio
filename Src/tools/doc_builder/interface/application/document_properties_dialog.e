@@ -182,6 +182,7 @@ feature {NONE} -- Implementation
 			l_formatter: XM_ESCAPED_FORMATTER
 			l_meta_array,
 			l_toc_array: ARRAY [STRING]
+			l_output: KL_STRING_OUTPUT_STREAM
 		do
 			l_meta_array := <<"document", "meta_data">>
 			l_toc_array := <<"document", "meta_data", "help", "toc">>
@@ -228,12 +229,13 @@ feature {NONE} -- Implementation
 				if not toc_20_pseudo_text.text.is_empty then
 					document.set_element (xm_document, l_toc_array, "envision_pseudo_name", toc_20_pseudo_text.text)
 				end
-			end		
+			end	
 				
-			save_xml_document (xm_document, document.name)
 			create l_formatter.make
-			l_formatter.process_document (xm_document)
-			document.set_text (l_formatter.last_string)
+			create l_output.make_empty
+			l_formatter.set_output (l_output)
+			l_formatter.process_document (xm_document)			
+			document.set_text (pretty_xml (l_output.string))
 			
 					-- Synchronization
 			Shared_document_manager.Synchronizer.add_document (document)

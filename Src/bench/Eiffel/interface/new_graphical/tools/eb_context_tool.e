@@ -135,7 +135,6 @@ feature {NONE} -- Initialization
 					cut_from_development_window
 				end
 			end
-			explorer_bar.repack_widgets
 			class_view.set_parent (explorer_bar_item)
 			feature_view.set_parent (explorer_bar_item)
 			output_view.set_parent (explorer_bar_item)
@@ -314,15 +313,16 @@ feature -- Status setting
 			sit: EV_WIDGET
 		do
 			sit := notebook.selected_item
-			if sit = output_view.widget then
+			
+			if sit = output_view.widget and then output_view.widget.is_displayed then
 				output_view.set_focus
-			elseif has_case and then sit = editor.widget then
+			elseif has_case and then sit = editor.widget and then editor.widget.is_displayed then
 				editor.set_focus
-			elseif sit = class_view.widget then
+			elseif sit = class_view.widget and then class_view.widget.is_displayed then
 				class_view.set_focus
-			elseif sit = feature_view.widget then
+			elseif sit = feature_view.widget and then feature_view.widget.is_displayed then
 				feature_view.set_focus
-			elseif has_metrics and then sit = metrics.widget then
+			elseif has_metrics and then sit = metrics.widget and then metrics.widget.is_displayed then
 				metrics.set_focus
 			end
 		end

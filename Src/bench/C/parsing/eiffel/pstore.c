@@ -35,7 +35,8 @@ rt_private char *server;		/* Current server used */
 rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
 rt_private void partial_store_write(void);
 
-#undef DEBUG
+/* Followings declaration are coming from store.c and eif_store.h */
+#define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
 
 long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 {
@@ -48,7 +49,14 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 
 	/* Initialization */
 
-	rt_init_store(partial_store_write, char_write, 0);
+	rt_init_store(
+		partial_store_write,
+		char_write,
+		flush_st_buffer,
+		st_write,
+		(void *) (0),
+		0,
+		EIF_BUFFER_SIZE);
 
 	fides = (int)f_desc;				/* For use of `st_write' */
 	result = lseek (fides, 0, SEEK_CUR);
@@ -91,7 +99,8 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 
 	flush_st_buffer();				/* Flush the buffer */
 
-	if (!gc_stopped) gc_run();					/* Restart GC */
+	if (!gc_stopped)
+		gc_run();					/* Restart GC */
 
 	rt_reset_store();
 

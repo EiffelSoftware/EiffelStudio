@@ -149,13 +149,15 @@ feature -- Status report
 			-- Has `v' been inserted at the end by the most recent `put' or
 			-- `extend'?
 		do
-			check
-				put_constraint: (v /= last_element.item) implies not off
-					-- Because, if this routine has not been called by
-					-- `extend', it was called by `put' which replaces the
-					-- current item, which implies the cursor is not `off'.
+			if not is_empty then
+				check
+					put_constraint: (v /= last_element.item) implies not off
+						-- Because, if this routine has not been called by
+						-- `extend', it was called by `put' which replaces the
+						-- current item, which implies the cursor is not `off'.
+				end
+				Result := (v = last_element.item) or else (v = item)
 			end
-			Result := (v = last_element.item) or else (v = item)
 		end
 
 feature -- Cursor movement

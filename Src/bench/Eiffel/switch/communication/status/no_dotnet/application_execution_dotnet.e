@@ -76,17 +76,6 @@ feature -- Bridge to Debugger
 		do
 		end
 
-	string_value_from_string_class_object_value (icd_string_instance: ANY): STRING is
-			-- String value of the `icd_string_instance'.
-		do
-		end
-		
-	debug_output_value_from_object_value (a_icd: ANY; a_icd_obj: ANY; 
-										a_frame: ANY; a_class_type: ANY): STRING is
-			-- Debug_output string value.			
-		do
-		end
-
 feature -- Bridge to Debugger
 
 	eifnet_debugger: EIFNET_DEBUGGER
@@ -140,22 +129,6 @@ feature -- Execution
 		end
 
 feature -- Object Keeper
-
-	keep_object (adv: ABSTRACT_DEBUG_VALUE) is
-		do
-		end
-
-	remove_kept_object_by_address (add: STRING) is
-		do
-		end
-
-	recycle_kept_object is
-		do
-		end
-
-	keep_only_objects (a_addresses: LIST [STRING]) is
-		do
-		end
 
 	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
 		do

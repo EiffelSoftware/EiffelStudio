@@ -10,17 +10,10 @@ deferred class
 inherit
 	ABSTRACT_DEBUG_VALUE
 
---feature {NONE} -- Init
---
---	init_dotnet_data (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
---
---		do
---		end
 
 feature -- Properties
 
 	icd_frame: ICOR_DEBUG_FRAME
-
 
 	icd_referenced_value: ICOR_DEBUG_VALUE
 			-- Original ICorDebugValue from Debugger

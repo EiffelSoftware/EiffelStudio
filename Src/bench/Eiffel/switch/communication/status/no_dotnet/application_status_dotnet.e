@@ -17,10 +17,6 @@ feature -- Class stack creation
 		end
 
 feature -- Values
-
-	current_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
-		do
-		end
 		
 	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
 		do

@@ -1,32 +1,20 @@
 system
-	sample
+	data_grid
 
 root
-	application: make_and_launch
+	APPLICATION: make_and_launch
 
 default
-	assertion (no)
+	assertion (require)
 	msil_generation (yes)
-	disabled_debug (yes)
-	disabled_debug ("dlg_dispatcher")
-	disabled_debug ("vision2_windows")
-	disabled_debug ("vision2_windows_gdi")
-	disabled_debug ("wel")
-	disabled_debug ("wel_gdi_count")
-	disabled_debug ("wel_gdi_references")
-	disabled_debug ("win_dispatcher")
-	debug (no)
-	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (no)
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	msil_assembly_compatibility ("None")
-	msil_clr_version ("v1.0.3705")
 	check_vape (yes)
 	console_application (no)
+
 
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\dotnet\vision2\data_grid"
@@ -47,7 +35,7 @@ cluster
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude
-			"Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp.e"; 
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; 
 		end
 
 	all vision2_net:		"$ISE_EIFFEL\library.net\vision2"
@@ -55,70 +43,76 @@ cluster
 	all vision2_extensions:		"$ISE_EIFFEL\library\vision2_extension"
 
 assembly
-	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
 
-	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
 		prefix
-			system_dll_
+			"SYSTEM_DLL_"
 		end
 
-	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
 		prefix
-			xml_
+			"XML_"
 		end
 
-	"system_drawing":	"System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	data:	"$ISE_DOTNET_FRAMEWORK\System.Data.dll"
 		prefix
-			drawing_
+			"DATA_"
 		end
 
-	"accessibility":	"Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
-
-	"system_runtime_serialization_formatters_soap":	"System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
-
-	"system_windows_forms":	"System.Windows.Forms","1.0.3300.0","neutral","b77a5c561934e089"
+	winforms:	"$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll"
 		prefix
-			winforms_
+			"WINFORMS_"
 		end
 
-	"System_Data":	"System.Data","1.0.3300.0","neutral","b77a5c561934e089"
+	cscompmgd:	"$ISE_DOTNET_FRAMEWORK\cscompmgd.dll"
 		prefix
-			data_
+			"CSCOMPMGD_"
 		end
 
-	"System_Web":	"System.Web","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
 		prefix
-			web_
+			"DRAWING_"
 		end
 
-	"System_Web_RegularExpressions":	"System.Web.RegularExpressions","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	"Microsoft.VisualC":	"$ISE_DOTNET_FRAMEWORK\microsoft.visualc.dll"
 		prefix
-			web_
+			"MICROSOFT_VISUALC_"
 		end
 
-	"Microsoft.VisualC, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"Microsoft.VisualC","7.0.3300.0","neutral","b03f5f7f11d50a3a"
+	"System.DirectoryServices":	"$ISE_DOTNET_FRAMEWORK\system.directoryservices.dll"
 		prefix
-			"microsoft_visualc_"
+			"SYSTEM_DIRECTORYSERVICES_"
 		end
 
-	"System.DirectoryServices, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.DirectoryServices","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"
 		prefix
-			"system_directoryservices_"
+			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
 		end
 
-	"cscompmgd, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"cscompmgd","7.0.3300.0","neutral","b03f5f7f11d50a3a"
+	"System.Web.RegularExpressions":	"$ISE_DOTNET_FRAMEWORK\system.web.regularexpressions.dll"
 		prefix
-			"cscompmgd_"
+			"SYSTEM_WEB_REGULAREXPRESSIONS_"
 		end
 
-	"System.Runtime.Remoting, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089":	"System.Runtime.Remoting","1.0.3300.0","neutral","b77a5c561934e089"
+	"System.Web":	"$ISE_DOTNET_FRAMEWORK\system.web.dll"
 		prefix
-			"system_runtime_remoting_"
+			"SYSTEM_WEB_"
 		end
 
-	"System.EnterpriseServices, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.EnterpriseServices","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+	"System.Runtime.Remoting":	"$ISE_DOTNET_FRAMEWORK\system.runtime.remoting.dll"
 		prefix
-			"system_enterpriseservices_"
+			"SYSTEM_RUNTIME_REMOTING_"
+		end
+
+	"System.EnterpriseServices":	"$ISE_DOTNET_FRAMEWORK\system.enterpriseservices.dll"
+		prefix
+			"SYSTEM_ENTERPRISESERVICES_"
+		end
+
+	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
+		prefix
+			"ACCESSIBILITY_"
 		end
 
 external

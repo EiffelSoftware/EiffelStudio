@@ -5,27 +5,18 @@ root
 	MONITOR_SYNCHRONIZATION: make
 
 default
-	assertion (no)
+	assertion (require)
 	msil_generation (yes)
-	arguments (" ")
-	disabled_debug (yes)
-	debug (no)
-	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	msil_culture ("n/a")
-	msil_assembly_compatibility ("None")
-	msil_clr_version ("v1.0.3705")
 	check_vape (yes)
 	console_application (yes)
 
-
-
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\dotnet\threading\monitor"
-
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
@@ -33,21 +24,18 @@ cluster
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
-		
 
 assembly
-	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
 
-external
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
+		prefix
+			"SYSTEM_DLL_"
+		end
 
-	include_path:
-		"$(ISE_EIFFEL)\library\vision2\spec\include",
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
-
-	object:
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
- 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
- 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
+		prefix
+			"XML_"
+		end
 
 end

@@ -8,6 +8,9 @@ default
 	assertion (require)
 	msil_generation (yes)
 	il_verifiable (yes)
+	cls_compliant (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (yes)
@@ -45,6 +48,16 @@ assembly
 			"CSCOMPMGD_"
 		end
 
+	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
+		prefix
+			"ACCESSIBILITY_"
+		end
+
+	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
+		prefix
+			"DRAWING_"
+		end
+
 	"Microsoft.VisualC":	"$ISE_DOTNET_FRAMEWORK\microsoft.visualc.dll"
 		prefix
 			"MICROSOFT_VISUALC_"
@@ -53,11 +66,6 @@ assembly
 	"System.DirectoryServices":	"$ISE_DOTNET_FRAMEWORK\system.directoryservices.dll"
 		prefix
 			"SYSTEM_DIRECTORYSERVICES_"
-		end
-
-	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
-		prefix
-			"SYSTEM_DRAWING_"
 		end
 
 	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"

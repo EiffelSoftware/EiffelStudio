@@ -17,9 +17,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-
-
 	
 feature 
 
@@ -65,9 +62,13 @@ feature
 		deferred
 		ensure
 			is_call_back_set and is_regular_call_back
-		end -- set_regular_call_back
+		end;
 
-end -- class TIMER_I
+	destroy is
+		deferred
+		end
+
+end 
 
 
 --|----------------------------------------------------------------

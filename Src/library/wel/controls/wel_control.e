@@ -94,6 +94,36 @@ feature -- Basic operations
 		do
 		end
 
+	go_to_next_tab_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN) is
+			-- Find the previous or following control with the
+			-- Wm_tabstop style in `a_parent depending on the
+			-- value of `after'.
+		require
+			valid_parent: a_parent /= Void and then a_parent.exists
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			hwnd := cwin_get_next_dlgtabitem (a_parent.item, item, after)
+			window := windows.item (hwnd)
+			window.set_focus
+		end
+
+	go_to_next_group_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN) is
+			-- Find the previous or following control with the 
+			-- Wm_tabstop style in the current group in `a_parent'
+			-- depending on the value of `after'.
+		require
+			valid_parent: a_parent /= Void and then a_parent.exists
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			hwnd := cwin_get_next_dlggroupitem (a_parent.item, item, after)
+			window := windows.item (hwnd)
+			window.set_focus
+		end
+
 feature {WEL_DIALOG} -- Status setting
 
 	set_exists (new_value: BOOLEAN) is
@@ -121,7 +151,7 @@ feature {WEL_COMPOSITE_WINDOW}
 		do
 		end 
 
-feature {NONE} -- Implementation
+feature {WEL_DIALOG} -- Implementation
 
 	set_default_window_procedure is
 			-- Set `default_window_procedure' with the
@@ -153,6 +183,22 @@ feature {NONE} -- Externals
 				%LPARAM): EIF_INTEGER"
 		alias
 			"CallWindowProc"
+		end
+
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgGroupItem"
+		end
+
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgTabItem"
 		end
 
 end -- class WEL_CONTROL

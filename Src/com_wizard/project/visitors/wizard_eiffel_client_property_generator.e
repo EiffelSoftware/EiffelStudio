@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			external_access_feature.set_result_type (a_visitor.eiffel_type)
 			external_access_feature.set_comment (a_descriptor.description)
 			external_access_feature.add_argument (clone (Default_pointer_argument))
-			external_access_feature.set_body (external_access_body (a_component_descriptor.c_type_name, a_visitor))
+			external_access_feature.set_body (external_access_body (a_component_descriptor.c_type_name, a_component_descriptor.c_header_file_name, a_visitor))
 			external_access_feature.set_external
 		ensure
 			non_void_external_access_feature: external_access_feature /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			
 			external_setting_feature.set_comment (setting_feature_comment (access_feature_name))
 			external_setting_feature.set_external
-			external_setting_feature.set_body (external_setting_body (a_component_descriptor.c_type_name, a_visitor))
+			external_setting_feature.set_body (external_setting_body (a_component_descriptor.c_type_name, a_component_descriptor.c_header_file_name, a_visitor))
 		ensure
 			non_void_external_setting_feature: external_setting_feature /= Void
 			non_void_external_setting_feature_name: external_setting_feature.name /= Void
@@ -305,11 +305,13 @@ feature {NONE} -- Implementation
 			valid_body: not Result.empty		
 		end
 
-	external_access_body (class_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	external_access_body (class_name, header_file_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- External access feature body
 		require
 			non_void_class_name: class_name /= Void
 			valid_class_name: not class_name.empty
+			non_void_header_file_name: header_file_name /= Void
+			valud_header_file_name: not header_file_name.empty
 			non_void_visitor: visitor /= Void
 		do
 			Result := clone (Tab_tab_tab)
@@ -317,7 +319,9 @@ feature {NONE} -- Implementation
 			Result.append (Cpp_clause)
 			Result.append (class_name)
 			Result.append (Space)
-			Result.append (header_file_name (class_name))
+			Result.append (Percent_double_quote)
+			Result.append (header_file_name)
+			Result.append (Percent_double_quote)
 			Result.append (Close_bracket)
 			Result.append (Open_parenthesis)
 			Result.append (Close_parenthesis)
@@ -333,11 +337,13 @@ feature {NONE} -- Implementation
 			valid_body: not Result.empty		
 		end
 
-	external_setting_body (class_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	external_setting_body (class_name, header_file_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- External setting body
 		require
 			non_void_class_name: class_name /= Void
 			valid_class_name: not class_name.empty
+			non_void_header_file_name: header_file_name /= Void
+			valud_header_file_name: not header_file_name.empty
 			non_void_visitor: visitor /= Void
 		local
 			tmp_string: STRING
@@ -347,7 +353,9 @@ feature {NONE} -- Implementation
 			Result.append (Cpp_clause)
 			Result.append (class_name)
 			Result.append (Space)
-			Result.append (header_file_name (class_name))
+			Result.append (Percent_double_quote)
+			Result.append (header_file_name)
+			Result.append (Percent_double_quote)
 			Result.append (Close_bracket)
 			Result.append (Open_parenthesis)
 			if visitor.is_array_basic_type or visitor.is_interface 

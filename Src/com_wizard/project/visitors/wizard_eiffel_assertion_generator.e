@@ -230,23 +230,6 @@ feature {NONE}
 			end
 		end
 
-	header_file_name (class_name: STRING): STRING is
-			-- Header file name
-		require
-			non_void_class_name: class_name /= Void
-			valid_class_name: not class_name.empty
-		do
-			create Result.make (0)
-			Result.append (Percent_double_quote)
-			Result.append ("E_")
-			Result.append (class_name)
-			Result.append (Header_file_extension)
-			Result.append (Percent_double_quote)
-		ensure
-			non_void_header_name: Result /= Void
-			valid_header_name: not result.empty
-		end
-
 end -- class WIZARD_EIFFEL_ASSERTION_GENERATOR
 
 --|----------------------------------------------------------------

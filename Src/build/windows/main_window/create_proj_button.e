@@ -10,10 +10,8 @@ inherit
 	EB_BUTTON_COM
 
 	LICENCE_COMMAND
-		redefine
-			question_ok_action,
-			question_cancel_action
-		end
+
+	QUEST_POPUPER
 
 creation
 	make

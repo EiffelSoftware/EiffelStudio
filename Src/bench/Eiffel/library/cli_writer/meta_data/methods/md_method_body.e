@@ -339,7 +339,6 @@ feature {NONE} -- Opcode insertion helpers
 		local
 			l_val: INTEGER_16
 			l_pos: INTEGER
-			i: INTEGER
 		do
 			l_val := val
 			l_pos := current_position

@@ -80,8 +80,6 @@ feature -- Saving
 			-- Write to stream `m' at position `pos'.
 		local
 			l_byte: INTEGER_8
-			l_data: INTEGER
-			l_pos: INTEGER
 		do
 			l_byte := ((internal_data & 0xFF000000) |>> 24).to_integer_8
 			m.put_integer_8 (l_byte, pos)

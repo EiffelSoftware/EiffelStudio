@@ -148,7 +148,7 @@ feature -- C code generation
 					file.putstring (";%N%
 						%%TEIF_REFERENCE Result;%N%
 						%%TEIF_REFERENCE *PResult;%N%
-						%%Tif (MTOG(*key,PResult)) return *PResult;%N%
+						%%Tif (MTOG((EIF_REFERENCE *),*key,PResult)) return *PResult;%N%
 						%%TResult = ");
 					value.generate (file);
 					file.putstring (";%N%

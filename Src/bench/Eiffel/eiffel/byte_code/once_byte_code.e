@@ -30,7 +30,9 @@ feature
 			type_i: TYPE_I;
 		do
 			type_i := real_type (result_type);
-			generated_file.putstring ("if (MTOG(*key,PResult))");
+			generated_file.putstring ("if (MTOG((");
+			type_i.c_type.generate (generated_file);
+			generated_file.putstring ("*),*key,PResult))");
 			generated_file.new_line;
 			generated_file.indent;
 				-- Full generation for a once function, but a single

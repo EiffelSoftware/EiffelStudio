@@ -442,8 +442,8 @@ feature {NONE} -- Implementation
 			current_window_parent: EV_WINDOW
 			locked_in_here: BOOLEAN
 			horizontal_box: EV_HORIZONTAL_BOX
-			flatten_button, shallow_flatten_button: EV_BUTTON
 			tool_bar: EV_TOOL_BAR
+			flatten_button, shallow_flatten_button: EV_TOOL_BAR_BUTTON
 			text: STRING
 		do
 			current_window_parent := parent_window (Current)
@@ -578,18 +578,23 @@ feature {NONE} -- Implementation
 					-- We are representing a top level widget so perform some slightly modified building in this case.
 					
 					-- Build and insert a button that may be used to flatten `object'.
-				create flatten_button.make_with_text ("Flatten")
 				create horizontal_box
-				attribute_editor_box.extend (horizontal_box)
-				flatten_button.select_actions.extend (agent object.flatten)
-				flatten_button.select_actions.extend (agent rebuild_associated_editors (object.id))
-				horizontal_box.extend (flatten_button)
-				horizontal_box.disable_item_expand (flatten_button)
+				
+				create tool_bar
+				create shallow_flatten_button.make_with_text ("Flatten")
+				shallow_flatten_button.select_actions.extend (agent flatten_object (False))
+				tool_bar.extend (shallow_flatten_button)
+				horizontal_box.extend (tool_bar)
+				horizontal_box.disable_item_expand (tool_bar)
 
-				create shallow_flatten_button.make_with_text ("Shallow")
-				shallow_flatten_button.select_actions.extend (agent flatten_object)
-				horizontal_box.extend (shallow_flatten_button)
-				horizontal_box.disable_item_expand (shallow_flatten_button)
+				create tool_bar
+ 				create flatten_button.make_with_text ("Deep Flatten")				
+				attribute_editor_box.extend (horizontal_box)
+				flatten_button.select_actions.extend (agent flatten_object (True))
+				tool_bar.extend (flatten_button)
+				horizontal_box.extend (tool_bar)
+				horizontal_box.disable_item_expand (tool_bar)
+				
 			end
 
 			if current_window_parent /= Void and locked_in_here then
@@ -597,14 +602,14 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	flatten_object is
+	flatten_object (deep_flatten: BOOLEAN) is
 			-- Flatten `object'.
 		require
 			object_not_void: object /= Void
 		local
 			command_flatten: GB_COMMAND_FLATTEN_OBJECT
 		do
-			create command_flatten.make (object, False)
+			create command_flatten.make (object, deep_flatten)
 			command_flatten.execute
 		end
 		
@@ -905,19 +910,6 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			end
 		end
 
-feature {GB_COMMAND} -- Implementation
-
-	set_object_silent (an_object: GB_OBJECT) is
-			-- Replace `object' with `an_object' silently.
-			-- The ids must be identical as this feature does not update the display
-			-- in `Current' and assumes that `an_object' is an identical copy of `object'.
-		require
-			an_object_not_void: an_object /= Void
-			ids_equal: an_object.id = object.id
-		do
-			object := an_object
-		end
-		
 feature {NONE} -- Debug information
 
 	show_id_dialog is

@@ -58,7 +58,7 @@ feature -- Generation Structure
 		do
 		end
 
-	define_entry_point (type_id: INTEGER; feature_id: INTEGER) is
+	define_entry_point (creation_type_id, type_id: INTEGER; feature_id: INTEGER) is
 			-- Define entry point for IL component from `feature_id' in
 			-- class `type_id'.
 		do

@@ -13,7 +13,7 @@ feature {NONE} -- GDK extenals for the fonts
 
 	gdk_font_load (name: POINTER): POINTER is
 		external
-			"C | <gdk/gdk.h>"
+			"C (gchar *): EIF_POINTER | <gdk/gdk.h>"
 		end
 
 	gdk_string_width (font, str: POINTER): INTEGER is
@@ -40,12 +40,12 @@ feature {NONE} -- Gtk externals for the fonts
 
 	gtk_font_selection_get_font_name (fontsel: POINTER): POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (GtkFontSelection *): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_font_selection_get_font (fontsel:POINTER):POINTER is
 		external
-			"C | <gtk/gtk.h>"
+			"C (GtkFontSelection *): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_font_selection_set_font_name (fontsel, name: POINTER) is

@@ -25,8 +25,6 @@
 #include "stream.h"
 #include "stdlib.h"
 
-#include "confmagic.h"
-
 
 #define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */
 #define EWB			"/bin/es3 -bench"	/* Ewb process within Eiffel dir */

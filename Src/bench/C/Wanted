@@ -29,6 +29,7 @@
 >HAS_SIGSETMASK
 >HAS_SIGVEC
 >HAS_SIGVECTOR
+>HAS_SMART_SBRK
 >HAS_SOCKET
 >HAS_STRDUP
 >HAS_STRERROR
@@ -51,7 +52,6 @@
 >I_SYS_IN
 >I_SYS_NDIR
 >I_SYS_RESOURCE
->I_SYS_SELECT
 >I_SYS_SOCKET
 >I_SYS_TIME
 >I_SYS_TIMEB
@@ -59,6 +59,7 @@
 >I_SYS_TIME_KERNEL
 >I_SYS_UN
 >I_TIME
+>I_TMVAL_SYS_SELECT
 >I_VARARGS
 >KEEPALIVE
 >MAY_PANIC
@@ -180,7 +181,6 @@ i_sysfile
 i_sysin
 i_sysndir
 i_sysresrc
-i_sysselct
 i_syssock
 i_systime
 i_systimeb
@@ -188,6 +188,7 @@ i_systimek
 i_systimes
 i_sysun
 i_time
+i_tmvlsyss
 i_varargs
 i_varhdr
 intsize
@@ -216,6 +217,7 @@ reg5
 reg6
 reg7
 rm
+sbrksmart
 sbrktype
 scriptdir
 sed

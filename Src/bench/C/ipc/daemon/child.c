@@ -30,8 +30,6 @@
 #include <fcntl.h>
 #endif
 
-#include "confmagic.h"
-
 #define PIPE_READ	0		/* File descriptor used for reading */
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 

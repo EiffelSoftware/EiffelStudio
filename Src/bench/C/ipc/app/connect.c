@@ -18,7 +18,9 @@
 #include <stdio.h>
 
 #ifdef HAS_SOCKET
-#include <sys/socket.h>
+#ifdef I_SYS_SOCKET
+#include "sys/socket.h"
+#endif
 #include <netdb.h>
 #endif
 

@@ -24,6 +24,8 @@ feature
 
 	Edit_class_abb: CHARACTER is 'v';
 
+	Exported_abb: CHARACTER is 'p';
+
 	Externals_abb: CHARACTER is 'x';
 
 	Feature_abb: CHARACTER is 'f';

@@ -38,7 +38,7 @@ feature -- Access
 			-- Registration class name
 		do
 			Result := clone (Ecom_prefix)
-			Result.append (Shared_wizard_environment.project_name)
+			Result.append (to_eiffel_name (Shared_wizard_environment.project_name))
 			Result.append (Registration_suffix)
 			Result.to_upper
 		end

@@ -47,7 +47,7 @@ feature {NONE} -- Creation
 		ensure
 			parent_set: parent = a_parent;
 			identifer_set: identifier.is_equal (a_name);
-			managed: managed
+			not_managed: not managed
 		end; 
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is

@@ -24,16 +24,56 @@ inherit
 		end
 
 creation
-	make_with_text
+	make,
+	make_with_text,
+	make_with_pixmap,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
-			-- Create a tree item and add it to the given parent.
+	make (par: EV_TREE_ITEM_CONTAINER) is
+			-- Create the widget with `par' as parent.
 		do
-			!EV_TREE_ITEM_IMP! implementation.make_with_text (par, txt)
+			!EV_TREE_ITEM_IMP! implementation.make
 			implementation.set_interface (Current)
-			par.implementation.add_item (Current)
+			set_parent (par)
+		end
+
+	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
+			-- Create an item with `par' as parent and `txt'
+			-- as text.
+		do
+			!EV_TREE_ITEM_IMP! implementation.make_with_text (txt)
+			implementation.set_interface (Current)
+			set_parent (par)
+		end
+
+	make_with_pixmap (par: EV_TREE_ITEM_CONTAINER; pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent and `pix'
+			-- as pixmap.
+		do
+			!EV_TREE_ITEM_IMP! implementation.make_with_pixmap (pix)
+			implementation.set_interface (Current)
+			set_parent (par)
+		end
+
+	make_with_all (par: EV_TREE_ITEM_CONTAINER; txt: STRING; pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `pix' as pixmap.
+		do
+			!EV_TREE_ITEM_IMP! implementation.make_with_all (txt, pix)
+			implementation.set_interface (Current)
+			set_parent (par)
+		end
+
+feature -- Access
+
+	parent: EV_TREE_ITEM_CONTAINER is
+			-- Parent of the current item.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.parent
 		end
 
 feature -- Status report
@@ -52,6 +92,19 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.is_expanded
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		do
+			implementation.set_parent (par)
+		ensure
+			parent_set: parent = par
 		end
 
 feature -- Event : command association

@@ -92,8 +92,8 @@ feature -- Initialization
 							if not c_error then
 									-- For eweasel processing
 								io.put_string ("C compilation completed%N")
-								io.default_output.flush
 							end
+							io.default_output.flush
 						end
 					else
 						if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then

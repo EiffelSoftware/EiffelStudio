@@ -518,7 +518,7 @@ feature -- Removal
 			wiped_out: empty
 		end
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action, remove_selection_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
@@ -807,7 +807,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
+	add_click_action, add_selection_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of actions to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require

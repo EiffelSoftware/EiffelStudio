@@ -1,5 +1,5 @@
 indexing
-	description: "Window describing the assembly of an Eiffel system (Ace, universe, ...)"
+	description: "Tool describing the assembly of an Eiffel system (Ace, universe, ...)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -97,6 +97,9 @@ feature -- Access
 --				a_stone.stone_type = stone_type or else
 --				a_stone.stone_type = Class_type 
 --		end
+--| FIXME
+--| Christophe, 1 nov 1999
+--| Drag and drop not implemented yet.
 
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text area?
@@ -194,7 +197,7 @@ feature -- Update
 	process_system (s: SYSTEM_STONE) is
 			-- Process system stone.
 		do
-			last_format.format (s)
+			set_stone (s)
 		end
 
 	process_ace_syntax (syn: ACE_SYNTAX_STONE) is
@@ -239,9 +242,10 @@ feature -- Update
 			if stone /= Void then
 				last_f := last_format
 				create system_stone
+				set_stone (system_stone)
 				old_do_format := last_f.do_format
 				last_f.set_do_format (true)
-				last_f.format (system_stone)
+--				last_f.format (system_stone)
 				last_f.set_do_format (old_do_format)
 			end
 		end
@@ -271,48 +275,8 @@ feature -- Update
 
 feature {NONE} -- Implementation Graphical Interface
 
---	build_save_as_menu_entry is
---			-- Create a save_as command to be inserted into file menu.
---		local
---			save_as_cmd: SAVE_AS_SYSTEM
---			save_as_menu_entry: EB_MENU_ENTRY
---		do
---			create save_as_cmd.make (Current)
---			create save_as_menu_entry.make (save_as_cmd, file_menu)
---		end
-
---	create_toolbar (a_parent: COMPOSITE) is
---			-- Create a toolbar_parent with parent `a_parent'.
---		local
---			sep: THREE_D_SEPARATOR
---		do
---			create toolbar_parent.make (new_name, a_parent)
---			create sep.make (Interface_names.t_Empty, toolbar_parent)
---			toolbar_parent.set_column_layout
---			toolbar_parent.set_free_size	
---			toolbar_parent.set_margin_height (0)
---			toolbar_parent.set_spacing (1)
---			create system_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
---			if not Platform_constants.is_windows then
---				create sep.make (Interface_names.t_Empty, toolbar_parent)
---			else
---				system_toolbar.set_height (22)
---			end
---		end
-
---	build_toolbar_menu is
---			-- Build the toolbar menu under the special sub menu.
---		local
---			sep: SEPARATOR
---			toolbar_t: TOGGLE_B
---		do
---			create sep.make (Interface_names.t_Empty, special_menu)
---			create toolbar_t.make (system_toolbar.identifier, special_menu)
---			system_toolbar.init_toggle (toolbar_t)
---		end
-
 	build_system_toolbar (tb: EV_BOX) is
-			-- create edit toolbar items inside `tb'
+			-- Create edit toolbar items inside `tb'
 		local
 --			quit_cmd: QUIT_SYSTEM
 --			has_close_button: BOOLEAN

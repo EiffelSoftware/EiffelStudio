@@ -29,7 +29,6 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
 
 feature {NONE} -- Initialization
 
@@ -52,21 +51,24 @@ feature {NONE} -- Initialization
 			tip_label.set_minimum_width (100)
 			show_actions.force_extend (agent set_text (all_tips @ tip_counter))
 			set_icon_pixmap (Icon_build_window @ 1)
-		end			
+		end
+		
+feature -- Basic operations
+
+	show_modal_and_centered_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' modal to an centered on `a_window'.
+		require
+			a_window_not_void: a_window /= Void
+		do
+			set_position (a_window.x_position + a_window.width // 2 - width // 2,
+					a_window.y_position + a_window.height // 2 - height // 2)
+			show_modal_to_window (a_window)
+		end
 
 feature {NONE} -- Implementation
 
 	tip_counter: INTEGER
 		-- Current tip to be displayed.
-
-	window_shown is
-			-- Called by `show_actions' of `gb_tip_of_the_day_dialog'.
-		do
-			if blocking_window /= Void then
-				set_position (blocking_window.x_position + blocking_window.width // 2 - width // 2,
-					blocking_window.y_position + blocking_window.height // 2 - height // 2)
-			end
-		end
 
 	next_tip_selected is
 			-- Called by `select_actions' of `next_tip_button'.

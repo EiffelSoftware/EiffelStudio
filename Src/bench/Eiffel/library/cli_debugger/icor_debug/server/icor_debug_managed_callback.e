@@ -576,7 +576,6 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].
 			-- `c' [in].  
 		local
-			l_class: ICOR_DEBUG_CLASS
 			retried: BOOLEAN
 		do
 			if not retried then

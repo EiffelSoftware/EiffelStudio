@@ -1,0 +1,68 @@
+"General"
+{
+}
+"Configurations"
+{
+	"Debug|.NET"
+	{
+		"AceFile" = ".\\debug\\ace.ace"
+		"ProjectFileName" = ""
+		"OptimizeCode" = "0"
+		"RequiresCleanCompile" = "0"
+		"UseGeneratedCryptographicKey" = "0"
+		"CompileOnLoad" = "0"
+	}
+	"Release|.NET"
+	{
+		"AceFile" = ".\\release\\ace.ace"
+		"ProjectFileName" = ""
+		"OptimizeCode" = "0"
+		"RequiresCleanCompile" = "0"
+		"UseGeneratedCryptographicKey" = "0"
+		"CompileOnLoad" = "0"
+	}
+}
+"Files"
+{
+	"Eiffel Source Files"
+	{
+		"ProjRelPath" = "F"
+		"NodeType" = "Directory"
+	}
+	"application.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"SEPNODE"
+	{
+		"ProjRelPath" = ""
+		"NodeType" = "SEPNODE"
+	}
+	"Referenced Assemblies"
+	{
+		"ProjRelPath" = "F"
+		"NodeType" = "Directory"
+	}
+	"SEPNODE"
+	{
+		"ProjRelPath" = ""
+		"NodeType" = "SEPNODE"
+	}
+	"Misc"
+	{
+		"ProjRelPath" = "F"
+		"NodeType" = "Directory"
+	}
+	"SEPNODE"
+	{
+		"ProjRelPath" = ""
+		"NodeType" = "SEPNODE"
+	}
+}
+"ProjStartupServices"
+{
+}
+"Globals"
+{
+}

@@ -1,0 +1,113 @@
+"General"
+{
+}
+"Configurations"
+{
+	"Debug|.NET"
+	{
+		"AceFile" = ".\\debug\\ace.ace"
+		"ProjectFileName" = ""
+		"OptimizeCode" = "0"
+		"RequiresCleanCompile" = "0"
+		"UseGeneratedCryptographicKey" = "0"
+		"CompileOnLoad" = "0"
+	}
+	"Release|.NET"
+	{
+		"AceFile" = ".\\release\\ace.ace"
+		"ProjectFileName" = ""
+		"OptimizeCode" = "0"
+		"RequiresCleanCompile" = "0"
+		"UseGeneratedCryptographicKey" = "0"
+		"CompileOnLoad" = "0"
+	}
+}
+"Files"
+{
+	"Eiffel Source Files"
+	{
+		"ProjRelPath" = "F"
+		"NodeType" = "Directory"
+	}
+	"app_con.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"card.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"column.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"game.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"game_con.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"game_man.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"game_num.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"main_win.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"sel_car.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"xcell_demo.e"
+	{
+		"ProjRelPath" = "T"
+		"NodeType" = "File"
+	}
+	"SEPNODE"
+	{
+		"ProjRelPath" = ""
+		"NodeType" = "SEPNODE"
+	}
+	"Referenced Assemblies"
+	{
+		"ProjRelPath" = "F"
+		"NodeType" = "Directory"
+	}
+	"SEPNODE"
+	{
+		"ProjRelPath" = ""
+		"NodeType" = "SEPNODE"
+	}
+	"Misc"
+	{
+		"ProjRelPath" = "F"
+		"NodeType" = "Directory"
+	}
+	"SEPNODE"
+	{
+		"ProjRelPath" = ""
+		"NodeType" = "SEPNODE"
+	}
+}
+"ProjStartupServices"
+{
+}
+"Globals"
+{
+}

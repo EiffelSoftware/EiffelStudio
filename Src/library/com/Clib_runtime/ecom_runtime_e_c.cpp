@@ -1972,6 +1972,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	char an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -1999,10 +2000,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2030,25 +2033,28 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = (char)(FUNCTION_CAST (EIF_CHARACTER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index));
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = (char)(FUNCTION_CAST (EIF_CHARACTER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2082,6 +2088,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	float a_float = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2108,10 +2115,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2138,24 +2147,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		a_float = (float)(FUNCTION_CAST (EIF_REAL, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &a_float);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			a_float = (float)(FUNCTION_CAST (EIF_REAL, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &a_float);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2189,6 +2201,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	long an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2216,10 +2229,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2247,24 +2262,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = (long)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = (long)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2298,6 +2316,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	short an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2325,10 +2344,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2356,24 +2377,28 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = (short)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = (short)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2407,6 +2432,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	double an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2434,10 +2460,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2464,25 +2492,28 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = (double)(FUNCTION_CAST (EIF_DOUBLE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index));
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = (double)(FUNCTION_CAST (EIF_DOUBLE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index));
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2516,6 +2547,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	VARIANT_BOOL an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2543,10 +2575,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2574,24 +2608,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_boolean ((FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_boolean ((FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2625,6 +2662,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	DATE an_element;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2652,10 +2690,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2683,24 +2723,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_date ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_date ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2734,6 +2777,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	HRESULT an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2761,10 +2805,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2792,24 +2838,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_hresult ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_hresult ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2843,6 +2892,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	VARIANT * an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2869,10 +2919,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -2900,24 +2952,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_pointed_variant ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
-		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_pointed_variant ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
+			hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -2951,6 +3006,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	CURRENCY * an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -2977,10 +3033,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -3008,24 +3066,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_pointed_currency ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
-		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_pointed_currency ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
+			hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -3059,6 +3120,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	DECIMAL * an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -3085,10 +3147,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -3116,24 +3180,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_pointed_decimal ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-					(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
-		hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_pointed_decimal ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+						(eif_access (eif_safe_array), eif_access (eif_index)), NULL);
+			hr = SafeArrayPutElement(c_safe_array, c_index, an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -3248,7 +3315,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 
 			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
 		} while (loop_control != 0);
-	}
+	};
 
 	// free memory
 	free (array_bound);
@@ -3282,6 +3349,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	IDispatch * an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -3308,10 +3376,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -3339,25 +3409,28 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_dispatch ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)));
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_dispatch ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)));
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);
@@ -3391,6 +3464,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 	long * c_index = 0;
 	IUnknown * an_element = 0;
 	HRESULT hr = 0;
+	long total_elements_count;
 
 	// protect eiffel object
 	eif_safe_array = eif_protect (a_ref);
@@ -3417,10 +3491,12 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 	// create SAFEARRAYBOUND
 	array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));
 
+	total_elements_count = 1;
 	for (i = 0; i < dimensions; i++)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [dimensions - i - 1];
 		array_bound[i].cElements  = (long) element_counts [dimensions - i - 1];
+		total_elements_count *= (long) element_counts [dimensions - i - 1];
 	}
 
 	// Create SAFEARRAY
@@ -3448,24 +3524,27 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 
 	//
 	// copy elements from eiffel array to c array
-	do
+	if (total_elements_count != 0 )
 	{
-		eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
-
-		for (i = 0; i < dimensions; i++)
+		do
 		{
-			c_index[i] = (long) tmp_index [dimensions - i - 1];
-		}
-		an_element = ccom_ec_unknown ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
-				(eif_access (eif_safe_array), eif_access (eif_index)));
-		hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
-		if (FAILED (hr))
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+			eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);
 
-		loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
-	} while (loop_control != 0);
+			for (i = 0; i < dimensions; i++)
+			{
+				c_index[i] = (long) tmp_index [dimensions - i - 1];
+			}
+			an_element = ccom_ec_unknown ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
+					(eif_access (eif_safe_array), eif_access (eif_index)));
+			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
+			if (FAILED (hr))
+			{
+				com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+			}
+
+			loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);
+		} while (loop_control != 0);
+	};
 
 	// free memory
 	free (array_bound);

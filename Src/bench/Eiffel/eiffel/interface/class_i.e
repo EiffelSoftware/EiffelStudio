@@ -67,14 +67,11 @@ feature -- Properties
 	hidden: BOOLEAN;
 			-- Is the class hidden in the precompilation sets?
 
-	file_name: STRING is
+	file_name: FILE_NAME is
 			-- Full file name of the class
-		local
-			fn: FILE_NAME
 		do
-			!!fn.make_from_string (cluster.path);
-			fn.set_file_name (base_name);
-			Result := fn
+			!! Result.make_from_string (cluster.path);
+			Result.set_file_name (base_name);
 		end;
 
 	date: INTEGER;
@@ -214,6 +211,8 @@ feature {COMPILER_EXPORTER} -- Setting
 
 	reset_options is
 			-- Reset the option values of the class
+		local
+			c: like compiled_class
 		do
 debug
 	io.error.putstring ("reset_options: ");
@@ -229,6 +228,10 @@ end;
 			debug_level := No_debug;
 			visible_level := Visible_default;
 			dynamic_calls := No_dynamic;
+			c := compiled_class;
+			if c /= Void and then not c.is_precompiled then
+				private_document_file_name := Void
+			end
 			hidden := False
 		end;
 
@@ -449,6 +452,53 @@ end;
 			hidden := other.hidden;
 		end;
 
+feature -- Document processing
+
+    document_file_name: FILE_NAME is
+            -- File name specified for the document
+			-- (.e is removed from end)
+		local
+			bname: STRING;
+			tmp: STRING
+			d_name: DIRECTORY_NAME;
+			i: INTEGER;
+        do
+            tmp := private_document_file_name;
+            if tmp = Void then
+				d_name := cluster.document_path;
+				if d_name /= Void then
+					!! Result.make_from_string (d_name);
+					bname := clone (base_name);
+					i := bname.count;
+					if 
+						i > 2 and then
+						bname.item (i - 1) = Dot and then
+						eif_valid_class_file_extension (bname.item (i))
+					then
+						bname.head (i - 2);
+					end;
+					Result.set_file_name (bname)
+				end
+			elseif not tmp.is_equal (No_word) then
+				!! Result.make_from_string (tmp);
+            end
+        end
+
+    set_document_file_name (a_file_name: like document_file_name) is
+            -- Set `document_file_name' to `a_file_name'
+        do
+            private_document_file_name := a_file_name
+        ensure
+            set: document_file_name = a_file_name
+        end;
+
+feature {NONE} -- Document processing
+
+	No_word: STRING is "no";
+
+    private_document_file_name: STRING
+            -- File name specified in Ace for the document file
+
 feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is
@@ -457,4 +507,10 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+    eif_valid_class_file_extension (c: CHARACTER): BOOLEAN is
+            -- Is `c' a valid class file extension?
+        external
+            "C"
+        end;
+
+end -- class CLASS_I

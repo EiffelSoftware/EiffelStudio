@@ -11,6 +11,17 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
+		export
+			{ANY} is_equal
+		redefine
+			is_equal
+		end
+
+	WEL_WINDOW_MANAGER
+		export
+			{NONE} all
+		undefine
+			is_equal
 		end
 
 creation
@@ -34,6 +45,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	x: INTEGER is
+			-- x position
 		require
 			exists: exists
 		do
@@ -41,6 +53,7 @@ feature -- Access
 		end
 
 	y: INTEGER is
+			-- y position
 		require
 			exists: exists
 		do
@@ -75,6 +88,24 @@ feature -- Element change
 			exists: exists
 		do
 			cwin_get_cursor_position (item)
+		end
+
+feature -- Status report
+
+	window_at: WEL_WINDOW is
+			-- Window containing current point
+		require
+			exists: exists
+		do
+			Result := windows.item (cwin_window_from_point (item))
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `Current' equal to `other'?
+		do
+			Result := x = other.x and then y = other.y
 		end
 
 feature -- Conversion
@@ -136,6 +167,14 @@ feature {NONE} -- Externals
 		end
 
 	cwel_point_get_y (ptr: POINTER): INTEGER is
+		external
+			"C [macro <point.h>]"
+		end
+
+	cwin_window_from_point (ptr: POINTER): POINTER is
+			-- SDK WindowFromPoint
+			--| Special case since the parameter is a POINT and not
+			--| a POINT *. So a macro is used.
 		external
 			"C [macro <point.h>]"
 		end

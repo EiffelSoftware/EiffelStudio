@@ -35,6 +35,7 @@ feature -- Initialization
 			create internal_file.make_file_info (fn.to_cil)
 			mode := Closed_file
 			create last_string.make (256)
+			name := fn
 		ensure
 			file_named: name.is_equal (fn)
 			file_closed: is_closed
@@ -49,6 +50,7 @@ feature -- Initialization
 		do
 			make (fn)
 			open_read
+			name := fn
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -64,6 +66,7 @@ feature -- Initialization
 		do
 			make (fn)
 			open_write
+			name := fn
 		ensure
 			exists: exists
 			open_write: is_open_write
@@ -78,6 +81,7 @@ feature -- Initialization
 		do
 			make (fn)
 			open_append
+			name := fn
 		ensure
 			exists: exists
 			open_append: is_open_append
@@ -92,6 +96,7 @@ feature -- Initialization
 		do
 			make (fn)
 			open_read_write
+			name := fn
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -108,6 +113,7 @@ feature -- Initialization
 		do
 			make (fn)
 			create_read_write
+			name := fn
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -125,6 +131,7 @@ feature -- Initialization
 		do
 			make (fn)
 			open_read_append
+			name := fn
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -133,13 +140,8 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- File name
-		do
-			create Result.make_from_cil (internal_file.get_name)
-		ensure
-			consistent_name: internal_stream /= Void implies internal_stream.get_name.equals (name.to_cil)
-		end
 
 	item: CHARACTER is
 			-- Current item

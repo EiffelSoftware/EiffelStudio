@@ -191,17 +191,13 @@ feature -- Access
 			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			from
-				layout_item.start
+				children.start
 			until
-				layout_item.off
+				children.off
 			loop
-				current_item ?= layout_item.item
-				check
-					current_item_not_void: current_item /= Void
-				end
-				a_list.extend (current_item.object)
+				a_list.extend (children.item)
 				current_item.object.all_children_recursive (a_list)
-				layout_item.forth
+				children.forth
 			end
 		end
 		
@@ -275,7 +271,6 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			element_info := full_information @ (name_string)
 			if element_info /= Void then
 				set_name (element_info.data)
-				layout_item.set_text (name + ": " + short_type)
 			end
 			element_info := full_information @ ("Expanded")
 			if element_info /= Void then
@@ -492,13 +487,13 @@ feature -- Basic operations
 			command_add: GB_COMMAND_ADD_OBJECT
 			insert_position: INTEGER
 		do
-			insert_position := parent_object.layout_item.index_of (layout_item, 1)
+			insert_position := parent_object.children.index_of (Current, 1)
 			
 				-- We must now check that the item being inserted before is not contained in the same parent as `Current'.
 				-- If this is the case, and the item is before `Current' in the parent, then we must use an insert_position
 				-- one less than normal.
-			if parent_object.layout_item.has (an_object.layout_item) and
-				parent_object.layout_item.index_of (an_object.layout_item, 1) < parent_object.layout_item.index_of (layout_item, 1) then
+			if parent_object.children.has (an_object) and
+			insert_position < parent_object.children.index_of (Current, 1) then
 				insert_position := insert_position - 1
 			end
 			create command_add.make (parent_object, an_object, insert_position)
@@ -528,7 +523,7 @@ feature -- Basic operations
 				-- `an_object' may already be contained in `Current'.
 				-- If this is the case, then the insert position is the number of
 				-- items held in the layout item, as we are effectively moving it to the end.
-			if layout_item.has (an_object.layout_item) then
+			if children.has (an_object) then
 				create command_add.make (Current, an_object,layout_item.count)
 			else
 				create command_add.make (Current, an_object, layout_item.count + 1)
@@ -691,12 +686,7 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 	cancel_edited_name is
 			-- Assign `name' to `edited_name'.
 		do
-			edited_name := name
-			if name.is_empty then
-				layout_item.set_text (type.substring (4, type.count))
-			else
-				layout_item.set_text (name + ": " + type.substring (4, type.count))			
-			end
+			set_name (name)
 		end
 
 	output_name: STRING is
@@ -830,7 +820,7 @@ feature {NONE} -- Implementation
 			else
 				status_start := "P"
 			end
-			if obj2.is_full and obj2.layout_item.count = 0 then
+			if obj2.is_full and obj2.children.count = 0 then
 				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children.")
 			elseif not does_accept_child then
 				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")

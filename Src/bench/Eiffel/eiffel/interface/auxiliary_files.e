@@ -501,6 +501,12 @@ feature -- Plug and Makefile file
 				buffer.putstring ("();%N")
 			end
 
+			if final_mode then
+					-- Declaration needed for calling `egc_routine_tables_init'.
+				buffer.putstring ("extern void egc_routine_tables_init (void);")
+				buffer.new_line
+			end
+
 			if final_mode and then System.array_optimization_on then
 				System.remover.array_optimizer.generate_plug_declarations (buffer)
 			else
@@ -717,7 +723,17 @@ feature -- Plug and Makefile file
 				buffer.putstring (";%N%N")
 			end
 
-			buffer.putstring ("%Tegc_platform_level = 0x00000D00;%N}%N")
+			buffer.putstring ("%Tegc_platform_level = 0x00000D00;")
+			buffer.new_line
+
+			if final_mode then
+					-- Initialize polymorphic tables
+				buffer.putstring ("%Tegc_routine_tables_init();")
+				buffer.new_line
+			end
+
+			buffer.putstring ("}%N%N")
+
 			buffer.end_c_specific_code
 
 			create plug_file.make_c_code_file (x_gen_file_name (final_mode, Eplug));

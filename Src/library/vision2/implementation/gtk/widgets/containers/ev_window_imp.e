@@ -228,6 +228,7 @@ feature -- Event - command association
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
 			add_command_with_event_data ("delete_event", cmd, arg, ev_data, 0, False)
+			has_close_command := True
 		end
 
 	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -273,31 +274,36 @@ feature -- Event -- removing command association
 			check False end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_APPLICATION_IMP} -- Implementation
 	
-	initialize is
---		local
---			i: INTEGER
---			a: ANY
---			s: string
+	connect_to_application (exit_function, application: POINTER) is
+		local
+			i: INTEGER
+			a: ANY
+			s: string
 		do
---			-- connect delete and destroy events to exit signals
---			-- Temporary XXX!
---			!!s.make (0)
---			s := "destroy"
---			a ?= s.to_c
---						
---			-- Connect the signal
---			i := c_gtk_signal_connect (widget, $a, $window_closed, 
---						   $Current, Default_pointer, 
---						   Default_pointer, 
---						   Default_pointer, 0, False)
---			
+			-- connect delete and destroy events to exit signals
+			-- Temporary XXX!
+			!!s.make (0)
+			s := "destroy"
+			a ?= s.to_c
+					
+			-- Connect the signal
+			i := c_gtk_signal_connect (widget, $a, exit_function, 
+						   application, Default_pointer, 
+						   Default_pointer, Default_pointer,
+						   Default_pointer, 0, False)
+			
 --			-- What about delete signal?
 --			s := "delete"
 --			a ?= s.to_c
---			--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
---
+--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
+		end
+
+feature {NONE} -- Implementation
+
+	initialize is
+		do
 			vbox := gtk_vbox_new (False, 0)
 			gtk_widget_show (vbox)
 			gtk_container_add (GTK_CONTAINER (widget), vbox)
@@ -306,14 +312,6 @@ feature {NONE} -- Implementation
 	vbox: POINTER
 		-- Vertical_box to have a possibility for a menu on the
 		-- top.
-
-	plateform_closed is
-			-- A specific function for each plateform to definitely
-			-- destroy the informations after the manager destroyed
-			-- the widget.
-		do
-			widget := default_pointer
-		end 
 
 feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
@@ -331,6 +329,11 @@ feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
 		do
 			gtk_box_pack_start (vbox, menu.widget, False, True, 0)
 		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	has_close_command: BOOLEAN
+			-- Did the user added a close command to the window.
 
 end -- class EV_WINDOW_IMP
 

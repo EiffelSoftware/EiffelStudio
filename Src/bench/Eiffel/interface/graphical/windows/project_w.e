@@ -9,7 +9,8 @@ inherit
 	TOOL_W
 		rename
 			edit_bar as project_toolbar,
-			Project_resources as resources
+			Project_resources as resources,
+			progress_dialog as shared_progress_dialog
 		redefine
 			tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,

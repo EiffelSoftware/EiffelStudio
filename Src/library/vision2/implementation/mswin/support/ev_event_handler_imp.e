@@ -95,18 +95,16 @@ feature {NONE} -- status setting
 					(command_list @ event_id) /= Void then
 				list_com := command_list @ event_id
 				list_arg := argument_list @ event_id
-				if list_com.has (cmd) then
-					from
-						list_com.start
-						list_arg.start
-					until
-						list_com.exhausted
-					loop
-						list_com.search (cmd)
-						list_com.remove
-						list_arg.go_i_th (list_com.index)
-						list_arg.remove
-					end			
+				from
+					list_com.start
+					list_com.search (cmd)
+				until
+					list_com.exhausted
+				loop
+					list_arg.go_i_th (list_com.index)
+					list_com.remove
+					list_arg.remove
+					list_com.search (cmd)
 				end
 			end
 		end
@@ -122,19 +120,18 @@ feature {NONE} -- Basic operation
 		local
 			com_list: LINKED_LIST [EV_COMMAND]
 			arg_list: LINKED_LIST [EV_ARGUMENT]
+			i: INTEGER
 		do
 			if command_list /= Void and then (command_list @ event_id) /= Void then
 				com_list := (command_list @ event_id)
 				arg_list := (argument_list @ event_id)
 				from
-					com_list.start
-					arg_list.start
+					i := 1
 				until
-					com_list.after
+					i > com_list.count
 				loop
-					com_list.item.execute (arg_list.item, data)
-					com_list.forth
-					arg_list.forth
+					(com_list.i_th (i)).execute (arg_list.i_th (i), data)
+					i := i + 1
 				end
 			end
 		end

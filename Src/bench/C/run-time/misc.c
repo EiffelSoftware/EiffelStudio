@@ -281,7 +281,7 @@ EIF_INTEGER i, j, k;
 	 * zeros.
 	 */
 
-	bcopy(new_area, new_area + j * elem_size, k * elem_size);
+	safe_bcopy(new_area, new_area + j * elem_size, k * elem_size);
 	bzero(new_area, j * elem_size);		/* Fill empty parts of area with 0 */
 	bzero(new_area + (j + k) * elem_size, (i - j - k) * elem_size);
 

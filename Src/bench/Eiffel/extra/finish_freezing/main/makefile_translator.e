@@ -1070,8 +1070,7 @@ feature {NONE} -- Translation
 			makefile.new_line
 
 -- DEF_FILE= appl.def
-			if options.has ("cecil_def") 
-			then 
+			if options.has ("cecil_def") then 
 				lastline := clone (options.get_string ("cecil_def", Void))
 				lastline.replace_substring_all ("$appl", appl)
 				subst_eiffel (lastline)
@@ -1101,7 +1100,7 @@ feature {NONE} -- Translation
 			makefile.putstring (lastline)
 			makefile.new_line
 			read_next
-			makefile.putstring (makefile_sh.laststring)
+			makefile.putstring ("SHARED_FLAGS = $(LDSHAREDFLAGS)")
 
 				-- SHAREDFLAGS
 			if options.has ("cecil_dynlib") then 
@@ -1220,10 +1219,8 @@ feature {NONE} -- Translation
 
 				-- DYNLIBSHAREDFLAGS
 			read_next
-			lastline := clone (makefile_sh.laststring)
-			makefile.putstring (lastline)
-			if options.has ("system_dynlib") 
-			then 
+			makefile.putstring ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
+			if options.has ("system_dynlib") then 
 				makefile.putstring (" \%N")
 				lastline := clone (options.get_string ("system_dynlib", Void))
 				lastline.replace_substring_all ("$appl", appl)

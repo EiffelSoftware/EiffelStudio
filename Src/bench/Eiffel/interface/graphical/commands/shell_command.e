@@ -32,7 +32,7 @@ feature {NONE}
 			-- If left mouse button was pressed -> execute command.
 			-- If right mouse button was pressed -> bring up shell window. 
 		local
-			req: ASYNC_SHELL;
+			req: EXTERNAL_COMMAND_EXECUTOR;
 			cmd_string, text_value: STRING;
 			fs: FILED_STONE;
 			routine_text: ROUTINE_TEXT;
@@ -84,18 +84,16 @@ feature {NONE}
 				if not cmd_string.empty then
 					cmd_string.replace_substring_all ("$target", fs.file_name);
 				end
-				!!req;
-				req.set_command_name (cmd_string);
-				req.send;		-- execute the command
+				!! req;
+				req.execute (cmd_string);
 			elseif text_window.file_name /= Void then
 				cmd_string := clone (command_shell_name);
 				if not cmd_string.empty then
 					cmd_string.replace_substring_all ("$line", "1");
 					cmd_string.replace_substring_all ("$target", text_window.file_name);
 				end
-				!!req;
-				req.set_command_name (cmd_string);
-				req.send;       -- execute the command
+				!! req;
+				req.execute (cmd_string);
 			end;
 		end;
 	

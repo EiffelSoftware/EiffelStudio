@@ -74,9 +74,7 @@ feature -- Output
 	format (e_class: E_CLASS) is
 			-- Format text for eiffel class `e_class'.
 		require
-			valid_e_class: e_class /= Void;
-			consistency: feature_clause_order /= Void implies 
-				not ordered_same_as_text
+			valid_e_class: e_class /= Void
 		local
 			f: FORMAT_CONTEXT_B
 		do

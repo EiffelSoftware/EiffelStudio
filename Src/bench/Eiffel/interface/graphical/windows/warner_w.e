@@ -72,7 +72,7 @@ feature
 			hide_help_button;
 			show_cancel_button;
 			show_ok_button;
-			set_ok_label (" Ok ");
+			set_ok_label (" OK ");
 			set_cancel_label ("Cancel");
 			set_help_label ("Help");
 			last_caller := a_command;
@@ -108,7 +108,7 @@ feature
 			hide_help_button;
 			show_cancel_button;
 			show_ok_button;
-			set_ok_label (" Ok ");
+			set_ok_label (" OK ");
 			set_cancel_label ("Cancel");
 			set_help_label ("Help");
 			last_caller := a_command;
@@ -152,7 +152,7 @@ feature {NONE}
 				hide_help_button;
 				show_cancel_button;
 				show_ok_button;
-				set_ok_label (" Ok ");
+				set_ok_label (" OK ");
 				set_cancel_label ("Cancel");
 				set_help_label ("Help");
 				i ?= argument;

@@ -66,12 +66,12 @@ feature {NONE}
 							temp.append (fn);
 							temp.append ("%Ncannot be read. Try again?");
 							warner.set_window (project_tool.text_window);
-							warner.custom_call (Current, temp, " Ok ", Void, "Cancel");
+							warner.custom_call (Current, temp, " OK ", Void, "Cancel");
 						end;
 					else
 						warner.set_window (project_tool.text_window);
 						warner.custom_call (Current, l_Specify_ace,
-							" Ok ", "Template", "Cancel");
+							" OK ", "Template", "Cancel");
 					end;	
 				else
 					!!system_stone.make (System);

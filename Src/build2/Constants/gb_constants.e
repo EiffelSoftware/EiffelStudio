@@ -395,6 +395,13 @@ feature -- Generation constants
 			"-- `Result' is window with which `Current' is implemented"
 		end
 		
+	window_access_as_dialog: STRING is
+			-- String used to define window when we are a client of window.
+		once
+			Result := "feature -- Access%N" + indent_less_two + "window: " + Ev_titled_window_string + indent_less_one +
+			"-- `Result' is dialog with which `Current' is implemented"
+		end
+		
 	client_window_string: STRING is "window"
 		-- Name used to access window as a client.
 

@@ -10,11 +10,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
-
 	EV_ITEM_IMP
 
 inherit
-
 	EV_ITEM_I
 
 	EV_EVENT_HANDLER_IMP
@@ -55,7 +53,7 @@ feature -- Status setting
 			-- Set text alignment of current label to center.
 		do
 			check
-                               not_yet_implemented: False
+				not_yet_implemented: False
             end
 		end
 
@@ -63,26 +61,33 @@ feature -- Status setting
 			-- Set text alignment of current label to right.
 		do
 			check
-                                not_yet_implemented: False
-                        end
+				not_yet_implemented: False
+			end
 		end
 
 	set_left_alignment is
 			-- Set text alignment of current label to left.
 		do
 			check
-                                not_yet_implemented: False
-                        end
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Event : command association
 
-	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is 
+			-- activated.
 		do
-			add_command (Cmd_item_activate, a_command, arguments)			
+			add_command (Cmd_item_activate, cmd, arg)			
 		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		do
+			add_command (Cmd_item_deactivate, cmd, arg)		
+		end
 
 feature {NONE} -- Implementation
 
@@ -90,21 +95,6 @@ feature {NONE} -- Implementation
 			-- Set `id' to `new_id'
 		do
 			id := new_id
-		end
-
-	set_parent (new_parent: EV_ITEM_CONTAINER_IMP) is
-			-- Make `par' the new container of th item.
-		do
-			parent_imp := new_parent
-		end
-
-feature {NONE} -- Implementation for events handling
-
-	initialize_list is
-			-- Create the `command_list' and the `arguments_list'.
-		do
-				!! command_list.make (1, 2)
-				!! argument_list.make (1, 2)
 		end
 
 end -- class EV_ITEM_IMP

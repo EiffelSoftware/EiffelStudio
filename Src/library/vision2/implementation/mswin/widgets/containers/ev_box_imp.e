@@ -108,15 +108,31 @@ feature -- Access
 	childvisible_nb: INTEGER
 			-- Number of visible children.
  
-	childexpand_nb: INTEGER is
-			-- Number of visible children which are expanded.
-		do
-			if non_expandable_children = Void then
-				Result := childvisible_nb
-			else
-				Result := childvisible_nb - non_expandable_children.count
+	compute_childexpand_nb is
+			-- Compute number of visible children which are expanded
+			-- and assign to `child_expand_number'.
+		local
+			l_cursor: CURSOR
+		do			
+			childexpand_nb := childvisible_nb
+			if non_expandable_children /= Void then
+				from
+					l_cursor := non_expandable_children.cursor
+					non_expandable_children.start
+				until
+					non_expandable_children.off
+				loop
+					if ev_children.i_th (non_expandable_children.item).is_show_requested then
+						childexpand_nb := childexpand_nb - 1
+					end
+					non_expandable_children.forth
+				end
+				non_expandable_children.go_to (l_cursor)
 			end
 		end
+		
+	childexpand_nb: INTEGER
+			-- Number of visible children which are expanded.
 
 	non_expandable_children: ARRAYED_LIST [INTEGER]
 			-- Position of the non expandable children in growing order.

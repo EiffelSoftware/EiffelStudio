@@ -235,6 +235,11 @@ feature {NONE} -- Implementation
 							c_client_visitor.visit (system_descriptor.interfaces.item)
 							eiffel_client_visitor.visit (system_descriptor.interfaces.item)
 						end
+						if shared_wizard_environment.server then
+							c_server_visitor.visit (system_descriptor.interfaces.item)
+							eiffel_server_visitor.visit (system_descriptor.interfaces.item)
+						end
+
 						system_descriptor.interfaces.forth
 						progress_report.step
 					end

@@ -94,7 +94,7 @@ feature -- Routines
 			real_help: help /= Void
 		do
 			menu_size := menu_size + 1 
-			entry.head (Max_Length_of_an_Entry)
+			entry.keep_head (Max_Length_of_an_Entry)
 			menu_entry.put (entry, menu_size) 
 			menu_help.put (help, menu_size) 
 			menu_tag.put (get_tag (entry), menu_size) 

@@ -118,7 +118,7 @@ X   complete but found to have bugs
     widgets/primitives/ev_select_button.e               *    *     *     .
     widgets/primitives/ev_check_button.e                *    *     *     .
     widgets/primitives/ev_option_button.e               *    *     *     .
-    widgets/primitives/ev_radio_button.e                *    o 2   o .1  .
+    widgets/primitives/ev_radio_button.e                *    *     o .1  .
     widgets/primitives/ev_toggle_button.e               *    *     *     .
  
   Misc widgets:

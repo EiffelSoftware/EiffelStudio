@@ -1,6 +1,6 @@
 -- Enlarged access to a C external
 
-class EXTERNAL_BL 
+class EXTERNAL_BL
 
 inherit
 
@@ -29,11 +29,11 @@ inherit
 	SHARED_DECLARATIONS;
 	EXTERNAL_CONSTANTS;
 
-feature 
+feature
 
 	parent: NESTED_BL;
 			-- Parent of access
-	
+
 	register: REGISTRABLE;
 			-- In which register the expression is stored
 
@@ -144,7 +144,7 @@ feature
 		do
 			do_generate (reg);
 		end;
-	
+
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate external call in a `typ' context
 		local
@@ -157,7 +157,7 @@ feature
 			check
 				final_mode: context.final_mode
 			end;
-			is_boolean :=  type.is_boolean;
+			is_boolean := type.is_boolean;
 			entry := Eiffel_table.poly_table (rout_id);
 
 			type_c := real_type (type).c_type;
@@ -236,35 +236,49 @@ feature
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
 			-- Generate final portion of C code.
 		local
-			generate_parenthesis: BOOLEAN
 			is_macro_extension: BOOLEAN
+			is_cpp_extension: BOOLEAN
+			final_mode: BOOLEAN
+			polymorphic: BOOLEAN
+			cpp_ext: CPP_EXTENSION_I
 		do
-			is_macro_extension := encapsulated and then extension.is_macro
+			if encapsulated then
+				is_macro_extension := extension.is_macro
+				is_cpp_extension := extension.is_cpp
+			end
+			final_mode := context.final_mode
 
 			generate_access_on_type (gen_reg, class_type);
 				-- Now generate the parameters of the call, if needed.
-			generate_parenthesis := not (is_attribute or
-					(context.final_mode and is_macro_extension and parameters = Void));
-			if generate_parenthesis then
-				generated_file.putchar ('(');
-			end;
-			if is_feature_call then
-				gen_reg.print_register;
-			end;
-			if parameters /= Void then
+
+			if final_mode then
+				polymorphic := Eiffel_table.poly_table (rout_id).is_polymorphic (class_type.type_id)
+
+				if is_macro_extension then
+					if parameters /= Void then
+						generated_file.putchar ('(')
+						extension.generate_parameter_list (parameters)
+						generated_file.putchar (')')
+					end
+					if not polymorphic then
+							--| See comments in `generate_access_on_type'
+						generated_file.putchar (')');
+					end
+				elseif is_cpp_extension and not polymorphic then
+					cpp_ext ?= extension
+					cpp_ext.generate (external_name, parameters)
+				else
+					generated_file.putchar ('(')
+					generate_parameters_list;
+					generated_file.putchar (')')
+				end
+			else
+				generated_file.putchar ('(')
 				generate_parameters_list;
-			end;
-			if generate_parenthesis then
-				generated_file.putchar (')');
-			end;
-			if
-				context.final_mode and then
-				not Eiffel_table.poly_table (rout_id).is_polymorphic (class_type.type_id) and then
-				is_macro_extension
-			then
-					--| See comments in `generate_access_on_type'
-				generated_file.putchar (')');
+				generated_file.putchar (')')
+					
 			end
+
 			if meta then
 					-- Close parenthesis opened by metamorphosis code
 				generated_file.putchar (')');
@@ -275,43 +289,29 @@ feature
 			end
 			release_hector_protection;
 		end;
-		
+
 	generate_parameters_list is
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B;
-			i: INTEGER;
-			generate_cast: BOOLEAN
-			arg_types: ARRAY [STRING]
+			ext: like extension
 		do
-			if parameters /= Void then
-				generate_cast := context.final_mode and then
-					extension /= Void and then
-					extension.generate_parameter_cast
+			ext := extension
 
-				if generate_cast then
-					arg_types := extension.argument_types
-					i := arg_types.lower
-				end
-
+			if ext /= Void then
+				ext.generate_parameter_list (parameters)
+			elseif parameters /= Void then
 				from
 					parameters.start;
 				until
 					parameters.after
 				loop
 					expr := parameters.item;	-- Cannot fail
-						-- add cast before parameter
-					if generate_cast then
-						generated_file.putchar ('(');
-						generated_file.putstring (arg_types.item (i));
-						generated_file.putstring (") ");
-					end;
 					expr.print_register;
 					if not parameters.islast then
 						generated_file.putstring (gc_comma);
 					end;
 					parameters.forth;
-					i := i + 1;
 				end;
 			end;
 		end;
@@ -373,7 +373,7 @@ feature
 						-- Unfortunately, the class which represents the '$'
 						-- operator is named hector_b, hence the confusion.
 					if expr_b.is_hector or not
-						 real_type (expr_b.type).c_type.is_pointer
+						real_type (expr_b.type).c_type.is_pointer
 					then
 						parameters.replace (expr_b.enlarged);
 					else

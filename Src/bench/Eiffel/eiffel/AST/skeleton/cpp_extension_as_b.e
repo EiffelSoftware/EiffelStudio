@@ -26,16 +26,19 @@ feature -- Type check
 	type_check (ext_as_b: EXTERNAL_AS_B) is
 			-- Perform type check on Current associated with `ext_as_b'.
 		local
-			a_feat: FEATURE_I
+			a_feat: EXTERNAL_I
 			arg_type: TYPE_A
 			error: BOOLEAN
 			ext_same_sign: EXT_SAME_SIGN
 		do
+io.putstring ("Improve error messages%N")
+			a_feat ?= context.a_feature
+
 				-- Check first argument if necessary
 			inspect
 				type
-			when normal, delete, data_member then
-				a_feat := context.a_feature
+			when standard, delete, data_member then
+					-- First argument has to be a pointer
 				if a_feat.argument_count = 0 then
 					error := True
 				else
@@ -52,7 +55,65 @@ feature -- Type check
 				-- No restriction on first parameter
 			end
 
-io.putstring ("Check is_function for new, delete, ...%N")
+			inspect
+				type
+			when data_member, static_data_member then
+					-- Must be a function
+				if not a_feat.is_function then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+				if type = data_member then
+					error := a_feat.argument_count /= 1
+				else
+					error := a_feat.argument_count /= 0
+				end
+				if error then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+			when new then
+					-- Must return a pointer
+				arg_type ?= a_feat.type
+				if not arg_type.is_pointer then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+				if a_feat.alias_name /= Void then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+			when delete then
+					-- Must be a procedure
+				if a_feat.is_function then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+				if a_feat.argument_count /= 1 then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+				if a_feat.alias_name /= Void then
+					!! ext_same_sign
+					context.init_error (ext_same_sign)
+					Error_handler.insert_error (ext_same_sign)
+					Error_handler.raise_error
+				end
+			when standard, static then
+					-- No restriction
+			end
 			type_check_signature
 		end
 
@@ -73,7 +134,7 @@ io.putstring ("Check is_function for new, delete, ...%N")
 
 					inspect
 						type
-					when normal, delete, data_member then
+					when standard, delete, data_member then
 						error := arg_count /= feature_count - 1
 					when new, static, static_data_member then
 						error := arg_count /= feature_count
@@ -82,24 +143,27 @@ io.putstring ("Check is_function for new, delete, ...%N")
 						-- No argument specified
 					inspect
 						type
-					 when normal, delete, data_member then
+					when standard, delete, data_member then
 						error := feature_count /= 1
 					when new, static, static_data_member then
 						error := feature_count /= 0
 					end
 				end
 
-					-- Check for return type
-				if return_type = void then
-					inspect
-						type
-					when new then
+				if not error then
+						-- Check for return type
+					if return_type = void then
+						inspect
+							type
+						when new then
+						else
+							error := a_feat.is_function
+						end
 					else
-						error := a_feat.is_function
+						error := not a_feat.is_function or else type = new
 					end
-				else
-					error := not a_feat.is_function or else type = new
 				end
+
 				if error then
 					!! ext_same_sign
 					context.init_error (ext_same_sign)

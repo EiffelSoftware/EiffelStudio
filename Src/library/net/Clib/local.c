@@ -4,6 +4,12 @@
 
 #include "eif_config.h"
 
+#ifdef EIF_VMS
+    /* This module just won't compile under VMS; give it up now. */
+int net_local_is_empty = 0;
+
+#else /* EIF_VMS */
+
 #include <sys/types.h>
 #include <sys/time.h>
 #include <errno.h>
@@ -58,3 +64,4 @@ EIF_POINTER get_unix_sock_path(EIF_POINTER add)
 	return (EIF_POINTER) ((struct sockaddr_un *)add)->sun_path;
 }
 
+#endif  /* EIF_VMS */

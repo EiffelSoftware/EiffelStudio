@@ -97,10 +97,10 @@ feature -- Access
 
 	init_licence: BOOLEAN is
 		do
-			licence.get_registration_info;
-			licence.set_version (3);
+			licence.set_version (3.5);
 			licence.set_application_name ("eiffelbench");
-			Result := licence.connected
+			licence.get_licence;
+			Result := licence.licensed;
 		end;
 
 feature {NONE} -- Implementation

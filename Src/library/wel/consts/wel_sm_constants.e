@@ -135,6 +135,20 @@ feature -- Access
 			"SM_CYFULLSCREEN"
 		end
 
+	Sm_cxmaximized: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"SM_CXMAXIMIZED"
+		end
+
+	Sm_cymaximized: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"SM_CYMAXIMIZED"
+		end
+
 	Sm_cykanjiwindow: INTEGER is
 		external
 			"C [macro <wel.h>]"

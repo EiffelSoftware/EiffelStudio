@@ -98,6 +98,18 @@ feature -- Status report
 			Result := cwin_get_system_metrics (Sm_cyfullscreen)
 		end
 
+	maximized_window_width: INTEGER is
+			-- Width of a maximized window
+		do
+			Result := cwin_get_system_metrics (Sm_cxmaximized)
+		end
+
+	maximized_window_height: INTEGER is
+			-- Height of a maximized window
+		do
+			Result := cwin_get_system_metrics (Sm_cymaximized)
+		end
+
 	horizontal_scroll_bar_arrow_width: INTEGER is
 			-- Width of arrow bitmap on horizontal scrollbar
 		do

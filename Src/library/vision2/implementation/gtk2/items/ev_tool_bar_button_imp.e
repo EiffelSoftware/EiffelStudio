@@ -41,7 +41,8 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_text
 		end
 
 create
@@ -89,6 +90,18 @@ feature -- Access
 			-- Tooltip use for describing `Current'
 
 feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		local
+			a_parent_imp: EV_TOOL_BAR_IMP
+		do
+			Precursor {EV_TEXTABLE_IMP} (a_text)
+			a_parent_imp ?= parent_imp
+			if a_parent_imp /= Void then
+				a_parent_imp.update_toolbar_style
+			end
+		end
 
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.

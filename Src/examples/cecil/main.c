@@ -1,19 +1,15 @@
-#include "eiffel.h"
-#include "except.h"
+#include "eif_setup.h"
+#include "eif_eiffel.h"
 
 EIF_OBJ main_obj;
 EIF_OBJ ll;
 
 
-ECall(x,y,z) 
-char *x;
-char *y;
-EIF_OBJ *z;
-
+ECall(char *x,char *y,EIF_OBJ z) 
 {
 	EIF_PROC ep;
 	EIF_TYPE_ID eti;
-	EIF_OBJ eo;
+	EIF_REFERENCE eo;
 
 	printf ("\n====== In Ecall ======\n");
 
@@ -21,35 +17,43 @@ EIF_OBJ *z;
 
 	ep = eif_proc(y,eti); printf ("\tEiffel procedure %s 0x%x\n", y, ep);
 
-	eo = eif_access(z); printf ("\tEiffel object = 0x%x\n", eo);
+	eo = (EIF_REFERENCE) eif_access(z); printf ("\tEiffel object = 0x%x\n", eo);
 
 	(ep)(eo);
 	printf ("\n====== Done ======\n");
 }
 
-main(argc, argv, envp)
-int argc;
-char **argv;
-char **envp;
+ECall_1arg(char *x,char *y,EIF_OBJ z, EIF_OBJ arg) 
+{
+	EIF_PROC ep;
+	EIF_TYPE_ID eti;
+	EIF_REFERENCE eo, eo_arg;
+
+	printf ("\n====== In Ecall_1arg ======\n");
+
+	eti = eif_type_id(x); printf ("\tEiffel type id = %d\n", eti);
+
+	ep = eif_proc(y, eti); printf ("\tEiffel procedure %s 0x%x\n", y, ep);
+
+	eo = (EIF_REFERENCE) eif_access(z); printf ("\tEiffel object = 0x%x\n", eo);
+	eo_arg = (EIF_REFERENCE) eif_access (arg); printf ("\tEiffel object = 0x%x\n",eo_arg);
+	printf ("We execute here the Eiffel code `print (ll)' from the C side\n");
+	(ep)(eo, eo_arg);
+	printf ("\n====== Done ======\n");
+}
+
+main(int argc,char **argv,char **envp)
 {
 
-    struct ex_vect *exvect;
-    jmp_buf exenv;
- 
-    initsig();
-    initstk();
-    exvect = exset((char *) 0, 0, (char *) 0);
-    exvect->ex_jbuf = (char *) exenv;
-    if (echval = setjmp(exenv))
-        failure();
- 
-	eif_rtinit (argc, argv, envp);
+	EIF_INITIALIZE(failure)
 
 	main_obj = eif_create(eif_type_id("MAIN"));
 	ECall("MAIN", "make", main_obj);
 	ECall("MAIN", "test_ll", main_obj);
-	ECall("MAIN", "print", main_obj);
+	ECall_1arg("MAIN", "print", main_obj, main_obj); /* print `main_obj' */
 	test_ll();
+	
+	EIF_DISPOSE_ALL
 }
 
 test_ll() {
@@ -64,8 +68,9 @@ char *field_obj;
 		/* 
 		 * Get the protected "ll" field of the main object.
 		 */
-	field_obj = eif_field(eif_access(main_obj), "ll", EIF_REFERENCE);
-	ll = henter(field_obj); printf ("\teif_field returns: %x, %x\n", ll, field_obj);
+	field_obj = eif_field((EIF_REFERENCE) eif_access(main_obj), "ll", EIF_REFERENCE);
+	ll = (EIF_OBJ) henter(field_obj);
+ printf ("\teif_field returns: %x, %x\n", ll, field_obj);
 
 		/* 
 		 * Get the cecil id of class STRING
@@ -85,11 +90,13 @@ char *field_obj;
 		/* 
 		 * Get the object corresponding to the "ll" field
 		 */
-	ll_obj = eif_access(ll); printf ("\tLL object = 0x%x\n", ll_obj);
+	ll_obj = (EIF_REFERENCE) eif_access(ll); printf ("\tLL object = 0x%x\n", ll_obj);
 
 		/*
 		 * Execture the print routine on the "ll" object
 		 */
+	printf ("Try to perform 10 forth on ll which has only five elements;\na precondition will be violated\n");
+
 	(print_proc)(ll_obj);
 	(print_proc)(ll_obj);
 	(print_proc)(ll_obj);

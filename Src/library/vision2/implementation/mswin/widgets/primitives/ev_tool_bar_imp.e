@@ -125,16 +125,12 @@ feature {NONE} -- Initialization
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
 		do
 			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
-			wel_make (ctrl, 0)			
-			create radio_group.make
-			create new_item_actions.make ("new_item", <<"widget">>)
-			new_item_actions.extend (~add_radio_button)
-			new_item_actions.extend (~widget_parented)
-			create remove_item_actions.make ("remove_item", <<"widget">>)
-			remove_item_actions.extend (~remove_radio_button)
-			remove_item_actions.extend (~widget_orphaned)
+			wel_make (ctrl, 0)	
 			{EV_PRIMITIVE_IMP} Precursor
-			{EV_HASH_TABLE_ITEM_HOLDER_IMP} Precursor
+			{EV_HASH_TABLE_ITEM_HOLDER_IMP} Precursor	
+			create radio_group.make
+			new_item_actions.extend (~add_radio_button)
+			remove_item_actions.extend (~remove_radio_button)
 			create ev_children.make (2)
 		end
 
@@ -426,81 +422,6 @@ feature {NONE} -- Implementation
 			ev_children.go_i_th (original_index)
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	widget_parented (w: EV_TOOL_BAR_BUTTON) is
-			-- Called every time a widget is added to the container.
-		require
-			w_not_void: w /= Void
-		local
-			w_imp: EV_TOOL_BAR_BUTTON_IMP
-		do
-			w_imp ?= w.implementation
-			w_imp.on_parented
-		end
-
-	widget_orphaned (w: EV_TOOL_BAR_BUTTON) is
-			-- Called every time a widget is removed from the container.
-		require
-			w_not_void: w /= Void
-		local
-			w_imp: EV_TOOL_BAR_BUTTON_IMP
-		do
-			w_imp ?= w.implementation
-			w_imp.on_orphaned
-		end
-
-	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
-			-- Radio items in this container.
-			-- `Current' shares reference with merged containers.
-
-	is_merged (other: EV_TOOL_BAR): BOOLEAN is
-			-- Is `Current' merged with `other'?
-		require
-			other_not_void: other /= Void
-		local
-			t_imp: EV_TOOL_BAR_IMP
-		do
-			t_imp ?= other.implementation
-			Result := t_imp.radio_group = radio_group
-		end
-
-	set_radio_group (rg: like radio_group) is
-			-- Set `radio_group' by reference. (Merge)
-		do
-			radio_group := rg
-		end
-
-	add_radio_button (w: EV_TOOL_BAR_RADIO_BUTTON) is
-			-- Called every time a widget is added to the container.
-		require
-			w_not_void: w /= Void
-		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
-		do
-			r ?= w.implementation
-			if r /= Void then
-				if not radio_group.empty then
-					r.disable_select
-				end
-				r.set_radio_group (radio_group)
-			end
-		end
-
-	remove_radio_button (w: EV_TOOL_BAR_RADIO_BUTTON) is
-			-- Called every time a widget is removed from the container.
-		require
-			w_not_void: w /= Void
-		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
-		do
-			r ?= w.implementation
-			if r /= Void then
-				r.remove_from_radio_group
-				r.enable_select
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	add_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
@@ -647,6 +568,59 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
+feature {EV_TOOL_BAR_IMP} -- Implementation
+
+	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
+			-- Radio items in this container.
+			-- `Current' shares reference with merged containers.
+
+	is_merged (other: EV_TOOL_BAR): BOOLEAN is
+			-- Is `Current' merged with `other'?
+		require
+			other_not_void: other /= Void
+		local
+			t_imp: EV_TOOL_BAR_IMP
+		do
+			t_imp ?= other.implementation
+			Result := t_imp.radio_group = radio_group
+		end
+
+	set_radio_group (rg: like radio_group) is
+			-- Set `radio_group' by reference. (Merge)
+		do
+			radio_group := rg
+		end
+
+	add_radio_button (w: EV_ITEM) is
+			-- Called every time a widget is added to the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				if not radio_group.empty then
+					r.disable_select
+				end
+				r.set_radio_group (radio_group)
+			end
+		end
+
+	remove_radio_button (w: EV_ITEM) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				r.remove_from_radio_group
+				r.enable_select
+			end
+		end
+
 feature {EV_PND_TRANSPORTER_IMP}
 
 	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER is
@@ -751,6 +725,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/04 22:45:46  rogers
+--| Re-order Precursor calls in initialize. Restructuring.
+--|
 --| Revision 1.39  2000/04/04 17:24:07  rogers
 --| Added connect_radio_grouping, widget_parented, widget_orphaned,
 --| radio_group, is_merged, set_radio_group, add_radio_button,

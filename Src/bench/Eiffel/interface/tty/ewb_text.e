@@ -37,14 +37,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Execution
 
-	want_compiled_class: BOOLEAN is
-			-- Does Current want a compiled class?
+	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+			-- Does Current want `class_i' to be compiled?
 			--| If the class is in the system: True
 			--| else: False.
-		local
-			class_i: CLASS_I
 		do
-			class_i := Eiffel_universe.class_with_name (class_name);
 			Result := class_i.compiled_eclass /= Void
 		end;
 

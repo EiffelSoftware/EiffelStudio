@@ -73,7 +73,7 @@ feature -- Update
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 
 	execute (arg: ANY) is
 			-- Execute the command.
@@ -82,7 +82,6 @@ feature {NONE} -- Implementation
 			rname, cname, feat_name: STRING;
 			temp: STRING;
 			f_table: E_FEATURE_TABLE;
-			class_tf: ROUTINE_CLASS_TEXT_FIELD;
 			e_feature: E_FEATURE;
 			stone: CLASSC_STONE;
 			feature_stone: FEATURE_STONE;
@@ -92,73 +91,74 @@ feature {NONE} -- Implementation
 			if (choice /= Void) and then arg = choice then
 				if choice.position /= 1 then
 					set_text (choice.selected_item);
-					execute (Void)
+					stone := classc_stone;
+					classc_stone := Void;
+					execute (stone)
 				end
 			else
-				!! mp.set_watch_cursor;
-				rname := clone (text);
-				rname.to_lower;
-				rname.left_adjust;
-				rname.right_adjust;
-				class_tf := tool.class_text_field;
-				stone := class_tf.classc_stone;
-				if stone /= Void and then not rname.empty then
-					e_class := stone.e_class;	
-					if e_class /= Void then
-						f_table := e_class.feature_table;
-						if rname.item (rname.count) = '*' then
-							rname.head (rname.count - 1);
-							!! feat_names.make;
-							from
-								f_table.start
-							until
-								f_table.after
-							loop
-								feat_name := f_table.key_for_iteration;
-								if
-									rname.empty or else
-									(feat_name.count >= rname.count and then
-									feat_name.substring 
+				stone ?= arg;
+				if stone = Void then
+						-- Ask for a class name first.
+					tool.class_text_field.execute (Void)
+				else
+					!! mp.set_watch_cursor;
+					rname := clone (text);
+					rname.to_lower;
+					rname.left_adjust;
+					rname.right_adjust;
+					if not rname.empty then
+						e_class := stone.e_class;	
+						if e_class /= Void then
+							f_table := e_class.feature_table;
+							if rname.item (rname.count) = '*' then
+								rname.head (rname.count - 1);
+								!! feat_names.make;
+								from f_table.start until f_table.after loop
+									feat_name := f_table.key_for_iteration;
+									if
+										rname.empty or else
+										(feat_name.count >= rname.count and then
+										feat_name.substring 
 											(1, rname.count).is_equal (rname))
-								then
-									feat_names.extend (feat_name)
+									then
+										feat_names.extend (feat_name)
+									end;
+									f_table.forth
 								end;
-								f_table.forth
-							end;
-							if choice = Void then
-								!! choice.make_with_widget (parent, Current)
-							end;
-							choice.popup (Current, feat_names)
-						else
-							e_feature := f_table.item (rname);		
-							if e_feature = Void then
-								warner (popup_parent).gotcha_call (w_Cannot_find_feature (rname, e_class.name))
+								if choice = Void then
+									!! choice.make_with_widget (parent, Current)
+								end;
+								classc_stone := stone;
+								mp.restore;
+								choice.popup (Current, feat_names)
 							else
-								!! feature_stone.make (e_feature, e_class);
-								tool.process_feature (feature_stone);
+								e_feature := f_table.item (rname);		
+								if e_feature = Void then
+									mp.restore;
+									warner (popup_parent).gotcha_call (w_Cannot_find_feature (rname, e_class.name))
+								else
+									!! feature_stone.make (e_feature, e_class);
+									tool.process_feature (feature_stone);
+									mp.restore;
+								end
 							end
+						else
+							cname := clone (tool.class_text_field.text);
+							mp.restore;
+							warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
 						end
 					else
-						cname := clone (class_tf.text);
-						warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
+						mp.restore;
+						warner (popup_parent).gotcha_call (w_Specify_a_feature)
 					end
-				elseif rname.empty then
-					warner (popup_parent).gotcha_call (w_Specify_a_feature)
-				else
-					cname := clone (class_tf.text);
-					cname.left_adjust;
-					cname.right_adjust;
-					if cname.empty  then
-						warner (popup_parent).gotcha_call (w_Specify_a_class)
-					elseif cname.item (cname.count) = '*' then
-						class_tf.popup_choice_window 
-					else
-						warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
-					end
-				end;
-				mp.restore
+				end
 			end
 		end;
+
+feature {NONE} -- Implementation
+
+	classc_stone: CLASSC_STONE;
+			-- Class stone saved while choosing a feature name
 
 	work (arg: ANY) is
 		do

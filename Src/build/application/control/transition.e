@@ -27,7 +27,7 @@ feature
 			labels: LINKED_LIST [CMD_LABEL];
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 			updated_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
-			label: STRING;
+			label: CMD_LABEL;
 			transition_name_list: TRAN_NAME_LIST;
 		do
 			!!transition_name_list.make;
@@ -39,25 +39,22 @@ feature
 			until
 				labels.after
 			loop
-				label := labels.item.label;
+				label := labels.item;
 				if not transition_name_list.has_label (label) then
 					!!text.make (0);
-					text.append (label);
-					text.set_label_name (label);
-					if
-						temp_trans.has (label)	
-					then
-						element := temp_trans.item (label);
+					text.set_cmd_label (label);
+					if temp_trans.has (label.label) then
+						element := temp_trans.item (label.label);
 						if (element = Void) then
 							text.set_destination_name ("return");
-							updated_trans.put (element, label);
+							updated_trans.put (element, label.label);
 						else
 							if (element.visual_name = Void) then
 								text.set_destination_name (element.internal_name);
 							else
 								text.set_destination_name (element.visual_name);
 							end;
-							updated_trans.put (element, label);
+							updated_trans.put (element, label.label);
 						end
 					else
 						text.set_destination_name ("self")
@@ -143,10 +140,8 @@ feature
 			until			
 				temp.after
 			loop
-				if
-					temp.item.destination_name.is_equal (dest_name)
-				then
-					Result.extend (temp.item.label_name)
+				if temp.item.destination_name.is_equal (dest_name) then
+					Result.extend (temp.item.cmd_label.label)
 				end;
 				temp.forth;
 			end	

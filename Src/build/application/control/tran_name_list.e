@@ -11,7 +11,7 @@ creation
 	
 feature 
 
-	has_label (cmd_label: STRING): BOOLEAN is
+	has_label (cmd_label: CMD_LABEL): BOOLEAN is
 			-- Does cmd_label already exists ?
 		do
 			from
@@ -19,7 +19,7 @@ feature
 			until
 				after or else Result
 			loop
-				Result := cmd_label.is_equal (item.label_name);
+				Result := cmd_label = item.cmd_label;
 				forth
 			end;	
 		end

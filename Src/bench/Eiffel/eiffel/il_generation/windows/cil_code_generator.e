@@ -641,7 +641,7 @@ feature -- Class info
 			create implementation_signatures_table.make (0, class_count)
 
 				-- Debug data structure.
-			create dbg_documents.make (0, class_count)
+			create internal_dbg_documents.make (0, class_count)
 			create method_sequence_points.make (1000)
 			create local_info.make (1000)
 			internal_class_types := Void
@@ -836,10 +836,10 @@ feature -- Class info
 
 						if
 							is_debug_info_enabled and
-							dbg_documents.item (class_c.class_id) = Void
+							internal_dbg_documents.item (class_c.class_id) = Void
 						then
 							uni_string.set_string (class_c.file_name)
-							dbg_documents.put (dbg_writer.define_document (uni_string,
+							internal_dbg_documents.put (dbg_writer.define_document (uni_string,
 								language_guid, vendor_guid, document_type_guid), class_c.class_id)
 						end
 
@@ -2114,7 +2114,7 @@ feature -- IL Generation
 							dbg_end_lines ?= l_sequence_point.item (5)
 							dbg_end_columns ?= l_sequence_point.item (6)
 							dbg_writer.define_sequence_points (
-								dbg_documents.item (l_sequence_point.integer_item (7)),
+								dbg_documents (l_sequence_point.integer_item (7)),
 								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 								dbg_end_lines, dbg_end_columns)
 							l_sequence_point_list.forth
@@ -2233,7 +2233,7 @@ feature -- IL Generation
 				if is_debug_info_enabled then
 					generate_local_debug_info (l_meth_token)
 					dbg_writer.define_sequence_points (
-						dbg_documents.item (current_class.class_id),
+						dbg_documents (current_class.class_id),
 						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 						dbg_end_lines, dbg_end_columns)
 					dbg_writer.close_method
@@ -4243,7 +4243,7 @@ feature -- Line info
 		do
 			if is_debug_info_enabled then
 				dbg_writer.define_sequence_points (
-					dbg_documents.item (a_class_type.associated_class.class_id),
+					dbg_documents (a_class_type.associated_class.class_id),
 					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 					dbg_end_lines, dbg_end_columns)
 
@@ -5310,7 +5310,25 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 	method_sequence_points: HASH_TABLE [LINKED_LIST [like sequence_point], INTEGER]
 			-- Table of `method_token' to sequence points definition.
 
-	dbg_documents: ARRAY [DBG_DOCUMENT_WRITER]
+	dbg_documents (a_class_id: INTEGER): DBG_DOCUMENT_WRITER is
+			-- Associated document to `a_class_id'.
+		require
+			in_debug_mode: is_debug_info_enabled
+		local
+			l_string: UNI_STRING
+			l_class: CLASS_C
+		do
+			Result := internal_dbg_documents.item (a_class_id)
+			if Result = Void then
+				l_class := System.class_of_id (a_class_id)
+				create l_string.make (l_class.file_name)
+				Result := dbg_writer.define_document (l_string, language_guid,
+					vendor_guid, document_type_guid)
+				internal_dbg_documents.put (Result, a_class_id)
+			end
+		end
+
+	internal_dbg_documents: ARRAY [DBG_DOCUMENT_WRITER]
 			-- Array indexed by class ID containing all DBG_DOCUMENTS.
 
 	internal_implementation_features: ARRAY [HASH_TABLE [INTEGER, INTEGER]]

@@ -62,39 +62,38 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
-
-
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (
 				c_object,
 				list_widget
 			)
 			C.gtk_container_add (c_object, list_widget)
---			real_signal_connect (
---				list_widget,
---				"unselect_child",
---				agent deselect_callback,
---				Void
---			)
+			real_signal_connect (
+				list_widget,
+				"unselect_child",
+				agent deselect_callback,
+				Void
+			)
 		end
 
 	initialize is
 		do
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
---			real_signal_connect (
---				list_widget,
---				"select_child",
---				agent select_callback,
---				Void
---			)
---			real_signal_connect (
---				visual_widget,
---				"button-press-event",
---				agent on_list_clicked,
---				Default_translate
---			)
-
+			
+			--| FIXME IEK These shoud be modified to use Gtk_marshal
+			real_signal_connect (
+				list_widget,
+				"select_child",
+				agent select_callback,
+				Void
+			)
+			real_signal_connect (
+				visual_widget,
+				"button-press-event",
+				agent on_list_clicked,
+				Default_translate
+			)
 			real_signal_connect (
 					visual_widget,
 					"button-press-event",

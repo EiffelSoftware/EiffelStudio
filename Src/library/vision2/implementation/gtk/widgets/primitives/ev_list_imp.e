@@ -47,6 +47,8 @@ feature -- Initialize
 			a_gs: GEL_STRING
 		do
 			{EV_LIST_ITEM_LIST_IMP} Precursor
+			
+			--| FIXME IEK These should be modified to use Gtk_marshal.
 			create a_gs.make ("leave-notify-event")
 			temp_sig_id := c_signal_connect (
 					list_widget,

@@ -9,8 +9,14 @@ class
 
 inherit
 	ECOM_WRAPPER
+		redefine
+			out
+		end
 
 	ECOM_VAR_TYPE
+		redefine
+			out
+		end
 
 creation
 	make,
@@ -36,7 +42,7 @@ feature -- Access
 	character_value: CHARACTER is
 			-- Character value
 		require
-			is_character: is_character (variable_type)
+			is_character: variable_type = Vt_i1
 		do
 			Result := ccom_character (initializer)
 		end
@@ -68,7 +74,7 @@ feature -- Access
 	integer2: INTEGER is
 			-- Short value
 		require
-			is_integer2: is_integer2 (variable_type)
+			is_integer2: variable_type = Vt_i2
 		do
 			Result := ccom_integer2 (initializer)
 		end
@@ -84,7 +90,7 @@ feature -- Access
 	unsigned_integer2: INTEGER is
 			-- Unsigned short value
 		require
-			is_unsigned_short: is_unsigned_short (variable_type)
+			is_unsigned_short: variable_type = Vt_ui2
 		do
 			Result := ccom_unsigned_integer2 (initializer)
 		end
@@ -100,7 +106,7 @@ feature -- Access
 	integer4: INTEGER is
 			-- Long value
 		require
-			is_integer4: is_integer4 (variable_type)
+			is_integer4: variable_type = Vt_i4
 		do
 			Result := ccom_integer4 (initializer)
 		end
@@ -116,7 +122,7 @@ feature -- Access
 	unsigned_integer4: INTEGER is
 			-- Unsigned long value
 		require
-			is_unsigned_long: is_unsigned_long (variable_type)
+			is_unsigned_long: variable_type = Vt_ui4
 		do
 			Result := ccom_unsigned_integer4 (initializer)
 		end
@@ -132,7 +138,7 @@ feature -- Access
 	integer_value: INTEGER is
 			-- Integer value
 		require
-			is_integer: is_int (variable_type)
+			is_integer: variable_type = Vt_int
 		do
 			Result := ccom_integer (initializer)
 		end
@@ -148,7 +154,7 @@ feature -- Access
 	unsigned_integer: INTEGER is
 			-- Unsigned integer value
 		require
-			is_unsigned_integer: is_unsigned_int (variable_type)
+			is_unsigned_integer: variable_type = Vt_uint
 		do
 			Result := ccom_unsigned_integer (initializer)
 		end
@@ -164,7 +170,7 @@ feature -- Access
 	real4: REAL is
 			-- Real value
 		require
-			is_real4: is_real4 (variable_type)
+			is_real4: variable_type = Vt_r4
 		do
 			Result := ccom_real4 (initializer)
 		end
@@ -181,7 +187,7 @@ feature -- Access
 	real8: DOUBLE is
 			-- Double value
 		require
-			is_real8: is_real8 (variable_type)
+			is_real8: variable_type = Vt_r8
 		do
 			Result := ccom_real8 (initializer)
 		end
@@ -197,7 +203,7 @@ feature -- Access
 	boolean_value: BOOLEAN is
 			-- Boolean value
 		require
-			is_boolean: is_boolean (variable_type)
+			is_boolean: variable_type = Vt_bool
 		do
 			Result := ccom_bool (initializer)
 		end
@@ -213,7 +219,7 @@ feature -- Access
 	date_value: DATE_TIME is
 			-- Date value
 		require
-			is_date: is_date (variable_type)
+			is_date: variable_type = Vt_date
 		local
 			tmp_double: DOUBLE
 		do
@@ -231,7 +237,7 @@ feature -- Access
 	error: ECOM_HRESULT is
 			-- Error value
 		require
-			is_error: is_error (variable_type)
+			is_error: variable_type = Vt_error
 		do
 			create Result.make
 			Result.set_item (ccom_error (initializer))
@@ -249,7 +255,7 @@ feature -- Access
 	decimal: ECOM_DECIMAL is
 			-- Decimal value
 		require
-		--	is_decimal: is_decimal (variable_type)
+		--	is_decimal: variable_type = Vt_decimal
 		do
 			Result := ccom_decimal (initializer)
 		end
@@ -265,7 +271,7 @@ feature -- Access
 	currency: ECOM_CURRENCY is
 			-- Currency value
 		require
-			is_currency: is_currency (variable_type)
+			is_currency: variable_type = Vt_cy
 		do
 			Result := ccom_currency (initializer)
 		end
@@ -281,7 +287,7 @@ feature -- Access
 	string_value: STRING is
 			-- BSTR value
 		require
-			is_bstr: is_bstr (variable_type)
+			is_bstr: variable_type = Vt_bstr 
 		do
 			Result := ccom_bstr (initializer)
 		end
@@ -305,7 +311,7 @@ feature -- Access
 	unknown_interface: ECOM_UNKNOWN_INTERFACE is
 			-- IUnknown interface value
 		require
-			is_unknown_ref: is_unknown (variable_type)
+			is_unknown_ref: variable_type = Vt_unknown
 		do
 			create Result.make_from_pointer( ccom_unknown_interface (initializer))
 		end
@@ -324,7 +330,7 @@ feature -- Access
 	dispatch_interface: ECOM_AUTOMATION_INTERFACE is
 			-- IDispatch interface value
 		require
-			is_dispatch_ref: is_dispatch (variable_type)
+			is_dispatch_ref: variable_type = Vt_dispatch
 		do
 			create Result.make_from_pointer (ccom_dispatch_interface (initializer))
 		end
@@ -1305,6 +1311,44 @@ feature -- Element change
 		do
 			ccom_set_safearray_unsigned_integer_reference (initializer, a_value.item)
 		end
+
+feature -- Output
+
+	out: STRING is
+			-- Printable representation of  value.
+		do
+			create Result.make (0)
+			if  (variable_type = Vt_bool) then
+				Result.append (boolean_value.out)
+			elseif (variable_type = Vt_i1) then
+				Result.append_character ('%Q')
+				Result.append (character_value.out)
+				Result.append_character ('%'')
+			elseif (variable_type = Vt_i2) then
+				Result.append (integer2.out)
+			elseif (variable_type = Vt_i4) then
+				Result.append (integer4.out)
+			elseif (variable_type = Vt_int) then
+				Result.append (integer_value.out)
+			elseif (variable_type = Vt_r4) then
+				Result.append (real4.out)
+			elseif (variable_type = Vt_r8) then
+				Result.append (real8.out)
+			elseif (variable_type = Vt_bstr) then
+				Result.append_character ('%"')
+				Result.append (string_value.out)
+				Result.append_character ('%"')
+			elseif (variable_type = Vt_ui1) then
+				Result.append (unsigned_character_value.out)
+			elseif (variable_type = Vt_uint) then
+				Result.append (unsigned_integer.out)
+			elseif (variable_type = Vt_ui2) then
+				Result.append (unsigned_integer2.out)
+			elseif (variable_type = Vt_ui4) then
+				Result.append (unsigned_integer4.out)
+			end
+		end;
+
 
 feature {NONE} -- Implementation
 

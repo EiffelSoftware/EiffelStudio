@@ -124,7 +124,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	_grow_handles (40);
 	ename = rindex(_argv[0], '\\');		/* Only last name if '\' found */
 
-	if (ename++ == (char *) 0)			/* There was no '/' in the name */
+	if (ename++ == (char *) 0)			/* There was no '\' in the name */
 		ename = _argv[0];				/* Program name is the filename */
 #elif defined EIF_WINDOWS
 	static char module_name [255] = {0};

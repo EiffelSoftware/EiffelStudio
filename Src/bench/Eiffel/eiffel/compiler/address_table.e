@@ -443,7 +443,7 @@ feature {NONE} -- Generation
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-						buffer.putstring ("RTNR();")
+						buffer.putstring ("RTNR(Current);")
 					else
 						if is_function then
 							buffer.putstring ("return ")
@@ -624,7 +624,7 @@ feature {NONE} -- Generation
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-						buffer.putstring ("RTNR();")
+						buffer.putstring ("RTNR(Current);")
 					else
 						if is_function then
 							buffer.putstring ("((*res).")

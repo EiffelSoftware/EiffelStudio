@@ -560,7 +560,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 
 #ifndef WORKBENCH
 
-void rt_norout(void) 
+void rt_norout(EIF_REFERENCE dummy) 
 {
 	/* Function called when Eiffel is supposed to call a deferred feature
 	 * without any implementation in final mode.

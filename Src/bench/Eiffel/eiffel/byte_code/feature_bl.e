@@ -202,7 +202,7 @@ end
 					-- Call to a deferred feature without implementation
 				is_deferred := True
 				buf.putchar ('(')
-				real_type (type).c_type.generate_function_cast (buf, <<>>)
+				real_type (type).c_type.generate_function_cast (buf, <<"EIF_REFERENCE">>)
 				buf.putstring (" RTNR)")
 			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
@@ -257,7 +257,7 @@ end
 						-- Call to a deferred feature without implementation
 					is_deferred := True
 					buf.putchar ('(')
-					real_type (type).c_type.generate_function_cast (buf, <<>>)
+					real_type (type).c_type.generate_function_cast (buf, <<"EIF_REFERENCE">>)
 					buf.putstring (" RTNR)")
 				end
 			end

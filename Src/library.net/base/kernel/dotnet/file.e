@@ -1102,6 +1102,7 @@ feature -- Element change
 			file_exists: exists
 		do
 			internal_file.move_to (new_name.to_cil)
+			name := new_name
 		ensure
 			name_changed: name.is_equal (new_name)
 		end

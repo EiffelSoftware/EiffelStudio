@@ -21,7 +21,6 @@ feature
 			-- Move cursor one position forward, then
 			-- put element `p' at cursor position, resize if necessary.
 		do
-			position := position + 1
 			if clickable_count = 0 then
 				resize (1, 20)
 			elseif position > count then
@@ -29,10 +28,11 @@ feature
 			end
 			put (p, position)
 			clickable_count := clickable_count + 1
+			position := position + 1
 		ensure
 			position_set: position = old position + 1
 			clickable_count_set: clickable_count = old clickable_count + 1
-			sorted_insertion: p.start_position > item(position - 1).end_position
+--			sorted_insertion: p.start_position > item(position - 2).end_position
 		end
 
 	trace is
@@ -61,7 +61,7 @@ feature
 				upper := other.upper
 				clickable_count := upper - lower + 1
 			else
-				wipe_out
+				discard_items
 				clickable_count := 0
 			end
 		ensure
@@ -77,9 +77,10 @@ feature
 
 	clear_clickable is
 			-- Make the text_struct empty.
+			-- there must be a nicer way to do this
 		do
-			upper := -1
-			lower := 0
+			upper := 0
+			lower := 1
 			area := Void
 			clickable_count := 0
 		end

@@ -170,6 +170,26 @@ feature -- Cursor movement
 			set_current_char (line.end_token, line.end_token.length)
 		end
 
+feature -- Transformation
+
+	insert_char (c: CHARACTER) is
+		do
+		end
+
+	delete_char is
+		do
+		end
+
+	replace_char (c: CHARACTER) is
+		do
+		end
+
+	delete_previous is
+		do
+			go_left_char
+			delete_char
+		end
+
 feature {NONE} -- Implementation
 
 	set_line_to_next is
@@ -217,17 +237,15 @@ feature {NONE} -- Implementation
 			else
 					-- we are too far, so the good token is the
 					-- previous one, we have to look into it.
-				token := current_tokem.previous
+				token := current_token.previous
 					-- rewind our pixel position
-				current_x := current_x - token.
+				current_x := current_x - token.width
 				x_in_token := x_in_pixels - current_x
 
 					-- Now retrieve the position inside the token.
 				pos_in_token := token.retrieve_position_by_width(x_in_token)
 			end
 		end
-
-		create
 
 invariant
 	x_in_pixels_positive_or_null: x_in_pixels >= 0

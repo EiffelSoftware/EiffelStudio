@@ -640,8 +640,13 @@ feature -- Status setting
 
 	set_rows (i: INTEGER) is
 			-- Set the character height of Current widget to `i'.
+		local
+			f: FONT
+			w: WIDGET
 		do
-
+			f := font
+			w := widget_oui
+			set_height (i * (f.ascent (w) + f.descent (w)))
 		end
 
 	set_cursor_position_visible (flag: BOOLEAN) is

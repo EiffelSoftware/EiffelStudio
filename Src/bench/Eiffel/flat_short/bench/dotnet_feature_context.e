@@ -320,7 +320,6 @@ feature {NONE} -- Element Change
 			l_cnt: INTEGER
 			l_id: INTEGER
 			l_overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
-			l_temp: STRING
 		do
 			create l_parsed_arguments.make_empty
 			l_constructor ?= current_feature

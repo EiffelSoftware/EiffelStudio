@@ -98,6 +98,16 @@ feature  -- Access
 			-- Return a RGB for Windows
 		do
 			Result := cwel_pointer_to_integer (item)
+		end;
+
+	brush: WEL_BRUSH is
+			--
+		do
+			Result := allocated_brush
+			if allocated_brush = Void then
+				!! Result.make_solid (Current);
+				allocated_brush := Result
+			end
 		end
 
 feature -- Settings
@@ -168,6 +178,7 @@ feature -- Settings
 					print ("%N")
 				end
 			end
+			!! allocated_brush.make_solid (Current)
 		end
 
 	set_white_default is
@@ -180,6 +191,9 @@ feature -- Settings
 		end
 
 feature {NONE} -- Implementation
+
+	allocated_brush: WEL_BRUSH;
+			-- Brush corresponding to the color
 
 	has (color_name: STRING): BOOLEAN is
 			-- Test if the color_name exists in the hash_table

@@ -125,8 +125,7 @@ feature -- Transformation
 			tmp_string2.append ("_user_precondition")
 			if 
 				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
-				an_interface_descriptor.feature_eiffel_names.has (tmp_string2) or
-				eiffel_key_words.has (tmp_string)
+				an_interface_descriptor.feature_eiffel_names.has (tmp_string2) 
 			then
 				interface_eiffel_name.append_integer (counter)
 			end

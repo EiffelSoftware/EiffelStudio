@@ -9,7 +9,12 @@ deferred class
 
 	EV_WIDGET_I 
 
+feature {NONE} -- Initialization
 
+	make (parent: EV_CONTAINER) is
+		deferred
+		end
+	
 feature {EV_WIDGET} -- Initialization
 	
 	
@@ -116,6 +121,26 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end
 	
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+                require
+                        exists: not destroyed
+                deferred
+                ensure
+                        Result >= 0
+                end
+
+        maximum_width: INTEGER is
+                        -- Maximum width that application wishes widget
+                        -- instance to have
+                require
+                        exists: not destroyed
+                deferred
+                ensure
+                        Result >= 0
+                end	
+	
 	minimum_width: INTEGER is
 			-- Minimum width of widget
 		require
@@ -167,7 +192,47 @@ feature -- Resizing
 		ensure					
 			dimensions_set: dimensions_set (width, new_height)
 		end
+	
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
+                require
+                        exists: not destroyed
+                        large_enough: max_height >= 0
+                deferred
+                ensure
+                        max_height = max_height
+                end
 
+        set_maximum_width (max_width: INTEGER) is
+                        -- Set `maximum_width' to `max_width'.
+                require
+                        exists: not destroyed
+                        large_enough: max_width >= 0
+                deferred
+                ensure
+                        max_width = max_width
+                end 
+
+        set_minimum_height (min_height: INTEGER) is
+                        -- Set `minimum__height' to `min_height'.
+                require
+                        exists: not destroyed
+                        height_large_enough: min_height >= 0
+                deferred
+                ensure
+                        min_height = min_height
+                end
+
+        set_minimum_width (min_width: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+                require
+                        exists: not destroyed
+                        a_min_large_enough: min_width >= 0
+                deferred
+                ensure
+                        min_width = min_width
+                end
+	
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
@@ -185,8 +250,8 @@ feature -- Resizing
 			exists: not destroyed
 		deferred
 		ensure
-			x_set: x = new_x	
-			y_set: y = new_y	
+		--XX	x_set: x = new_x	
+		--XX	y_set: y = new_y	
 		end
 
 	set_y (new_y: INTEGER) is

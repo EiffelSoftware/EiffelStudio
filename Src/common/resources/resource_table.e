@@ -93,6 +93,29 @@ feature -- Access
 			end
 		end;
 
+	get_character (name: STRING; default_value: CHARACTER): CHARACTER is
+			-- Value of the resource `name';
+			-- `default_value' if this value is not known
+		require
+			name_not_void: name /= Void;
+		local
+			string_value: STRING
+		do
+			if has (name) then
+				string_value := item (name);
+				if string_value.count > 0 then
+					Result := string_value.item (1);
+				else
+					Result := default_value
+				end;
+				if free_resource then
+					remove (name)
+				end
+			else
+				Result := default_value
+			end
+		end;
+
 feature -- Status report
 
 	free_resource: BOOLEAN;

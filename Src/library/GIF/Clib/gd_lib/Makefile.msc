@@ -1,0 +1,27 @@
+#Depending on your system, you will need to modify this makefile.
+
+CC=cl 
+AR=lib
+CFLAGS=-Ox
+LIBS= gd.lib
+
+all: gd.lib gddemo giftogd webgif
+
+gddemo: gddemo.obj gd.lib gd.h gdfonts.h gdfontl.h
+	$(CC) gddemo.obj -o gddemo	$(LIBS)
+
+giftogd: giftogd.obj gd.lib gd.h
+	$(CC) giftogd.obj -o giftogd	$(LIBS) 
+
+gd.lib: gd.obj gdfontt.obj gdfonts.obj gdfontmb.obj gdfontl.obj gdfontg.obj \
+	gd.h gdfontt.h gdfonts.h gdfontmb.h gdfontl.h gdfontg.h
+	rm -f gd.lib
+	$(AR) -OUT:gd.lib gd.obj gdfontt.obj gdfonts.obj gdfontmb.obj \
+		gdfontl.obj gdfontg.obj
+
+webgif: webgif.obj gd.lib gd.h
+	$(CC) webgif.obj -o webgif	$(LIBS)
+
+clean:
+	rm -f *.obj *.lib gddemo giftogd 
+

@@ -5,11 +5,16 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DIRECTORY_SELECTION_DIALOG_IMP
+	EV_DIRECTORY_DIALOG_IMP
 
 inherit
-	EV_DIRECTORY_SELECTION_DIALOG_I
-	EV_STANDARD_DIALOG_IMP
+	EV_DIRECTORY_DIALOG_I
+
+	EV_FILE_DIALOG_IMP
+		export {NONE}
+			file,
+			file_name
+		end
 
 creation
 	make,
@@ -20,61 +25,41 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a directory selection dialog with `par' as
 			-- parent.
+		local
+			a: ANY
+			s: STRING
+			par_imp: EV_CONTAINER_IMP
 		do
+			s := "Directory selection dialog"
+			a := s.to_c
+			par_imp ?= par.implementation
+
+			-- Create the gtk object.
+			widget := c_gtk_directory_selection_new ($a)
+
+			-- Attach the window to `par'.
+			gtk_window_set_transient_for (widget, par_imp.widget)
+			-- Set it as modal (nothing can be done
+			-- until the window is closed).
+			gtk_window_set_modal (widget, True)
+
+			-- Make it appear where the mouse is.
+			gtk_window_set_position (GTK_WINDOW (widget), 1)
+
+			-- Connect destroy command to `OK' and `Cancel' buttons.
+			add_dialog_close_command (ok_widget)
+			add_dialog_close_command (cancel_widget)		
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a directory selection dialog with `par' as
 			-- parent and `txt' as title.
 		do
+			make (par)
+			set_title (txt)
 		end
 
-feature -- Status report
-
-	directory: STRING is
-			-- Path of the current selected file
-		do
-		end
-
-feature -- Element change
-
-	set_base_directory (path: STRING) is
-			-- Make `path' the base directory in detrmining files
-			-- to be displayed.
-		do
-		end
-
-feature -- Event - command association
-
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "OK" button is pressed.
-			-- If there is no "OK" button, the event never occurs.
-		do
-		end
-
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Cancel" button is pressed.
-			-- If there is no "Cancel" button, the event never occurs.
-		do
-		end
-
-feature -- Event -- removing command association
-
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		do
-		end
-
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		do
-		end
-
-end -- class EV_DIRECTORY_SELECTION_DIALOG_IMP
+end -- class EV_DIRECTORY_DIALOG_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

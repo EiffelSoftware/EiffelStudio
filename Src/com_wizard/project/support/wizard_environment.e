@@ -170,8 +170,9 @@ feature -- Element Change
 			valid_name: not c_name.empty
 		do
 			eiffel_class_name := clone (c_name)
+			eiffel_class_name.to_upper
 		ensure
-			name_set: eiffel_class_name.is_equal (c_name)
+			name_set: eiffel_class_name /= Void and then not eiffel_class_name.empty
 		end
 
 	set_eiffel_project_name (p_name: like eiffel_project_name) is

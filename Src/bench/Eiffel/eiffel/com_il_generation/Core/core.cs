@@ -2146,7 +2146,7 @@ public class Core : ICore
 
 		name.Name = "ise_runtime";
 		name.Version = new Version( 5,0,35,1 );
-		Assembly.Load( name );
+		ExternalAssemblies.Add( Assembly.Load( name ));
 
 		ISE_class = Type.GetType( "ISE.Runtime.RUN_TIME, ise_runtime" );
 		assertion_tag = ISE_class.GetField( "assertion_tag" );

@@ -2,7 +2,7 @@ class ENV_INTERP
 
 inherit
 
-	EXECUTION_ENVIRONMENT
+	SHARED_EXEC_ENVIRONMENT
 
 feature
 
@@ -73,13 +73,13 @@ feature
 					end;
 					if Result.item (j) = '}' then
 						if j - 1 >= i then
-							s2 := get (Result.substring (i, j - 1));
+							s2 := Execution_environment.get (Result.substring (i, j - 1));
 						else
 							!!s2.make (0);
 						end;
 					else
 						if j >= i then
-							s2 := get (Result.substring (i, j));
+							s2 := Execution_environment.get (Result.substring (i, j));
 						else
 							!!s2.make (0);
 						end;

@@ -630,11 +630,11 @@ end;
 						rout_id := - rout_id;
 					end;
 					file.putint (rout_id);
---debug
+debug
 file.putstring (" /* `");
 file.putstring (feat.feature_name);
 file.putstring ("' */");
---end;
+end;
 				end;
 				file.putstring (",%N");
 				i := i + 1

@@ -137,6 +137,7 @@ feature
 						print_register;
 						generated_file.putstring (");");
 						generated_file.new_line;
+						call.generate_creation_call;
 					else
 						generate_register_assignment;
 						generate_creation;

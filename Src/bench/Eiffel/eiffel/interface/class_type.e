@@ -511,27 +511,17 @@ feature -- Generation
 	mark_creation_routine (r: REMOVER) is
 			-- Mark all the routines called in the creation routine
 		local
-			exp_desc: EXPANDED_DESC;
 			cl: CLASS_C;
 			creation_feature: FEATURE_I
-			pos: INTEGER
 		do
-			if associated_class.has_expanded then
-				pos := skeleton.index;
-				from
-					skeleton.go_expanded;
-				until
-					skeleton.after
-				loop
-					exp_desc ?= skeleton.item;
-					cl := exp_desc.class_type.associated_class;
-					creation_feature := cl.creation_feature;
-					if creation_feature /= Void then
-						r.record (creation_feature, cl);
-					end;
-					skeleton.forth;
+				-- Mark the creation procedure if the class
+				-- is used as expanded
+			cl := associated_class;
+			if cl.is_used_as_expanded then
+				creation_feature := cl.creation_feature;
+				if creation_feature /= Void then
+					r.record (creation_feature, cl);
 				end;
-				skeleton.go_i_th (pos);
 			end;
 		end;
 

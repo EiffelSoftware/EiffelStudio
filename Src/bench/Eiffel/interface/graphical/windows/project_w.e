@@ -52,7 +52,7 @@ feature
 			!!Result.make ("");
 		rescue
 			io.error.putstring ("Cannot open display %"");
-			display_name := env_get ("DISPLAY");
+			display_name := Execution_environment.get ("DISPLAY");
 			if display_name /= Void then
 				io.error.putstring (display_name);
 			end;

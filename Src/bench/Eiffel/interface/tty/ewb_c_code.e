@@ -22,25 +22,29 @@ feature
 	loop_execute is
 		local
 			d: DIRECTORY;
-			cmd, cp_cmd: STRING;
+			cp_cmd, current_dir: STRING;
 		do
-			!!cmd.make (50);
-			cmd.append ("cd ");
-			cmd.append (c_code_directory);
-			cmd.append ("; ");
-			cmd.append (Finish_freezing_script);
-			!!d.make (c_code_directory);
+				-- Change dir to the c_code_directory
+			current_dir := Execution_environment.current_working_directory
+			Execution_environment.change_current_working_directory (c_code_directory);
+
+				-- Check to see if Finish_freezing_script is there
+				-- copy if not
+			!!d.make (".");
 			if not d.has_entry (Finish_freezing_script) then
 				!!cp_cmd.make (50);
 				cp_cmd.append (Copy_cmd);
 				cp_cmd.append_character (' ');
 				cp_cmd.append (freeze_command_name);
-				cp_cmd.append_character (' ');
-				cp_cmd.append (c_code_directory);
-				cp_cmd.append ("; ");
-				cmd.prepend (cp_cmd);
+				cp_cmd.append (" .");
+				Execution_environment.system (cp_cmd);
 			end;
-			env_system (cmd);
+
+				-- Call Finish_freezing_script
+			Execution_environment.system (Finish_freezing_script);
+
+				-- Change dir back to original
+			Execution_environment.change_current_working_directory (current_dir);
 		end;
 
 end

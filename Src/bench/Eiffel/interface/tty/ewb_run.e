@@ -70,8 +70,8 @@ feature
 							appl_name.append (io.laststring);
 						end;
 					end;
-					env_put (Workbench_generation_path, "MELT_PATH");
-					env_system (appl_name);
+					Execution_environment.put (Workbench_generation_path, "MELT_PATH");
+					Execution_environment.system (appl_name);
 				end;
 			end
 		end;

@@ -17,7 +17,7 @@ feature
 
 	add_usage_special_cmds is
 		do
-			io.putstring ("-freeze|-finalize [-keep]|-precompile|%N%T");
+			io.putstring ("-freeze | -finalize [-keep] | -precompile |%N%T");
 		end;
 
 	add_help_special_cmds is

@@ -1,0 +1,60 @@
+system
+	help 
+
+root
+	convert(converter):"make" 
+
+default
+	assertion(all);
+	exception_trace (no); 
+	dead_code_removal (no);
+
+cluster
+	converter:			"."
+
+	library:			"/home/brendel/local/library"
+
+	-- eXML
+	exml(library):		 	"$/exml"
+	eXML_main(exml):		"$/main"
+	eXML_tree_parser(exml):		"$/main/tree_parser"
+	eXML_ise(exml): 	 	"$/compiler_specific/ise"
+
+	-- Gobo Eiffel Kernel Library
+	gobo:				"$EIFFEL4/library/gobo"
+	kl_kernel(gobo):		"$/library/kernel"
+	kl_kernel_spec(gobo):		"$/library/kernel/spec/ise"
+	all ds_structure(gobo):	"$/library/structure"
+		exclude
+			"hact"
+			"se"
+			"ve"
+		end
+
+	libraries:	"$EIFFEL4/library"
+
+	-- EiffelBase
+	all base:	"$EIFFEL4/library/base"
+		exclude
+			"table_eiffel3"
+		end
+
+	all time(library):	"$/time"
+		exclude
+			"german" "french"
+		end
+
+external
+
+    include_path:
+	"/home/brendel/local/library/exml/expat/xmlparse",
+	"/home/brendel/local/library/exml/expat/xmltok",
+	"/home/brendel/local/library/exml/compiler_specific/ise/clib";
+    object: 
+	"/home/brendel/local/library/exml/compiler_specific/ise/clib/exml_parser.o",
+	"/home/brendel/local/library/exml/expat/xmlparse/xmlparse.o",
+	"/home/brendel/local/library/exml/expat/xmlparse/hashtable.o",
+	"/home/brendel/local/library/exml/expat/xmltok/xmlrole.o",
+	"/home/brendel/local/library/exml/expat/xmltok/xmltok.o",
+	"/home/brendel/local/library/time/Clib/datetime.o";
+end

@@ -18,6 +18,8 @@ inherit
 
 	WINDOW_ATTRIBUTES
 
+	SHARED_BENCH_LICENSES
+
 creation
 	make
 
@@ -61,15 +63,19 @@ feature -- Constant strings
 
 	t_info:STRING is
 		once
-			!! Result.make(0)
-			Result.append ("Copyright (C) 1999%N%
-				%Interactive Software Engineering Inc.%N%N%
-				%ISE Building, 2nd floor%N%
-				%270 Storke Road, Goleta, CA 93117 USA%N%
-				%Telephone 805-685-1006, Fax 805-685-6869%N%
-				%Electronic mail <info@eiffel.com>%N%
-				%Web Customer Support: http://support.eiffel.com %N%
-				%Award-winning Web pages: http://eiffel.com%N")
+			if license.username /= Void and then not license.username.empty then
+				Result := "Registered version to: " + license.username + "%R%N%R%N"
+			else
+				Result := ""
+			end
+			Result.append ("Copyright (C) 1999%R%N%
+				%Interactive Software Engineering Inc.%R%N%R%N%
+				%ISE Building, 2nd floor%R%N%
+				%270 Storke Road, Goleta, CA 93117 USA%R%N%
+				%Telephone 805-685-1006, Fax 805-685-6869%R%N%
+				%Electronic mail <info@eiffel.com>%R%N%
+				%Web Customer Support: http://support.eiffel.com %R%N%
+				%Award-winning Web pages: http://eiffel.com%R%N")
 		end
 
 feature -- Attachements
@@ -120,7 +126,7 @@ feature -- Attachements
 			button.set_x ((total_width - 75) // 2)
 			button.forbid_recompute_size
 
-			set_size (total_width, logo_height * 2)
+			set_size (total_width, logo_height * 2 + 30)
 			forbid_resize
 		end
 

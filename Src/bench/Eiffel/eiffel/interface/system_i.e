@@ -40,7 +40,8 @@ inherit
 		end;
 	SHARED_DLE;
 	COMPILER_EXPORTER;
-	SHARED_ID
+	SHARED_ID;
+	SHARED_EIFFEL_PROJECT
 
 feature -- Counters
 
@@ -891,6 +892,7 @@ feature -- Recompilation
 			-- Incremetal recompilation of the system.
 		local
 			root_class_c: CLASS_C;
+			deg_output: DEGREE_OUTPUT
 		do
 				-- Recompilation initialization
 			if Compilation_modes.is_precompiling then
@@ -1027,16 +1029,14 @@ end;
 			finalize;
 
 				-- Produce the update file
+			deg_output := Degree_output;
 			if freeze then
-					-- Verbose
-				io.error.putstring ("Freezing system%N");
+				deg_output.put_freezing_message
 
 				c_comp_actions_freeze_system;
 				private_freeze := False;
-
 			else
-					-- Verbose
-				io.error.putstring ("Melting changes%N");
+				deg_output.put_melting_changes_message
 
 				execution_table.set_levels;
 				dispatch_table.set_levels;
@@ -1335,7 +1335,7 @@ end;
 			a_class: CLASS_C;
 			id_list: LINKED_LIST [CLASS_ID];
 			i: INTEGER;
-			temp: STRING
+			deg_output: DEGREE_OUTPUT
 		do
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
@@ -1353,9 +1353,12 @@ end;
 					-- tables
 				from
 					id_list := melted_set;
+					i := id_list.count;
+					deg_output := Degree_output;
+					deg_output.put_start_degree (1, i);
 					id_list.start
 				until
-					id_list.off
+					id_list.after
 				loop
 					a_class := class_of_id (id_list.item);
 						-- Verbose
@@ -1365,15 +1368,13 @@ debug ("COUNT")
 	io.error.putstring ("] ");
 	i := i - 1;
 end;
-					io.error.putstring ("Degree 1: class ");
-						temp := clone (a_class.class_name);
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					deg_output.put_degree_1 (a_class.e_class, i);
 					a_class.melt_feature_table;
 					a_class.melt_descriptor_tables;
-					id_list.forth
+					id_list.forth;
+					i := i - 1
 				end;
+				deg_output.put_end_degree;
 				melted_set.wipe_out;
 			end;
 		end;
@@ -1756,7 +1757,8 @@ feature -- Freeezing
 			id_list: LINKED_LIST [CLASS_ID];
 			i, nb: INTEGER;
 			temp: STRING;
-			descriptors: ARRAY [CLASS_ID]
+			descriptors: ARRAY [CLASS_ID];
+			deg_output: DEGREE_OUTPUT
 		do
 			freezing_occurred := True;
 			if Compilation_modes.is_extending then
@@ -1794,33 +1796,27 @@ end;
 				-- Rebuild the dispatch table and the execution tables
 			shake;
 
+			deg_output := Degree_output;
 				-- Generation of the descriptor tables
 			if First_compilation then
 				from
 					id_list := freeze_set2;
-debug ("COUNT")
-	i := id_list.count;
-end;
+					i := id_list.count;
+					deg_output.put_start_degree (-1, i);
 					id_list.start
 				until
-					id_list.off
+					id_list.after
 				loop
 					a_class := class_of_id (id_list.item);
+					deg_output.put_degree_minus_1 (a_class.e_class, i);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
 	io.error.putstring ("] ");
-	i := i - 1;
 end;
-						-- Verbose
-					io.error.putstring ("Degree -1: class ");
-						temp := clone (a_class.class_name);
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
-
 					a_class.generate_descriptor_tables;
 
+					i := i - 1;
 					id_list.forth
 				end;
 			else
@@ -1839,97 +1835,80 @@ end;
 				end;
 				from
 					id_list := melted_set;
-					id_list.start
-debug ("COUNT")
-	i := melted_set.count;
-end;
+					i := id_list.count;
+					deg_output.put_start_degree (-1, i);
+					id_list.start;
 				until
-					id_list.off
+					id_list.after
 				loop
 					a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
 	io.error.putstring ("] ");
-	i := i - 1;
 end;
 					if a_class /= Void then
-							-- Verbose
-						io.error.putstring ("Degree -1: class ");
-							temp := clone (a_class.class_name);
-							temp.to_upper;
-						io.error.putstring (temp);
-						io.error.new_line;
-
+						deg_output.put_degree_minus_1 (a_class.e_class, i);
 						a_class.generate_descriptor_tables;
 					end;
+					i := i - 1;
 					id_list.forth
 				end;
 			end;
+			deg_output.put_end_degree;
 
 			m_desc_server.clear;
 			melted_set.wipe_out;
 
 			from
 				id_list := freeze_set1;
-debug ("COUNT")
-	i := id_list.count;
-end;
-				id_list.start
+				i := id_list.count;
+				id_list.start;
+				deg_output.put_start_degree (-2, i);
 				open_log_files
 			until
-				id_list.off
+				id_list.after
 			loop
 				a_class := class_of_id (id_list.item);
+				deg_output.put_degree_minus_2 (a_class.e_class, i);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
 	io.error.putstring ("] ");
-	i := i - 1;
 end;
-					-- Verbose
-				io.error.putstring ("Degree -2: class ");
-					temp := clone (a_class.class_name);
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
-
 				a_class.pass4;
 
 				id_list.forth
+				i := i - 1;
 			end;
+			deg_output.put_end_degree;
 			close_log_files;
 
 			if not Compilation_modes.is_precompiling then
 				from
 					id_list := freeze_set2;
-debug ("COUNT")
-	i := id_list.count;
-end;
+					i := id_list.count;
+					deg_output.put_start_degree (-3, i);
 					id_list.start
 				until
-					id_list.off
+					id_list.after
 				loop
 					a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
 	io.error.putstring ("] ");
-	i := i - 1;
 end;
 					if a_class.is_modifiable then
-							-- Verbose
-						io.error.putstring ("Degree -3: class ");
-							temp := clone (a_class.class_name);
-							temp.to_upper;
-						io.error.putstring (temp);
-						io.error.new_line;
+						deg_output.put_degree_minus_3 (a_class.e_class, i);
 	
 						a_class.generate_feature_table;
 					end;
 
 					id_list.forth
+					i := i - 1;
 				end;
+				deg_output.put_end_degree;
 			end;
 
 debug ("ACTIVITY")
@@ -2053,7 +2032,8 @@ feature -- Final mode generation
 		local
 			old_remover_off: BOOLEAN;
 			old_exception_stack_managed: BOOLEAN;
-			old_inlining_on, old_array_optimization_on: BOOLEAN
+			old_inlining_on, old_array_optimization_on: BOOLEAN;
+			deg_output: DEGREE_OUTPUT
 		do
 
 			keep_assertions := keep_assert and then Lace.has_assertions;
@@ -2088,9 +2068,10 @@ feature -- Final mode generation
 
 				-- Dead code removal
 			if not remover_off then
-				-- Verbose
-				io.error.putstring ("Removing dead code%N");
-				remove_dead_code
+				deg_output := Degree_output;
+				deg_output.put_start_dead_code_removal_message;
+				remove_dead_code;
+				deg_output.put_end_dead_code_removal_message;
 			end;
 			tmp_opt_byte_server.flush;
 
@@ -2158,21 +2139,26 @@ feature -- Final mode generation
 			-- Process Degree -4.
 		local
 			a_class: CLASS_C;
-			temp: STRING
+			i: INTEGER;
+			deg_output: DEGREE_OUTPUT
 		do
-			from classes.start until classes.after loop
+			i := classes.count;
+			deg_output := Degree_output;
+			deg_output.put_start_degree (-4, i);
+			from 
+				classes.start 
+			until 
+				classes.after 
+			loop
 				a_class := classes.item_for_iteration;
-						-- Verbose
-				io.error.putstring ("Degree -4: class ");
-					temp := clone (a_class.class_name)
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
+				deg_output.put_degree_minus_4 (a_class.e_class, i);
 
 				a_class.process_polymorphism;
 				History_control.check_overload;
-				classes.forth
+				classes.forth;
+				i := i - 1
 			end;
+			deg_output.put_end_degree;
 			History_control.transfer;
 			tmp_poly_server.flush
 		end
@@ -2181,25 +2167,29 @@ feature -- Final mode generation
 			-- Process Degree -5.
 		local
 			a_class: CLASS_C;
-			temp: STRING
+			i: INTEGER;
+			deg_output: DEGREE_OUTPUT
 		do
+			i := classes.count;
+			deg_output := Degree_output;
+			deg_output.put_start_degree (-5, i);
 			!FINAL_MAKER! makefile_generator.make;
 			open_log_files;
 				-- Generation of C files associated to the classes of
 				-- the system.
-			from classes.start until classes.after loop
+			from 
+				classes.start 
+			until 
+				classes.after 
+			loop
 				a_class := classes.item_for_iteration;
-						-- Verbose
-				io.error.putstring ("Degree -5: class ");
-					temp := clone (a_class.class_name)
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
-
+				deg_output.put_degree_minus_5 (a_class.e_class, i);
 				current_class := a_class;
 				a_class.pass4;
-				classes.forth
+				classes.forth;
+				i := i - 1
 			end;
+			deg_output.put_end_degree;
 			close_log_files
 		end
 

@@ -235,10 +235,6 @@ feature -- Commands
 				end;
 				Universe.clusters.forth
 			end;
-				-- Verbose
-			io.putstring ("Precompiling ");
-			io.putint (i);
-			io.putstring (" classes%N");
 		end;
 
 	change_all_new_classes is

@@ -187,11 +187,14 @@ Integer_constant: TE_INTEGER
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					$$ := new_integer_as_from_hexa (false, token_buffer)
+					$$ := new_integer_as_from_hexa ('%U', token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					$$ := new_integer_as (False, "0")
+				end
+				if not $$.is_initialized then
+					report_integer_too_large_error (token_buffer)
 				end
 			}
 	|	TE_PLUS TE_INTEGER
@@ -202,11 +205,14 @@ Integer_constant: TE_INTEGER
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					$$ := new_integer_as_from_hexa (false, token_buffer)
+					$$ := new_integer_as_from_hexa ('+', token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					$$ := new_integer_as (False, "0")
+				end
+				if not $$.is_initialized then
+					report_integer_too_large_error (token_buffer)
 				end
 			}
 	|	TE_MINUS TE_INTEGER
@@ -217,12 +223,16 @@ Integer_constant: TE_INTEGER
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					$$ := new_integer_as_from_hexa (true, token_buffer)
+					$$ := new_integer_as_from_hexa ('-', token_buffer)
 				else
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					$$ := new_integer_as (False, "0")
+				end
+				if not $$.is_initialized then
+					token_buffer.precede ('-')
+					report_integer_too_small_error (token_buffer)
 				end
 			}
 	;

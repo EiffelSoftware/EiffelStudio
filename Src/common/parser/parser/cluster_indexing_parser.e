@@ -119,94 +119,94 @@ feature {NONE} -- Semantic actions
 					--|#line 182 "cluster_indexing.y"
 				yy_do_action_27
 			when 28 then
-					--|#line 197 "cluster_indexing.y"
+					--|#line 200 "cluster_indexing.y"
 				yy_do_action_28
 			when 29 then
-					--|#line 212 "cluster_indexing.y"
+					--|#line 218 "cluster_indexing.y"
 				yy_do_action_29
 			when 30 then
-					--|#line 230 "cluster_indexing.y"
+					--|#line 240 "cluster_indexing.y"
 				yy_do_action_30
 			when 31 then
-					--|#line 232 "cluster_indexing.y"
+					--|#line 242 "cluster_indexing.y"
 				yy_do_action_31
 			when 32 then
-					--|#line 234 "cluster_indexing.y"
+					--|#line 244 "cluster_indexing.y"
 				yy_do_action_32
 			when 33 then
-					--|#line 241 "cluster_indexing.y"
+					--|#line 251 "cluster_indexing.y"
 				yy_do_action_33
 			when 34 then
-					--|#line 245 "cluster_indexing.y"
+					--|#line 255 "cluster_indexing.y"
 				yy_do_action_34
 			when 35 then
-					--|#line 247 "cluster_indexing.y"
+					--|#line 257 "cluster_indexing.y"
 				yy_do_action_35
 			when 36 then
-					--|#line 249 "cluster_indexing.y"
+					--|#line 259 "cluster_indexing.y"
 				yy_do_action_36
 			when 37 then
-					--|#line 253 "cluster_indexing.y"
+					--|#line 263 "cluster_indexing.y"
 				yy_do_action_37
 			when 38 then
-					--|#line 255 "cluster_indexing.y"
+					--|#line 265 "cluster_indexing.y"
 				yy_do_action_38
 			when 39 then
-					--|#line 257 "cluster_indexing.y"
+					--|#line 267 "cluster_indexing.y"
 				yy_do_action_39
 			when 40 then
-					--|#line 259 "cluster_indexing.y"
+					--|#line 269 "cluster_indexing.y"
 				yy_do_action_40
 			when 41 then
-					--|#line 261 "cluster_indexing.y"
+					--|#line 271 "cluster_indexing.y"
 				yy_do_action_41
 			when 42 then
-					--|#line 263 "cluster_indexing.y"
+					--|#line 273 "cluster_indexing.y"
 				yy_do_action_42
 			when 43 then
-					--|#line 265 "cluster_indexing.y"
+					--|#line 275 "cluster_indexing.y"
 				yy_do_action_43
 			when 44 then
-					--|#line 267 "cluster_indexing.y"
+					--|#line 277 "cluster_indexing.y"
 				yy_do_action_44
 			when 45 then
-					--|#line 269 "cluster_indexing.y"
+					--|#line 279 "cluster_indexing.y"
 				yy_do_action_45
 			when 46 then
-					--|#line 271 "cluster_indexing.y"
+					--|#line 281 "cluster_indexing.y"
 				yy_do_action_46
 			when 47 then
-					--|#line 273 "cluster_indexing.y"
+					--|#line 283 "cluster_indexing.y"
 				yy_do_action_47
 			when 48 then
-					--|#line 275 "cluster_indexing.y"
+					--|#line 285 "cluster_indexing.y"
 				yy_do_action_48
 			when 49 then
-					--|#line 277 "cluster_indexing.y"
+					--|#line 287 "cluster_indexing.y"
 				yy_do_action_49
 			when 50 then
-					--|#line 279 "cluster_indexing.y"
+					--|#line 289 "cluster_indexing.y"
 				yy_do_action_50
 			when 51 then
-					--|#line 281 "cluster_indexing.y"
+					--|#line 291 "cluster_indexing.y"
 				yy_do_action_51
 			when 52 then
-					--|#line 283 "cluster_indexing.y"
+					--|#line 293 "cluster_indexing.y"
 				yy_do_action_52
 			when 53 then
-					--|#line 285 "cluster_indexing.y"
+					--|#line 295 "cluster_indexing.y"
 				yy_do_action_53
 			when 54 then
-					--|#line 287 "cluster_indexing.y"
+					--|#line 297 "cluster_indexing.y"
 				yy_do_action_54
 			when 55 then
-					--|#line 289 "cluster_indexing.y"
+					--|#line 299 "cluster_indexing.y"
 				yy_do_action_55
 			when 56 then
-					--|#line 291 "cluster_indexing.y"
+					--|#line 301 "cluster_indexing.y"
 				yy_do_action_56
 			when 57 then
-					--|#line 293 "cluster_indexing.y"
+					--|#line 303 "cluster_indexing.y"
 				yy_do_action_57
 			else
 				debug ("GEYACC")
@@ -769,11 +769,14 @@ end
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					yyval8 := new_integer_as_from_hexa (false, token_buffer)
+					yyval8 := new_integer_as_from_hexa ('%U', token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					yyval8 := new_integer_as (False, "0")
+				end
+				if not yyval8.is_initialized then
+					report_integer_too_large_error (token_buffer)
 				end
 			
 			yyval := yyval8
@@ -784,13 +787,13 @@ end
 		end
 
 	yy_do_action_28 is
-			--|#line 197 "cluster_indexing.y"
+			--|#line 200 "cluster_indexing.y"
 		local
 			yyval8: INTEGER_CONSTANT
 		do
---|#line 197 "cluster_indexing.y"
+--|#line 200 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 197")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 200")
 end
 
 
@@ -800,11 +803,14 @@ end
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					yyval8 := new_integer_as_from_hexa (false, token_buffer)
+					yyval8 := new_integer_as_from_hexa ('+', token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					yyval8 := new_integer_as (False, "0")
+				end
+				if not yyval8.is_initialized then
+					report_integer_too_large_error (token_buffer)
 				end
 			
 			yyval := yyval8
@@ -816,13 +822,13 @@ end
 		end
 
 	yy_do_action_29 is
-			--|#line 212 "cluster_indexing.y"
+			--|#line 218 "cluster_indexing.y"
 		local
 			yyval8: INTEGER_CONSTANT
 		do
---|#line 212 "cluster_indexing.y"
+--|#line 218 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 212")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 218")
 end
 
 
@@ -832,12 +838,16 @@ end
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					yyval8 := new_integer_as_from_hexa (true, token_buffer)
+					yyval8 := new_integer_as_from_hexa ('-', token_buffer)
 				else
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					yyval8 := new_integer_as (False, "0")
+				end
+				if not yyval8.is_initialized then
+					token_buffer.precede ('-')
+					report_integer_too_small_error (token_buffer)
 				end
 			
 			yyval := yyval8
@@ -849,13 +859,13 @@ end
 		end
 
 	yy_do_action_30 is
-			--|#line 230 "cluster_indexing.y"
+			--|#line 240 "cluster_indexing.y"
 		local
 			yyval9: REAL_AS
 		do
---|#line 230 "cluster_indexing.y"
+--|#line 240 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 230")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 240")
 end
 
 
@@ -868,13 +878,13 @@ end
 		end
 
 	yy_do_action_31 is
-			--|#line 232 "cluster_indexing.y"
+			--|#line 242 "cluster_indexing.y"
 		local
 			yyval9: REAL_AS
 		do
---|#line 232 "cluster_indexing.y"
+--|#line 242 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 232")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 242")
 end
 
 
@@ -888,13 +898,13 @@ end
 		end
 
 	yy_do_action_32 is
-			--|#line 234 "cluster_indexing.y"
+			--|#line 244 "cluster_indexing.y"
 		local
 			yyval9: REAL_AS
 		do
---|#line 234 "cluster_indexing.y"
+--|#line 244 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 234")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 244")
 end
 
 
@@ -910,13 +920,13 @@ end
 		end
 
 	yy_do_action_33 is
-			--|#line 241 "cluster_indexing.y"
+			--|#line 251 "cluster_indexing.y"
 		local
 			yyval3: BIT_CONST_AS
 		do
---|#line 241 "cluster_indexing.y"
+--|#line 251 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 241")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 251")
 end
 
 
@@ -929,13 +939,13 @@ end
 		end
 
 	yy_do_action_34 is
-			--|#line 245 "cluster_indexing.y"
+			--|#line 255 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 245 "cluster_indexing.y"
+--|#line 255 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 245")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 255")
 end
 
 
@@ -948,13 +958,13 @@ end
 		end
 
 	yy_do_action_35 is
-			--|#line 247 "cluster_indexing.y"
+			--|#line 257 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 247 "cluster_indexing.y"
+--|#line 257 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 247")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 257")
 end
 
 
@@ -967,13 +977,13 @@ end
 		end
 
 	yy_do_action_36 is
-			--|#line 249 "cluster_indexing.y"
+			--|#line 259 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 249 "cluster_indexing.y"
+--|#line 259 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 249")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 259")
 end
 
 
@@ -986,13 +996,13 @@ end
 		end
 
 	yy_do_action_37 is
-			--|#line 253 "cluster_indexing.y"
+			--|#line 263 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 253 "cluster_indexing.y"
+--|#line 263 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 253")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 263")
 end
 
 
@@ -1005,13 +1015,13 @@ end
 		end
 
 	yy_do_action_38 is
-			--|#line 255 "cluster_indexing.y"
+			--|#line 265 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 255 "cluster_indexing.y"
+--|#line 265 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 255")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 265")
 end
 
 
@@ -1024,13 +1034,13 @@ end
 		end
 
 	yy_do_action_39 is
-			--|#line 257 "cluster_indexing.y"
+			--|#line 267 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 257 "cluster_indexing.y"
+--|#line 267 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 257")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 267")
 end
 
 
@@ -1043,13 +1053,13 @@ end
 		end
 
 	yy_do_action_40 is
-			--|#line 259 "cluster_indexing.y"
+			--|#line 269 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 259 "cluster_indexing.y"
+--|#line 269 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 259")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 269")
 end
 
 
@@ -1062,13 +1072,13 @@ end
 		end
 
 	yy_do_action_41 is
-			--|#line 261 "cluster_indexing.y"
+			--|#line 271 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 261 "cluster_indexing.y"
+--|#line 271 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 261")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 271")
 end
 
 
@@ -1081,13 +1091,13 @@ end
 		end
 
 	yy_do_action_42 is
-			--|#line 263 "cluster_indexing.y"
+			--|#line 273 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 263 "cluster_indexing.y"
+--|#line 273 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 263")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 273")
 end
 
 
@@ -1100,13 +1110,13 @@ end
 		end
 
 	yy_do_action_43 is
-			--|#line 265 "cluster_indexing.y"
+			--|#line 275 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 265 "cluster_indexing.y"
+--|#line 275 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 265")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 275")
 end
 
 
@@ -1119,13 +1129,13 @@ end
 		end
 
 	yy_do_action_44 is
-			--|#line 267 "cluster_indexing.y"
+			--|#line 277 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 267 "cluster_indexing.y"
+--|#line 277 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 267")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 277")
 end
 
 
@@ -1138,13 +1148,13 @@ end
 		end
 
 	yy_do_action_45 is
-			--|#line 269 "cluster_indexing.y"
+			--|#line 279 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 269 "cluster_indexing.y"
+--|#line 279 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 269")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 279")
 end
 
 
@@ -1157,13 +1167,13 @@ end
 		end
 
 	yy_do_action_46 is
-			--|#line 271 "cluster_indexing.y"
+			--|#line 281 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 271 "cluster_indexing.y"
+--|#line 281 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 271")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 281")
 end
 
 
@@ -1176,13 +1186,13 @@ end
 		end
 
 	yy_do_action_47 is
-			--|#line 273 "cluster_indexing.y"
+			--|#line 283 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 273 "cluster_indexing.y"
+--|#line 283 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 273")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 283")
 end
 
 
@@ -1195,13 +1205,13 @@ end
 		end
 
 	yy_do_action_48 is
-			--|#line 275 "cluster_indexing.y"
+			--|#line 285 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 275 "cluster_indexing.y"
+--|#line 285 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 275")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 285")
 end
 
 
@@ -1214,13 +1224,13 @@ end
 		end
 
 	yy_do_action_49 is
-			--|#line 277 "cluster_indexing.y"
+			--|#line 287 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
 		do
---|#line 277 "cluster_indexing.y"
+--|#line 287 "cluster_indexing.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 277")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 287")
 end
 
 
@@ -1233,101 +1243,6 @@ end
 		end
 
 	yy_do_action_50 is
-			--|#line 279 "cluster_indexing.y"
-		local
-			yyval10: STRING_AS
-		do
---|#line 279 "cluster_indexing.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 279")
-end
-
-
-yyval10 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval10
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_51 is
-			--|#line 281 "cluster_indexing.y"
-		local
-			yyval10: STRING_AS
-		do
---|#line 281 "cluster_indexing.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 281")
-end
-
-
-yyval10 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval10
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_52 is
-			--|#line 283 "cluster_indexing.y"
-		local
-			yyval10: STRING_AS
-		do
---|#line 283 "cluster_indexing.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 283")
-end
-
-
-yyval10 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval10
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_53 is
-			--|#line 285 "cluster_indexing.y"
-		local
-			yyval10: STRING_AS
-		do
---|#line 285 "cluster_indexing.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 285")
-end
-
-
-yyval10 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval10
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_54 is
-			--|#line 287 "cluster_indexing.y"
-		local
-			yyval10: STRING_AS
-		do
---|#line 287 "cluster_indexing.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 287")
-end
-
-
-yyval10 := new_string_as (cloned_string (token_buffer)) 
-			yyval := yyval10
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
-end
-		end
-
-	yy_do_action_55 is
 			--|#line 289 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
@@ -1346,7 +1261,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_56 is
+	yy_do_action_51 is
 			--|#line 291 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
@@ -1365,7 +1280,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_57 is
+	yy_do_action_52 is
 			--|#line 293 "cluster_indexing.y"
 		local
 			yyval10: STRING_AS
@@ -1373,6 +1288,101 @@ end
 --|#line 293 "cluster_indexing.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 293")
+end
+
+
+yyval10 := new_string_as (cloned_string (token_buffer)) 
+			yyval := yyval10
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_53 is
+			--|#line 295 "cluster_indexing.y"
+		local
+			yyval10: STRING_AS
+		do
+--|#line 295 "cluster_indexing.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 295")
+end
+
+
+yyval10 := new_string_as (cloned_string (token_buffer)) 
+			yyval := yyval10
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_54 is
+			--|#line 297 "cluster_indexing.y"
+		local
+			yyval10: STRING_AS
+		do
+--|#line 297 "cluster_indexing.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 297")
+end
+
+
+yyval10 := new_string_as (cloned_string (token_buffer)) 
+			yyval := yyval10
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_55 is
+			--|#line 299 "cluster_indexing.y"
+		local
+			yyval10: STRING_AS
+		do
+--|#line 299 "cluster_indexing.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 299")
+end
+
+
+yyval10 := new_string_as (cloned_string (token_buffer)) 
+			yyval := yyval10
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_56 is
+			--|#line 301 "cluster_indexing.y"
+		local
+			yyval10: STRING_AS
+		do
+--|#line 301 "cluster_indexing.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 301")
+end
+
+
+yyval10 := new_string_as (cloned_string (token_buffer)) 
+			yyval := yyval10
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvs.put (yyval, yyvsp)
+end
+		end
+
+	yy_do_action_57 is
+			--|#line 303 "cluster_indexing.y"
+		local
+			yyval10: STRING_AS
+		do
+--|#line 303 "cluster_indexing.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 303")
 end
 
 

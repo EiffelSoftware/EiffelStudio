@@ -51,6 +51,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	strings: ARRAY [STRING] is
+			-- Strings contained in the list box
+		require
+			exists: exists
+		local
+			i: INTEGER
+		do
+			!! Result.make (0, count - 1)
+			from
+				i := Result.lower
+			until
+				i = Result.count
+			loop
+				Result.put (i_th_text (i), i)
+				i := i + 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			count_ok: Result.count = count
+		end
+
 	i_th_text (i: INTEGER): STRING is
 			-- Text at the zero-based index `i'
 		require
@@ -208,27 +229,6 @@ feature -- Status report
 		deferred
 		end
 
-	strings: ARRAY [STRING] is
-			-- Strings contained in the list box
-		require
-			exists: exists
-		local
-			i: INTEGER
-		do
-			!! Result.make (0, count - 1)
-			from
-				i := Result.lower
-			until
-				i = Result.count
-			loop
-				Result.put (i_th_text (i), i)
-				i := i + 1
-			end
-		ensure
-			result_not_void: Result /= Void
-			count_ok: Result.count = count
-		end
-
 	top_index: INTEGER is
 			-- Index of the first visible item
 		require
@@ -236,6 +236,9 @@ feature -- Status report
 		do
 			Result := cwin_send_message_result (item,
 				Lb_gettopindex, 0, 0)
+		ensure
+			result_large_enough: Result >= 0
+			result_small_enough: Result <= count
 		end
 
 	is_selected (index: INTEGER): BOOLEAN is
@@ -333,7 +336,7 @@ feature -- Measurement
 			positive_result: Result >= 0
 		end
 
-feature {NONE} -- Notifications
+feature -- Notifications
 
 	on_lbn_selchange is
 			-- The selection is about to change

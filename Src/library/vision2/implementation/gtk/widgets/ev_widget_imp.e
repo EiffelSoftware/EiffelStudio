@@ -372,13 +372,6 @@ feature -- Element change
 
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
-		local
-			a_cursor_imp: EV_PIXMAP_IMP
-			bitmap_data: ARRAY [CHARACTER]
-			i: INTEGER
-			cur_pix, a_cursor_ptr, fg, bg: POINTER
-			a_cur_data: ANY
-			tempbool: BOOLEAN
 		do
 			pointer_style := clone (a_cursor)
 			internal_set_pointer_style (a_cursor)
@@ -389,33 +382,46 @@ feature -- Element change
 		local
 			a_cursor_imp: EV_PIXMAP_IMP
 			bitmap_data: ARRAY [CHARACTER]
-			i: INTEGER
 			cur_pix, a_cursor_ptr, fg, bg: POINTER
 			a_cur_data: ANY
-			tempbool: BOOLEAN
 		do
-			fg := C.c_gdk_color_struct_allocate
-			C.set_gdk_color_struct_red (fg, 65535)
-			C.set_gdk_color_struct_green (fg, 65535)
-			C.set_gdk_color_struct_blue (fg, 65535)
-			tempbool := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, fg, False, True)
-			bg := C.c_gdk_color_struct_allocate
+			fg := fg_color
+			bg := bg_color
 			a_cursor_imp ?= a_cursor.implementation
 			check
 				a_cursor_imp_not_void: a_cursor_imp /= Void
 			end
 			bitmap_data := a_cursor_imp.bitmap_array
 			a_cur_data := bitmap_data.to_c
-			cur_pix := C.gdk_pixmap_create_from_data (NULL, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, bg, fg)
+			cur_pix := C.gdk_pixmap_create_from_data (NULL, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
 
 			--| FIXME IEK If a_cursor_imp has no mask then routine seg faults.
-			a_cursor_ptr := C.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, bg, fg, a_cursor.x_hotspot, a_cursor.y_hotspot)
-			c_free (fg)
-			c_free (bg)
+			a_cursor_ptr := C.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
 			C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), a_cursor_ptr)
 			C.gdk_cursor_destroy (a_cursor_ptr)
 		end
 		
+	bg_color: POINTER is
+			-- Default allocated background color.
+		local
+			a_success: BOOLEAN
+		once
+			Result := C.c_gdk_color_struct_allocate
+			a_success := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, Result, False, True)
+		end
+		
+	fg_color: POINTER is
+			-- Default allocate foreground color.
+		local
+			a_success: BOOLEAN
+		once
+			Result := C.c_gdk_color_struct_allocate
+			C.set_gdk_color_struct_red (Result, 65535)
+			C.set_gdk_color_struct_green (Result, 65535)
+			C.set_gdk_color_struct_blue (Result, 65535)
+			a_success := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, Result, False, True)
+		end
+	
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do

@@ -11,17 +11,16 @@ create
 
 feature	-- Initialization
 
-	make (ptr: POINTER; p: PROXY [BOOLEAN_REF]) is
+	make (ptr: POINTER; p: BOOLEAN_REF) is
 		do
 			continue := True
 			info := ptr
 			finished := p
 		end
-
 	
 feature	-- Access
 
-	finished : PROXY [BOOLEAN_REF]
+	finished: BOOLEAN_REF
 
 	continue: BOOLEAN
 
@@ -38,7 +37,7 @@ feature -- Display
 			io.read_line
 			res := clone (io.last_string)
 			if not res.is_equal ("y") then
-				finished.item.set_item (True)
+				finished.set_item (True)
 			end
 		end
 

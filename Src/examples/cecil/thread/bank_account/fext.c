@@ -8,8 +8,9 @@
 /* Post the periodic bank report.          */
 /* Synchronization is done from Eiffel.    */
 /*-----------------------------------------*/
-extern EIF_PROCEDURE post;
-extern EIF_OBJECT post_office;
+
+EIF_PROCEDURE post;	/* POST_OFFICE.post */
+EIF_OBJECT post_office;	/* POST_OFFICE object. */
 
 void c_post (EIF_POINTER ptr)
 {
@@ -32,9 +33,8 @@ void c_post (EIF_POINTER ptr)
 /* Record a transaction into bank account's history    */
 /*-----------------------------------------------------*/
 
-void record_transaction (struct bank_account *acc, EIF_INTEGER m)
+void record_transaction (struct bank_account *acc, EIF_INTEGER m, EIF_POINTER tid)
 {
-	EIF_GET_CONTEXT
 	static int top = 0;
 	struct transaction *t;
 	assert (top < LISTSZ);
@@ -42,8 +42,8 @@ void record_transaction (struct bank_account *acc, EIF_INTEGER m)
 	assert (post_office);
 
 	t = (struct transaction *) malloc (sizeof (struct transaction));
-	strcpy ((t->type) ,  (m >= 0 ? "DEPOSIT": "WITHDRAWAL"));
-	sprintf (t->who, "Thread 0x%x", eif_thr_id);
+	strcpy ((t->type) ,  (m >= 0 ? "DEPOSIT   ": "WITHDRAWAL"));
+	sprintf (t->who, "Thread 0x%016lX", tid);
 	t->amount = abs (m);
 	memcpy (acc->history + top , t, sizeof (struct transaction));
 	free (t);
@@ -59,17 +59,16 @@ void record_transaction (struct bank_account *acc, EIF_INTEGER m)
 /* Make a transaction.                       */
 /* Synchronization is done from Eiffel.      */
 /*-------------------------------------------*/
-void c_make_transaction (EIF_INTEGER m, EIF_POINTER ptr) 
+void c_make_transaction (EIF_INTEGER m, EIF_POINTER ptr, EIF_POINTER tid) 
 {
 	
 	struct bank_account *acc = (struct bank_account *) ptr;
-	EIF_GET_CONTEXT
 	assert (ptr);
 	assert (m);
 #ifdef DEBUG
-	printf ("Make transaction: amount = %d, in account 0x%x in thread 0x%x\n", m, ptr, eif_thr_id);
+	printf ("Make transaction: amount = %d, in account 0x%x in thread 0x%x\n", m, ptr, tid);
 #endif
 	acc->balance += m;
-	record_transaction (acc, m);
+	record_transaction (acc, m, tid);
 }	
 

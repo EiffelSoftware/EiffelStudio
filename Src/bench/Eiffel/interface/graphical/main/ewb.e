@@ -72,11 +72,10 @@ feature
 			end;
 		rescue
 			discard_licence;
---			if not Rescue_status.fail_on_rescue then
---				io.error.putstring ("EiffelBench: internal error%N");
---				retried := True;
---				retry
---			end;
+			if not Rescue_status.fail_on_rescue then
+				retried := True;
+				retry
+			end;
 		end;
 	
 feature {NONE}

@@ -3670,6 +3670,7 @@ feature -- Conveniences
 			include_paths := Void
 			object_file_names := Void
 			makefile_names := Void
+			dotnet_resources_names := Void
 		end
 
 	set_executable_directory (d: STRING) is

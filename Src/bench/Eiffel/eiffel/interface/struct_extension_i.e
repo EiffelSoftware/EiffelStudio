@@ -85,6 +85,7 @@ feature -- Code generation
 			-- Generate access to C structure
 		local
 			arg_types: ARRAY [STRING]
+			special_access: BOOLEAN
 		do
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
@@ -92,12 +93,20 @@ feature -- Code generation
 
 			arg_types := argument_types
 			if has_return_type then
+				if external_name.item (1) = '&' and then external_name.count > 1 then
+					buffer.putchar ('&')
+					special_access := True
+				end
 				buffer.putstring ("(((")
 				buffer.putstring (arg_types.item (1))
 				buffer.putstring (" *)")
 				parameters.first.print_register
 				buffer.putstring (")->")
-				buffer.putstring (external_name)
+				if not special_access then
+					buffer.putstring (external_name)
+				else
+					buffer.putstring (external_name.substring (2, external_name.count))
+				end
 			else
 				parameters.start
 				buffer.putstring ("(((")

@@ -355,6 +355,9 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
+	last_bitmap_index: INTEGER
+			-- Last bitmap index added by `add_bitmaps'.
+
 feature -- Element change
 
 	insert_button (index: INTEGER; button: WEL_TOOL_BAR_BUTTON) is
@@ -401,8 +404,8 @@ feature -- Element change
 			bitmap_not_void: bitmap /= Void
 			positive_bitmap_count: bitmap_count > 0
 		do
-			cwin_send_message (item, Tb_addbitmap, bitmap_count,
-				bitmap.to_integer)
+			last_bitmap_index := cwin_send_message_result (item,
+				Tb_addbitmap, bitmap_count, bitmap.to_integer)
 		end
 
 feature -- Removal

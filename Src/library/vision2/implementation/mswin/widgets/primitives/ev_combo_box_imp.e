@@ -126,7 +126,6 @@ inherit
 			on_sys_key_up,
 			default_process_message
 		redefine
-			on_cben_endedit_item,
 			on_cbn_editchange,
 			on_cbn_selchange,
 			on_cbn_dropdown,
@@ -822,15 +821,6 @@ feature {NONE} -- WEL Implementation
 
 	last_edit_change: STRING
 			-- The string resulting from the last edit change.
-
-	on_cben_endedit_item (info: WEL_NM_COMBO_BOX_EX_ENDEDIT) is
-			-- The user has concluded an operation within the edit box
-			-- or has selected an item from the control's drop-down list.
-		do
-			if info.why = Cbenf_return then
-				set_caret_position (1)
-			end
-		end
 
 	on_cbn_selchange is
 			-- The selection is about to change.

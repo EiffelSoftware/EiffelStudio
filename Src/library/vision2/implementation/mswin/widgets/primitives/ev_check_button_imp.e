@@ -14,10 +14,13 @@ inherit
 		end
 		
 	EV_TOGGLE_BUTTON_IMP
+		undefine
+			default_alignment
 		redefine
 			default_style,
 			interface,
-			make
+			make,
+			internal_default_height
 		end
 
 create
@@ -31,9 +34,17 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			extra_width := 20
+			text_alignment := default_alignment
 		end
 
 feature {NONE} -- Implementation
+
+	internal_default_height: INTEGER is
+			-- The default minimum height of `Current' with no text.
+			-- This is used in set_default_size.
+		do
+			Result := 13
+		end
 
 	default_style: INTEGER is
 			-- Not visible or child at creation

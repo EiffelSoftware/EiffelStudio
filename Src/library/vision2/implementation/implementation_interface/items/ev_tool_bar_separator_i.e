@@ -1,7 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision tool-bar separator, implementation interface."
+		"Eiffel Vision tool bar separator. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,6 +47,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/12 17:55:10  brendel
+--| Description.
+--|
 --| Revision 1.11  2000/04/10 20:00:58  brendel
 --| Fixed precursor construct.
 --|

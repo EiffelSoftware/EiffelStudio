@@ -126,17 +126,19 @@ feature {EIFNET_DEBUGGER} -- Implementation
 	token_Exception__className: INTEGER is
 			-- Attribute token of System.Exception::_className
 		once
---			if il_environment.version.is_equal (Il_environment.v1_2) then		
---				Result := token_Exception__className_v1_2		
---			else
+			if il_environment.version.is_equal (Il_environment.v1_2) then		
+				Result := token_Exception__className_v1_2		
+			else
 				Result := token_Exception__className_v1_1	
---			end			
+			end			
 		end	
 
 	token_Exception_ToString: INTEGER is
-			-- Attribute token of System.Exception::_message
+			-- Attribute token of System.Exception::ToString
 		once
-			if il_environment.version.is_equal (Il_environment.v1_1) then		
+			if il_environment.version.is_equal (Il_environment.v1_2) then		
+				Result := token_Exception_ToString_v1_2
+			elseif il_environment.version.is_equal (Il_environment.v1_1) then		
 				Result := token_Exception_ToString_v1_1
 			elseif il_environment.version.is_equal (Il_environment.v1_0) then			
 				Result := token_Exception_ToString_v1_0
@@ -162,9 +164,15 @@ feature {NONE} -- Constants
 			
 	token_exception_tostring_v1_1: INTEGER is 0x06000192			
 			--| v1.1 => System.Exception::_message: string :: 0x06000192 |--	
+
+	token_exception_tostring_v1_2: INTEGER is 0x06000212			
+			--| v1.2 => System.Exception::_message: string :: 0x06000212 |--	
 			
 	token_Exception__className_v1_1: INTEGER is 0x0400001D
 			--| v1.0/1.1 => System.Exception::_className: string :: 0x0400001D |--	
+
+	token_Exception__className_v1_2: INTEGER is 0x04000060
+			--| v1.2 => System.Exception::_className: string :: 0x04000060 |--	
 
 			
 end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER

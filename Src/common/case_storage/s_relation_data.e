@@ -2,13 +2,10 @@ class S_RELATION_DATA
 
 feature
 
-	--break_points: FIXED_LIST [S_HANDLE_DATA];
-			-- List of break points
-
-	f_rom: S_LINKABLE_KEY;
+	f_rom: INTEGER;
 			-- Partition from which the link originates.
 
-	t_o: S_LINKABLE_KEY;
+	t_o: INTEGER;
 			-- Partition to which the link destinates.
 
 	is_left_position: BOOLEAN;
@@ -21,17 +18,6 @@ feature
 			-- Label of relation
 
 feature -- Setting values
-
-	--set_break_points (l: like break_points) is
-			-- Set break_points to `l'.
-		--require
-			--valid_l: l /= Void;
-			--l_not_empty: not l.empty
-		--do
-			--break_points := l
-		--ensure
-			--break_set: break_points = l
-		--end;
 
 	set_class_links (f: like f_rom; t: like t_o) is
 			-- Set f_rom to `f' and set t_o to `t'.

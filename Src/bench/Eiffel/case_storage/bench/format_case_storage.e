@@ -8,7 +8,9 @@ inherit
 	WINDOWS;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS
-	SPECIAL_AST
+	SPECIAL_AST;
+	S_CASE_INFO;
+	STORABLE
 
 feature
 
@@ -23,6 +25,7 @@ feature
 		do
 			if not rescued then
 				if workbench.successfull then
+					Error_handler.wipe_out;
 					Create_case_storage_directory;
 					file_name := Case_storage_path;
 					!! file.make (file_name);
@@ -35,8 +38,10 @@ feature
 						in_bench_mode_bool.set_value (False);
 						in_assertion_bool.set_value (False);
 						order_same_as_text_bool.set_value (True);
+						initialize_view_ids;
 						process_clusters;
 						convert_to_case_format;
+						remove_old_classes;
 					end
 				else
 					error_window.put_string ("Project is in an unstable state.%N");
@@ -49,7 +54,6 @@ feature
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
-				Error_handler.trace;
 				rescued := True;
 				retry
 			else
@@ -58,6 +62,9 @@ feature
 		end
 
 feature {NONE}
+
+	view_id_info: VIEW_ID_INFO;
+			-- View id information
 
 	convert_to_case_format is	
 			-- Convert all the Eiffelbench structures into
@@ -68,24 +75,22 @@ feature {NONE}
 			root_cluster: S_CLUSTER_DATA;
 			system_data: S_SYSTEM_DATA;
 		do
-			if not rescued then
-				root_cluster := cluster_info.storage_info;
-				!! system_data;
-				system_data.set_root_cluster (root_cluster);
-				system_data.set_was_generated_from_bench;
-				system_data.set_grid_details (False, False, 20);
-				store_project_to_disk (system_data);
-			else
-				rescued := False
-			end
+			root_cluster := cluster_info.storage_info (view_id_info);
+			!! system_data;
+			system_data.set_root_cluster (root_cluster);
+			system_data.set_was_generated_from_bench;
+			system_data.set_class_view_number (view_id_info.class_view_number);
+			system_data.set_class_id_number (System.class_counter.value);
+			system_data.set_cluster_view_number (view_id_info.cluster_view_number);
+			store_project_to_disk (system_data);
 		rescue
 			if Rescue_status.is_unexpected_exception then
 				if cluster_info /= Void and then
 					cluster_info.had_io_problems 
 				then
+					Rescue_status.set_is_error_exception (True);
 					error_window.put_string ("Cannot store EiffelCase format to disk.%N");
 				end
-				rescued := True
 			end
 		end;
 
@@ -94,23 +99,62 @@ feature {NONE}
 		local
 			path: STRING
 		do
-			if not rescued then
-				io.error.putstring ("Storing information to disk ...%N");
-				path := clone (Case_storage_path);
-				path.extend (Directory_separator);
-				system_data.store_to_disk (path);
-				error_window.put_string ("Storing EiffelCase format finished%N")
-			else
-				error_window.put_string ("Cannot store EiffelCase format to disk.%N");
-				rescued := False	
-			end
+			io.error.putstring ("Storing information to disk ...%N");
+			path := clone (Case_storage_path);
+			path.extend (Directory_separator);
+			system_data.store_to_disk (path);
+			error_window.put_string ("Storing EiffelCase format finished%N")
 		rescue
-			if Rescue_status.is_unexpected_exception then
-				rescued := True;
-				retry
-			end
+			Rescue_status.set_is_error_exception (True);
+			error_window.put_string ("Error: Cannot store EiffelCase format to disk.%N");
 		end;
 
+	remove_old_classes is
+			-- Remove class information from disk which have been
+			-- removed since last reverse engineering.
+		do
+			view_id_info.remove_old_classes;
+		rescue
+			Rescue_status.set_is_error_exception (True);
+			error_window.put_string ("Error: Could not remove old classes from disk.%N");
+		end;
+
+	initialize_view_ids is
+			-- Initialize view ids for classes. Retrieve
+			-- the existing system and setup a table hashed on
+			-- name with the corresponding view_id.
+		local
+			s_system_data: S_SYSTEM_DATA;
+			path: STRING;
+			old_system_file: RAW_FILE
+		do
+			if not rescued then
+				path := clone (Case_storage_path);
+				path.extend (Directory_separator);
+				path.append (System_name);
+				!! old_system_file.make (path);
+				if old_system_file.exists then
+					if old_system_file.is_readable then
+						old_system_file.open_read;
+						s_system_data ?= retrieved (old_system_file);
+						check
+							valid_s_system_data: s_system_data /= Void
+						end;
+						!! view_id_info.make (s_system_data.class_view_number,
+											s_system_data.cluster_view_number);
+						view_id_info.initialize (s_system_data.root_cluster);
+						old_system_file.close;
+					else
+						Rescue_status.set_is_error_exception (True);
+						raise ("Case error")
+					end
+				end
+				if view_id_info = Void then
+					!! view_id_info.make (0, 0)
+				end
+			end
+		end;
+ 
 	process_clusters is
 			-- Process the EiffelBench clusters into 
 			-- appropriate structures EiffelCase storage.
@@ -119,7 +163,7 @@ feature {NONE}
 			cluster_names_list: LINKED_LIST [STRING];
 			other_cluster_info: like cluster_info;
 			parent_cluster_info: like cluster_info;
-			system_name: STRING;
+			s_name: STRING;
 			file_name: STRING
 		do
 			io.error.putstring ("Processing clusters%N");
@@ -127,12 +171,12 @@ feature {NONE}
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
 				-- in cluster_i is ID_SD.
-			!! system_name.make (0);
-			system_name.append (System.system_name);
-			system_name.to_upper;
-			cluster_info.set_name (system_name);
-			!! file_name.make (system_name.count);
-			file_name.append (system_name);
+			!! s_name.make (0);
+			s_name.append (System.system_name);
+			s_name.to_upper;
+			cluster_info.set_name (s_name);
+			!! file_name.make (s_name.count);
+			file_name.append (s_name);
 			file_name.to_lower;
 			cluster_info.set_file_name (file_name);
 			!! list.make;

@@ -4,7 +4,7 @@ feature {NONE}
 
 	Casegen: STRING is "CASEGEN";
 
-	Case_storage: STRING is "BStorage";
+	Case_storage: STRING is "Storage";
 
 	Class_suffix: STRING is "C";
 

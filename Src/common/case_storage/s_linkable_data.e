@@ -2,8 +2,8 @@ class S_LINKABLE_DATA
 
 feature
 
-	id: INTEGER;
-			-- Id of Current
+	view_id: INTEGER;
+			-- View Id of Current
 
 	name: STRING;
 			-- Current's name
@@ -15,15 +15,19 @@ feature
 	description: S_FREE_TEXT_DATA;
 			-- Description of Current
  
-	chart: S_CHART;
-			-- Informal description of Current
-
-	client_links: LIST [S_CLI_SUP_DATA];
+	client_links: ARRAYED_LIST [S_CLI_SUP_DATA];
 			-- List of supplier relations for which current
 			-- is the client
 
 	heir_links: FIXED_LIST [S_RELATION_DATA];
 			-- List of inheritance relations for which current is the heir
+
+feature
+
+	chart: S_CHART is
+			-- Informal chart of Current
+		do
+		end;
 
 feature -- Setting values
 
@@ -37,14 +41,14 @@ feature -- Setting values
 			name_set: name = s
 		end;
 
-	set_id (i: INTEGER) is
+	set_view_id (i: INTEGER) is
 			-- Set id to `i'.
 		require
 			valid_i: i > 0
 		do
-			id := i
+			view_id := i
 		ensure
-			id_set: id = i
+			view_id_set: view_id = i
 		end;
 
 	set_file_name (s: STRING) is
@@ -74,7 +78,6 @@ feature -- Setting values
 		require
 			valid_chart: ch /= Void
 		do
-			chart := ch
 		ensure
 			name_set: chart = ch
 		end;

@@ -3373,22 +3373,6 @@ feature -- Precompilation
 			end;
 		end;
 
-feature -- Case Storage
-
-	case_class_key: S_CLASS_KEY is
-			-- Class key used for case storage
-		local
-			temp, temp1: STRING
-		do
-			!! temp.make (0);
-			!! temp1.make (0);
-			temp.append (class_name);
-			temp1.append (cluster.cluster_name);
-			temp.to_upper;
-			temp1.to_upper;
-			!! Result.make (temp, temp1)
-		end;
-
 invariant
 
 	lace_class_exists: lace_class /= Void

@@ -38,8 +38,10 @@ feature {CASE_CLUSTER_INFO}
 			flat_struct.fill (True);
 			class_ast := flat_struct.ast;
 			Inst_context.set_cluster (classc.cluster);
-			-- Record index, and name
+				-- Record index, and name
 			s_class_data := class_ast.header_storage_info;
+				-- Record id
+			s_class_data.set_id (classc.id);
 				-- Record features, invariant
 			flat_struct.store_case_information (s_class_data);
 				-- Record base file name
@@ -90,9 +92,9 @@ feature {NONE} -- Recording information for eiffelcase
 	record_suppliers is
 		local
 			suppliers: SUPPLIER_LIST;
-			c_l: LINKED_LIST [S_CLI_SUP_DATA];
+			c_l: ARRAYED_LIST [S_CLI_SUP_DATA];
 			cli_sup_data: S_CLI_SUP_DATA;
-			sup_class_key, class_key: S_CLASS_KEY;
+			sup_class_id, class_id: INTEGER;
 			supplier: CLASS_C;
 			label: STRING;
 			gen_der_list: LINKED_LIST [GEN_TYPE_I];
@@ -101,9 +103,9 @@ feature {NONE} -- Recording information for eiffelcase
 			result_type: TYPE_A;
 			feat_arg: FEAT_ARG
 		do
-			class_key := classc.case_class_key;
+			class_id := classc.id;
 			suppliers := classc.suppliers;
-			!! c_l.make;
+			!! c_l.make (1);
 			if not suppliers.empty and then suppliers.count > 1 then
 					-- count > 1 is required since the class itself is always
 					-- included
@@ -118,8 +120,8 @@ feature {NONE} -- Recording information for eiffelcase
 							-- each supplier is the result of
 							-- implementation.
 						cli_sup_data.set_implementation (True);
-						cli_sup_data.set_class_links (classc.case_class_key,
-								suppliers.item.supplier.case_class_key);
+						cli_sup_data.set_class_links (classc.id,
+								suppliers.item.supplier.id);
 						c_l.put_right (cli_sup_data);
 						c_l.forth;
 					end;
@@ -138,12 +140,12 @@ feature {NONE} -- Recording information for eiffelcase
 						result_type ?= feature_i.type;
 						supplier := result_type.associated_class;
 						if supplier /= Void then
-							sup_class_key :=  supplier.case_class_key;
+							sup_class_id :=  supplier.id;
 							from
 								c_l.start
 							until
 								c_l.after or else 
-								c_l.item.supplier.is_equal (sup_class_key)
+								c_l.item.supplier = sup_class_id
 							loop
 								c_l.forth
 							end;
@@ -178,12 +180,12 @@ end
 								result_type ?= feat_arg.item;
 								supplier := result_type.associated_class;
 								if supplier /= Void then
-									sup_class_key := supplier.case_class_key;
+									sup_class_id := supplier.id;
 									from
 										c_l.start
 									until
 										c_l.after or else 
-										c_l.item.supplier.is_equal (sup_class_key)
+										c_l.item.supplier.is_equal (class_id)
 									loop
 										c_l.forth
 									end;
@@ -213,21 +215,21 @@ end
 					gen_der_list.after
 				loop
 					supplier := gen_der_list.item.base_class;
-					sup_class_key := supplier.case_class_key;
+					sup_class_id := supplier.id;
 					from
 						c_l.start
 					until
 						c_l.after or else 
-						c_l.item.supplier.is_equal (sup_class_key)
+						c_l.item.supplier = sup_class_id
 					loop
 						c_l.forth
 					end;
 					if c_l.after then
 							-- Not found
 						!! cli_sup_data;
-						cli_sup_data.set_class_links (class_key,
-							sup_class_key);
-						c_l.put_front (cli_sup_data);
+						cli_sup_data.set_class_links (class_id,
+							sup_class_id);
+						c_l.extend (cli_sup_data);
 					end;
 					if classc = supplier then
 						cli_sup_data.set_is_reflexive
@@ -262,8 +264,8 @@ end
 					parents.after
 				loop
 					!! inherit_data;
-					inherit_data.set_class_links (classc.case_class_key,
-							parents.item.associated_class.case_class_key);
+					inherit_data.set_class_links (classc.id,
+							parents.item.associated_class.id);
 					p_l.replace (inherit_data);
 					p_l.forth;
 					parents.forth
@@ -276,7 +278,7 @@ end
 			-- Record renamings for class `classc' into `s_class_data'.
 		local
 			renaming: EXTEND_TABLE [STRING, STRING];
-			features: LINKED_LIST [S_FEATURE_DATA];
+			features: ARRAYED_LIST [S_FEATURE_DATA];
 			feature_data: S_FEATURE_DATA
 			parent: PARENT_C;
 			found: BOOLEAN;
@@ -295,7 +297,7 @@ end
 				-- However, the user may modify the class which makes the 
 				-- analyzed AST structure not match the compiler structures.
 			if features = Void then
-				!! features.make
+				!! features.make (5);
 				s_class_data.set_features (features);
 			end;
 			from
@@ -353,14 +355,14 @@ end;
 								-- This means that the feature is not redefined.
 							!! temp.make (0);
 							temp.append (renaming.item_for_iteration);
-							!! feature_data.make (temp, classc.case_class_key);
+							!! feature_data.make (temp, classc.id);
 							feature_i := classc.feature_table.item 
 														(renaming.key_for_iteration);
 							if feature_i /= Void then
 								feature_ast := Body_server.item (feature_i.body_id);
 								feature_ast.store_information (classc, feature_data);
 								feature_i.store_case_information (feature_data);
-								features.put_front (feature_data);
+								features.put_front (feature_data); 
 							end
 						end;
 						feature_data.set_rename_clause (rename_data);
@@ -376,7 +378,7 @@ end;
 		local
 			class_info: CLASS_INFO;
 			redefining: SEARCH_TABLE [STRING];
-			features: LINKED_LIST [S_FEATURE_DATA];
+			features: ARRAYED_LIST [S_FEATURE_DATA];
 			feature_data: S_FEATURE_DATA
 			parent: PARENT_C;
 			found: BOOLEAN;

@@ -1,0 +1,71 @@
+#!/bin/sh
+
+echo "Check the status"
+if [ ! -d $DOCUMENT_DIR ]; then
+	echo DOCUMENT_DIR is not defined.  Cannot continue.;
+fi
+
+echo --------------------------------------------------------
+echo Checkout up to date version of XML documentation files |
+echo --------------------------------------------------------
+
+cd $DOCUMENT_DIR
+if [ -d xmldoc ]; then rm -rf xmldoc; fi
+cvs co -d xmldoc Delivery/xmldoc 
+
+echo ---------------------------------------------
+echo Checkout and compile the Documentation tool |
+echo ---------------------------------------------
+
+cd $EIFFEL_SRC/tools
+cvs co -d doc_builder Src/tools/doc_builder
+cd $EIFFEL_SRC/tools/doc_builder
+ec -finalize -ace docbuilder.unix.ace -c_compile
+if [ -e doc_builder ]; then
+	echo Couldnt generate doc_builder.exe
+fi
+
+echo ---------------------------------------------------------------
+echo Compile all required libraries and generate XML documentation |
+echo ---------------------------------------------------------------
+
+cd $EIFFEL_SRC/tools/doc_builder/resources/xml
+ec -ace all_libs.ace
+ec -flatshort -filter xml -all -project all_libs.epr
+
+echo ------------------------------------------------------
+echo Copy XML docs into appropriate written docs location |
+echo ------------------------------------------------------
+
+cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
+rm -rf *.html
+rm -rf *_links.xml
+rm -rf *_short.xml
+cd vision2/implementation
+rm -rf mswin
+sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
+cp new_index.xml index.xml
+
+cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
+
+mv base $DOCUMENT_DIR/xmldoc/libraries/base/reference
+mv wel $DOCUMENT_DIR/xmldoc/libraries/wel/reference
+mv vision2 $DOCUMENT_DIR/xmldoc/libraries/vision2/reference
+mv com $DOCUMENT_DIR/xmldoc/libraries/com/reference
+mv eiffel2java $DOCUMENT_DIR/xmldoc/libraries/eiffel2java/reference
+mv lex $DOCUMENT_DIR/xmldoc/libraries/lex/reference
+mv parse $DOCUMENT_DIR/xmldoc/libraries/parse/reference
+mv net $DOCUMENT_DIR/xmldoc/libraries/net/reference
+mv thread $DOCUMENT_DIR/xmldoc/libraries/thread/reference
+mv time $DOCUMENT_DIR/xmldoc/libraries/time/reference
+mv web $DOCUMENT_DIR/xmldoc/libraries/web/reference
+mv store $DOCUMENT_DIR/xmldoc/libraries/store/reference
+
+
+echo ---------------------------------------------------------------------------------------------
+echo Run the documentation tool to generate the documentation for EiffelStudio as web based help |
+echo ---------------------------------------------------------------------------------------------
+
+cd $EIFFEL_SRC/tools/doc_builder/EIFGEN/F_code
+./doc_builder -gen /xml2help -o /studio -t /web_simple -nohtml $DOCUMENT_DIR/xmldoc/documentation.dpr
+

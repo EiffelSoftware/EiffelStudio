@@ -48,13 +48,6 @@ feature {EV_WIDGET} -- Initialization
 			-- Does the widget expand its cell to take the
 			-- size the parent would like to give to it.
 
---	resize_type: INTEGER
---			-- How the widget resize itself in the cell
---			-- 0 : no resizing, the widget move
---			-- 1 : only the width changes
---			-- 2 : only the height changes
---			-- 3 : both width and height change
-
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
 		require
@@ -118,9 +111,8 @@ feature -- Status Report
 			-- want to resize the widget
 		require
 			exists: not destroyed
-			managed: managed
+--			managed: managed
 		deferred
---			Result := (resize_type = 1) or (resize_type = 3)	
 		end
 
 	vertical_resizable: BOOLEAN is
@@ -128,9 +120,8 @@ feature -- Status Report
 			-- want to resize the widget
 		require
 			exists: not destroyed
-			managed: managed
+--			managed: managed
 		deferred
---			Result := (resize_type = 2) or (resize_type = 3)	
 		end
 
 feature -- Status setting
@@ -219,7 +210,7 @@ feature -- Status setting
 			-- Make `flag' the new horizontal_resizable status.
 		require
 			exists: not destroyed
-			managed: managed
+--			managed: managed
 		deferred
 		ensure
 			horizontal_resize_set: horizontal_resizable = flag
@@ -229,7 +220,7 @@ feature -- Status setting
 			-- Make `flag' the new vertical_resizable status.
 		require
 			exists: not destroyed
-			managed: managed
+--			managed: managed
 		deferred
 		ensure
 			vertical_resize_set: vertical_resizable = flag
@@ -333,7 +324,7 @@ feature -- Resizing
 			-- and `new_height' the new `height'.
 		require
 			exists: not destroyed
-			Unmanaged: not managed
+--			Unmanaged: not managed
 			Positive_width: new_width >= 0
 			Positive_height_: new_height >= 0
 		deferred
@@ -345,7 +336,7 @@ feature -- Resizing
 			-- Make `value' the new width.
 		require
 			exists: not destroyed
-			Unmanaged: not managed
+--			Unmanaged: not managed
 			Positive_width: value >= 0
 		deferred
 		ensure
@@ -356,7 +347,7 @@ feature -- Resizing
 			-- Make `value' the new.
 		require
 			exists: not destroyed
-			Unmanaged: not managed
+--			Unmanaged: not managed
 			Positive_height: value >= 0
 		deferred
 		ensure					

@@ -21,7 +21,7 @@
 			<HEAD>Browsing tools</HEAD>
 			<TEXT DESCRIPTION="Maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
 			<TEXT DESCRIPTION="Allow class name completion in the address combo boxes">class_completion<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time" IMMEDIATE_EFFECT="no">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatically expand the feature tree">expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display editor on left?" IMMEDIATE_EFFECT="no">editor_left_side<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Maximized editor tools full screen?" IMMEDIATE_EFFECT="yes">editor_maximized<BOOLEAN>True</BOOLEAN></TEXT>

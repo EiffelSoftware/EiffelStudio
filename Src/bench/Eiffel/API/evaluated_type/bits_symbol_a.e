@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER}
 			constant: CONSTANT_I
 			bits_value: INTEGER
 			error: BOOLEAN
-			int_value: INT_VALUE_I
+			int_value: INTEGER_CONSTANT
 		do
 			origin_table := feat_table.origin_table
 			if not (System.current_class.class_id = class_id) then
@@ -98,7 +98,7 @@ feature {COMPILER_EXPORTER}
 					int_value ?= constant.value
 					error := int_value = Void
 					if not error then
-						bits_value := int_value.int_val
+						bits_value := int_value.value
 						error := bits_value <= 0
 					end
 				end

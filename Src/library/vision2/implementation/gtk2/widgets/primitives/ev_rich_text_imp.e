@@ -19,7 +19,8 @@ inherit
 	EV_TEXT_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			on_key_event
 		end
 
 create
@@ -34,6 +35,9 @@ feature {NONE} -- Initialization
 			tab_positions.internal_add_actions.extend (agent update_tab_positions)
 			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
+			pango_tab_array := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_new (1, True)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_tabs (text_view, pango_tab_array)
+			set_tab_width (96 // 2)
 			Precursor {EV_TEXT_IMP}
 		end
 
@@ -626,16 +630,26 @@ feature -- Status setting
 		
 	set_tab_width (a_width: INTEGER) is
 			-- Assign `a_width' to `tab_width'.
+		local
+			a_tab_array: POINTER
 		do
+			tab_width := a_width
+			update_tab_positions (1)
 		end
 
-	tab_width: INTEGER is
+	pango_tab_array: POINTER
+		-- Array of pango tabs used for `Current'
+
+	tab_width: INTEGER
 			-- Default width in pixels of each tab in `Current'.
-		do
-			Result := 40
-		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Used for key event actions sequences.
+		do
+			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
+		end
 
 	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
 			-- Called when a text mark within `text_buffer' has been set.
@@ -647,7 +661,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				a_selection_start := selection_start_internal
 				a_selection_end := selection_end_internal
 				if selection_change_actions_internal /= Void and then (previous_selection_start /= a_selection_start or else previous_selection_end /= a_selection_end) then
-				--	selection_change_actions_internal.call (Void)
+					selection_change_actions_internal.call (Void)
 				end
 				previous_selection_start := a_selection_start
 				previous_selection_end := a_selection_end
@@ -845,7 +859,23 @@ feature {NONE} -- Implementation
 
 	update_tab_positions (value: INTEGER) is
 			-- Update tab widths based on contents of `tab_positions'.
+		local
+			i: INTEGER
+			current_tab_position: INTEGER
 		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_resize (pango_tab_array, tab_positions.count + 1)
+			from
+				i := 1
+			until
+				i > tab_positions.count
+			loop
+				current_tab_position := current_tab_position + tab_positions.i_th (i)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position)
+				i := i + 1
+			end
+				-- Set the default tab width
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position + tab_width)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 		end
 
 	dispose_append_buffer is

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelCOM Wizard Guided Tour Introduction</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard, Guided Tour">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard, Guided Tour, Index">
+	</HEAD>
+
+	<BODY>
+
+<h1>
+<A NAME="pgfId=375637">
+ </A>
+<A NAME="29789">
+ </A>
+Creating a new component from an Eiffel project</h1>
+
+
+<p>The second tutorial describes creating a COM component from
+an Eiffel system. The tutorial example <i>String </i>is almost identical to <i>StringManipulator</i>
+of the previous tutorial. In the <i>StringManipulator</i> example the wizard
+starts from IDL file and builds an Eiffel System; in contrast, the <i>String</i>
+example takes an Eiffel system and generates an IDL file and the required
+plumbing code to make the Eiffel project accessible to COM runtime. You do not
+need to modify any Eiffel or C code.</p>
+
+
+<h2>
+<A NAME="pgfId=375831">
+ </A>
+ Step by step instructions</h2>
+
+
+
+
+
+<ul>
+<li>Create a new Eiffel project in the directory <i>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject</i>
+  where $ISE_EIFFEL represents the path to your EIFFEL50 directory.
+<li>Select Ace file from the same directory and compile.
+<li>Launch the EiffelCOM Wizard (from the Start menu, open Programs then
+  EiffelXX and click EiffelCOM Wizard)
+<li>Choose <i>Create a new project from an existing Eiffel project</i>.
+<li>Click <i>Next</i>
+<li>Click <i>Next</i> again
+<li>Click the top Browse button and open the file <i>$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\string.epr</i>
+  where $ISE_EIFFEL represents the path to your EIFFEL50 directory.
+<li>Click the second Browse button and open the file <i>$ISE_EIFFEL\examples\com\wizard\e2idl\
+  eproject\Ace.ace</i> where $ISE_EIFFEL represents the path to your EIFFEL50
+  directory.
+<li>In the third entry field enter <i>string_manipulator</i>.
+<li>In the forth entry field enter <i>root_cluster</i>.
+<li>Click <i>Next</i>.
+<li>Click the Browse button and select the directory where you want to create
+  the project (the destination folder). Choose <i>$ISE_EIFFEL\examples\com\wizard\e2idl\generated</i>
+  where $ISE_EIFFEL represents the path to your EIFFEL50 directory. If you work on
+  a Windows 9x machine, please choose a directory with a shorter path, for
+  example c:\e2idl.
+<li>Click <i>Next</i>
+<li>Choose Automation
+<li>Click <i>Next</i>
+<li>Click <i>Finish</i>
+<li>Wait until the wizard is done.</li>
+</ul>
+
+
+
+
+<h2>
+<A NAME="pgfId=375832">
+ </A>
+ First look at the generated code</h2>
+
+
+
+
+
+The only generated Eiffel class is <span class="eclass">COM_&lt;Name_of_system&gt;_REGISTRATION</span>.
+    You do not need to modify or implement any classes. The wizard produces a
+    ready-to-use component.
+
+
+
+
+
+<p CLASS="tip">
+ Tip: 
+ In most Eiffel systems functionality is spread out throughout the system. No
+  single class exposes the full functionality of the system and can serve as a
+  Facade to the outside world. Running the wizard on any such class would not be
+  practical. Before starting the wizard write an Eiffel class that acts as a
+  Facade and forwards client calls to the appropriate sybsystems. Enter the
+  Facade class name into &quot;Enter Eiffel class name&quot; field of the third
+  dialog (Eiffel Project File Dialog). The wizard generates an IDL file from
+  this class.
+
+
+
+        <p class="seealso">See Also: <a href="01_new_from_com.html">Creating a new COM component</a>, 
+        <a href="03_accessing.html">Accessing a COM component.</a></p>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

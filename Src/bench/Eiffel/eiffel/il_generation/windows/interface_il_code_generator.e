@@ -53,7 +53,6 @@ feature -- IL Generation
 			-- Generate IL code for feature in `class_c'.
 		local
 			class_interface: CLASS_INTERFACE
-			dispose_feat: FEATURE_I
 		do
 				-- Reset data
 			rout_ids_tbl.wipe_out

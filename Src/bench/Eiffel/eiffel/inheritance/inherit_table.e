@@ -1420,7 +1420,6 @@ feature {NONE} -- Implementation
 	compute_main_parent is
 			-- Set `number_of_features' and `main_parent' of `a_class'
 		local
-			l_feat_tbl: FEATURE_TABLE
 			l_parent, l_main_parent: CLASS_C
 			l_number_of_features, l_max: INTEGER
 		do

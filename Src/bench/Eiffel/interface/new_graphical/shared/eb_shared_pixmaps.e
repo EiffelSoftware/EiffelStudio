@@ -963,6 +963,26 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("display_labels")
 		end
+		
+	Icon_display_uml: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("uml")
+		end
+		
+	Icon_display_clusters: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("display_cluster")
+		end
+		
+	Icon_remove_anchor: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("remove_anchor")
+		end
+		
+	Icon_toggle_force_directed: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("toggle_force")
+		end
 
 	Icon_toggle_clusters: ARRAY [EV_PIXMAP] is
 		once
@@ -973,6 +993,12 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("class_header")
 		end
+		
+	Icon_toggle_quality: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("toggle_quality")
+		end
+		
 
 	Icon_super_cluster: ARRAY [EV_PIXMAP] is
 		once
@@ -1090,10 +1116,30 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("zoom_out")
 		end
+		
+	Icon_fit_to_screen: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("fit_to_screen")
+		end
 
 	Icon_select_depth: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("select_depth")
+		end
+		
+	Icon_display_legend: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("display_legend")
+		end
+		
+	Icon_pin_legend_open: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_pin_open_color")
+		end
+		
+	Icon_pin_legend_closed: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_pin_closed_color")
 		end
 
 	Icon_recycle_bin: ARRAY [EV_PIXMAP] is
@@ -1134,6 +1180,11 @@ feature -- Icons
 	Icon_bon_persistent: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_bon_persistent")
+		end
+		
+	Icon_bon_anchor: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_anchor")
 		end
 
 	Icon_system: ARRAY [EV_PIXMAP] is

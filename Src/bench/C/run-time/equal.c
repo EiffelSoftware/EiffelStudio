@@ -28,6 +28,7 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 #include "rt_gen_types.h"
 #include "eif_memory.h"
 #include "rt_macros.h"
+#include "rt_assert.h"
 #include <string.h>
 
 #define dprintf(n) if (DEBUG & n) printf
@@ -241,9 +242,18 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 		return EIF_FALSE;
 
 	s_flags = s_zone->ov_flags;
-	if (!(s_flags & EO_REF) && !(s_flags & EO_COMP))
+
+		/* In final mode, we can do block comparison on special of basic types
+		 * or on special of expanded which have no references since they have no header.
+		 * In workbench mode, block comparison is only possible on special of basic types. */
+#ifdef WORKBENCH
+	if (!(s_flags & EO_REF) && !(s_flags & EO_COMP)) {
+#else 
+	if (!(s_flags & EO_REF)) {
+#endif
 		/* Case 1: specials filled with direct instances: block comparison */
 		return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
+	}
 
 	if (s_flags & EO_TUPLE) {
 		EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
@@ -270,7 +280,7 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 			}
 		}
 		return EIF_TRUE;
-	} else if (!(s_flags & EO_COMP)) {
+	} else if ((s_flags & EO_REF) && !(s_flags & EO_COMP)) {
 		/* Case 2: specials filled with references: we have to check fields
 		 * one by one.
 		 */
@@ -411,6 +421,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			}
 			return EIF_TRUE;
 		} else if (!(flags & EO_COMP)) {
+			CHECK("Special of reference", flags & EO_REF);
 			/* Specials filled with references: we have to iterate on fields
 			* two by two.
 			*/
@@ -437,6 +448,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			}
 			return EIF_TRUE;
 		} else {
+			CHECK("Special of expanded with references", flags & EO_REF);
 			/* Special objects filled with (non-special) expanded objects.
 			 * we call then standard isomorphism test on normal objects.
 			 */
@@ -452,6 +464,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 				if (!(rdeepiter(t_ref, s_ref)))
 					return EIF_FALSE;
 			}
+			return EIF_TRUE;
 		}
 	}
 	else {

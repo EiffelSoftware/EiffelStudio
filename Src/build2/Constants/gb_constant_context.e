@@ -25,12 +25,24 @@ feature {NONE} -- Initialization
 			property_valid: a_property /= Void and then not a_property.is_empty
 			attribute_valid: an_attribute /= Void and then not an_attribute.is_empty
 		do
+			modify (a_constant, an_object, a_property, an_attribute)
+		end
+		
+feature -- Status_setting
+
+	modify (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, an_attribute: STRING) is
+			-- Modify `Current' to reflect arguments.
+		require
+			constant_not_void: a_constant /= Void
+			an_object_not_void: an_object /= Void
+			property_valid: a_property /= Void and then not a_property.is_empty
+			attribute_valid: an_attribute /= Void and then not an_attribute.is_empty
+		do
 			constant := a_constant
 			object := an_object
 			property := a_property.twin
 			attribute := an_attribute.twin
 		end
-		
 
 feature -- Access
 

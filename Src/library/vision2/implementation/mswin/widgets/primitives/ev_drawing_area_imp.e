@@ -80,7 +80,6 @@ inherit
 			on_kill_focus,
 			on_set_focus,
 			on_set_cursor,
-			on_accelerator_command,
 			show,
 			hide
 		redefine
@@ -614,6 +613,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/21 02:34:11  brendel
+--| Removed on_accelerator_command from undefine clause.
+--|
 --| Revision 1.37  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|
@@ -634,7 +636,8 @@ end -- class EV_DRAWING_AREA_IMP
 --|
 --| Revision 1.34  2000/02/24 05:02:34  pichery
 --| Fixed a bug: The Cs_owndc was set in the Windows Style instead of in the
---| Class Style....basically it was previously not taken into account by windows!
+--| Class Style....basically it was previously not taken into account by
+--|windows!
 --|
 --| Revision 1.33  2000/02/23 04:53:04  pichery
 --| fixed a postcondition violation when executing dc.get (we can only call "dc"

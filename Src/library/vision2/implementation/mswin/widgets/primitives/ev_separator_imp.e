@@ -57,7 +57,6 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_paint,
-			on_accelerator_command,
 			on_key_down,
 			show,
 			hide
@@ -164,6 +163,9 @@ end -- class EV_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/21 02:34:12  brendel
+--| Removed on_accelerator_command from undefine clause.
+--|
 --| Revision 1.15  2000/03/14 20:08:29  brendel
 --| Renamed some features from WEL in compliance with rest of window _IMP's.
 --|
@@ -177,7 +179,8 @@ end -- class EV_SEPARATOR_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.12.10.2  2000/01/11 20:03:34  rogers
---| Modified to comply with the major Vision2 changes. See diff for redefinitions, make now takes an interface.
+--| Modified to comply with the major Vision2 changes. See diff for
+--| redefinitions, make now takes an interface.
 --|
 --| Revision 1.12.10.1  1999/11/24 17:30:34  oconnor
 --| merged with DEVEL branch

@@ -88,7 +88,6 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_draw_item,
-			on_accelerator_command,
 			on_color_control,
 			on_wm_vscroll,
 			on_wm_hscroll,
@@ -1133,6 +1132,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/21 02:34:11  brendel
+--| Removed on_accelerator_command from undefine clause.
+--|
 --| Revision 1.49  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -1161,6 +1161,11 @@ feature -- Icons
 			Result := build_classic_pixmap ("print")
 		end
 
+	Icon_exception: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_exec_quit_color")
+		end
+
 feature -- Reading
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP is

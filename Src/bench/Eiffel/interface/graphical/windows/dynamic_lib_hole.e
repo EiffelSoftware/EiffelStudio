@@ -33,33 +33,60 @@ creation
 feature -- Callbacks
 
 	load_default is
+			-- Used when first open the dynamic_tool. (Create default)
+			-- and when we click on the dynamic_lib button, to say, RELOAD (NO).
 		local
 			fn:STRING
 			f: PLAIN_TEXT_FILE
+			fc: PLAIN_TEXT_FILE
 		do
-			fn := clone(eiffel_system.name)
-			fn.append_string(".def")
-			!! f.make_create_read_write(fn)
-
-			if 
-				f.exists and then 
-				f.is_readable and then 
-				f.is_plain
-			then
-				Eiffel_dynamic_lib.set_file_name (fn);
-				work (Current);
+			if Eiffel_dynamic_lib.modified then
+				!! fc.make_open_read (eiffel_dynamic_lib.file_name)
+				if eiffel_dynamic_lib.parse_exports_from_file(fc) then
+					dynamic_lib_tool.synchronize
+				end
+				fc.close
+				eiffel_dynamic_lib.set_modified(false)
 			else
-				io.put_string("Impossible to create the default file%N")
+				fn := clone(eiffel_system.name)
+				fn.append_string(".def")
+				!! f.make_create_read_write(fn)
+				if 
+					f.exists and then 
+					f.is_readable and then 
+					f.is_plain
+				then
+					f.close
+					Eiffel_dynamic_lib.set_file_name (fn);
+					work (Current);
+				else
+					io.put_string("Impossible to create the default file%N")
+				end
 			end
 		end;
 
 	load_chosen (argument: ANY) is
+			-- Used when first open the dynamic_tool.
+			-- and when we click on the dynamic_lib button, to say, SAVE (OK).
 		local
 			chooser: NAME_CHOOSER_W
+			fc: PLAIN_TEXT_FILE
 		do
-			chooser := name_chooser (popup_parent);
-			chooser.set_open_file;
-			chooser.call (Current);
+			if Eiffel_dynamic_lib.modified then
+				if tool.save_cmd_holder /= Void then
+					tool.save_cmd_holder.associated_command.execute (Void)
+				end
+				!! fc.make_open_read (eiffel_dynamic_lib.file_name)
+				if eiffel_dynamic_lib.parse_exports_from_file(fc) then
+					dynamic_lib_tool.synchronize
+				end
+				fc.close
+				eiffel_dynamic_lib.set_modified(false)
+			else
+				chooser := name_chooser (popup_parent);
+				chooser.set_open_file;
+				chooser.call (Current);
+			end
 		end;
 
 feature -- Properties
@@ -208,11 +235,18 @@ feature {NONE} -- Execution
 							dynamic_lib_tool.show_file_content (Eiffel_dynamic_lib.file_name)
 						end
 					else
-						!! f.make_open_read (Eiffel_dynamic_lib.file_name)
-						if Eiffel_dynamic_lib.parse_exports_from_file(f) then
-							dynamic_lib_tool.synchronize
+						if Eiffel_dynamic_lib.modified then
+							warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+							Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+
+						else
+							!! f.make_open_read (Eiffel_dynamic_lib.file_name)
+							if Eiffel_dynamic_lib.parse_exports_from_file(f) then
+								dynamic_lib_tool.synchronize
+							end
+							f.close
+							Eiffel_dynamic_lib.set_modified(False)
 						end
-						Eiffel_dynamic_lib.set_modified(False)
 					end
 				end 
 			end

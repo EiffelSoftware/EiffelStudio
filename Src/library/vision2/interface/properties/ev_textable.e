@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (a_text)
 		ensure
-			text_assigned: text.is_equal (a_text)
+			text_assigned: text.is_equal (a_text) amd text /= a_text
 		end
 	
 feature -- Access
@@ -39,7 +39,7 @@ feature -- Access
 		do
 			Result:= implementation.text
 		ensure
-			bridge_ok: (Result = implementation.text ) or else
+			bridge_ok: (Result = Void and implementation.text = Void) or else
 				Result.is_equal (implementation.text)
 		end 
 
@@ -73,7 +73,7 @@ feature -- Element change
 		do
 			implementation.set_text (a_text)
 		ensure
-			text_assigned: text.is_equal (a_text)
+			text_assigned: text.is_equal (a_text) and text /= a_text
 		end
 
 	remove_text is
@@ -143,6 +143,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/01 22:30:26  oconnor
+--| corrected postconditions
+--|
 --| Revision 1.16  2000/03/01 20:39:55  king
 --| Moved implementation featureto bottom of class for consistency
 --|

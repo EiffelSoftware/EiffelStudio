@@ -25,10 +25,28 @@ deferred class CURSOR_TREE [G] inherit
 	LINEAR [G]
 		rename
 			forth as preorder_forth,
+			finish as go_last_child,
+			occurrences as linear_occurrences,
+			has as linear_has,
+			off as linear_off
+		export
+			{ANY} all
+			{NONE} linear_occurrences, linear_has, linear_off
+		end;
+
+	LINEAR [G]
+		rename
+			forth as preorder_forth,
 			finish as go_last_child
 		redefine
+			occurrences,
+			has,
 			off
-		end;
+		select
+			occurrences,
+			has,
+			off
+		end
 
 feature -- Access
 
@@ -59,6 +77,27 @@ feature -- Access
 			go_to (pos)
 		end;
 
+	has (v: G): BOOLEAN is
+			-- Does structure include an occurrence of `v'?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		local
+			pos: CURSOR
+		do
+			pos := cursor
+			Result := linear_has (v)
+			go_to (pos)
+		end
+
+	occurrences (v: G): INTEGER is
+		local
+			pos: CURSOR;
+		do
+			pos := cursor
+			Result := linear_occurrences (v)
+			go_to (pos)
+		end
+
 feature -- Measurement
 
 	depth: INTEGER is
@@ -66,10 +105,12 @@ feature -- Measurement
 		local
 			pos: CURSOR;
 		do
-			pos := cursor;
-			go_above;
-			Result := depth_from_active - 1;
-			go_to (pos)
+			if not empty then
+				pos := cursor;
+				go_above;
+				Result := depth_from_active - 1;
+				go_to (pos)
+			end
 		end;
 
 	level: INTEGER is
@@ -223,7 +264,7 @@ feature -- Cursor movement
 			not_before: not before;
 			not_after: not after;
 			not_below: not below;
-			above = (old is_root)
+			coherency: (not old off and above) = (old is_root)
 		end;
 
 	down (i: INTEGER) is
@@ -573,7 +614,7 @@ feature {NONE} -- Implementation
 	depth_from_active: INTEGER is
 			-- Depth of subtree starting at active
 		do
-			if arity = 0 then
+			if not off and then arity = 0 then
 				Result := 1
 			else
 				from
@@ -588,10 +629,10 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	breadth_of_level_from_active (l: INTEGER): INTEGER is
-			-- Breadth of level `l' of subtree starting at current node
+	breadth_of_level_from_active (a_level: INTEGER): INTEGER is
+			-- Breadth of level `level' of subtree starting at current node
 		do
-			if (l = 2) or else is_leaf then
+			if (a_level = 2) or else is_leaf then
 				Result := arity
 			else
 				from
@@ -599,8 +640,7 @@ feature {NONE} -- Implementation
 				until
 					after
 				loop
-					Result := Result +
-						breadth_of_level_from_active (l - 1);
+					Result := Result + breadth_of_level_from_active (a_level - 1);
 					forth
 				end;
 				up

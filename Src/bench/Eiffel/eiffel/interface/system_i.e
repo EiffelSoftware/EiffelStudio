@@ -622,6 +622,17 @@ end
 			class_types.put (class_type, type_id)
 		end
 
+	remove_class_type (class_type: CLASS_TYPE) is
+			-- Remove `class_type' from `class_types' and associated
+			-- generated files if any.
+		require
+			good_argument: class_type /= Void
+			index_big_enough: class_type.type_id > 0
+		do
+			class_types.put (Void, class_type.type_id)
+			class_type.remove_c_generated_files
+		end
+
 	init_recompilation is
 			-- Initialization before a recompilation.
 		do

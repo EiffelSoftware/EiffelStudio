@@ -27,7 +27,9 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			is_selected := display_window.is_show_requested
+			if display_window /= Void then
+				is_selected := display_window.is_show_requested
+			end
 		end
 
 feature -- Access

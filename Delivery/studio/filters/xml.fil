@@ -33,7 +33,7 @@ non_generated_cluster		|<cluster><include>False</include>*</cluster>
 non_generated_class		|<class><include>False</include>*</class>
 non_generated_feature		|<feature><include>False</include>*</feature>
 keyword				|<keyword>*</keyword>
-reserved_word			|<reserved>*</reserved>
+reserved_word			|<keyword>*</keyword>
 symbol				|<symbol>*</symbol>
 comment				|<comment>*</comment>
 quoted				|<quoted>*</quoted>
@@ -42,7 +42,7 @@ character			|<char>*</char>
 number				|<number>*</number>
 local_symbol			|<local>*</local>
 assertion_tag			|<tag>*</tag>
-indexing_tag			|<itag>*</itag>
+indexing_tag			|<indexing_tag>*</indexing_tag>
 generic				|<generic>*</generic>
 .				|<dot>*</dot>
 

@@ -1203,9 +1203,7 @@ feature {NONE} -- open new class
 			-- If it is return, call execute_with_cluster.
 		do
 			if k /= Void then
-				if k.code = Key_csts.key_enter then
-					execute_with_cluster
-				elseif k.code = Key_csts.Key_escape then
+				if k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
 					end
@@ -1218,9 +1216,10 @@ feature {NONE} -- open new class
 			-- If it is return, call execute_with_class.
 		do
 			if k /= Void then
-				if k.code = Key_csts.key_enter then
-					execute_with_class
-				elseif k.code = Key_csts.Key_escape then
+--				if k.code = Key_csts.key_enter then
+--					execute_with_class
+--				else
+				if k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
 					end
@@ -1233,9 +1232,7 @@ feature {NONE} -- open new class
 			-- If it is return, call execute_with_feature.
 		do
 			if k /= Void then
-				if k.code = Key_csts.key_enter then
-					execute_with_feature
-				elseif k.code = Key_csts.Key_escape then
+				if k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
 					end
@@ -1250,7 +1247,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.Key_delete then
+				if k.code = Key_csts.key_enter then
+					execute_with_class
+				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
 					last_key_was_backspace := True
@@ -1271,7 +1270,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.Key_delete then
+				if k.code = Key_csts.key_enter then
+					execute_with_cluster
+				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
 					last_key_was_backspace := True
@@ -1296,7 +1297,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.Key_delete then
+				if k.code = Key_csts.key_enter then
+					execute_with_feature
+				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
 					last_key_was_backspace := True

@@ -14,7 +14,7 @@ inherit
 	WINDOWS
 	ENUMS
 
-creation
+create
 
 	make
 
@@ -36,41 +36,41 @@ feature
 	do
 		current_demo:=no_demo
 		base_make (a_name, a_s);
-		!!bulletin.make ("bulletin", Current)
-		!!exit_b.associate (Current, b_exit, "Exit", 150, 20)
-		!!bulletin_b.associate (Current, b_bulletin, "Bulletin", 20, 60)
-		!!form_b.associate (Current, b_form, "Form", 20, 100)
-		!!radio_box_b.associate (Current, b_radio_box, "Radio_box", 20, 140)
-		!!frame_b.associate (Current, b_frame, "Frame", 20, 180)
-		!!scrolled_w_b.associate (Current, b_scrolled_w, "Scrolled_w", 20, 220)
-		!!menu_b.associate (Current, b_menu, "Menu", 20, 260)
-		!!option_pull_b.associate (Current, b_option_pull, "Option_pull", 20, 300)
-		!!separator_b.associate (Current, b_separator, "Separator", 20, 340)
-		!!scroll_list_b.associate (Current, b_scroll_list, "Scroll_list", 20, 380)
-		!!scrolled_t_b.associate (Current, b_scrolled_t, "Scrolled_t", 20, 420)
+		create bulletin.make ("bulletin", Current)
+		create exit_b.associate (Current, b_exit, "Exit", 150, 20)
+		create bulletin_b.associate (Current, b_bulletin, "Bulletin", 20, 60)
+		create form_b.associate (Current, b_form, "Form", 20, 100)
+		create radio_box_b.associate (Current, b_radio_box, "Radio_box", 20, 140)
+		create frame_b.associate (Current, b_frame, "Frame", 20, 180)
+		create scrolled_w_b.associate (Current, b_scrolled_w, "Scrolled_w", 20, 220)
+		create menu_b.associate (Current, b_menu, "Menu", 20, 260)
+		create option_pull_b.associate (Current, b_option_pull, "Option_pull", 20, 300)
+		create separator_b.associate (Current, b_separator, "Separator", 20, 340)
+		create scroll_list_b.associate (Current, b_scroll_list, "Scroll_list", 20, 380)
+		create scrolled_t_b.associate (Current, b_scrolled_t, "Scrolled_t", 20, 420)
 
-		!!scrollbar_b.associate (Current, b_scrollbar, "Scrollbar", 150, 60)
-		!!scale_b.associate (Current, b_scale, "Scale", 150, 100)
-		!!pict_color_b.associate (Current, b_pict_color, "Pict_color_b", 150, 140)
-		!!push_b.associate (Current, b_push, "Push_b", 150, 180)
-		!!label_b.associate (Current, b_label, "Label", 150, 220)
-		!!draw_b.associate (Current, b_draw, "Draw_b", 150, 260)
-		!!toggle_b.associate (Current, b_toggle, "Toggle_b", 150, 300)
-		!!drawing_area_b.associate (Current, b_drawing_area, "Drawing_area", 150, 340)
-		!!text_field_b.associate (Current, b_text_field, "Text_field", 150, 380)
-		!!text_b.associate (Current, b_text, "Text", 150, 420)
+		create scrollbar_b.associate (Current, b_scrollbar, "Scrollbar", 150, 60)
+		create scale_b.associate (Current, b_scale, "Scale", 150, 100)
+		create pict_color_b.associate (Current, b_pict_color, "Pict_color_b", 150, 140)
+		create push_b.associate (Current, b_push, "Push_b", 150, 180)
+		create label_b.associate (Current, b_label, "Label", 150, 220)
+		create draw_b.associate (Current, b_draw, "Draw_b", 150, 260)
+		create toggle_b.associate (Current, b_toggle, "Toggle_b", 150, 300)
+		create drawing_area_b.associate (Current, b_drawing_area, "Drawing_area", 150, 340)
+		create text_field_b.associate (Current, b_text_field, "Text_field", 150, 380)
+		create text_b.associate (Current, b_text, "Text", 150, 420)
 
-		!!bulletin_d_b.associate (Current, b_bulletin_d, "Bulletin_d", 280, 60)
-		!!form_d_b.associate (Current, b_form_d, "Form_d", 280, 100)
-		!!prompt_d_b.associate (Current, b_prompt_d, "Prompt_d", 280, 140)
-		!!font_box_d_b.associate (Current, b_font_box_d, "Font_box_d", 280, 180)
-		!!message_d_b.associate (Current, b_message_d, "Message_d", 280, 220)
-		!!error_d_b.associate (Current, b_error_d, "Error_d", 280, 260)
-		!!question_d_b.associate (Current, b_question_d, "Question_d", 280, 300)
-		!!info_d_b.associate (Current, b_info_d, "Info_d", 280, 340)
-		!!working_d_b.associate (Current, b_working_d, "Working_d", 280, 380)
-		!!warning_d_b.associate (Current, b_warning_d, "Warning_d", 280, 420)
-		!!file_sel_d_b.associate (Current, b_file_sel_d, "File_sel_d", 280, 460)
+		create bulletin_d_b.associate (Current, b_bulletin_d, "Bulletin_d", 280, 60)
+		create form_d_b.associate (Current, b_form_d, "Form_d", 280, 100)
+		create prompt_d_b.associate (Current, b_prompt_d, "Prompt_d", 280, 140)
+		create font_box_d_b.associate (Current, b_font_box_d, "Font_box_d", 280, 180)
+		create message_d_b.associate (Current, b_message_d, "Message_d", 280, 220)
+		create error_d_b.associate (Current, b_error_d, "Error_d", 280, 260)
+		create question_d_b.associate (Current, b_question_d, "Question_d", 280, 300)
+		create info_d_b.associate (Current, b_info_d, "Info_d", 280, 340)
+		create working_d_b.associate (Current, b_working_d, "Working_d", 280, 380)
+		create warning_d_b.associate (Current, b_warning_d, "Warning_d", 280, 420)
+		create file_sel_d_b.associate (Current, b_file_sel_d, "File_sel_d", 280, 460)
 		set_size (400, 510);
 	end; -- make
 

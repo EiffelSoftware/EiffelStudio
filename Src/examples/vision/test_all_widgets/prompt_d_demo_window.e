@@ -9,7 +9,7 @@ inherit
 			make as prompt_d_make
 		end
 
-creation
+create
 
 	make
 

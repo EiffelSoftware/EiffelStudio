@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 

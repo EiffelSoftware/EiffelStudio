@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -17,7 +17,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!OPT_PULL!Result.make ("Opt_pull", Current)
+			create {OPT_PULL} Result.make ("Opt_pull", Current)
 		end
 
 	set_widgets is
@@ -29,13 +29,13 @@ feature
 			opt_pull ?= main_widget
 			opt_pull.set_title ("Option pull")
 
-			!!menu_entry1.make ("menu_entry1", opt_pull)
+			create menu_entry1.make ("menu_entry1", opt_pull)
 			menu_entry1.set_text ("Menu_entry1")
-			!!menu_entry2.make ("menu_entry2", opt_pull)
+			create menu_entry2.make ("menu_entry2", opt_pull)
 			menu_entry2.set_text ("Menu_entry2")
-			!!menu_entry3.make ("menu_entry3", opt_pull)
+			create menu_entry3.make ("menu_entry3", opt_pull)
 			menu_entry3.set_text ("Menu_entry3")
-			!!menu_entry4.make ("menu_entry4", opt_pull)
+			create menu_entry4.make ("menu_entry4", opt_pull)
 			menu_entry4.set_text ("Menu_entry4")
 		end
 

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!LABEL!Result.make ("Label", Current)
+			create {LABEL} Result.make ("Label", Current)
 		end
 
 	set_widgets is

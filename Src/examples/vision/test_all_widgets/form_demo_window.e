@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!FORM!Result.make ("Form", Current)
+			create {FORM} Result.make ("Form", Current)
 		end
 
 	set_widgets is

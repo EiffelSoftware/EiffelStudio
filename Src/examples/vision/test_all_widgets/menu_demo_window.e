@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!BAR!Result.make ("Bar", Current)
+			create {BAR} Result.make ("Bar", Current)
 		end
 
 	set_widgets is
@@ -43,20 +43,20 @@ feature
 			main_widget.set_x_y (30, 30)
 			bar ?= main_widget
 			bar.set_x_y (0, 0)
-			!!submenu1.make ("s1", bar)
-			!!submenu2.make ("s1", bar)
-			!!submenu3.make ("s1", bar)
-			!!submenu31.make ("s1", submenu3)
-			!!menu_entry11.make ("s1", submenu1)
-			!!menu_entry12.make ("s1", submenu1)
-			!!menu_entry13.make ("s1", submenu1)
-			!!menu_entry21.make ("s1", submenu2)
-			!!menu_entry22.make ("s1", submenu2)
-			!!menu_entry32.make ("s1", submenu3)
-			!!menu_entry33.make ("s1", submenu3)
-			!!menu_entry311.make ("s1", submenu31)
-			!!menu_entry312.make ("s1", submenu31)
-			!!menu_entry313.make ("s1", submenu31)
+			create submenu1.make ("s1", bar)
+			create submenu2.make ("s1", bar)
+			create submenu3.make ("s1", bar)
+			create submenu31.make ("s1", submenu3)
+			create menu_entry11.make ("s1", submenu1)
+			create menu_entry12.make ("s1", submenu1)
+			create menu_entry13.make ("s1", submenu1)
+			create menu_entry21.make ("s1", submenu2)
+			create menu_entry22.make ("s1", submenu2)
+			create menu_entry32.make ("s1", submenu3)
+			create menu_entry33.make ("s1", submenu3)
+			create menu_entry311.make ("s1", submenu31)
+			create menu_entry312.make ("s1", submenu31)
+			create menu_entry313.make ("s1", submenu31)
 
 			submenu1.set_title ("Submenu1")
 			submenu2.set_title ("Submenu2")
@@ -85,11 +85,11 @@ feature
 			menu_entry312.add_activate_action (Current, 312)
 			menu_entry313.add_activate_action (Current, 313)
 
-			!!message_box.make ("message_box", Current)
+			create message_box.make ("message_box", Current)
 			message_box.hide_cancel_button
 			message_box.hide_help_button
 			message_box.set_ok_label ("Ok")
-			!!ok_com.make
+			create ok_com.make
 			message_box.add_ok_action (ok_com, message_box)
 		end
 

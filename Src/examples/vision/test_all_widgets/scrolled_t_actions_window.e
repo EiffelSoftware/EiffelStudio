@@ -10,7 +10,7 @@ inherit
 			set_other_widgets_sensitive
 		end
 
-creation
+create
 
 	make
 
@@ -24,10 +24,10 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 390)
-			!!sel_active_b.associate (Current, b_sel_active, "Sel active", 20, 300)
-			!!is_read_only_b.associate (Current, b_is_read_only, "Is read only", 20, 340)
-			!!set_read_only_b.associate (Current, b_set_read_only, "Set read only", 180, 300)
-			!!set_editable_b.associate (Current, b_set_editable, "Set editable", 180, 340)
+			create sel_active_b.associate (Current, b_sel_active, "Sel active", 20, 300)
+			create is_read_only_b.associate (Current, b_is_read_only, "Is read only", 20, 340)
+			create set_read_only_b.associate (Current, b_set_read_only, "Set read only", 180, 300)
+			create set_editable_b.associate (Current, b_set_editable, "Set editable", 180, 340)
 		end
 
 	descendant_actions(arg: INTEGER_REF) is

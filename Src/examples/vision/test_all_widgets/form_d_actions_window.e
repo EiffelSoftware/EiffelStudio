@@ -10,7 +10,7 @@ inherit
 			set_other_widgets_sensitive
 		end
 
-creation
+create
 
 	make
 
@@ -24,10 +24,10 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 350)
-			!!allow_resize_b.associate (Current, b_allow_resize, "Allow resize", 20, 260)
-			!!forbid_resize_b.associate (Current, b_forbid_resize, "Forbid resize", 180, 260)
-			!!popup_b.associate (Current, b_popup, "Popup", 20, 300)
-			!!popdown_b.associate (Current, b_popdown, "Popdown", 180, 300)
+			create allow_resize_b.associate (Current, b_allow_resize, "Allow resize", 20, 260)
+			create forbid_resize_b.associate (Current, b_forbid_resize, "Forbid resize", 180, 260)
+			create popup_b.associate (Current, b_popup, "Popup", 20, 300)
+			create popdown_b.associate (Current, b_popdown, "Popdown", 180, 300)
 		end
 
 	descendant_actions(arg: INTEGER_REF) is

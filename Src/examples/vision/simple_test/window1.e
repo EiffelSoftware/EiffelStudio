@@ -10,7 +10,7 @@ inherit
 		end;
 	WINDOWS
 
-creation
+create
 
 	make
 
@@ -26,9 +26,9 @@ feature
 	make (a_name: STRING; a_s: SCREEN) is
 		do
 			base_make (a_name, a_s);
-			!!form.make ("Form", Current);
-			!!button1.make ("Button1", form);
-			!!button2.make ("Button2", form);
+			create form.make ("Form", Current);
+			create button1.make ("Button1", form);
+			create button2.make ("Button2", form);
 			set_values;
 			set_attachments;	
 			set_callbacks;
@@ -58,8 +58,8 @@ feature
 			popup_command: POPUP_COMMAND;
 			realize_command: REALIZE_COMMAND;
 		do
-			!!popup_command;
-			!!realize_command;
+			create popup_command;
+			create realize_command;
 			button1.add_activate_action (popup_command, message_box);
 			button2.add_activate_action (realize_command, other_window);
 		end;

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!SEPARATOR!Result.make ("Separator", Current)
+			create {SEPARATOR} Result.make ("Separator", Current)
 		end
 
 	set_widgets is

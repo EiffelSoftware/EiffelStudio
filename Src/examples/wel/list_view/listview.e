@@ -44,7 +44,7 @@ inherit
 			{NONE} all
 		end 
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			image_magenta				: INTEGER
 			background_color			: WEL_COLOR_REF
 		do
- 			{WEL_LIST_VIEW} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
+ 			Precursor {WEL_LIST_VIEW} (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 				-- create the image list
 			create image_list.make(Large_image_width, Large_image_height, Ilc_color4, True)

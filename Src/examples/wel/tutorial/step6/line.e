@@ -4,7 +4,7 @@ class
 inherit
 	LINKED_LIST [POINT]
 
-creation
+create
 	make
 
 feature -- Access

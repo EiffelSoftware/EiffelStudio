@@ -27,7 +27,7 @@ inherit
 		
 	COMMAND
 
-creation
+create
 	make
 
 feature
@@ -39,14 +39,14 @@ feature
 				--initialize as tooltip_initializer
 			tooltip_initialize (Current)
 
-			!!row_col.make ("Row_column", Current)
+			create row_col.make ("Row_column", Current)
 
-			!!push1.make ("Show", row_col)
+			create push1.make ("Show", row_col)
 				--set explanation text for this focusable
 			push1.set_focus_string ("Show second demo window")
 			push1.add_activate_action (Current, ShowSecond)
 
-			!!push2.make ("Hide", row_col)
+			create push2.make ("Hide", row_col)
 				--set explanation text for this focusable
 			push2.set_focus_string ("Hide second demo window")
 			push2.add_activate_action (Current, HideSecond)
@@ -78,7 +78,7 @@ feature
 	second_window: MY_TOP is
 			-- Another window of the demo
 		once
-			!!Result.make ("Second window", screen)
+			create Result.make ("Second window", screen)
 		end;
 
 	row_col: ROW_COLUMN

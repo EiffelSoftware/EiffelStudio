@@ -9,7 +9,7 @@ inherit
 
 	COMMAND
 
-creation
+create
 
 	make
 
@@ -23,9 +23,9 @@ feature
 	make (a_name: STRING; a_screen: SCREEN) is
 		do
 			top_shell_make (a_name, a_screen);
-			!!bulletin.make ("Bulletin", Current);
-			!!text_area.make ("Text", bulletin);
-			!!text_label.make ("Label", bulletin);
+			create bulletin.make ("Bulletin", Current);
+			create text_area.make ("Text", bulletin);
+			create text_label.make ("Label", bulletin);
 			set_values;
 			set_positions;	
 			set_callbacks;
@@ -35,7 +35,7 @@ feature
 		local
 			a_color: COLOR
 		do
-			!!a_color.make;
+			create a_color.make;
 			a_color.set_name ("yellow");
 			text_area.set_background_color (a_color);
 		end;
@@ -64,7 +64,7 @@ feature
 			temp: STRING
 		do
 			counter := counter + 1;
-			!!temp.make (0);	
+			create temp.make (0);	
 			temp.append_integer (counter);
 			temp.append (" modification(s)");
 			text_label.set_text (temp)

@@ -24,7 +24,7 @@ inherit
 	TOOLTIP_INITIALIZER
 		--widget containing focusable widgets
 		
-creation
+create
 	make
 
 feature -- Initialization
@@ -36,16 +36,16 @@ feature -- Initialization
 				-- initialize as tooltip initializer
 			tooltip_initialize (Current)
 
-			!!row_col.make ("Row_column", Current)
+			create row_col.make ("Row_column", Current)
 			row_col.set_row_layout
 
-			!!p1.make ("P1", row_col)
+			create p1.make ("P1", row_col)
 			p1.set_focus_string ("explanation text for P1")
 		
-			!!p2.make ("P2", row_col)
+			create p2.make ("P2", row_col)
 			p2.set_focus_string ("explanation text for P2")
 
-			!!p3.make ("P3", row_col)
+			create p3.make ("P3", row_col)
 			p3.set_focus_string ("explanation text for P3")
 
 		end		

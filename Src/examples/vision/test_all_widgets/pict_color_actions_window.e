@@ -10,7 +10,7 @@ inherit
 			set_other_widgets_sensitive
 		end
 
-creation
+create
 	make
 
 feature
@@ -20,7 +20,7 @@ feature
 	set_other_widgets is
 	do
 			set_size (330, 350)
-			!!set_pixmap_b.associate (Current, b_set_pixmap, "Set pixmap", 20, 300);
+			create set_pixmap_b.associate (Current, b_set_pixmap, "Set pixmap", 20, 300);
 		end;
 
 	descendant_actions(arg: INTEGER_REF) is
@@ -33,7 +33,7 @@ feature
 				if prompt.is_popped_up then
 					prompt.remove_ok_action (Current, b_set_pixmap)
 					prompt.remove_cancel_action (Current, b_cancel)
-					!!pixmap.make
+					create pixmap.make
 					pixmap.read_from_file (prompt.selection_text)
 					if pixmap.is_valid then
 						widget.set_pixmap (pixmap)

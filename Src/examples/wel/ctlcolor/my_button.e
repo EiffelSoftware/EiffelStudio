@@ -15,7 +15,7 @@ inherit
 			on_bn_clicked
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

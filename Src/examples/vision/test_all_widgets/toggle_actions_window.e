@@ -11,7 +11,7 @@ inherit
 			finish
 		end
 
-creation
+create
 
 	make
 
@@ -30,14 +30,14 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 470)
-			!!set_font_b.associate (Current, b_set_font, "Set font", 20, 300)
-			!!set_fg_b.associate (Current, b_set_fg, "Set fg", 20, 340)
-			!!activate_b.associate (Current, b_activate, "Activate", 20, 380)
-			!!arm_b.associate (Current, b_arm, "Arm", 180, 300)
-			!!disarm_b.associate (Current, b_disarm, "Disarm", 180, 340)
-			!!set_text_b.associate (Current, b_set_text, "Set text", 180, 380)
-			!!value_changed_b.associate (Current, b_value_changed, "Value changed", 20, 420)
-			!!state_b.associate (Current, b_state, "State", 180, 420)
+			create set_font_b.associate (Current, b_set_font, "Set font", 20, 300)
+			create set_fg_b.associate (Current, b_set_fg, "Set fg", 20, 340)
+			create activate_b.associate (Current, b_activate, "Activate", 20, 380)
+			create arm_b.associate (Current, b_arm, "Arm", 180, 300)
+			create disarm_b.associate (Current, b_disarm, "Disarm", 180, 340)
+			create set_text_b.associate (Current, b_set_text, "Set text", 180, 380)
+			create value_changed_b.associate (Current, b_value_changed, "Value changed", 20, 420)
+			create state_b.associate (Current, b_state, "State", 180, 420)
 			activate_action:=False
 			value_changed:=False
 		end
@@ -97,7 +97,7 @@ feature
 				if prompt.is_popped_up then
 					prompt.remove_ok_action (Current, b_bg_color)
 					prompt.remove_cancel_action (Current, b_cancel)
-					!!color.make
+					create color.make
 					color.set_name(prompt.selection_text)
 					widget.set_foreground_color (color)
 					set_widgets_sensitive

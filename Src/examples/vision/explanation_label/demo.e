@@ -8,7 +8,7 @@ class DEMO
 inherit
 	WINDOWS
 
-creation
+create
 
 	make
 

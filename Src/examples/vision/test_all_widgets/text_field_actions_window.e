@@ -11,7 +11,7 @@ inherit
 			finish
 		end
 
-creation
+create
 
 	make
 
@@ -30,14 +30,14 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 470)
-			!!activate_b.associate (Current, b_activate, "Activate", 20, 300)
-			!!set_max_size_b.associate (Current, b_set_max_size, "Set max size", 20, 340)
-			!!get_text_b.associate (Current, b_get_text, "Text", 20, 380)
-			!!append_b.associate (Current, b_append, "Append", 180, 300)
-			!!insert_b.associate (Current, b_insert, "Insert", 180, 340)
-			!!replace_b.associate (Current, b_replace, "Replace", 180, 380)
-			!!clear_b.associate (Current, b_clear, "Clear", 20, 420)
-			!!set_text_b.associate (Current, b_set_text, "Set text", 180, 420)
+			create activate_b.associate (Current, b_activate, "Activate", 20, 300)
+			create set_max_size_b.associate (Current, b_set_max_size, "Set max size", 20, 340)
+			create get_text_b.associate (Current, b_get_text, "Text", 20, 380)
+			create append_b.associate (Current, b_append, "Append", 180, 300)
+			create insert_b.associate (Current, b_insert, "Insert", 180, 340)
+			create replace_b.associate (Current, b_replace, "Replace", 180, 380)
+			create clear_b.associate (Current, b_clear, "Clear", 20, 420)
+			create set_text_b.associate (Current, b_set_text, "Set text", 180, 420)
 			activate_action:=False
 		end
 

@@ -1,7 +1,7 @@
 class
 	POINT
 
-creation
+create
 	make
 
 feature -- Initialization

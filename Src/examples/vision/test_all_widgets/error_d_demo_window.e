@@ -9,7 +9,7 @@ inherit
 			make as error_d_make
 		end
 
-creation
+create
 
 	make
 

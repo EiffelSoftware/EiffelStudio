@@ -9,7 +9,7 @@ inherit
 			make as bulletin_d_make
 		end
 
-creation
+create
 
 	make
 

@@ -17,7 +17,7 @@ inherit
 	ENUMS
 	WINDOWS
 
-creation
+create
 
 	make
 
@@ -40,23 +40,23 @@ feature
 		do
 			form_d_make (a_name, a_parent)
 			set_widgets
-			!!motion_press_command
+			create motion_press_command
 			prompt_type:=0
 		end
 
 	set_widgets is
 		do
-			!!exit_b.associate (Current, b_exit, "Exit", 100, 20)
-			!!button_press_b.associate (Current, b_button_press, "Button press", 20, 60)
-			!!pointer_motion_b.associate (Current, b_pointer_motion, "Pointer motion", 20, 100)
-			!!button_motion_b.associate (Current, b_button_motion, "Button motion", 20, 140)
-			!!bg_color_b.associate (Current, b_bg_color, "Bg color", 20, 180)
-			!!bg_pixmap_b.associate (Current, b_bg_pixmap, "Bg pixmap", 20, 220)
-			!!set_size_b.associate (Current, b_set_size, "Set size", 180, 60)
-			!!set_xy_b.associate (Current, b_set_xy, "Set x y", 180, 100)
-			!!destroy_b.associate (Current, b_destroy, "Destroy", 180, 140)
-			!!hide_b.associate (Current, b_hide, "Hide", 180, 180)
-			!!show_b.associate (Current, b_show, "Show", 180, 220)
+			create exit_b.associate (Current, b_exit, "Exit", 100, 20)
+			create button_press_b.associate (Current, b_button_press, "Button press", 20, 60)
+			create pointer_motion_b.associate (Current, b_pointer_motion, "Pointer motion", 20, 100)
+			create button_motion_b.associate (Current, b_button_motion, "Button motion", 20, 140)
+			create bg_color_b.associate (Current, b_bg_color, "Bg color", 20, 180)
+			create bg_pixmap_b.associate (Current, b_bg_pixmap, "Bg pixmap", 20, 220)
+			create set_size_b.associate (Current, b_set_size, "Set size", 180, 60)
+			create set_xy_b.associate (Current, b_set_xy, "Set x y", 180, 100)
+			create destroy_b.associate (Current, b_destroy, "Destroy", 180, 140)
+			create hide_b.associate (Current, b_hide, "Hide", 180, 180)
+			create show_b.associate (Current, b_show, "Show", 180, 220)
 			widgets_insensitive:=False
 			set_other_widgets
 		end
@@ -147,7 +147,7 @@ feature
 					if prompt.is_popped_up then
 						prompt.remove_ok_action (Current, b_bg_color)
 						prompt.remove_cancel_action (Current, b_cancel)
-						!!color.make
+						create color.make
 						color.set_name(prompt.selection_text)
 						widget.set_background_color(color)
 						set_widgets_sensitive
@@ -165,7 +165,7 @@ feature
 					if prompt.is_popped_up then
 						prompt.remove_ok_action (Current, b_bg_pixmap)
 						prompt.remove_cancel_action (Current, b_cancel)
-						!!pixmap.make
+						create pixmap.make
 						pixmap.read_from_file (prompt.selection_text)
 						if pixmap.is_valid then
 							widget.set_background_pixmap (pixmap)

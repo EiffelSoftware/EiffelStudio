@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!TEXT!Result.make ("Text", Current)
+			create {TEXT} Result.make ("Text", Current)
 		end
 
 	set_widgets is

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!SCROLLED_T!Result.make ("Scrolled_t", Current)
+			create {SCROLLED_T} Result.make ("Scrolled_t", Current)
 		end
 
 	set_widgets is

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!SCALE!Result.make ("Scale", Current)
+			create {SCALE} Result.make ("Scale", Current)
 		end
 
 	set_widgets is

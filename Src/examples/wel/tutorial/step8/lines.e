@@ -10,7 +10,7 @@ inherit
                         copy
                 end
 
-creation
+create
 	make
 
 end -- class LINES

@@ -17,13 +17,13 @@ feature
 			-- Screen associated with
 			-- program
 		once
-			!!Result.make ("");
+			create Result.make ("");
 		end;
 
 	init_toolkit: TOOLKIT_IMP is
 			-- Toolkit for current platform
 		once
-			!!Result.make ("");
+			create Result.make ("");
 		end;
 
 	init_windowing is
@@ -37,7 +37,7 @@ feature
 	main_window: MAIN_WINDOW is
 			-- Main window of the demo
 		once
-			!!Result.make ("Focusables demo", a_screen)
+			create Result.make ("Focusables demo", a_screen)
 		end;
 
 end -- class WINDOWS

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!SCROLLABLE_LIST!Result.make ("Scroll_list", Current)
+			create {SCROLLABLE_LIST} Result.make ("Scroll_list", Current)
 		end
 
 	set_widgets is

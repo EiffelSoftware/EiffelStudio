@@ -1,12 +1,12 @@
 indexing 
-	description: "This represents a scrollbar";
+	description: "Implementation of a scrollbar widget on Windows";
 	status: "See notice at end of class"; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
  
 class
 	SCROLLBAR_WINDOWS
-  
+ 
 inherit
 
 	SCROLLBAR_I
@@ -18,9 +18,6 @@ inherit
 			set_size
 		end
 
-	WEL_SBS_CONSTANTS
-		-- temporary
-	
 	WEL_SCROLL_BAR
 		rename
 			show as wel_show,
@@ -64,6 +61,8 @@ inherit
 			on_set_cursor,
 			on_key_up,
 			on_key_down
+		redefine
+			on_scroll
 		end
 
 	SIZEABLE_WINDOWS
@@ -74,7 +73,9 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_scrollbar: SCROLLBAR; man: BOOLEAN;  oui_parent: COMPOSITE) is
+	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE) is
+			-- Create a scrollbar with `a_scrollbar' as identifier,
+			-- `oui_parent' as parent managed or unmanaged and call `set_default'.
 		do
 			!! private_attributes
 			parent ?= oui_parent.implementation
@@ -85,11 +86,17 @@ feature {NONE} -- Initialization
  
 feature -- Access
 
-	granularity: INTEGER
+	line_increment: INTEGER
+			-- Distance (amount) to scroll on arrows
+
+	page_increment: INTEGER
+			-- Distance (amount) to scroll on page down or up
 
 	minimum, maximum: INTEGER
+			-- Minimum and maximum position of scrollbar
 
 	position: INTEGER
+			-- Current position
 
 	initial_delay: INTEGER
 			-- Amount of time to wait (milliseconds) before starting
@@ -104,29 +111,13 @@ feature -- Access
 
 feature -- Status report
 
+	is_maximum_right_bottom: BOOLEAN
+			-- Is maximum on right/bottom?
+
 	is_horizontal : BOOLEAN
-
-	vertical: BOOLEAN is
-		do
-			Result := not is_horizontal
-		end
-
-	is_maximum_right_bottom : BOOLEAN
+			-- Is scrollbar horizontal or vertical
 
 feature -- Status setting
-
-	set_maximum_right_bottom (flag: BOOLEAN) is
-		do
-			is_maximum_right_bottom := flag
-		end
-
-	set_position (p: INTEGER) is
-		do
-			position := p
-			if exists then
-				wel_set_position (p)
-			end
-		end
 
 	realize is
 			-- Create a scrollbar and display it
@@ -135,6 +126,9 @@ feature -- Status setting
 		do
 			if not realized then
 				wc ?= parent
+				check
+					wc /= void
+				end
 				resize_for_shell
 				if is_horizontal then
 					if not has_height then set_height (20) end
@@ -145,34 +139,69 @@ feature -- Status setting
 					if not has_width then set_width (20) end
 					make_vertical (wc, x, y, width, height, id_default)
 				end
-				set_minimum (minimum)
-				set_maximum (maximum)
+				wel_set_minimum (minimum)
+				wel_set_maximum (maximum)
+				set_position (position)
+			end
+		end
+
+	set_maximum_right_bottom (flag: BOOLEAN) is
+			-- Set maximum to be on bottom or right if 'flag'
+			-- set maximum to be on left or top otherwise
+		do
+			is_maximum_right_bottom := flag
+		end
+
+	set_horizontal (flag: BOOLEAN) is
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		local
+			wc: WEL_COMPOSITE_WINDOW
+		do
+			if flag /= is_horizontal then
+				is_horizontal := flag
+				if realized then
+					wel_destroy
+					wc ?= parent
+					check
+						wc /= void
+					end
+					if is_horizontal then
+						make_horizontal (wc, x, y, width, height, id_default)
+					else
+						make_vertical (wc, x, y, width, height, id_default)
+					end
+					wel_set_minimum (minimum)
+					wel_set_maximum (maximum)
+					set_position (position)
+				end
 			end
 		end
 
 	set_initial_delay (a_time: INTEGER) is
 			-- Set the amount of time to wait (milliseconds) before
-                        -- starting continuous slider movement to `new_delay'.
+			-- starting continuous slider movement to `new_delay'.
+
 		do
 			initial_delay := a_time
 		end
 
 	set_repeat_delay (a_time: INTEGER) is
 			-- Set the amount of time to wait (milliseconds) between
-                        -- subsequent movements after the initial delay to 'new_delay'.
+			-- subsequent movements after the initial delay to 'new_delay'.
 		do
 			repeat_delay := a_time
 		end
 
 	set_slider_size (a_size: INTEGER) is
-                        -- Set size of slider to 'new_size'.
+			-- Set size of slider to 'a_size'.
 		do
 			slider_size := a_size
 		end
 
-        set_height (new_height: INTEGER) is
-                        -- Set the height to `new_height'
-                do
+	set_height (new_height: INTEGER) is
+			-- Set the height to `new_height'
+		do
 			has_height := True
 			if private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
@@ -180,12 +209,12 @@ feature -- Status setting
 					wel_set_height (new_height)
 				end
 			end
-                end
+		end
 
-        set_size (new_width, new_height : INTEGER) is
-                        -- Set the height to `new_height' and the
-                        -- width to `new_width'.
-                do
+	set_size (new_width, new_height : INTEGER) is
+				-- Set the height to `new_height' 
+				-- and the width to `new_width'.
+		do
 			has_width := True
 			has_height := True
 			if private_attributes.width /= new_width
@@ -210,32 +239,8 @@ feature -- Status setting
 			end
 		end
 
-	set_horizontal (flag: BOOLEAN) is
-			-- Set orientation of the scale to horizontal if `flag',
-			-- to vertical otherwise.
-		local
-			a_style: INTEGER
-			wc: WEL_COMPOSITE_WINDOW
-		do
-			if flag /= is_horizontal then
-				is_horizontal := flag
-				if realized then
-					a_style := Ws_child + Ws_tabstop + Ws_visible
-					if is_horizontal then
-						a_style := a_style + Sbs_horz
-					else
-						a_style := a_style + Sbs_vert
-					end
-					wel_destroy
-					wc ?= parent
-					make_horizontal (wc, x, y, width, height, id_default)
-					set_height (width)
-					set_width (height)
-				end
-			end
-		end
-
 	set_minimum (m: INTEGER) is
+			-- Set minimum value of the scrollbar
 		do
 			minimum := m
 			if exists then
@@ -244,6 +249,7 @@ feature -- Status setting
 		end
 
 	set_maximum (m: INTEGER) is
+			-- Set maximum value of the scrollbar
 		do
 			maximum := m
 			if exists then
@@ -253,9 +259,29 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_granularity (g: INTEGER) is
+	set_position (p: INTEGER) is
+			-- Set scrollbar position
 		do
-			granularity := g
+			position := p
+			if exists then
+				if is_maximum_right_bottom then
+					wel_set_position (p)
+				else
+					wel_set_position (maximum - p)
+				end
+			end
+		end;
+
+	set_line_increment (inc: INTEGER) is
+			-- Set amount (distance) to move when arrow is pressed
+		do
+			line_increment := inc
+		end
+
+	set_page_increment (inc: INTEGER) is
+			--Set amount (distance) to move for page down or up
+		do
+			page_increment := inc
 		end
 
 	add_move_action (c: COMMAND; arg: ANY) is
@@ -284,58 +310,80 @@ feature {NONE} -- Implementation
 		do
 			set_maximum (100)
 			set_minimum (0)
-			set_granularity (1)
-			page_delta := 10
-			line_delta := 1
+			page_increment := 10
+			line_increment := 1
 		end
 
 	has_height: BOOLEAN
+		-- Has height been set?
 
 	has_width: BOOLEAN
+		-- Has width been set?
 
 	identifier: STRING
 
-	process_scroll_notification (notification_code, a_position: INTEGER) is
+	on_scroll (notification_code, a_position: INTEGER) is
 		do
-			debug ("SCROLLBAR")
-				print ("SCROLLBAR.process_scroll_notification")
-			end
-			if notification_code = sb_pagedown then
-				wel_set_position ((wel_position + page_delta).min (maximum))
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_linedown then
-				wel_set_position ((wel_position + line_delta).min (maximum))
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_pageup then
-				wel_set_position ((wel_position - page_delta).max (minimum))
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_lineup then
-				wel_set_position ((wel_position - line_delta).max (minimum))
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_top then
-				wel_set_position (maximum)
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_bottom then
-				wel_set_position (minimum)
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_thumbposition then
-				wel_set_position (a_position)
-				io.put_string ("thumbposition%N")
-				on_position_change (notification_code, a_position)
-			elseif notification_code = sb_thumbtrack then
-				wel_set_position (a_position)
-				io.put_string ("thumbtrack%N")
-				on_track (notification_code, a_position)
+			if is_maximum_right_bottom then 
+				if notification_code = Sb_pagedown then
+					set_position ((position + page_increment).min (maximum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_linedown then
+					set_position ((position + line_increment).min (maximum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_pageup then
+					set_position ((position - page_increment).max (minimum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_lineup then
+					set_position ((position - line_increment).max (minimum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_top then
+					set_position (minimum)
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_bottom then
+					set_position (maximum)
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_thumbposition then
+					set_position (a_position)
+					on_position_change (notification_code, a_position)
+				elseif notification_code = Sb_thumbtrack then
+					set_position (a_position)
+					on_track (notification_code, a_position)
+				end
+			else
+				if notification_code = Sb_pagedown then
+					set_position ((position - page_increment).max (minimum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_linedown then
+					set_position ((position - line_increment).max (minimum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_pageup then
+					set_position ((position + page_increment).min (maximum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_lineup then
+					set_position ((position + line_increment).min (maximum))
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_top then
+					set_position (maximum)
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_bottom then
+					set_position (minimum)
+					on_position_change (notification_code, position)
+				elseif notification_code = Sb_thumbposition then
+					set_position (maximum - a_position)
+					on_position_change (notification_code, a_position)
+				elseif notification_code = Sb_thumbtrack then
+					set_position (maximum - a_position)
+					on_track (notification_code, a_position)
+				end
 			end
 		end;	
-
-	page_delta, line_delta: INTEGER
 
 	on_position_change (a_code, a_position: INTEGER) is
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
-			!! cd.make (owner, a_code, a_position, vertical)
+			!! cd.make (owner, a_code, a_position, not is_horizontal)
 			value_changed_actions.execute (Current, cd)
 		end
 
@@ -343,7 +391,7 @@ feature {NONE} -- Implementation
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
-			!! cd.make (owner, a_code, a_position, vertical)
+			!! cd.make (owner, a_code, a_position, not is_horizontal)
 			move_actions.execute (Current, cd)
 		end
 
@@ -352,7 +400,7 @@ feature {NONE} -- Implementation
 			set_range (minimum, m)
 		end
 
-	wel_set_minimum  (m: INTEGER) is
+	wel_set_minimum (m: INTEGER) is
 		do
 			set_range (m, maximum)
 		end

@@ -69,7 +69,9 @@ inherit
 			on_right_button_up,
 			on_set_cursor
 		redefine
-			class_name
+			class_name,
+			on_vertical_scroll_control,
+			on_horizontal_scroll_control
 		end
 
 	WEL_BIT_OPERATIONS
@@ -152,6 +154,19 @@ feature {NONE} -- Implementation
 			if tw /= Void and then tw.exists then
 				set_x_y (0, 0)
 				set_size (tw.client_width, tw.client_height)
+			end
+		end
+
+	on_vertical_scroll_control,
+	on_horizontal_scroll_control (scroll_code, position: INTEGER;
+			bar: WEL_BAR) is
+			-- Deliver scroll messages to control which they belong to
+		local
+			scroll_bar: WEL_SCROLL_BAR
+		do
+			scroll_bar ?= bar
+			if scroll_bar /= void then
+				scroll_bar.on_scroll (scroll_code, position)
 			end
 		end
 

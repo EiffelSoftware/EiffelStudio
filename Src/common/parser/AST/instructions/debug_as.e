@@ -10,14 +10,9 @@ class DEBUG_AS
 inherit
 
 	INSTRUCTION_AS
-
-feature -- Properties
-
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
-			-- Compound to debug
-
-	keys: EIFFEL_LIST [STRING_AS];
-			-- Debug keys
+		redefine
+			number_of_stop_points
+		end
 
 feature {NONE} -- Initialization
 
@@ -39,6 +34,26 @@ feature {NONE} -- Initialization
 				end;
 			end;
 		end;
+
+feature -- Properties
+
+	compound: EIFFEL_LIST [INSTRUCTION_AS];
+			-- Compound to debug
+
+	keys: EIFFEL_LIST [STRING_AS];
+			-- Debug keys
+
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+			Result := 1;
+			if compound /= Void then
+				Result := Result + compound.number_of_stop_points;
+				Result := Result + 1;
+			end;
+		end
 
 feature -- Comparison
 

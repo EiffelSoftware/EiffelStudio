@@ -10,6 +10,22 @@ class IF_AS
 inherit
 	
 	INSTRUCTION_AS
+		redefine
+			number_of_stop_points
+		end
+
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			condition ?= yacc_arg (0);
+			compound ?= yacc_arg (1);
+			elsif_list ?= yacc_arg (2);
+			else_part ?= yacc_arg (3);
+		ensure then
+			condition_exists: condition /= Void;
+		end;
 
 feature -- Properties
 
@@ -25,18 +41,24 @@ feature -- Properties
 	else_part: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Else part
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	set is
-			-- Yacc initialization
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
 		do
-			condition ?= yacc_arg (0);
-			compound ?= yacc_arg (1);
-			elsif_list ?= yacc_arg (2);
-			else_part ?= yacc_arg (3);
-		ensure then
-			condition_exists: condition /= Void;
-		end;
+			Result := Result + 1;
+			if compound /= Void then
+				Result := Result + compound.number_of_stop_points;
+			end;
+			Result := Result + 1;
+			if elsif_list /= Void then
+				Result := Result + elsif_list.number_of_stop_points;
+			end;
+			if else_part /= Void then
+				Result := Result + else_part.number_of_stop_points;
+				Result := Result + 1;
+			end;
+		end
 
 feature -- Comparison 
 

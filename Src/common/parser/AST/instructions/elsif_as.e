@@ -10,14 +10,9 @@ class ELSIF_AS
 inherit
 
 	AST_EIFFEL
-
-feature -- Properties
-
-	expr: EXPR_AS;
-			-- Conditional expression
-
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
-			-- Compound
+		redefine
+			number_of_stop_points
+		end
 
 feature {NONE} -- Initialization
 
@@ -29,6 +24,25 @@ feature {NONE} -- Initialization
 		ensure then
 			expr_exists: expr /= Void
 		end;
+
+feature -- Properties
+
+	expr: EXPR_AS;
+			-- Conditional expression
+
+	compound: EIFFEL_LIST [INSTRUCTION_AS];
+			-- Compound
+
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		do
+            if compound /= Void then
+                Result := compound.number_of_stop_points
+            end;
+            Result := Result + 1
+		end
 
 feature {AST_EIFFEL} -- Output
 

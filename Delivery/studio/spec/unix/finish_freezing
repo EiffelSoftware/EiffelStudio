@@ -15,6 +15,7 @@ case `uname` in
 	;;
 esac
 if [ -z "$ncpus" ]; then ncpus=1; fi
+if [ "$ncpus" -eq "0" ]; then ncpus=1; fi
 
 if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
     make_args="-j $ncpus"

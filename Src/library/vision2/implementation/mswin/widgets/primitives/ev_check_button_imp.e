@@ -16,9 +16,15 @@ inherit
 		
 	EV_TOGGLE_BUTTON_IMP
 		undefine
+			default_process_message,
 			default_style
 		redefine
-			make, make_with_text
+			make,
+			make_with_text,
+			state,
+			set_state,
+			toggle,
+			add_toggle_command
 		end
 
 	WEL_CHECK_BOX
@@ -35,8 +41,6 @@ inherit
 			remove_command,
 			set_width,
 			set_height,
---			destroy,
---			set_text,
 			on_bn_clicked,
 			on_left_button_down,
 			on_right_button_down,
@@ -72,6 +76,42 @@ feature -- Initialization
 			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
 			extra_width := 20
 		end
+
+feature -- Status report
+	
+	state: BOOLEAN is
+			-- Is toggle pressed
+		do
+			Result := checked
+		end 
+
+feature -- Status setting
+
+	set_state (flag: BOOLEAN) is
+			-- Set Current toggle on and set
+			-- pressed to True.
+		do
+			if flag then
+				set_checked
+			else
+				set_unchecked
+			end
+		end
+
+	toggle is
+			-- Change the state of the toggle button to
+			-- opposite
+		do
+			set_state (not state)
+		end
+
+feature -- Event - command association
+	
+	add_toggle_command (a_command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is	
+		do
+			
+		end	
 
 end -- class EV_CHECK_BUTTON_IMP
 

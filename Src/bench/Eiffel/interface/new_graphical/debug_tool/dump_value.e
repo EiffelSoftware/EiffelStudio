@@ -501,6 +501,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
 			cv_spec: SPECIAL_VALUE
 			int_value: DEBUG_VALUE [INTEGER]
+			area_attribute: SPECIAL_VALUE
+			count_attribute: DEBUG_VALUE [INTEGER]
 			l_count: INTEGER
 			sc: CLASS_C
 			l_conform_to_string: BOOLEAN
@@ -525,16 +527,16 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					l_attributes_cursor := l_attributes.new_cursor
 					l_attributes_cursor.start
 				until
-					l_attributes_cursor.after
+					l_attributes_cursor.after or (area_attribute /= Void and count_attribute /= Void)
 				loop
 					l_attributes_item := l_attributes_cursor.item
 					cv_spec ?= l_attributes_item
-					if cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
-						Result := cv_spec.raw_string_value
-					else
+					if area_attribute = Void and cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
+						area_attribute := cv_spec
+					elseif count_attribute = Void and cv_spec = Void then
 						int_value ?= l_attributes_item
 						if int_value /= Void and then int_value.name.is_equal (l_count_name) then
-							l_count := int_value.value
+							count_attribute := int_value
 						end
 					end
 					l_attributes_cursor.forth
@@ -542,9 +544,13 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| At the point `area' and `count' from STRING should have been found in
 					--| STRING object.
 				check
-					count_attribute_found: True
-					area_attribute_found: True
+					count_attribute_found: count_attribute /= Void
+					area_attribute_found: area_attribute /= Void
 				end
+				
+				l_count := count_attribute.value
+				Result := area_attribute.truncated_raw_string_value (l_count)
+				
 				if Result /= Void then
 						--| We now have retrieved the full `area' of STRING object. Let's check
 						--| if we need to display the complete area, or just part of it.

@@ -156,10 +156,8 @@ feature -- Output
 		do
 			Result := items
 			if Result = Void then
-				l_min := Min_slice_ref.item
-				l_max := Max_slice_ref.item
-				create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} items.make (l_max - l_min + 1)
-				fill_items (l_min, l_max)
+				reset_items -- the size will be set by fill_items
+				fill_items (Min_slice_ref.item, Max_slice_ref.item)
 				Result := items
 			end
 		end
@@ -179,7 +177,7 @@ feature -- Output
 				set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
 				if sp_lower <= sp_upper then
 					nb_items := sp_upper - sp_lower + 1
-					if nb_items >= items.capacity then
+					if nb_items > items.capacity then
 						items.resize (nb_items)
 					end
 					get_array_value

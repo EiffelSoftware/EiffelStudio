@@ -71,7 +71,8 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 			if dv /= Void then
 				conv_nat_value ?= dv
 				if conv_nat_value /= Void then -- NativeArray (.NET)
-					conv_nat_value.items.wipe_out
+						--| wipe_out or create an empty list for `conv_nat_values.items'
+					conv_nat_value.reset_items
 					conv_nat_value.fill_items (spec_lower, spec_higher)
 				end
 				list := dv.sorted_children

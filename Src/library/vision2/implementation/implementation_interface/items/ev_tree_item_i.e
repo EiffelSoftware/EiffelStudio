@@ -12,47 +12,23 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			parent,
 			interface
 		end
 
-	EV_TREE_ITEM_HOLDER_I
+	EV_ITEM_LIST_I [EV_TREE_ITEM]
 		redefine
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_I
-		redefine
-			interface
-		end
+	--EV_PICK_AND_DROPABLE_I
+	--	redefine
+	--		interface
+	--	end
 
 feature -- Access
 
-	parent: EV_TREE_ITEM_HOLDER is
-			-- The parent of the Current widget
-			-- Can be void.
-		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
-		end
-
-	top_parent_imp: EV_TREE_IMP is
-			-- Top item holder containing the current item.
-		local
-			itm: EV_TREE_ITEM_IMP
-		do
-			itm ?= parent_imp
-			if itm = Void then
-				Result ?= parent_imp
-			else
-				Result := itm.top_parent_imp
-			end
-		end
-
-	top_parent: EV_TREE_ITEM_HOLDER is
-		do
-			if top_parent_imp /= Void then
-				Result := top_parent_imp.interface
-			end
+	parent_tree: EV_TREE is
+		deferred
 		end
 
 feature -- Status report
@@ -60,20 +36,14 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected?
 		require
-			in_widget: top_parent_imp /= Void
+			in_tree: parent_tree /= Void
 		deferred
 		end
 
 	is_expanded: BOOLEAN is
 			-- is the item expanded ?
 		require
-			in_widget: top_parent_imp /= Void
-		deferred
-		end
-
-	is_parent: BOOLEAN is
-			-- is the item the parent of other items?
-		require
+			in_tree: parent_tree /= Void
 		deferred
 		end
 
@@ -82,7 +52,7 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
-			in_widget: top_parent_imp /= Void
+			in_tree: parent_tree /= Void
 		deferred
 		ensure
  			state_set: is_selected = flag
@@ -91,7 +61,7 @@ feature -- Status setting
 	toggle is
 			-- Change the state of selection of the item.
 		require
-			in_widget: top_parent_imp /= Void
+			in_tree: parent_tree /= Void
 		do
 			set_selected (not is_selected)
 		end
@@ -99,61 +69,14 @@ feature -- Status setting
 	set_expand (flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
 		require
-			in_widget: top_parent_imp /= Void
-			is_parent: is_parent
+			in_tree: parent_tree /= Void
+			is_parent: count > 0
 		deferred
 		ensure
 			state_set: is_expanded = flag
 		end
 
-feature -- Event : command association
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
-		require
-			valid_command: cmd /= Void
-		deferred
-		end	
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
-		require
-			valid_command: cmd /= Void
-		deferred
-		end	
-
-	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the selection subtree is expanded or collapsed.
-		require
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is activated.
-		require
-		deferred			
-		end	
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
-		require
-		deferred	
-		end
-
-	remove_subtree_commands is
-			-- Empty the list of commands to be executed when
-			-- the selection subtree is expanded or collapsed.
-		require
-		deferred
-		end
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
 
@@ -180,6 +103,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/22 21:38:35  king
+--| Removed redundant command association features, inheriting from item_list
+--|
 --| Revision 1.24  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

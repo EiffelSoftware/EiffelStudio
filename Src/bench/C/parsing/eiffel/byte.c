@@ -159,7 +159,7 @@ long ca_suint32(void)
 
 void ca_store(char *area, long int siz, FILE *fil)
 {
-	if (fwrite(area, sizeof(char), siz, fil) != siz)
+	if (fwrite(area, sizeof(char), siz, fil) != (size_t) siz)
 		xraise(EN_IO);
 }
 

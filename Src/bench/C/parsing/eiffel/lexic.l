@@ -32,6 +32,10 @@ Ftp server: ftp.eiffel.com
 #include "parser.h"
 #include "yacc.h"
 
+#ifdef EIF_WIN32
+#include <io.h>
+#endif
+
 #define MAX_CHAR	256			/* Ascii limit */
 
 /*
@@ -63,6 +67,10 @@ struct token {					/* For gperf */
 };
 
 extern struct token *in_word_set();		/* Pointer to static data */
+
+
+/* defined in eif_err.c */
+extern void yyerror (char *);	/* Raise a syntax error */
 
 /*
  * Macros for lexical analyzer input 
@@ -243,7 +251,7 @@ static int get_char()
 	/* Try to recognize an eiffel character */
 
 	char *s, c;
-	int	i, char_value;
+	int	char_value;
 
 	s = token_str;		/* Statically allocated buffer */
 	inherit_context = 0;

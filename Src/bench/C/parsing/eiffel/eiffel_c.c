@@ -97,9 +97,7 @@ char *c_parse(FILE *f, char *filename)
 	extern int yydebug;
 #endif
 
-	char buf[100];			/* Error message */
 	int cancel;				/* Parsing cancelity */
-	char *c_name;			/* C string for `filename' */
 	int i;
 
 	/* Initialization */
@@ -267,7 +265,7 @@ char *create_id(char *s)
 	 * order to share them eventually.
 	 */
 
-	char *temp_id, *result;
+	char *result;
 
 	/* Fill the Eiffel string buffer with `s' */
 	strcpy(id_pchar, s);

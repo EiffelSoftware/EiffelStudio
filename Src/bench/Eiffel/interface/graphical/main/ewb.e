@@ -43,13 +43,13 @@ feature
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
 						("ISE Eiffel3: the environment variable $EIFFEL3 is not set%N");
-					die (-1)
+					new_die (-1)
 				end;
 				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
 						("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
-					die (-1)
+					new_die (-1)
 				end;
 
 					-- Read the resource files
@@ -73,7 +73,7 @@ feature
 				end;
 			else
 					-- Ensure clean exit in case of exception
-				die (-1)
+				new_die (-1)
 			end;
 		rescue
 			discard_licence;
@@ -81,7 +81,7 @@ feature
 					-- The rescue in BASIC_ES will display the tag
 				io.error.putstring ("ISE Eiffel3: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
-				temp := developer_exception_name;
+				temp := original_tag_name;
 				if temp /= Void then
 					io.error.putstring (temp);
 				end;

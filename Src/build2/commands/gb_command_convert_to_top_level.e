@@ -69,7 +69,6 @@ feature -- Basic Operation
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
-			widget: EV_WIDGET
 		do
 			child_object := Object_handler.deep_object_from_id (child_id)
 
@@ -78,19 +77,10 @@ feature -- Basic Operation
 			
 			create window_selector_item.make_with_object (new_object)
 			create display_win
-			widget ?= new_object.object
-			check
-				object_was_widget: widget /= Void
-			end
-			display_win.extend (widget)
+			insert_into_window (new_object.object, display_win)
 			create builder_win
-			widget ?= new_object.display_object
-			check
-				display_object_was_widget: widget /= Void
-			end
-			builder_win.extend (widget)
-			
-			
+			insert_into_window (new_object.display_object, builder_win)
+
 			create all_children_old.make (50)
 			child_object.all_children_recursive (all_children_old)
 			create all_children_new.make (50)

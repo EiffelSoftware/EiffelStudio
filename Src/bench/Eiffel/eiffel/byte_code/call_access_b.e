@@ -21,17 +21,8 @@ feature
 		deferred
 		end
 
-	rout_id: ROUTINE_ID is
+	routine_id: ROUTINE_ID
 			-- Routine ID for the access (used in final mode generation)
-		local
-			class_type: CL_TYPE_I
-		do
-			class_type ?= context_type
-			Result := class_type.base_class.feature_table.item
-				(feature_name).rout_id_set.first
-		ensure
-			routine_id_not_void: Result /= Void
-		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a feature call

@@ -20,6 +20,13 @@ inherit
 			interface
 		end
 
+feature {NONE} -- Implementation
+
+	initialize is
+		do
+			update_children_agent := ~update_children
+		end
+
 feature -- Access
 
 	columns: INTEGER is
@@ -210,6 +217,71 @@ feature -- Element change
 		deferred
 		end
 
+feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
+
+	update_children is
+			-- Update all children with `update_needed' True.
+			--| We are on an idle action now. At least one item has marked
+			--| itself `update_needed'.
+		local
+			cur: INTEGER
+		do
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				if ev_children.item.update_needed then
+					update_child (ev_children.item, ev_children.index)
+				end
+				ev_children.forth
+			end
+			ev_children.go_i_th (index)
+		end
+
+	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
+			-- Update `child'.
+		require
+			child_not_void: child /= Void
+			child_dirty: child.update_needed
+		local
+			cur: CURSOR
+			txt: STRING
+			list: LINKED_LIST [STRING]
+		do
+			list := child.interface
+			cur := list.cursor
+			from
+				list.start
+			until
+				list.index > columns or else list.after
+			loop
+				txt := list.item
+				if txt = Void then
+					txt := ""
+				end
+				set_cell_text (list.index, a_row, txt)
+				list.forth
+			end
+			list.go_to (cur)
+			child.update_performed
+		ensure
+			child_updated: not child.update_needed
+		end
+
+	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
+			-- Agent object for `update_children'.
+
+	set_cell_text (a_x, a_y: INTEGER; a_text: STRING) is
+			-- Set cell `a_x', `a_y' to `a_text'.
+		require
+			a_x_within_bounds: a_x >= 1 and then  a_x <= columns
+			a_y_within_bounds: a_y >= 1 and then  a_x <= count
+			a_text_not_void: a_text /= Void
+		deferred
+		end
+
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
@@ -242,6 +314,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/24 17:29:35  brendel
+--| Moved platform independent update code here.
+--|
 --| Revision 1.33  2000/03/24 01:36:21  brendel
 --| Added row_height.
 --| Formatting.

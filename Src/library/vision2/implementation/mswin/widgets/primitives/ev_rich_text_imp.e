@@ -37,7 +37,8 @@ inherit
 			selection_start,
 			selection_end,
 			wel_selection_start,
-			wel_selection_end
+			wel_selection_end,
+			set_selection
 		redefine
 			interface,
 			initialize,
@@ -120,7 +121,6 @@ inherit
 			selected_text,
 			current_line_number,
 			on_en_change,
-			set_selection,
 			set_text_limit,
 			select_all,
 			default_process_message,
@@ -302,7 +302,6 @@ feature -- Status report
 		local
 			char_imp: EV_CHARACTER_FORMAT_IMP
 		do
-				-- Create a screen DC for access to metrics
 			create Result
 			char_imp ?= Result.implementation
 			cwin_send_message (wel_item, em_getcharformat, 1, char_imp.to_integer)

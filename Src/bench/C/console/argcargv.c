@@ -17,6 +17,13 @@
 
 EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
 int eif_fn_count = 0;
+
+HANDLE ghInstance;
+HINSTANCE eif_hInstance;
+HINSTANCE eif_hPrevInstance;
+LPSTR eif_lpCmdLine;
+int eif_nCmdShow;
+
 static char **local_argv = NULL, *temp = NULL;
 
 void get_argcargv (int *argc, char ***argv)
@@ -24,13 +31,6 @@ void get_argcargv (int *argc, char ***argv)
 	int tl;
 
 	temp = strdup (GetCommandLine());
-	tl = strlen (temp);
-	if ((tl > 16) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
-		(temp[tl-16] == '"') && (temp[tl-15] == '?') && (temp[tl-17] == ' '))
-		{
-		temp[tl-17] = '\0';
-	}
-
 	local_argv = shword (temp);
 	*argv = local_argv;
 

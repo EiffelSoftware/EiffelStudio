@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	
 feature {NONE} -- Access
 
-	event_command_array: ARRAY [GTK_COMMAND_LIST]
+	event_command_array: ARRAY [EV_GTK_COMMAND_LIST]
 			-- Array sorted by event_id. And for each event_id,
 			-- list of the commands and its associated con_id
 			-- For this event_ids, See the class EV_EVENT_CONSTANTS
@@ -196,7 +196,7 @@ feature {NONE} -- Status setting
 			ev_d_imp: EV_EVENT_DATA_IMP
 			con_id: INTEGER
 
-			list_com: GTK_COMMAND_LIST
+			list_com: EV_GTK_COMMAND_LIST
 			event_id: INTEGER
                 do				
 			ev_d_imp ?= ev_data.implementation
@@ -258,7 +258,7 @@ feature {NONE} -- Status setting
 			ev_str: ANY
 			con_id: INTEGER
 -- alex
-			list_com: GTK_COMMAND_LIST
+			list_com: EV_GTK_COMMAND_LIST
 			event_id: INTEGER
 		do
 			ev_str:= event.to_c
@@ -310,7 +310,7 @@ feature {NONE} -- Status setting
 		require
 			valid_id: event_id >= 1 and event_id <= command_count
 		local
-			list_com: GTK_COMMAND_LIST
+			list_com: EV_GTK_COMMAND_LIST
 			con_id: INTEGER
 		do
 			if event_command_array /= Void then
@@ -342,7 +342,7 @@ feature {NONE} -- Status setting
 			valid_command: cmd /= Void
 			valid_id: event_id >= 1 and event_id <= command_count
 		local
-			list_com: GTK_COMMAND_LIST
+			list_com: EV_GTK_COMMAND_LIST
 
 		do
 			if event_command_array /= Void and then 

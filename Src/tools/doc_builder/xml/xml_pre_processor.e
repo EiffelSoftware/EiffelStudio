@@ -33,7 +33,7 @@ feature -- Commands
 
 	process is
 			-- Process
-		do
+		do			
 			if preferences.process_html_stylesheet then
 				insert_html_stylesheet_link
 			end
@@ -53,9 +53,48 @@ feature -- Commands
 			then			
 				insert_filter_script
 			end
+			if preferences.process_includes then
+				insert_includes
+			end
+			insert_content_div
 		end		
 
 feature {NONE} -- Processing
+
+	insert_content_div is
+			-- Insert reference to content style which excludes header and footer
+		local
+			l_parent,			
+			l_content: XM_ELEMENT	
+			l_ns: XM_NAMESPACE		
+		do			
+			l_parent := internal_xml.element_by_name ("document")
+			if l_parent /= Void then
+				create l_ns.make_default				
+				create l_content.make (l_parent, "outer_content", l_ns)
+				l_parent.put_last (l_content)
+				l_parent := l_parent.element_by_name ("paragraph")				
+				if l_parent /= Void then
+					
+							-- Move the header and footer up a level				
+					if header_inserted then
+						l_content.put_first (l_parent.item (1))
+						l_parent.remove_first
+					end
+					
+					l_content.put_last (l_parent)
+					
+					if footer_inserted then
+						l_content.put_last (l_parent.last)
+						l_parent.remove_last
+					end								
+							
+					l_content.set_name ("paragraph")					
+					l_parent.set_name ("div")						
+					l_parent.put_first (create {XM_ATTRIBUTE}.make ("style", l_ns, "content_style", l_parent))				
+				end
+			end	
+		end
 
 	insert_html_stylesheet_link is
 			-- Insert reference to project or document HTML stylesheet file
@@ -72,7 +111,7 @@ feature {NONE} -- Processing
 					if l_path /= Void then
 						create l_stylesheet_tag.make (l_parent, "stylesheet", create {XM_NAMESPACE}.make_default)
 						l_stylesheet_tag.put_last (create {XM_CHARACTER_DATA}.make (l_stylesheet_tag, l_path))
-						l_parent.put_last (l_stylesheet_tag)
+						l_parent.put_last (l_stylesheet_tag)						 	
 					end
 				end
 			end	
@@ -83,12 +122,15 @@ feature {NONE} -- Processing
 		local
 			l_header: DOCUMENT_HEADER
 			l_parent: XM_ELEMENT
+			l_filename: STRING
 		do
 				-- Build header
 			if preferences.use_header_file then
-				if preferences.override_file_header_declarations then
-					create l_header.make_from_file (shared_project.preferences.header_name)	
-				else
+				l_filename := shared_project.preferences.header_name
+				if l_filename /= Void and not l_filename.is_empty then
+					if preferences.override_file_header_declarations then
+						create l_header.make_from_file (shared_project.preferences.header_name)	
+					end
 				end
 			else
 				if internal_xml.document /= Void then
@@ -97,11 +139,14 @@ feature {NONE} -- Processing
 			end			
 			
 				-- Insert header in document
-			l_parent := internal_xml.element_by_name ("document")
-			if l_parent /= Void then
-				l_parent := l_parent.element_by_name ("paragraph")
-				if l_parent /= Void then					
-					l_parent.put_first (l_header.root_element)		
+			if l_header /= Void then
+				l_parent := internal_xml.element_by_name ("document")
+				if l_parent /= Void then
+					l_parent := l_parent.element_by_name ("paragraph")
+					if l_parent /= Void then					
+						l_parent.put_first (l_header.root_element)
+						header_inserted := True
+					end
 				end
 			end
 		end
@@ -111,23 +156,29 @@ feature {NONE} -- Processing
 		local
 			l_footer: DOCUMENT_FOOTER
 			l_parent: XM_ELEMENT
+			l_filename: STRING
 		do
 				-- Build footer
 			if preferences.use_footer_file then
-				if preferences.override_file_footer_declarations then
-					create l_footer.make_from_file (shared_project.preferences.footer_name)	
-				else
+				l_filename := shared_project.preferences.footer_name
+				if l_filename /= Void and not l_filename.is_empty then
+					if preferences.override_file_header_declarations then
+						create l_footer.make_from_file (shared_project.preferences.footer_name)	
+					end
 				end
 			else
 				create l_footer.make_from_file (footer_xml_template_file_name)
 			end
 			
 				-- Insert footer in document
-			l_parent := internal_xml.element_by_name ("document")
-			if l_parent /= Void then
-				l_parent := l_parent.element_by_name ("paragraph")
-				if l_parent /= Void then					
-					l_parent.put_last (l_footer.root_element)		
+			if l_footer /= Void then
+				l_parent := internal_xml.element_by_name ("document")
+				if l_parent /= Void then
+					l_parent := l_parent.element_by_name ("paragraph")
+					if l_parent /= Void then					
+						l_parent.put_last (l_footer.root_element)		
+						footer_inserted := True
+					end
 				end
 			end
 		end		
@@ -136,37 +187,47 @@ feature {NONE} -- Processing
 			-- Insert project navigation links
 		local
 			l_toc: TABLE_OF_CONTENTS
-			l_node,
-			l_parent: TABLE_OF_CONTENTS_NODE
-			l_label,
-			l_url,
-			l_separator: STRING		
-			l_xm_parent, l_xm_link, l_xm_label, l_xm_url: XM_ELEMENT
+			l_node,	l_parent: TABLE_OF_CONTENTS_NODE
+			l_label, l_url,	l_link_text, l_separator: STRING		
 			l_doc_link: DOCUMENT_LINK
+			l_xm_parent, l_xm_link, l_xm_label, l_xm_url: XM_ELEMENT
+			l_is_one: BOOLEAN
 		do
+			create l_link_text.make_empty
 			l_toc := shared_constants.help_constants.toc
 			if l_toc /= Void then
 					-- Get node matching document
 				l_node := l_toc.node_by_url (internal_xml.name)
-				if l_node /= Void then
-					
-						-- Determine element in which to put link xml
-					l_xm_parent := internal_xml.element_by_name ("document")
-					if l_xm_parent /= Void then
-						l_xm_parent := l_xm_parent.element_by_name ("paragraph").element_by_name ("span").element_by_name ("table").elements.item (2).elements.item (2)
-					end
+				l_xm_parent := internal_xml.element_by_name ("document")
+				if l_xm_parent /= Void then
+  					l_xm_parent := l_xm_parent.element_by_name ("paragraph")
+  					if l_xm_parent /= Void then
+  						l_xm_parent := l_xm_parent.element_by_name ("span")	
+  						if l_xm_parent /= Void then
+  							l_xm_parent := l_xm_parent.elements.item (2)
+  							if l_xm_parent /= Void then
+  								l_xm_parent := l_xm_parent.elements.item (1)
+  								if l_xm_parent /= Void then
+  									l_xm_parent := l_xm_parent.elements.item (1)		
+  								end
+  							end
+  						end
+  					end
+      			end
+				if l_node /= Void and l_xm_parent /= Void then
 					
 					if l_node.url /= Void then
 						create l_doc_link.make (l_node.url.twin, l_node.url.twin)
-					end
-											
+					end					
+			
+						-- Build link information					
 					from					
 						l_separator := " &gt; "
 						l_parent := l_node.parent
 					until
 						l_parent = Void
 					loop
-							-- Take parent information of node recursively and build XML link
+							-- Take parent information of node recursively and build link text
 						if l_parent.title /= Void then							
 							l_label := l_parent.title.twin	
 						end
@@ -178,24 +239,40 @@ feature {NONE} -- Processing
 						end
 						l_node := l_parent
 						l_parent := l_node.parent
-						if l_label /= Void then
-							create l_xm_link.make (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
-							create l_xm_label.make (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
-							l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, l_label))
-							l_xm_link.put_first (l_xm_label)
-							if l_url /= Void then
-								create l_xm_url.make (l_xm_link, "url", create {XM_NAMESPACE}.make_default)
-								l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, l_url))
-								l_xm_link.put_first (l_xm_url)								
-							end
-							if l_parent /= Void then								
-								l_xm_parent.put_first (l_xm_link)	
-								if l_parent.parent /= Void then
-									l_xm_parent.put_first (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
-								end
+						if l_label /= Void then							
+							if l_parent /= Void then
+								l_is_one := True
+								create l_xm_link.make (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
+           						create l_xm_label.make (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
+								l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, l_label))
+        						l_xm_link.put_first (l_xm_label)
+        						if l_url /= Void then
+									create l_xm_url.make (l_xm_link, "url", create {XM_NAMESPACE}.make_default)
+									l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, l_url))
+           							l_xm_link.put_first (l_xm_url)								
+           						end
+           						if l_parent /= Void then								
+           							l_xm_parent.put_first (l_xm_link)	
+           							if l_parent.parent /= Void then
+           								l_xm_parent.put_first (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
+           							end
+           						end
 							end
 						end					
 					end
+					
+						-- Create a default link to the root of the tree
+					if l_is_one then
+           				l_xm_parent.put_first (create {XM_CHARACTER_DATA}.make (l_xm_parent, l_separator))
+           			end
+					create l_xm_link.make (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
+           			create l_xm_label.make (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
+					l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, "Online Documentation"))
+        			l_xm_link.put_first (l_xm_label)
+        			create l_xm_url.make (l_xm_link, "url", create {XM_NAMESPACE}.make_default)
+					l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, "/index.html"))
+           			l_xm_link.put_first (l_xm_url)								           			
+					l_xm_parent.put_first (l_xm_link)						
 				end
 			end
 		end		
@@ -203,7 +280,7 @@ feature {NONE} -- Processing
 	insert_filter_script is
 			-- Insert filter script for web generated help project.
 			-- Note: this is required because Internet Explorer does not
-			-- support captureEvents() JavaScript method and therefore
+			-- support the captureEvents() JavaScript method and therefore
 			-- a page load event handler is required for all page so that
 			-- it can filter out unwanted content at loading time.
 		local
@@ -211,12 +288,26 @@ feature {NONE} -- Processing
 			l_parent,
 			l_script_tag: XM_ELEMENT
 		do
-			l_script_text := "function pageLoad (){parent.toc_frame.documentLoaded();}"
+			l_script_text := "function pageLoad (){if (parent.toc_frame){parent.toc_frame.documentLoaded();}}"
 			l_parent := internal_xml.element_by_name ("document")
 			if l_parent /= Void then
 					-- Insert script in header
 				l_parent := l_parent.element_by_name ("meta_data")
-				if l_parent /= Void then										
+				if l_parent /= Void then
+						-- External Javascript includes
+					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("type", create {XM_NAMESPACE}.make_default, "text/javascript", l_script_tag))
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("src", create {XM_NAMESPACE}.make_default, "/style_changer.js", l_script_tag))
+					l_parent.put_last (l_script_tag)	
+					
+					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("type", create {XM_NAMESPACE}.make_default, "text/javascript", l_script_tag))
+					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("src", create {XM_NAMESPACE}.make_default, "/toc.js", l_script_tag))
+					l_parent.put_last (l_script_tag)
+					
+						-- Page Load event handler
 					create l_script_tag.make (l_parent, "script", create {XM_NAMESPACE}.make_default)
 					l_script_tag.put_last (create {XM_ATTRIBUTE}.make ("Language", create {XM_NAMESPACE}.make_default, "JavaScript", l_script_tag))
 					l_script_tag.put_last (create {XM_CHARACTER_DATA}.make (l_script_tag, l_script_text))
@@ -234,6 +325,12 @@ feature {NONE} -- Processing
 			
 		end		
 
+	insert_includes is
+			-- Find all includes directives and insert into document
+		do
+			-- TO DO
+		end		
+
 feature {NONE} -- Implementation
 
 	internal_xml: DOCUMENT_XML
@@ -244,6 +341,10 @@ feature {NONE} -- Implementation
 		once
 			Result := shared_project.preferences	
 		end
+	
+	header_inserted,
+	footer_inserted: BOOLEAN	
+			-- Was header/footer inserted?
 		
 invariant
 	has_content: internal_xml /= Void

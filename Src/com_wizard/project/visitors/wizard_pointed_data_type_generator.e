@@ -703,7 +703,6 @@ feature {NONE} -- Implementation
 
 			-- element_c_type * result = 0;
 			-- value of ^
-			--
 
 			Result.append (element_c_type)
 			Result.append (Space)
@@ -713,8 +712,20 @@ feature {NONE} -- Implementation
 			Result.append (Space_equal_space)
 			Result.append (Zero)
 			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- EIF_REFERENCE cell_item = 0;
+			--
+
+			Result.append (Eif_reference)
+			Result.append (Space)
+			Result.append ("cell_item")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
+
 
 			-- eif_object = eif_protect (eif_ref);
 
@@ -779,7 +790,40 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- *result = cpp_object.element_ec_function (item (eif_access (eif_object)));
+			-- cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE)
+
+			Result.append ("cell_item = ")
+			Result.append (Eif_field)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_object_variable)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Double_quote)
+			Result.append ("item")
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Eif_reference)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			-- if (cell_item == NULL)
+
+			Result.append ("if (cell_item == NULL)")
+			Result.append (New_line_tab_tab)
+
+			--	*result = NULL;
+
+			Result.append ("*result = NULL;")
+			Result.append (New_line_tab)
+
+			-- else
+
+			Result.append ("else")
+			Result.append (New_line_tab_tab)
+
+			-- 	*result = cpp_object.element_ec_function (cell_item);
 			--                      value of ^
 
 			Result.append (Asterisk)
@@ -794,19 +838,7 @@ feature {NONE} -- Implementation
 			Result.append (element_ec_function)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append (Eif_field)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_object_variable)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (Double_quote)
-			Result.append ("item")
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Eif_reference)
-			Result.append (Close_parenthesis)
+			Result.append ("cell_item")
 			if element_writable then
 				Result.append (Comma_space)
 				Result.append (Null)

@@ -38,9 +38,6 @@ feature -- Access
 		deferred
 		end
 
-	data: ANY
-			-- A data kept by the item
-
 	parent_widget: EV_WIDGET is
 			-- Parent widget of the current item
 		require
@@ -65,17 +62,6 @@ feature -- Element change
 		deferred
 		ensure
 			text_set: text.is_equal (txt)
-		end
-
-	set_data (a: like data) is
-			-- Make `a' the new data of the item.
-		require
-			exists: not destroyed
-		do
-			data := a
-		ensure
-			data_set: (data /= Void) implies (data.is_equal (a))
-				and (data = Void) implies (a = Void)
 		end
 
 	set_parent (par: EV_ANY) is

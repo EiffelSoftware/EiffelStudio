@@ -32,13 +32,9 @@ feature -- Access
 			Result := implementation.text
 		end
 
-	data: ANY is
+	data: ANY
 			-- A data kept by the item
-		require
-			exists: not destroyed
-		do
-			Result := implementation.data
-		end
+			-- May be redefine.
 
 	parent: EV_ANY is
 			-- The parent of the Current widget
@@ -79,7 +75,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 		do
-			implementation.set_data (a)
+			data := a
 		ensure
 			data_set: (data /= Void) implies (data.is_equal (a))
 				and (data = Void) implies (a = Void)

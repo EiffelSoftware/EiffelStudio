@@ -759,7 +759,7 @@ void spclearall (EIF_POINTER spobj)
 		dtype = HEADER(ref)->ov_flags & EO_TYPE;
 		bzero(spobj, count * elem_size);
 			/* Initialize new expanded elements, if any */
-		init = (char *(*)(char *)) (Create(dtype)); /* %%ss cast? added */
+		init = (char *(*)(char *)) (XCreate(dtype)); /* %%ss cast? added */
 #ifdef MAY_PANIC
 		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
 			panic("init routine lost");

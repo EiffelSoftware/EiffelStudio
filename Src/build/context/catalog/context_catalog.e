@@ -65,7 +65,7 @@ feature
 			top_form: FORM
 		do
 			top_shell_create (Widget_names.context_catalog, eb_screen);
-			set_size (240, 260);
+			--set_size (240, 260);
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form, form);
 
@@ -89,7 +89,7 @@ feature
 			!! menu_page.make (form, rc);
 			!! set_page.make (form, rc);
 			!! group_page.make (form, rc);
-			initialize_window_attributes;
+			
 			current_button := window_page.button;
 
 			top_form.attach_top (edit_hole, 0);
@@ -125,7 +125,7 @@ feature
 			form.attach_left (rc, 0);
 			form.attach_right (rc, 0);
 			form.attach_bottom (rc, 0);
-
+			initialize_window_attributes;
 			current_button.set_selected;
 			!! del_com.make (Current);
 			set_delete_command (del_com);

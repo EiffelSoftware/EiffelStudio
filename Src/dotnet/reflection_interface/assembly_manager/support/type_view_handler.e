@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 						--update_children_inheritance_clauses (old_name, new_name)
 						rename_feature_in_children (old_name, new_name)
 						a_feature.set_eiffel_name (new_name)
-						a_feature.set_modified
+						a_feature.set_modified (True)
 					end
 				else
 					is_valid := False
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 				else
 					is_valid := is_valid and True
 					an_argument.set_eiffel_name (new_name)
-					a_feature.set_modified
+					a_feature.set_modified (True)
 				end
 			else
 				is_valid := False
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 				a_feature ?= enumerator.get_current
 				if a_feature /= Void then
 					a_feature.set_eiffel_name (new_name)
-					a_feature.set_modified
+					a_feature.set_modified (True)
 				end
 			end
 		end

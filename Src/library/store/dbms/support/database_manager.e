@@ -8,15 +8,15 @@ class
 
 feature -- Connection
 
-	set_connection_information (a_name, a_psswd, data_source: STRING) is
+	set_connection_information (user_name, password, data_source: STRING) is
 			-- Set information required to connect to the database.
 		require
-			not_void: a_name /= Void and a_psswd /= Void
+			not_void: user_name /= Void and password /= Void and data_source /= Void
 		local
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				create database_appl.login (a_name, a_psswd)
+				create database_appl.login (user_name, password)
 				database_appl.set_data_source (data_source)
 			else
 				has_error := True
@@ -191,7 +191,7 @@ feature -- Queries without result to load.
 				has_error := False
 				session_control.reset
 				db_change.set_query (a_query)
-				db_change.execute_query				
+				db_change.execute_query
 			else
 				has_error := True
 				error_message := unexpected_error (Execute_query_name)

@@ -31,6 +31,15 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_ABOUT_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		redefine
+			t_version_info
+		end
 
 creation
 	make
@@ -57,7 +66,7 @@ feature -- Initialization
 			disable_user_resize
 
 				-- Create controls.
-			eiffel_image := clone ((create {GB_SHARED_PIXMAPS}).Help_about_pixmap)
+			eiffel_image := (create {GB_SHARED_PIXMAPS}).Help_about_pixmap.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)
@@ -122,47 +131,12 @@ feature -- Initialization
 			set_default_cancel_button (ok_button)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
-
-feature {NONE} -- Constant strings
+		
+feature {NONE} -- Implementation
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild (5.3.0204)%N%
-				%Evaluation version"
-		end
-		
-
-	t_Copyright_info: STRING is
-		once
-			Result := 
-				"Copyright (C) 1985-2002 Eiffel Software Inc.%N%
-				%All rights reserved"
-		end
-
-	t_info: STRING is
-		once
-			create Result.make (500)
-			Result.append (
-				"Eiffel Software Inc.%N%
-				%ISE Building%N%
-				%356 Storke Road, Goleta, CA 93117 USA%N%
-				%Telephone: 805-685-1006, Fax 805-685-6869%N%
-				%Electronic mail: <info@eiffel.com>%N%
-				% %N%
-				%Web Customer Support: http://support.eiffel.com%N%
-				%Visit Eiffel on the Web: http://www.eiffel.com%N"
-			)
-		end
-
-	t_borland: STRING is
-			-- Text for Borland.
-		once
-			create Result.make (256)
-			Result.append (
-				"Includes Free Borland command-line%N%
-				%C++ compiler.%N%
-				%Visit http://www.borland.com/bcppbuilder")
-
+			Result := Precursor {GB_ABOUT_DIALOG_CONSTANTS} + "%NEvaluation Version:"
 		end
 
 end -- class GB_ABOUT_DIALOG

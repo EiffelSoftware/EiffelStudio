@@ -75,6 +75,9 @@ feature
 	rescue_clause: BYTE_LIST [BYTE_NODE]
 			-- List of INSTR_B instances: can be Void.
 
+	has_default_rescue: BOOLEAN
+			-- Is `rescue_clause' the default_rescue?
+
 	clear_old_expressions is
 			-- Clear old_expressions
 		require
@@ -173,6 +176,14 @@ feature
 			-- Assign `var' to `rescue_clause'.
 		do
 			rescue_clause := var
+		end
+
+	set_default_rescue (v: BOOLEAN) is
+			-- Assign `v' to `has_default_rescue'.
+		do
+			has_default_rescue := v
+		ensure
+			default_rescue_set: has_default_rescue = v
 		end
 
 	set_arguments (a: like arguments) is
@@ -535,6 +546,7 @@ feature -- Byte code generation
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 			cl_name: STRING
+			saved_debug_mode: BOOLEAN
 		do
 			local_list := context.local_list
 			local_list.wipe_out
@@ -639,7 +651,7 @@ feature -- Byte code generation
 				end
 			end
 
-				-- Resue offset if any.
+				-- Rescue offset if any.
 			if rescue_clause /= Void then
 				ba.append ('%/001/')
 				ba.mark_forward
@@ -656,11 +668,18 @@ feature -- Byte code generation
 			ba.append (Bc_null)
 
 			if rescue_clause /= Void then
+				if has_default_rescue then
+					saved_debug_mode := Context.debug_mode
+					Context.set_debug_mode (false)	
+				end
 				ba.write_forward
 				ba.append (Bc_rescue)
 				rescue_clause.make_byte_code (ba)
 				make_breakable (ba)
 				ba.append (Bc_end_rescue)
+				if has_default_rescue then
+					Context.set_debug_mode (saved_debug_mode)
+				end
 			end
 
 			from

@@ -3457,7 +3457,7 @@ feature -- Validity class
 					not l_cor_mism.is_procedure or l_cor_mism.argument_count > 0
 				then
 					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class STRING must have a procedure `internal_correct_mismatch' with no arguments", Current))
+						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments", Current))
 				end				
 			end-- Do nothing
 		end

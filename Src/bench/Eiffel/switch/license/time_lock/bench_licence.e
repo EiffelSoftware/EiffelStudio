@@ -118,7 +118,7 @@ feature -- Info
 			create environment
 
 				-- Create the DES encoder/decoder
-			create encoder.make_with_key (key)
+			create encoder.make_with_key (non_commercial_key)
 
 				-- Get the stored expiration date
 			date_name := clone (environment.get ("BENCH_TRIAL_51"))

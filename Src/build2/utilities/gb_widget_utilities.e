@@ -133,6 +133,8 @@ feature -- Basic operations
 		
 	unparent_ev_object (ev_object: EV_ANY) is
 			-- Remove `ev_object' from its parent.
+		require
+			object_not_void: ev_object /= Void
 		local
 			dynamic_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]
 			container: EV_CONTAINER
@@ -206,12 +208,16 @@ feature -- Basic operations
 
 	expand_tree_recursive (tree: EV_TREE) is
 			-- Ensure that every node of `tree' is expanded.
+		require
+			tree_not_void: tree /= Void
 		do
 			tree.recursive_do_all (agent expand_node)
 		end
 		
 	collapse_tree_recursive (tree: EV_TREE) is
 			-- Ensure that every node of `tree' is not epanded.
+		require
+			tree_not_void: tree /= Void
 		do
 			tree.recursive_do_all (agent collapse_node)
 		end
@@ -322,6 +328,53 @@ feature -- Basic operations
 			end
 		end
 		
+	reparent (original_widget, new_widget: EV_WIDGET) is
+			-- Replace `original_widget' with `new_widget' within parent of `original_widget'.
+		require
+			original_widget_parented: original_widget.parent /= Void
+			new_widget_not_parented: new_widget.parent = Void
+		local
+			cell: EV_CELL
+			widget_list: EV_WIDGET_LIST
+			split_area: EV_SPLIT_AREA
+			table: EV_TABLE
+			row, column, row_span, column_span: INTEGER
+		do
+			cell ?= original_widget.parent
+			if cell /= Void then
+				cell.wipe_out
+				cell.extend (new_widget)
+			else
+				widget_list ?= original_widget.parent
+				if widget_list /= Void then
+					widget_list.go_i_th (widget_list.index_of (original_widget, 1))
+					widget_list.remove
+					widget_list.put_left (new_widget)
+				else
+					split_area ?= original_widget.parent
+					if split_area /= Void then
+						if split_area.first = original_widget then
+							split_area.prune_all (original_widget)
+							split_area.set_first (new_widget)
+						else
+							split_area.prune_all (original_widget)
+							split_area.set_second (new_widget)
+						end
+					else
+						table ?= original_widget.parent
+						row := table.item_row_position (original_widget)
+						column := table.item_column_position (original_widget)
+						row_span := table.item_row_span (original_widget)
+						column_span := table.item_column_span (original_widget)
+						table.prune_all (original_widget)
+						table.put_at_position (new_widget, column, row, column_span, row_span)
+					end
+				end
+			end
+		ensure
+			new_widget_parented_correctly: new_widget.parent /= Void and old original_widget.parent = new_widget.parent
+			original_widget_not_parented: original_widget.parent = Void
+		end
 
 feature {NONE} -- Implementation
 

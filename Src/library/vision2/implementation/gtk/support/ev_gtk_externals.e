@@ -277,7 +277,20 @@ feature {NONE} -- GTK C functions for gtktext
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_text_forward_delete (text: POINTER; nchar: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_text_insert (text, font, fore, back, str: POINTER; length: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	c_gtk_text_insert (widget: POINTER; txt: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_text_full_insert (widget, font: POINTER; r, g, b: INTEGER;
+			txt: POINTER; length: INTEGER) is
 		external "C | %"gtk_eiffel.h%""
 		end
 

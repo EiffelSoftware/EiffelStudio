@@ -2,8 +2,8 @@ class FEATURE_NAMES_MERGER
 
 feature
 
-	merge2 (f1, f2: EIFFEL_LIST [FEATURE_NAME]) is
-			-- Merge feature names `f1' and `f2'.
+	merge2 (user, new_tmp: EIFFEL_LIST [FEATURE_NAME]) is
+			-- Merge feature names `user' and `new_tmp'.
 		local
 			new_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			new_names: LINKED_LIST [FEATURE_NAME]
@@ -13,32 +13,32 @@ feature
 	
 			-- Keeping names from template feature	
 			from
-				f2.start
+				new_tmp.start
 			until
-				f2.after
+				new_tmp.after
 			loop
-				new_names.put_left (f2.item)
-				f2.forth
+				new_names.put_left (new_tmp.item)
+				new_tmp.forth
 			end
 
 			-- Adding user defined names.
 			from
-				f1.start
+				user.start
 			until
-				f1.after
+				user.after
 			loop
 				from 
-					f2.start
+					new_tmp.start
 				until
-					f2.after or else (f2.item <= f1.item and f2.item >= f1.item)
+					new_tmp.after or else (new_tmp.item <= user.item and new_tmp.item >= user.item)
 				loop
-					f2.forth
+					new_tmp.forth
 				end
-				if f2.after then
-					new_names.put_left (f1.item)
+				if new_tmp.after then
+					new_names.put_left (user.item)
 				end
 
-				f1.forth
+				user.forth
 			end;
 			
 			!! merge_result.make (new_names.count)

@@ -2,10 +2,10 @@ class FEATURE_AS_MERGER
 
 feature
 
-	merge3 (o, u, n: FEATURE_AS) is
-			-- Merge `o'ld, `u'ser-defined and `n'ew feature.
+	merge3 (old_tmp, user, new_tmp: FEATURE_AS) is
+			-- Merge `old_tmp', `user' and `new_tmp' feature.
 		require
-			u_not_void: u /= Void
+			user_f_not_void: user /= Void
 		local
 			o_body: BODY_AS
 			o_fas_ebuild, u_fas_ebuild, n_fas_ebuild: FEATURE_AS_EBUILD
@@ -15,9 +15,9 @@ feature
 			comment_merger: COMMENT_MERGER;
 			o_comment: EIFFEL_COMMENTS;
 		do
-			o_fas_ebuild ?= o
-			u_fas_ebuild ?= u
-			n_fas_ebuild ?= n
+			o_fas_ebuild ?= old_tmp
+			u_fas_ebuild ?= user
+			n_fas_ebuild ?= new_tmp
 
 			if u_fas_ebuild /= Void or n_fas_ebuild /= Void then
 				!FEATURE_AS_EBUILD! merge_result
@@ -25,30 +25,38 @@ feature
 				!! merge_result
 			end
 
-			if n /= Void then
+			if new_tmp /= Void then
+				-- Merging feature names
+				-- It's not necessary to keep track of feature names,
+				-- appearing in the old template.
 				!! feature_names_merger;
-				feature_names_merger.merge2 (u.feature_names, n.feature_names)
+				feature_names_merger.merge2 (user.feature_names, new_tmp.feature_names)
 				merge_result.set_feature_names (feature_names_merger.merge_result)
 
-				if o /= Void then		
-					o_body := o.body
+				if old_tmp /= Void then		
+					o_body := old_tmp.body
 				end
 
-				if u.body = Void or else 
-					(u.body.is_body_equiv (n.body) and then
-					(u.body.is_assertion_equiv (n.body)))
+				if user.body = Void or else 
+					(user.body.is_body_equiv (new_tmp.body) and then
+					(user.body.is_assertion_equiv (new_tmp.body)))
 				then
-					merge_result.set_body (n.body)
+					-- Body of user feature is void or is
+					-- equivalent to one from new template.
+					-- Keeping new template feature
+					merge_result.set_body (new_tmp.body)
 				else
+					-- Merging bodies.
 					!! body_merger
-					body_merger.merge3 (o_body, u.body, n.body)
+					body_merger.merge3 (o_body, user.body, new_tmp.body)
 					merge_result.set_body (body_merger.merge_result)
 				end
 			else
-				merge_result.set_feature_names (u.feature_names)
-				merge_result.set_body (u.body)
-				merge_result.set_body_id (u.body_id)
-				merge_result.set_id (u.id)
+				-- Copying user feature
+				merge_result.set_feature_names (user.feature_names)
+				merge_result.set_body (user.body)
+				merge_result.set_body_id (user.body_id)
+				merge_result.set_id (user.id)
 			end
 
 			if u_fas_ebuild /= Void and n_fas_ebuild /= Void then
@@ -59,11 +67,13 @@ feature
 				end
 				if u_ras_ebuild = Void and n_ras_ebuild = Void and then o_ras_ebuild = Void
 				then
-						-- For attribute comment
+					-- For attribute comment
 					!! comment_merger
 					if o_fas_ebuild /= void then
 						o_comment := o_fas_ebuild.comment
 					end
+					
+					-- Merging comments for build features.
 					comment_merger.merge3 (o_comment,
 										u_fas_ebuild.comment, 
 										n_fas_ebuild.comment)

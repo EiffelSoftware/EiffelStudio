@@ -2,18 +2,18 @@ class FEATURE_CLAUSE_MERGER
 
 feature
 	
-	merge3 (old_cl, user_cl, new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
-			-- Merge feature clauses `old_cl', `user_cl' and `new_cl'.
+	merge3 (old_tmp, user, new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+			-- Merge feature clauses `old_tmp', `user' and `new_cl'.
 			-- No further abstraction possible, because
 			-- features can appear in different clauses, i.e.
 			-- feature `x' can appear in clause `a' in user-file and
 			-- in clause `b' in template file.
 		do
-			old_template_features := features_in_list (old_cl)
-			user_features := features_in_list (user_cl)
+			old_template_features := features_in_list (old_tmp)
+			user_features := features_in_list (user)
 
-			merge_keeping_order (user_cl, new_cl)
-			add_user_features (old_cl, user_cl, new_cl)
+			merge_keeping_order (user, new_cl)
+			add_user_features (old_tmp, user, new_cl)
 		end;
 
 	merge_result: EIFFEL_LIST [FEATURE_CLAUSE_AS]
@@ -216,7 +216,7 @@ feature {NONE} -- Internal
             end;
 
 
-	add_user_features (old_cl, user_cl,  new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+	add_user_features (old_tmp, user,  new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
 		local
 			merged_features: ARRAYED_LIST [FEATURE_AS]
 			current_feature_names: EIFFEL_LIST [FEATURE_NAME]
@@ -268,7 +268,7 @@ feature {NONE} -- Internal
 						merged_features.forth
 					end
 				else
-					if not has_feature (user_features.item, old_cl) then
+					if not has_feature (user_features.item, old_tmp) then
 						-- Not a feature removed from the old template, but
 						-- a feature added by the user.
 						-- Feature should be kept.
@@ -277,7 +277,7 @@ feature {NONE} -- Internal
                             temp_clauses.start
 						end
 						last_user_clause := user_clause
-						user_clause := feature_clause_of (user_features.item, user_cl)
+						user_clause := feature_clause_of (user_features.item, user)
 
 						if not user_clause.has_equiv_declaration (templ_clause) and then not user_clause.has_equiv_declaration (last_user_clause) then
 							-- Make new clause

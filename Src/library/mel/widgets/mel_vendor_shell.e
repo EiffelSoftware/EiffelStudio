@@ -35,7 +35,8 @@ feature -- Status report
 		do
 			Result := get_xm_font_list (screen_object, XmNdefaultFontList)
 		ensure
-			defalt_font_list_is_valid: Result /= Void and then Result.is_valid
+			Result_is_valid: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
 
 	button_font_list: MEL_FONT_LIST is
@@ -45,7 +46,8 @@ feature -- Status report
 		do
 			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
 		ensure
-			button_font_list_is_valid: Result /= Void and then Result.is_valid
+			Result_is_valid: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
 
 	label_font_list: MEL_FONT_LIST is
@@ -55,7 +57,8 @@ feature -- Status report
 		do
 			Result := get_xm_font_list (screen_object, XmNlabelFontList)
 		ensure
-			label_font_list_is_valid: Result /= Void and then Result.is_valid
+			Result_is_valid: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
 
 	text_font_list: MEL_FONT_LIST is
@@ -65,9 +68,9 @@ feature -- Status report
 		do
 			Result := get_xm_font_list (screen_object, XmNtextFontList)
 		ensure
-			text_font_list_is_valid: Result /= Void and then Result.is_valid
+			Result_is_valid: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
-
 
 	is_delete_response_destroy: BOOLEAN is
 			-- Will the shell destroy the window when receiving

@@ -50,9 +50,10 @@ feature -- Status report
 			exists: not is_destroyed
 		do
 			Result := get_xt_pixel (Current, XmNarmColor)
-        ensure
-            valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+		ensure
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	arm_pixmap: MEL_PIXMAP is
@@ -62,8 +63,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNarmPixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display)
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	default_button_shadow_thickness: INTEGER is
@@ -109,12 +111,12 @@ feature -- Status setting
 			-- Set `arm_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-            valid_color: a_color /= Void and then a_color.is_valid;
+			valid_color: a_color /= Void and then a_color.is_valid;
 			same_display: a_color.same_display (display)
-        do
-            set_xt_pixel (screen_object, XmNarmColor, a_color)
-        ensure
-            arm_color_set: arm_color.is_equal (a_color)
+		do
+			set_xt_pixel (screen_object, XmNarmColor, a_color)
+		ensure
+			arm_color_set: arm_color.is_equal (a_color)
 		end;
 
 	set_arm_pixmap (a_pixmap: MEL_PIXMAP) is

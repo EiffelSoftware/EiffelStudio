@@ -18,6 +18,8 @@
 	properly, but the root object is not created yet.
 */
 
+#include "umain.h"
+
 void umain(argc, argv, envp)
 int argc;
 char **argv;

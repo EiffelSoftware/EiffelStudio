@@ -61,9 +61,6 @@ private struct stack free_stack = {			/* Entries free in hector */
 private EIF_OBJ hector_addr();		/* Maps an adress to an hector position */
 private char *hpop();				/* Pop a free entry off the free stack */
 
-extern uint32 tenure;				/* Tenure value for next generation cycle */
-extern void urgent_plsc();			/* Urgent GC cycle */
-
 #ifndef lint
 private char *rcsid =
 	"$Id$";

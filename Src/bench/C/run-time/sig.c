@@ -742,9 +742,6 @@ int sig;
 	 * use our own description as found in the sig_name array.
 	 */
 
-#ifdef HAS_SYS_SIGLIST
-	extern char *sys_siglist[];
-#endif
 	int i;
 
 #ifdef HAS_SYS_SIGLIST

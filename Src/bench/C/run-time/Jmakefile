@@ -2,8 +2,8 @@
  *	 Jmakefile for Eiffel 3.0 run-time
  */
 
-CFLAGS = -I$(TOP)
-DPFLAGS = -I$(TOP)
+CFLAGS = -I$(TOP) -I../ipc/app
+DPFLAGS = -I$(TOP) -I../ipc/app
 
 NETWORK_OBJ = ../ipc/app/network.o
 

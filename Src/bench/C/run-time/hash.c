@@ -13,6 +13,7 @@
 #include "config.h"
 #include "portable.h"
 #include "tools.h"
+#include "malloc.h"
 #include "hash.h"
 
 /* 
@@ -32,9 +33,6 @@ private char *rcsid =
 /* 
  * Function definitions
  */
-extern void xfree();
-extern char * xcalloc();
-
 
 
 shared void hash_malloc(hp, size)

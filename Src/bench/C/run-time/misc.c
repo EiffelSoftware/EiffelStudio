@@ -29,6 +29,10 @@
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
 
+#ifdef EIF_WIN_31
+#include "wmhandlr.h"		/* For wmhandler_yield(), extra/mswin/console */
+#endif
+
 #ifdef __VMS
 public int	putenv ();
 #endif
@@ -179,10 +183,6 @@ char *s;
 	char * run_command;
 #endif
 
-#ifdef EIF_WIN_31
-	extern void wmhandler_yield();
-#endif
-
 	Signal_t (*old_signal_hdlr)();
 
 #ifdef SIGCLD
@@ -230,7 +230,6 @@ EIF_OBJ v,k;
 	char *key, *lower_k, *value, buf[1024];
 	int appl_len, key_len;
 	char modulename [MAX_PATH];
-	extern char **_argv;
 	HKEY hkey;
 	DWORD disp;
 
@@ -277,7 +276,6 @@ EIF_OBJ v,k;
 #elif defined EIF_WIN_31
 	EIF_INTEGER result;
 	char *ini;
-	extern char **_argv;
 
 	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)
 		return (EIF_INTEGER) -1;
@@ -310,7 +308,6 @@ EIF_OBJ k;
 	static char buf[1024];
 	int appl_len, key_len;
 	char modulename [MAX_PATH];
-	extern char **_argv;
 	HKEY hkey;
 	DWORD bsize;
 
@@ -357,7 +354,6 @@ EIF_OBJ k;
 #elif defined EIF_WIN_31
 	char *ini;
 	static char buf[128];
-	extern char **_argv;
 
 	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)
 		return (EIF_INTEGER) 0;

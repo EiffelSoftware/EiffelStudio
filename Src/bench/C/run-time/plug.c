@@ -21,6 +21,7 @@
 #include "interp.h"
 #include "hashin.h"
 #include "bits.h"
+#include "project.h"		/* for bit_dtype */
 
 
 #ifndef lint
@@ -539,7 +540,6 @@ char *parent;	/* Parent (enclosing object) */
 		case SK_BIT:
 			{
 			long offset;					/* Attribute offset */
-			extern int bit_dtype;			/* Bit dynamic type */
 		
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);

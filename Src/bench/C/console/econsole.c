@@ -18,6 +18,7 @@
 #include <commdlg.h>
 #define EIF_WINDOWS				/* Used to trick err_msg.h */
 #include "..\..\..\run-time\err_msg.h"
+#include "eif_cons.h"
 
 #define BUFFER_SIZE 255
 

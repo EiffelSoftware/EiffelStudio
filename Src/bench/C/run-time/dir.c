@@ -43,6 +43,7 @@
 #include "file.h"
 #include "dir.h"
 #include "plug.h"
+#include "error.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -79,13 +80,6 @@ typedef struct tagEIF_OS2_DIRENT {
 
 #ifndef HAS_READDIR
 	Sorry! You have to find a PD implementation of readdir()...
-#endif
-
-extern int esys();				/* Raise 'Operating system error' exception */
-extern int eio();				/* Raise 'I/O error' exception */
-
-#ifdef __VMS
-public char *	dir_dot_dir (char * dir);
 #endif
 
 /*

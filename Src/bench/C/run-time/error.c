@@ -13,6 +13,7 @@
 #include "config.h"
 #include "portable.h"
 #include "except.h"
+#include "error.h"
 
 #ifdef I_STRING
 #include <string.h>			/* Try to find strerror() there */
@@ -26,11 +27,6 @@ public char *error_tag(code)
 	 * code is stored in errno, or a null pointer if that description is not
 	 * available.
 	 */
-
-#ifdef HAS_SYS_ERRLIST
-	extern int sys_nerr;			/* Size of sys_errlist[] */
-	extern char *sys_errlist[];		/* Maps error code to string */
-#endif
 
 	if (code == 0)					/* No error recorded */
 		return (char *) 0;			/* No description necessary */

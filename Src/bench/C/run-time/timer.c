@@ -45,8 +45,6 @@ Timeval *stamp;
 public void gettime(stamp)
 Timeval *stamp;
 {
-	extern Time_t time();
-
 	(void) time(stamp);
 }
 #endif
@@ -120,7 +118,6 @@ public void getcputime(usertime, systime)
 double *usertime, *systime;
 {
 	struct tms time;
-	extern Clock_t times();
 
 	(void) times(&time);
 	*usertime = (double)time.tms_utime / (double)HZ;

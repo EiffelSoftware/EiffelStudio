@@ -21,6 +21,7 @@
 #include "local.h"
 #include "plug.h"
 #include "except.h"
+#include "lmalloc.h"				/* for malloc() */
 
 #ifdef I_STRING
 #include <string.h>
@@ -99,8 +100,6 @@ long size;
 
 	char *object;			/* Pointer to the freshly created bit object */
 	long nbytes;			/* Object's size */
-	extern int bit_dtype;	/* Dynamic type of BIT */
-	extern char *eif_set();	/* Setting of Eiffel object */
 
 	/* A BIT object has a length field (the number of bits in the object), and
 	 * an arena where the bits are stored, from left to right, as an array of
@@ -1017,7 +1016,6 @@ int size;
 {
 	struct bit *new;
 	int nbytes;
-	extern Malloc_t malloc();
 
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 	new = (struct bit *) malloc(nbytes);

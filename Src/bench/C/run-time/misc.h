@@ -28,6 +28,7 @@ extern EIF_INTEGER eif_system ();
 extern HANDLE eif_load_dll();
 extern void eif_free_dlls();
 
+extern char **_argv;
 #endif
 
 #endif

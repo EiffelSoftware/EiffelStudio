@@ -14,6 +14,8 @@
 #include "portable.h"
 #include "malloc.h"				/* For cmalloc() */
 #include "plug.h"				/* For makestr() */
+#include "except.h"				/* For fatal_error() */
+#include "argv.h"
 
 #ifdef I_STRING
 #include <string.h>				/* For strcpy(), strlen() */
@@ -37,7 +39,6 @@ char **eargv;
 {
 	/* Save command-line arguments array and number */
 
-	extern void fatal_error();
 	int i;
 
 	eif_argc = eargc;					/* Save number of arguments */

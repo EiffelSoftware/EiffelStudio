@@ -15,6 +15,8 @@
 #include "portable.h"
 #include "except.h"
 #include "plug.h"
+#include "error.h"
+#include "dir.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -102,12 +104,6 @@ private char *file_binary_fopen();		/* Open file */
 private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */
 private char *file_binary_freopen();	/* Reopen file */
 private void swallow_nl();		/* Swallow next character if new line */
-
-extern int esys();				/* Raise 'Operating system error' exception */
-extern int eio();				/* Raise 'I/O error' exception */
-#ifdef __VMS
-extern char * dir_dot_dir (char * dir);
-#endif
 
 #ifndef HAS_UTIME
 private int utime();
@@ -1589,7 +1585,6 @@ int uid;
 
 	char str[NAME_MAX];
 	struct passwd *pp;
-	extern struct passwd *getpwuid();
 
 #ifdef HAS_GETPWUID
 	pp = getpwuid(uid);
@@ -1614,7 +1609,6 @@ int gid;
 
 	char str[NAME_MAX];
 	struct group *gp;
-	extern struct group *getgrgid();
 
 #ifdef HAS_GETGRGID
 	gp = getgrgid(gid);
@@ -1726,7 +1720,7 @@ struct utimbuf *times;
 	/* Emulation of utime */
 #ifdef __VMS
 	return -1;
-#elsif defined EIF_OS2
+#elif defined EIF_OS2
 	return -1;
 #else
 	...

@@ -19,6 +19,7 @@
 #include "portable.h"
 #include "malloc.h"
 #include "garcol.h"
+#include "lmalloc.h"
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */

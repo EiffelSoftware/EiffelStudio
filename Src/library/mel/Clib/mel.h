@@ -1,3 +1,10 @@
+/*  mel/Clib/mel.h 
+**  $Id$ 
+*/
+
+#include "eif_config.h"
+#include "eif_portable.h"
+
 #include <stdio.h>
 #include <math.h>
 #include <X11/Xlib.h>
@@ -7,13 +14,16 @@
 #include <X11/Shell.h>
 #include <X11/Xos.h>
 #include <Xm/Xm.h>
+
 #include "eif_macros.h"
-#include "eif_config.h"
 #include "eif_argv.h"
+#include "eif_malloc.h"
+
 #include <sys/types.h>
-#ifndef __VMS
+
+#ifndef EIF_VMS
 #include <sys/param.h>
-#endif /* not vms */
+#endif /* not EIF_VMS */
 
 #ifdef I_XM_PROTOCOLS
 #include <Xm/Protocols.h>

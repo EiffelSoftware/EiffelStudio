@@ -978,8 +978,6 @@ feature {NONE} -- Implementation
 		local
 			sel_items: like selected_items
 		do
-				io.error.putstring ("->SINGLE%N")
-
 			if list_widget /= NULL and then not selection_mode_is_single then
 				if multiple_selection_enabled then
 					sel_items := selected_items
@@ -1009,7 +1007,6 @@ feature {NONE} -- Implementation
 			-- if necessary.
 		do
 			if list_widget /= NULL and then selection_mode_is_single then
-				io.error.putstring ("->BROWSE%N")
 				if multiple_selection_enabled then
 					C.gtk_clist_set_selection_mode (
 						list_widget, 
@@ -1168,6 +1165,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.76  2001/07/09 18:38:48  etienne
+--| Removed debugging output.
+--|
 --| Revision 1.75  2001/07/09 18:32:19  etienne
 --| Improved selection management.
 --|

@@ -170,11 +170,15 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	fcolor: INTEGER is
 			-- foreground color RGB packed into 24 bit.
+			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
+			-- Blue, Green, Red
 		deferred
 		end
 		
 	bcolor: INTEGER is
 			-- background color RGB packed into 24 bit.
+			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
+			-- Blue, Green, Red
 		deferred
 		end
 

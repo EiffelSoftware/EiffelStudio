@@ -45,8 +45,10 @@ feature -- Status setting
 	add (widget: WIDGET_WINDOWS) is
 			-- Add a widget to the menu
 		do
-			menu_id.next
-			menu_buttons.put (widget, menu_id.value)
+			if not menu_buttons.has_item (widget) then
+				menu_id.next
+				menu_buttons.put (widget, menu_id.value)
+			end
 		end
 
 	reset is

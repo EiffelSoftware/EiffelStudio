@@ -7,7 +7,7 @@ inherit
 			make as et_make
 		end;
 
-	COMPILER_IDABLE
+	IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id

@@ -233,7 +233,7 @@ feature -- Access
 				loop
 					Result.append ("_")
 					tmp := clone (l_meta.item (i).il_type_name)
-					tmp.replace_substring_all (".", "_")
+					tmp := tmp.substring (tmp.last_index_of ('.', tmp.count) + 1, tmp.count)
 					Result.append (tmp)
 					i := i + 1
 				end

@@ -45,5 +45,5 @@ external
 		"..\..\.."
 	object:
 		"..\..\fext.obj"
-	make:	"..\..\Makefile.ms"
+	make:	"..\..\Make.win"
 end

@@ -1,4 +1,4 @@
--SUBSYSTEM:CONSOLE -NODEFAULTLIB:libc -OUT:cecil.exe 
+-SUBSYSTEM:CONSOLE -NODEFAULTLIB:libc -OUT:tst.exe 
 main.obj
 EIFGEN\F_code\libbank_account.lib
 USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.lib SHELL32.lib COMDLG32.lib UUID.lib OLE32.lib OLEAUT32.lib COMCTL32.lib 

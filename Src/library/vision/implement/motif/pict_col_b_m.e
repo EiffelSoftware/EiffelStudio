@@ -28,11 +28,12 @@ feature {NONE} -- Initialization
 
 	make (a_push_b: PICT_COLOR_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif push button.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_pb_make (a_push_b.identifier,
-					mel_parent (a_push_b, widget_index),
-					man);
+			mel_pb_make (a_push_b.identifier, mc, man);
 			a_push_b.set_font_imp (Current)
 			set_type_string (False);
 		end;
@@ -48,8 +49,8 @@ feature -- Status report
 			if private_pixmap = Void then
 				!! private_pixmap.make;
 				pixmap_x ?= private_pixmap.implementation;
-				--ext_name := MlabelPixmap.to_c;
-				--pixmap_x.set_default_pixmap (c_get_pixmap (screen_object, $ext_name));
+				pixmap_x.increment_users;
+				pixmap_x.set_default_pixmap (mel_pixmap);
 			end;
 			Result := private_pixmap
 		end;
@@ -64,31 +65,28 @@ feature -- Status setting
 		do
 			if private_pixmap /= Void then
 				pixmap_implementation ?= private_pixmap.implementation;
-				pixmap_implementation.remove_object (Current)
+				pixmap_implementation.decrement_users
 			end;
 			private_pixmap := a_pixmap;
-			pixmap_implementation ?= private_pixmap.implementation;
-			pixmap_implementation.put_object (Current);
-			--ext_name := MlabelPixmap.to_c;
-			--c_set_pixmap (screen_object, 
-					--pixmap_implementation.resource_pixmap (screen), 
-					--$ext_name)
+			pixmap_implementation ?= a_pixmap.implementation;
+			pixmap_implementation.increment_users;
+			mel_set_pixmap (pixmap_implementation);
+			set_insensitive_pixmap (pixmap_implementation)
 		end;
 
-feature {NONE} -- Implementation
+feature {PIXMAP_X} -- Implementation
 
 	private_pixmap: PIXMAP;
-		-- Pixmap data
+			-- Pixmap data
 
 	update_pixmap is
 			-- Update the X pixmap after a change inside the Eiffel pixmap.
 		local
-			ext_name: ANY;
 			pixmap_implementation: PIXMAP_X
 		do
-			--ext_name := MlabelPixmap.to_c;
-			pixmap_implementation ?= pixmap.implementation;
-			--c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+			pixmap_implementation ?= private_pixmap.implementation;
+			mel_set_pixmap (pixmap_implementation);
+			set_insensitive_pixmap (pixmap_implementation)
 		end
 
 end -- PICT_COL_B_M

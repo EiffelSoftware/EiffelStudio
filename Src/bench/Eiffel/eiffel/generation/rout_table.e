@@ -44,7 +44,7 @@ feature
 			found: BOOLEAN;
 			is_deferred: BOOLEAN;
 			i, nb, old_position: INTEGER
-			local_copy: like Current
+			local_copy: ROUT_TABLE
 		do
 			old_position := position
 
@@ -103,7 +103,7 @@ feature
 			routine_name: STRING;
 			empty_function_ptr_string: STRING
 			function_ptr_cast_string: STRING
-			local_copy: like Current
+			local_copy: ROUT_TABLE
 		do
 			from
 				empty_function_ptr_string := "(char *(*)()) 0,%N"

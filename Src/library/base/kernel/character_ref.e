@@ -92,6 +92,58 @@ feature -- Comparison
 			Result := min_ref (other).item
 		end;
 
+feature -- Basic routines
+
+	infix "+" (incr: INTEGER): CHARACTER is
+			-- Add `incr' to the code of `item'
+		require
+			valid_upper_increment: item.code + incr <= 255
+			valid_lower_increment: item.code + incr >= 0
+		do
+			Result := chconv (chcode (item) + incr)
+		ensure
+			valid_result: Result |-| item = incr
+		end
+
+	infix "-" (decr: INTEGER): CHARACTER is
+			-- Subtract `decr' to the code of `item'
+		require
+			valid_upper_decrement: item.code - decr <= 255
+			valid_lower_decrement: item.code - decr >= 0
+		do
+			Result := chconv (chcode (item) - decr)
+		ensure
+			valid_result: item |-| Result = decr
+		end
+
+	infix "|-|" (other: CHARACTER): INTEGER is
+			-- Difference between the codes of `item' and `other'
+		do
+			Result := chcode (item) - chcode (other)
+		ensure
+			valid_result: other + Result = item
+		end
+
+	next: CHARACTER is
+			-- Next character
+		require
+			valid_character: item /= '%/255/'
+		do
+			Result := item + 1
+		ensure
+			valid_result: Result |-| item = 1
+		end
+
+	previous: CHARACTER is
+			-- Previous character
+		require
+			valid_character: item /= '%U'
+		do
+			Result := item - 1
+		ensure
+			valid_result: Result |-| item = - 1
+		end
+
 feature -- Element change
 
 	set_item (c: CHARACTER) is
@@ -157,6 +209,12 @@ feature {NONE} -- Implementation
 
 	chcode (c: like item): INTEGER is
 			-- Associated integer value
+		external
+			"C"
+		end;
+
+	chconv (i: INTEGER): CHARACTER is
+			-- Character associated with integer value `i'
 		external
 			"C"
 		end;

@@ -1,8 +1,8 @@
 <project xmlns="" xmlns:ns1="">
 	<project_name>docs</project_name>
-	<root_directory>G:/tmpdev/xmldoc</root_directory>
-	<schema>G:/tmpdev/tools/doc_builder/resources/xml/schema/document.xsd</schema>
-	<html_css>G:/tmpdev/xmldoc/default.css</html_css>
+	<root_directory>g:/Deliv_55/xmldoc</root_directory>
+	<schema>g:/tmpdev/tools/doc_builder/resources/xml/schema/document.xsd</schema>
+	<html_css>g:/Deliv_55/xmldoc/default.css</html_css>
 	<header_override>True</header_override>
 	<use_header_from_file>False</use_header_from_file>
 	<footer_override>True</footer_override>

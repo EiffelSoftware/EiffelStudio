@@ -24,27 +24,43 @@ inherit
 			set_size as p_set_size,
 			set_width as p_set_width,
 			set_height as p_set_height,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
-			set_background_color,
-			update_background_color, width, height, 
-			real_x, real_y, set_x_y
+			set_background_color_from_imp,
+			width, height, real_x, real_y, set_x_y, 
+			set_action, add_button_press_action,
+			add_button_release_action, add_button_motion_action,
+			add_enter_action, add_key_press_action, add_key_release_action,
+			add_leave_action, add_pointer_motion_action,
+			remove_button_motion_action, remove_button_press_action,
+			remove_button_release_action, remove_enter_action, remove_key_press_action,
+			remove_key_release_action, remove_leave_action,
+			remove_pointer_motion_action, remove_action, grab, 
+			ungrab
 		end;
 
 	MANAGER_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
 			set_size, set_width, set_height, 
-			set_background_color,
+			set_background_color_from_imp,
 			update_background_color, 
 			width, height, x, y,
-			real_x, real_y, set_x, set_y,
-			set_x_y
+			real_x, real_y, set_x, set_y, set_x_y,
+			set_action, add_button_press_action,
+			add_button_release_action, add_button_motion_action,
+			add_enter_action, add_key_press_action, add_key_release_action,
+			add_leave_action, add_pointer_motion_action,
+			remove_button_motion_action, remove_button_press_action,
+			remove_button_release_action, remove_enter_action, remove_key_press_action,
+			remove_key_release_action, remove_leave_action,
+			remove_pointer_motion_action, remove_action, grab, 
+			ungrab
 		select
 			set_size, set_width, set_height, x, y, set_x, set_y
 		end;
@@ -63,7 +79,7 @@ inherit
 			set_horizontal as mel_set_horizontal,
 			scale_multiple as granularity,
 			set_scale_multiple as set_granularity,
-            is_shown as shown
+			is_shown as shown
 		redefine
 			width, height, x, y, real_x, real_y, set_x, set_y,
 			set_x_y, set_height, set_width, set_size
@@ -77,11 +93,12 @@ feature {NONE} -- Initialization
 
 	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scale.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_scale_make (a_scale.identifier,
-					mel_parent (a_scale, widget_index),
-					man);
+			mel_scale_make (a_scale.identifier, mc, man);
 			a_scale.set_font_imp (Current);
 		end;
 
@@ -89,32 +106,32 @@ feature -- Status report
 
 	real_x: INTEGER is
 		do
-			Result := scroll_bar_widget.real_x
+			Result := scroll_bar.real_x
 		end;
 
 	real_y: INTEGER is
 		do
-			Result := scroll_bar_widget.real_y
+			Result := scroll_bar.real_y
 		end;
 
 	x: INTEGER is
 		do
-			Result := p_x + scroll_bar_widget.x
+			Result := p_x + scroll_bar.x
 		end;
 
 	y: INTEGER is
 		do
-			Result := p_y + scroll_bar_widget.y
+			Result := p_y + scroll_bar.y
 		end;
 
 	height: INTEGER is
 		do
-			Result := scroll_bar_widget.height
+			Result := scroll_bar.height
 		end;
 
 	width: INTEGER is
 		do
-			Result := scroll_bar_widget.width
+			Result := scroll_bar.width
 		end;
 
 	is_maximum_right_bottom: BOOLEAN is
@@ -122,17 +139,14 @@ feature -- Status report
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
 		do
-			if is_horizontal then
-				Result := is_maximum_on_left
-			else
-				Result := is_maximum_on_top
-			end
+			Result := not is_maximum_on_left or else
+				not is_maximum_on_top
 		end;
 
 	is_output_only: BOOLEAN is
 			-- Is scale mode output only mode?
 		do
-			Result := is_sensitive
+			Result := not is_sensitive
 		end;
 
 	text: STRING is
@@ -141,11 +155,23 @@ feature -- Status report
 			ms: MEL_STRING
 		do
 			ms := title_string;
-			Result := ms.to_eiffel_string;
-			ms.free
+			if ms = Void then
+				!! Result.make (0);
+			else
+				Result := ms.to_eiffel_string;
+				ms.free
+			end;
 		end;
 
 feature -- Status setting
+
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+			-- Set `a_command' to be executed when `a_translation' occurs.
+			-- `a_translation' is specified with Xtoolkit convention.
+		do
+			scroll_bar.set_override_translation (a_translation,
+					x_event_vision_callback (a_command), argument)
+		end;
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -202,10 +228,10 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_text);
-			text_widget.unmanage;
+			!! ms.make_default_l_to_r (a_text);
+			label.unmanage;
 			set_title_string (ms);
-			text_widget.manage;
+			label.manage;
 			ms.free
 		end;
 
@@ -221,24 +247,24 @@ feature -- Status setting
 				p_set_size (nw, nh);
 			elseif is_horizontal then
 				if is_value_shown and (text = Void or else text.empty) then
-					p_set_size (nw, nh + text_widget.height);
+					p_set_size (nw, nh + label.height);
 				elseif not is_value_shown then
-					p_set_size (nw, nh + text_widget.height);
+					p_set_size (nw, nh + label.height);
 				else
-					p_set_size (nw, nh + (2 * text_widget.height));
+					p_set_size (nw, nh + (2 * label.height));
 				end;
 			else
-				!!vas.make(0);
+				!! vas.make(0);
 				if is_value_shown and (text = Void or else text.empty) then
 					vas.append_integer (maximum);
-					tw := font_string_width(widget_oui, vas);
+					tw := font_width_of_string (vas);
 					p_set_size (nw + tw, nh);
 				elseif not is_value_shown then
-					p_set_size (nw + text_widget.width, nh);
+					p_set_size (nw + label.width, nh);
 				else
 					vas.append_integer (maximum);
-					tw := font_string_width(widget_oui, vas);
-					p_set_size (nw + text_widget.width + tw, nh);
+					tw := font_width_of_string (vas);
+					p_set_size (nw + label.width + tw, nh);
 				end;
 			end;
 			set_scale_size (nw, nh);
@@ -259,14 +285,14 @@ feature -- Status setting
 				!!vas.make(0);
 				if is_value_shown and (text = Void or else text.empty) then
 					vas.append_integer (maximum);
-					tw := font_string_width(widget_oui, vas);
+					tw := font_width_of_string (vas);
 					p_set_width (nw + tw);
 				elseif not is_value_shown then
-					p_set_width (nw + text_widget.width);
+					p_set_width (nw + label.width);
 				else 
 					vas.append_integer (maximum);
-					tw := font_string_width(widget_oui, vas);
-					p_set_width (nw + text_widget.width + tw);
+					tw := font_width_of_string (vas);
+					p_set_width (nw + label.width + tw);
 				end;
 			end;
 			set_scale_width (nw);
@@ -282,11 +308,11 @@ feature -- Status setting
 				p_set_height (nh);
 			elseif is_horizontal then
 				if is_value_shown and (text = Void or else text.empty) then
-					p_set_height (nh + text_widget.height);
+					p_set_height (nh + label.height);
 				elseif not is_value_shown then
-					p_set_height (nh + text_widget.height);
+					p_set_height (nh + label.height);
 				else
-					p_set_height (nh + (2 * text_widget.height));
+					p_set_height (nh + (2 * label.height));
 				end;
 			else
 				p_set_height (nh);
@@ -297,13 +323,13 @@ feature -- Status setting
 	set_x (new_x: INTEGER) is
 			-- Set `x' to `new_x'.
 		do
-			p_set_y (new_x - scroll_bar_widget.x)
+			p_set_x (new_x - scroll_bar.x)
 		end;
 
 	set_y (new_y: INTEGER) is
 			-- Set `y' to `new_y'.
 		do
-			p_set_y (new_y - scroll_bar_widget.y)
+			p_set_y (new_y - scroll_bar.y)
 		end;
 
 	set_x_y (new_x, new_y: INTEGER) is
@@ -329,65 +355,225 @@ feature -- Element change
 			remove_value_changed_callback (mel_vision_callback (a_command), argument)
 		end;
 
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when the
+			-- `number'-th mouse button is pressed.
+		do
+			scroll_bar.add_event_handler (ButtonPressMask,
+					x_button_vision_callback (a_command, number), argument)
+	   end;
+
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when the
+			-- `number'-th mouse button is released.
+		do
+			scroll_bar.add_event_handler (ButtonReleaseMask,
+					x_button_vision_callback (a_command, number), argument)
+		end;
+
+	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when the
+			-- mouse is moved while the `number'-th mouse button is pressed.
+		local
+			a_mask: POINTER
+		do
+			inspect number
+			when 1 then
+				a_mask := Button1MotionMask
+			when 2 then
+				a_mask := Button2MotionMask
+			when 3 then
+				a_mask := Button3MotionMask
+			when 4 then
+				a_mask := Button4MotionMask
+			when 5 then
+				a_mask := Button5MotionMask
+			else
+			end
+			if a_mask /= default_pointer then
+				scroll_bar.add_event_handler (a_mask,
+					x_event_vision_callback (a_command), argument)
+			end
+		end;
+
+	add_enter_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when the
+			-- pointer enter the window.
+		do
+			scroll_bar.add_event_handler (EnterWindowMask,
+					x_event_vision_callback (a_command), argument)
+		end;
+
+	add_key_press_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when a key
+			-- is pressed.
+		do
+			scroll_bar.add_event_handler (KeyPressMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	add_key_release_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when a key
+			-- is released.
+		do
+			scroll_bar.add_event_handler (KeyReleaseMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	add_leave_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when the
+			-- pointer leave the window.
+		do
+			scroll_bar.add_event_handler (LeaveWindowMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when the
+			-- mouse is moved.
+		do
+			scroll_bar.add_event_handler (PointerMotionMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	grab (a_cursor: SCREEN_CURSOR) is
+			-- Grab the mouse and the keyboard.
+			-- If `cursor' is not void, the pointer will have the shape
+			-- set by cursor during the grab.
+		local
+			cursor_implementation: SCREEN_CURSOR_X;
+		do
+			if a_cursor /= Void then
+				cursor_implementation ?= a_cursor.implementation
+				cursor_implementation.allocate_cursor;
+			end;
+			scroll_bar.grab_pointer (cursor_implementation)
+		end;
+
+	ungrab is
+			-- Release the mouse and the keyboard from an earlier grab.
+		do
+			scroll_bar.ungrab_pointer
+		end;
+
 feature -- Removal
 
 	remove_move_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		do
-            remove_drag_callback (mel_vision_callback (a_command), argument)
+			remove_drag_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
-            remove_drag_callback (mel_vision_callback (a_command), argument)
+			remove_drag_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	remove_action (a_translation: STRING) is
+			-- Remove the command executed when `a_translation' occurs.
+			-- Do nothing if no command has been specified.
+		do
+			scroll_bar.remove_override_translation (a_translation)
+		end;
+
+	remove_button_motion_action (number: INTEGER; a_command: COMMAND;
+			argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when the
+			-- mouse is moved while the `number'-th mouse button is pressed.
+		local
+			a_mask: POINTER
+		do
+			inspect number
+			when 1 then
+				a_mask := Button1MotionMask
+			when 2 then
+				a_mask := Button2MotionMask
+			when 3 then
+				a_mask := Button3MotionMask
+			when 4 then
+				a_mask := Button4MotionMask
+			when 5 then
+				a_mask := Button5MotionMask
+			else
+			end
+			if a_mask /= default_pointer then
+				scroll_bar.remove_event_handler (a_mask,
+					x_event_vision_callback (a_command), argument)
+			end
+		end;
+
+	remove_button_press_action (number: INTEGER; a_command: COMMAND;
+			argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when the
+			-- `number'-th mouse button is pressed.
+		do
+			scroll_bar.remove_event_handler (ButtonPressMask,
+					x_button_vision_callback (a_command, number), argument)
+		end;
+
+	remove_button_release_action (number: INTEGER; a_command: COMMAND;
+			argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when the
+			-- `number'-th mouse button is released.
+		do
+			scroll_bar.remove_event_handler (ButtonReleaseMask,
+					x_button_vision_callback (a_command, number), argument)
+		end;
+
+	remove_enter_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when the
+			-- pointer enter the window.
+		do
+			scroll_bar.remove_event_handler (EnterWindowMask,
+					x_event_vision_callback (a_command), argument)
+		end;
+
+	remove_key_press_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when a key
+			-- is pressed.
+		do
+			scroll_bar.remove_event_handler (KeyPressMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	remove_key_release_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when a key
+			-- is released.
+		do
+			scroll_bar.remove_event_handler (KeyReleaseMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	remove_leave_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when the
+			-- pointer leave the window.
+		do
+			scroll_bar.remove_event_handler (LeaveWindowMask,
+				x_event_vision_callback (a_command), argument)
+		end;
+
+	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' to the list of action to execute when the
+			-- mouse is moved.
+		do
+			scroll_bar.remove_event_handler (PointerMotionMask,
+				x_event_vision_callback (a_command), argument)
 		end;
 
 feature -- Color
 
-	set_background_color (a_color: COLOR) is
-			-- Set background_color to `a_color'.
-		require else
-			a_color_exists: not (a_color = Void)
-		local
-			pixmap_implementation: PIXMAP_X;
-			color_implementation: COLOR_X;
-			pix: POINTER
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
 		do
-			if private_background_pixmap /= Void then
-				pixmap_implementation ?= private_background_pixmap.implementation;
-				pixmap_implementation.remove_object (Current);
-				private_background_pixmap := Void
-			end;
-			if private_background_color /= Void then
-				color_implementation ?= private_background_color.implementation;
-				color_implementation.remove_object (Current)
-			end;
-			private_background_color := a_color;
-			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix);
-			--xm_change_bg_color (slide_widget, pix);
+			mel_set_background_color (color_imp);
+			scroll_bar.set_background_color (color_imp);
+			scroll_bar.update_colors;
 			if private_foreground_color /= Void then
 				update_foreground_color
 			end
-		end;
-
-feature {COLOR_X}
-
-	update_background_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			color_implementation: COLOR_X;
-		do
-			color_implementation ?= background_color.implementation;
-			--xm_change_bg_color (screen_object, 
-						--color_implementation.pixel (screen));
-			--xm_change_bg_color (slide_widget, 
-						--color_implementation.pixel (screen));
 		end;
 
 end -- class SCALE_M

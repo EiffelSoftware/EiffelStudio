@@ -28,7 +28,8 @@ inherit
 			pointer_button_press_actions_internal,
 			pointer_motion_actions_internal,
 			event_widget,
-			set_pixmap
+			set_pixmap,
+			sensitive_widget
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -171,10 +172,16 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (c_object, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (event_widget, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation
+
+	sensitive_widget: POINTER is
+			-- Widget used for enabling/disabling event sensitivity of `Current'
+		do
+			Result := c_object
+		end
 
 	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
 	

@@ -54,7 +54,6 @@ feature -- Basic Operation
 			directory: DIRECTORY
 			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			history.cut_off_at_current_position
 			create layout_item.make_with_name (directory_name)
 			window_selector.extend (layout_item)
 			

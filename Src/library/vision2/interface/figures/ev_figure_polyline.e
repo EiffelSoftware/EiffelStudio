@@ -20,6 +20,9 @@ inherit
 	EV_ARROWED_FIGURE
 		undefine
 			default_create
+		redefine
+			start_angle,
+			end_angle
 		end
 
 create
@@ -57,6 +60,34 @@ feature -- Access
 			-- i.e. should first and last point be connected?
 
 feature -- Status report
+
+	start_angle: DOUBLE is
+			-- Angle that line begins on relative to world.
+		local
+			a_point: EV_RELATIVE_POINT
+		do
+			if points.count >= 2 then
+				a_point := points.i_th (2)
+				Result := 2 * Pi - line_angle (start_point.x_abs, start_point.y_abs,
+					a_point.x_abs, a_point.y_abs)
+			else
+				Result := 0
+			end
+		end
+
+	end_angle: DOUBLE is
+			-- Angle that line ends on relative to world.
+		local
+			a_point: EV_RELATIVE_POINT
+		do
+			if points.count >= 2 then
+				a_point := points.i_th (points.count - 1)
+				Result := Pi - line_angle (a_point.x_abs, a_point.y_abs,
+					end_point.x_abs, end_point.y_abs)
+			else
+				Result := 0
+			end
+		end
 
 	line_count: INTEGER is
 			-- Returns number of lines this polyline has.

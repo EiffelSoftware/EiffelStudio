@@ -11,20 +11,29 @@ class
 inherit
 	EV_SEPARATOR_ITEM
 		redefine
+			make_with_index,
 			implementation
 		end
 
 creation
-	make
+	make,
+	make_with_index
 
 feature {NONE} -- Initialization
 
 	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
-			!EV_TOOL_BAR_SEPARATOR_IMP! implementation.make
+			create {EV_TOOL_BAR_SEPARATOR_IMP} implementation.make
 			implementation.set_interface (Current)
 			set_parent (par)
+		end
+
+	make_with_index (par: like parent; pos: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		do
+			create {EV_TOOL_BAR_SEPARATOR_IMP} implementation.make
+			{EV_SEPARATOR_ITEM} Precursor (par, pos)
 		end
 
 feature -- Implementation

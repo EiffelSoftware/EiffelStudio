@@ -66,18 +66,32 @@ feature -- Basic Operations
 			l_dir: DIRECTORY
 			l_names: NATIVE_ARRAY [ASSEMBLY_NAME]
 			l_info: CACHE_INFO
+			l_consumed_path: STRING
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
 			if not l_retried then
 				l_assembly := load_from_gac_or_path (a_path)
 				
+
+					-- For assemblies that are in the GAC but are consumed
+					-- from a local path, when the version number changes that assembly
+					-- needs to be updated, regardless of the GAC path. Using ASSEMBLY.location
+					-- when an instance of ASSEMBLY is created my using feature{ASSEMLBY}.load
+					-- will alway return a different path if the version number changes. Whereas
+					-- feature{ASSEMLBY}.load_from/.location will always return the same path.
+				l_ca := consumed_assembly_from_path (a_path)
+				if l_ca /= Void then
+					l_consumed_path := a_path
+				else
+					l_consumed_path := l_assembly.location
+				end
 					-- only consume `assembly' if assembly has not already been consumed,
 					-- corresponding assembly has been modified or if consumer tool has been 
 					-- modified.
-				if is_assembly_stale (l_assembly.location) then
+				if is_assembly_stale (l_consumed_path) then
 						-- update stale assembly
-					update_assembly (l_assembly.location)
+					update_assembly (l_consumed_path)
 				end
 			
 				create l_consumer.make (Current)
@@ -368,6 +382,7 @@ feature {NONE} -- Implementation
 			l_file_info: FILE_INFO
 			l_dir_info: DIRECTORY_INFO
 			l_so: SYSTEM_OBJECT
+			l_new_ca: CONSUMED_ASSEMBLY
 		do
 			if cache_reader.is_assembly_in_cache (a_path, True) then
 				l_ca := consumed_assembly_from_path (a_path)
@@ -376,6 +391,11 @@ feature {NONE} -- Implementation
 				create l_dir_info.make (l_consume_path)
 				create l_file_info.make (l_ca.location)
 				Result := not l_dir_info.exists or feature {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
+				if not Result then
+					-- User could have swaped file to an older version
+					l_new_ca := create_consumed_assembly_from_path ("dummy", a_path)
+					Result := not l_new_ca.out.is_equal (l_ca.out)
+				end
 				if not Result then
 						-- now check in consumer is newer
 					l_so := Current

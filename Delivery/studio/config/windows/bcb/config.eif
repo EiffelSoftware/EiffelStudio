@@ -66,6 +66,7 @@ ranlib: "echo"
 
 -- platform remove command
 rm: "del"
+file_exist: "if exist"
 rmdir: "rd"
 
 -- make program

@@ -27,6 +27,7 @@ feature {NONE} -- Implementation
 			Precursor (an_interface)
 			set_c_object (C.gtk_progress_bar_new_with_adjustment (adjustment))
 			gtk_progress_bar := c_object
+			enable_segmentation
 		end
 
 feature -- Status report

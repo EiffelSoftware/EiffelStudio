@@ -19,81 +19,89 @@ inherit
 	MEL_MANAGER
 		redefine
 			create_callback_struct
-		end
+		end;
+
+	MEL_FONTABLE
+		undefine
+			clean_up, object_clean_up, destroy
+		redefine
+			create_callback_struct
+		end;
 
 creation 
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scale.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scale (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Access
 
-	text_widget: MEL_LABEL_GADGET is
-			-- Text widget
+	label: MEL_LABEL_GADGET is
+			-- Label text widget of scale
 		local
-			w: POINTER;
+			c_list: FIXED_LIST [POINTER];
 			i, c: INTEGER
 		do
 			if private_text_widget = Void then
 				c := children_count;
+				c_list := children;
 				from
-					i := 1
+					c_list.start
 				until		
-					i > c 
+					c_list.after or else Result /= Void
 				loop
-					w := get_i_th_widget_child (screen_object, i - 1);
-					if xm_is_label_gadget (w) then
-						!! private_text_widget.make_from_existing (w);
-						i := c 
+					if xm_is_label_gadget (c_list.item) then
+						!! Result.make_from_existing (c_list.item, Current);
 					end;
-					i := i + 1
+					c_list.forth
 				end
+				private_text_widget := Result
 			end;
 			Result := private_text_widget
 		ensure
 			non_void_result: Result /= Void
 		end;
 
-	scroll_bar_widget: MEL_LABEL_GADGET is
-			-- Scroll bar
+	scroll_bar: MEL_SCROLL_BAR is
+			-- Scroll bar of scale
 		local
-			w: POINTER;
-			i, c: INTEGER	
+			c_list: FIXED_LIST [POINTER]	
 		do
 			if private_sb_widget = Void then
-				c := children_count;
+				c_list := children;
 				from
-					i := 1
+					c_list.start
 				until		
-					i > c 
+					c_list.after or else Result /= Void
 				loop
-					w := get_i_th_widget_child (screen_object, i - 1);
-					if xm_is_scroll_bar (w) then
-						!! private_sb_widget.make_from_existing (w);
-						i := c 
+					if xm_is_scroll_bar (c_list.item) then
+						!! Result.make_from_existing (c_list.item, Current);
 					end;
-					i := i + 1
+					c_list.forth
 				end
+				private_sb_widget := Result
 			end;
 			Result := private_sb_widget
 		ensure
@@ -161,8 +169,6 @@ feature -- Status report
 			exists: not is_destroyed
 		do
 			Result := get_xm_string (screen_object, XmNtitleString)
-		ensure
-			title_string_not_void: Result /= Void
 		end;
 
 	scale_multiple: INTEGER is
@@ -463,7 +469,7 @@ feature {NONE} -- Implementation
 	private_text_widget: MEL_LABEL_GADGET;
 			-- Private text widget
 
-	private_sb_widget: MEL_LABEL_GADGET;
+	private_sb_widget: MEL_SCROLL_BAR;
 			-- Private Scroll Bar widget
 
 	processing_direction: INTEGER is
@@ -501,27 +507,6 @@ feature {NONE} -- Implementation
 			"C [macro <Xm/Scale.h>] (Widget, int)"
 		alias
 			"XmScaleSetValue"
-		end;
-
-	xm_is_scroll_bar (widget: POINTER): BOOLEAN is
-		external
-			"C [macro <Xm/ScrollBar.h>] (Widget): EIF_BOOLEAN"
-		alias
-			"XmIsScrollBar"
-		end;
-
-	xm_is_label (widget: POINTER): BOOLEAN is
-		external
-			"C [macro <Xm/Label.h>] (Widget): EIF_BOOLEAN"
-		alias
-			"XmIsLabel"
-		end;
-
-	xm_is_label_gadget (widget: POINTER): BOOLEAN is
-		external
-			"C [macro <Xm/LabelG.h>] (Widget): EIF_BOOLEAN"
-		alias
-			"XmIsLabelGadget"
 		end;
 
 invariant

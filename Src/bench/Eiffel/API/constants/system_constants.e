@@ -175,10 +175,10 @@ feature {NONE}
 feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.3-19"
-	Version_tag: STRING is "0x0000000B"
+	Version_number: STRING is "4.3"
+	Version_tag: STRING is "0x0000000C"
 	Version_number_tag: STRING is "version_number"
-	Storable_version_number: STRING is "4.3-19"
+	Storable_version_number: STRING is "4.3"
 	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}

@@ -15,7 +15,11 @@ inherit
 		redefine
 			object, display_object, is_full,
 			build_display_object, delete,
-			accepts_child
+			accepts_child, connect_display_object_events,
+			unconnect_display_object_pick_events,
+			unconnect_display_object_drop_events,
+			update_representations_for_name_or_type_change,
+			real_display_object
 		end
 		
 create
@@ -43,9 +47,11 @@ feature -- Basic operation
 		do
 		ensure then
 				-- For an EV_TABLE, Count is not the the number of widgets, `widget_count' is the correct measure of this.
-			one_item_added_to_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) implies object.count = old object.count + 1
-			one_item_added_to_display_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) implies display_object.child.count = old display_object.child.count + 1
-			one_item_added_to_layout_item: not old layout_item.has (an_object.layout_item) implies layout_item.count = old layout_item.count + 1
+			one_item_added_to_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) and
+			not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies object.count = old object.count + 1
+			one_item_added_to_display_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) and
+			not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies display_object.child.count = old display_object.child.count + 1
+--FIXME			one_item_added_to_layout_item: not old layout_item.has (an_object.layout_item) implies layout_item.count = old layout_item.count + 1
 		end
 		
 	is_full: BOOLEAN is
@@ -114,16 +120,65 @@ feature {NONE} -- Implementation
 				widget_not_void: widget /= Void
 			end
 			create display_object.make_with_name_and_child (type, widget)
-			display_object.set_pebble_function (agent retrieve_pebble)
+			connect_display_object_events
+		end
+		
+	connect_display_object_events is
+			-- Connect events to `display_object' to permit interactive building.
+		do
+			Precursor {GB_PARENT_OBJECT}
+				-- Firstly remove any previous events as if the widget changes
+				-- between a representation and flat, `connect_display_object_events' may be called
+				-- multiple times.
+			display_object.child.drop_actions.wipe_out
+			
+				-- Now connect all events.
 			display_object.child.set_pebble_function (agent retrieve_pebble)
-			display_object.drop_actions.extend (agent add_new_object_wrapper (?))
-			display_object.drop_actions.extend (agent add_new_component_wrapper (?))
 			display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
 			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
-			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
-			display_object.drop_actions.extend (agent set_color)
 			display_object.child.drop_actions.extend (agent set_color)
+		end
+		
+	unconnect_display_object_pick_events is
+			-- Unconnect pick events from `display_object' to restrict interactive building.
+			-- For example we do not permit a user to modify the structure if the object is
+			-- part of a representation of a top level object.
+		do
+			Precursor {GB_PARENT_OBJECT}
+			display_object.child.remove_pebble
+		end
+		
+	unconnect_display_object_drop_events is
+			-- Unconnect drop events from `display_object' to restrict interactive building.
+			-- For example we do not permit a user to modify the structure if the object is
+			-- part of a representation of a top level object.
+		do
+			Precursor {GB_PARENT_OBJECT}
+			display_object.child.drop_actions.wipe_out
+			display_object.child.drop_actions.set_veto_pebble_function (Void)
+		end
+		
+feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_WINDOW_SELECTOR, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
+
+	update_representations_for_name_or_type_change is
+			-- Update all representations of `Current' to reflect a change
+			-- of name or type.
+		do
+			Precursor {GB_PARENT_OBJECT}
+			if is_instance_of_top_level_object then
+				display_object.set_text (object_handler.deep_object_from_id (associated_top_level_object).name.as_upper)
+			else
+				display_object.set_text (type)
+			end
+		end
+		
+feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementatio
+
+	real_display_object: EV_ANY is
+			-- `Result' is widget associated with `display_object'.
+		do
+			Result := display_object.child
 		end
 
 end -- class GB_CONTAINER_OBJECT

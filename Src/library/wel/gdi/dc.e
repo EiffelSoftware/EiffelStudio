@@ -857,6 +857,26 @@ feature -- Basic operations
 			cwin_text_out (item, x, y, $a, string.count)
 		end
 
+	tabbed_text_out (x, y: INTEGER; string: STRING;
+			tabulations: ARRAY [INTEGER];
+			tabulations_origin: INTEGER) is
+			-- Write `string' on `x' and `y' position expanding
+			-- tabs to the values specified in `tabulations'.
+			-- `tabulations_origin' specifies the x-coordinate of
+			-- the starting position from which tabs are expanded.
+		require
+			exists: exists
+			string_not_void: string /= Void
+			tabulations_not_void: tabulations /= Void
+		local
+			a1, a2: ANY
+		do
+			a1 := string.to_c
+			a2 := tabulations.to_c
+			cwin_tabbed_text_out (item, x, y, $a1, string.count,
+				tabulations.count, $a2, tabulations_origin)
+		end
+
 	draw_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
 			-- Draw the text `string' inside 
 			-- the `rect' using `format'
@@ -1354,6 +1374,17 @@ feature {NONE} -- Externals
 			"TextOut"
 		end
 
+	cwin_tabbed_text_out (hdc: POINTER; x, y: INTEGER; string: POINTER;
+			lenght, tab_count: INTEGER; tabs: POINTER;
+			tab_origin: INTEGER) is
+			-- SDK TabbedTextOut
+		external
+			"C [macro <wel.h>] (HDC, int, int, LPCTSTR, int, int, %
+				%LPINT, int)"
+		alias
+			"TabbedTextOut"
+		end
+
 	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER; 
 			rect: POINTER; format: INTEGER) is
 			-- SDK DrawText
@@ -1772,7 +1803,7 @@ feature {NONE} -- Externals
 			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
 			-- SDK GetTabbedTextExtent
 		external
-			"C [macro <wel.h>] (HDC, LPCTSTR, int, int, %
+			"C [macro <wel.h>] (HDC, LPCSTR, int, int, %
 				%LPINT): EIF_INTEGER"
 		alias
 			"GetTabbedTextExtent"

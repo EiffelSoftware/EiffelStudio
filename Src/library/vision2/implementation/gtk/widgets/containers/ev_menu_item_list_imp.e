@@ -145,7 +145,32 @@ feature {EV_ANY_I} -- Implementation
 			end
 			interface.go_to (cur)
 		end
-	
+
+	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
+			-- Separator before item with `an_index'.
+		require
+			an_index_within_bounds:
+				an_index > 0 and then an_index <= ev_children.count
+		local
+			cur: CURSOR
+			cur_item: INTEGER
+			sep_imp: EV_MENU_SEPARATOR_IMP
+		do
+		--	from
+		--		ev_children.start
+		--		cur_item := 1
+		--	until
+		--		ev_children.off or else an_index = cur_item
+		--	loop
+		--		sep_imp ?= ev_children.item
+		--		if sep_imp /= Void then
+		--			Result := sep_imp
+		--		end
+		--		ev_children.forth
+		--		cur_item := cur_item + 1
+		--	end
+		end
+
 end -- class EV_MENU_ITEM_LIST_IMP
 
 --!-----------------------------------------------------------------------------
@@ -169,6 +194,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/06 18:41:51  brendel
+--| Added separator_imp_by_index.
+--|
 --| Revision 1.7  2000/04/05 21:16:09  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

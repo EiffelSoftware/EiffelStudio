@@ -1,7 +1,8 @@
 indexing
 
 	description: 
-		"EiffelVision window, gtk implementation."
+		"EiffelVision window. Display a window that allows only one%
+		 % child. Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -12,44 +13,124 @@ class
 	EV_WINDOW_IMP
 	
 inherit
-	EV_WINDOW_I	
-	
-	EV_CONTAINER_IMP
-		redefine	
-			wel_window,
-			minimum_width,
-			minimum_height
-		end
-	
+	EV_WINDOW_I
+
+	EV_CONTAINER_IMP	
+			redefine
+				wel_window,
+				set_minimum_width,
+				set_minimum_height,
+				child_has_resized
+			end
+
 creation
 	
 	make
 	
 feature {NONE} -- Initialization
 	
-        make is
+      make (interface: EV_WINDOW) is
                         -- Create a window. Window does not have any
                         -- parents
 		do
 			!!wel_window.make_top ("EV_WINDOW")
+			wel_window.add_child (Current)
 		--	set_x_y (wel_window.default_x, wel_window.default_y)
 		--	set_size (wel_window.minimal_width, wel_window.minimal_height)
-
+			set_minimum_width (system_metrics.window_minimum_width)
+			set_minimum_height (system_metrics.window_minimum_height)
+	--		attach_to_window
 		end
-	
+
 		
 feature  -- Access
 
 
-        icon_name: STRING is
+      icon_name: STRING is
                         -- Short form of application name to be
                         -- displayed by the window manager when
                         -- application is iconified
 		do
 			check
                                 not_yet_implemented: False
-                        end	
+            end
+        end
+
+      icon_mask: EV_PIXMAP is
+                        -- Bitmap that could be used by window manager
+                        -- to clip `icon_pixmap' bitmap to make the
+                        -- icon nonrectangular 
+		do
+			check
+                                not_yet_implemented: False
+                        end
                 end
+
+      icon_pixmap: EV_PIXMAP is
+                        -- Bitmap that could be used by the window manager
+                        -- as the application's icon
+		do
+			check
+                                not_yet_implemented: False
+                        end
+		end
+	
+
+      title: STRING is
+                        -- Application name to be displayed by
+                        -- the window manager
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+
+      widget_group: EV_WIDGET is
+                        -- Widget with wich current widget is associated.
+                        -- By convention this widget is the "leader" of a group
+                        -- widgets. Window manager will treat all widgets in
+                        -- a group in some way; for example, it may move or
+                        -- iconify them together
+				do
+						check
+                                not_yet_implemented: False
+                        end
+                end 
+
+feature -- Element change
+
+        set_icon_mask (mask: EV_PIXMAP) is
+                        -- Set `icon_mask' to `mask'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+        set_icon_pixmap (pixmap: EV_PIXMAP) is
+                        -- Set `icon_pixmap' to `pixmap'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+ 	    set_title (new_title: STRING) is
+                        -- Set `title' to `new_title'.            
+		do
+			check
+					not_yet_implemented: False
+			end
+        end
+
+        set_widget_group (group_widget: EV_WIDGET) is
+                        -- Set `widget_group' to `group_widget'.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+		end
 
 feature -- Status report
 
@@ -87,26 +168,53 @@ feature -- Element change
 			check
                                 not_yet_implemented: False
                         end
-                end
-	
-feature -- Measurement
-	
-	minimum_width: INTEGER is
-			-- Minimum width of window
-		once
-			Result := system_metrics.window_minimum_width
+                end	
+
+feature -- Resizing
+
+	child_has_resized (new_width, new_height: INTEGER; child: EV_WIDGET_IMP) is
+			-- Resize the container according to the 
+			-- resize of the child
+		do
+			-- XX Have to take into account the borders 
+			-- (new_width and new_height are the 
+			-- dimensions of the client area)
+			set_size (new_width + 2*system_metrics.window_frame_width, 
+				  new_height + system_metrics.title_bar_height + system_metrics.window_border_height + 2 * system_metrics.window_frame_height)
 		end
 
-	minimum_height: INTEGER is
-			-- Minimum height of window
-		once
-			Result := system_metrics.window_minimum_height
+feature -- Redefine for windows
+
+	set_minimum_width (min_width: INTEGER) is
+			-- Minimum width of window
+			-- Must be bigger than the mswin minimum, or it does nothing
+		do
+			if min_width >= system_metrics.window_minimum_width then
+				minimum_width := min_width
+			end
 		end
+
+	set_minimum_height (min_height: INTEGER) is
+			-- Minimum heigth of window, must be bigger than the mswin minimum
+		do
+			if min_height >= system_metrics.window_minimum_height then
+				minimum_height := min_height
+			end
+		end
+
+feature --{EV_WINOW_IMP} -- Implementation
 	
+	system_metrics: WEL_SYSTEM_METRICS is
+			-- System metrics to query things like
+			-- window_frame_width
+		once
+			!!Result
+		end
+
+
+feature {EV_APPLICATION_IMP} -- Implementation
 	
-feature {EV_APPLICATION} -- Implementation
-	
-	wel_window: WEL_FRAME_WINDOW
+	wel_window: EV_WEL_FRAME_WINDOW
 
 
 end

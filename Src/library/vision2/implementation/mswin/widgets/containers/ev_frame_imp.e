@@ -91,7 +91,7 @@ feature -- Access
 	client_width: INTEGER is
 			-- Width of the client area.
 		do
-			Result := (width - client_x - Border_width).max (0)
+			Result := (wel_width - client_x - Border_width).max (0)
 		end
 	
 	client_height: INTEGER is
@@ -289,24 +289,40 @@ feature {NONE} -- WEL Implementation
 				end
 			end
 
-			draw_edge (paint_dc, create {WEL_RECT}.make (
-					0, text_height // 2, width, height
-				), wel_style, Bf_rect)
+				-- Draw the Edge
+			draw_edge (
+				paint_dc, 
+				create {WEL_RECT}.make (
+					0, 
+					text_height // 2, 
+					cur_width, 
+					cur_height
+					),
+				wel_style, 
+				Bf_rect
+				)
+
 			if wel_style.bit_and (Bdr_raisedouter) = Bdr_raisedouter then
 				--| FIXME This is to work around a bug where the 3D highlight
 				--| does not seem to appear.
 				paint_dc.select_pen (highlight_pen)
-				paint_dc.line (0, text_height // 2, width, text_height // 2)
-				paint_dc.line (0, text_height // 2, 0, height - 1)
+				paint_dc.line (
+					0,         text_height // 2, 
+					cur_width, text_height // 2
+					)
+				paint_dc.line (
+					0, text_height // 2, 
+					0, cur_height - 1
+					)
 			end
 
 			if text /= Void then
 				if alignment.is_left_aligned then
 					text_pos := Text_padding
 				elseif alignment.is_center_aligned then
-					text_pos := (width - text_width) // 2
+					text_pos := (cur_width - text_width) // 2
 				elseif alignment.is_right_aligned then
-					text_pos := width - text_width - Text_padding
+					text_pos := cur_width - text_width - Text_padding
 				end
 				font_imp ?= font.implementation
 				check
@@ -318,8 +334,12 @@ feature {NONE} -- WEL Implementation
 				if is_sensitive then
 					paint_dc.text_out (text_pos, 0, " " + wel_text + " ")
 				else
-					draw_insensitive_text (paint_dc,
-						" " + wel_text + " ", text_pos, 0)
+					draw_insensitive_text (
+						paint_dc,
+						" " + wel_text + " ", 
+						text_pos, 
+						0
+						)
 				end
 			end
 		end
@@ -351,6 +371,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/06/09 01:23:20  manus
+--| Merged version 1.20.8.7 from DEVEL branch to trunc
+--|
 --| Revision 1.37  2000/06/08 18:46:48  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -14,12 +14,11 @@ deferred class
 	EV_CONTAINER_IMP
 
 inherit
-	EV_CONTAINER_I	
+	EV_CONTAINER_I
 
 	EV_WIDGET_IMP
 		redefine
-			widget_make,
-			set_parent
+			widget_make
 		end
 
 feature {NONE} -- Initialization
@@ -68,7 +67,7 @@ feature -- Element change
 				wel_set_parent (ww)
 				par_imp ?= par.implementation
 				check
-					parent_not_void: par_imp /= Void
+					valid_cast: par_imp /= Void
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
 				par_imp.add_child (Current)
@@ -107,7 +106,7 @@ feature {EV_SIZEABLE_IMP} -- Implementation for automatic size compute
 			set_minimum_height (value)
 		end
 
-feature {EV_MENU_HOLDER_IMP} -- Implementation
+feature {EV_MENU_HOLDER_IMP, EV_MENU_ITEM_HOLDER_IMP} -- Implementation
 
 	menu_items: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
 			-- It can be only one list by container because
@@ -147,9 +146,9 @@ feature {NONE} -- WEL Implementation
    	background_brush: WEL_BRUSH is
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
-   			-- By default there is no background
-  		do
- 			if background_color /= void then
+   			-- By default there is no background  
+		do
+ 			if exists and background_color_imp /= void then
  				!! Result.make_solid (background_color_imp)
  			end
  		end

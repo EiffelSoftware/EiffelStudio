@@ -1,6 +1,6 @@
 indexing
 	description: "Useful constants for assembly manager"
-	external_name: "AssemblyManager.RenameClausesViewerDictionary"
+	external_name: "ISE.AssemblyManager.RenameClausesViewerDictionary"
 
 class
 	RENAME_CLAUSES_VIEWER_DICTIONARY

@@ -13,8 +13,6 @@ inherit
 		
 	GB_SHARED_COMMAND_HANDLER
 	
-	GB_SHARED_HISTORY
-	
 	GB_SHARED_TOOLS
 	
 	WIZARD_SHARED
@@ -33,7 +31,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			is_selected := history.dialog.is_show_requested
+			is_selected := history_dialog.is_show_requested
 		end
 		
 feature -- Access
@@ -56,7 +54,7 @@ feature -- Basic operations
 			-- Result is window referenced by
 			-- `Current' command.
 		do
-			Result := history.dialog
+			Result := history_dialog
 		end
 
 end -- class GB_SHOW_HIDE_HISTORY_COMMAND

@@ -42,15 +42,22 @@ feature -- Status report
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
 		do
-			create Result.make
-			Result.extend (interface)
-			--| FIXME IEK To be implemented.
+			if parent_imp /= Void then
+				--Result := parent_imp.radio_group
+			else
+				create Result.make
+				Result.extend (interface)
+			end
 		end
 
 	selected_peer: like interface is
 			-- Radio item that is currently selected.
 		do
-			Result := interface
+			if parent_imp /= Void then
+				--Result := parent_imp.selected_peer
+			else
+				Result := interface
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -99,6 +106,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/12 00:18:47  king
+--| Initial implementation for radio grouping
+--|
 --| Revision 1.16  2000/04/11 23:17:52  king
 --| Made compilable and invariant happy
 --|

@@ -26,8 +26,7 @@ inherit
 			process_message,
 			set_x_position,
 			set_y_position,
-			set_position,
-			on_key_down
+			set_position
 		end
 
 create
@@ -223,18 +222,6 @@ feature {EV_DIALOG_I} -- Implementation
 			is_destroyed := True
 		end
 
-feature {EV_BUTTON_IMP} -- Implementation
-
-	on_dialog_key_down (virtual_key: INTEGER) is
-			-- Executed when the Enter or Escape key is pressed.
-		do
-			if virtual_key = Vk_escape then
-				call_default_button_action (False)
-			elseif virtual_key = Vk_return then
-				call_default_button_action (True)
-			end
-		end
-	
 feature {NONE} -- Implementation
 
 	move_children (other_imp: like common_dialog_imp) is
@@ -300,13 +287,6 @@ feature {NONE} -- Implementation
 		rescue
 			rescued := rescued + 1
 			retry
-		end
-
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-		do
-			on_dialog_key_down (virtual_key)
-			Precursor {EV_TITLED_WINDOW_IMP} (virtual_key, key_data)
 		end
 
 	promote_to_modal_dialog is
@@ -432,7 +412,7 @@ feature {NONE} -- Implementation
 		do
 			if msg = Wm_close then
 					-- Simulate a click on the default_cancel_button
-				call_default_button_action (False)
+				process_standard_key_press (vk_escape)	
 					-- Do not actually close the window.
 				if close_request_actions_internal /= Void then
 					close_request_actions_internal.call (Void)
@@ -443,28 +423,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_default_button_action (use_push_button: BOOLEAN) is
-			-- Call the action for the default push button if `a_push_button' is
-			-- set, for the default cancel button otherwise.
-		local
-			button_actions: EV_NOTIFY_ACTION_SEQUENCE
-			button: EV_BUTTON
-		do
-			if not interface.is_destroyed then
-				if use_push_button then
-					button := interface.default_push_button
-				else
-					button := interface.default_cancel_button
-				end
-				if button /= Void and then button.is_sensitive and then button.is_displayed then
-					button_actions := button.select_actions
-					if button_actions /= Void then
-						button_actions.call (Void)
-					end
-				end
-			end
-		end
-		
 	common_dialog_imp: EV_DIALOG_IMP_COMMON is
 			-- Dialog implementation type common to all descendents.
 		do

@@ -228,13 +228,13 @@ feature {GB_OBJECT} -- Status Setting
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 			
-		delete is
-				-- Perform any necessary pre processing for
-				-- a deletion of `Current' from the system.
-			do
-				-- Redefine in descendents that need to handle
-				-- special processing for a delete.
-			end
+	delete is
+			-- Perform any necessary pre processing for
+			-- a deletion of `Current' from the system.
+		do
+			-- Redefine in descendents that need to handle
+			-- special processing for a delete.
+		end
 
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 

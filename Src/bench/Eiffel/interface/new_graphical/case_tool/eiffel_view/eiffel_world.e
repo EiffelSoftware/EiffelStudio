@@ -1264,7 +1264,9 @@ feature {NONE} -- Implementation
 		do
 			lpd := context_editor.progress_dialog
 			if lpd /= Void then
-				lpd.set_value (lpd.value + 1)
+				if lpd.value < lpd.range.upper then
+					lpd.set_value (lpd.value + 1)
+				end
 			end
 		end
 

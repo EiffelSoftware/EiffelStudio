@@ -340,7 +340,7 @@ feature {NONE} -- Implementation (adding relations)
 						es_link.enable_needed_on_diagram
 					end
 					world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_add_inh_link_cmd,
+						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name, es_link.descendant.name),
 						agent add_ancestor (other_model, es_link),
 						agent remove_ancestor (other_model, es_link))
 				end
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation (adding relations)
 						end
 						
 						world.context_editor.history.register_named_undoable (
-							interface_names.t_diagram_add_cs_link_cmd,
+							interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
 							agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
 							agent remove_added_feature_and_link (client_model, added_code, last_query, es_link))
 					else
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation (move)
 			ce := world.context_editor
 			if world.selected_figures.is_empty then
 				world.context_editor.history.register_named_undoable (
-						Interface_names.t_Diagram_move_class_cmd,
+						Interface_names.t_Diagram_move_class_cmd (model.name),
 						[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed, agent apply_right_angles_if_needed>>],
 						[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed, agent apply_right_angles_if_needed>>])
 			else
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation (move)
 				offset_x := port_x - saved_x
 				offset_y := port_y - saved_y
 				world.context_editor.history.register_named_undoable (
-					interface_names.t_diagram_move_class_cmd,
+					interface_names.t_diagram_move_class_cmd (model.name),
 					[<<agent set_port_position (port_x, port_y), agent move_figures_for (l_selected_figures, offset_x, offset_y), agent ce.restart_force_directed>>],                       
 					[<<agent set_port_position (saved_x, saved_y), agent move_figures_for (l_selected_figures, -offset_x, -offset_y), agent ce.restart_force_directed>>])
 			end

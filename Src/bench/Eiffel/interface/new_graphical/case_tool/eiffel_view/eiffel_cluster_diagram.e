@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 					fig.set_port_position (drop_x, drop_y)
 
 					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_include_cluster_cmd,
+						interface_names.t_diagram_include_cluster_cmd (new_cluster.name),
 						agent reinclude_cluster (fig, remove_links, remove_classes),
 						agent remove_cluster_virtual (fig, remove_links, remove_classes))
 						
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 					saved_y := fig.port_y
 					fig.set_port_position (drop_x, drop_y)
 					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_move_cluster_cmd,
+						interface_names.t_diagram_move_cluster_cmd (new_cluster.name),
 						agent fig.set_port_position (drop_x, drop_y),
 						agent fig.set_port_position (saved_x, saved_y))
 				end
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 					update_cluster_legend
 					
 					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_include_class_cmd,
+						interface_names.t_diagram_include_class_cmd (new_class.name),
 						[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
 						[<<agent remove_cluster_virtual (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>])
 				else
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 						update_cluster_legend
 						
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_include_class_cmd,
+							interface_names.t_diagram_include_class_cmd (new_class.name),
 							[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
 							[<<agent remove_cluster_virtual (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>])
 					else
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 							remove_links := new_class.needed_links
 							update_cluster_legend
 							context_editor.history.register_named_undoable (
-								interface_names.t_diagram_include_class_cmd,
+								interface_names.t_diagram_include_class_cmd (new_class.name),
 								[<<agent reinclude_class (fig, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
 								[<<agent remove_class_virtual (fig, remove_links), agent update_cluster_legend>>])
 						else
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 								remove_links := new_class.needed_links
 								update_cluster_legend
 								context_editor.history.register_named_undoable (
-									interface_names.t_diagram_include_class_cmd,
+									interface_names.t_diagram_include_class_cmd (new_class.name),
 									[<<agent reinclude_class (fig, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
 									[<<agent remove_class_virtual (fig, remove_links), agent update_cluster_legend>>])
 							else
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 								saved_y := fig.port_y
 								fig.set_port_position (drop_x, drop_y)
 								context_editor.history.register_named_undoable (
-									interface_names.t_diagram_move_class_cmd,
+									interface_names.t_diagram_move_class_cmd (new_class.name),
 									agent fig.set_port_position (drop_x, drop_y),
 									agent fig.set_port_position (saved_x, saved_y))
 							end
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 					if not class_was_inserted and then not class_was_reincluded then				
 						
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd,
+							interface_names.t_diagram_move_class_cmd (new_class.name),
 							[<<agent fig.set_port_position (drop_x, drop_y), agent new_cluster.extend (new_class), 
 							   agent l_manager.move_class (new_class.class_i, old_cluster.cluster_i, new_cluster.cluster_i)>>],
 							[<<agent fig.set_port_position (saved_x, saved_y), agent old_cluster.extend (new_class),
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 						-- class was not in the diagram before.
 						remove_links := new_class.needed_links
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd,
+							interface_names.t_diagram_move_class_cmd (new_class.name),
 							[<<agent reinclude_class (fig, remove_links, drop_x, drop_y),
 							   agent new_cluster.extend (new_class),
 							   agent l_manager.move_class (new_class.class_i, old_cluster_i, new_cluster_i)>>],
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 						update_cluster_legend
 						
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_include_class_cmd,
+							interface_names.t_diagram_include_class_cmd (es_class.name),
 							[<<agent reinclude_cluster (cluster_fig, remove_links, remove_classes), agent update_cluster_legend>>],
 							[<<agent remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent update_cluster_legend>>])
 						
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 						remove_links := es_class.needed_links
 						cf.set_port_position (a_x, a_y)
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_include_class_cmd,
+							interface_names.t_diagram_include_class_cmd (es_class.name),
 							[<<agent reinclude_class (cf, remove_links, a_x, a_y), agent update_cluster_legend>>],
 							[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
 					end

@@ -175,7 +175,7 @@ feature {NONE} -- Cluster manger observer
 						old_clus.prune_all (l_class)
 						new_clus.extend (l_class)
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd,
+							interface_names.t_diagram_move_class_cmd (l_class.name),
 							[<<agent old_clus.prune_all (l_class),
 							   agent new_clus.extend (l_class),
 							   agent manager.move_class (l_class.class_i, old_clus.cluster_i, new_clus.cluster_i)>>],
@@ -192,7 +192,7 @@ feature {NONE} -- Cluster manger observer
 				   		old_clus.prune_all (l_class)
 						new_clus.extend (l_class)
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd,
+							interface_names.t_diagram_move_class_cmd (l_class.name),
 							[<<agent old_clus.prune_all (l_class),
 							   agent new_clus.extend (l_class),
 							   agent manager.move_class (l_class.class_i, old_clus.cluster_i, new_clus.cluster_i)>>],

@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 					remove_links := es_class.needed_links
 					tool.restart_force_directed
 					history.do_named_undoable (
-						interface_names.t_diagram_delete_class_cmd,
+						interface_names.t_diagram_erase_class_cmd (es_class.name),
 						[<<agent l_world.remove_class_virtual (class_fig, remove_links), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 						[<<agent l_world.reinclude_class (class_fig, remove_links, old_x, old_y), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 				end
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			l_world := tool.world
 
 			history.do_named_undoable (
-				interface_names.t_diagram_delete_class_cmd + "es",
+				interface_names.t_diagram_erase_classes_cmd,
 				[<<agent remove_class_list (a_stone.classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 				[<<agent reinclude_class_list (a_stone.classes, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 		end
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 					end
 					
 					history.do_named_undoable (
-							interface_names.t_diagram_include_class_cmd,
+							interface_names.t_diagram_erase_cluster_cmd (es_cluster.name),
 							[<<agent l_world.remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 							[<<agent l_world.reinclude_cluster (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 				end
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 				end
 
 				history.do_named_undoable (
-					interface_names.t_diagram_delete_class_cmd + "es",
+					interface_names.t_diagram_erase_classes_cmd,
 					[<<agent remove_class_list (l_c_figs), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 					[<<agent reinclude_class_list (l_c_figs, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			if l_item /= Void then
 				l_projector := tool.projector
 				history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd,
+					interface_names.t_diagram_delete_inheritance_link_cmd (fig.model.ancestor.name, fig.model.descendant.name),
 					[<<agent l_item.disable_needed_on_diagram, agent l_projector.full_project>>],
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			if l_item /= Void then
 				l_projector := tool.projector
 				history.do_named_undoable (
-					interface_names.t_diagram_delete_client_link_cmd,
+					interface_names.t_diagram_delete_client_link_cmd (fig.model.name),
 					[<<agent l_item.disable_needed_on_diagram, agent l_projector.full_project>>],
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end

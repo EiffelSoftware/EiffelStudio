@@ -25,8 +25,8 @@ feature -- Initialization
 	make (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initialize the button in preference tool.
 		do
-			button_make (menu_entry_name, a_parent);
-			set_text (a_cmd.name);
+			button_make (menu_entry_name, a_parent)
+			set_text (a_cmd.name)
 			add_activate_action (a_cmd, Void)
 		end
 
@@ -41,6 +41,8 @@ feature -- Status setting
 				set_toggle_off
 			end
 		end
+
+feature -- Properties
 
 	associated_command: PREFERENCE_CATEGORY is
 			-- Command type that menu entry expects

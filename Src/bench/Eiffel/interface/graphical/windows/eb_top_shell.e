@@ -39,18 +39,17 @@ feature -- Initialization
 		do
 			if Platform_constants.is_windows then
 					-- For windows we need the id for the Icon
-				old_make (an_id.out, a_screen);
+				old_make (an_id.out, a_screen)
 			else
 					-- For unix we need this for the X resource file
-				old_make (Interface_names.n_X_resource_name, a_screen);
-			end;
+				old_make (Interface_names.n_X_resource_name, a_screen)
+			end
 
 			tooltip_initialize (Current)
-			!! associated_form.make ("", Current);
-
+			!! associated_form.make ("", Current)
 		ensure
 			screen_set: equal (screen, a_screen)
-		end;
+		end
 
 feature -- Properties
 
@@ -62,19 +61,17 @@ feature -- Display
 	display is
 			-- Show Current on the screen
 		do
-
 			if realized then
 				show
 			else
-				realize;
+				realize
 				focus_label.initialize_focusables (Current)
-			end;
+			end
 			raise
-		end;
+		end
 
 feature {NONE} -- Implementation
 
-	--implementation: TOP_SHELL_IMP
-	implementation: TOP_SHELL_I --VISIONLITE
+	implementation: TOP_SHELL_I
 
 end -- class EB_TOP_SHELL

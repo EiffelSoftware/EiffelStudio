@@ -409,7 +409,8 @@ feature -- Element change
 			-- Interrupt current compilations.
 		require
 			is_compiling: degree_output.current_degree <= 6;
-			is_before_degree_3: degree_output.current_degree >= 3
+			is_before_degree_3_or_0: degree_output.current_degree >= 3 or
+				else degree_output.current_degree = 0 -- case
 		do
 			Error_handler.insert_interrupt_error
 		end;

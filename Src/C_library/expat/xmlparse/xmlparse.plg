@@ -1,0 +1,61 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: xmltok - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D98.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "XML_NS" /D XMLTOKAPI=__declspec(dllexport) /D "WIN32" /D "_WINDOWS" /D "XML_DTD" /Fp".\Release/xmltok.pch" /YX /Fo".\Release/" /Fd".\Release/" /FD /c 
+"E:\50dev\C_library\expat\xmltok\dllmain.c"
+"E:\50dev\C_library\expat\xmltok\xmlrole.c"
+"E:\50dev\C_library\expat\xmltok\xmltok.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D98.tmp" 
+Creating temporary file "C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D99.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /entry:"DllMain" /subsystem:windows /dll /incremental:no /pdb:".\Release/xmltok.pdb" /machine:I386 /out:"..\bin\xmltok.dll" /implib:".\Release/xmltok.lib" /link50compat 
+.\Release\dllmain.obj
+.\Release\xmlrole.obj
+.\Release\xmltok.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D99.tmp"
+<h3>Output Window</h3>
+Compiling...
+dllmain.c
+xmlrole.c
+xmltok.c
+Linking...
+   Creating library .\Release/xmltok.lib and object .\Release/xmltok.exp
+<h3>
+--------------------Configuration: xmlparse - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D9B.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /I "..\xmltok" /I "..\xmlwf" /D XMLTOKAPI=__declspec(dllimport) /D XMLPARSEAPI=__declspec(dllexport) /D "NDEBUG" /D "XML_NS" /D "WIN32" /D "_WINDOWS" /D "XML_DTD" /Fp".\Release/xmlparse.pch" /YX /Fo".\Release/" /Fd".\Release/" /FD /c 
+"E:\50dev\C_library\expat\xmlparse\xmlparse.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D9B.tmp" 
+Creating temporary file "C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D9C.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x20000000" /subsystem:windows /dll /incremental:no /pdb:".\Release/xmlparse.pdb" /machine:I386 /out:"..\bin\xmlparse.dll" /implib:".\Release/xmlparse.lib" /link50compat 
+.\Release\xmlparse.obj
+\50dev\C_library\expat\xmltok\Release\xmltok.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\manus\LOCALS~1\Temp\RSP1D9C.tmp"
+<h3>Output Window</h3>
+Compiling...
+xmlparse.c
+Linking...
+   Creating library .\Release/xmlparse.lib and object .\Release/xmlparse.exp
+
+
+
+<h3>Results</h3>
+xmlparse.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

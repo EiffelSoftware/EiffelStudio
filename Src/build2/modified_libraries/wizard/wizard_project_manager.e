@@ -8,38 +8,30 @@ class
 	WIZARD_PROJECT_MANAGER
 
 inherit
-	EV_APPLICATION
-		rename 
-			copy as copy_application
-		undefine
-			help_engine
-		select 
-			copy_application
-		end
 
 	WIZARD_SHARED
-		undefine
-			default_create
+		export
+			{NONE} all
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create
+		export
+			{NONE} all
 		end
 	
 	GB_SHARED_STATUS_BAR
-		undefine
-			default_create
+		export
+			{NONE} all
 		end
 	
 	GB_SHARED_XML_HANDLER
-		undefine
-			default_create
+		export
+			{NONE} all
 		end
 		
 	GB_SHARED_TOOLS
-		undefine
-			default_create
+		export
+			{NONE} all
 		end
 
 creation
@@ -56,10 +48,9 @@ feature {NONE} -- Initialization
 			else
 				default_create
 				build_non_once_windows
-				set_application (Current)
-				pnd_motion_actions.extend (agent clear_status_during_transport)
-				cancel_actions.extend (agent clear_status_after_transport)
+				set_application ((create {EV_ENVIRONMENT}).application)
 				prepare (hwnd)
+				application.launch
 			end
 		end
 		
@@ -70,9 +61,7 @@ feature {NONE} -- Initialization
 			default_create
 			build_non_once_windows
 			xml_handler.load_components
-			set_application (Current)
-			pnd_motion_actions.extend (agent clear_status_during_transport)
-			cancel_actions.extend (agent clear_status_after_transport)
+			set_application ((create {EV_ENVIRONMENT}).application)
 			first_window.set_title (Wizard_title)
 			if not is_modify_wizard then
 				first_window.show
@@ -86,12 +75,12 @@ feature {NONE} -- Initialization
 				-- want to show the window until the very last minute (connected below)
 				-- so that we reduce flicker.
 			if is_modify_wizard then
-				post_launch_actions.extend (agent first_window.load_first_state)
-				post_launch_actions.extend (agent first_window.show)
-				post_launch_actions.extend (agent first_window.enable_maximize)
-				post_launch_actions.extend (agent type_selector.ensure_top_item_visible)
+				application.post_launch_actions.extend (agent first_window.load_first_state)
+				application.post_launch_actions.extend (agent first_window.show)
+				application.post_launch_actions.extend (agent first_window.enable_maximize)
+				application.post_launch_actions.extend (agent type_selector.ensure_top_item_visible)
 			end
-			launch
+			application.launch
 		end
 
 	prepare (hwnd: INTEGER) is

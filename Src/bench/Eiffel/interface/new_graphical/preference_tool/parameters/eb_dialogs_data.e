@@ -38,6 +38,12 @@ feature -- Access
 		do
 			Result := boolean_resource_value (confirm_finalize_assertions_string, True)
 		end
+		
+	confirm_finalize_precompile: BOOLEAN is
+			-- Should .NET precompile projects be finalize?
+		do
+			Result := boolean_resource_value (confirm_finalize_precompile_string, True)
+		end
 
 	confirm_save_before_compile: BOOLEAN is
 			-- Should all files be saved before compiling without displaying
@@ -99,6 +105,12 @@ feature -- Element change
 			set_boolean_resource (confirm_finalize_assertions_string, new_value)
 		end
 
+	set_confirm_finalize_precompile (new_value: BOOLEAN) is
+			-- Set `confirm_finalize_precompile' to `new_value'.
+		do
+			set_boolean_resource (confirm_finalize_precompile_string, new_value)
+		end
+
 	set_confirm_save_before_compile (new_value: BOOLEAN) is
 			-- Set `confirm_save_before_compile' to `new_value'.
 		do
@@ -146,5 +158,6 @@ feature {NONE} -- Preference strings
 	confirm_ignore_all_breakpoints_string: STRING is "confirm_ignore_all_breakpoints"
 	confirm_convert_project_string: STRING is "confirm_convert_project"
 	acknowledge_not_loaded_string: STRING is "acknowledge_not_loaded"
+	confirm_finalize_precompile_string: STRING is "confirm_finalize_precompile"
 	
 end -- class EB_DIALOGS_DATA

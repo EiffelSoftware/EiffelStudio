@@ -1,0 +1,40 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<TITLE>Error wizard</TITLE>
+<META NAME="MS-HKWD" CONTENT="error message">
+<META NAME="MS-HKWD" CONTENT="compilation error message">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>Error wizard</h1>
+<p>More often than wanted, Eiffel compilations are not successful. The good
+point is that when an error is detected by the compiler, it will not be a
+problem at run-time. The bad point is that you have to fix compilation errors
+before being able to launch and debug your system.</p>
+<p>When an error occurs during an Eiffel compilation in EiffelStudio, the <b> Output</b>
+tab of the context tool displays a description of the error and its location,
+which looks more or less like this:</p>
+<p align="center"><IMG SRC="/images/eiffelstudio/error_message.png"></p>
+<p>In this case, the compiler tries to explain that the identifier &quot;sessiond&quot;
+is not a known identifier in the context where it was typed. This is a common
+error that mainly occurs when making typos in the code. Assuming the message
+does not make sense to you (which may happen in more complex cases), you can
+query more information about the encounted error.</p>
+
+<p>To do this:</p>
+
+<ul>
+  <li><A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</A> the code of the error, in this case VEEN.</li>
+  <li><A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Drop</A>
+  it either in the editor or on the error help button <IMG SRC="/images/eiffelstudio/icons/icon_help_tool_color.gif">.</li>
+  <li>A dialog is then popped up that describes extended information concerning
+    this error type:</li>
+</ul>
+<P ALIGN="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/error_description_dialog.png">
+</body>
+
+</html>

@@ -30,7 +30,12 @@ class ARRAY [G] inherit
 
 create
 	make,
-	make_from_array
+	make_from_array,
+	make_from_cil
+
+convert
+	to_cil: {NATIVE_ARRAY [G]},
+	make_from_cil ({NATIVE_ARRAY [G]})
 
 feature -- Initialization
 
@@ -66,6 +71,20 @@ feature -- Initialization
 			upper := a.upper
 		end
 
+	make_from_cil (na: NATIVE_ARRAY [G]) is
+			-- Initialize array from `na'.
+		local
+			array_copy: NATIVE_ARRAY [G]
+		do
+			array_copy ?= na.clone
+			check
+				copy_successful: array_copy /= Void
+			end
+			create area.make_from_native_array (array_copy)
+			lower := 1
+			upper := na.count
+		end
+			
 feature -- Access
 
 	item, infix "@" (i: INTEGER): G is

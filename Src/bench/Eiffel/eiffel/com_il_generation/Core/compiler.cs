@@ -520,6 +520,7 @@ feature -- Generation Structure
 			FEATURE eiffel_entry_point;
 	
 			EntryType = main_module.DefineType (Classes [TypeID].name + EntryTypeName);
+
 			entry_point = EntryType.DefineMethod (Entry_point_name,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
@@ -534,12 +535,14 @@ feature -- Generation Structure
 				throw new ApplicationException ("DefineEntryPoint: Real entry point " + 
 					"not found (TypeID: " + TypeID + ", FeatureID: " + FeatureID + ")");
 
+
 			Generator.Emit ( OpCodes.Newobj, Classes [CreationTypeID].DefaultConstructor);
 			if (eiffel_entry_point.argument_count > 1) {
 				Generator.Emit (OpCodes.Ldarg_0);
 			}
 
 			Generator.Emit (OpCodes.Call, eiffel_entry_point.method_builder);
+
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();
 			assembly.SetEntryPoint (entry_point, application_kind);
@@ -2134,6 +2137,11 @@ feature -- Private
 /*
 feature -- Statics
 */
+	internal static Guid Language_guid = new Guid ("6805C61E-8195-490c-87EE-A713301A670C");
+	internal static Guid Language_vendor_guid = new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7");
+	internal static Guid Document_type_guid = Guid.Empty;
+		// Guids used for generation of debug information.
+
 	// Current mapped class
 	internal static int CurrentTypeID;
 

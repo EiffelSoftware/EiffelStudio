@@ -20,6 +20,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -34,6 +39,7 @@ feature -- Basic operation
 			objects_without_ids: BOOLEAN
 			current_object: GB_OBJECT
 		do
+			system_status.set_object_structure_changing
 				-- First, intialization.
 			create existing_ids.make (50)
 			objects := object_handler.objects.linear_representation
@@ -93,6 +99,7 @@ feature -- Basic operation
 				end
 				objects.forth
 			end
+			system_status.set_object_structure_changed
 		end
 		
 	shift_all_ids_upwards is

@@ -263,11 +263,11 @@ feature -- Access
 			Result := body.index_of_instruction (i)
 		end
 
-	custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
-			-- Custom attribute of current class if any.
+	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Custom attributes of current class if any.
 		do
 			if indexes /= Void then
-				Result := indexes.custom_attribute
+				Result := indexes.custom_attributes
 			end
 		end
 
@@ -317,6 +317,9 @@ feature -- Type check, byte code and dead code removal
 			context.begin_expression
 				-- Type check
 			body.type_check
+			if custom_attributes /= Void then
+				custom_attributes.type_check
+			end
 		end
 
 	check_local_names is
@@ -334,6 +337,9 @@ feature -- Type check, byte code and dead code removal
 			context.start_lines
 			context.set_has_loop (False)
 			Result := body.byte_node
+			if custom_attributes /= Void then
+				Result.set_custom_attributes (custom_attributes.byte_node)
+			end
 			Result.set_has_loop (context.has_loop)
 		end
 

@@ -415,7 +415,6 @@ end
 			-- Generate return Result or hard-coded null
 		local
 			assignment: ASSIGN_B
-			a_creation: CREATION_B
 			buf: GENERATION_BUFFER
 		do
 			if compound /= Void then
@@ -426,9 +425,8 @@ end
 					-- statements have already been generated.
 				if compound.item.last_all_in_result then
 					assignment ?= compound.item
-					a_creation ?= compound.item
 					if
-						assignment = Void and a_creation = Void and
+						assignment = Void and
 						not context.has_rescue
 					then
 						buf := buffer

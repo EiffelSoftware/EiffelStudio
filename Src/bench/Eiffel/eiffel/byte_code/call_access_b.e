@@ -9,7 +9,7 @@ deferred class
 inherit
 	ACCESS_B
 		redefine
-			make_byte_code, make_creation_byte_code, generate_il
+			make_byte_code, generate_il
 		end
 
 	SHARED_NAMES_HEAP

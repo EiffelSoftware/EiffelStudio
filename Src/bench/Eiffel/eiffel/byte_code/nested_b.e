@@ -6,7 +6,7 @@ inherit
 
 	CALL_B
 		redefine
-			enlarged, make_byte_code, make_creation_byte_code,
+			enlarged, make_byte_code,
 			need_invariant, set_need_invariant,
 			is_unsafe, calls_special_features, optimized_byte_node,
 			is_special_feature, size, pre_inlined_code,
@@ -77,11 +77,6 @@ feature
 			Result.set_message (message.sub_enlarged (Result));
 		end;
 
-	generate_creation_call is
-			-- Generation of a creation call
-		do
-		end;
-
 	need_invariant: BOOLEAN is
 		do
 			Result := message.need_invariant
@@ -103,25 +98,6 @@ feature -- IL code generation
 		
 	generate_il is
 			-- Generate IL code for a nested call.
-		do
-			generate_il_call (True, False)
-		end
-	
-	generate_il_creation is
-			-- Generate IL code for a nested call of a creation expression,
-			-- i.e. no invariant check will be called before calling creation
-			-- procedure
-		do
-			generate_il_call (False, True)
-		end
-		
-feature {NONE} -- IL code generation
-
-	generate_il_call (inv_checked, in_creation: BOOLEAN) is
-			-- Generate IL code for a nested call with invariant
-			-- checked before calling the feature if `inv_checked'.
-			-- If `in_creation' it means that we already have target of
-			-- call generated on top of stack.
 		local
 			can_discard_target: BOOLEAN
 			is_target_generated: BOOLEAN
@@ -131,44 +107,42 @@ feature {NONE} -- IL code generation
 			local_number: INTEGER
 			l_type: TYPE_I
 		do
-			if not in_creation then
-				can_discard_target := not message.need_target
+			can_discard_target := not message.need_target
 
-				if can_discard_target then
-						-- If we have a constant or a static external call,
-						-- we can forget about the generation of `target' only
-						-- if it is not a routine call. If the generation
-						-- of `target' occurred, we need to pop from
-						-- execution stack the value returned by `target'
-						-- because it is not needed to perform the call to `message'.
-					is_target_generated := (not target.is_predefined and
-						(parent /= Void or not target.is_attribute))
-				else
-					is_target_generated := True
-				end
-				
-				if is_target_generated then
-						-- We pass `True' to force a special treatment on 
-						-- generation of `target' if it is an expanded object.
-						-- Namely if `target' is predefined we will load
-						-- the address of `target' instead of `target' itself.
-						-- `message' will manage the boxing operation if needed.
-					target.generate_il_call_access (True)
-						-- We need to generate an address operation of most recently
-						-- pushed value, but because it is not a predefined entity
-						-- we need to do something special.
-					l_attr ?= target
-				end
+			if can_discard_target then
+					-- If we have a constant or a static external call,
+					-- we can forget about the generation of `target' only
+					-- if it is not a routine call. If the generation
+					-- of `target' occurred, we need to pop from
+					-- execution stack the value returned by `target'
+					-- because it is not needed to perform the call to `message'.
+				is_target_generated := (not target.is_predefined and
+					(parent /= Void or not target.is_attribute))
+			else
+				is_target_generated := True
+			end
+			
+			if is_target_generated then
+					-- We pass `True' to force a special treatment on 
+					-- generation of `target' if it is an expanded object.
+					-- Namely if `target' is predefined we will load
+					-- the address of `target' instead of `target' itself.
+					-- `message' will manage the boxing operation if needed.
+				target.generate_il_call_access (True)
+					-- We need to generate an address operation of most recently
+					-- pushed value, but because it is not a predefined entity
+					-- we need to do something special.
+				l_attr ?= target
+			end
 
-				if can_discard_target and is_target_generated then
-					il_generator.pop
-				end
+			if can_discard_target and is_target_generated then
+				il_generator.pop
 			end
 
 				-- Generate call
 			l_call_access ?= message
 			if l_call_access /= Void then
-				l_call_access.generate_il_call (inv_checked)
+				l_call_access.generate_il_call (True)
 				if l_attr /= Void and then l_attr.need_address (True) then
 					l_type := Context.real_type (l_call_access.type)
 					if not l_type.is_void then
@@ -205,21 +179,6 @@ feature -- Byte code generation
 	
 				-- generate the call byte code
 			message.make_byte_code (ba);
-		end;
-
-	make_creation_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a nested call for a creation.
-		do
-				-- generate the target byte code
-			target.make_byte_code (ba);
-
-			if target.is_feature then
-					-- insert a debugger hook without increasing the line number
-				generate_melted_debugger_hook_nested (ba); 
-			end
-
-				-- generate the call byte code
-			message.make_creation_byte_code (ba);
 		end;
 
 feature -- Array optimization

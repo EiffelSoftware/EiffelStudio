@@ -83,16 +83,6 @@ feature
 			-- Do nothing
 		end;
 
-feature -- Byte code generation
-
-	make_creation_byte_code (ba: BYTE_ARRAY) is
-			-- Generate call as a creation procedure
-		require
-			ba_not_void: ba /= Void
-		do
-			make_byte_code (ba);
-		end;
-
 feature -- Array optimization
 
 	is_special_feature: BOOLEAN is

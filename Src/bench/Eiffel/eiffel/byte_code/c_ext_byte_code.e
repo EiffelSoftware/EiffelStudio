@@ -21,8 +21,6 @@ feature -- Generation
 		end
 
 	generate_body is
-		local
-			header: GENERATION_BUFFER
 		do
 			if is_during_il then
 				generate_c_extern_declaration

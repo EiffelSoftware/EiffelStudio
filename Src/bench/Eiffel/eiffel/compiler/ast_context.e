@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			create array_line.make
 			create tuple_line.make
 			create interval_line.make
+			create creation_infos.make
 			create creation_types.make
 			create parameters.make
 			create supplier_ids.make
@@ -85,10 +86,12 @@ feature -- Access
 	interval_line: LINE [INTERVAL_B]
 			-- Line of intervals
 
-	creation_types: LINE [CREATE_INFO]
+	creation_infos: LINE [CREATE_INFO]
+			-- How a type should be created?
+
+	creation_types: LINE [TYPE_I]
 			-- Creation information types
 
-	
 	parameters: LINE [TYPE_A]
 			-- Features with arguments encountered during type check
 
@@ -391,6 +394,7 @@ feature -- Managing the type stack
 			array_line.start;	
 			tuple_line.start;	
 			interval_line.start;
+			creation_infos.start;
 			creation_types.start;
 			parameters.start;
 			instruction_line.start
@@ -416,6 +420,7 @@ feature -- Managing the type stack
 			array_line.wipe_out;
 			tuple_line.wipe_out;
 			interval_line.wipe_out;
+			creation_infos.wipe_out;
 			creation_types.wipe_out;
 			parameters.wipe_out;
 			instruction_line.wipe_out;

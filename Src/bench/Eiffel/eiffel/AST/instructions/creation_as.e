@@ -397,30 +397,31 @@ feature -- Type check, byte code and dead code removal
 				create {CREATE_FEAT} create_info.make (attribute_b.attribute_id,
 					attribute_b.routine_id, context.current_class)
 			end
-			Creation_types.insert (create_info)
+			context.creation_infos.insert (create_info)
+			context.creation_types.insert (creation_type.actual_type.type_i)
+			
+			check
+				not creation_type.actual_type.type_i.is_void
+			end
 
 				-- Update type stack
 			context.pop (1)
 		end
 
-	Creation_types: LINE [CREATE_INFO] is
-			-- Line of creation informations
-		once
-			Result := context.creation_types
-		end
-
-	byte_node: CREATION_B is
+	byte_node: ASSIGN_B is
 			-- Byte code for creation instruction
 		local
-			access, call_access: ACCESS_B
-			nested: NESTED_B
-			create_info: CREATE_INFO
+			l_create_info: CREATE_INFO
+			l_type: TYPE_I
+			l_access: ACCESS_B
+			l_call_access: CALL_ACCESS_B
 			the_call: like call
+			l_creation_expr: CREATION_EXPR_B
 		do
-			create Result
-			access := target.byte_node
-			Result.set_target (access)
-		
+			l_access := target.byte_node
+
+			create l_creation_expr
+
 			if default_call = Void or else default_call.feature_name.is_empty then
 				the_call := call
 			else
@@ -428,19 +429,35 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			if the_call /= Void then
-				call_access := the_call.byte_node
-				create nested
-				nested.set_target (access)
-				access.set_parent (nested)
-				nested.set_message (call_access)
-				call_access.set_parent (nested)
-				Result.set_call (nested)
+				l_call_access ?= the_call.byte_node
+				check
+					has_valid_call: l_call_access /= Void
+				end
+				l_creation_expr.set_call (l_call_access)
 			end
-			Result.set_line_number (line_number)
 
-			create_info := Creation_types.item;	
-			Result.set_info (create_info)
-			Creation_types.forth
+				-- Cannot be Void since the only thing that we put is of type CREATION_TYPE
+				-- for a CREATION_EXPR_B
+			l_create_info := context.creation_infos.item
+			context.creation_infos.forth
+			check
+				l_create_info_not_void: l_create_info /= Void
+			end
+
+			l_type := context.creation_types.item
+			context.creation_types.forth
+			check
+				l_type_not_void: l_type /= Void
+			end
+			
+			l_creation_expr.set_info (l_create_info)
+			l_creation_expr.set_type (l_type)
+			l_creation_expr.set_line_number (line_number)
+			
+			create Result
+			Result.set_target (l_access)
+			Result.set_source (l_creation_expr)
+			Result.set_line_number (line_number)
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -8,8 +8,7 @@ inherit
 			print_register, free_register,
 			stored_register, has_call, has_gcable_variable, c_type,
 			set_register, register, set_parent, parent, propagate,
-			unanalyze, generate_creation_call, generate, analyze,
-			allocates_memory
+			unanalyze, generate, analyze, allocates_memory
 		end
 	
 feature 
@@ -346,17 +345,6 @@ end
 					-- We are not the last call on the chain.
 				message.generate
 			end
-		end
-
-	generate_creation_call is
-			-- Generate creation call
-		do
-			target.generate
-				-- generate a hook
-			if target.is_feature then 
-				generate_frozen_debugger_hook_nested
-			end
-			generate_call (target, False)
 		end
 
 	generate_call (reg: REGISTRABLE; with_inv: BOOLEAN) is

@@ -83,7 +83,7 @@ feature {IL_CODE_GENERATOR} -- Generation
 		local
 			ca_b: CUSTOM_ATTRIBUTE_B
 			cb: CREATION_EXPR_B
-			l_creation_external: CREATION_EXTERNAL_B
+			l_creation_external: EXTERNAL_B
 			l_extension: IL_EXTENSION_I
 			count: INTEGER
 			param: BYTE_LIST [EXPR_B]

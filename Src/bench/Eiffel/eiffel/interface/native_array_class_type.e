@@ -89,7 +89,7 @@ feature -- IL code generation
 		local
 			gen_param: TYPE_I
 			cl_type: CL_TYPE_I
-			generic_type_id: INTEGEr
+			generic_type_id: INTEGER
 		do
 			if first_generic.is_true_expanded then
 				gen_param ?= array_type.true_generics.item (1)

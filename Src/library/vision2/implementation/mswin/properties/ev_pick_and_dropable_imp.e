@@ -373,7 +373,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 			pick_and_dropable ?= target
 			check
-				pick_and_dropable_not_void : pick_and_dropable /= Void
+			 pick_and_dropable_correct: target /= Void implies pick_and_dropable /= Void
 			end
 			pick_ended_actions.call ([pick_and_dropable])
 			enable_transport

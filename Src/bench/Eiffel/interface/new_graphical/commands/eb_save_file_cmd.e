@@ -11,11 +11,8 @@ inherit
 	NEW_EB_CONSTANTS
 	SYSTEM_CONSTANTS
 	EB_EDITOR_COMMAND
---		rename
---			inactive_symbol as unmodified_pixmap,
---			active_symbol as modified_pixmap
 		redefine
---			license_checked, unmodified_pixmap,
+--			license_checked,
 			tool
 		end
 

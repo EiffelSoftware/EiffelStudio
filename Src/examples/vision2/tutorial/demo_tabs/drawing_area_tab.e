@@ -22,13 +22,13 @@ feature -- Initialization
 	make(par: EV_CONTAINER) is
 			-- Create the tab and initalise the objects.
 		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
-				-- Commands used by the tab.
-			
+			l1: EV_LABEL			
 		do
-		{ANY_TAB} Precursor (Void)
-
-		set_parent (par)
+			{ANY_TAB} Precursor (Void)
+				-- Creates the objects and their commands.
+			create l1.make_with_text(Current,"EV_DRAWING_AREA has no new features which are%N interactive in this demo.")
+			set_child_position (l1, 0, 0, 1, 1)
+			set_parent (par)
 		end
 
 feature -- Access
@@ -43,14 +43,6 @@ feature -- Access
 
 	current_widget: EV_LIST
 		-- The current demo.
-
-	f1: TEXT_FEATURE_MODIFIER
-		--  A feature modifier for the action window.
-
-	b1: EV_BUTTON
-		-- A button for the action window.
-
-feature -- Execution Feature
 
 end -- class DRAWING_AREA_TAB
  

@@ -59,7 +59,15 @@ feature -- Access
 		once
 			l_name := value.generator
 			system := Eiffel_system.system
-			if l_name.is_equal (Integer_8_name) then
+			if l_name.is_equal (natural_8_name) then
+				Result := system.natural_8_class.compiled_class
+			elseif l_name.is_equal (natural_16_name) then
+				Result := system.natural_16_class.compiled_class
+			elseif l_name.is_equal (natural_32_name) then
+				Result := system.natural_32_class.compiled_class
+			elseif l_name.is_equal (natural_64_name) then
+				Result := system.natural_64_class.compiled_class
+			elseif l_name.is_equal (Integer_8_name) then
 				Result := system.Integer_8_class.compiled_class
 			elseif l_name.is_equal (Integer_16_name) then
 				Result := system.Integer_16_class.compiled_class
@@ -217,6 +225,10 @@ feature {NONE} -- Class constants
 	Boolean_name: STRING is "BOOLEAN"
 	Character_name: STRING is "CHARACTER"
 	Wide_char_name: STRING is "WIDE_CHARACTER"
+	natural_8_name: STRING is "NATURAL_8"
+	natural_16_name: STRING is "NATURAL_16"
+	natural_32_name: STRING is "NATURAL_32"
+	natural_64_name: STRING is "NATURAL_64"
 	Integer_8_name: STRING is "INTEGER_8"
 	Integer_16_name: STRING is "INTEGER_16"
 	Integer_32_name: STRING is "INTEGER_32"

@@ -17,7 +17,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-	SHARED_FORMAT_TABLES
+	EB_SHARED_FORMAT_TABLES
 
 creation
 
@@ -66,6 +66,7 @@ feature -- Formatting
 			cur: CURSOR
 			routine_w: EB_FEATURE_TOOL
 			st: STRUCTURED_TEXT
+			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
 				classc_stone ?= stone
@@ -90,12 +91,12 @@ feature -- Formatting
 							if filed_stone /= Void then
 								if filed_stone.file_name /= Void then
 									error := true
---									warner (popup_parent).gotcha_call 	
---									(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+									create wd.make_default (tool.parent, Interface_names.t_Warning,
+										Warning_messages.w_Cannot_read_file (filed_stone.file_name))
 								else
 									error := true
---									warner (popup_parent).gotcha_call 
---										(Warning_messages.w_No_associated_file)
+									create wd.make_default (tool.parent, Interface_names.t_Warning,
+										Warning_messages.w_No_associated_file)
 								end
 							end			
 						end
@@ -115,18 +116,18 @@ feature -- Formatting
 						else
 							tool.set_file_name (file_name (filed_stone))
 						end
---						tool.set_stone (stone)
+						tool.set_stone (stone)
 						routine_w ?= tool
---						if 	
---							routine_w /= Void and then
---							routine_w.stone.e_feature.written_class.lace_class.hide_implementation
---						then
---							st := rout_flat_context_text (routine_w.stone)
---							tool.text_window.process_text (st)
---							tool.text_window.display
---						else	
+						if 	
+							routine_w /= Void and then
+							routine_w.stone.e_feature.written_class.lace_class.hide_implementation
+						then
+							st := rout_flat_context_text (routine_w.stone)
+							tool.text_window.process_text (st)
+							tool.text_window.show
+						else	
 							tool.text_window.set_text (stone_text)
---						end
+						end
 						tool.update_save_symbol
 						tool.set_mode_for_editing
 --						tool.show_editable_text
@@ -138,8 +139,8 @@ feature -- Formatting
 										-- internally (resynchronization, ...)
 									class_name := classc_stone.e_class.name
 									error := true
---									warner (popup_parent).gotcha_call 
---										(Warning_messages.w_Class_modified (class_name))
+									create wd.make_default (tool.parent, Interface_names.t_Warning,
+										Warning_messages.w_Class_modified (class_name))
 								end
 							elseif st = Void then
 								tool.text_window.update_clickable_from_stone (stone)
@@ -157,7 +158,8 @@ feature -- Formatting
 			else
 --				create mp.do_nothing
 --				mp.restore
---				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info)
+				create wd.make_default (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_Cannot_retrieve_info)
 			end
 		rescue
 --			if original_exception = Io_exception then

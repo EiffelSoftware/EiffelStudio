@@ -30,8 +30,6 @@ feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER} -- Basic operation
 			-- For every item in `all_gb_ev', execute the deferred
 			-- building features. Wipe out `all_gb_ev' and
 			-- `all_element' during the process.
-		require
-			lists_equal_in_length: all_gb_ev.count = all_element.count
 		do
 			from
 				all_gb_ev.start

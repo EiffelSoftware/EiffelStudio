@@ -65,7 +65,6 @@ feature -- Basic operations
 					counter := counter - 1
 				end
 				recent_projects.put (system_status.current_project_settings.project_location, 1)
-				Preferences.set_array_resource (preferences.recent_projects_string, recent_projects)
 			elseif project_index /= 1 then
 					-- Now move an already existing project to the first location.
 				l_string := recent_projects.item (project_index)
@@ -79,6 +78,8 @@ feature -- Basic operations
 				end
 				recent_projects.put (l_string, 1)
 			end
+			preferences.set_array_resource (preferences.recent_projects_string, recent_projects)
+			preferences.save_resources
 		end
 		
 	clip_recent_projects is

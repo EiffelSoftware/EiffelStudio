@@ -550,7 +550,7 @@ feature -- Basic operation
 								end
 								first_types := action_sequence1.argument_types_as_string
 								second_types := action_sequence2.argument_types_as_string
-								if first_types /= second_types then
+								if not equal (first_types, second_types) then
 									Result := False
 								end
 							end

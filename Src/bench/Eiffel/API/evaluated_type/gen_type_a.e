@@ -261,6 +261,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				!!Result
 				Result.set_base_class_id (base_class_id)
 				Result.set_generics (new_generics)
+				Result.set_is_expanded (is_expanded)
 			end
 		end
 
@@ -286,6 +287,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				!!Result
 				Result.set_base_class_id (base_class_id)
 				Result.set_generics (new_generics)
+				Result.set_is_expanded (is_expanded)
 			end
 		end
 
@@ -490,6 +492,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			creation_constraint_list: LINKED_LIST [FEATURE_I]
 			error_list: LINKED_LIST [CONSTRAINT_INFO]
 			formal_dec_as: FORMAL_DEC_AS
+			class_c: CLASS_C
 		do
 			from
 				i := 1
@@ -553,10 +556,20 @@ feature {COMPILER_EXPORTER} -- Primitives
 					--| This can be done only when the associated constraint class
 					--| has a computed feature table.
 				formal_dec_as := associated_class.generics.i_th (i)
-				if formal_dec_as.has_computed_feature_table then
+				class_c := to_check.associated_class
+				if
+						-- If they are the same type we don't need
+					not constraint_type.same_as (to_check) and then
+						-- One way to know that we have all the information is to check
+						-- if we are at degree 3.
+					(System.in_pass3 or else (
+						formal_dec_as.has_computed_feature_table
+						and then class_c.feature_table /= Void))
+				then
 					creation_constraint_list := formal_dec_as.constraint_creation_list
 					if creation_constraint_list /= Void then
-						creators_table := to_check.associated_class.creators
+						matched := constraint_type.same_as (to_check)
+						creators_table := class_c.creators
 	
 							-- A creation procedure has to be specified, so if none is
 							-- specified or if there is no creation procedure in the class
@@ -569,7 +582,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 								not matched or else creation_constraint_list.after
 							loop
 								creators_table.search (creation_constraint_list.item.feature_name)
-								matched := creators_table.found and then creators_table.found_item.valid_for (context_class)
+								matched := creators_table.found
+									and then creators_table.found_item.valid_for (context_class)
 								creation_constraint_list.forth
 							end
 						end
@@ -735,7 +749,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			gens: FIXED_LIST [S_TYPE_INFO]
 			count, i: INTEGER
 		do
-			!! Result.make (Void, associated_class.id)
+			!! Result.make_for_bench (Void, associated_class.id)
 			count := generics.count
 
 				-- TUPLE may have zero generics
@@ -766,7 +780,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 		do
 			ass_classc := associated_class
 			class_name := clone (ass_classc.name)
-			!! Result.make (class_name, ass_classc.id)
+			!! Result.make_for_bench (class_name, ass_classc.id)
 			count := generics.count
 
 				-- TUPLE may have zero generics

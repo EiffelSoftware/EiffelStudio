@@ -2472,6 +2472,15 @@ feature -- Dino stuff
 			melted_set.put (melted_info);
 		end;
 
+
+	has_types: BOOLEAN is
+			-- Are there any generic instantiations of Current
+			-- in the system or is Current a non generic class?
+		do
+			Result :=
+					(types /= Void) and then (not types.empty)
+		end;
+
 invariant
 
 	lace_class_exists: lace_class /= Void

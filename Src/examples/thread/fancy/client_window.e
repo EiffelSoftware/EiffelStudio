@@ -7,14 +7,11 @@ inherit
 			make as old_make,
 			move_and_resize as old_move_and_resize
 		redefine
-			on_wm_destroy,
 			on_wm_close,
 			class_background,
 			class_name,
 			default_ex_style
 		end
-
-	OBJECT_CONTROL
 
 create
 	make, make_by_pointer
@@ -26,8 +23,6 @@ feature -- Initialization
 		do
 			old_make (win, a_name)
 		end
-
-
 
 feature -- Behavior
 
@@ -41,16 +36,6 @@ feature -- Behavior
 		end
 
 feature -- Redefine features
-
-	on_wm_destroy is
-			-- Wm_destroy message.
-			-- Quit the application if `Current' is the
-			-- application's main window.
-		do
-			on_destroy
-			exists := False
-			unregister_window (Current)
-		end
 
 	on_wm_close is
 			-- Wm_close message.

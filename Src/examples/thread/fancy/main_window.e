@@ -5,7 +5,6 @@ inherit
 
 	WEL_FRAME_WINDOW
 		redefine
-			on_wm_destroy,
 			on_wm_close,
 			closeable,
 			class_background,
@@ -176,17 +175,6 @@ feature -- Behavior
 			-- Perform the corresponding menu command with id `a_control_id'.
 		do
 			on_menu_command (a_control_id)
-		end
-
-	on_wm_destroy is
-			-- Wm_destroy message.
-			-- Quit the application if `Current' is the
-			-- application's main window.
-		do
-			on_destroy
-			exists := False
-			unregister_window (Current)
-			cwin_post_quit_message (0)
 		end
 
 	on_wm_close is

@@ -448,11 +448,17 @@ feature {EV_ANY_I} -- Drawing implementation
 		-- Distance of focus rectangle from edge of button.
 
 	internal_background_brush: WEL_BRUSH is
-			-- `Result' is 
+			-- `Result' is background brush to be used for `Current'.
 		local
 			color_imp: EV_COLOR_IMP
+			color: EV_COLOR
 		do
-			color_imp ?= background_color.implementation
+			color_imp := background_color_imp
+			if color_imp = Void then
+				create color
+				color_imp ?= color.implementation
+				color_imp.set_with_system_id (feature {WEL_COLOR_CONSTANTS}.Color_btnface)
+			end
 			create Result.make_solid (color_imp)
 		end
 		
@@ -869,8 +875,8 @@ feature {EV_ANY_I} -- Drawing implementation
 		
 	color_gray_text: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorgraytext.
-		once
-			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_graytext)
+		do
+			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_graytext)
 		end
 		
 	white: WEL_COLOR_REF is
@@ -881,32 +887,32 @@ feature {EV_ANY_I} -- Drawing implementation
 
 	rtext_color: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorbtntext
-		once
-			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_btntext)
+		do
+			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btntext)
 		end
 
 	rlight: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Color3dlight
-		once
-			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_3dlight)
+		do
+			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_3dlight)
 		end
 		
 	rhighlight: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorbtnhighlight
-		once
-			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_btnhighlight)
+		do
+			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnhighlight)
 		end
 		
 	rshadow: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color - Colorbtnshadow.
-		once
-			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_btnshadow)
+		do
+			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_btnshadow)
 		end
 		
 	rdark_shadow: WEL_COLOR_REF is
 			-- `Result' is color corresponding to Windows color -Color3ddkshadow
-		once
-			create Result.make_system ((create {WEL_COLOR_CONSTANTS}).Color_3ddkshadow)
+		do
+			create Result.make_system (feature {WEL_COLOR_CONSTANTS}.Color_3ddkshadow)
 		end
 		
 feature {NONE} -- Feature that should be directly implemented by externals

@@ -32,12 +32,6 @@ feature -- Access
 
 feature -- Path Locations
 
-	help_directory: DIRECTORY_NAME is
-			-- Root directory for help generation	
-		do
-			Result := help_directory_cell.item
-		end
-
 	toc_path: DIRECTORY_NAME is
 			-- Path to TOC directory
 		once
@@ -88,15 +82,6 @@ feature -- XML Tags
 	log_file_tag: STRING is "log_file"
 
 feature -- Status Setting
-
-	set_help_directory (a_dir: DIRECTORY_NAME) is
-			-- Set root location for help project generation
-		require
-			directory_not_void: a_dir /= Void
-			directory_valid: (create {DIRECTORY}.make (a_dir)).exists
-		do
-			help_directory_cell.put (a_dir)		
-		end
 	
 	set_help_toc (a_toc: like toc) is
 			-- Set Table of Contents
@@ -128,13 +113,7 @@ feature -- Status Setting
 				is_vsip_help := False
 				is_web_help := True
 			end
-		end	
-		
-	set_toc_is_physical	(a_flag: BOOLEAN) is
-			-- Set `toc_is_physical'
-		do
-			toc_is_physical := a_flag	
-		end		
+		end			
 		
 feature -- Implementation
 
@@ -142,12 +121,6 @@ feature -- Implementation
 	vsip_help,
 	web_help: INTEGER is unique
 			-- Transformation type chosen identifier
-
-	help_directory_cell: CELL [DIRECTORY_NAME] is
-			-- Once cell containing help directory name
-		once
-			create Result			
-		end
 		
 invariant
 	html_help_exclusive: is_html_help implies (not is_vsip_help and not is_web_help)

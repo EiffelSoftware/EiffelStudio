@@ -89,8 +89,12 @@ feature -- Directory Paths
 		
 	script_output: PLAIN_TEXT_FILE is
 			-- File containing output information regarding command prompt processing
+		local
+			l_filename: FILE_NAME
 		once
-			create Result.make (application_root_directory.out + "\output_log.txt")
+			create l_filename.make_from_string (application_root_directory.out)
+			l_filename.extend ("output_log.txt")
+			create Result.make (l_filename.string)
 			if not Result.exists then
 				Result.create_read_write
 				Result.close
@@ -127,9 +131,6 @@ feature -- Table of Contents Preferences
 
 	index_file_name: STRING
 			-- File name to use for index/root nodes
-
-	html_location: STRING
-			-- Location of HTML from which TOC is generated
 			
 	code_directories: ARRAYED_LIST [STRING] is
 			-- Directories containing code XML.  Output specific to output type.
@@ -211,13 +212,7 @@ feature -- Status Setting
 			-- Set `is_gui_mode'
 		do
 			is_gui_mode := a_mode	
-		end
-
-	set_html_location (a_location: STRING) is
-			-- Set `html_location'
-		do
-			html_location := a_location	
-		end		
+		end	
 
 	set_index_file_name (a_name: STRING) is
 			-- Set `index_file_name'
@@ -283,5 +278,20 @@ feature -- Platform
 			Result.extend ("classic")
 			Result.extend (".net")
 		end
+
+feature -- Access 
+
+	allowed_file_types: HASH_TABLE [EV_PIXMAP, STRING] is
+			-- Hash of recognized file types in application with appropriate icon identifier
+		local
+			l_graphical_constants: GRAPHICAL_CONSTANTS
+		once
+			create l_graphical_constants
+			create Result.make (3)
+			Result.compare_objects
+			Result.extend (l_graphical_constants.xml_file_icon, "xml")
+			Result.extend (l_graphical_constants.html_file_icon, "htm")
+			Result.extend (l_graphical_constants.html_file_icon, "html")
+		end	
 
 end -- class APPLICATION_CONSTANTS

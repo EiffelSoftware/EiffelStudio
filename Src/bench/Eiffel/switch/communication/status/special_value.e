@@ -48,8 +48,18 @@ feature {NONE} -- Initialization
 			address := addr;
 			is_null := (address = Void)
 			capacity := cap;
-			create items.make (capacity)
-		end;
+			create_empty_items
+		end
+		
+	create_empty_items is
+			-- allocate area for `items' attribute.
+		local
+			l_slice_max, l_slice_min: INTEGER
+		do
+			l_slice_min := (capacity - 1).min (Min_slice_ref.item)
+			l_slice_max := (capacity - 1).min (Max_slice_ref.item)
+			create items.make (l_slice_max - l_slice_min + 1)			
+		end
 
 feature -- Access
 

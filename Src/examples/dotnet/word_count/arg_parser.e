@@ -1,3 +1,7 @@
+indexing
+	description: "Argument parser"
+	external_name: "ISE.Examples.WordCount.ArgParser"
+	
 deferred class
 	ARG_PARSER
 
@@ -7,8 +11,10 @@ inherit
 feature {NONE} -- Initialization
 
 	make_case_insensitive_default_switch (s: ARRAY [STRING]) is
-			-- Default to case-insensitive switches and
-			-- default to "/" and "-" as the only valid switch characters.
+		indexing
+			description: "[Default to case-insensitive switches and%
+						%default to %"/%" and %"-%" as the only valid switch characters.]"
+			external_name: "MakeCaseInsensitiveDefaultSwitch"
 		require
 			non_void_symbols: s /= Void
 		do
@@ -16,7 +22,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_default_switch (s: ARRAY [STRING]; cs: BOOLEAN) is
-			-- Default to "/" and "-" as the only valid switch characters.
+		indexing
+			description: "Default to %"/%" and %"-%" as the only valid switch characters."
+			external_name: "MakeDefaultSwitch"
 		require
 			non_void_symbols: s /= Void
 		do
@@ -24,7 +32,9 @@ feature {NONE} -- Initialization
 		end
 	
 	make (s: ARRAY [STRING]; cs: BOOLEAN; sw: ARRAY [STRING]) is
-			-- No defaults
+		indexing
+			description: "No defaults"
+			external_name: "Make"
 		require
 			non_void_symbols: s /= Void
 			non_void_switches: sw /= Void
@@ -41,27 +51,38 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	symbols: ARRAY [STRING]
-			-- Command line symbols
+		indexing
+			description: "Command line symbols"
+			external_name: "Symbols"
+		end
 	
 	case_sensitive: BOOLEAN
-			-- Should the symbol matching be case-sensitive?
+		indexing
+			description: "Should the symbol matching be case-sensitive?"
+			external_name: "CaseSensitive"
+		end
 	
 	switches: ARRAY [STRING]
-			-- Command line switches
+		indexing
+			description: "Command line switches"
+			external_name: "Switches"
+		end
 
 feature -- Basic Operations
 
 	usage (error_info: STRING) is
-			-- Display application usage description.
-			-- `error_info' is equal to illegal switch in command line, if any.
+		indexing
+			description: "[Display application usage description.%
+						%`error_info' is equal to illegal switch in command line, if any.]"
 		require
-	--		valid_error_info: error_info /= Void implies array.IndexOf_System_Array_System_Object (switches, error_info) >= 0
+	--		valid_error_info: error_info /= Void implies array.index_of_array_object (switches, error_info) >= 0
 		deferred
 		end
 
 	parse (args: ARRAY [STRING]): BOOLEAN is
-			-- Parse arbitrary set of arguments.
-			-- Return `True' if successful.
+		indexing
+			description: "Parse arbitrary set of arguments. Return `True' if successful."
+			external_name: "Parse"
 		require
 			non_void_args: args /= Void
 		local
@@ -82,7 +103,7 @@ feature -- Basic Operations
 				until
 					is_switch or n >= switches.count
 				loop
-					is_switch := string.CompareOrdinal_System_String_System_Int32 (args.item (arg_num), 0, switches.item (n), 0, 1) = 0
+					is_switch := string.compare_ordinal_string_int32 (args.item (arg_num), 0, switches.item (n), 0, 1) = 0
 					n := n + 1
 				end
 				if is_switch then
@@ -94,9 +115,9 @@ feature -- Basic Operations
 						is_legal_switch or n >= symbols.count
 					loop
 						if case_sensitive then
-							is_legal_switch := string.CompareOrdinal_System_String_System_Int32 (args.item (arg_num), 1, symbols.item (n), 0, symbols.item	(n).count) = 0
+							is_legal_switch := string.compare_ordinal_string_int32 (args.item (arg_num), 1, symbols.item (n), 0, symbols.item (n).get_length) = 0
 						else
-							is_legal_switch := string.CompareOrdinal_System_String_System_Int32 (args.item (arg_num).ToUpper, 1, symbols.item (n).ToUpper, 0, symbols.item (n).count) = 0
+							is_legal_switch := string.compare_ordinal_string_int32 (args.item (arg_num).to_upper, 1, symbols.item (n).to_upper, 0, symbols.item (n).get_length) = 0
 						end
 						n := n + 1
 					end
@@ -107,9 +128,9 @@ feature -- Basic Operations
 							valid_index: n > 0 and n < symbols.count
 						end
 						if case_sensitive then
-							ss := switch_value (symbols.item (n - 1), args.item (arg_num).Substring_System_Int32 (1 + symbols.item (n - 1).count))
+							ss := switch_value (symbols.item (n - 1), args.item (arg_num).substring (1 + symbols.item (n - 1).get_length))
 						else
-							ss := switch_value (symbols.item (n - 1).ToLower, args.item (arg_num).Substring_System_Int32 (1 + symbols.item (n - 1).count))
+							ss := switch_value (symbols.item (n - 1).to_lower, args.item (arg_num).substring (1 + symbols.item (n - 1).get_length))
 						end
 					end
 				else

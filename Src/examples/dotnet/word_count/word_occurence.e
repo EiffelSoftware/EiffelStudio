@@ -1,3 +1,7 @@
+indexing
+	description: "Word occurrence"
+	external_name: "ISE.Examples.WordCount.WordOccurrence"
+	
 class
 	WORD_OCCURENCE
 
@@ -11,11 +15,13 @@ create
 feature {NONE} -- Initialization
 
 	make (occ: INTEGER; w: STRING) is
-			-- Set `occurences' with `occ' and `word' with `w'.
+		indexing
+			description: "Set `occurences' with `occ' and `word' with `w'."
+			external_name: "Make"
 		require
 			valid_occurences: occ >= 0
 			non_void_word: w /= Void
-			valid_word: w.count > 0
+			valid_word: w.get_length > 0
 		do
 			occurences := occ
 			word := w
@@ -27,15 +33,23 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	occurences: INTEGER
-			-- Number of time the word occured
+		indexing
+			description: "Number of time the word occured"
+			external_name: "Occurrences"
+		end
 	
 	word: STRING
-			-- Word whose occurences are being counted
+		indexing
+			description: "Word whose occurences are being counted"
+			external_name: "Word"
+		end
 
 feature -- Comparison
 
-	CompareTo (obj: ANY): INTEGER is
-			-- Sort two WordOccurrence objects by occurrence first, then by word.
+	compare_to (obj: ANY): INTEGER is
+		indexing
+			description: "Sort two WordOccurrence objects by occurrence first, then by word."
+			external_name: "CompareTo"
 		local
 			occ: WORD_OCCURENCE
 		do
@@ -44,7 +58,7 @@ feature -- Comparison
 				Result := occurences - occ.occurences
 				if Result = 0 then
 					-- Both objects have the same ccurrence, sort alphabetically by word
-					Result := word.compare_system_string_system_string (word, occ.word)
+					Result := word.compare (word, occ.word)
 				end
 			end
 		end

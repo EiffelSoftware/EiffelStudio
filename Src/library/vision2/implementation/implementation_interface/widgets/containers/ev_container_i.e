@@ -101,7 +101,7 @@ feature -- Status setting
 					-- and add `Current' to group.
 			elseif internal_merged_radio_button_groups = Void then
 				set_internal_merged_radio_button_group (container_i.internal_merged_radio_button_groups)
-				container_i.merged_radio_button_groups.extend (interface)
+				container_i.internal_merged_radio_button_groups.extend (interface)
 				
 					-- If `Current' and `other' both have individual groups of their own, then merge groups,
 					-- and update references, all to point to same group.

@@ -6,7 +6,7 @@ inherit
 
 	MAKEFILE_GENERATOR
 		redefine
-			init_objects_baskets, generate_additional_rules
+			init_objects_baskets
 		end;
 
 creation
@@ -294,15 +294,6 @@ feature
 			if System.has_separate then
 				Result.append ("\$(EIFFEL4)/library/net/spec/\$(PLATFORM)/lib/libnet.a")
 			end
-		end;
-
-	generate_additional_rules is
-		do
-			Make_file.putstring ("%T$(RM) ");
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.new_line;
 		end;
 
 end

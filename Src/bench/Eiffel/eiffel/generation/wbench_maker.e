@@ -6,8 +6,7 @@ inherit
 
 	MAKEFILE_GENERATOR
 		redefine
-			generate_specific_defines, generate_other_objects,
-			generate_additional_rules
+			generate_specific_defines, generate_other_objects
 		end;
 
 creation
@@ -298,13 +297,4 @@ feature
 			end;
 		end;
 
-	generate_additional_rules is
-		do
-			Make_file.putstring ("%T$(RM) ");
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.new_line;
-		end;
- 
 end

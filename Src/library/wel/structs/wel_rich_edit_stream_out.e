@@ -35,11 +35,15 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_callback (buffer: STRING): INTEGER is
-			-- `a_buffer' contains `a_length' characters.
+	internal_callback (buffer: POINTER; length: INTEGER): INTEGER is
+			-- `buffer' contains `length' characters.
+		local
+			l_value: STRING
 		do
+			create l_value.make (length + 1)
+			l_value.from_c_substring (buffer, 1, length)
 			stream_result := 0
-			write_buffer (buffer)
+			write_buffer (l_value)
 			Result := stream_result
 		end
 

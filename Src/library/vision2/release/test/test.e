@@ -164,7 +164,7 @@ feature
 			Result.extend (create {EV_LIST}.make_for_test)
 			Result.extend (create {EV_MULTI_COLUMN_LIST}.make_for_test)
 			Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
-			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+--|FIXME (win)	Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
@@ -349,6 +349,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/29 01:23:00  brendel
+--| Commented out EV_SPIN_BUTTON.
+--|
 --| Revision 1.13  2000/03/22 00:39:46  oconnor
 --| more tests
 --|

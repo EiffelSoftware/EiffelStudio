@@ -50,7 +50,7 @@ feature
 			pixel: POINTER
 		do
 			if fg_color /= Void then
-				color_implementation ?= foreground_color.implementation;
+				color_implementation ?= fg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			fg_color := a_color;

@@ -191,9 +191,7 @@ feature -- Status report
 			-- Class name in upper case.
 		do
 			Result := name
-			if Result /= Void then
-				Result := Result.as_upper
-			else
+			if Result = Void then
 				Result := "Name not yet set"
 			end
 		ensure then
@@ -276,6 +274,7 @@ feature -- Setting
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
+			s_upper: s.as_upper.is_equal (s)
 		do
 			name := s
 		ensure
@@ -335,7 +334,7 @@ feature -- Output
 		require
 			non_void_st: st /= Void
 		do
-			st.add_classi (Current, name_in_upper) 
+			st.add_classi (Current, name) 
 		end
 
 feature {COMPILER_EXPORTER} -- Properties
@@ -444,9 +443,9 @@ feature {COMPILER_EXPORTER} -- Compiled class
 			elseif Current = local_system.double_class then
 				create {DOUBLE_B} Result.make (Current)
 			elseif Current = local_system.pointer_class then
-				create {POINTER_B} Result.make (Current)
+				create {POINTER_B} Result.make (Current, False)
 			elseif Current = local_system.typed_pointer_class then
-				create {POINTER_B} Result.make (Current)
+				create {POINTER_B} Result.make (Current, True)
 			elseif Current = local_system.special_class then
 				create {SPECIAL_B} Result.make (Current)
 			elseif Current = local_system.to_special_class then
@@ -455,26 +454,6 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				create {ARRAY_CLASS_B} Result.make (Current)
 			elseif Current = local_system.string_class then
 				create {STRING_CLASS_B} Result.make (Current)
-			elseif Current = local_system.character_ref_class then
-				create {CHARACTER_REF_B} Result.make (Current, False)
-			elseif Current = local_system.wide_char_ref_class then
-				create {CHARACTER_REF_B} Result.make (Current, True)
-			elseif Current = local_system.boolean_ref_class then
-				create {BOOLEAN_REF_B} Result.make (Current)
-			elseif Current = local_system.integer_8_ref_class then
-				create {INTEGER_REF_B} Result.make (Current, 8)
-			elseif Current = local_system.integer_16_ref_class then
-				create {INTEGER_REF_B} Result.make (Current, 16)
-			elseif Current = local_system.integer_32_ref_class then
-				create {INTEGER_REF_B} Result.make (Current, 32)
-			elseif Current = local_system.integer_64_ref_class then
-				create {INTEGER_REF_B} Result.make (Current, 64)
-			elseif Current = local_system.real_ref_class then
-				create {REAL_REF_B} Result.make (Current)
-			elseif Current = local_system.double_ref_class then
-				create {DOUBLE_REF_B} Result.make (Current)
-			elseif Current = local_system.pointer_ref_class then
-				create {POINTER_REF_B} Result.make (Current)
 			elseif Current = local_system.tuple_class then
 				create {TUPLE_CLASS_B} Result.make (Current)
 			elseif Current = local_system.native_array_class then
@@ -602,5 +581,6 @@ feature {NONE} -- Externals
 
 invariant
 	name_not_void: name /= Void
+	name_in_upper: name.as_upper.is_equal (name)
 
 end -- class CLASS_I

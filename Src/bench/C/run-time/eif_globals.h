@@ -49,6 +49,11 @@ extern EIF_TSD_TYPE eif_global_key;
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
+		/*debug.c */
+	struct dbstack db_stack;		/* Debugging stack. */
+	struct dbinfo d_data;			/* Global debugger information */
+	struct pgcontext d_cxt;			/* Main program context */
+
 
 		/* except.c */
 	struct xstack eif_stack;		/* Calling stack (rt_public) */
@@ -167,6 +172,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 } eif_global_context_t;
 
+	/* debug.c */
+#define db_stack		(eif_globals->db_stack)		/* rt_shared */
+#define d_data			(eif_globals->d_data)		/* rt_shared */
+#define d_cxt			(eif_globals->d_cxt)		/* rt_shared */
 
 	/* except.c */
 /* Exported data structures (used by the generated C code) */
@@ -299,6 +308,12 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define EIF_GET_CONTEXT
 #define EIF_END_GET_CONTEXT
 
+
+	/* debug.c */
+/* Debugging data structures */
+extern struct dbstack db_stack;	/* Calling context stack */
+extern struct dbinfo d_data;	/* Global debugger information */
+extern struct pgcontext d_cxt;	/* Program context */
 
 
 	/* err_msg.h */

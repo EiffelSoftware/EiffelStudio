@@ -93,11 +93,12 @@ feature -- Display
 feature -- Width & height
 
 	width: INTEGER is
-			-- Width in pixel of the entire.
+			-- Width in pixel of the entire token.
 		deferred
 		end
 	
 	height: INTEGER is
+			-- Height in pixel of the token
 		local
 			a_dc: WEL_MEMORY_DC
 		once

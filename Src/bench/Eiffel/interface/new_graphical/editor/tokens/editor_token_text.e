@@ -33,6 +33,7 @@ feature -- Initialisation
 feature -- Miscellaneous
 
 	width: INTEGER is
+			-- Width in pixel of the entire token.
 		do
 			dc.select_font(font)
 			Result := dc.string_width(image)
@@ -91,16 +92,24 @@ feature -- Miscellaneous
 		end
 
 	display(d_y: INTEGER; a_dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y')
 		do
 			display_with_colors(d_y, text_color, background_color, a_dc)
 		end
 
 	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y') with its
+			-- selected state.
 		do
 			display_with_colors(d_y, selected_text_color, selected_background_color, a_dc)
 		end
 
 	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y') with its
+			-- selected state from beggining to `pivot'
 		local
 			old_text_color: WEL_COLOR_REF
 			old_background_color: WEL_COLOR_REF

@@ -7,8 +7,26 @@ indexing
 class
 	EV_SCREEN
 
---inherit
---	EV_DRAWABLE
+inherit
+	EV_DRAWABLE
+		redefine
+			implementation
+		end
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a screen object.
+		do
+			!EV_SCREEN_IMP! implementation.make
+		end
+
+feature -- Implementation
+
+	implementation: EV_SCREEN_IMP
 
 end -- class EV_SCREEN
 

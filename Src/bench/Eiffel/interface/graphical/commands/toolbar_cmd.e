@@ -9,7 +9,7 @@ class TOOLBAR_CMD
 
 inherit
 	COMMAND;
-	SET_WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES
 
 creation
 	make

@@ -79,6 +79,9 @@ feature -- Basic Operations
 					l_targets.remove
 				end
 				l_target_type := target_type (l_targets.first)
+				if l_target_type = Void then
+					l_target_type := type_of_target (l_targets.first, feature_table, feature_variables (locals, arguments, feature_i, feature_table), class_i)
+				end
 				if l_target_type /= Void and then not l_target_type.is_void then
 					l_targets.start
 					l_targets.remove

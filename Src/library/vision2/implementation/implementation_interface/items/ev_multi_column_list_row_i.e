@@ -103,6 +103,20 @@ feature -- Element Change
 			interface := list
 		end
 
+feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is 
+			-- activated.
+		deferred
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		deferred
+		end
+
 invariant
 --	parent_not_void: parent /= Void
 --	parent_exists: not parent.destroyed

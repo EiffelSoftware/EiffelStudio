@@ -40,12 +40,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_class: E_CLASS) is
+	make (a_feature: E_FEATURE) is
+			-- Initialize feature stone.
 		do
 			start_position := -1;
 			end_position := -1;
 			e_feature := a_feature;
-			e_class := a_class
+			e_class := a_feature.associated_class
 		end;
 
 feature -- Properties
@@ -267,11 +268,9 @@ feature -- dragging
 			new_e_feature: like e_feature
 		do
 			if e_class /= Void and e_feature /= Void then
-				if Eiffel_system.class_of_id (e_class.id) = e_class then
-					new_e_feature := e_class.feature_with_name (e_feature.name);
-					if new_e_feature /= Void then
-						!! Result.make (new_e_feature, e_class)
-					end
+				new_e_feature := e_feature.updated_version
+				if new_e_feature /= Void then
+					!! Result.make (new_e_feature)
 				end
 			end
 		end;

@@ -139,8 +139,6 @@ feature {NONE} -- Implementation
 			until
 				class_names.off
 			loop
-				temp := feature {ISE_RUNTIME}.check_assert (False)
-				
 				l_dynamic_type := dynamic_type_from_string (class_names.item.as_upper)
 				if l_dynamic_type /= -1 then
 					common_test ?= new_instance_of (l_dynamic_type)
@@ -151,6 +149,7 @@ feature {NONE} -- Implementation
 					-- we must protect it, as if anybody else was to put a file in one of these directories,
 					-- then it would crash the system.
 				if common_test /= Void then
+					temp := feature {ISE_RUNTIME}.check_assert (False)
 					common_test.default_create
 					temp := feature {ISE_RUNTIME}.check_assert (True)
 					check

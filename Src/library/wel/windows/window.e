@@ -423,12 +423,8 @@ feature -- Status setting
 			-- Show the window
 		require
 			exists: exists
-			parent_shown: parent /= Void implies parent.exists and
-				parent.shown
 		do
 			cwin_show_window (item, Sw_show)
-		ensure
-			shown: shown
 		end
 
 	hide is

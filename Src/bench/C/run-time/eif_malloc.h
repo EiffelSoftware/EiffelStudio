@@ -89,8 +89,11 @@ extern "C" {
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else
+#ifdef EIF_STRING_OPTIMIZATION
 #define GS_ZONE_SZ_DEFAULT	2097152	/* Size of a scavenge zone (2MB) */
-#endif
+#else
+#define GS_ZONE_SZ_DEFAULT 307200
+#endif	/* EIF_STRING_OPTIMIZATION */
 #define GS_FLOATMARK (eif_scavenge_size >> 2 + \
 					  eif_scavenge_size >> 3 + \
 					  eif_scavenge_size >> 5)	/* Leave that much free, this is

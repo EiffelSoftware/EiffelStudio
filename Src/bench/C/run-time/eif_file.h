@@ -156,6 +156,7 @@ RT_LNK EIF_INTEGER file_info(struct stat *buf, int op);
 RT_LNK EIF_BOOLEAN file_eaccess(struct stat *buf, int op);
 RT_LNK EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);
 RT_LNK EIF_BOOLEAN file_exists(char *name);
+RT_LNK EIF_BOOLEAN file_path_exists(char *name);
 RT_LNK void file_rename(char *from, char *to);
 RT_LNK void file_link(char *from, char *to);
 RT_LNK void file_mkdir(char *path);

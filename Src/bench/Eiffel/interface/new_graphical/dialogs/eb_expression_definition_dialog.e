@@ -130,6 +130,7 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (ok_button)
 			hb.extend (cb)
 			hb.disable_item_expand (cb)
+			hb.extend (create {EV_CELL})
 			cnt.extend (hb)
 			
 			dialog.extend (cnt)

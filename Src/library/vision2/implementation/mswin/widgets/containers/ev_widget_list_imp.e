@@ -22,15 +22,12 @@ feature -- Access
 
 	item: EV_WIDGET is
 			-- Current item.
-		local
-			w: EV_WIDGET
 		do
 			if ev_children.item /= Void then
-				w ?= ev_children.item.interface
+				Result ?= ev_children.item.interface
 				check
-					interface_not_void: w /= Void
+					Result_not_void: Result /= Void
 				end
-				Result := w
 			end
 		end
 
@@ -47,7 +44,7 @@ feature -- Access
 		end
 
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP] is
-			-- List of children.
+			-- Internal list of children.
 		deferred
 		end
 
@@ -296,6 +293,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/03 00:56:33  brendel
+--| Cosmetics.
+--|
 --| Revision 1.9  2000/03/02 21:58:45  brendel
 --| Reviewed.
 --|

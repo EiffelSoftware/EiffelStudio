@@ -103,7 +103,7 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	run_idr.c path_name.c dle.c object_id.c eif_threads.c eif_project.c\
+	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
 	eif_rw_lock.c \
 	gen_conf.c rout_obj.c
 
@@ -153,7 +153,6 @@ WSRC = \
 	search.c \
 	run_idr.c \
 	path_name.c \
-	dle.c \
 	object_id.c \
 	eif_threads.c \
 	main.c \
@@ -200,7 +199,6 @@ ESRC = \
 	search.c \
 	run_idr.c \
 	path_name.c \
-	dle.c \
 	object_id.c \
 	eif_threads.c \
 	bmain.c \
@@ -217,7 +215,6 @@ MT_LOBJ = \
 	MTcompress.o \
 	MToption.o	\
 	MTconsole.o \
-	MTdle.o \
 	MTobject_id.o \
 	MTmalloc.o \
 	MTgarcol.o \
@@ -266,7 +263,6 @@ LOBJ = \
 	eif_once.o \
 	compress.o \
 	option.o	\
-	dle.o \
 	object_id.o \
 	console.o \
 	malloc.o \
@@ -352,7 +348,6 @@ WOBJ = \
 	wsearch.o \
 	wrun_idr.o \
 	wpath_name.o \
-	wdle.o \
 	wobject_id.o \
 	weif_threads.o \
 	wmain.o \
@@ -407,7 +402,6 @@ MT_WOBJ = \
 	MTwsearch.o \
 	MTwrun_idr.o \
 	MTwpath_name.o \
-	MTwdle.o \
 	MTwobject_id.o \
 	MTweif_threads.o \
 	MTwmain.o \
@@ -461,7 +455,6 @@ EOBJ = \
 	wsearch.o \
 	wrun_idr.o \
 	wpath_name.o \
-	wdle.o \
 	wobject_id.o \
 	weif_threads.o \
 	bmain.o \

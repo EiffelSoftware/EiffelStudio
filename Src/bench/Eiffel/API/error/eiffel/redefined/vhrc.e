@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Involved parent
 
 	code: STRING is "VHRC";

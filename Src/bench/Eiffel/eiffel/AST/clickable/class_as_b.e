@@ -109,11 +109,11 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 
 feature -- Stoning
  
-	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
 			Result := Universe.class_named 
 						(class_name, 
-						reference_class.cluster).compiled_eclass
+						reference_class.cluster).compiled_class
 		end
 
 	click_list: CLICK_LIST

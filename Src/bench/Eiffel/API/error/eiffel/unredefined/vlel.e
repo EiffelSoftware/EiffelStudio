@@ -16,7 +16,7 @@ inherit
 	
 feature -- Properties
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Parent node involved
 
 	code: STRING is "VLEL";

@@ -19,11 +19,11 @@ feature -- Execution
 
 	work is
 		local
-			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
+			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
 			i: INTEGER;
 			other_feature: E_FEATURE;
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 		do
 			!! classes.make;
 			record_descendants (classes, current_class);

@@ -173,7 +173,7 @@ feature -- Access
 			Result := generics /= Void
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Eiffel class associated to the current type
 		deferred
 		ensure

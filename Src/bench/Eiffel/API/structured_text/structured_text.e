@@ -242,7 +242,7 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_before_class (e_class: E_CLASS) is
+	add_before_class (e_class: CLASS_C) is
 			-- Put `e_class' at current position.
 		require
 			valid_e_class: e_class /= Void
@@ -253,7 +253,7 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_end_class (e_class: E_CLASS) is
+	add_end_class (e_class: CLASS_C) is
 			-- Put `e_class' at current position.
 		require
 			valid_e_class: e_class /= Void
@@ -301,7 +301,7 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_feature_name (f_name: STRING; e_class: E_CLASS) is
+	add_feature_name (f_name: STRING; e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		require
 			valid_f_name: f_name /= Void
@@ -334,7 +334,7 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
+	add_address (address: STRING; a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' for `e_class'.
 		require
 			valid_address: address /= Void;
@@ -351,7 +351,7 @@ feature -- Element change
 			add (ti_Tab1)
 		end;
 
-	add_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
+	add_class_syntax (syn: SYNTAX_ERROR; e_class: CLASS_C; str: STRING) is
 			-- Put `syn' for `e_class'.
 		require
 			valid_syn: syn /= Void;

@@ -22,7 +22,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_class: E_CLASS) is
+	make (a_class: CLASS_C) is
 			-- Make current command with current_class as
 			-- `a_class'.
 		require
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Property
 
-	current_class: E_CLASS
+	current_class: CLASS_C
 			-- Class for current action
 
 	executable: BOOLEAN is
@@ -69,7 +69,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	sorted_list (list: LINKED_LIST [E_CLASS]): SORTED_TWO_WAY_LIST [CLASS_I] is
+	sorted_list (list: LINKED_LIST [CLASS_C]): SORTED_TWO_WAY_LIST [CLASS_I] is
 			-- Sorted `list' based on `class_name' from `CLASS_I'
 		require
 			valid_list: list /= Void

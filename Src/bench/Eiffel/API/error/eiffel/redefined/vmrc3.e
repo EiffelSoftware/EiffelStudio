@@ -16,7 +16,7 @@ inherit
 	
 feature -- Property
 
-	selection_list: LINKED_LIST [CELL2 [E_FEATURE, E_CLASS]];
+	selection_list: LINKED_LIST [CELL2 [E_FEATURE, CLASS_C]];
 			-- Info about the features to select
 
 	subcode: INTEGER is 2;
@@ -38,7 +38,7 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		local
-			info: CELL2 [E_FEATURE, E_CLASS];
+			info: CELL2 [E_FEATURE, CLASS_C];
 		do
 			from
 				selection_list.start
@@ -68,7 +68,7 @@ feature {COMPILER_EXPORTER}
 			valid_l: l /= Void
 		local
 			info: INHERIT_INFO;
-			cell2: cell2 [E_FEATURE, E_CLASS];
+			cell2: cell2 [E_FEATURE, CLASS_C];
 			api_feature: E_FEATURE
 		do
 			from

@@ -25,10 +25,10 @@ feature -- Access
 			Result := other.is_boolean
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated eiffel class
 		once
-			Result := Eiffel_system.boolean_class.compiled_eclass
+			Result := Eiffel_system.boolean_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER}

@@ -31,7 +31,7 @@ feature -- Execution
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			feat: E_FEATURE;
 			feature_name: STRING;
 			class_name: STRING
@@ -49,7 +49,7 @@ feature -- Execution
 				until 
 					classes.after 
 				loop
-					e_class := classes.item_for_iteration.compiled_eclass;
+					e_class := classes.item_for_iteration.compiled_class;
 					if e_class /= Void then 
 						feat := e_class.feature_with_name (feature_name);
 						if feat /= Void then

@@ -29,13 +29,13 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	displayed: LINKED_LIST [E_CLASS];
+	displayed: LINKED_LIST [CLASS_C];
 
-	rec_display (i: INTEGER; c: E_CLASS; st: STRUCTURED_TEXT) is
+	rec_display (i: INTEGER; c: CLASS_C; st: STRUCTURED_TEXT) is
 			-- Display parents of `c' in tree form.
 		local
-			descendants: LINKED_LIST [E_CLASS]
-			descendant_class: E_CLASS;
+			descendants: LINKED_LIST [CLASS_C]
+			descendant_class: CLASS_C;
 		do
 			descendants := c.descendants;
 			if not descendants.empty then

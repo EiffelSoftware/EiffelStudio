@@ -22,7 +22,7 @@ feature -- Output
 			-- Execute Current command.
 		local
 			suppliers: SORTED_TWO_WAY_LIST [CLASS_I];
-			a_supplier: E_CLASS
+			a_supplier: CLASS_C
 		do
 			structured_text.add_string ("Suppliers of class ");
 			current_class.append_signature (structured_text);
@@ -35,7 +35,7 @@ feature -- Output
 			until
 				suppliers.after
 			loop
-				a_supplier := suppliers.item.compiled_eclass;
+				a_supplier := suppliers.item.compiled_class;
 				if (current_class /= a_supplier) then
 					structured_text.add_indent;
 					a_supplier.append_signature (structured_text);

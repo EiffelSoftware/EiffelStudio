@@ -25,7 +25,7 @@ feature -- Execution
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
 			a_classi: CLASS_I;
-			a_classe: E_CLASS;
+			a_classe: CLASS_C;
 		do
 			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
@@ -55,7 +55,7 @@ feature -- Execution
 					sorted_classes.after 
 				loop
 					a_classi := sorted_classes.item;
-					a_classe := a_classi.compiled_eclass;
+					a_classe := a_classi.compiled_class;
 					if a_classe /= Void then
 						a_classe.append_signature (structured_text)
 					else

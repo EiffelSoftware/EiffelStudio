@@ -20,7 +20,7 @@ inherit
 
 feature -- Property
 
-	parent: E_CLASS;
+	parent: CLASS_C;
 			-- Parent class to which `inherited_feature' belongs
 
 feature -- Access

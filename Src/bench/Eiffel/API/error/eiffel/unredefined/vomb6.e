@@ -22,7 +22,7 @@ feature -- Properties
 	unique_feature: E_FEATURE;
 			-- Unique feature name
 
-	written_class: E_CLASS;
+	written_class: CLASS_C;
 			-- Class involved
 
 feature -- Access
@@ -43,7 +43,7 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		local
-			wclass: E_CLASS
+			wclass: CLASS_C
 		do
 			wclass := unique_feature.written_class;
 			st.add_string ("Constant: ");

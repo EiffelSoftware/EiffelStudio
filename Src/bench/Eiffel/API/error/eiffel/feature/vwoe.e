@@ -17,7 +17,7 @@ inherit
 	
 feature -- Properties
 
-	other_class: E_CLASS;
+	other_class: CLASS_C;
 			-- Class for which there is no infix/prefix feature
 
 	op_name: STRING;

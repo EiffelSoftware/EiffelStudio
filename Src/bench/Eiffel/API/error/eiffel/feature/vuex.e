@@ -16,7 +16,7 @@ inherit
 	
 feature -- Properties
 
-	static_class: E_CLASS;
+	static_class: CLASS_C;
 			-- Class form which the feature named `feature_name' is
 			-- not exported to the class of id `class_id'
 
@@ -47,7 +47,7 @@ feature -- Output
 			-- Build specific explanation image for current error
 			-- in `st'.
 		local
-			w_class: E_CLASS
+			w_class: CLASS_C
 		do
 			w_class := exported_feature.written_class;
 			st.add_string ("Feature: ");

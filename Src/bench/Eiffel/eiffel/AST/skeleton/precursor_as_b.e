@@ -31,10 +31,10 @@ feature -- Attributes
 
 feature -- Stoning
 
-	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
 			Result := Universe.class_named (parent_name, 
-						reference_class.cluster).compiled_eclass
+						reference_class.cluster).compiled_class
 		end
 
 feature -- Type check, byte code and dead code removal

@@ -73,7 +73,7 @@ feature -- Setting
 
 feature -- Output
 
-	format (e_class: E_CLASS) is
+	format (e_class: CLASS_C) is
 			-- Format text for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
@@ -100,7 +100,7 @@ feature -- Output
 			error := f.execution_error
 		end;
 
-	format_invariants (e_class: E_CLASS) is
+	format_invariants (e_class: CLASS_C) is
 			-- Format invariants for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void

@@ -41,7 +41,7 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		local
-			wclass: E_CLASS
+			wclass: CLASS_C
 		do
 			wclass := old_feature.written_class;
 			st.add_string ("Redeclared routine: ");

@@ -32,7 +32,7 @@ feature -- Data
 
 feature -- DYNAMIC_LIB Exports processing.
 
-	add_export_feature (d_class:E_CLASS; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER) is
+	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER) is
 		require
 			class_exists: d_class /=Void
 			--creation_exists: d_creation /= Void

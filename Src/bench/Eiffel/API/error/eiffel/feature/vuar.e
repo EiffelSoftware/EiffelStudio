@@ -36,7 +36,7 @@ feature -- Output
 
 	print_called_feature (st: STRUCTURED_TEXT) is
 		local
-			a_class: E_CLASS
+			a_class: CLASS_C
 		do
 			a_class := called_feature.written_class;
 			st.add_string ("Called feature: ");

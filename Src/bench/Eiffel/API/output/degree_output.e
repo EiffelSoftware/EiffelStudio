@@ -148,7 +148,7 @@ feature -- Output on per class
 			processed := processed + 1
 		end;
 
-	put_degree_5 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree five with `nbr_to_go' 
 			-- classes to go.
@@ -162,7 +162,7 @@ feature -- Output on per class
 			processed := processed + 1;
 		end;
 
-	put_degree_4 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree four with `nbr_to_go' 
 			-- classes to go out of `total_nbr'..
@@ -176,7 +176,7 @@ feature -- Output on per class
 			processed := processed + 1;
 		end;
 
-	put_degree_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree three with `nbr_to_go' 
 			-- classes to go.
@@ -189,7 +189,7 @@ feature -- Output on per class
 			display_degree (degree_3_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_2 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree two with `nbr_to_go' 
 			-- classes to go.
@@ -201,7 +201,7 @@ feature -- Output on per class
 			display_degree (degree_2_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_1 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree one with `nbr_to_go' 
 			-- classes to go.
@@ -213,7 +213,7 @@ feature -- Output on per class
 			display_degree (degree_1_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_minus_1 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_minus_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus one with `nbr_to_go' 
 			-- classes to go.
@@ -225,7 +225,7 @@ feature -- Output on per class
 			display_degree (degree_minus_1_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_minus_2 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus two with `nbr_to_go' 
 			-- classes to go.
@@ -237,7 +237,7 @@ feature -- Output on per class
 			display_degree (degree_minus_2_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_minus_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus three with `nbr_to_go' 
 			-- classes to go.
@@ -249,7 +249,7 @@ feature -- Output on per class
 			display_degree (degree_minus_3_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_minus_4 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_minus_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus four with `nbr_to_go' 
 			-- classes to go.
@@ -261,7 +261,7 @@ feature -- Output on per class
 			display_degree (degree_minus_4_message, nbr_to_go, a_class.name_in_upper)
 		end;
 
-	put_degree_minus_5 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+	put_degree_minus_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during degree minus five with `nbr_to_go' 
 			-- classes to go.
@@ -298,7 +298,7 @@ feature -- Output on per class
 			io.error.new_line
 		end;
 
-	put_case_class_message (a_class: E_CLASS) is
+	put_case_class_message (a_class: CLASS_C) is
 			-- Put message to indicate that `a_class' is being
 			-- analyzed for case.
 		require
@@ -309,7 +309,7 @@ feature -- Output on per class
 			processed := processed + 1;
 		end;
 
-	put_class_document_message (a_class: E_CLASS) is
+	put_class_document_message (a_class: CLASS_C) is
 			-- Put message to indicate that `a_class' is being
 			-- generated for documentation.
 		require

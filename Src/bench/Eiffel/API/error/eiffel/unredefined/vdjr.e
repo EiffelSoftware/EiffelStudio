@@ -43,7 +43,7 @@ feature -- Output
 
 	print_signatures (st: STRUCTURED_TEXT) is
 		local
-			oclass, nclass: E_CLASS
+			oclass, nclass: CLASS_C
 		do
 			oclass := old_feature.written_class;
 			nclass := new_feature.written_class;

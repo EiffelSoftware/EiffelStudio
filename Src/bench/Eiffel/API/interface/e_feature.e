@@ -190,7 +190,7 @@ feature -- Properties
 
 feature -- Access
 
-	precursors: ARRAYED_LIST [E_CLASS] is
+	precursors: ARRAYED_LIST [CLASS_C] is
 			-- Precursor definition of written in classes
 			-- of current feature defined in `from_c'
 		local
@@ -198,7 +198,7 @@ feature -- Access
 			inh_info: INH_ASSERT_INFO;
 			i, nb: INTEGER;
 			assert_id_set: ASSERT_ID_SET;
-			e_class: E_CLASS
+			e_class: CLASS_C
 		do
 			f := associated_feature_i;
 			check
@@ -279,7 +279,7 @@ feature -- Access
 			end
 		end;
 
-	associated_class: E_CLASS is
+	associated_class: CLASS_C is
 			-- Class where the feature was evaluated in
 		do
 			check
@@ -288,7 +288,7 @@ feature -- Access
 			Result := Eiffel_system.class_of_id (associated_class_id);
 		end;
 
-	written_class: E_CLASS is
+	written_class: CLASS_C is
 			-- Class where the feature is written in
 		require
 			good_written_in: written_in /= Void;
@@ -303,7 +303,7 @@ feature -- Access
 			Result := body_id /= Void
 		end;
 
-	is_exported_to (client: E_CLASS): BOOLEAN is
+	is_exported_to (client: CLASS_C): BOOLEAN is
 			-- Is the current feature exported to class `client' ?
 		require
 			good_argument: client /= Void;
@@ -339,7 +339,7 @@ feature -- Access
 			Result := name.hash_code
 		end;
 
-	callers (cl_class: E_CLASS): SORTED_TWO_WAY_LIST [STRING] is
+	callers (cl_class: CLASS_C): SORTED_TWO_WAY_LIST [STRING] is
 			-- Callers for feature from `associated_class'
 			-- to client class `cl_class'
 		require

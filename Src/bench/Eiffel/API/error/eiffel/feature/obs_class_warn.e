@@ -17,10 +17,10 @@ inherit
 
 feature -- Properties
 
-	associated_class: E_CLASS;
+	associated_class: CLASS_C;
 			-- Class using the obsolete class
 
-	obsolete_class: E_CLASS;
+	obsolete_class: CLASS_C;
 			-- Obsolete class
 
 	code: STRING is

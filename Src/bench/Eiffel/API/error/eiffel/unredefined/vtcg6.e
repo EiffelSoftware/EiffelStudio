@@ -17,7 +17,7 @@ feature -- Properties
 
 	feature_name: STRING
 
-	constraint_class: E_CLASS
+	constraint_class: CLASS_C
 
 	code: STRING is "VTCG"
 			-- Error code

@@ -16,7 +16,7 @@ inherit
 	
 feature -- Properties
 
-	features: LINKED_LIST [CELL2 [E_FEATURE, E_CLASS]];
+	features: LINKED_LIST [CELL2 [E_FEATURE, CLASS_C]];
 			-- Features inherited defined in a eiffel class which are neither 
 			-- the same (from the repeated inheritance point of view) or all redefined
 			-- by their parent
@@ -41,9 +41,9 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		local
-			feature_info: CELL2 [E_FEATURE, E_CLASS];
+			feature_info: CELL2 [E_FEATURE, CLASS_C];
 			feat: E_FEATURE;
-			parent: E_CLASS;
+			parent: CLASS_C;
 		do
 			from
 				features.start;
@@ -72,10 +72,10 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_fs: fs /= Void
 		local
-			cell2: CELL2 [E_FEATURE, E_CLASS];
+			cell2: CELL2 [E_FEATURE, CLASS_C];
 			inh_info: INHERIT_INFO;
 			e_feature: E_FEATURE;
-			parent: E_CLASS
+			parent: CLASS_C
 			features_list: like features
 		do
 			from

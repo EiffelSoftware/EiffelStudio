@@ -24,7 +24,7 @@ feature -- Properties
 	class_id: CLASS_ID;
 			-- Id of the class to which the feature table belongs to.
 
-	associated_class: E_CLASS is
+	associated_class: CLASS_C is
 			-- Associated class
 		require
 			valid_class_id: class_id /= Void

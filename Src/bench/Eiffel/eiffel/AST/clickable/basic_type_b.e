@@ -29,7 +29,7 @@ feature -- Signature
 
 feature -- Stoning
 
-	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
 			Result := actual_type.associated_eclass
 		end;

@@ -47,11 +47,11 @@ feature {TEXT_ITEM} -- Text processing
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 			-- Process class name text `t'.
 		local
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			class_i: CLASS_I
 		do
 			class_i := text.class_i;
-			e_class := class_i.compiled_eclass;
+			e_class := class_i.compiled_class;
 			if e_class /= Void then
 				put_class (e_class, text.image)
 			else
@@ -209,7 +209,7 @@ feature -- Output
 			put_string (str)
 		end;
 
-	put_class (e_class: E_CLASS; str: STRING) is
+	put_class (e_class: CLASS_C; str: STRING) is
 			-- Put `e_class' with string representation
 			-- `str' at current position.
 		require
@@ -246,7 +246,7 @@ feature -- Output
 			put_string (str)
 		end;
 
-	put_feature_name (f_name: STRING; e_class: E_CLASS) is
+	put_feature_name (f_name: STRING; e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		require
 			valid_f_name: f_name /= Void
@@ -264,7 +264,7 @@ feature -- Output
 			put_feature (feat, str)
 		end;
 
-	put_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
+	put_address (address: STRING; a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' with `a_name' for `e_class'.
 		require
 			valid_address: address /= Void;
@@ -273,7 +273,7 @@ feature -- Output
 			put_string (address)
 		end;
 
-	put_class_syntax (syn: SYNTAX_ERROR; eclass: E_CLASS; str: STRING) is
+	put_class_syntax (syn: SYNTAX_ERROR; eclass: CLASS_C; str: STRING) is
 			-- Put `syn' for `e_class' with `str' as representation.
 		require
 			valid_syn: syn /= Void;
@@ -327,7 +327,7 @@ feature -- Output
 			put_string (str)
 		end;
 
-	put_after_class (e_class: E_CLASS; str: STRING) is
+	put_after_class (e_class: CLASS_C; str: STRING) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -335,7 +335,7 @@ feature -- Output
 			put_string (str)
 		end;
 
-	put_before_class (e_class: E_CLASS) is
+	put_before_class (e_class: CLASS_C) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_e_class: e_class /= Void

@@ -61,7 +61,7 @@ feature -- Access
 			evaluated_type.has_associated_class
 		end
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated class
 		do
 			Result := evaluated_type.associated_eclass

@@ -110,6 +110,7 @@ feature -- Status setting
 				if parent /= Void and then parent.exists then
 					m ?= parent
 					m.set_insensitive_widget (Current, flag)
+					m.invalidate
 				end
 			end
 			private_attributes.set_insensitive (flag)

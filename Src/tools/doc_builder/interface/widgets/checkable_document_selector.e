@@ -22,14 +22,14 @@ feature -- Creation
 			has_root: root_directory /= Void
 			has_widget: widget /= Void
 		local
-			top_node: EV_CHECKABLE_TREE_ITEM
+--			top_node: EV_CHECKABLE_TREE_ITEM
 		do
-			internal_tree := widget
-			create root.make_open_read (root_directory)
-			create top_node.make_with_text_and_expand_function (short_name (root.name), agent get_children (root))
-			top_node.set_data (root.name)			
-			internal_tree.extend (top_node)
-			internal_tree.register_checkable_node (top_node)
+--			internal_tree := widget
+--			create root.make_open_read (root_directory)
+--			create top_node.make_with_text_and_expand_function (short_name (root.name), agent get_children (root))
+--			top_node.set_data (root.name)			
+--			internal_tree.extend (top_node)
+--			internal_tree.register_checkable_node (top_node)
 		end		
 
 feature -- Commands
@@ -53,7 +53,7 @@ feature -- Query
 			dir_not_void: root_dir /= Void
 		local
 			node,
-			file_node: EV_CHECKABLE_TREE_ITEM
+--			file_node: EV_CHECKABLE_TREE_ITEM
 			dir: DIRECTORY
 			cnt: INTEGER
 			file: RAW_FILE
@@ -78,18 +78,18 @@ feature -- Query
 					create file.make (l_filename.string)
 					create dir.make (l_filename.string)
 					if dir.exists then
-						create node.make_with_text_and_expand_function (short_name (dir.name), agent get_children (dir))
-						node.set_data (dir.name)
-						internal_tree.register_checkable_node (node)
-						Result.extend (node)
-					elseif file.exists then
-						l_file_type:= file_type (file.name)
-						if l_file_type.is_equal ("xml") then
-							create file_node.make_with_text (short_name (root_dir.lastentry))
-							file_node.set_data (file.name)
-							internal_tree.register_checkable_node (file_node)
-							Result.extend (file_node)
-						end
+--						create node.make_with_text_and_expand_function (short_name (dir.name), agent get_children (dir))
+--						node.set_data (dir.name)
+--						internal_tree.register_checkable_node (node)
+--						Result.extend (node)
+--					elseif file.exists then
+--						l_file_type:= file_type (file.name)
+--						if l_file_type.is_equal ("xml") then
+--							create file_node.make_with_text (short_name (root_dir.lastentry))
+--							file_node.set_data (file.name)
+--							internal_tree.register_checkable_node (file_node)
+--							Result.extend (file_node)
+--						end
 					end
 				end
 				cnt := cnt + 1

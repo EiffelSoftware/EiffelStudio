@@ -151,8 +151,8 @@ feature {NONE}-- Initialization
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_tall_height)
 			set_title ("Document Settings")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_10)
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "General")
@@ -188,13 +188,13 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_4.set_padding_width (5)
 			l_ev_vertical_box_4.set_border_width (5)
 			l_ev_frame_1.set_text ("Windows Help")
-			l_ev_vertical_box_5.set_padding_width (padding_width)
-			l_ev_vertical_box_5.set_border_width (border_width)
+			l_ev_vertical_box_5.set_padding_width (5)
+			l_ev_vertical_box_5.set_border_width (2)
 			l_ev_vertical_box_5.disable_item_expand (toc_12_title_box)
 			l_ev_vertical_box_5.disable_item_expand (toc_12_location_box)
 			l_ev_vertical_box_5.disable_item_expand (toc_12_pseudo_box)
-			l_ev_horizontal_box_6.set_padding_width (padding_width)
-			l_ev_horizontal_box_6.set_border_width (border_width)
+			l_ev_horizontal_box_6.set_padding_width (5)
+			l_ev_horizontal_box_6.set_border_width (2)
 			override_12_check.set_text ("Override settings for Microsoft Windows Help")
 			toc_12_title_box.set_padding_width (5)
 			toc_12_title_box.set_border_width (2)
@@ -209,13 +209,13 @@ feature {NONE}-- Initialization
 			toc_12_pseudo_box.disable_item_expand (l_ev_label_7)
 			l_ev_label_7.set_text ("Pseudo Name")
 			l_ev_frame_2.set_text ("VSIP Help")
-			l_ev_vertical_box_6.set_padding_width (padding_width)
-			l_ev_vertical_box_6.set_border_width (border_width)
+			l_ev_vertical_box_6.set_padding_width (5)
+			l_ev_vertical_box_6.set_border_width (2)
 			l_ev_vertical_box_6.disable_item_expand (toc_20_title_box)
 			l_ev_vertical_box_6.disable_item_expand (toc_20_location_box)
 			l_ev_vertical_box_6.disable_item_expand (toc_20_pseudo_box)
-			l_ev_horizontal_box_7.set_padding_width (padding_width)
-			l_ev_horizontal_box_7.set_border_width (border_width)
+			l_ev_horizontal_box_7.set_padding_width (5)
+			l_ev_horizontal_box_7.set_border_width (2)
 			override_20_check.set_text ("Override settings for Microsoft Help 2.0 (Visual Studio Integration)")
 			toc_20_title_box.set_padding_width (5)
 			toc_20_title_box.set_border_width (2)
@@ -240,8 +240,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_9.set_border_width (5)
 			l_ev_horizontal_box_9.disable_item_expand (l_ev_label_12)
 			l_ev_label_12.set_text ("Output Type ")
-			l_ev_horizontal_box_10.set_padding_width (padding_width)
-			l_ev_horizontal_box_10.set_border_width (border_width)
+			l_ev_horizontal_box_10.set_padding_width (5)
+			l_ev_horizontal_box_10.set_border_width (2)
 			l_ev_horizontal_box_10.disable_item_expand (apply_button)
 			l_ev_horizontal_box_10.disable_item_expand (okay_button)
 			l_ev_horizontal_box_10.disable_item_expand (cancel_button)
@@ -290,10 +290,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class DOCUMENT_PROPERTIES_DIALOG_IMP

@@ -368,7 +368,7 @@ feature {NONE} -- XML Implementation
 			doc_not_void: a_doc /= void
 			doc_has_associated_file: a_doc.file.exists
 		do
-			if a_doc.is_valid_xml then
+			if a_doc.is_valid_xml (a_doc.text) then
 				if xml_expr_check.is_selected then
 					-- Needs implementing
 				end
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 				run_on_directory (create {DIRECTORY}.make (Shared_project.root_directory))
 			elseif shared_document_editor.has_open_document then
 				if all_documents then
-					run_on_documents (Shared_document_editor.documents)
+--					run_on_documents (Shared_document_editor.documents)
 				else
 					run_on_document (Shared_document_editor.current_document)
 				end

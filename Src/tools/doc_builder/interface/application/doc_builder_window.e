@@ -14,10 +14,15 @@ inherit
 				document_toc
 		end
 
-	OBSERVER
+	TEXT_OBSERVER				
 		undefine
 			default_create,
 			copy
+		redefine
+			on_cursor_moved,
+			on_selection_finished,
+			on_text_fully_loaded,
+			on_text_edited
 		end
 
 	SHARED_OBJECTS
@@ -41,24 +46,27 @@ feature {NONE} -- Initialization
 			set_root_window (Current)
 			create render_factory
 			create internal_selector_widgets.make (4)
-			shared_document_editor.initialize (document_editor, Current)
+			
+				-- Editor			
+			editor_container.extend (shared_document_Editor.header.container)
+			editor_container.disable_item_expand (shared_document_editor.header.container)
+			editor_container.extend (shared_document_editor.widget)
+			search_control_container.put_front (shared_search_control)
+			search_control_container.disable_item_expand (shared_search_control)
 			
 					-- File Menu
 			new_menu_item.select_actions.extend 			(agent open_template_dialog)
 			open_menu_item.select_actions.extend 			(agent Shared_document_manager.open_document)
 			open_project_menu_item.select_actions.extend 	(agent Shared_project.open)
-			close_file_menu_item.select_actions.extend 		(agent Shared_document_editor.close_document)
 			save_menu_item.select_actions.extend 			(agent Shared_document_editor.save_document)
 			exit_menu_item.select_actions.extend 			(agent close_application)
 			
 					-- Edit Menu
-			cut_menu_item.select_actions.extend				(agent Shared_document_editor.cut_text)
-			copy_menu_item.select_actions.extend 			(agent Shared_document_editor.copy_text)
-			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste_text)
+			cut_menu_item.select_actions.extend				(agent Shared_document_editor.cut_selection)
+			copy_menu_item.select_actions.extend 			(agent Shared_document_editor.copy_selection)
+			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste)
 			search_menu_item.select_actions.extend 			(agent Shared_document_editor.open_search_dialog)
 			parser_menu_item.select_actions.extend 			(agent open_expression_dialog)
-			wrap_menu_item.select_actions.extend 			(agent shared_document_editor.toggle_word_wrap)
-			font_menu_item.select_actions.extend 			(agent (shared_document_editor.preferences).load_font_dialog)
 			
 					-- View Menu
 			element_selector_menu.set_data (element_area)
@@ -86,9 +94,9 @@ feature {NONE} -- Initialization
 			help_menu_item.select_actions.extend 			(agent display_help)
 		
 					-- Toolbar Events
-			toolbar_cut.select_actions.extend 				(agent Shared_document_editor.cut_text)
-			toolbar_copy.select_actions.extend 				(agent Shared_document_editor.copy_text)
-			toolbar_paste.select_actions.extend 			(agent Shared_document_editor.paste_text)			
+			toolbar_cut.select_actions.extend 				(agent Shared_document_editor.cut_selection)
+			toolbar_copy.select_actions.extend 				(agent Shared_document_editor.copy_selection)
+			toolbar_paste.select_actions.extend 			(agent Shared_document_editor.paste)			
 			toolbar_xml_format.select_actions.extend		(agent Shared_document_editor.pretty_print_text)
 			toolbar_code_format.select_actions.extend 		(agent shared_document_editor.pretty_format_code_text)
 			toolbar_new.select_actions.extend 				(agent Shared_document_manager.create_document)
@@ -97,7 +105,6 @@ feature {NONE} -- Initialization
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
 			toolbar_link_check.select_actions.extend		(agent shared_document_editor.validate_document_links)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
-			toolbar_highlight_toggle.select_actions.extend 	(agent update_highlighting)
 			output_combo.select_actions.extend 				(agent update_output_filter)
 											
 					-- TOC Widget Events
@@ -112,8 +119,6 @@ feature {NONE} -- Initialization
 			toc_merge_button.select_actions.extend 			(agent open_toc_merge_dialog)
 				
 					-- Misc Interface Events
-			editor_close.select_actions.extend	 			(agent Shared_document_editor.close_document)
-			document_editor.selection_actions.extend 		(agent Shared_document_editor.refresh)
 			attribute_list_close.select_actions.extend 		(agent attribute_selector_menu.disable_select)
 			attribute_list_close.select_actions.extend 		(agent show_hide_widget (attribute_list_tool, False))
 			sub_element_close.select_actions.extend 		(agent sub_element_menu.disable_select)
@@ -121,11 +126,13 @@ feature {NONE} -- Initialization
 			node_properties_close.select_actions.extend 	(agent show_hide_widget (node_properties_tool, False))
 			
 
-				-- Initial setup			
+				-- Initial setup
+			browser_container.extend (shared_web_browser)
+			shared_document_editor.add_edition_observer (Current)
+			shared_document_editor.add_selection_observer (Current)
+			shared_document_editor.add_cursor_observer (Current)
 			output_combo.disable_edit
-			output_combo.change_actions.extend (agent update_output_filter)
-			update_status_report (True, "No document loaded")
-			should_update := True
+			output_combo.change_actions.extend (agent update_output_filter)					
 			update			
 			close_request_actions.extend (agent close_application)
 		end
@@ -197,7 +204,7 @@ feature -- Interface Events
 			-- Update the toolbar
 		local			
 			l_curr_doc: DOCUMENT
-			l_curr_widget: EV_TEXT
+			l_text: EDITABLE_TEXT
 		do
 			if shared_project.is_valid then
 				toggle_sensitivity (toolbar_new, True)
@@ -206,31 +213,26 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_new, False)
 				toggle_sensitivity (toolbar_open, False)
 			end
-			if Shared_document_editor.has_open_document then
+			if shared_document_editor.has_open_document then
+				l_text := shared_document_editor.text_displayed
 				l_curr_doc := Shared_document_editor.current_document
-				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
-				
-						-- Save
-				toggle_sensitivity (toolbar_save, l_curr_doc.is_modified)
 				
 						-- Document
-				toggle_sensitivity (toolbar_copy, l_curr_widget.has_selection)
-				toggle_sensitivity (toolbar_cut, l_curr_widget.has_selection)
-				toggle_sensitivity (toolbar_paste, Shared_document_editor.clipboard_empty)					
+				toggle_sensitivity (toolbar_copy, l_text.has_selection)
+				toggle_sensitivity (toolbar_cut, l_text.has_selection)
+				toggle_sensitivity (toolbar_paste, not shared_document_editor.clipboard_empty)					
 				toggle_sensitivity (toolbar_xml_format, True)
-				toggle_sensitivity (toolbar_code_format, l_curr_widget.has_selection)
-				toggle_sensitivity (editor_close, True)
+				toggle_sensitivity (toolbar_code_format, l_text.has_selection)				
 				toggle_sensitivity (toolbar_link_check, True)
 				
 						-- Validation and properties
-				if Shared_document_manager.has_schema then
+				if shared_document_manager.has_schema then
 					toggle_sensitivity (toolbar_validate, True)
 					toggle_sensitivity (toolbar_properties, True)
 				end					
 				
 						-- Filtering
 				output_combo.enable_sensitive
-				toolbar_highlight_toggle.enable_sensitive
 			else
 						-- Save
 				toggle_sensitivity (toolbar_save, False)
@@ -241,7 +243,6 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_paste, False)					
 				toggle_sensitivity (toolbar_xml_format, False)
 				toggle_sensitivity (toolbar_code_format, False)
-				toggle_sensitivity (editor_close, False)
 				toggle_sensitivity (toolbar_link_check, False)
 				
 						-- Validation
@@ -252,7 +253,6 @@ feature -- Interface Events
 				
 						-- Filtering
 				output_combo.disable_sensitive
-				toolbar_highlight_toggle.disable_sensitive
 			end					
 		end
 		
@@ -260,7 +260,8 @@ feature -- Interface Events
 			-- Update the menus
 		local
 			l_curr_doc: DOCUMENT
-			l_curr_widget: EV_TEXT
+			l_text: EDITABLE_TEXT
+			l_name: STRING
 		do
 			if Shared_project.is_valid then
 				toggle_sensitivity (document_menu, True)
@@ -275,25 +276,26 @@ feature -- Interface Events
 				toggle_sensitivity (open_menu_item, False)
 			end
 			if Shared_document_editor.has_open_document then
-				l_curr_doc := Shared_document_editor.current_document
-				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
-				
+				l_curr_doc := shared_document_editor.current_document
+				l_text := shared_document_editor.text_displayed
+
 						-- Title bar
-				if l_curr_widget = Void then
+				if l_curr_doc = Void then
 					set_title ("Doc Builder")
 				else
-					set_title ("Doc Builder: " + l_curr_doc.name)
+					l_name := l_curr_doc.name.twin
+					l_name.replace_substring_all ("\", "/")
+					set_title ("Doc Builder: " + l_name)
 				end				
 				
-						-- File Menu
-				toggle_sensitivity (save_menu_item, l_curr_doc.is_modified)
+						-- File Menu				
 				toggle_sensitivity (close_file_menu_item, True)
 				
 						-- Edit Menu
 				toggle_sensitivity (document_menu, True)
-				toggle_sensitivity (copy_menu_item, l_curr_widget.has_selection)
-				toggle_sensitivity (cut_menu_item, l_curr_widget.has_selection)
-				toggle_sensitivity (paste_menu_item, Shared_document_editor.clipboard_empty)										
+				toggle_sensitivity (copy_menu_item, l_text.has_selection)
+				toggle_sensitivity (cut_menu_item, l_text.has_selection)
+				toggle_sensitivity (paste_menu_item, not shared_document_editor.clipboard_empty)										
 			else
 						-- File menu
 				toggle_sensitivity (save_menu_item , False)
@@ -338,7 +340,6 @@ feature -- GUI Updating
 			update_toolbar
 			update_menus
 			update_toc_toolbar
---			update_output_combo
 			update_status_report (False, "")
 		end		
 	
@@ -361,7 +362,7 @@ feature -- GUI Updating
 						list.after
 					loop					
 						create l_row.make_with_text (list.item)
-						l_row.pointer_double_press_actions.force_extend (agent ((shared_document_editor.current_widget).internal_edit_widget).tag_selection_as_xml (list.item))
+						l_row.pointer_double_press_actions.force_extend (agent shared_document_editor.tag_selection (list.item))
 						sub_elements_list.extend (l_row)
 						list.forth
 					end
@@ -383,16 +384,7 @@ feature -- GUI Updating
 					report_label.set_foreground_color (Shared_constants.Application_constants.No_error_color)
 				end
 			end
-		end			
-		
-	update_status_line (a_line_no, a_caret_pos: INTEGER) is
-			-- Update status bar with cursor position information
-		require
-			a_line_no_valid: a_line_no > 0
-			a_caret_pos_valid: a_caret_pos > 0
-		do
-			line_pos_label.set_text (a_line_no.out + ":" + a_caret_pos.out)	
-		end		
+		end				
 
 	update_output_filter is
 			-- Update the output filter type
@@ -401,36 +393,12 @@ feature -- GUI Updating
 			l_curr_doc: DOCUMENT
 		do
 			l_filter ?= Shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)
-			if l_filter.highlighting_enabled then
-				toolbar_highlight_toggle.enable_select
-			else
-				toolbar_highlight_toggle.disable_select
-			end
 			shared_project.filter_manager.set_filter (l_filter)
 			l_curr_doc := shared_document_editor.current_document
 			if l_curr_doc /= Void then				
 				shared_web_browser.set_document (l_curr_doc)
-				if l_filter.highlighting_enabled then
-					l_curr_doc.widget.internal_edit_widget.highlight					
-				end
 			end
-		end
-		
-	update_highlighting is
-			-- Update highlighting info
-		local
-			l_filter: OUTPUT_FILTER
-			l_document_widget: DOCUMENT_TEXT_WIDGET
-		do			
-			l_filter ?= shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)
-			l_filter.enable_highlighting (toolbar_highlight_toggle.is_selected)
-			if shared_document_editor.has_open_document then
-				l_document_widget := shared_document_editor.current_document.widget.internal_edit_widget
-				if l_document_widget /= Void then					
-					l_document_widget.highlight
-				end
-			end
-		end		
+		end	
 
 	update_output_combo is
 			-- Update the output combo box
@@ -454,6 +422,39 @@ feature -- GUI Updating
 			update_output_filter
 		end
 
+	on_text_edited (directly_edited: BOOLEAN) is
+			-- Update `Current' when some text has been modified
+			-- if `directly_edited', the user has modified the text in the editor,
+			-- not via another tool or wizard
+			-- Observer must be registered as "edition_observer" for this feature to be called.
+		do
+			toggle_sensitivity (toolbar_save, True)
+			toggle_sensitivity (save_menu_item, True)			
+		end
+
+	on_text_fully_loaded,
+	on_cursor_moved is
+			-- Update `Current' when the text has been completely loaded.
+			-- Observer must be registered as "edition_observer" for this feature to be called.
+		do		
+			update_toolbar
+			update_menus
+			
+				-- Positional information
+			cursor_text_position.set_text ("Pos: " + shared_document_editor.text_displayed.cursor.x_in_characters.out)	
+			line_number.set_text ("Line:" + shared_document_editor.text_displayed.current_line_number.out)
+			cursor_line_pos.set_text ("Byte: " + shared_document_editor.text_displayed.cursor.pos_in_characters.out)	
+		end
+		
+	on_selection_finished is
+			-- Update `Current' when the text has been completely loaded.
+			-- Observer must be registered as "edition_observer" for this feature to be called.
+		do
+			print ("selection finished%N")
+			update_toolbar
+			update_menus
+		end
+		
 feature -- Status Setting
 
 	set_toc_widget (a_toc: TABLE_OF_CONTENTS_WIDGET) is
@@ -479,6 +480,8 @@ feature -- Status Setting
 		end		
 
 feature {NONE} -- Implementation
+		
+	header: TEXT_PANEL_HEADER	
 		
 	toggle_sensitivity (sensitive_item: EV_SENSITIVE; on: BOOLEAN)	is
 			-- Toggle `sensitive_item' to `on'
@@ -591,7 +594,7 @@ feature {NONE} -- Dialog
 				if l_doc.is_valid_to_schema then
 					l_doc.properties.show_modal_to_window (Current)
 				else
-					l_doc.error_report.show
+					shared_error_reporter.show
 				end
 			end					
 		end
@@ -622,14 +625,11 @@ feature {NONE} -- Dialog
 
 	display_help is
 			-- Display help
-		local
-			l_error: ERROR_REPORT
 		do
 			shared_help_manager.show_help
 			if not shared_help_manager.last_show_successful then
-				create l_error.make ("Could not load help.")
-				l_error.append_error (create {ERROR}.make ("Unable to initialize help"))
-				l_error.show
+				shared_error_reporter.set_error (create {ERROR}.make ("Unable to initialize help"))
+				shared_error_reporter.show
 			end	
 		end		
 

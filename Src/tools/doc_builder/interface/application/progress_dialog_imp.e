@@ -54,21 +54,21 @@ feature {NONE}-- Initialization
 			set_maximum_width (dialog_width)
 			set_maximum_height (dialog_tall_height)
 			set_title ("Progress")
-			cancel_button.set_padding_width (padding_width)
-			cancel_button.set_border_width (border_width)
+			cancel_button.set_padding_width (5)
+			cancel_button.set_border_width (2)
 			cancel_button.disable_item_expand (l_ev_vertical_box_1)
 			cancel_button.disable_item_expand (l_ev_vertical_box_2)
 			cancel_button.disable_item_expand (l_ev_vertical_box_3)
-			l_ev_vertical_box_1.set_padding_width (padding_width)
+			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (inner_border_width)
 			l_ev_vertical_box_1.disable_item_expand (progress_bar)
 			progress_bar.set_minimum_width (15)
 			progress_bar.set_minimum_height (25)
 			progress_bar.set_leap (1)
-			l_ev_vertical_box_2.set_padding_width (padding_width)
+			l_ev_vertical_box_2.set_padding_width (5)
 			l_ev_vertical_box_2.set_border_width (inner_border_width)
 			heading_label.align_text_left
-			l_ev_vertical_box_3.set_padding_width (padding_width)
+			l_ev_vertical_box_3.set_padding_width (5)
 			l_ev_vertical_box_3.set_border_width (inner_border_width)
 			l_ev_vertical_box_3.disable_item_expand (status_label)
 			status_label.align_text_left
@@ -96,10 +96,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class PROGRESS_DIALOG_IMP

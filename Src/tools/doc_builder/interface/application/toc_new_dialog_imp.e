@@ -65,25 +65,25 @@ feature {NONE}-- Initialization
 			set_maximum_width (dialog_width)
 			set_maximum_height (dialog_medium_height)
 			set_title ("New Table of Contents")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_label_1.set_text ("A new Table of Contents may be generated from the project directory%Nstructure, or may be created empty.")
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Name")
 			l_ev_label_2.align_text_left
-			l_ev_vertical_box_2.set_padding_width (padding_width)
-			l_ev_vertical_box_2.set_border_width (border_width)
+			l_ev_vertical_box_2.set_padding_width (5)
+			l_ev_vertical_box_2.set_border_width (2)
 			project_radio.set_text ("Make as copy of project directory structure")
 			empty_radio.set_text ("Make empty ")
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (okay_button)
 			l_ev_horizontal_box_2.disable_item_expand (cancel_button)
 			okay_button.set_text ("OK")
@@ -118,10 +118,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class TOC_NEW_DIALOG_IMP

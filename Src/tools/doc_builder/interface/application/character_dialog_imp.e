@@ -51,8 +51,8 @@ feature {NONE}-- Initialization
 			set_title ("Special Characters")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_1, "XML Characters")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "HTML Characters")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_2.disable_item_expand (dummy_cancel_button)
 			dummy_cancel_button.set_text ("Cancel")
 			dummy_cancel_button.set_minimum_width (0)
@@ -82,10 +82,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class CHARACTER_DIALOG_IMP

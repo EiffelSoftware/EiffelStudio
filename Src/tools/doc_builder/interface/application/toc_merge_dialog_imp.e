@@ -61,22 +61,22 @@ feature {NONE}-- Initialization
 			set_maximum_width (dialog_width)
 			set_maximum_height (dialog_medium_height)
 			set_title ("TOC Merge Dialog")
-			l_ev_vertical_box_1.set_padding_width (border_width)
-			l_ev_vertical_box_1.set_border_width (padding_width)
+			l_ev_vertical_box_1.set_padding_width (2)
+			l_ev_vertical_box_1.set_border_width (5)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_label_1.set_text ("Select the Table of Contents to merge")
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("New toc name")
 			l_ev_label_2.align_text_left
-			l_ev_horizontal_box_3.set_padding_width (padding_width)
-			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.set_padding_width (5)
+			l_ev_horizontal_box_3.set_border_width (2)
 			l_ev_horizontal_box_3.disable_item_expand (ok_button)
 			l_ev_horizontal_box_3.disable_item_expand (cancel_button)
 			ok_button.set_text ("OK")
@@ -111,10 +111,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class TOC_MERGE_DIALOG_IMP

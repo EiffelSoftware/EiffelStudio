@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end					
 			
 			document.set_text (document_text (xm_document))
-			document.widget.internal_edit_widget.set_text (pretty_xml (document.text))
+--			document.widget.internal_edit_widget.set_text (pretty_xml (document.text))
 			
 					-- Synchronization
 			Shared_document_manager.Synchronizer.add_document (document)

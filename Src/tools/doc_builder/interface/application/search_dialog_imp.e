@@ -54,17 +54,17 @@ feature {NONE}-- Initialization
 			
 			set_minimum_width (dialog_width)
 			set_title ("Search")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.set_text ("Find")
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (find_but)
 			l_ev_horizontal_box_2.disable_item_expand (cancel_but)
 			find_but.set_text (button_find_text)
@@ -98,10 +98,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class SEARCH_DIALOG_IMP

@@ -399,8 +399,6 @@ feature {NONE} -- Implementation
 	copy_pixmap (other_interface: EV_PIXMAP) is
 			-- Update `Current' to have same appearence as `other_interface'.
 			-- (So as to satisfy `is_equal'.)
-		local
-			simple_pixmap: EV_PIXMAP_IMP
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (other_interface)
 				-- As `Current' may be parented, invalidate

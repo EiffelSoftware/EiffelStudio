@@ -296,16 +296,18 @@ feature -- Initialization
 		do
 			Precursor {EB_SYSTEM_TAB}
 			enable_select (cls_compliant_check)
-			enable_select (dotnet_naming_convention_check)
 			enable_select (verifiable_check)
 			disable_select (dll_check)
 			enable_select (full_cluster_name_check)
 			enable_select (cluster_name_check)
+			disable_select (dotnet_naming_convention_check)
 		ensure then
 			verifiable_check_selected: verifiable_check.is_selected
 			dll_check_not_selected: not dll_check.is_selected
 			cls_compliant_check_selected: cls_compliant_check.is_selected
-			dotnet_naming_convention_check_selected: dotnet_naming_convention_check.is_selected
+			full_cluster_name_selected: full_cluster_name_check.is_selected
+			cluster_name_selected: cluster_name_check.is_selected
+			dotnet_naming_convention_check_selected: not dotnet_naming_convention_check.is_selected
 		end
 
 feature {NONE} -- Initialization

@@ -28,6 +28,9 @@ inherit
 			eac_path
 		end
 
+create {COM_CACHE_MANAGER}
+	default_create
+
 feature -- Access
 
 	is_successful: BOOLEAN
@@ -188,15 +191,21 @@ feature {NONE} -- Implementation
 			l_lifetime_lease: ILEASE
 			l_time_span: TIME_SPAN
 			l_marshal: MARSHAL_CACHE_MANAGER
+			l_location: SYSTEM_STRING
+			l_full_name: SYSTEM_STRING
+			
 		do
 			if internal_marshalled_cache_manager = Void then
 				check
 					app_domain_not_exists: app_domain = Void
 				end
 				app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
-				l_inst_obj_handle ?= app_domain.create_instance_from (
-					to_dotnet.get_type.assembly.location,
-					(create {MARSHAL_CACHE_MANAGER}).to_dotnet.get_type.full_name)
+				
+					-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
+				l_location := (create {COM_CACHE_MANAGER}).to_dotnet.get_type.assembly.location
+				l_full_name := (create {MARSHAL_CACHE_MANAGER}).to_dotnet.get_type.full_name
+				l_inst_obj_handle ?= app_domain.create_instance_from (l_location, l_full_name)
+					
 				check
 					created_new_cache_manager: l_inst_obj_handle /= Void
 				end

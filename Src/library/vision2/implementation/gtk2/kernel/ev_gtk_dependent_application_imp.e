@@ -62,16 +62,13 @@ feature -- Implementation
 
 	pango_layout: POINTER is
 			-- 
-		local
-			a_cs: EV_GTK_C_STRING
 		once
-			create a_cs.make ("A")
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, a_cs.item)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
 		end
 
 	pango_iter: POINTER is
 			-- 
-		once
+		do
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 		end
 

@@ -168,9 +168,9 @@ feature -- Conversion
 	key_code_from_wel (a_wel_code: INTEGER): INTEGER is
 			-- Corresponding key code for ``a_wel_code''.
 		require
-				a_wel_code_valid: valid_wel_code (a_wel_code)
+			a_wel_code_valid: valid_wel_code (a_wel_code)
 		do
-			Result := wel_to_v2_table @ a_wel_code
+			Result := wel_to_v2_table.item (a_wel_code)
 		end
 
 feature -- Contract support
@@ -178,8 +178,7 @@ feature -- Contract support
 	valid_wel_code (a_wel_code: INTEGER): BOOLEAN is
 			-- Is ``a_wel_code'' valid?
 		do
-			Result := True
-			--| FIXME To be implemented
+			Result := wel_to_v2_array.has (a_wel_code)
 		end
 
 feature {NONE} -- Implementation
@@ -190,10 +189,10 @@ feature {NONE} -- Implementation
 			create Result.make ($first, $last)
 $v2_to_wel_array		end
 
-	wel_to_v2_table: ARRAY [INTEGER] is
+	wel_to_v2_table: HASH_TABLE [INTEGER] is
 			-- Vision2 keycodes indexed by WEL key code.
 		once
-			create Result.make (0, 999) --| FIXME
+			create Result.make (10)
 $wel_to_v2_array		end
 
 end -- class EV_WEL_KEY_CONVERSION
@@ -298,6 +297,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.7  2000/03/18 00:27:38  brendel
+# Implemented valid_wel_code.
+#
 # Revision 1.6  2000/03/18 00:06:06  brendel
 # Implemented valid_gtk_code.
 #

@@ -1469,7 +1469,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				Result := l_tokens.item (a_type_id)
 			end
 		ensure
-			constructor_token_valid: Result /= Void
+			constructor_token_valid: Result /= 0
 		end
 
 	invariant_token (a_type_id: INTEGER): INTEGER is

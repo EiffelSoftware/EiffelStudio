@@ -1776,7 +1776,7 @@ end
 	has_argument_name (arg_id: INTEGER): BOOLEAN is
 			-- Has current feature an argument named `arg_id" ?
 		require
-			arg_id /= Void
+			arg_id_positive: arg_id > 0
 		do
 			if arguments /= Void then
 				Result := arguments.argument_position_id (arg_id, 1) /= 0

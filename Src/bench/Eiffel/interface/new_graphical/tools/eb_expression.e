@@ -161,7 +161,7 @@ feature -- Bridge to dbg_expression_evaluator
 			l_evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			l_evaluator := expression_evaluator
-			if Result = Void and then l_evaluator /= Void then
+			if l_evaluator /= Void then
 				Result := l_evaluator.error_message
 			end
 		end
@@ -171,7 +171,7 @@ feature -- Bridge to dbg_expression_evaluator
 			l_evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			l_evaluator := expression_evaluator
-			if Result = Void and then l_evaluator /= Void then
+			if l_evaluator /= Void then
 				Result := l_evaluator.error
 			end			
 		end		

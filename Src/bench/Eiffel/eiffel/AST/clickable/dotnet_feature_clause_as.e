@@ -45,8 +45,6 @@ feature -- Status Setting
 
 	set_export_status (a_flag: BOOLEAN) is
 			-- Set 'is_exported' to reflect 'a_flag'.
-		require
-			flag_not_void: a_flag /= Void
 		do
 			is_exported := a_flag
 		ensure

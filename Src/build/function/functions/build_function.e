@@ -133,16 +133,16 @@ feature {NONE} -- Function Editor
 
 feature -- Insertion and Delections
 
-	add_element_line (i: INTEGER; input_st, output_st: data) is
+	add_element_line (i: INTEGER; input_d, output_d: data) is
 			-- Add `input_st' and `output_st' at line
 			-- `position' in input_list and output_list.
 		do
-			if not has_input (input_st) then
+			if not has_input (input_d) then
 				if i = 1 and input_list.empty then
-					add (input_st, output_st);
+					add (input_d, output_d);
 				else
 					go_i_th (i - 1);
-					add_right (input_st, output_st);
+					put_right (input_d, output_d);
 				end;
 			end
 		end; 
@@ -156,16 +156,15 @@ feature -- Insertion and Delections
 			cut_elt_line_cmd: FUNC_CUT;
 		do
 			find_input (elt);
-			if
-				not input_list.after
-			then
-				if
-					is_command
-				then
+			if not input_list.after then
+				if is_command then
 					!!cut_elt_line_cmd;
 					cut_elt_line_cmd.execute (Current);
 				end;
 				remove;
+				if func_editor /= Void then
+					func_editor.display_page_number
+				end
 			end
 		end;
 
@@ -250,11 +249,6 @@ feature -- Input and Output datas
 			output_data := s;
 		end;
 
-	copy_lists (func: data) is
-			-- Copy the contents of `func' into edited function.
-		deferred
-		end;
-
 feature {NONE}
 
 	input_set: BOOLEAN is
@@ -307,23 +301,6 @@ feature {NONE}
 			end;
 		end;
 
-	copy_contents (func: like Current) is
-		local
-			il, ol: like input_list;
-		do
-			il := func.input_list;
-			ol := func.output_list;
-			from
-				il.start;
-				ol.start;
-			until
-				il.after
-			loop
-				add (il.item, ol.item);
-				il.forth
-			end
-		end; 
-
 feature -- List operations
 
 	add (i: like input_data; o: like output_data) is
@@ -336,7 +313,7 @@ feature -- List operations
 			output_list.extend (o);
 		end;
 
-	add_right (i: like input_data; o: like output_data) is
+	put_right (i: like input_data; o: like output_data) is
 			-- Add right  the pair (`i', `o') to Current
 			-- function.
 		require

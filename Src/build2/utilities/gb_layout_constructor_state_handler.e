@@ -41,6 +41,8 @@ feature -- Access
 			reset_item (state_tree.root_node, layout_constructor_item)
 		end
 		
+feature {NONE} -- Implementation
+		
 	reset_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Reset state of `layout_item' from `tree_item'.
 		local
@@ -64,6 +66,9 @@ feature -- Access
 				else
 					layout_item.collapse
 				end
+				if tree_item.selected then
+					layout_item.enable_select
+				end
 				layout_item.forth
 				tree_item.forth
 			end
@@ -80,6 +85,11 @@ feature -- Access
 				tree_item.enable_state
 			else
 				tree_item.disable_state
+			end
+			if layout_item.is_selected then
+				tree_item.enable_selected
+			else
+				tree_item.disable_selected
 			end
 			from
 				layout_item.start

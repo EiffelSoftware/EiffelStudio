@@ -37,11 +37,11 @@
 <P CLASS="nn-first">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
 <P CLASS="nn-first">
-<A NAME="pgfId-437424"></A>Before we proceed with the facilities of the environment, let's take a look at the way EiffelStudio organizes the files of a project.
+<A NAME="pgfId-437424"></A>Before we proceed with the facilities of the environment, let's take a look at the way EiffelStudio organizes project files.
 <P CLASS="nn-normal">
-<A NAME="pgfId-3077"></A>With EiffelStudio, you build project. Most projects yield an executable system, although you can also build a project just to define a library that will be used by executable systems.
+<A NAME="pgfId-3077"></A>With EiffelStudio, you build projects. Most projects yield an executable system, although you can also build a project just to define a library for use by such systems.
 <P CLASS="nn-normal">
-<A NAME="pgfId-527857"></A>Every session is relative to a project; you can start a new project from within EiffelBench by going to the <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-527857"></A>Every session is relative to a project; you can start a new project from within EiffelStudio by going to the <SPAN CLASS="ee-keyword">
 File </SPAN>
 <SPAN CLASS="ee-symbol">
 --> </SPAN>
@@ -53,9 +53,9 @@ don't select that menu entry now</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-437467"></A>Every project has a <SPAN CLASS="ff-bold">
 project directory</SPAN>
- which will contain the files generated and managed by EiffelStudio. The project directory may also host some of the source files containing your Eiffel classes, the Ace file, and external software written in other languages, but that is not required; the source files may reside anywhere. Some users, in fact, like to put nothing else than the EiffelStudio-generated files in the project directory; this separates user-managed and system-managed files, and can facilitate configuration management, backups and porting.
+ which will contain the files generated and managed by EiffelStudio. The project directory may also host some of the source files containing your Eiffel classes, the Ace (control file), and external software written in other languages, but that is not required; the source files may reside anywhere. Some users, in fact, like to put nothing else than the EiffelStudio-generated files in the project directory; this separates user-managed and system-managed files, and can facilitate configuration management, backups and porting.
 <P CLASS="nn-normal">
-<A NAME="pgfId-437468"></A>In this simple Tour, however, things have been set up so that all the files of interest, source texts as well as generated ones, will appear in the project directory <SPAN CLASS="ee-text">
+<A NAME="pgfId-437468"></A>In this simple Tour, things have been set up so that all the files of interest, source texts as well as generated ones, will appear in the project directory <SPAN CLASS="ee-text">
 YOURDIR</SPAN>
  (either <SPAN CLASS="ee-keyword">
 $ISE_EIFFEL&#92;examples&#92;bench&#92;tour</SPAN>
@@ -76,39 +76,37 @@ ls</SPAN>
 YOURDIR </SPAN>
 directory include the following:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-437485"></A>First you see a number of files with the extension <SPAN CLASS="ee-dot">
 .</SPAN>
 <SPAN CLASS="ee-keyword">
 e</SPAN>
- (where <SPAN CLASS="ee-keyword">
-e</SPAN>
- is for Eiffel): <SPAN CLASS="ee-keyword">
+, for &quot;Eiffel&quot;: <SPAN CLASS="ee-keyword">
 heir.e</SPAN>
 , <SPAN CLASS="ee-keyword">
 invalid.e</SPAN>
- and others. These are the Eiffel source files, each containing one class. The recommended convention is, for clarity, to store a class of name <SPAN CLASS="ee-text">
+ and others. These are the Eiffel source files, each containing one class. The recommended convention is to store a class of name <SPAN CLASS="ee-text">
 CLASS_NAME</SPAN>
  into a file of name <SPAN CLASS="ee-text">
 class_name</SPAN>
 <SPAN CLASS="ee-keyword">
 .e</SPAN>
 , where <SPAN CLASS="ee-text">
-CLASS_NAME</SPAN>
+class_name</SPAN>
  is the lower-case version of <SPAN CLASS="ee-text">
 CLASS_NAME</SPAN>
 ; here, file <SPAN CLASS="ee-keyword">
 heir.e</SPAN>
  contains the class <SPAN CLASS="ee-keyword">
 HEIR </SPAN>
-and so on. As you may remember, Eiffel is not case-sensitive, but the standard convention for class names is to write them in all upper case. The use of <SPAN CLASS="ee-text">
+and so on. As you may remember, Eiffel is case-insensitive, but the standard convention for class names is to write them in all upper case. Calling the file <SPAN CLASS="ee-text">
 class_name</SPAN>
 <SPAN CLASS="ee-keyword">
 .e</SPAN>
- as the file name is only a recommendation, not an obligation; but you <SPAN CLASS="ff-italics">
+ is only a recommendation, not an obligation; but you <SPAN CLASS="ff-italics">
 are</SPAN>
- required to store one class per file. This keeps things simple and facilitate project management and configuration management.</LI>
-<LI CLASS="ll-bull">
+ required to store one class per file. This keeps things simple and facilitates project and configuration management.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-437517"></A>You also notice two files with an <SPAN CLASS="ee-keyword">
 ace</SPAN>
  extension. These are the compilation control files. The reason there are two is that this example has a Windows version and a Unix/Linux version. As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project. In most practical cases, however, you won't need to build an Ace; if you use the &quot;<SPAN CLASS="ee-keyword">
@@ -119,11 +117,11 @@ Create a new project</SPAN>
 Lace</SPAN>
  (Language for Assembling Classes in Eiffel). If you like you can take a peek at Lace by opening the relevant <SPAN CLASS="ee-keyword">
 .ace</SPAN>
- file with a text viewer or editor now (but don't make any change); it shouldn't be hard to understand what it's all about. But that's not really necessary at this stage.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-437620"></A>Next you see a file called <SPAN CLASS="ee-keyword">
+ file with a text viewer or editor now (but don't make any change); it shouldn't be hard to understand what it's all about. But that's not really necessary at this stage.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555055"></A>Next you see a file called <SPAN CLASS="ee-keyword">
 simple.epr</SPAN>
-. This is the Eifffel Project Repository, hence the extension. Any successful compilation of a project will produce a project of this kind, <SPAN CLASS="ee-text">
+. This is the Eiffel Project Repository, hence the extension. Any successful compilation of a project will produce a project of this kind, <SPAN CLASS="ee-text">
 system_name</SPAN>
 <SPAN CLASS="ee-keyword">
 .epr</SPAN>
@@ -133,8 +131,8 @@ Open compiled project</SPAN>
 10</SPAN>
 </A>), you will just select the corresponding <SPAN CLASS="ee-keyword">
 .epr</SPAN>
- file.</LI>
-<LI CLASS="ll-bull">
+ file.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-437541"></A>Finally you will notice a subdirectory called <SPAN CLASS="ee-keyword">
 EIFGEN</SPAN>
 , for &quot;<SPAN CLASS="ee-keyword">
@@ -149,9 +147,9 @@ EIFGEN</SPAN>
 .epr</SPAN>
  file and recompile your system, recreating a new <SPAN CLASS="ee-keyword">
 EIFGEN</SPAN>
- in the process. This also means that you should not add any files into this directory, or modify any of its files, since a later compilation is free to change or regenerate whatever it wants to in <SPAN CLASS="ee-keyword">
+ in the process. This also means that you should not add any files into this directory, or modify any of its files, since a later compilation is free to change or regenerate whatever it chooses in <SPAN CLASS="ee-keyword">
 EIFGEN</SPAN>
-.</LI>
+.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-437648"></A>Later on, we will see that EiffelStudio may generate three more subdirectories of the project directory: <SPAN CLASS="ee-keyword">
@@ -182,7 +180,7 @@ which contains the generated code (<SPAN CLASS="ee-keyword">
 W</SPAN>
  for &quot;Workbench&quot; -- we'll see the reason later). Feel free to browse through it if you like, but don't change anything.
 <P CLASS="nn-normal">
-<A NAME="pgfId-3762"></A>By the way, we are done with any platform-specific instructions. Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.
+<A NAME="pgfId-3762"></A>By the way, we are now done with any platform-specific instructions. Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-05.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-07.html"><area shape="default" nohref></MAP>
 
 <p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>

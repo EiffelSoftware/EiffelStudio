@@ -46,14 +46,14 @@
 <P CLASS="nn-normal">
 <A NAME="pgfId-520215"></A>The facilities to be described now are also useful when you find such an error, as they will help you study its execution context. In fact, one of the characteristics of the debugging mechanism is that there is no &quot;debugger&quot; proper, no more than there is a &quot;browser&quot;; you have instead a set of facilities supporting controlled execution and debugging. This means for example that:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-520222"></A>While debugging, you can access all the browsing capabilities to explore the features and classes surrounding the cause of an error.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-520235"></A>While browsing, you can launch or resume execution, and follow its progress through the debugging facilities.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-520222"></A>While debugging, you can access all the browsing capabilities to explore the features and classes surrounding the cause of an error.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-520235"></A>While browsing, you can launch or resume execution, and follow its progress through the debugging facilities.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520243"></A>If execution stops on an exception -- assertion violation, arithmetic overflow, call on a void target <SPAN CLASS="tt-nsymbol">
 &#8230;</SPAN>
- -- you have all the environment's facilities at your disposal to understand what happened.</LI>
+ -- you have all the environment's facilities at your disposal to understand what happened.
 </UL>
 </DIV>
 <DIV>
@@ -73,7 +73,7 @@ buttonholes</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-520254"></A>The labels correspond to the icons' use as buttons: enable all set breakpoints, disable them all, clear all, display information on current breakpoints. The difference between &quot;disabling&quot; and &quot;removing&quot; is that disabling turns breakpoints off until further notice but remembers them, so that you can later re-enable them, whereas &quot;removing&quot; clears them for good.
+<A NAME="pgfId-520254"></A>The labels correspond to the icons' use as buttons: enable all set breakpoints, disable them all, clear all, display information on current breakpoints. The difference between &quot;disabling&quot; and &quot;removing&quot; is that disabling turns off breakpoints until further notice but remembers them, so that you can later re-enable them, whereas &quot;removing&quot; clears them for good.
 <P CLASS="nn-normal">
 <A NAME="pgfId-520257"></A>Target a Development Tool to the class <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
@@ -81,13 +81,13 @@ TESTROOT</SPAN>
 make</SPAN>
  (the first routine, after the declaration of the two attributes o1 and o2) to the <SPAN CLASS="ee-keyword">
 Enable all</SPAN>
- icon, used here as a hole. This sets a breakpoint on the routine. Click the button labeled <SPAN CLASS="ee-keyword">
-Display info</SPAN>
+ icon, used here as a hole. This sets and enables a breakpoint on the routine. Click the button labeled <SPAN CLASS="ee-keyword">
+Display info </SPAN>
 above to get the list of breakpoints, as shown in the the next figure.
 <P CLASS="jj-small">
-<A NAME="pgfId-520262"></A>If you don't see this list in the Context pane, make sure the Context pane is present (if not, click on the <SPAN CLASS="ee-keyword">
-Context</SPAN>
- button in the top tool bar). In this case you can get the same effect as that of <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-520262"></A>If the Context pane is not present, <SPAN CLASS="ee-keyword">
+Display info</SPAN>
+ will bring it up. You can get the same effect as that of <SPAN CLASS="ee-keyword">
 Display info </SPAN>
 by selecting the <SPAN CLASS="ee-keyword">
 Output</SPAN>
@@ -102,7 +102,7 @@ Output</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-520395"></A>This shows that so far you have enabled only one breakpoint. For a finer degree of control, let's look at the feature's flat form. Pick-and-drop <SPAN CLASS="ee-text">
 make</SPAN>
- to the Context pane -- from the Context pane itself, since its name appears there, or the Text pane); this sets the Context to the <SPAN CLASS="ee-keyword">
+ to the Context pane -- from the Context pane itself, since its name appears there, or the Editing pane); this sets the Context to the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
  tab. Select the <SPAN CLASS="ee-keyword">
 Flat</SPAN>
@@ -115,9 +115,9 @@ Flat</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-520433"></A>The small circles on the left side of the Flat form indicate breakpoint positions. Empty ones are not set; set breakpoints are marked by a circle filled with red. At the moment only one is set, corresponding to the first instruction of the routine since, as noted, setting a breakpoint on a routine as a whole means setting it on its first operation.
+<A NAME="pgfId-520433"></A>The small circles on the left side of the Flat form indicate breakpoint positions. Empty ones are not set; enabled breakpoints are marked by a circle filled with red. At the moment only one is enabled, corresponding to the first instruction of the routine since, as noted, setting a breakpoint on a routine as a whole means setting it on its first operation.
 <P CLASS="nn-normal">
-<A NAME="pgfId-520436"></A>By (left) clicking on a breakpoint mark, you toggle it between set and not set. You can also right-click on a mark to get a menu of possibilities. Try setting and unsetting a few of these marks; you might get something like this:
+<A NAME="pgfId-520436"></A>By (left) clicking on a breakpoint mark, you toggle it between enabled and not set. You can also right-click on a mark to get a menu of possibilities. Try enabling and unsetting a few of these marks; you might get something like this:
 <DIV>
 <p>
 <ul>
@@ -199,14 +199,14 @@ make</SPAN>
 <A NAME="pgfId-520541"></A>The pane at the bottom left indicates that execution has stopped in <SPAN CLASS="ee-text">
 make</SPAN>
 . The Context shows the flat form of that routine, with a new icon to indicate the stop point which execution has reached. At the bottom right is a new tool, the <SPAN CLASS="ff-bold">
-object editor</SPAN>
+Object Editor</SPAN>
 , which shows the content of current object and (later) related objects. At the moment you can see that:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520551"></A>The current object is an instance of class <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520552"></A>The class (as you can also see from its text in a Development Tool) has two attributes o1 and o2, for which the corresponding fields in the current object are both void; this is as expected since you haven't yet executed the two creation instructions <SPAN CLASS="ee-keyword">
 create </SPAN>
 <SPAN CLASS="ee-comment">
@@ -221,8 +221,8 @@ o1</SPAN>
 create</SPAN>
  <SPAN CLASS="ee-text">
 o2</SPAN>
-, which come after the breakpoint.</LI>
-<LI CLASS="ll-bull">
+, which come after the breakpoint.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520571"></A>Along with attributes, an Eiffel class may have <SPAN CLASS="ff-bold">
 once functions</SPAN>
 , executed at most once -- the first time they are called -- in a given session, and from then on always returning the same value. Here the once function <SPAN CLASS="ee-text">
@@ -235,7 +235,7 @@ operating_environment</SPAN>
 io</SPAN>
 , from the top-level class <SPAN CLASS="ee-text">
 ANY</SPAN>
-) has not yet been called.</LI>
+) has not yet been called.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-520574"></A>The execution-time objects that you may display in an Object Editor are our latest kind of EiffelStudio &quot;development object&quot;, along with classes, features, explanations, clusters; notice their distinctive icon, a rectangular mesh suggestion an object's division into fields. It appears colored for actual objects, gray for void references such as <SPAN CLASS="ee-text">

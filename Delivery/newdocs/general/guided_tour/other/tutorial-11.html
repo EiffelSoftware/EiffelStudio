@@ -61,7 +61,7 @@ setup</SPAN>
  a <SPAN CLASS="ee-keyword">
 once</SPAN>
  procedure solves it: we can simply include a call
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -73,7 +73,7 @@ once</SPAN>
 <A NAME="pgfId-515822"></A>at the beginning of each affected routine; the first one to come in will perform the needed initializations; subsequent calls will have, as desired, no effect.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515830"></A>Once functions will give us shared objects. A common scheme is
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -143,7 +143,7 @@ io</SPAN>
 <A NAME="pgfId-515839"></A>The attributes studied earlier were variable: each represents a field present in each instance of the class and changeable by its routines.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515843"></A>It is also possible to declare constant attributes, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -197,7 +197,7 @@ U</SPAN>
  for null).
 <P CLASS="nn-normal">
 <A NAME="pgfId-515846"></A>For integer constants, it is also possible to avoid specifying the values. A declaration of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -251,7 +251,7 @@ inspect</SPAN>
  multi-branch instruction studied in the next section. They are only appropriate for codes that can take on a fixed number of well-defined values -- not as a way to program operations with many variants, a need better addressed by the object-oriented technique studied earlier and relying on inheritance, polymorphism, redeclaration and dynamic binding.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515854"></A>Manifest constants are also available for strings, using double quotes as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -271,7 +271,7 @@ Go get a life</SPAN>
 <A NAME="pgfId-515855"></A>with special characters again using the <SPAN CLASS="ee-comment">
 %</SPAN>
  codes. It is also possible to declare manifest arrays using double angle brackets:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -361,7 +361,7 @@ else</SPAN>
  come zero or more instructions.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515876"></A>A multi-branch instruction has the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -503,7 +503,7 @@ c</SPAN>
  must hold.)
 <P CLASS="nn-first">
 <A NAME="pgfId-515892"></A>The loop construct has the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -653,7 +653,7 @@ Check</SPAN>
 <A NAME="pgfId-515898"></A>This instruction serves to state properties that are expected to be satisfied at some stages of the computation -- other than the specific stages, such as routine entry and exit, already covered by the other assertion mechanisms such as preconditions, postconditions and invariants. A recommended use of <SPAN CLASS="ee-keyword">
 check</SPAN>
  involves calling a routine with a precondition, where the call, for good reason, does not explicitly test for the precondition. Consider a routine of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -687,7 +687,7 @@ end</SPAN>
 <A NAME="pgfId-515908"></A>Because of the call to <SPAN CLASS="ee-text">
 some_feature</SPAN>
 , the routine will only work if its precondition is satisfied on entry. To guarantee this precondition, the caller may protect it by the corresponding test, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -741,7 +741,7 @@ y</SPAN>
 for some <SPAN CLASS="ee-text">
 y </SPAN>
 that you know is not void. You should document this knowledge by writing the call as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -796,7 +796,7 @@ generalization</SPAN>
 <A NAME="pgfId-531242"></A>The notion of obsolete class and feature helps address this issue. By declaring a feature as <SPAN CLASS="ee-keyword">
 obsolete</SPAN>
 , using the syntax
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -865,10 +865,10 @@ ARRAY</SPAN>
 obsolete</SPAN>
 :
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-553537"></A>In the message following the keyword, explain the recommended replacement. This message will be part of the warning produced by the compiler for a system that includes the obsolete element.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-531333"></A>In the body of the routine, it is usually appropriate, as here, to replace the original implementation by a call to the new version. This may imply a small performance overhead, but simplifies maintenance and avoids errors.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-553537"></A>In the message following the keyword, explain the recommended replacement. This message will be part of the warning produced by the compiler for a system that includes the obsolete element.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-531333"></A>In the body of the routine, it is usually appropriate, as here, to replace the original implementation by a call to the new version. This may imply a small performance overhead, but simplifies maintenance and avoids errors.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-531334"></A>It is good discipline not to let obsolete elements linger around for too long. The next major new release, after a suitable grace period, should remove them.
@@ -884,7 +884,7 @@ obsolete</SPAN>
 <A NAME="pgfId-553393"></A>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (<A HREF="tutorial-07.html#59651" CLASS="XRef"><SPAN CLASS="ww-crossref">
 &quot;Creating and initializing objects&quot;,  page 20</SPAN>
 </A>):
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -916,7 +916,7 @@ x</SPAN>
 <A NAME="pgfId-553493"></A>the first one if the corresponding class has a <SPAN CLASS="ee-keyword">
 create</SPAN>
  clause, the second one if not. In either form you may include a type name in braces, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -952,7 +952,7 @@ x</SPAN>
 , assumed here to be <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
 . This avoids introducing a local entity, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -996,7 +996,7 @@ make </SPAN>
 <A NAME="pgfId-553564"></A>and has exactly the same effect. Another variant is the <SPAN CLASS="ff-bold">
 creation expression</SPAN>
 , which always lists the type, but returns a value instead of being an instruction. It is useful in the followingcontext:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1028,7 +1028,7 @@ make </SPAN>
 </table></ul><p>
 <P CLASS="nn-first">
 <A NAME="pgfId-553610"></A>which you may again view as an abbreviation for a more verbose form that would need a local entity, using a creation instruction:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1094,7 +1094,7 @@ x</SPAN>
 <A NAME="pgfId-555302"></A><A NAME="36752"></A>Tuple types</H2>
 <P CLASS="nn-first">
 <A NAME="pgfId-555303"></A>The study of genericity described arrays. Another common kind of container objects bears some resemblance to arrays: sequences, or &quot;tuples&quot;, of elements of specified types. The difference is that all elements of an array were of the same type, or a conforming one, whereas for tuples you will specify the types we want for each relevant element. A typical tuple type is of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1126,7 +1126,7 @@ TUPLE</SPAN>
  to obtain the effect of a generic class with a variable number of parameters.
 <P CLASS="nn-first">
 <A NAME="pgfId-555310"></A>To write the tuples themselves -- the sequences of elements, instances of a tuple type -- you will also use square brackets; for example
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1238,7 +1238,7 @@ put</SPAN>
 . A typical example is a general-purpose output procedure that takes an arbitrary sequence of values, of arbitrary types, and prints them. It may simply take an argument of type <SPAN CLASS="ee-text">
 TUPLE</SPAN>
 , so that clients can call it under the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">

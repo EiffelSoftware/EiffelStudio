@@ -44,32 +44,32 @@
 assertions</SPAN>
 , which may in particular appear in the following roles:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445197"></A>Routine <SPAN CLASS="ff-bold">
 preconditions</SPAN>
 <A NAME="marker-445196"></A> express the requirements that clients must satisfy whenever they call a routine. For example the designer of <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
  may wish to permit a withdrawal operation only if it keeps the account's balance at or above the minimum. Preconditions are introduced by the keyword <SPAN CLASS="ee-keyword">
 require</SPAN>
-. </LI>
-<LI CLASS="ll-bull">
+. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445199"></A>Routine <SPAN CLASS="ff-bold">
 postconditions</SPAN>
 <A NAME="marker-445198"></A>, introduced by the keyword <SPAN CLASS="ee-keyword">
 ensure</SPAN>
-, express conditions that the routine (the supplier) guarantees on return, if the precondition was satisfied on entry. </LI>
-<LI CLASS="ll-bull">
+, express conditions that the routine (the supplier) guarantees on return, if the precondition was satisfied on entry. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445203"></A>A class <SPAN CLASS="ff-bold">
 invariant</SPAN>
 <A NAME="marker-445200"></A> mu<A NAME="marker-445201"></A>st be satisfied by every <A NAME="marker-445202"></A>instance of the class whenever the instance is externally accessible: after creation, and after any call to an exported routine of the class. The invariant appears in a clause introduced by the keyword <SPAN CLASS="ee-keyword">
 invariant</SPAN>
-<A NAME="marker-445204"></A>, and represents a general consistency constraint imposed on all routines of the class. </LI>
+<A NAME="marker-445204"></A>, and represents a general consistency constraint imposed on all routines of the class. 
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-445250"></A>With appropriate assertions, the class <SPAN CLASS="ee-text">
 ACCOUNT </SPAN>
 becomes:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -242,7 +242,7 @@ acc1</SPAN>
  to create accounts; but then the default initialization, setting balance to zero, violated the invariant. By having one or more creation procedures, listed in the <SPAN CLASS="ee-keyword">
 create</SPAN>
  clause at the beginning of the class text, a class offers a way to override the default initializations. The effect of 
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -288,7 +288,7 @@ NONE</SPAN>
 <SPAN CLASS="ee-comment">
 }</SPAN>
 ; so it would be invalid for a client to include a call such as
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -350,7 +350,7 @@ short form</SPAN>
 &quot;, which serves as its interface documentation, is obtained from the full text by removing all non-exported features and all implementation information such as <SPAN CLASS="ee-keyword">
 do</SPAN>
  clauses of routines, but keeping interface information and in particular assertions. Here is the Contract Form of the above class:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">

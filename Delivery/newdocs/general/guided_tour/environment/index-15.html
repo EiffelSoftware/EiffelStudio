@@ -43,14 +43,14 @@ information about their projects. You can get such information through the <SPAN
 Metrics</SPAN>
  tab of the Context pane, which enables you to perform a number of operations, to be detailed next:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522834"></A>Apply predefined metrics (such as number of classes, number of invariants, number of features, number of compilations so far, and many others) to components of a system at various levels including feature, class, cluster, entire system.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522839"></A>Define new metrics, through mathematical formulae or boolean selection, and apply them to your project.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522842"></A>Store  measurement results, as well as metric definitions, into an XML archive that can be stored locally or made available on the Web for future reference.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522845"></A>Compare the measurements on a system to those on record locally or on a Web site. ISE has released on its own site an archive recording the metric properties of its basic libraries, available to any other project for comparison.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522834"></A>Apply predefined metrics (such as number of classes, number of invariants, number of features, number of compilations so far, and many others) to components of a system at various levels including feature, class, cluster, entire system.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522839"></A>Define new metrics, through mathematical formulae or boolean selection, and apply them to your project.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522842"></A>Store  measurement results, as well as metric definitions, into an XML archive that can be stored locally or made available on the Web for future reference.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522845"></A>Compare the measurements on a system to those on record locally or on a Web site. ISE has released on its own site an archive recording the metric properties of its basic libraries, available to any other project for comparison.
 </UL>
 <DIV>
 <H2 CLASS="aa-sec3">
@@ -149,26 +149,26 @@ Classes</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-522685"></A>Metrics are divided into elementary and composite:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522686"></A>An elementary metric measures the number of occurrences of a certain pattern in the product or process. An example is the number of precondition clauses in a class.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522687"></A>A composite metric, defined by a user of the environment, applies a mathematical or logical formula involving other metrics (elementary or previously defined metrics). </LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522686"></A>An elementary metric measures the number of occurrences of a certain pattern in the product or process. An example is the number of precondition clauses in a class.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522687"></A>A composite metric, defined by a user of the environment, applies a mathematical or logical formula involving other metrics (elementary or previously defined metrics). 
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-522690"></A>Among elementary metrics, we make a further distinction between raw and derived:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-522691"></A>Raw metrics are simple counts, built-in into the environment, of occurrences of certain basic elements. For example <SPAN CLASS="ee-text">
 Classes</SPAN>
-, the number of classes, is raw.</LI>
-<LI CLASS="ll-bull">
+, the number of classes, is raw.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-522692"></A>It is often useful to define a new metric by subjecting a raw metric to one or more <SPAN CLASS="ff-bold">
 selection criteria</SPAN>
 . For example a class may be either deferred (abstract) or effective (concrete, i.e. fully implemented). This is a selection criterion. Separately, a class may have an invariant, or not; this is another selection criterion, <SPAN CLASS="ee-text">
 Invariant_equipped</SPAN>
 . You might want to know the number of classes that are deferred and have no invariant clause; if so, you may define a derived metric by submitting the raw metric <SPAN CLASS="ee-text">
 Classes</SPAN>
- to both of these criteria connected by an &quot;and&quot;.</LI>
+ to both of these criteria connected by an &quot;and&quot;.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-522693"></A>The precise definition of <SPAN CLASS="ff-italics">
@@ -256,7 +256,7 @@ Features</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-522704"></A>A composite metrics applies one or more mathematical operators to a set of metrics, themselves either elementary (raw or derived) or already composite. In line with the conservative approach mentioned earlier, EiffelStudio permits only three kinds of mathematical operator:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-522706"></A><SPAN CLASS="ff-bold">
 Linear</SPAN>
  metrics of the form <SPAN CLASS="ee-symbol">
@@ -279,8 +279,8 @@ i</SPAN>
 m</SPAN>
 <SPAN CLASS="ee-sub">
 i</SPAN>
- existing metrics (either elementary or basic) with the same unit, other than RATIO. (It would be improper to add two RATIO since they might be ratios of incompatible things.)</LI>
-<LI CLASS="ll-bull">
+ existing metrics (either elementary or basic) with the same unit, other than RATIO. (It would be improper to add two RATIO since they might be ratios of incompatible things.)
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-523167"></A><SPAN CLASS="ff-bold">
 Ratio</SPAN>
  metrics of the form <SPAN CLASS="ee-text">
@@ -301,11 +301,11 @@ i</SPAN>
 RATIO</SPAN>
  is a catch-all category for all divisions, so you can't divide further without courting incoherence). The resulting unit is <SPAN CLASS="ee-text">
 RATIO</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-523178"></A><SPAN CLASS="ff-bold">
 Scope comparison</SPAN>
- metrics that measure the ratio of the value of a given non-ratio metric over two different scope types. For example by choosing the metric Classes and the scope types &quot;cluster&quot; and &quot;system&quot; we can measure the proportion of classes in a system that belong to the current cluster.</LI>
+ metrics that measure the ratio of the value of a given non-ratio metric over two different scope types. For example by choosing the metric Classes and the scope types &quot;cluster&quot; and &quot;system&quot; we can measure the proportion of classes in a system that belong to the current cluster.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-523239"></A>Let's define a linear metric <SPAN CLASS="ee-text">
@@ -488,10 +488,10 @@ Add measure to the list and save it</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-523316"></A>The operation has had two effects:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-523361"></A>Add the latest measure to the table of currently displayed measure.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-523362"></A>The first time around, as here, created a metrics file; a messages tells us this:</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-523361"></A>Add the latest measure to the table of currently displayed measure.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-523362"></A>The first time around, as here, created a metrics file; a messages tells us this:
 </UL>
 <DIV>
 <p>
@@ -507,10 +507,10 @@ Metrics</SPAN>
 metric_file.xml</SPAN>
  file contains both the metrics you have defined, and the measures you have performed. This makes it possible to use it both for:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-523387"></A>Applying to a new project the metrics that you have defined for an existing one (so that, as you go, you can accumulate a portfolio of useful metrics).</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-523388"></A>Using existing measures as a comparison for new projects.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-523387"></A>Applying to a new project the metrics that you have defined for an existing one (so that, as you go, you can accumulate a portfolio of useful metrics).
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-523388"></A>Using existing measures as a comparison for new projects.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-523391"></A>To obtain more measures, apply the three metrics that you defined earlier -- with names <SPAN CLASS="ee-text">
@@ -565,10 +565,10 @@ Exit</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-522773"></A>The notion of metric archive addresses this need. You may:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522774"></A>As noted above, archive all current measures into an XML file, called a measurement archive.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-522775"></A>Make this measurement archive available in a shared directory, or as a URL on the Internet.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522774"></A>As noted above, archive all current measures into an XML file, called a measurement archive.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-522775"></A>Make this measurement archive available in a shared directory, or as a URL on the Internet.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-522776"></A>At any time in a project, select any measurement archive, local or URL, as the reference archive; in that case all measures that you perform will be compared to those of the reference archive. You may select various comparison formats: percentage (the default), difference percentage, plain value.

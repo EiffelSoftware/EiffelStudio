@@ -48,12 +48,12 @@ operations</SPAN>
 represent</SPAN>
  operations, so that we can include them in object structures that some other piece of the software will later traverse to uncover the operations and, usually, execute them. Such &quot;operation wrapper&quot; objects, called agents, are useful in a number of application areas such as:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555127"></A>GUI (Graphical User Interface) programming, where we may associate an agent with a certain event of the interface, such as a mouse click at a certain place on the screen, to prescribe that if the event occurs -- a user clicks there -- it must cause execution of the agent's associated operation.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555128"></A>Iteration on data structures, where we may define a general-purpose routine that can apply an arbitrary operation to all the elements of a structure such as a list; to specify a particular operation to iterate, we will pass to the iteration mechanism an agent representing that operation.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555129"></A>Numerical computation, where we may define a routine that computes the integral of any applicable function on any applicable interval; to represent that function and pass its representation to the integration routine, we will use an agent.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555127"></A>GUI (Graphical User Interface) programming, where we may associate an agent with a certain event of the interface, such as a mouse click at a certain place on the screen, to prescribe that if the event occurs -- a user clicks there -- it must cause execution of the agent's associated operation.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555128"></A>Iteration on data structures, where we may define a general-purpose routine that can apply an arbitrary operation to all the elements of a structure such as a list; to specify a particular operation to iterate, we will pass to the iteration mechanism an agent representing that operation.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555129"></A>Numerical computation, where we may define a routine that computes the integral of any applicable function on any applicable interval; to represent that function and pass its representation to the integration routine, we will use an agent.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-555130"></A>Operations in Eiffel are expressed as routines, and indeed every agent will have an associated routine. Remember, however, that the fundamental distinction between objects and operations remains: an agent is an object, and it is not a routine; it <SPAN CLASS="ff-italics">
@@ -67,7 +67,7 @@ call</SPAN>
 <A NAME="pgfId-555131"></A>Building an agent</H2>
 <P CLASS="nn-first">
 <A NAME="pgfId-555135"></A>In the simplest form, also one of the most common, you obtain an agent just by writing
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -83,7 +83,7 @@ r</SPAN>
 <A NAME="pgfId-555136"></A>where <SPAN CLASS="ee-text">
 r</SPAN>
  is the name of a routine of the enclosing class. This is an expression, which you may assign to a writable entity, or pass as argument to a routine. Here for example is how you will specify event handling in the style of the EiffelVision 2 GUI library:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -123,7 +123,7 @@ over the interval <SPAN CLASS="ee-comment">
 <SPAN CLASS="ee-comment">
 1</SPAN>
 through a call such as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -149,7 +149,7 @@ agent</SPAN>
 </table></ul><p>
 <P CLASS="nn-first">
 <A NAME="pgfId-555148"></A>In the third example area cited above, you may call an iterator of EiffelBase through
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -263,7 +263,7 @@ item</SPAN>
  on <SPAN CLASS="ee-text">
 f</SPAN>
 :
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -364,7 +364,7 @@ f </SPAN>
 representing the function to be integrated, and the two interval bounds. When we need to evaluate that function for the value <SPAN CLASS="ee-text">
 x</SPAN>
 , in the line
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -417,7 +417,7 @@ REAL</SPAN>
 .
 <P CLASS="nn-normal">
 <A NAME="pgfId-555485"></A>Similarly, consider the agent that the call seen above:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -441,7 +441,7 @@ item </SPAN>
 of the list of agents, your_icon<SPAN CLASS="ee-keyword">
 .</SPAN>
  click_actions, an instruction such as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -471,7 +471,7 @@ agent</SPAN>
  your_routine, inserted by the above call to <SPAN CLASS="ee-text">
 extend</SPAN>
 , the effect will be the same as that of calling
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -505,7 +505,7 @@ call</SPAN>
 , passed exactly the arguments that a direct call to the routine would expect. You can have more flexibility. In particular, you may build an agent from a routine with more arguments than expected in the final call, and you may set the values of some arguments at the time you define the agent.
 <P CLASS="nn-normal">
 <A NAME="pgfId-555215"></A>Assume for example that a cartographical application lets a user record the location of a city by clicking on the corresponding position on the map. The application may do this through a procedure
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -551,7 +551,7 @@ pop</SPAN>
 </table></ul><p>
 <P CLASS="nn-first">
 <A NAME="pgfId-555224"></A>Then you can associate it with the GUI through a call such as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -665,7 +665,7 @@ population</SPAN>
  and <SPAN CLASS="ee-keyword">
 agent</SPAN>
  your_routine are acceptable in exactly the same situations, since both represent routines with two arguments. The type of both is 
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -737,7 +737,7 @@ directly</SPAN>
  in the GUI, as shown above, without any &quot;controller&quot; code.
 <P CLASS="nn-normal">
 <A NAME="pgfId-555234"></A>As another example of the mechanism's versatility, we saw above an integral function that could integrate a function of one variable over an interval, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -771,7 +771,7 @@ integral </SPAN>
 function; just use the same <SPAN CLASS="ee-text">
 integral</SPAN>
  as before, judiciously selecting what to close and what to leave open:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -833,7 +833,7 @@ x, y</SPAN>
 <SPAN CLASS="ee-comment">
 )</SPAN>
 . Agents, too, have a qualified variant as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -891,7 +891,7 @@ g</SPAN>
  belongs, known in the preceding examples from the type of <SPAN CLASS="ee-text">
 a</SPAN>
 . As in creation expressions, we must list the type explicitly; the convention is the same: write the types in braces, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -961,7 +961,7 @@ g </SPAN>
 <A NAME="pgfId-555254"></A>The first two of these examples are open on the target and both operands; they mean the same. The third is closed on one argument, open on the other and on the target.
 <P CLASS="nn-normal">
 <A NAME="pgfId-555255"></A>These possibilities give even more flexibility to the mechanism because they mean that an operation that needs agents with certain arguments open doesn't care whether they come from an argument or an operand of the original routine. This is particularly useful for iterators and means that if you have two lists
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -997,7 +997,7 @@ INTEGER</SPAN>
 </table></ul><p>
 <P CLASS="nn-first">
 <A NAME="pgfId-555264"></A>you may write both
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1031,7 +1031,7 @@ agent</SPAN>
 <A NAME="pgfId-555265"></A>even though the two procedures used in the agents have quite different forms. We are assuming here that the first one, in class <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
 , is something like
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1067,7 +1067,7 @@ my_account</SPAN>
 <SPAN CLASS="ee-dot">
 .</SPAN>
 deposit_one_grand. In contrast, the other routine has an argument:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1112,10 +1112,10 @@ LIST</SPAN>
 do_all</SPAN>
 , for both purposes:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555278"></A>Depositing money on every account in a list of accounts.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555279"></A>Adding all the integers in a list of integers.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555278"></A>Depositing money on every account in a list of accounts.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555279"></A>Adding all the integers in a list of integers.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-555120"></A>Agents provide a welcome complement to the other mechanisms of Eiffel. They do not conflict with them but, when appropriate -- as in the examples sketched in this section -- provide clear and expressive programming schemes, superior to the alternatives.

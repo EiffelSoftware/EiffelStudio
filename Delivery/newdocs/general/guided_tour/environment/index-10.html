@@ -88,7 +88,7 @@ EiffelStudio bar</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-511021"></A>Note that the class only has a few immediate features because most of its interesting features are inherited. Make sure the Text pane is high enough (as on the above figure) and click the feature <SPAN CLASS="ee-text">
+<A NAME="pgfId-511021"></A>Note that the class only has a few immediate features because most of its interesting features are inherited. Make sure the Editing pane is tall enough (as on the above figure) and click the feature <SPAN CLASS="ee-text">
 forth</SPAN>
 , the last one, in the Feature Tree on the left. This makes the feature the tool's current target, and scrolls the text to its declaration:
 <DIV>
@@ -109,7 +109,7 @@ forth</SPAN>
 <H2 CLASS="aa-sec3">
 <A NAME="pgfId-511160"></A>Basic feature information</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-510990"></A>Now let's look at the feature views. Click the Feature View tab at the bottom of the Context Pane:
+<A NAME="pgfId-510990"></A>Now let's look at the feature views. Click the Feature View tab at the bottom of the Context pane:
 <DIV>
 <p>
 <ul>
@@ -131,7 +131,7 @@ forth</SPAN>
 Flat</SPAN>
 . The flat view of a feature, similar in concept to the flat view of a class (page <A HREF="index.html#FLAT FORM OF CLASS" CLASS="XRef"><SPAN CLASS="ww-crossref">
 35</SPAN>
-</A>), gives the full text of a feature, taking into account any inherited precondition or postcondition clauses. Here the feature as declared in the class appears in the top Text pane, with no precondition and an <SPAN CLASS="ee-keyword">
+</A>), gives the full text of a feature, taking into account any inherited precondition or postcondition clauses. Here the feature as declared in the class appears in the top Editing pane, with no precondition and an <SPAN CLASS="ee-keyword">
 ensure then</SPAN>
  postcondition clause. But it's a redefinition of an inherited feature; the flat view in the bottom Context pane shows the full precondition, inherited from the ancestor <SPAN CLASS="ee-text">
 LINEAR</SPAN>
@@ -177,15 +177,15 @@ forth</SPAN>
 LIST</SPAN>
 , its ancestors and its descendants. Reading from the top we see that:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-511083"></A>The version from <SPAN CLASS="ee-text">
 LIST</SPAN>
  is called in <SPAN CLASS="ee-text">
 LIST</SPAN>
  itself by the function <SPAN CLASS="ee-text">
 is_equal</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-511084"></A>The version from <SPAN CLASS="ee-text">
 LIST's</SPAN>
  descendant <SPAN CLASS="ee-text">
@@ -196,8 +196,8 @@ could</SPAN>
 LIST</SPAN>
  but dynamically attached to an instance of <SPAN CLASS="ee-text">
 ARRAYED_CIRCULAR</SPAN>
-).</LI>
-<LI CLASS="ll-bull">
+).
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-511095"></A>About 60% down, <SPAN CLASS="ee-text">
 forth</SPAN>
  from <SPAN CLASS="ee-text">
@@ -210,15 +210,15 @@ ARRAYED_CIRCULAR</SPAN>
 ARRAYED_LIST</SPAN>
 , and two routines of <SPAN CLASS="ee-text">
 MULTI_ARRAY_LIST</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-511100"></A>Also note, in the following entry, that after renaming <SPAN CLASS="ee-text">
 forth</SPAN>
  is called <SPAN CLASS="ee-text">
 back</SPAN>
  in the descendant <SPAN CLASS="ee-text">
 ARRAYED_STACK</SPAN>
-.</LI>
+.
 </UL>
 </DIV>
 <DIV>
@@ -300,11 +300,19 @@ because in the case of feature merging (combining several features inherited fro
 </SPAN>
 
 <P CLASS="nn-normal">
-<A NAME="pgfId-511176"></A>The last button, <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-511176"></A>The next button, <SPAN CLASS="ee-keyword">
 Descendant versions</SPAN>
 , similarly tells you all that happens to a feature in the descendants of the current class.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-547312"></A>Who has the same name?</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-547313"></A>The last button, <SPAN CLASS="ee-keyword">
+Homonyms</SPAN>
+, displays all the features of the system which, related or not to the current feature by redeclaration, have the same name. You can then explore any such feature to see if the relationship is more than casual.
 <P CLASS="nn-normal">
-<A NAME="pgfId-511180"></A>In any system or library making extensive use of inheritance and its associated mechanisms -- renaming, redefinition, effecting, undefinition, multiple and repeated inheritance, polymorphism, dynamic binding -- these facilities are invaluable to track what happens to features. What makes them even more precious is their connection with the rest of the browsing and documentation capabilities, especially the pick-and-drop studied in the next section.
+<A NAME="pgfId-511180"></A>In any system or library making extensive use of inheritance and its associated mechanisms -- renaming, redefinition, effecting, undefinition, multiple and repeated inheritance, polymorphism, dynamic binding -- the feature browsing facilities are invaluable to track what happens to features. What makes them even more precious is their connection with the rest of the browsing and documentation capabilities, especially the pick-and-drop studied in the next section.
 </DIV>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-09.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-11.html"><area shape="default" nohref></MAP>
 

@@ -25,6 +25,7 @@
 #include <stdio.h>		/* For stream flushing */
 #include "dle.h"		/* For dle_reclaim */
 #include "option.h"		/* For exitprf */
+#include "object_id.h"	/* For the object id and separate stacks */
 
 #ifdef WORKBENCH
 #include "interp.h"
@@ -224,7 +225,6 @@ extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern struct stack hec_stack;		/* The hector stack (objects seen from C) */
 extern struct stack hec_saved;		/* The hector stack (objects kept by C) */
-extern struct stack object_id_stack;/* The object id stack (objects seen by object_id/id_object) */
 #ifndef TEST
 extern int cc_for_speed;			/* Priority to speed or memory? */
 #else
@@ -806,6 +806,11 @@ private void full_mark()
 	 */
 	mark_simple_stack(&hec_stack, recursive_mark, moving);
 	mark_simple_stack(&hec_saved, recursive_mark, moving);
+
+#ifdef CONCURRENT_EIFFEL
+	/* The separate_object_id_set records object referenced by other processors */
+	mark_simple_stack(&separate_object_id_set, recursive_mark, moving);
+#endif
 
 	/* The object id stacks record the objects referenced by an identifier. Those objects
 	 * are not necessarily alive. Thus only an update after a move is needed.
@@ -2757,6 +2762,11 @@ private void mark_new_generation()
 	 */
 	mark_simple_stack(&hec_stack, generation_mark, moving);
 	mark_simple_stack(&hec_saved, generation_mark, moving);
+
+#ifdef CONCURRENT_EIFFEL
+	/* The separate_object_id_set records object referenced by other processors */
+	mark_simple_stack(&separate_object_id_set, generation_mark, moving);
+#endif
 
 	/* The object id stacks record the objects referenced by an identifier. Those objects
 	 * are not necessarily alive. Thus only an update after a move is needed.

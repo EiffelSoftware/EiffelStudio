@@ -744,7 +744,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
-					choice.show_relative_to_window (window_manager.last_focused_window.window)
+					choice.show
 				end
 			else
 				if output_line /= Void then
@@ -800,7 +800,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
-					choice.show_relative_to_window (window_manager.last_focused_window.window)
+					choice.show
 				end
 			else
 				if output_line /= Void then
@@ -841,7 +841,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
-					choice.show_relative_to_window (window_manager.last_focused_window.window)
+					choice.show
 				end
 			else
 				if choosing_class then
@@ -1275,7 +1275,11 @@ feature {NONE} -- open new class
 						cluster_had_selection := False
 					end
 				end
-				is_typing_cluster := True
+				if k.code /= Key_csts.Key_enter then
+					is_typing := True
+				else
+					is_typing := False
+				end
 			end
 		end
 
@@ -1296,7 +1300,7 @@ feature {NONE} -- open new class
 						feature_had_selection := False
 					end
 				end
-				is_typing_feature := True
+				is_typing := True
 			end
 		end
 
@@ -1306,22 +1310,16 @@ feature {NONE} -- open new class
 	last_key_was_backspace: BOOLEAN
 			-- Was the last pressed key `back_space'?
 			
-	is_typing_cluster: BOOLEAN
-			-- Is the user typing in the cluster address combo box (we don't complete otherwise).
-
 	cluster_had_selection: BOOLEAN
 			-- Did the cluster address had a selection when the user hit the key?
 			-- Only meaningful if `last_key_was_backspace'.
 
 	is_typing: BOOLEAN
-			-- Is the user typing in the class address combo box (we don't complete otherwise).
+			-- Is the user typing in an address combo box (we don't complete otherwise).
 
 	had_selection: BOOLEAN
 			-- Did the class address had a selection when the user hit the key?
 			-- Only meaningful if `last_key_was_backspace'.
-
-	is_typing_feature: BOOLEAN
-			-- Is the user typing in the feature address combo box (we don't complete otherwise).
 
 	feature_had_selection: BOOLEAN
 			-- Did the feature address had a selection when the user hit the key?
@@ -1503,7 +1501,7 @@ feature {NONE} -- open new class
 					nb := nb - 1
 				end
 			end
-			is_typing_cluster := False
+			is_typing := False
 			
 			if not do_not_complete and nb > 0 then
 				list := Universe.clusters
@@ -1603,7 +1601,7 @@ feature {NONE} -- open new class
 					nb := nb - 1
 				end
 			end
-			is_typing_feature := False
+			is_typing := False
 
 			if
 				current_typed_class /= Void and then

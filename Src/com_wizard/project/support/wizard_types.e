@@ -115,7 +115,7 @@ feature -- COM/C types
 
 	Currency, Com_currency_type: STRING is "CURRENCY"
 
-	Decimal: STRING is "DECIMAL"
+	Decimal, Com_decimal_type: STRING is "DECIMAL"
 
 	Idispatch: STRING is "IDispatch *"
 

@@ -971,8 +971,8 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 		}
 	
 #else	/* EIF_REM_SET_OPTIMIZATION */
-		RTAS(supplier, client);					/* Age check */
 		*(char **)(client + offset) = supplier;	/* Attachment */
+		RTAS(supplier, client);					/* Age check */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
 		xfree((char *) rt_unsolved);		/* Free reference solving cell */

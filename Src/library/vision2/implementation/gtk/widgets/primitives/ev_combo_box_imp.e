@@ -19,13 +19,13 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		undefine
-			pointer_over_widget,
 			create_focus_in_actions,
 			create_focus_out_actions
 		redefine
 			initialize,
 			make,
-			interface
+			interface,
+			on_focus_changed
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -227,6 +227,15 @@ feature {NONE} -- Implementation
 			-- Do nothing, we handle selection via unmapping of popup window and explicit calling.
 		end
 		
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Focus for `Current' has changed'.
+		do
+			Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
+			if a_has_focus and is_editable then
+				select_all
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX

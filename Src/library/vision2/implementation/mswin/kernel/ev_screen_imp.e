@@ -105,18 +105,8 @@ feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER) is
 			-- Set `pointer_position' to (`x',`y`).
-		local
-			abs_x: INTEGER
-			abs_y: INTEGER
 		do
-			abs_x := (65535 * x) // System_metrics_constants.screen_width
-			abs_y := (65535 * y) // System_metrics_constants.screen_height
-			check
-				width_ok: width = System_metrics_constants.screen_width
-				height_ok: height = System_metrics_constants.screen_height
-			end
-			
-			send_mouse_absolute_move (abs_x, abs_y)
+			cwin_set_cursor_position (x, y)
 		end
 
 	set_default_colors is

@@ -544,6 +544,8 @@ feature -- Warning Dialogs
 	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of EiffelBuild.%NClick 'Continue' if you wish to load the project, with default EiffelBuild settings."
 	
 	Not_all_windows_named_string: STRING is "Some of the windows you are attempting to generate are not named.%NThe name is required for the generation and is used for both the class and file names.%NDo you wish EiffelBuild to assign default names to those windows that are unnamed?"
+	
+	constant_rejected_warning: STRING is "The value of the selected constant does not lie within the range permitted for this%Nproperty, and thefore the constant has been rejected.%NThe range of permitted values is restricted by the properties and settings of each object."
 
 feature -- Object editor properties
 
@@ -698,11 +700,13 @@ feature -- Constants
 
 feature -- Preferences
 
-	do_not_show_again: STRING is "Always add new constants and do not show this dialog again."
+	constants_do_not_show_again: STRING is "Reject invalid constants, and do not show this dialog again."
 
 	--show_pixmap_constant_directory_warning: STRING is "show_pixmap_constant_directory_warning"
 	show_repeated_absolute_constant_warning: STRING is "show_repeated_absolute_constant_warning"
 	
-	show_create_new_directory_constant_warning: STRING is "show_create_new_directory_constant_warning"
+--	show_create_new_directory_constant_warning: STRING is "show_create_new_directory_constant_warning"
+	
+	show_invalid_constant_selection_warning: STRING is "show_invalid_constant_selection_warning"
 
 end -- class GB_CONSTANTS

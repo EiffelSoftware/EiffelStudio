@@ -26,7 +26,7 @@ alias compile_ace `^
 remtrace Compiling Ace: %@EXECSTR[cd]\%2 &^
 remtrace Melting %@EXECSTR[cd]\%2 &^
 clean_project &^
-melt %2 &^
+freeze %2 &^
 wff &^
 iff not exist EIFGEN\W_code\*.exe then &^
 remtrace *****Error***** %@EXECSTR[cd]\%2 won't freeze. &^

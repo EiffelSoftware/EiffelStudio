@@ -1,0 +1,89 @@
+remtrace Check the status
+iff not defined DOCUMENT_DIR then
+	echo DOCUMENT_DIR is not defined. Cannot continue
+	CANCEL
+endiff
+iff not isdir %DOCUMENT_DIR then
+	echo %DOCUMENT_DIR is not a directory
+	CANCEL
+endiff
+iff not isdir %INSTALL_DIR\docs then
+	echo No destination directory for the documentation
+	CANCEL
+endiff
+
+remtrace --------------------------------------------------------
+remtrace Checkout up to date version of XML documentation files |
+remtrace --------------------------------------------------------
+
+cdd %DOCUMENT_DIR
+if isdir xmldoc fullrd xmldoc
+if exist xmldoc fullrd xmldoc
+exprt -r %DEFAULT_CVS_TAG -d xmldoc Delivery/xmldoc 
+
+
+remtrace ---------------------------------------------
+remtrace Checkout and compile the Documentation tool |
+remtrace ---------------------------------------------
+
+cdd %EIFFEL_SRC\tools
+exprt -r %DEFAULT_CVS_TAG -d doc_builder Src/tools/doc_builder
+cd %EIFFEL_SRC\tools\doc_builder
+clean_project
+finalize docbuilder_classic.ace
+fff
+cleanup_eiffel doc_builder.exe
+iff not exist doc_builder.exe then
+	remtrace Couldnt generate doc_builder.exe
+	CANCEL
+endiff
+move doc_builder.exe %DOCUMENT_DIR
+
+
+remtrace ---------------------------------------------------------------
+remtrace Compile all required libraries and generate XML documentation |
+remtrace ---------------------------------------------------------------
+
+cdd %EIFFEL_SRC\tools\doc_builder\resources\xml
+melt all_libs.ace
+ec -flatshort -filter xml -all -project all_libs.epr
+
+remtrace ------------------------------------------------------
+remtrace Copy XML docs into appropriate written docs location |
+remtrace ------------------------------------------------------
+
+cdd %EIFFEL_SRC\tools\doc_builder\resources\xml\Documentation
+fullrd *.html
+fullrd *_links.xml
+fullrd *_short.xml
+cd vision2\implementation
+fullrd mswin
+sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
+move new_index.xml index.xml
+gvim.exe -c "set ff=dos" -c "wq" index.xml
+
+cdd %EIFFEL_SRC\tools\doc_builder\resources\xml\Documentation
+
+move /s base %DOCUMENT_DIR\xmldoc\libraries\base\reference
+move /s wel %DOCUMENT_DIR\xmldoc\libraries\wel\reference
+move /s vision2 %DOCUMENT_DIR\xmldoc\libraries\vision2\reference
+move /s /s com %DOCUMENT_DIR\xmldoc\libraries\com\reference
+move /s eiffel2java %DOCUMENT_DIR\xmldoc\libraries\eiffel2java\reference
+move /s lex %DOCUMENT_DIR\xmldoc\libraries\lex\reference
+move /s parse %DOCUMENT_DIR\xmldoc\libraries\parse\reference
+move /s net %DOCUMENT_DIR\xmldoc\libraries\net\reference
+move /s thread %DOCUMENT_DIR\xmldoc\libraries\thread\reference
+move /s time %DOCUMENT_DIR\xmldoc\libraries\time\reference
+move /s web %DOCUMENT_DIR\xmldoc\libraries\web\reference
+move /s store %DOCUMENT_DIR\xmldoc\libraries\store\reference
+
+	
+remtrace ----------------------------------------------------------------------------------------
+remtrace Run the documentation tool to generate the documentation for EiffelStudio as .chm file |
+remtrace ----------------------------------------------------------------------------------------
+
+cdd %DOCUMENT_DIR
+doc_builder.exe -gen /xml2help -o /studio -t /mshtml %DOCUMENT_DIR\xmldoc\documentation.dpr
+copy C:\doc_temp\HTML\docs.chm %INSTALL_DIR\docs\eiffel.chm
+
+

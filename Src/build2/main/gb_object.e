@@ -946,7 +946,7 @@ feature -- Basic operations
 			command_add.execute
 		ensure
 			object_contained_if_not_top_level: not an_object.is_top_level_object implies parent_object.children.has (an_object)
-			children_count_increased: parent_object.children.count = old parent_object.children.count + 1
+			children_count_increased: old an_object.parent_object /= parent_object implies parent_object.children.count = old parent_object.children.count + 1
 		end
 		
 	add_new_component (a_component: GB_COMPONENT) is
@@ -1646,6 +1646,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					all_children.item.unconnect_display_object_pick_events
 					all_children.forth
 				end
+				
 			end
 		ensure
 			associated_object_set: old associated_top_level_object_on_loading > 0 implies associated_top_level_object = old associated_top_level_object_on_loading

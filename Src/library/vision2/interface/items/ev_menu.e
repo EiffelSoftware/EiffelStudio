@@ -3,6 +3,8 @@ indexing
 	description: 
 		"EiffelVision menu. Menu contains several menu items and shows them when the menu is opened."
 	status: "See notice at end of class"
+	note: "  1- The menu must be created with a parent (not Void).%
+		%2- set_parent feature is not available for this class."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,19 +26,23 @@ feature {NONE} -- Initialization
 
 	make (par: EV_MENU_HOLDER) is
 			-- Create an empty menu.
+		require
+			parent_needed: (par /= Void)
 		do
 			!EV_MENU_IMP!implementation.make
 			implementation.set_interface (Current)
-			set_parent (par)
+			implementation.set_parent (par)
 		end
 
 	make_with_text (par: EV_MENU_HOLDER; label: STRING) is         
 			-- Create a menu widget with `par' as
 			-- parent
+		require
+			parent_needed: (par /= Void)
 		do
 			!EV_MENU_IMP!implementation.make_with_text (label)
 			implementation.set_interface (Current)
-			set_parent (par)
+			implementation.set_parent (par)
 		end	
 
 feature -- Access
@@ -47,16 +53,6 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.text
-		end
-
-feature -- Element change
-
-	set_parent (par: EV_MENU_HOLDER) is
-			-- Make `par' the new parent of the item.
-		require
-			exists: not destroyed
-		do
-			implementation.set_parent (par)
 		end
 
 feature -- Implementation

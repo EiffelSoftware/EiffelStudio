@@ -191,7 +191,7 @@ feature
 				-- the Result register in once functions. The Result is always
 				-- recorded in the GC by RTOC, so there is no need to get an
 				-- l[] variable from the GC hooks. Here we are going to call
-				-- the print_register_by_name function on Result_register,
+				-- the print_register function on Result_register,
 				-- and this has been carefully patched in RESULT_BL to handle
 				-- the once cases.
 			!! dummy
@@ -781,7 +781,7 @@ feature
 				buffer.putstring (gc_dtype)
 			else
 				buffer.putstring (gc_upper_dtype_lparan)
-				Current_register.print_register_by_name
+				Current_register.print_register
 				buffer.putchar (')')
 			end
 		end

@@ -42,11 +42,6 @@ feature
 	
 	print_register is
 			-- Generates the C representation of `register'
-		deferred
-		end;
-
-	print_register_by_name is
-			-- Generates the C representation of a register
 		do
 			context.buffer.putstring (register_name)
 		end;

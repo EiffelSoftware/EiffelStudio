@@ -273,7 +273,7 @@ feature -- Generation
 				buf.new_line;
 				buf.putstring ("int inlined_dtype = ");
 				buf.putstring (gc_upper_dtype_lparan);
-				current_reg.print_register_by_name;
+				current_reg.print_register;
 				buf.putstring (");");
 				buf.new_line
 			end;

@@ -84,15 +84,6 @@ feature
 			Result.append(regnum.out);
 		end;
 
-	print_register is
-			-- Print register.
-		local
-			str: STRING;
-			index: INTEGER;
-		do
-			context.buffer.putstring (register_name);
-		end;
-
 	is_temporary: BOOLEAN is true;
 			-- Register is a temporary one.
 

@@ -428,7 +428,7 @@ feature
 								generate_gen_type_conversion (gen_type)
 							end
 							context.local_var.set_position (i)
-							context.local_var.print_register_by_name
+							context.local_var.print_register
 							exp_type_id := cl_type_i.expanded_type_id - 1
 							if context.workbench_mode then
 									-- RTLX is a macro used to create
@@ -460,7 +460,7 @@ feature
 									buf.putstring (");%N%T")
 									buf.putstring (clone (c_name))
 									buf.putchar ('(')
-									context.local_var.print_register_by_name
+									context.local_var.print_register
 								end
 							end
 							buf.putstring (gc_rparan_comma)
@@ -472,7 +472,7 @@ feature
 						elseif type_i.is_bit then
 							bit_i ?= type_i; -- Cannot fail
 							context.local_var.set_position (i)
-							context.local_var.print_register_by_name
+							context.local_var.print_register
 							buf.putstring (" = RTLB(")
 							buf.putint (bit_i.size)
 							buf.putstring (gc_rparan_comma)
@@ -494,7 +494,7 @@ feature
 						generate_block_open
 						generate_gen_type_conversion (gen_type)
 					end
-					context.result_register.print_register_by_name
+					context.result_register.print_register
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
@@ -525,7 +525,7 @@ feature
 							buf.putstring (");%N%T")
 							buf.putstring (clone (c_name))
 							buf.putchar ('(')
-							context.local_var.print_register_by_name
+							context.local_var.print_register
 						end
 					end
 					buf.putstring (gc_rparan_comma)
@@ -536,7 +536,7 @@ feature
 					buf.new_line
 				elseif type_i.is_bit then
 					bit_i ?= type_i; -- Cannot fail
-					context.result_register.print_register_by_name
+					context.result_register.print_register
 					buf.putstring (" = RTLB(")
 					buf.putint (bit_i.size)
 					buf.putstring (gc_rparan_comma)
@@ -564,7 +564,7 @@ feature
 					if arg.is_expanded then
 						context.arg_var.set_position (i)
 						buf.putstring ("if ((EIF_REFERENCE) 0 == ")
-						context.arg_var.print_register_by_name
+						context.arg_var.print_register
 						buf.putchar (')')
 						buf.new_line
 						buf.indent
@@ -602,10 +602,10 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			context.arg_var.print_register_by_name
+			context.arg_var.print_register
 			buf := buffer
 			buf.putstring (" = RTCL(")
-			context.arg_var.print_register_by_name
+			context.arg_var.print_register
 				-- If `idx' is not -1, then the reference was the one for the
 				-- enclosing object and it needs adjusting by the expanded
 				-- object's offset whithin that bigger object.
@@ -944,13 +944,13 @@ feature
 			if context.workbench_mode then
 				buf.putstring (tag)
 				buf.putchar ('(')
-				context.current_register.print_register_by_name
+				context.current_register.print_register
 				buf.putstring (", RTAL);")
 				buf.new_line
 			elseif context.assertion_level.check_invariant then
 				buf.putstring (tag)
 				buf.putchar ('(')
-				context.current_register.print_register_by_name
+				context.current_register.print_register
 				buf.putstring (gc_rparan_comma)
 				buf.new_line
 			end
@@ -1126,7 +1126,7 @@ feature
 			buf.putstring ("%", ")
 			feature_origin (buf)
 			buf.putstring (gc_comma)
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buf.putstring (gc_rparan_comma)
 			buf.new_line
 		end
@@ -1488,7 +1488,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("if (CURRSO(")
 						if reg /= Void then
-							reg.print_register_by_name
+							reg.print_register
 						else
 							buf.putstring (var_name)
 						end
@@ -1539,7 +1539,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("CURFSO(")
 						if reg /= Void then
-							reg.print_register_by_name
+							reg.print_register
 						else
 							buf.putstring (var_name)
 						end
@@ -1580,7 +1580,7 @@ feature -- Concurrent Eiffel
 						reg := context.associated_register_table.item(var_name)
 						buf.putstring ("CURFSO(")
 						if reg /= Void then
-							reg.print_register_by_name
+							reg.print_register
 						else
 							buf.putstring (var_name)
 						end

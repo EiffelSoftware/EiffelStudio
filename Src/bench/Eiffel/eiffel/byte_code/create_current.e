@@ -28,7 +28,7 @@ feature
 		do
 			buffer := context.buffer;
 			buffer.putstring ("Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putchar (')')
 		end;
 
@@ -53,7 +53,7 @@ feature -- Generic conformance
 		do
 			buffer.putint (-12)
 			buffer.putstring (", Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putstring ("), ")
 		end
 
@@ -82,7 +82,7 @@ feature -- Generic conformance
 			buffer.putstring ("typarr[")
 			buffer.putint (idx_cnt.value)
 			buffer.putstring ("] = Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putstring (");")
 			buffer.new_line
 			dummy := idx_cnt.next
@@ -102,7 +102,7 @@ feature -- Assignment attempt
 
 		do
 			buffer.putstring ("Dftype(")
-			context.Current_register.print_register_by_name
+			context.Current_register.print_register
 			buffer.putstring (")")
 		end
 

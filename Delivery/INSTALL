@@ -33,7 +33,7 @@ If you choose to run Eiffel from the CD-ROM you have to copy the directory Eiffe
 Setting up the License
 ----------------------
 
-With your version of ISE Eiffel, you should have received a license code (either permanent or temporary). The code should be of the form XXXXXXXX:YYYYYYYY. Add this code at the first line in the file $ISE_EIFFEL/install/limand/dhost if $ISE_LICENSE is not defined, otherwise in $ISE_LICENSE/limand/dhost.
+With your version of ISE Eiffel, you should have received a license code (either permanent or temporary). The code should be of the form XXXXXXXX:YYYYYYYY where XXXXXXXX is your username and YYYYYYYY is your password. Add this code at the first line in the file $ISE_EIFFEL/install/limand/dhost if $ISE_LICENSE is not defined, otherwise in $ISE_LICENSE/limand/dhost.
 
 
 Setting up the examples

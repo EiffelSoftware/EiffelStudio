@@ -32,7 +32,7 @@ RT_LNK long ei_bit_size(long i, EIF_REFERENCE object);
 RT_LNK long ei_size(EIF_REFERENCE object);
 RT_LNK EIF_BOOLEAN ei_special(EIF_REFERENCE object);
 RT_LNK void *ei_oref(long, EIF_REFERENCE);
-RT_LNK BOOLEAN eif_special_any_type (EIF_INTEGER dftype);
+RT_LNK EIF_BOOLEAN eif_special_any_type (EIF_INTEGER dftype);
 RT_LNK void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dtype);
 RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 

@@ -1,0 +1,182 @@
+//
+//    Eif_properties.idl
+//
+//
+//
+
+
+import "oaidl.idl";
+
+interface IEiffelProjectProperties;
+interface IEiffelClusterProperties;
+
+[
+  oleautomation,
+  uuid (C212FAAB-FAA8-48b9-9D4E-2D0CA4EB3354),
+  helpstring ("Eiffel Project Properties.")
+]
+interface IEiffelProjectProperties: IUnknown
+{
+  [helpstring ("Open Ace file.")]
+  HRESULT open_ace_file ([in] BSTR ace_file_name);
+  
+  [helpstring ("Application name.")]
+  HRESULT application_name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Root class name.")]
+  HRESULT root_class_name ([out, retval] BSTR * return_value);
+  
+  [helpstring ("Creation procedure name.")]
+  HRESULT creation_procedure ([out, retval] BSTR * return_value);
+  
+  [helpstring ("Are preconditions checked?")]
+  HRESULT require_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are postconditions checked?")]
+  HRESULT ensure_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are check statements checked?")]
+  HRESULT check_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are loop assertions checked?")]
+  HRESULT loop_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are invariants checked?")]
+  HRESULT invariant_checked ([out, retval] VARIANT_BOOL *return_value);
+  
+  [helpstring ("Define whether preconditions should be checked.")]
+  HRESULT check_require ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether postconditions should be checked.")]
+  HRESULT check_ensure ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether check statements should be checked.")]
+  HRESULT check_check ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether loop assertions should be checked.")]
+  HRESULT check_loop ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether invariants should be checked.")]
+  HRESULT check_invariant ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Program arguments.")]
+  HRESULT arguments ([out, retval] BSTR * return_value);
+  
+  [helpstring ("Set new arguments.")]
+  HRESULT set_arguments ([in] BSTR new_arguments); 
+
+  [helpstring ("Are line numbers generated?")]
+  HRESULT line_number_generation ([out, retval] VARIANT_BOOL *return_value);
+  
+  [helpstring ("Define whether line numbers should be generated.")]
+  HRESULT generate_line_numbers ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Clusters in current project (IEiffelClusterProperties).")]
+  HRESULT clusters ([out, retval] VARIANT * return_value);
+
+  [helpstring ("Add a cluster to the project.")]
+  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR cluster_path);
+  
+  [helpstring ("Remove a cluster from the project.")]
+  HRESULT remove_cluster ([in] BSTR cluster_name);
+
+  [helpstring ("Cluster properties.")]
+  HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
+  
+  [helpstring ("Imported assemblies.")]
+  HRESULT assemblies ([out, retval] SAFEARRAY (BSTR) * return_value);
+  
+  [helpstring ("Add an assembly to the project.")]
+  HRESULT add_assembly ([in] BSTR assembly_path);
+  
+  [helpstring ("Remove an assembly from the project.")]
+  HRESULT remove_assembly ([in] BSTR assembly_path);  
+};
+
+[
+  oleautomation,
+  uuid (5D0B0013-F831-4ff6-A443-7B30882A5EB8),
+  helpstring ("Eiffel Cluster Properties (for Ace file).")
+]
+interface IEiffelClusterProperties: IUnknown
+{
+  [helpstring ("Cluster name.")]
+  HRESULT name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Full path to cluster.")]
+  HRESULT cluster_path ([out, retval] BSTR * path);
+  
+  [helpstring ("Is override?.")]
+  HRESULT is_override ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Is library?.")]
+  HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Is all?.")]
+  HRESULT is_all ([out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Are preconditions checked?")]
+  HRESULT require_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are postconditions checked?")]
+  HRESULT ensure_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are check statements checked?")]
+  HRESULT check_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are loop assertions checked?")]
+  HRESULT loop_checked ([out, retval] VARIANT_BOOL * return_value);
+  
+  [helpstring ("Are invariants checked?")]
+  HRESULT invariant_checked ([out, retval] VARIANT_BOOL *return_value);
+  
+  [helpstring ("Define whether preconditions should be checked.")]
+  HRESULT check_require ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether postconditions should be checked.")]
+  HRESULT check_ensure ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether check statements should be checked.")]
+  HRESULT check_check ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether loop assertions should be checked.")]
+  HRESULT check_loop ([in] VARIANT_BOOL * new_value);
+  
+  [helpstring ("Define whether invariants should be checked.")]
+  HRESULT check_invariant ([in] VARIANT_BOOL * new_value);  
+  
+  [helpstring ("Excluded directories.")]
+  HRESULT excluded ([out, retval] SAFEARRAY (BSTR) * return_value);
+  
+  [helpstring ("Add a directory to exclude.")]
+  HRESULT add_exclude ([in] BSTR dir_name);
+  
+  [helpstring ("Remove a directory to exclude.")]
+  HRESULT remove_exclude ([in] BSTR dir_name);  
+  
+  [helpstring ("Included directories.")]
+  HRESULT included ([out, retval] SAFEARRAY (BSTR) * return_value);
+  
+  [helpstring ("Add a directory to exclude.")]
+  HRESULT add_include ([in] BSTR dir_name);
+  
+  [helpstring ("Remove a directory to exclude.")]
+  HRESULT remove_include ([in] BSTR dir_name);  
+};
+
+[
+  uuid (07E52ABF-6895-4a80-9F2B-2992FFD8E534)
+]
+library eiffel_properties
+{
+  importlib ("stdole2.tlb");
+  importlib ("stdole2.tlb");
+  
+  [
+    uuid (1C17D2BC-4BFE-4519-9E34-19DF28A259C2)
+  ]
+  coclass CEiffelProjectProperties
+  {
+    [default] interface IEiffelProjectProperties;
+  };
+};

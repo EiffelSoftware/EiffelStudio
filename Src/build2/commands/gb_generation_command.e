@@ -12,16 +12,36 @@ inherit
 		redefine
 			make, execute, executable
 		end
-		
+
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
+	
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -60,11 +80,27 @@ feature -- Basic operations
 	
 	execute is
 				-- Execute `Current'.
+		local
+			objects: ARRAYED_LIST [GB_OBJECT]
+			confirmation_dialog: EV_CONFIRMATION_DIALOG
 		do
-			create dialog.make_default
-			dialog.show_modal_to_window (main_window)
-
+			objects := Window_selector.objects
+			if not object_handler.objects_all_named (objects) then
+				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
+				confirmation_dialog.show_modal_to_window (main_window)
+				if confirmation_dialog.selected_button.is_equal ("OK") then
+					object_handler.add_default_names (objects)
+				end
+			end
+			if object_handler.objects_all_named (objects) then
+					-- We check to see if the generation should begin, by the
+					-- status of the naming.
+				create dialog.make_default
+				dialog.show_modal_to_window (main_window)
+			end
 		end
+		
+feature {NONE} -- Implementation
 
 	dialog: GB_CODE_GENERATION_DIALOG
 		-- Displays generation output.

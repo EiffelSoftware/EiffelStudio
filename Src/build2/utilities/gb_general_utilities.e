@@ -117,10 +117,9 @@ feature -- Basic operations
 			if an_object.output_name.is_empty and an_object.name.is_empty then
 				Result := an_object.type.substring (4, an_object.type.count)
 			else		
-					-- Decide which name to use. If the output name is longer,
-					-- it means that we are editing tha name, and the output name should
-					-- be displayed.
-				if an_object.output_name.count > an_object.name.count then
+					-- Decide which name to use. If the output name is not
+					-- equal to the actual name, then use the output name.
+				if not an_object.output_name.as_lower.is_equal (an_object.name.as_lower) then
 					displayed_name := an_object.output_name
 				else
 					displayed_name := an_object.name

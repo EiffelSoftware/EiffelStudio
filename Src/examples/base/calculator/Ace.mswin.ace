@@ -7,6 +7,7 @@ root
 
 default
 	assertion (all);
+	console_application (yes)
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster

@@ -677,13 +677,12 @@ feature -- Basic operations
 				-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
 				-- it is simply drawing a rectangle and dows not flicker.
 				
-			if last_column_index = grid.column_count or last_column_index = 0 then				
-				rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
-				if rectangle_width >= 0 then
-						-- Check to see if we must draw the background to the right of the items.
-					grid.drawable.set_foreground_color (grid.background_color)
-					grid.drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
-				end
+			rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
+				-- We compute the rectangle width based on the position of the final item within `column_offsets'.
+			if rectangle_width >= 0 then
+					-- Check to see if we must draw the background to the right of the items.
+				grid.drawable.set_foreground_color (grid.background_color)
+				grid.drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
 			end
 			if current_row = Void or else current_row.index = grid.row_count then
 				if grid.is_row_height_fixed and not grid.is_tree_enabled then

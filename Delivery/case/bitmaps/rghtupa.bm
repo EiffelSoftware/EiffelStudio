@@ -1,0 +1,4 @@
+#define right_up_arrow_width 3
+#define right_up_arrow_height 3
+static char right_up_arrow_bits[] = {
+   0xff, 0xfe, 0xfc};

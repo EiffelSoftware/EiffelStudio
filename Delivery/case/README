@@ -1,0 +1,13 @@
+
+You need to set $EIFFEL3 to the installation directory of I.S.E Eiffel 3.
+You need to also set $PLATFORM.
+
+Include into the path:
+	$EIFFEL3/case/spec/$PLATFORM/bin
+
+To run eiffelcase type:
+	ecase
+
+To retrieve projects stored with versions prior to 3.3, rename file `.idfile'
+from <Project_dir>/CASEGEN/Storage to `idfile' in the same directory.
+

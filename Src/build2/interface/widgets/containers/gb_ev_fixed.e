@@ -73,101 +73,13 @@ feature -- Access
 			Result := Precursor {GB_EV_ANY}
 			Result.extend (button)
 			button.select_actions.extend (agent show_layout_window)
---			create check_buttons.make (0)
---			Result := Precursor {GB_EV_ANY}
---				-- We need the child of the display objects here,
---				-- not the actual object itself.
---			second := objects @ (2).item
---			
---			create is_homogeneous_check.make_with_text ("Is_homogeneous?")
---			Result.extend (is_homogeneous_check)
---			is_homogeneous_check.select_actions.extend (agent update_homogeneous)
---			is_homogeneous_check.select_actions.extend (agent update_editors)
---			
---			create padding_entry.make (Current, Result, "Padding", agent set_padding (?), agent valid_input (?))
---			create border_entry.make (Current, Result, "Border", agent set_border (?), agent valid_input (?))
---
---				-- We only add the is_expandable label if there are children
---			if not first.is_empty then
---				create label.make_with_text ("Is_item_expanded?")
---				Result.extend (label)			
---			end		
---			from
---				first.start
---				second.start
---			until
---				first.off or second.off
---			loop
---				create check_button.make_with_text (class_name (first.item))
---				check_button.set_pebble_function (agent retrieve_pebble (parent_editor.object.layout_item, first.index))
---				check_buttons.force (check_button)
---				check_button.select_actions.extend (agent update_widget_expanded (check_button, first.item))
---				check_button.select_actions.extend (agent update_widget_expanded (check_button, second.item))
---				check_button.select_actions.extend (agent update_editors)
---				Result.extend (check_button)
---				first.forth
---				second.forth
---			end
---			
---			update_attribute_editor
---
---			disable_all_items (Result)
---			align_labels_left (Result)
 		end
 		
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
---			check
---				counts_match: first.count = check_buttons.count
---			end
---			is_homogeneous_check.select_actions.block
---
---			if first.is_homogeneous then
---				is_homogeneous_check.enable_select
---			else
---				is_homogeneous_check.disable_select
---			end
---			border_entry.set_text (first.border_width.out)
---			padding_entry.set_text (first.padding_width.out)
---			
---			from
---				check_buttons.start
---			until
---				check_buttons.off
---			loop
---				check_buttons.item.select_actions.block
---				if first.is_item_expanded (first @ check_buttons.index) then
---					check_buttons.item.enable_select
---				else
---					check_buttons.item.disable_select
---				end
---				check_buttons.item.select_actions.resume
---				check_buttons.forth
---			end			
---			is_homogeneous_check.select_actions.resume
 		end
-		
-		
-	update_widget_expanded (check_button: EV_CHECK_BUTTON; w: EV_WIDGET) is
-			-- Change the expanded status of `w'.
-		local
-			box_parent: EV_BOX
-		do
---			box_parent ?= w.parent
---			check
---				parent_is_box: box_parent /= Void
---			end
---			if check_button.is_selected then
---				box_parent.enable_item_expand (w)
---			else
---				box_parent.disable_item_expand (w)
---			end
---			system_status.enable_project_modified
---			command_handler.update
-		end
-		
 		
 feature {GB_XML_STORE} -- Output
 
@@ -175,43 +87,57 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
-			temp_string: STRING
+			temp_x_position_string, temp_y_position_string,
+			temp_width_string, temp_height_string: STRING
+			temp: STRING
 		do
---				-- Boxes are not homogeneous by default.
---			if objects.first.is_homogeneous = True then
---				add_element_containing_boolean (element, Is_homogeneous_string, objects.first.is_homogeneous)
---			end
---				-- Padding is 0 by default.
---			if objects.first.padding_width > 0 then
---				add_element_containing_integer (element, Padding_string, objects.first.padding_width)	
---			end
---				-- Border is 0 by default.
---			if objects.first.border_width > 0 then
---				add_element_containing_integer (element, Border_string, objects.first.border_width)
---			end
---			
---				-- If there are one or more children in the box, then we always
---				-- store the string of details. This could be changed to be made smarter
---				-- at some point, so we only store if one ore more are not expanded.
---				-- Initialize `temp_string' as empty.
---			temp_string := ""
---			from
---				first.start
---			until
---				first.off
---			loop
---						-- For each child that is expandable add "1" else add "0".
---					if first.is_item_expanded (first.item) then
---						temp_string := temp_string + "1"
---					else
---						temp_string := temp_string + "0"
---					end
---				first.forth
---			end
---			if not temp_string.is_empty then
---				add_element_containing_string (element, Is_item_expanded_string, temp_string)
---			end
+			temp_x_position_string := ""
+			temp_y_position_string := ""
+			temp_width_string := ""
+			temp_height_string := ""
+			from
+				first.start
+			until
+				first.off
+			loop
+				temp_x_position_string := temp_x_position_string + add_leading_zeros (first.item.x_position.out)
+				temp_y_position_string := temp_y_position_string + add_leading_zeros (first.item.y_position.out)
+				temp_width_string := temp_width_string + add_leading_zeros (first.item.width.out)
+				temp_height_string := temp_height_string + add_leading_zeros (first.item.height.out)
+				first.forth
+			end
+			if not temp_x_position_string.is_empty then
+				add_element_containing_string (element, x_position_string, temp_x_position_string)
+			end
+			if not temp_y_position_string.is_empty then
+				add_element_containing_string (element, y_position_string, temp_y_position_string)
+			end
+			if not temp_width_string.is_empty then
+				add_element_containing_string (element, width_string, temp_width_string)
+			end
+			if not temp_height_string.is_empty then
+				add_element_containing_string (element, height_string, temp_height_string)
+			end
 		end
+		
+	add_leading_zeros (original_string: STRING): STRING is
+			-- Add leading zeros to `original_string',
+			-- so it is a valid 4 character, Integer representation.
+		require
+			original_string_length_ok: original_string.count >= 1 and original_string.count < 5
+		do
+			if original_string.count = 1 then
+				Result := "000" + original_string
+			elseif original_string.count = 2 then
+				Result := "00" + original_string
+			elseif original_string.count = 3 then
+				Result := "0" + original_string
+			end
+		ensure
+			Result_correct_length: Result.count = 4
+			Result_is_integer: Result.is_integer
+		end
+		
 		
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
@@ -219,30 +145,9 @@ feature {GB_XML_STORE} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
---			full_information := get_unique_full_info (element)
---			
---			element_info := full_information @ (Is_homogeneous_string)
---			if element_info /= Void then
---				if element_info.data.is_equal (True_string) then
---					for_all_objects (agent {EV_BOX}.enable_homogeneous)
---				else
---					for_all_objects (agent {EV_BOX}.disable_homogeneous)
---				end
---			end
---
---			element_info := full_information @ (Padding_string)
---			if element_info /= Void then
---				for_all_objects (agent {EV_BOX}.set_padding_width (element_info.data.to_integer))
---			end
---			
---			element_info := full_information @ (Border_string)
---			if element_info /= Void then
---				for_all_objects (agent {EV_BOX}.set_border_width (element_info.data.to_integer))
---			end
---		
---		
---				-- We set up some deferred building now.
---			deferred_builder.defer_building (Current, element)
+				-- All the building for an EV_FIXED needs to be deferred so
+				-- we set up some deferred building now.
+			deferred_builder.defer_building (Current, element)
 		end
 		
 feature {GB_CODE_GENERATOR} -- Output
@@ -306,41 +211,75 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			second: like ev_type
-			temp_string: STRING
-			box_parent1, box_parent2: EV_BOX
+			temp_x_position_string, temp_y_position_string,
+			temp_width_string, temp_height_string: STRING
+			extracted_string: STRING
 		do
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (Is_item_expanded_string)
---				-- We only stored the expanded information if there were
---				-- children.
---			if element_info /= Void then			
---				temp_string := element_info.data
---				second ?= (objects @ 2)
---				box_parent1 ?= first
---				box_parent2 ?= second
---				check
---					string_matches: temp_string.count = first.count
---				end
---				from
---					first.start
---					second.start
---				until
---					first.off
---				loop
---					if temp_string @ first.index = '1' then
---						box_parent1.enable_item_expand (first.item)
---						box_parent2.enable_item_expand (second.item)
---					else
---						box_parent1.disable_item_expand (first.item)
---						box_parent2.disable_item_expand (second.item)
---					end
---					first.forth
---					second.forth
---				end
---			end
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (x_position_string)
+			if element_info /= Void then
+				temp_x_position_string := element_info.data				
+			end
+			
+			element_info := full_information @ (y_position_string)
+			if element_info /= Void then
+				temp_y_position_string := element_info.data				
+			end
+			
+			element_info := full_information @ (width_string)
+			if element_info /= Void then
+				temp_width_string := element_info.data				
+			end
+			
+			element_info := full_information @ (height_string)
+			if element_info /= Void then
+				temp_height_string := element_info.data				
+			end
+			
+			check
+				strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
+					temp_x_position_string.count = temp_width_string.count and
+					temp_x_position_string.count = temp_height_string.count
+				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
+				strings_correct_length: temp_x_position_string.count // 4 = first.count
+			end
+			
+			from
+				first.start
+			until
+				first.off
+			loop
+					-- Read current x position data from `temp_x_position_string'.
+				extracted_string := temp_x_position_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				check
+					value_is_integer: extracted_string.is_integer
+				end
+				set_x_position (first.item, extracted_string.to_integer)
+					
+					-- Read current y position data from `temp_y_position_string'.
+				extracted_string := temp_y_position_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				check
+					value_is_integer: extracted_string.is_integer
+				end
+				set_y_position (first.item, extracted_string.to_integer)
+				
+					-- Read current width data from `temp_width_string'.
+				extracted_string := temp_width_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				check
+					value_is_integer: extracted_string.is_integer
+				end
+				set_item_width (first.item, extracted_string.to_integer)
+				
+					-- Read current height data from `temp_height_string'.
+				extracted_string := temp_height_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				check
+					value_is_integer: extracted_string.is_integer
+				end
+				set_item_height (first.item, extracted_string.to_integer)
+				
+				first.forth
+			end	
 		end
-		
 
 feature {NONE} -- Implementation
 
@@ -1118,5 +1057,13 @@ feature {NONE} -- Attributes
 			
 	world: EV_FIGURE_WORLD
 		-- Figure world containg all widget representations.
+		
+	x_position_string: STRING is "Children_x_position"
+	
+	y_position_string: STRING is "Children_y_position"
+	
+	height_string: STRING is "Children_height"
+	
+	width_string: STRING is "Children_width"
 			
 end -- class GB_EV_BOX

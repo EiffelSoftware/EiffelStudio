@@ -22,7 +22,7 @@ inherit
 			parent, pixmap_equal_to
 		redefine
 			set_pixmap, pixmap, remove_pixmap, on_parented, on_orphaned,
-			parent_imp, interface
+			parent_imp, interface, destroy
 		end
 
 	EV_TEXTABLE_IMP
@@ -35,7 +35,8 @@ inherit
 	EV_TOOLTIPABLE_IMP
 		redefine
 			interface,
-			set_tooltip
+			set_tooltip,
+			destroy
 		end
 
 	WEL_LVM_CONSTANTS
@@ -337,6 +338,14 @@ feature {NONE} -- Implementation
 
 	internal_text: STRING
 			-- Text of `Current'.
+			
+	destroy is
+			-- Destroy `Current'.
+		do
+			Precursor {EV_TOOLTIPABLE_IMP}
+			Precursor {EV_ITEM_IMP}
+		end
+		
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 

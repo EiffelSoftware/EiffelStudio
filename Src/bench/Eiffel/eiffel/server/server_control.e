@@ -194,8 +194,8 @@ end;
 				not Result or i > files_upper
 			loop
 				file:= files.item (i);
-				if file /= Void then
-					Result := file.exists and then file.is_readable
+				if file /= Void and then file.exists then
+					Result := file.is_readable
 				end;
 				i := i + 1
 			end
@@ -215,12 +215,11 @@ end;
 				not Result or i > files_upper
 			loop
 				file:= files.item (i);
-				if file /= Void then
+				if file /= Void and then file.exists then
 					if file.precompiled then
-						Result := file.exists and then file.is_readable
+						Result := file.is_readable
 					else
-						Result := file.exists and then 
-							(file.is_readable and file.is_writable)
+						Result := (file.is_readable and file.is_writable)
 					end
 				end;
 				i := i + 1

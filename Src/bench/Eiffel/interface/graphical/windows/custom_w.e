@@ -28,8 +28,6 @@ feature
 		local
 			void_argument: ANY
 		do
-io.error.putstring ("FIXME: delete_window_action is not implemented!!!%N");
-
 			shell_make (tool_name, a_screen);
 			build_widgets;
 			!!format_catalog.make (10);

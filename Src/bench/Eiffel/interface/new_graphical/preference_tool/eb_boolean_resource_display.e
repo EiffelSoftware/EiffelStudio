@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_with_resource (a_parent: EV_CONTAINER; a_resource: like resource) is
+	make_with_resource (a_parent: EV_BOX; a_resource: like resource) is
 			-- Display Current
 		do
 			Precursor (a_parent, a_resource)

@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_with_resource (par: EV_CONTAINER; a_resource: like resource) is
+	make_with_resource (par: EV_BOX; a_resource: like resource) is
 			-- Display Current
 		local
 			cmd: EV_ROUTINE_COMMAND

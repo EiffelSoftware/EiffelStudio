@@ -120,12 +120,41 @@ feature -- Status report
 			Result := manager_built and then manager.transfer_finished
 		end
 
+	error: BOOLEAN is
+			-- Has an error occurred?
+		do
+			Result := manager_built and then manager.error
+		end
+
+	error_reason: STRING is
+			-- Reason of most recent error
+		require
+			error_occurred: error
+		do
+			Result := manager.error_reason
+		ensure
+			non_empty_string: Result /= Void and then not Result.is_empty
+		end
+
 	transfer_succeeded: BOOLEAN is
 			-- Has the last transfer succeeded?
 		do
 			Result := manager_built and then manager.transactions_succeeded
 		end
 
+feature -- Status setting
+
+	set_timeout (s: INTEGER) is
+			-- Set timeout to `s' seconds.
+			-- (This feature must be called *before* adding transactions in
+			-- order to affect the added transactions.)
+		require
+			non_negative: s >= 0
+		do
+			timeout := s
+		ensure
+			timeout_set: timeout = s
+		end
 			
 feature -- Element change
 
@@ -156,6 +185,12 @@ feature -- Element change
 				end
 			sr := deep_clone (resource_hash.found_item)
 
+				debug
+					Io.error.put_string (s)
+					Io.error.put_string (" -> ")
+					Io.error.put_string (t)
+					Io.error.put_string (" added.%N")
+				end
 			resource_factory.set_address (t)
 			tu := resource_factory.url
 			resource_hash.search (tu.location)
@@ -165,7 +200,16 @@ feature -- Element change
 						-- check
 				end
 			tr := deep_clone (resource_hash.found_item)
-
+			
+			if timeout /= Void then
+				sr.set_timeout (timeout.item)
+				tr.set_timeout (timeout.item)
+					debug
+						Io.error.put_string ("Timeout set to ")
+						Io.error.put_integer (timeout.item)
+						Io.error.put_string (" seconds%N")
+					end
+			end
 			create ta.make (sr, tr)
 			transactions.extend (ta)
 		ensure
@@ -259,6 +303,10 @@ feature {NONE} -- Implementation
 	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]
 			-- Hash table of created resources
 
+	timeout: INTEGER_REF
+			-- Duration of timeout in seconds
+			-- (If `Void' the default value is used.)
+			
 	optimized_count: INTEGER is
 			-- Number of optimized transactions
 		do
@@ -343,6 +391,7 @@ feature {NONE} -- Implementation
 			from 
 				optimized_transactions.start
 				create transfer_manager.make
+				transfer_manager.stop_on_error
 			until 
 				optimized_transactions.after
 			loop

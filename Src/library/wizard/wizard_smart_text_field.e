@@ -147,6 +147,16 @@ feature -- Settings
 			end
 		end
 
+	remove_text is
+			-- Remove the text of the text field.
+		do
+			if generated then 
+				textfield.remove_text
+			else
+				textfield_string := Void
+			end
+		end
+
 	set_label_string_and_size (a_string: STRING; a_size: INTEGER) is
 			-- Set the label text to `a_string' and the minimum width for
 			-- the label to `a_size'.

@@ -355,11 +355,11 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	pi_half: DOUBLE is 1.57079633
+	pi_half: DOUBLE is 1.57079632679489661923
+					   
+	pi_times_two: DOUBLE is 6.28318530717958647693 
 	
-	pi_times_two: DOUBLE is 6.28318531
-	
-	pi_half_times_three: DOUBLE is 4.71238898
+	pi_half_times_three: DOUBLE is 4.71238898038468985769
 
 end -- class EV_MODEL_DOUBLE_MATH
 

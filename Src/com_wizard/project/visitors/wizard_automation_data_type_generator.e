@@ -107,7 +107,6 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_variant")
 				ec_function_name.append ("ccom_ec_variant")
 				is_structure := True
-				vt_type := binary_or (Vt_variant, Vt_byref)
 
 			elseif is_currency (a_type) then
 				ce_function_name.append ("ccom_ce_currency")

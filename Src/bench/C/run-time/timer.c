@@ -27,11 +27,6 @@ doc:<file name="timer.c" header="rt_timer.h" version="$Id$" summary="Time relate
 #include <sys/machd.h>
 #endif
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 #ifdef HAS_GETTIMEOFDAY
 rt_public void gettime(struct timeval *stamp)
 {

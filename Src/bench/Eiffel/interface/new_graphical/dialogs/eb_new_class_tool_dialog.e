@@ -45,12 +45,12 @@ feature -- Initialization
 			create create_b.make_with_text (action_area, Interface_names.b_Create)
 			create cancel_b.make_with_text (action_area, Interface_names.b_Cancel)
 
-			file_entry.add_activate_command (Current, create_new_class)
+			file_entry.add_return_command (Current, create_new_class)
 			cancel_b.add_click_command (Current, cancel)
 			create_b.add_click_command (Current, create_new_class)
 --			set_composite_attributes (Current)
 			allow_resize
-			set_modal
+			set_modal (True)
 		end
 
 feature -- Callbacks

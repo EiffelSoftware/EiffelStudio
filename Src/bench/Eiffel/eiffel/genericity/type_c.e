@@ -141,6 +141,28 @@ feature
 			buffer.put_string (")) ")
 		end
 
+	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER) is
+			-- Generate conversion to `REAL_64', needed because
+			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
+		require
+			buffer_not_void: buffer /= Void
+		do
+			check
+				not_called: False
+			end
+		end
+
+	generate_conversion_to_real_32 (buffer: GENERATION_BUFFER) is
+			-- Generate conversion to `REAL_32', needed because
+			-- for some descendants, it is not enough to just to a cast to EIF_REAL_32.
+		require
+			buffer_not_void: buffer /= Void
+		do
+			check
+				not_called: False
+			end
+		end
+		
 	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.

@@ -37,9 +37,10 @@ feature {NONE} -- Initialization
 		require
 			a_not_void: a /= Void
 		local
-			l_assembly_directory: STRING
 			l_assembly_location: PATH_NAME
 			l_env: EIFFEL_ENV
+			l_emitter: IL_EMITTER
+			l_vd64: VD64
 		do
 				-- Initialize assembly info.
 			cluster_name := a.cluster_name
@@ -48,6 +49,14 @@ feature {NONE} -- Initialization
 				set_version (a.version)
 				set_culture (a.culture)
 				set_public_key_token (a.public_key_token)
+				create l_emitter.make (system.clr_runtime_version)
+				if l_emitter.exists then
+					consumed_folder_name := l_emitter.relative_folder_name (assembly_name, version, culture, public_key_token)
+				else
+						-- IL_EMITTER component could not be loaded.
+					create l_vd64
+					Error_handler.insert_error (l_vd64)
+				end
 			else
 				is_local := True
 				initialize_from_local_assembly (a.assembly_name)
@@ -65,17 +74,9 @@ feature {NONE} -- Initialization
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
 			create l_env
-			l_assembly_directory := build_assembly_path (assembly_name, version, culture,
-				public_key_token)
-				
-			if is_local then
-					-- Look in EIFGEN/Assemblies.
-				l_assembly_location := Local_assembly_path.twin
-			else
-					-- Look in EAC.
-				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
-			end
-			l_assembly_location.extend (l_assembly_directory)
+		
+			l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
+			l_assembly_location.extend (consumed_folder_name)
 			create dollar_path.make_from_string (l_assembly_location)
 			update_path
 
@@ -94,21 +95,15 @@ feature {NONE} -- Initialization
 	make_from_consumed_assembly (l_ass: CONSUMED_ASSEMBLY) is
 			-- Create Current from data in `l_ass'.
 		local
-			l_assembly_directory: STRING
 			l_assembly_location: PATH_NAME
 			l_env: EIFFEL_ENV
 		do
 				-- Initialize assembly info.
 			cluster_name := l_ass.out
-			assembly_info_make (l_ass.name)
-			if l_ass.version /= Void and l_ass.culture /= Void and l_ass.key /= Void then
-				set_version (l_ass.version)
-				set_culture (l_ass.culture)
-				set_public_key_token (l_ass.key)
-			else
-				is_local := True
-				initialize_from_local_assembly (l_ass.name)
-			end
+			assembly_info_make (l_ass.location)
+			
+			is_local := True
+			initialize_from_local_assembly (l_ass.location)
 
 			prefix_name := l_ass.name + "_"
 			prefix_name.replace_substring_all (".", "_")
@@ -121,17 +116,8 @@ feature {NONE} -- Initialization
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
 			create l_env
-			l_assembly_directory := build_assembly_path (assembly_name, version, culture,
-				public_key_token)
-				
-			if is_local then
-					-- Look in EIFGEN/Assemblies.
-				l_assembly_location := Local_assembly_path.twin
-			else
-					-- Look in EAC.
-				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
-			end
-			l_assembly_location.extend (l_assembly_directory)
+			l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
+			l_assembly_location.extend (l_ass.folder_name)
 			create dollar_path.make_from_string (l_assembly_location)
 			update_path
 
@@ -141,10 +127,6 @@ feature {NONE} -- Initialization
 			create overriden_classes.make (0)
 		ensure
 			cluster_name_set: cluster_name /= Void
-			assembly_name_set: not is_local implies (assembly_name = l_ass.name)
-			version_set: not is_local implies version = l_ass.version
-			culture: not is_local implies culture = l_ass.culture
-			public_key_token: not is_local implies public_key_token = l_ass.key
 		end
 		
 feature -- Comparison
@@ -158,7 +140,8 @@ feature -- Comparison
 				equal (prefix_name, other.prefix_name) and then
 				equal (version, other.version) and then
 				equal (culture, other.culture) and then
-				equal (public_key_token, other.public_key_token)
+				equal (public_key_token, other.public_key_token) and then 
+				equal (consumed_folder_name, other.consumed_folder_name)
 		end
 		
 feature -- Access
@@ -183,6 +166,9 @@ feature -- Access
 			
 	assembly_path: STRING
 			-- Path of current assembly if it is a local assembly.
+			
+	consumed_folder_name: STRING
+			-- name of consumed assembly folder in EAC
 
 	is_assembly: BOOLEAN is True
 			-- Is current an instance of ASSEMBLY_I?
@@ -203,6 +189,7 @@ feature -- Copy
 			referenced_assemblies := old_assembly.referenced_assemblies
 			is_local := old_assembly.is_local
 			assembly_path := old_assembly.assembly_path
+			consumed_folder_name := old_assembly.consumed_folder_name
 		end
 		
 feature -- Initialization
@@ -213,7 +200,7 @@ feature -- Initialization
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER
 			l_env: EIFFEL_ENV
-			l_assembly_location, l_local_path: PATH_NAME
+			l_assembly_location: PATH_NAME
 			l_path: STRING
 			l_types_file, l_reference_file: FILE_NAME
 			
@@ -296,38 +283,27 @@ feature -- Initialization
 			loop
 				l_cons_assembly := l_referenced_assemblies.assemblies.item (i)
 				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
-				l_assembly_location.extend (build_assembly_path (
-					l_cons_assembly.name, l_cons_assembly.version,
-					l_cons_assembly.culture, l_cons_assembly.key))
+				l_assembly_location.extend (l_cons_assembly.folder_name)
 				l_path := environ.interpreted_string (l_assembly_location)
 					
 				l_assembly ?= Universe.cluster_of_path (l_path)
 				if l_assembly = Void then
-					l_local_path := Local_assembly_path.twin
-					l_local_path.extend (build_assembly_path (
-						l_cons_assembly.name, l_cons_assembly.version,
-						l_cons_assembly.culture, l_cons_assembly.key))
-					l_assembly ?= Universe.cluster_of_path (l_local_path)
+						-- We did not find a global or a local matching assembly,
+						-- we are going to try to add it as a global assembly and
+						-- emit the missing XML.
+					l_assembly ?= Lace.old_universe.cluster_of_path (l_path)
 					if l_assembly = Void then
-							-- We did not find a global or a local matching assembly,
-							-- we are going to try to add it as a global assembly and
-							-- emit the missing XML.
-						l_assembly ?= Lace.old_universe.cluster_of_path (l_path)
-						if l_assembly = Void then
-							create l_assembly.make_from_consumed_assembly (l_cons_assembly)
-							Eiffel_system.add_sub_cluster (l_assembly)
-							Universe.insert_cluster (l_assembly)
-							l_assembly.import_data
-							universe.add_new_assembly_in_ace (l_assembly)
-						else
-							Eiffel_system.add_sub_cluster (l_assembly)
-							Universe.insert_cluster (l_assembly)
-						end
+						create l_assembly.make_from_consumed_assembly (l_cons_assembly)
+						Eiffel_system.add_sub_cluster (l_assembly)
+						Universe.insert_cluster (l_assembly)
+						l_assembly.import_data
+						universe.add_new_assembly_in_ace (l_assembly)
+					else
+						Eiffel_system.add_sub_cluster (l_assembly)
+						Universe.insert_cluster (l_assembly)
 					end
-					referenced_assemblies.put (l_assembly, i)
-				else
-					referenced_assemblies.put (l_assembly, i)
 				end
+				referenced_assemblies.put (l_assembly, i)
 				i := i + 1
 			end
 		end
@@ -369,7 +345,7 @@ feature -- Initialization
 					end
 					l_assemblies.forth
 				end
-				l_emitter.consume_local_assembly (l_names, Local_assembly_path)
+				l_emitter.consume_assembly_from_path (l_names)
 			end
 		end
 
@@ -389,7 +365,7 @@ feature {NONE} -- Implementation
 				create l_vd64
 				Error_handler.insert_error (l_vd64)
 			else
-				l_emitter.consume_gac_assembly (assembly_name, version, culture, public_key_token)
+				l_emitter.consume_assembly (assembly_name, version, culture, public_key_token)
 			end
 		end
 		
@@ -437,38 +413,10 @@ feature {NONE} -- Implementation
 						then
 							public_key_token := Void
 						end
+						consumed_folder_name := l_emitter.consumed_folder_name
 					end
 				end
 			end
-		end
-
-	build_assembly_path (a_name, a_version, a_culture, a_key: STRING): STRING is
-			-- Build directory name corresponding to given assembly description.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			l_version: STRING
-		do
-			create Result.make (a_name.count + 3)
-			Result.append (a_name)
-			Result.append_character ('-')
-			
-			if a_version /= Void then
-				l_version := a_version.twin
-				l_version.replace_substring_all (".", "_")
-				Result.append (l_version)
-			end
-			Result.append_character ('-')
-			
-			if a_culture /= Void and then not a_culture.is_equal (neutral_string) then
-				Result.append (a_culture)
-			end
-			if a_key /= Void and then not a_key.is_equal (null_key_string) then
-				Result.append_character ('-')
-				Result.append (a_key)
-			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Constants
@@ -484,5 +432,6 @@ feature {NONE} -- Constants
 invariant
 	cluster_name_not_void: cluster_name /= Void
 	assembly_name_not_void: assembly_name /= Void
+	consumed_folder_name_not_void: consumed_folder_name /= Void
 
 end -- class ASSEMBLY_I

@@ -17,7 +17,7 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
-			{ANY} gb_primitive_object_class_name
+			{ANY} gb_primitive_object_class_name, gb_parent_object_class_name
 		end
 	
 	GB_SHARED_OBJECT_EDITORS

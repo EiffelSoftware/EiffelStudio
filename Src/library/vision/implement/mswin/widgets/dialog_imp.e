@@ -8,19 +8,6 @@ class
   
 inherit 
 	WM_SHELL_IMP
-		rename
-			destroy as wm_shell_destroy,
-			realize as wm_shell_realize
-		redefine
-			x,
-			show,
-			default_style,
-			class_name,
-			unrealize,
-			set_default_position
-		end
-
-	WM_SHELL_IMP
 		redefine
 			x,
 			show,
@@ -30,9 +17,6 @@ inherit
 			realize,
 			unrealize,
 			set_default_position
-		select
-			destroy,
-			realize
 		end
 
 	DIALOG_I
@@ -86,7 +70,7 @@ feature -- Status setting
 					set_windows_sensitive
 				end
 			end
-			wm_shell_destroy (wid_list)
+			{WM_SHELL_IMP} Precursor (wid_list)
 		end
 
 	popdown is
@@ -118,7 +102,7 @@ feature -- Status setting
 		
 	realize is
 		do
-			wm_shell_realize
+			{WM_SHELL_IMP} Precursor
 				-- set initial focus
 			if initial_focus /= void then
 				initial_focus.wel_set_focus

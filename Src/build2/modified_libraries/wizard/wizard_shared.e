@@ -52,11 +52,10 @@ feature -- Access
 			-- for example, when starting a new wizard Build project.
 			-- Determined from the arguments which started the wizard.
 		do
-			if argument_array.count <= 2 then
+			if argument_array.count <= 4 then
 				Result := True
 			end
 		end
-		
 
 	wizard_source: STRING is
 			-- Wizard sources

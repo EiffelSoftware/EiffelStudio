@@ -14,7 +14,8 @@ inherit
 			save_cmd_holder, set_default_format, hole_button
 		end;
 	COMMAND;
-	SET_WINDOW_ATTRIBUTES
+	SET_WINDOW_ATTRIBUTES;
+	RESOURCE_USER
 
 creation
 
@@ -264,6 +265,22 @@ feature -- Window Implementation
 			is_a_shell: is_a_shell
 		do
 			eb_shell.set_x_y (new_x, new_y)
+		end;
+
+	set_height (new_height: INTEGER) is
+			-- Set height to `new_height'.
+		require
+			is_a_shell: is_a_shell
+		do
+			eb_shell.set_height (new_height)
+		end;
+
+	set_width (new_width: INTEGER) is
+			-- Set width to `new_width'.
+		require
+			is_a_shell: is_a_shell
+		do
+			eb_shell.set_width (new_width)
 		end;
 
 	destroy is

@@ -10,7 +10,8 @@ deferred class
 inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
-			interface
+			interface,
+			pixmaps_size_changed
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]

@@ -34,7 +34,7 @@ feature -- Creation
 
 feature -- Generation
 
-	generate (buffer: GENERATION_BUFFER; cnt : COUNTER) is
+	generate (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING) is
 			-- C code of Current descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -82,6 +82,7 @@ feature -- Generation
 						if re.is_generic then
 							buffer.putstring (gen_type);
 							buffer.putint (cnt.value);
+							buffer.putstring (id_string)
 							j := cnt.next
 						else           
 							buffer.putstring (null_init);
@@ -103,6 +104,7 @@ feature -- Generation
 							if ae.is_generic then
 								buffer.putstring (gen_type);
 								buffer.putint (cnt.value);
+								buffer.putstring (id_string)
 								j := cnt.next
 							else           
 								buffer.putstring (null_init);
@@ -122,7 +124,7 @@ feature -- Generation
 			end;
 		end;
 
-	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER) is
+	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER; id_string: STRING) is
 			-- C code of Current precompiled descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -146,8 +148,8 @@ feature -- Generation
 			from
 					-- Initialize all the constant string used during this generation
 				info := "].info = (uint16) ("
-				desc1 := "%Tdesc["
-				desc2 := ");%N%Tdesc["
+				desc1 := "%Tdesc" + id_string + "["
+				desc2 := ");%N%Tdesc" + id_string + "["
 				type := "].type = (int16) ("
 				gen_type := "].gen_type = "
 				non_generic := "(int16 *) 0;%N"
@@ -182,6 +184,7 @@ feature -- Generation
 						if re.is_generic then
 							buffer.putstring (gen_type_string);
 							buffer.putint (cnt.value);
+							buffer.putstring (id_string);
 							buffer.putstring (end_of_line)
 							j := cnt.next
 						else
@@ -209,6 +212,7 @@ feature -- Generation
 							if ae.is_generic then
 								buffer.putstring (gen_type_string);
 								buffer.putint (cnt.value);
+								buffer.putstring (id_string);
 								buffer.putstring (end_of_line)
 								j := cnt.next
 							else
@@ -236,7 +240,7 @@ feature -- Generation
 			end;
 		end;
 
-	generate_generic (buffer: GENERATION_BUFFER; cnt : COUNTER) is
+	generate_generic (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING) is
 			-- C code for generic types in Current descriptor unit
 		require
 			buffer_not_void: buffer /= Void
@@ -264,6 +268,7 @@ feature -- Generation
 					if re /= Void then
 						buffer.putstring (static_decl);
 						buffer.putint (cnt.value);
+						buffer.putstring (id_string);
 						j := cnt.next;
 						buffer.putstring (start_decl);
 						re.generate_cid (buffer, False);
@@ -273,6 +278,7 @@ feature -- Generation
 						if ae /= Void then
 							buffer.putstring (static_decl);
 							buffer.putint (cnt.value);
+							buffer.putstring (id_string);
 							j := cnt.next;
 							buffer.putstring (start_decl);
 							ae.generate_cid (buffer, False);

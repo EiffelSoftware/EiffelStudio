@@ -85,7 +85,10 @@ feature -- Status
 
 	file_name: STRING
 			-- Name of current PE file on disk.
-			
+
+	has_debug_info: BOOLEAN
+			-- Does current have some debug info?
+
 feature -- Access
 
 	pe_header: CLI_PE_FILE_HEADER
@@ -100,6 +103,10 @@ feature -- Access
 
 	code: MANAGED_POINTER
 			-- CLI code instruction stream.
+
+	debug_directory: CLI_DEBUG_DIRECTORY
+	debug_info: MANAGED_POINTER
+			-- Data for storing debug information in PE files.
 
 	cli_header: CLI_HEADER
 			-- Header for `meta_data'.
@@ -148,6 +155,21 @@ feature -- Settings
 			cli_header.set_entry_point_token (token)
 		end
 
+	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY; a_debug_info: MANAGED_POINTER) is
+			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
+			-- to `a_debug_info'.
+		require
+			a_cli_debug_directory_not_void: a_cli_debug_directory /= Void
+			a_debug_info_not_void: a_debug_info /= Void
+		do
+			debug_directory := a_cli_debug_directory
+			debug_info := a_debug_info
+			has_debug_info := True
+		ensure
+			debug_directory_set: debug_directory = a_cli_debug_directory
+			debug_info_set: debug_info = a_debug_info
+		end
+		
 feature -- Saving
 
 	save is
@@ -186,6 +208,14 @@ feature -- Saving
 				end
 				l_pe_file.put_data (method_writer.item, code_size)
 			end
+			
+			if has_debug_info then
+				l_pe_file.put_data (debug_directory.item, debug_directory.count)
+				l_pe_file.put_data (debug_info.item, debug_info.count)
+				create l_padding.make (padding (debug_directory.count + debug_info.count, 16))
+				l_pe_file.put_data (l_padding.item, l_padding.count)
+			end
+			
 			l_pe_file.put_data (emitter.assembly_memory.item, meta_data_size)
 			
 			if import_table_padding > 0 then
@@ -225,15 +255,20 @@ feature {NONE} -- Saving
 				code_size := method_writer.size
 			end
 
+			if has_debug_info then
+				debug_size := pad_up (debug_directory.count + debug_info.count, 16)
+			end
+
 				-- Real size of all components
 			headers_size := dos_header.count + pe_header.count +
 				optional_header.count + text_section_header.count +
 				reloc_section_header.count
 			
 			import_table_padding := pad_up (iat.count + cli_header.count + code_size +
-				meta_data_size, 16) - (iat.count + cli_header.count + code_size + meta_data_size)
+				debug_size + meta_data_size, 16) -
+				(iat.count + cli_header.count + code_size + debug_size + meta_data_size)
 
-			text_size := iat.count + cli_header.count + code_size + meta_data_size +
+			text_size := iat.count + cli_header.count + code_size + debug_size + meta_data_size +
 				import_table_padding + import_table.count + entry_data.count
 				
 			reloc_size := reloc_section.count
@@ -249,20 +284,20 @@ feature {NONE} -- Saving
 			code_rva := text_rva + iat.count + cli_header.count
 
 			import_directory_rva := text_rva + iat.count + cli_header.count + code_size + 
-				meta_data_size + import_table_padding
+				debug_size + meta_data_size + import_table_padding
 		end
 
 	update_rvas is
 			-- Update all PE files data structures with correct RVAs.
 		local
 			import_directory, reloc_directory,
-			iat_directory, cli_directory: CLI_DIRECTORY
+			iat_directory, cli_directory, l_debug_directory: CLI_DIRECTORY
 		do
 				-- Update optional header section.
 			optional_header.set_code_size (text_size_on_disk)
 			optional_header.set_reloc_size (reloc_size_on_disk)
 			optional_header.set_entry_point_rva (text_rva + iat.count +
-				cli_header.count + code_size + meta_data_size + import_table_padding +
+				cli_header.count + code_size + debug_size + meta_data_size + import_table_padding +
 				import_table.count + entry_data.start_position)
 			optional_header.set_base_of_code (text_rva)
 			optional_header.set_base_of_reloc (reloc_rva)
@@ -278,6 +313,19 @@ feature {NONE} -- Saving
 				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_basereloc)
 			reloc_directory.set_rva (reloc_rva)
 			reloc_directory.set_data_size (reloc_size)
+
+			if has_debug_info then
+				l_debug_directory := optional_header.directory (
+					feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
+				l_debug_directory.set_rva (text_rva + iat.count + cli_header.count + code_size)
+				l_debug_directory.set_data_size (debug_directory.count)
+				
+				debug_directory.set_address_of_data (text_rva + iat.count + cli_header.count +
+					code_size + debug_directory.count)
+				debug_directory.set_pointer_to_data (headers_size_on_disk + iat.count +
+					cli_header.count + code_size + debug_directory.count)
+				debug_directory.set_size (debug_info.count)
+			end
 			
 			iat_directory := optional_header.directory (
 				feature {CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
@@ -310,20 +358,22 @@ feature {NONE} -- Saving
 			
 				-- CLI header.
 			cli_header.meta_data_directory.set_rva_and_size (text_rva + iat.count +
-				cli_header.count + code_size, meta_data_size)
+				cli_header.count + code_size + debug_size, meta_data_size)
 			
 				-- Setting of import table.
 			iat.set_import_by_name_rva (text_rva + iat.count + cli_header.count + code_size +
-				meta_data_size + import_table_padding + import_table.Size_to_import_by_name)
+				+ debug_size + meta_data_size + import_table_padding +
+				import_table.Size_to_import_by_name)
 			import_table.set_rvas (text_rva, text_rva + iat.count + cli_header.count +
-				code_size + meta_data_size + import_table_padding)
+				code_size + debug_size + meta_data_size + import_table_padding)
 			
 				-- Entry point setting
 			entry_data.set_iat_rva (text_rva)
 			
 				-- Reloc section
 			reloc_section.set_data (text_rva + iat.count + cli_header.count + code_size +
-				meta_data_size + import_table_padding + import_table.count + entry_data.jump_size)
+				debug_size + meta_data_size + import_table_padding + import_table.count +
+				entry_data.jump_size)
 				
 				-- Set method RVAs now.
 			method_writer.update_rvas (emitter, code_rva)
@@ -362,7 +412,7 @@ feature {NONE} -- Implementation
 	text_rva, code_rva, reloc_rva: INTEGER
 			-- Size information about current PE.
 
-	meta_data_size, code_size: INTEGER
+	debug_size, meta_data_size, code_size: INTEGER
 
 	import_table_padding: INTEGER
 			-- Padding added before `import_table' so that it is aligned on 16 bytes boundaries.

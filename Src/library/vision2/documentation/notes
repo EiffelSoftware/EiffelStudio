@@ -1,0 +1,184 @@
+Looked at:
+	kernel
+	support
+	properties
+	widgets/uncommon_widgets
+	widgets/containers
+	widgets/primitives
+
+To look at:
+	widgets/ev_widget.e
+	widgets/common_dialogs
+	figures
+	items
+	events
+	pick_and_drop
+	
+To delete: 
+	ev_scale.e
+	ev_vertical_scale.e
+	ev_horizontal_scale.e
+	ev_rich_text.e
+	ev_spin_box.e
+	ev_composed_item.e
+
+To be revised:
+	ev_multi_column_list_row.e
+	ev_text.e
+	ev_text_format.e
+	ev_dynamic_table.e
+	ev_fixed.e
+	ev_password_field.e
+	ev_scrollable_text.e
+
+To do:
+	Connect close action for windows.
+
+Status:													
+.   not implemented
+o   incomplete
+*   complete
+X   complete but found to have bugs
+-   NA
+(Note the TEST column will be used later)
+
+														IF	WEL	GEL TEST
+  Base:										
+    kernel/ev_any.e										*	.	.	.
+    properties/ev_drawable.e							.	.	.	.
+    properties/ev_drawable_constants.e					.	.	.	.
+    properties/ev_fontable.e							.	.	.	.
+    properties/ev_pick_and_dropable.e					o	.	.	.
+    properties/ev_pixmapable.e							*	.	.	.
+    properties/ev_textable.e							*	.	.	.
+    support/ev_dynamic_list.e							.	.	.	.
+    widgets/ev_widget.e									o	.	.	.
+    widgets/primitives/ev_primitive.e					*	.	.	.
+    items/ev_item.e										*	.	.	.
+    items/ev_simple_item.e								o	.	.	.
+    items/ev_composed_item.e							o	.	.	.
+    items/ev_separator_item.e							o	.	.	.
+    support/ev_item_list.e								o	.	.	.
+	
+  Support:
+    support/ev_default_colors.e							*	.	.	.
+    kernel/ev_accelerator.e								*	.	.	.
+    kernel/ev_key_constants.e							o	.	.	.
+    kernel/ev_color.e									*	.	.	.
+    kernel/ev_coordinates.e								*	.	.	.
+    kernel/ev_cursor.e									o	.	.	.
+    kernel/ev_cursor_code.e								o	.	.	.
+    kernel/ev_font.e									o	.	.	.
+    kernel/ev_font_constants.e							o	.	.	.
+    kernel/ev_key.e										*	.	.	.
+    kernel/ev_rectangle.e								o	.	.	.
+    kernel/ev_timeout.e									*	.	.	.
+    support/ev_default_font.e							.	.	.	.
+    support/ev_radio_peer.e								*	.	.	.
+
+  System:
+    kernel/ev_application.e								o	.	.	.
+    kernel/ev_environment.e								*	.	.	.
+    kernel/ev_internal.e								o	.	.	.
+    widgets/uncommon_widgets/ev_screen.e				*	.	.	.
+
+  Buttons:
+    widgets/primitives/ev_button.e						*	.	*	.
+    widgets/primitives/ev_select_button.e				*	.	*	.
+    widgets/primitives/ev_check_button.e				*	.	*	.
+    widgets/primitives/ev_option_button.e				*	.	*	.
+    widgets/primitives/ev_radio_button.e				*	.	o	.
+    widgets/primitives/ev_toggle_button.e				*	.	*	.
+
+  Misc widgets:
+    widgets/primitives/ev_combo_box.e					*	o	o	.
+    widgets/primitives/ev_text_component.e				o	.	.	.
+    widgets/primitives/ev_text_field.e			 		*	*	*	.
+    widgets/primitives/ev_label.e						*	*	*	.
+    widgets/primitives/ev_drawing_area.e				*	o	o	.
+    widgets/primitives/ev_separator.e					*	*	*	.
+    widgets/primitives/ev_horizontal_separator.e		*	*	*	.
+    widgets/primitives/ev_vertical_separator.e			*	*	*	.
+    widgets/uncommon_widgets/ev_pixmap.e				o	o	o	.
+
+  Gauges:
+    widgets/primitives/ev_gauge.e						*	*	*	.
+    widgets/primitives/ev_spin_button.e					*	.	*	.
+    widgets/primitives/ev_progress_bar.e				*	*	*	.
+    widgets/primitives/ev_horizontal_progress_bar.e		*	*	*	.
+    widgets/primitives/ev_vertical_progress_bar.e		*	*	*	.
+    widgets/primitives/ev_scroll_bar.e					*	*	*	.
+    widgets/primitives/ev_horizontal_scroll_bar.e		*	*	*	.
+    widgets/primitives/ev_vertical_scroll_bar.e			*	*	*	.
+    widgets/primitives/ev_range.e						*	*	*	.
+    widgets/primitives/ev_horizontal_range.e			*	*	*	.
+    widgets/primitives/ev_vertical_range.e				*	*	*	.
+  
+  Dialogs:
+    widgets/common_dialogs/ev_directory_dialog.e		*	*	*	.
+    widgets/common_dialogs/ev_error_dialog.e			*	-	-	.
+    widgets/common_dialogs/ev_file_dialog.e				*	*	*	.
+    widgets/common_dialogs/ev_file_open_dialog.e		*	*	*	.
+    widgets/common_dialogs/ev_file_save_dialog.e		*	*	*	.
+    widgets/common_dialogs/ev_information_dialog.e		*	-	-	.
+    widgets/common_dialogs/ev_message_dialog.e			o	-	-	.
+    widgets/common_dialogs/ev_question_dialog.e			*	-	-	.
+    widgets/common_dialogs/ev_standard_dialog.e			*	-	-	.
+    widgets/common_dialogs/ev_warning_dialog.e			*	-	-	.
+    widgets/common_dialogs/ev_confirmation_dialog.e		*	-	-	.
+
+  Containers:
+    widgets/containers/ev_container.e					*	.	.	.
+    widgets/containers/ev_cell.e						*	.	.	.
+    widgets/containers/ev_aggregate_cell.e				o	.	.	.
+    widgets/containers/ev_frame.e						*	.	.	.
+    widgets/containers/ev_window.e						*	.	.	.
+    widgets/containers/ev_dialog.e						o	.	.	.
+    widgets/containers/ev_titled_window.e				o	.	.	.
+    widgets/containers/ev_viewport.e					*	.	.	.
+    widgets/containers/ev_scrollable_area.e				*	.	.	.
+    widgets/containers/ev_widget_list.e					*	.	.	.
+    widgets/containers/ev_widget_list_cursor.e			*	.	.	.
+    widgets/containers/ev_notebook.e					*	.	.	.
+    widgets/containers/ev_box.e							*	.	.	.
+    widgets/containers/ev_horizontal_box.e				*	.	.	.
+    widgets/containers/ev_vertical_box.e				*	.	.	.
+    widgets/containers/ev_aggregate_box.e				*	.	.	.
+    widgets/containers/ev_split_area.e					o	.	.	.
+    widgets/containers/ev_horizontal_split_area.e		o	.	.	.
+    widgets/containers/ev_vertical_split_area.e			o	.	.	.
+
+  Menu:
+    widgets/uncommon_widgets/ev_menu.e					*	o	o	.
+    widgets/uncommon_widgets/ev_menu_bar.e				*	*	*	.
+    widgets/containers/ev_menu_item_list.e				o	o	o	.
+    items/ev_menu_item.e								*	*	*	.
+    items/ev_check_menu_item.e							*	*	*	.
+    items/ev_menu_separator.e							*	*	*	.
+    items/ev_radio_menu_item.e							*	*	*	.
+    items/ev_select_menu_item.e							*	*	*	.
+
+  Status bar:
+    items/ev_status_bar_item.e							.	.	.	.
+    widgets/uncommon_widgets/ev_status_bar.e			.	.	.	.
+
+  Tool bar:
+    widgets/primitives/ev_tool_bar.e				 	o	.	.	.
+    items/ev_tool_bar_item.e							.	.	.	.
+    items/ev_tool_bar_button.e							.	.	.	.
+    items/ev_tool_bar_radio_button.e					.	.	.	.
+    items/ev_tool_bar_separator.e						.	.	.	.
+    items/ev_tool_bar_toggle_button.e					.	.	.	.
+
+  Tree:
+    widgets/primitives/ev_tree.e						o	.	.	.
+    support/ev_tree_item_holder.e						.	.	.	.
+    items/ev_tree_item.e								.	.	.	.
+
+  List:
+    widgets/primitives/ev_list.e						*	.	.	.
+    items/ev_list_item.e								*	.	.	.
+
+  Multi column list:
+    widgets/primitives/ev_multi_column_list.e			*	.	.	.
+    items/ev_multi_column_list_row.e					.	.	.	.

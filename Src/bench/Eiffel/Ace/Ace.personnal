@@ -1,4 +1,4 @@
-system es3
+system es4
 
 root
 
@@ -21,7 +21,7 @@ cluster
 		traversing:			"$BENCH/Eiffel/library/base/structures/traversing";
 		tree:				"$BENCH/Eiffel/library/base/structures/tree";
 
--- ES3 SPECIFIC CLUSTERS
+-- ES4 SPECIFIC CLUSTERS
 
 		liman_client:		"$BENCH/Eiffel/limand/client";
 		liman_shared:		"$BENCH/Eiffel/limand/shared";
@@ -96,7 +96,6 @@ cluster
 -- SHARED BETWEEN COMPILER AND INTERFACE:
 
 		clicking:			"$BENCH/Eiffel/shared/clicking";
-		communications:		"$BENCH/Eiffel/shared/es3_bench";
 		stones:				"$BENCH/Eiffel/shared/stones";
 		tops:				"$BENCH/Eiffel/shared/tops";
 

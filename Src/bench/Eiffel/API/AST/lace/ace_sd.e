@@ -191,7 +191,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				Result.empty
 			then
 					-- For the melt_only version, if no precompiled project is
-					-- specified, return $EIFFEL3/precomp/spec/$PLATFORM/base
+					-- specified, return $EIFFEL4/precomp/spec/$PLATFORM/base
 				Result.extend (Default_precompiled_base_location)
 			end
 		ensure
@@ -230,7 +230,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				Result.empty
 			then
 					-- For the melt_only version, if no precompiled project is
-					-- specified, return $EIFFEL3/precomp/spec/$PLATFORM/base
+					-- specified, return $EIFFEL4/precomp/spec/$PLATFORM/base
 				!! d_precompiled_option;
 				d_precompiled_option.set_default_base_location
 				Result.put (d_precompiled_option, Default_precompiled_base_location)

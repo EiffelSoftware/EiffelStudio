@@ -23,7 +23,7 @@ feature -- Initialization
 			new_name_not_void: new_name /= Void
 		do
 			application_name := new_name;
-			Eiffel3 := get ("EIFFEL3");
+			Eiffel4 := get ("EIFFEL4");
 			Platform := get ("PLATFORM");
 			Home := get ("HOME");
 			Eifdefaults := get ("EIF_DEFAULTS")
@@ -35,10 +35,10 @@ feature -- File names
 
 	system_general: FILE_NAME is
 			-- General system level resource specification file
-			-- ($EIFFEL3/eifinit/application_name/general)
+			-- ($EIFFEL4/eifinit/application_name/general)
 		do
-			if Eiffel3 /= Void then
-				!! Result.make_from_string (Eiffel3);
+			if Eiffel4 /= Void then
+				!! Result.make_from_string (Eiffel4);
 				Result.extend_from_array (<<Eifinit, application_name>>);
 				Result.set_file_name (General);
 			end
@@ -46,10 +46,10 @@ feature -- File names
 
 	system_specific: FILE_NAME is
 			-- Platform specific system level resource specification file
-			-- ($EIFFEL3/eifinit/application_name/spec/$PLATFORM)
+			-- ($EIFFEL4/eifinit/application_name/spec/$PLATFORM)
 		do
-			if Eiffel3 /= Void and Platform /= Void then
-				!! Result.make_from_string (Eiffel3);
+			if Eiffel4 /= Void and Platform /= Void then
+				!! Result.make_from_string (Eiffel4);
 				Result.extend_from_array (<<Eifinit, application_name, Spec>>);
 				Result.set_file_name (Platform);
 			end
@@ -105,7 +105,7 @@ feature -- File names
 
 feature {NONE} -- Implementation
 
-	Eiffel3: STRING;
+	Eiffel4: STRING;
 	Platform: STRING;
 	Home: STRING;
 	Eifdefaults: STRING;

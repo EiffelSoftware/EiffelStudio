@@ -77,7 +77,7 @@ feature -- Access
 	Default_unknown_name: FILE_NAME is
 			-- *** FIXME to be added to eiffel_env
 		once
-			!! Result.make_from_string (Eiffel3_dir_name);
+			!! Result.make_from_string (Eiffel_installation_dir_name);
 			Result.extend_from_array (<<"bench", "help", "defaults">>);
 			Result.set_file_name ("unknown");
 		end;

@@ -30,7 +30,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 
 	set_default_base_location is
 			-- For the melt_only version, if no precompiled project is
-			-- specified, set precomp to $EIFFEL3/precomp/spec/$PLATFORM/base.
+			-- specified, set precomp to $EIFFEL4/precomp/spec/$PLATFORM/base.
 		local
 			id_sd: ID_SD
 		do

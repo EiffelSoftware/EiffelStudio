@@ -1,4 +1,4 @@
-system es3
+system es4
 
 root
 
@@ -6,38 +6,38 @@ root
 
 default
 
-	--debug ("ACTIVITY")
+--	debug ("ACTIVITY")
 
 cluster
 
 	-- EiffelBase
 
-		kernel:				"$EIFFEL3/library/base/kernel";
-		support:			"$EIFFEL3/library/base/support";
-		access:				"$EIFFEL3/library/base/structures/access";
-		cursors:			"$EIFFEL3/library/base/structures/cursors";
-		dispenser:			"$EIFFEL3/library/base/structures/dispenser";
-		list:				"$EIFFEL3/library/base/structures/list";
-		set:				"$EIFFEL3/library/base/structures/set";
-		sort:				"$EIFFEL3/library/base/structures/sort";
-		storage:			"$EIFFEL3/library/base/structures/storage";
-		table:				"$EIFFEL3/library/base/structures/table";
-		traversing:			"$EIFFEL3/library/base/structures/traversing";
-		tree:				"$EIFFEL3/library/base/structures/tree";
+		kernel:				"$EIFFEL4/library/base.old/kernel";
+		support:			"$EIFFEL4/library/base.old/support";
+		access:				"$EIFFEL4/library/base.old/structures/access";
+		cursors:			"$EIFFEL4/library/base.old/structures/cursors";
+		dispenser:			"$EIFFEL4/library/base.old/structures/dispenser";
+		list:				"$EIFFEL4/library/base.old/structures/list";
+		set:				"$EIFFEL4/library/base.old/structures/set";
+		sort:				"$EIFFEL4/library/base.old/structures/sort";
+		storage:			"$EIFFEL4/library/base.old/structures/storage";
+		table:				"$EIFFEL4/library/base.old/structures/table";
+		traversing:			"$EIFFEL4/library/base.old/structures/traversing";
+		tree:				"$EIFFEL4/library/base.old/structures/tree";
 
 	-- EiffelNet
 
-		abstract_socket:	"$EIFFEL3/library/net/abstract/socket";
-		net_socket:			"$EIFFEL3/library/net/network/socket";
-		local_socket:		"$EIFFEL3/library/net/local/socket";
+		abstract_socket:	"$EIFFEL4/library/net/abstract/socket";
+		net_socket:			"$EIFFEL4/library/net/network/socket";
+		local_socket:		"$EIFFEL4/library/net/local/socket";
 
-		polling:			"$EIFFEL3/library/net/polling";
+		polling:			"$EIFFEL4/library/net/polling";
 
-		abstract_client_server:	"$EIFFEL3/library/net/abstract/client_server";
-		net_client_server:		"$EIFFEL3/library/net/network/client_server";
-		local_client_server:	"$EIFFEL3/library/net/local/client_server";
+		abstract_client_server:	"$EIFFEL4/library/net/abstract/client_server";
+		net_client_server:		"$EIFFEL4/library/net/network/client_server";
+		local_client_server:	"$EIFFEL4/library/net/local/client_server";
 
--- ES3 SPECIFIC CLUSTERS
+-- ES4 SPECIFIC CLUSTERS
 
 		liman_abstract:		"$BENCH/Eiffel/limand/abstract";
 		liman_client:		"$BENCH/Eiffel/limand/client";
@@ -164,8 +164,8 @@ external
 		"$(BENCH)/C/platform/libplatform.a",
 		"$(BENCH)/C/liman/lm/liblm.a",
 		"$(BENCH)/C/liman/shared/libshared.a",
-		"$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libwkbench.a",
+		"$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libwkbench.a",
 		"$(BENCH)/C/idrs/libidr.a",
-		"$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
 
 end

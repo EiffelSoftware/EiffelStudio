@@ -1,4 +1,4 @@
-system es3
+system es4
 
 root
 
@@ -8,20 +8,20 @@ cluster
 
 -- STANDARD STRUCTURES:
 
-		kernel:				"$EIFFEL3/library/base/kernel";
-		support:			"$EIFFEL3/library/base/support";
-		access:				"$EIFFEL3/library/base/structures/access";
-		cursors:			"$EIFFEL3/library/base/structures/cursors";
-		dispenser:			"$EIFFEL3/library/base/structures/dispenser";
-		list:				"$EIFFEL3/library/base/structures/list";
-		set:				"$EIFFEL3/library/base/structures/set";
-		sort:				"$EIFFEL3/library/base/structures/sort";
-		storage:			"$EIFFEL3/library/base/structures/storage";
-		table:				"$EIFFEL3/library/base/structures/table";
-		traversing:			"$EIFFEL3/library/base/structures/traversing";
-		tree:				"$EIFFEL3/library/base/structures/tree";
+		kernel:				"$EIFFEL4/library/base/kernel";
+		support:			"$EIFFEL4/library/base/support";
+		access:				"$EIFFEL4/library/base/structures/access";
+		cursors:			"$EIFFEL4/library/base/structures/cursors";
+		dispenser:			"$EIFFEL4/library/base/structures/dispenser";
+		list:				"$EIFFEL4/library/base/structures/list";
+		set:				"$EIFFEL4/library/base/structures/set";
+		sort:				"$EIFFEL4/library/base/structures/sort";
+		storage:			"$EIFFEL4/library/base/structures/storage";
+		table:				"$EIFFEL4/library/base/structures/table";
+		traversing:			"$EIFFEL4/library/base/structures/traversing";
+		tree:				"$EIFFEL4/library/base/structures/tree";
 
--- ES3 SPECIFIC CLUSTERS
+-- ES4 SPECIFIC CLUSTERS
 
  
         liman_abstract:     "$BENCH/Eiffel/limand/abstract";
@@ -163,48 +163,48 @@ cluster
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
 	-- Vision
-		graph_widgets:		"$EIFFEL3/library/vision/implement/motif";
-		graph_toolkit:		"$EIFFEL3/library/vision/implement/toolkit";
-		graph_commands:		"$EIFFEL3/library/vision/oui/context_data";
-		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
-		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
-		graph_tools:		"$EIFFEL3/library/vision/tools";
+		graph_widgets:		"$EIFFEL4/library/vision/implement/motif";
+		graph_toolkit:		"$EIFFEL4/library/vision/implement/toolkit";
+		graph_commands:		"$EIFFEL4/library/vision/oui/context_data";
+		graph_kernel:		"$EIFFEL4/library/vision/oui/kernel";
+		graph_oui_widgets:	"$EIFFEL4/library/vision/oui/widgets";
+		graph_tools:		"$EIFFEL4/library/vision/tools";
 
 	-- Mel
 
-		m1:					"$EIFFEL3/library/mel/callback_structs";
-		m2:					"$EIFFEL3/library/mel/constants";
-		m3:					"$EIFFEL3/library/mel/events";
-		m4:					"$EIFFEL3/library/mel/extra";
-		m5:					"$EIFFEL3/library/mel/gadgets";
-		m6:					"$EIFFEL3/library/mel/implementation";
-		m7:					"$EIFFEL3/library/mel/kernel";
-		m8:					"$EIFFEL3/library/mel/resources";
-		m9:					"$EIFFEL3/library/mel/widgets";
+		m1:					"$EIFFEL4/library/mel/callback_structs";
+		m2:					"$EIFFEL4/library/mel/constants";
+		m3:					"$EIFFEL4/library/mel/events";
+		m4:					"$EIFFEL4/library/mel/extra";
+		m5:					"$EIFFEL4/library/mel/gadgets";
+		m6:					"$EIFFEL4/library/mel/implementation";
+		m7:					"$EIFFEL4/library/mel/kernel";
+		m8:					"$EIFFEL4/library/mel/resources";
+		m9:					"$EIFFEL4/library/mel/widgets";
 
 	-- Net
-		abstract_socket:        "$EIFFEL3/library/net/abstract/socket";
-		net_socket:             "$EIFFEL3/library/net/network/socket";
-		local_socket:           "$EIFFEL3/library/net/local/socket";
-		polling:                "$EIFFEL3/library/net/polling";
-		abstract_client_server: "$EIFFEL3/library/net/abstract/client_server";
-		net_client_server:      "$EIFFEL3/library/net/network/client_server";
-		local_client_server:    "$EIFFEL3/library/net/local/client_server";
+		abstract_socket:        "$EIFFEL4/library/net/abstract/socket";
+		net_socket:             "$EIFFEL4/library/net/network/socket";
+		local_socket:           "$EIFFEL4/library/net/local/socket";
+		polling:                "$EIFFEL4/library/net/polling";
+		abstract_client_server: "$EIFFEL4/library/net/abstract/client_server";
+		net_client_server:      "$EIFFEL4/library/net/network/client_server";
+		local_client_server:    "$EIFFEL4/library/net/local/client_server";
 
 external
 
 	include_path:
 		"\$(BENCH)/C/parsing/shared",
-		"\$(EIFFEL3)/library/mel/Clib";
+		"\$(EIFFEL4)/library/mel/Clib";
 
 	object:
 		"$(BENCH)/C/parsing/eiffel/libweiffel.a",
 		"$(BENCH)/C/parsing/lace/liblace.a",
 		"$(BENCH)/C/parsing/shared/libparsing.a",
 		"$(BENCH)/C/platform/libplatform.a",
-		"$(EIFFEL3)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-		"$(EIFFEL3)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
-		"$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a",
+		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
+		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a",
 		"$(BENCH)/C/ipc/ewb/libewb.a",
 		"$(BENCH)/C/ipc/shared/libipc.a",
 		"$(BENCH)/C/liman/lm/liblm.a",

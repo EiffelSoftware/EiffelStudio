@@ -3,6 +3,7 @@ indexing
 		"Test cases that consist of a complete test and produce a result"
 
 	status:	"See note at end of class"
+	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -54,7 +55,7 @@ feature -- Status report
 	has_expected_result: BOOLEAN is
 			-- Is there an expected result?
 		do
-			Result := expected_result /= Void
+			Result := exception_expected xor expected_result /= Void
 		end
 
 feature -- Status setting
@@ -67,7 +68,7 @@ feature -- Status setting
 				expected_result := r.has_passed
 			end
 		ensure
-			result_setting_ok: exception_expected xor expected_result /= Void
+			result_setting_ok: has_expected_result
 		end
 
 	clear_expected_result is
@@ -127,10 +128,23 @@ feature {NONE} -- Implementation
 			end
 			if not has_current_result then
 				test_results.add_failure (No_tests_text)
-			elseif has_expected_result and not is_current_exception then
-				res := has_current_passed
-				test_results.clear_current_result
-				assert (equal (res, expected_result.item), Expected_result_text)
+			elseif has_expected_result then
+				if expected_result /= Void then
+					res := has_current_passed
+					test_results.clear_current_result
+					assert (equal (res, expected_result.item), 
+						Expected_result_text)
+				elseif exception_expected then
+					res := is_current_exception
+					test_results.clear_current_result
+					assert (equal (res, exception_expected), 
+						Expected_result_text)
+				else
+					check
+						impossible_case: False
+							-- This case cannot happen.
+					end
+				end
 			end
 			test_results.set_execution_time (diff)
 				check
@@ -143,11 +157,10 @@ end -- class TEST_CASE
 
 --|----------------------------------------------------------------
 --| EiffelTest: Reusable components for developing unit tests.
---| Copyright (C) 2000 Interactive Software Engineering Inc (ISE).
---| EiffelTest may be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
+--| Copyright (C) 2000 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
 --| ISE Building, 2nd floor

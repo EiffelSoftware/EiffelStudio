@@ -698,7 +698,10 @@ feature {PERM_WIND_C}
 				abort_button_release := False
 				set_cursor (context.is_movable)
 				if context /= previous_context then
-					if previous_context /= Void and then previous_context.is_selectionable then
+					if previous_context /= Void
+						and then not previous_context.widget.destroyed
+						and then previous_context.is_selectionable
+					then
 						previous_context.set_selected (False)
 						previous_context.widget.set_cursor (cursors.arrow_cursor)
 							if previous_context.widget.managed then

@@ -245,7 +245,7 @@ public class Core : ICore
 					Globals.ClassTable [TypeID].SetDefaultConstructor(
 						ExternalType.GetConstructor(
 							BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance,
-							null, Globals.EmptyArrayTypes, null ));
+							null, Type.EmptyTypes, null ));
 			}
 			else
 			{
@@ -867,8 +867,7 @@ public class Core : ICore
 		try
 		{
 			EntryType = module.DefineType( Globals.ClassTable [TypeID].Name + "_" + Globals.EntryTypeName );
-			Type [] ArgumentTypes = new Type [0];//{ typeof( string[] )};
-			EntryPoint = EntryType.DefineMethod( Globals.EntryPointName, MethodAttributes.Public | MethodAttributes.Static, Type.GetType( "void" ), ArgumentTypes );
+			EntryPoint = EntryType.DefineMethod( Globals.EntryPointName, MethodAttributes.Public | MethodAttributes.Static, Type.GetType( "void" ), Type.EmptyTypes );
 			Generator = EntryPoint.GetILGenerator();
 			RealEntryPoint =(( EiffelMethod )( Globals.ClassTable [TypeID].FeatureIDTable [FeatureID] )).Builder;
 			if( RealEntryPoint == null )

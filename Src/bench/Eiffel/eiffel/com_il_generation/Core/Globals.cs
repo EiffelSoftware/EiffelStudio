@@ -58,9 +58,6 @@ internal class Globals
 	// Eiffel `Result' keyword
 	internal static String ResultName = "Result";
 
-	// Empty Type array
-	internal static Type[] EmptyArrayTypes = new Type[0];
-
 	// Store/Retrieve I1 element type to/from array
 	internal static int IlI1 = 30;
 

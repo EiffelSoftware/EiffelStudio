@@ -13,7 +13,7 @@ inherit
 			copy, is_equal
 		redefine
 			is_multi_type, deep_actual_type, is_equivalent,
-			dump, ext_append_to, internal_conform_to, type_i,
+			dump, ext_append_to, conform_to, type_i,
 			create_info, instantiation_of
 		end
 
@@ -132,8 +132,8 @@ feature {COMPILER_EXPORTER}
 			Result := last_type.instantiation_of (type, a_class_id)
 		end
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does Current conform to `other' ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 			-- The rule is the following:
 			-- <<e1,...,en>> conforms to A means that:
 			-- if A is an ARRAY of T type, every element type of current conforms
@@ -141,7 +141,7 @@ feature {COMPILER_EXPORTER}
 			-- Otherwise, computed type of Current conforms to A.
 		local
 			gen_type: GEN_TYPE_A
-			generic_param, type_a: TYPE_A
+			generic_param, type_a, l_ref: TYPE_A
 			i, nb: INTEGER
 		do
 			nb := count
@@ -159,9 +159,13 @@ feature {COMPILER_EXPORTER}
 						(i > count) or else (not Result)
 					loop
 						type_a := item (i)
-						Result := type_a.conform_to (generic_param) 
-									and then not (type_a.is_true_expanded 
-									and not generic_param.is_true_expanded)
+						Result := type_a.conform_to (generic_param) or else
+							type_a.convert_to (context.current_class, generic_param)
+						if not Result and not generic_param.is_expanded and type_a.is_expanded then
+							l_ref := type_a.reference_actual_type
+							Result := type_a.convert_to (context.current_class, l_ref) and
+								l_ref.conform_to (generic_param)
+						end
 						i := i + 1
 					end
 				end

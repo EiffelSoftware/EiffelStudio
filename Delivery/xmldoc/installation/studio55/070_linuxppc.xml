@@ -1,74 +1,120 @@
-<document title="EiffelStudio 5.4 for LinuxPPC">
+<document title="EiffelStudio 5.5 for LinuxPPC">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
 		<paragraph>
 			<table>
-				<row><cell>Computer/Processor</cell><cell>Power	PC with 300 MHz or higher Pentium II class processor or equivalent recommended (single or dual processor system)</cell></row>
-				<row><cell>Operating System</cell><cell>glibc 2.1.3 or above and GTK+ 1.2.7 (GTK+ 1.2.9 source is included with EiffelStudio)</cell></row>
-				<row><cell>Memory</cell><cell>128 MB of RAM (256Mb recommended)</cell></row>
-				<row><cell>Hard Disk</cell><cell>300Mb uncompressed hard disk space (500Mb recommended) </cell></row>
-				<row><cell>Drive</cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads)</cell></row>
-				<row><cell>Display</cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor</cell></row>
-				<row><cell>Peripherals</cell><cell>Keyboard and mouse or compatible pointing device</cell></row>
+				<row><cell><bold>Computer/Processor</bold></cell><cell>PowerPC.</cell></row>
+				<row><cell><bold>Operating System</bold></cell><cell>Yellow Dog Linux 4.0 with either Gnome 2.6 or GTK+ 2.4.</cell></row>
+				<row><cell><bold>Memory</bold></cell><cell>256 MB of RAM (512Mb recommended).</cell></row>
+				<row><cell><bold>Hard Disk</bold></cell><cell>400Mb uncompressed hard disk space (700Mb recommended).</cell></row>
+				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads).</cell></row>
+				<row><cell><bold>Display</bold></cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor.</cell></row>
+				<row><cell><bold>Peripherals</bold></cell><cell>Keyboard and mouse or compatible pointing device.</cell></row>
 			</table>
 		</paragraph>
-		<heading><size>2</size>Installation</heading>
-		<paragraph>The installation of the files is done by copying the files from the delivery medium to the hard disk, for example to directory /usr/local/Eiffel54.</paragraph>
-
-		<paragraph>If the delivery medium is a gzipped tar file, you need to untar the file to the desired location. For example:</paragraph>
+		<heading><size>2</size>Checking your environment</heading>
+		<paragraph>EiffelStudio 5.5 requires GTK+ 2.4.0 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>pkg-config --modversion gtk+-2.0</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 2.4.0 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 2.4.0.</paragraph>
+		<heading><size>2</size>Installing the Free Edition</heading>
+		<paragraph>After downloading the <bold>Eiffel55.tgz</bold> installation package, you should manually extract its contents to your hard drive. For example, you can extract it into /usr/local using the following command (assuming that you have permission to /usr/local and that the file Eiffel55.tgz was saved in /tmp):</paragraph>
 		<code_block>
-	cd /usr/local
-	gunzip -c _delivery_file.tar.gz | tar xvf -</code_block>
+cd /usr/local
+tar xvfz /tmp/Eiffel55.tgz</code_block>
 
-		<paragraph>This will install EiffelStudio 5.4 in to /usr/local/Eiffel54.</paragraph>
+		<paragraph>This will install EiffelStudio 5.5 files into /usr/local/Eiffel55.</paragraph>
+		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
+			<list ordered="false">
+				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel55</item>
+				<item><bold>ISE_PLATFORM</bold> to linuxppc</item>
+			</list>
+		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
+		</paragraph>
+		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
+export ISE_EIFFEL=/usr/local/Eiffel55
+export ISE_PLATFORM=linuxppc
+export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
+		</paragraph>
+		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
+setenv ISE_EIFFEL /usr/local/Eiffel55
+setenv ISE_PLATFORM linuxppc
+set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
+		</paragraph>
+		<paragraph>Once this is done you can jump to the "Using EiffelStudio" section at the end of this document.</paragraph>
 
-		<heading><size>3</size>Setting the Environment Variables</heading>
+		<heading><size>2</size>Installing the University Edition</heading>
+		<paragraph>Insert the CD into your CD-ROM drive. You should manually extract its contents to your hard drive. For example, you can extract it in /usr/local using the following command (assuming that you have permission to /usr/local and that the CD is mounted on /mnt/cdrom):</paragraph>
+		<code_block>cd /usr/local
+cp -r /mnt/cdrom/Eiffel55 .</code_block>
+		
+		<paragraph>This will install the EiffelStudio 5.5 files into /usr/local/Eiffel55.</paragraph>
+		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
+			<list ordered="false">
+				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel55</item>
+				<item><bold>ISE_PLATFORM</bold> to linuxppc</item>
+			</list>
+		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
+		</paragraph>
+		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
+export ISE_EIFFEL=/usr/local/Eiffel55
+export ISE_PLATFORM=linuxppc
+export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
+		</paragraph>
+		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
+setenv ISE_EIFFEL /usr/local/Eiffel55
+setenv ISE_PLATFORM linuxppc
+set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
+		</paragraph>
+		<paragraph>Once this is done you can jump to the "Using EiffelStudio" section at the end of this document.</paragraph>
 
-		<paragraph>Set environment variable ISE_EIFFEL to the Eiffel54 directory you want to run Eiffel from. This directory can be on your hard disk (/usr/local/Eiffel54) 
-or on CD-ROM.</paragraph>
+		<heading><size>2</size>Installing the Enterprise Edition</heading>
+		<paragraph>Insert the CD into your CD-ROM drive. You should manually extract its contents to your hard drive. For example you can extract it in /usr/local using the following command (assuming that you have permission to /usr/local and that the CD is mounted on /mnt/cdrom):</paragraph>
+		<code_block>cd /usr/local
+cp -r /mnt/cdrom/Eiffel55 .</code_block>
+		
+		<paragraph>This will install the EiffelStudio 5.5 files into /usr/local/Eiffel55.</paragraph>
+		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
+			<list ordered="false">
+				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel55</item>
+				<item><bold>ISE_PLATFORM</bold> to linuxppc</item>
+			</list>
+		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
+		</paragraph>
+		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
+export ISE_EIFFEL=/usr/local/Eiffel55
+export ISE_PLATFORM=linuxppc
+export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
+		</paragraph>
+		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
+setenv ISE_EIFFEL /usr/local/Eiffel55
+setenv ISE_PLATFORM linuxppc
+set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
+		<paragraph>Once the files are copied and once the environment variables are properly set, you need to register EiffelStudio. To do so type the following commands:</paragraph>
+		<code_block>cd $ISE_EIFFEL
+./register</code_block>
+		
+		<paragraph>A dialog asking for your <bold>Username</bold> and <bold>CD Key</bold> should appear as it does below:</paragraph><paragraph><alignment>center</alignment><image><url>../../images/installation/55/unix_setup.png</url><alt_text>Setup dialog</alt_text></image></paragraph>
+			<paragraph>Enter the information located inside the box that contains your copy of the EiffelStudio Enterprise Edition. Once the information is correct, the <bold>Register</bold> button will be enabled. Click <bold>Register</bold> to actually register EiffelStudio.</paragraph>
+			<paragraph>The first time you launch EiffelStudio, you will be asked for an activation key through the following dialog:</paragraph>
+			<paragraph><alignment>center</alignment><image><url>../../images/installation/55/unix_registration.png</url><alt_text>Registration dialog</alt_text></image></paragraph>
+			<paragraph>By clicking on the <link><url>http://activate.eiffel.com</url><label>http://activate.eiffel.com</label></link> URL, a new web browser will appear with the requested fields automatically filled in with the appropriate information. Simply click <bold>Activate</bold> and a new page with an activation code will appear. Copy and paste the activation code in the first field and the <bold>Activate</bold> button should be enabled to let you activate your copy.</paragraph><paragraph> You can activate your copy up to three times. Once you have reached this threshold and need to reinstall your copy, contact Eiffel Software to request one more activation.</paragraph>
+			<paragraph>If no web broswer appears, it is most likely because netscape is not installed on your machine or is not in your path. Instead you should manually launch a new web browser and go to the page <link><url>http://activate.eiffel.com</url><label>http://activate.eiffel.com</label></link> and enter the information manually. Then follow the above instructions as if the browser had been properly launched.</paragraph>
+			<paragraph>You may receive the following dialog when launching EiffelStudio:</paragraph>
+			<paragraph><alignment>center</alignment><image><url>../../images/installation/55/unix_registration_error.png</url><alt_text>Registration incomplete</alt_text></image></paragraph>
+			<paragraph>This probably means that the <bold>register</bold> program was not launched or did not succeed in storing data to the following file $<bold>ISE_EIFFEL</bold>/install/limand/.ec_license. To solve this, rerun the <bold>register</bold> program with a user account that has permissions to write at $<bold>ISE_EIFFEL</bold>/install/limand and enter your <bold>Username</bold> and <bold>CD Key</bold>.</paragraph>
+		<paragraph>Once this is done you can jump to the next section "Using EiffelStudio."</paragraph>
+		</paragraph>
+		
+						
+		<heading><size>2</size>Using EiffelStudio</heading>
+		<heading><size>3</size>Setting up the examples</heading>
+		<paragraph>Most of the examples require that you have a precompiled version of EiffelBase. To build it, simply run the script $<bold>ISE_EIFFEL</bold>/make_install after having completed all of the above steps. This script also prompts you to precompile EiffelVision which is not required to compile the examples and you can safely skip this step if you do not intend to use a precompiled of EiffelVision.</paragraph>
 
-		<paragraph>Set your ISE_PLATFORM environment variable to specify your platform. For example for Linux computers, the value should be `linux-glibc2.1'.</paragraph>
-	
-		<paragraph>Add the following directory to your path: $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin.</paragraph>
+		<heading><size>3</size>Starting EiffelStudio</heading>
 
-		<heading><size>3</size>Setting Up the Examples</heading>
-
-		<paragraph>Most of the examples requires that you have a precompiled version of EiffelBase. 
-To build it, simply run the script $ISE_EIFFEL/make_install after having done all 
-the above steps. This script also prompts you to precompile EiffelVision2 which 
-is not required to compile the examples and you can safely skip this step if you 
-do not intend to use a precompiled of EiffelVision2.</paragraph>
-
-		<heading><size>3</size>Gtk+</heading>
-
-		<paragraph>EiffelStudio 5.4 requires Gtk+ 1.2.8 or above to function correctly. You can check 
-that you have this installed correctly by typing `gtk-config --version'. If the 
-reply is not `1.2.*' then gtk+ is not installed correctly. If the reply is 1.2.* 
-you can skip the rest of this section.</paragraph>
-
-		<paragraph>Included with the delivery is the source code for Gtk+, to install 
-Gtk+ on your system look in the $ISE_EIFFEL/library/gel directory. There 
-Gtk+ you can
-conveniently type `Make' and then Gtk+ will be compiled, you will then need to 
-type 'Make install' (you may need to be Root to do this) to copy over the gtk+ 
-configuration files required for C compilation.</paragraph>
-
-		<paragraph>You will then need to set/update the LD_LIBRARY_PATH environment variable to allow the linker to find the gtk libraries. This should be set to include the 
-$ISE_EIFFEL/library/gel/gtk/lib directory. If you have a version of gtk that 
-is below 1.2.6 you will have to make sure that this directory comes before the 
-directory where the existing gtk+ library files are based.</paragraph>
-
-		<heading><size>3</size>EiffelStudio</heading>
-
-		<paragraph>Now everything should be Ok and you should be able to run the compiler. Launch 'estudio' for the interactive graphical user interface of the compiler of 'ec' 
-for command line interface.</paragraph>
-
+		<paragraph>Now everything should be properly installed and you should be able to run the compiler. Launch <bold>estudio</bold> for the interactive graphical user interface of the compiler, or launch <bold>ec</bold> for the command line interface. If you are a new user to EiffelStudio, we recommend that you follow <link><url>../../general/guided_tour/studio/index.xml</url><label>the guided tour</label></link>.</paragraph>
 
 		<heading><size>3</size>EiffelStudio Appearance</heading>
 
-		<paragraph>EiffelStudio for Unix uses the gtk+ theme engine to allow for custom appearance such as changing the default font size and color of windows, etc. If you do not 
-have a theme manager (such as that provided with Gnome) you can copy the .gtkrc file from $ISE_EIFFEL/eifinit/studio/spec/gtk directory to your $HOME directory. You can then edit the XLFD in the .gtkrc file to alter the default size of the fonts that Studio employs. The current font point size is 10, recommended values are 10, 12 or 14. This will install Eiffel 5 in to /usr/local/Eiffel5x.</paragraph>
-		<paragraph><link><label>Online Support</label><url>http://www.eiffel.com/general/general_feedback.html</url></link></paragraph>
+		<paragraph>EiffelStudio for Unix uses the GTK+ theme engine to allow for custom appearance such as changing the default font size and color of windows, etc. If you do not have a theme manager (such as that provided with Gnome) you can copy the .gtkrc-2.0 file from $<bold>ISE_EIFFEL</bold>/eifinit/studio/spec/gtk directory to your $<bold>HOME</bold> directory.</paragraph>
 	</paragraph>
 </document>

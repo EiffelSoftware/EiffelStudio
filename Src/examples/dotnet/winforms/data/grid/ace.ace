@@ -1,5 +1,5 @@
 system
-	"data_grid"
+	data_grid
 
 root
 	DATA_GRID: make
@@ -12,6 +12,8 @@ default
 	debug (no)
 	line_generation (yes)
 	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
 	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (no)
@@ -22,7 +24,7 @@ cluster
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"; "classic"; 
+			"table_eiffel3"; "classic";
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
@@ -42,13 +44,14 @@ cluster
 external
 
 	assembly:
+			--| TODO: adapt these paths to your .NET installation
 		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.xml.dll",
 		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Drawing.dll",
 		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Data.dll"
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Data.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.xml.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.dll",
+		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll"
 
 end

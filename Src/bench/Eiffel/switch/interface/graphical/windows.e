@@ -5,7 +5,8 @@ class WINDOWS
 
 inherit
 
-	SHARED_STATUS
+	SHARED_STATUS;
+	NAMER
 
 feature {NONE}
 
@@ -27,22 +28,32 @@ end;
 			!!Result.make (project_tool.screen)
 		end;
 
+	ghost_top_shell: TOP_SHELL is
+			-- Invisible parent of shared windows
+			-- (warner, confirmer, ...)
+		once
+			!! Result.make (new_name, project_tool.screen);
+			Result.set_x_y (project_tool.screen.x, project_tool.screen.y);
+			Result.realize;
+			Result.hide
+		end;
+
 	name_chooser: NAME_CHOOSER_W is
 			-- File selection window
 		once
-			!!Result.make (project_tool)
+			!!Result.make (ghost_top_shell)
 		end;
 
 	warner: WARNER_W is
 			-- Warning window
 		once
-			!!Result.make (project_tool)
+			!!Result.make (ghost_top_shell)
 		end;
 
 	confirmer: CONFIRMER_W is
 			-- Confirmation widget
 		once
-			!!Result.make (project_tool)
+			!!Result.make (ghost_top_shell)
 		end;
 
 	error_window: CLICK_WINDOW is

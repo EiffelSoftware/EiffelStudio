@@ -60,7 +60,7 @@ feature {NONE} -- Externals
 	cpp_new (AString: POINTER): POINTER is 
 			-- Call single constructor of C++ class.
 		external
-			"C++ [new MyString %"mystring.h%"] (EIF_POINTER)"
+			"C++ [new MyString %"mystring.h%"] (char *)"
 		end
 
 	cpp_delete (cpp_obj: POINTER) is

@@ -95,7 +95,7 @@ feature {EV_ANY} -- Contract support
 				t_item.put_front (t_item2)
 				t_item2.prune (t_item3)
 				t_item.go_i_th (3)		
-				t_item.put_left (t_item3)
+			--| FIXME??	t_item.put_left (t_item3)
 				t_item3.prune (t_item4)
 				t_item.go_i_th (5)
 				t_item.replace (t_item4)
@@ -173,6 +173,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/14 16:52:43  brendel
+--| Added FIXME. Why is this item's parent not Void???
+--|
 --| Revision 1.33  2000/03/17 00:10:55  king
 --| Corrected precursor call in create_act_seq
 --|

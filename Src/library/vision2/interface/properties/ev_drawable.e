@@ -1,6 +1,7 @@
 indexing
 	description:
-		"Abstraction for objects onto which graphical primatives may be drawn."
+		"Abstraction for objects onto which graphical primitives may be%N%
+		%applied."
 	note:
 		"When line style is dashed and line width is bigger than one,%N%
 		%lines are not guaranteed to be dashed on all platforms."
@@ -477,6 +478,9 @@ end -- class EV_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/27 17:21:01  brendel
+--| Spelling.
+--|
 --| Revision 1.20  2000/03/17 01:23:33  oconnor
 --| formatting and layout
 --|

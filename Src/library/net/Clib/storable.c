@@ -73,7 +73,6 @@ int net_socket_ready (int read)
 
 int net_char_read(char *pointer, int size)
 {
-	GTCX
 	int i;
 
 retry:
@@ -208,7 +207,6 @@ int net_char_write(char *pointer, int size)
 
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
-	GTCX
 	socket_fides = file_desc;
 
 	return portable_retrieve(net_char_read);

@@ -160,7 +160,7 @@ feature -- Basic operation
 
 feature -- Root window
 
-	silly_main_window: EV_INTERNAL_SILLY_WINDOW_IMP is
+	Silly_main_window: EV_INTERNAL_SILLY_WINDOW_IMP is
 			-- Current main window of the application.
 		once
 			--| Previously this would return the first window created
@@ -179,7 +179,7 @@ feature -- Element change
 	add_root_window (w: WEL_FRAME_WINDOW) is
 			-- Add `w' to the list of root windows.
 		do
-			application_windows_id.extend (w.item)
+			Application_windows_id.extend (w.item)
 		end
 
 	remove_root_window (w: WEL_FRAME_WINDOW) is
@@ -187,22 +187,22 @@ feature -- Element change
 		local
 			window: WEL_FRAME_WINDOW
 		do
-			application_windows_id.prune_all (w.item)
-			if application_windows_id.is_empty then
-				window := silly_main_window
+			Application_windows_id.prune_all (w.item)
+			if Application_windows_id.is_empty then
+				window := Silly_main_window
 			else
 				from
-					application_windows_id.start
+					Application_windows_id.start
 				until
-					application_windows_id.after or else 
-					is_window (application_windows_id.item.item)
+					Application_windows_id.after or else 
+					is_window (Application_windows_id.item.item)
 				loop
-					application_windows_id.forth
+					Application_windows_id.forth
 				end
 				check
-					not_after: not application_windows_id.after
+					not_after: not Application_windows_id.after
 				end
-				window ?= window_of_item (application_windows_id.item.item)
+				window ?= window_of_item (Application_windows_id.item.item)
 				check
 					window_is_assigned_correctly: window /= Void
 				end
@@ -224,7 +224,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	application_windows_id: ARRAYED_LIST [POINTER] is
+	Application_windows_id: ARRAYED_LIST [POINTER] is
 			-- All user created windows in the application.
 			--| For internal use only.
 		once
@@ -254,27 +254,27 @@ feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 			ev_win: EV_WINDOW_IMP
 			res: ARRAYED_LIST [EV_WINDOW]
 		do
-			create res.make (application_windows_id.count)
+			create res.make (Application_windows_id.count)
 			Result := res
 			from
-				application_windows_id.start
+				Application_windows_id.start
 			until
-				application_windows_id.after
+				Application_windows_id.after
 			loop
-				if is_window (application_windows_id.item) then
-					ev_win ?= window_of_item (application_windows_id.item)
+				if is_window (Application_windows_id.item) then
+					ev_win ?= window_of_item (Application_windows_id.item)
 					if ev_win /= Void then
 						res.extend (ev_win.interface)
-						application_windows_id.forth
+						Application_windows_id.forth
 					else
 							-- Object has been collected, we remove it
-							-- from `application_windows_id'.
-						application_windows_id.remove
+							-- from `Application_windows_id'.
+						Application_windows_id.remove
 					end
 				else
 						-- Object has been collected, we remove it
-						-- from `application_windows_id'.
-					application_windows_id.remove
+						-- from `Application_windows_id'.
+					Application_windows_id.remove
 				end
 			end
 		end

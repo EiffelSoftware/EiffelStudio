@@ -23,10 +23,8 @@ extern char		*create_class(),
 				*create_real(),
 				*create_string(),
 				*create_type_class(),
-				*create_parent_type(),
 				*create_feature_as(),
 				*create_exp_class_type(),
-				*create_routine(),
 				*create_feature_name();
 
 /*

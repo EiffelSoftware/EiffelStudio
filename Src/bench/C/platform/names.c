@@ -63,3 +63,41 @@ public EIF_REFERENCE eif_copy_cmd ()
 #endif
 }
 
+public EIF_REFERENCE eif_timeout_msg ()
+{
+	/* Message displayed when ebench is unable to launch
+	 * the system (because of a timeout).
+	 */
+
+#ifdef __WATCOMC__
+	extern *appl_ini_file ();
+#endif
+	extern char *getenv();				/* Get environment variable value */
+
+	char s[512];
+	char *eif_timeout;
+
+	strcpy(s, "Couldn't launch system in allotted time.\n");
+	strcat(s, "Try restarting ebench after setting ");
+#ifdef __WATCOMC__
+	strcat(s, "variable\n");
+#else
+	strcat(s, "environment\nvariable ");
+#endif
+	strcat(s, "EIF_TIMEOUT to a value larger than\n");
+	eif_timeout = getenv("EIF_TIMEOUT");
+	if (eif_timeout != (char *) 0) {	/* Environment variable set */
+		strcat(s, "current value ");
+		strcat(s, eif_timeout);
+	} else {
+		strcat(s, "the default 120");
+	}
+#ifdef __WATCOMC__
+	strcat(s, " in the [Environment] section\nof the file ");
+	strcat(s, appl_ini_file());
+	strcat(s, "\n");
+#else
+	strcat(s, ".\n");
+#endif
+	return RTMS (s);
+}

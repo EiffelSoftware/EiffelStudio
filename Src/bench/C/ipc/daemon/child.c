@@ -34,7 +34,7 @@
 #define PIPE_READ	0		/* File descriptor used for reading */
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 
-#define TIMEOUT		120		/* Time to let the child initialize */
+int TIMEOUT;				/* Time to let the child initialize */
 
 /* To fight SIGPIPE signals */
 private jmp_buf env;		/* Environment saving for longjmp() */

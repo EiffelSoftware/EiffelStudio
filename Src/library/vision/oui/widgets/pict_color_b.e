@@ -104,7 +104,7 @@ feature -- Element change
 		do
 			implementation.set_pixmap (a_pixmap)
 		ensure
-			pixmap = a_pixmap
+			pixmap_changed: pixmap = a_pixmap
 		end;
 
 	set_pixmap_by_name (a_pixmap_name: STRING) is

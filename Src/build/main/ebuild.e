@@ -18,6 +18,7 @@ inherit
 			ignore as sig_ignore,
 			catch as sig_catch
 		end
+	ERROR_POPUPER
 
 creation
 	make
@@ -27,16 +28,16 @@ feature
 	make is
 		local
 			init: INIT_CHECK
-			mp: MOUSE_PTR
-			tg: STRING
+--			temp: STRING
+			error: BOOLEAN
 		do
-			no_message_on_failure
+--			no_message_on_failure
 			if not retried then
 				init_windowing
 				!!init
 				init.perform_initial_check
 				if init.error then
-					io.error.putstring ("EiffelBuild stopped%N")
+					error := True
 					exit
 				elseif init_licence then
 						-- Initialize the resources
@@ -47,15 +48,24 @@ feature
 					discard_license
 				end
 			else
-				io.error.putstring ("Internal error: ")
-				if original_tag_name /= Void then
-					io.error.putstring (original_tag_name)
-				end
-				io.error.putstring ("%NEiffelBuild stopped%N")
+				error := True
+			end
+			if error then
+--				temp := original_tag_name
+--				if temp = Void then
+--					!! temp.make (0)
+--				end
+				error_box.popup (Current, Messages.crash_error, Void)
+				error_box.error_d.set_x_y (eb_screen.width // 2 -
+					error_box.error_d.width // 2,
+					eb_screen.height // 2 - error_box.error_d.height // 2)
+				iterate
 			end
 		rescue
-			discard_license
-			if not is_signal or else signal /= Sigint then
+--			discard_license
+			if not Resources.fail_on_rescue
+			and then (not is_signal or else signal /= Sigint)
+			then
 				retried := True
 				rescue_project
 				retry

@@ -13,7 +13,7 @@ deferred class
 inherit
 	EV_ITEM_I
 
-	EV_PIXMAP_CONTAINER_I
+--	EV_PIXMAP_CONTAINER_I
 
 feature {NONE} -- Initialization
 
@@ -58,10 +58,11 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_double_click_command (a_command: EV_COMMAND; 
-			       arg: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the item is double clicked
+	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make 'cmd' the executed command the item is double clicked.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end	
 

@@ -39,16 +39,15 @@ feature {NONE} -- Initialization
 
 feature -- Event - command association
 	
-	add_activate_command ( command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the text field is activated, ie when
-			-- the user press the enter key.
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make 'cmd' the executed commands when the text
+			-- field is activated, ie when the user press the
+			-- enter key.
 		require
 			exists: not destroyed
-			valid_command: command /= Void
+			valid_command: cmd /= Void
 		do
-			implementation.add_activate_command ( command, 
-							      arguments )
+			implementation.add_activate_command (cmd, arg)
 		end	
 
 feature {NONE} -- Implementation

@@ -52,7 +52,7 @@ feature -- Access
 		end
 
 	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
-			-- Give the item of the list at the zero-base
+			-- Give the item of the list at the one-base
 			-- `index'.
 		require
 			exists: not destroyed
@@ -63,7 +63,7 @@ feature -- Access
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
+			-- selection, it gives the last selected item.
 		require
 			exists: not destroyed
 			item_selected: selected
@@ -141,27 +141,33 @@ feature -- Status setting
 
 	set_left_alignment (column: INTEGER) is
 			-- Align the text of the column at left.
+			-- Cannot be used for the first column which is 
+			-- always left aligned.
 		require
 			exists: not destroyed
-			column_exists: column >= 1 and column <= columns
+			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (0, column)
 		end
 
 	set_center_alignment (column: INTEGER) is
 			-- Align the text of the column at left.
+			-- Cannot be used for the first column which is 
+			-- always left aligned.
 		require
 			exists: not destroyed
-			column_exists: column >= 1 and column <= columns
+			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (2, column)
 		end
 	
 	set_right_alignment (column: INTEGER) is
 			-- Align the text of the column at left.
+			-- Cannot be used for the first column which is 
+			-- always left aligned.
 		require
 			exists: not destroyed
-			column_exists: column >= 1 and column <= columns
+			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (1, column)
 		end
@@ -169,8 +175,7 @@ feature -- Status setting
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
-			-- Make `txt' the title of the column number
-			-- `number'.
+			-- Make `txt' the title of the one-based `column'.
 		require
 			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
@@ -179,8 +184,7 @@ feature -- Element change
 		end
 
 	set_column_width (value: INTEGER; column: INTEGER) is
-			-- Make `value' the new width of the column number
-			-- `column'.
+			-- Make `value' the new width of the one-based column.
 		require
 			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
@@ -196,26 +200,33 @@ feature -- Element change
 			implementation.set_rows_height (value)
 		end
 
-feature -- Event : command association
-
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when an item is
-			-- selected.
+	clear_items is
+			-- Clear all the items of the list.
 		require
 			exists: not destroyed
-			command_not_void: a_command /= Void
 		do
-			implementation.add_selection_command (a_command, arguments)
+			implementation.clear_items
 		end
 
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Make `command' executed when an item is
-			-- selected by double clicked.
+feature -- Event : command association
+
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Make `cmd' the executed command when the selection
+			-- has changed.
 		require
 			exists: not destroyed
-			command_not_void: a_command /= Void
+			valid_command: cmd /= Void
 		do
-			implementation.add_double_click_selection_command (a_command, arguments)
+			implementation.add_selection_command (cmd, arg)
+		end
+
+	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when a column is clicked.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_column_click_command (cmd, arg)
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_MULTI_COLUMN_LIST_ROW} -- Implementation
@@ -227,6 +238,9 @@ feature {NONE} -- Inapplicable
 	make (par: EV_CONTAINER) is
 			-- Do nothing, but need to be implemented.
 		do
+			check
+				inapplicable: False
+			end
 		end
 
 end -- class EV_MULTI_COLUMN_LIST

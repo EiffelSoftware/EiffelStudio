@@ -8,10 +8,6 @@ inherit
 		redefine
 			is_equal
 		end;
-	SHARED_ENCODER
-		redefine
-			is_equal
-		end;
 	SHARED_SERVER
 		redefine
 			is_equal
@@ -38,10 +34,10 @@ feature
 	class_type: CLASS_TYPE;
 			-- Class type to which the unit belongs to
 
-	id: INTEGER;
+	id: COMPILER_ID;
 			-- Second part of the unit description
 
-	index: INTEGER;
+	index: COMPILER_ID;
 			-- Index of the unit in an array
 
 	set_class_type (t: CLASS_TYPE) is
@@ -50,13 +46,13 @@ feature
 			class_type := t
 		end;
 
-	set_id (i: INTEGER) is
+	set_id (i: like id) is
 			-- Assign `i' to `id'.
 		do
 			id := i;
 		end;
 
-	set_index (i: INTEGER) is
+	set_index (i: like index) is
 			-- Assign `i' to `index'.
 		do
 			index := i;
@@ -70,12 +66,12 @@ feature
 			Result := class_type.type_id
 		end;
 
-	class_type_id: INTEGER is
+	class_type_id: TYPE_ID is
 			-- `id' of `class_type'
 		require
 			class_type_exists: class_type /= Void
 		do
-			Result := class_type.id.id
+			Result := class_type.id
 		end;
 
 	is_valid: BOOLEAN is
@@ -87,15 +83,15 @@ feature -- Hash coding
 	hash_code: INTEGER is 
 			-- Hash code
 		do
-			Result := class_type_id * Mask + id;
+			Result := class_type_id.hash_code * Mask + id.hash_code
 		end;
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := 	class_type_id = other.class_type_id
+			Result := 	equal (class_type_id, other.class_type_id)
 						and then
-						id = other.id
+						equal (id, other.id)
 		end;
 
 	Mask: INTEGER is 32768;

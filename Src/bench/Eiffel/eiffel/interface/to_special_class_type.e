@@ -15,7 +15,6 @@ inherit
 			generate_feature
 		end;
 	SHARED_TABLE;
-	SHARED_ENCODER;
 	SHARED_BODY_ID;
 
 creation
@@ -70,7 +69,7 @@ feature
 				%/*%N%
 				% * make_area%N%
 				% */%Nvoid ");
-			encoded_name := Encoder.feature_name (id.id, feat.body_id);
+			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);
 

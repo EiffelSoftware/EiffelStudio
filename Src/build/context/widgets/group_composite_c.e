@@ -182,7 +182,6 @@ feature
 			parent_widget: COMPOSITE
 		do
 			generate_internal_name;
-			retrieved_node.set_name_change (full_name);
 			if not (parent = Void) then
 				parent_widget ?= parent.widget;
 			end;

@@ -53,6 +53,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_CAPABILITIES_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -178,8 +183,10 @@ feature -- Status report
 			-- area.
 			-- A returned coordinate can be negative if the
 			-- character has been scrolled outside the edit
-			-- control's client area. The coordinates are truncated to integer values and are in screen units relative to the
-			-- upper-left corner of the client area of the control.
+			-- control's client area. The coordinates are truncated
+			-- to integer values and are in screen units relative
+			-- to the upper-left corner of the client area of the
+			-- control.
 		require
 			exists: exists
 			a_x_large_enough: a_x >= 0
@@ -308,11 +315,13 @@ feature -- Status setting
 			exists: exists
 			color_not_void: color /= Void
 		do
-			cwin_send_message (item, Em_setbkgndcolor, 0, color.to_integer)
+			cwin_send_message (item, Em_setbkgndcolor, 0,
+				color.to_integer)
 		end
 
 	set_background_system_color is
-			-- Set the background color with the window background system color. 
+			-- Set the background color with the window
+			-- background system color.
 		require
 			exists: exists
 		do
@@ -412,7 +421,7 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_message (Em_streamin, Sf_text, stream)
+			send_stream_in_message (Sf_text, stream)
 		end
 
 	text_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
@@ -421,7 +430,7 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_message (Em_streamout, Sf_text, stream)
+			send_stream_out_message (Sf_text, stream)
 		end
 
 	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
@@ -430,7 +439,7 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_message (Em_streamin, Sf_rtf, stream)
+			send_stream_in_message (Sf_rtf, stream)
 		end
 
 	rtf_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
@@ -439,20 +448,35 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_message (Em_streamout, Sf_rtf, stream)
+			send_stream_out_message (Sf_rtf, stream)
 		end
 
-	send_stream_message (message, format: INTEGER;
-				stream: WEL_RICH_EDIT_STREAM) is
-			-- Start stream operation with `stream'.
+	send_stream_in_message (format: INTEGER;
+			stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start stream in operation with `stream'.
 			-- See class WEL_SF_CONSTANTS for `format' values.
-			-- Lowest level stream procedures.
+			-- Lowest level stream in procedures.
 		require
 			exists: exists
 			stream_not_void: stream /= Void
 		do
 			stream.init_action
-			cwin_send_message (item, message, format,
+			cwin_send_message (item, Em_streamin, format,
+				stream.to_integer)
+			stream.finish_action
+		end
+
+	send_stream_out_message (format: INTEGER;
+			stream: WEL_RICH_EDIT_STREAM_OUT) is
+			-- Start stream out operation with `stream'.
+			-- See class WEL_SF_CONSTANTS for `format' values.
+			-- Lowest level stream out procedures.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			stream.init_action
+			cwin_send_message (item, Em_streamout, format,
 				stream.to_integer)
 			stream.finish_action
 		end
@@ -504,6 +528,64 @@ feature -- Element change
 		do
 			cwin_send_message (item, Em_setparaformat, 0,
 				a_para_format.to_integer)
+		end
+
+	print_all (dc: WEL_PRINTER_DC; title: STRING) is
+			-- Print the contents of the rich edit control on
+			-- the printer `dc'. `title' is the printer job name.
+		require
+			exists: exists
+			dc_not_void: dc /= Void
+			dc_exists: dc.exists
+			title_not_void: title /= Void
+		local
+			i, tl, page_width, page_height: INTEGER
+			page_left, page_top: INTEGER
+			fr: WEL_FORMAT_RANGE
+			r: WEL_RECT
+		do
+			from
+				tl := text_length
+				!! fr.make
+				fr.set_dc (dc)
+				fr.set_dc_target (dc)
+				fr.character_range.set_range (0, tl)
+				dc.start_document (title)
+				dc.start_page
+				page_left := 720
+				page_top := 720
+				page_width := (dc.width /
+					dc.device_caps (Logical_pixels_x) *
+					1440).truncated_to_integer - 720
+				page_height := (dc.height /
+					dc.device_caps (Logical_pixels_y) *
+					1440).truncated_to_integer - 720
+				!! r.make (page_left, page_top,
+					page_width, page_height)
+			until
+				i >= tl
+			loop
+				-- Print as mush as will fit on a page. The
+				-- return value is the index of the first
+				-- character on the next page.
+				fr.set_rect (r)
+				fr.set_rect_page (r)
+				i := cwin_send_message_result (item,
+					Em_formatrange, 1, fr.to_integer)
+				-- If there is more text to print, spit this
+				-- page from the printer and start another one.
+				if i < tl then
+					dc.end_page
+					dc.start_page
+					fr.character_range.set_range (i, tl)
+				end
+			end
+			-- Reset the formatting of the rich edit control.
+			cwin_send_message (item, Em_formatrange, 1, 0)
+
+			-- Finish the document.
+			dc.end_page
+			dc.end_document
 		end
 
 feature -- Obsolete

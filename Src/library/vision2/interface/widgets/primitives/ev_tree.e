@@ -58,13 +58,6 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.selected_item
 		end
-		
-	find_item_recursively_by_data (some_data: ANY): EV_TREE_NODE is
-			-- If `data' contained in a tree item at any level then
-			-- assign this item to `Result'.
-		do
-			Result := implementation.find_item_recursively_by_data (some_data)
-		end
 
 feature -- Status report
 
@@ -109,14 +102,6 @@ feature -- Status report
 			bridge_ok: Result = implementation.pixmaps_height
 		end
 		
-	has_recursively (an_item: EV_TREE_NODE): BOOLEAN is
-			-- Is `an_item' contained in `Current' at any level?
-		do
-			Result := implementation.has_recursively (an_item)
-		ensure
-			not_found_in_empty: Result implies not is_empty
-		end
-		
 feature -- Status setting
 
 	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
@@ -132,15 +117,6 @@ feature -- Status setting
 		ensure
 			width_set: pixmaps_width = a_width
 			height_set: pixmaps_height = a_height
-		end
-		
-feature -- Basic operations
-
-	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
-			-- Apply `action' to every item.
-			-- Semantics not guaranteed if `action' changes the structure;
-		do
-			implementation.recursive_do_all (action)
 		end
 
 feature {NONE} -- Contract support

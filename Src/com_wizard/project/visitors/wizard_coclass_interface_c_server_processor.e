@@ -21,21 +21,34 @@ feature -- Basic operations
 		local
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 		do
-			-- Add parent and import header files
-			coclass_generator.cpp_class_writer.add_parent (an_interface.c_type_name, 
-					an_interface.namespace, Public)
-			coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
-			coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
-
-			coclass_generator.interface_names.extend (an_interface.c_type_name)
-
-			if an_interface.dispinterface or an_interface.dual then
-				coclass_generator.dispinterface_names.extend (an_interface.c_type_name)
-				dispatch_interface := True
+			if
+				not an_interface.name.is_equal (Iunknown_type) and
+				not an_interface.name.is_equal (Idispatch_type)
+			then
+				coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
 			end
+			if not has_descendants_in_coclass (coclass, an_interface) then
+				coclass_generator.cpp_class_writer.add_parent (an_interface.c_type_name, 
+						an_interface.namespace, Public)
+				
+				if not an_interface.c_header_file_name.empty then
+					coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
+				end
 
-			create interface_generator.make (coclass, an_interface, coclass_generator.cpp_class_writer)
-			interface_generator.generate_functions_and_properties (an_interface)
+				coclass_generator.interface_names.extend (an_interface.c_type_name)
+
+				if 
+					an_interface.dispinterface or 
+					an_interface.dual or
+					an_interface.inherit_from_dispatch
+				then
+					coclass_generator.dispinterface_names.extend (an_interface.c_type_name)
+					dispatch_interface := True
+				end
+
+				create interface_generator.make (coclass, an_interface, coclass_generator.cpp_class_writer)
+				interface_generator.generate_functions_and_properties (an_interface)
+			end
 		end
 
 	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is

@@ -23,10 +23,8 @@ feature -- Basic operations
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			if
-				not an_interface.c_type_name.is_equal (Idispatch_type) and
-				not an_interface.c_type_name.is_equal (Iunknown_type)
+				not has_descendants_in_coclass (coclass, an_interface)
 			then
-				-- Add  import header files
 				coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
 				coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
 
@@ -38,7 +36,6 @@ feature -- Basic operations
 				a_variable_name.append (an_interface.c_type_name)
 				data_member.set_name (a_variable_name)
 
-				-- Variable type
 				create a_variable_type.make (100)
 				if an_interface.namespace /= Void and then not an_interface.namespace.empty then
 					a_variable_type.append (an_interface.namespace)
@@ -51,7 +48,6 @@ feature -- Basic operations
 
 				coclass_generator.cpp_class_writer.add_member (data_member, Private)
 
-				-- Find all features and properties
 				a_name := an_interface.c_type_name
 				coclass_generator.interface_names.extend (a_name)
 

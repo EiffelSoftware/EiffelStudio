@@ -15,29 +15,19 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature
+	initialize_stack is
+		do
+		end
+
 feature -- Properties
 
 	routine: E_FEATURE
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 
-	result_value: ABSTRACT_DEBUG_VALUE is
-			-- Result value of routine
-		do
-		end
-
 	current_object: ABSTRACT_DEBUG_VALUE is
 			-- Current object value
-		do
-		end
-
-	locals: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Value of local variables
-		do
-		end
-
-	arguments: LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Value of arguments
 		do
 		end
 
@@ -49,6 +39,8 @@ feature -- Properties
 			--| the "line" between the two processes is free.
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
+
+	display_object_address: like object_address
 			
 feature -- Dotnet Properties
 
@@ -57,25 +49,6 @@ feature -- Dotnet Properties
 		end
 
 	dotnet_module_filename: STRING is
-		do
-		end
-
-feature -- Output
-
-	display_arguments (st: STRUCTURED_TEXT) is
-			-- Display the arguments passed to the routine
-			-- associated with Current call.
-		do
-		end
-
-	display_locals (st: STRUCTURED_TEXT) is
-			-- Display the local entities and result (if it exists) of 
-			-- the routine associated with Current call.
-		do
-		end
-
-	display_feature (st: STRUCTURED_TEXT) is
-			-- Display information about associated routine.
 		do
 		end
 

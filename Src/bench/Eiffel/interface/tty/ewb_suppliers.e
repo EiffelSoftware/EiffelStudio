@@ -32,7 +32,7 @@ feature
 			loop
 				a_supplier := suppliers.item.supplier;
 				if (c /= a_supplier) then
-					output_window.put_string ("    ");
+					output_window.put_char ('%T');
 					a_supplier.append_clickable_signature (output_window);
 					output_window.new_line;
 				end;

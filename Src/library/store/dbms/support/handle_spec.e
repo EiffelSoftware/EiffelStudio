@@ -11,7 +11,14 @@ feature -- Access
 	Db_spec: G is
 			-- Handle to actual database
 		do
-			!! Result 
+			if db_spec_impl = Void then
+				create	db_spec_impl
+			end
+			Result := db_spec_impl
 		end
+
+	feature {NONE} -- Implementation
+
+	db_spec_impl : G
 
 end -- class HANDLE_SPEC

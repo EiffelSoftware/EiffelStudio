@@ -51,7 +51,10 @@ feature -- Status Setting
 			until 
 				i > count
 			loop
-				odbc_c_free (ptr @ i)
+				if ptr.item(i)  /= default_pointer then
+					odbc_c_free (ptr @ i)
+				end
+				ptr.put (default_pointer, i)
 				i := i + 1
 			end		
 			count := 0

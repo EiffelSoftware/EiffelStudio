@@ -42,6 +42,15 @@ feature -- Initialization
 			!! ht.make (name_table_size)
 			implementation := handle.database.db_selection
 			implementation.set_ht (ht)
+			error_c := error_code
+		end
+
+feature -- Access
+
+	last_parsed_query : STRING is
+			-- Last parsed SQL query
+		do
+			Result := implementation.last_parsed_query
 		end
 
 feature -- Status report
@@ -89,6 +98,13 @@ feature -- Status report
 		do
 			Result := container.after
 		end
+
+	error_m: STRING is 
+		do
+			Result := error_message
+		end
+
+	error_c: INTEGER
 
 feature -- Status setting
 

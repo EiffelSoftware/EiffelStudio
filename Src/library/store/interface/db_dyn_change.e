@@ -20,6 +20,9 @@ inherit
 		end
 
 	PARAMETER_HDL
+		redefine
+			parameter_count
+		end
 
 creation
 	make
@@ -33,7 +36,7 @@ feature -- Initialization
 			!! ht.make (name_table_size)
 			implementation.set_ht (ht)
 			init
-			implementation.init_implementation (parameters_value, parameter_name_to_position)
+			implementation.init_implementation (parameters_value, parameters)
 		end
 
 feature -- Element change
@@ -43,9 +46,15 @@ feature -- Element change
 		require
 			not_void: s /= Void
 			meaning_full_sql: s.count > 0
+			is_ok: is_ok
+			is_allocatable: is_allocatable
 		do
 			implementation.prepare (s)
 			set_prepared (TRUE)
+			if not is_ok and then is_tracing then
+				trace_output.putstring (error_message)
+				trace_output.new_line
+			end
 		ensure
 			prepared_statement: is_prepared
 		end
@@ -66,6 +75,29 @@ feature -- Element change
 			if is_ok then
 				implementation.execute
 			end
+			if not is_ok and then is_tracing then
+				trace_output.putstring (error_message)
+				trace_output.new_line
+			end
+		end
+
+	parameter_count : INTEGER is
+		do
+			Result := implementation.parameter_count
+		end
+
+feature -- Status Report
+
+	is_allocatable : BOOLEAN is
+		do
+			Result := implementation.is_allocatable
+		end
+
+feature -- Basic Operations
+
+	terminate is
+		do
+			implementation.terminate
 		end
 
 feature {NONE} -- Implementation

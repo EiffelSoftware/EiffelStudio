@@ -1,5 +1,5 @@
 indexing
-	description: "Implementation of DB_CHANGE";
+	description: "Implmentation of DB_CHANGE";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -31,6 +31,11 @@ inherit
 creation -- Creation procedure
 
 	make
+
+feature -- Access
+
+	last_parsed_query : STRING
+			-- Last parsed query
 
 feature -- Element change
 
@@ -64,6 +69,7 @@ feature -- Element change
 					handle.status.set (db_spec.init_order (temp_descriptor, tmp_string))
 				end
 			end
+			last_parsed_query := tmp_string
 			if tmp_string /= Void then
 				if immediate_execution then
 						-- Allocate a new descriptor, just for the exec_immediate.

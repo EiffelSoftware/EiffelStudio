@@ -27,6 +27,9 @@ inherit
 		end
 
 	PARAMETER_HDL
+		redefine
+			parameter_count
+		end
 
 creation
 	make
@@ -40,7 +43,7 @@ feature -- Initialization
 			implementation := handle.database.db_dyn_selection
 			implementation.set_ht (ht)
 			init
-			implementation.init_implementation (parameters_value, parameter_name_to_position)
+			implementation.init_implementation (parameters_value, parameters)
 		end
 
 feature -- Element change
@@ -50,10 +53,16 @@ feature -- Element change
 		require
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
+			is_ok: is_ok
+			is_allocatable: is_allocatable
 		do
 			set_executed (FALSE)
 			implementation.prepare (s)
 			set_prepared (TRUE)
+			if not is_ok and then is_tracing then
+				trace_output.putstring (error_message)
+				trace_output.new_line
+			end
 		ensure
 			prepared_statement: is_prepared
 			prepared_statement: not is_executed
@@ -80,8 +89,17 @@ feature -- Element change
 				end
 				implementation.execute
 			end
+			if not is_ok and then is_tracing then
+				trace_output.putstring (error_message)
+				trace_output.new_line
+			end
 		ensure
 			prepared_statement: is_executed
+		end
+
+	parameter_count : INTEGER is
+		do
+			Result := implementation.parameter_count
 		end
 
 feature {NONE} -- Implementation

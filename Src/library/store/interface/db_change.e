@@ -30,6 +30,14 @@ creation -- Creation procedure
 
 	make
 
+feature -- Access
+
+	last_parsed_query : STRING is
+			-- Last parsed SQL query
+		do
+			Result := implementation.last_parsed_query
+		end
+
 feature -- Basic operations
 
 	modify (request: STRING) is
@@ -41,8 +49,8 @@ feature -- Basic operations
 			request_exists: request /= Void
 			is_ok: is_ok
 		do
-			implementation.modify (request)
 			last_query := request
+			implementation.modify (request)
 			if not is_ok and then is_tracing then
 				trace_output.putstring (error_message)
 				trace_output.new_line

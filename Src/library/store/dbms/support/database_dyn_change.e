@@ -36,7 +36,11 @@ feature
 			parsed: BOOLEAN
 			ArgNum: INTEGER
 		do
-			sql_string.wipe_out
+			if sql_string = Void then
+				create sql_string.make (s.count)
+			else
+				sql_string.wipe_out
+			end
 			sql_string.append (s)
 			s.wipe_out
 			s.append (parse (sql_string))
@@ -55,9 +59,11 @@ feature
 					handle.status.set (db_spec.pre_immediate (descriptor, ArgNum))
 				end
 			end
+			set_executed (FALSE)
 			set_prepared (TRUE)
 		ensure
-			prepare_statement: is_prepared
+			prepared_statement: is_prepared
+			prepared_statement: not is_executed
 		end
 
 	bind_parameter is
@@ -65,7 +71,8 @@ feature
 		require
 			prepared_statement: is_prepared
 		do
-			db_spec.bind_parameter (parameters_value, parameters_value, descriptor, handle, "")	
+			setup_parameters
+			db_spec.bind_parameter (parameters_value, parameters, descriptor, handle, "")	
 		end
 
 	execute is
@@ -79,14 +86,26 @@ feature
 			if is_ok then
 				handle.status.set (db_spec.start_order (descriptor))
 			end
+			set_executed (TRUE)
+		ensure
+			executed_statement: is_executed
+		end
+
+	terminate is
+		do
+				handle.status.set (db_spec.terminate_order (descriptor))
+		end
+
+feature -- Status Report
+
+	is_allocatable : BOOLEAN is
+		do
+			Result := db_spec.descriptor_is_available
 		end
 
 feature {NONE} -- Implementation
 
-	sql_string: STRING is
-		once
-			!! Result.make (0)
-		end
+	sql_string: STRING 
 
 	descriptor: INTEGER
 

@@ -399,8 +399,6 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
-			
-			attribute_editor_box.extend (create {EV_LABEL}.make_with_text (object.id.out))
 	
 			create label.make_with_text ("Name:")
 			label.align_text_left

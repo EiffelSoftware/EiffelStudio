@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 				c := s.item (i)
 				if (c.is_upper and not previous_underscore) or else (previous_digit and not c.is_digit) then
 					Result := Result + "_" 
-				elseif c.is_digit and not previous_digit then
+				elseif c.is_digit and not previous_digit and not previous_underscore then
 					Result := Result + "_"
 				end
 				previous_underscore := c.is_upper or c = '_'

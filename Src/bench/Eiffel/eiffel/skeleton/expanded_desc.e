@@ -15,7 +15,13 @@ inherit
 	
 feature -- Access
 
-	class_type: CLASS_TYPE
+	class_type: CLASS_TYPE is
+			-- Associated CLASS_TYPE of `cl_type_i'.
+		do
+			Result := cl_type_i.associated_class_type
+		end
+		
+	cl_type_i: CL_TYPE_I
 			-- Class type of the expanded attribute
 
 	type_i: TYPE_I
@@ -24,9 +30,9 @@ feature -- Access
 	type_id: INTEGER is
 			-- Type id of the expanded type of the attribute
 		require
-			class_type_exists: class_type /= Void
+			cl_type_i_exists: cl_type_i /= Void
 		do
-			Result := class_type.type_id
+			Result := cl_type_i.type_id
 		end
 
 	sk_value: INTEGER is
@@ -68,12 +74,12 @@ feature -- Comparisons
 
 feature -- Settings
 
-	set_class_type (i: CLASS_TYPE) is
-			-- Assign `i' to `class_type'.
+	set_cl_type_i (i: like cl_type_i) is
+			-- Assign `i' to `cl_type_i'.
 		do
-			class_type := i
+			cl_type_i := i
 		ensure
-			set: class_type = i
+			cl_type_i_set: cl_type_i = i
 		end
 
 	set_type_i (t : TYPE_I) is

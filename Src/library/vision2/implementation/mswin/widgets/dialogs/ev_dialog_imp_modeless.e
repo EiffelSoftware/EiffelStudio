@@ -30,6 +30,7 @@ feature -- Basic operations
 		local
 			parent_window_imp: WEL_WINDOW
 				-- Create the dialog.
+			other_menu_bar: EV_MENU_BAR
 		do
 			if exists then
 					-- We handle the case where `Current' has already been
@@ -47,11 +48,15 @@ feature -- Basic operations
 					show_actions_internal.call ([])
 				end
 			else
+				other_menu_bar := interface.implementation.menu_bar
 				parent_window := a_parent_window
 				parent_window_imp ?= a_parent_window.implementation
 				internal_dialog_make (parent_window_imp, 0, Void)
 				if show_actions_internal /= Void then
 					show_actions_internal.call ([])
+				end
+				if other_menu_bar /= Void then
+					interface.set_menu_bar (other_menu_bar)
 				end
 			end
 		end

@@ -767,7 +767,7 @@ feature -- Basic operations
 		do
 			a_visitor := a_record_descriptor.visitor
 			check
-				a_visitor.is_structure_pointer
+				a_visitor.is_structure
 			end
 			tmp_element_c_type := a_visitor.c_type
 			tmp_element_eiffel_type := a_visitor.eiffel_type

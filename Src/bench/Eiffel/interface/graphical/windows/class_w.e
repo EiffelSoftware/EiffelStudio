@@ -167,6 +167,20 @@ feature -- Status setting
 			read_only_text_window := ed
 		end
 
+	set_read_only is
+			-- set the class_tool as READ_ONLY
+		local
+			tmp:STRING
+		do
+			text_window.set_read_only
+			tmp := clone(title)
+			tmp.append_string (" [READ-ONLY]");
+			if is_a_shell then
+				eb_shell.set_title (tmp) 
+			end
+
+		end
+
 	execute_last_format (s: STONE) is
 			-- Execute the last format with stone `s'.
 			-- If `last_format' is not allowed for `s' (when

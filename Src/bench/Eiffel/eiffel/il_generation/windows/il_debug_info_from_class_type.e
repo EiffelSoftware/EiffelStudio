@@ -34,6 +34,21 @@ feature {NONE} -- Initialization
 			create list_breakable_il_offset.make (20)
 		end
 
+feature -- reset
+
+	reset (a_class_type: CLASS_TYPE) is
+			-- Reset data for `static_type_id'.
+		require
+			class_type_not_void: a_class_type /= Void
+		do
+			check
+				static_type_id = a_class_type.static_type_id
+			end
+			list_feature_token.wipe_out
+			list_once_tokens.wipe_out
+			list_breakable_il_offset.wipe_out
+		end
+
 feature -- Properties
 
 	static_type_id: INTEGER 

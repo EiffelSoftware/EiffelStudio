@@ -54,27 +54,42 @@ feature -- Clean up of the temporary server file
 			Tmp_rep_depend_server.clear
 			Tmp_rep_server.clear
 			Tmp_rep_feat_server.clear
-			Tmp_rep_info_server.clear
+		end
+
+	tmp_purge is
+		do
+				-- Removed unused files from EIFGEN
+			Tmp_ast_server.files_purge
+			Tmp_feat_tbl_server.files_purge
+			Tmp_class_info_server.files_purge
+			Tmp_rep_info_server.files_purge
+			Tmp_byte_server.files_purge
+			Tmp_inv_byte_server.files_purge
+			Tmp_depend_server.files_purge
+			Tmp_rep_depend_server.files_purge
+			Tmp_rep_server.files_purge
+
+			server_controler.remove_useless_files
 		end
 
 feature -- Purge of compilation files
 
 	purge is
-			-- Purge compilation files and delete useless datas.
+			-- Purge compilation files
 		do
-				-- Transfer datas from servers to temporary servers
-			feat_tbl_server.purge
-			depend_server.purge
-			rep_depend_server.purge
-			class_info_server.purge
-			inv_byte_server.purge
-			byte_server.purge
-			ast_server.purge
-			m_feat_tbl_server.purge
-			m_feature_server.purge
-			m_rout_id_server.purge
-			m_desc_server.purge
-			rep_server.purge
+				-- Removed unused files from EIFGEN
+			feat_tbl_server.files_purge
+			depend_server.files_purge
+			rep_depend_server.files_purge
+			class_info_server.files_purge
+			inv_byte_server.files_purge
+			byte_server.files_purge
+			ast_server.files_purge
+			m_feat_tbl_server.files_purge
+			m_feature_server.files_purge
+			m_rout_id_server.files_purge
+			m_desc_server.files_purge
+			rep_server.files_purge
 
 			server_controler.remove_useless_files
 		end

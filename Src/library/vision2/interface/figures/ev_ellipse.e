@@ -34,6 +34,7 @@ feature -- Initialization
 			radius1 := 1
 			radius2 := 1
 			create orientation.make (0.0)
+			set_origin_to_center
 		end
 
 feature -- Access

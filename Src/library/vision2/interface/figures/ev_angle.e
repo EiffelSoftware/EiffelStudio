@@ -9,6 +9,10 @@ class
 
 inherit
 	EV_ANGLE_ROUTINES
+		rename
+			tangent as compute_tangent,
+			sine as compute_sine,
+			cosine as compute_cosine
 		undefine
 			is_equal
 		end
@@ -67,6 +71,27 @@ feature -- Operations
 			Create Result.make (value / r)
 		end
 
+
+	sine: REAL is
+			-- Return the sine of Current.
+		do
+			Result := compute_sine(value)
+		end
+
+	cosine: REAL is
+			-- Return the cosine of Current.
+		do
+			Result := compute_cosine(value)
+		end
+
+	tangent: REAL is
+			-- Return the tangent corresponding to Current.
+		require
+			cosine_not_nul: cosine /= 0.0
+		do
+			Result := compute_tangent(value)
+		end
+	
 feature -- Access
 
 	radians: REAL is

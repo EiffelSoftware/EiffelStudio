@@ -212,19 +212,15 @@ feature -- Execution
 			app_context: MEL_APPLICATION_CONTEXT
 		do
 			if arg = Expose_action then
-				if not shown_called then
-					expose_data ?= context_data;
+				expose_data ?= context_data;
 debug ("DRAWING")
 	io.error.putstring ("Expose number ");
 	io.error.putint (expose_data.exposes_to_come);
 	io.error.new_line
 end
-					to_refresh.merge_clip (expose_data.clip);
-					if expose_data.exposes_to_come = 0 then
-						draw_text
-					end
-				else
-					shown_called := False;
+				to_refresh.merge_clip (expose_data.clip);
+				if expose_data.exposes_to_come = 0 then
+					draw_text
 				end
 			elseif arg = Resize_action then
 				w := total_width;

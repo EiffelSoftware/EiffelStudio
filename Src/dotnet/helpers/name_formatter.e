@@ -102,9 +102,6 @@ feature -- Basic Operations
 			-- Format `name' to Eiffel conventions
 		require
 			non_void_name: name /= Void
-		local
-			container, nested: STRING
-			i: INTEGER
 		do
 			operators.search (name)
 			if operators.found then
@@ -137,7 +134,6 @@ feature -- Basic Operations
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty
 		local
-			i: INTEGER
 			l_name: STRING
 			l_var: like variable_mapping_table
 		do
@@ -222,7 +218,6 @@ feature -- Basic Operations
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty
 		local
-			i: INTEGER
 			l_name: STRING
 			l_var: like variable_mapping_table
 		do

@@ -1,6 +1,6 @@
 indexing
 	description: "Useful constants for assembly manager"
-	external_name: "AssemblyManager.ImportDialogDictionary"
+	external_name: "ISE.AssemblyManager.ImportDialogDictionary"
 
 class
 	IMPORT_DIALOG_DICTIONARY
@@ -9,6 +9,18 @@ inherit
 	DIALOG_DICTIONARY
 	
 feature -- Access
+	
+	Assembly_and_dependancies_importation_message: STRING is "The assembly manager will now import the selected assembly and its dependancies. This may take a few minutes. Please be patient."
+			-- Message to let the user know selected assembly and its dependancies will be imported to the Eiffel repository.
+		indexing
+			external_name: "AssemblyAndDependanciesImportationMessage"
+		end
+
+	Assembly_importation_message: STRING is "The assembly manager will now import the selected assembly without any dependancies. This may take a few minutes. Please be patient."
+			-- Message to let the user know selected assembly will be imported to the Eiffel repository.
+		indexing
+			external_name: "AssemblyImportationMessage"
+		end
 		
 	Assembly_label_text: STRING is "Selected assembly: "
 			-- Text of assembly label
@@ -70,6 +82,12 @@ feature -- Access
 			external_name: "OkButtonLabel"
 		end
 
+	Red_color: SYSTEM_DRAWING_COLOR
+			-- Red color
+		indexing
+			external_name: "RedColor"
+		end
+		
 	Title: STRING is "Import a .NET assembly"
 			-- Window title
 		indexing

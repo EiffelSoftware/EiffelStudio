@@ -1,6 +1,6 @@
 indexing
 	description: "Useful constants for assembly manager"
-	external_name: "AssemblyManager.DialogDictionary"
+	external_name: "ISE.AssemblyManager.DialogDictionary"
 
 class
 	DIALOG_DICTIONARY

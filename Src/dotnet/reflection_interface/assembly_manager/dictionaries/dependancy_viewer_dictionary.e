@@ -1,6 +1,6 @@
 indexing
 	description: "Useful constants for assembly manager"
-	external_name: "AssemblyManager.DependancyViewerDictionary"
+	external_name: "ISE.AssemblyManager.DependancyViewerDictionary"
 
 class
 	DEPENDANCY_VIEWER_DICTIONARY

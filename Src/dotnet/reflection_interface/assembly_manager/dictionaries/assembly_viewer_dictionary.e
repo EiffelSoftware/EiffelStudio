@@ -1,6 +1,6 @@
 indexing
 	description: "Useful constants for assembly manager"
-	external_name: "AssemblyManager.AssemblyViewerDictionary"
+	external_name: "ISE.AssemblyManager.AssemblyViewerDictionary"
 
 class
 	ASSEMBLY_VIEWER_DICTIONARY
@@ -21,7 +21,13 @@ feature -- Access
 		indexing
 			external_name: "AssemblyCultureColumnTitle"
 		end
-	
+
+	Assembly_importation_handler_type: STRING is "AssemblyManager.AssemblyImportationHandler"
+			-- `AssemblyManager.AssemblyImportationHandler' type as a string
+		indexing
+			external_name: "AssemblyImportationHandlerType"
+		end
+		
 	Assembly_manager_title: STRING is "Assembly Manager"
 			-- Window title
 		indexing
@@ -40,12 +46,18 @@ feature -- Access
 			external_name: "AssemblyPublicKeyColumnTitle"
 		end
 
+	Assembly_removal_handler_type: STRING is "AssemblyManager.AssemblyRemovalHandler"
+			-- `AssemblyManager.AssemblyRemovalHandler' type as a string
+		indexing
+			external_name: "AssemblyRemovalHandlerType"
+		end
+		
 	Assembly_version_column_title: STRING is "Version"
 			-- Assembly version column title
 		indexing
 			external_name: "AssemblyVersionColumnTitle"
 		end
-
+	
 --	Button_appearance: INTEGER is 1
 --			-- Appearance enum value for Button.
 --		indexing
@@ -123,12 +135,6 @@ feature -- Access
 --		indexing
 --			external_name: "MiddleCenterAlignment"
 --		end
-		
-	Neutral_culture: STRING is "neutral"
-			-- Neutral culture
-		indexing
-			external_name: "NeutralCulture"
-		end
 		
 	No_dependancy: STRING is "No dependancy"
 			-- No dependancy message

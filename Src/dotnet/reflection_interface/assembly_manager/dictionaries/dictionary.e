@@ -1,6 +1,6 @@
 indexing
 	description: "Useful constants for assembly manager"
-	external_name: "AssemblyManager.Dictionary"
+	external_name: "ISE.AssemblyManager.Dictionary"
 
 class
 	DICTIONARY

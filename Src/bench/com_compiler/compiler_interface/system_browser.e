@@ -437,7 +437,6 @@ feature -- Basic Operations
 			a_description_string: STRING
 		do
 			a_member_info := assembly_information.find_type (a_assembly_name, a_full_dotnet_type)
-			Result := a_member_info.summary
 			if a_member_info /= Void then
 				a_description_string := "%NSummary%N"
 				a_description_string := a_description_string + a_member_info.summary

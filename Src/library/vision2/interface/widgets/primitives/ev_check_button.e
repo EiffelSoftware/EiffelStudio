@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Eiffel Vision check button. Labeled check boxes."
+		"Toggle button with state displayed as a check box."
+	appearance:
+		" [X] `text' "
 	status: "See notice at end of class"
 	keywords: "toggle, check, tick, button, box"
 	date: "$Date$"
@@ -24,11 +26,10 @@ create
 feature {NONE} -- Implementation
 
 	implementation: EV_CHECK_BUTTON_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
-			-- Create the implementation for the toggle button.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			Create {EV_CHECK_BUTTON_IMP} implementation.make (Current)
 		end
@@ -56,6 +57,9 @@ end -- class EV_CHECK_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/21 01:53:00  oconnor
+--| comments and formatting
+--|
 --| Revision 1.13  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

@@ -1,8 +1,11 @@
 indexing
 	description:
-		"Eiffel Vision button.%N%
-		%Push button widget that can display text and/or a pixmap.%N%
-		%(Also the base class for other button widgets)"
+		"Push button widget that displays text and/or a pixmap.%N%
+		%(Also base class for other button widgets)"
+	appearance:
+		" ------------ %N%
+		%|   `text'   |%N%
+		% ============"
 	status: "See notice at end of class"
 	keywords: "press, push, label, pixmap"
 	date: "$Date$"
@@ -40,8 +43,6 @@ feature {NONE} -- Initialization
 	make_with_text_and_action
 		(a_text: STRING; an_action: PROCEDURE [ANY, TUPLE []]) is
 			-- Create with 'a_text' and `an_action' in `press_actions'.
-			--| FIXME this is just an idea for evaluation, tell me what you
-			--| think. Sam 20000119
 		require
 			text_not_void: a_text /= Void
 			an_action_not_void: an_action /= Void
@@ -60,25 +61,25 @@ feature -- Event handling
 	press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when button is pressed and then released.
 
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_BUTTON_I
+		-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_action_sequences is
-			-- Create action sequences for button.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PRIMITIVE} Precursor
 			create press_actions
 		end
 
 	create_implementation is
-			-- Create implementation of button.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_BUTTON_IMP} implementation.make (Current)
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_BUTTON_I
-			-- Implementation of button.
 
 feature {NONE} -- Contract support
 
@@ -115,6 +116,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/21 01:52:45  oconnor
+--| comments and formatting
+--|
 --| Revision 1.27  2000/03/20 20:25:35  oconnor
 --| comments
 --|
@@ -222,7 +226,6 @@ end -- class EV_BUTTON
 --|
 --| Revision 1.21.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

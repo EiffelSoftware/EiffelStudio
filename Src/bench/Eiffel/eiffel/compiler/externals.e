@@ -149,7 +149,11 @@ feature -- Merging
 		local
 			external_name: STRING
 		do
-			from other.start until other.after loop
+			from
+				other.start
+			until
+				other.after
+			loop
 				external_name := other.key_for_iteration;
 				if has (external_name) then
 					add_occurence (external_name)

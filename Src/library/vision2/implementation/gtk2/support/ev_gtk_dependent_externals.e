@@ -19,7 +19,20 @@ feature -- Externals
 		alias
 			"GTK_WIDGET_GET_CLASS"
 		end
-		
+
+	frozen gtk_tree_view_column_autosize_enum: INTEGER is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_TREE_VIEW_COLUMN_AUTOSIZE"
+		end
+
+	frozen gtk_tree_view_column_fixed_enum: INTEGER is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_TREE_VIEW_COLUMN_FIXED"
+		end
 
 	frozen pango_tab_array_new (a_initial_size: INTEGER; a_position_in_pixels: BOOLEAN): POINTER is
 		external

@@ -179,26 +179,32 @@ int plen;		/* The length of the pattern */
 	 * of the matching substring or a null pointer if not found.
 	 */
 
-	register1 char *p;		/* Pattern string pointer */
-	register2 char *t;		/* Text pointer */
-	register4 char *tx;		/* Another text pointer (start of search) */
+	register1 unsigned char *p;		/* Pattern string pointer */
+	register2 unsigned char *t;		/* Text pointer */
+	register4 unsigned char *tx;	/* Another text pointer (start of search) */
 	register3 int i;		/* Position within pattern string */
 
-	tx = text;				/* Where we start scanning */
+	tx = (unsigned char *)text;				/* Where we start scanning */
 	text += tlen;			/* First address beyond text string */
 
-	while (tx + plen <= text) {		/* While enough text still left */
+	while (tx + plen <= (unsigned char *)text) {		/* While enough text still left */
 
-		for (p = pattern, t = tx, i = 0; i < plen; p++, t++, i++)
+		for (p = (unsigned char *)pattern, t = tx, i = 0; i < plen; p++, t++, i++)
 			if (*p != *t)			/* Scan pattern string */
 				break;				/* Mismatch, so stop */
 		
 		if (i == plen)				/* Got substring (whole pattern matched) */
-			return tx;				/* Start of substring found */
-		
-		tx += delta[*(tx + i)];	/* Shift to next text location */
-	}
+			return (char *) tx;				/* Start of substring found */
 
+			/* If pattern is not found and tx+plen=text, the pattern is not
+			 * in the string (we cannot get the value of tx+plen as the
+			 * string is NOT null terminated)
+			 */
+		if (tx + plen == (unsigned char *)text)
+			return (char *) 0;
+
+		tx += delta[*(tx + plen)];	/* Shift to next text location */
+	}
 	return (char *) 0;		/* No substring found */
 }
 

@@ -22,7 +22,9 @@ inherit
 			process_class, process_breakable, compatible,
 			close, set_font, editable_text_window,
 			set_editable_text_window, has_editable_text, 
-			read_only_text_window, set_read_only_text_window
+			read_only_text_window, set_read_only_text_window,
+			update_boolean_resource,
+			update_integer_resource
 		end
 
 	BAR_AND_TEXT
@@ -35,10 +37,13 @@ inherit
 			process_class, process_breakable, compatible,
 			make_shell, close, set_font, editable_text_window,
 			set_editable_text_window, has_editable_text,
-			read_only_text_window, set_read_only_text_window
+			read_only_text_window, set_read_only_text_window,
+			update_boolean_resource,
+			update_integer_resource
 		select
 			reset, make_shell
-		end
+		end;
+	EB_CONSTANTS
 
 creation
 
@@ -60,6 +65,54 @@ feature -- Initialization
 			make_form (a_form);
 			init_text_window;
 		end;
+
+feature -- Update Resources
+
+	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+			-- Also update the interface.
+		local
+			fr: like Feature_tool_resources
+		do
+			fr := Feature_tool_resources
+			if old_res = fr.command_bar then
+				if new_res.actual_value then
+					edit_bar.add
+				else
+					edit_bar.remove
+				end
+			elseif old_res = fr.format_bar then
+				if new_res.actual_value then
+					format_bar.add
+				else
+					format_bar.remove
+				end
+			end;
+			old_res.update_with (new_res)
+		end;
+
+	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+			-- Also update the interface.
+		local
+			fr: like Feature_tool_resources
+		do
+			fr := Feature_tool_resources;
+			if new_res.actual_value > 0 then
+				if old_res = fr.tool_height then
+					if old_res.actual_value /= new_res.actual_value then
+						set_height (new_res.actual_value)
+					end
+				elseif old_res = fr.tool_width then
+					if old_res.actual_value /= new_res.actual_value then
+						set_width (new_res.actual_value)
+					end
+				end;
+				old_res.update_with (new_res)
+			end
+		end
 
 feature -- Window Properties
 
@@ -280,7 +333,7 @@ feature -- Stone updating
 				i := i + 1
 			end
 			if (fi /= Void) then
-				!! fs.make (fi, a_stone.e_class);
+				!! fs.make (fi, c);
 				process_feature (fs);
 			else
 				error_window.clear_window;
@@ -290,7 +343,7 @@ feature -- Stone updating
 				text.add_new_line;
 				text.add_string ("   for class ");
 				s := c.name_in_upper;
-				text.add_classi (stone.e_feature.written_class.lace_class, s);
+				text.add_classi (c.lace_class, s);
 				error_window.process_text (text);
 				error_window.display;
 				project_tool.raise;
@@ -352,6 +405,14 @@ feature -- Graphical Interface
 				fill_menus
 			end;
 			set_last_format (default_format);
+
+			if Feature_tool_resources.command_bar.actual_value = False then
+				edit_bar.remove
+			end;
+			if Feature_tool_resources.format_bar.actual_value = False then
+				format_bar.remove
+			end;
+
 			attach_all	
 		end;
 
@@ -451,7 +512,8 @@ feature {NONE} -- Implementation; Window Settings
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			eb_shell.set_size (650, 450)
+			eb_shell.set_size (Feature_tool_resources.tool_width.actual_value, 
+				Feature_tool_resources.tool_height.actual_value)
 		end;
 
 feature {NONE} -- Implementation; Graphical Interface

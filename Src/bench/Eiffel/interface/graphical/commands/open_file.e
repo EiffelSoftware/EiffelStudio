@@ -38,9 +38,11 @@ feature -- Callbacks
 
 	loose_changes (argument: ANY) is
 			-- The user has eventually been warned that he will lose his stuff
+		local
+			chooser: NAME_CHOOSER_W
 		do
-			name_chooser (text_window).set_window (text_window);
-			last_name_chooser.call (Current) 
+			chooser := name_chooser (popup_parent);
+			chooser.call (Current) 
 		end;
 	
 feature -- Properties
@@ -57,8 +59,9 @@ feature {NONE} -- Implementation
 			-- Open a file.
 		local
 			fn: STRING;
-			f: RAW_FILE;
-			temp: STRING
+			f: PLAIN_TEXT_FILE;
+			temp: STRING;	
+			chooser: NAME_CHOOSER_W
 		do
 			if argument /= Void and then argument = last_name_chooser then
 				fn := clone (last_name_chooser.selected_file);
@@ -67,26 +70,25 @@ feature {NONE} -- Implementation
 					if
 						f.exists and then f.is_readable and then f.is_plain
 					then
-						text_window.show_file (fn);
-						text_window.display_header (fn)
+						tool.show_file (f);
 					elseif f.exists and then not f.is_plain then
-						warner (text_window).custom_call (Current, 
+						warner (popup_parent).custom_call (Current, 
 							w_Not_a_file_retry (fn), " OK ", Void, "Cancel");
 					else
-						warner (text_window).custom_call (Current, 
+						warner (popup_parent).custom_call (Current, 
 						w_Cannot_read_file_retry (fn), " OK ", Void, "Cancel");
 					end
 				else
-					warner (text_window).custom_call (Current, 
+					warner (popup_parent).custom_call (Current, 
 						w_Not_a_file_retry (fn), " OK ", Void, "Cancel");
 				end
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (text_window).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, l_File_changed)
 				else
-					name_chooser (text_window).set_window (text_window);
-					last_name_chooser.call (Current) 
+					chooser := name_chooser (popup_parent);
+					chooser.call (Current) 
 				end
 			end
 		end;

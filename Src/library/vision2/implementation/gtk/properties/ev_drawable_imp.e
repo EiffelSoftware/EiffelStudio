@@ -378,12 +378,31 @@ feature -- Drawing operations
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
+		local
+			corrected_start, corrected_aperture: REAL
+			pi_nb: INTEGER
 		do
 			if drawable /= NULL then
+				if a_height /= 0 then
+					pi_nb := ((a_start_angle + Pi / 2) / Pi).floor
+					corrected_start := a_start_angle - pi_nb * Pi
+					if (math.modulo (a_start_angle, Pi)) /= Pi/2 then
+						corrected_start := arc_tangent ((a_width * tangent (corrected_start))/a_height)
+					end
+					corrected_start := corrected_start + pi_nb * Pi
+					corrected_aperture := an_aperture + a_start_angle
+					pi_nb := ((corrected_aperture + Pi / 2) / Pi).floor
+					corrected_aperture := corrected_aperture - pi_nb * Pi
+					if (math.modulo (corrected_aperture, Pi)) /= Pi/2 then
+						corrected_aperture := arc_tangent ((a_width * tangent (corrected_aperture))/a_height)
+					end
+					corrected_aperture := corrected_aperture - corrected_start + pi_nb * Pi
+				end
+
 				C.gdk_draw_arc (drawable, gc, 0, x,
 					y, a_width,
-					a_height, (radians_to_gdk_angle * a_start_angle).truncated_to_integer,
-					(radians_to_gdk_angle * an_aperture).truncated_to_integer)
+					a_height, (radians_to_gdk_angle * corrected_start).truncated_to_integer,
+					(radians_to_gdk_angle * corrected_aperture).truncated_to_integer)
 			end
 		end
 
@@ -463,12 +482,44 @@ feature -- Drawing operations
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians
 		local
+			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+			semi_width, semi_height: DOUBLE
+			tang_start, tang_end: DOUBLE
+			x_tmp, y_tmp: DOUBLE
 		do
-			x_start_arc := x + (a_width // 2) + (a_width // 2 * cosine (a_start_angle)).rounded
-			y_start_arc := y + (a_height // 2) - (a_height // 2 * sine (a_start_angle)).rounded
-			x_end_arc := x + (a_width // 2) + (a_width // 2 * cosine ((a_start_angle + an_aperture))).rounded
-			y_end_arc := y + (a_height // 2) - (a_height // 2 * sine ((a_start_angle + an_aperture))).rounded
+			left := x
+			top := y
+			right := left + a_width
+			bottom := top + a_height
+			                     
+			semi_width := a_width / 2
+			semi_height := a_height / 2
+			tang_start := tangent (a_start_angle)
+			tang_end := tangent (a_start_angle + an_aperture)
+			                        
+			x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
+			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
+			if sine (a_start_angle) > 0 then
+				y_tmp := -y_tmp
+			end
+			if cosine (a_start_angle) < 0 then
+				x_tmp := -x_tmp
+			end
+			x_start_arc := (x_tmp + left + semi_width).rounded
+			y_start_arc := (y_tmp + top + semi_height).rounded
+			
+			x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
+			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
+			if sine (a_start_angle + an_aperture) > 0 then
+				y_tmp := -y_tmp
+			end
+			if cosine (a_start_angle + an_aperture) < 0 then
+				x_tmp := -x_tmp
+			end
+			x_end_arc := (x_tmp + left + semi_width).rounded
+			y_end_arc := (y_tmp + top + semi_height).rounded
+                        		
 			draw_arc (x, y, a_width, a_height, a_start_angle, an_aperture)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_start_arc, y_start_arc)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_end_arc, y_end_arc)
@@ -527,15 +578,33 @@ feature -- filling operations
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
+		local
+			corrected_start, corrected_aperture: REAL
+			pi_nb: INTEGER
 		do
 			if drawable /= NULL then
+				if height /= 0 then
+					pi_nb := ((a_start_angle + Pi / 2) / Pi).floor
+					corrected_start := a_start_angle - pi_nb * Pi
+					if (math.modulo (a_start_angle, Pi)) /= Pi/2 then
+						corrected_start := arc_tangent ((a_width * tangent (corrected_start))/a_height)
+					end
+					corrected_start := corrected_start + pi_nb * Pi
+					corrected_aperture := an_aperture + a_start_angle
+					pi_nb := ((corrected_aperture + Pi / 2) / Pi).floor
+					corrected_aperture := corrected_aperture - pi_nb * Pi
+					if (math.modulo (corrected_aperture, Pi)) /= Pi/2 then
+						corrected_aperture := arc_tangent ((a_width * tangent (corrected_aperture))/a_height)
+					end
+					corrected_aperture := corrected_aperture - corrected_start + pi_nb * Pi
+				end
 				if tile /= Void then
 					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
 				end
 				C.gdk_draw_arc (drawable, gc, 1, x,
 					y, a_width,
-					a_height, (a_start_angle * radians_to_gdk_angle).rounded,
-					(an_aperture * radians_to_gdk_angle).rounded)
+					a_height, (corrected_start * radians_to_gdk_angle).rounded,
+					(corrected_aperture * radians_to_gdk_angle).rounded)
 				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
 			end
 		end
@@ -590,7 +659,12 @@ feature {NONE} -- Implementation
 		end
 
 	interface: EV_DRAWABLE
-
+	
+	math: EV_FIGURE_MATH is
+		once
+			create Result
+		end
+		
 	system_colormap: POINTER is
 			-- Default system color map used for allocating colors.
 		once
@@ -624,6 +698,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2001/06/28 22:57:49  etienne
+--| Gauthier and I made changes in `draw_pie_slice', `draw_arc' and `fill_pie_slice' so that the behavior is the same with GTK as on Windows.
+--|
 --| Revision 1.18  2001/06/20 22:17:28  rogers
 --| Replaced Ev_drawing_mode* with drawing_mode*.
 --|

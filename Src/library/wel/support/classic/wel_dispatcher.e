@@ -96,13 +96,13 @@ feature {NONE} -- Implementation
 			last_result: INTEGER
 		do
 			debug ("dlg_dispatcher")
-				io.print ("in dlg_proc ")
-				io.print (hwnd)
-				io.print (' ')
-				io.print (msg)
-				io.print (' ')
-				io.print (msg = Wm_initdialog)
-				io.new_line
+				io.put_string ("in dlg_proc ")
+				io.put_string (hwnd.out)
+				io.put_character (' ')
+				io.put_integer (msg)
+				io.put_character (' ')
+				io.put_boolean (msg = Wm_initdialog)
+				io.put_new_line
 			end
 			if msg = Wm_initdialog then
 				window := new_dialog

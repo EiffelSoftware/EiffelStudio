@@ -500,7 +500,7 @@ feature {NONE} -- Externals
 	c_sleep (v: INTEGER) is
 			-- Sleep for `v' milliseconds.
 		external
-			"C | <winbase.h>"
+			"C [macro <windows.h>] (DWORD)"
 		alias
 			"Sleep"
 		end

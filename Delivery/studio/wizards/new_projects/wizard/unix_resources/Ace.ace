@@ -42,8 +42,6 @@ cluster
 			"test"
 		end
 
-		-- GEL library
-
 		-- Wizard library
 	all wizard_library:		"$ISE_EIFFEL/library/wizard"
 		exclude

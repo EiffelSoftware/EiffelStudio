@@ -28,6 +28,10 @@ inherit
 	BEURK_HEXER
 		undefine
 			is_equal
+		end;
+	SHARED_TEXT_ITEMS
+		undefine
+			is_equal
 		end
 
 creation {RECV_VALUE, ATTR_REQUEST}
@@ -75,7 +79,7 @@ feature -- Output
 	append_type_and_value (st: STRUCTURED_TEXT) is
 		do 
 			st.add_classi (dynamic_class.lace_class, "BIT");
-			st.add_string (" ");
+			st.add (ti_Space);
 			st.add_int (value.count - 1);
 			st.add_string (" = ");
 			st.add_string (value)

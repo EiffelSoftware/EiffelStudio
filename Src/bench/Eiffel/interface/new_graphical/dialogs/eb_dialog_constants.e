@@ -22,6 +22,9 @@ feature -- Access
 	close_string: STRING is "Close"
 			-- `Result' is STRING constant named `close_string'.
 
+	save_string: STRING is "Save"
+			-- `Result' is STRING constant named `save_string'.
+
 	small_padding: INTEGER is 4
 			-- `Result' is INTEGER constant named small_padding.
 

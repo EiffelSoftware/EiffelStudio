@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -31,6 +32,11 @@ feature {NONE} -- Initialization
 			!! texta.make (Current)
 			set_position (50)
 			set_parent (par)
+
+				--Sets the tabs for the action window
+			set_container_tabs
+			tab_list.extend(split_area_tab)
+			create action_window.make(hsplit,tab_list)
 		end
 
 feature -- Access

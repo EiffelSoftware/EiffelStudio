@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -35,6 +36,11 @@ feature {NONE} -- Initialization
 			append_page (box, "Pixmap 2")
 			set_current_page (2)
 			set_parent (par)
+			
+				--Sets the tabs for the action window
+			set_container_tabs
+			tab_list.extend(notebook_tab)
+			create action_window.make(Current,tab_list)
 		end
 
 feature -- Access

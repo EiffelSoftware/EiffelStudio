@@ -8,10 +8,12 @@ class
 	FRAME_WINDOW
 
 inherit
-	EV_VERTICAL_BOX
+	EV_FRAME
 		redefine
 			make
 		end
+
+	DEMO_WINDOW
 
 creation
 	make
@@ -21,20 +23,21 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'. For efficiency, we
 			-- first create the frame without parent.
-		local
-			lab: EV_LABEL
+
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
-			!! frame.make_with_text (Current, "A frame with text")
-			!! lab.make (Current)
-			!! frame.make (Current)
-			set_parent (par)
+			{EV_FRAME} Precursor (par)
+			set_text ("A frame with text")
+
+				-- Sets the tabs for the action window
+			set_container_tabs
+			create frame_tab.make(Void)
+			tab_list.extend(frame_tab)
+			create action_window.make(Current,tab_list)
 		end
 
 feature -- Access
 
-	frame: EV_FRAME
-		-- A frame for the demo
+	frame_tab: FRAME_TAB
 
 end -- class SCROLLABLE_WINDOW
 

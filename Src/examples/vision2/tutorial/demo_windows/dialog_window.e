@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+	DEMO_WINDOW
 
 creation
 	make
@@ -28,20 +29,41 @@ feature {NONE} -- Initialization
 			set_horizontal_resize (False)
 			!! cmd.make (~execute1)
 			add_click_command (cmd, Void)
+			set_parent (par)
 		end
 
 feature -- Access
 
-	dialog: EV_DIALOG
+	current_widget: EV_DIALOG
 		-- The window
+	
+	temp_window: EV_WINDOW
 
 feature -- Execution features
 
 	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when we press the first button
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-		--	!! dialog.make (parent)
+			if current_widget = Void then
+				create temp_window.make_top_level
+				create current_widget.make(temp_window)
+				current_widget.set_title("Dialog Window")
+				create cmd.make (~hide_dialog)
+				current_widget.add_close_command (cmd, Void)
+				set_container_tabs
+				create action_window.make (current_widget, tab_list)
+			end
+			current_widget.show
 		end
+
+
+	hide_dialog (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Executed when the window is closed.
+		do
+			current_widget.hide
+		end	
 
 end -- class DIALOG_WINDOW
 

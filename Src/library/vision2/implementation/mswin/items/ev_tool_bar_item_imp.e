@@ -29,16 +29,6 @@ feature -- Access
 		
 	image_index: INTEGER
 			-- Index of the pixmaps in the imagelists.
-		
-	set_image_index (an_index: INTEGER) is
-			-- Assign `an_index' to `image_index'.
-		require
-			valid_index: an_index >= -1
-		do
-			image_index := an_index
-		ensure
-			image_index_set: image_index = an_index
-		end
 
 	is_sensitive: BOOLEAN is
 			-- Is `Current' sensitive?

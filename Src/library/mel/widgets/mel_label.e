@@ -16,31 +16,39 @@ inherit
 			{NONE} all
 		end;
 
-	MEL_PRIMITIVE
+	MEL_PRIMITIVE;
+
+	MEL_FONTABLE
+		undefine
+			clean_up
+		end
 
 creation 
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif label widget.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_label (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Status report
@@ -121,21 +129,15 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNrecomputeSize)
 		end
 
-	font_list: MEL_FONT_LIST is
-			-- Font list of Current.
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 	insensitive_pixmap: MEL_PIXMAP is
-			-- Insensitive pixmap of Current.
+			-- Insensitive pixmap of Current
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNlabelInsensitivePixmap)
+			Result := get_xt_pixmap (Current, XmNlabelInsensitivePixmap)
 		ensure
-			insensitive_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	pixmap: MEL_PIXMAP is
@@ -143,9 +145,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNlabelPixmap)
+			Result := get_xt_pixmap (Current, XmNlabelPixmap)
 		ensure
-			pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	is_string: BOOLEAN is
@@ -229,11 +232,20 @@ feature -- Status report
 		end;
 
 	mnemonic_char_set: STRING is
-			-- Set of keysyms for accelerator keys.
+			-- Set of keysyms for accelerator keys
 		require
 			exists: not is_destroyed
 		do
 			Result := get_xt_string (screen_object, XmNmnemonicCharSet)
+		end;
+
+	mnemonic: CHARACTER is
+			-- Keysym of the key to press in order to post the pulldown
+			-- menu associated with an option menu
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_keysym (screen_object, XmNmnemonic)
 		end;
 
 	is_string_direction_l_to_r: BOOLEAN is
@@ -248,13 +260,14 @@ feature -- Status setting
 
 	set_label_as_string (a_text: STRING) is
 			-- Set `label_as_string' to `a_text'.
+			--| Interpret `%N' in `a_text'.
 		require
 			exists: not is_destroyed;
 			not_a_text_void: a_text /= Void
 		local
 			compound_string: MEL_STRING
 		do
-			!! compound_string.make_localized (a_text);
+			!! compound_string.make_default_l_to_r (a_text);
 			set_xm_string (screen_object, XmNlabelString, compound_string);
 			compound_string.free
 		ensure
@@ -292,6 +305,26 @@ feature -- Status setting
 			set_xm_string (screen_object, XmNacceleratorText, a_compound_string)
 		ensure
 			accelerator_text_set: accelerator_text.is_equal (a_compound_string)
+		end;
+
+	set_mnemonic (a_character: CHARACTER) is
+			-- Set `mnemonic'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_keysym (screen_object, XmNmnemonic, a_character)
+		ensure
+			set: mnemonic = a_character
+		end;
+
+	set_mnemonic_char_set (a_string: STRING) is
+			-- Set `mnemonic_char_set'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_string (screen_object, XmNmnemonicCharSet, a_string)
+		ensure
+			set: mnemonic_char_set.is_equal (a_string)
 		end;
 
 	set_recomputing_size_allowed (b: BOOLEAN) is
@@ -334,33 +367,30 @@ feature -- Status setting
 			end_alignment_set: end_alignment
 		end;
 
-	set_font_list (a_font_list: MEL_FONT_LIST) is
-			-- Set `font_list' to `a_font_list'.
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 	set_insensitive_pixmap (a_pixmap: MEL_PIXMAP) is
 			-- Set `insensitive_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNlabelInsensitivePixmap, a_pixmap)
 		ensure
-			insensitive_pixmap_set: insensitive_pixmap = a_pixmap
+			insensitive_pixmap_set: insensitive_pixmap.is_equal (a_pixmap)
 		end;
 
 	set_pixmap (a_pixmap: MEL_PIXMAP) is
 			-- Set `pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNlabelPixmap, a_pixmap)
 		ensure
-			pixmap_set: pixmap = a_pixmap
+			pixmap_set: pixmap.is_equal (a_pixmap)
 		end;
 
 	set_type_string (b: BOOLEAN) is

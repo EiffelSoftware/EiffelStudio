@@ -1,0 +1,42 @@
+<document output="envision" title="EiffelVision2 Window">
+	<meta_data/>
+	<paragraph>
+		<table>
+			<row>
+				<cell>
+					<paragraph>The EiffelVision2 Window item is a new Eiffel Class, TITLED_WINDOW  that represents a Vision2 titled window, inheriting  EV_TITLED_WINDOW.</paragraph>
+					<paragraph>  Default feature clauses are contained within the class text, and three  pre-defined features are contained:</paragraph>
+					<list ordered="false">
+						<item>initialize - Redefined from  EV_TITLED_WINDOW, this feature performs the initialization of the  window, and any custom initialization required for your window, can be added  here. intialize is executed as a result of calling  default_create on the window. </item>
+						<item>is_in_default_state - Is the window in the correct  default state after initialization? If you wish to check the default state of  your window, add code to perform this here. </item>
+						<item>close_requested - Destroys the window. Connected to the  close_request_actions of the window during intialize.  The close_request_actions are fired when a user  attempts to close the window, and if you wish to override the default  behaviour, add your code to this feature. </item>
+					</list>
+					<paragraph>For more information regarding the use of 
+						<link>
+							<url>/libraries/vision2/index.html</url>
+							<label>Vision2</label>
+						</link>,  click 
+						<link>
+							<url>/libraries/vision2/index.html</url>
+							<label>here</label>
+						</link>
+					</paragraph>
+					<paragraph>Appearence of an  EV_TITLED_WINDOW:</paragraph>
+					<paragraph>
+						<image> 
+							<alt_text>titled window</alt_text> 
+							<url>titled_window.PNG</url>
+						</image>
+					</paragraph>
+					<seealso>
+						<bold>See Also</bold>
+						<line_break/>
+						<link>
+							<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.htm</url>
+							<label>  Adding New Project Items</label>
+						</link>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

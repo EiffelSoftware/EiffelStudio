@@ -1,0 +1,17 @@
+<document title="Code" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>The following code items may be added:
+		<list ordered="false">
+			<item>Class</item>
+			<item>Component Class</item>
+			<item>Installer Class</item>
+			<item>Web Service</item>
+			<item>Windows Service Class</item>
+		</list>
+	</paragraph></document>

@@ -6,167 +6,131 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	COMMAND_TOOL_HOLE
 
 inherit
-
 	EDIT_BUTTON
 		redefine
-			process_command, 
-			process_instance,
-			process_any,
-			compatible,
-			execute,
-			make
-		end
-
-	DRAG_SOURCE
-
-	CMD_INST_STONE
-		redefine
-			stone_type
+			data,
+			execute
 		end
 
 creation
-
 	make
 
-feature -- Creation
+feature -- Access
 
-	make (a_parent: COMPOSITE) is
+	associated_command: CMD is
 		do
-			{EDIT_BUTTON} Precursor (a_parent)
-			initialize_transport
-		end
-feature -- Initialization
-
-	set_parent_command_tool (cmd_tool: COMMAND_TOOL) is
-			-- Set `parent_command_tool' to `cmd_tool'.
-		require
-			parent_not_void: cmd_tool /= Void
-		do
-			parent_command_tool := cmd_tool
+			if data /= Void and then not data.empty then
+				Result := data.command_instance.associated_command
+			end
 		end
 
-	stone_type: INTEGER is
-			-- Current accept both command and instance stone.
-			-- That's why we need to use any_type
+	associated_instance: CMD_INSTANCE is 
 		do
-			Result := Stone_types.command_type
+			if data /= Void and then not data.empty then
+				Result := data.command_instance
+			end
 		end
 
-	create_focus_label is
-		do
-			set_focus_string (Focus_labels.command_label)
-		end
-
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.command_pixmap
 		end
 
-	full_symbol: PIXMAP is
+	full_symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.command_dot_pixmap
 		end
 
-	compatible (st: STONE): BOOLEAN is
+feature -- Status setting
+
+	set_callbacks is
+		local
+			arg: EV_ARGUMENT1 [ANY]
+			cmd: EV_ROUTINE_COMMAND
 		do
-			Result :=
-				st.stone_type = Stone_types.command_type or else
-				st.stone_type = Stone_types.instance_type
+			create arg.make (associated_instance)
+			add_button_press_command (3, create {PND_ACCELERATOR}, arg)
+			activate_pick_and_drop (Void, Void)
+			set_data_type (Pnd_types.instance_type)
+
+			create cmd.make (~process_command)
+			add_pnd_command (Pnd_types.command_type, cmd, Void)
+			create cmd.make (~process_instance)
+			add_pnd_command (Pnd_types.instance_type, cmd, Void)
 		end
+
+	set_empty_symbol is
+		do
+			set_transported_data (Void)
+			if pixmap /= symbol then
+				set_pixmap (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			set_transported_data (associated_instance)
+			if pixmap /= full_symbol then
+				set_pixmap (full_symbol)
+			end
+		end
+
+feature -- Basic operations
+
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.command_label)
+--		end
 
 	create_empty_editor is
 		do
 			window_mgr.display (window_mgr.command_tool)	
 		end
 
-	set_empty_symbol is
-		do
-			if pixmap /= symbol then
-				set_symbol (symbol)
-			end
-		end
+feature {COMMAND_TOOL_HOLE} -- Hole features
 
-	set_full_symbol is
-		do
-			if pixmap /= full_symbol then
-				set_symbol (full_symbol)
-			end
-		end
-
-feature -- Hole features
-
-	process_any (dropped: STONE) is
-			-- Check the kind of stone
-		local
-			a_cmd_inst: CMD_INST_STONE
-			a_cmd: CMD_STONE
-		do
-			a_cmd_inst ?= dropped
-			a_cmd ?= dropped
-			if a_cmd_inst /= Void then
-				process_instance (a_cmd_inst)
-			elseif a_cmd /= Void then
-				process_command (a_cmd)
-			end
-		end
-
-	process_instance (dropped: CMD_INST_STONE) is
-			-- Retarget the associated command tool .
-		do
-			parent_command_tool.set_instance (dropped.data)
-		end
-
-	process_command (dropped: CMD_STONE) is
+	process_command (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 			-- Retarget the associted command tool creating
 			-- a new instance of `dropped.data'.
+		local
+			cmd: CMD
 		do
-			parent_command_tool.set_command (dropped.data)
+			cmd ?= ev_data.data
+			data.set_command (cmd)
 		end
 
-feature {CONTEXT} -- Attribute
+	process_instance (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+			-- Retarget the associated command tool .
+		local
+			inst: CMD_INSTANCE
+		do
+			inst ?= ev_data.data
+			data.set_instance (inst)
+		end
 
-	parent_command_tool: COMMAND_TOOL
+feature {NONE} -- Attribute
+
+	data: COMMAND_TOOL
 			-- Command tool to which Current belongs
 
 feature {NONE} -- Command execution
 
-	execute (arg: ANY) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- Retarget the command tool to a new instance of the currently
-			-- edited command when `Current' is pressed.
+			-- edited command when `Current' is selected.
 		local
 			an_instance: CMD_INSTANCE
 		do
-			if parent_command_tool.command_instance /= Void then
-				!! an_instance.session_init (parent_command_tool.edited_command)
-				parent_command_tool.set_instance_only (an_instance)
-			end
-		end
-
-feature -- Drag source features
-
-	source: like Current is
-		do
-			Result := Current
-		end
-
-feature -- Stone features
-
-	associated_command: CMD is
-		do
-			if parent_command_tool /= Void and then not parent_command_tool.empty then
-				Result := parent_command_tool.command_instance.associated_command
-			end
-		end
-
-	data: CMD_INSTANCE is 
-		do
-			if parent_command_tool /= Void and then not parent_command_tool.empty then
-				Result := parent_command_tool.command_instance
+			if pixmap = symbol then
+				{EDIT_BUTTON} Precursor (arg, ev_data)
+			elseif not data.empty then
+				create an_instance.session_init (data.edited_command)
+				data.set_instance_only (an_instance)
 			end
 		end
 
 end -- class COMMAND_TOOL_HOLE
+

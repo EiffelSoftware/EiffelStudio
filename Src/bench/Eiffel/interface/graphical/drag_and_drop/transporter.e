@@ -136,15 +136,26 @@ feature -- Update
 			valid_s: s /= Void
 		local
 			scr: SCREEN;
+			target: HOLE
 		do
 			drag_source := s;
-			stone := drag_source.transported_stone;
+			stone := s.transported_stone;
 			x0 := ix;
 			y0 := iy;
 			x1 := widget.screen.x;
 			y1 := widget.screen.y;
 			draw_segment (x0, y0, x1, y1);	
-			widget.grab (stone.stone_cursor);;
+			target := pointed_hole;
+			if 
+				target /= Void and then 
+				target.compatible (stone) 
+			then
+				is_compatible_target := True;
+				widget.grab (stone.stone_cursor)
+			else
+				is_compatible_target := False;
+				widget.grab (stone.x_stone_cursor)
+			end;
 			dropped := False;
 		end;
 
@@ -178,6 +189,16 @@ feature -- Execution
 					x1 := scr.x; 
 					y1 := scr.y;
 					draw_segment (x0, y0, x1, y1);
+					target := pointed_hole;
+					if target /= Void and then target.compatible (stone) then
+						if not is_compatible_target then
+							is_compatible_target := True
+							widget.grab (stone.stone_cursor)
+						end
+					elseif is_compatible_target then
+						is_compatible_target := False;
+						widget.grab (stone.x_stone_cursor)
+					end
 				end;
 			elseif argument = Abort_action then
 					-- Abort.
@@ -211,9 +232,6 @@ feature -- Execution
 						target.receive (stone)
 					end;
 				end;
-				--if drag_source /= Void then
-					--drag_source.update_after_transport (button_data)
-				--end;
 				stone := Void;
 				drag_source := Void;
 			end;
@@ -247,5 +265,8 @@ feature {NONE} -- Implementation
 		once
 			!! Result
 		end;
+
+	is_compatible_target: BOOLEAN
+			-- Is the target compatible with `stone' being dragged?
 
 end -- class TRANSPORTER

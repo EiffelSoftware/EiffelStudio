@@ -238,7 +238,7 @@ feature -- Duplication
 			"Use `deep_twin' instead."
 		do
 			if other /= Void then
-				Result := feature {ISE_RUNTIME}.c_deep_clone ($other)
+				Result := other.deep_twin
 			end
 		ensure
 			deep_equal: deep_equal (other, Result)

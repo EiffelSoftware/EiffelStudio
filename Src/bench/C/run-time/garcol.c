@@ -1205,16 +1205,17 @@ rt_public void reclaim(void)
 #endif
 
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
+	eif_free (starting_working_directory);
+	eif_gen_conf_cleanup ();
+#ifdef EIF_WIN32
+	eif_cleanup(); 
+	eif_free_dlls();
+#endif /* EIF_WIN32 */
 
 #ifdef EIF_THREADS 
 	CHECK ("Root thread", eif_thr_is_root ());
 	eif_thread_cleanup ();
 #endif	/* EIF_THREADS */
-	eif_free (starting_working_directory);
-	eif_gen_conf_cleanup ();
-#ifdef EIF_WIN32
-	eif_cleanup(); 
-#endif /* EIF_WIN32 */
 
 #ifdef ISE_GC
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
@@ -1226,10 +1227,6 @@ rt_public void reclaim(void)
 #endif	/* !HAS_SMART_MMAP && !!HAS_SBRK */
 	}
 	cklst.ck_head = (struct chunk *) 0;
-#endif
-
-#ifdef EIF_WINDOWS 
-	eif_free_dlls();
 #endif
 
 #ifdef ISE_GC

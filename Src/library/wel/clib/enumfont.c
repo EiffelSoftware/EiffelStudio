@@ -28,7 +28,9 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * 
 	if (font_family_enumerator)
 	{
 		((wel_enum_font_fam_procedure) (
-			(EIF_OBJ) eif_access (font_family_enumerator),
+#ifndef EIF_IL_DLL
+			(EIF_OBJECT) eif_access (font_family_enumerator),
+#endif
 			(EIF_POINTER) lpelf,
 			(EIF_POINTER) lpntm,
 			(EIF_INTEGER) font_type,

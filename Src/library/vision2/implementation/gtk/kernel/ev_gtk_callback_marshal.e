@@ -41,6 +41,12 @@ feature {NONE} -- Initialization
 
 	default_create is
 			-- Create the dispatcher, one object per system.
+		do
+			initialize
+		end
+
+	initialize is
+			-- Initialize callbacks
 		once
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
 		end

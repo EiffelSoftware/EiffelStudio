@@ -140,7 +140,7 @@ feature -- Text operations
 					-- Does not highlight if `b' is beyond the
 					-- bounds of the text.
 				if b > a then
-					set_selection (a,b)
+					set_selection (a, b)
 				end
 			end
 		end

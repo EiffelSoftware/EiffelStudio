@@ -9,7 +9,7 @@ class
 inherit
 	LABEL
 		redefine
-			make
+			manage
 		end
 
 	FOCUSABLE
@@ -18,14 +18,16 @@ inherit
 		end
 
 creation
-	make
+	make, make_unmanaged
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
-			-- Creation routine
+	manage is
 		do
-			Precursor (a_name, a_parent)
+			Precursor
+			if focus_string /= Void then
+				initialize_focus
+			end
 		end
 
 	focus_label: FOCUS_LABEL_I is
@@ -36,7 +38,7 @@ feature -- Initialization
 		do
 			ti ?= top
 			check
-				valid_tooltip_initializer: ti/= void
+				valid_tooltip_initializer: ti/= Void
 			end
 			Result := ti.label
 		end

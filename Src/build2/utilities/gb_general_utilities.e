@@ -146,7 +146,9 @@ feature -- Basic operations
 			reversed.mirror
 			sub_index := reversed.substring_index ("dne", 1)
 			index_of_old_name := class_text.substring_index (old_name, class_text.count - sub_index)
-			class_text.replace_substring (new_name, index_of_old_name, index_of_old_name + old_name.count - 1)
+			if index_of_old_name /= 0 then
+				class_text.replace_substring (new_name, index_of_old_name, index_of_old_name + old_name.count - 1)
+			end
 		ensure
 			count_changed_accordingly: old class_text.count = class_text.count + old_name.count - new_name.count
 		end

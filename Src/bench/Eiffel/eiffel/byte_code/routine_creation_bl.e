@@ -97,7 +97,7 @@ feature
 			generate_gen_type_conversion (gen_type)
 			print_register
 			buf.putstring (" = ")
-			buf.putstring ("RTLNR(typres, (char*)(")
+			buf.putstring ("RTLNR(typres, (EIF_POINTER)(")
 			generate_routine_address
 			buf.putstring ("), ")
 
@@ -105,20 +105,20 @@ feature
 				arguments.print_register
 				buf.putstring (", ")
 			else
-				buf.putstring ("(char *)0, ")
+				buf.putstring ("(EIF_REFERENCE) 0, ")
 			end
 
 			if open_map /= Void then
 				open_map.print_register
 				buf.putstring (", ")
 			else
-				buf.putstring ("(char *)0, ")
+				buf.putstring ("(EIF_REFERENCE) 0, ")
 			end
 
 			if closed_map /= Void then
 				closed_map.print_register
 			else
-				buf.putstring ("(char *)0")
+				buf.putstring ("(EIF_REFERENCE) 0")
 			end
 			buf.putstring (");")
 			buf.new_line
@@ -136,7 +136,7 @@ feature
 		do
 			buf := buffer
 			if context.workbench_mode then
-				buf.putstring ("(EIF_POINTER) RTWPPR(")
+				buf.putstring ("RTWPPR(")
 				cl_type ?= context.real_type (class_type)
 				cl_type.associated_class_type.id.generated_id (buf)
 				buf.putstring (gc_comma)

@@ -915,7 +915,10 @@ Routine:
 		Postcondition
 		Rescue
 		TE_END
-			{ $$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos, current_position) }
+			{
+				$$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos, current_position, once_manifest_string_count)
+				once_manifest_string_count := 0
+			}
 	;
 
 Routine_body: Internal
@@ -1403,7 +1406,8 @@ Class_invariant: -- Empty
 			{
 				id_level := Normal_level
 				inherit_context := False
-				$$ := new_invariant_as ($3)
+				$$ := new_invariant_as ($3, once_manifest_string_count)
+				once_manifest_string_count := 0
 			}
 	;
 
@@ -2006,6 +2010,7 @@ Expression_constant: Boolean_constant
 	|	TE_ONCE_STRING Manifest_string
 			{
 				$2.set_is_once_string (True)
+				once_manifest_string_count := once_manifest_string_count + 1
 				$$ := $2
 			}
 	;

@@ -335,6 +335,11 @@ feature -- Generation Structure
 		do
 		end
 
+	generate_runtime_helper is
+			-- Generate a class for run-time needs.
+		do
+		end
+
 	generate_resources (a_resources: LIST [STRING]) is
 			-- Generate all resources in assembly.
 		require
@@ -1137,6 +1142,27 @@ feature -- Once management
 	generate_once_store_result is
 			-- Generate setting of static `result' variable corresponding
 			-- to current processed once function.
+		do
+		end
+
+feature -- Once manifest string manipulation
+
+	generate_once_string_allocation (count: INTEGER) is
+			-- Generate code that allocates memory required for `count'
+			-- once manifest strings of the current routine.
+		require
+			valid_count: count >= 0
+		do
+		end
+
+	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
+			-- Generate code for once string in a current routine with the given
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- or Eiffel string type otherwise.
+		require
+			valid_number: number >= 0
+			non_void_value: value /= Void
+			non_empty_value: not value.is_empty
 		do
 		end
 

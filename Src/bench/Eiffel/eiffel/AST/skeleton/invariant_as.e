@@ -20,12 +20,16 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (a: like assertion_list) is
+	initialize (a: like assertion_list; oms_count: like once_manifest_string_count) is
 			-- Create a new INVARIANT AST node.
+		require
+			valid_oms_count: oms_count >= 0
 		do
 			assertion_list := a
+			once_manifest_string_count := oms_count
 		ensure
 			assertion_list_set: assertion_list = a
+			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
 feature -- Visitor
@@ -40,6 +44,9 @@ feature -- Attribute
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
+
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings
 
 feature -- Comparison
 

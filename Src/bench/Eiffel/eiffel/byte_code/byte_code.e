@@ -139,6 +139,10 @@ feature -- Access
 			-- Do nothing
 		end
 
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings in immediate (i.e., not inherited)
+			-- precondition, body, postcondition and rescue clause
+
 feature -- Settings
 
 	set_feature_name_id (id: INTEGER) is
@@ -255,6 +259,16 @@ feature -- Settings
 			-- Assign `l' to `locals'.
 		do
 			locals := l
+		end
+
+	set_once_manifest_string_count (oms_count: like once_manifest_string_count) is
+			-- Set `once_manifest_string_count' to `oms_count'.
+		require
+			valid_oms_count: oms_count >= 0
+		do
+			once_manifest_string_count := oms_count
+		ensure
+			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
 	enlarge_tree is
@@ -511,6 +525,10 @@ feature -- IL code generation
 				-- Put a breakable point on feature name.
 			il_generator.put_line_info (start_line_number)
 			il_generator.flush_sequence_points (context.class_type)
+
+			if once_manifest_string_count > 0 then
+				il_generator.generate_once_string_allocation (once_manifest_string_count)
+			end
 
 			generate_il_body
 
@@ -1111,5 +1129,9 @@ feature -- Inlining
 			-- Does the current byte code inline some of the calls ?
 		do
 		end
+
+invariant
+
+	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 end

@@ -306,6 +306,17 @@ feature -- Analyzis
 				buf.put_new_line
 			end
 
+				-- Allocate memory for once manifest strings if required
+			if context.byte_code.once_manifest_string_count > 0 then
+				buf.put_string ("RTAOMS(")
+				buf.put_integer (context.original_body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (context.byte_code.once_manifest_string_count)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			end
+
 				-- Generate the saving of the workbench mode assertion level
 			if context.workbench_mode then
 				generate_save_assertion_level
@@ -1477,6 +1488,13 @@ feature -- Byte code generation
 			have_assert, has_old: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 		do
+				-- Allocate memory for once manifest strings if required
+			if context.byte_code.once_manifest_string_count > 0 then
+				ba.append (Bc_allocate_once_strings)
+				ba.append_integer (context.original_body_index - 1)
+				ba.append_integer (context.byte_code.once_manifest_string_count)
+			end
+
 			inh_assert := Context.inherited_assertion
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else inh_assert.has_precondition)

@@ -196,6 +196,11 @@ feature -- Generation
 					-- Generate types metadata description and IL code
 				generate_all_types (sorted_classes (System.classes))
 
+				if not is_single_module then
+						-- Generate run-time helper.
+					il_generator.generate_runtime_helper
+				end
+
 					-- Generate entry point if necessary
 				generate_entry_point
 
@@ -398,6 +403,11 @@ feature {NONE} -- Type description
 			generate_class_mappings (classes, True)
 			generate_class_mappings (classes, False)
 			generate_class_attributes (classes)
+			
+			if is_single_module then
+					-- Generate run-time helper.
+				il_generator.generate_runtime_helper
+			end
 
 				-- Generate only features description for each Eiffel class type
 				-- with their IL code.

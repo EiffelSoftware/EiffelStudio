@@ -174,6 +174,10 @@ feature -- Access
 
 		-- Conversion
 	Bc_cast_char:		CHARACTER is '%/143/'
+	
+		-- Once manifest strings
+	Bc_once_string:		CHARACTER is '%/144/'
+	Bc_allocate_once_strings:	CHARACTER is '%/145/'
 
 		-- Instructions for Concurrent Eiffel
 

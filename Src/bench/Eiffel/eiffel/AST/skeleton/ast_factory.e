@@ -1254,14 +1254,17 @@ feature -- Access
 			upper_set: Result.upper = u
 		end
 
-	new_invariant_as (a: EIFFEL_LIST [TAGGED_AS]): INVARIANT_AS is
+	new_invariant_as (a: EIFFEL_LIST [TAGGED_AS]; once_manifest_string_count: INTEGER): INVARIANT_AS is
 			-- New INVARIANT AST node
+		require
+			valid_once_manifest_string_count: once_manifest_string_count >= 0
 		do
 			create Result
-			Result.initialize (a)
+			Result.initialize (a, once_manifest_string_count)
 		ensure
 			invariant_as_not_void: Result /= Void
 			assertion_list_set: Result.assertion_list = a
+			once_manifest_string_count_set: Result.once_manifest_string_count = once_manifest_string_count
 		end
 
 	new_like_id_as (a: ID_AS): LIKE_ID_AS is
@@ -1532,14 +1535,16 @@ feature -- Access
 
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
 		l: EIFFEL_LIST [TYPE_DEC_AS]; b: ROUT_BODY_AS; po: ENSURE_AS;
-		r: EIFFEL_LIST [INSTRUCTION_AS]; p: INTEGER; end_loc: TOKEN_LOCATION): ROUTINE_AS is
+		r: EIFFEL_LIST [INSTRUCTION_AS]; p: INTEGER; end_loc: TOKEN_LOCATION;
+		once_manifest_string_count: INTEGER): ROUTINE_AS is
 			-- New ROUTINE AST node
 		require
 			b_not_void: b /= Void
 			end_loc_not_void: end_loc /= Void
+			valid_once_manifest_string_count: once_manifest_string_count >= 0
 		do
 			create Result
-			Result.initialize (o, pr, l, b, po, r, p, end_loc)
+			Result.initialize (o, pr, l, b, po, r, p, end_loc, once_manifest_string_count)
 		ensure
 			routine_as_not_void: Result /= Void
 			obsolete_message_set: Result.obsolete_message = o
@@ -1550,6 +1555,7 @@ feature -- Access
 			rescue_clause_set: Result.rescue_clause = r
 			body_start_position_set: Result.body_start_position = p
 			body_end_line_number_set: Result.end_location.is_equal (end_loc)
+			once_manifest_string_count_set: Result.once_manifest_string_count = once_manifest_string_count
 		end
 
 	new_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]; is_qualified: BOOLEAN): ROUTINE_CREATION_AS is

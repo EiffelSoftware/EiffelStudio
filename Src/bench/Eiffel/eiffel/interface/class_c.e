@@ -1124,6 +1124,7 @@ end
 						create invar_byte
 						invar_byte.set_class_id (class_id)
 						invar_byte.set_byte_list (invar_clause.byte_node)
+						invar_byte.set_once_manifest_string_count (invar_clause.once_manifest_string_count)
 						Tmp_inv_byte_server.put (invar_byte)
 
 						add_feature_to_melted_set (invariant_feature)

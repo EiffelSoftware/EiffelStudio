@@ -614,7 +614,7 @@ feature -- Element change
 					-- If `a' and `b' are categories,
 					-- `a' | `b' must also be one.
 					-- not 'a'|+('b') ==> test of transition number.
-				debug
+				debug ("lex_output")
 					io.put_string ("Union2, length = 6");
 					io.new_line;
 				end;
@@ -1057,7 +1057,7 @@ feature {NONE} -- Implementation
 				include (fa, shift);
 				shift := shift + fa.nb_states;
 				set_final (shift, token_type_list.item);
-				debug
+				debug ("lex_output")
 					io.put_string (" Tool selected: ");
 					io.put_integer (selected_tools.item);
 					io.put_string (" Description: ");
@@ -1225,7 +1225,7 @@ feature {NONE} -- Implementation
 			-- Create an error message when a regular expression can
 			-- be recognized by the first and the second token type.
 			-- Example "aa" is recognized by +(a..z) and 2(a).
-			-- The first tool yield the priority to the second.
+			-- The first will yield the priority to the second.
 		require
 			first_is_a_token_type: token_type_list.has (first);
 			second_is_a_token_type: token_type_list.has (second)

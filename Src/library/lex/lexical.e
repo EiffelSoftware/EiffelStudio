@@ -259,7 +259,7 @@ feature -- Input
 							column_nb_array.item (token_start),
 							keyword_code (local_string),
 							local_string);
-					debug
+					debug ("lex_output")
 						io.put_string ("Last token:%N");
 						io.put_string (last_token.out);
 						io.put_string ("Type return:");
@@ -452,31 +452,33 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			from
-				i := categories_table.lower;
-				io.put_string (" LEXICAL%N Categories table.%N From ");
-				io.put_integer (i)
-			until
-				i = categories_table.upper
-			loop
-				i := i + 1;
-				if categories_table.item (i) /= categories_table.item (i - 1) then
-					io.put_string (" to ");
-					io.put_integer (i - 1);
-					io.put_string (" ");
-					io.put_integer (categories_table.item (i - 1));
-					io.put_string ("th category.%N From ");
+			debug ("lex_output")
+				from
+					i := categories_table.lower;
+					io.put_string (" LEXICAL%N Categories table.%N From ");
 					io.put_integer (i)
-				end
-			end;
-			io.put_string (" to ");
-			io.put_integer (i);
-			io.put_string (" ");
-			io.put_integer (categories_table.item (i));
-			io.put_string ("-th category.%N End of categories table.%N");
-			dfa.trace;
-			io.put_string (" End LEXICAL.");
-			io.new_line
+				until
+					i = categories_table.upper
+				loop
+					i := i + 1;
+					if categories_table.item (i) /= categories_table.item (i - 1) then
+						io.put_string (" to ");
+						io.put_integer (i - 1);
+						io.put_string (" ");
+						io.put_integer (categories_table.item (i - 1));
+						io.put_string ("th category.%N From ");
+						io.put_integer (i)
+					end
+				end;
+				io.put_string (" to ");
+				io.put_integer (i);
+				io.put_string (" ");
+				io.put_integer (categories_table.item (i));
+				io.put_string ("-th category.%N End of categories table.%N");
+				dfa.trace;
+				io.put_string (" End LEXICAL.");
+				io.new_line
+			end
 		end;
 
 feature -- Obsolete

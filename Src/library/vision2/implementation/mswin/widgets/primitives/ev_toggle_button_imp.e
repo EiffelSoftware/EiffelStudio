@@ -15,7 +15,9 @@ inherit
 
 	EV_SELECT_BUTTON_IMP
 		undefine
-			default_style
+			default_style,
+			wel_make,
+			make_by_id
 		redefine
 			interface
 		end
@@ -106,6 +108,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/07 01:17:44  brendel
+--| Added undefine of wel_make and make_by_id.
+--|
 --| Revision 1.20  2000/02/25 21:28:16  brendel
 --| Formatting.
 --|

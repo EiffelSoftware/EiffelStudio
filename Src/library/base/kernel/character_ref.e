@@ -34,7 +34,7 @@ feature -- Access
 	code: INTEGER is
 			-- Associated integer value
 		do
-			Result := chcode ($item);		
+			Result := chcode (item);		
 		end;
 
 	hash_code: INTEGER is
@@ -100,7 +100,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of character
 		do
-			Result := c_outc ($item)
+			Result := c_outc (item)
 		end;
 
 

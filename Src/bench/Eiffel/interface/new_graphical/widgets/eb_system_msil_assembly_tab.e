@@ -52,68 +52,72 @@ feature -- Store/Retrieve
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			pref_string, pk_string: ID_SD
 		do
-			al := root_ast.assemblies
-			check
-				correctly_retrieved: al = Void or else al.is_empty
-			end
-			if al = Void then
-				create al.make (gac_assembly_list.count + local_assembly_list.count)
-			end
-				-- Store local references
-			from
-				local_assembly_list.start
-			until
-				local_assembly_list.after
-			loop
-				l_row := local_assembly_list.item
-				if not (l_row @ 2).is_empty then
-					pref_string := new_id_sd (l_row @ 2, True)
-				else
-					pref_string := Void
+			if msil_widgets_enabled then
+				al := root_ast.assemblies
+				check
+					correctly_retrieved: al = Void or else al.is_empty
 				end
-				if not (l_row @ 6).is_empty then
-					pk_string := new_id_sd (l_row @ 6, True)
-				else
-					pk_string := Void
+				if al = Void then
+					create al.make (gac_assembly_list.count + local_assembly_list.count)
 				end
-				create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
-					new_id_sd (l_row @ 3, True),
-					pref_string,
-					new_id_sd (l_row @ 4, True),
-					new_id_sd (l_row @ 5, True),
-					pk_string)
-				al.extend (l_assembly_sd)
-				local_assembly_list.forth
-			end
-				-- Store GAC references
-			from
-				gac_assembly_list.start
-			until
-				gac_assembly_list.after
-			loop
-				l_row := gac_assembly_list.item
-				if not (l_row @ 2).is_empty then
-					create pref_string.initialize (l_row @ 2)
-				else
-					pref_string := Void
+					-- Store local references
+				from
+					local_assembly_list.start
+				until
+					local_assembly_list.after
+				loop
+					l_row := local_assembly_list.item
+					if not (l_row @ 2).is_empty then
+						pref_string := new_id_sd (l_row @ 2, True)
+					else
+						pref_string := Void
+					end
+					if not (l_row @ 6).is_empty then
+						pk_string := new_id_sd (l_row @ 6, True)
+					else
+						pk_string := Void
+					end
+					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
+						new_id_sd (l_row @ 3, True),
+						pref_string,
+						new_id_sd (l_row @ 4, True),
+						new_id_sd (l_row @ 5, True),
+						pk_string)
+					al.extend (l_assembly_sd)
+					local_assembly_list.forth
 				end
-				create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
-					new_id_sd (l_row @ 3, True),
-					pref_string,
-					new_id_sd (l_row @ 4, True),
-					new_id_sd (l_row @ 5, True),
-					new_id_sd (l_row @ 6, True))
-				al.extend (l_assembly_sd)
-				gac_assembly_list.forth
+					-- Store GAC references
+				from
+					gac_assembly_list.start
+				until
+					gac_assembly_list.after
+				loop
+					l_row := gac_assembly_list.item
+					if not (l_row @ 2).is_empty then
+						create pref_string.initialize (l_row @ 2)
+					else
+						pref_string := Void
+					end
+					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, False),
+						new_id_sd (l_row @ 3, True),
+						pref_string,
+						new_id_sd (l_row @ 4, True),
+						new_id_sd (l_row @ 5, True),
+						new_id_sd (l_row @ 6, True))
+					al.extend (l_assembly_sd)
+					gac_assembly_list.forth
+				end
+				root_ast.set_assemblies (al)
 			end
-			root_ast.set_assemblies (al)
 		end
 		
 
 	retrieve (root_ast: ACE_SD) is
 			-- Retrieve content of `root_ast' and update content of widget.
 		do
-			initialize_from_ast (root_ast)
+			if msil_widgets_enabled then
+				initialize_from_ast (root_ast)
+			end
 		end
 
 feature {NONE} -- Filling

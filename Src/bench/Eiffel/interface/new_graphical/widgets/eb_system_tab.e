@@ -69,6 +69,12 @@ feature -- Status
 			Result := last_error_message /= Void
 		end
 
+	msil_widgets_enabled: BOOLEAN
+			-- Are 'msil_specific_widgets' currently enabled?
+
+	c_widgets_enabled: BOOLEAN
+			-- Are 'c_specific_widgets' enabled?
+
 feature -- Status setting
 
 	enable_msil_widgets is
@@ -76,6 +82,8 @@ feature -- Status setting
 		do
 			msil_specific_widgets.do_all ({EV_WIDGET}~enable_sensitive)
 			c_specific_widgets.do_all ({EV_WIDGET}~disable_sensitive)
+			msil_widgets_enabled := True
+			c_widgets_enabled := False
 		end
 
 	enable_c_widgets is
@@ -83,6 +91,8 @@ feature -- Status setting
 		do
 			msil_specific_widgets.do_all ({EV_WIDGET}~disable_sensitive)
 			c_specific_widgets.do_all ({EV_WIDGET}~enable_sensitive)
+			msil_widgets_enabled := False
+			c_widgets_enabled := True
 		end
 
 	disable_widgets_set_before_has_compilation_started is

@@ -49,9 +49,9 @@ feature -- Execution
 
 	execute is
 		local
-			case_w: CASE_W
+			case_interface: CASE_INTERFACE
 		do
-			!! case_w.make (output_window, reverse_engineering_window)	
+			!! case_interface.make (output_window, reverse_engineering_window)	
 		end;
 
 feature {NONE} -- Properties

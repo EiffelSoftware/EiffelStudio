@@ -57,7 +57,7 @@ feature -- Execution
 			fn: FILE_NAME;
 			prev_class: CLASS_C;
 			prev_cluster: CLUSTER_I
-			case_tool: CASE_W
+			case_tool: CASE_INTERFACE
 		do
 			if not rescued then
 				if not Workbench.system_defined then

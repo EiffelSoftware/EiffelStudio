@@ -363,10 +363,10 @@ EIF_INTEGER add_f, typ, prot;
 
 	result = socket ((int) add_f, (int) typ, (int) prot);
 #if defined EIF_WIN32 || defined EIF_OS2
-	if (result < 0)
+	if (result == INVALID_SOCKET)
 		eio();
 #else
-	if (result == INVALID_SOCKET)
+	if (result < 0)
 		eio();
 #endif
 	return (EIF_INTEGER) result;

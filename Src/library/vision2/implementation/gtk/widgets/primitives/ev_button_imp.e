@@ -17,9 +17,6 @@ inherit
 	EV_BAR_ITEM_IMP
         
 	EV_TEXTABLE_IMP
-		redefine
-			make
-		end
 
 	EV_PIXMAPABLE_IMP
 		undefine
@@ -39,6 +36,13 @@ feature {NONE} -- Initialization
 			widget := gtk_button_new
 			gtk_object_ref (widget)
 			initialize
+		end
+
+	make_with_text (txt: STRING) is
+			-- Create 
+		do
+			make
+			create_text_label (txt)
 		end
 	
 	initialize is

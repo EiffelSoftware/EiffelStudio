@@ -56,11 +56,15 @@ extern int epush(register struct stack *stk, register void *value);	/* Push an a
 extern int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem-set? */
 extern int is_in_special_rem_set (EIF_REFERENCE obj);	/* Is obj in special_rem_set? */
 /* General-purpose exported functions */
+#endif
 RT_LNK void plsc(void);					/* Partial scavenging */
+#ifdef ISE_GC
 extern void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
 extern void mksp(void);					/* Mark and sweep algorithm */
+#endif
 RT_LNK void reclaim(void);				/* Reclaim all the objects */
 RT_LNK int collect(void);				/* Generation-based collector */
+#ifdef ISE_GC
 extern int acollect(void);				/* Automatic garbage collection */
 extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
 RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
@@ -76,19 +80,25 @@ extern int eif_promote_special (register EIF_REFERENCE object);
 							/* Does an special refers to young ones ? */
 extern int is_in_special_rem_set (register EIF_REFERENCE object);
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif
 RT_LNK char *onceset(void);				/* Recording of once function result */
 RT_LNK void new_onceset(EIF_REFERENCE);				/* Recording of once function result */
 #ifdef EIF_THREADS
 RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result */
 #endif
+#ifdef ISE_GC
 
 extern EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
 	/* Get stack address of "once" from "once_set". */
 extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
+#endif
 RT_LNK void gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void gc_run(void);				/* Restart the garbage collector */
+#ifdef ISE_GC
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
+
+#endif /* ISE_GC */
 
 #ifdef EIF_THREADS
 #define EIF_GLOBAL_ONCE_MUTEX_LOCK 		eif_thr_mutex_lock(eif_global_once_mutex)
@@ -96,7 +106,6 @@ extern void gfree(register union overhead *zone);	/* Garbage collector's free ro
 extern EIF_MUTEX_TYPE *eif_global_once_mutex;	/* Mutex used to protect insertion of global onces in `global_once_set' */
 #endif
 
-#endif /* ISE_GC */
 
 #ifdef __cplusplus
 }

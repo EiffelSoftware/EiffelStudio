@@ -77,19 +77,22 @@ RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
 extern EIF_REFERENCE eif_strset(EIF_REFERENCE object, unsigned int nbytes);
 						/* Set the string header. */
 RT_LNK EIF_REFERENCE cmalloc(unsigned int nbytes);				/* Allocate a C object */
-extern EIF_REFERENCE gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
 extern EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
 extern EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
 extern void xfree(register EIF_REFERENCE ptr);				/* Free */
-extern void xfreechunk(EIF_REFERENCE ptr);					/* Free memory chunks */
 extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
 extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
 RT_LNK EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
+
+#ifdef ISE_GC
+extern EIF_REFERENCE gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
 extern struct emallinfo *meminfo(int type);	/* Memory statistics */
+extern void xfreechunk(EIF_REFERENCE ptr);					/* Free memory chunks */
+#endif /* ISE_GC */
 
 
-
+#ifdef ISE_GC
 /*
  * Shared routines
  */
@@ -103,6 +106,8 @@ extern void memck(unsigned int max_dt);
 extern void mem_diagnose(int sig);			/* Memory usage dump */
 extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
 extern void sc_stop(void);
+
+#endif /* ISE_GC */
 
 #ifdef __cplusplus
 }

@@ -59,9 +59,12 @@
 #include "eif_interp.h"
 #endif
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef ISE_GC
 
 #ifdef EIF_ASSERTIONS
 extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
@@ -169,7 +172,10 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * the garbage collector or the memory management routines.
  */
 
+#endif /* ISE_GC */
+
 #ifndef EIF_THREADS
+#ifdef ISE_GC
 rt_shared struct stack loc_stack = {			/* Local indirection stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -184,6 +190,7 @@ rt_public struct stack loc_set = {				/* Local variable stack */
 	(EIF_REFERENCE *) 0,			/* st_top */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
+#endif
 rt_public struct stack once_set = {			/* Once functions */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -194,6 +201,7 @@ rt_public struct stack once_set = {			/* Once functions */
 #else
 	/* Same as above except that GC keeps track of all thread specific stack to
 	 * perform a GC cycle among all threads */
+#ifdef ISE_GC
 rt_public struct stack_list loc_stack_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
@@ -204,6 +212,7 @@ rt_public struct stack_list loc_set_list = {
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
 };
+#endif
 rt_public struct stack_list once_set_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
@@ -217,6 +226,7 @@ rt_public struct stack global_once_set = {			/* Once functions */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 
+#ifdef ISE_GC
 	/* Other containers needed by GC but are not specific to garcol */
 	/* hector.c */
 rt_public struct stack_list hec_stack_list = {
@@ -229,6 +239,7 @@ rt_public struct stack_list hec_saved_list = {
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
 };
+#endif
 
 	/* except.c */
 rt_public struct stack_list eif_stack_list = {
@@ -252,6 +263,7 @@ rt_public struct stack_list opstack_list = {
 
 #endif
 
+#ifdef ISE_GC
 rt_private struct stack rem_set = {			/* Remembered set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -273,6 +285,7 @@ rt_shared struct stack moved_set = {			/* Moved objects set */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 
+
 #ifdef EIF_MEMORY_OPTIMIZATION
 	/********************************************************************
 	 * Memory set: Record memory objects in the GS zone.		 		*
@@ -287,6 +300,8 @@ rt_public struct stack memory_set =
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
 #endif	/* EIF_MEMORY_OPTIMIZATION */
+
+#endif
 
 #ifdef EIF_THREADS
 rt_public EIF_MUTEX_TYPE *eif_gc_mutex = NULL;	/* Mutex used to protect GC collection or allocation */
@@ -331,6 +346,8 @@ rt_public int gc_monitor = 0;		/* Disable GC time-monitoring by default */
 rt_public EIF_REFERENCE root_obj = NULL;	
 									/* Address of the 'root' object */ 
 
+#ifdef ISE_GC
+
 #ifdef DEBUG
 rt_private int nb_items(register1 struct stack *);	
 #endif
@@ -345,14 +362,19 @@ rt_shared int is_in_special_rem_set (EIF_REFERENCE obj);
 rt_public int acollect(void);				/* Collection based on threshold */
 rt_public int scollect(int (*gc_func) (void), int i);				/* Collect with statistics */
 
+#endif /* ISE_GC */
+
 /* Stopping/restarting the GC */
 rt_public void gc_stop(void);				/* Stop the garbage collector */
 rt_public void gc_run(void);				/* Restart the garbage collector */
 
+#ifdef ISE_GC
 /* Mark and sweep */
 rt_public void mksp(void);					/* The mark and sweep entry point */
 rt_private int mark_and_sweep(void);		/* Mark and sweep algorithm */
+#endif /* ISE_GC */
 rt_public void reclaim(void);				/* Reclaim all the objects */
+#ifdef ISE_GC
 rt_private void full_mark(EIF_CONTEXT_NOARG);			/* Marks all reachable objects */
 rt_private void full_sweep(void);			/* Removes all un-marked objects */
 rt_private void run_collector(void);		/* Wrapper for full collections */
@@ -425,12 +447,14 @@ rt_shared EIF_REFERENCE to_chunk(void);			/* Address of the chunk holding 'to' *
 /* Dealing with dispose routine */
 rt_shared void gfree(register union overhead *zone);				/* Free object, eventually call dispose */
 
+#endif
 /* Stack handling routines */
 rt_shared int epush(register struct stack *stk, register void *value);				/* Push value on stack */
 rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);		/* Creates an empty stack */
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
 rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
+#ifdef ISE_GC
 
 /* Marking algorithm */
 #ifdef RECURSIVE_MARKING
@@ -454,22 +478,6 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERE
 
 #ifdef WORKBENCH
 rt_private void mark_op_stack(struct opstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move);		/* Marks operational stack */
-
-#ifdef CONCURRENT_EIFFEL
-#define DISP(x,y) \
-	(x == scount)?sep_obj_dispose(y):call_disp(x,y)
-#else
-#define DISP(x,y) call_disp(x,y)
-#endif
-
-#else
-/* Does the exception stack need to be traversed to update references to
- * moving objects (i.e. set to False if no assertion and exception_trace(yes)
- * is not used in the Ace file
- */
-
-#define DISP(x,y) ((void *(*)())Dispose(x))(y)
-
 #endif
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
@@ -786,6 +794,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 
 	return status;		/* Forward status report */
 }
+#endif /* ISE_GC */
 
 /*
  * Garbage collector stop/run
@@ -800,8 +809,10 @@ rt_public void gc_stop(void)
 	 * signal handler).
 	 */
 
+#ifdef ISE_GC
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status |= GC_STOP;		/* Stop GC */
+#endif
 }
 
 rt_public void gc_run(void)
@@ -815,10 +826,13 @@ rt_public void gc_run(void)
 	 * reference problem--RAM.
 	 */
 
+#ifdef ISE_GC
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status &= ~GC_STOP;		/* Restart GC */
+#endif
 }
 
+#ifdef ISE_GC
 /*
  * Mark and sweep garbage collector.
  */
@@ -871,6 +885,7 @@ rt_private void clean_up(void)
 	rel_core();				/* We may give some core back to the kernel */
 	SIGRESUME;				/* Dispatch any signal which has been queued */
 }
+#endif /* ISE_GC */
 
 rt_public void reclaim(void)
 {
@@ -888,6 +903,8 @@ rt_public void reclaim(void)
 
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;
+
+#ifdef ISE_GC
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	if (egc_prof_enabled)
@@ -943,16 +960,17 @@ rt_public void reclaim(void)
 	eif_free_dlls();
 #endif
 
-
 #ifdef LMALLOC_CHECK
-	eif_lm_display ();
-	eif_lm_free ();
+		eif_lm_display ();
+		eif_lm_free ();
 #endif	/* LMALLOC_CHECK */
 
+#endif /* ISE_GC */
 		/* Final collection terminated, unmark the flag */
 	eif_is_in_final_collect = EIF_FALSE;
 }
 
+#ifdef ISE_GC
 rt_private void run_collector(void)
 {
 	/* Run the mark and sweep collectors, assuming the state is already set.
@@ -2855,6 +2873,7 @@ rt_private void full_update(void)
 	update_memory_set ();
 #endif	/* EIF_MEMORY_OPTIMIZATION */
 }
+#endif /* ISE_GC */
 
 /*
  * Mixed strategy garbage collector (mark and sweep plus scavenging).
@@ -2867,12 +2886,15 @@ rt_public void plsc(void)
 	 * updating (available to the user via MEMORY).
 	 */
 
+#ifdef ISE_GC
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
+#endif /* ISE_GC */
 }
 
+#ifdef ISE_GC
 rt_private int partial_scavenging(void)
 {
 	/* Partial Scavenging -- Implementation of the INRIA algorithm
@@ -3812,6 +3834,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
  * for both generation collection and generation scavenging.
  */
 
+#endif /* ISE_GC */
 rt_public int collect(void)
 {
 	/* The generational collector entry point, with statistics updating. The
@@ -3819,11 +3842,16 @@ rt_public int collect(void)
 	 * to the user via MEMORY primitives.
 	 */
 
+#ifdef ISE_GC
 	int result;
 	result = scollect(generational_collect, GST_GEN);
 	return result;
+#else
+	return 0;
+#endif /* ISE_GC */
 }
 
+#ifdef ISE_GC
 rt_private int generational_collect(void)
 {
 	/* Generation collector -- The new generation is completely collected
@@ -5239,6 +5267,8 @@ rt_private void update_memory_set ()
 
 	REQUIRE ("GC is not stopped", !(g_data.status & GC_STOP));
 
+	/************************* End of postconditions. **********************/
+
 	memcpy (&new_stack, &memory_set, sizeof(struct stack));
 	s = new_stack.st_cur = memory_set.st_hd;		/* New empty stack */
 	if (s) {
@@ -6270,6 +6300,8 @@ rt_shared void gfree(register union overhead *zone)
 	xfree((EIF_REFERENCE) (zone + 1));		/* Put object back to free-list */
 }
 
+#endif
+
 /* Once functions need to be kept in a dedicated stack, so that they are
  * always kept alive. Before returning, a once function needs to call the
  * following to properly record itself.
@@ -6502,6 +6534,7 @@ rt_public void st_reset(register1 struct stack *stk)
 	memset (stk, 0, sizeof(struct stack));
 }
 
+#ifdef ISE_GC
 #ifdef EIF_REM_SET_OPTIMIZATION
 rt_shared int is_in_special_rem_set (EIF_REFERENCE obj)
 {
@@ -6754,6 +6787,8 @@ rt_public void eif_panic(char *s)
 }
 
 #endif
+
+#endif /* ISE_GC */
 
 #ifdef __cplusplus
 }

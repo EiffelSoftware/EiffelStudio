@@ -56,7 +56,8 @@ cluster
 		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
-		ids:				"$BENCH/Eiffel/eiffel/ids";
+		compiler_ids:		"$BENCH/Eiffel/eiffel/ids/compiler";
+		routine_ids:		"$BENCH/Eiffel/eiffel/ids/routine";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
 		interface:			"$BENCH/Eiffel/eiffel/interface";
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";

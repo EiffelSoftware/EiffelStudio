@@ -20,12 +20,13 @@ inherit
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
-	SHARED_BENCH_RESOURCES;
+	--SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as choose_template,
 			execute_warner_ok as warner_ok
 		end;
+	EB_CONSTANTS
 	CREATE_ACE_CALLER
 
 creation
@@ -343,7 +344,7 @@ feature {NONE} -- Implementation; Execution
 				elseif compilation_allowed then
 					if Eiffel_ace.file_name /= Void then
 						confirm_and_compile (arg);
-						if resources.get_boolean (r_Raise_on_error, true) then
+						if Project_resources.raise_on_error.actual_value then
 							tool.raise
 						end
 					elseif arg = Void then

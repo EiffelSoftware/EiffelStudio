@@ -9,7 +9,7 @@ class SHARED_FORMAT_TABLES
 
 inherit
 
-	SHARED_BENCH_RESOURCES
+	EB_CONSTANTS
 
 feature -- Properties
 
@@ -190,8 +190,8 @@ feature -- Clearing tables
 feature {NONE} -- Attributes
 
 	History_size: INTEGER is
-		once
-			Result := resources.get_integer (r_History_size, 10);
+		do
+			Result := System_resources.history_size.actual_value;
 			if Result < 1 or Result > 100 then
 					-- Just in case the user specified some weird values.
 				Result := 10

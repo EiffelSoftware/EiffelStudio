@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Update `resources'.
 		do
 			!! acrobat_reader.make (associated_category.acrobat_reader);
+			!! text_mode.make (associated_category.text_mode);
 			!! tab_step.make (associated_category.tab_step);
 			!! editor.make (associated_category.editor);
 			!! filter_path.make (associated_category.filter_path);
@@ -47,6 +48,7 @@ feature {NONE} -- Initialization
 			end
 
 			resources.extend (acrobat_reader);
+			resources.extend (text_mode)
 			resources.extend (tab_step);
 			resources.extend (editor);
 			resources.extend (filter_path);
@@ -111,5 +113,6 @@ feature {NONE} -- Resources
 	history_size: INTEGER_PREF_RES;
 	window_free_list_number: INTEGER_PREF_RES;
 	color_list: ARRAY_PREF_RES
+	text_mode: STRING_PREF_RES;
 
 end -- class GENERAL_PREF_CAT

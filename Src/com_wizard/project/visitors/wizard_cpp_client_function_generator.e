@@ -307,7 +307,16 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 			if visitor.is_basic_type then
-				message_output.add_warning (Current, message_output.Not_pointer_type)
+				Result.append (Tmp_clause)
+				Result.append (name)
+
+				Result.append (Space_equal_space)
+
+				Result.append (Open_parenthesis)
+				Result.append (visitor.c_type)
+				Result.append (Close_parenthesis)
+				Result.append (name)
+				Result.append (Semicolon)
 
 			elseif visitor.is_enumeration then
 				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)

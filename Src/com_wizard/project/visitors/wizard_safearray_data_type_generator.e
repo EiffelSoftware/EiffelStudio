@@ -505,7 +505,7 @@ feature -- Basic operations
 				%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
 				%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
 				%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%index = (EIF_INTEGER) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
+				%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
 				%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%
 				%for (i = 0; i < dim_count; i++)%N%T%
 				%%<%N%T%T%
@@ -563,7 +563,7 @@ feature -- Basic operations
 					%eif_array_element = eif_protect (rt_generated_ce." + tmp_element_ce_function + "(sa_element);%N%T%T%
 					%put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%
 					%eif_wean (eif_array_element);%N%T%
-				%%> while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
+				%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
 				%// free memory%N%T%
 				%hr = SafeArrayDestroy (a_safearray);%N%T%
 				%if (hr != S_OK)%N%T%
@@ -620,7 +620,7 @@ feature -- Basic operations
 				%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
 				%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
 				%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%index = (EIF_INTEGER) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
+				%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
 				%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%
 				%for (i = 0; i < dim_count; i++)%N%T%
 				%%<%N%T%T%
@@ -682,7 +682,7 @@ feature -- Basic operations
 					%%>%N%T%T%
 					%put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%
 					%eif_wean (eif_array_element);%N%T%
-				%%> while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
+				%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
 				%// free memory%N%T%
 				%hr = SafeArrayDestroy (a_safearray);%N%T%
 				%if (hr != S_OK)%N%T%

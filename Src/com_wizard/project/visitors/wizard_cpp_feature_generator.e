@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (New_line_tab_tab_tab)
 
-			-- 		com_eraise (rt_ec.ccom_ec_lpstr (eename (HRESULT_CODE (hr) - 1024)), HRESULT_CODE (hr) -1024);
+			-- 		com_eraise (rt_ec.ccom_ec_lpstr (eename (HRESULT_CODE (hr) - 1024), NULL), HRESULT_CODE (hr) -1024);
 
 			Result.append (Com_eraise)
 			Result.append (Space)
@@ -291,6 +291,8 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			Result.append_integer (1024)
 			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			result.append (Null)
 			Result.append (Close_parenthesis)
 			Result.append (Comma)
 			Result.append (Hresult_code)

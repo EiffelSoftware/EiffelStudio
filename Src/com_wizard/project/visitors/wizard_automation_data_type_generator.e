@@ -128,6 +128,7 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_lpstr")
 				ec_function_name.append ("ccom_ec_lpstr")
 				can_free := True
+				writable := True
 
 			elseif is_lpwstr (a_type) then
 				ce_function_name.append ("ccom_ce_lpwstr")

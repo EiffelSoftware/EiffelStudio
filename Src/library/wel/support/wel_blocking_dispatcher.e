@@ -94,6 +94,15 @@ feature {NONE} -- Implementation
 			Result.put (Wel_list_view_constants.Lvm_getcountperpage,Wel_list_view_constants.Lvm_getcountperpage)
 			Result.put (Wel_list_view_constants.Lvm_getbkcolor,		Wel_list_view_constants.Lvm_getbkcolor)
 			Result.put (Wel_window_constants.Wm_ncactivate,			Wel_window_constants.Wm_ncactivate)
+			Result.put (Wel_window_constants.Wm_ctlcolormsgbox,		Wel_window_constants.Wm_ctlcolormsgbox)
+			Result.put (Wel_window_constants.Wm_ctlcoloredit,		Wel_window_constants.Wm_ctlcoloredit)
+			Result.put (Wel_window_constants.Wm_ctlcolorbtn,		Wel_window_constants.Wm_ctlcolorbtn)
+			Result.put (Wel_window_constants.Wm_ctlcolordlg,		Wel_window_constants.Wm_ctlcolordlg)
+			Result.put (Wel_window_constants.Wm_ctlcolorscrollbar,	Wel_window_constants.Wm_ctlcolorscrollbar)
+			Result.put (Wel_window_constants.Wm_ctlcolorstatic,		Wel_window_constants.Wm_ctlcolorstatic)
+			Result.put (Wel_window_constants.Wm_command,			Wel_window_constants.Wm_command)
+			Result.put (Wel_window_constants.Wm_geticon,			Wel_window_constants.Wm_geticon)
+			Result.put (Wel_window_constants.Wm_showwindow,			Wel_window_constants.Wm_showwindow)
 		end
 
 	special_messages: HASH_TABLE [INTEGER, INTEGER] is
@@ -176,7 +185,7 @@ feature {NONE}
 				bres := cwin_set_foreground_window (blocking_dispatcher_window.item)
 
 			elseif msg = Wel_window_constants.Wm_childactivate then
-				io.putstring ("Received WM_CHILDACTIVATE message")
+				debug ("WEL_BLOCKING_DISPATCHER") io.putstring ("Received WM_CHILDACTIVATE message") end
 
 			elseif msg = Wel_window_constants.Wm_activate then
 				debug ("WEL_BLOCKING_DISPATCHER") io.putstring ("Received WM_ACTIVATE message") end

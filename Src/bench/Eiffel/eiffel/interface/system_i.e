@@ -113,9 +113,6 @@ feature
 	m_feature_server: M_FEATURE_SERVER;
 			-- Server of melted feature byte code
 
-	m_rout_tbl_server: M_ROUT_TBL_SERVER;
-			-- Server for melted routine tables
-
 	m_rout_id_server: M_ROUT_ID_SERVER;
 			-- Server for routine id array byte code
 
@@ -383,6 +380,14 @@ feature
 			!!rout_info_table.make;
 			!!onbidt.make (50);
 			!!optimization_tables.make
+		end;
+
+	reset_debug_counter is
+			-- Reset the debugger counters.
+		do
+			if execution_table /= Void then
+				execution_table.reset_debug_counter
+			end
 		end;
 
 	init is

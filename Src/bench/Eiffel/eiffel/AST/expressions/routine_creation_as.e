@@ -515,7 +515,6 @@ feature {NONE} -- Type
 				-- In the previous example, we should look the feature table of the
 				-- `actual_class_type', but if we have `my_proc ((a.y)~f)', we need
 				-- to take the feature table of the real type of `a'.
-			actual_feat_tbl := context.actual_class_type.associated_class.feature_table
 			solved_type := Creation_evaluator.evaluated_type (
 										   target_type, a_table, a_feature)
 			solved_type := solved_type.instantiation_in (target_type, cid)

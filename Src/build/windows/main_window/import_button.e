@@ -49,9 +49,9 @@ feature {NONE}
 			end
 		end
 
--- added by samik
 	execute (a: ANY) is
 		do
+			work (a)
 		end
 
 end

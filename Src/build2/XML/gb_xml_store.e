@@ -162,7 +162,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 			an_object.generate_xml (new_type_element)
 			
 				-- Now store all attributes from interface of Vision2.
-			supported_types := clone (handler.supported_types)
+			supported_types := handler.supported_types.twin
 			from
 				supported_types.start
 			until

@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_CHECK_MENU_ITEM_I
+		undefine
+			parent
 		redefine
 			interface
 		end
@@ -86,6 +88,9 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/24 01:42:02  brendel
+--| Undefined parent from ImpInt.
+--|
 --| Revision 1.13  2000/02/23 02:13:26  brendel
 --| Revised. Implemented.
 --|

@@ -135,7 +135,7 @@ feature -- Basic operations
 				end
 				
 					-- Hide the history window.
-				if history.dialog.is_show_requested then
+				if history.history_dialog.is_show_requested then
 					command_handler.show_hide_history_command.execute
 				end
 					-- Remove the history.

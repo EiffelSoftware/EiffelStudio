@@ -125,8 +125,13 @@ feature {NONE} -- Implementation
 		local
 			d_options: LACE_LIST [D_OPTION_SD]
 			fopt: FREE_OPTION_SD
+			l_ast: ACE_SD
 		do
-			d_options := lace.parsed_ast.defaults
+			l_ast := lace.parsed_ast
+				-- `l_ast' could be Void if Ace is not valid.
+			if l_ast /= Void then
+				d_options := l_ast.defaults
+			end
 			if d_options /= Void then
 				from 
 					d_options.start

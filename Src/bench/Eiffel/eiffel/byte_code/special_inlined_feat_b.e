@@ -62,7 +62,7 @@ feature -- Generation
 				buf.putstring (" + (")
 				parameters.i_th (2).print_register
 				buf.putstring (")) = ")
-				argument_regs.item(1).print_register
+				parameters.i_th (1).print_register
 				buf.putstring (";")
 				buf.new_line
 				buf.putstring ("/* END INLINED CODE */")

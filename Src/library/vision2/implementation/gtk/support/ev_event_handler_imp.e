@@ -158,6 +158,8 @@ feature {NONE} -- Status report
 			-- For lists, trees and combo boxes:
 			elseif ev_str.is_equal ("selection_changed") then
 				Result := selection_changed_id
+			elseif ev_str.is_equal ("select_child") then
+				Result := select_child_id
 
 			-- For multi column lists:
 			elseif ev_str.is_equal ("select_row") then
@@ -184,6 +186,18 @@ feature {NONE} -- Status report
 			-- For text fields:
 			elseif ev_str.is_equal ("activate") then
 				Result := activate_id
+
+			-- For rich text:
+			elseif ev_str.is_equal ("insert_text") then
+				Result := insert_text_id
+			elseif ev_str.is_equal ("delete_text") then
+				Result := delete_text_id
+
+			-- For scrollbars, spin buttons and Ranges (GtkScale):
+--			elseif ev_str.is_equal ("motion") then
+--				Result := motion_id
+			elseif ev_str.is_equal ("value_changed") then
+				Result := value_changed_id
 
 			end
 		ensure
@@ -221,21 +235,24 @@ feature {NONE} -- Status setting
 				valid_event_data_implementation: ev_d_imp /= Void
 			end
 			ev_str := event.to_c
-			con_id := c_gtk_signal_connect (
-				wid,
-				$ev_str,
-				cmd.execute_address,
-				$cmd,
-				$arg,
-				$ev_data,
-				$ev_d_imp,
-				ev_d_imp.initialize_address,
-				mouse_button,
-				double_click,
-				extra_data
-			)
-			check
-				successfull_connect: con_id > 0
+			if (wid /= default_pointer) then
+				con_id := c_gtk_signal_connect (
+					wid,
+					$ev_str,
+					cmd.execute_address,
+					$cmd,
+					$arg,
+					$ev_data,
+					$ev_d_imp,
+					ev_d_imp.initialize_address,
+					mouse_button,
+					double_click,
+					extra_data
+				)
+
+				check
+					successfull_connect: con_id > 0
+				end
 			end
  
 			-- Updating the `event_command_array' by including the new command :
@@ -260,7 +277,7 @@ feature {NONE} -- Status setting
 		end
         
 	add_command (wid: POINTER; event: STRING; cmd: EV_COMMAND; 
-		     arg: EV_ARGUMENT) is
+		     arg: EV_ARGUMENT; extra_data: POINTER) is
 			-- Add `cmd' at the end of the list of
 			-- actions to be executed when the 'event'
 			-- happens `arg' will be passed to
@@ -275,28 +292,28 @@ feature {NONE} -- Status setting
 		local
 			ev_str: ANY
 			con_id: INTEGER
-
 			list_com: EV_GTK_COMMAND_LIST
 			event_id: INTEGER
 		do
 			ev_str:= event.to_c
-			con_id := c_gtk_signal_connect (
-				wid,
-				$ev_str,
-				cmd.execute_address,
-				$cmd,
-				$arg,
-				Default_pointer,
-				Default_pointer,
-				Default_pointer,
-				0,
-				False,
-				Default_pointer
-			)
-			check
-				successfull_connect: con_id > 0		
+			if (wid /= default_pointer) then
+				con_id := c_gtk_signal_connect (
+					wid,
+					$ev_str,
+					cmd.execute_address,
+					$cmd,
+					$arg,
+					Default_pointer,
+					Default_pointer,
+					Default_pointer,
+					0,
+					False,
+					extra_data
+				)
+				check
+					successfull_connect: con_id > 0		
+				end
 			end
-
 
 			-- Updating the `event_command_array' by including the new command :
 
@@ -341,7 +358,11 @@ feature {NONE} -- Status setting
 						list_com.exhausted
 					loop
 						con_id := list_com.connexion_id
-						gtk_signal_disconnect (wid, con_id)
+
+						if (wid /= default_pointer) then
+							gtk_signal_disconnect (wid, con_id)
+						end
+
 						-- remove the command in GTK
 						list_com.forth
 					end
@@ -373,8 +394,11 @@ feature {NONE} -- Status setting
 				until
 					list_com.exhausted
 				loop
-					gtk_signal_disconnect (wid, list_com.connexion_id)
-						-- remove the command in GTK
+					if (wid /= default_pointer) then
+						gtk_signal_disconnect (wid, list_com.connexion_id)
+							-- remove the command in GTK
+					end
+
 					list_com.remove
 						-- update of the event_command_array
 					list_com.search_cmd (cmd)

@@ -42,9 +42,9 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_syntax_errori: SYNTAX_ERROR; c: CLASS_C) is
+	make (a_syntax_message: SYNTAX_MESSAGE; c: CLASS_C) is
 		do
-			syntax_error_i := a_syntax_errori
+			syntax_message := a_syntax_message
 			cl_make (c)
 		end
 
@@ -60,24 +60,7 @@ feature -- Properties
 	is_valid: BOOLEAN is
 			-- Is `Current' meaningful?
 		do
-			Result := Precursor {SYNTAX_STONE} and then
-					Precursor {CLASSC_STONE}
+			Result := Precursor {SYNTAX_STONE} and then Precursor {CLASSC_STONE}
 		end
-	
-feature -- Access
-
---	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with Current stone during transport
-			-- when widget at cursor position is compatible with Current stone
---		do
---			Result := Cursors.cur_Class
---		end
-
---	x_stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with Current stone during transport
-			-- when widget at cursor position is not compatible with Current stone
---		do
---			Result := Cursors.cur_X_class
---		end
 
 end -- class CL_SYNTAX_STONE

@@ -1,9 +1,7 @@
 indexing
-	description: 
-		"Stone representing a syntax error."
+	description: "Stone representing a syntax issue."
 	date: "$Date$"
-	revision: "$Revision $"
-
+	revision: "$Revision$"
 
 class
 	SYNTAX_STONE
@@ -26,26 +24,34 @@ inherit
 			is_storable
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_syntax_errori: SYNTAX_ERROR) is
+	make (a_syntax_message: like syntax_message) is
+			-- Create instance of SYNTAX_STONE with `a_syntax_message'.
+		require
+			a_syntax_message_not_void: a_syntax_message /= Void
  		do
-			syntax_error_i := a_syntax_errori
+			syntax_message := a_syntax_message
+		ensure
+			syntax_message_set: syntax_message = a_syntax_message
 		end
 
 feature -- Properties
  
-	syntax_error_i: SYNTAX_ERROR
+	syntax_message: SYNTAX_MESSAGE
+			-- Associated message about syntax issue.
 
 feature -- Access
 
 	file_name: FILE_NAME is
 			-- The one from SYNTAX_ERROR: where it happened
 		do
-			create Result.make_from_string (syntax_error_i.file_name)
+			create Result.make_from_string (syntax_message.file_name)
+		ensure then
+			file_name_not_void: Result /= Void
 		end
 
 	help_text: STRING is
@@ -71,12 +77,17 @@ feature -- Access
 			end
 		end
 
-	start_position: INTEGER is do Result := syntax_error_i.start_position end
+	start_position: INTEGER is
 			-- Stating position of the token involved in the syntax error
+		do
+			Result := syntax_message.start_position
+		end
 
-	end_position: INTEGER is do Result := syntax_error_i.end_position end
-			-- Ending position of the of the token involved in the syntax
-			-- error
+	end_position: INTEGER is
+			-- Ending position of the of the token involved in the syntax error
+		do
+			Result := syntax_message.end_position
+		end
 
 	code: STRING is "Syntax error"
 			-- Error code
@@ -85,14 +96,14 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := Cursors.cur_Interro
+			Result := Cursors.cur_interro
 		end
 
 	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := Cursors.cur_X_interro
+			Result := Cursors.cur_x_interro
 		end
 
 	is_storable: BOOLEAN is

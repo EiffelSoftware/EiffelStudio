@@ -6,7 +6,7 @@ JCFLAGS = $(CFLAGS) $ccflags $optimize
 LN = copy
 MV = \bin\mv
 RM = del
-OBJECTS = argcargv.obj econsole.obj $(TOP)\ipc\shared\shword.obj
+OBJECTS = argcargv.obj econsole.obj
 
 .c.obj:
 	$(CC) -c $(JCFLAGS) $<

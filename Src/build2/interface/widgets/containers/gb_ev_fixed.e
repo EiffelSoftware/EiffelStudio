@@ -66,7 +66,7 @@ feature -- Access
 		local
 			button: EV_BUTTON
 		do
-			create button.make_with_text ("Position children")
+			create button.make_with_text ("Position children...")
 			if first.is_empty then
 				button.disable_sensitive
 			end

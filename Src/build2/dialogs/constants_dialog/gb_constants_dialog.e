@@ -1008,10 +1008,5 @@ feature {NONE} -- Implementation
 			parent_window (constants_list).unlock_update
 		end
 
-invariant
-	input_fields_not_void: string_input /= Void and integer_input /= Void and directory_input /= Void
---	at_least_one_sort_in_place: sorted_by_name or sorted_by_type or sorted_by_value
-	-- Only one sort in place
-
 end -- class GB_CONSTANTS_DIALOG
 

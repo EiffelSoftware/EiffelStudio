@@ -44,30 +44,26 @@ feature -- Access
 	search_after (v: like item) is
 		-- Go to first position with item greater
 		-- than or equal to `v'.
+--| NOTE NOTE NOTE NOTE NOTE NOTE NOTE
+--| This is exactly the same implementation as
+--| in sorted list. The one that was previously
+--| integrated did not work. It will have to
+--| be revized eventually.
 		do
-			if before or else v > item then
-				from
-					if before then 
-						forth
-					end
-				until
-					after or else v <= item
-				loop
-					forth
-				end
-			else
-				from
-					back
-				until
-					before or else item < v
-				loop
-					back
+			from
+				if before then
+					forth;
+				elseif after then
+					if not empty then start end
+				elseif v < item then
+					start
 				end;
+			until
+				after or else v <= item
+			loop
 				forth
 			end
 		end;
-					
-					
 
 feature -- Transformation
 

@@ -64,13 +64,18 @@ feature {NONE} -- Initialization
 
 feature -- Filling
 
-	set_routine (l_frame: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; a_dyn_class, a_org_class: CLASS_C; a_feature: FEATURE_I; a_line_number: INTEGER) is
+	set_routine (l_frame: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; 
+			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
+			a_feature: FEATURE_I; a_line_number: INTEGER) is
 		do
 			icd_il_frame := l_frame
 			
 			il_offset := icd_il_frame.get_ip
 			
-			dynamic_class := a_dyn_class
+			dynamic_type := a_dyn_type
+			if dynamic_type /= Void then
+				dynamic_class := dynamic_type.associated_class	
+			end
 			origin_class := a_org_class
 			break_index := a_line_number
 

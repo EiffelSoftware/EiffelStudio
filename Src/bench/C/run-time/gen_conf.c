@@ -1937,39 +1937,14 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 	/* Process anchored types */
 
-	if ((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE)) {
+	if
+		((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE) ||
+		(dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE))
+	{
 		/* Anchor to a feature */
-
-		*cachable = (char) 0;   /* Cannot cache - may change */
-		(*intab)++;
-		ltype = **intab;    /* Actual type of object */
-		++(*intab);
-
-		/* If ltype is < 0 then the object was void (e.g.void argument) */
-
-		if (ltype >= 0)                 /* Object was not void */
-			ltype = RTUD_INV(ltype);    /* Reverse RTUD */
-
-		/* Process static type now */
-
-		save_otab = *outtab;
-		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
-		*outtab = save_otab;
-
-		if (ltype >= 0)
-			dftype = ltype;     /* Use dynamic type of object */
-
-		**outtab = dftype;
-		(*outtab)++;
-
-		return (apply_rtud ? RTUD(dftype) : dftype);
-	}
-
-	if ((dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE)) {
 		/* Anchor to argument or Current */
 
 		*cachable = (char) 0;   /* Cannot cache - may change */
-
 		(*intab)++;
 		ltype = **intab;    /* Actual type of object */
 		++(*intab);
@@ -2086,8 +2061,6 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	/* Search */
 
 	gdp  = eif_derivations [RTUD(dftype)];
-		/* FIXME: Eric Bezault fix is the following */
-	/*gdp  = eif_derivations [RTUD(dftype)];*/
 	prev = (EIF_GEN_DER *) 0;
 
 	while (gdp != (EIF_GEN_DER *) 0) {

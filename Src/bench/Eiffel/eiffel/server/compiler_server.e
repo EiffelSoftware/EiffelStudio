@@ -130,7 +130,6 @@ debug ("SERVER")
 	print (an_id)
 end
 
-			init_file (server_file)
 			pos := store_append (server_file.descriptor, $t, $make_index, $need_index, $Current)
 			!! info.make (pos, server_file.id)
 			server_file.add_occurence
@@ -144,14 +143,6 @@ end
 				end
 			end
 			force (info, an_id)
-		end
-
-	init_file (server_file: SERVER_FILE) is
-			-- Init server file `server_file' before writing in it.
-		require
-			good_argument: server_file /= Void
-		do
-			server_file.go (server_file.count)
 		end
 
 	remove (an_id: H) is

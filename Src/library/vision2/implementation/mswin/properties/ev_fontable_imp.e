@@ -9,6 +9,11 @@ deferred class EV_FONTABLE_IMP
 
 feature -- Access
 
+	wel_window: WEL_CONTROL is
+			-- Actual wel_window
+		deferred
+		end
+
 	font: EV_FONT is
 			-- font of current primitive
 		require
@@ -48,11 +53,13 @@ feature -- Status setting
 			-- font used for the implementation
 
 	wel_font: WEL_FONT is
-		deferred
+		do
+			Result := wel_window.font
 		end
 
 	wel_set_font (f:WEL_FONT) is
-		deferred
+		do
+			wel_window.set_font (f)
 		end
 	
 	destroyed: BOOLEAN is

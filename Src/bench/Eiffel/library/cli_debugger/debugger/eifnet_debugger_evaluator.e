@@ -445,7 +445,6 @@ feature {NONE}
 					--			as an Eval exception, maybe we should manage this differently
 					last_eval_is_exception := True
 					debug ("DEBUGGER_TRACE_EVAL")
-						eifnet_debugger.display_last_exception
 						io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 					end
 				elseif eifnet_debugger.last_managed_callback_is_eval_exception then
@@ -489,7 +488,6 @@ feature {NONE}
 					last_eval_is_exception := True
 					Result := Void --"WARNING: Could not evaluate output"
 					debug ("DEBUGGER_TRACE_EVAL")
-						eifnet_debugger.display_last_exception
 						io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 					end
 				elseif eifnet_debugger.managed_callback_is_eval_exception (lmcb) then

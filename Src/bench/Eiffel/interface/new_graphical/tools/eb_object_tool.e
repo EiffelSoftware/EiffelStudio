@@ -378,7 +378,6 @@ feature -- Status setting
 							objects_tree.remove
 						end
 
-						cse ?= current_stack_element
 
 						if current_object /= Void then
 							display_first := current_object.display
@@ -387,6 +386,10 @@ feature -- Status setting
 							display_first_onces := current_object.display_onces
 						end
 
+						cse ?= current_stack_element
+						check
+							cse /= Void
+						end
 						if Application.is_dotnet then
 							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} obj.make (Current, cse.dynamic_class, cse.object_address)
 						else
@@ -629,16 +632,13 @@ feature {NONE} -- Implementation
 			-- for now only for Dotnet systems
 		local
 			item: EV_TREE_ITEM
-			l_exception_detail: TUPLE [STRING, STRING]
 			l_exception_module_detail: STRING
 			l_exception_tag, l_exception_message: STRING
 			exception_item: EV_TREE_ITEM
 		do
 			if Application.is_dotnet and then Application.imp_dotnet.exception_occurred then
-				l_exception_detail := Application.imp_dotnet.exception_details
-				if l_exception_detail /= Void then
-					l_exception_module_detail ?= l_exception_detail.item (2)
-					
+				l_exception_module_detail := Application.imp_dotnet.exception_module_name
+				if l_exception_module_detail /= Void then
 					create exception_item
 					if Application.imp_dotnet.exception_handled then
 						exception_item.set_text ("Exception raised :: First chance")
@@ -648,7 +648,6 @@ feature {NONE} -- Implementation
 					exception_item.set_pixmap (Pixmaps.Icon_green_tick)
 					
 						--| Exception message
-					
 					l_exception_tag := Application.imp_dotnet.exception_message
 					if l_exception_tag /= Void then
 						create item
@@ -894,6 +893,9 @@ feature {NONE} -- Implementation
 				end
 			else
 				cse ?= current_stack_element
+				check
+					cse /= Void
+				end
 				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (Current, cse)
 			end
 			if current_object /= Void then

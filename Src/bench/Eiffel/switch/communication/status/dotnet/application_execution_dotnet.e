@@ -211,12 +211,12 @@ feature -- Bridge to Debugger
 			Result := Eifnet_debugger.last_exception_is_handled
 		end
 
-	exception_details: TUPLE [STRING, STRING] is
-			-- class details , module details
+	exception_module_name: STRING is
+			-- Exception "GetMessage" output
 		require
 			exception_occurred: exception_occurred
 		do
-			Result := Eifnet_debugger.exception_details
+			Result := Eifnet_debugger.exception_module_name
 		end
 
 	exception_to_string: STRING is

@@ -31,7 +31,26 @@ feature -- Access
 		-- Should all windows containing tools be shown modelessly
 		-- to the main window. Otherwise, they are independent.
 		
+	loading_project: BOOLEAN
+		-- Is the loading of a project currently underway?
+		
 feature -- Status setting
+
+	enable_loading_project is
+			-- Ensure `loading_project' is True
+		do
+			loading_project := True
+		ensure
+			project_loading: loading_project
+		end
+		
+	disable_loading_project is
+			-- Ensure `loading_project' is False
+		do
+			loading_project := False
+		ensure
+			project_not_loading: not loading_project
+		end
 
 	set_current_project (new_project_settings: GB_PROJECT_SETTINGS) is
 			-- Assign `new_project_settings' to `current_project_settings'.

@@ -27,10 +27,10 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make,
-			wel_move_and_resize as control_move_and_resize
+			make as ev_wel_control_container_make
 		redefine
-			top_level_window_imp
+			top_level_window_imp,
+			wel_move_and_resize
 		end
 
 create
@@ -69,7 +69,7 @@ feature {EV_ANY_I} -- Implementation
 			-- If there is any child, it also adapt them to fit to the given
 			-- value.
 		do
-			control_move_and_resize (a_x, a_y, a_width, a_height, repaint)
+			Precursor (a_x, a_y, a_width, a_height, repaint)
 			if child /= Void then
 				child.set_move_and_size (0, 0, 
 					client_width, client_height)
@@ -129,6 +129,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/29 21:30:09  brendel
+--| Used redefinition instead of renaming.
+--|
 --| Revision 1.10  2000/03/23 19:33:26  brendel
 --| Removed FIXME related to previous commital.
 --|

@@ -293,6 +293,48 @@ feature -- Conversion
 			Result := item
 		end
 
+	to_hex_string: STRING is
+			-- Convert `item' into an hexadecimal string.
+		local
+			i: INTEGER
+			val: INTEGER_64
+			a_digit: INTEGER
+		do
+			from
+				i := (create {PLATFORM}).Integer_64_bits // 4
+				create Result.make (i)
+				Result.fill_blank
+				val := item
+			until
+				i = 0
+			loop
+				a_digit := (val & 0x0F).to_integer
+				Result.put (a_digit.to_hex_character, i)
+				val := val |>> 4 
+				i := i - 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+			Result_valid_count: Result.count = (create {PLATFORM}).Integer_64_bits // 4
+		end
+
+	to_hex_character: CHARACTER is
+			-- Convert `item' into an hexadecimal character.
+		require
+			in_bounds: 0 <= item and item <= 15
+		local
+			tmp: INTEGER
+		do
+			tmp := item.to_integer
+			if tmp <= 9 then
+				Result := (tmp + ('0').code).to_character
+			else
+				Result := (('A').code + (tmp - 10)).to_character
+			end
+		ensure
+			valid_character: ("0123456789ABCDEF").has (Result)
+		end
+
 	frozen to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		require

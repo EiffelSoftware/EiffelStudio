@@ -22,13 +22,13 @@ feature {NONE} -- Initialization
 		do
 			item := c_get_bstr (astring.item)
 		ensure
-			string_created: item /= Void
+			string_created: item /= default_pointer
 		end
 		
 	make_by_pointer (p: POINTER) is
 			-- create a BSTR from a pointer
 		require
-			non_void_pointer: p /= Void
+			non_void_pointer: p /= default_pointer
 		do
 			item := p
 		end

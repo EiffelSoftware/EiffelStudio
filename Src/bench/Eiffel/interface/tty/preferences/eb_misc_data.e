@@ -203,6 +203,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	acrobat_reader_preference: STRING_PREFERENCE
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE
 	shell_editor_preference: STRING_PREFERENCE
+	internet_browser_preference: STRING_PREFERENCE
 	general_shell_command_preference: STRING_PREFERENCE
 	general_filter_name_preference: STRING_PREFERENCE
 	general_filter_command_preference: STRING_PREFERENCE
@@ -230,6 +231,7 @@ feature {NONE} -- Preference Strings
 	acrobat_reader_string: STRING is "misc.acrobat_reader"
 	text_mode_is_windows_string: STRING is "misc.text_mode_is_windows"
 	shell_editor_string: STRING is "misc.editor"
+	internet_browser_string: STRING is "misc.internet_browser"
 	general_shell_command_string: STRING is "misc.shell_command"
 	general_filter_name_string: STRING is "misc.filter_name"
 	general_filter_command_string: STRING is "misc.filter_command"
@@ -275,7 +277,8 @@ feature {NONE} -- Implementation
 
 			acrobat_reader_preference := l_manager.new_string_resource_value (l_manager, acrobat_reader_string, "acrobat")
 			text_mode_is_windows_preference := l_manager.new_boolean_resource_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)						
-			shell_editor_preference := l_manager.new_string_resource_value (l_manager, shell_editor_string, "vi")			
+			shell_editor_preference := l_manager.new_string_resource_value (l_manager, shell_editor_string, "vi")
+			internet_browser_preference := l_manager.new_string_resource_value (l_manager, internet_browser_string, "netscape $url")
 			general_shell_command_preference := l_manager.new_string_resource_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")			
 			general_filter_name_preference := l_manager.new_string_resource_value (l_manager, general_filter_name_string, "PostScript")			
 			general_filter_command_preference := l_manager.new_string_resource_value (l_manager, general_filter_command_string, "")			

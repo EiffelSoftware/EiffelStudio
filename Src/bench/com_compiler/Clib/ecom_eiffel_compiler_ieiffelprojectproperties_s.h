@@ -47,6 +47,26 @@ class IEnumImportedAssemblies;
 
 
 
+#ifndef __ecom_eiffel_compiler_IEnumIncludePaths_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumIncludePaths_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumIncludePaths;
+}
+#endif
+
+
+
+#ifndef __ecom_eiffel_compiler_IEnumObjectFiles_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumObjectFiles_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumObjectFiles;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelProjectProperties_INTERFACE_DEFINED__
@@ -213,6 +233,42 @@ public:
 	Remove an assembly from the project.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP remove_assembly(  /* [in] */ BSTR assembly_path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Included Paths.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP include_paths(  /* [out, retval] */ ecom_eiffel_compiler::IEnumIncludePaths * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Add an include path to the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP add_include_path(  /* [in] */ BSTR include_path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Remove an include path from the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP remove_include_path(  /* [in] */ BSTR include_path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Object Files.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP object_files(  /* [out, retval] */ ecom_eiffel_compiler::IEnumObjectFiles * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Add an object file to the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP add_object_file(  /* [in] */ BSTR object_file ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Remove an object file from the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP remove_object_file(  /* [in] */ BSTR object_file ) = 0;
 
 
 	/*-----------------------------------------------------------

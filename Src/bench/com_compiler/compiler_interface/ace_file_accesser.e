@@ -601,6 +601,80 @@ feature -- Access
 		ensure
 			valid_ast: is_valid
 		end
+		
+	include_paths: LINKED_LIST [STRING] is
+			-- included paths in the project
+		require
+			valid_ast: is_valid
+		local
+			l_ext: LACE_LIST [LANG_TRIB_SD]
+			file_names: LACE_LIST [ID_SD]
+		do
+			create Result.make
+			l_ext := root_ast.externals
+			if l_ext /= Void then
+				from
+					l_ext.start
+				until
+					l_ext.after
+				loop
+					if l_ext.item.language_name.is_include_path then
+						file_names := l_ext.item.file_names
+						check
+							has_files: file_names /= Void
+						end
+						from
+							file_names.start
+						until
+							file_names.after
+						loop
+							Result.extend (file_names.item)
+							file_names.forth
+						end
+					end
+					l_ext.forth
+				end
+			end
+		ensure
+			valid_ast: is_valid
+		end
+		
+	object_files: LINKED_LIST [STRING] is
+			-- object files in the project
+		require
+			valid_ast: is_valid
+		local
+			l_ext: LACE_LIST [LANG_TRIB_SD]
+			file_names: LACE_LIST [ID_SD]
+		do
+			create Result.make
+			l_ext := root_ast.externals
+			if l_ext /= Void then
+				from
+					l_ext.start
+				until
+					l_ext.after
+				loop
+					if l_ext.item.language_name.is_object then
+						file_names := l_ext.item.file_names
+						check
+							has_files: file_names /= Void
+						end
+						from
+							file_names.start
+						until
+							file_names.after
+						loop
+							Result.extend (file_names.item)
+							file_names.forth
+						end
+					end
+					l_ext.forth
+				end
+			end
+		ensure
+			valid_ast: is_valid
+		end
 
 	cluster_sd_with_name (name: STRING): CLUSTER_SD is
 			-- Cluster named `name' in current system.
@@ -872,7 +946,7 @@ feature -- Element change
 			-- Set cluster named `name' as override cluster.
 		require
 			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
+			empty_name: not name.is_empty
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
@@ -901,7 +975,7 @@ feature -- Element change
 					defaults.forth
 				end
 			end
-			defaults.extend (new_special_option_sd ("override_cluster", name, False))
+			defaults.extend (new_special_option_sd ("override_cluster", name, False))	
 		end
 
 	add_cluster (name, parent_name, path: STRING) is
@@ -1041,6 +1115,168 @@ feature -- Element change
 				end
 			end
 		end
+		
+	add_include_path (path: STRING) is
+			-- add an include path to the project
+		require
+			path_not_void: path /= Void
+			path_not_empty: not path.is_empty
+		local
+			l_ext: LACE_LIST [LANG_TRIB_SD]
+			file_names: LACE_LIST [ID_SD]
+			lt: LANG_TRIB_SD
+			lang: LANGUAGE_NAME_SD
+			l_ass: LINKED_LIST [STRING]
+		do
+			l_ass := include_paths
+			l_ass.compare_objects
+			if not l_ass.has (new_id_sd (path, True)) then
+				l_ext := root_ast.externals
+				if l_ext = Void then
+					create l_ext.make (20)
+					root_ast.set_externals (l_ext)
+				end
+				from
+					l_ext.start
+				until
+					l_ext.after
+				loop
+					if l_ext.item.language_name.is_include_path then
+						lt := l_ext.item
+					end
+					l_ext.forth
+				end
+				if lt = Void then
+					lang := new_language_name_sd (new_id_sd ("include_path", True))
+					create file_names.make (20)
+					lt := new_lang_trib_sd (lang, file_names)
+					l_ext.extend (lt)
+				end
+				lt.file_names.extend (new_id_sd (path, True))
+			end
+		end
+		
+	remove_include_path (path: STRING) is
+			-- remove an include path from the project
+		local
+			l_ext: LACE_LIST [LANG_TRIB_SD]
+			file_names: LACE_LIST [ID_SD]
+			path_sd: ID_SD
+		do
+			path_sd := new_id_sd (path, True)
+			l_ext := root_ast.externals
+			if l_ext /= Void then
+				from
+					l_ext.start
+				until
+					l_ext.after
+				loop
+					if l_ext.item.language_name.is_include_path then
+						file_names := l_ext.item.file_names
+						from
+							file_names.start
+						until
+							file_names.after
+						loop
+							if file_names.item.is_equal (path_sd) then
+								file_names.remove
+							else
+								file_names.forth
+							end
+						end
+					end
+					if file_names.is_empty then
+						l_ext.remove
+					else
+						l_ext.forth
+					end
+				end
+				if l_ext.is_empty then
+					l_ext := Void
+				end
+			end
+		end
+		
+	add_object_file (path: STRING) is
+			-- add an object file to the project
+		require
+			path_not_void: path /= Void
+			path_not_empty: not path.is_empty
+		local
+			l_ext: LACE_LIST [LANG_TRIB_SD]
+			file_names: LACE_LIST [ID_SD]
+			lt: LANG_TRIB_SD
+			lang: LANGUAGE_NAME_SD
+			l_ass: LINKED_LIST [STRING]
+		do
+			l_ass := object_files
+			l_ass.compare_objects
+			if not l_ass.has (new_id_sd (path, True)) then
+				l_ext := root_ast.externals
+				if l_ext = Void then
+					create l_ext.make (20)
+					root_ast.set_externals (l_ext)
+				end
+				from
+					l_ext.start
+				until
+					l_ext.after
+				loop
+					if l_ext.item.language_name.is_object then
+						lt := l_ext.item
+					end
+					l_ext.forth
+				end
+				if lt = Void then
+					lang := new_language_name_sd (new_id_sd ("object", True))
+					create file_names.make (20)
+					lt := new_lang_trib_sd (lang, file_names)
+					l_ext.extend (lt)
+				end
+				lt.file_names.extend (new_id_sd (path, True))
+			end
+		end
+		
+	remove_object_file (path: STRING) is
+			-- remove an object file from the project
+		local
+			l_ext: LACE_LIST [LANG_TRIB_SD]
+			file_names: LACE_LIST [ID_SD]
+			path_sd: ID_SD
+		do
+			path_sd := new_id_sd (path, True)
+			l_ext := root_ast.externals
+			if l_ext /= Void then
+				from
+					l_ext.start
+				until
+					l_ext.after
+				loop
+					if l_ext.item.language_name.is_object then
+						file_names := l_ext.item.file_names
+						from
+							file_names.start
+						until
+							file_names.after
+						loop
+							if file_names.item.is_equal (path_sd) then
+								file_names.remove
+							else
+								file_names.forth
+							end
+						end
+					end
+					if file_names.is_empty then
+						l_ext.remove
+					else
+						l_ext.forth
+					end
+				end
+				if l_ext.is_empty then
+					l_ext := Void
+				end
+			end
+		end
 
 	rename_cluster (old_name, new_name: STRING) is
 			-- Rename cluster named `old_name' in `new_name'.
@@ -1059,8 +1295,8 @@ feature -- Element change
 				until
 					done or else l_clusters.after
 				loop
-					if l_clusters.item.cluster_name.is_equal (new_id_sd (old_name, False)) then
-						l_clusters.item.set_cluster_name (new_id_sd (new_name, False))
+					if l_clusters.item.cluster_name.is_equal (new_id_sd (old_name, true)) then
+						l_clusters.item.set_cluster_name (new_id_sd (new_name, true))
 						done := True
 					else
 						l_clusters.forth

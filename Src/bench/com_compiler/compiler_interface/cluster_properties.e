@@ -36,6 +36,7 @@ inherit
 			set_all,
 			set_use_system_default,
 			set_assertions,
+			set_parent_name,
 			add_exclude,
 			remove_exclude,
 			cluster_id
@@ -371,6 +372,18 @@ feature -- Element change
 		do
 			id_sd := new_id_sd (a_name, False)
 			cluster_sd.set_cluster_name (id_sd)
+				
+			-- change all of the sub clusters parent name to the current name
+			if subclusters_impl /= Void then
+				from
+					subclusters_impl.start
+				until
+					subclusters_impl.after
+				loop
+					subclusters_impl.item.set_parent_name (a_name)
+					subclusters_impl.forth
+				end
+			end
 		end
 
 	set_cluster_path (path: STRING) is
@@ -378,7 +391,7 @@ feature -- Element change
 		local
 			id_sd: ID_SD
 		do
-			id_sd := new_id_sd (path, False)
+			id_sd := new_id_sd (path, True)
 			cluster_sd.set_directory_name (id_sd)
 		end
 
@@ -499,6 +512,19 @@ feature -- Element change
 			end
 		end
 
+	set_parent_name (a_parent_name: STRING) is
+			-- set the parent name on those clusters that
+			-- have already had the parent name set
+		require
+			is_child: parent_name.count > 0
+			non_void_parent: a_parent_name /= Void
+			non_empty_parent: a_parent_name.count > 0 
+		do
+			cluster_sd.set_parent_name (create {ID_SD}.initialize (a_parent_name))
+		ensure
+			parent_name_set: parent_name.is_equal (a_parent_name)
+		end
+		
 
 	add_exclude (dir_name: STRING) is
 			-- Add a directory to exclude.

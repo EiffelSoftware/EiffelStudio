@@ -21,6 +21,8 @@ interface IEnumCluster;
 interface IEnumFeature;
 interface IEnumClusterProp;
 interface IEnumClusterExcludes;
+interface IEnumIncludePaths;
+interface IEnumObjectFiles;
 interface IEnumImportedAssemblies;
 interface IEiffelSystemClusters;
 
@@ -232,6 +234,58 @@ interface IEnumClusterExcludes : IUnknown
 
     HRESULT Clone(
         [out] IEnumClusterExcludes ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid(DB65539C-1C71-4a59-B548-22DA96BF0D13),
+    helpstring ("Include Path Enumeration.")
+]
+
+interface IEnumIncludePaths : IUnknown
+{
+    HRESULT Next(
+        [out] BSTR *rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumIncludePaths ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+
+//---------------------------------------------------------------------
+[
+    oleautomation,
+    uuid(5CE55179-0954-44f9-9E1F-A74456642047),
+    helpstring ("Object File Enumeration.")
+]
+
+interface IEnumObjectFiles : IUnknown
+{
+    HRESULT Next(
+        [out] BSTR *rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumObjectFiles ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 
@@ -618,6 +672,24 @@ interface IEiffelProjectProperties: IDispatch
   [id (118), helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_path);
 
+  [id (123), propget, helpstring ("Included Paths.")]
+  HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
+
+  [id (124), helpstring ("Add an include path to the project.")]
+  HRESULT add_include_path ([in] BSTR include_path);
+
+  [id (125), helpstring ("Remove an include path from the project.")]
+  HRESULT remove_include_path ([in] BSTR include_path);
+
+  [id (126), propget, helpstring ("Object Files.")]
+  HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
+
+  [id (127), helpstring ("Add an object file to the project.")]
+  HRESULT add_object_file ([in] BSTR object_file);
+
+  [id (128), helpstring ("Remove an object file from the project.")]
+  HRESULT remove_object_file ([in] BSTR object_file);
+
   [id (131), helpstring ("Update the project Ace file according to the current settings.")]
   HRESULT update_project_ace_file ([in] BSTR project_ace_file_name);
 
@@ -775,6 +847,8 @@ library eiffel_compiler
   interface IEnumFeature;
   interface IEnumClusterProp;
   interface IEnumClusterExcludes;
+  interface IEnumIncludePaths;
+  interface IEnumObjectFiles;
   interface IEnumImportedAssemblies;
   interface IEiffelSystemClusters;
 

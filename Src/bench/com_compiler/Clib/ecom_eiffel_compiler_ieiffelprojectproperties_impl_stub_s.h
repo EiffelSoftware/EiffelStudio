@@ -197,6 +197,42 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Included Paths.
+	-----------------------------------------------------------*/
+	STDMETHODIMP include_paths(  /* [out, retval] */ ecom_eiffel_compiler::IEnumIncludePaths * * return_value );
+
+
+	/*-----------------------------------------------------------
+	Add an include path to the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP add_include_path(  /* [in] */ BSTR include_path );
+
+
+	/*-----------------------------------------------------------
+	Remove an include path from the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP remove_include_path(  /* [in] */ BSTR include_path );
+
+
+	/*-----------------------------------------------------------
+	Object Files.
+	-----------------------------------------------------------*/
+	STDMETHODIMP object_files(  /* [out, retval] */ ecom_eiffel_compiler::IEnumObjectFiles * * return_value );
+
+
+	/*-----------------------------------------------------------
+	Add an object file to the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP add_object_file(  /* [in] */ BSTR object_file );
+
+
+	/*-----------------------------------------------------------
+	Remove an object file from the project.
+	-----------------------------------------------------------*/
+	STDMETHODIMP remove_object_file(  /* [in] */ BSTR object_file );
+
+
+	/*-----------------------------------------------------------
 	Update the project Ace file according to the current settings.
 	-----------------------------------------------------------*/
 	STDMETHODIMP update_project_ace_file(  /* [in] */ BSTR project_ace_file_name );

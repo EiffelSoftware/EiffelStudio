@@ -52,6 +52,7 @@ feature -- Initialization
 					create clusters_table.make (cl.count)
 					create cluster_table_by_id.make (cl.count)
 					create clusters_impl.make (10)
+					create renamed_clusters_table.make (10)
 					cl.start
 					next_id := 1
 				until
@@ -125,6 +126,13 @@ feature -- Basic Operations
 				l_clusters.after
 			loop
 				clus_name := l_clusters.item.cluster_name
+				
+				-- check to see if the cluster has been renamed. If so the
+				-- subsitute the old name for the new. This will preserve the
+				-- original order of the clusters
+				if renamed_clusters_table.has (clus_name)  then
+					create clus_name.initialize (renamed_clusters_table.item (clus_name))
+				end
 				if copy_clusters.has (clus_name) then
 					l_clusters.put (copy_clusters.item (clus_name).cluster_sd)
 					copy_clusters.remove (clus_name)
@@ -212,6 +220,7 @@ feature -- Basic Operations
 				clusters_impl.forth
 			end
 		end
+		
 
 	cluster_properties (cluster_name: STRING): CLUSTER_PROPERTIES is
 			-- Cluster properties.
@@ -235,11 +244,27 @@ feature -- Element change
 			-- 'a_new_name' [in]
 		local
 			cluster: CLUSTER_PROPERTIES
+			replaced: BOOLEAN
 		do
 			cluster ?= clusters_table.item (a_name)
 			if cluster /= Void then
-				clusters_table.remove (a_name)
-				clusters_table.put (cluster, a_new_name)
+				-- check to see if the cluster has already been renamed.
+				from
+					renamed_clusters_table.start
+				until
+					renamed_clusters_table.after or replaced
+				loop
+					if renamed_clusters_table.item_for_iteration.is_equal (a_name) then
+						renamed_clusters_table.replace (a_new_name, renamed_clusters_table.key_for_iteration)
+						replaced := true;
+					end
+					renamed_clusters_table.forth
+				end	
+				-- if it has not been renamed then added it to the renamed table
+				if renamed_clusters_table.after then
+					renamed_clusters_table.put (a_new_name, a_name)
+				end
+				clusters_table.replace_key (a_new_name, a_name)
 				cluster.set_name (a_new_name);
 			end
 		end
@@ -249,6 +274,9 @@ feature {NONE} -- Implementation
 
 	clusters_impl: ARRAYED_LIST [CLUSTER_PROPERTIES]
 			-- List of clusters.
+			
+	renamed_clusters_table: HASH_TABLE [STRING, STRING]
+			-- Hash table of the clusters that have been renamed
 			
 	clusters_table: HASH_TABLE [CLUSTER_PROPERTIES, STRING]
 			-- Hash table of clusters.
@@ -265,5 +293,6 @@ invariant
 	non_void_clusters_list: clusters_impl /= Void
 	non_void_clusters_table: clusters_table /= Void
 	non_void_ace_accesser: ace_accesser /= Void
+	non_void_rename_cluster_table: renamed_clusters_table /= Void
 
 end -- class SYSTEM_CLUSTERS

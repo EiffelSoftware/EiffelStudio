@@ -1,6 +1,10 @@
 #ifndef _CONCURRENT_EXTERN_FUNCTIONS_
 #define _CONCURRENT_EXTERN_FUNCTIONS_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 /*---------------------------------------------------------*/
 /* The following are functions in the concurrent C-library */
 /*---------------------------------------------------------*/
@@ -189,6 +193,10 @@ extern EIF_INTEGER get_pattern_id(struct ctable *ct, char *key);
 #ifdef EIF_WIN32
 /* For debuging */
 extern void disp_info(char *, char *, long);
+#endif
+			
+#ifdef __cplusplus
+}
 #endif
 
 #endif

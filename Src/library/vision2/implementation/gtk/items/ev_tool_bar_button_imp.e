@@ -53,7 +53,8 @@ inherit
 			pointer_double_press_actions,
 			create_pointer_button_press_actions,
 			create_pointer_double_press_actions,
-			select_actions
+			select_actions,
+			on_focus_changed
 		redefine
 			make,
 			initialize,

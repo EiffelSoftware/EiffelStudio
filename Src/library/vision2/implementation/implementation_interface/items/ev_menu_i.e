@@ -18,7 +18,7 @@ inherit
 			interface
 		end
 
-feature -- Standard operations
+feature -- Basic operations
 
 	show is
 			-- Pop up on the current pointer position.
@@ -58,6 +58,9 @@ end -- class EV_MENU_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/22 23:52:22  brendel
+--| Fixed feature clause name.
+--|
 --| Revision 1.20  2000/03/22 22:52:00  brendel
 --| Added show and show_at.
 --|

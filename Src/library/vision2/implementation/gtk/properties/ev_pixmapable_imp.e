@@ -31,51 +31,64 @@ feature -- Initialization
 feature -- Access
 
 	pixmap: EV_PIXMAP is
-			-- Pixmap that has been set.
-		local
-			pix_imp: EV_PIXMAP_IMP
-			temp_gtk_pixmap, gdk_data, gdk_mask: POINTER
+			-- 
 		do
-			temp_gtk_pixmap := gtk_pixmap
-			if temp_gtk_pixmap /= NULL then
-				create Result
-				pix_imp ?= Result.implementation
-				feature {EV_GTK_EXTERNALS}.gtk_pixmap_get (temp_gtk_pixmap, $gdk_data, $gdk_mask)
-				pix_imp.copy_from_gdk_data (gdk_data, gdk_mask, pix_width, pix_height)
-			end
+			if internal_pixmap /= Void then
+				Result := clone (internal_pixmap.interface)
+			end		
 		end
 
 feature -- Element change
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to `pixmap'.
-		local
-			imp: EV_PIXMAP_IMP
-			gtk_pix_wid: POINTER
 		do
 			remove_pixmap
-			imp ?= a_pixmap.implementation
-			pix_width := imp.width
-			pix_height := imp.height
-			gtk_pix_wid := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (imp.drawable, imp.mask)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pix_wid)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (pixmap_box, gtk_pix_wid)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)		
+			--internal_pixmap := clone (a_pixmap)
+			internal_pixmap ?= a_pixmap.implementation	
+			internal_set_pixmap (internal_pixmap, internal_pixmap.width, internal_pixmap.height)
 		end
 
 	remove_pixmap is
 			-- Assign Void to `pixmap'.
+		do	
+			internal_pixmap := Void
+			internal_remove_pixmap
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
+		end
+		
+feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
+
+	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
+			-- 
+		local
+			gtk_pix_wid: POINTER
+		do
+			if a_width /= internal_pixmap.width or else a_height /= internal_pixmap.height then
+				-- We need to scale pixmap before it is placed in to pixmap holder
+				internal_remove_pixmap
+				a_pixmap_imp.stretch (a_width, a_height)
+			end
+			gtk_pix_wid := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pixmap_imp.drawable, a_pixmap_imp.mask)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pix_wid)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (pixmap_box, gtk_pix_wid)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)				
+		end
+		
+	internal_remove_pixmap is
+			-- Remove pixmap from Current
 		local
 			p: POINTER
 		do	
 			p := gtk_pixmap
 			if p /= NULL then
-				--feature {EV_GTK_EXTERNALS}.gtk_object_ref (p)
 				--| We want p to be deallocated by gtk.
 				feature {EV_GTK_EXTERNALS}.gtk_container_remove (pixmap_box, p)
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
-		end
+		end	
+
+	internal_pixmap: EV_PIXMAP_IMP
+			-- Internal stored pixmap.		
 
 feature {NONE} -- Implementation
 
@@ -90,9 +103,6 @@ feature {NONE} -- Implementation
 				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			end
 		end
-		
-	pix_width, pix_height: INTEGER
-		-- Stored dimensions used for creating on the fly pixmaps.
 
 	pixmap_box: POINTER
 			-- GtkHBox to hold the GtkPixmap.

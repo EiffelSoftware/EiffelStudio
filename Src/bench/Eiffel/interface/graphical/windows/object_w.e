@@ -14,17 +14,18 @@ inherit
 	BAR_AND_TEXT
 		rename
 			attach_all as default_attach_all,
-			make as normal_create
+			make as normal_create,
+			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole, build_widgets,
 			tool_name, set_default_position, default_format
 		end
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, hole, default_format,
+			text_window, build_format_bar, hole, default_format, close_windows,
 			tool_name, set_default_position, make, build_widgets, attach_all
 		select
-			make, attach_all
+			make, attach_all, close_windows
 		end
 
 creation
@@ -42,6 +43,14 @@ feature
 
 	text_window: OBJECT_TEXT;
 
+	close_windows is
+			-- Close sub-windows.
+		do
+			old_close_windows;
+			if slice_command.slice_window.is_popped_up then
+				slice_command.slice_window.popdown
+			end
+		end;
 	
 feature {NONE}
 
@@ -91,22 +100,23 @@ feature {NONE}
 
 	build_command_bar is
 		do
+			!! slice_command.make (command_bar, text_window);
+			command_bar.attach_left (slice_command, 0);
+			command_bar.attach_right (slice_command, 0);
+			command_bar.attach_bottom (slice_command, 0)
 			!! current_target.make (command_bar, text_window);
 			command_bar.attach_left (current_target, 0);
-			command_bar.attach_bottom (current_target, 0)
+			command_bar.attach_right (current_target, 0);
+			command_bar.attach_bottom_widget (slice_command, current_target, 10)
 			!! next_target.make (command_bar, text_window);
 			command_bar.attach_left (next_target, 0);
+			command_bar.attach_right (next_target, 0);
 			command_bar.attach_bottom_widget (current_target, next_target, 0);
 			!! previous_target.make (command_bar, text_window);
 			command_bar.attach_left (previous_target, 0);
+			command_bar.attach_right (previous_target, 0);
 			command_bar.attach_bottom_widget (next_target, previous_target, 0);
 		end;
-
-	showattr_command: SHOW_ATTR_VALUES;
-	showonce_command: SHOW_ONCE_RESULTS;
-	current_target: CURRENT_OBJECT;
-	previous_target: PREVIOUS_OBJECT;
-	next_target: NEXT_OBJECT;
 
 	set_default_position is
 			-- Display the window at the cursor position.
@@ -119,5 +129,14 @@ feature {NONE}
 		do
 			Result := showattr_command
 		end;
+
+feature
+
+	showattr_command: SHOW_ATTR_VALUES;
+	showonce_command: SHOW_ONCE_RESULTS;
+	current_target: CURRENT_OBJECT;
+	previous_target: PREVIOUS_OBJECT;
+	next_target: NEXT_OBJECT;
+	slice_command: SLICE_COMMAND;
 
 end

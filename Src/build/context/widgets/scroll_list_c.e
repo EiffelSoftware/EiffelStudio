@@ -9,7 +9,7 @@ inherit
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
-			stored_node, context_initialization, is_fontable,
+			stored_node, is_fontable,
 			widget, position_initialization, set_size,
 			widget_creation_routine_name
 		end;
@@ -17,7 +17,7 @@ inherit
 	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			context_initialization, is_fontable, 
+			is_fontable, 
 			widget, position_initialization, set_size,
 			widget_creation_routine_name
 		select
@@ -45,10 +45,10 @@ feature
 			from
 				i := 1;
 			until
-				i > 5
+				i > 3
 			loop
 				!!text.make (0);
-				text.append ("Item");
+				text.append ("i");
 				text.append (to_string (i));
 				widget.put_right (text);
 				i := i + 1;
@@ -146,15 +146,15 @@ feature {NONE}
 	
 feature {CONTEXT}
 
-	context_initialization (context_name: STRING): STRING is
-		local
-			func_name: STRING;
-		do
-			!!Result.make (0);
-			function_int_to_string (Result, context_name, 
-				"set_visible_item_count", 
-			visible_item_count)
-		end;
+	--context_initialization (context_name: STRING): STRING is
+		--local
+			--func_name: STRING;
+		--do
+			--!!Result.make (0);
+			--function_int_to_string (Result, context_name, 
+				--"set_visible_item_count", 
+			--visible_item_count)
+		--end;
 
 	position_initialization (context_name: STRING): STRING is
 			-- Eiffel code for the position of current context

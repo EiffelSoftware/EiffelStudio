@@ -24,11 +24,6 @@ inherit
 
 	EV_C_UTIL
 
---	GTK_ENUMS
-
---	EV_GTK_KEY_CONVERSION
---| Removed for implementation reasons regarding executable size
-
 	INTERNAL
 
 feature {EV_ANY_I} -- Access
@@ -48,10 +43,6 @@ feature {EV_ANY_I} -- Access
 			c_object := a_c_object
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
-			--	print (generator + ".set_c_object new eif_object "
-			--		+ out.substring (1, out.index_of ('%N', 1) - 1)
-			--		+ " and new c_object " + c_object.out  +
-			--		" and new eif_oid " + object_id.out + "%N")
 			end
 			set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
 		ensure
@@ -88,10 +79,22 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			-- Render `Current' unusable.
 		local
 			i, l: INTEGER
+			item_imp: EV_ITEM_IMP
+			widget_imp: EV_WIDGET_IMP
 		do
 			debug ("EV_GTK_DESTROY")
 				safe_print (generator + ".destroy")
 			end
+			item_imp ?= Current
+			if item_imp /= Void and then item_imp.parent_imp /= Void then
+					item_imp.parent_imp.interface.prune_all (item_imp.interface)
+			else
+				widget_imp ?= Current
+				if widget_imp /= Void and then widget_imp.parent_imp /= Void then
+					widget_imp.parent_imp.interface.prune_all (widget_imp.interface)
+				end
+			end
+			
 			l := action_sequences.count
 			from i := 1 until i > l loop
 				action_sequences.i_th (i).block
@@ -101,9 +104,15 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			disconnect_all_signals
 			if C.gtk_is_window (c_object) then
 				C.gtk_object_destroy (c_object)
+			elseif C.gtk_object_struct_ref_count (c_object) > 1 then
+				if C.gtk_widget_struct_parent (c_object) /= NULL then
+					C.gtk_container_remove (C.gtk_widget_struct_parent (c_object), c_object)
+				else
+					--print ("Object has ref count of more than 1 but with no parent%N")
+				end
 			else
 				C.gtk_object_unref (c_object)
-			end	
+			end
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL

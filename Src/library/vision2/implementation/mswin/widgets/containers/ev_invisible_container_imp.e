@@ -13,9 +13,6 @@ deferred class
 	
 inherit
 	EV_CONTAINER_I
-		redefine
-			interface
-		end
 
 	EV_CONTAINER_IMP
 		undefine
@@ -24,7 +21,6 @@ inherit
 		redefine
 			enable_sensitive,
 			disable_sensitive,
-			interface
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -120,10 +116,6 @@ feature -- Assertion features
 			Result := ev_children.has (a_child)
 		end
 
-feature {NONE}
-
-	interface: EV_INVISIBLE_CONTAINER
-
 end -- class EV_INVISIBLE_CONTAINER_IMP
 
 --|----------------------------------------------------------------
@@ -147,6 +139,9 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/21 18:12:21  oconnor
+--| removed redefinition of interface
+--|
 --| Revision 1.26  2000/03/21 16:57:29  oconnor
 --| removed invisible container _I
 --|

@@ -144,7 +144,6 @@ feature {NONE} -- debugger behavior
 	end_of_managed_callback_without_stopping (cb_id: INTEGER) is
 			-- called at each ending of callback with no stopping state
 		local
-			process_callback: BOOLEAN
 			execution_stopped: BOOLEAN
 		do			
 			execution_stopped := continue (cb_id)

@@ -446,7 +446,6 @@ feature -- Drawing operations
 			-- 
 		local
 			pix_imp: EV_PIXMAP_IMP
-			a_src_pixbuf, a_dest_pixbuf: POINTER
 		do
 			create Result
 			pix_imp ?= Result.implementation

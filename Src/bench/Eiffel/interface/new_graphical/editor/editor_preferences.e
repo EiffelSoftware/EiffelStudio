@@ -6,6 +6,7 @@ indexing
 
 class
 	EDITOR_PREFERENCES
+	EV_FIGURE_TEXT
 
 inherit
 	ANY
@@ -176,7 +177,7 @@ feature -- Element Change (General preferences)
 			view_invisible_symbols_set: not view_invisible_symbols
 		end
 
-	turn_smart_ident_on is
+	enable_smart_ident is
 			-- Set `smart_identation' to True.
 		do
 			smart_identation := True
@@ -184,7 +185,7 @@ feature -- Element Change (General preferences)
 			smart_identation_set: smart_identation
 		end
 
-	turn_smart_ident_off is
+	disable_smart_ident is
 			-- Set `smart_identation' to False.
 		do
 			smart_identation := False

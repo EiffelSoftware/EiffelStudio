@@ -3,6 +3,9 @@ class
 
 inherit
 	WEL_APPLICATION
+		redefine
+			idle_action
+		end
 
 creation
 	make
@@ -12,7 +15,14 @@ feature
 	main_window: MAIN_WINDOW is
 			-- Create the application's main window
 		once
-			!! Result.make
+			create Result.make
+			Result.set_application(Current)
+			enable_idle_action
+		end
+
+	idle_action is
+		do
+			main_window.idle_action
 		end
 
 end -- class APPLICATION

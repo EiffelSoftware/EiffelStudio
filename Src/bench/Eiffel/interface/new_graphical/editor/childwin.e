@@ -67,14 +67,6 @@ feature -- Initialization
 			end
 		end
 
-	class_background: WEL_BRUSH is
-			-- Set the class background to NULL in order
-			-- to have full control on the WM_ERASEBKG event
-			-- (on_erase_background)
-		once
-			create Result.make_by_pointer(Default_pointer)
-		end
-
 	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING) is
 		do
 				-- Create the window.
@@ -83,14 +75,15 @@ feature -- Initialization
 				-- Retrieve user preferences (syntax highligting, tabulation width, ...).
 			editor_preferences.set_tabulation_spaces(4)
 			editor_preferences.show_invisible_symbols
-			editor_preferences.turn_smart_ident_on
-
-				-- Read and parse the file.
-			read_and_analyse_file (a_name)
+			editor_preferences.enable_smart_ident
 
 				-- Load the font & Compute Font related constants.
 			Initialize
 			number_of_lines_displayed := height // line_increment
+
+				-- Read and parse the file.
+			file_name := clone(a_name)
+			start_reading_file
 
 				-- Setup the scroll bars.
 			set_vertical_range (1, vertical_range_max)
@@ -107,30 +100,15 @@ feature -- Initialization
 			set_focus
 		end
 
-	read_and_analyse_file (a_name: STRING) is
-			-- Read the file named `a_name' and perform a lexical analysis
-		local
-			file: PLAIN_TEXT_FILE
-			line_item: EDITOR_LINE
-			curr_string: STRING
-			fake_text: EDITOR_TOKEN_TEXT
-			fake_list: EDITOR_LINE
+	idle_action: BOOLEAN is
+			-- Action performed when the application is idle.
+			-- Returns True if no more call to idle_action is
+			-- needed.
 		do
-				-- read the file
-			create file.make_open_read (a_name)
-			create text_displayed.make
-			
-			from
-				file.start
-			until
-				file.after
-			loop
-				file.read_line
-				curr_string := clone (file.last_string)
-				text_displayed.lexer.execute (curr_string)
-				create line_item.make_from_lexer (text_displayed.lexer)
-				text_displayed.extend (line_item)
+			if not file_loaded then
+				finish_reading_file
 			end
+			Result := file_loaded
 		end
 
 feature -- Access
@@ -951,8 +929,13 @@ feature {NONE} -- Implementation
 			Result := editor_preferences.normal_background_brush
 		end
 
-	initialized: BOOLEAN
-		-- Has initialisations been performed?
+	class_background: WEL_BRUSH is
+			-- Set the class background to NULL in order
+			-- to have full control on the WM_ERASEBKG event
+			-- (on_erase_background)
+		once
+			create Result.make_by_pointer(Default_pointer)
+		end
 
 	class_icon: WEL_ICON is
 			-- Window's icon
@@ -974,6 +957,69 @@ feature {NONE} -- Implementation
 				-- create the font
 			create log_font.make (editor_preferences.font_size, editor_preferences.font_name)
 			create Result.make_indirect (log_font)
+		end
+
+feature {NONE} -- Load/Save File handling
+
+	start_reading_file is
+			-- Read the file named `a_name' and perform a lexical analysis
+		local
+			line_item: EDITOR_LINE
+			curr_string: STRING
+			fake_text: EDITOR_TOKEN_TEXT
+			fake_list: EDITOR_LINE
+		do
+				-- read the file
+			create file.make_open_read (file_name)
+			create text_displayed.make
+			
+			from
+				file.start
+			until
+				text_displayed.count > number_of_lines_displayed or else file.after
+			loop
+				file.read_line
+				curr_string := clone (file.last_string)
+				text_displayed.lexer.execute (curr_string)
+				create line_item.make_from_lexer (text_displayed.lexer)
+				text_displayed.extend (line_item)
+			end
+
+			if file.after then
+				file_loaded := True
+			end
+		end
+
+	finish_reading_file is
+			-- Read the file named `a_name' and perform a lexical analysis
+		local
+			line_item: EDITOR_LINE
+			curr_string: STRING
+			fake_text: EDITOR_TOKEN_TEXT
+			fake_list: EDITOR_LINE
+			lines_read: INTEGER
+		do
+			from
+				lines_read := 1
+			until
+				lines_read > 10 or else file.after
+			loop
+				file.read_line
+				curr_string := clone (file.last_string)
+				text_displayed.lexer.execute (curr_string)
+				create line_item.make_from_lexer (text_displayed.lexer)
+				text_displayed.extend (line_item)
+
+					-- prepare next iteration
+				lines_read := lines_read + 1
+			end
+
+			if file.after then
+				file_loaded := True
+			end
+
+				-- Update the scroll bars.
+			set_vertical_range (1, vertical_range_max)
 		end
 
 feature {NONE} -- Private Characteristics of the window
@@ -1021,6 +1067,20 @@ feature {NONE} -- Private Characteristics of the window
 				Result := selection_start
 			end
 		end
+
+feature {NONE} -- Initialisations and File status
+
+	file_loaded: BOOLEAN
+			-- Have we finished loading the file?
+
+	file_name: STRING
+			-- Name of the current edited file.
+	
+	file: PLAIN_TEXT_FILE
+			-- Current edited file.
+
+	initialized: BOOLEAN
+			-- Has initialisations been performed?
 
 feature {NONE} -- Private Constants
 

@@ -35,13 +35,6 @@ rt_private void partial_store_write(void);
 
 #undef DEBUG
 
-void c_sv_init(EIF_INTEGER f_desc)
-{
-	/* Position file `f' at the end. */
-    if (lseek((int)f_desc,0,SEEK_END) == -1)
-		esys();
-}
-
 long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 {
 	/* Append `o' in file `f', and applies routine `mid'
@@ -154,8 +147,7 @@ zone->ov_flags);
 			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
 			count = *(long *) o_ptr;
 			if (!(flags & EO_COMP)) {		/* Special of references */
-				for (ref = object; count > 0; count--,
-						ref = (char *) ((char **) ref + 1)) {
+				for (ref = object; count > 0; count--, ref = (char *) ((char **) ref + 1)) {
 					o_ref = *(char **) ref;
 					if (o_ref != (char *) 0)
 						object_count = pst_store(o_ref,object_count);
@@ -191,16 +183,6 @@ zone->ov_flags);
 		(make_index)(server,object,saved_file_pos,object_count-saved_object_count);
 
 	return object_count;
-}
-
-long fpos2(EIF_INTEGER file_desc)
-{
-	register long result = (long) lseek((int)file_desc, 0, SEEK_CUR);
-
-	if (result == -1)
-		esys();
-
-	return result;
 }
 
 rt_private void partial_store_write(void)

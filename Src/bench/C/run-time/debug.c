@@ -943,7 +943,7 @@ rt_shared char *dview(EIF_OBJ root)
  * Debuggable byte-code loading.
  */
 
-rt_public int dmake_room(int new)
+rt_public int dmake_room(int new_entries_number)
         		/* Amount of new entries in melting table */
 {
 	/* Pre-extend the melting table, making room for the new byte codes entries.
@@ -956,28 +956,28 @@ rt_public int dmake_room(int new)
 	char **new_melt;			/* New melting table address */
 	int *new_mpatidtab;			/* New melted pattern id table */
 
-	if (new == 0)				/* Table does not need any extension */
+	if (new_entries_number == 0)				/* Table does not need any extension */
 		return 0;				/* Everything is fine */
 
 #ifdef DEBUG
 	dprintf(4)("dmake_room: extending melt (0x%lx), %d items by %d\n",
-		 melt, melt_count, new);
+		 melt, melt_count, new_entries_number);
 	dprintf(4)("dmake_room: extending mpatidtab (0x%lx), %d items by %d\n",
-		 mpatidtab, melt_count, new);
+		 mpatidtab, melt_count, new_entries_number);
 #endif
 
 	if (melt == (char **) 0) {
-		new_melt = (char **) cmalloc(new * sizeof(char *));
-		new_mpatidtab = (int *) cmalloc(new * sizeof(int));
+		new_melt = (char **) cmalloc(new_entries_number * sizeof(char *));
+		new_mpatidtab = (int *) cmalloc(new_entries_number * sizeof(int));
 	}
 	else {
-		new_melt = (char **) crealloc((char *)(melt + zeroc), (melt_count + new) * sizeof(char *));
-		new_mpatidtab = (int *) crealloc((char *)(mpatidtab + zeroc), (melt_count + new) * sizeof(int));
+		new_melt = (char **) crealloc((char *)(melt + zeroc), (melt_count + new_entries_number) * sizeof(char *));
+		new_mpatidtab = (int *) crealloc((char *)(mpatidtab + zeroc), (melt_count + new_entries_number) * sizeof(int));
 	}
 	if ((new_melt == (char **) 0) || (new_mpatidtab == (int *) 0))
 		return -1;				/* Not enough memory for extension */
 
-	melt_count += new;				/* New melting table size */
+	melt_count += new_entries_number;				/* New melting table size */
 	melt = new_melt - zeroc;			/* Melting table address may have changed */
 	mpatidtab = new_mpatidtab - zeroc;	/* Melted pattern id table may heve changed */
 	

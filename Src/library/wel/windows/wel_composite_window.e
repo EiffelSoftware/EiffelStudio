@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_ICON_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	children: LINKED_LIST [WEL_WINDOW] is
@@ -212,6 +217,25 @@ feature -- Status setting
 			cwin_set_menu (item, default_pointer)
 		ensure
 			menu_unset: not has_menu
+		end
+
+	set_icon (a_small_icon: WEL_ICON; a_big_icon: WEL_ICON) is
+			-- Set the small (16x16) and the normal (32x32) icon for this window.
+			--
+			-- Note: Set `a_small_icon' to Void to remove the small icon and
+			--       `a_big_icon' to Void to remove the big icon.
+		do
+			if a_small_icon /= Void then
+				cwin_send_message (item, Wm_seticon, Icon_small, cwel_pointer_to_integer(a_small_icon.item))
+			else
+				cwin_send_message (item, Wm_seticon, Icon_small, 0)
+			end
+
+			if a_big_icon /= Void then
+				cwin_send_message (item, Wm_seticon, Icon_big, cwel_pointer_to_integer(a_big_icon.item))
+			else
+				cwin_send_message (item, Wm_seticon, Icon_big, 0)
+			end
 		end
 
 	set_horizontal_position (position: INTEGER) is

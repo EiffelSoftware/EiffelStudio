@@ -1,7 +1,7 @@
 indexing
-	description	: "Command to open system configuration tool window."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Command to open system configuration tool window."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_SYSTEM_CMD
@@ -50,39 +50,53 @@ feature -- Basic operations
 
 	execute is
 			-- Open the Project configuration window.
-                local
-               		tool_window: EB_SYSTEM_WINDOW
-                    mem: MEMORY
-                    rescued: BOOLEAN
-                    wd: EV_WARNING_DIALOG
-                    cur_dev: EB_DEVELOPMENT_WINDOW
-                    first, second: EB_DEVELOPMENT_WINDOW
-                    a: SPECIAL [ANY]
-                    pretty: EB_PRETTY_PRINT_DIALOG
-                do        
-                	if not rescued then
-      					if
-                        	(not Workbench.is_compiling or else
-                            Workbench.last_reached_degree <= 5)
-                       	then
-                           	if not system_window_is_valid then
-                             	create tool_window.make
-                                set_system_window (tool_window)
-                           	end
-                               	system_window.initialize_content
-                                system_window.raise
-                           	else
-                               	create wd.make_with_text (Warning_messages.w_Degree_needed (6))
-                                wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-                           	end
-                        end
-                rescue
-                 	display_error_message (window_manager.last_focused_development_window.window)
-                    if catch_exception then
-                    	rescued := True
-                        retry
-                  	end
-                end
+		local
+			tool_window: EB_SYSTEM_WINDOW
+			mem: MEMORY
+			rescued: BOOLEAN
+			wd: EV_WARNING_DIALOG
+			cur_dev: EB_DEVELOPMENT_WINDOW
+			first, second: EB_DEVELOPMENT_WINDOW
+			a: SPECIAL [ANY]
+			pretty: EB_PRETTY_PRINT_DIALOG
+		do
+			if not rescued then
+				if
+					(create {EV_ENVIRONMENT}).application /= Void and then
+					(create {EV_ENVIRONMENT}).application.ctrl_pressed
+				then
+						-- Small addition to force a GC cycle when `we' want
+						-- to see if objects are indeed collected when we
+						-- think they should.
+					create mem
+					mem.full_collect
+					mem.full_coalesce
+					mem.full_collect
+				end
+
+				if
+					(not Workbench.is_compiling or else
+					Workbench.last_reached_degree <= 5)
+				then
+					if not system_window_is_valid then
+						create tool_window.make
+						set_system_window (tool_window)
+					end
+						system_window.initialize_content
+						system_window.raise
+					else
+						create wd.make_with_text (Warning_messages.w_Degree_needed (6))
+						wd.show_modal_to_window (window_manager.
+							last_focused_development_window.window)
+					end
+				end
+		rescue
+			display_error_message (window_manager.last_focused_development_window.window)
+			if catch_exception then
+				rescued := True
+				retry
+			end
+		end
 
 feature {NONE} -- Implementation
 

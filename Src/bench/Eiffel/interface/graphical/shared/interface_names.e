@@ -65,8 +65,10 @@ feature -- Graphical degree output
 	d_Compilation_cluster: STRING is	"Cluster:";
 	d_Compilation_progress: STRING is	"Compilation Progress";
 	d_Degree: STRING is					"Degree:";
+	d_Documentation: STRING is			"Documentation";
 	d_Features_processed: STRING is		"Features processed: ";
 	d_Features_to_go: STRING is			"Features to go: ";
+	d_Generating: STRING is				"Generating: ";
 	d_Resynchronizing_breakpoints: STRING is "Resynchronzing breakpoints";
 	d_Resynchronizing_tools: STRING is	"Resynchronzing tools";
 	d_Reverse_engineering: STRING is	"Reverse Engineering Project";
@@ -77,8 +79,9 @@ feature -- Help text
 
 feature -- Accelerator, focus label and menu name
 
-	f_Case_storage: STRING is			"Case storage";
-	m_Case_storage: STRING is			"Cas&e storage";
+	m_Apply: STRING is			"&Apply"
+	f_Case_storage: STRING is		"Case storage";
+	m_Case_storage: STRING is		"Cas&e storage";
 	a_Clear_breakpoints: STRING is		"Ctrl<Key>l";
 	f_Clear_breakpoints: STRING is		"Clear stop points";
 	m_Clear_breakpoints: STRING is		"C&lear stop points%TCtrl+L";
@@ -138,6 +141,8 @@ feature -- Accelerator, focus label and menu name
 	m_text_doc: STRING is				"&Text";
 	f_short_doc: STRING is				"Short";
 	m_short_doc: STRING is				"&Short";
+	f_Show_cluster_heir_list: STRING is	"Show cluster hierarchy";
+	m_Show_cluster_heir_list: STRING is	"Cluster &hierarchy";
 	a_Freeze: STRING is					"Ctrl Alt<Key>f";
 	f_Freeze: STRING is					"Freeze...";
 	m_Freeze: STRING is					"&Freeze...%TCtrl+Alt+F";
@@ -164,6 +169,7 @@ feature -- Accelerator, focus label and menu name
 	m_Next_target: STRING is			"N&ext";
 	f_Non_clickable_showstops: STRING is "Non clickable stop points";
 	m_Non_clickable_showstops: STRING is "&Non clickable stop points";
+	m_Ok: STRING is					"&Ok";
 	a_Open: STRING is					"Ctrl<Key>o";
 	f_Open: STRING is					"Open";
 	m_Open: STRING is					"&Open%TCtrl+O";
@@ -179,6 +185,12 @@ feature -- Accelerator, focus label and menu name
 	m_Profile_tool: STRING is			"Pro&file tool";
 	f_Previous_target: STRING is		"Previous";
 	m_Previous_target: STRING is		"&Previous";
+	a_Quick_update: STRING is			"Ctrl Alt<Key>q";
+	f_Quick_update: STRING is			"Quick melt";
+	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Alt+Q";
+	f_Raise_project: STRING is			"Raise project tool";
+	m_Raise_project: STRING is			"&Raise project tool%TAlt+R";
+	a_Raise_project: STRING is			"Alt<Key>P";
 	f_Run_finalized: STRING is			"Run finalized system";
 	m_Run_finalized: STRING is			"&Run finalized system";
 	a_Save: STRING is					"Ctrl<Key>S";
@@ -255,23 +267,23 @@ feature -- Accelerator, focus label and menu name
 	f_Stoppable: STRING is				"Stoppable";
 	m_Stoppable: STRING is				"&Stoppable";
 	f_System: STRING is					"System";
-	m_System: STRING is					"&System";
+	m_System: STRING is					"&System tool";
 	a_Update: STRING is					"Ctrl Alt<Key>m";
 	f_Update: STRING is					"Melt";
 	m_Update: STRING is					"&Melt%TCtrl+Alt+M";
 	a_Up_stack: STRING is				"Ctrl<Key>u";
 	f_Up_stack: STRING is				"Go up one level";
 	m_Up_stack: STRING is				"Go &up one level%TCtrl+U";
-	f_Validate: STRING is				"Validate";
 	m_Validate: STRING is				"&Validate";
-	f_Version: STRING is				"Version";
 	m_Version: STRING is				"&Version";
 
 feature -- Menu mnenomics
 
+	m_Category: STRING is				"&Category";
 	m_Class_tools: STRING is			"&Class tools";
 	m_Commands: STRING is				"&Commands";
 	m_Compile: STRING is				"&Compile";
+	m_Document: STRING is				"&Documentation";
 	m_Debug: STRING is					"&Debug";
 	m_Edit: STRING is					"&Edit";
 	m_Explain_tools: STRING is			"&Explain tools";
@@ -329,6 +341,7 @@ feature -- Title part
 	t_Class_list_of: STRING is			"Classes in universe ";
 	t_Click_form_of: STRING is			"Clickable form of class ";
 	t_Clients_of: STRING is				"Clients of class ";
+	t_Clusters_hierarchy: STRING is		"Cluster Hierarchy";
 	t_Clusters_of: STRING is			"Clusters in universe ";
 	t_Confirm: STRING is				"Please confirm";
 	t_Custom_of: STRING is				"Custom view of class ";

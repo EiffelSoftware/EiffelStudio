@@ -53,7 +53,11 @@ feature -- Special simbols -- 1
 
 	Assignment: STRING is ":="
 
+	Eiffel_not_equal: STRING is "/="
+
 	C_equal: STRING is " == "
+
+	C_not_equal: STRING is "!="
 
 	Ampersand: STRING is "&"
 
@@ -259,8 +263,6 @@ feature -- C keywords -- 3
 	Pure_virtual_sufix: STRING is " = 0"
 
 	Ulong_type: STRING is "ULONG"
-
-	C_not_equal: STRING is "!="
 
 	Bool: STRING is "BOOL"
 
@@ -489,6 +491,8 @@ feature -- COM types -- 7
 
 	Regcls_multiple_use: STRING is "REGCLS_MULTIPLEUSE"
 
+	Regcls_single_use: STRING is "REGCLS_SINGLEUSE"
+
 	Tchar_creation_function: STRING is "__TEXT"
 
 feature -- Generator constants -- 8
@@ -525,9 +529,9 @@ feature -- Generator constants -- 8
 
 	Ccom_embedding_feature_name: STRING is "ccom_embedding"
 
-	Ccom_regserver_feature_name: STRING is "ccom_regserver"
+	Ccom_regserver_feature_name: STRING is "ccom_register_server"
 
-	Ccom_unregserver_feature_name: STRING is "ccom_unregserver"
+	Ccom_unregserver_feature_name: STRING is "ccom_unregister_server"
 
 	Embedding_feature_name: STRING is "embedding"
 

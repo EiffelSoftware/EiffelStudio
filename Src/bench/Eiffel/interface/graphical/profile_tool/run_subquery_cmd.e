@@ -22,11 +22,9 @@ feature {NONE} -- Initialization
 			a_tool_not_void: a_tool /= Void
 		do
 			tool := a_tool
-		ensure
-			tool_set: tool.is_equal (a_tool)
 		end
 
-feature {NONE} -- Command Execution
+feature -- Command Execution
 
 	execute (arg: ANY) is
 			-- Execute Current
@@ -55,7 +53,7 @@ feature {NONE} -- Command Execution
 				!! executer.make (st, profiler_query, tool.profiler_options);
 				executer.set_last_output (tool.profinfo);
 				executer.execute;
-				tool.update_window (st, profiler_query, executer.last_output)
+				tool.update_window (st, profiler_query, tool.profiler_options, executer.last_output)
 			end
 		end
 

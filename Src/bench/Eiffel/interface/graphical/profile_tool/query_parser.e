@@ -47,7 +47,8 @@ feature {NONE} -- Implementation
 				elseif col_name.is_equal ("EOQ") then
 					end_of_query := True
 				else
-					index := index + col_name.count;
+					--index := index + col_name.count;
+					index := index + 1;
 					index := index + white_space_length (str, index);
 						operator := operator_str (str, index);
 					index := index + operator.count;
@@ -115,12 +116,13 @@ feature {NONE} -- Implementation
 			from
 				index := idx
 			until
-				str @ index /= '<' and then
+				index > str.count or else
+				(str @ index /= '<' and then
 				str @ index /= '>' and then
 				str @ index /= '=' and then
 				str @ index /= '/' and then
 				str @ index /= 'i' and then
-				str @ index /= 'n'
+				str @ index /= 'n')
 			loop
 				index := index + 1
 			end;
@@ -179,8 +181,9 @@ feature {NONE} -- Implementation
 				from
 					old_index := index
 				until
-					not ((str @ index).is_digit) and then
-					str @ index /= '.'
+					index > str.count or else
+					(not ((str @ index).is_digit) and then
+					str @ index /= '.')
 				loop
 					index := index + 1
 				end;
@@ -219,7 +222,7 @@ feature {NONE} -- Implementation
 			from
 				index := idx
 			until
-				not chis_space (str @ index)
+				index > str.count or else not chis_space (str @ index)
 			loop
 				Result := Result + 1;
 				index := index + 1

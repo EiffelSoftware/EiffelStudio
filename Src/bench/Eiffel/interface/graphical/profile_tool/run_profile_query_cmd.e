@@ -49,9 +49,9 @@ feature {NONE} -- Execution
 				profiler_query.set_subquery_operators (subquery_operators);
 
 				!! profiler_options;
-				profiler_options.set_output_names (output_names);
-				profiler_options.set_filenames (filenames);
-				profiler_options.set_language_names (language_names);
+				profiler_options.set_output_names (clone (output_names));
+				profiler_options.set_filenames (clone (filenames));
+				profiler_options.set_language_names (clone (language_names));
 
 				!! st.make;
 				!! executer.make (st, profiler_query, profiler_options);

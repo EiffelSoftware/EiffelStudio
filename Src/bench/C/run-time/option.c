@@ -262,7 +262,7 @@ void exitprf()
 								features[j].all_total_time / (double)HZ,
 								features[j].descendent_time / (double)HZ,
 #else
-								features[j].all_total_time.
+								features[j].all_total_time,
 								features[j].descendent_time,
 #endif /* HAS_TIMES */
 #endif /* HAS_GETRUSAGE */
@@ -689,8 +689,8 @@ double *systime;	/* System time */
 }
 #else
 {
-	*user_time = 0;
-	*system_time = 0;
+	*usertime = 0;
+	*systime = 0;
 }
 #endif /* HAS_TIMES */
 #endif /* HAS_GETRUSAGE */

@@ -11,11 +11,11 @@ inherit
 
 feature
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Cluster name: ");
-			put_string (cluster_name);
-			new_line
+			ow.put_string ("Cluster name: ");
+			ow.put_string (cluster_name);
+			ow.new_line
 		end;
 
 end

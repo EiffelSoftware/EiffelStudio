@@ -23,11 +23,11 @@ feature
 			path := s
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("File: ");
-			put_string (path);
-			new_line;
+			ow.put_string ("File: ");
+			ow.put_string (path);
+			ow.new_line;
 		end;
 
 end

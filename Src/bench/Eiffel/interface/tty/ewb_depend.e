@@ -41,9 +41,9 @@ feature
 				supplier := System.class_of_id (class_id);
 				supp_f := supplier.feature_table.feature_of_feature_id (fid);
 
-				supplier.append_clickable_name (output_window);
+				supplier.append_name (output_window);
 				output_window.put_char ('.');
-				supp_f.append_clickable_name (output_window, supplier);
+				supp_f.append_name (output_window, supplier);
 				output_window.new_line;
 
 				fdep.forth

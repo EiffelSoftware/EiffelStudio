@@ -20,11 +20,11 @@ feature
 			cluster_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Unknown cluster name: ");
-			put_string (cluster_name);
-			new_line
+			ow.put_string ("Unknown cluster name: ");
+			ow.put_string (cluster_name);
+			ow.new_line
 		end;
 
 end

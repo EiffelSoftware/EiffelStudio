@@ -21,11 +21,11 @@ feature
 			path := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Precompiled path: ");
-			put_string (path);
-			new_line
+			ow.put_string ("Precompiled path: ");
+			ow.put_string (path);
+			ow.new_line
 		end;
 
 end

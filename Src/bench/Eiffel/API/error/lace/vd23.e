@@ -17,11 +17,11 @@ feature
 			class_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Class name: ");
-			put_string (class_name);
-			new_line;
+			ow.put_string ("Class name: ");
+			ow.put_string (class_name);
+			ow.new_line;
 		end;
 
 end

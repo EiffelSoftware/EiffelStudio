@@ -15,12 +15,12 @@ feature
 			option_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_string ("Option: ");
-			put_string (option_name);
-			new_line
+			put_cluster_name (ow);
+			ow.put_string ("Option: ");
+			ow.put_string (option_name);
+			ow.new_line
 		end;
 
 end

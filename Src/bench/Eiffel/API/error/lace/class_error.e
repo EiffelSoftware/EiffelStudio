@@ -17,17 +17,17 @@ feature
 			class_name := s;
 		end;
 
-	put_class_name is
+	put_class_name (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Class name: ");
-			put_string (class_name);
-			new_line;
+			ow.put_string ("Class name: ");
+			ow.put_string (class_name);
+			ow.new_line;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_class_name;
+			put_cluster_name (ow);
+			put_class_name (ow);
 		end;
 
 end

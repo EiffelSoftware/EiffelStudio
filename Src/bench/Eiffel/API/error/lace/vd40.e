@@ -8,10 +8,10 @@ inherit
 
 feature
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_cluster_path;
+			put_cluster_name (ow);
+			put_cluster_path (ow);
 		end;
 
 end

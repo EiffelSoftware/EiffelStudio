@@ -22,13 +22,13 @@ feature
 			root_class := a_class_c;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Root class: ");
-			root_class.append_clickable_name (error_window);
-			put_string ("%NInvalid procedure name: ");
-			put_string (creation_routine);
-			new_line
+			ow.put_string ("Root class: ");
+			root_class.append_name (ow);
+			ow.put_string ("%NInvalid procedure name: ");
+			ow.put_string (creation_routine);
+			ow.new_line
 		end;
 
 end

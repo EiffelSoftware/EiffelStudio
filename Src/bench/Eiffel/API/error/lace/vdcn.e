@@ -14,9 +14,9 @@ feature
 	code: STRING is "VDCN";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
+			put_cluster_name (ow);
 		end;
 
 end

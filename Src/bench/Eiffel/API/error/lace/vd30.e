@@ -20,11 +20,11 @@ feature
 			root_class_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Invalid class name: ");
-			put_string (root_class_name);
-			new_line
+			ow.put_string ("Invalid class name: ");
+			ow.put_string (root_class_name);
+			ow.new_line
 		end;
 
 end

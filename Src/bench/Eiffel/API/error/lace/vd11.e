@@ -23,16 +23,16 @@ feature
 	code: STRING is "VSCN";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_cluster_name;
-			put_string ("Class name: ");
-			put_string (a_class.class_name);
-			put_string ("%NFirst file: ");
-			put_string (file_name);
-			put_string ("%NSecond file: ");
-			put_string (a_class.file_name);
-			new_line
+			put_cluster_name (ow);
+			ow.put_string ("Class name: ");
+			ow.put_string (a_class.class_name);
+			ow.put_string ("%NFirst file: ");
+			ow.put_string (file_name);
+			ow.put_string ("%NSecond file: ");
+			ow.put_string (a_class.file_name);
+			ow.new_line
 		end;
 
 end

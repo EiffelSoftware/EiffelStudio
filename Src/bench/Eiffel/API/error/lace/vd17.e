@@ -32,11 +32,11 @@ feature
 	code: STRING is "VD17";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Cluster path: ");
+			ow.put_string ("Cluster path: ");
 -- FIXME
-			put_string (FIX ME!);
-			new_line
+			put_string ("FIX ME!");
+			ow.new_line
 		end;
 end

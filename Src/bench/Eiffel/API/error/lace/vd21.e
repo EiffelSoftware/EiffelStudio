@@ -11,12 +11,12 @@ inherit
 
 feature
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			if cluster /= Void then
-				put_cluster_name;
+				put_cluster_name (ow);
 			end;
-			put_file_name
+			put_file_name (ow)
 		end;
 
 end

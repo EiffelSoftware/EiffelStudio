@@ -37,7 +37,7 @@ feature -- Properties
 		deferred
 		end;
 
-	output_window: CLICK_WINDOW is
+	output_window: OUTPUT_WINDOW is
 			-- Output for current menu selection
 		do
 			Result := command_line_io.output_window
@@ -55,7 +55,7 @@ feature -- Comparison
 
 feature {BASIC_ES, EWB_BASIC_LOOP} -- Setting
 
-	set_output_window (display: CLICK_WINDOW) is
+	set_output_window (display: OUTPUT_WINDOW) is
 			-- Set the output window to `display'
 		do
 			command_line_io.set_output_window (display)

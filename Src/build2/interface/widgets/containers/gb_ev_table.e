@@ -580,15 +580,18 @@ feature {NONE} -- Implementation
 		local
 			second_widget: EV_WIDGET
 		do
-			first.set_item_span (v, columns, rows)
-				-- Now we need to get the widget represented in objects at the
-				-- second place.
-			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
-			(objects @ 2).set_item_span (second_widget, columns, rows)
-				-- Flag that notification is required for all corresponding editors.
-			must_update_editors := True
-				-- Update project.
-			enable_project_modified
+				-- Do nothing if span has not changed.
+			if first.item_column_span (v) /= columns or first.item_row_span (v) /= rows then
+				first.set_item_span (v, columns, rows)
+					-- Now we need to get the widget represented in objects at the
+					-- second place.
+				second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+				(objects @ 2).set_item_span (second_widget, columns, rows)
+					-- Flag that notification is required for all corresponding editors.
+				must_update_editors := True
+					-- Update project.
+				enable_project_modified
+			end
 		end
 		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
@@ -596,16 +599,20 @@ feature {NONE} -- Implementation
 		local
 			second_widget: EV_WIDGET
 		do
-				-- Now we need to get the widget represented in objects at the
-				-- second place. We must do this before we move the first widget.
-			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
-
-			first.set_item_position_and_span (v, a_column, a_row, columns, rows)
-			(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
-				-- Flag that notification is required for all corresponding editors.
-			must_update_editors := True
-				-- Update project.
-			enable_project_modified
+				-- Do nothing it position and span has not changed.
+			if first.item_column_position (v) /= a_column or first.item_row_position (v) /= a_row or
+			 first.item_column_span (v) /= columns or first.item_row_span (v) /= rows then
+					-- Now we need to get the widget represented in objects at the
+					-- second place. We must do this before we move the first widget.
+				second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+	
+				first.set_item_position_and_span (v, a_column, a_row, columns, rows)
+				(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
+					-- Flag that notification is required for all corresponding editors.
+				must_update_editors := True
+					-- Update project.
+				enable_project_modified		
+			end
 		end
 		
 

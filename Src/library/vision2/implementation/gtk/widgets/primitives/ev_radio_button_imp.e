@@ -17,7 +17,10 @@ inherit
 		export {NONE}
 			box,
 			initialize,
-			create_text_label
+			create_text_label,
+			set_pixmap,
+			unset_pixmap,
+			pixmap_size_ok
 		redefine
 			make,
 			make_with_text,

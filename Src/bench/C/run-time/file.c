@@ -1140,7 +1140,22 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 #else
 	status = stat (name, &buf);
 #endif
+
+#ifdef EIF_SOLARIS
+	if (status == -1) {
+			/* If the file is larger than what our file routines can handle
+			 * it does not mean that the file does not exist. It does but we
+			 * cannot handle it.
+			 * This is needed to be able to check existence of file bigger
+			 * than 2GB on Solaris.
+			 */
+		return (errno == EOVERFLOW ? EIF_TRUE : EIF_FALSE);
+	} else {
+		return EIF_TRUE;
+	}
+#else
 	return (status == -1 ? EIF_FALSE : EIF_TRUE);
+#endif
 }
 
 rt_public EIF_BOOLEAN file_path_exists(char *name)
@@ -1158,7 +1173,21 @@ rt_public EIF_BOOLEAN file_path_exists(char *name)
 	status = stat(name, &buf);
 #endif
 
+#ifdef EIF_SOLARIS
+	if (status == -1) {
+			/* If the file is larger than what our file routines can handle
+			 * it does not mean that the file does not exist. It does but we
+			 * cannot handle it.
+			 * This is needed to be able to check existence of file bigger
+			 * than 2GB on Solaris.
+			 */
+		return (errno == EOVERFLOW ? EIF_TRUE : EIF_FALSE);
+	} else {
+		return EIF_TRUE;
+	}
+#else
 	return (status == -1 ? EIF_FALSE : EIF_TRUE);
+#endif
 }
 
 

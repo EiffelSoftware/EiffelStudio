@@ -34,7 +34,7 @@
 
 void odbc_error_handler (HSTMT,int);
 void odbc_clear_error ();
-void odbc_disp_rec(int);  
+void odbc_disp_rec(int);
 void odbc_disp_c_type();
 void odbc_unhide_qualifier(char *);
 char *odbc_date_to_str(int, int, int, int, int, int, int);
@@ -68,10 +68,11 @@ char dbmsVer[DB_MAX_NAME_LEN];
 short number_connection=0;
 
 /* Messages */
-char *error_message;
-char *warn_message;
+char *error_message;/*exported to Eiffel*/
+char *warn_message;/*exported to Eiffel*/
 
-static int error_number,  tmp_int;
+/*static*/ int error_number;/*exported to Eiffel*/
+static int tmp_int;
 static int data_type, size, max_size, * past_time;
 static char *tmp_st;
 char odbc_user_name[40];
@@ -93,7 +94,7 @@ int is_null_data;
 int c_odbc_make (int m_size)
 {
   int count;
-  
+
   if (error_message == NULL) {
 	 ODBC_SAFE_ALLOC(error_message, (char *) malloc (sizeof (char) * (m_size + ERROR_MESSAGE_SIZE)));
 	 ODBC_SAFE_ALLOC(warn_message, (char *) malloc (sizeof (char) * (m_size + WARN_MESSAGE_SIZE)));
@@ -101,10 +102,10 @@ int c_odbc_make (int m_size)
 
   odbc_clear_error ();
   max_size = m_size;
-  
+
   for (count = 0; count < MAX_DESCRIPTOR; count++)
       odbc_descriptor[count] = NULL;
-  
+
   return error_number;
 }
 
@@ -135,7 +136,7 @@ int c_odbc_make (int m_size)
 int odbc_new_descriptor ()
 {
   int result = odbc_first_descriptor_available ();
-  
+
   if (result != NO_MORE_DESCRIPTOR)
     {
       //rc = SQLAllocStmt(hdbc, &(hstmt[result]));
@@ -144,11 +145,11 @@ int odbc_new_descriptor ()
 		odbc_error_handler(NULL, 0);
 		return NO_MORE_DESCRIPTOR;
       }
-	
+
       /* malloc area for the descriptor and then initialize it */
       /* ODBC_SAFE_ALLOC(odbc_descriptor[result], (ODBCSQLDA *) malloc(IISQDA_HEAD_SIZE + IISQDA_VAR_SIZE));
       SetVarNum(odbc_descriptor[result], 1); */
-      odbc_descriptor[result] = (ODBCSQLDA *)(0x1); 
+      odbc_descriptor[result] = (ODBCSQLDA *)(0x1);
       pcbValue[result] = NULL;
       odbc_indicator[result] = NULL;
       flag[result] = ODBC_SQL;
@@ -172,17 +173,17 @@ int odbc_new_descriptor ()
 /*****************************************************************/
 int odbc_first_descriptor_available (void)
 {
-  int no_descriptor;    
+  int no_descriptor;
 
 
   for (no_descriptor = 0;
-       no_descriptor < MAX_DESCRIPTOR && 
+       no_descriptor < MAX_DESCRIPTOR &&
        odbc_descriptor[no_descriptor] != NULL;
        no_descriptor++)
     {
       /* empty */
     }
-  
+
   if (no_descriptor < MAX_DESCRIPTOR)
     {
       return no_descriptor;
@@ -246,7 +247,7 @@ int odbc_max_descriptor ()
 /*****************************************************************/
 int odbc_pre_immediate(int no_desc, int argNum) {
 
-	
+
 	odbc_clear_error();
 
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
@@ -273,7 +274,7 @@ int odbc_pre_immediate(int no_desc, int argNum) {
 /* and finally return error number.                              */
 /*                                                               */
 /*****************************************************************/
-int odbc_exec_immediate (int no_desc, char *order)
+void odbc_exec_immediate (int no_desc, char *order)
 {
 
 
@@ -295,8 +296,6 @@ int odbc_exec_immediate (int no_desc, char *order)
 		free(pcbValue[no_desc]);
 		pcbValue[no_desc] = NULL;
 	}
-
-	return error_number;
 }
 
 /*****************************************************************/
@@ -317,7 +316,7 @@ int odbc_exec_immediate (int no_desc, char *order)
 /*   3. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_init_order (int no_desc, char *order, int argNum)
+void odbc_init_order (int no_desc, char *order, int argNum)
 {
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
 	//short colNum;
@@ -341,11 +340,10 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
 		odbc_error_handler(NULL, 203);
 		strcat(error_message, "\nInvalid Descriptor Number!");
-		return error_number;
 	}
 	odbc_unhide_qualifier(order);
 	odbc_tranNumber = 1;
-	odbc_clear_error();  
+	odbc_clear_error();
 	warn_message[0] = '\0';
 
 
@@ -367,9 +365,9 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 				i = j;
 			else
 				i++;
-			for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++) 
+			for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++)
 				tmpBuf[j] = order[i];
-			tmpBuf[j] = '\0';       
+			tmpBuf[j] = '\0';
 			if (j) {
 				if (strlen(odbc_qualifier) > 0 && strlen(odbc_owner) > 0)
 					rc = SQLTables(hstmt[no_desc], odbc_qualifier, SQL_NTS, odbc_owner, SQL_NTS, tmpBuf, SQL_NTS, NULL, 0);
@@ -381,7 +379,7 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 					rc = SQLTables(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
 			}
 			else
-				rc = SQLTables(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);                     
+				rc = SQLTables(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 			odbc_qualifier[0] = '\0';
 			odbc_owner[0] ='\0';
 		}
@@ -397,13 +395,13 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 					i = j;
 				else
 					i++;
-				for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++) 
-					tmpBuf[j] = order[i];   
+				for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++)
+					tmpBuf[j] = order[i];
 				tmpBuf[j] = '\0';
 				if (j)
 					rc = SQLColumns(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0);
 				else
-					rc = SQLColumns(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);                    
+					rc = SQLColumns(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 			}
 			else {
 				if (memcmp(tmpBuf, sqlproc, 9) == 0) {
@@ -417,10 +415,10 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 						i = j;
 					else
 						i++;
-					for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++) 
-						tmpBuf[j] = order[i];   
+					for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++)
+						tmpBuf[j] = order[i];
 					tmpBuf[j] = '\0';
-					if (j) 
+					if (j)
 						rc = SQLProcedures(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
 					else
 						rc = SQLProcedures(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
@@ -435,12 +433,11 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 			odbc_descriptor[no_desc] = NULL;
 			//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-			return error_number;
 		}
 	}
 
 
-	
+
 	if (flag[no_desc] == ODBC_SQL) {
 	/* Process general ODBC SQL statements    */
 
@@ -451,17 +448,14 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 				odbc_descriptor[no_desc] = NULL;
 				//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 				rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-				return error_number;
 			}
-		} 
+		}
 	}
 
 	if (argNum > 0) {
 		ODBC_SAFE_ALLOC(pcbValue[no_desc], (SDWORD *) malloc(sizeof(SDWORD)*argNum));
 	} else
 		pcbValue[no_desc] = NULL;
-
-	return error_number;
 }
 
 
@@ -482,7 +476,7 @@ int odbc_init_order (int no_desc, char *order, int argNum)
 /*                                                               */
 /*****************************************************************/
 
-int odbc_start_order (int no_desc)
+void odbc_start_order (int no_desc)
 {
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
 	short colNum;
@@ -500,11 +494,11 @@ int odbc_start_order (int no_desc)
 	SQLCHAR     szTypeName[DB_REP_LEN];
 	SQLINTEGER  ColumnSize, BufferLength;
 	SQLSMALLINT DataType, DecimalDigits, NumPrecRadix, Nullable;
-	
+
 	SQLINTEGER cbCatalog, cbSchema, cbTableName, cbColumnName;
 	SQLINTEGER cbDataType, cbTypeName, cbColumnSize, cbBufferLength;
 	SQLINTEGER cbDecimalDigits, cbNumPrecRadix, cbNullable;
-	
+
 	if (flag[no_desc] == ODBC_CATALOG_COL) {
 			SQLBindCol(hstmt, 1, SQL_C_CHAR, szCatalog, DB_REP_LEN,&cbCatalog);
 			SQLBindCol(hstmt, 2, SQL_C_CHAR, szSchema, DB_REP_LEN, &cbSchema);
@@ -528,7 +522,6 @@ int odbc_start_order (int no_desc)
 							pcbValue[no_desc] = NULL;
 						}
 						rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-						return error_number;
 					}
 				}
 				if (rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO){
@@ -542,7 +535,6 @@ int odbc_start_order (int no_desc)
 								pcbValue[no_desc] = NULL;
 							}
 							rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-							return error_number;
 						}
 					}
 					/*memcpy( (SQL_C_CHAR *)(&(odbc_indicator[no_des][1]), (SQL_C_CHAR *)(&cbCatalog)), DB_SIZEOF_CHAR);
@@ -557,14 +549,14 @@ int odbc_start_order (int no_desc)
 					memcpy( (SQL_C_SSHORT *)(&(odbc_indicator[no_des][10]), (SQL_C_SSHORT *)(&cbNumPrecRadix)), DB_SIZEOF_SHORT);
 					memcpy( (SQL_C_SSHORT *)(&(odbc_indicator[no_des][11]), (SQL_C_SSHORT *)(&cbNullable)), DB_SIZEOF_SHORT);*/
 
-				} 
+				}
 				else {
 						break;
 				}
 			}
 	}
-		
-										
+
+
 
 	if (flag[no_desc] == ODBC_SQL) {
 	/* Process general ODBC SQL statements    */
@@ -579,7 +571,6 @@ int odbc_start_order (int no_desc)
 				}
 				//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 				rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-				return error_number;
 			}
 		}
 
@@ -592,7 +583,7 @@ int odbc_start_order (int no_desc)
 				rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 				return error_number;
 			}
-		}		
+		}
 */
 	}
 
@@ -608,10 +599,9 @@ int odbc_start_order (int no_desc)
 			}
 			//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-			return error_number;
 		}
 	}
-	
+
 
 	if (colNum > DB_MAX_COLS) {
 		if (error_number) {
@@ -628,10 +618,9 @@ int odbc_start_order (int no_desc)
 		}
 		//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-		return error_number;
 	}
 
-	if (colNum > 0) 
+	if (colNum > 0)
 		i = colNum;
 	else
 		i = 1;
@@ -641,7 +630,7 @@ int odbc_start_order (int no_desc)
 	SetVarNum(dap,i);
 	SetColNum(dap, colNum);
 
-	bufSize = 0;                                                         
+	bufSize = 0;
 	for (i=0; i < colNum && !error_number; i++) {
 	/* fill in the describing information for each column, and calculate */
 	/* the total length of the data buffer                               */
@@ -663,18 +652,18 @@ int odbc_start_order (int no_desc)
 			dap->sqlvar[i].c_type = odbc_c_type(dap->sqlvar[i].sqltype);
 			type = dap->sqlvar[i].c_type;
 			switch(type) {
-				//case SQL_C_DATE: 
+				//case SQL_C_DATE:
 				case SQL_C_TYPE_DATE:
 					SetDbColLength(dap, i, sizeof(DATE_STRUCT));
 					/*bufSize += sizeof(DATE_STRUCT) + 1; */
 					break;
-				//case SQL_C_TIME: 
+				//case SQL_C_TIME:
 				case SQL_C_TYPE_TIME:
 					SetDbColLength(dap, i, sizeof(TIME_STRUCT));
 					/*bufSize += sizeof(TIME_STRUCT) + 1; */
 					break;
 				//case SQL_C_TIMESTAMP:
-				case SQL_C_TYPE_TIMESTAMP: 
+				case SQL_C_TYPE_TIMESTAMP:
 					SetDbColLength(dap, i, sizeof(TIMESTAMP_STRUCT));
 					/*bufSize += sizeof(TIMESTAMP_STRUCT) + 1; */
 					break;
@@ -705,8 +694,8 @@ int odbc_start_order (int no_desc)
 					break;
 			}
 			bufSize += GetDbColLength(dap, i) + 1;
-		} 
-	}                   
+		}
+	}
 
 
 	if (error_number) {
@@ -718,7 +707,6 @@ int odbc_start_order (int no_desc)
 		}
 		//rc = SQLFreeStmt(hstmt[no_desc], SQL_DROP);
 		rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_desc]);
-		return error_number;
 	}
 
 	/* allocate the data  buffer, and then assign the data buffer to */
@@ -733,8 +721,7 @@ int odbc_start_order (int no_desc)
 	}
 
 	/* allocate buffer for INDICATORs of the output fields           */
-	ODBC_SAFE_ALLOC(odbc_indicator[no_desc], (SDWORD *) malloc((colNum+1)*sizeof(long))); 
-	return error_number;
+	ODBC_SAFE_ALLOC(odbc_indicator[no_desc], (SDWORD *) malloc((colNum+1)*sizeof(long)));
 }
 
 
@@ -754,7 +741,7 @@ int odbc_start_order (int no_desc)
 /*   2. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-int odbc_terminate_order (int no_des)
+void odbc_terminate_order (int no_des)
 {
 	//int i;
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
@@ -777,7 +764,6 @@ int odbc_terminate_order (int no_des)
 		    //rc = SQLFreeStmt(hstmt[no_des], SQL_DROP);
 			rc = SQLFreeHandle (SQL_HANDLE_STMT, hstmt[no_des]);
 		}
-	return error_number;
 }
 
 /*****************************************************************/
@@ -810,7 +796,7 @@ int odbc_close_cursor (int no_des)
 /* PARAMETERS: no_des- index in descriptor vector.               */
 /* DESCRIPTION:                                                  */
 /*   A SELECT statement is now being executed in DYNAMIC EXECU-  */
-/* TION mode,  the  routine is to FETCH a new tuple from database*/ 
+/* TION mode,  the  routine is to FETCH a new tuple from database*/
 /* and if a new tuple is fetched, return 1 otherwise return 0.   */
 /*                                                               */
 /*****************************************************************/
@@ -819,7 +805,7 @@ int odbc_next_row (int no_des)
      /* move to the next row of selection */
      /* return 0 if there is a next row, 1 if no row left */
 {
-    
+
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
 	short colNum = GetColNum(dap);
 	UWORD i;
@@ -859,7 +845,7 @@ int odbc_next_row (int no_des)
 /* NAME: odbc_support_proc()                                     */
 /* DESCRIPTION:                                                  */
 /*   to determine if the current ODBC Data Source/Driver support */
-/* stored procedure: 1-- yes, 0 -- no                            */ 
+/* stored procedure: 1-- yes, 0 -- no                            */
 /*                                                               */
 /*****************************************************************/
 
@@ -870,7 +856,7 @@ int odbc_support_proc() {
 /*****************************************************************/
 /*                                                               */
 /*                    ROUTINE DESCRIPTION                        */
-/*                                                               */  
+/*                                                               */
 /* NAME: odbc_support_create_proc()                              */
 /* DESCRIPTION:                                                  */
 /*  to determine if the current ODBC Data Source/Driver support  */
@@ -892,7 +878,7 @@ int odbc_support_create_proc() {
 /*****************************************************************/
 /*                                                               */
 /*                    ROUTINE DESCRIPTION                        */
-/*                                                               */  
+/*                                                               */
 /* NAME: odbc_driver_name()                                      */
 /* DESCRIPTION:                                                  */
 /* 	return the name of the driver                                */
@@ -913,7 +899,7 @@ char * odbc_driver_name() {
 /*       odbc_sensitive_mixed()					 */
 /* DESCRIPTION:                                                  */
 /*   Decide if the underlying driver is sensitive to upper/lower */
-/* cases, and what format is stored in database.                 */ 
+/* cases, and what format is stored in database.                 */
 /*                                                               */
 /*****************************************************************/
 int odbc_insensitive_upper() {
@@ -966,7 +952,7 @@ TIMESTAMP_STRUCT *dp;
 			break;
 		case REAL_TYPE:
 			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_REAL, sizeof(float), 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
-			break; 
+			break;
 		case BOOLEAN_TYPE:
 			rc = SQLBindParameter(hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_BIT, sizeof(int), 0, value, len, &(pcbValue[no_desc][seriNumber-1]));
 			break;
@@ -994,7 +980,7 @@ TIMESTAMP_STRUCT *dp;
 /* PARAMETER: no_desc - the index of descriptor                  */
 /* DESCRIPTION:                                                  */
 /*   to indicate the statement for descriptor 'no_desc' is to    */
-/* get column(s) (of a special table or whole data source).      */ 
+/* get column(s) (of a special table or whole data source).      */
 /*                                                               */
 /*****************************************************************/
 int odbc_set_col_flag(int no_desc) {
@@ -1011,7 +997,7 @@ int odbc_set_col_flag(int no_desc) {
 /* PARAMETER: no_desc - the index of descriptor                  */
 /* DESCRIPTION:                                                  */
 /*   to indicate the statement for descriptor 'no_desc' is to    */
-/* get  table(s) in the current Data Source.                     */ 
+/* get  table(s) in the current Data Source.                     */
 /*                                                               */
 /*****************************************************************/
 int odbc_set_tab_flag(int no_desc) {
@@ -1027,7 +1013,7 @@ int odbc_set_tab_flag(int no_desc) {
 /* PARAMETER: no_desc - the index of descriptor                  */
 /* DESCRIPTION:                                                  */
 /*   to indicate the statement for descriptor 'no_desc' is to    */
-/* get stored procedure(s) in the current Data Source.           */ 
+/* get stored procedure(s) in the current Data Source.           */
 /*                                                               */
 /*****************************************************************/
 int odbc_set_proc_flag(int no_desc) {
@@ -1043,14 +1029,14 @@ int odbc_set_proc_flag(int no_desc) {
 /* PARAMETER: buf -- the content of a SQL command                */
 /* DESCRIPTION:                                                  */
 /*   When "qualifier" is used to identify an database object,    */
-/* we have to hide ":" in the qualifier first, otherwise, it     */ 
+/* we have to hide ":" in the qualifier first, otherwise, it     */
 /* will be misinterpreted by feature SQL_SCAN::parse.            */
 /*                                                               */
 /*****************************************************************/
 char *odbc_hide_qualifier(char *buf) {
 	int i;
 	int len = strlen(buf);
-	
+
 	for (i=0; i < len; i++) {
 		if (buf[i] == ':' && i > 0 && ((buf[i-1] >= 'a' && buf[i-1] <= 'z') || (buf[i-1] >='A' && buf[i-1] <= 'Z')))
 			buf[i] = 0x1 ;
@@ -1066,7 +1052,7 @@ char *odbc_hide_qualifier(char *buf) {
 /* PARAMETER: buf -- the content of a SQL command                */
 /* DESCRIPTION:                                                  */
 /*   When "qualifier" is used to identify an database object,    */
-/* we have to hide ":" in the qualifier first, otherwise, it     */ 
+/* we have to hide ":" in the qualifier first, otherwise, it     */
 /* will be misinterpreted by feature SQL_SCAN::parse.  After     */
 /* the command has been parsed, we should recover the original   */
 /* ":" in the qualifier.                                         */
@@ -1075,8 +1061,8 @@ char *odbc_hide_qualifier(char *buf) {
 void odbc_unhide_qualifier(char *buf) {
 	int i;
 	int len = strlen(buf);
-	
-	
+
+
 	for (i=0; i < len; i++) {
 		if (buf[i] == 0x1 && i > 0 && ((buf[i-1] >= 'a' && buf[i-1] <= 'z') || (buf[i-1] >='A' && buf[i-1] <= 'Z')))
 			buf[i] = ':' ;
@@ -1090,7 +1076,7 @@ void odbc_unhide_qualifier(char *buf) {
 /* NAME: odbc_qualifier_quoter                                   */
 /* DESCRIPTION:                                                  */
 /*   Return the string used to quote identifiers in SQL command, */
-/* For example, if the quoter is `, and we want to select on     */ 
+/* For example, if the quoter is `, and we want to select on     */
 /* table "my table", we should express the query as:             */
 /* select * from `My table`                                      */
 /*                                                               */
@@ -1106,7 +1092,7 @@ char *odbc_identifier_quoter() {
 /* NAME: odbc_qualifier_seperator                                */
 /* DESCRIPTION:                                                  */
 /*   When "qualifier" and "owner" are used to identifier a       */
-/* database object, they should be seperated by a string called  */ 
+/* database object, they should be seperated by a string called  */
 /* "qualifier seperator".                                        */
 /*                                                               */
 /*****************************************************************/
@@ -1122,11 +1108,11 @@ char *odbc_qualifier_seperator() {
 /* PARAMETER: qfy -- the content of qualifier                    */
 /* DESCRIPTION:                                                  */
 /*   Set qualifier to a global variable. The function is used    */
-/* to implement command "SQLTable(tanle_name)" conviently.       */ 
+/* to implement command "SQLTable(tanle_name)" conviently.       */
 /*                                                               */
 /*****************************************************************/
 void odbc_set_qualifier(char *qfy) {
-	if (qfy == NULL) 
+	if (qfy == NULL)
 		odbc_qualifier[0] = '\0';
 	else
 		strcpy(odbc_qualifier, qfy);
@@ -1140,7 +1126,7 @@ void odbc_set_qualifier(char *qfy) {
 /* PARAMETER: owner- the owner                                   */
 /* DESCRIPTION:                                                  */
 /*   Set owner to     a global variable. The function is used    */
-/* to implement command "SQLTable(tanle_name)" conviently.       */ 
+/* to implement command "SQLTable(tanle_name)" conviently.       */
 /*                                                               */
 /*****************************************************************/
 void odbc_set_owner(char *owner) {
@@ -1159,7 +1145,7 @@ void odbc_set_owner(char *owner) {
 /* PARAMETER: no_desc - the index of descriptor                  */
 /* DESCRIPTION:                                                  */
 /*   to indicate the statement for descriptor 'no_desc' is  a    */
-/* general ODBC SQL statement.                                   */ 
+/* general ODBC SQL statement.                                   */
 /*                                                               */
 /*****************************************************************/
 int odbc_unset_catalog_flag(int no_desc) {
@@ -1177,7 +1163,7 @@ int odbc_unset_catalog_flag(int no_desc) {
 /*                 -- others: get timestamp string               */
 /* DESCRIPTION:                                                  */
 /*   to change an Eiffel DATE data into a STRING in the following*/
-/* format: 'yyyy-mm-dd hh:mm:ss'                                 */ 
+/* format: 'yyyy-mm-dd hh:mm:ss'                                 */
 /*                                                               */
 /*****************************************************************/
 char *odbc_date_to_str(int year, int month, int day, int hour, int minute, int sec, int type) {
@@ -1214,7 +1200,7 @@ char *odbc_date_to_str(int year, int month, int day, int hour, int minute, int s
 /* NAME: odbc_date(int year,month,day,hour,minute,sec;char *buf  */
 /* DESCRIPTION:                                                  */
 /*   to change an Eiffel DATE data into a STRING in the following*/
-/* format: 'yyyy-mm-dd hh:mm:ss'                                 */ 
+/* format: 'yyyy-mm-dd hh:mm:ss'                                 */
 /*                                                               */
 /*****************************************************************/
 char *odbc_stru_of_date(int year, int month, int day, int hour, int minute, int sec, int type) {
@@ -1276,13 +1262,13 @@ int odbc_connect (char *name, char *passwd, char *dsn)
 	//rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC2,0);
 	rc = SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC3,0);
 	if (rc) {
-		odbc_error_handler(NULL,910);  
+		odbc_error_handler(NULL,910);
 		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
 		return error_number;
 	}
 	rc = SQLAllocHandle(SQL_HANDLE_DBC,henv, &hdbc);
 	if (rc) {
-		odbc_error_handler(NULL,11);  
+		odbc_error_handler(NULL,11);
 		rc = SQLFreeHandle(SQL_HANDLE_ENV,henv);
 		return error_number;
 	}
@@ -1307,7 +1293,7 @@ int odbc_connect (char *name, char *passwd, char *dsn)
 	rc = SQLGetInfo(hdbc, SQL_DBMS_VER, dbmsVer, sizeof(dbmsVer), &indColName);
 	rc = SQLGetInfo(hdbc, SQL_IDENTIFIER_QUOTE_CHAR, idQuoter, sizeof(idQuoter), &indColName);
 	rc = SQLGetInfo(hdbc, SQL_QUOTED_IDENTIFIER_CASE, &odbc_case, sizeof(odbc_case), &indColName);
-	
+
 	if (indColName == 1 && idQuoter[0] == ' ')
 		idQuoter[0] = '\0';
 	else
@@ -1340,16 +1326,16 @@ int odbc_connect (char *name, char *passwd, char *dsn)
 /*   Disconnect the current connection with an  ODBC  database.  */
 /*                                                               */
 /*****************************************************************/
-int odbc_disconnect ()
+void odbc_disconnect ()
 {
   int count;
-  
+
   odbc_clear_error ();
   //rc = SQLTransact(henv, SQL_NULL_HDBC, SQL_COMMIT);
   rc = SQLEndTran(SQL_HANDLE_ENV, henv, SQL_COMMIT);
   if (rc) {
 	odbc_error_handler(NULL,13);
-  }  
+  }
   for (count = 0; count < MAX_DESCRIPTOR; count++)
     {
       odbc_terminate_order (count);
@@ -1370,9 +1356,6 @@ int odbc_disconnect ()
     if (rc)
 	  odbc_error_handler(NULL,16);
   odbc_tranNumber = 0;}
-  return error_number;
-
-
 }
 
 /*****************************************************************/
@@ -1384,7 +1367,7 @@ int odbc_disconnect ()
 /*   Roll back the current transaction .                         */
 /*                                                               */
 /*****************************************************************/
-int odbc_rollback ()
+void odbc_rollback ()
 {
   int count;
 
@@ -1400,7 +1383,6 @@ int odbc_rollback ()
       odbc_terminate_order (count);
     }
   odbc_tranNumber = 0;
-  return error_number;
 }
 
 /*****************************************************************/
@@ -1412,7 +1394,7 @@ int odbc_rollback ()
 /*   Commit the current transaction.                             */
 /*                                                               */
 /*****************************************************************/
-int odbc_commit ()
+void odbc_commit ()
 {
   int count;
   odbc_clear_error ();
@@ -1427,7 +1409,6 @@ int odbc_commit ()
       odbc_terminate_order (count);
     }
   odbc_tranNumber = 0;
-  return error_number;
 }
 
 /*****************************************************************/
@@ -1499,7 +1480,7 @@ int odbc_put_col_name (int no_des, int index, char *result)
 {
 	int i = index - 1;
 	char buf[DB_MAX_NAME_LEN+1];
-	
+
 	size = (((odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamel;
 	memcpy(buf, (((odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamec, size);
 	buf[size] = '\0';
@@ -1590,13 +1571,13 @@ int odbc_put_data (int no_des, int index, char *result)
   int i = index -1;
   ODBCSQLDA * dap = odbc_descriptor[no_des];
   data_type = GetDbCType (dap, i);
-  
+
   memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
   if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
   /* the retrived value is NULL, we use empty string to represent NULL */
 	result[0] = '\0';
 	return 0;
-	
+
   }
 
   memcpy(result, GetDbColPtr(dap, i), odbc_tmp_indicator);
@@ -1612,9 +1593,9 @@ int odbc_get_integer_data (int no_des, int index)
   int length = GetDbColLength(dbp, i);
   short sint;
   long  lint;
-  
+
 	data_type = GetDbCType(dbp, i);
-	
+
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
 	if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
 	/* the retrieved value is NULL, we use 0 to be NULL value */
@@ -1648,7 +1629,7 @@ int odbc_get_boolean_data (int no_des, int index)
 {
   int i = index - 1;
   ODBCSQLDA * dbp = odbc_descriptor[no_des];
-  
+
   data_type = GetDbCType (dbp,i);
 
   if (data_type == SQL_C_BIT)
@@ -1704,7 +1685,7 @@ float odbc_get_real_data (int no_des, int index)
   int i = index - 1;
   float result_real;
   ODBCSQLDA * dbp = odbc_descriptor[no_des];
-  
+
   data_type = GetDbCType (dbp, i);
   if (data_type == SQL_C_FLOAT)  {
 	memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
@@ -1726,7 +1707,7 @@ float odbc_get_real_data (int no_des, int index)
   }
 }
 
-// The following function tell whether the retrieved data is null or not 
+// The following function tell whether the retrieved data is null or not
 
 int odbc_is_null_data(int no_des, int index)
 {
@@ -1744,7 +1725,7 @@ int odbc_get_date_data (int no_des, int index)
   DATE_STRUCT *dateP;
   TIMESTAMP_STRUCT *stampP;
   TIME_STRUCT *timeP;
-  
+
   data_type = GetDbCType(dbp, i);
   //if (data_type == SQL_C_DATE || data_type == SQL_C_TIMESTAMP || data_type == SQL_C_TIME)
   if (data_type == SQL_C_TYPE_DATE || data_type == SQL_C_TYPE_TIMESTAMP || data_type == SQL_C_TYPE_TIME)
@@ -1853,6 +1834,7 @@ void odbc_clear_error ()
 {
   error_number = 0;
   error_message[0] = '\0';
+  warn_message[0] = '\0';
 }
 
 void odbc_error_handler(HSTMT h_err_stmt, int code) {
@@ -1874,7 +1856,7 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 		}
 		return ;
 	}
-	
+
 	switch(rc) {
 	case SQL_INVALID_HANDLE:
 		error_number = DB_SQL_INVALID_HANDLE;
@@ -1930,8 +1912,8 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 
 int odbc_c_type(int odbc_type) {
 	switch(odbc_type) {
-		case SQL_CHAR: 
-		case SQL_VARCHAR: 
+		case SQL_CHAR:
+		case SQL_VARCHAR:
 		case SQL_LONGVARCHAR:
 			return SQL_C_CHAR;
 		//case SQL_DATE:
@@ -2027,7 +2009,7 @@ void odbc_disp_rec(int no_des) {
 
 			break;
 		case SQL_C_BIT:
-			printf(" data=%d ",odbc_get_boolean_data(no_des, i+1));           
+			printf(" data=%d ",odbc_get_boolean_data(no_des, i+1));
 			break;
 		case SQL_C_CHAR:
 			j = odbc_put_data(no_des, i+1, buff);
@@ -2035,24 +2017,24 @@ void odbc_disp_rec(int no_des) {
 			printf(" data='%s' ", buff);
 			break;
 		case SQL_C_STINYINT:
-			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));           
+			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));
 			break;
 		case SQL_C_SSHORT:
-			printf(" data=%d ",odbc_get_integer_data(no_des, i+1)); 
+			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));
 			break;
 		case SQL_C_SLONG:
-			printf(" data=%d ",odbc_get_integer_data(no_des, i+1)); 
+			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));
 			break;
 		case SQL_C_FLOAT:
-			printf(" data=%f ",odbc_get_real_data(no_des, i+1)); 
+			printf(" data=%f ",odbc_get_real_data(no_des, i+1));
 			break;
 		case SQL_C_DOUBLE:
-			printf(" data=%f ",odbc_get_float_data(no_des, i+1)); 
+			printf(" data=%f ",odbc_get_float_data(no_des, i+1));
 			break;
 		default:
 			printf("Error Datatype:%d ", type);
 		}
-		if (odbc_indicator[no_des][i]) 
+		if (odbc_indicator[no_des][i])
 			printf(" **** indicator = %d \n", odbc_indicator[no_des][i]);
 		else
 			printf("\n");

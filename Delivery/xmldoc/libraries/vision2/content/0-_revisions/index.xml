@@ -50,9 +50,6 @@
 							<item>Fixed bug which caused processing of particular keys in widgets contained within the dialog to be processed by the dialog preventing the `key_press_actions' from being fired and causing miscellaneous keyboard navigational issues.</item>
 						</list>
 					</item>
-					<item>
-						<bold>EV_TEXT_FIELD</bold> - calling `set_font' now updates the `minimum_height' of the text field so that it is large enough to completely display the font.
-					</item>
 				</list>
 			</item>
 			<item>
@@ -188,6 +185,9 @@
 					<item>
 						<bold>EV_PROGRESS_BAR</bold> - Fixed bug which was limiting values in the range 0 to 65535. 
 					</item>
+					<item>
+						<bold>EV_TEXT_FIELD</bold> - calling `set_font' now updates the `minimum_height' of the text field so that it is large enough to completely display the font.
+					</item> 
 				</list>
 			</item>
 			<item>

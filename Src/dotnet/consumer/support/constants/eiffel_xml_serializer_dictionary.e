@@ -130,6 +130,18 @@ feature -- Access
 		once
 			Result := ("</" + create {STRING}.make_from_Cil (None_node) + ">").to_cil
 		end
+		
+	Open_xmls_field: SYSTEM_STRING is
+			-- <XMLS NAME="
+		once
+			Result := ("<" + create {STRING}.make_from_Cil (Xmls_node) + " " + create {STRING}.make_from_Cil (Version_xml_attribute) + "=%"").to_cil
+		end
+			
+	Close_xmls_field: SYSTEM_STRING is
+			-- "</XMLS>"
+		once
+			Result := ("</" + create {STRING}.make_from_Cil (Xmls_node) + ">").to_cil
+		end
 
 	Quote_space: SYSTEM_STRING is
 			-- "%" "

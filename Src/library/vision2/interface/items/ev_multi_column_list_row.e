@@ -21,12 +21,11 @@ inherit
 			create_action_sequences
 		end
 
-	--| FIXME IEK Should inherit from PND
-	--EV_PICK_AND_DROPABLE
-	--	redefine
-	--		implementation,
-	--		create_action_sequences
-	--	end
+	EV_PICK_AND_DROPABLE
+		redefine
+			implementation,
+			create_action_sequences
+		end
 
 create
 	default_create,
@@ -65,9 +64,6 @@ feature -- Status setting
 			not_selected: not is_selected
 		end
 		
-	
-		
-
 	toggle is
 			-- Change the state of selection of the item.
 		require
@@ -95,6 +91,7 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 		do
 			{EV_COMPOSED_ITEM} Precursor
+			{EV_PICK_AND_DROPABLE} Precursor
 			create select_actions
 			create deselect_actions
 		end
@@ -127,6 +124,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/09 01:19:27  king
+--| Now inheriting from PND
+--|
 --| Revision 1.28  2000/03/03 00:01:19  rogers
 --| Split set_selected into enable_select and disable_select.
 --|

@@ -55,6 +55,7 @@ feature -- Element Change
 		local
 			ti: TREE_KEY [like first_data]
 		do
+			tl.set_tree (Current)
 			create ti.make (tl)
 			tl.set_key (ti)
 			if first_data = Void then
@@ -78,6 +79,7 @@ feature -- Element Change
 		local
 			ti: TREE_KEY [like first_data]
 		do
+			tl.set_tree (Current)
 			create ti.make (tl)
 			tl.set_key (ti)
 			if last_data = Void then

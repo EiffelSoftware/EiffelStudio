@@ -49,6 +49,7 @@
 #	define cwel_scroll_caret(_hwnd_) ((void) 0)
 #	define cwel_idc_size IDC_SIZE
 #	define cwel_idc_icon IDC_ICON
+#	define WM_NOTIFY 0x004E /* Not defined in `windows.h' version 3.1 */
 #endif
 
 #endif /* __WEL__ */

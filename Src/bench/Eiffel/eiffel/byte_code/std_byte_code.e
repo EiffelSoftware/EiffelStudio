@@ -646,6 +646,10 @@ feature
 					-- mode assertion level of the current object.
 				generated_file.putstring ("RTDA;");
 				generated_file.new_line;
+				if rescue_clause /= void then
+					generated_file.putstring ("RTDT;");
+					generated_file.new_line;
+				end
 			end;
 				-- The local variable array is then declared, based on the
 				-- number of reference variable which need to be placed under

@@ -1893,11 +1893,18 @@ feature -- Class initialization
 					Current /= System.integer_64_class.compiled_class and then
 					Current /= System.real_class.compiled_class and then
 					Current /= System.pointer_class.compiled_class and then
-					Current /= System.typed_pointer_class.compiled_class and then
-					(not System.il_generation and then
-					Current /= System.wide_char_class.compiled_class)
+					Current /= System.typed_pointer_class.compiled_class
 				then
-					System.set_has_expanded
+						-- Because `WIDE_CHARACTER' is not part of IL system
+						-- we only do the check for non IL system that current
+						-- class is different from `WIDE_CHARACTER'.
+					if not System.il_generation then
+						if Current /= System.wide_char_class.compiled_class then
+							System.set_has_expanded
+						end
+					else
+						System.set_has_expanded
+					end
 				end
 			end
 

@@ -134,6 +134,23 @@ feature -- Element change
 			--| FIXME IEK Needs proper implementation
 		end
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	call_select_actions is
+			-- Call the select_actions for `Current'
+		do
+			if not in_select_actions_call then
+				in_select_actions_call := True
+				if select_actions_internal /= Void then
+					select_actions_internal.call (Void)
+				end
+			end
+			in_select_actions_call := False
+		end
+		
+	in_select_actions_call: BOOLEAN
+		-- Is `Current' in the process of having its select actions called
+
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -141,7 +158,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (event_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (c_object, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation

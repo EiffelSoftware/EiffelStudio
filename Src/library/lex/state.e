@@ -7,26 +7,30 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class STATE feature
+class STATE 
+
+feature -- Access
 
 	final: INTEGER;
 			-- Number of the regular expression of which Current
-			-- is a final state; 0 if not final
-			-- (That is to say that when you go from state to state
+			-- is a final state; 0 if not final.
+			-- (When you go from state to state
 			-- in an automaton, at the end of the course the
-			-- attribute final of the Current state is the
+			-- attribute `final' of the current state is the
 			-- identification number of the regular expression
-			-- recognized, 0 means that nothing has been recognized)
+			-- recognized. 0 means that nothing has been recognized.)
 
 	final_array: ARRAY [INTEGER];
-			-- Array of all the possible ``final'' (useful
+			-- Array of all the possible `final' states (useful
 			-- in the case of several possible final attributes)
 
+feature -- Status setting
+
 	set_final (i: INTEGER) is
-			-- Set final and the first entry of final_array to i.
+			-- Make current state final for `i'-th regular expression.
 		do
 			if final_array = Void then
-				!!final_array.make (1, 1);
+				!! final_array.make (1, 1);
 				final_array.put (i, 1);
 				final := i
 			elseif final_array.item (final_array.lower) /= i then
@@ -36,7 +40,7 @@ class STATE feature
 		ensure
 			final_is_i: final = i;
 			lower_entry_is_i: final_array.item (final_array.lower) = i
-		end -- set_final
+		end 
 
 invariant
 

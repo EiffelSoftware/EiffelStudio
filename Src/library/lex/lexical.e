@@ -15,37 +15,132 @@ class LEXICAL inherit
 
 creation
 
-	make
+	make, make_new
 
-feature
+feature -- Initialization
 
 	make is
-			-- Make `last_token'
+			-- Set up lexical analyzer for retrieval.
 		do
-			!!last_token
-		end; -- make
+			!! last_token
+		end;
 
-			-- Tokens' attributes
+	make_new is
+			-- Set up a new lexical analyzer
+		do
+			!! last_token;
+			initialize
+		end
+
+feature -- Access
+
+	last_token: TOKEN;
+			-- Last token read
+
+	token_line_number: INTEGER is
+			-- Line number of last token read
+		do
+			Result := line_nb_array.item (token_start)
+		ensure
+			Result >= 1
+		end;
+
+	token_column_number: INTEGER is
+			-- Column number of last token read
+		do
+			Result := column_nb_array.item (token_start)
+		ensure
+			Result >= 1
+		end;
+
+	last_string_read: STRING is
+			-- String value of last token read
+		do
+				-- Create a new string at each call
+			Result := buffer.substring (token_start, token_end)
+		end;
+
+	keyword_code (word: STRING): INTEGER is
+			-- Keyword code for `word'.
+			-- -1 if not a keyword.
+		do
+			if keywords_case_sensitive then
+				if keyword_h_table.has (word) then
+					Result := keyword_h_table.position
+				else
+					Result := -1
+				end
+			else
+				lower_word := clone (word);
+				lower_word.to_lower;
+				if keyword_h_table.has (lower_word) then
+					Result := keyword_h_table.position
+				else
+					Result := -1
+				end
+			end
+		end;
+
+	last_is_keyword: BOOLEAN is
+			-- Is the last read token a keyword?
+		do
+			Result := is_keyword (last_string_read)
+		ensure
+			Result = is_keyword (last_string_read)
+		end;
+
+	last_keyword_code: INTEGER is
+			-- Keyword code for last token.
+			-- -1 if not a keyword.
+		do
+			Result := keyword_code (last_string_read)
+		ensure
+			-- Result = -1 or last_string_read is in keyword_h_table.
+		end;
+
+	last_keyword_text: STRING is
+			-- Last read string if recognized as a keyword;
+			-- void otherwise.
+		do
+			if last_is_keyword then
+				Result := last_string_read
+			end
+		end;
+
+	keyword_string (n: INTEGER): STRING is
+			-- Keyword corresponding to keyword code `n'
+		do
+			Result := keyword_h_table.key_at (n)
+		end;
+
 
 	token_type: INTEGER;
-			-- Type of last token recognized
+			-- Type of last token read
 
 	other_possible_tokens: ARRAY [INTEGER];
-			-- Other possible types of tokens recognized on the same state
+			-- Other candidate types for last recognized token
 
 	end_of_text: BOOLEAN;
-			-- Is end of input reached?
+			-- Has end of input been reached?
+
+feature -- Status setting
 
 	set_separator_type (type : INTEGER) is
 			-- Set `type' to be the type of tokens
 			-- used as separators.
         do
             separator_token_type := type
-        end; -- set_separator_type
+		ensure
+			separator_token_type = type
+        end;
+
+feature -- Input
 
 	get_token is
-			-- Read new token, recognize the longest possible string,
-			-- ignore unrecognized tokens and designated separators.
+			-- Read new token matching one of the regular
+			-- expressions of the lexical grammar.
+			-- Recognize longest possible string;
+			-- ignore unrecognized tokens and separators.
 		local
 			found: BOOLEAN
 		do
@@ -56,10 +151,15 @@ feature
 				get_any_token;
 				found := token_type /= separator_token_type and token_type /= 0
 			end
-		end; -- get_token
+		ensure
+			end_of_text or
+			(token_type /= separator_token_type
+			and token_type /= 0)
+		end;
 
 	get_any_token is
-			-- Read new token, recognize the longest possible string,
+			-- Try to read a new token.
+			-- Recognize longest possible string.
 			--| Thus, when a token is recognized, this routine keeps
 			--| track of its type, but goes on analyzing, until the
 			--| current state has a void successor.
@@ -155,18 +255,13 @@ feature
 				retried := true;
 				retry
 			end
-				-- Warning: if a token more than max_token_length long
-				-- is at the end of the buffer, the rescue clause will
-				-- not be triggered in check 0, because the
-				-- precondition "index_small_enough" of
-				-- buffer.item_code will not be checked.
-				-- If string is compiled in check 1 or 2, the
-				-- precondition will be violated, the rescue clause
-				-- executed, and the case properly handled.
-		end; -- get_any_token
+				-- For this Rescue clause to work properly
+				-- STRING must be compiled with precondition checking.
+		end;
 
 	get_short_token is
-			-- Read new token, recognize the shortest possible string,
+			-- Read shortest token that matches one of the
+			-- lexical grammar's regular expressions.
 		require
 			dfa_not_Void: dfa /= Void;
 			not_end_of_text: not end_of_text;
@@ -224,19 +319,15 @@ feature
 				retried := true;
 				retry
 			end
-				-- Warning if a token more than max_token_length long
-				-- is at the end of the buffer, the rescue clause will
-				-- not be triggered in check 0, because the
-				-- precondition "index_small_enough" of
-				-- buffer.item_code will not be checked.
-				-- If string is compiled in check 1 or 2, the
-				-- precondition will be violated, the rescue clause
-				-- executed, and the case properly handled.
-		end; -- get_short_token
+				-- For this Rescue clause to work properly
+				-- STRING must be compiled with precondition checking.
+		end;
 
 	get_fixed_token (l: INTEGER) is
-			-- Read new token, recognize the longest possible string,
-			-- which length is less than or equal to `l'.
+			-- Read new token that matches one of the
+			-- lexical grammar's regular expressions.
+			-- Recognize longest possible string with
+			-- length less than or equal to `l'.
 		require
 			dfa_not_Void: dfa /= Void;
 			not_end_of_text: not end_of_text;
@@ -293,103 +384,15 @@ feature
 				retried := true;
 				retry
 			end
-				-- Warning: if a token more than max_token_length long
-				-- is at the end of the buffer, the rescue clause will
-				-- not be triggered in check 0, because the
-				-- precondition "index_small_enough" of
-				-- buffer.item_code will not be checked.
-				-- If string is compiled in check 1 or 2, the
-				-- precondition will be violated, the rescue clause
-				-- executed, and the case properly handled.
-		end; -- get_fixed_token
+				-- For this Rescue clause to work properly
+				-- STRING must be compiled with precondition
+		end;
 
-	go_on is
-			-- Read tokens until one is recognized.
-		do
-			from
-				get_token
-			until
-				token_type /= 0 or end_of_text
-			loop
-				get_token
-			end
-		end; -- go_on
-
-	last_token: TOKEN;
-			-- Last token recognized in the text
-
-	token_line_number: INTEGER is
-			-- Line number of last token read
-		do
-			Result := line_nb_array.item (token_start)
-		end; -- token_line_number
-
-	token_column_number: INTEGER is
-			-- Column number of last token read
-		do
-			Result := column_nb_array.item (token_start)
-		end; -- token_column_number
-
-	last_string_read: STRING is
-			-- String value of the last token
-		do
-				-- Create a new string at each call
-			Result := buffer.substring (token_start, token_end)
-		end; -- last_string_read
-
-	keyword_code (word: STRING): INTEGER is
-			-- Keyword code for `word'.
-			-- -1 if not a keyword.
-		do
-			if keywords_case_sensitive then
-				if keyword_h_table.has (word) then
-					Result := keyword_h_table.position
-				else
-					Result := -1
-				end
-			else
-				lower_word := clone (word);
-				lower_word.to_lower;
-				if keyword_h_table.has (lower_word) then
-					Result := keyword_h_table.position
-				else
-					Result := -1
-				end
-			end
-		end; -- keyword_code
-
-	last_is_keyword: BOOLEAN is
-			-- Is the last read token a keyword?
-		do
-			Result := is_keyword (last_string_read)
-		end; -- last_is_keyword
-
-	last_keyword_code: INTEGER is
-			-- Keyword code for last token.
-			-- -1 if not a keyword.
-		do
-			Result := keyword_code (last_string_read)
-		ensure
-			-- Result = -1 or last_string_read is in keyword_h_table.
-		end; -- last_keyword_code
-
-	last_keyword_text: STRING is
-			-- Last read string if recognized as a keyword;
-			-- Void otherwise.
-		do
-			if last_is_keyword then
-				Result := last_string_read
-			end
-		end; -- last_keyword_text
-
-	keyword_string (n: INTEGER): STRING is
-			-- Keyword corresponding to keyword code `n'
-		do
-			Result := keyword_h_table.key_at (n)
-		end; -- keyword_string
+feature -- Output
 
 	trace is
-			-- Output an internal representation of the lexical analyzer.
+			-- Output information about the analyzer's
+			-- current status.
 		local
 			i, ol_d: INTEGER
 		do
@@ -418,21 +421,35 @@ feature
 			dfa.trace;
 			io.putstring (" End LEXICAL.");
 			io.new_line
-		end -- trace
+		end;
 
-feature {LEXICAL}
+feature -- Obsolete
+
+	go_on is
+			obsolete "Use ``get_token'' directly"
+		do
+			from
+				get_token
+			until
+				token_type /= 0 or end_of_text
+			loop
+				get_token
+			end
+		end;
+
+feature {LEXICAL} -- Implementation
 
 	initialize is
 			-- Create data structures for the lexical analyzer.
 		do
 			create_buffers (standard_buffer_size, standard_line_length);
 			if keyword_h_table = Void then
-				!!keyword_h_table.make (1)
+				!! keyword_h_table.make (1)
 			end;
 			end_of_text := false
-		end -- initialize
+		end;
 
-feature {LEXICAL, LEX_BUILDER}
+feature {LEXICAL, LEX_BUILDER} -- Implementation
 
 	initialize_attributes (d: FIXED_DFA; c: ARRAY [INTEGER];
 					k: HASH_TABLE [INTEGER, STRING]; b: BOOLEAN) is
@@ -442,11 +459,9 @@ feature {LEXICAL, LEX_BUILDER}
 			categories_table := c;
 			keyword_h_table := k;
 			keywords_case_sensitive := b
-		end -- initialize_attributes
+		end;
 
-feature {NONE}
-
-			-- Constants
+feature {NONE} -- Implementation
 
 	standard_buffer_size: INTEGER is 10240;
 			-- Standard buffer size
@@ -464,9 +479,6 @@ feature {NONE}
 
 	almost_end_of_buffer: INTEGER is 9984;
 			-- Buffer_size minus max_token_length
-
-
-			-- Attributes created by LEX_BUILDER
 
 	dfa: FIXED_DFA;
 			-- Automaton used for the parsing
@@ -501,7 +513,7 @@ feature {NONE}
 		do
 			read_index := 1;
 			token_end := buffer_size
-		end; -- reset_data
+		end;
 
 	is_keyword (word: STRING): BOOLEAN is
 			-- Is `word' a keyword included in the
@@ -513,7 +525,7 @@ feature {NONE}
 				lower_word.to_lower;
 				Result := token_type = keyword_h_table.item (lower_word)
 			end
-		end -- is_keyword
+		end;
 
 end -- class LEXICAL
  

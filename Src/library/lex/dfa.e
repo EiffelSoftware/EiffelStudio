@@ -11,12 +11,12 @@ deferred class DFA inherit
 
 	AUTOMATON
 
-feature
+feature -- Access
 
 	recognize (l: LINKED_LIST [INTEGER]): INTEGER is
-			-- Attribute ``final'' of the state reached in Current after
+			-- `final' value for the state reached after
 			-- making transitions from state to state on the
-			-- inputs listed in l; 0 if not recognized
+			-- inputs listed in `l'; 0 if not recognized.
 		local
 			state: STATE_OF_DFA;
 			index: INTEGER
@@ -34,55 +34,57 @@ feature
 			if (l.after or l.empty) then
 				Result := state.final
 			end
-		end; -- recognize
+		end; 
 
 	possible_tokens (l: LINKED_LIST [INTEGER]): ARRAY [INTEGER] is
 			-- Attribute ``final_array'' of the state reached in Current after
 			-- making transitions from state to state on the
-			-- inputs listed in l; empty if not recognized
+			-- inputs listed in `l'; empty if not recognized
 		local
 			state: STATE_OF_DFA;
 			index: INTEGER
 		do
 			from
-   			state := start_state;
-   			l.start
+	   			state := start_state;
+   				l.start
 			until
-   			(l.after or l.empty) or else state.successor(l.item) = Void
+   				(l.after or l.empty) or else state.successor(l.item) = Void
 			loop
-   			state := state.successor (l.item);
-   			l.forth
+   				state := state.successor (l.item);
+   				l.forth
 			end;
 			if l.after or l.empty then
-   			Result := state.final_array
+   				Result := state.final_array
 			else
-   			!!Result.make (0, -1)
+   				!!Result.make (0, -1)
 			end
-		end; -- possible_tokens
+		end; 
 
-	set_transition (source, inp_ut, target: INTEGER) is
-			-- Set transition from source to target on inp_ut.
+	find_successor (source, input_doc: INTEGER): STATE_OF_DFA is
+			-- Successor of source on `input_doc';
+			-- void if no successor
+		deferred
+		end;
+
+feature -- Status setting
+
+	set_transition (source, input_doc, target: INTEGER) is
+			-- Set transition from `source' to `target' on `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
 			target_in_automaton: target >= 1 and target <= nb_states;
-			possible_inp_ut: inp_ut >= 0 and inp_ut <= greatest_input
+			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		deferred
-		end; -- set_transition
+		end;
 
-	find_successor (source, inp_ut: INTEGER): STATE_OF_DFA is
-			-- Successor of source on inp_ut;
-			-- void if no successor
-		deferred
-		end -- find_successor
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	start_state: STATE_OF_DFA is
 			-- Start_number-th state
 			-- (Used for the beginning of the course
 			-- through the automaton)
 		deferred
-		end -- start_state
+		end; 
 
 end -- class DFA
  

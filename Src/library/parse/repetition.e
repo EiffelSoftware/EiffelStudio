@@ -12,19 +12,64 @@ deferred class REPETITION inherit
 
 	CONSTRUCT
 		rename
-			add_component as field,
+			put_component as field,
 			is_leaf as no_components
 		redefine
 			expand_all
 		end
 
-feature {NONE}
+feature -- Status report
+
+	no_left_recursion: BOOLEAN is
+			-- Is the construct's production free of left recursion?
+		do
+			if structure_list.has (production) then
+				left_recursion.put (true);
+				child_recursion.put (true);
+				recursion_message.append (construct_name);
+				recursion_message.append ("%N");
+				Result := false;
+			else
+				structure_list.put_right (production);
+				child_start;
+				Result := message_construction
+			end;
+			structure_list.search (production);
+			structure_list.remove;
+			structure_list.go_i_th (0)
+		end 
+
+feature {CONSTRUCT} -- Implementation
+
+	expand_all is
+			-- Expand all child constructs.
+		do
+			if no_components then
+				expand
+			end
+		end; 
+
+	check_recursion is
+			-- Check the sequence for left recursion.
+		do
+			if not check_recursion_list.has (production) then
+				check_recursion_list.put_left (production);
+				if print_mode.item then
+					print_children
+				end;
+				child_start;
+				child.expand_all;
+				child.check_recursion
+			end
+		end 
+
+feature {NONE} -- Implementation
 
 	separator: STRING is 
 			-- List separator in the descendant,
 			-- must be defined as a keyword in the lexical analyser
 		deferred 
-		end; -- separator
+		end; 
 
 	separator_code: INTEGER is 
 			-- Code of the keyword-separator; -1 if none
@@ -41,7 +86,7 @@ feature {NONE}
 			else
 				Result := -1
 			end
-		end; -- separator_code
+		end;
 
 	commit_on_separator : BOOLEAN is
 			-- Is one element of the sequence and a separator enough to
@@ -51,13 +96,13 @@ feature {NONE}
 			-- choice construct as a common ancestor of the parents)
 		do
 			Result := true
-		end; -- commit_on_separator
+		end; 
 
 	has_separator: BOOLEAN is
 			-- Has the sequence a separator?
 		do
 			Result := separator_code /= -1
-		end; -- has_separator
+		end; 
 
 	expand is
 			-- Create next construct to be parsed and insert it in
@@ -67,7 +112,7 @@ feature {NONE}
 		do
 			n := clone (production.first);
 			field (n)
-		end; -- expand
+		end; 
 
 	parse_body is
 			-- Attempt to find a sequence of constructs with separators
@@ -100,7 +145,7 @@ feature {NONE}
 			end;
 			wrong := has_separator and separator_found and not child_found;
 			complete := first_child_found and not (committed and wrong)
-		end; -- parse
+		end; 
 
 	parse_one: BOOLEAN is
 			-- Parse one element of the sequence and
@@ -121,7 +166,7 @@ feature {NONE}
 			if not child.parsed then
 				remove_child
 			end
-		end; -- parse_one
+		end; 
 
 	in_action is
 			-- Execute semantic actions on current construct
@@ -138,62 +183,13 @@ feature {NONE}
 					child_forth
 				end
 			end
-		end; -- in_action	
+		end; 
 
 	middle_action is
 			-- Execute this after parsing each child.
 			-- Do nothing here.
 		do
-		end -- middle_action
-
-feature 
-
-		--  Routines for checking the grammar for left recursion
-
-	no_left_recursion: BOOLEAN is
-			-- Is the construct's production free of left recursion?
-		do
-			if structure_list.has (production) then
-				left_recursion.put (true);
-				child_recursion.put (true);
-				recursion_message.append (construct_name);
-				recursion_message.append ("%N");
-				Result := false;
-			else
-				structure_list.put_right (production);
-				child_start;
-				Result := message_construction
-			end;
-			structure_list.search (production);
-			structure_list.remove;
-			structure_list.go_i_th (0)
-		end -- no_left_recursion
-
-feature {CONSTRUCT}
-
-	expand_all is
-			-- Expand all child constructs.
-		do
-			if no_components then
-				expand
-			end
-		end; -- expand_all
-
-	check_recursion is
-			-- Check the sequence for left recursion.
-		do
-			if not check_recursion_list.has (production) then
-				check_recursion_list.put_left (production);
-				if print_mode.item then
-					print_children
-				end;
-				child_start;
-				child.expand_all;
-				child.check_recursion
-			end
-		end -- check_recursion
-
-feature {NONE}
+		end;
 
 	print_children is
 			-- Print content of sequence,
@@ -216,7 +212,7 @@ feature {NONE}
 				print_keyword
 			end;
 			io.new_line
-		end; -- print_children
+		end; 
 
 	print_keyword is
 			-- Print separator string.
@@ -224,7 +220,7 @@ feature {NONE}
 			io.putchar ('"');
 			io.putstring (document.keyword_string (separator_code));
 			io.putstring ("%" ")
-		end -- print_keyword
+		end 
 
 end -- class REPETITION
  

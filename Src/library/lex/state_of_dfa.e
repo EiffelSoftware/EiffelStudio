@@ -18,20 +18,22 @@ class STATE_OF_DFA inherit
 		rename
 			make as array_make
 		export
-			{ANY} item
+			{NONE} to_c
 		end
 
 creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (s: INTEGER) is
 			-- Make state with 0 to s possibles inputs.
 		do
 			array_make (0, s)
-		end; -- make
+		end; 
+
+feature -- Element change
 
 	append_transition (i: INTEGER; t: STATE_OF_DFA) is
 			-- Append transition from current state to state t on input i.
@@ -40,16 +42,18 @@ feature
 			possible_input: i <= upper and i >= 0
 		do
 			put (t, i)
-		end; -- append_transition
+		end; 
+
+feature -- Cursor movement
 
 	successor (i: INTEGER): STATE_OF_DFA is
-			-- Successor of current state on input i;
+			-- Successor of current state for input `i';
 			-- Void if no successor
 		require
 			possible_input: i <= upper and i >= 0
 		do
 			Result := item (i)
-		end -- successor
+		end 
 
 end -- class STATE_OF_DFA
  

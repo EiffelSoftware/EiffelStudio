@@ -21,12 +21,12 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (lower_index, upper_index: INTEGER) is
 		do
 			array_make (lower_index, upper_index)
-		end -- make
+		end;
 
 end -- class LEX_ARRAY [T]
  

@@ -26,54 +26,60 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (i, s: INTEGER) is
-			-- Make a dfa with 0 to i inputs possibles,
-			-- and s states possibles.
+			-- Make a dfa with 0 to `i' possible inputs
+			-- and `s' possible states.
 		do
 			fixed_make (i, s);
 			greatest_input := i;
 			nb_states := s
-		end; -- make
+		end; 
+
+feature -- Access
+
+	find_successor (source, input_doc: INTEGER): STATE_OF_DFA is
+			-- Successor of source on `input_doc';
+			-- void if no successor
+		require else
+			source_in_automaton: source >= 1 and source <= nb_states;
+			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
+		do
+			Result := item (source).successor (input_doc)
+		end;
+
+feature -- Status setting
 
 	set_state is
 			-- Make a new state.
 		local
 			current_state: STATE_OF_DFA
 		do
-			!!current_state.make (greatest_input);
+			!! current_state.make (greatest_input);
 			add_right (current_state)
-		end; -- set_state
+		end; 
 
-	set_transition (source, inp_ut, target: INTEGER) is
-			-- Set transition from source to target on inp_ut.
+	set_transition (source, input_doc, target: INTEGER) is
+			-- Set transition from `source' to `target' on `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
 			target_in_automaton: target >= 1 and target <= nb_states;
-			possible_inp_ut: inp_ut >= 0 and inp_ut <= greatest_input
+			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		do
-			item (source).append_transition (inp_ut, item (target))
-		end; -- set_transition
-
-	find_successor (source, inp_ut: INTEGER): STATE_OF_DFA is
-			-- Successor of source on inp_ut;
-			-- void if no successor
-		require else
-			source_in_automaton: source >= 1 and source <= nb_states;
-			possible_inp_ut: inp_ut >= 0 and inp_ut <= greatest_input
-		do
-			Result := item (source).successor (inp_ut)
-		end; -- find_successor
+			item (source).append_transition (input_doc, item (target))
+		end;
 
 	set_final (state, f: INTEGER) is
-			-- Set the attribute "final" of state as f.
+			-- Make `state' final for regular expression `f'.
 		do
 			f_set_final (state, f)
-		end; -- set_final
+		end; 
+
+feature -- Output
 
 	trace is
-			-- List the states of Current.
+			-- Print information about the automaton's states.
 		local
 			i,j, index: INTEGER;
 			value: STATE_OF_DFA
@@ -133,9 +139,9 @@ feature
 				io.new_line
 			end;
 			io.putstring (" End FIXED DFA.%N")
-		end -- trace
+		end; 
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	start_state: STATE_OF_DFA is
 			-- Start_number-th state
@@ -143,7 +149,7 @@ feature {NONE}
 			-- through the automaton)
 		do
 			Result := item (start_number)
-		end -- start_state
+		end; 
 
 end -- class FIXED_DFA
  

@@ -24,83 +24,121 @@ creation
 
 	make
 
-feature
+feature  -- Initialization
 
 	make is
 		do
-			!!tool_list.make;
-			!!tool_names.make
-		end; -- make
+			!! tool_list.make;
+			!! tool_names.make
+		end;
+
+	initialize is
+			-- Set up attributes of `analyzer'.
+		do
+			initialized := true;
+			if analyzer = Void then
+				!! analyzer.make
+			end;
+			analyzer.initialize_attributes (dfa, categories_table,
+					keyword_h_table, keywords_case_sensitive)
+		ensure
+			initialized
+		end;
+
+feature -- Access
 
 	tool_list: LINKED_LIST [PDFA];
-			-- Regular expressions used as tools
-			-- to build the main one
+			-- Regular expressions used as auxiliary tools
 
 	tool_names: LINKED_LIST [STRING];
-			-- Names of the regular expressions
-			-- in the tool list
+			-- Names of regular expressions in tool list
 
 	case_sensitive: BOOLEAN;
-			-- Is the tool building case sensitive?
+			-- Will future tools be case-sensitive?
 
 	keywords_case_sensitive: BOOLEAN;
-			-- Are the keyword case sensitive?
+			-- Will future tools be case-sensitive for keywords?
 
 	categories_table: ARRAY [INTEGER];
-			-- Table with each input's category number
+			-- Table of category numbers for each input
 
 	keyword_h_table: HASH_TABLE [INTEGER, STRING];
 			-- Keyword table
 
 	error_list: ERROR_LIST is
-			-- Error message list
+			-- List of error messages
 		once
-			!!Result.make
-		end; -- error_list
+			!! Result.make
+		end;
 
 	analyzer: LEXICAL;
-			-- Lexical analyzer built
+			-- The lexical analyzer built so far
 
--- Routines used for tools (i.e. regular expressions) building:
+	last_created_tool: INTEGER;
+			-- Identification number of the last
+			-- regular expression put in tool_list
+
+	selected_tools: LINKED_LIST [INTEGER];
+			-- Regular expressions included in the main one
+
+	token_type_list: LINKED_LIST [INTEGER];
+			-- Token types of the selected tools.
+			-- Indexed by tool numbers.
+
+	lexical_frozen: BOOLEAN;
+			-- Has the lexical grammar been finalized?
+			-- | (in other words: has the DFA been built?)
+
+feature -- Status setting	
 
 	ignore_case is
-			-- Ignore case in tool building.
-			-- Do not change the existing tools.
+			-- Make letter case not significant in future tools.
+			-- This is the default.
 		do
 			case_sensitive := false
-		end; -- ignore_case
+		ensure
+			not case_sensitive
+		end;
 
 	distinguish_case is
-			-- Distinguish case in tool building.
-			-- Do not change the existing tools.
-			-- If neither ignore_case nor distinguish_case is
-			-- used, then ignore_case is the default.
+			-- Make letter case significant in future tools.
+			-- Default is ignore case.
 		do
 			case_sensitive := true
-		end; -- distinguish_case
+		ensure
+			case_sensitive
+		end;
 
 	keywords_ignore_case is
-			-- Ignore case for keywords.
+			-- Make letter case not significant for keywords
+			-- in future tools.
+			-- This is the default.
 		require
-			none_of_the_tools_built: tool_list = Void or else tool_list.empty
+			no_tools_built: tool_list = Void or else tool_list.empty
 		do
 			keywords_case_sensitive := false
-		end; -- keywords_ignore_case
+		ensure
+			not keywords_case_sensitive
+		end;
 
 	keywords_distinguish_case is
-			-- Distinguish case for keywords. If neither
-			-- keywords_ignore_case nor keywords_distinguish_case
-			-- is used, then keywords_ignore_case is the default.
+			-- Make letter case not significant for keywords
+			-- in future tools.
+			-- Default is ignore case.
 		require
-			none_of_the_tools_built: tool_list.empty
+			no_tool_built: tool_list.empty
 		do
 			keywords_case_sensitive := true
-		end; -- keywords_distinguish_case
+		ensure
+			keywords_case_sensitive
+		end;
+
+feature -- Element change
 
 	interval (b, e: CHARACTER) is
-			-- make a regular expression `b'..'e', or `b' if `b' = `e'.
+			-- Create regular expression `b'..`e', or `b' if `b' = `e'.
 		require
-			not_built: not dfa_built;
+			not_built: not lexical_frozen;
 			e_code_small_enough: charcode (e) <= Last_ascii;
 			b_code_large_enough: charcode (b) >= 0;
 			b_before_e: charcode (b) <= charcode (e)
@@ -110,7 +148,7 @@ feature
 			c_name: STRING;
 			list: LINKED_LIST [INTEGER]
 		do
-			!!fa.make (2, Last_ascii);
+			!! fa.make (2, Last_ascii);
 			bb := charcode (b);
 			ee := charcode (e);
 			from
@@ -123,7 +161,7 @@ feature
 			end;
 			if bb <= Lower_z and ee >= Upper_a and then
 					(bb <= Upper_z or ee >= Lower_a) then
-				fa.now_has_letters
+				fa.set_letters
 			end;
 			if not case_sensitive then
 				fa.remove_case_sensitiveness
@@ -132,7 +170,7 @@ feature
 			tool_list.finish;
 			tool_list.put_right (fa);
 			if bb /= ee then
-				!!c_name.make (8);
+				!! c_name.make (8);
 				c_name.extend ('%'');
 				c_name.append (readable_form (b));
 				c_name.extend ('%'');
@@ -141,24 +179,24 @@ feature
 				c_name.append (readable_form (e));
 				c_name.extend ('%'')
 			else
-				!!c_name.make (3);
+				!! c_name.make (3);
 				c_name.extend ('%'');
 				c_name.append (readable_form (b));
 				c_name.extend ('%'')
 			end;
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- interval
+		end;
 
 	any_character is
-			-- Create a regular expression $. including all characters.
+			-- Create regular expression $. matching all characters.
 		require
-			dfa_not_built: not dfa_built
+			not_frozen: not lexical_frozen
 		local
 			i: INTEGER;
 			new_tool: PDFA
 		do
-			!!new_tool.make (2, Last_ascii);
+			!! new_tool.make (2, Last_ascii);
 			from
 				i := -1
 			until
@@ -167,7 +205,7 @@ feature
 				i := i + 1;
 				new_tool.set_transition (1, i, 2)
 			end;
-			new_tool.now_has_letters;
+			new_tool.set_letters;
 			if not case_sensitive then
 				new_tool.remove_case_sensitiveness
 			end;
@@ -176,18 +214,18 @@ feature
 			tool_list.put_right (new_tool);
 			tool_names.finish;
 			tool_names.put_right ("$.")
-		end; -- any_character
+		end;
 
 	any_printable is
-			-- Create a regular expression $P including all printable
-			-- characters.
+			-- Create regular expression $P matching all
+			-- printable characters.
 		require
-			dfa_not_built: not dfa_built
+			not_frozen: not lexical_frozen
 		local
 			i: INTEGER;
 			new_tool: PDFA
 		do
-			!!new_tool.make (2, Last_ascii);
+			!! new_tool.make (2, Last_ascii);
 			from
 				i := First_printable - 1
 			until
@@ -196,7 +234,7 @@ feature
 				i := i + 1;
 				new_tool.set_transition (1, i, 2)
 			end;
-			new_tool.now_has_letters;
+			new_tool.set_letters;
 			if not case_sensitive then
 				new_tool.remove_case_sensitiveness
 			end;
@@ -205,16 +243,16 @@ feature
 			tool_list.put_right (new_tool);
 			tool_names.finish;
 			tool_names.put_right ("$P")
-		end; -- any_printable
+		end;
 
 	difference (r: INTEGER; c: CHARACTER) is
-			-- Create a regular expression representing
+			-- Create regular expression representing
 			-- the difference `r' - `c'.
 			-- `r' must be a simple category, such as `a'..`z',
 			-- or a union of simple categories,
-			-- such as `a'..`z' | '`0'..`9'.
+			-- such as `a'..`z' | `0'..`9'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			r_exists: r >= 1 and r <= last_created_tool;
 			r_simple_category: tool_list.i_th (r).nb_states = 2
 		local
@@ -223,7 +261,7 @@ feature
 			c_name: STRING
 		do
 			tool_list.go_i_th (r);
-			!!new.make (tool_list.item.nb_states, Last_ascii);
+			!! new.make (tool_list.item.nb_states, Last_ascii);
 			new.include (tool_list.item, 0);
 			cc := charcode (c);
 			new.delete_transition (1, cc, 2);
@@ -233,7 +271,7 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			tool_names.go_i_th (r);
 			c_name.append (tool_names.item);
 			c_name.extend ('-');
@@ -242,13 +280,13 @@ feature
 			c_name.extend ('%'');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- difference
+		end;
 
 	append (p, s: INTEGER) is
-			-- Create a regular expression `p'`s':
-			-- `s' appended at end of `p'
+			-- Create regular expression `p'`s':
+			-- `s' appended to `p'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			p_in_tool: p >= 1 and p <= last_created_tool;
 			s_in_tool: s >= 1 and s <= last_created_tool
 		local
@@ -261,7 +299,7 @@ feature
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!!new.make (length, Last_ascii);
+			!! new.make (length, Last_ascii);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -272,7 +310,7 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
 			c_name.extend (' ');
@@ -280,13 +318,13 @@ feature
 			c_name.append (tool_names.item);
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- append
+		end;
 
 	append_optional (p, s: INTEGER) is
-			-- Create a regular expression `p'[`s']:
-			-- `s' appended at end of `p', `s' is optional.
+			-- Create regular expression `p'[`s']:
+			-- `s' optionally appended to `p'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			p_in_tool: p >= 1 and p <= last_created_tool;
 			s_in_tool: s >= 1 and s <= last_created_tool
 		local
@@ -299,7 +337,7 @@ feature
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!!new.make (length, Last_ascii);
+			!! new.make (length, Last_ascii);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -311,7 +349,7 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
 			c_name.extend (' ');
@@ -321,13 +359,13 @@ feature
 			c_name.extend (']');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- append_optional
+		end;
 
 	prepend_optional (p, s: INTEGER) is
-			-- Create a regular expression [`p']`s':
-			-- `s' appended at end of `p', `p' is optional.
+			-- Create regular expression [`p']`s':
+			-- `s' appended to optional `p'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			p_in_tool: p >= 1 and p <= last_created_tool;
 			s_in_tool: s >= 1 and s <= last_created_tool
 		local
@@ -340,7 +378,7 @@ feature
 			tool_list.go_i_th (s);
 			s_length := tool_list.item.nb_states;
 			length := p_length + s_length;
-			!!new.make (length, Last_ascii);
+			!! new.make (length, Last_ascii);
 			new.include (tool_list.item, p_length);
 			tool_list.go_i_th (p);
 			new.include (tool_list.item, 0);
@@ -352,7 +390,7 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			c_name.extend ('[');
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
@@ -362,13 +400,13 @@ feature
 			c_name.append (tool_names.item);
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- prepend_optional
+		end;
 
 	case_insensitive (c: INTEGER) is
-			-- Create a regular expression ~(`c'), which is like `c',
-			-- but case insensitive.
+			-- Create regular expression ~(`c'):
+			-- like `c', but case-insensitive.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			z_possible: Last_ascii >= Lower_z;
 			c_in_tool: c >= 1 and c <= last_created_tool
 		local
@@ -377,27 +415,27 @@ feature
 			in_put: INTEGER
 		do
 			tool_list.go_i_th (c);
-			!!new.make (tool_list.item.nb_states, Last_ascii);
+			!! new.make (tool_list.item.nb_states, Last_ascii);
 			new.include (tool_list.item, 0);
 			new.remove_case_sensitiveness;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			c_name.extend ('~');
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- case_insensitive
+		end;
 
 	optional (c: INTEGER) is
-			-- Create a regular expression [`c'], which is same as `c'
-			-- but optional.
+			-- Create regular expression [`c']:
+			-- optional `c'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			c_in_tool: c >= 1 and c <= last_created_tool
 		local
 			new: PDFA;
@@ -406,7 +444,7 @@ feature
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!!new.make (length, Last_ascii);
+			!! new.make (length, Last_ascii);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (1, length);
 			if not case_sensitive then
@@ -416,19 +454,19 @@ feature
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			c_name.extend ('[');
 			c_name.append (tool_names.item);
 			c_name.extend (']');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- optional
+		end;
 
 	iteration1 (c: INTEGER) is
-			-- Create a regular expression +(`c'), which is an iteration
-			-- of regular expression `c', with at least one element.
+			-- Create regular expression +(`c'): one or more
+			-- consecutive occurrences of `c'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			c_in_tool: c >= 1 and c <= last_created_tool
 		local
 			new: PDFA;
@@ -437,7 +475,7 @@ feature
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!!new.make (length, Last_ascii);
+			!! new.make (length, Last_ascii);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (length, 1);
 			if not case_sensitive then
@@ -447,20 +485,20 @@ feature
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			c_name.precede ('+');
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- iteration1
+		end;
 
 	iteration (c: INTEGER) is
-			-- Create a regular expression *(`c'), which is an iteration
-			-- of regular expression `c', with zero or more elements.
+			-- Create regular expression *(`c'): zero or more
+			-- consecutive occurrences of `c'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			c_in_tool: c >= 1 and c <= last_created_tool
 		local
 			new: PDFA;
@@ -469,7 +507,7 @@ feature
 		do
 			tool_list.go_i_th (c);
 			length := tool_list.item.nb_states;
-			!!new.make (length, Last_ascii);
+			!! new.make (length, Last_ascii);
 			new.include (tool_list.item, 0);
 			new.set_e_transition (length, 1);
 			new.set_e_transition (1, length);
@@ -480,21 +518,20 @@ feature
 			tool_list.finish;
 			tool_list.put_right (new);
 			tool_names.go_i_th (c);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			c_name.precede ('*');
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- iteration
+		end;
 
 	iteration_n (n, c: INTEGER) is
-			-- Create a regular expression n(`c'), which is an
-			-- iteration n times of `c'.
-			-- For instance: 6(`a'..`z').
+			-- Create regular expression `n'(`c'):
+			-- exactly `n' consecutive occurrences of `c'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			n_large_enough: n > 0;
 			c_in_tool: c >= 1 and c <= last_created_tool
 		local
@@ -505,7 +542,7 @@ feature
 			tool_list.go_i_th (c);
 			new := tool_list.item;
 			o_length := new.nb_states;
-			!!a_prefix.make (o_length * n, Last_ascii);
+			!! a_prefix.make (o_length * n, Last_ascii);
 			a_prefix.include (new, 0);
 			from
 				index := 1
@@ -524,20 +561,20 @@ feature
 			tool_list.finish;
 			tool_list.put_right (a_prefix);
 			tool_names.go_i_th (c);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			c_name.append (n.out);
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- iteration_n
+		end;
 
 	union2 (a, b: INTEGER) is
-			-- Create a regular expression `a' | `b', which the union
-			-- of `a' and `b'.
+			-- Create regular expression `a' | `b': union of
+			-- `a' and `b' (matches an occurrence of `a' or `b')).
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			a_in_tool: a >= 1 and a <= last_created_tool;
 			b_in_tool: b >= 1 and b <= last_created_tool
 		local
@@ -562,7 +599,7 @@ feature
 					io.putstring ("Union2, length = 6");
 					io.new_line;
 				end;
-				!!new.make (2, Last_ascii);
+				!! new.make (2, Last_ascii);
 				new.include (tool_list.item, 0);
 				tool_list.go_i_th (a);
 				new.include (tool_list.item, 0)
@@ -571,7 +608,7 @@ feature
 					io.putstring ("Union2, length /= 6");
 					io.new_line;
 				end;
-				!!new.make (length, Last_ascii);
+				!! new.make (length, Last_ascii);
 				new.include (tool_list.item, a_length + 1);
 				tool_list.go_i_th (a);
 				new.include (tool_list.item, 1);
@@ -586,7 +623,7 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			tool_names.go_i_th (a);
 			c_name.append (tool_names.item);
 			c_name.extend ('|');
@@ -594,15 +631,14 @@ feature
 			c_name.append (tool_names.item);
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- union2
+		end;
 
 	union (a, b: INTEGER) is
-			-- Create a regular expression
-			-- `a' | `a'+1 | .. | `b', the
-			-- union of the successives categories
-			-- `a', `a'+1, ..,`b'.
+			-- Create regular expression for the multiple union
+			-- `a' | `a'+1 | .. | `b': matches any occurrence of
+			-- `a', or `a'+1, .., or `b'.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			a_not_too_small: a >= 1;
 			b_not_too_large: b <= last_created_tool;
 			a_smaller_than_b: a <= b
@@ -610,10 +646,10 @@ feature
 			new, cat: PDFA;
 			tool_p, length, index: INTEGER;
 			c_name: STRING;
-			cat_set, non_cat_set: FIX_INT_SET
+			cat_set, non_cat_set: FIXED_INTEGER_SET
 		do
-			!!cat_set.make (b);
-			!!non_cat_set.make (b);
+			!! cat_set.make (b);
+			!! non_cat_set.make (b);
 			length := 2;
 			from
 				tool_list.go_i_th (a)
@@ -629,7 +665,7 @@ feature
 				tool_list.forth
 			end;
 			if not cat_set.empty then
-				!!cat.make (2, Last_ascii);
+				!! cat.make (2, Last_ascii);
 				from
 					tool_p := cat_set.smallest
 				until
@@ -644,11 +680,11 @@ feature
 				new := cat
 			else
 				if cat_set.empty then
-					!!new.make (length, Last_ascii);
+					!! new.make (length, Last_ascii);
 					index := 2
 				else
 					length := length + 2;
-					!!new.make (length, Last_ascii);
+					!! new.make (length, Last_ascii);
 					new.include (cat, 1);
 					new.set_e_transition (1, 2);
 					new.set_e_transition (3, length);
@@ -673,7 +709,7 @@ feature
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new);
-			!!c_name.make (0);
+			!! c_name.make (0);
 			from
 				tool_names.go_i_th (a);
 			until
@@ -686,11 +722,11 @@ feature
 			c_name.append (tool_names.item);
 			tool_names.finish;
 			tool_names.put_right (c_name)
-		end; -- union
+		end;
 
 	set_word (word: STRING) is
-			-- Create a regular expression "`word'", which is same
-			-- as (`w'`o'`r'`d').
+			-- Create regular expression for `word':
+			-- synonym for concatenation (`w' `o' `r' `d').
 		require
 			word_not_empty: word.count >= 1
 		local
@@ -699,7 +735,7 @@ feature
 			tool_name: STRING
 		do
 			length := word.count;
-			!!new_tool.make (length + 1, Last_ascii);
+			!! new_tool.make (length + 1, Last_ascii);
 			from
 			until
 				i = length
@@ -709,7 +745,7 @@ feature
 				new_tool.set_transition (i, code, i + 1);
 				if (code <= Lower_z and code >= Lower_a) or else
 						(code <= Upper_z and code >= Upper_a) then
-					new_tool.now_has_letters
+					new_tool.set_letters
 				end
 			end;
 			if not case_sensitive then
@@ -723,29 +759,29 @@ feature
 			tool_name.extend ('"');
 			tool_names.finish;
 			tool_names.put_right (tool_name)
-		end; -- set_word
+		end;
 
 	up_to (word: STRING) is
-			-- Create a regular expression ->"`word'", which is a
-			-- set of any number of any characters, ended by "`word'".
-			-- Example: "/* C comment */" is recognized by (->"*/").
+			-- Create regular expression ->"`word'", which is a
+			-- set of any number of any characters ended by "`word'".
+			-- Example: "/* C comment */" matches (->"*/").
 			-- The difference between (+$. '*' '/') and
-			-- (->"*/") is that "*/..*/..*/" can be recognized by the
-			-- first one and not by the second one.
+			-- (->"*/") is that "*/..*/..*/" matches
+			-- the first but not the second.
 			-- The difference between
 			-- ((($.-'*') | ('*'($.-'/'))) +('*' '/') )
-			-- and "(->"*/")" is that "..**/" can be recognized by
-			-- the second one and not by the first one.
+			-- and "(->"*/")" is that "..**/" matches
+			-- the second but not the first.
 		require
 			word_not_empty: word.count > 0;
-			dfa_not_built: not dfa_built
+			not_frozen: not lexical_frozen
 		local
 			i, j, length: INTEGER;
 			new_tool: PDFA;
 			r_name: STRING
 		do
 			length := word.count;
-			!!new_tool.make ((6 * length) + 1, Last_ascii);
+			!! new_tool.make ((6 * length) + 1, Last_ascii);
 			from
 			until
 				i = length
@@ -773,14 +809,14 @@ feature
 					word.item_code (1), (6 * i) + 5);
 				i := i + 1
 			end;
-			new_tool.now_has_letters;
+			new_tool.set_letters;
 			if not case_sensitive then
 				new_tool.remove_case_sensitiveness
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
 			tool_list.put_right (new_tool);
-			!!r_name.make (4);
+			!! r_name.make (4);
 			r_name.extend ('-');
 			r_name.extend ('>');
 			r_name.extend ('"');
@@ -788,7 +824,7 @@ feature
 			r_name.extend ('"');
 			tool_names.finish;
 			tool_names.put_right (r_name)
-		end; -- up_to
+		end;
 
 	put_keyword (s: STRING; exp: INTEGER) is
 			-- Declare `s' as a keyword described by
@@ -796,7 +832,7 @@ feature
 			--| Do not check if `s' is recognized by `exp'.
 			--| This is done when the dfa is built.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			exp_selected: token_type_list /= Void and then token_type_list.has(exp)
 		local
 			u, l: STRING;
@@ -815,32 +851,18 @@ feature
 				tool_list.item.add_keyword (u);
 				last_declared_keyword := last_declared_keyword + 2
 			end
-		end; -- put_keyword
-
-	remove is
-			-- Remove the last regular expression
-			-- from the tool list.
-		require
-			dfa_not_built: not dfa_built;
-			at_least_one_regular: last_created_tool >= 1
-		do
-			last_created_tool := last_created_tool - 1;
-			tool_list.finish;
-			tool_names.finish;
-			tool_list.remove;
-			tool_names.remove
-		end; -- remove
+		end;
 
 	select_tool (i: INTEGER) is
-			-- Select the `i'_th tool to include it in the main
+			-- Select the `i'_th tool for inclusion in the main
 			-- regular expression.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			i_exist: i > 0 and i <= last_created_tool
 		do
 			if selected_tools = Void then
-				!!selected_tools.make;
-				!!token_type_list.make
+				!! selected_tools.make;
+				!! token_type_list.make
 			end;
 			selected_tools.finish;
 			selected_tools.put_right (i);
@@ -852,7 +874,7 @@ feature
 			nb_states := nb_states + tool_list.item.nb_states
 		ensure
 			i_selected: selected_tools.has (i)
-		end; -- select_tool
+		end;
 
 	associate (t, n: INTEGER) is
 			-- Associate the `t'-th tool with token type `n'.
@@ -880,7 +902,7 @@ feature
 				end;
 				token_type_list.put (n)
 			end
-		end; -- associate
+		end;
 
 	recognize (s: STRING): INTEGER is
 			-- Token_type of `s'; 0 if not recognized
@@ -888,7 +910,7 @@ feature
 			i: INTEGER;
 			l: LINKED_LIST [INTEGER];
 		do
-			!!l.make;
+			!! l.make;
 			from
 				i := 1
 			until
@@ -899,7 +921,40 @@ feature
 				i := i + 1
 			end;
 			Result := dfa.recognize (l)
-		end; -- recognize
+		end;
+
+feature -- Removal
+
+	remove is
+			-- Remove the last regular expression
+			-- from the tool list.
+		require
+			not_frozen: not lexical_frozen;
+			at_least_one_regular: last_created_tool >= 1
+		do
+			last_created_tool := last_created_tool - 1;
+			tool_list.finish;
+			tool_names.finish;
+			tool_list.remove;
+			tool_names.remove
+		end;
+
+feature -- Input
+
+	retrieve_analyzer (file_name: STRING) is
+			-- Retrieve `analyzer' from file named `file_name'.
+		local
+			retrieved_file: UNIX_FILE
+		do
+			if analyzer = Void then
+				!! analyzer.make
+			end;
+			!! retrieved_file.make_open_read (file_name);
+			analyzer ?= analyzer.retrieved (retrieved_file);
+			retrieved_file.close
+		end;
+
+feature -- Output
 
 	store_analyzer (file_name: STRING) is
 			-- Store `analyzer' in file named `file_name'.
@@ -909,59 +964,20 @@ feature
 			store_file: UNIX_FILE
 		do
 			if analyzer = Void then
-				!!analyzer.make
+				!! analyzer.make
 			end;
-			!!store_file.make_open_write (file_name);
+			!! store_file.make_open_write (file_name);
 			analyzer.basic_store (store_file);
 			store_file.close
-		end; -- store_analyzer
+		end;
 
-	retrieve_analyzer (file_name: STRING) is
-			-- Retrieve `analyzer' from file named `file_name'.
-		local
-			retrieved_file: UNIX_FILE
-		do
-			if analyzer = Void then
-				!!analyzer.make
-			end;
-			!!retrieved_file.make_open_read (file_name);
-			analyzer ?= analyzer.retrieved (retrieved_file);
-			retrieved_file.close
-		end; -- retrieve_analyzer
-
-	initialize is
-			-- Initialize the attributes of `analyzer'.
-		do
-			initialized := true;
-			if analyzer = Void then
-				!!analyzer.make
-			end;
-			analyzer.initialize_attributes (dfa, categories_table,
-					keyword_h_table, keywords_case_sensitive)
-		end -- initialize
-
-feature {NONE}
-
-	last_created_tool: INTEGER;
-			-- Identification number of the last
-			-- regular expression put in tool_list
-
-	selected_tools: LINKED_LIST [INTEGER];
-			-- Regular expressions included in the main one
-
-	token_type_list: LINKED_LIST [INTEGER];
-			-- Token types of the selected tools:
-			-- The first list value is the token type of
-			-- the first selected tool, etc.
-
-	dfa_built: BOOLEAN;
-			-- Is the DFA built?
+feature {NONE} -- Implementation
 
 	last_declared_keyword: INTEGER;
 			-- Identification number of the last keyword declared
 
 	initialized : BOOLEAN;
-            -- Is analyzer initialized?
+			-- Is analyzer initialized?
 
 	readable_form (c: CHARACTER): STRING is
 			-- "\n" if c = '\n' ...
@@ -975,18 +991,16 @@ feature {NONE}
 			elseif c = '%R' then
 				Result := "%%R"
 			else
-				!!Result.make (1);
+				!! Result.make (1);
 				Result.extend (c)
 			end
-		end; -- readable_form
+		end;
 
--- Routines used for DFA building:
-
-	freeze is
+	freeze_lexical is
 			-- Build the main PDFA, and then the DFA which is
 			-- used to recognize a language.
 		require
-			dfa_not_built: not dfa_built;
+			not_frozen: not lexical_frozen;
 			tools_selected: selected_tools /= Void
 		do
 			creation_with_all_inputs;
@@ -995,11 +1009,11 @@ feature {NONE}
 			set_start (1);
 			construct_dfa;
 			copy_keywords;
-			dfa_built := true
+			lexical_frozen := true
 		ensure
-			dfa_not_Void: dfa /= Void;
-			dfa_built: dfa_built = true
-		end; -- freeze
+			not_frozen: dfa /= Void;
+			not_frozen: lexical_frozen
+		end;
 
 	creation_with_all_inputs is
 			-- Create main PDFA, including all the selected tools.
@@ -1007,7 +1021,7 @@ feature {NONE}
 			-- that the initial state in the first one, and the
 			-- final state is the last one.
 		require
-			dfa_not_built: not dfa_built
+			not_frozen: not lexical_frozen
 		local
 			shift: INTEGER;
 			fa: PDFA
@@ -1040,7 +1054,7 @@ feature {NONE}
 				selected_tools.forth;
 				token_type_list.forth
 			end
-		end; -- creation_with_all_inputs
+		end;
 
 	build_categories_table is
 			-- Build categories_table.
@@ -1052,15 +1066,15 @@ feature {NONE}
 			-- number of the category it belongs to.
 			-- The 0th category includes all the unused inputs,
 			-- and the input -1, which means end of file.
-			-- This routine uses "search_in_tree" of NFA, which
+			-- This routine uses "search_in_tree" of NDFA, which
 			-- purpose is to sort a set of FIX_INT_SET.
 		local
 			in_put: INTEGER;
-			set, old_set: FIX_INT_SET
+			set, old_set: FIXED_INTEGER_SET
 		do
-			!!set_tree.make (nb_states, 0);
-			!!categories_table.make (-1, Last_ascii);
-			!!old_set.make (nb_states);
+			!! set_tree.make (nb_states, 0);
+			!! categories_table.make (-1, Last_ascii);
+			!! old_set.make (nb_states);
 			from
 				in_put := - 1
 			until
@@ -1081,7 +1095,7 @@ feature {NONE}
 			greatest_input := new_number;
 			new_number := 0;
 			set_tree := Void
-		end; -- build_categories_table
+		end;
 
 	creation_with_categories is
 			-- Re-Create main PDFA, using categories_table,
@@ -1091,10 +1105,10 @@ feature {NONE}
 		require
 			categories_table: categories_table /= Void
 		local
-			new_input_array: ARRAY [FIX_INT_SET];
+			new_input_array: ARRAY [FIXED_INTEGER_SET];
 			category, in_put: INTEGER
 		do
-			!!new_input_array.make (0, greatest_input);
+			!! new_input_array.make (0, greatest_input);
 			from
 				in_put := -1
 			until
@@ -1107,7 +1121,7 @@ feature {NONE}
 				end
 			end;
 			input_array := new_input_array
-		end; -- creation_with_categories
+		end;
 
 	copy_keywords is
 			-- Copy the keywords in the hash table.
@@ -1117,7 +1131,7 @@ feature {NONE}
 			tool_number, token_type: INTEGER
 		do
 			if last_declared_keyword > 0 then
-				!!keyword_h_table.make (last_declared_keyword)
+				!! keyword_h_table.make (last_declared_keyword)
 			end;
 			from
 				selected_tools.start;
@@ -1144,7 +1158,7 @@ feature {NONE}
 				selected_tools.forth;
 				token_type_list.forth
 			end
-		end; -- copy_keywords
+		end;
 
 	recognized (kwd: STRING; token_type: INTEGER): BOOLEAN is
 			-- Is `kwd' recognized by the regular
@@ -1156,7 +1170,7 @@ feature {NONE}
 			l: LINKED_LIST [INTEGER];
 			possible_tokens: ARRAY [INTEGER]
 		do
-			!!l.make;
+			!! l.make;
 			from
 				i := 1
 			until
@@ -1175,7 +1189,7 @@ feature {NONE}
 				Result := (possible_tokens.item (i) = token_type);
 				i := i + 1
 			end
-		end; -- recognized
+		end;
 
 	dfa_set_final (s, new_final: INTEGER) is
 			-- Set the attribute final of state s to new_final.
@@ -1189,7 +1203,7 @@ feature {NONE}
 				error_common_part (old_final, new_final);
 				dfa.item (s).set_final (new_final)
 			end
-		end; -- dfa_set_final
+		end;
 
 	error_common_part (first, second: INTEGER) is
 			-- Create an error message when a regular expression can
@@ -1202,7 +1216,7 @@ feature {NONE}
 		local
 			message: STRING
 		do
-			!!message.make (0);
+			!! message.make (0);
 			message.append ("Warning: some tokens can be recognized by ");
 			token_type_list.start;
 			token_type_list.search (first);
@@ -1217,7 +1231,7 @@ feature {NONE}
 			message.append (tool_names.item);
 			message.append (".%N	The second one has priority.");
 			error_list.add_message (message)
-		end; -- error_common_part
+		end;
 
 	error_keyword (t: INTEGER; k: STRING) is
 			-- Create an error message when a keyword k is not
@@ -1225,7 +1239,7 @@ feature {NONE}
 		local
 			message: STRING
 		do
-			!!message.make (0);
+			!! message.make (0);
 			message.append ("Warning: ");
 			message.append (k);
 			message.append (" is not recognized by ");
@@ -1233,7 +1247,7 @@ feature {NONE}
 			message.append (tool_names.item);
 			message.extend ('.');
 			error_list.add_message (message)
-		end -- error_keyword
+		end;
 
 invariant
 

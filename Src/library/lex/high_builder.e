@@ -19,7 +19,7 @@ creation
 
 	make
 
-feature
+feature -- Element change
 
 	put_nameless_expression (s: STRING; n: INTEGER) is
 			-- Record the regular expression described
@@ -38,26 +38,26 @@ feature
 				select_tool (last_created_tool);
 				associate (last_created_tool, n)
 			end
-		end; -- put_nameless_expression
+		end; 
 
 	build_dollar_any is
-			-- Build $.: any character.
+			-- Build $., matching any character.
 		require
 			good_first_character: description.item (cursor) = '.'
 		do
 			any_character
-		end; -- build_dollar_any
+		end; 
 
 	build_dollar_p is
-			-- Build $P.: any printable character.
+			-- Build $P, matching any printable character.
 		require
 			good_first_character: description.item (cursor) = 'P'
 		do
 			any_printable
-		end; -- build_dollar_p
+		end; 
 
 	build_dollar_b is
-			-- Build $B: any number of break characters:
+			-- Build $B, matching any number of break characters:
 			-- blank, new-line, tabulation, carriage-return.
 		do
 			interval (' ', ' ');
@@ -65,19 +65,19 @@ feature
 			interval ('%F', '%F');
 			interval ('%N', '%N');
 			union (last_created_tool - 3, last_created_tool)
-		end; -- build_dollar_b
+		end; 
 
 	build_dollar_n is
-			-- Build $N: natural integer constants.
+			-- Build $N, matching natural integer constants.
 			-- +('0'..'9')
 		do
 			interval ('0', '9');
 			iteration1 (last_created_tool);
 			dollar_n := last_created_tool
-		end; -- build_dollar_n
+		end; 
 
 	build_dollar_z is
-			-- Build $Z: Possibly signed integer constants.
+			-- Build $Z, matching possibly signed integer constants.
 			-- ['+'|'-'] +('0'..'9')
 		do
 			if dollar_n = 0 then
@@ -88,10 +88,10 @@ feature
 			union2 (last_created_tool - 1, last_created_tool);
 			prepend_optional (last_created_tool, dollar_n);
 			dollar_z := last_created_tool
-		end; -- build_dollar_z
+		end; 
 
 	build_dollar_r is
-			-- Build $R: floating point constants.
+			-- Build $R, matching floating point constants.
 			-- ['+'|'-'] +('0'..'9') '.' *('0'..'9') ['e'|'E' ['+'|'-']
 			-- +('0'..'9')]
 		do
@@ -111,15 +111,15 @@ feature
 			append (last_created_tool, dollar_z);
 			append_optional (dollar_r, last_created_tool);
 			dollar_r := last_created_tool
-		end -- build_dollar_r
+		end 
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	cursor: INTEGER;
 			-- Position in description.
 
 	description: STRING;
-			-- Description of the regular expression.
+			-- Description of the regular expression
 
 	description_length: INTEGER;
 			-- Length of description.
@@ -168,7 +168,7 @@ feature {NONE}
 		ensure
 			cursor_on_end_sequence: parsing_stopped or else
 				description.item (cursor) = end_sequence
-		end; -- build_sequence
+		end; 
 
 	build_tool is
 			-- Build the tool corresponding to the current
@@ -207,7 +207,7 @@ feature {NONE}
 				end
 			end
 			--| Cursor has to be on the next regular expression.
-		end; -- build_tool
+		end; 
 
 	action_parenthesis is
 			-- Build the sequence included in parenthesis.
@@ -221,10 +221,10 @@ feature {NONE}
 		ensure
 			cursor_after_parenthesis:
 				parsing_stopped or else description.item (cursor - 1) = ')'
-		end; -- action_parenthesis
+		end; 
 
 	action_bracket is
-			-- Build a tool and set it optional.
+			-- Build a tool and make it optional.
 		require
 			good_first_character: description.item (cursor) = '['
 		do
@@ -236,7 +236,7 @@ feature {NONE}
 		ensure
 			cursor_after_bracket: parsing_stopped or else
 					description.item (cursor - 1) = ']'
-		end; -- action_bracket
+		end; 
 
 	action_quote is
 			-- Look for the first char, eventually for the second,
@@ -255,7 +255,7 @@ feature {NONE}
 			end
 		ensure
 			-- cursor after last quote.
-		end; -- action_quote
+		end; 
 
 	action_two_char (first_char: CHARACTER) is
 			-- Look for the second character and build the
@@ -310,11 +310,11 @@ feature {NONE}
 					end
 				end
 			end
-		end; -- action_two_char
+		end; 
 
 	get_char_in_quotes is
-			-- Set current_char to character found between two quotes.
-			-- "quote" if '\'', "return" if '\n', "tab" if '\t' ..
+			-- Set `current_char' to character found between two quotes.
+			-- "quote" if '\'', "return" if '\n', "tab" if '\t' etc.
 			-- If the character is '\s' set current_char to '\0' and
 			-- build a tool "any separator".
 			-- If the character is '\p' set current_char to '\0' and
@@ -385,7 +385,7 @@ feature {NONE}
 		ensure
 			cursor_after_quote: parsing_stopped or else
 				description.item (cursor - 1) = '%''
-		end; -- get_char_in_quotes
+		end; 
 
 	action_star is
 			-- Build a tool and then an iteration of any number,
@@ -398,7 +398,7 @@ feature {NONE}
 			if not parsing_stopped then
 				iteration (last_created_tool)
 			end
-		end; -- action_star
+		end; 
 
 	action_plus is
 			-- Build a tool and then an iteration of any number,
@@ -411,7 +411,7 @@ feature {NONE}
 			if not parsing_stopped then
 				iteration1 (last_created_tool)
 			end
-		end; -- action_plus
+		end; 
 
 	action_tilde is
 			-- Build a tool and then another identical,
@@ -424,7 +424,7 @@ feature {NONE}
 			if not parsing_stopped then
 				case_insensitive (last_created_tool)
 			end
-		end; -- action_tilde
+		end; 
 
 	action_dollar is
 			-- Build tools described with the dollar sign and
@@ -476,7 +476,7 @@ feature {NONE}
 			end
 		ensure
 			cursor_after: is_cursor_after
-		end; -- action_dollar
+		end; 
 
 	is_cursor_after: BOOLEAN is
 		do
@@ -488,7 +488,7 @@ feature {NONE}
 				or else description.item (cursor - 1) = 'R';
 			Result := Result or else description.item (cursor - 1) = 'W'
 			 	or else description.item (cursor - 1) = '%''
-		end; -- is_cursor_after
+		end; 
 
 	dollar_n, dollar_z, dollar_r: INTEGER;
 			-- Tool numbers of $N, $Z, and $R
@@ -504,13 +504,13 @@ feature {NONE}
 			difference (last_created_tool, '%N');
 			difference (last_created_tool, '%R');
 			iteration1 (last_created_tool)
-		end; -- build_dollar_w
+		end; 
 
 	build_dollar_l is
 			-- Build $L: a new-line character.
 		do
 			interval ('%N', '%N')
-		end; -- build_dollar_l
+		end; 
 
 	action_set_word is
 			-- Build a tool "word", same as ('w' 'o' 'r' 'd').
@@ -522,7 +522,7 @@ feature {NONE}
 		ensure
 			cursor_after_double_quote: parsing_stopped or else
 				description.item (cursor - 1) = '"'
-		end; -- action_set_word
+		end; 
 
 	action_up_to is
 			-- Build a tool which is a sequence of any character,
@@ -542,7 +542,7 @@ feature {NONE}
 		ensure
 			cursor_after_double_quote: parsing_stopped or else
 				description.item (cursor - 1) = '"'
-		end; -- action_up_to
+		end; 
 
 	get_string is
 			-- Set last_string to the string value beginning at cursor.
@@ -551,7 +551,7 @@ feature {NONE}
 		local
 			back_slashed, endword: BOOLEAN
 		do
-			!!last_string.make(0);
+			!! last_string.make (0);
 			from
 			until
 				endword or parsing_stopped
@@ -587,7 +587,7 @@ feature {NONE}
 		ensure
 			cursor_after_double_quote: parsing_stopped or else
 				description.item (cursor - 1) = '"'
-		end; -- get_string
+		end; 
 
 	action_digit is
 			-- Build a tool and then an iteration of n times this tool.
@@ -614,7 +614,7 @@ feature {NONE}
 			if not parsing_stopped then
 				iteration_n (mult, last_created_tool)
 			end
-		end; -- action_digit
+		end; 
 
 	get_octal is
 			-- Set the value of current_char to the character
@@ -650,7 +650,7 @@ feature {NONE}
 			end
 		ensure
 			-- cursor after octal number
-		end; -- get_octal
+		end; 
 
 	get_hexadecimal is
 			-- Set the value of current_char to the character
@@ -684,7 +684,7 @@ feature {NONE}
 			end
 		ensure
 			-- cursor_after_hexadecimal:
-		end; -- get_hexadecimal
+		end; 
 
 	hexa_value (c: CHARACTER): INTEGER is
 			-- O if c = '0', 1 if c = '1',.., 15 if c = 'f' or 'F',
@@ -702,7 +702,7 @@ feature {NONE}
 			else
 				Result := -1
 			end
-		end; -- hexa_value
+		end; 
 
 	remove_separators is
 			-- Remove ' ' '\n' and '\t' of description except
@@ -750,7 +750,7 @@ feature {NONE}
 			elseif description_length = 1 then
 				raise_error (1, '%U', "Nothing in the description.")
 			end
-		end; -- remove_separators
+		end; 
 
 	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING) is
 			-- Print an error message and stop parsing.
@@ -762,7 +762,7 @@ feature {NONE}
 			error_position: INTEGER;
 			message: STRING
 		do
-			!!message.make (0);
+			!! message.make (0);
 			if description_length = 1 or pos < 1 then
 				error_position := 1
 			elseif pos < description_length then
@@ -785,7 +785,7 @@ feature {NONE}
 			message.extend ('%N');
 			error_list.add_message (message);
 			parsing_stopped := true
-		end -- raise_error
+		end 
 
 invariant
 

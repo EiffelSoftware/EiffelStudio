@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -13,15 +12,17 @@ deferred class CHOICE inherit
 
 	CONSTRUCT
 		rename
-			add_component as branch,
+			put_component as branch,
 			is_leaf as no_components
 		end
 
-feature 
+feature -- Access
 
 	retained: CONSTRUCT;
 			-- Child which matches the input document;
-			-- Void if none
+			-- Void if none.
+
+feature -- Status report
 
 	no_left_recursion: BOOLEAN is
 			-- Is the construct free of left recursion?
@@ -48,9 +49,9 @@ feature
 			structure_list.search (production);
 			structure_list.remove;
 			structure_list.go_i_th (0)
-		end -- no_left_recursion
+		end;
 
-feature {CONSTRUCT}
+feature {CONSTRUCT} -- Implementation
 
 	check_recursion is
 			-- Check choice construct for left recursion.
@@ -71,9 +72,9 @@ feature {CONSTRUCT}
 					child_forth
 				end
 			end
-		end -- check_recursion
+		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	print_children is
 			-- Print children separated with a bar.
@@ -92,13 +93,13 @@ feature {NONE}
 				end
 			end;
 			io.new_line
-		end; -- print_children
+		end; 
 
 	expand is
 			-- Create list of possible choices.
 		do
 			expand_next
-		end; -- expand
+		end; 
 
 	parse_body is
 			-- Try each possible expansion and keep
@@ -124,14 +125,14 @@ feature {NONE}
 			wipe_out;
 		-- A choice, once parsed, is not used as a tree node: it
 		-- has only one child which is accessed through 'retained'
-		end; -- parse_body
+		end; 
 
 	in_action is
 		do
 			if retained /= Void then
 				retained.semantics
 			end
-		end -- in_action
+		end;
 
 end -- class CHOICE
  

@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			l_cell_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_cell_1.set_minimum_height (10)
 			l_label_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_label_1.set_text ("This is the evaluation version of EiffelBuild and%Ncode generation has been disabled.%N%NTo obtain a full copy of EiffelBuild contact:%N%NEiffel Software Inc.%NISE Building%N256 Storke Road, Goleta, CA 93117 USA%NTelephone: 805-685-1006, Fax 805-685-6869%NElectronice mail: <info@eiffel.com>%N%NWeb Customer Support: http://support.eiffel.com%NVisit Eiffel on the Web: http://www.eiffel.com")
+			l_label_1.set_text ("This is the evaluation version of EiffelBuild and%Ncode generation has been disabled.%N%NTo obtain a full copy of EiffelBuild contact:%N%NEiffel Software Inc.%NISE Building%N356 Storke Road, Goleta, CA 93117 USA%NTelephone: 805-685-1006, Fax 805-685-6869%NElectronice mail: <info@eiffel.com>%N%NWeb Customer Support: http://support.eiffel.com%NVisit Eiffel on the Web: http://www.eiffel.com")
 			l_label_1.align_text_left
 			l_horizontal_box_3.set_border_width (6)
 			l_horizontal_box_3.disable_item_expand (l_button_1)

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			--put ("localhost:0", "DISPLAY")
-			-- This line may be uncommented to allow for display redirection to another machine.
+				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 			
 			create locale_str.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_set_locale)
 			
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gdk_rgb_init
 			
 			enable_ev_gtk_log (0)
-			-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
+				-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 			feature {EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 		
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			set_tooltip_delay (500)
 			create window_oids.make
 			
-			-- Initialize the marshal object.
+				-- Initialize the marshal object.
 			create gtk_marshal
 		end
 
@@ -259,52 +259,6 @@ feature -- Status setting
 		end
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
-
-	pnd_target_from_gdk_window (
-		a_gdk_window: POINTER;
-		a_x, a_y: INTEGER
-		): EV_PICK_AND_DROPABLE is
-		require
-			a_gdk_window_not_void: a_gdk_window /= NULL
-		local
-			cur: CURSOR
-			imp: EV_PICK_AND_DROPABLE_IMP
-			row_imp: EV_PND_DEFERRED_ITEM
-			trg: EV_PICK_AND_DROPABLE
-		do
-			cur := pnd_targets.cursor
-			from
-				pnd_targets.start
-			until
-				pnd_targets.after or Result /= Void
-			loop
-				trg ?= id_object (pnd_targets.item)
-				if trg = Void or else trg.is_destroyed then
-					--| FIXME Unsensitive widgets should not be droppable.
-					pnd_targets.forth
-					-- If Void or destroyed then it will be removed on the next pick.
-				else
-					imp ?= trg.implementation
-					if imp = Void then
-						row_imp ?= trg.implementation
-						check
-							imp_not_void: row_imp /= Void
-						end
-						if
-							row_imp.parent_widget_is_displayed and then
-							row_imp.pointer_over_widget (a_gdk_window, a_x, a_y)
-						then
-							Result := trg
-						end
-					elseif imp.is_displayed and then not imp.internal_non_sensitive
-					and then imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
-						Result := trg
-					end				
-					pnd_targets.forth
-				end
-			end
-			pnd_targets.go_to (cur)
-		end
 
 	on_pick (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport

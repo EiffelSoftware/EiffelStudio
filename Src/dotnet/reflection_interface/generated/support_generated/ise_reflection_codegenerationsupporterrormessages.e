@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.CodeGenerationSupportErrorMessages"
-	assembly: "ISE.Reflection.Support", "0.0.0.0", "neutral", "2ef5239aeb372f26"
+	assembly: "ISE.Reflection.Support", "0.0.0.0", "neutral", "a3b366af8d5e38c"
 
 external class
 	ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES

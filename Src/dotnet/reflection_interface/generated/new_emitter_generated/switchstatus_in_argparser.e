@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ArgParser+SwitchStatus"
-	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "20ff36d6debc9ba6"
 	enum_type: "INTEGER"
 
 frozen expanded external class

@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.EiffelAssemblyCacheHandler"
-	assembly: "ISE.Reflection.EiffelAssemblyCacheHandler", "0.0.0.0", "neutral", "5fadf94dea1743a"
+	assembly: "ISE.Reflection.EiffelAssemblyCacheHandler", "0.0.0.0", "neutral", "5c25a2fd2f3a220"
 
 external class
 	ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
@@ -128,6 +128,13 @@ feature -- Basic Operations
 			"AccessViolationError"
 		end
 
+	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"IsValidDirectoryPath"
+		end
+
 	make_cache_handler is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
@@ -189,6 +196,13 @@ feature -- Basic Operations
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"Commit"
+		end
+
+	is_valid_filename (a_filename: STRING): BOOLEAN is
+		external
+			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"IsValidFilename"
 		end
 
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is

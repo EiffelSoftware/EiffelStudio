@@ -1,18 +1,40 @@
-/**********************************************
+/*==============================================================================
+ EiffelVision/GTK External C library
+ gtk_eiffel.h
+--------------------------------------------------------------------------------
+ description: "Functions for using gtk from Eiffel"
+ date:        "$Date$"
+ revision:    "$Revision$"
+ status:      "See notice at end of file"
+==============================================================================*/
 
-EiffelVision/GTK 
 
-external C library
-					       
-  Date: 5/22/98
-
-**************************************** */
+/*==============================================================================
+ Included files
+==============================================================================*/
 
 #include <gtk/gtk.h>
 #include "eif_eiffel.h"
 #include "eif_argv.h"
 
 
+/*==============================================================================
+ Initialization
+--------------------------------------------------------------------------------
+ Pass command line arguments to the GTK initialization code 
+ In ISE's runtime there are references to these in "argv.h" 
+==============================================================================*/
+
+void c_gtk_init_toolkit (); 
+
+
+/*==============================================================================
+ Event handling
+==============================================================================*/
+
+/*------------------------------------------------------------------------------
+ Data passed back to event handlers
+------------------------------------------------------------------------------*/
 
 typedef  struct callback_data {
     EIF_PROC rtn;
@@ -29,26 +51,31 @@ typedef  struct callback_data {
 void c_free_call_back_block (callback_data_t *p);
 
 
-/* Pass command line arguments to the GTK initialization code */
-/* In ISE's runtime there are references to these in "argv.h" */
-void c_gtk_init_toolkit (); 
+/*------------------------------------------------------------------------------
+ Called by gtk when a signal is emitted, passes signal on to Eiffel.
+------------------------------------------------------------------------------*/
 
-/* This function is actually called when the event occurs */
-/* an it in turn calls Eiffel.                            */
 void c_signal_callback (GtkObject *w, gpointer data);
 
 
-/* This function is actually called when the event occurs */
-/* an it in turn calls Eiffel.                            */
-/* This function is called for signals named "*_event".  XXXX */
+/*------------------------------------------------------------------------------
+ Called by gtk when an event is emitted, passes event on to Eiffel.
+------------------------------------------------------------------------------*/
+
 void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data);
 
 
-/* Function to call when signal is disconnected */
+/*------------------------------------------------------------------------------
+To be called when signal is disconnected
+------------------------------------------------------------------------------*/
+
 void c_gtk_signal_destroy_data (gpointer data);
 
 
-/* Connect a call back to a widget/event pair */
+/*------------------------------------------------------------------------------
+ Connect a call back to a widget/event pair
+------------------------------------------------------------------------------*/
+
 gint c_gtk_signal_connect (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
@@ -60,8 +87,11 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   char mouse_button,
 			   char double_click);
 
-/* Connect a call back to a widget/event pair */
-/* To be run after other callbacks */
+/*------------------------------------------------------------------------------
+ Connect a call back to a widget/event pair
+ To be run after other callbacks (see gtk documentation)
+------------------------------------------------------------------------------*/
+
 gint c_gtk_signal_connect_after (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
@@ -73,17 +103,19 @@ gint c_gtk_signal_connect_after (GtkObject *widget,
 			   char mouse_button,
 			   char double_click);
 
-/* Disconnect a call back of a widget/event pair */
+/*------------------------------------------------------------------------------
+ Disconnect a call back of a widget/event pair
+------------------------------------------------------------------------------*/
+
 void c_gtk_signal_disconnect (GtkObject *widget, 
 			      EIF_PROC func,
 			      EIF_OBJ object,
 			      EIF_OBJ argument);
 
-/********************************
- *
- * Some routines for widgets
- *
- ********************************/
+
+/*==============================================================================
+ gtk_widget functions
+==============================================================================*/
 
 /* True, if widget is destroyed */
 int c_gtk_widget_destroyed (GtkWidget *widget);
@@ -107,6 +139,7 @@ EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w);
 /* Two routines for post-consitions */
 EIF_BOOLEAN c_gtk_widget_position_set (GtkWidget *w, gint x, gint y);
 EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint height);
+
 
 
 /*********************************
@@ -145,11 +178,14 @@ EIF_REFERENCE c_gtk_widget_get_name (GtkWidget *widget);
 /* set widget name */
 void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name);
 
-/********************************
- *
- * Some routines for toolbar
- *
- ********************************/
+void c_gtk_widget_set_bg_color (GtkWidget *widget, int r, int g, int b);
+void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
+void c_gtk_widget_set_fg_color (GtkWidget *widget, int r, int g, int b);
+void c_gtk_widget_get_fg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
+
+/*==============================================================================
+ gtk_toolbar functions
+==============================================================================*/
 
 /* Call back for toolbar buttons */
 void c_toolbar_callback (GtkObject *w, gpointer data);
@@ -163,34 +199,9 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 				EIF_PROC func, EIF_OBJ object,
 				callback_data_t **p);
 
-/********************************
- *
- * Some routines for message dialog
- *
- ********************************/
-
-				/* Create message dialog buttons */
-void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
-				     GtkWidget *cancel, GtkWidget *help);
-
-
-				/* Message dialog text */
-void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label);
-
-/********************************
- *
- * Some routines for buttons
- *
- ********************************/
-
-/* 
-   out: label_widget pointer to buttons label widget
-   in: label_text  text of label
- */
-/*GtkWidget* c_gtk_create_button_with_label (GtkWidget *label_widget,
-					  const gchar *label_text)
-
-*/
+/*==============================================================================
+ button functions
+==============================================================================*/
 
 /*
   Returns the label widget of button. 
@@ -201,11 +212,10 @@ GtkWidget* c_gtk_get_label_widget (GtkWidget *widget);
 /* Return a state of a toggle button */
 EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
-/********************************
- *
- * Some routines for text
- *
- ********************************/
+
+/*==============================================================================
+ text functions
+==============================================================================*/
 
 /* The length of the string in text widget */
 int c_gtk_get_text_length (GtkWidget* text);
@@ -213,21 +223,18 @@ int c_gtk_get_text_length (GtkWidget* text);
 /* The maximum length of string in text widget */
 int c_gtk_get_text_max_length (GtkWidget* text);
 
-/********************************
- *
- * Some routines for combos
- *
- ********************************/
 
-#define c_gtk_combo_entry(p)      (((GtkCombo*)p)->entry)  /*GtkWidget**/
-#define c_gtk_combo_list(p)      (((GtkCombo*)p)->list)  /*GtkWidget**/
+/*==============================================================================
+ gtk_combo functions
+==============================================================================*/
+
+#define c_gtk_combo_entry(p) (((GtkCombo*)p)->entry)  /*GtkWidget**/
+#define c_gtk_combo_list(p)  (((GtkCombo*)p)->list)   /*GtkWidget**/
 
 
-/********************************
- *
- * Some routines for pixmaps
- *
- ********************************/
+/*==============================================================================
+ gtk_pixmap functions
+==============================================================================*/
 
 /* Create an empty pixmap */
 GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget);
@@ -240,11 +247,9 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name );
 
-/********************************
- *
- * Some routines for lists and clist (multi-column list)
- *
- ********************************/
+/*==============================================================================
+ gtk_list functions
+==============================================================================*/
 
 /* List : add a listItem to a list */
 void c_gtk_list_item_select (GtkWidget *item);
@@ -256,71 +261,102 @@ gint c_gtk_list_selected_item (GtkWidget *item);
 /* List : number of rows */
 guint c_gtk_list_rows (GtkWidget *list);
 
-/* CList */
-#define c_gtk_clist_rows(p)     (((GtkCList*)p)->rows)     /*integer*/
-#define c_gtk_clist_columns(p)  (((GtkCList*)p)->columns)  /*integer*/
-#define c_gtk_clist_selection_mode(p) (((GtkCList*)p)->selection_mode)  /*integer*/
+
+/*==============================================================================
+ gtk_list functions
+==============================================================================*/
+
 gint c_gtk_clist_append_row (GtkWidget* list);
 guint c_gtk_clist_selected (GtkWidget* list);
 gint c_gtk_clist_ith_selected_item (GtkWidget* list, guint i);
 guint c_gtk_clist_selection_length (GtkWidget* list);
 
+/* CList */
+#define c_gtk_clist_rows(p)     (((GtkCList*)p)->rows)     /*integer*/
+#define c_gtk_clist_columns(p)  (((GtkCList*)p)->columns)  /*integer*/
+#define c_gtk_clist_selection_mode(p) (((GtkCList*)p)->selection_mode)  /*integer*/
 
-/********************************
- *
- * Some routines for tables
- *
- ********************************/
+
+/*==============================================================================
+ gtk_table functions
+==============================================================================*/
 
 /* Routines to get and set the number of rows and columns of a table. */
 EIF_INTEGER c_gtk_table_rows        (GtkWidget *widget            );
 EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget            );
 
-/********************************
- *
- * Some routines for trees
- *
- ********************************/
+
+/*==============================================================================
+ gtk_tree functions
+==============================================================================*/
 
 /* Routine to know if a tree item is expanded */
 EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget);
 
-/********************************
- *
- * Some routines for text area
- *
- ********************************/
+
+/*==============================================================================
+ gtk_text functions
+==============================================================================*/
 
 /* Insert a text in a text-area widget. */
 void c_gtk_text_insert (GtkWidget *widget, const char *txt);
 
-/********************************
- *
- * Some routines for boxes
- *
- ********************************/
+/*==============================================================================
+ gtk_box functions
+==============================================================================*/
 
 /* Set the options of a child in a box */
 void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 				  gint expand, gint fill);
 
 
-/********************************
- *
- * Some routines for windows
- *
- ********************************/
+/*==============================================================================
+ gtk_window functions
+==============================================================================*/
 
 /* Give the position of a window. */
 EIF_INTEGER c_gtk_window_x (GtkWidget *w);
 EIF_INTEGER c_gtk_window_y (GtkWidget *w);
 
-/********************************
- *
- * A macro for menu
- *
- ********************************/
 
-#define c_gtk_menu_item_submenu(p) (((GtkMenuItem*)p)->submenu) /* GtkWidget* */
+/*==============================================================================
+ gtk_menu functions
+==============================================================================*/
 
-#define c_gtk_check_menu_item_active(p) (((GtkCheckMenuItem*)p)->active) /* guint */
+#define c_gtk_menu_item_submenu(p) (((GtkMenuItem*)p)->submenu)
+/* GtkWidget* */
+
+#define c_gtk_check_menu_item_active(p) (((GtkCheckMenuItem*)p)->active)
+/* guint */
+	
+
+/*==============================================================================
+ gtk_style functions
+==============================================================================*/
+
+void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
+
+/*#define c_gtk_style_base_color_blue(p) \
+	((((GtkStyle*)p)->base[GTK_STATE_NORMAL].blue)/257)
+*/
+
+/*==============================================================================
+ End of file
+==============================================================================*/
+
+/*|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|--------------------------------------------------------------*/
+

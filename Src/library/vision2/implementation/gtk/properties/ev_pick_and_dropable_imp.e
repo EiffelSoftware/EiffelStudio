@@ -57,7 +57,9 @@ feature {NONE} -- Implementation
 		do
 			if not has_capture then
 				App_implementation.disable_debugger
-				set_focus
+				if not has_focus then
+					set_focus
+				end
 				feature {EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
 				i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), 1, feature {EV_GTK_EXTERNALS}.gdk_button_release_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum, null, null, 0)
 				i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), True, 0)
@@ -68,12 +70,14 @@ feature {NONE} -- Implementation
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
-			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
-				0 -- guint32 time
-			)
-			feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
-			App_implementation.enable_debugger				
+			if has_capture then
+				feature {EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
+				feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
+					0 -- guint32 time
+				)
+				feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+				App_implementation.enable_debugger				
+			end	
 		end
 
 	has_capture: BOOLEAN is

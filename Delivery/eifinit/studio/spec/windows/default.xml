@@ -500,7 +500,7 @@
 		</TOPIC>
 		<TOPIC TOPIC_ID="Debugging_tools" ICON="icon_preferences_folder">
 			<HEAD>Debugging tools</HEAD>
-			<TEXT DESCRIPTION="Display DEBUG_OUTPUT.debug_ouput value">debug_output_evaluation<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display DEBUG_OUTPUT.debug_output value">debug_output_evaluation<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display ANY.generating_type value">generating_type_evaluation<BOOLEAN>True</BOOLEAN></TEXT>
 			<TOPIC TOPIC_ID="Dotnet_debugging_tools" ICON="icon_preferences_folder">
 				<HEAD>Dotnet</HEAD>

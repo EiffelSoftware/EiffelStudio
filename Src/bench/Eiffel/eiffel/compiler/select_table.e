@@ -6,12 +6,13 @@
 class SELECT_TABLE
 
 inherit
+	HASH_TABLE [FEATURE_I, INTEGER]
 
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
 		end
-	EXTEND_TABLE [FEATURE_I, INTEGER];
+		
 	SHARED_HISTORY_CONTROL
 		undefine
 			copy, is_equal

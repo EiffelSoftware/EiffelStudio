@@ -10,7 +10,7 @@ indexing
 class EXTERNALS 
 
 inherit
-	EXTEND_TABLE [EXTERNAL_INFO, INTEGER]
+	HASH_TABLE [EXTERNAL_INFO, INTEGER]
 		rename
 			make as extend_table_make
 		end

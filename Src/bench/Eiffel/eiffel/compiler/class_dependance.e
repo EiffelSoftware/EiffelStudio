@@ -8,7 +8,7 @@ indexing
 class CLASS_DEPENDANCE 
 
 inherit
-	EXTEND_TABLE [FEATURE_DEPENDANCE, INTEGER]
+	HASH_TABLE [FEATURE_DEPENDANCE, INTEGER]
 		redefine
 			remove, put
 		end
@@ -41,14 +41,14 @@ feature
 			-- We must update the correspondance table in the server
 		do
 			System.depend_server.add_correspondance (bindex, class_id)
-			Precursor {EXTEND_TABLE} (f, bindex)
+			Precursor {HASH_TABLE} (f, bindex)
 		end
 
 	remove (bindex: INTEGER) is
 			-- we must update the correspondance table in the server
 		do
 			System.depend_server.remove_correspondance (bindex)
-			Precursor {EXTEND_TABLE} (bindex)
+			Precursor {HASH_TABLE} (bindex)
 		end
 
 end

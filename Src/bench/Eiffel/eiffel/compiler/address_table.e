@@ -7,7 +7,7 @@ class
 	ADDRESS_TABLE
 
 inherit
-	EXTEND_TABLE [TWO_WAY_SORTED_SET [INTEGER], INTEGER]
+	HASH_TABLE [TWO_WAY_SORTED_SET [INTEGER], INTEGER]
 		rename
 			has as class_has_dollar_operator,
 			cursor as ht_cursor

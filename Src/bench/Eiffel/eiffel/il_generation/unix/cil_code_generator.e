@@ -122,9 +122,6 @@ feature -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
-	global_once_generation: BOOLEAN
-			-- Are we currently generating a per-process once feature?
-
 feature {IL_CODE_GENERATOR} -- Access
 
 	is_console_application: BOOLEAN
@@ -286,14 +283,6 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
-		end
-
-	set_global_once_generation (v: BOOLEAN) is
-			-- Set `global_once_generation' to `v'.
-		do
-			global_once_generation := v
-		ensure
-			global_once_generation_set: global_once_generation = v
 		end
 
 feature -- Cleanup
@@ -1128,22 +1117,17 @@ feature -- Once management
 			-- Token for static fields holding value if once has been computed,
 			-- and its value if computed.
 
-	generate_once_done_info (name: STRING) is
-			-- Generate declaration of static `done' variable corresponding
-			-- to once feature `name'.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
+	generate_once_prologue is
+			-- Generate prologue for once feature.
+			-- The feature is used with `generate_once_epilogue' as follows:
+			--    generate_once_prologue
+			--    ... -- code of once feature body
+			--    generate_once_epilogue
 		do
 		end
 
-	generate_once_result_info (name: STRING; type_i: TYPE_I) is
-			-- Generate declaration of static `result' variable corresponding
-			-- to once function `name' that has a return type `type_i'.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			type_i: type_i /= Void
+	generate_once_epilogue is
+			-- Generate epilogue for once feature.
 		do
 		end
 
@@ -1153,16 +1137,6 @@ feature -- Once management
 		end
 
 	generate_once_result_address is
-			-- Generate test on `done' of once feature `name'.
-		do
-		end
-
-	generate_once_return (has_result: BOOLEAN) is
-			-- Generate return from once routine, including loading of function result if `has_result' is true.
-		do
-		end
-
-	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		do
 		end

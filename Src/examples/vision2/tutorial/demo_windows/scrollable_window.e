@@ -13,6 +13,8 @@ inherit
 			make
 		end
 
+	PIXMAP_PATH
+
 creation
 	make
 
@@ -20,17 +22,18 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
+		local
+			pix: EV_PIXMAP
 		do
 			{EV_SCROLLABLE_AREA} Precursor (par)
-
-			!! ta.make (Current)
-			ta.set_size (300, 300)
+			create pix.make_from_file (pixmap_path ("SevenFalls.bmp"))
+			create ta.make_with_pixmap (Current, pix)
 		end
 
 feature -- Access
 
-	ta: EV_TEXT
-		-- A text area for the demo
+	ta: EV_DRAWING_AREA
+		-- A drawing_area for the demo
 
 end -- class SCROLLABLE_WINDOW
 

@@ -659,7 +659,9 @@ feature -- Generation Structure
 					i := i + 1
 				end
 			end
-			
+
+			define_assembly_attributes
+		
 			main_module.save_to_disk
 		end
 
@@ -928,11 +930,11 @@ feature -- Class info
 			l_attributes := l_class.custom_attributes
 			if l_attributes /= Void then
 				l_ca_factory.generate_custom_attributes (
-					class_type_token (class_type.implementation_id), class_type, l_attributes)
+					class_type_token (class_type.implementation_id), l_attributes)
 					-- Generate custome attribute on interface if it is generated.
 				if class_type.static_type_id /= class_type.implementation_id then
 					l_ca_factory.generate_custom_attributes (
-						class_type_token (class_type.static_type_id), class_type, l_attributes)
+						class_type_token (class_type.static_type_id), l_attributes)
 				end
 			end
 	
@@ -942,13 +944,38 @@ feature -- Class info
 				l_attributes := l_class.class_custom_attributes
 				if l_attributes /= Void then
 					l_ca_factory.generate_custom_attributes (
-						class_type_token (class_type.implementation_id), class_type, l_attributes)
+						class_type_token (class_type.implementation_id), l_attributes)
 				end
 				l_attributes := l_class.interface_custom_attributes
 				if l_attributes /= Void then
 					l_ca_factory.generate_custom_attributes (
-						class_type_token (class_type.static_type_id), class_type, l_attributes)
+						class_type_token (class_type.static_type_id), l_attributes)
 				end
+			end
+		end
+
+	define_assembly_attributes is
+			-- Define custom attributes for current assembly.
+		local
+			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
+			l_class: CLASS_C
+			l_attributes: BYTE_LIST [BYTE_NODE]
+			l_cur_mod: like current_module
+		do
+			if System.root_class /= Void and then System.root_class.is_compiled then
+				l_cur_mod := current_module
+				current_module := main_module
+				l_class := System.root_class.compiled_class
+				current_class_type := l_class.types.first
+				create l_ca_factory
+
+					-- First we generate attributes common to both generated class and interface.
+				l_attributes := l_class.assembly_custom_attributes
+				if l_attributes /= Void then
+					l_ca_factory.generate_custom_attributes (main_module.associated_assembly_token,
+						l_attributes)
+				end
+				current_module := l_cur_mod
 			end
 		end
 

@@ -129,6 +129,7 @@ feature -- Graphical User Interface
 			profiler_toggle.set_text ("Profiler")
 			dead_code_removal_toggle.set_text ("Dead code removal")
 			debug_toggle.set_text ("Debug")
+			dead_code_removal_toggle.set_toggle_on
 
 			require_ass.set_toggle_on;
 			assertion_radio.set_always_one (True);

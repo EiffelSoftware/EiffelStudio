@@ -81,6 +81,22 @@ feature {NONE}
 			end
 		end;
 
+	profile_path: STRING is
+			-- Location of the profiler configuration files
+		local
+			dir_name: DIRECTORY_NAME
+		once
+			!! dir_name.make_from_string (Eiffel3_dir_name);
+			dir_name.extend_from_array(<<"bench", "profiler">>);
+			Result := resources.get_string (r_Profiler_path, dir_name);
+			if Result.empty then
+				Result := dir_name
+			else
+					-- Interpretation of the environment variables
+				Result := interpret (Result)
+			end
+		end;
+
 	tmp_directory: STRING is
 		local
 			dir_name: DIRECTORY_NAME

@@ -43,6 +43,7 @@ feature -- Access
 		do
 			Result := implementation.windows
 		ensure
+			not_void: Result /= Void
 			bridge_ok: Result.is_equal (implementation.windows)
 		end
 		
@@ -64,6 +65,7 @@ feature -- Access
 		do
 			Result := implementation.help_accelerator
 		ensure
+			not_void: Result /= Void
 			bridge_ok: Result.is_equal (implementation.help_accelerator)
 		end
 
@@ -74,6 +76,7 @@ feature -- Access
 		do
 			Result := implementation.contextual_help_accelerator
 		ensure
+			not_void: Result /= Void
 			bridge_ok: Result.is_equal
 				(implementation.contextual_help_accelerator)
 		end
@@ -85,6 +88,7 @@ feature -- Access
 		do
 			Result := implementation.help_engine
 		ensure
+			not_void: Result /= Void
 			bridge_ok: Result.is_equal (implementation.help_engine)
 		end
 
@@ -94,6 +98,9 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.clipboard
+		ensure
+			not_void: Result /= Void
+			bridge_ok: Result.is_equal (implementation.clipboard)
 		end
 
 feature -- Element Change
@@ -136,7 +143,7 @@ feature -- Basic operation
 
 	launch is
 			-- Start the application.
-			-- Call `prepare' the Begin event processing.
+			-- This begins the event processing loop.
 		require
 			not_destroyed: not is_destroyed
 			not_already_launched: not is_launched
@@ -174,7 +181,7 @@ feature -- Basic operation
 			-- Change mouse cursor to help cursor.
 			-- Capture mouse input.
 			-- Send help context of widget being clicked to help engine for
-			-- Processing.
+			-- processing.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -197,7 +204,7 @@ feature -- Status report
 
 	tooltip_delay: INTEGER is
 			-- Time in milliseconds which the pointer must be stationary over
-			-- a widget before a tooltips apears.
+			-- a widget before a tooltip appears.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -207,7 +214,7 @@ feature -- Status report
 		end
 
 	default_tooltip_delay: INTEGER is 500
-			-- Default delay in milleseconds of tool tips.
+			-- Default delay in milleseconds for tooltips.
 	
 	focused_widget: EV_WIDGET is
 			-- Widget that has keyboard focus.

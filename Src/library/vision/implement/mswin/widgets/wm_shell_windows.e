@@ -1,16 +1,15 @@
-indexing 
+indexing
 	description: "A shell under the control %
 		%of the Window manager - always %
 		%so for Windows"
 	status: "See notice at end of class"; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
- 
+
 class
 	WM_SHELL_WINDOWS
-  
-inherit 
 
+inherit
 	WM_SHELL_I
 
 	SHELL_WINDOWS
@@ -46,6 +45,7 @@ feature -- Initialization
 feature -- Access
 
 	bar: BAR_WINDOWS
+			-- Menu bar
  
 feature -- Status setting
 
@@ -57,10 +57,11 @@ feature -- Status setting
 			if exists then
 				wel_set_text (a_title)
 			end
-			private_title := clone (a_title);
-		end;
+			private_title := clone (a_title)
+		end
 
 	associate_bar (new_bar: BAR_WINDOWS) is
+			-- Associate a menu bar to the widget.
 		require
 			bar_exists: new_bar /= Void
 		do
@@ -76,6 +77,7 @@ feature -- Status setting
 feature -- Removal
 
 	remove_bar is
+			-- Remove the menu bar from the widget.
 		require
 			bar_present: bar /= Void
 		do
@@ -84,16 +86,16 @@ feature -- Removal
 				unset_menu
 			end
 			shell_height := shell_height - menu_bar_height
+		ensure
+			bar_void: bar = Void
 		end
 
 feature {NONE} -- Implementation
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
-			-- May be redefined to paint something on
-			-- the `paint_dc'. `invalid_rect' defines
-			-- the invalid rectangle of the client area that
-			-- needs to be repainted.
+			-- The invalid rectangle of the client area,
+			-- `invalid_rect', needs repainting.
 		local
 			pixmap_windows: PIXMAP_WINDOWS
 			wel_dib: WEL_DIB

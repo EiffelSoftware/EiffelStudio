@@ -9,14 +9,6 @@ deferred class
 inherit
 	EB_COMMAND
 
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Initialize default values.
-		do
-			is_sensitive := True
-		end
-
 feature -- Status report
 
 	is_sensitive: BOOLEAN

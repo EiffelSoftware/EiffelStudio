@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		require
 			valid_style: s = editor_style or s = default_style or s = context_style
 		do
-			initialize
+			is_sensitive := True
 			style := s
 			if s = default_style then
 				create accelerator.make_with_key_combination (

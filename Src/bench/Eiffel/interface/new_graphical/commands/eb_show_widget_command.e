@@ -10,7 +10,8 @@ class
 inherit
 	EB_TARGET_COMMAND
 		redefine
-			target
+			target,
+			initialize
 		end
 
 creation

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize default_values.
 		do
-			initialize
+			
 		end
 
 feature -- Basic operations

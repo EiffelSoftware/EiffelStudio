@@ -8,21 +8,10 @@ deferred class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
-		redefine
-			initialize
-		end
 
 	EB_CLIPBOARD_OBSERVER
 		redefine
 			on_changed
-		end
-
-feature {NONE} -- initialization
-
-	initialize is
-		do	
-			Precursor
-			disable_sensitive
 		end
 
 feature {NONE} -- Implementation

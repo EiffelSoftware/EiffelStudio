@@ -13,14 +13,12 @@ inherit
 			make as command_make
 		redefine
 			enable_visible,
-			disable_visible,
-			initialize
+			disable_visible
 		end
 
 	EB_MENUABLE_COMMAND
 		redefine
-			new_menu_item,
-			initialize
+			new_menu_item
 		end
 
 create
@@ -34,13 +32,6 @@ feature {NONE} -- Initialization
 			command_make (a_target)
 			menu_name := a_menu_name
 			name := a_menu_name
-		end
-
-	initialize is
-			-- Initialize default values.
-		do
-			Precursor {EB_SHOW_WIDGET_COMMAND}
-			Precursor {EB_MENUABLE_COMMAND}
 		end
 
 feature -- Status setting

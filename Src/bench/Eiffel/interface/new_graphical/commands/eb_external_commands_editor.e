@@ -20,11 +20,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_RESOURCES
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -239,7 +234,7 @@ feature {NONE} -- Implementation
 			loop
 				if commands @ i /= Void then
 					rn := base_resource_name + i.out
-					set_string (rn, (commands @ i).resource)
+					set_string_resource (rn, (commands @ i).resource)
 				end
 				i := i + 1
 			end

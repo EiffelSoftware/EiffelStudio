@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize default values.
-		deferred
+		do
 		end
 
 feature -- Properties

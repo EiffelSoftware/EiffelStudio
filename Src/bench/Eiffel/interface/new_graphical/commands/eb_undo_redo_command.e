@@ -12,8 +12,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
-			new_menu_item,
-			initialize
+			new_menu_item
 		end
 
 	EB_UNDO_REDO_OBSERVER
@@ -24,11 +23,6 @@ inherit
 	EB_RECYCLABLE
 
 feature {NONE} -- initialization
-
-	initialize is
-		do
-			is_sensitive := false
-		end
 
 feature -- Execution
 

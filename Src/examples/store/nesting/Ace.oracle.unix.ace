@@ -35,11 +35,9 @@ cluster
 external
 	include_path:
 		"\$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
-		"\$(ISE_EIFFEL)/library/time/Clib"
 		"\$(ORACLE_HOME)/rdbms/public"
 
 	object: "$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/libsupport.a",
 		"$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/liboracle.a",
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib/libdatetime.a",
 		"-L$(ORACLE_HOME)/lib -lclntsh"
 end

@@ -37,11 +37,7 @@ cluster
 	time_english:		"$ISE_EIFFEL\library\time\format\english";
 
 external
-	include_path:
-		"$(ISE_EIFFEL)\library\time\Clib"
-
 	object:		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
-		"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\ingres_store.lib",
 		"$(II_SYSTEM)\ingres\lib\ingres.lib"
 

@@ -152,37 +152,37 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_system_name (return_value: STRING) is
+	set_system_name (pbstr_name: STRING) is
 			-- System name.
-			-- `return_value' [in].  
+			-- `pbstr_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_root_class_name (return_value: STRING) is
+	set_root_class_name (pbstr_class_name: STRING) is
 			-- Root class name.
-			-- `return_value' [in].  
+			-- `pbstr_class_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_creation_routine (return_value: STRING) is
+	set_creation_routine (pbstr_routine_name: STRING) is
 			-- Creation routine name.
-			-- `return_value' [in].  
+			-- `pbstr_routine_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
+	set_namespace_generation (penum_cluster_namespace_generation: INTEGER) is
 			-- Namespace generation for cluster
-			-- `penu_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
+			-- `penum_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penum_cluster_namespace_generation' values. 
 		do
 			-- Put Implementation here.
 		end
 
-	set_default_namespace (return_value: STRING) is
+	set_default_namespace (pbstr_namespace: STRING) is
 			-- Default namespace.
-			-- `return_value' [in].  
+			-- `pbstr_namespace' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -201,86 +201,86 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	set_generate_debug_info (return_value: BOOLEAN) is
+	set_generate_debug_info (pvb_generate: BOOLEAN) is
 			-- Generate debug info?
-			-- `return_value' [in].  
+			-- `pvb_generate' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_precompiled_library (return_value: STRING) is
+	set_precompiled_library (pbstr_path: STRING) is
 			-- Precompiled file.
-			-- `return_value' [in].  
+			-- `pbstr_path' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_assertions (p_assertions: INTEGER) is
+	set_assertions (pul_assertions: INTEGER) is
 			-- Project assertions
-			-- `p_assertions' [in].  
+			-- `pul_assertions' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_title (return_value: STRING) is
+	set_title (pbstr_title: STRING) is
 			-- Project title.
-			-- `return_value' [in].  
+			-- `pbstr_title' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_description (return_value: STRING) is
+	set_description (pbstr_description: STRING) is
 			-- Project description.
-			-- `return_value' [in].  
+			-- `pbstr_description' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_company (return_value: STRING) is
+	set_company (pbstr_company: STRING) is
 			-- Project company.
-			-- `return_value' [in].  
+			-- `pbstr_company' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_product (return_value: STRING) is
+	set_product (ppbstr_product: STRING) is
 			-- Product.
-			-- `return_value' [in].  
+			-- `ppbstr_product' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_version (return_value: STRING) is
+	set_version (pbstr_version: STRING) is
 			-- Project version.
-			-- `return_value' [in].  
+			-- `pbstr_version' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_trademark (return_value: STRING) is
+	set_trademark (pbstr_trademark: STRING) is
 			-- Project trademark.
-			-- `return_value' [in].  
+			-- `pbstr_trademark' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_copyright (return_value: STRING) is
+	set_copyright (pbstr_copyright: STRING) is
 			-- Project copyright.
-			-- `return_value' [in].  
+			-- `pbstr_copyright' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_culture (return_value: STRING) is
+	set_culture (pbstr_cultre: STRING) is
 			-- Asembly culture.
-			-- `return_value' [in].  
+			-- `pbstr_cultre' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_key_file_name (return_value: STRING) is
+	set_key_file_name (pbstr_file_name: STRING) is
 			-- Asembly signing key file name.
-			-- `return_value' [in].  
+			-- `pbstr_file_name' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -309,7 +309,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_stub.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_stub.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB

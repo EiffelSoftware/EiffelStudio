@@ -10,14 +10,14 @@ inherit
 
 feature -- Status Report
 
-	next_user_precondition (rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF): BOOLEAN is
+	next_user_precondition (pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `next'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	skip_user_precondition (celt: INTEGER): BOOLEAN is
+	skip_user_precondition (ul_count: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `skip'.
 			-- Redefine in descendants if needed.
 		do
@@ -31,14 +31,14 @@ feature -- Status Report
 			Result := True
 		end
 
-	clone1_user_precondition (ppenum: CELL [IENUM_ASSEMBLY_INTERFACE]): BOOLEAN is
+	clone1_user_precondition (pp_ienum_assembly: CELL [IENUM_ASSEMBLY_INTERFACE]): BOOLEAN is
 			-- User-defined preconditions for `clone1'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	ith_item_user_precondition (an_index: INTEGER; rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]): BOOLEAN is
+	ith_item_user_precondition (ul_count: INTEGER; pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]): BOOLEAN is
 			-- User-defined preconditions for `ith_item'.
 			-- Redefine in descendants if needed.
 		do
@@ -54,25 +54,25 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pp_ieiffel_assembly_properties' [out].  
+			-- `pul_fetched' [out].  
 		require
-			non_void_rgelt: rgelt /= Void
-			non_void_pcelt_fetched: pcelt_fetched /= Void
-			next_user_precondition: next_user_precondition (rgelt, pcelt_fetched)
+			non_void_pp_ieiffel_assembly_properties: pp_ieiffel_assembly_properties /= Void
+			non_void_pul_fetched: pul_fetched /= Void
+			next_user_precondition: next_user_precondition (pp_ieiffel_assembly_properties, pul_fetched)
 		deferred
 
 		ensure
-			valid_rgelt: rgelt.item /= Void
+			valid_pp_ieiffel_assembly_properties: pp_ieiffel_assembly_properties.item /= Void
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		require
-			skip_user_precondition: skip_user_precondition (celt)
+			skip_user_precondition: skip_user_precondition (ul_count)
 		deferred
 
 		end
@@ -85,29 +85,29 @@ feature -- Basic Operations
 
 		end
 
-	clone1 (ppenum: CELL [IENUM_ASSEMBLY_INTERFACE]) is
+	clone1 (pp_ienum_assembly: CELL [IENUM_ASSEMBLY_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_assembly' [out].  
 		require
-			non_void_ppenum: ppenum /= Void
-			clone1_user_precondition: clone1_user_precondition (ppenum)
+			non_void_pp_ienum_assembly: pp_ienum_assembly /= Void
+			clone1_user_precondition: clone1_user_precondition (pp_ienum_assembly)
 		deferred
 
 		ensure
-			valid_ppenum: ppenum.item /= Void
+			valid_pp_ienum_assembly: pp_ienum_assembly.item /= Void
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
+	ith_item (ul_count: INTEGER; pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_count' [in].  
+			-- `pp_ieiffel_assembly_properties' [out].  
 		require
-			non_void_rgelt: rgelt /= Void
-			ith_item_user_precondition: ith_item_user_precondition (an_index, rgelt)
+			non_void_pp_ieiffel_assembly_properties: pp_ieiffel_assembly_properties /= Void
+			ith_item_user_precondition: ith_item_user_precondition (ul_count, pp_ieiffel_assembly_properties)
 		deferred
 
 		ensure
-			valid_rgelt: rgelt.item /= Void
+			valid_pp_ieiffel_assembly_properties: pp_ieiffel_assembly_properties.item /= Void
 		end
 
 	count: INTEGER is

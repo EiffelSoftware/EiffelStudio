@@ -69,59 +69,59 @@ feature -- Access
 
 feature -- Basic Operations
 
-	cluster_descriptor (cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+	cluster_descriptor (bstr_class_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
 			-- Cluster descriptor.
-			-- `cluster_name' [in].  
+			-- `bstr_class_name' [in].  
 		do
-			Result := ccom_cluster_descriptor (initializer, cluster_name)
+			Result := ccom_cluster_descriptor (initializer, bstr_class_name)
 		end
 
-	class_descriptor (class_name1: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
+	class_descriptor (bstr_cluster_name: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
 			-- Class descriptor.
-			-- `class_name1' [in].  
+			-- `bstr_cluster_name' [in].  
 		do
-			Result := ccom_class_descriptor (initializer, class_name1)
+			Result := ccom_class_descriptor (initializer, bstr_cluster_name)
 		end
 
-	feature_descriptor (class_name1: STRING; feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	feature_descriptor (bstr_class_name: STRING; bstr_feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature descriptor.
-			-- `class_name1' [in].  
-			-- `feature_name' [in].  
+			-- `bstr_class_name' [in].  
+			-- `bstr_feature_name' [in].  
 		do
-			Result := ccom_feature_descriptor (initializer, class_name1, feature_name)
+			Result := ccom_feature_descriptor (initializer, bstr_class_name, bstr_feature_name)
 		end
 
-	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
+	search_classes (bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
-			-- `a_string' [in].  
-			-- `is_substring' [in].  
+			-- `bstr_search_str' [in].  
+			-- `vb_is_substring' [in].  
 		do
-			Result := ccom_search_classes (initializer, a_string, is_substring)
+			Result := ccom_search_classes (initializer, bstr_search_str, vb_is_substring)
 		end
 
-	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
+	search_features (bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
-			-- `a_string' [in].  
-			-- `is_substring' [in].  
+			-- `bstr_search_str' [in].  
+			-- `vb_is_substring' [in].  
 		do
-			Result := ccom_search_features (initializer, a_string, is_substring)
+			Result := ccom_search_features (initializer, bstr_search_str, vb_is_substring)
 		end
 
-	description_from_dotnet_type (a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+	description_from_dotnet_type (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING): STRING is
 			-- Retrieve description from dotnet type
-			-- `a_assembly_name' [in].  
-			-- `a_full_dotnet_type' [in].  
+			-- `bstr_assembly_name' [in].  
+			-- `bstr_full_dotnet_name' [in].  
 		do
-			Result := ccom_description_from_dotnet_type (initializer, a_assembly_name, a_full_dotnet_type)
+			Result := ccom_description_from_dotnet_type (initializer, bstr_assembly_name, bstr_full_dotnet_name)
 		end
 
-	description_from_dotnet_feature (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+	description_from_dotnet_feature (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING; bstr_feature_signature: STRING): STRING is
 			-- Retrieve description from dotnet feature
-			-- `a_assembly_name' [in].  
-			-- `a_full_dotnet_type' [in].  
-			-- `a_feature_signature' [in].  
+			-- `bstr_assembly_name' [in].  
+			-- `bstr_full_dotnet_name' [in].  
+			-- `bstr_feature_signature' [in].  
 		do
-			Result := ccom_description_from_dotnet_feature (initializer, a_assembly_name, a_full_dotnet_type, a_feature_signature)
+			Result := ccom_description_from_dotnet_feature (initializer, bstr_assembly_name, bstr_full_dotnet_name, bstr_feature_signature)
 		end
 
 feature {NONE}  -- Implementation
@@ -176,43 +176,43 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_cluster_descriptor (cpp_obj: POINTER; cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+	ccom_cluster_descriptor (cpp_obj: POINTER; bstr_class_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
 			-- Cluster descriptor.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_class_descriptor (cpp_obj: POINTER; class_name1: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
+	ccom_class_descriptor (cpp_obj: POINTER; bstr_cluster_name: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
 			-- Class descriptor.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_feature_descriptor (cpp_obj: POINTER; class_name1: STRING; feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	ccom_feature_descriptor (cpp_obj: POINTER; bstr_class_name: STRING; bstr_feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature descriptor.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_search_classes (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
+	ccom_search_classes (cpp_obj: POINTER; bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
 		end
 
-	ccom_search_features (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
+	ccom_search_features (cpp_obj: POINTER; bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
 		end
 
-	ccom_description_from_dotnet_type (cpp_obj: POINTER; a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+	ccom_description_from_dotnet_type (cpp_obj: POINTER; bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING): STRING is
 			-- Retrieve description from dotnet type
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_description_from_dotnet_feature (cpp_obj: POINTER; a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+	ccom_description_from_dotnet_feature (cpp_obj: POINTER; bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING; bstr_feature_signature: STRING): STRING is
 			-- Retrieve description from dotnet feature
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"

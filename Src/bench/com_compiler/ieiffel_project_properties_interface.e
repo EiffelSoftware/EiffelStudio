@@ -17,7 +17,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_system_name_user_precondition (return_value: STRING): BOOLEAN is
+	set_system_name_user_precondition (pbstr_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_system_name'.
 			-- Redefine in descendants if needed.
 		do
@@ -31,7 +31,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_root_class_name_user_precondition (return_value: STRING): BOOLEAN is
+	set_root_class_name_user_precondition (pbstr_class_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_root_class_name'.
 			-- Redefine in descendants if needed.
 		do
@@ -45,7 +45,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_creation_routine_user_precondition (return_value: STRING): BOOLEAN is
+	set_creation_routine_user_precondition (pbstr_routine_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_creation_routine'.
 			-- Redefine in descendants if needed.
 		do
@@ -59,7 +59,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_namespace_generation_user_precondition (penu_cluster_namespace_generation: INTEGER): BOOLEAN is
+	set_namespace_generation_user_precondition (penum_cluster_namespace_generation: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `set_namespace_generation'.
 			-- Redefine in descendants if needed.
 		do
@@ -73,7 +73,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_default_namespace_user_precondition (return_value: STRING): BOOLEAN is
+	set_default_namespace_user_precondition (pbstr_namespace: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_default_namespace'.
 			-- Redefine in descendants if needed.
 		do
@@ -115,7 +115,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_generate_debug_info_user_precondition (return_value: BOOLEAN): BOOLEAN is
+	set_generate_debug_info_user_precondition (pvb_generate: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `set_generate_debug_info'.
 			-- Redefine in descendants if needed.
 		do
@@ -129,7 +129,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_precompiled_library_user_precondition (return_value: STRING): BOOLEAN is
+	set_precompiled_library_user_precondition (pbstr_path: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_precompiled_library'.
 			-- Redefine in descendants if needed.
 		do
@@ -143,7 +143,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_assertions_user_precondition (p_assertions: INTEGER): BOOLEAN is
+	set_assertions_user_precondition (pul_assertions: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `set_assertions'.
 			-- Redefine in descendants if needed.
 		do
@@ -178,7 +178,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_title_user_precondition (return_value: STRING): BOOLEAN is
+	set_title_user_precondition (pbstr_title: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_title'.
 			-- Redefine in descendants if needed.
 		do
@@ -192,7 +192,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_description_user_precondition (return_value: STRING): BOOLEAN is
+	set_description_user_precondition (pbstr_description: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_description'.
 			-- Redefine in descendants if needed.
 		do
@@ -206,7 +206,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_company_user_precondition (return_value: STRING): BOOLEAN is
+	set_company_user_precondition (pbstr_company: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_company'.
 			-- Redefine in descendants if needed.
 		do
@@ -220,7 +220,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_product_user_precondition (return_value: STRING): BOOLEAN is
+	set_product_user_precondition (ppbstr_product: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_product'.
 			-- Redefine in descendants if needed.
 		do
@@ -234,7 +234,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_version_user_precondition (return_value: STRING): BOOLEAN is
+	set_version_user_precondition (pbstr_version: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_version'.
 			-- Redefine in descendants if needed.
 		do
@@ -248,7 +248,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_trademark_user_precondition (return_value: STRING): BOOLEAN is
+	set_trademark_user_precondition (pbstr_trademark: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_trademark'.
 			-- Redefine in descendants if needed.
 		do
@@ -262,7 +262,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_copyright_user_precondition (return_value: STRING): BOOLEAN is
+	set_copyright_user_precondition (pbstr_copyright: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_copyright'.
 			-- Redefine in descendants if needed.
 		do
@@ -276,7 +276,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_culture_user_precondition (return_value: STRING): BOOLEAN is
+	set_culture_user_precondition (pbstr_cultre: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_culture'.
 			-- Redefine in descendants if needed.
 		do
@@ -290,7 +290,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_key_file_name_user_precondition (return_value: STRING): BOOLEAN is
+	set_key_file_name_user_precondition (pbstr_file_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `set_key_file_name'.
 			-- Redefine in descendants if needed.
 		do
@@ -328,11 +328,11 @@ feature -- Basic Operations
 
 		end
 
-	set_system_name (return_value: STRING) is
+	set_system_name (pbstr_name: STRING) is
 			-- System name.
-			-- `return_value' [in].  
+			-- `pbstr_name' [in].  
 		require
-			set_system_name_user_precondition: set_system_name_user_precondition (return_value)
+			set_system_name_user_precondition: set_system_name_user_precondition (pbstr_name)
 		deferred
 
 		end
@@ -345,11 +345,11 @@ feature -- Basic Operations
 
 		end
 
-	set_root_class_name (return_value: STRING) is
+	set_root_class_name (pbstr_class_name: STRING) is
 			-- Root class name.
-			-- `return_value' [in].  
+			-- `pbstr_class_name' [in].  
 		require
-			set_root_class_name_user_precondition: set_root_class_name_user_precondition (return_value)
+			set_root_class_name_user_precondition: set_root_class_name_user_precondition (pbstr_class_name)
 		deferred
 
 		end
@@ -362,11 +362,11 @@ feature -- Basic Operations
 
 		end
 
-	set_creation_routine (return_value: STRING) is
+	set_creation_routine (pbstr_routine_name: STRING) is
 			-- Creation routine name.
-			-- `return_value' [in].  
+			-- `pbstr_routine_name' [in].  
 		require
-			set_creation_routine_user_precondition: set_creation_routine_user_precondition (return_value)
+			set_creation_routine_user_precondition: set_creation_routine_user_precondition (pbstr_routine_name)
 		deferred
 
 		end
@@ -380,11 +380,11 @@ feature -- Basic Operations
 
 		end
 
-	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
+	set_namespace_generation (penum_cluster_namespace_generation: INTEGER) is
 			-- Namespace generation for cluster
-			-- `penu_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
+			-- `penum_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penum_cluster_namespace_generation' values. 
 		require
-			set_namespace_generation_user_precondition: set_namespace_generation_user_precondition (penu_cluster_namespace_generation)
+			set_namespace_generation_user_precondition: set_namespace_generation_user_precondition (penum_cluster_namespace_generation)
 		deferred
 
 		end
@@ -397,11 +397,11 @@ feature -- Basic Operations
 
 		end
 
-	set_default_namespace (return_value: STRING) is
+	set_default_namespace (pbstr_namespace: STRING) is
 			-- Default namespace.
-			-- `return_value' [in].  
+			-- `pbstr_namespace' [in].  
 		require
-			set_default_namespace_user_precondition: set_default_namespace_user_precondition (return_value)
+			set_default_namespace_user_precondition: set_default_namespace_user_precondition (pbstr_namespace)
 		deferred
 
 		end
@@ -449,11 +449,11 @@ feature -- Basic Operations
 
 		end
 
-	set_generate_debug_info (return_value: BOOLEAN) is
+	set_generate_debug_info (pvb_generate: BOOLEAN) is
 			-- Generate debug info?
-			-- `return_value' [in].  
+			-- `pvb_generate' [in].  
 		require
-			set_generate_debug_info_user_precondition: set_generate_debug_info_user_precondition (return_value)
+			set_generate_debug_info_user_precondition: set_generate_debug_info_user_precondition (pvb_generate)
 		deferred
 
 		end
@@ -466,11 +466,11 @@ feature -- Basic Operations
 
 		end
 
-	set_precompiled_library (return_value: STRING) is
+	set_precompiled_library (pbstr_path: STRING) is
 			-- Precompiled file.
-			-- `return_value' [in].  
+			-- `pbstr_path' [in].  
 		require
-			set_precompiled_library_user_precondition: set_precompiled_library_user_precondition (return_value)
+			set_precompiled_library_user_precondition: set_precompiled_library_user_precondition (pbstr_path)
 		deferred
 
 		end
@@ -483,11 +483,11 @@ feature -- Basic Operations
 
 		end
 
-	set_assertions (p_assertions: INTEGER) is
+	set_assertions (pul_assertions: INTEGER) is
 			-- Project assertions
-			-- `p_assertions' [in].  
+			-- `pul_assertions' [in].  
 		require
-			set_assertions_user_precondition: set_assertions_user_precondition (p_assertions)
+			set_assertions_user_precondition: set_assertions_user_precondition (pul_assertions)
 		deferred
 
 		end
@@ -524,11 +524,11 @@ feature -- Basic Operations
 
 		end
 
-	set_title (return_value: STRING) is
+	set_title (pbstr_title: STRING) is
 			-- Project title.
-			-- `return_value' [in].  
+			-- `pbstr_title' [in].  
 		require
-			set_title_user_precondition: set_title_user_precondition (return_value)
+			set_title_user_precondition: set_title_user_precondition (pbstr_title)
 		deferred
 
 		end
@@ -541,11 +541,11 @@ feature -- Basic Operations
 
 		end
 
-	set_description (return_value: STRING) is
+	set_description (pbstr_description: STRING) is
 			-- Project description.
-			-- `return_value' [in].  
+			-- `pbstr_description' [in].  
 		require
-			set_description_user_precondition: set_description_user_precondition (return_value)
+			set_description_user_precondition: set_description_user_precondition (pbstr_description)
 		deferred
 
 		end
@@ -558,11 +558,11 @@ feature -- Basic Operations
 
 		end
 
-	set_company (return_value: STRING) is
+	set_company (pbstr_company: STRING) is
 			-- Project company.
-			-- `return_value' [in].  
+			-- `pbstr_company' [in].  
 		require
-			set_company_user_precondition: set_company_user_precondition (return_value)
+			set_company_user_precondition: set_company_user_precondition (pbstr_company)
 		deferred
 
 		end
@@ -575,11 +575,11 @@ feature -- Basic Operations
 
 		end
 
-	set_product (return_value: STRING) is
+	set_product (ppbstr_product: STRING) is
 			-- Product.
-			-- `return_value' [in].  
+			-- `ppbstr_product' [in].  
 		require
-			set_product_user_precondition: set_product_user_precondition (return_value)
+			set_product_user_precondition: set_product_user_precondition (ppbstr_product)
 		deferred
 
 		end
@@ -592,11 +592,11 @@ feature -- Basic Operations
 
 		end
 
-	set_version (return_value: STRING) is
+	set_version (pbstr_version: STRING) is
 			-- Project version.
-			-- `return_value' [in].  
+			-- `pbstr_version' [in].  
 		require
-			set_version_user_precondition: set_version_user_precondition (return_value)
+			set_version_user_precondition: set_version_user_precondition (pbstr_version)
 		deferred
 
 		end
@@ -609,11 +609,11 @@ feature -- Basic Operations
 
 		end
 
-	set_trademark (return_value: STRING) is
+	set_trademark (pbstr_trademark: STRING) is
 			-- Project trademark.
-			-- `return_value' [in].  
+			-- `pbstr_trademark' [in].  
 		require
-			set_trademark_user_precondition: set_trademark_user_precondition (return_value)
+			set_trademark_user_precondition: set_trademark_user_precondition (pbstr_trademark)
 		deferred
 
 		end
@@ -626,11 +626,11 @@ feature -- Basic Operations
 
 		end
 
-	set_copyright (return_value: STRING) is
+	set_copyright (pbstr_copyright: STRING) is
 			-- Project copyright.
-			-- `return_value' [in].  
+			-- `pbstr_copyright' [in].  
 		require
-			set_copyright_user_precondition: set_copyright_user_precondition (return_value)
+			set_copyright_user_precondition: set_copyright_user_precondition (pbstr_copyright)
 		deferred
 
 		end
@@ -643,11 +643,11 @@ feature -- Basic Operations
 
 		end
 
-	set_culture (return_value: STRING) is
+	set_culture (pbstr_cultre: STRING) is
 			-- Asembly culture.
-			-- `return_value' [in].  
+			-- `pbstr_cultre' [in].  
 		require
-			set_culture_user_precondition: set_culture_user_precondition (return_value)
+			set_culture_user_precondition: set_culture_user_precondition (pbstr_cultre)
 		deferred
 
 		end
@@ -660,11 +660,11 @@ feature -- Basic Operations
 
 		end
 
-	set_key_file_name (return_value: STRING) is
+	set_key_file_name (pbstr_file_name: STRING) is
 			-- Asembly signing key file name.
-			-- `return_value' [in].  
+			-- `pbstr_file_name' [in].  
 		require
-			set_key_file_name_user_precondition: set_key_file_name_user_precondition (return_value)
+			set_key_file_name_user_precondition: set_key_file_name_user_precondition (pbstr_file_name)
 		deferred
 
 		end

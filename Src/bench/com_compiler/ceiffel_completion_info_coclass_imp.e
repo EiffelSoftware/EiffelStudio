@@ -35,58 +35,58 @@ feature -- Basic Operations
 			item := ccom_create_item (Current)
 		end
 
-	add_local (name: STRING; type: STRING) is
+	add_local (bstr_name: STRING; bstr_type: STRING) is
 			-- Add a local variable used for solving member completion list
-			-- `name' [in].  
-			-- `type' [in].  
+			-- `bstr_name' [in].  
+			-- `bstr_type' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	add_argument (name: STRING; type: STRING) is
+	add_argument (bstr_name: STRING; bstr_type: STRING) is
 			-- Add an argument used for solving member completion list
-			-- `name' [in].  
-			-- `type' [in].  
+			-- `bstr_name' [in].  
+			-- `bstr_type' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	target_features (target: STRING; feature_name: STRING; file_name: STRING; return_names: ECOM_VARIANT; return_signatures: ECOM_VARIANT; return_image_indexes: ECOM_VARIANT) is
+	target_features (bstr_target: STRING; bstr_feature_name: STRING; bstr_file_name: STRING; pvar_names: ECOM_VARIANT; pvar_signatures: ECOM_VARIANT; pvar_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
-			-- `target' [in].  
-			-- `feature_name' [in].  
-			-- `file_name' [in].  
-			-- `return_names' [out].  
-			-- `return_signatures' [out].  
-			-- `return_image_indexes' [out].  
+			-- `bstr_target' [in].  
+			-- `bstr_feature_name' [in].  
+			-- `bstr_file_name' [in].  
+			-- `pvar_names' [out].  
+			-- `pvar_signatures' [out].  
+			-- `pvar_image_indexes' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	target_feature (target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	target_feature (bstr_target: STRING; bstr_feature_name: STRING; bstr_file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature information
-			-- `target' [in].  
-			-- `feature_name' [in].  
-			-- `file_name' [in].  
+			-- `bstr_target' [in].  
+			-- `bstr_feature_name' [in].  
+			-- `bstr_file_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	flush_completion_features (a_file_name: STRING) is
-			-- Flush temporary completion features for a specifi file
-			-- `a_file_name' [in].  
+	flush_completion_features (bstr_file_name: STRING) is
+			-- Flush temporary completion features for a specific file
+			-- `bstr_file_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+	initialize_feature (bstr_name: STRING; var_arguments: ECOM_VARIANT; var_argument_types: ECOM_VARIANT; bstr_return_type: STRING; ul_feature_type: INTEGER; bstr_file_name: STRING) is
 			-- Initialize a feature for completion without compiltation
-			-- `a_name' [in].  
-			-- `a_arguments' [in].  
-			-- `a_argument_types' [in].  
-			-- `a_return_type' [in].  
-			-- `a_feature_type' [in].  
-			-- `a_file_name' [in].  
+			-- `bstr_name' [in].  
+			-- `var_arguments' [in].  
+			-- `var_argument_types' [in].  
+			-- `bstr_return_type' [in].  
+			-- `ul_feature_type' [in].  
+			-- `bstr_file_name' [in].  
 		do
 			-- Put Implementation here.
 		end

@@ -134,69 +134,69 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_cluster_path (path: STRING) is
+	set_cluster_path (pbstr_path: STRING) is
 			-- Full path to cluster.
-			-- `path' [in].  
+			-- `pbstr_path' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_override (return_value: BOOLEAN) is
+	set_override (pvb_override: BOOLEAN) is
 			-- Should this cluster classes take priority over other classes with same name?
-			-- `return_value' [in].  
+			-- `pvb_override' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_is_library (return_value: BOOLEAN) is
+	set_is_library (pvb_library: BOOLEAN) is
 			-- Should this cluster be treated as library?
-			-- `return_value' [in].  
+			-- `pvb_library' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_all (return_value: BOOLEAN) is
+	set_all (pvb_all: BOOLEAN) is
 			-- Should all subclusters be included?
-			-- `return_value' [in].  
+			-- `pvb_all' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_use_system_default (return_value: BOOLEAN) is
+	set_use_system_default (pvb_use_defaults: BOOLEAN) is
 			-- Should use system default?
-			-- `return_value' [in].  
+			-- `pvb_use_defaults' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_assertions (evaluate_check: BOOLEAN; evaluate_require: BOOLEAN; evaluate_ensure: BOOLEAN; evaluate_loop: BOOLEAN; evaluate_invariant: BOOLEAN) is
+	set_assertions (vb_check: BOOLEAN; vb_require: BOOLEAN; vb_ensure: BOOLEAN; vb_loop: BOOLEAN; vb_invariant: BOOLEAN) is
 			-- Set assertions for cluster.
-			-- `evaluate_check' [in].  
-			-- `evaluate_require' [in].  
-			-- `evaluate_ensure' [in].  
-			-- `evaluate_loop' [in].  
-			-- `evaluate_invariant' [in].  
+			-- `vb_check' [in].  
+			-- `vb_require' [in].  
+			-- `vb_ensure' [in].  
+			-- `vb_loop' [in].  
+			-- `vb_invariant' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	add_exclude (dir_name: STRING) is
-			-- Add a directory to exclude.
-			-- `dir_name' [in].  
+	add_exclude (bstr_name: STRING) is
+			-- Add a item to exclude.
+			-- `bstr_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	remove_exclude (dir_name: STRING) is
-			-- Remove a directory to exclude.
-			-- `dir_name' [in].  
+	remove_exclude (bstr_name: STRING) is
+			-- Remove a item from being excluded.
+			-- `bstr_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	set_cluster_namespace (a_namespace: STRING) is
+	set_cluster_namespace (pbstr_namespace: STRING) is
 			-- Cluster namespace.
-			-- `a_namespace' [in].  
+			-- `pbstr_namespace' [in].  
 		do
 			-- Put Implementation here.
 		end

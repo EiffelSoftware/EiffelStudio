@@ -104,85 +104,85 @@ feature {NONE}  -- Externals
 	ccom_name (cpp_obj: POINTER): STRING is
 			-- Cluster name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_description (cpp_obj: POINTER): STRING is
 			-- Cluster description.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_tool_tip (cpp_obj: POINTER): STRING is
 			-- Cluster Tool Tip.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_classes (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_class_count (cpp_obj: POINTER): INTEGER is
 			-- Number of classes in cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_INTEGER"
 		end
 
 	ccom_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of subclusters in cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_cluster_count (cpp_obj: POINTER): INTEGER is
 			-- Number of subclusters in cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_INTEGER"
 		end
 
 	ccom_cluster_path (cpp_obj: POINTER): STRING is
 			-- Full path to cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_relative_path (cpp_obj: POINTER): STRING is
 			-- Relative path to cluster.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_is_override_cluster (cpp_obj: POINTER): BOOLEAN is
 			-- Should this cluster classes take priority over other classes with same name?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_library (cpp_obj: POINTER): BOOLEAN is
 			-- Should this cluster be treated as library?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_cluster_descriptor_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"]()"
 		end
 
 	ccom_create_ieiffel_cluster_descriptor_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterDescriptor_impl_proxy.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClusterDescriptor_impl_proxy.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY

@@ -65,54 +65,54 @@ feature -- Status Report
 
 feature -- Basic Operations
 
+	add_include_path (bstr_path: STRING) is
+			-- Add a include path to the project.
+			-- `bstr_path' [in].  
+		do
+			ccom_add_include_path (initializer, bstr_path)
+		end
+
+	remove_include_path (bstr_path: STRING) is
+			-- Remove a include path from the project.
+			-- `bstr_path' [in].  
+		do
+			ccom_remove_include_path (initializer, bstr_path)
+		end
+
+	replace_include_path (bstr_path: STRING; bstr_old_path: STRING) is
+			-- Replace an include path in the project.
+			-- `bstr_path' [in].  
+			-- `bstr_old_path' [in].  
+		do
+			ccom_replace_include_path (initializer, bstr_path, bstr_old_path)
+		end
+
+	add_object_file (bstr_file_name: STRING) is
+			-- Add a object file to the project.
+			-- `bstr_file_name' [in].  
+		do
+			ccom_add_object_file (initializer, bstr_file_name)
+		end
+
+	remove_object_file (bstr_file_name: STRING) is
+			-- Remove a object file from the project.
+			-- `bstr_file_name' [in].  
+		do
+			ccom_remove_object_file (initializer, bstr_file_name)
+		end
+
+	replace_object_file (bstr_file_name: STRING; bstr_old_file_name: STRING) is
+			-- Replace an object file in the project.
+			-- `bstr_file_name' [in].  
+			-- `bstr_old_file_name' [in].  
+		do
+			ccom_replace_object_file (initializer, bstr_file_name, bstr_old_file_name)
+		end
+
 	store is
 			-- Save changes.
 		do
 			ccom_store (initializer)
-		end
-
-	add_include_path (include_path: STRING) is
-			-- Add a include path to the project.
-			-- `include_path' [in].  
-		do
-			ccom_add_include_path (initializer, include_path)
-		end
-
-	remove_include_path (include_path: STRING) is
-			-- Remove a include path from the project.
-			-- `include_path' [in].  
-		do
-			ccom_remove_include_path (initializer, include_path)
-		end
-
-	replace_include_path (new_include_path: STRING; old_include_path: STRING) is
-			-- Replace an include path in the project.
-			-- `new_include_path' [in].  
-			-- `old_include_path' [in].  
-		do
-			ccom_replace_include_path (initializer, new_include_path, old_include_path)
-		end
-
-	add_object_file (object_file: STRING) is
-			-- Add a object file to the project.
-			-- `object_file' [in].  
-		do
-			ccom_add_object_file (initializer, object_file)
-		end
-
-	remove_object_file (object_file: STRING) is
-			-- Remove a object file from the project.
-			-- `object_file' [in].  
-		do
-			ccom_remove_object_file (initializer, object_file)
-		end
-
-	replace_object_file (new_include_path: STRING; old_object_file: STRING) is
-			-- Replace an object file in the project.
-			-- `new_include_path' [in].  
-			-- `old_object_file' [in].  
-		do
-			ccom_replace_object_file (initializer, new_include_path, old_object_file)
 		end
 
 feature {NONE}  -- Implementation
@@ -125,25 +125,19 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_store (cpp_obj: POINTER) is
-			-- Save changes.
-		external
-			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"]()"
-		end
-
-	ccom_add_include_path (cpp_obj: POINTER; include_path: STRING) is
+	ccom_add_include_path (cpp_obj: POINTER; bstr_path: STRING) is
 			-- Add a include path to the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_remove_include_path (cpp_obj: POINTER; include_path: STRING) is
+	ccom_remove_include_path (cpp_obj: POINTER; bstr_path: STRING) is
 			-- Remove a include path from the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_replace_include_path (cpp_obj: POINTER; new_include_path: STRING; old_include_path: STRING) is
+	ccom_replace_include_path (cpp_obj: POINTER; bstr_path: STRING; bstr_old_path: STRING) is
 			-- Replace an include path in the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
@@ -155,19 +149,19 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_add_object_file (cpp_obj: POINTER; object_file: STRING) is
+	ccom_add_object_file (cpp_obj: POINTER; bstr_file_name: STRING) is
 			-- Add a object file to the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_remove_object_file (cpp_obj: POINTER; object_file: STRING) is
+	ccom_remove_object_file (cpp_obj: POINTER; bstr_file_name: STRING) is
 			-- Remove a object file from the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_replace_object_file (cpp_obj: POINTER; new_include_path: STRING; old_object_file: STRING) is
+	ccom_replace_object_file (cpp_obj: POINTER; bstr_file_name: STRING; bstr_old_file_name: STRING) is
 			-- Replace an object file in the project.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
@@ -177,6 +171,12 @@ feature {NONE}  -- Externals
 			-- Object files.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_store (cpp_obj: POINTER) is
+			-- Save changes.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemExternals_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemExternals_impl_proxy_s.h%"]()"
 		end
 
 	ccom_delete_ieiffel_system_externals_impl_proxy (a_pointer: POINTER) is

@@ -10,14 +10,14 @@ inherit
 
 feature -- Status Report
 
-	wipe_out_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `wipe_out'.
+	flush_assemblies_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `flush_assemblies'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	add_assembly_user_precondition (a_prefix: STRING; a_cluster_name: STRING; a_path: STRING; a_copy: BOOLEAN): BOOLEAN is
+	add_assembly_user_precondition (bstr_prefix: STRING; bstr_cluster_name: STRING; bstr_file_name: STRING; vb_copy_locally: BOOLEAN): BOOLEAN is
 			-- User-defined preconditions for `add_assembly'.
 			-- Redefine in descendants if needed.
 		do
@@ -40,22 +40,22 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	wipe_out is
+	flush_assemblies is
 			-- Wipe out current list of assemblies
 		require
-			wipe_out_user_precondition: wipe_out_user_precondition
+			flush_assemblies_user_precondition: flush_assemblies_user_precondition
 		deferred
 
 		end
 
-	add_assembly (a_prefix: STRING; a_cluster_name: STRING; a_path: STRING; a_copy: BOOLEAN) is
+	add_assembly (bstr_prefix: STRING; bstr_cluster_name: STRING; bstr_file_name: STRING; vb_copy_locally: BOOLEAN) is
 			-- Add an assembly to the project.
-			-- `a_prefix' [in].  
-			-- `a_cluster_name' [in].  
-			-- `a_path' [in].  
-			-- `a_copy' [out].  
+			-- `bstr_prefix' [in].  
+			-- `bstr_cluster_name' [in].  
+			-- `bstr_file_name' [in].  
+			-- `vb_copy_locally' [out].  
 		require
-			add_assembly_user_precondition: add_assembly_user_precondition (a_prefix, a_cluster_name, a_path, a_copy)
+			add_assembly_user_precondition: add_assembly_user_precondition (bstr_prefix, bstr_cluster_name, bstr_file_name, vb_copy_locally)
 		deferred
 
 		end

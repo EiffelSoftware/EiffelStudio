@@ -20,17 +20,17 @@ feature -- Access
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (pp_ieiffel_parameter_descriptor: CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pp_ieiffel_parameter_descriptor' [out].  
+			-- `pul_fetched' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -41,17 +41,17 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	clone1 (ppenum: CELL [IENUM_PARAMETER_INTERFACE]) is
+	clone1 (pp_ienum_parameter: CELL [IENUM_PARAMETER_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_parameter' [out].  
 		do
 			-- Put Implementation here.
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE]) is
+	ith_item (ul_index: INTEGER; pp_ieiffel_parameter_descriptor: CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_index' [in].  
+			-- `pp_ieiffel_parameter_descriptor' [out].  
 		do
 			-- Put Implementation here.
 		end

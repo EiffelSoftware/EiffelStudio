@@ -193,39 +193,39 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	set_system_name (return_value: STRING) is
+	set_system_name (pbstr_name: STRING) is
 			-- System name.
-			-- `return_value' [in].  
+			-- `pbstr_name' [in].  
 		do
-			ccom_set_system_name (initializer, return_value)
+			ccom_set_system_name (initializer, pbstr_name)
 		end
 
-	set_root_class_name (return_value: STRING) is
+	set_root_class_name (pbstr_class_name: STRING) is
 			-- Root class name.
-			-- `return_value' [in].  
+			-- `pbstr_class_name' [in].  
 		do
-			ccom_set_root_class_name (initializer, return_value)
+			ccom_set_root_class_name (initializer, pbstr_class_name)
 		end
 
-	set_creation_routine (return_value: STRING) is
+	set_creation_routine (pbstr_routine_name: STRING) is
 			-- Creation routine name.
-			-- `return_value' [in].  
+			-- `pbstr_routine_name' [in].  
 		do
-			ccom_set_creation_routine (initializer, return_value)
+			ccom_set_creation_routine (initializer, pbstr_routine_name)
 		end
 
-	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
+	set_namespace_generation (penum_cluster_namespace_generation: INTEGER) is
 			-- Namespace generation for cluster
-			-- `penu_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
+			-- `penum_cluster_namespace_generation' [in]. See ECOM_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penum_cluster_namespace_generation' values. 
 		do
-			ccom_set_namespace_generation (initializer, penu_cluster_namespace_generation)
+			ccom_set_namespace_generation (initializer, penum_cluster_namespace_generation)
 		end
 
-	set_default_namespace (return_value: STRING) is
+	set_default_namespace (pbstr_namespace: STRING) is
 			-- Default namespace.
-			-- `return_value' [in].  
+			-- `pbstr_namespace' [in].  
 		do
-			ccom_set_default_namespace (initializer, return_value)
+			ccom_set_default_namespace (initializer, pbstr_namespace)
 		end
 
 	set_project_type (penum_project_type: INTEGER) is
@@ -242,88 +242,88 @@ feature -- Basic Operations
 			ccom_set_dot_net_naming_convention (initializer, pvb_naming_convention)
 		end
 
-	set_generate_debug_info (return_value: BOOLEAN) is
+	set_generate_debug_info (pvb_generate: BOOLEAN) is
 			-- Generate debug info?
-			-- `return_value' [in].  
+			-- `pvb_generate' [in].  
 		do
-			ccom_set_generate_debug_info (initializer, return_value)
+			ccom_set_generate_debug_info (initializer, pvb_generate)
 		end
 
-	set_precompiled_library (return_value: STRING) is
+	set_precompiled_library (pbstr_path: STRING) is
 			-- Precompiled file.
-			-- `return_value' [in].  
+			-- `pbstr_path' [in].  
 		do
-			ccom_set_precompiled_library (initializer, return_value)
+			ccom_set_precompiled_library (initializer, pbstr_path)
 		end
 
-	set_assertions (p_assertions: INTEGER) is
+	set_assertions (pul_assertions: INTEGER) is
 			-- Project assertions
-			-- `p_assertions' [in].  
+			-- `pul_assertions' [in].  
 		do
-			ccom_set_assertions (initializer, p_assertions)
+			ccom_set_assertions (initializer, pul_assertions)
 		end
 
-	set_title (return_value: STRING) is
+	set_title (pbstr_title: STRING) is
 			-- Project title.
-			-- `return_value' [in].  
+			-- `pbstr_title' [in].  
 		do
-			ccom_set_title (initializer, return_value)
+			ccom_set_title (initializer, pbstr_title)
 		end
 
-	set_description (return_value: STRING) is
+	set_description (pbstr_description: STRING) is
 			-- Project description.
-			-- `return_value' [in].  
+			-- `pbstr_description' [in].  
 		do
-			ccom_set_description (initializer, return_value)
+			ccom_set_description (initializer, pbstr_description)
 		end
 
-	set_company (return_value: STRING) is
+	set_company (pbstr_company: STRING) is
 			-- Project company.
-			-- `return_value' [in].  
+			-- `pbstr_company' [in].  
 		do
-			ccom_set_company (initializer, return_value)
+			ccom_set_company (initializer, pbstr_company)
 		end
 
-	set_product (return_value: STRING) is
+	set_product (ppbstr_product: STRING) is
 			-- Product.
-			-- `return_value' [in].  
+			-- `ppbstr_product' [in].  
 		do
-			ccom_set_product (initializer, return_value)
+			ccom_set_product (initializer, ppbstr_product)
 		end
 
-	set_version (return_value: STRING) is
+	set_version (pbstr_version: STRING) is
 			-- Project version.
-			-- `return_value' [in].  
+			-- `pbstr_version' [in].  
 		do
-			ccom_set_version (initializer, return_value)
+			ccom_set_version (initializer, pbstr_version)
 		end
 
-	set_trademark (return_value: STRING) is
+	set_trademark (pbstr_trademark: STRING) is
 			-- Project trademark.
-			-- `return_value' [in].  
+			-- `pbstr_trademark' [in].  
 		do
-			ccom_set_trademark (initializer, return_value)
+			ccom_set_trademark (initializer, pbstr_trademark)
 		end
 
-	set_copyright (return_value: STRING) is
+	set_copyright (pbstr_copyright: STRING) is
 			-- Project copyright.
-			-- `return_value' [in].  
+			-- `pbstr_copyright' [in].  
 		do
-			ccom_set_copyright (initializer, return_value)
+			ccom_set_copyright (initializer, pbstr_copyright)
 		end
 
-	set_culture (return_value: STRING) is
+	set_culture (pbstr_cultre: STRING) is
 			-- Asembly culture.
-			-- `return_value' [in].  
+			-- `pbstr_cultre' [in].  
 		do
-			ccom_set_culture (initializer, return_value)
+			ccom_set_culture (initializer, pbstr_cultre)
 		end
 
-	set_key_file_name (return_value: STRING) is
+	set_key_file_name (pbstr_file_name: STRING) is
 			-- Asembly signing key file name.
-			-- `return_value' [in].  
+			-- `pbstr_file_name' [in].  
 		do
-			ccom_set_key_file_name (initializer, return_value)
+			ccom_set_key_file_name (initializer, pbstr_file_name)
 		end
 
 	set_working_directory (pbstr_working_directory: STRING) is
@@ -355,7 +355,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_system_name (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_system_name (cpp_obj: POINTER; pbstr_name: STRING) is
 			-- System name.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -367,7 +367,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_root_class_name (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_root_class_name (cpp_obj: POINTER; pbstr_class_name: STRING) is
 			-- Root class name.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -379,7 +379,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_creation_routine (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_creation_routine (cpp_obj: POINTER; pbstr_routine_name: STRING) is
 			-- Creation routine name.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -391,7 +391,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_set_namespace_generation (cpp_obj: POINTER; penu_cluster_namespace_generation: INTEGER) is
+	ccom_set_namespace_generation (cpp_obj: POINTER; penum_cluster_namespace_generation: INTEGER) is
 			-- Namespace generation for cluster
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_INTEGER)"
@@ -403,7 +403,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_default_namespace (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_default_namespace (cpp_obj: POINTER; pbstr_namespace: STRING) is
 			-- Default namespace.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -439,7 +439,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
-	ccom_set_generate_debug_info (cpp_obj: POINTER; return_value: BOOLEAN) is
+	ccom_set_generate_debug_info (cpp_obj: POINTER; pvb_generate: BOOLEAN) is
 			-- Generate debug info?
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
@@ -451,7 +451,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_precompiled_library (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_precompiled_library (cpp_obj: POINTER; pbstr_path: STRING) is
 			-- Precompiled file.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -463,7 +463,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_set_assertions (cpp_obj: POINTER; p_assertions: INTEGER) is
+	ccom_set_assertions (cpp_obj: POINTER; pul_assertions: INTEGER) is
 			-- Project assertions
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_INTEGER)"
@@ -493,7 +493,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_title (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_title (cpp_obj: POINTER; pbstr_title: STRING) is
 			-- Project title.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -505,7 +505,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_description (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_description (cpp_obj: POINTER; pbstr_description: STRING) is
 			-- Project description.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -517,7 +517,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_company (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_company (cpp_obj: POINTER; pbstr_company: STRING) is
 			-- Project company.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -529,7 +529,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_product (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_product (cpp_obj: POINTER; ppbstr_product: STRING) is
 			-- Product.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -541,7 +541,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_version (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_version (cpp_obj: POINTER; pbstr_version: STRING) is
 			-- Project version.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -553,7 +553,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_trademark (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_trademark (cpp_obj: POINTER; pbstr_trademark: STRING) is
 			-- Project trademark.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -565,7 +565,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_copyright (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_copyright (cpp_obj: POINTER; pbstr_copyright: STRING) is
 			-- Project copyright.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -577,7 +577,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_culture (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_culture (cpp_obj: POINTER; pbstr_cultre: STRING) is
 			-- Asembly culture.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
@@ -589,7 +589,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_key_file_name (cpp_obj: POINTER; return_value: STRING) is
+	ccom_set_key_file_name (cpp_obj: POINTER; pbstr_file_name: STRING) is
 			-- Asembly signing key file name.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"

@@ -12,74 +12,81 @@ inherit
 
 feature -- Access
 
-	cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
-			-- Cluster tree.
+	get_cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Retrieve enumerator of clusters in tree form.
 		do
 			-- Put Implementation here.
 		end
 
-	flat_clusters: IENUM_CLUSTER_PROP_INTERFACE is
-			-- Cluster in a flat form.
+	get_all_clusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Retrieve enumerator of all defined clusters.
 		do
 			-- Put Implementation here.
 		end
 
 feature -- Basic Operations
 
+	get_cluster_full_name (bstr_name: STRING): STRING is
+			-- Get a clusters full name from its name.
+			-- `bstr_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	get_cluster_properties (bstr_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
+			-- Retrieve a clusters properties by its name.
+			-- `bstr_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	get_cluster_properties_by_id (n_cluster_id: INTEGER): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
+			-- Retrieve a clusters properties by its ID.
+			-- `n_cluster_id' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	change_cluster_name (bstr_name: STRING; bstr_new_name: STRING) is
+			-- Change a clusters name.
+			-- `bstr_name' [in].  
+			-- `bstr_new_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	add_cluster (bstr_name: STRING; bstr_parent_name: STRING; bstr_path: STRING) is
+			-- Add a cluster to system clusters.
+			-- `bstr_name' [in].  
+			-- `bstr_parent_name' [in].  
+			-- `bstr_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	remove_cluster (bstr_name: STRING) is
+			-- Remove a cluster from system clusters.
+			-- `bstr_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	store is
-			-- Save changes.
+			-- Persist current changes to disk
 		do
 			-- Put Implementation here.
 		end
 
-	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-			-- `cluster_name' [in].  
-			-- `parent_name' [in].  
-			-- `cluster_path' [in].  
+	is_cluster_name_available (bstr_name: STRING): BOOLEAN is
+			-- Determins if 'bstrName' is available as a cluster name
+			-- `bstr_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	remove_cluster (cluster_name: STRING) is
-			-- Remove a cluster from the project.
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	cluster_properties (cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	cluster_properties_by_id (cluster_id: INTEGER): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_id' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	change_cluster_name (a_name: STRING; a_new_name: STRING) is
-			-- Change cluster name.
-			-- `a_name' [in].  
-			-- `a_new_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	is_valid_name (cluster_name: STRING): BOOLEAN is
-			-- Checks to see if a cluster name is valid
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	get_cluster_fullname (cluster_name: STRING): STRING is
-			-- Retrieves a clusters full name from its name
-			-- `cluster_name' [in].  
+	is_valid_cluster_name (bstr_name: STRING): BOOLEAN is
+			-- Validates a cluster name
+			-- `bstr_name' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -95,7 +102,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_SYSTEM_CLUSTERS_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_stub.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_stub.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_SYSTEM_CLUSTERS_IMPL_STUB

@@ -10,29 +10,29 @@ inherit
 
 feature -- Status Report
 
-	assembly_name_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_name'.
+	name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	assembly_version_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_version'.
+	version_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `version'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	assembly_culture_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_culture'.
+	culture_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `culture'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	assembly_public_key_token_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_public_key_token'.
+	public_key_token_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `public_key_token'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -45,22 +45,22 @@ feature -- Status Report
 			Result := True
 		end
 
-	assembly_cluster_name_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_cluster_name'.
+	cluster_name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `cluster_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	assembly_prefix_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_prefix'.
+	prefix1_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `prefix1'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_assembly_prefix_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_assembly_prefix'.
+	set_prefix_user_precondition (pbstr_prefix: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_prefix'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -75,34 +75,34 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	assembly_name: STRING is
+	name: STRING is
 			-- Assembly name.
 		require
-			assembly_name_user_precondition: assembly_name_user_precondition
+			name_user_precondition: name_user_precondition
 		deferred
 
 		end
 
-	assembly_version: STRING is
+	version: STRING is
 			-- Assembly version.
 		require
-			assembly_version_user_precondition: assembly_version_user_precondition
+			version_user_precondition: version_user_precondition
 		deferred
 
 		end
 
-	assembly_culture: STRING is
+	culture: STRING is
 			-- Assembly culture.
 		require
-			assembly_culture_user_precondition: assembly_culture_user_precondition
+			culture_user_precondition: culture_user_precondition
 		deferred
 
 		end
 
-	assembly_public_key_token: STRING is
+	public_key_token: STRING is
 			-- Assembly public key token
 		require
-			assembly_public_key_token_user_precondition: assembly_public_key_token_user_precondition
+			public_key_token_user_precondition: public_key_token_user_precondition
 		deferred
 
 		end
@@ -115,27 +115,27 @@ feature -- Basic Operations
 
 		end
 
-	assembly_cluster_name: STRING is
+	cluster_name: STRING is
 			-- Assembly cluster name.
 		require
-			assembly_cluster_name_user_precondition: assembly_cluster_name_user_precondition
+			cluster_name_user_precondition: cluster_name_user_precondition
 		deferred
 
 		end
 
-	assembly_prefix: STRING is
+	prefix1: STRING is
 			-- Prefix.
 		require
-			assembly_prefix_user_precondition: assembly_prefix_user_precondition
+			prefix1_user_precondition: prefix1_user_precondition
 		deferred
 
 		end
 
-	set_assembly_prefix (return_value: STRING) is
+	set_prefix (pbstr_prefix: STRING) is
 			-- Prefix.
-			-- `return_value' [in].  
+			-- `pbstr_prefix' [in].  
 		require
-			set_assembly_prefix_user_precondition: set_assembly_prefix_user_precondition (return_value)
+			set_prefix_user_precondition: set_prefix_user_precondition (pbstr_prefix)
 		deferred
 
 		end

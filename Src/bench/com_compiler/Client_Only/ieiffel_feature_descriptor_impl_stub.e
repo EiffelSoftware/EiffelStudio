@@ -102,7 +102,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	implementer_count: INTEGER is
+	implementers_count: INTEGER is
 			-- Number of feature implementers.
 		do
 			-- Put Implementation here.
@@ -114,7 +114,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	ancestor_version_count: INTEGER is
+	ancestor_versions_count: INTEGER is
 			-- Number of ancestor versions.
 		do
 			-- Put Implementation here.
@@ -126,7 +126,7 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	descendant_version_count: INTEGER is
+	descendant_versions_count: INTEGER is
 			-- Number of descendant versions.
 		do
 			-- Put Implementation here.
@@ -224,10 +224,10 @@ feature -- Access
 
 feature -- Basic Operations
 
-	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
+	feature_location (pbstr_path: CELL [STRING]; pul_line: INTEGER_REF) is
 			-- Feature location, full path to file and line number
-			-- `file_path' [in, out].  
-			-- `line_number' [in, out].  
+			-- `pbstr_path' [out].  
+			-- `pul_line' [out].  
 		do
 			-- Put Implementation here.
 		end
@@ -243,7 +243,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_stub.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub %"ecom_EiffelComCompiler_IEiffelFeatureDescriptor_impl_stub.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB

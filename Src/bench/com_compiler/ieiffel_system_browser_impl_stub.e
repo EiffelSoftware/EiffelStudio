@@ -56,57 +56,57 @@ feature -- Access
 
 feature -- Basic Operations
 
-	cluster_descriptor (cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+	cluster_descriptor (bstr_class_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
 			-- Cluster descriptor.
-			-- `cluster_name' [in].  
+			-- `bstr_class_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	class_descriptor (class_name1: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
+	class_descriptor (bstr_cluster_name: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
 			-- Class descriptor.
-			-- `class_name1' [in].  
+			-- `bstr_cluster_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	feature_descriptor (class_name1: STRING; feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
+	feature_descriptor (bstr_class_name: STRING; bstr_feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature descriptor.
-			-- `class_name1' [in].  
-			-- `feature_name' [in].  
+			-- `bstr_class_name' [in].  
+			-- `bstr_feature_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	search_classes (a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
+	search_classes (bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
-			-- `a_string' [in].  
-			-- `is_substring' [in].  
+			-- `bstr_search_str' [in].  
+			-- `vb_is_substring' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	search_features (a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
+	search_features (bstr_search_str: STRING; vb_is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
-			-- `a_string' [in].  
-			-- `is_substring' [in].  
+			-- `bstr_search_str' [in].  
+			-- `vb_is_substring' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	description_from_dotnet_type (a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+	description_from_dotnet_type (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING): STRING is
 			-- Retrieve description from dotnet type
-			-- `a_assembly_name' [in].  
-			-- `a_full_dotnet_type' [in].  
+			-- `bstr_assembly_name' [in].  
+			-- `bstr_full_dotnet_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	description_from_dotnet_feature (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+	description_from_dotnet_feature (bstr_assembly_name: STRING; bstr_full_dotnet_name: STRING; bstr_feature_signature: STRING): STRING is
 			-- Retrieve description from dotnet feature
-			-- `a_assembly_name' [in].  
-			-- `a_full_dotnet_type' [in].  
-			-- `a_feature_signature' [in].  
+			-- `bstr_assembly_name' [in].  
+			-- `bstr_full_dotnet_name' [in].  
+			-- `bstr_feature_signature' [in].  
 		do
 			-- Put Implementation here.
 		end

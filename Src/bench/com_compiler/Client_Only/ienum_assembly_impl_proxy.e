@@ -33,19 +33,19 @@ feature -- Access
 
 feature -- Basic Operations
 
-	next (rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
-			-- `rgelt' [out].  
-			-- `pcelt_fetched' [out].  
+			-- `pp_ieiffel_assembly_properties' [out].  
+			-- `pul_fetched' [out].  
 		do
-			ccom_next (initializer, rgelt, pcelt_fetched)
+			ccom_next (initializer, pp_ieiffel_assembly_properties, pul_fetched)
 		end
 
-	skip (celt: INTEGER) is
+	skip (ul_count: INTEGER) is
 			-- No description available.
-			-- `celt' [in].  
+			-- `ul_count' [in].  
 		do
-			ccom_skip (initializer, celt)
+			ccom_skip (initializer, ul_count)
 		end
 
 	reset is
@@ -54,19 +54,19 @@ feature -- Basic Operations
 			ccom_reset (initializer)
 		end
 
-	clone1 (ppenum: CELL [IENUM_ASSEMBLY_INTERFACE]) is
+	clone1 (pp_ienum_assembly: CELL [IENUM_ASSEMBLY_INTERFACE]) is
 			-- No description available.
-			-- `ppenum' [out].  
+			-- `pp_ienum_assembly' [out].  
 		do
-			ccom_clone1 (initializer, ppenum)
+			ccom_clone1 (initializer, pp_ienum_assembly)
 		end
 
-	ith_item (an_index: INTEGER; rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
+	ith_item (ul_count: INTEGER; pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
 			-- No description available.
-			-- `an_index' [in].  
-			-- `rgelt' [out].  
+			-- `ul_count' [in].  
+			-- `pp_ieiffel_assembly_properties' [out].  
 		do
-			ccom_ith_item (initializer, an_index, rgelt)
+			ccom_ith_item (initializer, ul_count, pp_ieiffel_assembly_properties)
 		end
 
 feature {NONE}  -- Implementation
@@ -79,58 +79,58 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_next (cpp_obj: POINTER; rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	ccom_next (cpp_obj: POINTER; pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is
+	ccom_skip (cpp_obj: POINTER; ul_count: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
 	ccom_reset (cpp_obj: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"]()"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"]()"
 		end
 
-	ccom_clone1 (cpp_obj: POINTER; ppenum: CELL [IENUM_ASSEMBLY_INTERFACE]) is
+	ccom_clone1 (cpp_obj: POINTER; pp_ienum_assembly: CELL [IENUM_ASSEMBLY_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"](EIF_OBJECT)"
 		end
 
-	ccom_ith_item (cpp_obj: POINTER; an_index: INTEGER; rgelt: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
+	ccom_ith_item (cpp_obj: POINTER; ul_count: INTEGER; pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"](EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_count (cpp_obj: POINTER): INTEGER is
 			-- No description available.
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"](): EIF_INTEGER"
 		end
 
 	ccom_delete_ienum_assembly_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"]()"
 		end
 
 	ccom_create_ienum_assembly_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEnumAssembly_impl_proxy %"ecom_eiffel_compiler_IEnumAssembly_impl_proxy.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEnumAssembly_impl_proxy %"ecom_EiffelComCompiler_IEnumAssembly_impl_proxy.h%"]():EIF_POINTER"
 		end
 
 end -- IENUM_ASSEMBLY_IMPL_PROXY

@@ -16,6 +16,8 @@ feature	-- Initialization
 	make is
 			-- Initialize the assembly interface information
 		do
+				-- Initialize COM if not done yet.
+			(create {CLI_COM}).initialize_com
 			create assembly_interface.make
 			initialize
 		end

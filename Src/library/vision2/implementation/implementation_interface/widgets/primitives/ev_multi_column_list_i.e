@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 			-- given.
 		require
 			valid_txt: txt /= Void
-		deferred
+		do
+			make_with_size (txt.count)
+			set_columns_title (txt)
 		end
 
 feature -- Access
@@ -154,7 +156,20 @@ feature -- Element change
 			exists: not destroyed
 			text_not_void: txt /= Void
 			valid_text_length: txt.count <= columns
-		deferred
+		local
+			i: INTEGER
+			list_i: INTEGER
+		do
+			from
+				i := txt.lower
+				list_i := 1
+			until
+				i = txt.upper + 1
+			loop
+				set_column_title (txt @ i, list_i)
+				i := i+ 1
+				list_i := list_i + 1
+			end
 		end
 
 	set_column_width (value: INTEGER; column: INTEGER) is
@@ -171,7 +186,20 @@ feature -- Element change
 			exists: not destroyed
 			value_not_void: value /= Void
 			valid_value_length: value.count <= columns
-		deferred
+		local
+			i: INTEGER
+			list_i: INTEGER
+		do
+			from
+				i := value.lower
+				list_i := 1
+			until
+				i = value.upper + 1
+			loop
+				set_column_width (value @ i, list_i)
+				i := i + 1
+				list_i := list_i + 1
+			end
 		end
 
 	set_rows_height (value: INTEGER) is

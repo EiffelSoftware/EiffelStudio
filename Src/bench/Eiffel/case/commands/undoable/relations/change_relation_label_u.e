@@ -28,19 +28,19 @@ feature -- Initialization
 			set_watch_cursor;
 			relation := figure;
 				-- Need to parse it to make it legal
-			!! l.make (0);
-			l.update_from (to);
-			l.parse;
-			new_label := l;
-			reverse := reverse_capability;
+			!! l.make (0)
+			l.update_from (to.text)
+			l.parse
+			new_label := l
+			reverse := reverse_capability
 			if reverse then
-				old_label := clone (figure.reverse_label);
+				old_label := clone (figure.reverse_label)
 			else
-				old_label := clone (figure.label);
-			end;
-			record;
-			redo;
-			restore_cursor;
+				old_label := clone (figure.label)
+			end
+			record
+			redo
+			restore_cursor
 		ensure
 			relation_correctly_set: relation = figure;
 			new_label_correctly_set: new_label.is_equal (to)
@@ -64,21 +64,21 @@ feature -- Update
 			-- Re-execute command (after it was undone)
 		do
 			if reverse then
-				relation.set_reverse_label (clone (new_label))
+				relation.set_reverse_label(clone(new_label.text)) -- (clone (new_label))
 			else
-				relation.set_label (clone (new_label))
-			end;
+				relation.set_label(clone(new_label.text)) -- (clone (new_label))
+			end
 			update
-		end; -- redo
+		end -- redo
 
 	undo is
 			-- Cancel effect of executing the command
 		do
 			if reverse then
-				relation.set_reverse_label (clone (old_label))
+				relation.set_reverse_label (clone(old_label.text)) --(clone (old_label))
 			else
-				relation.set_label (clone (old_label))
-			end;
+				relation.set_label (clone(old_label.text)) --(clone (old_label))
+			end
 			update
 		end -- undo
 
@@ -103,10 +103,10 @@ feature {NONE} -- Implementation Properties
 	relation: CLI_SUP_DATA;
 			-- Relation modified created
 
-	new_label: STRING;
+	new_label: LABEL_DATA -- STRING
 			-- New label given to the relation
 
-	old_label: like new_label;
+	old_label: like new_label
 			-- Relation's old label
 
 	reverse: BOOLEAN

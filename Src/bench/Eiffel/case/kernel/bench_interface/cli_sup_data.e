@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 		local
 			class_data	: CLASS_DATA
 		do
-			client := a_client;
-			supplier := a_supplier;
+			client := a_client
+			supplier := a_supplier
 
 			class_data	?= a_supplier
 		
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				generics := deep_clone ( class_data.generics ) -- pascalf
 			end
 
-			!! break_points.make;
+			!! break_points.make
 			!! label.make (0)
 		ensure
 			client_correctly_set: client = a_client;
@@ -615,13 +615,13 @@ feature -- Storage
 
 	storage_info: S_CLI_SUP_DATA is
 		do
-			!! Result;
-			store_information (Result);
-			if not label.empty then
-				Result.set_label (label.string_value);
-			end;
-			Result.set_implementation (is_implementation);
-			Result.set_reflexive (is_reflexive);
+		--	!! Result;
+		--	store_information (Result);
+		--	if not label.empty then
+		--		Result.set_label (label.string_value);
+		--	end;
+		--	Result.set_implementation (is_implementation);
+		--	Result.set_reflexive (is_reflexive);
 		end
 
 feature {CLI_SUP_VIEW} -- Implementation

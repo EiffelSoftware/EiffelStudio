@@ -2,18 +2,62 @@ class LABEL_DATA
 
 inherit
 
-	STRING
+	--STRING
+	--	rename
+	--		make as old_make
+	--	end;
+	--DATA
+	--	undefine
+	--		is_equal, out, copy, consistent, setup
+	--	end
+
+	NAME_DATA
 		rename
-			make as old_make
-		end;
-	DATA
-		undefine
-			is_equal, out, copy, consistent, setup
+			name as text, set_name as set_text
 		end
 
 creation
 
 	make
+
+feature -- Implementation of NAME_DATA features.
+
+	is_equal(lab: like Current): BOOLEAN is
+			-- Does 'lab' equal to Current.
+		do
+			Result := (text.is_equal(lab.text))
+		end
+
+	copy(lab: like Current) is
+			-- Replace the text of Current by 'lab' one.
+		do
+			text := clone(lab.text)
+		ensure then
+			consistent: text.is_equal(lab.text)
+		end
+
+	update_name is
+		-- Update label within the workareas.
+		do
+			-- Has to be implemented.
+		end
+	
+	string_value,text: STRING
+		-- name of the label
+
+	set_text(s: STRING) is
+		-- Set 's' as 'name'.
+		do
+			text := s
+		ensure then
+			consistent: text /= Void and then text=s
+		end
+
+	empty: BOOLEAN is
+			-- Is the label displayable ?
+		do
+			Result := text.empty
+		end
 
 feature -- Initialization
 
@@ -23,7 +67,8 @@ feature -- Initialization
 		do
 			--x_offset := Resources.link_x_offset;
 			--y_offset := Resources.link_y_offset;
-			old_make (n);
+			--old_make (n);
+			!! text.make(20)
 			from_ratio := Initial_from_ratio   
 			from_handle_nbr := 1
 		ensure
@@ -124,7 +169,7 @@ feature -- Element change
 	increment_handle_nbr is
 			-- Increment from_handle_nbr
 		require
-			has_label: not empty
+			has_label: not text.empty
 		do
 			from_handle_nbr := from_handle_nbr + 1
 		ensure
@@ -135,7 +180,7 @@ feature -- Element change
 			-- Increment from_handle_nbr
 		require
 			valid_from_handle_nbr: from_handle_nbr > 1;
-			has_label: not empty
+			has_label: not text.empty
 		do
 			from_handle_nbr := from_handle_nbr - 1
 		ensure
@@ -146,69 +191,66 @@ feature -- Update
 
 	update_from (st: STRING) is
 			-- Update Current from `st'.
+		require
+			not_void: st /= Void
 		do
-			wipe_out;
-			append (st)
-		end;
+			text.wipe_out
+			text.append (st)
+		end
 
 	update_from_view (view: LABEL_VIEW) is
 			-- Update Current from view `view'.
 		require
 			valid_view: view /= Void
 		do
-		end;
+		end
 
 	parse is
 			-- Parse Current text to remove
 			-- excess spaces 
 		local
-			value: STRING;
+			value: STRING
 		do
-			!! value.make (count);	
-			if not empty then
-				value.append (Current);
+			!! value.make (text.count);	
+			if not text.empty then
+				value.append (text)
 				value.replace_substring_all (" ", "")
 				value.replace_substring_all (",", ", ")
 			end
-		end;
+		end
 
 	words: LINKED_LIST [STRING] is
 			-- Words as a linked list
 		do
-			Result := parse_label_string (Current)
-		end;
+			Result := parse_label_string (text)
+		end
 
 feature -- Output
 
 	focus: STRING is
 		do
-			Result := clone (Current)
-		end;
-
-	string_value: STRING is
-			-- String value of Current (used for storage)
-		do
-			!! Result.make (count);	
-			Result.append (Current)
-		end;
+			Result := clone (text)
+		end
 
 	output_value: STRING is
 			-- Displayed value (for workarea and printing)
 		do
-			!! Result.make (count);
-			if not empty then
-				Result.append (Current);
+			!! Result.make (text.count)
+			if not text.empty then
+				Result.append (text)
 				Result.replace_substring_all ("%%N", " ")
 				Result.replace_substring_all ("%%n", " ")
 			end
-		end;
+		ensure
+			not_void: Result /= Void
+		end
 
 feature -- Storage
 
 	storage_info: LABEL_VIEW is
 			-- Associated storage information
 		do
-			!! Result;
+			!! Result
 			Result.update_from (Current)
 		end
 
@@ -223,23 +265,23 @@ feature {NONE} -- Implementation
 			separator: CHARACTER
 		do
 			!! Result.make;
-			separator := ',';
+			separator := ','
 			from
 				i := 1;
-				!! word.make (0);
+				!! word.make (0)
 			until
 				i > a_label.count
 			loop
 				if a_label.item (i) = separator then
 					word.extend (a_label.item (i))
 					Result.put_right (word);
-					Result.forth;
+					Result.forth
 					if i < a_label.count and
 						a_label.item (i + 1) = ' '
 					then
 						i := i + 1
 					end;
-					!! word.make (0);
+					!! word.make (0)
 				elseif (a_label.item (i) = '%%') and then
 					(i + 1 <= a_label.count) and then
 					((a_label.item (i + 1) = 'N') or else
@@ -247,29 +289,25 @@ feature {NONE} -- Implementation
 				then
 						-- found %N
 					i := i + 1
-					Result.put_right (word);
-					Result.forth;
+					Result.put_right (word)
+					Result.forth
 					!! word.make (0);
 				else
 					word.extend (a_label.item (i))
-				end;
+				end
 				i := i + 1
-			end;
+			end
 			if word /= Void and then not word.empty then
 				Result.put_right (word)
 			end
-		end;
+		end
 
 invariant
 
-	valid_to_ratio: to_ratio >= 0 and then to_ratio <= maximal_ratio;
-	valid_from_ratio: from_ratio >= 0 and then from_ratio <= maximal_ratio;
-
-	-- valid_ratios: from_ratio + to_ratio = maximal_ratio;
-	--%%%% fixme: seems to be a problem in frozen mode. Violated
-	--%%%% when it is ok.
-
-	valid_to_handle_nbr: to_handle_nbr >= 2;
-	valid_from_handle_nbr: to_handle_nbr >= 1;
-
+	LABEL_DATA_valid_to_ratio: to_ratio >= 0 and then to_ratio <= maximal_ratio
+	LABEL_DATA_valid_from_ratio: from_ratio >= 0 and then from_ratio <= maximal_ratio
+	--valid_ratios: from_ratio + to_ratio = maximal_ratio
+	LABEL_DATA_valid_to_handle_nbr: to_handle_nbr >= 2
+	LABEL_DATA_valid_from_handle_nbr: to_handle_nbr >= 1
+	LABEL_DATA_text_exists: text /= Void
 end

@@ -16,16 +16,18 @@ feature -- Update
 	shared is
 			-- Add shared specification to 'link'
 		do
-			link.add_shared (reverse);
+			link.add_shared (reverse)
 			workareas.add_shared (link, reverse)
-		end; -- shared
+			observer_management.update_observer(link)
+		end
 
 	unshared is
 			-- Remove shared specification of 'link'
 		do
-			link.remove_shared (reverse);
+			link.remove_shared (reverse)
 			workareas.remove_shared (link, reverse)
-		end; -- unshared
+			observer_management.update_observer(link)
+		end
 
 	update is
 			-- Update the relation window corresponding to 'link'

@@ -80,24 +80,14 @@ feature -- Status report
 		do
 		end
 
-	max_height: INTEGER is
+	max_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have
-		do
-			Result := 1
-		ensure then
-			Result >= 1
-		end
 
-	max_width: INTEGER is
+	max_width: INTEGER
 			-- Maximum width that application wishes widget
 			-- instance to have
-		do
-			Result := 1
-		ensure then
-			Result >= 1
-		end
-
+ 
 	min_aspect_x: INTEGER is
 			-- Numerator of minimum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
@@ -110,23 +100,13 @@ feature -- Status report
 		do
 		end
 
-	min_height: INTEGER is
+	min_height: INTEGER
 			-- minimum height that application wishes widget
 			-- instance to have
-		do
-			Result := 1
-		ensure then
-			Result >= 1
-		end
 
-	min_width: INTEGER is
+	min_width: INTEGER
 			-- minimum width that application wishes widget
 			-- instance to have
-		do
-			Result := 1
-		ensure then
-			Result >= 1
-		end
 
 	width_inc: INTEGER is
 			-- Increment for a progression of preferred
@@ -210,6 +190,7 @@ feature -- Status setting
 	set_max_height (a_height: INTEGER) is
 			-- Set `max_height' to `a_height'.
 		do
+			max_height := a_height
 		ensure then
 			max_height = a_height
 		end
@@ -217,6 +198,7 @@ feature -- Status setting
 	set_max_width (a_max: INTEGER) is
 			-- Set `max_width' to `a_max'.
 		do
+			max_width := a_max
 		ensure then
 			max_width = a_max
 		end
@@ -238,6 +220,7 @@ feature -- Status setting
 	set_min_height (a_min: INTEGER) is
 			-- Set `min_height' to `a_min'.
 		do
+			min_height := a_min
 		ensure then
 			min_height = a_min
 		end
@@ -245,6 +228,7 @@ feature -- Status setting
 	set_min_width (a_min: INTEGER) is
 			-- Set `min_width' to `a_min'.
 		do
+			min_width := a_min
 		ensure then
 			min_width = a_min
 		end

@@ -100,6 +100,8 @@ feature -- Initialization
 			default_position := true
 			private_attributes.set_width (100)
 			private_attributes.set_height (100)
+			max_width := full_screen_client_area_width 
+			max_height := full_screen_client_area_height
 		end
 
 	initialize is

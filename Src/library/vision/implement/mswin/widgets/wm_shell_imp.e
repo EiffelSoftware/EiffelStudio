@@ -19,6 +19,7 @@ inherit
 			on_accelerator_command,
 			on_paint,
 			on_size,
+			on_get_min_max_info,
 			realize,
 			class_name
 		end
@@ -158,6 +159,18 @@ feature {NONE} -- Implementation
 		do
 			resize_shell_children (a_width, a_height)
 		end
+
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+		local
+		 	track: WEL_POINT
+		do
+			!! track.make (min_width + shell_width, min_height + shell_height)
+			min_max_info.set_min_track_size (track)
+			!! track.make (max_width + shell_width, max_height + shell_height)
+			min_max_info.set_max_track_size (track)
+			Precursor (min_max_info)
+		end
+
 
 	default_style: INTEGER is
 			-- Default style for creation

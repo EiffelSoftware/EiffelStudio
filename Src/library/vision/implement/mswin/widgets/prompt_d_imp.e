@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 			shell_height := title_bar_height + 2 * dialog_window_frame_height +
 				window_border_height + window_frame_height
 			shell_width := 2 * window_frame_width
+			max_width := full_screen_client_area_width 
+			max_height := full_screen_client_area_height
 			default_position := True
 			create_controls
 		end

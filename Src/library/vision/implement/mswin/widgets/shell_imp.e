@@ -401,11 +401,25 @@ feature {NONE} -- Implementation
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
 		local
 		 	track: WEL_POINT
+			w: INTEGER
+			h: INTEGER
 		do
 			if fixed_size_flag then
-				!! track.make (private_attributes.width + shell_width, private_attributes.height + shell_height)
+				if is_restored then
+					w := private_attributes.width + shell_width 
+					h := private_attributes.height + shell_height 
+				else
+					w := wel_width
+					h := wel_height
+				end
+				!! track.make (w, h)
 				min_max_info.set_min_track_size (track)
 				min_max_info.set_max_track_size (track)
+			end
+			if minimized then
+				is_restored := True
+			else
+				is_restored := False
 			end
 		end
 
@@ -415,6 +429,9 @@ feature {NONE} -- Implementation
 				disable_default_processing
 			end
 		end
+
+	is_restored: BOOLEAN
+			--Is the shell restored ?
 
 end -- SHELL_IMP
  

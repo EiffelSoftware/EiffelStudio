@@ -41,35 +41,37 @@ feature -- Access
 				print ("DEBUGGED_OBJECT_DOTNET.make%N")
 			end
 			l_val := kept_object_item (addr)
+			if l_val /= Void then
 
-			attributes := l_val.children;
+				attributes := l_val.children;
 
-			l_spec_val ?= l_val
-			if l_spec_val /= Void then
-				is_special := True
-				capacity := l_spec_val.capacity
-			else
-				l_str_val ?= l_val
-				if l_str_val /= Void then
-					is_string_value := True
-					capacity := l_str_val.length				
-				end			
+				l_spec_val ?= l_val
+				if l_spec_val /= Void then
+					is_special := True
+					capacity := l_spec_val.capacity
+				else
+					l_str_val ?= l_val
+					if l_str_val /= Void then
+						is_string_value := True
+						capacity := l_str_val.length				
+					end			
+				end
+
+				dtype := l_val.dynamic_class
+				if dtype = Void then
+						-- Oops, the run-time returned a type that is not in the system.
+						-- We then default to class ANY.
+					dtype := eiffel_system.Any_class.compiled_class
+				end
+
+				l_ref_val ?= l_val
+				if l_ref_val /= Void then
+					class_type := l_ref_val.dynamic_class_type
+				else
+					class_type := dtype.types.first
+				end
+
 			end
-
-			dtype := l_val.dynamic_class
-			if dtype = Void then
-					-- Oops, the run-time returned a type that is not in the system.
-					-- We then default to class ANY.
-				dtype := eiffel_system.Any_class.compiled_class
-			end
-
-			l_ref_val ?= l_val
-			if l_ref_val /= Void then
-				class_type := l_ref_val.dynamic_class_type
-			else
-				class_type := dtype.types.first
-			end
-
 			object_address := addr;
 			max_capacity := -1
 		ensure

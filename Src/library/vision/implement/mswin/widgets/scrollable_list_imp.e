@@ -462,7 +462,7 @@ feature -- Element change
 		do
 			ll_extend (an_item)
 			if realized then
-				private_add (an_item.value, -1)
+				private_add (an_item.value, 0)
 			end
 		end
 
@@ -472,7 +472,7 @@ feature -- Element change
 		do
 			ll_put_right (an_item)
 			if realized then
-				private_add (an_item.value, index)
+				private_add (an_item.value, index + 1)
 			end
 		end
 
@@ -499,8 +499,9 @@ feature -- Element change
 			end
 			if realized then
 				i := find_string_exact (index - 1, an_item.value)
+					-- i is a zero-based index
 				if i /= -1 then
-					private_delete (i)
+					private_delete (i + 1)
 				end
 			end
 		end
@@ -511,17 +512,20 @@ feature -- Element change
 		do
 			ll_put_front (an_item)
 			if realized then
-				private_add (an_item.value, 0)
+				private_add (an_item.value, 1)
 			end
 		end
 
 	put_i_th (an_item: SCROLLABLE_LIST_ELEMENT; i: INTEGER) is
-			-- Put `an_item' at `i'-th position.
+			-- Replace `i'-th item, if in index interval, by `an_item'.
+			-- Do not move cursor.
+		local
+			pos: CURSOR
 		do
-			ll_put_i_th (an_item, i)
-			if realized then
-				private_add (an_item.value, i - 1)
-			end
+			pos := cursor
+			go_i_th (i)
+			replace (an_item)
+			go_to (pos)
 		end
 
 	remove is
@@ -529,20 +533,20 @@ feature -- Element change
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
 		do
-			ll_remove
 			if realized then
-				private_delete (index - 1)
+				private_delete (index)
 			end
+			ll_remove
 		end
 
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
-			ll_remove_right
 			if realized then
-				private_delete (index)
+				private_delete (index + 1)
 			end
+			ll_remove_right
 		end
 
 	put_left (an_item: SCROLLABLE_LIST_ELEMENT) is
@@ -568,7 +572,7 @@ feature -- Element change
 				until
 					l.exhausted
 				loop
-					private_add (l.item.value, -1);
+					private_add (l.item.value, 0)
 					l.forth
 				end
 			end
@@ -577,11 +581,11 @@ feature -- Element change
 	replace (an_item: SCROLLABLE_LIST_ELEMENT) is
 			-- Replace current item by `v'.
 		do
-			ll_replace (an_item)
 			if realized then
-				private_delete (index - 1)
-				private_add (an_item.value, index )
+				private_delete (index)
+				private_add (an_item.value, index)
 			end
+			ll_replace (an_item)
 		end
 
 	prune_all (an_item: SCROLLABLE_LIST_ELEMENT) is
@@ -592,17 +596,23 @@ feature -- Element change
 		local
 			i: INTEGER
 		do
-			ll_prune_all (an_item)
 			if realized then
 				from
 					i := find_string_exact (0, an_item.value)
 				until
-					i = -1
+					i = - 1
 				loop
-					private_delete (i)
-					i := find_string_exact (0, an_item.value)
+					if wel_count > 0 then
+						i := find_string_exact (0, an_item.value)
+					else
+						i := -1
+					end
+					if i /= -1 then
+						private_delete (i + 1)
+					end
 				end
 			end
+			ll_prune_all (an_item)
 		end
 
 	merge_left (other: like Current) is
@@ -635,8 +645,8 @@ feature -- Element change
 				until
 					other.after
 				loop
-					private_add (other.item.value, i)
 					i := i + 1
+					private_add (other.item.value, i)
 					other.forth
 				end
 			end
@@ -663,7 +673,7 @@ feature -- Element change
 				until
 					not extendible or else lin_rep.off
 				loop
-					private_add (lin_rep.item.value, -1)
+					private_add (lin_rep.item.value, 0)
 					lin_rep.forth
 				end
 			end
@@ -674,10 +684,10 @@ feature -- Element change
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
-			ll_remove_left
 			if realized then
-				private_delete (index - 2)
+				private_delete (index - 1)
 			end
+			ll_remove_left
 		end
 
 feature {NONE} -- Implementation
@@ -744,7 +754,8 @@ feature {NONE} -- Implementation
 						show_horizontal_scroll_bar
 					end
 				end
-				if pos = -1 then
+			-- WEL list start from zero
+				if pos = 0 then
 					wel_add_string (s)
 				else
 					wel_insert_string_at (s, pos - 1)
@@ -767,8 +778,9 @@ feature {NONE} -- Implementation
 			a_font_windows: FONT_IMP
 			a_width: INTEGER
 		do
-			s := clone (i_th_text (pos))
-			wel_delete_string (pos)
+			s := clone (i_th_text (pos - 1))
+			wel_delete_string (pos - 1)
+				-- WEL list starts from zero
 			if realized then
 				a_font_windows ?= font.implementation
 				if fixed_size_flag then
@@ -994,7 +1006,7 @@ feature {NONE} -- Implementation
 			until
 				after
 			loop
-				private_add (item.value, -1)
+				private_add (item.value, 0)
 				forth
 			end
 			go_i_th (pos)

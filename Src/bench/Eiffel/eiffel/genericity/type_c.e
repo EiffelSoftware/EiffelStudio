@@ -160,11 +160,6 @@ feature
 			-- String generated for the type.
 		deferred
 		end
-
-	c_string_id: INTEGER is
-			-- String ID generated for the type.
-		deferred
-		end
 		
 	union_tag: STRING is
 			-- Union tag name for type in EIF_ARG_UNIONs.

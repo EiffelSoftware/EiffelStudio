@@ -18,20 +18,41 @@ inherit
 			make_with_text as old_make_with_text
 		end
 
+	EV_PIXMAPABLE_IMP
+		rename
+			make as old_make,
+			interface as widget_interface,
+			set_interface as set_widget_interface,
+			add_double_click_command as old_add_dblclk,
+			remove_double_click_commands as old_remove_dblclk
+		end
+		
 	EV_WIDGET_IMP
 			-- Inheriting from widget,
 			-- because items are widget in gtk
 		rename
 			make as old_make,
 			interface as widget_interface,
-			set_interface as set_widget_interface
+			set_interface as set_widget_interface,
+			add_double_click_command as old_add_dblclk,
+			remove_double_click_commands as old_remove_dblclk
 		end
 
 	EV_GTK_ITEMS_EXTERNALS
 
+feature -- Acces
+
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 feature -- Event : command association
 
-	add_activate_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_activate_command (command: EV_COMMAND; arguments: EV_ARGUMENT) is
 			-- Add 'command' to the list of commands to be
 			-- executed when the menu item is activated
 			-- The toggle event doesn't work on gtk, then
@@ -40,27 +61,43 @@ feature -- Event : command association
 			add_command ("select", command, arguments)
 		end
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		do
 			add_command ("deselect", cmd, arg)
 		end	
 
-feature {NONE} -- Implementation
-	
-	set_label_widget (new_label_widget: POINTER) is
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
 		do
-			check
-				do_not_call: False
-			end
+			check False end		
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		do	
+			check False end
 		end
+
+--feature {NONE} -- Implementation
 	
-	label_widget: POINTER is
-                        -- gtk widget of the label inside the item
-                do
-                        Result := c_gtk_get_label_widget (widget)
-		end
+--	set_label_widget (new_label_widget: POINTER) is
+--		do
+--			check
+--				do_not_call: False
+--			end
+--		end
+	
+--	label_widget: POINTER is
+ --                       -- gtk widget of the label inside the item
+  --              do
+ --                     Result := c_gtk_get_label_widget (widget)
+--		end
 
 end -- class EV_ITEM_IMP
 

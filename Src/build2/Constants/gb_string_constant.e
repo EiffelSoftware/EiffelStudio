@@ -86,12 +86,13 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			loop
 				constant_context := referers.item
 					
-					validate_agent ?= new_gb_ev_any (constant_context).validate_agents.item (constant_context.attribute)
-					check
-						validate_agent_not_void: validate_agent /= Void
-					end
-					validate_agent.call ([new_value])
-					Result := validate_agent.last_result
+				validate_agent ?= new_gb_ev_any (constant_context).validate_agents.item (constant_context.attribute)
+				check
+					validate_agent_not_void: validate_agent /= Void
+				end
+		
+				validate_agent.call ([new_value])
+				Result := validate_agent.last_result
 				referers.forth
 			end
 		end

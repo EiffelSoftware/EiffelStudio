@@ -80,8 +80,7 @@ feature {NONE} -- Implementation
 		local
 			history: STONE_HISTORY
 			s: STONE
-			c: CLASSC_STONE
-			ci: CLASSI_STONE
+			c: CLASS_STONE
 			t: EB_CLASS_TOOL
 			wd: EV_WARNING_DIALOG
 		do
@@ -91,20 +90,19 @@ feature {NONE} -- Implementation
 			else
 				history.back
 				history.set_do_not_update (True)
---				tool.receive (history.item)
--- beginning of receive remplacement (as receive does not exists)
+--|				tool.receive (history.item)
+--| FIXME
+--| Christophe, 2 nov 1999
+--| beginning of `receive' remplacement (as receive does not exists)
 				s := history.item
 				t ?= tool
 				if t /= Void then
 					c ?= s
-					ci ?= s
 					if c /= Void then
-						t.process_class (c)	
-					else
-						t.process_classi (ci)	
+						t.set_stone (c)	
 					end
 				end
--- end of receive remplacement
+--| end of `receive' remplacement
 				history.set_do_not_update (False)
 			end
 		end

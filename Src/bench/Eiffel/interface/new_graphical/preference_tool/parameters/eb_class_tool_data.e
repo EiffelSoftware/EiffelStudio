@@ -36,16 +36,16 @@ feature -- Access
 			Result := resources.get_boolean ("parse_class_after_saving", True)
 		end
 
---	feature_close_order is
---		do
---			Result := resources.get_list ("feature_clause_order",
---				<< "Initialization", "Access", "Measurement",
---				"Comparison", "Status report", "Status setting",
---				"Cursor movement", "Element change", "Removal",
---				"Resizing", "Transformation", "Conversion",
---				"Duplication", "Miscellaneous",
---				"Basic operations", "Obsolete", "Inapplicable",
---				"Implementation", "*" >>)
---		end
+	feature_clause_order: ARRAY [STRING] is
+		do
+			Result := resources.get_array ("feature_clause_order",
+				<< "Initialization", "Access", "Measurement",
+				"Comparison", "Status report", "Status setting",
+				"Cursor movement", "Element change", "Removal",
+				"Resizing", "Transformation", "Conversion",
+				"Duplication", "Miscellaneous",
+				"Basic operations", "Obsolete", "Inapplicable",
+				"Implementation", "*" >>)
+		end
 
 end -- class EB_CLASS_TOOL_DATA

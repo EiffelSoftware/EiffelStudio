@@ -55,6 +55,9 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append ("set_item (cpp_obj)")
 
+			feature_body.append (New_line_tab_tab_tab)
+			feature_body.append (make_word)
+
 			Result.set_effective
 			Result.set_body (feature_body)
 		ensure

@@ -12,7 +12,7 @@ feature
 	cluster: CLUSTER_I;
 			-- Cluster from which classes are renamed
 
-	renamings: EXTEND_TABLE [STRING, STRING];
+	renamings: HASH_TABLE [STRING, STRING];
 			-- Renamings: key is new name, entry is the old one
 
 	make is

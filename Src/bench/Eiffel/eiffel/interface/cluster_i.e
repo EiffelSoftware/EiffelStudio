@@ -104,7 +104,7 @@ feature -- Attributes
 	path: STRING
 			-- Path to the cluster (without environment variables)
 
-	classes: EXTEND_TABLE [CLASS_I, STRING]
+	classes: HASH_TABLE [CLASS_I, STRING]
 			-- Classes available in the cluster: key is the declared
 			-- name and entry is the class
 
@@ -1233,7 +1233,7 @@ end;
 		local
 			a_cluster: CLUSTER_I;
 			rename_clause: RENAME_I;
-			table: EXTEND_TABLE [STRING, STRING];
+			table: HASH_TABLE [STRING, STRING];
 			found: BOOLEAN;
 			vscn: VSCN;
 		do
@@ -1272,7 +1272,7 @@ end;
 			old_cursor: CURSOR;
 			a_cluster: CLUSTER_I;
 			rename_clause: RENAME_I;
-			table: EXTEND_TABLE [STRING, STRING];
+			table: HASH_TABLE [STRING, STRING];
 		do
 			old_cursor := renamings.cursor;
 			from

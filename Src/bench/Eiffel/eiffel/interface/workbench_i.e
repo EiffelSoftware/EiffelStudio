@@ -36,7 +36,7 @@ feature -- Attributes
 	lace: LACE_I
 			-- Current lace description
 
-	precompiled_directories: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+	precompiled_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			-- Precompilation directories, indexed by precompilation ids
 
 	precompiled_driver: FILE_NAME
@@ -366,7 +366,7 @@ feature -- Commands
 			-- Record all the classes in the universe as
 			-- changed (for precompilation)
 		local
-			class_list: EXTEND_TABLE [CLASS_I, STRING]
+			class_list: HASH_TABLE [CLASS_I, STRING]
 			c: CLUSTER_I
 		do
 			from
@@ -394,7 +394,7 @@ feature -- Commands
 			-- Record all the classes in the universe as
 			-- changed (for compilation using `NONE' as root class)
 		local
-			class_list: EXTEND_TABLE [CLASS_I, STRING]
+			class_list: HASH_TABLE [CLASS_I, STRING]
 			c: CLUSTER_I
 			cl: CLASS_I
 			file_date: INTEGER

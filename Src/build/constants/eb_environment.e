@@ -16,6 +16,7 @@ feature -- Directory name constants
 	Bitmaps_name: STRING is "bitmaps";
 	Bin_name: STRING is "bin";
 	Build_name: STRING is "build";
+	Buildgen_name: STRING is "BUILDGEN";
 	Classes_name: STRING is "classes";
 	--old Classes_name: STRING is "Classes";
 	Command_name: STRING is "command";
@@ -175,6 +176,13 @@ feature -- Directory names for projects
 			Result.extend (Application_name);
 		end;
 
+	Buildgen_directory: DIRECTORY_NAME is
+			-- Session storage directory
+		do
+			!! Result.make_from_string (Project_directory);
+			Result.extend (Buildgen_name);
+		end;
+
 	Classes_directory: DIRECTORY_NAME is
 			-- Directory for generated Eiffel
 			-- classes
@@ -204,7 +212,7 @@ feature -- Directory names for projects
 	Restore_directory: DIRECTORY_NAME is
 			-- Session storage directory
 		do
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Buildgen_directory);
 			Result.extend (Restore_name);
 		end;
 
@@ -217,7 +225,7 @@ feature -- Directory names for projects
 	Storage_directory: DIRECTORY_NAME is
 			-- Session storage directory
 		do
-			!! Result.make_from_string (Project_directory);
+			!! Result.make_from_string (Buildgen_directory);
 			Result.extend (Storage_name);
 		end;
 
@@ -283,6 +291,7 @@ feature -- Directory creation
 			Project_dir_defined: Project_directory.count > 0
 		do
 			mkdir (Project_directory);
+			mkdir (Buildgen_directory);
 			mkdir (Storage_directory);
 			mkdir (Restore_directory);
 			create_generated_directories

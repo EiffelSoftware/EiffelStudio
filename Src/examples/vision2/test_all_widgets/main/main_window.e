@@ -25,7 +25,7 @@ creation
 feature --Access
 
 	label_b, fixed_b: EV_BUTTON
-	box: EV_BOX
+	box: EV_VERTICAL_BOX
 			-- Push buttons
 feature -- Initialization
 	

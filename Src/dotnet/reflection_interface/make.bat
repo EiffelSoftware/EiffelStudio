@@ -34,6 +34,8 @@ echo ******************************************************
 cd ISE.Reflection.EiffelComponents
 cd ace_file
 gacutil -u ISE.Reflection.EiffelComponents
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace 
 gacutil -i ISE.Reflection.EiffelComponents.dll
 copy .\ISE.Reflection.EiffelComponents.dll ..\..\bin
@@ -55,6 +57,8 @@ echo *****************************************************************
 cd ISE.Reflection.EiffelAssemblyCacheNotifier
 cd ace_file
 gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace 
 gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\bin
@@ -76,6 +80,8 @@ echo *********************************************
 cd ISE.Reflection.Support
 cd ace_file
 gacutil -u ISE.Reflection.Support
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace 
 gacutil -i ISE.Reflection.Support.dll
 copy .\ISE.Reflection.Support.dll ..\..\bin
@@ -97,6 +103,8 @@ echo ******************************************************************
 cd ISE.Reflection.EiffelAssemblyCacheHandler
 cd ace_file
 gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace 
 gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\bin
@@ -119,6 +127,8 @@ echo ***************************************************
 cd ISE.Reflection.CodeGenerator
 cd ace_file
 gacutil -u ISE.Reflection.CodeGenerator
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace
 gacutil -i ISE.Reflection.CodeGenerator.dll
 copy .\ISE.Reflection.CodeGenerator.dll ..\..\bin
@@ -140,6 +150,8 @@ echo *********************************************************
 cd ISE.Reflection.ReflectionInterface
 cd ace_file
 gacutil -u ISE.Reflection.ReflectionInterface
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace 
 gacutil -i ISE.Reflection.ReflectionInterface.dll
 copy .\ISE.Reflection.ReflectionInterface.dll ..\..\bin
@@ -198,6 +210,8 @@ echo *  Generating `folder_browser.dll'  *
 echo *************************************
 
 gacutil -u folder_browser
+del *.epr
+rd -q -s EIFGEN
 ec -ace Ace.ace -finalize
 cd EIFGEN
 cd F_code
@@ -256,6 +270,8 @@ echo ******************************************
 cd assembly_manager
 cd ace_file
 gacutil -u ISE.AssemblyManager
+del *.epr
+rd -q -s EIFGEN
 ec -ace ace.ace
 gacutil -i ISE.AssemblyManager.exe
 copy ISE.AssemblyManager.exe .\..\dotnet\reflection_interface\bin

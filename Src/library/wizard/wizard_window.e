@@ -46,10 +46,10 @@ feature -- Initialization
 		do	
 			Create h_sep
 			a_box.extend(h_sep)
-			a_box.disable_child_expand(h_sep)
+			a_box.disable_item_expand(h_sep)
 			Create h1
 			a_box.extend (h1)
-			a_box.disable_child_expand (h1)
+			a_box.disable_item_expand (h1)
 
 			Create previous_b.make_with_text_and_action ("<< Previous ", ~previous_page)
 			Create next_b.make_with_text_and_action ("Next >>", ~next_page)	
@@ -59,27 +59,25 @@ feature -- Initialization
 
 			create h2
 			h1.extend (h2)
-			h1.disable_child_expand (h2)
+			h1.disable_item_expand (h2)
 
 			h2.extend (previous_b)
 			previous_b.set_minimum_width (60)
 			previous_b.align_text_center
-			h2.disable_child_expand (previous_b)
+			h2.disable_item_expand(previous_b)
 
 			h2.extend (next_b)
 			next_b.set_minimum_width (60)
 			next_b.align_text_center
-			h2.disable_child_expand (next_b)
+			h2.disable_item_expand (next_b)
 
 			h1.extend (cancel_b)
-			h1.disable_child_expand (cancel_b)
+			h1.disable_item_expand (cancel_b)
 			cancel_b.set_minimum_width (60)
 			cancel_b.align_text_center
 
 			h1.set_padding (20)
 			h1.set_border_width (10)
-
-
 		end
 
 	load_first_state is

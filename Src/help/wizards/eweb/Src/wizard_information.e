@@ -20,20 +20,41 @@ feature {WIZARD_WINDOW} -- Initialization
 
 feature -- Setting
 
-	set_project_location (a_location: STRING) is
+	set_project_location (a_loc: STRING) is
+		require
+			not_void: a_loc /= Void
 		do
-			project_location:= a_location
+			project_location:= a_loc
+		ensure
+			set: project_location = a_loc
 		end
 
 	set_generation_location (a_location: STRING) is
+		require
+			not_void: a_location /= Void
 		do
 			generation_location:= a_location
+		ensure
+			set: generation_location = a_location
 		end
 
 	set_new_project is
 		do
 			is_new_project := TRUE
+		ensure
+			is_new_project
 		end
+
+	set_files(li: LINKED_LIST[STRING]) is
+		require
+			list_exists: li /= Void
+		do
+			list_of_html_pages := li
+		ensure
+			set: li = list_of_html_pages
+		end
+
+feature -- Access
 
 	is_new_project: BOOLEAN
 

@@ -16,6 +16,8 @@ feature {NONE} -- Initialization
 			-- Create current object with information
 			-- relative to current state 'an_info'.
 			-- Should be redefined when needed.
+		require
+			info_exists: an_info /= Void
 		do
 			wizard_information := clone(an_info)
 			change_entries
@@ -133,13 +135,6 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	pixmap: EV_PIXMAP is
-			-- Pixmap on which can be displayed a picture which 
-			-- goes with the state.
-		once
-			Create Result
-		end
-
 	message: STRING is 
 			-- Message which explains what the page is about.
 		deferred 
@@ -158,4 +153,9 @@ feature -- Access
 		do
 		end
 
+invariant
+	message_exists: message /= Void and then not message.empty
+	title_exists: title /= Void and then not title.empty
+	pixmap_location: pixmap_location /= Void
+	
 end -- class WIZARD_STATE_WINDOW

@@ -46,9 +46,10 @@ feature -- Initialization
 			-- Create the window.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_window_new (C.Gtk_window_popup_enum))
+			set_c_object (C.gtk_window_new (C.Gtk_window_toplevel_enum))
 			set_title ("")
-				-- set title also realizes the window.	
+				-- set title also realizes the window.
+			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
 		end
@@ -527,6 +528,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2001/06/19 01:12:58  king
+--| Changed from popup to top level with no wdm decorations
+--|
 --| Revision 1.49  2001/06/15 19:30:27  king
 --| Refactored a call_close_request_actions callback routine
 --|

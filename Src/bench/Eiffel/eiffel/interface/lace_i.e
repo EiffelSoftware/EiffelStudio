@@ -98,7 +98,7 @@ end;
 			precomp_r: PRECOMP_R;
 			extendible_r: EXTENDIBLE_R;
 			old_system: SYSTEM_I;
-			precomp_project_name: STRING;
+			precomp_project_names: LINKED_LIST [STRING];
 			extendible_project_name: STRING;
 			sys: SYSTEM_I
 		do
@@ -108,15 +108,15 @@ end;
 				!! ace_options
 
 				if not_first_parsing = False then
-					precomp_project_name := root_ast.precomp_project_name;
+					precomp_project_names := root_ast.precomp_project_names;
 					extendible_project_name := root_ast.extendible_project_name;
 					if extendible_project_name /= Void then
 							-- DLE: retrieve the dynamically extendible project.
 						!!extendible_r;
 						extendible_r.retrieve_extendible (extendible_project_name)
-					elseif precomp_project_name /= Void then
+					elseif precomp_project_names /= Void then
 						!!precomp_r;
-						precomp_r.retrieve_precompiled (precomp_project_name);
+						precomp_r.retrieve_precompiled (precomp_project_names);
 					else
 						!! sys;
 						Workbench.set_system (sys)

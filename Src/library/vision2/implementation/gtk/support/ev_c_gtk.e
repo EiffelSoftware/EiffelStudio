@@ -24,7 +24,8 @@ feature -- Externals
 			"GDK_DISPLAY()"
 		end
 
-	x_list_fonts (display, pattern: POINTER; max_return: INTEGER; actual_size: POINTER): POINTER is
+	x_list_fonts (display, pattern: POINTER; max_return: INTEGER;
+		actual_size: POINTER): POINTER is
 			-- Display * display
 			-- char * pattern
 			-- int max_return
@@ -60,8 +61,25 @@ feature -- Externals
 		external
 			"C (GdkWindow *): gboolean | %"ev_titled_window_imp.h%""
 		end
+		
+feature -- Externals
 
-feature {NONE} -- Externals
+	c_gtk_clist_set_pixtext (a_clist: POINTER; a_row: INTEGER; a_column: INTEGER; a_pixmap: POINTER; a_text: POINTER) is 
+			-- Parsed as:
+			-- void c_gtk_clist_set_pixtext (
+			--     GtkWidget *a_clist,
+			--     int a_row,
+			--     int a_column,
+			--     GtkWidget *a_pixmap,
+			--     gchar *a_text
+			-- );
+			--
+			-- Original C code from %"gtk_eiffel.h%":
+			-- 
+			-- void c_gtk_clist_set_pixtext (GtkWidget* clist, int row, int column, GtkWidget *pixmap, gchar *text);
+		external
+			" C | %"gtk_eiffel.h%""
+		end
 
 	c_gtk_init_toolkit is 
 			-- Parsed as:
@@ -1389,23 +1407,6 @@ feature {NONE} -- Externals
 			-- Original C code from %"gtk_eiffel.h%":
 			-- 
 			-- void c_gtk_clist_get_bg_color (GtkWidget* list_row, int row, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b);
-		external
-			" C | %"gtk_eiffel.h%""
-		end
-
-	c_gtk_clist_set_pixtext (a_clist: POINTER; a_row: INTEGER; a_column: INTEGER; a_pixmap: POINTER; a_text: POINTER) is 
-			-- Parsed as:
-			-- void c_gtk_clist_set_pixtext (
-			--     GtkWidget *a_clist,
-			--     int a_row,
-			--     int a_column,
-			--     GtkWidget *a_pixmap,
-			--     gchar *a_text
-			-- );
-			--
-			-- Original C code from %"gtk_eiffel.h%":
-			-- 
-			-- void c_gtk_clist_set_pixtext (GtkWidget* clist, int row, int column, GtkWidget *pixmap, gchar *text);
 		external
 			" C | %"gtk_eiffel.h%""
 		end

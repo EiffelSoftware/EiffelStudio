@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
 			textable_imp_initialize
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, text_label)
-			set_font (font)
 			align_text_center
 		end
 

@@ -59,7 +59,6 @@ feature {NONE} -- Initialization
 			end
 			explorer_bar_item.show_actions.extend (agent on_bar_item_shown)
 			explorer_bar.add (explorer_bar_item)
-			explorer_bar.repack_widgets
 		end
 
 feature -- Access

@@ -8,13 +8,29 @@ class
 	EV_GTK_C_STRING
 
 create
-	make, make_from_pointer
+	make, make_from_pointer, make_from_ascii_string
+
+convert
+	make_from_ascii_string ({STRING})
 	
 	
 feature {NONE} -- Initialization
 
+	make_from_ascii_string (a_string: STRING) is
+			-- Create a C string from `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		local
+			a_string_value: ANY
+		do
+			a_string_value := a_string.to_c
+			create managed_data.make_from_pointer ($a_string_value, a_string.count + 1)
+		end
+
 	make (a_string: STRING) is
 			-- Create a UTF8 string from `a_string'
+		require
+			a_string_not_void: a_string /= Void
 		local
 			utf8_ptr: POINTER
 			string_value: ANY

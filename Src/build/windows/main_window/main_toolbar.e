@@ -20,13 +20,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_BOX) is
 		local
 			hbox: EV_HORIZONTAL_BOX
 			v_separator: EV_TOOL_BAR_SEPARATOR
 		do
 			create hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 			{EV_TOOL_BAR} Precursor (hbox)
 			create create_proj_b.make (Current)
 			create load_proj_b.make (Current)

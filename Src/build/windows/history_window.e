@@ -38,11 +38,13 @@ feature {NONE} -- Initialization
 
 			create list.make_with_size (vbox, 2)
 			create hbox.make (vbox)
-			hbox.set_expand (False)
+			vbox.set_child_expandable (hbox, False)
 
 			create fix.make (hbox)
 			create undo_button.make (hbox)
+			hbox.set_child_expandable (undo_button, False)
 			create redo_button.make (hbox)
+			hbox.set_child_expandable (redo_button, False)
 			set_values
 			set_callbacks
 			set_properties
@@ -58,9 +60,7 @@ feature {NONE} -- Initialization
 			list.set_column_title ("Action", 1)
 			list.set_column_title ("Entity", 2)
 			undo_button.set_text (Widget_names.undo_label)
-			undo_button.set_expand (False)
 			redo_button.set_text (Widget_names.redo_label)
-			redo_button.set_expand (False)
 		end
 
 	set_callbacks is
@@ -85,8 +85,8 @@ feature {NONE} -- Initialization
 
 	set_geometry is
 		do
-			set_minimum_width (Resources.history_wnd_width)
-			set_minimum_height (Resources.history_wnd_height)
+			set_width (Resources.history_wnd_width)
+			set_height (Resources.history_wnd_height)
 		end
 
 feature -- Access

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			con_id: INTEGER
 		do
 			-- Set the interface
-			interface ?= an_interface
+			interface := an_interface
 
 			-- Initialize the datas
 			set_default_options
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
  			-- connect gtk widget destroy signal to EV_WIDGET_IMP.destroy_signal_callback
 			!!s.make (0)
 			s := "destroy"
-			ev_str ?= s.to_c
+			ev_str := s.to_c
 							
 			-- Connect the signal
 			con_id := c_gtk_signal_connect (widget, $ev_str, $destroy_signal_callback, 
@@ -144,7 +144,8 @@ feature -- Status setting
 	set_focus is
 			-- Set focus to Current
 		do
-			check not_implemented: False end
+				-- to be tested
+			gtk_widget_grab_focus (widget)
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -352,6 +353,8 @@ feature -- Event - command association
 	
 	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
 			arg: EV_ARGUMENT) is
+		require else
+			mouse_button_ok: (mouse_button >=1 and mouse_button<=3)
 		local
 			ev_data: EV_EVENT_DATA
 		do
@@ -361,6 +364,8 @@ feature -- Event - command association
 	
 	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
 				    arg: EV_ARGUMENT) is
+		require else
+			mouse_button_ok: (mouse_button >=1 and mouse_button<=3)
 		local
 			ev_data: EV_EVENT_DATA
 		do
@@ -370,6 +375,8 @@ feature -- Event - command association
 	
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
 				  arg: EV_ARGUMENT) is
+		require else
+			mouse_button_ok: (mouse_button >=1 and mouse_button<=3)
 		local
 			ev_data: EV_EVENT_DATA
 		do
@@ -387,7 +394,7 @@ feature -- Event - command association
 	
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		do
-			add_command ("destroy", cmd, arg)
+			add_command ("destroy_event", cmd, arg)
 		end
 	
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -416,9 +423,9 @@ feature -- Event - command association
 	
 	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
-			ev_data: EV_EVENT_DATA		
+			ev_data: EV_EVENT_DATA
 		do
-			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
+			!EV_EVENT_DATA!ev_data.make-- temporary, create a correct object here XX
 			add_command_with_event_data ("enter_notify_event", cmd, arg, ev_data, 0, False)
 		end
 	
@@ -426,7 +433,7 @@ feature -- Event - command association
 		local
 			ev_data: EV_EVENT_DATA		
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 			add_command_with_event_data ("leave_notify_event", cmd, arg, ev_data, 0, False)
 		end
 
@@ -436,7 +443,7 @@ feature -- Event - command association
 		local
 			ev_data: EV_EVENT_DATA		
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 			add_command_with_event_data ("focus_in_event", cmd, arg, ev_data, 0, False)
 		end
 
@@ -446,7 +453,7 @@ feature -- Event - command association
 		local
 			ev_data: EV_EVENT_DATA		
 		do
-			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 			add_command_with_event_data ("focus_out_event", cmd, arg, ev_data, 0, False)
 		end
 
@@ -455,31 +462,66 @@ feature -- Event -- removing command association
 	remove_button_press_commands (mouse_button: INTEGER) is
 			-- Empty the list of commands to be executed when
 			-- button number 'mouse_button' is pressed.
+		require else
+			mouse_button_ok: (mouse_button >=1 and mouse_button<=3)
 		do
+			inspect
+				mouse_button
+			when 1 then
+				remove_commands (button_one_press_event_id)
+			when 2 then
+				remove_commands (button_two_press_event_id)
+			when 3 then
+				remove_commands (button_three_press_event_id)
+			end
 		end
 
 	remove_button_release_commands (mouse_button: INTEGER) is
 			-- Empty the list of commands to be executed when
 			-- button number 'mouse_button' is released.
+		require else
+			mouse_button_ok: (mouse_button >=1 and mouse_button<=3)
 		do
+			inspect
+				mouse_button
+			when 1 then
+				remove_commands (button_one_release_event_id)
+			when 2 then
+				remove_commands (button_two_release_event_id)
+			when 3 then
+				remove_commands (button_three_release_event_id)
+			end
 		end
 
 	remove_double_click_commands (mouse_button: INTEGER) is
 			-- Empty the list of commands to be executed when
 			-- button number 'mouse_button' is double clicked.
+		require else
+			mouse_button_ok: (mouse_button >=1 and mouse_button<=3)
 		do
+			inspect
+				mouse_button
+			when 1 then
+				remove_commands (button_one_double_click_event_id)
+			when 2 then
+				remove_commands (button_two_double_click_event_id)
+			when 3 then
+				remove_commands (button_three_double_click_event_id)
+			end
 		end
 
 	remove_motion_notify_commands is
 			-- Empty the list of commands to be executed when
 			-- the mouse move.
 		do
+			remove_commands (motion_notify_event_id)
 		end
 
 	remove_destroy_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget is destroyed.
 		do
+			remove_commands (destroy_event_id)
 		end
 
 	remove_expose_commands is
@@ -487,6 +529,7 @@ feature -- Event -- removing command association
 			-- the widget has to be redrawn because it was exposed from
 			-- behind another widget.
 		do
+			remove_commands (expose_event_id)
 		end
 
 	remove_key_press_commands is
@@ -494,6 +537,8 @@ feature -- Event -- removing command association
 			-- a key is pressed on the keyboard while the widget has the
 			-- focus.
 		do
+			
+			remove_commands (key_press_event_id)
 		end
 
 	remove_key_release_commands is
@@ -501,30 +546,35 @@ feature -- Event -- removing command association
 			-- a key is released on the keyboard while the widget has the
 			-- focus.
 		do
+			remove_commands (key_release_event_id)
 		end
 
 	remove_enter_notify_commands is
 			-- Empty the list of commands to be executed when
 			-- the cursor of the mouse enter the widget.
 		do
+			remove_commands (enter_notify_event_id)
 		end
 
 	remove_leave_notify_commands is
 			-- Empty the list of commands to be executed when
 			-- the cursor of the mouse leave the widget.
 		do
+			remove_commands (leave_notify_event_id)
 		end
 
 	remove_get_focus_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget get the focus.
 		do
+			remove_commands (focus_in_event_id)
 		end
 
 	remove_lose_focus_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget lose the focus.
 		do
+			remove_commands (focus_out_event_id)
 		end
 
 feature -- Postconditions
@@ -560,101 +610,10 @@ feature -- Postconditions
 				(not shown and then (x = - 1 and y = - 1))
 		end
 
-feature {NONE} -- Implementation
-
-	add_command_with_event_data (event: STRING; cmd: EV_COMMAND; 
-		     arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA;
-		     mouse_button: INTEGER; double_click: BOOLEAN) is
-			-- Add `cmd' at the end of the list of
-			-- actions to be executed when the 'event'
-			-- happens `arg' will be passed to
-			-- `cmd' whenever it is invoked as a
-			-- callback. 'arg' can be Void, which
-			-- means that no arguments are passed to the
-			-- cmd. 'ev_data' is an empty object 
-			-- which will be filled by gtk (in C library) 
-			-- when the event happens.
-		
-		require		
-			valid_event: event /= Void
-			valid_command: cmd /= Void
-		local
-			ev_str: ANY
-			ev_d_imp: EV_EVENT_DATA_IMP
-			con_id: INTEGER
-                do				
-			ev_d_imp ?= ev_data.implementation
-			check
-				valid_event_data_implementation: ev_d_imp /= Void
-			end
-			ev_str := event.to_c
-			con_id := c_gtk_signal_connect (
-				widget,
-				$ev_str,
-				cmd.execute_address,
-				$cmd,
-				$arg,
-				$ev_data,
-				$ev_d_imp,
-				ev_d_imp.initialize_address,
-				mouse_button,
-				double_click
-			)
-			check
-				successfull_connect: con_id > 0
-			end
-		end
-        
-	add_command (event: STRING; cmd: EV_COMMAND; 
-		     arg: EV_ARGUMENT) is
-			-- Add `cmd' at the end of the list of
-			-- actions to be executed when the 'event'
-			-- happens `arg' will be passed to
-			-- `cmd' whenever it is invoked as a
-			-- callback. 'arg' can be Void, which
-			-- means that no arguments are passed to the
-			-- command. 
-			
-		require		
-			valid_event: event /= Void
-			valid_command: cmd /= Void
-		local
-			ev_str: ANY
-			con_id: INTEGER
-                do
-			ev_str:= event.to_c
-			con_id := c_gtk_signal_connect (
-				widget,
-				$ev_str,
-				cmd.execute_address,
-				$cmd,
-				$arg,
-				Default_pointer,
-				Default_pointer,
-				Default_pointer,
-				0,
-				False
-			)
-			check
-				successfull_connect: con_id > 0		
-			end
-		end
-
-	remove_command (command_id: INTEGER) is
-			-- Remove the command associated with
-			-- 'command_id' from the list of actions for
-			-- this context. If there is no command
-			-- associated with 'command_id', nothing
-			-- happens.
-		do		
-			gtk_signal_disconnect (widget, command_id)
-		end
-
-
 feature {EV_WIDGET_IMP} -- Implementation
 	
 	widget: POINTER
-                        -- pointer to the C structure representing this widget
+                        -- pointer to the C structure representing this widgetf
 
 end -- class EV_WIDGET_IMP
 

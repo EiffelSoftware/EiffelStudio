@@ -35,63 +35,63 @@ default
 	trace(no)
 
 cluster
-	root_cluster:		"D:\help\wizards\estore2\src"
+	root_cluster:		".\src"
 
-	all base:		"D:\Eiffel_Projects\base"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"desc"; "table_eiffel3"; 
 		end
 
-	all vision2:		"$EIFFEL4\library\vision2"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
 			"gtk"; "test"; 
 		end
 
-	all wel:		"$EIFFEL4\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 
-	all wizard_tool:		"$EIFFEL4\library\wizard"
+	all wizard_tool:		"$EIFFEL_SRC\library\wizard"
 		exclude
 			"CVS"; "unix"; 
 		end
 
-	time:		"$EIFFEL4\library\time"
+	time:		"$EIFFEL_SRC\library\time"
 
 	time_format (time):		"$\format"
 
 	time_english (time):		"$\format\english"
 
-	estore_support:		"$EIFFEL4\library\store\support"
+	estore_support:		"$EIFFEL_SRC\library\store\support"
 
-	estore_interface:		"$EIFFEL4\library\store\interface"
+	estore_interface:		"$EIFFEL_SRC\library\store\interface"
 
-	estore_db_support:		"$EIFFEL4\library\store\dbms\support"
+	estore_db_support:		"$EIFFEL_SRC\library\store\dbms\support"
 
-	all estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms"
+	all estore_rdbms:		"$EIFFEL_SRC\library\store\dbms\rdbms"
 
-	all estore_generation:		"$EIFFEL4\library\store\generation"
+	all estore_generation:		"$EIFFEL_SRC\library\store\generation"
 
 external
 
 	include_path:
-		"$EIFFEL4\library\wel\spec\windows\include",
-		"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
+		"$EIFFEL_SRC\library\wel\spec\windows\include",
+		"$EIFFEL_SRC\library\store\dbms\rdbms\oracle\Clib",
 		"$(ORACLE_HOME)\OCI\include",
-		"$EIFFEL4\library\store\dbms\rdbms\odbc\Clib",
-		"$EIFFEL4\library\vision2\spec\include",
-		"$EIFFEL4\library\time\Clib",
-		"$EIFFEL4\library\wizard\help\Clib"
+		"$EIFFEL_SRC\library\store\dbms\rdbms\odbc\Clib",
+		"$EIFFEL_SRC\library\vision2\spec\include",
+		"$EIFFEL_SRC\library\time\Clib",
+		"$EIFFEL_SRC\library\wizard\help\Clib"
 
 	object:
-		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
-		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
-		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib",
-		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
-		"$EIFFEL4\library\wel\spec\msc\lib\wel.lib",
-		"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-		"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-		"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
-		"$EIFFEL4\library\time\spec\$(COMPILER)\lib\datetime.lib",
+		"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\support.lib",
+		"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+		"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\odbc32.lib",
+		"$EIFFEL_SRC\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
+		"$EIFFEL_SRC\library\wel\spec\msc\lib\wel.lib",
+		"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+		"$EIFFEL_SRC\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
+		"$EIFFEL_SRC\library\time\spec\$(COMPILER)\lib\datetime.lib",
 		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib",
-		"$EIFFEL4\library\wizard\help\Clib\htmlhelp.lib"
+		"$EIFFEL_SRC\library\wizard\help\Clib\htmlhelp.lib"
 
 end

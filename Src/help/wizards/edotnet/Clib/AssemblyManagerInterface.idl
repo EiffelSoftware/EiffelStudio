@@ -3,7 +3,7 @@
 // typelib filename: <could not determine filename>
 
 [
-  uuid(A15DF32A-0F73-3C93-89FD-A8783996C0DB),
+  uuid(4482624D-80A1-3333-A12B-DE408B206FCA),
   version(1.0)
 ]
 library AssemblyManagerInterface
@@ -20,7 +20,7 @@ library AssemblyManagerInterface
       odl,
       uuid(232A7E85-2357-386E-A37D-1D957E41AFFD),
       version(1.0),
-      oleautomation  
+      oleautomation   
 
     ]
     interface IAssemblyManagerInterface : IUnknown {
@@ -42,7 +42,7 @@ library AssemblyManagerInterface
     };
 
     [
-      uuid(05624193-ECF7-3E13-9F0B-3AC39344E8CB),
+      uuid(B2B0DDA2-F183-3631-9F85-7BC837A1B418),
       version(1.0)
     ]
     coclass AssemblyManagerInterface {

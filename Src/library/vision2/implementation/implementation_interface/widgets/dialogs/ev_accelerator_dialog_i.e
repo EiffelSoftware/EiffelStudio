@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			create window.make_top_level
 			set_title ("Accelerator Selector")
 			position_composants
-			window.forbid_resize
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
@@ -105,6 +104,7 @@ feature -- Status setting
 			-- As the window is modal, nothing can be done
 			-- until the user closed the window.
 		do
+			window.forbid_resize
 			window.show
 		end
 
@@ -188,6 +188,7 @@ feature {NONE} -- Implementation
 
 			create hbox.make (main_box)
 			hbox.set_spacing (10)
+			hbox.set_expand (False)
 			create label.make (hbox)
 			create ok.make_with_text (hbox, "OK")
 			ok.set_expand (False)
@@ -239,6 +240,7 @@ feature {NONE} -- Implementation
 			litem: EV_LIST_ITEM
 		do
 			create combo.make (par)
+			combo.set_extended_height (400)
 			combo.set_editable (False)
 			create cmd.make (~changed_execute)
 			combo.add_selection_command (cmd, Void)

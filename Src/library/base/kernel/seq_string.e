@@ -85,12 +85,11 @@ feature -- Access
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
-			s_area: like area;
+			s_area: ANY;
 		do
 			if not off then
 				s_area := s.area;
-				index := str_str (area, s_area, count,
-						s.count, index, fuzzy);
+				index := str_str ($area, $s_area, count, s.count, index, fuzzy);
 				if index = 0 then
 					index := count + 1
 				end
@@ -105,7 +104,7 @@ feature -- Access
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
-			s_mir_area, mir_area: like area;
+			s_mir_area, mir_area: ANY;
 			str_mirrored: like Current;
 			s_mirrored: STRING;
 		do
@@ -114,7 +113,7 @@ feature -- Access
 				s_mirrored := s.mirrored;
 				s_mir_area := s_mirrored.area;
 				mir_area := str_mirrored.area;
-				index := count - str_str (mir_area, s_mir_area, count, s.count,
+				index := count - str_str ($mir_area, $s_mir_area, count, s.count,
 						str_mirrored.index, fuzzy) + 1;
 				if index = count + 1 then
 					index := 0

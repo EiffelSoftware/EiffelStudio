@@ -33,7 +33,7 @@ feature
 	positive_value_found: BOOLEAN
 			-- Is a positive value involved in the choices ?
 
-	positive_value: INTEGER
+	positive_value: ATOMIC_AS
 			-- One of the positive values found (error report)
 
 	unique_names: LINKED_SET [STRING]
@@ -54,7 +54,7 @@ feature
 	wipe_out is
 		do
 			unique_names.wipe_out
-			positive_value_found := False
+			positive_value := Void
 			type := Void
 			node := Void
 			feature_table := Void
@@ -106,14 +106,14 @@ feature
 			vomb3: VOMB3
 			i: like intervals
 		do
-			lower_bound := make_bound (interval.lower)
+			lower_bound := inspect_value (interval.lower)
 			upper := interval.upper
 			if upper = Void then
 				upper_bound := lower_bound
 			else
-				upper_bound := make_bound (upper)
+				upper_bound := inspect_value (upper)
 			end
-			Result := lower_bound.make_interval (upper_bound)
+			Result := lower_bound.inspect_interval (upper_bound)
 			if Result.is_good_range then
 				from
 					i := intervals
@@ -138,92 +138,49 @@ feature
 
 feature {NONE} -- Implementation
 
-	make_bound (bound: ATOMIC_AS): INTERVAL_VAL_B is
-			-- Create bound associated to `bound'.
+	inspect_value (bound: ATOMIC_AS): INTERVAL_VAL_B is
+			-- Inspect value associated to `bound'
 		require
 			type_not_void: type /= Void
 			bound_not_void: bound /= Void
-			valid_bound_type: bound.is_inspect_value (type)
-		do
-			if type.is_character then
-				Result := bound.make_character
-			else
-				Result := make_integer (bound)
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	make_integer (bound: ATOMIC_AS): INT_VAL_B is
-			-- Integer bound associated to `bound'.
-		require
-			type_not_void: type /= Void
-			bound_not_void: bound /= Void
-			valid_bound_type: bound.good_integer
+			valid_bound_type: bound.is_valid_inspect_value (type)
 		local
-			int_bound: INTEGER_CONSTANT
-			id: ID_AS
-			static: STATIC_ACCESS_AS
 			constant_i: CONSTANT_I
-			integer_value: INTEGER_CONSTANT
 			constant_name: STRING
 			written_class: CLASS_C
-			int_value: INTEGER
 			make_vomb5: BOOLEAN
 			vomb5: VOMB5
 			vomb4: VOMB4
 			vomb6: VOMB6
 		do
-			if bound.is_integer then
-				int_bound ?= bound
-				int_value := int_bound.integer_32_value
-				Result := int_bound.make_integer
-				if int_value > 0 then
-					positive_value_found := True
-					positive_value := int_value
-					make_vomb5 := not unique_names.is_empty
-				end
-			else
-				id ?= bound
-				if id /= Void then
-					constant_i ?= feature_table.item (id)
-				else
-					static ?= bound
-					constant_i := static.associated_constant
-				end
-				integer_value ?= constant_i.value
-				int_value := integer_value.integer_32_value
-				Result := bound.make_integer
+			Result := bound.inspect_value (type)
+			constant_i := bound.unique_constant
+			if constant_i /= Void then
 				constant_name := constant_i.feature_name
-				if constant_i.is_unique then
-					if unique_names.has (constant_name) then
-							-- Error
-						create vomb4
-						context.init_error (vomb4)
-						vomb4.set_unique_feature (constant_i)
-						Error_handler.insert_error (vomb4)
-					else
-						unique_names.extend (constant_name)
-						written_class := constant_i.written_class
-						if last_class = Void then
-							last_class := written_class
-						elseif last_class /= written_class then
-								-- Error
-							create vomb6
-							context.init_error (vomb6)
-							vomb6.set_unique_feature (constant_i)
-							vomb6.set_written_class (last_class)
-							Error_handler.insert_error (vomb6)
-						end
-					end
-					make_vomb5 := positive_value_found
+				if unique_names.has (constant_name) then
+						-- Error
+					create vomb4
+					context.init_error (vomb4)
+					vomb4.set_unique_feature (constant_i)
+					Error_handler.insert_error (vomb4)
 				else
-					if int_value > 0 then
-						positive_value_found := True
-						positive_value := int_value
-						make_vomb5 := not unique_names.is_empty
+					unique_names.extend (constant_name)
+					written_class := constant_i.written_class
+					if last_class = Void then
+						last_class := written_class
+					elseif last_class /= written_class then
+							-- Error
+						create vomb6
+						context.init_error (vomb6)
+						vomb6.set_unique_feature (constant_i)
+						vomb6.set_written_class (last_class)
+						Error_handler.insert_error (vomb6)
 					end
 				end
+				make_vomb5 := positive_value /= Void
+			elseif Result.is_allowed_unique_value then
+				positive_value := bound
+				make_vomb5 := not unique_names.is_empty
 			end
 			if make_vomb5 then
 				create vomb5

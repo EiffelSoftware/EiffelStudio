@@ -90,7 +90,8 @@ feature {NONE} -- Implementation
 				if not a_list.after then
 					Result.append ("%T%T")
 					Result.append (a_list.item.keyword)
-					Result.append_character ('%N')
+					Result.append ("%N%T%T%T")
+					Result.append (a_list.item.code)
 					a_list.forth
 				end
 			until

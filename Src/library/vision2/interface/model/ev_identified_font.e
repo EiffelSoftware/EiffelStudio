@@ -15,7 +15,7 @@ feature {NONE} -- Initialisation
 	make_with_id (a_font: like font; an_id: like id) is
 			-- Create an EV_IDENTIFIED_FONT containing `a_font' with `an_id'.
 		require
-			a_font_not_Void: a_font /= Void
+			a_font_not_void: a_font /= Void
 			an_id_positive: an_id > 0
 		do
 			font := a_font
@@ -33,7 +33,7 @@ feature -- Access
 		-- id for `font'.
 	
 invariant
-	font_not_Void: font /= Void
+	font_not_void: font /= Void
 	id_positive: id >= 0
 
 end -- class EV_IDENTIFIED_FONT

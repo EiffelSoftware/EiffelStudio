@@ -97,6 +97,9 @@ feature -- Assertions
 	{
 		assertion_levels = new Hashtable (100);
 		Assembly a = Type.GetTypeFromHandle (type_handle).Assembly;
+		ASSERTION_LEVEL_ATTRIBUTE level_attribute;
+		ASSERTION_LEVEL_ENUM l_common_level, l_current_level;
+		bool l_computed, l_same_level;
 
 		#if ASSERTIONS
 			ASSERTIONS.CHECK ("There should be an assembly", a != null);
@@ -104,12 +107,33 @@ feature -- Assertions
 
 		object [] cas = a.GetCustomAttributes (typeof (ASSERTION_LEVEL_ATTRIBUTE), false);
 		if ((cas != null) && (cas.Length > 0)) {
+			l_same_level = true;
+			l_computed = false;
+			l_common_level = ASSERTION_LEVEL_ENUM.no;
 			foreach (object ca in cas) {
-				ASSERTION_LEVEL_ATTRIBUTE level_attribute = (ASSERTION_LEVEL_ATTRIBUTE) ca;
+				level_attribute = (ASSERTION_LEVEL_ATTRIBUTE) ca;
+				l_current_level = level_attribute.assertion_level;
 				assertion_levels.Add (
 					level_attribute.class_type,			// key
-					level_attribute.assertion_level);	// value
+					l_current_level);	// value
+				if (!l_computed) {
+					l_common_level = l_current_level;
+					l_computed = true;
+				} else {
+					if (l_same_level) {
+						l_same_level = (l_common_level == l_current_level);
+					}
+				}
 			}
+			if (l_same_level) {
+				global_assertion_level = l_common_level;
+				is_global_assertion_level_set = true;
+			} else {
+				is_global_assertion_level_set = false;
+			}
+		} else {
+			global_assertion_level = ASSERTION_LEVEL_ENUM.no;
+			is_global_assertion_level_set = true;
 		}
 	}
 
@@ -134,7 +158,11 @@ feature -- Assertions
 		Result = !in_assertion();
 		if (Result) {
 				// Let's extract the specified assertion level for type `t'.
-			if ((assertion_levels != null)) {
+				// If `is_global_assertion_level_set' is set, then we can return
+				// the global one.
+			if (is_global_assertion_level_set) {
+				return (global_assertion_level & val) == val;
+			} else if ((assertion_levels != null)) {
 				obj = assertion_levels [t];
 				if (obj != null) {
 					type_assertion_level = (ASSERTION_LEVEL_ENUM) obj;
@@ -183,6 +211,15 @@ feature {NONE} -- Implementations: Assertions
 		// Flag used during assertion checking to make sure
 		// that assertions are not checked within an assertion
 		// checking.
+
+	private static ASSERTION_LEVEL_ENUM global_assertion_level = ASSERTION_LEVEL_ENUM.no;
+		// Default global level of assertion checking. If `is_global_assertion_level_set'
+		// then all types have the same level of assertions, therefore no need to look
+		// into the `assertion_levels' table to find out if we should check the assertion
+		// for a given type.
+
+	private static bool is_global_assertion_level_set = false;
+		// Is `global_assertion_level' set?
 
 /*
 feature -- Status report

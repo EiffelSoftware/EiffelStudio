@@ -354,7 +354,7 @@ feature {NONE} -- Initialization
 			l_constructor: CONSUMED_CONSTRUCTOR
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg_ids: ARRAY [INTEGER]
-			i, j, k, l, nb: INTEGER
+			i, j, k, l, m, nb, l_record_pos: INTEGER
 			l_orig_tbl: SELECT_TABLE
 			l_creators: like creators
 			l_external_type, l_written_type: CL_TYPE_A
@@ -469,7 +469,14 @@ feature {NONE} -- Initialization
 							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Static_field_type)
 						end
 					else
-						l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Static_type)
+						if l_member.is_prefix or l_member.is_infix then
+							check
+								not_manually_added: not l_member.is_artificially_added
+							end
+							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Operator_type)
+						else
+							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Static_type)
+						end
 					end
 				else
 					if l_member.is_attribute then
@@ -510,18 +517,30 @@ feature {NONE} -- Initialization
 					from
 						l_args := l_member.arguments
 						l := 0
+						m := 0
 						j := l_args.lower
 						k := l_args.upper
-						create l_feat_arg.make (k - j + 1)
+						if not l_member.is_artificially_added and (l_member.is_infix or l_member.is_prefix) then
+							check
+								l_args_big_enough: l_args.lower + 1 <= l_args.upper
+							end
+							l_record_pos := j + 1
+						else
+							l_record_pos := j
+						end
+						create l_feat_arg.make (k - l_record_pos + 1)
 						create l_arg_ids.make (1, k - j + 1)
 					until
 						j > k
 					loop
-						l_external_type := internal_type_from_consumed_type (True,
-							l_args.item (j).type)
-						l_feat_arg.put_i_th (l_external_type, l + 1)
-						l_names_heap.put (l_args.item (j).eiffel_name)
-						l_feat_arg.argument_names.put (l_names_heap.found_item, l)
+						if j >= l_record_pos then
+							l_external_type := internal_type_from_consumed_type (True,
+								l_args.item (j).type)
+							l_feat_arg.put_i_th (l_external_type, m + 1)
+							l_names_heap.put (l_args.item (j).eiffel_name)
+							l_feat_arg.argument_names.put (l_names_heap.found_item, m)
+							m := m + 1
+						end
 
 						l_names_heap.put (l_args.item (j).type.name)
 						l_arg_ids.put (l_names_heap.found_item, l + 1)
@@ -539,8 +558,17 @@ feature {NONE} -- Initialization
 
 				l_feat.set_is_infix (l_member.is_infix)
 				l_feat.set_is_prefix (l_member.is_prefix)
+
 				l_feat.set_is_frozen (l_member.is_frozen)
-				l_feat.set_feature_name (l_member.eiffel_name)
+				if l_member.is_prefix then
+					l_feat.set_feature_name (
+						Prefix_infix_names.prefix_feature_name_with_symbol (l_member.eiffel_name))
+				elseif l_member.is_infix then
+					l_feat.set_feature_name (
+						Prefix_infix_names.infix_feature_name_with_symbol (l_member.eiffel_name))
+				else
+					l_feat.set_feature_name (l_member.eiffel_name)
+				end
 				l_feat.set_feature_id (feature_id_counter.next)
 
 				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
@@ -965,6 +993,11 @@ feature {NONE} -- Implementation
 			inserted_class: syntactical_suppliers.has (cl.associated_class)
 			inserted_generic_parameter: cl.has_generics implies
 				syntactical_suppliers.has (cl.generics.item (1).associated_class)
+		end
+
+	prefix_infix_names: PREFIX_INFIX_NAMES is
+		once
+			create Result
 		end
 
 invariant

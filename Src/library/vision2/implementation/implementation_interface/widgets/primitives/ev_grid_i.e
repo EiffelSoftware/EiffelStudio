@@ -38,7 +38,7 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
 		do
-			to_implement ("EV_GRID_I.column")
+			Result := grid_columns @ a_column
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -246,88 +246,73 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_row (a_row: EV_GRID_ROW; i: INTEGER) is
-			-- Insert `a_row' between rows `i' and `i+1'
+	insert_new_row (a_index: INTEGER) is
+			-- Insert a new row at index `a_index'.
 		require
-			a_row_not_void: a_row /= Void
-			a_row_not_parented: a_row.parent = Void
-			i_positive: i > 0
-			i_less_than_row_count: i <= row_count
+			i_positive: a_index > 0
+		local
+			a_grid_row: EV_GRID_ROW
 		do
-			to_implement ("EV_GRID_I.insert_row")
+			create a_grid_row.make_with_grid_i (Current)
+			grid_rows.put (a_grid_row, a_index)
+			row_count := row_count + 1
 		ensure
 			row_count_set: row_count = old row_count + 1
-			row_i_unchanged: row (i) = old row (i)
-			row_inserted: row (i + 1) = a_row
-			row_i_plus_one_shifted:
-				(i < old row_count) implies (row (i + 2) = old row (i + 1))
-			row_parented: a_row.parent /= Void
 		end
 
-	insert_row_parented (a_row: EV_GRID_ROW; i: INTEGER; a_parent_row: EV_GRID_ROW) is
+	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Insert `a_row' between rows `i' and `i+1'
 		require
-			a_row_not_void: a_row /= Void
-			a_row_not_parented: a_row.parent = Void
 			i_positive: i > 0
 			i_less_than_row_count: i <= row_count
-			a_parent_row: a_parent_row /= Void
+			a_parent_row_not_void: a_parent_row /= Void
 		do
-			to_implement ("EV_GRID_I.insert_row_parented")
+			insert_new_row (i)
+			a_parent_row.add_subrow (row (i))
 		ensure
 			row_count_set: row_count = old row_count + 1
-			row_i_unchanged: row (i) = old row (i)
-			row_inserted: row (i + 1) = a_row
-			row_i_plus_one_shifted:
-				(i < old row_count) implies (row (i + 2) = old row (i + 1))
-			row_parented: a_row.parent_row = a_parent_row
+			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 
-	insert_column (a_column: EV_GRID_COLUMN; i: INTEGER) is
-			-- Insert `a_column' between columns `i' and `i+1'
+	insert_new_column (a_index: INTEGER) is
+			-- Insert a new column at index `a_index'.
 		require
-			a_column_not_void: a_column /= Void
-			a_column_not_parented: a_column.parent = Void
-			i_positive: i > 0
-			i_less_than_column_count: i <= column_count
+			i_positive: a_index > 0
+		local
+			a_column: EV_GRID_COLUMN
 		do
-			to_implement ("EV_GRID_I.insert_column")
+			create a_column.make_with_grid_i (Current)
+			a_column.set_index (a_index)
+			grid_columns.put (a_column, a_index)
+			column_count := column_count + 1
 		ensure
 			column_count_set: column_count = old column_count + 1
-			column_i_unchanged: column (i) = old column (i)
-			column_inserted: column (i + 1) = a_column
-			column_i_plus_one_shifted:
-				(i < old column_count) implies (column (i + 2) = old column (i + 1))
-			column_parented: a_column.parent /= Void
 		end
 
-	set_row (a_row: EV_GRID_ROW; i: INTEGER) is
-			-- Replace column `i' by `a_row'
+	move_row (i, j: INTEGER) is
+			-- Move row at index `i' to index `j'
 		require
-			a_row_not_void: a_row /= Void
-			a_row_not_parented: a_row.parent = Void
 			i_positive: i > 0
+			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
+			j_less_than_row_count: j <= row_count
 		do
-			to_implement ("EV_GRID_I.set_row")
+
 		ensure
-			inserted: row (i) = a_row
-			a_row_parented: a_row.parent /= Void
+			moved: row (j) = old row (i) and then row (j) /= row (i)
 		end
 
-	set_column (a_column: EV_GRID_COLUMN; i: INTEGER) is
-			-- Replace column at position `i' by `a_column'
+	move_column (i, j: INTEGER) is
+			-- Move row at index `i' to index `j'
 		require
-			a_column_not_void: a_column /= Void
-			a_column_not_parented: a_column.parent = Void
 			i_positive: i > 0
 			i_less_than_column_count: i <= column_count
+			j_less_than_column_count: j <= column_count
 		do
-			to_implement ("EV_GRID_I.set_column")
+
 		ensure
-			inserted: column (i) = a_column
-			a_column_parented: a_column.parent /= Void
-		end
+			moved: column (j) = old column (i) and then column (j) /= column (i)
+		end	
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Replace grid item at position (`a_column', `a_row') with `a_item'
@@ -335,8 +320,19 @@ feature -- Element change
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			a_item_not_void: a_item /= Void
+		local
+			a_grid_col: EV_GRID_COLUMN
+			a_grid_row: EV_GRID_ROW
 		do
-			to_implement ("EV_GRID_I.set_item")
+			a_item.implementation.set_parent_grid_i (Current)
+			a_grid_col :=  grid_columns @ a_column
+			if a_grid_col = Void then
+				insert_new_column (a_column)
+			end
+			a_grid_row := grid_rows @ a_row
+			if a_grid_row = Void then
+				insert_new_row (a_row)
+			end
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
 		end
@@ -350,6 +346,7 @@ feature -- Removal
 			a_column_less_than_column_count: a_column <= column_count
 		do
 			to_implement ("EV_GRID_I.remove_column")
+			column_count := column_count - 1
 		ensure
 			column_count_updated: column_count = old column_count - 1
 			old_column_removed: (old column (a_column)).parent = Void
@@ -362,6 +359,7 @@ feature -- Removal
 			a_row_less_than_row_count: a_row <= row_count
 		do
 			to_implement ("EV_GRID_I.remove_row")
+			row_count := row_count - 1
 		ensure
 			row_count_updated: row_count = old row_count - 1
 			old_row_removed: (old row (a_row)).parent = Void
@@ -375,11 +373,35 @@ feature -- Measurements
 	row_count: INTEGER
 			-- Number of rows in Current
 
-feature {NONE} -- Implementation
+feature {EV_GRID_COLUMN, EV_GRID_I} -- Implementation
+
+	index_of_column (a_column: EV_GRID_COLUMN): INTEGER is
+			-- index of column `a_column'.
+		require
+			a_column /= Void
+			a_column_parent_grid_is_current: grid_columns.has_item (a_column)
+		do
+			Result := grid_columns.key_for_iteration
+		end
+
+feature {EV_GRID_COLUMN, EV_GRID_I} -- Implementation
 
 	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM]]
+		-- Array of individual row's data, row by row
 	
-		-- Drawing object used to display `Current'
+	grid_rows: HASH_TABLE [EV_GRID_ROW, INTEGER]
+		-- Hash table returning the appropriate EV_GRID_ROW from a given index
+
+	grid_columns: HASH_TABLE [EV_GRID_COLUMN, INTEGER]
+		-- Hash table returning the appropriate EV_GRID_COLUMN from a given index
+
+	visible_column_list: SPECIAL [INTEGER]
+		-- List of the visible column indexes in the grid from left to right.
+
+	visible_column_count: INTEGER
+		-- Number of visible columns present in the grid.
+
+feature {NONE} -- Implementation
 
 	initialize_grid is
 			-- Initialize `Current'. To be called during `initialize' of
@@ -389,6 +411,9 @@ feature {NONE} -- Implementation
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
 			create row_list.make (5)
+			create grid_columns.make (5)
+			create grid_rows.make (5)
+			
 			create drawer.make_with_grid (Current)	
 			create drawable
 			create vertical_scroll_bar
@@ -468,7 +493,7 @@ feature {NONE} -- Implementation
 	default_minimum_size: INTEGER is 50
 		-- Default minimum size dimensions for `Current'.
 
-feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN} -- Implementation
+feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 
 	interface: EV_GRID
 			-- Provides a common user interface to possibly dependent

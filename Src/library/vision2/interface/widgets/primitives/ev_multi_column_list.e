@@ -144,7 +144,7 @@ feature -- Status setting
 			-- always left aligned.
 		require
 			exists: not destroyed
-			column_exists: column > 0 and column <= columns
+			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (0, column)
 		end
@@ -155,7 +155,7 @@ feature -- Status setting
 			-- always left aligned.
 		require
 			exists: not destroyed
-			column_exists: column > 0 and column <= columns
+			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (2, column)
 		end
@@ -166,7 +166,7 @@ feature -- Status setting
 			-- always left aligned.
 		require
 			exists: not destroyed
-			column_exists: column > 0 and column <= columns
+			column_exists: column > 1 and column <= columns
 		do
 			implementation.set_column_alignment (1, column)
 		end

@@ -1712,7 +1712,7 @@ done:
 /*------------------------------------------------------------------*/
 /* Computation of a new id.                                         */
 /*                                                                  */
-/* stype      : Static type of caller; RTUD(no); -1 if none.        */
+/* stype      : Static type of caller; RTUD(no); <= 0 if none.      */
 /* intab      : RTUD(no) except for dtypes of objects               */
 /* outtab     : List of computed ids for generics; RTUD(no).        */
 /* obj_type   : Full type of object; RTUD(yes). Used to replace a   */
@@ -1841,10 +1841,10 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		pos = -16-dftype;
 
 		/* get actual generic from `stype' for descendant
-		   `obj_type' if stype >= 0 else use obj_type.
+		   `obj_type' if stype > 0 else use obj_type.
 		*/
 
-		if (stype >= 0)
+		if (stype > 0)
 		{
 			amap = eif_anc_id_map [obj_type];
 

@@ -230,9 +230,12 @@ feature -- Check
 				check_precompiled_optional (assembly_driver);
 			else
 				check_precompiled_optional (precompiled_driver);
-				if has_precompiled_preobj then
-					check_precompiled_optional (precompiled_preobj)
-				end
+					-- FIXME: Manu 09/18/2002: we cannot use `precompiled_preobj'
+					-- as it is using the Makefile convention and not the actual
+					-- path to the precompiled preobj.
+--				if has_precompiled_preobj then
+--					check_precompiled_optional (precompiled_preobj)
+--				end
 			end
 		end
 		

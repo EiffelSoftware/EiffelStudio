@@ -77,7 +77,7 @@ feature {MEL_SELECTION} -- Implementation
 			-- `done_command' will be invoked when the transfer is complete.
 		require
 			valid_widget: a_widget /= Void;
-			positive_time: time > 0
+			time_not_zero: time /= 0;
 		local
 			an_atom: MEL_ATOM;
 			ext_string: ANY
@@ -104,7 +104,7 @@ feature {MEL_SELECTION} -- Implementation
 			-- `execute' routine).
 		require
 			valid_widget: a_widget /= Void;
-			positive_time: time > 0
+			time_not_zero: time /= 0;
 		do
 			requestor_command := requestor_cmd;
 			xt_get_selection_value (a_widget.screen_object,

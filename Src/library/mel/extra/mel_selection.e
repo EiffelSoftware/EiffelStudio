@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- `done_cmd' will be invoked when the transfer is complete.
 		require
 			valid_widget: a_widget /= Void and then not a_widget.is_destroyed;
-			positive_time: time > 0;
+			time_not_zero: time /= 0;
 			valid_atom: target_atom /= Void and then target_atom.is_valid
 		local
 			lose_cmd_exec, done_cmd_exec: MEL_COMMAND_EXEC
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			-- `execute' routine).
 		require
 			valid_widget: a_widget /= Void and then not a_widget.is_destroyed
-			positive_time: time > 0;
+			time_not_zero: time /= 0;
 			valid_atom: target_atom /= Void and then target_atom.is_valid
 		local
 			cmd_exec: MEL_COMMAND_EXEC

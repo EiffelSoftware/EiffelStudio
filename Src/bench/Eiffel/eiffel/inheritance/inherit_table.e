@@ -102,6 +102,9 @@ feature
 	supplier_status_modified: BOOLEAN;
 			-- The status (expanded, deferred) of a supplier has changed
 
+	assert_prop_list: LINKED_LIST [INTEGER];
+			-- List of routine ids for assertion modifications
+
 	adaptations: LINKED_LIST [FEATURE_ADAPTATION] is
 			-- List of redefinitions and joins
 		once
@@ -191,6 +194,8 @@ feature
 				-- Check-sum error after analysis fo the inherited
 				-- features
 			Error_handler.checksum;
+				-- Create propagation list for assertions
+			!!assert_prop_list.make;
 				-- Analyze local features
 			if a_class.changed then
 					-- Remove all changed features if any
@@ -302,8 +307,18 @@ feature
 			pass3_control.set_invariant_changed (invariant_changed);
 			pass3_control.set_invariant_removed (invariant_removed);
 
+				-- Update the assert_id_set of redefined features.
+				-- Also update assert_prop_list if redefinition
+				-- occurs.
+			update_inherited_assertions;
+
+			if assert_prop_list.empty then
+				assert_prop_list := Void
+			end;
 				-- Propagation
-			pass_c.propagate (feature_table, resulting_table, pass2_control);
+			pass_c.propagate (feature_table, resulting_table,
+								pass2_control, assert_prop_list);
+			assert_prop_list := Void;
 
 				-- Process creation feature of `a_class'.
 			a_class.process_creation_feature (resulting_table);
@@ -805,14 +820,26 @@ end;
 						-- Incrementality of the workbench is here: we
 						-- compare the content of a new feature and the
 						-- one of an old feature.
-					is_the_same := old_description.equiv (yacc_feature);
+					is_the_same := old_description.is_assertion_equiv (yacc_feature);
 debug ("ACTIVITY")
 	if not is_the_same then
 		io.error.putchar ('%T');
 		io.error.putstring (feature_name);
-		io.error.putstring (" has syntactically changed%N");
+		io.error.putstring (" assertions has syntactically changed%N");
 	end;
 end;
+					if is_the_same then
+						is_the_same := old_description.is_body_equiv (yacc_feature);
+debug ("ACTIVITY")
+	if not is_the_same then
+		io.error.putchar ('%T');
+		io.error.putstring (feature_name);
+	end;
+end;
+					else
+						assert_prop_list.add (feature_i.rout_id_set.first)
+					end;
+
 						-- If old representation written in the class,
 						-- keep the fact the old feature from a previous
 						-- is an origin or not.
@@ -891,6 +918,10 @@ end;
 			new_externals.wipe_out;
 			invariant_changed := False;
 			invariant_removed := False;
+			if assert_prop_list /= Void then
+				-- An error has occurred
+				assert_prop_list.wipe_out;
+			end;
 			clear_all;
 		end;
 
@@ -915,6 +946,16 @@ end;
 				a_feature.process_pattern;
 				origins.forth;
 			end;
+		end;
+
+	update_inherited_assertions is
+			-- Update assert_id_set for redefined or merged routines
+			-- in adaptations.
+		local
+			redefined_features: REDEF_FEAT;
+		do
+			!!redefined_features;
+			redefined_features.process (adaptations, assert_prop_list);
 		end;
 
 	update_body_server is
@@ -1022,6 +1063,13 @@ end;
 							!!join.make (inherit_feat, inherited_feature);
 							adaptations.start;
 							adaptations.put_left (join);
+debug ("ACTIVITY")
+	io.putstring ("joining feature: ");
+	io.putstring (inherited_feature.feature_name);
+	io.putstring ("%N%Tfrom class: ");
+	io.putstring (inherited_feature.written_class.class_name);
+	io.new_line;
+end;
 						end;
 					end;
 				end;

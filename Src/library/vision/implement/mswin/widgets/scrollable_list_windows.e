@@ -14,10 +14,15 @@ inherit
 			cursor as screen_cursor
 		redefine
 			realize, unrealize,
-			set_height, set_size, set_width
+			set_height, set_size, set_width,
+			set_widget_default
 		end
 		
 	SCROLLABLE_LIST_I
+
+	FONTABLE_I
+
+	FONTABLE_WINDOWS
 
 	WEL_LIST_BOX
 		rename
@@ -366,23 +371,23 @@ feature -- Status setting
 
 feature -- Element change
 
-	extend (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Add `a_item' to end.
+	extend (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Add `an_item' to end.
 			-- Do not move cursor.
 		do
-			ll_extend (a_item)
+			ll_extend (an_item)
 			if realized then
-				private_add (a_item.value, -1)
+				private_add (an_item.value, -1)
 			end
 		end
 
-	put_right (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Add `a_item' to the right of cursor position.
+	put_right (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Add `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		do
-			ll_put_right (a_item)
+			ll_put_right (an_item)
 			if realized then
-				private_add (a_item.value, index)
+				private_add (an_item.value, index)
 			end
 		end
 
@@ -395,39 +400,39 @@ feature -- Element change
 			end
 		end
 
-	prune (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Remove first occurrence of `a_item', if any,
+	prune (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Remove first occurrence of `an_item', if any,
 			-- after cursor position.
 			-- If found, move cursor to right neighbor;
 			-- if not, make structure `exhausted'.
 		local
 			i: INTEGER
 		do
-			ll_prune (a_item)
+			ll_prune (an_item)
 			if realized then
-				i := find_string_exact (index - 1, a_item.value)
+				i := find_string_exact (index - 1, an_item.value)
 				if i /= -1 then
 					private_delete (i)
 				end
 			end
 		end
 
-	put_front (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Add `a_item' to beginning.
+	put_front (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Add `an_item' to beginning.
 			-- Do not move cursor.
 		do
-			ll_put_front (a_item)
+			ll_put_front (an_item)
 			if realized then
-				private_add (a_item.value, 0)
+				private_add (an_item.value, 0)
 			end
 		end
 
-	put_i_th (a_item: SCROLLABLE_LIST_ELEMENT; i: INTEGER) is
-			-- Put `a_item' at `i'-th position.
+	put_i_th (an_item: SCROLLABLE_LIST_ELEMENT; i: INTEGER) is
+			-- Put `an_item' at `i'-th position.
 		do
-			ll_put_i_th (a_item, i)
+			ll_put_i_th (an_item, i)
 			if realized then
-				private_add (a_item.value, i - 1)
+				private_add (an_item.value, i - 1)
 			end
 		end
 
@@ -442,11 +447,11 @@ feature -- Element change
 			end
 		end
 
-	put (a_item: SCROLLABLE_LIST_ELEMENT) is
+	put (an_item: SCROLLABLE_LIST_ELEMENT) is
 			-- Replace current item by `v'.
 			-- (Synonym for `replace')
 		do
-			replace (a_item)				
+			replace (an_item)				
 		end
 
 	remove_right is
@@ -459,13 +464,13 @@ feature -- Element change
 			end
 		end
 
-	put_left (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Add `a_item' to the left of cursor position.
+	put_left (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Add `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		do
-			ll_put_left (a_item)
+			ll_put_left (an_item)
 			if realized then
-				private_add (a_item.value, index - 1)
+				private_add (an_item.value, index - 1)
 			end
 		end
 
@@ -488,33 +493,33 @@ feature -- Element change
 			end
 		end
 
-	replace (a_item: SCROLLABLE_LIST_ELEMENT) is
+	replace (an_item: SCROLLABLE_LIST_ELEMENT) is
 			-- Replace current item by `v'.
 		do
-			ll_replace (a_item)
+			ll_replace (an_item)
 			if realized then
 				private_delete (index - 1)
-				private_add (a_item.value, index - 1)
+				private_add (an_item.value, index - 1)
 			end
 		end
 
-	prune_all (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Remove all occurrences of `a_item'.
+	prune_all (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Remove all occurrences of `an_item'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 			-- Leave structure `exhausted'.
 		local
 			i: INTEGER
 		do
-			ll_prune_all (a_item)
+			ll_prune_all (an_item)
 			if realized then
 				from
-					i := find_string_exact (0, a_item.value)
+					i := find_string_exact (0, an_item.value)
 				until
 					i = -1
 				loop
 					private_delete (i)
-					i := find_string_exact (0, a_item.value)
+					i := find_string_exact (0, an_item.value)
 				end
 			end
 		end
@@ -553,10 +558,10 @@ feature -- Element change
 			ll_merge_right (other)
 		end
 
-	force (a_item: SCROLLABLE_LIST_ELEMENT) is
-			-- Add `a_item' to end.
+	force (an_item: SCROLLABLE_LIST_ELEMENT) is
+			-- Add `an_item' to end.
 		do
-			extend (a_item)
+			extend (an_item)
 		end
 
 	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT]) is
@@ -868,6 +873,21 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	set_widget_default is
+			-- Set the defaults for current widget.
+		local
+			sl: SCROLL_LIST
+		do
+			sl ?= owner
+			if sl /= Void then
+				sl.set_font_imp (Current)
+			end
+			if managed and parent.realized then
+				realize;
+				parent.child_has_resized
+			end
+		end;
 
 end -- class SCROLLABLE_LIST_WINDOWS
 

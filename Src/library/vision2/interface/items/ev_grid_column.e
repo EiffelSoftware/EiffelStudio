@@ -12,7 +12,7 @@ inherit
 			default_create, copy, is_equal
 		end
 	
-	EV_SELECTABLE
+	EV_DESELECTABLE
 		redefine
 			implementation
 		end

@@ -17,7 +17,9 @@ inherit
 			copy, default_create
 		end
 	
-	EV_SELECTABLE
+	EV_DESELECTABLE
+		undefine
+			is_in_default_state
 		redefine
 			implementation
 		end

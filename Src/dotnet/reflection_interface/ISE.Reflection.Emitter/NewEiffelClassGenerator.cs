@@ -75,24 +75,27 @@ public class EiffelClassGenerator: Globals
 		Emitter emitter;
 		String Path;
 		
-		emitter = new Emitter();
-		Emitter.NameFormatter.EiffelFormatting = EiffelFormatting;
-		emitter.PrepareEmitFromAssembly( assembly );		
-		
-		if( PathName == null )
+		if( !IsAssemblyImported( assembly ) || XmlGeneration ) 
 		{
-			Path = Environment.CurrentDirectory;
-			EmitFromAssembly( assembly, Path );
-		}
-		else
-		{
-			if( PathName.Length == 0 )
+			emitter = new Emitter();
+			Emitter.NameFormatter.EiffelFormatting = EiffelFormatting;
+			emitter.PrepareEmitFromAssembly( assembly );		
+
+			if( PathName == null )
 			{
 				Path = Environment.CurrentDirectory;
 				EmitFromAssembly( assembly, Path );
 			}
 			else
-				EmitFromAssembly( assembly, PathName );
+			{
+				if( PathName.Length == 0 )
+				{
+					Path = Environment.CurrentDirectory;
+					EmitFromAssembly( assembly, Path );
+				}
+				else
+					EmitFromAssembly( assembly, PathName );
+			}
 		}
 	}
 

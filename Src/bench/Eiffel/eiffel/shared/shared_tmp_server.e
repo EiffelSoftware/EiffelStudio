@@ -126,4 +126,9 @@ feature {NONE}
 			!!Result.make;
 		end;
 
+	Tmp_class_comments_server: TMP_CLASS_COMMENTS_SERVER is
+		once
+			!!Result.make;
+		end;
+
 end

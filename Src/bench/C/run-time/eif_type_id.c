@@ -19,12 +19,19 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 /* Prototypes */
 rt_private int is_good (char c);
 rt_private int is_type_separator (char c);
-rt_private int is_expanded_or_reference_keyword (char *str, int count);
-rt_private int is_generic (struct cecil_info *type, char *class);
+rt_private int is_expanded_or_reference_keyword (char *str, int count, struct type_array_element *);
+rt_private int is_generic (struct cecil_info *type, struct type_array_element *type_entry);
+rt_private EIF_TYPE_ID eifcid(struct type_array_element *type_entry);
 rt_private int32 sk_type (int32 cecil_id);
-rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array);
+rt_private EIF_TYPE_ID compute_eif_type_id (int n, struct type_array_element *type_array);
 rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_number,
-		char **type_string_array, int16* typearr, int pos, int length);
+		struct type_array_element *type_array, int16* typearr, int pos, int length);
+
+struct type_array_element {
+	char *type_name;
+	int is_expanded;
+	int is_reference;
+};
 
 /*------------------------------------------------------------------*/
 /* Compute the dynamic type corresponding to the C string type      */
@@ -32,16 +39,16 @@ rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_num
 /*------------------------------------------------------------------*/
 rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 {
-	char **type_string_array = (char **) 0;
-	char *string_type = (char *) 0;
+	struct type_array_element *type_array = NULL;
+	char *string_type = NULL;
 	char c = (char) 0;
 	int i = 0;
-	int state = 1;
+	int state = 1, substate = 0;
 	int n = 0;	/* Number of elements in an the C generated array */
 	int l = 0;	/* length of the currently analyzed string */
 	EIF_TYPE_ID result; /* Computed `type_id' */
 
-	if (type_string == (char *) 0)
+	if (type_string == NULL)
 			/* Cannot process current string */
 		return EIF_NO_TYPE;
 
@@ -52,49 +59,64 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 			state = 0;
 		}
 		if (state == 0 && is_type_separator (c)) {
-				/* If we find `expanded' or `reference' then we continue our parsing of the type
-				 * as it is not yet completed. */
-			if (is_expanded_or_reference_keyword (type_string + i - l, l)) {
-				l++;
+				/* When encountering `expanded' or `reference' we might do a useless reallocation
+				 * but that's not too bad. */
+			type_array = (struct type_array_element *)
+				eif_realloc (type_array, (n + 1) * sizeof (struct type_array_element));
+			if (type_array == NULL) {
+				enomem();
+			}
+
+				/* If we encounter the `expanded' or `reference' prefix then we mark
+				 * `type_array [n]' accordingly. We cannot encounter it more than once though.*/
+			if
+				((substate != 1) &&
+				(is_expanded_or_reference_keyword (type_string + i - l, l, &type_array [n])))
+			{
+					/* We store the expanded/reference info, so we can reset `l' to just analyze
+					 * the type. */
+				l = 0;
+				substate = 1;
 			} else {
 				state = 1;
-				type_string_array = (char **) eif_realloc (type_string_array, (n + 1) * sizeof (char *));
-				if (type_string_array == (char **) 0)
-					enomem();
 				string_type = (char *) eif_malloc ((l + 1) * sizeof (char));
-				if (string_type == (char *) 0)
+				if (string_type == NULL) {
 					enomem();
+				}
 				string_type = (char *) memcpy (string_type, type_string + i - l, l);
 				string_type [l] = (char) 0;
-				type_string_array [n] = string_type;
+				type_array [n].type_name = string_type;
 				n++;
 				l = 0;
+				substate = 0;
 			}
 		}
 		i++;
 	}
 
-	if (type_string_array == (char **) 0) {
+	if (type_array == NULL) {
 			/* There was only a simple type, not a generic one. */
-		type_string_array = (char **) eif_malloc (sizeof (char *));
-		if (type_string_array == (char **) 0)
+		type_array = (struct type_array_element *) eif_malloc (sizeof (struct type_array_element));
+		if (type_array == NULL) {
 			enomem();
+		}
 		string_type = (char *) eif_malloc ((l + 1) * sizeof (char));
-		if (string_type == (char *) 0)
+		if (string_type == NULL) {
 			enomem();
+		}
 		string_type = (char *) memcpy (string_type, type_string + i - l, l);
 		string_type [l] = (char) 0;
-		type_string_array [0] = string_type;
+		type_array [0].type_name = string_type;
 		n = 1;
 	}
-	result = compute_eif_type_id (n, type_string_array);
+	result = compute_eif_type_id (n, type_array);
 
 		/* Free all the allocated memory */
 	for (i=0; i <= n - 1; i++) {
-		string_type = type_string_array [i];
+		string_type = type_array [i].type_name;
 		eif_free (string_type);
 	}
-	eif_free (type_string_array);
+	eif_free (type_array);
 
 	return result;
 }
@@ -109,25 +131,68 @@ rt_private int is_type_separator (char c)
 	return ((c == '[') || (c == ']') || (c == ',') || (c == ' '));
 }
 
-rt_private int is_expanded_or_reference_keyword (char *str, int count)
+rt_private int is_expanded_or_reference_keyword (char *str, int count, struct type_array_element *entry)
 {
-	if (count == 8) {
-		return strncmp ("expanded", str, count) == 0;
-	} else if (count == 9) {
-		return strncmp ("reference", str, count) == 0;
+	int result;
+
+	if ((count == 8) &&  (strncmp ("expanded", str, count) == 0)) {
+		entry->is_expanded = 1;
+		entry->is_reference = 0;
+		result = 1;
+	} else if ((count == 9) && (strncmp ("reference", str, count) == 0)) {
+		entry->is_reference = 1;
+		entry->is_expanded = 0;
+		result = 1;
 	} else {
-		return 0;
+		entry->is_reference = 0;
+		entry->is_expanded = 0;
+		result = 0;
 	}
+
+	return result;
 }
 
-rt_private int is_generic (struct cecil_info *type, char *class)
+rt_private struct cecil_info *cecil_info_for_entry (struct type_array_element *type_entry)
+{
+	struct cecil_info *result = NULL;
+
+	REQUIRE("Valid type entry", type_entry);
+	REQUIRE("Has type name", type_entry->type_name);
+
+	if (type_entry->is_expanded) {
+			/* Lookup in CECIL expanded table. */
+		result = (struct cecil_info *) ct_value (&egc_ce_exp_type, type_entry->type_name);
+	} else if (type_entry->is_reference) {
+			/* Lookup in CECIL non-expanded table. */
+		result = (struct cecil_info *) ct_value (&egc_ce_type, type_entry->type_name);
+	} else {
+			/* Lookup first in CECIL non-expanded table. */
+		result = (struct cecil_info *) ct_value(&egc_ce_type, type_entry->type_name);
+		if (!result) {
+				/* It was not found in the non-expanded table, hopefully it is in
+				 * the expanded table. */
+			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, type_entry->type_name);
+		} else {
+				/* We found the type in the non-expanded classes table. Let's check
+				 * that indeed it is not declared as an expanded class. */
+			if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
+					/* The class is an expanded class therefore we need to look into the
+					 * expanded table to find what we are looking for. */
+				result = (struct cecil_info *) ct_value (&egc_ce_exp_type, type_entry->type_name);
+			}
+		}
+	}
+	return result;
+}
+
+rt_private int is_generic (struct cecil_info *type, struct type_array_element *type_entry)
 {
 	struct cecil_info *ltype;
 
-	ltype = (struct cecil_info *) ct_value (&egc_ce_type, class);
-	if (!ltype) {
-		ltype = (struct cecil_info *) ct_value (&egc_ce_exp_type, class);
-	}
+	REQUIRE("Valid type entry", type_entry);
+	REQUIRE("Has type name", type_entry->type_name);
+
+	ltype = cecil_info_for_entry (type_entry);
 	if (!ltype) {
 			/* We did not find an entry of `class' in the list of
 			 * classes, so we should return EIF_NO_TYPE */
@@ -146,13 +211,34 @@ rt_private int is_generic (struct cecil_info *type, char *class)
 	}
 }
 
-rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
+rt_private EIF_TYPE_ID eifcid(struct type_array_element *type_entry)
+{
+	/* Return class ID of `type_entry'. If the class id is not available or
+	 * the associated type is generic, then EIF_NO_TYPE is returned.
+	 */
+	
+	struct cecil_info *value;			/* Pointer to value stored in H table */
+
+	REQUIRE("Valid type entry", type_entry);
+	REQUIRE("Has type name", type_entry->type_name);
+
+	value = cecil_info_for_entry (type_entry);
+	if ((!value) || (value->nb_param > 0)) {
+			/* Type not found or generic type. */
+		return EIF_NO_TYPE;
+	} else {
+			/* The associated type ID */
+		return value->dynamic_type;
+	}
+}
+
+rt_private EIF_TYPE_ID compute_eif_type_id (int n, struct type_array_element *type_array)
 {
 	struct cecil_info type;
 	EIF_TYPE_ID result = 0;
 	int error = 0;
 
-	if (is_generic (&type, type_string_array[0]) > 0) {
+	if (is_generic (&type, &type_array[0]) > 0) {
 		int16 *typearr = (int16 *) 0;
 
 			/* Allocate the typearr structures and do the basic
@@ -168,13 +254,13 @@ rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 
 			/* There is a generic type, so we need to analyze the generic parameter
 			 * before finding out the real type */
-		eif_type_id_ex (&error, &type, type.nb_param, type_string_array, typearr, 0, n);
+		eif_type_id_ex (&error, &type, type.nb_param, type_array, typearr, 0, n);
 		if (error == 0) {
 			result = (EIF_TYPE_ID) eif_compound_id ((int16 *)0, (int16) 0,(int16) typearr[1], typearr);
 		}
 		eif_free (typearr);
 	} else
-		result = eifcid(type_string_array [0]);
+		result = eifcid(&type_array [0]);
 
 	if (error == 0) {
 		return result;
@@ -184,7 +270,7 @@ rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 }
 
 rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_number,
-		char **type_string_array, int16* typearr, int pos, int length)
+		struct type_array_element *type_array, int16* typearr, int pos, int length)
 {
 	int i = 0;
 	struct cecil_info ltype;
@@ -213,15 +299,15 @@ rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_num
 		enomem();
 
 	for (i = 1; i <= gen_number; i++) {
-		if (is_generic (&ltype, type_string_array [index + pos + i]) > 0) {
+		if (is_generic (&ltype, &type_array [index + pos + i]) > 0) {
 			eif_type_id_ex (error, &ltype, ltype.nb_param,
-					type_string_array, typearr, index + pos + i, length);
+					type_array, typearr, index + pos + i, length);
 				/* Extract from computed type, the associated `SK_xx' value.
 				 * We need to do `RTUD' because it is a typarr ID. */
 			gtype [i - 1] = sk_type (RTUD(typearr [index + pos + i + 1]));
 			index = index + ltype.nb_param;
 		} else {
-			cecil_id = eifcid (type_string_array [index + pos + i]);
+			cecil_id = eifcid (&type_array [index + pos + i]);
 			gtype [i - 1]  = sk_type (cecil_id);
 			CHECK("valid type id", (cecil_id & SK_DTYPE) == cecil_id);
 			typearr [index + pos + i + 1] = eif_id_for_typarr ((int16) cecil_id);

@@ -113,7 +113,7 @@ feature -- Element change
 feature -- Cursor movement
 
 	go_right_char is
-			-- Go to next character.
+			-- Move to next character.
 		do
 			if pos_in_token = token.length then
 					-- Go to next token, first character.
@@ -130,7 +130,7 @@ feature -- Cursor movement
 		end
 
 	go_left_char is
-			-- Go to previous character.
+			-- Move to previous character.
 		do
 			if pos_in_token = 1 then
 					-- Go to previous token, last character.
@@ -147,23 +147,27 @@ feature -- Cursor movement
 		end
 
 	go_up_line is
-		do
-			set_line_to_next
-			update_current_char
-		end
-
-	go_down_line is
+			-- Move up one line (to preceding line).
 		do
 			set_line_to_previous
 			update_current_char
 		end
 
+	go_down_line is
+			-- Move down one line (to next line).
+		do
+			set_line_to_next
+			update_current_char
+		end
+
 	go_start_line is
+			-- Move to beginning of line.
 		do
 			set_current_char (line.first_token, 1)
 		end
 
 	go_end_line is
+			-- Move to end of line.
 		do
 			set_current_char (line.end_token, line.end_token.length)
 		end

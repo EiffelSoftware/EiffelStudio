@@ -94,8 +94,8 @@ Formats,,,,,,,
 
 debugger,,,,,,,
 ,5,Feature evaluation,Arnaud,DBG0001,Xavier,10,Done
-,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,,,
-,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2,
+,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,Xavier,3,Done
+,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2,Done
 ,4,Stack overflow detection,Xavier,DBG0004,Xavier,2,Done
 ,2,Allow to choose on which exceptions the program should stop,Xavier,DBG0005,,,
 ,2,Support debugging of processes not launched from EiffelStudio (like VC++),Xavier,DBG0006,,,
@@ -138,7 +138,7 @@ editor,,,,,,,
 ,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011,,,
 ,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012,,,
 ,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013,,,
-,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014,Xavier,1,
+,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014,Xavier,1,Done
 ,5,Completion of features should show complete signature (i.e. return type too),Manus,EDT0015,Xavier,1,Done
 
 

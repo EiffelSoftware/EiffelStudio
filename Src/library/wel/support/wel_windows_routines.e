@@ -228,6 +228,14 @@ feature {NONE} -- Externals
 			"MessageBeep"
 		end
 
+	cwin_get_dlg_item (hwnd: POINTER; an_id: INTEGER): POINTER is
+			-- SDK GetDlgItem
+		external
+			"C [macro <wel.h>] (HWND, int): EIF_POINTER"
+		alias
+			"GetDlgItem"
+		end
+
 	cwin_get_tick_count: INTEGER is
 			-- SDK GetTickCount
 		external
@@ -316,6 +324,14 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"GetForegroundWindow()"
+		end
+
+	cwin_get_window (hwnd: POINTER; relation_flag: INTEGER): POINTER is
+			-- SDK GetWindow
+		external
+			"C [macro <wel.h>] (HWND, UINT): EIF_POINTER"
+		alias
+			"GetWindow"
 		end
 
 	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is

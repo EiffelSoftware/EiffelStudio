@@ -26,44 +26,63 @@ inherit
 			{NONE} all
 		end
 
+	WEL_IDB_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_STANDARD_TOOL_BAR_BITMAP_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
 feature {NONE} -- Initialization
 
 	make is
+		local
+			bitmap_index1, bitmap_index2: INTEGER
 		do
 			make_top (Title)
 			set_menu (main_menu)
-			resize (450, 400)
+			resize (400, 350)
 
 			-- Create a rich edit control
-			!! rich_edit.make (Current, "", 0, 35, 0, 0, -1)
-			!! char_format.make
-			char_format.set_face_name ("Arial")
-			char_format.set_height (12 * 20)
-			char_format.unset_bold
-			rich_edit.set_character_format_selection (char_format)
-			rich_edit.set_text ("Rich edit control")
+			!! rich_edit.make (Current, "", 0, 35, 200, 200, -1)
 
 			-- Create a toolbar and buttons
 			!! tool_bar.make (Current, -1)
 
-			!! tool_bar_button1.make_check (0, Cmd_bold)
-			!! tool_bar_button2.make_check (1, Cmd_italic)
-			!! tool_bar_button3.make_check (2, Cmd_underline)
-			!! tool_bar_button4.make_separator
-			!! tool_bar_button5.make_button (3, Cmd_font)
-			!! tool_bar_button6.make_button (4, Cmd_color)
-			!! tool_bar_button7.make_separator
-			!! tool_bar_button8.make_check_group (5, Cmd_left)
-			!! tool_bar_button9.make_check_group (6, Cmd_center)
-			!! tool_bar_button10.make_check_group (7, Cmd_right)
-			!! tool_bar_button11.make_separator
-			!! tool_bar_button12.make_check (8, Cmd_bullet)
-
 			!! tool_bar_bitmap.make (Bmp_toolbar)
-			tool_bar.add_bitmaps (tool_bar_bitmap, 8)
+			!! standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
+
+			tool_bar.add_bitmaps (standard_tool_bar_bitmap, 1)
+			bitmap_index1 := tool_bar.last_bitmap_index
+
+			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
+			bitmap_index2 := tool_bar.last_bitmap_index
+
+			!! tool_bar_button1.make_button (bitmap_index1 + Std_filenew, Cmd_new)
+			!! tool_bar_button2.make_button (bitmap_index1 + Std_fileopen, Cmd_open)
+			!! tool_bar_button3.make_button (bitmap_index1 + Std_filesave, Cmd_save)
+			!! tool_bar_button4.make_separator
+			!! tool_bar_button5.make_button (bitmap_index1 + Std_print, Cmd_print)
+			!! tool_bar_button6.make_separator
+			!! tool_bar_button7.make_check (bitmap_index2 + 0, Cmd_bold)
+			!! tool_bar_button8.make_check (bitmap_index2 + 1, Cmd_italic)
+			!! tool_bar_button9.make_check (bitmap_index2 + 2, Cmd_underline)
+			!! tool_bar_button10.make_separator
+			!! tool_bar_button11.make_button (bitmap_index2 + 3, Cmd_font)
+			!! tool_bar_button12.make_button (bitmap_index2 + 4, Cmd_color)
+			!! tool_bar_button13.make_separator
+			!! tool_bar_button14.make_check_group (bitmap_index2 + 5, Cmd_left)
+			!! tool_bar_button15.make_check_group (bitmap_index2 + 6, Cmd_center)
+			!! tool_bar_button16.make_check_group (bitmap_index2 + 7, Cmd_right)
+			!! tool_bar_button17.make_separator
+			!! tool_bar_button18.make_check (bitmap_index2 + 8, Cmd_bullet)
+
 			tool_bar.add_buttons (<<
 				tool_bar_button1,
 				tool_bar_button2,
@@ -76,14 +95,28 @@ feature {NONE} -- Initialization
 				tool_bar_button9,
 				tool_bar_button10,
 				tool_bar_button11,
-				tool_bar_button12>>)
+				tool_bar_button12,
+				tool_bar_button13,
+				tool_bar_button14,
+				tool_bar_button15,
+				tool_bar_button16,
+				tool_bar_button17,
+				tool_bar_button18>>)
+
+			on_menu_command (Cmd_new)
 		end
 
 feature -- Access
 
-	tool_bar: WEL_TOOL_BAR
+	file_name: STRING
+			-- File name of the active document
 
-	tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
+	tool_bar: WEL_TOOL_BAR
+			-- Window's tool bar
+
+	tool_bar_bitmap, 
+	standard_tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
+			-- Tool bar Bitmaps
 
 	tool_bar_button1,
 	tool_bar_button2,
@@ -96,17 +129,28 @@ feature -- Access
 	tool_bar_button9,
 	tool_bar_button10,
 	tool_bar_button11,
-	tool_bar_button12: WEL_TOOL_BAR_BUTTON
+	tool_bar_button12,
+	tool_bar_button13,
+	tool_bar_button14,
+	tool_bar_button15,
+	tool_bar_button16,
+	tool_bar_button17,
+	tool_bar_button18: WEL_TOOL_BAR_BUTTON
+			-- Tool bar buttons
 
 	rich_edit: WEL_RICH_EDIT
+			-- Rich edit control
 
 	char_format: WEL_CHARACTER_FORMAT
+			-- Structure to format characters
 
 	para_format: WEL_PARAGRAPH_FORMAT
+			-- Structure to format paragraphs
 
 feature {NONE} -- Implementation
 
 	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Draw the tooltips.
 		local
 			tt: WEL_TOOLTIP_TEXT
 		do
@@ -119,30 +163,69 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_control_id_command (control_id: INTEGER) is
-		do
-			on_menu_command (control_id)
-		end
-
 	on_menu_command (menu_id: INTEGER) is
+			-- Execute the command identified by `menu_id'.
 		local
-			i: INTEGER
+			file: RAW_FILE
 		do
 			inspect
 				menu_id
-			when Cmd_open then
-				warning_message_box ("Feature not implemented.", "Open")
-			when Cmd_save then
-				warning_message_box ("Feature not implemented.", "Save")
-			when Cmd_print then
-				warning_message_box ("Feature not implemented.", "Print")
 			when Cmd_exit then
 				destroy
+			when Cmd_new then
+				rich_edit.clear
+				file_name := Void
+				set_window_title
+				!! char_format.make
+				char_format.set_face_name ("Arial")
+				char_format.set_height (10 * 20)
+				char_format.unset_bold
+				rich_edit.set_character_format_selection (char_format)
+			when Cmd_open then
+				open_file_dialog.activate (Current)
+				if open_file_dialog.selected then
+					file_name := clone (open_file_dialog.file_name)
+					!! file.make_open_read (file_name)
+					if file_name.substring_index ("txt", 1) > 0 then
+						rich_edit.load_text_file (file)
+					else
+						rich_edit.load_rtf_file (file)
+					end
+					set_window_title
+					rich_edit.set_text_limit ((rich_edit.text_length * 2).max (32000))
+				end
+			when Cmd_save then
+				if file_name /= Void then
+					!! file.make_create_read_write (file_name)
+					if file_name.substring_index ("txt", 1) > 0 then
+						rich_edit.save_text_file (file)
+					else
+						rich_edit.save_rtf_file (file)
+					end
+				else
+					on_menu_command (Cmd_save_as)
+				end
+			when Cmd_save_as then
+				save_file_dialog.activate (Current)
+				if save_file_dialog.selected then
+					file_name := save_file_dialog.file_name
+					set_window_title
+					!! file.make_create_read_write (file_name)
+					if file_name.substring_index ("txt", 1) > 0 then
+						rich_edit.save_text_file (file)
+					else
+						rich_edit.save_rtf_file (file)
+					end
+				end
+			when Cmd_print then
+				print_dialog.activate (Current)
+				if print_dialog.selected then
+					rich_edit.print_all (print_dialog.dc, file_name)
+				end
 			when Cmd_bold then
 				!! char_format.make
 				if tool_bar.button_checked (Cmd_bold) then
 					char_format.set_bold
-
 				else
 					char_format.unset_bold
 				end
@@ -205,6 +288,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_control_id_command (control_id: INTEGER) is
+		do
+			on_menu_command (control_id)
+		end
+
 	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Reposition the status window and the tool bar when
 			-- the window has been resized.
@@ -231,6 +319,57 @@ feature {NONE} -- Implementation
 			!! Result.make
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	open_file_dialog: WEL_OPEN_FILE_DIALOG is
+			-- Dialog box to open a file.
+		local
+			ofn: WEL_OFN_CONSTANTS
+		once
+			!! ofn
+			!! Result.make
+			Result.set_default_extension ("txt")
+			Result.set_filter (<<"Text file (*.txt)",
+				"Rich Text Format file (*.rtf)">>,
+				<<"*.txt", "*.rtf">>)
+			Result.add_flag (ofn.Ofn_filemustexist)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	save_file_dialog: WEL_SAVE_FILE_DIALOG is
+			-- Dialog box to save a file.
+		once
+			!! Result.make
+			Result.set_default_extension ("txt")
+			Result.set_filter (<<"Text file (*.txt)",
+				"Rich Text Format file (*.rtf)">>,
+				<<"*.txt", "*.rtf">>)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	print_dialog: WEL_PRINT_DIALOG is
+			-- Dialog box to select the printer.
+		once
+			!! Result.make
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	set_window_title is
+			-- Set the window's title with `file_name'.
+		local
+			s: STRING
+		do
+			s := clone (Title)
+			s.append (" - ")
+			if file_name /= Void then
+				s.append (file_name)
+			else
+				s.append ("Untitled")
+			end
+			set_text (s)
 		end
 
 	class_icon: WEL_ICON is

@@ -78,31 +78,43 @@ const IID IID_ICorDebugArrayValue = {0x0405B0DF,0xA660,0x11d2,0xBD,0x02,0x00,0x0
 //////////////////////////////////////////////////
 */
 
-typedef LONG EIF_DBG_STATE;
 rt_private Callback_ids dbg_last_callback_id;
 rt_private HANDLE estudio_thread_handle;
 rt_private DWORD estudio_thread_id;
 rt_private BOOL dbg_start_timer_requested;
-rt_private UINT dbg_keep_synchro;
 rt_private bool dbg_estudio_notification_processing;
 
 rt_private UINT dbg_timer;
 rt_private EIF_OBJECT estudio_callback_object;
 rt_private EIF_POINTER estudio_callback_event;
 
-rt_private volatile EIF_DBG_STATE dbg_state ;
-#define LOCKED_DBG_STATE_VALUE InterlockedExchangeAdd ((EIF_DBG_STATE*) &dbg_state, 0)
-#define LOCKED_DBG_STATE_IS_NOT_EQUAL(v) (InterlockedExchangeAdd ((EIF_DBG_STATE*) &dbg_state, 0) != v)
-#define LOCKED_DBG_STATE_IS_EQUAL(v) (InterlockedExchangeAdd ((EIF_DBG_STATE*) &dbg_state, 0) == v)
-#define LOCKED_DBG_STATE_SET_VALUE(v) (InterlockedExchange ((EIF_DBG_STATE*) &dbg_state, v))
-#define LOCKED_DBG_STATE_INCREMENT  (InterlockedIncrement ((EIF_DBG_STATE*) &dbg_state))
+
+/*  Interlocked protection */
+#define LOCKED_VALUE(a) InterlockedExchangeAdd ((LONG*) &a, 0)
+#define LOCKED_SET_VALUE(a,v) InterlockedExchange ((LONG*) &a, v)
+#define LOCKED_INCREMENT_VALUE(a) InterlockedIncrement ((LONG*) &a)
+#define LOCKED_VALUE_IS_EQUAL(a,v) (InterlockedExchangeAdd ((LONG*) &a, 0) == v)
+#define LOCKED_VALUE_IS_NOT_EQUAL(a,v) (InterlockedExchangeAdd ((LONG*) &a, 0) != v)
+
+rt_private UINT dbg_keep_synchro;
+#define LOCKED_DBG_KEEP_SYNCHRO LOCKED_SET_VALUE(dbg_keep_synchro, 1)
+#define LOCKED_DBG_STOP_SYNCHRO LOCKED_SET_VALUE(dbg_keep_synchro, 0)
+#define LOCKED_DBG_SYNCHRO_IS_ON LOCKED_VALUE_IS_EQUAL(dbg_keep_synchro, 1)
+#define LOCKED_DBG_SYNCHRO_IS_OFF LOCKED_VALUE_IS_EQUAL(dbg_keep_synchro, 0)
+
+rt_private volatile LONG dbg_state ;
+#define LOCKED_DBG_STATE_VALUE LOCKED_VALUE(dbg_state)
+#define LOCKED_DBG_STATE_IS_EQUAL(v) (LOCKED_VALUE_IS_EQUAL(dbg_state, v))
+#define LOCKED_DBG_STATE_IS_NOT_EQUAL(v) (LOCKED_VALUE_IS_NOT_EQUAL(dbg_state, v))
+#define LOCKED_DBG_STATE_SET_VALUE(v) LOCKED_SET_VALUE(dbg_state, v)
+#define LOCKED_DBG_STATE_INCREMENT  LOCKED_INCREMENT_VALUE(dbg_state)
 
 rt_private void reset_variables() {
 	/* Reset variables used in the synchro */
 	LOCKED_DBG_STATE_SET_VALUE (0);
 	dbg_last_callback_id = CB_NONE;
 	dbg_start_timer_requested = false;
-	dbg_keep_synchro = 1;
+	LOCKED_DBG_KEEP_SYNCHRO;
 	dbg_estudio_notification_processing = false;
 }
 
@@ -315,7 +327,7 @@ rt_private void dbg_resume_estudio_thread () {
 
 rt_public EIF_BOOLEAN dbg_is_synchronizing () {
 	/* Are we still synchronizing ? */
-	return EIF_TEST(dbg_keep_synchro == 1);
+	return EIF_TEST(LOCKED_DBG_SYNCHRO_IS_ON);
 }
 rt_public void dbg_notify_from_estudio (char * str) {
 #ifdef DBGTRACE_ENABLED
@@ -335,7 +347,7 @@ rt_public void dbg_terminate_synchro () {
 	/* Terminate synchronisation */
 	DBGTRACE("[Synchro|ES] Terminate Synchro : start");
 	CHECK (dbg_timer != 0, "Require: timer = 0 (OFF)")
-	dbg_keep_synchro = 0;
+	LOCKED_DBG_STOP_SYNCHRO;
 	/* Release dbg in case dbg is waiting and stucked */
 	LOCKED_DBG_STATE_SET_VALUE (2); 
 	DBGTRACE("[Synchro|ES] Terminate Synchro: done");
@@ -468,9 +480,8 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 		if (LOCKED_DBG_STATE_IS_EQUAL (4)) {
 			DBGTRACE("[ES] exit timer action and unlock dbg ");
 			LOCKED_DBG_STATE_INCREMENT;
-			if (dbg_keep_synchro == 1) {
+			if (LOCKED_DBG_SYNCHRO_IS_ON) {
 				LOCKED_DBG_STATE_SET_VALUE (0);
-				
 				if (dbg_start_timer_requested) {
 					dbg_start_timer ();
 				}
@@ -522,7 +533,6 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 		DBGTRACE("[ES::Eval] estudio into NOTIFY, eval forced, then estudio will end right away");
 		LOCKED_DBG_STATE_INCREMENT;
 	}
-
 
 	// Initialize data
 	// at begining we don't care about past
@@ -628,7 +638,7 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #ifdef DBGTRACE_ENABLED
 	once_enter_cb = 0;
 #endif
-	if (dbg_keep_synchro == 0) { /* We are terminating debugging .. */
+	if (LOCKED_DBG_SYNCHRO_IS_OFF) { /* We are terminating debugging .. */
 		LOCKED_DBG_STATE_SET_VALUE (2);
 
 		DBGTRACE("3.3 - [CB] now s=2, we by pass ec's turn, because dbg_keep_synchro == 0");

@@ -1,7 +1,7 @@
 indexing
 	description: "Delegate used by WEL_DISPATCHER to enable callbacks from Win32 API to WEL managed code"
 	external_name: "ISE.Runtime.WEL_DISPATCHER_DELEGATE"
-	assembly: "Ise.Runtime", "5.2.0.0", "neutral", "def26f296efef469"
+	assembly: "ISE.Runtime", "5.2.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 

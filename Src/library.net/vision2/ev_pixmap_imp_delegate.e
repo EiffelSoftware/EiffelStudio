@@ -1,7 +1,7 @@
 indexing
 	description: "Delegate use to load pixmap"
 	external_name: "ISE.Runtime.EV_PIXMAP_IMP_DELEGATE"
-	assembly: "Ise.Runtime", "5.2.0.0", "neutral", "def26f296efef469"
+	assembly: "ISE.Runtime", "5.2.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 					-- 3rd button pressed
 				slice_window.call 
 			elseif argument = slice_window then
-				current_format := text_window.last_format_2.associated_command;
+				current_format := text_window.last_format.associated_command;
 				if current_format = text_window.tool.showattr_frmt_holder.associated_command then
 					old_do_format := current_format.do_format;
 					current_format.set_do_format (true);

@@ -27,9 +27,6 @@ feature -- Window Properties
 	history: STONE_HISTORY;
 			-- History list for Current.
 
-	--last_format: FORMATTER;
-			---- Last format used.
-
 	stone: STONE;
 			-- Stone in tool
 
@@ -174,25 +171,6 @@ feature {TEXT_WINDOW} -- Status setting
 			set: s = stone
 		end;
 
-	--set_last_format (f: like last_format) is
-			---- Assign `f' to `last_format'.
-		--require
-			--format_exists: f /= Void
-		--do
-			--if last_format /= f then
-				--if not history.islast then
-					--history.extend (stone)
-				--end;
-				--if last_format /= Void then
-					--last_format.darken (False)
-				--end;
-				--last_format := f;
-				--last_format.darken (True)
-			--end
-		--ensure
-			--last_format = f
-		--end;
-
 feature -- Update
 
 	update_save_symbol is
@@ -200,9 +178,9 @@ feature -- Update
 		do
 			if save_cmd_holder /= Void then
 				if text_window.changed then
-					save_cmd_holder.associated_button.darken (true)
+					save_cmd_holder.set_selected (true)
 				else
-					save_cmd_holder.associated_button.darken (false)
+					save_cmd_holder.set_selected (false)
 				end
 			end
 		end;
@@ -227,7 +205,7 @@ feature -- Update
 				stone.synchronized_stone /= Void
 			then
 					-- The root stone is still valid.
-				f ?= text_window.last_format_2.associated_command;
+				f ?= text_window.last_format.associated_command;
 				old_do_format := f.do_format;
 				f.set_do_format (true);
 				f.execute (history.item);

@@ -2,7 +2,6 @@ deferred class TEXT_AREA
 
 inherit
 
-	TEXT_FORMATTER;
 	OUTPUT_WINDOW;
 	DRAG_SOURCE;
 	WINDOWS;
@@ -13,7 +12,7 @@ inherit
 
 feature -- Properties
 
-	last_format_2: FORMAT_HOLDER;
+	last_format: FORMAT_HOLDER;
 			-- Last format used.
 
 	tool: TOOL_W;
@@ -76,23 +75,25 @@ feature -- Status setting
 		deferred
 		end;
 
-	set_last_format_2 (f: like last_format_2) is
-			-- Assign `f' to `last_format_2'.
+	set_last_format (f: like last_format) is
+			-- Assign `f' to `last_format'.
 		require
 			format_exists: f /= Void
 		do
-			if last_format_2 /= f then
+			if last_format /= f then
 				if not tool.history.islast then
 					tool.history.extend (tool.stone)
 				end;
-				if last_format_2 /= Void then
-					last_format_2.associated_button.darken (False)
+				if last_format /= Void then
+					last_format.set_selected (False)
 				end;
-				last_format_2 := f;
-				last_format_2.associated_button.darken (True)
+				last_format := f;
+				last_format.set_selected (True)
+			else
+				last_format.set_selected (True)
 			end
 		ensure
-			last_format_2 = f
+			last_format_set: equal (last_format, f)
 		end;
 
 feature -- Execution

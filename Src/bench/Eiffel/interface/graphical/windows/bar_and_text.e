@@ -68,12 +68,27 @@ feature -- Standard Interface
 		do
 			set_default_size;
 			build_text_window;
+			build_menus;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			text_window.set_last_format_2 (default_format);
+			text_window.set_last_format (default_format);
 			attach_all
+		end;
+
+	build_menus is
+			-- Create the menus.
+		do
+			!! menu_bar.make (new_name, global_form);
+			!! file_menu.make ("File", menu_bar);
+			!! edit_menu.make ("Edit", menu_bar);
+			!! format_menu.make ("Formats", menu_bar);
+			!! special_menu.make ("Special", menu_bar);
+			!! preference_menu.make ("Preference", menu_bar);
+			!! window_menu.make ("Windows", menu_bar);
+			!! help_menu.make ("Help", menu_bar);
+			menu_bar.set_help_button (help_menu.menu_button)
 		end;
 
 	build_bar is
@@ -91,26 +106,41 @@ feature -- Standard Interface
 		local
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
+			quit_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
 			change_font_button: EB_BUTTON;
+			change_font_menu_entry: EB_MENU_ENTRY;
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
+			search_menu_entry: EB_MENU_ENTRY;
 		do
+				-- Creation of all the commands, holes, buttons, and menu entries
 			!! hole.make (text_window);
 			!! hole_button.make (hole, edit_bar);
-			!! hole_holder.make (hole, hole_button);
+			!! hole_holder.make_plain (hole);
+			hole_holder.set_button (hole_button);
 			!! search_cmd.make (edit_bar, text_window);
 			!! search_button.make (search_cmd, edit_bar);
-			!! search_cmd_holder.make (search_cmd, search_button);
+			!! search_menu_entry.make (search_cmd, edit_menu);
+			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
 				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit.make (quit_cmd, quit_button);
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+			exit_cmd_holder.set_menu_entry (exit_menu_entry);
+
+				-- Attachments are done here, because of speed.
+				-- I know it's not really maintainable.
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_top (search_button, 0);
@@ -126,8 +156,13 @@ feature -- Standard Interface
 		do
 			!! hole.make (text_window);
 			!! hole_button.make (hole, edit_bar);
-			!! hole_holder.make (hole, hole_button);
+			!! hole_holder.make_plain (hole);
+			hole_holder.set_button (hole_button);
+
+				-- Here we have to go for a different approach because
+				-- `create_edit_buttons' gets redefined in the descendants.
 			create_edit_buttons;
+
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_top (open_cmd_holder.associated_button, 0);
@@ -153,9 +188,13 @@ feature -- Standard Interface
 	attach_all is
 			-- Attach button bar and windows below together.
 		do
+			global_form.attach_left (menu_bar, 0);
+			global_form.attach_right (menu_bar, 0);
+			global_form.attach_top (menu_bar, 0);
+
 			global_form.attach_left (edit_bar, 0);
 			global_form.attach_right (edit_bar, 0);
-			global_form.attach_top (edit_bar, 0);
+			global_form.attach_top_widget (menu_bar, edit_bar, 0);
 
 			global_form.attach_left (text_window, 0);
 			global_form.attach_right (text_window, 0);
@@ -169,6 +208,20 @@ feature -- Standard Interface
 
 feature -- Window Implementation
 
+	fill_menus is
+			-- Adds entries to the `Window' menu.
+		local
+			class_menu_entry: EB_MENU_ENTRY;
+			feature_menu_entry: EB_MENU_ENTRY;
+			object_menu_entry: EB_MENU_ENTRY;
+			explain_menu_entry: EB_MENU_ENTRY
+		do
+			!! class_menu_entry.make (Project_tool.class_hole_holder.associated_command, window_menu);
+			!! feature_menu_entry.make (Project_tool.routine_hole_holder.associated_command, window_menu);
+			!! object_menu_entry.make (Project_tool.object_hole_holder.associated_command, window_menu);
+			!! explain_menu_entry.make (Project_tool.explain_hole_holder.associated_command, help_menu);
+		end;
+
 	realize is
 			-- Realize Current.
 		do
@@ -179,25 +232,35 @@ feature -- Window Implementation
 	create_edit_buttons is
 			-- Create the edit buttons needed for the edit bar.
 		local
-			quit_cmd: QUIT_FILE
-			quit_button: EB_BUTTON
-			change_font_cmd: CHANGE_FONT
-			change_font_button: EB_BUTTON
-			search_cmd: SEARCH_STRING
-			search_button: EB_BUTTON
+			quit_cmd: QUIT_FILE;
+			quit_button: EB_BUTTON;
+			quit_menu_entry: EB_MENU_ENTRY
+			change_font_cmd: CHANGE_FONT;
+			change_font_button: EB_BUTTON;
+			change_font_menu_entry: EB_MENU_ENTRY
+			search_cmd: SEARCH_STRING;
+			search_button: EB_BUTTON;
+			search_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY;
 		do
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit.make (quit_cmd, quit_button);
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
 				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
 			!! search_cmd.make (edit_bar, text_window);
 			!! search_button.make (search_cmd, edit_bar);
-			!! search_cmd_holder.make (search_cmd, search_button);
+			!! search_menu_entry.make (search_cmd, edit_menu);
+			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 		end;
 
 	close_windows is
@@ -224,7 +287,7 @@ feature -- Window Settings
 	set_default_format is
 			-- Default format of windows.
 		do
-			text_window.set_last_format_2 (default_format);
+			text_window.set_last_format (default_format);
 		end;
 
 	set_default_size is
@@ -257,6 +320,22 @@ feature -- Window Settings
 		end;
 
 feature -- Window Properties
+
+	menu_bar: BAR;
+
+	file_menu: MENU_PULL;
+
+	edit_menu: MENU_PULL;
+
+	format_menu: MENU_PULL;
+
+	special_menu: MENU_PULL;
+
+	preference_menu: MENU_PULL;
+
+	window_menu: MENU_PULL;
+
+	help_menu: MENU_PULL;
 
 	global_form: FORM;
 
@@ -311,8 +390,10 @@ feature -- Window Properties
 		end;
 
 	quit: COMMAND_HOLDER;
-			-- Command used to from Current.
+			-- Command used to exit from Current.
 
+	exit_cmd_holder: COMMAND_HOLDER;
+			-- Command used to end the session.
 feature -- Execution Implementation
 
 	execute (argument: ANY) is

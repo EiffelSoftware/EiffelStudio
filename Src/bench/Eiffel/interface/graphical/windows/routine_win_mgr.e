@@ -45,7 +45,7 @@ feature -- Debugging (stop points)
 					if rout_text.in_debug_format then
 						rout_text.redisplay_breakable_mark (index)
 					elseif 
-						rout_text.last_format_2 = rout_window.showtext_frmt_holder 
+						rout_text.last_format = rout_window.showtext_frmt_holder 
 					then
 							-- Update the title bar of the feature tool.
 							-- "(stop)" if the routine has a stop point set.

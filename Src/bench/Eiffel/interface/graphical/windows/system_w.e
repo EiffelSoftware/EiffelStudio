@@ -66,7 +66,7 @@ feature -- Update
 			if text_window.changed then
 				showtext_frmt_holder.execute (s);
 			else
-				text_window.last_format_2.execute (s);
+				text_window.last_format.execute (s);
 				history.extend (s)
 			end
 		end;
@@ -113,10 +113,10 @@ feature -- Update
 		do
 			if stone /= Void then
 				!! system_stone;
-				old_do_format := text_window.last_format_2.associated_command.do_format;
-				text_window.last_format_2.associated_command.set_do_format (true);
-				text_window.last_format_2.execute (system_stone);
-				text_window.last_format_2.associated_command.set_do_format (old_do_format)
+				old_do_format := text_window.last_format.associated_command.do_format;
+				text_window.last_format.associated_command.set_do_format (true);
+				text_window.last_format.execute (system_stone);
+				text_window.last_format.associated_command.set_do_format (old_do_format)
 			end
 		end;
 
@@ -141,38 +141,56 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			quit_cmd: QUIT_SYSTEM;
 			quit_button: EB_BUTTON;
+			quit_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
 			change_font_button: EB_BUTTON;
+			change_font_menu_entry: EB_MENU_ENTRY;
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
+			search_menu_entry: EB_MENU_ENTRY;
 			open_cmd: OPEN_SYSTEM;
-			open_button: EB_BUTTON
+			open_button: EB_BUTTON;
+			open_menu_entry: EB_MENU_ENTRY;
 			save_cmd: SAVE_SYSTEM;
-			save_button: EB_BUTTON
+			save_button: EB_BUTTON;
+			save_menu_entry: EB_MENU_ENTRY;
 			save_as_cmd: SAVE_AS_SYSTEM;
-			save_as_button: EB_BUTTON
+			save_as_button: EB_BUTTON;
+			save_as_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
 			!! open_cmd.make (text_window);
 			!! open_button.make (open_cmd, edit_bar);
-			!! open_cmd_holder.make (open_cmd, open_button);
+			!! open_menu_entry.make (open_cmd, file_menu);
+			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry);
 			!! save_cmd.make (text_window);
 			!! save_button.make (save_cmd, edit_bar);
-			!! save_cmd_holder.make (save_cmd, save_button);
+			!! save_menu_entry.make (save_cmd, file_menu);
+			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
 			!! save_as_cmd.make (text_window);
 			!! save_as_button.make (save_as_cmd, edit_bar);
-			!! save_as_cmd_holder.make (save_as_cmd, save_as_button);
+			!! save_as_menu_entry.make (save_as_cmd, file_menu);
+			!! save_as_cmd_holder.make (save_as_cmd, save_as_button, save_as_menu_entry);
+			!! sep.make (new_name, file_menu);
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit.make (quit_cmd, quit_button);
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
 				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
 			!! search_cmd.make (edit_bar, text_window);
 			!! search_button.make (search_cmd, edit_bar);
-			!! search_cmd_holder.make (search_cmd, search_button);
+			!! search_menu_entry.make (search_cmd, edit_menu);
+			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 		end;
 
 	build_widgets is
@@ -183,13 +201,15 @@ feature {NONE} -- Implementation; Graphical Interface
 			else
 				!SYSTEM_TAB_TEXT! text_window.make (new_name, global_form, Current);
 			end;
+			build_menus;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			text_window.set_last_format_2 (default_format);
+			fill_menus;
+			text_window.set_last_format (default_format);
 			attach_all
 		end;
 
@@ -209,50 +229,60 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			stat_cmd: SHOW_STATISTICS;
 			stat_button: EB_BUTTON;
+			stat_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			mod_cmd: SHOW_MODIFIED;
 			mod_button: EB_BUTTON;
+			mod_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			list_cmd: SHOW_CLUSTERS;
 			list_button: EB_BUTTON;
+			list_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showtext_cmd: SHOW_TEXT;
 			showtext_button: EB_BUTTON;
+			showtext_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showclass_cmd: SHOW_CLASS_LIST;
 			showclass_button: EB_BUTTON;
+			showclass_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showindex_cmd: SHOW_INDEXING;
 			showindex_button: EB_BUTTON
+			showindex_menu_entry: EB_TICKABLE_MENU_ENTRY;
 		do
+				-- First we create all the objects needed for the attachments.
 			!! showtext_cmd.make (text_window);
 			!! showtext_button.make (showtext_cmd, format_bar);
-			!! showtext_frmt_holder.make (showtext_cmd, showtext_button);
-			format_bar.attach_top (showtext_button, 0);
-			format_bar.attach_left (showtext_button, 0);
-
+			!! showtext_menu_entry.make (showtext_cmd, format_menu);
+			!! showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry);
 			!! list_cmd.make (text_window);
 			!! list_button.make (list_cmd, format_bar);
-			!! showlist_frmt_holder.make (list_cmd, list_button);
-			format_bar.attach_top (list_button, 0);
-			format_bar.attach_left_widget (showtext_button, list_button, 0);
-
+			!! list_menu_entry.make (list_cmd, format_menu);
+			!! showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry);
 			!! showclass_cmd.make (text_window);
 			!! showclass_button.make (showclass_cmd, format_bar);
-			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button);
-			format_bar.attach_top (showclass_button, 0);
-			format_bar.attach_left_widget (list_button, showclass_button, 0);
-
+			!! showclass_menu_entry.make (showclass_cmd, format_menu);
+			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry);
 			!! stat_cmd.make (text_window);
 			!! stat_button.make (stat_cmd, format_bar);
-			!! showstatistics_frmt_holder.make (stat_cmd, stat_button);
-			format_bar.attach_top (stat_button, 0);
-			format_bar.attach_left_widget (showclass_button, stat_button, 0);
-
+			!! stat_menu_entry.make (stat_cmd, format_menu);
+			!! showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry);
 			!! mod_cmd.make (text_window);
 			!! mod_button.make (mod_cmd, format_bar);
-			!! showmodified_frmt_holder.make (mod_cmd, mod_button);
-			format_bar.attach_top (mod_button, 0);
-			format_bar.attach_left_widget (stat_button, mod_button, 0);
-
+			!! mod_menu_entry.make (mod_cmd, format_menu);
+			!! showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry);
 			!! showindex_cmd.make (text_window);
 			!! showindex_button.make (showindex_cmd, format_bar);
-			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button);
+			!! showindex_menu_entry.make (showindex_cmd, format_menu);
+			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry);
+
+				-- Now we attach everything (this is done here for reason of speed).
+			format_bar.attach_top (showtext_button, 0);
+			format_bar.attach_left (showtext_button, 0);
+			format_bar.attach_top (list_button, 0);
+			format_bar.attach_left_widget (showtext_button, list_button, 0);
+			format_bar.attach_top (showclass_button, 0);
+			format_bar.attach_left_widget (list_button, showclass_button, 0);
+			format_bar.attach_top (stat_button, 0);
+			format_bar.attach_left_widget (showclass_button, stat_button, 0);
+			format_bar.attach_top (mod_button, 0);
+			format_bar.attach_left_widget (stat_button, mod_button, 0);
 			format_bar.attach_top (showindex_button, 0);
 			format_bar.attach_left_widget (mod_button, showindex_button, 0);
 		end;
@@ -261,22 +291,27 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			shell_cmd: SHELL_COMMAND;
 			shell_button: EB_BUTTON;
+			shell_menu_entry: EB_MENU_ENTRY;
 			case_storage_cmd: CASE_STORAGE;
-			case_storage_button: EB_BUTTON
+			case_storage_button: EB_BUTTON;
+			case_storage_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
 			shell_button.add_button_click_action (3, shell_cmd, Void);
-			!! shell.make (shell_cmd, shell_button);
-			command_bar.attach_right (shell_button, 0);
-			command_bar.attach_left (shell_button, 0);
-			command_bar.attach_bottom (shell_button, 0);
-
+			!! shell_menu_entry.make (shell_cmd, special_menu);
+			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
 			!! case_storage_cmd.make (text_window);
 			!! case_storage_button.make (case_storage_cmd, command_bar);
 			case_storage_button.set_action ("!c<Btn1Down>", case_storage_cmd, case_storage_cmd.control_click);
-			!! case_storage_cmd_holder.make (case_storage_cmd, case_storage_button);
+			!! sep.make (new_name, special_menu);
+			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
+			!! case_storage_cmd_holder.make (case_storage_cmd, case_storage_button, case_storage_menu_entry);
 
+			command_bar.attach_right (shell_button, 0);
+			command_bar.attach_left (shell_button, 0);
+			command_bar.attach_bottom (shell_button, 0);
 			command_bar.attach_left (case_storage_button, 0);
 			command_bar.attach_bottom_widget (shell_button, case_storage_button, 10)
 		end;

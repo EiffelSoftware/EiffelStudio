@@ -19,10 +19,6 @@ inherit
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as loose_changes
-		end;
-	CURSOR_TYPE
-		rename
-			Dot as Dot_Cursor
 		end
 
 feature -- Properties
@@ -103,18 +99,19 @@ feature -- Formatting
 			-- if it's clickable; do nothing otherwise.
 		local
 			retried: BOOLEAN;
-			tool: BAR_AND_TEXT
+			tool: BAR_AND_TEXT;
+			mp: MOUSE_PTR
 		do
 			if not retried then 
 				if 
 					do_format or else filtered or else
-					(text_window.last_format_2.associated_command /= Current or
+					(text_window.last_format.associated_command /= Current or
 					not equal (stone, text_window.root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
 							display_temp_header (stone);
-							set_global_cursor (watch_cursor);
+							!! mp.set_watch_cursor;
 							text_window.clean;
 							text_window.set_root_stone (stone);
 							text_window.set_file_name (file_name (stone));
@@ -122,10 +119,10 @@ feature -- Formatting
 							text_window.set_editable;
 							text_window.display;
 							text_window.set_read_only;
-							text_window.set_last_format_2 (holder);
+							text_window.set_last_format (holder);
 							filtered := false;
 							display_header (stone);
-							restore_cursors
+							mp.restore
 						else
 							tool ?= text_window.tool;
 							if tool /= Void then
@@ -136,7 +133,7 @@ feature -- Formatting
 				end
 			else
 				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
-				restore_cursors
+				mp.restore;
 			end
 		rescue
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
@@ -149,7 +146,7 @@ feature -- Formatting
 			end
 		end;
 
-feature -- Filters; Attributes
+feature -- Filters; Properties
 
 	filtered: BOOLEAN;
 			-- Has the last action of `current' been a filter action?
@@ -161,14 +158,14 @@ feature -- Filters; Implementation
 			-- Filter the `Current' format with `filtername'.
 		require
 			filtername_not_void: filtername /= Void;
-			current_format: text_window.last_format_2.associated_command = Current
+			current_format: text_window.last_format.associated_command = Current
 		do
 			if text_window.root_stone /= Void then
 				warner (text_window).gotcha_call (w_Not_a_filterable_format)
 			end
 		end;
 
-feature {NONE} -- Porperties
+feature {NONE} -- Properties
 
 	holder: FORMAT_HOLDER
 			-- Holds the format holder in which
@@ -240,15 +237,6 @@ feature {NONE} -- Porperties
 
 	indent: INTEGER
 			-- Number of blank characters in a tab
-
-feature {NONE} -- Implementation
-
-	watch_cursor: SCREEN_CURSOR is
-			-- Cursor to be used when waiting for the end of an execution.
-		once
-			!! Result.make;
-			Result.set_type (Watch);
-		end;
 
 feature {ROUTINE_WIN_MGR} -- Implementation
 

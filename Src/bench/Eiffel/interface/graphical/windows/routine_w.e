@@ -103,7 +103,7 @@ feature -- Stone updating
 
 	process_feature (a_stone: FEATURE_STONE) is
 		do
-			text_window.last_format_2.execute (a_stone);
+			text_window.last_format.execute (a_stone);
 			history.extend (a_stone);
 			update_edit_bar
 		end;
@@ -121,7 +121,8 @@ feature -- Stone updating
 			rout_id: ROUTINE_ID;
 			fi: E_FEATURE;
 			fs: FEATURE_STONE;
-			temp: STRING
+			text: STRUCTURED_TEXT;
+			s: STRING
 		do
 			ris := stone.e_feature.rout_id_set;
 			c := a_stone.e_class;
@@ -141,16 +142,15 @@ feature -- Stone updating
 				!! fs.make (fi, a_stone.e_class);
 				process_feature (fs);
 			else
-				temp := a_stone.e_class.name_in_upper;
-				temp.prepend ("No version of current feature for class ");
 				error_window.clear_window;
-				error_window.put_string ("No version of feature ")
-				stone.e_feature.append_name
-							(error_window,
-							stone.e_feature.written_class);
-				error_window.put_string ("%N   for class ");
-				a_stone.e_class.append_name (error_window);
-				error_window.new_line;
+				!! text.make;
+				text.add_string ("No version of feature ");
+				text.add_feature (stone.e_feature, stone.e_feature.written_class, stone.e_feature.name);
+				text.add_string ("%N   for class ");
+				s := stone.e_feature.written_class.name;
+				s.to_upper;
+				text.add_classi (stone.e_feature.written_class.lace_class, s);
+				error_window.process_text (text);
 				error_window.display;
 				project_tool.raise;
 			end;
@@ -186,20 +186,22 @@ feature -- Graphical Interface
 			-- Build the widgets for this window.
 		do
 			set_default_size;
-				if tabs_disabled then
-					!! text_window.make (new_name, global_form, Current);
-				else
-					!ROUTINE_TAB_TEXT! text_window.make (new_name, global_form, Current);
-				end;
-				!! edit_bar.make (new_name, global_form);
-				build_bar;
-				!! format_bar.make (new_name, global_form);
-				build_format_bar;
-				!! command_bar.make (new_name, global_form);
-				build_command_bar;
-				text_window.set_last_format_2 (default_format);
+			if tabs_disabled then
+				!! text_window.make (new_name, global_form, Current);
+			else
+				!ROUTINE_TAB_TEXT! text_window.make (new_name, global_form, Current);
+			end;
+			build_menus
+			!! edit_bar.make (new_name, global_form);
+			build_bar;
+			!! format_bar.make (new_name, global_form);
+			build_format_bar;
+			!! command_bar.make (new_name, global_form);
+			build_command_bar;
+			fill_menus;
+			text_window.set_last_format (default_format);
 			attach_all	
-		end
+		end;
 
 	attach_all is
 			-- Attach all widgets.
@@ -307,32 +309,43 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			shell_cmd: SHELL_COMMAND;
 			shell_button: EB_BUTTON;
+			shell_menu_entry: EB_MENU_ENTRY;
 			previous_target_cmd: PREVIOUS_TARGET;
-			previous_target_button: EB_BUTTON
+			previous_target_button: EB_BUTTON;
+			previous_target_menu_entry: EB_MENU_ENTRY;
 			next_target_cmd: NEXT_TARGET;
-			next_target_button: EB_BUTTON
+			next_target_button: EB_BUTTON;
+			next_target_menu_entry: EB_MENU_ENTRY;
 			current_target_cmd: CURRENT_ROUTINE;
-			current_target_button: EB_BUTTON
+			current_target_button: EB_BUTTON;
+			current_target_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
 			shell_button.add_button_click_action (3, shell_cmd, Void);
-			!! shell.make (shell_cmd, shell_button);
-			command_bar.attach_left (shell_button, 0);
-			command_bar.attach_bottom (shell_button, 0);
+			!! shell_menu_entry.make (shell_cmd, special_menu);
+			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
 			!! current_target_cmd.make (text_window);
 			!! current_target_button.make (current_target_cmd, command_bar);
-			!! current_target_cmd_holder.make (current_target_cmd, current_target_button)
-			command_bar.attach_left (current_target_button, 0);
-			command_bar.attach_bottom_widget (shell_button, current_target_button, 10);
+			!! sep.make (new_name, special_menu);
+			!! current_target_menu_entry.make (current_target_cmd, special_menu);
+			!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry)
 			!! next_target_cmd.make (text_window);
 			!! next_target_button.make (next_target_cmd, command_bar);
-			!! next_target_cmd_holder.make (next_target_cmd, next_target_button)
-			command_bar.attach_left (next_target_button, 0);
-			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
+			!! next_target_menu_entry.make (next_target_cmd, special_menu);
+			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
 			!! previous_target_cmd.make (text_window);
 			!! previous_target_button.make (previous_target_cmd, command_bar);
-			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button)
+			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
+			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
+
+			command_bar.attach_left (shell_button, 0);
+			command_bar.attach_bottom (shell_button, 0);
+			command_bar.attach_left (current_target_button, 0);
+			command_bar.attach_bottom_widget (shell_button, current_target_button, 10);
+			command_bar.attach_left (next_target_button, 0);
+			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
 			command_bar.attach_left (previous_target_button, 0);
 			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0);
 		end;
@@ -342,66 +355,81 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			rout_cli_cmd: SHOW_ROUTCLIENTS;
 			rout_cli_button: EB_BUTTON;
+			rout_cli_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			rout_hist_cmd: SHOW_ROUT_HIST;
 			rout_hist_button: EB_BUTTON;
+			rout_hist_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			past_cmd: SHOW_PAST;
 			past_button: EB_BUTTON;
+			past_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			rout_flat_cmd: SHOW_ROUT_FLAT;
 			rout_flat_button: EB_BUTTON;
+			rout_flat_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			future_cmd: SHOW_FUTURE;
 			future_button: EB_BUTTON;
+			future_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			stop_cmd: SHOW_BREAKPOINTS;
 			stop_button: EB_BUTTON;
+			stop_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			text_cmd: SHOW_TEXT;
 			text_button: EB_BUTTON;
+			text_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			homonym_cmd: SHOW_HOMONYMS;
-			homonym_button: EB_BUTTON
+			homonym_button: EB_BUTTON;
+			homonym_menu_entry: EB_TICKABLE_MENU_ENTRY;
+			sep: SEPARATOR
 		do
+				-- First we create all needed objects.
 			!! text_cmd.make (text_window);
 			!! text_button.make (text_cmd, format_bar);
-			!! showtext_frmt_holder.make (text_cmd, text_button);
-			format_bar.attach_top (text_button, 0);
-			format_bar.attach_left (text_button, 0);
-
+			!! text_menu_entry.make (text_cmd, format_menu);
+			!! showtext_frmt_holder.make (text_cmd, text_button, text_menu_entry);
 			!! rout_flat_cmd.make (text_window);
 			!! rout_flat_button.make (rout_flat_cmd, format_bar);
-			!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button);
-			format_bar.attach_top (rout_flat_button, 0);
-			format_bar.attach_left_widget (text_button, rout_flat_button, 0);
-
+			!! rout_flat_menu_entry.make (rout_flat_cmd, format_menu);
+			!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button, rout_flat_menu_entry);
 			!! rout_cli_cmd.make (text_window);
 			!! rout_cli_button.make (rout_cli_cmd, format_bar);
-			!! showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button);
-			format_bar.attach_top (rout_cli_button, 0);
-			format_bar.attach_left_widget (rout_flat_button, rout_cli_button, 10);
-
+			!! sep.make (new_name, format_menu);
+			!! rout_cli_menu_entry.make (rout_cli_cmd, format_menu);
+			!! showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button, rout_cli_menu_entry);
 			!! rout_hist_cmd.make (text_window);
 			!! rout_hist_button.make (rout_hist_cmd, format_bar);
-			!! showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button);
-			format_bar.attach_top (rout_hist_button, 0);
-			format_bar.attach_left_widget (rout_cli_button, rout_hist_button, 0);
-
+			!! rout_hist_menu_entry.make (rout_hist_cmd, format_menu);
+			!! showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button, rout_hist_menu_entry);
 			!! past_cmd.make (text_window);
 			!! past_button.make (past_cmd, format_bar);
-			!! showpast_frmt_holder.make (past_cmd, past_button);
-			format_bar.attach_top (past_button, 0);
-			format_bar.attach_left_widget (rout_hist_button, past_button, 0);
-
+			!! past_menu_entry.make (past_cmd, format_menu);
+			!! showpast_frmt_holder.make (past_cmd, past_button, past_menu_entry);
 			!! future_cmd.make (text_window);
 			!! future_button.make (future_cmd, format_bar);
-			!! showfuture_frmt_holder.make (future_cmd, future_button);
-			format_bar.attach_top (future_button, 0);
-			format_bar.attach_left_widget (past_button, future_button, 0);
-
+			!! future_menu_entry.make (future_cmd, format_menu);
+			!! showfuture_frmt_holder.make (future_cmd, future_button, future_menu_entry);
 			!! homonym_cmd.make (text_window);
 			!! homonym_button.make (homonym_cmd, format_bar);
-			!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button);
-			format_bar.attach_top (homonym_button, 0);
-			format_bar.attach_left_widget (future_button, homonym_button, 0);
-
+			!! homonym_menu_entry.make (homonym_cmd, format_menu);
+			!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button, homonym_menu_entry);
 			!! stop_cmd.make (text_window);
 			!! stop_button.make (stop_cmd, format_bar);
-			!! showstop_frmt_holder.make (stop_cmd, stop_button);
+			!! sep.make (new_name, format_menu);
+			!! stop_menu_entry.make (stop_cmd, format_menu);
+			!! showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry);
+
+				-- Now we do all attachments. This is done here because of speed.
+			format_bar.attach_top (text_button, 0);
+			format_bar.attach_left (text_button, 0);
+			format_bar.attach_top (rout_flat_button, 0);
+			format_bar.attach_left_widget (text_button, rout_flat_button, 0);
+			format_bar.attach_top (rout_cli_button, 0);
+			format_bar.attach_left_widget (rout_flat_button, rout_cli_button, 10);
+			format_bar.attach_top (rout_hist_button, 0);
+			format_bar.attach_left_widget (rout_cli_button, rout_hist_button, 0);
+			format_bar.attach_top (past_button, 0);
+			format_bar.attach_left_widget (rout_hist_button, past_button, 0);
+			format_bar.attach_top (future_button, 0);
+			format_bar.attach_left_widget (past_button, future_button, 0);
+			format_bar.attach_top (homonym_button, 0);
+			format_bar.attach_left_widget (future_button, homonym_button, 0);
 			format_bar.attach_top (stop_button, 0);
 			format_bar.attach_left_widget (homonym_button, stop_button, 10);
 		end;
@@ -413,10 +441,14 @@ feature {NONE} -- Implementation; Graphical Interface
 			label: LABEL;
 			quit_cmd: QUIT_FILE;
 			quit_button: EB_BUTTON;
+			quit_menu_entry: EB_MENU_ENTRY;
+			exit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON
+			change_font_button: EB_BUTTON;
+			change_font_menu_entry: EB_MENU_ENTRY;
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
+			search_menu_entry: EB_MENU_ENTRY;
 			class_hole_button: ROUT_CLASS_HOLE;
 			class_hole_holder: HOLE_HOLDER;
 			stop_hole_button: DEBUG_STOPIN;
@@ -424,78 +456,81 @@ feature {NONE} -- Implementation; Graphical Interface
 		do
 			edit_bar.set_fraction_base (31);
 
+				-- First we create the needed objects.
 			!! hole_form.make (new_name, edit_bar);
+			!! hole.make (text_window);
+			!! hole_button.make (hole, hole_form);
+			!! hole_holder.make_plain (hole);
+			hole_holder.set_button (hole_button);
+			!! class_hole.make (text_window);
+			!! class_hole_button.make (class_hole, hole_form);
+			!! class_hole_holder.make_plain (class_hole);
+			class_hole_holder.set_button (class_hole_button);
+			!! stop_hole.make (text_window);
+			!! stop_hole_button.make (stop_hole, hole_form);
+			!! stop_hole_holder.make_plain (stop_hole);
+			stop_hole_holder.set_button (stop_hole_button);
+			!! change_routine_form.make (new_name, edit_bar);
+			!! change_routine_command.make (change_routine_form, text_window);
+			!! label.make ("", edit_bar);
+			!! change_class_form.make (new_name, edit_bar);
+			!! change_class_command.make (change_class_form, text_window);
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+			exit_cmd_holder.set_menu_entry (exit_menu_entry);
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, edit_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			!! search_cmd.make (edit_bar, text_window);
+			!! search_button.make (search_cmd, edit_bar);
+			!! search_menu_entry.make (search_cmd, edit_menu);
+			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+
+				-- Now we do all the attachments. This is done here for speed.
 			edit_bar.attach_left (hole_form, 0);
 			edit_bar.attach_top (hole_form, 0);
 			edit_bar.attach_bottom (hole_form, 0);
-
-			!! hole.make (text_window);
-			!! hole_button.make (hole, hole_form);
-			!! hole_holder.make (hole, hole_button);
 			hole_form.attach_left (hole_button, 0);
 			hole_form.attach_top (hole_button, 0);
-			!! class_hole.make (text_window);
-			!! class_hole_button.make (class_hole, hole_form);
-			!! class_hole_holder.make (class_hole, class_hole_button);
 			hole_form.attach_left_widget (hole_button, class_hole_button, 0);
 			hole_form.attach_top (class_hole_button, 0);
-			!! stop_hole.make (text_window);
-			!! stop_hole_button.make (stop_hole, hole_form);
-			!! stop_hole_holder.make (stop_hole, stop_hole_button);
 			hole_form.attach_left_widget (class_hole_button, stop_hole_button, 0);
 			hole_form.attach_top (stop_hole_button, 0);
-
-			!! change_routine_form.make (new_name, edit_bar);
 			edit_bar.attach_left_position (change_routine_form, 11);
 			edit_bar.attach_top (change_routine_form, 0);
 			edit_bar.attach_bottom (change_routine_form, 0);
 			edit_bar.attach_right_position (change_routine_form, 17);
-
-			!! change_routine_command.make (change_routine_form, text_window);
 			change_routine_command.set_width (80);
 			change_routine_form.attach_left (change_routine_command, 0);
 			change_routine_form.attach_top (change_routine_command, 0);
 			change_routine_form.attach_bottom (change_routine_command, 0);
 			change_routine_form.attach_right (change_routine_command, 0);
-
-			!! label.make ("", edit_bar);
 			label.set_text ("from: ");
 			label.set_right_alignment;
 			edit_bar.attach_left_position (label, 17);
 			edit_bar.attach_top (label, 0);
 			edit_bar.attach_bottom (label, 0);
 			edit_bar.attach_right_position (label, 20);
-
-			!! change_class_form.make (new_name, edit_bar);
 			edit_bar.attach_left_position (change_class_form, 20);
 			edit_bar.attach_top (change_class_form, 0);
 			edit_bar.attach_bottom (change_class_form, 0);
-
-			!! change_class_command.make (change_class_form, text_window);
 			change_class_command.set_width (80);
 			change_class_form.attach_left (change_class_command, 0);
 			change_class_form.attach_top (change_class_command, 0);
 			change_class_form.attach_bottom (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);
-
-			!! quit_cmd.make (text_window);
-			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit.make (quit_cmd, quit_button);
 			edit_bar.attach_top (quit_button, 0);
 			edit_bar.attach_right (quit_button, 0);
-
-			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
 			edit_bar.attach_top (change_font_button, 0);
 			edit_bar.attach_right_widget (quit_button, change_font_button, 10);
-
-			!! search_cmd.make (edit_bar, text_window);
-			!! search_button.make (search_cmd, edit_bar);
-			!! search_cmd_holder.make (search_cmd, search_button);
 			edit_bar.attach_top (search_button, 0);
 			edit_bar.attach_right_widget (change_font_button, search_button, 0);
 			edit_bar.attach_right_widget (search_button, change_class_form, 2)

@@ -110,7 +110,7 @@ feature -- Window Properties
 			elseif not a_stone.is_valid then
 				warner (Current).gotcha_call (w_Object_not_inspectable)
 			else
-				text_window.last_format_2.execute (a_stone);
+				text_window.last_format.execute (a_stone);
 				history.extend (a_stone)
 			end
 		end;
@@ -135,7 +135,7 @@ feature -- Settings
 	set_default_format is
 			-- Set the format to its default.
 		do
-			text_window.set_last_format_2 (default_format);
+			text_window.set_last_format (default_format);
 		end;
 
 feature -- Commands
@@ -186,15 +186,22 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			once_cmd: SHOW_ONCE_RESULTS;
 			once_button: EB_BUTTON;
+			once_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			attr_cmd: SHOW_ATTR_VALUES;
-			attr_button: EB_BUTTON
+			attr_button: EB_BUTTON;
+			attr_menu_entry: EB_TICKABLE_MENU_ENTRY;
 		do
+				-- First we create all objects.
 			!! once_cmd.make (text_window);
 			!! once_button.make (once_cmd, format_bar);
-			!! showonce_frmt_holder.make (once_cmd, once_button);
+			!! once_menu_entry.make (once_cmd, format_menu);
+			!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry);
 			!! attr_cmd.make (text_window);
 			!! attr_button.make (attr_cmd, format_bar);
-			!! showattr_frmt_holder.make (attr_cmd, attr_button);
+			!! attr_menu_entry.make (attr_cmd, format_menu);
+			!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry);
+
+				-- Now we do the attachments (for reason of speed).
 			format_bar.attach_top (attr_button, 0);
 			format_bar.attach_left (attr_button, 0);
 			format_bar.attach_top (once_button, 0);
@@ -209,13 +216,15 @@ feature {NONE} -- Implementation; Graphical Interface
 			else
 				!OBJECT_TAB_TEXT! text_window.make (new_name, global_form, Current);
 			end;
+			build_menus;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-				!! command_bar.make (new_name, global_form);
+			!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			text_window.set_last_format_2 (default_format);
+			fill_menus;
+			text_window.set_last_format (default_format);
 			attach_all
 		end;
 
@@ -234,35 +243,53 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			previous_target_cmd: PREVIOUS_OBJECT;
 			previous_target_button: EB_BUTTON;
+			previous_target_menu_entry: EB_MENU_ENTRY;
 			next_target_cmd: NEXT_OBJECT;
 			next_target_button: EB_BUTTON;
+			next_target_menu_entry: EB_MENU_ENTRY;
 			current_target_cmd: CURRENT_OBJECT;
 			current_target_button: EB_BUTTON;
+			current_target_menu_entry: EB_MENU_ENTRY;
 			slice_cmd: SLICE_COMMAND;
-			slice_button: EB_BUTTON
+			slice_button: EB_BUTTON;
+			slice_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
+				-- Here we create all objects needed for the attachments.
 			!! slice_cmd.make (command_bar, text_window);
 			!! slice_button.make (slice_cmd, command_bar);
 			slice_button.add_button_click_action (3, slice_cmd, Void);
-			!! slice_cmd_holder.make (slice_cmd, slice_button);
+			!! slice_menu_entry.make (slice_cmd, special_menu);
+				-- This is a little hack, since we want the slice window to come up.
+				-- The appropriate argument for command is than Void instead of
+				-- the `text_window'.
+			slice_menu_entry.remove_activate_action (slice_cmd, slice_cmd.text_window);
+			slice_menu_entry.add_activate_action (slice_cmd, Void);
+			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry);
+			!! sep.make (new_name, special_menu);
+			!! current_target_cmd.make (text_window);
+			!! current_target_button.make (current_target_cmd, command_bar);
+			!! current_target_menu_entry.make (current_target_cmd, special_menu);
+			!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry);
+			!! next_target_cmd.make (text_window);
+			!! next_target_button.make (next_target_cmd, command_bar);
+			!! next_target_menu_entry.make (next_target_cmd, special_menu);
+			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
+			!! previous_target_cmd.make (text_window);
+			!! previous_target_button.make (previous_target_cmd, command_bar);
+			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
+			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
+
+				-- Here we do the attachments (for reasons of speed).
 			command_bar.attach_left (slice_button, 0);
 			command_bar.attach_right (slice_button, 0);
 			command_bar.attach_bottom (slice_button, 0)
-			!! current_target_cmd.make (text_window);
-			!! current_target_button.make (current_target_cmd, command_bar);
-			!! current_target_cmd_holder.make (current_target_cmd, current_target_button);
 			command_bar.attach_left (current_target_button, 0);
 			command_bar.attach_right (current_target_button, 0);
 			command_bar.attach_bottom_widget (slice_button, current_target_button, 10)
-			!! next_target_cmd.make (text_window);
-			!! next_target_button.make (next_target_cmd, command_bar);
-			!! next_target_cmd_holder.make (next_target_cmd, next_target_button);
 			command_bar.attach_left (next_target_button, 0);
 			command_bar.attach_right (next_target_button, 0);
 			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
-			!! previous_target_cmd.make (text_window);
-			!! previous_target_button.make (previous_target_cmd, command_bar);
-			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button);
 			command_bar.attach_left (previous_target_button, 0);
 			command_bar.attach_right (previous_target_button, 0);
 			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0);

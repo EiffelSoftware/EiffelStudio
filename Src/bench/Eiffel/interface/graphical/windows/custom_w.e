@@ -12,7 +12,7 @@ inherit
 	COMMAND;
 	TOOL_W
 		redefine
-			text_window, tool_name, hole
+			tool_name, hole
 		end;
 	CUSTOM_CONST;
 	CUSTOM_INTERF;
@@ -125,8 +125,6 @@ feature -- Window Properties
 		do
 			Result := "Custom"
 		end;
-
-	text_window: CUSTOM_TEXT;
 
 	hole: CUSTOM_CMD;
 
@@ -249,7 +247,7 @@ feature -- Graphical Interface
 
 			!! name_spec.make (new_name, global_form);
 			!! name_label.make (new_name, name_spec);
-			!! text_window.make (new_name, name_spec, Current);
+			build_text_windows;
 
 			!! separator1.make (new_name, global_form);
 			!! separator2.make (new_name, global_form);
@@ -349,10 +347,10 @@ feature -- Graphical Interface
 			global_form.attach_top_widget (separator1, name_spec, 0);
 			name_spec.attach_top (name_label, 4);
 			name_spec.attach_left (name_label, 3);
-			name_spec.attach_right_widget (text_window, name_label, 3);
-			name_spec.attach_left (text_window, 140);
-			name_spec.attach_right (text_window, 0);
-			name_spec.attach_bottom (text_window, 0);
+			name_spec.attach_right_widget (text_window.widget, name_label, 3);
+			name_spec.attach_left (text_window.widget, 140);
+			name_spec.attach_right (text_window.widget, 0);
+			name_spec.attach_bottom (text_window.widget, 0);
 			global_form.attach_top (separator2, 70);
 			global_form.attach_top_widget (separator1, separator7, 0);
 			global_form.attach_bottom_widget (separator2, separator7, 0);

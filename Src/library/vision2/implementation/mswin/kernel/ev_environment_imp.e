@@ -27,6 +27,23 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := True
 		end
+		
+feature {NONE} -- Implementation
+
+	supported_image_formats: LINEAR [STRING] is
+			-- `Result' contains all supported image formats
+			-- on current platform, in the form of their three letter extension.
+			-- e.g. PNG, BMP, XPM, ICO
+		local
+			res: ARRAYED_LIST [STRING]
+		do
+			create res.make (3)
+			res.extend ("BMP")
+			res.extend ("PNG")
+			res.extend ("ICO")
+			res.compare_objects
+			Result := res
+		end
 
 end -- class EV_ENVIRONMENT_IMP
 

@@ -594,7 +594,11 @@ feature -- Update
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
 			Workbench.recompile
-			Comp_system.purge
+				-- FIXME: We don't purge the system, because of a problems with IDs
+				-- i.e. the system which is using the precompiled can think that some
+				-- IDs are available but they are not. This is due because of a bad
+				-- merging of SERVER_CONTROLs from the different precompiled libraries.
+--			Comp_system.purge
 
 			if successful then
 				Comp_system.set_licensed_precompilation (licensed)

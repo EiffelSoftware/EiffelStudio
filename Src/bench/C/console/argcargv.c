@@ -30,7 +30,7 @@ rt_private void shword(char *cmd, int *argc, char ***argvp);
 
 rt_public void get_argcargv (int *argc, char ***argv)
 {
-	size_t tl;
+	size_t tl, sz;
 	temp = strdup (GetCommandLine());
 
 		/* Only for Application that are launched from EiffelBench:
@@ -39,11 +39,19 @@ rt_public void get_argcargv (int *argc, char ***argv)
 		* that the program needs.
 		*/
 	tl = strlen (temp);
-	if ((tl > 16) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
-			(temp[tl-16] == '"') && (temp[tl-15] == '?') && (temp[tl-17] == ' ')) {
-		temp[tl-17] = '\0';
+
+		/* 2 because we retrieve 2 HANDLEs from the command line. */
+	sz = (2 * sizeof(HANDLE) * 4 + 2) / 3;
+	if (sz % 4) {
+		sz += 4 - (sz % 4);
 	}
-	
+	if
+		((tl > sz + 4) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
+		(temp[tl-(sz+3)] == '?') && (temp[tl-(sz+4)] == '"') && (temp[tl - (sz + 5)] == ' '))
+	{
+		temp[tl - (sz + 5)] = '\0';
+	}
+
 	*argc = 0;
 	shword (temp, argc, argv);
 }

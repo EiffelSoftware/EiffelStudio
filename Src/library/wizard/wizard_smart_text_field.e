@@ -1,6 +1,6 @@
 indexing
 	description	: "Text field which are used by the Wizard"
-	author		: "pascalf"
+	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -10,12 +10,13 @@ class
 inherit
 	WIZARD_SHARED
 
-creation	
+create	
 	make
 
 feature -- Initialization
 
 	make (a_caller: WIZARD_STATE_WINDOW) is
+			-- Initialize with `a_caller' as caller.
 		do
 			caller := a_caller
 		end
@@ -256,7 +257,7 @@ feature {NONE} -- Implementation
 		do
 			create file_selector
 			file_selector.set_filter (browse_file_filter)
-			file_selector.ok_actions.extend(~file_selected(file_selector))
+			file_selector.ok_actions.extend(agent file_selected (file_selector))
 			file_selector.show_modal_to_window (caller.first_window)
 		end
 
@@ -271,16 +272,18 @@ feature {NONE} -- Implementation
 
 				-- Retrieve the string from the textfield, and set
 				-- the starting directory with it if it's a directory.
-			start_directory := clone(textfield.text)
-			end_char := start_directory @ start_directory.count
-			if end_char = '\' or end_char = '/' then
-				start_directory.head (start_directory.count - 1)
-			end
-			if start_directory /= Void and then 
-				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory)).exists
-			then
-				dir_selector.set_start_directory (start_directory)
+			start_directory := clone (textfield.text)
+			
+			if start_directory /= Void then
+				end_char := start_directory @ start_directory.count
+				if end_char = '\' or end_char = '/' then
+					start_directory.head (start_directory.count - 1)
+				end
+				if not start_directory.is_empty and then
+					(create {DIRECTORY}.make (start_directory)).exists
+				then
+					dir_selector.set_start_directory (start_directory)
+				end
 			end
 			dir_selector.ok_actions.extend(~directory_selected(dir_selector))
 			dir_selector.show_modal_to_window (caller.first_window)

@@ -5,7 +5,9 @@ inherit
 	WEL_MAIN_DIALOG
 		redefine
 			setup_dialog,
-			on_control_id_command
+			on_control_id_command,
+			on_cancel,
+			on_ok
 		end
 
 	APPLICATION_IDS
@@ -66,6 +68,32 @@ feature -- Access
 
 	check_box: WEL_CHECK_BOX
 			-- Check box to control the command execution
+			
+feature {NONE} -- Implementation
+
+	on_ok is
+			-- Button OK has been pressed (marked "Cancel").
+		do
+			remove_commands
+			Precursor {WEL_MAIN_DIALOG}			
+		end
+		
+	
+	on_cancel is
+			-- Current has been cancelled.
+		do
+			remove_commands
+			Precursor {WEL_MAIN_DIALOG}
+		end
+		
+	remove_commands is
+			-- Unconnect all commands from `Current'.
+		do
+			remove_command (Wm_move)
+			remove_command (Wm_lbuttondown)
+			remove_command (Wm_command)
+		end
+		
 
 end -- class MAIN_DIALOG
 

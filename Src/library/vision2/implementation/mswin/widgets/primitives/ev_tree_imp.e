@@ -393,7 +393,7 @@ feature {EV_TREE_ITEM_I} -- Implementation
 	insert_item (item_imp: like item_type; an_index: INTEGER) is
 			-- Insert `item_imp' at the `an_index' position.
 		do
-			if index = 1 then
+			if an_index = 1 then
 				general_insert_item (item_imp, default_pointer, Tvi_first)
 			else
 				general_insert_item (item_imp, default_pointer, (ev_children @ (an_index - 1)).h_item)
@@ -644,6 +644,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/06 20:46:07  rogers
+--| Corrected reference from index -> an_index in insert_item.
+--|
 --| Revision 1.38  2000/03/06 19:09:07  rogers
 --| Added selected_items, enable_multiple_selection, disable_multiple_selection and multiple_selection_enabled. All these are to be implemented.
 --|

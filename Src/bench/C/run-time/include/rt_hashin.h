@@ -50,7 +50,7 @@ extern void ht_force(struct htable *ht, register long unsigned int key, char *va
 extern void ht_remove(struct htable *ht, register long unsigned int key);			/* Remove value in H table */
 extern int ht_xtend(struct htable *ht);				/* Extend size of full H table */
 extern void ht_zero(struct htable *ht);				/* Initialize H table to zero */
-extern void ht_free(struct htable *ht);				/* Free hash table */
+RT_LNK void ht_free(struct htable *ht);				/* Free hash table */
 
 #ifdef __cplusplus
 }

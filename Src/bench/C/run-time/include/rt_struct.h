@@ -47,7 +47,7 @@ extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
  */
 
 #ifndef WORKBENCH
-extern long *nbref;		/* Gives # of references given DT */
+RT_LNK long *nbref;		/* Gives # of references given DT */
 #endif
 
 /* Macro to extract from `cn_flags' of `node' of type `struct cnode' and gets

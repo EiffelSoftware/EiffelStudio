@@ -184,37 +184,10 @@ feature -- Element change
 			icon_name_holder := an_icon_name
 		end
 
-	set_icon_mask (an_icon_mask: EV_PIXMAP) is
-			-- Assign `an_icon_mask' to `icon_mask'.
-		local
-			mask_imp: EV_PIXMAP_IMP
-			icon_pixmap_imp: EV_PIXMAP_IMP
-		do
-			icon_mask := an_icon_mask
-			mask_imp ?= icon_mask.implementation
-			check
-				mask_implementation_exists: mask_imp /= Void
-			end
-
-			if icon_pixmap /= Void then
-				icon_pixmap_imp ?= icon_pixmap.implementation
-				check
-					icon_pixmap_implementation_exists: icon_pixmap_imp /= Void
-				end
-				--| FIXME  No more create_window
-				--c_gtk_window_set_icon
-				--(c_object, icon_pixmap_imp.c_object,
-				--icon_pixmap_imp.create_window, mask_imp.c_object)
-			end
-                end
-
 	set_icon_pixmap (an_icon: EV_PIXMAP) is
 			-- Assign `an_icon' to `icon'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
-			mask_imp: EV_PIXMAP_IMP
-			icon_window: EV_WINDOW
-			icon_window_imp: EV_WINDOW_IMP
 		do
 			create icon_pixmap
 			icon_pixmap.copy (an_icon)
@@ -223,31 +196,7 @@ feature -- Element change
 				icon_implementation_exists: pixmap_imp /= Void
 			end
 
-			create icon_window
-			icon_window.set_size (icon_pixmap.width, icon_pixmap.height)
-			icon_window.extend (icon_pixmap)
-
-			icon_window_imp ?= icon_window.implementation			
-			C.gtk_widget_shape_combine_mask (
-				icon_window_imp.c_object,
-				pixmap_imp.mask,
-				0, 0
-			)
-			--icon_window.show
-			if icon_mask /= Void then
-				-- A mask has been set.
-				mask_imp ?= icon_mask.implementation
-				check
-					mask_exists: mask_imp /= Void
-				end
-			else
-				-- Retrieve mask from pixmap.
-				--C.gdk_window_set_icon (
-				--	C.gtk_widget_struct_window (pixmap_imp.c_object),
-				--	C.gtk_widget_struct_window (icon_window_imp.c_object),
-				--	NULL, NULL)
-
-			end
+			C.gdk_window_set_icon (C.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 
 feature {EV_ANY_I} -- Implementation

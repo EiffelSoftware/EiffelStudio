@@ -89,11 +89,8 @@ feature -- Code generation access
 	shared_library_check: EV_CHECK_BUTTON
 			-- Shared library generation status for current system.
 
-	shared_library_field: EV_TEXT_FIELD
+	shared_library_field: EV_PATH_FIELD
 			-- Shared library field name for current system.
-
-	browse_button: EV_BUTTON
-			-- Button to browse for a shared library definition file.
 
 feature -- Parent access
 
@@ -285,7 +282,6 @@ feature -- Status setting
 
 			if not shared_library_check.is_selected then
 				shared_library_field.disable_sensitive
-				browse_button.disable_sensitive
 			end
 		end
 
@@ -354,7 +350,6 @@ feature {NONE} -- Initialization
 			c_specific_widgets.extend (dead_code_removal_check)
 			c_specific_widgets.extend (inlining_check)
 			c_specific_widgets.extend (inlining_size_field)
-			c_specific_widgets.extend (browse_button)
 		end
 	
 	ace_frame (st: STRING): EV_FRAME is
@@ -402,7 +397,6 @@ feature {NONE} -- Initialization
 		local
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
-			label: EV_LABEL
 			list: ARRAYED_LIST [EV_WIDGET]
 		do
 			create Result.make_with_text (st)
@@ -416,25 +410,15 @@ feature {NONE} -- Initialization
 			address_expression_check := new_check_button (vbox, "Address expression")
 			shared_library_check := new_check_button (vbox, "Shared library definition")
 
-			create hbox
-			hbox.set_padding (Layout_constants.Tiny_padding_size)
-			create label.make_with_text (" location: ")
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
-			create shared_library_field
+			vbox.set_padding (Layout_constants.Tiny_padding_size)
+			create shared_library_field.make_with_text_and_parent (" Location: ", system_window.window)
+			shared_library_field.set_browse_for_file ("*.def")
 			shared_library_field.disable_sensitive
-			shared_library_field.set_minimum_width (100)
-			hbox.extend (shared_library_field)
-			create browse_button.make_with_text_and_action (Interface_names.b_Browse, ~browse_file)
-			browse_button.disable_sensitive
-			hbox.extend (browse_button)
-			hbox.disable_item_expand (browse_button)
-			vbox.extend (hbox)
-			vbox.disable_item_expand (hbox)
+			vbox.extend (shared_library_field)
+			vbox.disable_item_expand (shared_library_field)
 			
 			create list.make (2)
 			list.extend (shared_library_field)
-			list.extend (browse_button)
 			shared_library_check.select_actions.extend (~list_desactivation_action
 					(shared_library_check, list))
 
@@ -470,34 +454,6 @@ feature {NONE} -- Initialization
 
 			Result.extend (vbox)
 		end
-
-feature {NONE} -- Action
-
-	browse_file is
-			-- Popup a "select directory" dialog.
-		require
-			shared_library_field_not_void: shared_library_field /= Void
-		local
-			fd: EV_FILE_OPEN_DIALOG
-			start_directory: STRING
-		do
-			create fd
-			fd.set_filter ("*.def")
-			fd.set_title (Interface_names.t_Select_a_directory)
-			start_directory := shared_library_field.text
-			if
-				start_directory /= Void and then
-				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory)).exists
-			then
-				fd.set_start_directory(start_directory)
-			end
-			fd.show_modal_to_window (window_manager.last_focused_window.window)
-			if fd.file_name /= Void and then not fd.file_name.is_empty then
-				shared_library_field.set_text (fd.file_name)
-			end
-		end
-
 
 invariant
 	address_expression_check_not_void: address_expression_check /= Void

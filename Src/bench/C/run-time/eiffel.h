@@ -36,3 +36,6 @@
 
 #endif
 
+extern double math_power ();
+
+

@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "sig.h"
 #include "bits.h"
+#include <math.h>
 
 /*#define DEBUG 6	/**/
 #define TEST

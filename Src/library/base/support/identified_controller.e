@@ -9,26 +9,26 @@ class IDENTIFIED_CONTROLLER
  
 feature -- Measurement
  
-    object_id_stack_size: INTEGER is
+--    object_id_stack_size: INTEGER is
             -- Size of the object_id stack in chunks
             --| a chunk contains 1000 elements
-        external
-            "C | %"eif_object_id.h%""
-		alias
-			"eif_object_id_stack_size"
-        end
+--        external
+--            "C | %"eif_object_id.h%""
+--		alias
+--			"eif_object_id_stack_size"
+ --       end
  
 feature -- Status setting
  
-    extend_object_id_stack (nb_chunks: INTEGER) is
+  --  extend_object_id_stack (nb_chunks: INTEGER) is
             -- Extend the object_id stack by `nb_chunks' chunks.
             --| a chunk contains 1000 elements
-	require positive_nb : nb_chunks > 0 
-       external
-            "C | %"eif_object_id.h%""
-		alias
-			"eif_extend_object_id_stack"
-        end
+--	require positive_nb : nb_chunks > 0 
+ --      external
+  --          "C | %"eif_object_id.h%""
+--		alias
+--			"eif_extend_object_id_stack"
+ --       end
 
 end -- class IDENTIFIED_CONTROLLER
 

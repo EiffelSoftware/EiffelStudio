@@ -1,12 +1,30 @@
 indexing
-	description: "Objects that arrange nodes using a physical model."
-	status: "See notice at end of class"
+	description: "[
+			EG_FORCE_DIRECTED_LAYOUT is a force directed layout using a spring particle system and
+			a Barnes and Hut solver. The complexity is therfore O(n log n) where n is the number of
+			linkables.
+			
+			Links between nodes behave as if they where springs. 
+				The higher `stiffness' the stronger the springs.
+				
+			All nodes are repulsing each other from each other as if they where magnets with same polarity. 
+				The higher `electrical_repulsion' the stronger the repulsion.
+				
+			All nodes fall into the center. 
+				The position of the center is (`center_x', `center_y') and the higher `center_attraction' 
+				the faster the nodes fall into the center.
+				
+			`theta' is the error variable for Barnes and Hut where 0 is low error and slow calculation and
+				100 is high error and fast calculation.
+				
+				]"
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	EG_FORCE_DIRECTED_LAYOUT
-
+	
 inherit
 	EG_LAYOUT
 		redefine
@@ -29,62 +47,50 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EG_LAYOUT}
 			preset (3)
-			move_threshold := 10.0
+			move_threshold := 10
+			theta := 25
 			create stop_actions
 		end
+		
+feature -- Status report
+			
+	is_stopped: BOOLEAN
+			-- Is stopped?
 			
 feature -- Access
 
 	center_attraction: INTEGER
-		
-	stiffness: INTEGER
-		
-	electrical_repulsion: INTEGER
-		
-	energy_tolerance: DOUBLE
-			-- Algorithm variables
+			-- Attraction of the center in percent.
 			
 	center_x: INTEGER
+			-- X position of the center.
+			
 	center_y: INTEGER
-			-- Position of the center.
+			-- Y position of the center.
+		
+	stiffness: INTEGER
+			-- Stiffness of the links in percent.
+		
+	electrical_repulsion: INTEGER
+			-- Electrical repulsion between nodes in percent.
 			
 	stop_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Called when the layouting stops.
 	
 	move_threshold: DOUBLE
-			-- Stop layouting and call `stop_actions' if no node moved
+			-- Call `stop_actions' if no node moved
 			-- for more then `move_threshold'.
 			
-feature -- Access
+	theta: INTEGER
+			-- Error variable for Barnes and Hut.
+			
+	last_theta_average: DOUBLE
+			-- Average theta value after last call to `layout'.
 
-	fence: EV_RECTANGLE
-			-- Fence to keep nodes in (optional, Void if no fence)
-			
-	is_stopped: BOOLEAN
-		
-			
 feature -- Element change
 
-	set_fence (a_fence: like fence) is
-			-- Set 'fence'.
-		do
-			fence := a_fence
-		ensure
-			set: fence = a_fence
-		end
-		
-	set_move_threshold (d: DOUBLE) is
-			-- Set `move_threshold' to `d'.
-		do
-			move_threshold := d
-		ensure
-			set: move_threshold = d
-		end
-		
-		
-feature -- Basic operations
-
 	preset (a_level: INTEGER) is
-			-- Rest the setting accoridingly to 'a_level', which is one of:
+			-- Rest the setting accordingly to `a_level', which is one of:
 			-- 1: tight, 2: normal, 3: loose
 		do
 			if a_level = 1 then
@@ -103,6 +109,22 @@ feature -- Basic operations
 				set_stiffness (0)
 				set_electrical_repulsion (90)
 			end
+		end
+		
+	set_move_threshold (d: INTEGER) is
+			-- Set `move_threshold' to `d'.
+		do
+			move_threshold := d
+		ensure
+			set: move_threshold = d
+		end
+		
+	set_theta (a_theta: INTEGER) is
+			-- Set `theta' to `a_theta'.
+		require
+			valid_value: a_theta >= 0 and a_theta <= 100
+		do
+			theta := a_theta
 		end
 
 	set_center_attraction (a_value: INTEGER) is
@@ -140,12 +162,17 @@ feature -- Basic operations
 		do
 			center_x := ax
 			center_y := ay
+		ensure
+			set: center_x = ax and center_y = ay
 		end
+		
+feature -- Basic operations
 		
 	reset is
 			-- Set `is_stopped' to False.
 		do
 			is_stopped := False
+			iterations := 0
 		ensure
 			set: not is_stopped 
 		end
@@ -163,258 +190,152 @@ feature -- Basic operations
 			-- Arrange the elements in `graph'.
 		do
 			if not is_stopped then
-				max_move := 0.0
-				internal_center_attraction := (center_attraction / 50) --/ (world.scale_factor ^ 2)
-				internal_stiffness := (0.01 + stiffness / 300) --/ (world.scale_factor ^ 2)
-				internal_electrical_repulsion := (1 + electrical_repulsion * 200) * (world.scale_factor ^ 1.5)
-				layout_linkables (world.nodes, 1, void)
-				if max_move < move_threshold * world.scale_factor ^ 0.5  then
+				if world.nodes.is_empty then
 					is_stopped := True
 					stop_actions.call (Void)
+				else
+					max_move := 0
+					last_theta_average := 0.0
+					theta_count := 0
+
+					layout_linkables (world.nodes, 1, void)
+					
+					if max_move < move_threshold * world.scale_factor ^ 0.5 and iterations > 10 then
+						is_stopped := True
+						stop_actions.call (Void)
+					else					
+						iterations := iterations + 1
+					end
+					if theta_count > 0 then
+						last_theta_average := last_theta_average / theta_count
+					end
 				end
+			else
+				last_theta_average := 0.0
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	ground_tolerance: DOUBLE is 2.0
-	previous_total_energy: DOUBLE
-	total_energy: DOUBLE
-	internal_center_attraction: DOUBLE
-	internal_stiffness: DOUBLE
-	internal_electrical_repulsion: DOUBLE
+	spring_particle: EG_SPRING_PARTICLE
+			-- Solver for spring force.
 	
+	spring_energy: EG_SPRING_ENERGY
+			-- Solver for spring energy.
 
-	max_move: DOUBLE
+	max_move: INTEGER
 			-- Maximal move in x and y direction of a node.
+			
+	theta_count: INTEGER
+			-- Theta count.
+			
+	iterations: INTEGER
+			-- Number of iterations
 
-	
-	tolerance: DOUBLE is 0.001
-	math: DOUBLE_MATH is once create Result end
-			-- For math functions
-	
-	get_link_weight (link: EG_LINK_FIGURE): DOUBLE is
-			-- 
-		do
-			Result := 0.25 / world.scale_factor
-		end
-		
 	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
 			-- arrange `linkables'.
 		local
-			l_distance, l_force: DOUBLE
-			l_item, l_other: EG_LINKABLE_FIGURE
-			nodes: ARRAYED_LIST [EG_LINKABLE_FIGURE]
-			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			i, nb, j, nb2: INTEGER
-			move: DOUBLE
-			px, py: INTEGER
-			opx, opy: INTEGER
-			a_edge: EG_LINK_FIGURE
-			l_weight: DOUBLE
+			l_item: EG_LINKABLE_FIGURE
+			i, nb: INTEGER
+			l_force: VECTOR2D [DOUBLE]
+			dx, dy: INTEGER
+			move: INTEGER
+			l_linkables: like linkables
+			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
 		do
 			if not is_stopped then
+				-- Filter out not visible nodes
 				from
-					i := 1
-					nb := linkables.count
+					create l_linkables.make (linkables.count)
+					linkables.start
 				until
-					i > nb
+					linkables.after
 				loop
-					l_item := linkables.i_th (i)
-					if l_item.is_show_requested and then not l_item.is_fixed then				
-						px := l_item.port_x 
-						py := l_item.port_y 
-
-						if internal_center_attraction > 0 then
-							l_distance := distance (center_x, center_y, px, py)
-							if l_distance > 0.1 then
-								l_force := - internal_center_attraction / l_distance
-								l_item.set_dx_dy (l_item.dx + l_force * (px - center_x), l_item.dy + l_force * (py - center_y))
-							end
-						end	
-
-						nodes := world.nodes
-						from
-							j := 1--i + 1
-						until
-							j > nb
-						loop
-							l_other := linkables.i_th (j)
-							if l_other.is_show_requested then 
-								if l_item /= l_other then
-									opx := l_other.port_x 
-									opy := l_other.port_y 
-									
-									l_distance := distance (px, py, opx, opy).max (tolerance)
-									
-									l_force := internal_electrical_repulsion / (l_distance^3)
-									l_item.set_dx_dy (l_item.dx + l_force  * (px - opx), l_item.dy + l_force *  (py - opy))
-								end
-							end
-							j := j + 1
-						end
-						links := l_item.links
-						from
-							j := 1
-							nb2 := links.count
-						until
-							j > nb2
-						loop
-							a_edge := links.i_th (j)
-							if a_edge.is_show_requested then
---								attract_connected (l_item, links.i_th (j))
-								if l_item = a_edge.source then
-									l_other := a_edge.target
-								else
-									l_other := a_edge.source
-								end
-								if l_other.is_show_requested then 
-									opx := l_other.port_x 
-									opy := l_other.port_y 
-									l_distance := distance (px, py, opx, opy)
-									if l_distance > tolerance then
-										l_weight := internal_stiffness * get_link_weight (a_edge)
-										l_item.set_dx_dy (l_item.dx - l_weight * (px - opx), l_item.dy - l_weight * (py - opy))
-									end
-								end
-							end
-							j := j + 1
-						end
-						
-						recursive_energy (l_item, linkables)
-						move := (l_item.step * l_item.dx).abs + (l_item.step * l_item.dy).abs
-						if move > max_move then
-							max_move := move
-						end
-						l_item.translate (fence)
+					l_item := linkables.item
+					if l_item.is_show_requested then
+						l_linkables.extend (l_item)
 					end
-					i := i + 1
+					linkables.forth
 				end
+
+				if not l_linkables.is_empty then
+							-- Initialize particle solvers
+					l_center_attraction := (center_attraction / 50)
+					l_stiffness := ((0.01 + stiffness / 300) * 0.5) / (world.scale_factor)
+					l_electrical_repulsion := (1 + electrical_repulsion * 200) * (world.scale_factor ^ 1.5)
+		
+					create spring_particle.make_with_particles (l_linkables)
+					create spring_energy.make_with_particles (l_linkables)
 					
+					spring_particle.set_center (center_x, center_y)
+					spring_particle.set_center_attraction (l_center_attraction)
+					spring_particle.set_electrical_repulsion (l_electrical_repulsion)
+					spring_particle.set_stiffness (l_stiffness)
+					spring_particle.set_theta (theta / 100)
+					
+					spring_energy.set_center (center_x, center_y)
+					spring_energy.set_center_attraction (l_center_attraction)
+					spring_energy.set_electrical_repulsion (l_electrical_repulsion)
+					spring_energy.set_stiffness (l_stiffness)
+					spring_energy.set_theta (theta / 100)
+					
+						-- solve system
+					from
+						i := 1
+						nb := l_linkables.count
+					until
+						i > nb
+					loop
+						l_item := l_linkables.i_th (i)
 						
+						if not l_item.is_fixed then
+								-- Calculate spring force
+							l_force := spring_particle.force (l_item)
+							l_item.set_delta (l_force.x, l_force.y)
+								-- Update statistic
+							last_theta_average := last_theta_average + spring_particle.last_theta_average
+							theta_count := theta_count + 1
+								
+								-- Calculate spring energy
+							recursive_energy (l_item)
+						
+								-- Move item
+							dx := (l_item.dt * l_item.dx).truncated_to_integer
+							dy := (l_item.dt * l_item.dy).truncated_to_integer
+							
+							move := dx.abs + dy.abs
+							if move > max_move then
+								max_move := move
+							end
+					
+							l_item.set_x_y (l_item.x + dx, l_item.y + dy)
+							l_item.set_delta (0, 0)
+						end
+						i := i + 1
+					end
+				end
 			end
 		end
 		
-	repulse (a_node, a_other: EG_LINKABLE_FIGURE) is
-			-- Get the electrical repulsion between all nodes, including those that are not adjacent.
+	recursive_energy (a_node: EG_LINKABLE_FIGURE) is
+			-- Calculate spring energy for `a_node'
 		local
-			l_distance, l_force: DOUBLE
-			npx, npy, opx, opy: INTEGER
-		do
-			if a_node /= a_other then
-				npx := a_node.port_x
-				npy := a_node.port_y
-				opx := a_other.port_x
-				opy := a_other.port_y
-				l_distance := distance (npx, npy, opx, opy)
-				if l_distance < tolerance then
-					l_distance := tolerance
-				end
-				l_force := internal_electrical_repulsion / l_distance / l_distance / l_distance
-				a_node.set_dx_dy (a_node.dx + l_force  * (npx - opx), a_node.dy + l_force *  (npy - opy))
-			end
-		end
-
-	attract_connected (a_node: EG_LINKABLE_FIGURE; a_edge: EG_LINK_FIGURE) is
-			-- Get the spring force between all of its adjacent nodes.
-		local
-			l_distance: DOUBLE
-			l_other: EG_LINKABLE_FIGURE
-			l_weight: DOUBLE
-			npx, npy, opx, opy: DOUBLE--INTEGER
-		do
-			if a_node = a_edge.source then
-				l_other := a_edge.target
-			else
-				l_other := a_edge.source
-			end
-			if l_other.is_show_requested then --and then l_other.has_visible_link then
-				npx := a_node.port_x 
-				npy := a_node.port_y 
-				opx := l_other.port_x 
-				opy := l_other.port_y 
-				l_distance := distance (npx, npy, opx, opy)
-				if l_distance > tolerance then
-					l_weight := get_link_weight (a_edge)
-					a_node.set_dx_dy (a_node.dx - internal_stiffness * l_weight * (npx - opx), a_node.dy - internal_stiffness * l_weight * (npy - opy))
-				end
-			end
-		end
-
-	recursive_energy (a_node: EG_LINKABLE_FIGURE; linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]) is
-		require
-			a_node_not_void: a_node /= Void
-			a_node_is_shown_requested: a_node.is_show_requested
-		local
-			l_initial_energy, l_step, l_energy: DOUBLE
 			i: INTEGER
-			
-			nb: INTEGER
-			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			a_other: like a_node
-			a_edge: EG_LINK_FIGURE
-			l_distance, l_distance2: DOUBLE
-			npx, npy: DOUBLE
-			ox, oy, px, py: INTEGER
-			l_weight: DOUBLE
+			l_energy, l_initial_energy: DOUBLE
+			l_dt: DOUBLE
 		do
-			l_step := a_node.step * 2
-			a_node.set_step (l_step)
+			l_dt := a_node.dt
 			
-			px := a_node.port_x
-			py := a_node.port_y
-			npx := a_node.port_x + l_step * a_node.dx
-			npy := a_node.port_y + l_step * a_node.dy
-			l_energy := internal_center_attraction * distance (npx, npy, center_x, center_y)
-			l_initial_energy := internal_center_attraction * distance (px, py, center_x, center_y)
-			from
-				i := 1
-				nb := linkables.count
-			until
-				i > nb
-			loop
-				a_other := linkables.i_th (i)
-				if a_node /= a_other and then a_other.is_show_requested then--and then a_other.has_visible_link then
-					ox := a_other.port_x
-					oy := a_other.port_y
-					l_energy :=  l_energy + internal_electrical_repulsion / distance (npx, npy, ox, oy).max (0.0001)
-					l_initial_energy :=  l_initial_energy + internal_electrical_repulsion / distance (px, py, ox, oy).max (0.0001)
-				end
-				i := i + 1
-			end
-			links := a_node.links
-			from
-				i := 1
-				nb := links.count
-			until
-				i > nb
-			loop
-				a_edge := links.i_th (i)
-				if a_edge.is_show_requested then
-					if a_node = a_edge.source then
-						a_other := a_edge.target
-					else
-						a_other := a_edge.source
-					end
-					if a_other /=Void and then a_other.is_show_requested then-- and then a_other.has_visible_link then
-						ox := a_other.port_x
-						oy := a_other.port_y
-						l_weight := internal_stiffness * get_link_weight (a_edge)
-
-						l_distance := distance (npx, npy, ox, oy)
-						l_distance2 := distance (px, py, ox, oy)
-						
-						l_energy := l_energy +  l_weight * l_distance * l_distance / 2
-						l_initial_energy := l_initial_energy + l_weight * l_distance2 * l_distance2 / 2
-					end
-				end
-				i := i + 1
-			end
-
-			check
-				l_energy = get_node_energy (a_node, l_step, linkables)	
-				l_initial_energy = get_node_energy (a_node, 0, linkables)
-			end
+			a_node.set_dt (0)
+			l_initial_energy := spring_energy.force (a_node)
+			last_theta_average := last_theta_average + spring_energy.last_theta_average
+			theta_count := theta_count + 1
+			
+			l_dt := (l_dt * 2)
+			a_node.set_dt (l_dt)
+			l_energy := spring_energy.force (a_node)
+			last_theta_average := last_theta_average + spring_energy.last_theta_average
+			theta_count := theta_count + 1
 
 			from
 				i := 0
@@ -422,63 +343,14 @@ feature {NONE} -- Implementation
 				l_energy <= l_initial_energy or else i > 4
 			loop
 				i := i + 1
-				l_step := l_step / 4
-				l_energy := get_node_energy (a_node, l_step, linkables)
+				l_dt := l_dt / 4
+				a_node.set_dt (l_dt)
+				l_energy := spring_energy.force (a_node)
+				last_theta_average := last_theta_average + spring_energy.last_theta_average
+				theta_count := theta_count + 1
 			end
-			a_node.set_step (l_step)
 		end
 
-	get_node_energy (a_node: EG_LINKABLE_FIGURE; a_step: DOUBLE; linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]): DOUBLE is
-		require
-			a_node_not_void: a_node /= Void
-			a_node_is_shown_requested: a_node.is_show_requested
-		local
-			i, nb: INTEGER
-			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			a_other: like a_node
-			a_edge: EG_LINK_FIGURE
-			l_distance: DOUBLE
-			npx, npy: DOUBLE
-		do
-			npx := a_node.port_x + a_step * a_node.dx
-			npy := a_node.port_y + a_step * a_node.dy
-			Result := internal_center_attraction * distance (npx, npy, center_x, center_y)
-			from
-				i := 1
-				nb := linkables.count
-			until
-				i > nb
-			loop
-				a_other := linkables.i_th (i)
-				if a_node /= a_other and then a_other.is_show_requested then--and then a_other.has_visible_link then
-					Result :=  Result + internal_electrical_repulsion / distance (npx, npy, a_other.port_x, a_other.port_y).max (0.0001)
-				end
-				i := i + 1
-			end
-			links := a_node.links
-			from
-				i := 1
-				nb := links.count
-			until
-				i > nb
-			loop
-				a_edge := links.i_th (i)
-				if a_edge.is_show_requested then
-					if a_node = a_edge.source then
-						a_other := a_edge.target
-					else
-						a_other := a_edge.source
-					end
-					if a_other /=Void and then a_other.is_show_requested then-- and then a_other.has_visible_link then
-						l_distance := distance (npx, npy, a_other.port_x, a_other.port_y)
-						Result := Result + internal_stiffness * get_link_weight (a_edge) * l_distance * l_distance / 2
-					end
-				end
-				i := i + 1
-			end
-		end
-		
-	
 end -- class EG_FORCE_DIRECTED_LAYOUT
 
 --|----------------------------------------------------------------

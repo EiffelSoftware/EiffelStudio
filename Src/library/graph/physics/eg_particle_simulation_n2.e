@@ -1,32 +1,38 @@
 indexing
-	description: "[
-			Common shared routines for XML extraction, saving and deserialization
-		]"
+	description: "Objects that is a straight forward implementation for an `n_body_force_solver' O(n^2)"
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SHARED_XML_ROUTINES
+deferred class
+	EG_PARTICLE_SIMULATION_N2 [G -> NUMERIC]
 
 inherit
-	ANY
-
-	XM_CALLBACKS_FILTER_FACTORY
-		export
-			{NONE} all
-		end
-
+	EG_PARTICLE_SIMULATION [G]
+	
 feature {NONE} -- Implementation
 
-	Xml_routines: XML_ROUTINES is
-			-- Access the common xml routines.
-		once
-			create Result.default_create
-		ensure
-			non_void_Xml_routines: Xml_routines /= Void
+	n_body_force_solver (a_particle: EG_PARTICLE): G is
+			-- Solve n_nody_force O(n).
+		local
+			l_item: EG_PARTICLE
+		do
+			from
+				particles.start
+			until
+				particles.after
+			loop
+				l_item := particles.item
+				if Result = Void then
+					Result := n_body_force (a_particle, l_item)
+				else
+					Result := Result + n_body_force (a_particle, l_item)
+				end
+				particles.forth
+			end
 		end
-
-end -- Class SHARED_XML_ROUTINES
+	
+end -- class EG_PARTICLE_SIMULATION_N2
 
 --|----------------------------------------------------------------
 --| EiffelGraph: library of graph components for ISE Eiffel.

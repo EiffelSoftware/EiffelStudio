@@ -33,7 +33,7 @@ feature {NONE} -- Useless
 			end
 		end
 
-feature {NONE} -- Execution
+feature {PREFERENCE_COMMAND} -- Execution
 
 	execute (argument: ANY) is
 			-- Execute Current
@@ -41,7 +41,7 @@ feature {NONE} -- Execution
 			tool.validate_all;
 			if tool.is_valid then
 				tool.apply_changes;
-				tool.save_holder.execute (close_it)
+				tool.save_cmd.execute (close_it)
 			end
 		end
 

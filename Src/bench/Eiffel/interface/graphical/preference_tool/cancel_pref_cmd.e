@@ -33,7 +33,7 @@ feature {NONE} -- Useless
 			end
 		end
 
-feature {NONE} -- Execution
+feature {PREEFERENCE_COMMAND} -- Execution
 
 	execute (argument: ANY) is
 			-- Execute Current

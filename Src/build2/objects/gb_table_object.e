@@ -51,7 +51,7 @@ feature -- Access
 				until
 					rows_counter > object.rows or not_full
 				loop
-					if object.area_clear (columns_counter, rows_counter, 1, 1) then
+					if object.item (columns_counter, rows_counter) = void then
 						not_full := True
 					else
 						rows_counter := rows_counter + 1

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TREE_ITEM_HOLDER_I
+	EV_TREE_ITEM_LIST_I
 
 inherit
 	EV_ITEM_LIST_I [EV_TREE_ITEM]
@@ -35,7 +35,7 @@ Feature -- Status report
 			go_to (temp_cursor)
 		end
 
-end -- class EV_TREE_ITEM_HOLDER_I
+end -- class EV_TREE_ITEM_LIST_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -58,6 +58,9 @@ end -- class EV_TREE_ITEM_HOLDER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/16 23:13:06  king
+--| Renamed class from holder to list
+--|
 --| Revision 1.14  2000/03/07 01:31:13  king
 --| Implemented find_recursive feature
 --|

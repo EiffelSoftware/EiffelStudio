@@ -130,7 +130,7 @@ feature -- keysymdef resources
 			"XK_Down"
 		end
 	
-	XK_Prior: INTEGER is
+	XK_Prior, XK_Page_Up: INTEGER is
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -138,28 +138,12 @@ feature -- keysymdef resources
 			"XK_Prior"
 		end
 	
-	XK_Page_Up: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_Page_Up"
-		end
-	
-	XK_Next: INTEGER is
+	XK_Next, XK_Page_Down: INTEGER is
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
 		alias
 			"XK_Next"
-		end
-	
-	XK_Page_Down: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_Page_Down"
 		end
 	
 	XK_End: INTEGER is
@@ -344,110 +328,6 @@ feature -- keysymdef resources
 				%| <X11/keysym.h>"
 		alias
 			"XK_KP_F4"
-		end
-	
-	XK_KP_Home: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Home"
-		end
-	
-	XK_KP_Left: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Left"
-		end
-	
-	XK_KP_Up: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Up"
-		end
-	
-	XK_KP_Right: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Right"
-		end
-	
-	XK_KP_Down: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Down"
-		end
-	
-	XK_KP_Prior: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Prior"
-		end
-	
-	XK_KP_Page_Up: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Page_Up"
-		end
-	
-	XK_KP_Next: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Next"
-		end
-	
-	XK_KP_Page_Down: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Page_Down"
-		end
-	
-	XK_KP_End: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_End"
-		end
-	
-	XK_KP_Begin: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Begin"
-		end
-	
-	XK_KP_Insert: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Insert"
-		end
-	
-	XK_KP_Delete: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_KP_Delete"
 		end
 	
 	XK_KP_Equal: INTEGER is

@@ -1,0 +1,10 @@
+copy support.net\any.e kernel\any.e
+copy support.net\boolean.e kernel\boolean.e
+copy support.net\character.e kernel\character.e
+copy support.net\integer.e kernel\integer.e
+copy support.net\integer_8.e kernel\integer_8.e
+copy support.net\integer_16.e kernel\integer_16.e
+copy support.net\integer_64.e kernel\integer_64.e
+copy support.net\real.e kernel\real.e
+copy support.net\pointer.e kernel\pointer.e
+copy support.net\double.e kernel\double.e

@@ -1,0 +1,10 @@
+del support.net\system\system_object.e
+del support.net\system\boolean.e
+del support.net\system\character.e
+del support.net\system\integer.e
+del support.net\system\integer_8.e
+del support.net\system\integer_16.e
+del support.net\system\integer_64.e
+del support.net\system\real.e
+del support.net\system\pointer.e
+del support.net\system\double.e

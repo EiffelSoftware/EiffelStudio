@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	WIZARD_SHARED
 
 inherit
@@ -104,19 +104,14 @@ feature -- Access
 			app_cell.put (app)
 		end
 
-	help_engine: EV_HELP_ENGINE is
+	help_engine: WIZARD_HELP_ENGINE is
 			-- Help engine
-		once
+		do
 			create Result.make
 		ensure
 			help_engine_created: Result /= Void
 		end
 
-	current_help_context: WIZARD_HELP_CONTEXT is
-			-- Help context for this window
-		deferred	
-		end
-		
 feature -- Colors
 
 	White_color: EV_COLOR is
@@ -146,9 +141,9 @@ feature -- Colors
 			Result.set_family (Result.Family_screen)
 			Result.set_weight (Result.Weight_bold)
 			Result.set_shape (Result.Shape_regular)
-			Result.preferred_faces.extend ("Verdana")
-			Result.preferred_faces.extend ("Arial")
-			Result.preferred_faces.extend ("Helvetica")
+			Result.preferred_families.extend ("Verdana")
+			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (16)
 		end
 
@@ -159,9 +154,9 @@ feature -- Colors
 			Result.set_family (Result.Family_screen)
 			Result.set_weight (Result.Weight_bold)
 			Result.set_shape (Result.Shape_regular)
-			Result.preferred_faces.extend ("Tahoma")
-			Result.preferred_faces.extend ("Arial")
-			Result.preferred_faces.extend ("Helvetica")
+			Result.preferred_families.extend ("Tahoma")
+			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end
 
@@ -172,9 +167,9 @@ feature -- Colors
 			Result.set_family (Result.Family_screen)
 			Result.set_weight (Result.Weight_regular)
 			Result.set_shape (Result.Shape_regular)
-			Result.preferred_faces.extend ("Tahoma")
-			Result.preferred_faces.extend ("Arial")
-			Result.preferred_faces.extend ("Helvetica")
+			Result.preferred_families.extend ("Tahoma")
+			Result.preferred_families.extend ("Arial")
+			Result.preferred_families.extend ("Helvetica")
 			Result.set_height (11)
 		end
 

@@ -94,7 +94,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			end
 		end;
 
-	storage_info: S_CLUSTER_DATA is
+	storage_info: S_CLUSTER_DATA_R332 is
 		local
 			clust_l: FIXED_LIST [S_CLUSTER_DATA];
 			classes_i: EXTEND_TABLE [CLASS_I, STRING];
@@ -103,18 +103,25 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			s_cluster_data: S_CLUSTER_DATA;
 			view_id: INTEGER;
 			old_cluster_info: OLD_CASE_LINKABLE_INFO;
-			s_chart: S_CHART
+			s_chart: S_CHART;
+			cluster_name: STRING;
+			dollar_path: STRING
 		do
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
 				-- in cluster_i is ID_SD.
 			if cluster_i /= Void then
-				!! name.make (0);
-				name.append (cluster_i.cluster_name);
+				!! name.make (cluster_i.cluster_name.count);
+				name.append (cluster_i.cluster_name)
 			end;
 			name.to_upper;
 			!! Result.make (name);
 			Result.set_file_name (file_name);
+			if cluster_i /= Void then
+				!! dollar_path.make (cluster_i.dollar_path.count);
+				dollar_path.append (cluster_i.dollar_path);
+				Result.set_reversed_engineered_file_name (dollar_path)
+			end;
 				-- Get old descrition for data (if any) and update
 			   	-- s_class_data
 			old_cluster_info := old_clusters_info.item (name);
@@ -143,7 +150,9 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 				classes_i := Void;
 				if not classes.empty then
 io.error.putstring ("Analyzing cluster: ");
-io.error.putstring (name);
+cluster_name := clone (name);
+cluster_name.to_lower;
+io.error.putstring (cluster_name);
 io.error.new_line;
 					Result.set_classes (class_storage_information (classes))
 				end;
@@ -298,7 +307,8 @@ feature {NONE} -- Class information
 			old_classes: HASH_TABLE [INTEGER, STRING];
 			class_info: CASE_CLASS_INFO;
 			new_class_views: LINKED_LIST [S_CLASS_DATA];
-			view_id: INTEGER
+			view_id: INTEGER;
+			c_name: STRING
 		do
 			old_classes := View_id_info.old_classes_with_cluster_name (name);
 			!! Result.make (classes.count);
@@ -312,7 +322,9 @@ feature {NONE} -- Class information
 			loop
 				classc := classes.item;
 				io.error.putstring ("%TAnalyzing class ");
-				io.error.putstring (classc.class_name);
+				c_name := clone (classc.class_name);
+				c_name.to_upper;
+				io.error.putstring (c_name);
 				io.error.new_line;
 				!! class_info.make (classc);
 				class_info.formulate_class_data (flat_struct);

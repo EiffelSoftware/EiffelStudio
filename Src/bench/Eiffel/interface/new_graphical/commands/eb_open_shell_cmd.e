@@ -29,7 +29,7 @@ feature -- Properties
 			-- The command line dialog.
 
 	command_shell_name: STRING is
-			-- Name of the command to execute in the shell window.
+			-- Name of the command to execute in the shell dialog.
 		do
 			Result := general_shell_command
 		end
@@ -59,7 +59,7 @@ feature -- Update
 			req: EXTERNAL_COMMAND_EXECUTOR
 			cmd_string: STRING
 		do
-				-- feature text window
+				-- feature text area
 			cmd_string := clone (command_shell_name)
 			if not cmd_string.empty then
 				replace_target (cmd_string, fs.file_name)
@@ -138,14 +138,13 @@ feature {NONE} -- Implementation
 
 	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- If left mouse button was pressed -> execute command.
-			-- If right mouse button was pressed -> bring up shell window. 
+			-- If right mouse button was pressed -> bring up shell dialog. 
 		local
 			req: EXTERNAL_COMMAND_EXECUTOR
 			cmd_string: STRING
 			feature_tool: EB_FEATURE_TOOL
 			class_tool: EB_CLASS_TOOL
 			feature_stone: FEATURE_STONE
-			fs: FILED_STONE
 			line_nb: INTEGER
 		do
 			feature_tool ?= tool
@@ -160,7 +159,7 @@ feature {NONE} -- Implementation
 				if class_tool /= Void and then
 					(class_tool.last_format = class_tool.format_list.text_format)
 				then
-					line_nb := class_tool.text_window.current_line
+					line_nb := class_tool.text_area.current_line
 				end
 				if not cmd_string.empty then
 					replace_target (cmd_string, tool_file_name)
@@ -173,14 +172,14 @@ feature {NONE} -- Implementation
 
 	tool_file_name: STRING is
 			-- Provides `tool''s file name, if possible.
-			-- (tool.fs.file_name seems to be different from tool.file_name)
+			-- (fs.file_name seems to be different from tool.file_name)
 		local
-			ed: EB_EDITOR
+			ed: EB_EDIT_TOOL
 			fs: FILED_STONE
 		do
 			ed ?= tool
 			if ed /= Void then
-				fs ?= ed.stone
+				fs := ed.stone
 				if fs /= void then
 					Result := fs.file_name
 				end

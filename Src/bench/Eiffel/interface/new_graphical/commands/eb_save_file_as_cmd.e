@@ -7,7 +7,7 @@ class
 	EB_SAVE_FILE_AS_CMD
 
 inherit
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 --		redefine
 --			license_checked
 --		end
@@ -38,7 +38,7 @@ feature {EB_FILE_OPENER} -- Callbacks
 		local
 			to_write: STRING
 		do
-			to_write := tool.text_window.text
+			to_write := tool.text_area.text
 			new_file.open_write
 			if not to_write.empty then
 				to_write.prune_all ('%R')
@@ -54,17 +54,23 @@ feature {EB_FILE_OPENER} -- Callbacks
 				end
 			end
 			new_file.close
-			if tool.text_window.changed then 
-				tool.text_window.disable_clicking
+			if tool.text_area.changed then 
+				tool.text_area.disable_clicking
 			end
-			if tool.file_name = Void then
-				set_tool_new_name (new_file.name)
-			end
+			set_tool_new_name (new_file.name)
 		end
 
 	set_tool_new_name (new_name: STRING) is
+			--| FIXME
+			--| Christophe, 15 oct 1999
+			--| this feature should be moved in the EB_TOOL hierarchy
+		local
+			ed: EB_EDIT_TOOL
 		do
-			tool.set_file_name (new_name)
+			ed ?= tool
+			if ed /= Void then
+				ed.set_file_name (new_name)
+			end
 			tool.set_title (new_name)
 		end
 			

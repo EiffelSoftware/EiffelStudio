@@ -1,5 +1,6 @@
 indexing
-	description: "Command to save a file."
+	description: "Command to save a file. Used by the class tool%
+		%and the dynamic lib tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,12 +9,12 @@ class
 
 inherit
 	EB_GENERAL_DATA
+	EB_CLASS_TOOL_DATA
 	NEW_EB_CONSTANTS
-	SYSTEM_CONSTANTS
+--	SYSTEM_CONSTANTS
 	EB_EDITOR_COMMAND
 		redefine
 --			license_checked,
-			tool
 		end
 	EB_COMMAND_FEEDBACK
 
@@ -34,7 +35,6 @@ feature -- Properties
 --			Result := Pixmaps.bm_Modified
 --		end
 
-	tool: EB_EDITOR
 --	tool: EB_CLASS_TOOL
 			-- The tool
 
@@ -81,7 +81,7 @@ feature -- Execution
 				end
 
 				if aok then
-					to_write := tool.text_window.text
+					to_write := tool.text_area.text
 					tmp_file.open_write
 					if not to_write.empty then
 						to_write.prune_all ('%R')
@@ -104,13 +104,11 @@ feature -- Execution
 						new_file.delete
 						tmp_file.change_name (tool.file_name)
 					end
+					tool.set_last_saving_date (tmp_file.date)
 
-					tool.text_window.disable_clicking
-					if tool.stone /= Void then
--- and then tool.resources.parse_class_after_saving.actual_value then
-						if tool.parse_file then
---							tool.update
-						end
+					tool.text_area.disable_clicking
+					if tool.stone /= Void and then parse_class_after_saving then
+						tool.parse_file
 					end
 					tool.update_save_symbol
 				end

@@ -1,15 +1,27 @@
 indexing
-	description: "Objects that ..."
-	author: "Marina Nudelman"
+	description: "COM Routines"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	ECOM_ROUTINES
 
+feature -- Access
+
+	com_api: ECOM_COM is
+		once
+			create Result
+		end
+
+	guid_routines: ECOM_GUID_ROUTINES is
+		once
+			create Result
+		end
+
 feature {NONE} -- Implementation
 
-		initializer_routines: POINTER is
+	initializer_routines: POINTER is
 			-- Pointer to structure
 		once
 			Result := ccom_create_e_routines

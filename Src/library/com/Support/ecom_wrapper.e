@@ -1,6 +1,6 @@
 indexing
 	description: "Wrapper of C structures and Interfaces"
-	author: "Marina Nudelman"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,6 +9,8 @@ deferred class
 
 inherit
 	MEMORY
+		export
+			{NONE} all
 		redefine
 			dispose
 		end

@@ -72,7 +72,7 @@ feature {NONE} -- Access
 
 feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER, CONSUMED_REFERENCED_TYPE, CONSUMED_TYPE} -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: CONSUMED_REFERENCED_TYPE): BOOLEAN is
 			-- Only compare referenced types from same assembly as ids may change for other assemblies!
 		do
 			Result := other.name.is_equal (name) and other.assembly_id = assembly_id and

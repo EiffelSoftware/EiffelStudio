@@ -16,7 +16,7 @@ inherit
 			append_to
 		end
 
-creation
+create
 
 	make
 

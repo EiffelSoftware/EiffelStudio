@@ -14,7 +14,7 @@ inherit
 			is_delayed
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

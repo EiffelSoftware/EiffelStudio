@@ -9,7 +9,7 @@ inherit
 			key_name, generate, make_byte_code
 		end
 
-creation
+create
 	init
 	
 feature 

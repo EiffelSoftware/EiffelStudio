@@ -10,7 +10,7 @@ class CYCLE_FUNCTION
 inherit
 	LANGUAGE_FUNCTION
 
-creation
+create
 	make
 
 feature -- Creation
@@ -26,7 +26,7 @@ feature -- Output
 	name: STRING is
 			-- The name of the cycle.
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append_string ("<cycle ");
 			Result.append_string (cycle_num.out);
 			Result.append_string (">")

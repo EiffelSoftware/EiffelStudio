@@ -41,7 +41,7 @@ inherit
 			is_equal, copy
 		end
 
-creation {SYSTEM_I}
+create {SYSTEM_I}
 	make
 
 feature -- Access
@@ -81,7 +81,7 @@ end
 			if class_has_dollar_operator (class_id) then
 				sorted_set := found_item
 			else
-				!! sorted_set.make
+				create sorted_set.make
 				put (sorted_set, class_id)
 			end
 
@@ -216,7 +216,7 @@ feature {NONE} -- Generation
 			cursor: CURSOR
 			a_class: CLASS_C
 		do
-			!! type_id_array.make (0, System.static_type_id_counter.count)
+			create type_id_array.make (0, System.static_type_id_counter.count)
 
 				-- First generate the tables per class type
 			from
@@ -323,7 +323,7 @@ feature {NONE} -- Generation
 			temp: STRING
 		do
 			from
-				!! Result.make (1, nb + 1)
+				create Result.make (1, nb + 1)
 				Result.put ("Current", 1)
 				i := 1
 			until
@@ -347,7 +347,7 @@ feature {NONE} -- Generation
 			from
 				i := 1
 				nb := args.count
-				!! Result.make (1, nb + 1)
+				create Result.make (1, nb + 1)
 				Result.put ("EIF_REFERENCE", 1)
 			until
 				i > nb
@@ -572,7 +572,7 @@ feature {NONE} -- Generation
 			from
 				i := 1
 				nb := args.count
-				!! Result.make (1, nb)
+				create Result.make (1, nb)
 			until
 				i > nb
 			loop

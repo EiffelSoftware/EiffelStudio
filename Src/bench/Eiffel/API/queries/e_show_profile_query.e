@@ -16,7 +16,7 @@ inherit
 			executable, execute
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -34,7 +34,7 @@ feature -- Initialization
 			structured_text := new_st;
 			prof_query := profiler_query;
 			prof_options := clone (profiler_options);
-			!! expanded_filenames.make
+			create expanded_filenames.make
 		end;
 
 feature -- Access
@@ -126,7 +126,7 @@ debug("SHOW_PROF_QUERY")
 end;
 						structured_text.add_string (current_item);
 						structured_text.add_new_line;
-						!! line_str.make (current_item.count);
+						create line_str.make (current_item.count);
 						line_str.fill_character ('-');
 						structured_text.add_string (line_str);
 						structured_text.add_new_line;
@@ -199,7 +199,7 @@ end;
 					end;
 					wc_name := extract_filename(name);
 					wc_name.to_lower
-					!! directory.make (dir_name);
+					create directory.make (dir_name);
 					if directory.exists then;
 						from
 							entries := directory.linear_representation;
@@ -208,7 +208,7 @@ end;
 							entries.forth
 							entries_name := entries.item
 							entries_name.to_lower
-							!! wildcard_matcher.make (wc_name, entries_name);
+							create wildcard_matcher.make (wc_name, entries_name);
 						until
 							entries.after
 						loop
@@ -260,7 +260,7 @@ end;
 				-- Copy filenames back in the original array
 				-- to keep them for the next run as default.
 			from
-				!! empty_array.make (1, 0);
+				create empty_array.make (1, 0);
 				prof_options.filenames.copy (empty_array);
 				expanded_filenames.start
 			until
@@ -302,7 +302,7 @@ end;
 					old_index := old_index - 1
 				end
 			end;
-			!! Result.make (0);
+			create Result.make (0);
 			if old_index > 1 then
 				Result.append_string (name.substring (1, old_index))
 			end
@@ -319,7 +319,7 @@ end;
 			loop
 				i := i - 1
 			end;
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append_string (name.substring (i + 1, name.count))
 		end;
 
@@ -375,10 +375,10 @@ end;
 
 			if prof_query.subquery_operators.count > 0 then
 				if prof_query.operator_at (1).actual_operator.is_equal ("or") then
-					!OR_FILTER! first_filter.make;
+					create {OR_FILTER} first_filter.make;
 					last_op := "or"
 				else
-					!AND_FILTER! first_filter.make;
+					create {AND_FILTER} first_filter.make;
 					last_op := "and"
 				end;
 				boolean_filter := first_filter;
@@ -395,10 +395,10 @@ end;
 							first_filter.extend (generate_filter (i))
 						else
 							if prof_query.operator_at (i).actual_operator.is_equal ("or") then
-								!OR_FILTER! boolean_filter.make;
+								create {OR_FILTER} boolean_filter.make;
 								last_op := "or"
 							else
-								!AND_FILTER! boolean_filter.make;
+								create {AND_FILTER} boolean_filter.make;
 								last_op := "and"
 							end;
 							boolean_filter.extend (generate_filter (i))
@@ -422,22 +422,22 @@ end;
 		do
 			col_name := prof_query.subquery_at (i).column;
 			if col_name.is_equal ("percentage") then
-				!PERCENTAGE_FILTER! Result.make;
+				create {PERCENTAGE_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
 			elseif col_name.is_equal ("self") then
-				!SELF_FILTER! Result.make;
+				create {SELF_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
 			elseif col_name.is_equal ("descendants") then
-				!DESCENDANTS_FILTER! Result.make;
+				create {DESCENDANTS_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
 			elseif col_name.is_equal ("total") then
-				!TOTAL_FILTER! Result.make;
+				create {TOTAL_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
 			elseif col_name.is_equal ("calls") then
-				!CALLS_FILTER! Result.make;
+				create {CALLS_FILTER} Result.make;
 				Result := set_filter_value (Result, true, i)
 			elseif col_name.is_equal ("featurename") then
-				!NAME_FILTER! Result.make;
+				create {NAME_FILTER} Result.make;
 				Result.set_value (prof_query.subquery_at (i).value)
 			end;
 			Result.set_operator (prof_query.subquery_at (i).operator)
@@ -491,7 +491,7 @@ end;
 			real_ref: REAL_REF
 		do
 			if calls then
-				!! int_ref;
+				create int_ref;
 				if val.is_equal ("min") then
 					if prof_options.language_names.item (1).is_equal ("eiffel") then
 						int_ref.set_item (profile_information.profile_data.calls_min_eiffel)
@@ -524,7 +524,7 @@ end;
 				end;
 				Result := int_ref
 			else
-				!! real_ref;
+				create real_ref;
 				if prof_query.subquery_at (i).column.is_equal ("percentage") then
 					if val.is_equal ("min") then
 						if prof_options.language_names.item (1).is_equal ("eiffel") then
@@ -663,7 +663,7 @@ end;
 		do
 			if prof_options.language_names.count > 1 then
 				from
-					!OR_FILTER! lang_filt.make;
+					create {OR_FILTER} lang_filt.make;
 					i := 1
 				until
 					i > prof_options.language_names.count
@@ -671,12 +671,12 @@ end;
 					lang_filt.extend (generate_language_filter (i));
 					i := i + 1
 				end
-				!AND_FILTER! new_ff.make;
+				create {AND_FILTER} new_ff.make;
 				new_ff.extend (lang_filt);
 				new_ff.extend (first_filter);
 				first_filter := new_ff
 			elseif prof_options.language_names.count = 1 then
-				!AND_FILTER! new_ff.make;
+				create {AND_FILTER} new_ff.make;
 				new_ff.extend (generate_language_filter (1));
 				new_ff.extend (first_filter);
 				first_filter := new_ff
@@ -692,11 +692,11 @@ end;
 			lang_name := prof_options.language_names.item (i);
 			lang_name.to_lower;
 			if lang_name.is_equal ("eiffel") then
-				!EIFFEL_FILTER! Result.make
+				create {EIFFEL_FILTER} Result.make
 			elseif lang_name.is_equal ("c") then
-				!C_FILTER! Result.make
+				create {C_FILTER} Result.make
 			elseif lang_name.is_equal ("cycle") then
-				!CYCLE_FILTER! Result.make
+				create {CYCLE_FILTER} Result.make
 			end
 		end;
 

@@ -12,7 +12,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-creation
+create
 	make
 
 feature
@@ -21,9 +21,9 @@ feature
 			-- Initialization
 		do
 			old_make
-			!! control.make
-			!! array_optimizer.make
-			!! inliner.make
+			create control.make
+			create array_optimizer.make
+			create inliner.make
 		end
 
 feature
@@ -35,7 +35,7 @@ feature
 			dep: DEPEND_UNIT
 		do
 			from
-				!! dep.make (in_class.class_id, feat)
+				create dep.make (in_class.class_id, feat)
 				control.extend (dep)
 			until
 				control.is_empty
@@ -120,7 +120,7 @@ end
 	mark_alive (body_index: INTEGER) is
 			-- Record feature `feat'
 		do
-			{FEAT_ITERATOR} Precursor (body_index)
+			Precursor {FEAT_ITERATOR} (body_index)
 
 			features := features + 1
 			if features = features_per_message then

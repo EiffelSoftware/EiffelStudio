@@ -16,7 +16,7 @@ inherit
 
 	PROJECT_CONTEXT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize the system.
 		do
-			!! sub_clusters.make (3);
+			create sub_clusters.make (3);
 		end;
 
 feature -- Access
@@ -50,7 +50,7 @@ feature -- Access
 	statistics: SYSTEM_STATISTICS is
 			-- Statistics of the Eiffel System
 		do
-			!! Result.make
+			create Result.make
 		end;
 
 	document_path: DIRECTORY_NAME is

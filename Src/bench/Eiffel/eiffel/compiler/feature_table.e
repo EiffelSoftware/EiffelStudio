@@ -256,7 +256,7 @@ feature -- Comparison
 								end
 							end
 							Result := False
-							!!depend_unit.make (feat_tbl_id, f2)
+							create depend_unit.make (feat_tbl_id, f2)
 							pass2_ctrl.propagators.extend (depend_unit)
 						else
 							f1.set_code_id (f2.code_id)			
@@ -399,7 +399,7 @@ debug ("ACTIVITY")
 	io.error.putstring (old_feature_i.feature_name)
 	io.error.putstring (" is propagated to clients%N")
 end
-					!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first)
+					create depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first)
 					propagators.put (depend_unit)
 					propagate_feature := False
 				end
@@ -411,7 +411,7 @@ end
 				then
 						-- Detect an attribute changed into a function.
 					if depend_unit = Void then
-						!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first)
+						create depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first)
 					end
 debug ("ACTIVITY")
 	io.error.putstring ("Melted propagators: ")
@@ -442,7 +442,7 @@ end
 		io.error.putint (removed_feature_ids.item)
 		io.error.putstring (" (removed by `update_table' is propagated to clients%N")
 	end
-					!!depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item)
+					create depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item)
 					propagators.put (depend_unit)
 					removed_feature_ids.forth
 				end
@@ -545,7 +545,7 @@ end
 				if feature_i.is_deferred then
 					deferred_found := True
 					if non_deferred then
-						!!vcch1
+						create vcch1
 						vcch1.set_class (associated_class)
 						vcch1.set_a_feature (feature_i)
 						Error_handler.insert_error (vcch1)
@@ -702,7 +702,7 @@ end
 			attribute_type: TYPE_A
 		do
 			from
-				!!Result.make
+				create Result.make
 				start
 			until
 				after
@@ -714,7 +714,7 @@ end
 							-- No attribute of NONE type in skeleton
 						attr_type := attribute_type.type_i
 						if attr_type.has_formal or attr_type.is_true_expanded then
-							!!generic_desc
+							create generic_desc
 							generic_desc.set_type_i (attr_type)
 							desc := generic_desc
 						else
@@ -832,7 +832,7 @@ end
 		local
 			feature_i: FEATURE_I
 		do
-			!!Result.make (0, associated_class.feature_id_counter.value)
+			create Result.make (0, associated_class.feature_id_counter.value)
 			from
 				start
 			until
@@ -851,7 +851,7 @@ end
 			list: ARRAYED_LIST [FEATURE_I]
 			feat: FEATURE_I
 		do
-			!!Result.make (10)
+			create Result.make (10)
 			from
 				start
 			until
@@ -861,7 +861,7 @@ end
 				if feat.is_replicated and then feat.is_unselected then
 					list := Result.item (feat.body_index)
 					if list = Void then
-						!! list.make (1)
+						create list.make (1)
 						Result.put (list, feat.body_index)
 					end
 					list.extend (feat)
@@ -899,7 +899,7 @@ feature -- API
 			feat: FEATURE_I
 		do
 			from
-				!! Result.make (count)
+				create Result.make (count)
 				if object_comparison then
 					Result.compare_objects
 				else
@@ -927,7 +927,7 @@ feature -- API
 		do  
 			from
 				c_id := feat_tbl_id
-				!! list.make
+				create list.make
 				start
 			until
 				after
@@ -945,7 +945,7 @@ feature {FORMAT_REGISTRATION} -- Init
 	init_origin_table is
 			-- Initialize the origin table (for formatting).
 		do
-			!! origin_table.make (0)
+			create origin_table.make (0)
 		end
 
 feature -- Debugging

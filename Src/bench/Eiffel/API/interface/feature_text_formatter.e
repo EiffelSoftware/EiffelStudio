@@ -27,9 +27,9 @@ feature -- Execution
 			f: FORMAT_FEAT_CONTEXT
 		do
 			if display_breakpoint then
-				!DEBUG_CONTEXT! f.make (a_feature.associated_class);
+				create {DEBUG_CONTEXT} f.make (a_feature.associated_class);
 			else
-				!! f.make (a_feature.associated_class);
+				create f.make (a_feature.associated_class);
 			end
 
 			if is_clickable then
@@ -49,7 +49,7 @@ feature -- Execution
 		local
 			f: SIMPLE_DEBUG_CONTEXT
 		do
-			!! f.make (a_feature);
+			create f.make (a_feature);
 			text := f.text;
 			error := f.execution_error
 		end;

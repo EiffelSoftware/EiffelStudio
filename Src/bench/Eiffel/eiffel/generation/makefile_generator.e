@@ -135,7 +135,7 @@ feature -- Object basket managment
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
 		do
-			!!object_name.make (0)
+			create object_name.make (0)
 			object_name.append (base_name)
 			object_name.append (".o")
  			string_list := system_baskets.item (1)
@@ -148,7 +148,7 @@ feature -- Object basket managment
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
 		do
-			!!object_name.make (0)
+			create object_name.make (0)
 			object_name.append (base_name)
 			object_name.append (".o")
  			string_list := system_baskets.item (basket_number)
@@ -405,16 +405,16 @@ feature -- Sub makefile generation
 				basket := baskets.item (i)
 				if not basket.is_empty then
 					if system.in_final_mode then
-						!!f_name.make_from_string (Final_generation_path)
+						create f_name.make_from_string (Final_generation_path)
 					else
-						!!f_name.make_from_string (Workbench_generation_path)
+						create f_name.make_from_string (Workbench_generation_path)
 					end
 					create subdir_name.make (5)
 					subdir_name.append_character (sub_dir)
 					subdir_name.append_integer (i)
 					f_name.extend (subdir_name)
 					f_name.set_file_name (Makefile_SH)
-					!! new_makefile.make (f_name)
+					create new_makefile.make (f_name)
 					make_file  := new_makefile
 					make_file.open_write
 						-- Generate main /bin/sh preamble

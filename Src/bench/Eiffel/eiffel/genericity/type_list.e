@@ -16,7 +16,7 @@ inherit
 				remove, cursor, go_to, wipe_out, extend
 		end
 
-creation
+create
 	make
 
 feature -- Search

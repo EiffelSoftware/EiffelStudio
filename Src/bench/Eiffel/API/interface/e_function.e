@@ -14,7 +14,7 @@ inherit
 			is_function, type
 		end
 
-creation
+create
 	
 	make
 

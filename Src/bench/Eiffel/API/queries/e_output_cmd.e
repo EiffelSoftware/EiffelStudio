@@ -35,7 +35,7 @@ feature -- Setting
 	make is
 			-- Create `structured_text' to `st'.
 		do
-			!! structured_text.make
+			create structured_text.make
 		ensure
 			struct_text_not_void: structured_text /= Void
 		end;

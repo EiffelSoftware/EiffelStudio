@@ -31,7 +31,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -59,7 +59,7 @@ feature -- Creation
 			until
 				i = nb
 			loop
-				!! desc.make (local_class_types.item, s)
+				create desc.make (local_class_types.item, s)
 				l_area.put (desc, i)
 				local_class_types.forth
 				i := i + 1
@@ -157,7 +157,7 @@ feature -- Insertion
 							-- descriptor,  (otherwise recuperate existing one).
 						du := desc.table_item (origin)
 						if du = Void then
-							!! du.make (origin, nb_routines)
+							create du.make (origin, nb_routines)
 							desc.table_put (du, origin)
 						end
 							-- Insert the polymorphical entry correponding to

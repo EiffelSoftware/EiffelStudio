@@ -14,7 +14,7 @@ inherit
 			is_procedure
 		end
 
-creation
+create
 
 	make
 

@@ -14,7 +14,7 @@ inherit
 			is_unique
 		end
 
-creation
+create
 
 	make
 

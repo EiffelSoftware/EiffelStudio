@@ -7,7 +7,7 @@ indexing
 
 class PROFILE_SET
 
-creation
+create
 	make
 
 feature -- Creation
@@ -15,9 +15,9 @@ feature -- Creation
 	make is
 			-- Creation feature
 		do
-			!! eiffel_profiling_list.make;
-			!! c_profiling_list.make;
-			!! cycle_profiling_list.make;
+			create eiffel_profiling_list.make;
+			create c_profiling_list.make;
+			create cycle_profiling_list.make;
 			calls_min_eiffel := -1;
 			calls_min_c := -1;
 			calls_min_cycle := -1;

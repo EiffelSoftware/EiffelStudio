@@ -15,7 +15,7 @@ feature -- Creation
 
 	make is
 		do
-			!! filters.make
+			create filters.make
 		end
 
 feature -- Adding PROFILE_FILTERs

@@ -48,8 +48,8 @@ feature -- Execution
 			
 			-- Group the features in terms of their origin.
 			from
-				!! table.make (20);
-				!! classes.make;
+				create table.make (20);
+				create classes.make;
 				feature_table.start
 			until
 				feature_table.after
@@ -61,7 +61,7 @@ feature -- Execution
 					if table.has (id) then
 						list := table.found_item
 					else
-						!! list.make;
+						create list.make;
 						table.put (list, id);
 						classes.put_front (e_class);
 					end;

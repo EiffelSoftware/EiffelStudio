@@ -9,7 +9,7 @@ inherit
 			generate, final_table_size
 		end
 
-creation
+create
 	make
 
 feature
@@ -83,7 +83,7 @@ feature
 	void_type: VOID_I is
 			-- Void universal type
 		once
-			!!Result
+			create Result
 		end;
 
 feature -- Sort

@@ -18,13 +18,13 @@ feature -- previously in ATTR_UNIT
 	new_poly_table (routine_id: INTEGER): ATTR_TABLE is
 			-- New associated polymorhic table
 		do
-			!! Result.make (routine_id)
+			create Result.make (routine_id)
 		end;
 
 	entry (class_type: CLASS_TYPE): ATTR_ENTRY is
 			-- Attribute entry in an attribute offset table
 		do
-			!!Result;
+			create Result;
 			Result.set_type_id (class_type.type_id);
 			Result.set_feature_id (feature_id);
 			Result.set_type (feature_type (class_type));

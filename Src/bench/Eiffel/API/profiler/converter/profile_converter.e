@@ -14,7 +14,7 @@ inherit
 	PROJECT_CONTEXT
 	EXCEPTIONS
 
-creation
+create
 	make
 
 feature -- Creation
@@ -27,8 +27,8 @@ feature -- Creation
 		do
 			config := s_p_config
 			profilename := profile
-			!! profile_information.make
-			!! cyclics.make
+			create profile_information.make
+			create cyclics.make
 			read_profile_file
 			read_translat_file (translat)
 		end
@@ -137,9 +137,9 @@ debug("PROFILE_CONVERT")
 	io.error.new_line
 end
 
-			!! out_file_name.make_from_string (profilename)
+			create out_file_name.make_from_string (profilename)
 			out_file_name.add_extension (Dot_profile_information)
-			!! file.make (out_file_name)
+			create file.make (out_file_name)
 			if
 				(file.exists and then file.is_writable)
 				or else file.is_creatable
@@ -268,7 +268,7 @@ end
 					space := token_string.index_of (' ', 1)
 					num_str := token_string.substring (space + 1, token_string.index_of (' ', space + 1))
 					number := num_str.to_integer
-					!! cycle_function.make (number)
+					create cycle_function.make (number)
 					is_cycle := True
 					is_eiffel := False
 					is_c := False
@@ -339,7 +339,7 @@ end
 						is_c := False
 						is_cycle := False
 					else
-						!! c_function.make (function_name)
+						create c_function.make (function_name)
 						is_c := True
 						is_cycle := False
 						is_eiffel := False
@@ -350,7 +350,7 @@ end
 					then
 						from
 							string_idx := string_idx + 1
-							!! cycle_name.make (0)
+							create cycle_name.make (0)
 							cycle_name.extend ('<')
 						until
 							profile_string.item (string_idx) = '>'
@@ -428,11 +428,11 @@ end
 			end
 
 			if is_eiffel then
-				!! e_data.make (number_of_calls, percentage, function_time, descendant_time, e_function)
+				create e_data.make (number_of_calls, percentage, function_time, descendant_time, e_function)
 				profile_information.insert_eiffel_profiling_data (e_data)
 
 			elseif is_c then
-				!! c_data.make (number_of_calls, percentage, function_time, descendant_time, c_function)
+				create c_data.make (number_of_calls, percentage, function_time, descendant_time, c_function)
 				if function_name.is_equal ("main") then
 					total_time := function_time + descendant_time
 					profile_information.set_total_execution_time (total_time)
@@ -440,7 +440,7 @@ end
 				profile_information.insert_c_profiling_data (c_data)
 
 			elseif is_cycle then
-				!! cy_data.make (number_of_calls, percentage, function_time, descendant_time, cycle_function)
+				create cy_data.make (number_of_calls, percentage, function_time, descendant_time, cycle_function)
 				profile_information.insert_cycle_profiling_data (cy_data)
 			end
 
@@ -494,7 +494,7 @@ end
 		do
 			next_char := profile_string.item (string_idx)
 			if next_char.is_alpha or else next_char = '_' then
-				!! token_string.make (0)
+				create token_string.make (0)
 				token_string.extend (next_char)
 				from
 					string_idx := string_idx + 1
@@ -552,7 +552,7 @@ end
 				token_type := String_token
 			elseif next_char = '<' then
 				from
-					!! token_string.make (0)
+					create token_string.make (0)
 					token_string.extend (next_char)
 					string_idx := string_idx + 1
 					next_char := profile_string.item (string_idx)
@@ -567,7 +567,7 @@ end
 				string_idx := string_idx + 1
 				token_type := String_token
 			elseif next_char.is_digit then
-				!! token_string.make (0)
+				create token_string.make (0)
 				token_string.extend (next_char)
 				from
 					string_idx := string_idx + 1
@@ -587,7 +587,7 @@ end
 						temp_noc := token_string.to_integer
 						string_idx := string_idx + 1
 						next_char := profile_string.item (string_idx)
-						!! token_string.make (0)
+						create token_string.make (0)
 					until
 						not (next_char.is_digit)
 					loop
@@ -607,7 +607,7 @@ end
 					token_type := Error_token
 				end
 			elseif next_char = '[' then
-				!! token_string.make (0)
+				create token_string.make (0)
 				token_string.extend (next_char)
 				from
 					string_idx := string_idx + 1
@@ -645,7 +645,7 @@ feature {NONE} -- Commands
 		local
 			file : PLAIN_TEXT_FILE
 		do
-			!! file.make_open_read (profilename)
+			create file.make_open_read (profilename)
 			file.read_stream (file.count)
 			profile_string := file.last_string
 			file.close
@@ -669,10 +669,10 @@ feature {NONE} -- Commands
 						-- a FIX.
 						-- ***** FIXME *****
 
-				!! file.make (filename)
-				!! table_name.make_from_string (filename)
+				create file.make (filename)
+				create table_name.make_from_string (filename)
 				table_name.add_extension (Table_extension)
-				!! table_file.make (table_name)
+				create table_file.make (table_name)
 
 					-- Both files should exist. Existence of TRANSLAT
 					-- is already checked in the root class
@@ -708,7 +708,7 @@ feature {NONE} -- Commands
 			else
 					-- Dummy instance just to make sure the rest of the
 					-- converter keeps working.
-				!! functions.make (0)
+				create functions.make (0)
 			end
 		rescue
 			retried := True
@@ -726,16 +726,16 @@ feature {NONE} -- Commands
 			object_file: RAW_FILE
 		do
 			from
-				!! functions.make (20)
+				create functions.make (20)
 				io.putstring ("Creating function table. Please wait...%N")
 			until
 				translat_string.count = 0
 			loop
 					-- Initialize function / feature name.
-				!! c_name.make (0)
-				!! cluster_name.make (0)
-				!! cl_name.make (0)
-				!! feature_name.make (0)
+				create c_name.make (0)
+				create cluster_name.make (0)
+				create cl_name.make (0)
+				create feature_name.make (0)
 
 					-- Get a single line from the string.
 				translat_line := get_translat_line
@@ -759,10 +759,10 @@ feature {NONE} -- Commands
 				c_name.append_string (translat_line.substring (first_tab, second_tab - 1))
 
 					-- Put function-feature in the hash table.
-				!! new_function.make (cluster_name, cl_name, feature_name)
+				create new_function.make (cluster_name, cl_name, feature_name)
 				functions.put (new_function, c_name)
 			end
-			!! object_file.make_open_write (filename)
+			create object_file.make_open_write (filename)
 			object_file.independent_store (functions)
 			object_file.close
 		end
@@ -771,7 +771,7 @@ feature {NONE} -- Commands
 		local
 			new_line_index : INTEGER
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			new_line_index := translat_string.index_of ('%N',1)
 			Result.append_string (translat_string.substring (1, new_line_index))
 			translat_string.remove_head (new_line_index)

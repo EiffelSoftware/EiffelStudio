@@ -13,7 +13,7 @@ inherit
 			has_valid_feature
 		end
 
-creation
+create
 	make, do_nothing
 
 feature -- Access
@@ -27,7 +27,7 @@ feature -- Execution
 		local
 			ctxt: FEATURE_TEXT_FORMATTER;
 		do
-			!! ctxt;
+			create ctxt;
 			ctxt.set_clickable
 				--| Show the flat format, that's why we are passing `False'
 				--| as parameter to the `format' feature

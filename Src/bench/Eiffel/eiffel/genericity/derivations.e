@@ -11,7 +11,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature
@@ -44,7 +44,7 @@ debug
 end;
 			derivations := item (an_id);
 			if derivations = Void then
-				!!derivations.make;
+				create derivations.make;
 				put (derivations, an_id);
 			end;
 

@@ -12,7 +12,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 	
@@ -53,9 +53,9 @@ feature
 
 	make is
 		do
-			!!unique_names.make;
-			!!int_intervals.make;
-			!!char_intervals.make;
+			create unique_names.make;
+			create int_intervals.make;
+			create char_intervals.make;
 		end;
 
 	wipe_out is
@@ -120,7 +120,7 @@ feature
 			else
 				second_int := make_integer (upper);
 			end;
-			!!Result.make (first_int, second_int);
+			create Result.make (first_int, second_int);
 			if Result.is_good_range then
 				from
 					int_intervals.start;
@@ -129,7 +129,7 @@ feature
 				loop
 					if not Result.disjunction (int_intervals.item) then
 							-- Error
-						!!vomb3;
+						create vomb3;
 						context.init_error (vomb3);
 						vomb3.set_interval (Result.intersection (int_intervals.item));
 						Error_handler.insert_error (vomb3);
@@ -159,7 +159,7 @@ feature
 			else
 				second_char := upper.make_character;
 			end;
-			!!Result.make (first_char, second_char);
+			create Result.make (first_char, second_char);
 			if Result.is_good_range then
 				from
 					char_intervals.start;
@@ -168,7 +168,7 @@ feature
 				loop
 					if not Result.disjunction (char_intervals.item) then
 							-- Error
-						!!vomb3;
+						create vomb3;
 						context.init_error (vomb3);
 						vomb3.set_interval (Result.intersection (char_intervals.item));
 						Error_handler.insert_error (vomb3);
@@ -225,7 +225,7 @@ feature
 					unique_found := True;
 					if unique_names.has (constant_name) then
 							-- Error
-						!!vomb4;
+						create vomb4;
 						context.init_error (vomb4);
 						vomb4.set_unique_feature (constant_i);
 						Error_handler.insert_error (vomb4);
@@ -236,7 +236,7 @@ feature
 							last_class := written_class;
 						elseif last_class /= written_class then
 								-- Error
-							!!vomb6;
+							create vomb6;
 							context.init_error (vomb6);
 							vomb6.set_unique_feature (constant_i);
 							vomb6.set_written_class (last_class);
@@ -253,7 +253,7 @@ feature
 				end;
 			end;
 			if make_vomb5 then
-				!!vomb5;
+				create vomb5;
 				context.init_error (vomb5);
 				vomb5.set_positive_value (positive_value);
 				Error_handler.insert_error (vomb5);

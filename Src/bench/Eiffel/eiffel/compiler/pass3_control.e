@@ -17,7 +17,7 @@ inherit
 			wipe_out, make
 		end
 
-creation
+create
 
 	make
 	
@@ -36,7 +36,7 @@ feature
 	make is
 		do
 			basic_make;
-			!!changed_status.make;
+			create changed_status.make;
 		end;
 
 	set_invariant_removed (b: BOOLEAN) is

@@ -11,7 +11,7 @@ inherit
 
 	E_CLASS_CMD
 
-creation
+create
 
 	make, do_nothing
 
@@ -20,7 +20,7 @@ feature -- Output
 	work is
 			-- Execute Current command.	
 		do
-			!! displayed.make;
+			create displayed.make;
 			current_class.append_signature (structured_text);
 			structured_text.add_new_line;
 			rec_display (1, current_class, structured_text);

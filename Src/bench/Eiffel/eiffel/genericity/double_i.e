@@ -71,7 +71,7 @@ feature
 	description: DOUBLE_DESC is
 			-- Type description for skeleton
 		do
-			!!Result
+			create Result
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
@@ -130,7 +130,7 @@ feature
 
 	type_a: DOUBLE_A is
 		do
-			!! Result
+			create Result
 		end
 
 feature -- Generic conformance

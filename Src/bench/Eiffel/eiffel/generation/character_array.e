@@ -11,7 +11,7 @@ inherit
 			{CHARACTER_ARRAY} area
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

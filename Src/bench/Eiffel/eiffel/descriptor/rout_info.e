@@ -17,7 +17,7 @@ indexing
 class
 	ROUT_INFO 
 
-creation
+create
 	make
 
 feature -- Initialization

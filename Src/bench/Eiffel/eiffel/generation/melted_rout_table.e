@@ -9,7 +9,7 @@ class
 inherit
 	CHARACTER_ARRAY
 
-creation
+create
 	make
 
 end -- class MELTED_ROUT_TABLE

@@ -17,7 +17,7 @@ inherit
 			append_to
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -92,7 +92,7 @@ feature -- Output
 	name: STRING is
 			-- The name of the feature.
 		do
-			!!Result.make (0);
+			create Result.make (0);
 			if class_id = 0 then
 				Result.append ("<cluster_tag>")
 			else

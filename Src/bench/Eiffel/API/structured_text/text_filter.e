@@ -114,7 +114,7 @@ feature -- Removal
 	wipe_out_image is
 			-- Wipe out the image.
 		do
-			!! image.make (2000)
+			create image.make (2000)
 		end
 
 feature -- Access
@@ -580,7 +580,7 @@ feature {NONE} -- Text processing
 			print_escaped_text (" ");
 			process_basic_text (ti_Dashdash);
 			print_escaped_text (" ");
-			!! item.make ("class ");
+			create item.make ("class ");
 			process_comment_text (item);
 			print_escaped_text (text.e_class.name_in_upper)
 		end;

@@ -14,7 +14,7 @@ inherit
 			image, append_to
 		end
 
-creation
+create
 
 	make
 
@@ -23,7 +23,7 @@ feature -- Properties
 	image: STRING is
 			-- Text representing Current text
 		do	
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append (" -- class ");
 			Result.append (e_class.name_in_upper);
 		end;

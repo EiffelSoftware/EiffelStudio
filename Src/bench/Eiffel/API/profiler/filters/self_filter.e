@@ -19,7 +19,7 @@ inherit
 			filtering_is_allowed
 		end
 
-creation
+create
 	make
 
 feature -- Creation is

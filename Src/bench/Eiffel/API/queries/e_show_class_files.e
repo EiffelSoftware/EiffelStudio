@@ -11,7 +11,7 @@ class
 inherit
 	E_CLUSTER_CMD
 
-creation
+create
 	make, do_nothing
 
 feature -- Execution

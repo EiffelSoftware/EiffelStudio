@@ -15,7 +15,7 @@ inherit
 			set_id as set_type_id
 		end
 
-creation
+create
 	make
 	
 end -- class MELTED_FEATURE_TABLE

@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			to_go_out, total_nbr_out: STRING
 		do
 			total_nbr_out := total_number.out;
-			!! Result.make (7);
+			create Result.make (7);
 			Result.append ("[");
 			perc := percentage_calculation (nbr_to_go);
 			if perc < 10 then

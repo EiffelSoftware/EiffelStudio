@@ -14,7 +14,7 @@ inherit
 			executable
 		end
 
-creation
+create
 
 	make, do_nothing
 
@@ -56,7 +56,7 @@ feature -- Execution
 				case_interface.show
 				case_interface.raise
 			else
-				!! case_interface.make (output_window, reverse_engineering_window)	
+				create case_interface.make (output_window, reverse_engineering_window)	
 			end
 		end;
 

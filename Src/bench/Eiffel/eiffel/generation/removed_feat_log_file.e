@@ -3,7 +3,7 @@ class REMOVED_FEAT_LOG_FILE
 inherit
 	PLAIN_TEXT_FILE
 
-creation
+create
 	make
 
 feature
@@ -14,7 +14,7 @@ feature
 		do
 			putstring (class_type.associated_class.cluster.cluster_name);
 			putchar ('%T');
-			!! s.make (0)
+			create s.make (0)
 			class_type.type.dump (s);
 			putstring (s)
 			putchar ('%T');

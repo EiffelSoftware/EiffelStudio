@@ -84,7 +84,7 @@ feature {COMPILER_EXPORTER}
 
 	set_name (s: STRING) is
 		do
-			!!feature_name.make (0);
+			create feature_name.make (0);
 			feature_name.load (s);
 		end
 

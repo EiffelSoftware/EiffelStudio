@@ -14,7 +14,7 @@ inherit
 			image as empty_string
 		end
 
-creation
+create
 
 	make
 

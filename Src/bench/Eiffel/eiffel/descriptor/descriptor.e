@@ -28,7 +28,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
 feature
@@ -127,7 +127,7 @@ feature -- Generation
 			end;
 
 			from
-				!!cnt
+				create cnt
 				start
 			until
 				after
@@ -147,7 +147,7 @@ feature -- Generation
 			cnt : COUNTER
 		do
 			from
-				!!cnt
+				create cnt
 				start
 			until
 				after
@@ -198,7 +198,7 @@ feature -- Generation
 			end;
 
 			from
-				!!cnt
+				create cnt
 				start
 				i := 1
 			until

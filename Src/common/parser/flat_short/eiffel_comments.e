@@ -20,7 +20,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make
 
 feature {NONE}
@@ -105,7 +105,7 @@ feature -- Comparison
 			c, i: INTEGER
                         s: STRING;
 		do
-                        !! Result.make;
+                        create Result.make;
 			c := count;
 
                         old_templ.compare_objects;

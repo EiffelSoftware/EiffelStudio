@@ -44,7 +44,7 @@ feature -- Checking
 			-- Check all items
 		do
 			from
-				!! Result.make
+				create Result.make
 				input_set.start
 			until
 				input_set.after

@@ -41,7 +41,7 @@ feature
 debug ("ACTIVITY")
 io.error.putstring ("TIME_CHECK check_suppliers_of_unchanged_classes%N");
 end;
-				!!old_classes.make (500);
+				create old_classes.make (500);
 				clusters := Universe.clusters;
 				from
 					new_classes.start
@@ -80,7 +80,7 @@ end;
 						-- Some classes may have the same visiblity
 						-- Check all the clients because there is maybe a conflict
 						-- 'classes_to_recompile' is updated and the check is done only once
-					!!checked_classes.make (old_classes.count);
+					create checked_classes.make (old_classes.count);
 					from
 						old_classes.start
 					until

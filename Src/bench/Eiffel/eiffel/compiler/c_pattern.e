@@ -25,7 +25,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -150,7 +150,7 @@ feature -- Pattern generation
 			i, nb: INTEGER;
 			temp: STRING
 		do
-			!! Result.make (1, argument_count + 1)
+			create Result.make (1, argument_count + 1)
 			Result.put ("Current", 1)
 			from
 				i := 1;
@@ -176,7 +176,7 @@ feature -- Pattern generation
 				Result.put ("EIF_REFERENCE", 1)
 				j := 2
 			else
-				!! Result.make (1, nb)
+				create Result.make (1, nb)
 				j := 1
 			end
 			from

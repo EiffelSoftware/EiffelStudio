@@ -28,7 +28,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Create an empty table.
 		do
 			ht_make (n)
-			!! offset_counters.make (n)
+			create offset_counters.make (n)
 		end
 
 feature -- Insertion
@@ -83,7 +83,7 @@ feature -- Offset processing
 		do
 			class_id := c.class_id
 			if not offset_counters.has (class_id) then
-				!! counter
+				create counter
 					-- Routine offsets start from 0.
 				counter.set_value (-1)
 				offset_counters.put (counter, class_id)
@@ -143,7 +143,7 @@ feature -- Query features
 				end
 				forth
 			end
-			!! Result.make (1, max)
+			create Result.make (1, max)
 			from
 				start
 			until

@@ -8,7 +8,7 @@ inherit
 			generate_specific_defines, generate_other_objects
 		end;
 
-creation
+create
 
 	make
 
@@ -195,7 +195,7 @@ feature
 								packet_nb := cl_type.packet_number
 									-- C code
 								object_name := cl_type.base_file_name;
-								!!file_name.make (16);
+								create file_name.make (16);
 								file_name.append (object_name);
 								file_name.append (".o");
 								string_list := object_baskets.item (packet_nb)
@@ -203,7 +203,7 @@ feature
 								string_list.finish
 
 									-- Descriptor file
-								!!file_name.make (16);
+								create file_name.make (16);
 								file_name.append (object_name);
 								file_name.append_character (Descriptor_file_suffix);
 								file_name.append (".o");
@@ -218,7 +218,7 @@ feature
 	
 					if (not a_class.is_precompiled) then
 							-- Feature table
-						!!file_name.make (16);
+						create file_name.make (16);
 						file_name.append (a_class.base_file_name);
 						file_name.append_integer (a_class.feature_table_file_id);
 						file_name.append_character (Feature_table_file_suffix);

@@ -18,7 +18,7 @@ inherit
 	SHARED_SERVER
 	SHARED_ERROR_HANDLER
 
-creation
+create
 
 	make
 

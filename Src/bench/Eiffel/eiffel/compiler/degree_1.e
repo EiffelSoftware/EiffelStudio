@@ -12,7 +12,7 @@ inherit
 	DEGREE
 	SHARED_DEGREES
 
-creation
+create
 
 	make
 

@@ -18,7 +18,7 @@ inherit
 			replace as replace1
 		end
 
-creation
+create
 
 	make
 

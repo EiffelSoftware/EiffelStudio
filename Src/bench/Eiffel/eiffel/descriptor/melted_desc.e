@@ -16,7 +16,7 @@ inherit
 			set_id as set_class_id
 		end
 
-creation
+create
 	make
 
 end -- class MELTED_DESC

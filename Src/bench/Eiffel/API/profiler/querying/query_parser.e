@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 						if value = Void then
 							error := True
 						else
-							!! subquery.make (col_name, operator, value);
+							create subquery.make (col_name, operator, value);
 							sqv.subqueries.extend (subquery);
 							if index < str.count then
 								index := index + white_space_length (str, index);
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 								else
 									index := index + boolean_op.count;
 									index := index + white_space_length (str, index);
-									!! sub_operator.make (boolean_op);
+									create sub_operator.make (boolean_op);
 									sqv.subquery_operators.extend (sub_operator);
 									index := index + white_space_length (str, index)
 								end
@@ -145,8 +145,8 @@ feature {NONE} -- Implementation
 		local
 			operator: STRING
 		do
-			!! operator.make(0)
-			!! Result.make(0)
+			create operator.make(0)
+			create Result.make(0)
 			operator := str.substring (idx, idx + 1)
 			
 			if operator.is_equal("<=") 
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 	value_str (str: STRING; index, end_index: INTEGER): STRING is
 			-- Get value str from `str' beetween position 'index' and 'end_index'
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result := str.substring (index, end_index);
 			Result.left_adjust;
 			Result.right_adjust;

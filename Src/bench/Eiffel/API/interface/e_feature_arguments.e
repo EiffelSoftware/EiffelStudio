@@ -15,7 +15,7 @@ inherit
 			{NONE} list_put_i_th
 		end
 
-creation
+create
 	make, make_filled
 
 feature -- Property

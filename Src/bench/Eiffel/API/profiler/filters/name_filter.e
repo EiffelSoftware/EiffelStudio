@@ -17,7 +17,7 @@ inherit
 			filtering_is_allowed
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -61,7 +61,7 @@ feature -- Comparing
 			wildcard_matcher: KMP_WILD
 		do
 			if has_wildcards (value) then
-				!! wildcard_matcher.make (value, item_value)
+				create wildcard_matcher.make (value, item_value)
 				Result := wildcard_matcher.pattern_matches
 			else
 				Result := item_value.is_equal (value)

@@ -13,7 +13,7 @@ inherit
 
 	SHARED_COUNTER
 
-creation
+create
 	make
 
 feature {NONE} -- Creation

@@ -14,7 +14,7 @@ inherit
 	SHARED_EXEC_ENVIRONMENT;
 	PROJECT_CONTEXT
 
-creation
+create
 	make
 
 feature -- Initialization

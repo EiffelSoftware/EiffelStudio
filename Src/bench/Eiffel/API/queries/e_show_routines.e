@@ -23,7 +23,7 @@ inherit
 			work
 		end
 
-creation
+create
 
 	make, do_nothing
 
@@ -45,7 +45,7 @@ feature -- Execution
 			class_f: CLASS_TEXT_FORMATTER
 		do
 			class_work;
-			!! class_f;
+			create class_f;
 			class_f.set_clickable;
 			class_f.format_invariants (current_class);
 			if not class_f.error then

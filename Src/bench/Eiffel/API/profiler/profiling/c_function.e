@@ -10,7 +10,7 @@ class C_FUNCTION
 inherit
 	LANGUAGE_FUNCTION
 
-creation
+create
 	make
 
 feature -- Creation

@@ -8,7 +8,7 @@ inherit
 			make as array_make
 		end;
 
-creation
+create
 	make
 
 feature 

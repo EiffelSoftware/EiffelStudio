@@ -70,7 +70,7 @@ feature
 	description: REFERENCE_DESC is
 			-- Type description for skeleton
 		do
-			!!Result
+			create Result
 		end
 
 	generate_cecil_value (f: GENERATION_BUFFER) is

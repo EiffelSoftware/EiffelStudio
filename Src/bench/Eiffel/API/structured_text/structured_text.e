@@ -37,7 +37,7 @@ inherit
 			copy
 		end
 
-creation
+create
 
 	make
 

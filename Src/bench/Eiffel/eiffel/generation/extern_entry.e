@@ -20,7 +20,7 @@ feature -- from EXTERN_ENTRY
 			-- Routine name to generate
 		do
 			if encapsulated then
-				Result := {ROUT_ENTRY} Precursor
+				Result := Precursor {ROUT_ENTRY}
 			else
 				Result := external_name;
 			end;
@@ -58,7 +58,7 @@ feature -- previously in EXTERNAL_UNIT
 		local
 			written_type: CL_TYPE_I;
 		do
-			!!Result;
+			create Result;
 			Result.set_type_id (class_type.type_id);
 			Result.set_type (feature_type (class_type));
 			Result.set_body_index (body_index);

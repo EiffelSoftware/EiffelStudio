@@ -15,7 +15,7 @@ inherit
 			set_id as set_real_body_id
 		end
 
-creation
+create
 	make
 	
 end -- class MELT_FEATURE

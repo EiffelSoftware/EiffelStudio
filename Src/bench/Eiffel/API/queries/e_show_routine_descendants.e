@@ -11,7 +11,7 @@ inherit
 
 	E_FEATURE_CMD
 
-creation
+create
 
 	make, do_nothing
 
@@ -25,7 +25,7 @@ feature -- Execution
 			other_feature: E_FEATURE;
 			e_class: CLASS_C;
 		do
-			!! classes.make;
+			create classes.make;
 			record_descendants (classes, current_class);
 
 			rout_id_set := current_feature.rout_id_set;

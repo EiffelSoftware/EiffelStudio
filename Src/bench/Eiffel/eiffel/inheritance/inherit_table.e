@@ -234,13 +234,6 @@ feature
 					-- Compute invariant clause
 				compute_invariant;
 			end;
-				-- Check creation procedure of changed root class
-			if 	a_class.changed
-				and then
-				a_class = System.root_class.compiled_class
-			then
-				a_class.check_root_class (resulting_table);
-			end;
 				-- Check sum error
 			Error_handler.checksum;
 			check
@@ -320,6 +313,7 @@ feature
 			if Feat_tbl_server.server_has (id) then
 					-- We have a previous compiled class
 				feature_table := Feat_tbl_server.server_item (id);
+				feature_table.update_table;
 			else
 					-- No previous compilation
 				feature_table := Empty_table;
@@ -332,7 +326,8 @@ feature
 			if Tmp_feat_tbl_server.has (id) then
 					-- There eas an error and a feature table has been already
 					-- computed for this class.
-				previous_feature_table := Tmp_feat_tbl_server.item (id)
+				previous_feature_table := Tmp_feat_tbl_server.item (id);
+				previous_feature_table.update_table;
 			end;
 		end;
 
@@ -765,7 +760,7 @@ debug ("ACTIVITY")
 		io.error.putchar ('%T');
 		io.error.putstring (feature_name);
 		io.error.putstring (" has syntactically changed%N");
-	end
+	end;
 end;
 						-- If old representation written in the class,
 						-- keep the fact the old feature from a previous

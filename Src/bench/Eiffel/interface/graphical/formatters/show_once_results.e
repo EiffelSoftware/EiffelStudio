@@ -126,9 +126,7 @@ feature {NONE}
 		require
 			f_exists: f /= Void
 		do
-			Result := (f.written_class > System.any_class.compiled_class or
-					dynamic_class <= System.any_class.compiled_class)
-					and then (f.is_once and f.is_function)
+			Result := f.is_once and f.is_function
 		end;
 
 	display_temp_header (stone: STONE) is

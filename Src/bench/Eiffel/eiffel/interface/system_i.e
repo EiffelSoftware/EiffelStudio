@@ -272,32 +272,44 @@ feature
 			-- System initialization
 		require
 			general_class: general_class /= Void;
+		local
+			local_workbench: WORKBENCH_I;
+			local_universe: UNIVERSE_I;
+			local_root_cluster: CLUSTER_I;
 		do
+			local_workbench := Workbench;
+			local_universe := Universe;
+			local_root_cluster := root_cluster;
+
 				-- At the very beginning of a session, even class ANY is
 				-- not compiled. So we must say to the workbench to compile
 				-- classes ANY, DOUBLE... ARRAY
-			Workbench.change_class (general_class);
-			Workbench.change_class (any_class);
-			Workbench.change_class
-							(Universe.class_named ("numeric", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("double", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("real", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("integer", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("boolean", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("character", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("array", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("bit_ref", root_cluster));
-			Workbench.change_class
-							(Universe.class_named ("pointer", root_cluster));
-			Workbench.change_class (root_class)
+			local_workbench.change_class (general_class);
+			local_workbench.change_class (any_class);
+			local_workbench.change_class
+							(local_universe.class_named ("numeric", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("double", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("real", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("integer", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("boolean", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("character", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("array", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("bit_ref", local_root_cluster));
+			local_workbench.change_class
+							(local_universe.class_named ("pointer", local_root_cluster));
+			local_workbench.change_class (root_class)
 		end;
+
+	protected_classes: INTEGER is 11;
+		-- Usefull for remove_useless_classes
+		-- The 11 first classes are protected (see `init')
 
 	insert_changed_class (cl: CLASS_C) is
 			-- Insert a changed class in `changed_classes'. Do not insert
@@ -308,6 +320,11 @@ feature
 		local
 			old_pos: INTEGER;
 		do
+--debug ("ACTIVITY")
+io.error.putstring ("%TChanged class ");
+io.error.putstring (cl.class_name);
+io.error.new_line;
+--end;
 				-- An insertion in `changed_classes' could happen during
 				-- an iteration on it, so the position must be saved.
 			old_pos := changed_classes.position;
@@ -332,11 +349,11 @@ feature
 		local
 			new_id, id_array_count: INTEGER;
 		do
-debug ("ACTIVITY")
+--debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ");
 io.error.putstring (c.class_name);
 io.error.new_line;
-end;
+--end;
 			new_id := class_counter.next;
 				-- Give a compiled class a frozen id
 			c.set_id (new_id);
@@ -373,6 +390,15 @@ end;
 		require
 			good_argument: a_class /= Void;
 			no_clients: a_class.syntactical_clients.empty;
+		do
+			remove_class (a_class);
+		end;
+
+	remove_class (a_class: CLASS_C) is
+			-- Remove class `a_class' from the system even if
+			-- it has syntactical_clients
+		require
+			 good_argument: a_class /= Void;
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
 			descendants, suppliers, clients: LINKED_LIST [CLASS_C];
@@ -394,7 +420,9 @@ end;
 			moved := True;
 
 				-- Remove type check relations
-			a_class.remove_relations;
+			if a_class.parents /= Void then
+				a_class.remove_relations;
+			end;
 
 				-- Remove class `a_class' from the list of changed classes
 			c := changed_classes.cursor;
@@ -453,7 +481,6 @@ end;
 				end;
 				local_cursor := local_cursor.right
 			end;
-
 		end;
 	
 	class_of_id (id: INTEGER): CLASS_C is
@@ -664,8 +691,10 @@ end;
 		local
 			i, nb: INTEGER;
 			a_class: CLASS_C;
+			root_class_c: CLASS_C;
 		do
 			from
+				root_class_c := root_class.compiled_class;
 				i := 1;
 				nb := id_array.count;
 			until
@@ -676,8 +705,11 @@ end;
 					and then
 					a_class.syntactical_clients.empty
 					and then
-					a_class.id > 12	-- Class of id less than 12 is protected
-									-- See feature `init'
+					a_class.id > protected_classes
+							-- Class of id less than protected_classes is protected
+							-- See feature `init'
+					and then
+					a_class /= root_class_c
 				then
 					remove_old_class (a_class)
 				end;
@@ -960,7 +992,7 @@ end;
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
 			from
-				local_cursor := changed_classes.first_element;
+				local_cursor := changed_classes.first_element
 			until
 				local_cursor = Void
 			loop
@@ -1017,6 +1049,9 @@ end;
 			type_cursor: LINKABLE [CLASS_TYPE];
 			cl_type: CLASS_TYPE;
 		do
+--debug ("ACTIVITY")
+	io.error.putstring ("Updating .UPDT%N");
+--end;
 			Update_file.open_write;
 			file_pointer := Update_file.file_pointer;
 
@@ -1303,6 +1338,10 @@ feature  -- Freeezing
 
 				id_cursor := id_cursor.right
 			end;
+
+--debug ("ACTIVITY")
+io.error.putstring ("Generating tables...%N");
+--end;
 
 			freeze_set1.wipe_out;
 			freeze_set2.wipe_out;

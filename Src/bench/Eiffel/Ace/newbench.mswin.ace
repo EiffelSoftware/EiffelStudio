@@ -2,13 +2,12 @@ system
 	"ec"
 
 root
-	EB_KERNEL: make
+	eb_kernel: make
 
 default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
-	arguments ("-from_bench")
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
@@ -51,7 +50,6 @@ default
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
-	disabled_debug ("liman")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("once")
 	disabled_debug ("optimization")
@@ -83,6 +81,8 @@ default
 	dead_code_removal (yes)
 	exception_trace (yes)
 	inlining (no)
+	arguments ("-from_bench")
+
 
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
@@ -105,15 +105,10 @@ cluster
 			"CVS"; 
 		end
 
-	liman:		"$EIFFEL_SRC\Eiffel\limand"
-
-	liman_bench (liman):		"$\bench"
-
-	liman_bench_graphical (liman):		"$\bench_graphical"
-
-	liman_abstract (liman):		"$\abstract"
-
-	liman_graphical (liman):		"$\graphical"
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"CVS"; "french"; "german"; 
+		end
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
@@ -221,7 +216,17 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
-	eac_documentation:	"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
+	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
+
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
+		exclude
+			"free"; "command_line"; "CVS"; 
+		end
+
+	all keygen:		"$EIFFEL_SRC\library\keygen"
+		exclude
+			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
+		end
 
 external
 

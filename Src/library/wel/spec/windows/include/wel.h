@@ -15,8 +15,8 @@
 #	include <windows.h>
 #endif
 
-#ifndef _eiffel_h_
-#	include <eiffel.h>
+#ifndef _eif_eiffel_h_
+#	include <eif_eiffel.h>
 #endif
 
 #ifndef _lang_h_

@@ -10,7 +10,8 @@ inherit
 	EB_WINDOW
 		redefine
 			build_menus,
-			build_file_menu
+			build_file_menu,
+			window_displayed
 		end
 
 	EB_GENERAL_DATA
@@ -51,6 +52,9 @@ create
 
 feature -- Tab access
 
+	ok_button: EV_BUTTON
+			-- Ok button.
+
 	general_tab: EB_SYSTEM_GENERAL_TAB
 			-- Widget describing General tab.
 
@@ -87,6 +91,12 @@ feature -- Interface access
 
 feature -- Actions
 
+	window_displayed is
+			-- 
+		do
+			ok_button.set_focus
+		end
+		
 	ok_action is
 			-- Action performed when clicking `Ok' button.
 		do
@@ -391,8 +401,8 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Default_border_size)
 
 				-- Create Ok button
-			create button.make_with_text_and_action (Interface_names.b_OK, agent ok_action)
-			extend_button (vbox, button)
+			create ok_button.make_with_text_and_action (Interface_names.b_OK, agent ok_action)
+			extend_button (vbox, ok_button)
 
 				-- Create Cancel button
 			create button.make_with_text_and_action (Interface_names.b_Cancel, agent cancel_action)

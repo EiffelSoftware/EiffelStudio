@@ -2,8 +2,6 @@ indexing
 	description:
 		"Base class for bar graph gauges that display progress of a process.%N%
 		%See EV_HORIZONTAL_PROGRESS_BAR and EV_VERTICAL_PROGRESS_BAR"
-	note: "Default step is 10."
-	--| FIXME this not is not inforced, need to add `is_in_default_state'.
 	status: "See notice at end of class"
 	keywords: "status, progress, bar"
 	date: "$Date$"
@@ -16,16 +14,6 @@ inherit
 	EV_GAUGE
 		redefine
 			implementation
-		end
-
-feature -- Access
-
-	proportion: REAL is
-			-- Proportion of bar filled. Range: [0,1].
-		do
-			Result := implementation.proportion
-		ensure
-			bridge_ok: Result = implementation.proportion
 		end
 
 feature -- Status report
@@ -56,25 +44,10 @@ feature -- Status setting
 			not_is_segmented: not is_segmented
 		end
 
-	set_proportion (a_proportion: REAL) is
-			-- Assign `a_proportion' to `proportion'.
-		require
-			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
-		do
-			implementation.set_proportion (a_proportion)
-		ensure
-			a_proportion_assigned:
-				(proportion - a_proportion).abs < step / (maximum - minimum)
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: EV_PROGRESS_BAR_I
 			-- Responsible for interaction with the native graphics toolkit.
-
-invariant
-	proportion_within_range: proportion >= 0 and proportion <= 1
-	proportion_definition: maximum = minimum implies proportion = 1.0
 
 end -- class EV_PROGRESS_BAR
 
@@ -99,6 +72,9 @@ end -- class EV_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/13 18:01:57  brendel
+--| Removed set_proportion since it is now in EV_GAUGE.
+--|
 --| Revision 1.10  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

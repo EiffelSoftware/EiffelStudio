@@ -38,11 +38,8 @@
 
 #define EIF_GET_CONTEXT \
 	eif_global_context_t *eif_globals;\
-	EIF_TSD_ERRCODE_TYPE tsd_key_err; \
-	EIF_TSD_GET(eif_global_key,eif_globals,tsd_key_err); \
-	if (EIF_TSD_INVALID_ERRCODE(tsd_key_err)) { \
-		panic("Thread data not available"); \
-	} else {
+	EIF_TSD_GET(eif_global_key,eif_globals,"Thread data not available"); \
+	{
 #define EIF_END_GET_CONTEXT }
 
 extern EIF_TSD_TYPE eif_global_key;

@@ -22,6 +22,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	dotnet_metamorphose_basic_to_ref (dmp: DUMP_VALUE): DUMP_VALUE is
+			-- Metamorphose basic type into corresponding _REF type
+		do
+		end
+
 	dotnet_evaluate_once_function (f: E_FEATURE): DUMP_VALUE is
 			-- Evaluation of once function
 		do

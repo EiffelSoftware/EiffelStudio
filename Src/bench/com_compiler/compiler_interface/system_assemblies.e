@@ -18,10 +18,10 @@ inherit
 			is_valid_prefix,
 			is_prefix_allocated,
 			contains_assembly,
-			contains_signed_assembly,
-			contains_unsigned_assembly,
-			cluster_name_from_signed_assembly,
-			cluster_name_from_unsigned_assembly
+			contains_gac_assembly,
+			contains_local_assembly,
+			cluster_name_from_gac_assembly,
+			cluster_name_from_local_assembly
 		end
 	LACE_AST_FACTORY
 		export
@@ -39,9 +39,10 @@ feature {NONE} -- Initialization
 			non_void_ace_accesser: ace /= Void
 		local
 			al: LACE_LIST [ASSEMBLY_SD]
-			assembly: ASSEMBLY_SD
+			assembly: ASSEMBLY_PROPERTIES
 			--assembly_prefix: ID_SD
 		do
+			create assemblies_impl.make (10)
 			ace_accesser := ace
 			al ?= ace_accesser.root_ast.assemblies
 			if al /= Void then
@@ -51,15 +52,13 @@ feature {NONE} -- Initialization
 
 						-- Initialize assemblies list
 					create assemblies_table.make (al.count)
-					create assemblies_impl.make (10)
 					al.start
 				until
 					al.after
 				loop
-					assembly := al.item
-					-- TODO: add assembly prefix search feature. Assembly must search a single cluster's 'uses' to extract the
-					-- prefix for the assembly's 'cluster_name'
-					add_assembly("", assembly.cluster_name, assembly.assembly_name, assembly.version, assembly.culture, assembly.public_key_token)
+					create assembly.make_with_assembly_sd(al.item)
+					assemblies_table.put (assembly, assembly.assembly_cluster_name)
+				    assemblies_impl.extend (assembly)
 					al.forth
 				end
 			end
@@ -126,7 +125,7 @@ feature -- Access
 		local
 			assembly: ASSEMBLY_PROPERTIES
 		do
-			create assembly.make (a_prefix, a_cluster_name, name, version, culture, public_key)
+			create assembly.make (a_cluster_name, name, a_prefix, version, culture, public_key)
 			assemblies_table.put (assembly, a_cluster_name)
 		    assemblies_impl.extend (assembly)
 		end
@@ -259,20 +258,20 @@ feature -- Access
 			Result := assemblies_table.has (a_cluster_name)
 		end
 		
-	contains_signed_assembly (name, version, culture, public_key: STRING): BOOLEAN is
+	contains_gac_assembly (name, version, culture, public_key: STRING): BOOLEAN is
 			-- does the system already contain the specified signed assembly reference
 		do
-			Result := cluster_name_from_signed_assembly (name, version, culture, public_key).count > 0
+			Result := cluster_name_from_gac_assembly (name, version, culture, public_key).count > 0
 		end
 		
-	contains_unsigned_assembly (path: STRING): BOOLEAN is
+	contains_local_assembly (path: STRING): BOOLEAN is
 			-- does the system already contain an assembly reference to 'path'
 		do
-			Result := cluster_name_from_unsigned_assembly (path).count > 0
+			Result := cluster_name_from_local_assembly (path).count > 0
 		end
 		
 		
-	cluster_name_from_signed_assembly (name, version, culture, public_key: STRING): STRING is
+	cluster_name_from_gac_assembly (name, version, culture, public_key: STRING): STRING is
 			-- retieve the assembly identifier for a signed assembly from the passed arguements
 			-- returns "" if no assembly was found
 		local
@@ -307,7 +306,7 @@ feature -- Access
 		end
 		
 	
-	cluster_name_from_unsigned_assembly (path: STRING): STRING is
+	cluster_name_from_local_assembly (path: STRING): STRING is
 			-- retieve the assembly identifier for a local assembly from the passed arguments
 			-- returns "" if no assembly was found
 		local

@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_EDIT
+		redefine
+			default_ex_style
+		end
 
 	WEL_ES_CONSTANTS
 		export
@@ -26,6 +29,11 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Ws_border + Es_left +
 				Es_autohscroll
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := Ws_ex_clientedge
 		end
 
 end -- class WEL_SINGLE_LINE_EDIT

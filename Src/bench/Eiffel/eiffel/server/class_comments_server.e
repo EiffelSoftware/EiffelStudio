@@ -23,7 +23,7 @@ creation
 
 feature -- Update
 
-	take_control (other: TMP_CLASS_COMMENTS_SERVER) is
+	take_control (other: COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]) is
 			-- Take control of `other'.
 		local
 			info, old_info: SERVER_INFO;

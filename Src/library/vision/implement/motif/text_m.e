@@ -197,6 +197,18 @@ feature
 			set_xt_boolean (action_target, True, MwordWrap)
 		end;
 
+	disable_verify_bell is
+			-- Disable the bell when an action is forbidden
+		do
+			set_xt_boolean (action_target, False, MverifyBell)
+		end;
+
+	enable_verify_bell is
+			-- enable the bell when an action is forbidden
+		do
+			set_xt_boolean (action_target, True, MverifyBell)
+		end;
+
 	end_of_selection: INTEGER is
 			-- Position of the end of the current selection highlightened
 		require else
@@ -283,6 +295,12 @@ feature
 			-- Is specified that lines are to be broken at word breaks?
 		do
 			Result := xt_boolean (action_target, MwordWrap)
+		end;
+
+	is_bell_enabled: BOOLEAN is
+			-- Is the bell enabled when an action is forbidden
+		do
+			Result := xt_boolean (action_target, MverifyBell)
 		end;
 
 feature {NONE}
@@ -499,6 +517,40 @@ feature
 			xm_text_set_length (action_target, a_max)
 		end;
 
+feature -- Cursor position
+
+    x_coordinate (char_pos: INTEGER): INTEGER is
+            -- X coordinate relative to the upper left corner
+            -- of Current text widget at character position `char_pos'.
+        do
+			Result := xm_text_x_coord (action_target, char_pos)
+        end;
+
+    y_coordinate (char_pos: INTEGER): INTEGER is
+            -- Y coordinate relative to the upper left corner
+            -- of Current text widget at character position `char_pos'.
+        do
+			Result := xm_text_y_coord (action_target, char_pos)
+        end;
+
+    character_position (x_pos, y_pos: INTEGER): INTEGER is
+            -- Character position at cursor position `x' and `y'
+        do
+			Result := xm_text_cur_pos (action_target, x_pos, y_pos)
+        end;
+
+    top_character_position: INTEGER is
+            -- Character position of first character displayed
+        do
+			Result := xm_text_top_char (action_target)
+        end;
+
+    set_top_character_position (char_pos: INTEGER) is
+            -- Set first character displayed to `char_pos'.
+        do
+			xm_text_set_top_char (action_target, char_pos)
+        end;
+
 feature {NONE} -- External features
 
 	c_set_do_it (value: INTEGER) is
@@ -596,9 +648,32 @@ feature {NONE} -- External features
 			"C"
 		end;
 
+	xm_text_x_coord (scr_obj: POINTER; char_pos: INTEGER): INTEGER is
+		external
+			"C"
+		end;
+
+	xm_text_y_coord (scr_obj: POINTER; char_pos: INTEGER): INTEGER is
+		external
+			"C"
+		end;
+
+	xm_text_cur_pos (scr_obj: POINTER; x_pos, y_pos: INTEGER): INTEGER is
+		external
+			"C"
+		end;
+
+	xm_text_top_char (scr_obj: POINTER): INTEGER is
+		external
+			"C"
+		end;
+
+	xm_text_set_top_char (scr_obj: POINTER; char_pos: INTEGER) is
+		external
+			"C"
+		end;
+
 end
-
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

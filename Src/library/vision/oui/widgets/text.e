@@ -134,6 +134,48 @@ feature -- Text selection
 			end_of_selection = last
 		end -- set_selection
 
+	x_coordinate (char_pos: INTEGER): INTEGER is
+			-- X coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		require
+			valid_position: char_pos >= 0 and then char_pos <= count
+		do
+			Result := implementation.x_coordinate (char_pos)
+		end;
+ 
+	y_coordinate (char_pos: INTEGER): INTEGER is
+			-- Y coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		require
+			valid_position: char_pos >= 0 and then char_pos <= count
+		do
+			Result := implementation.y_coordinate (char_pos)
+		end;
+ 
+	character_position (x_pos, y_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x' and `y'
+		do
+			Result := implementation.character_position (x_pos, y_pos)
+		end;
+
+	top_character_position: INTEGER is
+			-- Character position of first character displayed
+		do
+			Result := implementation.top_character_position
+		ensure
+			valid_result: Result >= 0 and then Result <= count
+		end;
+ 
+	set_top_character_position (char_pos: INTEGER) is
+			-- Set first character displayed to `char_pos'.
+		require
+			valid_position: char_pos >= 0 and then char_pos <= count
+		do
+			implementation.set_top_character_position (char_pos)
+		ensure
+			valid_position: top_character_position = char_pos
+		end;
+ 
 feature -- Text cursor position
 
 	cursor_position: INTEGER is
@@ -216,6 +258,12 @@ feature -- Text mode
 			Result := implementation.is_word_wrap_mode
 		end; -- is_word_wrap_mode
 
+	is_bell_enabled: BOOLEAN is
+			-- Is the bell enabled when an action is forbidden
+		do
+			Result := implementation.is_bell_enabled
+		end;
+
 	allow_action is
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
@@ -255,6 +303,18 @@ feature -- Text mode
 		do
 			implementation.enable_word_wrap
 		end; -- disable_word_wrap
+
+	disable_verify_bell is
+			-- Disable the bell when an action is forbidden
+		do
+			implementation.disable_verify_bell
+		end;
+
+	enable_verify_bell is
+			-- Enable the bell when an action is forbidden
+		do
+			implementation.enable_verify_bell
+		end;
 
 feature -- Resize policies
 

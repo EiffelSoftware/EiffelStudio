@@ -30,6 +30,7 @@ To be revised:
     ev_dynamic_tree_item.e
 
 To do:
+- Fix radio grouping in menus on GTK.
 - Splitter cursor in EV_SPLIT_AREA.
 - Redo windows dialog implementation.
 - Right click interface to pick and drop.
@@ -70,14 +71,6 @@ Feature/Bug requests:
 - Is it possible to sort data in a multiple column list ? Is it possible to
   set editable the cells of the list ? (jsireude@capgemini.fr, PR 2456) 
 
-Allocations:
-JR: tool_bar_item, pick_and_dropable
-AP: pixmap
-VB: dynamic_list, item, simple_item, list_item, list, menu, menu_item_list
-
-2 days: application, environment, default_colors
- 
-
 Status:                                                    
 .   not implemented
 o   incomplete
@@ -91,15 +84,15 @@ X   complete but found to have bugs
     kernel/ev_any.e                                     *    -     *     .
     properties/ev_drawable.e                            *    *     *     .
     properties/ev_drawable_constants.e                  *    *     *     .
-    properties/ev_fontable.e                            *    o .5  o     .
-    properties/ev_pick_and_dropable.e                   o    o .5  o 1   .
+    properties/ev_fontable.e                            *    *     o     .
+    properties/ev_pick_and_dropable.e                   o    o 2   o 1   .
     properties/ev_pixmapable.e                          *    o .5  *     .
     properties/ev_textable.e                            *    *     *     .
-    support/ev_dynamic_list.e                           o    o 2   o     .
+    support/ev_dynamic_list.e                           *    *     *     .
     widgets/ev_widget.e                                 o    o 3   o 1   .
     widgets/primitives/ev_primitive.e                   *    *     *     .
-    items/ev_item.e                                     *    o .5  *     .
-    items/ev_simple_item.e                              o    o .1  *     .
+    items/ev_item.e                                     *    *     *     .
+    items/ev_simple_item.e                              o    *     *     .
     items/ev_separator_item.e                           o    *     *     .
     support/ev_item_list.e                              o    o 1   *     .
     
@@ -139,7 +132,7 @@ X   complete but found to have bugs
     widgets/primitives/ev_separator.e                   *    *     *     .
     widgets/primitives/ev_horizontal_separator.e        *    *     *     .
     widgets/primitives/ev_vertical_separator.e          *    *     *     .
-    widgets/uncommon_widgets/ev_pixmap.e                o    o 4   o     .
+    widgets/uncommon_widgets/ev_pixmap.e                o    o     o     .
 
   Gauges:
     widgets/primitives/ev_gauge.e                       *    *     *     .
@@ -177,7 +170,7 @@ X   complete but found to have bugs
     widgets/containers/ev_titled_window.e               o    o 2   o     .
     widgets/containers/ev_viewport.e                    *    o .5  o     .
     widgets/containers/ev_scrollable_area.e             *    o .5  o     .
-    widgets/containers/ev_widget_list.e                 *    o .5  *     .
+    widgets/containers/ev_widget_list.e                 *    *     *     .
     widgets/containers/ev_dynamic_list_cursor.e         *    *     *     .
     widgets/containers/ev_notebook.e                    *    *     *     .
     widgets/containers/ev_box.e                         *    *     *     .
@@ -189,13 +182,13 @@ X   complete but found to have bugs
     widgets/containers/ev_vertical_split_area.e         o    -     -     .
 
   Menu:
-    widgets/uncommon_widgets/ev_menu.e                  *    o .5  o     .
+    widgets/uncommon_widgets/ev_menu.e                  *    *     o     .
     widgets/uncommon_widgets/ev_menu_bar.e              *    *     *     .
-    widgets/containers/ev_menu_item_list.e              o    o 1.5 o     .
+    widgets/containers/ev_menu_item_list.e              o    *     o     .
     items/ev_menu_item.e                                o    *     *     .
     items/ev_check_menu_item.e                          *    *     *     .
     items/ev_menu_separator.e                           *    *     *     .
-    items/ev_radio_menu_item.e                          *    *     *     .
+    items/ev_radio_menu_item.e                          *    *     o     .
     items/ev_select_menu_item.e                         *    *     *     .
 
   Status bar:
@@ -216,9 +209,11 @@ X   complete but found to have bugs
     items/ev_tree_item.e                                *    o     X     .
 
   List:
-    widgets/primitives/ev_list.e                        *    o 1   *     .
-    items/ev_list_item.e                                *    o .5  *     .
+    widgets/primitives/ev_list.e                        *    *     *     .
+    items/ev_list_item.e                                *    *     *     .
 
   Multi column list:
     widgets/primitives/ev_multi_column_list.e           *    o 2   o     .
     items/ev_multi_column_list_row.e                    *    o 1   o     .
+
+                                                 totals        33

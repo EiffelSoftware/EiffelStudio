@@ -1,4 +1,0 @@
-#define down_arrow_width 5
-#define down_arrow_height 3
-static char down_arrow_bits[] = {
-   0x1f, 0x0e, 0x04};

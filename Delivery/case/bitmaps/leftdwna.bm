@@ -1,4 +1,0 @@
-#define left_down_arrow_width 3
-#define left_down_arrow_height 3
-static char left_down_arrow_bits[] = {
-   0x01, 0x03, 0x07};

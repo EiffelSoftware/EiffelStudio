@@ -1336,6 +1336,90 @@ feature -- PS
 				Result.append (": ");
 				Result.append (type.dump)
 			end
-		end
+		end;
+
+feature -- Debugging
+
+	debuggables: LINKED_LIST [DEBUGGABLE] is
+			-- List of byte code arrays and associated
+			-- information corresponding to Current
+			-- FEATURE_I.
+			--| The class in which the feature is
+			--| written might be generic, debugable 
+			--| information must thus be generated 
+			--| for each possible instantiation.
+		local
+			type_list: LINKED_LIST [CLASS_TYPE]
+		do
+			!!Result.make;
+			from
+				type_list := written_class.types;
+				type_list.start
+			until
+				type_list.after
+			loop
+				Result.add (debuggable (type_list.item));
+				type_list.forth
+			end
+		end;
+
+	debuggable (class_type: CLASS_TYPE): DEBUGGABLE is
+			-- Debuggable byte code, real_body_index and
+			-- real_body_id of version of current feature
+			-- in `class_type'
+		require
+			class_type /= Void;
+			--class_type.associated_class = written_class
+		local
+			du: DISPATCH_UNIT;
+			eu: EXECUTION_UNIT;
+			new_body_id: INTEGER;
+			bc: BYTE_CODE;
+			fa: FEATURE_AS
+		do
+			!!Result;
+
+			-- Compute the real body index.
+			!!du.make (class_type, Current);
+			Dispatch_table.put (du);
+				-- `put' has a side effect which
+				-- `positions' last_unit; `du' 
+				-- should aready be present in
+				-- `Dispatch_table'.
+			du := Dispatch_table.last_unit;
+			Result.set_real_body_index (du.real_body_index);
+
+			-- Compute the real body id.
+			eu :=  du.execution_unit;
+			if System.frozen_level < eu.real_body_id then
+					-- The feature is already melted, the entry
+					-- in the run time melted table can be reused.
+				Result.set_real_body_id (eu.real_body_id)
+			else
+					-- The feature is frozen. Ask the execution
+					-- table to generate a new body id.	
+				new_body_id := Execution_table.debuggable_body_id;
+				Result.set_real_body_id (new_body_id)
+			end;
+
+			-- Compute the list of breakable AST nodes
+			-- (will be used when generating the byte
+			-- code array).
+			fa := Body_server.item (body_id);
+			Context.start_lines; -- Ast_context
+			fa.find_breakable;
+
+			-- Compute the debuggable byte code.
+			Byte_context.init (class_type.type);
+			Byte_context.set_class_type (class_type);
+			Byte_context.set_instruction_line (context.instruction_line);
+			Byte_array.clear;
+			Byte_context.set_debug_mode (True);
+			bc := Byte_server.item (body_id);
+			bc.make_byte_code (Byte_array);
+			Result.set_byte_code (Byte_array.character_array);
+			Result.set_breakable_points (Byte_context.breakable_points);
+			Byte_context.clear_all
+		end;
 
 end

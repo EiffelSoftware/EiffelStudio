@@ -113,14 +113,10 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	relative_position: TUPLE [INTEGER, INTEGER] is
 			-- Position relative to `Parent'.
-		local
-			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP	
-			list_imp: EV_MULTI_COLUMN_LIST_IMP
 		do
-			list_imp ?= parent_imp
 			create Result.make
-			Result.put (list_imp.child_x, 1)
-			Result.put (- list_imp.child_y (row_imp), 2)
+			Result.put (parent_imp.child_x, 1)
+			Result.put (parent_imp.child_y (Current), 2)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -150,6 +146,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/14 18:43:03  rogers
+--| Fixed bug in relative_position.
+--|
 --| Revision 1.23  2000/03/13 23:17:49  rogers
 --| Removed redundent command associations. Added relative_position. Changed the export status of implementation features to {EV_MULTI_COLUMN_LIST_IMP}.
 --|

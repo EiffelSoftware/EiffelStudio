@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Constants
 
 	Implementations: INTEGER is 2
-			-- Number of implemetations
+			-- Number of implementations
 
 feature {NONE} -- Implementation
 

@@ -69,12 +69,12 @@ feature {NONE}
 			pub_date: DATE_TIME
 		do
 			create author.make (10)
-			price := 51
+			price := 222
 			create pub_date.make_now 
 
 			create proc.make (Proc_name)
 			proc.load
-			proc.set_arguments (<<"author", "price", "pub_date">>,
+			proc.set_arguments (<<"new_author", "new_price", "new_date">>,
 						<<author, price, pub_date >>)
 
 			if proc.exists then
@@ -99,15 +99,15 @@ feature {NONE}
 				io.new_line
 				io.new_line
 
-				base_change.set_map_name (pub_date, "pub_date")
-				base_change.set_map_name (price, "price")
-				base_change.set_map_name (author, "author")
+				base_change.set_map_name (pub_date, "new_date")
+				base_change.set_map_name (price, "new_price")
+				base_change.set_map_name (author, "new_author")
 
 				proc.execute (base_change)
 
-				base_change.unset_map_name ("author")
-				base_change.unset_map_name ("price")
-				base_change.unset_map_name ("pub_date")
+				base_change.unset_map_name ("new_author")
+				base_change.unset_map_name ("new_price")
+				base_change.unset_map_name ("new_date")
 
 				io.new_line
 				io.putstring ("Author? ('exit' to terminate):")
@@ -119,19 +119,19 @@ feature {NONE}
 
 	Select_text: STRING is
 		"update DB_BOOK set %
-		%author = author, price = price, year = pub_date where author = author"
+		%price = new_price, year = new_date where author = new_author"
 
 	Table_name: STRING is
 		"DB_BOOK"
 
-	Proc_name: STRING is "DB_BOOK_PROC"
+	Proc_name: STRING is "DB_BOOK_PROCEDURE"
 
 end -- class RUNNER_ORA
 
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1997 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

@@ -22,7 +22,10 @@ inherit
 			{ANY} all
 		end;
 	SHARED_INSTANTIATOR;
-	SHARED_INST_CONTEXT
+	SHARED_INST_CONTEXT;
+	SHARED_ERROR_HANDLER;
+	SHARED_RESCUE_STATUS;
+	SHARED_PASS
 
 creation
 
@@ -136,6 +139,14 @@ feature -- Access
 			end;
 		ensure
 			non_void_result_if: has_ast implies Result /= Void 
+		end;
+
+	invariant_ast: INVARIANT_AS is
+			-- Associated invariant AST structure
+		do
+			if compiled_info.invariant_feature /= Void then
+				Result := Inv_ast_server.item (id)
+			end
 		end;
 
 	has_types: BOOLEAN is
@@ -301,9 +312,34 @@ feature -- Server Access
 		end;
 
 	file_name: STRING is
-			-- FIle name of the class
+			-- File name of the class
 		do
 			Result := lace_class.file_name
+		end;
+
+	file_is_readable: BOOLEAN is
+			-- Is file with `file_name' readable?
+		local
+			f: PLAIN_TEXT_FILE
+		do
+			!! f.make (file_name);
+			Result := f.is_readable	
+		end;
+
+	has_syntax_error: BOOLEAN is
+			-- Does class have a syntax error (after calling `parse_ast')?
+		do
+			Result := last_syntax_error /= Void
+		ensure
+			ok_implies_last_syn_void: Result implies last_syntax_error = Void;
+			not_ok_implies_last_syn_not_void: Result implies last_syntax_error /= Void
+		end
+
+	last_syntax_error: SYNTAX_ERROR is
+			-- Last syntax error generated after calling
+			-- routine `parse_ast'
+		do
+			Result := last_syntax_cell.item
 		end;
 
 feature -- Comparison
@@ -312,6 +348,48 @@ feature -- Comparison
 			-- Order relation on classes
 		do
 			Result := topological_id < other.topological_id;
+		end;
+
+feature -- Element change
+
+	parse_ast is
+			-- Parse the AST structure of current class if it has changed.
+			-- Set `last_syntax_error' if a syntax error ocurred.
+			--| Save the AST in the temporary server and add it to the
+			--| pass one controller (need to still do the end of pass1 process).
+		require
+			file_is_readable: file_is_readable
+		local
+			class_ast: CLASS_AS_B;
+			error: BOOLEAN;
+			syntax_error: SYNTAX_ERROR
+		do
+			if not error then
+				last_syntax_cell.put (Void);
+				class_ast := compiled_info.build_ast;
+				class_ast.set_id (id);
+					-- Mark the class syntactically changed
+				compiled_info.set_changed (True);
+				Tmp_ast_server.put (class_ast);
+				pass1_controler.insert_parsed_class (compiled_info);
+				pass2_controler.insert_new_class (compiled_info);
+				pass3_controler.insert_new_class (compiled_info);
+				pass4_controler.insert_new_class (compiled_info);
+				lace_class.set_date
+			else
+				syntax_error ?= Error_handler.error_list.first;
+				check
+					syntax_error_not_void: syntax_error /= Void
+				end;
+				last_syntax_cell.put (syntax_error);
+				error := False
+			end
+		rescue
+			if Rescue_status.is_error_exception then
+				Rescue_status.set_is_error_exception (False);
+				error := True;
+				retry
+			end
 		end;
 
 feature -- Output
@@ -491,6 +569,16 @@ feature {CLASS_C, CLASS_SORTER} -- Setting
 			obsolete_message := m
 		end;
 
+feature -- Removal
+
+	clear_syntax_error is
+			-- Clear the syntax error information.
+		do
+			last_syntax_cell.put (Void)
+		ensure
+			not_has_syntax: not has_syntax_error
+		end;
+
 feature {COMPILER_EXPORTER} -- Implementation
 
 	types: TYPE_LIST;
@@ -540,6 +628,14 @@ feature {COMPILER_EXPORTER} -- Merging
 			types.append (other.types)
 		end
 
+feature {NONE} -- Implementation
+
+	last_syntax_cell: CELL [SYNTAX_ERROR] is
+			-- Stored value of last generated syntax error generated calling
+			-- routine `parse_ast'
+		once
+			!! Result.put (Void)
+		end;
 invariant
 
 	lace_class_exists: lace_class /= Void;

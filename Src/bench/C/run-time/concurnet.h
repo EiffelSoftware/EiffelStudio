@@ -14,11 +14,11 @@
 #endif
                                                       
 
-extern 		void c_close_socket ();
-extern 		void c_set_blocking ();
-extern 		void c_set_non_blocking ();
-extern 		EIF_INTEGER c_accept ();
-extern 		void c_listen ();
+extern 		void c_close_socket (EIF_INTEGER);
+extern 		void c_set_blocking (EIF_INTEGER);
+extern 		void c_set_non_blocking (EIF_INTEGER);
+extern 		EIF_INTEGER c_accept (EIF_INTEGER, EIF_POINTER, EIF_INTEGER);
+extern 		void c_listen (EIF_INTEGER, EIF_INTEGER);
 
 #define     c_concur_close_socket(s) \
             { \
@@ -31,10 +31,10 @@ extern 		void c_listen ();
 #define		c_concur_listen(s, n)				c_listen(s, n)
 
 
-extern 		EIF_INTEGER c_socket ();
-extern 		void set_sin_addr ();
-extern 		void host_address_from_name ();
-extern 		EIF_INTEGER net_host_addr ();
+extern 		EIF_INTEGER c_socket (EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
+extern 		void set_sin_addr (EIF_POINTER, EIF_INTEGER);
+extern 		void host_address_from_name (EIF_POINTER, EIF_POINTER);
+extern 		EIF_INTEGER net_host_addr (EIF_POINTER);
 
 #define		c_concur_socket(a, t, p)			c_socket(a, t, p)
 #define		c_concur_set_host_addr(x, y)		set_sin_addr(x, y)
@@ -42,10 +42,10 @@ extern 		EIF_INTEGER net_host_addr ();
 #define		c_concur_net_host_addr(x)			net_host_addr(x)
 
 
-extern 		EIF_INTEGER c_read_int ();
-extern 		EIF_REAL c_read_float ();
-extern 		EIF_DOUBLE c_read_double ();
-extern 		EIF_INTEGER c_read_stream ();
+extern 		EIF_INTEGER c_read_int (EIF_INTEGER);
+extern 		EIF_REAL c_read_float (EIF_INTEGER);
+extern 		EIF_DOUBLE c_read_double (EIF_INTEGER);
+extern 		EIF_INTEGER c_read_stream (EIF_INTEGER, EIF_INTEGER, EIF_OBJ);
 
 /* If we use the old EiffelNet version, we should use the following macro:
 #define		c_concur_read_int(s)				ntohl(c_read_int(s))
@@ -56,10 +56,10 @@ extern 		EIF_INTEGER c_read_stream ();
 #define 	c_concur_my_read_stream(s, l, b)	c_read_stream(s, l, b)
 
 
-extern 		void c_put_stream ();
-extern 		void c_put_int ();
-extern 		void c_put_float ();
-extern 		void c_put_double ();
+extern 		void c_put_stream (EIF_INTEGER, EIF_OBJ, EIF_INTEGER);
+extern 		void c_put_int (EIF_INTEGER, EIF_INTEGER);
+extern 		void c_put_float (EIF_INTEGER, EIF_DOUBLE);
+extern 		void c_put_double (EIF_INTEGER, EIF_DOUBLE);
 
 #define		c_concur_put_stream(s, p, l)		c_put_stream(s, p, l)
 /* If we use the old EiffelNet version, we should use the following macro:
@@ -70,10 +70,13 @@ extern 		void c_put_double ();
 #define		c_concur_put_double(s, v)			c_put_double(s, v)
 
 
-extern 		EIF_INTEGER c_select();
+extern 		EIF_INTEGER c_select(EIF_INTEGER, EIF_OBJ, EIF_OBJ, EIF_OBJ, EIF_INTEGER, EIF_INTEGER);
 
-extern 		float change_float_order();
-extern 		double change_double_order();
+extern 		float change_float_order(float);
+extern 		double change_double_order(double);
+
+extern 	 	char *eif_net_retrieved(EIF_INTEGER);
+extern 		void eif_net_independent_store(EIF_INTEGER, char *);
 
 /*
 #define 	c_concur_select(fn, rm, wm, em, to, tom)	c_select(fn, rm, wm, em, to, tom)

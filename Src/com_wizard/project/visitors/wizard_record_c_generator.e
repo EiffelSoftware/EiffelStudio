@@ -22,7 +22,7 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate c client for record.
 		local
-			struct_def, forward_def: STRING
+			struct_def, forward_def, a_mapper_include: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			header: STRING
 			a_windows_structure: WIZARD_WINDOWS_STRUCTURE
@@ -57,6 +57,9 @@ feature -- Access
 			else
 				forward_def.append (Struct)
 			end
+			forward_def.append (Space)
+			forward_def.append ("tag")
+			forward_def.append (a_descriptor.c_type_name)
 			forward_def.append (Space)
 			forward_def.append (a_descriptor.c_type_name)
 			forward_def.append (Semicolon)
@@ -94,14 +97,13 @@ feature -- Access
 				end
 			end
 
-			struct_def.append (typedef)
-			struct_def.append (Space)
 			if a_descriptor.is_union then
 				struct_def.append (Union)
 			else
 				struct_def.append (Struct)
 			end
 			struct_def.append (Space)
+			struct_def.append ("tag")
 			struct_def.append (a_descriptor.c_type_name)
 			struct_def.append (New_line)
 			struct_def.append (Open_curly_brace)
@@ -127,8 +129,6 @@ feature -- Access
 				a_descriptor.fields.forth
 			end
 			struct_def.append (Close_curly_brace)
-			struct_def.append (Space)
-			struct_def.append (a_descriptor.c_type_name)
 			struct_def.append (Semicolon)
 			if windows_structures.has (a_descriptor.c_type_name) then
 				struct_def.append (New_line)
@@ -143,6 +143,20 @@ feature -- Access
 			end
 
 			c_writer.add_other (struct_def)
+
+			create a_mapper_include.make (100)
+			a_mapper_include.append (c_writer.cpp_protector_end)
+			a_mapper_include.append (New_line)
+			a_mapper_include.append (New_line)
+			a_mapper_include.append (Include_clause)
+			a_mapper_include.append (Space)
+			a_mapper_include.append ("%"")
+			a_mapper_include.append (Ecom_generated_rt_globals_header_file_name)
+			a_mapper_include.append ("%"")
+			a_mapper_include.append (New_line)
+			a_mapper_include.append (New_line)
+			a_mapper_include.append (c_writer.cpp_protector_start)
+			c_writer.add_other (a_mapper_include)
 
 			from
 				a_descriptor.fields.start
@@ -160,8 +174,6 @@ feature -- Access
 			header.append (Wizard_note)
 			header.append (a_descriptor.creation_message)
 			c_writer.set_header (header)
-		ensure then
-			non_void_c_writer: c_writer /= Void
 		end
 
 

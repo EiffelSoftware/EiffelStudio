@@ -38,23 +38,23 @@ feature -- Element change
 feature -- Removal
 
 	prune (v: G) is
-		-- Remove `v' if present.
-	deferred
-	ensure then
-		removed_count_change: old has (v) implies (count = old count - 1);
-		not_removed_no_count_change: not old has (v) implies (count = old count);
-		item_deleted: not has (v)
-	end;
+			-- Remove `v' if present.
+		deferred
+		ensure then
+			removed_count_change: old has (v) implies (count = old count - 1);
+			not_removed_no_count_change: not old has (v) implies (count = old count);
+			item_deleted: not has (v)
+		end;
 
 	changeable_comparison_criterion: BOOLEAN is
-		-- May `object_comparison' be changed?
-		-- (Answer: only if set empty; otherwise insertions might
-		-- introduce duplicates, destroying the set property.)
-	do
-		Result := empty
-	ensure then
-		only_on_empty: Result = empty
-	end
+			-- May `object_comparison' be changed?
+			-- (Answer: only if set empty; otherwise insertions might
+			-- introduce duplicates, destroying the set property.)
+		do
+			Result := empty
+		ensure then
+			only_on_empty: Result = empty
+		end
 
 end -- class SET
 

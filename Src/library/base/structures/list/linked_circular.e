@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature -- Measurement
 
-	count : INTEGER is
+	count: INTEGER is
 			-- Number of items
 		do
 			Result := list.count
@@ -64,7 +64,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	replace (v : G) is
+	replace (v: G) is
 			-- Replace current item by `v'.
 		do
 			list.replace (v)
@@ -77,7 +77,7 @@ feature -- Element change
 			list.merge_right (other.list)
 		end
 
-	put_right (v : like item) is
+	put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -114,13 +114,13 @@ feature -- Element change
 
 feature -- Access
 
-	item : G is
+	item: G is
 			-- Current item
 		do
 			Result := list.item
 		end
 
-	cursor : CURSOR is
+	cursor: CURSOR is
 			-- Current cursor position
 		do
 			!CIRCULAR_CURSOR!Result.make (list.cursor, internal_exhausted, starter)
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Status report
 
-	full : BOOLEAN is false;
+	full: BOOLEAN is False;
 		-- Is structured filled to capacity? (Answer: no.)
 
 	readable : BOOLEAN is
@@ -148,7 +148,7 @@ feature -- Status report
 			end
 		end
 
-	writable : BOOLEAN is
+	writable: BOOLEAN is
 			-- Is there a current item that may be written?
 		do
 			Result := list.writable
@@ -276,7 +276,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 			!! Result.make
 		end;
 
-	list : LINKED_LIST[G]
+	list: LINKED_LIST [G]
 
 	standard_after : BOOLEAN is
 			do

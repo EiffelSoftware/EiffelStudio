@@ -133,8 +133,11 @@ feature -- Status setting
 			str.extend (' ')
 			str.append (Http_version)
 			str.append (Http_end_of_header_line)
-	
-			str.append (Http_host_header + ": " + address.host + ":" + address.port.out)
+
+			str.append (Http_host_header + ": " + address.host)
+			if address.port /= address.default_port then
+				str.append (":" + address.port.out)
+			end
 			if not address.username.is_empty then
 				str.append (Http_end_of_header_line)
 				str.append (Http_Authorization_header + ": Basic " 

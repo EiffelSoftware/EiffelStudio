@@ -1072,7 +1072,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			a_pixbuf := pixmap_imp.pixbuf_from_drawable
+			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
 			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)

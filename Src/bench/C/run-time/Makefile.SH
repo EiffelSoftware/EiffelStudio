@@ -59,7 +59,7 @@ SED = $sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  console.c option.c \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
+SOURCES =  compress.c console.c option.c \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
 OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o option.o update.o wbench.o main.o
 LSCRIPTS =  size.h
 
@@ -105,6 +105,7 @@ WADD = debug.c interp.c update.c wbench.c
 NETWORK = network.o
 
 WSRC = \
+	compress.c \
 	console.c \
 	woption.c \
 	wmath.c \
@@ -148,6 +149,7 @@ WSRC = \
 	wexcept.c 
 
 ESRC = \
+	compress.c \
 	console.c \
 	wmath.c \
 	wmalloc.c \
@@ -190,6 +192,7 @@ ESRC = \
 	bexcept.c 
 
 LOBJ = \
+	compress.o \
 	console.o \
 	option.o \
 	math.o \
@@ -234,6 +237,7 @@ LOBJ = \
 
 WOBJ = \
 	$(NETWORK) \
+	compress.o \
 	console.o \
 	woption.o \
 	wmath.o \
@@ -282,6 +286,7 @@ WOBJ = \
 
 EOBJ = \
 	woption.o \
+	compress.o \
 	console.o \
 	wmath.o \
 	wmalloc.o \

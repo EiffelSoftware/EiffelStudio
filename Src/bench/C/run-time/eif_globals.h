@@ -230,7 +230,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #endif
 
 		/* string.c */
-	char eif_string_buffer_cx [MAX_NUM_LEN + 1]; /* Where string is built. */
+	EIF_CHARACTER eif_string_buffer_cx [MAX_NUM_LEN + 1]; /* Where string is built. */
 	/* Thread management variables */
 	int n_children_cx;					/* Number or child threads */
 	EIF_THR_TYPE *last_child_cx;		/* Task id of the last created thread */

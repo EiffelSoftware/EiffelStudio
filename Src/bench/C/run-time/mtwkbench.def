@@ -402,7 +402,6 @@ EXPORTS
 	str_isi
 	str_isr
 	str_left
-	str_len
 	str_ljustify
 	str_lower
 	str_mirror

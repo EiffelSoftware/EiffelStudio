@@ -39,6 +39,10 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `first'.
 		do
+			if first.is_show_requested and not is_show_requested_check_button.is_selected then
+				is_show_requested_check_button.enable_select
+			end
+			
 			minimum_width_entry.update_constant_display (first.minimum_width.out)
 			if first.minimum_width_set_by_user then
 				
@@ -63,6 +67,15 @@ feature -- Access
 		do
 			create Result
 			initialize_attribute_editor (Result)
+			
+			create is_show_requested_check_button.make_with_text (gb_ev_widget_is_show_requested)
+			is_show_requested_check_button.set_tooltip (gb_ev_widget_is_show_requested_tooltip)
+			is_show_requested_check_button.select_actions.extend (agent toggle_visibility)
+			is_show_requested_check_button.select_actions.extend (agent update_editors)
+			if not is_instance_of (first, dynamic_type_from_string ("EV_WINDOW")) then
+				Result.extend (is_show_requested_check_button)
+				Result.disable_item_expand (is_show_requested_check_button)
+			end
 			
 			create label.make_with_text (Gb_ev_widget_minimum_width)
 			Result.extend (label)
@@ -107,6 +120,16 @@ feature {NONE} -- Implementation
 			validate_agents.extend (agent valid_minimum_dimension (?), Minimum_height_string)
 			execution_agents.extend (agent set_minimum_width (?), Minimum_width_string)
 			validate_agents.extend (agent valid_minimum_dimension (?), Minimum_width_string)
+		end
+		
+	toggle_visibility is
+			-- Update is_displayed state.
+		do
+			if is_show_requested_check_button.is_selected then
+				for_first_object (agent {EV_WIDGET}.show)
+			else
+				for_first_object (agent {EV_WIDGET}.hide)
+			end
 		end
 
 	reset_width is
@@ -176,9 +199,14 @@ feature {NONE} -- Implementation
 
 	Minimum_width_string: STRING is "Minimum_width"
 	Minimum_height_string: STRING is "Minimum_height"
+	
+	Is_show_requested_string: STRING is "Is_show_requested"
 
 	reset_width_button, reset_height_button: EV_BUTTON
 		-- Buttons that allow you to reset the minimum sizes on objects.
+		
+	is_show_requested_check_button: EV_CHECK_BUTTON
+		-- Button allowing control of a widgets visible state.
 		
 invariant
 	--first.minimum_width_set_by_user implies not reset_width_button.is_sensitive else reset_button.is_sensitive

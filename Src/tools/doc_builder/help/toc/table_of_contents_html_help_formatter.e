@@ -22,8 +22,7 @@ feature -- Access
 		do
 			create Result.make_empty
 			Result.append (html_help_header)
-			Result.append ("<OBJECT type=%"text/site properties%">%N%
-				%%T<param name=%"ImageType%" value=%"Folder%">%N</OBJECT><UL>")	
+			Result.append ("<UL>")	
 			Result.append (processed_text)
 			Result.append (html_help_footer)
 		end

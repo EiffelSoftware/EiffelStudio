@@ -79,7 +79,7 @@ feature -- Access
 			l_assembly: ASSEMBLY_SD
 			l_cluster_name: STRING
 		do
-			l_cluster_name := a_cluster_name.as_lower
+			l_cluster_name := clone (a_cluster_name)
 			
 			if not assemblies_table.has (l_cluster_name) then
 				if a_prefix /= Void and not a_prefix.is_empty then
@@ -110,7 +110,7 @@ feature -- Access
 			l_public_key_token: STRING
 			l_culture: STRING
 		do
-			l_cluster_name := a_cluster_name.as_lower
+			l_cluster_name := clone (a_cluster_name)
 			
 			if a_culture = Void or else a_culture.is_empty then
 				l_culture := "neutral"	

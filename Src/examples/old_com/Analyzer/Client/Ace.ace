@@ -6,7 +6,7 @@ root
 
 default
 	assertion (require);
-	precompiled ("$EIFFEL4\precomp\spec\windows\wel")
+	precompiled ("$EIFFEL4\precomp\spec\windows\wel");
 
 cluster
 
@@ -85,7 +85,7 @@ cluster
 			EOLE_DLL_ENTRY;
 			EOLE_DOCUMENTATION;
 			EOLE_EXCEPINFO;
-			EOLE_FILETIME;
+			EOLE_FILE_TIME;
 			EOLE_REFERENCE;
 			EOLE_SAFEARRAY;
 			EOLE_SAFEARRAY_BOUNDS;

@@ -44,7 +44,7 @@ feature -- Initialization
 			!!list.make (new_name, Current);
 			list.set_single_selection;
 			list.set_visible_item_count (5);
-			list.add_single_action (Current, list);
+			list.add_click_action (Current, list);
 			attach_left (list, 10);
 			attach_top_widget (filter_label, list, 0);
 			attach_right (list, 10);
@@ -95,11 +95,14 @@ feature -- Execution; Implementation
 	
 	call is
 		local
-			index: INTEGER
+			index: INTEGER;
+			str_element: SCROLLABLE_LIST_STRING_ELEMENT
 		do
 			warning_message := Void;
 			fill_list;
-			index := list.index_of (associated_command.filter_name, 1);
+			!! str_element.make (0);
+			str_element.append (associated_command.filter_name);
+			index := list.index_of (str_element, 1);
 			if index = 0 then index := 1 end;
 			list.go_i_th (index);
 			list.select_item;
@@ -134,7 +137,7 @@ feature {NONE} -- Properties
 
 	associated_command: FILTER_COMMAND;
 
-	list: SCROLL_LIST;
+	list: SCROLLABLE_LIST;
 
 	text_field: TEXT_FIELD;
 
@@ -164,7 +167,7 @@ feature {NONE} -- Implementation
 				tmp_name := associated_command.filter_name;
 				tmp_name.wipe_out;
 				if list.selected_item /= Void then
-					tmp_name.append (list.selected_item)
+					tmp_name.append (list.selected_item.value)
 				end;
 				tmp_name := associated_command.shell_command_name;
 				tmp_name.wipe_out;
@@ -186,17 +189,22 @@ feature {NONE} -- Implementation
 			filter_dir: DIRECTORY;
 			file_name, file_suffix: STRING;
 			name_count: INTEGER;
-			filter_names: SORTED_TWO_WAY_LIST [STRING]
+			filter_names: SORTED_TWO_WAY_LIST [STRING];
+			str_element: SCROLLABLE_LIST_STRING_ELEMENT
 		do
 			!!filter_dir.make (filter_path);
 			if not filter_dir.exists then
 				warning_message := w_Directory_not_exist (filter_path);
 				list.wipe_out;
-				list.put_right ("")
+				!! str_element.make (0);
+				str_element.append ("");
+				list.put_right (str_element)
 			elseif not filter_dir.is_readable then
 				warning_message := w_Cannot_read_directory (filter_path);
 				list.wipe_out;
-				list.put_right ("")
+				!! str_element.make (0);
+				str_element.append ("");
+				list.put_right (str_element)
 			else
 				!!filter_names.make;
 				filter_dir.open_read;
@@ -223,14 +231,18 @@ feature {NONE} -- Implementation
 				filter_dir.close;
 				list.wipe_out;
 				if filter_names.empty then
-					list.put_right ("")
+					!! str_element.make (0);
+					str_element.append ("");
+					list.put_right (str_element)
 				else
 					from
 						filter_names.start
 					until
 						filter_names.after
 					loop
-						list.put_right (filter_names.item);
+						!! str_element.make (0);
+						str_element.append (filter_names.item);
+						list.put_right (str_element)
 						list.forth;
 						filter_names.forth
 					end

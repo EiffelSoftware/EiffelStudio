@@ -40,7 +40,7 @@ feature -- Initialization
 			!! cluster_form.make ("", Current);
 			!! cluster_name.make ("", cluster_form);
 			!! cluster_list.make ("", cluster_form);
-			cluster_list.set_visible_item_count (10);
+			--cluster_list.set_visible_item_count (10);
 			!! file_form.make ("", Current);
 			!! file_label.make ("", file_form);
 			!! file_entry.make ("", file_form);
@@ -102,7 +102,7 @@ feature -- Callbacks
 
 feature -- Properties
 
-	cluster_list: SCROLL_LIST;
+	cluster_list: SCROLLABLE_LIST;
 
 	file_entry: TEXT_FIELD;
 
@@ -148,7 +148,8 @@ feature -- Access
 			valid_args: class_n /= Void 
 		local
 			str, str2: STRING;
-			clus: LINKED_LIST [CLUSTER_I]
+			clus: LINKED_LIST [CLUSTER_I];
+			str_el: SCROLLABLE_LIST_STRING_ELEMENT
 		do
 			cluster := cl;
 			class_name := clone (class_n);
@@ -169,12 +170,16 @@ feature -- Access
 				until
 					clus.after
 				loop
-					cluster_list.put_left (clus.item.cluster_name);
+					!! str_el.make (0);
+					str_el.append (clus.item.cluster_name);
+					cluster_list.extend (str_el);
 					clus.forth
 				end;
 				cluster_list.select_i_th (1);
 				if cluster_list.count < 10 then
 					cluster_list.set_visible_item_count (cluster_list.count)
+				else
+					cluster_list.set_visible_item_count (10);
 				end
 			else
 				create_b.set_insensitive
@@ -188,7 +193,7 @@ feature -- Access
 			clun: STRING;
 			clu: CLUSTER_I; 
 		do
-			clun := cluster_list.selected_item; 
+			clun := cluster_list.selected_item.value; 
 			clun.to_lower;
 			clu := Eiffel_universe.cluster_of_name (clun);
 			if clu = Void then

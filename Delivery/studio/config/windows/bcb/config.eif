@@ -123,7 +123,12 @@ cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS) $precompilelibs%
 %%Tif exist $@ $(RM) $@%N%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**"
 
-il_resource: "%
+il_system_compilation_line: "%
+	%$(IL_SYSTEM): $(OBJECTS) $(EXTERNALS) $(IL_RESOURCE).res%N%
+	%%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N%
+	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) $(OBJECTS), $(IL_SYSTEM),, $(SHAREDLIBS) $(EXTERNALS),, $(IL_RESOURCE).res %N%
+	%%T$(RM) $(OBJECTS)%N%
+	%%Techo Success > completed.eif%N%N%
 	%..\..\$(IL_RESOURCE).rc:%N%
 	%%Tif not exist ..\..\$(IL_RESOURCE).rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\$(IL_RESOURCE).rc%N%
 	%%N%

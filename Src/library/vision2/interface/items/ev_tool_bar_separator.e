@@ -13,6 +13,7 @@ inherit
 	EV_TOOL_BAR_ITEM
 		export
 			{NONE} all
+			{ANY} parent, out
 		redefine
 			implementation
 		end
@@ -20,7 +21,7 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_SHARED_TRANSPORT_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_SEPARATOR_I
 			-- Responsible for interaction with native graphics toolkit.

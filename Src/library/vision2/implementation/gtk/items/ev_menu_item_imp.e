@@ -105,6 +105,7 @@ feature -- Element change
 			temp_string := u_lined_filter (a_text).to_c
 			key := C.gtk_label_parse_uline (text_label,
 				$temp_string)
+			C.gtk_widget_show (text_label)
 		end
 
 	remove_text is

@@ -208,6 +208,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		local
 			gdkwin_parent, gdkwin_parent_parent: POINTER
 			clist_parent: POINTER
+			pnd_row: EV_TREE_NODE_IMP
 		do
 			if is_displayed then
 				gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
@@ -221,7 +222,8 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					gdkwin_parent_parent = clist_parent
 
 				if clist_parent = gdkwin_parent then
-					if row_from_y_coord (a_y) /= Void then
+					pnd_row := row_from_y_coord (a_y)
+					if pnd_row /= Void and then pnd_row.drop_actions_internal /= Void then
 						Result := False
 					end
 				end

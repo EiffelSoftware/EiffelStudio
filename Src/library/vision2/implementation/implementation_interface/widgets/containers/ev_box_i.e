@@ -17,6 +17,7 @@ feature -- Constants
 	
 	Default_homogeneous: BOOLEAN is True
 	Default_spacing: INTEGER is 0
+	Default_border_width: INTEGER is 0
 
 feature -- Access
 

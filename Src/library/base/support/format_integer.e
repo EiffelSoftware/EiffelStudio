@@ -401,7 +401,7 @@ feature -- Conversion
 				unsigned := i
 			end
 			if not no_separator then
-				Result := separate (unsigned.out)
+				Result := split (unsigned.out)
 			else
 				Result := clone (unsigned.out)
 			end
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 	Sign_positive_value: INTEGER is 2
 	Sign_negative_value: INTEGER is 3
 
-	separate (s : STRING): STRING is
+	split (s : STRING): STRING is
 			-- Apply separators to an integer
 		require
 			efficiency: separator /= '%U'
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 				Result.precede (s.item (count))
 				count := count - 1
 			end
-		end -- separate
+		end -- split
 
 	process_sign (s: STRING; sn : INTEGER): STRING is
 			-- Process sign related values.

@@ -76,7 +76,7 @@ feature -- Initialization
 			!! surround_box.make;
 			!! origin
 		ensure
-			empty
+			is_empty
 		end;
 
 	make_fig is

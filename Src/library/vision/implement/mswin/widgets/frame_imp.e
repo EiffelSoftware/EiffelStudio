@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 		do
 			if realized then
 				l := children_list
-				if not l.empty then
+				if not l.is_empty then
 					l.first.set_form_width ((form_width - 2 * width).max (0))
 					l.first.set_form_height ((form_height - box_text_height - 2 * height).max (0))
 					l.first.set_x_y (width, box_text_height + height)
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 		do
 			if realized then
 				l := children_list
-				if not l.empty then
+				if not l.is_empty then
 					a_width := l.first.form_width
 					a_height := l.first.form_height
 					set_size (a_width + 2 * width,

@@ -163,7 +163,7 @@ feature -- Element change
 			v.set_conf_not_notify;
 			v.attach_drawing_imp_with_parent (Current, drawing);
 			if i_th (v.plane+1).before then
-				if i_th (v.plane+1).empty then
+				if i_th (v.plane+1).is_empty then
 					i_th (v.plane+1).forth
 				else
 					i_th (v.plane+1).start
@@ -252,7 +252,7 @@ feature -- Cursor movement
 			from
 				al_start
 			until
-				off or else (not al_item.empty)
+				off or else (not al_item.is_empty)
 			loop
 				al_forth
 			end;
@@ -266,7 +266,7 @@ feature -- Cursor movement
 		do
 			al_finish;
 			al_item.finish;
-			if al_item.empty then
+			if al_item.is_empty then
 				al_forth
 			end
 		end;
@@ -279,7 +279,7 @@ feature -- Cursor movement
 				from
 					al_forth
 				until
-					off or else (not al_item.empty) 
+					off or else (not al_item.is_empty) 
 				loop
 					al_forth
 				end;

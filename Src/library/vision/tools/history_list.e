@@ -25,7 +25,7 @@ inherit
 			wipe_out as list_wipe_out
 		export
 			{NONE} all;
-			{ANY} off, after, before, isfirst, islast, count, index, first, last, i_th, empty
+			{ANY} off, after, before, isfirst, islast, count, index, first, last, i_th, is_empty
 		end
 
 creation
@@ -85,7 +85,7 @@ feature -- Cursor movement
 		require
 			index_large_enough: i >= 0;
 			index_small_enough: i <= count;
-			not_zero_unless_empty: not empty or i = 0
+			not_zero_unless_empty: not is_empty or i = 0
 		do
 			if i > index then
 				from
@@ -141,7 +141,7 @@ feature -- Removal
 		local
 			i, n: INTEGER
 		do
-			if (not islast) and (not empty) then
+			if (not islast) and (not is_empty) then
 				from
 					n := count-index
 					i := 1
@@ -169,7 +169,7 @@ feature -- Removal
 				end;
 			end
 		ensure
-			islast_unless_empty: (not empty) implies islast
+			islast_unless_empty: (not is_empty) implies islast
 		end;
 
 	wipe_out is

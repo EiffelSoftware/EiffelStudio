@@ -93,7 +93,7 @@ feature -- Element change
 					scroll_list.extend (history_list.i_th (i));
 					i := i+1
 				end;
-				if not scroll_list.empty then
+				if not scroll_list.is_empty then
 					scroll_list.set_visible_item_count (scroll_list.count)
 				end;
 				scroll_list.go_i_th (scroll_list.index);
@@ -172,7 +172,7 @@ feature {HISTORY_LIST}
 			else
 				undo_button.set_sensitive
 			end;
-			if scroll_list.islast or scroll_list.empty then
+			if scroll_list.islast or scroll_list.is_empty then
 				redo_button.set_insensitive 
 			else
 				redo_button.set_sensitive 

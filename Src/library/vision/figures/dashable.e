@@ -20,7 +20,7 @@ feature -- Element change
 			-- Set pattern of dash to be used to draw lines.
 		require
 			a_dash_exists: a_dash /= Void;
-			a_dash_valid: not a_dash.empty
+			a_dash_valid: not a_dash.is_empty
 		do
 			dash_pattern := a_dash;
 		end;
@@ -83,7 +83,7 @@ feature {NONE} -- Access
 
 invariant
 
-	pattern_when_exists: dash_pattern /= Void implies (not dash_pattern.empty)
+	pattern_when_exists: dash_pattern /= Void implies (not dash_pattern.is_empty)
 
 end -- class DASHABLE
 

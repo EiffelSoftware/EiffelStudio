@@ -13,6 +13,11 @@ inherit
 			set_name
 		end
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -90,7 +95,7 @@ feature -- Basic Operations
 			l_counter: INTEGER
 		do
 		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_counter := l_counter + 1
 			retry
 		end

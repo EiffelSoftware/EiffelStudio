@@ -11,6 +11,11 @@ inherit
 
 	ECD_SHARED_CODE_GENERATOR_CONTEXT
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -201,7 +206,7 @@ feature {NONE} -- Implementation
 				if this_target_object /= Void then
 					l_parent_name := implementing_type (current_class, routine_name, arguments)
 					if l_parent_name = Void then
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_implementing_type, [current_class, routine_name])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_implementing_type, [current_class, routine_name])
 					else
 						if l_parent_name.is_equal (current_class) then
 							Result := this_target_object.type
@@ -222,7 +227,7 @@ feature {NONE} -- Implementation
 							if variable_target_object /= Void then
 								Result := variable_target_object.type
 							else
-								(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["routine reference expression"])
+								Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["routine reference expression"])
 							end
 						end
 					end
@@ -261,7 +266,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Non_generated_type, [a_dotnet_type_name, "implementing_type", "routine reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Non_generated_type, [a_dotnet_type_name, "implementing_type", "routine reference expression"])
 			end			
 		end
 

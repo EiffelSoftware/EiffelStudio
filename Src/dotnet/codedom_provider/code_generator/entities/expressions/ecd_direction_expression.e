@@ -9,6 +9,10 @@ class
 inherit 
 	ECD_EXPRESSION
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
 create
 	make
 
@@ -48,7 +52,7 @@ feature -- Access
 			-- Type of expression
 		do
 			if is_byref then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Incorrect_result, ["type from direction expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Incorrect_result, ["type from direction expression"])
 				Result := expression.type -- Should be TYPED_POINTER [expression.type]
 			else
 				Result := expression.type

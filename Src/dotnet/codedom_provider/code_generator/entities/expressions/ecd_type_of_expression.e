@@ -9,6 +9,11 @@ class
 inherit
 	ECD_EXPRESSION
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -47,7 +52,7 @@ feature -- Access
 				create Result.make_from_string (target)
 			end
 		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			retried := True
 			retry
 		end

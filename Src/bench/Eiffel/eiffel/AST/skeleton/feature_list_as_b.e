@@ -8,8 +8,6 @@ inherit
 		end;
 
 	FEATURE_SET_AS_B
-		undefine
-			simple_format
 		redefine
 			format
 		end
@@ -53,12 +51,10 @@ feature -- Export status computing
 			-- Reconstitute text.
 			--| what if multiple names in ancestors?
 		do
-			ctxt.begin;
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
+			ctxt.set_space_between_tokens;
 			ctxt.continue_on_failure;
 			features.format (ctxt);
-			ctxt.commit;
 		end;
 			
 end -- class FEATURE_LIST_AS_B

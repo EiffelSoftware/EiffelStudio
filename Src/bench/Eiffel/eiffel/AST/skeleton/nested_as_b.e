@@ -16,8 +16,6 @@ inherit
 		end;
 
 	CALL_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -76,7 +74,6 @@ feature -- Type check, byte code and dead code removal
 			target.format (ctxt);
 			if ctxt.last_was_printed then
 				ctxt.need_dot;
-				ctxt.keep_types;
 				message.format (ctxt);
 				if ctxt.last_was_printed then
 					ctxt.commit

@@ -150,45 +150,16 @@ feature {NONE} -- Implementation
 	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Process inherited interfaces
 		require
-			non_void_cpp_class_writer: cpp_class_writer /= Void
-			non_void_component_descriptor: a_coclass_descriptor /= Void
-			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
+			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 		local
-			a_name, tmp_string: STRING
-			interface_descriptors: LIST[WIZARD_INTERFACE_DESCRIPTOR]
-			coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			interface_processor: WIZARD_COCLASS_INTERFACE_C_SERVER_PROCESSOR
 		do
-			interface_descriptors := a_coclass_descriptor.interface_descriptors
-
-			-- Find all the features and properties in inherited interfaces
-			if not interface_descriptors.empty then
-				from
-					interface_descriptors.start
-				until
-					interface_descriptors.off
-				loop
-					-- Add parent and import header files
-					cpp_class_writer.add_parent (interface_descriptors.item.c_type_name, Public)
-					cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
-					cpp_class_writer.add_other_source (iid_definition (interface_descriptors.item.name, interface_descriptors.item.guid))
-
-					-- Find all features and properties
-					a_name := interface_descriptors.item.c_type_name
-					interface_names.extend (a_name)
-
-					if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
-						if (dispinterface_names = Void) then
-							create dispinterface_names.make
-						end
-						dispinterface_names.extend (a_name)
-						dispatch_interface := True
-					end
-
-					generate_functions_and_properties (a_coclass_descriptor, interface_descriptors.item, interface_descriptors.item.name)
-
-					interface_descriptors.forth
-				end
+			create interface_processor.make (a_coclass_descriptor, Current)
+			if (dispinterface_names = Void) then
+				create dispinterface_names.make
 			end
+			interface_processor.process_interfaces
+			dispatch_interface := interface_processor.dispatch_interface
 		end
 
 	add_destructor is

@@ -32,7 +32,7 @@ feature {NONE}
 
 	symbol: PIXMAP is
 		do
-			Result := Pixmaps.create_command_instance_b_pixmap;
+			Result := Pixmaps.create_command_instance_pixmap;
 		end;
 			
 feature {NONE}

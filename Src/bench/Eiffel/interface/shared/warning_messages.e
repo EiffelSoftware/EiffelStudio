@@ -470,10 +470,14 @@ feature -- Cluster tree warnings
 			class_name_not_void: class_name /= Void
 		do
 			create Result.make (100)
-			Result.append ("'")
-			Result.append (class_name)
-			Result.append ("' is not a valid class name.%N%
-						%Class names should only include%N%
+			if class_name.is_empty then
+				Result.append ("An empty class name is not valid.%N")
+			else
+				Result.append ("'")
+				Result.append (class_name)
+				Result.append ("' is not a valid class name.%N")
+			end
+			Result.append ("Class names should only include%N%
 						%alphanumeric characters or underscores,%N%
 						%and start with an alphabetic character.%N%
 						%Please select a different class name.")
@@ -484,11 +488,16 @@ feature -- Cluster tree warnings
 			cluster_name_not_void: cluster_name /= Void
 		do
 			create Result.make (100)
-			Result.append ("'")
-			Result.append (cluster_name)
-			Result.append ("' is not a valid cluster name.%N%
-						%Cluster names should only include %N%
-						%alphanumeric characters or underscores.%N%
+			if cluster_name.is_empty then
+				Result.append ("An empty cluster name is not valid.%N")
+			else
+				Result.append ("'")
+				Result.append (cluster_name)
+				Result.append ("' is not a valid cluster name.%N")
+			end
+			Result.append ("Cluster names should only include %N%
+						%alphanumeric characters or underscores,%N%
+						%and start with an alphabetic character.%N%
 						%Please select a different cluster name.")
 		end
 
@@ -497,11 +506,16 @@ feature -- Cluster tree warnings
 			feature_name_not_void: feature_name /= Void
 		do
 			create Result.make (100)
-			Result.append ("'")
-			Result.append (feature_name)
-			Result.append ("' is not a valid feature name.%N%
-						%Feature names should only include %N%
-						%alphanumeric characters or underscores.%N%
+			if feature_name.is_empty then
+				Result.append ("An empty feature name is not valid.%N")
+			else
+				Result.append ("'")
+				Result.append (feature_name)
+				Result.append ("' is not a valid feature name.%N")
+			end
+			Result.append ("Feature names should only include %N%
+						%alphanumeric characters or underscores,%N%
+						%and start with an alphabetic character.%N%
 						%Please select a different feature name.")
 		end
 
@@ -526,17 +540,6 @@ feature -- Cluster tree warnings
 			Result.append (name.as_upper);
 			Result.append (" already exists in the universe.")
 		end;
-
-	w_Directory_already_in_cluster (base_name: STRING): STRING is
-		require
-			base_name_not_void: base_name /= Void
-		do	
-			create Result.make (60);
-			Result.append ("Directory with name ");
-			Result.append (base_name.as_lower)
-			Result.append (" already exists.%N%
-				%Do you want to use it for the new cluster?")
-		end
 
 	w_Confirm_delete_class (class_name: STRING): STRING is
 		do

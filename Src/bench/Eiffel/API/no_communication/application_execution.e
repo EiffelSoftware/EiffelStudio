@@ -27,4 +27,9 @@ feature
         do
         end
 
+	resynchronize_breakpoints is
+			-- Resychronize the breakpoints after a compilation.
+		do
+		end
+
 end -- class APPLICATION_EXECUTION

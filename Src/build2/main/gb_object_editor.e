@@ -493,10 +493,14 @@ feature {NONE} -- Implementation
 		local
 			interval: INTEGER_INTERVAL
 			timeout: EV_TIMEOUT
+			locked_in_this_feature: BOOLEAN
 		do
 			if viewport.height < control_holder.minimum_height then
 				if not scroll_bar.is_show_requested then
-					parent_window (Current).lock_update
+					if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+						locked_in_this_feature := True
+						parent_window (Current).lock_update
+					end
 					viewport.resize_actions.pause
 					control_holder.resize_actions.pause
 						-- There is no way ti resize a box in a viewport to
@@ -523,7 +527,9 @@ feature {NONE} -- Implementation
 					
 					viewport.resize_actions.resume
 					control_holder.resize_actions.resume
-					parent_window (Current).unlock_update
+					if locked_in_this_feature then
+						parent_window (Current).unlock_update
+					end
 				end
 			else
 				scroll_bar.hide

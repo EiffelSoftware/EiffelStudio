@@ -30,21 +30,6 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
-
-	displayed_while_running: BOOLEAN
-			-- Should process output be displayed while the process is running?
-
-feature -- Element Change
-
-	set_displayed_while_running (a_boolean: BOOLEAN) is
-			-- Set `displayed_while_running' to `a_boolean'.
-		do
-			displayed_while_running := a_boolean
-		ensure
-			set: displayed_while_running = a_boolean
-		end
-
 feature -- Basic Operations
 
 	spawn (a_command_line, a_working_directory: STRING) is

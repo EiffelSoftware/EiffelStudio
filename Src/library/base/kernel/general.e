@@ -210,7 +210,7 @@ feature -- Basic operations
 
 	frozen default: like Current is
 			-- Default value of current type.
-		once
+		do
 		end;
 
 	frozen do_nothing is

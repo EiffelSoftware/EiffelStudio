@@ -87,6 +87,10 @@ public struct except exdata = {
 	0,				/* ex_orig */
 	(char *) 0,		/* ex_tag */
 	(char *) 0,		/* ex_otag */
+    (char *) 0,     /* ex_rt */
+    (char *) 0,     /* ex_ort */
+    0,              /* ex_class */
+    0,              /* ex_oclass */
 };
 
 #ifdef WORKBENCH
@@ -124,6 +128,10 @@ private void excur();			/* Current exception code in previous level */
 private void exorig();			/* Original exception code in previous level */
 private char *extag();			/* Recompute exception tag */
 private void exception();		/* Debugger hook */
+private print_history_table = ~0;   /* Enable/disable printing of hist. table */
+
+/* Eiffel interface */
+private char eedefined();          /* Is exception code valid? */
 
 /* Stack handling routines */
 public void expop();				/* Pops an execution vector off */
@@ -594,6 +602,9 @@ public void exfail()
 	 * entry in the rescue clause).
 	 */
 
+	struct ex_vect *vector;			/* The stack vector entry at the top */
+	int code;						/* Exception code */
+
 	SIGBLOCK;			/* Critical section, protected against signals */
 
 	expop(&eif_stack);	/* Remove EX_RESC vector */
@@ -602,7 +613,49 @@ public void exfail()
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
-	eviol();			/* And raise exception in caller */
+	/* An assertion violation occurred, or the routine reached the end of its
+	 * rescue clause with no 'retry'. Set the exception code matching the
+	 * execution vector at the top of the stack and start backtracking, unless
+	 * we have to ignore the exception.
+	 */
+	
+	/* Derive exception code from the information held in the top level vector
+	 * in the Eiffel call stack. If the exception is ignored, pop the offending
+	 * vector and leave 'echval' undisturbed. Otherwise, set 'echval' to the
+	 * code of the current exception and start backtracking.
+	 */
+
+	vector = extop(&eif_stack);		/* Top level vector */
+	code = xcode(vector);			/* Failure yields a specific code */
+	if (code < EN_NEX && ex_ign[code]) {	/* Exception to be ignored */
+		expop(&eif_stack);					/* Remove the faulty vector */
+		return;
+	}
+
+
+	/* Set up 'echtg' to be the tag of the current exception, if one can be
+	 * computed, otherwise it is a null pointer. This will be used by the
+	 * debugger in its stop notification request.
+	 */
+
+	echval = code;				/* Keep track of the last exception code */
+	echtg = vector->ex_name;	/* Record exception tag, if any */
+
+	/* Maintain the notion of original exception at this level, despite any
+	 * extra implicit raises, by recomputing the code each time. Due to the
+	 * way exorig() works, we have to fake the entry in a new exception level
+	 * prior to the call.
+	 */
+	echlvl++;			/* Have to fake a nesting level */
+	exorig();			/* Recompute original exception code */
+	echlvl--;			/* Restore nesting level */
+
+#ifndef NOHOOK
+	exception(PG_VIOL);		/* Debugger hook -- implicitely raised exception */
+#endif
+	ereturn();				/* Go back to last recorded rescue entry */
+
+	/* NOTREACHED */
 }
 
 public void exresc(rout_vect)
@@ -683,6 +736,9 @@ long num;			/* May be called from Eiffel, and INTEGER is long */
 	 */
 	
 	struct ex_vect *trace;		/* The stack trace entry */
+	struct ex_vect *vector;     /* The stack trace entry */
+	char *tg, *obj;
+	int type;
 
 	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
 		return;
@@ -742,7 +798,46 @@ long num;			/* May be called from Eiffel, and INTEGER is long */
 		echtg = tag;
 	}
 
-	/* Maintain the notion of original exception at this level, despite any
+    vector = extop(&eif_stack);     /* Vector at top of stack */
+    if (vector == (struct ex_vect *) 0) {
+        echrt = (char *) 0;     /* Null routine name */
+        echclass = 0;          /* Null class name */
+    } else {
+        if (in_assertion) {
+            tg = vector->ex_name;
+            type = vector->ex_type;
+            if (type == EX_CINV)
+                obj = vector->ex_oid;
+            expop(&eif_stack);
+            vector = extop(&eif_stack);
+            if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
+                echrt = (char *) 0;     /* Null routine name */
+                echclass = 0;          /* Null class name */
+            } else {
+                echrt = vector->ex_rout;    /* Record routine name */
+                echclass = vector->ex_orig; /* Record class name */
+                vector = exget(&eif_stack);
+                if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
+                    echmem |= MEM_FULL;                 /* Signal it */
+                    if (num != EN_OMEM)                 /* If not already there */
+                        enomem();                       /* Raise an out of memory */
+                } else {
+                    vector->ex_type = type;     /* Restore type */
+                    vector->ex_name = tg;       /* Restore tag */
+                    if (type == EX_CINV)
+                        vector->ex_oid = obj;   /* Restore object id if in invariant */
+                }
+            }
+        } else {
+            echrt = vector->ex_rout;    /* Record routine name */
+            echclass = vector->ex_orig; /* Record class name */
+        }
+    }
+
+	trace->ex_where = echrt;		/* Save routine in trace for exorig */
+	trace->ex_from = echclass;			/* Save class in trace for exorig */
+
+/* Maintain the notion of original exception at this level, despite any
 	 * extra explicit raises, by recomputing the code each time. Due to the
 	 * way exorig() works, we have to fake the entry in a new exception level
 	 * prior to the call.
@@ -771,6 +866,8 @@ public void eviol()
 	
 	struct ex_vect *vector;			/* The stack vector entry at the top */
 	int code;						/* Exception code */
+	int type;                   /* Exception type */
+	char *obj;                  /* Object */
 
 	/* Derive exception code from the information held in the top level vector
 	 * in the Eiffel call stack. If the exception is ignored, pop the offending
@@ -786,13 +883,45 @@ public void eviol()
 	}
 
 
-	/* Set up 'echtg' to be the tag of the current exception, if one can be
+    /* `eviol' will only be called after `exasrt'. Thus, only the tag
+     * and type will be saved temporarily whilst retrieving
+     * the routine and class name.
+     *
+	 * Set up 'echtg' to be the tag of the current exception, if one can be
 	 * computed, otherwise it is a null pointer. This will be used by the
 	 * debugger in its stop notification request.
 	 */
 
+	SIGBLOCK;           /* Critical section, protected against signals */
+
 	echval = code;				/* Keep track of the last exception code */
 	echtg = vector->ex_name;	/* Record exception tag, if any */
+    type = vector->ex_type;     /* Record exception type */
+    if (type == EX_CINV)        /* if in invariant */
+        obj = vector->ex_oid;   /*      record object */
+
+    expop(&eif_stack);          /* Remove vector */
+
+    vector = extop(&eif_stack); /* Execution vector at top of stack */
+    if (vector == (struct ex_vect *) 0) {
+        echrt = (char *) 0;     /* Null routine name */
+        echclass =  0;          /* Null class name */
+    } else {
+        echrt = vector->ex_rout;    /* Record routine name */
+        echclass = vector->ex_orig; /* Record class name */
+    }
+
+    vector = exget(&eif_stack);  /* Get brand new vector on the Eiffel stack */
+    if (vector == (struct ex_vect *) 0) {   /* No more memory */
+        echmem |= MEM_FULL;
+        xraise(EN_MEM);
+        return;                             /* Critical exception */
+    }
+
+    vector->ex_type = type;     /* Restore type */
+    vector->ex_name = echtg;    /* Restore tag */
+    if (type == EX_CINV)
+        vector->ex_oid = obj;   /* Restore object id if in invariant */
 
 	/* Maintain the notion of original exception at this level, despite any
 	 * extra implicit raises, by recomputing the code each time. Due to the
@@ -934,6 +1063,8 @@ private char *backtrack()
 			 */
 			echval = EN_RESC;			/* Exception in rescue clause */
 			echtg = (char *) 0;			/* No associated tag */
+			echrt = top->ex_rout;       /* Associated routine */
+			echclass = top->ex_orig;    /* Associated class */
 			break;
 		case EX_HDLR:					/* Signal handler routine failed */
 			/* Push an "end of level" pseudo-record on the exception trace stack
@@ -1156,15 +1287,21 @@ private void exorig()
 		if (eif_trace.st_hd == (struct stxchunk *) 0) {		/* No stack yet */
 			echorg = echval;				/* Original is current exception */
 			echotag = echtg;				/* As well as original tag */
+			echort = echrt;                 /* As well as original routine */
+			echoclass = echclass;           /* As well as original class */
 			return;
 		}
 		top = eif_trace.st_hd->sk_arena;	/* This is the bottom */
 		if (top == eif_trace.st_top) {		/* Empty stack (yes, can happen) */
 			echorg = echval;				/* Original is current exception */
 			echotag = echtg;				/* As well as original tag */
+			echort = echrt;                 /* As well as original routine */
+			echoclass = echclass;           /* As well as original class */
 		} else {
 			echorg = top->ex_type;			/* Get original exception code */
 			echotag = extag(top);			/* And recompute tag */
+			echort = echrt;                 /* As well as original routine */
+			echoclass = echclass;           /* As well as original class */
 		}
 		return;
 	}
@@ -1188,12 +1325,16 @@ private void exorig()
 			if (poped == 0) {			/* First one, nothing at this level */
 				echorg = echval;		/* Current exception is original */
 				echotag = echtg;		/* (implicitely raised from eviol) */
+				echort = echrt;         /* As well as original routine */
+				echoclass = echclass;   /* As well as original class */
 				break;
 			}
 			(void) exget(&eif_trace);	/* Move just above it */
 			top = extop(&eif_trace);	/* Fetch record */
 			echorg = top->ex_type;		/* Original exception code */
 			echotag = extag(top);		/* Recompute exception tag */
+			echort = echrt;         	/* As well as original routine */
+			echoclass = echclass;   	/* As well as original class */
 			break;
 		}
 		expop(&eif_trace);		/* Level mark not found, continue */
@@ -1210,11 +1351,15 @@ private void exorig()
 	else if (echorg == 0) {
 		echorg = EN_OMEM;				/* Default exception */
 		echotag = (char *) 0;			/* No known tag */
+		echort = (char *) 0;            /* No known routine */
+		echoclass = 0;                  /* No known class */
 	}
 #else
 	if (echorg == 0) {
 		echorg = EN_OMEM;				/* Default exception */
 		echotag = (char *) 0;			/* No known tag */
+		echort = (char *) 0;            /* No known routine */
+		echoclass = 0;                  /* No known class */
 	}
 #endif
 
@@ -1244,6 +1389,11 @@ struct ex_vect *trace;		/* Faulty vector on trace stack */
 	default:
 		echtg = trace->ex_name;
 	}
+
+    echrt = trace->ex_where;    /* Associated routine */
+    echclass = trace->ex_from;      /* Associated class */
+
+    return echtg;
 }
 
 public void esfail()
@@ -1414,6 +1564,8 @@ char *msg;
 			trace->ex_type = EN_FATAL;
 	}
 	echtg = msg;					/* Associated tag */
+	echrt = (char *) 0;             /* No routine name */
+    echclass = 0;                   /* No current class */
 	esfail();						/* Raise system failure and stack dump */
 
 	reclaim();						/* Reclaim all the objects */
@@ -2167,6 +2319,36 @@ public char *eeotag()
 	return (char *) 0;
 }
 
+public char *eeorout()
+{
+    /* Return the routine of the first exception at this nesting level */
+
+    if (echorg == 0)        /* No original exception */
+        return (char *) 0;
+
+    if (echort != (char *) 0)
+        return makestr(echort, strlen(echort)); /* Last exception tag */
+
+    return (char *) 0;
+}
+
+public char *eeoclass()
+{
+    /* Return the class of the first exception at this nesting level */
+
+    char *cl_name;
+
+    if (echorg == 0)        /* No original exception */
+        return (char *) 0;
+
+    if (echoclass != 0) {
+        cl_name = Origin(echoclass);
+        return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
+    }
+
+    return (char *) 0;
+}
+
 public long eelcode()
 {
 	return (long) echval;	/* Last exception code */
@@ -2183,11 +2365,91 @@ public char *eeltag()
 	return (char *) 0;
 }
 
+public char *eelrout()
+{
+    /* Return the routine of the last exception */
+
+    if (echval == 0)        /* No current exception */
+        return (char *) 0;
+
+    if (echrt != (char *) 0)
+        return makestr(echrt, strlen(echrt)); /* Last exception tag */
+
+    return (char *) 0;
+}
+
+public char *eelclass()
+{
+    /* Return the class of the last exception */
+
+    char *cl_name;
+
+    if (echval == 0)        /* No current exception */
+        return (char *) 0;
+
+    if (echclass != 0) {
+        cl_name = Origin(echclass);
+        return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
+    }
+
+    return (char *) 0;
+}
+
 public void eetrace(b)
 char b;
 {
+    /* Enable/diable printing of the history table */
+
+    if (b == (char) 1)
+        print_history_table = ~0;
+    else
+        print_history_table = 0;
 }
 
+public char *eename(ex) 
+long ex;
+{
+    /* Return the english description for exeception `ex' */
+
+    char *ex_string;
+
+    if (eedefined(ex) == (char) 1){
+        ex_string = exception_string(ex);
+        return makestr(ex_string, strlen(ex_string));
+    }
+}
+
+public void eecatch(ex)
+long ex;
+{
+    /* Catch exception `ex' */
+
+    if (eedefined(ex) == (char) 1){
+        ex_ign[ex] = 0;
+        if (ex == EN_FLOAT)
+            (void) signal(SIGFPE, exfpe);
+    }
+
+}
+
+public void eeignore(ex)
+long ex;
+{
+    /* Ignore exception `ex' */
+    if (eedefined(ex) == (char) 1){
+        ex_ign[ex] = 1;
+        if (ex == EN_FLOAT)
+            (void) signal(SIGFPE, SIG_IGN);
+    }
+}
+
+private char eedefined(ex)
+long ex;
+{
+    /* Is exception `ex' defined? */
+
+    return ((ex > 0 && ex <= EN_NEX)? (char) 1 : (char) 0);
+}
 
 #ifdef TEST
 

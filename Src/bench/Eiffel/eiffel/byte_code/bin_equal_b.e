@@ -10,7 +10,8 @@ inherit
 			unanalyze as old_unanalyze
 		redefine
 			make_byte_code, is_commutative, print_register, type,
-			generate, analyze
+			generate, analyze, is_unsafe, optimized_byte_node,
+			calls_special_features, pre_inlined_code, inlined_byte_code
 		end;
 
 	BINARY_B
@@ -20,7 +21,8 @@ inherit
 		redefine
 			free_register, unanalyze,
 			make_byte_code, is_commutative, print_register, type,
-			generate, analyze
+			generate, analyze, is_unsafe, optimized_byte_node,
+			calls_special_features, pre_inlined_code, inlined_byte_code
 		select
 			free_register, unanalyze
 		end
@@ -286,5 +288,42 @@ feature -- Byte code generation
 				ba.append (operator_constant);
 			end;
 		end;
+
+feature -- Array optimization
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := right.is_unsafe or else
+				left.is_unsafe
+		end
+
+	optimized_byte_node: EXPR_B is
+		do
+			Result := Current;
+			left := left.optimized_byte_node;
+			right := right.optimized_byte_node
+		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := left.calls_special_features (array_desc)
+				or else right.calls_special_features (array_desc)
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current;
+			left := left.pre_inlined_code
+			right := right.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			left := left.inlined_byte_code
+			right := right.inlined_byte_code
+		end
 
 end

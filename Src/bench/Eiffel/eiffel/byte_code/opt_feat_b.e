@@ -7,7 +7,7 @@ inherit
 
 	FEATURE_B
 		redefine
-			enlarged
+			enlarged, inlined_byte_code
 		end
 
 feature 
@@ -25,17 +25,33 @@ feature
 			end;
 		end
 
-	set_array_target (t: INTEGER) is
+	set_array_target (t: like array_desc) is
 		do
 			array_desc := t
 		end
 
+	set_access_area (b: BOOLEAN) is
+		do
+			access_area := b;
+		end;
+
 feature {OPT_FEAT_B} -- Implementation
 
-	array_desc: INTEGER;
+	array_desc: ACCESS_B;
 			-- Integer describing the type of target:
 			-- arg: >0; Result: 0; local: <0
 
 	is_item: BOOLEAN;
+
+	access_area: BOOLEAN;
+			-- Has the access to the area been generated in OPT_LOOP_BL ?
+
+feature -- Inlining
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			parameters := parameters.inlined_byte_code
+		end
 
 end

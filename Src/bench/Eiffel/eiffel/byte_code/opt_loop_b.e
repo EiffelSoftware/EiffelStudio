@@ -6,7 +6,8 @@ inherit
 
 	LOOP_B
 		redefine
-			enlarged
+			enlarged, size,
+			pre_inlined_code
 		end
 
 feature
@@ -26,5 +27,38 @@ feature
 		end;
 
 	array_desc: TWO_WAY_SORTED_SET [INTEGER];
+
+	add_offset_to_generate (arr_desc: INTEGER) is
+		do	
+			if generated_offsets = Void then
+				!!generated_offsets.make
+			end
+			generated_offsets.extend (arr_desc)
+		end;
+
+	generated_offsets: TWO_WAY_SORTED_SET [INTEGER];
+
+	add_offset_already_generated (arr_desc: INTEGER) is
+		do
+			if already_generated_offsets = Void then
+				!!already_generated_offsets.make
+			end
+			already_generated_offsets.extend (arr_desc)
+		end;
+
+	already_generated_offsets: TWO_WAY_SORTED_SET [INTEGER];
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 100000
+		end
+
+	pre_inlined_code: like Current is
+			-- This should NEVER be called!!!
+			-- (size is bigger than maximum)
+		do
+		end
 
 end

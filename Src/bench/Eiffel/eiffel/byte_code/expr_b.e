@@ -11,7 +11,8 @@ inherit
 
 	BYTE_NODE
 		redefine
-			need_enlarging, enlarged, optimized_byte_node
+			need_enlarging, enlarged, optimized_byte_node,
+			pre_inlined_code, inlined_byte_code
 		end;
 	SHARED_C_LEVEL;
 	TYPE_I_CONST;
@@ -126,9 +127,23 @@ feature
 		do
 		end;
 
-feature
+feature  -- Array optimization
 
 	optimized_byte_node: EXPR_B is
+			-- Redefined for type check
+		do
+			Result := Current
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: EXPR_B is
+			-- Redefined for type check
+		do
+			Result := Current
+		end
+
+	inlined_byte_code: EXPR_B is
 			-- Redefined for type check
 		do
 			Result := Current

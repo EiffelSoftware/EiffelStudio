@@ -69,6 +69,12 @@ feature -- Access
 			Result := 80
 		end
 
+	ok_button_text: STRING is
+			-- `Result' is STRING constant named `ok_button_text'.
+		once
+			Result := "OK"
+		end
+
 	next_tip_text: STRING is
 			-- `Result' is STRING constant named `next_tip_text'.
 		once
@@ -79,12 +85,6 @@ feature -- Access
 			-- `Result' is STRING constant named `system_window_title'.
 		once
 			Result := "Project Configuration"
-		end
-
-	png_location: STRING is
-			-- `Result' is DIRECTORY constant named `png_location'.
-		once
-			Result := "D:\Eiffel54\build\bitmaps\png"
 		end
 
 	new_button_add_text: STRING is
@@ -129,10 +129,10 @@ feature -- Access
 			Result := -100
 		end
 
-	ok_button_text: STRING is
-			-- `Result' is STRING constant named `ok_button_text'.
+	modify_button_text: STRING is
+			-- `Result' is STRING constant named `modify_button_text'.
 		once
-			Result := "OK"
+			Result := "Modify"
 		end
 
 	large_spacing_width: INTEGER is 
@@ -159,10 +159,10 @@ feature -- Access
 			Result := "Close"
 		end
 
-	modify_button_text: STRING is
-			-- `Result' is STRING constant named `modify_button_text'.
+	png_location: STRING is
+			-- `Result' is DIRECTORY constant named `png_location'.
 		once
-			Result := "Modify"
+			Result := "D:\Eiffel54\build\bitmaps\png"
 		end
 
 

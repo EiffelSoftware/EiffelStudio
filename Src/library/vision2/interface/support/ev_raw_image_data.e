@@ -100,14 +100,14 @@ feature -- Access
 		do
 			from
 				Result := ""
-				Result.append_character (hex_code (array_item (1).code.bit_shift_right (4)))
+				Result.append_character (hex_code (array_item (1).code |>> 4))
 				Result.append_character (hex_code ((array_item (1).code) \\ 16))
 				i := 2
 			until
 				i = count + 1
 			loop
 				if i \\ 4 /= 0 then
-					Result.append_character (hex_code (array_item (i).code.bit_shift_right (4)))
+					Result.append_character (hex_code (array_item (i).code |>> 4))
 					Result.append_character (hex_code ((array_item (i).code) \\ 16))
 				end
 				i := i + 1

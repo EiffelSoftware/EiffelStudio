@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			control_make (a_parent, "WINFORM_CONTAINER")
 			create winform_container.make
 			an_item.set_parent (winform_container)
-			cwin_set_parent (winform_container.get_handle, item)
+			cwin_set_parent (winform_container.handle, item)
 			winform := an_item
 		ensure
 			parent_set: parent = a_parent

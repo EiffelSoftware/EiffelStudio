@@ -28,7 +28,7 @@ feature -- Access
 	command_line: STRING is
 			-- Command line argument received in WinMain
 		once
-			create Result.make_from_cil (feature {ENVIRONMENT}.get_command_line)
+			create Result.make_from_cil (feature {ENVIRONMENT}.command_line)
 		ensure
 			result_not_void: Result /= Void
 		end

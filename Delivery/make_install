@@ -28,17 +28,13 @@ if [ "$prec_base" != "n" ]; then
 	echo Precompile EiffelBase
 	cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base
 	rm -rf EIFGEN
-	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace
-	cd EIFGEN/W_code
-	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace -c_compile
 fi
 if [ "$prec_vision2" = "y" ]; then
 	echo Precompile EiffelVision2
 	cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision2
 	rm -rf EIFGEN
-	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace
-	cd EIFGEN/W_code
-	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace -c_compile
 fi
 
 cd $INIT_DIR

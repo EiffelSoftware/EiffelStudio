@@ -48,9 +48,10 @@ feature -- Access
 		do
 			Result := retrieve_toolbar (command_pool, project_toolbar_layout)
 			if boolean_resource_value ("debugger__show_text_in_project_toolbar", False) then
+				Result.enable_important_text
+			elseif boolean_resource_value ("debugger__show_all_text_in_project_toolbar", False) then
 				Result.enable_text_displayed
 			end
-
 		end
 
 	save_project_toolbar (project_toolbar: EB_TOOLBAR) is
@@ -58,7 +59,8 @@ feature -- Access
 			-- Call `save_resources' to have the changes actually saved.
 		do
 			set_array_resource ("debugger__project_toolbar_layout", save_toolbar (project_toolbar))
-			set_boolean_resource ("debugger__show_text_in_project_toolbar", project_toolbar.is_text_displayed)
+			set_boolean_resource ("debugger__show_text_in_project_toolbar", project_toolbar.is_text_important)
+			set_boolean_resource ("debugger__show_all_text_in_project_toolbar", project_toolbar.is_text_displayed)
 		end
 
 	set_critical_stack_depth (d: INTEGER) is

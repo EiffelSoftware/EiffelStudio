@@ -336,24 +336,24 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y' absolute position.
 		require
 			exists: exists
+		local
+			point: WEL_POINT
 		do
-			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
+			if parent /= Void then
+				create point.make (a_x, a_y)
+				point.screen_to_client (parent)
+				move (point.x, point.y)
+			else
+				move (a_x, a_y)
+			end
 		end
 
 	move (a_x, a_y: INTEGER) is
 			-- Move the window to `a_x', `a_y' position.
-		local
-			point: WEL_POINT
 		do
-			if parent = Void then
-				move_absolute (a_x, a_y)
-			else
-				!! point.make (a_x, a_y)
-				point.client_to_screen (parent)
-				move_absolute (point.x, point.y)
-			end
+			cwin_set_window_pos (item, default_pointer,
+				a_x, a_y, 0, 0,
+				Swp_nosize + Swp_nozorder + Swp_noactivate)
 		end
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is

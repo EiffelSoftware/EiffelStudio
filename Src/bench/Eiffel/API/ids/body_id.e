@@ -32,10 +32,8 @@ feature {COMPILER_EXPORTER} -- Access
 			type_id_not_void: type_id /= Void
 		local
 			buff: STRING
-			old_body_id: INTEGER
 		do
-			Result := clone (prefix_name);
-			Result.append (type_id.prefix_name);
+			Result := clone (prefix_name (type_id))
 			buff := Buffer;
 			eif000 ($buff, type_id.internal_id, internal_id);
 			Result.append (buff)
@@ -49,10 +47,12 @@ feature {NONE} -- Implementation
 			Result := System.body_id_counter.item (compilation_id)
 		end
 
-	prefix_name: STRING is
+	prefix_name (type_id: TYPE_ID): STRING is
 			-- Prefix for generated C function names
+		require
+			type_id_not_void: type_id /= Void
 		do
-			Result := counter.prefix_name
+			Result := counter.prefix_name (type_id)
 		end
 
 end -- class BODY_ID

@@ -21,7 +21,8 @@ inherit
 		redefine
 			interface,
 			make,
-			has_wm_decorations
+			has_wm_decorations,
+			is_displayed
 		end
 		
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -92,6 +93,13 @@ feature -- Status report
 			Result := old_geometry /= Void
 		end
 
+	is_displayed: BOOLEAN is
+			-- Is 'Current' displayed on screen?
+		do
+			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
+		end
+		
+
 feature -- Status setting
 
 	raise is
@@ -108,16 +116,9 @@ feature -- Status setting
 
 	minimize is
 			-- Display iconified/minimised.
-		local
-			main_not_running: INTEGER
 		do
-			from
-				feature {EV_GTK_EXTERNALS}.c_gdk_window_iconify (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
-			until 
-				feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
-			loop
-				main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
-			end
+			feature {EV_GTK_EXTERNALS}.c_gdk_window_iconify (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			App_implementation.process_events
 		end
 
 	maximize is
@@ -137,6 +138,7 @@ feature -- Status setting
 				feature {EV_GTK_EXTERNALS}.c_gdk_window_deiconify (
 					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
 				)
+				App_implementation.process_events
 			elseif is_maximized then
 				set_geometry (old_geometry)
 			end
@@ -203,6 +205,7 @@ feature {EV_ANY_I} -- Implementation
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				a_rect.x, a_rect.y,
 				a_rect.width, a_rect.height)
+			--| FIXME Window geometry doesn't take border or title bar in to account.
 		end
 
 	old_geometry: EV_RECTANGLE

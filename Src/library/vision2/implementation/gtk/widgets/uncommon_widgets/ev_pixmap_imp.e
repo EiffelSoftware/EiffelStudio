@@ -314,7 +314,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			a_style: POINTER
 		do
 			a_style := C.gtk_widget_get_style (default_gtk_window)
-			gdkpix := C.gdk_pixmap_create_from_xpm_d (default_gdk_window, $gdkmask, C.gtk_style_struct_bg (a_style), a_xpm_data)
+			gdkpix := C.gdk_pixmap_create_from_xpm_d (default_gdk_window, $gdkmask, NULL, a_xpm_data)
 			set_pixmap (gdkpix, gdkmask)
 		end
 

@@ -1027,7 +1027,7 @@ feature -- Signature checking
 				-- of `feat_table'.
 		local
 			args: like arguments
-			arg_id: STRING
+			arg_id: INTEGER
 			vreg: VREG
 			vrfa: VRFA
 			i, nb: INTEGER
@@ -1039,24 +1039,23 @@ feature -- Signature checking
 			until
 				i > nb
 			loop
-				arg_id := args.item_name (i)
+				arg_id := args.item_id (i)
 					-- Searching to find after the current item another one
 					-- with the same name. 
-					-- We do `i + 2' for the start index because we need to go
-					-- one step further (+ 1) and also because we are directly
-					-- using area (+ 1)
-				if args.argument_position (arg_id, i + 2) /= 0 then
+					-- We do `i + 1' for the start index because we need to go
+					-- one step further (+ 1)
+				if args.argument_position_id (arg_id, i + 1) /= 0 then
 						-- Two arguments with the same name
-					!!vreg
+					create vreg
 					vreg.set_class (written_class)
 					vreg.set_feature (Current)
-					vreg.set_entity_name (arg_id)
+					vreg.set_entity_name (Names_heap.item (arg_id))
 					Error_handler.insert_error (vreg)
 				end
-				if feat_table.has (arg_id) then
+				if feat_table.has_id (arg_id) then
 						-- An argument name is a feature name of the feature
 						-- table.
-					!!vrfa
+					create vrfa
 					vrfa.set_class (written_class)
 					vrfa.set_feature (Current)
 					vrfa.set_other_feature (feat_table.found_item)

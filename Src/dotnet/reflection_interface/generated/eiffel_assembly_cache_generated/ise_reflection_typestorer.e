@@ -71,69 +71,6 @@ feature -- Access
 
 feature -- Basic Operations
 
-	MakeTypeStorer (a_folder_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"MakeTypeStorer"
-		end
-
-	exists (a_filename: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.TypeStorer"
-		alias
-			"exists"
-		end
-
-	GenerateXmlElementFromList (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlElementFromList"
-		end
-
-	GenerateXmlElementsFromFeatureArguments (arguments: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlElementsFromFeatureArguments"
-		end
-
-	GenerateXmlClassFooter (invariants: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlClassFooter"
-		end
-
-	StringFromList (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): STRING is
-		external
-			"IL signature (System.Collections.ArrayList): System.String use ISE.Reflection.TypeStorer"
-		alias
-			"StringFromList"
-		end
-
-	Support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
-		external
-			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.TypeStorer"
-		alias
-			"Support"
-		end
-
-	GenerateXmlElementsFromAssertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; assertion_type: STRING) is
-		external
-			"IL signature (System.Collections.ArrayList, System.String): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlElementsFromAssertions"
-		end
-
-	AddType (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; overwrite: BOOLEAN) is
-		external
-			"IL signature (ISE.Reflection.EiffelClass, System.Boolean): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"AddType"
-		end
-
 	GenerateXmlInheritElement is
 		external
 			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
@@ -141,11 +78,11 @@ feature -- Basic Operations
 			"GenerateXmlInheritElement"
 		end
 
-	GenerateXmlAliasElement is
+	commit is
 		external
 			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"GenerateXmlAliasElement"
+			"commit"
 		end
 
 	GenerateXmlClassBody is
@@ -162,11 +99,32 @@ feature -- Basic Operations
 			"GenerateXmlClassHeader"
 		end
 
-	commit is
+	exists (a_filename: STRING): BOOLEAN is
 		external
-			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+			"IL signature (System.String): System.Boolean use ISE.Reflection.TypeStorer"
 		alias
-			"commit"
+			"exists"
+		end
+
+	GenerateXmlElementFromInheritanceClauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlElementFromInheritanceClauses"
+		end
+
+	StringFromList (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): STRING is
+		external
+			"IL signature (System.Collections.ArrayList): System.String use ISE.Reflection.TypeStorer"
+		alias
+			"StringFromList"
+		end
+
+	GenerateXmlElementFromList (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlElementFromList"
 		end
 
 	GenerateXmlFeaturesElement (features: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -174,6 +132,62 @@ feature -- Basic Operations
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"GenerateXmlFeaturesElement"
+		end
+
+	GenerateXmlElementsFromFeatureArguments (arguments: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlElementsFromFeatureArguments"
+		end
+
+	GenerateXmlClassFooter (invariants: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlClassFooter"
+		end
+
+	GenerateXmlAliasElement is
+		external
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlAliasElement"
+		end
+
+	MakeTypeStorer (a_folder_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"MakeTypeStorer"
+		end
+
+	GenerateXmlElementsFromAssertions (assertions: SYSTEM_COLLECTIONS_ARRAYLIST; assertion_type: STRING) is
+		external
+			"IL signature (System.Collections.ArrayList, System.String): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlElementsFromAssertions"
+		end
+
+	Support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.TypeStorer"
+		alias
+			"Support"
+		end
+
+	StringFromInheritanceClauses (a_list: SYSTEM_COLLECTIONS_ARRAYLIST): STRING is
+		external
+			"IL signature (System.Collections.ArrayList): System.String use ISE.Reflection.TypeStorer"
+		alias
+			"StringFromInheritanceClauses"
+		end
+
+	AddType (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; overwrite: BOOLEAN) is
+		external
+			"IL signature (ISE.Reflection.EiffelClass, System.Boolean): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"AddType"
 		end
 
 end -- class ISE_REFLECTION_TYPESTORER

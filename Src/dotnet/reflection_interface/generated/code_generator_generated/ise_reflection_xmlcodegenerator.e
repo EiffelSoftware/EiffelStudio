@@ -36,9 +36,9 @@ feature -- Access
 
 feature -- Basic Operations
 
-	StartAssemblyGeneration (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	StartAssemblyGeneration (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
 		external
-			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
 			"StartAssemblyGeneration"
 		end

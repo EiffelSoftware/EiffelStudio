@@ -41,7 +41,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "rt_wbench.h"
 #include "rt_garcol.h"
 #include "rt_struct.h"
-#include "server.h" /* For debug_mode: we need to move dynamic_eval */
+#include "rt_main.h" /* For debug_mode: we need to move dynamic_eval */
 #include "eif_helpers.h"
 
 #ifdef CONCURRENT_EIFFEL

@@ -467,12 +467,18 @@ feature {NONE} -- Implementation
 		local
 			a_container: EV_CONTAINER
 			a_widget_list: LINEAR [EV_WIDGET]
+			chain: CHAIN [EV_WIDGET]
+			cursor: CURSOR
 		do
 			if a_widget.has_focus then
 				Result := a_widget
 			else
 				a_container ?= a_widget
 				if a_container /= Void then
+					chain ?= a_container
+					if chain /= Void then
+						cursor := chain.cursor
+					end
 					from
 						a_widget_list := a_container.linear_representation
 						a_widget_list.start
@@ -481,6 +487,9 @@ feature {NONE} -- Implementation
 					loop
 						Result := focused_widget_from_container (a_widget_list.item)
 						a_widget_list.forth
+					end
+					if chain /= Void then
+						chain.go_to (cursor)
 					end
 				end
 			end

@@ -14,12 +14,8 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio
 	cd $FINALIZATION_DIR
-	if [ ! -f finalizedbench.ace ]; then
-		echo Cannot find the finalization Ace for EiffelStudio
-		CANCEL
-	fi
 	clean_project
-	finalize finalizedbench.ace
+	finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
 	tgz_ccode ec
 	if [ ! -e ec.tar.gz ]; then
 		echo Could not finalize a new EiffelStudio

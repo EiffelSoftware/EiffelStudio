@@ -69,14 +69,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_frozen_class: BOOLEAN
-			-- Is current class a SPECIAL one?
+	is_single_class: BOOLEAN
+			-- Can current class only be single inherited?
 
 	current_class_type: CLASS_TYPE
 			-- Currently class type being handled.
 
-	standard_twin_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
-			-- Routine ID of `standard_twin', `finalize' and `to_string' from ANY.
+	standard_twin_rout_id, internal_finalize_rout_id: INTEGER
+			-- Routine ID of `standard_twin' and `finalize' from ANY.
 	
 	last_parents: ARRAY [INTEGER]
 			-- List of parents last described after call to `update_parents'.
@@ -628,20 +628,6 @@ feature -- IL Generation
 
 	generate_object_equality_test is
 			-- Generate comparison of two objects.
-		do
-		end
-
-	generate_finalize_feature (feat: FEATURE_I) is
-			-- Generate `Finalize' that calls `finalize' definition from ANY.
-		require
-			feat_not_void: feat /= Void
-		do
-		end
-
-	generate_to_string_feature (feat: FEATURE_I) is
-			-- Generate `ToString' that calls `to_string' definition from ANY.
-		require
-			feat_not_void: feat /= Void
 		do
 		end
 

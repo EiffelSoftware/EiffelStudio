@@ -18,6 +18,7 @@ Feature -- Status report
 			-- assign this item to `Result'.
 		local
 			temp_cursor: CURSOR
+			actual_item: EV_TREE_NODE
 		do
 			temp_cursor := cursor
 			from
@@ -25,10 +26,11 @@ Feature -- Status report
 			until
 				interface.after or Result /= Void
 			loop
-				if (data = Void and then item.data = Void) or
-					data /= void and item.data /= Void and then data.same_type (item.data) and then
-					data.is_equal (item.data) then
-					Result := item
+				actual_item := interface.item
+				if (data = Void and then actual_item.data = Void) or
+					data /= void and actual_item.data /= Void and then data.same_type (actual_item.data) and then
+					data.is_equal (actual_item.data) then
+					Result := actual_item
 				end
 				interface.forth
 			end
@@ -43,6 +45,7 @@ Feature -- Status report
 			-- `should_compare_objects' otherwise compare references.
 		local
 			temp_cursor: CURSOR
+			actual_item: EV_TREE_NODE
 		do
 			temp_cursor := cursor
 			from
@@ -50,11 +53,12 @@ Feature -- Status report
 			until
 				interface.after or Result /= Void
 			loop
-				if (should_compare_objects and then ((data = Void and then item.data = Void) or data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data)))
-				or (not should_compare_objects and data = item.data) then
-					Result := item
+				actual_item := interface.item
+				if (should_compare_objects and then ((data = Void and then actual_item.data = Void) or data /= void and actual_item.data /= Void and then data.same_type (actual_item.data) and then data.is_equal (actual_item.data)))
+				or (not should_compare_objects and data = actual_item.data) then
+					Result := actual_item
 				else
-					Result := item.implementation.retrieve_item_recursively_by_data (data, should_compare_objects)
+					Result := actual_item.implementation.retrieve_item_recursively_by_data (data, should_compare_objects)
 				end
 				interface.forth
 			end
@@ -69,6 +73,7 @@ Feature -- Status report
 			-- `should_compare_objects' otherwise compare references.
 		local
 			temp_cursor: CURSOR
+			actual_item: EV_TREE_NODE
 		do
 			temp_cursor := cursor
 			create Result.make (0)
@@ -77,11 +82,12 @@ Feature -- Status report
 			until
 				interface.after
 			loop
-				if (should_compare_objects and then ((data = Void and then item.data = Void) or data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data)))
-				or (not should_compare_objects and data = item.data) then
-					Result.extend (item)
+				actual_item := interface.item
+				if (should_compare_objects and then ((data = Void and then actual_item.data = Void) or data /= void and actual_item.data /= Void and then data.same_type (actual_item.data) and then data.is_equal (actual_item.data)))
+				or (not should_compare_objects and data = actual_item.data) then
+					Result.extend (actual_item)
 				end
-				Result.append (item.implementation.retrieve_items_recursively_by_data (data, should_compare_objects))
+				Result.append (actual_item.implementation.retrieve_items_recursively_by_data (data, should_compare_objects))
 				interface.forth
 			end
 			go_to (temp_cursor)
@@ -94,6 +100,7 @@ Feature -- Status report
 			-- Does `Current' contain `an_item' at any level?
 		local
 			temp_cursor: CURSOR
+			actual_item: EV_TREE_NODE
 		do
 			temp_cursor := cursor			
 			from
@@ -101,10 +108,11 @@ Feature -- Status report
 			until
 				interface.after or Result = True
 			loop
-				if equal (an_item, item) then
+				actual_item := interface.item
+				if equal (an_item, actual_item) then
 					Result := True
 				else
-					Result := item.implementation.has_recursively (an_item)
+					Result := actual_item.implementation.has_recursively (an_item)
 				end
 				interface.forth
 			end
@@ -125,7 +133,7 @@ Feature -- Status report
 			until
 				interface.after
 			loop
-				item.implementation.recursive_do_all (action)
+				interface.item.implementation.recursive_do_all (action)
 				t.put (item, 1)
 				action.call (t)
 				interface.forth

@@ -145,12 +145,14 @@ feature {NONE} -- Execution
 				if print_to_file_t.state then
 					chooser := name_chooser (last_command.popup_parent);
 					mp.restore;
+					close;
 					chooser.call (Current)
 				else
 					!! file_name.make_from_string (tmp_directory);
 					file_name.set_file_name ("bench_tmp_file")
 					print_file (file_name);
 					mp.restore;
+					close
 				end;
 			end
 		end

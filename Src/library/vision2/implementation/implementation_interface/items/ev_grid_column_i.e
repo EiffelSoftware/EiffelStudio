@@ -188,6 +188,7 @@ feature -- Element change
 			is_parented: parent /= Void
 		do
 			header_item.set_width (a_width)
+			parent_grid_i.header.item_resize_end_actions.call ([header_item])
 		ensure
 			width_set: width = a_width
 		end

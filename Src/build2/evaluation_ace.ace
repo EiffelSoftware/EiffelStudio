@@ -53,9 +53,6 @@ cluster
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
-		exclude
-			"wel_modeless_dialog.e"; 
-		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		include

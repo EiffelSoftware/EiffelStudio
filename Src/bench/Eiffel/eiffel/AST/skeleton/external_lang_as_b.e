@@ -470,14 +470,6 @@ loc_begin, loc_end);
 					image.wipe_out;	-- nothing must be after include file declaration
 				end;
 
-					-- For DLL16/32 a signature is COMPULSORY; test it here
-				if ((special_id = dll16_id) or (special_id = dll32_id)) and then not has_signature 
-					and context.a_feature.argument_count > 0 then
-					loc_begin := 1;
-					loc_end := offset;
-					raise_external_error ("For DLL16 or DLL32, a signature must be specified%N",loc_begin,loc_end);
-				end;
-
 				if image.count > 0 then
 					loc_begin := source.substring_index (image,1);
 					loc_end := offset;

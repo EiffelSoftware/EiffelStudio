@@ -258,7 +258,7 @@ feature -- Status report
 			from
 				current_windows.start
 			until
-				current_windows.after
+				current_windows.off
 			loop
 				if current_windows.item.has_focus then
 					Result := focused_widget_from_container (current_windows.item.item)
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 						a_widget_list := a_container.linear_representation
 						a_widget_list.start
 					until
-						a_widget_list.after or Result /= Void
+						a_widget_list.off or Result /= Void
 					loop
 						Result := focused_widget_from_container (a_widget_list.item)
 						a_widget_list.forth

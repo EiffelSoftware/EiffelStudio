@@ -8,6 +8,8 @@
 import "oaidl.idl";
 
 interface IEiffelProject;
+interface IEiffelCompletionInfo;
+interface IEiffelCompletionEntry;
 interface IEiffelCompiler;
 interface IEiffelCompilerEvents;
 interface IEiffelSystemBrowser;
@@ -28,8 +30,9 @@ interface IEnumClusterExcludes;
 interface IEnumIncludePaths;
 interface IEnumObjectFiles;
 interface IEnumAssembly;
+interface IEnumCompletionEntry;
 
-// IDispathc IDs
+// IDispatch IDs
 enum
 {
     ISECompilerID_store = 1,
@@ -112,8 +115,42 @@ interface IEiffelProject: IUnknown
 
   [helpstring ("Project Properties.")]
   HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
+
+  [helpstring ("Completion information")]
+  HRESULT completion_information ([out, retval] IEiffelCompletionInfo ** return_value);
 };
 //---------------------------------------------------------------------
+
+[
+  oleautomation,
+  uuid (E3A9365E-C4A2-4238-8CFA-51DB6EF708F0),
+  helpstring ("Eiffel Completion entry.")
+]
+interface IEiffelCompletionEntry: IUnknown
+{
+  [helpstring ("Feature name.")]
+  HRESULT name ([out, retval] BSTR * return_value);
+	
+  [helpstring ("Feature signature.")]
+  HRESULT signature ([out, retval] BSTR * return_value);
+
+  [helpstring ("Is entry a feature?")]
+  HRESULT is_feature ([out] VARIANT_BOOL* return_value);	
+};
+//---------------------------------------------------------------------
+
+[
+  oleautomation,
+  uuid (06B9F5AA-0E7D-4d84-800A-3866AC709503),
+  helpstring ("Eiffel Completion info.")
+]
+interface IEiffelCompletionInfo: IUnknown
+{
+	[helpstring ("Features accessible from target.")]
+	HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEnumCompletionEntry ** return_value);
+};
+//---------------------------------------------------------------------
+
 [
   oleautomation,
   uuid (590282FD-2BEE-44a1-91B3-61C926BAD512),
@@ -321,6 +358,31 @@ interface IEnumAssembly : IUnknown
         [out] IEnumAssembly ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelAssemblyProperties ** rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid(84EEC2AE-E186-4ac6-BCEA-11AE9796A7C7),
+    helpstring ("Completion Entry Enumeration.")
+]
+interface IEnumCompletionEntry : IUnknown
+{
+    HRESULT Next(
+        [out] IEiffelCompletionEntry ** rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumCompletionEntry ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelCompletionEntry ** rgelt);
 
     HRESULT count ([out, retval] ULONG *return_value);
 };
@@ -541,11 +603,8 @@ interface IEiffelClassDescriptor: IUnknown
   uuid (2CB5C09A-2222-42f7-9371-398FB71EBB93),
   helpstring ("Eiffel Feature Descriptor.")
 ]
-interface IEiffelFeatureDescriptor: IUnknown
+interface IEiffelFeatureDescriptor: IEiffelCompletionEntry
 {
-  [helpstring ("Feature name.")]
-  HRESULT name ([out, retval] BSTR * return_value);
-
   [helpstring ("Feature external name.")]
   HRESULT external_name ([out, retval] BSTR * return_value);
 
@@ -561,9 +620,6 @@ interface IEiffelFeatureDescriptor: IUnknown
   [helpstring ("Feature location, full path to file and line number")]
   HRESULT feature_location (  [in, out] BSTR * file_path,
                 [in, out] ULONG * line_number);
-
-  [helpstring ("Feature signature.")]
-  HRESULT signature ([out, retval] BSTR * return_value);
 
   [helpstring ("List of all feature callers, includding callers of ancestor and descendant versions.")]
   HRESULT all_callers ([out, retval] IEnumFeature ** some_callers);
@@ -1095,6 +1151,8 @@ library eiffel_compiler
   importlib ("stdole2.tlb");
   importlib ("stdole2.tlb");
   interface IEiffelProject;
+  interface IEiffelCompletionInfo;
+  interface IEiffelCompletionEntry;
   interface IEiffelCompiler;
   interface IEiffelCompilerEvents;
   interface IEiffelSystemBrowser;
@@ -1115,7 +1173,7 @@ library eiffel_compiler
   interface IEnumIncludePaths;
   interface IEnumObjectFiles;
   interface IEnumAssembly;
-
+  interface IEnumCompletionEntry;
 
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)
@@ -1133,6 +1191,15 @@ library eiffel_compiler
   {
     [default] interface IEiffelCompiler;
     [default, source] interface IEiffelCompilerEvents;
+  };
+
+  [
+    uuid (AABB3C81-5B4C-47df-A683-1FD716E975C6),
+    noncreatable
+  ]
+  coclass CEiffelCompletionInfo
+  {
+    [default] interface IEiffelCompletionInfo;
   };
 
 };

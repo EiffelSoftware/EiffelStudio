@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			-- add it in the `par'.
 		do
 			!EV_COMBO_BOX_ITEM_IMP!implementation.make_with_text (par, txt)
+			implementation.set_interface (Current)
 			par.implementation.add_item (Current)
 		end	
 

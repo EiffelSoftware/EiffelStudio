@@ -113,6 +113,38 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
+
+	pnd_target_from_gdk_window (a_gdk_window: POINTER): EV_PICK_AND_DROPABLE is
+		local
+			c: CURSOR
+			imp: EV_PICK_AND_DROPABLE_IMP
+			trg: EV_PICK_AND_DROPABLE
+		do
+			--| FIXME use this implementation instead!:
+			--| Result := hash_table.item (a_gdk_window)
+			c := pnd_targets.cursor
+			from
+				pnd_targets.start
+			until
+				pnd_targets.after or Result /= Void
+			loop
+				trg ?= id_object (pnd_targets.item)
+				if trg = Void then
+					pnd_targets.prune_all (pnd_targets.item)
+				else
+					imp ?= trg.implementation
+					check
+						imp_not_void: imp /= Void
+					end
+					-- if imp has `a_gdk_window' then
+					--		Result := pnd_targets.item
+					-- end
+				end
+				pnd_targets.forth
+			end
+			pnd_targets.go_to (c)
+		end
+
 	on_pick (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		local
@@ -290,6 +322,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/21 23:49:51  oconnor
+--| added pnd_target_from_gdk_window stub for PND
+--|
 --| Revision 1.15  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

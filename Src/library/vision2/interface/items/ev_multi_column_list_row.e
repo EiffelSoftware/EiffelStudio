@@ -1,7 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision multi column list row. These rows are used in%N%
-		%the multi-column lists."
+		"Row item for use in EV_MULTI_COLUMN_LIST"
 	status: "See notice at end of class"
 	keywords: "multi column list, row, item, select"
 	date: "$Date$"
@@ -41,7 +40,7 @@ create
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected
+			-- Is the item selected?
 		require
 			has_parent: parent /= Void
 		do
@@ -51,8 +50,7 @@ feature -- Status report
 feature -- Status setting
 
 	enable_select is
-			-- Select Current.
-			-- Must be in a multi column list.
+			-- Set `is_selected' `True'.
 		require
 			has_parent: parent /= Void
 		do
@@ -62,8 +60,7 @@ feature -- Status setting
 		end
 
 	disable_select is
-			-- Deselect Current.
-			-- Must be in a multi column list.
+			-- Set `is_selected' `False'.
 		require
 			has_parent: parent /= Void
 		do
@@ -73,8 +70,7 @@ feature -- Status setting
 		end
 		
 	toggle is
-			-- Change the state of selection of the item.
-			-- Must be in a multi column list.
+			-- Change `is_selected'.
 		require
 			has_parent: parent /= Void
 		do
@@ -84,10 +80,10 @@ feature -- Status setting
 feature -- Event handling
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when item is selected.
+			-- Actions to be performed when selected.
 
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when item is deselected.
+			-- Actions to be performed when deselected.
 
 feature {NONE} -- Implementation
 
@@ -103,27 +99,28 @@ feature {NONE} -- Implementation
 			implementation.update
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_MULTI_COLUMN_LIST_ROW_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_implementation is 
-			-- Create `implementation'.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			interactive_list_make
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_ITEM} Precursor
 			{EV_PICK_AND_DROPABLE} Precursor
 			create select_actions
 			create deselect_actions
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_MULTI_COLUMN_LIST_ROW_I
-			-- Platform dependent access.
 
 feature -- Obsolete
 
@@ -166,6 +163,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.34  2000/03/23 23:25:18  brendel
 --| Now calls Precursor of create_action_sequences for PND-able.
 --|

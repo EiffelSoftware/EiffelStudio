@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" EiffelVision Toolbar button, a specific button that goes%
-		% in a tool-bar."
+		"Press button for use with EV_TOOL_BAR"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,7 +86,7 @@ feature -- Status report
 feature -- Status setting
 
 	enable_sensitive is
-			-- Enable sensitivity to user input events.
+			-- Set `is_sensitive' `True'.
 		do
 			implementation.enable_sensitive
 		ensure
@@ -96,7 +94,7 @@ feature -- Status setting
 		end
 
 	disable_sensitive is
-			-- Disable sensitivity to user input events.
+			-- Set `is_sensitive' `False'.
 		do
 			implementation.disable_sensitive
 		ensure
@@ -106,28 +104,29 @@ feature -- Status setting
 feature -- Event handling
 
 	press_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when button is pressed.
+			-- Actions to be performed when pressed.
+			--| FIXME change to select_actions
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_BUTTON_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of tool bar button.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
-			-- Create action sequences for tool bar button.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_SIMPLE_ITEM} Precursor
 			{EV_PICK_AND_DROPABLE} Precursor
 			create press_actions
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TOOL_BAR_BUTTON_I
-			-- Platform dependent access.
 
 invariant
 	press_actions_not_void: press_actions /= Void
@@ -155,6 +154,9 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.11  2000/03/20 23:07:53  pichery
 --| Added the notion of gray pixmap, as well as the features `set_gray_pixmap'
 --| and `remove_gray_pixmap' to set and remove the gray pixmap.
@@ -189,10 +191,14 @@ end -- class EV_TOOL_BAR_BUTTON
 --| Removed redundant features, changed set_sensitive to enable and disable
 --|
 --| Revision 1.7.4.3  2000/01/20 16:55:55  rogers
---| Implemented create_implementation, added some comments and created both pick_actions and drop_Actions in create_action_sequences.
+--| Implemented create_implementation, added some comments and created both
+--| pick_actions and drop_Actions in create_action_sequences.
 --|
 --| Revision 1.7.4.2  1999/12/17 21:11:02  rogers
---| Now inherits EV_PICK_AND_DROPABLE instead of EV_PND_SOURCE and EV_PND_TARGET. Make procedures have been removed, ready for re-implementation. The addition and removal of commands have been commented, ready for re-implementation.
+--| Now inherits EV_PICK_AND_DROPABLE instead of EV_PND_SOURCE and
+--| EV_PND_TARGET. Make procedures have been removed, ready for
+--| re-implementation. The addition and removal of commands have been
+--| commented, ready for re-implementation.
 --|
 --| Revision 1.7.4.1  1999/11/24 17:30:43  oconnor
 --| merged with DEVEL branch
@@ -202,7 +208,6 @@ end -- class EV_TOOL_BAR_BUTTON
 --|
 --| Revision 1.6.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

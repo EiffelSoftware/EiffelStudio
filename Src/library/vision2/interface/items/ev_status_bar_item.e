@@ -1,8 +1,8 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"Eiffel Vision status bar item."
+		"Item for use with EV_STATUS_BAR."
 	status: "See notice at end of class."
+	keywords: "status, bar, report, message"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +24,7 @@ create
 feature -- Access
 
 	parent: EV_STATUS_BAR is
-			-- Parent of the current item.
+			-- Contains `Current'.
 		do
 			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
@@ -32,38 +32,40 @@ feature -- Access
 feature -- Measurement
 
 	width: INTEGER is
-			-- The width of the item in the status bar.
-		require
+			-- Horizontal size in pixels.
 		do
 			Result := implementation.width
 		end
 
 feature -- Status setting
 
-	set_width (value: INTEGER) is
-			-- Make `value' the new width of the item.
-			-- If -1, then the item reach the right of the status
-			-- bar.
+	set_width (a_width: INTEGER) is
+			-- Assign `a_width' to `width'.
+			-- If -1, then the item reach the right of the status bar.
+			--| FIXME what kind up hella ungly hack is this?
+			--| Screw you guys, I'm going home.
+			--| <IRONIC> RESPECT MY AUTHORITAY!! </IRONIC>
 		require
 			has_parent: parent /= Void
-			valid_value: value >= -1
-			maximise_ok: value = -1 implies (parent.i_th (parent.count) = Current)
+			valid_value: a_width >= -1
+			maximise_ok: a_width = -1
+				implies (parent.i_th (parent.count) = Current)
 		do
-			implementation.set_width (value)
+			implementation.set_width (a_width)
 		ensure
-			width_set: (width = value) or (value = -1)
+			width_set: (a_width = width) or (a_width = -1)
 		end
 
 feature {NONE} -- Implementation
 
+	implementation: EV_STATUS_BAR_ITEM_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
-			-- Create implementation of status bar item.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_STATUS_BAR_ITEM_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_STATUS_BAR_ITEM_I
-			-- platform dependent access.
 
 end -- class EV_STATUS_BAR_ITEM
 
@@ -88,6 +90,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.16  2000/03/13 22:11:44  king
 --| Defined creation procedures
 --|
@@ -126,7 +131,6 @@ end -- class EV_STATUS_BAR_ITEM
 --|
 --| Revision 1.10.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

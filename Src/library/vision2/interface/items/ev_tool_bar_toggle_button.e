@@ -1,9 +1,9 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" EiffelVision tool-bar toggle button. A two state%
-		% button for the tool-bar."
+		"Button for use with EV_TOOL_BAR that toggles between states each time%
+		%it is pressed"
 	status: "See notice at end of class."
+	keywords: "tool, bar, toggle, button"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +24,7 @@ create
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the current button selected?
+			-- Is the button selected?
 		do
 			Result := implementation.is_selected
 		end
@@ -32,7 +32,7 @@ feature -- Status report
 feature -- Status setting
 
 	enable_select is
-			-- Select the current button.
+			-- Set `is_selected' `True'.
 		do
 			implementation.enable_select
 		ensure
@@ -40,7 +40,7 @@ feature -- Status setting
 		end
 
 	disable_select is
-			-- Unselect the current_button.
+			-- Set `is_selected' `False'.
 		do
 			implementation.disable_select
 		ensure
@@ -48,7 +48,7 @@ feature -- Status setting
 		end
 
 	toggle is
-			-- Toggle the state of the current button.
+			-- Change `is_selected'.
 		do
 			if is_selected then
 				disable_select
@@ -59,19 +59,18 @@ feature -- Status setting
 			toggled: is_selected /= old is_selected
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of tool bar toggle button.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
-			-- Platform dependent access.
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 
@@ -96,6 +95,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.7  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -118,7 +120,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 --| added --| FIXME Not for release
 --|
 --| Revision 1.4.4.2  2000/01/26 19:44:42  rogers
---| altered to comply with the major vision2 changes. Remove command associations. Removed make and make_with_text as they are now inherited from ev_tool_bar_button. Added implementation and create_implementation.
+--| altered to comply with the major vision2 changes. Remove command
+--| associations. Removed make and make_with_text as they are now inherited
+--| from ev_tool_bar_button. Added implementation and create_implementation.
 --|
 --| Revision 1.4.4.1  1999/11/24 17:30:43  oconnor
 --| merged with DEVEL branch
@@ -128,7 +132,6 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 --|
 --| Revision 1.3.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

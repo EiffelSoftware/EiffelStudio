@@ -53,6 +53,7 @@ extern EIF_INTEGER cwin_reg_value_number(EIF_INTEGER key);
 
 extern EIF_INTEGER cwin_reg_connect_key(EIF_POINTER hostname, EIF_INTEGER key);
 
+extern void cwin_reg_value_destroy(EIF_POINTER eif_value);
 #endif  /* __WEL_REGISTRY__ */
 
 /*

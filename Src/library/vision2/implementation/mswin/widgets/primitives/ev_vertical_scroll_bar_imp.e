@@ -46,9 +46,6 @@ feature -- Status setting
    			-- Plateform dependant initializations.
    		do
 			internal_set_minimum_width (15)
-			if parent_imp /= Void then
-				parent_imp.notify_change (1)
-			end
  		end
 
 end -- class EV_VERTICAL_SCROLL_BAR_IMP

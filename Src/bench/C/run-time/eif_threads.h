@@ -116,16 +116,15 @@ extern void eufreeze(char *object);
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
 		r = mutex_trylock(m); \
 		if(r && (r != EBUSY)) \
-			eif_thr_panic(msg); \
+			eif_thr_panic(msg)
 #define EIF_MUTEX_UNLOCK(m,msg)		if (mutex_unlock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_DESTROY(m,msg)	free(m)
 
 #define EIF_TSD_TYPE					thread_key_t
 #define EIF_TSD_VAL_TYPE				void *
-#define EIF_TSD_CREATE(key,msg)			\
-	if (thr_keycreate(&(key),NULL)) { \
-		eif_thr_panic(msg); \
-#define EIF_TSD_SET(key,val,msg)		\
+#define EIF_TSD_CREATE(key,msg)		\
+	if (thr_keycreate(&(key),NULL)) eif_thr_panic(msg)
+#define EIF_TSD_SET(key,val,msg)	\
 	if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val)))  eif_thr_panic(msg)
 #define EIF_TSD_GET(key,val,msg)		\
 	if (thr_getspecific((key),(void **)&(val))) \

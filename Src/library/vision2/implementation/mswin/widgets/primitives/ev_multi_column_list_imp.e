@@ -274,7 +274,7 @@ feature -- Status setting
 					-- The scroll bars become hidden, but by calling `update_item'
 					-- it forces `Current' to redisplay them if necessary.
 				if count > 0 then
-					update_item (count)	
+					update_item (count - 1)	
 				end
 			end
 		end
@@ -305,7 +305,7 @@ feature -- Status setting
 					-- The scroll bars become hidden, but by calling `update_item'
 					-- it forces `Current' to redisplay them if necessary.
 				if count > 0 then
-					update_item (count)	
+					update_item (count - 1)	
 				end
 			end
 		end

@@ -65,8 +65,7 @@ feature
 	register_name: STRING is
 			-- ASCII representation of register
 		do
-			Result := Buffer;
-			Result.wipe_out;
+			!! Result.make (10)
 			inspect
 				c_type.level
 			when C_long then

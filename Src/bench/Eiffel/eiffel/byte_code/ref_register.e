@@ -29,16 +29,15 @@ feature
 	free_register is
 			-- Free register used by the expression
 		do
-			context.free_non_gc_vars;
+			context.free_non_gc_vars
 		end;
 
 	register_name: STRING is
 			-- ASCII representation of register
 		do
-			Result := Buffer;
-			Result.wipe_out;
-			Result.append ("xp");
-			Result.append(regnum.out);
+			!! Result.make (10)
+			Result.append ("xp")
+			Result.append(regnum.out)
 		end;
 
 	print_register is

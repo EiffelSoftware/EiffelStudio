@@ -44,9 +44,7 @@ feature
 	register_name: STRING is
 			-- The "Current" string
 		do
-			Result := Buffer;
-			Result.wipe_out;
-			Result.append("Current");
+			Result := "Current";
 		end;
 
 feature -- Byte code generation

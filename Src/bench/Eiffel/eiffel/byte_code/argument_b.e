@@ -61,8 +61,7 @@ feature
 	register_name: STRING is
 			-- The "arg<num>" string
 		do
-			Result := Buffer;
-			Result.wipe_out;
+			!! Result.make (10)
 			Result.append ("arg");
 			Result.append (position.out);
 		end;

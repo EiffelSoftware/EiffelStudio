@@ -28,8 +28,12 @@ feature -- Initialization
 			-- Create the 
 		do
 			{ACTIVE_PICT_COLOR_B} Precursor (a_name, a_parent)
-			set_active (not General_resources.regular_button.actual_value)
-			General_resources.add_user (Current)
+			if General_resources.regular_button /= Void then
+					-- Not Void implies that we are on Windows where
+					-- the functionality is fully implemented.
+				set_active (not General_resources.regular_button.actual_value)
+				General_resources.add_user (Current)
+			end
 		end
 
 feature -- Access

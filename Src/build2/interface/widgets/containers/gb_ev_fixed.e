@@ -70,12 +70,22 @@ feature -- Access
 			Result := Precursor {GB_EV_ANY}
 			Result.extend (button)
 			button.select_actions.extend (agent show_layout_window)
+			
+			update_attribute_editor
 		end
 		
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
+				-- We cannot check whether layout_window.is_show_requested,
+				-- which is what we really should be checking for, as
+				-- checking this re-creates the window which is not good.
+				-- If world /= Void, then the layout window has been shown 
+				-- at least once, so this is a temporary fix.
+			if world /= Void then
+				draw_widgets
+			end
 		end
 		
 feature {GB_XML_STORE} -- Output
@@ -497,34 +507,42 @@ feature {NONE} -- Implementation
 		
 	set_x_position (widget: EV_WIDGET; x_pos: INTEGER) is
 			-- Set x_position of `widget' in `first' to `x_pos'.
+		local
+			second: like ev_type
 		do
-			--| FIXME
 			first.set_item_x_position (widget, x_pos)
-			--second.set_item_x_position (widget, x_pos)
+			second := objects @ 2
+			second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
 		end
 		
 	set_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
 			-- Set y_position of `widget' in `first' to `y_pos'.
+		local
+			second: like ev_type
 		do
-			--| FIXME
-			first.set_item_y_position (widget, y_pos)										
-			--second.set_item_y_position (widget, y_pos)
+			first.set_item_y_position (widget, y_pos)
+			second := objects @ 2
+			second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
 		end
 		
 	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
 			-- Set width of `widget' in `first' to `new_width'.
+		local
+			second: like ev_type
 		do
-			--| FIXME
 			first.set_item_width (widget, new_width)
-			--second.set_item_width (widget, new_width)
+			second := objects @ 2
+			second.set_item_width (second @ first.index_of (widget, 1), new_width)
 		end
 		
 	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
 			-- Set height of `widget' in `first' to `new_height'.
+		local
+			second: like ev_type
 		do
-			--| FIXME
 			first.set_item_height (widget, new_height)
-			--second.set_item_height (widget, new_height)
+			second := objects @ 2
+			second.set_item_height (second @ first.index_of (widget, 1), new_height)
 		end	
 		
 

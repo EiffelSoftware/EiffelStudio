@@ -70,7 +70,7 @@ feature {NONE} -- Element change
 				list := accelerator_list.item (id)
 			else
 				!! list.make
-				accelerator_list.extend (list, id)
+				accelerator_list.put (list, id)
 			end
 			!! com.make (cmd, arg)
 			list.extend (com)

@@ -107,9 +107,10 @@ feature -- Basic operations
 				if (handle.execution_type.immediate_execution) then
 					private_change.modify (private_string)
 				else 
-					handle.execution_type.set_immediate
+						-- Does not work with Oracle.
+		--			handle.execution_type.set_immediate
 					private_change.modify (private_string)
-					handle.execution_type.unset_immediate
+		--			handle.execution_type.unset_immediate
 				end
 			else
 				db_spec.store_proc_not_supported

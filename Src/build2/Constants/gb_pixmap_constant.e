@@ -188,7 +188,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 			-- Rebuild representations of `Current', and update all referers within system.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP]]
+			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING]]
 			file_name: FILE_NAME
 		do
 			if is_absolute then
@@ -208,7 +208,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 				check
 					execution_agent_not_void: execution_agent /= Void
 				end
-				execution_agent.call ([pixmap])
+				execution_agent.call ([pixmap, value])
 				referers.forth
 			end
 		end

@@ -43,7 +43,14 @@ inherit
 		undefine
 			copy, default_create
 		end
+		
+	EIFFEL_RESERVED_WORDS
+		undefine
+			copy, default_create
+		end
 
+	GB_CONSTANTS
+	
 
 create
 	make_with_object
@@ -257,10 +264,10 @@ feature {NONE} -- Implementation
 		do
 			current_text_field := all_text_fields @ index
 			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then
-				if object_handler.name_in_use (current_text_field.text, Void) then
-					current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+				if object_handler.name_in_use (current_text_field.text, Void) or (reserved_words.has (current_text_field.text.as_lower)) then
+					current_text_field.set_foreground_color (red)
 				else
-					current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+					current_text_field.set_foreground_color (black)
 				end
 			else
 				undo_last_character (current_text_field)
@@ -360,10 +367,7 @@ feature {NONE} -- Implementation
 			warning_dialog: EV_WARNING_DIALOG
 			counter: INTEGER
 			action_info: GB_ACTION_SEQUENCE_INFO
-		do
-			--| FIXME checking for duplicate names needs to be implemented. Look at name from GB_OBJECT for this code adaptation.
-			
-			
+		do	
 				-- We must validate all the names contained in the boxes.
 				-- First, we need to find out all selected text fields.
 			from
@@ -376,14 +380,17 @@ feature {NONE} -- Implementation
 						invalid_state := True
 						create warning_dialog.make_with_text ("Please enter a feature name for `" + all_names @ (counter) + "'.")
 						warning_dialog.show_modal_to_window (Current)
+					elseif (all_text_fields @ counter).foreground_color.is_equal (red) then
+						invalid_state := True
+						create warning_dialog.make_with_text (Event_feature_name_warning)
+						warning_dialog.show_modal_to_window (Current)
 					end	
 				end
 				counter := counter + 1
 			end
 			
 
-			if not invalid_state then
-				
+			if not invalid_state then			
 					-- Then insert the new info.
 				from
 					counter := 1
@@ -403,5 +410,19 @@ feature {NONE} -- Implementation
 				destroy	
 			end
 		end
+		
+	red: EV_COLOR is
+			-- `Result' is red EV_COLOR.
+		once
+			Result := (create {EV_STOCK_COLORS}).red
+		end
+		
+	black: EV_COLOR is
+			-- `Result' is black EV_COLOR.
+		once
+			Result := (create {EV_STOCK_COLORS}).black
+		end
+		
+		
 
 end -- class GB_EVENT_SELECTION_DIALOG

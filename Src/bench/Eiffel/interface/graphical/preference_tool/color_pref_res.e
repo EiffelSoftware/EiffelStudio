@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 				list.extend (c_array.item (i));
 				i := i + 1 
 			end;
-			color_box.popup (Current, list)
+			color_box.popup (Current, list, Interface_names.t_Select_color)
 		end
 
 end -- class COLOR_PREF_RES

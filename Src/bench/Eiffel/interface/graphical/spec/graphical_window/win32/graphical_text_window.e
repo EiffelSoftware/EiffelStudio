@@ -36,7 +36,6 @@ inherit
 			put_class as st_put_class, 
 			put_classi as st_put_classi, 
 			put_cluster as st_put_cluster,
-			process_breakpoint as st_process_breakpoint, 
 			process_padded as st_process_padded, 
 			put_class_syntax as st_put_class_syntax,
 			put_quoted_comment as st_put_quoted_comment, 
@@ -55,7 +54,8 @@ inherit
 			copy, setup, set_tab_length
 		redefine
 			implementation, put_stone, put_string, new_line, display,
-			put_after_class, put_normal_string, reset, disable_clicking
+			process_breakpoint, put_after_class, put_normal_string,
+			reset, disable_clicking
 		end;
 
 	SCROLLED_TEXT_WINDOW
@@ -75,7 +75,7 @@ inherit
 		select
 			put_address, put_feature_name, put_feature, put_feature_error,
 			put_error, put_class, put_classi, put_cluster,
-			process_breakpoint, process_padded, put_class_syntax,
+			process_padded, put_class_syntax,
 			put_quoted_comment, put_operator, put_symbol,
 			put_ace_syntax, put_keyword, put_comment, process_call_stack_item,
 			clear_window, init_resource_values, process_text
@@ -145,20 +145,20 @@ feature -- Output
 			p: WEL_COMPOSITE_WINDOW
 		do
 			if dummy_text = Void then
-				p ?= top.implementation;
+				p ?= top.implementation
 				!! dummy_text.make (p, 
-					"Dummy", implementation.wel_x + 10, 	
-					implementation.wel_y + 10,
-					10, 10, 0)
+						"Dummy", implementation.wel_x + 10, 	
+						implementation.wel_y + 10,
+						10, 10, 0)
 			else
 				dummy_text.show
-			end;
-			implementation.hide;
+			end
+			implementation.wel_hide
 		end
 
 	show_text_window is
 		do
-			implementation.wel_show;
+			implementation.wel_show
 			dummy_text.hide
 		end
 
@@ -337,10 +337,6 @@ feature -- Text formatting
 	process_padded is
 			-- Process padded value (used when processing breakpoints).
 		do
-			if last_click_break /= Void then
-				last_click_break.set_end_position (text_position);
-				last_click_break := Void
-			end;
 			implementation.set_character_format_word (breakable_format);
 			put_normal_string ("   ");
 		end;
@@ -348,22 +344,19 @@ feature -- Text formatting
 	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process the quoted `text' within a comment.
 		local
-			breakable_stone: BREAKABLE_STONE;
+			breakable_stone: BREAKABLE_STONE
 			debug_mark: STRING
+			click_break: CLICK_BREAKABLE
 		do
 			!! breakable_stone.make (a_bp.e_feature, a_bp.index);
 			if a_bp.display_number then
 				implementation.set_character_format_word (breakable_format);
 				put_stone (breakable_stone, a_bp.index.out)
 			else
-				if last_click_break /= Void then
-					last_click_break.set_end_position (text_position);
-					last_click_break := Void
-				end;
 				put_string (" ");
-				!! last_click_break.make (breakable_stone,
+				!! click_break.make (breakable_stone,
 						text_position, text_position + 3);
-				add_click_stone (last_click_break);
+				add_click_stone (click_break);
 				text_position := text_position + 3;
 				implementation.set_character_format_word (breakable_format);
 				implementation.replace_selection (breakable_stone.sign);

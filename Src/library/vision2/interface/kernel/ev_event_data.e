@@ -20,17 +20,6 @@ feature {NONE}  -- Creation
 			!EV_EVENT_DATA_IMP! implementation
 		end
 
-feature -- Access
-
-	widget: EV_WIDGET is
-			-- The mouse pointer was over this widget 
-			-- when event happened
-		do
-			Result := implementation.widget
-		ensure
-			valid_result: Result /= Void
-		end
-
 feature -- Debug
 
 	print_contents is

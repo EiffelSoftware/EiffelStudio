@@ -1,0 +1,26 @@
+Instructions to build a delivery:
+
+
+1 - Preparing a delivery:
+
+Make sure that ISE_EIFFEL and ISE_PLATFORM are correctly defined, ie
+they point to an existing Eiffel installation.
+
+Edit `set_aliases' to reflect your environment.
+
+Launch `make_delivery'.
+
+
+
+2 - Producing a library for a given platform:
+
+Define ISE_EIFFEL to the location where the Eiffel delivery will be
+copied and ISE_PLATFORM to your current platform.
+
+Edit `set_aliases' to reflect your environment.
+
+Launch `compile_exes'.
+
+At the end, in ISE_EIFFEL you have a complete delivery.
+
+

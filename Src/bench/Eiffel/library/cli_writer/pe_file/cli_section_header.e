@@ -133,13 +133,13 @@ feature {NONE} -- Settings
 	c_set_number_of_relocations (an_item: POINTER; i: INTEGER_16) is
 			-- Set `NumberOfRelocations' to `i'.
 		external
-			"C struct IMAGE_SECTION_HEADER access NumberOfRelocations type DWORD use <windows.h>"
+			"C struct IMAGE_SECTION_HEADER access NumberOfRelocations type WORD use <windows.h>"
 		end
 
 	c_set_number_of_line_numbers (an_item: POINTER; i: INTEGER_16) is
 			-- Set `NumberOfLinenumbers' to `i'.
 		external
-			"C struct IMAGE_SECTION_HEADER access NumberOfLinenumbers type DWORD use <windows.h>"
+			"C struct IMAGE_SECTION_HEADER access NumberOfLinenumbers type WORD use <windows.h>"
 		end
 
 	c_set_characteristics (an_item: POINTER; i: INTEGER) is

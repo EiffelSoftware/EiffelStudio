@@ -105,15 +105,15 @@ char * object;
 
 public void allocate_gen_buffer ()
 {
-    if (general_buffer == (char *) 0) {
-	char g_status = g_data.status;
+	if (general_buffer == (char *) 0) {
+		char g_status = g_data.status;
 
-	g_data.status |= GC_STOP;
-        general_buffer = (char *) cmalloc (buffer_size * sizeof (char));
+		g_data.status |= GC_STOP;
+		general_buffer = (char *) cmalloc (buffer_size * sizeof (char));
 		if (general_buffer == (char *) 0)
 			eraise ("out of memory", EN_PROG);
-	g_data.status = g_status;
-    }
+		g_data.status = g_status;
+	}
 	current_position = 0;
 	end_of_buffer = 0;
 }
@@ -671,7 +671,7 @@ private void make_header()
 			eio();
 		buffer_write(bufer, (strlen (bufer)));
 	}
-	free (bufer);
+	xfree (bufer);
 }
 
 

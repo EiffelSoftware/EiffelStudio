@@ -33,14 +33,26 @@ feature -- Access
 feature -- Basic operations
 
 	initialize_preferences is
-			--
+			-- Initialize preferences.
+		local
+			directory: DIRECTORY_NAME
+			file_name: FILE_NAME
 		do
 			register_basic_graphical_types
-			initialize ("D:\Eiffel54\build\spec\windows\default.xml", Eiffel_preferences)
-			Pixmaps_path_cell.put ("D:\Eiffel54\studio\bitmaps\ico")
-			Pixmaps_extension_cell.put ("ico")
+			create file_name.make_from_string (Eiffel_installation_dir_name)
+			file_name.extend ("build")
+			file_name.extend ("config")
+			file_name.extend ("default.xml")
+			initialize (file_name, Eiffel_preferences)
+			directory := Bitmaps_path
+			if eiffel_platform.as_lower.is_equal ("windows") then
+				Pixmaps_path_cell.put (directory)
+				Pixmaps_extension_cell.put ("ico")
+			else
+				Pixmaps_path_cell.put (directory)
+				Pixmaps_extension_cell.put ("png")
+			end
 		end
-		
 
 	show_preference_window is
 			-- Ensure that `preference_window' is displayed.
@@ -49,7 +61,6 @@ feature -- Basic operations
 			preference_window.show
 		end
 		
-
 feature -- Obsolete
 
 feature -- Inapplicable
@@ -57,7 +68,7 @@ feature -- Inapplicable
 feature {NONE} -- Implementation
 
 	preference_window: PREFERENCE_WINDOW
-			--
+			-- Preference window used to allow editing of the preferences.
 
 invariant
 	invariant_clause: True -- Your invariant here

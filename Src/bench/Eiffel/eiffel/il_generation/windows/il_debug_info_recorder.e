@@ -384,7 +384,6 @@ feature -- line debug recording
 					
 					debug ("debugger_il_info_trace")
 						print (" - " + a_feat.written_class.name_in_upper
---						+ " :: NOP :: "
 								+ "."
 								+ a_feat.feature_name 
 								+ " -> "
@@ -405,19 +404,28 @@ feature {NONE} -- line debug recording Implementation
 	ignoring_next_debug_info: BOOLEAN
 			-- Do we ignore recording of debug info (nop) for next recording ?
 
-feature -- line debug exploitation
+feature -- line debug access
 
-	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [INTEGER] is
-			-- List of breakable IL Offset for `a_feat'
+	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN is
+			-- is a_il_offset related to an Eiffel line index ?
 		require
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
+			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]]
+			l_offsets_info: LIST [INTEGER]
 		do
-			l_info_from_class_type := info_from_class_type (a_class_type, False)
-			if l_info_from_class_type /= Void then
-				Result := l_info_from_class_type.breakable_il_offsets (a_feat)
+			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			if l_il_offset_list /= Void then
+				from
+					l_il_offset_list.start
+				until
+					l_il_offset_list.after or Result
+				loop
+					l_offsets_info ?= l_il_offset_list.item.item (2)
+					Result := l_offsets_info.has (a_il_offset)
+					l_il_offset_list.forth
+				end
 			end
 		end
 		
@@ -427,9 +435,72 @@ feature -- line debug exploitation
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_list: ARRAYED_LIST [INTEGER]
+			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]]
+			l_offsets_info: LIST [INTEGER]
+			l_offset_before: INTEGER
+			l_breakable_line: INTEGER
+			o: INTEGER
 		do
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			if l_il_offset_list /= Void then
+				from
+					l_breakable_line := 0
+					l_offset_before := -1
+					l_il_offset_list.start
+				until
+					l_il_offset_list.after
+				loop
+					l_offsets_info ?= l_il_offset_list.item.item (2)
+					from
+						l_offsets_info.start
+					until
+						l_offsets_info.after
+					loop
+						o := l_offsets_info.item
+						if o <= a_il_offset and o > l_offset_before then
+							l_offset_before := o
+							l_breakable_line := l_il_offset_list.index - 1 --| LIST.first.index = 1
+						end
+						l_offsets_info.forth
+					end
+					l_il_offset_list.forth
+				end
+			end
+			Result := l_breakable_line
+		end
+
+--	next_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
+--			-- Next IL offset for the il offset `a_current_il_offset' or current offset if on a breakable point
+--		require
+--			class_type_not_void: a_class_type /= Void
+--			feat_not_void: a_feat /= Void
+--		local
+--			l_list: SORTED_LIST [INTEGER]
+--		do
+--			l_list := feature_breakable_il_offsets_sorted_list (a_class_type, a_feat)
+--			if l_list /= Void then
+--				from
+--					l_list.start
+--				until
+--					l_list.after
+--					or else Result >= a_il_offset
+--				loop
+--					Result := l_list.item --| LIST.index => 1
+--					l_list.forth
+--				end			
+--			end
+--		end
+--		
+	approximate_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
+			-- Approximate IL offset for the il offset `a_current_il_offset' 
+			-- previous or current offset if on a breakable point
+		require
+			class_type_not_void: a_class_type /= Void
+			feat_not_void: a_feat /= Void
+		local
+			l_list: SORTED_LIST [INTEGER]
+		do
+			l_list := feature_breakable_il_offsets_sorted_list (a_class_type, a_feat)
 			if l_list /= Void then
 				from
 					l_list.start
@@ -437,70 +508,11 @@ feature -- line debug exploitation
 					l_list.after
 					or else l_list.item > a_il_offset
 				loop
-					Result := l_list.index - 1 --| ARRAYED_LIST.index => 1
-					l_list.forth
-				end
-			end
-		end
-
-	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_line: INTEGER): INTEGER is
-			-- IL offset for the Eiffel line number `a_line'
-			-- Return -1 if index out of range
-		require
-			class_type_not_void: a_class_type /= Void
-			feat_not_void: a_feat /= Void
-		local
-			l_index: INTEGER
-			l_list: ARRAYED_LIST [INTEGER]
-		do
-			l_index := a_line + 1
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			
-			if 
-				l_list /= Void 
-				and then l_list.valid_index (l_index) 
-			then
-				Result := l_list.i_th (l_index)
-			else
-				Result:= -1
-			end
-		end
-
-	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN is
-			-- is a_il_offset related to an Eiffel line index ?
-		require
-			class_type_not_void: a_class_type /= Void
-			feat_not_void: a_feat /= Void
-		local
-			l_list: LIST [INTEGER]
-		do
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			if l_list /= Void then
-				Result := l_list.has (a_il_offset)			
-			end
-		end
-		
-	next_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
-			-- Next IL offset for the il offset `a_current_il_offset'
-		require
-			class_type_not_void: a_class_type /= Void
-			feat_not_void: a_feat /= Void
-		local
-			l_list: ARRAYED_LIST [INTEGER]
-		do
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			if l_list /= Void then
-				from
-					l_list.start
-				until
-					l_list.after
-					or else Result > a_il_offset
-				loop
-					Result := l_list.item --| ARRAYED_LIST.index => 1
+					Result := l_list.item --| LIST.index => 1
 					l_list.forth
 				end			
 			end
-		end
+		end		
 
 	next_feature_breakable_il_range_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_current_il_offset: INTEGER): ARRAY [TUPLE [INTEGER, INTEGER]] is
 			-- IL range offset for the Eiffel line `a_line' in the step next
@@ -508,12 +520,12 @@ feature -- line debug exploitation
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_list: ARRAYED_LIST [INTEGER]			
+			l_list: SORTED_LIST [INTEGER]			
 			l_inf, l_sup: INTEGER		
-			l_interval: TUPLE[INTEGER, INTEGER]			
+			l_interval: TUPLE [INTEGER, INTEGER]			
 			i: INTEGER
 		do
-			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			l_list := feature_breakable_il_offsets_sorted_list (a_class_type, a_feat)
 			if l_list /= Void then
 				from
 					l_list.start
@@ -545,6 +557,70 @@ feature -- line debug exploitation
 						i := i + 1
 					end		
 				end
+			end
+		end
+
+	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_breakable_line_number: INTEGER): LIST [INTEGER] is
+			-- IL offset for the bp slot index `a_breakable_line_number'
+			-- Return Void if index out of range
+		require
+			class_type_not_void: a_class_type /= Void
+			feat_not_void: a_feat /= Void
+		local
+			l_index: INTEGER
+			l_list: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]]
+		do
+			l_index := a_breakable_line_number + 1
+			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			
+			if 
+				l_list /= Void 
+				and then l_list.valid_index (l_index) 
+			then
+				Result ?= l_list.i_th (l_index).item (2)
+			else
+				Result:= Void
+			end
+		end		
+		
+feature {NONE} -- line debug exploitation
+
+	feature_breakable_il_offsets_sorted_list (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): SORTED_LIST [INTEGER] is
+			-- List of all sorted breakable IL Offset for `a_feat'
+		require
+			class_type_not_void: a_class_type /= Void
+			feat_not_void: a_feat /= Void
+		local
+			l_il_offset_list: ARRAYED_LIST [ TUPLE [INTEGER, LIST [INTEGER]]]
+			l_offsets_info: LIST [INTEGER]			
+		do
+			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
+			if l_il_offset_list /= Void then
+				from
+					create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make 
+						--| +2 : in case we have loop with variant + invariant
+					l_il_offset_list.start
+				until
+					l_il_offset_list.after
+				loop
+					l_offsets_info ?= l_il_offset_list.item.item (2)
+					Result.append (l_offsets_info)
+					l_il_offset_list.forth
+				end				
+			end
+		end
+		
+	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]] is
+			-- List of breakable IL Offset for `a_feat'
+		require
+			class_type_not_void: a_class_type /= Void
+			feat_not_void: a_feat /= Void
+		local
+			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
+		do
+			l_info_from_class_type := info_from_class_type (a_class_type, False)
+			if l_info_from_class_type /= Void then
+				Result := l_info_from_class_type.breakable_il_offsets (a_feat)
 			end
 		end
 		

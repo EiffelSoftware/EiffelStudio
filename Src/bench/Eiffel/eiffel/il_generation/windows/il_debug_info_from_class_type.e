@@ -157,15 +157,6 @@ feature -- Recording Operation once_tokens
 				if a_once_result_token /= 0 then
 					l_entry.put_integer (a_once_result_token, 2)
 				end
-
---				debug ("il_info_trace")
---					print (">> CONFLICT record_feature_token <<%N")
---					print ("  - key : feature_name_id =" + l_feature_name_id.out + "%N")
---					print ("  - already               = " + list_once_tokens.item (l_feature_name_id).out + "%N")
---					print ("  - replace               = " + l_entry.out + "%N")
---					print ("%N")
---				end
---				list_once_tokens.force (l_entry , l_feature_name_id)
 			end
 		ensure
 			once_tokens (a_feature_i) /= Void
@@ -173,7 +164,7 @@ feature -- Recording Operation once_tokens
 
 feature -- Queries IL Offsets
 
-	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [INTEGER] is
+	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]] is
 			-- breakable_il_offsets associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -194,14 +185,33 @@ feature -- Queries IL Offsets
 
 feature -- Recording Operation
 
-	record_add_line_info (a_feature: FEATURE_I; a_il_offset: INTEGER; a_eiffel_slot_index: INTEGER) is
+	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]]): TUPLE [INTEGER, LIST [INTEGER]] is
+			-- Breakable line info for `eiffel_line' inside `a_data'
+		do
+			from
+				a_data.start
+			until
+				a_data.after or Result /= Void
+			loop
+				if a_data.item.integer_item (1) = a_eiffel_line then
+					Result := a_data.item
+				else
+					a_data.forth
+				end
+			end
+		end
+
+	record_add_line_info (a_feature: FEATURE_I; a_il_offset: INTEGER; a_eiffel_line: INTEGER) is
 			-- Record IL Information regarding breakable Lines
 		require
 			a_feature /= Void
 			a_il_offset >= 0
-			a_eiffel_slot_index >= 0
+			a_eiffel_line >= 0
 		local
-			l_il_offset_list: ARRAYED_LIST [INTEGER]
+			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]] 
+			l_line_info: TUPLE [INTEGER, LIST [INTEGER]]
+			l_offsets_info: LIST [INTEGER]
+				-- bp index => [eiffel line number, [IL offsets, ...]]
 			l_feature_name_id: INTEGER
 		do
 			l_feature_name_id := a_feature.feature_name_id
@@ -210,7 +220,18 @@ feature -- Recording Operation
 				create l_il_offset_list.make (20)
 				list_breakable_il_offset.put (l_il_offset_list, l_feature_name_id)
 			end
-			l_il_offset_list.extend (a_il_offset)
+			l_line_info := line_info_for_eiffel_line (a_eiffel_line, l_il_offset_list)
+			if l_line_info = Void then
+				create {LINKED_LIST [INTEGER]} l_offsets_info.make
+				l_line_info := [a_eiffel_line, l_offsets_info]
+				l_il_offset_list.extend (l_line_info)
+			else
+				l_offsets_info ?= l_line_info.item (2)
+			end
+			l_offsets_info.extend (a_il_offset)
+			debug ("debugger_il_info_trace")
+				print (" -> " + l_il_offset_list.count.out + "@" + l_line_info.integer_item (1).out +  ": " + l_il_offset_list.count.out + "%N")
+			end
 		end
 
 feature -- Cleaning operation
@@ -265,8 +286,9 @@ feature {NONE} -- Storage Implementation
 	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER], HASHABLE] 
 			-- feature_tokens[_done|_result] <= [feature_name_id]
 
-	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST[INTEGER], INTEGER] 
-			-- [List [Offset IL] ] <= [feature_name_id]
+--	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST[INTEGER], INTEGER] 
+	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]], INTEGER]
+			-- [bp index => [eiffel line, List [Offset IL]] ] <= [feature_name_id]
 
 invariant
 

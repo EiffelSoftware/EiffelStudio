@@ -27,18 +27,30 @@ feature {NONE} -- Initialization
 feature {GB_XML_LOAD} -- Basic operation
 
 	build is
-			--
+			-- For every item in `all_gb_ev', execute the deferred
+			-- building features. Wipe out `all_gb_ev' and
+			-- `all_element' during the process.
+		require
+			lists_equal_in_length: all_gb_ev.count = all_element.count
 		local
 			counter: INTEGER
 		do
 			from
-				counter := 1
+				all_gb_ev.start
+				all_element.start
 			until
-				counter = all_gb_ev.count + 1
+				all_gb_ev.is_empty
 			loop
-				(all_gb_ev @ counter).modify_from_xml_after_build (all_element @ counter)
-				counter := counter + 1
+				all_gb_ev.item.modify_from_xml_after_build (all_element.item)
+				all_gb_ev.remove
+				all_element.remove
+				check
+					all_element.count = all_gb_ev.count
+				end
 			end
+		ensure
+			all_gb_ev_is_empty: all_gb_ev.is_empty
+			all_element_is_empty: all_element.is_empty
 		end
 		
 	
@@ -61,6 +73,15 @@ feature {GB_EV_ANY} -- Basic operation
 feature {NONE} -- Implementation
 
 	all_gb_ev: ARRAYED_LIST [GB_EV_ANY]
+		-- All instances of `gb_ev_any' which have been set as
+		-- deferred in the building process.
+		
 	all_element: ARRAYED_LIST [XML_ELEMENT]
+		-- All the XML elements containing information for
+		-- building objects from the elements of `all_gb_ev'.
+		
+invariant
+	
+	test: all_gb_ev /= Void implies all_gb_ev.count = all_element.count
 
 end -- class GB_DEFERRED_BUILDER

@@ -153,10 +153,17 @@ feature -- Status report
 			-- label is longer, it will be cut.
 		require
 			exists: exists
+		local
+			buffer: STRING
 		do
-			cwin_send_message (item, Tcm_getitem, index, dummy_tab_item.to_integer)
-			Result := dummy_tab_item
+			create Result.make
+			create buffer.make (buffer_size)
+			buffer.fill_blank
+			Result.set_text (buffer)
+			Result.set_cchtextmax (buffer_size)
+			cwin_send_message (item, Tcm_getitem, index, Result.to_integer)
 		end
+			
 
 feature -- Status setting
 

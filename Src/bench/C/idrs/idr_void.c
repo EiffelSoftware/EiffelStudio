@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_void(void)
+rt_public bool_t idr_void(IDR *idrs, void *ext)
 {
 	/* Sometimes, it is convenient to provide a pointer to an IDR serialization
 	 * routine doing nothing. This one does just that: it always returns true

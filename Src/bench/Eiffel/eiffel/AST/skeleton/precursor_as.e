@@ -105,9 +105,9 @@ feature -- Type check, byte code and dead code removal
 		do
 				-- Check that we're in the body of a routine (vupr1).
 			if
-				context.level1 -- postcondition
-				or else context.level2 -- invariant
-				or else context.level4 -- precondition
+				context.is_checking_precondition or else
+				context.is_checking_postcondition or else
+				context.is_checking_invariant
 			then
 				create vupr1
 				context.init_error (vupr1)
@@ -225,11 +225,13 @@ feature -- Type check, byte code and dead code removal
 			
 				-- Supplier dependances update
 				-- Create self-dependance
-			create depend_unit.make (last_id, context.current_feature)
+			create depend_unit.make_with_level (last_id, context.current_feature,
+				context.depend_unit_level)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Create dependance on precursor
-			create depend_unit.make (p_type.class_id, a_feature)
+			create depend_unit.make_with_level (p_type.class_id, a_feature,
+			context.depend_unit_level)
 			context.supplier_ids.extend (depend_unit)
 			
 				-- Attachments type check

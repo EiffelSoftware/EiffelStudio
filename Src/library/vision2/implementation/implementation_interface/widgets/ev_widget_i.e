@@ -121,16 +121,6 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end
 	
-	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
-                require
-                        exists: not destroyed
-                deferred
-                ensure
-                        Result >= 0
-                end
-
         maximum_width: INTEGER is
                         -- Maximum width that application wishes widget
                         -- instance to have
@@ -141,6 +131,16 @@ feature -- Measurement
                         Result >= 0
                 end	
 	
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+                require
+                        exists: not destroyed
+                deferred
+                ensure
+                        Result >= 0
+                end
+
 	minimum_width: INTEGER is
 			-- Minimum width of widget
 		require
@@ -193,16 +193,6 @@ feature -- Resizing
 			dimensions_set: dimensions_set (width, new_height)
 		end
 	
-	set_maximum_height (max_height: INTEGER) is
-                        -- Set `maximum_height' to `max_height'.
-                require
-                        exists: not destroyed
-                        large_enough: max_height >= 0
-                deferred
-                ensure
-                        max_height = max_height
-                end
-
         set_maximum_width (max_width: INTEGER) is
                         -- Set `maximum_width' to `max_width'.
                 require
@@ -213,6 +203,39 @@ feature -- Resizing
                         max_width = max_width
                 end 
 
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
+                require
+                        exists: not destroyed
+                        large_enough: max_height >= 0
+                deferred
+                ensure
+                        max_height = max_height
+                end
+
+        set_minimum_size (min_width, min_height: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+			-- Set `minimum_height' to `min_height'.
+                require
+                        exists: not destroyed
+                        a_min_large_enough: min_width >= 0
+			height_large_enough: min_height >= 0
+                deferred
+                ensure
+                        min_width = min_width
+			min_height = min_height
+                end  
+        
+	set_minimum_width (min_width: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+                require
+                        exists: not destroyed
+                        a_min_large_enough: min_width >= 0
+                deferred
+                ensure
+                        min_width = min_width    
+                end  
+	
         set_minimum_height (min_height: INTEGER) is
                         -- Set `minimum__height' to `min_height'.
                 require
@@ -223,16 +246,6 @@ feature -- Resizing
                         min_height = min_height
                 end
 
-        set_minimum_width (min_width: INTEGER) is
-                        -- Set `minimum_width' to `min_width'.
-                require
-                        exists: not destroyed
-                        a_min_large_enough: min_width >= 0
-                deferred
-                ensure
-                        min_width = min_width
-                end
-	
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
@@ -269,7 +282,8 @@ feature -- Resizing
 		-- the values given or the minimum values possible 
 		-- for that widget
 		do
-			Result := (width = new_width or else width = minimum_width) and then (height = new_height or else height = minimum_height)
+Result := True
+--			Result := (width = new_width or else width = minimum_width) and then (height = new_height or else height = minimum_height)
 		end		
 		
 feature -- Event - command association

@@ -79,6 +79,7 @@ feature -- Basic operations
 			-- Stop at current point in list on `abort'.
 		local
 			snapshot: ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
+			l_action: PROCEDURE [ANY, EVENT_DATA]
 			i: INTEGER
 		do
 			if count > 0 then
@@ -101,8 +102,9 @@ feature -- Basic operations
 						i > snapshot.count
 						or is_aborted_stack.item
 					loop
-						if snapshot.i_th (i) /= Void then
-							snapshot.i_th (i).call (event_data)							
+						l_action := snapshot.i_th (i)
+						if l_action /= Void then
+							l_action.call (event_data)							
 						end
 						i := i + 1
 					end

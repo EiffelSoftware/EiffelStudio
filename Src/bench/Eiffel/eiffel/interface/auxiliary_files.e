@@ -594,6 +594,8 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("%Tegc_fsystem = egc_fsystem_init;%N")
 			Plug_file.putstring ("%Tegc_fco_table = egc_fco_table_init;%N")
 			Plug_file.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init;%N")
+			Plug_file.putstring ("%Tegc_partab = egc_partab_init;%N")
+			Plug_file.putstring ("%Tegc_partab_size = egc_partab_size_init;%N")
 
 			if not final_mode then
 				Plug_file.putstring ("%Tegc_frozen = egc_frozen_init;%N")

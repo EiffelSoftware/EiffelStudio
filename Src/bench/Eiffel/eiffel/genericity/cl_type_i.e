@@ -12,7 +12,11 @@ inherit
 			same_as,
 			c_type,
 			instantiation_in,
-			conforms_to_array
+			complete_instantiation_in,
+			conforms_to_array,
+			generated_id,
+			gen_type_string,
+			make_gen_type_byte_code
 		end
 
 feature
@@ -50,6 +54,12 @@ feature
 			-- No meta generic in non-generic type
 		end
 
+	true_generics : ARRAY [TYPE_I] is
+			-- Array of generics: no mapping reference -> REFERENCE_I
+		do
+			-- Non generic types don't have them
+		end
+
 	base_class: CLASS_C is
 			-- Base class associated to the class type
 		do
@@ -79,9 +89,18 @@ feature
 					and then other_cl_type.is_expanded = is_expanded
 					and then other_cl_type.is_separate = is_separate
 					and then other_cl_type.meta_generic = Void
+					and then other_cl_type.true_generics = Void
 		end
 
 	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
+			-- Instantiation of Current in context of `other'
+		require else
+			True
+		do
+			Result := Current
+		end
+
+	complete_instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is
 			-- Instantiation of Current in context of `other'
 		require else
 			True
@@ -273,6 +292,40 @@ feature
 			Result.set_is_expanded (is_expanded)
 			Result.set_is_separate (is_separate)
 			Result.set_base_class_id (base_id)
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+
+		do
+			if has_associated_class_type then
+				if final_mode then
+					Result := type_id - 1
+				else
+					Result := associated_class_type.id.id-1
+				end
+
+				if is_expanded then
+					Result := -256 - Result
+				end
+			else
+				Result := -10       -- Invalid - should never happen
+			end
+		end
+
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+
+		do
+			!!Result.make (0)
+			Result.append_integer (generated_id (final_mode))
+			Result.append (", ")
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append_short_integer (generated_id (False))
 		end
 
 end

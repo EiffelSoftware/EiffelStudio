@@ -96,7 +96,7 @@ feature
 				register := target;
 			end;
 			if call /= Void then
-				!! access_reg;
+				!!access_reg;
 				access_reg.set_register (register);
 				access_reg.set_type (target.type);
 				call.set_target (access_reg);
@@ -116,10 +116,15 @@ feature
 		local
 			target_type: TYPE_I;
 			is_expanded: BOOLEAN;
+			gen_type   : GEN_TYPE_I
 		do
 			generate_line_info;
 
 			target_type := Context.real_type (target.type);
+			gen_type    ?= target_type
+
+			info.generate_start (Current);
+			info.generate_gen_type_conversion (Current);
 
 			if target.is_result and last_in_result then
 					-- This is the generation of a last !!Result with a
@@ -257,6 +262,7 @@ feature
 					generated_file.new_line;
 				end;
 			end
+			info.generate_end (Current)
 		end;
 
 	generate_creation_invariant is

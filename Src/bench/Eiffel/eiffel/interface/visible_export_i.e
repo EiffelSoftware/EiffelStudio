@@ -17,7 +17,8 @@ feature
 	is_visible (feat: FEATURE_I): BOOLEAN is
 			-- Is the feature `feat' visible for external code ?
 		do
-			Result := feat.export_status.is_all;
+			Result := feat.export_status.is_all
+				or else feat.access_class.creators.has (feat.feature_name)
 		end;
 
 	has_visible: BOOLEAN is True
@@ -35,7 +36,7 @@ feature
 			loop
 				a_feature := feat_table.item_for_iteration;
 
-				if 	a_feature.export_status.is_all then
+				if is_visible (a_feature) then
 debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring (generator);
 	io.error.putstring (": Recording feature ");
@@ -119,8 +120,7 @@ end;
 				a_feature := feat_table.item_for_iteration;
 				if
 					not (a_feature.is_deferred or else a_feature.is_attribute)
-				and then
-					a_feature.export_status.is_all
+					and then is_visible (a_feature)
 				then
 					nb := nb + 1;
 				end;
@@ -137,8 +137,7 @@ end;
 				a_feature := feat_table.item_for_iteration;
 				if
 					not (a_feature.is_deferred or else a_feature.is_attribute)
-				and then
-					a_feature.export_status.is_all
+					and then is_visible (a_feature)
 				then
 					Cecil1.put (a_feature, real_name (a_feature));
 				end;
@@ -161,8 +160,7 @@ end;
 			loop
 				a_feature := feat_table.item_for_iteration;
 				if 	not (a_feature.is_deferred or else a_feature.is_attribute)
-					and then
-					a_feature.export_status.is_all
+					and then is_visible (a_feature)
 				then
 					Result := Result + 1;
 				end;

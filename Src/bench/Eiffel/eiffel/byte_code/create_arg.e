@@ -20,28 +20,32 @@ feature
 		end;
 
 	analyze is
-			-- Do nothing
 		do
+			if is_generic then
+				context.mark_current_used
+			end
 		end;
 
 	generate is
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
 		local
-			type_i: TYPE_I;
 			cl_type_i: CL_TYPE_I;
+			gen_type_i: GEN_TYPE_I;
 			gen_file: INDENT_FILE;
 		do
 			gen_file := context.generated_file;
-			type_i := context.byte_code.arguments.item (position);
-			type_i := context.constrained_type (type_i);
-			type_i := context.instantiation_of (type_i);
-				-- The following RAA cannot fail.
-			cl_type_i ?= type_i;
+			cl_type_i := type_to_create;
+			gen_type_i ?= cl_type_i;
 			gen_file.putstring ("RTCA(arg");
 			gen_file.putint (position);
 			gen_file.putstring (gc_comma);
-			gen_file.putint (cl_type_i.type_id - 1);
+
+			if gen_type_i /= Void then
+				gen_file.putstring ("typres");
+			else
+				gen_file.putint (cl_type_i.type_id - 1);
+			end
 			gen_file.putchar (')');
 		end;
 
@@ -50,19 +54,69 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an argument anchored type.
 		local
-			type_i: TYPE_I;
-			cl_type_i: CL_TYPE_I;
+			cl_type_i : CL_TYPE_I;
+			gen_type  : GEN_TYPE_I
 		do
 			ba.append (Bc_carg);
-			type_i := context.byte_code.arguments.item (position);
-			type_i := context.constrained_type (type_i);
-			type_i := context.instantiation_of (type_i);
-				-- The following RAA cannot fail.
-			cl_type_i ?= type_i;
+			cl_type_i := type_to_create
+			gen_type  ?= cl_type_i;
+
 				-- Default creation type
 			ba.append_short_integer (cl_type_i.type_id - 1);
+				-- Generics (if any)
+			if gen_type /= Void then
+				gen_type.make_gen_type_byte_code (ba);
+			end
+			ba.append_short_integer (-1);
 				-- Argument position
 			ba.append_short_integer (position);
+		end;
+
+feature -- Generic conformance
+
+	generate_gen_type_conversion (node : BYTE_NODE) is
+
+		local
+			gen_type : GEN_TYPE_I
+		do
+			gen_type ?= type_to_create
+
+			if gen_type /= Void then
+				node.generate_gen_type_conversion (gen_type)
+			end
+		end
+
+	generated_type_id : STRING is
+
+		local
+			cl_type_i : CL_TYPE_I;
+			gen_type  : GEN_TYPE_I
+		do
+			cl_type_i := type_to_create;
+			gen_type  ?= cl_type_i;
+
+			!!Result.make (0)
+			Result.append ("RTCA(arg");
+			Result.append_integer (position);
+			Result.append (gc_comma);
+
+			if gen_type = Void then
+				Result.append_integer (cl_type_i.type_id - 1);
+			else
+				Result.append ("typres");
+			end
+
+			Result.append_character (')');
+		end;
+
+	type_to_create : CL_TYPE_I is
+
+		local
+			type_i : TYPE_I;
+		do
+			type_i := context.byte_code.arguments.item (position);
+			type_i := context.constrained_type (type_i);
+			Result ?= context.instantiation_of (type_i);
 		end;
 
 feature -- Debug

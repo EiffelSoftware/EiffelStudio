@@ -6,7 +6,8 @@ inherit
 			dump,
 			is_char,
 			same_as,
-			description, sk_value, generate_cecil_value, hash_code
+			description, sk_value, generate_cecil_value, hash_code,
+			generated_id
 		end
 
 feature
@@ -111,6 +112,14 @@ feature
 			-- to the current C type in `file'.
 		do
 			file.putstring ("it_char")
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+
+		do
+			Result := -2        -- Code for CHARACTER
 		end
 
 end

@@ -211,13 +211,30 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 		local
 			ref: REFERENCE_I;
 			meta_gen: META_GENERIC;
+			true_gen: ARRAY [TYPE_I]
+			any_type_i : TYPE_I
+			any_type_a : TYPE_A
 		do
 				--- Not once because array_id can change
 			!!ref;
 			!!meta_gen.make (1);
 			meta_gen.put (ref, 1);
+			!!true_gen.make (1, 1);
+			any_type_a := ref.type_a;
+
+			if any_type_a /= Void then
+				any_type_i := any_type_a.type_i;
+			end;
+
+			if any_type_i /= Void then
+				true_gen.put (any_type_i, 1);
+			else
+				-- Should never happen!
+				true_gen.put (ref, 1);
+			end;
 			!!Result;
 			Result.set_meta_generic (meta_gen);
+			Result.set_true_generics (true_gen);
 			Result.set_base_id (System.array_id);
 		end;
 

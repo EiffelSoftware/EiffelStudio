@@ -73,6 +73,8 @@ feature -- Generation
 				descriptor_generate_precomp (f)
 			else
 				f.new_line
+				descriptor_generate_generic (f)
+				f.new_line
 				descriptor_generate (f)
 			end;
 
@@ -87,34 +89,60 @@ feature -- Generation
 		require
 			file_not_void: f /= Void
 			file_exists: f.exists
+		local
+			cnt : COUNTER
 		do
 			f.putstring ("static struct desc_info desc[] = {%N");
 
 			if (invariant_entry = Void) then
 				f.putstring ("%T{(uint16) ");
 				f.putint (Invalid_index);
-				f.putstring (", (int16) -1},%N")
+				f.putstring (", (int16) -1, (int16 *) 0},%N")
 			else
 				f.putstring ("%T{(uint16) ");
 				f.putint (invariant_entry.real_body_index.id - 1);
-				f.putstring (", (int16) -1},%N");
+				f.putstring (", (int16) -1, (int16 *) 0},%N")
 			end;
 
 			from
+				!!cnt
 				start
 			until
 				after
 			loop
-				item_for_iteration.generate (f)
+				item_for_iteration.generate (f, cnt)
 				forth
 			end
 
 			f.putstring ("%N};%N")
 		end;
 
+	descriptor_generate_generic (f : INDENT_FILE) is
+			-- C code for generic type arrays.
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
+		local
+			cnt : COUNTER
+		do
+			from
+				!!cnt
+				start
+			until
+				after
+			loop
+				item_for_iteration.generate_generic (f, cnt);
+				forth
+			end;
+			f.putstring ("%N")
+		end;
+
 	descriptor_generate_precomp (f: INDENT_FILE) is
 			-- C code of corresponding to run-time
 			-- structure of Current precompiled descriptor
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
 		local
 			i: INTEGER
 		do
@@ -128,10 +156,12 @@ feature -- Generation
 				f.putint (Invalid_index)
 				f.putstring (";%N")
 				f.putstring ("%Tdesc[0].type = (int16) -1;%N")
+				f.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
 			else
 				f.putstring ("%Tdesc[0].info = (uint16) (")
 				f.putstring (invariant_entry.real_body_index.generated_id)
 				f.putstring (");%N%Tdesc[0].type = (int16) -1;%N")
+				f.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
 			end;
 
 			from
@@ -235,6 +265,10 @@ feature -- Melting
 			else
 				ba.append_short_integer	(invariant_entry.real_body_index.id - 1)
 			end;
+
+			-- No type
+			ba.append_short_integer (-1);
+			-- No generics
 			ba.append_short_integer (-1);
 
 				-- Append the individual descriptor units

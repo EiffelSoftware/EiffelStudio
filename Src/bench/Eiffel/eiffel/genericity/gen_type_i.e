@@ -6,13 +6,16 @@ inherit
 	CL_TYPE_I
 		redefine
 			meta_generic,
+			true_generics,
 			same_as, is_equal,
 			is_valid,
 			has_formal,
 			instantiation_in,
 			dump,
 			append_signature,
-			type_a
+			type_a,
+			gen_type_string,
+			make_gen_type_byte_code
 		end
 
 feature
@@ -26,8 +29,20 @@ feature
 			meta_generic := m
 		end
 
+	true_generics : ARRAY [TYPE_I]
+			-- True generic types.
+
+	set_true_generics (tgen: ARRAY [TYPE_I]) is
+			-- Assign `tgen' to `true_generics'.
+		do
+			true_generics := tgen
+		ensure
+			generics_set : true_generics = tgen
+		end
+
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
+			-- NOTE: we do not compare `true_generics'!
 		local
 			gen_type_i: GEN_TYPE_I
 		do
@@ -61,6 +76,7 @@ feature
 		do
 			Result := clone (Current)
 			Result.set_meta_generic (clone (meta_generic))
+			Result.set_true_generics (clone (true_generics))
 		end
 
 	instantiation_in (other: like Current): like Current is
@@ -69,10 +85,12 @@ feature
 			i, count, meta_position: INTEGER
 			formal: FORMAL_I
 			meta_gen: like meta_generic
+			true_gen: like true_generics
 		do
 			from
 				Result := duplicate
 				meta_gen := Result.meta_generic
+				true_gen := Result.true_generics
 				i := 1
 				count := meta_generic.count
 			until
@@ -80,6 +98,8 @@ feature
 			loop
 				meta_gen.put
 					(meta_generic.item (i).instantiation_in (other), i)
+				true_gen.put
+					(true_generics.item (i).complete_instantiation_in (other), i)
 				i := i + 1
 			end
 		end
@@ -168,6 +188,48 @@ feature
 			loop
 				array.put (meta_generic.item (i).type_a, i)
 				i := i - 1
+			end
+		end
+
+feature -- Generic conformance
+
+	gen_type_string (final_mode : BOOLEAN) : STRING is
+
+		local
+			i, up : INTEGER
+		do
+			!!Result.make (0)
+			Result.append_integer (generated_id (final_mode))
+			Result.append (", ")
+
+			from
+				i  := true_generics.lower
+				up := true_generics.upper
+			until
+				i > up
+			loop
+				Result.append (true_generics.item (i).gen_type_string (
+																final_mode
+																	  ))
+				i := i + 1
+			end
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY) is
+
+		local
+			i, up : INTEGER
+		do
+			ba.append_short_integer (generated_id (False))
+
+			from
+				i  := true_generics.lower
+				up := true_generics.upper
+			until
+				i > up
+			loop
+				true_generics.item (i).make_gen_type_byte_code (ba)
+				i := i + 1
 			end
 		end
 

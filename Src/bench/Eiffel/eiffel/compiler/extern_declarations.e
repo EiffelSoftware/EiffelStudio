@@ -185,6 +185,9 @@ feature
 				f.putstring ("extern int16 ");
 				f.putstring (local_type_tables.item_for_iteration);
 				f.putstring ("[];%N");
+				f.putstring ("extern int16 *");
+				f.putstring (local_type_tables.item_for_iteration);
+				f.putstring ("_gen_type [];%N");
 				local_type_tables.forth;
 			end;
 

@@ -141,6 +141,7 @@ feature -- Object basket managment
 			add_in_system_basket (Evisib)
 			add_in_system_basket (Ececil)
 			add_in_system_basket (Einit)
+			add_in_system_basket (Eparents)
 		end
 
 	compute_partial_system_objects is
@@ -275,7 +276,6 @@ feature -- Generate DLL
 			make_file.new_line
 		end
 
-
 feature -- Actual generation
 
 	make_file: INDENT_FILE
@@ -325,7 +325,6 @@ feature -- Actual generation
 			generate_cecil
 
 				-- Generate DLLs rules
-			
 			generate_dll
 
 				-- Generate cleaning rules
@@ -1109,7 +1108,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("%N%T cp $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
 			make_file.putstring (emain_file)
 
-			make_file.putstring (" E1/emain.c") 
+			make_file.putstring (" E1/emain.c")
 
 			make_file.putstring ("%N%T cd ")
 			make_file.putstring (System_object_prefix)

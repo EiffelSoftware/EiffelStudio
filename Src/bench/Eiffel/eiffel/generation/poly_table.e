@@ -303,14 +303,80 @@ feature
 	generate_type_table (file: INDENT_FILE) is
 			-- Generate the associated type table in final mode.
 		local
-			i, nb, index: INTEGER
+			i, j, nb, index: INTEGER
 			entry: T
 			local_copy: like Current
+			c_name: STRING
 		do
+			local_copy := Current
+
+				-- First generate type arrays for generic types.
+			c_name := rout_id.type_table_name
+
 			from
-				local_copy := Current
+				i := min_type_id;
+				nb := max_type_id;
+				index := lower
+				j := 0;
+			until
+				i > nb
+			loop
+				entry := local_copy.array_item (index);
+				if i = entry.type_id then
+					if entry.is_generic then
+						file.putstring ("static int16 ");
+						file.putstring (c_name);
+						file.putstring ("_pgtype");
+						file.putint (j);
+						file.putstring (" [] = {");
+						file.putstring (entry.gen_type_string);
+						file.putstring ("-1};");
+						file.new_line;
+						j := j + 1
+					end;
+					index := index + 1
+				end;
+				i := i + 1;
+			end;
+
+				-- Now generate pointer table
+			file.putstring ("int16 *");
+			file.putstring (c_name);
+			file.putstring ("_gen_type [] = {%N");
+
+			from
+				i := min_type_id;
+				nb := max_type_id;
+				index := lower
+				j := 0 
+			until
+				i > nb
+			loop
+				entry := local_copy.array_item (index)
+				if i = entry.type_id then
+					if entry.is_generic then
+						file.putstring (c_name);
+						file.putstring ("_pgtype");
+						file.putint (j);
+						file.putchar (',');
+						j := j + 1;
+					else
+						file.putstring ("0,");
+					end
+					index := index + 1
+				else
+					file.putstring ("0,");
+				end;
+				file.new_line;
+
+				i := i + 1;
+			end;
+			file.putstring ("0};%N%N");
+
+				-- Generate the old stuff
+			from
 				file.putstring ("int16 ")
-				file.putstring (rout_id.type_table_name)
+				file.putstring (c_name)
 				file.putstring ("[] = {%N")
 				i := min_type_id
 				nb := max_type_id

@@ -18,8 +18,14 @@ feature
 
 	generate is
 			-- Generate creation type id (dynamic type) of current	
+		local
+			gen_file: INDENT_FILE;
 		do
-			context.generate_current_dtype;
+--            context.generate_current_dtype;
+			gen_file := context.generated_file;
+			gen_file.putstring ("Dftype(")
+			gen_file.putstring (context.Current_register.register_name)
+			gen_file.putchar (')')
 		end;
 
 feature -- Byte code generation
@@ -28,6 +34,31 @@ feature -- Byte code generation
 			-- Generate byte code for a like Current creation type.
 		do
 			ba.append (Bc_ccur);
+		end;
+
+feature -- Generic conformance
+
+	generate_gen_type_conversion (node : BYTE_NODE) is
+
+		do
+			-- Nothing.
+		end
+
+	generated_type_id : STRING is
+
+		do
+			!!Result.make (0)
+			Result.append ("Dftype(")
+			Result.append (context.Current_register.register_name)
+			Result.append_character (')')
+		end
+
+	type_to_create : CL_TYPE_I is
+
+		do
+			-- None.
+			-- If Current is generic it already
+			-- carries all the info in it's header.
 		end;
 
 feature -- Debug

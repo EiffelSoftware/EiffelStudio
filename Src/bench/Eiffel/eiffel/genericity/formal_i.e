@@ -3,7 +3,8 @@ class FORMAL_I
 inherit
 	TYPE_I
 		redefine
-			is_formal, same_as, has_formal, instantiation_in
+			is_formal, same_as, has_formal, instantiation_in,
+			complete_instantiation_in, generated_id
 		end
 
 feature
@@ -40,6 +41,25 @@ feature
 			good_context: position <= other.meta_generic.count
 		do
 			Result := other.meta_generic.item (position)
+		end
+
+	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+
+		require else
+			good_context: position <= other.true_generics.count;
+		local
+			btype : BASIC_I
+		do
+			-- Keep formal generic parameters iff the
+			-- actual is not a basic type.
+
+			btype ?= other.true_generics.item (position)
+
+			if btype /= Void then
+				Result := btype
+			else
+				Result := Current
+			end
 		end
 
 	c_type: TYPE_C is
@@ -95,6 +115,14 @@ feature
 		do
 			!!Result
 			Result.set_position (position)
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode : BOOLEAN) : INTEGER is
+
+		do
+			Result := -16 - position
 		end
 
 end

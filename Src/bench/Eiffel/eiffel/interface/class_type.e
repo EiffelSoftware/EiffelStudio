@@ -733,6 +733,96 @@ feature -- Byte code generation
 			Tmp_m_feat_tbl_server.put (melted_feat_tbl)
 		end
 
+feature -- Parent table generation
+
+	generate_parent_table (parents_file : INDENT_FILE; 
+						   final_mode   : BOOLEAN) is
+			-- Generate parent table
+		require
+			valid_file   : parents_file /= Void;
+			is_open_write: parents_file.is_open_write
+		local
+			parents     : FIXED_LIST [CL_TYPE_A];
+			parent_type : CL_TYPE_I
+			gen_type    : GEN_TYPE_I;
+			a_class     : CLASS_C
+		do
+			gen_type ?= type
+			a_class  := associated_class
+
+			if gen_type /= Void and then
+					gen_type.meta_generic /= Void then
+				Par_table.init (type.generated_id (final_mode), 
+								gen_type.meta_generic.count,
+								a_class.name_in_upper, a_class.is_expanded);
+			else
+				Par_table.init (type.generated_id (final_mode), 0,
+								a_class.name_in_upper, a_class.is_expanded);
+			end
+
+			from
+				parents := a_class.parents
+				parents.start
+			until
+				parents.after
+			loop
+				parent_type := parents.item.type_i
+				if gen_type /= Void then
+					parent_type := parent_type.instantiation_in (gen_type)
+				end
+				Par_table.append_type (parent_type)
+				parents.forth
+			end
+
+			Par_table.generate (parents_file, final_mode)
+		end;
+
+	make_parent_table_byte_code (ba: BYTE_ARRAY) is
+			-- Generate parent table
+		local
+			parents     : FIXED_LIST [CL_TYPE_A];
+			parent_type : CL_TYPE_I
+			gen_type    : GEN_TYPE_I;
+			a_class     : CLASS_C
+		do
+			gen_type ?= type
+			a_class  := associated_class
+
+			if gen_type /= Void and then
+					gen_type.meta_generic /= Void then
+				Par_table.init (type.generated_id (False), 
+								gen_type.meta_generic.count,
+								a_class.name_in_upper, a_class.is_expanded);
+			else
+				Par_table.init (type.generated_id (False), 0,
+								a_class.name_in_upper, a_class.is_expanded);
+			end
+
+			from
+				parents := a_class.parents;
+				parents.start;
+			until
+				parents.after
+			loop
+				parent_type := parents.item.type_i
+
+				if gen_type /= Void then
+					parent_type := parent_type.instantiation_in (gen_type)
+				end
+
+				Par_table.append_type (parent_type)
+				parents.forth
+			end
+
+			Par_table.make_byte_code (ba);
+		end;
+
+	Par_table: PARENT_TABLE is
+			-- Buffer for parent table generation
+		once
+			!!Result.make
+		end;
+
 feature -- Skeleton generation
 
 	generate_skeleton1 (skeleton_file: INDENT_FILE) is
@@ -752,6 +842,9 @@ feature -- Skeleton generation
 
 					-- Generate attribute types sequence
 				skeleton_file.putstring ("uint32 types")
+				if type_id = 256 or type_id = 295 then
+					print ("I'm here")
+				end
 				skeleton_file.putint (type_id)
 				skeleton_file.putstring (" [] =%N")
 				skeleton.generate_type_array
@@ -842,9 +935,9 @@ feature -- Skeleton generation
 			end
 
 			if byte_context.final_mode then
-				if 	a_class.has_invariant
-					and
-					a_class.assertion_level.check_invariant
+				if
+					a_class.has_invariant
+					and a_class.assertion_level.check_invariant
 				then
 					skeleton_file.putstring (
 						Invariant_body_id.feature_name (id))
@@ -1151,8 +1244,8 @@ feature -- Cecil generation for Concurrent Eiffel
 	generate_separate_pattern (file: FILE) is
 			-- Generation of the Cecil table
 			-- Caller must guarantee it's called in Final mode
-        require
-            finalized_mode: byte_context.final_mode
+		require
+			finalized_mode: byte_context.final_mode
 		do
 			if associated_class.has_visible then
 				file.putstring ("{(int32) ")

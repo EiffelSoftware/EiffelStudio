@@ -2,36 +2,26 @@ system
 	test_all_widgets
 
 root
-
-	demo (ROOT_CLUSTER): "make"
+	demo: "make"
 
 default
-
 --	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision")
-
 	assertion (all);
 
 cluster
+	root_cluster: "$ISE_EIFFEL/examples/vision/test_all_widgets"
 
-	ROOT_CLUSTER: ".";
-
--- If you are not using the precompiled version of EiffelVision, 
--- uncomment the `external' clause below. 
-
--- EiffelBase:
-
-	all base: 		"$ISE_EIFFEL\library\base"
+		-- EiffelBase:
+	all base: 		"$ISE_EIFFEL/library/base"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end
 
--- MEL
+		-- MEL
     all mel:                            "$ISE_EIFFEL/library/mel/";
                         
-                        
--- EiffelVision
-
+		-- EiffelVision
     vision:                 	"$ISE_EIFFEL/library/vision";
 	vision_kernel (vision):         "$/oui/kernel";
 	vision_widgets (vision):        "$/oui/widgets";
@@ -40,14 +30,14 @@ cluster
 	vision_figures (vision):	"$/figures";
 	vision_tools (vision):		"$/tools";
 
-	-- Toolkit
+		-- Toolkit
 	vision_toolkit (vision):		"$/implement/toolkit";
 	vision_toolkit_kernel (vision_toolkit):	"$/kernel";
 	vision_toolkit_widgets (vision_toolkit):	"$/widgets";
 	vision_toolkit_support (vision_toolkit):	"$/support";
 
 
-	-- Implementation clusters for x/Motif
+		-- Implementation clusters for x/Motif
 	vision_imp (vision):          		"$/implement/motif";
 	vision_imp_kernel (vision_imp):         "$/kernel";
 	vision_imp_widgets (vision_imp):        "$/widgets";
@@ -55,20 +45,20 @@ cluster
 
     vision_imp_x (vision):      		"$/implement/x";
     vision_imp_x_kernel (vision_imp_x):  	"$/kernel";
---        vision_imp_x_widgets (vision_imp_x):    "$/widgets";
+	--vision_imp_x_widgets (vision_imp_x):    "$/widgets";
     vision_imp_x_support (vision_imp_x):    "$/support";
 
     vision_obsolete_motif (vision): "$/obsolete/motif";
     vision_obsolete_oui (vision):   "$/obsolete/oui";
     vision_obsolete_toolkit (vision):"$/obsolete/toolkit";
 
+-- If you are not using the precompiled version of EiffelVision, 
+-- uncomment the `external' clause below. 
+
 external
-
-        include_path:
-                "\$(ISE_EIFFEL)/library/mel/Clib";
-
+        include_path: "\$(ISE_EIFFEL)/library/mel/Clib";
         object:
-                "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+			"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
                 "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
                 "-lXm -lXt -lX11 -lXext -lXp"
 

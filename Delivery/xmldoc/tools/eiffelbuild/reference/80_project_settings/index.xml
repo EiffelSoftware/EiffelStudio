@@ -19,14 +19,8 @@
 			<bold>Settings...</bold> from the 
 			<bold>Project</bold> menu.
 		</paragraph>
-		<paragraph>The window is organized as three tabs:</paragraph>
+		<paragraph>The window is organized as two tabs:</paragraph>
 		<list ordered="true">
-			<item>
-				<link>
-					<url>10_general.xml</url>
-					<label>General</label>
-				</link>
-			</item>
 			<item>
 				<link>
 					<url>20_build.xml</url>
@@ -40,7 +34,7 @@
 				</link>
 			</item>
 		</list>
-		<paragraph>All options are enabled and saved into the project settings file, 'project_settings.xml' as soon as the window is closed.</paragraph>
+		<paragraph>All options are enabled and saved into the project settings file, 'build_project.bpr' as soon as the window is closed.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

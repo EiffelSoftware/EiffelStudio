@@ -14,10 +14,10 @@ inherit
 		undefine
 			byte_node
 		redefine
-			find_breakable, format
+			find_breakable, format, type_check
 		end
 
-feature
+feature -- Access
 
 	byte_node: INSTR_B is
 			-- Associated byte code
@@ -41,5 +41,19 @@ feature -- Output
 		do
 			simple_format (ctxt)
 		end;
+
+feature -- Update
+
+	type_check is
+			-- Record the current position and type check the AST node.
+		do
+			Error_handler.set_error_position (start_position);
+			perform_type_check
+		end
+
+	perform_type_check is
+			-- Type check the AST node.
+		deferred
+		end;	
  
 end -- class INSTRUCTION_AS_B

@@ -23,6 +23,11 @@ inherit
 		end;
 	COMPILER_EXPORTER
 
+	DEBUG_OUTPUT
+		rename
+			debug_output as name_in_upper
+		end
+
 creation {COMPILER_EXPORTER}
 	make
 

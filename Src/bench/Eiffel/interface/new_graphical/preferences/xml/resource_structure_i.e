@@ -16,7 +16,6 @@ feature -- Initialization
 			s: STRING
 			p: XML_TREE_PARSER
 			error_message: STRING
---			folder_i: RESOURCE_FOLDER_I
 		do
 			create file_name.make_from_string (default_file)
 			create table.make (100)
@@ -35,7 +34,6 @@ feature -- Initialization
 				else
 					create {RESOURCE_FOLDER_IMP} root_folder_i.make_default_root (parser.root_element, interface)
 					root_folder_i.create_interface
-					root_folder := root_folder_i.interface
 				end
 			else
 				error_message := "does not exist%N"
@@ -58,19 +56,19 @@ feature -- Access
 			Result := table.item (resource_name)
 		end
 
-	folder (path: STRING): like root_folder is
+	folder (path: STRING): RESOURCE_FOLDER is
 			-- Folder at location `path'
 		local
 			i, j: INTEGER
 			s: STRING
-			f: like folder
+			f: like root_folder_i
 			loop_must_end: BOOLEAN
 		do
 			from
 				i := 1
 				j := 1
 				s := path
-				f := root_folder
+				f := root_folder_i
 				loop_must_end := s.empty
 			until
 				loop_must_end
@@ -86,7 +84,7 @@ feature -- Access
 			if i + 1 < s.count then
 				f := folder_child (f, s.substring (i, s.count))
 			end
-			Result := f
+			Result := f.interface
 		end
 
 	child_list (path: STRING): LINKED_LIST [like folder] is
@@ -131,13 +129,8 @@ feature -- Save
 
 feature -- Status report
 
-	root_folder: RESOURCE_FOLDER
-			-- Root of the folder hierarchy.
-			--| `folder' type accords to it, but other
-			--| features should accord with `folder' type
-			--| because it's more intuitive.
-
 	root_folder_i: RESOURCE_FOLDER_I
+			-- Root of the folder hierarchy.
 
 	has_folder (s: STRING): BOOLEAN is
 		do
@@ -153,12 +146,12 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	folder_child (par: RESOURCE_FOLDER; child_name: STRING): like folder is
+	folder_child (par: RESOURCE_FOLDER_I; child_name: STRING): RESOURCE_FOLDER_I is
 			-- Child of `par' with name `child_name'
 			-- Void if `par' has no child called `child_name'.
 		local
-			l: linked_list [like folder]
-			f: like folder
+			l: LINKED_LIST [RESOURCE_FOLDER_I]
+			f: RESOURCE_FOLDER_I
 			s: STRING
 		do
 			l := par.child_list

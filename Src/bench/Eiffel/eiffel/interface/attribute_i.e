@@ -315,6 +315,8 @@ feature
 			ba := Byte_array;
 			ba.clear;
 	
+				-- Once mark
+			ba.append ('%U');
 				-- Start	
 			ba.append (Bc_start);
 				-- Routine id
@@ -324,8 +326,6 @@ feature
 			ba.append_integer (result_type.sk_value);
 				-- Argument count
 			ba.append_short_integer (0);
-				-- Once mark
-			ba.append ('%U');
 				-- Local count
 			ba.append_short_integer (0);
 				-- No argument clone

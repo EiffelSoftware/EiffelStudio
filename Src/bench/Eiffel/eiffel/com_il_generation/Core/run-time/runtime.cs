@@ -389,6 +389,7 @@ feature -- Status report
 	{
 		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
 		INTERFACE_TYPE_ATTRIBUTE generic_type;
+		object[] l_attributes;
 		GENERIC_TYPE l_gen_type;
 		CLASS_TYPE cl_type;
 		Type Result = null;
@@ -404,10 +405,16 @@ feature -- Status report
 			cl_type = (CLASS_TYPE) l_gen_type.generics [pos - 1];
 			if (!cl_type.is_basic ()) {
 				if (cl_type.type.Value != (System.IntPtr) 0) {
-					generic_type = (INTERFACE_TYPE_ATTRIBUTE)
-						Type.GetTypeFromHandle (cl_type.type).
-							GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
-					Result = generic_type.class_type;
+					Result = Type.GetTypeFromHandle (cl_type.type);
+					l_attributes = Result.GetCustomAttributes (
+						typeof (INTERFACE_TYPE_ATTRIBUTE), false);
+					#if ASSERTIONS
+						ASSERTIONS.CHECK ("l_attributes not null", l_attributes != null);
+					#endif
+					if (l_attributes.Length > 0) {
+						generic_type = (INTERFACE_TYPE_ATTRIBUTE) l_attributes [0];
+						Result = generic_type.class_type;
+					}
 				} else {
 						/* Generic parameter is of type NONE, so we return an instance
 						 * of NONE_TYPE as associated type. It is mostly there to fix

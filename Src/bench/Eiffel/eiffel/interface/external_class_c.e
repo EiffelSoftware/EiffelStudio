@@ -1192,9 +1192,9 @@ feature {NONE} -- Implementation
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....
 					check
-						has_basic: Basic_type_mapping.has (l_type_name)
+						has_basic: basic_type_mapping.has (l_type_name)
 					end
-					l_result := Basic_type_mapping.item (l_type_name)
+					l_result := basic_type_mapping.item (l_type_name)
 				end
 				
 				if l_result = Void then
@@ -1229,14 +1229,14 @@ feature {NONE} -- Implementation
 			create Result.make (20)
 			Result.put (System.boolean_class, "System.Boolean")
 			Result.put (System.character_class, "System.Char")
-			Result.put (System.integer_8_class, "System.Byte")
 			Result.put (System.integer_8_class, "System.SByte")
 			Result.put (System.integer_16_class, "System.Int16")
-			Result.put (System.integer_16_class, "System.UInt64")
 			Result.put (System.integer_32_class, "System.Int32")
-			Result.put (System.integer_32_class, "System.UInt32")
 			Result.put (System.integer_64_class, "System.Int64")
-			Result.put (System.integer_64_class, "System.UInt64")
+			Result.put (System.natural_8_class, "System.Byte")
+			Result.put (System.natural_16_class, "System.UInt64")
+			Result.put (System.natural_32_class, "System.UInt32")
+			Result.put (System.natural_64_class, "System.UInt64")
 			Result.put (System.pointer_class, "System.IntPtr")
 			Result.put (System.pointer_class, "System.UIntPtr")
 			Result.put (System.real_32_class, "System.Single")

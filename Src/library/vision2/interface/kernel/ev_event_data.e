@@ -12,16 +12,18 @@ class
 creation
 	make
 	
-feature -- Initialization
+feature {NONE}  -- Initialization
 	
 	make (p: POINTER) is
 		do
-			item := p
+			-- Initialize widget XX
 		end
 	
 feature -- Access
 	
 	widget: EV_WIDGET
+			-- The mouse pointer was over this widget 
+			-- when event happened
 	
 feature -- Debug
 	
@@ -31,12 +33,6 @@ feature -- Debug
 			print (widget)
 			io.put_string ("%N")
 		end
-	
-
-feature {NONE} -- Implementation
-	
-	item: POINTER
-			-- Reference to the C structure of an evenmt.
 	
 end
 			

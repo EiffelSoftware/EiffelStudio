@@ -13,6 +13,7 @@ inherit
 	
 	EV_EVENT_DATA	
 		redefine
+			make,
 			print_contents
 		end
 	
@@ -20,33 +21,27 @@ inherit
 creation
 	make
 	
+feature {NONE} -- Initialization
+	
+	make (p: POINTER) is
+		do
+			x := c_gdk_event_x (p)
+			y := c_gdk_event_y (p)
+			state := c_gdk_event_state (p)
+			button := c_gdk_event_button (p)
+			keyval := c_gdk_event_keyval (p)
+		end
+	
+	
 feature -- Access	
 	
-	x: DOUBLE is
+	x: DOUBLE
 			-- x coordinate of mouse pointer 
-		do
-			Result := c_x (item)
-		end
-	
-	y: DOUBLE is
-		do
-			Result := c_y (item)
-		end
-	
-	state: INTEGER is
-		do
-			Result := c_state (item)
-		end
-		
-	button: INTEGER is
-		do
-			Result := c_button (item)
-		end
-
-	keyval: INTEGER is
-		do
-			Result := c_keyval (item)
-		end
+	y: DOUBLE 
+			-- y coordinate of mouse pointer 
+	state: INTEGER
+	button: INTEGER
+	keyval: INTEGER
 	
 feature -- Debug
 	
@@ -67,39 +62,29 @@ feature -- Debug
 feature {NONE} -- Implementation
 	
 	
-	c_x  (p: POINTER): DOUBLE is
+	c_gdk_event_x  (p: POINTER): DOUBLE is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
-		alias
-			"GDK_EVENT_GET_X"
+			"C [macro %"gdk_eiffel.h%"]"
 		end
 	
-	c_y (p: POINTER): DOUBLE is
+	c_gdk_event_y (p: POINTER): DOUBLE is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
-		alias
-			"GDK_EVENT_GET_Y"
+			"C [macro %"gdk_eiffel.h%"]"
 		end	
 	
-	c_state (p: POINTER): INTEGER is
+	c_gdk_event_state (p: POINTER): INTEGER is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
-		alias
-			"GDK_EVENT_GET_STATE"
+			"C [macro %"gdk_eiffel.h%"]"
 		end	
 	
-	c_button (p: POINTER): INTEGER is
+	c_gdk_event_button (p: POINTER): INTEGER is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
-		alias
-			"GDK_EVENT_GET_BUTTON"
+			"C [macro %"gdk_eiffel.h%"]"
 		end	
 	
-	c_keyval (p: POINTER): INTEGER is
+	c_gdk_event_keyval (p: POINTER): INTEGER is
 		external 
-			"C [macro %"gtk_eiffel.h%"]"
-		alias
-			"GDK_EVENT_GET_KEYVAL"
+			"C [macro %"gdk_eiffel.h%"]"
 		end	
 			
 end

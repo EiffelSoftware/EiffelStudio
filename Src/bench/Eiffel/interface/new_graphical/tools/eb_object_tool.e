@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 			display_first_onces := False
 			display_first_special := True
 			display_first := True
-			create_update_on_idle_agent
 		end
 
 	build_interface is
@@ -93,6 +92,8 @@ feature {NONE} -- Initialization
 			expand_args := True
 			expand_locals := True
 			widget := split
+			
+			create_update_on_idle_agent			
 		end
 
 	build_explorer_bar is
@@ -144,7 +145,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Name as it may appear in a menu.
 		do
-			Result := Interface_names.m_Call_stack_tool
+			Result := Interface_names.m_Object_tools
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

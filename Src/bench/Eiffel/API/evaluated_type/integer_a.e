@@ -96,12 +96,13 @@ feature {COMPILER_EXPORTER}
 			if in_generics then
 				Result := same_as (other)
 			else
-				Result := {BASIC_A} Precursor (other, False)
-							or else other.is_real
-							or else other.is_double
-				if not Result and then other.is_integer then
+				if other.is_integer then
 					int ?= other
 					Result := int.compatibility_size >= compatibility_size
+				else
+					Result := Precursor {BASIC_A} (other, False)
+						or else other.is_real
+						or else other.is_double
 				end
 			end
 		end

@@ -55,8 +55,13 @@ feature -- Comparisons
 		do
 			if Precursor {ATTR_DESC} (other) then
 				other_exp ?= other
-				Result := (other_exp /= Void) and then (other_exp.type_id = type_id)
-					and then identical_types (other_exp.type_i)
+					-- Before calling `other_exp.type_id' we have to make sure that
+					-- this call is permissible in current context. It could be that
+					-- `other_exp' stands for "A [X]" while now we have generic class
+					-- "A [G, G]" and therefore cannot find associated CLASS_TYPE for
+					-- `other.cl_type_i'.
+				Result := (other_exp /= Void) and then other_exp.cl_type_i.has_associated_class_type and then
+					(other_exp.type_id = type_id) and then identical_types (other_exp.type_i)
 			end
 		end
 

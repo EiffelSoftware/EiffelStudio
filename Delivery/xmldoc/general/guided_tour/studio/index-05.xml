@@ -97,7 +97,7 @@
 			<item>On Windows, in a new console.  </item>
 			<item>On Unix, in the window from which you launched EiffelStudio.  </item>
 		</list>
-		<paragraph>Why C compilation?  Eiffel Software  Eiffel under some circumstances uses C as intermediate code for its compiler's generated code, and relies on a C compiler to process the result.  On Windows you will by default use the command-line Borland compiler (included with the  Eiffel Software  Eiffel delivery); you may replace it by another, such as Visual C/C++ from Microsoft (available directly from  Eiffel Software ) if you wish.  On Unix you will use the resident C compiler.  </paragraph>
+		<paragraph>Why C compilation? Eiffel Software's implementation of Eiffel under some circumstances uses C as intermediate code for its compiler's generated code, and relies on a C compiler to process the result.  On Windows you will by default use the command-line Borland compiler (included with the EiffelStudio delivery); you may replace it by another, such as Visual C/C++ from Microsoft (available directly from  Eiffel Software) if you wish. On Unix you will use the resident C compiler.  </paragraph>
 		<paragraph>EiffelStudio reports that the C compilation has terminated:</paragraph>
 		<image_link>
 			<url>index-4.png</url>

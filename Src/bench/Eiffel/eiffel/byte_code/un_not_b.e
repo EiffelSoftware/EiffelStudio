@@ -5,10 +5,21 @@ inherit
 		rename
 			Bc_not as operator_constant
 		redefine
-			generate_operator, is_built_in
+			generate_operator, is_built_in, print_register
 		end;
 	
 feature
+
+	print_register is
+			-- print expression value
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			expr.c_type.generate_cast (buf)
+			buf.putchar ('!')
+			expr.print_register
+		end
 
 	generate_operator is
 			-- Generate the unary operator

@@ -392,6 +392,14 @@ feature -- Document
 				create l_link.make (a_file, l_name)
 				if rel then
 					Result := l_link.relative_url
+					if 
+						l_consts.generation_data.is_generating and then 
+						l_consts.shared_constants.help_constants.is_web_help 
+					then
+						if Result.has_substring ("../") then
+							Result.remove_head (3)
+						end
+					end
 				else
 					Result := l_link.absolute_url
 				end										

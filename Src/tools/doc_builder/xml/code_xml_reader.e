@@ -130,8 +130,6 @@ feature {NONE} -- Tag
 					else
 						output_string.append ("</span>")
 					end
---				elseif a_tag.is_equal (Anchor_tag) then
---					output_string.append ("</a>")
 				elseif a_tag.is_equal (Location_tag) then
 					location_done := True
 				end
@@ -185,28 +183,38 @@ feature {NONE} -- Implementation
 	parsed_url (a_url: STRING): STRING is
 			-- Parsed url
 		local
-			l_name,
-			l_anchor: STRING
-			l_ref_pos: INTEGER
-			l_filename: FILE_NAME
+			l_name: STRING
+			l_slash_index,
+			l_start_pos: INTEGER
+			l_next_char: CHARACTER
+			l_done: BOOLEAN
 		do
-			l_name := file_no_extension (a_url)
-			l_name.replace_substring_all ("../", "")
-			l_name.replace_substring_all (" ", "")
-			l_ref_pos := a_url.last_index_of ('#', a_url.count)
-			if l_ref_pos > 0 then
-				l_anchor := a_url.substring (l_ref_pos, a_url.count)
-			else
-				l_anchor := ""
+			l_name := a_url
+			
+			from
+				l_start_pos := 1
+			until
+				l_done
+			loop
+				l_slash_index := l_name.index_of ('/', l_start_pos)
+				if l_slash_index > 0 then
+					l_next_char := l_name.item (l_slash_index + 1)					
+					l_start_pos := l_slash_index + 1
+					l_done := l_next_char /= '.'
+				else
+					l_done := True
+				end
 			end
-			l_ref_pos := l_name.index_of ('/', 1)
-			if l_ref_pos > 0 then
-				l_name.insert_string ("/reference", l_ref_pos)				
-			end
-			create l_filename.make_from_string ("libraries")
-			l_filename.extend (l_name)
-			l_filename.add_extension ("html")
-			Result := "\" + l_filename.string + l_anchor
+			
+			if l_next_char /= Void and then l_next_char /= '.' then
+				l_slash_index := l_name.index_of ('/', l_start_pos)
+				if l_slash_index > 0 then
+					l_name.insert_string ("/reference", l_slash_index)
+					l_name.prepend ("../")
+				end
+			end			
+			l_name.replace_substring_all (".xml", ".html")
+			Result := l_name
 		end		
 		
 	write_content (remove: BOOLEAN) is

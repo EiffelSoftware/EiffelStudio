@@ -133,8 +133,7 @@ feature {NONE} -- Commands
 								replace_token (l_text, Html_content_token, l_html)
 								l_stylesheet := stylesheet_path (l_file.name, True)	
 								
-									-- Workaround as result if including extra reference directory									
-								l_stylesheet.prepend ("../")
+									-- Workaround as result if including extra reference directory
 								l_title.replace_substring_all (Chart_suffix, "")
 								l_title.replace_substring_all (Contract_suffix, "")
 								l_title.to_upper								

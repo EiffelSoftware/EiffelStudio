@@ -80,11 +80,20 @@ feature {NONE} -- Implmentation
 			l_code_dir_name: FILE_NAME
 			l_code_html_filter: CODE_HTML_FILTER
 			l_cnt: INTEGER
-			l_curr_dir: STRING
+			l_curr_dir,
+			l_toc_name: STRING
 			l_generate: BOOLEAN
 		do
 				-- Target directory for libraries HTML
 			create l_code_dir_name.make_from_string (Shared_constants.Application_constants.Temporary_html_directory)
+			if shared_constants.help_constants.is_web_help then				
+				if (create {PLAIN_TEXT_FILE}.make (shared_constants.help_constants.toc.name)).exists then
+					l_toc_name := file_no_extension (short_name (shared_constants.help_constants.toc.name))
+					l_code_dir_name.extend (l_toc_name)
+				else
+					l_code_dir_name.extend (shared_constants.help_constants.toc.name)
+				end
+			end
 			l_code_dir_name.extend ("libraries")		
 			create l_code_target_dir.make (l_code_dir_name.string)
 			if l_code_target_dir /= Void then

@@ -179,6 +179,6 @@ feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 	choice_box: EV_VERTICAL_BOX
 
 	message_box: EV_HORIZONTAL_BOX		
-			-- Box where is displayed the description of current state (gray bkground).
+			-- Box where is displayed the description of current state (gray background).
 	
 end -- class INTERMEDIARY_STATE_WINDOW

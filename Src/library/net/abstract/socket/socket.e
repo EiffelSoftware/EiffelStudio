@@ -69,6 +69,7 @@ feature -- Access
 		local
 			was_blocking: BOOLEAN
 		do
+			mismatch_information.do_nothing
 			was_blocking := is_blocking
 			set_blocking
 			Result := eif_net_retrieved (descriptor)

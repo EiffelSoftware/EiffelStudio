@@ -86,8 +86,8 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-CFLAGS = -I$(TOP) -I../ipc/app
-DPFLAGS = -I$(TOP) -I../ipc/app
+CFLAGS = -I$(TOP) -I. -I../ipc/app
+DPFLAGS = -I$(TOP) -I. -I../ipc/app
 
 NETWORK_OBJ = ../ipc/app/network.o
 
@@ -96,7 +96,7 @@ LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	run_idr.c path_name.c dle.c object_id.c
+	run_idr.c path_name.c dle.c object_id.c eif_threads.c
 
 OTHER = main.c except.c
 
@@ -145,6 +145,7 @@ WSRC = \
 	wpath_name.c \
 	wdle.c \
 	wobject_id.c \
+	weif_threads.c \
 	wmain.c \
 	wexcept.c 
 
@@ -188,6 +189,7 @@ ESRC = \
 	wpath_name.c \
 	wdle.c \
 	wobject_id.c \
+	weif_threads.c \
 	bmain.c \
 	bexcept.c 
 
@@ -232,6 +234,7 @@ LOBJ = \
 	path_name.o \
 	dle.o \
 	object_id.o \
+	eif_threads.o \
 	main.o \
 	except.o 
 
@@ -277,6 +280,7 @@ WOBJ = \
 	wpath_name.o \
 	wdle.o \
 	wobject_id.o \
+	weif_threads.o \
 	wmain.o \
 	wexcept.o \
 	debug.o \
@@ -325,6 +329,7 @@ EOBJ = \
 	wpath_name.o \
 	wdle.o \
 	wobject_id.o \
+	weif_threads.o \
 	bmain.o \
 	bexcept.o \
 	debug.o \
@@ -654,6 +659,12 @@ wobject_id.c: object_id.c
 remove::
 	$(RM) wobject_id.c
 
+weif_threads.c: eif_threads.c
+	$(RM) weif_threads.c
+	$(LN) eif_threads.c weif_threads.c
+remove::
+	$(RM) weif_threads.c
+
 wmain.c: main.c
 	$(RM) wmain.c
 	$(LN) main.c wmain.c
@@ -825,6 +836,10 @@ wobject_id.o: wobject_id.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 
+weif_threads.o: weif_threads.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
 wmain.o: wmain.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
@@ -930,9 +945,12 @@ local_clean::
 	$(RM) core *~ *.o
 
 local_realclean:: local_clean
+	$(RM) -r UU
 
 local_clobber:: local_realclean
-	$(RM) Makefile config.sh
+	$(RM) config.sh config.h
+	$(RM) -r .config
+	$(RM) Makefile
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \

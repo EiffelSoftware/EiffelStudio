@@ -29,7 +29,7 @@ extern struct xstack eif_stack;
 #define ECATCH	struct ex_vect *exvect;\
 	jmp_buf exenv;\
 	RTEA ((char *)0,0, (char *)0);\
-	exvect->ex_jbuf = (char *) exenv;\
+	exvect->ex_jbuf = &exenv;\
 	if (return_hr_value = setjmp (exenv)) \
 		return (HRESULT)(f.hresult (return_hr_value))
 

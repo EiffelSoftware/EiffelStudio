@@ -321,7 +321,6 @@ feature -- Measurement
 			old_iteration_position := iteration_position
 		end
 
-
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -478,6 +477,13 @@ feature -- Cursor movement
 			item_if_found: found implies (found_item = content.item (position)) 
 		end
 
+	search_item: G is
+		obsolete
+			"Use found_item instead."
+		do
+			Result := found_item
+		end
+		
 feature -- Element change
 
 	put (new: G; key: H) is

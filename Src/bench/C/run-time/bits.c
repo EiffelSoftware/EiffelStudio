@@ -274,6 +274,7 @@ rt_public char *b_clone(char *bit)
 	 * buffers :-)--RAM.
 	 */
 
+	EIF_GET_CONTEXT
 	char *new;						/* Address of newly allocated object */
 
 	epush(&loc_stack, (char *) &bit);	/* Ensure address is updated by GC */
@@ -282,6 +283,7 @@ rt_public char *b_clone(char *bit)
 	b_copy(bit, new);				/* Copy into newly allocated bits */
 
 	return new;			/* Freshly allocated bit field object */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void b_put(char *bit, char value, int at)
@@ -362,6 +364,7 @@ rt_private char *b_right_shift(char *bit, long int s)
 {
 	/* Shifts `bit' by `s' positions to the right */
 
+	EIF_GET_CONTEXT
 	int len;					/* Length of the bit field */
 	int i;						/* Loop over the bit field */
 	int units;					/* Number of bit units */
@@ -413,12 +416,14 @@ rt_private char *b_right_shift(char *bit, long int s)
 	}
 
 	return new;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *b_left_shift(char *bit, long int s)
 {
 	/* Shifts `bit' by `s' positions to the left */
 
+	EIF_GET_CONTEXT
 	int len;					/* Length of the bit field */
 	int i;						/* Loop over the bit field */
 	int units;					/* Number of bit units */
@@ -479,6 +484,7 @@ rt_private char *b_left_shift(char *bit, long int s)
 	}
 
 	return new;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *b_rotate(char *bit, long int s)
@@ -500,6 +506,7 @@ rt_private char *b_right_rotate(char *bit, long int s)
 {
 	/* Rotates `bit' by `s' positions to the right */
 
+	EIF_GET_CONTEXT
 	int len;				/* Length of the bit field */
 	int i;					/* Loop over the bit field */
 	int units;				/* Number of bit units */
@@ -599,12 +606,14 @@ rt_private char *b_right_rotate(char *bit, long int s)
 	}
 
 	return new;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *b_left_rotate(char *bit, long int s)
 {
 	/* Rotates `bit' by `s' positions to the left */
 
+	EIF_GET_CONTEXT
 	int len;				/* Length of the bit field */
 	int i;					/* Loop over the bit field */
 	int units;				/* Number of bit units */
@@ -703,6 +712,7 @@ rt_private char *b_left_rotate(char *bit, long int s)
 	}
 
 	return new;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *b_and (char *a, char *b)
@@ -714,6 +724,7 @@ rt_public char *b_and (char *a, char *b)
 	 * of `a'.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 uint32 len_a;		/* Length of the bit field a */
 	register2 uint32 len_b;		/* Length of the bit field b */
 	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
@@ -756,6 +767,7 @@ rt_public char *b_and (char *a, char *b)
 		*addr_a = 0;
 
 	return a;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *b_implies(char *a, char *b)
@@ -767,6 +779,7 @@ rt_public char *b_implies(char *a, char *b)
 	 * of `a'.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 uint32 len_a;		/* Length of the bit field a */
 	register2 uint32 len_b;		/* Length of the bit field b */
 	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
@@ -809,6 +822,7 @@ rt_public char *b_implies(char *a, char *b)
 		*addr_a = ~(*addr_a);
 
 	return a;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *b_or(char *a, char *b)
@@ -820,6 +834,7 @@ rt_public char *b_or(char *a, char *b)
 	 * of `a'.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 uint32 len_a;		/* Length of the bit field a */
 	register2 uint32 len_b;		/* Length of the bit field b */
 	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
@@ -858,6 +873,7 @@ rt_public char *b_or(char *a, char *b)
 	 */
 
 	return a;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *b_xor(char *a, char *b)
@@ -869,6 +885,7 @@ rt_public char *b_xor(char *a, char *b)
 	 * of `a'.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 uint32 len_a;		/* Length of the bit field a */
 	register2 uint32 len_b;		/* Length of the bit field b */
 	register3 uint32 *addr_a;	/* Pointer into the arena of 'a' */
@@ -907,6 +924,7 @@ rt_public char *b_xor(char *a, char *b)
 	 */
 
 	return a;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *b_not(char *a)

@@ -184,14 +184,11 @@ feature -- Byte code generation
 
 				if actual_type = Void then
 					ba.append (Bc_void)
-				elseif actual_type.is_basic then 
-						-- Simple type objects are metamorphosed
-					ba.append (Bc_metamorphose);
 				end;
 				expressions.back;
 			end;
 			if base_class.is_precompiled then
-				ba.append (Bc_parray);
+				ba.append (Bc_ptuple);
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
 				ba.append_integer (rout_info.origin);
@@ -201,7 +198,7 @@ feature -- Byte code generation
 				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 			else
-				ba.append (Bc_array);
+				ba.append (Bc_tuple);
 				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer
@@ -211,9 +208,12 @@ feature -- Byte code generation
 				feat_id := feat_i.feature_id;
 				ba.append_short_integer (feat_id);
 			end;
-			ba.append_integer (expressions.count);
-			-- Tell interpreter that this is a TUPLE.
-			ba.append_short_integer (1)
+			ba.append_integer (expressions.count + 1);
+			if real_ty.is_basic_uniform then
+				ba.append_integer (1)
+			else
+				ba.append_integer (0)
+			end			
 		end;
 
 feature -- Array optimization

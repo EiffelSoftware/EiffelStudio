@@ -15,10 +15,7 @@ inherit
 feature 
 
 	register: REGISTRABLE
-			-- Register for array
-
-	array_area_reg: REGISTER
-			-- Register for array area
+			-- Register for TUPLE
 
 	metamorphose_reg: REGISTER
 			-- Register for metamorphosis
@@ -44,7 +41,6 @@ feature
 			real_ty ?= context.real_type (type)
 
 			get_register
-			create array_area_reg.make (Reference_c_type.c_type)
 			from
 				i := 0
 				expressions.start
@@ -54,7 +50,7 @@ feature
 				expr ?= expressions.item
 				expr_type := context.real_type (expr.type)
 
-				if expr_type.is_expanded then 
+				if expr_type.is_true_expanded then 
 					require_meta := True
 				end
 				expr.analyze
@@ -72,7 +68,6 @@ feature
 		local
 			expr: EXPR_B
 		do
-			array_area_reg := Void
 			metamorphose_reg := Void
 			set_register (Void)	
 			from
@@ -90,9 +85,6 @@ feature
 			-- Free the registers.
 		do
 			Precursor {TUPLE_CONST_B}
-			if array_area_reg /= Void then
-				array_area_reg.free_register
-			end
 			if metamorphose_reg /= Void then
 				metamorphose_reg.free_register
 			end
@@ -128,13 +120,13 @@ feature {NONE} -- C code generation
 			generate_gen_type_conversion (real_ty)
 			print_register
 			buf.putstring (" = ")
-			if workbench_mode then
-				buf.putstring ("RTLN(typres");
+			buf.putstring ("RTLNTS(typres, ");
+			buf.putint (real_ty.true_generics.count + 1)
+			buf.putstring (", ")
+			if real_ty.is_basic_uniform then
+				buf.putint (1)
 			else
-				buf.putstring ("RTLNS(typres, ");
-				buf.putint (real_ty.type_id - 1)
-				buf.putstring (", ")
-				real_ty.associated_class_type.skeleton.generate_size (buf)
+				buf.putint (0)
 			end
 			buf.putstring (");");
 			buf.new_line;
@@ -147,39 +139,22 @@ feature {NONE} -- C code generation
 		local
 			expr: EXPR_B
 			actual_type: TYPE_I
-			target_type: REFERENCE_I
 			basic_i: BASIC_I
 			metamorphosed: BOOLEAN
-			i, position: INTEGER
+			i: INTEGER
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-
-			create target_type
-			array_area_reg.print_register
-			buf.putstring (" = * (EIF_REFERENCE *) ")
-			print_register
-			buf.putchar (';')
-			buf.new_line
 			from
 				expressions.start
 				i := 1
-				position := 0
 			until
 				expressions.after
 			loop
 				metamorphosed := False
 				expr ?= expressions.item
 				actual_type := context.real_type (expr.type)
-				if actual_type.is_basic then
-					basic_i ?= actual_type
-					expr.generate
-					basic_i.metamorphose 
-						(metamorphose_reg, expr, buf, context.workbench_mode)
-					buf.putchar (';')
-					buf.new_line
-					metamorphosed := True
-				elseif actual_type.is_true_expanded then
+				if actual_type.is_true_expanded then
 					expr.generate
 					metamorphose_reg.print_register
 					buf.putstring (" = RTCL(")
@@ -190,13 +165,13 @@ feature {NONE} -- C code generation
 				else
 					expr.generate
 				end
-				buf.putchar ('*')
-				buf.putchar ('(')
-				target_type.c_type.generate_access_cast (buf)
-				array_area_reg.print_register
+				-- Generate initializations of values.
+				buf.putstring ("((EIF_TYPED_ELEMENT *)")
+				print_register
 				buf.putchar('+');
-				buf.putint (position)
-				buf.putchar (')')
+				buf.putint (i)
+				buf.putstring (")->element.")
+				buf.putstring (actual_type.c_type.union_tag)
 				buf.putstring (" = ")
 				if metamorphosed then
 					metamorphose_reg.print_register
@@ -207,21 +182,20 @@ feature {NONE} -- C code generation
 				buf.new_line
 					-- Generation of the RTAS_OPT protection
 					-- since the array contains references
-				buf.putstring ("RTAS_OPT(")
-				if metamorphosed then
-					metamorphose_reg.print_register
-				else
-					expr.print_register
+				if not actual_type.is_basic then
+					buf.putstring ("RTAS(")
+					if metamorphosed then
+						metamorphose_reg.print_register
+					else
+						expr.print_register
+					end
+					buf.putchar (',')
+					print_register
+					buf.putchar (')')
+					buf.putchar (';')
+					buf.new_line
 				end
-				buf.putchar (',')
-				buf.putint (position)
-				buf.putchar (',')
-				array_area_reg.print_register
-				buf.putchar (')')
-				buf.putchar (';')
-				buf.new_line
 				expressions.forth
-				position := position + 1
 				i := i + 1
 			end
 		end
@@ -309,5 +283,6 @@ feature {NONE} -- C code generation
 			buf.putstring (");")
 			buf.new_line
 		end
+	
 end
 

@@ -319,265 +319,184 @@ feature -- Status report
 
 	is_character (variable_type: INTEGER): BOOLEAN is
 			-- Is variable character?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_i1
+			Result := binary_and (variable_type, Vt_typemask) = Vt_i1
 		end
 
 	is_integer2 (variable_type: INTEGER): BOOLEAN is
 			-- Is variable short integer?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_i2
+			Result := binary_and (variable_type, Vt_typemask) = Vt_i2
 		end
 
 	is_integer4 (variable_type: INTEGER): BOOLEAN is
 			-- Is variable long integer?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_i4
+			Result := binary_and (variable_type, Vt_typemask) = Vt_i4
 		end
 
 	is_real4 (variable_type: INTEGER): BOOLEAN is
 			-- Is variable real?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_r4
+			Result := binary_and (variable_type, Vt_typemask) = Vt_r4
 		end
 
 	is_real8 (variable_type: INTEGER): BOOLEAN is
 			-- Is variable double?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_r8
+			Result := binary_and (variable_type, Vt_typemask) = Vt_r8
 		end
 
 	is_boolean (variable_type: INTEGER): BOOLEAN is
 			-- Is variable boolen?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_bool
+			Result := binary_and (variable_type, Vt_typemask) = Vt_bool
 		end
 
 	is_date (variable_type: INTEGER): BOOLEAN is
 			-- Is variable date?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_date
+			Result := binary_and (variable_type, Vt_typemask) = Vt_date
 		end
  
 	is_error (variable_type: INTEGER): BOOLEAN is
 			-- Is variable error?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_error
+			Result := binary_and (variable_type, Vt_typemask) = Vt_error
 		end
 
 	is_variant (variable_type: INTEGER): BOOLEAN is
 			-- Is variable variant?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_variant
+			Result := binary_and (variable_type, Vt_typemask) = Vt_variant
 		end
 
 	is_currency (variable_type: INTEGER): BOOLEAN is
 			-- Is variable currency?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_cy
+			Result := binary_and (variable_type, Vt_typemask) = Vt_cy
 		end
 
 	is_bstr (variable_type: INTEGER): BOOLEAN is
 			-- Is variable BSTR?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_bstr
+			Result := binary_and (variable_type, Vt_typemask) = Vt_bstr
 		end
 
 	is_dispatch (variable_type: INTEGER): BOOLEAN is
 			-- Is dispatch interface?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_dispatch
+			Result := binary_and (variable_type, Vt_typemask) = Vt_dispatch
 		end
 
 	is_unknown (variable_type: INTEGER): BOOLEAN is
 			-- Is IUnknown interface?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_unknown
+			Result := binary_and (variable_type, Vt_typemask) = Vt_unknown
 		end
 
 	is_decimal (variable_type: INTEGER): BOOLEAN is
 			-- Is decimal variable?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_decimal
+			Result := binary_and (variable_type, Vt_typemask) = Vt_decimal
 		end
 
 	is_unsigned_char (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned char?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_ui1
+			Result := binary_and (variable_type, Vt_typemask) = Vt_ui1
 		end
 
 	is_unsigned_short (variable_type: INTEGER): BOOLEAN is
 			-- Is Ivariable unsigned short?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_ui2
+			Result := binary_and (variable_type, Vt_typemask) = Vt_ui2
 		end
 
 	is_unsigned_long (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned long?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_ui4
+			Result := binary_and (variable_type, Vt_typemask) = Vt_ui4
 		end
 
 	is_long_long (variable_type: INTEGER): BOOLEAN is
 			-- Is variable long long?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_i8
+			Result := binary_and (variable_type, Vt_typemask) = Vt_i8
 		end
 
 	is_unsigned_long_long (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned long long?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_ui8
+			Result := binary_and (variable_type, Vt_typemask) = Vt_ui8
 		end
 
 	is_int (variable_type: INTEGER): BOOLEAN is
 			-- Is variable int?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_int
+			Result := binary_and (variable_type, Vt_typemask) = Vt_int
 		end
 
 	is_unsigned_int (variable_type: INTEGER): BOOLEAN is
 			-- Is variable unsigned int?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_uint
+			Result := binary_and (variable_type, Vt_typemask) = Vt_uint
 		end
 
 	is_void (variable_type: INTEGER): BOOLEAN is
 			-- Is variable void?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_void
+			Result := binary_and (variable_type, Vt_typemask) = Vt_void
 		end
 
 	is_hresult (variable_type: INTEGER): BOOLEAN is
 			-- Is variable int?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_hresult
+			Result := binary_and (variable_type, Vt_typemask) = Vt_hresult
 		end
 
 	is_ptr (variable_type: INTEGER): BOOLEAN is
 			-- Is variable ptr?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_ptr
+			Result := binary_and (variable_type, Vt_ptr) = Vt_ptr
 		end
 
 	is_safearray (variable_type: INTEGER): BOOLEAN is
 			-- Is variable SAFEARRAY?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_safearray
+			Result := binary_and (variable_type, Vt_safearray) = Vt_safearray
 		end
 
 	is_carray (variable_type: INTEGER): BOOLEAN is
 			-- Is variable C ARRAY?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_carray
+			Result := binary_and (variable_type, Vt_carray) = Vt_carray
 		end
 
 	is_user_defined (variable_type: INTEGER): BOOLEAN is
 			-- Is variable user defined?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_userdefined
+			Result := binary_and (variable_type, Vt_typemask) = Vt_userdefined
 		end
 
 	is_lpstr (variable_type: INTEGER): BOOLEAN is
 			-- Is variable LPSTR?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_lpstr
+			Result := binary_and (variable_type, Vt_typemask) = Vt_lpstr
 		end
 
 	is_lpwstr (variable_type: INTEGER): BOOLEAN is
 			-- Is variable LPWSTR?
-		local
-			tmp: INTEGER
 		do
-			tmp := binary_and (variable_type, Vt_typemask)
-			Result := tmp = Vt_lpwstr
+			Result := binary_and (variable_type, Vt_typemask) = Vt_lpwstr
 		end
 
+	is_record (variable_type: INTEGER): BOOLEAN is
+			-- Is variable a Record? (i.e. a C struct)
+		do
+			Result := binary_and (variable_type, Vt_record) = Vt_record
+		end
+		
 	is_array (variable_type: INTEGER): BOOLEAN is
 			-- Is variable array?
 		do
@@ -622,6 +541,7 @@ feature -- Status report
 					is_user_defined (a_var_type) or
 					is_lpstr (a_var_type) or
 					is_lpwstr (a_var_type) or
+					is_record (a_var_type) or
 					is_array (a_var_type) or
 					is_byref (a_var_type)
 		end

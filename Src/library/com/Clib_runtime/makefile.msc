@@ -1,12 +1,12 @@
 # ecom_runtime.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -c -Ox -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows\include -I$(LIBRARY)\com\library\include\ 
 
 .cpp.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = ecom_exception.obj ecom_string_convert.obj ecom_structure_wrappers.obj 
+OBJ = ecom_exception.obj ecom_string_convert.obj ecom_structure_wrappers.obj ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj
 
 ecom_runtime.lib: $(OBJ)
 	if exist $@ del $@

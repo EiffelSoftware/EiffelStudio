@@ -49,7 +49,7 @@ feature -- Access
 		require
 			a_name /= Void
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			a_name.is_equal (name) and a_name /= name
 		end

@@ -63,7 +63,7 @@ feature -- Basic operations
 					-- Save current link midpoints.
 				lf := a_stone.source
 				link_tool_dialog.set_link_figure (lf)
-				saved_midpoints := clone (lf.midpoints)
+				saved_midpoints := lf.midpoints.twin
 	
 				create screen
 				x_pos := screen.pointer_position.x - link_tool_dialog.width // 2
@@ -129,7 +129,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 						end
 						
 							-- Save current link midpoints.
-						new_midpoints := clone (lf.midpoints)
+						new_midpoints := lf.midpoints.twin
 						if link_tool_dialog.handle_left_selected then
 							history.register_named_undoable (
 								Interface_names.t_Diagram_put_one_handle_left_cmd,

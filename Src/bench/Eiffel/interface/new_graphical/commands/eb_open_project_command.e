@@ -104,7 +104,7 @@ feature -- Execution
 					if not Eiffel_project.initialized then
 						open_project_file (project_file_name)
 					else
-						ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
+						ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
 						ebench_name.append (" ")
 						ebench_name.append (project_file_name)
 						launch_ebench (ebench_name)
@@ -253,7 +253,7 @@ feature {NONE} -- Project Initialization
 
 			if not Eiffel_project.error_occurred then
 				init_project
-				title := clone (Interface_names.l_Loaded_project)
+				title := Interface_names.l_Loaded_project.twin
 				project_name := project_dir.name
 				if project_name.item (project_name.count) = Operating_environment.Directory_separator then
 					project_name.keep_head (project_name.count -1)
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 		do
 			last_char := file_name.item (file_name.count)
 			if last_char = Operating_environment.Directory_separator then
-				Result := clone (file_name)
+				Result := file_name.twin
 				Result.remove (file_name.count)
 			else
 				Result := file_name	

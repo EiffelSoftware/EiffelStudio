@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		do
 			create fn.make_from_string (dialog.file_name)
 			if not fn.is_empty then
-				bckfn := clone (fn)
+				bckfn := fn.twin
 				bckfn.add_extension ("swp")
 				create backup_file.make (bckfn)
 				open_backup := False

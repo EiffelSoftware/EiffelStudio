@@ -560,8 +560,8 @@ feature -- Action
 			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			i: INTEGER
 		do
-			metric_list := clone (tool.metrics)
-			metric_xml_list := clone (tool.user_metrics_xml_list)
+			metric_list := tool.metrics.twin
+			metric_xml_list := tool.user_metrics_xml_list.twin
 			i := tool.nb_basic_metrics + 1
 			from metric_list.go_i_th (i) until metric_list.after loop
 				metric_list.remove

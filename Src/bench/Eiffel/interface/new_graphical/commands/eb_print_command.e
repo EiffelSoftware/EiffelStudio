@@ -98,7 +98,7 @@ feature -- Execution
 			shell_request: COMMAND_EXECUTOR
 			file: PLAIN_TEXT_FILE
 		do
-			cmd := clone (shell_cmd)
+			cmd := shell_cmd.twin
 				-- let's check if passed command is well written
 			if cmd.substring_index ("$target", 1) /= 0 then
 				editor := dev_window.current_editor

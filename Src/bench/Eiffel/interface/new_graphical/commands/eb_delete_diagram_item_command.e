@@ -81,7 +81,7 @@ feature -- Initialization
 					Interface_names.t_Diagram_delete_inheritance_link_cmd,
 					agent remove_inheritance_figure (a_stone.source),
 					agent restore_inheritance_figure (a_stone.source,
-						clone (a_stone.source.midpoints)))
+						a_stone.source.midpoints.twin))
 				if not a_stone.source.last_generation_successful then
 					history.remove_last
 					a_stone.source.update
@@ -139,7 +139,7 @@ feature -- Initialization
 						[<<agent remove_client_supplier_figures (csfs_to_remove, a_stone.source),
 							agent update_label (a_stone.source)>>],
 						[<<agent restore_client_supplier_figures (csfs_to_remove,
-							clone (a_stone.source.midpoints), a_stone.source),
+							a_stone.source.midpoints.twin, a_stone.source),
 							agent update_label (a_stone.source)>>])
 				end
 			end
@@ -195,9 +195,13 @@ feature -- Initialization
 		end
 
 	remove_client_supplier_figures (
-		client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
-		client_stone: CLIENT_SUPPLIER_FIGURE) is
+			client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
+			client_stone: CLIENT_SUPPLIER_FIGURE)
+		is
 			-- Remove `client_supplier_figures' items from diagram.
+		require
+			client_supplier_figures_not_void: client_supplier_figures /= Void
+			client_stone_not_void: client_stone /= Void
 		local
 			d: CONTEXT_DIAGRAM
 			cf: CLASS_FIGURE
@@ -232,10 +236,15 @@ feature -- Initialization
 		end
 		
 	restore_client_supplier_figures (
-		client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
-		saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT];
-		client_stone: CLIENT_SUPPLIER_FIGURE) is
+			client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
+			saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT];
+			client_stone: CLIENT_SUPPLIER_FIGURE)
+		is
 			-- Put `client_supplier_figures' items back on  diagram.
+		require
+			client_supplier_figures_not_void: client_supplier_figures /= Void
+			saved_midpoints_not_void: saved_midpoints /= Void
+			client_stone_not_void: client_stone /= Void
 		local
 			d: CONTEXT_DIAGRAM
 			cf: CLASS_FIGURE

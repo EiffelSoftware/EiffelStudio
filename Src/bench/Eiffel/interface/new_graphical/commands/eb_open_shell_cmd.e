@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			cmd_string: STRING
 		do
 				-- feature text area
-			cmd_string := clone (command_shell_name)
+			cmd_string := command_shell_name
 			if not cmd_string.is_empty then
 				replace_target (cmd_string, fs.file_name)
 				cmd_string.replace_substring_all ("$line", fs.line_number.out)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 		do
 			conv_f ?= cs
 			if conv_f = Void then
-				cmd_string := clone (command_shell_name)
+				cmd_string := command_shell_name
 				if not cmd_string.is_empty then
 					replace_target(cmd_string, cs.file_name)
 					cmd_string.replace_substring_all ("$line", "1")
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
 		do
-			cmd_string := clone (command_shell_name)
+			cmd_string := command_shell_name
 			if not cmd_string.is_empty then
 				replace_target(cmd_string, syn.file_name)
 				cmd_string.replace_substring_all ("$line", syn.syntax_message.line_number.out)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			if fn = Void then
 				target_string := ""
 			else
-				target_string := clone (fn)
+				target_string := fn.twin
 			end
 			cmd.replace_substring_all ("$target", target_string)
 		end
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			development_window: EB_DEVELOPMENT_WINDOW
 		do
 			development_window := target
-			cmd_string := clone (command_shell_name)
+			cmd_string := command_shell_name
 			line_nb := development_window.editor_tool.text_area.first_line_displayed
 			if not cmd_string.is_empty then
 				replace_target (cmd_string, window_file_name)
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation properties
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell dialog.
 		do
-			Result := general_shell_command
+			Result := general_shell_command.twin
 		end
 
 	menu_name: STRING is

@@ -121,7 +121,7 @@ feature -- Basic operations
 			else
 				Result.disable_sensitive
 			end
-			tt := clone (tooltip)
+			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)

@@ -964,7 +964,7 @@ feature {NONE} -- Implementation
 				s := n.substring (1, i)
 				rest := n.substring (i + 1, n.count)
 			else
-				s := clone (n)
+				s := n.twin
 			end
 
 			create name_figure

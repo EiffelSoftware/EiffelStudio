@@ -57,12 +57,17 @@ feature -- Setting
 			primitive: PRIMITIVE;
 			fontable: FONTABLE;
 			manager: MANAGER;
-			terminal: TERMINAL_OUI
+			terminal: TERMINAL_OUI;
+			tmp_bg_color, tmp_fg_color: COLOR;
+			tmp_font: FONT
 		do
+			tmp_bg_color := bg_color;
+			tmp_fg_color := fg_color;
+			tmp_font := global_font
 			if 
-				bg_color /= Void or else 
-				fg_color /= Void or else
-				global_font /= Void
+				tmp_bg_color /= Void or else 
+				tmp_fg_color /= Void or else
+				tmp_font /= Void
 			then
 				children := composite.descendents;
 				children.extend (composite);
@@ -72,30 +77,30 @@ feature -- Setting
 					children.after
 				loop
 					widget := children.item;
-					if bg_color /= Void then
-						widget.set_background_color (bg_color)
+					if tmp_bg_color /= Void then
+						widget.set_background_color (tmp_bg_color)
 					end;
-					if fg_color /= Void then
+					if tmp_fg_color /= Void then
 						primitive ?= widget;
 						if primitive /= Void then
-							primitive.set_foreground_color (fg_color)
+							primitive.set_foreground_color (tmp_fg_color)
 						else
 							manager ?= widget;
 							if manager /= Void then
-								manager.set_foreground_color (fg_color)
+								manager.set_foreground_color (tmp_fg_color)
 							end
 						end
 					end;
-					if global_font /= Void then
+					if tmp_font /= Void then
 						fontable ?= widget;
 						if fontable /= Void then
-							fontable.set_font (global_font)
+							fontable.set_font (tmp_font)
 						else
 							terminal ?= widget;
 							if terminal /= Void then
-								terminal.set_button_font (global_font);
-								terminal.set_label_font (global_font);
-								terminal.set_text_font (global_font)
+								terminal.set_button_font (tmp_font);
+								terminal.set_label_font (tmp_font);
+								terminal.set_text_font (tmp_font)
 							end
 						end
 					end;

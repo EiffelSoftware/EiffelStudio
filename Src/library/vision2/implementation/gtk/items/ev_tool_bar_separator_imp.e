@@ -10,30 +10,31 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
-		rename
-			parent_imp as wrong_parent_imp
+		select
+			parent,
+			parent_imp
+		end
+
+	EV_SEPARATOR_ITEM_IMP
+		undefine
+			parent,
+			set_foreground_color,
+			set_background_color
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
-			old_add_dblclk as o_a_dblclk,
-			old_remove_dblclk as o_r_dblclk
+			parent_imp as button_parent_imp,
+			parent as button_parent
 		undefine
+			old_remove_dblclk,
+			old_add_dblclk
+		redefine
 			make
 		select
-			parent_imp,
 			remove_double_click_commands,
-			set_foreground_color,
-			add_double_click_command,
-			set_background_color
+			add_double_click_command
 		end			
-
-	EV_SEPARATOR_ITEM_IMP
-		rename
-			parent_imp as old_parent_imp,
-			set_foreground_color as set_f_c,
-			set_background_color as set_b_c
-		end
 
 create
 	make

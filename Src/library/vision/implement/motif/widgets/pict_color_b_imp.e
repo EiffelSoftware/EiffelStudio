@@ -28,7 +28,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_push_b: PICT_COLOR_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_push_b: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a motif push button.
 		local
 			mc: MEL_COMPOSITE

@@ -241,7 +241,7 @@ feature -- Status setting
 			size_valid: a_width > 0 and a_height > 0
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			dialog: BUILD_DOCKABLE_DIALOG
+			dialog: MULTIPLE_SPLIT_AREA_DOCKABLE_DIALOG
 		do
 			create holder.make_with_tool (widget, name, Current)
 			external_representation.extend (widget)
@@ -827,7 +827,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			original_parent: EV_BOX
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			parent_index: INTEGER
-			value: INTEGER
+			widgets: ARRAYED_LIST [EV_WIDGET]
 		do
 				-- Firstly show the widget of the tool, as it was
 				-- hidden when minimized.
@@ -836,6 +836,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			original_parent ?= a_tool.parent
 			remove_tool_from_parent (a_tool)
 			index_of_tool := all_holders.index_of (a_tool, 1)
+			a_tool.disable_minimized
 			
 			if all_split_areas.valid_index (split_area_index (index_of_tool)) then
 				parent_split_area := all_split_areas.i_th (split_area_index (index_of_tool))
@@ -861,18 +862,18 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				-- same box as `a_tool'. We now recalculate which box they should be
 				-- held in.
 			if original_parent /= void and not original_parent.is_empty then
+				widgets := box_contents (original_parent)
 				from
+					widgets.start
 				until
-					original_parent.is_empty
+					widgets.off
 				loop
-						-- We must keep returning to the start as `minimize_tool' is
-						-- not a safe call.
-					original_parent.start
-					current_holder ?= original_parent.item
+					current_holder ?= widgets.item
 					check
 						item_was_holder: current_holder /= Void
 					end
 					minimize_tool (current_holder)
+					widgets.forth
 				end
 			end
 			
@@ -1187,6 +1188,34 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			else
 				Result := window
 			end	
+		end
+		
+feature {NONE} -- Implementation
+
+	box_contents (box: EV_BOX): ARRAYED_LIST [EV_WIDGET] is
+			-- `Result' is contents of `box' as an ARRAYED_LIST.
+			-- `box' remains unchanged.
+		require
+			box_not_void: box /= Void
+		local
+			cursor: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
+		do
+			cursor := box.cursor
+			create Result.make (box.count)
+			from
+				box.start
+			until
+				box.off
+			loop
+				Result.extend (box.item)
+				box.forth
+			end
+			box.go_to (cursor)
+		ensure
+			Result_not_void: Result /= Void
+			Result_count_consistent: Result.count = box.count
+			box_count_unchanged: box.count = old box.count
+			box_index_consistent: old box.index = box.index
 		end
 
 invariant

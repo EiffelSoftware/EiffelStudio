@@ -28,6 +28,10 @@ int dummy_length;
 static int eif_console_eof_value = 0;
 static BOOL eif_console_allocated = FALSE;
 
+#ifdef EIF_THREADS
+rt_private EIF_MUTEX_TYPE *eif_exception_trace_mutex = (EIF_MUTEX_TYPE *) 0;
+#endif
+
 void eif_console_putint (long l);
 void eif_console_putchar (EIF_CHARACTER c);
 void eif_console_putstring (EIF_POINTER s, long length);
@@ -323,6 +327,14 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	r = vsprintf (s,StrFmt, ap);
 	va_end (ap);
 
+
+#ifdef EIF_THREADS
+	if (!eif_exception_trace_mutex)
+		EIF_MUTEX_CREATE(eif_exception_trace_mutex, "Could not create mutex for saving the exception trace in a file\n");
+
+	EIF_MUTEX_LOCK(eif_exception_trace_mutex, "Could not lock mutex for saving the exception trace in a file\n");
+#endif
+
 	getcwd(saved_cwd, MAX_PATH);
 	chdir (starting_working_directory);
 
@@ -331,6 +343,10 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 		fclose (exception_saved);
 	}
 	chdir (saved_cwd);
+
+#ifdef EIF_THREADS
+	EIF_MUTEX_UNLOCK(eif_exception_trace_mutex, "Could not unlock mutex for saving the exception trace in a file\n");
+#endif
 
 	eif_console_putstring (s, strlen(s));
 	return r;

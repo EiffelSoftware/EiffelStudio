@@ -21,7 +21,6 @@ feature -- Initialization
 			-- Initialize Current.
 		do
 			Precursor
---			Feature_resources.add_user (Current)
 		end
 
 feature -- Update

@@ -21,7 +21,6 @@ feature -- Initialization
 		 	-- Initialize Current.
 		do
 			precursor
---			Explain_resources.add_user (Current)
 		end
 
 end -- class EB_EXPLAIN_TOOL_LIST

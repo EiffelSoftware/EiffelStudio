@@ -4,23 +4,32 @@ indexing
 class
 	CONSUMED_ARGUMENT
 
-inherit
-	NAME_FORMATTER
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (p: PARAMETER_INFO) is
-			-- Initialize from `p'.
+	make (dn, en: STRING; ct: CONSUMED_REFERENCED_TYPE; o: BOOLEAN) is
+			-- Set `dotnet_name' with `dn'.
+			-- Set `eiffel_name' with `en'.
+			-- Set `type' with `ct'.
+			-- Set `is_out' with `o'.
 		require
-			non_void_parameter: p /= Void
+			non_void_dotnet_name: dn /= Void
+			valid_dotnet_name: not dn.is_empty
+			non_void_eiffel_name: en /= Void
+			valid_eiffel_name: not en.is_empty
+			non_void_type: ct /= Void
 		do
-			create dotnet_name.make_from_cil (p.get_name)
-			eiffel_name := format_variable_name (dotnet_name)
-			create type.make (p.get_parameter_type)
-			is_out := p.get_is_out
+			dotnet_name := dn
+			eiffel_name := en
+			type := ct
+			is_out := o
+		ensure
+			eiffel_name_set: eiffel_name = en
+			dotnet_name_set: dotnet_name = dn
+			type_set: type = ct
+			is_out_set: is_out = o
 		end
 		
 feature -- Access

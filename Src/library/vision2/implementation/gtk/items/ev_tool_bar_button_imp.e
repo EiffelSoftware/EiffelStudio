@@ -79,12 +79,12 @@ feature -- Access
 			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
+
 	parent_imp: EV_TOOL_BAR_IMP
+
 
 feature -- Element Change
 
-
-	
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the
 			-- list.
@@ -98,8 +98,8 @@ feature -- Element Change
 		do
 			{EV_BUTTON_IMP} Precursor (txt)
 			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0)
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.45)
 			end
 		end
 
@@ -108,10 +108,10 @@ feature -- Element Change
 			-- Redfinition needed to align pixmap in centre of button.
 			{EV_BUTTON_IMP} Precursor (pix_imp)
 			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0.5)
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0)
 			end
 			if label_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 1.0)
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.45)
 			end
 		end
 

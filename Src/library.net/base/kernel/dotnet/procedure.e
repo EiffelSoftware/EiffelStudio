@@ -16,7 +16,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE]
+	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE create make end]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
@@ -28,8 +28,7 @@ feature -- Calls
 		local
 			obj: SYSTEM_OBJECT
 		do
-			rout_set_cargs
-			obj := rout_disp.invoke (rout_target, rout_arguments)
+			obj := rout_disp.invoke (target_object, internal_operands)
 		end
 
 indexing

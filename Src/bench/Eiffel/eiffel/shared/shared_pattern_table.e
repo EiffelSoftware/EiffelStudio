@@ -3,7 +3,6 @@
 class SHARED_PATTERN_TABLE
 
 inherit
-
 	SHARED_WORKBENCH
 	
 feature {NONE}

@@ -98,6 +98,9 @@ end
 				-- Lace parsing
 			root_ast := Void
 			Parser.parse_file (file_name)
+			if Parser.error_count > 0 then
+				successful := False
+			end
 			root_ast ?= Parser.ast
 			build_universe
 		rescue

@@ -403,7 +403,7 @@ feature {NONE} -- Text processing
 			process_basic_text (text)
 		end;
 
-	process_breakpoint is
+	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
 		do
 		end;

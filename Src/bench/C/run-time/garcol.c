@@ -1374,12 +1374,25 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 	 * objects. At the beginning of this phase, it is assumed that no
 	 * object is marked.
 	 */
+
+	int i;
+	int moving = g_data.status & (GC_PART | GC_GEN);
+
 		/* Initialize our overflow depth */
 	overflow_stack_depth = 0;
 
 		/* Perform marking */
 	root_obj = MARK_SWITCH(&root_obj);	/* Primary root */
-	internal_marking (MARK_SWITCH, g_data.status &(GC_PART | GC_GEN));
+
+		/* Deal with once manifest strings. */
+#ifndef EIF_THREADS
+	mark_stack(&oms_set, MARK_SWITCH, moving);
+#else
+	for (i = 0; i < oms_set_list.count; i++)
+		mark_stack(oms_set_list.threads.sstack[i], MARK_SWITCH, moving);
+#endif
+
+	internal_marking (MARK_SWITCH, moving);
 }
 
 rt_private void internal_marking(MARKER marking, int moving)
@@ -1414,7 +1427,6 @@ rt_private void internal_marking(MARKER marking, int moving)
 #else
 	mark_stack(&once_set, marking, moving);
 #endif
-	mark_stack(&oms_set, marking, moving);
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
@@ -1454,8 +1466,6 @@ rt_private void internal_marking(MARKER marking, int moving)
 
 	for (i = 0; i < once_set_list.count; i++)
 		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
-	for (i = 0; i < oms_set_list.count; i++)
-		mark_stack(oms_set_list.threads.sstack[i], marking, moving);
 
 	for (i = 0; i < hec_stack_list.count; i++)
 		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);

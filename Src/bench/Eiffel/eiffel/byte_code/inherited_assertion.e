@@ -139,8 +139,16 @@ feature -- Assertion
 					--! Need to replace old expressions with
 					--! enlarged old expressions for C generation
 					--! later on.
-				if old_expr /= Void then
-					old_expression_list.put (Context.byte_code.old_expressions)
+					-- This is done automatically because of equality given below.
+					-- However, if old expressions are eliminated altogether,
+					-- they should be set to void to avoid assertion violation later
+					-- (for example in `BYTE_CODE.set_old_expressions').
+				check
+					same_old_expressions: old_expr = Context.byte_code.old_expressions
+				end
+				if old_expr /= Void and then old_expr.is_empty  then
+						-- Old expressions were eliminated.
+					old_expression_list.put (Void)
 				end
 				postcondition_forth
 			end

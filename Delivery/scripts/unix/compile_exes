@@ -192,16 +192,6 @@ cd $INSTALL_DIR
 remtrace Build
 move $INSTALL_DIR/build/spec/unix $INSTALL_DIR/build/spec/$ISE_PLATFORM
 cd $EXPORT_DIR/build
-gunzip -c gobo_16.tar.gz | tar -xf -
-gunzip -c exml.tar.gz | tar -xf -
-cd ..
-safe_md $EXPORT_DIR/build2
-safe_md $EXPORT_DIR/build2/modified_libraries
-move $EXPORT_DIR/build/gobo_16 $EXPORT_DIR/build2/modified_libraries
-move $EXPORT_DIR/build/exml $EXPORT_DIR/build2/modified_libraries
-cd $EXPORT_DIR/build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/clib
-default_make
-cd $EXPORT_DIR/build
 untgz_ccode build
 gzip build
 move build.gz build_enterprise.gz

@@ -1,4 +1,9 @@
-
+indexing
+	description: "Used to store a formal argument (formal %
+				% part of aan ARG_INSTANCE object)."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class S_ARG 
 
@@ -22,7 +27,7 @@ feature
 
 	argument: ARG is
 		do
-			!!Result.storage_init (context_type_table.item (type));
+			!! Result.storage_init (context_type_table.item (type))
 			if parent_type > 0 then
 				Result.set_parent (command_table.item (parent_type))
 			elseif parent_type < 0 then

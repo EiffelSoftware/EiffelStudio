@@ -17,15 +17,13 @@ inherit
 		redefine
 			build_format_bar, hole, 
 			tool_name, open_cmd_holder, save_cmd_holder,
-			save_as_cmd_holder, editable,
-			create_edit_buttons, set_default_size,
-			build_widgets, resize_action,
-			build_edit_bar, stone_type, synchronize,
+			editable, set_default_size, build_widgets, resize_action,
+			build_bar, stone_type, synchronize,
 			process_class_syntax, process_feature, process_feature_error,
 			process_class, process_classi, compatible,
 			set_mode_for_editing, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window,
+			set_read_only_text_window, able_to_edit,
 			update_boolean_resource,
 			update_integer_resource,
 			close, set_title, parse_file,
@@ -35,16 +33,14 @@ inherit
 		redefine
 			build_format_bar, hole,
 			tool_name, open_cmd_holder, save_cmd_holder,
-			save_as_cmd_holder, editable,
-			build_edit_bar, create_edit_buttons, reset,
-			set_default_size, build_widgets,
+			editable, build_bar, reset, set_default_size, build_widgets,
 			close_windows, resize_action, stone_type,
 			synchronize, set_stone, process_class_syntax,
 			process_feature, process_class, process_classi,
 			compatible, set_mode_for_editing, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window, process_feature_error,
-			update_boolean_resource,
+			update_boolean_resource, able_to_edit,
 			update_integer_resource,
 			close, set_title, parse_file, resources, history_window_title
 		select
@@ -127,6 +123,12 @@ feature -- Access
 
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
+		do
+			Result := True
+		end;
+
+	able_to_edit: BOOLEAN is
+			-- Are we able to edit the text?
 		do
 			Result := last_format = showtext_frmt_holder
 		end;
@@ -421,7 +423,6 @@ feature -- Window Settings
 		do
 			old_close_windows;
 			class_text_field.close_choice_window;
-			filter_command.close_filter_window;
 			version_cmd.close_choice_window
 		end;
 
@@ -553,8 +554,6 @@ feature {NONE} -- Commands
 
 	save_cmd_holder: TWO_STATE_CMD_HOLDER;
 
-	save_as_cmd_holder: COMMAND_HOLDER;
-
 	shell: COMMAND_HOLDER;
 
 	current_target_cmd_holder: COMMAND_HOLDER;
@@ -562,12 +561,6 @@ feature {NONE} -- Commands
 	previous_target_cmd_holder: COMMAND_HOLDER;
 
 	next_target_cmd_holder: COMMAND_HOLDER;
-
-	super_melt_menu_entry: EB_MENU_ENTRY;
-
-	filter_menu_entry: EB_MENU_ENTRY;
-
-	filter_command: FILTER_COMMAND;
 
 feature {NONE} -- Implementation; Graphical Interface
 
@@ -583,8 +576,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			save_cmd: SAVE_FILE;
 			save_button: EB_BUTTON;
 			save_menu_entry: EB_MENU_ENTRY;
-			save_as_cmd: SAVE_AS_FILE;
-			save_as_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
 			history_list_cmd: LIST_HISTORY
 		do
@@ -597,14 +588,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! save_button.make (save_cmd, edit_bar);
 			!! save_menu_entry.make (save_cmd, file_menu);
 			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
-			!! save_as_cmd.make (Current);
-			!! save_as_menu_entry.make (save_as_cmd, file_menu);
-			!! save_as_cmd_holder.make_plain (save_as_cmd);
-			save_as_cmd_holder.set_menu_entry (save_as_menu_entry);
+			build_save_as_menu_entry;
 			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
-			!! sep.make (new_name, file_menu);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
@@ -631,6 +618,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			super_melt_cmd: SUPER_MELT;
 			sep: SEPARATOR;
 			history_list_cmd: LIST_HISTORY;
+			super_melt_menu_entry: EB_MENU_ENTRY;
 			new_class_button: EB_BUTTON_HOLE
 		do
 			!! version_cmd.make (Current);
@@ -640,10 +628,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			shell_button.add_third_button_action;
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
-
-			!! filter_command.make (Current);
-			!! filter_menu_entry.make (filter_command, special_menu);
-
+			build_filter_menu_entry;
 			!! super_melt_cmd.make (Current);
 			!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
 
@@ -827,7 +812,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_right (exp_button, 0);
 		end;
 
-	build_edit_bar is
+	build_bar is
 			-- Build top bar: editing commands
 		do
 			edit_bar.set_fraction_base (21);

@@ -571,6 +571,12 @@ doc:	</attribute>
 rt_private EIF_BOOLEAN eif_is_new_recoverable_format = EIF_TRUE;
 #endif
 
+rt_public EIF_BOOLEAN eif_set_new_recoverable_format_active (void)
+{
+	RT_GET_CONTEXT
+	return eif_is_new_recoverable_format;
+}
+
 rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
 {
 	RT_GET_CONTEXT

@@ -7,14 +7,12 @@ class
 	ECOM_WIDE_STRING
 
 inherit
-	Memory
-		redefine
-			dispose
-		end
+	
+	ECOM_STRUCTURE
 
 creation
 	make_from_string,
-	make_from_wide_str_ptr
+	make_from_pointer
 
 feature {NONE} -- Initialization
 
@@ -23,36 +21,20 @@ feature {NONE} -- Initialization
 		require
 			nonvoid_string: string /= Void
 		local
-			a: ANY
+			wel_string: WEL_STRING
 		do
-			a := string.to_c
+			!!wel_string.make (string)
 			initializer := ccom_create_e_wide_string
-			ccom_create_from_string (initializer, $a)
+			ccom_create_from_string (initializer, wel_string.item)
+			item := ccom_wide_str_pointer (initializer)
 		ensure
-			initializer /= Default_pointer
-			item /= Default_pointer
-		end
-
-	make_from_wide_str_ptr (wide_str_ptr: POINTER) is
-			-- Create wide string from `wide_str_ptr'
-		require
-			nonnull_pointer: wide_str_ptr /= Default_pointer
-		do
-			initializer := ccom_create_e_wide_string
-			ccom_initialize_wide_string (initializer, wide_str_ptr)
-		ensure
-			initializer /= Default_pointer
-			item /= Default_pointer
+			non_default_initializer: initializer /= Default_pointer
+			non_default_item: item /= Default_pointer
 		end
 
 feature -- Accsess
 
-	item: POINTER is
-			-- pointer to wide string
-		do
-			Result := ccom_wide_str_pointer (initializer)
-		end
-
+	
 	to_string: STRING is
 			-- convert wide string to string
 		do
@@ -63,10 +45,12 @@ feature -- Accsess
 
 feature {NONE} -- Implementation
 
-	initializer: POINTER
-			-- Pointer to structure
+	create_wrapper (a_pointer: POINTER): POINTER is
+		do
+			Result := ccom_create_from_pointer (a_pointer)
+		end
 
-	dispose is
+	free_structure is
 			-- delete structure
 		do
 			ccom_delete_e_wide_string (initializer)
@@ -90,14 +74,14 @@ feature {NONE} -- Externals
 			"C++ [E_wide_string %"E_wide_string.h%"](EIF_POINTER)"
 		end
 
-	ccom_initialize_wide_string (cpp_obj: POINTER; wide_str: POINTER) is
+	ccom_create_from_pointer (wide_str: POINTER): POINTER is
 		external
-			"C++ [E_wide_string %"E_wide_string.h%"](EIF_POINTER)"
+			"C++ [new E_wide_string %"E_wide_string.h%"](EIF_POINTER)"
 		end
 
 	ccom_wide_str_to_string (cpp_obj: POINTER): STRING is
 		external
-			"C++ [E_wide_string %"E_wide_string.h%"](): EIF_OBJ"
+			"C++ [E_wide_string %"E_wide_string.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_wide_str_pointer (cpp_obj: POINTER): POINTER is
@@ -106,3 +90,20 @@ feature {NONE} -- Externals
 		end
 
 end -- class ECOM_WIDE_STRING
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

@@ -8,14 +8,11 @@ class
 
 inherit
 	
-	MEMORY
-		redefine
-			dispose
-		end
+	ECOM_STRUCTURE
 
 creation
 	make_from_integer,
-	make_from_ularge_integer_ptr
+	make_from_pointer
 
 feature {NONE} -- Initialization
 
@@ -28,33 +25,16 @@ feature {NONE} -- Initialization
 			initializer /= Default_pointer
 			item /= Default_pointer
 		end
-
-	make_from_ularge_integer_ptr (ularge_integer_ptr: POINTER) is
-			-- Creation routine
-		require
-			valid_ptr: ularge_integer_ptr /= Default_pointer
-		do
-			initializer := ccom_create_c_ularge_integer;
-			ccom_set_from_ularge_integer(initializer, ularge_integer_ptr);
-		ensure
-			initializer /= Default_pointer
-			item /= Default_pointer
-		end
-
-feature -- Access
-
-	item: POINTER is
-			-- pointer to ULARGE_INTEGER (64-bit unsigned integer)
-		do
-			Result := ccom_ularge_integer (initializer)
-		end
+	
 
 feature {NONE} -- Implementation
 
-	initializer: POINTER
-			-- Pointer to E_ULarge_Integer which is wrapper of ULARGE_INTEGER
+	create_wrapper (a_pointer: POINTER): POINTER is
+		do
+			Result := ccom_set_from_ularge_integer (a_pointer)
+		end
 
-	dispose is
+	free_structure is
 			-- Delete structure
 		do
 			ccom_delete_c_ularge_integer (initializer)
@@ -77,9 +57,9 @@ feature {NONE} -- Externals
 			"C++ [E_ULarge_Integer %"E_ULarge_Integer.h%"] (EIF_INTEGER)"
 		end
 
-	ccom_set_from_ularge_integer (cpp_obj: POINTER; i: POINTER) is
+	ccom_set_from_ularge_integer (i: POINTER): POINTER is
 		external
-			"C++ [E_ULarge_Integer %"E_ULarge_Integer.h%"] (ULARGE_INTEGER *)"
+			"C++ [new E_ULarge_Integer %"E_ULarge_Integer.h%"] (ULARGE_INTEGER *)"
 		end
 
 	ccom_ularge_integer (cpp_obj: POINTER): POINTER is
@@ -88,3 +68,20 @@ feature {NONE} -- Externals
 		end
 
 end -- class ECOM_ULARGE_INTEGER
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

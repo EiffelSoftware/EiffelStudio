@@ -8,10 +8,7 @@ class
 
 inherit
 
-	MEMORY
-		redefine
-			dispose
-		end
+	ECOM_STRUCTURE
 
 	ECOM_STGTY
 	
@@ -20,18 +17,8 @@ inherit
 	ECOM_LOCK_TYPES
 
 creation
-	make_from_statstg
 
-feature {NONE} -- Initialization
-
-	make_from_statstg (statstg: POINTER) is
-			-- Creation routine
-		require
-			valid_statstg: statstg /= Default_pointer;
-		do
-			initializer := ccom_create_c_statstg;
-			ccom_initialize_statstg (initializer, statstg);	
-		end
+	make_from_pointer
 
 feature -- Access
 
@@ -40,7 +27,7 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!!wide_string.make_from_wide_str_ptr (ccom_name (initializer))
+			!!wide_string.make_from_pointer (ccom_name (initializer))
 			Result := wide_string.to_string
 		end
 
@@ -69,33 +56,33 @@ feature -- Access
 	size: ECOM_ULARGE_INTEGER is
 			-- Size in bytes of stream or byte array. 
 		do
-			!!Result.make_from_ularge_integer_ptr (ccom_size(initializer))
+			!!Result.make_from_pointer (ccom_size(initializer))
 		ensure
 			Result /= Void and Result.item /= Default_pointer
 		end
 
-	modification_time: POINTER is
+	modification_time: WEL_FILE_TIME is
 			-- Last modification time 
 		do
-			Result := ccom_modification_t (initializer)
+			!!Result.make_by_pointer (ccom_modification_t (initializer))
 		ensure
-			Result /= Default_pointer
+			Result /= Void
 		end
 
-	creation_time: POINTER is
+	creation_time: WEL_FILE_TIME is
 			-- Creation time  
 		do
-			Result := ccom_creation_t (initializer)
+			!!Result.make_by_pointer (ccom_creation_t (initializer))
 		ensure
-			Result /= Default_pointer
+			Result /= Void
 		end
 
-	access_time: POINTER is
+	access_time: WEL_FILE_TIME is
 			-- Last access time 
 		do
-			Result := ccom_access_t (initializer)
+			!!Result.make_by_pointer (ccom_access_t (initializer))
 		ensure
-			Result /= Default_pointer
+			Result /= Void
 		end
 
 	mode: INTEGER is
@@ -126,10 +113,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initializer: POINTER 
-		-- Pointer to STATSTG structure (C++ object)
+	create_wrapper (a_pointer: POINTER): POINTER is
+		do
+			Result := ccom_create_c_statstg (a_pointer)
+		end
 
-	dispose is
+	free_structure is
 			-- delete corresponding C++ object
 		do
 			ccom_delete_c_statstg (initializer)
@@ -137,19 +126,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	ccom_create_c_statstg: POINTER is
+	ccom_create_c_statstg(a_pointer: POINTER): POINTER is
 		external
-			"C++ [new E_STATSTG %"E_statstg.h%"] ()"
+			"C++ [new E_STATSTG %"E_statstg.h%"] (STATSTG *)"
 		end
 
 	ccom_delete_c_statstg (cpp_obj: POINTER) is
 		external
 			"C++ [delete E_STATSTG %"E_statstg.h%"] ()"
-		end
-
-	ccom_initialize_statstg (cpp_obj: POINTER; p_statstg: POINTER) is
-		external
-			"C++ [E_STATSTG %"E_statstg.h%"] (STATSTG *)"
 		end
 
 	ccom_name (cpp_obj: POINTER): POINTER is
@@ -203,3 +187,20 @@ feature {NONE} -- Externals
 		end
 
 end -- class ECOM_STATSTG
+
+--|----------------------------------------------------------------
+--| EiffelCOM: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1988-1999 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support http://support.eiffel.com
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
+

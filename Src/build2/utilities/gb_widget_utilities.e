@@ -624,5 +624,107 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	build_string_from_font (font: EV_FONT): STRING is
+			-- `Result' is string representation of `font'.
+		require
+			font_not_void: font /= Void
+		do
+			Result := font.family.out + ";"
+			Result.append (font.weight.out + ";")
+			Result.append (font.shape.out + ";")
+			Result.append (font.height_in_points.out + ";")
+			from
+				font.preferred_families.start
+			until
+				font.preferred_families.off
+			loop
+				Result.append (font.preferred_families.item.out)
+				font.preferred_families.forth
+			end
+		end
+		
+		
+	build_string_from_color (color: EV_COLOR): STRING is
+			-- `Result' is string representation of `color'.
+		require
+			color_not_void: color /= Void
+		do
+			create Result.make (0)
+			Result := Result + add_leading_zeros (color.red_8_bit.out, 3)
+			Result := Result + add_leading_zeros (color.green_8_bit.out, 3)
+			Result := Result + add_leading_zeros (color.blue_8_bit.out, 3)
+		end
+		
+	build_color_from_string (a_string: STRING): EV_COLOR is
+			-- `Result' is an EV_COLOR built from contents of `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			string_correct_length: a_string.count = 9
+			a_string_is_integer: a_string.is_integer
+		do
+			create Result
+			Result.set_rgb_with_8_bit (a_string.substring (1, 3).to_integer,
+				a_string.substring (4, 6).to_integer,
+				a_string.substring (7, 9).to_integer)
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	build_font_from_string (a_string: STRING): EV_FONT is
+			-- `Result' is an EV_FONT built from contents of `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			correct_separators: a_string.occurrences (';') = 4
+		local
+			internal_string: STRING
+		do
+			internal_string := a_string.twin
+			
+			create Result.make_with_values (get_next_part_of_multi_part_string (a_string).to_integer,
+				get_next_part_of_multi_part_string (a_string).to_integer,
+				get_next_part_of_multi_part_string (a_string).to_integer,
+				get_next_part_of_multi_part_string (a_string).to_integer)
+			Result.preferred_families.extend (a_string)
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	get_next_part_of_multi_part_string (a_string: STRING): STRING is
+			-- `Result' is substring from position 1 to the position up to the first
+			-- occurance of a ';' character. Prune all characters up to and including
+			-- the `;' from `a_string
+		require
+			a_string_not_void: a_string /= Void
+			a_string_has_separators: a_string.occurrences (';') > 0
+		local
+			next_separator_index: INTEGER
+		do
+			next_separator_index := a_string.index_of (';', 1)
+			Result := a_string.substring (1, next_separator_index - 1)
+			a_string.remove_head (next_separator_index)
+		ensure
+			result_not_void: Result /= Void
+			counts_consistent: old a_string.count = a_string.count + Result.count + 1
+		end
+		
+		
+	add_leading_zeros (original_string: STRING count: INTEGER): STRING is
+			-- `Result' is `a_string' with leading zeros added so that it it `count' characters long.
+		require
+			original_string_not_void: original_string /= Void
+			count_positive: count > 0
+			original_string_length_valid: original_string.count <= count
+		do
+			from
+				Result := original_string.twin
+			until
+				Result.count = count
+			loop
+				Result.insert_character ('0', 1)
+			end
+		ensure
+			Result_not_void: Result /= Void
+			Result_correct_length: Result.count = count
+		end
 
 end -- class GB_UTILITIES

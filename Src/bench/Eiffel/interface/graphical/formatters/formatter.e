@@ -40,25 +40,24 @@ feature
 					--| for file modification (only showtext
 					--| command can modify text)
 				set_global_cursor (watch_cursor);
-				formatted := text_window.root_stone;
-				if formatted /= Void then
-						--| Last format has to be
-						--| show text command.
-					text_window.last_format.format (formatted);
-				end
-				restore_cursors;
-			elseif not text_window.changed then
+				text_window.set_changed (false);
+				execute_licenced (formatted);
+				text_window.history.extend (text_window.root_stone);
+				restore_cursors
+			else
 				if argument = text_window then
 					formatted ?= text_window.root_stone
 				else
 					formatted ?= argument
 				end;
-				set_global_cursor (watch_cursor);
-				execute_licenced (formatted);
-				restore_cursors;
-			else
-				warner.set_window (text_window);
-				warner.call (Current, l_File_changed)
+				if not text_window.changed then
+					set_global_cursor (watch_cursor);
+					execute_licenced (formatted);
+					restore_cursors;
+				else
+					warner.set_window (text_window);
+					warner.call (Current, l_File_changed)
+				end
 			end
 		end;
 

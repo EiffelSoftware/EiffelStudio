@@ -134,20 +134,26 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			container: EV_CONTAINER
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				Result := pixmap_name + ".set_with_named_file (%"" + element_info.data + "%")"
-				Result := Result + indent + a_name + ".set_pixmap (" + pixmap_name + ")"
+				io.putstring (a_type.out)
+				if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string ("EV_CONTAINER")) then
+					Result := Result + indent + a_name + ".set_background_pixmap (" + pixmap_name + ")"
+				else
+					Result := Result + indent + a_name + ".set_pixmap (" + pixmap_name + ")"
+				end
 			end
 			Result := strip_leading_indent (Result)
 		end

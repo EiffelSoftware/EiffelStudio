@@ -22,6 +22,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EV_ANY_HANDLER
+		undefine
+			default_create
+		end
 
 feature -- Access
 

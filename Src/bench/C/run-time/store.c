@@ -47,6 +47,7 @@ extern char *idr_temp_buf; 			/*temporary buffer for idr floats and doubles*/
 /*
  * Function declarations
  */
+extern void eio();
 private void internal_store();
 private void st_store();				/* Second pass of the store */
 private void ist_write();

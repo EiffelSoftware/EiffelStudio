@@ -31,6 +31,8 @@
  * `wdisp (dyn_type)'
  */
 
+extern void tabinit();
+
 public char *(*wfeat(static_type, feature_id, dyn_type))()
 int static_type, dyn_type;
 int32 feature_id;

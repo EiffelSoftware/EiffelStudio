@@ -41,6 +41,7 @@ private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
 
 extern int fides;
 extern int r_fides;
+extern void eio();
 
 
 public bool_t run_idr_setpos(idrs, pos)

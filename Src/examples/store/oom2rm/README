@@ -1,0 +1,21 @@
+
+Object Oriented Model To Relational Model (OOM2RM)
+
+This example illustrates how to dynamically generate
+the description of a relational schema (with SQL statements) 
+from the traversal of a network of Eiffel objects.
+
+One Eiffel model sample is given in subdirectory Model1
+and serves as the sample to use to generate the relational schema.
+
+To apply the example on a model of your choice, replace
+in the Ace file reference to the cluster Model1 with a reference
+to your customized cluster.
+
+
+
+CAVEAT
+Some problems have been encountered when using generic containers classes
+derived with simple type.
+To overcome this problem, rather use ARRAY [INTEGER_REF] instead of 
+ARRAY [INTEGER].

@@ -1,0 +1,3 @@
+create table HUMAN (h_name varchar (255), h_birthday date, h_no int)
+create table HUMAN_h_country (h_no int, c_no int)
+create table COUNTRY (c_name varchar (255), c_no int)

@@ -35,13 +35,9 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Set new UI style for dialog if supported.
 		do
-			-- We want to be able to create folders and stuff in the dialog
-			-- so we choose the new UI style if the system supports it.
-			-- Systems that have lower than Shell32.dll version 5.00: too bad!
-			-- We use BIF_USENEWUI (see MSDN) which is not in shlobj.h yet.
-
 			if shell32_version >= version_500 then
-				add_flag (64)
+				-- See header comment of {WEL_BIF_CONSTANTS}.Bif_usenewui
+				add_flag (Bif_usenewui)
 			end
 
 			is_initialized := True
@@ -96,6 +92,9 @@ end -- class EV_DIRECTORY_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/15 16:55:25  brendel
+--| Changed magic number 64 with BIF_USENEWUI.
+--|
 --| Revision 1.7  2000/03/14 23:51:43  brendel
 --| Added step to initialization that takes advantage of new choose folder
 --| dialogs in version 5.00 of shell32.dll, if present.

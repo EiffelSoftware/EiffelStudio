@@ -43,6 +43,13 @@ feature -- Access
 			result_not_void: Result /= Void
 			object_comparison_set: Result.object_comparison
 		end
+		
+	mouse_wheel_scroll_lines: INTEGER is
+			-- Default number of lines to scroll in response to
+			-- a mouse wheel scroll event.
+		do
+			Result := implementation.mouse_wheel_scroll_lines
+		end
 
 feature {NONE} -- Contract support
 

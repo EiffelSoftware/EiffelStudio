@@ -443,6 +443,9 @@ feature {NONE} -- Implementation
 						-- Must now remove the tool from its parent, part of `Current'.
 					tool.parent.prune_all (tool)
 					
+						-- Remove `tool' from the external representation.
+					parent_area.external_representation.prune_all (tool)
+					
 						-- FIXME Need to insert the tool back at its current size.
 						-- However, at this point, we have no access to its previous size. If
 						-- the size was stored when a dock began (`dock_started_actions'), then it could be

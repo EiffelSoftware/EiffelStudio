@@ -15,7 +15,9 @@ feature -- Initialization
 
 	initialize (default_file: STRING; loc: STRING) is
 		do
-			make_default (default_file)
+			if default_file /= Void then
+				make_default (default_file)
+			end
 			if root_folder_i /= Void then
 				update (loc)
 			else
@@ -27,7 +29,9 @@ feature -- Initialization
 		local
 			file_name: FILE_NAME
 		do
-			make_default_for_file (default_file)
+			if default_file /= Void then
+				make_default_for_file (default_file)
+			end
 			if root_folder_i /= Void then
 				update (loc)
 			else
@@ -86,80 +90,5 @@ feature -- Saving
 		do
 			root_folder_i.root_save (location)
 		end
-
-	save_resource (res: RESOURCE) is
-			-- save `res' at the position `path')
-		do
---			root_folder.save_resource (res, location, path)
-		end
-
-feature -- Modification
-
---	put (res: RESOURCE; path: STRING) is
---			-- Put `res' in Current.
---		local
---			f: like folder
---		do
---			table.put_resource (res)
---			put_folder (path)
---			f := folder (path)
---			if f = Void then
---				check
---					Folder_not_created: false
---				end
---			end
---			f.resource_list.extend (res)
---		end
-
---	put_folder (path: STRING) is
---			-- Make sure a folder exists at location `path',
---			-- creating folders iteratively if needed.
---		local
---			i, j: INTEGER
---			s: STRING
---			f, f_child: like folder
---			terra_incognita: BOOLEAN
---		do
---			from
---				i := 1
---				j := 1
---				s := path
---				if s.empty then j := 0 end
---				f := root_folder
---			until
---				j < 1
---			loop
---				j := s.index_of ('/', i)
---				if j > i then
---					if not terra_incognita then
---						f_child := folder_child (f, s.substring (i, j - 1))
---						if (f_child = Void) then
---								-- no folders anymore: from now on, we'll have
---								-- to create them.
---							terra_incognita := True
---							create f_child.make_from_scratch (s.substring (i, j - 1), Current)
---							f.child_list.extend (f_child)
---						end
---					else
---						create f_child.make_from_scratch (s.substring (i, j - 1), Current)
---						f.child_list.extend (f_child)
---					end
---					i := j + 1
---					f := f_child
---				end
---			end
---			if i + 1 < s.count then
---				if not terra_incognita then
---					f_child := folder_child (f, s.substring (i, s.count))
---					if f_child = Void then
---						create f_child.make_from_scratch (s.substring (i, s.count), Current)
---						f.child_list.extend (f_child)
---					end
---				else
---					create f_child.make_from_scratch (s.substring (i, s.count), Current)
---					f.child_list.extend (f_child)
---				end
---			end
---		end
 
 end -- class RESOURCE_STRUCTURE_IMP

@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			valid_extension: not Result.is_empty and then Result.item (1) = '.'
 		end
 
-	time_out: INTEGER is 10
+	time_out: INTEGER is 180
 			-- Alloted time for creation of serialized file
 
 invariant

@@ -66,7 +66,7 @@ feature -- Basic Operations
 						end
 					end
 					l_old_count := l_variables_list.count
-					l_variables_list.resize (1, l_old_count + l_features_count)
+					l_variables_list.conservative_resize (1, l_old_count + l_features_count)
 					l_variables_list.subcopy (l_features, 1, l_features_count, l_old_count + 1)
 				end
 				l_variables_list.sort					

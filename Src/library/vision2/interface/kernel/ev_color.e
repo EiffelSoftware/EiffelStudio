@@ -477,10 +477,6 @@ feature -- Constants
 
 	Max_24_bit: INTEGER is 16777215
 			-- Maximum value for 24 bit unsigned integers.
-
-	Max_32_bit: INTEGER is 4294967295
-			-- Maximum value for 32 bit unsigned integers.
-			--| FIXME INTEGER is signed!
 		
 feature {NONE} -- Contract support
 

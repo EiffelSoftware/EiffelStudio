@@ -112,7 +112,7 @@ feature -- Access
 			if container /= Void then
 						-- We may only replace an EV_CONTAINER with an EV_SPLIT_AREA if the container
 						-- holds no more than two items.
-					if type_conforms_to (current_type, dynamic_type_from_string ("EV_SPLIT_AREA")) then
+					if type_conforms_to (current_type, dynamic_type_from_string (ev_split_area_string)) then
 						if container.object.count <= 2 then
 							can_drop := True
 						else

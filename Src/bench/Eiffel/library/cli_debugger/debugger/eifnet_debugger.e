@@ -19,13 +19,13 @@ inherit
 	ICOR_EXPORTER
 		export
 			{NONE} all
-		end	
+		end
 
 	EIFNET_DEBUGGER_SYNCHRO
 		export
 			{NONE} all
-			{APPLICATION_EXECUTION_DOTNET} stop_dbg_timer
-		end	
+			{EIFNET_EXPORTER} stop_dbg_timer, start_dbg_timer, lock_and_wait_for_callback
+		end
 
 	EIFNET_DEBUGGER_TRACER_ACCESS
 		export
@@ -35,7 +35,7 @@ inherit
 	SHARED_DEBUG
 		export
 			{NONE} all
-		end		
+		end
 
 	DEBUG_OUTPUT_SYSTEM_I
 		export
@@ -56,6 +56,7 @@ feature -- Initialization
 	make is
 			-- Creation
 		do
+			create evaluator.make (Current)
 		end
 		
 	initialize_clr_host is
@@ -554,7 +555,7 @@ feature -- Function Evaluation
 					l_func := l_icd_module.get_function_from_token (l_feature_token)
 	
 					if l_func /= Void then
-						l_icd := function_evaluation (a_frame, l_icd, l_func)
+						l_icd := evaluator.function_evaluation (a_frame, l_icd, l_func)
 						if l_icd /= Void then
 							create l_debug_info.make (l_icd)
 							Result := string_value_from_string_class_object_value (l_debug_info.interface_debug_object_value)							
@@ -624,76 +625,13 @@ feature -- Function Evaluation
 			end
 		end
 
+feature -- Bridge to evaluator
+
+	evaluator: EIFNET_DEBUGGER_EVALUATOR
+
 	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_func: ICOR_DEBUG_FUNCTION): ICOR_DEBUG_VALUE is
-			-- Function evaluation result for `a_func' on `a_icd'
-		require
-			object_not_void: a_icd /= Void
-			func_not_void: a_func /= Void
-		local
-			l_chain: ICOR_DEBUG_CHAIN
-			l_func: ICOR_DEBUG_FUNCTION
-			l_icd_thread: ICOR_DEBUG_THREAD
-			l_icd_eval: ICOR_DEBUG_EVAL
-			l_status: APPLICATION_STATUS_DOTNET
 		do
-			l_func := a_func
-			if a_frame /= Void then
-				l_chain := a_frame.get_chain
-				l_icd_thread := l_chain.get_thread
-			else
-				l_icd_thread := icor_debug_thread
-			end
-			l_icd_eval := l_icd_thread.create_eval
-			l_status := Application.imp_dotnet.status
-			l_status.set_is_evaluating (True)
-				--| Let use the evaluating mecanism instead of the normal one
-				--| then let's disable the timer for ec callback
-			stop_dbg_timer
-				--| We then call function evaluation on `a_icd'
-			l_icd_eval.call_function (l_func, 1, << a_icd >>)
-			do_continue
-				--| And we wait for all callback to be finished
-			lock_and_wait_for_callback
-			reset_data_changed
-
-			if 
-				Application.imp_dotnet.eifnet_debugger.last_managed_callback_is_exception 
-			then
-				check False end
-				Result := Void --"WARNING: Could not evaluate output"
-				debug ("DEBUGGER_TRACE_EVAL")
-					display_last_exception
-					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
-				end
-				do_clear_exception
-			else
-				if l_icd_eval /= Void then
-					Result := l_icd_eval.get_result
-				end
-			end
-			l_status.set_is_evaluating (False)
-			start_dbg_timer					
-		end
-
-feature {NONE}
-
-	display_last_exception is
-			-- 
-		require
-			last_managed_callback_is_exception
-		local
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			l_exception: ICOR_DEBUG_VALUE
-		do
-			l_exception := active_exception_value
-			if l_exception /= Void then
-				create l_exception_info.make (active_exception_value)
-	
-				print ("%N%NException ....%N")
-				print ("%T Class   => " + l_exception_info.value_class_name + "%N")
-				print ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
-				print ("%T Message => " + (create {EIFNET_EXCEPTION_CODE} ).exception_string_representation (l_exception_info.value_class_token ) + "%N")			
-			end
+			Result := evaluator.function_evaluation (a_frame, a_icd, a_func)
 		end
 
 feature {NONE} -- External

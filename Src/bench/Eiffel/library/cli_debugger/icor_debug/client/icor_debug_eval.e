@@ -147,6 +147,14 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
+	new_string (str: STRING) is
+			-- NewString allocates a string object with the given contents.
+		local
+			l_c_string: C_STRING
+		do
+			create l_c_string.make (str)
+			last_call_success := cpp_new_string (item, l_c_string.item)
+		end
 
 feature {NONE} -- Implementation
 
@@ -198,7 +206,17 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"CreateValue"
-		end		
+		end	
+		
+	cpp_new_string (obj: POINTER; a_p_string: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugEval signature(LPCWSTR): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"NewString"
+		end			
 
 end -- class ICOR_DEBUG_EVAL
 

@@ -126,7 +126,7 @@ feature -- Initialization
 			length: INTEGER
 		do
 			length := str_len (c_string)
-			if capacity < length then
+			if safe_capacity < length then
 				make_area (length + 1)
 			end
 			($area).memory_copy (c_string, length)
@@ -150,7 +150,7 @@ feature -- Initialization
 			length: INTEGER
 		do
 			length := end_pos - start_pos + 1
-			if capacity < length then
+			if safe_capacity < length then
 				make_area (length + 1)
 			end
 				-- Make `$area' the substring of `c_string'
@@ -363,7 +363,9 @@ feature -- Measurement
 	capacity: INTEGER is
 			-- Allocated space
 		do
-			Result := area.count - 1
+			if area /= Void then
+				Result := safe_capacity
+			end
 		end
 
 	count: INTEGER
@@ -693,7 +695,7 @@ feature -- Element change
 		do
 			substring_size := end_index - start_index + 1
 			new_size := s.count + count - substring_size
-			if new_size > capacity then
+			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
 			s_area := s.area
@@ -772,8 +774,8 @@ feature -- Element change
 	fill_character (c: CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
 		do
-			($area).memory_set (c.code, capacity)
-			count := capacity
+			($area).memory_set (c.code, safe_capacity)
+			count := safe_capacity
 		ensure
 			filled: full
 			same_size: (count = capacity) and (capacity = old capacity)
@@ -893,7 +895,7 @@ feature -- Element change
 	precede, prepend_character (c: CHARACTER) is
 			-- Add `c' at front.
 		do
-			if count = capacity then
+			if count = safe_capacity then
 				resize (count + additional_space)
 			end
 			str_cprepend ($area, c, count)
@@ -911,7 +913,7 @@ feature -- Element change
 			s_area: like area
 		do
 			new_size := count + s.count
-			if new_size > capacity then
+			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
 			s_area := s.area
@@ -962,7 +964,7 @@ feature -- Element change
 			s_area: like area
 		do
 			new_size := s.count + count
-			if new_size > capacity then
+			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
 			s_area := s.area;
@@ -1019,7 +1021,7 @@ feature -- Element change
 			current_count: INTEGER
 		do
 			current_count := count
-			if current_count = capacity then
+			if current_count = safe_capacity then
 				resize (current_count + additional_space)
 			end
 			area.put (c, current_count)
@@ -1061,7 +1063,7 @@ feature -- Element change
 			s_area: like area
 		do
 			new_size := s.count + count
-			if new_size > capacity then
+			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
 			s_area := s.area
@@ -1081,7 +1083,7 @@ feature -- Element change
 			new_size: INTEGER
 		do
 			new_size := count + 1
-			if new_size > capacity then
+			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
 			str_insert ($area, $c, count, 1, i)
@@ -1263,7 +1265,7 @@ feature -- Resizing
 		require else
 			new_size_non_negative: newsize >= 0
 		do
-			if newsize > capacity then
+			if newsize > safe_capacity then
 				resize (newsize)
 			end
 		end
@@ -1298,21 +1300,21 @@ feature -- Conversion
 			-- Left justify the string using
 			-- the capacity as the width
 		do
-			str_ljustify ($area, count, capacity)
+			str_ljustify ($area, count, safe_capacity)
 		end
 
 	center_justify is
 			-- Center justify the string using
 			-- the capacity as the width
 		do
-			str_cjustify ($area, count, capacity)
+			str_cjustify ($area, count, safe_capacity)
 		end
 
 	right_justify is
 			-- Right justify the string using
 			-- the capacity as the width
 		do
-			str_rjustify ($area, count, capacity)
+			str_rjustify ($area, count, safe_capacity)
 		end
 
 	character_justify (pivot: CHARACTER; position: INTEGER) is
@@ -1346,7 +1348,7 @@ feature -- Conversion
 			end
 			from
 			until
-				count = capacity
+				count = safe_capacity
 			loop
 				extend (' ')
 			end
@@ -1439,7 +1441,7 @@ feature -- Conversion
 			temp: ARRAYED_LIST [CHARACTER]
 			i: INTEGER
 		do
-			create temp.make (capacity)
+			create temp.make (safe_capacity)
 			from
 				i := 1
 			until
@@ -1627,6 +1629,14 @@ feature {NONE} -- Empty string implementation
 			make_area (1)
 			Result := area
 			area := old_area
+		end
+
+	safe_capacity: INTEGER is
+			-- Allocated space
+		require
+			area_not_void: area /= Void
+		do
+			Result := area.count - 1
 		end
 
 feature {STRING} -- Implementation

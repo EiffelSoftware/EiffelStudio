@@ -8,13 +8,15 @@ class
 
 inherit
 	EB_FORMAT_COMMAND
+		rename
+			process as process_format 
 		redefine
 			execute
 		end
 
 feature -- Execution
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute (argument: EV_ARGUMENT1 [STONE]; data: EV_EVENT_DATA) is
 			-- Ask for a confirmation before executing the format.
 		local
 --			mp: MOUSE_PTR
@@ -22,10 +24,8 @@ feature -- Execution
 		do
 			if argument = Void then
 				s := f.tool.stone
-			elseif argument /= Callback then
-				s ?= argument.first
 			else
-				process
+				s ?= argument.first
 			end
 			if (s /= Void and then s.clickable) and then not user_asked then
 --				not data.control_key_pressed then
@@ -46,14 +46,10 @@ feature {EB_CONFIRM_FORMATTING_DIALOG} -- callbacks
 		do
 				-- The user wants to execute this format,
 				-- even though it's a long format.
-			if not (f.tool.text_window.changed) or else user_warned then
---					create mp.set_watch_cursor
---					execute_licensed (s)
-					f.format (s)
---					mp.restore
+			if f.tool.text_window.changed then
+				create csd.make_and_launch (f.tool, Current)
 			else
-				create csd.make_and_launch (f.tool, Current, Callback)
-				user_warned := True
+				process_format
 			end
 		end
 
@@ -63,13 +59,6 @@ feature {EB_CONFIRM_FORMATTING_DIALOG} -- callbacks
 		end
 
 feature -- Implementation
-
-	s: STONE
-
-	callback: EV_ARGUMENT1 [ANY] is
-		once
-			create Result.make (Void)
-		end
 
 	user_asked: BOOLEAN
 

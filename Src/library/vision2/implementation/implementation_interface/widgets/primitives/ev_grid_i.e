@@ -487,7 +487,6 @@ feature -- Status setting
 			a_row_count_positive: a_row_count >= 1
 		do
 			resize_row_lists (a_row_count)
-			fixme ("Implement correct reducing of row count")
 			recompute_vertical_scroll_bar
 			redraw_client_area
 		ensure
@@ -776,7 +775,7 @@ feature {NONE} -- Implementation
 		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
 		-- The actual ordering is queried from `visible_physical_column_indexes'
 
-feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]] is
 		-- Memory Array of individual row's data, row by row
@@ -931,6 +930,14 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 		
 	header: EV_HEADER
 		-- Header displayed at top of `Current'.
+		
+feature {EV_GRID_ITEM_I} -- Implementation
+
+	selection_color: EV_COLOR is
+			-- Color used for selected items.
+		once
+			create Result.make_with_8_bit_rgb (0, 0, 128)
+		end
 	
 feature {NONE} -- Drawing implementation
 
@@ -997,6 +1004,7 @@ feature {NONE} -- Drawing implementation
 			viewport.extend (drawable)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
+			drawable.pointer_button_press_actions.extend (agent grid_pressed)
 			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
 			update_scroll_bar_spacer
 		end
@@ -1394,6 +1402,19 @@ feature {NONE} -- Drawing implementation
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 		
+feature {NONE} -- Event handling
+
+	grid_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			--
+		local
+			pointed_item: EV_GRID_ITEM
+		do
+			pointed_item := drawer.item_at_position (a_x, a_y)
+			if a_button = 1 then
+				pointed_item.enable_select
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is

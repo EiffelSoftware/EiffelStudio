@@ -47,6 +47,9 @@ feature -- Properties
 	message: STRING
 			-- Specify syntax issue message.
 
+	line_number: INTEGER
+			-- Line number in `filename' where `start_position' is located.
+
 feature {NONE} -- Output
 
 	previous_line, current_line, next_line: STRING
@@ -55,9 +58,6 @@ feature {NONE} -- Output
 	start_line_pos: INTEGER
 			-- Start position of line in `filename' where `start_position' is located.
 			
-	line_number: INTEGER
-			-- Line number in `filename' where `start_position' is located.
-
 	initialize_output is
 			-- Set `previous_line', `current_line' and `next_line' with their proper values
 			-- taken from file `file_name'.

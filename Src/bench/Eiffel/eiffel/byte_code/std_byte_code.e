@@ -316,6 +316,8 @@ feature
 			bit_i: BIT_I;
 			creation_feature: FEATURE_I;
 			class_type: CLASS_TYPE;
+			written_class: CLASS_C;
+			written_type: CLASS_TYPE;
 			c_name: STRING;
 		do
 			if locals /= Void then
@@ -345,10 +347,16 @@ feature
 								class_type := cl_type_i.associated_class_type;
 								creation_feature := class_type.associated_class.creation_feature;
 								if creation_feature /= Void then
+									written_class := System.class_of_id (creation_feature.written_in);
+									if written_class.generics = Void then
+										written_type := written_class.types.first
+									else
+										written_type := written_class.meta_type
+																(class_type.type).associated_class_type;
+									end;
+									c_name := Encoder.feature_name (written_type.id, creation_feature.body_id);
 									generated_file.putstring (");%N%T");
-									c_name := Encoder.feature_name
-										(class_type.id, creation_feature.body_id);
-									generated_file.putstring (c_name.duplicate);
+									generated_file.putstring (c_name);
 									generated_file.putchar ('(');
 									context.local_var.print_register_by_name;
 								end;
@@ -385,10 +393,16 @@ feature
 						class_type := cl_type_i.associated_class_type;
 						creation_feature := class_type.associated_class.creation_feature;
 						if creation_feature /= Void then
+							written_class := System.class_of_id (creation_feature.written_in);
+							if written_class.generics = Void then
+								written_type := written_class.types.first
+							else
+								written_type := written_class.meta_type
+														(class_type.type).associated_class_type;
+							end;
+							c_name := Encoder.feature_name (written_type.id, creation_feature.body_id);
 							generated_file.putstring (");%N%T");
-							c_name := Encoder.feature_name
-								(class_type.id, creation_feature.body_id);
-							generated_file.putstring (c_name.duplicate);
+							generated_file.putstring (c_name);
 							generated_file.putchar ('(');
 							context.local_var.print_register_by_name;
 						end;

@@ -42,6 +42,11 @@ feature
 				files.resize (1, nb + Chunk);
 			end;
 			files.put (new_file, id);
+debug ("SERVER")
+	io.error.putstring ("Creating new file: ");
+	io.error.putint (id);
+	io.error.new_line;
+end;
 			last_computed_id := id;
 		end;
 
@@ -154,6 +159,11 @@ end;
 			end;
 			f.open;
 			put (f);
+debug ("SERVER")
+	io.error.putstring ("Opening file: E");
+	io.error.putint (f.id);
+	io.error.new_line;
+end;
 		ensure
 			is_open: f.is_open
 		end;

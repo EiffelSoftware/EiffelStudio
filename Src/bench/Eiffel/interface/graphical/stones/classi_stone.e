@@ -11,11 +11,11 @@ creation
 feature -- making
 
 	make (aclassi: CLASS_I) is
-            -- Copy all information from argument
-            -- OR KEEP A REFERENCE?
-      do
+			-- Copy all information from argument
+			-- OR KEEP A REFERENCE?
+		do
 			class_i := aclassi
-        end;
+		end;
  
 	class_i: CLASS_I;
 

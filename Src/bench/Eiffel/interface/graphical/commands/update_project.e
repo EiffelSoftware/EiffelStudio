@@ -169,6 +169,7 @@ feature {NONE}
 			file: UNIX_FILE
 		do
 			if not retried then
+				System.server_controler.wipe_out;
 				!!file.make (Project_file_name);
 				file.open_binary_write;
 				workbench.basic_store (file);

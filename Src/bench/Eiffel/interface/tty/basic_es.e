@@ -72,14 +72,14 @@ feature -- Input/Output
 		do
 			io.putstring ("Usage:%N%T");
 			io.putstring (argument (0));
-			io.putstring (" [-help|");
+			io.putstring (" [-help | ");
 			add_usage_special_cmds;
 			io.putstring ("%
-				%-loop|-clients class|-suppliers class%N%
-				%%T-flatshort [-troff] class|-flat class|-short [-troff] class%N%
-				%%T-descendants class|-ancestors class|%N%
-				%%T-aversions class feature|-dversions class feature|%N%
-				%%T-implementers class feature|-callers class feature|%N%
+				%-loop | -clients class | -suppliers class |%N%
+				%%T-flatshort [-troff] class | -flat class | -short [-troff] class |%N%
+				%%T-descendants class | -ancestors class |%N%
+				%%T-aversions class feature | -dversions class feature |%N%
+				%%T-implementers class feature | -callers class feature |%N%
 				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
 		end;
 

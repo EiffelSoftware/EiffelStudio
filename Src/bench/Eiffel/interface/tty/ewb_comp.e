@@ -112,6 +112,7 @@ feature -- Compilation
 				inspect
 					option
 				when 'c' then
+					Lace.set_file_name (Void)
 				when 's' then
 					io.putstring ("File name (`Ace' is the default): ");
 					io.readline;
@@ -135,7 +136,7 @@ feature -- Compilation
 						cmd.append (Default_ace_file);
 						cmd.append_character (' ');
 						cmd.append (file_name);
-						env_system (cmd);
+						Execution_environment.system (cmd);
 						Lace.set_file_name (file_name.duplicate);
 						edit (Lace.file_name);
 					end;
@@ -217,11 +218,12 @@ feature -- Compilation
 				if not uf.exists then
 						-- Request
 					!!cmd_string.make (200);
-					cmd_string.append ("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
+					cmd_string.append (Prelink_command_name);
+					cmd_string.append_character (' ');
 					cmd_string.append (Precompilation_driver);
-					cmd_string.append (" ");
+					cmd_string.append_character (' ');
 					cmd_string.append (arg2);
-					env_system (cmd_string);
+					Execution_environment.system (cmd_string);
 				end;
 			end;
 		end;

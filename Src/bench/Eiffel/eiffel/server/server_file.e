@@ -10,13 +10,13 @@ inherit
 			close as basic_close
 		end;
 	UNIX_FILE
-        rename
-            make as file_make
-        redefine
-            close
+		rename
+			make as file_make
+		redefine
+			close
 		select
 			close
-        end;
+		end;
 	IDABLE;
 	SHARED_FILES;
 	SHARED_SCONTROL;
@@ -103,6 +103,11 @@ end;
 				open_binary_read_write;
 			end;
 			is_open := True;
+debug ("SERVER")
+	io.error.putstring ("Opening file E");
+	io.error.putint (id);
+	io.error.new_line;
+end;
 		ensure
 			is_open
 		end;
@@ -112,8 +117,13 @@ end;
 		require else
 			is_open: is_open
 		do
-			file_close (file_pointer);
+			basic_close;
 			is_open := False;
+debug ("SERVER")
+	io.error.putstring ("Closing file E");
+	io.error.putint (id);
+	io.error.new_line;
+end;
 		ensure then
 			is_closed: not is_open
 		end;
@@ -133,7 +143,7 @@ end;
 			!!name.make (path.count + 6);
 			name.append (path);
 			name.append_character (Directory_separator);
-            name.append_character ('E');
+			name.append_character ('E');
 			name.append_integer (id);
 		end;
 

@@ -16,10 +16,39 @@ feature {NONE}
 		end;
 
 	Freeze_command_name: STRING is
+		local
+			c: CHARACTER
 		once
+			c := Directory_separator;
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bench/spec/$PLATFORM/bin/");
+			Result.append_character (c);
+			Result.append ("bench");
+			Result.append_character (c);
+			Result.append ("spec");
+			Result.append_character (c);
+			Result.append ("$PLATFORM");
+			Result.append_character (c);
+			Result.append ("bin");
+			Result.append_character (c);
 			Result.append (Finish_freezing_script);
+		end;
+
+	Prelink_command_name: STRING is
+		local
+			c: CHARACTER
+		once
+			c := Directory_separator;
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append_character (c);
+			Result.append ("bench");
+			Result.append_character (c);
+			Result.append ("spec");
+			Result.append_character (c);
+			Result.append ("$PLATFORM");
+			Result.append_character (c);
+			Result.append ("bin");
+			Result.append_character (c);
+			Result.append (Prelink_script);
 		end;
 
 	Default_ace_name: STRING is
@@ -30,9 +59,18 @@ feature {NONE}
 		end;
 
 	help_path: STRING is
+		local
+			c: CHARACTER
 		once
+			c := Directory_separator;
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bench/help/errors/")
+			Result.append_character (c);
+			Result.append ("bench");
+			Result.append_character (c);
+			Result.append ("help");
+			Result.append_character (c);
+			Result.append ("errors");
+			Result.append_character (c);
 		end;
 
 	bm_Breakpoint: PIXMAP is
@@ -362,10 +400,16 @@ feature {NONE}
 
 	pixmap_file_content (fn: STRING): PIXMAP is
 		local
-			full_path: STRING
+			full_path: STRING;
+			c: CHARACTER
 		do
+			c := Directory_separator;
 			full_path := Eiffel3_dir_name.duplicate;
-			full_path.append ("/bench/bitmaps/");
+			full_path.append_character (c);
+			full_path.append ("bench");
+			full_path.append_character (c);
+			full_path.append ("bitmaps");
+			full_path.append_character (c);
 			full_path.append (fn);
 			!!Result.make;
 			Result.read_from_file (full_path);

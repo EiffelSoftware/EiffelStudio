@@ -18,12 +18,7 @@ inherit
 	SHARED_EWB_ABBREV;
 	COMPARABLE;
 	LIC_EXITER;
-	EXECUTION_ENVIRONMENT
-		rename
-			put as env_put,
-			get as env_get,
-			system as env_system
-		end;
+	SHARED_EXEC_ENVIRONMENT
 
 
 feature -- Creation
@@ -520,13 +515,13 @@ feature
 			editor: STRING;
 			cmd: STRING;
 		do
-			editor := env_get ("EIF_EDITOR");
+			editor := Execution_environment.get ("EIF_EDITOR");
 			if editor /= Void then
 				!!cmd.make (0);
 				cmd.append (editor);
 				cmd.append_character (' ');
 				cmd.append (a_file);
-				env_system (cmd);
+				Execution_environment.system (cmd);
 			else
 				io.error.putstring ("The variable EIF_EDITOR is not set%N");
 			end;

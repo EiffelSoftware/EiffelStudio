@@ -8,13 +8,45 @@ feature {NONE}
 
 	Copy_cmd: STRING is "cp"
 
-	Default_Ace_file: STRING is "/bench/help/defaults/Ace.default"
+	Default_Ace_file: STRING is
+		local
+			c: CHARACTER
+		once
+			c := Directory_separator;
+			!!Result.make (0);
+			Result.append_character (c);
+			Result.append ("bench");
+			Result.append_character (c);
+			Result.append ("help");
+			Result.append_character (c);
+			Result.append ("defaults");
+			Result.append_character (c);
+			Result.append ("Ace.default");
+		end;
 
-	Default_precompiled_location: STRING is "$EIFFEL3/precompiled/spec/$PLATFORM/base"
+	Default_precompiled_location: STRING is
+		local
+			c: CHARACTER
+		once
+			c := Directory_separator;
+			!!Result.make (0);
+			Result.append ("$EIFFEL3");
+			Result.append_character (c);
+			Result.append ("precompiled");
+			Result.append_character (c);
+			Result.append ("spec");
+			Result.append_character (c);
+			Result.append ("$PLATFORM");
+			Result.append_character (c);
+			Result.append ("base.batch");
+		end;
 
 	Descriptor_suffix: STRING is "D"
 
-	Directory_separator: CHARACTER is '/';
+	Directory_separator: CHARACTER is
+		once
+			Result := c_dir_separator
+		end
 
 	Dot: CHARACTER is '.'
 
@@ -78,6 +110,8 @@ feature {NONE}
 
 	Makefile_SH: STRING is "Makefile.SH"
 
+	Prelink_script: STRING is "prelink"
+
 	Preobj: STRING is "preobj.o"
 
 	Updt: STRING is ".UPDT"
@@ -92,6 +126,15 @@ feature {NONE}
 		-- Maximum number of non encrypted characters during
 		-- code generation
 		--| The class FEATURE_I will be generated in the file 'feature<n>.c'
+
+feature {NONE} -- Externals
+
+	c_dir_separator: CHARACTER is
+		external
+			"C"
+		alias
+			"eif_dir_separator"
+		end;
 
 end
 

@@ -225,12 +225,22 @@ feature {NONE} -- Initialization
 					end
 					l_feat := l_deferred
 				else
-					if l_member.has_return_value then
-						create {EXTERNAL_FUNC_I} l_external
+					if l_member.is_artificially_added then
+							-- Special care of `|', `to_integer' and `from_integer' of
+							-- enum classes which have to be non-external feature.
+						if l_member.has_return_value then
+							create {DYN_FUNC_I} l_feat
+						else
+							create {DYN_PROC_I} l_feat
+						end
 					else
-						create {EXTERNAL_I} l_external
+						if l_member.has_return_value then
+							create {EXTERNAL_FUNC_I} l_external
+						else
+							create {EXTERNAL_I} l_external
+						end
+						l_feat := l_external
 					end
-					l_feat := l_external
 				end
 
 					-- Add creation routine to `creators' if any.

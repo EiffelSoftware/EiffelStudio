@@ -132,7 +132,7 @@ feature
 	create_edit_buttons is do end;
 
 	close_windows is
-			-- Close search window
+			-- Close sub-windows.
 		do
 			search_command.close;
 			change_font_command.close

@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 				not Result or i = count + 1
 			loop
 				select_transaction (i)
-				q.call ([])
+				q.call (Void)
 				Result := Result and q.last_result
 				i := i + 1
 			end
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 				i = count + 1 or (error_stops and transaction.error)
 			loop
 				select_transaction (i)
-				cmd.call ([])
+				cmd.call (Void)
 				i := i + 1
 			end
 			select_transaction (idx)

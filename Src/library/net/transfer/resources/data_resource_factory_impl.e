@@ -90,7 +90,7 @@ feature -- Status setting
 							-- Because we know that the requested service is
 							-- supported.
 					end
-				url_function.call([])
+				url_function.call(Void)
 				url := url_function.last_result
 			else
 				address := Void
@@ -118,8 +118,7 @@ feature -- Basic operations
 		require
 			correct_address: is_address_correct
 		do
-			resource_function.call ([])
-			resource:= resource_function.last_result
+			resource := resource_function.item (Void)
 		ensure
 			resource_created: resource /= Void
 		end

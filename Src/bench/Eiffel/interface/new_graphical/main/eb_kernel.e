@@ -12,7 +12,6 @@ inherit
 	EIFFEL_ENV
 
 	ISED_X_SLAVE
---	MEL_COMMAND
 	NEW_EB_CONSTANTS
 
 	ARGUMENTS
@@ -91,6 +90,9 @@ feature -- Initialization
 --								create new_project.make_from_ebench (Project_tool, argument (create_project_index + 1))
 --							end
 --						end
+--| FIXME
+--| Christophe, 26 oct 1999
+--| Options for launching es4. Not implemented yet.
 						create graphic_compiler.make
 					else
 						Eiffel_project.set_batch_mode (True)
@@ -128,6 +130,7 @@ feature -- Properties
 
 	retried: BOOLEAN
 			-- For rescues
+
 feature {NONE} -- Initialization
 
 --	init_toolkit: TOOLKIT_IMP is
@@ -158,5 +161,11 @@ feature -- Communications
 				-- the `Listen_to_const' pipe.
 --			app_context.set_input_read_callback (listen_to, Current, Void)
 	        end
+--| FIXME
+--| Christophe, 26 oct 1999
+--| There is no equivalent of this function implemented yet.
+--| So es4 cannot listen to ebench yet. This has to be done
+--| when the event system is made.
+
 
 end -- class EB_KERNEL

@@ -139,8 +139,7 @@ feature {NONE} -- Implementation
 						elseif 
 							visitor.is_structure_pointer or 
 							visitor.is_interface_pointer or
-							visitor.is_coclass_pointer or
-							visitor.is_basic_type_ref 
+							visitor.is_coclass_pointer
 						then
 							Result.append (visitor.c_type)
 						else

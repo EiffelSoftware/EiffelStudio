@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 			variant_field_names.put (Variant_pdispval, Vt_dispatch)
 			variant_field_names.put (Variant_parray, Vt_array)
 			variant_field_names.put (Variant_pbval, binary_or (Vt_byref, Vt_ui1))
-			variant_field_names.put (Variant_pival, binary_or (Vt_byref, Vt_i4))
+			variant_field_names.put (Variant_pival, binary_or (Vt_byref, Vt_i2))
 			variant_field_names.put (Variant_plval, binary_or (Vt_byref, Vt_i4))
 			variant_field_names.put (Variant_pfltval, binary_or (Vt_byref, Vt_r4))
 			variant_field_names.put (Variant_pdblval, binary_or (Vt_byref, Vt_r8))

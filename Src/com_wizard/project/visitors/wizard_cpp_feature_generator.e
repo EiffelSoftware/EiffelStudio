@@ -18,17 +18,12 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_WRITER_DICTIONARY
-		export 
-			{NONE} all
-		end
-
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
 
-	WIZARD_COMPONENT_C_GENERATOR
+	WIZARD_GUID_GENERATOR
 		export
 			{NONE} all
 		end

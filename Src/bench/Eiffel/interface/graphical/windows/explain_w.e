@@ -102,7 +102,7 @@ feature -- Window Properties
 	
 feature {NONE} -- Attributes; Forms And Holes
 
-	hole: EXPLAIN_HOLE;
+	hole: EXPLAIN_CMD;
 			-- Hole charaterizing current
 
 end -- class EXPLAIN_W

@@ -86,11 +86,11 @@ feature -- Drag source/Hole properties
 
 feature -- Formats
 
-	last_format: FORMATTER is
-			-- Last format used.
-		do
-			Result := tool.last_format
-		end;
+	--last_format: FORMATTER is
+			---- Last format used.
+		--do
+			--Result := tool.last_format
+		--end;
 
 	history: STONE_HISTORY is
 			-- History list for Current.
@@ -104,15 +104,15 @@ feature -- Formats
 			set_read_only	
 		end;
 
-	set_last_format (f: like last_format) is
-			-- Assign `f' to `last_format'.
-		require	
-			format_exists: f /= Void
-		do
-			tool.set_last_format (f)
-		ensure
-			last_format = f
-		end;
+	--set_last_format (f: like last_format) is
+			---- Assign `f' to `last_format'.
+		--require	
+			--format_exists: f /= Void
+		--do
+			--tool.set_last_format (f)
+		--ensure
+			--last_format = f
+		--end;
 
 feature -- Properties
 

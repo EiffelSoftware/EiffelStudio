@@ -11,8 +11,7 @@ inherit
 
 	EB_BUTTON_HOLE
 		redefine
-			symbol, stone_type, name,
-			icon_symbol, full_symbol
+			stone_type
 		end
 
 creation
@@ -21,29 +20,6 @@ creation
 	
 feature  -- Properties
 
-	symbol: PIXMAP is
-			-- Icon for the explain tool
-		once
-			Result := bm_Explain
-		end;
-
-	full_symbol: PIXMAP is
-			-- Icon for the class tool
-		once
-			Result := bm_Explain_dot
-		end;
-
-	icon_symbol: PIXMAP is
-			-- Icon for the explain tool
-		once
-			Result := bm_Explain_icon
-		end;
-
-	name: STRING is
-		do
-			Result := l_Explain
-		end;
-	
 	stone_type: INTEGER is
 			-- Type of compatible stone.
 		do

@@ -12,8 +12,7 @@ inherit
 
 	EB_BUTTON_HOLE
 		redefine
-			compatible, symbol, stone_type, name, icon_symbol,
-			full_symbol
+			compatible, stone_type
 		end
 
 creation
@@ -22,29 +21,11 @@ creation
 
 feature -- Properties
 
-	symbol: PIXMAP is
-			-- Icon for the class tool
-		once
-			Result := bm_Class
-		end;
-
-	full_symbol: PIXMAP is
-			-- Icon for the class tool
-		once
-			Result := bm_Class_dot
-		end;
-
-	icon_symbol: PIXMAP is
-			-- Icon for the class tool
-		once
-			Result := bm_Class_icon
-		end;
-
 	stone_type: INTEGER is
 		do
 			Result := Class_type
 		end;
-	
+
 feature {NONE} -- Properties
 
 	compatible (dropped: STONE): BOOLEAN is
@@ -53,11 +34,6 @@ feature {NONE} -- Properties
 			Result := dropped /= Void and then
 				((dropped.stone_type = Class_type) or 
 				else (dropped.stone_type = Routine_type))
-		end;
-
-	name: STRING is
-		do
-			Result := l_Class
 		end;
 
 end -- class CLASS_HOLE

@@ -15,7 +15,7 @@ inherit
 			make as normal_create,
 			reset as old_reset
 		redefine
-			hole, build_format_bar, text_window,
+			hole, hole_button, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, set_default_size,
 			resize_action, stone, stone_type,
@@ -25,7 +25,7 @@ inherit
 
 	BAR_AND_TEXT
 		redefine
-			hole, build_format_bar, text_window,
+			hole, hole_button, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
 			set_default_size, make, resize_action,
@@ -67,7 +67,7 @@ feature -- Resetting
 			-- Reset the window contents
 		do
 			old_reset;
-			class_hole.set_empty_symbol;
+			-- class_hole.set_empty_symbol;
 			change_class_command.clear;
 			change_routine_command.clear;
 		end;
@@ -103,7 +103,7 @@ feature -- Stone updating
 
 	process_feature (a_stone: FEATURE_STONE) is
 		do
-			last_format.execute (a_stone);
+			text_window.last_format_2.execute (a_stone);
 			history.extend (a_stone);
 			update_edit_bar
 		end;
@@ -163,7 +163,7 @@ feature -- Graphical Interface
 		do
 			synchronise_stone;
 			if stone = Void then
-				class_hole.set_empty_symbol;
+				-- class_hole.set_empty_symbol;
 				change_class_command.clear;
 				change_routine_command.clear
 			else
@@ -220,20 +220,23 @@ feature {ROUTINE_TEXT} -- Forms And Holes
 
 	change_routine_form: FORM;
 
-	hole: ROUTINE_HOLE;
-			-- Hole caraterizing current
+	hole: ROUTINE_CMD;
+			-- Hole charaterizing Current.
 
-	class_hole: ROUT_CLASS_HOLE;
+	hole_button: ROUTINE_HOLE;
+			-- Hole characterizing Current.
+
+	class_hole: ROUT_CLASS_CMD;
 			-- Hole for version of routine for a particular class.
 
-	stop_hole: DEBUG_STOPIN;
+	stop_hole: DEBUG_STOPIN_CMD;
 			-- To set breakpoints
 
 feature {ROUTINE_TEXT} -- Formats
 
 	showroutclients_frmt_holder: FORMAT_HOLDER;
 
-	showhomonyms_command: SHOW_HOMONYMS;
+	showhomonyms_frmt_holder: FORMAT_HOLDER;
 
 	showpast_frmt_holder: FORMAT_HOLDER;
 
@@ -350,7 +353,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			stop_cmd: SHOW_BREAKPOINTS;
 			stop_button: EB_BUTTON;
 			text_cmd: SHOW_TEXT;
-			text_button: EB_BUTTON
+			text_button: EB_BUTTON;
+			homonym_cmd: SHOW_HOMONYMS;
+			homonym_button: EB_BUTTON
 		do
 			!! text_cmd.make (text_window);
 			!! text_button.make (text_cmd, format_bar);
@@ -388,15 +393,17 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_top (future_button, 0);
 			format_bar.attach_left_widget (past_button, future_button, 0);
 
-			!! showhomonyms_command.make (format_bar, text_window);
-			format_bar.attach_top (showhomonyms_command, 0);
-			format_bar.attach_left_widget (future_button, showhomonyms_command, 0);
+			!! homonym_cmd.make (text_window);
+			!! homonym_button.make (homonym_cmd, format_bar);
+			!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button);
+			format_bar.attach_top (homonym_button, 0);
+			format_bar.attach_left_widget (future_button, homonym_button, 0);
 
 			!! stop_cmd.make (text_window);
 			!! stop_button.make (stop_cmd, format_bar);
 			!! showstop_frmt_holder.make (stop_cmd, stop_button);
 			format_bar.attach_top (stop_button, 0);
-			format_bar.attach_left_widget (showhomonyms_command, stop_button, 10);
+			format_bar.attach_left_widget (homonym_button, stop_button, 10);
 		end;
 
 	build_bar is
@@ -409,7 +416,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			change_font_cmd: CHANGE_FONT;
 			change_font_button: EB_BUTTON
 			search_cmd: SEARCH_STRING;
-			search_button: EB_BUTTON
+			search_button: EB_BUTTON;
+			class_hole_button: ROUT_CLASS_HOLE;
+			class_hole_holder: HOLE_HOLDER;
+			stop_hole_button: DEBUG_STOPIN;
+			stop_hole_holder: HOLE_HOLDER
 		do
 			edit_bar.set_fraction_base (31);
 
@@ -418,15 +429,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_top (hole_form, 0);
 			edit_bar.attach_bottom (hole_form, 0);
 
-			!! hole.make (hole_form, Current);
-			hole_form.attach_left (hole, 0);
-			hole_form.attach_top (hole, 0);
-			!! class_hole.make (hole_form, Current);
-			hole_form.attach_left_widget (hole, class_hole, 0);
-			hole_form.attach_top (class_hole, 0);
-			!! stop_hole.make (hole_form, Current);
-			hole_form.attach_left_widget (class_hole, stop_hole, 0);
-			hole_form.attach_top (stop_hole, 0);
+			!! hole.make (text_window);
+			!! hole_button.make (hole, hole_form);
+			!! hole_holder.make (hole, hole_button);
+			hole_form.attach_left (hole_button, 0);
+			hole_form.attach_top (hole_button, 0);
+			!! class_hole.make (text_window);
+			!! class_hole_button.make (class_hole, hole_form);
+			!! class_hole_holder.make (class_hole, class_hole_button);
+			hole_form.attach_left_widget (hole_button, class_hole_button, 0);
+			hole_form.attach_top (class_hole_button, 0);
+			!! stop_hole.make (text_window);
+			!! stop_hole_button.make (stop_hole, hole_form);
+			!! stop_hole_holder.make (stop_hole, stop_hole_button);
+			hole_form.attach_left_widget (class_hole_button, stop_hole_button, 0);
+			hole_form.attach_top (stop_hole_button, 0);
 
 			!! change_routine_form.make (new_name, edit_bar);
 			edit_bar.attach_left_position (change_routine_form, 11);

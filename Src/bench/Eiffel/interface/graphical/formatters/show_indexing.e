@@ -20,12 +20,12 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
+	make (a_text_window: TEXT_WINDOW) is 
 		do 
-			init (c, a_text_window)
+			init (a_text_window)
 		end; 
 
-feature -- Porperties
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 

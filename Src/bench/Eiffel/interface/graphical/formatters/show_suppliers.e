@@ -9,7 +9,7 @@ class SHOW_SUPPLIERS
 
 inherit
 
-	FORMATTER_2
+	FORMATTER
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end

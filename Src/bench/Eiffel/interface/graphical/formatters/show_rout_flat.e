@@ -9,7 +9,7 @@ class SHOW_ROUT_FLAT
 
 inherit
 
-	FORMATTER_2
+	FORMATTER
 		redefine
 			dark_symbol, display_temp_header
 		end;

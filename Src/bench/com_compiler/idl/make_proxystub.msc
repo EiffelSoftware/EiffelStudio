@@ -1,0 +1,31 @@
+# ISE.CompilerPS.dll - Makefile for Microsoft C
+
+CC = cl
+LINKER = link
+OUTPUT_CMD = -Fo
+CFLAGS = /ML /W0 /GD /Ox /D "REGISTER_PROXY_DLL" /D "_WIN32_DCOM" /D "_WIN32_WINNT=0x0500" /D WIN32 /YX /c
+#CFLAGS = /ML /W0 /GD /Zi /D "REGISTER_PROXY_DLL" /D "_WIN32_DCOM" /D "_WIN32_WINNT=0x0500" /D WIN32 /YX /c
+LINK_FLAGS = /DLL /RELEASE /INCREMENTAL:NO
+#LINK_FLAGS = /DLL /DEBUG /INCREMENTAL:NO
+
+OBJ = ISE.CompilerPS_data.obj \
+ISE.CompilerPS_proxy.obj \
+ISE.CompilerPS_iid.obj \
+
+all:: ISE.CompilerPS.dll
+
+ISE.CompilerPS.dll: $(OBJ)
+  if exist $@ del $@
+  $(LINKER) $(LINK_FLAGS) -DEF:ISE.CompilerPS.def -OUT:$@ $(OBJ) kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib uuid.lib oleaut32.lib
+
+.c.obj:
+  $(CC) $(CFLAGS) $<
+
+ISE.CompilerPS_iid.obj: ise.compilerps_iid.c
+  $(CC) $(CFLAGS) $(OUTPUT_CMD)$@ $?
+
+ISE.CompilerPS_data.obj: ise.compilerps_data.c
+  $(CC) $(CFLAGS) $(OUTPUT_CMD)$@ $?
+  
+ISE.CompilerPS_proxy.obj: ise.compilerps_proxy.c
+  $(CC) $(CFLAGS) $(OUTPUT_CMD)$@ $?

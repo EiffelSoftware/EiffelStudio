@@ -30,6 +30,16 @@ feature {NONE} -- Initialization
 			Precursor (an_interface)
 			wel_make
 		end
+		
+feature {EV_ANY_I} -- Status report
+
+	parent: EV_WINDOW is
+			-- Parent of `Current'.
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface					
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -228,6 +238,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/06/21 18:51:42  rogers
+--| Implemented parent.
+--|
 --| Revision 1.11  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

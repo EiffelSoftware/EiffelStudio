@@ -60,6 +60,7 @@ feature -- Update
 
 				-- Project directory
 			!! project_dir.make (project_name);
+			Project_directory.set_directory (project_name)
 
 			if not project_dir.base_exists then
 				temp := Warning_messages.w_Directory_not_exist (project_dir.name)
@@ -105,11 +106,6 @@ feature -- Update
 			valid_project_name: project_name /= Void and then 
 							not project_name.empty
 		local
-			workb: WORKBENCH_I;
-			init_work: INIT_WORKBENCH;
-			project_eif_file: RAW_FILE;
-			precomp_r: PRECOMP_R;
-			extendible_r: EXTENDIBLE_R;
 			temp: STRING;
 			project_dir: PROJECT_DIRECTORY;
 		do
@@ -168,8 +164,6 @@ feature -- Update
 		require
 			New_project: project_is_new
 		local
-			workb: WORKBENCH_I;
-			init_work: INIT_WORKBENCH;
 			file: PLAIN_TEXT_FILE
 		do
 			if is_loop then

@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"Displays the system statistics in output_window.";
-	date: "$Date$";
+	description: "Displays the system statistics in output_window."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class EWB_STATISTICS
+class
+	EWB_STATISTICS
 
 inherit
-
 	EWB_FILTER_SYSTEM
 		rename
 			name as statistics_cmd_name, 
@@ -22,6 +20,6 @@ feature {NONE} -- Implementation
 			-- Associated system command to be executed
 		do
 			!! Result.make
-		end;
+		end
 
 end -- class EWB_STATISTICS

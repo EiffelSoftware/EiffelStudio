@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
         local
             cmd: E_STORE_CASE_INFO
         do
-			!! cmd.make (output_window, Reverse_engineering_window)
+			!! cmd.make (output_window, Project_tool.progress_dialog)
 			cmd.execute;
         end;
 

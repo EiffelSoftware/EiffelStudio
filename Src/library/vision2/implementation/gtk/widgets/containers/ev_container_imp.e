@@ -181,6 +181,7 @@ feature -- Status setting
 			r ?= w.implementation
 			if r /= Void then
 				set_radio_group (C.g_slist_remove (radio_group, r.c_object))
+				C.gtk_radio_button_set_group (r.c_object, Default_pointer)
 				if r.is_selected then
 					if radio_group /= Default_pointer then
 						C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
@@ -246,6 +247,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/15 01:19:40  brendel
+--| Fixed bug in removal of radio button.
+--|
 --| Revision 1.29  2000/03/03 21:24:00  brendel
 --| Fixed bug in connect_radio_groups. When implementation of `a_container' is
 --| Void, target and argument of call are reversed, because on that class,

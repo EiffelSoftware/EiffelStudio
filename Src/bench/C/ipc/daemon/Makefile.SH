@@ -58,7 +58,6 @@ OBJECTS =  \$(OBJ)
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
@@ -88,7 +87,9 @@ LIBDIR = ../shared
 LIBNAME = libipc.a
 LIBARCH = $(LIBDIR)/$(LIBNAME)
 
-DPFLAGS = -I$(TOP) -I$(LIBDIR)
+LIBRUN = ../../run-time
+
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN)
 CFLAGS = $(DPFLAGS)
 LDFLAGS = $(LIBARCH)
 
@@ -144,12 +145,12 @@ local_clobber:: local_realclean
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \
-		if test -f Makefile.SH; then \
-			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
-			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
-		fi; \
-		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
-		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
 	else touch $@; exit 0; fi
 
 Makefile: Makefile.SH

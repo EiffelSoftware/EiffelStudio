@@ -143,7 +143,7 @@ feature -- Basic operations
 				undo_exhausted_actions.call (Void)
 			end
 		ensure
-			updated: undo_list.index = old undo_list.index - 1
+			updated_if_not_wiped_out: not undo_list.is_empty implies undo_list.index = old undo_list.index - 1
 		end
 
 	redo is
@@ -158,7 +158,7 @@ feature -- Basic operations
 				redo_exhausted_actions.call (Void)
 			end
 		ensure
-			updated: undo_list.index = old undo_list.index + 1
+			updated_if_not_wiped_out: not undo_list.is_empty implies undo_list.index = old undo_list.index + 1
 		end
 
 feature -- Element change

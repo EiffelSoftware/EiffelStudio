@@ -233,13 +233,11 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			-- automatically and insert for any object
 			-- that was not named by the user.
 		local
-			application_element: XML_ELEMENT
+			application_element, window_element,
+			new_type_element, directory_element: XML_ELEMENT
 			toe_document: TOE_DOCUMENT
-			window_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			window_element, directory_element: XML_ELEMENT
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
-			new_type_element: XML_ELEMENT
-			window_selector_layout, current_layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			object_count := object_handler.objects.count
 			objects_written := 0

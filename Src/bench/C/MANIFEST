@@ -147,6 +147,7 @@ liman/client/alive.c
 liman/client/auth.c
 liman/client/auth.h
 liman/client/bye.c
+liman/client/eclient.c
 liman/client/eiffel.c
 liman/client/init.c
 liman/client/lices.c

@@ -21,6 +21,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_TYPE_ID
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -328,6 +333,7 @@ feature {NONE} -- Implementation
 		local
 			writer: CACHE_WRITER
 		do
+			set_assembly_id_offset (Default_offset)
 			if ass/= Void then
 				create writer
 				if not no_output then
@@ -360,6 +366,7 @@ feature {NONE} -- Implementation
 			des: EIFFEL_XML_DESERIALIZER
 			local_info_path: STRING
 		do
+			set_assembly_id_offset (Local_offset)
 			reconsume := True
 			local_info_path := destination_path.clone (destination_path)
 			if local_info_path.item (local_info_path.count) /= '\' then

@@ -89,7 +89,11 @@ feature {NONE} -- Initialization
 			shared_preferences: GB_SHARED_PREFERENCES
 			preferences_initialized: BOOLEAN
 		do
-				-- Ensure that the preferences are initialixed correctly.
+			
+				-- Ensure that the preferences are initialized correctly.
+			if command_line.argument_array.count = 4 or command_line.argument_array.count = 7 then
+				system_status.enable_wizard_system
+			end
 			create shared_preferences
 			preferences_initialized := preferences.initialized
 
@@ -131,7 +135,6 @@ feature {NONE} -- Initialization
 				-- 2. "visualstudio_project" which informs Build it has been launched from VS.
 				-- 3. Full path to location of BPR file.
 				if (command_line.argument_array @ 2).as_lower.is_equal (Visual_studio_project_argument) then
-					system_status.enable_wizard_system
 					create wizard_manager.make_and_launch_as_modify_wizard (visual_studio_information.Visual_studio_pixmap_location)					
 				end
 			end
@@ -167,7 +170,6 @@ feature {NONE} -- Initialization
 	
 						-- And set them as the build settings.
 					system_status.set_current_project (project_settings)
-					system_status.enable_wizard_system
 					create wizard_manager.make_and_launch ((command_line.argument_array @ 4).to_integer)
 				end
 			end

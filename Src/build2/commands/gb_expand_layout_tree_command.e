@@ -46,10 +46,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	tool_bar_button: EV_TOOL_BAR_BUTTON is
-			--
-		local
-			pixamps: GB_SHARED_PIXMAPS
-			top_window: EV_TITLED_WINDOW
+			-- `Result' is a tool bar button that when selected, expands `layout_constructor'.
 		do
 			create Result
 			Result.select_actions.extend (agent execute)

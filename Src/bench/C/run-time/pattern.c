@@ -260,7 +260,7 @@ rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int 
 		
 		/* Compute the minimum delta shift value */
 		for (i = 0, s = plen + 1; i < fuzzy; i++) {
-			m = darray[i][*(tx + (plen - i))];
+			m = darray[i][(int) *(tx + (plen - i))];
 			if (m < s)
 				s = m;
 		}

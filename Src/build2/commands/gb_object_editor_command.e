@@ -107,7 +107,5 @@ feature {NONE} -- Implementation
 				create dialog.make_with_text (Object_editor_button_warning)
 				dialog.show_modal_to_window (main_window)
 			end
-			
-			
 
 end -- class GB_OBJECT_EDITOR_COMMAND

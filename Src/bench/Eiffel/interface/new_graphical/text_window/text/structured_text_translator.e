@@ -246,17 +246,6 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_exported_feature_name_text (t: EXPORTED_FEATURE_NAME_TEXT) is
-		local
-			tok: EDITOR_TOKEN_FEATURE
-			stone: EXPORTED_FEATURE_NAME_STONE
-		do
-			create tok.make (t.image, tab_size_cell)
-			create stone.make (t.image, t.e_class, t.exported_name)
-			tok.set_pebble (stone)
-			last_line.append_token (tok)
-		end
-
 	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
 		local

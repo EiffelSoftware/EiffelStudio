@@ -1192,9 +1192,9 @@ feature {NONE} -- Implementation
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....
 					check
-						has_basic: basic_type_mapping.has (l_type_name)
+						has_basic: lace_class.basic_type_mapping.has (l_type_name)
 					end
-					l_result := basic_type_mapping.item (l_type_name)
+					l_result := lace_class.basic_type_mapping.item (l_type_name)
 				end
 				
 				if l_result = Void then
@@ -1223,28 +1223,6 @@ feature {NONE} -- Implementation
 			result_not_void: force_compilation implies Result /= Void
 		end
 	
-	basic_type_mapping: HASH_TABLE [CLASS_I, STRING] is
-			-- Mapping between name of basic class in mscorlib and Eiffel CLASS_I.
-		once
-			create Result.make (20)
-			Result.put (System.boolean_class, "System.Boolean")
-			Result.put (System.character_class, "System.Char")
-			Result.put (System.integer_8_class, "System.SByte")
-			Result.put (System.integer_16_class, "System.Int16")
-			Result.put (System.integer_32_class, "System.Int32")
-			Result.put (System.integer_64_class, "System.Int64")
-			Result.put (System.natural_8_class, "System.Byte")
-			Result.put (System.natural_16_class, "System.UInt64")
-			Result.put (System.natural_32_class, "System.UInt32")
-			Result.put (System.natural_64_class, "System.UInt64")
-			Result.put (System.pointer_class, "System.IntPtr")
-			Result.put (System.pointer_class, "System.UIntPtr")
-			Result.put (System.real_32_class, "System.Single")
-			Result.put (System.real_64_class, "System.Double")
-		ensure
-			basic_type_mapping_not_void: Result /= Void
-		end
-
 	set_constant_value (a_constant: CONSTANT_I; a_external_type: CL_TYPE_A; a_value: STRING) is
 			-- Set `value' of `a_constant' with data of `a_value' using `a_external_type'
 			-- to find out type of constant.

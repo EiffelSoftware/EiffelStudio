@@ -43,8 +43,6 @@ feature {NONE} -- Initialization
 			-- C memory area is not initialized.
 		require
 			positive_length: a_length >= 0
-		local
-			s: STRING
 		do
 			item := c_calloc (1, a_length + 1)
 			if item = default_pointer then

@@ -61,6 +61,7 @@ feature -- Execution features
 				current_widget.set_height(480)
 				current_widget.set_minimum_width(400)
 				current_widget.set_minimum_height(320)
+				current_widget.set_icon_name ("icon")
 
 				-- We create the action window ansset the button
 				-- sensitive again

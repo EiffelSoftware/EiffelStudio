@@ -29,7 +29,7 @@ inherit
 
 	BAR_AND_TEXT
 		redefine
-			hole, hole_button, build_format_bar, 
+			hole, build_format_bar, 
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
 			set_default_size, resize_action,
@@ -64,6 +64,7 @@ feature -- Initialization
 			show_menus := False;
 			make_form (a_form);
 			init_text_window;
+			set_composite_attributes (a_form)
 		end;
 
 feature -- Update Resources
@@ -387,20 +388,16 @@ feature -- Graphical Interface
 				build_menus
 			end;
 
-			!! toolbar_parent.make (new_name, global_form, Current);
-			toolbar_parent.set_column_layout;
-			toolbar_parent.set_free_size;
-			!! popup_cmd.make (Current);
-			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+			create_toolbar_parent (global_form);
 
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
 			build_bar;
-			!! toolbar_separator.make (new_name, toolbar_parent);
-			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if show_menus then
-				fill_menus
+				fill_menus;
+				build_toolbar_menu
 			end;
 			set_last_format (default_format);
 

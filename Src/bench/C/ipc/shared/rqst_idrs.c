@@ -45,8 +45,8 @@ rt_private struct idr_discrim u_Request[] = {
 	{ MOVE, idr_Opaque },
 	{ BREAK, idr_Opaque },
 	{ LOAD, idr_Opaque },
-	{ BYTECODE, idr_Opaque }, 
-	{ RESUME, idr_Opaque }, 
+	{ BYTECODE, idr_Opaque },
+	{ RESUME, idr_Opaque },
 	{ DUMPED, idr_Dumped },
 	{ DUMP, idr_Opaque },
 	{ INSPECT, idr_Opaque },
@@ -155,7 +155,7 @@ struct item *exi;
 			exi = (struct item *) malloc (sizeof (struct item));
 			bzero (exi, sizeof (struct item));
 			ext -> dmpu.dmpu_item = exi;
-		}	
+		}
 		if (exi == 0)
 			return 0; /* lack of memory. Abort */
 		return idr_Item (idrs, exi);
@@ -175,4 +175,3 @@ rt_public bool_t idr_Request(IDR *idrs, Request *ext)
 {
 	return idr_union(idrs, &ext->rq_type, (char *) (&ext->rqu), u_Request, idr_void);
 }
-

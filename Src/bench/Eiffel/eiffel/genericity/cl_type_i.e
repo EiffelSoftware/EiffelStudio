@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_IL_CASING
+		export
+			{NONE} all
+		end
+
 create
 	make
 	
@@ -82,7 +87,7 @@ feature -- Access
 			Result.set_is_separate (is_separate)
 		end
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Class name of current type.
 		local
 			l_class_c: like base_class
@@ -91,7 +96,7 @@ feature -- Access
 			if l_class_c.is_external then
 				Result := clone (base_class.external_class_name)
 			else
-				Result := clone (base_class.name)
+				Result := internal_il_type_name (clone (base_class.name), a_prefix)
 			end
 		end
 
@@ -476,5 +481,35 @@ feature -- Output
 			end
 			Result.append (base_class.name_in_upper)
 		end
-	
+
+feature {NONE} -- Implementation
+
+	internal_il_type_name (a_base_name, a_prefix: STRING): STRING is
+			-- Full type name of `a_base_name' using `a_prefix' in IL code generation
+			-- with namespace specification
+		require
+			a_base_name_not_void: a_base_name /= Void
+		local
+			l_name: STRING
+		do
+			Result := a_base_name
+			l_name := base_class.lace_class.actual_namespace
+			if a_prefix /= Void then
+				if l_name.is_empty then
+					l_name := a_prefix + "."
+				else
+					l_name := il_casing.namespace_casing (l_name) + "." + a_prefix + "."
+				end
+			else
+				if not l_name.is_empty then					
+					l_name := il_casing.namespace_casing (l_name) + "."
+				end
+			end
+			Result := l_name + il_casing.pascal_casing (Result,
+				feature {IL_CASING_CONVERSION}.upper_case)
+		ensure
+			internal_il_type_name_not_void: Result /= Void
+			internal_il_type_name_not_empty: not Result.is_empty
+		end
+
 end

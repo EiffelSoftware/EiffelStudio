@@ -55,10 +55,10 @@ feature
 			Result.set_is_true_expanded (is_true_expanded)
 		end
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Class name of current type.
 		do
-			Result := clone (base_class.name)
+			Result := internal_il_type_name (clone (base_class.name), a_prefix)
 		end
 
 feature -- Generic conformance

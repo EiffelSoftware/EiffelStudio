@@ -30,10 +30,10 @@ feature -- Comparison
 
 feature -- Access
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class
 		do
-			Result := clone (true_generics.item (1).il_type_name)
+			Result := clone (true_generics.item (1).il_type_name (a_prefix))
 			Result.append ("[]")
 		end
 
@@ -58,7 +58,6 @@ feature -- Access
 			deep_il_element_type_not_void: Result /= Void
 		end
 
-		
 feature -- Duplication
 
 	duplicate: NATIVE_ARRAY_TYPE_I is

@@ -67,7 +67,7 @@ feature -- Status report
 			end
 		end
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		do
 			Result := internal_name

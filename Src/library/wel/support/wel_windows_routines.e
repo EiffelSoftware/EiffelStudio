@@ -95,9 +95,20 @@ feature -- Basic operations
 feature -- Status report
 
 	key_state (virtual_key: INTEGER): BOOLEAN is
-			-- Is `virtual_key' down?
+		obsolete "Use key_down or key_locked instead"
 		do
-			Result := cwin_get_key_state (virtual_key)
+		end
+
+	key_down (virtual_key: INTEGER): BOOLEAN is
+			--Is 'virtual' key pressed
+		do
+			Result := cwel_key_down (virtual_key)
+		end
+
+	key_locked (virtual_key: INTEGER): BOOLEAN is
+			--Is 'virtual' key locked
+		do
+			Result := cwel_key_locked (virtual_key)
 		end
 
 	tick_count: INTEGER is
@@ -205,10 +216,18 @@ feature {NONE} -- Externals
 
 	cwin_get_key_state (virtual_key: INTEGER): BOOLEAN is
 			-- SDK GetKeyState
+		obsolete "Use cwel_key_down or cwel_key_locked"
+		do
+		end
+
+	cwel_key_down (virtual_key: INTEGER): BOOLEAN is
 		external
-			"C [macro <wel.h>] (int): EIF_BOOLEAN"
-		alias
-			"GetKeyState"
+			"C [macro <wel_windows_routines.h>] (int): EIF_BOOLEAN"
+		end
+
+	cwel_key_locked (virtual_key: INTEGER): BOOLEAN is
+		external
+			"C [macro <wel_windows_routines.h>] (int): EIF_BOOLEAN"
 		end
 
 	cwin_output_debug_string (s: POINTER) is

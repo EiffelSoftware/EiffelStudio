@@ -88,7 +88,7 @@ rt_private int init_argv(void)
 	if (argv == (char **) 0)		/* Not enough memory */
 		return -1;
 
-	bzero(argv, size);				/* Ensure all slots are null pointers */
+	memset (argv, 0, size);				/* Ensure all slots are null pointers */
 	argc = ARGV_NUMBER;				/* Record dynamic size of argv[] */
 	where = 0;						/* Next allocation will be done here */
 

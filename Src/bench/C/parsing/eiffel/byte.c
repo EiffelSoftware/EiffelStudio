@@ -30,7 +30,7 @@ void ca_zero(char *area, long int size)
 {
 	/* Reset character array `area' to zero. */
 
-	bzero(area, size * sizeof(char));
+	memset (area, 0, size * sizeof(char));
 }
 
 void ca_wlong (char *area, long int val, long int strchr)

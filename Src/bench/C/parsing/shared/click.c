@@ -26,7 +26,7 @@ void click_list_init (void)
 		if ((click_stack = (char **) cmalloc(click_size * sizeof(char *))) == 0)
    		internal_error("Memory allocation failed\n");
 		}
-	bzero (click_stack, click_size * sizeof(char *));
+	memset  (click_stack, 0, click_size * sizeof(char *));
 }
 
 char *click_list_new(void)

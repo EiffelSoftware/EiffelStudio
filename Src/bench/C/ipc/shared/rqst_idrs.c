@@ -119,7 +119,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		exv = dum -> dmpu.dmpu_vect;
 		if (exv == 0) {
 			exv = (struct ex_vect *) malloc (sizeof (struct ex_vect));
-			bzero (exv, sizeof (struct ex_vect));
+			memset  (exv, 0, sizeof (struct ex_vect));
 			dum -> dmpu.dmpu_vect = exv;
 		}
 		if (exv == 0)
@@ -145,7 +145,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		exi = dum -> dmpu.dmpu_item;
 		if (exi == 0){
 			exi = (struct item *) malloc (sizeof (struct item));
-			bzero (exi, sizeof (struct item));
+			memset  (exi, 0, sizeof (struct item));
 			dum -> dmpu.dmpu_item = exi;
 		}
 		if (exi == 0)

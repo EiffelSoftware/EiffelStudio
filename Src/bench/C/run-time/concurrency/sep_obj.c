@@ -29,7 +29,7 @@ uint32 type;
     register4 char *(*init)();          /* The optional initialization */
  
     SIGBLOCK;                   /* Critical section */
-    bzero(object, nbytes);      /* All set with zeros */
+    memset (object, 0, nbytes);      /* All set with zeros */
  
     zone = HEADER(object);      /* Object's header */
     zone->ov_size &= ~B_C;      /* Object is an Eiffel one */

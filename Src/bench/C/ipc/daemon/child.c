@@ -193,7 +193,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	*(dotplace + 4) = '\0';
 	if (strchr (cmd2, ' ') != NULL) {
 		cmdline = malloc (strlen (cmd) + 3 + 18);
-		bzero (cmdline, strlen(cmd) + 3);
+		memset  (cmdline, 0, strlen(cmd) + 3);
 		strcpy (cmdline , "\"");
 		strcat (cmdline, cmd2);
 		strcat (cmdline, "\" ");

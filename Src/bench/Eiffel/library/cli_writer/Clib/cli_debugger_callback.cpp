@@ -15,6 +15,7 @@ extern "C" {
 
 const IID IID_ICorDebugManagedCallback = {0x3d6f5f60,0x7538,0x11d3,0x8d,0x5b,0x00,0x10,0x4b,0x35,0xe7,0xef};
 const IID IID_ICorDebugUnmanagedCallback = {0x5263E909,0x8CB5,0x11d3,0xBD,0x2F,0x00,0x00,0xF8,0x08,0x49,0xBD};
+const IID IID_ICorDebugManagedCallback2 = {0x250E5EEA,0xDB5C,0x4C76,0xB6,0xF3,0x8C,0x46,0xF1,0x2E,0x32,0x03};
 
 #ifdef DBGTRACE_ENABLED
 rt_public void trace_event_cb (char* mesg)
@@ -42,34 +43,20 @@ rt_public void trace_event_cb_hr (char* mesg,HRESULT hr)
 #define DBGTRACE_HR(msg)
 #endif
 
-/*
- * CorDebugManagedCallback
- */
-
-
-rt_public EIF_POINTER new_cordebug_managed_callback ()
-	/* Create new instance of ICorDebugManagedCallback */
-{
-	DebuggerManagedCallback *icdmcb = new DebuggerManagedCallback();
-
-//	hr = CoCreateInstance (CLSID_CorDebug, NULL,
-//		CLSCTX_INPROC_SERVER, IID_ICorDebugManagedCallback, (void **) & icdmcb);
-//
-//	CHECK (hr, "Could not create ICorDebugManagedCallback")
-
-	return icdmcb;
-}
-
-
-
 rt_private char message [1024];
 	/* Error message for exceptions */
 
 #ifdef ASSERTIONS
 rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
-#define CHECK(hr,msg) if (hr) raise_error (hr, msg);
+#define CHECK(hr,msg) if (hr) raise_error (hr, "check", msg);
+#define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, "check", msg);
+#define REQUIRE(cond,msg) if (!cond) raise_error (-1, "require", msg);
+#define ENSURE(cond,msg) if (!cond) raise_error (-1, "ensure", msg);
 #else
 #define CHECK(hr,msg)
+#define CHECKHR(cond,hr,msg)
+#define REQUIRE(cond,msg)
+#define ENSURE(cond,msg)
 #endif
 
 /*
@@ -138,11 +125,19 @@ HRESULT DebuggerManagedCallback::ExitProcess(ICorDebugProcess *pProcess)
 HRESULT DebuggerManagedCallback::CreateAppDomain(ICorDebugProcess *pProcess,
                                           ICorDebugAppDomain *pAppDomain)
 {
+	HRESULT hr;
 	dbg_begin_callback (CB_CREATE_APP_DOMAIN);
 	CLEAR_DBG_CB_INFO;
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_CREATE_APP_DOMAIN);
 	SET_DBG_CB_INFO_POINTER(1, pProcess);
 	SET_DBG_CB_INFO_POINTER(2, pAppDomain);
+
+	/* This has to be performed during callback processing, not after 
+	 * or while the debuggee is stopped */
+
+	hr = pAppDomain->Attach();
+	CHECKHR ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), hr, "Could not attach debugger to AppDomain");
+
 //	DBGTRACE("[ManagedCallback] CreateAppDomain ");
 	dbg_finish_callback (CB_CREATE_APP_DOMAIN);
     return S_OK;
@@ -260,6 +255,9 @@ HRESULT DebuggerManagedCallback::Exception(ICorDebugAppDomain *pAppDomain,
 	SET_DBG_CB_INFO_POINTER(2, pThread);
 	SET_DBG_CB_INFO_BOOL(3, unhandled);
 
+	/* This has to be performed during callback processing, not after 
+	 * or while the debuggee is stopped */
+
 	hr = pThread->GetCurrentException (&pExceptionValue);
 	if (SUCCEEDED(hr)) {
 		SET_DBG_CB_INFO_POINTER(4, pExceptionValue);
@@ -336,6 +334,10 @@ HRESULT DebuggerManagedCallback::LoadModule( ICorDebugAppDomain *pAppDomain,
 	SET_DBG_CB_INFO_CALLBACK_ID(CB_LOAD_MODULE);
 	SET_DBG_CB_INFO_POINTER(1, pAppDomain);
 	SET_DBG_CB_INFO_POINTER(2, pModule);
+
+	/* This has to be performed during callback processing, not after 
+	 * or while the debuggee is stopped */
+
 	pModule->EnableJITDebugging (true, false);
 // 	DBGTRACE("[ManagedCallback] LoadModule");
 	dbg_finish_callback (CB_LOAD_MODULE);
@@ -511,6 +513,89 @@ HRESULT DebuggerManagedCallback::BreakpointSetError(ICorDebugAppDomain *pAppDoma
 	dbg_finish_callback (CB_BREAKPOINT_SET_ERROR);
     return S_OK;
 }
+
+
+/* ///////////////////////////////////
+ * //  ICorDebugManagedCallback2 .. //
+ * /////////////////////////////////// */
+
+HRESULT DebuggerManagedCallback::FunctionRemapOpportunity(ICorDebugAppDomain *pAppDomain,
+                                     ICorDebugThread *pThread,
+                                     ICorDebugFunction *pOldFunction,
+                                     ICorDebugFunction *pNewFunction,
+                                     ULONG32 oldILOffset)
+{
+	return S_OK;
+}
+
+    /*
+     * CreateConnection is called when a new connection is created.
+     */
+HRESULT DebuggerManagedCallback::CreateConnection(ICorDebugProcess *pProcess,
+                             CONNID dwConnectionId,
+                             WCHAR *pConnName)
+{
+	return S_OK;
+}
+
+    /*
+     * ChangeConnection is called when a connection's set of tasks changes.
+     */
+HRESULT DebuggerManagedCallback::ChangeConnection(ICorDebugProcess *pProcess,
+                             CONNID dwConnectionId ) 
+{
+	return S_OK;
+}
+
+    /*
+     * DestroyConnection is called when a connection is ended.
+     */
+HRESULT DebuggerManagedCallback::DestroyConnection(ICorDebugProcess *pProcess,
+                              CONNID dwConnectionId )
+{
+	return S_OK;
+}
+
+    /*
+     * Exception is called at various points during the search phase of the
+     * exception-handling process.  The exception being processed can be
+     * retrieved from the ICorDebugThread.
+     */
+
+HRESULT DebuggerManagedCallback::Exception(ICorDebugAppDomain *pAppDomain,
+                       ICorDebugThread *pThread,
+                       ICorDebugFrame *pFrame,
+                       ULONG32 nOffset,
+                       CorDebugExceptionCallbackType dwEventType,
+                       DWORD dwFlags )
+{
+	return S_OK;
+}
+
+    /*
+     * ExceptionUnwind is called at various points during the unwind phase
+     * of the exception-handling process.
+     */
+HRESULT DebuggerManagedCallback::ExceptionUnwind(ICorDebugAppDomain *pAppDomain,
+                             ICorDebugThread *pThread,
+                             CorDebugExceptionUnwindCallbackType dwEventType,
+                             DWORD dwFlags )
+{
+	return S_OK;
+}
+
+    /*
+     * FunctionRemapComplete is fired whenever execution switches over to a new version of a function.
+     * At this point steppers can be added to that new version of the function, and no sooner.
+     *
+     */
+HRESULT DebuggerManagedCallback::FunctionRemapComplete(ICorDebugAppDomain *pAppDomain,
+                                     ICorDebugThread *pThread,
+                                     ICorDebugFunction *pFunction)
+{
+	return S_OK;
+}
+
 
 
 /* ///////////////////////////////////

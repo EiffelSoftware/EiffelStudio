@@ -21,7 +21,91 @@ extern EIF_POINTER new_cordebug_managed_callback ();
 #define COM_METHOD HRESULT STDMETHODCALLTYPE
 
 #ifdef __cplusplus
-class DebuggerManagedCallback : public ICorDebugManagedCallback
+
+/* ------------------------------------------------------------------------- *
+ * DebuggerUnmanagedCallback2
+ * ------------------------------------------------------------------------- */
+
+#ifndef __ICorDebugManagedCallback2_INTERFACE_DEFINED__
+typedef enum CorDebugExceptionCallbackType
+{
+	DEBUG_EXCEPTION_FIRST_CHANCE = 1,        /* Fired when exception thrown */
+	DEBUG_EXCEPTION_USER_FIRST_CHANCE = 2,   /* Fired when search reaches first user code */
+	DEBUG_EXCEPTION_CATCH_HANDLER_FOUND = 3, /* Fired if & when search finds a handler */
+	DEBUG_EXCEPTION_UNHANDLED = 4            /* Fired if search doesnt find a handler */
+} CorDebugExceptionCallbackType;
+
+
+typedef enum CorDebugExceptionFlags
+{
+	DEBUG_EXCEPTION_CAN_BE_INTERCEPTED = 0x0001 /* Indicates interceptable exception */
+} CorDebugExceptionFlags;
+
+
+typedef enum CorDebugExceptionUnwindCallbackType
+{
+	DEBUG_EXCEPTION_UNWIND_BEGIN = 1, /* Fired at the beginning of the unwind */
+	DEBUG_EXCEPTION_INTERCEPTED = 2   /* Fired after an exception has been intercepted */
+} CorDebugExceptionUnwindCallbackType;
+
+
+typedef DWORD CONNID;
+EXTERN_C const IID IID_ICorDebugManagedCallback2;
+
+
+    MIDL_INTERFACE("250E5EEA-DB5C-4C76-B6F3-8C46F12E3203")
+	
+    ICorDebugManagedCallback2 : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE FunctionRemapOpportunity( 
+            /* [in] */ ICorDebugAppDomain *pAppDomain,
+            /* [in] */ ICorDebugThread *pThread,
+            /* [in] */ ICorDebugFunction *pOldFunction,
+            /* [in] */ ICorDebugFunction *pNewFunction,
+            /* [in] */ ULONG32 oldILOffset) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE CreateConnection( 
+            /* [in] */ ICorDebugProcess *pProcess,
+            /* [in] */ CONNID dwConnectionId,
+            /* [in] */ WCHAR *pConnName) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE ChangeConnection( 
+            /* [in] */ ICorDebugProcess *pProcess,
+            /* [in] */ CONNID dwConnectionId) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE DestroyConnection( 
+            /* [in] */ ICorDebugProcess *pProcess,
+            /* [in] */ CONNID dwConnectionId) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE Exception( 
+            /* [in] */ ICorDebugAppDomain *pAppDomain,
+            /* [in] */ ICorDebugThread *pThread,
+            /* [in] */ ICorDebugFrame *pFrame,
+            /* [in] */ ULONG32 nOffset,
+            /* [in] */ CorDebugExceptionCallbackType dwEventType,
+            /* [in] */ DWORD dwFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE ExceptionUnwind( 
+            /* [in] */ ICorDebugAppDomain *pAppDomain,
+            /* [in] */ ICorDebugThread *pThread,
+            /* [in] */ CorDebugExceptionUnwindCallbackType dwEventType,
+            /* [in] */ DWORD dwFlags) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE FunctionRemapComplete( 
+            /* [in] */ ICorDebugAppDomain *pAppDomain,
+            /* [in] */ ICorDebugThread *pThread,
+            /* [in] */ ICorDebugFunction *pFunction) = 0;
+        
+    };
+
+#endif
+
+/* ------------------------------------------------------------------------- *
+ * DebuggerUnmanagedCallback
+ * ------------------------------------------------------------------------- */
+
+class DebuggerManagedCallback : public ICorDebugManagedCallback, public ICorDebugManagedCallback2
 {
 public:    
     DebuggerManagedCallback() : m_refCount(0)
@@ -49,9 +133,11 @@ public:
     COM_METHOD QueryInterface(REFIID riid, void **ppInterface)
     {
         if (riid == IID_IUnknown)
-            *ppInterface = (IUnknown *) this;
+            *ppInterface = (IUnknown*)(ICorDebugManagedCallback*)this;
         else if (riid == IID_ICorDebugManagedCallback)
             *ppInterface = (ICorDebugManagedCallback *) this;
+        else if (riid == IID_ICorDebugManagedCallback2)
+            *ppInterface = (ICorDebugManagedCallback2 *) this;
         else
             return (E_NOINTERFACE);
 
@@ -155,15 +241,74 @@ public:
                                   ICorDebugBreakpoint *pBreakpoint,
                                   DWORD dwError);
     
-	//
-	// initialize_callback called from Eiffel
-	// 
+	/* --------------------------------------------------------------- *
+	 * ICorDebugManagedCallback2 routines
+	 * --------------------------------------------------------------- */
+
+    COM_METHOD FunctionRemapOpportunity(ICorDebugAppDomain *pAppDomain,
+                                     ICorDebugThread *pThread,
+                                     ICorDebugFunction *pOldFunction,
+                                     ICorDebugFunction *pNewFunction,
+                                     ULONG32 oldILOffset);
+
+    /*
+     * CreateConnection is called when a new connection is created.
+     */
+    COM_METHOD CreateConnection(ICorDebugProcess *pProcess,
+                             CONNID dwConnectionId,
+                             WCHAR *pConnName);
+
+    /*
+     * ChangeConnection is called when a connection's set of tasks changes.
+     */
+    COM_METHOD ChangeConnection(ICorDebugProcess *pProcess,
+                             CONNID dwConnectionId );
+
+    /*
+     * DestroyConnection is called when a connection is ended.
+     */
+    COM_METHOD DestroyConnection(ICorDebugProcess *pProcess,
+                              CONNID dwConnectionId );
+
+
+
+
+    /*
+     * Exception is called at various points during the search phase of the
+     * exception-handling process.  The exception being processed can be
+     * retrieved from the ICorDebugThread.
+     */
+
+    COM_METHOD Exception(ICorDebugAppDomain *pAppDomain,
+                       ICorDebugThread *pThread,
+                       ICorDebugFrame *pFrame,
+                       ULONG32 nOffset,
+                       CorDebugExceptionCallbackType dwEventType,
+                       DWORD dwFlags );
+
+
+
+    /*
+     * ExceptionUnwind is called at various points during the unwind phase
+     * of the exception-handling process.
+     */
+    COM_METHOD ExceptionUnwind(ICorDebugAppDomain *pAppDomain,
+                             ICorDebugThread *pThread,
+                             CorDebugExceptionUnwindCallbackType dwEventType,
+                             DWORD dwFlags );
+    /*
+     * FunctionRemapComplete is fired whenever execution switches over to a new version of a function.
+     * At this point steppers can be added to that new version of the function, and no sooner.
+     *
+     */
+    COM_METHOD FunctionRemapComplete(ICorDebugAppDomain *pAppDomain,
+                                     ICorDebugThread *pThread,
+                                     ICorDebugFunction *pFunction);
 
 protected:
     long        m_refCount;
 
 };
-
 
 /* ------------------------------------------------------------------------- *
  * DebuggerUnmanagedCallback

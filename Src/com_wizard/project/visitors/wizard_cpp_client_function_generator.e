@@ -97,8 +97,7 @@ feature {NONE} -- Implementation
 				until
 					arguments.after
 				loop
-					create visitor
-					visitor.visit (arguments.item.type)
+					visitor := arguments.item.type.visitor
 
 					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
 						c_header_files.force (visitor.c_header_file)
@@ -124,8 +123,7 @@ feature {NONE} -- Implementation
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
-								create visitor
-								visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+								visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
 
 								signature.append (Space)
 								signature.append (Ampersand)
@@ -232,8 +230,7 @@ feature {NONE} -- Implementation
 					Result.append (Hresult_variable_name)
 					Result.append (Space_equal_space)
 				elseif not (func_desc.return_type.type = Vt_void) then
-					create visitor
-					visitor.visit (func_desc.return_type)
+					visitor := func_desc.return_type.visitor
 					Result.append (visitor.c_type)
 					Result.append (Space)
 					Result.append (C_result)
@@ -265,8 +262,7 @@ feature {NONE} -- Implementation
 					Result.append (Hresult_variable_name)
 					Result.append (Space_equal_space)
 				elseif not (func_desc.return_type.type = Vt_void) then
-					create visitor
-					visitor.visit (func_desc.return_type)
+					visitor := func_desc.return_type.visitor
 					Result.append (visitor.c_type)
 					Result.append (Space)
 					Result.append (C_result)
@@ -298,7 +294,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_feature_body: Result /= Void
 			valid_feature_body: not Result.empty	
-		end  -- function
+		end 
 
 	free_safearray_set_up (a_name: STRING): STRING is
 			-- Free SAFEARRY.
@@ -347,18 +343,11 @@ feature {NONE} -- Implementation
 			non_void_visitor: a_visitor /= Void
 		do
 			create Result.make (1000)
-			if a_visitor.is_basic_type then
+			if a_visitor.is_basic_type or a_visitor.is_enumeration then
 				Result.append (Space_open_parenthesis)
 				Result.append (a_visitor.cecil_type)
 				Result.append (Close_parenthesis)
 				Result.append (a_name)
-
-			elseif a_visitor.is_enumeration then
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_integer)
-				Result.append (Close_parenthesis)
-				Result.append (a_name)
-
 			else
 				Result.append (Space_open_parenthesis)
 				if (a_visitor.vt_type = Vt_bool) then
@@ -514,69 +503,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			non_void_out_parameter: Result /= Void
-		end
-
-	out_return_value_set_up (name: STRING; type: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
-			-- Code to set up "out" return value
-			--	Arguments
-			-- `name' - argument name.
-			-- `type' - argument type, see ECOM_VAR_TYPE for values
-		require
-			non_void_name: name /= Void
-			valid_name: not name.empty
-			non_void_visitor: visitor /= Void
-		local
-			tmp_string: STRING
-		do
-			create Result.make (1000)
-			if visitor.is_basic_type and not is_ptr (visitor.vt_type) then
-				message_output.add_warning (Current, message_output.Not_pointer_type)
-
-			elseif visitor.is_enumeration then
-				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
-
-			else 
-				Result.append (Put_procedure_name)
-				Result.append (Feature_clause)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
-				Result.append (name)
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_reference)
-				Result.append (Close_parenthesis)
-				if visitor.need_generate_ce then
-					Result.append (Generated_ce_mapper)
-				else
-					Result.append (Ce_mapper)
-				end
-				Result.append (Dot)
-				Result.append (visitor.ce_function_name)
-				Result.append (Space_open_parenthesis)
-				Result.append (Open_parenthesis)
-				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append (Tmp_clause)
-				Result.append (name)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				-- Free resource
-				Result.append (Free)
-				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_clause)
-				Result.append (Close_parenthesis)
-
-			end
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-		ensure
-			non_void_out_parameter: Result /= Void
-			valid_out_parameter: not Result.empty
 		end
 
 	retval_struct_pointer_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is

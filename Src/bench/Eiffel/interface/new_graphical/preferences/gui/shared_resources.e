@@ -8,24 +8,14 @@ class
 	SHARED_RESOURCES
 
 inherit
-	SHARED_PLATFORM_CONSTANTS
+	EIFFEL_ENV
 
 feature -- Access
 
 	resources: RESOURCE_STRUCTURE is
 			-- Resources specified by the user
-		local
-			file_name: FILE_NAME
-			environment: EXECUTION_ENVIRONMENT
 		once
-			if Platform_constants.is_windows then
-				create Result.make_from_location (System_general, "HKEY_CURRENT_USER\Software\ISE\Eiffel50")
-			else
-				create environment
-				create file_name.make_from_string (environment.home_directory_name)
-				file_name.set_file_name (".es5rc")
-				create Result.make_from_location (System_general, file_name)
-			end
+			create Result.make_from_location (System_general, Eiffel_preferences)
 		end
 
 feature -- Access
@@ -198,36 +188,6 @@ feature -- Basic operations
 			-- Commit all changes by saving the registry/.es5rc file.
 		do
 			resources.save
-		end
-
-feature {NONE} -- File names
-
-	system_general: FILE_NAME is
-			-- General system level resource specification file
-			-- ($EIFFEL5/eifinit/application_name/general)
-		local
-			Eiffel5: STRING
-		do
-			Eiffel5 := Exec_environment.get ("EIFFEL5")
-			if Eiffel5 /= Void then
-				create Result.make_from_string (Eiffel5)
-				if Platform_constants.is_windows then
-					Result.extend_from_array (<<"eifinit", "bench", "spec", "windows">>)
-				else
-					Result.extend_from_array (<<"eifinit", "bench", "spec", "gtk">>)
-				end
-				Result.set_file_name ("default")
-				Result.add_extension ("xml")
-			end
-		ensure
-			Result_not_empty: Result /= Void
-		end
-
-feature {NONE} -- Constants
-
-	Exec_environment: EXECUTION_ENVIRONMENT is
-		once	
-			create Result
 		end
 
 end -- class SHARED_RESOURCES

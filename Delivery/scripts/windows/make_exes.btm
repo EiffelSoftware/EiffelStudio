@@ -390,6 +390,10 @@ remtrace Recompiling EiffelBuild
 cdd %INIT_DIR
 call make_build.btm
 
+remtrace Recompiling Vision2 tour
+cdd %INIT_DIR
+call make_vision2_tour.btm
+
 remtrace Recompile Legacy++
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d legacy "Src/tools/legacy"

@@ -25,36 +25,57 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\winforms\control_reference\tree_view\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the 
-			<span>TREE_VIEW</span> control, and on the right you have some controls to configure the 
-			<span>TREE_VIEW</span>.
+			<span><code><class_name>TREE_VIEW</class_name></code></span> control, and on the right you have some controls to configure the 
+			<span><code><class_name>TREE_VIEW</class_name></code></span>.
 		</paragraph>
 		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>The application shows how to use a 
-			<span>TREE_VIEW</span> and what are all its different configurations.
+			<span><code><class_name>TREE_VIEW</class_name></code></span> and what are all its different configurations.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span>TREE_VIEW</span>
+				<span><code><class_name>TREE_VIEW</class_name></code></span>
 			</item>
 			<item>
-				<span>GROUP_BOX</span>
+				<span><code><class_name>GROUP_BOX</class_name></code></span>
 			</item>
 			<item>
-				<span>CHECK_BOX</span>
+				<span><code><class_name>CHECK_BOX</class_name></code></span>
 			</item>
 			<item>
-				<span>COMBO_BOX</span>
+				<span><code><class_name>COMBO_BOX</class_name></code></span>
 			</item>
 			<item>
-				<span>LABEL</span>
+				<span><code><class_name>LABEL</class_name></code></span>
 			</item>
 		</list>
 		<heading>

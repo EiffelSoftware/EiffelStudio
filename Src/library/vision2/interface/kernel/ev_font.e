@@ -344,7 +344,7 @@ feature -- Basic operations
 			Result := family = other.family and then
 				weight = other.weight and then
 				shape = other.shape and then
-				height = other.height
+				height_in_points = other.height_in_points
 		end
 
 	copy (other: like Current) is

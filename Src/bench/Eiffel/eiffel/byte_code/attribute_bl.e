@@ -42,10 +42,8 @@ feature
 	register: REGISTRABLE;
 			-- In which register the expression is stored
 
-	
 	basic_register: REGISTRABLE;
 			-- Register used to store the metamorphosed simple type
-
 	
 	set_register (r: REGISTRABLE) is
 			-- Set current register to `r'

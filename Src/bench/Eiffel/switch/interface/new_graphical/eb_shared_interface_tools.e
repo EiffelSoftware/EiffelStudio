@@ -22,6 +22,12 @@ feature -- Access
 			Result := progress_dialog_cell.item
 		end
 
+	has_modified_classes: BOOLEAN is
+			-- Are there unsaved class texts in the interface?
+		do
+			Result := Window_manager.has_modified_windows
+		end
+
 feature {NONE} -- Element change
 
 	set_output_manager (a_output_manager: EB_OUTPUT_MANAGER) is

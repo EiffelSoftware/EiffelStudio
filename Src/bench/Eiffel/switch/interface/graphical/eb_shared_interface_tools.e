@@ -83,6 +83,9 @@ feature {NONE} -- Shared tools access
 			Result := is_system_tool_cell.item
 		end
 
+	has_modified_classes: BOOLEAN is False
+			-- For compatibility with new_graphical.
+
 	Dynamic_lib_tool: DYNAMIC_LIB_W is
 			-- Unique assembly tool
 		once

@@ -624,22 +624,6 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
  * CURPO(exp_obj, start) put a Complex EXPANDED object "exp_obj" into the 
  *       cell of the  parameter array indexed by "start".
  * CURPP(ptr, start) put a POINTER into the cell of the parameter array indexed by "start".
- * CURPSOA(sep_obj, start) put a separate object "sep_obj" into the 
- *        cell of the ALTERNATIVE parameter array indexed by "start".
- * CURPIA(i_val, start) put an integer "i_val" into the cell of the  
- *       ALTERNATIVE parameter array indexed by "start".
- * CURPRA(r_val, start) put a real "r_val" into the cell of the  
- *       ALTERNATIVE parameter array indexed by "start".
- * CURPDA(d_val, start) put a double "d_val" into the cell of the  
- *       ALTERNATIVE parameter array indexed by "start".
- * CURPSA(s_val, start) put a string "s_val" into the cell of the 
- *       ALTERNATIVE parameter array indexed by "start".
- * CURPCA(c_val, start) put a character "c_val" into the cell of the 
- *       ALTERNATIVE parameter array indexed by "start".
- * CURPBA(b_val, start) put a boolean "b_val" into the cell of the  
- *       ALTERNATIVE parameter array indexed by "start".
- * CURPOA(exp_obj, start) put a Complex EXPANDED object "exp_obj" into the 
- *       cell of the  ALTERNATIVE parameter array indexed by "start".
  * CURGI(x) get the INTEHER stored in cell "x" of the parameter array.
  * CURGR(x) get the REAL    stored in cell "x" of the parameter array.
  * CURGD(x) get the DOUBLE  stored in cell "x" of the parameter array.
@@ -828,47 +812,12 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 
 #define CURPO(exp_obj, start) \
         _concur_paras[start].type = Expanded_object; \
-        set_str_val_into_parameter(_concur_paras+start, "Storable_Format_of_the_EXPANDED_Object(transferred as STRING), and Restore on the Client side ")
+        _concur_paras[start].uval.obj_ref = henter(exp_obj)
 
 #define CURPP(ptr, start) \
         _concur_paras[start].type = Pointer_type; \
         _concur_paras[start].uval.pointer_val = ptr 
 
-#define CURPIA(i_val, start) \
-        _concur_alt_paras[start].type = Integer_type; \
-        _concur_alt_paras[start].uval.int_val = i_val
-	
-#define CURPRA(r_val, start) \
-        _concur_alt_aras[start].type = Real_type; \
-        _concur_alt_paras[start].uval.real_val = r_val
-	
-#define CURPDA(d_val, start) \
-        _concur_alt_paras[start].type = Double_type; \
-        _concur_alt_paras[start].uval.double_val = d_val
-	
-#define CURPBA(b_val, start) \
-        _concur_alt_paras[start].type = Boolean_type; \
-        _concur_alt_paras[start].uval.bool_val = b_val
-	
-#define CURPSA(s_val, start) \
-        _concur_alt_paras[start].type = String_type; \
-        set_str_val_into_parameter(_concur_alt_paras+start, s_val)
-
-#define CURPOA(exp_obj, start) \
-        _concur_alt_paras[start].type = Expanded_object; \
-        set_str_val_into_parameter(_concur_alt_paras+start, "Storable_Format_of_the_EXPANDED_Object(transferred as STRING), and Restore on the Client side ")
-
-#define CURPSOA(sep_obj, start) \
-        _concur_alt_paras[start].type = Separate_reference; \
-        _concur_alt_paras[start].uval.s_obj = henter(sep_obj)
-	
-#define CURPCA(c_val, start) \
-        _concur_alt_paras[start].type = Character_type; \
-		c_class[0] = c_val;\
-		c_class[1] = '\0'; \
-		/* here, we use global variable as a temporary buffer */ \
-        set_str_val_into_parameter(_concur_alt_paras+start, c_class)
-	
 #define CURSSRI(cmd, para_nb) \
 		_concur_command = cmd; \
 		_concur_para_num = para_nb; \

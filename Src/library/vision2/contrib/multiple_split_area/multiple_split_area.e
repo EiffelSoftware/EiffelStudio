@@ -1127,7 +1127,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			cursor: CURSOR
 		do
 			cursor := all_holders.cursor
-			--Result := all_holders.i_th (linear_representation.index_of (a_widget, 1))
 			from
 				all_holders.start
 			until

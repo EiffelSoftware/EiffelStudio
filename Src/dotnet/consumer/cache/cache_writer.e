@@ -83,7 +83,7 @@ feature -- Basic Operations
 				create l_consumer.make (Current)
 				
 				l_ca := consumed_assembly_from_path (l_assembly.location)
-				if not l_ca.gac_path.is_equal (l_assembly.location.to_lower) then
+				if not l_ca.gac_path.is_equal (l_assembly.location) then
 						-- Assembly has been added or removed from GAC, so lets update it.
 					l_info := cache_reader.info
 					l_ca.set_gac_path (l_assembly.location)
@@ -93,7 +93,7 @@ feature -- Basic Operations
 					update_client_assembly_mappings (l_ca)
 				end
 				if cache_reader.is_assembly_in_cache (l_assembly.location, True) then
-					if l_ca.location /= a_path.as_lower and then l_ca.location = l_ca.gac_path then
+					if not l_ca.location.is_equal (a_path.as_lower) and then l_ca.location.is_equal (l_ca.gac_path) then
 							-- update path information if a better path is found
 						l_ca.set_location (a_path)
 						l_info := cache_reader.info
@@ -389,7 +389,6 @@ feature {NONE} -- Implementation
 			debug ("assemblies_are_never_stale")
 				Result := False
 			end
-			Result := False
 		end
 		
 	remove_assembly_internal (a_path: STRING) is

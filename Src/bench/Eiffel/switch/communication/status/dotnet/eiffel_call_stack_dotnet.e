@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 							from
 								i := l_frames.lower
 							until
-								i > l_frames.upper or else level > n
+								i > l_frames.upper or else (n > 0 and level > n)
 							loop
 								l_frame := l_frames @ i
 								l_frame_il := l_frame.query_interface_icor_debug_il_frame

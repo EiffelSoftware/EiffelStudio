@@ -3116,7 +3116,7 @@ rt_private void clean_zones(void)
 			 * in the next partial scavenging.
 			 */
 
-			memcpy (&ps_to, &ps_from, sizeof(Timeval));
+			memcpy (&ps_to, &ps_from, sizeof(struct sc_zone));
 			ps_to.sc_flgs = ((union overhead *) ps_from.sc_arena)->ov_size;
 
 #ifdef DEBUG

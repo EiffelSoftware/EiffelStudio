@@ -86,6 +86,35 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 --			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
 		end
+		
+	activate is
+            -- Setup `Current' for user interactive editing
+        require
+            not_destroyed: not is_destroyed
+            parented: is_parented
+        do
+            implementation.activate
+        end
+
+    deactivate is
+            -- Cleanup from previous call to `activate'
+        require
+            not_destroyed: not is_destroyed
+            parented: is_parented
+        do
+            implementation.deactivate
+        end
+
+    active_action (popup_window: EV_WINDOW) is
+            -- `Current' has been requested to be updated via `popup_window'
+        require
+            popup_window_not_void: popup_window /= Void
+            popup_window_not_destroyed: not popup_window.is_destroyed
+        do
+            -- Redefined by descendents
+        ensure
+            popup_window_shown: popup_window.is_show_requested
+        end
 
 feature -- Status report
 

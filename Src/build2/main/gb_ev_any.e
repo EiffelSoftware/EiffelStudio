@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that manipulate/have knowledge of Vision2 objects."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

@@ -26,7 +26,6 @@ inherit
 			set_move_and_size
 		end
 
-
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
@@ -85,13 +84,13 @@ feature -- Resizing
 	set_width (new_width: INTEGER) is
 		do
 			set_local_width (new_width)
-			notify_size_to_parent
+			parent_imp.child_width_changed (width, Current)
 		end
 
 	set_height (new_height: INTEGER) is
 		do
 			set_local_height (new_height)
-			notify_size_to_parent
+			parent_imp.child_height_changed (height, Current)
 		end
 
 feature {NONE} -- Basic operation

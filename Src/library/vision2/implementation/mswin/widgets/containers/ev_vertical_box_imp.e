@@ -13,14 +13,14 @@ inherit
 	
 	EV_BOX_IMP
 		redefine
-			child_has_resized,
+			child_width_changed,
+			child_height_changed,
 			child_minwidth_changed,
 			child_minheight_changed
 		end
 
 creation
 	make
-
 
 feature {NONE} -- Basic operation 
 
@@ -97,9 +97,8 @@ feature {NONE} -- Basic operation
 		end
 
 	add_children_height: INTEGER is
-			-- Give the sum of the height of all the children
-		local
-			temp_result: INTEGER
+			-- Give the sum of the `height' of all the children
+			-- Maybe not necessary.
 		do
 			if not children.empty then
 				from
@@ -107,28 +106,48 @@ feature {NONE} -- Basic operation
 				until
 					children.after
 				loop
-					temp_result := temp_result + children.item.minimum_height
+					Result := Result + children.item.minimum_height
 					children.forth
 				end
 			end
-			Result := temp_result
 		end
 
+	add_children_minimum_height: INTEGER is
+			-- Give the sum of the `minimum_height' of all the children
+		do
+			if not children.empty then
+				from
+					children.start
+				until
+					children.after
+				loop
+					Result := Result + children.item.minimum_height
+					children.forth
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
-	child_has_resized (child_width, child_height: INTEGER; a_child: EV_WIDGET_IMP) is
-			-- Resize and replace all its children according to the resize of one of them.
-			-- If the  child has a minimal size which is bigger than the minimum size of
-			-- the others, the container take this new minimal size.
+	child_width_changed (child_new_width: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Resize and replace all its children according 
+			-- to the resize of one of them.
 		do
-			if shown then
-				if child_height >= (minimum_height - total_spacing) // children.count or child_width > minimum_width then
-					parent_ask_resize (child_width, (child_height * children.count) + total_spacing)
-					notify_size_to_parent
-				else
-					a_child.parent_ask_resize (minimum_width, (minimum_height - total_spacing ) // children.count)
-				end
+			if child_new_width > minimum_width then
+				set_local_width (child_new_width)
+				parent_imp.child_width_changed (width, Current)
+			else
+				the_child.set_width (minimum_width)
+			end
+		end
+
+	child_height_changed (child_new_height: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Resize and replace all its children according 
+			-- to the resize of one of them.
+		do
+			if shown and child_new_height >= (minimum_height - total_spacing) // children.count then
+				set_local_height ((child_new_height * children.count) + total_spacing)
+				parent_imp.child_height_changed (height, Current)
 			end
 		end
 
@@ -146,7 +165,7 @@ feature {NONE} -- Implementation
 			if is_homogeneous and child_new_minimum > (minimum_height - total_spacing) // children.count then
 				set_minimum_height (child_new_minimum * children.count + total_spacing)
 			else
-				set_minimum_height (add_children_height + total_spacing)
+				set_minimum_height (add_children_minimum_height + total_spacing)
 			end	
 		end
 

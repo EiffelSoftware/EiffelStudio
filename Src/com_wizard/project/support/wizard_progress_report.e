@@ -16,6 +16,7 @@ inherit
 create
 	make
 
+
 feature {NONE} -- Initialization
 
 	make (a_parent: like parent) is

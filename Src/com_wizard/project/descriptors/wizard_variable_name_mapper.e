@@ -29,6 +29,9 @@ feature -- Access
 			Result.append (Implemented_coclass_extension)
 		end
 
+	Registration_class_creation_routine: STRING is "make"
+			-- Registration class creation routine name
+
 	registration_class_name: STRING is
 			-- Registration class name
 		do
@@ -36,6 +39,10 @@ feature -- Access
 			Result.append (Shared_wizard_environment.project_name)
 			Result.append (Registration_suffix)
 			Result.to_upper
+			Result.append (Colon)
+			Result.append (Double_quote)
+			Result.append ("Registration_class_creation_routine")
+			Result.append (Double_quote)
 		end
 
 	to_eiffel_name (a_name: STRING): STRING is

@@ -86,7 +86,7 @@ rt_public bool_t idr_long(IDR *idrs, long int *lp)
 			memcpy (&value, idrs->i_ptr, 4);
 			upper = (long) ntohl(value);
 			idrs->i_ptr += 4;
-#if PTRSIZ == 4
+#if LNGSIZ == 4
 						/*if the data has come from a 8 byte */
 			*lp = lower;		/* long machine and we are only a 4 byte*/
 			if (upper & 0x80000000)

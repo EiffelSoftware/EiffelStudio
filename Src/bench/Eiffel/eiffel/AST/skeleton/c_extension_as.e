@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 		do
 			s := special_part
 			if s /= Void and then s.count /= 0 then
-				raise_error ("Invalid special routine clause")
+				raise_error ("Invalid sub-language routine clause")
 			end
 		end
 

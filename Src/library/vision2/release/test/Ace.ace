@@ -13,8 +13,6 @@ cluster
 
 dev:						"$WS"
 
-event(dev):					"$/event"
-
 gel(dev):					"$/gel"
 
 all vision2(dev):				"$/vision2"

@@ -148,10 +148,10 @@ feature {NONE} -- Implementation
 						end
 					end
 
+					mp.restore
 					error_window.display
 					tool_resynchronization (argument)
 					Degree_output.finish_degree_output
-					mp.restore
 				end
 			else
 					-- The project may be corrupted => the project

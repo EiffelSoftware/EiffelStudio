@@ -58,6 +58,27 @@ feature
 			end
 		end;
 
+	has_state_name (name: STRING): BOOLEAN is
+		local
+			s: STATE;
+			other_name: STRING;
+			new_name: STRING
+		do
+			new_name := clone (name);
+			new_name.to_lower;
+			from 
+				start
+			until
+				off or else Result
+			loop
+				s ?= key_for_iteration;
+				other_name := clone (s.label);
+				other_name.to_lower;
+				Result := equal (other_name, new_name);
+				forth
+			end
+		end;
+
 	state_names: LINKED_LIST [STRING] is
 			-- All state names
 		local

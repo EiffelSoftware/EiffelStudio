@@ -23,14 +23,16 @@ inherit
 			unrealize as composite_unrealize
 		redefine
 			set_managed,
-			realized
+			realized,
+			realize_children
 		end
 
 	MANAGER_WINDOWS
 		redefine
 			set_managed,
 			unrealize,
-			realized
+			realized,
+			realize_children
 		select
 			unrealize
 		end
@@ -231,7 +233,7 @@ feature -- Element change
 					check
 						parent_not_void: mp /= Void
 					end
-					-- ++ -- mp.manage_separator (s) -- ++ -- XXX To be Implemented
+					mp.insert_separator (index_of (s) - unmanaged_count (s) - 1)
 				else
 					mp ?= w
 					if mp /= Void then
@@ -270,14 +272,16 @@ feature -- Element change
 			else
 				s ?= w
 				if s /= Void then
-					-- Delete separator from menu XXX
+					if w.parent.managed then
+						delete_position (index_of (w) - unmanaged_count (w))
+					end
 				else
 					ba ?= w.parent
 					if ba /= Void then
 						ba.remove_popup (w)
 					else
 						if w.parent.managed then
-							cwin_delete_menu (wel_item, index_of (w) - unmanaged_count (w), Mf_byposition)
+							delete_position (index_of (w) - unmanaged_count (w))
 						end
 					end
 				end
@@ -297,6 +301,24 @@ feature -- Removal
 		end
 
 feature {NONE} -- Implementation
+
+	realize_children is
+			-- Realize the children of Current.
+		local
+			local_children: ARRAYED_LIST [WIDGET_WINDOWS]
+		do
+			local_children := children_list
+			from
+				local_children.finish
+			variant
+				local_children.count - local_children.index
+			until
+				local_children.before
+			loop
+				local_children.item.realize
+				local_children.back
+			end
+		end
 
 	unmanaged_count (w: WIDGET_WINDOWS): INTEGER is
 			-- Number of unmanaged widgets before `w'.

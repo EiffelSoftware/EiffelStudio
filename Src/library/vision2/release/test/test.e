@@ -49,7 +49,7 @@ feature
 			timer: EV_TIMEOUT
 		do
 			first_window.set_title ("Eiffel Vision Widgets")
-			set_status_bar (create {EV_STATUS_BAR}.make_for_test)
+			first_window.set_status_bar (create {EV_STATUS_BAR}.make_for_test)
 			create menu_bar
 			first_window.set_menu_bar (menu_bar)
 			create object_menu.make_with_text ("Other objects")
@@ -507,6 +507,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/28 23:43:26  brendel
+--| Corrected.
+--|
 --| Revision 1.41  2000/04/28 22:32:13  brendel
 --| What's the point of having a status bar not at the bottom of a window?
 --|

@@ -1,15 +1,17 @@
+indexing
+
+	description: 
+		"AST representation of manifest array.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ARRAY_AS
 
 inherit
 
 	ATOMIC_AS
 
-feature -- Attributes
-
-	expressions: EIFFEL_LIST [EXPR_AS];
-			-- Expression list symbolizing the manifest array
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -23,7 +25,12 @@ feature -- Initialization
 			expressions_exists: expressions /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	expressions: EIFFEL_LIST [EXPR_AS];
+			-- Expression list symbolizing the manifest array
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.

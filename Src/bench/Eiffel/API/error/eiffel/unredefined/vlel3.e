@@ -1,4 +1,9 @@
--- A feature name is repeated more than once in export adaptation
+indexing
+
+	description: 
+		"A feature name is repeated more than once in export adaptation.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VLEL3 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VLEL3

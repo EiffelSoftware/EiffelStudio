@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Abstract class representing routines that have a body.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 deferred class INTERNAL_AS
 
 inherit
@@ -7,12 +14,7 @@ inherit
 			has_instruction, index_of_instruction
 		end
 
-feature -- Attributes
-
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
-			-- Compound
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -20,7 +22,12 @@ feature -- Initialization
 			compound ?= yacc_arg (0);
 		end
 
-feature -- Status report
+feature -- Properties
+
+	compound: EIFFEL_LIST [INSTRUCTION_AS];
+			-- Compound
+
+feature -- Access
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does the current routine body has instruction `i'?
@@ -53,7 +60,7 @@ feature -- Status report
 			end
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -78,7 +85,7 @@ feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication
 			compound := c;
 		end;	
 
-feature {} -- Formatter
+feature {NONE} -- Formatter
 	
 	begin_keyword: TEXT_ITEM is 
 		deferred

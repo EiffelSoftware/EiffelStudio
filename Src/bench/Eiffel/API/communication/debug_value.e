@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Abstract notion of value during the execution of the application.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 
 deferred class DEBUG_VALUE
 

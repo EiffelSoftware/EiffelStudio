@@ -1,18 +1,17 @@
+indexing
+
+	description: 
+		"AST representation of creation routines.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CREATE_AS
 
 inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	clients: CLIENT_AS;
-			-- Client list
-
-	feature_list: EIFFEL_LIST [FEATURE_NAME];
-			-- Feature list
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -23,7 +22,15 @@ feature -- Initialization
 			feature_list ?= yacc_arg (1);
 		end;
 
-feature -- Status report
+feature -- Properties
+
+	clients: CLIENT_AS;
+			-- Client list
+
+	feature_list: EIFFEL_LIST [FEATURE_NAME];
+			-- Feature list
+
+feature -- Access
 
 	has_feature_name (f: FEATURE_NAME): BOOLEAN is
 			-- Is `f' present in current creation?
@@ -44,7 +51,7 @@ feature -- Status report
 			feature_list.go_to (cur)
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -64,7 +71,7 @@ feature -- Simple formatting
 			end;
 		end;
 			
-feature -- Convenience
+feature {COMPILER_EXPORTER} -- Convenience
 
 	set_feature_list (f: like feature_list) is
 		do

@@ -1,4 +1,10 @@
--- Error when there is twice or more a feature name in an undefining clause
+indexing
+
+	description: 
+		"Error when there is twice or more a feature name %
+		%in an undefining clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDUS4 
 
@@ -9,12 +15,14 @@ inherit
 			code, subcode, build_explain
 		end
 	
-feature 
+feature -- Properties
 
 	code: STRING is "VDUS";
 			-- Error code
 
 	subcode: INTEGER is 4;
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -25,4 +33,4 @@ feature
 			ow.new_line;
 		end;
 
-end 
+end -- class VDUS4

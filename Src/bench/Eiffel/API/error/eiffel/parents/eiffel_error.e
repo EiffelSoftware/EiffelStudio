@@ -1,41 +1,49 @@
--- Error object sent by the compiler to the workbench
+indexing
+
+	description: 
+		"Error object sent by the compiler to the workbench.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class EIFFEL_ERROR 
 
 inherit
 
-	SHARED_WORKBENCH
-		export
-			{NONE} all
-		end;
 	ERROR
 		redefine
-			trace
+			trace, is_defined
 		end
 
-feature 
+feature -- Properties
 
-	class_c: CLASS_C;
+	e_class: E_CLASS;
 			-- Class where the error is encountered
 
-	set_class (c: CLASS_C) is
-			-- Assign `c' to `class_c'.
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			class_c := c
+			Result := is_class_defined
+		ensure then
+			yes_implies_class_defined: Result implies is_class_defined
 		end;
 
-	set_class_id (id: INTEGER) is
-		obsolete "Use `set_class'"
-			-- Assign `c' to `class_c'.
+	is_class_defined: BOOLEAN is
+			-- Is `e_class' defined for error?
 		do
-			class_c := System.class_of_id (id)
+			Result := e_class /= Void
+		ensure
+			yes_implies_valid_class: Result implies e_class /= Void
 		end;
+
+feature -- Output
 
 	trace (ow: OUTPUT_WINDOW) is
 		do
 			print_error_message (ow);
 			ow.put_string ("Class: ");
-			class_c.e_class.append_signature (ow);
+			e_class.append_signature (ow);
 			ow.new_line;
 			build_explain (ow)
 		end;
@@ -44,4 +52,14 @@ feature
 		do
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_class (c: CLASS_C) is
+			-- Assign `c' to `class_c'.
+		require
+			valid_c: c /= Void
+		do
+			e_class := c.e_class
+		end;
+
+end -- class EIFFEL_ERROR

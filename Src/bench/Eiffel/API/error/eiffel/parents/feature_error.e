@@ -1,4 +1,9 @@
+indexing
 
+	description: 
+		"Error that occured within a feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class FEATURE_ERROR 
 
@@ -6,47 +11,59 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			trace
+			trace, is_defined
 		end;
 
-feature 
+feature -- Properties
 
-	feature_i: FEATURE_I;
+	e_feature: E_FEATURE;
 			-- Feature involved in the error
-			-- [if Void it is in the invariant]
-
-	set_feature (f: FEATURE_I) is
-			-- Assign `f' to `feature'.
-		do
-			feature_i := f;
-		end;
 
 	feature_name: STRING;
+			-- If e_feature is Void then use feature name 
+			-- (if this is Void then feature occurred in
+			-- the invariant)
 
-	set_feature_name (s: STRING) is
-		obsolete "Use `set_feature' if a FEATURE_I is defined%N%
-				%or change the inheritance clause from FEATURE_ERROR%N%
-				%to FEATURE_NAME_ERROR"
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			feature_name := s;
+			Result := is_class_defined and then
+				is_feature_defined
+		ensure then
+			is_feature_defined: Result implies is_feature_defined
 		end;
+
+	is_feature_defined: BOOLEAN is
+			-- Is the feature defined for error?
+		do
+			Result := e_feature /= Void
+		ensure
+			yes_implies_valid_feature: Result implies e_feature /= Void
+		end;
+
+feature -- Output
 
 	trace (ow: OUTPUT_WINDOW) is
 		do
 			print_error_message (ow);
 			ow.put_string ("Class: ");
-			class_c.e_class.append_signature (ow);
-			if feature_i /= Void then
-				ow.put_string ("%NFeature: ");
-				feature_i.append_name (ow, class_c);
-			elseif feature_name /= Void then
-				ow.put_string ("%NFeature: ");
-				ow.put_string (feature_name);
-			else
-				ow.put_string ("%NFeature: invariant");
-			end;
+			e_class.append_signature (ow);
+			ow.put_string ("%NFeature: ");
+			e_feature.append_name (ow, e_class);
 			ow.new_line;
 			build_explain (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_feature (f: FEATURE_I) is
+			-- Assign `f' to `feature'.
+		require
+			valid_f: f /= Void
+		do
+			e_feature := f.api_feature
+		end;
+
+end -- class FEATURE_ERROR

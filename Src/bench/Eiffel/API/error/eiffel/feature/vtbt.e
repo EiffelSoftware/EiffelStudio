@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class VTBT 
 
 inherit
@@ -7,17 +14,14 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Property
 
 	code: STRING is "VTBT";
 			-- Error code
 
 	value: INTEGER;
 
-	set_value (i: INTEGER) is
-		do
-			value := i;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -28,4 +32,11 @@ feature
 			end;
 		end;
 
-end 
+feature {COMPILER_EXPORTER}
+
+	set_value (i: INTEGER) is
+		do
+			value := i;
+		end;
+
+end -- class VTBT

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Free binary expression description";
+	description: 
+		"AST representation of a free binary expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,12 +14,7 @@ inherit
 			set, operator_is_keyword
 		end
 
-feature -- Attributes
-
-	op_name: ID_AS;
-			-- Free operator name
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -32,7 +28,10 @@ feature -- Initialization
 			operator_exists: op_name /= Void;
 		end;
 
-feature
+feature -- Properties
+
+	op_name: ID_AS;
+			-- Free operator name
 
 	infix_function_name: STRING is
 			-- Internal name of the infixed feature associated to the

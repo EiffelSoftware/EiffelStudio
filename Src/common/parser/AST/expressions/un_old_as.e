@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST represenation of a unary `old' operation.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class UN_OLD_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			simple_format, operator_is_keyword
 		end
 
-feature -- Type check
+feature -- Properties
 
 	prefix_feature_name: STRING is
 			-- Internal name of the prefixed feature
@@ -18,7 +25,7 @@ feature -- Type check
 	
 	operator_is_keyword: BOOLEAN is true;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class OBJECT_NAME_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_object
 		end
 
-feature
+feature -- Properties
 
 	is_object: BOOLEAN is
 			-- Is the language name "Object" ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class OBJECT_NAME_SD

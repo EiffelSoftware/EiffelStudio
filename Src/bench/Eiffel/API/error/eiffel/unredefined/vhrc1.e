@@ -1,4 +1,9 @@
--- Error for unvalid renaming
+indexing
+
+	description: 
+		"Error for invalid renaming.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VHRC1 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 1;
 
-end
+end -- class VHRC1

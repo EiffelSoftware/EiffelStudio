@@ -1,5 +1,10 @@
--- Error for precompiled systems that cannot be succesfully
--- retrieved.
+indexing
+
+	description: 
+		"Error for precompiled systems that cannot be succesfully%
+		%retrieved.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD41
 
@@ -10,16 +15,12 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Property
 
 	path: STRING;
 			-- Path of precompiled project
 
-	set_path (s: STRING) is
-			-- Assign `s' to `path'.
-		do
-			path := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -28,4 +29,12 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {PRECOMP_R} -- Setting
+
+	set_path (s: STRING) is
+			-- Assign `s' to `path'.
+		do
+			path := s;
+		end;
+
+end -- class VD41

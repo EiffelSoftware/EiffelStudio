@@ -1,4 +1,9 @@
--- Error for generic type for once function
+indexing
+
+	description: 
+		"Error for generic type for once function.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VFFD7 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 7;
 
-end
+end -- class VFFD7

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a the content of an Eiffel constant.";
+	description: 
+		"AST representation of a the content of an Eiffel constant.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,12 +14,7 @@ inherit
 			is_unique, is_constant
 		end
 
-feature -- Attributes
-
-	value: EXPR_AS;
-			-- Constant value
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is 
 			-- Yacc initialisation
@@ -28,7 +24,10 @@ feature -- Initialization
 			value_exists: value /= Void
 		end;
 
-feature -- Conveniences
+feature -- Properties
+
+	value: EXPR_AS;
+			-- Constant value
 
 	is_constant: BOOLEAN is
 			-- Is the current content a constant one ?
@@ -46,6 +45,8 @@ feature -- Conveniences
 				Result := a_value.terminal.is_unique;
 			end;
 		end;
+
+feature -- Access
 
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Are the values of Current and other the
@@ -66,7 +67,7 @@ feature -- Conveniences
 			Result := 0
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -77,7 +78,7 @@ feature -- Simple formatting
 			ctxt.format_ast (value)
 		end;
 
-feature -- Replication
+feature {CONSTANT_AS} -- Replication
 
 	set_value (v: like value) is
 		do

@@ -1,5 +1,10 @@
--- Error for a rename clause where the old name appears more than once
--- in rename clauses
+indexing
+
+	description: 
+		"Error for a rename clause where the old name appears %
+		%more than once in rename clauses.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VHRC2 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode:INTEGER is 2;
 
-end
+end -- class VHRC2

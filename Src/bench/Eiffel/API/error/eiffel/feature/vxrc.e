@@ -1,4 +1,9 @@
--- Error when a deferred or an external feature has a rescue clause
+indexing
+
+	description: 
+		"Error when a deferred or an external feature has a rescue clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VXRC 
 
@@ -9,17 +14,14 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VXRC";
 			-- Error code
 
 	is_deferred: BOOLEAN;
 
-	set_deferred (b: BOOLEAN) is
-		do
-			is_deferred := b
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +32,11 @@ feature
 			end;
 		end;
 
-end 
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_deferred (b: BOOLEAN) is
+		do
+			is_deferred := b
+		end;
+
+end -- class VXRC

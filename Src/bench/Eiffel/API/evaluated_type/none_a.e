@@ -1,4 +1,9 @@
--- Actual type for integer type
+indexing
+
+	description: 
+		"Actual type for integer type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class NONE_A
 
@@ -70,4 +75,4 @@ feature {COMPILER_EXPORTER}
             !! Result.make ("NONE", 0)
         end;
 
-end
+end -- class NONE_A

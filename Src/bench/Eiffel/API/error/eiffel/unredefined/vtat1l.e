@@ -1,4 +1,9 @@
--- Error for an unvalid anchored local type
+indexing
+
+	description: 
+		"Error for an invalid anchored local type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTAT1L 
 
@@ -10,4 +15,4 @@ inherit
 			set_argument_name as set_local_name
 		end
 
-end
+end -- class VTAT1L

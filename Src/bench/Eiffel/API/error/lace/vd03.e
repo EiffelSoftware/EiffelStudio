@@ -1,4 +1,10 @@
--- Error for an invalid cluster name specified in an adaptation clause
+indexing
+
+	description: 
+		"Error for an invalid cluster name specified in%
+		%an adaptation clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD03
 
@@ -9,16 +15,12 @@ inherit
 			build_explain
 		end
 
-feature
+feature -- Property
 
 	cluster_name: ID_SD;
 			-- Cluster name not valid
 
-	set_cluster_name (s: ID_SD) is
-			-- Assign `s' to `cluster_name'.
-		do
-			cluster_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -27,4 +29,13 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {CLUST_ADAPT_SD} -- Setting
+
+	set_cluster_name (s: ID_SD) is
+			-- Assign `s' to `cluster_name'.
+		do
+			cluster_name := s;
+		end;
+
+
+end -- class VD03

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a parenthesized expression";
+	description: 
+		"AST representation of a parenthesized expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	expr: EXPR_AS;
-			-- Parenthesized expression
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -25,7 +21,12 @@ feature -- Initialization
 			expr_exists: expr /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Property
+
+	expr: EXPR_AS;
+			-- Parenthesized expression
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

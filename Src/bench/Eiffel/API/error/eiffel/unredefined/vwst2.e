@@ -1,5 +1,10 @@
--- Error when an attribute name appears more than once in the attribute
--- name list of a strip expression
+indexing
+
+	description: 
+		"Error when an attribute name appears more than once %
+		%in the attribute name list of a strip expression.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VWST2 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VWST

@@ -20,7 +20,7 @@ feature -- Properties
 			Result := "dynamic"
 		end;
 
-feature -- Update
+feature {COMPILER_EXPORTER}
 
 	adapt ( value: OPT_VAL_SD;
 			classes:EXTEND_TABLE [CLASS_I, STRING];
@@ -73,4 +73,4 @@ feature -- Update
 			end
 		end;
 
-end -- class DYNAMIC_SD
+end -- class DYNAMIC_SD 

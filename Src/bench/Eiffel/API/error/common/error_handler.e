@@ -254,4 +254,4 @@ invariant
 	error_list_exists: error_list /= Void;
 	warning_list_exists: warning_list /= Void;
 
-end
+end -- class ERROR_HANDLER

@@ -1,10 +1,17 @@
+indexing
+
+	description: 
+		"Abstract notion of a routine body.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 deferred class ROUT_BODY_AS
 
 inherit
 
 	AST_EIFFEL
 
-feature -- Conveniences
+feature -- Properties
 
 	is_once: BOOLEAN is
 			-- Is the routine body a once one ?
@@ -23,6 +30,8 @@ feature -- Conveniences
 		do
 			-- Do nothing
 		end;
+
+feature -- Access
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Has current routine body instruction `i'?

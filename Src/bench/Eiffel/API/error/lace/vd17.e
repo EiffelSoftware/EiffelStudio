@@ -1,4 +1,9 @@
--- Error when invalid file name in C/Object file name list
+indexing
+
+	description: 
+		"Error when invalid file name in C/Object file name list.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD17
 
@@ -9,13 +14,25 @@ inherit
 			build_explain
 		end
 
-feature
+feature -- Properties
 
 	file_name: ID_SD;
 			-- File name involved
 
 	file_name_list: LACE_LIST [ID_SD];
 			-- File name list
+
+feature -- Output
+
+	build_explain (ow: OUTPUT_WINDOW) is
+		do
+			ow.put_string ("Cluster path: ");
+-- FIXME
+			ow.put_string ("FIX ME!");
+			ow.new_line
+		end;
+
+feature {NONE} -- Setting
 
 	set_file_name (fn: ID_SD) is
 			-- Assign `fn' to `file_name'.
@@ -29,14 +46,4 @@ feature
 			file_name_list := l;
 		end;
 
-	code: STRING is "VD17";
-			-- Error code
-
-	build_explain (ow: OUTPUT_WINDOW) is
-		do
-			ow.put_string ("Cluster path: ");
--- FIXME
-			put_string ("FIX ME!");
-			ow.new_line
-		end;
-end
+end -- class VD17

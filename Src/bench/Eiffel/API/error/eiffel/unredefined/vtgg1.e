@@ -1,5 +1,10 @@
--- Error when a feature type violates the constrained genericity validity
--- rule
+indexing
+
+	description: 
+		"Error when a feature type violates the constrained genericity %
+		%validity rule.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTGG1 
 
@@ -7,4 +12,4 @@ inherit
 
 	VTGG
 
-end
+end -- class VTGG1

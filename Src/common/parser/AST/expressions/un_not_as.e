@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST represenation of a unary `not' operation.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class UN_NOT_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			operator_is_keyword
 		end
 
-feature 
+feature -- Properties
 
 	prefix_feature_name: STRING is
 			-- Internal name of the prefixed feature

@@ -1,7 +1,9 @@
--- Class_rename_pair       : Name LEX_SD Name
---
--- ExternaL_rename_pair    : /* empty */
---                         | Name LEX_SD Name
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class TWO_NAME_SD
 
@@ -9,15 +11,7 @@ inherit
 
 	AST_LACE
 
-feature -- Attributes
-
-	old_name: ID_SD;
-			-- Old name
-
-	new_name: ID_SD;
-			-- New name
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -26,4 +20,12 @@ feature -- Initialization
 			new_name ?= yacc_arg (1)
 		end
 
-end
+feature -- Properties
+
+	old_name: ID_SD;
+			-- Old name
+
+	new_name: ID_SD;
+			-- New name
+
+end -- class TWO_NAME_SD

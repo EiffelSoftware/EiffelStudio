@@ -1,4 +1,10 @@
--- Error when an id in a strip expression is not an attribute name
+indexing
+
+	description: 
+		"Error when an id in a strip expression is %
+		%not an attribute name.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VWST1 
 
@@ -9,7 +15,7 @@ inherit
 			build_explain, subcode
 		end
 	
-feature
+feature -- Properties
 
 	subcode: INTEGER is
 		do
@@ -19,14 +25,10 @@ feature
 	attribute_name: STRING;
 			-- Attribute name in the strip expresssion
 
-	set_attribute_name (s: STRING) is
-			-- Assign `s' to `attribute_name'.
-		do
-			attribute_name := s;
-		end;
-
 	code: STRING is "VWST";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
@@ -37,4 +39,12 @@ feature
 			ow.new_line
 		end
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_attribute_name (s: STRING) is
+			-- Assign `s' to `attribute_name'.
+		do
+			attribute_name := s;
+		end;
+
+end -- class VWST1

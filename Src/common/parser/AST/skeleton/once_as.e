@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of a once routines.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ONCE_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_once
 		end;
 
-feature
+feature -- Properties
 
 	is_once: BOOLEAN is
 			-- Is the current routine body a once one ?
@@ -15,7 +22,7 @@ feature
 			Result := true;
 		end;
 
-feature {}
+feature {NONE}
 
 	begin_keyword: BASIC_TEXT is
 			-- "once" keyword

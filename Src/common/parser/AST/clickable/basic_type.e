@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract class for Eiffel basic types.";
+	description: 
+		"AST representation of an Eiffel basic type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -14,20 +15,20 @@ inherit
 			is_class
 		end			
 
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			-- Do nothing
+		end;
+
 feature -- Properties
 
 	is_class: BOOLEAN is
 			-- Does the Current AST represent a class?
 		do
 			Result := True
-		end;
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
 		end;
 
 end -- class BASIC_TYPE

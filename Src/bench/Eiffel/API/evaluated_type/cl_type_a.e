@@ -1,4 +1,9 @@
--- Description of an actual class type
+indexing
+
+	description: 
+		"Description of an actual class type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CL_TYPE_A
 
@@ -57,7 +62,7 @@ feature -- Output
 			if is_expanded then
 				ow.put_string ("expanded ");
 			end;
-			associated_class.append_name (ow);
+			associated_eclass.append_name (ow);
 		end;
 
 	dump: STRING is
@@ -339,4 +344,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			!! Result.make (class_name, ass_classc.id)
         end;
 
-end
+end -- class CL_TYPE_A

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a non-nested call";
+	description: 
+		"AST representation of a non-nested call.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	CALL_AS
 
-feature
+feature -- Properties
 
 	access_name: STRING is
 		deferred

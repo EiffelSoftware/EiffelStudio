@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for integer constant.";
+	description: 
+		"AST representation of an integer constant.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,12 +14,7 @@ inherit
 			is_integer, good_integer
 		end
 
-feature -- Attributes
-
-	value: INTEGER;
-			-- Integer value
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -26,7 +22,10 @@ feature -- Initialization
 			value := yacc_int_arg (0);
 		end
 
-feature -- Conveniences
+feature -- Properties
+
+	value: INTEGER;
+			-- Integer value
 
 	is_integer: BOOLEAN is
 			-- Is it an integer value ?
@@ -34,13 +33,14 @@ feature -- Conveniences
 			Result := True;
 		end;
 
-	good_integer: BOOLEAN is
-			-- Is the atomic a good integer bound for multi-branch ?
-		do
-			Result := True;
-		end;
+feature -- Output
 
-feature -- Simple formatting
+    string_value: STRING is
+        do
+            Result := value.out
+        end	
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -48,9 +48,12 @@ feature -- Simple formatting
 			ctxt.put_string (value.out);
 		end;
 	
-    string_value: STRING is
-        do
-            Result := value.out
-        end	
+feature {COMPILER_EXPORTER}
+
+	good_integer: BOOLEAN is
+			-- Is the atomic a good integer bound for multi-branch ?
+		do
+			Result := True;
+		end;
 
 end -- class INTEGER_AS

@@ -1,4 +1,9 @@
--- Error for unknown language name in Externals clause
+indexing
+
+	description: 
+		"Error for unknown language name in Externals clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD34
 
@@ -9,16 +14,12 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Property
 
 	language_name: STRING;
 			-- Option name
 
-	set_language_name (s: STRING) is
-			-- Assign `s' to `language_name'
-		do
-			language_name := s
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -27,4 +28,12 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {LANG_TRIB_SD} -- Setting
+
+	set_language_name (s: STRING) is
+			-- Assign `s' to `language_name'
+		do
+			language_name := s
+		end;
+
+end -- class VD34

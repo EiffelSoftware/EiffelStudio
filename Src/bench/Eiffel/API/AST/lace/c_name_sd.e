@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class C_NAME_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_c
 		end
 
-feature
+feature -- Properties
 
 	is_c: BOOLEAN is
 			-- Is the language name "C" ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class C_NAME_SD

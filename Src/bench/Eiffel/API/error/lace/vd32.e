@@ -1,4 +1,9 @@
--- Warning for unknown free option
+indexing
+
+	description: 
+		"Error for unknown free option";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD32
 
@@ -9,7 +14,7 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Property
 
 	code: STRING is "VD32";
 			-- Error code
@@ -17,11 +22,7 @@ feature
 	option_name: STRING;
 			-- Option name
 
-	set_option_name (s: STRING) is
-			-- Assign `s' to `option_name'
-		do
-			option_name := s
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +31,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {D_OPTION_SD, CLUST_PROP_SD} -- Setting
+
+	set_option_name (s: STRING) is
+			-- Assign `s' to `option_name'
+		do
+			option_name := s
+		end;
+
+end -- class VD32

@@ -1,10 +1,17 @@
+indexing
+
+	description: 
+		"AST representation of an Eiffel function pointer for Current.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ADDRESS_CURRENT_AS
 
 inherit
 
 	EXPR_AS
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -12,7 +19,7 @@ feature -- Initialization
 			-- Do nothing
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

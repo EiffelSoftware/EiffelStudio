@@ -1,4 +1,9 @@
--- Error for unvalid equality
+indexing
+
+	description: 
+		"Error for invalid equality.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VWEQ 
 
@@ -9,7 +14,7 @@ inherit
 			build_explain
 		end
 	
-feature 
+feature -- Properties
 
 	left_type: TYPE_A;
 			-- Left type of the equality
@@ -17,18 +22,10 @@ feature
 	right_type: TYPE_A;
 			-- Right type of the equality
 
-	set_right_type (t: TYPE_A) is
-		do
-			right_type := t;
-		end;
-
-	set_left_type (t: TYPE_A) is
-		do
-			left_type := t;
-		end;
-
 	code: STRING is "VWEQ";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
@@ -41,4 +38,16 @@ feature
 			ow.new_line
 		end
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_right_type (t: TYPE_A) is
+		do
+			right_type := t;
+		end;
+
+	set_left_type (t: TYPE_A) is
+		do
+			left_type := t;
+		end;
+
+end -- class VWEQ

@@ -1,4 +1,9 @@
--- Error when undefinition of a deferred feature
+indexing
+
+	description: 
+		"Error when undefinition of a deferred feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDUS3 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VDUS3

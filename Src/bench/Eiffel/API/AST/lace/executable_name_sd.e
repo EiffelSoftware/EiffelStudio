@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EXECUTABLE_NAME_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_executable
 		end
 
-feature
+feature -- Properties
 
 	is_executable: BOOLEAN is
 			-- Is the language name "Executable" ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class EXECUTABLE_NAME_SD

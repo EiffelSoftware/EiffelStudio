@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing an integer.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class INTEGER_VALUE
 
 inherit

@@ -1,4 +1,9 @@
--- Error for undeclared identifier
+indexing
+
+	description: 
+		"Error for undeclared identifier.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VEEN 
 
@@ -32,4 +37,4 @@ feature
 			ow.new_line;
 		end
 
-end
+end -- class VEEN

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of retry instruction";
+	description: 
+		"AST representation of retry instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -18,7 +19,7 @@ feature -- Initialization
 			-- Do nothing
 		end;
 
-feature -- Equivalence
+feature -- Comparison
 		
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -35,7 +36,7 @@ feature -- Equivalence
 			Result := True
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,4 +1,9 @@
--- Error when a precompiled file or directory cannot be read
+indexing
+
+	description: 
+		"Error when a precompiled file or directory cannot be read.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD42
 
@@ -9,23 +14,14 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Properties
 
 	path: STRING;
 			-- Path of file/directory
 
-	set_path (s: STRING) is
-			-- Assign `s' to `path'.
-		do
-			path := s;
-		end;
-
 	is_directory: BOOLEAN;
 
-	set_is_directory is
-		do
-			is_directory := True
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -38,4 +34,17 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {REMOTE_PROJECT_DIRECTORY} -- Setting
+
+	set_path (s: STRING) is
+			-- Assign `s' to `path'.
+		do
+			path := s;
+		end;
+
+	set_is_directory is
+		do
+			is_directory := True
+		end;
+
+end -- class VD42

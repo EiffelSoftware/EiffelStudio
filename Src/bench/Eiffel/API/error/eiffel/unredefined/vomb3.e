@@ -1,4 +1,9 @@
--- Error when the is a conflict on values in an inspect expression
+indexing
+
+	description: 
+		"Error when the is a conflict on values in an inspect expression.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VOMB3 
 
@@ -9,20 +14,14 @@ inherit
 			subcode, build_explain
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3;
-
-feature
 
 	interval: INTERVAL_B;
 			-- Interval of conflicting values
 
-	set_interval (t: INTERVAL_B) is
-			-- Assign `t' to `interval'.
-		do
-			interval := t;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -31,4 +30,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_interval (t: INTERVAL_B) is
+			-- Assign `t' to `interval'.
+		do
+			interval := t;
+		end;
+
+end -- class VOMB3

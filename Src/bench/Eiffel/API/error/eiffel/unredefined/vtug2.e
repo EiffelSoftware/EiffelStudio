@@ -1,4 +1,9 @@
--- Error for wrong number of generic parameter for an argument type
+indexing
+
+	description: 
+		"Error for wrong number of generic parameter for an argument type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTUG2 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 	
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 2
 
-end
+end -- class VTUG2

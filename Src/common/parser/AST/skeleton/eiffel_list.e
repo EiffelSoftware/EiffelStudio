@@ -1,6 +1,7 @@
 indexing
 
-	description: "List used in abstract syntax trees.";
+	description: 
+		"List used in abstract syntax trees.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -25,11 +26,11 @@ inherit
 			make
 		end;
 
-creation
+creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS}
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
 		do
@@ -63,7 +64,7 @@ feature -- Element change
 			other.go_to (cur)
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL, FORMAT_CONTEXT} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.

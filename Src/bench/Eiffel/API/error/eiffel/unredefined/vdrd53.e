@@ -1,5 +1,10 @@
--- Error when an argument type of a redefinition violates the rule
--- of signature conformance
+indexing
+
+	description: 
+		"Error when an argument type of a redefinition violates %
+		%the rule of signature conformance.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRD53 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VDRD53

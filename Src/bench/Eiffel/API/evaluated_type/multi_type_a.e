@@ -1,4 +1,9 @@
--- Actual type for manifest array conformance
+indexing
+
+	description: 
+		"Actual type for manifest array conformance.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class MULTI_TYPE_A 
 	
@@ -168,4 +173,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
             Result := last_type.storage_info_with_name (classc);
         end;
 
-end
+end -- class MULTI_TYPE_A

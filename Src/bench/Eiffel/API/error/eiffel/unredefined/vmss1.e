@@ -1,4 +1,9 @@
--- Error when the compiler cannot find a final name for a selection
+indexing
+
+	description: 
+		"Error when the compiler cannot find a final name for a selection.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VMSS1 
 	
@@ -9,9 +14,9 @@ inherit
 			subcode
 		end
 	
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 1;
 			-- Error code
 
-end 
+end -- class VMSS1

@@ -1,4 +1,9 @@
--- Actual type description
+indexing
+
+	description: 
+		"Actual type description.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class TYPE_A
 
@@ -456,4 +461,4 @@ feature {COMPILER_EXPORTER}
 			valid_result: result /= Void
 		end;
 
-end
+end -- class TYPE_A

@@ -1,4 +1,9 @@
--- Error when two local variables (or more) have the same name
+indexing
+
+	description: 
+		"Error when two local variables (or more) have the same name.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VRLE2 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 	
-feature 
+feature -- Property
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VRLE2

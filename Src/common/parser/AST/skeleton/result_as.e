@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description to access to `Result'.";
+	description: 
+		"AST representation to access to `Result'.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	ACCESS_AS
 
-feature
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -18,12 +19,14 @@ feature
 			-- Do nothing
 		end;
 
+feature -- Properties
+
 	access_name: STRING is
 		once
 			Result := "Result"
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

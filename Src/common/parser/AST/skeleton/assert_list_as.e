@@ -1,15 +1,17 @@
+indexing
+
+	description: 
+		"AST representation list of tagged_as structures.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ASSERT_LIST_AS
 
 inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	assertions: EIFFEL_LIST [TAGGED_AS];
-			-- Assertion list
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -17,16 +19,12 @@ feature -- Initialization
 			assertions ?= yacc_arg (0);
 		end
 
-feature -- Incrementality
+feature -- Properties
 
-	reset is
-		do
-			if assertions /= Void then
-				assertions.start
-			end;
-		end;
+	assertions: EIFFEL_LIST [TAGGED_AS];
+			-- Assertion list
 
-feature -- Status report
+feature -- Access
 
 	has_assertion (a: TAGGED_AS): BOOLEAN is
 			-- Does current list have assertion `a'?
@@ -47,7 +45,7 @@ feature -- Status report
 			assertions.go_to (cur)
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
@@ -90,6 +88,15 @@ feature -- Simple formatting
 				ctxt.new_line
 			end;
 			ctxt.commit;
+		end;
+
+feature {ROUTINE_AS}
+
+	reset is
+		do
+			if assertions /= Void then
+				assertions.start
+			end;
 		end;
 
 feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication

@@ -1,4 +1,9 @@
--- Actual type for bits_symbol: `base_type' is the bits value
+indexing
+
+	description: 
+		"Actual type for bits_symbol: `base_type' is the bits value.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BITS_SYMBOL_A
 
@@ -120,4 +125,4 @@ feature {COMPILER_EXPORTER}
 				feature_name.is_equal (bits_s.feature_name)
 		end;
 
-end
+end -- class BITS_SYMBOL_A

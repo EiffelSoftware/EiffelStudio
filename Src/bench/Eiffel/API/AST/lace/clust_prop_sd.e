@@ -1,37 +1,9 @@
--- Option_clause           : /* empty */
---                         | Use Include Exclude Name_adapt Defaults Options Visible LEX_END
---
--- Use                     : /* empty */
---                         | LEX_USE Name
---
--- Include                 : /* empty */
---                         | LEX_INCLUDE File_list
--- 
--- Exclude                 : /* empty */
---                         | LEX_EXCLUDE File_list
--- 
--- File_list               : File_clause
---                         | File_list LEX_SEMICOLON File_clause
--- 
--- File_clause             : /* empty */
---                         | Name
--- 
--- Name_adapt              : /* empty */
---                         | LEX_ADAPT Cluster_adapt_list
--- 
--- Cluster_adapt_list      : Cluster_adapt_clause
---                         | Cluster_adapt_list LEX_SEMICOLON Cluster_adapt_clause
--- 
--- Options                 : /* empty */
---                         | LEX_OPTION O_option_clause_list
---
--- Visible                 : /* empty */
---                         | LEX_VISIBLE Class_visi_list
---
--- Class_visi_list         : Class_visibility
---                         | Class_visi_list LEX_SEMICOLON Class_visibility
+indexing
 
-
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLUST_PROP_SD
 
@@ -46,7 +18,21 @@ inherit
 	SHARED_ENV;
 	SYSTEM_CONSTANTS
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			use_name ?= yacc_arg (0);
+			include_option ?= yacc_arg (1);
+			exclude_option ?= yacc_arg (2);
+			adapt_option ?= yacc_arg (3);
+			default_option ?= yacc_arg (4);
+			options ?= yacc_arg (5);
+			visible_option ?= yacc_arg (6)
+		end;
+
+feature -- Properties
 
 	use_name: ID_SD;
 			-- Use file
@@ -69,21 +55,7 @@ feature -- Attributes
 	visible_option: LACE_LIST [CLAS_VISI_SD];
 			-- Visibility
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			use_name ?= yacc_arg (0);
-			include_option ?= yacc_arg (1);
-			exclude_option ?= yacc_arg (2);
-			adapt_option ?= yacc_arg (3);
-			default_option ?= yacc_arg (4);
-			options ?= yacc_arg (5);
-			visible_option ?= yacc_arg (6)
-		end;
-
-feature -- Lace compilation
+feature {COMPILER_EXPORTER} -- Lace compilation
 
 	adapt_use is
 			-- Adapt cluster `cluster' with the use file
@@ -235,4 +207,4 @@ feature -- Lace compilation
 			end;
 		end;
 
-end
+end -- class CLUST_PROP_SD

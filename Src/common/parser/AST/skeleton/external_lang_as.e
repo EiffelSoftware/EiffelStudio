@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of a external macro structure.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EXTERNAL_LANG_AS
 
 inherit
@@ -6,7 +13,18 @@ inherit
 	EXTERNAL_CONSTANTS;
 	COMPILER_EXPORTER
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			language_name ?= yacc_arg (0);
+			parse;
+		ensure then
+			language_name /= Void;
+		end;
+
+feature -- Properties
 
 	language_name: STRING_AS;
 			-- Language name
@@ -30,7 +48,7 @@ feature -- Attributes
 	include_list: EXTERNALS_LIST;
 			-- List of include files
 
-feature -- Routines
+feature -- Access
 
 	is_special: BOOLEAN is
 			-- Does the external declaration include a "macro"/"dll16"/"dll32" ?
@@ -80,18 +98,7 @@ feature -- Routines
 			end;
 		end;
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			language_name ?= yacc_arg (0);
-			parse;
-		ensure then
-			language_name /= Void;
-		end;
-
-feature -- Parsing
+feature {NONE} -- Implementation
 
 	parse is 
 		local
@@ -469,9 +476,6 @@ loc_end);
 						-- if it's not the case, there must be an error
 					raise_external_error ("Extra text at end of external language specification", loc_begin, loc_end);
 				end;
-debug ("EXTERNAL_PARSING")
-	display_results;
-end;
 			else
 				if ext_language_name = Void then
 					loc_begin := 1;
@@ -485,21 +489,6 @@ end;
 										%(external language must be C)", loc_begin, loc_end);
 			end;
 		end;
-
-feature -- Debug
-
-	display_results is
-		do
-		end;
-
-feature -- Output
-
-		simple_format (ctxt: FORMAT_CONTEXT) is
-			do
-				ctxt.format_ast (language_name)
-			end
-
-feature -- Error handling
 
 	raise_external_error (msg: STRING; start_p: INTEGER; end_p: INTEGER) is
 			-- Raises error occured while parsing
@@ -515,5 +504,12 @@ feature -- Error handling
 			Error_handler.insert_error (ext_error);
 			Error_handler.raise_error;
 		end;
+
+feature {AST_EIFFEL} -- Output
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.format_ast (language_name)
+		end
 
 end -- class EXTERNAL_LANG_AS

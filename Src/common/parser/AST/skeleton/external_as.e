@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of a external C routine.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EXTERNAL_AS
 
 inherit
@@ -7,17 +14,7 @@ inherit
 			is_external, has_instruction, index_of_instruction
 		end;
 
-feature -- Attributes
-
-	language_name: EXTERNAL_LANG_AS;
-			-- Language name
-			-- might be replaced by external_declaration or external_definition
-
-	alias_name: STRING_AS;
-			-- Optional external name
-
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -28,7 +25,14 @@ feature -- Initialization
 			language_name /= Void;
 		end;
 
-feature -- Conveniences
+feature -- Properties
+
+	language_name: EXTERNAL_LANG_AS;
+			-- Language name
+			-- might be replaced by external_declaration or external_definition
+
+	alias_name: STRING_AS;
+			-- Optional external name
 
 	is_external: BOOLEAN is
 			-- Is the current routine body an external one ?
@@ -44,7 +48,7 @@ feature -- Conveniences
 			end;
 		end; -- external_name
 
-feature -- Status report
+feature -- Access
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
 			-- Does current routine body has instruction `i'?
@@ -59,7 +63,7 @@ feature -- Status report
 			Result := 0
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description for formal generic type.";
+	description: 
+		"AST representation of a formal generic type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -24,25 +25,7 @@ inherit
 			is_class
 		end
 
-feature
-
-	position: INTEGER;
-			-- Position of the formal parameter in the declaration
-			-- array
-
-	set_position (i: INTEGER) is
-			-- Assign `i' to `position'.
-		do
-			position := i;
-		end;
-
-	is_class: BOOLEAN is
-			-- Does the Current AST represent a class?
-		do
-			Result := True
-		end;
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -50,7 +33,28 @@ feature -- Initialization
 			position := yacc_int_arg (0);
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	position: INTEGER;
+			-- Position of the formal parameter in the declaration
+			-- array
+
+	is_class: BOOLEAN is
+			-- Does the Current AST represent a class?
+		do
+			Result := True
+		end;
+
+feature -- Output
+
+	dump: STRING is
+		do
+			!!Result.make (12);
+			Result.append ("Generic #");
+			Result.append_integer (position);
+		end;
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -58,13 +62,12 @@ feature -- Simple formatting
 			ctxt.put_string (ctxt.formal_name (position))
 		end;
 
-feature
+feature {COMPILER_EXPORTER}
 
-	dump: STRING is
+	set_position (i: INTEGER) is
+			-- Assign `i' to `position'.
 		do
-			!!Result.make (12);
-			Result.append ("Generic #");
-			Result.append_integer (position);
+			position := i;
 		end;
 
 end -- class FORMAL_AS

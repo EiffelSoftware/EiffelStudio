@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract node for alternative values of a multi-branch instruction";
+	description: 
+		"AST representation for alternative values of a multi-branch instruction.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,16 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	lower: ATOMIC_AS;
-			-- Lower bound
-
-	upper: ATOMIC_AS;
-			-- Upper bound
-			-- void if constant rather than interval
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -29,6 +21,17 @@ feature -- Initialization
 		ensure then
 			lower_exists: lower /= Void;
 		end;
+
+feature -- Properties
+
+	lower: ATOMIC_AS;
+			-- Lower bound
+
+	upper: ATOMIC_AS;
+			-- Upper bound
+			-- void if constant rather than interval
+
+feature {COMPILER_EXPORTER} -- Access
 
 	good_integer_interval: BOOLEAN is
 			-- Is the current interval a good integer interval ?
@@ -46,7 +49,7 @@ feature -- Initialization
 						(upper = Void or else upper.good_character)
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,5 +1,10 @@
--- Error when a redeclaration don't specify a require else or an ensure
--- then assertion block
+indexing
+
+	description: 
+		"Error when a redeclaration don't specify a require %
+		%else or an ensure then assertion block.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRD8 
 
@@ -7,38 +12,35 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode
+			build_explain, subcode, is_defined
 		end
 
-feature
+feature -- Properties
 
-	a_feature: FEATURE_I;
-			-- Feature violatting the rule
-
-	set_feature (f: FEATURE_I) is
-			-- Assign `f' to `a_feature'.
-		do
-			a_feature := f;
-		end;
+	a_feature: E_FEATURE;
+			-- Feature violating the rule
 
 	precondition: BOOLEAN;
 
-	set_precondition is
-		do
-			precondition := True;
-		end;
-
 	postcondition: BOOLEAN;
-
-	set_postcondition is
-		do
-			postcondition := True;
-		end;
 
 	code: STRING is "VDRD";
 			-- Error code
 
 	subcode: INTEGER is 3;
+
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := is_class_defined and then
+				a_feature /= Void 
+		ensure then
+			valid_a_feature: Result implies a_feature /= Void
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
@@ -57,4 +59,24 @@ feature
 			end;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_feature (f: FEATURE_I) is
+			-- Assign `f' to `a_feature'.
+		require
+			valid_f: f /= Void
+		do
+			a_feature := f.api_feature;
+		end;
+
+	set_postcondition is
+		do
+			postcondition := True;
+		end;
+
+	set_precondition is
+		do
+			precondition := True;
+		end;
+
+end -- class VDRD8

@@ -1,4 +1,9 @@
--- Error in creation instruction
+indexing
+
+	description: 
+		"Error in creation instruction.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCC 
 
@@ -9,26 +14,17 @@ inherit
 			build_Explain
 		end;
 
-feature
+feature -- Properties
 
 	type: TYPE_A;
 			-- Creation type involved
-
-	set_type (t: TYPE_A) is
-			-- Assign `t' to `type'.
-		do
-			type := t;
-		end;
 
 	code: STRING is "VGCC";
 			-- Error code
 
 	target_name: STRING;
 
-	set_target_name (s: STRING) is
-		do
-			target_name := s
-		end;
+feature -- Output
 
 	print_name (ow: OUTPUT_WINDOW) is
 		do
@@ -44,4 +40,17 @@ feature
 			print_name (ow)
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_target_name (s: STRING) is
+		do
+			target_name := s
+		end;
+
+	set_type (t: TYPE_A) is
+			-- Assign `t' to `type'.
+		do
+			type := t;
+		end;
+
+end -- class VGCC

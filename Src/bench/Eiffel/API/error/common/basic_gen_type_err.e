@@ -1,4 +1,9 @@
--- Syntax error for basic type with generic derivation
+indexing
+
+	description: 
+		"Syntax error for basic type with generic derivation.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BASIC_GEN_TYPE_ERR
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
             -- Specific syntax message.
@@ -21,4 +26,4 @@ feature
 			Result := "basic type can not have generic derivation"
         end;
 
-end
+end -- class BASIC_GEN_TYPE_ERR

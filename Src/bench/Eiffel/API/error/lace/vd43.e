@@ -1,4 +1,9 @@
--- Warning for incompletely C compiled precompiled system
+indexing
+
+	description: 
+		"Warning for incompletely C compiled precompiled system.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD43
 
@@ -9,7 +14,7 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Properties
 
 	code: STRING is "VD43";
 			-- Error code
@@ -17,11 +22,7 @@ feature
 	path: STRING;
 			-- path name
 
-	set_path (s: STRING) is
-			-- Assign `s' to `path'
-		do
-			path := s
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -30,4 +31,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {REMOTE_PROJECT_DIRECTORY} -- Setting
+
+	set_path (s: STRING) is
+			-- Assign `s' to `path'
+		do
+			path := s
+		end;
+
+end -- class VD43

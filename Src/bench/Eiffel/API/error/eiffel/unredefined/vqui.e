@@ -1,4 +1,9 @@
--- Error for unvalid type of a unique constant
+indexing
+
+	description: 
+		"Error for invalid type of a unique constant.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VQUI 
 
@@ -9,17 +14,14 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VQUI";
 			-- Error code
 
 	type: TYPE_A;
 
-	set_type (t: TYPE_A) is
-		do
-			type := t;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -28,4 +30,11 @@ feature
 			ow.new_line;
 		end;
 			
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_type (t: TYPE_A) is
+		do
+			type := t;
+		end;
+
 end

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Platform specific constants.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class PLATFORM_CONSTANTS
 
 inherit
@@ -28,5 +35,4 @@ feature -- Externals
 
 	Copy_cmd: STRING is external "C" alias "eif_copy_cmd" end;
 
-end
-
+end -- class PLATFORM_CONSTANTS

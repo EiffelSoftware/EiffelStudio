@@ -1,6 +1,10 @@
--- Error for useless selections
--- The selection is not needed or there are two different selection of the
--- same feature
+indexing
+
+	description: 
+		"Error for useless selections. The selection is not needed or there are two %
+		%different selection of the same feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VMSS2 obsolete "NOT DEFINED IN THE BOOK%N%
 			%VMSS2 is in fact in class VMSS3"
@@ -9,28 +13,16 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode
+			build_explain, subcode, is_defined
 		end
 	
-feature 
+feature -- Properties
 
 	feature_name: STRING;
 			-- Feature name selected
 
-	parent: CLASS_C;
+	parent: E_CLASS;
 			-- Class id of the involved parent
-
-	set_feature_name (s: STRING) is
-			-- Assign `s' to `feature_name'.
-		do
-			feature_name := s;
-		end;
-
-	set_parent (c: CLASS_C) is
-			-- Assign `i' to `parent_id'.
-		do
-			parent := c;
-		end;
 
 	code: STRING is "VMSS";
 			-- Error code
@@ -40,6 +32,21 @@ feature
 			Result := 3
 		end;
 
+feature -- Access
+
+    is_defined: BOOLEAN is
+            -- Is the error fully defined?
+        do
+			Result := is_class_defined and then
+				parent /= Void and then
+				feature_name /= Void
+		ensure then
+			valid_parent: Result implies parent /= Void;
+			valid_feature_name: Result implies feature_name /= Void
+		end
+
+feature -- Output
+
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
 			-- in `ow'.
@@ -47,8 +54,26 @@ feature
 			ow.put_string ("Feature name: ");
 			ow.put_string (feature_name);
 			ow.put_string ("%NIn Select subclause for parent: ");
-			parent.e_class.append_signature (ow);
+			parent.append_signature (ow);
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_feature_name (s: STRING) is
+			-- Assign `s' to `feature_name'.
+		require
+			valid_s: s /= Void
+		do
+			feature_name := s;
+		end;
+
+	set_parent (c: CLASS_C) is
+			-- Assign `i' to `parent_id'.
+		require
+			valid_c: c /= Void
+		do
+			parent := c.e_class;
+		end;
+
+end -- class VMSS2

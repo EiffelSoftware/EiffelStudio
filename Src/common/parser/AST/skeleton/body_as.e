@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an Eiffel feature.";
+	description: 
+		"AST representation of an Eiffel feature body.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,18 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	arguments: EIFFEL_LIST [TYPE_DEC_AS];
-			-- List (of list) of arguments
-
-	type: TYPE;
-			-- Type if any
-
-	content: CONTENT_AS;
-			-- Content of the body: constant or regular body
-
-feature -- Initialization
+feature {NONE} -- Initialization
 	
 	set is
 			-- Yacc initialization
@@ -32,12 +22,48 @@ feature -- Initialization
 				-- Constant value or standard feature body
 		ensure then
 			(content /= Void) or else (type /= Void);
-		end; -- set
+		end
+
+feature -- Properties
+
+	arguments: EIFFEL_LIST [TYPE_DEC_AS];
+			-- List (of list) of arguments
+
+	type: TYPE;
+			-- Type if any
+
+	content: CONTENT_AS;
+			-- Content of the body: constant or regular body
 
 	is_unique: BOOLEAN is
 		do
 			Result := content /= Void and then content.is_unique
 		end;
+
+feature -- Access
+
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+			-- Does this body has instruction `i'?
+		do
+			if content /= Void then
+				Result := content.has_instruction (i)
+			else
+				Result := False
+			end
+		end;
+
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+			-- Index of `i' in this body.
+			-- Result is `0' not found.
+		do
+			if content /= Void then
+				Result := content.index_of_instruction (i)
+			else
+				Result := 0
+			end
+		end;
+
+feature {BODY_AS, FEATURE_AS}
 
 	check_local_names is
 			-- Check conflicts between local names and feature names
@@ -108,30 +134,7 @@ end
 			end
 		end;
 
-feature -- Status report
-
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
-			-- Does this body has instruction `i'?
-		do
-			if content /= Void then
-				Result := content.has_instruction (i)
-			else
-				Result := False
-			end
-		end;
-
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
-			-- Index of `i' in this body.
-			-- Result is `0' not found.
-		do
-			if content /= Void then
-				Result := content.index_of_instruction (i)
-			else
-				Result := 0
-			end
-		end;
-
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

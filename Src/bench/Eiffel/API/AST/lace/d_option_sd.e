@@ -1,9 +1,9 @@
--- D_option_clause            : /* empty */
---                            | Name Option_mark
---                            ;
--- Option_mark                : /* empty */
---                            | LEX_LEFT_PARAM Option_value LEX_RIGHT_PARAM
---                            ;
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class D_OPTION_SD
 
@@ -14,15 +14,7 @@ inherit
 			adapt
 		end;
 
-feature -- Attributes
-
-	option: OPTION_SD;
-			-- Option name
-
-	value: OPT_VAL_SD;
-			-- option value
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -44,6 +36,16 @@ feature -- Initialization
 			end;
 		end;
 
+feature -- Properties
+
+	option: OPTION_SD;
+			-- Option name
+
+	value: OPT_VAL_SD;
+			-- option value
+
+feature {NONE} -- Implementation
+
 	check_valid_free_options is
 		local
 			free_option: FREE_OPTION_SD;
@@ -59,7 +61,7 @@ feature -- Initialization
 			end;
 		end;
 
-feature -- Lace compilation
+feature {COMPILER_EXPORTER} -- Lace compilation
 
 	process_system_level_options is
 		do
@@ -75,4 +77,4 @@ feature -- Lace compilation
 			option.adapt (value, context.current_cluster.classes, Void) 
 		end;
 
-end
+end -- class D_OPTION_SD

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for DOUBLE type.";
+	description: 
+		"AST representation of a DOUBLE type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,7 @@ inherit
 
 	BASIC_TYPE
 
-feature
+feature -- Output
 
 	dump: STRING is "DOUBLE";
 			-- Dumped trace

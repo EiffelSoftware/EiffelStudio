@@ -1,4 +1,9 @@
--- Class for an staticed type on a feature
+indexing
+
+	description: 
+		"Class for an staticed type on a feature.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class LIKE_FEATURE
 
@@ -277,4 +282,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			!! Result.make (tmp);
 		end;
 
-end
+end -- class LIKE_FEATURE

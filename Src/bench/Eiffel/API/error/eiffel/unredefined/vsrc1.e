@@ -1,4 +1,9 @@
--- Error for generic root class
+indexing
+
+	description: 
+		"Error for generic root class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VSRC1 
 
@@ -9,11 +14,11 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VSRC";
 			-- Error code
 
 	subcode: INTEGER is 1;
 
-end 
+end -- class VSRC1

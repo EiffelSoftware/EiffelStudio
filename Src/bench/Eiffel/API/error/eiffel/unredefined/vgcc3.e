@@ -1,5 +1,10 @@
--- Error when the creation type of a creation instruction is an expanded
--- type, a none type or a simple type
+indexing
+
+	description: 
+		"Error when the creation type of a creation instruction %
+		%is an expanded type, a none type or a simple type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCC3 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3
 
-end
+end -- class VGCC3

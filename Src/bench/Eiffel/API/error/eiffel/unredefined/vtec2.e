@@ -1,5 +1,10 @@
--- Error for expanded that has more that more creation routines
--- or creation routine has arguments.
+indexing
+
+	description: 
+		"Error for expanded that has more that more creation routines %
+		%or creation routine has arguments";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTEC2 
 
@@ -10,8 +15,8 @@ inherit
 			subcode
 		end;
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-end
+end -- class VTEC2

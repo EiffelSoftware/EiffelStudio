@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an item in the class indexing list.";
+	description: 
+		"AST representation of an item in the class indexing list.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,23 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	tag: ID_AS;
-			-- Tag of the index list
-
-	index_list: EIFFEL_LIST [ATOMIC_AS];
-			-- Indexes
-
-feature -- Equivalence
-
-	is_equiv (other: like Current): BOOLEAN is
-		do
-			Result := deep_equal (tag, other.tag) and then
-						deep_equal (index_list, other.index_list)
-		end;
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -37,7 +22,23 @@ feature -- Initialization
 			list_exists: index_list /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	tag: ID_AS;
+			-- Tag of the index list
+
+	index_list: EIFFEL_LIST [ATOMIC_AS];
+			-- Indexes
+
+feature -- Comparison
+
+	is_equiv (other: like Current): BOOLEAN is
+		do
+			Result := deep_equal (tag, other.tag) and then
+						deep_equal (index_list, other.index_list)
+		end;
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

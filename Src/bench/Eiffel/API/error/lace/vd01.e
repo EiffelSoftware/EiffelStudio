@@ -1,5 +1,11 @@
--- Error for an non-existent cluster path, or a cluster path which doesn't
--- correpond to a directory or a readable directory
+indexing
+
+	description: 
+		"Error for an non-existent cluster path, or%
+		%a cluster path which doesn't correspond to a%
+		%directory or a readable directory";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD01
 
@@ -10,23 +16,15 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Properties
 
 	path: STRING;
 			-- Invalid path
 
-	set_path (s: STRING) is
-			-- Assign `s' to `path'.
-		do
-			path := s;
-		end;
-
 	cluster_name: STRING;
+			-- Cluster name that is not readable
 
-	set_cluster_name (s: STRING) is
-		do
-			cluster_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -37,4 +35,17 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {CLUSTER_I} -- Setting
+
+	set_path (s: STRING) is
+			-- Assign `s' to `path'.
+		do
+			path := s;
+		end;
+
+	set_cluster_name (s: STRING) is
+		do
+			cluster_name := s;
+		end;
+
+end -- class VD01

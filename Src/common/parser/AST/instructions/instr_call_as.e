@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a call as an instruction";
+	description: 
+		"AST representation of a call as an instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
-
-	call: CALL_AS;
-			-- Call instruction
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -25,7 +21,12 @@ feature -- Initialization
 			call_exists: call /= Void;
 		end;
 
-feature -- Equivalence
+feature -- Properties
+
+	call: CALL_AS;
+			-- Call instruction
+
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -48,7 +49,7 @@ feature -- Equivalence
 			Result := deep_equal (call, other.call)
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

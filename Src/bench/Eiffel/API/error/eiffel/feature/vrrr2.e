@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VRRR2 
 
@@ -8,7 +14,7 @@ inherit
 			build_explain, subcode
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VRRR";
 			-- Error code
@@ -17,10 +23,7 @@ feature
 
 	is_deferred: BOOLEAN;
 
-	set_is_deferred (b: BOOLEAN) is
-		do
-			is_deferred := b;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -32,4 +35,11 @@ feature
 			end;
 		end;
 
-end 
+feature {COMPILER_EXPORTER}
+
+	set_is_deferred (b: BOOLEAN) is
+		do
+			is_deferred := b;
+		end;
+
+end -- class VRRR2

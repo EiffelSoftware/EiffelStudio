@@ -1,6 +1,7 @@
 indexing
 
-	description: "Node for Eiffel terminals.";
+	description: 
+		"AST representation for Eiffel terminals.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	terminal: ATOMIC_AS;
-			-- terminal
-
-feature -- Initilization
+feature {NONE} -- Initilization
 
 	set is
 			-- Yacc initialization
@@ -25,7 +21,12 @@ feature -- Initilization
 			terminal_exists: terminal /= Void
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	terminal: ATOMIC_AS;
+			-- terminal
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

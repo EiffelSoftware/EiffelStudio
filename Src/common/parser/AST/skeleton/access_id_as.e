@@ -1,8 +1,8 @@
 indexing
 
 	description:
-			"Abstract description of an access (local, argument or feature). %
-			%It is necessary the first call in a nested expression.";
+		"AST representation of an access (local, argument or feature). %
+		%It is necessary the first call in a nested expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 

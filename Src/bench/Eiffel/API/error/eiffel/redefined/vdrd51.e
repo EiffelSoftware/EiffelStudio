@@ -1,4 +1,9 @@
--- Error for non-conformance of Result types for redefinitions
+indexing
+
+	description: 
+		"Error for non-conformance of Result types for redefinitions.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDRD51 
 
@@ -9,7 +14,7 @@ inherit
 			subcode
 		end;
 	
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 
 			-- Error code
@@ -17,4 +22,4 @@ feature
 			Result := 2;
 		end;
 
-end
+end -- class VDRD51

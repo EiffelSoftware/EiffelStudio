@@ -1,4 +1,9 @@
--- Actual type like Current
+indexing
+
+	description: 
+		"Actual type like Current.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class LIKE_CURRENT
 
@@ -148,7 +153,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				like_c.actual_type.is_deep_equal (actual_type);
 		end;
 
-			
 	create_info: CREATE_CURRENT is
 			-- Byte code information for entity type creation
 		once
@@ -163,4 +167,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			!! Result.make ("like Current")
 		end;
 
-end
+end -- class LIKE_CURRENT

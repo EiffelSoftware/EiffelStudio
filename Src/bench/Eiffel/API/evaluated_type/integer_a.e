@@ -1,4 +1,9 @@
--- Actual type for integer type
+indexing
+
+	description: 
+		"Actual type for integer type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class INTEGER_A
 
@@ -85,4 +90,4 @@ feature {COMPILER_EXPORTER}
 			Result := System.integer_class.compiled_class;
 		end;
 
-end
+end -- class INTEGER_A

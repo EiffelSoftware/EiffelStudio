@@ -1,4 +1,9 @@
--- Error for deferred root class
+indexing
+
+	description: 
+		"Error for deferred root class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VSRC2
 
@@ -9,11 +14,11 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VSRC";
 			-- Error code
 
 	subcode: INTEGER is 2;
 
-end 
+end -- class VSRC2

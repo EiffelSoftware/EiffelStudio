@@ -1,4 +1,9 @@
--- Error when a result entity in used in a precondition
+indexing
+
+	description: 
+		"Error when a result entity in used in a precondition.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VEEN2A 
 
@@ -17,4 +22,4 @@ feature
 		do
 		end;
 
-end
+end -- class VEEN2A

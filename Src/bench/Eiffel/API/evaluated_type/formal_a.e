@@ -1,7 +1,12 @@
--- Descripion of a actual formal generic type: the base type is the class
--- to which the formal generic belongs to and `position' is the position
--- of the formal in the formal generic parameter declaration of this
--- class
+indexing
+
+	description: 
+		"Descripion of a actual formal generic type: the base type %
+		%is the class to which the formal generic belongs to and `position' %
+		%is the position of the formal in the formal generic parameter %
+		%declaration of this class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class FORMAL_A
 
@@ -153,4 +158,4 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			end
 		end;
 
-end
+end -- class FORMAL_A

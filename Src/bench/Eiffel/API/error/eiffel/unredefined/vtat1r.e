@@ -1,4 +1,9 @@
--- Error when feature type is an unvalid anchored type
+indexing
+
+	description: 
+		"Error when feature type is an invalid anchored type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VTAT1R 
 
@@ -15,7 +20,7 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -23,4 +28,4 @@ feature
 			old_build_explain (ow);
 		end;
 
-end
+end -- class VTAT1R

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Free unary expression description";
+	description: 
+		"AST representation of free unary expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,12 +14,7 @@ inherit
 			set
 		end
 
-feature -- Attributes
-
-	op_name: ID_AS;
-			-- Operator name
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -30,7 +26,10 @@ feature -- Initialization
 			op_name_exists: op_name /= Void;
 		end;
 
-feature -- Type check
+feature -- Properties
+
+	op_name: ID_AS;
+			-- Operator name
 
 	prefix_feature_name: STRING is
 			-- Internal name

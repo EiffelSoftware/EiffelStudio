@@ -1,4 +1,9 @@
--- Syntax error for uncompleted string (final quote is missing)
+indexing
+
+	description: 
+		"Syntax error for uncompleted string (final quote is missing).";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class STRING_UNCOMPLETED
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
 			-- Specific syntax message.
@@ -21,4 +26,4 @@ feature
 			Result := "incomplete string: missing final quote"
         end
 
-end
+end -- class STRING_UNCOMPLETED

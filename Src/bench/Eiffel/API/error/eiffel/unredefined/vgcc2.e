@@ -1,4 +1,9 @@
--- Error for a creation of an instance of a deferred class
+indexing
+
+	description: 
+		"Error for a creation of an instance of a deferred class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VGCC2 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2
 
-end
+end -- class VGCC2

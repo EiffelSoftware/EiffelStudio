@@ -1,4 +1,9 @@
--- Error for cluster
+indexing
+
+	description: 
+		"Error for cluster.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class CLUSTER_ERROR
 
@@ -6,16 +11,12 @@ inherit
 
 	LACE_ERROR
 
-feature
+feature -- Property
 
 	cluster: CLUSTER_I;
 			-- Cluster involved
 
-	set_cluster (c: CLUSTER_I) is
-			-- Assign `c' to `cluster'.
-		do
-			cluster := c;
-		end;
+feature -- Output
 
 	put_cluster_name (ow: OUTPUT_WINDOW) is
 			-- Display the cluster name
@@ -33,4 +34,12 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {AST_LACE, COMPILER_EXPORTER}
+
+	set_cluster (c: CLUSTER_I) is
+			-- Assign `c' to `cluster'.
+		do
+			cluster := c;
+		end;
+
+end -- class CLUSTER_ERROR

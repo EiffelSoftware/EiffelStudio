@@ -19,7 +19,7 @@ feature -- Properties
 			Result := "hide"
 		end;
 
-feature -- Update
+feature {COMPILER_EXPORTER}
 
 	adapt ( value: OPT_VAL_SD;
 			classes:EXTEND_TABLE [CLASS_I, STRING];
@@ -63,4 +63,4 @@ feature -- Update
 			end;
 		end;
 
-end -- class HIDE_SD
+end -- class HIDE_SD 

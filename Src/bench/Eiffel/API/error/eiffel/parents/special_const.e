@@ -1,8 +1,13 @@
--- Constants for special errors
+indexing
+
+	description: 
+		"Constants for special errors.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SPECIAL_CONST
 
-feature
+feature -- Access
 
 	Case_1: STRING is "Class TO_SPECIAL must have one formal generic parameter";
 
@@ -38,4 +43,4 @@ feature
 
 	Case_16: STRING is "Non-expanded classes for basic types may not have creation procedure";
 
-end
+end -- class SPECIAL_CONST

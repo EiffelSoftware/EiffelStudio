@@ -1,17 +1,24 @@
+indexing
+
+	description: 
+		"AST representation of an `all' structure.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ALL_AS
 
 inherit
 
 	FEATURE_SET_AS
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
 		do
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

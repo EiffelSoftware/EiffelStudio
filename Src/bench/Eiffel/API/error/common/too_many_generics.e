@@ -1,4 +1,9 @@
--- Syntax error for more than 4 generic parameters
+indexing
+
+	description: 
+		"Syntax error for more than 4 generic parameters.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class TOO_MANY_GENERICS
 
@@ -9,11 +14,11 @@ inherit
 			syntax_message
 		end
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature
+feature -- Property
 
 	syntax_message: STRING is
 			-- Specific syntax message.
@@ -21,4 +26,4 @@ feature
 			Result := "the number of generic parameters is limited to four"
         end;
 
-end
+end -- class TOO_MANY_GENERICS

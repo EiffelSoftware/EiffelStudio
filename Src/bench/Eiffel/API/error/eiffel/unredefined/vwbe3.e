@@ -1,4 +1,9 @@
--- Assertion has not a boolean expression as condition
+indexing
+
+	description: 
+		"Assertion has not a boolean expression as condition.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VWBE3 
 
@@ -6,8 +11,8 @@ inherit
 
 	VWBE
 
-feature
+feature -- Properties
 
 	where: STRING is "In assertion clause"
 
-end
+end -- class VWBE3

@@ -1,18 +1,17 @@
+indexing
+
+	description: 
+		"AST representation of an export item.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EXPORT_ITEM_AS
 
 inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	clients: CLIENT_AS;
-			-- Client list
-
-	features: FEATURE_SET_AS;
-			-- Feature set
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -21,7 +20,15 @@ feature -- Initialization
 			features ?= yacc_arg (1);
 		end;
 
-feature -- Simple formatting
+feature -- Properties
+
+	clients: CLIENT_AS;
+			-- Client list
+
+	features: FEATURE_SET_AS;
+			-- Feature set
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,4 +1,9 @@
--- Error when an infixed feature has not exactly one argument
+indexing
+
+	description: 
+		"Error when an infixed feature has not exactly one argument.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VFFD6 
 
@@ -9,8 +14,8 @@ inherit
 			subcode
 		end;
 
-feature 
+feature -- Properties
 
 	subcode: INTEGER is 6;
 
-end
+end -- class VFFD6

@@ -1,9 +1,9 @@
--- Cluster_clause          : /* empty */
---                         | Cluster_tag Name Cluster_properties
---                         ;
--- 
--- Cluster_tag             : Name LEX_COLUMN
---                         ;
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLUSTER_SD
 
@@ -15,18 +15,7 @@ inherit
 		end;
 	SHARED_ENV;
 
-feature -- Attributes
-
-	cluster_name: ID_SD;
-			-- Cluster name
-
-	directory_name: ID_SD;
-			-- Path to the cluster
-
-	cluster_properties: CLUST_PROP_SD;
-			-- Cluster properties
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -40,7 +29,18 @@ feature -- Initialization
 			cluster_name_exists: cluster_name /= Void;
 		end;
 
-feature -- Lace recompilation
+feature -- Properties
+
+	cluster_name: ID_SD;
+			-- Cluster name
+
+	directory_name: ID_SD;
+			-- Path to the cluster
+
+	cluster_properties: CLUST_PROP_SD;
+			-- Cluster properties
+
+feature {COMPILER_EXPORTER} -- Lace recompilation
 
 	build is
 			-- Build the cluster
@@ -162,7 +162,7 @@ end;
 			end;
 		end;
 
-feature -- DLE
+feature {COMPILER_EXPORTER} -- DLE
 
 	build_dle is
 			-- Build the cluster.
@@ -230,4 +230,4 @@ end;
 			end
 		end;
 
-end
+end -- class CLUSTER_SD

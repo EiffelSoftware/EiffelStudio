@@ -1,4 +1,9 @@
--- Warning for rename clause in Ace
+indexing
+
+	description: 
+		"Warning for rename clause in Ace.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class REN_WARN
 
@@ -9,14 +14,16 @@ inherit
 			build_explain, code
 		end
 
-feature
+feature -- Property
 
 	code: STRING is "VD35";
 			-- Error code
+
+feature -- Ouput
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			put_cluster_name (ow)
 		end;
 
-end
+end -- class REN_WARN

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an Eiffel loop instruction";
+	description: 
+		"AST representation of an Eiffel loop instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,7 +11,21 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			from_part ?= yacc_arg (0);
+			invariant_part ?= yacc_arg (1);
+			variant_part ?= yacc_arg (2);
+			stop ?= yacc_arg (3);
+			compound ?= yacc_arg (4);
+		ensure then
+			stop_exists: stop /= Void
+		end;
+
+feature -- Properties
 
 	from_part: EIFFEL_LIST [INSTRUCTION_AS];
 			-- from compound
@@ -27,21 +42,7 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Loop compound
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			from_part ?= yacc_arg (0);
-			invariant_part ?= yacc_arg (1);
-			variant_part ?= yacc_arg (2);
-			stop ?= yacc_arg (3);
-			compound ?= yacc_arg (4);
-		ensure then
-			stop_exists: stop /= Void
-		end;
-
-feature -- Equivalence
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -80,7 +81,7 @@ feature -- Equivalence
 			end
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

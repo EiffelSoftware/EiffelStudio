@@ -1,4 +1,9 @@
--- Error VRLE
+indexing
+
+	description: 
+		"Error VRLE.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VRLE 
 
@@ -6,10 +11,9 @@ inherit
 
 	FEATURE_ERROR
 
-
-feature 
+feature -- Properties
 
 	code: STRING is "VRLE";
 			-- Error code
 
-end
+end -- class VRLE

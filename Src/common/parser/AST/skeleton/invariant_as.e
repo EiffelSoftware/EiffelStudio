@@ -1,6 +1,7 @@
 indexing
 
-	description: "Description of class invariant.";
+	description: 
+		"AST representation of a class invariant.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,37 +14,30 @@ inherit
 			is_invariant_obj
 		end;
 
-feature -- Identity
+feature {NONE} -- Initialization
+
+	set is
+			-- Initialization routine.
+		do
+			assertion_list ?= yacc_arg (0);
+		end;
+
+feature -- Properties
 
 	id: INTEGER;
 			-- Class id of the class to which current is the invariant
 			-- description
 
-	set_id (i: INTEGER) is
-			-- Assign `i' to `id'.
+	is_invariant_obj: BOOLEAN is
+			-- Is the current object an instance of INVARIANT_AS ?
 		do
-			id := i;
-		end; -- set_id
-
-feature -- Attribute
+			Result := True;
+		end;
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS];
 			-- Assertion list
 
-	set_assertion_list (a: like assertion_list) is
-		do
-			assertion_list := a
-		end;
-
-feature -- Initialization
-
-	set is
-			-- Initialization routine
-		do
-			assertion_list ?= yacc_arg (0);
-		end;
-
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -85,12 +79,17 @@ feature -- Simple formatting
 			ctxt.commit;
 		end;
 
-feature -- Conveniences
+feature {COMPILER_EXPORTER}
 
-	is_invariant_obj: BOOLEAN is
-			-- Is the current object an instance of INVARIANT_AS ?
+	set_id (i: INTEGER) is
+			-- Assign `i' to `id'.
 		do
-			Result := True;
+			id := i;
+		end; 
+
+	set_assertion_list (a: like assertion_list) is
+		do
+			assertion_list := a
 		end;
 
 end -- class INVARIANT_AS

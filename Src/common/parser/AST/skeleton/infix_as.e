@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of an Eiffel infixed feature name.";
+	description: 
+		"AST representation of an Eiffel infixed feature name.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,37 +14,7 @@ inherit
 			is_infix, is_valid, offset, simple_format
 		end
 
-feature -- Attributes
-
-	fix_operator: STRING_AS;
-			-- Infix notation
-
-feature -- Conveniences
-
-	is_infix: BOOLEAN is
-			-- is the feature name an infixed notation ?
-		do
-			Result := True;
-		end; -- is_infix
-
-	infix "<" (other: FEATURE_NAME): BOOLEAN is
-		local
-			infix_feature: like Current;
-			normal_feature: FEAT_NAME_ID_AS;
-		do
-			normal_feature ?= other;
-			infix_feature ?= other;
-			if infix_feature /= void then
-				Result := fix_operator < infix_feature.fix_operator
-			else
-				check
-					normal_feature /= void
-				end;
-				Result := false;
-			end;
-		end;
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -56,40 +27,18 @@ feature -- Initialization
 			fix_operator_exists: fix_operator /= Void
 		end;
 
-feature -- Simple formatting
+feature -- Properties
 
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
+	fix_operator: STRING_AS;
+			-- Infix notation
+
+	is_infix: BOOLEAN is
+			-- is the feature name an infixed notation ?
 		do
-			if is_frozen then
-				ctxt.put_text_item (ti_Frozen_keyword);
-				ctxt.put_space
-			end;
-			if is_infix then
-				ctxt.put_text_item (ti_Infix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item_without_tabs (ti_Double_quote);
-				ctxt.prepare_for_infix (internal_name, void);
-				ctxt.put_infix_feature
-			else
-				ctxt.put_text_item (ti_Prefix_keyword);
-				ctxt.put_space;
-				ctxt.put_text_item_without_tabs (ti_Double_quote);
-				ctxt.prepare_for_prefix (internal_name);
-				ctxt.put_prefix_feature
-			end;
-			ctxt.put_text_item_without_tabs (ti_Double_quote);
-		end;
+			Result := True;
+		end; -- is_infix
 
-feature
-
-	set_name (s: STRING) is
-		do
-			!!fix_operator;
-			fix_operator.set_value (s);
-		end;
-
-feature
+feature -- Access
 
 	internal_name: ID_AS is
 			-- Internal name used by the compiler
@@ -170,5 +119,57 @@ feature
 				Result := Result + 6
 			end
 		end
+
+feature -- Comparison
+
+	infix "<" (other: FEATURE_NAME): BOOLEAN is
+		local
+			infix_feature: like Current;
+			normal_feature: FEAT_NAME_ID_AS;
+		do
+			normal_feature ?= other;
+			infix_feature ?= other;
+			if infix_feature /= void then
+				Result := fix_operator < infix_feature.fix_operator
+			else
+				check
+					normal_feature /= void
+				end;
+				Result := false;
+			end;
+		end;
+
+feature {AST_EIFFEL} -- Output
+
+	simple_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			if is_frozen then
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
+			end;
+			if is_infix then
+				ctxt.put_text_item (ti_Infix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
+				ctxt.prepare_for_infix (internal_name, void);
+				ctxt.put_infix_feature
+			else
+				ctxt.put_text_item (ti_Prefix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
+				ctxt.prepare_for_prefix (internal_name);
+				ctxt.put_prefix_feature
+			end;
+			ctxt.put_text_item_without_tabs (ti_Double_quote);
+		end;
+
+feature {COMPILER_EXPORTER}
+
+	set_name (s: STRING) is
+		do
+			!!fix_operator;
+			fix_operator.set_value (s);
+		end;
 
 end -- class INFIX_AS

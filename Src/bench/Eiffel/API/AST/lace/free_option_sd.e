@@ -19,23 +19,27 @@ inherit
 	SHARED_DYNAMIC_CALLS;
 	EIFFEL_ENV
 
-feature
-
-	option_name: ID_SD;
-			-- Free option name
+feature {NONE} -- Initialization
 
 	set is
-			-- Yacc initialization
+			-- Yacc initialization.
 		do
 			option_name ?= yacc_arg (0);
 		ensure then
 			option_name_exists: option_name /= Void;
 		end;
 
+feature -- Properties
+
+	option_name: ID_SD;
+			-- Free option name
+
 	is_free_option: BOOLEAN is
 		do
 			Result := True
 		end;
+
+feature {COMPILER_EXPORTER}
 
 	is_valid: BOOLEAN is
 		local
@@ -113,7 +117,7 @@ feature {NONE}
 			Result.force (override_cluster, "override_cluster");
 		end;
 
-feature
+feature {COMPILER_EXPORTER}
 
 	adapt ( value: OPT_VAL_SD;
 			classes:EXTEND_TABLE [CLASS_I, STRING];
@@ -290,4 +294,4 @@ feature
 			end;
 		end;
 
-end
+end -- class FREE_OPTION_SD

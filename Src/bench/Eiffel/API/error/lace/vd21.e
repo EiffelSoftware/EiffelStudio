@@ -1,4 +1,9 @@
--- Error for unreadable file
+indexing
+
+	description: 
+		"Error for unreadable file.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD21
 
@@ -9,7 +14,7 @@ inherit
 			build_explain
 		end;
 
-feature
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -19,4 +24,4 @@ feature
 			put_file_name (ow)
 		end;
 
-end
+end -- class VD21

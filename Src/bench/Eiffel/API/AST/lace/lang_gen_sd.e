@@ -1,8 +1,9 @@
--- Generate_option         : /* empty */
---                         | LEX_LEFT_PARAM Generate_option_value LEX_RIGHT_PARAM
--- 
--- Generate_option_value   : LEX_YES
---                         | LEX_NO
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class LANG_GEN_SD
 
@@ -13,18 +14,7 @@ inherit
 			adapt
 		end
 
-feature -- Attributes
-
-	language_name: LANGUAGE_NAME_SD;
-			-- Language name
-
-	generate_value: YES_OR_NO_SD;
-			-- Generation value
-
-	file__name: ID_SD;
-			-- File name
-
-feature -- Initialization
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -35,6 +25,19 @@ feature -- Initialization
 		ensure then
 			language_name_exists: language_name /= Void;
 		end;
+
+feature -- Properties
+
+	language_name: LANGUAGE_NAME_SD;
+			-- Language name
+
+	generate_value: YES_OR_NO_SD;
+			-- Generation value
+
+	file__name: ID_SD;
+			-- File name
+
+feature {COMPILER_EXPORTER}
 
 	adapt is
 			-- Generate analysis
@@ -64,4 +67,4 @@ feature -- Initialization
 			end;
 		end;
 
-end
+end -- class LANG_GEN_SD

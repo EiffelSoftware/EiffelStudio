@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing a double.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class DOUBLE_VALUE
 
 inherit

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing of reference object.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class REFERENCE_VALUE
 
 inherit

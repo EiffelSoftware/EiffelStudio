@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST representation of BIT types.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class BITS_AS
 
 inherit
@@ -7,12 +14,7 @@ inherit
 			set
 		end
 
-feature -- Attributes
-
-	bits_value: INTEGER_AS;
-			-- Bits value
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initilization
@@ -21,6 +23,13 @@ feature -- Initialization
 		ensure then
 			bits_value_exists: bits_value /= Void
 		end;
+
+feature -- Properties
+
+	bits_value: INTEGER_AS;
+			-- Bits value
+
+feature -- Output
 
 	dump: STRING is
 			-- Debug purpose

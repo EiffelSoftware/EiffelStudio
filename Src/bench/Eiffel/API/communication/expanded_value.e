@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Run time value representing an expanded object.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class
 
 	EXPANDED_VALUE

@@ -1,4 +1,9 @@
--- Error when a local ACE file has a use clause
+indexing
+
+	description: 
+		"Error when a local ACE file has a use clause.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VDUC
 	
@@ -9,9 +14,9 @@ inherit
 			code
 		end
 
-feature
+feature -- Property
 
 	code: STRING is "VDUC";
 			-- Error code
 
-end
+end -- class VDUC

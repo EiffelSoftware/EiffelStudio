@@ -1,4 +1,9 @@
--- List used in abstract syntax trees.
+indexing
+
+	description: 
+		"List used in abstract syntax trees.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class LACE_LIST [T->AST_LACE]
 
@@ -16,7 +21,7 @@ creation
 
 	make
 
-feature
+feature {COMPILER_EXPORTER}
 
 	adapt is
 			-- Adaptation iteration
@@ -34,4 +39,4 @@ feature
 			end
 		end
 
-end
+end -- class LACE_LIST [T->AST_LACE]

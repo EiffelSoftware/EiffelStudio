@@ -1,15 +1,17 @@
+indexing
+
+	description: 
+		"AST represenation of a unary `strip' operation.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class UN_STRIP_AS
 
 inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	id_list: EIFFEL_LIST [ID_AS];
-			-- Attribute list
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -24,7 +26,12 @@ feature -- Initialization
 			id_list /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Property
+
+	id_list: EIFFEL_LIST [ID_AS];
+			-- Attribute list
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

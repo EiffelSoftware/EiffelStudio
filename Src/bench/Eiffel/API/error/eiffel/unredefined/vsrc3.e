@@ -1,4 +1,9 @@
--- Error for a root class having bad creation procedure arguments
+indexing
+
+	description: 
+		"Error for a root class having bad creation procedure arguments.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VSRC3
 
@@ -6,25 +11,30 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode
+			build_explain, subcode, is_defined
 		end;
 
-feature
+feature -- Properties
 
 	code: STRING is "VSRC";
 
 	subcode: INTEGER is 3;
 
-feature
-
-	creation_feature: FEATURE_I;
+	creation_feature: E_FEATURE;
 			-- Creation procedure name involved in the error
 
-	set_creation_feature (f: FEATURE_I) is
-			-- Assign `s' to `creation_name'.
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			creation_feature := f;
-		end;
+			Result := is_class_defined and then
+				creation_feature /= Void
+		ensure then
+			valid_creation_feature: Result implies creation_feature /= Void
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -34,4 +44,14 @@ feature
 			ow.new_line;
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	set_creation_feature (f: FEATURE_I) is
+			-- Assign `s' to `creation_name'.
+		require
+			valid_f: f /= Void
+		do
+			creation_feature := f.api_feature;
+		end;
+
+end -- class VSRC3

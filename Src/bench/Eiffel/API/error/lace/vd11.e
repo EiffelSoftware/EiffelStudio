@@ -1,4 +1,9 @@
--- Error when two files *.e with same class in the same cluster
+indexing
+
+	description: 
+		"Error when two files *.e with same class in the same cluster.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD11 obsolete "Use VSCN"
 
@@ -9,19 +14,15 @@ inherit
             build_explain, code
         end
 
-feature
+feature -- Properties
 
 	a_class: CLASS_I;
 			-- Class involved
 
-	set_a_class (c: CLASS_I) is
-			-- Assign `c' to `a_class'.
-		do
-			a_class := c;
-		end;
-
 	code: STRING is "VSCN";
 			-- Error code
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -35,4 +36,12 @@ feature
 			ow.new_line
 		end;
 
-end
+feature {CLUSTER_I} -- Setting
+
+	set_a_class (c: CLASS_I) is
+			-- Assign `c' to `a_class'.
+		do
+			a_class := c;
+		end;
+
+end -- class VD11

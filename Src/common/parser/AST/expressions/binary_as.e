@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract class for binary expression nodes";
+	description: 
+		"AST representation for binary expression nodes.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	left: EXPR_AS;
-			-- Left operand
-
-	right: EXPR_AS;
-			-- Right operand
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -30,7 +23,13 @@ feature -- Initialization
 			right_exists: right /= Void
 		end;
 
-feature -- Balancing rule control
+feature -- Properties
+
+	left: EXPR_AS;
+			-- Left operand
+
+	right: EXPR_AS;
+			-- Right operand
 
 	balanced: BOOLEAN is
 			-- Is the current binary operation subject to the balancing
@@ -53,8 +52,6 @@ feature -- Balancing rule control
 			-- Do nothing
 		end;
 
-feature -- Type check, byte code and dead code removal
-
 	infix_function_name: STRING is
 			-- Internal name of the infix feature associated to the
 			-- binary expression
@@ -76,7 +73,7 @@ feature -- Type check, byte code and dead code removal
 			Result := infix_function_name;	
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

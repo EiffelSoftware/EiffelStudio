@@ -1,9 +1,9 @@
 indexing
 
 	description:
-			"Abstract description of an access to an Eiffel feature (note %
-			%that this access can not be the first call of a nested %
-			%expression).";
+		"AST representation of an access to an Eiffel feature (note %
+		%that this access can not be the first call of a nested %
+		%expression).";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,7 +13,21 @@ inherit
 
 	ACCESS_AS
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	set is
+			-- Yacc initialization
+		do
+			feature_name ?= yacc_arg (0);
+			parameters ?= yacc_arg (1);
+			if parameters /= Void then
+				parameters.start
+			end
+		ensure then
+			feature_name_exists: feature_name /= Void;
+		end;
+
+feature -- Properties
 
 	feature_name: ID_AS;
 			-- Name of the feature called
@@ -29,26 +43,12 @@ feature -- Attributes
 			end;
 		end;
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0);
-			parameters ?= yacc_arg (1);
-			if parameters /= Void then
-				parameters.start
-			end
-		ensure then
-			feature_name_exists: feature_name /= Void;
-		end;
-
 	access_name: STRING is
 		do
 			Result := feature_name
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -57,7 +57,7 @@ feature -- Simple formatting
 			ctxt.put_current_feature;
 		end;
 
-feature -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}
+feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}
 
 	set_feature_name (name: like feature_name) is
 		require

@@ -1,4 +1,9 @@
--- Error when there is an addtional unvalid selection
+indexing
+
+	description: 
+		"Error when there is an additional invalid selection.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VMRC2 
 
@@ -6,41 +11,60 @@ inherit
 
 	VMRC
 		redefine
-			build_explain, subcode
+			build_explain, subcode, is_defined
 		end
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 2;
 
-	selected: FEATURE_I;
+	selected_feature: E_FEATURE;
 
-	unvalid: FEATURE_I;
+	invalid_feature: E_FEATURE;
 
-	init (s: FEATURE_I; u: FEATURE_I) is
-			-- Initialization
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
 		do
-			selected := s;
-			unvalid := u;
-		end;
+			Result := is_class_defined and then
+				selected_feature /= Void and then
+				invalid_feature /= Void
+		ensure then
+			valid_selected_feature: Result implies selected_feature /= Void;
+			valid_invalid_feature: Result implies invalid_feature /= Void
+		end
+
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
 			-- in `ow'.
 		local
-			u_class: CLASS_C;
-			s_class: CLASS_C;
+			u_class: E_CLASS;
+			s_class: E_CLASS;
 		do
-			u_class := unvalid.written_class;
-			s_class := selected.written_class;
+			u_class := invalid_feature.written_class;
+			s_class := selected_feature.written_class;
 			ow.put_string ("First version: ");
-			selected.append_name (ow, s_class);
+			selected_feature.append_name (ow, s_class);
 			ow.put_string (" from class: ");
 			s_class.append_name (ow);
 			ow.put_string ("Second version: ");
-			unvalid.append_name (ow, u_class);
+			invalid_feature.append_name (ow, u_class);
 			ow.put_string (" from class: ");
 			u_class.append_name (ow);
 		end;
 
-end
+feature {COMPILER_EXPORTER}
+
+	init (s: FEATURE_I; u: FEATURE_I) is
+			-- Initialization
+		require
+			valid_args: s /= Void and then u /= Void
+		do
+			selected_feature := s.api_feature;
+			invalid_feature := u.api_feature;
+		end;
+
+end -- class VMRC2

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a type declaration.";
+	description: 
+		"AST representation of a type declaration.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,15 +11,7 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
-
-	id_list: EIFFEL_LIST [ID_AS];
-			-- List of ids
-
-	type: TYPE;
-			-- Type
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -30,35 +23,22 @@ feature -- Initialization
 			type_exists: type /= Void
 		end;
 
-feature -- Incrementality
+feature -- Properties
+
+	id_list: EIFFEL_LIST [ID_AS];
+			-- List of ids
+
+	type: TYPE;
+			-- Type
+
+feature {ROUTINE_AS} -- Incrementality
 
 	reset is
 		do
 			id_list.start
 		end;
 
-feature -- Status report
-
-	has_id (i: ID_AS): BOOLEAN is
-			-- Does current type declaration contain
-			-- id `i'?
-		local
-			cur: CURSOR
-		do
-			cur := id_list.cursor
-			from
-				id_list.start
-			until
-				id_list.after or else Result
-			loop
-				Result := id_list.item.is_equal (i)
-				id_list.forth
-			end;
-	
-			id_list.go_to (cur)
-		end;
-
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -86,23 +66,5 @@ feature {TYPE_DEC_AS, LOCALS_MERGER} -- Replication
 		do
 			id_list := id
 		end; 
-
-feature -- Debug
-
-	trace is
-		do
-			type.trace;
-			io.error.putstring (id_list.tagged_out);
-			from
-				id_list.start
-			until
-				id_list.after
-			loop
-				io.error.putstring ("Name: ");
-				io.error.putstring (id_list.item);
-				io.error.new_line;
-				id_list.forth
-			end;
-		end
 
 end -- class TYPE_DEC_AS

@@ -1,4 +1,9 @@
--- Actual type for real type
+indexing
+
+	description: 
+		"Actual type for real type.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class DOUBLE_A
 
@@ -81,4 +86,4 @@ feature {COMPILER_EXPORTER}
 			Result := System.double_class.compiled_class;
 		end;
 
-end
+end -- class DOUBLE_A

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a multi_branch instruction";
+	description: 
+		"AST representation of a multi_branch instruction";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,18 +11,7 @@ inherit
 
 	INSTRUCTION_AS
 
-feature -- Attributes
-
-	switch: EXPR_AS;
-			-- Expression to inspect
-
-	case_list: EIFFEL_LIST [CASE_AS];
-			-- Alternatives
-
-	else_part: EIFFEL_LIST [INSTRUCTION_AS];
-			-- Else part
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc alternatives
@@ -33,7 +23,18 @@ feature -- Initialization
 			switch_exists: switch /= Void
 		end;
 
-feature -- Equivalence
+feature -- Properties
+
+	switch: EXPR_AS;
+			-- Expression to inspect
+
+	case_list: EIFFEL_LIST [CASE_AS];
+			-- Alternatives
+
+	else_part: EIFFEL_LIST [INSTRUCTION_AS];
+			-- Else part
+
+feature -- Comparison
 
 	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
 			-- Is `other' instruction equivalent to Current?
@@ -64,7 +65,7 @@ feature -- Equivalence
 			end
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

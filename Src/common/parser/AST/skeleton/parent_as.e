@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a parent.";
+	description: 
+		"AST representation of a parent.";
 	date: "Date: $";
 	revision: "Revision: $"
 
@@ -10,7 +11,22 @@ inherit
 
 	AST_EIFFEL
 
-feature -- Attributes
+feature {NONE} -- Initilization
+	
+	set is
+			-- Yacc initilization
+		do
+			type ?= yacc_arg (0);
+			renaming ?= yacc_arg (1);
+			exports ?= yacc_arg (2);
+			undefining ?= yacc_arg (3);
+			redefining ?= yacc_arg (4);
+			selecting ?= yacc_arg (5);
+		ensure then
+			type_exists: type /= Void
+		end;
+
+feature -- Properties
 
 	type: CLASS_TYPE_AS;
 			-- Parent type
@@ -30,26 +46,31 @@ feature -- Attributes
 	selecting: EIFFEL_LIST [FEATURE_NAME];
 			-- Select clause
 
-feature -- Initilization
-	
-	set is
-			-- Yacc initilization
+feature -- Access
+
+	is_subset_of (other: like Current): BOOLEAN is
+			-- Is Current a subset of `other'?
+			--| Does Current content appear in `other'?
+		require
+			valid_other: other /= Void;
+			same_type: deep_equal (type, other.type);
 		do
-			type ?= yacc_arg (0);
-			renaming ?= yacc_arg (1);
-			exports ?= yacc_arg (2);
-			undefining ?= yacc_arg (3);
-			redefining ?= yacc_arg (4);
-			selecting ?= yacc_arg (5);
-		ensure then
-			type_exists: type /= Void
+			Result := is_list_subset_of (exports, other.exports);
+			if Result then
+				Result := is_list_subset_of (redefining, other.redefining);
+		   end;
+			if Result then
+				Result := is_list_subset_of (renaming, other.renaming);
+			end;
+			if Result then
+				Result := is_list_subset_of (selecting, other.selecting);
+			end;
+			if Result then
+				Result := is_list_subset_of (undefining, other.undefining);
+		   end;
 		end;
 
-	Redef: INTEGER is 1;
-	Undef: INTEGER is 2;
-	Selec: INTEGER is 3;
-
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -128,30 +149,6 @@ feature -- Simple formatting
 				ctxt.put_text_item (ti_End_keyword);
 				ctxt.exdent
 			end
-		end;
-
-feature -- Merging
-
-	is_subset_of (other: like Current): BOOLEAN is
-			-- Is Current a subset of `other'?
-			--| Does Current content appear in `other'?
-		require
-			valid_other: other /= Void;
-			same_type: deep_equal (type, other.type);
-		do
-			Result := is_list_subset_of (exports, other.exports);
-			if Result then
-				Result := is_list_subset_of (redefining, other.redefining);
-		   end;
-			if Result then
-				Result := is_list_subset_of (renaming, other.renaming);
-			end;
-			if Result then
-				Result := is_list_subset_of (selecting, other.selecting);
-			end;
-			if Result then
-				Result := is_list_subset_of (undefining, other.undefining);
-		   end;
 		end;
 
 feature {NONE} -- Merging
@@ -236,7 +233,7 @@ is
 			end
 		end;
 
-feature -- Replication
+feature {COMPILER_EXPORTER} -- Replication
 
 	set_exports (e: like exports) is
 		do
@@ -267,5 +264,11 @@ feature -- Replication
 		do
 			undefining := u
 		end;
+
+feature {NONE}
+
+	Redef: INTEGER is 1;
+	Undef: INTEGER is 2;
+	Selec: INTEGER is 3;
 
 end -- class PARENT_AS

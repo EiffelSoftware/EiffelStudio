@@ -1,6 +1,7 @@
 indexing
 		
-	description: "Abstract description for `like id' type.";
+	description: 
+		"AST representation for `like id' type.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,12 +14,7 @@ inherit
 			has_like, is_deep_equal, simple_format
 		end;
 
-feature -- Attributes
-
-	anchor: ID_AS;
-			-- Anchor name
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -28,7 +24,12 @@ feature -- Initialization
 			anchor_exists: anchor /= Void
 		end;
 
-feature -- Implementation of inherited deferred features
+feature -- Properties
+
+	anchor: ID_AS;
+			-- Anchor name
+
+feature -- Access
 
 	is_deep_equal (other: TYPE): BOOLEAN is
 		local
@@ -45,6 +46,8 @@ feature -- Implementation of inherited deferred features
 			Result := True;
 		end;
 
+feature -- Output
+
 	dump: STRING is
 			-- Dump string
 		do
@@ -53,7 +56,7 @@ feature -- Implementation of inherited deferred features
 			Result.append (anchor);
 		end;
 
-feature -- Simple formatting
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
@@ -64,7 +67,7 @@ feature -- Simple formatting
 			ctxt.put_current_feature;
 		end;
 	
-feature {LIKE_ID_AS}	-- Replication
+feature {LIKE_ID_AS} -- Replication
 
 	set_anchor (a: like anchor) is
 		do

@@ -1,5 +1,10 @@
--- Error for a formal generic name as a class name in the surrounding
--- universe.
+indexing
+
+	description: 
+		"Error for a formal generic name as a class name %
+		%in the surrounding universe.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VCFG1 
 
@@ -10,7 +15,7 @@ inherit
 			subcode, build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	code: STRING is "VCFG";
 			-- Error code
@@ -23,11 +28,7 @@ feature
 	formal_name: STRING;
 			-- Formal generic name
 
-	set_formal_name (s: STRING) is
-			-- Assign `s' to `formal_name'.
-		do
-			formal_name := s;
-		end;
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		do
@@ -38,4 +39,12 @@ feature
 			end;
 		end;
 
-end
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_formal_name (s: STRING) is
+			-- Assign `s' to `formal_name'.
+		do
+			formal_name := s;
+		end;
+
+end -- class VCFG1

@@ -1,17 +1,21 @@
--- Error object sent by the compiler to the workbench
+indexing
+
+	description: 
+		"Error object sent by the compiler to the workbench.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class ERROR
 
 inherit
 
-	SHARED_EIFFEL_PROJECT;
 	EIFFEL_ENV;
 	COMPARABLE
 		undefine
 			is_equal
 		end;
 
-feature -- Access 
+feature -- Properties 
 
 	code: STRING is
 			-- Code error
@@ -32,6 +36,14 @@ feature -- Access
 			Result := "Error";
 		end;
 
+feature -- Access
+
+    is_defined: BOOLEAN is
+            -- Is the error fully defined?
+        do
+            Result := True
+        end;
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -45,7 +57,8 @@ feature -- Output
 
 	trace (ow: OUTPUT_WINDOW) is
 		require
-			valid_ow: ow /= Void
+			valid_ow: ow /= Void;
+			is_defined: is_defined
 		do
 			print_error_message (ow);
 			build_explain (ow);
@@ -113,4 +126,10 @@ feature -- Output
 		deferred
 		end;
 
+invariant
+
+	non_void_code: code /= Void;
+	non_void_error_message: error_string /= Void;
+	non_void_help_file_name: help_file_name /= Void
+	
 end -- class ERROR

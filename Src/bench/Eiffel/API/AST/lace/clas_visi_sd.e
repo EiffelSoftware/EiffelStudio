@@ -1,29 +1,9 @@
--- Class_visibility        : /* empty */
---                         | Name
---                         | Name LEX_END
---                         | Name Creation_restriction Export_restriction External_rename LEX_END
---                         ;
--- 
--- Creation_restriction    : /* empty */
--- 
--- Creation_restriction    : /* empty */
---                         | LEX_CREATION Feature_name_list
---                         ;
--- 
--- Export_restriction        : /* empty */
---                         | LEX_EXPORT Feature_name_list
---                         ;
--- 
--- Feature_name_list        : Name_star
---                         | Feature_name_list LEX_COMMA Name_star
---                         ;
--- 
--- External_rename            : /* empty */
---                         | LEX_RENAME External_rename_list
---                         ;
--- 
--- External_rename_list    : ExternaL_rename_pair
---                         | External_rename_list LEX_COMMA ExternaL_rename_pair
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLAS_VISI_SD
 
@@ -34,7 +14,19 @@ inherit
 			adapt
 		end
 
-feature -- Attributes
+feature {NONE} -- Initialization 
+
+	set is
+			-- Yacc initialization
+		do
+			class_name ?= yacc_arg (0);
+			visible_name ?= yacc_arg (1);
+			creation_restriction ?= yacc_arg (2);
+			export_restriction ?= yacc_arg (3);
+			renamings ?= yacc_arg (4)
+		end;
+
+feature -- Properties
 
 	class_name: ID_SD;
 
@@ -46,17 +38,7 @@ feature -- Attributes
 
 	renamings: LACE_LIST [TWO_NAME_SD];
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			class_name ?= yacc_arg (0);
-			visible_name ?= yacc_arg (1);
-			creation_restriction ?= yacc_arg (2);
-			export_restriction ?= yacc_arg (3);
-			renamings ?= yacc_arg (4)
-		end;
+feature {COMPILER_EXPORTER}
 
 	external_name: STRING is
 			-- External name for the visible class
@@ -144,4 +126,4 @@ feature -- Initialization
 			Result_exists: Result /= Void;
 		end;
 	
-end
+end -- class CLAS_VISI_SD

@@ -1,4 +1,9 @@
--- Error for unvalid reverse assignment attempt
+indexing
+
+	description: 
+		"Error for invalid reverse assignment attempt.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VJRV 
 
@@ -9,12 +14,27 @@ inherit
 			build_explain
 		end;
 
-feature 
+feature -- Properties
 
 	target_type: TYPE_A;
 			-- Target type
 
 	target_name: STRING;
+
+	code: STRING is "VJRV";
+			-- Error code
+
+feature -- Output
+
+	build_explain (ow: OUTPUT_WINDOW) is
+		do
+			ow.put_string ("Target name: ");
+			ow.put_string (target_name);
+			ow.put_string ("%NTarget type: ");
+			target_type.append_to (ow);
+		end;
+
+feature {COMPILER_EXPORTER}
 
 	set_target_name (s: STRING) is
 		do
@@ -27,15 +47,4 @@ feature
 			target_type := t;
 		end; -- set_target_type
 
-	code: STRING is "VJRV";
-			-- Error code
-
-	build_explain (ow: OUTPUT_WINDOW) is
-		do
-			ow.put_string ("Target name: ");
-			ow.put_string (target_name);
-			ow.put_string ("%NTarget type: ");
-			target_type.append_to (ow);
-		end;
-
-end 
+end -- class VJRV

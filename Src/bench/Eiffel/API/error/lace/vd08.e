@@ -1,4 +1,9 @@
--- Error for an include file without any class in it
+indexing
+
+	description: 
+		"Error for an include file without any class in it.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class VD08
 
@@ -6,4 +11,4 @@ inherit
 
 	FILE_ERROR
 
-end
+end -- class VD08

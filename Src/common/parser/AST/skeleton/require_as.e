@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"AST represenation of a require else construct.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class REQUIRE_AS
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			simple_put_clause_keywords
 		end
 
-feature -- Conveniences
+feature -- Properties
 
 	is_else: BOOLEAN is
 			-- Is the assertion list a require else ?

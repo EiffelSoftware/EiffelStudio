@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"System level constants.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class SYSTEM_CONSTANTS
 
 feature {NONE}
@@ -155,5 +162,4 @@ feature {NONE}
 			!!Result
 		end;
 
-end
-
+end -- class SYSTEM_CONSTANTS

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Abstract description of a call as an expression";
+	description: 
+		"AST representation of a call as an expression.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,12 +11,7 @@ inherit
 
 	EXPR_AS
 
-feature -- Attributes
-
-	call: CALL_AS;
-			-- Expression call
-
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
@@ -25,7 +21,12 @@ feature -- Initialization
 			call_exists: call /= Void;
 		end;
 
-feature -- Simple formatting
+feature -- Property
+
+	call: CALL_AS;
+			-- Expression call
+
+feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

@@ -1,12 +1,9 @@
--- O_option_clause         : /* empty */
---                         | Name Option_mark Target_list
--- 
--- Target_list             : /* empty */
---                         | LEX_COLUMN Name Class_name_list
---                         ;
--- 
--- Class_name_list         : Name_star
---                         | Class_name_list LEX_COMMA Name_star
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class O_OPTION_SD
 
@@ -17,10 +14,7 @@ inherit
 			set, adapt
 		end;
 
-feature
-
-	target_list: LACE_LIST [ID_SD];
-			-- List of class targets
+feature {NONE} -- Initialization 
 
 	set is
 			-- Yacc initialization
@@ -31,6 +25,13 @@ feature
 		ensure then
 			target_list_exists: target_list /= Void;
 		end;
+
+feature -- Properties
+
+	target_list: LACE_LIST [ID_SD];
+			-- List of class targets
+
+feature {COMPILER_EXPORTER}
 
 	adapt is
 			-- Option adaptation
@@ -86,4 +87,4 @@ feature
 			end;
 		end;
 
-end
+end -- class O_OPTION_SD

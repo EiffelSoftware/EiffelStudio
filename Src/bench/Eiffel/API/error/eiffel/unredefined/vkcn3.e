@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class VKCN3
 
 inherit
@@ -7,8 +14,8 @@ inherit
 			subcode
 		end
 
-feature
+feature -- Properties
 
 	subcode: INTEGER is 3;
 
-end
+end -- class VKCN3

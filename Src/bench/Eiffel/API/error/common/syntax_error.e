@@ -1,4 +1,9 @@
--- Syntax error
+indexing
+
+	description: 
+		"Syntax error.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SYNTAX_ERROR
 
@@ -10,11 +15,21 @@ inherit
 		end;
 	SHARED_WORKBENCH
 
-creation
+creation {ERROR_HANDLER}
 
 	init
 
-feature -- Attributes
+feature {NONE} -- Initialization
+
+	init is
+			-- Initialize `start_position' and `end_position'.
+		do
+			start_position := get_start_position;
+			end_position := get_end_position;
+			file_name := get_yacc_file_name;
+		end;
+
+feature -- Properties
 
 	file_name: STRING;
 			-- Path to the file where the syntax error happened
@@ -25,38 +40,6 @@ feature -- Attributes
 	end_position: INTEGER;
 			-- Ending position of the of the token involved in the syntax
 			-- error
-
-feature -- Creation
-
-	init is
-			-- Initialize `start_position' and `end_position'.
-		do
-			start_position := get_start_position;
-			end_position := get_end_position;
-			file_name := get_yacc_file_name;
-		end;
-
-feature -- Conveniences
-
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name'.
-		do
-			file_name := s;
-		end;
-
-	set_start_position (i: INTEGER) is
-			-- Assign `i' to `start_position'.
-		do
-			start_position := i;
-		end;
-
-	set_end_position (i: INTEGER) is
-			-- Assign `i' to `end_position'.
-		do
-			end_position := i;
-		end;
-
-feature -- Property
 
 	code: STRING is "Syntax error";
 			-- Error code
@@ -70,7 +53,7 @@ feature -- Property
 			non_void_result: Result /= Void
 		end;	
 
-feature
+feature -- Output
 
 	build_explain (ow: OUTPUT_WINDOW) is
 		local
@@ -118,12 +101,12 @@ feature
 						-- Error happened in a class
 					ow.put_string (" in class ");
 					ow.put_class_syntax (Current, System.current_class.e_class, 
-							System.current_class.signature)
+							System.current_class.e_class.signature)
 				else
 						-- Error happened while parsing a "use" file
 					ow.put_string (" in Cluster_properties %"Use%" file")
 					if file_name /= Void then
-						ow.put_string ("%N     File: "); 
+						ow.put_string ("%N	 File: "); 
 						ow.put_string (file_name);
 					end;
 				end
@@ -153,7 +136,7 @@ feature
 					i := i + 1;
 					c := a_line.item (i);
 					if c = '%T' then
-						ow.put_string ("    ")
+						ow.put_string ("	")
 					else
 						ow.put_char (c)
 					end;
@@ -176,7 +159,7 @@ feature
 				i := i + 1;
 				c := a_line.item (i);
 				if c = '%T' then
-					ow.put_string ("    ");
+					ow.put_string ("	");
 					if i <= pos then
 						nb_tab := nb_tab + 1;
 					end;
@@ -221,4 +204,4 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+end -- class SYNTAX_ERROR

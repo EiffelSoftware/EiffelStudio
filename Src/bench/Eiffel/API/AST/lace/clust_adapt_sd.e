@@ -1,6 +1,9 @@
--- Cluster_adapt_clause    : /* empty */
---                         | Cluster_ignore
---                         | Cluster_rename_clause
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class CLUST_ADAPT_SD
 
@@ -8,10 +11,12 @@ inherit
 
 	AST_LACE
 
-feature
+feature -- Properties
 
 	cluster_name: ID_SD;
 			-- Name of the cluster to adapt
+
+feature {COMPILER_EXPORTER}
 
 	good_cluster: BOOLEAN is
 			--- Check existence of cluster named `cluster_name'.
@@ -37,4 +42,4 @@ feature
 			end;
 		end;
 
-end
+end -- class CLUST_ADAPT_SD

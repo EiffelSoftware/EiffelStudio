@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class REQUIRE_SD
 
 inherit
@@ -7,7 +14,7 @@ inherit
 			is_require
 		end
 
-feature
+feature -- Properties
 
 	is_require: BOOLEAN is
 			-- Is the option value `require' ?
@@ -15,4 +22,4 @@ feature
 			Result := True;
 		end
 
-end
+end -- class REQUIRE_SD

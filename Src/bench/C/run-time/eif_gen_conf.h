@@ -72,11 +72,11 @@ RT_LNK int eif_par_table2_size;
 /* Type map: compound->compiler generated id */
 RT_LNK int16 *eif_cid_map;
 
+#ifdef EIF_THREADS
+RT_LNK int eif_cid_map_acc (int);
+#else
 /* Inverse RTUD Table to reverse the effect of RTUD */
 RT_LNK int16 *rtud_inv;
-
-#ifdef EIF_THREADS
-RT_LNK int16 eif_cid_map_acc (int idx);
 #endif
 
 /* Maximum nr. of entries in a compound typeid array */

@@ -79,7 +79,7 @@ feature -- Access
 		do
 			Result := private_dynamic_class;
 			if Result = Void then
-				if is_attribute then
+				if dynamic_type_name /= Void then
 					type_name := clone (dynamic_type_name);
 					type_name.to_lower;
 					class_i := Eiffel_universe.class_with_name (type_name);
@@ -99,32 +99,32 @@ feature -- Access
 
 feature -- Output
 
-	append_type_and_value (ow: OUTPUT_WINDOW) is 
+	append_type_and_value (st: STRUCTURED_TEXT) is 
 		local
 			ec: E_CLASS;
 			status: APPLICATION_STATUS
 		do 
 			if address = Void then
-				ow.put_string ("NONE = Void")
+				st.add_string ("NONE = Void")
 			else
 				ec := dynamic_class;
 				if ec /= Void then
-					ec.append_name (ow);
-					ow.put_string (" [");
+					ec.append_name (st);
+					st.add_string (" [");
 					status := Application.status;
 					if status /= Void and status.is_stopped then
-						ow.put_address (address, ec)
+						st.add_address (address, ec)
 					else
-						ow.put_string (address)
+						st.add_string (address)
 					end;
-					ow.put_string ("]");
+					st.add_string ("]");
 					if string_value /= Void then
-						ow.put_string (" = ");
-						ow.put_string (string_value)
+						st.add_string (" = ");
+						st.add_string (string_value)
 					end
 				else
-					Any_class.append_name (ow);
-					ow.put_string (" = Unknown")
+					Any_class.append_name (st);
+					st.add_string (" = Unknown")
 				end
 			end
 		end;

@@ -141,6 +141,43 @@ feature -- Input/output
 			get_last_input;
 		end;
 
+	get_option_value (an_option: STRING; value: BOOLEAN) is
+			-- Get a valid from `an_option' of either
+			-- true or false.
+			-- Set `last_input' to "False" or "True"
+		require
+			valid_name: an_option /= Void
+		local
+			tmp: STRING
+		do
+			if not more_arguments then
+				io.putstring ("--> ");
+				io.putstring (an_option);
+				io.putstring (" [")
+				if value then
+					io.putstring ("yes")
+				else
+					io.putstring ("no")
+				end;
+				io.putstring ("]: ")
+				get_name;
+			end;
+			get_last_input;
+			if last_input = Void or else last_input.empty then
+				last_input := value.out
+			else
+				tmp := clone (last_input);
+				tmp.to_lower;
+				if tmp.is_equal ("yes") or else tmp.is_equal ("y") then
+					last_input := (True).out
+				else
+					last_input := (False).out
+				end
+			end
+		ensure
+			last_input_is_boolean: last_input.is_boolean
+		end;
+
 	get_prof_file_name is
 		do
 			if not more_arguments then

@@ -105,19 +105,23 @@ feature {NONE} -- Implementation
 	
 	
 	external_assemblies: STRING is
-			-- List of external assemblies
+			-- List of assemblies to include in the project.
 		require
 			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
-			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
+--			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
 		local
 			an_assembly: ASSEMBLY_INFORMATION
-			l_assembly_name, l_assembly_name_2: STRING
-			index: INTEGER
 			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			local_assemblies: LINKED_LIST [STRING]
+			l_assembly_name, l_path_to_assembly: STRING
+			index: INTEGER
 		do
 			create Result.make (1024)
-			Result.append (Assembly_keyword + New_line)
+			Result.append (Assembly_keyword)
+			Result.append (New_line)
+			
+			Result.append (Mscorlib_assembly)
+			Result.append (New_line)
 
 			selected_assemblies := wizard_information.selected_assemblies
 			from
@@ -146,7 +150,7 @@ feature {NONE} -- Implementation
 				selected_assemblies.forth
 			end
 			
-			--Result.append (Local_assembly)
+			Result.append (Tab + Tab + "-- Local assemblies.")
 			Result.append (New_line)
 			local_assemblies := wizard_information.local_assemblies
 			from
@@ -155,37 +159,18 @@ feature {NONE} -- Implementation
 				local_assemblies.after
 			loop
 				Result.append (Tab)
-				l_assembly_name := clone (local_assemblies.item)
+				l_path_to_assembly := local_assemblies.item
+				l_assembly_name := clone (l_path_to_assembly)
 				index := l_assembly_name.last_index_of ('\', l_assembly_name.count)
 				l_assembly_name.keep_tail (l_assembly_name.count - index)
-				l_assembly_name_2 := l_assembly_name
 				l_assembly_name.replace_substring_all (".", "_")
 				Result.append (l_assembly_name + "_" + ":")
 				Result.append (Tab)
 				Result.append ("%"")
-				Result.append (l_assembly_name_2)
+				Result.append (l_path_to_assembly)
 				Result.append ("%"")
 				Result.append (New_line)
-				
-				--Result.append (Tab + local_assemblies.item)
 
---				an_assembly := emit (wizard_information.local_assemblies.item)				
---				Result.append (Tab + an_assembly.name + "_" + " :" )
---				Result.append (Tab + "%"")
---				Result.append (an_assembly.name)
---				Result.append ("%"")
---				if not an_assembly.version.is_empty then
---					Result.append ("," + Tab + "%"")
---					Result.append (an_assembly.version)
---					Result.append ("%",")
---					Result.append (Tab + "%"")
---					Result.append (an_assembly.culture)
---					Result.append ("%",")
---					Result.append (Tab + "%"")
---					Result.append (an_assembly.public_key)
---					Result.append ("%"")
---					Result.append (New_line)
---				end
 				local_assemblies.forth
 			end	
 
@@ -201,16 +186,16 @@ feature {NONE} -- Implementation
 			not_empty_text: not Result.is_empty
 		end			
 
-	emit (assembly_path: STRING): ASSEMBLY_INFORMATION is
-			-- emit assembly and return its information.
-		require
-			non_void_assembly_path: assembly_path /= Void
-			not_empty_assembly_path: not assembly_path.is_empty
-		do
-			create Result.make (assembly_path)
-		ensure 
-			non_void_result: Result /= Void
-		end
+--	emit (assembly_path: STRING): ASSEMBLY_INFORMATION is
+--			-- emit assembly and return its information.
+--		require
+--			non_void_assembly_path: assembly_path /= Void
+--			not_empty_assembly_path: not assembly_path.is_empty
+--		do
+--			create Result.make (assembly_path)
+--		ensure 
+--			non_void_result: Result /= Void
+--		end
 		
 feature {NONE} -- Constants
 
@@ -226,9 +211,6 @@ feature {NONE} -- Constants
 	Creation_routine_name_template: STRING is "<FL_CREATION_ROUTINE_NAME>"
 			-- String to be replaced by the chosen creation routine name
 
---	Creation_routine_external_name_template: STRING is "<FL_CREATION_ROUTINE_EXTERNAL_NAME>"
---			-- String to be replaced by the chosen creation routine external name
-			
 	External_assemblies_template: STRING is "<FL_EXTERNAL_ASSEMBLIES>"
 			-- String to be replaced by the paths to the selected .NET assemblies
 	
@@ -253,8 +235,8 @@ feature {NONE} -- Constants
 	Application_template_filename: STRING is "template_application.e"
 			-- Filename of the template used to automatically generate a root class for .NET applications
 
-	External_classes_comment: STRING is "-- .NET System"
-			-- Comment before paths to external classes
+--	External_classes_comment: STRING is "-- .NET System"
+--			-- Comment before paths to external classes
 	
 	None_class: STRING is "none"
 			-- `NONE' class
@@ -265,9 +247,6 @@ feature {NONE} -- Constants
 	Comma: STRING is ","
 			-- Comma
 	
---	External_keyword: STRING is "external"
---			-- External keyword
-	
 	Assembly_keyword: STRING is "assembly"
 			-- Assembly keyword
 
@@ -276,45 +255,8 @@ feature {NONE} -- Constants
 
 	Eiffel_key: STRING is "$ISE_EIFFEL"
 			-- Key of environment variable to the Eiffel delivery
-	
---	is_selected_assembly (a_location: STRING): BOOLEAN is
---			-- Is assembly corresponding to `a_location' a selected assembly?
---		require
---			non_void_location: a_location /= Void
---			not_emtpy_location: not a_location.is_empty
---			non_void_selected_assemblies: selected_assemblies /= Void
---		local
---			an_assembly_info: ASSEMBLY_INFORMATION
---		do
---			from
---				selected_assemblies.start
---			until
---				selected_assemblies.after or Result
---			loop
---				an_assembly_info := selected_assemblies.item
---				Result := assembly_location (an_assembly_info).is_equal (a_location)
---				selected_assemblies.forth
---			end
---		end
---		
---	is_dependency (a_location: STRING): BOOLEAN is
---			-- Is assembly corresponding to `a_location' a selected assembly?
---		require
---			non_void_location: a_location /= Void
---			not_emtpy_location: not a_location.is_empty
---			non_void_dependencies: dependencies /= Void
---		local
---			an_assembly_info: ASSEMBLY_INFORMATION
---		do
---			from
---				dependencies.start
---			until
---				dependencies.after or Result
---			loop
---				an_assembly_info := dependencies.item
---				Result := assembly_location (an_assembly_info).is_equal (a_location)
---				dependencies.forth
---			end
---		end
-		
+			
+	Mscorlib_assembly: STRING is "mscorlib:   %"mscorlib%",   %"1.0.3300.0%", %"neutral%", %"b77a5c561934e089%""
+			-- Mscorlib assembly allways added to the ace file.
+
 end -- class WIZARD_PROJECT_GENERATOR

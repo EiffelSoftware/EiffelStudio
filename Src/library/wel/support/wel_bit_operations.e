@@ -12,7 +12,7 @@ feature -- Basic operations
 	set_flag (flags, mask: INTEGER): INTEGER is
 			-- Set the `mask' in `flags'
 		do
-			Result := c_set_flag (flags, mask)
+			Result := flags | mask
 		ensure
 			flag_set: flag_set (Result, mask)
 		end
@@ -20,7 +20,7 @@ feature -- Basic operations
 	clear_flag (flags, mask: INTEGER): INTEGER is
 			-- Clear the `mask' in `flags'
 		do
-			Result := c_clear_flag (flags, mask)
+			Result := flags & mask.bit_not
 		ensure
 			flag_unset: not flag_set (Result, mask)
 		end
@@ -30,24 +30,7 @@ feature -- Status report
 	flag_set (flags, mask: INTEGER): BOOLEAN is
 			-- Is `mask' set in `flags'?
 		do
-			Result := c_flag_set (flags, mask)
-		end
-
-feature {NONE} -- Externals
-
-	c_set_flag (flags, mask: INTEGER): INTEGER is
-		external
-			"C [macro <wel.h>]"
-		end
-
-	c_clear_flag (flags, mask: INTEGER): INTEGER is
-		external
-			"C [macro <wel.h>]"
-		end
-
-	c_flag_set (flags, mask: INTEGER): BOOLEAN is
-		external
-			"C [macro <wel.h>]"
+			Result := (flags & mask) = mask
 		end
 
 end -- class WEL_BIT_OPERATIONS

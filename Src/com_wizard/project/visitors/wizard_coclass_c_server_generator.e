@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 				l_interface := l_descriptors.item
 				if not l_interface.is_iunknown and not l_interface.is_idispatch then
 					l_body.append (" ")
-					l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (l_interface.c_type_name)))
+					l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (l_interface.name)))
 				end
 				l_descriptors.forth
 			end
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			until
 				l_descriptors.after
 			loop
-				l_body.append (case_body_in_find_connection_point (l_descriptors.item, iid_name (l_descriptors.item.c_type_name)))
+				l_body.append (case_body_in_find_connection_point (l_descriptors.item, iid_name (l_descriptors.item.name)))
 				l_descriptors.forth
 			end
 			l_body.append ("%N%T{%N%T%T*ppCP = NULL;%N%T%Treturn CONNECT_E_NOCONNECTION;%N%T}%N%T")

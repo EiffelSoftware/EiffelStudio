@@ -67,7 +67,7 @@ feature -- Access
 			Result := dropped.stone_type = stone_type
 		end;
 
-feature {TRANSPORTER} -- Implementation
+feature -- Implementation
 
 	receive (dropped: STONE) is
 			-- Receive dropped stone

@@ -174,17 +174,21 @@ feature -- Removal
 
 	wipe_out is
 			-- Remove all items.
+		local
+			l: like Current
 		do
+			l := clone (Current)
+
 			Precursor
 
 			from
-				start
+				l.start
 			until
-				after
+				l.after
 			loop
 				consistency_count := consistency_count - 1
-				on_item_removed (item)
-				forth
+				on_item_removed (l.item)
+				l.forth
 			end
 		end
 
@@ -290,6 +294,9 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.5  2000/06/26 19:00:47  oconnor
+--| clone current for wipeout
+--|
 --| Revision 1.4  2000/06/15 22:52:05  pichery
 --| Removed `on_item_already_xxxx',
 --| now `on_item_xxxx' is executed after the

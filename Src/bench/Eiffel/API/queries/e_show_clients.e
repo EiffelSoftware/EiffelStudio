@@ -21,11 +21,11 @@ feature -- Execution
 			-- Execute Current command.
 		local
 			clients: LINKED_LIST [E_CLASS];
-			a_client: E_CLASS
+			a_client: E_CLASS;
 		do
-			output_window.put_string ("Clients of class ");
-			current_class.append_signature (output_window);
-			output_window.put_string (":%N%N");
+			structured_text.add_string ("Clients of class ");
+			current_class.append_signature (structured_text);
+			structured_text.add_string (":%N%N");
 			from	
 				clients := current_class.clients;
 				clients.start;
@@ -34,9 +34,9 @@ feature -- Execution
 			loop
 				a_client := clients.item;
 				if (current_class /= a_client) then
-					output_window.put_char ('%T');
-					a_client.append_signature (output_window);
-					output_window.new_line;
+					structured_text.add_char ('%T');
+					a_client.append_signature (structured_text);
+					structured_text.add_new_line;
 				end;
 				clients.forth
 			end

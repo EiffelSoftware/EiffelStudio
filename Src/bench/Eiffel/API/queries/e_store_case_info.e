@@ -10,11 +10,34 @@ class E_STORE_CASE_INFO
 inherit
 
 	E_OUTPUT_CMD
+		redefine
+			executable
+		end
 
 creation
 
-	make, do_nothing
+	make_with_window, do_nothing
 
+feature -- Initialization
+
+	make_with_window (display: like output_window) is
+			-- Initialize Current with `output_window' is `display'.
+		require
+			valid_display: display /= Void
+		do
+			output_window := display
+		ensure
+			output_window_set: equal (output_window, display)
+		end;
+
+feature -- Properties
+
+	executable: BOOLEAN is
+			-- May `execute' be called?
+		do
+			Result := output_window /= Void
+		end;
+			
 feature -- Execution
 
 	execute is
@@ -25,4 +48,10 @@ feature -- Execution
 			format_storage.execute
 		end;
 
-end -- class E_STORE_CASE_INFO 
+feature {NONE} -- Properties
+
+	output_window: OUTPUT_WINDOW;
+			-- Output window used to display during the
+			-- execution of Current.
+
+end -- class E_STORE_CASE_INFO

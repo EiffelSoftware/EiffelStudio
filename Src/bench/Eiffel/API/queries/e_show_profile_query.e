@@ -13,17 +13,17 @@ creation
 
 feature -- Initialization
 
-	make (new_output: OUTPUT_WINDOW;
+	make (new_st: STRUCTURED_TEXT;
 		profiler_query: PROFILER_QUERY;
 		profiler_options: PROFILER_OPTIONS) is
-			-- Create the object and use `new_output'
+			-- Create the object and use `new_st'
 			-- for output.
 		require
-			new_output_not_void: new_output /= Void;
+			new_st_not_void: new_st /= Void;
 			profiler_query_not_void: profiler_query /= Void;
 			profiler_options_not_void: profiler_options /= Void
 		do
-			output_window := new_output;
+			st := new_st;
 			prof_query := profiler_query;
 			prof_options := profiler_options;
 			!! expanded_filenames.make;
@@ -34,7 +34,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- Is Current executable?
 		do
-			Result := output_window /= Void and then
+			Result := st /= Void and then
 					prof_query /= Void and then
 					prof_options /= Void
 		end;
@@ -93,14 +93,14 @@ feature {QUERY_EXECUTER} -- Implementation
 				if not current_item.is_equal ("last_output") then
 					profile_information ?= store.retrieve_by_name(expanded_filenames.item)
 					if profile_information /= Void then
-						output_window.put_string("%N%N:::::::::::::::::::::::::::::::::::%N")
-						output_window.put_string(expanded_filenames.item)
-						output_window.put_string("%N:::::::::::::::::::::::::::::::::::%N%N")
+						st.add_string("%N%N:::::::::::::::::::::::::::::::::::%N")
+						st.add_string(expanded_filenames.item)
+						st.add_string("%N:::::::::::::::::::::::::::::::::::%N%N")
 					end
 				else
-					output_window.put_string ("%N%N:::::::::::::::::::::::::::::::%N");
-					output_window.put_string ("last output");
-					output_window.put_string ("%N:::::::::::::::::::::::::::::::%N%N");
+					st.add_string ("%N%N:::::::::::::::::::::::::::::::%N");
+					st.add_string ("last output");
+					st.add_string ("%N:::::::::::::::::::::::::::::::%N%N");
 					profile_information := int_last_output;
 				end;
 			end
@@ -238,11 +238,11 @@ feature {QUERY_EXECUTER} -- Implementation
 			until
 				i > prof_options.output_names.count
 			loop
-				output_window.put_string (prof_options.output_names.item(i));
-				output_window.put_string("%T");
+				st.add_string (prof_options.output_names.item(i));
+				st.add_string("%T");
 				i := i + 1
 			end;
-			output_window.put_string("%N");
+			st.add_string("%N");
 		end
 
 	print_result is
@@ -594,45 +594,48 @@ feature {QUERY_EXECUTER} -- Implementation
 				i > prof_options.output_names.count
 			loop
 				if prof_options.output_names.item (i).is_equal ("featurename") then
-					output_window.put_string (item.function.out)
-					output_window.put_string ("%T")
+					st.add_string (item.function.out)
+					st.add_string ("%T")
 				elseif prof_options.output_names.item (i).is_equal ("calls") then
-					output_window.put_string (item.number_of_calls.out)
+					st.add_string (item.number_of_calls.out)
 				elseif prof_options.output_names.item (i).is_equal ("self") then
-					output_window.put_string (item.self_sec.out)
+					st.add_string (item.self_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("descendents") then
-					output_window.put_string (item.descendents_sec.out)
-					output_window.put_string ("%T")
+					st.add_string (item.descendents_sec.out)
+					st.add_string ("%T")
 				elseif prof_options.output_names.item (i).is_equal ("total") then
-					output_window.put_string (item.total_sec.out)
+					st.add_string (item.total_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("percentage") then
-					output_window.put_string (item.percentage.out)
-					output_window.put_string ("%T")
+					st.add_string (item.percentage.out)
+					st.add_string ("%T")
 				end
-				output_window.put_string("%T")
+				st.add_string("%T")
 				i := i + 1
 			end
-			output_window.put_string("%N")
-		end
+			st.add_string("%N")
+		end;
 
 feature {NONE} -- Attributes
 
-	expanded_filenames: LINKED_LIST [STRING]
+	expanded_filenames: LINKED_LIST [STRING];
 		-- unwildcarded filenames
 
-	profile_information: PROFILE_INFORMATION
+	profile_information: PROFILE_INFORMATION;
 		-- Retrieved from disk- where it is stored by prof_converter.
 
-	first_filter: PROFILE_FILTER
+	first_filter: PROFILE_FILTER;
 		-- Filter of which the `filter'-feature is to be called.
 
-	int_last_output: PROFILE_INFORMATION
+	int_last_output: PROFILE_INFORMATION;
 		-- Output as result of the last queried query.
 
-	prof_query: PROFILER_QUERY
+	prof_query: PROFILER_QUERY;
 		-- All the active queries.
 
-	prof_options: PROFILER_OPTIONS
+	prof_options: PROFILER_OPTIONS;
 		-- The options specified by the user.
+
+	st: STRUCTURED_TEXT;
+			-- The text that is to bew displayed.
 
 end -- class E_SHOW_PROFILE_QUERY

@@ -22,18 +22,18 @@ inherit
 
 feature -- Initialization
 
-	set, make (a_class: E_CLASS; display: like output_window) is
+	set, make (a_class: E_CLASS; st: like structured_text) is
 			-- Make current command with current_class as
 			-- `a_class'.
 		require
 			valid_a_class_c: a_class /= Void;
-			valid_display: display /= Void
+			valid_st: st /= Void
 		do
 			current_class := a_class;	
-			set_output_window (display)
+			set_structured_text (st)
 		ensure
 			class_set: current_class = a_class;
-			display_set: output_window = display
+			structured_text_set: structured_text = st
 		end;
 
 feature -- Property
@@ -45,7 +45,7 @@ feature -- Property
 			-- Is the Current able to be executed?
 		do
 			Result := current_class /= Void and then
-				output_window /= Void
+				structured_text /= Void
 		ensure then
 			good_result: Result implies current_class /= Void;
 		end

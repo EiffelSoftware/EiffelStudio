@@ -250,7 +250,7 @@ feature -- Access
 				written_class.is_debuggable
 		end;
 
-	text: STRING is
+	text: STRUCTURED_TEXT is
 			-- Text of the Current lace file.
 			-- Void if unreadable file
 		local
@@ -266,20 +266,21 @@ feature -- Access
 				body_as := ast;
 				start_position := body_as.start_position;
 				end_position := body_as.end_position;
-				Result := "-- Version from class: ";
+				!! Result.make;
+				Result.add_string ("-- Version from class: ");
 				cn := clone (c.name)
 				cn.to_upper;
-				Result.append (cn);
-				Result.append ("%N%N%T");
+				Result.add_classi (c.lace_class, cn);
+				Result.add_string ("%N%N%T");
 				if
 					class_text.count >= end_position and
 					start_position < end_position
 				then
 					class_text := class_text.substring 
 								(start_position + 1, end_position);
-					Result.append (class_text)
+					Result.add_feature (Current, c, class_text)
 				end;
-				Result.append ("%N");
+				Result.add_string ("%N");
 			end
 		end;
 
@@ -396,45 +397,45 @@ feature -- Comparison
 
 feature -- Output
 
-	append_signature (ow: OUTPUT_WINDOW; c: E_CLASS) is
-			-- Append the signature of current feature in `ow'
+	append_signature (st: STRUCTURED_TEXT; c: E_CLASS) is
+			-- Append the signature of current feature in `st'
 		require
-			non_void_ow: ow /= Void
+			non_void_st: st /= Void
 		local
 			args: like arguments
 		do
 			args := arguments;
-			append_name (ow, c);
+			append_name (st, c);
 			if args /= Void then
-				ow.put_string (" (");
+				st.add_string (" (");
 				from
 					args.start
 				until
 					args.after
 				loop
-					ow.put_string (args.argument_names.i_th 
+					st.add_string (args.argument_names.i_th 
 									(args.index));
-					ow.put_string (": ");
-					args.item.append_to (ow);
+					st.add_string (": ");
+					args.item.append_to (st);
 					args.forth;
 					if not args.after then
-						ow.put_string ("; ")
+						st.add_string ("; ")
 					end
 				end;
-				ow.put_char (')')
+				st.add_char (')')
 			end;
 			if type /= Void then
-				ow.put_string (": ");
-				type.append_to (ow);
+				st.add_string (": ");
+				type.append_to (st);
 			end;
 		end;
 
-	append_name (ow: OUTPUT_WINDOW; c: E_CLASS) is
-			-- Append the name of the feature in `ow'
+	append_name (st: STRUCTURED_TEXT; c: E_CLASS) is
+			-- Append the name of the feature in `st'
 		require
-			valid_ow: ow /= Void
+			valid_st: st /= Void
 		do
-			ow.put_feature (Current, c, name) 
+			st.add_feature (Current, c, name) 
 		end;
 
 	signature: STRING is

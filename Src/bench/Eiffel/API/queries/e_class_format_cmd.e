@@ -35,11 +35,11 @@ feature -- Access
 					current_class <= Any_class
 		end;
 
-	display_feature (f: E_FEATURE; c: E_CLASS) is
+	display_feature (f: E_FEATURE; c: E_CLASS; st: STRUCTURED_TEXT) is
 			-- Display feature `f' defined in class `c'
-			-- to the output window.
+			-- to `st'.
 		do
-			f.append_signature (output_window, c);
+			f.append_signature (st, c);
 		end;
 
 feature -- Execution
@@ -92,10 +92,10 @@ feature -- Execution
 			until
 				classes.after
 			loop
-				output_window.put_string ("Class ");
+				structured_text.add_string ("Class ");
 				e_class := classes.item;
-				e_class.append_signature (output_window);
-				output_window.put_string (":%N%N");
+				e_class.append_signature (structured_text);
+				structured_text.add_string (":%N%N");
 				list := table.item (e_class.id);
 				list.sort;
 				from
@@ -104,12 +104,12 @@ feature -- Execution
 					list.after
 				loop
 					e_feature := list.item;
-					output_window.put_char ('%T');
-					display_feature (e_feature, c);
-					output_window.new_line;
+					structured_text.add_char ('%T');
+					display_feature (e_feature, c, structured_text);
+					structured_text.add_new_line;
 					list.forth
 				end;
-				output_window.new_line;
+				structured_text.add_new_line;
 				classes.forth
 			end
 		end

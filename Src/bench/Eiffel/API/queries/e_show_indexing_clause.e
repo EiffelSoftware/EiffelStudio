@@ -47,7 +47,7 @@ feature -- Execution
 			a_classi: CLASS_I;
 			a_class: E_CLASS;
 		do
-			!!sorted_class_names.make;
+			!! sorted_class_names.make;
 			classes := cluster.classes;
 			from 
 				classes.start 
@@ -58,33 +58,33 @@ feature -- Execution
 				classes.forth
 			end;
 			sorted_class_names.sort;
-			output_window.put_string ("Cluster: ");
-			output_window.put_string (cluster.cluster_name);
+			structured_text.add_string ("Cluster: ");
+			structured_text.add_string (cluster.cluster_name);
 			if cluster.is_precompiled then
-				output_window.put_string (" (Precompiled)")
+				structured_text.add_string (" (Precompiled)")
 			end;
-			output_window.new_line;
+			structured_text.add_new_line;
 			from
 				sorted_class_names.start
 			until
 				sorted_class_names.after
 			loop
-				output_window.put_string ("%T");
+				structured_text.add_string ("%T");
 				a_classi := classes.item (sorted_class_names.item);
 				a_class := a_classi.compiled_eclass;
 				if a_class /= Void then
-					a_class.append_signature (output_window);
-					display_indexing (a_class)
+					a_class.append_signature (structured_text);
+					display_indexing (a_class, structured_text)
 				else
-					a_classi.append_name (output_window);
-					output_window.put_string ("  (not in system)")
+					a_classi.append_name (structured_text);
+					structured_text.add_string ("  (not in system)")
 				end;
-				output_window.new_line;
+				structured_text.add_new_line;
 				sorted_class_names.forth
 			end
 		end;
 
-	display_indexing (e_class: E_CLASS) is
+	display_indexing (e_class: E_CLASS; st: STRUCTURED_TEXT) is
 			-- Display the indexing clause of `classc' if any.
 		local
 			indexes: EIFFEL_LIST [INDEX_AS];
@@ -110,18 +110,18 @@ feature -- Execution
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
 						then
-							output_window.put_string ("%N%T%T");
-							output_window.put_string (index_tag);
-							output_window.put_string (": ")
+							structured_text.add_string ("%N%T%T");
+							structured_text.add_string (index_tag);
+							structured_text.add_string (": ")
 							index_list := index.index_list;
 							from 
 								index_list.start 
 							until 
 								index_list.after 
 							loop
-								output_window.put_string (index_list.item.string_value);
+								structured_text.add_string (index_list.item.string_value);
 								if not index_list.islast then
-									output_window.put_string (", ")
+									structured_text.add_string (", ")
 								end;
 								index_list.forth
 							end

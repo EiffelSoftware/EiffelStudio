@@ -22,9 +22,9 @@ feature -- Execution
 			-- Show system statistics.
 		do
 			if Eiffel_project.initialized then
-				output_window.put_int (Eiffel_system.number_of_classes);
-				output_window.put_string (" classes in the system.");
-				output_window.new_line
+				structured_text.add_int (Eiffel_system.number_of_classes);
+				structured_text.add_string (" classes in the system.");
+				structured_text.add_new_line;
 			end
 		end;
 

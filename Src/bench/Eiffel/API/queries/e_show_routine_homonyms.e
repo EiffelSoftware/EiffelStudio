@@ -57,10 +57,10 @@ feature -- Execution
 						feat := e_class.feature_with_name (feature_name);
 						if feat /= Void then
 							class_name := e_class.name;
-							feat.append_signature (output_window, e_class);
-							output_window.put_string ("%N%TFrom class ");
-							e_class.append_signature (output_window);
-							output_window.new_line;
+							feat.append_signature (structured_text, e_class);
+							structured_text.add_string ("%N%TFrom class ");
+							e_class.append_signature (structured_text);
+							structured_text.add_new_line;
 						end
 					end;
 					classes.forth

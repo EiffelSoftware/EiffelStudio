@@ -301,6 +301,7 @@ feature -- Status setting
 			i: INTEGER
 			rl, rr: ARRAY_RESOURCE
 		do
+			initialize_debugging_window
 			debugging_window.window.lock_update
 
 			normal_left_layout := debugging_window.left_panel.save_to_resource
@@ -541,12 +542,6 @@ feature -- Debugging events
 		do
 			Window_manager.display_message (Interface_names.E_running)
 			Application.status.set_max_depth (maximum_stack_depth)
-			if debugging_window = Void then
-				debugging_window ?= Window_manager.last_focused_window
-				if debugging_window = Void then
-					debugging_window := Window_manager.a_development_window
-				end
-			end
 				-- Test whether application was really launched.
 			output_manager.clear
 			output_manager.display_application_status
@@ -713,6 +708,8 @@ feature -- Debugging events
 					-- Make all debugging tools disappear.
 				if not debugging_window.destroyed then
 					unraise
+				else
+					raised := False
 				end
 					-- Make related buttons insensitive.
 				stop_cmd.disable_sensitive
@@ -1172,6 +1169,19 @@ feature {NONE} -- Implementation
 			if Application.status /= Void and then Application.status.is_stopped then
 				send_rqst_3 (Rqst_overflow_detection, 0, 0, nb)
 			end
+		end
+
+	initialize_debugging_window is
+			-- Set `debugging_window' with window requesting a debug session.
+		do
+			if debugging_window = Void then
+				debugging_window ?= window_manager.last_focused_window
+				if debugging_window = Void then
+					debugging_window := window_manager.a_development_window
+				end
+			end
+		ensure
+			debugging_window_set: debugging_window /= Void
 		end
 		
 feature {NONE} -- MSIL system implementation

@@ -655,6 +655,7 @@ feature {NONE} -- WEL Implementation
 			-- A column was tapped.
 		do
 			--| FIXME execute_command (Cmd_column_click, Void)
+			interface.column_click_actions.call ([])
 			disable_default_processing
 		end
 
@@ -663,19 +664,20 @@ feature {NONE} -- WEL Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-		--| FIXME 
-		--if info.uchanged = Lvif_state and info.isubitem = 0 then
-		--	if flag_set(info.unewstate, Lvis_selected) and
-		--			not flag_set(info.uoldstate, Lvis_selected) then
-		--		item_imp := ev_children @ (info.iitem + 1)
-		--		item_imp.execute_command (Cmd_item_activate, Void)
-		--		execute_command (Cmd_select, Void)
-		--	elseif flag_set(info.uoldstate, Lvis_selected) and
-		--		not flag_set(info.unewstate, Lvis_selected) then
-		--		item_imp := ev_children @ (info.iitem + 1)
-		--		item_imp.execute_command (Cmd_item_deactivate, Void)
-		--	end
-		--end
+		if info.uchanged = Lvif_state and info.isubitem = 0 then
+			if flag_set(info.unewstate, Lvis_selected) and
+					not flag_set(info.uoldstate, Lvis_selected) then
+				item_imp := ev_children @ (info.iitem + 1)
+				item_imp.interface.select_actions.call ([])
+				--item_imp.execute_command (Cmd_item_activate, Void)
+				--execute_command (Cmd_select, Void)
+			elseif flag_set(info.uoldstate, Lvis_selected) and
+				not flag_set(info.unewstate, Lvis_selected) then
+				item_imp := ev_children @ (info.iitem + 1)
+				--item_imp.execute_command (Cmd_item_deactivate, Void)
+				item_imp.interface.deselect_actions.call ([])
+			end
+		end
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -870,6 +872,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/06 17:13:33  rogers
+--| Added calls to row select and deselect actions. Added call to column_click_actions.
+--|
 --| Revision 1.42  2000/03/04 00:09:35  rogers
 --| Removed commented item, implemented seemingly correct code for column_title which currently does not work. Appears to be a WEL bug.
 --|

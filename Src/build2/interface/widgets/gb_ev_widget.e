@@ -21,13 +21,20 @@ inherit
 
 
 	GB_XML_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
 		
 	GB_EV_WIDGET_EDITOR_CONSTRUCTOR
+		undefine
+			default_create
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			is_shared_set: not is_shared
 		end
 
-	make_from_array (data: ARRAY [INTEGER_8]) is
+	make_from_array (data: ARRAY [NATURAL_8]) is
 			-- Allocate `item' with `data.count' bytes and copy
 			-- content of `data' into `item'.
 		require
@@ -147,13 +147,22 @@ feature -- Duplication
 		
 feature -- Access: Platform specific
 
+	read_natural_8 (pos: INTEGER): NATURAL_8 is
+			-- Read NATURAL_8 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			Result := feature {MARSHAL}.read_byte (item, pos)
+		end
+
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_byte (item, pos)
+			Result := feature {MARSHAL}.read_byte (item, pos).as_integer_8
 		end
 
 	read_integer_16 (pos: INTEGER): INTEGER_16 is
@@ -243,7 +252,7 @@ feature -- Access: Platform specific
 			Result := l_target.item (0)
 		end
 
-	read_array (pos, a_count: INTEGER): ARRAY [INTEGER_8] is
+	read_array (pos, a_count: INTEGER): ARRAY [NATURAL_8] is
 			-- Read `count' bytes at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -257,7 +266,7 @@ feature -- Access: Platform specific
 			until
 				i >= a_count
 			loop
-				Result.put (read_integer_8 (pos + i), i + 1)
+				Result.put (read_natural_8 (pos + i), i + 1)
 				i := i + 1
 			end
 		ensure
@@ -267,13 +276,24 @@ feature -- Access: Platform specific
 
 feature -- Element change: Platform specific
 
+	put_natural_8 (i: NATURAL_8; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			feature {MARSHAL}.write_byte (item + pos, i)
+		ensure
+			inserted: i = read_natural_8 (pos)
+		end
+
 	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			feature {MARSHAL}.write_byte (item + pos, i)
+			feature {MARSHAL}.write_byte (item + pos, i.as_natural_8)
 		ensure
 			inserted: i = read_integer_8 (pos)
 		end
@@ -382,7 +402,7 @@ feature -- Element change: Platform specific
 			inserted: d = read_double (pos)
 		end
 
-	put_array (data: ARRAY [INTEGER_8]; pos: INTEGER) is
+	put_array (data: ARRAY [NATURAL_8]; pos: INTEGER) is
 			-- Copy content of `data' into `item' at position `pos'.
 		require
 			data_not_void: data /= Void

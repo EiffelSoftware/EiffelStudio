@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			-- Create the widget with `par' as parent.
 		do
 			base_make (an_interface)
+			real_text := ""
 		end
 
 	initialize is
@@ -47,12 +48,36 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- Is `Current' selected in `parent'?
+		do
+			Result := parent_imp.is_item_imp_selected (Current)
+		end
+
+feature -- Status setting
+
+	enable_select is
+			-- Set `is_selected' `True'.
+		do
+			parent_imp.select_item_imp (Current)
+		end
+
+	disable_select is
+			-- Set `is_selected' `False'.
+		do
+			parent_imp.deselect_item_imp (Current)
+		end
+
 feature -- Access
 
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			--Result := parent_imp.internal_get_index (Current) + 1
+			if parent_imp /= Void then
+				Result := parent_imp.ev_children.index_of (Current, 1)
+			end
 		end
 
 	parent_imp: EV_LIST_IMP
@@ -119,11 +144,11 @@ feature -- Status report
 	real_text: STRING
 			-- Internal `text'. Not to be returned directly. Use clone.
 
-	is_selected: BOOLEAN is
-			-- Is the item selected
-		do
-			--Result := parent_imp.internal_is_selected (Current)
-		end
+--	is_selected: BOOLEAN is
+--			-- Is the item selected
+--		do
+--			--Result := parent_imp.internal_is_selected (Current)
+--		end
 
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
@@ -149,12 +174,12 @@ feature -- Status setting
 			end
 		end
 
-	toggle is
-			-- Change the state of the toggle button to
-			-- opposit status.
-		do
-			set_selected (not is_selected)
-		end
+--	toggle is
+--			-- Change the state of the toggle button to
+--			-- opposit status.
+--		do
+--			set_selected (not is_selected)
+--		end
 
 feature -- Element change
 
@@ -258,6 +283,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/29 20:25:17  brendel
+--| Implemented using new _I.
+--| To be cleaned up.
+--|
 --| Revision 1.40  2000/03/29 02:17:16  brendel
 --| Commented out features that have no routine body anyway.
 --| To be implemented.

@@ -50,6 +50,7 @@ private void wean();				/* Wean adopted object */
 private void load_bc();				/* Load byte code information */
 private void obj_inspect();
 private void bit_inspect();
+private void once_inspect();		/* Once routines inspection */
 
 private IDRF idrf;			/* IDR filter for serialize communications */
 
@@ -142,6 +143,9 @@ Request *rqst;				/* The received request to be processed */
 		break;
 	case WEAN:						/* Wean adopted object */
 		wean(writefd(sp), &rqst->rq_opaque);
+		break;
+	case ONCE:						/* Once routines inspection */
+		once_inspect(writefd (sp), &rqst->rq_opaque);
 		break;
 	}
 
@@ -333,6 +337,33 @@ Opaque *what;		/* Generic structure describing request */
 
 	twrite(out, strlen(out));
 	free(out);
+}
+
+private void once_inspect(s, what)
+int s;				/* The connected socket */
+Opaque *what;		/* Generic structure describing request */
+{
+	/* Check whether a once routine has already been called. In this case
+	 * its result may be ask by ewb.
+	 */
+
+	int arg_num;
+	uint32 body_id = (uint32) what->op_third;	/* Body_id of once routine */
+
+	switch (what->op_first) {		/* First value describes request */
+	case OUT_CALLED:				/* Has once routine already been called? */
+		if (onceitem(body_id) != (uint32 *)0)	/* body_id found in once list */
+			twrite("true", 4);
+		else
+			twrite("false", 5);
+		break;
+	case OUT_RESULT:				/* Result of already called once function */
+		arg_num = what->op_second;	/* Number of arguments to be passed */
+		send_once_result(s, body_id, arg_num);	/* Send result back to ewb */
+		break;
+	default:
+		panic("BUG once inspect");
+	}
 }
 
 private void adopt(s, what)
@@ -621,6 +652,8 @@ register1 char *object;
 					twrite (buffer, strlen(buffer));
 				}
 			} else {
+				sprintf(buffer, "%s", System(type & SK_DTYPE).cn_generator);
+				twrite (buffer, strlen(buffer));
 				sprintf(buffer, "Void");
 				twrite (buffer, strlen(buffer));
 			}

@@ -53,6 +53,7 @@ public bool_t idr_Request();
 	{ ADOPT, idr_Opaque },
 	{ ACCESS, idr_Opaque },
 	{ WEAN, idr_Opaque },
+	{ ONCE, idr_Opaque },
 	{ __dontcare__, idr_void },
 };
 

@@ -14,6 +14,7 @@
 #ifndef _wbench_h_
 #define _wbench_h_
 
+extern uint32 *onceadd();					/* Add once-routine body_id in a list */
 extern char *(*wfeat())();				/* Feature call */
 extern char *(*wfeat_inv())();			/* Nested feature call */
 extern void wexp();						/* Creation call for expanded types */

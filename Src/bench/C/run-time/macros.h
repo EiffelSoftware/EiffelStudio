@@ -289,6 +289,7 @@ extern int fcount;
  *  RTVA(x,y,z,t) is a nested access to an attribute (dot expression)
  *  RTWT(x,y,z) fetches the creation type
  *  RTWP(x,y,z) returns the feature address ($ operator)
+ *  RTWO(x) stores in a list the body id of the just called once routine
  */
 #define RTWF(x,y,z) wfeat(x,y,z)
 #define RTVF(x,y,z,t) wfeat_inv(x,y,z,t)
@@ -296,6 +297,7 @@ extern int fcount;
 #define RTVA(x,y,z,t) wattr_inv(x,y,z,t)
 #define RTWT(x,y,z) wtype(x,y,z)
 #define RTWP(x,y,z) wpointer(x,y,z)
+#define RTWO(x) onceadd(x)
 
 #define WDBG(x,y)	is_debug(x,y)				/* Debug option */
 #define WASC(x)		eoption[x].assert_level		/* Assertion level */
@@ -304,7 +306,7 @@ extern int fcount;
 #define WASF(x)		wasfree(x)				/* Free assertion list */
 
 #define RTDS(x)		dispatch(x)			/* Body id of body index (x) */
-#define RTFZ(x)		frozen(x)			/* C frozen pointer of body id (x)
+#define RTFZ(x)		frozen(x)			/* C frozen pointer of body id (x) */
 #define RTMT(x)		melt(x)				/* Byte code of body id (x) */
 
 #endif

@@ -25,6 +25,9 @@
 #undef STACK_CHUNK
 #define STACK_CHUNK		200			/* Number of items in a stack chunk */
 #define CALL_SZ			sizeof(struct dcall)
+#define LIST_CHUNK		200			/* Number of items in a list chunk */
+#define BODY_ID_SZ		sizeof(uint32)
+
 
 /*#define DEBUG 63		/* Activate debugging code */
 
@@ -50,6 +53,19 @@ shared struct dbstack db_stack = {
 	(struct stdchunk *) 0,		/* st_cur */
 	(struct dcall *) 0,			/* st_top */
 	(struct dcall *) 0,			/* st_end */
+};
+
+/* Once list. This list records the body_id of once routines that have already
+ * been called. This is usefull to prevent those routines to be supermelted
+ * losing in that case their memory (whether they have already been called
+ * and their result). This list is also needed to inspect result of
+ * once functions in order to know if that result has already been evaluated.
+ */
+shared struct id_list once_list = {
+	(struct idlchunk *) 0,		/* idl_hd */
+	(struct idlchunk *) 0,		/* idl_tl */
+	(uint32 *) 0,				/* idl_last */
+	(uint32 *) 0,				/* idl_end */
 };
 
 /* For faster reference, the current control table is memorized in a global
@@ -82,6 +98,12 @@ private struct dcall *stack_allocate();	/* Allocate first chunk */
 private int stack_extend();				/* Extend stack size */
 private void npop();					/* Pop 'n' items */
 private int nb_calls();					/* Number of calls registered */
+
+/* Once list handling routines */
+public uint32 *onceadd();				/* Add once body_id to list */
+public uint32 *onceitem();				/* Item with body_id in list */
+private uint32 *list_allocate();		/* Allocate first chunk */
+private int list_extend();				/* Extend list size */
 
 /* Program context */
 shared void escontext();				/* Save program context */
@@ -714,13 +736,18 @@ public struct dcall *dtop()
 
 public void initdb()
 {
-	/* Initialize debugger stack */
+	/* Initialize debugger stack and once list */
 
 	struct dcall *top;			/* Arena for first stack chunk */
+	uint32 *list_arena;			/* Arena for first list chunk */
 
 	top = stack_allocate(STACK_CHUNK);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
 		fatal_error("can't create debugger stack");
+
+	list_arena = list_allocate(LIST_CHUNK);		/* Create one */
+	if (list_arena == (uint32 *) 0)		 		/* Could not create list */
+		fatal_error("can't create once list");
 }
 
 private int nb_calls()
@@ -953,3 +980,162 @@ char *addr;			/* Address where byte code is stored */
 
 }
 
+/*
+ * Once list handling.
+ */
+
+private uint32 *list_allocate(size)
+register1 int size;					/* Initial size */
+{
+	/* The once list is created, with size 'size'.
+	 * Return the arena value.
+	 */
+
+	register2 uint32 *arena;			/* Address for the arena */
+	register3 struct idlchunk *chunk;	/* Address of the chunk */
+
+	size *= BODY_ID_SZ;
+	size += sizeof(*chunk);
+	chunk = (struct idlchunk *) cmalloc(size);
+	if (chunk == (struct idlchunk *) 0)
+		return (uint32 *) 0;			/* Malloc failed for some reason */
+
+	SIGBLOCK;
+	once_list.idl_hd = chunk;			/* New list (head of list) */
+	once_list.idl_tl = chunk;			/* One chunk for now */
+	arena = (uint32 *) (chunk + 1);		/* Header of chunk */
+	once_list.idl_last = arena;			/* Empty list */
+	chunk->idl_arena = arena;			/* Base address */
+	once_list.idl_end = chunk->idl_end = (uint32 *)
+		((char *) chunk + size);		/* First free location beyond list */
+	chunk->idl_next = (struct idlchunk *) 0;
+	chunk->idl_prev = (struct idlchunk *) 0;
+	SIGRESUME;
+
+	return arena;			/* List allocated */
+}
+
+public uint32 *onceadd(id)
+uint32 id;
+{
+	/* Add body_id 'id' to end of the once list. If it fails, raise
+	 * an "Out of memory" exception.
+	 */
+
+	register1 uint32 *last = once_list.idl_last;/* Last free element of list */
+
+	/* List created at initialization time via initdb */
+
+	if (once_list.idl_end == last) {
+		/* The end of the current stack chunk has been reached. Create
+		 * a new one and insert it in the list.
+		 */
+		SIGBLOCK;
+		if (-1 == list_extend(LIST_CHUNK))
+			enomem();
+		last = once_list.idl_last;		/* New last */
+		SIGRESUME;
+	}
+
+	once_list.idl_last = last + 1;		/* Points to next free location */
+	bcopy(&id, last, BODY_ID_SZ);		/* Add `id' in the list */
+
+	return last;						/* Address of allocated item */
+}
+
+private int list_extend(size)
+register1 int size;					/* Size of new chunk to be added */
+{
+	/* The once list is extended and the list structure is updated.
+	 * 0 is returned in case of success. Otherwise, -1 is returned.
+	 */
+
+	register2 uint32 *arena;			/* Address for the arena */
+	register3 struct idlchunk *chunk;	/* Address of the chunk */
+
+	size *= BODY_ID_SZ;
+	size += sizeof(*chunk);
+	chunk = (struct idlchunk *) cmalloc(size);
+	if (chunk == (struct idlchunk *) 0)
+		return -1;		/* Malloc failed for some reason */
+
+	SIGBLOCK;
+	arena = (uint32 *) (chunk + 1);				/* Header of chunk */
+	chunk->idl_next = (struct idlchunk *) 0;	/* Last chunk in list */
+	chunk->idl_prev = once_list.idl_tl;			/* Preceded by the old tail */
+	once_list.idl_tl->idl_next = chunk;			/* Maintain link w/previous */
+	once_list.idl_tl = chunk;					/* New tail */
+	chunk->idl_arena = arena;					/* Where items are stored */
+	chunk->idl_end = (uint32 *)
+		((char *) chunk + size);				/* First item beyond chunk */
+	once_list.idl_last = arena;					/* New top */
+	once_list.idl_end = chunk->idl_end;			/* End of current chunk */
+	SIGRESUME;
+
+	return 0;			/* Everything is ok */
+}
+
+public uint32 *onceitem(id)
+register1 uint32 id;
+{
+	/* Returns a pointer to the element of the list with body_id `id'
+	 * or a NULL pointer if that value is not found. I assume that the
+	 * list has been created.
+	 */
+
+	register2 struct idlchunk *chunk;	/* To walk through the list */
+	register3 uint32 *item;				/* To walk through the chunk */
+	register4 int done = 0;				/* Last element of list not reached */
+
+	for (chunk = once_list.idl_hd; chunk && !done; chunk = chunk->idl_next) {
+		if (chunk != once_list.idl_tl)
+			for (item = chunk->idl_arena; item != chunk->idl_end; item++) {
+				if (*item == id)
+					return item;
+			}
+		else {	/* Stop at last element */
+			for (item = chunk->idl_arena; item != once_list.idl_last; item++) {
+				if (*item == id)
+					return item;
+			}
+			done = 1;								/* Reached end of list */
+		}
+	}
+
+	return (uint32 *)0;		/* val not found */
+}
+
+public struct item *docall(body_id, arg_num)
+register1 uint32 body_id;		/* body id of the once function */
+register2 int arg_num;			/* Number of arguments */
+{
+	/* Call the routine identified by `body_id'. This routine is supposed to
+	 * be an already called once function with `arg_num' arguments. `arg_num'+1
+	 * NULL items are push on the operational stack (fuction's arguments plus
+	 * target of the call) before the function call and the result is popped
+	 * from that stack and returned. Since the once function has already been
+	 * called, the arguments on the operational stack are just popped during
+	 * the call without any further evaluation. These args can therefore be
+	 * Null items. The registers do not need to be resynchronized, even if
+	 * the once function is melted, because in that case we just inspect
+	 * the header part of the byte code without modifying any registers.
+	 */
+
+	char *old_IC;				/* IC back up */
+	uint32 pid;					/* Pattern id of the frozen feature */
+	register3 i;
+
+	for (i = 0; i <= arg_num ; i++)		/* Push arg_num + 1 null items */
+		iget();							/* on the operational stack */
+
+	old_IC = IC;				/* IC back up */
+	if (body_id < zeroc) {		/* We are below zero Celsius, i.e. ice */
+		pid = (uint32) FPatId(body_id);
+		(pattern[pid].toc)(frozen[body_id], 0);		/* Call pattern */
+	} else
+		xinterp(melt[body_id]);
+	IC = old_IC;				/* Restore IC back-up */
+
+	return opop();				/* Return the result of the once function */
+								/* and remove it from the operational stack */
+}

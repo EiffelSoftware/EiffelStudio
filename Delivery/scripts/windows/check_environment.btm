@@ -28,6 +28,10 @@ iff not defined NO_COMPILE then
 		CANCEL
 	endiff
 	
+	iff not exist %ISE_EIFFEL\BCC55\Bin\bcc32.exe then
+		echo Cannot find a version of Borland under ISE_EIFFEL. Cannot continue
+		CANCEL
+	endiff
 	iff "%@SEARCH[ec.exe]" == "" then
 		echo Cannot find a version of ec. Cannot continue
 		CANCEL

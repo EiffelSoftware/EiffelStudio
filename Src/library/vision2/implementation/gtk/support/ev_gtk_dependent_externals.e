@@ -8,6 +8,18 @@ class
 
 feature -- Externals
 
+	frozen gtk_value_pointer (arg: POINTER): POINTER is
+			-- Pointer to the value of a GtkArg.
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+		
+	frozen gtk_value_int (arg: POINTER): POINTER is
+			-- Integer value from a GtkArg.
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
 		external
 			"C (GtkObject*, guint) | <gtk/gtk.h>"

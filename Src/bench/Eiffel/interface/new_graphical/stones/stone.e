@@ -28,7 +28,7 @@ feature -- Properties
 		deferred 
 		end
 
---	stone_cursor: SCREEN_CURSOR is
+--	stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 --		deferred
@@ -36,7 +36,7 @@ feature -- Properties
 --			non_void: Result /= Void
 --		end
 
---	x_stone_cursor: SCREEN_CURSOR is
+--	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 --		deferred

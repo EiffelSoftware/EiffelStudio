@@ -67,6 +67,9 @@ feature
 	pointer_ref_class: CLASS_I;
 			-- Class POINTER_REF
 
+	memory_class_i: CLASS_I;
+			-- Class MEMORY
+
 	set_general_class (c: CLASS_I) is
 			-- Assign `c' to `general_class'.
 		do
@@ -179,6 +182,12 @@ feature
 			-- Assign `c' to `pointer_ref_class'.
 		do
 			pointer_ref_class := c;
+		end;
+
+	set_memory_class_i (c: CLASS_I) is
+			-- Assign `c' to `memory_class_i'.
+		do
+			memory_class_i := c
 		end;
 
 	general_id: CLASS_ID is

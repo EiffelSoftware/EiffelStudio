@@ -58,6 +58,9 @@ feature -- Access
 	default_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			-- Descriptor of default interface.
 
+	default_source_dispinterface_name: STRING
+			-- Name of default source interface.
+
 	flags: INTEGER
 			-- See ECOM_TYPE_FLAGS for values.
 
@@ -119,6 +122,18 @@ feature -- Element Change
 		ensure
 			non_void_default_dispinterface: default_dispinterface_name /= Void
 			valid_default_dispinterface: not default_dispinterface_name.empty and default_dispinterface_name.is_equal (a_name)
+		end
+
+	set_default_source_dispinterface_name (a_name: STRING) is
+			-- Set `default_source_dispinterface_name' with `a_name'.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			default_source_dispinterface_name := a_name
+		ensure
+			non_void_default_source_dispinterface: default_source_dispinterface_name /= Void
+			valid_default_source_dispinterface: not default_source_dispinterface_name.empty and default_source_dispinterface_name.is_equal (a_name)
 		end
 
 	set_default_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is

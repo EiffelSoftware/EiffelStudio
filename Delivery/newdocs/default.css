@@ -225,6 +225,16 @@ A:hover {
 	PADDING: 4px 8px;
 }
 
+.warning {
+	MARGIN-TOP=1em;
+	MARGIN-BOTTOM=1em;
+	BACKGROUND-COLOR=#FFECEF;
+	BORDER-WIDTH: 1px;
+	BORDER-STYLE: solid;
+	BORDER-COLOR: #999999;
+	PADDING: 4px 8px;
+}
+
 .figuretitle {
 	MARGIN_TOP=.5em;
 	MARGIN_BOTTOM=3em;

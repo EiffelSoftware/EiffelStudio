@@ -17,7 +17,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			put, eif_getenv
+			eif_getenv
 		end;
 	SHARED_STDOUT
 

@@ -49,16 +49,19 @@ feature -- Access
 				not is_new implies project_eif_file.exists
 		end;
 
-	project_eif_file: RAW_FILE is
+	project_eif_file: PROJECT_EIFFEL_FILE is
 			-- Project.eif file in project directory
 		local
-			fn: FILE_NAME
+			fn, ptxt_fn: FILE_NAME
 		do
 			if private_project_eif_file = Void then
 				!! fn.make_from_string (name);
 				fn.extend (Eiffelgen);
 				fn.set_file_name (Dot_workbench);
-				!! private_project_eif_file.make (fn)
+				!! ptxt_fn.make_from_string (name);
+				ptxt_fn.extend (Eiffelgen);
+				ptxt_fn.set_file_name (Project_txt);
+				!! private_project_eif_file.make (fn, ptxt_fn)
 			end;
 			Result := private_project_eif_file
 		ensure
@@ -119,7 +122,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	private_project_eif_file: RAW_FILE;
+	private_project_eif_file: PROJECT_EIFFEL_FILE;
 			-- Project.eif file
 
 end -- class PROJECT_DIRECTORY

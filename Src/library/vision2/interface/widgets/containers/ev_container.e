@@ -107,8 +107,9 @@ feature -- Element change
 		require
 			extendible: extendible
 			v_not_void: v /= Void
-			not_has_v: not has (v)
-			not_v_is_parent_recursive: not v.is_parent_recursive (Current)
+			v_parent_void: v.parent = Void
+			v_not_current: v /= Current
+			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.extend (v)
 		ensure
@@ -120,8 +121,9 @@ feature -- Element change
 		require
 			writable: writable
 			v_not_void: v /= Void
-			not_has_v: not has (v)
-			not_v_is_parent_recursive: not v.is_parent_recursive (Current)
+			v_parent_void: v.parent = Void
+			v_not_current: v /= Current
+			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.replace (v)
 		ensure
@@ -360,6 +362,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/07 01:34:28  brendel
+--| Improved contracts.
+--|
 --| Revision 1.29  2000/03/20 19:39:25  king
 --| Removed item_is_old_item post cond as n/a to cell
 --|

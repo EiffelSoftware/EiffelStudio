@@ -8,16 +8,17 @@ indexing
 class EB_PROJECT_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+	EB_PROJECT_TOOL_DATA
 		rename
 			Project_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+	NEW_EB_CONSTANTS
 
 creation
 	make 
@@ -28,18 +29,16 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create tool_x.make_with_resource (Current, parameters.tool_x)
-			Create tool_y.make_with_resource (Current, parameters.tool_y)
-			Create tool_width.make_with_resource (Current, parameters.tool_width)
-			Create tool_height.make_with_resource (Current, parameters.tool_height)
-			Create command_bar.make_with_resource (Current, parameters.command_bar)
-			Create format_bar.make_with_resource (Current, parameters.format_bar)
---			Create feature_window.make_with_resource (Current, parameters.feature_window)
---			Create object_window.make_with_resource (Current, parameters.object_window)
-			Create selector_window.make_with_resource (Current, parameters.selector_window)
-			Create raise_on_error.make_with_resource (Current, parameters.raise_on_error)
-			Create graphical_output_disabled.make_with_resource (
-				Current, parameters.graphical_output_disabled)
+			create tool_x.make_with_resource (Current, parameters.tool_x)
+			create tool_y.make_with_resource (Current, parameters.tool_y)
+			create tool_width.make_with_resource (Current, parameters.tool_width)
+			create tool_height.make_with_resource (Current, parameters.tool_height)
+			create command_bar.make_with_resource (Current, parameters.command_bar)
+			create format_bar.make_with_resource (Current, parameters.format_bar)
+--			create feature_window.make_with_resource (Current, parameters.feature_window)
+--			create object_window.make_with_resource (Current, parameters.object_window)
+			create selector_window.make_with_resource (Current, parameters.selector_window)
+			create raise_on_error.make_with_resource (Current, parameters.raise_on_error)
 
 			resources.extend (tool_x)
 			resources.extend (tool_y)
@@ -51,7 +50,6 @@ feature {NONE} -- Initialization
 --			resources.extend (object_window)
 			resources.extend (selector_window)
 			resources.extend (raise_on_error)
-			resources.extend (graphical_output_disabled)
 		end
 
 feature -- Access
@@ -59,8 +57,8 @@ feature -- Access
 	name: STRING is "Project tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_Preference_project
 		end
 
@@ -71,6 +69,5 @@ feature {NONE} -- Implementation
 	command_bar, format_bar, selector_window,
 	feature_window, object_window,
 	raise_on_error: EB_BOOLEAN_RESOURCE_DISPLAY
-	graphical_output_disabled: EB_BOOLEAN_RESOURCE_DISPLAY
 
 end -- class EB_PROJECT_ENTRY_PANEL

@@ -216,6 +216,7 @@ feature {NONE} -- Implementation
 				non_void_full_error: full_error /= Void
 				non_void_short_error: short_error /= Void
 			end
+			short_error := format_error (short_error)
 			compiler_coclass.event_output_warning (full_error, short_error, warn.code, file_name, line_pos, 0)
 		end
 
@@ -297,6 +298,7 @@ feature {NONE} -- Implementation
 				non_void_full_error: full_error /= Void
 				non_void_short_error: short_error /= Void
 			end
+			short_error := format_error (short_error)
 			compiler_coclass.event_output_error (full_error, short_error, err.code, file_name, line_pos, 0)
 		end
 
@@ -305,6 +307,19 @@ feature {NONE} -- Implementation
 		do
 			Result := err_string /= Void and (not err_string.is_empty) and (not err_string.is_equal ("Error")) and (not err_string.is_equal ("Warning"))
 		end
+		
+	format_error (a_error: STRING): STRING is
+			-- formates `a_error' and returns result.
+			-- Used to remove new line formatting presented in EiffelStudio
+		require
+			non_void_error: a_error /= Void
+		do
+			Result := clone (a_error)
+			Result.replace_substring_all ("%N  ", " ")
+		ensure
+			non_void_Result: result /= Void
+		end
+		
 		
 		
 end -- class VS_ERROR_DISPLAYER

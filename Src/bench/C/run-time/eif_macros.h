@@ -301,6 +301,8 @@ RT_LNK int fcount;
 #define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) eif_cid_map [(x) & EO_TYPE]))
 #define RTCDT			int EIF_VOLATILE dtype = Dtype(Current)
 #define RTCDD			int EIF_VOLATILE dtype
+#define RTCFDT			int EIF_VOLATILE dftype = Dftype(Current)
+#define RTCFDD			int EIF_VOLATILE dftype
 
 
 
@@ -508,7 +510,10 @@ RT_LNK int fcount;
 #define RTCID(tp,x,y,z)	\
 		((x) ? eif_compound_id((tp), (int16) Dftype(x),(y),(z)) : \
 		 eif_compound_id ((tp), (int16) 0, (y), (z)))
-#define RTFCID(ct,x,y,z,u)	eif_final_id((ct),(x),(y),(z),(u))
+#define RTCID2(tp,x,y,z)	\
+		eif_compound_id((tp), (int16) (x),(y),(z))
+#define RTFCID(ct,x,y,z,u)	eif_final_id((ct),(x),(y), (int16) Dftype(z),(u))
+#define RTFCID2(ct,x,y,z,u)	eif_final_id((ct),(x),(y),(int16) (z),(u))
 #define RTGPTID(st,x,y)		eif_gen_param_id ((st),(x),(y))
 
 

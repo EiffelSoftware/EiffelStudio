@@ -290,7 +290,7 @@ rt_shared void eif_gen_conf_cleanup ();
 rt_private EIF_LW_MUTEX_TYPE   *eif_gen_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
-rt_public int16 eifthd_final_id (int16, int16 *, int16 **, EIF_REFERENCE, int );
+rt_public int16 eifthd_final_id (int16, int16 *, int16 **, int16, int );
 rt_public int16 eifthd_gen_param (int16, EIF_REFERENCE , int, char *, long *);
 rt_public int eifthd_gen_count (EIF_REFERENCE );
 rt_public char eifthd_gen_typecode (EIF_REFERENCE , int);
@@ -355,13 +355,13 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 }
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_REFERENCE Current, int offset)
+rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, int16 dftype, int offset)
 {
 	int16   result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_final_id (stype, ttable, gttable, Current, offset);
+	result = eifthd_final_id (stype, ttable, gttable, dftype, offset);
 
 	EIFMTX_UNLOCK;
 
@@ -877,11 +877,11 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 /* Result : RTUD(yes); doesn't matter since in final mode           */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_REFERENCE Current, int offset)
+rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, int16 dftype, int offset)
 
 {
 	int16   result, *gtp;
-	int16	dtype = Dtype (Current);
+	int16	dtype = Deif_bid(dftype);
 	int	table_index = dtype - offset;
 
 	if (gttable != (int16 **) 0)
@@ -891,7 +891,7 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_R
 		if ((gtp != (int16 *) 0) && (*(gtp+1) != TERMINATOR))
 		{
 			*gtp = dtype;
-			return eif_compound_id ((int16 *)0, (int16) Dftype (Current), ttable[table_index], gtp);
+			return eif_compound_id ((int16 *)0, dftype, ttable[table_index], gtp);
 		}
 	}
 

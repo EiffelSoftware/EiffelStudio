@@ -33,15 +33,12 @@ feature -- Access
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
-			Result := Added.twin
-			Result.append (Space)
-			Result.append (Alias_keyword)
-			Result.append (Space)
+			create Result.make (240)
+			Result.append ("Added alias ")
 			Result.append (name)
-			Result.append (Space)
-			Result.append (For)
-			Result.append (Space)
+			Result.append (" for ")
 			Result.append (type_descriptor.name)
+			Result.append ("%R%N")
 		end
 
 feature -- Basic operations

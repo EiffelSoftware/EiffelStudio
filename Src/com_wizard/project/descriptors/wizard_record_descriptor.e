@@ -47,27 +47,27 @@ feature -- Access
 
 	creation_message: STRING is
 			-- Creation message used for wizard output
+		local
+			l_description: STRING
+			l_field: WIZARD_RECORD_FIELD_DESCRIPTOR
 		do
-			Result := Added.twin
-			Result.append (Space)
-			Result.append (Record)
-			Result.append (Space)
-			Result.append (Name)
+			Result := "Added Record "
 			from 
 				fields.start
-				Result.append (New_line_tab)
+				Result.append ("%R%N%T")
 			until
 				fields.after
 			loop
-				Result.append (fields.item.name)
-				Result.append (Colon)
-				Result.append (Space)
-				Result.append (fields.item.data_type.name)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Double_dash)
-				Result.append (Space)
-				Result.append (fields.item.description)
-				Result.append (New_line_tab)
+				l_field := fields.item
+				Result.append (l_field.name)
+				Result.append (": ")
+				Result.append (l_field.data_type.name)
+				l_description := l_field.description
+				if l_description /= Void and then not l_description.is_empty then
+					Result.append ("%R%N%T%T%T-- ")
+					Result.append (l_description)
+				end
+				Result.append ("%R%N%T")
 				fields.forth
 			end
 		end

@@ -46,7 +46,7 @@ feature -- Basic Operations
 			visited: BOOLEAN
 		do
 			visited := a_descriptor.visited
-			{WIZARD_DATA_VISITOR} Precursor (a_descriptor)
+			Precursor {WIZARD_DATA_VISITOR} (a_descriptor)
 			if not is_interface and not is_coclass then
 				if need_generate_ce and not visited then
 					Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
@@ -82,9 +82,8 @@ feature -- Access
 			comment.append ("Free memory of ")
 			comment.append (c_type)
 			comment.append (c_post_type)
-			comment.append (Dot)
+			comment.append (".")
 			Result.set_comment (comment)
-
 			Result.set_name (free_memory_function_name)
 			Result.set_result_type ("void")
 			Result.set_signature (free_memory_function_signature)
@@ -106,10 +105,9 @@ feature -- Access
 			comment.append ("Convert ")
 			comment.append (c_type)
 			comment.append (c_post_type)
-			comment.append (Space)
 			comment.append (" to ")
 			comment.append (eiffel_type)
-			comment.append (Dot)
+			comment.append (".")
 			Result.set_comment (comment)
 
 			Result.set_name (ce_function_name)
@@ -135,7 +133,7 @@ feature -- Access
 			comment.append (" to ")
 			comment.append (c_type)
 			comment.append (c_post_type)
-			comment.append (Dot)
+			comment.append (".")
 			Result.set_comment (comment)
 
 			Result.set_name (ec_function_name)

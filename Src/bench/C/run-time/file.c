@@ -555,7 +555,7 @@ rt_public void file_append(FILE *f, FILE *other, EIF_INTEGER l)
 			amount = BUFSIZ;
 		if (amount != fread(buffer, sizeof(char), amount, other))
 			eise_io("FILE: unable to read appended file.");
-		l -= amount;
+		l = (l - (EIF_INTEGER) amount);
 		if (amount != fwrite(buffer, sizeof(char), amount, f))
 			eise_io("FILE: unable to write appended file.");
 	}

@@ -24,6 +24,20 @@ inherit
 			is_in_default_state
 		end
 
+feature -- Access
+
+	item_by_data (some_data: ANY): like item is
+			-- First item with `some_data'.
+		obsolete "Use `retrieve_item_by_data' instead."
+		require
+			not_destroyed: not is_destroyed
+			data_not_void: some_data /= Void
+		do
+			Result := implementation.item_by_data (some_data)
+		ensure
+			bridge_ok: Result = implementation.item_by_data (some_data)
+		end
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

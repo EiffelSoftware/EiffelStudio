@@ -1225,7 +1225,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 		ofst = spt->h_keys [i];
 		if (ofst == -1)
-			continue;				/* No new reference, just unmark it. */
+			continue;				/* No new reference, pass it. */
 		container = (EIF_REFERENCE *) (spt->h_values [i] + ofst * sizeof (EIF_REFERENCE));
 		if (*container == (EIF_REFERENCE) 0)
 			continue;				/* Skip Void elements. */
@@ -1285,7 +1285,11 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 		if (move) 	/* May Item move? */
 		{
-			if (*container > sc_to.sc_arena && *container <= sc_to.sc_end)	
+			if (
+				(g_data.status & GC_FAST) &&
+				(*container > sc_to.sc_arena) && 
+				(*container <= sc_to.sc_end)
+			)	
 						/* Is it in the generational scavenge `to' zone? */
 							
 	 		{
@@ -1304,8 +1308,8 @@ rt_private void mark_special_table (register struct special_table *spt, register
 			}
 			else		/* Not a twin, then mark it. */
 			{
-				*container = mark_expanded (*container, marker);
-									/* FIXME. Maybe call `marker' directly. */
+				*container = marker (*container);
+							
 				iz = HEADER (*container);	/* Update item's info zone. */
 			}
 		}
@@ -1953,15 +1957,15 @@ rt_private EIF_REFERENCE recursive_mark(EIF_REFERENCE root)
 			return root;				/* Object processed and did not move */
 
 		if (
-			offset & GC_GEN && !(size & B_BUSY)
+			(offset & GC_GEN) && !(size & B_BUSY)
 		) {
 			root = scavenge(root, &sc_to);	/* Simple scavenging */
 			zone = HEADER(root);			/* Update zone */
 			flags = zone->ov_flags;			/* And Eiffel flags */
 			goto marked;					/* I hate those--necessary here */
 		} else if (
-			offset & GC_PART &&
-			root > ps_from.sc_arena && root <= ps_from.sc_end
+			(offset & GC_PART) &&
+			(root > ps_from.sc_arena && root <= ps_from.sc_end)
 		) {
 			root = scavenge(root, &ps_to);	/* Partial scavenge */
 			zone = HEADER(root);			/* Update zone */
@@ -3768,6 +3772,20 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	register2 union overhead *zone;	/* Malloc info header */
 	int length;						/* Length of scavenged object */
 
+	assert (g_data.status & (GC_GEN | GC_PART) || 
+			g_data.status & GC_FAST);
+									/* Algorithm moves objects. */
+
+	assert (						/* Not in Generation Scavenge TO zone. */
+		!((g_data.status & GC_FAST) &&
+		(root > sc_to.sc_arena) && 
+		(root <= sc_to.sc_end))
+	);				
+	assert (						/* Not in Partial Scavenge TO zone. */
+		!((g_data.status & GC_PART) &&
+		(root > ps_to.sc_arena) && 
+		(root <= ps_to.sc_end))
+	);
 	zone = HEADER(root);
 
 	/* Expanded objects are held in one object, and a pseudo-reference field
@@ -3808,7 +3826,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	root = to->sc_top;						/* New location in 'to' space */
 	length = (zone->ov_size & B_SIZE) + OVERHEAD;
 	to->sc_top += length;					/* Update free-location pointer */
-	bcopy((EIF_REFERENCE) zone, root, length);		/* The scavenge process itself */
+	bcopy((EIF_REFERENCE) zone, root, length);/* The scavenge process itself */
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
 #ifdef EIF_NO_SCAVENGE
 	eif_panic ("Scavenging is not disabled");
@@ -5465,7 +5483,8 @@ rt_private int update_special_rem_set(void)
 	hvalues = special_rem_set->h_values;	 
 	moving = g_data.status;				/* Garbage collector's status */
 	generational = moving & GC_FAST;	/* Is this a collect() cycle? */
-	moving &= GC_PART | GC_GEN ;		/* Current algorithm moves objects? */
+	moving &= GC_PART | GC_GEN ;		/* Is this a Full collection,
+										   which moves objects?	*/
 
 	new_table = (struct special_table *) malloc (sizeof (struct special_table));
 	if (new_table == (struct special_table *) 0)	
@@ -5535,11 +5554,15 @@ rt_private int update_special_rem_set(void)
 
 	for (i = 0 ; i < count; i++)
 	{
-		assert (!(HEADER (hvalues [i])->ov_size & B_FWD));
-											/* Must be udpdated earlier. */
-		HEADER (hvalues [i])->ov_flags &= ~EO_REM;	
-											/* Remove remembered flag. */
-		assert (!(HEADER(hvalues [i])->ov_flags & EO_REM));	
+		union overhead *tzone = HEADER (hvalues [i]);	/* Fetch zone. */
+		if (tzone->ov_size & B_FWD)	{
+				/* Is object forwarded? */
+				tzone = HEADER (tzone->ov_fwd);	
+					/* Update zone, but not object, We must keep
+					 *the B_FWD flag to check if object is alive later on. */
+		}
+		tzone->ov_flags &= ~EO_REM;	/* Remove remembered flag. */
+		assert (!(tzone->ov_flags & EO_REM));	
 											/* This flag must be unset. */
 	}	/* for ... */
 
@@ -5635,12 +5658,15 @@ rt_private int update_special_rem_set(void)
 				printf ("UPDATE_SPECIAL_REM_SET_DEBUG: Object was forwarded.\n");
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
-				hvalues [i] = zone->ov_fwd;
+				hvalues [i] = zone->ov_fwd;	/* Update object now. */
 				object = hvalues [i];
 				zone = HEADER (object);
 				assert (!(zone->ov_size & B_FWD));
 			}
 			else if (!(zone->ov_flags & EO_MARK))	/* Object is dead */
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+				printf ("UPDATE_SPECIAL_REM_SET:Remembered object %x is dead and kicked out.\n", object);
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 				continue;			/* Remove it from special remembered table. */
 		} 
 		else if (!(zone->ov_flags & EO_MARK))	/* Object cannot move */
@@ -5665,11 +5691,8 @@ rt_private int update_special_rem_set(void)
 		/* Initializations for item. */
 		offset 	= hkeys [i];
 
-		if (offset == -1)		 /* No new references in it, by convention. */
-		{
-			assert (!(refers_new_object_not_updated (hvalues [i])));
+		if (offset == -1) /* No subreference to check. */
 			continue;						/* Remove it. */
-		}
 		if (offset == -2)		 	/* Twin, by convention.*/
 		{
 
@@ -6044,9 +6067,10 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 		if ((subref > sc_to.sc_arena && subref <= sc_to.sc_end) ||
 		(subref > ps_to.sc_arena && subref <= ps_to.sc_end))
 			continue;	/* Ok, next. */
-		if (g_data.status & GC_PART)	/* Is this a partial scavenging. */
+		if (!(g_data.status & GC_FAST) && (g_data.status & GC_PART))	
+				/* Is this a partial scavenging. */
 			if ((subref > ps_from.sc_arena && subref <= ps_from.sc_end))
-				continue;		/* Next -- Skip object in ps `from' zone. */
+				return 0;		/* Object not updated. */
 		EIF_END_GET_CONTEXT
 		return 0;
 	}	
@@ -6059,11 +6083,8 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
-	 * answer is known. Return a boolean value stating the result. This
-	 * routine is recursively called to deal with expanded objects. However,
-	 * there are few of them, so I chose to delcare locals in registers--RAM.
-	 *
-	 * Take care of forwarded items. 
+	 * answer is known. Return a boolean value stating the result. 
+	 * This routine can deal with non updated sub-objects. 
 	 */
 
 	register2 uint32 flags;			/* Eiffel flags */
@@ -6086,8 +6107,9 @@ rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 		if (root == (EIF_REFERENCE) 0)
 			continue;						/* Skip void references */
 		if (HEADER (root)->ov_size & B_FWD)
-			root = HEADER (root)->ov_fwd;	/* Update it. */
-		flags = HEADER(root)->ov_flags;
+			flags = HEADER(HEADER (root)->ov_fwd)->ov_flags;/* Update flags. */
+		else
+			flags = HEADER(root)->ov_flags;
 		if (!(flags & EO_OLD))
 			return 1;						/* Object references a young one */
 	}

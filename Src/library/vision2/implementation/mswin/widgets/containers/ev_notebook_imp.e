@@ -103,6 +103,22 @@ feature -- Status report
 			Result := current_selection + 1
 		end
 
+	tab_position: STRING is
+			-- Position of the tabs.
+		do
+			inspect
+				tab_pos
+			when Pos_top then
+				Result:="top"
+			when Pos_bottom then
+				Result:="bottom"
+			when Pos_left then
+				Result:="left"
+			when Pos_right then
+				Result:="right"
+			end
+		end
+
 feature -- Status setting
 
 	set_default_minimum_size is
@@ -128,6 +144,8 @@ feature -- Status setting
  			tab_pos := pos
  			set_style (basic_style)
 			set_font (font)
+			--------
+			notify_change (2)
 		end
 
 	set_current_page (index: INTEGER) is
@@ -227,7 +245,7 @@ feature -- Element change
 			index: INTEGER
 		do
 			index := get_child_index (a_child)
-			delete_item (index - 1)
+			delete_item (index)
 			notify_change (2 + 1)
 		end
 
@@ -329,14 +347,16 @@ feature -- Basic operation
 			test: BOOLEAN
 			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
+			ww: WEL_WINDOW
 		do
 			from
-				Result := 0
+				Result := -1
 			until
-				(Result = count) or test
+				(Result = count - 1) or test
 			loop
 				Result := Result + 1
 				child_item := get_item (Result)
+				ww := child_item.window
 				child_imp ?= child_item.window
 				if a_child.is_equal (child_imp) then
 					test := True

@@ -3,7 +3,7 @@ indexing
 		"Eiffel Vision toggle button. Button that toggles between one of two%N%
 		%states (raised and depressed) each time it is pressed."
 	status: "See notice at end of class"
-	keywords: "toggle, buttonm"
+	keywords: "toggle, button"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -25,7 +25,7 @@ create
 feature -- Status report
 	
 	is_selected: BOOLEAN is
-			-- Is button depressed? :)
+			-- Is button depressed?
 		require
 		do
 			Result := implementation.state
@@ -94,6 +94,9 @@ end -- class EV_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/23 20:20:41  rogers
+--| Corrected spelling mistake in keywords, removed smiley face from comment on is_selected.
+--|
 --| Revision 1.19  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

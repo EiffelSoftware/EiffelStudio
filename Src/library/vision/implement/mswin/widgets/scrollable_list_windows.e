@@ -21,12 +21,14 @@ inherit
 		
 	SCROLLABLE_LIST_I
 		rename
-			resize as array_resize,
-			copy as array_copy,
-			setup as array_setup
+			is_equal as arrayed_list_is_equal,
+			resize as arrayed_list_resize,
+			copy as arrayed_list_copy,
+			setup as arrayed_list_setup
 		select
-			array_setup,
-			array_copy
+			arrayed_list_is_equal,
+			arrayed_list_setup,
+			arrayed_list_copy
 		end
 
 	FONTABLE_I

@@ -5,8 +5,6 @@
 >BYTEORDER
 >CAN_KEEPALIVE
 >CAT2
->Caddr_t
->Clock_t
 >DIRNAMLEN
 >EOFPIPE
 >F_OK
@@ -15,6 +13,7 @@
 >HAS_BCOPY
 >HAS_BZERO
 >HAS_CHOWN
+>HAS_DLOPEN
 >HAS_DUP2
 >HAS_FCNTL
 >HAS_FTIME
@@ -60,6 +59,7 @@
 >INTSIZE
 >I_DIRECT
 >I_DIRENT
+>I_DLFCN
 >I_FCNTL
 >I_FD_SET_SYS_SELECT
 >I_GRP
@@ -104,9 +104,7 @@
 >Time_t
 >USE_ADD_LOG
 >USE_BSDJMP
->USE_BSDPGRP
 >USE_STRUCT_COPY
->USE_TIOCNOTTY
 >Uid_t
 >VAL_NOFILE
 >VMS
@@ -116,6 +114,7 @@
 >bcmp
 >bcopy
 >bzero
+>getgroups
 >index
 >register1
 >register2
@@ -133,7 +132,6 @@ abortsig
 add_log
 alignbytes
 aphostname
-bin
 bitpbyte
 byteorder
 cc
@@ -142,7 +140,6 @@ charsize
 chgrp
 chmod
 chown
-clocktype
 cp
 cpp_stuff
 d_access
@@ -150,10 +147,10 @@ d_bcmp
 d_bcopy
 d_bsd
 d_bsdjmp
-d_bsdpgrp
 d_bzero
 d_chown
 d_dirnamlen
+d_dlopen
 d_dup2
 d_eofpipe
 d_eunice
@@ -205,7 +202,6 @@ d_uname
 d_unlink
 d_usleep
 d_utime
-d_voidtty
 date
 doublesize
 eunicefix
@@ -214,6 +210,7 @@ grep
 groupstype
 i_direct
 i_dirent
+i_dlfcn
 i_fcntl
 i_fd_setsyss
 i_grp
@@ -239,6 +236,10 @@ i_tmvlsyss
 i_utime
 i_varargs
 i_xm_protocols
+install
+installbin
+installmansrc
+installscript
 intsize
 large
 ldflags
@@ -249,7 +250,6 @@ ln
 longsize
 malloctype
 manext
-mansrc
 mkdep
 mv
 nofile
@@ -268,8 +268,6 @@ reg6
 reg7
 rm
 sbrksmart
-sbrktype
-scriptdir
 sed
 selecttype
 signal_t

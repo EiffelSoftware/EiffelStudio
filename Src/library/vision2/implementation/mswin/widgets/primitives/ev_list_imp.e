@@ -28,6 +28,7 @@ inherit
 		
 	EV_LIST_ITEM_HOLDER_IMP
 		redefine
+			initialize,
 			interface
 		end
 	
@@ -43,7 +44,8 @@ inherit
 			on_right_button_down,
 			on_key_down,
 			on_mouse_move,
-			pnd_press
+			pnd_press,
+			initialize
 		end
 
  	WEL_LIST_BOX
@@ -118,6 +120,13 @@ feature {NONE} -- Initialization
 			id := 0
 			!! ev_children.make (2)
 		end	
+
+	initialize is
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			{EV_LIST_ITEM_HOLDER_IMP} Precursor
+		end
+		
 
 feature -- Status report
 
@@ -666,6 +675,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/03/24 19:14:52  rogers
+--| Redefined initialize from EV_LIST_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.51  2000/03/21 01:25:54  rogers
 --| Renamed child_source -> pnd_child_source, set_child_source -> set_pnd_child_source. Added pnd_press.
 --|

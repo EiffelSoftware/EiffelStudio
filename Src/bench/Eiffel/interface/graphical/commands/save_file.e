@@ -9,8 +9,10 @@ class SAVE_FILE
 
 inherit
 
+	EB_CONSTANTS;
 	TWO_STATE_CMD
 		rename
+			init as make,
 			true_state_symbol as unmodified_pixmap,
 			false_state_symbol as modified_pixmap
 		redefine
@@ -21,14 +23,6 @@ creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do
-			init (a_text_window)
-		end;
-
 feature -- Properties
 
 	unmodified_pixmap: PIXMAP is 
@@ -87,6 +81,9 @@ feature {NONE} -- Implementation
 					end;
 					new_file.close;
 					text_window.disable_clicking;
+					if System_resources.parse_class_after_saving.actual_value then
+						tool.parse_file
+					end;
 					tool.update_save_symbol;
 				end
 			end

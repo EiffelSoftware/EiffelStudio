@@ -282,20 +282,6 @@ feature -- Access
 
 feature -- Element change
 
-	add_new_classs (class_i: like class_anchor) is
-		require
-			non_void_class_i: class_i /= Void
-			name_set: class_i.name /= Void
-			base_name_set: class_i.base_name /= Void
-			not_in_cluster: not classes.has (class_i.name)
-		do
-			class_i.set_cluster (Current)
-			class_i.set_date
-			classes.put (class_i, class_i.name);	
-		ensure
-			in_cluster: classes.has (class_i.name)
-		end
-
 	add_sub_cluster (c: like Current) is
 			-- Add cluster `c' to `sub_clusters.
 		require

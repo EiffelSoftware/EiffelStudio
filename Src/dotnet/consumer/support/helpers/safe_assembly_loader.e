@@ -5,8 +5,14 @@ indexing
 
 class
 	SAFE_ASSEMBLY_LOADER
+	
+inherit
+	KEY_ENCODER
+		export
+			{NONE} all
+		end
 
-feature {NONE} -- Basic Operations
+feature -- Basic Operations
 
 	load_assembly_from_path (a_path: STRING): ASSEMBLY is
 			-- loads an assembly from `a_path'
@@ -70,6 +76,25 @@ feature {NONE} -- Basic Operations
 				if Result = Void or not Result.global_assembly_cache then
 					Result := l_assembly
 				end
+			end
+		end
+		
+feature -- Query
+
+	is_mscorlib (a_assembly: ASSEMBLY): BOOLEAN is
+			-- is `a_assembly' mscorlib?
+		require
+			a_assembly_not_void: a_assembly /= Void
+		local
+			l_name: ASSEMBLY_NAME
+			l_pkt: NATIVE_ARRAY [INTEGER_8]
+		do
+			l_name := a_assembly.get_name
+			if ("mscorlib").is_equal (l_name.name) then
+				l_pkt := l_name.get_public_key_token
+				if l_pkt /= Void and then l_pkt.length > 0 then
+					Result := encoded_key (l_pkt).as_lower.is_equal ("b77a5c561934e089")
+				end				
 			end
 		end
 

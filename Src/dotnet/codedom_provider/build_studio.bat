@@ -33,8 +33,28 @@ IF EXIST EIFGEN RD /Q /S EIFGEN
 IF EXIST *.epr DEL /Q /F *.epr
 ec -ace ace.ace -precompile -finalize -c_compile
 CD ..\..
-IF EXIST build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.CodeDom.dll GOTO END
+IF EXIST build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.CodeDom.dll GOTO VISION2
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.dll was generated in build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code)
+GOTO END
+
+:VISION2
+CD build_studio\EiffelSoftware.EiffelVision2
+IF EXIST EIFGEN RD /Q /S EIFGEN
+IF EXIST *.epr DEL /Q /F *.epr
+ec -ace ace.ace -precompile -finalize -c_compile
+CD ..\..
+IF EXIST build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll GOTO MANAGER
+ECHO Compilation failed !! (no EiffelSoftware.EiffelVision2.dll was generated in build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code)
+GOTO END
+
+:MANAGER
+CD build_studio\ecd_manager
+IF EXIST EIFGEN RD /Q /S EIFGEN
+IF EXIST *.epr DEL /Q /F *.epr
+ec -ace ace.ace -finalize -c_compile
+CD ..\..
+IF EXIST build_studio\ecd_manager\EIFGEN\F_code\ecd_manager.exe GOTO END
+ECHO Compilation failed !! (no ecd_manager.exe was generated in build_studio\ecd_manager\EIFGEN\F_code)
 GOTO END
 
 :END

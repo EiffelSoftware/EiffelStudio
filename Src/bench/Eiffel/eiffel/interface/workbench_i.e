@@ -17,7 +17,8 @@ inherit
 		redefine
 			lace, system, universe
 		end;
-	COMPILER_EXPORTER; WINDOWS
+	COMPILER_EXPORTER;
+	WINDOWS
 
 feature -- Attributes
 

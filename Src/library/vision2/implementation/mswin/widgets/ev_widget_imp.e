@@ -166,9 +166,7 @@ feature -- Status report
 		end
 
 	shown: BOOLEAN is
-			-- Is the widget shown?
-			-- Do not use the WEL feature because it can be shown and
-			-- displayed when the parent is not shown.
+			-- Is the widget shown in its parent?
 		do
 			Result := flag_set (style, Ws_visible)
 		end

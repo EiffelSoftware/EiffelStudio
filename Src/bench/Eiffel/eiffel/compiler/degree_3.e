@@ -78,6 +78,9 @@ feature {NONE} -- Processing
 				-- Type checking and maybe byte code production for `a_class'.
 			a_class.pass3
 			a_class.set_reverse_engineered (False)
+			if System.il_generation then
+				a_class.update_anchors			
+			end
 
 				-- No error happened: set the compilation
 				-- status of class `class_c'.

@@ -161,10 +161,6 @@ feature -- Basic Operation
 					end
 					a_combo.put_front (create {EV_LIST_ITEM}.make_with_text (a_entry))
 					a_combo.set_text (a_entry)
-					l_save_routine ?= a_combo.data
-					if l_save_routine /= Void then
-						l_save_routine.call ([a_combo.strings])
-					end
 				else
 					if not a_combo.text.is_equal (a_entry) then
 						a_combo.set_text (a_entry)						
@@ -178,6 +174,10 @@ feature -- Basic Operation
 						a_combo.set_strings (l_new_list)
 						a_combo.change_actions.resume
 					end
+				end
+				l_save_routine ?= a_combo.data
+				if l_save_routine /= Void then
+					l_save_routine.call ([a_combo.strings])
 				end
 			end
 		end

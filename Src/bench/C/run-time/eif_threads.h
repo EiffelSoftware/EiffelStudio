@@ -28,6 +28,14 @@ extern void eif_thr_register(void);
 extern void eif_thr_create(EIF_OBJ current_obj, EIF_PROC init_func);
 extern void eif_thr_exit(void);
 
+/* Mutex functions at end of file */
+
+extern EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object);
+extern EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER proxy);
+extern void eif_thr_proxy_dispose(EIF_POINTER proxy);
+
+
+
 /* Imported functions */
 extern char *efreeze(EIF_OBJ object);
 extern void eufreeze(char *object);
@@ -140,6 +148,11 @@ extern void eufreeze(char *object);
 #endif
 
 extern EIF_MUTEX_TYPE eif_rmark_mutex;
+
+extern EIF_MUTEX_TYPE eif_thr_mutex_create(void);
+extern void eif_thr_mutex_lock(EIF_MUTEX_TYPE a_mutex_pointer);
+extern void eif_thr_mutex_unlock(EIF_MUTEX_TYPE a_mutex_pointer);
+extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer);
 
 #endif	/* _eif_threads_h_ */
 #endif	/* EIF_THREADS */

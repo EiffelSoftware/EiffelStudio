@@ -171,15 +171,16 @@ feature {NONE} -- Implementation
 			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW
 		do
-			if a_button = 3 then		
+			if a_button = 3 and is_sensitive then		
 				window ?= window_manager.last_focused_window
 				if window /= Void then
 					dev := window.window
 					if not argument_dialog_is_valid then
 						create args_dialog.make (window, agent execute)
 						set_argument_dialog (args_dialog)
+					else
+						argument_dialog.update
 					end
-					argument_dialog.update
 					if argument_dialog.is_displayed then
 						argument_dialog.raise
 					else

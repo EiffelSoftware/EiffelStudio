@@ -1,5 +1,5 @@
 /*
- * WEL_PROCESS_INFORMATION.H
+ * WEL_NET_RESOURCE.H
  */
 
 #ifndef __WEL_NET_RESOURCE__
@@ -22,10 +22,10 @@ extern "C" {
 #define cwel_net_resource_get_type(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->dwType))
 #define cwel_net_resource_get_display_type(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->dwDisplayType))
 #define cwel_net_resource_get_usage(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->dwUsage))
-#define cwel_net_resource_get_local_name(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->lpLocalName))
-#define cwel_net_resource_get_remote_name(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->lpRemoteName))
-#define cwel_net_resource_get_comment(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->lpComment))
-#define cwel_net_resource_get_provider(_ptr_) ((EIF_INTEGER)(((NETRESOURCE *) _ptr_)->lpProvider))
+#define cwel_net_resource_get_local_name(_ptr_) ((EIF_POINTER)(((NETRESOURCE *) _ptr_)->lpLocalName))
+#define cwel_net_resource_get_remote_name(_ptr_) ((EIF_POINTER)(((NETRESOURCE *) _ptr_)->lpRemoteName))
+#define cwel_net_resource_get_comment(_ptr_) ((EIF_POINTER)(((NETRESOURCE *) _ptr_)->lpComment))
+#define cwel_net_resource_get_provider(_ptr_) ((EIF_POINTER)(((NETRESOURCE *) _ptr_)->lpProvider))
 
 #ifdef __cplusplus
 }

@@ -70,6 +70,10 @@ feature -- Access
 			Result := internal_height
 		end
 
+	height_in_points: INTEGER
+			-- Preferred font height measure in points
+		
+
 feature -- Element change
 
 	set_family (a_family: INTEGER) is
@@ -98,6 +102,14 @@ feature -- Element change
 		do
 			internal_height := a_height
 			update_font_face
+		end
+
+	set_height_in_points (a_height: INTEGER) is
+			-- Set `a_height_in_points' to `a_height'.
+		do
+			internal_height := a_height
+				--FIXME IEK Temporary implementation
+			height_in_points := a_height
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;

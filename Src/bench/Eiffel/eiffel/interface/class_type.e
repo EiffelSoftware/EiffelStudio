@@ -312,9 +312,9 @@ feature -- Generation
 							-- Generation of extern declarations
 						Extern_declarations.generate_header (header_buffer)
 					elseif Compilation_modes.is_precompiling then
-						Class_counter.generate_extern_offsets (buffer)
-						Static_type_id_counter.generate_extern_offsets (buffer)
-						Real_body_id_counter.generate_extern_offsets (buffer)
+						Class_counter.generate_extern_offsets (header_buffer)
+						Static_type_id_counter.generate_extern_offsets (header_buffer)
+						Real_body_id_counter.generate_extern_offsets (header_buffer)
 					end
 
 					buffer.open_write_c

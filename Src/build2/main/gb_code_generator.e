@@ -121,6 +121,27 @@ feature {NONE} -- Creation
 		
 feature -- Basic operation
 
+	generate_single_window (window_name: STRING) is
+			-- Generate code for top level object named `window_name' only.
+			-- No other files are generated.
+		require
+			window_name_not_void: window_name /= Void
+		do
+			window_to_generate := window_name
+			generate
+			window_to_generate := Void
+		end
+		
+	window_to_generate: STRING
+		-- Nmae of window to generate if a single window is being generated,
+		-- Void otherwise.
+	
+	generating_single_window: BOOLEAN is
+			-- Is a single window being generated?
+		do
+			Result := window_to_generate /= Void
+		end
+
 	generate is
 			-- Generate the project as per settings in `project_settings'.
 		local	
@@ -151,16 +172,18 @@ feature -- Basic operation
 			
 				-- We only generate an ace file and an EV_APPLICATION if the user
 				-- has selected to generate a complete project from the system settings.
-			if project_settings.complete_project then
+			if project_settings.complete_project and not generating_single_window then
 					-- Generate an ace file for the project.
 				build_ace_file
 					-- Generate an EV_APPLICATION for the project
 				build_application_file
 			end
 			
-			build_constants_file
-			if project_settings.load_constants then
-				build_constants_load_file
+			if not generating_single_window then
+				build_constants_file
+				if project_settings.load_constants then
+					build_constants_load_file
+				end
 			end
 			
 			root_element ?= current_document.first
@@ -253,25 +276,27 @@ feature -- Basic operation
 						elseif current_type.is_equal (Constants_string) then
 							
 						else
-							directory_name := generated_path.twin
-							from
-								parent_directories.start
-							until
-								parent_directories.off
-							loop
-								directory_name.extend (parent_directories.item)
-								parent_directories.forth
-							end
-								-- Only create the directory if it is not empty.
-							create directory.make (directory_name)
-							if not directory.exists then
-								directory.create_dir
-							end
 							reset_generation_constants_for_class
 							prepass_xml (current_element, document_info, 1)
-							window_file_name := generated_path.twin
-							build_main_window_implementation (directory_name)
-							build_main_window (directory_name)
+							if window_to_generate = Void or else document_info.name.as_lower.is_equal (window_to_generate.as_lower) then
+								directory_name := generated_path.twin
+								from
+									parent_directories.start
+								until
+									parent_directories.off
+								loop
+									directory_name.extend (parent_directories.item)
+									parent_directories.forth
+								end
+									-- Only create the directory if it is not empty.
+								create directory.make (directory_name)
+								if not directory.exists then
+									directory.create_dir
+								end								
+								window_file_name := generated_path.twin
+								build_main_window_implementation (directory_name)
+								build_main_window (directory_name)
+							end
 						end
 					end
 				
@@ -305,7 +330,7 @@ feature -- Basic operation
 			end
 		end
 		
-feature {WIZARD_FOURTH_STATE, WIZARD_FINAL_STATE, GB_CODE_GENERATION_DIALOG} -- Implementation
+feature {WIZARD_FOURTH_STATE, WIZARD_FINAL_STATE, GB_CODE_GENERATION_DIALOG, GB_GENERATION_COMMAND} -- Implementation
 
 	set_progress_bar (bar: EV_PROGRESS_BAR) is
 			-- Assign `bar' to `progress_bar'

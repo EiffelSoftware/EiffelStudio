@@ -130,6 +130,7 @@
 					</li>
 					<li><B>EV_CHECKABLE_LIST</B> - Corrected postcondition of `checked_items' which was checking `selected_items' in error, and therefore almost always failing.</li>
 					<li><B>EV_APPLICATION</B> - Querying `focused_widget' if the window with the focus was empty caused a crash. This has now been fixed, and in this situation, the window itself is returned.</li>
+					<li><B>EV_FIGURE_TEXT</B> - Fixed handling of `preferred_fonts' from the `font', which was not taken into account. Previously, the default font was always used.</li>
 				</ul>
 			<li>
 				<b>Windows</b>

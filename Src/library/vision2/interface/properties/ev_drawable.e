@@ -17,7 +17,6 @@ deferred class
 	EV_DRAWABLE
 
 inherit
-
 	EV_COLORIZABLE
 		redefine
 			implementation,
@@ -465,7 +464,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			Result := Precursor {EV_ANY} and then
+			Result := Precursor {EV_COLORIZABLE} and then
 				line_width = 1 and then
 				drawing_mode = drawing_mode_copy and then
 				clip_area = Void and then

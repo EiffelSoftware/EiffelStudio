@@ -7,10 +7,16 @@ indexing
 deferred class
 	EV_MENU_CONTAINER_I
 
+inherit
+	EV_ANY_I
+
 feature {EV_MENU} -- Implementation
 	
 	add_menu (menu: EV_MENU) is
 			-- Add `a_menu' into container.
+		require
+			exists: not destroyed
+			valid_menu: menu.is_valid
 		deferred
 		end
 

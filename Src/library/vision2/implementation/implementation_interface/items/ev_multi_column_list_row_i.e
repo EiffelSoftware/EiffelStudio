@@ -7,12 +7,15 @@ indexing
 deferred class
 	EV_MULTI_COLUMN_LIST_ROW_I
 
+inherit
+	EV_ANY_I
+
 feature -- Initialization
 
 	make (par: EV_MULTI_COLUMN_LIST) is
 		-- Create an empty row.
 		require
-			parent_not_void: par /= Void
+			valid_parent: par.is_valid
 		deferred
 		end
 
@@ -26,7 +29,7 @@ feature -- Access
 	columns: INTEGER is
 			-- Number of columns in the row
 		require
---			exists: not destroyed
+			exists: not destroyed
 		deferred
 		end
 
@@ -38,7 +41,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
---			exists: not destroyed
+			exists: not destroyed
 		deferred
 		end
 
@@ -47,14 +50,14 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
---			exists: not destroyed
+			exists: not destroyed
 		deferred
 		end
 
 	toggle is
 			-- Change the state of selection of the item.
 		require
---			exists: not destroyed
+			exists: not destroyed
 		do
 			set_selected (not is_selected)
 		end
@@ -65,7 +68,7 @@ feature -- Element Change
 			-- Make `text ' the new label of the `column'-th
 			-- cell of the row.
 		require
---			exists: not destroyed
+			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 			text_not_void: a_text /= Void
 		deferred
@@ -73,7 +76,7 @@ feature -- Element Change
 
 	set_text (a_text: ARRAY[STRING]) is
 		require
---			exists: not destroyed
+			exists: not destroyed
 			text_not_void: a_text /= Void
 			text_length_ok: a_text.count <= columns
 		local

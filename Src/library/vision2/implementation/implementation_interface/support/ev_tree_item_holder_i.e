@@ -7,10 +7,16 @@ indexing
 deferred class
 	EV_TREE_ITEM_CONTAINER_I
 
+inherit
+	EV_ANY_I
+
 feature {EV_TREE_ITEM} -- Implementation
 
 	add_item (an_item: EV_TREE_ITEM) is
 			-- Add `item' to the list
+		require
+			exists: not destroyed
+			valid_item: an_item.is_valid
 		deferred
 		end
 

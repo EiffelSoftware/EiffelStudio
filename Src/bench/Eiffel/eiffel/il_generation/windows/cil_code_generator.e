@@ -4761,6 +4761,35 @@ feature -- Labels and branching
 			create Result.make (method_body.define_label)
 		end
 
+feature -- Switch instruction
+
+	switch_count: INTEGER
+			-- Number of switch labels to be generated
+
+	put_switch_start (count: INTEGER) is
+			-- Generate start of a switch instruction with `count' items.
+		require
+			valid_count: count > 0
+		do
+			method_body.put_opcode_integer (feature {MD_OPCODES}.switch, count)
+			switch_count := count
+		ensure
+			switch_count_set: switch_count = count
+		end
+
+	put_switch_label (label: IL_LABEL) is
+			-- Generate a branch to `label' in switch instruction.
+		require
+			label_not_void: label /= Void
+			positive_switch_count: switch_count > 0
+		do
+			switch_count := switch_count - 1
+				-- Labels of switch instruction are calculated relative to instruction end
+			method_body.put_label (label.id, - switch_count * 4)
+		ensure
+			switch_count_decremented: switch_count = old switch_count - 1
+		end
+
 feature -- Binary operator generation
 
 	generate_binary_operator (code: INTEGER) is

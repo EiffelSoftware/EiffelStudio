@@ -2,7 +2,7 @@
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set INIT_DIR=%@EXECSTR[cd]
-set TMP_ISE_EIFFEL=ISE_EIFFEL
+set TMP_ISE_EIFFEL=%ISE_EIFFEL
 
 call set_aliases.btm
 remtrace Set up the environment
@@ -10,24 +10,26 @@ on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 if exist %INSTALL_LOG fullrf %INSTALL_LOG
+if exist %INIT_DIR\precomp_errors.log fullrf %INIT_DIR\precomp_errors.log
 set ISE_EIFFEL=%INSTALL_DIR
 
 alias precompile `cdd %1 &^
 echo Precompile %1 &^
 clean_project &^
-ec -precompile >>& %INSTALL_LOG &^
+ec -batch -precompile >>& %INSTALL_LOG &^
 wff &^
 iff not exist EIFGEN\W_CODE\%ISE_C_COMPILER\driver.exe .or. not exist EIFGEN\W_CODE\%ISE_C_COMPILER\precomp.lib then &^
-echo *****Error***** %1 won't precompile! &^
+echo *****Error***** %1 won't precompile! >> %INIT_DIR\precomp_errors.log &^
 else &^
-clean_project &^
-echo %1 precompiled OK. &^
-endiff `
+del /exsq *.c *.obj big_fil* *.pch *.BAK finished Makef* Cobj* *.ilc &^
+echo %1 precompiled OK. >> %INIT_DIR\precomp_errors.log &^
+endiff &^
+cd .. `
 
 cdd %ISE_EIFFEL\precomp\spec\%ISE_PLATFORM
 if exist subdirs.txt fullrf subdirs.txt
 dir /b *. >> subdirs.txt
 for %t in (@subdirs.txt) do precompile %t
 
-
+:broken
 CANCEL

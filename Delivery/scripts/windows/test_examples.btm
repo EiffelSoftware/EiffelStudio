@@ -2,7 +2,7 @@
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set INIT_DIR=%@EXECSTR[cd]
-set TMP_ISE_EIFFEL=ISE_EIFFEL
+set TMP_ISE_EIFFEL=%ISE_EIFFEL
 
 call set_aliases.btm
 remtrace Set up the environment
@@ -10,21 +10,26 @@ on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 if exist %INSTALL_LOG fullrf %INSTALL_LOG
+fullrf %INIT_DIR\examples_errors.log
 set ISE_EIFFEL=%INSTALL_DIR
 
 alias compile_ace `^
-echo Compiling Ace: %1\%2 &^
+remtrace ***Compiling Ace: %@EXECSTR[cd]\%2 &^
+remtrace ***Melting %@EXECSTR[cd]\%2 &^
 clean_project &^
 melt %2 &^
 wff &^
 iff not exist EIFGEN\W_code\*.exe then &^
-echo *****Error***** %1\%2 won't melt. &^
+remtrace *****Error***** %@EXECSTR[cd]\%2 won't freeze. &^
+echo *****Error***** %@EXECSTR[cd]\%2 won't freeze. >> %INIT_DIR\examples_errors.log &^
 endiff &^
 clean_project &^
+remtrace ***Finalizing %@EXECSTR[cd]\%2 &^
 finalize %2 &^
 fff &^
 iff not exist EIFGEN\F_code\*.exe then &^
-echo *****Error***** %1\%2 won't finalize. &^
+remtrace *****Error***** %@EXECSTR[cd]\%2 won't finalize. &^
+echo *****Error***** %@EXECSTR[cd]\%2 won't finalize. >> %INIT_DIR\examples_errors.log  &^
 endiff &^
 clean_project`
 
@@ -40,7 +45,7 @@ cd .. &^
 endiff`
 
 alias test_subdirs `^
-echo Testing subdirs of %1 &^
+echo Testing subdirs of %@EXECSTR[cd] &^
 if exist subdirs.txt fullrf subdirs.txt &^
 dir /AD /b >> subdirs.txt &^
 for %t in (@subdirs.txt) do test_subdir %1 %t`
@@ -48,5 +53,6 @@ for %t in (@subdirs.txt) do test_subdir %1 %t`
 cdd %INSTALL_DIR\examples
 test_subdirs %INSTALL_DIR\examples
 
+:broken
 CANCEL
 

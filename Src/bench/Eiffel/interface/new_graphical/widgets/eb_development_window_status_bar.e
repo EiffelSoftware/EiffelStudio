@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 	
+	SHARED_RESOURCES
+		export
+			{NONE} all
+		end
+	
 	EB_DEBUGGER_OBSERVER
 		export
 			{NONE} all
@@ -269,8 +274,14 @@ feature {NONE} -- Implementation: event handling
 				debugger_cell.extend (debugger_icon)
 			end
 			debugger_icon.set_tooltip (Interface_names.E_running)
-			update_running_icon
-			running_timer.set_interval (300)
+			if use_animated_icons then
+				update_running_icon
+				running_timer.set_interval (300)
+			else
+				debugger_icon.set_background_color (debugger_cell.background_color)
+				debugger_icon.clear
+				debugger_icon.draw_pixmap (0, 0, pixmaps.icon_running.item (2))
+			end
 		end
 
 	on_application_stopped is
@@ -344,8 +355,14 @@ feature {NONE} -- Implementation: event handling
 			-- The project starts to compile.
 		do
 			compilation_icon.set_tooltip (Interface_names.E_compiling)
-			update_compiling_icon
-			compiling_timer.set_interval (300)
+			if use_animated_icons then
+				update_compiling_icon
+				compiling_timer.set_interval (300)
+			else
+				compilation_icon.set_background_color (debugger_cell.background_color)
+				compilation_icon.clear
+				compilation_icon.draw_pixmap (0, 0, Pixmaps.Icon_is_compiling)
+			end
 			if Eiffel_project.Manager.has_edited_classes then
 				on_project_edited
 			else
@@ -444,6 +461,10 @@ feature {NONE} -- Implementation
 			p: EV_PIXMAP
 			op: EV_PIXMAP
 		do
+				--| We do not check every time that the `use_animated_icons'
+				--| preference is still set.
+				--| 2 reasons: efficiency, consistency (in the other direction
+				--| the preference is only effective at the next run).
 			running_icon_index := (running_icon_index + 1)
 			if running_icon_index > 3 then
 				running_icon_index := 1
@@ -467,6 +488,12 @@ feature {NONE} -- Implementation
 			compilation_icon.set_background_color (debugger_cell.background_color)
 			compilation_icon.clear
 			compilation_icon.draw_pixmap (0, 0, p)
+		end
+
+	use_animated_icons: BOOLEAN is
+			-- Should we use animated icons whenever possible? (compiling, running)
+		do
+			Result := boolean_resource_value ("use_animated_icons", True)
 		end
 
 	running_icon_index: INTEGER

@@ -264,6 +264,11 @@ feature -- Icons
 			Result.put (pixmap_file_content ("icon_compiling_4"), 4)
 		end
 
+	Icon_is_compiling: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_compiling")
+		end
+
 	Icon_feature: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("feature")

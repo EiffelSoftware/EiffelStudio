@@ -1804,6 +1804,7 @@ feature {NONE} -- Implementation
 			new_type_not_empty: new_type /= Void and not (new_type.count = 0)
 		local
 			status_start: STRING
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			if application.shift_pressed then
 				status_start := "Parent of p"
@@ -1814,8 +1815,19 @@ feature {NONE} -- Implementation
 				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children.")
 			elseif not does_accept_child then
 				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
-			elseif obj2.is_full then
-				set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
+			else
+				titled_window_object ?= obj2
+				if titled_window_object /= Void then
+					if new_type.is_equal (menu_bar_string) then
+						if titled_window_object.object.menu_bar /= Void then
+							set_status_text (status_start + "ointed target (" + obj2.short_type + ") already has a menu bar.")
+						end
+					elseif obj2.is_full then					
+						set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
+					end	
+				elseif obj2.is_full then
+					set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
+				end
 			end
 		end
 		

@@ -1,22 +1,34 @@
 indexing
-	description: "All information about the wizard ... This class is inherited in each state "
-	author: "davids"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "All information about the wizard ... This class is inherited in each state "
+	author		: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_INFORMATION
 
-Creation
+create
 	make
 
-feature  -- Initialization
+feature {NONE} -- Initialization
+
 	make is
+			-- Initialize.
 		do
-		
 		end
 
-feature -- Setting
+feature -- Access
+
+	location: STRING
+		-- location of the project
+
+	l_to_precompile: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		-- list of library to precompile
+
+	l_precompilable: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		-- list of library that can be precompile
+
+feature -- Element change
 
 	set_location (s: STRING) is
 		do
@@ -32,24 +44,5 @@ feature -- Setting
 		do
 			l_precompilable:= l
 		end
-
-	set_es4_location (s: STRING) is
-		do
-			es4_location:= s
-		end
-
-feature -- Access
-
-	location: STRING
-		-- location of the project
-
-	l_to_precompile: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
-		-- list of library to precompile
-
-	l_precompilable: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
-		-- list of library that can be precompile
-
-	es4_location: STRING
-		-- es4 location
 
 end -- class WIZARD_INFORMATION

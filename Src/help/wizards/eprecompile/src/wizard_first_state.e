@@ -1,23 +1,18 @@
 indexing
-	description: "Page in which the user choose where he wants to generate the sources."
-	author: "david s"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Page in which the user choose where he wants to generate the sources."
+	author		: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	wizard_first_state
+	WIZARD_FIRST_STATE
 
 inherit
-	INTERMEDIARY_STATE_WINDOW
+	WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,
 			build
-		end
-
-	EXECUTION_ENVIRONMENT
-		rename
-			command_line as cmd_line
 		end
 
 create
@@ -31,7 +26,6 @@ feature -- Basic Operation
 			h1: EV_HORIZONTAL_BOX
 			v1: EV_VERTICAL_BOX
 			lab: EV_LABEL
-			txt: WIZARD_SMART_TEXT
 			cell: EV_CELL
 		do 
 			create to_precompile_libraries
@@ -93,7 +87,7 @@ feature -- Basic Operation
 
 
 			create v1
-			create lab.make_with_text("Libraries to compile")
+			create lab.make_with_text ("Libraries to compile")
 			v1.extend(lab)
 			v1.disable_item_expand(lab)
 			v1.extend(to_precompile_libraries)		
@@ -186,7 +180,6 @@ feature -- Basic Operation
 				wizard_information.set_l_precompilable (list)
 			end
 
-			wizard_information.set_es4_location (es4_location)
 			Precursor
 		end
 
@@ -195,15 +188,16 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("CHOOSE LIBRARIES")
-			message.set_text ("Choose the libraries you want to precompile. You can even add your own library.")
+			title.set_text ("Choose Libraries to precompile")
+			subtitle.set_text ("Choose the libraries you want to precompile.%NYou can even add your own library.")
+			message.remove_text
 		end
 
 feature -- Tools
 
 	fill_lists is
 			-- Fill the EV_MULTI_COLUMN_LIST for all the compilable libraries
-			-- To determine the compilable libraries, we check the $EIFFEL4 directory
+			-- To determine the compilable libraries, we check the $EIFFEL5 directory
 			-- This function fill the library from *scratch*
 			-- If the user has hit Back, then fill_lists_from_previous_state will be
 			-- called
@@ -211,14 +205,10 @@ feature -- Tools
 			it: EV_MULTI_COLUMN_LIST_ROW
 			eiffel_directory: DIRECTORY
 			list_of_preprecompilable_libraries: ARRAYED_LIST [STRING]
-			current_lib, eif_4, plat: STRING
+			current_lib: STRING
+			current_precomp: FILE_NAME
 		do
-			eif_4 := get ("EIFFEL4")
-			plat := get ("PLATFORM")
-
-			es4_location := eif_4 + "/bench/spec/" + plat + "/bin/"
-
-			create eiffel_directory.make_open_read (eif_4 + "\precomp\spec\windows")
+			create eiffel_directory.make_open_read (Default_precompiled_location)
 			if eiffel_directory.exists then
 				list_of_preprecompilable_libraries:= eiffel_directory.linear_representation
 
@@ -228,7 +218,9 @@ feature -- Tools
 					list_of_preprecompilable_libraries.after
 				loop
 					current_lib:= list_of_preprecompilable_libraries.item
-					it:= fill_ev_list_items (eiffel_directory.name + "/" + current_lib, "ace.ace")
+					create current_precomp.make_from_string (eiffel_directory.name)
+					current_precomp.extend (current_lib)
+					it:= fill_ev_list_items (current_precomp, "Ace.ace")
 					if it /= Void then
 						precompilable_libraries.extend (it)
 					end
@@ -251,14 +243,17 @@ feature -- Tools
 			int_dir: DIRECTORY
 			list_of_file: ARRAYED_LIST [STRING]
 			info_lib: TUPLE [STRING, BOOLEAN]
+			path_name: FILE_NAME
 		do
-			it:= Void
+			create path_name.make_from_string (path_lib)
+			path_name.set_file_name (ace_name)
+			it := Void
 			create int_dir.make_open_read (path_lib)
 			if int_dir.exists then
 				list_of_file:= int_dir.linear_representation
 				list_of_file.compare_objects
 				if list_of_file.has (ace_name) then
-					create fi.make_open_read (path_lib + "/" + ace_name)
+					create fi.make_open_read (path_name)
 					fi.read_stream (fi.count)
 					s:= clone (fi.last_string)
 					fi.close
@@ -272,7 +267,7 @@ feature -- Tools
 
 					create it			
 					create info_lib.make
-					info_lib.put (path_lib + "/" + ace_name, 1)
+					info_lib.put (path_name, 1)
 					if list_of_file.has ("EIFGEN") then
 						info_lib.put (True, 2)
 						it.extend (sys_name)
@@ -294,10 +289,7 @@ feature -- Tools
 			-- Fill the MULTI_COLUMN_LIST when the user has previously 
 			-- choose its library to precompile.
 			-- Can occur only if the user has pushed the Back button
-		local
-			
 		do
-
 			from 
 				wizard_information.l_to_precompile.start
 			until
@@ -335,7 +327,7 @@ feature -- Tools
 			add_b.disable_sensitive
 			add_items
 		ensure
-			precompilable_libraries.empty
+			precompilable_libraries.is_empty
 		end
 
 	add_items is
@@ -367,14 +359,14 @@ feature -- Tools
 			until
 				to_precompile_libraries.after
 			loop
-				it:= to_precompile_libraries.item
+				it := to_precompile_libraries.item
 				it.enable_select
 				to_precompile_libraries.forth
 			end
 			remove_b.disable_sensitive
 			remove_items
 		ensure
-			to_precompile_libraries.empty
+			to_precompile_libraries.is_empty
 		end
 
 	remove_items is
@@ -422,7 +414,7 @@ feature -- Tools
 			create file_selector
 			file_selector.set_filter ("*.ace")
 			file_selector.ok_actions.extend(~file_selected(file_selector))
-			file_selector.show_modal
+			file_selector.show_modal_to_window (first_window)
 		end
 
 	file_selected (file_selector: EV_FILE_OPEN_DIALOG) is
@@ -446,27 +438,20 @@ feature -- Tools
 feature -- Implementation
 
 	no_lib_selected: BOOLEAN
-		-- Is at least a library has been selected by the user
+			-- Is at least a library has been selected by the user
 
 	error_no_ace: BOOLEAN
-		-- Is there an ace file "ace.ace" in the library directory
+			-- Is there an ace file "ace.ace" in the library directory
 
 	precompilable_libraries: EV_MULTI_COLUMN_LIST
-		-- List of precombilable libraries
+			-- List of precombilable libraries
 
 	to_precompile_libraries: EV_MULTI_COLUMN_LIST
-		-- List of libraries to precompile
+			-- List of libraries to precompile
 
 	remove_b, add_b, remove_all_b, add_all_b: EV_BUTTON
 
 	add_your_own_b: EV_BUTTON
-		-- button to let the user add his own library
-
-	es4_location: STRING
-		-- ebench infos
-
---	wizard_warning: WIZARD_WARNING
-		-- Warning box for the wizard
-
+			-- button to let the user add his own library
 
 end -- class wizard_first_state

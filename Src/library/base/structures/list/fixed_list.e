@@ -61,7 +61,7 @@ class FIXED_LIST [G] inherit
 				copy,
 				area,
 				has
-			{FIXED_LIST}
+			{FIXED_LIST, FIXED_TREE}
 				array_make
 		undefine
 			count, linear_representation, put, resizable

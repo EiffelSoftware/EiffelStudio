@@ -37,16 +37,24 @@ feature {NONE}
 				name_chooser.call (Current) 
 			elseif argument = name_chooser then
 				fn := clone (name_chooser.selected_file);
-				!! f.make (fn);
-				if
-					f.exists and then f.is_readable and then f.is_plain
-				then
-					text_window.show_file (fn);
-					text_window.display_header (fn);
-					Lace.set_file_name (fn)
-				else
-					warner (text_window).custom_call (Current, 
+				if not fn.empty then
+					!! f.make (fn);
+					if
+						f.exists and then f.is_readable and then f.is_plain
+					then
+						text_window.show_file (fn);
+						text_window.display_header (fn);
+						Lace.set_file_name (fn)
+					elseif f.exists and then not f.is_plain then
+						warner (text_window).custom_call (Current,
+							w_Not_a_file_retry (fn), " OK ", Void, "Cancel")
+					else
+						warner (text_window).custom_call (Current, 
 						w_Cannot_read_file_retry (fn), " OK ", Void, "Cancel");
+					end
+				else
+					warner (text_window).custom_call (Current,
+						w_Not_a_file_retry (fn), " OK ", Void, "Cancel")
 				end
 			else
 				-- First click on open

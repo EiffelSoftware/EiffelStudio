@@ -77,7 +77,7 @@ class FIXED_LIST [G] inherit
 
 creation
 
-	make
+	make, make_filled
 
 feature -- Initialization
 
@@ -88,6 +88,16 @@ feature -- Initialization
 		ensure
 			is_before: before;
 			new_count: count = 0
+		end;
+
+	make_filled (n: INTEGER) is
+			-- Create a list with `n' void elements.
+		do
+			array_make (1, n);
+			count := n;
+		ensure
+			is_before: before;
+			new_count: count = n
 		end;
 
 feature -- Access

@@ -19,11 +19,11 @@ feature
 		do
 		end; -- actual_type
 
-	valid_redeclaration (precursor: TYPE_A; redeclared: TYPE_A): BOOLEAN is
-			-- Is the redeclaration of `precursor' into `redeclared' valid
+	valid_redeclaration (a_precursor: TYPE_A; redeclared: TYPE_A): BOOLEAN is
+			-- Is the redeclaration of `a_precursor' into `redeclared' valid
 			-- in the current class ?
 		do
-			Result := redeclared.conform_to (precursor);
+			Result := redeclared.conform_to (a_precursor);
 		end;
 
 	is_basic: BOOLEAN is

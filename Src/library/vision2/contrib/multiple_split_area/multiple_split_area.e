@@ -1562,7 +1562,7 @@ feature {NONE} -- Implementation
 				end
 				linear_representation.forth
 			end
-			if minimized_count = count - 1 then
+			if count > 1 and minimized_count = count - 1 then
 				restore_minimized_tool (holder_of_widget (first_minimized))
 				holder_of_widget (first_minimized).minimize_button.set_pixmap (minimize_pixmap)
 			end

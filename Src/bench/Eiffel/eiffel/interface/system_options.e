@@ -53,6 +53,11 @@ feature -- Access
 	msil_assembly_compatibility: STRING
 			-- Compatibility of current assembly with other assemblies.
 
+	cls_compliant, cls_compliant_name: BOOLEAN
+			-- Let the compiler generates CLS compliant metadata along with or
+			-- without having CLS compliant name.
+			--| Used for IL generation.
+
 	line_generation: BOOLEAN
 			-- Does the system generate the line number in the C-code?
 
@@ -93,9 +98,9 @@ feature -- Update
 			end
 		ensure
 			java_generation_set:
-				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else java_generation
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else java_generation = v
 			il_generation_set:
-				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else il_generation
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else il_generation = v
 			msil_generation_type_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started
 				or else msil_generation_type.is_equal ("dll")
@@ -173,6 +178,28 @@ feature -- Update
 			msil_assembly_compatibility := comp
 		ensure
 			msil_assembly_compatibility_set: msil_assembly_compatibility = comp
+		end
+
+	set_cls_compliant (v: BOOLEAN) is
+			-- Set `cls_compliant' to `v' if project is not already compiled.
+		do
+			if not (create {SHARED_WORKBENCH}).Workbench.is_already_compiled then
+				cls_compliant := v
+			end
+		ensure
+			cls_compliant_set:
+				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else cls_compliant = v
+		end
+
+	set_cls_compliant_name (v: BOOLEAN) is
+			-- Set `cls_compliant_name' to `v' if project is not already compiled.
+		do
+			if not (create {SHARED_WORKBENCH}).Workbench.is_already_compiled then
+				cls_compliant_name := v
+			end
+		ensure
+			cls_compliant_name_set:
+				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else cls_compliant_name = v
 		end
 
 	set_generate_eac_metadata (b: BOOLEAN) is

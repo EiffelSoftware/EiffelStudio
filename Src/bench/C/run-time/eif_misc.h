@@ -53,7 +53,10 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define esbool_size ((EIF_INTEGER) BYTSIZ*CHRSIZ)
 #define eschar_size ((EIF_INTEGER) BYTSIZ*CHRSIZ)
 #define esreal_size ((EIF_INTEGER) BYTSIZ*FLTSIZ)
+#define esint8_size ((EIF_INTEGER) BYTSIZ*CHRSIZ)
+#define esint16_size ((EIF_INTEGER) BYTSIZ*I16SIZ)
 #define esint_size ((EIF_INTEGER) BYTSIZ*LNGSIZ)
+#define esint64_size ((EIF_INTEGER) BYTSIZ*I64SIZ)
 #define esptr_size ((EIF_INTEGER) BYTSIZ*PTRSIZ)
 #define esdouble_size ((EIF_INTEGER) BYTSIZ*DBLSIZ)
 

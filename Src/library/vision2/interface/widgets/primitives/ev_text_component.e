@@ -96,11 +96,11 @@ feature -- Status report
 		end
 
 
-	valid_character_position (pos: INTEGER): BOOLEAN is
+	valid_position (pos: INTEGER): BOOLEAN is
 		require
 			exist: not destroyed
 		do
-			Result := implementation.valid_character_position (pos)
+			Result := implementation.valid_position (pos)
 		end
 
 
@@ -221,7 +221,11 @@ feature -- Basic operation
 		require
 			exist: not destroyed
 		do
-			implementation.deselect_all
+			if
+				has_selection
+			then
+				implementation.deselect_all
+			end
 		ensure
 			has_no_selection: not has_selection
 		end

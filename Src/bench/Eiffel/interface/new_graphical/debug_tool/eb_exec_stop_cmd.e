@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_f5),
 				True, False, True)
-			accelerator.actions.extend (~execute)
+			accelerator.actions.extend (agent execute)
 		end
 
 feature -- Formatting

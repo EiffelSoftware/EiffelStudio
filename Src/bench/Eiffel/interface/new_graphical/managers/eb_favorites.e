@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			create observer_list.make (10)
 			is_initialized := True
 			disable_sensitive
-			Eiffel_project.manager.close_agents.extend (~disable_sensitive)
-			Eiffel_project.manager.create_agents.extend (~enable_sensitive)
+			Eiffel_project.manager.close_agents.extend (agent disable_sensitive)
+			Eiffel_project.manager.create_agents.extend (agent enable_sensitive)
 		end
 
 feature -- Initialization

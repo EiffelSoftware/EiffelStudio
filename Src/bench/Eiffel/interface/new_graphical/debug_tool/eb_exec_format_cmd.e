@@ -65,14 +65,14 @@ feature -- Access
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
 			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
-			Result.select_actions.put_front (~execute_from (Result))
+			Result.select_actions.put_front (agent execute_from (Result))
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
 		do
 			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor
-			Result.select_actions.put_front (~execute_from (Result))
+			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
 feature {NONE} -- Attributes

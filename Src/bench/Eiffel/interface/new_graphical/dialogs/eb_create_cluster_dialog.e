@@ -122,10 +122,10 @@ feature {NONE} -- Initialization
 			create cluster_frame.make_with_text (Interface_names.l_Parent_cluster)
 			
 				-- Setup the agents
-			browse_button.select_actions.extend (~start_browsing)
-			top_radio.select_actions.extend (~top_cluster_selected)
-			sub_radio.select_actions.extend (~sub_cluster_selected)
-			library_box.select_actions.extend (~library_selected)
+			browse_button.select_actions.extend (agent start_browsing)
+			top_radio.select_actions.extend (agent top_cluster_selected)
+			sub_radio.select_actions.extend (agent sub_cluster_selected)
+			library_box.select_actions.extend (agent library_selected)
 			
 				-- Organize the options
 			wid := name_label.minimum_width.max (path_label.minimum_width)
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						create cd.make_with_text (Warning_messages.w_Directory_already_in_cluster (chosen_dir))
-						cd.button ((create {EV_DIALOG_CONSTANTS}).ev_yes).select_actions.extend (~real_create_cluster (in_recursive, base_name, dollar_path, ace_path))
+						cd.button ((create {EV_DIALOG_CONSTANTS}).ev_yes).select_actions.extend (agent real_create_cluster (in_recursive, base_name, dollar_path, ace_path))
 						cd.show_modal_to_window (Current)
 					end
 				end
@@ -536,7 +536,7 @@ feature {NONE} -- Graphic interface
 			lastdir: STRING
 		do
 			create bd
-			bd.ok_actions.extend (~set_path (bd))
+			bd.ok_actions.extend (agent set_path (bd))
 			if not folder_entry.text.is_empty then
 				bd.set_start_directory ((create {ENV_INTERP}).interpreted_string (folder_entry.text))
 			else

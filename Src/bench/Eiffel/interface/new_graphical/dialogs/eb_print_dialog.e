@@ -22,7 +22,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 			set_title (Interface_names.f_Print)
 
-			close_actions.extend (~destroy)
+			close_actions.extend (agent destroy)
 
 			create vbox
 
@@ -109,12 +109,12 @@ feature {NONE} -- Initialization
 
 			set_default_cancel_button (cancel_button)
 
-			ok_button.select_actions.extend (~execute)
+			ok_button.select_actions.extend (agent execute)
 
 
-			cancel_button.select_actions.extend (~cancel)
+			cancel_button.select_actions.extend (agent cancel)
 
-			shell_cmd_field.return_actions.extend (~execute)
+			shell_cmd_field.return_actions.extend (agent execute)
 
 		end
 

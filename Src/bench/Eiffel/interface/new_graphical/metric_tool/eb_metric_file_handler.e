@@ -317,25 +317,25 @@ feature -- Metric operators
 			if Xml_routines.element_by_name (a_definition, "Deferred_class") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Deferred_class")
 				if bool then
-					Result.put (bf~is_class_deferred, 1)
+					Result.put (agent bf.is_class_deferred, 1)
 				else
-					Result.put (bf~is_class_effective, 1)
+					Result.put (agent bf.is_class_effective, 1)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Invariant") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Invariant")
 				if bool then
-					Result.put (bf~is_class_invariant_equipped, 2)
+					Result.put (agent bf.is_class_invariant_equipped, 2)
 				else
-					Result.put (bf~is_class_invariant_equipped_less, 2)
+					Result.put (agent bf.is_class_invariant_equipped_less, 2)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Obsolete") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Obsolete")
 				if bool then
-					Result.put (bf~is_class_obsolete, 3)
+					Result.put (agent bf.is_class_obsolete, 3)
 				else
-					Result.put (bf~is_class_not_obsolete, 3)
+					Result.put (agent bf.is_class_not_obsolete, 3)
 				end
 			end
 		ensure
@@ -355,33 +355,33 @@ feature -- Metric operators
 			if Xml_routines.element_by_name (a_definition, "D_or_i_clients") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_clients")
 				if bool then
-					Result.put (bf~is_class_direct_client, 1)
+					Result.put (agent bf.is_class_direct_client, 1)
 				else
-					Result.put (bf~is_class_client, 1)
+					Result.put (agent bf.is_class_client, 1)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "D_or_i_suppliers") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_suppliers")
 				if bool then
-					Result.put (bf~is_class_direct_supplier, 2)
+					Result.put (agent bf.is_class_direct_supplier, 2)
 				else
-					Result.put (bf~is_class_supplier, 2)
+					Result.put (agent bf.is_class_supplier, 2)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "D_or_i_heirs") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_heirs")
 				if bool then
-					Result.put (bf~is_class_direct_heir, 3)
+					Result.put (agent bf.is_class_direct_heir, 3)
 				else
-					Result.put (bf~is_class_heir, 3)
+					Result.put (agent bf.is_class_heir, 3)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "D_or_i_parents") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "D_or_i_parents")
 				if bool then
-					Result.put (bf~is_class_direct_parent, 4)
+					Result.put (agent bf.is_class_direct_parent, 4)
 				else
-					Result.put (bf~is_class_parent, 4)
+					Result.put (agent bf.is_class_parent, 4)
 				end
 			end
 		ensure
@@ -401,65 +401,65 @@ feature -- Metric operators
 			if Xml_routines.element_by_name (a_definition, "Attr_or_rout") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Attr_or_rout")
 				if bool then
-					Result.put (bf~is_feature_attribute, 1)
+					Result.put (agent bf.is_feature_attribute, 1)
 				else
-					Result.put (bf~is_feature_routine, 1)
+					Result.put (agent bf.is_feature_routine, 1)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Quer_or_comm") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Quer_or_comm")
 				if bool then
-					Result.put (bf~is_feature_querie, 2)
+					Result.put (agent bf.is_feature_querie, 2)
 				else
-					Result.put (bf~is_feature_command, 2)
+					Result.put (agent bf.is_feature_command, 2)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Function") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Function")
 				if bool then
-					Result.put (bf~is_feature_function, 2)
+					Result.put (agent bf.is_feature_function, 2)
 				else
-					Result.put (bf~is_feature_not_function, 2)
+					Result.put (agent bf.is_feature_not_function, 2)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Deferred_feat") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Deferred_feat")
 				if bool then
-					Result.put (bf~is_feature_deferred, 3)
+					Result.put (agent bf.is_feature_deferred, 3)
 				else
-					Result.put (bf~is_feature_effective, 3)
+					Result.put (agent bf.is_feature_effective, 3)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Exported") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Exported")
 				if bool then
-					Result.put (bf~is_feature_exported, 4)
+					Result.put (agent bf.is_feature_exported, 4)
 				else
-					Result.put (bf~is_feature_not_exported, 4)
+					Result.put (agent bf.is_feature_not_exported, 4)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Inherited") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Inherited")
 				if bool then
-					Result.put (bf~is_feature_inherited, 5)
+					Result.put (agent bf.is_feature_inherited, 5)
 				else
-					Result.put (bf~is_feature_not_inherited, 5)
+					Result.put (agent bf.is_feature_not_inherited, 5)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Pre_equi") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Pre_equi")
 				if bool then
-					Result.put (bf~is_feature_precondition_equipped, 6)
+					Result.put (agent bf.is_feature_precondition_equipped, 6)
 				else
-					Result.put (bf~is_feature_precondition_equipped_less, 6)
+					Result.put (agent bf.is_feature_precondition_equipped_less, 6)
 				end
 			end
 			if Xml_routines.element_by_name (a_definition, "Post_equi") /= Void then
 				bool := Xml_routines.xml_boolean (a_definition, "Post_equi")
 				if bool then
-					Result.put (bf~is_feature_postcondition_equipped, 7)
+					Result.put (agent bf.is_feature_postcondition_equipped, 7)
 				else
-					Result.put (bf~is_feature_postcondition_equipped_less, 7)
+					Result.put (agent bf.is_feature_postcondition_equipped_less, 7)
 				end
 			end
 		ensure

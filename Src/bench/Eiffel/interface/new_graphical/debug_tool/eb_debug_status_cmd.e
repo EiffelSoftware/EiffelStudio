@@ -17,7 +17,7 @@ inherit
 
 	EB_SHARED_INTERFACE_TOOLS
 
-creation
+create
 
 	make
 

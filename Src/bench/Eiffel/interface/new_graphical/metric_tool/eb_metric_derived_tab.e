@@ -54,8 +54,8 @@ feature -- Initialization
 
 					create name_field
 					name_field.set_minimum_height (22)
-					name_field.key_press_actions.extend (~dialog_key_press_action (?, name_field))
-					name_field.key_press_string_actions.extend (~change_in_name)
+					name_field.key_press_actions.extend (agent dialog_key_press_action (?, name_field))
+					name_field.key_press_string_actions.extend (agent change_in_name)
 					hb.extend (name_field)
 				extend (hb)
 				disable_item_expand (hb)
@@ -72,7 +72,7 @@ feature -- Initialization
 					create unit_field
 					unit_field.set_minimum_height (22)
 					unit_field.disable_edit
-					unit_field.key_press_actions.extend (~dialog_key_press_action (?, unit_field))
+					unit_field.key_press_actions.extend (agent dialog_key_press_action (?, unit_field))
 					hb.extend (unit_field)
 				extend (hb)
 				disable_item_expand (hb)
@@ -98,7 +98,7 @@ feature -- Initialization
 						fill_raw_metric_combobox
 --						raw_metric_combobox.set_text (raw_metric_combobox.first.text)
 						raw_metric_combobox.disable_edit
-						raw_metric_combobox.select_actions.extend (~choose_panel)
+						raw_metric_combobox.select_actions.extend (agent choose_panel)
 						hb.extend (raw_metric_combobox)
 --						hb.disable_item_expand (raw_metric_combobox)
 					vb.extend (hb)
@@ -109,12 +109,12 @@ feature -- Initialization
 					hb.set_border_width (5)
 					hb.set_padding (5)
 						create or_button.make_with_text ("At least one of the following is met")
-						or_button.select_actions.extend (~enable_save)
+						or_button.select_actions.extend (agent enable_save)
 						hb.extend (or_button)
 						hb.disable_item_expand (or_button)
 
 						create and_button.make_with_text ("All of the following are met")
-						and_button.select_actions.extend (~enable_save)
+						and_button.select_actions.extend (agent enable_save)
 						hb.extend (and_button)
 						hb.disable_item_expand (and_button)
 
@@ -135,7 +135,7 @@ feature -- Initialization
 			extend (vb)
 
 			preset
-			name_field.key_press_actions.extend (~following_widget (?, raw_metric_combobox))
+			name_field.key_press_actions.extend (agent following_widget (?, raw_metric_combobox))
 		end
 
 	raw_metric_combobox: EV_COMBO_BOX
@@ -213,17 +213,17 @@ feature -- Initialization
 			create hb
 
 				create deferred_class.make_with_text (interface_names.metric_deferred_class)
-				deferred_class.select_actions.extend (~enable_save)
+				deferred_class.select_actions.extend (agent enable_save)
 				hb.extend (deferred_class)
 				hb.disable_item_expand (deferred_class)
 
 				create effective_class.make_with_text (interface_names.metric_effective_class)
-				effective_class.select_actions.extend (~enable_save)
+				effective_class.select_actions.extend (agent enable_save)
 				hb.extend (effective_class)
 				hb.disable_item_expand (effective_class)
 
 				create ignore_deferred_class.make_with_text (interface_names.metric_ignore)
-				ignore_deferred_class.select_actions.extend (~enable_save)
+				ignore_deferred_class.select_actions.extend (agent enable_save)
 				hb.extend (ignore_deferred_class)
 				ignore_deferred_class.enable_select
 				hb.disable_item_expand (ignore_deferred_class)
@@ -235,17 +235,17 @@ feature -- Initialization
 			create hb
 
 				create invariant_equi.make_with_text (interface_names.metric_invariant_equipped)
-				invariant_equi.select_actions.extend (~enable_save)
+				invariant_equi.select_actions.extend (agent enable_save)
 				hb.extend (invariant_equi)
 				hb.disable_item_expand (invariant_equi)
 
 				create not_invariant_equi.make_with_text (interface_names.metric_no_invariant)
-				not_invariant_equi.select_actions.extend (~enable_save)
+				not_invariant_equi.select_actions.extend (agent enable_save)
 				hb.extend (not_invariant_equi)
 				hb.disable_item_expand (not_invariant_equi)
 
 				create ignore_invariant.make_with_text (interface_names.metric_ignore)
-				ignore_invariant.select_actions.extend (~enable_save)
+				ignore_invariant.select_actions.extend (agent enable_save)
 				hb.extend (ignore_invariant)
 				ignore_invariant.enable_select
 				hb.disable_item_expand (ignore_invariant)
@@ -257,17 +257,17 @@ feature -- Initialization
 			create hb
 
 				create obsolete_class.make_with_text (interface_names.metric_obsolete)
-				obsolete_class.select_actions.extend (~enable_save)
+				obsolete_class.select_actions.extend (agent enable_save)
 				hb.extend (obsolete_class)
 				hb.disable_item_expand (obsolete_class)
 
 				create not_obsolete_class.make_with_text (interface_names.metric_no_obsolete)
-				not_obsolete_class.select_actions.extend (~enable_save)
+				not_obsolete_class.select_actions.extend (agent enable_save)
 				hb.extend (not_obsolete_class)
 				hb.disable_item_expand (not_obsolete_class)
 
 				create ignore_obsolete.make_with_text (interface_names.metric_ignore)
-				ignore_obsolete.select_actions.extend (~enable_save)
+				ignore_obsolete.select_actions.extend (agent enable_save)
 				hb.extend (ignore_obsolete)
 				ignore_obsolete.enable_select
 				hb.disable_item_expand (ignore_obsolete)
@@ -297,12 +297,12 @@ feature -- Initialization
 			create hb
 
 				create self.make_with_text ("Include self (dependent or not)")
-				self.select_actions.extend (~enable_save)
+				self.select_actions.extend (agent enable_save)
 				hb.extend (self)
 				hb.disable_item_expand (self)
 
 				create not_self.make_with_text ("Exclude self unless dependent")
-				not_self.select_actions.extend (~enable_save)
+				not_self.select_actions.extend (agent enable_save)
 				hb.extend (not_self)
 				not_self.enable_select
 				hb.disable_item_expand (not_self)
@@ -314,17 +314,17 @@ feature -- Initialization
 			create hb
 
 				create direct_clients.make_with_text ("Direct clients")
-				direct_clients.select_actions.extend (~enable_save)
+				direct_clients.select_actions.extend (agent enable_save)
 				hb.extend (direct_clients)
 				hb.disable_item_expand (direct_clients)
 
 				create indirect_clients.make_with_text ("Direct and indirect clients")
-				indirect_clients.select_actions.extend (~enable_save)
+				indirect_clients.select_actions.extend (agent enable_save)
 				hb.extend (indirect_clients)
 				hb.disable_item_expand (indirect_clients)
 
 				create ignore_clients.make_with_text (interface_names.metric_ignore)
-				ignore_clients.select_actions.extend (~enable_save)
+				ignore_clients.select_actions.extend (agent enable_save)
 				hb.extend (ignore_clients)
 				ignore_clients.enable_select
 				hb.disable_item_expand (ignore_clients)
@@ -336,17 +336,17 @@ feature -- Initialization
 			create hb
 
 				create direct_suppliers.make_with_text ("Direct suppliers")
-				direct_suppliers.select_actions.extend (~enable_save)
+				direct_suppliers.select_actions.extend (agent enable_save)
 				hb.extend (direct_suppliers)
 				hb.disable_item_expand (direct_suppliers)
 
 				create indirect_suppliers.make_with_text ("Direct and indirect suppliers")
-				indirect_suppliers.select_actions.extend (~enable_save)
+				indirect_suppliers.select_actions.extend (agent enable_save)
 				hb.extend (indirect_suppliers)
 				hb.disable_item_expand (indirect_suppliers)
 
 				create ignore_suppliers.make_with_text (interface_names.metric_ignore)
-				ignore_suppliers.select_actions.extend (~enable_save)
+				ignore_suppliers.select_actions.extend (agent enable_save)
 				hb.extend (ignore_suppliers)
 				ignore_suppliers.enable_select
 				hb.disable_item_expand (ignore_suppliers)
@@ -358,17 +358,17 @@ feature -- Initialization
 			create hb
 
 				create direct_heirs.make_with_text ("Direct heirs")
-				direct_heirs.select_actions.extend (~enable_save)
+				direct_heirs.select_actions.extend (agent enable_save)
 				hb.extend (direct_heirs)
 				hb.disable_item_expand (direct_heirs)
 
 				create indirect_heirs.make_with_text ("Direct and indirect heirs")
-				indirect_heirs.select_actions.extend (~enable_save)
+				indirect_heirs.select_actions.extend (agent enable_save)
 				hb.extend (indirect_heirs)
 				hb.disable_item_expand (indirect_heirs)
 
 				create ignore_heirs.make_with_text (interface_names.metric_ignore)
-				ignore_heirs.select_actions.extend (~enable_save)
+				ignore_heirs.select_actions.extend (agent enable_save)
 				hb.extend (ignore_heirs)
 				ignore_heirs.enable_select
 				hb.disable_item_expand (ignore_heirs)
@@ -380,17 +380,17 @@ feature -- Initialization
 			create hb
 
 				create direct_parents.make_with_text ("Direct parents")
-				direct_parents.select_actions.extend (~enable_save)
+				direct_parents.select_actions.extend (agent enable_save)
 				hb.extend (direct_parents)
 				hb.disable_item_expand (direct_parents)
 
 				create indirect_parents.make_with_text ("Direct and indirect parents")
-				indirect_parents.select_actions.extend (~enable_save)
+				indirect_parents.select_actions.extend (agent enable_save)
 				hb.extend (indirect_parents)
 				hb.disable_item_expand (indirect_parents)
 
 				create ignore_parents.make_with_text (interface_names.metric_ignore)
-				ignore_parents.select_actions.extend (~enable_save)
+				ignore_parents.select_actions.extend (agent enable_save)
 				hb.extend (ignore_parents)
 				ignore_parents.enable_select
 				hb.disable_item_expand (ignore_parents)
@@ -423,17 +423,17 @@ feature -- Initialization
 			create hb
 
 				create attr.make_with_text (interface_names.metric_attributes)
-				attr.select_actions.extend (~enable_save)
+				attr.select_actions.extend (agent enable_save)
 				hb.extend (attr)
 				hb.disable_item_expand (attr)
 
 				create rout.make_with_text (interface_names.metric_routines)
-				rout.select_actions.extend (~enable_save)
+				rout.select_actions.extend (agent enable_save)
 				hb.extend (rout)
 				hb.disable_item_expand (rout)
 
 				create ignore_attr_rout.make_with_text (interface_names.metric_ignore)
-				ignore_attr_rout.select_actions.extend (~enable_save)
+				ignore_attr_rout.select_actions.extend (agent enable_save)
 				hb.extend (ignore_attr_rout)
 				ignore_attr_rout.enable_select
 				hb.disable_item_expand (ignore_attr_rout)
@@ -445,17 +445,17 @@ feature -- Initialization
 			create hb
 
 				create quer.make_with_text (interface_names.metric_queries)
-				quer.select_actions.extend (~enable_save)
+				quer.select_actions.extend (agent enable_save)
 				hb.extend (quer)
 				hb.disable_item_expand (quer)
 
 				create comm.make_with_text (interface_names.metric_commands)
-				comm.select_actions.extend (~enable_save)
+				comm.select_actions.extend (agent enable_save)
 				hb.extend (comm)
 				hb.disable_item_expand (comm)
 
 				create ignore_quer_comm.make_with_text (interface_names.metric_ignore)
-				ignore_quer_comm.select_actions.extend (~enable_save)
+				ignore_quer_comm.select_actions.extend (agent enable_save)
 				hb.extend (ignore_quer_comm)
 				ignore_quer_comm.enable_select
 				hb.disable_item_expand (ignore_quer_comm)
@@ -467,17 +467,17 @@ feature -- Initialization
 			create hb
 
 				create func.make_with_text (interface_names.metric_functions)
-				func.select_actions.extend (~enable_save)
+				func.select_actions.extend (agent enable_save)
 				hb.extend (func)
 				hb.disable_item_expand (func)
 
 				create not_func.make_with_text ("Not functions")
-				not_func.select_actions.extend (~enable_save)
+				not_func.select_actions.extend (agent enable_save)
 				hb.extend (not_func)
 				hb.disable_item_expand (not_func)
 
 				create ignore_func.make_with_text (interface_names.metric_ignore)
-				ignore_func.select_actions.extend (~enable_save)
+				ignore_func.select_actions.extend (agent enable_save)
 				hb.extend (ignore_func)
 				ignore_func.enable_select
 				hb.disable_item_expand (ignore_func)
@@ -489,17 +489,17 @@ feature -- Initialization
 			create hb
 
 				create deferred_feat.make_with_text (interface_names.metric_deferred_feature)
-				deferred_feat.select_actions.extend (~enable_save)
+				deferred_feat.select_actions.extend (agent enable_save)
 				hb.extend (deferred_feat)
 				hb.disable_item_expand (deferred_feat)
 
 				create effective_feat.make_with_text ("Effective")
-				effective_feat.select_actions.extend (~enable_save)
+				effective_feat.select_actions.extend (agent enable_save)
 				hb.extend (effective_feat)
 				hb.disable_item_expand (effective_feat)
 
 				create ignore_deferred_feat.make_with_text (interface_names.metric_ignore)
-				ignore_deferred_feat.select_actions.extend (~enable_save)
+				ignore_deferred_feat.select_actions.extend (agent enable_save)
 				hb.extend (ignore_deferred_feat)
 				ignore_deferred_feat.enable_select
 				hb.disable_item_expand (ignore_deferred_feat)
@@ -511,17 +511,17 @@ feature -- Initialization
 			create hb
 
 				create exported.make_with_text (interface_names.metric_exported)
-				exported.select_actions.extend (~enable_save)
+				exported.select_actions.extend (agent enable_save)
 				hb.extend (exported)
 				hb.disable_item_expand (exported)
 
 				create not_exported.make_with_text ("Restricted")
-				not_exported.select_actions.extend (~enable_save)
+				not_exported.select_actions.extend (agent enable_save)
 				hb.extend (not_exported)
 				hb.disable_item_expand (not_exported)
 
 				create ignore_exported.make_with_text (interface_names.metric_ignore)
-				ignore_exported.select_actions.extend (~enable_save)
+				ignore_exported.select_actions.extend (agent enable_save)
 				hb.extend (ignore_exported)
 				ignore_exported.enable_select
 				hb.disable_item_expand (ignore_exported)
@@ -533,17 +533,17 @@ feature -- Initialization
 			create hb
 
 				create inherited.make_with_text (interface_names.metric_inherited)
-				inherited.select_actions.extend (~enable_save)
+				inherited.select_actions.extend (agent enable_save)
 				hb.extend (inherited)
 				hb.disable_item_expand (inherited)
 
 				create not_inherited.make_with_text ("Not inherited")
-				not_inherited.select_actions.extend (~enable_save)
+				not_inherited.select_actions.extend (agent enable_save)
 				hb.extend (not_inherited)
 				hb.disable_item_expand (not_inherited)
 
 				create ignore_inherited.make_with_text (interface_names.metric_ignore)
-				ignore_inherited.select_actions.extend (~enable_save)
+				ignore_inherited.select_actions.extend (agent enable_save)
 				hb.extend (ignore_inherited)
 				ignore_inherited.enable_select
 				hb.disable_item_expand (ignore_inherited)
@@ -555,17 +555,17 @@ feature -- Initialization
 			create hb
 
 				create pre_equi.make_with_text (interface_names.metric_precondition_equipped)
-				pre_equi.select_actions.extend (~enable_save)
+				pre_equi.select_actions.extend (agent enable_save)
 				hb.extend (pre_equi)
 				hb.disable_item_expand (pre_equi)
 
 				create not_pre_equi.make_with_text ("No precondition")
-				not_pre_equi.select_actions.extend (~enable_save)
+				not_pre_equi.select_actions.extend (agent enable_save)
 				hb.extend (not_pre_equi)
 				hb.disable_item_expand (not_pre_equi)
 
 				create ignore_pre_equi.make_with_text (interface_names.metric_ignore)
-				ignore_pre_equi.select_actions.extend (~enable_save)
+				ignore_pre_equi.select_actions.extend (agent enable_save)
 				hb.extend (ignore_pre_equi)
 				ignore_pre_equi.enable_select
 				hb.disable_item_expand (ignore_pre_equi)
@@ -577,17 +577,17 @@ feature -- Initialization
 			create hb
 
 				create post_equi.make_with_text (interface_names.metric_postcondition_equipped)
-				post_equi.select_actions.extend (~enable_save)
+				post_equi.select_actions.extend (agent enable_save)
 				hb.extend (post_equi)
 				hb.disable_item_expand (post_equi)
 
 				create not_post_equi.make_with_text ("No postcondition")
-				not_post_equi.select_actions.extend (~enable_save)
+				not_post_equi.select_actions.extend (agent enable_save)
 				hb.extend (not_post_equi)
 				hb.disable_item_expand (not_post_equi)
 
 				create ignore_post_equi.make_with_text (interface_names.metric_ignore)
-				ignore_post_equi.select_actions.extend (~enable_save)
+				ignore_post_equi.select_actions.extend (agent enable_save)
 				hb.extend (ignore_post_equi)
 				ignore_post_equi.enable_select
 				hb.disable_item_expand (ignore_post_equi)

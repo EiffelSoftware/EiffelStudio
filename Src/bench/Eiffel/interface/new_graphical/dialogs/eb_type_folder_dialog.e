@@ -53,10 +53,10 @@ feature {NONE} -- Initialization
 			buttons_box.set_padding (Layout_constants.Default_padding_size)
 			buttons_box.set_border_width (Layout_constants.Default_padding_size)
 	
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, ~on_ok)
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, ~on_cancel)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
 			extend_button (buttons_box, cancel_button)
 
 				-- Create the controls
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			extend (hb)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
-			show_actions.extend (folder_name_entry~set_focus)
+			show_actions.extend (agent folder_name_entry.set_focus)
 		end
 
 feature -- Access

@@ -86,10 +86,10 @@ feature {NONE} -- Initialization
 			message_label.align_text_left
 			
 			create wizards_list
-			wizards_list.select_actions.extend (~update_description)
-			wizards_list.deselect_actions.extend (~update_description)
-			wizards_list.select_actions.extend (~update_ok_button)
-			wizards_list.deselect_actions.extend (~update_ok_button)
+			wizards_list.select_actions.extend (agent update_description)
+			wizards_list.deselect_actions.extend (agent update_description)
+			wizards_list.select_actions.extend (agent update_ok_button)
+			wizards_list.deselect_actions.extend (agent update_ok_button)
 			wizards_list.set_minimum_height (Layout_constants.dialog_unit_to_pixels (80))
 			fill_list_with_available_wizards
 
@@ -103,9 +103,9 @@ feature {NONE} -- Initialization
 			description_frame.extend (description_box)
 		
 				--| Action buttons box
-			create ok_button.make_with_text_and_action (Interface_names.b_Next, ~on_ok)
+			create ok_button.make_with_text_and_action (Interface_names.b_Next, agent on_ok)
 			Layout_constants.set_default_size_for_button (ok_button)
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, ~destroy)
+			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent destroy)
 			Layout_constants.set_default_size_for_button (cancel_button)
 			create buttons_box
 			buttons_box.enable_homogeneous

@@ -51,7 +51,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			minimize_all_cmd.set_tooltip (Interface_names.e_Minimize_all)
 			minimize_all_cmd.set_menu_name (Interface_names.m_Minimize_all)
 			minimize_all_cmd.set_name ("Minimize_all")
-			minimize_all_cmd.add_agent (~minimize_all)
+			minimize_all_cmd.add_agent (agent minimize_all)
 			minimize_all_cmd.enable_sensitive
 
 			create raise_all_cmd.make
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			raise_all_cmd.set_tooltip (Interface_names.e_Raise_all)
 			raise_all_cmd.set_menu_name (Interface_names.m_Raise_all)
 			raise_all_cmd.set_name ("Raise_all")
-			raise_all_cmd.add_agent (~raise_all)
+			raise_all_cmd.add_agent (agent raise_all)
 			raise_all_cmd.enable_sensitive
 
 			create raise_all_unsaved_cmd.make
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			raise_all_unsaved_cmd.set_tooltip (Interface_names.e_Raise_all_unsaved)
 			raise_all_unsaved_cmd.set_menu_name (Interface_names.m_Raise_all_unsaved)
 			raise_all_unsaved_cmd.set_name ("Raise_all_unsaved")
-			raise_all_unsaved_cmd.add_agent (~raise_all_unsaved)
+			raise_all_unsaved_cmd.add_agent (agent raise_all_unsaved)
 			raise_all_unsaved_cmd.enable_sensitive
 
 			Eiffel_project.manager.load_agents.extend (agent on_project_loaded)
@@ -456,32 +456,32 @@ feature -- Actions on all windows
 	raise_all_unsaved is
 			-- Raise all the editors.
 		do
-			for_all (~raise_unsaved_action)
+			for_all (agent raise_unsaved_action)
 		end
 
 	refresh_all is
 			-- Refresh all the windows after a compilation
 		do
-			for_all (~refresh_action)
+			for_all (agent refresh_action)
 		end
 
 	save_all is
 			-- Ask each window to save its content.
 		do
-			for_all (~save_action)
+			for_all (agent save_action)
 		end
 
 	save_all_before_compiling is
 			-- Ask each window to save its content.
 		do
-			for_all (~save_before_compiling_action)
+			for_all (agent save_before_compiling_action)
 		end
 
 	backup_all is
 			-- Create a backup file (.swp) for all development window.
 		do
 			not_backuped := 0
-			for_all (~backup_action)
+			for_all (agent backup_action)
 		end
 
 	not_backuped: INTEGER
@@ -490,31 +490,31 @@ feature -- Actions on all windows
 	minimize_all is
 			-- Minimize all windows
 		do
-			for_all (~minimize_action)
+			for_all (agent minimize_action)
 		end
 
 	disable_all is
 			-- Disable sensitivity on all windows.
 		do
-			for_all (~disable_action)
+			for_all (agent disable_action)
 		end
 
 	enable_all is
 			-- Enable sensitivity on all windows.
 		do
-			for_all (~enable_action)
+			for_all (agent enable_action)
 		end
 
 	quick_refresh_all is
 			-- Redraws the editors of all the windows.
 		do
-			for_all (~quick_refresh_action)
+			for_all (agent quick_refresh_action)
 		end
 
 	raise_all is
 			-- Raise all windows.
 		do
-			for_all (~raise_window)
+			for_all (agent raise_window)
 		end
 
 	close_all is
@@ -558,7 +558,7 @@ feature -- Actions on all windows
 				Finalize_project_cmd.disable_sensitive
 			end
 
-			for_all (~synchronize_action)
+			for_all (agent synchronize_action)
 		end
 
 	display_message (m: STRING) is
@@ -649,8 +649,8 @@ feature {NONE} -- Exit implementation
 				Exit_application_cmd.set_already_confirmed (True)
 				create qd.make_with_text (Interface_names.L_exit_warning)
 				create evcsts
-				qd.button (evcsts.ev_yes).select_actions.extend (~save_and_quit)
-				qd.button (evcsts.ev_no).select_actions.extend (~quit)
+				qd.button (evcsts.ev_yes).select_actions.extend (agent save_and_quit)
+				qd.button (evcsts.ev_no).select_actions.extend (agent quit)
 				qd.show_modal_to_window (last_focused_development_window.window)
 			else
 				quit
@@ -751,7 +751,7 @@ feature -- Events
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
 			System_cmd.enable_sensitive
-			for_all (~create_project_action)
+			for_all (agent create_project_action)
 		end
 
 	on_project_loaded is
@@ -791,7 +791,7 @@ feature -- Events
 			end
 			load_favorites
 			Manager.on_project_loaded
-			for_all (~load_project_action)
+			for_all (agent load_project_action)
 		end
 
 	on_project_unloaded is
@@ -799,7 +799,7 @@ feature -- Events
 		do
 			Manager.on_project_unloaded
 			save_favorites
-			for_all (~unload_project_action)
+			for_all (agent unload_project_action)
 			Melt_project_cmd.disable_sensitive
 			Quick_melt_project_cmd.disable_sensitive
 			Freeze_project_cmd.disable_sensitive

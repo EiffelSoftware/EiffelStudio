@@ -33,7 +33,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 
 	make_default
 	
@@ -71,9 +71,9 @@ feature -- Initialization
 			create cancel_button.make_with_text (Interface_names.b_Cancel)
 			extend (cancel_button)
 
-			ok_button.select_actions.extend (~execute (ok_it))
-			apply_button.select_actions.extend (~execute (apply_it))
-			cancel_button.select_actions.extend (~execute (cancel_it))
+			ok_button.select_actions.extend (agent execute (ok_it))
+			apply_button.select_actions.extend (agent execute (apply_it))
+			cancel_button.select_actions.extend (agent execute (cancel_it))
 			associated_command := cmd
 --			set_composite_attributes (Current)
 

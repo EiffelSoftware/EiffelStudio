@@ -44,18 +44,18 @@ feature -- Initialization
 			parent_name := raw_metric
 			bf := basic_func
 			create processors.make (Feature_scope, System_scope)
-			processors.put (~default_feature_value, Feature_scope)
-			processors.put (~default_class_value, Class_scope)
-			processors.put (~default_cluster_value, Cluster_scope)
-			processors.put (~default_system_value, System_scope)
+			processors.put (agent default_feature_value, Feature_scope)
+			processors.put (agent default_class_value, Class_scope)
+			processors.put (agent default_cluster_value, Cluster_scope)
+			processors.put (agent default_system_value, System_scope)
 
 			if equal (parent_name, interface_names.metric_classes) then
-				processors.put (~apply_criteria_to_scope, Class_scope)
+				processors.put (agent apply_criteria_to_scope, Class_scope)
 			elseif equal (parent_name, interface_names.metric_dependents) then
-				processors.put (~apply_dependents_criteria_to_scope, Class_scope)
+				processors.put (agent apply_dependents_criteria_to_scope, Class_scope)
 			elseif equal (parent_name, interface_names.metric_features) then
-				processors.put (~apply_criteria_to_scope, Feature_scope)
-				processors.put (~class_value_for_feature_criteria, Class_scope)
+				processors.put (agent apply_criteria_to_scope, Feature_scope)
+				processors.put (agent class_value_for_feature_criteria, Class_scope)
 			end
 			include_self := self
 		end

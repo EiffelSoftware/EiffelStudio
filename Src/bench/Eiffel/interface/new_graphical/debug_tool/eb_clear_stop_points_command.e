@@ -37,10 +37,10 @@ feature -- Access
 			-- Create a new toolbar button for `Current'.
 		do
 			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
-			Result.drop_actions.extend (~drop_breakable (?))
-			Result.drop_actions.extend (~drop_feature (?))
-			Result.drop_actions.extend (~drop_class (?))
-			Result.drop_actions.set_veto_pebble_function (~can_drop)
+			Result.drop_actions.extend (agent drop_breakable (?))
+			Result.drop_actions.extend (agent drop_feature (?))
+			Result.drop_actions.extend (agent drop_class (?))
+			Result.drop_actions.set_veto_pebble_function (agent can_drop)
 --			Result.drop_actions.extend (~quick_refresh_on_class_drop)
 --			Result.drop_actions.extend (~quick_refresh_on_brk_drop)
 --			Result.select_actions.extend (window_manager~quick_refresh_all)
@@ -139,7 +139,7 @@ feature -- Execution
 					2, "confirm_clear_breakpoints",
 					Warning_messages.w_Clear_breakpoints, Interface_names.l_Dont_ask_me_again
 				)
-				cd.set_ok_action (~clear_breakpoints)
+				cd.set_ok_action (agent clear_breakpoints)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				
 					-- Update output tools

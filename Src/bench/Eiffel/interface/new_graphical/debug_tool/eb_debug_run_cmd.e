@@ -108,13 +108,13 @@ feature -- Access
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
 			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
-			Result.select_actions.put_front (~execute_from (Result))
+			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
 		do
 			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor
-			Result.select_actions.put_front (~execute_from (Result))
+			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
 feature -- Execution
@@ -140,14 +140,14 @@ feature -- Execution
 						-- It is VERY dangerous to launch the debugger in these conditions.
 						-- However, forbidding it completely may be too frustating.
 					create cd.make_with_text (Warning_messages.w_Debug_not_compiled)
-					cd.button ("OK").select_actions.extend (~launch_application)
+					cd.button ("OK").select_actions.extend (agent launch_application)
 					cd.show_modal_to_window (Window_manager.last_focused_window.window)
 				elseif not Debugger_manager.can_debug then
 						-- A class was removed since the last compilation.
 						-- It is VERY dangerous to launch the debugger in these conditions.
 						-- However, forbidding it completely may be too frustating.
 					create cd.make_with_text (Warning_messages.w_Removed_class_debug)
-					cd.button ("OK").select_actions.extend (~launch_application)
+					cd.button ("OK").select_actions.extend (agent launch_application)
 					cd.show_modal_to_window (Window_manager.last_focused_window.window)					
 				else
 					launch_application
@@ -317,7 +317,7 @@ feature -- Execution
 									-- The Makefile file is more recent than the 
 									-- application
 								create cd.make_with_text_and_actions (Warning_messages.w_Makefile_more_recent (makefile_sh_name),
-									<<~c_compile>>)
+									<<agent c_compile>>)
 								cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 							else
 								Output_manager.clear

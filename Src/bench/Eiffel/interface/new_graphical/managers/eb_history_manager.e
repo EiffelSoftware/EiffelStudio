@@ -16,7 +16,7 @@ inherit
 
 	SHARED_RESOURCES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

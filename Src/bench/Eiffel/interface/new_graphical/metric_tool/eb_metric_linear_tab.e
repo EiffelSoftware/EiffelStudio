@@ -52,8 +52,8 @@ feature -- Initialization
 
 					create name_field
 					name_field.set_minimum_height (22)
-					name_field.key_press_actions.extend (~dialog_key_press_action (?, name_field))
-					name_field.key_press_string_actions.extend (~change_in_name)
+					name_field.key_press_actions.extend (agent dialog_key_press_action (?, name_field))
+					name_field.key_press_string_actions.extend (agent change_in_name)
 					hb.extend (name_field)
 				extend (hb)
 				disable_item_expand (hb)
@@ -70,7 +70,7 @@ feature -- Initialization
 					create unit_field
 					unit_field.set_minimum_height (22)
 					unit_field.disable_edit
-					unit_field.key_press_actions.extend (~dialog_key_press_action (?, unit_field))
+					unit_field.key_press_actions.extend (agent dialog_key_press_action (?, unit_field))
 					hb.extend (unit_field)
 				extend (hb)
 				disable_item_expand (hb)
@@ -97,7 +97,7 @@ feature -- Initialization
 								create coeff_field
 								coeff_field.set_minimum_width (60)
 								coeff_field.set_minimum_height (22)
-								coeff_field.key_press_actions.extend (~dialog_key_press_action (?, coeff_field))
+								coeff_field.key_press_actions.extend (agent dialog_key_press_action (?, coeff_field))
 								hb_min.extend (coeff_field)
 
 								create label.make_with_text ("x")
@@ -121,12 +121,12 @@ feature -- Initialization
 								interface.fill_metric_combobox (metric_combobox)
 --								metric_combobox.set_text (metric_combobox.first.text)
 								metric_combobox.disable_edit
-								metric_combobox.key_press_actions.extend (~dialog_key_press_action (?, metric_combobox))
+								metric_combobox.key_press_actions.extend (agent dialog_key_press_action (?, metric_combobox))
 								hb_min.extend (metric_combobox)
 
-								create plus_button.make_with_text_and_action ("+", ~add_action)
+								create plus_button.make_with_text_and_action ("+", agent add_action)
 								plus_button.set_minimum_size (22, 22)
-								plus_button.key_press_actions.extend (~dialog_key_press_action (?, plus_button))
+								plus_button.key_press_actions.extend (agent dialog_key_press_action (?, plus_button))
 								hb_min.extend (plus_button)
 								hb_min.disable_item_expand (plus_button)
 							vb_min.extend (hb_min)
@@ -146,7 +146,7 @@ feature -- Initialization
 						definition_field.disable_edit
 						hb.extend (definition_field)
 
-						metric_combobox.select_actions.extend (~display_formula_and_unit (metric_combobox, definition_field))
+						metric_combobox.select_actions.extend (agent display_formula_and_unit (metric_combobox, definition_field))
 
 						create {EV_CELL} ev_any
 						ev_any.set_minimum_size (22, 22)
@@ -164,26 +164,26 @@ feature -- Initialization
 					hb.set_padding (5)
 						create text_field
 						text_field.disable_edit
-						text_field.key_press_actions.extend (~dialog_key_press_action (?, text_field))
+						text_field.key_press_actions.extend (agent dialog_key_press_action (?, text_field))
 						hb.extend (text_field)
 
 						create vb_min
 						vb_min.set_padding (5)
 							create del_button
-							del_button.select_actions.extend (~remove_action)
+							del_button.select_actions.extend (agent remove_action)
 							del_button.set_minimum_size (22, 22)
 							del_button.set_tooltip ("Remove last term")
 							del_button.set_pixmap (Pixmaps.Icon_delete_small @ 1)
-							del_button.key_press_actions.extend (~dialog_key_press_action (?, del_button))
+							del_button.key_press_actions.extend (agent dialog_key_press_action (?, del_button))
 							vb_min.extend (del_button)
 							vb_min.disable_item_expand (del_button)
 
 							create new_button
-							new_button.select_actions.extend (~preset)
+							new_button.select_actions.extend (agent preset)
 							new_button.set_tooltip ("New metric")
 							new_button.set_minimum_size (22, 22)
 							new_button.set_pixmap (Pixmaps.Icon_new_metric @ 1)
-							new_button.key_press_actions.extend (~dialog_key_press_action (?, new_button))
+							new_button.key_press_actions.extend (agent dialog_key_press_action (?, new_button))
 							vb_min.extend (new_button)
 							vb_min.disable_item_expand (new_button)
 
@@ -195,10 +195,10 @@ feature -- Initialization
 				frame.extend (vb1)
 				extend (frame)
 			preset
-			name_field.key_press_actions.extend (~following_widget (?, coeff_field))
-			coeff_field.key_press_actions.extend (~following_widget (?, metric_combobox))
-			metric_combobox.key_press_actions.extend (~following_widget (?, plus_button))
-			plus_button.key_press_actions.extend (~following_widget (?, coeff_field))
+			name_field.key_press_actions.extend (agent following_widget (?, coeff_field))
+			coeff_field.key_press_actions.extend (agent following_widget (?, metric_combobox))
+			metric_combobox.key_press_actions.extend (agent following_widget (?, plus_button))
+			plus_button.key_press_actions.extend (agent following_widget (?, coeff_field))
 		end
 
 feature -- Access

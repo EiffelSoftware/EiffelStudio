@@ -107,12 +107,12 @@ feature -- Dialogs
 						create {EV_CELL} ev_any
 						vb.extend (ev_any)
 
-						create add_button.make_with_text_and_action ("Add->", ~add_metric)
+						create add_button.make_with_text_and_action ("Add->", agent add_metric)
 						add_button.set_minimum_size (60, 22)
 						vb.extend (add_button)
 						vb.disable_item_expand (add_button)
 
-						create remove_button.make_with_text_and_action ("<-Remove", ~remove_metric)
+						create remove_button.make_with_text_and_action ("<-Remove", agent remove_metric)
 						remove_button.set_minimum_size (60, 22)
 						vb.extend (remove_button)
 						vb.disable_item_expand (remove_button)
@@ -163,12 +163,12 @@ feature -- Dialogs
 					create {EV_CELL} ev_any
 					hb1.extend (ev_any)
 
-					create ok_button.make_with_text_and_action ("OK", ~ok_import)
+					create ok_button.make_with_text_and_action ("OK", agent ok_import)
 					ok_button.set_minimum_size (50, 22)
 					hb1.extend (ok_button)
 					hb1.disable_item_expand (ok_button)
 
-					create cancel_button.make_with_text_and_action ("Cancel", ~cancel_import)
+					create cancel_button.make_with_text_and_action ("Cancel", agent cancel_import)
 					cancel_button.set_minimum_size (50, 22)
 					hb1.extend (cancel_button)
 					hb1.disable_item_expand (cancel_button)
@@ -246,11 +246,11 @@ feature -- Dialogs
 					create {EV_CELL} ev_any
 					hb.extend (ev_any)
 
-					create ok_rename_button.make_with_text_and_action ("OK", ~ok_rename)
+					create ok_rename_button.make_with_text_and_action ("OK", agent ok_rename)
 					ok_rename_button.set_minimum_width (30)
 					hb.extend (ok_rename_button)
 
-					create cancel_rename_button.make_with_text_and_action ("Cancel", ~cancel_rename)
+					create cancel_rename_button.make_with_text_and_action ("Cancel", agent cancel_rename)
 					cancel_rename_button.set_minimum_width (30)
 					hb.extend (cancel_rename_button)
 
@@ -272,7 +272,7 @@ feature -- Importation
 		do
 			create open_dialog
 			open_dialog.set_filter ("*.xml")
-			open_dialog.open_actions.extend (~import_file)
+			open_dialog.open_actions.extend (agent import_file)
 			open_dialog.show_modal_to_window (interface.management_dialog)
 		end
 	
@@ -306,7 +306,7 @@ feature -- Importation
 					if file.exists and then not file.is_directory then
 						if importable_metric_list = Void then
 							create importable_metric_list
-							importable_metric_list.select_actions.extend (~enable_add)
+							importable_metric_list.select_actions.extend (agent enable_add)
 						end
 						importable_metric_list.wipe_out
 						file.open_read
@@ -323,7 +323,7 @@ feature -- Importation
 							create list_item.make_with_text (imported_metrics.item.name)
 							create list_item_data.make (imported_metrics.item, imported_xml_elements.item)
 							list_item.set_data (list_item_data)
-							list_item.pointer_double_press_actions.extend (~double_click_add)
+							list_item.pointer_double_press_actions.extend (agent double_click_add)
 							list_item.set_pebble (list_item)
 							list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
 							importable_metric_list.extend (list_item)
@@ -333,7 +333,7 @@ feature -- Importation
 						file.close
 						if current_metric_list = Void then
 							create current_metric_list
-							current_metric_list.select_actions.extend (~enable_remove)
+							current_metric_list.select_actions.extend (agent enable_remove)
 						end
 						current_metric_list.wipe_out
 						create non_removable_metrics.make
@@ -344,7 +344,7 @@ feature -- Importation
 						loop
 							create list_item.make_with_text (interface.ev_list.item.text)
 							list_item.set_data (interface.ev_list.item.data)
-							list_item.pointer_double_press_actions.extend (~double_click_remove)
+							list_item.pointer_double_press_actions.extend (agent double_click_remove)
 							list_item.set_pebble (list_item)
 							list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
 							current_metric_list.extend (list_item)
@@ -409,7 +409,7 @@ feature -- Importation
 			loop
 				create list_item.make_with_text (interface.ev_list.item.text)
 				list_item.set_data (interface.ev_list.item.data)
-				list_item.pointer_double_press_actions.extend (~double_click_remove)
+				list_item.pointer_double_press_actions.extend (agent double_click_remove)
 				list_item.set_pebble (list_item)
 				list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
 				current_metric_list.extend (list_item)
@@ -474,7 +474,7 @@ feature -- Importation
 					cell.item2.remove_attribute_by_name ("Name")
 					Xml_routines.add_attribute ("Name", l_namespace, new_name, cell.item2)
 					list_item.pointer_double_press_actions.wipe_out
-					list_item.pointer_double_press_actions.extend (~double_click_remove)
+					list_item.pointer_double_press_actions.extend (agent double_click_remove)
 					current_metric_list.extend (list_item)
 					current_metric_list.last.enable_select
 				end
@@ -501,7 +501,7 @@ feature -- Importation
 			list_item := current_metric_list.selected_item
 			if list_item /= Void then
 				list_item.pointer_double_press_actions.wipe_out
-				list_item.pointer_double_press_actions.extend (~double_click_add)
+				list_item.pointer_double_press_actions.extend (agent double_click_add)
 				current_metric_list.prune (list_item)
 				importable_metric_list.extend (list_item)
 				importable_metric_list.last.enable_select

@@ -35,7 +35,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	default_create
 
 feature -- Basic Operations / Generic purpose

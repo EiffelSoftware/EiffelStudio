@@ -244,8 +244,8 @@ feature -- Existing name
 			actions_array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create actions_array.make (1, 2)
-			actions_array.put (~yes_action, 1)
-			actions_array.put (~do_nothing, 2)
+			actions_array.put (agent yes_action, 1)
+			actions_array.put (agent do_nothing, 2)
 			create confirm_dialog.make_with_text_and_actions (
 								"Name is already used to define%N%
 								%a metric. Do you want%N%

@@ -109,15 +109,15 @@ feature {NONE} -- Initialization
 			create cluster_list
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
 			create deferred_check.make_with_text (Interface_names.L_deferred)
-			deferred_check.select_actions.extend (~on_deferred)
+			deferred_check.select_actions.extend (agent on_deferred)
 			create expanded_check.make_with_text (Interface_names.L_expanded)
-			expanded_check.select_actions.extend (~on_expanded)
+			expanded_check.select_actions.extend (agent on_expanded)
 			create empty_check.make_with_text (Interface_names.L_not_empty)
 			empty_check.enable_select
 			create creation_check.make_with_text (Interface_names.l_generate_Creation)
 			create parents_list.make
-			parents_list.text_field.focus_in_actions.extend (~on_focus_in)
-			parents_list.text_field.focus_out_actions.extend (~on_focus_out)
+			parents_list.text_field.focus_in_actions.extend (agent on_focus_in)
+			parents_list.text_field.focus_out_actions.extend (agent on_focus_out)
 
 				-- Build the frames
 			create properties_frame.make_with_text (Interface_names.l_Properties)

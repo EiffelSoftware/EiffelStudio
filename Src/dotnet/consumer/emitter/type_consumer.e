@@ -91,35 +91,31 @@ feature {NONE} -- Initialization
 					-- from parent interfaces as `t.get_members_binding_flags' does not do it.
 				update_interface_members (t)
 --				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
---						feature {BINDING_FLAGS}.flatten_hierarchy)
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public)
 --				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
---						feature {BINDING_FLAGS}.flatten_hierarchy)
+--						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public)
 			else
 				internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+						feature {BINDING_FLAGS}.non_public)
 --				internal_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 --						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+--						feature {BINDING_FLAGS}.non_public)
 --				internal_fields := t.get_fields_binding_flags (feature {BINDING_FLAGS}.instance |
 --						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+--						feature {BINDING_FLAGS}.non_public)
 				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
+						feature {BINDING_FLAGS}.static)
 				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public|
-						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
+						feature {BINDING_FLAGS}.static)
 			end
 			
 --			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---					feature {BINDING_FLAGS}.flatten_hierarchy)
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public)
 --			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---					feature {BINDING_FLAGS}.flatten_hierarchy)
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public)
 
 			internal_constructors := t.get_constructors
 			internal_referenced_type := referenced_type_from_type (t)
@@ -481,6 +477,8 @@ feature {NONE} -- Implementation
 					info.is_static,
 					info.is_abstract,
 					info.is_public,
+					(info.attributes.to_integer & feature {METHOD_ATTRIBUTES}.new_slot.to_integer) = feature {METHOD_ATTRIBUTES}.new_slot.to_integer,
+					info.is_virtual,
 					property_or_event,
 					referenced_type_from_type (info.declaring_type))
 			end
@@ -509,6 +507,8 @@ feature {NONE} -- Implementation
 					is_infix (info),
 					is_prefix (info),
 					info.is_public,
+					(info.attributes.to_integer & feature {METHOD_ATTRIBUTES}.new_slot.to_integer) = feature {METHOD_ATTRIBUTES}.new_slot.to_integer,
+					info.is_virtual,
 					property_or_event,
 					referenced_type_from_type (info.declaring_type))
 			end
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 							name.append (args.item (i).eiffel_name)
 							i := i + 1
 						end
-						l_reserved.put (name, name)
+						name := unique_feature_name (name)
 						tc.item.set_name (name)
 						Result.put (tc.item.consumed_constructor, j)
 						j := j + 1
@@ -670,7 +670,7 @@ feature {NONE} -- Implementation
 							name.append (args.item (i).eiffel_name)
 							i := i + 1
 						end
-						l_reserved.put (name, name)
+						name := unique_feature_name (name)
 						tc.item.set_name (name)
 						Result.put (tc.item.consumed_constructor, j)
 						j := j + 1
@@ -899,30 +899,79 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			-- 
 		local
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
---			l_methods: NATIVE_ARRAY [METHOD_INFO]
+			l_method, l_obj_method: METHOD_INFO
+			l_cell: CLI_CELL [METHOD_INFO]
 			l_processed: HASHTABLE
+			i, j, k, nb: INTEGER
+			l_matched: BOOLEAN
+			l_object_methods: like Object_methods
+			l_meth_name: STRING
+			l_params, l_obj_params: NATIVE_ARRAY [PARAMETER_INFO]
 		do
 			create l_processed.make_from_capacity (10)
-			
---			create internal_fields.make (0)
+
 			create internal_members.make (0)
---			create internal_methods.make (0)
 			create internal_properties.make (0)
 			create internal_events.make (0)
 			
 			internal_update_interface_members (t, l_processed)
 
-			create l_members.make (internal_members.count + object_members.count)
-			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer (object_members, 0, l_members,
-				internal_members.count, object_members.count)
-			internal_members := l_members
+			from
+				l_object_methods := clone (Object_methods)
+				l_members := internal_members
+				i := l_members.lower
+				nb := l_members.upper
+			until
+				i > nb
+			loop
+				l_method ?= l_members.item (i)
+				if l_method /= Void then
+					create l_meth_name.make_from_cil (l_method.name)
+					l_cell := l_object_methods.item (l_meth_name)
+					if l_cell /= Void then
+							-- Let's check return type and arguments type.
+						l_obj_method := l_cell.item
+						l_obj_params := l_obj_method.get_parameters
+						l_params := l_method.get_parameters
+						if
+							l_obj_method.return_type.equals_type (l_method.return_type) and then
+							l_obj_params.count = l_params.count
+						then
+							from
+								j := l_obj_params.lower
+								k := l_obj_params.upper
+								l_matched := True
+							until
+								j > k or not l_matched
+							loop
+								l_matched := l_obj_params.item (j).parameter_type.equals_type
+									(l_params.item (j).parameter_type)
+								j := j + 1
+							end
+							if l_matched then
+								l_object_methods.remove (l_meth_name)
+							end
+						end
+					end
+				end
+				i := i + 1
+			end
+			
+			create l_members.make (internal_members.count + l_object_methods.count)
+ 			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)			
 
---			create l_methods.make (internal_methods.count + Object_methods.count)
---			feature {SYSTEM_ARRAY}.copy (internal_methods, l_methods, internal_methods.count)
---			feature {SYSTEM_ARRAY}.copy_array_integer (Object_methods, 0, l_methods,
---				internal_methods.count, Object_methods.count)
---			internal_methods := l_methods
+			from
+				l_object_methods.start
+				i := internal_members.count
+			until
+				l_object_methods.after
+			loop
+				l_members.put (i, l_object_methods.item_for_iteration.item)
+				i := i + 1
+				l_object_methods.forth
+			end
+
+			internal_members := l_members
 		end
 
 	internal_update_interface_members (t: TYPE; processed: HASHTABLE) is
@@ -943,16 +992,16 @@ feature {NONE} -- Added features of System.Object to Interfaces
 		do
 			l_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.non_public)
 --			l_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 --					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
---					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+--					feature {BINDING_FLAGS}.non_public)
 			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.static)
 			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.static)
 			
 
 				-- merge members.
@@ -994,16 +1043,29 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			end
 		end
 
-	object_members: NATIVE_ARRAY [MEMBER_INFO] is
+	object_methods: HASH_TABLE [CLI_CELL [METHOD_INFO], STRING] is
 			-- List of members of System.Object.
 		local
 			l_type: TYPE
+			l_methods: NATIVE_ARRAY [METHOD_INFO]
+			i, nb: INTEGER
 		once
 			l_type := feature {TYPE}.get_type_string (("System.Object").to_cil)
-			Result := l_type.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
+			l_methods := l_type.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 				feature {BINDING_FLAGS}.public)
+			create Result.make (l_methods.count)
+			from
+				i := l_methods.lower
+				nb := l_methods.upper
+			until
+				i > nb
+			loop
+				Result.put (create {CLI_CELL [METHOD_INFO]}.put (l_methods.item (i)),
+					create {STRING}.make_from_cil (l_methods.item (i).name))
+				i := i + 1
+			end
 		ensure
-			object_members_not_void: Result /= Void
+			object_methods: Result /= Void
 		end
 		
 feature {NONE} -- Added features for ENUM types.
@@ -1028,6 +1090,8 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_infix
 				False,	-- is_prefix
 				True,	-- is_public
+				False,  -- is_new_slot
+				True,	-- is_virtual
 				False,	-- is_property_or_event
 				enum_type)
 			Result.set_is_artificially_added (True)				
@@ -1049,7 +1113,9 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_deferred
 				True,	-- is_infix
 				False,	-- is_prefix
-				True,	-- is_public
+				True,	-- is_public,
+				False,	-- is_new_slot
+				True,	-- is_virtual
 				False,	-- is_property_or_event
 				enum_type)
 			Result.set_is_artificially_added (True)
@@ -1069,7 +1135,9 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_deferred
 				True,	-- is_infix
 				False,	-- is_prefix
-				True,	-- is_public
+				True,	-- is_public,
+				False,	-- is_new_slot
+				True,	-- is_virtual
 				False,	-- is_property_or_event
 				enum_type)
 			Result.set_is_artificially_added (True)				

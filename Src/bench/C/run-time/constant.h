@@ -27,9 +27,6 @@ to indicate indirect(also called Eiffel or protected) address.
  * concurrent applications, defines SIGNAL, otherwise undefine it.
 */
 
-#define SEP_OBJ
-/* if class SEP_OBJ is still used, please define it. */
-
 #define tGC_ON_CPU_TIME
 /* Concurrent Eiffel call GC once after a certain period. If we 
  * want the period is calculated based on CPU time, define the symbol,
@@ -40,7 +37,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #include <winsock.h>
 #else
 #include <sys/wait.h>
-/*#include <sys/stat.h>*/
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <string.h>
@@ -50,6 +47,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #endif
                                   
 #include <setjmp.h>
+#include "plug.h"
 #include "concurnet.h"
 #include "curerrmsg.h"
 #include "cecil.h"
@@ -114,9 +112,6 @@ typedef unsigned char   EIF_BOOLEAN;
 #define constant_crash_info_len 		1024 /* buffer length for crash info */
 #define constant_size_of_data_buf 		1024 /* data buffer length in con_make */
 #define constant_size_of_line_buf 		1024 /* line buffer length in con_make */
-#define constant_num_of_remote_servers 	50 /* max number of remote servers defined in configure file */
-#define constant_num_of_hosts		  	50 /* max number of hosts defined in configure file */
-#define constant_num_of_host_levels	  	20 /* max number of host levels defined in configure file */
 #define constant_max_len_of_int_in_str 	30
 #define constant_max_server_name_len 	50
 #define constant_max_level_name_len 	50
@@ -194,6 +189,7 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_procedure_with_ack				1
 #define	constant_query							2
 #define	constant_attribute						3
+#define	constant_deep_import					4
 
 /*----------------------------------------------------------*/
 /*    The following define exception constants              */
@@ -209,8 +205,6 @@ typedef unsigned char   EIF_BOOLEAN;
 #define exception_cant_set_up_connection		8
 #define exception_out_of_memory         		9
 #define exception_void_separate_object  		11
-
-#define exception_sep_obj_not_visible     		10
 
 #define CONCURRENT_CRASH        -101 
 /* the Eiffel exception type raised by Concurrency-Library. */
@@ -309,6 +303,7 @@ typedef unsigned char   EIF_BOOLEAN;
 
 #endif
  
+#define is_sep_obj(ref) _concur_sep_obj_dtype == Dtype(ref)
 
 /*----------------------------------------------------------*/
 /*    The following define STRUCTUREs used by the C-library */
@@ -450,6 +445,7 @@ typedef struct _rs {
 char name[constant_max_server_name_len+1];
 char host[constant_max_host_name_len+1];
 EIF_INTEGER port;
+struct _rs *next;
 } REMOTE_SERVER;
 
 typedef struct _net_res {
@@ -457,11 +453,14 @@ char host[constant_max_host_name_len+1];
 EIF_INTEGER capability;
 char directory[constant_max_directory_len+1];
 char executable[constant_max_executable_len+1];
+struct _net_res  *next;
 } RESOURCE;
 
 typedef struct _rl {
 char name[constant_max_level_name_len+1];
-EIF_INTEGER indicator; /* index to the array of RESOURCE */
+RESOURCE *host_list;
+RESOURCE *end_of_host_list;
+struct _rl *next;
 } RESOURCE_LEVEL;
 
 typedef struct _my_string {
@@ -575,7 +574,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 /* The following MACROs are defined for Concurrent Compiler */
 /*----------------------------------------------------------*/
 
-/* CURIS(config, cur) initialize the local server. "config" is the
+/* CURIS initialize the local server. "config" is the
  *        configure file's name, "cur" is the container of the
  *        root object on the processor.
  * CURCCI(class, feature)  initialize for creating separate child 
@@ -659,10 +658,10 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
  *			Try again when wake up. 
  */ 
 
-#define CURIS(config, cur) \
+#define CURIS \
 	strcpy(_concur_executable, argv[0]); \
 	if (_concur_root_of_the_application) { \
-		make_server(config); \
+		make_server(); \
 		strcpy(_concur_class_name_of_root_obj, eifname(Dtype(root_obj))); \
 	} \
 	else { \
@@ -677,7 +676,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
  \
         _concur_parent = setup_connection(atoi(argv[2]), atoi(argv[3])); \
  \
-		make_server(config); \
+		make_server(); \
  \
         _concur_command = constant_sep_child; \
         _concur_para_num = 0; \
@@ -692,7 +691,6 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 		_concur_paras_size = 0; \
 #endif */\
  \
-		/*make_server(config);*/ \
         tell_parent_info_of_myself(argv[2], atoi(argv[3])); \
  \
 /* #ifdef COMBINE_CREATION_WITH_INIT \
@@ -707,7 +705,11 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 	
 #define CURCCI(class,feature) \
 		_concur_is_creating_sep_child = 1; \
-		sprintf(_concur_crash_info, CURERR9, _concur_hosts[_concur_resource_index].host, _concur_scoop_dog_port); \
+		if (!_concur_host_index) { \
+			sprintf(_concur_crash_info, CURAPPERR43); \
+			c_raise_concur_exception(exception_configure_syntax_error); \
+		};  \
+		sprintf(_concur_crash_info, CURERR9, _concur_host_index->host, _concur_scoop_dog_port); \
 		_concur_scoop_dog = setup_connection(c_get_addr_from_name(dispatch_to()), _concur_scoop_dog_port); \
 		_concur_crash_info[0] = '\0'; \
         _concur_command = constant_create_sep_obj; \

@@ -367,7 +367,7 @@ rt_private void interpret(int flag, int where)
 	EIF_TYPE_ID sep_obj_id;			/* The data type id of the special class
 									* for separate object proxy.
 									*/
-	sep_obj_id = eif_type_id ("SEP_OBJ");
+	sep_obj_id = _concur_sep_obj_dtype;
 #endif
 #endif
 

@@ -169,10 +169,17 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	dle_zeroc = dle_level;		/* DLE: New value of DLE frozen level */
 
 	/* Allocation of variable `esystem' */
+#if CONCURRENT_EIFFEL
+	esystem = (struct cnode *) cmalloc((count+1) * sizeof(struct cnode));
+	if (esystem == (struct cnode *) 0)
+		enomem();				/* Not enough room */
+	bcopy(fsystem, esystem, (scount+1) * sizeof(struct cnode));
+#else
 	esystem = (struct cnode *) cmalloc(count * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
 		enomem();				/* Not enough room */
 	bcopy(fsystem, esystem, scount * sizeof(struct cnode));
+#endif
 
 	/* Allocation of the variable `ecall' */
 	ecall = (int32 **) cmalloc(count * sizeof(int32 *));

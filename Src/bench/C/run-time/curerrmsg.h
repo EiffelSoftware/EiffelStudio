@@ -89,12 +89,17 @@
 #define CURAPPERR30 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect host name."
 #define CURAPPERR31 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect port number/directory."
 #define CURAPPERR32 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect directory."
-#define CURAPPERR33 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect at least one host in each level."
+#define CURAPPERR33 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect at least one host in each group."
 #define CURAPPERR34 "    Syntax error in configure file's CREATION part around line: \n%s\n-- expect 'end'."
 #define CURAPPERR35 "    Syntax error in configure file for <%s>: %s\n-- executable file's name should be FULL name(from root)."
 #define CURAPPERR36 "    Syntax error in configure file for <%s>: %s\n-- executable file's name should not be empty."
 #define CURAPPERR37 "    Syntax Error in configure file around line:\n%s\n-- Key word `external' or `default' or nothing is expected!"
 
+#define CURAPPERR39	"    Host <%s> does not exist in group <%s> or its capacity is less than 1."
+#define CURAPPERR40	"    Group <%s> does not exist in configure table."
+#define CURAPPERR41	"    Group <%s> does not contain a host whose capacity is greater than 0."
+#define CURAPPERR42 "    Syntax error in configure file's CREATION part: expect at least one group."
+#define CURAPPERR43 "    Invalid cursor of configure table. The configure table is empty."
 
 /* The following are error messages whose causes are not clear  */
 
@@ -182,6 +187,18 @@
 #define CURERR14	"    Error happened when execute separate feature/attribute `%s'\nof `%s'."
 #define CURERR15	"   Attribute %s is not found in class %s."
 #define CURERR16	"    Not implemented type(0x%x) of separate attribute."
+#define CURERR24	"    Can't find feature %s(in class %s)'s pattern ID."
+
+
+/*--------------------------------------------------------*/
+/*     Error Message From : sep_obj.c                     */
+/*--------------------------------------------------------*/
+
+/* The following are implementation error messages */
+#define CURIMPERR25	"    No memory to create Eiffel separate object proxy."
+
+/* The following are error messages whose causes are not clear  */
+#define CURERR23	"    Can't make network connection with host %s at port %d."
 
 
 /*--------------------------------------------------------*/
@@ -190,17 +207,17 @@
 
 /* The following are implementation error messages */
 /*
-#define CURIMPERR25	
+#define CURIMPERR26	
 */
 
 /* The following are application error messages */
 /*
-#define CURAPPERR39
+#define CURAPPERR44
 */
 
 /* The following are error messages whose causes are not clear  */
 /*
-#define CURERR23	
+#define CURERR25	
 */
 
 #endif

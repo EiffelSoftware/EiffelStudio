@@ -24,7 +24,6 @@ cluster
 	iteration (base):          "$/structures/iteration";
 	kernel (base):             "$/kernel";
 	list (base):               "$/structures/list";
-	obsolete (base):           "$/structures/obsolete";
 	set (base):                "$/structures/set";
 	sort (base):               "$/structures/sort";
 	storage (base):            "$/structures/storage";
@@ -257,7 +256,7 @@ external
                 "$(BENCH)/C/liman/lm/liblm.a",
 	        "$(BENCH)/C/liman/shared/libshared.a",
         	"$(BENCH)/C/idrs/libidr.a",
-		"-lXm -lXt -lX11 -lXpm";
+		"-lXm -lXt -lX11 -lXpm -lXext -lXp";
 
 end
 

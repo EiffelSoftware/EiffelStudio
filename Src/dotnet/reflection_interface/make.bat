@@ -1,12 +1,11 @@
 @echo off
-echo
 
 mkdir bin
 
-echo *************************************
-echo *    Generating `ISE.Reflection.Formatter.dll'     *
-echo *************************************
-echo
+echo ***********************************************
+echo *  Generating `ISE.Reflection.Formatter.dll'  *
+echo ***********************************************
+
 cd ISE.Reflection.Emitter
 copy ..\..\..\tools\emitter\formatter.cs .
 call make_formatter.bat
@@ -15,18 +14,18 @@ del formatter.cs
 del ISE.Reflection.Formatter.dll
 cd ..
 
-echo **********************************************************
-echo *    Generating Eiffel class corresponding to `ISE.Reflection.Formatter.dll'     *
-echo ********************************************************** 
-echo
+echo *****************************************************************
+echo *  Generating Eiffel class from `ISE.Reflection.Formatter.dll'  *
+echo ***************************************************************** 
+
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.Formatter.dll /d .\generated\formatter_generated
 
 set PATH=%PATH%;%ISE_EIFFEL%\bench\spec\windows\bin
 
-echo ******************************************
-echo *    Generating `ISE.Reflection.EiffelComponents.dll'     *
-echo ******************************************
-echo
+echo ******************************************************
+echo *  Generating `ISE.Reflection.EiffelComponents.dll'  *
+echo ******************************************************
+
 cd ISE.Reflection.EiffelComponents
 cd ace_file
 ec -ace ace.ace -batch 
@@ -35,17 +34,17 @@ copy .\ISE.Reflection.EiffelComponents.dll ..\..\bin
 cd ..
 cd ..
 
-echo ***************************************************************
-echo *    Emitting Eiffel classes corresponding to `ISE.Reflection.EiffelComponents.dll'     *
-echo ***************************************************************
-echo
+echo ************************************************************************
+echo *  Emitting Eiffel classes from `ISE.Reflection.EiffelComponents.dll'  *
+echo ************************************************************************
+
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.EiffelComponents.dll /d .\generated\eiffel_components_generated
 del .\generated\eiffel_components_generated\tuple.e
 
-echo **************************************************
-echo *    Generating `ISE.Reflection.EiffelAssemblyCacheNotifier.dll'     *
-echo **************************************************
-echo
+echo *****************************************************************
+echo *  Generating `ISE.Reflection.EiffelAssemblyCacheNotifier.dll'  *
+echo *****************************************************************
+
 cd ISE.Reflection.EiffelAssemblyCacheNotifier
 cd ace_file
 ec -ace ace.ace -batch 
@@ -54,17 +53,17 @@ copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\bin
 cd ..
 cd ..
 
-echo **********************************************************************
-echo *    Emitting Eiffel classes corresponding to `ISE.Reflection.EiffelAssemblyCacheNotifier.dll'    *
-echo **********************************************************************
-echo
+echo ***********************************************************************************
+echo *  Emitting Eiffel classes from `ISE.Reflection.EiffelAssemblyCacheNotifier.dll'  *
+echo ***********************************************************************************
+
 copy .\bin\ISE.Reflection.EiffelComponents.dll ..\..\tools\emitter
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll /d .\generated\notifier_generated
 
-echo **************************************************
-echo *    Generating `ISE.Reflection.Support.dll'     *
-echo **************************************************
-echo
+echo *********************************************
+echo *  Generating `ISE.Reflection.Support.dll'  *
+echo *********************************************
+
 cd ISE.Reflection.Support
 cd ace_file
 ec -ace ace.ace -batch 
@@ -73,17 +72,17 @@ copy .\ISE.Reflection.Support.dll ..\..\bin
 cd ..
 cd ..
 
-echo **********************************************************************
-echo *    Emitting Eiffel classes corresponding to `ISE.Reflection.Support.dll'    *
-echo **********************************************************************
-echo
+echo ****************************************************************
+echo *   Emitting Eiffel classes from `ISE.Reflection.Support.dll'  *
+echo ****************************************************************
+
 copy bin\ISE.Reflection.Formatter.dll ..\..\tools\emitter
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.Support.dll /d .\generated\support_generated
 
-echo **************************************************
-echo *    Generating `ISE.Reflection.EiffelAssemblyCacheHandler.dll'     *
-echo **************************************************
-echo
+echo ******************************************************************
+echo *    Generating `ISE.Reflection.EiffelAssemblyCacheHandler.dll'  *
+echo ******************************************************************
+
 cd ISE.Reflection.EiffelAssemblyCacheHandler
 cd ace_file
 ec -ace ace.ace -batch 
@@ -92,18 +91,18 @@ copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\bin
 cd ..
 cd ..
 
-echo **********************************************************************
-echo *    Emitting Eiffel classes corresponding to `ISE.Reflection.EiffelAssemblyCacheHandler.dll'    *
-echo **********************************************************************
-echo
+echo **********************************************************************************
+echo *  Emitting Eiffel classes from `ISE.Reflection.EiffelAssemblyCacheHandler.dll'  *
+echo **********************************************************************************
+
 copy .\bin\ISE.Reflection.Support.dll ..\..\tools\emitter
 copy .\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\tools\emitter
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll /d .\generated\eiffel_assembly_cache_generated
 
-echo **************************************************
-echo *    Generating `ISE.Reflection.CodeGenerator.dll'     *
-echo **************************************************
-echo
+echo ***************************************************
+echo *  Generating `ISE.Reflection.CodeGenerator.dll'  *
+echo ***************************************************
+
 cd ISE.Reflection.CodeGenerator
 cd ace_file
 ec -ace ace.ace -batch 
@@ -112,17 +111,17 @@ copy .\ISE.Reflection.CodeGenerator.dll ..\..\bin
 cd ..
 cd ..
 
-echo **********************************************************************
-echo *    Emitting Eiffel classes corresponding to `ISE.Reflection.CodeGenerator.dll'    *
-echo **********************************************************************
-echo
+echo *********************************************************************
+echo *  Emitting Eiffel classes from `ISE.Reflection.CodeGenerator.dll'  *
+echo *********************************************************************
+
 copy .\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\tools\emitter
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.CodeGenerator.dll /d .\generated\code_generator_generated
 
-echo **************************************************
-echo *    Generating `ISE.Reflection.ReflectionInterface.dll'     *
-echo **************************************************
-echo
+echo *********************************************************
+echo *  Generating `ISE.Reflection.ReflectionInterface.dll'  *
+echo *********************************************************
+
 cd ISE.Reflection.ReflectionInterface
 cd ace_file
 ec -ace ace.ace -batch 
@@ -131,10 +130,10 @@ copy .\ISE.Reflection.ReflectionInterface.dll ..\..\bin
 cd ..
 cd ..
 
-echo **********************************************************************
-echo *    Emitting Eiffel classes corresponding to `ISE.Reflection.ReflectionInterface.dll'    *
-echo **********************************************************************
-echo
+echo **************************************************************************
+echo *  Emitting Eiffel classes from `ISE.Reflection.ReflectionInterface.dll' *
+echo **************************************************************************
+
 ..\..\tools\emitter\emitter.exe /t .\bin\ISE.Reflection.ReflectionInterface.dll /d .\generated\reflection_interface_generated
 del ..\..\tools\emitter\ISE.Reflection.EiffelComponents.dll
 del ..\..\tools\emitter\ISE.Reflection.EiffelAssemblyCacheNotifier.dll
@@ -142,19 +141,19 @@ del ..\..\tools\emitter\ISE.Reflection.Support.dll
 del ..\..\tools\emitter\ISE.Reflection.EiffelAssemblyCacheHandler.dll
 del ..\..\tools\emitter\ISE.Reflection.Formatter.dll
 
-echo **************************************************
-echo *    Generating `ISE.AssemblyManager.WindowsDirectoryExtractor.dll'     *
-echo **************************************************
-echo
+echo ********************************************************************
+echo *  Generating `ISE.AssemblyManager.WindowsDirectoryExtractor.dll'  *
+echo ********************************************************************
+
 cd assembly_manager
 cd gac_browser
 call make.bat
 copy ISE.AssemblyManager.WindowsDirectoryExtractor.dll ..\..\bin
 
-echo **************************************************
-echo *    Generating `FolderBrowser.dll' and `FolderDialog.dll'     *
-echo **************************************************
-echo
+echo *************************************************************
+echo * Generating `FolderBrowser.dll' and `FolderDialog.dll'     *
+echo *************************************************************
+
 cd ..
 cd folder_dialog
 cd Core
@@ -167,10 +166,10 @@ cd Clib
 call make_finalize.bat
 cd ..
 
-echo **************************************************
-echo *    Generating `folder_browser.dll'     *
-echo **************************************************
-echo
+echo *************************************
+echo *  Generating `folder_browser.dll'  *
+echo *************************************
+
 ec -ace Ace.ace -batch -finalize
 cd EIFGEN
 cd F_code
@@ -182,10 +181,10 @@ cd ..
 cd ..
 cd ..
 
-echo **************************************************
-echo *    Generating `ISE.Reflection.Emitter.exe'     *
-echo **************************************************
-echo
+echo *********************************************
+echo *  Generating `ISE.Reflection.Emitter.exe'  *
+echo *********************************************
+
 cd ISE.Reflection.Emitter
 copy ..\..\..\tools\emitter\argparser.cs .
 copy ..\..\..\tools\emitter\eiffelclassfactory.cs .
@@ -218,10 +217,10 @@ del undefineclauses.cs
 
 cd ..
 
-echo **************************************************
-echo *    Generating `ISE.AssemblyManager.exe'     *
-echo **************************************************
-echo
+echo ******************************************
+echo *  Generating `ISE.AssemblyManager.exe'  *
+echo ******************************************
+
 cd assembly_manager
 cd ace_file
 ec -ace ace.ace -batch 

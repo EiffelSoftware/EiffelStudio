@@ -17,7 +17,7 @@ LIBS =  /OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
 #############################################################
 # Release
 #############################################################
-CFLAGS = $(CFLAGS) /DNDEBUG /W3 /Ox /GD
+CFLAGS = $(CFLAGS) /DNDEBUG /W3 /Ox
 
 $(PROJ).DLL: $(OBJS)
     echo >NUL @<<$(PROJ).CRF

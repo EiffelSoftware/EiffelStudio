@@ -53,11 +53,11 @@ feature -- Setting
 
 	reset_modes is
 		do
-			is_quick_melt := False;
-			is_freezing := False;
-			is_finalizing := False;
-			is_extendible := False;
-			is_extending := False;
+			is_quick_melt := False
+			is_freezing := False
+			is_finalizing := False
+			is_extendible := False
+			is_extending := False
 			is_precompiling := False
 		end;
 

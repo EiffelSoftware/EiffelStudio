@@ -28,17 +28,21 @@ mtccflags=$ccflags
 
 cppflags=''
 ldflags='-EL -X -N -warn-common'
+mtldsharedflags='-EL -X -N -warn-common -shared -o'
+ldsharedflags='-EL -X -N -warn-common -shared -o'
 
 libs=''
 mtlibs=''
 
 prefix='lib'
+shared_prefix='lib'
 mt_prefix='mt'
 concurrent_prefix='c'
 eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
-command_makefile='make'
+shared_suffix='.so'
+command_makefile='make -f'
 
 optimize='-O3'
 large=''

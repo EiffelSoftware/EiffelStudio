@@ -36,10 +36,8 @@ feature -- Properties
 	is_attribute: BOOLEAN;
 			-- Is Current feature an attribute?
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN is do end
 			-- Is Current feature a constant attribute ?
-		do
-		end
 
 	is_deferred: BOOLEAN;
 			-- Is Current feature deferred?
@@ -47,10 +45,8 @@ feature -- Properties
 	is_effective: BOOLEAN;
 			-- Is Current feature effecting an inherited feature?
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN is do end
 			-- Is Current feature a once?
-		do
-		end
 
 	is_expanded: BOOLEAN;
 			-- Is Current feature an expanded one?

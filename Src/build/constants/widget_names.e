@@ -201,6 +201,7 @@ feature -- Widget Names used in context editor and catalog
 	Radio_box_name: STRING is "Radio box";
 	Read_only_name: STRING is "Read only";
 	Reference_name: STRING is "Reference";
+	Reset_font_name: STRING is "Reset font";
 	Right_arrow_name: STRING is "Right arrow";
 	Right_name: STRING is "Right";
 	Row_name: STRING is "Row";
@@ -282,6 +283,7 @@ feature -- Names for Widget Windows
 	Create_project_window: STRING is "Create Project";
 	Error_window: STRING is "Error Window";
 	Event_Catalog: STRING is "Event Catalog"
+	File_popup_for_command: STRING is "Search for class name";
 	Help_window: STRING is "Help Window";
 	History_window: STRING is "History Window";
 	Import_window: STRING is "Import Project";
@@ -290,6 +292,7 @@ feature -- Names for Widget Windows
 	Namer_window: STRING is "Namer Window";
 	Question_window: STRING is "Question Window";
 	Save_project_as_window: STRING is "Save project as...";
+	Select_toolkit_popup: STRING is "Select Toolkit";
 	State_Editor: STRING is "State Editor";
 	Translation_editor: STRING is "Translation Editor";
 	Warning_window: STRING is "Warning Window";
@@ -300,6 +303,7 @@ feature -- Names for Main Panel
 	Create_project_label: STRING is "Creating new project...";
 	Interface_label: STRING is "Interface";
 	Interface_only_label: STRING is "Interface only";
+	Enter_command_class_name_label: STRING is "Enter command class name";
 	Retrieving_project_label: STRING is "Retrieving project...";
 	Visibility_label:STRING is "Visibility"
 
@@ -307,6 +311,7 @@ feature -- Translation editor
 
 	translation_name: STRING is "Translation"
 	negate_name: STRING is "negate"
+	only_name: STRING is "only"
 	Save_name: STRING is "Save"
 
 feature -- Application editor

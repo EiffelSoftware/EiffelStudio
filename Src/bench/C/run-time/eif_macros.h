@@ -442,7 +442,8 @@ RT_LNK int fcount;
 
 /* Other macros used to handle specific needs:
  *  RTMS(s) creates an Eiffel string from a C manifest string s.
- *  RTMS(s,c) creates an Eiffel string from a C manifest string s with length c.
+ *  RTMS_EX(s,c) creates an Eiffel string from a C manifest string s with length c.
+ *  RTSOF(s,o) returns the C pointer of the address s + o.
  *  RTST(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
  *  RTXA(x,y) copies 'x' into expanded 'y' with exception if 'x' is void.
  *  RTEQ(x,y) returns true if 'x' = 'y'
@@ -452,6 +453,7 @@ RT_LNK int fcount;
  */
 #define	RTMS(s) makestr(s,strlen(s))
 #define	RTMS_EX(s,c) makestr(s,c)
+#define RTSOF(s,o) ((EIF_CHARACTER *)(s)+(o))
 #define	RTST(c,d,i,n) striparr(c,d,i,n);
 #define RTXA(x,y) xcopy(x, y)
 #define RTEQ(x,y) xequal(x, y)

@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TOOL_BAR) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_TOOL_BAR_SEPARATOR_IMP! implementation.make

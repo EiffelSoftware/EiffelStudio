@@ -10,6 +10,7 @@ class OPEN_PROJECT
 inherit
 
 	SHARED_EIFFEL_PROJECT;
+	SHARED_APPLICATION_EXECUTION;
 	PROJECT_CONTEXT;
 	COMMAND_W;
 	LICENCED_COMMAND
@@ -196,11 +197,13 @@ feature -- Project Initialization
 	init_project is
 			-- Initialize project.
 		local
-			e_displayer: DEFAULT_ERROR_DISPLAYER;
+			e_displayer: BENCH_ERROR_DISPLAYER;
 			g_degree_output: GRAPHICAL_DEGREE_OUTPUT;
 		do
 			!! e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer);
+			Application.set_interrupt_number (
+				Project_resources.interrupt_every_n_instructions.actual_value);
 			if not Project_resources.graphical_output_disabled.actual_value then
 				!! g_degree_output;
 				Eiffel_project.set_degree_output (g_degree_output)

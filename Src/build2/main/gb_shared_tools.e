@@ -75,7 +75,7 @@ feature -- Access
 		end
 		
 	history_dialog: GB_HISTORY_DIALOG is
-			--
+			-- `Result' is history dialog of system.
 		once
 			Result := (create {GB_SHARED_HISTORY}).history.history_dialog
 		end

@@ -54,7 +54,7 @@ feature -- Access
 			l.search (undo_list.item)
 			Result := l
 		ensure
-			Result /= undo_list
+			undo_pairs_not_void: Result /= undo_list
 		end
 
 feature -- Basic operations
@@ -63,12 +63,12 @@ feature -- Basic operations
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 		require
-			action /= Void
-			undo_procedure /= Void
-			conforms (action, "PROCEDURE [ANY, TUPLE []]")
-			or conforms_to_tuple_of_array_of (action, "PROCEDURE [ANY, TUPLE []]")
-			conforms (undo_procedure, "PROCEDURE [ANY, TUPLE []]")
-			or conforms_to_tuple_of_array_of (undo_procedure, "PROCEDURE [ANY, TUPLE []]")
+			action_not_void: action /= Void
+			undo_procedure_not_void: undo_procedure /= Void
+			action_valid: conforms (action, "PROCEDURE [ANY, TUPLE []]")
+				or conforms_to_tuple_of_array_of (action, "PROCEDURE [ANY, TUPLE []]")
+			undo_procedure_valid: conforms (undo_procedure, "PROCEDURE [ANY, TUPLE []]")
+				or conforms_to_tuple_of_array_of (undo_procedure, "PROCEDURE [ANY, TUPLE []]")
 		local
 			t: TUPLE
 			action_proc: PROCEDURE [ANY, TUPLE []]
@@ -123,9 +123,9 @@ feature -- Basic operations
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 		require
-			an_action /= Void
-			an_undo_procedure /= Void
-			a_name /= Void
+			a_name_not_void: a_name /= Void
+			an_action_not_void: an_action /= Void
+			an_undo_procedure_not_void: an_undo_procedure /= Void
 		do
 			do_undoable (an_action, an_undo_procedure)
 			undo_list.last.set_name (a_name)
@@ -134,7 +134,7 @@ feature -- Basic operations
 	undo is
 			-- Reverse the most recent reversable action.
 		require
-			not undo_exhausted
+			not_undo_exhausted: not undo_exhausted
 		do
 			undo_list.item.undo
 			undo_list.back
@@ -143,13 +143,13 @@ feature -- Basic operations
 				undo_exhausted_actions.call (Void)
 			end
 		ensure
-			undo_list.index = old undo_list.index - 1
+			updated: undo_list.index = old undo_list.index - 1
 		end
 
 	redo is
 			-- Reperform the most recently reversed action.
 		require
-			not redo_exhausted
+			not_redo_exhausted: not redo_exhausted
 		do
 			undo_list.forth
 			undo_list.item.redo
@@ -158,7 +158,7 @@ feature -- Basic operations
 				redo_exhausted_actions.call (Void)
 			end
 		ensure
-			undo_list.index = old undo_list.index + 1
+			updated: undo_list.index = old undo_list.index + 1
 		end
 
 feature -- Element change
@@ -263,8 +263,8 @@ feature {NONE} -- Implementation
 	procedure_array_call (array: ARRAY [ANY]) is
 			-- Call all procedures in `array'.
 		require
-			array /= Void
-			conforms_to_array_of (array, "PROCEDURE [ANY, TUPLE []]")
+			array_not_void: array /= Void
+			array_valid: conforms_to_array_of (array, "PROCEDURE [ANY, TUPLE []]")
 		local
 			i: INTEGER
 			p: PROCEDURE [ANY, TUPLE []]
@@ -282,10 +282,10 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	undo_list /= Void
-	do_actions /= Void
-	undo_actions /= Void
-	undo_exhausted_actions /= Void
-	redo_exhausted_actions /= Void
+	undo_list_not_void: undo_list /= Void
+	do_actions_not_void: do_actions /= Void
+	undo_actions_not_void: undo_actions /= Void
+	undo_exhausted_actions_not_void: undo_exhausted_actions /= Void
+	redo_exhausted_actions_not_void: redo_exhausted_actions /= Void
 
 end -- class UNDO_CONTEXT

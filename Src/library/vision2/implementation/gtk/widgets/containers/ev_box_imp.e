@@ -35,6 +35,12 @@ feature -- Access
 			Result := c_gtk_container_border_width (widget)
 		end
 
+	spacing: INTEGER is
+			-- Spacing between the objects in the box
+		do
+			Result := c_gtk_box_spacing (widget)
+		end
+	
 feature -- Element change (box specific)
 	
 	set_homogeneous (flag: BOOLEAN) is

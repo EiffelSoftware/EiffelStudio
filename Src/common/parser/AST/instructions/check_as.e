@@ -17,7 +17,8 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			check_list ?= yacc_arg (0);
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		end;
 
 feature -- Properties

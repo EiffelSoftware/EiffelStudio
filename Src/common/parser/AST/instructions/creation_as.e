@@ -1,9 +1,9 @@
 indexing
 
-    description: 
+	description: 
 		"AST representation of a clause clause";
-    date: "$Date$";
-    revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CREATION_AS
 
@@ -19,7 +19,8 @@ feature {NONE} -- Initialization
 			type ?= yacc_arg (0);
 			target ?= yacc_arg (1);
 			call ?= yacc_arg (2);
-			start_position := yacc_position
+			start_position := yacc_position;
+			line_number    := yacc_line_number
 		ensure then
 			target_exists: target /= Void;
 		end;

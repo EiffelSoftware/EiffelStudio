@@ -2208,6 +2208,53 @@ end;
 			rout_table.write;
 		end;
 
+    memory_class: CLASS_C is
+        local
+            nbr, i: INTEGER;
+			class_c: CLASS_C
+        once
+            from
+                nbr := id_array.count;
+                i := 1
+            until
+                i > nbr or else (Result /= Void)
+            loop
+                class_c := id_array.item (i);
+                if (class_c /= Void) and class_c.class_name.is_equal ("memory") then
+                    Result := class_c
+                else
+                    i := i + 1;
+                end;
+            end;
+        end;
+
+    memory_descendants: LINKED_LIST [CLASS_C] is
+            -- Memory descendants.
+        once
+            !!Result.make;
+            if memory_class /= Void then
+                formulate_mem_descendants (memory_class, Result);
+            end;
+        end;
+ 
+    formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
+        local
+            descendants: LINKED_LIST [CLASS_C];
+            d: CLASS_C
+        do
+            from
+                descendants := c.descendants;
+                descendants.start
+            until
+                descendants.after
+            loop
+				d := descendants.item;
+                desc.add (d);
+                formulate_mem_descendants (d, desc);
+                descendants.forth;
+            end;
+        end;
+ 
 	generate_dispose_table is
 			-- Generate dispose table
 		local
@@ -2333,6 +2380,15 @@ end;
 				-- Dynamic type of class ARRAY[ANY]
 			Plug_file.putstring ("int arr_dtype = ");
 			Plug_file.putint (arr_type_id - 1);
+			Plug_file.putstring (";%N");
+
+				--	Dynmaic type of class MEMORY (if compiled) 
+			Plug_file.putstring ("int mem_dtype = ");
+			if memory_class /= Void then
+				Plug_file.putint (memory_class.types.first.type_id - 1);
+			else
+				Plug_file.putstring ("-1");
+			end;
 			Plug_file.putstring (";%N");
 
 				-- Dynamic type of class BIT_REF

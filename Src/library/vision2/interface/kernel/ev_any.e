@@ -138,8 +138,6 @@ feature {EV_ANY} -- Implementation
 		end
 
 	initialize is
-			--| FIXME if no one redefines this we can remove it.
-			--| The interface object's should not need any state anyway.
 			-- Mark `Current' as initialized.
 			-- This must be called during the creation procedure
 			-- to satisfy the `is_initialized' invariant.
@@ -266,6 +264,11 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/02 21:00:01  oconnor
+--| Removed FIXME about possible removal from initialize,
+--| initialize is needed by platform independant widgets
+--| and by users wishing to subclass vision classes.
+--|
 --| Revision 1.12  2000/03/01 03:18:27  oconnor
 --| reverted last commit which was in error
 --|

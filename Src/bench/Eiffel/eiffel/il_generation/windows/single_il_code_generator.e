@@ -451,9 +451,9 @@ feature -- IL Generation
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
 		do
-			if feat.rout_id_set.has (internal_duplicate_rout_id) then
+			if feat.rout_id_set.has (standard_twin_rout_id) then
 				generate_feature (feat, False, False, False)
-				generate_feature_internal_duplicate (feat)
+				generate_feature_standard_twin (feat)
 			else
 				if not is_frozen_class then
 						-- Generate static definition of `feat'.
@@ -548,8 +548,8 @@ feature -- IL Generation
 				end
 			end
 
-			if feat.feature_name_id = feature {PREDEFINED_NAMES}.Internal_duplicate_name_id then
-				generate_feature_internal_duplicate (feat)
+			if feat.feature_name_id = feature {PREDEFINED_NAMES}.Standard_twin_name_id then
+				generate_feature_standard_twin (feat)
 			else
 				generate_feature_il (feat, dup_feat,
 					implemented_type (feat.written_in,

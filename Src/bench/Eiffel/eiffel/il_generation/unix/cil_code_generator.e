@@ -75,8 +75,8 @@ feature -- Access
 	current_class_type: CLASS_TYPE
 			-- Currently class type being handled.
 
-	internal_duplicate_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
-			-- Routine ID of `internal_duplicate', `finalize' and `to_string' from ANY.
+	standard_twin_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
+			-- Routine ID of `standard_twin', `finalize' and `to_string' from ANY.
 	
 	last_parents: ARRAY [INTEGER]
 			-- List of parents last described after call to `update_parents'.
@@ -619,8 +619,8 @@ feature -- IL Generation
 		do
 		end
 
-	generate_feature_internal_duplicate (feat: FEATURE_I) is
-			-- Generate IL code for feature `internal_duplicate' from ANY.
+	generate_feature_standard_twin (feat: FEATURE_I) is
+			-- Generate IL code for feature `standard_twin' from ANY.
 		require
 			feat_not_void: feat /= Void
 		do

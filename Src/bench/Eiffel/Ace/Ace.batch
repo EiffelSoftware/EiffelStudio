@@ -26,6 +26,7 @@ cluster
 		liman_common:		"$BENCH/Eiffel/limand/common";
 		liman_bench:		"$BENCH/Eiffel/limand/bench";
 		beurk:				"$BENCH/Eiffel/beurk";
+		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 		debugclas:			"$BENCH/Eiffel/debug";
 

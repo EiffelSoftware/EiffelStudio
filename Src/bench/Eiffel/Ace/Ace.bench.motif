@@ -28,6 +28,7 @@ cluster
 		liman_client:		"$BENCH/Eiffel/limand/client";
 		liman_shared:		"$BENCH/Eiffel/limand/shared";
 		beurk:				"$BENCH/Eiffel/beurk";
+		compiler_support:	"$BENCH/Eiffel/support";
 		replication:		"$BENCH/Eiffel/eiffel/replication";
 
 	-- General compilation:

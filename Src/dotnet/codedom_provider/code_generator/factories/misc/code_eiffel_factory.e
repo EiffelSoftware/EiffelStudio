@@ -16,6 +16,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
+		export
+			{NONE} all
+		end
+
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_compile_unit (a_source: SYSTEM_DLL_CODE_COMPILE_UNIT) is
@@ -40,7 +45,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			until
 				i = l_count
 			loop
-				if not has (l_referenced_assemblies.item (i)) then
+				if not has_file (l_referenced_assemblies.item (i)) then
 					add_referenced_assembly (l_referenced_assemblies.item (i))
 					if not assembly_added then
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
@@ -102,12 +107,16 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
 			l_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
 			l_type_reference: CODE_TYPE_REFERENCE
-			l_name: STRING
 			l_type_attributes: TYPE_ATTRIBUTES
-			l_deferred: BOOLEAN
-			l_frozen: BOOLEAN
-			l_expanded: BOOLEAN
+			l_deferred, l_frozen, l_expanded: BOOLEAN
 			l_generated_type: CODE_GENERATED_TYPE
+			l_deferred_type: CODE_DEFERRED_TYPE
+			l_generated_types: LIST [CODE_GENERATED_TYPE]
+			l_all_features: HASH_TABLE [CODE_FEATURE, STRING]
+			l_feature: CODE_FEATURE
+			l_name, l_unique_name, l_counter: STRING
+			l_parents: CODE_PARENT_COLLECTION
+			l_is_interface: BOOLEAN
 		do
 			create l_namespace.make (a_source.name)
 			set_current_namespace (l_namespace)
@@ -125,6 +134,8 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			end
 			l_types := a_source.types
 			if l_types /= Void then
+
+				-- First initialize generated types from codedom types
 				from
 					l_count := l_types.count
 					i := 0
@@ -138,7 +149,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_expanded := l_type.is_struct
 					l_type_reference := Type_reference_factory.type_reference_from_declaration (l_type, l_name)
 					if l_deferred then
-						create {CODE_DEFERRED_TYPE} l_generated_type.make (l_type_reference)
+						create l_deferred_type.make (l_type_reference)
+						if l_type.is_interface then
+							l_deferred_type.set_is_interface
+						end
+						l_generated_type := l_deferred_type
 					end
 					if l_frozen then
 						if l_expanded then
@@ -154,8 +169,9 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					Resolver.add_generated_type (l_generated_type)
 					i := i + 1
 				end
+				
+				-- Then process generated types and put result in generated namespace
 				from
-					l_count := l_types.count
 					i := 0
 				until
 					i = l_count
@@ -163,6 +179,48 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					code_dom_generator.generate_type_from_dom (l_types.item (i))
 					l_namespace.types.extend (last_type)
 					i := i + 1
+				end
+				
+				-- Finally check for rename clauses, this needs to be done after the generation is complete
+				-- as we need the class hierarchy
+				from
+					l_generated_types := l_namespace.types
+					l_generated_types.start
+				until
+					l_generated_types.after
+				loop
+					l_generated_type := l_generated_types.item
+					l_all_features := l_generated_type.all_features
+					from
+						l_all_features.start
+					until
+						l_all_features.after
+					loop
+						l_feature := l_all_features.item_for_iteration
+						l_name := l_feature.eiffel_name
+						l_parents := l_generated_type.parents
+						if not l_feature.is_redefined and l_parents.has_feature (l_name) then
+							l_type_reference := l_parents.parent_type_with_homonym
+							Resolver.search (l_type_reference)
+							if Resolver.found then
+								l_deferred_type ?= Resolver.found_type
+								l_is_interface := l_deferred_type /= Void and then l_deferred_type.is_interface
+							else
+								l_is_interface := l_type_reference.dotnet_type /= Void and then l_type_reference.dotnet_type.is_interface
+							end
+							if not l_is_interface then
+								-- Only add rename clause if parent is not an interface as otherwise method is not flagged as being redefined
+								l_counter := rename_counter.out
+								create l_unique_name.make (l_name.count + l_counter.count + 1)
+								l_unique_name.append (l_name)
+								l_unique_name.append_character ('_')
+								l_unique_name.append (l_counter)
+								l_generated_type.add_rename_clause (l_type_reference, Type_reference_factory.type_reference_from_code (l_generated_type).member_from_code (l_feature), l_unique_name)
+							end
+						end
+						l_all_features.forth
+					end
+					l_generated_types.forth
 				end
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_types, [l_namespace.name])
@@ -173,6 +231,19 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_compile_unit_implies_not_empty_namespaces_list: last_compile_unit /= Void implies last_compile_unit.namespaces.count > 0
 		end
 
+	rename_counter: INTEGER is
+			-- Counter starting at 2 and automatically incremented after each query
+		do
+			if rename_counter_cell = Void then
+				rename_counter_cell := 1
+			end
+			rename_counter_cell.set_item (rename_counter_cell.item + 1)
+			Result := rename_counter_cell.item
+		end
+	
+	rename_counter_cell: INTEGER_REF
+			-- Cell for counter
+		
 end -- class CODE_EIFFEL_FACTORY
 
 --+--------------------------------------------------------------------

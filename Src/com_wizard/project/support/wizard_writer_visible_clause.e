@@ -90,7 +90,7 @@ feature -- Element change
 		do
 			exported_features.extend (clone (a_feature))
 		ensure
-			added: exported_features.last = a_feature
+			added: exported_features.last.is_equal (a_feature)
 		end
 
 invariant

@@ -514,7 +514,7 @@ feature {NONE} -- Array manipulations
 			end
 		ensure
 			array_set_if_not_none_type:
-				not a_array_element_type.is_equal (none_node) implies
+				lower <= upper implies
 					Result /= Void and then (Result.lower = lower and Result.upper = upper)
 		end
 

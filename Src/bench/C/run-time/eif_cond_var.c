@@ -24,7 +24,6 @@ int pthread_cond_init (pthread_cond_t *cv, const pthread_condattr_t* unused)
 {
   cv->waiters_ = 0;
   cv->was_broadcast_ = 0;
-
   cv->sema_ = 
 	  CreateSemaphore (0, /* no security
                         0, /* non-signaled
@@ -49,7 +48,6 @@ int pthread_cond_destroy (pthread_cond_t *cv)
 	CloseHandle(cv->waiters_done_);
 	return 0;
 }
-
 
 int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t external_mutex)
 {
@@ -103,7 +101,6 @@ int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t external_mutex)
   WaitForSingleObject (external_mutex, INFINITE); 
 
   return 0; 
-
 }
 
 

@@ -17,6 +17,11 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+		
+	EV_ANY_HANDLER
+		undefine
+			copy, is_equal, default_create
+		end
 	
 create
 	make_with_combo_control

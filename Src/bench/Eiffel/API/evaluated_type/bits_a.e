@@ -7,6 +7,8 @@ class BITS_A
 
 inherit
 	BASIC_A
+		rename
+			make as cl_make
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			weight, same_as, ext_append_to,

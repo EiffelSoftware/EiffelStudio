@@ -11,7 +11,7 @@ inherit
 			valid_generic, solved_type, good_generics,
 			error_generics, check_constraints,
 			same_as, same_class_type, is_tuple, associated_class,
-			internal_conform_to, set_base_class_id, type_i
+			internal_conform_to, type_i
 		end
 
 create
@@ -20,14 +20,6 @@ create
 feature -- Properties
 
 	is_tuple: BOOLEAN is True
-
-feature -- Setting
-
-	set_base_class_id (id: like base_class_id) is
-			-- Assign `id' to `base_class_id'.
-		do
-			base_class_id := id
-		end
 
 feature -- Access
 
@@ -40,7 +32,7 @@ feature -- Access
 		do
 			other_tuple_type ?= other
 			if other_tuple_type /= Void
-				and then other_tuple_type.base_class_id = base_class_id
+				and then other_tuple_type.class_id = class_id
 				and then is_true_expanded = other_tuple_type.is_true_expanded
 			then
 				from
@@ -99,8 +91,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 	any_type_a : CL_TYPE_A is
 
 		once
-			!!Result
-			Result.set_base_class_id (System.any_id)
+			create Result.make (System.any_id)
 		end
 
 	type_i: TUPLE_TYPE_I is
@@ -127,7 +118,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i := i + 1
 			end
 
-			create Result.make (base_class_id)
+			create Result.make (class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (true_generics)
 			Result.set_is_true_expanded (is_true_expanded)
@@ -155,8 +146,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						(generics.item (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
-				create Result.make (new_generics)
-				Result.set_base_class_id (base_class_id)
+				create Result.make (class_id, new_generics)
 				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
@@ -168,7 +158,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			tuple_type: TUPLE_TYPE_A
 			tuple_type_generics: like generics
 		do
-			if base_class_id = type.base_class_id then
+			if class_id = type.class_id then
 				tuple_type ?= type
 				if tuple_type /= Void then
 					from
@@ -259,7 +249,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		do
 			other_tuple_type ?= other
 			if  other_tuple_type /= Void
-				and then other_tuple_type.base_class_id = base_class_id
+				and then other_tuple_type.class_id = class_id
 			then
 				from
 					i := 1

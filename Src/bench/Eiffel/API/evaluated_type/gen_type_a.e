@@ -7,6 +7,8 @@ class GEN_TYPE_A
 
 inherit
 	CL_TYPE_A
+		rename
+			make as cl_make
 		redefine
 			generics, valid_generic, parent_type, dump, ext_append_to,
 			has_like, duplicate, solved_type, type_i, good_generics,
@@ -22,14 +24,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (g: like generics) is
+	make (a_class_id: INTEGER; g: like generics) is
 			-- Create Current with `g' types as generic parameter.
 		require
+			valid_class_id: a_class_id > 0
 			has_generics: g /= Void
 		do
 			generics := g
+			class_id := a_class_id
 		ensure
 			generics_set: generics = g
+			class_id_set: class_id = a_class_id
 		end
 
 feature -- Property
@@ -47,7 +52,7 @@ feature -- Comparison
 		do
 			Result := is_true_expanded = other.is_true_expanded and then
 				is_separate = other.is_separate and then
-				base_class_id = other.base_class_id
+				class_id = other.class_id
 			if Result then
 				from
 					i := 1
@@ -76,7 +81,7 @@ feature -- Access
 			other_gen_type ?= other
 			if 	other_gen_type /= Void
 				and then
-				other_gen_type.base_class_id = base_class_id
+				other_gen_type.class_id = class_id
 				and then
 				is_true_expanded = other_gen_type.is_true_expanded
 			then
@@ -269,7 +274,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i := i + 1
 			end
 
-			create Result.make (base_class_id)
+			create Result.make (class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (true_generics)
 			Result.set_is_true_expanded (is_true_expanded)
@@ -296,8 +301,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 							(generics.item (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
-				create Result.make (new_generics)
-				Result.set_base_class_id (base_class_id)
+				create Result.make (class_id, new_generics)
 				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
@@ -321,8 +325,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					new_generics.put (generics.item (i).deep_actual_type, i)
 					i := i + 1
 				end
-				create Result.make (new_generics)
-				Result.set_base_class_id (base_class_id)
+				create Result.make (class_id, new_generics)
 				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
@@ -346,8 +349,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					new_generics.put (generics.item (i).conformance_type, i)
 					i := i + 1
 				end
-				create Result.make (new_generics)
-				Result.set_base_class_id (base_class_id)
+				create Result.make (class_id, new_generics)
 				Result.set_is_true_expanded (is_true_expanded)
 			end
 		end
@@ -410,7 +412,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A
 			gen_type_generics: like generics
 		do
-			if base_class_id = type.base_class_id then
+			if class_id = type.class_id then
 				gen_type ?= type
 				if gen_type /= Void then
 					from
@@ -735,7 +737,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		local
 			formal_type_dec_as: FORMAL_DEC_AS
 			formal_crc_list, crc_list: LINKED_LIST [FEATURE_I];
-			creators_table: EXTEND_TABLE [EXPORT_I, STRING]
+			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
 			feat_tbl: FEATURE_TABLE
 			class_c: CLASS_C
@@ -852,10 +854,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			other_generics: like generics
 		do
 			other_gen_type ?= other
-			if  other_gen_type /= Void
-				and then
-				other_gen_type.base_class_id = base_class_id
-			then
+			if other_gen_type /= Void and then other_gen_type.class_id = class_id then
 				from
 					Result := True
 					i := 1

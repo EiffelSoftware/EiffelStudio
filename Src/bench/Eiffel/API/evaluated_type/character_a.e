@@ -7,6 +7,8 @@ class CHARACTER_A
 
 inherit
 	BASIC_A
+		rename
+			make as cl_make
 		redefine
 			is_character, type_i, associated_class, same_as,
 			internal_conform_to

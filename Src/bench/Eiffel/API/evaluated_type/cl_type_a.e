@@ -1,25 +1,32 @@
 indexing
 	description: "Description of an actual class type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CL_TYPE_A
 
 inherit
 	TYPE_A
 		redefine
-			is_true_expanded,
-			is_separate,
-			instantiation_in,
-			valid_generic,
-			duplicate,
-			meta_type,
-			same_as,
-			good_generics,
-			error_generics,
-			has_expanded,
-			is_valid,
-			format
+			is_true_expanded, is_separate, instantiation_in, valid_generic,
+			duplicate, meta_type, same_as, good_generics, error_generics,
+			has_expanded, is_valid, format
+		end
+	
+	DEBUG_OUTPUT
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_class_id: INTEGER) is
+		require
+			valid_class_id: a_class_id > 0
+		do
+			class_id := a_class_id
+		ensure
+			class_id_set: class_id = a_class_id
 		end
 
 feature -- Properties
@@ -31,6 +38,8 @@ feature -- Properties
 			-- Is the current actual type a separate one ?
 
 	is_valid: BOOLEAN is
+			-- Is Current still valid?
+			-- I.e. its `associated_class' is still in system.
 		do
 			Result := associated_class /= Void
 		end
@@ -42,12 +51,12 @@ feature -- Comparison
 		do
 			Result := is_true_expanded = other.is_true_expanded and then
 				is_separate = other.is_separate and then
-				base_class_id = other.base_class_id
+				class_id = other.class_id
 		end
 
 feature -- Access
 
-	base_class_id: INTEGER
+	class_id: INTEGER
 			-- Class id of the associated class
 
 	same_as (other: TYPE_A): BOOLEAN is
@@ -56,28 +65,15 @@ feature -- Access
 			other_class_type: CL_TYPE_A
 		do
 			other_class_type ?= other
-			Result := 	other_class_type /= Void
-						and then
-							-- FIXME
-						base_class_id = other_class_type.base_class_id
-						and then
-						is_true_expanded = other_class_type.is_true_expanded
-						and then
-						is_separate = other_class_type.is_separate
+			Result := other_class_type /= Void and then class_id = other_class_type.class_id
+						and then is_true_expanded = other_class_type.is_true_expanded
+						and then is_separate = other_class_type.is_separate
 		end
 
 	associated_class: CLASS_C is
 			-- Associated class to the type
 		do
-			Result := System.class_of_id (base_class_id)
-		end
-
-feature -- Setting
-
-	set_base_class_id (id: like base_class_id) is
-			-- Assign `id' to `base_class_id'.
-		do
-			base_class_id := id
+			Result := System.class_of_id (class_id)
 		end
 
 feature -- Output
@@ -119,18 +115,22 @@ feature {COMPILER_EXPORTER}
 			-- Assign `b' to `is_true_expanded'.
 		do
 			is_true_expanded := b
+		ensure
+			is_true_expanded_set: is_true_expanded = b
 		end
 
 	set_is_separate (b: BOOLEAN) is
 			-- Assign `b' to `is_separate'.
 		do
 			is_separate := b
+		ensure
+			is_separate_set: is_separate = b
 		end
 
 	type_i: CL_TYPE_I is
 			-- C type
 		do
-			create Result.make (base_class_id)
+			create Result.make (class_id)
 			Result.set_is_true_expanded (is_true_expanded)
 			Result.set_is_separate (is_separate)
 		end
@@ -154,7 +154,7 @@ feature {COMPILER_EXPORTER}
 
 	error_generics: VTUG is
 		do
-			!VTUG2!Result
+			create {VTUG2} Result
 			Result.set_type (Current)
 			Result.set_base_class (associated_class)
 		end
@@ -184,19 +184,15 @@ feature {COMPILER_EXPORTER} -- Conformance
 						-- No type conforms directly to `other'.
 					current_class := associated_class
 					parent_class := other_class_type.associated_class
-					Result := 	((not in_generics) and then
-								same_class_type (other_class_type))
-								or else 
-								(is_true_expanded and then
+					Result := ((not in_generics) and then same_class_type (other_class_type))
+								or else (is_true_expanded and then
 								current_class.conform_to (parent_class))
 				else
 					current_class := associated_class
 					parent_class := other_class_type.associated_class
 					Result := 	(not (in_generics and then is_true_expanded))
-								and then
-								current_class.conform_to (parent_class)
-								and then
-								other_class_type.valid_generic (Current)
+								and then current_class.conform_to (parent_class)
+								and then other_class_type.valid_generic (Current)
 				end
 			end
 		end
@@ -226,16 +222,19 @@ feature {COMPILER_EXPORTER} -- Conformance
 				i > count or else Result
 			loop
 				parent_actual_type := parent_type (parents.i_th (i))
-				Result := parent_actual_type.internal_conform_to
-													(gen_type, True)
+				Result := parent_actual_type.internal_conform_to (gen_type, True)
 				i := i + 1
 			end
 		end
 
 	parent_type (parent: CL_TYPE_A): TYPE_A is
-			-- Parent actual type
+			-- Parent actual type.
+		require
+			parent_not_void: parent /= Void
 		do
 			Result := parent.duplicate
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
@@ -270,19 +269,19 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
-	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
-			-- Instantiation of type `type' written in class of id `class_id'
+	instantiation_of (type: TYPE; a_class_id: INTEGER): TYPE_A is
+			-- Instantiation of type `type' written in class of id `a_class_id'
 			-- in the context of Current
 		local
 			instantiation: TYPE_A
 			gen_type: GEN_TYPE_A
 		do
-			if class_id = base_class_id then
+			if a_class_id = class_id then
 					-- Feature is written in the class associated to the
 					-- current actual class type
 				instantiation := Current
 			else
-				instantiation := find_class_type (System.class_of_id (class_id))
+				instantiation := find_class_type (System.class_of_id (a_class_id))
 			end
 			Result := type.actual_type
 			if instantiation.generics /= Void then
@@ -336,7 +335,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	same_class_type (other: CL_TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := base_class_id = other.base_class_id
+			Result := class_id = other.class_id
 		end
 
 	create_info: CREATE_TYPE is
@@ -346,9 +345,19 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is
-			--
+			-- Format current.
 		do
 			ctxt.put_classi (associated_class.lace_class)
+		end
+
+feature -- Debugging
+
+	debug_output: STRING is
+			-- Display name of associated class.
+		do
+			if is_valid then
+				Result := associated_class.name_in_upper
+			end
 		end
 
 end -- class CL_TYPE_A

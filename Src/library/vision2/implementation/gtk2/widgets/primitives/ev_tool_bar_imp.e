@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (i)
 			imp ?= child_array.i_th (i).implementation
 			item_ptr := imp.c_object
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
+			 {EV_GTK_EXTERNALS}.object_ref (item_ptr)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
 			child_array.remove
 			imp.set_item_parent_imp (Void)
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-			
+				
 			initialize_tool_bar_style (list_widget)
 			
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)

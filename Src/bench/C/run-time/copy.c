@@ -383,7 +383,7 @@ register1 char *target;
 		 * with same dynamic type. Block copy here, but references on
 		 * expanded must be updated and sepcial objects reallocated.
 		 */
-		bcopy(source, target, size);
+		safe_bcopy(source, target, size);
 
 		/* Perform aging tests. We need the address of the enclosing object to
 		 * update the flags there, in case the target is to be memorized.
@@ -431,7 +431,7 @@ register1 char *target;
 	/* Evaluation of the size field to copy */
 	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD(2);
 
-	bcopy(source, target, field_size);			/* Block copy */
+	safe_bcopy(source, target, field_size);			/* Block copy */
 
 	/* Ok, normally we would have to perform age tests, by scanning the special
 	 * object, looking for new objects. But a special object can be really big,

@@ -167,7 +167,16 @@ feature {NONE} -- Implementation
 		do
 			lower := 1
 			upper := signature.index_of ('(', 1)
-			if (upper <= 1) or (upper > (signature.count - 5)) then
+			if (upper <= 1) then
+				upper := signature.index_of (')', 1)
+				if upper >= 1 then
+					display_error_message
+				else
+					cmd_name := signature.substring (lower, signature.count)
+					cmd_name.prune_all (' ')
+					!! arg_list.make
+				end
+			elseif (upper > (signature.count - 5)) then
 				display_error_message
 			else
 				cmd_name := signature.substring (lower, upper - 1)
@@ -204,10 +213,10 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				if not error then
-					!! app_routine.make (cmd_name, arg_list)
-					current_application_class.add_routine (app_routine)
-				end
+			end
+			if not error then
+				!! app_routine.make (cmd_name, arg_list)
+				current_application_class.add_routine (app_routine)
 			end
 		end
 

@@ -32,9 +32,9 @@ extern "C" {
 #endif
 
 #ifndef EIF_THREADS
-RT_LNK EIF_REFERENCE *EIF_once_values;	/* Once values for a thread */
-RT_LNK EIF_REFERENCE **EIF_oms;	/* Once manifest strings for a thread */
-RT_LNK int in_assertion;	/* Value of the assertion level */
+RT_LNK EIF_once_value_t *EIF_once_values; /* Once values for a thread */
+RT_LNK EIF_REFERENCE **EIF_oms;           /* Once manifest strings for a thread */
+RT_LNK int in_assertion;                  /* Value of the assertion level */
 #endif
 
 RT_LNK long EIF_once_count;			/* Nr. of once routines */

@@ -253,11 +253,11 @@ rt_public void eif_thr_register(void)
 		 * Also set value root thread id.
 		 */
 
-		EIF_once_values = (EIF_REFERENCE *) eif_realloc (EIF_once_values, EIF_once_count * REFSIZ);
+		EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-		if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
+		if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
 			enomem();
-		memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * REFSIZ);
+		memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
 	} else {
 		not_root_thread = 1;
 		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */

@@ -99,6 +99,12 @@ end;
 
 				!!uf.make (application_name);
 				!!make_f.make (makefile_sh_name);
+
+--!! FIXME: melt_only (no check for Makefile.SH)
+--!! FIXME: melt_only
+--!! FIXME: melt_only
+--!! FIXME: melt_only
+
 				if uf.exists then
 					if make_f.exists and then make_f.date > uf.date then
 							-- The Makefile file is more recent than the 

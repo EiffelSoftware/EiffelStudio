@@ -70,7 +70,10 @@ feature -- Access
 			loop
 				command := application.command_list.item
 				if command /= Void then
-					if command.argument_type.is_equal (query_type) then
+					if not query_type.is_equal ("STRING")
+					and then not query_type.is_equal ("INTEGER")
+					and then not query_type.is_equal ("BOOLEAN")
+					or else command.argument_type.is_equal (query_type) then
 						if command.command_name.substring_index (query_name, 1) > 0 then
 							possible_commands.put_front (command)
 						else

@@ -1035,6 +1035,9 @@ feature -- Generation (Linking rules)
 			make_file.putstring (emain_file)
 			make_file.putstring ("%N%T cp $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
 			make_file.putstring (emain_file)
+
+			make_file.putstring (" E1/emain.c") 
+
 			make_file.putstring ("%N%T cd ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)

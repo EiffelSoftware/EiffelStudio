@@ -1,3 +1,7 @@
+-------------------------------------------------
+-- This ace file has been generated for you by --
+-- The New Wizard Application Wizard.          --
+-------------------------------------------------
 system
 	<FL_WIZARD_NAME>
 
@@ -14,7 +18,7 @@ default
 	dead_code_removal (yes)
 	profile (no)
 	line_generation (no)
-	debug  (no)
+	debug (no)
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
@@ -51,8 +55,8 @@ external
 			"$ISE_EIFFEL\library\vision2\spec\include"
 
 	object:
-			"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib",
-			"$ISE_EIFFEL\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
-			"$ISE_EIFFEL\library\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
-			"$ISE_EIFFEL\library\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib"
+			"$ISE_EIFFEL\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+			"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+			"$(ISE_EIFFEL)\C_library\zlib\zlib.lib",
+			"$(ISE_EIFFEL)\C_library\libpng\libpng.lib"
 end

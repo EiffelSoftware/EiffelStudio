@@ -126,9 +126,6 @@ feature {EV_DEFAULT_COLORS_IMP, EV_COLOR_SELECTION_DIALOG_IMP} -- Initialization
 			implementation.set_interface (Current)
 		end
 
---invariant
---	valid_implementation: implementation /= Void
-
 end -- class EV_COLOR
 
 --|----------------------------------------------------------------

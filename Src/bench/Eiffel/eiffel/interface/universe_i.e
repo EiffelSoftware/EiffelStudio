@@ -151,11 +151,6 @@ feature -- Access
 
 	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I] is
 			-- Compiled classes with name `class_name' found in the Universe
-		local
-			cur: CURSOR
-			cname: STRING
-			class_i: CLASS_I
-			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			Result := classes_with_name (class_name)
 			from

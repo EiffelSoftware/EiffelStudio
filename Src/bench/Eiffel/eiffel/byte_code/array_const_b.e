@@ -96,7 +96,10 @@ feature
 				expr ?= expressions.item;
 				actual_type ?= context.real_type (expr.type);
 				expr.make_byte_code (ba);
-				if need_metamorphosis (actual_type) then
+
+				if actual_type = Void then
+					ba.append (Bc_void);
+				elseif need_metamorphosis (actual_type) then
 						-- Simple type objects are metamorphosed
 					basic_i ?= actual_type;	
 					ba.append (Bc_metamorphose);

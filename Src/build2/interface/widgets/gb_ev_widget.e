@@ -61,10 +61,13 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			if objects.first.minimum_width_set_by_user then
+			if object.name.is_equal ("template_dialog") then
+				do_nothing
+			end
+			if objects.first.minimum_width_set_by_user or uses_constant (Minimum_width_string) then
 				add_integer_element (element, Minimum_width_string, objects.first.minimum_width)	
 			end
-			if objects.first.minimum_height_set_by_user then
+			if objects.first.minimum_height_set_by_user or uses_constant (Minimum_height_string) then
 				add_integer_element (element, Minimum_height_string, objects.first.minimum_height)
 			end
 		end

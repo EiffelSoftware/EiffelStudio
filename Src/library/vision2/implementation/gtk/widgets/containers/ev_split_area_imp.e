@@ -24,7 +24,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			container_widget
+			container_widget,
+			on_widget_mapped
 		end
 
 feature {NONE} -- Initialization
@@ -35,16 +36,21 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			update_splitter
 			second_expandable := True
+			user_split_position := -1
 			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, 0)
+			real_signal_connect (c_object, "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), App_implementation.default_translate)
 		end
 
-feature
+feature -- Access
 
 	split_position: INTEGER is
 			-- Position from the left/top of the splitter from `Current'.
 		do
 			Result := gtk_paned_struct_child1_size (container_widget)
 			Result := Result.max (minimum_split_position).min (maximum_split_position)
+			if not is_displayed and then user_split_position /= -1 then
+				Result := user_split_position
+			end
 		end
 
 	set_first (an_item: like item) is
@@ -120,7 +126,12 @@ feature
 	set_split_position (a_split_position: INTEGER) is
 			-- Set the position of the splitter.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
+			if is_displayed then
+				feature {EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
+				user_split_position := -1
+			else
+				user_split_position := a_split_position
+			end
 		end
 
 	enable_flat_separator is
@@ -182,6 +193,17 @@ feature
 		end
 
 feature {NONE} -- Implementation
+
+	user_split_position: INTEGER
+			-- Split position as set by user, -1 if unset.
+
+	on_widget_mapped is
+			-- `Current' has been mapped to screen.
+		do
+			if user_split_position /= -1 then
+				set_split_position (user_split_position)
+			end
+		end
 
 	container_widget: POINTER
 		-- Pointer to the GtkPaned widget.

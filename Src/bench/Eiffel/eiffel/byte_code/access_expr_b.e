@@ -109,8 +109,9 @@ feature
 	print_register is
 			-- Print expression value
 		do
-			if (expr.register = Void or expr.register = No_register) and
-				not expr.is_simple_expr
+			if
+				(expr.register = Void or expr.register = No_register)
+				and then not expr.is_simple_expr
 			then
 				generated_file.putchar ('(');
 				expr.print_register;

@@ -32,7 +32,7 @@ inherit
 create 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (dbg: EIFNET_DEBUGGER) is
 		do
@@ -40,6 +40,11 @@ feature -- Initialization
 		end
 
 	eifnet_debugger: EIFNET_DEBUGGER
+	
+feature -- Status
+	
+	last_call_success: INTEGER
+			-- last_call_success from ICOR_DEBUG_EVAL
 
 feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 
@@ -51,8 +56,19 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.call_function (a_func, a_args)
-			Result := complete_evaluation
+			Result := complete_function_evaluation
 		end
+
+	methode_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
+			-- Methode evaluation result for `a_func' on `a_icd'
+		require
+			args_not_void: a_args /= Void
+			meth_not_void: a_meth /= Void
+		do
+			prepare_evaluation (a_frame)
+			last_icor_debug_eval.call_function (a_meth, a_args)
+			complete_methode_evaluation
+		end		
 		
 	new_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_string: STRING): ICOR_DEBUG_VALUE is
 			-- NewString evaluation with `a_string'
@@ -61,7 +77,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_string (a_string)
-			Result := complete_evaluation
+			Result := complete_function_evaluation
 		end
 
 	new_object_no_constructor_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE is
@@ -71,7 +87,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_object_no_constructor (a_icd_class)
-			Result := complete_evaluation
+			Result := complete_function_evaluation
 		end
 
 	new_object_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
@@ -82,7 +98,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 		do
 			prepare_evaluation (a_frame)
 			last_icor_debug_eval.new_object (a_icd_func, a_args)
-			Result := complete_evaluation
+			Result := complete_function_evaluation
 		end
 
 feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Basic value creation
@@ -167,12 +183,29 @@ feature {EIFNET_EXPORTER} -- String facilities
 		do
 			l_str_icdv := new_string_evaluation (a_frame, a_val)
 			prepare_evaluation (a_frame)
-			last_icor_debug_eval.new_object (eiffel_string_make_from_cil_constructor, <<l_str_icdv>>)			
-			Result := complete_evaluation
+			last_icor_debug_eval.new_object_no_constructor (eiffel_string_icd_class)
+--			last_icor_debug_eval.new_object (eiffel_string_ctor, <<>>)			
+			Result := complete_function_evaluation
+			
+			methode_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, l_str_icdv>>)			
 		end	
 
-	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
 
+	eiffel_string_icd_class: ICOR_DEBUG_CLASS is
+		once
+			Result := eifnet_debugger.eiffel_string_icd_class
+		ensure
+			Result /= Void
+		end
+		
+--	eiffel_string_ctor: ICOR_DEBUG_FUNCTION is
+--		once
+--			Result := eifnet_debugger.eiffel_string_ctor
+--		ensure
+--			Result /= Void
+--		end
+		
+	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION is
 		once
 			Result := eifnet_debugger.eiffel_string_make_from_cil_constructor
 		ensure
@@ -236,12 +269,47 @@ feature {NONE}
 			l_status: APPLICATION_STATUS_DOTNET
 		do
 			l_icd_eval := last_icor_debug_eval
+			last_call_success := l_icd_eval.last_call_success
 			l_status := last_app_status
 			l_status.set_is_evaluating (False)
 			restore_state_info			
 		end
 
-	complete_evaluation: ICOR_DEBUG_VALUE is
+	complete_methode_evaluation is
+		require
+			last_icor_debug_eval /= Void
+			last_app_status /= Void
+		local
+			l_icd_eval: ICOR_DEBUG_EVAL
+			l_status: APPLICATION_STATUS_DOTNET
+		do
+			l_icd_eval := last_icor_debug_eval
+			last_call_success := l_icd_eval.last_call_success			
+			l_status := last_app_status
+
+			eifnet_debugger.do_continue
+				--| And we wait for all callback to be finished
+			eifnet_debugger.lock_and_wait_for_callback
+			eifnet_debugger.reset_data_changed
+			if 
+				eifnet_debugger.last_managed_callback_is_exception 
+			then
+				check False end
+				debug ("DEBUGGER_TRACE_EVAL")
+					display_last_exception
+					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
+				end
+				eifnet_debugger.do_clear_exception
+--				Result := False
+--			else
+--				Result := True
+			end
+			l_status.set_is_evaluating (False)
+			eifnet_debugger.start_dbg_timer
+			restore_state_info			
+		end
+
+	complete_function_evaluation: ICOR_DEBUG_VALUE is
 		require
 			last_icor_debug_eval /= Void
 			last_app_status /= Void
@@ -267,13 +335,12 @@ feature {NONE}
 				end
 				eifnet_debugger.do_clear_exception
 			else
-				if l_icd_eval /= Void then
-					Result := l_icd_eval.get_result
-				end
+				Result := l_icd_eval.get_result
 			end
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
 			restore_state_info			
+			last_call_success := l_icd_eval.last_call_success			
 		end
 
 	display_last_exception is

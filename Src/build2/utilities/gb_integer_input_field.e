@@ -59,22 +59,15 @@ feature {NONE} -- Initialization
 			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
-		local
-			editor_constructor: GB_EV_EDITOR_CONSTRUCTOR
 		do
 			call_default_create (any)
 			add_label (label_text, tooltip)
 			internal_type := a_type
-			editor_constructor ?= any
-			check
-				object_was_editor_constructor: editor_constructor /= Void
-			end
 			internal_gb_ev_any ?= any
 			check
 				internal_gb_ev_any /= Void
 			end
-
-			object ?= editor_constructor.object
+			object ?= internal_gb_ev_any.object
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
@@ -94,20 +87,14 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
-		local
-			editor_constructor: GB_EV_EDITOR_CONSTRUCTOR
 		do
 			call_default_create (any)
 			internal_type := a_type
-			editor_constructor ?= any
-			check
-				object_was_editor_constructor: editor_constructor /= Void
-			end
 			internal_gb_ev_any ?= any
 			check
 				internal_gb_ev_any /= Void
 			end
-			object ?= editor_constructor.object
+			object ?= internal_gb_ev_any.object
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void

@@ -25,6 +25,12 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_DOCKABLE_SOURCE
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_COLORIZABLE
 		undefine

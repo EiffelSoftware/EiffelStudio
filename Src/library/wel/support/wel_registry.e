@@ -69,7 +69,7 @@ feature -- Actions
 		local
 			index_value: POINTER
 		do
-			index_value := key_from_path (key_path, True, Key_all_access)
+			index_value := key_from_path (key_path, True, Key_write)
 			if index_value /= default_pointer then
 				set_key_value (index_value, value_name, value)
 			end

@@ -779,6 +779,7 @@ feature {NONE} -- Mouse copy cut
 					mouse_copy_cut := False
 					editor_area.set_pointer_style (basic_pointer)
 					x_cur := x_pos + offset - left_margin_width
+					x_cur := x_cur.max (1)
 					perform_changes := 
 						is_in_editor_panel (a_screen_x, a_screen_y)
 							and then

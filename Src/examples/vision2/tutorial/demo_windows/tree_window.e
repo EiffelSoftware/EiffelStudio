@@ -17,7 +17,6 @@ creation
 	make
 
 feature {NONE} -- Initialization
-
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
 		local
@@ -30,9 +29,12 @@ feature {NONE} -- Initialization
 			!! tree_item1.make_with_text (Current, "Item 4")
 			!! tree_item3.make_with_text (tree_item1, "Item 5")
 			!! tree_item2.make_with_text (tree_item1, "Item 6")
+			tree_item1.set_expand (True)
 			!! tree_item1.make_with_text (tree_item2, "Click Me !")
+			tree_item2.set_expand (True)
 			!! cmd.make (~execute1)
 			tree_item1.add_activate_command (cmd, Void)
+
 		end
 
 feature -- Access

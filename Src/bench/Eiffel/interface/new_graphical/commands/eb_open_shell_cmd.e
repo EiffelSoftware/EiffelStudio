@@ -47,10 +47,8 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text, use_gray_icons)
---			Result.drop_actions.extend (~drop (?))
---			Result.drop_actions.set_veto_pebble_function (~is_storable)
-			Result.drop_actions.extend (~process_class (?))
-			Result.drop_actions.extend (~process_feature (?))
+			Result.drop_actions.extend (~drop (?))
+			Result.drop_actions.set_veto_pebble_function (~is_storable)
 		end
 
 feature {NONE} -- Update
@@ -65,13 +63,13 @@ feature {NONE} -- Update
 			if fs /= Void then
 				process_feature (fs)
 			else
-				cs ?= s
-				if cs /= Void then
-					process_class (cs)
+				cl_syntax_s ?= s
+				if cl_syntax_s /= Void then
+					process_class_syntax (cl_syntax_s)
 				else
-					cl_syntax_s ?= s
-					if cl_syntax_s /= Void then
-						process_class_syntax (cl_syntax_s)
+					cs ?= s
+					if cs /= Void then
+						process_class (cs)
 					end
 				end
 			end
@@ -124,7 +122,7 @@ feature {NONE} -- Implementation
 			cmd_string := clone (command_shell_name)
 			if not cmd_string.is_empty then
 				replace_target(cmd_string, syn.file_name)
-				cmd_string.replace_substring_all ("$line", "1")
+				cmd_string.replace_substring_all ("$line", syn.syntax_message.line_number.out)
 				create req
 				req.execute (cmd_string)
 			end

@@ -233,8 +233,8 @@ feature -- Status report
 			a_wel_font: WEL_FONT
 			character_effects: EV_CHARACTER_FORMAT_EFFECTS
 		do
+			lock_window_update
 			safe_store_caret
-		
 			set_selection (caret_index - 1, caret_index - 1)
 			wel_character_format := current_selection_character_format
 			effects := wel_character_format.effects
@@ -263,6 +263,7 @@ feature -- Status report
 				character_effects)
 				
 			safe_restore_caret
+			unlock_window_update
 		end
 		
 	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
@@ -294,6 +295,7 @@ feature -- Status report
 			wel_character_format: WEL_CHARACTER_FORMAT
 			range_already_selected: BOOLEAN
 		do
+			lock_window_update
 			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
 				range_already_selected := True
 			else
@@ -305,6 +307,7 @@ feature -- Status report
 			if not range_already_selected then
 				safe_restore_caret
 			end
+			unlock_window_update
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is

@@ -1,4 +1,4 @@
---|FXIME remove this file (move contents into eiffel code)
+/* FXIME remove this file (move contents into eiffel code) */
 /***************************
  *			   *		     
  *   EiffelVision/GTK      *

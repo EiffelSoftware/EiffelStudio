@@ -94,12 +94,35 @@ feature -- Status setting
 	
 feature -- Event - command association
 	
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be
 			-- executed when the button is pressed
 		do
-			add_command ( "activate", command,  arguments )
+			add_command ("activate", cmd,  arg)
+		end
+
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+		do
+			add_command ("changed", cmd,  arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
+		do
+			check False end
+		end
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+		do
+			check False end
 		end
 
 end -- class EV_TEXT_FIELD_IMP

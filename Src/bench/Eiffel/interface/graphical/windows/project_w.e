@@ -25,8 +25,6 @@ inherit
 	BASE
 		rename
 			make as base_make
-		redefine
-			delete_window_action
 		end;
 	EXCEPTIONS
 		rename
@@ -89,6 +87,7 @@ feature
 			set_icon_name (tool_name);
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Map>,<Prop>", Current, popup);
+			set_delete_command (quit_command)
 		end;
 
 	set_default_position is do end;
@@ -97,7 +96,7 @@ feature
 
 	close_windows is 
 		do 
-			change_font_command.close (text_window)
+			change_font_command.close
 		end;
 
 	popup_file_selection is
@@ -162,6 +161,7 @@ feature -- xterminal
 					end	
 				end
 			elseif arg = popdown then
+				close_windows;
 				window_manager.hide_all_editors;
 				if 	system_tool.realized and then system_tool.shown then
 					system_tool.hide;
@@ -180,9 +180,6 @@ feature -- xterminal
 					hidden_confirmer := true;
 					confirmer.popdown
 				end;	
-			elseif arg = task_end then
-				task_end.remove_action (Current, task_end);
-				quit_command.execute (Void);
 			else
 				old_execute (arg)
 			end
@@ -192,17 +189,6 @@ feature -- xterminal
 	hidden_warner: BOOLEAN;
 	hidden_confirmer: BOOLEAN;
 	hidden_name_chooser: BOOLEAN;
-
-feature {NONE}
-
-	task_end: TASK;
-
-	delete_window_action is
-		do
-			!!task_end.make;
-			task_end.add_action (Current, task_end);
-			iterate
-		end;
 
 feature -- rest
 

@@ -43,12 +43,13 @@ feature -- Messages
 								%Click Back and choose a valid creation routine name."
 
 	m_Wizard_instalation_error: STRING is
-								"The wizard can not be completed because its instalation is not complete.%N%
-								%The COM component %"ISE.VS.VisionSupport%" is missing or not registred.%N%
+								"The wizard can not be completed because its installation is not complete.%N%
+								%The COM component %"ISE.VS.VisionSupport%" is missing or not registered.%N%
 								%%N%
-								%Contact support@eiffel.com for more details.%N%
+								%Contact htpp://support.eiffel.com for more details.%N%
 								%%N%
 								%Click Abort to finish the wizard."
+
 
 	m_Empty_root_class_external_name_error: STRING is
 								"Please chose a .NET name for the root class.%N%

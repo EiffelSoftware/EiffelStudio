@@ -45,6 +45,10 @@ feature -- Access
 	number_of_recent_projects: STRING is "number_of_recent_projects"
 	
 	show_deleting_keyboard_warning: STRING is "show_deleting_keyboard_warning"
+	
+	show_deleting_directories_warning: STRING is "show_deleting_directories_warning"
+	
+	show_deleting_final_directory_warning: STRING is "show_deleting_final_directory_warning"
 			
 feature -- Basic operations
 

@@ -133,7 +133,7 @@ feature -- Element change
 			-- Note: Current content from index `1' to
 			-- `count.min (a_count)' is unchanged.
 		require
-			a_count_non_negative: a_count > 0
+			a_count_non_negative: a_count >= 0
 		local
 			new_size: INTEGER
 		do

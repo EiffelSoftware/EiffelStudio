@@ -7,12 +7,16 @@ indexing
 class
 	EMAIL
 
+inherit
+	MEMORY_RESOURCE
+
 create
 	make_with_one_recipient, make_with_recipients
 
-feature -- Initialization
+feature -- Initialization.
 
 	make_with_one_recipient (a_sender: STRING; a_recipient: STRING; a_subject: STRING; a_message: STRING) is
+			-- Create an email for one recipient.
 		require
 			needed_info: a_sender /= Void
 						 and then a_recipient /= Void 
@@ -28,6 +32,7 @@ feature -- Initialization
 		end
 
 	make_with_recipients (a_sender: STRING; some_recipients: LINKED_LIST [STRING]; a_message: STRING) is
+			-- Create an email for multiple recipients.
 		do
 			set_mail_from (a_sender)
 			set_mail_to (some_recipients)
@@ -35,12 +40,38 @@ feature -- Initialization
 			set_message (a_message)
 		end
 
-feature -- Tool
+feature -- Status setting
 
-	add_mail_to (new_to: STRING) is
-		do
-			mail_to.extend (new_to)
-		end
+	is_sender: BOOLEAN is True
+		-- Can the resource be send.
+
+	is_receiver: BOOLEAN is True
+		-- Can the resource	be received.
+
+feature -- Access
+
+	subject: STRING
+		-- Email subject
+
+	mail_from: STRING
+		-- From (sender)
+
+	mail_to: LINKED_LIST [STRING]
+		-- To (recipients)
+
+	mail_cc: LINKED_LIST [STRING]
+		-- Cc (recipients)
+
+	mail_bcc: LINKED_LIST [STRING]
+		-- Bcc (recipients)
+
+	message: STRING
+		-- Email message
+
+	signature: STRING
+		-- Email signature
+
+	mailer: MAILER
 
 feature -- Settings
 
@@ -81,29 +112,12 @@ feature -- Settings
 			signature:= s
 		end
 
-feature -- Access
+feature -- Basic operations.
 
-	subject: STRING
-		-- Email subject
-
-	mail_from: STRING
-		-- From (sender)
-
-	mail_to: LINKED_LIST [STRING]
-		-- To (recipients)
-
-	mail_cc: LINKED_LIST [STRING]
-		-- Cc (recipients)
-
-	mail_bcc: LINKED_LIST [STRING]
-		-- Bcc (recipients)
-
-	message: STRING
-		-- Email message
-
-	signature: STRING
-		-- Email signature
-
-	mailer: MAILER
+	add_mail_to (new_to: STRING) is
+			-- Add a new recipient to the email.
+		do
+			mail_to.extend (new_to)
+		end
 
 end -- class EMAIL

@@ -5,19 +5,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EB_PREFERENCE_WINDOW
+class
+	EB_PREFERENCE_WINDOW
 
 inherit
-	EV_WINDOW
+	EB_TOOL_WINDOW
 		redefine
-			make, make_top_level, implementation
-		end
-
-	EB_TOOL_CONTAINER
-		undefine
-			show, widget_make, parent, parent_needed
-		redefine
-			tool, implementation
+			make, make_top_level, tool
 		end
 
 	INTERFACE_NAMES
@@ -48,22 +42,12 @@ feature {NONE} -- Initialization
 	make_top_level is
 			-- same as make but with no parent
 			-- used only for debugging
-		local
-			c : EV_COLOR
 		do
 			Precursor
 			Create tool.make (Current, Current)
 
 			initialize_main_menu
 --			forbid_resize
-
-			Create c.make_rgb (255, 0, 0)
-			set_foreground_color (c)
-			propagate_foreground_color
-
-			Create c.make_rgb (255, 255, 0)
-			set_background_color (c)
-			propagate_background_color
 
 			set_size (500, 550)
 
@@ -128,42 +112,10 @@ feature -- Display
 			hide
 		end
 
-feature -- Tool manipulation
-
-	destroy_tool is
-			-- destroy associated tool
-			-- implies Current destruction
-			-- (window cannot exist without its tool)
-		do
-			tool.destroy_imp
-			destroy
-		end			
-
-	show_tool is
-			-- destroy associated tool
-			-- implies Current destruction
-			-- (window cannot exist without its tool)
-		do
-			tool.show_imp
-			show
-		end			
-
-	hide_tool is
-			-- destroy associated tool
-			-- implies Current destruction
-			-- (window cannot exist without its tool)
-		do
-			tool.hide_imp
-			hide
-		end			
-
 feature {NONE} -- Properties
 
 	tool: EB_PREFERENCE_TOOL
 			-- the preference tool
-	
-	menu_bar: EV_STATIC_MENU_BAR
-			-- Menu bar for the menus
 
 	file_menu,
 			-- The file menu
@@ -174,8 +126,4 @@ feature {NONE} -- Properties
 	help_menu: EV_MENU
 			-- The help menu
 
-feature {NONE} -- Implementation (UI Constants)
-
-	implementation: EV_WINDOW_I
-
-end -- class PREFERENCE_TOOL
+end -- class EB_PREFERENCE_WINDOW

@@ -8,7 +8,7 @@ deferred class TYPE_A
 inherit
 	TYPE
 		rename
-			position as comment_position
+			start_position as comment_position
 		redefine
 			is_solved, same_as, format, append_to
 		end

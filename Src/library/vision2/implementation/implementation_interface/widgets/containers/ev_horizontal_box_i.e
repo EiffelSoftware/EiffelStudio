@@ -17,56 +17,22 @@ inherit
 		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	insertion_position: INTEGER is
-			-- `Result' is insertion position in `Current' based on
-			-- Current screen pointer.
-		local
-			curs: CURSOR
-			offset: INTEGER
-			current_position: INTEGER
-			last_position: INTEGER
-			temp1, temp2: INTEGER
+	pointer_offset: INTEGER is
+			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		do
-			Result := -1
-			curs := cursor
-			offset := internal_screen.pointer_position.x - screen_x
-				-- As the current mouse position may have changed since the
-				-- motion event was received, we only perform the
-				-- following if this is not the case
-			if offset >= 0 and offset <= width then
-			if offset >= width - border_width then
-							Result := interface.count + 1
-						elseif offset < border_width then
-							Result := 1
-				else
-				from
-					interface.start
-					last_position := border_width
-				until
-					Result /= -1
-				loop
-					current_position := current_position + interface.item.width
-					if interface.index = 1 then
-						current_position := current_position + border_width
-					else
-						current_position := current_position + interface.padding_width
-					end
-						if offset >= last_position and then offset <= current_position then
-							temp1 := (current_position - last_position) // 2
-							temp2 := last_position + temp1 + (interface.padding_width // 2)
-							if offset > temp2 then
-								Result := interface.index + 1
-							else
-								Result := interface.index
-							end
-						end
-						
-					last_position := current_position
-					interface.forth
-				end 
-				go_to (curs)
-				end
-			end
+			Result := internal_screen.pointer_position.x - screen_x		
+		end
+		
+	docking_dimension_of_current_item: INTEGER is
+			-- Dimension of `interface.item' matching orientation of `Current'.
+		do
+			Result := interface.item.width
+		end
+		
+	docking_dimension_of_current: INTEGER is
+			-- Dimension of `Current' matching orientation of `Current'
+		do
+			Result := width
 		end
 
 feature {EV_ANY_I} -- Implementation

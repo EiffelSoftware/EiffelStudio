@@ -10,13 +10,29 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
-		select
-			parent_imp
+		rename
+			parent_imp as wrong_parent_imp
 		end
+
+	EV_TOOL_BAR_BUTTON_IMP
+		rename
+			old_add_dblclk as o_a_dblclk,
+			old_remove_dblclk as o_r_dblclk
+		undefine
+			make
+		select
+			parent_imp,
+			remove_double_click_commands,
+			set_foreground_color,
+			add_double_click_command,
+			set_background_color
+		end			
 
 	EV_SEPARATOR_ITEM_IMP
 		rename
-			parent_imp as old_parent_imp
+			parent_imp as old_parent_imp,
+			set_foreground_color as set_f_c,
+			set_background_color as set_b_c
 		end
 
 create
@@ -27,21 +43,8 @@ feature -- Initialization
 	make is
 			-- create the widget
 		do
-		end
-
-feature -- Access
-
-	index: INTEGER is
-			-- Index of the current item.
-		do
-		end
-
-feature -- Element change
-
-	set_index (pos: INTEGER) is
-			-- Make `pos' the new index of the item in the
-			-- list.
-		do
+			widget := gtk_vseparator_new
+			gtk_object_ref (widget)
 		end
 
 end -- class EV_TOOL_BAR_SEPARATOR_I

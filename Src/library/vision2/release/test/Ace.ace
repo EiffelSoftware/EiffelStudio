@@ -1,0 +1,43 @@
+system
+	test
+
+root
+	TEST: make_and_launch
+
+default
+
+	assertion (all)
+	--assertion (require)
+	--debug("EVENT_TRACE")
+	--debug("EV_GTK_DEBUG")
+cluster
+
+dev:						"$WS"
+
+event(dev):					"$/event"
+
+gel(dev):					"$/gel"
+
+all vision2(dev):				"$/vision2"
+	exclude
+		"test";
+		"mswin";
+		"EIFGEN";
+	end
+
+test(dev):				"$/vision2/release/test"
+
+all base(dev):					"$/base"
+	exclude
+		"table_eiffel3"
+	end
+
+external
+
+	include_path:
+		"$WS/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+	object:
+		"$(WS)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+		"`gtk-config --libs`"
+
+end

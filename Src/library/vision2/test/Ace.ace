@@ -1,0 +1,43 @@
+system
+
+	test
+
+root
+
+	TEST: make_and_launch
+
+default
+
+	assertion (no)
+
+	debug("EVENT_TRACE")
+	debug("EV_GTK_DEBUG")
+cluster
+
+dev:						"$WS"
+
+event(dev):					"$/event"
+
+gel(dev):					"$/gel"
+
+all vision2(dev):				"$/v2_hack-o-rama"
+	exclude
+		"mswin";
+		"new_figures";
+		"EIFGEN";
+	end
+
+all base(dev):					"$/base"
+	exclude
+		"table_eiffel3"
+	end
+
+external
+
+	include_path:
+		"$WS/v2_hack-o-rama/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+	object:
+		"$(WS)/v2_hack-o-rama/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_eiffel.o",
+		"`gtk-config --libs`"
+
+end

@@ -1,0 +1,31 @@
+#!/bin/bash
+cvs -d :pserver:$USER@cvs:/home/cvs export -r HACK-O-RAMA vision2
+cp RELEASE_NOTES vision2
+cd vision2
+make
+echo -n "."
+rm -rf documentation perlvision.pl test Makefile components extra release
+echo -n "."
+rm -rf `find . -name '*_notes*'`
+echo -n "."
+rm -rf `find . -name '*to_do*'`
+echo -n "."
+rm -rf `find . -name '*.def*'`
+echo -n "."
+for file in `find . -name '*.e'`
+do
+	if grep "^--| FIXME Not for release" $file > /dev/null 2>&1
+	then
+		rm -f $file
+	else
+		grep -v "\$Id$file > $file.new
+		mv -f $file.new $file
+		if [ `grep -v \"C $file | fmt -s -w 80 | wc -l` != `grep -v \"C $file | wc -l` ]
+		then
+			 echo "> 80 cols! $file"
+		fi
+		grep -v -- "--|" $file > $file.new
+		mv -f $file.new $file
+	fi
+done
+echo "Done!"

@@ -13,6 +13,11 @@ feature -- Externals
 --			"C signature (): GtkWidget* use <gtk/gtk.h>"
 --		end
 
+	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER) is
+		external
+			"C signature (GdkWindow*, GdkRectangle*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_entry_set_max_length (a_entry: POINTER; a_max: INTEGER) is
 		external
 			"C (GtkEntry*, gint) | <gtk/gtk.h>"

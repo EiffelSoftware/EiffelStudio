@@ -554,7 +554,7 @@ end
 										c_name, <<"EIF_REFERENCE">>)
 								end
 							end
-							buf.putstring (gc_rparan_comma)
+							buf.putstring (gc_rparan_semi_c)
 
 							if gen_type /= Void then
 								generate_block_close
@@ -566,7 +566,7 @@ end
 							context.local_var.print_register
 							buf.putstring (" = RTLB(")
 							buf.putint (bit_i.size)
-							buf.putstring (gc_rparan_comma)
+							buf.putstring (gc_rparan_semi_c)
 							buf.new_line
 						end
 					end
@@ -622,7 +622,7 @@ end
 
 						end
 					end
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 
 					if gen_type /= Void then
 						generate_block_close
@@ -633,7 +633,7 @@ end
 					context.result_register.print_register
 					buf.putstring (" = RTLB(")
 					buf.putint (bit_i.size)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 				end
 			end
@@ -1278,7 +1278,7 @@ end
 			buf := buffer
 			buf.putstring ("RTSA(")
 			context.generate_current_dtype
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 		end
 
@@ -1310,7 +1310,7 @@ end
 				buf.putstring (tag)
 				buf.putchar ('(')
 				context.current_register.print_register
-				buf.putstring (gc_rparan_comma)
+				buf.putstring (gc_rparan_semi_c)
 				buf.new_line
 			end
 		end
@@ -1340,7 +1340,7 @@ end
 				if nb_refs > 0 then
 					buf.putstring ("RTXS(")
 					buf.putint (nb_refs)
-					buf.putstring (gc_rparan_comma)
+					buf.putstring (gc_rparan_semi_c)
 					buf.new_line
 				end
 				rescue_clause.generate
@@ -1504,7 +1504,7 @@ end
 			feature_origin (buf)
 			buf.putstring (gc_comma)
 			buf.putstring (" dtype")
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 		end
 
@@ -1537,7 +1537,7 @@ end
 			end
 			buf.putstring (gc_comma)
 			buf.putint (real_body_id - 1)
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 		end
 

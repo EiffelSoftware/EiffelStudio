@@ -62,7 +62,7 @@ feature
 			buf := buffer
 			buf.putstring (" = RTHP(");
 			expr.print_register;
-			buf.putstring (gc_rparan_comma);
+			buf.putstring (gc_rparan_semi_c);
 			buf.new_line;
 		end;
 	

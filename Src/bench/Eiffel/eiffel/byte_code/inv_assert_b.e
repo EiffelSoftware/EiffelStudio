@@ -41,7 +41,7 @@ feature
 				buf.putstring ("RTIS(")
 			end
 			context.Current_register.print_register
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 				-- Now evaluate the expression
 			expr.generate

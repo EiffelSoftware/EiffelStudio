@@ -159,7 +159,7 @@ feature
 						info.generate;
 						buf.putstring ("), ");
 						print_register;
-						buf.putstring (gc_rparan_comma);
+						buf.putstring (gc_rparan_semi_c);
 						buf.new_line;
 						call.generate_creation_call;
 					else
@@ -228,7 +228,7 @@ feature
 						info.generate;
 						buf.putstring ("), ");
 						print_register;
-						buf.putstring (gc_rparan_comma);
+						buf.putstring (gc_rparan_semi_c);
 						buf.new_line;
 					else
 						-- We had to get a regiser because RTAR evaluates its
@@ -238,7 +238,7 @@ feature
 						print_register;
 						buf.putstring (" = RTLN(");
 						info.generate;
-						buf.putstring (gc_rparan_comma);
+						buf.putstring (gc_rparan_semi_c);
 						buf.new_line;
 					end;
 					if call /= Void then
@@ -279,7 +279,7 @@ feature
 				buf := buffer
 				buf.putstring ("RTCI(");
 				print_register;
-				buf.putstring (gc_rparan_comma);
+				buf.putstring (gc_rparan_semi_c);
 				buf.new_line;
 			end
 		end;
@@ -299,7 +299,7 @@ feature
 			buf := buffer
 			buf.putstring ("RTLN(");
 			info.generate;
-			buf.putstring (gc_rparan_comma);
+			buf.putstring (gc_rparan_semi_c);
 			buf.new_line;
 		end;
 

@@ -66,7 +66,7 @@ feature
 				buf.putstring ("RTCS(")
 			end
 			generate_assertion_code (In_loop_variant)
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 			expr.generate
 			register.print_register
@@ -113,7 +113,7 @@ feature
 				buf.putstring ("RTCS(")
 			end
 			generate_assertion_code (In_loop_variant)
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 			expr.generate
 			new_register.print_register

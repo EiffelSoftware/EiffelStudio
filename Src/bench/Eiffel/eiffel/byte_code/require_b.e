@@ -67,7 +67,7 @@ feature
 				buf.putstring ("RTCS(")
 			end
 			generate_assertion_code (context.assertion_type)
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 
 				-- Now evaluate the expression
@@ -80,7 +80,7 @@ feature
 			else
 				context.print_current_label
 			end
-			buf.putstring (gc_rparan_comma)
+			buf.putstring (gc_rparan_semi_c)
 			buf.new_line
 			buf.putstring ("RTCK;")
 			buf.new_line

@@ -124,6 +124,12 @@ feature {NONE} -- Initialization
 			create directory_input
 			directory_input.disable_edit
 			directory_input.change_actions.extend (agent update_buttons)
+			create color_input
+			color_input.disable_edit
+			color_input.change_actions.extend (agent update_buttons)
+			create font_input
+			font_input.disable_edit
+			font_input.change_actions.extend (agent update_buttons)
 			create filename_input
 			filename_input.change_actions.extend (agent update_buttons)
 			string_item.enable_select
@@ -205,6 +211,12 @@ feature {NONE} -- Implementation
 	filename_input: EV_TEXT_FIELD
 		-- Input field for FILENAME constants.
 		
+	color_input: EV_TEXT_FIELD
+		-- Input field for COLOR constants.
+		
+	font_input: EV_TEXT_FIELD
+		-- Input field for FONT constants.
+		
 	remove_displayed_input_field is
 			-- Ensure that `entry_selection_parent' is empty
 		do
@@ -245,13 +257,9 @@ feature {NONE} -- Implementation
 				-- `parent' to determine which one must be validated
 			if string_input.parent /= Void then
 				Result := not string_input.text.is_empty
-			elseif integer_input.parent /= Void then
-				Result := True
-			elseif directory_input.parent /= Void then
-				Result := True
 			elseif filename_input.parent /= Void then
 				Result := not filename_input.text.is_empty
-			elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
+			else
 				Result := True
 			end
 		end
@@ -272,8 +280,7 @@ feature {NONE} -- Implementation
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end					
-				end
-				if type_combo_box.selected_item.text.is_equal (Integer_constant_type) and modify_constant /= Void then
+				elseif type_combo_box.selected_item.text.is_equal (Integer_constant_type) and modify_constant /= Void then
 					if modify_constant.name.is_equal (name_field.text) then
 						new_button.disable_sensitive
 					if integer_input.text.is_equal (modify_constant.value_as_string) then
@@ -285,8 +292,7 @@ feature {NONE} -- Implementation
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				end
-				if type_combo_box.selected_item.text.is_equal (directory_constant_type) and modify_constant /= Void then
+				elseif type_combo_box.selected_item.text.is_equal (directory_constant_type) and modify_constant /= Void then
 					if modify_constant.name.is_equal (name_field.text) then
 						new_button.disable_sensitive
 						modify_button.enable_sensitive
@@ -294,8 +300,23 @@ feature {NONE} -- Implementation
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
 					end
-				end
-				if type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
+				elseif type_combo_box.selected_item.text.is_equal (color_constant_type) and modify_constant /= Void then
+					if modify_constant.name.is_equal (name_field.text) then
+						new_button.disable_sensitive
+						modify_button.enable_sensitive
+					else
+						new_button.enable_sensitive
+						modify_button.disable_sensitive
+					end
+				elseif type_combo_box.selected_item.text.is_equal (font_constant_type) and modify_constant /= Void then
+					if modify_constant.name.is_equal (name_field.text) then
+						new_button.disable_sensitive
+						modify_button.enable_sensitive
+					else
+						new_button.enable_sensitive
+						modify_button.disable_sensitive
+					end
+				elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
 					new_button.enable_sensitive
 					modify_button.enable_sensitive
 				end
@@ -347,6 +368,46 @@ feature {NONE} -- Implementation
 				rebuild_for_selected_type (integer_item.text)
 			end
 			currently_selected_type := Integer_constant_type
+		end
+		
+	color_item_selected is
+			-- Called by `select_actions' of `color_item'.
+		do
+			name_field.enable_edit
+			name_field.enable_sensitive
+			name_field.remove_text
+			new_button.disable_sensitive
+			new_button.set_text (New_button_text)
+			if not color_item.select_actions.state.is_equal (color_item.select_actions.blocked_state) then
+				constants_list.remove_selection
+				color_input.remove_text
+			end
+			remove_displayed_input_field
+			entry_selection_parent.extend (color_input)
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (integer_constant_type) then
+				rebuild_for_selected_type (color_item.text)
+			end
+			currently_selected_type := Color_constant_type
+		end
+		
+	font_item_selected is
+			-- Called by `select_actions' of `font_item'.
+		do
+			name_field.enable_edit
+			name_field.enable_sensitive
+			name_field.remove_text
+			new_button.disable_sensitive
+			new_button.set_text (New_button_text)
+			if not font_item.select_actions.state.is_equal (font_item.select_actions.blocked_state) then
+				constants_list.remove_selection
+				font_input.remove_text
+			end
+			remove_displayed_input_field
+			entry_selection_parent.extend (font_input)
+			if not display_all_types.is_selected and not currently_selected_type.is_equal (font_constant_type) then
+				rebuild_for_selected_type (font_item.text)
+			end
+			currently_selected_type := Font_constant_type
 		end
 
 	directory_item_selected is
@@ -414,7 +475,9 @@ feature {NONE} -- Implementation
 			-- `new_button' has been selected, so add a new constant accordingly.
 		local
 			add_constant_command: GB_COMMAND_ADD_CONSTANT
-			directory_dialog: EV_DIRECTORY_DIALOG
+			a_directory_dialog: EV_DIRECTORY_DIALOG
+			a_color_dialog: EV_COLOR_DIALOG
+			a_font_dialog: EV_FONT_DIALOG
 		do
 				-- As only one entry field may be parented, we check the
 				-- `parent' to determine which one must be validated
@@ -428,10 +491,26 @@ feature {NONE} -- Implementation
 				add_constant_command.execute
 				new_button.disable_sensitive
 			elseif directory_input.parent /= Void then
-				create directory_dialog
-				directory_dialog.show_modal_to_window (Current)
-				if not directory_dialog.directory.is_empty then
-					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, directory_dialog.directory))
+				create a_directory_dialog
+				a_directory_dialog.show_modal_to_window (Current)
+				if not a_directory_dialog.directory.is_empty then
+					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_directory_dialog.directory))
+					add_constant_command.execute
+					name_field.remove_text
+				end
+			elseif color_input.parent /= Void then
+				create a_color_dialog
+				a_color_dialog.show_modal_to_window (Current)
+				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					create add_constant_command.make (create {GB_COLOR_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_color_dialog.color))	
+					add_constant_command.execute
+					name_field.remove_text
+				end
+			elseif font_input.parent /= Void then
+				create a_font_dialog
+				a_font_dialog.show_modal_to_window (Current)
+				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					create add_constant_command.make (create {GB_FONT_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_font_dialog.font))
 					add_constant_command.execute
 					name_field.remove_text
 				end
@@ -439,7 +518,6 @@ feature {NONE} -- Implementation
 				select_pixmap
 			end	
 		end
-		
 
 	modify_button_selected is
 			-- Called by `select_actions' of `add_button'.
@@ -452,12 +530,18 @@ feature {NONE} -- Implementation
 			pixmap_dialog: GB_PIXMAP_SETTINGS_DIALOG
 			directory_constant: GB_DIRECTORY_CONSTANT
 			directory_dialog: EV_DIRECTORY_DIALOG
+			color_constant: GB_COLOR_CONSTANT
+			a_color_dialog: EV_COLOR_DIALOG
+			font_constant: GB_FONT_CONSTANT
+			a_font_dialog: EV_FONT_DIALOG
 		do
 				-- An existing constant must now be modified.
 			an_integer_constant ?= modify_constant
 			a_string_constant ?= modify_constant
 			pixmap_constant ?= modify_constant
 			directory_constant ?= modify_constant
+			color_constant ?= modify_constant
+			font_constant ?= modify_constant
 			if an_integer_constant /= Void and then an_integer_constant.can_modify_to_value (integer_input.value) then
 					an_integer_constant.modify_value (integer_input.value)
 						-- Now update the representation of the constant in the list.
@@ -473,6 +557,22 @@ feature {NONE} -- Implementation
 				pixmap_dialog.show_modal_to_window (Current)
 				row := constants_list.i_th (modify_constant_index)
 				row.set_pixmap (pixmap_constant.small_pixmap)
+			elseif color_constant /= Void then
+				create a_color_dialog
+				a_color_dialog.set_title (select_color_location_modify_string + color_constant.name + "%"")
+				a_color_dialog.set_color (color_constant.value)
+				a_color_dialog.show_modal_to_window (Current)
+				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					color_constant.modify_value (a_color_dialog.color)
+				end
+			elseif font_constant /= Void then
+				create a_font_dialog
+				a_font_dialog.set_title (select_font_location_modify_string + font_constant.name + "%"")
+				a_font_dialog.set_font (font_constant.value)
+				a_font_dialog.show_modal_to_window (Current)
+				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					font_constant.modify_value (a_font_dialog.font)
+				end
 			elseif directory_constant /= Void then
 				create directory_dialog
 				directory_dialog.set_title (select_directory_location_modify_string + directory_constant.name + "%"")
@@ -823,6 +923,8 @@ feature {NONE} -- Implementation
 			integer_item.select_actions.block
 			pixmap_item.select_actions.block
 			directory_item.select_actions.block
+			color_item.select_actions.block
+			font_item.select_actions.block
 			select_named_combo_item (type_combo_box, modify_constant.type)
 			if modify_constant.type.is_equal (String_constant_type) then
 				string_item_selected
@@ -832,12 +934,18 @@ feature {NONE} -- Implementation
 				directory_item_selected 
 			elseif modify_constant.type.is_equal (Pixmap_constant_type) then
 				pixmap_item_selected
+			elseif modify_constant.type.is_equal (Color_constant_type) then
+				color_item_selected
+			elseif modify_constant.type.is_equal (Font_constant_type) then
+				font_item_selected
 			end
 			string_item.select_actions.resume
 			integer_item.select_actions.resume
 			pixmap_item.select_actions.resume
 			directory_item.select_actions.resume
 			type_combo_box.select_actions.resume
+			color_item.select_actions.resume
+			font_item.select_actions.resume
 			remove_button.enable_sensitive
 			name_field.set_text (an_item.i_th (1))
 			if string_input.parent /= Void then
@@ -846,6 +954,10 @@ feature {NONE} -- Implementation
 				directory_input.set_text (an_item.i_th (3))
 			elseif integer_input.parent /= Void then
 				integer_input.set_value ((an_item.i_th (3)).to_integer)
+			elseif color_input.parent /= Void then
+				color_input.set_text (an_item.i_th (3))
+			elseif font_input.parent /= Void then
+				font_input.set_text (an_item.i_th (3))
 			end
 			unlock_update
 		end

@@ -72,6 +72,8 @@ feature -- Basic Operation
 			string_constant: GB_STRING_CONSTANT
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			directory_constant: GB_DIRECTORY_CONSTANT
+			color_constant: GB_COLOR_CONSTANT
+			font_constant: GB_FONT_CONSTANT
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			if internal_constant.type.is_equal (Integer_constant_type) then
@@ -86,6 +88,12 @@ feature -- Basic Operation
 			elseif internal_constant.type.is_equal (Directory_constant_type) then
 				directory_constant ?= internal_constant
 				Constants.add_directory (directory_constant)
+			elseif internal_constant.type.is_equal (Color_constant_type) then
+				color_constant ?= internal_constant
+				Constants.add_color (color_constant)
+			elseif internal_constant.type.is_equal (Font_constant_type) then
+				font_constant ?= internal_constant
+				Constants.add_font (font_constant)
 			end
 			editors := all_editors
 			from

@@ -52,6 +52,12 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	is_profile: BOOLEAN is
+			-- Is the option a profile one ?
+		do
+			-- Do nothing
+		end;
+
 	is_free_option: BOOLEAN is
 		do
 			-- Do nothing

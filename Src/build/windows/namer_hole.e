@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_TOOL_BAR) is
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
@@ -45,8 +45,8 @@ feature {NAMER_HOLE} -- Command
 			namable: NAMABLE
 		do
 			namable ?= ev_data.data
-			if namable /= Void and then namable.is_able_to_be_named then
-				namer_window.popup_with (namable)
+			if namable /= Void then
+				change_name (namable)
 			end
 		end
 

@@ -12,6 +12,9 @@ class
 
 inherit
 	SHARED_DEBUG
+		export
+			{NONE} Min_slice_ref, Max_slice_ref
+		end
 
 	EB_CONSTANTS
 		export
@@ -160,7 +163,6 @@ feature -- Status setting
 			i: INTEGER
 			s: STRING
 			first_dot, par1, par2, first_op: INTEGER
-			rest: STRING
 			op: STRING
 			look_for_op: BOOLEAN
 		do
@@ -168,6 +170,8 @@ feature -- Status setting
 			error_message := Void
 			feature_name := Void
 			is_constant := False
+			is_non_equality_test := False
+			is_equality_test := False
 			constant_result_type := Void
 			constant_result_value := Void
 			is_identity := False
@@ -254,6 +258,12 @@ feature -- Status setting
 				create message.make_with_target (Current, s)
 				syntax_error := syntax_error or message.syntax_error
 			end
+			if is_equality_test or is_non_equality_test then
+					-- We must have a target and exactly one parameter.
+				if (target = Void) or (parameters.count /= 1) then
+					syntax_error := True
+				end
+			end
 		ensure
 			expression_set: expression = new_expr
 			feature_name_if_not_error: (not syntax_error) implies (feature_name /= Void)
@@ -268,6 +278,106 @@ feature -- Status report
 			if Result then
 				Result := not expr.has ('%R') and not expr.has ('%N')
 			end
+		end
+
+	is_condition (f: E_FEATURE): BOOLEAN is
+			-- Is `Current' a condition (boolean query) in the context of `f'?
+		require
+			valid_f: f /= Void
+			no_error: not syntax_error
+			good_state: f.written_class /= Void and then f.written_class.has_feature_table
+		local
+			fargs: LIST [STRING]
+			locals: EIFFEL_LIST [TYPE_DEC_AS]
+			type: TYPE_A
+			t: TYPE
+			fi: FEATURE_I
+			i: INTEGER
+			prev_class: CLASS_C
+			prev_cluster: CLUSTER_I
+		do
+			check
+				not is_equality_test and not is_non_equality_test
+				-- These cases imply we have a target.
+			end
+				-- First, initialize the context.
+			prev_class := System.current_class
+			prev_cluster := Inst_context.cluster
+			System.set_current_class (f.written_class)
+			Inst_context.set_cluster (f.written_class.cluster)
+			
+			result_static_type := Void
+			if feature_name.is_equal (Result_name) then
+					-- Ah, that's an easy one: we evaluate the result.
+				type := f.type
+				if type /= Void then
+					result_static_type := type.associated_class
+				end
+			else
+					-- First look up in the feature arguments.
+				if f.arguments /= Void then
+					fargs := f.argument_names
+					from
+						fargs.start
+					until
+						fargs.after or result_static_type /= Void
+					loop
+						if fargs.item.is_equal (feature_name) then
+							type := f.arguments.i_th (fargs.index)
+							if i /= Void then
+								result_static_type := type.associated_class
+							end
+						end
+						fargs.forth
+					end
+				end
+				locals := f.locals
+				if result_static_type = Void and then locals /= Void then
+						-- Then look up in the feature locals
+					from
+						locals.start
+					until
+						locals.after or result_static_type /= Void
+					loop
+						from
+							i := 1
+						until
+							i > locals.item.id_list.count or result_static_type /= Void
+						loop
+							if locals.item.item_name (i).is_equal (feature_name) then
+								t := locals.item.type
+								if t /= Void then
+									result_static_type := t.actual_type.associated_class
+								end
+							end
+							i := i + 1
+						end
+						locals.forth
+					end
+				end
+				if result_static_type = Void then
+						-- Last, look up in the class features.
+					fi := f.written_class.feature_named (feature_name)
+					if fi /= Void and then fi.type /= Void then
+						result_static_type := fi.type.actual_type.associated_class
+					end
+				end
+			end
+			if result_static_type /= Void then
+				if message /= Void then
+					message.find_static_type
+					final_result_static_type := message.final_result_static_type
+				else
+					final_result_static_type := result_static_type
+				end
+				Result := final_result_static_type /= Void and then
+							final_result_static_type = System.boolean_class.compiled_class
+			else
+				Result := False
+			end
+				-- Reset the context.
+			System.set_current_class (prev_class)
+			Inst_context.set_cluster (prev_cluster)
 		end
 
 	expression: STRING
@@ -332,7 +442,6 @@ feature -- Basic operations
 			running_and_stopped: Application.is_running and Application.is_stopped
 		local
 			f: E_FEATURE
-			o: DEBUGGED_OBJECT
 			par1: EB_EXPRESSION
 		do
 			error_message := Void
@@ -340,6 +449,7 @@ feature -- Basic operations
 			result_static_type := Void
 			final_result_type := Void
 			final_result_value := Void
+			final_result_static_type := Void
 			if is_identity then
 				check
 					parameters.count = 1
@@ -347,9 +457,13 @@ feature -- Basic operations
 				end
 				par1 := parameters.first
 				par1.evaluate
-				result_object := par1.result_object
-				result_static_type := par1.result_static_type
+				result_object := par1.final_result_value
+				result_static_type := par1.final_result_static_type
 				error_message := par1.error_message
+			elseif is_equality_test then
+				evaluate_equal
+			elseif is_non_equality_test then
+				evaluate_different
 			elseif is_constant then
 				result_object := constant_result_value
 				result_static_type := constant_result_type
@@ -421,6 +535,7 @@ feature -- Basic operations
 							else
 								final_result_value := message.final_result_value
 								final_result_type := message.final_result_type
+								final_result_static_type := message.final_result_static_type
 							end
 						elseif result_object.is_void then
 							error_message := feature_name + " has a Void result"
@@ -428,7 +543,7 @@ feature -- Basic operations
 							error_message := "Could not evaluate the dynamic type of " + feature_name
 						end
 					else
-						error_message := "Could not evaluate " + expression
+						error_message := "Could not evaluate " + feature_name
 					end
 				else
 					final_result_value := result_object
@@ -439,10 +554,12 @@ feature -- Basic operations
 					else
 						error_message := "Could not evaluate the type of " + expression
 					end
+					final_result_static_type := result_static_type
 				end
 			end
 		ensure
 			error_message_if_failed: ((final_result_value = Void) implies (error_message /= Void)) and
+									 ((final_result_static_type = Void) implies (error_message /= Void)) and
 									 ((final_result_type = Void) implies (error_message /= Void))
 		end
 
@@ -484,17 +601,57 @@ feature {EB_EXPRESSION} -- Status report: intermediate results.
 			-- Result of `Current'.
 			--| Only valid after `evaluate' was called.
 
-feature {NONE} -- Internal status
+	final_result_static_type: CLASS_C
+			-- Static type of `Current'.
+			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
 
-	is_constant: BOOLEAN
-			-- Does `Current' operate on a constant?
+	target: EB_EXPRESSION
+			-- Target for the call described by `Current'.
+			--| Only for contracts.
 
-	constant_result_value: DUMP_VALUE
-			-- Value associated to a constant expression.
-	
-	constant_result_type: CLASS_C
-			-- Type associated to a constant expression.
-	
+	find_static_type is
+			-- Find the static type of the final result of `Current'.
+		require
+			has_target: target /= Void
+			target_has_type: target.result_static_type /= Void
+		local
+			t: TYPE
+			fi: FEATURE_I
+			prev_class: CLASS_C
+			prev_cluster: CLUSTER_I
+		do
+			if is_equality_test or is_non_equality_test then
+				result_static_type := System.boolean_class.compiled_class
+			else
+				result_static_type := Void
+				fi := target.result_static_type.feature_named (feature_name)
+				if fi /= Void then
+					t := fi.type
+					if t /= Void then
+							-- First, initialize the context.
+						prev_class := System.current_class
+						prev_cluster := Inst_context.cluster
+						System.set_current_class (fi.written_class)
+						Inst_context.set_cluster (fi.written_class.cluster)
+			
+						result_static_type := t.actual_type.associated_class
+						
+							-- Reset the context.
+						System.set_current_class (prev_class)
+						Inst_context.set_cluster (prev_cluster)
+					end
+				end
+			end
+			if result_static_type /= Void then
+				if message /= Void then
+					message.find_static_type
+					final_result_static_type := message.final_result_static_type
+				else
+					final_result_static_type := result_static_type
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	parse_parameters (pars: STRING) is
@@ -551,8 +708,6 @@ feature {NONE} -- Implementation
 			-- Do nothing if there already was a syntax error.
 		require
 			valid_fn: fn /= Void
-		local
-			i, first_weird, last_weird: INTEGER
 		do
 			fn.left_adjust
 			fn.right_adjust
@@ -583,6 +738,10 @@ feature {NONE} -- Implementation
 				is_constant := True
 				constant_result_type := System.boolean_class.compiled_class
 				constant_result_value := create {DUMP_VALUE}.make_boolean (fn.to_boolean, constant_result_type)
+			elseif fn.is_equal (infix_feature_name_with_symbol ("=")) then
+				is_equality_test := True
+			elseif fn.is_equal (infix_feature_name_with_symbol ("/=")) then
+				is_non_equality_test := True
 			elseif Syntax_checker.is_valid_feature_name (fn) then
 				-- Nothing special.
 			else
@@ -593,9 +752,17 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			set_if_valid: (not syntax_error) implies (
-						(Syntax_checker.is_valid_feature_name (feature_name) or Syntax_checker.is_constant (feature_name)) and
-						(feature_name = fn)
-					)
+							(Syntax_checker.is_valid_feature_name (feature_name) or
+							 Syntax_checker.is_constant (feature_name) or
+							 is_equality_test or is_non_equality_test
+							) and
+							(feature_name = fn)
+						  )
+			valid_flags: (not syntax_error) implies (
+						 (is_identity = feature_name.is_equal (Identity)) and
+						 (is_equality_test = feature_name.is_equal (infix_feature_name_with_symbol ("="))) and
+						 (is_non_equality_test = feature_name.is_equal (infix_feature_name_with_symbol ("/=")))
+						 )
 		end
 
 	remove_prefix_operators (s: STRING) is
@@ -605,29 +772,31 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			ops: ARRAYED_LIST [STRING]
 		do
-			from
-				i := 1
-				create ops.make (5)
-				op := operator_starting_at (i, s)
-			until
-				(i > s.count) or else (not is_blank (s.item (i)) and op = Void)
-			loop
-				if op /= Void then
-					s.tail (s.count - (op.count + i - 1))
-					ops.extend (op)
-					i := 0
+			if not s.is_empty then
+				from
+					i := 1
+					create ops.make (5)
+					op := operator_starting_at (i, s)
+				until
+					(i > s.count) or else (not is_blank (s.item (i)) and op = Void)
+				loop
+					if op /= Void then
+						s.tail (s.count - (op.count + i - 1))
+						ops.extend (op)
+						i := 0
+					end
+					i := i + 1
+					op := operator_starting_at (i, s)
 				end
-				i := i + 1
-				op := operator_starting_at (i, s)
-			end
-			from
-				ops.finish
-			until
-				ops.before
-			loop
-				s.append_character ('.')
-				s.append (prefix_feature_name_with_symbol (ops.item))
-				ops.back
+				from
+					ops.finish
+				until
+					ops.before
+				loop
+					s.append_character ('.')
+					s.append (prefix_feature_name_with_symbol (ops.item))
+					ops.back
+				end
 			end
 		end
 
@@ -650,6 +819,13 @@ feature {NONE} -- Implementation
 					Result := s.substring (pos, i - 1)
 				end
 			end
+			if Result = Void then
+				if s.item (pos) = '=' then
+					Result := "="
+				elseif (s.item (pos) = '/') and (pos < s.count) and then (s.item (pos + 1) = '=') then
+					Result := "/="
+				end
+			end
 			from
 				Syntax_checker.Basic_operators.start
 			until
@@ -665,7 +841,7 @@ feature {NONE} -- Implementation
 							if
 								(pos + cop.count <= s.count) and then
 								(is_blank (s.item (pos + cop.count))) and
-								(pos > 1 and then is_blank (s.item (pos - 1)))
+								((pos = 1) or (pos > 1 and then is_blank (s.item (pos - 1))))
 							then
 								Result := cop
 							end
@@ -751,6 +927,40 @@ feature {NONE} -- Implementation
 			is_not_blank: (Result < s.count) implies not is_blank (s.item (Result))
 		end
 
+	evaluate_equal is
+			-- Evaluate `Current' as an equality test.
+		require
+			parsed: feature_name /= Void
+			really_equality_test: feature_name.is_equal (infix_feature_name_with_symbol ("="))
+			operands: parameters.count = 1 and target /= Void
+		local
+			res: BOOLEAN
+		do
+			evaluate_parameters
+			if error_message = Void then
+				res := target.result_object.same_as (parameters.first.result_object)
+				result_static_type := System.boolean_class.compiled_class
+				create result_object.make_boolean (res, result_static_type)
+			end
+		end
+
+	evaluate_different is
+			-- Evaluate `Current' as an non-equality test.
+		require
+			parsed: feature_name /= Void
+			really_equality_test: feature_name.is_equal (infix_feature_name_with_symbol ("/="))
+			operands: parameters.count = 1 and target /= Void
+		local
+			res: BOOLEAN
+		do
+			evaluate_parameters
+			if error_message = Void then
+				res := not target.result_object.same_as (parameters.first.result_object)
+				result_static_type := System.boolean_class.compiled_class
+				create result_object.make_boolean (res, result_static_type)
+			end
+		end
+
 	evaluate_feature_on_class (f: E_FEATURE) is
 			-- Evaluate `f' in the context of its dynamic_class
 		require
@@ -773,28 +983,32 @@ feature {NONE} -- Implementation
 		require
 			valid_feature: sf /= Void
 			valid_dtype: dtype /= Void
-			valid_address: o_addr /= Void implies (Application.is_valid_object_address (o_addr))
+			valid_address: (o_addr /= Void) implies (Application.is_valid_object_address (o_addr))
 			enough_data: (o_addr = Void) /= (value = Void)
+			good_type: (o_addr /= Void) implies ((create {DEBUGGED_OBJECT}.make (o_addr, 0, 1)).dtype = dtype)
 		local
 			lst: LIST [ABSTRACT_DEBUG_VALUE]
 			dmp: DUMP_VALUE
-			found: BOOLEAN
 			par: INTEGER
 			f: E_FEATURE
 			realf: E_FEATURE
-			fid: INTEGER
 			rout_info: ROUT_INFO
 			obj: DEBUGGED_OBJECT
 			dv: ABSTRACT_DEBUG_VALUE
+			addr: STRING
 		do
+			addr := o_addr
+			if addr = Void then
+				addr := value.address
+			end
 			f := sf.ancestor_version (dtype)
 			if f = Void then
 				error_message := "No descendant of feature " + sf.name + " in class " + dtype.name_in_upper
 			elseif f.associated_feature_i.is_once and f.type /= Void then
 				evaluate_once (f)
 			elseif f.is_attribute then
-				if o_addr /= Void then
-					create obj.make (o_addr, 0, 1)
+				if addr /= Void then
+					create obj.make (addr, 0, 1)
 					lst := obj.attributes
 					dv := find_item_in_list (f.name, lst)
 					result_static_type := f.type.associated_class
@@ -850,10 +1064,8 @@ feature {NONE} -- Implementation
 				loop
 					dmp := parameters.item.final_result_value
 					dmp.send_value
-					io.putstring ("Sending parameter")
 					if (not realf.arguments.i_th (parameters.index).is_basic) and dmp.is_basic then
 						send_rqst_0 (Rqst_metamorphose)
-						io.putstring ("Converting parameter")
 					end
 					parameters.forth
 				end
@@ -878,9 +1090,9 @@ feature {NONE} -- Implementation
 						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 					else
 						if dtype.types.count > 1 then
-							if o_addr /= Void then
+							if addr /= Void then
 									-- The type has generic derivations: we need to find the precise type.
-								create obj.make (o_addr, 0, 1)
+								create obj.make (addr, 0, 1)
 								send_rqst_3 (Rqst_dynamic_eval, f.feature_id, obj.class_type.static_type_id - 1, par)
 							else
 									--| Shouldn't happen: basic types are not generic.
@@ -897,6 +1109,10 @@ feature {NONE} -- Implementation
 						item.set_hector_addr
 						result_object := item.dump_value
 						result_static_type := f.type.associated_class
+						if result_static_type.is_basic and (result_object.address /= Void) then
+								-- We expected a basic type, but got a reference.
+							result_object := result_object.to_basic
+						end
 					else
 						error_message := "Function " + f.name + " raised an exception"
 					end
@@ -910,8 +1126,6 @@ feature {NONE} -- Implementation
 			-- Retrieve the dump result of `expr'.
 		require
 			valid_expression: expr /= Void
-		local
-			dv: ABSTRACT_DEBUG_VALUE
 		do
 			Result := expr.final_result_value
 		ensure
@@ -974,7 +1188,6 @@ feature {NONE} -- Implementation
 			loop
 				parameters.item.evaluate
 				error_message := parameters.item.error_message
-					-- FIXME XR: We must protect the parameters!
 				parameters.forth
 			end
 		end
@@ -1024,7 +1237,6 @@ feature {NONE} -- Implementation
 		local
 			lower_name: STRING
 			cse: CALL_STACK_ELEMENT
-			o: DEBUGGED_OBJECT
 			cf, f: E_FEATURE
 			pos, cnt: INTEGER
 			locals: EIFFEL_LIST [TYPE_DEC_AS]
@@ -1068,6 +1280,11 @@ feature {NONE} -- Implementation
 							-- Darn, if that's so, I'm gonna look through the current object's attributes and onces!
 						f := cf.written_class.feature_with_name (n)
 						if f /= Void then
+							debug ("DEBUGGER_INTERFACE")
+								io.putstring ("cse.dtype: " + cse.dynamic_class.name_in_upper)
+								io.putstring ("%Ndtype: " + (create {DEBUGGED_OBJECT}.make (cse.object_address, 0, 1)).dtype.name_in_upper)
+								io.new_line
+							end
 							evaluate_feature_on_object (f, cse.object_address, cse.dynamic_class, Void)
 						end
 					else
@@ -1140,15 +1357,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal data
 
-	target: EB_EXPRESSION
-			-- Target for the call described by `Current'.
-
 	message: EB_EXPRESSION
 			-- Message part of `Current'.
 
 	is_identity: BOOLEAN
 			-- Does `Current' simply return its parameter?
 
+	is_constant: BOOLEAN
+			-- Does `Current' operate on a constant?
+
+	is_equality_test: BOOLEAN
+			-- Does `Current' perform a comparison between its target and its parameter?
+
+	is_non_equality_test: BOOLEAN
+			-- Does `Current' perform a difference test between its target and its parameter?
+
+	constant_result_value: DUMP_VALUE
+			-- Value associated to a constant expression.
+	
+	constant_result_type: CLASS_C
+			-- Type associated to a constant expression.
+	
 	parameters: ARRAYED_LIST [EB_EXPRESSION]
 			-- Parameters concerning `Current' at the first level.
 

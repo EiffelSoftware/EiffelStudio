@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 						return_value.append (New_line_tab)
 						return_value.append (Return)
 
-						if visitor.is_structure_pointer then
+						if visitor.is_structure_pointer or visitor.is_interface_pointer then
 							variables.append (retval_struct_pointer_set_up (visitor))
 							
 							signature.append (Space)
@@ -194,8 +194,7 @@ feature {NONE} -- Implementation
 						return_value.append (Semicolon)
 						return_value.append (New_line_tab)
 	
-					end
-					if is_paramflag_fout (arguments.item.flags)  and not is_paramflag_fretval(arguments.item.flags)  then  -- if out or inout
+					elseif is_paramflag_fout (arguments.item.flags) and not is_paramflag_fretval(arguments.item.flags)  then  -- if out or inout
 						if 
 							visitor.is_interface or 
 							visitor.is_structure or 
@@ -230,9 +229,8 @@ feature {NONE} -- Implementation
 							out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 						end
 						signature.append (Comma)
-					end
 	
-					if is_paramflag_fin (arguments.item.flags) and not is_paramflag_fout (arguments.item.flags) then -- in parameter
+					else  --if is_paramflag_fin (arguments.item.flags) and not is_paramflag_fout (arguments.item.flags) then -- in parameter
 						signature.append (in_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
 						signature.append (Comma)
 					end
@@ -557,14 +555,6 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_POINTER_FUNCTION item;
-
-			Result.append (Eif_pointer_function)
-			Result.append (Space)
-			Result.append (Item_clause)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
 			-- `visitor.c_type' a_ptr;
 			--
 
@@ -604,22 +594,6 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- item = eif_pointer_function ("item", tid)
-
-			Result.append (Item_clause)
-			Result.append (Space_equal_space)
-			Result.append (Eif_pointer_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (Item_clause)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
 			-- result = eif_create (tid);
 
 			Result.append (C_result)
@@ -646,22 +620,22 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- a_ptr = (`visitor.c_type') item (eif_access (result));
+			-- a_ptr = eif_field (eif_access (result), "item", EIF_POINTER)
 
-			Result.append ("a_ptr")
-			Result.append (Space_equal_space)
-			Result.append (Open_parenthesis)
-			Result.append (visitor.c_type)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
 			Result.append (Item_clause)
+			Result.append (Space_equal_space)
+			Result.append (Eif_field)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append (Space_open_parenthesis)
 			Result.append (C_result)
 			Result.append (Close_parenthesis)
+			Result.append (Double_quote)
+			Result.append (Item_clause)
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)

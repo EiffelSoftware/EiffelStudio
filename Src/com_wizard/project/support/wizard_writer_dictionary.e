@@ -315,6 +315,8 @@ feature -- CECIL names -- 5
 
 	Eif_procedure_name: STRING is "eif_procedure"
 
+	Eif_field: STRING is "eif_field"
+
 	Eif_character_function: STRING is "EIF_CHARACTER_FUNCTION"
 
 	Eif_character_function_name: STRING is "eif_character_function"

@@ -18,6 +18,12 @@ inherit
 			default_style,
 			on_key_down
 		redefine
+			interface,
+			make
+		end
+
+	EV_RADIO_PEER_IMP
+		redefine
 			interface
 		end
 
@@ -65,6 +71,15 @@ inherit
 create
 	make
 
+feature {NONE} -- Initalization
+
+	make (an_interface: like interface) is
+			-- Create radio button and set `is_selected' to `True'.
+		do
+			Precursor (an_interface)
+			set_checked
+		end
+
 feature {NONE} -- Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -99,6 +114,10 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/25 02:17:44  brendel
+--| Added inheritance of EV_RADIO_PEER_IMP.
+--| Redefined make to set default `is_selected' `True'.
+--|
 --| Revision 1.20  2000/02/24 20:40:22  brendel
 --| Revised.
 --| Changed --| to --! for copyright notice.

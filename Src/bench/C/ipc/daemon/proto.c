@@ -388,7 +388,6 @@ rt_private void commute(int from, int to, int size)
 #ifdef EIF_WIN32
 	if (size == 0)
 		{
-		amount = 0;
 		if (-1 == net_recv(from, buf, amount, TRUE))
 			return;
 		if (-1 == net_send(to, buf, amount)) {	/* Cannot send any more */
@@ -456,11 +455,11 @@ rt_private void run_command(int s)
 
 #ifdef __VMS
      appname = rindex (meltpath, ']');
-     if (appname = rindex (meltpath, ']')) *appname = 0;
+     if (appname) ;
      else strcpy (meltpath, "[]");
 #else
      appname = rindex (meltpath, '/');
-     if (appname = rindex (meltpath, '/')) *appname = 0;
+     if (appname) ;
      else strcpy (meltpath, ".");
 #endif
      envstring = (char *)malloc (strlen (meltpath)
@@ -550,7 +549,6 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	 */
 
 	char *cmd;			/* Command to be run */
-	int status;			/* Command status, as returned by system() */
 	int jobnum;			/* Job number assigned to comamnd */
 	Request dans;		/* Answer (status of comamnd) */
 #ifdef  EIF_WIN32
@@ -558,6 +556,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
 #else
+	int status;			/* Command status, as returned by system() */
     char *meltpath, *appname, *envstring;   /* set MELT_PATH */
 	STREAM *sp;			/* Stream to be used for communications */
 
@@ -585,7 +584,6 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
-	status = -1;
 	if (CreateProcess (
 		NULL,
 		cmd,
@@ -596,10 +594,10 @@ rt_private void run_asynchronous(int s, Request *rqst)
 		NULL,
 		current_dir,
 		&siStartInfo,
-		&procinfo)) {
+		&procinfo))
+	{
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
-		status = 0;
 	}
 	chdir(current_dir);
 	free(current_dir);

@@ -200,6 +200,14 @@ feature {NONE}
 			Result.append ("%Nis not a file")
 		end;
 
+	w_Not_a_file_retry (file_name: STRING): STRING is
+		require
+			file_name_not_void: file_name /= Void
+		do
+			Result := w_Not_a_file (file_name);
+			Result.append (". Try again?")
+		end;
+
 	w_Not_a_filterable_format: STRING is "Only clickable, flat, short %
 									%and flat-short forms may be filtered";
 

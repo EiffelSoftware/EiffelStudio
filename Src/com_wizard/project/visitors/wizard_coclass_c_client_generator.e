@@ -240,6 +240,7 @@ feature {NONE} -- Implementation
 			constructor_body.append (Hresult_variable_name_2)
 			constructor_body.append (Semicolon)
 			constructor_body.append (New_line)
+
 			constructor_body.append (co_initialize_ex_function)
 			constructor_body.append (examine_hresult (Hresult_variable_name))
 
@@ -408,22 +409,6 @@ feature {NONE} -- Implementation
 			valid_multiple_query_interface: not Result.empty
 		end
 
-	co_initialize_ex_function: STRING is
-			-- CoInitialize function call
-		do
-			create Result.make (1000)
-			Result.append (Tab)
-			Result.append ("hr = CoInitializeEx (")
-			Result.append (Null)
-			Result.append (Comma_space)
-			Result.append (concurrency_model)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
-		ensure
-			non_void_co_initialize: Result /= Void
-			valid_co_initialize: not Result.empty
-		end
 
 end -- class WIZARD_COCLASS_C_CLIENT_GENERATOR
 

@@ -561,7 +561,7 @@ feature -- Measurement
 			end
 		end
 
-feature {EV_FIXED_IMP} -- Implementation
+feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 
 	fixed_minimum_height: INTEGER
 
@@ -572,8 +572,16 @@ feature {EV_FIXED_IMP} -- Implementation
 	set_fixed_size (a_width, a_height: INTEGER) is
 			-- Set the size within EV_FIXED without appearing to alter min size.
 		do
-			fixed_minimum_height := minimum_height
-			fixed_minimum_width := minimum_width
+			if a_width > -1  then
+				fixed_minimum_width := a_width
+			else
+				fixed_minimum_width := minimum_width
+			end
+			if a_height > -1 then
+				fixed_minimum_height := a_height
+			else
+				fixed_minimum_height := minimum_height
+			end
 			widget_in_fixed := True
 			C.gtk_widget_set_usize (c_object, a_width, a_height)
 		end
@@ -612,6 +620,11 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			parent_imp := a_container_imp
+			if parent_imp = Void then
+				widget_in_fixed := False
+				fixed_minimum_height := 0
+				fixed_minimum_width := 0
+			end
 		end
 		
 feature {EV_ANY_IMP} -- Implementation
@@ -663,10 +676,9 @@ feature {NONE} -- Implementation
 			-- Abstracted implementation for minumum size setting.
 		do
 			if widget_in_fixed then
-				fixed_minimum_height := 0
-				fixed_minimum_width := 0
-				widget_in_fixed := False
-			end				
+				fixed_minimum_height := a_minimum_height
+				fixed_minimum_width := a_minimum_width
+			end
 			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
 		end
 

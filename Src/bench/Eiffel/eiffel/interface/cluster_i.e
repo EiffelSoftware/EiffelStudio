@@ -1082,13 +1082,13 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			!! d.make (Result)
 			if not d.exists then
 					-- Create the backup directory again just in case the user removes it.
-				d.create
+				d.create_dir
 			end
 			Result.extend (backup_subdirectory)
 
 			!! d.make (Result)
 			if not d.exists then
-				d.create
+				d.create_dir
 			end
 		end
 

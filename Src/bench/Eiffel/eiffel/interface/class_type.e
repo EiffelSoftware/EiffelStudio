@@ -436,7 +436,7 @@ feature -- Generation
 			dir_name.extend (subdirectory)
 			!!dir.make (dir_name)
 			if not dir.exists then
-				dir.create
+				dir.create_dir
 			end
 			!!f_name.make_from_string (dir_name)
 			f_name.set_file_name (base_file_name)

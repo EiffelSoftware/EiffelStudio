@@ -371,13 +371,13 @@ feature -- Automatic backup
 				-- Create the EIFGEN/BACKUP directory
 			!!d.make (Backup_path)
 			if not d.exists then
-				d.create
+				d.create_dir
 			end
 
 				-- Create the EIFGEN/BACKUP/COMP<n> directory
 			!!d.make (backup_subdirectory)
 			if not d.exists then
-				d.create
+				d.create_dir
 			end
 		end
 

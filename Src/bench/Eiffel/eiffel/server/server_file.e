@@ -59,7 +59,7 @@ feature
 			d_name.extend (temp);
 			!!d.make (d_name);
 			if not d.exists then
-				d.create
+				d.create_dir
 			end;
 			!!f_name.make_from_string (d_name);
 			f_name.set_file_name (i.file_name);

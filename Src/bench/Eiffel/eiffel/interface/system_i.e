@@ -2839,7 +2839,7 @@ end
 				dir_name.extend (temp)
 				!! subdir.make (dir_name)
 				if not subdir.exists then
-					subdir.create
+					subdir.create_dir
 				end
 				!!f_name.make_from_string (dir_name)
 				f_name.set_file_name ("ececil.h")

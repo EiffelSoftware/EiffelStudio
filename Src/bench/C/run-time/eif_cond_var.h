@@ -31,8 +31,8 @@ typedef struct
 
 /* Use a Win32 Mutex type for the POSIX pthread_mutex_t; */
 typedef HANDLE pthread_mutex_t;
+typedef void pthread_condattr_t ; /* unused */
 
-typedef void pthread_condattr_t ;
 extern int pthread_cond_init (pthread_cond_t *,const pthread_condattr_t * ) ;
 extern int pthread_cond_wait (pthread_cond_t *, pthread_mutex_t );
 extern int pthread_cond_broadcast (pthread_cond_t *);

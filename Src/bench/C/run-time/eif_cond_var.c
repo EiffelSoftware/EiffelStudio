@@ -37,7 +37,6 @@ int pthread_cond_init (pthread_cond_t *cv, const pthread_condattr_t* unused)
                    FALSE, /* auto-reset
                    FALSE, /* non-signaled 
                    NULL); /* unnamed
-
   return 0;
 }
 

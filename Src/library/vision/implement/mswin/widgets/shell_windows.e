@@ -325,6 +325,7 @@ feature {NONE} -- Implementation
 			b: BULLETIN_WINDOWS
 			d: DIALOG_WINDOWS
 		do
+			children_resizing := True
 			private_attributes.set_height (a_height)
 			private_attributes.set_width (a_width)				
 			local_children := children_list
@@ -354,7 +355,11 @@ feature {NONE} -- Implementation
 				end
 				local_children.forth
 			end
+			children_resizing := False
 		end
+
+	children_resizing: BOOLEAN
+			-- Are the children currently being resized
 
 	default_style: INTEGER is
 		once

@@ -3,15 +3,17 @@ class DO_AS_B
 inherit
 
 	DO_AS
-		rename
-			compound as old_compound
+		redefine
+			compound
 		end;
 
 	INTERNAL_AS_B
-		select
+		redefine
 			compound
 		end
 
-feature
+feature -- Properties
+
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B]
 
 end -- class DO_AS_B

@@ -3,19 +3,22 @@ class BIN_NE_AS_B
 inherit
 
 	BIN_NE_AS
-		rename
-			left as old_ne_left,
-			right as old_ne_right
+		redefine
+			left, right
 		end;
 
 	BIN_EQ_AS_B
 		undefine
 			operator_name
 		redefine
-			byte_anchor
-		select
-			left, right
+			byte_anchor, left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

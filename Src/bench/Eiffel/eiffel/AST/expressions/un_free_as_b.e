@@ -9,25 +9,23 @@ class UN_FREE_AS_B
 inherit
 
 	UN_FREE_AS
-		rename
-			expr as old_free_expr
 		redefine
-			op_name
+			op_name, expr
 		end;
 
 	UNARY_AS_B
 		undefine
 			set
 		redefine
-			byte_node
-		select
-			expr
+			byte_node, expr
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	op_name: ID_AS_B;
 			-- Operator name
+
+	expr: EXPR_AS_B
 
 feature -- Type check
 

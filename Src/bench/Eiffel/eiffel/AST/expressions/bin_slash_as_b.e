@@ -3,22 +3,29 @@ class BIN_SLASH_AS_B
 inherit
 
 	BIN_SLASH_AS
-		rename
-			left as old_slash_left,
-			right as old_slash_right
+		redefine
+			left, right
 		end;
 
 	ARITHMETIC_AS_B
 		redefine
-			numeric_balance
-		select
 			numeric_balance, left, right
+		select
+			numeric_balance
 		end;
 
 	ARITHMETIC_AS_B
 		rename
 			numeric_balance as old_numeric_balance
+		redefine
+			left, right
 		end;
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

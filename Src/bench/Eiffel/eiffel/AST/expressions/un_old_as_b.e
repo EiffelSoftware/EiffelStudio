@@ -3,8 +3,8 @@ class UN_OLD_AS_B
 inherit
 
 	UN_OLD_AS
-		rename
-			expr as old_old_expr
+		redefine
+			expr
 		end;
 
 	UNARY_AS_B
@@ -12,10 +12,12 @@ inherit
 			operator_is_keyword, simple_format
 		redefine
 			type_check, byte_node, operator_is_keyword, format,
-			replicate, fill_calls_list
-		select
-			expr
+			replicate, fill_calls_list, expr
 		end;
+
+feature -- Property
+
+	expr: EXPR_AS_B
 
 feature -- Type check, byte code and dead code removal
 

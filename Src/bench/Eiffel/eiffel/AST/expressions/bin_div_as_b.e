@@ -3,22 +3,29 @@ class BIN_DIV_AS_B
 inherit
 
 	BIN_DIV_AS
-		rename
-			left as old_div_left,
-			right as old_div_right
+		redefine
+			left, right 
 		end;
 
 	ARITHMETIC_AS_B
 		redefine
-			numeric_balance
-		select
 			numeric_balance, right, left
+		select
+			numeric_balance
 		end;
 
 	ARITHMETIC_AS_B
 		rename
 			numeric_balance as old_numeric_balance
+		redefine
+			right, left
 		end;
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B;
 
 feature
 

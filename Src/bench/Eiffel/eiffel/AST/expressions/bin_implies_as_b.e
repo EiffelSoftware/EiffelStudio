@@ -3,17 +3,22 @@ class BIN_IMPLIES_AS_B
 inherit
 
 	BIN_IMPLIES_AS
-		rename
-			left as old_implies_left,
-			right as old_implies_right
+		redefine
+			left, right
 		end;
 
 	BINARY_AS_B
 		undefine
 			bit_balanced
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

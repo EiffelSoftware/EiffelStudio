@@ -3,15 +3,20 @@ class BIN_PLUS_AS_B
 inherit
 
 	BIN_PLUS_AS
-		rename
-			left as old_plus_left,
-			right as old_plus_right
+		redefine
+			left, right
 		end;
 
 	ARITHMETIC_AS_B
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

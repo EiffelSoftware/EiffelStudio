@@ -3,9 +3,8 @@ class BIN_EQ_AS_B
 inherit
 
 	BIN_EQ_AS
-		rename
-			left as old_eq_left,
-			right as old_eq_right
+		redefine
+			left, right
 		end;
 
 	BINARY_AS_B
@@ -13,10 +12,14 @@ inherit
 			operator_is_keyword, operator_is_special, 
 			operator_name
 		redefine
-			type_check, byte_node, replicate
-		select
-			left, right
+			type_check, byte_node, replicate, left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature -- Type check, byte code and dead code removal
 

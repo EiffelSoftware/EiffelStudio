@@ -9,18 +9,21 @@ deferred class COMPARISON_AS_B
 inherit
 
 	COMPARISON_AS
-		rename
-			left as old_left,
-			right as old_right
+		redefine
+			left, right
 		end;
 
 	BINARY_AS_B
 		undefine
 			balanced, operator_is_special, operator_is_keyword
-		select
+		redefine
 			left, right
 		end
 
-feature
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 end -- class COMPARISON_AS_B

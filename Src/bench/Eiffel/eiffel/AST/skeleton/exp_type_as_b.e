@@ -11,13 +11,11 @@ class EXP_TYPE_AS_B
 inherit
 
 	EXP_TYPE_AS
-		rename
-			class_name as old_class_name,
-			generics as old_generics
 		undefine
 			same_as
 		redefine
-			record_expanded, is_deep_equal
+			record_expanded, is_deep_equal,
+			class_name, generics
 		end;
 
 	CLASS_TYPE_AS_B
@@ -27,16 +25,23 @@ inherit
 			format as basic_format
 		undefine
 			set, is_deep_equal, dump, simple_format
+		redefine
+			class_name, generics
 		end;
 	CLASS_TYPE_AS_B
 		undefine
 			set, is_deep_equal, dump, simple_format
 		redefine
-			actual_type, solved_type, format
+			actual_type, solved_type, format, class_name, generics
 		select
-			actual_type, solved_type, format, generics,
-			class_name
+			actual_type, solved_type, format
 		end
+
+feature -- Properties
+
+	class_name: ID_AS_B;
+
+	generics: EIFFEL_LIST_B [TYPE_B]
 
 feature
 

@@ -3,18 +3,20 @@ class UN_PLUS_AS_B
 inherit
 
 	UN_PLUS_AS
-		rename
-			expr as old_plus_expr
+		redefine
+			expr	
 		end;
 
 	UNARY_AS_B
 		redefine
-			byte_node
-		select	
-			expr
+			byte_node, expr
 		end
 
-feature -- Byte node
+feature -- Property
+
+	expr: EXPR_AS_B
+
+feature -- Access
 
 	byte_node: UN_PLUS_B is
 			-- Associated byte code

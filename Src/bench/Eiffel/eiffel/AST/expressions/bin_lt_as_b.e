@@ -3,15 +3,20 @@ class BIN_LT_AS_B
 inherit
 
 	BIN_LT_AS
-		rename
-			left as old_lt_left,
-			right as old_lt_right
+		redefine
+			left, right
 		end;
 
 	COMPARISON_AS_B
-		select
+		redefine
 			left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B	
 
 feature
 

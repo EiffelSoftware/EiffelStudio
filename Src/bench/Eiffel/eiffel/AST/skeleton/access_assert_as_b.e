@@ -12,24 +12,31 @@ class ACCESS_ASSERT_AS_B
 inherit
 
 	ACCESS_ASSERT_AS
-		rename
-			feature_name as old_assert_feature_name,
-			parameters as old_assert_parameters
+		redefine
+			feature_name, parameters 
 		end;
 
 	ACCESS_INV_AS_B
 		rename
 			access_type as feature_access_type
+		redefine
+			parameters, feature_name
 		end;
 
 	ACCESS_INV_AS_B
 		redefine
-			access_type
-		select
 			access_type, parameters, feature_name
+		select
+			access_type
 		end
 
-feature
+feature -- Properties
+
+	feature_name: ID_AS_B
+
+	parameters: EIFFEL_LIST_B [EXPR_AS_B]
+
+feature -- Access
 
 	access_type: TYPE_A is
 			-- Type check an the access to an id

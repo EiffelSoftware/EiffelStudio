@@ -3,19 +3,22 @@ class BIN_POWER_AS_B
 inherit
 
 	BIN_POWER_AS
-		rename
-			left as old_power_left,
-			right as old_power_right
+		redefine
+			left, right
 		end;
 
 	ARITHMETIC_AS_B
 		undefine
 			balanced
 		redefine
-			balanced
-		select
-			left, right
+			balanced, left, right
 		end
+
+feature -- Properties
+
+	left: EXPR_AS_B;
+
+	right: EXPR_AS_B
 
 feature
 

@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 	class_background: WEL_BRUSH is
 			-- Standard window background color
 		once
-			!! Result.make_by_sys_color (Color_window + 1)
+			create Result.make_by_sys_color (Color_window + 1)
 		end
 
 	class_name: STRING is

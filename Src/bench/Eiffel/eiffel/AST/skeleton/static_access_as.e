@@ -229,9 +229,6 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.begin
 
-			ctxt.put_text_item (Ti_feature_keyword)
-			ctxt.put_space
-			
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.format_ast (class_type)
 			create dummy_call

@@ -5,15 +5,11 @@ WARNING!!!: If you are planning to overwrite this file then
 please be sure that you add both of the following things to
 the new server_registration.cpp.
 
-> replace REGCLS_MULTIPLEUSE with REGCLS_SINGLEUSE in
-  ccom_initialize_com_function().
-  -- Lines 427, 434, 441
-
-> Added ProxyStubClsid32 reg key and value to CEiffelProject
+> Add ProxyStubClsid32 reg key and value to CEiffelProject
   coclass and any other newly added creatable coclasses.
   Note: The GUID for the proxy stub should be the same GUID
   as the first interface in the compiler type library.
-  -- Lines 83 - 88
+  -- Lines 71 - 76
 -----------------------------------------------------------*/
 
 #include "server_registration.h"
@@ -51,33 +47,15 @@ const REG_DATA reg_entries[] =
 		TRUE
 	},
 	{
-		__TEXT("AppID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
-		0,
-		"CEiffelProject Application",
-		TRUE
-	},
-	{
-		__TEXT("AppID\\ISE"),
-		__TEXT("AppID"),
-		__TEXT("{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
-		TRUE
-	},
-	{
-		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\InprocServer32"),
 		0,
 		file_name,
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\InprocServer32"),
 		__TEXT("ThreadingModel"),
 		__TEXT("Apartment"),
-		TRUE
-	},
-	{
-		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
-		__TEXT("AppID"),
-		__TEXT("{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		TRUE
 	},
 	{
@@ -98,7 +76,6 @@ const REG_DATA reg_entries[] =
 		__TEXT("EiffelComCompiler.CEiffelProject"),
 		TRUE
 	},
-
 	{
 		__TEXT("EiffelComCompiler.CEiffelProject.1"),
 		0,
@@ -136,33 +113,15 @@ const REG_DATA reg_entries[] =
 		TRUE
 	},
 	{
-		__TEXT("AppID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
-		0,
-		"CEiffelCompiler Application",
-		TRUE
-	},
-	{
-		__TEXT("AppID\\ISE"),
-		__TEXT("AppID"),
-		__TEXT("{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
-		TRUE
-	},
-	{
-		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\InprocServer32"),
 		0,
 		file_name,
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\InprocServer32"),
 		__TEXT("ThreadingModel"),
 		__TEXT("Apartment"),
-		TRUE
-	},
-	{
-		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
-		__TEXT("AppID"),
-		__TEXT("{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		TRUE
 	},
 	{
@@ -214,33 +173,15 @@ const REG_DATA reg_entries[] =
 		TRUE
 	},
 	{
-		__TEXT("AppID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
-		0,
-		"CEiffelCompletionInfo Application",
-		TRUE
-	},
-	{
-		__TEXT("AppID\\ISE"),
-		__TEXT("AppID"),
-		__TEXT("{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
-		TRUE
-	},
-	{
-		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\InprocServer32"),
 		0,
 		file_name,
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\InprocServer32"),
 		__TEXT("ThreadingModel"),
 		__TEXT("Apartment"),
-		TRUE
-	},
-	{
-		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
-		__TEXT("AppID"),
-		__TEXT("{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		TRUE
 	},
 	{
@@ -289,7 +230,7 @@ const REG_DATA reg_entries[] =
 
 const int com_entries_count = sizeof (reg_entries)/sizeof (*reg_entries);
 
-DWORD threadID = GetCurrentThreadId ();
+long lock_count = 0;
 
 
 
@@ -356,13 +297,66 @@ EIF_INTEGER Register( const REG_DATA *rgEntries, int cEntries )
 	return hr;
 };
 
-void LockModule( void )
+EIF_INTEGER ccom_dll_get_class_object_function( CLSID * rclsid, IID * riid, void **ppv )
 
 	/*-----------------------------------------------------------
-	Lock module.
+	DLL get class object funcion
 	-----------------------------------------------------------*/
 {
-	CoAddRefServerProcess ();
+	if (IsEqualGUID (* rclsid, CLSID_CEiffelProject_))
+	{
+		if (!(CEiffelProject_cls_object.IsInitialized))
+			CEiffelProject_cls_object.Initialize();
+		return CEiffelProject_cls_object.QueryInterface (* riid, ppv);
+	}
+	else if (IsEqualGUID (* rclsid, CLSID_CEiffelCompiler_))
+	{
+		if (!(CEiffelCompiler_cls_object.IsInitialized))
+			CEiffelCompiler_cls_object.Initialize();
+		return CEiffelCompiler_cls_object.QueryInterface (* riid, ppv);
+	}
+	else if (IsEqualGUID (* rclsid, CLSID_CEiffelCompletionInfo_))
+	{
+		if (!(CEiffelCompletionInfo_cls_object.IsInitialized))
+			CEiffelCompletionInfo_cls_object.Initialize();
+		return CEiffelCompletionInfo_cls_object.QueryInterface (* riid, ppv);
+	}
+	else
+		return (*ppv = 0), CLASS_E_CLASSNOTAVAILABLE;
+};
+
+EIF_INTEGER ccom_dll_register_server_function( void )
+
+	/*-----------------------------------------------------------
+	Register DLL server.
+	-----------------------------------------------------------*/
+{
+	GetModuleFileName (eif_hInstance, file_name, MAX_PATH);
+
+#ifdef UNICODE
+	lstrcpy (ws_file_name, file_name);
+#else
+	mbstowcs (ws_file_name, file_name, MAX_PATH);
+#endif
+	return Register (reg_entries, com_entries_count);
+};
+
+EIF_INTEGER ccom_dll_unregister_server_function( void )
+
+	/*-----------------------------------------------------------
+	Unregister Server.
+	-----------------------------------------------------------*/
+{
+	return Unregister (reg_entries, com_entries_count);
+};
+
+EIF_INTEGER ccom_dll_can_unload_now_function( void )
+
+	/*-----------------------------------------------------------
+	Whether component can be unloaded?
+	-----------------------------------------------------------*/
+{
+	return lock_count? S_FALSE: S_OK;
 };
 
 void UnlockModule( void )
@@ -371,95 +365,16 @@ void UnlockModule( void )
 	Unlock module.
 	-----------------------------------------------------------*/
 {
-	if (CoReleaseServerProcess () == 0)
-		PostThreadMessage (threadID, WM_QUIT, 0, 0);
+	InterlockedDecrement (&lock_count);
 };
 
-void ccom_register_server_function()
+void LockModule( void )
 
 	/*-----------------------------------------------------------
-	Register server.
+	Lock module.
 	-----------------------------------------------------------*/
 {
-	HRESULT hr = CoInitialize (0);
-	if (FAILED (hr))
-	{
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-	}
-	GetModuleFileName (0, file_name, MAX_PATH);
-
-#ifdef UNICODE
-	lstrcpy (ws_file_name, file_name);
-#else
-	mbstowcs (ws_file_name, file_name, MAX_PATH);
-#endif
-	Register (reg_entries, com_entries_count);
-	CoUninitialize ();
-};
-
-void ccom_unregister_server_function()
-
-	/*-----------------------------------------------------------
-	Unregister server.
-	-----------------------------------------------------------*/
-{
-	HRESULT hr = CoInitialize (0);
-
-	Unregister (reg_entries, com_entries_count);
-	CoUninitialize ();
-	return;
-};
-
-void ccom_initialize_com_function()
-
-	/*-----------------------------------------------------------
-	Initialize server.
-	-----------------------------------------------------------*/
-{
-	HRESULT hr = CoInitialize (0);
-		if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	if (!(CEiffelProject_cls_object.IsInitialized))
-			CEiffelProject_cls_object.Initialize();
-		hr = CoRegisterClassObject (CLSID_CEiffelProject_, static_cast<IClassFactory*>(&CEiffelProject_cls_object), CLSCTX_LOCAL_SERVER, REGCLS_SINGLEUSE, &dwRegister_CEiffelProject);
-	if (FAILED (hr))
-	{
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-	}
-	if (!(CEiffelCompiler_cls_object.IsInitialized))
-			CEiffelCompiler_cls_object.Initialize();
-		hr = CoRegisterClassObject (CLSID_CEiffelCompiler_, static_cast<IClassFactory*>(&CEiffelCompiler_cls_object), CLSCTX_LOCAL_SERVER, REGCLS_SINGLEUSE, &dwRegister_CEiffelCompiler);
-	if (FAILED (hr))
-	{
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-	}
-	if (!(CEiffelCompletionInfo_cls_object.IsInitialized))
-			CEiffelCompletionInfo_cls_object.Initialize();
-		hr = CoRegisterClassObject (CLSID_CEiffelCompletionInfo_, static_cast<IClassFactory*>(&CEiffelCompletionInfo_cls_object), CLSCTX_LOCAL_SERVER, REGCLS_SINGLEUSE, &dwRegister_CEiffelCompletionInfo);
-	if (FAILED (hr))
-	{
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-	}
-
-};
-
-void ccom_cleanup_com_function()
-
-	/*-----------------------------------------------------------
-	Clean up COM.
-	-----------------------------------------------------------*/
-{
-	CoRevokeClassObject (dwRegister_CEiffelProject);
-
-	CoRevokeClassObject (dwRegister_CEiffelCompiler);
-
-	CoRevokeClassObject (dwRegister_CEiffelCompletionInfo);
-
-	CoUninitialize ();
+	InterlockedIncrement (&lock_count);
 };
 #ifdef __cplusplus
 }

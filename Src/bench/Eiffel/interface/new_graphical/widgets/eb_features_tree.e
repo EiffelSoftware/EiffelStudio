@@ -80,37 +80,40 @@ feature -- Access
 	toggle_signatures is
 			-- Toggle signature on/off
 		do
+			signature_enabled := not signature_enabled		
 			recursive_do_all (agent toggle_node_signature)
-			signature_enabled := not signature_enabled			
 		end
 		
 	toggle_node_signature (n: EV_TREE_NODE) is
 			-- Toggle signature mode on the tree node
 		local
 			ef: E_FEATURE
-			efunc: E_FUNCTION
-			l_name: STRING
 		do
 			ef ?= n.data
 			if ef /= Void then
-				if signature_enabled then
-					l_name := ef.name
-				else
-					l_name := ef.feature_signature
-					
-					efunc ?= ef
-					if efunc /= Void then
-						l_name.append (" : " + efunc.type.dump)
-					end
-				end
-				n.set_text (l_name)				
+				n.set_text (feature_name (ef))				
 			end
-		end		
+		end
 		
 	signature_enabled: BOOLEAN
 			-- Do we display signature of feature ?
 
 feature {EB_FEATURES_TOOL} -- Implementation
+
+	feature_name (a_ef: E_FEATURE): STRING is
+			-- Feature name of `a_ef' depending of the signature displayed or not.
+		require
+			a_ef_not_void: a_ef /= Void
+		do
+			if signature_enabled then
+				Result := a_ef.feature_signature
+				if a_ef.type /= Void then
+					Result.append (": " + a_ef.type.dump)						
+				end
+			else
+				Result := a_ef.name
+			end
+		end
 
 	build_tree (fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
 			-- Build the feature tree corresponding to current class.
@@ -451,25 +454,23 @@ feature {NONE} -- Implementation
 				loop
 					f_item_name := f_names.item.internal_name
 					create tree_item
-					tree_item.set_text (f_item_name)
-					if is_clickable then
-						if
-							features_tool.current_compiled_class /= Void and then
-							features_tool.current_compiled_class.has_feature_table
-						then
-							ef := features_tool.current_compiled_class.feature_with_name (
-								f_item_name)
-							if ef /= Void then
+					ef := features_tool.current_compiled_class.feature_with_name (f_item_name)
+					if ef = Void then
+						raise ("Void feature")
+					else
+						if is_clickable then
+							if
+								features_tool.current_compiled_class /= Void and then
+								features_tool.current_compiled_class.has_feature_table
+							then
 								tree_item.set_data (ef)
 								tree_item.pointer_button_press_actions.extend (
 									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
 							end
 						end
 					end
-					ef := features_tool.current_compiled_class.feature_with_name (f_item_name)
-					if ef = Void then
-						raise ("Void feature")
-					end
+
+					tree_item.set_text (feature_name (ef))
 					
 					if ef.is_deferred then
 						tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
@@ -518,7 +519,6 @@ feature {NONE} -- Implementation
 					raise ("Void feature")
 				end
 				create tree_item
-				tree_item.set_text (fl.item.eiffel_name)
 				if is_clickable then
 					if 
 						features_tool.current_compiled_class /= Void and then 
@@ -545,6 +545,8 @@ feature {NONE} -- Implementation
 				end
 				if ef = Void then
 					raise ("Void feature")
+				else
+					tree_item.set_text (feature_name (ef))
 				end
 				
 				if ef.is_deferred then

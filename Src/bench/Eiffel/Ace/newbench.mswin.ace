@@ -295,7 +295,6 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
 		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
 		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
-		"$(EIFFEL_SRC)\C\idrs\idr.lib",
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",

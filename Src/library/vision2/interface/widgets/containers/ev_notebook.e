@@ -1,8 +1,15 @@
 indexing
 	description: 
-		"Eiffel Vision notebook. Multiple widget container. Each child is%N%
-		%displayed on an individual page and may be selected via a tab.%N%
-		%The selected page is displayed above all others."
+		"Multiple widget container. Each widget is displayed on an individual%
+		%page. A tab is displayed for each page allow its selection. Only the%
+		%selected page is visible."
+	appearance:
+		"  _______  _______  _______       %N%
+		%_/ tab_1 \/_tab_2_\/_tab_3_\______%N%
+		%|                                |%N%
+		%|        `selected_item'         |%N%
+		%|                                |%N%
+		%----------------------------------"
 	status: "See notice at end of class"
 	keywrods: "notebook, tab, page"
 	date: "$Date$"
@@ -212,6 +219,9 @@ end -- class EV_NOTEBOOK
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/17 23:50:03  oconnor
+--| comments
+--|
 --| Revision 1.18  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -86,9 +86,26 @@ feature -- Initialization
 			-- Create `objects' to hold 2 items.
 		do
 			create objects.make (2)
+			create validate_agents.make (2)
+			create execution_agents.make (2)
+			initialize_agents
 		end
 		
 feature -- Access
+	
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		deferred
+		end
+	
+	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING]
+			-- Agents to query if a property modification is permitted, accessible
+			-- via their associated name.
+	
+	execution_agents: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]
+			-- Agents to execute a property modification, accessible
+			-- via their associated name.
 
 	parent_editor: GB_OBJECT_EDITOR
 		-- Object editor containing `Current'.

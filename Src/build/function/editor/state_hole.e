@@ -9,21 +9,15 @@ class
 
 inherit
 
-	EB_BUTTON
-
-	HOLE
+	EDIT_BUTTON
 		redefine
-			process_state
-		end
-
-	WINDOWS
-		select
-			init_toolkit
+			make, execute, process_state
 		end
 
 	SHARED_APPLICATION
 
-	COMMAND
+	COMMAND_ARGS
+
 
 creation
 
@@ -34,9 +28,8 @@ feature -- Initialization
 	make (a_parent: COMPOSITE) is
 			-- Creation routine
 		do
-			make_visible (a_parent)
-			register
-			add_button_press_action (3, Current, Void)
+			Precursor (a_parent)
+			add_button_press_action (3, Current, First)
 		end
 
 feature 
@@ -52,13 +45,7 @@ feature
 		do
 			set_focus_string (Focus_labels.current_state_label)
 		end
-
-	target: WIDGET is
-			-- Target of the hole.
-		do
-			Result := Current
-		end
-
+ 
 	set_state (s: STRING) is
 			-- Set current state to `s'.
 		local
@@ -71,6 +58,14 @@ feature
 		end
 
 feature {NONE}
+
+	create_empty_editor is
+		local
+			editor: STATE_EDITOR
+		do
+			editor := Window_mgr.state_editor
+			window_mgr.display (editor)
+		end
 
 	states_wnd: MAIN_PANEL_STATES_WND is
 			-- List of available states that is displayed
@@ -94,7 +89,11 @@ feature {NONE}
 	execute (argument: ANY) is
 			-- Display the list of available states.
 		do
-			states_wnd.popup (Shared_app_graph.state_names)
+			if argument = First then
+				states_wnd.popup (Shared_app_graph.state_names)
+			else
+				Precursor (argument)
+			end
 		end
 
 	update_main_panel (s: BUILD_STATE) is

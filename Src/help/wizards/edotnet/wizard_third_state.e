@@ -188,12 +188,6 @@ feature {NONE} -- Vision2 controls
 	remove_button: EV_BUTTON
 			-- Button to remove a selected assembly
 	
---	import_button: EV_BUTTON
---			-- Button labeled "ISE Assemblies manager"
-	
---	browse_button: EV_BUTTON
---			-- Button used to import local assemblies, i.e. run the emitter on them
-
 feature {NONE} -- Implementation
 
 	display_state_text is
@@ -288,40 +282,24 @@ feature {NONE} -- Implementation
 			wizard_information.available_assemblies.extend (assembly_info)
 		end
 
---	import_assembly is
---			-- Launch ISE Assembly Manager.
---		local
---			cursor_pixmap: EV_STOCK_PIXMAPS
---			process_launcher: WEL_PROCESS_LAUNCHER
+--	emit_assembly is
+--			-- Ask for .NET assembly and location and then call the emitter.
 --		do
---			create cursor_pixmap
---			first_window.set_pointer_style (cursor_pixmap.Wait_cursor)
---			import_button.disable_sensitive 
---			create process_launcher
---			process_launcher.launch_and_refresh (ISE_assembly_manager_filename, "", ~on_refresh)
---			first_window.set_pointer_style (cursor_pixmap.Standard_cursor)
---			import_button.enable_sensitive
---			update_gui
+--			entries_checked := True
+--			entries_changed := False			
+--			proceed_with_new_state (create {WIZARD_EMIT_STATE}.make (wizard_information))
+--		ensure
+--			entries_processed: not entries_changed
 --		end
-
-	emit_assembly is
-			-- Ask for .NET assembly and location and then call the emitter.
-		do
-			entries_checked := True
-			entries_changed := False			
-			proceed_with_new_state (create {WIZARD_EMIT_STATE}.make (wizard_information))
-		ensure
-			entries_processed: not entries_changed
-		end
-
-	update_gui is
-			-- Update list of assemblies
-		do
-			wizard_information.update_lists
-			references_to_add.wipe_out
-			added_references.wipe_out
-			fill_lists			
-		end
+--
+--	update_gui is
+--			-- Update list of assemblies
+--		do
+--			wizard_information.update_lists
+--			references_to_add.wipe_out
+--			added_references.wipe_out
+--			fill_lists			
+--		end
 		
 	update_buttons_state (a_row: EV_MULTI_COLUMN_LIST_ROW)is
 			-- Update the state of `Add' and `Remove' buttons
@@ -359,20 +337,20 @@ feature {NONE} -- Implementation
 			Result.set_data (an_assembly_info)
 		end
 
-	build_list_row_from_assembly_name (an_assembly_name: STRING): EV_MULTI_COLUMN_LIST_ROW is
-			-- Create an EV_MULTI_COLUMN_LIST_ROW object representing `an_assembly_name'.
-		require
-			non_void_assembly_name: an_assembly_name /= Void 
-			not_empty_assembly_name: not an_assembly_name.is_empty
-		do
-			create Result
-			Result.extend (an_assembly_name)
-			Result.extend (Empty_string)
-			Result.extend (Empty_string)
-			Result.extend (Empty_string)
-			
-			Result.set_data (an_assembly_name)
-		end
+--	build_list_row_from_assembly_name (an_assembly_name: STRING): EV_MULTI_COLUMN_LIST_ROW is
+--			-- Create an EV_MULTI_COLUMN_LIST_ROW object representing `an_assembly_name'.
+--		require
+--			non_void_assembly_name: an_assembly_name /= Void 
+--			not_empty_assembly_name: not an_assembly_name.is_empty
+--		do
+--			create Result
+--			Result.extend (an_assembly_name)
+--			Result.extend (Empty_string)
+--			Result.extend (Empty_string)
+--			Result.extend (Empty_string)
+--			
+--			Result.set_data (an_assembly_name)
+--		end
 
 	on_refresh is
 			-- Action performed while ISE Assembly Manager is active to refresh EiffelStudio development window

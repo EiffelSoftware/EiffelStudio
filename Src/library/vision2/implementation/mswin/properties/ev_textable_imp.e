@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_TEXT_CONTAINER_IMP
+	EV_TEXTABLE_IMP
 	
 inherit
-	EV_TEXT_CONTAINER_I
+	EV_TEXTABLE_I
 
 feature -- Status setting
 
@@ -59,13 +59,13 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation : the wel values, are deferred here, but
-			   -- they need to be define by the heir
+		  -- they need to be define by the heir
 
 	wel_set_text (str: STRING) is
 		deferred
 		end
 
-end -- class EV_TEXT_CONTAINER_IMP
+end -- class EV_TEXTABLE_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

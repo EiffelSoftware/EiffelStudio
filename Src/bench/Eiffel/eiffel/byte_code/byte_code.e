@@ -782,6 +782,18 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
+	has_loop: BOOLEAN
+			-- Does the current byte code has a loop construct?
+			--| Set during the creation of the byte code at degree 3.
+
+	set_has_loop (v: BOOLEAN) is
+			-- Assign `v' to `has_loop'.
+		do
+			has_loop := v
+		ensure
+			has_loop_set: has_loop = v
+		end
+
 	has_array_as_argument: BOOLEAN is
 			-- Is ARRAY or one of its descendants used as an argument
 		do

@@ -7,7 +7,7 @@ inherit
 	BYTE_NODE
 		redefine
 			analyze, generate, enlarge_tree, make_byte_code,
-			has_loop, assigns_to, is_unsafe, optimized_byte_node,
+			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code, line_number, set_line_number
 		end;
@@ -131,31 +131,26 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	has_loop: BOOLEAN is
-		do
-			Result := compound /= void and then compound.has_loop
-		end;
-
 	assigns_to (i: INTEGER): BOOLEAN is
 		do
-			Result := compound /= void and then compound.assigns_to (i)
+			Result := compound /= Void and then compound.assigns_to (i)
 		end;
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
 		do
-			Result := compound /= void and then
+			Result := compound /= Void and then
 						compound.calls_special_features (array_desc)
 		end
 
 	is_unsafe: BOOLEAN is
 		do
-			Result := compound /= void and then compound.is_unsafe
+			Result := compound /= Void and then compound.is_unsafe
 		end
 
 	optimized_byte_node: like Current is
 		do
 			Result := Current;
-			if compound /= void then
+			if compound /= Void then
 				compound := compound.optimized_byte_node
 			end
 		end
@@ -173,7 +168,7 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 		do
 			Result := Current
-			if compound /= void then
+			if compound /= Void then
 				compound := compound.pre_inlined_code
 			end
 		end
@@ -181,7 +176,7 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
-			if compound /= void then
+			if compound /= Void then
 				compound := compound.inlined_byte_code
 			end
 		end

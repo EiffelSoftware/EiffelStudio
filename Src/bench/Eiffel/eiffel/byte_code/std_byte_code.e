@@ -6,7 +6,7 @@ inherit
 	BYTE_CODE
 		redefine
 			compound, analyze, generate, finish_compound,
-			has_loop, assigns_to, optimized_byte_node,
+			assigns_to, optimized_byte_node,
 			calls_special_features, size,
 			inlined_byte_code, pre_inlined_code
 		end
@@ -1291,12 +1291,6 @@ feature -- Byte code generation
 		end
 
 feature -- Array optimization
-
-	has_loop: BOOLEAN is
-		do
-			Result := (compound /= Void and then compound.has_loop)
-				or else (rescue_clause /= Void and then rescue_clause.has_loop)
-		end
 
 	assigns_to (i: INTEGER): BOOLEAN is
 		do

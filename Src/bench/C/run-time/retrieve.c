@@ -59,6 +59,7 @@
 rt_public struct htable *rt_table;		/* Table used for solving references */
 rt_public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
 rt_public char rt_kind;			/* Kind of storable */
+rt_public char rt_kind_version;		/* Version of storable */
 
 /*
  * Private data declaration
@@ -129,7 +130,7 @@ rt_private char old_rt_kind;			/* Kind of storable */
 /* Declarations to work with streams */
 rt_private char *stream_buffer;
 rt_private int stream_buffer_position;
-rt_private int stream_buffer_size;
+rt_private long stream_buffer_size;
 
 /* Static CID array */
 
@@ -244,10 +245,10 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 			independent_retrieve_init (4096, 1);
 			break;
 		case INDEPENDENT_STORE_4_3:
-			eraise("Cannot retrieve 4.3 independent storable", EN_RETR);
 		case INDEPENDENT_STORE_4_4:		/* New Independent store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = INDEPENDENT_STORE;
+			rt_kind_version = rt_type;
 			independent_retrieve_init (RETRIEVE_BUFFER_SIZE, 0);
 			break;
 		default: 			/* If not one of the above, error!! */

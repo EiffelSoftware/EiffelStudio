@@ -31,8 +31,13 @@
 private fnptr set_proc;
 private fnptr send_proc;
 
-/* tnh added prototype */
 extern EIF_INTEGER eif_system();
+
+#ifdef EIF_WIN32
+HANDLE eif_coninfile, eif_conoutfile;
+
+extern char *eif_getenv (char *);
+#endif
 
 void async_shell_pass_address(send_address, set_address)
 fnptr send_address, set_address;
@@ -46,6 +51,13 @@ void eif_call_finish_freezing(c_code_dir, freeze_cmd_name)
 EIF_OBJ c_code_dir, freeze_cmd_name;
 {
 #ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
+	STARTUPINFO				siStartInfo;
+	PROCESS_INFORMATION		procinfo;
+	LPVOID					env;
+	char					buf[1000];
+#endif
+
 	char *cmd, *current_dir, *eiffel_dir;
 
 	current_dir = getcwd(NULL, PATH_MAX);
@@ -59,7 +71,28 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	strcat (cmd, eif_getenv("PLATFORM"));
 	strcat (cmd, "\\bin\\es3sh.exe");
 
+#ifdef EIF_WIN32
+	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
+	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.lpTitle = NULL;
+	siStartInfo.lpReserved = NULL;
+	siStartInfo.lpReserved2 = NULL;
+	siStartInfo.cbReserved2 = 0;
+	siStartInfo.lpDesktop = NULL;
+	siStartInfo.dwFlags = 0;
+	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
+	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
+	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
+
+	if (CreateProcess (cmd, NULL, NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, eif_access(c_code_dir), &siStartInfo, &procinfo))
+		{
+		CloseHandle (procinfo.hProcess);
+		CloseHandle (procinfo.hThread);
+		}
+	FreeEnvironmentStrings (env);
+#else
 	(void) WinExec(cmd, SW_SHOWNORMAL);
+#endif
 	xfree(cmd);
 
 	chdir(current_dir);

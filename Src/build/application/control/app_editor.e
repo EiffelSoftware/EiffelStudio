@@ -188,9 +188,7 @@ feature -- Drawing area
 				end;
 				figures.set_selected (a_circle);
 				selected_figure := a_circle;
-				if
-					selected_figure /= Void
-				then
+				if selected_figure /= Void then
 					selected_figure.select_figure
 				end;
 			end
@@ -258,6 +256,23 @@ feature -- Drawing area
 					eds.item.update_title
 				end
 			end	
+		end;
+
+	update_context_name_in_editors (c: CONTEXT) is
+			-- Update context name in state_editors for 
+			-- context `c'.
+		local
+			eds: LINKED_LIST [STATE_EDITOR];
+		do
+			eds := window_mgr.state_editors;
+			from 
+				eds.start
+			until
+				eds.after 
+			loop
+				eds.item.update_context_name (c);
+				eds.forth
+			end;	
 		end;
 
 	update_selected (s: STATE) is
@@ -473,7 +488,9 @@ feature
 			-- modified command `cmd'.
 		do
 			if implementation /= Void and then realized then
-				if selected_figure.data.has_command (cmd) then
+				if cmd = Void or else 
+					selected_figure.data.has_command (cmd) 
+				then
 					app_editor.display_transitions;
 				end
 			end
@@ -552,7 +569,6 @@ feature {NONE}
 				-- **********
 			transition_list.set_single_selection;
 			state_list.set_single_selection;
-			figures.set_showable_area (drawing_sw);
 			drawing_sw.set_working_area (drawing_area);
 			drawing_area.set_background_color (Resources.drawing_area_color);
 			drawing_area.set_size (Resources.app_dr_area_width,

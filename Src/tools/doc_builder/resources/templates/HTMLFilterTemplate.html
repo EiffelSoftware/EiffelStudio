@@ -1,20 +1,22 @@
 <!-- Includes -->
-<script type="text/javascript" src="../toc.js"></script>
+<script type="text/javascript" src="[!TOCScript!]"></script>
 
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="../toc.css">
+		<link rel="stylesheet" type="text/css" href="[!TOCStyle!]">
 	</head>
 	<body>
-		<form name="theForm">
+		<form name="theForm" method="post" action="/cgi-bin/htdig/htsearch" target="content_frame">
 			<table class="normal" cellpadding="5">
 					<tr>
-						<td class="heading_text">
-							Show documentation for:
-						</td>
+						<td class="heading_text">														
+							[!FilterHTML!]
+						</td>							
 					</tr>
 					<tr>
-						<td>[!FilterHTML!]<td>
+						<td class="heading_text">
+							[!FilterSearchHTML!]
+						</td>
 					</tr>
 			</table>
 		</form>

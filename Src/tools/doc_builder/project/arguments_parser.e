@@ -161,7 +161,6 @@ feature -- Commands
 			io.putstring ("			/vsip 		Microsoft Visual Studio .NET Integration Help (MSHelp 2.0)%N")
 			io.putstring ("	-nohtml	Do not compile HTML Help project after generation")
 			io.putstring (" project_file	Project file to open.%N")
-			io.putstring ("Press any key to finish terminate...")
 			io.read_character
 		end
 		
@@ -232,7 +231,8 @@ feature -- Commands
 				
 						-- Create TOC
 				report ("Creating TOC from directory " + l_root_dir.name + "...")
-				create l_toc.make_from_directory (l_root_dir)								
+				create l_toc.make_from_directory (l_root_dir)
+				l_toc.set_name (help_generation_type)
 				report ("success%N")
 
 						-- Filter TOC
@@ -282,8 +282,9 @@ feature -- Commands
 				elseif help_generation_type.is_equal ("vsip") then
 					l_help_project := create {MSHELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
 					report ("success%N")
-				else
-					-- TO DO: Web Help
+				elseif help_generation_type.is_equal ("web") then
+					l_help_project := create {WEB_HELP_PROJECT}.make (l_html_directory, l_project.name, l_toc)
+					report ("success%N")
 				end
 				report ("Generating help from help project information...")
 				create l_help_generator.make (l_help_project)

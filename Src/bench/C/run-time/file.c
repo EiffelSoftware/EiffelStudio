@@ -280,24 +280,24 @@ FILE *fp;
 }
 
 public  EIF_INTEGER file_size (fp)
-EIF_POINTER fp;
+FILE *fp;
 {
 	struct stat buf;
 
 	errno = 0;
-	if (0 != fflush ((FILE *)fp))   /* Without a flush the information */
+	if (0 != fflush (fp)   /* Without a flush the information */
 		esys();						/* is not up to date */
 
-	if (fstat (fileno ((FILE *)fp), &buf) == -1)
+	if (fstat (fileno (fp), &buf) == -1)
 		esys();						/* An error occurred: raise exception */
 	return (EIF_INTEGER) buf.st_size;
 }
 
-public char file_feof(fp)
+public EIF_BOOLEAN file_feof(fp)
 FILE *fp;      
 {
-	return (char) (feof(fp) != 0);	/* End of file? */
-}            
+	return (EIF_BOOLEAN) (feof(fp) != 0);	/* End of file? */
+}
 
 /*
  * I/O routines (output).

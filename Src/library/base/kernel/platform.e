@@ -15,6 +15,7 @@ class PLATFORM inherit
 feature -- Access
 
 	Character_bits: INTEGER is
+			-- Number of bits in a value of type `CHARACTER'
 		external
 			"C"
 		alias
@@ -22,6 +23,7 @@ feature -- Access
 		end;
 
 	Integer_bits: INTEGER is
+			-- Number of bits in a value of type `INTEGER'
 		external
 			"C"
 		alias
@@ -29,6 +31,7 @@ feature -- Access
 		end;
 
 	Real_bits: INTEGER is
+			-- Number of bits in a value of type `REAL'
 		external
 			"C"
 		alias
@@ -36,6 +39,7 @@ feature -- Access
 		end;
 
 	Double_bits: INTEGER is
+			-- Number of bits in a value of type `DOUBLE'
 		external
 			"C"
 		alias

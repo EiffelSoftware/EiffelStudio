@@ -5,6 +5,7 @@ indexing
 	revision: "$Revision$"
 */
 
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -58,3 +59,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyKeyFile("ise_runtime.key")]
 #endif
 [assembly: AssemblyKeyName("")]
+[assembly: CLSCompliantAttribute (true)]

@@ -19,6 +19,8 @@ inherit
 			interface
 		end
 
+	EV_GTK_KEY_CONVERSION
+
 create
 	make
 
@@ -29,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_button_new)
+			create key
 		end
 
 	initialize is
@@ -52,7 +55,7 @@ feature {NONE} -- Implementation
 					c_object,
 					eiffel_to_c ("pressed"),
 					accel_group,
-					key.code, --| FIXME
+					key_code_to_gtk (key.code),
 					modifier_mask,
 					0)
 			end
@@ -97,7 +100,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			-- Get the GTK string representation.
 		do
 			create Result.make (0)
-			Result.from_c (C.gtk_accelerator_name (key.code, modifier_mask))
+			Result.from_c (C.gtk_accelerator_name (key_code_from_gtk (key.code), modifier_mask))
 		end
 
 feature -- Access
@@ -196,6 +199,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/21 23:08:06  brendel
+--| Changed to use new key design.
+--|
 --| Revision 1.4  2000/03/15 22:56:08  brendel
 --| Changed key_code to key.
 --|

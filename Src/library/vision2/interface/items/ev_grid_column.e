@@ -30,6 +30,8 @@ feature -- Access
 
 	title: STRING is
 			-- Title of Current column. Empty if none.
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.count")
 		ensure
@@ -41,8 +43,15 @@ feature -- Access
 		require
 			i_positive: i > 0
 			i_less_than_count: i <= count
+			is_parented: parent /= Void
+		local
+			grid_row: SPECIAL [EV_GRID_ITEM]
 		do
-			to_implement ("EV_GRID_COLUMN.item")
+			grid_row :=  parent_grid_i.row_list @ i
+			if grid_row = Void then
+					-- The row is new, so no item existed
+					
+			end
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -50,11 +59,15 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current column belongs
 		do
-			Result := parent_grid_i.interface
+			if parent_grid_i /= Void then
+				Result := parent_grid_i.interface
+			end
 		end
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.selected_items")
 		ensure
@@ -62,7 +75,9 @@ feature -- Access
 		end
 		
 	width: INTEGER is
-			-- `Result' is width of `Current'.
+			-- `Result' is width of `Current'.		
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.width")
 		ensure
@@ -76,7 +91,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_COLUMN.index")
+			Result := internal_index
 		ensure
 			index_positive: Result > 0
 			index_less_than_column_count: Result <= parent.column_count
@@ -84,6 +99,8 @@ feature -- Status report
 
 	count: INTEGER is
 			-- Number of items in current
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.count")
 		ensure
@@ -97,6 +114,7 @@ feature -- Element change
 		require
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.set_item")
 		ensure
@@ -105,6 +123,8 @@ feature -- Element change
 
 	set_title (a_title: like title) is
 			-- a_title_not_void: a_title /= Void
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.title")
 		ensure
@@ -115,6 +135,7 @@ feature -- Element change
 			-- Set `background_color' with `a_color'
 		require
 			a_color_not_void: a_color /= Void
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.background_color")
 		ensure
@@ -125,23 +146,37 @@ feature -- Element change
 			-- Assign `a_width' to `width'.
 		require
 			width_non_negative: a_width >= 0
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_COLUMN.set_width")
 		ensure
 			width_set: width = a_width
 		end
 
-feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_I} -- Implementation
 
-	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
-			-- Set `parent_grid_i' to `a_parent_grid_i'
+	set_index (a_index: INTEGER) is
+			-- Set the `index' for `Current'
 		require
-			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+			a_index_valid: a_index > 0
 		do
-			parent_grid_i := a_parent_grid_i
-		ensure
-			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+			internal_index := a_index
 		end
+
+	remove_parent_grid_i is
+			-- Set `parent_grid_i' to Void
+		require
+			is_parented: parent /= Void
+		do
+			parent_grid_i := Void
+		ensure
+			parent_grid_i_unset: parent_grid_i = Void
+		end
+
+feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN} -- Implementation
+
+	internal_index: INTEGER
+		-- Index of `Current' in `parent_grid_i'
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in.

@@ -221,6 +221,7 @@ feature -- Commands
 				if Lace.successful then
 					if Lace.has_changed then
 						System.set_melt
+						System.set_finalize
 					end
 				end
 

@@ -4,7 +4,6 @@ class SHOW_INDEXING
 
 inherit
 
-	SHARED_WORKBENCH;
 	LONG_FORMATTER
 		redefine
 			dark_symbol, display_temp_header, post_fix

@@ -19,59 +19,69 @@ inherit
 	MEL_PRIMITIVE
 		redefine
 			create_callback_struct
-		end
+		end;
+
+	MEL_FONTABLE
+		undefine
+			clean_up
+		redefine
+			create_callback_struct
+		end;
 
 creation
-	make, make_from_existing
+	make, 
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif list widget.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_list (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Access
 
-    index_of (an_item: MEL_STRING; i: INTEGER): INTEGER is
-            -- Index of `i'-th occurrence of `an_item'
+	index_of (an_item: MEL_STRING; i: INTEGER): INTEGER is
+			-- Index of `i'-th occurrence of `an_item'
 			-- (Zero if not found.)
-        require
-            positive_occurrence: i > 0;
+		require
+			positive_occurrence: i > 0;
 			valid_an_item: an_item /= Void and then not an_item.is_destroyed
-        do
-            Result := xm_list_index_of (screen_object, an_item.handle, i)
-        ensure 
-            valid_result: Result >= 0
-        end;
+		do
+			Result := xm_list_index_of (screen_object, an_item.handle, i)
+		ensure 
+			valid_result: Result >= 0
+		end;
 
-    item_pos_from (an_item: MEL_STRING; from_pos: INTEGER): INTEGER is
-            -- Index of `an_item' beyond `from_pos' in `items'.
+	item_pos_from (an_item: MEL_STRING; from_pos: INTEGER): INTEGER is
+			-- Index of `an_item' beyond `from_pos' in `items'.
 			-- (Zero if not found.)
 		require
 			valid_an_item: an_item /= Void and then not an_item.is_destroyed;
 			from_pos_large_enough: from_pos >= 0;
 			from_pos_small_enough: from_pos <= item_count
-        do
-            Result := xm_list_item_pos_from (screen_object, an_item.handle, from_pos)
-        ensure 
-            valid_result: Result >= 0
-        end;
+		do
+			Result := xm_list_item_pos_from (screen_object, an_item.handle, from_pos)
+		ensure 
+			valid_result: Result >= 0
+		end;
 
 	item_exists (an_item: MEL_STRING): BOOLEAN is
 			-- Is `an_item' present?
@@ -105,13 +115,6 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNdoubleclickInterval)
 		ensure
 			double_click_interval_large_enough: Result >= 0
-		end;
-
-	font_list: MEL_FONT_LIST is
-			-- Font list of Current
-		require
-			exists: not is_destroyed
-		do
 		end;
 
 	item_count: INTEGER is
@@ -175,12 +178,12 @@ feature -- Status report
 			selected_item_count_large_enough: Result >= 0
 		end;
 
-    selected_positions: LINKED_LIST [INTEGER] is
-            -- Positions of the selected items
-        local
-            int_table: POINTER;
+	selected_positions: LINKED_LIST [INTEGER] is
+			-- Positions of the selected items
+		local
+			int_table: POINTER;
 			i, c: INTEGER
-        do
+		do
 			!! Result.make;
 			c := selected_item_count;
 			if c > 0 then
@@ -194,10 +197,10 @@ feature -- Status report
 					i := i + 1
 				end;
 				xt_free (int_table)
-            end
+			end
 		ensure
 			valid_result: selected_item_count = Result.count
-        end;
+		end;
 
 	selected_items: MEL_STRING_TABLE is
 			-- Table of selected items
@@ -291,14 +294,6 @@ feature -- Status setting
 			set_xt_int (screen_object, XmNdoubleclickInterval, a_time)
 		ensure
 			time_set: double_click_interval = a_time
-		end;
-
-	set_font_list (a_font_list: MEL_FONT_LIST) is
-			-- Set `font_list' to `a_font_list'.
-		require
-			exists: not is_destroyed;
-		do
-		ensure
 		end;
 
 	set_items (a_list: MEL_STRING_TABLE) is
@@ -424,11 +419,9 @@ feature -- Status setting
 			-- Set `visible_item_count' to `a_value'.
 		require
 			exists: not is_destroyed;
-			a_value_large_enough: a_value > 0
+			a_positive_value: a_value > 0
 		do
 			set_xt_int (screen_object, XmNvisibleItemCount, a_value)
-		ensure
-			value_set: visible_item_count = a_value
 		end;
 
 	set_pos (a_value: INTEGER) is
@@ -471,7 +464,7 @@ feature -- Element Change
 			-- Put `an_item' at `a_position'.
 		require
 			exists: not is_destroyed;
-			a_position_large_enough: a_position > 0;
+			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= item_count + 1;
 			an_item_not_void: not an_item.is_destroyed
 		do
@@ -484,7 +477,7 @@ feature -- Element Change
 			-- Put `an_item_list' at `a_position' and select them.
 		require
 			exists: not is_destroyed;
-			a_position_large_enough: a_position > 0;
+			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= item_count + 1;
 			an_item_list_not_void: not an_item_list.is_destroyed
 		do

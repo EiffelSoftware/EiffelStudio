@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			from
-				done := false
+				done := s.count = 0
 			until
 				done
 			loop

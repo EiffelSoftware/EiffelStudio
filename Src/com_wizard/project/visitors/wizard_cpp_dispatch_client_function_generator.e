@@ -415,28 +415,40 @@ feature {NONE} -- Implementation
 				Result := clone (New_line_tab)
 				Result.append (argument_type_set_up (position, type))
 
-				Result.append (visitor.c_type)
-				Result.append (Space)
-				Result.append (Tmp_clause)
-				Result.append (name)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				Result.append (Tmp_clause)
-				Result.append (name)
-				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
-				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
-
-				if 
-					visitor.is_array_basic_type or 
-					visitor.is_structure_pointer or
-				 	visitor.is_interface_pointer or
-				 	visitor.is_coclass_pointer 
-				then
+				if visitor.is_basic_type_ref then
+					Result.append (visitor.c_type)
+					Result.remove (Result.count)
+					Result.append (Space)
+					Result.append (Tmp_clause)
 					Result.append (name)
+					Result.append (Space_equal_space)
+					Result.append (Zero)
+					Result.append (Semicolon)
+					Result.append (New_line_tab)
+
+					tmp_string := clone (Tmp_clause)
+					tmp_string.append (name)
+					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
+
+				elseif visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer or
+						visitor.is_coclass_pointer then
+					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))	
 				else
+					Result.append (visitor.c_type)
+					Result.remove (Result.count)
+					Result.append (Space)
+					Result.append (Tmp_clause)
+					Result.append (name)
+					Result.append (Semicolon)
+					Result.append (New_line_tab)
+
+					Result.append (Tmp_clause)
+					Result.append (name)
+					Result.append (Space_equal_space)
+					Result.append (Open_parenthesis)
+					Result.append (visitor.c_type)
+					Result.append (Close_parenthesis)
+
 					if visitor.need_generate_ec then
 						Result.append (Generated_ec_mapper)
 					else
@@ -454,16 +466,12 @@ feature {NONE} -- Implementation
 						Result.append (Null)
 					end
 					Result.append (Close_parenthesis)
+					Result.append (Semicolon)
+					Result.append (New_line_tab)
+
+					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
 				end
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				tmp_string := clone (Tmp_clause)
-				tmp_string.append (name)
-
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
 			end
-
 		end
 
 	in_parameter_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
